@@ -415,14 +415,14 @@ public class ImportDialogChecker extends GuiChecker {
     return selectionPanel;
   }
 
-  public void importDeferred(String accountName, String fileName, boolean withMainAccount) {
+  public void importDeferred(String accountName, String fileName, boolean withMainAccount, String targetAccountName) {
     setFilePath(fileName)
       .acceptFile();
     if (getAccountEditionChecker().getAccountName().equals(accountName)) {
       if (accountName.length() > 20) {
         getAccountEditionChecker().setName(accountName.substring(0, 20));
       }
-      setDeferredAccount(25, 28, 0);
+      setDeferredAccount(25, 28, 0, targetAccountName);
     }
     else {
       setMainAccount();
@@ -433,7 +433,7 @@ public class ImportDialogChecker extends GuiChecker {
         if (accountName.length() > 20) {
           getAccountEditionChecker().setName(accountName.substring(0, 20));
         }
-        setDeferredAccount(25, 28, 0);
+        setDeferredAccount(25, 28, 0, targetAccountName);
       }
       else {
         setMainAccount();
@@ -446,6 +446,14 @@ public class ImportDialogChecker extends GuiChecker {
     getAccountEditionChecker().setAsDeferredCard();
     getAccountEditionChecker().checkDeferredWarning();
     getAccountEditionChecker().setDeferred(dayPeriod, dayPrelevement, monthShift);
+    return this;
+  }
+
+  public ImportDialogChecker setDeferredAccount(int dayPeriod, int dayPrelevement, int monthShift, String targetAccount) {
+    getAccountEditionChecker().setAsDeferredCard()
+      .checkDeferredWarning()
+      .setDeferred(dayPeriod, dayPrelevement, monthShift)
+      .setTargetAccount(targetAccount);
     return this;
   }
 

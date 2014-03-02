@@ -8,7 +8,6 @@ import java.util.Comparator;
 import java.util.Arrays;
 
 public class GlobFieldsComparator implements Comparator<Glob> {
-
   private Field[] fields;
   private boolean[] ascending;
 
@@ -29,6 +28,16 @@ public class GlobFieldsComparator implements Comparator<Glob> {
                               Field field4, boolean field4ascending) {
     this(new Field[]{field1, field2, field3, field4},
          new boolean[]{field1ascending, field2ascending, field3ascending, field4ascending});
+  }
+
+  public GlobFieldsComparator(Field ...fields) {
+    this(fields, createAscending(fields));
+  }
+
+  private static boolean[] createAscending(Field[] fields) {
+    boolean[] ascendings = new boolean[fields.length];
+    Arrays.fill(ascendings, Boolean.TRUE);
+    return ascendings;
   }
 
   private GlobFieldsComparator(Field[] fields, boolean[] ascending) {

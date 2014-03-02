@@ -41,7 +41,7 @@ public class SeriesChooserComponentFactory implements RepeatComponentFactory<Glo
   protected SelectionService selectionService;
   private Map<Key, SplitsNode<JRadioButton>> seriesToComponent = new HashMap<Key, SplitsNode<JRadioButton>>();
 
-  protected GlobList currentTransactions = GlobList.EMPTY;
+  private GlobList currentTransactions = GlobList.EMPTY;
 
   private BudgetArea budgetArea;
 
@@ -72,8 +72,12 @@ public class SeriesChooserComponentFactory implements RepeatComponentFactory<Glo
 
   public void registerComponents(RepeatCellBuilder cellBuilder, final Glob series) {
     String seriesName = seriesStringifier.toString(new GlobList(series), repository);
+    boolean updateTargetAccount = false;
+    if (series.get(Series.TARGET_ACCOUNT) == null) {
+      updateTargetAccount = true;
+    }
     final Key seriesKey = series.getKey();
-    final JRadioButton selector = createSeriesSelector(seriesName, seriesKey, null);
+    final JRadioButton selector = createSeriesSelector(seriesName, seriesKey, null, updateTargetAccount ? series : null);
     buttonGroup.add(selector);
 
     final DefaultChangeSetListener seriesUpdateListener = new DefaultChangeSetListener() {
@@ -127,7 +131,7 @@ public class SeriesChooserComponentFactory implements RepeatComponentFactory<Glo
     GlobsPanelBuilder.addRepeat("subSeriesRepeat", SubSeries.TYPE,
                                 GlobMatchers.fieldEquals(SubSeries.SERIES, series.get(Series.ID)),
                                 new GlobFieldComparator(SubSeries.ID), repository, cellBuilder,
-                                new SubSeriesComponentFactory(seriesName, "subSeriesSelector", budgetArea));
+                                new SubSeriesComponentFactory(seriesName, "subSeriesSelector", budgetArea, updateTargetAccount ? series : null));
 
     updateToggleSelection(selector, selectionService.getSelection(Transaction.TYPE), seriesKey);
   }
@@ -161,12 +165,18 @@ public class SeriesChooserComponentFactory implements RepeatComponentFactory<Glo
 
   protected JRadioButton createSeriesSelector(final String label,
                                               final Key seriesKey,
-                                              final Key subSeriesKey) {
+                                              final Key subSeriesKey,
+                                              final Glob series) {
     JRadioButton radio = new JRadioButton(new AbstractAction(label) {
       public void actionPerformed(ActionEvent e) {
         try {
           repository.startChangeSet();
           for (Glob transaction : currentTransactions) {
+            if (series != null) {
+              if (series.get(Series.TARGET_ACCOUNT) == null) {
+                updateTargetSeries(transaction, seriesKey, SeriesChooserComponentFactory.this.repository);
+              }
+            }
             Key key = transaction.getKey();
             repository.setTarget(key, Transaction.SERIES, seriesKey);
             repository.setTarget(key, Transaction.SUB_SERIES, subSeriesKey);
@@ -182,6 +192,15 @@ public class SeriesChooserComponentFactory implements RepeatComponentFactory<Glo
     });
     radio.setName(label);
     return radio;
+  }
+
+  public static void updateTargetSeries(Glob transaction, Key seriesKey, final GlobRepository repository) {
+    Glob target = repository.findLinkTarget(transaction, Transaction.ACCOUNT);
+    Integer targetAccount = transaction.get(Transaction.ACCOUNT);
+    if (target.get(Account.CARD_TYPE).equals(AccountCardType.DEFERRED.getId())) {
+      targetAccount = target.get(Account.DEFERRED_TARGET_ACCOUNT);
+    }
+    repository.update(seriesKey, Series.TARGET_ACCOUNT, targetAccount);
   }
 
   private void updateToggleSelection(JToggleButton selector, GlobList transactions, Key seriesKey) {
@@ -218,11 +237,13 @@ public class SeriesChooserComponentFactory implements RepeatComponentFactory<Glo
     private String seriesName;
     private String name;
     private BudgetArea budgetArea;
+    private Glob series;
 
-    public SubSeriesComponentFactory(String seriesName, String name, BudgetArea budgetArea) {
+    public SubSeriesComponentFactory(String seriesName, String name, BudgetArea budgetArea, Glob series) {
       this.seriesName = seriesName;
       this.name = name;
       this.budgetArea = budgetArea;
+      this.series = series;
     }
 
     public void registerComponents(RepeatCellBuilder cellBuilder, final Glob subSeries) {
@@ -230,7 +251,7 @@ public class SeriesChooserComponentFactory implements RepeatComponentFactory<Glo
       String subSeriesName = subSeries.get(SubSeries.NAME);
 
       final Key subSeriesKey = subSeries.getKey();
-      final JRadioButton selector = createSeriesSelector(subSeriesName, seriesKey, subSeriesKey);
+      final JRadioButton selector = createSeriesSelector(subSeriesName, seriesKey, subSeriesKey, series);
       final DefaultChangeSetListener subSeriesUpdateListener = new DefaultChangeSetListener() {
         public void globsChanged(ChangeSet changeSet, GlobRepository repository) {
           if (changeSet.containsChanges(subSeriesKey)) {

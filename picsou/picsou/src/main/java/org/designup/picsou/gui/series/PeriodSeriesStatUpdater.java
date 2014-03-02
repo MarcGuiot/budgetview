@@ -1,6 +1,7 @@
 package org.designup.picsou.gui.series;
 
 import com.budgetview.shared.utils.Amounts;
+import org.designup.picsou.model.SignpostStatus;
 import org.designup.picsou.gui.model.PeriodSeriesStat;
 import org.designup.picsou.gui.model.SeriesType;
 import org.designup.picsou.gui.model.SeriesStat;

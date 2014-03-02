@@ -3,7 +3,6 @@ package org.designup.picsou.gui.upgrade;
 import com.budgetview.shared.utils.Amounts;
 import org.designup.picsou.gui.PicsouApplication;
 import org.designup.picsou.gui.PicsouInit;
-import org.designup.picsou.gui.license.LicenseService;
 import org.designup.picsou.gui.utils.FrameSize;
 import org.designup.picsou.importer.analyzer.TransactionAnalyzerFactory;
 import org.designup.picsou.model.*;
@@ -17,12 +16,13 @@ import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.fields.LinkField;
 import org.globsframework.model.*;
 import org.globsframework.model.format.GlobPrinter;
+import org.globsframework.model.repository.GlobIdGenerator;
 import org.globsframework.model.utils.GlobBuilder;
 import org.globsframework.model.utils.GlobFunctor;
 import org.globsframework.model.utils.GlobMatchers;
-import org.globsframework.model.utils.GlobUtils;
 import org.globsframework.utils.Log;
 import org.globsframework.utils.Utils;
+import org.globsframework.utils.collections.Pair;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
@@ -122,7 +122,7 @@ public class UpgradeTrigger implements ChangeSetListener {
       reassignBankId(repository);
     }
 
-    if (currentJarVersion < 117){
+    if (currentJarVersion < 117) {
       updateOpenCloseAccount(repository);
       deleteDuplicateSynchro(repository);
     }
@@ -140,6 +140,10 @@ public class UpgradeTrigger implements ChangeSetListener {
       LayoutConfig.init(frameSize.screenSize, frameSize.targetFrameSize, repository);
     }
 
+    if (currentJarVersion < 132) {
+      updateTargetAccount(repository);
+    }
+
     UserPreferences.initMobilePassword(repository, false);
 
     deleteDeprecatedGlobs(repository);
@@ -151,6 +155,78 @@ public class UpgradeTrigger implements ChangeSetListener {
     }
 
     repository.update(UserVersionInformation.KEY, UserVersionInformation.CURRENT_JAR_VERSION, PicsouApplication.JAR_VERSION);
+  }
+
+  private void updateTargetAccount(GlobRepository repository) {
+    GlobList allSeries = repository.getAll(Series.TYPE, GlobMatchers.not(GlobMatchers.fieldEquals(Series.BUDGET_AREA, BudgetArea.SAVINGS.getId())));
+    GlobIdGenerator idGenerator = repository.getIdGenerator();
+    for (Glob series : allSeries) {
+        GlobList operations = repository.findByIndex(Transaction.SERIES_INDEX, Transaction.SERIES, series.get(Series.ID))
+          .getGlobs().filter(GlobMatchers.isFalse(Transaction.PLANNED), repository);
+        Set<Integer> accounts = new HashSet<Integer>();
+        for (Glob glob : operations) {
+          accounts.add(glob.get(Transaction.ACCOUNT));
+        }
+        if (accounts.size() == 0) {
+          // nothing
+        } else if (accounts.size() == 1) {
+          repository.update(series.getKey(), Series.TARGET_ACCOUNT, accounts.iterator().next());
+        }
+        else {
+          Glob groups = repository.create(SeriesGroup.TYPE, value(SeriesGroup.NAME, series.get(Series.NAME)),
+                                          value(SeriesGroup.BUDGET_AREA, series.get(Series.BUDGET_AREA)));
+          boolean first = true;
+          Key key = series.getKey();
+          for (Integer account : accounts) {
+            if (!first) {
+              key = Key.create(Series.TYPE, idGenerator.getNextId(Series.ID, 1));
+              repository.create(key, series.toArray());
+              repository.update(key, value(Series.INITIAL_AMOUNT, 0.));
+            }
+            first = false;
+            repository.update(key,
+                              value(Series.GROUP, groups.get(SeriesGroup.ID)),
+                              value(Series.TARGET_ACCOUNT, account));
+            for (Glob op : operations) {
+              if (op.get(Transaction.ACCOUNT).equals(account)) {
+                repository.update(op.getKey(), value(Transaction.SERIES, key.get(Series.ID)));
+              }
+            }
+          }
+        }
+    }
+    GlobList allSavingsSeries = repository.getAll(Series.TYPE, GlobMatchers.fieldEquals(Series.BUDGET_AREA, BudgetArea.SAVINGS.getId()));
+    Map<Key, Key> saving = new HashMap<Key, Key>();
+    for (Glob series : allSavingsSeries) {
+      if (!saving.containsKey(series.getKey())){
+        saving.put(repository.findLinkTarget(series, Series.MIRROR_SERIES).getKey(), series.getKey());
+      }
+    }
+
+    for (Map.Entry<Key, Key> entry : saving.entrySet()) {
+      Glob series1 = repository.get(entry.getKey());
+      Glob series2 = repository.get(entry.getValue());
+      Set<Integer> accountId1 = updateTargetAccount(repository, series1, repository.findLinkTarget(series1, Series.TARGET_ACCOUNT));
+      Set<Integer> accountId2 = updateTargetAccount(repository, series2, repository.findLinkTarget(series2, Series.TARGET_ACCOUNT));
+      if (accountId1.size() > 1 || accountId2.size() > 1) {
+        // que faire?
+      }
+    }
+  }
+
+  private Set<Integer> updateTargetAccount(GlobRepository repository, Glob series1, Glob targetAccount) {
+    Set<Integer> accounts1 = new HashSet<Integer>();
+    if (Account.isMain(targetAccount) && !Account.isUserCreatedMainAccount(targetAccount)) {
+      GlobList operations1 = repository.findByIndex(Transaction.SERIES_INDEX, Transaction.SERIES, series1.get(Series.ID))
+        .getGlobs().filter(GlobMatchers.isFalse(Transaction.PLANNED), repository);
+      for (Glob glob : operations1) {
+        accounts1.add(glob.get(Transaction.ACCOUNT));
+      }
+      if (accounts1.size() == 1) {
+        repository.update(series1.getKey(), Series.TARGET_ACCOUNT, accounts1.iterator().next());
+      }
+    }
+    return accounts1;
   }
 
   private void deleteDuplicateSynchro(GlobRepository repository) {
@@ -182,7 +258,7 @@ public class UpgradeTrigger implements ChangeSetListener {
       for (Glob glob1 : acc2) {
         if (glob1 != glob) {
           if (Utils.equal(glob.get(RealAccount.NUMBER), glob1.get(RealAccount.NUMBER)) &&
-              Utils.equal(glob.get(RealAccount.NAME), glob1.get(RealAccount.NAME)) ){
+              Utils.equal(glob.get(RealAccount.NAME), glob1.get(RealAccount.NAME))) {
             return true;
           }
         }
@@ -208,7 +284,7 @@ public class UpgradeTrigger implements ChangeSetListener {
       }
       else {
         Glob bankEntity = repository.findLinkTarget(account, RealAccount.BANK_ENTITY);
-        if (bankEntity != null){
+        if (bankEntity != null) {
           repository.update(account.getKey(), RealAccount.BANK, bankEntity.get(BankEntity.BANK));
         }
       }
@@ -321,14 +397,14 @@ public class UpgradeTrigger implements ChangeSetListener {
   private void correctSavingMirror(GlobRepository repository) {
     GlobList savingsSeries = repository.getAll(Series.TYPE, GlobMatchers.fieldEquals(Series.BUDGET_AREA, BudgetArea.SAVINGS.getId()));
     for (Glob series : savingsSeries) {
-      Glob mirorSeries = repository.findLinkTarget(series, Series.MIRROR_SERIES);
-      if (mirorSeries.get(Series.TARGET_ACCOUNT).equals(series.get(Series.TARGET_ACCOUNT))) {
+      Glob mirrorSeries = repository.findLinkTarget(series, Series.MIRROR_SERIES);
+      if (mirrorSeries.get(Series.TARGET_ACCOUNT).equals(series.get(Series.TARGET_ACCOUNT))) {
         updateSavingsSeries(repository, series);
         //finalement deux series sont identiques
-        if (mirorSeries.get(Series.TARGET_ACCOUNT).equals(series.get(Series.TARGET_ACCOUNT))) {
+        if (mirrorSeries.get(Series.TARGET_ACCOUNT).equals(series.get(Series.TARGET_ACCOUNT))) {
           Log.write("Correcting savings series.");
-          repository.update(mirorSeries.getKey(), Series.TARGET_ACCOUNT, mirorSeries.get(Series.FROM_ACCOUNT));
-          repository.update(series.getKey(), Series.TARGET_ACCOUNT, mirorSeries.get(Series.TO_ACCOUNT));
+          repository.update(mirrorSeries.getKey(), Series.TARGET_ACCOUNT, mirrorSeries.get(Series.FROM_ACCOUNT));
+          repository.update(series.getKey(), Series.TARGET_ACCOUNT, mirrorSeries.get(Series.TO_ACCOUNT));
         }
       }
     }

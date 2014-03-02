@@ -42,6 +42,7 @@ import org.designup.picsou.gui.utils.Matchers;
 import org.designup.picsou.gui.utils.TableView;
 import org.designup.picsou.importer.utils.BankFormatExporter;
 import org.designup.picsou.model.*;
+import org.designup.picsou.triggers.TransactionPlannedTrigger;
 import org.designup.picsou.utils.Lang;
 import org.designup.picsou.utils.TransactionComparator;
 import org.globsframework.gui.GlobSelection;
@@ -654,6 +655,9 @@ public class CategorizationView extends View implements TableView, Filterable, C
         return false;
       }
       Integer subSeriesId = SeriesEditor.get(directory).getLastSelectedSubSeriesId();
+      if (series.get(Series.TARGET_ACCOUNT) == null) {
+        SeriesChooserComponentFactory.updateTargetSeries(transaction, series.getKey(), repository);
+      }
       repository.update(transaction.getKey(),
                         value(Transaction.SERIES, series.get(Series.ID)),
                         value(Transaction.SUB_SERIES, subSeriesId),

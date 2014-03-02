@@ -81,12 +81,7 @@ public class SeriesShape {
     else if (periodCount == 10){
       day = getMiddle10(period);
     }
-
-    int lastDay = Month.getLastDayNumber(monthId);
-    if (day > lastDay) {
-      return lastDay;
-    }
-    return day;
+    return Month.getDay(day, monthId);
   }
 
   public static int getBegin(int periodCount, int period) {

@@ -283,9 +283,8 @@ public class RequestForConfigServlet extends HttpServlet {
               updateNewActivationCodeRequest.execute(mail, code);
               db.commit();
               resp.setHeader(ConfigService.HEADER_MAIL_SENT, "true");
-              if (mailer.reSendExistingLicenseOnError(lang, code, mail)) {
-                logInfo("Run_count_decrease_send_new_license_to mail = " + mail);
-              }
+              mailer.reSendExistingLicenseOnError(lang, code, mail);
+              logInfo("Run_count_decrease_send_new_license_to mail = " + mail);
             }
             else {
               logInfo("Run_count_decrease_with_different_activation_code_for mail = " + mail);

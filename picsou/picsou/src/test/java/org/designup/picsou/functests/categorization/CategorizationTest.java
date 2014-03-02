@@ -183,6 +183,7 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
 
   public void testSelectingASeriesInABudgetAreaUnselectsPreviousSeriesInOtherBudgetAreas() throws Exception {
 
+    operations.openPreferences().setFutureMonthsCount(2).validate();
     OfxBuilder
       .init(this)
       .addTransaction("2008/06/25", -59.90, "France Telecom")
@@ -191,6 +192,12 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
     views.selectCategorization();
     categorization.setNewRecurring("France Telecom", "Telephone");
     categorization.checkRecurringSeriesIsSelected("Telephone");
+    timeline.selectAll();
+    transactions.showPlannedTransactions().initAmountContent()
+      .add("27/08/2008", "Planned: Telephone", -59.90, "Telephone", -119.80, -119.80, "Account n. 00001123")
+      .add("27/07/2008", "Planned: Telephone", -59.90, "Telephone", -59.90, -59.90, "Account n. 00001123")
+      .add("25/06/2008", "FRANCE TELECOM", -59.90, "Telephone", 0.00, 0.00, "Account n. 00001123")
+      .check();
 
     categorization.setNewVariable("France Telecom", "Phone");
 
@@ -1095,7 +1102,7 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
     categorization
       .selectSavings()
       .createSeries()
-      .setFromAccount("Main accounts")
+      .setFromAccount("Account n. 00001123")
       .setToAccount("Epargne")
       .setName("Epargne")
       .validate();
@@ -1124,8 +1131,8 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
       .validate();
 
     views.selectBudget();
-    budgetView.savings.editSeries("From account Epargne").deleteCurrentSeries();
-    budgetView.savings.editSeries("To account Epargne").deleteCurrentSeries();
+//    budgetView.savings.editSeries("From account Epargne").deleteCurrentSeries();
+//    budgetView.savings.editSeries("To account Epargne").deleteCurrentSeries();
 
     views.selectCategorization();
     categorization
@@ -1136,7 +1143,7 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
     views.selectBudget();
     budgetView.savings.createSeries()
       .setName("My savings")
-      .setFromAccount("Main accounts")
+      .setFromAccount("Account n. 00001123")
       .setToAccount("Epargne")
       .validate();
 

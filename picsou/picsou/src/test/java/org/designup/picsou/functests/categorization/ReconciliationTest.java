@@ -209,16 +209,16 @@ public class ReconciliationTest extends LoggedInFunctionalTestCase {
     setCurrentDate("2012/05/22");
     restartApplicationFromBackup();
 
-    mainAccounts.checkPosition("Account n. 00123", 850);
-    mainAccounts.checkSummary(850.00, "2012/05/20");
+    mainAccounts.checkPosition("Account n. 00123", 1000);
+    mainAccounts.checkSummary(1000.00, "2012/05/01");
 
     OfxBuilder.init(this)
       .addBankAccount("00123", 1000.00, "2012/05/15")
       .addTransaction("2012/05/21", -100.00, "CHEQUE 00012345")
       .load();
 
-    mainAccounts.checkPosition("Account n. 00123", 750);
-    mainAccounts.checkSummary(750.00, "2012/05/21");
+    mainAccounts.checkPosition("Account n. 00123", 900);
+    mainAccounts.checkSummary(900.00, "2012/05/21");
 
     categorization.initContent()
       .add("20/05/2012", "", "[R] AUCHAN 1", -50.00)
@@ -238,8 +238,8 @@ public class ReconciliationTest extends LoggedInFunctionalTestCase {
 
     categorization.getReconciliation().select("CHEQUE N°00012345").reconcile();
 
-    mainAccounts.checkPosition("Account n. 00123", 850);
-    mainAccounts.checkSummary(850.00, "2012/05/21");
+    mainAccounts.checkPosition("Account n. 00123", 900);
+    mainAccounts.checkSummary(900.00, "2012/05/21");
 
     categorization.initContent()
       .add("20/05/2012", "", "[R] AUCHAN 1", -50.00)
@@ -289,8 +289,8 @@ public class ReconciliationTest extends LoggedInFunctionalTestCase {
       .add("10/05/2012", "", "[R] CHEQUE N° 12345", -100.00)
       .check();
 
-    mainAccounts.checkPosition("Main", 850);
-    mainAccounts.checkSummary(850.00, "2012/05/10");
+    mainAccounts.checkPosition("Main", 1000.);
+    mainAccounts.checkSummary(1000.00, "2012/05/01");
 
     notifications.checkHidden();
 
@@ -312,12 +312,12 @@ public class ReconciliationTest extends LoggedInFunctionalTestCase {
       .add("10/05/2012", "", "CHEQUE N°0012345", -100.00)
       .check();
 
-    mainAccounts.checkPosition("Main", 700);
-    mainAccounts.checkSummary(700.00, "2012/05/11");
+    mainAccounts.checkPosition("Main", 850);
+    mainAccounts.checkSummary(850.00, "2012/05/11");
     notifications.checkVisible(1)
       .openDialog()
       .checkMessageCount(1)
-      .checkMessage(0, "The last computed position for 'Main' (700.00) is not the same as the " +
+      .checkMessage(0, "The last computed position for 'Main' (850.00) is not the same as the " +
                        "imported one (0.00)")
       .validate();
 
@@ -499,7 +499,7 @@ public class ReconciliationTest extends LoggedInFunctionalTestCase {
       .selectTransactions("Virement")
       .selectSavings().createSeries()
       .setName("Epargne")
-      .setFromAccount("Main accounts")
+      .setFromAccount("Account n. 00001123")
       .setToAccount("Epargne LCL")
       .validate();
     views.selectBudget();
@@ -517,10 +517,10 @@ public class ReconciliationTest extends LoggedInFunctionalTestCase {
 
     // est-ce vraiment ce qu'on attends (creation de l'operation miroir)
     transactions.initAmountContent()
-      .add("20/04/2012", "OP 1", 50.00, "Epargne", 1290.00, 1290.00, "Epargne LCL")
-      .add("20/04/2012", "OP 1", -50.00, "Epargne", 50.00, "Main accounts")
-      .add("12/04/2012", "OP 2", 40.00, "To categorize", 1240.00, 1240.00, "Epargne LCL")
-      .add("10/04/2012", "VIREMENT", 100.00, "Epargne", 1200.00, 1200.00, "Epargne LCL")
+      .add("20/04/2012", "OP 1", 50.00, "Epargne", 1090.00, 1090.00, "Epargne LCL")
+//      .add("20/04/2012", "OP 1", -50.00, "Epargne", 50.00, 50.00, "Account n. 00001123")
+      .add("12/04/2012", "OP 2", 40.00, "To categorize", 1040.00, 1040.00, "Epargne LCL")
+//      .add("10/04/2012", "VIREMENT", 100.00, "Epargne", 1200.00, 1200.00, "Epargne LCL")
       .add("10/04/2012", "VIREMENT", -100.00, "Epargne", 100.00, 100.00, "Account n. 00001123")
       .check();
   }

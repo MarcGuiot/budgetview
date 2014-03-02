@@ -190,7 +190,7 @@ public class TransactionViewTest extends LoggedInFunctionalTestCase {
     categorization
       .selectSavings().createSeries()
       .setName("Epargne")
-      .setFromAccount("Main accounts")
+      .setFromAccount("Account n. 00001123")
       .setToAccount("Epargne")
       .validate();
 
@@ -299,10 +299,10 @@ public class TransactionViewTest extends LoggedInFunctionalTestCase {
     transactions
       .showPlannedTransactions()
       .initAmountContent()
-      .add("04/07/2006", "Planned: Nounou", -100.00, "Nounou", 160.00, "Main accounts")
-      .add("04/07/2006", "Planned: Voiture", -70.00, "Voiture", 260.00, "Main accounts")
-      .add("04/06/2006", "Planned: Nounou", -100.00, "Nounou", 330.00, "Main accounts")
-      .add("04/06/2006", "Planned: Voiture", -70.00, "Voiture", 430.00, "Main accounts")
+      .add("04/07/2006", "Planned: Nounou", -100.00, "Nounou", 160.00, 160.00, OfxBuilder.DEFAULT_ACCOUNT_NAME)
+      .add("04/07/2006", "Planned: Voiture", -70.00, "Voiture", 260.00, 260.00, OfxBuilder.DEFAULT_ACCOUNT_NAME)
+      .add("04/06/2006", "Planned: Nounou", -100.00, "Nounou", 330.00, 330.00, OfxBuilder.DEFAULT_ACCOUNT_NAME)
+      .add("04/06/2006", "Planned: Voiture", -70.00, "Voiture", 430.00, 430.00, OfxBuilder.DEFAULT_ACCOUNT_NAME)
       .add("06/05/2006", "NOUNOU", -100.00, "Nounou", 500.00, 500.00, OfxBuilder.DEFAULT_ACCOUNT_NAME)
       .add("03/05/2006", "PEAGE", -30.00, "To categorize", 600.00, 600.00, OfxBuilder.DEFAULT_ACCOUNT_NAME)
       .add("02/05/2006", "SG", -200.00, "To categorize", 630.00, 630.00, OfxBuilder.DEFAULT_ACCOUNT_NAME)
@@ -359,7 +359,7 @@ public class TransactionViewTest extends LoggedInFunctionalTestCase {
       .selectTransactions("sg")
       .selectSavings().createSeries()
       .setName("Epargne")
-      .setFromAccount("Main accounts")
+      .setFromAccount("Account n. 00001123")
       .setToAccount("Epargne LCL")
       .validate();
 

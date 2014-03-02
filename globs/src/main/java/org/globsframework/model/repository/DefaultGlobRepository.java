@@ -437,6 +437,9 @@ public class DefaultGlobRepository implements GlobRepository, IndexSource {
   }
 
   public void delete(GlobList list) throws OperationDenied {
+    if (list.isEmpty()){
+      return;
+    }
     startChangeSet();
     OperationDenied exception = null;
     try {

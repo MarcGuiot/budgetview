@@ -93,6 +93,9 @@ public class Account {
   @DefaultInteger(0)
   public static IntegerField DEFERRED_MONTH_SHIFT;
 
+  @Target(Account.class)
+  public static LinkField DEFERRED_TARGET_ACCOUNT;
+
   @Target(AccountCardType.class)
   @DefaultInteger(0)
   public static LinkField CARD_TYPE;
@@ -290,7 +293,7 @@ public class Account {
   public static class Serializer implements PicsouGlobSerializer {
 
     public int getWriteVersion() {
-      return 10;
+      return 11;
     }
 
     public boolean shouldBeSaved(GlobRepository repository, FieldValues fieldValues) {
@@ -325,11 +328,15 @@ public class Account {
       outputStream.writeInteger(values.get(DEFERRED_DAY));
       outputStream.writeInteger(values.get(DEFERRED_MONTH_SHIFT));
       outputStream.writeDouble(values.get(PAST_POSITION));
+      outputStream.writeInteger(values.get(DEFERRED_TARGET_ACCOUNT));
       return serializedByteArrayOutput.toByteArray();
     }
 
     public void deserializeData(int version, FieldSetter fieldSetter, byte[] data, Integer id) {
-      if (version == 10) {
+      if (version == 11) {
+        deserializeDataV11(fieldSetter, data);
+      }
+      else if (version == 10) {
         deserializeDataV10(fieldSetter, data);
       }
       else if (version == 9) {
@@ -359,6 +366,36 @@ public class Account {
       else if (version == 1) {
         deserializeDataV1(fieldSetter, data);
       }
+    }
+
+    private void deserializeDataV11(FieldSetter fieldSetter, byte[] data) {
+      SerializedInput input = SerializedInputOutputFactory.init(data);
+      fieldSetter.set(NUMBER, input.readUtf8String());
+      fieldSetter.set(BANK_ENTITY, input.readInteger());
+      fieldSetter.set(BRANCH_ID, input.readInteger());
+      fieldSetter.set(NAME, input.readUtf8String());
+      fieldSetter.set(POSITION_WITH_PENDING, input.readDouble());
+      fieldSetter.set(TRANSACTION_ID, input.readInteger());
+      fieldSetter.set(POSITION_DATE, input.readDate());
+      fieldSetter.set(ACCOUNT_TYPE, input.readInteger());
+      fieldSetter.set(UPDATE_MODE, input.readInteger());
+      fieldSetter.set(IS_IMPORTED_ACCOUNT, input.readBoolean());
+      fieldSetter.set(CLOSED_DATE, input.readDate());
+      fieldSetter.set(OPEN_DATE, input.readDate());
+      fieldSetter.set(FIRST_POSITION, input.readDouble());
+      fieldSetter.set(BANK, input.readInteger());
+      fieldSetter.set(BANK_ENTITY_LABEL, input.readUtf8String());
+      fieldSetter.set(CARD_TYPE, input.readInteger());
+      fieldSetter.set(DIRECT_SYNCHRO, input.readBoolean());
+      fieldSetter.set(LAST_IMPORT_POSITION, input.readDouble());
+      fieldSetter.set(CLOSE_POSITION, input.readDouble());
+      fieldSetter.set(OPEN_TRANSACTION, input.readInteger());
+      fieldSetter.set(CLOSED_TRANSACTION, input.readInteger());
+      fieldSetter.set(DEFERRED_DEBIT_DAY, input.readInteger());
+      fieldSetter.set(DEFERRED_DAY, input.readInteger());
+      fieldSetter.set(DEFERRED_MONTH_SHIFT, input.readInteger());
+      fieldSetter.set(PAST_POSITION, input.readDouble());
+      fieldSetter.set(DEFERRED_TARGET_ACCOUNT, input.readInteger());
     }
 
     private void deserializeDataV10(FieldSetter fieldSetter, byte[] data) {

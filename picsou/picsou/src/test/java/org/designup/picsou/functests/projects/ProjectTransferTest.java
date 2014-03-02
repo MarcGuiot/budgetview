@@ -51,13 +51,13 @@ public class ProjectTransferTest extends LoggedInFunctionalTestCase {
       .setAmount(200.00)
       .checkMonth("Dec 2010")
       .checkNoFromAccountSelected("Select the source account")
-      .checkFromAccounts("Select the source account", "External account", "Main accounts", "Savings account")
+      .checkFromAccounts("Select the source account", "External account", "Main account", "Savings account")
       .checkNoToAccountSelected("Select the target account")
-      .checkToAccounts("Select the target account", "External account", "Main accounts", "Savings account")
+      .checkToAccounts("Select the target account", "External account", "Main account", "Savings account")
       .checkSavingsMessageHidden()
       .setFromAccount("Savings account")
       .checkSavingsMessageShown()
-      .setToAccount("Main accounts")
+      .setToAccount("Main account")
       .checkSavingsMessageShown()
       .validate();
     currentProject.checkProjectGauge(0.00, 0.00);
@@ -85,7 +85,7 @@ public class ProjectTransferTest extends LoggedInFunctionalTestCase {
     currentProject.view(0).setActive();
     currentProject.toggleAndEditTransfer(0)
       .checkFromAccount("Savings account")
-      .checkToAccount("Main accounts")
+      .checkToAccount("Main account")
       .cancel();
     currentProject.backToList();
     projects.checkCurrentProjects("| Trip | Dec | 0.00 | on |");
@@ -123,7 +123,7 @@ public class ProjectTransferTest extends LoggedInFunctionalTestCase {
     currentProject
       .setName("Trip")
       .addExpenseItem(0, "Item 1", 201012, -100.00)
-      .addTransferItem(1, "Transfer", 200.00, "Savings account", "Main accounts");
+      .addTransferItem(1, "Transfer", 200.00, "Savings account", "Main account");
 
     views.selectData();
     currentProject.backToList();
@@ -150,9 +150,7 @@ public class ProjectTransferTest extends LoggedInFunctionalTestCase {
       .validate();
 
     views.selectBudget();
-    budgetView.savings.checkSeriesList("From account Savings account",
-                                       "Project transfer",
-                                       "To account Savings account");
+    budgetView.savings.checkSeriesList("Project transfer");
   }
 
   public void testMustSelectDifferentFromAndToAccounts() throws Exception {
@@ -198,9 +196,9 @@ public class ProjectTransferTest extends LoggedInFunctionalTestCase {
       .setAmount(200.00)
       .checkMonth("Dec 2010")
       .validateAndCheckFromAccountError("You must select a source account")
-      .setFromAccount("Main accounts")
+      .setFromAccount("Main account 1")
       .validateAndCheckToAccountError("You must select a target account")
-      .setToAccount("Main accounts")
+      .setToAccount("Main account 1")
       .validateAndCheckFromAccountError("You must select different source and target accounts")
       .setFromAccount("External account")
       .validateAndCheckFromAccountError("You must select at least one savings account")
@@ -224,7 +222,7 @@ public class ProjectTransferTest extends LoggedInFunctionalTestCase {
     projectChart.create();
     currentProject
       .setName("Trip")
-      .addTransferItem(0, "Transfer", 200.00, "Savings account 1", "Main accounts");
+      .addTransferItem(0, "Transfer", 200.00, "Savings account 1", "Main account 1");
     currentProject.checkProjectGauge(0.00, 0.00);
     currentProject.checkPeriod("December 2010");
 
@@ -246,7 +244,7 @@ public class ProjectTransferTest extends LoggedInFunctionalTestCase {
     projectChart.create();
     currentProject
       .setName("Trip")
-      .addTransferItem(0, "Transfer", 200.00, "Savings account 1", "Main accounts");
+      .addTransferItem(0, "Transfer", 200.00, "Savings account 1", "Main account 1");
     currentProject.checkProjectGauge(0.00, 0.00);
     currentProject.checkPeriod("December 2010");
 
@@ -267,7 +265,7 @@ public class ProjectTransferTest extends LoggedInFunctionalTestCase {
     projectChart.create();
     currentProject
       .setName("Trip")
-      .addTransferItem(0, "Transfer", 200.00, "Savings account 1", "Main accounts");
+      .addTransferItem(0, "Transfer", 200.00, "Savings account 1", "Main account 1");
     currentProject.checkProjectGauge(0.00, 0.00);
     currentProject.checkPeriod("December 2010");
 
@@ -276,7 +274,7 @@ public class ProjectTransferTest extends LoggedInFunctionalTestCase {
 
     currentProject
       .toggleAndEditTransfer(0)
-      .setFromAccount("Main accounts")
+      .setFromAccount("Main account 1")
       .setToAccount("Savings account 1")
       .validate();
 
@@ -293,7 +291,7 @@ public class ProjectTransferTest extends LoggedInFunctionalTestCase {
     projectChart.create();
     currentProject
       .setName("Trip")
-      .addTransferItem(0, "Transfer", 200.00, "Savings account 1", "Main accounts");
+      .addTransferItem(0, "Transfer", 200.00, "Savings account 1", "Main account 1");
     currentProject.checkProjectGauge(0.00, 0.00);
     currentProject.checkPeriod("December 2010");
 
@@ -361,7 +359,7 @@ public class ProjectTransferTest extends LoggedInFunctionalTestCase {
 
     projectChart.create();
     currentProject.setName("My Project")
-      .addTransferItem(0, "Transfer", 200.00, "Savings account 1", "Main accounts");
+      .addTransferItem(0, "Transfer", 200.00, "Savings account 1", "Main account 1");
 
     categorization.setSavings("TRANSFER FROM SAVINGS ACCOUNT 1", "Transfer");
     categorization.setSavings("TRANSFER TO SAVINGS ACCOUNT 1", "Transfer");
@@ -397,7 +395,7 @@ public class ProjectTransferTest extends LoggedInFunctionalTestCase {
     projectChart.create();
     currentProject
       .setName("Trip")
-      .addTransferItem(0, "Transfer", 200.00, "Savings account 1", "Main accounts");
+      .addTransferItem(0, "Transfer", 200.00, "Savings account 1", "Main account 1");
     currentProject.checkProjectGauge(0.00, 0.00);
     currentProject.checkPeriod("December 2010");
 
@@ -406,7 +404,7 @@ public class ProjectTransferTest extends LoggedInFunctionalTestCase {
 
     currentProject
       .toggleAndEditTransfer(0)
-      .setFromAccount("Main accounts")
+      .setFromAccount("Main account 1")
       .setToAccount("Savings account 1")
       .switchToSeveralMonths()
       .switchToMonthEditor()
@@ -451,13 +449,13 @@ public class ProjectTransferTest extends LoggedInFunctionalTestCase {
     projectChart.create();
     currentProject
       .setName("Trip")
-      .addTransferItem(0, "Transfer", 200.00, "Savings account 1", "Main accounts");
+      .addTransferItem(0, "Transfer", 200.00, "Savings account 1", "Main account 1");
     currentProject.checkProjectGauge(0.00, 0.00);
     currentProject.checkPeriod("December 2010");
 
     currentProject
       .toggleAndEditTransfer(0)
-      .setFromAccount("Main accounts")
+      .setFromAccount("Main account 1")
       .setToAccount("Savings account 1")
       .switchToSeveralMonths()
       .switchToMonthEditor()

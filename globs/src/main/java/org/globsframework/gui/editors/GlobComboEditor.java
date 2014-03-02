@@ -143,6 +143,10 @@ public class GlobComboEditor
     return combo;
   }
 
+  public void setVisible(boolean visible) {
+    combo.setVisible(visible);
+  }
+
   public void dispose() {
     if (combo != null){
       repository.removeChangeListener(this);

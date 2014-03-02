@@ -228,7 +228,7 @@ public class SeriesDeletionTest extends LoggedInFunctionalTestCase {
     savingsAccounts.createSavingsAccount("Livret", 1000.00);
     budgetView.savings.createSeries()
       .setName("Epargne")
-      .setFromAccount("Main accounts")
+      .setFromAccount("Account n. 00001123")
       .setToAccount("Livret")
       .validate();
 

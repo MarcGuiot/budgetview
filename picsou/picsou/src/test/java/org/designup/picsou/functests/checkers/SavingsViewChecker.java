@@ -1,6 +1,8 @@
 package org.designup.picsou.functests.checkers;
 
 import junit.framework.Assert;
+import org.designup.picsou.functests.checkers.components.GaugeChecker;
+import org.designup.picsou.gui.components.charts.Gauge;
 import org.uispec4j.*;
 import org.uispec4j.assertion.UISpecAssert;
 
@@ -150,9 +152,19 @@ public class SavingsViewChecker extends ViewChecker {
     return this;
   }
 
+  public SavingsViewChecker checkGaugeTooltip(String accountName, String seriesName, String tooltipText) {
+    assertThat(new GaugeChecker((Gauge)getPanel().getPanel(getGaugeName(accountName, seriesName)).getAwtComponent())
+                 .tooltipContains(tooltipText));
+    return this;
+  }
+
   private Button getSeriesButton(String accountName, String seriesName) {
     String buttonName = getButtonName(accountName, seriesName);
     return getPanel().getButton(buttonName);
+  }
+
+  private String getGaugeName(String accountName, String seriesName) {
+    return accountName + "." + seriesName + ".gauge";
   }
 
   private String getButtonName(String accountName, String seriesName) {

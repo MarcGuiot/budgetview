@@ -67,7 +67,7 @@ public class SeriesOrGroup {
     switch (type) {
       case SERIES:
         Glob series = repository.get(Key.create(Series.TYPE, id));
-        return SeriesWrapper.shouldCreateWrapperForSeries(series);
+        return SeriesWrapper.shouldCreateWrapperForSeries(series, repository);
       case SERIES_GROUP:
         return true;
     }

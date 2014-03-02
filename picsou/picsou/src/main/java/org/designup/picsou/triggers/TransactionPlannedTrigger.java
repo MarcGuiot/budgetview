@@ -42,6 +42,23 @@ public class TransactionPlannedTrigger implements ChangeSetListener {
       }
     }
 
+    changeSet.safeVisit(Series.TYPE, new ChangeSetVisitor() {
+      public void visitCreation(Key key, FieldValues values) throws Exception {
+      }
+
+      public void visitUpdate(Key key, FieldValuesWithPrevious values) throws Exception {
+        if (values.contains(Series.TARGET_ACCOUNT)) {
+          GlobList months = repository.getAll(Month.TYPE);
+          for (Glob glob : months) {
+              listOfSeriesAndMonth.add(new Pair<Integer, Integer>(key.get(Series.ID), glob.get(Month.ID)));
+          }
+        }
+      }
+
+      public void visitDeletion(Key key, FieldValues previousValues) throws Exception {
+      }
+    });
+
     changeSet.safeVisit(Transaction.TYPE, new ChangeSetVisitor() {
       public void visitCreation(Key key, FieldValues values) throws Exception {
         Integer seriesId = values.get(Transaction.SERIES);
@@ -319,6 +336,9 @@ public class TransactionPlannedTrigger implements ChangeSetListener {
       minDay = currentMonth.get(CurrentMonth.LAST_TRANSACTION_DAY);
     }
 
+    if (series.get(Series.TARGET_ACCOUNT) == null) {
+      return;
+    }
     int account;
     Glob fromAccount = repository.findLinkTarget(series, Series.FROM_ACCOUNT);
     Glob toAccount = repository.findLinkTarget(series, Series.TO_ACCOUNT);
@@ -330,25 +350,25 @@ public class TransactionPlannedTrigger implements ChangeSetListener {
       }
       account = series.get(Series.TARGET_ACCOUNT);
     }
-    else if (fromAccount == null && toAccount == null) {
-      account = Account.MAIN_SUMMARY_ACCOUNT_ID;
+    else { //if (fromAccount == null && toAccount == null) {
+      account = series.get(Series.TARGET_ACCOUNT); // Account.MAIN_SUMMARY_ACCOUNT_ID;
     }
-    else {
-      if (fromAccount != null && AccountType.MAIN.getId().equals(fromAccount.get(Account.ACCOUNT_TYPE))) {
-        account = fromAccount.get(Account.ID);
-      }
-      else if (toAccount != null && AccountType.MAIN.getId().equals(toAccount.get(Account.ACCOUNT_TYPE))) {
-        account = toAccount.get(Account.ID);
-      }
-      else {
-        if (fromAccount == null) {
-          account = toAccount.get(Account.ID);
-        }
-        else { //if (toAccount == null)
-          account = fromAccount.get(Account.ID);
-        }
-      }
-    }
+//    else {
+//      if (fromAccount != null && AccountType.MAIN.getId().equals(fromAccount.get(Account.ACCOUNT_TYPE))) {
+//        account = fromAccount.get(Account.ID);
+//      }
+//      else if (toAccount != null && AccountType.MAIN.getId().equals(toAccount.get(Account.ACCOUNT_TYPE))) {
+//        account = toAccount.get(Account.ID);
+//      }
+//      else {
+//        if (fromAccount == null) {
+//          account = toAccount.get(Account.ID);
+//        }
+//        else { //if (toAccount == null)
+//          account = fromAccount.get(Account.ID);
+//        }
+//      }
+//    }
     computePlanned(series, repository, monthId, amount, minDay, declarePlanned, account);
   }
 

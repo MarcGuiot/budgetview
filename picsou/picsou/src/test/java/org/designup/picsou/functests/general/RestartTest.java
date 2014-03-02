@@ -130,26 +130,31 @@ public class RestartTest extends LoggedInFunctionalTestCase {
 
   public void testBudgetView() throws Exception {
 
+    mainAccounts.createMainAccount("Manual", 0);
     views.selectBudget();
     budgetView.variable.createSeries()
       .setName("Courant")
+      .setAccount("Manual")
       .selectAllMonths()
       .setAmount("2500")
       .validate();
 
     budgetView.income.createSeries()
       .setName("Salaire")
+      .setAccount("Manual")
       .selectAllMonths()
       .setAmount("3000")
       .validate();
     budgetView.recurring.createSeries()
       .setName("EDF")
       .selectAllMonths()
+      .setAccount("Manual")
       .setAmount("100")
       .validate();
 
     budgetView.recurring.createSeries()
       .setName("Loyer")
+      .setAccount("Manual")
       .setAmount("1000")
       .validate();
 
@@ -296,7 +301,7 @@ public class RestartTest extends LoggedInFunctionalTestCase {
       .editTransfer(0)
       .setLabel("Transfer")
       .setFromAccount("Savings account 1")
-      .setToAccount("Main accounts")
+      .setToAccount("Main account 1")
       .switchToSeveralMonths()
       .switchToMonthEditor()
       .setMonth(200901)
@@ -647,7 +652,7 @@ public class RestartTest extends LoggedInFunctionalTestCase {
     OfxBuilder.init(this)
       .addCardAccount("123", 1000.00, "2008/08/19")
       .addTransaction("2008/08/06", -30.00, "FNAC")
-      .loadOneDeferredCard("Other");
+      .loadOneDeferredCard("Other", "Account n. 111");
 
     OfxBuilder.init(this)
       .addBankAccount("unknown 222", 222, "222", 1000.00, "2008/08/19")

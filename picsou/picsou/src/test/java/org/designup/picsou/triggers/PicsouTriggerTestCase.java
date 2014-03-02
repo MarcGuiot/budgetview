@@ -75,6 +75,7 @@ public abstract class PicsouTriggerTestCase extends PicsouTestCase {
                       value(Series.DAY, 4),
                       value(Series.BUDGET_AREA, BudgetArea.INCOME.getId()),
                       value(Series.NAME, "salaire"),
+                      value(Series.TARGET_ACCOUNT, -1),
                       value(Series.PROFILE_TYPE, ProfileType.CUSTOM.getId()),
                       value(Series.IS_AUTOMATIC, false));
   }
@@ -86,6 +87,7 @@ public abstract class PicsouTriggerTestCase extends PicsouTestCase {
                       value(Series.BUDGET_AREA, BudgetArea.VARIABLE.getId()),
                       value(Series.DAY, 25),
                       value(Series.NAME, "courses"),
+                      value(Series.TARGET_ACCOUNT, -1),
                       value(Series.PROFILE_TYPE, ProfileType.CUSTOM.getId()),
                       value(Series.IS_AUTOMATIC, false));
   }
@@ -98,6 +100,7 @@ public abstract class PicsouTriggerTestCase extends PicsouTestCase {
                       value(Series.BUDGET_AREA, BudgetArea.RECURRING.getId()),
                       value(Series.NAME, "free telecom"),
                       value(Series.PROFILE_TYPE, ProfileType.CUSTOM.getId()),
+                      value(Series.TARGET_ACCOUNT, -1),
                       value(Series.IS_AUTOMATIC, false));
   }
 }

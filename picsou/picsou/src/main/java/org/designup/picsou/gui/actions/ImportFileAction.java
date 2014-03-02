@@ -6,8 +6,6 @@ import org.designup.picsou.gui.importer.ImportDialog;
 import org.designup.picsou.gui.license.LicenseActivationDialog;
 import org.designup.picsou.gui.license.LicenseService;
 import org.designup.picsou.gui.startup.components.OpenRequestManager;
-import org.designup.picsou.gui.time.TimeService;
-import org.designup.picsou.model.CurrentMonth;
 import org.designup.picsou.model.SignpostStatus;
 import org.designup.picsou.model.User;
 import org.designup.picsou.utils.Lang;
@@ -21,8 +19,6 @@ import java.awt.event.ActionEvent;
 import java.io.File;
 import java.util.Collections;
 import java.util.List;
-
-import static org.globsframework.model.FieldValue.value;
 
 public class ImportFileAction extends AbstractAction {
 
@@ -108,26 +104,20 @@ public class ImportFileAction extends AbstractAction {
       this.directory = directory;
       this.repository = repository;
       if (!LicenseService.trialExpired(repository) && !User.isDemoUser(repository.get(User.KEY))) {
-      importDialog = new ImportDialog(Lang.get("import.fileSelection.close"), files, defaultAccount,
-                                      directory.get(JFrame.class),
-                                      repository, directory,
-                                      usePreferedPath, isSynchro);
-      if (!files.isEmpty()) {
-        importDialog.acceptFiles();
+        importDialog = new ImportDialog(Lang.get("import.fileSelection.close"), files, defaultAccount,
+                                        directory.get(JFrame.class),
+                                        repository, directory,
+                                        usePreferedPath, isSynchro);
+        if (!files.isEmpty()) {
+          importDialog.acceptFiles();
+        }
+        if (importedAccounts != null && !importedAccounts.isEmpty()) {
+          importDialog.showSynchro(importedAccounts);
+        }
       }
-      if (importedAccounts != null && !importedAccounts.isEmpty()) {
-        importDialog.showSynchro(importedAccounts);
-      }
-    }
     }
 
     public void run() {
-      if (TimeService.reset()) {
-        repository.update(CurrentMonth.KEY,
-                          value(CurrentMonth.CURRENT_MONTH, TimeService.getCurrentMonth()),
-                          value(CurrentMonth.CURRENT_DAY, TimeService.getCurrentDay()));
-
-      }
       if (importDialog != null) {
         SignpostStatus.setCompleted(SignpostStatus.IMPORT_STARTED, repository);
         importDialog.show();

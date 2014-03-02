@@ -30,7 +30,7 @@ public class BudgetWizardTest extends LoggedInFunctionalTestCase {
     categorization.setNewVariable("FNAC", "Equipment", -100.);
     categorization.setNewIncome("Salaire", "Salaire");
     categorization.setNewExtra("Air France", "Trips");
-    categorization.setNewSavings("VIRT ING", "Epargne", "Main accounts", "External account");
+    categorization.setNewSavings("VIRT ING", "Epargne", "Account n. 00001123", "External account");
 
     timeline.selectMonth("2008/07");
     views.selectBudget();
@@ -67,6 +67,7 @@ public class BudgetWizardTest extends LoggedInFunctionalTestCase {
     timeline.selectMonth("2008/08");
     budgetView.extras.createSeries()
       .setName("Trip")
+      .setAccount("Account n. 00001123")
       .setAmount(170)
       .validate();
     budgetView.getSummary().checkEndPosition(1000.00);

@@ -249,14 +249,22 @@ public class SeriesWrapper {
     throw new InvalidState("Unexpected type found for:\n" + GlobPrinter.toString(wrapper));
   }
 
-  public static boolean shouldCreateWrapperForSeries(FieldValues seriesValues) {
+  public static boolean shouldCreateWrapperForSeries(Glob seriesValues, GlobRepository repository) {
     Integer budgetAreaId = seriesValues.get(Series.BUDGET_AREA);
     if (BudgetArea.OTHER.getId().equals(budgetAreaId)) {
       return false;
     }
 
-    if (BudgetArea.SAVINGS.getId().equals(budgetAreaId) &&
-        !Utils.equal(seriesValues.get(Series.TARGET_ACCOUNT), Account.MAIN_SUMMARY_ACCOUNT_ID)) {
+    // && !Utils.equal(seriesValues.get(Series.TARGET_ACCOUNT), Account.MAIN_SUMMARY_ACCOUNT_ID)) {
+    if (BudgetArea.SAVINGS.getId().equals(budgetAreaId)) {
+      Glob target = repository.findLinkTarget(seriesValues, Series.TO_ACCOUNT);
+      if (target != null && target.get(Account.ID) == Account.EXTERNAL_ACCOUNT_ID){
+        return true;
+      }
+      Glob fromAccount = repository.findLinkTarget(seriesValues, Series.FROM_ACCOUNT);
+      if (fromAccount != null && fromAccount.get(Account.ID) == Account.EXTERNAL_ACCOUNT_ID){
+        return true;
+      }
       return false;
     }
 

@@ -127,7 +127,7 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
       .check();
 
     views.selectCategorization();
-    categorization.setNewSavings("Virt Compte Epargne", "Epargne", "Main accounts", "Livret");
+    categorization.setNewSavings("Virt Compte Epargne", "Epargne", "Account n. 00001123", "Livret");
 
     views.selectBudget();
     budgetView.savings.alignAndPropagate("Epargne");
@@ -469,11 +469,17 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
   }
 
   public void testDeactivatingSeriesBudgets() throws Exception {
+    mainAccounts.createNewAccount()
+      .setName("Main")
+      .selectBank("ING Direct")
+      .setPosition(0)
+      .validate();
     views.selectBudget();
     budgetView.income.createSeries()
       .setName("salaire")
       .selectAllMonths()
       .setAmount("1000")
+      .setAccount("Main")
       .validate();
     timeline.selectMonth("2008/08");
     budgetView.income.checkSeries("salaire", 0, 1000);
@@ -570,6 +576,7 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
       .setName("Loto")
       .selectAllMonths()
       .setAmount("15")
+      .setAccount("Account n. 00001123")
       .selectPositiveAmounts()
       .validate();
     views.selectData();

@@ -9,7 +9,10 @@
       <label text="$account.deferred.period.day.end"/>
       <filler fill="horizontal"/>
     </row>
-
+    <row>
+      <label text="$account.deferred.target.account" marginRight="5"/>
+      <comboBox ref="deferredTargetAccount" marginRight="5"/>
+    </row>
     <row>
       <label text="$account.deferred.debit.day" marginRight="5"/>
       <comboBox ref="deferredDebitDay" marginRight="5"/>

@@ -687,4 +687,10 @@ public class SeriesChartsPanel implements GlobSelectionListener {
       chart.clear();
     }
   }
+
+//  Glob series = repository.get(Key.create(Series.TYPE, seriesId));
+//  if (SeriesWrapper.shouldCreateWrapperForSeries(series, repository)) {
+//    if (budgetAreas.contains(BudgetArea.get(series.get(Series.BUDGET_AREA)))
+//        && SeriesWrapper.shouldCreateWrapperForSeries(series, repository)) {
+
 }

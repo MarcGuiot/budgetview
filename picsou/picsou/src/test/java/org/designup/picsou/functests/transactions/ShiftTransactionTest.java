@@ -275,7 +275,7 @@ public class ShiftTransactionTest extends LoggedInFunctionalTestCase {
 
     budgetView.savings.createSeries()
       .setName("Epargne")
-      .setFromAccount("Main accounts")
+      .setFromAccount("Account n. 00001123")
       .setToAccount("Epargne")
       .validate();
 

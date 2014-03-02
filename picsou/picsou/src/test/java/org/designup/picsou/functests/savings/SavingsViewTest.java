@@ -24,7 +24,7 @@ public class SavingsViewTest extends LoggedInFunctionalTestCase {
       .setPosition(200)
       .validate();
 
-    categorization.setNewSavings("Virt", "Epargne", "Main accounts", "ING");
+    categorization.setNewSavings("Virt", "Epargne", "Account n. 00000123", "ING");
     views.selectBudget();
     budgetView.savings.alignAndPropagate("Epargne");
 
@@ -54,7 +54,7 @@ public class SavingsViewTest extends LoggedInFunctionalTestCase {
       .setPosition(200)
       .validate();
 
-    categorization.setNewSavings("Virt", "Epargne", "Main accounts", "ING");
+    categorization.setNewSavings("Virt", "Epargne", "Account n. 00000123", "ING");
 
     views.selectBudget();
     budgetView.savings.alignAndPropagate("Epargne");
@@ -106,7 +106,7 @@ public class SavingsViewTest extends LoggedInFunctionalTestCase {
       .setPosition(0)
       .setStartDate("2009/07/02")
       .validate();
-    categorization.setNewSavings("Virt", "Epargne", "Main accounts", "ING");
+    categorization.setNewSavings("Virt", "Epargne", "Account n. 00000123", "ING");
 
     timeline.selectMonth("2009/06");
     savingsView.checkTotalEstimatedPosition("-", "2009/06/30");
@@ -134,7 +134,7 @@ public class SavingsViewTest extends LoggedInFunctionalTestCase {
       .validate();
 
     views.selectCategorization();
-    categorization.setNewSavings("Virt", "Epargne", "Main accounts", "ING");
+    categorization.setNewSavings("Virt", "Epargne", "Account n. 00000123", "ING");
     views.selectBudget();
     budgetView.savings.alignAndPropagate("Epargne");
 
@@ -203,7 +203,7 @@ public class SavingsViewTest extends LoggedInFunctionalTestCase {
       .validate();
 
     views.selectCategorization();
-    categorization.setNewSavings("Virt", "Epargne", "ING", "Main accounts");
+    categorization.setNewSavings("Virt", "Epargne", "ING", "Account n. 00000123");
 
     views.selectBudget();
     budgetView.savings.alignAndPropagate("Epargne");
@@ -224,13 +224,13 @@ public class SavingsViewTest extends LoggedInFunctionalTestCase {
       .initAmountContent()
       .add("11/10/2009", "Planned: Epargne", -200.00, "Epargne", 460.00, 460.00, "ING")
       .add("11/10/2009", "Planned: External", 210.00, "External", 660.00, 660.00, "ING")
-      .add("11/10/2009", "Planned: Epargne", 200.00, "Epargne", 1600.00, "Main accounts")
+      .add("11/10/2009", "Planned: Epargne", 200.00, "Epargne", 1600.00, 1600.00, "Account n. 00000123")
       .add("11/09/2009", "Planned: Epargne", -200.00, "Epargne", 450.00, 450.00, "ING")
       .add("11/09/2009", "Planned: External", 210.00, "External", 650.00, 650.00, "ING")
-      .add("11/09/2009", "Planned: Epargne", 200.00, "Epargne", 1400.00, "Main accounts")
+      .add("11/09/2009", "Planned: Epargne", 200.00, "Epargne", 1400.00, 1400.00, "Account n. 00000123")
       .add("11/08/2009", "Planned: Epargne", -200.00, "Epargne", 440.00, 440.00, "ING")
       .add("11/08/2009", "Planned: External", 210.00, "External", 640.00, 640.00, "ING")
-      .add("11/08/2009", "Planned: Epargne", 200.00, "Epargne", 1200.00, "Main accounts")
+      .add("11/08/2009", "Planned: Epargne", 200.00, "Epargne", 1200.00, 1200.00, "Account n. 00000123")
       .add("15/07/2009", "EXTERNAL", 210.00, "External", 430.00, 430.00, "ING")
       .add("10/07/2009", "VIRT", -200.00, "Epargne", 220.00, 220.00, "ING")
       .add("10/07/2009", "VIRT", 200.00, "Epargne", 1000.00, 1000.00, "Account n. 00000123")
@@ -253,12 +253,12 @@ public class SavingsViewTest extends LoggedInFunctionalTestCase {
       .initAmountContent()
       .add("11/10/2009", "Planned: Epargne", -200.00, "Epargne", 460.00, 460.00, "ING")
       .add("11/10/2009", "Planned: External", 210.00, "External", 660.00, 660.00, "ING")
-      .add("11/10/2009", "Planned: Epargne", 200.00, "Epargne", 1590.00, "Main accounts")
+      .add("11/10/2009", "Planned: Epargne", 200.00, "Epargne", 1590.00, 1590.00, "Account n. 00000123")
       .add("11/09/2009", "Planned: Epargne", -200.00, "Epargne", 450.00, 450.00, "ING")
       .add("11/09/2009", "Planned: External", 210.00, "External", 650.00, 650.00, "ING")
-      .add("11/09/2009", "Planned: Epargne", 200.00, "Epargne", 1390.00, "Main accounts")
+      .add("11/09/2009", "Planned: Epargne", 200.00, "Epargne", 1390.00, 1390.00, "Account n. 00000123")
       .add("25/08/2009", "Planned: Epargne", -200.00, "Epargne", 440.00, 440.00, "ING")
-      .add("25/08/2009", "Planned: Epargne", 200.00, "Epargne", 1190.00, "Main accounts")
+      .add("25/08/2009", "Planned: Epargne", 200.00, "Epargne", 1190.00, 1190.00, "Account n. 00000123")
       .add("25/08/2009", "EXTERNAL", 210.00, "External", 640.00, 640.00, "ING")
       .add("25/08/2009", "ED", -10.00, "To categorize", 990.00, 990.00, "Account n. 00000123")
       .add("15/07/2009", "EXTERNAL", 210.00, "External", 430.00, 430.00, "ING")

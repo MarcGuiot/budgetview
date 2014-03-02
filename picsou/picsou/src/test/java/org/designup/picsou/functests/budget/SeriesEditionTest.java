@@ -872,13 +872,14 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
   }
 
   public void testUnknownPeriodicity() throws Exception {
+    fail("Je ne suis pas d'accord avec le test et ce n'est pas conforme a la version precedente : alors pourquoi le test passe?");
     OfxBuilder.init(this)
       .addTransaction("2008/06/29", -100.00, "Virement")
       .load();
 
     categorization.selectTableRow(0);
     categorization.selectSavings()
-      .selectAndCreateSavingsSeries("Epargne", "Main accounts");
+      .selectAndCreateSavingsSeries("Epargne", "Account n. 00001123");
 
     budgetView.savings.align("Epargne");
 
@@ -912,7 +913,7 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
 
     categorization.selectTableRow(0);
     categorization.selectSavings()
-      .selectAndCreateSavingsSeries("Epargne", "Main accounts");
+      .selectAndCreateSavingsSeries("Epargne", "Account n. 00001123");
 
     categorization.selectSavings()
       .editSeries("Epargne")
@@ -937,7 +938,7 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
 
     categorization.selectTableRow(0);
     categorization.selectSavings()
-      .selectAndCreateSavingsSeries("Epargne", "Main accounts");
+      .selectAndCreateSavingsSeries("Epargne", "Account n. 00001123");
     categorization.selectSavings().editSeries("Epargne")
       .setRepeatIrregular()
       .setEndDate(200807)
@@ -963,7 +964,7 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
       .load();
     categorization.selectTransactions("Virement");
     categorization.selectSavings()
-      .selectAndCreateSavingsSeries("Epargne", "Main accounts");
+      .selectAndCreateSavingsSeries("Epargne", "Account n. 00001123");
 
     categorization.selectSavings().editSeries("Epargne")
       .setRepeatEveryTwoMonths()
@@ -997,7 +998,7 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
       .load();
     categorization.selectTransactions("Virement");
     categorization.selectSavings()
-      .selectAndCreateSavingsSeries("Epargne", "Main accounts");
+      .selectAndCreateSavingsSeries("Epargne", "Account n. 00001123");
 
     operations.openPreferences().setFutureMonthsCount(1).validate();
     categorization.selectSavings().editSeries("Epargne")
@@ -1370,7 +1371,7 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
       .validate();
     categorization.selectTransaction("salaire")
       .selectUncategorized().setUncategorized();
-    categorization.setNewSavings("salaire", "complement", "external", "Main accounts");
+    categorization.setNewSavings("salaire", "complement", "external", "Account n. 00001123");
     budgetView.savings.editSeries("complement")
       .checkBudgetAreaIsHidden()
       .validate();
@@ -1425,6 +1426,16 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
 
     transactions.initContent()  // should be empty
       .check();
+
+  }
+
+
+  public void testUpdateTargetAccountIsNotPossibleWithOperation() throws Exception {
+    fail("MG verifier qu'on ne peut pas changer le compte si il y a deja des operations associée");
+  }
+
+  public void testClosedAccount() throws Exception {
+    fail("MG : if the account is closed we must update the end date? (or not create planned operation)");
 
   }
 }

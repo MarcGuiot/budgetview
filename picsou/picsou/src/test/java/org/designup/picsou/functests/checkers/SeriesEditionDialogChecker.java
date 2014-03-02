@@ -531,6 +531,11 @@ public class SeriesEditionDialogChecker extends SeriesAmountEditionChecker<Serie
     return this;
   }
 
+  public SeriesEditionDialogChecker setAccount(String account) {
+    dialog.getComboBox("targetAccount").select(account);
+    return this;
+  }
+
   public SeriesEditionDialogChecker checkFromContentEquals(String... name) {
     assertTrue(dialog.getComboBox("fromAccount").contentEquals(name));
     return this;

@@ -23,7 +23,7 @@ public class SavingsSeriesEditionTest extends LoggedInFunctionalTestCase {
     views.selectBudget();
     budgetView.savings
       .createSeries()
-      .setFromAccount("Main accounts")
+      .setFromAccount("Account n. 00001123")
       .setToAccount("Epargne LCL")
       .setName("Epargne")
       .validate();
@@ -31,13 +31,13 @@ public class SavingsSeriesEditionTest extends LoggedInFunctionalTestCase {
     budgetView.savings
       .editSeries("Epargne")
       .checkToAccount("Epargne LCL")
-      .setToAccount("Main accounts")
+      .setToAccount("Account n. 00001123")
       .setFromAccount("Epargne LCL")
       .checkAmountTogglesAreNotVisible()
       .selectMonth(200808)
       .setAmount("100")
       .checkAmount("100")
-      .setFromAccount("Main accounts")
+      .setFromAccount("Account n. 00001123")
       .setToAccount("Epargne LCL")
       .checkAmount("100")
       .validate();
@@ -67,7 +67,7 @@ public class SavingsSeriesEditionTest extends LoggedInFunctionalTestCase {
     budgetView.savings
       .createSeries()
       .setName("Epargne")
-      .setFromAccount("Main accounts")
+      .setFromAccount("Account n. 00001123")
       .setToAccount("Epargne LCL")
       .checkOkEnabled(true)
       .validate();
@@ -75,7 +75,7 @@ public class SavingsSeriesEditionTest extends LoggedInFunctionalTestCase {
     budgetView.savings
       .createSeries()
       .setName("Veranda")
-      .setToAccount("Main accounts")
+      .setToAccount("Account n. 00001123")
       .setFromAccount("Epargne CA")
       .setRepeatSingleMonth()
       .setSingleMonthDate(200810)
@@ -88,12 +88,12 @@ public class SavingsSeriesEditionTest extends LoggedInFunctionalTestCase {
       .checkRepeatsASingleMonth()
       .checkSingleMonthDate("Oct 2008")
       .checkFromAccount("Epargne CA")
-      .checkToAccount("Main accounts")
+      .checkToAccount("Account n. 00001123")
       .checkRepeatsASingleMonth()
       .cancel();
 
     budgetView.savings.editSeries("Epargne")
-      .checkFromAccount("Main accounts")
+      .checkFromAccount("Account n. 00001123")
       .checkToAccount("Epargne LCL")
       .cancel();
   }
@@ -116,7 +116,7 @@ public class SavingsSeriesEditionTest extends LoggedInFunctionalTestCase {
     budgetView.savings
       .createSeries()
       .setName("Epargne")
-      .setFromAccount("Main accounts")
+      .setFromAccount("Account n. 00001123")
       .setToAccount("Epargne LCL")
       .validate();
 
@@ -148,12 +148,12 @@ public class SavingsSeriesEditionTest extends LoggedInFunctionalTestCase {
     views.selectBudget();
     budgetView.savings.createSeries()
       .setName("CA")
-      .setFromAccount("Main accounts")
+      .setFromAccount("Account n. 00001123")
       .setToAccount("Account n. 111")
       .validate();
 
     budgetView.savings
-      .checkSeriesPresent("CA", "From Account n. 111", "To Account n. 111");
+      .checkSeriesPresent("CA");
   }
 
   public void testUseSingleMonthCreateSeriesBudget() throws Exception {
@@ -173,7 +173,7 @@ public class SavingsSeriesEditionTest extends LoggedInFunctionalTestCase {
 
     budgetView.savings
       .createSeries()
-      .setFromAccount("Main accounts")
+      .setFromAccount("Account n. 00001123")
       .setToAccount("Epargne LCL")
       .setName("Epargne")
       .setRepeatEverySixMonths()
@@ -201,7 +201,7 @@ public class SavingsSeriesEditionTest extends LoggedInFunctionalTestCase {
     views.selectBudget();
     budgetView.savings.createSeries()
       .setName("CA")
-      .setFromAccount("Main accounts")
+      .setFromAccount("Account n. 00001123")
       .setToAccount("Account n. 111")
       .validate();
     views.selectCategorization();
@@ -214,10 +214,10 @@ public class SavingsSeriesEditionTest extends LoggedInFunctionalTestCase {
     views.selectBudget();
     budgetView.savings.checkSeriesPresent("Other");
 
-    SeriesEditionDialogChecker firstSeriesChecker =
-      budgetView.savings.editSeries("Other");
-    firstSeriesChecker.selectAllMonths().setAmount(50).validate();
-    savingsView.editSeries("Account n. 111", "CA")
+    budgetView.savings.editSeries("Other")
+      .selectAllMonths().setAmount(50).validate();
+    fail("Pourquoi il y a avait CA et non Other?");
+    savingsView.editSeries("Account n. 111", "Other")
       .checkName("Other")
       .validate();
     savingsView.returnToBudgetView();
@@ -248,7 +248,7 @@ public class SavingsSeriesEditionTest extends LoggedInFunctionalTestCase {
       .checkToAccount("")
       .checkSavingsMessageVisibility(true)
       .checkOkEnabled(false)
-      .setFromAccount("Main accounts")
+      .setFromAccount("Account n. 00001123")
       .setToAccount("External account")
       .checkOkEnabled(true)
       .validate();

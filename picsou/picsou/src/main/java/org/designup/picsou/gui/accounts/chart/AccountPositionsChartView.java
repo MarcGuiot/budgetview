@@ -28,7 +28,7 @@ public class AccountPositionsChartView extends PositionsChartView {
 
   public AccountPositionsChartView(Integer accountId, String componentName, HistoChartRange range,
                                    final GlobRepository repository, final Directory directory) {
-    super(range, new HistoChartConfig(false, false, false, false, false, false, false, false, true, true),
+    super(range, new HistoChartConfig(false, false, false, false, false, false, false, true, true, true),
           componentName, repository, directory);
     this.accountId = accountId;
 

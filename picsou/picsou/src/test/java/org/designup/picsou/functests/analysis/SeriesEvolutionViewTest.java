@@ -38,6 +38,7 @@ public class SeriesEvolutionViewTest extends LoggedInFunctionalTestCase {
     timeline.selectMonth("2008/11");
     budgetView.extras.createSeries()
       .setName("Lottery")
+      .setAccount("Account n. 00000123")
       .selectPositiveAmounts()
       .setAmount(100.00)
       .validate();
@@ -45,6 +46,7 @@ public class SeriesEvolutionViewTest extends LoggedInFunctionalTestCase {
     timeline.selectMonth("2008/12");
     budgetView.extras.createSeries()
       .setName("Christmas")
+      .setAccount("Account n. 00000123")
       .setAmount(300.00)
       .validate();
 
@@ -762,6 +764,7 @@ public class SeriesEvolutionViewTest extends LoggedInFunctionalTestCase {
       .addTransaction("2008/07/12", +95.00, "Virt livret")
       .loadInAccount("Livret");
 
+    budgetView.savings.createSavingSeries("To account Livret", "Account n. 00001123", "Livret");
     categorization.setSavings("Virement", "To account Livret");
     categorization.setSavings("Virt livret", "To account Livret");
 
@@ -777,7 +780,7 @@ public class SeriesEvolutionViewTest extends LoggedInFunctionalTestCase {
       .add("Variable", "", "", "", "", "", "", "", "")
       .add("Extras", "", "", "", "", "", "", "", "")
       .add("Savings", "", "95.00", "", "", "", "", "", "")
-      .add("To account Livret", "", "95.00", "", "", "", "", "", "")
+//      .add("To account Livret", "", "95.00", "", "", "", "", "", "")
       .check();
   }
 
@@ -876,7 +879,7 @@ public class SeriesEvolutionViewTest extends LoggedInFunctionalTestCase {
       .setName("ING")
       .selectBank("ING Direct")
       .validate();
-    categorization.setNewSavings("Virt sur ING", "Virt vers livret", "ING", "Main accounts");
+    categorization.setNewSavings("Virt sur ING", "Virt vers livret", "ING", "Account n. 00000123");
 
     views.selectCategorization();
     categorization.setNewIncome("WorldCo", "John's");
@@ -884,7 +887,7 @@ public class SeriesEvolutionViewTest extends LoggedInFunctionalTestCase {
     categorization.setNewRecurring("Free", "Internet");
     categorization.setNewRecurring("Orange", "Mobile");
     categorization.setNewVariable("Auchan", "Groceries", -450.00);
-    categorization.setNewSavings("Virt vers ING", "Virt de livret", "Main accounts", "ING");
+    categorization.setNewSavings("Virt vers ING", "Virt de livret", "Account n. 00000123", "ING");
 
     seriesAnalysis.toggleTable();
 

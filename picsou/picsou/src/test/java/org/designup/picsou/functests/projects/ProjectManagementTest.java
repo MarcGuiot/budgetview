@@ -37,6 +37,7 @@ public class ProjectManagementTest extends LoggedInFunctionalTestCase {
       .checkMonth("Jan 2011")
       .setAmount(-200.00)
       .validate();
+
     currentProject
       .checkProjectGauge(0.00, -200.00)
       .checkItemCount(1)

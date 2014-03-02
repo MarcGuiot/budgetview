@@ -45,7 +45,7 @@ public class SeriesEvolutionStackChartTest extends LoggedInFunctionalTestCase {
     categorization.setNewRecurring("Free", "Internet");
     categorization.setNewRecurring("Orange", "Mobile");
     categorization.setNewVariable("Auchan", "Groceries", -450.);
-    categorization.setNewSavings("Virt Epargne", "Virt Livret", "Main accounts", "Livret");
+    categorization.setNewSavings("Virt Epargne", "Virt Livret", "Account n. 00001123", "Livret");
 
     timeline.selectMonth("2009/06");
     views.selectBudget();
@@ -63,9 +63,9 @@ public class SeriesEvolutionStackChartTest extends LoggedInFunctionalTestCase {
       .checkValue("Savings", 100.00);
     seriesAnalysis.checkBalanceChartLabel("Main accounts balance");
     seriesAnalysis.seriesChart.getSingleDataset()
-      .checkSize(4)
+      .checkSize(3)
       .checkValue("Groceries", 450.00)
-      .checkValue("Virt Livret", 100.00)
+//      .checkValue("Virt Livret", 100.00)
       .checkValue("Mobile", 50.00)
       .checkValue("Internet", 30.00);
     seriesAnalysis.checkSeriesChartLabel("Main series");
@@ -73,9 +73,9 @@ public class SeriesEvolutionStackChartTest extends LoggedInFunctionalTestCase {
     timeline.selectMonth("2009/07");
     checkStandardCaseMainBalance();
     seriesAnalysis.seriesChart.getSingleDataset()
-      .checkSize(4)
+      .checkSize(3)
       .checkValue("Groceries", 450.00)
-      .checkValue("Virt Livret", 100.00)
+//      .checkValue("Virt Livret", 100.00)
       .checkValue("Mobile", 60.00)
       .checkValue("Internet", 30.00);
     seriesAnalysis.checkSeriesChartLabel("Main series");
@@ -83,9 +83,9 @@ public class SeriesEvolutionStackChartTest extends LoggedInFunctionalTestCase {
     seriesAnalysis.select("Balance");
     checkStandardCaseMainBalance();
     seriesAnalysis.seriesChart.getSingleDataset()
-      .checkSize(4)
+      .checkSize(3)
       .checkValue("Groceries", 450.00)
-      .checkValue("Virt Livret", 100.00)
+//      .checkValue("Virt Livret", 100.00)
       .checkValue("Mobile", 60.00)
       .checkValue("Internet", 30.00);
     seriesAnalysis.checkSeriesChartLabel("Main series");
@@ -93,9 +93,9 @@ public class SeriesEvolutionStackChartTest extends LoggedInFunctionalTestCase {
     seriesAnalysis.select("Main accounts");
     checkStandardCaseMainBalance();
     seriesAnalysis.seriesChart.getSingleDataset()
-      .checkSize(4)
+      .checkSize(3)
       .checkValue("Groceries", 450.00)
-      .checkValue("Virt Livret", 100.00)
+//      .checkValue("Virt Livret", 100.00)
       .checkValue("Mobile", 60.00)
       .checkValue("Internet", 30.00);
     seriesAnalysis.checkSeriesChartLabel("Main series");
@@ -195,7 +195,7 @@ public class SeriesEvolutionStackChartTest extends LoggedInFunctionalTestCase {
     categorization.setNewRecurring("Free", "Internet");
     categorization.setNewRecurring("Orange", "Mobile");
     categorization.setNewVariable("Auchan", "Groceries", -600.00);
-    categorization.setNewSavings("Virt Epargne", "Virt Livret", "Main accounts", "Livret");
+    categorization.setNewSavings("Virt Epargne", "Virt Livret", "Account n. 00001123", "Livret");
 
     timeline.selectMonths("2009/06", "2009/07");
 
@@ -692,12 +692,13 @@ public class SeriesEvolutionStackChartTest extends LoggedInFunctionalTestCase {
     categorization.setNewRecurring("Free", "Internet");
     categorization.setNewRecurring("Orange", "Mobile");
     categorization.setNewVariable("Auchan", "Groceries", -450.00);
-    categorization.setNewSavings("Virt Epargne", "Virt Livret", "Main accounts", "Livret");
+    categorization.setNewSavings("Virt Epargne", "Virt Livret", "Account n. 00001123", "Livret");
     categorization.showUncategorizedTransactionsOnly();
 
     timeline.selectMonth(200907);
 
     // ---- BudgetArea ----
+
 
     views.selectAnalysis();
     seriesAnalysis.balanceChart.checkRightClickOptions("Income",
@@ -857,6 +858,8 @@ public class SeriesEvolutionStackChartTest extends LoggedInFunctionalTestCase {
       .setPosition(10.00)
       .validate();
 
+    budgetView.savings.createSavingSeries("To account Livret", "Account n. 00001123", "Livret");
+
     OfxBuilder.init(this)
       .addBankAccount("333", 20, "2008/07/12")
       .addTransaction("2008/07/12", +95.00, "Virt livret")
@@ -866,10 +869,10 @@ public class SeriesEvolutionStackChartTest extends LoggedInFunctionalTestCase {
     categorization.setSavings("Virt livret", "To account Livret");
 
     seriesAnalysis.seriesChart.getSingleDataset()
-      .checkSize(1)
-      .checkValue("To account Livret", 95.00);
+      .checkSize(0);
+      //.checkValue("To account Livret", 95.00);
 
-    seriesAnalysis.seriesChart.select("To account Livret");
-    seriesAnalysis.checkSelected("To account Livret");
+//    seriesAnalysis.seriesChart.select("To account Livret");
+//    seriesAnalysis.checkSelected("To account Livret");
   }
 }

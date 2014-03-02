@@ -243,7 +243,7 @@ public class TransactionCreationTest extends LoggedInFunctionalTestCase {
     budgetView.savings
       .createSeries()
       .setName("virement manuel vers livret A")
-      .setFromAccount("Main account")
+      .setFromAccount("Cash")
       .setToAccount("Livret A")
       .validate();
 
@@ -476,12 +476,12 @@ public class TransactionCreationTest extends LoggedInFunctionalTestCase {
 
     views.selectData();
     transactions.showPlannedTransactions().initAmountContent()
-      .add("04/03/2013", "Planned: Courses", -30.00, "Courses", 870.00, "Main accounts")
-      .add("04/02/2013", "Planned: Courses", -30.00, "Courses", 900.00, "Main accounts")
-      .add("10/01/2013", "TRANSACTION 3", -10.00, "Courses", 970.00, 930.00, "Main account")
-      .add("04/01/2013", "Planned: Courses", -20.00, "Courses", 940.00, "Main accounts")
-      .add("10/12/2012", "TRANSACTION 2", -10.00, "Courses", 980.00, 960.00, "Main account")
-      .add("04/12/2012", "Planned: Courses", -20.00, "Courses", 970.00, "Main accounts")
+      .add("04/03/2013", "Planned: Courses", -30.00, "Courses", 870.00, 870.00, "Main account")
+      .add("04/02/2013", "Planned: Courses", -30.00, "Courses", 900.00, 900.00, "Main account")
+      .add("10/01/2013", "TRANSACTION 3", -10.00, "Courses", 930.00, 930.00, "Main account")
+      .add("04/01/2013", "Planned: Courses", -20.00, "Courses", 940.00, 940.00, "Main account")
+      .add("10/12/2012", "TRANSACTION 2", -10.00, "Courses", 960.00, 960.00, "Main account")
+      .add("04/12/2012", "Planned: Courses", -20.00, "Courses", 970.00, 970.00, "Main account")
       .add("03/11/2012", "TRANSACTION 4", -20.00, "Courses", 990.00, 990.00, "Main account")
       .add("02/11/2012", "TRANSACTION 1", -10.00, "Courses", 1010.00, 1010.00, "Main account")
       .check();
@@ -637,7 +637,7 @@ public class TransactionCreationTest extends LoggedInFunctionalTestCase {
       .addTransaction("2008/06/27", -50, "Auchan 1")
       .addBankAccount("1234", 1000, "2008/06/30")
       .addTransaction("2008/06/28", -550, "Prelevement")
-      .loadDeferredCard("Card n. 1111");
+      .loadDeferredCard("Card n. 1111", "Account n. 1234");
 
     mainAccounts.edit("Card n. 1111").setDeferred(27, 28, 0).validate();
 
@@ -683,11 +683,101 @@ public class TransactionCreationTest extends LoggedInFunctionalTestCase {
 
     views.selectData();
     transactions.showPlannedTransactions().initAmountContent()
-      .add("31/08/2008", "BRICO", -10.00, "To categorize", -10.00, -25.00, "Account n. 00001123")
-      .add("19/08/2008", "Planned: course", -15.00, "course", -15.00, "Main accounts")
+      .add("31/08/2008", "BRICO", -10.00, "To categorize", -25.00, -25.00, "Account n. 00001123")
+      .add("19/08/2008", "Planned: course", -15.00, "course", -15.00, -15.00, "Account n. 00001123")
       .add("15/08/2008", "MCDO", -15.00, "course", 0.00, 0.00, "Account n. 00001123")
       .check();
-    mainAccounts.checkPosition("Account n. 00001123", -10);
+    mainAccounts.checkPosition("Account n. 00001123", 0);
     mainAccounts.checkSummary(0, "2008/08/15");
+  }
+
+  public void testUpdateAccountPositionInDifferentImportedAccountWithPlanned() throws Exception {
+    OfxBuilder.init(this)
+      .addTransaction("2008/06/16", -30., "Burger King")
+      .addTransaction("2008/07/18", -30., "Burger King")
+      .addTransaction("2008/08/15", -15, "McDo")
+      .load();
+
+    views.selectCategorization();
+    categorization
+      .setNewRecurring("Burger King", "course")
+      .setRecurring("McDo", "course");
+
+    mainAccounts.createNewAccount()
+      .setName("Main")
+      .selectBank("CIC")
+      .setPosition(1000.00)
+      .validate();
+
+    transactionCreation.show()
+      .selectAccount("Main")
+      .create(15, "Brico", -10)
+      .createToBeReconciled(31, "Brico", -10);
+
+    views.selectData();
+    transactions.showPlannedTransactions().initAmountContent()
+      .add("31/08/2008", "BRICO", -10.00, "To categorize", 980.00, 965.00, "Main")
+      .add("19/08/2008", "Planned: course", -15.00, "course", -15.00, 975.00, "Account n. 00001123")
+      .add("15/08/2008", "BRICO", -10.00, "To categorize", 990.00, 990.00, "Main")
+      .add("15/08/2008", "MCDO", -15.00, "course", 0.00, 1000.00, "Account n. 00001123")
+      .check();
+
+    mainAccounts.checkPosition("Account n. 00001123", 0);
+    mainAccounts.checkPosition("Main", 990);
+    mainAccounts.checkSummary(990, "2008/08/15");
+  }
+
+  public void testDifferentDateForEachAccount() throws Exception {
+    OfxBuilder.init(this)
+      .addTransaction("2008/08/15", -15, "Auchan")
+      .load();
+
+    mainAccounts.createNewAccount()
+      .setName("Main")
+      .selectBank("CIC")
+      .setPosition(1000.00)
+      .validate();
+
+    transactionCreation.show()
+      .shouldUpdatePosition()
+      .selectAccount("Main")
+      .create(10, "manual op", -50.00)
+      .create(28, "manual op", -50.00)
+      .create(31, "manual op", -50.00);
+
+    mainAccounts.checkSummary(850, "2008/08/31");
+
+    transactionCreation
+      .selectAccount(OfxBuilder.DEFAULT_ACCOUNT_NAME)
+      .createToBeReconciled(16, "Auchan", -50.00);
+
+    mainAccounts.checkSummary(850, "2008/08/31");
+
+    views.selectCategorization();
+    categorization
+      .setNewRecurring("AUCHAN", "bricolage", -300.);
+    categorization
+      .selectTransaction("[R] AUCHAN")
+      .selectRecurring().selectSeries("bricolage");
+
+    categorization
+      .setNewRecurring("MANUAL OP", "course", -200.);
+
+    views.selectData();
+    transactions.showPlannedTransactions().initAmountContent()
+      .add("31/08/2008", "Planned: course", -50.00, "course", 800.00, 515.00, "Main")
+      .add("31/08/2008", "Planned: bricolage", -235.00, "bricolage", -285.0, 565., "Account n. 00001123")
+      .add("31/08/2008", "MANUAL OP", -50.00, "course", 850.00, 800.00, "Main")
+      .add("28/08/2008", "MANUAL OP", -50.00, "course", 900.00, 850.00, "Main")
+      .add("16/08/2008", "AUCHAN", -50.00, "bricolage", -50.00, 900.00, "Account n. 00001123")
+      .add("15/08/2008", "AUCHAN", -15.00, "bricolage", 0.00, 950.00, "Account n. 00001123")
+      .add("10/08/2008", "MANUAL OP", -50.00, "course", 950.00, 965.00, "Main")
+      .check();
+
+    mainAccounts.checkPosition("Account n. 00001123", 0.);
+    mainAccounts.checkAccountUpdateDate("Account n. 00001123", "2008/08/15");
+    mainAccounts.checkPosition("Main", 850);
+    mainAccounts.checkAccountUpdateDate("Main", "2008/08/31");
+    mainAccounts.checkSummary(850, "2008/08/31");
   }
 }

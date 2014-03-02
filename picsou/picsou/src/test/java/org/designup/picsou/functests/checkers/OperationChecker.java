@@ -72,9 +72,9 @@ public class OperationChecker {
       .completeImport();
   }
 
-  public void importOfxWithDeferred(String fileName, String cardAccountName) {
+  public void importOfxWithDeferred(String fileName, String cardAccountName, String targetAccount) {
     openImportDialog()
-      .importDeferred(cardAccountName, fileName, true);
+      .importDeferred(cardAccountName, fileName, true, targetAccount);
   }
 
   public void importWithNewAccount(String fileName, String accountName) {
@@ -90,12 +90,13 @@ public class OperationChecker {
     importDialog.completeLastStep();
   }
 
-  public void importQifFileWithDeferred(String fileName, String bank, Double position) {
-    importQifFileWithDeferred(fileName, bank, position, 25, 28, 0);
+  public void importQifFileWithDeferred(String fileName, String bank, Double position, String targetAccount) {
+    importQifFileWithDeferred(fileName, bank, position, 25, 28, 0, targetAccount);
   }
 
   public void importQifFileWithDeferred(String fileName, String bank, Double position,
-                                           final int deferredDayPeriod, final int deferredDayPrelevement, final int deferredMonthShift) {
+                                           final int deferredDayPeriod, final int deferredDayPrelevement, final int deferredMonthShift,
+                                           String targetAccount) {
     ImportDialogChecker importDialog = openImportDialog()
       .setFilePath(fileName)
       .acceptFile();
@@ -108,7 +109,7 @@ public class OperationChecker {
     accountEditionChecker
       .setAccountNumber("1111")
       .setAccountName("card 1111")
-      .setDeferredAccount(deferredDayPeriod, deferredDayPrelevement, deferredMonthShift);
+      .setDeferredAccount(deferredDayPeriod, deferredDayPrelevement, deferredMonthShift, targetAccount);
 
     if (position != null) {
       importDialog.setPosition(position);

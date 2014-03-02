@@ -1,5 +1,6 @@
 package org.designup.picsou.functests.checkers;
 
+import com.sun.org.apache.xerces.internal.impl.dv.XSSimpleType;
 import junit.framework.Assert;
 import org.designup.picsou.functests.checkers.components.DeltaGaugeChecker;
 import org.designup.picsou.functests.checkers.components.GaugeChecker;
@@ -583,6 +584,11 @@ public class BudgetViewChecker extends ViewChecker {
 
     private Button getSpecificActionButton() {
       return getPanel().getButton("specificAction");
+    }
+
+    public SavingsBudgetAreaChecker createSavingSeries(String name, String fromAccount, String toAccount) {
+      createSeries().setName(name).setToAccount(toAccount).setFromAccount(fromAccount).validate();
+      return this;
     }
   }
 
