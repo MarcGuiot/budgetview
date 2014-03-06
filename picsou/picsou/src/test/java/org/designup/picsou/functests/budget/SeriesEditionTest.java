@@ -1429,12 +1429,17 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
 
   }
 
-
   public void testUpdateTargetAccountIsNotPossibleWithOperation() throws Exception {
-    fail("MG verifier qu'on ne peut pas changer le compte si il y a deja des operations associée");
+    OfxBuilder.init(this)
+      .addTransaction("2008/01/01", -29.00, "Auchan") // pour creer des mois dans le passe
+      .load();
+    categorization.setNewVariable("Auchan", "Courses");
+
+    budgetView.variable.editSeries("Courses").checkAcountCanNotBeChanged();
   }
 
   public void testClosedAccount() throws Exception {
+
     fail("MG : if the account is closed we must update the end date? (or not create planned operation)");
 
   }

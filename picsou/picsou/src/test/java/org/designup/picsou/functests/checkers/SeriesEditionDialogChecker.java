@@ -770,4 +770,9 @@ public class SeriesEditionDialogChecker extends SeriesAmountEditionChecker<Serie
     assertThat(dialog.getComboBox("targetAccount").selectionEquals(accountName));
     return this;
   }
+
+  public SeriesEditionDialogChecker checkAcountCanNotBeChanged() {
+    assertFalse(dialog.getComboBox("targetAccount").isEnabled());
+    return this;
+  }
 }

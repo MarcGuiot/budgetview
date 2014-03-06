@@ -618,6 +618,7 @@ public class SeriesEditionDialog {
     amountEditionPanel.setCurrentSeries(currentSeries.getKey());
     selectionService.select(currentSeries);
     updateMonthSelectionCard();
+    targetAccount.setEnabled(selectedTransactions.isEmpty());
 
     tabs.select(0);
 
