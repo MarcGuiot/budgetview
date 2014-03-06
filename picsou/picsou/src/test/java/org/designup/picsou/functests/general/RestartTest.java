@@ -229,10 +229,10 @@ public class RestartTest extends LoggedInFunctionalTestCase {
     projectChart.create();
     currentProject
       .setName("MyProject")
+      .setDefaultAccount("Account n. 001111")
       .addExpenseItem(0, "Booking", 200808, -200.00)
       .addExpenseItem(1, "Travel", 200810, -100.00)
       .addExpenseItem(2, "Hotel", 200810, -500.00);
-
     categorization.selectTransaction("RESA")
       .selectExtras().selectSeries("Booking");
 
@@ -246,6 +246,7 @@ public class RestartTest extends LoggedInFunctionalTestCase {
 
     timeline.selectMonth("2008/10");
     budgetView.extras.checkSeries("MyProject", 0, -600.00);
+
     budgetView.getSummary().checkEndPosition(350.00);
 
     restartApplication();

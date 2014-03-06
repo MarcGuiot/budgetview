@@ -98,6 +98,7 @@ public class ProjectItemToSeriesTrigger implements ChangeSetListener {
                         value(Series.GROUP, project.get(Project.SERIES_GROUP)),
                         value(Series.BUDGET_AREA, BudgetArea.EXTRAS.getId()),
                         value(Series.NAME, projectItemValues.get(ProjectItem.LABEL)),
+                        value(Series.TARGET_ACCOUNT, projectItemValues.get(ProjectItem.ACCOUNT)),
                         value(Series.IS_AUTOMATIC, false),
                         value(Series.FIRST_MONTH, firstMonth),
                         value(Series.LAST_MONTH, lastMonth));

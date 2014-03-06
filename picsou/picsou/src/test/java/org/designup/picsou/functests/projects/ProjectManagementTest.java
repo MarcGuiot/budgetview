@@ -26,6 +26,7 @@ public class ProjectManagementTest extends LoggedInFunctionalTestCase {
 
     projectChart.create();
     currentProject
+      .setDefaultAccount("Account n. 001111")
       .checkProjectGaugeHidden()
       .checkProjectButtonsHidden()
       .setName("My project")
@@ -155,6 +156,7 @@ public class ProjectManagementTest extends LoggedInFunctionalTestCase {
     projectChart.create();
     currentProject
       .setName("My project")
+      .setDefaultAccount("Account n. 001111")
       .addExpenseItem(0, "Reservation", 201101, -200.00)
       .addExpenseItem(1, "Hotel", 201101, -300.00)
       .backToList();

@@ -31,6 +31,9 @@ public class ProjectItem {
   @Target(Project.class)
   public static LinkField PROJECT;
 
+  @Target(Account.class)
+  public static LinkField ACCOUNT;
+
   @Target(ProjectItemType.class)
   @DefaultInteger(0)
   public static LinkField ITEM_TYPE;
@@ -160,7 +163,7 @@ public class ProjectItem {
 
   public static class Serializer implements PicsouGlobSerializer {
     public int getWriteVersion() {
-      return 4;
+      return 5;
     }
 
     public boolean shouldBeSaved(GlobRepository repository, FieldValues fieldValues) {
@@ -184,11 +187,15 @@ public class ProjectItem {
       output.writeUtf8String(fieldValues.get(ProjectItem.URL));
       output.writeUtf8String(fieldValues.get(ProjectItem.DESCRIPTION));
       output.writeInteger(fieldValues.get(ProjectItem.SEQUENCE_NUMBER));
+      output.writeInteger(fieldValues.get(ProjectItem.ACCOUNT));
       return serializedByteArrayOutput.toByteArray();
     }
 
     public void deserializeData(int version, FieldSetter fieldSetter, byte[] data, Integer id) {
-      if (version == 4) {
+      if (version == 5) {
+        deserializeDataV5(fieldSetter, data);
+      }
+      else if (version == 4) {
         deserializeDataV4(fieldSetter, data);
       }
       else if (version == 3) {
@@ -200,6 +207,25 @@ public class ProjectItem {
       else if (version == 1) {
         deserializeDataV1(fieldSetter, data);
       }
+    }
+
+    private void deserializeDataV5(FieldSetter fieldSetter, byte[] data) {
+      SerializedInput input = SerializedInputOutputFactory.init(data);
+      fieldSetter.set(ProjectItem.PROJECT, input.readInteger());
+      fieldSetter.set(ProjectItem.ITEM_TYPE, input.readInteger());
+      fieldSetter.set(ProjectItem.LABEL, input.readUtf8String());
+      fieldSetter.set(ProjectItem.FIRST_MONTH, input.readInteger());
+      fieldSetter.set(ProjectItem.USE_SAME_AMOUNTS, input.readBoolean());
+      fieldSetter.set(ProjectItem.PLANNED_AMOUNT, input.readDouble());
+      fieldSetter.set(ProjectItem.MONTH_COUNT, input.readInteger());
+      fieldSetter.set(ProjectItem.ACTIVE, input.readBoolean());
+      fieldSetter.set(ProjectItem.SERIES, input.readInteger());
+      fieldSetter.set(ProjectItem.SUB_SERIES, input.readInteger());
+      fieldSetter.set(ProjectItem.PICTURE, input.readInteger());
+      fieldSetter.set(ProjectItem.URL, input.readUtf8String());
+      fieldSetter.set(ProjectItem.DESCRIPTION, input.readUtf8String());
+      fieldSetter.set(ProjectItem.SEQUENCE_NUMBER, input.readInteger());
+      fieldSetter.set(ProjectItem.ACCOUNT, input.readInteger());
     }
 
     private void deserializeDataV4(FieldSetter fieldSetter, byte[] data) {

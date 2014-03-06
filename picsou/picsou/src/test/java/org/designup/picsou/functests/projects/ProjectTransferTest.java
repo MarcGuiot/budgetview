@@ -152,7 +152,7 @@ public class ProjectTransferTest extends LoggedInFunctionalTestCase {
 
     views.selectBudget();
     budgetView.savings.checkSeriesList("From account Savings account",
-                                       "Project Transfer",
+                                       "Transfer",
                                        "To account Savings account");
   }
 

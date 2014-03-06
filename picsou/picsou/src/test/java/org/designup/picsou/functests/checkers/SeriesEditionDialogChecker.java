@@ -765,4 +765,9 @@ public class SeriesEditionDialogChecker extends SeriesAmountEditionChecker<Serie
     checkNoTipVisible(dialog);
     return this;
   }
+
+  public SeriesEditionDialogChecker checkTargetAccount(String accountName) {
+    assertThat(dialog.getComboBox("targetAccount").selectionEquals(accountName));
+    return this;
+  }
 }

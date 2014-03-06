@@ -42,6 +42,16 @@ public class ProjectEditionChecker extends ViewChecker {
     return this;
   }
 
+  public ProjectEditionChecker setDefaultAccount(String accountName){
+    getPanel().getComboBox("accountSelection").select(accountName);
+    return this;
+  }
+
+  public ProjectEditionChecker checkDefaultAccount(String accountName){
+    assertThat(getPanel().getComboBox("accountSelection").selectionEquals(accountName));
+    return this;
+  }
+
   public ProjectEditionChecker setName(String name) {
     getPanel().getTextBox("projectName").setText(name);
     return this;

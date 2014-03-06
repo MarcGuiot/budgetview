@@ -12,6 +12,7 @@ import org.globsframework.model.FieldSetter;
 import org.globsframework.model.FieldValues;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobRepository;
+import org.globsframework.model.utils.GlobMatcher;
 import org.globsframework.utils.collections.Pair;
 import org.globsframework.utils.exceptions.ItemNotFound;
 import org.globsframework.utils.serialization.SerializedByteArrayOutput;
@@ -592,4 +593,17 @@ public class Account {
       fieldSetter.set(IS_IMPORTED_ACCOUNT, true);
     }
   }
+
+  public static class UserSavingAccountMatcher implements GlobMatcher {
+    public boolean matches(Glob account, GlobRepository repository) {
+      return isUserCreatedSavingsAccount(account);
+    }
+  }
+
+  public static class UserAccountMatcher implements GlobMatcher {
+    public boolean matches(Glob account, GlobRepository repository) {
+      return isUserCreatedAccount(account);
+    }
+  }
+
 }

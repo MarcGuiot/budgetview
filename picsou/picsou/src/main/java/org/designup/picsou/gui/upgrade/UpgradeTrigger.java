@@ -22,7 +22,6 @@ import org.globsframework.model.utils.GlobFunctor;
 import org.globsframework.model.utils.GlobMatchers;
 import org.globsframework.utils.Log;
 import org.globsframework.utils.Utils;
-import org.globsframework.utils.collections.Pair;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
@@ -153,47 +152,51 @@ public class UpgradeTrigger implements ChangeSetListener {
   }
 
   private void updateTargetAccount(GlobRepository repository) {
-    GlobList allSeries = repository.getAll(Series.TYPE, GlobMatchers.not(GlobMatchers.fieldEquals(Series.BUDGET_AREA, BudgetArea.SAVINGS.getId())));
+    GlobList allSeries = repository.getAll(Series.TYPE,
+                                           GlobMatchers.and(
+                                             GlobMatchers.not(GlobMatchers.fieldEquals(Series.BUDGET_AREA, BudgetArea.SAVINGS.getId())),
+                                             GlobMatchers.not(GlobMatchers.fieldEquals(Series.BUDGET_AREA, BudgetArea.OTHER.getId()))));
     GlobIdGenerator idGenerator = repository.getIdGenerator();
     for (Glob series : allSeries) {
-        GlobList operations = repository.findByIndex(Transaction.SERIES_INDEX, Transaction.SERIES, series.get(Series.ID))
-          .getGlobs().filter(GlobMatchers.isFalse(Transaction.PLANNED), repository);
-        Set<Integer> accounts = new HashSet<Integer>();
-        for (Glob glob : operations) {
-          accounts.add(glob.get(Transaction.ACCOUNT));
-        }
-        if (accounts.size() == 0) {
-          // nothing
-        } else if (accounts.size() == 1) {
-          repository.update(series.getKey(), Series.TARGET_ACCOUNT, accounts.iterator().next());
-        }
-        else {
-          Glob groups = repository.create(SeriesGroup.TYPE, value(SeriesGroup.NAME, series.get(Series.NAME)),
-                                          value(SeriesGroup.BUDGET_AREA, series.get(Series.BUDGET_AREA)));
-          boolean first = true;
-          Key key = series.getKey();
-          for (Integer account : accounts) {
-            if (!first) {
-              key = Key.create(Series.TYPE, idGenerator.getNextId(Series.ID, 1));
-              repository.create(key, series.toArray());
-              repository.update(key, value(Series.INITIAL_AMOUNT, 0.));
-            }
-            first = false;
-            repository.update(key,
-                              value(Series.GROUP, groups.get(SeriesGroup.ID)),
-                              value(Series.TARGET_ACCOUNT, account));
-            for (Glob op : operations) {
-              if (op.get(Transaction.ACCOUNT).equals(account)) {
-                repository.update(op.getKey(), value(Transaction.SERIES, key.get(Series.ID)));
-              }
+      GlobList operations = repository.findByIndex(Transaction.SERIES_INDEX, Transaction.SERIES, series.get(Series.ID))
+        .getGlobs().filter(GlobMatchers.isFalse(Transaction.PLANNED), repository);
+      Set<Integer> accounts = new HashSet<Integer>();
+      for (Glob glob : operations) {
+        accounts.add(glob.get(Transaction.ACCOUNT));
+      }
+      if (accounts.size() == 0) {
+        // nothing
+      }
+      else if (accounts.size() == 1) {
+        repository.update(series.getKey(), Series.TARGET_ACCOUNT, accounts.iterator().next());
+      }
+      else {
+        Glob groups = repository.create(SeriesGroup.TYPE, value(SeriesGroup.NAME, series.get(Series.NAME)),
+                                        value(SeriesGroup.BUDGET_AREA, series.get(Series.BUDGET_AREA)));
+        boolean first = true;
+        Key key = series.getKey();
+        for (Integer account : accounts) {
+          if (!first) {
+            key = Key.create(Series.TYPE, idGenerator.getNextId(Series.ID, 1));
+            repository.create(key, series.toArray());
+            repository.update(key, value(Series.INITIAL_AMOUNT, 0.));
+          }
+          first = false;
+          repository.update(key,
+                            value(Series.GROUP, groups.get(SeriesGroup.ID)),
+                            value(Series.TARGET_ACCOUNT, account));
+          for (Glob op : operations) {
+            if (op.get(Transaction.ACCOUNT).equals(account)) {
+              repository.update(op.getKey(), value(Transaction.SERIES, key.get(Series.ID)));
             }
           }
         }
+      }
     }
     GlobList allSavingsSeries = repository.getAll(Series.TYPE, GlobMatchers.fieldEquals(Series.BUDGET_AREA, BudgetArea.SAVINGS.getId()));
     Map<Key, Key> saving = new HashMap<Key, Key>();
     for (Glob series : allSavingsSeries) {
-      if (!saving.containsKey(series.getKey())){
+      if (!saving.containsKey(series.getKey())) {
         saving.put(repository.findLinkTarget(series, Series.MIRROR_SERIES).getKey(), series.getKey());
       }
     }

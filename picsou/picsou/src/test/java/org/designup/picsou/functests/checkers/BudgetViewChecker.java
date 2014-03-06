@@ -341,6 +341,11 @@ public class BudgetViewChecker extends ViewChecker {
       return this;
     }
 
+    public BudgetAreaChecker createSeries(String name, String account) {
+      createSeries().setName(name).setAccount(account).validate();
+      return this;
+    }
+
     public SeriesEditionDialogChecker createSeries() {
       return SeriesEditionDialogChecker.open(getActionPopup().triggerClick(Lang.get("series.add")));
     }
@@ -494,7 +499,7 @@ public class BudgetViewChecker extends ViewChecker {
     }
 
     public void checkCarryOverDisabled(String seriesName) {
-      getSeriesPanel(seriesName).getSeriesButton().checkItemNotPresent("Carry over next month");
+      getSeriesPanel(seriesName).getSeriesButton().checkItemDisable("Carry over next month");
     }
 
     public BudgetAreaChecker checkGroups(String series, String... labels) {
