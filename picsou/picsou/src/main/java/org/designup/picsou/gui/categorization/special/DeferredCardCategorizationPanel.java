@@ -2,10 +2,8 @@ package org.designup.picsou.gui.categorization.special;
 
 import org.designup.picsou.gui.actions.ImportFileAction;
 import org.designup.picsou.gui.categorization.CategorizationView;
-import org.designup.picsou.gui.categorization.components.SeriesChooserComponentFactory;
 import org.designup.picsou.gui.categorization.utils.FilteredRepeats;
 import org.designup.picsou.gui.categorization.utils.SeriesCreationHandler;
-import org.designup.picsou.gui.description.stringifiers.SeriesNameComparator;
 import org.designup.picsou.gui.help.HyperlinkHandler;
 import org.designup.picsou.gui.utils.Matchers;
 import org.designup.picsou.model.BudgetArea;
@@ -13,11 +11,9 @@ import org.designup.picsou.model.Series;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.splits.utils.GuiUtils;
-import org.globsframework.gui.components.GlobRepeat;
-import org.globsframework.gui.components.GlobRepeatListener;
-import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.utils.TypeChangeSetListener;
+import org.globsframework.utils.Functor;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
@@ -25,9 +21,8 @@ import javax.swing.*;
 public class DeferredCardCategorizationPanel implements SpecialCategorizationPanel {
   private SpecialCategorizationPanelController controller;
   private GlobRepository repository;
-  private Directory directory;
   private JEditorPane message;
-  private GlobRepeat repeat;
+  private FilteredRepeats.Handler repeatHandler;
   private String currentMsg = null;
 
   public DeferredCardCategorizationPanel() {
@@ -64,21 +59,10 @@ public class DeferredCardCategorizationPanel implements SpecialCategorizationPan
     message = GuiUtils.createReadOnlyHtmlComponent();
     panelBuilder.add("message", message);
 
-    JRadioButton invisibleRadio = new JRadioButton("noDeferredCard");
-    panelBuilder.add("invisibleToggle", invisibleRadio);
-
-    Matchers.CategorizationFilter filter = Matchers.deferredCardCategorizationFilter();
-    repeat = panelBuilder.addRepeat("seriesRepeat",
-                                    Series.TYPE,
-                                    filter,
-                                    SeriesNameComparator.INSTANCE,
-                                    new SeriesChooserComponentFactory(budgetArea, invisibleRadio,
-                                                                      repository,
-                                                                      directory));
-    filteredRepeats.add(filter, repeat);
-
-    repeat.addListener(new GlobRepeatListener() {
-      public void listChanged(GlobList currentList) {
+    repeatHandler = filteredRepeats.addRepeat(budgetArea, panelBuilder,
+                                              Matchers.deferredCardCategorizationFilter());
+    repeatHandler.addListener(new Functor() {
+      public void run() throws Exception {
         updateDisplay();
       }
     });
@@ -101,7 +85,7 @@ public class DeferredCardCategorizationPanel implements SpecialCategorizationPan
 
   private void updateDisplay() {
     if (repository.contains(Series.TYPE, Matchers.deferredCardSeries())) {
-      if (repeat.isEmpty()) {
+      if (repeatHandler.isEmpty()) {
         updateMessage("categorization.specialCases.deferredCard.invalidSelection");
       }
       else {

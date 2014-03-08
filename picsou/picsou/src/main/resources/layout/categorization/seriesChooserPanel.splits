@@ -21,7 +21,7 @@
     <style selector="footer button" ui="hyperlinkButtonWithoutUnderline" foreground="categorization.footerButton"
            marginTop="5"/>
 
-    <style selector="htmlEditorPane.hints"  weightY="0.1" border="empty(0,10,10,10)" font="-,plain,12"/>
+    <style selector="htmlEditorPane.hints" weightY="0.1" border="empty(0,10,10,10)" font="-,plain,12"/>
 
   </styles>
 
@@ -34,7 +34,6 @@
       </row>
 
       <htmlEditorPane ref="noSeriesMessage" border="empty(10)" hyperlinkListener="hyperlinkHandler"/>
-      <radioButton ref="invisibleToggle" visible="false"/>
       <scrollPane verticalUnitIncrement="15" weightY="100">
         <repeat ref="seriesRepeat" layout="wrappedColumn" margin="10">
           <column name="seriesBlock">
@@ -47,10 +46,6 @@
               <radioButton ref="subSeriesSelector" styleClass="subSeriesSelector"/>
             </repeat>
           </column>
-          <footer>
-            <button action="createSeries" text="$series.create.footer" name="createSeriesFooter"
-                    tooltipText="$series.create.tooltip"/>
-          </footer>
         </repeat>
       </scrollPane>
       <htmlEditorPane ref="categorizationMessage" styleClass="hints"/>

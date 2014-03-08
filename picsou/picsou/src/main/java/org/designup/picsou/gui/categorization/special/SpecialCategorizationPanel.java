@@ -2,7 +2,6 @@ package org.designup.picsou.gui.categorization.special;
 
 import org.designup.picsou.gui.categorization.utils.FilteredRepeats;
 import org.designup.picsou.gui.categorization.utils.SeriesCreationHandler;
-import org.designup.picsou.gui.series.SeriesEditor;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.utils.directory.Directory;
 

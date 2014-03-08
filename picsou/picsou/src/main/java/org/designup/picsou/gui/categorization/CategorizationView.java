@@ -17,7 +17,6 @@ import org.designup.picsou.gui.components.filtering.components.FilterClearingPan
 import org.designup.picsou.gui.components.layoutconfig.SplitPaneConfig;
 import org.designup.picsou.gui.components.table.PicsouTableHeaderPainter;
 import org.designup.picsou.gui.description.stringifiers.SeriesDescriptionStringifier;
-import org.designup.picsou.gui.description.stringifiers.SeriesNameComparator;
 import org.designup.picsou.gui.description.stringifiers.TransactionDateStringifier;
 import org.designup.picsou.gui.help.HyperlinkHandler;
 import org.designup.picsou.gui.printing.actions.PrintTransactionsAction;
@@ -49,14 +48,13 @@ import org.globsframework.gui.GlobSelectionListener;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.SelectionService;
 import org.globsframework.gui.actions.DisabledAction;
+import org.globsframework.gui.components.ShowHideButton;
 import org.globsframework.gui.splits.color.ColorChangeListener;
 import org.globsframework.gui.splits.color.ColorLocator;
 import org.globsframework.gui.splits.repeat.RepeatCellBuilder;
 import org.globsframework.gui.splits.repeat.RepeatComponentFactory;
 import org.globsframework.gui.splits.utils.GuiUtils;
-import org.globsframework.gui.components.GlobRepeat;
 import org.globsframework.gui.utils.PopupMenuFactory;
-import org.globsframework.gui.components.ShowHideButton;
 import org.globsframework.gui.views.GlobTableView;
 import org.globsframework.gui.views.LabelCustomizer;
 import org.globsframework.gui.views.utils.LabelCustomizers;
@@ -69,7 +67,6 @@ import org.globsframework.model.utils.*;
 import org.globsframework.utils.Log;
 import org.globsframework.utils.Strings;
 import org.globsframework.utils.Utils;
-import org.globsframework.utils.collections.Pair;
 import org.globsframework.utils.directory.DefaultDirectory;
 import org.globsframework.utils.directory.Directory;
 
@@ -95,7 +92,7 @@ public class CategorizationView extends View implements TableView, Filterable, C
   private GlobList currentTransactions = GlobList.EMPTY;
   private GlobTableView transactionTable;
   private JComboBox filteringModeCombo;
-  private FilteredRepeats seriesRepeat = new FilteredRepeats();
+  private FilteredRepeats seriesRepeat;
   private Color envelopeSeriesLabelForegroundColor;
   private Color envelopeSeriesLabelBackgroundColor;
 
@@ -118,6 +115,7 @@ public class CategorizationView extends View implements TableView, Filterable, C
 
   public CategorizationView(final GlobRepository repository, Directory parentDirectory) {
     super(repository, createLocalDirectory(parentDirectory));
+    this.seriesRepeat = new FilteredRepeats(repository, directory);
     this.colorService.addListener(this);
     this.parentDirectory = parentDirectory;
     parentDirectory.get(SelectionService.class).addListener(new GlobSelectionListener() {
@@ -381,10 +379,7 @@ public class CategorizationView extends View implements TableView, Filterable, C
       public void selectionUpdated(GlobSelection selection) {
         currentTransactions = selection.getAll(Transaction.TYPE);
         Set<Integer> months = currentTransactions.getValueSet(Transaction.BUDGET_MONTH);
-        for (Pair<Matchers.CategorizationFilter, GlobRepeat> filter : seriesRepeat) {
-          filter.getFirst().filterDates(months, currentTransactions);
-          filter.getSecond().setFilter(filter.getFirst());
-        }
+        seriesRepeat.update(months, currentTransactions);
         colors.setSplitGroupSourceId(getSplitGroupSourceId());
         transactionTable.getComponent().repaint();
         categorizedTransactions.clear();
@@ -407,7 +402,7 @@ public class CategorizationView extends View implements TableView, Filterable, C
     return transaction.get(Transaction.SPLIT_SOURCE);
   }
 
-  private SeriesChooserComponentFactory addSeriesChooser(String name, BudgetArea budgetArea, GlobsPanelBuilder parentBuilder) {
+  private void addSeriesChooser(String name, BudgetArea budgetArea, GlobsPanelBuilder parentBuilder) {
     GlobsPanelBuilder builder = new GlobsPanelBuilder(CategorizationView.class,
                                                       "/layout/categorization/seriesChooserPanel.splits",
                                                       repository, directory);
@@ -422,23 +417,12 @@ public class CategorizationView extends View implements TableView, Filterable, C
     DynamicMessage categorizationMessage = CategorizationMessageFactory.create(budgetArea, repository, directory);
     builder.add("categorizationMessage", categorizationMessage.getComponent());
 
-    JRadioButton invisibleRadio = new JRadioButton("invisibleButton");
-    builder.add("invisibleToggle", invisibleRadio);
-
     DescriptionPanelHandler descriptionHandler = new DescriptionPanelHandler(repository);
     builder.add("descriptionPanel", descriptionHandler.getPanel());
     builder.add("showDescription", descriptionHandler.getShowAction());
     builder.add("hideDescription", descriptionHandler.getHideAction());
 
-    Matchers.CategorizationFilter filter = Matchers.seriesCategorizationFilter(budgetArea.getId());
-    SeriesChooserComponentFactory componentFactory =
-      new SeriesChooserComponentFactory(budgetArea, invisibleRadio, repository, directory);
-    GlobRepeat repeat = builder.addRepeat("seriesRepeat",
-                                          Series.TYPE,
-                                          filter,
-                                          SeriesNameComparator.INSTANCE,
-                                          componentFactory);
-    seriesRepeat.add(filter, repeat);
+    seriesRepeat.addRepeat(budgetArea, builder, Matchers.seriesCategorizationFilter(budgetArea.getId()));
 
     JPanel groupForSeries = new JPanel();
     builder.add("groupCreateEditSeries", groupForSeries);
@@ -446,7 +430,6 @@ public class CategorizationView extends View implements TableView, Filterable, C
     builder.add("additionalAction", getAdditionalAction(budgetArea));
 
     parentBuilder.add(name, builder);
-    return componentFactory;
   }
 
   private Action getAdditionalAction(BudgetArea budgetArea) {
@@ -642,14 +625,8 @@ public class CategorizationView extends View implements TableView, Filterable, C
     }
 
     private boolean categorize(Glob series, final Glob transaction) {
-      boolean noneMatch = false;
-      for (Pair<Matchers.CategorizationFilter, GlobRepeat> filter : seriesRepeat) {
-        filter.getFirst().filterDates(Collections.singleton(transaction.get(Transaction.BUDGET_MONTH)),
-                                      Collections.singletonList(transaction));
-        filter.getSecond().setFilter(filter.getFirst());
-        noneMatch |= filter.getFirst().matches(series, repository);
-      }
-      if (!noneMatch) {
+      boolean matchFound = seriesRepeat.updateAndCheckMatch(series, transaction);
+      if (matchFound) {
         return false;
       }
       Integer subSeriesId = SeriesEditor.get(directory).getLastSelectedSubSeriesId();

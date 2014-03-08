@@ -4,7 +4,6 @@
 
   <verticalBoxes>
     <htmlEditorPane ref="message" border="empty(0,20,0,0)" hyperlinkListener="hyperlinkHandler"/>
-    <radioButton ref="invisibleToggle" visible="false"/>
     <repeat ref="seriesRepeat" layout="verticalGrid" border="empty(0,20,10,0)" autoHideIfEmpty="true">
       <verticalBoxes name="seriesBlock">
         <row>
