@@ -64,7 +64,8 @@ public class SeriesDeletionDialog {
     // Transfer
     builder.add("transfer", new TransferAction(transactionsForSeries, firstMonth));
     GlobListView seriesList = builder.addList("seriesList", Series.TYPE);
-    builder.add("seriesFilter", GlobListViewFilter.init(seriesList).setDefaultMatcher(new SeriesFilter()));
+    builder.add("seriesFilter", GlobListViewFilter.init(seriesList)
+      .setDefaultMatcher(new SeriesFilter(currentSeries.get(Series.TARGET_ACCOUNT))));
 
     // Set end date
     builder.add("setEndDate", new SetEndDateAction(lastMonth));
@@ -115,6 +116,8 @@ public class SeriesDeletionDialog {
     public void actionPerformed(ActionEvent actionEvent) {
       repository.startChangeSet();
       Integer targetSeriesId = targetSeries.get(Series.ID);
+      repository.update(targetSeries.getKey(), Series.TARGET_ACCOUNT,
+                        currentSeries.get(Series.TARGET_ACCOUNT));
       for (Glob transaction : transactionsForSeries) {
         repository.update(transaction.getKey(),
                           value(Transaction.SERIES, targetSeriesId),
@@ -180,9 +183,16 @@ public class SeriesDeletionDialog {
   }
 
   private class SeriesFilter implements GlobMatcher {
+    private Integer targetAccount;
+
+    public SeriesFilter(Integer targetAccount) {
+      this.targetAccount = targetAccount;
+    }
+
     public boolean matches(Glob series, GlobRepository repository) {
       return (series != null)
              && !series.getKey().equals(currentSeries.getKey())
+             && ((series.get(Series.TARGET_ACCOUNT) == null) || series.get(Series.TARGET_ACCOUNT).equals(targetAccount))
              && !BudgetArea.SAVINGS.getId().equals(series.get(Series.BUDGET_AREA))
              && !series.getKey().get(Series.ID).equals(Series.ACCOUNT_SERIES_ID);
     }

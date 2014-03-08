@@ -7,10 +7,7 @@ import org.globsframework.metamodel.fields.BooleanField;
 import org.globsframework.metamodel.fields.DoubleField;
 import org.globsframework.metamodel.fields.IntegerField;
 import org.globsframework.metamodel.fields.StringField;
-import org.globsframework.model.utils.EmptyGlobList;
-import org.globsframework.model.utils.GlobFieldComparator;
-import org.globsframework.model.utils.GlobFunctor;
-import org.globsframework.model.utils.GlobMatcher;
+import org.globsframework.model.utils.*;
 import org.globsframework.utils.Utils;
 import org.globsframework.utils.exceptions.UnexpectedApplicationState;
 
@@ -289,8 +286,14 @@ public class GlobList extends ArrayList<Glob> {
     return false;
   }
 
-  public GlobList sort(Field field) {
-    return sort(new GlobFieldComparator(field));
+  public GlobList sort(Field ...field) {
+    if (field == null || field.length == 0){
+      return this;
+    }
+    if (field.length == 1){
+      return sort(new GlobFieldComparator(field[0]));
+    }
+    return sort(new GlobFieldsComparator(field));
   }
 
   public GlobList sort(Comparator<Glob> comparator) {

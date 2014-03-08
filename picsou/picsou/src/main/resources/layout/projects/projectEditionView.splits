@@ -61,7 +61,10 @@
           <toggleButton ref="activeToggle"/>
           <button action="modify" styleClass="editIcon" autoHideSource="activeToggle"/>
         </row>
-        <component ref="monthSlider" marginBottom="5"/>
+        <row>
+          <component ref="monthSlider" marginBottom="5"/>
+          <comboBox ref="accountSelection"/>
+        </row>
         <row ref="gaugePanel" opaque="false" autoHideSource="gauge">
           <component ref="gauge" styleClass="totalGauge"/>
           <label ref="totalActual" styleClass="totalAmount"/>

@@ -32,6 +32,13 @@ public abstract class PopupChecker {
     close(menu);
   }
 
+  public void checkItemDisable(String action) {
+    MenuItem menu = openMenu();
+    MenuItem subMenu = menu.getSubMenu(action);
+    assertFalse(subMenu.isEnabled());
+    close(menu);
+  }
+
   public void checkItemSelected(String menuItem) {
     checkCheckBoxItem(menuItem, menuItem + " is not selected", true);
   }

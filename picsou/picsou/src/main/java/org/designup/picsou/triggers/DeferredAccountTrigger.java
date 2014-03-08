@@ -101,7 +101,8 @@ public class DeferredAccountTrigger implements ChangeSetListener {
                                     FieldValue.value(Series.BUDGET_AREA, BudgetArea.OTHER.getId()),
                                     FieldValue.value(Series.FROM_ACCOUNT, accountId),
                                     FieldValue.value(Series.IS_AUTOMATIC, false),
-                                    FieldValue.value(Series.INITIAL_AMOUNT, 0.));
+                                    FieldValue.value(Series.INITIAL_AMOUNT, 0.),
+                                    FieldValue.value(Series.TARGET_ACCOUNT, accountId));
     SeriesBudgetTrigger budget = new SeriesBudgetTrigger(repository);
     budget.updateSeriesBudget(series, repository);
   }

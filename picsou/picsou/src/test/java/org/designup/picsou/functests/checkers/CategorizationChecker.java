@@ -575,14 +575,23 @@ public class CategorizationChecker extends ViewChecker {
   }
 
   public CategorizationChecker setNewRecurring(String label, String seriesName) {
+    return setNewRecurring(label, seriesName, null);
+  }
+    public CategorizationChecker setNewRecurring(String label, String seriesName, Double amount) {
     int[] indices = getRowIndices(label);
     boolean first = true;
     for (int index : indices) {
       selectTableRow(index);
       if (first) {
+        if (amount != null){
         selectRecurring()
-          .createSeries(seriesName)
-          .selectSeries(seriesName);
+          .selectNewSeries(seriesName, amount);
+        }
+        else {
+          selectRecurring()
+            .createSeries(seriesName);
+        }
+          //.selectSeries(seriesName);
         first = false;
       }
       else {

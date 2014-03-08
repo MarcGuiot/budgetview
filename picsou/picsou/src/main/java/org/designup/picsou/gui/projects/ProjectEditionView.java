@@ -154,6 +154,9 @@ public class ProjectEditionView extends View implements GlobSelectionListener {
 
     imageStatusUpdater = new ImageStatusUpdater(Project.ACTIVE, imageLabel, repository);
 
+    builder.addComboEditor("accountSelection", Project.DEFAULT_ACCOUNT)
+      .setFilter(new Account.UserAccountMatcher());
+
     monthSlider = new MonthSlider(new ProjectPeriodSliderAdapter(), repository, directory);
     builder.add("monthSlider", monthSlider);
 
@@ -249,6 +252,7 @@ public class ProjectEditionView extends View implements GlobSelectionListener {
                                       value(ProjectItem.LABEL, defaultLabel),
                                       value(ProjectItem.FIRST_MONTH, getNewItemMonth()),
                                       value(ProjectItem.PROJECT, projectId),
+                                      value(ProjectItem.ACCOUNT, repository.get(currentProjectKey).get(Project.DEFAULT_ACCOUNT)),
                                       value(ProjectItem.SEQUENCE_NUMBER, ProjectItem.getNextSequenceNumber(projectId, ProjectEditionView.this.repository)));
         if (ProjectItemType.TRANSFER.equals(itemType)) {
           repository.create(ProjectTransfer.TYPE, value(ProjectTransfer.PROJECT_ITEM, item.get(ProjectItem.ID)));

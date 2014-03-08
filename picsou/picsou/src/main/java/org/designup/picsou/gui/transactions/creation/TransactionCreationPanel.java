@@ -260,8 +260,8 @@ public class TransactionCreationPanel extends View implements GlobSelectionListe
         updateInProgress = false;
       }
 
-      Integer account = prototypeTransaction.get(Transaction.ACCOUNT);
-      if (account == null) {
+      Integer accountId = prototypeTransaction.get(Transaction.ACCOUNT);
+      if (accountId == null) {
         showErrorMessage("transactionCreation.error.account");
         return;
       }
@@ -332,6 +332,11 @@ public class TransactionCreationPanel extends View implements GlobSelectionListe
                                       updateAccountCheckBox.isSelected()));
 
         createdTransaction = parentRepository.create(Transaction.TYPE, values.toArray());
+
+        Glob account = parentRepository.get(KeyBuilder.newKey(Account.TYPE, accountId));
+        if (!account.get(Account.IS_IMPORTED_ACCOUNT)) {
+          parentRepository.update(account.getKey(), value(Account.IS_IMPORTED_ACCOUNT, true));
+        }
 
         autoCategorizationFunctor.run(createdTransaction, parentRepository);
       }

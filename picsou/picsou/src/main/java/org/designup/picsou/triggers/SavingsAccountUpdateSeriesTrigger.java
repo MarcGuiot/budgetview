@@ -16,22 +16,23 @@ public class SavingsAccountUpdateSeriesTrigger extends AbstractChangeSetListener
   public void globsChanged(ChangeSet changeSet, final GlobRepository repository) {
     changeSet.safeVisit(Account.TYPE, new ChangeSetVisitor() {
       public void visitCreation(Key key, FieldValues values) throws Exception {
-        if (AccountType.SAVINGS.getId().equals(values.get(Account.ACCOUNT_TYPE))) {
-          if (values.get(Account.ID) != Account.SAVINGS_SUMMARY_ACCOUNT_ID
-              && values.get(Account.ID) != Account.EXTERNAL_ACCOUNT_ID) {
-            createSeries(repository, values);
-          }
-        }
+//        if (AccountType.SAVINGS.getId().equals(values.get(Account.ACCOUNT_TYPE))) {
+//          if (values.get(Account.ID) != Account.SAVINGS_SUMMARY_ACCOUNT_ID
+//              && values.get(Account.ID) != Account.EXTERNAL_ACCOUNT_ID) {
+//            createSeries(repository, values);
+//          }
+//        }
       }
 
       public void visitUpdate(Key key, FieldValuesWithPrevious values) throws Exception {
-        if (values.contains(Account.ACCOUNT_TYPE) &&
-            AccountType.SAVINGS.getId().equals(values.get(Account.ACCOUNT_TYPE))) {
-          createSeries(repository, repository.get(key));
-        }
-        else if (values.contains(Account.IS_IMPORTED_ACCOUNT)) {
+//        if (values.contains(Account.ACCOUNT_TYPE) &&
+//            AccountType.SAVINGS.getId().equals(values.get(Account.ACCOUNT_TYPE))) {
+//          createSeries(repository, repository.get(key));
+//        }
+//        else
+        if (values.contains(Account.IS_IMPORTED_ACCOUNT) && values.get(Account.IS_IMPORTED_ACCOUNT)) {
           deleteCreatedBySeries(key, repository);
-          createMirrorSeriesOnChange(key, repository);
+//          createMirrorSeriesOnChange(key, repository);
         }
       }
 

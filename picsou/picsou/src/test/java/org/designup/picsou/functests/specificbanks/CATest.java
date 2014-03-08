@@ -4,7 +4,7 @@ import org.designup.picsou.model.TransactionType;
 
 public class CATest extends SpecificBankTestCase {
   public void test() throws Exception {
-    operations.importOfxWithDeferred(getFile("ca1.ofx"), "Card n. 5341-1130-2611-1111");
+    operations.importOfxWithDeferred(getFile("ca1.ofx"), "Card n. 5341-1130-2611-1111", "Account n. 123123123123");
     timeline.selectAll();
 
     views.selectData();

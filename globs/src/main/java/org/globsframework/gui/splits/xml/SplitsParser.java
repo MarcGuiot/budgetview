@@ -14,12 +14,16 @@ import org.xml.sax.SAXNotRecognizedException;
 import org.xml.sax.SAXNotSupportedException;
 
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 import javax.xml.validation.Schema;
 import javax.xml.validation.Validator;
 import javax.xml.validation.ValidatorHandler;
 import java.io.Reader;
+import java.util.ArrayDeque;
 import java.util.Arrays;
+import java.util.Deque;
+import java.util.Stack;
 
 public class SplitsParser {
 
@@ -36,12 +40,18 @@ public class SplitsParser {
     this.factory = factory;
   }
 
+  static Deque<SAXParser> parsers = new ArrayDeque<SAXParser>();
+
   public Splitter.SplitComponent parse(Reader reader) {
 
     SplitsBootstrapXmlNode bootstrap = new SplitsBootstrapXmlNode();
     try {
-      javax.xml.parsers.SAXParser parser = xmlFactory.newSAXParser();
+      SAXParser parser = parsers.poll();
+      if (parser == null) {
+        parser = xmlFactory.newSAXParser();
+      }
       SaxStackParser.parse(parser.getXMLReader(), bootstrap, reader);
+      parsers.add(parser);
     }
     catch (SAXException e) {
       throw new ExceptionHolder(e);

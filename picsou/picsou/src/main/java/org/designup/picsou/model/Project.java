@@ -22,7 +22,8 @@ import org.globsframework.utils.serialization.SerializedOutput;
 import java.util.HashSet;
 import java.util.Set;
 
-import static org.globsframework.model.utils.GlobMatchers.*;
+import static org.globsframework.model.utils.GlobMatchers.fieldEquals;
+import static org.globsframework.model.utils.GlobMatchers.linkedTo;
 
 public class Project {
   public static GlobType TYPE;
@@ -50,6 +51,9 @@ public class Project {
 
   @Target(Picture.class)
   public static LinkField PICTURE;
+
+  @Target(Account.class)
+  public static LinkField DEFAULT_ACCOUNT;
 
   static {
     GlobTypeLoader.init(Project.class, "project");
@@ -112,7 +116,7 @@ public class Project {
   public static class Serializer implements PicsouGlobSerializer {
 
     public int getWriteVersion() {
-      return 3;
+      return 4;
     }
 
     public boolean shouldBeSaved(GlobRepository repository, FieldValues fieldValues) {
@@ -120,7 +124,10 @@ public class Project {
     }
 
     public void deserializeData(int version, FieldSetter fieldSetter, byte[] data, Integer id) {
-      if (version == 3) {
+      if (version == 4) {
+        deserializeDataV4(fieldSetter, data);
+      }
+      else if (version == 3) {
         deserializeDataV3(fieldSetter, data);
       }
       else if (version == 2) {
@@ -138,7 +145,17 @@ public class Project {
       output.writeInteger(fieldValues.get(Project.SERIES_GROUP));
       output.writeBoolean(fieldValues.get(Project.ACTIVE));
       output.writeInteger(fieldValues.get(Project.PICTURE));
+      output.writeInteger(fieldValues.get(Project.DEFAULT_ACCOUNT));
       return serializedByteArrayOutput.toByteArray();
+    }
+
+    private void deserializeDataV4(FieldSetter fieldSetter, byte[] data) {
+      SerializedInput input = SerializedInputOutputFactory.init(data);
+      fieldSetter.set(Project.NAME, input.readUtf8String());
+      fieldSetter.set(Project.SERIES_GROUP, input.readInteger());
+      fieldSetter.set(Project.ACTIVE, input.readBoolean());
+      fieldSetter.set(Project.PICTURE, input.readInteger());
+      fieldSetter.set(Project.DEFAULT_ACCOUNT, input.readInteger());
     }
 
     private void deserializeDataV3(FieldSetter fieldSetter, byte[] data) {

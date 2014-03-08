@@ -50,20 +50,22 @@ public class BalanceTest extends LoggedInFunctionalTestCase {
     categorization
       .setNewRecurring("prov", "Courses");
     timeline.selectMonth("2009/05");
-    categorization.editSeries("Courses").setPropagationEnabled().setAmount(10).validate();
+    categorization.editSeries("Courses")
+      .setAccount("Account n. 00001123")
+      .setPropagationEnabled().setAmount(10).validate();
 
     timeline.selectAll();
     transactions
       .showPlannedTransactions()
       .initAmountContent()
-      .add("19/08/2009", "Planned: Tel", -29.90, "Tel", -159.60, "Main accounts")
-      .add("11/08/2009", "Planned: Courses", -10.00, "Courses", -129.70, "Main accounts")
-      .add("19/07/2009", "Planned: Tel", -29.90, "Tel", -119.70, "Main accounts")
+      .add("19/08/2009", "Planned: Tel", -29.90, "Tel", -139.60, -159.60, "Account n. 00001123")
+      .add("11/08/2009", "Planned: Courses", -10.00, "Courses", -109.70, -129.70, "Account n. 00001123")
+      .add("19/07/2009", "Planned: Tel", -29.90, "Tel", -99.70,	-119.70, "Account n. 00001123")
       .add("05/07/2009", "PROV", -10.00, "Courses", -20.00, -89.80, "Manual")
-      .add("19/06/2009", "Planned: Tel", -29.90, "Tel", -79.80, "Main accounts")
-      .add("11/06/2009", "Planned: Courses", -10.00, "Courses", -49.90, "Main accounts")
+      .add("19/06/2009", "Planned: Tel", -29.90, "Tel", -69.80, -79.80, "Account n. 00001123")
+      .add("11/06/2009", "Planned: Courses", -10.00, "Courses", -39.90, -49.90, "Account n. 00001123")
       .add("22/05/2009", "PROV", -10.00, "Courses", -10.00, -39.90, "Manual")
-      .add("19/05/2009", "Planned: Tel", -29.90, "Tel", -29.90, "Main accounts")
+      .add("19/05/2009", "Planned: Tel", -29.90, "Tel", -29.90, -29.90, "Account n. 00001123")
       .add("20/04/2009", "FREE TELECOM", -29.90, "Tel", 0.00, 0.00, OfxBuilder.DEFAULT_ACCOUNT_NAME)
       .check();
 
@@ -202,7 +204,7 @@ public class BalanceTest extends LoggedInFunctionalTestCase {
     categorization.selectTransactions("P3 CE", "P2 CE");
 
     categorization.selectSavings()
-      .selectAndCreateSavingsSeries("Epargne", "Main accounts", "Account n. 111");
+      .selectAndCreateSavingsSeries("Epargne", "Account n. 00001123", "Account n. 111");
 
     categorization.selectTransactions("V3 CC", "V2 CC")
       .selectSavings().selectSeries("Epargne");

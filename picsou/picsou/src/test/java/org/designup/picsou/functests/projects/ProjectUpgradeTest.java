@@ -12,7 +12,9 @@ import org.globsframework.model.GlobList;
 import org.globsframework.model.Key;
 import org.globsframework.model.format.GlobPrinter;
 import org.globsframework.model.utils.GlobMatchers;
+import org.globsframework.utils.Files;
 
+import java.io.File;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -27,8 +29,7 @@ public class ProjectUpgradeTest extends LoggedInFunctionalTestCase {
   }
 
   public void testCompleteCaseForJar131() throws Exception {
-
-    operations.restore("picsou/picsou/src/test/resources/testbackups/upgrade_jar131_projects.budgetview");
+    operations.restore(Files.copyResourceToTmpFile(this, "/testbackups/upgrade_jar131_projects.budgetview"));
 
     projects.checkCurrentProjects("| Voyage Rome | Jan | 1080.00 | on |");
     projects.select("Voyage Rome");
@@ -87,7 +88,7 @@ public class ProjectUpgradeTest extends LoggedInFunctionalTestCase {
   }
 
   public void testSeveralTransactionsAssignedToRootProjectSeries() throws Exception {
-    operations.restore("picsou/picsou/src/test/resources/testbackups/upgrade_jar131_projects_multi_root.budgetview");
+    operations.restore(Files.copyResourceToTmpFile(this, "/testbackups/upgrade_jar131_projects_multi_root.budgetview"));
     projects.checkCurrentProjects("| Voyage Rome | Jan | 1080.00 | on |");
     projects.select("Voyage Rome");
     currentProject.checkItems("| Voyage     | Jan | 180.00 | 200.00 |\n" +
@@ -126,7 +127,7 @@ public class ProjectUpgradeTest extends LoggedInFunctionalTestCase {
   }
 
   public void testOlderVersion() throws Exception {
-    operations.restore("picsou/picsou/src/test/resources/testbackups/upgrade_jar96_projects.budgetview");
+    operations.restore(Files.copyResourceToTmpFile(this, "/testbackups/upgrade_jar96_projects.budgetview"));
     projects.checkCurrentProjects("| Voyage Rome | Jan | 500.00 | on |");
     projects.select("Voyage Rome");
     currentProject.checkItems("| Voyage 1   | Jan | 30.00  | 150.00 |\n" +

@@ -150,6 +150,24 @@ public class Files {
     copyStream(inputStream, new FileOutputStream(file));
   }
 
+  public static String copyResourceToTmpFile(Object obj, String resourceName) throws IOException{
+    InputStream stream = obj.getClass().getResourceAsStream(resourceName);
+    if (stream == null){
+      throw new RuntimeException("Fail to find " + resourceName);
+    }
+    int i = resourceName.indexOf(".");
+    String extention = "tmp";
+    if (i >-1){
+      extention = resourceName.substring(i, resourceName.length());
+    }
+
+    File tmp = File.createTempFile("tmp", extention);
+    tmp.deleteOnExit();
+    String path = tmp.getAbsolutePath();
+    copyStreamTofile(stream, path);
+    return path;
+  }
+
   public static void copyStream(InputStream inputStream, OutputStream outputStream) throws IOException {
     byte[] bytes = new byte[1024];
     int readed;

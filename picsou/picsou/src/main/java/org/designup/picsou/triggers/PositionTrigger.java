@@ -1,6 +1,7 @@
 package org.designup.picsou.triggers;
 
 import com.budgetview.shared.utils.Amounts;
+import org.designup.picsou.gui.time.TimeService;
 import org.designup.picsou.model.*;
 import org.designup.picsou.utils.TransactionComparator;
 import org.globsframework.metamodel.GlobType;
@@ -323,6 +324,7 @@ public class PositionTrigger implements ChangeSetListener {
     return GlobMatchers.and(GlobMatchers.fieldEquals(Transaction.ACCOUNT, accountId),
                             GlobMatchers.or(
                               GlobMatchers.isTrue(Transaction.PLANNED),
+                              GlobMatchers.fieldEquals(Transaction.TO_RECONCILE, Boolean.TRUE),
                               GlobMatchers.fieldStrictlyGreaterThan(Transaction.POSITION_MONTH, monthId),
                               GlobMatchers.and(
                                 GlobMatchers.fieldEquals(Transaction.POSITION_MONTH, monthId),
@@ -333,6 +335,7 @@ public class PositionTrigger implements ChangeSetListener {
   private static GlobMatcher getMatcherForFutureOperations(int monthId, int day) {
     return GlobMatchers.or(GlobMatchers.isTrue(Transaction.PLANNED),
                            GlobMatchers.fieldStrictlyGreaterThan(Transaction.POSITION_MONTH, monthId),
+                           GlobMatchers.fieldEquals(Transaction.TO_RECONCILE, Boolean.TRUE),
                            GlobMatchers.and(
                              GlobMatchers.fieldEquals(Transaction.POSITION_MONTH, monthId),
                              GlobMatchers.fieldStrictlyGreaterThan(Transaction.POSITION_DAY, day))
@@ -456,7 +459,6 @@ public class PositionTrigger implements ChangeSetListener {
         repository.update(account.getKey(),
                           value(Account.TRANSACTION_ID, lastRealTransaction.get(Transaction.ID)),
                           value(Account.PAST_POSITION, lastRealTransaction.get(Transaction.ACCOUNT_POSITION)));
-
       }
       else if (lastTransaction != null) {
         repository.update(account.getKey(),
@@ -530,19 +532,19 @@ public class PositionTrigger implements ChangeSetListener {
   }
 
   private static void computeTotalPosition(GlobRepository repository, Glob[] transactions,
-                                           SameAccountChecker sameCheckerAccount, GlobMatcher futureMatcher) {
+                                           final SameAccountChecker sameCheckerAccount, GlobMatcher futureMatcher) {
 
     GlobList deferredSeries = repository.getAll(Series.TYPE, GlobMatchers.and(GlobMatchers.isNotNull(Series.FROM_ACCOUNT),
                                                                               GlobMatchers.isNull(Series.TO_ACCOUNT)));
     Set<Integer> deferredAccounts = repository.getAll(Account.TYPE,
                                                       GlobMatchers.fieldEquals(Account.CARD_TYPE, AccountCardType.DEFERRED.getId()))
       .getSortedSet(Account.ID);
-    MapOfMaps<Integer, Integer, Boolean> isWithDrawBySeriesByMonth = new MapOfMaps<Integer, Integer, Boolean>();
+    MapOfMaps<Integer, Integer, Glob> isWithDrawBySeriesByMonth = new MapOfMaps<Integer, Integer, Glob>();
     for (Glob series : deferredSeries) {
       GlobList deferredTransactions = repository.findByIndex(Transaction.SERIES_INDEX, Transaction.SERIES, series.get(Series.ID))
         .getGlobs();
       for (Glob transaction : deferredTransactions) {
-        isWithDrawBySeriesByMonth.put(series.get(Series.FROM_ACCOUNT), transaction.get(Transaction.POSITION_MONTH), Boolean.TRUE);
+        isWithDrawBySeriesByMonth.put(series.get(Series.FROM_ACCOUNT), transaction.get(Transaction.POSITION_MONTH), transaction);
       }
     }
 
@@ -557,7 +559,7 @@ public class PositionTrigger implements ChangeSetListener {
       }
       Integer accountId = transaction.get(Transaction.ACCOUNT);
       if (deferredAccounts.contains(accountId) && isWithDrawBySeriesByMonth.get(accountId, transaction.get(Transaction.POSITION_MONTH)) != null) {
-        repository.update(transaction.getKey(), Transaction.SUMMARY_POSITION, position);
+        repository.update(transaction.getKey(), Transaction.SUMMARY_POSITION, null);
         continue;
       }
       position += transaction.get(Transaction.AMOUNT);
@@ -568,13 +570,54 @@ public class PositionTrigger implements ChangeSetListener {
       }
       canUpdate &= !isFutureOp;
     }
+    // pour les operations du compte differé :
+    // on force explicitement le montant summary au montant summary de l'operation de prelevement si elle existe
+    for (index = 0; index < transactions.length; index++) {
+      Glob transaction = transactions[index];
+      if (!sameCheckerAccount.isSame(transaction.get(Transaction.ACCOUNT))) {
+        continue;
+      }
+      Integer accountId = transaction.get(Transaction.ACCOUNT);
+      if (deferredAccounts.contains(accountId)) {
+        Glob withDrawOperation = isWithDrawBySeriesByMonth.get(accountId, transaction.get(Transaction.POSITION_MONTH));
+        if (withDrawOperation != null){
+          repository.update(transaction.getKey(), Transaction.SUMMARY_POSITION, withDrawOperation.get(Transaction.SUMMARY_POSITION));
+        }
+      }
+    }
 
     if (realPosition != null) {
-      repository.update(sameCheckerAccount.getSummary(),
-                        value(Account.POSITION_WITH_PENDING, realPosition.get(Transaction.SUMMARY_POSITION)),
-                        value(Account.POSITION_DATE,
-                              Month.toDate(realPosition.get(Transaction.BANK_MONTH),
-                                           realPosition.get(Transaction.BANK_DAY))));
+//      repository.update(sameCheckerAccount.getSummary(),
+//                        value(Account.POSITION_WITH_PENDING, realPosition.get(Transaction.SUMMARY_POSITION)),
+//                        value(Account.POSITION_DATE,
+//                              Month.toDate(realPosition.get(Transaction.BANK_MONTH),
+//                                           realPosition.get(Transaction.BANK_DAY))));
+      GlobList accounts = repository.getAll(Account.TYPE).filter(new GlobMatcher() {
+        public boolean matches(Glob item, GlobRepository repository) {
+          return sameCheckerAccount.isSame(item.get(Account.ID)) && Account.isUserCreatedAccount(item);
+        }
+      }, repository);
+      double total = 0;
+      int lastDate = 0;
+      for (Glob account : accounts) {
+        if (!deferredAccounts.contains(account.get(Account.ID))){
+          Date closedDate = account.get(Account.CLOSED_DATE);
+          if (closedDate == null || Month.toFullDate(closedDate) > TimeService.getCurrentFullDate()) {
+            total += account.get(Account.POSITION_WITH_PENDING, 0);
+          }
+          int tmp = Month.getFullDate(account.get(Account.POSITION_DATE));
+          if (tmp > lastDate) {
+            lastDate = tmp;
+          }
+        }
+      }
+      if (lastDate != 0) {
+        repository.update(sameCheckerAccount.getSummary(),
+                          value(Account.POSITION_WITH_PENDING, total),
+                          value(Account.POSITION_DATE,
+                                Month.toDate(Month.getMonthIdFromFullDate(lastDate),
+                                             Month.getDayFromFullDate(lastDate))));
+      }
     }
   }
 
@@ -611,7 +654,7 @@ public class PositionTrigger implements ChangeSetListener {
       super(accountIds, deferredAccountIds, repository);
       this.accountCreated = accountCreated;
     }
-
+  
     public void visitCreation(Key key, FieldValues values) throws Exception {
       accountCreated.add(key.get(Account.ID));
       update(key.get(Account.ID));

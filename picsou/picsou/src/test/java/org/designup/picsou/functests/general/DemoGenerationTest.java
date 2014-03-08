@@ -265,7 +265,7 @@ public class DemoGenerationTest extends LoggedInFunctionalTestCase {
 
     categorization.setNewSavings(transaction("savings"),
                                  series("savings"),
-                                 mainAccounts(),
+                                 account("main"),
                                  account("savings"));
 
     budgetView.savings.editSeries(series("savings"))
@@ -296,7 +296,7 @@ public class DemoGenerationTest extends LoggedInFunctionalTestCase {
     categorization.setNewVariable(transaction("manual2"), series("manual.daily"), -30.00);
     categorization.setVariable(transaction("manual4"), series("manual.daily"));
     categorization.setVariable(transaction("manual3"), series("manual.daily"));
-    categorization.setVariable(transaction("manual1"), series("cash"));
+    categorization.setVariable(transaction("manual1"), series("manual.daily"));
 
     //======== SERIES TUNING ===========
 
@@ -346,7 +346,7 @@ public class DemoGenerationTest extends LoggedInFunctionalTestCase {
       .addExpenseItem(1, project("rome.flight"), holidaysMonth1, -450.00)
       .addExpenseItem(2, project("rome.food"), holidaysMonth2, -550.00)
       .addExpenseItem(3, project("rome.accomodation"), holidaysMonth3, -1200.00)
-      .addTransferItem(4, project("rome.transfer"), holidaysMonth1, 300.00, account("savings"), mainAccounts());
+      .addTransferItem(4, project("rome.transfer"), holidaysMonth1, 300.00, account("savings"), account("main"));
     currentProject.sortItems();
 
     categorization.setExtra(transaction("booking"), project("rome.accomodation.booking"));
@@ -364,7 +364,7 @@ public class DemoGenerationTest extends LoggedInFunctionalTestCase {
     timeline.selectMonth(Month.toString(Month.next(thirdMonth)));
     budgetView.savings.createSeries()
       .setName(series("savings.trip"))
-      .setFromAccount(mainAccounts())
+      .setFromAccount(account("main"))
       .setToAccount(account("provisions"))
       .setStartDate(firstMonth)
       .setEndDate(firstMonth)
@@ -375,7 +375,7 @@ public class DemoGenerationTest extends LoggedInFunctionalTestCase {
     budgetView.savings.createSeries()
       .setName(series("trip.payment"))
       .setFromAccount(account("provisions"))
-      .setToAccount(mainAccounts())
+      .setToAccount(account("main"))
       .setRepeatIrregular()
       .setPropagationDisabled()
       .selectMonth(holidaysMonth1)
@@ -390,10 +390,10 @@ public class DemoGenerationTest extends LoggedInFunctionalTestCase {
 
     //======== CLEANUP ===========
 
-    budgetView.savings.editSeries(fromAccount("provisions")).deleteCurrentSeries();
-    budgetView.savings.editSeries(toAccount("provisions")).deleteCurrentSeries();
-    budgetView.savings.editSeries(fromAccount("savings")).deleteCurrentSeries();
-    budgetView.savings.editSeries(toAccount("savings")).deleteCurrentSeries();
+//    budgetView.savings.editSeries(fromAccount("provisions")).deleteCurrentSeries();
+//    budgetView.savings.editSeries(toAccount("provisions")).deleteCurrentSeries();
+//    budgetView.savings.editSeries(fromAccount("savings")).deleteCurrentSeries();
+//    budgetView.savings.editSeries(toAccount("savings")).deleteCurrentSeries();
 
     operations.hideSignposts();
 

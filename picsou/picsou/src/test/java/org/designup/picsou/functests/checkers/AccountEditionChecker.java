@@ -59,6 +59,13 @@ public class AccountEditionChecker extends GuiChecker {
     return this;
   }
 
+  public AccountEditionChecker setTargetAccount(String accountName) {
+    ComboBox account = dialog.getComboBox("deferredTargetAccount");
+    account.select(accountName);
+    assertThat(account.selectionEquals(accountName));
+    return this;
+  }
+
   public AccountEditionChecker modifyBank(String initialBank, String newBankName, String newURL) {
     BankChooserChecker bankChooser = openBankSelection().checkSelectedBank(initialBank);
 

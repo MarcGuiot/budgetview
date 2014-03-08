@@ -361,6 +361,10 @@ public class Month {
     return toFullDate(getMonthId(date), getDay(date));
   }
 
+  public static int getFullDate(Date date) {
+    return toFullDate(date);
+  }
+
   public static class RangeIterator implements Iterator<Integer> {
     private int current;
     private int max;

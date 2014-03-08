@@ -111,10 +111,10 @@ public class DeferredOperationTrigger extends DefaultChangeSetListener {
         .findByIndex(DeferredCardDate.MONTH, deferredMonthId).getGlobs().getFirst();
     Integer deferredDay;
     if (deferredCardDate == null) {
-      deferredDay = account.get(Account.DEFERRED_DEBIT_DAY);
+      deferredDay = Month.getDay(account.get(Account.DEFERRED_DEBIT_DAY), deferredMonthId);
     }
     else {
-      deferredDay = deferredCardDate.get(DeferredCardDate.DAY);
+      deferredDay = Month.getDay(deferredCardDate.get(DeferredCardDate.DAY), deferredMonthId);
     }
     repository.update(key, FieldValue.value(Transaction.POSITION_DAY, deferredDay),
                       FieldValue.value(Transaction.POSITION_MONTH, deferredMonthId),

@@ -24,6 +24,7 @@ import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.format.DescriptionService;
 import org.globsframework.model.format.GlobListStringifier;
+import org.globsframework.model.format.GlobPrinter;
 import org.globsframework.model.format.GlobStringifier;
 import org.globsframework.model.utils.GlobListFunctor;
 import org.globsframework.model.utils.GlobMatchers;
@@ -58,13 +59,13 @@ public class SavingsSeriesComponentFactory implements RepeatComponentFactory<Glo
 
     cellBuilder.add("seriesName", seriesNameButton.getComponent());
 
-    addAmountButton(name + ".", "observedSeriesAmount", PeriodSeriesStat.AMOUNT, series, cellBuilder, new GlobListFunctor() {
+    addAmountButton(name + ".", "observedSeriesAmount", PeriodSeriesStat.AMOUNT, series, periodSeriesStat, cellBuilder, new GlobListFunctor() {
       public void run(GlobList list, GlobRepository repository) {
         directory.get(NavigationService.class).gotoDataForSeries(series);
       }
     });
 
-    addAmountButton(name + ".", "plannedSeriesAmount", PeriodSeriesStat.PLANNED_AMOUNT, series, cellBuilder, new GlobListFunctor() {
+    addAmountButton(name + ".", "plannedSeriesAmount", PeriodSeriesStat.PLANNED_AMOUNT, series, periodSeriesStat, cellBuilder, new GlobListFunctor() {
       public void run(GlobList list, GlobRepository repository) {
         showSeriesAmountEdition(series);
       }
@@ -72,17 +73,17 @@ public class SavingsSeriesComponentFactory implements RepeatComponentFactory<Glo
 
     Glob fromAccount = repository.findLinkTarget(series, Series.FROM_ACCOUNT);
     Glob toAccount = repository.findLinkTarget(series, Series.TO_ACCOUNT);
-    boolean mainAccount = account.get(Account.ID).equals(Account.MAIN_SUMMARY_ACCOUNT_ID);
+//    boolean mainAccount = account.get(Account.ID).equals(Account.MAIN_SUMMARY_ACCOUNT_ID);
     Gauge gauge;
-    if (fromAccount != null && fromAccount.equals(account)) {
-      gauge = BudgetAreaGaugeFactory.createGauge(mainAccount);
-    }
-    else {
-      if (toAccount == null || !toAccount.equals(account)) {
-        throw new UnexpectedApplicationState("No target account");
-      }
-      gauge = BudgetAreaGaugeFactory.createGauge(mainAccount);
-    }
+//    if (fromAccount != null && fromAccount.equals(account)) {
+//      gauge = BudgetAreaGaugeFactory.createGauge(!mainAccount);
+//    }
+//    else {
+//      if (toAccount == null || !toAccount.equals(account)) {
+//        throw new UnexpectedApplicationState("No target account");
+//      }
+      gauge = BudgetAreaGaugeFactory.createGauge(false);
+//    }
     final double multiplier = Account.getMultiplierForInOrOutputOfTheAccount(series);
 
     final GlobGaugeView gaugeView =
@@ -109,13 +110,13 @@ public class SavingsSeriesComponentFactory implements RepeatComponentFactory<Glo
                                String buttonName,
                                DoubleField field,
                                final Glob series,
-                               RepeatCellBuilder cellBuilder,
+                               Glob periodSeriesStat, RepeatCellBuilder cellBuilder,
                                final GlobListFunctor callback) {
     String name = prefixName + buttonName;
     final GlobButtonView globButtonView =
       GlobButtonView.init(PeriodSeriesStat.TYPE, repository, directory, getStringifier(series, field), callback)
         .setName(name)
-        .setFilter(PeriodSeriesStat.seriesMatcher());
+        .forceSelection(periodSeriesStat.getKey());
     cellBuilder.add(buttonName, globButtonView.getComponent());
     cellBuilder.addDisposeListener(globButtonView);
   }

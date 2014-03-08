@@ -20,6 +20,8 @@
           <label text="$seriesEdition.budgetArea" styleClass="formLabel" autoHideSource="budgetAreaChooser"
                  marginLeft="15" marginBottom="4"/>
           <comboBox ref="budgetAreaChooser" marginBottom="4"/>
+          <label text="$seriesEdition.targetAccount" styleClass="formLabel"/>
+          <comboBox ref="targetAccount" marginTop="4"/>
         </row>
 
         <column autoHideSource="fromAccount" border="empty(10 ,0,15,0)">

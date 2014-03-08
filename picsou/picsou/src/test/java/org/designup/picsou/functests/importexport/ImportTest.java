@@ -5,9 +5,11 @@ import org.designup.picsou.functests.checkers.ImportDialogChecker;
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
 import org.designup.picsou.functests.utils.QifBuilder;
+import org.designup.picsou.gui.description.PicsouDescriptionService;
 import org.designup.picsou.gui.time.TimeService;
 import org.designup.picsou.model.TransactionType;
 import org.designup.picsou.utils.Lang;
+import org.globsframework.model.format.Formats;
 import org.globsframework.utils.Files;
 import org.globsframework.utils.TestUtils;
 
@@ -343,15 +345,6 @@ public class ImportTest extends LoggedInFunctionalTestCase {
       .setFilePath(fileName)
       .acceptFile();
 
-    importDialog
-      .selectBank(SOCIETE_GENERALE)
-      .checkFileContent(new Object[][]{
-        {"2008/06/10", "Metro", "71.00"},
-      })
-      .setMainAccount()
-      .setDeferredAccount(25, 28, 0)
-      .doImport();
-
     importDialog.selectBank(SOCIETE_GENERALE)
       .setMainAccount()
       .checkFileContent(new Object[][]{
@@ -370,7 +363,16 @@ public class ImportTest extends LoggedInFunctionalTestCase {
         {"2008/06/10", "McDo", "10.00"},
       })
       .selectBank(SOCIETE_GENERALE)
-      .setMainAccount();
+      .setMainAccount()
+      .doImport();
+
+    importDialog
+      .selectBank(SOCIETE_GENERALE)
+      .checkFileContent(new Object[][]{
+        {"2008/06/10", "Metro", "71.00"},
+      })
+      .setMainAccount()
+      .setDeferredAccount(25, 28, 0, "Account n. 12345678a");
 
     importDialog
       .completeImport();
@@ -391,9 +393,9 @@ public class ImportTest extends LoggedInFunctionalTestCase {
       .initContent()
       .add("21/06/2008", TransactionType.VIREMENT, "V'lib", "", 1.00)
       .add("14/06/2008", TransactionType.VIREMENT, "V'lib", "", 1.00)
+      .add("10/06/2008", TransactionType.CREDIT_CARD, "Metro", "", 71.00)
       .add("10/06/2008", TransactionType.VIREMENT, "McDo", "", 10.00)
       .add("10/06/2008", TransactionType.VIREMENT, "V'lib", "", 1.00)
-      .add("10/06/2008", TransactionType.CREDIT_CARD, "Metro", "", 71.00)
       .check();
   }
 
@@ -1062,34 +1064,35 @@ public class ImportTest extends LoggedInFunctionalTestCase {
 
   public void testImportAndChangeDate() throws Exception {
     MutableNow now = new MutableNow();
+
     OfxBuilder.init(this)
       .addBankAccount("111", 100, now.format())
-      .addTransaction(now.format(), -100.00, "Virement")
+      .addTransaction(now.format(), -100.00, "Virement 1 ")
       .load();
 
     now.addOneDay();
+    operations.nextSixDays();
 
     OfxBuilder.init(this)
       .addBankAccount("111", 110., now.format())
-      .addTransaction(now.format(), -100.00, "Virement")
+      .addTransaction(now.format(), -100.00, "Virement 2")
       .load();
 
     notifications.checkVisible(1);
 
-    TimeService.Now previous = TimeService.setTimeAccessor(now);
-
+    now.set(TimeService.getToday().getTime());
     OfxBuilder.init(this)
-      .addBankAccount("111", 0., now.format())
-      .addTransaction(now.format(), -100.00, "Virement")
+      .addBankAccount("111", -100., now.format())
+      .addTransaction(now.format(), -100.00, "Virement 3")
       .load();
 
     notifications.checkHidden();
-    TimeService.setTimeAccessor(previous);
 
     timeline.selectAll();
     transactions.initAmountContent()
-      .add("01/09/2008", "VIREMENT", -100.00, "To categorize", 0.00, 0.00, "Account n. 111")
-      .add("31/08/2008", "VIREMENT", -100.00, "To categorize", 100.00, 100.00, "Account n. 111")
+      .add("06/09/2008", "VIREMENT 3", -100.00, "To categorize", -100.00, -100.00, "Account n. 111")
+      .add("01/09/2008", "VIREMENT 2", -100.00, "To categorize", 0.00, 0.00, "Account n. 111")
+      .add("31/08/2008", "VIREMENT 1", -100.00, "To categorize", 100.00, 100.00, "Account n. 111")
       .check();
 
     fail("Si on met -100 a la place de -110 dans la position de compte, changeSet.containChange retourne false car c'est la meme valeur " +

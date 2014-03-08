@@ -77,6 +77,7 @@ public class SeriesEditionDialog {
   private GlobList selectedTransactions = new EmptyGlobList();
   private GlobLinkComboEditor fromAccountsCombo;
   private GlobLinkComboEditor toAccountsCombo;
+  private GlobLinkComboEditor targetAccount;
   private Boolean isAutomatic = false;
   private JComboBox dayChooser;
   private CardHandler monthSelectionCards;
@@ -162,6 +163,11 @@ public class SeriesEditionDialog {
 
     accountFilter = createAccountFilter();
 
+    targetAccount = GlobLinkComboEditor.init(Series.TARGET_ACCOUNT, localRepository, localDirectory)
+      .setFilter(accountFilter)
+      .setShowEmptyOption(false);
+    builder.add("targetAccount", targetAccount);
+
     fromAccountsCombo = GlobLinkComboEditor.init(Series.FROM_ACCOUNT, localRepository, localDirectory)
       .setShowEmptyOption(false)
       .setFilter(accountFilter);
@@ -229,6 +235,7 @@ public class SeriesEditionDialog {
           dayChooser.setVisible(noneImported);
           savingsMessage.setVisible(!isValidSeries(currentSeries));
           okAction.setEnabled(isValidSeries(currentSeries));
+          targetAccount.setVisible(!isSavingsSeries);
         }
         updateDateSelectors();
         updateMonthChooser();
@@ -275,10 +282,12 @@ public class SeriesEditionDialog {
   }
 
   public static GlobMatcher createAccountFilter() {
-    return and(not(fieldEquals(Account.ID, Account.ALL_SUMMARY_ACCOUNT_ID)),
-                        or(fieldEquals(Account.ID, Account.MAIN_SUMMARY_ACCOUNT_ID),
-                           not(fieldEquals(Account.ACCOUNT_TYPE, AccountType.MAIN.getId()))),
-                        not(fieldEquals(Account.ID, Account.SAVINGS_SUMMARY_ACCOUNT_ID)));
+    return GlobMatchers.or(GlobMatchers.fieldEquals(Account.ID, Account.EXTERNAL_ACCOUNT_ID),
+                           GlobMatchers.not(GlobMatchers.contained(Account.ID, Account.SUMMARY_ACCOUNT_IDS)));
+//    return and(not(fieldEquals(Account.ID, Account.ALL_SUMMARY_ACCOUNT_ID)),
+//               or(fieldEquals(Account.ID, Account.MAIN_SUMMARY_ACCOUNT_ID),
+//                  not(fieldEquals(Account.ACCOUNT_TYPE, AccountType.MAIN.getId()))),
+//               not(fieldEquals(Account.ID, Account.SAVINGS_SUMMARY_ACCOUNT_ID)));
   }
 
   private boolean isValidSeries(Glob series) {
@@ -540,11 +549,11 @@ public class SeriesEditionDialog {
       Set<Integer> positiveAccount = new HashSet<Integer>();
       Set<Integer> negativeAccount = new HashSet<Integer>();
       for (Glob transaction : selectedTransactions) {
-        Glob account = repository.findLinkTarget(transaction, Transaction.ACCOUNT);
+//        Glob account = repository.findLinkTarget(transaction, Transaction.ACCOUNT);
         Integer accountId = transaction.get(Transaction.ACCOUNT);
-        if (Account.isMain(account)) {
-          accountId = Account.MAIN_SUMMARY_ACCOUNT_ID;
-        }
+//        if (Account.isMain(account)) {
+//          accountId = Account.MAIN_SUMMARY_ACCOUNT_ID;
+//        }
         if (transaction.get(Transaction.AMOUNT) >= 0) {
           positiveAccount.add(accountId);
         }

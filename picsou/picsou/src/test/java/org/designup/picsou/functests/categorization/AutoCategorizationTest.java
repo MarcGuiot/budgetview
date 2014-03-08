@@ -111,25 +111,27 @@ public class AutoCategorizationTest extends LoggedInFunctionalTestCase {
     String path = OfxBuilder
       .init(this)
       .addBankAccount(30066, 10674, "000123", 0, "2006/01/11")
+      .addTransaction("2006/01/10", -2.2, "virement")
       .addCardAccount("000111", 0, "2006/01/11")
       .addTransaction("2006/01/10", -1.1, "Menu K")
       .addTransaction("2006/01/11", -1.1, "Fouquet's")
       .save();
+//    System.out.println("AutoCategorizationTest.testAutoCategorizationWithCardTransactions " + path);
+//    openApplication();
     operations
       .openImportDialog()
       .setFilePath(path)
       .acceptFile()
-      .setDeferredAccount(25, 28, 0)
-      .doImport()
       .setMainAccount()
-      .completeImportWithNext();
-
-//    .loadDeferredCard("Card n. 000111");
+      .doImport()
+      .setDeferredAccount(25, 28, 0, "Account n. 000123")
+      .completeImport();
 
     views.selectData();
     transactions.initContent()
       .add("11/01/2006", TransactionType.CREDIT_CARD, "Fouquet's", "", -1.10)
       .add("10/01/2006", TransactionType.CREDIT_CARD, "Menu K", "", -1.10)
+      .add("10/01/2006", TransactionType.PRELEVEMENT, "virement", "", -2.2)
       .check();
 
     views.selectCategorization();
@@ -144,6 +146,7 @@ public class AutoCategorizationTest extends LoggedInFunctionalTestCase {
       .add("12/01/2006", TransactionType.CREDIT_CARD, "Menu K", "", -1.30, "dej")
       .add("11/01/2006", TransactionType.CREDIT_CARD, "Fouquet's", "", -1.10)
       .add("10/01/2006", TransactionType.CREDIT_CARD, "Menu K", "", -1.10, "dej")
+      .add("10/01/2006", TransactionType.PRELEVEMENT, "virement", "", -2.2)
       .check();
   }
 

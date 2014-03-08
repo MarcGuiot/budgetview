@@ -228,7 +228,7 @@ public class SeriesDeletionTest extends LoggedInFunctionalTestCase {
     savingsAccounts.createSavingsAccount("Livret", 1000.00);
     budgetView.savings.createSeries()
       .setName("Epargne")
-      .setFromAccount("Main accounts")
+      .setFromAccount("Account n. 00001123")
       .setToAccount("Livret")
       .validate();
 
@@ -344,5 +344,25 @@ public class SeriesDeletionTest extends LoggedInFunctionalTestCase {
     budgetView.variable.editSeries("Drinks")
       .checkEndDate("May 2008")
       .validate();
+  }
+
+  public void testTransferOnlyIfSameAccount() throws Exception {
+    mainAccounts.createMainAccount("her account", 10);
+    OfxBuilder.init(this)
+      .addTransaction("2010/12/01", 100.00, "Auchan")
+      .loadInAccount("her account");
+    mainAccounts.createMainAccount("his account", 10);
+
+    budgetView.variable.createSeries("courses", "her account");
+    budgetView.variable.createSeries("courses sans compte");
+    categorization.setVariable("Auchan", "courses");
+    budgetView.variable.createSeries("his courses", "his account");
+    budgetView.variable.openDeleteSeries("courses")
+    .checkTransferSeries("courses sans compte").cancel();
+    budgetView.variable.createSeries("her courses", "her account");
+    budgetView.variable.openDeleteSeries("courses")
+      .checkTransferSeries("courses sans compte", "her courses")
+      .selectTransferSeries("courses sans compte").transfer();
+    budgetView.variable.editSeries("courses sans compte").checkTargetAccount("her account");
   }
 }

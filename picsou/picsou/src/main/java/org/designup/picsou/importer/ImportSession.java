@@ -127,7 +127,8 @@ public class ImportSession {
     });
     accountIds =
       importRepository.getAll(RealAccount.TYPE, GlobMatchers.contained(RealAccount.ID, tmpAccountIds))
-        .sort(RealAccount.NAME).sort(RealAccount.NUMBER);
+        //=>compte carte (debit differé) en premier pour qu'on puisse choisir le compte en target.
+        .sort(RealAccount.CARD_TYPE, RealAccount.NAME, RealAccount.NUMBER);
 
     // on met en premier un compte qui a des operations sinon, le dateFormat sera demandé pour un compte
     // potentiellement vide
@@ -256,28 +257,34 @@ public class ImportSession {
   }
 
   public Key importTransactions(Glob importedAccount, Glob currentlySelectedAccount, String selectedDateFormat) {
-    localRepository.delete(Key.create(CurrentAccountInfo.TYPE, 0));
-    if (!load) {
-      return null;
-    }
-    if (accountIds.isEmpty()) {
-      load = false;
-    }
+    try {
+      localRepository.startChangeSet();
+      localRepository.delete(Key.create(CurrentAccountInfo.TYPE, 0));
+      if (!load) {
+        return null;
+      }
+      if (accountIds.isEmpty()) {
+        load = false;
+      }
 
-    BankPluginService bankPluginService = directory.get(BankPluginService.class);
-    GlobList transactions = localRepository.getAll(ImportedTransaction.TYPE);
-    bankPluginService.apply(currentlySelectedAccount, importedAccount, transactions, referenceRepository,
-                            localRepository, importChangeSet);
+      BankPluginService bankPluginService = directory.get(BankPluginService.class);
+      GlobList transactions = localRepository.getAll(ImportedTransaction.TYPE);
+      bankPluginService.apply(currentlySelectedAccount, importedAccount, transactions, referenceRepository,
+                              localRepository, importChangeSet);
 
-    GlobList allNewTransactions = convertImportedTransaction(selectedDateFormat, currentlySelectedAccount.get(Account.ID));
+      GlobList allNewTransactions = convertImportedTransaction(selectedDateFormat, currentlySelectedAccount.get(Account.ID));
 
-    boolean value = shouldImportSeries();
-    if (value) {
-      referenceRepository.update(importKey, TransactionImport.IS_WITH_SERIES, value);
-    }
+      boolean value = shouldImportSeries();
+      if (value) {
+        referenceRepository.update(importKey, TransactionImport.IS_WITH_SERIES, value);
+      }
 //    importKey = createCurrentImport(typedStream, localRepository);
-    setCurrentImport(allNewTransactions, localRepository);
-    localRepository.deleteAll(ImportedTransaction.TYPE);
+      setCurrentImport(allNewTransactions, localRepository);
+      localRepository.deleteAll(ImportedTransaction.TYPE);
+    }
+    finally {
+      localRepository.completeChangeSet();
+    }
     importChangeSetAggregator.dispose();
     try {
       DefaultChangeSet updateImportChangeSet = new DefaultChangeSet();

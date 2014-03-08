@@ -149,4 +149,19 @@ public class SerializationTest extends TestCase {
       .set(DummyObject.VALUE, 6.2)
       .get();
   }
+
+  public static final String TMP_OUTPUT_SER = "/tmp/output1G.ser";
+  final static long SIZE = 1000;
+
+  public static void main(String[] args) throws FileNotFoundException {
+    File file = new File(TMP_OUTPUT_SER);
+    SerializedInput serizalizedInput = SerializedInputOutputFactory.init(new BufferedInputStream(new FileInputStream(file)));
+    long start = System.nanoTime();
+    for (long i = 0; i < SIZE * (1024l * 1024l / 8l); i++) {
+      serizalizedInput.readNotNullDouble();
+    }
+    long end = System.nanoTime();
+    System.out.println("PerfRead.read " + file.length() / ((end - start) / 1000000000.) / 1024 / 1024);
+
+  }
 }

@@ -531,6 +531,11 @@ public class SeriesEditionDialogChecker extends SeriesAmountEditionChecker<Serie
     return this;
   }
 
+  public SeriesEditionDialogChecker setAccount(String account) {
+    dialog.getComboBox("targetAccount").select(account);
+    return this;
+  }
+
   public SeriesEditionDialogChecker checkFromContentEquals(String... name) {
     assertTrue(dialog.getComboBox("fromAccount").contentEquals(name));
     return this;
@@ -758,6 +763,11 @@ public class SeriesEditionDialogChecker extends SeriesAmountEditionChecker<Serie
 
   public SeriesEditionDialogChecker checkNoTipShown() {
     checkNoTipVisible(dialog);
+    return this;
+  }
+
+  public SeriesEditionDialogChecker checkTargetAccount(String accountName) {
+    assertThat(dialog.getComboBox("targetAccount").selectionEquals(accountName));
     return this;
   }
 }

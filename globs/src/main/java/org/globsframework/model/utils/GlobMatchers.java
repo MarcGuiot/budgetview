@@ -1,10 +1,13 @@
 package org.globsframework.model.utils;
 
+import org.globsframework.gui.SelectionService;
 import org.globsframework.metamodel.Field;
+import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.Link;
 import org.globsframework.metamodel.fields.*;
 import org.globsframework.metamodel.links.FieldMappingFunctor;
 import org.globsframework.model.Glob;
+import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.Key;
 import org.globsframework.utils.Strings;
@@ -540,5 +543,14 @@ public class GlobMatchers {
     public String toString() {
       return field.getFullName() + " in " + values;
     }
+  }
+
+  public static GlobMatcher notInSelection(final GlobType type, final SelectionService selectionService){
+    return new GlobMatcher() {
+      public boolean matches(Glob item, GlobRepository repository) {
+        GlobList currentSelection = selectionService.getSelection(type);
+        return !currentSelection.getKeySet().contains(item.getKey());
+      }
+    };
   }
 }

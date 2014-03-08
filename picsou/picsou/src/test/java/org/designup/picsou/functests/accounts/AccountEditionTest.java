@@ -262,6 +262,7 @@ public class AccountEditionTest extends LoggedInFunctionalTestCase {
       .setName("edf")
       .selectAllMonths()
       .setAmount(50)
+      .setAccount("Main")
       .validate();
 
     timeline.selectMonth("2008/10");
@@ -471,7 +472,7 @@ public class AccountEditionTest extends LoggedInFunctionalTestCase {
       .addTransaction("2008/06/27", -50, "Auchan")
       .addBankAccount("1234", 1000, "2008/06/30")
       .addTransaction("2008/06/28", -550, "Prelevement")
-      .loadDeferredCard("Card n. 1111");
+      .loadDeferredCard("Card n. 1111", "Account n. 1234");
 
     mainAccounts.edit("Card n. 1111")
       .setStartDate("2008/06/01")

@@ -196,22 +196,28 @@ public class OfxBuilder {
 
   public void loadDeferredCard(String accountName) {
     save();
-    importDefered(accountName, fileName, true);
+    importDefered(accountName, fileName, true, null);
   }
 
-  public void loadOneDeferredCard(String bank) {
+  public void loadDeferredCard(String accountName, String targetAccountName) {
+    save();
+    importDefered(accountName, fileName, true, targetAccountName);
+  }
+
+  public void loadOneDeferredCard(String bank, String targetAccountName) {
     save();
     operations.openImportDialog()
       .setFilePath(fileName)
       .acceptFile()
-      .setDeferredAccount(25, 28, 0)
+      .setDeferredAccount(25, 28, 0, targetAccountName)
       .selectBank(bank)
       .completeImport();
   }
 
-  private void importDefered(String accountName, final String fileName, boolean withMainAccount) {
+  private void importDefered(String accountName, final String fileName,
+                             boolean withMainAccount, String targetAccountName) {
     ImportDialogChecker importDialog = operations.openImportDialog();
-    importDialog.importDeferred(accountName, fileName, withMainAccount);
+    importDialog.importDeferred(accountName, fileName, withMainAccount, targetAccountName);
   }
 
   public void loadUnknown(String bank) {

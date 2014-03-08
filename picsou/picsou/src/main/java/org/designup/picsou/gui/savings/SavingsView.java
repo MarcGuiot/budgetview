@@ -79,7 +79,7 @@ public class SavingsView extends View implements GlobSelectionListener {
   }
 
   private GlobMatcher getFilter() {
-    return GlobMatchers.and(new AccountMatcher(),
+    return GlobMatchers.and(new Account.UserSavingAccountMatcher(),
                             accountDateMatcher,
                             GlobMatchers.not(GlobMatchers.fieldEquals(Account.ID,
                                                                       Account.MAIN_SUMMARY_ACCOUNT_ID)));
@@ -89,12 +89,6 @@ public class SavingsView extends View implements GlobSelectionListener {
     GlobList selectedMonth = selection.getAll(Month.TYPE);
     accountDateMatcher = new Matchers.AccountDateMatcher(selectedMonth);
     repeat.setFilter(getFilter());
-  }
-
-  private class AccountMatcher implements GlobMatcher {
-    public boolean matches(Glob account, GlobRepository repository) {
-      return Account.isUserCreatedSavingsAccount(account);
-    }
   }
 
   private class SavingsAccountsComponentFactory implements RepeatComponentFactory<Glob> {

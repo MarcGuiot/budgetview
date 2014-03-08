@@ -337,6 +337,9 @@ public class CategorizationView extends View implements TableView, Filterable {
         return false;
       }
       Integer subSeriesId = SeriesEditor.get(directory).getLastSelectedSubSeriesId();
+      if (series.get(Series.TARGET_ACCOUNT) == null) {
+        SeriesChooserComponentFactory.updateTargetSeries(transaction, series.getKey(), repository);
+      }
       repository.update(transaction.getKey(),
                         value(Transaction.SERIES, series.get(Series.ID)),
                         value(Transaction.SUB_SERIES, subSeriesId),

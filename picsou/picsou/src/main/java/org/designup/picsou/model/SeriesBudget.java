@@ -24,6 +24,7 @@ import static org.globsframework.model.FieldValue.value;
        loyer ?
        salaire ?
        credit ?
+       on a eu une demande pour l'alimentaire (c'est assez logique...)
        ==> que des mono operations.
    ajouter un WeeklyBudget avec comme clée parent l'ID du budget parent
    On laisse l'observed ici. On ne fait porter par WeeklyBudget que le montant pour
