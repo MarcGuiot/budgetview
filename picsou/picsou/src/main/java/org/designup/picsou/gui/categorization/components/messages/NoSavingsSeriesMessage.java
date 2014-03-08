@@ -1,5 +1,6 @@
-package org.designup.picsou.gui.categorization.components;
+package org.designup.picsou.gui.categorization.components.messages;
 
+import org.designup.picsou.gui.categorization.components.messages.NoSeriesMessage;
 import org.designup.picsou.model.Account;
 import org.designup.picsou.model.BudgetArea;
 import org.designup.picsou.model.AccountType;

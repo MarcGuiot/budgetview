@@ -1,4 +1,4 @@
-package org.designup.picsou.gui.categorization.components;
+package org.designup.picsou.gui.categorization.components.messages;
 
 import org.designup.picsou.model.BudgetArea;
 import org.designup.picsou.model.Series;
@@ -10,7 +10,6 @@ import org.globsframework.model.GlobRepository;
 import org.globsframework.model.utils.GlobMatchers;
 import org.globsframework.utils.directory.Directory;
 
-import javax.swing.*;
 import java.util.Set;
 
 public class NoSeriesMessage extends DynamicMessage {

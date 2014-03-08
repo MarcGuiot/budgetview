@@ -1,6 +1,7 @@
 package org.designup.picsou.gui.categorization.components;
 
 import org.designup.picsou.gui.accounts.AccountEditionDialog;
+import org.designup.picsou.gui.categorization.components.messages.DynamicMessage;
 import org.designup.picsou.model.Account;
 import org.designup.picsou.model.Transaction;
 import org.designup.picsou.utils.Lang;

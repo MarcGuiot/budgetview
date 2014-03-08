@@ -1,4 +1,4 @@
-package org.designup.picsou.gui.categorization.components;
+package org.designup.picsou.gui.categorization.components.messages;
 
 import org.designup.picsou.gui.help.HyperlinkHandler;
 import org.globsframework.gui.splits.utils.GuiUtils;

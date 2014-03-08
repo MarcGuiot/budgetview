@@ -1,6 +1,6 @@
 package org.designup.picsou.gui.categorization.reconciliation;
 
-import org.designup.picsou.gui.categorization.CategorizationView;
+import org.designup.picsou.gui.categorization.components.CategorizationTableView;
 import org.designup.picsou.gui.transactions.columns.TransactionRendererColors;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.SelectionService;
@@ -40,10 +40,10 @@ public class ReconciliationPanel {
 
     comparator = new ReferenceTransactionComparator();
     tableView =
-      CategorizationView.createTransactionTable("possibleTransactions", builder, colors,
-                                                comparator,
-                                                LabelCustomizer.NO_OP,
-                                                repository, localDirectory)
+      CategorizationTableView.createTransactionTable("possibleTransactions", builder, colors,
+                                                     comparator,
+                                                     LabelCustomizer.NO_OP,
+                                                     repository, localDirectory)
         .setFilter(GlobMatchers.NONE);
 
     reconcileAction = new ReconcileAction(repository, localDirectory);

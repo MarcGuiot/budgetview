@@ -1,5 +1,7 @@
 package org.designup.picsou.gui.categorization.components;
 
+import org.designup.picsou.gui.categorization.components.messages.BlankDynamicMessage;
+import org.designup.picsou.gui.categorization.components.messages.DynamicMessage;
 import org.designup.picsou.model.BudgetArea;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.utils.directory.Directory;

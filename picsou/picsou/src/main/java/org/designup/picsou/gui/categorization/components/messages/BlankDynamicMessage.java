@@ -1,4 +1,4 @@
-package org.designup.picsou.gui.categorization.components;
+package org.designup.picsou.gui.categorization.components.messages;
 
 import org.globsframework.model.GlobRepository;
 import org.globsframework.utils.directory.Directory;
