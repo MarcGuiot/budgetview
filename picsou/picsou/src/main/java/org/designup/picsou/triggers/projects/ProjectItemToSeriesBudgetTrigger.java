@@ -87,6 +87,10 @@ public class ProjectItemToSeriesBudgetTrigger extends AbstractChangeSetListener 
 
     Key seriesKey = Key.create(Series.TYPE, seriesId);
 
+    if (repository.find(seriesKey) == null){
+      return;
+    }
+
     GlobList transactions =
       repository.findByIndex(Transaction.SERIES_INDEX, Transaction.SERIES, seriesId)
         .getGlobs()
