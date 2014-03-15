@@ -8,9 +8,9 @@
   <repeat ref="seriesRepeat" margin="10">
     <column name="seriesBlock">
       <row>
-        <radioButton ref="seriesToggle" styleClass="selector"/>
-        <button ref="editSeries" styleClass="editIcon" tooltipText="$series.edit.tooltip" marginLeft="5"/>
-        <filler fill="horizontal"/>
+        <radioButton ref="seriesToggle" styleClass="selector" weightX="1"/>
+        <button ref="editSeries" styleClass="editIcon" tooltipText="$series.edit.tooltip" marginLeft="5" weightX="1"/>
+        <filler fill="horizontal" weightX="1000"/>
       </row>
       <repeat ref="subSeriesRepeat" marginLeft="15" border="matte(0,1,0,0,categorization.subseries.line)" autoHideIfEmpty="true">
         <radioButton ref="subSeriesSelector" styleClass="subSeriesSelector"/>

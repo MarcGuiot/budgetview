@@ -21,6 +21,8 @@
 
     <style selector="htmlEditorPane.hints" weightY="0.1" border="empty(0,10,10,10)" font="-,plain,12"/>
 
+    <style selector="#groupLabel" foreground="toggle.selector.group"/>
+
   </styles>
 
   <column>
