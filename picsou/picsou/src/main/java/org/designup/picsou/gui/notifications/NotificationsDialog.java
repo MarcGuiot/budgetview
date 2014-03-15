@@ -8,15 +8,14 @@ import org.designup.picsou.model.Account;
 import org.designup.picsou.model.AccountPositionError;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.splits.SplitsBuilder;
+import org.globsframework.gui.splits.PanelBuilder;
 import org.globsframework.gui.splits.repeat.Repeat;
-import org.globsframework.gui.splits.repeat.RepeatCellBuilder;
 import org.globsframework.gui.splits.repeat.RepeatComponentFactory;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.repository.LocalGlobRepository;
 import org.globsframework.model.repository.LocalGlobRepositoryBuilder;
-import org.globsframework.model.utils.GlobComparators;
 import org.globsframework.model.utils.GlobFieldsComparator;
 import org.globsframework.utils.directory.Directory;
 
@@ -49,7 +48,7 @@ public class NotificationsDialog {
 
     repeat = builder
       .addRepeat("messages", notifications, new RepeatComponentFactory<Notification>() {
-        public void registerComponents(RepeatCellBuilder cellBuilder, Notification notification) {
+        public void registerComponents(PanelBuilder cellBuilder, Notification notification) {
           cellBuilder.add("date", new JLabel(Formatting.toString(notification.getDate())));
 
           JTextArea messageText = new JTextArea(notification.getMessage());

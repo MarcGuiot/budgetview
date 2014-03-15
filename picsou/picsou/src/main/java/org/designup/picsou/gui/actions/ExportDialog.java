@@ -9,7 +9,7 @@ import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.splits.SplitsLoader;
 import org.globsframework.gui.splits.SplitsNode;
-import org.globsframework.gui.splits.repeat.RepeatCellBuilder;
+import org.globsframework.gui.splits.PanelBuilder;
 import org.globsframework.gui.splits.repeat.RepeatComponentFactory;
 import org.globsframework.gui.splits.utils.Disposable;
 import org.globsframework.gui.splits.utils.GuiUtils;
@@ -51,7 +51,7 @@ public class ExportDialog {
     builder.addRepeat("types",
                       exporters.getAll(),
                       new RepeatComponentFactory<Exporter>() {
-                        public void registerComponents(RepeatCellBuilder cellBuilder, Exporter exporter) {
+                        public void registerComponents(PanelBuilder cellBuilder, Exporter exporter) {
                           final String exporterType = exporter.getType();
 
                           JRadioButton radio = new JRadioButton();

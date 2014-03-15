@@ -435,7 +435,7 @@ public class ProjectManagementTest extends LoggedInFunctionalTestCase {
       .deleteItem(0);
 
     categorization.selectTransaction("EUROPCAR").getExtras().checkNoSeriesSelected();
-    categorization.selectTransaction("SHERATON").getExtras().checkSeriesIsSelected("Accomodation");
+    categorization.selectTransaction("SHERATON").getExtras().checkSelectedSeries("Accomodation");
     categorization.selectTransaction("SNCF").getExtras().checkNoSeriesSelected();
 
     transactions.initContent()

@@ -2,6 +2,7 @@ package org.designup.picsou.gui.categorization.special;
 
 import org.designup.picsou.gui.actions.ImportFileAction;
 import org.designup.picsou.gui.categorization.CategorizationView;
+import org.designup.picsou.gui.categorization.utils.CategorizationMatchers;
 import org.designup.picsou.gui.categorization.utils.FilteredRepeats;
 import org.designup.picsou.gui.categorization.utils.SeriesCreationHandler;
 import org.designup.picsou.gui.help.HyperlinkHandler;
@@ -60,7 +61,7 @@ public class DeferredCardCategorizationPanel implements SpecialCategorizationPan
     panelBuilder.add("message", message);
 
     repeatHandler = filteredRepeats.addRepeat(budgetArea, panelBuilder,
-                                              Matchers.deferredCardCategorizationFilter());
+                                              CategorizationMatchers.deferredCardCategorizationFilter());
     repeatHandler.addListener(new Functor() {
       public void run() throws Exception {
         updateDisplay();

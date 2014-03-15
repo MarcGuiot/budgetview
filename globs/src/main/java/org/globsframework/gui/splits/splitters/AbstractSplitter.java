@@ -35,7 +35,6 @@ public abstract class AbstractSplitter implements Splitter {
     setGridPos(splitComponent.componentConstraints);
     overrideStretch(splitComponent.componentConstraints);
     Component component = splitComponent.componentConstraints.getComponent();
-//    setOpacity(component);
     if (addMargin) {
       addMargin(splitComponent.componentConstraints);
     }

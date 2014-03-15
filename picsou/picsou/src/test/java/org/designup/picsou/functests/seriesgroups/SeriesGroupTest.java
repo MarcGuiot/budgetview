@@ -79,7 +79,60 @@ public class SeriesGroupTest extends LoggedInFunctionalTestCase {
   }
 
   public void testGroupsAreShownInCategorizationView() throws Exception {
-    fail("tbd: review categorization.xxx.checkGroup()");
+    OfxBuilder.init(this)
+      .addTransaction("2013/12/12", -70.00, "Auchan")
+      .addTransaction("2013/12/15", -50.00, "Monoprix")
+      .addTransaction("2014/01/10", -80.00, "Auchan")
+      .addTransaction("2014/01/11", -30.00, "Lidl")
+      .addTransaction("2014/01/11", -100.00, "FNAC")
+      .load();
+
+    categorization.setNewVariable("AUCHAN", "Food", -200.00);
+    categorization.setNewVariable("MONOPRIX", "Home", -100.00);
+    categorization.setNewVariable("FNAC", "Leisures", -200.00);
+
+    categorization.getVariable()
+      .checkContainsSeries("Food", "Home", "Leisures")
+      .checkContainsNoGroup();
+
+    budgetView.variable.addToNewGroup("Food", "Groceries");
+    categorization.getVariable()
+      .checkSeriesListEquals("Home", "Leisures", "Food")
+      .checkNoGroupSeriesListEquals("Home", "Leisures")
+      .checkGroupContainsSeries("Groceries", "Food")
+      .checkSelectedSeries("Leisures");
+
+    categorization
+      .selectTransaction("AUCHAN")
+      .getVariable()
+      .checkSelectedSeries("Food");
+
+    budgetView.variable.addToGroup("Leisures", "Groceries");
+    categorization.getVariable()
+      .checkSeriesListEquals("Home", "Food", "Leisures")
+      .checkNoGroupSeriesListEquals("Home")
+      .checkGroupContainsSeries("Groceries", "Food", "Leisures")
+      .checkSelectedSeries("Food");
+
+    budgetView.variable.removeFromGroup("Food");
+    categorization.getVariable()
+      .checkSeriesListEquals("Food", "Home", "Leisures")
+      .checkNoGroupSeriesListEquals("Food", "Home")
+      .checkGroupContainsSeries("Groceries", "Leisures")
+      .checkSelectedSeries("Food");
+
+    operations.undo();
+    categorization.getVariable()
+      .checkSeriesListEquals("Home", "Food", "Leisures")
+      .checkNoGroupSeriesListEquals("Home")
+      .checkGroupContainsSeries("Groceries", "Food", "Leisures")
+      .checkSelectedSeries("Food");
+
+    budgetView.variable.deleteGroup("Groceries");
+    categorization.getVariable()
+      .checkSeriesListEquals("Food", "Home", "Leisures")
+      .checkContainsNoGroup()
+      .checkSelectedSeries("Food");
   }
 
   public void testMonthLimits() throws Exception {

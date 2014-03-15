@@ -26,7 +26,7 @@ import org.globsframework.gui.components.GlobSelectablePanel;
 import org.globsframework.gui.components.GlobSelectionToggle;
 import org.globsframework.gui.components.GlobUnselectPanel;
 import org.globsframework.gui.splits.SplitsNode;
-import org.globsframework.gui.splits.repeat.RepeatCellBuilder;
+import org.globsframework.gui.splits.PanelBuilder;
 import org.globsframework.gui.splits.repeat.RepeatComponentFactory;
 import org.globsframework.gui.utils.*;
 import org.globsframework.gui.views.AbstractGlobTextView;
@@ -127,7 +127,7 @@ public abstract class AccountViewPanel {
   }
 
   private class AccountRepeatFactory implements RepeatComponentFactory<Glob> {
-    public void registerComponents(RepeatCellBuilder cellBuilder, final Glob account) {
+    public void registerComponents(PanelBuilder cellBuilder, final Glob account) {
 
       SplitsNode<JPanel> accountPanel = cellBuilder.add("accountPanel", new JPanel());
       GlobSelectablePanel toggle =
@@ -135,7 +135,7 @@ public abstract class AccountViewPanel {
                                 "selectedPanel", "unselectedPanel",
                                 "selectedRolloverPanel", "unselectedRolloverPanel",
                                 repository, directory, account.getKey());
-      cellBuilder.addDisposeListener(toggle);
+      cellBuilder.addDisposable(toggle);
 
       add("editAccount",
           createEditAccountButton(account, repository, directory), account, cellBuilder);
@@ -148,11 +148,11 @@ public abstract class AccountViewPanel {
                                       "accountPositionsChart",
                                       new SelectionHistoChartRange(repository, directory), repository, directory);
       positionsChart.registerComponents(cellBuilder);
-      cellBuilder.addDisposeListener(positionsChart);
+      cellBuilder.addDisposable(positionsChart);
 
       GlobSelectionToggle selectionToggle = new GlobSelectionToggle(account.getKey(), repository, directory);
       cellBuilder.add("selectAccount", selectionToggle.getComponent());
-      cellBuilder.addDisposeListener(selectionToggle);
+      cellBuilder.addDisposable(selectionToggle);
 
       add("accountUpdateDate",
           GlobLabelView.init(Account.POSITION_DATE, repository, directory)
@@ -181,13 +181,13 @@ public abstract class AccountViewPanel {
         ).forceSelection(account.getKey());
       cellBuilder.add("accountPosition", balance.getComponent());
 
-      cellBuilder.addDisposeListener(balance);
+      cellBuilder.addDisposable(balance);
     }
 
-    private void add(String name, final AbstractGlobTextView labelView, Glob account, RepeatCellBuilder cellBuilder) {
+    private void add(String name, final AbstractGlobTextView labelView, Glob account, PanelBuilder cellBuilder) {
       labelView.forceSelection(account.getKey());
       cellBuilder.add(name, labelView.getComponent());
-      cellBuilder.addDisposeListener(labelView);
+      cellBuilder.addDisposable(labelView);
     }
   }
 

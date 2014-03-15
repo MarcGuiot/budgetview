@@ -12,7 +12,7 @@ import org.designup.picsou.model.ImportedTransaction;
 import org.designup.picsou.model.RealAccount;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobsPanelBuilder;
-import org.globsframework.gui.splits.repeat.RepeatCellBuilder;
+import org.globsframework.gui.splits.PanelBuilder;
 import org.globsframework.gui.splits.repeat.RepeatComponentFactory;
 import org.globsframework.gui.splits.utils.Disposable;
 import org.globsframework.gui.splits.utils.GuiUtils;
@@ -333,7 +333,7 @@ public class CsvImporterDialog {
 
     private static final int MAX_LABEL_LENGTH = 40;
 
-    public void registerComponents(RepeatCellBuilder cellBuilder, final FieldAssociation fieldAssociation) {
+    public void registerComponents(PanelBuilder cellBuilder, final FieldAssociation fieldAssociation) {
       final StringField field = fieldAssociation.fileField;
 
       String firstLineContent = Strings.cut(field.getName(), MAX_LABEL_LENGTH);

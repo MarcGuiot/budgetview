@@ -25,7 +25,7 @@ import org.globsframework.gui.GlobSelection;
 import org.globsframework.gui.GlobSelectionListener;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.editors.GlobToggleEditor;
-import org.globsframework.gui.splits.repeat.RepeatCellBuilder;
+import org.globsframework.gui.splits.PanelBuilder;
 import org.globsframework.gui.splits.repeat.RepeatComponentFactory;
 import org.globsframework.gui.splits.utils.Disposable;
 import org.globsframework.gui.components.GlobRepeat;
@@ -220,17 +220,17 @@ public class ProjectEditionView extends View implements GlobSelectionListener {
       itemPanelFactory = new ProjectItemPanelFactory(scrollPane, repository, directory);
     }
 
-    public void registerComponents(RepeatCellBuilder cellBuilder, final Glob item) {
+    public void registerComponents(PanelBuilder cellBuilder, final Glob item) {
       ProjectItemPanel itemPanel = itemPanelFactory.create(item);
       cellBuilder.add("projectItemPanel", itemPanel.getPanel());
 
       itemPanels.put(item.getKey(), itemPanel);
-      cellBuilder.addDisposeListener(new Disposable() {
+      cellBuilder.addDisposable(new Disposable() {
         public void dispose() {
           itemPanels.remove(item.getKey());
         }
       });
-      cellBuilder.addDisposeListener(itemPanel);
+      cellBuilder.addDisposable(itemPanel);
     }
   }
 

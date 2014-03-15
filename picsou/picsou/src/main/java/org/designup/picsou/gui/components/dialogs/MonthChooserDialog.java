@@ -8,7 +8,7 @@ import org.globsframework.gui.splits.SplitsBuilder;
 import org.globsframework.gui.splits.color.ColorChangeListener;
 import org.globsframework.gui.splits.color.ColorLocator;
 import org.globsframework.gui.splits.color.ColorService;
-import org.globsframework.gui.splits.repeat.RepeatCellBuilder;
+import org.globsframework.gui.splits.PanelBuilder;
 import org.globsframework.gui.splits.repeat.RepeatComponentFactory;
 import org.globsframework.gui.splits.utils.Disposable;
 import org.globsframework.utils.directory.Directory;
@@ -185,7 +185,7 @@ public class MonthChooserDialog implements ColorChangeListener, Disposable {
       this.index = index;
     }
 
-    public void registerComponents(RepeatCellBuilder cellBuilder, final Integer item) {
+    public void registerComponents(PanelBuilder cellBuilder, final Integer item) {
       AbstractAction action = new AbstractAction(Month.getShortMonthLabel(item)) {
         public void actionPerformed(ActionEvent e) {
           selection.set(Month.toMonthId(currentYear, item));

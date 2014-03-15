@@ -82,7 +82,7 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
       .checkDescriptionDisplayed()
       .checkNoSeriesMessage("You must create a series")
       .selectNewSeries("Courant")
-      .checkSeriesIsSelected("Courant")
+      .checkSelectedSeries("Courant")
       .checkNoSeriesMessageHidden();
 
     transactions.checkSeries(0, "Courant");
@@ -135,7 +135,7 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
     });
 
     categorization.selectTableRow(0);
-    categorization.getVariable().checkSeriesIsSelected("Groceries");
+    categorization.getVariable().checkSelectedSeries("Groceries");
     categorization.selectTableRow(1);
     categorization.checkRecurringSeriesIsSelected("Internet");
   }
@@ -178,7 +178,7 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
     categorization.checkRecurringSeriesIsSelected("Comm");
 
     categorization.selectTableRows(0, 3);
-    categorization.getVariable().checkSeriesIsSelected("Groceries");
+    categorization.getVariable().checkSelectedSeries("Groceries");
   }
 
   public void testSelectingASeriesInABudgetAreaUnselectsPreviousSeriesInOtherBudgetAreas() throws Exception {
@@ -201,11 +201,11 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
 
     categorization.setNewVariable("France Telecom", "Phone");
 
-    categorization.selectRecurring().checkSeriesNotSelected("Telephone");
+    categorization.selectRecurring().checkNoSeriesSelected();
     categorization.setRecurring("France Telecom", "Telephone");
 
     categorization.selectVariable();
-    categorization.getVariable().checkSeriesNotSelected("Phone");
+    categorization.getVariable().checkNoSeriesSelected();
   }
 
   public void testRevertingTransactionsToUncategorized() throws Exception {
@@ -630,7 +630,7 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
       {"26/06/2008", "", "Free Telecom 26/06", -29.90}
     });
     categorization.checkSelectedTableRows(0, 1);
-    categorization.getVariable().checkSeriesIsSelected("Groceries");
+    categorization.getVariable().checkSelectedSeries("Groceries");
 
     categorization.showUncategorizedTransactionsOnly();
     categorization.checkTable(new Object[][]{
@@ -1477,7 +1477,7 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
       .checkLabel("AUCHAN C'EST BON")
       .selectVariable()
       .selectNewSeries("Courant")
-      .checkSeriesIsSelected("Courant");
+      .checkSelectedSeries("Courant");
     categorization.checkYellowBgLabel(0, 1);
     categorization.selectTableRow(1)
       .checkNormalBgColor(0, 1)
@@ -1663,6 +1663,6 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
       .selectRecurring()
       .createSeries().setName("Free").gotoSubSeriesTab().addSubSeries("box").selectSubSeries("box").validate();
 
-    categorization.selectVariable().checkSeriesNotSelected("other");
+    categorization.selectVariable().checkNoSeriesSelected();
   }
 }

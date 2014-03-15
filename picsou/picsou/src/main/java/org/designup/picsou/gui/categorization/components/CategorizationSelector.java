@@ -11,7 +11,7 @@ import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.SelectionService;
 import org.globsframework.gui.splits.SplitsNode;
 import org.globsframework.gui.splits.layout.CardHandler;
-import org.globsframework.gui.splits.repeat.RepeatCellBuilder;
+import org.globsframework.gui.splits.PanelBuilder;
 import org.globsframework.gui.splits.repeat.RepeatComponentFactory;
 import org.globsframework.gui.splits.utils.Disposable;
 import org.globsframework.metamodel.GlobType;
@@ -149,7 +149,7 @@ public class CategorizationSelector implements GlobSelectionListener, ChangeSetL
       buttonGroup.add(multiBudgetAreaToggle);
     }
 
-    public void registerComponents(RepeatCellBuilder cellBuilder, final BudgetArea budgetArea) {
+    public void registerComponents(PanelBuilder cellBuilder, final BudgetArea budgetArea) {
       String label = budgetAreaStringifier.toString(repository.get(budgetArea.getKey()), repository);
       final JToggleButton toggle = new JToggleButton(new AbstractAction(label) {
         public void actionPerformed(ActionEvent e) {
@@ -165,7 +165,7 @@ public class CategorizationSelector implements GlobSelectionListener, ChangeSetL
       buttonGroup.add(toggle);
       toggles.put(budgetArea, toggle);
 
-      cellBuilder.addDisposeListener(new Disposable() {
+      cellBuilder.addDisposable(new Disposable() {
         public void dispose() {
           buttonGroup.remove(toggle);
           toggles.remove(budgetArea);

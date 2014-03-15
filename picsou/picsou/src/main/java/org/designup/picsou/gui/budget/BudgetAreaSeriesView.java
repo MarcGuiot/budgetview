@@ -27,8 +27,8 @@ import org.globsframework.gui.GlobSelectionListener;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.splits.SplitsLoader;
 import org.globsframework.gui.splits.SplitsNode;
+import org.globsframework.gui.splits.PanelBuilder;
 import org.globsframework.gui.splits.repeat.Repeat;
-import org.globsframework.gui.splits.repeat.RepeatCellBuilder;
 import org.globsframework.gui.splits.repeat.RepeatComponentFactory;
 import org.globsframework.gui.splits.utils.Disposable;
 import org.globsframework.gui.splits.utils.GlobListener;
@@ -246,13 +246,13 @@ public class BudgetAreaSeriesView extends View {
       });
     }
 
-    public void registerComponents(RepeatCellBuilder cellBuilder, final Glob periodSeriesStat) {
+    public void registerComponents(PanelBuilder cellBuilder, final Glob periodSeriesStat) {
 
       final Glob target = PeriodSeriesStat.findTarget(periodSeriesStat, repository);
 
       NameLabelPopupButton nameButton = getNameButton(periodSeriesStat, target, cellBuilder);
       final SplitsNode<JButton> seriesName = cellBuilder.add("seriesName", nameButton.getComponent());
-      cellBuilder.addDisposeListener(nameButton);
+      cellBuilder.addDisposable(nameButton);
 
       final SplitsNode<JButton> observedAmountButton = addAmountButton("observedSeriesAmount", PeriodSeriesStat.AMOUNT, periodSeriesStat, cellBuilder, new GlobListFunctor() {
         public void run(GlobList list, GlobRepository repository) {
@@ -285,9 +285,9 @@ public class BudgetAreaSeriesView extends View {
                                                                     seriesName,
                                                                     observedAmountButton,
                                                                     plannedAmountButton);
-      cellBuilder.addDisposeListener(updater);
+      cellBuilder.addDisposable(updater);
       if (budgetArea == BudgetArea.VARIABLE && !SignpostStatus.isCompleted(SignpostStatus.SERIES_AMOUNT_SHOWN, repository)) {
-        cellBuilder.addDisposeListener(new Disposable() {
+        cellBuilder.addDisposable(new Disposable() {
           public void dispose() {
             updaters.remove(updater);
           }
@@ -319,11 +319,11 @@ public class BudgetAreaSeriesView extends View {
           seriesName.applyStyle(highlighted ? "highlightedAmount" : "standardAmount");
         }
       };
-      cellBuilder.addDisposeListener(highlightUpdater);
+      cellBuilder.addDisposable(highlightUpdater);
 
       cellBuilder.add("gauge", gaugeView.getComponent());
-      cellBuilder.addDisposeListener(gaugeView);
-      cellBuilder.addDisposeListener(new Disposable() {
+      cellBuilder.addDisposable(gaugeView);
+      cellBuilder.addDisposable(new Disposable() {
         public void dispose() {
           visibles.remove(gaugeView);
         }
@@ -337,10 +337,10 @@ public class BudgetAreaSeriesView extends View {
       DeltaGauge deltaGauge = deltaGaugeView.getComponent();
       cellBuilder.add("deltaGauge", deltaGauge);
       deltaGauge.setActionListener(new ShowDetailsTipAction(deltaGauge, directory));
-      cellBuilder.addDisposeListener(deltaGaugeView);
+      cellBuilder.addDisposable(deltaGaugeView);
     }
 
-    private NameLabelPopupButton getNameButton(Glob periodSeriesStat, Glob target, RepeatCellBuilder cellBuilder) {
+    private NameLabelPopupButton getNameButton(Glob periodSeriesStat, Glob target, PanelBuilder cellBuilder) {
       switch (PeriodSeriesStat.getSeriesType(periodSeriesStat)) {
         case SERIES:
         {
@@ -350,7 +350,7 @@ public class BudgetAreaSeriesView extends View {
               button.getComponent().putClientProperty(IS_GROUP_ELEMENT_PROPERTY, series != null && series.get(Series.GROUP) != null);
             }
           });
-          cellBuilder.addDisposeListener(disposable);
+          cellBuilder.addDisposable(disposable);
           return button;
         }
         case SERIES_GROUP:
@@ -435,14 +435,14 @@ public class BudgetAreaSeriesView extends View {
     private SplitsNode<JButton> addAmountButton(String name,
                                                 DoubleField field,
                                                 final Glob periodSeriesStat,
-                                                RepeatCellBuilder cellBuilder,
+                                                PanelBuilder cellBuilder,
                                                 final GlobListFunctor callback) {
       final GlobButtonView amountButtonView =
         GlobButtonView.init(PeriodSeriesStat.TYPE, repository, directory, getStringifier(field), callback)
           .forceSelection(periodSeriesStat.getKey());
       JButton button = amountButtonView.getComponent();
       SplitsNode<JButton> node = cellBuilder.add(name, button);
-      cellBuilder.addDisposeListener(amountButtonView);
+      cellBuilder.addDisposable(amountButtonView);
       return node;
     }
   }

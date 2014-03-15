@@ -10,7 +10,7 @@ import org.designup.picsou.model.Project;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.splits.SplitsNode;
-import org.globsframework.gui.splits.repeat.RepeatCellBuilder;
+import org.globsframework.gui.splits.PanelBuilder;
 import org.globsframework.gui.splits.repeat.RepeatComponentFactory;
 import org.globsframework.gui.splits.utils.OnLoadListener;
 import org.globsframework.gui.splits.utils.ToggleVisibilityAction;
@@ -57,7 +57,7 @@ public class ProjectListView extends View {
   }
 
   private class ProjectComponentFactory implements RepeatComponentFactory<Glob> {
-    public void registerComponents(RepeatCellBuilder builder, final Glob projectStat) {
+    public void registerComponents(PanelBuilder builder, final Glob projectStat) {
 
       final Key projectKey = Key.create(Project.TYPE, projectStat.get(ProjectStat.PROJECT));
 
@@ -65,18 +65,18 @@ public class ProjectListView extends View {
 
       ProjectButton button = new ProjectButton(projectKey, menuFactory, repository, directory);
       builder.add("projectButton", button);
-      builder.addDisposeListener(button);
+      builder.addDisposable(button);
 
       GlobLabelView name = GlobLabelView.init(Project.NAME, repository, directory)
         .forceSelection(projectKey);
       SplitsNode<JLabel> nameNode = builder.add("name", name.getComponent());
-      builder.addDisposeListener(name);
+      builder.addDisposable(name);
 
       final GlobBooleanNodeStyleUpdater nameUpdater =
         new GlobBooleanNodeStyleUpdater(Project.ACTIVE, nameNode,
                                         "activeProjectName", "inactiveProjectName",
                                         repository);
-      builder.addDisposeListener(nameUpdater);
+      builder.addDisposable(nameUpdater);
 
       builder.addOnLoadListener(new OnLoadListener() {
         public void processLoad() {
@@ -85,9 +85,9 @@ public class ProjectListView extends View {
       });
     }
 
-    private PopupMenuFactory createPopupFactory(Key projectKey, RepeatCellBuilder builder) {
+    private PopupMenuFactory createPopupFactory(Key projectKey, PanelBuilder builder) {
       ProjectPopupMenuFactory menuFactory = new ProjectPopupMenuFactory(projectKey, repository, directory);
-      builder.addDisposeListener(menuFactory);
+      builder.addDisposable(menuFactory);
       return menuFactory;
     }
   }

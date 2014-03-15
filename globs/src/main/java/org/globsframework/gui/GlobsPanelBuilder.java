@@ -4,8 +4,8 @@ import org.globsframework.gui.actions.CreateGlobAction;
 import org.globsframework.gui.actions.DeleteGlobAction;
 import org.globsframework.gui.editors.*;
 import org.globsframework.gui.splits.SplitsBuilder;
+import org.globsframework.gui.splits.PanelBuilder;
 import org.globsframework.gui.splits.repeat.Repeat;
-import org.globsframework.gui.splits.repeat.RepeatCellBuilder;
 import org.globsframework.gui.splits.repeat.RepeatComponentFactory;
 import org.globsframework.gui.components.GlobRepeat;
 import org.globsframework.gui.components.GlobRepeatListener;
@@ -206,13 +206,13 @@ public class GlobsPanelBuilder extends SplitsBuilder {
   }
 
   public static GlobRepeat addRepeat(String name, final GlobType type, GlobMatcher matcher,
-                                     Comparator<Glob> comparator, GlobRepository repository, RepeatCellBuilder builder,
+                                     Comparator<Glob> comparator, GlobRepository repository, PanelBuilder builder,
                                      RepeatComponentFactory<Glob> factory) {
     GlobRepeatUpdater updater = new GlobRepeatUpdater();
     final GlobViewModel model = new GlobViewModel(type, repository, comparator, updater);
     model.setFilter(matcher, true);
     Repeat<Glob> repeat = builder.addRepeat(name, model.getAll(), factory);
-    builder.addDisposeListener(model);
+    builder.addDisposable(model);
     updater.set(model, repeat);
     return updater;
   }
@@ -318,6 +318,10 @@ public class GlobsPanelBuilder extends SplitsBuilder {
       if (listeners.isEmpty()) {
         listeners = null;
       }
+    }
+
+    public void refresh() {
+      model.refresh();
     }
 
     private void notifyListeners() {

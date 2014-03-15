@@ -187,7 +187,7 @@ public abstract class PerfsTest extends LoggedInFunctionalTestCase {
 
       categorization.selectTransactions("Auchan");
       categorization.selectVariable().selectNewSeries("Courant");
-      categorization.getVariable().checkSeriesIsSelected("Courant");
+      categorization.getVariable().checkSelectedSeries("Courant");
 
       transactions.checkSeries("Auchan", "Courant");
       operations.undo();
@@ -195,7 +195,7 @@ public abstract class PerfsTest extends LoggedInFunctionalTestCase {
       operations.redo();
       transactions.checkSeries("Auchan", "Courant");
 
-      categorization.getVariable().checkSeriesIsSelected("Courant");
+      categorization.getVariable().checkSelectedSeries("Courant");
       operations.undo();
 
       categorization.selectAllTransactions();

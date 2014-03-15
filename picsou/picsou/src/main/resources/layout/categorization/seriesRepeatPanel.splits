@@ -1,0 +1,20 @@
+<splits xmlns="http://www.globsframework.org/xml/splits.xsd">
+
+  <styleImport file="/layout/picsouStyles.splits"/>
+  <styles>
+    <style selector="radioButton.subSeriesSelector" horizontalAlignment="left"/>
+  </styles>
+
+  <repeat ref="seriesRepeat" margin="10">
+    <column name="seriesBlock">
+      <row>
+        <radioButton ref="seriesToggle" styleClass="selector"/>
+        <button ref="editSeries" styleClass="editIcon" tooltipText="$series.edit.tooltip" marginLeft="5"/>
+        <filler fill="horizontal"/>
+      </row>
+      <repeat ref="subSeriesRepeat" marginLeft="15" border="matte(0,1,0,0,categorization.subseries.line)" autoHideIfEmpty="true">
+        <radioButton ref="subSeriesSelector" styleClass="subSeriesSelector"/>
+      </repeat>
+    </column>
+  </repeat>
+</splits>

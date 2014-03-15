@@ -2,7 +2,7 @@ package org.globsframework.gui;
 
 import org.globsframework.gui.splits.SplitsRepeatTest;
 import org.globsframework.gui.splits.color.ColorService;
-import org.globsframework.gui.splits.repeat.RepeatCellBuilder;
+import org.globsframework.gui.splits.PanelBuilder;
 import org.globsframework.gui.splits.repeat.RepeatComponentFactory;
 import org.globsframework.gui.components.GlobRepeat;
 import org.globsframework.metamodel.DummyObject;
@@ -38,7 +38,7 @@ public class GlobsPanelBuilderTest extends UISpecTestCase {
     GlobRepeat repeat =
       builder.addRepeat("repeat", DummyObject.TYPE, GlobMatchers.ALL,
                         new GlobFieldComparator(DummyObject.NAME), new RepeatComponentFactory<Glob>() {
-          public void registerComponents(RepeatCellBuilder cellBuilder, Glob item) {
+          public void registerComponents(PanelBuilder cellBuilder, Glob item) {
             cellBuilder.add("name", new JLabel(item.get(DummyObject.NAME)));
           }
         });

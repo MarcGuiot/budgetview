@@ -4,8 +4,7 @@ import org.designup.picsou.gui.utils.Gui;
 import org.designup.picsou.model.ColorTheme;
 import org.designup.picsou.model.UserPreferences;
 import org.globsframework.gui.splits.ImageLocator;
-import org.globsframework.gui.splits.color.ColorService;
-import org.globsframework.gui.splits.repeat.RepeatCellBuilder;
+import org.globsframework.gui.splits.PanelBuilder;
 import org.globsframework.gui.splits.repeat.RepeatComponentFactory;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.ChangeSet;
@@ -53,7 +52,7 @@ public class ColorThemeItemFactory implements RepeatComponentFactory<Glob> {
     });
   }
 
-  public void registerComponents(RepeatCellBuilder cellBuilder, Glob colorTheme) {
+  public void registerComponents(PanelBuilder cellBuilder, Glob colorTheme) {
     ColorTheme theme = ColorTheme.get(colorTheme);
 
     JToggleButton toggle = new JToggleButton(new ToggleAction(theme));

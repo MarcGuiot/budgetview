@@ -1,6 +1,5 @@
 package org.globsframework.gui.splits;
 
-import org.globsframework.gui.splits.repeat.RepeatCellBuilder;
 import org.globsframework.gui.splits.repeat.RepeatComponentFactory;
 
 import javax.swing.*;
@@ -43,7 +42,7 @@ public class SplitsDynamicStylesTest extends SplitsTestCase {
     builder.addRepeat("myRepeat", Arrays.asList("aa", "bb"),
                       new RepeatComponentFactory<String>() {
 
-                        public void registerComponents(RepeatCellBuilder cellBuilder, String object) {
+                        public void registerComponents(PanelBuilder cellBuilder, String object) {
                           JLabel jLabel = new JLabel(object);
                           SplitsNode<JLabel> labelSplitsNode = cellBuilder.add("label", jLabel);
                           splitsNodesMap.put(object, labelSplitsNode);
@@ -83,7 +82,7 @@ public class SplitsDynamicStylesTest extends SplitsTestCase {
     builder.addRepeat("myRepeat", Arrays.asList("aa", "bb"),
                       new RepeatComponentFactory<String>() {
 
-                        public void registerComponents(RepeatCellBuilder cellBuilder, String object) {
+                        public void registerComponents(PanelBuilder cellBuilder, String object) {
                           JLabel jLabel = new JLabel(object);
                           SplitsNode<JLabel> node = cellBuilder.add("label", jLabel);
                           node.applyStyle("red");

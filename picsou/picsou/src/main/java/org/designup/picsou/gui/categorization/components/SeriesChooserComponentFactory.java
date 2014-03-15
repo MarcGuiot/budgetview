@@ -8,7 +8,7 @@ import org.globsframework.gui.GlobSelectionListener;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.SelectionService;
 import org.globsframework.gui.splits.SplitsNode;
-import org.globsframework.gui.splits.repeat.RepeatCellBuilder;
+import org.globsframework.gui.splits.PanelBuilder;
 import org.globsframework.gui.splits.repeat.RepeatComponentFactory;
 import org.globsframework.gui.splits.utils.Disposable;
 import org.globsframework.model.*;
@@ -29,7 +29,7 @@ import java.util.Set;
 
 public class SeriesChooserComponentFactory implements RepeatComponentFactory<Glob> {
   protected JRadioButton invisibleSelector;
-  protected ButtonGroup buttonGroup = new ButtonGroup();
+  protected ButtonGroup buttonGroup;
 
   protected GlobListStringifier seriesStringifier;
   protected GlobStringifier subSeriesStringifier;
@@ -47,9 +47,11 @@ public class SeriesChooserComponentFactory implements RepeatComponentFactory<Glo
 
   public SeriesChooserComponentFactory(BudgetArea budgetArea,
                                        JRadioButton invisibleSelector,
+                                       ButtonGroup buttonGroup,
                                        GlobRepository repository,
                                        Directory directory) {
     this.invisibleSelector = invisibleSelector;
+    this.buttonGroup = buttonGroup;
     this.buttonGroup.add(invisibleSelector);
 
     this.repository = repository;
@@ -70,7 +72,7 @@ public class SeriesChooserComponentFactory implements RepeatComponentFactory<Glo
     this.budgetArea = budgetArea;
   }
 
-  public void registerComponents(RepeatCellBuilder cellBuilder, final Glob series) {
+  public void registerComponents(PanelBuilder cellBuilder, final Glob series) {
     String seriesName = seriesStringifier.toString(new GlobList(series), repository);
     boolean updateTargetAccount = false;
     if (series.get(Series.TARGET_ACCOUNT) == null) {
@@ -116,7 +118,7 @@ public class SeriesChooserComponentFactory implements RepeatComponentFactory<Glo
       editSeriesButton.setVisible(false);
     }
 
-    cellBuilder.addDisposeListener(new Disposable() {
+    cellBuilder.addDisposable(new Disposable() {
       public void dispose() {
         repository.removeChangeListener(seriesUpdateListener);
         selectionService.removeListener(listener);
@@ -246,7 +248,7 @@ public class SeriesChooserComponentFactory implements RepeatComponentFactory<Glo
       this.series = series;
     }
 
-    public void registerComponents(RepeatCellBuilder cellBuilder, final Glob subSeries) {
+    public void registerComponents(PanelBuilder cellBuilder, final Glob subSeries) {
       final Key seriesKey = subSeries.getTargetKey(SubSeries.SERIES);
       String subSeriesName = subSeries.get(SubSeries.NAME);
 
@@ -270,7 +272,7 @@ public class SeriesChooserComponentFactory implements RepeatComponentFactory<Glo
       final SubSeriesUpdater updater =
         new SubSeriesUpdater(selector, invisibleSelector, seriesKey, subSeriesKey,
                              budgetArea, repository, selectionService);
-      cellBuilder.addDisposeListener(new Disposable() {
+      cellBuilder.addDisposable(new Disposable() {
         public void dispose() {
           updater.dispose();
           buttonGroup.remove(selector);

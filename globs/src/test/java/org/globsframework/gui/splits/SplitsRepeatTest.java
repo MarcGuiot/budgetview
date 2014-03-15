@@ -3,7 +3,6 @@ package org.globsframework.gui.splits;
 import org.globsframework.gui.splits.exceptions.SplitsException;
 import org.globsframework.gui.splits.layout.*;
 import org.globsframework.gui.splits.repeat.Repeat;
-import org.globsframework.gui.splits.repeat.RepeatCellBuilder;
 import org.globsframework.gui.splits.repeat.RepeatComponentFactory;
 import org.globsframework.gui.splits.utils.Disposable;
 import org.globsframework.utils.Strings;
@@ -22,7 +21,7 @@ public class SplitsRepeatTest extends SplitsTestCase {
     Repeat<String> repeat =
       builder.addRepeat("myRepeat", Arrays.asList("aa", "bb"),
                         new RepeatComponentFactory<String>() {
-                          public void registerComponents(RepeatCellBuilder cellBuilder, String object) {
+                          public void registerComponents(PanelBuilder cellBuilder, String object) {
                             cellBuilder.add("label", new JLabel(object));
                             cellBuilder.add("btn", new JButton(object));
                           }
@@ -86,7 +85,7 @@ public class SplitsRepeatTest extends SplitsTestCase {
     Repeat<String> repeat =
       builder.addRepeat("myRepeat", Arrays.asList("aa", "bb"),
                         new RepeatComponentFactory<String>() {
-                          public void registerComponents(RepeatCellBuilder cellBuilder, String object) {
+                          public void registerComponents(PanelBuilder cellBuilder, String object) {
                             cellBuilder.add("label", new JLabel(object));
                             cellBuilder.add("btn", new JButton(object));
                           }
@@ -139,7 +138,7 @@ public class SplitsRepeatTest extends SplitsTestCase {
     Repeat<String> repeat =
       builder.addRepeat("myRepeat", new ArrayList<String>(),
                         new RepeatComponentFactory<String>() {
-                          public void registerComponents(RepeatCellBuilder cellBuilder, String object) {
+                          public void registerComponents(PanelBuilder cellBuilder, String object) {
                             cellBuilder.add("label", new JLabel(object));
                             cellBuilder.add("btn", new JButton(object));
                           }
@@ -171,10 +170,10 @@ public class SplitsRepeatTest extends SplitsTestCase {
 
   public void testImbricatedRepeats() throws Exception {
     builder.addRepeat("parentRepeat", Arrays.asList("aa", "bb", "cc"), new RepeatComponentFactory<String>() {
-      public void registerComponents(RepeatCellBuilder cellBuilder, String object) {
+      public void registerComponents(PanelBuilder cellBuilder, String object) {
         cellBuilder.add("label", new JLabel(object));
         cellBuilder.addRepeat("childRepeat", getItems(object), new RepeatComponentFactory<String>() {
-          public void registerComponents(RepeatCellBuilder cellBuilder, String item) {
+          public void registerComponents(PanelBuilder cellBuilder, String item) {
             cellBuilder.add("button", new JButton(item));
           }
         });
@@ -209,17 +208,17 @@ public class SplitsRepeatTest extends SplitsTestCase {
   public void testDisposeListener() throws Exception {
     final StringBuilder logger = new StringBuilder();
     Repeat<String> parentRepeat = builder.addRepeat("parentRepeat", Arrays.asList("aa", "bb", "cc"), new RepeatComponentFactory<String>() {
-      public void registerComponents(RepeatCellBuilder cellBuilder, final String object) {
-        cellBuilder.addDisposeListener(new Disposable() {
+      public void registerComponents(PanelBuilder cellBuilder, final String object) {
+        cellBuilder.addDisposable(new Disposable() {
           public void dispose() {
             logger.append(object).append('\n');
           }
         });
         cellBuilder.add("label", new JLabel(object));
         cellBuilder.addRepeat("childRepeat", getItems(object), new RepeatComponentFactory<String>() {
-          public void registerComponents(RepeatCellBuilder cellBuilder, final String item) {
+          public void registerComponents(PanelBuilder cellBuilder, final String item) {
             cellBuilder.add("button", new JButton(item));
-            cellBuilder.addDisposeListener(new Disposable() {
+            cellBuilder.addDisposable(new Disposable() {
               public void dispose() {
                 logger.append(item).append('\n');
               }
@@ -266,7 +265,7 @@ public class SplitsRepeatTest extends SplitsTestCase {
 
   public void testVerticalGridLayout() throws Exception {
     Repeat<String> repeat = builder.addRepeat("repeat", Arrays.asList("aa", "bb"), new RepeatComponentFactory<String>() {
-      public void registerComponents(RepeatCellBuilder cellBuilder, String object) {
+      public void registerComponents(PanelBuilder cellBuilder, String object) {
         cellBuilder.add("label", new JLabel(object));
         cellBuilder.add("button", new JButton(object));
       }
@@ -321,7 +320,7 @@ public class SplitsRepeatTest extends SplitsTestCase {
     Repeat<String> repeat =
       builder.addRepeat("myRepeat", Arrays.asList("aa", "bb"),
                         new RepeatComponentFactory<String>() {
-                          public void registerComponents(RepeatCellBuilder cellBuilder, String object) {
+                          public void registerComponents(PanelBuilder cellBuilder, String object) {
                             cellBuilder.add("label", new JLabel(object));
                             cellBuilder.add("btn", new JButton(object));
                           }
@@ -392,7 +391,7 @@ public class SplitsRepeatTest extends SplitsTestCase {
     Repeat<String> repeat =
       builder.addRepeat("myRepeat", Arrays.asList("aa", "bb"),
                         new RepeatComponentFactory<String>() {
-                          public void registerComponents(RepeatCellBuilder cellBuilder, String object) {
+                          public void registerComponents(PanelBuilder cellBuilder, String object) {
                             cellBuilder.add("label", new JLabel(object));
                             cellBuilder.add("btn", new JButton(object));
                           }
@@ -470,7 +469,7 @@ public class SplitsRepeatTest extends SplitsTestCase {
     Repeat<String> repeat =
       builder.addRepeat("myRepeat", Arrays.asList("aa", "bb"),
                         new RepeatComponentFactory<String>() {
-                          public void registerComponents(RepeatCellBuilder cellBuilder, String object) {
+                          public void registerComponents(PanelBuilder cellBuilder, String object) {
                             cellBuilder.add("label", new JLabel(object));
                             cellBuilder.add("btn", new JButton(object));
                           }
@@ -499,7 +498,7 @@ public class SplitsRepeatTest extends SplitsTestCase {
     builder.add("title1", new JLabel("col1"));
     builder.add("title2", new JLabel("footerCol1"));
     Repeat<String> repeat = builder.addRepeat("repeat", new ArrayList<String>(), new RepeatComponentFactory<String>() {
-      public void registerComponents(RepeatCellBuilder cellBuilder, String object) {
+      public void registerComponents(PanelBuilder cellBuilder, String object) {
         cellBuilder.add("label", new JLabel(object));
         cellBuilder.add("button", new JButton(object));
       }
@@ -534,7 +533,7 @@ public class SplitsRepeatTest extends SplitsTestCase {
     builder.add("title1", new JLabel("col1"));
     builder.add("title2", new JLabel("footerCol1"));
     Repeat<String> repeat = builder.addRepeat("repeat", Arrays.asList("aa", "bb"), new RepeatComponentFactory<String>() {
-      public void registerComponents(RepeatCellBuilder cellBuilder, String object) {
+      public void registerComponents(PanelBuilder cellBuilder, String object) {
         cellBuilder.add("label", new JLabel(object));
         cellBuilder.add("button", new JButton(object));
       }
@@ -622,7 +621,7 @@ public class SplitsRepeatTest extends SplitsTestCase {
   public void testHeaderNotShownInEmptyRepeat() throws Exception {
     builder.add("title1", new JLabel("col1"));
     Repeat<String> repeat = builder.addRepeat("repeat", new ArrayList<String>(), new RepeatComponentFactory<String>() {
-      public void registerComponents(RepeatCellBuilder cellBuilder, String object) {
+      public void registerComponents(PanelBuilder cellBuilder, String object) {
         cellBuilder.add("label", new JLabel(object));
         cellBuilder.add("button", new JButton(object));
       }
@@ -665,7 +664,7 @@ public class SplitsRepeatTest extends SplitsTestCase {
     Repeat<String> repeat =
       builder.addRepeat("myRepeat", Arrays.asList("aa", "bb"),
                         new RepeatComponentFactory<String>() {
-                          public void registerComponents(RepeatCellBuilder cellBuilder, String object) {
+                          public void registerComponents(PanelBuilder cellBuilder, String object) {
                             cellBuilder.add("label", new JLabel(object));
                             cellBuilder.add("btn", new JButton(object));
                           }
@@ -707,7 +706,7 @@ public class SplitsRepeatTest extends SplitsTestCase {
 
   public void testGridSwap() throws Exception {
     Repeat<String> repeat = builder.addRepeat("repeat", Arrays.asList("aa", "bb"), new RepeatComponentFactory<String>() {
-      public void registerComponents(RepeatCellBuilder cellBuilder, String object) {
+      public void registerComponents(PanelBuilder cellBuilder, String object) {
         cellBuilder.add("label", new JLabel(object));
         cellBuilder.add("button", new JButton(object));
       }
@@ -735,7 +734,7 @@ public class SplitsRepeatTest extends SplitsTestCase {
 
   public void testHorizontalGridLayout() throws Exception {
     builder.addRepeat("repeat", Arrays.asList("aa", "bb"), new RepeatComponentFactory<String>() {
-      public void registerComponents(RepeatCellBuilder cellBuilder, String object) {
+      public void registerComponents(PanelBuilder cellBuilder, String object) {
         cellBuilder.add("label", new JLabel(object));
         cellBuilder.add("button", new JButton(object));
       }
@@ -760,7 +759,7 @@ public class SplitsRepeatTest extends SplitsTestCase {
 
   public void testForceWrapInHorizontalGridLayouts() throws Exception {
     builder.addRepeat("repeat", Arrays.asList("a", "b", "c", "d"), new RepeatComponentFactory<String>() {
-      public void registerComponents(RepeatCellBuilder cellBuilder, String object) {
+      public void registerComponents(PanelBuilder cellBuilder, String object) {
         cellBuilder.add("label", new JLabel(object));
         cellBuilder.add("button", new JButton(object));
       }
@@ -783,7 +782,7 @@ public class SplitsRepeatTest extends SplitsTestCase {
 
   public void testForceWrapInVerticalGridLayouts() throws Exception {
     builder.addRepeat("repeat", Arrays.asList("a", "b", "c", "d"), new RepeatComponentFactory<String>() {
-      public void registerComponents(RepeatCellBuilder cellBuilder, String object) {
+      public void registerComponents(PanelBuilder cellBuilder, String object) {
         cellBuilder.add("label", new JLabel(object));
         cellBuilder.add("button", new JButton(object));
       }
@@ -807,7 +806,7 @@ public class SplitsRepeatTest extends SplitsTestCase {
   public void testRowLayout() throws Exception {
     builder.addRepeat("myRepeat", Arrays.asList("aa", "bb"),
                       new RepeatComponentFactory<String>() {
-                        public void registerComponents(RepeatCellBuilder cellBuilder, String object) {
+                        public void registerComponents(PanelBuilder cellBuilder, String object) {
                           cellBuilder.add("label", new JLabel(object));
                         }
                       });
@@ -823,7 +822,7 @@ public class SplitsRepeatTest extends SplitsTestCase {
   public void testWrappedRowLayout() throws Exception {
     builder.addRepeat("myRepeat", Arrays.asList("aa", "bb"),
                       new RepeatComponentFactory<String>() {
-                        public void registerComponents(RepeatCellBuilder cellBuilder, String object) {
+                        public void registerComponents(PanelBuilder cellBuilder, String object) {
                           cellBuilder.add("label", new JLabel(object));
                         }
                       });
@@ -840,7 +839,7 @@ public class SplitsRepeatTest extends SplitsTestCase {
   public void testWrappedColumnLayout() throws Exception {
     builder.addRepeat("myRepeat", Arrays.asList("aa", "bb"),
                       new RepeatComponentFactory<String>() {
-                        public void registerComponents(RepeatCellBuilder cellBuilder, String object) {
+                        public void registerComponents(PanelBuilder cellBuilder, String object) {
                           cellBuilder.add("label", new JLabel(object));
                           cellBuilder.add("btn", new JButton(object));
                         }
@@ -860,7 +859,7 @@ public class SplitsRepeatTest extends SplitsTestCase {
   public void testLabelForInRepeat() throws Exception {
     builder.addRepeat("myRepeat", Arrays.asList("aa", "bb"),
                       new RepeatComponentFactory<String>() {
-                        public void registerComponents(RepeatCellBuilder cellBuilder, String text) {
+                        public void registerComponents(PanelBuilder cellBuilder, String text) {
                           cellBuilder.add("label", new JLabel(text));
                           cellBuilder.add("btn", new JButton(text + "Button"));
                         }
@@ -882,7 +881,7 @@ public class SplitsRepeatTest extends SplitsTestCase {
   public void testAutoHideInRepeat() throws Exception {
     builder.addRepeat("myRepeat", Arrays.asList("aa", "bb"),
                       new RepeatComponentFactory<String>() {
-                        public void registerComponents(RepeatCellBuilder cellBuilder, String text) {
+                        public void registerComponents(PanelBuilder cellBuilder, String text) {
                           cellBuilder.add("label", new JLabel(text));
                           cellBuilder.add("btn", new JButton(text + "Button"));
                         }
@@ -908,7 +907,7 @@ public class SplitsRepeatTest extends SplitsTestCase {
     Repeat<String> repeat =
       builder.addRepeat("myRepeat", Arrays.asList("aa"),
                         new RepeatComponentFactory<String>() {
-                          public void registerComponents(RepeatCellBuilder cellBuilder, String object) {
+                          public void registerComponents(PanelBuilder cellBuilder, String object) {
                             cellBuilder.add("label", new JLabel(object));
                             cellBuilder.add("btn", new JButton(object));
                           }
@@ -943,7 +942,7 @@ public class SplitsRepeatTest extends SplitsTestCase {
     Repeat<String> repeat =
       builder.addRepeat("myRepeat", Arrays.asList("aa", "bb"),
                         new RepeatComponentFactory<String>() {
-                          public void registerComponents(RepeatCellBuilder cellBuilder, String object) {
+                          public void registerComponents(PanelBuilder cellBuilder, String object) {
                             JPanel panel = new JPanel();
                             panel.setName(object + "Panel");
                             cellBuilder.add("panel", panel);

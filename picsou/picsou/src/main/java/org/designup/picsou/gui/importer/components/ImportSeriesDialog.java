@@ -10,7 +10,7 @@ import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.editors.GlobLinkComboEditor;
 import org.globsframework.gui.editors.GlobTextEditor;
-import org.globsframework.gui.splits.repeat.RepeatCellBuilder;
+import org.globsframework.gui.splits.PanelBuilder;
 import org.globsframework.gui.splits.repeat.RepeatComponentFactory;
 import org.globsframework.model.*;
 import org.globsframework.model.repository.LocalGlobRepository;
@@ -60,7 +60,7 @@ public class ImportSeriesDialog {
     builder.addRepeat("series", ImportedSeries.TYPE,
                       GlobMatchers.keyIn(importedSeriesKeys),
                       new GlobFieldComparator(ImportedSeries.NAME), new RepeatComponentFactory<Glob>() {
-      public void registerComponents(RepeatCellBuilder cellBuilder, Glob item) {
+      public void registerComponents(PanelBuilder cellBuilder, Glob item) {
 
         JTextField nameField = GlobTextEditor.init(ImportedSeries.NAME, localRepository, directory)
           .forceSelection(item.getKey())

@@ -261,7 +261,7 @@ public class AutoCategorizationTest extends LoggedInFunctionalTestCase {
 
     categorization
       .selectTransaction("3_Auchan")
-      .getVariable().checkSeriesIsSelected("Courses_2");
+      .getVariable().checkSelectedSeries("Courses_2");
   }
 
   public void testAutoCategorisationOnSameLabelWithNumber() throws Exception {

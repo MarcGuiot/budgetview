@@ -17,7 +17,7 @@ import org.globsframework.gui.GlobSelectionListener;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.splits.ImageLocator;
 import org.globsframework.gui.splits.layout.CardHandler;
-import org.globsframework.gui.splits.repeat.RepeatCellBuilder;
+import org.globsframework.gui.splits.PanelBuilder;
 import org.globsframework.gui.splits.repeat.RepeatComponentFactory;
 import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
@@ -76,7 +76,7 @@ public class CardView extends View implements GlobSelectionListener {
     }
 
     builder.addRepeat("viewToggles", Arrays.asList(CARDS), new RepeatComponentFactory<Card>() {
-      public void registerComponents(RepeatCellBuilder cellBuilder, Card card) {
+      public void registerComponents(PanelBuilder cellBuilder, Card card) {
         cellBuilder.add("toggle", toggles[card.getId()]);
       }
     });

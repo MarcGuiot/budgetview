@@ -22,14 +22,14 @@ import java.util.Set;
 import static org.globsframework.model.FieldValue.value;
 
 public enum BudgetArea implements GlobConstantContainer {
-  ALL("ALL", -1, false, false, false),
-  INCOME("INCOME", 0, true, true, true),
-  RECURRING("RECURRING", 1, false, false, true),
-  VARIABLE("VARIABLE", 2, false, false, false),
-  EXTRAS("EXTRAS", 4, false, false, false),
-  SAVINGS("SAVINGS", 5, false, true, false),
-  UNCATEGORIZED("UNCATEGORIZED", 6, false, false, true),
-  OTHER("OTHER", 7, false, false, true);
+  ALL("ALL", -1, false, false),
+  INCOME("INCOME", 0, true, true),
+  RECURRING("RECURRING", 1, false, true),
+  VARIABLE("VARIABLE", 2, false, false),
+  EXTRAS("EXTRAS", 4, false, false),
+  SAVINGS("SAVINGS", 5, false, false),
+  UNCATEGORIZED("UNCATEGORIZED", 6, false, true),
+  OTHER("OTHER", 7, false, true);
 
   public static GlobType TYPE;
 
@@ -42,25 +42,19 @@ public enum BudgetArea implements GlobConstantContainer {
   private String name;
   private int id;
   private boolean income;
-  private boolean overrunAllowed;
   private boolean automatic;
 
   public static final BudgetArea[] INCOME_AND_EXPENSES_AREAS = {INCOME, RECURRING, VARIABLE, EXTRAS, SAVINGS};
 
-  BudgetArea(String name, int id, boolean isIncome, boolean overrunAllowed, final boolean automatic) {
+  BudgetArea(String name, int id, boolean isIncome, final boolean automatic) {
     this.automatic = automatic;
     this.name = name;
     this.id = id;
     this.income = isIncome;
-    this.overrunAllowed = overrunAllowed;
   }
 
   public boolean isIncome() {
     return income;
-  }
-
-  public boolean isOverrunAllowed() {
-    return overrunAllowed;
   }
 
   public boolean isAutomatic() {

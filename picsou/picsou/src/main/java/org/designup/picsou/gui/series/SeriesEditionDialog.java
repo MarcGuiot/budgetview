@@ -25,7 +25,7 @@ import org.globsframework.gui.editors.GlobLinkComboEditor;
 import org.globsframework.gui.editors.GlobTextEditor;
 import org.globsframework.gui.splits.layout.CardHandler;
 import org.globsframework.gui.splits.layout.TabHandler;
-import org.globsframework.gui.splits.repeat.RepeatCellBuilder;
+import org.globsframework.gui.splits.PanelBuilder;
 import org.globsframework.gui.splits.repeat.RepeatComponentFactory;
 import org.globsframework.gui.splits.utils.GuiUtils;
 import org.globsframework.metamodel.GlobType;
@@ -253,7 +253,7 @@ public class SeriesEditionDialog {
 
     builder.addRepeat("monthRepeat", Arrays.asList(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12),
                       new RepeatComponentFactory<Integer>() {
-                        public void registerComponents(RepeatCellBuilder cellBuilder, final Integer monthIndex) {
+                        public void registerComponents(PanelBuilder cellBuilder, final Integer monthIndex) {
                           cellBuilder.add("monthLabel", new JLabel(Month.getShortMonthLabel(monthIndex)));
                           MonthCheckBoxUpdater updater = new MonthCheckBoxUpdater(monthIndex, localRepository, selectionService);
                           cellBuilder.add("monthSelector", updater.getCheckBox());

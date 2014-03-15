@@ -6,7 +6,7 @@ import org.designup.picsou.gui.components.dialogs.PicsouDialog;
 import org.designup.picsou.model.SignpostSectionType;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.splits.SplitsNode;
-import org.globsframework.gui.splits.repeat.RepeatCellBuilder;
+import org.globsframework.gui.splits.PanelBuilder;
 import org.globsframework.gui.splits.repeat.RepeatComponentFactory;
 import org.globsframework.gui.splits.utils.GuiUtils;
 import org.globsframework.model.GlobRepository;
@@ -62,7 +62,7 @@ public class SignpostSectionDialog {
       this.completedSection = completedSection;
     }
 
-    public void registerComponents(RepeatCellBuilder cellBuilder,
+    public void registerComponents(PanelBuilder cellBuilder,
                                    final SignpostSection section) {
       SplitsNode<JPanel> sectionPanel = cellBuilder.add("sectionPanel", new JPanel());
       SplitsNode<JLabel> label = cellBuilder.add("sectionTitle", new JLabel(section.getLabel()));

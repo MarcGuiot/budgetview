@@ -16,8 +16,6 @@
            icon="button_hide.png" rolloverIcon="button_hide_rollover.png"
            border="" margin="5" marginLeft="0" weightX="0" fill="none" anchor="center"/>
 
-    <style selector="radioButton.subSeriesSelector" horizontalAlignment="left"/>
-
     <style selector="footer button" ui="hyperlinkButtonWithoutUnderline" foreground="categorization.footerButton"
            marginTop="5"/>
 
@@ -35,19 +33,23 @@
 
       <htmlEditorPane ref="noSeriesMessage" border="empty(10)" hyperlinkListener="hyperlinkHandler"/>
       <scrollPane verticalUnitIncrement="15" weightY="100">
-        <repeat ref="seriesRepeat" layout="wrappedColumn" margin="10">
-          <column name="seriesBlock">
-            <row>
-              <radioButton ref="seriesToggle" styleClass="selector"/>
-              <button ref="editSeries" styleClass="editIcon" tooltipText="$series.edit.tooltip" marginLeft="5"/>
-              <filler fill="horizontal"/>
-            </row>
-            <repeat ref="subSeriesRepeat" marginLeft="15" border="matte(0,1,0,0,categorization.subseries.line)">
-              <radioButton ref="subSeriesSelector" styleClass="subSeriesSelector"/>
-            </repeat>
+        <row>
+          <column>
+            <panel ref="rootSeriesPanel"/>
+            <filler fill="vertical"/>
           </column>
-        </repeat>
+          <column>
+            <repeat ref="groupRepeat" layout="column">
+              <column name="groupPanel" border="matte(1,1,1,1,#FFFFFF)" autoHideSource="groupLabel">
+                <label ref="groupLabel"/>
+                <panel ref="seriesPanel"/>
+              </column>
+            </repeat>
+            <filler fill="vertical"/>
+          </column>
+        </row>
       </scrollPane>
+
       <htmlEditorPane ref="categorizationMessage" styleClass="hints"/>
       <row styleClass="footer" ref="groupCreateEditSeries">
         <button action="createSeries" tooltipText="$series.create.tooltip"/>

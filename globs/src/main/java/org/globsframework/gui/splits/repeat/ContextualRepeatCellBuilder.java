@@ -1,5 +1,6 @@
 package org.globsframework.gui.splits.repeat;
 
+import org.globsframework.gui.splits.PanelBuilder;
 import org.globsframework.gui.splits.SplitsNode;
 import org.globsframework.gui.splits.impl.DefaultSplitsNode;
 import org.globsframework.gui.splits.layout.CardHandler;
@@ -11,7 +12,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.Collection;
 
-public class ContextualRepeatCellBuilder implements RepeatCellBuilder {
+public class ContextualRepeatCellBuilder implements PanelBuilder {
   private RepeatContext repeatContext;
 
   public ContextualRepeatCellBuilder(RepeatContext repeatContext) {
@@ -41,8 +42,9 @@ public class ContextualRepeatCellBuilder implements RepeatCellBuilder {
     return DefaultCardHandler.init(panel);
   }
 
-  public void addDisposeListener(Disposable disposable) {
+  public ContextualRepeatCellBuilder addDisposable(Disposable disposable) {
     repeatContext.addDisposable(disposable);
+    return this;
   }
 
   public void addOnLoadListener(OnLoadListener listener) {

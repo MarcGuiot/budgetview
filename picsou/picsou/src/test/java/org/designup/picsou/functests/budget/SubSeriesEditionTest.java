@@ -36,14 +36,12 @@ public class SubSeriesEditionTest extends LoggedInFunctionalTestCase {
     categorization
       .selectTransaction("Tx 1")
       .selectVariable()
-      .checkSeriesIsSelected("SubSeries 1")
-      .checkSeriesNotSelected("SubSeries 2");
+      .checkSelectedSeries("SubSeries 1");
 
     categorization
       .selectTransaction("Tx 2")
       .selectVariable()
-      .checkSeriesNotSelected("SubSeries 1")
-      .checkSeriesIsSelected("SubSeries 2");
+      .checkSeriesNotSelected("SubSeries 1");
 
     transactions.initContent()
       .add("15/07/2008", TransactionType.PRELEVEMENT, "TX 2", "", -40.00, "Series / SubSeries 2")
@@ -54,7 +52,7 @@ public class SubSeriesEditionTest extends LoggedInFunctionalTestCase {
       .selectTransaction("Tx 1")
       .selectVariable()
       .selectSeries("Series")
-      .checkSeriesIsSelected("Series");
+      .checkSelectedSeries("Series");
 
     transactions.initContent()
       .add("15/07/2008", TransactionType.PRELEVEMENT, "TX 2", "", -40.00, "Series / SubSeries 2")

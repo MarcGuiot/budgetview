@@ -7,7 +7,7 @@ import org.designup.picsou.model.*;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.editors.GlobLinkComboEditor;
-import org.globsframework.gui.splits.repeat.RepeatCellBuilder;
+import org.globsframework.gui.splits.PanelBuilder;
 import org.globsframework.gui.splits.repeat.RepeatComponentFactory;
 import org.globsframework.gui.splits.utils.Disposable;
 import org.globsframework.gui.splits.utils.GuiUtils;
@@ -102,7 +102,7 @@ public class CardTypeChooserDialog {
       this.localRepository = localRepository;
     }
 
-    public void registerComponents(RepeatCellBuilder cellBuilder, final Glob account) {
+    public void registerComponents(PanelBuilder cellBuilder, final Glob account) {
       String accountName = getAccountName(account, localRepository);
       cellBuilder.add("accountName", new JLabel(accountName));
 
@@ -146,7 +146,7 @@ public class CardTypeChooserDialog {
 
       localRepository.addChangeListener(accountUpdateListener);
 
-      cellBuilder.addDisposeListener(new Disposable() {
+      cellBuilder.addDisposable(new Disposable() {
         public void dispose() {
           localRepository.removeChangeListener(accountUpdateListener);
         }

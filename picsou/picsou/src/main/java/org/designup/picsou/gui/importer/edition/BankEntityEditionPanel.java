@@ -3,7 +3,7 @@ package org.designup.picsou.gui.importer.edition;
 import org.designup.picsou.gui.bank.BankChooserDialog;
 import org.designup.picsou.model.Account;
 import org.globsframework.gui.GlobsPanelBuilder;
-import org.globsframework.gui.splits.repeat.RepeatCellBuilder;
+import org.globsframework.gui.splits.PanelBuilder;
 import org.globsframework.gui.splits.repeat.RepeatComponentFactory;
 import org.globsframework.gui.splits.utils.Disposable;
 import org.globsframework.model.Glob;
@@ -40,7 +40,7 @@ public class BankEntityEditionPanel implements Disposable {
     builder.addRepeat("repeat",
                       valueSet,
                       new RepeatComponentFactory<String>() {
-                        public void registerComponents(RepeatCellBuilder cellBuilder, String bankEntityLabel) {
+                        public void registerComponents(PanelBuilder cellBuilder, String bankEntityLabel) {
                           GlobList filteredAccounts =
                             accounts.filter(GlobMatchers.fieldEquals(Account.BANK_ENTITY_LABEL, bankEntityLabel), repository)
                               .sort(Account.NUMBER);

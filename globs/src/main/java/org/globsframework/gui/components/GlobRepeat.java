@@ -16,4 +16,6 @@ public interface GlobRepeat {
   void addListener(GlobRepeatListener listener);
 
   void removeListener(GlobRepeatListener listener);
+
+  void refresh();
 }

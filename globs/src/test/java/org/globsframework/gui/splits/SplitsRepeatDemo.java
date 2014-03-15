@@ -1,6 +1,5 @@
 package org.globsframework.gui.splits;
 
-import org.globsframework.gui.splits.repeat.RepeatCellBuilder;
 import org.globsframework.gui.splits.repeat.RepeatComponentFactory;
 import org.globsframework.gui.splits.utils.GuiUtils;
 import org.globsframework.utils.directory.DefaultDirectory;
@@ -15,11 +14,11 @@ public class SplitsRepeatDemo {
     SplitsBuilder builder = SplitsBuilder.init(new DefaultDirectory());
 
     builder.addRepeat("repeat1", Arrays.asList("a", "b", "c"), new RepeatComponentFactory<String>() {
-      public void registerComponents(RepeatCellBuilder cellBuilder, String item) {
+      public void registerComponents(PanelBuilder cellBuilder, String item) {
         cellBuilder.add("label1", new JLabel(item));
         cellBuilder.addRepeat("repeat2", getItems(item), new RepeatComponentFactory<String>() {
 
-          public void registerComponents(RepeatCellBuilder cellBuilder, String item) {
+          public void registerComponents(PanelBuilder cellBuilder, String item) {
             cellBuilder.add("label2", new JLabel(item));
           }
         });

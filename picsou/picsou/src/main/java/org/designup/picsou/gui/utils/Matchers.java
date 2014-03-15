@@ -1,7 +1,7 @@
 package org.designup.picsou.gui.utils;
 
-import org.designup.picsou.model.*;
 import com.budgetview.shared.utils.Amounts;
+import org.designup.picsou.model.*;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
@@ -9,7 +9,10 @@ import org.globsframework.model.Key;
 import org.globsframework.model.utils.GlobMatcher;
 import org.globsframework.model.utils.GlobMatchers;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 import static org.globsframework.model.utils.GlobMatchers.*;
 
@@ -141,95 +144,6 @@ public class Matchers {
   public static GlobMatcher deferredCardSeries() {
     return GlobMatchers.and(GlobMatchers.fieldEquals(Series.BUDGET_AREA, BudgetArea.OTHER.getId()),
                             GlobMatchers.not(GlobMatchers.fieldEquals(Series.ID, Series.ACCOUNT_SERIES_ID)));
-  }
-
-  public static CategorizationFilter deferredCardCategorizationFilter() {
-    return seriesCategorizationFilter(BudgetArea.OTHER.getId());
-  }
-
-  public static CategorizationFilter seriesCategorizationFilter(final Integer budgetAreaId) {
-    return new CategorizationFilter(budgetAreaId);
-  }
-
-  public static class CategorizationFilter implements GlobMatcher {
-    private List<Glob> transactions = Collections.emptyList();
-    private MonthMatcher filter;
-
-    public CategorizationFilter(final Integer budgetAreaId) {
-      filter = seriesActiveInPeriod(budgetAreaId, false, true, true);
-    }
-
-    public boolean matches(Glob series, GlobRepository repository) {
-      if (transactions.isEmpty()) {
-        return false;
-      }
-      if (series.get(Series.ID).equals(Series.ACCOUNT_SERIES_ID)){
-        return false;
-      }
-      if (filter.matches(series, repository)) {
-        if (series.get(Series.BUDGET_AREA).equals(BudgetArea.OTHER.getId()) &&
-            series.get(Series.FROM_ACCOUNT) != null) {
-          return checkInMain(repository);
-        }
-        Glob targetAccount = repository.findLinkTarget(series, Series.TARGET_ACCOUNT);
-        if (targetAccount == null) {
-          return true;
-        }
-        for (Glob transaction : transactions) {
-          if (!isSameAccount(repository, targetAccount, transaction)) {
-            return false;
-          }
-          if (series.get(Series.TO_ACCOUNT) != null && transaction.get(Transaction.AMOUNT) > 0 &&
-              !series.get(Series.TO_ACCOUNT).equals(series.get(Series.TARGET_ACCOUNT))) {
-            return false;
-          }
-          else if (series.get(Series.FROM_ACCOUNT) != null && transaction.get(Transaction.AMOUNT) < 0 &&
-                   !series.get(Series.FROM_ACCOUNT).equals(series.get(Series.TARGET_ACCOUNT))) {
-            return false;
-          }
-        }
-        return true;
-      }
-      return false;
-    }
-
-    private boolean isSameAccount(GlobRepository repository, Glob account, Glob transaction) {
-//      if (Account.isMain(account)) {
-//        Glob operationAccount = repository.findLinkTarget(transaction, Transaction.ACCOUNT);
-//        return AccountType.MAIN.getId().equals(operationAccount.get(Account.ACCOUNT_TYPE));
-//      }
-//      else if (Account.isSavings(account)) {
-      Integer transactionAccount = transaction.get(Transaction.ACCOUNT);
-      if (transactionAccount.equals(account.get(Account.ID))){
-        return true;
-      }
-      Glob target = repository.findLinkTarget(transaction, Transaction.ACCOUNT);
-      return target != null && account.get(Account.ID).equals(target.get(Account.DEFERRED_TARGET_ACCOUNT));
-//      }
-//      return false;
-    }
-
-    public String toString() {
-      return "CategorizationFilter(" + filter + ")";
-    }
-
-    private boolean checkInMain(GlobRepository repository) {
-      for (Glob transaction : transactions) {
-        Glob account = repository.findLinkTarget(transaction, Transaction.ACCOUNT);
-        if (!Account.isMain(account)) {
-          return false;
-        }
-        if (!AccountCardType.NOT_A_CARD.getId().equals(account.get(Account.CARD_TYPE))) {
-          return false;
-        }
-      }
-      return true;
-    }
-
-    public void filterDates(Set<Integer> monthIds, List<Glob> transactions) {
-      filter.filterMonths(monthIds);
-      this.transactions = transactions;
-    }
   }
 
   public static abstract class SeriesFirstEndDateFilter implements MonthMatcher {

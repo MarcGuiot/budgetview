@@ -5,8 +5,8 @@ import org.designup.picsou.model.Account;
 import org.designup.picsou.model.Bank;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobsPanelBuilder;
+import org.globsframework.gui.splits.PanelBuilder;
 import org.globsframework.gui.splits.repeat.Repeat;
-import org.globsframework.gui.splits.repeat.RepeatCellBuilder;
 import org.globsframework.gui.splits.repeat.RepeatComponentFactory;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobRepository;
@@ -57,11 +57,11 @@ public class BankAccountGroupsPanel {
   }
 
   private class SynchroAccountRepeatFactory implements RepeatComponentFactory<BankAccountGroup> {
-    public void registerComponents(RepeatCellBuilder groupCellBuilder, final BankAccountGroup accountsGroup) {
+    public void registerComponents(PanelBuilder groupCellBuilder, final BankAccountGroup accountsGroup) {
       groupCellBuilder.add("bankLabel", createBankLabel(accountsGroup));
 
       groupCellBuilder.addRepeat("accounts", accountsGroup.getAccounts(), new RepeatComponentFactory<Glob>() {
-        public void registerComponents(RepeatCellBuilder cellBuilder, Glob account) {
+        public void registerComponents(PanelBuilder cellBuilder, Glob account) {
           cellBuilder.add("accountLabel", new JLabel(account.get(Account.NAME)));
         }
       });

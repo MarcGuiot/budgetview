@@ -12,6 +12,7 @@ import org.designup.picsou.gui.categorization.utils.SeriesCreationHandler;
 import org.designup.picsou.gui.components.JPopupButton;
 import org.designup.picsou.gui.components.filtering.Filterable;
 import org.designup.picsou.gui.components.layoutconfig.SplitPaneConfig;
+import org.designup.picsou.gui.description.SeriesAndGroupsComparator;
 import org.designup.picsou.gui.help.HyperlinkHandler;
 import org.designup.picsou.gui.projects.actions.CreateProjectAction;
 import org.designup.picsou.gui.series.SeriesEditor;
@@ -21,7 +22,6 @@ import org.designup.picsou.gui.signpost.guides.GotoBudgetSignpost;
 import org.designup.picsou.gui.signpost.sections.SkipCategorizationPanel;
 import org.designup.picsou.gui.transactions.TransactionDetailsView;
 import org.designup.picsou.gui.transactions.creation.TransactionCreationPanel;
-import org.designup.picsou.gui.utils.Matchers;
 import org.designup.picsou.gui.utils.TableView;
 import org.designup.picsou.model.*;
 import org.designup.picsou.utils.Lang;
@@ -31,9 +31,10 @@ import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.SelectionService;
 import org.globsframework.gui.actions.DisabledAction;
 import org.globsframework.gui.components.ShowHideButton;
-import org.globsframework.gui.splits.repeat.RepeatCellBuilder;
+import org.globsframework.gui.splits.PanelBuilder;
 import org.globsframework.gui.splits.repeat.RepeatComponentFactory;
 import org.globsframework.gui.splits.utils.GuiUtils;
+import org.globsframework.gui.views.GlobLabelView;
 import org.globsframework.model.*;
 import org.globsframework.model.format.GlobListStringifier;
 import org.globsframework.model.utils.GlobMatcher;
@@ -44,9 +45,9 @@ import javax.swing.*;
 import javax.swing.event.TableModelListener;
 import java.awt.event.ActionEvent;
 import java.util.Arrays;
-import java.util.Set;
 
 import static org.globsframework.model.FieldValue.value;
+import static org.globsframework.model.utils.GlobMatchers.fieldEquals;
 
 public class CategorizationView extends View implements TableView, Filterable {
 
@@ -171,8 +172,7 @@ public class CategorizationView extends View implements TableView, Filterable {
       public void selectionUpdated(GlobSelection selection) {
         currentTransactions.clear();
         currentTransactions.addAll(selection.getAll(Transaction.TYPE));
-        Set<Integer> months = currentTransactions.getValueSet(Transaction.BUDGET_MONTH);
-        seriesRepeat.update(months, currentTransactions);
+        seriesRepeat.update(currentTransactions);
         categorizationTableView.updateSelection();
       }
     }, Transaction.TYPE);
@@ -198,7 +198,13 @@ public class CategorizationView extends View implements TableView, Filterable {
     builder.add("showDescription", descriptionHandler.getShowAction());
     builder.add("hideDescription", descriptionHandler.getHideAction());
 
-    seriesRepeat.addRepeat(budgetArea, builder, Matchers.seriesCategorizationFilter(budgetArea.getId()));
+    SeriesRepeatPanel repeatPanel = new SeriesRepeatPanel(budgetArea, null, seriesRepeat, currentTransactions, repository, directory);
+    builder.add("rootSeriesPanel", repeatPanel.getPanel());
+
+    builder.addRepeat("groupRepeat", SeriesGroup.TYPE,
+                      fieldEquals(SeriesGroup.BUDGET_AREA, budgetArea.getId()),
+                      new SeriesAndGroupsComparator(repository),
+                      new GroupComponentFactory());
 
     JPanel groupForSeries = new JPanel();
     builder.add("groupCreateEditSeries", groupForSeries);
@@ -257,7 +263,7 @@ public class CategorizationView extends View implements TableView, Filterable {
   }
 
   public class SpecialCategorizationRepeatFactory implements RepeatComponentFactory<SpecialCategorizationPanel> {
-    public void registerComponents(RepeatCellBuilder cellBuilder, SpecialCategorizationPanel categorizationPanel) {
+    public void registerComponents(PanelBuilder cellBuilder, SpecialCategorizationPanel categorizationPanel) {
 
       JPanel blockPanel = new JPanel();
       blockPanel.setName(categorizationPanel.getId());
@@ -345,6 +351,33 @@ public class CategorizationView extends View implements TableView, Filterable {
                         value(Transaction.SUB_SERIES, subSeriesId),
                         value(Transaction.RECONCILIATION_ANNOTATION_SET, !Transaction.isManuallyCreated(transaction)));
       return true;
+    }
+  }
+
+  private class GroupComponentFactory implements RepeatComponentFactory<Glob> {
+    public void registerComponents(PanelBuilder cellBuilder, Glob group) {
+
+      JLabel groupLabel = getGroupLabel(group, cellBuilder);
+      cellBuilder.add("groupLabel", groupLabel);
+
+      BudgetArea budgetArea = BudgetArea.get(group.get(SeriesGroup.BUDGET_AREA));
+      final SeriesRepeatPanel panel = new SeriesRepeatPanel(budgetArea, group, seriesRepeat, currentTransactions, repository, directory);
+      cellBuilder.add("seriesPanel", panel.getPanel());
+      panel.addAutoHide(groupLabel);
+      cellBuilder.addDisposable(panel);
+    }
+
+    private JLabel getGroupLabel(Glob group, PanelBuilder cellBuilder) {
+      if (group == null) {
+        JLabel emptyLabel = new JLabel();
+        emptyLabel.setVisible(false);
+        return emptyLabel;
+      }
+
+      GlobLabelView labelView = GlobLabelView.init(SeriesGroup.TYPE, repository, directory)
+        .forceSelection(group.getKey());
+      cellBuilder.addDisposable(labelView);
+      return labelView.getComponent();
     }
   }
 }

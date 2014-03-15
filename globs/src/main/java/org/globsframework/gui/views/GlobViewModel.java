@@ -180,6 +180,7 @@ public class GlobViewModel implements ChangeSetListener, Disposable {
         iter.remove();
       }
     }
+    setFilter(matcher, true);
     globs.updateSorting();
   }
 

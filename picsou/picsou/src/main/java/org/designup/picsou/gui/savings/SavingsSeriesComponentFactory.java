@@ -15,7 +15,7 @@ import org.designup.picsou.model.Month;
 import org.designup.picsou.model.Series;
 import com.budgetview.shared.utils.Amounts;
 import org.globsframework.gui.SelectionService;
-import org.globsframework.gui.splits.repeat.RepeatCellBuilder;
+import org.globsframework.gui.splits.PanelBuilder;
 import org.globsframework.gui.splits.repeat.RepeatComponentFactory;
 import org.globsframework.gui.views.GlobButtonView;
 import org.globsframework.metamodel.fields.DoubleField;
@@ -24,12 +24,10 @@ import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.format.DescriptionService;
 import org.globsframework.model.format.GlobListStringifier;
-import org.globsframework.model.format.GlobPrinter;
 import org.globsframework.model.format.GlobStringifier;
 import org.globsframework.model.utils.GlobListFunctor;
 import org.globsframework.model.utils.GlobMatchers;
 import org.globsframework.utils.directory.Directory;
-import org.globsframework.utils.exceptions.UnexpectedApplicationState;
 
 public class SavingsSeriesComponentFactory implements RepeatComponentFactory<Glob> {
   private Glob account;
@@ -49,7 +47,7 @@ public class SavingsSeriesComponentFactory implements RepeatComponentFactory<Glo
     this.seriesStringifier = directory.get(DescriptionService.class).getStringifier(Series.TYPE);
   }
 
-  public void registerComponents(RepeatCellBuilder cellBuilder, final Glob periodSeriesStat) {
+  public void registerComponents(PanelBuilder cellBuilder, final Glob periodSeriesStat) {
     final Glob series = PeriodSeriesStat.findTarget(periodSeriesStat, repository);
     String name = account.get(Account.NAME) + "." + seriesStringifier.toString(series, repository);
 
@@ -102,15 +100,15 @@ public class SavingsSeriesComponentFactory implements RepeatComponentFactory<Glo
     gaugeView.setName(name + ".gauge");
     cellBuilder.add("gauge", gaugeView.getComponent());
 
-    cellBuilder.addDisposeListener(gaugeView);
-    cellBuilder.addDisposeListener(seriesNameButton);
+    cellBuilder.addDisposable(gaugeView);
+    cellBuilder.addDisposable(seriesNameButton);
   }
 
   private void addAmountButton(String prefixName,
                                String buttonName,
                                DoubleField field,
                                final Glob series,
-                               Glob periodSeriesStat, RepeatCellBuilder cellBuilder,
+                               Glob periodSeriesStat, PanelBuilder cellBuilder,
                                final GlobListFunctor callback) {
     String name = prefixName + buttonName;
     final GlobButtonView globButtonView =
@@ -118,7 +116,7 @@ public class SavingsSeriesComponentFactory implements RepeatComponentFactory<Glo
         .setName(name)
         .forceSelection(periodSeriesStat.getKey());
     cellBuilder.add(buttonName, globButtonView.getComponent());
-    cellBuilder.addDisposeListener(globButtonView);
+    cellBuilder.addDisposable(globButtonView);
   }
 
   private GlobListStringifier getStringifier(Glob series, final DoubleField field) {

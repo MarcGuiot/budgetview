@@ -16,7 +16,7 @@ import org.designup.picsou.model.Month;
 import org.designup.picsou.model.Transaction;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.SelectionService;
-import org.globsframework.gui.splits.repeat.RepeatCellBuilder;
+import org.globsframework.gui.splits.PanelBuilder;
 import org.globsframework.gui.splits.utils.Disposable;
 import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
@@ -89,7 +89,7 @@ public abstract class PositionsChartView extends View implements HistoChartRange
     builder.add(componentName, getChart());
   }
 
-  public void registerComponents(RepeatCellBuilder builder) {
+  public void registerComponents(PanelBuilder builder) {
     builder.add(componentName, getChart());
   }
 

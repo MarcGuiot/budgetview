@@ -5,7 +5,7 @@ import org.designup.picsou.gui.components.utils.CustomFocusTraversalPolicy;
 import org.designup.picsou.gui.config.ConfigService;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobsPanelBuilder;
-import org.globsframework.gui.splits.repeat.RepeatCellBuilder;
+import org.globsframework.gui.splits.PanelBuilder;
 import org.globsframework.gui.splits.repeat.RepeatComponentFactory;
 import org.globsframework.gui.splits.utils.Disposable;
 import org.globsframework.gui.splits.utils.GuiUtils;
@@ -49,7 +49,7 @@ public class LicenseConfirmationPanel implements Disposable {
                                     repository, directory);
 
     builder.addRepeat("questions", questions, new RepeatComponentFactory<Question>() {
-      public void registerComponents(RepeatCellBuilder cellBuilder, final Question question) {
+      public void registerComponents(PanelBuilder cellBuilder, final Question question) {
         cellBuilder.add("question", new JLabel(question.getQuestionText()));
         cellBuilder.add("answer", question.textArea);
         question.textArea.setName("answer" + question.index);

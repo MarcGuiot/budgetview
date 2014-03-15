@@ -107,7 +107,7 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
     budgetView.extras.checkSeries("Anniversaire", -95.0, -95.0);
 
     views.selectCategorization();
-    categorization.getExtras().checkSeriesIsSelected("Anniversaire");
+    categorization.getExtras().checkSelectedSeries("Anniversaire");
   }
 
   public void testSavingsSeries() throws Exception {
@@ -137,7 +137,7 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
     budgetView.savings.checkSeries("Epargne", 25.0, 25.0);
 
     views.selectCategorization();
-    categorization.getSavings().checkSeriesIsSelected("Epargne");
+    categorization.getSavings().checkSelectedSeries("Epargne");
   }
 
   public void testUnset() throws Exception {

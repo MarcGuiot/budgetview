@@ -18,7 +18,7 @@ import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobSelection;
 import org.globsframework.gui.GlobSelectionListener;
 import org.globsframework.gui.GlobsPanelBuilder;
-import org.globsframework.gui.splits.repeat.RepeatCellBuilder;
+import org.globsframework.gui.splits.PanelBuilder;
 import org.globsframework.gui.splits.repeat.RepeatComponentFactory;
 import org.globsframework.gui.components.GlobRepeat;
 import org.globsframework.gui.views.GlobLabelView;
@@ -98,7 +98,7 @@ public class SavingsView extends View implements GlobSelectionListener {
       this.seriesButtons = seriesButtons;
     }
 
-    public void registerComponents(RepeatCellBuilder cellBuilder, final Glob account) {
+    public void registerComponents(PanelBuilder cellBuilder, final Glob account) {
 
       cellBuilder.add("accountName",
                       GlobLabelView.init(Account.NAME, repository, directory)
@@ -114,7 +114,7 @@ public class SavingsView extends View implements GlobSelectionListener {
       final SavingsSeriesView seriesView = new SavingsSeriesView(account, repository, directory,
                                                                  seriesButtons);
       cellBuilder.add("savingsSeries", seriesView.getPanel());
-      cellBuilder.addDisposeListener(seriesView);
+      cellBuilder.addDisposable(seriesView);
 
       final HistoChartBuilder histoChartBuilder =
         new HistoChartBuilder(new HistoChartConfig(false, false, false, true, true, true, false, true, false, false),
@@ -129,7 +129,7 @@ public class SavingsView extends View implements GlobSelectionListener {
           }
         }
       };
-      cellBuilder.addDisposeListener(updater);
+      cellBuilder.addDisposable(updater);
       cellBuilder.add("savingsAccountChart", histoChartBuilder.getChart());
     }
 

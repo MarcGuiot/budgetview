@@ -3,12 +3,17 @@ package org.designup.picsou.functests.checkers;
 import junit.framework.Assert;
 import junit.framework.AssertionFailedError;
 import org.designup.picsou.model.BudgetArea;
+import org.globsframework.utils.TestUtils;
+import org.uispec4j.Button;
+import org.uispec4j.Panel;
 import org.uispec4j.*;
 import org.uispec4j.assertion.Assertion;
 import org.uispec4j.utils.Utils;
 
 import javax.swing.*;
+import java.awt.*;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import static org.uispec4j.assertion.UISpecAssert.*;
@@ -33,22 +38,34 @@ public class BudgetAreaCategorizationChecker extends GuiChecker {
   }
 
   public BudgetAreaCategorizationChecker checkContainsSeries(String... seriesNames) {
-    List<String> names = getSeriesNames();
+    List<String> names = getSeriesNames(panel);
     org.globsframework.utils.TestUtils.assertContains(names, seriesNames);
     return this;
   }
 
   public BudgetAreaCategorizationChecker checkSeriesListEquals(String... seriesNames) {
-    List<String> names = getSeriesNames();
+    List<String> names = getSeriesNames(panel);
     org.globsframework.utils.TestUtils.assertEquals(names, seriesNames);
     return this;
   }
 
-  private List<String> getSeriesNames() {
+  private List<String> getSeriesNames(Panel container) {
     List<String> names = new ArrayList<String>();
-    UIComponent[] radios = panel.getUIComponents(RadioButton.class);
+    UIComponent[] radios = container.getUIComponents(RadioButton.class);
     for (UIComponent radio : radios) {
       if (isSeriesRadio(radio)) {
+        names.add(radio.getLabel());
+      }
+    }
+    return names;
+  }
+
+  private List<String> getSelectedSeriesNames(Panel container) {
+    List<String> names = new ArrayList<String>();
+    UIComponent[] radios = container.getUIComponents(RadioButton.class);
+    for (UIComponent radio : radios) {
+      RadioButton radioButton = (RadioButton)radio;
+      if (radioButton.isSelected().isTrue()) {
         names.add(radio.getLabel());
       }
     }
@@ -83,8 +100,8 @@ public class BudgetAreaCategorizationChecker extends GuiChecker {
     return this;
   }
 
-  public BudgetAreaCategorizationChecker checkSeriesIsSelected(String seriesName) {
-    assertThat(panel.getRadioButton(seriesName).isSelected());
+  public BudgetAreaCategorizationChecker checkSelectedSeries(String seriesName) {
+    TestUtils.assertSetEquals(getSelectedSeriesNames(panel), Collections.singleton(seriesName));
     return this;
   }
 
@@ -203,7 +220,7 @@ public class BudgetAreaCategorizationChecker extends GuiChecker {
     Panel seriesPanel = seriesRadio.getContainer("seriesBlock");
     for (String subName : subSeriesNames) {
       assertFalse("subSeries unexpectedly found with name: " + subName,
-                 seriesPanel.containsUIComponent(RadioButton.class, subName));
+                  seriesPanel.containsUIComponent(RadioButton.class, subName));
     }
     return this;
   }
@@ -308,19 +325,78 @@ public class BudgetAreaCategorizationChecker extends GuiChecker {
   }
 
   public BudgetAreaCategorizationChecker checkGroupContainsSeries(String group, String... seriesNames) {
-    System.out.println("TBD: BudgetAreaCategorizationChecker.checkGroupContainsSeries");
-    checkContainsSeries(seriesNames);
+    Panel groupPanel = getGroupPanel(group);
+    List<String> actualSeries = new ArrayList<String>();
+    for (Component component : groupPanel.getSwingComponents(JRadioButton.class)) {
+      JRadioButton radio = (JRadioButton)component;
+      actualSeries.add(radio.getText());
+    }
+    TestUtils.assertSetEquals(actualSeries, seriesNames);
     return this;
   }
 
+  private Panel getGroupPanel(String groupName) {
+    List<JLabel> matchingLabels = new ArrayList<JLabel>();
+    for (Component component : panel.getSwingComponents(JLabel.class, "groupLabel")) {
+      JLabel label = (JLabel)component;
+      if (component.isVisible() && Utils.equals(groupName, label.getText())) {
+        matchingLabels.add(label);
+      }
+    }
+    if (matchingLabels.isEmpty()) {
+      Assert.fail("No group found with name: " + groupName + " - actual: " + getTextForLabels(matchingLabels));
+    }
+    if (matchingLabels.size() > 1) {
+      Assert.fail("Several groups found with name: " + groupName + " => " + getTextForLabels(matchingLabels));
+    }
+    TextBox textBox = new TextBox(matchingLabels.get(0));
+    return textBox.getContainer("groupPanel");
+  }
+
+  private List<String> getTextForLabels(List<JLabel> matchingLabels) {
+    List<String> actual = new ArrayList<String>();
+    for (JLabel matchingLabel : matchingLabels) {
+      actual.add(matchingLabel.getText());
+    }
+    return actual;
+  }
+
   public BudgetAreaCategorizationChecker checkGroupNotShown(String group) {
-    System.out.println("TBD: BudgetAreaCategorizationChecker.checkGroupContainsSeries");
+    for (Component component : panel.getSwingComponents(JLabel.class, "groupLabel")) {
+      JLabel label = (JLabel)component;
+      if (component.isVisible() && Utils.equals(group, label.getText())) {
+        Assert.fail("Group '" + group + "' unexpectedly visible in: " + getVisibleGroupNames());
+      }
+    }
     return this;
   }
 
   public BudgetAreaCategorizationChecker checkGroupDoesNotContainSeries(String group, String... seriesNames) {
     System.out.println("TBD: BudgetAreaCategorizationChecker.checkGroupDoesNotContainSeries");
     checkDoesNotContainSeries(seriesNames);
+    return this;
+  }
+
+  public BudgetAreaCategorizationChecker checkContainsNoGroup() {
+    List<String> visibleGroups = getVisibleGroupNames();
+    TestUtils.checkEmpty(visibleGroups, "Groups unexpectedly shown:");
+    return this;
+  }
+
+  public List<String> getVisibleGroupNames() {
+    List<String> visibleGroups = new ArrayList<String>();
+    for (Component component : panel.getSwingComponents(JLabel.class, "groupLabel")) {
+      if (component.isVisible()) {
+        JLabel label = (JLabel)component;
+        visibleGroups.add(label.getText());
+      }
+    }
+    return visibleGroups;
+  }
+
+  public BudgetAreaCategorizationChecker checkNoGroupSeriesListEquals(String... seriesNames) {
+    List<String> names = getSeriesNames(panel.getPanel("rootSeriesPanel"));
+    org.globsframework.utils.TestUtils.assertEquals(names, seriesNames);
     return this;
   }
 }

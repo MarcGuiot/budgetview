@@ -4,7 +4,7 @@ import org.designup.picsou.client.ServerAccess;
 import org.designup.picsou.gui.components.dialogs.PicsouDialog;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobsPanelBuilder;
-import org.globsframework.gui.splits.repeat.RepeatCellBuilder;
+import org.globsframework.gui.splits.PanelBuilder;
 import org.globsframework.gui.splits.repeat.RepeatComponentFactory;
 import org.globsframework.gui.splits.utils.Disposable;
 import org.globsframework.model.GlobRepository;
@@ -30,7 +30,7 @@ public class RestoreSnapshotDialog {
     final GlobsPanelBuilder builder = new GlobsPanelBuilder(getClass(), "/layout/backuprestore/restoreSnapshotDialog.splits", repository, directory);
 
     builder.addRepeat("versionRepeat", getSnapshots(), new RepeatComponentFactory<ServerAccess.SnapshotInfo>() {
-      public void registerComponents(RepeatCellBuilder cellBuilder, ServerAccess.SnapshotInfo item) {
+      public void registerComponents(PanelBuilder cellBuilder, ServerAccess.SnapshotInfo item) {
         cellBuilder.add("dateRef", new RestoreSnapshotAction(directory, repository, item, dialog));
       }
     });

@@ -10,7 +10,7 @@ import org.designup.picsou.gui.components.charts.histo.line.HistoLineDataset;
 import org.globsframework.gui.GlobSelection;
 import org.globsframework.gui.GlobSelectionListener;
 import org.globsframework.gui.SelectionService;
-import org.globsframework.gui.splits.repeat.RepeatCellBuilder;
+import org.globsframework.gui.splits.PanelBuilder;
 import org.globsframework.gui.splits.repeat.RepeatComponentFactory;
 import org.globsframework.metamodel.Field;
 import org.globsframework.metamodel.GlobType;
@@ -53,7 +53,7 @@ public class FieldRepeatComponentFactory implements RepeatComponentFactory<Field
     this.type = typeId.getGlobType();
   }
 
-  public void registerComponents(RepeatCellBuilder cellBuilder, Field field) {
+  public void registerComponents(PanelBuilder cellBuilder, Field field) {
     cellBuilder.add("chartTitle", new JLabel(field.getName()));
     cellBuilder.add("chart", createPerfChart(field));
   }

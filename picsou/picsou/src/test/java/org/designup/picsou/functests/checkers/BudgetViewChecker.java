@@ -1,6 +1,5 @@
 package org.designup.picsou.functests.checkers;
 
-import com.sun.org.apache.xerces.internal.impl.dv.XSSimpleType;
 import junit.framework.Assert;
 import org.designup.picsou.functests.checkers.components.DeltaGaugeChecker;
 import org.designup.picsou.functests.checkers.components.GaugeChecker;
@@ -498,8 +497,12 @@ public class BudgetViewChecker extends ViewChecker {
       getSeriesPanel(seriesName).getSeriesButton().checkItemEnabled("Carry expenses remainder over next month");
     }
 
+    public void checkCarryOverNotShown(String seriesName) {
+      getSeriesPanel(seriesName).getSeriesButton().checkItemNotPresent("Carry over next month");
+    }
+
     public void checkCarryOverDisabled(String seriesName) {
-      getSeriesPanel(seriesName).getSeriesButton().checkItemDisable("Carry over next month");
+      getSeriesPanel(seriesName).getSeriesButton().checkItemDisabled("Carry over next month");
     }
 
     public BudgetAreaChecker checkGroups(String series, String... labels) {

@@ -14,6 +14,7 @@ import org.globsframework.gui.splits.repeat.Repeat;
 import org.globsframework.gui.splits.repeat.RepeatComponentFactory;
 import org.globsframework.gui.splits.splitters.DefaultSplitterFactory;
 import org.globsframework.gui.splits.utils.Disposable;
+import org.globsframework.gui.splits.utils.OnLoadListener;
 import org.globsframework.gui.splits.xml.SplitsParser;
 import org.globsframework.utils.Files;
 import org.globsframework.utils.Strings;
@@ -30,13 +31,14 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-public class SplitsBuilder {
+public class SplitsBuilder implements PanelBuilder {
 
   private Map<String, SplitsBuilder> children = new HashMap<String, SplitsBuilder>();
   private DefaultSplitsContext context;
   private Source source;
   private java.util.List<SplitsLoader> loaders = new ArrayList<SplitsLoader>();
   private Directory directory;
+  private java.util.List<OnLoadListener> onLoadListeners = new ArrayList<OnLoadListener>();
 
   public SplitsBuilder(Directory directory) {
     this.directory = directory;
@@ -79,9 +81,9 @@ public class SplitsBuilder {
     return this;
   }
 
-  public SplitsBuilder add(String name, Action action) {
+  public <T extends Action> T add(String name, T action) {
     context.add(name, action);
-    return this;
+    return action;
   }
 
   public SplitsBuilder add(String name, HyperlinkListener listener) {
@@ -162,6 +164,10 @@ public class SplitsBuilder {
     return (T)loadWithNode().getComponent();
   }
 
+  public void addOnLoadListener(OnLoadListener listener) {
+    onLoadListeners.add(listener);
+  }
+
   public <T extends Component> SplitsNode<T> loadWithNode() {
     context.cleanUp();
     for (Map.Entry<String, SplitsBuilder> entry : children.entrySet()) {
@@ -187,6 +193,9 @@ public class SplitsBuilder {
 
   protected void completeAfterLoad() {
     context.complete();
+    for (OnLoadListener listener : onLoadListeners) {
+      listener.processLoad();
+    }
   }
 
   public SplitsNode doLoad() {
@@ -197,7 +206,7 @@ public class SplitsBuilder {
       component = parser.parse(reader);
     }
     catch (GlobsException e) {
-      throw e;
+      throw new RuntimeException("Error parsing " + source, e);
     }
     catch (Exception e) {
       throw new ResourceAccessFailed("Error parsing Splits descriptor: " + e.getMessage() + context.dump(), e);
@@ -241,6 +250,10 @@ public class SplitsBuilder {
         return new InputStreamReader(stream);
       }
     }
+
+    public String toString() {
+      return resourceName;
+    }
   }
 
   private static class FileSource implements Source {
@@ -261,6 +274,10 @@ public class SplitsBuilder {
         throw new ResourceAccessFailed("UTF-8", e);
       }
     }
+
+    public String toString() {
+      return file.getAbsolutePath();
+    }
   }
 
   private static class StringSource implements Source {
@@ -272,6 +289,10 @@ public class SplitsBuilder {
 
     public Reader getReader() {
       return new StringReader(content);
+    }
+
+    public String toString() {
+      return content;
     }
   }
 }

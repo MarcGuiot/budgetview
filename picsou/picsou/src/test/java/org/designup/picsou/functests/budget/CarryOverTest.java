@@ -408,7 +408,7 @@ public class CarryOverTest extends LoggedInFunctionalTestCase {
       .addExpenseItem(0, "Item 0", 200808, -10.00)
       .addExpenseItem(1, "Item 1", 200808, -10.00);
 
-    budgetView.extras.checkCarryOverDisabled("My Project");
+    budgetView.extras.checkCarryOverNotShown("My Project");
   }
 
   public void testPostponesEndDateIfNeededButCannotGoPastLastMonth() throws Exception {
