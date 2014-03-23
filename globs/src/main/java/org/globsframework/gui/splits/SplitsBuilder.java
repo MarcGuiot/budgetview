@@ -30,8 +30,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-public class SplitsBuilder {
-
+public class SplitsBuilder implements Disposable {
   private Map<String, SplitsBuilder> children = new HashMap<String, SplitsBuilder>();
   private DefaultSplitsContext context;
   private Source source;

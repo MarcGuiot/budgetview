@@ -241,6 +241,7 @@ public class SeriesEditionDialog {
         updateMonthChooser();
         updateMonthSelectionCard();
         updateBudgetAreaCombo();
+        updateTargetAccount();
       }
     }, Series.TYPE);
 
@@ -248,6 +249,7 @@ public class SeriesEditionDialog {
       public void globsChanged(ChangeSet changeSet, GlobRepository repository) {
         updateDateSelectors();
         updateMonthChooser();
+        updateTargetAccount();
       }
     });
 
@@ -315,6 +317,13 @@ public class SeriesEditionDialog {
     }
     else {
       monthSelectionPanel.setVisible(false);
+    }
+  }
+
+  private void updateTargetAccount() {
+    if (currentSeries != null) {
+      targetAccount.setEnabled(
+        !Series.hasRealOperations(localRepository, currentSeries.get(Series.ID)));
     }
   }
 

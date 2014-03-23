@@ -3,7 +3,9 @@ package org.designup.picsou.gui.projects.itemedition;
 import org.designup.picsou.gui.components.images.GlobImageLabelView;
 import org.designup.picsou.gui.help.HyperlinkHandler;
 import org.designup.picsou.gui.projects.ProjectView;
+import org.designup.picsou.model.Account;
 import org.designup.picsou.model.ProjectItem;
+import org.designup.picsou.model.Series;
 import org.designup.picsou.model.Transaction;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobsPanelBuilder;
@@ -43,6 +45,11 @@ public class ProjectItemExpensePanel extends ProjectItemEditionPanel {
       .forceSelection(itemKey);
     builder.add("urlField", urlField);
 
+    builder.addComboEditor("accountSelection", ProjectItem.ACCOUNT)
+      .setEnabled(itemKey == null || !Series.hasRealOperations(localRepository, localRepository.get(itemKey).get(ProjectItem.SERIES)))
+      .setFilter(new Account.UserAccountMatcher())
+      .forceSelection(itemKey);
+
     GlobMultiLineTextEditor descriptionField = GlobMultiLineTextEditor.init(ProjectItem.DESCRIPTION, localRepository, directory)
       .forceSelection(itemKey);
     builder.add("descriptionField", descriptionField);
@@ -51,7 +58,7 @@ public class ProjectItemExpensePanel extends ProjectItemEditionPanel {
     builder.add("cancel", new CancelAction());
 
     builder.add("handler", new HyperlinkHandler(directory));
-
+    disposables.add(builder);
     return builder.load();
   }
 
