@@ -43,7 +43,7 @@ public class SubSeriesEvolutionViewTest extends LoggedInFunctionalTestCase {
   public void testSelectingSubSeries() throws Exception {
 
     seriesAnalysis
-      .checkBudgetStackShown()
+      .checkBudgetAndSeriesStacksShown()
       .checkStackButtonsHidden();
     seriesAnalysis.initContent(5)
       .add("Main accounts", "-115.00", "-125.00", "125.00")
@@ -65,9 +65,8 @@ public class SubSeriesEvolutionViewTest extends LoggedInFunctionalTestCase {
 
     seriesAnalysis.select("Food");
     seriesAnalysis
-      .checkBudgetStackShown()
-      .checkGotoSubSeriesShown()
-      .gotoSubSeriesStack()
+      .checkBudgetAndSeriesStacksShown()
+      .checkGotoSubSeriesShown().gotoDown()
       .checkGotoBudgetShown();
     seriesAnalysis.seriesChart.getSingleDataset()
       .checkSize(1)
@@ -124,7 +123,7 @@ public class SubSeriesEvolutionViewTest extends LoggedInFunctionalTestCase {
       .checkLineColumn(3, "Jul", "2012", 0.00);
     seriesAnalysis.checkSelected("Groceries");
 
-    seriesAnalysis.gotoBudgetStack();
+    seriesAnalysis.gotoUp();
     seriesAnalysis.select("Restaurant");
     seriesAnalysis
       .checkSubSeriesStackShown()
@@ -145,8 +144,8 @@ public class SubSeriesEvolutionViewTest extends LoggedInFunctionalTestCase {
       .checkLineColumn(3, "Jul", "2012", 0.00);
 
     seriesAnalysis
-      .gotoBudgetStack()
-      .checkBudgetStackShown()
+      .gotoUp()
+      .checkBudgetAndSeriesStacksShown()
       .checkGotoSubSeriesShown();
     seriesAnalysis.balanceChart.getRightDataset()
       .checkSize(2)
@@ -155,9 +154,9 @@ public class SubSeriesEvolutionViewTest extends LoggedInFunctionalTestCase {
 
     budgetView.variable.gotoAnalysis("Food");
     seriesAnalysis
-      .checkBudgetStackShown()
+      .checkBudgetAndSeriesStacksShown()
       .checkGotoSubSeriesShown()
-      .gotoSubSeriesStack()
+      .gotoDown()
       .checkSubSeriesStackShown();
     seriesAnalysis.seriesChart.getSingleDataset()
       .checkSize(1)
@@ -172,7 +171,7 @@ public class SubSeriesEvolutionViewTest extends LoggedInFunctionalTestCase {
   public void testDeletingAndAddingSubSeries() throws Exception {
 
     seriesAnalysis.select("Food");
-    seriesAnalysis.gotoSubSeriesStack();
+    seriesAnalysis.gotoDown();
     seriesAnalysis.subSeriesChart.select("Restaurant");
     seriesAnalysis.seriesChart.getSingleDataset()
       .checkSize(1)
@@ -183,6 +182,7 @@ public class SubSeriesEvolutionViewTest extends LoggedInFunctionalTestCase {
       .deleteSubSeriesAndConfirm("Restaurant")
       .validate();
 
+    seriesAnalysis.select("Food");
     seriesAnalysis
       .checkSubSeriesStackShown()
       .checkGotoBudgetShown();
@@ -195,13 +195,13 @@ public class SubSeriesEvolutionViewTest extends LoggedInFunctionalTestCase {
       .checkValue("Groceries", 100.00)
       .checkValue("Food", 160.00);
 
-    seriesAnalysis.gotoBudgetStack();
+    seriesAnalysis.gotoUp();
     seriesAnalysis.balanceChart.getRightDataset()
       .checkSize(2)
       .checkValue("Variable", 260.00, true)
       .checkValue("Recurring", 50.00);
 
-    seriesAnalysis.gotoSubSeriesStack();
+    seriesAnalysis.gotoDown();
     seriesAnalysis.checkExpanded("Food", true);
     seriesAnalysis.toggleExpansion("Food");
     budgetView.variable.editSeries("Food")
@@ -210,7 +210,12 @@ public class SubSeriesEvolutionViewTest extends LoggedInFunctionalTestCase {
       .validate();
 
     views.selectAnalysis();
+    seriesAnalysis.select("Balance");
+    seriesAnalysis.checkBudgetAndSeriesStacksShown();
+
+    seriesAnalysis.select("Food");
     seriesAnalysis.checkExpanded("Food", true);
+    seriesAnalysis.gotoDown();
 
     categorization.setVariable("MacDo", "Food", "FastFood");
 
@@ -224,13 +229,14 @@ public class SubSeriesEvolutionViewTest extends LoggedInFunctionalTestCase {
       .checkValue("Food", 100.00)
       .checkValue("FastFood", 60.00);
 
-    seriesAnalysis.gotoBudgetStack();
+    seriesAnalysis.gotoUp();
     seriesAnalysis.balanceChart.getRightDataset()
       .checkSize(2)
       .checkValue("Variable", 260.00, true)
       .checkValue("Recurring", 50.00);
 
-    seriesAnalysis.gotoSubSeriesStack();
+    seriesAnalysis.gotoDown();
+
     seriesAnalysis.seriesChart
       .rightClickAndEditSeries("Food", "Edit")
       .gotoSubSeriesTab()
@@ -241,7 +247,7 @@ public class SubSeriesEvolutionViewTest extends LoggedInFunctionalTestCase {
       .validate();
 
     seriesAnalysis
-      .checkBudgetStackShown()
+      .checkBudgetAndSeriesStacksShown()
       .checkStackButtonsHidden();
 
     seriesAnalysis.balanceChart.getRightDataset()
@@ -253,7 +259,7 @@ public class SubSeriesEvolutionViewTest extends LoggedInFunctionalTestCase {
   public void testCreatingUnassigningAndDeletingTransactions() throws Exception {
 
     seriesAnalysis.select("Food");
-    seriesAnalysis.gotoSubSeriesStack();
+    seriesAnalysis.gotoDown();
     seriesAnalysis.seriesChart.getSingleDataset()
       .checkSize(1)
       .checkValue("Food", 260.00, true);

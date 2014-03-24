@@ -28,6 +28,7 @@ public class SeriesAnalysisChecker extends ExpandableTableChecker<SeriesAnalysis
   public final HistoChartChecker histoChart;
   public final StackChecker balanceChart;
   public final StackChecker seriesChart;
+  public final StackChecker groupSeriesChart;
   public final StackChecker subSeriesChart;
 
   private Table table;
@@ -41,6 +42,7 @@ public class SeriesAnalysisChecker extends ExpandableTableChecker<SeriesAnalysis
     this.histoChart = new HistoChartChecker(mainWindow, "seriesAnalysisView", "histoChart");
     this.balanceChart = new StackChecker(mainWindow, PANEL_NAME, "balanceChart");
     this.seriesChart = new StackChecker(mainWindow, PANEL_NAME, "seriesChart");
+    this.groupSeriesChart = new StackChecker(mainWindow, PANEL_NAME, "groupChart");
     this.subSeriesChart = new StackChecker(mainWindow, PANEL_NAME, "subSeriesChart");
   }
 
@@ -335,11 +337,27 @@ public class SeriesAnalysisChecker extends ExpandableTableChecker<SeriesAnalysis
     return this;
   }
 
-  public SeriesAnalysisChecker checkBudgetStackShown() {
+  public SeriesAnalysisChecker checkGroupSeriesAndSubSeriesStacksShown() {
+    balanceChart.checkHidden();
+    seriesChart.checkHidden();
+    groupSeriesChart.checkVisible();
+    subSeriesChart.checkVisible();
+    return this;
+  }
+
+  public SeriesAnalysisChecker checkSeriesAndGroupSeriesStacksShown() {
+    balanceChart.checkHidden();
+    seriesChart.checkVisible();
+    groupSeriesChart.checkVisible();
+    subSeriesChart.checkHidden();
+    return this;
+  }
+
+  public SeriesAnalysisChecker checkBudgetAndSeriesStacksShown() {
     balanceChart.checkVisible();
     seriesChart.checkVisible();
+    groupSeriesChart.checkHidden();
     subSeriesChart.checkHidden();
-    assertFalse(getPanel().getButton("gotoBudgetButton").isEnabled());
     return this;
   }
 
@@ -347,35 +365,63 @@ public class SeriesAnalysisChecker extends ExpandableTableChecker<SeriesAnalysis
     balanceChart.checkHidden();
     seriesChart.checkVisible();
     subSeriesChart.checkVisible();
-    assertTrue(panel.getButton("gotoBudgetButton").isEnabled());
     return this;
   }
 
   public SeriesAnalysisChecker checkGotoBudgetShown() {
-    assertTrue(panel.getButton("gotoBudgetButton").isVisible());
-    assertFalse(panel.getButton("gotoSubSeriesButton").isVisible());
+    Button gotoUpButton = panel.getButton("gotoUpButton");
+    assertTrue(gotoUpButton.isVisible());
+    assertTrue(gotoUpButton.textEquals(Lang.get("seriesAnalysis.toggleController.gotoBudget")));
+    return this;
+  }
+
+  public SeriesAnalysisChecker checkGotoUpHidden() {
+    assertFalse(panel.getButton("gotoUpButton").isVisible());
+    return this;
+  }
+
+  public SeriesAnalysisChecker checkGotoDownHidden() {
+    assertFalse(panel.getButton("gotoDownButton").isVisible());
+    return this;
+  }
+
+  public SeriesAnalysisChecker checkGotoDownToGroupSeriesShown() {
+    Button gotoDownButton = panel.getButton("gotoDownButton");
+    assertTrue(gotoDownButton.isVisible());
+    assertTrue(gotoDownButton.textEquals(Lang.get("seriesAnalysis.toggleController.gotoGroupSeries")));
+    return this;
+  }
+
+  public SeriesAnalysisChecker checkGotoUpToGroupSeriesShown() {
+    Button gotoUpButton = panel.getButton("gotoUpButton");
+    assertTrue(gotoUpButton.isVisible());
+    assertTrue(gotoUpButton.textEquals(Lang.get("seriesAnalysis.toggleController.gotoGroupSeries")));
     return this;
   }
 
   public SeriesAnalysisChecker checkGotoSubSeriesShown() {
-    assertFalse(panel.getButton("gotoBudgetButton").isVisible());
-    assertTrue(panel.getButton("gotoSubSeriesButton").isVisible());
+    Button gotoDownButton = panel.getButton("gotoDownButton");
+    assertTrue(gotoDownButton.isVisible());
+    assertTrue(gotoDownButton.textEquals(Lang.get("seriesAnalysis.toggleController.gotoSubSeries")));
     return this;
   }
 
   public SeriesAnalysisChecker checkStackButtonsHidden() {
-    assertFalse(panel.getButton("gotoBudgetButton").isVisible());
-    assertFalse(panel.getButton("gotoSubSeriesButton").isVisible());
+    assertFalse(panel.getButton("gotoUpButton").isVisible());
+    assertFalse(panel.getButton("gotoDownButton").isVisible());
     return this;
   }
 
-  public SeriesAnalysisChecker gotoBudgetStack() {
-    panel.getButton("gotoBudgetButton").click();
+  public SeriesAnalysisChecker gotoUp() {
+    Button button = panel.getButton("gotoUpButton");
+    assertThat(button.isVisible());
+    assertThat(button.isEnabled());
+    button.click();
     return this;
   }
 
-  public SeriesAnalysisChecker gotoSubSeriesStack() {
-    Button button = panel.getButton("gotoSubSeriesButton");
+  public SeriesAnalysisChecker gotoDown() {
+    Button button = panel.getButton("gotoDownButton");
     assertThat(button.isVisible());
     assertThat(button.isEnabled());
     button.click();

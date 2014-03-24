@@ -24,20 +24,12 @@ import org.globsframework.gui.GlobSelectionListener;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.SelectionService;
 import org.globsframework.metamodel.GlobType;
-import org.globsframework.model.Glob;
-import org.globsframework.model.GlobList;
-import org.globsframework.model.GlobRepository;
-import org.globsframework.model.Key;
-import org.globsframework.model.utils.GlobMatchers;
-import org.globsframework.model.utils.TypeChangeSetListener;
+import org.globsframework.model.*;
 import org.globsframework.utils.Strings;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.SortedSet;
+import java.util.*;
 
 import static org.designup.picsou.gui.model.SeriesStat.*;
 import static org.globsframework.model.utils.GlobMatchers.*;
@@ -54,11 +46,13 @@ public class SeriesChartsPanel implements GlobSelectionListener {
   private HistoChartBuilder histoChartBuilder;
 
   private StackChart balanceChart;
-  private StackChart seriesChart;
+  private StackChart rootSeriesChart;
+  private StackChart groupSeriesChart;
   private StackChart subSeriesChart;
 
   private JLabel balanceChartLabel;
   private JLabel seriesChartLabel;
+  private JLabel groupChartLabel;
   private JLabel subSeriesChartLabel;
 
   private StackChartColors balanceStackColors;
@@ -66,9 +60,9 @@ public class SeriesChartsPanel implements GlobSelectionListener {
   private StackChartColors expensesStackColors;
   private SelectionService selectionService;
 
-  private static final GlobType[] USED_TYPES =
-    new GlobType[]{BudgetStat.TYPE, Series.TYPE, SubSeries.TYPE,
-                   SavingsBudgetStat.TYPE, PeriodSeriesStat.TYPE, SeriesStat.TYPE, SubSeriesStat.TYPE};
+  private static final Set<GlobType> USED_TYPES =
+    new HashSet<GlobType>(Arrays.asList(BudgetStat.TYPE, Series.TYPE, SubSeries.TYPE,
+                                        SavingsBudgetStat.TYPE, PeriodSeriesStat.TYPE, SeriesStat.TYPE, SubSeriesStat.TYPE));
   private StackToggleController stackToggle;
 
   public SeriesChartsPanel(HistoChartRange range,
@@ -90,7 +84,8 @@ public class SeriesChartsPanel implements GlobSelectionListener {
       }
     });
     balanceChart = new StackChart();
-    seriesChart = new StackChart();
+    rootSeriesChart = new StackChart();
+    groupSeriesChart = new StackChart();
     subSeriesChart = new StackChart();
 
     balanceStackColors = createStackColors("stack.income.bar", "stack.income.border",
@@ -100,22 +95,40 @@ public class SeriesChartsPanel implements GlobSelectionListener {
     expensesStackColors = createStackColors("stack.expenses.bar", "stack.expenses.bar",
                                             "stack.expenses.bar", "stack.expenses.bar", directory);
 
-    repository.addChangeListener(new TypeChangeSetListener(USED_TYPES) {
-      protected void update(GlobRepository repository) {
-        updateCharts(true);
+    repository.addChangeListener(new ChangeSetListener() {
+      public void globsChanged(ChangeSet changeSet, GlobRepository repository) {
+        for (GlobType type : USED_TYPES) {
+          if (changeSet.containsChanges(type)) {
+            GlobList newSelection = new GlobList();
+            for (Key wrapperKey : selectedWrapperKeys) {
+              if (repository.contains(wrapperKey)) {
+                newSelection.add(repository.get(wrapperKey));
+              }
+            }
+            stackToggle.updateFromSelection(newSelection);
+            updateCharts(true);
+            return;
+          }
+        }
+      }
+
+      public void globsReset(GlobRepository repository, Set<GlobType> changedTypes) {
+        if (!Collections.disjoint(changedTypes, USED_TYPES)) {
+          selectionService.clear(SeriesWrapper.TYPE);
+        }
       }
     });
 
     new StackSelectionListener(balanceChart, parentSelectionService);
-    new StackSelectionListener(seriesChart, parentSelectionService);
+    new StackSelectionListener(rootSeriesChart, parentSelectionService);
+    new StackSelectionListener(groupSeriesChart, parentSelectionService);
     new StackSelectionListener(subSeriesChart, parentSelectionService);
 
-    stackToggle = new StackToggleController(balanceChart, subSeriesChart);
+    stackToggle = new StackToggleController(balanceChart, rootSeriesChart, groupSeriesChart, subSeriesChart, repository);
   }
 
   public void reset() {
-    setMainSummaryWrapperKey();
-    stackToggle.showBudgetStack();
+    stackToggle.showBudget(setMainSummaryWrapperKey());
   }
 
   private StackChartColors createStackColors(String leftBar, String leftBorder,
@@ -137,17 +150,19 @@ public class SeriesChartsPanel implements GlobSelectionListener {
   public void registerCharts(GlobsPanelBuilder builder) {
     builder.add("histoChart", histoChartBuilder.getChart());
     builder.add("balanceChart", balanceChart);
-    builder.add("seriesChart", seriesChart);
+    builder.add("seriesChart", rootSeriesChart);
+    builder.add("groupChart", groupSeriesChart);
     builder.add("subSeriesChart", subSeriesChart);
 
     builder.add("histoChartLabel", histoChartBuilder.getLabel());
     builder.add("histoChartLegend", histoChartBuilder.getLegend());
     balanceChartLabel = builder.add("balanceChartLabel", new JLabel()).getComponent();
     seriesChartLabel = builder.add("seriesChartLabel", new JLabel()).getComponent();
+    groupChartLabel = builder.add("groupChartLabel", new JLabel()).getComponent();
     subSeriesChartLabel = builder.add("subSeriesChartLabel", new JLabel()).getComponent();
 
-    builder.add("gotoBudgetButton", stackToggle.getGotoBudgetButton());
-    builder.add("gotoSubSeriesButton", stackToggle.getGotoSubSeriesButton());
+    builder.add("gotoUpButton", stackToggle.getGotoUpButton());
+    builder.add("gotoDownButton", stackToggle.getGotoDownButton());
   }
 
   public void monthSelected(Integer monthId, SortedSet<Integer> monthIds) {
@@ -159,48 +174,25 @@ public class SeriesChartsPanel implements GlobSelectionListener {
   public void selectionUpdated(GlobSelection selection) {
     if (selection.isRelevantForType(SeriesWrapper.TYPE)) {
       GlobList wrappers = selection.getAll(SeriesWrapper.TYPE);
+
+      selectedWrapperKeys.clear();
       if (wrappers.isEmpty()) {
-        setMainSummaryWrapperKey();
+        wrappers.add(setMainSummaryWrapperKey());
       }
       else {
-        selectedWrapperKeys.clear();
         selectedWrapperKeys.addAll(wrappers.getKeyList());
-        if (containsSubSeries(wrappers)) {
-          stackToggle.showSubSeriesStack();
-        }
-        else {
-          stackToggle.setSubSeriesPresent(containsSeriesWithSubSeries(wrappers));
-        }
       }
+      stackToggle.updateFromSelection(wrappers);
     }
 
     updateCharts(true);
   }
 
-  private boolean containsSubSeries(GlobList selectedWrappers) {
-    for (Glob wrapper : selectedWrappers) {
-      if (SeriesWrapper.isSubSeries(wrapper)) {
-        return true;
-      }
-    }
-    return false;
-  }
-
-  private boolean containsSeriesWithSubSeries(GlobList selectedWrappers) {
-    for (Glob wrapper : selectedWrappers) {
-      if (SeriesWrapper.isSeries(wrapper)) {
-        Glob series = SeriesWrapper.getSeries(wrapper, repository);
-        if (repository.contains(SubSeries.TYPE, GlobMatchers.linkedTo(series, SubSeries.SERIES))) {
-          return true;
-        }
-      }
-    }
-    return false;
-  }
-
-  private void setMainSummaryWrapperKey() {
+  private Glob setMainSummaryWrapperKey() {
     selectedWrapperKeys.clear();
-    selectedWrapperKeys.add(Key.create(SeriesWrapper.TYPE, SeriesWrapper.BALANCE_SUMMARY_ID));
+    Key key = Key.create(SeriesWrapper.TYPE, SeriesWrapper.BALANCE_SUMMARY_ID);
+    selectedWrapperKeys.add(key);
+    return repository.find(key);
   }
 
   private void updateCharts(final boolean resetPosition) {
@@ -240,35 +232,75 @@ public class SeriesChartsPanel implements GlobSelectionListener {
       return;
     }
 
-    Set<SeriesOrGroup> seriesOrGroups = getSeriesOrGroups(selectedWrappers);
+    Set<SeriesOrGroup> selectedSeriesOrGroups = getSeriesOrGroups(selectedWrappers);
+    Set<Integer> seriesIds = getIds(selectedWrappers, SeriesWrapperType.SERIES);
     Set<Integer> subSeriesIds = getIds(selectedWrappers, SeriesWrapperType.SUB_SERIES);
     for (Integer subSeriesId : subSeriesIds) {
       Glob subSeries = repository.get(Key.create(SubSeries.TYPE, subSeriesId));
-      seriesOrGroups.add(new SeriesOrGroup(subSeries.get(SubSeries.SERIES), SeriesType.SERIES));
+      seriesIds.add(subSeries.get(SubSeries.SERIES));
+      selectedSeriesOrGroups.add(new SeriesOrGroup(subSeries.get(SubSeries.SERIES), SeriesType.SERIES));
     }
-    for (SeriesOrGroup seriesOrGroup : seriesOrGroups) {
+    for (SeriesOrGroup seriesOrGroup : selectedSeriesOrGroups) {
       budgetAreas.add(seriesOrGroup.getBudgetArea(repository));
     }
 
-    if (seriesOrGroups.isEmpty()) {
+    if (selectedSeriesOrGroups.isEmpty()) {
       histoChartBuilder.showBudgetAreaHisto(budgetAreas, referenceMonthId, resetPosition);
     }
     else if (!subSeriesIds.isEmpty()) {
       histoChartBuilder.showSubSeriesHisto(subSeriesIds, referenceMonthId, resetPosition);
     }
-    else {
-      histoChartBuilder.showSeriesHisto(seriesOrGroups, referenceMonthId, resetPosition);
+    else { // Series or SeriesGroup
+      histoChartBuilder.showSeriesHisto(selectedSeriesOrGroups, referenceMonthId, resetPosition);
     }
 
-    if ((seriesOrGroups.size() == 1)) {
-      updateSubSeriesStacks(seriesOrGroups.iterator().next(), subSeriesIds);
+    if (isSingleSeries(selectedSeriesOrGroups)) {
+      updateSubSeriesStacks(selectedSeriesOrGroups.iterator().next(), subSeriesIds);
     }
     else {
       clearSubSeriesStacks();
     }
 
+    Set<Integer> groupIds = new HashSet<Integer>();
+    for (Integer seriesId : seriesIds) {
+      Glob series = repository.get(Key.create(Series.TYPE, seriesId));
+      if (series.get(Series.GROUP) != null) {
+        Glob group = repository.findLinkTarget(series, Series.GROUP);
+        groupIds.add(group.get(SeriesGroup.ID));
+        selectedSeriesOrGroups.add(new SeriesOrGroup(group));
+      }
+    }
+
+    Integer groupId = getGroupToShow(selectedSeriesOrGroups);
+    if (groupId != null) {
+      updateGroupStacks(groupId, selectedSeriesOrGroups);
+    }
+    else {
+      clearGroupSeriesStacks();
+    }
+
     updateMainBalanceStack(budgetAreas);
-    updateBudgetAreaSeriesStack(budgetAreas, seriesOrGroups);
+    updateBudgetAreaSeriesStack(budgetAreas, selectedSeriesOrGroups);
+  }
+
+  private Integer getGroupToShow(Set<SeriesOrGroup> seriesOrGroups) {
+    Set<SeriesOrGroup> groups = new HashSet<SeriesOrGroup>();
+    for (SeriesOrGroup seriesOrGroup : seriesOrGroups) {
+      if (seriesOrGroup.isGroup()) {
+        groups.add(seriesOrGroup);
+      }
+      else if (seriesOrGroup.isInGroup(repository)) {
+        groups.add(seriesOrGroup.getContainingGroup(repository));
+      }
+    }
+    if (groups.size() == 1) {
+      return groups.iterator().next().getId();
+    }
+    return null;
+  }
+
+  private boolean isSingleSeries(Set<SeriesOrGroup> seriesOrGroups) {
+    return seriesOrGroups.size() == 1 && seriesOrGroups.iterator().next().isSeries();
   }
 
   private Set<SeriesOrGroup> getSeriesOrGroups(GlobList wrappers) {
@@ -339,8 +371,34 @@ public class SeriesChartsPanel implements GlobSelectionListener {
       }
     }
 
-    seriesChart.update(dataset, expensesStackColors);
+    rootSeriesChart.update(dataset, expensesStackColors);
     updateSeriesLabel("mainAccount");
+  }
+
+  private void updateGroupStacks(Integer groupId, Set<SeriesOrGroup> selectedSeriesOrGroups) {
+    StackChartDataset incomeDataset = new StackChartDataset();
+    StackChartDataset expensesDataset = new StackChartDataset();
+
+    GlobList stats = repository.getAll(SeriesStat.TYPE, and(isSeriesInGroup(groupId), fieldIn(SeriesStat.MONTH, selectedMonthIds)));
+    for (SeriesOrGroup seriesOrGroup : SeriesOrGroup.getAllFromSeriesStat(stats)) {
+      if (seriesOrGroup.shouldCreateWrapper(repository)) {
+        double amount = getTotalAmountForSelectedPeriod(seriesOrGroup);
+        StackChartDataset targetDataset = amount >= 0 ? incomeDataset : expensesDataset;
+        targetDataset.add(seriesOrGroup.getName(repository),
+                          Math.abs(amount),
+                          seriesOrGroup.getKey(),
+                          selectedSeriesOrGroups.contains(seriesOrGroup));
+      }
+    }
+
+    installDatasets(groupSeriesChart, incomeDataset, expensesDataset);
+
+    Glob group = repository.get(Key.create(SeriesGroup.TYPE, groupId));
+    updateGroupLabel(group.get(SeriesGroup.NAME));
+  }
+
+  private void clearGroupSeriesStacks() {
+    groupSeriesChart.clear();
   }
 
   private void updateBudgetAreaSeriesStack(Set<BudgetArea> budgetAreas, Set<SeriesOrGroup> selectedSeriesOrGroups) {
@@ -360,7 +418,7 @@ public class SeriesChartsPanel implements GlobSelectionListener {
       }
     }
 
-    installDatasets(seriesChart, incomeDataset, expensesDataset);
+    installDatasets(rootSeriesChart, incomeDataset, expensesDataset);
     if (budgetAreas.size() == 1) {
       updateSeriesLabel("budgetArea", budgetAreas.iterator().next().getLabel().toLowerCase());
     }
@@ -415,7 +473,7 @@ public class SeriesChartsPanel implements GlobSelectionListener {
                   false);
     }
 
-    seriesChart.update(dataset, expensesStackColors);
+    rootSeriesChart.update(dataset, expensesStackColors);
     updateSeriesLabel("uncategorized");
   }
 
@@ -510,7 +568,7 @@ public class SeriesChartsPanel implements GlobSelectionListener {
   }
 
   private void updateSavingsSeriesStack(StackChartDataset seriesInDataset, StackChartDataset seriesOutDataset) {
-    seriesChart.update(seriesInDataset, seriesOutDataset, balanceStackColors);
+    rootSeriesChart.update(seriesInDataset, seriesOutDataset, balanceStackColors);
     updateSeriesLabel("savingsSeries");
   }
 
@@ -526,7 +584,6 @@ public class SeriesChartsPanel implements GlobSelectionListener {
       subSeriesList = repository.findByIndex(SubSeries.SERIES_INDEX, seriesOrGroup.id);
     }
     if (subSeriesList.isEmpty()) {
-      stackToggle.setSubSeriesPresent(false);
       clearSubSeriesStacks();
       return;
     }
@@ -595,6 +652,10 @@ public class SeriesChartsPanel implements GlobSelectionListener {
 
   private void updateSeriesLabel(String messageKey, String... args) {
     updateLabel(seriesChartLabel, "chart.series." + messageKey, args);
+  }
+
+  private void updateGroupLabel(String groupName) {
+    updateLabel(groupChartLabel, "chart.group", Strings.cut(groupName, 30));
   }
 
   private void updateSubSeriesLabel(String seriesName) {
@@ -687,10 +748,4 @@ public class SeriesChartsPanel implements GlobSelectionListener {
       chart.clear();
     }
   }
-
-//  Glob series = repository.get(Key.create(Series.TYPE, seriesId));
-//  if (SeriesWrapper.shouldCreateWrapperForSeries(series, repository)) {
-//    if (budgetAreas.contains(BudgetArea.get(series.get(Series.BUDGET_AREA)))
-//        && SeriesWrapper.shouldCreateWrapperForSeries(series, repository)) {
-
 }

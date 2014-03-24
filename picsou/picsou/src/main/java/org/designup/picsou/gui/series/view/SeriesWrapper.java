@@ -216,6 +216,9 @@ public class SeriesWrapper {
     else if (glob.getType().equals(BudgetArea.TYPE)) {
       return getWrapperForBudgetArea(BudgetArea.get(glob.get(BudgetArea.ID)), repository);
     }
+    else if (glob.getType().equals(SeriesGroup.TYPE)) {
+      return getWrapperForSeriesGroup(glob.get(SeriesGroup.ID), repository);
+    }
     else {
       throw new InvalidParameter("Unexpected type: " + glob.getType());
     }

@@ -153,6 +153,18 @@ public class SeriesStat {
     };
   }
 
+  public static GlobMatcher isSeriesInGroup(final Integer groupId) {
+    return new GlobMatcher() {
+      public boolean matches(Glob seriesStat, GlobRepository repository) {
+        if ((seriesStat == null) || !SeriesType.SERIES.getId().equals(seriesStat.get(TARGET_TYPE))) {
+          return false;
+        }
+        Glob series = repository.find(org.globsframework.model.Key.create(Series.TYPE, seriesStat.get(SeriesStat.TARGET)));
+        return series != null && Utils.equal(groupId, series.get(Series.GROUP));
+      }
+    };
+  }
+
   public static GlobMatcher isRoot() {
     return new GlobMatcher() {
       public boolean matches(Glob seriesStat, GlobRepository repository) {

@@ -39,6 +39,10 @@ public class SeriesOrGroup {
     this.type = type;
   }
 
+  public Integer getId() {
+    return id;
+  }
+
   public String getName(GlobRepository repository) {
     switch (type) {
       case SERIES:
@@ -140,6 +144,10 @@ public class SeriesOrGroup {
     return true;
   }
 
+  public boolean isGroup() {
+    return SeriesType.SERIES_GROUP.equals(type);
+  }
+
   public boolean isSeries() {
     return SeriesType.SERIES.equals(type);
   }
@@ -151,5 +159,16 @@ public class SeriesOrGroup {
 
     Glob series = repository.get(Key.create(Series.TYPE, id));
     return series.get(Series.GROUP) != null;
+  }
+
+  public SeriesOrGroup getContainingGroup(GlobRepository repository) {
+    if (!isSeries()) {
+      return null;
+    }
+    Glob series = repository.get(Key.create(Series.TYPE, id));
+    if (series.get(Series.GROUP) == null) {
+      return null;
+    }
+    return new SeriesOrGroup(series.get(Series.GROUP), SeriesType.SERIES_GROUP);
   }
 }

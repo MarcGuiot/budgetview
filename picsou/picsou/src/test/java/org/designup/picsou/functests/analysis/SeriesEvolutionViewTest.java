@@ -2,11 +2,7 @@ package org.designup.picsou.functests.analysis;
 
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
-import org.designup.picsou.gui.series.view.SeriesWrapper;
-import org.designup.picsou.model.Account;
-import org.designup.picsou.model.Series;
 import org.designup.picsou.model.TransactionType;
-import org.globsframework.model.format.GlobPrinter;
 
 import java.awt.*;
 
@@ -357,7 +353,7 @@ public class SeriesEvolutionViewTest extends LoggedInFunctionalTestCase {
     views.checkAnalysisSelected();
     seriesAnalysis.checkBreadcrumb("Overall budget > Income > John's");
 
-    seriesAnalysis.checkBudgetStackShown();
+    seriesAnalysis.checkBudgetAndSeriesStacksShown();
     seriesAnalysis.balanceChart.getLeftDataset()
       .checkSize(1)
       .checkValue("Income", 670.00, true);
@@ -377,7 +373,7 @@ public class SeriesEvolutionViewTest extends LoggedInFunctionalTestCase {
     seriesAnalysis.checkSelected("Mary's");
     seriesAnalysis.checkBreadcrumb("Overall budget > Income > Mary's");
 
-    seriesAnalysis.checkBudgetStackShown();
+    seriesAnalysis.checkBudgetAndSeriesStacksShown();
     seriesAnalysis.balanceChart.getLeftDataset()
       .checkSize(1)
       .checkValue("Income", 670.00, true);
