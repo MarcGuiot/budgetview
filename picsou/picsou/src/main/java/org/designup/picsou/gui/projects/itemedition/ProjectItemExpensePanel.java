@@ -46,7 +46,7 @@ public class ProjectItemExpensePanel extends ProjectItemEditionPanel {
     builder.add("urlField", urlField);
 
     builder.addComboEditor("accountSelection", ProjectItem.ACCOUNT)
-      .setEnabled(itemKey == null || !Series.hasRealOperations(localRepository, localRepository.get(itemKey).get(ProjectItem.SERIES)))
+      .setEnabled(itemKey == null || !Series.hasRealOperations(parentRepository, localRepository.get(itemKey).get(ProjectItem.SERIES)))
       .setFilter(new Account.UserAccountMatcher())
       .forceSelection(itemKey);
 

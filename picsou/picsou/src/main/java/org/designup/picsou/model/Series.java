@@ -255,10 +255,10 @@ public class Series {
     return UNCATEGORIZED_SERIES_ID.equals(seriesId);
   }
 
-  public static boolean hasRealOperations(final LocalGlobRepository repository, final Integer seriesId) {
+  public static boolean hasRealOperations(final GlobRepository repository, final Integer seriesId) {
     return !repository.findByIndex(Transaction.SERIES_INDEX, Transaction.SERIES, seriesId)
-    .getGlobs().filter(GlobMatchers.isFalse(Transaction.PLANNED), repository)
-    .isEmpty();
+      .getGlobs().filter(GlobMatchers.isFalse(Transaction.PLANNED), repository)
+      .isEmpty();
   }
 
   public static class Serializer implements PicsouGlobSerializer {

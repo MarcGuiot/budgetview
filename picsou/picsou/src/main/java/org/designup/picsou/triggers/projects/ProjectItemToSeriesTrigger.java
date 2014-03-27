@@ -27,6 +27,12 @@ public class ProjectItemToSeriesTrigger implements ChangeSetListener {
         if (!ProjectItem.usesExtrasSeries(item)) {
           return;
         }
+        if (values.contains(ProjectItem.ACCOUNT)){
+          Glob series = repository.findLinkTarget(repository.get(itemKey), ProjectItem.SERIES);
+          if (series != null) {
+            repository.update(series.getKey(), value(Series.TARGET_ACCOUNT, values.get(ProjectItem.ACCOUNT)));
+          }
+        }
         if (values.contains(ProjectItem.ACTIVE)) {
           createOrDeleteSeriesForItem(item, repository);
           return;

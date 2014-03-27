@@ -34,6 +34,7 @@ public class ProjectManagementTest extends LoggedInFunctionalTestCase {
       .checkItemCount(0);
     currentProject.addExpenseItem()
       .editExpense(0)
+      .checkTargetAcount("Account n. 001111")
       .setLabel("Reservation")
       .checkMonth("Jan 2011")
       .setAmount(-200.00)
@@ -758,5 +759,69 @@ public class ProjectManagementTest extends LoggedInFunctionalTestCase {
                               "| Second | Jan | 0.00 | 100.00 |\n" +
                               "| First  | Feb | 0.00 | 100.00 |\n" +
                               "| Third  | Feb | 0.00 | 100.00 |");
+  }
+
+  public void testWithMultipleMainAccount() throws Exception {
+    operations.hideSignposts();
+    operations.openPreferences().setFutureMonthsCount(6).validate();
+    OfxBuilder.init(this)
+      .addBankAccount("001111", 1000.00, "2010/12/30")
+      .addTransaction("2010/12/01", 1000.00, "Income")
+      .addTransaction("2010/12/10", -100.00, "first 1111")
+      .load();
+
+    OfxBuilder.init(this)
+      .addBankAccount("002222", 00.00, "2010/12/30")
+      .addTransaction("2010/12/01", 500.00, "Income")
+      .addTransaction("2010/12/10", -400.00, "second 2222")
+      .load();
+    projectChart.create();
+
+    currentProject
+      .setName("My project")
+      .setDefaultAccount("Account n. 002222")
+      .addExpenseItem(0, "First 1111", 201012, -1000.00, "Account n. 001111")
+      .addExpenseItem(1, "Second 2222", 201012, -100.00);
+    currentProject
+      .toggleAndEditExpense(1)
+      .checkTargetAcount("Account n. 002222")
+      .cancel();
+    currentProject
+      .toggleAndEditExpense(0)
+      .checkTargetAcount("Account n. 001111")
+      .cancel();
+
+    timeline.selectAll();
+    transactions
+      .showPlannedTransactions()
+      .initAmountContent()
+      .add("11/12/2010", "Planned: Second 2222", -100.00, "Second 2222", -100.00, -100.00, "Account n. 002222")
+      .add("11/12/2010", "Planned: First 1111", -1000.00, "First 1111", 0.00, 0.00, "Account n. 001111")
+      .add("10/12/2010", "SECOND 2222", -400.00, "To categorize", 0.00, 1000.00, "Account n. 002222")
+      .add("10/12/2010", "FIRST 1111", -100.00, "To categorize", 1000.00, 1400.00, "Account n. 001111")
+      .add("01/12/2010", "INCOME", 500.00, "To categorize", 400.00, 1500.00, "Account n. 002222")
+      .add("01/12/2010", "INCOME", 1000.00, "To categorize", 1100.00, 1000.00, "Account n. 001111")
+      .check();
+
+    categorization.selectTransaction("FIRST 1111")
+      .selectExtras().selectSeries("First 1111");
+
+    categorization.selectTransaction("SECOND 2222")
+      .selectExtras().selectSeries("Second 2222");
+
+    transactions.initAmountContent()
+      .add("11/12/2010", "Planned: First 1111", -900.00, "First 1111", 100.00, 100.00, "Account n. 001111")
+      .add("10/12/2010", "SECOND 2222", -400.00, "Second 2222", 0.00, 1000.00, "Account n. 002222")
+      .add("10/12/2010", "FIRST 1111", -100.00, "First 1111", 1000.00, 1400.00, "Account n. 001111")
+      .add("01/12/2010", "INCOME", 500.00, "To categorize", 400.00, 1500.00, "Account n. 002222")
+      .add("01/12/2010", "INCOME", 1000.00, "To categorize", 1100.00, 1000.00, "Account n. 001111")
+      .check();
+
+    currentProject
+      .toggleAndEditExpense(0)
+      .checkTargetAcountNotEditable()
+      .cancel();
+
+
   }
 }

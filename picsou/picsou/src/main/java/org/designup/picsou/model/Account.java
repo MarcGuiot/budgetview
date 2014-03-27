@@ -602,7 +602,8 @@ public class Account {
 
   public static class UserAccountMatcher implements GlobMatcher {
     public boolean matches(Glob account, GlobRepository repository) {
-      return isUserCreatedAccount(account);
+      return isUserCreatedAccount(account)
+             && account.get(Account.ACCOUNT_TYPE).equals(AccountType.MAIN.getId());
     }
   }
 
