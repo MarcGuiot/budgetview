@@ -109,7 +109,8 @@ public enum ApplicationColors {
                                                "/colors/color_pink.properties",
                                                "/colors/color_purple.properties",
                                                "/colors/color_turquoise.properties",
-                                               "/colors/color_print.properties"};
+                                               "/colors/color_print.properties",
+                                               "/colors/color_black_modern.properties"};
 
   ApplicationColors() {
     this(false);
