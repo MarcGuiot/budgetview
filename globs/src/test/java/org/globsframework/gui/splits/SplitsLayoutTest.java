@@ -275,7 +275,7 @@ public class SplitsLayoutTest extends SplitsTestCase {
       fail();
     }
     catch (Exception e) {
-      checkException(e, "Referenced component 'unknown' not found");
+      checkExceptionCause(e, "Referenced component 'unknown' not found");
     }
   }
 

@@ -206,7 +206,7 @@ public class SplitsBuilder implements PanelBuilder {
       component = parser.parse(reader);
     }
     catch (GlobsException e) {
-      throw new RuntimeException("Error parsing " + source, e);
+      throw new SplitsException("Error parsing " + source, e);
     }
     catch (Exception e) {
       throw new ResourceAccessFailed("Error parsing Splits descriptor: " + e.getMessage() + context.dump(), e);

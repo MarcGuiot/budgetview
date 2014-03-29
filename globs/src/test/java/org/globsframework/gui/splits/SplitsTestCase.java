@@ -91,12 +91,14 @@ public abstract class SplitsTestCase extends UISpecTestCase {
       fail();
     }
     catch (Exception e) {
-      checkException(e, error);
+      checkExceptionCause(e, error);
     }
   }
 
-  protected void checkException(Exception e, String message) {
-    if (!e.getMessage().contains(message)) {
+  protected void checkExceptionCause(Throwable e, String message) {
+    Throwable cause = e.getCause();
+    Throwable exception = cause != null ? cause : e;
+    if (!exception.getMessage().contains(message)) {
       fail("Exception does not contain message: " + message + "\n" +
            "Actual message is: " + e.getMessage());
     }

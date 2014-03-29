@@ -5,7 +5,6 @@ import org.globsframework.gui.splits.layout.CardHandler;
 import org.globsframework.utils.TestUtils;
 import org.uispec4j.finder.ComponentFinder;
 import static org.uispec4j.finder.ComponentMatchers.*;
-import org.uispec4j.*;
 
 import javax.swing.*;
 import java.awt.*;
@@ -111,7 +110,7 @@ public class SplitsBuilderTest extends SplitsTestCase {
       fail();
     }
     catch (Exception e) {
-      checkException(e, "Referenced component 'panel' must be a JPanel");
+      checkExceptionCause(e, "Referenced component 'panel' must be a JPanel");
     }
   }
 
@@ -132,7 +131,7 @@ public class SplitsBuilderTest extends SplitsTestCase {
       fail();
     }
     catch (Exception e) {
-      checkException(e, "No component found for ref: anUndefinedId");
+      checkExceptionCause(e, "No component found for ref: anUndefinedId");
     }
   }
 

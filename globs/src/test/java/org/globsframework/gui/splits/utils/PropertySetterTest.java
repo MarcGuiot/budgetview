@@ -8,6 +8,7 @@ import org.globsframework.gui.splits.font.FontService;
 import org.globsframework.gui.splits.font.FontLocator;
 import org.globsframework.gui.splits.ImageLocator;
 import org.globsframework.gui.splits.TextLocator;
+import org.globsframework.gui.splits.layout.LayoutService;
 import org.globsframework.utils.directory.Directory;
 import org.globsframework.utils.directory.DefaultDirectory;
 import org.uispec4j.UISpecTestCase;
@@ -28,6 +29,7 @@ public class PropertySetterTest extends UISpecTestCase {
     directory.add(ImageLocator.class, new DummyImageLocator());
     directory.add(TextLocator.class, new DummyTextLocator());
     directory.add(FontLocator.class, new FontService());
+    directory.add(LayoutService.class, new LayoutService());
     context = new DefaultSplitsContext(directory);
   }
 

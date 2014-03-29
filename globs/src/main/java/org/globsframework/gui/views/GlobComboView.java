@@ -63,7 +63,9 @@ public class GlobComboView extends AbstractGlobComponentHolder<GlobComboView> im
 
   public GlobComboView setComparator(Comparator<Glob> comparator) {
     this.comparator = comparator;
-    this.model.updateSorting();
+    if (model != null) {
+      this.model.updateSorting();
+    }
     return this;
   }
 
@@ -208,17 +210,17 @@ public class GlobComboView extends AbstractGlobComponentHolder<GlobComboView> im
     public Model() {
       model = new GlobViewModel(type, repository, comparator, showEmptyOption, new GlobViewModel.Listener() {
         public void globInserted(int index) {
-            listener.globInserted(index);
+          listener.globInserted(index);
           fireIntervalAdded(this, index, index);
         }
 
         public void globUpdated(int index) {
-            listener.globUpdated(index);
+          listener.globUpdated(index);
           fireContentsChanged(this, index, index);
         }
 
         public void globRemoved(int index) {
-            listener.globRemoved(index);
+          listener.globRemoved(index);
           fireIntervalRemoved(this, index, index);
         }
 

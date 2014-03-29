@@ -200,7 +200,7 @@ public class SplitsComponentsTest extends SplitsTestCase {
 
   public void testUsingAnImageLocatorInHtmlComponents() throws Exception {
     textLocator.set("editor.text", "<html><img src='anImage'/></html>");
-    JEditorPane editorPane = parse("<htmlEditorPane text='$editor.text' useImageLocator='true'/>");
+    parse("<htmlEditorPane text='$editor.text' useImageLocator='true'/>");
     assertEquals("anImage", iconLocator.lastRequestedImageName);
   }
 
@@ -275,7 +275,7 @@ public class SplitsComponentsTest extends SplitsTestCase {
       fail();
     }
     catch (SplitsException e) {
-      checkException(e, "Label 'Title' references an unknown component '???'");
+      checkExceptionCause(e, "Label 'Title' references an unknown component '???'");
     }
   }
 
@@ -308,7 +308,7 @@ public class SplitsComponentsTest extends SplitsTestCase {
       fail();
     }
     catch (Exception e) {
-      checkException(e, "panel components cannot have more than one subcomponent");
+      checkExceptionCause(e, "panel components cannot have more than one subcomponent");
     }
   }
 
@@ -363,7 +363,7 @@ public class SplitsComponentsTest extends SplitsTestCase {
       fail();
     }
     catch (Exception e) {
-      checkException(e, "scrollPane must have exactly one subcomponent");
+      checkExceptionCause(e, "scrollPane must have exactly one subcomponent");
     }
   }
 
@@ -374,7 +374,7 @@ public class SplitsComponentsTest extends SplitsTestCase {
       fail();
     }
     catch (Exception e) {
-      checkException(e, "scrollPane must have exactly one subcomponent");
+      checkExceptionCause(e, "scrollPane must have exactly one subcomponent");
     }
   }
 
@@ -474,8 +474,8 @@ public class SplitsComponentsTest extends SplitsTestCase {
       fail();
     }
     catch (Exception e) {
-      assertTrue(e.getMessage().contains("Invalid component 'grid' found in 'tabs' component -  " +
-                                         "only 'tab' subcomponents are accepted"));
+      checkExceptionCause(e, "Invalid component 'grid' found in 'tabs' component -  " +
+                             "only 'tab' subcomponents are accepted");
     }
   }
 
@@ -491,7 +491,7 @@ public class SplitsComponentsTest extends SplitsTestCase {
       fail();
     }
     catch (Exception e) {
-      assertTrue(e.getMessage().contains("Tab component 'Tab 1' must have exactly one subcomponent"));
+      checkExceptionCause(e, "Tab component 'Tab 1' must have exactly one subcomponent");
     }
 
     try {
@@ -502,7 +502,7 @@ public class SplitsComponentsTest extends SplitsTestCase {
       fail();
     }
     catch (Exception e) {
-      assertTrue(e.getMessage().contains("Tab component 'Tab 1' must have exactly one subcomponent"));
+      checkExceptionCause(e, "Tab component 'Tab 1' must have exactly one subcomponent");
     }
   }
 
@@ -603,7 +603,7 @@ public class SplitsComponentsTest extends SplitsTestCase {
       fail();
     }
     catch (Exception e) {
-      assertTrue(e.getMessage().contains("Unknown direction for filler: unknown"));
+      checkExceptionCause(e, "Unknown direction for filler: unknown");
     }
   }
 
@@ -707,8 +707,8 @@ public class SplitsComponentsTest extends SplitsTestCase {
       fail();
     }
     catch (Exception e) {
-      assertTrue(e.getMessage().contains("Panel 'myPanel' must use a CardLayout, " +
-                                         "preferably through a CardHandler"));
+      checkExceptionCause(e, "Panel 'myPanel' must use a CardLayout, " +
+                             "preferably through a CardHandler");
     }
   }
 
@@ -723,7 +723,7 @@ public class SplitsComponentsTest extends SplitsTestCase {
       fail();
     }
     catch (Exception e) {
-      assertTrue(e.getMessage().contains("cards components must reference a registered panel (use ref='xxx')"));
+      checkExceptionCause(e, "cards components must reference a registered panel (use ref='xxx')");
     }
   }
 
@@ -739,7 +739,7 @@ public class SplitsComponentsTest extends SplitsTestCase {
       fail();
     }
     catch (Exception e) {
-      assertTrue(e.getMessage().contains("Card items must have a 'name' attribute"));
+      checkExceptionCause(e, "Card items must have a 'name' attribute");
     }
   }
 
@@ -790,8 +790,8 @@ public class SplitsComponentsTest extends SplitsTestCase {
       parse("<label shadowDirection='unknown'/>");
       fail();
     }
-    catch (ItemNotFound e) {
-      assertTrue(e.getMessage().contains("unknown value 'unknown'"));
+    catch (SplitsException e) {
+      checkExceptionCause(e, "unknown value 'unknown'");
     }
   }
 

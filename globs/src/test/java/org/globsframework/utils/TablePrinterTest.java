@@ -24,8 +24,7 @@ public class TablePrinterTest extends TestCase {
   public void testNoHeader() throws Exception {
     TablePrinter table = new TablePrinter(true);
     table.addRow("Value 1", 22.0, "Item 3");
-    assertEquals("|         |       |        |\n" +
-                 "| Value 1 | 22.00 | Item 3 |\n",
+    assertEquals("| Value 1 | 22.00 | Item 3 |\n",
                  table.toString());
   }
 
@@ -53,7 +52,7 @@ public class TablePrinterTest extends TestCase {
                          true, new PrintWriter(writer));
     }
     catch (InvalidParameter e) {
-      assertEquals("Row larger than the header row: [a, b, c]", e.getMessage());
+      assertEquals("Row larger than the first row: [a, b, c]", e.getMessage());
     }
 
   }

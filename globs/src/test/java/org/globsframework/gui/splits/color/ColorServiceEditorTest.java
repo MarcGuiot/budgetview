@@ -17,7 +17,7 @@ public class ColorServiceEditorTest extends UISpecTestCase {
   protected ColorServiceEditor editor;
 
   protected void setUp() throws Exception {
-    colorService = new ColorService(getClass(), "set1.colors", "set2.colors");
+    colorService = new ColorService(getClass(), "/splits/colors/set1.colors", "/splits/colors/set2.colors");
     initEditor();
   }
 

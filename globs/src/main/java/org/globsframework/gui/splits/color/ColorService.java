@@ -161,7 +161,7 @@ public class ColorService implements ColorLocator {
     if (file == null) {
       return null;
     }
-    return file.substring(file.indexOf('/') + 1);
+    return file.substring(file.lastIndexOf('/') + 1);
   }
 
   public void removeAllListeners() {

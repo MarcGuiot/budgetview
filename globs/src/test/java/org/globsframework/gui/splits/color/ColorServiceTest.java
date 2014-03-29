@@ -80,7 +80,7 @@ public class ColorServiceTest extends UISpecTestCase {
   }
 
   private void checkDefaultColorSet(String name) {
-    service = new ColorService(getClass(), "set1.colors", "set2.colors");
+    service = new ColorService(getClass(), "/splits/colors/set1.colors", "/splits/colors/set2.colors");
     assertEquals(name, service.getCurrentColorSetName());
   }
 

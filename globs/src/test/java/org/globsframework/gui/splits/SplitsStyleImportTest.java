@@ -1,5 +1,6 @@
 package org.globsframework.gui.splits;
 
+import org.globsframework.gui.splits.exceptions.SplitsException;
 import org.globsframework.utils.Files;
 import org.globsframework.utils.TestUtils;
 import org.globsframework.utils.exceptions.ItemNotFound;
@@ -57,8 +58,8 @@ public class SplitsStyleImportTest extends SplitsTestCase {
         .load();
       fail();
     }
-    catch (ItemNotFound e) {
-      assertTrue(e.getMessage().contains("Could not find file: /unknown.splits"));
+    catch (SplitsException e) {
+      checkExceptionCause(e, "Could not find file: /unknown.splits");
     }
   }
 }

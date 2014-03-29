@@ -5,6 +5,7 @@ import org.globsframework.gui.splits.layout.*;
 import org.globsframework.gui.splits.repeat.Repeat;
 import org.globsframework.gui.splits.repeat.RepeatComponentFactory;
 import org.globsframework.gui.splits.utils.Disposable;
+import org.globsframework.gui.splits.utils.DummyRepeatLayout;
 import org.globsframework.utils.Strings;
 import org.uispec4j.finder.ComponentMatchers;
 import org.uispec4j.utils.AssertionFailureNotDetectedError;
@@ -490,7 +491,7 @@ public class SplitsRepeatTest extends SplitsTestCase {
       throw new AssertionFailureNotDetectedError();
     }
     catch (SplitsException e) {
-      assertEquals("Repeat component 'myRepeat' must have exactly one header component", e.getMessage());
+      assertEquals("Repeat component 'myRepeat' must have exactly one header component", e.getCause().getMessage());
     }
   }
 
@@ -935,26 +936,47 @@ public class SplitsRepeatTest extends SplitsTestCase {
                "  button:bb\n");
   }
 
+  public void testCustomRepeatLayout() throws Exception {
+    builder.addRepeat("myRepeat", Arrays.asList("aa", "bb"),
+                      new RepeatComponentFactory<String>() {
+                        public void registerComponents(PanelBuilder cellBuilder, String object) {
+                          cellBuilder.add("label", new JLabel(object));
+                          cellBuilder.add("btn", new JButton(object));
+                        }
+                      });
+
+    DummyRepeatLayout.reset();
+
+    parse(
+      "<repeat ref='myRepeat' layout='" + DummyRepeatLayout.class.getName() + "'>" +
+      "  <row>" +
+      "    <label ref='label'/>" +
+      "    <button ref='btn'/>" +
+      "  </row>" +
+      "</repeat>");
+
+    DummyRepeatLayout.checkLastInstance("checkHeader", "checkContent", "init", "set");
+  }
+
   public void testCardLayoutInRepeat() throws Exception {
 
     final java.util.List<CardHandler> handlers = new ArrayList<CardHandler>();
 
-    Repeat<String> repeat =
-      builder.addRepeat("myRepeat", Arrays.asList("aa", "bb"),
-                        new RepeatComponentFactory<String>() {
-                          public void registerComponents(PanelBuilder cellBuilder, String object) {
-                            JPanel panel = new JPanel();
-                            panel.setName(object + "Panel");
-                            cellBuilder.add("panel", panel);
+    builder.addRepeat("myRepeat", Arrays.asList("aa", "bb"),
+                      new RepeatComponentFactory<String>() {
+                        public void registerComponents(PanelBuilder cellBuilder, String object) {
+                          JPanel panel = new JPanel();
+                          panel.setName(object + "Panel");
+                          cellBuilder.add("panel", panel);
 
-                            cellBuilder.add("label", new JLabel(object));
+                          cellBuilder.add("label", new JLabel(object));
 
-                            cellBuilder.add("button", new JButton(object));
-                            cellBuilder.add("radio", new JRadioButton(object));
+                          cellBuilder.add("button", new JButton(object));
+                          cellBuilder.add("radio", new JRadioButton(object));
 
-                            handlers.add(cellBuilder.addCardHandler("cards"));
-                          }
-                        });
+                          handlers.add(cellBuilder.addCardHandler("cards"));
+                        }
+                      });
 
     org.uispec4j.Panel panel = new org.uispec4j.Panel((JPanel)parse(
       "<repeat ref='myRepeat'>" +

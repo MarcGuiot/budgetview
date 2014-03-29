@@ -5,10 +5,10 @@ import org.globsframework.gui.splits.SplitsContext;
 import org.globsframework.gui.splits.exceptions.SplitsException;
 import org.globsframework.gui.splits.impl.DefaultSplitProperties;
 import org.globsframework.gui.splits.utils.PropertySetter;
+import org.globsframework.utils.ClassUtils;
 import org.globsframework.utils.exceptions.InvalidParameter;
 import org.globsframework.utils.exceptions.ItemNotFound;
 
-import javax.swing.plaf.ComponentUI;
 import java.awt.*;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
@@ -28,7 +28,17 @@ public class LayoutService {
   public LayoutManager getLayout(String name, SplitsContext context) {
     LayoutFactory factory = factories.get(name);
     if (factory == null) {
-      throw new ItemNotFound("Unknown layout: " + name);
+      Object instance = null;
+      try {
+        instance = ClassUtils.createFromClassName(name);
+      }
+      catch (ClassNotFoundException e) {
+        throw new ItemNotFound("Unknown layout: " + name + " - make sure that it is registered or that it refers to a public static class reference");
+      }
+      if (!(instance instanceof LayoutManager)) {
+        throw new InvalidParameter("Class '" + name + "' should implement LayoutManager");
+      }
+      return (LayoutManager)instance;
     }
     return factory.createLayout(context);
   }

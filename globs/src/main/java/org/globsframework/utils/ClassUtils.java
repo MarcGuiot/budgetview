@@ -8,17 +8,17 @@ public class ClassUtils {
   private ClassUtils() {
   }
 
-  public static <T> T createFromProperty(String propertyName) throws InvalidParameter {
-    String className = System.getProperty(propertyName);
+  public static <T> T createFromClassName(String className) throws InvalidParameter, ClassNotFoundException {
     if ((className == null) || (className.length() == 0)) {
-      throw new InvalidParameter("Property '" + propertyName + "' is not set");
+      throw new InvalidParameter("Class name should not be empty");
     }
+    Class<?> aClass = Class.forName(className);
     try {
-      return (T)Class.forName(className).newInstance();
+      return (T)aClass.newInstance();
     }
     catch (Exception e) {
-      throw new InvalidParameter("Property '" + propertyName + "' must refer to a class " +
-                                 "with a default constructor", e);
+      throw new InvalidParameter("Class '" + className + "' should have a " +
+                                 "default constructor", e);
     }
   }
 }

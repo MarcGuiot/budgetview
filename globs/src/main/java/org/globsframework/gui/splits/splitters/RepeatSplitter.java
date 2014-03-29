@@ -7,6 +7,7 @@ import org.globsframework.gui.splits.exceptions.SplitsException;
 import org.globsframework.gui.splits.layout.WrappedColumnLayout;
 import org.globsframework.gui.splits.repeat.*;
 import org.globsframework.gui.splits.utils.ScrollableFlowLayout;
+import org.globsframework.utils.ClassUtils;
 import org.globsframework.utils.Strings;
 import org.globsframework.utils.exceptions.ItemNotFound;
 import org.globsframework.utils.exceptions.InvalidParameter;
@@ -107,8 +108,14 @@ public class RepeatSplitter extends AbstractSplitter {
     else if ("horizontalGrid".equalsIgnoreCase(layoutProperty)) {
       return new GridRepeatLayout(GridRepeatLayout.Direction.HORIZONTAL, properties.getInt("gridWrapLimit"));
     }
-    throw new SplitsException("Unknown layout type '" + layoutProperty + "' for repeat '" + ref +
-                              "' - use one of [column|verticalGrid]");
+
+    try {
+      return ClassUtils.createFromClassName(layoutProperty);
+    }
+    catch (Exception e) {
+      throw new SplitsException("Unknown layout type '" + layoutProperty + "' for repeat '" + ref +
+                                "' - use one of [column|row|wrappedColumn|wrappedRow|verticalGrid|horizontalGrid] or a custom RepeatLayout class");
+    }
   }
 
   public String getName() {
