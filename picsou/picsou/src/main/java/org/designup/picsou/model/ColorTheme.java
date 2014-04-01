@@ -52,6 +52,10 @@ public enum ColorTheme implements GlobConstantContainer {
     return id;
   }
 
+  public String getColorFileName() {
+    return colorFilePath.substring(colorFilePath.lastIndexOf("/") + 1);
+  }
+
   public String getColorFilePath() {
     return colorFilePath;
   }

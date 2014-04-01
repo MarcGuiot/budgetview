@@ -618,10 +618,10 @@ public class BudgetViewChecker extends ViewChecker {
 
     // The reference component in each row is the gauge
     private static final int SERIES_OFFSET = 0;
-    private static final int GAUGE_OFFSET = +1;
-    private static final int OBSERVED_LABEL_OFFSET = +2;
-    private static final int PLANNED_LABEL_OFFSET = +4;
-    private static final int DELTA_GAUGE_OFFSET = +5;
+    private static final int GAUGE_OFFSET = +2;
+    private static final int OBSERVED_LABEL_OFFSET = +3;
+    private static final int PLANNED_LABEL_OFFSET = +5;
+    private static final int DELTA_GAUGE_OFFSET = +6;
 
     private JPanel panel;
     private int index;

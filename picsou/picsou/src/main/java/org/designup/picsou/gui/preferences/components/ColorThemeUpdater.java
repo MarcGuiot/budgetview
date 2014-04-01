@@ -36,7 +36,7 @@ public class ColorThemeUpdater {
 
   public static void apply(GlobRepository repository, Directory directory) {
     ColorTheme theme = getCurrentTheme(repository);
-    directory.get(ColorService.class).setCurrentSet(theme.getColorFilePath());
+    directory.get(ColorService.class).setCurrentSet(theme.getColorFileName());
     directory.get(ConfiguredPropertiesService.class)
       .apply(Files.loadProperties(ColorThemeUpdater.class, "/" + theme.getThemeFilePath()));
     JFrame frame = directory.find(JFrame.class);

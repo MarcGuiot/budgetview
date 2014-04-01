@@ -1,11 +1,11 @@
 package org.designup.picsou.gui.components.layoutconfig;
 
+import org.designup.picsou.gui.utils.FrameSize;
 import org.designup.picsou.model.LayoutConfig;
 import org.globsframework.gui.splits.utils.GuiUtils;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.*;
 import org.globsframework.utils.directory.Directory;
-import org.globsframework.utils.exceptions.ItemNotFound;
 
 import javax.swing.*;
 import java.awt.*;
@@ -52,7 +52,8 @@ public class LayoutConfigService {
 
   private void updateComponents() {
     JFrame frame = directory.get(JFrame.class);
-    Glob layoutConfig = LayoutConfig.find(GuiUtils.getMaxSize(frame), repository);
+    FrameSize frameSize = FrameSize.init(directory.get(JFrame.class));
+    Glob layoutConfig = LayoutConfig.find(frameSize.screenSize, frameSize.targetFrameSize, repository, false);
     if (layoutConfig == null) {
       return;
     }
@@ -63,11 +64,8 @@ public class LayoutConfigService {
   }
 
   public void updateFields(FieldValues values) {
-    Dimension maxSize = GuiUtils.getMaxSize(directory.get(JFrame.class));
-    Glob layoutConfig = LayoutConfig.find(maxSize, repository);
-    if (layoutConfig == null) {
-      throw new ItemNotFound("No config found for: " + maxSize);
-    }
+    FrameSize frameSize = FrameSize.init(directory.get(JFrame.class));
+    Glob layoutConfig = LayoutConfig.find(frameSize.screenSize, frameSize.targetFrameSize, repository, true);
     repository.update(layoutConfig.getKey(), values.toArray());
   }
 
@@ -81,7 +79,8 @@ public class LayoutConfigService {
   }
 
   private void storeFrameSize(Dimension newSize, JFrame frame, GlobRepository repository) {
-    Glob layoutConfig = LayoutConfig.find(GuiUtils.getMaxSize(frame), repository);
+    FrameSize frameSize = FrameSize.init(frame);
+    Glob layoutConfig = LayoutConfig.find(frameSize.screenSize, frameSize.targetFrameSize, repository, true);
     if (layoutConfig == null) {
       return;
     }

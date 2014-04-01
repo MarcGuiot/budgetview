@@ -126,17 +126,15 @@ public class UpgradeTrigger implements ChangeSetListener {
       updateOpenCloseAccount(repository);
       deleteDuplicateSynchro(repository);
     }
-    if (currentJarVersion < 131) {
-      FrameSize frameSize = FrameSize.init(directory.get(JFrame.class));
-      LayoutConfig.init(frameSize.screenSize, frameSize.targetFrameSize, repository);
-    }
     if (currentJarVersion < 132) {
       projectUpgrade.updateProjectSeriesAndGroups(repository);
     }
-
     if (currentJarVersion < 132) {
       updateTargetAccount(repository);
     }
+
+    FrameSize frameSize = FrameSize.init(directory.get(JFrame.class));
+    LayoutConfig.find(frameSize.screenSize, frameSize.targetFrameSize, repository, true);
 
     UserPreferences.initMobilePassword(repository, false);
 

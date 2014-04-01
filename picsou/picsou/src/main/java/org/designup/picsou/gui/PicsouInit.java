@@ -325,7 +325,7 @@ public class PicsouInit {
       }
 
       FrameSize frameSize = FrameSize.init(directory.get(JFrame.class));
-      LayoutConfig.init(frameSize.screenSize, frameSize.targetFrameSize, repository);
+      LayoutConfig.find(frameSize.screenSize, frameSize.targetFrameSize, repository, true);
 
       repository.findOrCreate(CurrentMonth.KEY,
                               value(CurrentMonth.LAST_TRANSACTION_DAY, 0),

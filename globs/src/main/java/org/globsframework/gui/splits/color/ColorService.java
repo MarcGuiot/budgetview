@@ -59,7 +59,7 @@ public class ColorService implements ColorLocator {
         return;
       }
     }
-    throw new ItemNotFound("No color set found with name: " + name);
+    throw new ItemNotFound("No color set found with name: " + name + " - actual content: " + colorSets);
   }
 
   public void setCurrentSet(ColorSet colorSet) {

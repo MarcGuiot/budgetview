@@ -8,7 +8,6 @@ import org.globsframework.metamodel.fields.DoubleField;
 import org.globsframework.metamodel.fields.IntegerField;
 import org.globsframework.metamodel.utils.GlobTypeLoader;
 import org.globsframework.model.*;
-import org.globsframework.utils.exceptions.ItemAmbiguity;
 import org.globsframework.utils.serialization.SerializedByteArrayOutput;
 import org.globsframework.utils.serialization.SerializedInput;
 import org.globsframework.utils.serialization.SerializedInputOutputFactory;
@@ -66,32 +65,21 @@ public class LayoutConfig {
     GlobTypeLoader.init(LayoutConfig.class, "layoutConfig");
   }
 
-  public static void init(Dimension screenSize, Dimension targetFrameSize, GlobRepository repository) {
+  public static Glob find(Dimension screenSize, Dimension targetFrameSize, GlobRepository repository, boolean createIfNeeded) {
     GlobList all = repository.getAll(LayoutConfig.TYPE,
                                      and(fieldEquals(SCREEN_WIDTH, screenSize.width),
                                          fieldEquals(SCREEN_HEIGHT, screenSize.height)));
-    if (all.isEmpty()) {
-      repository.create(TYPE,
-                        value(SCREEN_WIDTH, screenSize.width),
-                        value(SCREEN_HEIGHT, screenSize.height),
-                        value(FRAME_WIDTH, targetFrameSize.width),
-                        value(FRAME_HEIGHT, targetFrameSize.height));
-    }
-  }
-
-  public static Glob find(Dimension screenSize, GlobRepository repository) {
-    GlobList all = repository.getAll(LayoutConfig.TYPE,
-                                     and(fieldEquals(SCREEN_WIDTH, screenSize.width),
-                                         fieldEquals(SCREEN_HEIGHT, screenSize.height)));
-    if (all.isEmpty()) {
-      return null;
-    }
-    else if (all.size() > 1) {
-      throw new ItemAmbiguity("Found several LayoutConfig for: " + screenSize);
-    }
-    else {
+    if (!all.isEmpty()) {
       return all.getFirst();
     }
+    if (createIfNeeded) {
+      return repository.create(TYPE,
+                               value(SCREEN_WIDTH, screenSize.width),
+                               value(SCREEN_HEIGHT, screenSize.height),
+                               value(FRAME_WIDTH, targetFrameSize.width),
+                               value(FRAME_HEIGHT, targetFrameSize.height));
+    }
+    return null;
   }
 
   public static class Serializer implements PicsouGlobSerializer {

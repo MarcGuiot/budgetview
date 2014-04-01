@@ -100,17 +100,17 @@ public enum ApplicationColors {
   private String toString;
 
   public static final String[] COLOR_FILES = {"/colors/color.properties",
-                                               "/colors/color_classic_blue.properties",
-                                               "/colors/color_blue.properties",
-                                               "/colors/color_blue_flat.properties",
-                                               "/colors/color_green.properties",
-                                               "/colors/color_grey_flat.properties",
-                                               "/colors/color_black.properties",
-                                               "/colors/color_pink.properties",
-                                               "/colors/color_purple.properties",
-                                               "/colors/color_turquoise.properties",
-                                               "/colors/color_print.properties",
-                                               "/colors/color_black_modern.properties"};
+                                              "/colors/color_classic_blue.properties",
+                                              "/colors/color_blue.properties",
+                                              "/colors/color_blue_flat.properties",
+                                              "/colors/color_green.properties",
+                                              "/colors/color_grey_flat.properties",
+                                              "/colors/color_black.properties",
+                                              "/colors/color_pink.properties",
+                                              "/colors/color_purple.properties",
+                                              "/colors/color_turquoise.properties",
+                                              "/colors/color_print.properties",
+                                              "/colors/color_black_modern.properties"};
 
   ApplicationColors() {
     this(false);

@@ -25,6 +25,7 @@ import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobSelection;
 import org.globsframework.gui.GlobSelectionListener;
 import org.globsframework.gui.GlobsPanelBuilder;
+import org.globsframework.gui.actions.ToggleBooleanAction;
 import org.globsframework.gui.splits.SplitsLoader;
 import org.globsframework.gui.splits.SplitsNode;
 import org.globsframework.gui.splits.PanelBuilder;
@@ -314,13 +315,32 @@ public class BudgetAreaSeriesView extends View {
                                        Series.DESCRIPTION);
       }
 
+      final JButton groupToggle = new JButton();
+      switch (PeriodSeriesStat.getSeriesType(periodSeriesStat)) {
+        case SERIES:
+          groupToggle.setEnabled(false);
+          Disposable disposable = GlobListener.install(target.getKey(), repository, new GlobListener.Functor() {
+            public void update(Glob series, GlobRepository repository) {
+              groupToggle.putClientProperty(IS_GROUP_ELEMENT_PROPERTY, series != null && series.get(Series.GROUP) != null);
+            }
+          });
+          cellBuilder.addDisposable(disposable);
+          break;
+        case SERIES_GROUP:
+          ToggleBooleanAction action = new ToggleBooleanAction(target.getKey(), SeriesGroup.EXPANDED, "-", "+", repository);
+          cellBuilder.addDisposable(action);
+          groupToggle.setAction(action);
+          break;
+      }
+      cellBuilder.add("groupToggle", groupToggle);
+
       HighlightUpdater highlightUpdater = new HighlightUpdater(target.getKey(), directory) {
         protected void setHighlighted(boolean highlighted) {
           seriesName.applyStyle(highlighted ? "highlightedAmount" : "standardAmount");
         }
       };
       cellBuilder.addDisposable(highlightUpdater);
-
+      gaugeView.getComponent().setName("gauge");
       cellBuilder.add("gauge", gaugeView.getComponent());
       cellBuilder.addDisposable(gaugeView);
       cellBuilder.addDisposable(new Disposable() {
@@ -344,14 +364,7 @@ public class BudgetAreaSeriesView extends View {
       switch (PeriodSeriesStat.getSeriesType(periodSeriesStat)) {
         case SERIES:
         {
-          final NameLabelPopupButton button = seriesButtons.createSeriesPopupButton(target);
-          Disposable disposable = GlobListener.install(target.getKey(), repository, new GlobListener.Functor() {
-            public void update(Glob series, GlobRepository repository) {
-              button.getComponent().putClientProperty(IS_GROUP_ELEMENT_PROPERTY, series != null && series.get(Series.GROUP) != null);
-            }
-          });
-          cellBuilder.addDisposable(disposable);
-          return button;
+          return seriesButtons.createSeriesPopupButton(target);
         }
         case SERIES_GROUP:
         {

@@ -16,34 +16,26 @@
     <style id="down" selector="x" icon="button_down_blue.png"/>
     <style id="none" selector="x" icon=""/>
 
-    <style selector="#seriesName" ui="hyperlinkButtonWithoutUnderline"
-           fill="none" anchor="right"
-           horizontalAlignment="right" iconTextGap="4"
-           icon="empty(10,18)"
+    <style selector="button#seriesName" ui="hyperlinkButtonWithoutUnderline"
+           iconTextGap="4" icon="empty(10,18)"
            rolloverIcon="downArrow(10,18,8,8,block.inner.edit.rollover)"
            pressedIcon="downArrow(10,18,8,8,block.inner.edit.pressed)"/>
     <style id="seriesEnabled" selector="x" foreground="block.item.link"/>
     <style id="seriesDisabled" selector="x" foreground="block.item.link.inactive"/>
 
+    <style selector="button#groupToggle" ui="hyperlinkButtonWithoutUnderline" foreground="block.item.link"/>
+
     <ui name="amountLinkUI" class="org.globsframework.gui.splits.components.HyperlinkButtonUI"
         underline="false" useNormalColorWhenDisabled="false" autoHideEnabled="false"
         disabledColor="block.item.link.inactive"/>
     <style selector="button#observedSeriesAmount" ui="amountLinkUI"
-           fill="none" anchor="right" horizontalAlignment="right"  weightX="0.1" marginLeft="0"
            foreground="block.amount.actual.link" font="-,plain,11"/>
     <style selector="button#plannedSeriesAmount" ui="amountLinkUI"
-           fill="none" anchor="left" horizontalAlignment="left" weightX="0.1" marginRight="0"
            foreground="block.amount.planned.link" font="-,bold,11" opaque="true"/>
     <style id="plannedToSet" selector="x" background="block.amount.planned.link.toset" opaque="true"/>
     <style id="plannedAlreadySet" selector="x" background="block.inner.bg" opaque="false"/>
 
-    <style selector="label.slash" text="/"
-           marginLeft="5" marginRight="5" weightX="0.01"
-           foreground="block.amount.separator"
-           font="-,plain,11"/>
-
-    <style selector="#gauge" weightX="100"/>
-    <style selector=".detailGauge" marginLeft="6" marginRight="6"/>
+    <style selector="label.slash" text="/" foreground="block.amount.separator" font="-,plain,11"/>
 
     <style selector="#total label" marginBottom="0"/>
 
@@ -53,8 +45,7 @@
            negativeColor="deltaGauge.negative"
            noPreviousValueColor="deltaGauge.noPreviousValue"
            background="block.inner.bg" opaque="false"
-           preferredSize="(12,12)"
-           fill="none" anchor="center" marginRight="2" marginLeft="3"/>
+           preferredSize="(12,12)"/>
 
     <style id="highlightedAmount" selector="x" opaque="true"
            background="block.inner.highlight.selected.bg"/>
@@ -97,24 +88,24 @@
         <column styleClass="blockScrollBorder" weightY="10">
           <scrollPane verticalUnitIncrement="10" forceVerticalScroll="true" weightY="10">
             <verticalBoxes>
-              <repeat ref="seriesRepeat" styleClass="innerBlock" layout="verticalGrid"
-                      margin="5">
+              <repeat ref="seriesRepeat" styleClass="innerBlock" layout="org.designup.picsou.gui.budget.components.BudgetAreaSeriesLayout"
+                      margin="5" marginTop="0">
                 <header>
-                  <button ref="titleSeries" styleClass="itemLink" text="$budgetview.columnTitle.series"
-                          anchor="center"/>
+                  <button ref="titleSeries" styleClass="itemLink" text="$budgetview.columnTitle.series"/>
                   <label/>
-                  <button ref="titleAmountReal" styleClass="itemLink" text="$budgetview.columnTitle.real"
-                          anchor="right"/>
+                  <label/>
+                  <button ref="titleAmountReal" styleClass="itemLink" text="$budgetview.columnTitle.real"/>
                   <label/>
                   <button ref="titleAmountPlanned" styleClass="itemLink" text="$budgetview.columnTitle.planned"
                           anchor="left"/>
                   <label/>
                 </header>
                 <button ref="seriesName"/>
+                <button ref="groupToggle"/>
                 <component ref="gauge" styleClass="detailGauge"/>
                 <button ref=  "observedSeriesAmount"
                         tooltipText="$budgetview.tooltip.detail.observed" font="-,plain,10"/>
-                <label styleClass="slash"/>
+                <label name="slash" styleClass="slash"/>
                 <button ref="plannedSeriesAmount"
                         tooltipText="$budgetview.tooltip.detail.planned"/>
                 <component ref="deltaGauge"/>
