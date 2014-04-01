@@ -151,9 +151,7 @@ public class ProjectTransferTest extends LoggedInFunctionalTestCase {
       .validate();
 
     views.selectBudget();
-    budgetView.savings.checkSeriesList("From account Savings account",
-                                       "Transfer",
-                                       "To account Savings account");
+    budgetView.savings.checkSeriesList("Transfer");
   }
 
   public void testMustSelectDifferentFromAndToAccounts() throws Exception {

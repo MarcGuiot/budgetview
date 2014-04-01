@@ -22,6 +22,7 @@ import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.delta.DefaultChangeSet;
 import org.globsframework.model.delta.MutableChangeSet;
+import org.globsframework.model.format.GlobPrinter;
 import org.globsframework.model.repository.DefaultGlobIdGenerator;
 import org.globsframework.utils.Files;
 import org.globsframework.utils.Log;
@@ -29,9 +30,7 @@ import org.globsframework.utils.collections.MapOfMaps;
 import org.globsframework.utils.directory.Directory;
 import org.globsframework.utils.exceptions.InvalidData;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.util.Collection;
 import java.util.List;
 
@@ -122,6 +121,13 @@ public class BackupService {
     MutableChangeSet changeSet = new DefaultChangeSet();
     GlobList userData = serverAccess.getUserData(changeSet, new BackupIdUpdater());
     userData.addAll(PicsouInit.additionalGlobToAdd(repository));
+//    try {
+//      File bv = File.createTempFile("budgetview", ".txt");
+//      GlobPrinter.init(userData).run(new BufferedWriter(new FileWriter(bv)));
+//      System.out.println("org.designup.picsou.gui.backup.BackupService.restore " + bv.getAbsolutePath());
+//    }
+//    catch (IOException e) {
+//    }
 
     try {
       repository.startChangeSet();
@@ -133,7 +139,6 @@ public class BackupService {
     finally {
       repository.completeChangeSet();
     }
-
     try {
       repository.startChangeSet();
       repository.addTriggerAtFirst(upgradeTrigger);

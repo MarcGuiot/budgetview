@@ -1,6 +1,7 @@
 package org.designup.picsou.functests.projects;
 
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
+import org.designup.picsou.functests.utils.OfxBuilder;
 import org.designup.picsou.gui.model.SeriesStat;
 import org.designup.picsou.gui.model.SeriesType;
 import org.designup.picsou.model.Project;
@@ -165,4 +166,32 @@ public class ProjectUpgradeTest extends LoggedInFunctionalTestCase {
     budgetView.extras.checkContent("| Voyage Rome | 0.00 | 200.00 |\n" +
                                    "| Hotel       | 0.00 | 200.00 |\n");
   }
+
+  public void testName() throws Exception {
+    operations.restore(Files.copyResourceToTmpFile(this, "/testbackups/differentAccountInSameSeries.ser"));
+    budgetView.recurring.checkGroupItems("Energies:Account n. 123", "Energies:Account n. 456");
+
+
+//    public void testGeneratePreviousVersion() throws Exception {
+//      OfxBuilder
+//        .init(this)
+//        .addBankAccount(30003, 12345, "123123123", 10, "2006/01/30")
+//        .addTransaction("2006/01/10", -1, "EDF")
+//        .load();
+//
+//      OfxBuilder
+//        .init(this)
+//        .addBankAccount(30003, 12345, "123123123", 10, "2006/01/31")
+//        .addTransaction("2006/01/15", -10, "EDF")
+//        .load();
+//
+//      categorization.setNewRecurring("EDF", "Energies");
+//
+//      operations.backup("differentAccountInSameSeries.ser");
+//
+//    }
+
+
+  }
+
 }

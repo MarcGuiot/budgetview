@@ -68,7 +68,7 @@ public class ProjectItemTransferPanel extends ProjectItemEditionPanel {
     builder.add("cancel", new CancelAction());
 
     builder.add("handler", new HyperlinkHandler(directory));
-
+    disposables.add(builder);
     return builder.load();
   }
 

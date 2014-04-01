@@ -190,15 +190,26 @@ public class ProjectEditionChecker extends ViewChecker {
   }
 
   public ProjectEditionChecker addExpenseItem(int index, String label, int firstMonth, double amount) {
-    return addExpenseItem(index, label, firstMonth, amount, 1);
+    return addExpenseItem(index, label, firstMonth, amount, 1, null);
+  }
+
+  public ProjectEditionChecker addExpenseItem(int index, String label, int firstMonth, double amount, String account) {
+    return addExpenseItem(index, label, firstMonth, amount, 1, account);
   }
 
   public ProjectEditionChecker addExpenseItem(int index, String label, int firstMonth, double amount, int numberOfMonths) {
+    return addExpenseItem(index, label, firstMonth, amount, numberOfMonths, null);
+  }
+
+    public ProjectEditionChecker addExpenseItem(int index, String label, int firstMonth, double amount, int numberOfMonths, String account) {
     addExpenseItem();
-    ProjectItemEditionChecker projectItemEditionChecker = editExpense(index)
+      ProjectItemExpenseEditionChecker projectItemEditionChecker = editExpense(index)
       .setLabel(label)
       .setMonth(firstMonth)
       .setAmount(amount);
+      if (account != null) {
+        projectItemEditionChecker.setTargetAccount(account);
+      }
     if (numberOfMonths != 1) {
       projectItemEditionChecker
         .switchToSeveralMonths()

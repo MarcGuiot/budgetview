@@ -34,6 +34,7 @@ public class SeriesGroupTest extends LoggedInFunctionalTestCase {
                                      "| Leisures  | 100.00 | 200.00 |\n" +
                                      "| Home      | 0.00   | 100.00 |\n");
     budgetView.variable.checkGroupItems("Food");
+    budgetView.variable.checkGroupToggleHidden("Home");
 
     budgetView.variable.checkGroups("Leisures", "Groceries", "New group...");
     budgetView.variable.addToGroup("Home", "Groceries");
@@ -56,13 +57,13 @@ public class SeriesGroupTest extends LoggedInFunctionalTestCase {
 
     // -- Groups can be collapsed / expanded --
 
-    budgetView.variable.collapseGroup("Groceries");
+    budgetView.variable.collapseGroup("Groceries").checkGroupToggleCollapsed("Groceries");
     budgetView.variable.checkContent("| Groceries | 80.00  | 300.00 |\n" +
                                      "| Leisures  | 100.00 | 200.00 |\n");
     budgetView.variable.checkTotalAmounts(-180.00, -500.00);
     budgetView.variable.checkGroupItems();
 
-    budgetView.variable.expandGroup("Groceries");
+    budgetView.variable.expandGroup("Groceries").checkGroupToggleExpanded("Groceries");
     budgetView.variable.checkContent("| Groceries | 80.00  | 300.00 |\n" +
                                      "| Food      | 80.00  | 200.00 |\n" +
                                      "| Home      | 0.00   | 100.00 |\n" +

@@ -5,6 +5,7 @@ import org.uispec4j.Panel;
 import org.uispec4j.TextBox;
 import org.uispec4j.assertion.UISpecAssert;
 
+import static org.uispec4j.assertion.UISpecAssert.assertFalse;
 import static org.uispec4j.assertion.UISpecAssert.assertThat;
 
 public class ProjectItemExpenseEditionChecker extends ProjectItemEditionChecker<ProjectItemExpenseEditionChecker> {
@@ -24,6 +25,21 @@ public class ProjectItemExpenseEditionChecker extends ProjectItemEditionChecker<
 
   public ProjectItemExpenseEditionChecker checkAmount(double amount) {
     AmountEditorChecker.init(panel, "amountEditor").checkAmount(amount);
+    return this;
+  }
+
+  public ProjectItemExpenseEditionChecker setTargetAccount(String accountName){
+    panel.getComboBox("accountSelection").select(accountName);
+    return this;
+  }
+
+  public ProjectItemExpenseEditionChecker checkTargetAcount(String account) {
+    assertThat(panel.getComboBox("accountSelection").selectionEquals(account));
+    return this;
+  }
+
+  public ProjectItemEditionChecker checkTargetAcountNotEditable() {
+    assertFalse(panel.getComboBox("accountSelection").isEditable());
     return this;
   }
 

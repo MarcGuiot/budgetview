@@ -272,4 +272,9 @@ public abstract class AbstractSplitsContext implements SplitsContext {
       };
     }
   }
+
+//  protected void finalize() throws Throwable {
+//    super.finalize();
+//    cleanUp();
+//  }
 }

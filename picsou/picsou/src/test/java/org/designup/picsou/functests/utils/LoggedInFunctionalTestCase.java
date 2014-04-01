@@ -46,7 +46,6 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
   public DemoMessageChecker demoMessage;
   public ImportPanelChecker importPanel;
   public NotesViewChecker notes;
-  public BackupChecker backup;
   public ProjectChartChecker projectChart;
   public ProjectListChecker projects;
   public ProjectEditionChecker currentProject;
@@ -162,7 +161,6 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
     mainAccounts = new MainAccountViewChecker(mainWindow);
     savingsAccounts = new SavingsAccountViewChecker(mainWindow);
     operations = new OperationChecker(mainWindow);
-    backup = new BackupChecker(operations);
     timeline = new TimeViewChecker(mainWindow);
     transactions = new TransactionChecker(mainWindow);
     transactionDetails = new TransactionDetailsChecker(mainWindow);
@@ -231,7 +229,6 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
     transactionDetails = null;
     transactionCreation = null;
     operations = null;
-    backup = null;
     screen = null;
     newVersion = null;
     demoMessage = null;

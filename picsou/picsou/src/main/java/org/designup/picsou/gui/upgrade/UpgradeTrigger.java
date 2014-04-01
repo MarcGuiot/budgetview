@@ -9,7 +9,9 @@ import org.designup.picsou.importer.analyzer.TransactionAnalyzerFactory;
 import org.designup.picsou.model.*;
 import org.designup.picsou.triggers.AccountInitialPositionTrigger;
 import org.designup.picsou.triggers.PositionTrigger;
+import org.designup.picsou.triggers.SeriesBudgetTrigger;
 import org.designup.picsou.triggers.savings.UpdateMirrorSeriesChangeSetVisitor;
+import org.designup.picsou.utils.Lang;
 import org.designup.picsou.utils.TransactionComparator;
 import org.globsframework.metamodel.Field;
 import org.globsframework.metamodel.GlobType;
@@ -17,6 +19,8 @@ import org.globsframework.metamodel.fields.LinkField;
 import org.globsframework.model.*;
 import org.globsframework.model.format.GlobPrinter;
 import org.globsframework.model.repository.GlobIdGenerator;
+import org.globsframework.model.repository.LocalGlobRepository;
+import org.globsframework.model.repository.LocalGlobRepositoryBuilder;
 import org.globsframework.model.utils.GlobBuilder;
 import org.globsframework.model.utils.GlobFunctor;
 import org.globsframework.model.utils.GlobMatchers;
@@ -150,12 +154,22 @@ public class UpgradeTrigger implements ChangeSetListener {
   }
 
   private void updateTargetAccount(GlobRepository repository) {
+    SeriesBudgetTrigger seriesBudgetTrigger = new SeriesBudgetTrigger(repository);
+    LocalGlobRepository subGlobRepository = LocalGlobRepositoryBuilder.init(repository)
+      .copy(Month.TYPE, CurrentMonth.TYPE).get();
+    subGlobRepository.addTrigger(seriesBudgetTrigger);
+
+    Map<Key, Key> saving;
     GlobList allSeries = repository.getAll(Series.TYPE,
                                            GlobMatchers.and(
                                              GlobMatchers.not(GlobMatchers.fieldEquals(Series.BUDGET_AREA, BudgetArea.SAVINGS.getId())),
-                                             GlobMatchers.not(GlobMatchers.fieldEquals(Series.BUDGET_AREA, BudgetArea.OTHER.getId()))));
+                                             GlobMatchers.not(GlobMatchers.fieldEquals(Series.BUDGET_AREA, BudgetArea.OTHER.getId())))
+    );
     GlobIdGenerator idGenerator = repository.getIdGenerator();
     for (Glob series : allSeries) {
+      if (BudgetArea.UNCATEGORIZED.getId().equals(series.get(Series.BUDGET_AREA))) {
+        continue;
+      }
       GlobList operations = repository.findByIndex(Transaction.SERIES_INDEX, Transaction.SERIES, series.get(Series.ID))
         .getGlobs().filter(GlobMatchers.isFalse(Transaction.PLANNED), repository);
       Set<Integer> accounts = new HashSet<Integer>();
@@ -169,18 +183,25 @@ public class UpgradeTrigger implements ChangeSetListener {
         repository.update(series.getKey(), Series.TARGET_ACCOUNT, accounts.iterator().next());
       }
       else {
-        Glob groups = repository.create(SeriesGroup.TYPE, value(SeriesGroup.NAME, series.get(Series.NAME)),
+        String seriesName = series.get(Series.NAME);
+        Glob groups = repository.create(SeriesGroup.TYPE, value(SeriesGroup.NAME, seriesName),
                                         value(SeriesGroup.BUDGET_AREA, series.get(Series.BUDGET_AREA)));
         boolean first = true;
         Key key = series.getKey();
         for (Integer account : accounts) {
           if (!first) {
             key = Key.create(Series.TYPE, idGenerator.getNextId(Series.ID, 1));
-            repository.create(key, series.toArray());
-            repository.update(key, value(Series.INITIAL_AMOUNT, 0.));
+            subGlobRepository.startChangeSet();
+            subGlobRepository.create(key, series.toArray());
+            subGlobRepository.update(key, value(Series.INITIAL_AMOUNT, 0.));
+            subGlobRepository.completeChangeSet();
+            subGlobRepository.commitChanges(false);
           }
           first = false;
+          String accoutName = repository.get(KeyBuilder.newKey(Account.TYPE, account))
+            .get(Account.NAME);
           repository.update(key,
+                            value(Series.NAME, Lang.get("series.upgrade.rename", seriesName, accoutName)),
                             value(Series.GROUP, groups.get(SeriesGroup.ID)),
                             value(Series.TARGET_ACCOUNT, account));
           for (Glob op : operations) {
@@ -192,7 +213,7 @@ public class UpgradeTrigger implements ChangeSetListener {
       }
     }
     GlobList allSavingsSeries = repository.getAll(Series.TYPE, GlobMatchers.fieldEquals(Series.BUDGET_AREA, BudgetArea.SAVINGS.getId()));
-    Map<Key, Key> saving = new HashMap<Key, Key>();
+    saving = new HashMap<Key, Key>();
     for (Glob series : allSavingsSeries) {
       if (!saving.containsKey(series.getKey())) {
         saving.put(repository.findLinkTarget(series, Series.MIRROR_SERIES).getKey(), series.getKey());
@@ -500,7 +521,8 @@ public class UpgradeTrigger implements ChangeSetListener {
         repository.getAll(Transaction.TYPE,
                           and(fieldEquals(Transaction.SERIES, series.get(Series.ID)),
                               fieldEquals(Transaction.ACCOUNT, account.get(Account.ID)),
-                              isTrue(Transaction.PLANNED)));
+                              isTrue(Transaction.PLANNED))
+        );
       for (Glob glob : planned) {
         repository.update(glob.getKey(),
                           value(Transaction.ACCOUNT_POSITION, null),
@@ -523,7 +545,8 @@ public class UpgradeTrigger implements ChangeSetListener {
                              repository.update(transaction.getKey(), Transaction.LABEL, newVisibleLabel);
 
                            }
-                         });
+                         }
+    );
   }
 
   private void migrateBankEntity(GlobRepository repository) {
@@ -559,7 +582,8 @@ public class UpgradeTrigger implements ChangeSetListener {
                                                  ProfileType.CUSTOM.getId());
                              }
                            }
-                         });
+                         }
+    );
   }
 
   private void removeOccasionalBudgetArea(GlobRepository repository) {
@@ -605,7 +629,8 @@ public class UpgradeTrigger implements ChangeSetListener {
                                 and(
                                   fieldEquals(Transaction.SERIES, seriesId),
                                   fieldEquals(Transaction.CATEGORY, categoryId)
-                                ));
+                                )
+              );
             for (Glob transaction : transactions) {
               repository.setTarget(transaction.getKey(), Transaction.SUB_SERIES, subSeries.getKey());
             }

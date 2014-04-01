@@ -26,7 +26,8 @@ public class TransactionFilterPanel extends TextFilterPanel {
 
   protected GlobMatcher createMatcher(String searchFilter) {
     searchFilter = searchFilter.toLowerCase();
-    return or(fieldContainsIgnoreCaseAndAccents(Transaction.LABEL, searchFilter),
+    return or(fieldContainsIgnoreCaseAndAccents(Transaction.ORIGINAL_LABEL, searchFilter),
+              fieldContainsIgnoreCaseAndAccents(Transaction.LABEL, searchFilter),
               fieldContainsIgnoreCaseAndAccents(Transaction.NOTE, searchFilter),
               new AmountMatcher(searchFilter, descriptionService),
               new SeriesMatcher(searchFilter));

@@ -231,9 +231,10 @@ public class GlobLinkComboEditor
     this.completed = true;
   }
 
-  public void setEnabled(boolean enabled) {
+  public GlobLinkComboEditor setEnabled(boolean enabled) {
     this.forcedEnabled = enabled;
     globComboView.setEnabled(forcedEnabled && (currentKey != null));
+    return this;
   }
 
   public void setVisible(boolean visible) {

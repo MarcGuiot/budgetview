@@ -537,9 +537,30 @@ public class BudgetViewChecker extends ViewChecker {
       return this;
     }
 
+    public BudgetAreaChecker checkGroupToggleExpanded(String groupName) {
+      Button toggle = getSeriesPanel(groupName).getToggleButton();
+      assertThat(toggle.isEnabled());
+      assertThat(toggle.textEquals("-"));
+      return this;
+    }
+
     public BudgetAreaChecker collapseGroup(String groupName) {
       getSeriesPanel(groupName).getSeriesButton()
         .click(Lang.get("seriesGroup.menu.collapse"));
+      return this;
+    }
+
+    public BudgetAreaChecker checkGroupToggleCollapsed(String groupName) {
+      Button toggle = getSeriesPanel(groupName).getToggleButton();
+      assertThat(toggle.isEnabled());
+      assertThat(toggle.textEquals("+"));
+      return this;
+    }
+
+    public BudgetAreaChecker checkGroupToggleHidden(String groupName) {
+      Button toggle = getSeriesPanel(groupName).getToggleButton();
+      assertThat(toggle.textEquals(""));
+      assertFalse(toggle.isEnabled());
       return this;
     }
 
@@ -572,7 +593,7 @@ public class BudgetViewChecker extends ViewChecker {
       }
 
       SeriesPanelUI seriesPanelUI = (SeriesPanelUI)ui;
-      TestUtils.assertEquals(seriesNames, seriesPanelUI.getGroupItemLabels(jPanel));
+      TestUtils.assertSetEquals(seriesNames, seriesPanelUI.getGroupItemLabels(jPanel));
     }
   }
 
@@ -618,6 +639,7 @@ public class BudgetViewChecker extends ViewChecker {
 
     // The reference component in each row is the gauge
     private static final int SERIES_OFFSET = 0;
+    private static final int GROUP_TOGGLE_OFFSET = +1;
     private static final int GAUGE_OFFSET = +2;
     private static final int OBSERVED_LABEL_OFFSET = +3;
     private static final int PLANNED_LABEL_OFFSET = +5;
@@ -635,6 +657,10 @@ public class BudgetViewChecker extends ViewChecker {
 
     private PopupButton getSeriesButton() {
       return new PopupButton(new Button((JButton)getComponent(SERIES_OFFSET)));
+    }
+
+    private Button getToggleButton() {
+      return new Button((JButton)getComponent(GROUP_TOGGLE_OFFSET));
     }
 
     public GaugeChecker getGauge() {

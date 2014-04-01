@@ -82,11 +82,12 @@ public class ProjectUpgrade {
   }
 
   private void clearActualStats(final Glob series) {
+    final Integer seriesId = series.get(Series.ID);
     functors.add(new Functor() {
       public void apply(GlobRepository repository) {
         for (Glob stat : repository.getAll(SeriesStat.TYPE,
                                            and(fieldEquals(SeriesStat.TARGET_TYPE, SeriesType.SERIES.getId()),
-                                               fieldEquals(SeriesStat.TARGET, series.get(Series.ID))))) {
+                                               fieldEquals(SeriesStat.TARGET, seriesId)))) {
           repository.update(stat.getKey(), SeriesStat.ACTUAL_AMOUNT, 0.00);
         }
       }
@@ -122,18 +123,18 @@ public class ProjectUpgrade {
 
   private class BindTransactionsToSeries implements Functor {
 
-    private final Glob series;
+    private final Integer seriesId;
     private final GlobList transactions;
 
     public BindTransactionsToSeries(Glob series, GlobList transactions) {
-      this.series = series;
+      this.seriesId = series.get(Series.ID);
       this.transactions = transactions;
     }
 
     public void apply(GlobRepository repository) {
       for (Glob transaction : transactions) {
         repository.update(transaction.getKey(),
-                          value(Transaction.SERIES, series.get(Series.ID)),
+                          value(Transaction.SERIES, seriesId),
                           value(Transaction.SUB_SERIES, null));
       }
     }

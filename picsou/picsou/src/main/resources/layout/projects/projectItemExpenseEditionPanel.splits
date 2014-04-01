@@ -14,6 +14,7 @@
     <row styleClass="firstItemBlock">
       <label text="$projectView.item.edition.label" styleClass="formLabel"/>
       <textField ref="nameField" weightX="100" marginRight="5"/>
+      <comboBox ref="accountSelection"/>
     </row>
 
     <row styleClass="itemBlock">

@@ -10,7 +10,9 @@ import org.globsframework.model.FieldSetter;
 import org.globsframework.model.FieldValues;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobRepository;
+import org.globsframework.model.repository.LocalGlobRepository;
 import org.globsframework.model.utils.GlobMatcher;
+import org.globsframework.model.utils.GlobMatchers;
 import org.globsframework.utils.Strings;
 import org.globsframework.utils.exceptions.ItemNotFound;
 import org.globsframework.utils.serialization.SerializedByteArrayOutput;
@@ -251,6 +253,12 @@ public class Series {
 
   public static boolean isUncategorized(Integer seriesId) {
     return UNCATEGORIZED_SERIES_ID.equals(seriesId);
+  }
+
+  public static boolean hasRealOperations(final GlobRepository repository, final Integer seriesId) {
+    return !repository.findByIndex(Transaction.SERIES_INDEX, Transaction.SERIES, seriesId)
+      .getGlobs().filter(GlobMatchers.isFalse(Transaction.PLANNED), repository)
+      .isEmpty();
   }
 
   public static class Serializer implements PicsouGlobSerializer {

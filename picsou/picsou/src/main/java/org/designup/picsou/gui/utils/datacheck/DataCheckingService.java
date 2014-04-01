@@ -244,8 +244,24 @@ public class DataCheckingService {
 
 
     checkAccountTotal(report);
-
+    checkTransactionSeries(repository, report);
     return report.hasError();
+  }
+
+  private void checkTransactionSeries(GlobRepository repository, DataCheckReport report) {
+    Set<Integer> series = repository.getAll(Series.TYPE).getValueSet(Series.ID);
+    GlobList all = repository.getAll(Transaction.TYPE);
+    for (Glob glob : all) {
+      if (!series.contains(glob.get(Transaction.SERIES))) {
+        if (glob.get(Transaction.PLANNED) || glob.get(Transaction.CREATED_BY_SERIES)){
+          repository.delete(glob);
+        }
+        else {
+          repository.update(glob.getKey(), Transaction.SERIES, Series.UNCATEGORIZED_SERIES_ID);
+        }
+        report.addError("Missing series for " + glob.get(Transaction.LABEL));
+      }
+    }
   }
 
   private void checkAccountTotal(DataCheckReport report) {
@@ -323,15 +339,21 @@ public class DataCheckingService {
       currentMonth = Month.next(currentMonth);
     }
 
-    for (Integer budgetId : budgets) {
-      Key seriesBudgetKey = Key.create(SeriesBudget.TYPE, budgetId);
-      Glob seriesBudget = repository.get(seriesBudgetKey);
-      buf.append("Deleting SeriesBudget for series : ").append(series.get(Series.NAME))
-        .append(" at :").append(seriesBudget.get(SeriesBudget.MONTH)).append(("\n"));
-      repository.delete(seriesBudgetKey);
+    repository.startChangeSet();
+    try {
+      for (Integer budgetId : budgets) {
+        Key seriesBudgetKey = Key.create(SeriesBudget.TYPE, budgetId);
+        Glob seriesBudget = repository.get(seriesBudgetKey);
+        buf.append("Deleting SeriesBudget for series : ").append(series.get(Series.NAME))
+          .append(" at :").append(seriesBudget.get(SeriesBudget.MONTH)).append(("\n"));
+        repository.delete(seriesBudgetKey);
+      }
+      for (Integer month : budgetToCreate) {
+        MonthsToSeriesBudgetTrigger.addMonthForSeries(repository, month, series);
+      }
     }
-    for (Integer month : budgetToCreate) {
-      MonthsToSeriesBudgetTrigger.addMonthForSeries(repository, month, series);
+    finally {
+      repository.completeChangeSet();
     }
   }
 

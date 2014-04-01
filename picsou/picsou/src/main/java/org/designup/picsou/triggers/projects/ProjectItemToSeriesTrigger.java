@@ -27,6 +27,12 @@ public class ProjectItemToSeriesTrigger implements ChangeSetListener {
         if (!ProjectItem.usesExtrasSeries(item)) {
           return;
         }
+        if (values.contains(ProjectItem.ACCOUNT)){
+          Glob series = repository.findLinkTarget(repository.get(itemKey), ProjectItem.SERIES);
+          if (series != null) {
+            repository.update(series.getKey(), value(Series.TARGET_ACCOUNT, values.get(ProjectItem.ACCOUNT)));
+          }
+        }
         if (values.contains(ProjectItem.ACTIVE)) {
           createOrDeleteSeriesForItem(item, repository);
           return;
@@ -75,8 +81,20 @@ public class ProjectItemToSeriesTrigger implements ChangeSetListener {
           !repository.contains(Transaction.TYPE,
                                and(fieldEquals(Transaction.SERIES, seriesId),
                                    isFalse(Transaction.PLANNED)))) {
-        repository.update(item.getKey(), ProjectItem.SERIES, null);
-        repository.delete(seriesKey);
+        Glob series = repository.get(seriesKey);
+        if (series.get(Series.MIRROR_SERIES) != null){
+          if (!repository.contains(Transaction.TYPE,
+                              and(fieldEquals(Transaction.SERIES, seriesId),
+                                  isFalse(Transaction.PLANNED)))) {
+            repository.update(item.getKey(), ProjectItem.SERIES, null);
+            repository.delete(seriesKey);
+            repository.delete(KeyBuilder.newKey(Series.TYPE, series.get(Series.ID)));
+          }
+        }
+        else {
+          repository.update(item.getKey(), ProjectItem.SERIES, null);
+          repository.delete(seriesKey);
+        }
       }
     }
   }
