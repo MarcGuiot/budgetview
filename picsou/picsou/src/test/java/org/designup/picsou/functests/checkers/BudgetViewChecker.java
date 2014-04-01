@@ -569,7 +569,7 @@ public class BudgetViewChecker extends ViewChecker {
       }
 
       SeriesPanelUI seriesPanelUI = (SeriesPanelUI)ui;
-      TestUtils.assertEquals(seriesNames, seriesPanelUI.getGroupItemLabels(jPanel));
+      TestUtils.assertSetEquals(seriesNames, seriesPanelUI.getGroupItemLabels(jPanel));
     }
   }
 
