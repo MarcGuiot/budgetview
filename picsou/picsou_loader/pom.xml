@@ -66,7 +66,7 @@
                             version="${budgetviewVersion}"
                             jvmversion="1.5+"
                             arguments="-l fr"
-                            vmoptions="-Xmx128m -Dapple.awt.graphics.UseQuartz=false">
+                            vmoptions="-Xmx256m -Dapple.awt.graphics.UseQuartz=false">
 
                   <documenttype name="Financial information"
                                 extensions="ofx qif ofc"
@@ -87,7 +87,7 @@
                             version="${budgetviewVersion}"
                             jvmversion="1.5+"
                             arguments="-l en"
-                            vmoptions="-Xmx128m -Dapple.awt.graphics.UseQuartz=false">
+                            vmoptions="-Xmx256m -Dapple.awt.graphics.UseQuartz=false">
 
                   <documenttype name="Financial information"
                                 extensions="ofx qif ofc"
