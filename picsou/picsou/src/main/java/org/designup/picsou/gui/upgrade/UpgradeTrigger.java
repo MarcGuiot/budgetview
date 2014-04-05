@@ -184,8 +184,10 @@ public class UpgradeTrigger implements ChangeSetListener {
       }
       else {
         String seriesName = series.get(Series.NAME);
-        Glob groups = repository.create(SeriesGroup.TYPE, value(SeriesGroup.NAME, seriesName),
-                                        value(SeriesGroup.BUDGET_AREA, series.get(Series.BUDGET_AREA)));
+        Glob groups = repository.create(SeriesGroup.TYPE,
+                                        value(SeriesGroup.NAME, seriesName),
+                                        value(SeriesGroup.BUDGET_AREA, series.get(Series.BUDGET_AREA)),
+                                        value(SeriesGroup.EXPANDED, false));
         boolean first = true;
         Key key = series.getKey();
         for (Integer account : accounts) {
@@ -201,7 +203,7 @@ public class UpgradeTrigger implements ChangeSetListener {
           String accoutName = repository.get(KeyBuilder.newKey(Account.TYPE, account))
             .get(Account.NAME);
           repository.update(key,
-                            value(Series.NAME, Lang.get("series.upgrade.rename", seriesName, accoutName)),
+                            value(Series.NAME, accoutName),
                             value(Series.GROUP, groups.get(SeriesGroup.ID)),
                             value(Series.TARGET_ACCOUNT, account));
           for (Glob op : operations) {
@@ -216,7 +218,10 @@ public class UpgradeTrigger implements ChangeSetListener {
     saving = new HashMap<Key, Key>();
     for (Glob series : allSavingsSeries) {
       if (!saving.containsKey(series.getKey())) {
-        saving.put(repository.findLinkTarget(series, Series.MIRROR_SERIES).getKey(), series.getKey());
+        Glob target = repository.findLinkTarget(series, Series.MIRROR_SERIES);
+        if (target != null) {
+          saving.put(target.getKey(), series.getKey());
+        }
       }
     }
 
@@ -662,7 +667,6 @@ public class UpgradeTrigger implements ChangeSetListener {
       repository.update(glob.getKey(), Transaction.LABEL, label);
     }
   }
-
 
   public void postProcessing(GlobRepository repository) {
     for (Map.Entry<Integer, Key[]> entry : savingsSeriesToOp.entrySet()) {

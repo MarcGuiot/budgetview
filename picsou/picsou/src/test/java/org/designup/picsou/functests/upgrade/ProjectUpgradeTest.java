@@ -1,25 +1,8 @@
-package org.designup.picsou.functests.projects;
+package org.designup.picsou.functests.upgrade;
 
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
-import org.designup.picsou.functests.utils.OfxBuilder;
-import org.designup.picsou.gui.model.SeriesStat;
-import org.designup.picsou.gui.model.SeriesType;
-import org.designup.picsou.model.Project;
-import org.designup.picsou.model.ProjectItem;
-import org.designup.picsou.model.Series;
-import org.designup.picsou.model.Transaction;
-import org.globsframework.model.Glob;
-import org.globsframework.model.GlobList;
-import org.globsframework.model.Key;
-import org.globsframework.model.format.GlobPrinter;
-import org.globsframework.model.utils.GlobMatchers;
+import org.designup.picsou.model.*;
 import org.globsframework.utils.Files;
-
-import java.io.File;
-import java.util.HashSet;
-import java.util.Set;
-
-import static org.globsframework.model.utils.GlobMatchers.*;
 
 public class ProjectUpgradeTest extends LoggedInFunctionalTestCase {
 
@@ -167,31 +150,24 @@ public class ProjectUpgradeTest extends LoggedInFunctionalTestCase {
                                    "| Hotel       | 0.00 | 200.00 |\n");
   }
 
-  public void testName() throws Exception {
-    operations.restore(Files.copyResourceToTmpFile(this, "/testbackups/differentAccountInSameSeries.ser"));
-    budgetView.recurring.checkGroupItems("Energies:Account n. 123", "Energies:Account n. 456");
+  public void testProjectsWithVariousTranferItems() throws Exception {
+    operations.restoreWithPassword(Files.copyResourceToTmpFile(this, "/testbackups/upgrade_jar125_projets_multi_transfers.budgetview"), "pwd");
+    projects.checkCurrentProjects("| Vacances | Apr | 300.00 | on |");
+    projects.select("Vacances");
+    currentProject.checkItems("| Courant > Epargne | Apr | +100.00 | +50.00  |\n" +
+                              "| Externe > Epargne | Apr | +300.00 | +300.00 |\n" +
+                              "| Epargne > Externe | Apr | +100.00 | +100.00 |\n" +
+                              "| Voyage            | Apr | 0.00    | 300.00  |\n");
 
-
-//    public void testGeneratePreviousVersion() throws Exception {
-//      OfxBuilder
-//        .init(this)
-//        .addBankAccount(30003, 12345, "123123123", 10, "2006/01/30")
-//        .addTransaction("2006/01/10", -1, "EDF")
-//        .load();
-//
-//      OfxBuilder
-//        .init(this)
-//        .addBankAccount(30003, 12345, "123123123", 10, "2006/01/31")
-//        .addTransaction("2006/01/15", -10, "EDF")
-//        .load();
-//
-//      categorization.setNewRecurring("EDF", "Energies");
-//
-//      operations.backup("differentAccountInSameSeries.ser");
-//
-//    }
-
-
+    transactions.initContent()
+      .add("05/04/2014", TransactionType.VIREMENT, "VERS EPARGNE", "", 50.00, "Courant > Epargne")
+      .add("05/04/2014", TransactionType.MANUAL, "DE EXTERNE", "", 100.00, "Externe > Epargne")
+      .add("05/04/2014", TransactionType.MANUAL, "DE COURANT", "", 50.00, "Courant > Epargne")
+      .add("05/04/2014", TransactionType.MANUAL, "VERS EXTERNE", "", -100.00, "Epargne > Externe")
+      .add("05/04/2014", TransactionType.MANUAL, "VERS EPARGNE", "", -50.00, "Courant > Epargne")
+      .add("05/04/2014", TransactionType.PRELEVEMENT, "DE COURANT", "", -50.00, "Courant > Epargne")
+      .add("01/04/2014", TransactionType.PRELEVEMENT, "EPARGNE > EXTERNE", "", -100.00, "Epargne > Externe")
+      .add("01/04/2014", TransactionType.VIREMENT, "EXTERNE > EPARGNE", "", 200.00, "Externe > Epargne")
+      .check();
   }
-
 }

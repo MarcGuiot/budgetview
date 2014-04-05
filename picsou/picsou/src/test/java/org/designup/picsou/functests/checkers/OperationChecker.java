@@ -304,7 +304,6 @@ public class OperationChecker {
       .process(new WindowHandler() {
         public Trigger process(Window window) throws Exception {
           MessageFileDialogChecker dialog = new MessageFileDialogChecker(window);
-//          dialog.checkMessageContains(Lang.get("backup.ok.message"));
           selectedFile.set(dialog.getFilePath());
           return dialog.getOkTrigger();
         }
@@ -341,7 +340,7 @@ public class OperationChecker {
 
   }
 
-  public void restoreWithNewPassword(String filePath, final String password) {
+  public void restoreWithPassword(String filePath, final String password) {
     WindowInterceptor.init(getRestoreTrigger())
       .process(FileChooserHandler.init().select(filePath))
       .process(new WindowHandler() {

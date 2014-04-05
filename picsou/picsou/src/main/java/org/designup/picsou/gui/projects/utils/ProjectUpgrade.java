@@ -11,6 +11,7 @@ import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.Key;
+import org.globsframework.model.format.GlobPrinter;
 import org.globsframework.model.utils.GlobFieldsComparator;
 
 import java.util.ArrayList;
@@ -94,7 +95,7 @@ public class ProjectUpgrade {
     });
   }
 
-  public void storeSeriesBinding(Glob series, GlobRepository repository) {
+  private void storeSeriesBinding(Glob series, GlobRepository repository) {
     GlobList transactions = repository.getAll(Transaction.TYPE,
                                               and(fieldEquals(Transaction.SERIES, series.get(Series.ID)),
                                                   isFalse(Transaction.PLANNED)));
@@ -102,7 +103,7 @@ public class ProjectUpgrade {
     clearSubSeries(repository, transactions);
   }
 
-  public void clearSubSeries(GlobRepository repository, GlobList transactions) {
+  private void clearSubSeries(GlobRepository repository, GlobList transactions) {
     for (Glob transaction : transactions) {
       repository.update(transaction.getKey(),
                         value(Transaction.SERIES, Series.UNCATEGORIZED_SERIES_ID),
@@ -133,9 +134,11 @@ public class ProjectUpgrade {
 
     public void apply(GlobRepository repository) {
       for (Glob transaction : transactions) {
-        repository.update(transaction.getKey(),
-                          value(Transaction.SERIES, seriesId),
-                          value(Transaction.SUB_SERIES, null));
+        if (transaction.exists()) {
+          repository.update(transaction.getKey(),
+                            value(Transaction.SERIES, seriesId),
+                            value(Transaction.SUB_SERIES, null));
+        }
       }
     }
   }

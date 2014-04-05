@@ -11,6 +11,7 @@ import org.designup.picsou.gui.time.TimeService;
 import org.designup.picsou.gui.upgrade.UpgradeTrigger;
 import org.designup.picsou.model.CurrentMonth;
 import org.designup.picsou.model.SignpostStatus;
+import org.designup.picsou.model.Transaction;
 import org.designup.picsou.model.User;
 import org.designup.picsou.server.model.SerializableGlobType;
 import org.designup.picsou.server.persistence.direct.ReadOnlyAccountDataManager;
@@ -121,13 +122,6 @@ public class BackupService {
     MutableChangeSet changeSet = new DefaultChangeSet();
     GlobList userData = serverAccess.getUserData(changeSet, new BackupIdUpdater());
     userData.addAll(PicsouInit.additionalGlobToAdd(repository));
-//    try {
-//      File bv = File.createTempFile("budgetview", ".txt");
-//      GlobPrinter.init(userData).run(new BufferedWriter(new FileWriter(bv)));
-//      System.out.println("org.designup.picsou.gui.backup.BackupService.restore " + bv.getAbsolutePath());
-//    }
-//    catch (IOException e) {
-//    }
 
     try {
       repository.startChangeSet();

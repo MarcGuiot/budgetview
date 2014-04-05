@@ -210,7 +210,7 @@ public class ProjectTransferTest extends LoggedInFunctionalTestCase {
     budgetView.extras.checkNoSeriesShown();
     budgetView.savings.checkSeries("Transfer", 0.00, -200.00);
     categorization.selectTransaction("Transfer 1").selectSavings()
-      .checkGroupContainsSeries("Trip", "Transfer")
+      .checkContainsSeries("Transfer")
       .checkSeriesIsActive("Transfer")
       .checkSeriesContainsNoSubSeries("Transfer");
   }

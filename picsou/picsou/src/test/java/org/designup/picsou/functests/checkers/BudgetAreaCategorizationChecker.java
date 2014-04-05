@@ -325,13 +325,28 @@ public class BudgetAreaCategorizationChecker extends GuiChecker {
   }
 
   public BudgetAreaCategorizationChecker checkGroupContainsSeries(String group, String... seriesNames) {
+    List<String> actualSeries = getSeriesNames(group);
+    TestUtils.assertSetEquals(actualSeries, seriesNames);
+    return this;
+  }
+
+  public List<String> getSeriesNames(String group) {
     Panel groupPanel = getGroupPanel(group);
     List<String> actualSeries = new ArrayList<String>();
     for (Component component : groupPanel.getSwingComponents(JRadioButton.class)) {
       JRadioButton radio = (JRadioButton)component;
       actualSeries.add(radio.getText());
     }
-    TestUtils.assertSetEquals(actualSeries, seriesNames);
+    return actualSeries;
+  }
+
+  public BudgetAreaCategorizationChecker checkGroupDoesNotContainSeries(String group, String... seriesNames) {
+    List<String> actualSeries = getSeriesNames(group);
+    for (String series : seriesNames) {
+      if (actualSeries.contains(series)) {
+        Assert.fail("'" + series + "' unexpectedly found in " + actualSeries);
+      }
+    }
     return this;
   }
 
@@ -368,12 +383,6 @@ public class BudgetAreaCategorizationChecker extends GuiChecker {
         Assert.fail("Group '" + group + "' unexpectedly visible in: " + getVisibleGroupNames());
       }
     }
-    return this;
-  }
-
-  public BudgetAreaCategorizationChecker checkGroupDoesNotContainSeries(String group, String... seriesNames) {
-    System.out.println("TBD: BudgetAreaCategorizationChecker.checkGroupDoesNotContainSeries");
-    checkDoesNotContainSeries(seriesNames);
     return this;
   }
 
