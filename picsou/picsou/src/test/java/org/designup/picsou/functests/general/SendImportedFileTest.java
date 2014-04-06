@@ -54,7 +54,7 @@ public class SendImportedFileTest extends LoggedInFunctionalTestCase {
 
     mainAccounts.edit("Account n. 10101010").delete();
     timeline.selectAll();
-    transactions.checkTableIsEmpty();
+    transactions.checkEmpty();
 
     operations.importOfxFile(fileName);
     timeline.selectAll();

@@ -47,12 +47,13 @@ public class BalanceTest extends LoggedInFunctionalTestCase {
       .setDay(5)
       .create();
 
-    categorization
-      .setNewRecurring("prov", "Courses");
+    categorization.setNewRecurring("prov", "Courses");
     timeline.selectMonth("2009/05");
     categorization.editSeries("Courses")
-      .setAccount("Account n. 00001123")
-      .setPropagationEnabled().setAmount(10).validate();
+      .checkReadOnlyTargetAccount("Manual")
+      .setPropagationEnabled()
+      .setAmount(10)
+      .validate();
 
     timeline.selectAll();
     transactions

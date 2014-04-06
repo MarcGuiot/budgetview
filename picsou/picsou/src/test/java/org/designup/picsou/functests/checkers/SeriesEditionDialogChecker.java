@@ -531,11 +531,6 @@ public class SeriesEditionDialogChecker extends SeriesAmountEditionChecker<Serie
     return this;
   }
 
-  public SeriesEditionDialogChecker setAccount(String account) {
-    dialog.getComboBox("targetAccount").select(account);
-    return this;
-  }
-
   public SeriesEditionDialogChecker checkFromContentEquals(String... name) {
     assertTrue(dialog.getComboBox("fromAccount").contentEquals(name));
     return this;
@@ -766,13 +761,24 @@ public class SeriesEditionDialogChecker extends SeriesAmountEditionChecker<Serie
     return this;
   }
 
-  public SeriesEditionDialogChecker checkTargetAccount(String accountName) {
-    assertThat(dialog.getComboBox("targetAccount").selectionEquals(accountName));
+  public SeriesEditionDialogChecker setTargetAccount(String account) {
+    dialog.getComboBox("targetAccountCombo").select(account);
+    assertFalse(dialog.getTextBox("targetAccountLabel").isVisible());
     return this;
   }
 
-  public SeriesEditionDialogChecker checkAcountCanNotBeChanged() {
-    assertFalse(dialog.getComboBox("targetAccount").isEnabled());
+  public SeriesEditionDialogChecker checkTargetAccounts(String... accounts) {
+    ComboBox combo = dialog.getComboBox("targetAccountCombo");
+    assertThat(combo.contentEquals(accounts));
+    assertThat(combo.isVisible());
+    return this;
+  }
+
+  public SeriesEditionDialogChecker checkReadOnlyTargetAccount(String accountName) {
+    assertFalse(dialog.getComboBox("targetAccountCombo").isVisible());
+    TextBox label = dialog.getTextBox("targetAccountLabel");
+    assertTrue(label.textEquals(accountName));
+    assertTrue(label.isVisible());
     return this;
   }
 }

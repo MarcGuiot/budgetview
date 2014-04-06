@@ -173,7 +173,7 @@ public abstract class PerfsTest extends LoggedInFunctionalTestCase {
       operations.undo();
       operations.undo();
 
-      transactions.checkTableIsEmpty();
+      transactions.checkEmpty();
     }
 
 
@@ -209,7 +209,7 @@ public abstract class PerfsTest extends LoggedInFunctionalTestCase {
 
       transactions.checkSeries("Auchan", "To categorize");
       operations.undo();
-      transactions.checkTableIsEmpty();
+      transactions.checkEmpty();
     }
 
     public void testMaxUndo() throws Exception {

@@ -1253,7 +1253,7 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
     views.selectBudget();
     budgetView.recurring.createSeries()
       .setName("EDF")
-      .setAccount("Main")
+      .setTargetAccount("Main")
       .selectAllMonths()
       .setAmount("50")
       .validate();

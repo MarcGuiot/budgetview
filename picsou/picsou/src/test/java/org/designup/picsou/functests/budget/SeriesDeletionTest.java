@@ -358,11 +358,15 @@ public class SeriesDeletionTest extends LoggedInFunctionalTestCase {
     categorization.setVariable("Auchan", "courses");
     budgetView.variable.createSeries("his courses", "his account");
     budgetView.variable.openDeleteSeries("courses")
-    .checkTransferSeries("courses sans compte").cancel();
+      .checkTransferSeries("courses sans compte")
+      .cancel();
     budgetView.variable.createSeries("her courses", "her account");
     budgetView.variable.openDeleteSeries("courses")
       .checkTransferSeries("courses sans compte", "her courses")
-      .selectTransferSeries("courses sans compte").transfer();
-    budgetView.variable.editSeries("courses sans compte").checkTargetAccount("her account");
+      .selectTransferSeries("courses sans compte")
+      .transfer();
+    budgetView.variable.editSeries("courses sans compte")
+      .checkReadOnlyTargetAccount("her account")
+      .cancel();
   }
 }

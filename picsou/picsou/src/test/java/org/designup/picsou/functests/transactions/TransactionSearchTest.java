@@ -64,7 +64,7 @@ public class TransactionSearchTest extends LoggedInFunctionalTestCase {
       .check();
 
     searchField.setText("unknown");
-    transactions.checkTableIsEmpty();
+    transactions.checkEmpty();
 
     searchField.setText("50.");
     transactions.initContent()
@@ -279,7 +279,7 @@ public class TransactionSearchTest extends LoggedInFunctionalTestCase {
       .selectDeletionOption("Move them to envelope 'Alimentation'")
       .validate();
     seriesDialog.validate();
-    transactions.checkTableIsEmpty();
+    transactions.checkEmpty();
     
     transactions.clearSearch();
     transactions.initContent()
@@ -298,6 +298,6 @@ public class TransactionSearchTest extends LoggedInFunctionalTestCase {
       .check();
 
     budgetView.variable.editSeries("Alimentation").setName("Restaurant").validate();
-    transactions.checkTableIsEmpty();
+    transactions.checkEmpty();
   }
 }

@@ -1416,31 +1416,45 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
 
     timeline.selectMonth("2008/03");
 
-    transactions.initContent()  // should be empty
-      .check();
+    transactions.checkEmpty();
 
     timeline.selectMonth("2008/08");
     savingsView.editSeries("ING", "Epargne")
       .setEndDate(200807)
       .validate();
 
-    transactions.initContent()  // should be empty
-      .check();
-
+    transactions.checkEmpty();
   }
 
-  public void testUpdateTargetAccountIsNotPossibleWithOperation() throws Exception {
+  public void testCanSelectMainAccountBeforeAnyOperationIsAssigned() throws Exception {
     OfxBuilder.init(this)
-      .addTransaction("2008/01/01", -29.00, "Auchan") // pour creer des mois dans le passe
+      .addBankAccount(-1, 10674, "0000123", 100.00, "2008/10/15")
+      .addTransaction("2008/01/01", -30.00, "Auchan")
       .load();
-    categorization.setNewVariable("Auchan", "Courses");
 
-    budgetView.variable.editSeries("Courses").checkAcountCanNotBeChanged();
+    OfxBuilder.init(this)
+      .addBankAccount(-1, 10674, "0000234", 100.00, "2008/10/15")
+      .addTransaction("2008/01/02", -50.00, "FNAC")
+      .load();
+
+    savingsAccounts.createNewAccount()
+      .setName("Livret")
+      .selectBank("ING Direct")
+      .setPosition(2000.00)
+      .validate();
+
+    budgetView.variable.createSeries()
+      .setName("Courses")
+      .checkTargetAccounts("Account n. 0000123", "Account n. 0000234")
+      .validate();
+
+    categorization.setVariable("Auchan", "Courses");
+    budgetView.variable.editSeries("Courses")
+      .checkReadOnlyTargetAccount("Account n. 0000123")
+      .cancel();
   }
 
   public void testClosedAccount() throws Exception {
-
     fail("MG : if the account is closed we must update the end date? (or not create planned operation)");
-
   }
 }

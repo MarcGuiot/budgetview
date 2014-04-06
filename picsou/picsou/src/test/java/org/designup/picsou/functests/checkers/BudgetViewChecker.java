@@ -341,7 +341,7 @@ public class BudgetViewChecker extends ViewChecker {
     }
 
     public BudgetAreaChecker createSeries(String name, String account) {
-      createSeries().setName(name).setAccount(account).validate();
+      createSeries().setName(name).setTargetAccount(account).validate();
       return this;
     }
 

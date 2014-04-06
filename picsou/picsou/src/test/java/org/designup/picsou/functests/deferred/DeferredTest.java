@@ -490,7 +490,7 @@ public class DeferredTest extends LoggedInFunctionalTestCase {
     views.selectBudget();
     budgetView.variable.createSeries()
       .setName("Mc Do")
-      .setAccount("Account n. 1234")
+      .setTargetAccount("Account n. 1234")
       .selectAllMonths()
       .setAmount("100")
       .validate();
@@ -548,13 +548,13 @@ public class DeferredTest extends LoggedInFunctionalTestCase {
     operations.importQifFileWithDeferred(d1, SOCIETE_GENERALE, -48., "Main account");
 
     budgetView.income.createSeries()
-      .setName("salary").setPropagationEnabled().setAccount("Main account").setAmount("200").validate();
+      .setName("salary").setPropagationEnabled().setTargetAccount("Main account").setAmount("200").validate();
 
     budgetView.recurring.createSeries()
-      .setName("EDF").setPropagationEnabled().setAccount("Main account").setAmount("40").validate();
+      .setName("EDF").setPropagationEnabled().setTargetAccount("Main account").setAmount("40").validate();
 
     budgetView.recurring.createSeries()
-      .setName("courses").setPropagationEnabled().setAccount("Main account").setAmount("200").validate();
+      .setName("courses").setPropagationEnabled().setTargetAccount("Main account").setAmount("200").validate();
 
     transactions.showPlannedTransactions();
 
@@ -893,7 +893,7 @@ public class DeferredTest extends LoggedInFunctionalTestCase {
       .load();
 
     budgetView.recurring.createSeries().setName("course").setAmount(300).setPropagationEnabled()
-      .setAccount("Account n. 00001123").validate();
+      .setTargetAccount("Account n. 00001123").validate();
 
     mainAccounts.createNewAccount()
       .setName("Compte differé")

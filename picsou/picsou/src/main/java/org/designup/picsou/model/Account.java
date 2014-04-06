@@ -220,6 +220,14 @@ public class Account {
     return (account != null) && !SUMMARY_ACCOUNT_IDS.contains(account.get(Account.ID));
   }
 
+  public static GlobMatcher userCreatedMainAccounts() {
+    return new GlobMatcher() {
+      public boolean matches(Glob account, GlobRepository repository) {
+        return isUserCreatedMainAccount(account);
+      }
+    };
+  }
+
   public static boolean isUserCreatedMainAccount(Glob account) {
     return (account != null) &&
            Account.isMain(account) &&

@@ -5,11 +5,9 @@ import org.designup.picsou.functests.checkers.ImportDialogChecker;
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
 import org.designup.picsou.functests.utils.QifBuilder;
-import org.designup.picsou.gui.description.PicsouDescriptionService;
 import org.designup.picsou.gui.time.TimeService;
 import org.designup.picsou.model.TransactionType;
 import org.designup.picsou.utils.Lang;
-import org.globsframework.model.format.Formats;
 import org.globsframework.utils.Files;
 import org.globsframework.utils.TestUtils;
 
@@ -903,7 +901,7 @@ public class ImportTest extends LoggedInFunctionalTestCase {
 
     views.checkDataSelected();
     mainAccounts.checkSelectedAccounts("Account n. 112");
-    transactions.checkTableIsEmpty();
+    transactions.checkEmpty();
 
     notifications.checkVisible(2);
     mainAccounts.edit("Account n. 112")

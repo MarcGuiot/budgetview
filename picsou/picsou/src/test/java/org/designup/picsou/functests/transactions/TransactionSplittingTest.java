@@ -521,7 +521,7 @@ public class TransactionSplittingTest extends LoggedInFunctionalTestCase {
       .check();
 
     transactions.deleteAll("Removing a mix of standard and split operations");
-    transactions.checkTableIsEmpty();
+    transactions.checkEmpty();
   }
 
   private SplitDialogChecker openDialogWith(String date, double amount, String label, String series) {

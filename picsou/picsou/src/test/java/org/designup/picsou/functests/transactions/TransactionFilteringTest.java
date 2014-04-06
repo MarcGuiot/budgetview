@@ -241,7 +241,7 @@ public class TransactionFilteringTest extends LoggedInFunctionalTestCase {
     mainAccounts.select("Account n. 3");
     mainAccounts.checkSelectedAccounts("Account n. 3");
     transactions.checkClearFilterButtonShown();
-    transactions.checkTableIsEmpty();
+    transactions.checkEmpty();
     transactions.checkGraph("Account n. 3 - april 2006")
       .checkRange(200604, 200604)
       .checkValue(200604, 25, 10000.00)

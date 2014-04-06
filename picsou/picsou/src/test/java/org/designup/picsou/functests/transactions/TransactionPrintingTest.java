@@ -33,7 +33,7 @@ public class TransactionPrintingTest extends LoggedInFunctionalTestCase {
       .check();
 
     transactions.setSearchText("xx");
-    transactions.checkTableIsEmpty();
+    transactions.checkEmpty();
     transactions.checkPrintDisabled();
   }
 

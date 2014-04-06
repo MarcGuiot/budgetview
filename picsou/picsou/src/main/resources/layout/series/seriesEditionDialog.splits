@@ -14,15 +14,20 @@
 
       <column weightX="7" preferredSize="(680,490)">
 
-        <row weightY="0.1">
-          <label text="$seriesEdition.name" styleClass="formLabel" marginBottom="4"/>
-          <textField ref="nameField" marginBottom="4"/>
+        <horizontalBoxes weightY="0.1" marginBottom="4">
+          <label text="$seriesEdition.name" styleClass="formLabel"/>
+
+          <textField ref="nameField" preferredSize="(300,20)"/>
+
           <label text="$seriesEdition.budgetArea" styleClass="formLabel" autoHideSource="budgetAreaChooser"
-                 marginLeft="15" marginBottom="4"/>
-          <comboBox ref="budgetAreaChooser" marginBottom="4"/>
-          <label text="$seriesEdition.targetAccount" styleClass="formLabel"/>
-          <comboBox ref="targetAccount" marginTop="4"/>
-        </row>
+                 border="empty(0,10,0,4)" />
+          <comboBox ref="budgetAreaChooser"/>
+
+          <label text="$seriesEdition.targetAccount" styleClass="formLabel" autoHideSource="targetAccountCombo"
+                 border="empty(0,10,0,4)"/>
+          <comboBox ref="targetAccountCombo"/>
+          <label ref="targetAccountLabel"/>
+        </horizontalBoxes>
 
         <column autoHideSource="fromAccount" border="empty(10 ,0,15,0)">
           <label text="$seriesEdition.accountSelection" styleClass="separatorTitle"/>

@@ -28,6 +28,7 @@ import org.globsframework.gui.splits.layout.TabHandler;
 import org.globsframework.gui.splits.PanelBuilder;
 import org.globsframework.gui.splits.repeat.RepeatComponentFactory;
 import org.globsframework.gui.splits.utils.GuiUtils;
+import org.globsframework.gui.views.GlobLabelView;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.fields.IntegerField;
 import org.globsframework.model.*;
@@ -47,6 +48,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.*;
 
+import static org.designup.picsou.model.Account.userCreatedMainAccounts;
 import static org.globsframework.model.FieldValue.value;
 import static org.globsframework.model.utils.GlobMatchers.*;
 
@@ -77,7 +79,8 @@ public class SeriesEditionDialog {
   private GlobList selectedTransactions = new EmptyGlobList();
   private GlobLinkComboEditor fromAccountsCombo;
   private GlobLinkComboEditor toAccountsCombo;
-  private GlobLinkComboEditor targetAccount;
+  private GlobLinkComboEditor targetAccountCombo;
+  private JLabel targetAccountLabel;
   private Boolean isAutomatic = false;
   private JComboBox dayChooser;
   private CardHandler monthSelectionCards;
@@ -163,10 +166,14 @@ public class SeriesEditionDialog {
 
     accountFilter = createAccountFilter();
 
-    targetAccount = GlobLinkComboEditor.init(Series.TARGET_ACCOUNT, localRepository, localDirectory)
-      .setFilter(accountFilter)
+    targetAccountCombo = GlobLinkComboEditor.init(Series.TARGET_ACCOUNT, localRepository, localDirectory)
+      .setFilter(userCreatedMainAccounts())
       .setShowEmptyOption(false);
-    builder.add("targetAccount", targetAccount);
+    builder.add("targetAccountCombo", targetAccountCombo);
+
+    targetAccountLabel = GlobLabelView.init(Series.TARGET_ACCOUNT, localRepository, localDirectory)
+      .getComponent();
+    builder.add("targetAccountLabel", targetAccountLabel);
 
     fromAccountsCombo = GlobLinkComboEditor.init(Series.FROM_ACCOUNT, localRepository, localDirectory)
       .setShowEmptyOption(false)
@@ -235,7 +242,7 @@ public class SeriesEditionDialog {
           dayChooser.setVisible(noneImported);
           savingsMessage.setVisible(!isValidSeries(currentSeries));
           okAction.setEnabled(isValidSeries(currentSeries));
-          targetAccount.setVisible(!isSavingsSeries);
+          setAccountComboVisible(!isSavingsSeries);
         }
         updateDateSelectors();
         updateMonthChooser();
@@ -284,12 +291,8 @@ public class SeriesEditionDialog {
   }
 
   public static GlobMatcher createAccountFilter() {
-    return GlobMatchers.or(GlobMatchers.fieldEquals(Account.ID, Account.EXTERNAL_ACCOUNT_ID),
-                           GlobMatchers.not(GlobMatchers.contained(Account.ID, Account.SUMMARY_ACCOUNT_IDS)));
-//    return and(not(fieldEquals(Account.ID, Account.ALL_SUMMARY_ACCOUNT_ID)),
-//               or(fieldEquals(Account.ID, Account.MAIN_SUMMARY_ACCOUNT_ID),
-//                  not(fieldEquals(Account.ACCOUNT_TYPE, AccountType.MAIN.getId()))),
-//               not(fieldEquals(Account.ID, Account.SAVINGS_SUMMARY_ACCOUNT_ID)));
+    return or(fieldEquals(Account.ID, Account.EXTERNAL_ACCOUNT_ID),
+              not(contained(Account.ID, Account.SUMMARY_ACCOUNT_IDS)));
   }
 
   private boolean isValidSeries(Glob series) {
@@ -322,9 +325,14 @@ public class SeriesEditionDialog {
 
   private void updateTargetAccount() {
     if (currentSeries != null) {
-      targetAccount.setEnabled(
-        !Series.hasRealOperations(localRepository, currentSeries.get(Series.ID)));
+      setAccountComboVisible(!Series.hasRealOperations(localRepository, currentSeries.get(Series.ID)));
     }
+  }
+
+  private void setAccountComboVisible(boolean isEditable) {
+    targetAccountCombo.setVisible(isEditable);
+    targetAccountLabel.setVisible(!isEditable);
+    GuiUtils.revalidate(targetAccountCombo.getComponent());
   }
 
   private void registerDateRangeComponents(GlobsPanelBuilder builder) {
@@ -627,7 +635,7 @@ public class SeriesEditionDialog {
     amountEditionPanel.setCurrentSeries(currentSeries.getKey());
     selectionService.select(currentSeries);
     updateMonthSelectionCard();
-    targetAccount.setEnabled(selectedTransactions.isEmpty());
+    setAccountComboVisible(selectedTransactions.isEmpty());
 
     tabs.select(0);
 

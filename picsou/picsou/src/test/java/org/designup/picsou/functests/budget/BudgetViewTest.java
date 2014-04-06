@@ -479,7 +479,7 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
       .setName("salaire")
       .selectAllMonths()
       .setAmount("1000")
-      .setAccount("Main")
+      .setTargetAccount("Main")
       .validate();
     timeline.selectMonth("2008/08");
     budgetView.income.checkSeries("salaire", 0, 1000);
@@ -576,7 +576,7 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
       .setName("Loto")
       .selectAllMonths()
       .setAmount("15")
-      .setAccount("Account n. 00001123")
+      .setTargetAccount("Account n. 00001123")
       .selectPositiveAmounts()
       .validate();
     views.selectData();

@@ -34,7 +34,7 @@ public class SeriesEvolutionViewTest extends LoggedInFunctionalTestCase {
     timeline.selectMonth("2008/11");
     budgetView.extras.createSeries()
       .setName("Lottery")
-      .setAccount("Account n. 00000123")
+      .setTargetAccount("Account n. 00000123")
       .selectPositiveAmounts()
       .setAmount(100.00)
       .validate();
@@ -42,7 +42,7 @@ public class SeriesEvolutionViewTest extends LoggedInFunctionalTestCase {
     timeline.selectMonth("2008/12");
     budgetView.extras.createSeries()
       .setName("Christmas")
-      .setAccount("Account n. 00000123")
+      .setTargetAccount("Account n. 00000123")
       .setAmount(300.00)
       .validate();
 

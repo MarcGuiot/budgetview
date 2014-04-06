@@ -178,7 +178,7 @@ public class PlanificationTest extends LoggedInFunctionalTestCase {
     timeline.selectMonth("2008/09");
     budgetView.extras.createSeries()
       .setName("Miami trip")
-      .setAccount("Main")
+      .setTargetAccount("Main")
       .setAmount(2000.00)
       .validate();
 

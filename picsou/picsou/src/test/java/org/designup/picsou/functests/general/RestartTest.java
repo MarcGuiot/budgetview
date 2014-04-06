@@ -6,12 +6,9 @@ import org.designup.picsou.functests.checkers.LoginChecker;
 import org.designup.picsou.functests.checkers.PreferencesChecker;
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
-import org.designup.picsou.gui.projects.utils.ProjectUtils;
 import org.designup.picsou.gui.time.TimeService;
 import org.designup.picsou.model.ColorTheme;
-import org.designup.picsou.model.ProjectItemAmount;
 import org.designup.picsou.model.TransactionType;
-import org.globsframework.model.format.GlobPrinter;
 import org.globsframework.utils.Dates;
 import org.uispec4j.assertion.UISpecAssert;
 
@@ -135,27 +132,27 @@ public class RestartTest extends LoggedInFunctionalTestCase {
     views.selectBudget();
     budgetView.variable.createSeries()
       .setName("Courant")
-      .setAccount("Manual")
+      .setTargetAccount("Manual")
       .selectAllMonths()
       .setAmount("2500")
       .validate();
 
     budgetView.income.createSeries()
       .setName("Salaire")
-      .setAccount("Manual")
+      .setTargetAccount("Manual")
       .selectAllMonths()
       .setAmount("3000")
       .validate();
     budgetView.recurring.createSeries()
       .setName("EDF")
       .selectAllMonths()
-      .setAccount("Manual")
+      .setTargetAccount("Manual")
       .setAmount("100")
       .validate();
 
     budgetView.recurring.createSeries()
       .setName("Loyer")
-      .setAccount("Manual")
+      .setTargetAccount("Manual")
       .setAmount("1000")
       .validate();
 

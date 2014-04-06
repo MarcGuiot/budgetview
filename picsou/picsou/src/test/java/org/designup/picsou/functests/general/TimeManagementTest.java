@@ -72,7 +72,7 @@ public class TimeManagementTest extends LoggedInFunctionalTestCase {
       .check();
 
     timeline.selectMonth("2006/02");
-    transactions.checkTableIsEmpty();
+    transactions.checkEmpty();
 
     timeline.selectMonth("2006/03");
     transactions
@@ -99,7 +99,7 @@ public class TimeManagementTest extends LoggedInFunctionalTestCase {
       .check();
 
     timeline.selectNone();
-    transactions.checkTableIsEmpty();
+    transactions.checkEmpty();
   }
 
   public void testMenuSelection() throws Exception {

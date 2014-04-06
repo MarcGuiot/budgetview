@@ -67,7 +67,7 @@ public class BudgetWizardTest extends LoggedInFunctionalTestCase {
     timeline.selectMonth("2008/08");
     budgetView.extras.createSeries()
       .setName("Trip")
-      .setAccount("Account n. 00001123")
+      .setTargetAccount("Account n. 00001123")
       .setAmount(170)
       .validate();
     budgetView.getSummary().checkEndPosition(1000.00);
