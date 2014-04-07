@@ -124,7 +124,8 @@ public class ProjectTransferTest extends LoggedInFunctionalTestCase {
     currentProject
       .setName("Trip")
       .addExpenseItem(0, "Item 1", 201012, -100.00)
-      .addTransferItem(1, "Transfer", 200.00, "Savings account", "Main account");
+      .addTransferItem(1, "Transfer", 200.00, "Savings account", "Main account")
+      .addTransferItem(2, "Savings", 200.00, "Main account", "Savings account");
 
     views.selectData();
     currentProject.backToList();
@@ -136,6 +137,15 @@ public class ProjectTransferTest extends LoggedInFunctionalTestCase {
       .checkName("Trip")
       .editTransfer(1)
       .checkLabel("Transfer")
+      .cancel();
+
+    views.selectBudget();
+    budgetView.savings.editProjectForSeries("Savings");
+    views.checkHomeSelected();
+    currentProject
+      .checkName("Trip")
+      .editTransfer(2)
+      .checkLabel("Savings")
       .cancel();
 
     currentProject.backToList();
@@ -151,7 +161,7 @@ public class ProjectTransferTest extends LoggedInFunctionalTestCase {
       .validate();
 
     views.selectBudget();
-    budgetView.savings.checkSeriesList("Transfer");
+    budgetView.savings.checkSeriesList("Savings", "Transfer");
   }
 
   public void testMustSelectDifferentFromAndToAccounts() throws Exception {

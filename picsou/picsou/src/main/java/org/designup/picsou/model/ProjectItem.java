@@ -140,7 +140,10 @@ public class ProjectItem {
     }
     GlobList items = repository.getAll(ProjectItem.TYPE, GlobMatchers.linkedTo(series, ProjectItem.SERIES));
     if (items.isEmpty()) {
-      return null;
+      items = repository.getAll(ProjectItem.TYPE, GlobMatchers.fieldEquals(ProjectItem.SERIES, series.get(Series.MIRROR_SERIES)));
+      if (items.isEmpty()) {
+        return null;
+      }
     }
     if (items.size() > 1) {
       throw new UnexpectedApplicationState("More than 1 project for series " + series + " : " + items);
