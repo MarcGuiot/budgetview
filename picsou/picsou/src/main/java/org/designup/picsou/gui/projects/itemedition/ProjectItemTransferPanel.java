@@ -145,9 +145,11 @@ public class ProjectItemTransferPanel extends ProjectItemEditionPanel {
     if (!discardedAccountIds.isEmpty()) {
       ConfirmUncategorizeDialog confirmation =
         new ConfirmUncategorizeDialog(projectTransferKey, previousFromAccountId, previousToAccountId);
-      confirmation.show();
-      if (confirmation.cancelled) {
-        return false;
+      if (!confirmation.getTransactions().isEmpty()){
+        confirmation.show();
+        if (confirmation.cancelled) {
+          return false;
+        }
       }
     }
 
