@@ -139,8 +139,9 @@ public class ProjectItem {
       return null;
     }
     GlobList items = repository.getAll(ProjectItem.TYPE, GlobMatchers.linkedTo(series, ProjectItem.SERIES));
-    if (items.isEmpty()) {
-      items = repository.getAll(ProjectItem.TYPE, GlobMatchers.fieldEquals(ProjectItem.SERIES, series.get(Series.MIRROR_SERIES)));
+    Integer mirrorSeriesId = series.get(Series.MIRROR_SERIES);
+    if (items.isEmpty() && mirrorSeriesId != null) {
+      items = repository.getAll(ProjectItem.TYPE, GlobMatchers.fieldEquals(ProjectItem.SERIES, mirrorSeriesId));
       if (items.isEmpty()) {
         return null;
       }

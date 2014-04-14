@@ -3,6 +3,7 @@ package org.designup.picsou.license;
 import org.globsframework.sqlstreams.SqlService;
 import org.globsframework.sqlstreams.SqlConnection;
 import org.globsframework.sqlstreams.SqlRequest;
+import org.globsframework.sqlstreams.constraints.Constraints;
 import org.globsframework.sqlstreams.drivers.jdbc.JdbcSqlService;
 import org.globsframework.model.GlobList;
 import org.globsframework.model.Glob;
@@ -28,7 +29,40 @@ public class DuplicateLine {
     String passwd = input.readLine();
     SqlService sqlService = new JdbcSqlService(databaseUrl, user, passwd);
 
-    complete(sqlService.getDb());
+    SqlConnection db = sqlService.getDb();
+    String bvUser = null;
+    if (args.length !=0) {
+      bvUser = args[0];
+      GlobList licences = db.getQueryBuilder(License.TYPE, Constraints.equal(License.MAIL, bvUser))
+        .selectAll().getQuery().executeAsGlobs();
+      if (licences.size() == 0){
+        System.out.println("DuplicateLine.main " + bvUser + " not found.");
+      }
+      else {
+        Glob glob = null;
+        for (Glob licence : licences) {
+          glob = licence;
+          if (licence.get(License.ACTIVATION_CODE) != null) {
+            break;
+          }
+        }
+        String currentCode = glob.get(License.ACTIVATION_CODE);
+        SqlRequest sqlRequest = db.getCreateBuilder(License.TYPE)
+          .set(License.ACCESS_COUNT, 1L)
+          .set(License.SIGNATURE, glob.get(License.SIGNATURE))
+          .set(License.ACTIVATION_CODE, currentCode == null ? glob.get(License.LAST_ACTIVATION_CODE) : currentCode)
+          .set(License.MAIL, glob.get(License.MAIL))
+          .set(License.TRANSACTION_ID, glob.get(License.TRANSACTION_ID))
+          .getRequest();
+        sqlRequest.run();
+        sqlRequest.close();
+        db.commitAndClose();
+        System.out.println("DuplicateLine.main " + bvUser + " found and duplicate.");
+      }
+    }
+    else {
+      complete(db);
+    }
   }
 
   public static void complete(SqlConnection connection) {
