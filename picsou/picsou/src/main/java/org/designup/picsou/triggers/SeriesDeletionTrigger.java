@@ -9,24 +9,35 @@ import org.globsframework.model.*;
 import org.globsframework.model.utils.DefaultChangeSetListener;
 import org.globsframework.model.utils.DefaultChangeSetVisitor;
 import org.globsframework.model.utils.GlobFunctor;
+import org.globsframework.model.utils.GlobMatchers;
 
 import static org.designup.picsou.gui.model.SeriesStat.linkedToSeries;
 import static org.globsframework.model.FieldValue.value;
+import static org.globsframework.model.utils.GlobMatchers.fieldEquals;
 import static org.globsframework.model.utils.GlobMatchers.linkedTo;
 
 public class SeriesDeletionTrigger extends DefaultChangeSetListener {
   public void globsChanged(ChangeSet changeSet, final GlobRepository repository) {
     changeSet.safeVisit(Series.TYPE, new DefaultChangeSetVisitor() {
       public void visitDeletion(Key seriesKey, FieldValues values) throws Exception {
-        propagateSeriesDeletion(seriesKey, repository);
+        propagateSeriesDeletion(seriesKey, true, repository);
       }
     });
   }
 
-  static public void propagateSeriesDeletion(Key seriesKey, GlobRepository repository) {
+  public static void propagateSeriesDeletion(Key seriesKey, boolean deleteMirror, GlobRepository repository) {
     repository.startChangeSet();
     try {
       Integer seriesId = seriesKey.get(Series.ID);
+
+      if (deleteMirror) {
+        for (Glob mirror : repository.getAll(Series.TYPE, fieldEquals(Series.MIRROR_SERIES, seriesId))) {
+          if (mirror.exists()) {
+            propagateSeriesDeletion(mirror.getKey(), false, repository);
+          }
+        }
+      }
+
       repository.delete(SeriesStat.TYPE, linkedToSeries(seriesKey));
 
       repository.delete(repository.findByIndex(SeriesBudget.SERIES_INDEX,
@@ -44,6 +55,7 @@ public class SeriesDeletionTrigger extends DefaultChangeSetListener {
 
       repository.delete(SubSeries.TYPE,
                         linkedTo(seriesKey, SubSeries.SERIES));
+
     }
     finally {
       repository.completeChangeSet();

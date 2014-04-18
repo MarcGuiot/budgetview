@@ -41,6 +41,16 @@ public class ProjectTransfer {
                                                               transferValues.get(PROJECT_ITEM)));
   }
 
+  public static boolean usesMainAccounts(FieldValues transferValues, GlobRepository repository) {
+    AccountType fromType = getAccountType(transferValues, repository, FROM_ACCOUNT);
+    AccountType toType = getAccountType(transferValues, repository, TO_ACCOUNT);
+    return (fromType == AccountType.MAIN) || (toType == AccountType.MAIN);
+  }
+
+  public static boolean isFromAccountAMainAccount(Glob transfer, GlobRepository repository) {
+    return getAccountType(transfer, repository, FROM_ACCOUNT) == AccountType.MAIN;
+  }
+
   public static boolean usesSavingsAccounts(FieldValues transferValues, GlobRepository repository) {
     AccountType fromType = getAccountType(transferValues, repository, FROM_ACCOUNT);
     AccountType toType = getAccountType(transferValues, repository, TO_ACCOUNT);

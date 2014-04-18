@@ -38,7 +38,10 @@ public class ProjectItemToStatTrigger implements ChangeSetListener {
       }
 
       public void visitDeletion(Key key, FieldValues previousValues) throws Exception {
-        repository.delete(Key.create(ProjectItemStat.TYPE, key.get(ProjectItem.ID)));
+        Key statKey = Key.create(ProjectItemStat.TYPE, key.get(ProjectItem.ID));
+        if (repository.contains(statKey)) {
+          repository.delete(statKey);
+        }
       }
     });
 

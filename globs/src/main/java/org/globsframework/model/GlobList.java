@@ -180,6 +180,11 @@ public class GlobList extends ArrayList<Glob> {
     return result;
   }
 
+  public Integer[] getValueSetArray(IntegerField field) {
+    Set<Integer> result = getValueSet(field);
+    return result.toArray(new Integer[result.size()]);
+  }
+
   public Set<Boolean> getValueSet(BooleanField field) {
     Set<Boolean> result = new HashSet<Boolean>();
     for (Glob glob : this) {
@@ -223,6 +228,15 @@ public class GlobList extends ArrayList<Glob> {
 
   public Integer[] getValues(IntegerField field) {
     Integer[] result = new Integer[size()];
+    int index = 0;
+    for (Glob glob : this) {
+      result[index++] = glob.get(field);
+    }
+    return result;
+  }
+
+  public String[] getValues(StringField field) {
+    String[] result = new String[size()];
     int index = 0;
     for (Glob glob : this) {
       result[index++] = glob.get(field);

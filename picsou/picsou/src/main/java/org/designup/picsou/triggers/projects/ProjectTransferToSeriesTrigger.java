@@ -49,7 +49,7 @@ public class ProjectTransferToSeriesTrigger implements ChangeSetListener {
   public void globsReset(GlobRepository repository, Set<GlobType> changedTypes) {
   }
 
-  private void createSavingsSeries(Key projectTransferKey, GlobRepository repository) {
+  public static Glob createSavingsSeries(Key projectTransferKey, GlobRepository repository) {
     Glob projectTransfer = repository.get(projectTransferKey);
     Glob item = ProjectTransfer.getItemFromTransfer(projectTransferKey, repository);
     Integer firstMonth = item.get(ProjectItem.FIRST_MONTH);
@@ -66,6 +66,7 @@ public class ProjectTransferToSeriesTrigger implements ChangeSetListener {
                                     value(Series.FIRST_MONTH, firstMonth),
                                     value(Series.LAST_MONTH, lastMonth));
     repository.update(item.getKey(), ProjectItem.SERIES, series.get(Series.ID));
+    return series;
   }
 
   private void updateSavingsSeries(Key projectTransferKey, FieldValues values, GlobRepository repository) {

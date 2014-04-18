@@ -101,9 +101,9 @@ public class SeriesAmountEditionDialog {
 
   private GlobList getBudgets(Glob series) {
     GlobList globs = parentRepository.findByIndex(SeriesBudget.SERIES_INDEX, SeriesBudget.SERIES, series.get(Series.ID)).getGlobs();
-    Integer value = series.get(Series.MIRROR_SERIES);
-    if (value != null) {
-      globs.addAll(parentRepository.findByIndex(SeriesBudget.SERIES_INDEX, SeriesBudget.SERIES, value).getGlobs());
+    Integer mirrorSeriesId = series.get(Series.MIRROR_SERIES);
+    if (mirrorSeriesId != null) {
+      globs.addAll(parentRepository.findByIndex(SeriesBudget.SERIES_INDEX, SeriesBudget.SERIES, mirrorSeriesId).getGlobs());
     }
     return globs;
   }

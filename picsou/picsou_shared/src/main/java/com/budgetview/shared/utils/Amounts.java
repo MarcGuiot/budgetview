@@ -2,6 +2,7 @@ package com.budgetview.shared.utils;
 
 import org.globsframework.utils.Strings;
 import org.globsframework.utils.Utils;
+import org.globsframework.utils.exceptions.InvalidParameter;
 
 public class Amounts {
 
@@ -120,5 +121,47 @@ public class Amounts {
 
   public static boolean isSameSign(double first, double second) {
     return Math.signum(first) * Math.signum(second) > 0;
+  }
+
+  public static double[] split(Double totalAmount, int length) {
+    if (length < 0) {
+      throw new InvalidParameter("Length should be >0 but is: " + length);
+    }
+    double[] result = new double[length];
+    double remaining = totalAmount;
+    for (int i = 0; i < length - 1; i++) {
+      result[i] = Math.floor(totalAmount / length);
+      remaining -= result[i];
+    }
+    if (length > 0) {
+      result[length - 1] = remaining;
+    }
+    return result;
+  }
+
+  public static double[] adjustTotal(Double[] values, double newTotal) {
+    double[] result = new double[values.length];
+    double total = 0.00;
+    for (Double value : values) {
+      total += value;
+    }
+    if (isNearZero(total)) {
+      double[] split = split(newTotal, result.length);
+      for (int i = 0; i < values.length; i++) {
+        result[i] = values[i] + split[i];
+      }
+    }
+    else {
+      double ratio = newTotal / total;
+      double remaining = newTotal;
+      for (int i = 0; i < values.length - 1; i++) {
+        result[i] = values[i] * ratio;
+        remaining -= result[i];
+      }
+      if (values.length > 0) {
+        result[values.length - 1] = remaining;
+      }
+    }
+    return result;
   }
 }

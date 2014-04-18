@@ -2,7 +2,12 @@ package org.designup.picsou.functests.upgrade;
 
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.model.*;
+import org.globsframework.model.format.GlobPrinter;
 import org.globsframework.utils.Files;
+
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
 
 public class ProjectUpgradeTest extends LoggedInFunctionalTestCase {
 
@@ -14,6 +19,21 @@ public class ProjectUpgradeTest extends LoggedInFunctionalTestCase {
 
   public void testCompleteCaseForJar131() throws Exception {
     operations.restore(Files.copyResourceToTmpFile(this, "/testbackups/upgrade_jar131_projects.budgetview"));
+
+    operations.selectAllMonthsSinceJanuary();
+    transactions.initAmountContent()
+      .add("13/02/2014", "AIR FRANCE", -150.00, "Voyage", 3520.00, 3520.00, "Compte Perso")
+      .add("12/02/2014", "LE VIEUX CAMPEUR", -70.00, "Other", 3670.00, 3670.00, "Compte Perso")
+      .add("12/02/2014", "FNAC", -100.00, "Loisirs", 3740.00, 3740.00, "Compte Perso")
+      .add("11/02/2014", "VIRT EPARGNE ROME", 50.00, "Provisions Rome", 2700.00, 2700.00, "Livret")
+      .add("11/02/2014", "VIRT EPARGNE ROME", -50.00, "Provisions Rome", 3840.00, 3840.00, "Compte Perso")
+      .add("08/02/2014", "AUCHAN", -450.00, "Courses", 3890.00, 3890.00, "Compte Perso")
+      .add("05/02/2014", "WORLDCO", 2000.00, "Salaire 1", 4340.00, 4340.00, "Compte Perso")
+      .add("20/01/2014", "VIRT EPARGNE ROME", 50.00, "Provisions Rome", 2650.00, 2650.00, "Livret")
+      .add("20/01/2014", "VIRT EPARGNE ROME", -50.00, "Provisions Rome", 2340.00, 2340.00, "Compte Perso")
+      .add("18/01/2014", "DECATHLON", -30.00, "Prepa Rome", 2420.00, 2420.00, "Compte Perso")
+      .add("15/01/2014", "AIR FRANCE", -30.00, "Voyage", 2390.00, 2390.00, "Compte Perso")
+      .check();
 
     projects.checkCurrentProjects("| Voyage Rome | Jan | 1080.00 | on |");
     projects.select("Voyage Rome");
@@ -27,6 +47,7 @@ public class ProjectUpgradeTest extends LoggedInFunctionalTestCase {
     currentProject.view(0).checkCategorizationWarningNotShown();
     currentProject.view(1).checkCategorizationWarningShown();
     currentProject.view(2).checkCategorizationWarningNotShown();
+    currentProject.checkDefaultAccount("Compte Perso");
 
     categorization.initContent()
       .add("15/01/2014", "Voyage", "AIR FRANCE", -30.00)
@@ -169,5 +190,43 @@ public class ProjectUpgradeTest extends LoggedInFunctionalTestCase {
       .add("01/04/2014", TransactionType.PRELEVEMENT, "EPARGNE > EXTERNE", "", -100.00, "Epargne > Externe")
       .add("01/04/2014", TransactionType.VIREMENT, "EXTERNE > EPARGNE", "", 200.00, "Externe > Epargne")
       .check();
+  }
+
+  public void testProjetItemsUsingSeveralAccountsAreSplitted() throws Exception {
+
+    operations.restore(Files.copyResourceToTmpFile(this, "/testbackups/upgrade_jar131_projets_multi_comptes.budgetview"));
+
+    transactions.initContent()
+      .add("10/04/2014", TransactionType.PRELEVEMENT, "VIRT JOINT > LIVRET1", "", -50.00, "Provisions - Compte Joint")
+      .add("09/04/2014", TransactionType.PRELEVEMENT, "SNCF", "", -80.00, "Voyage - Compte Joint")
+      .add("08/04/2014", TransactionType.MANUAL, "MCDO", "", -30.00, "Other - Compte Joint")
+      .add("08/04/2014", TransactionType.PRELEVEMENT, "SNCF", "", -70.00, "Voyage - Compte Joint")
+      .add("07/04/2014", TransactionType.PRELEVEMENT, "SUBWAY", "", -20.00, "Other - Compte Perso")
+      .add("06/04/2014", TransactionType.VIREMENT, "VIRT JOINT > PERSO", "", 200.00, "Provisions - Compte Perso")
+      .add("06/04/2014", TransactionType.VIREMENT, "VIRT LIVRET1", "", 50.00, "Provisions - Compte Joint")
+      .add("06/04/2014", TransactionType.PRELEVEMENT, "VIRT PERSO > LIVRET1", "", -200.00, "Provisions - Compte Perso")
+      .add("05/04/2014", TransactionType.PRELEVEMENT, "AIR FRANCE", "", -300.00, "Voyage - Compte Perso")
+      .check();
+
+    projects.select("Vacances");
+    currentProject.checkDefaultAccount("Compte Joint");
+    currentProject.checkItems("| Voyage - Compte Joint     | Apr | 150.00  | 250.00  |\n" +
+                              "| Voyage - Compte Perso     | Apr | 300.00  | 250.00  |\n" +
+                              "| Provisions - Compte Joint | Apr | +50.00  | +150.00 |\n" +
+                              "| Provisions - Compte Perso | Apr | +200.00 | +150.00 |\n" +
+                              "| Other - Compte Joint      | Apr | 30.00   | 0.00    |\n" +
+                              "| Other - Compte Perso      | Apr | 20.00   | 0.00    |");
+    currentProject.backToList();
+    projects.checkCurrentProjects("| Vacances | Apr | 500.00 | on |");
+
+    views.selectBudget();
+    budgetView.savings
+      .checkTotalAmounts(250.00, 250.00)
+      .checkContent("| Provisions - Compte Perso | 200.00 | 125.00 |\n" +
+                    "| Provisions - Compte Joint | 50.00  | 125.00 |\n" +
+                    "| Du compte Livret 1        | 0.00   | 0.00   |\n" +
+                    "| Du compte Livret 2        | 0.00   | 0.00   |\n" +
+                    "| Vers le compte Livret 1   | 0.00   | 0.00   |\n" +
+                    "| Vers le compte Livret 2   | 0.00   | 0.00   |\n");
   }
 }

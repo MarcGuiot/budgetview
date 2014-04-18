@@ -67,10 +67,10 @@ public class DuplicateProjectDialog {
         .copy(Month.TYPE)
         .get();
     initialFirstMonth = projectStat.get(ProjectStat.FIRST_MONTH);
-    duplicateProject = privateRepository.create(DuplicateProject.TYPE,
-                                                value(DuplicateProject.FIRST_MONTH, initialFirstMonth));
+    duplicateProject = privateRepository.create(ProjectDuplicate.TYPE,
+                                                value(ProjectDuplicate.FIRST_MONTH, initialFirstMonth));
 
-    nameField = GlobTextEditor.init(DuplicateProject.NAME, privateRepository, directory)
+    nameField = GlobTextEditor.init(ProjectDuplicate.NAME, privateRepository, directory)
       .forceSelection(duplicateProject.getKey())
       .getComponent();
     builder.add("nameField", nameField);
@@ -92,47 +92,14 @@ public class DuplicateProjectDialog {
     builder.dispose();
   }
 
-  public void createDuplicate(String name, Integer duplicateFirstMonth) {
+  public void createDuplicate(String newProjectName, Integer duplicateFirstMonth) {
 
-    int offset = Month.distance(initialFirstMonth, duplicateFirstMonth);
+    int monthOffset = Month.distance(initialFirstMonth, duplicateFirstMonth);
 
-    repository.startChangeSet();
     try {
-      Glob newProject = repository.create(Project.TYPE,
-                                          value(Project.NAME, name),
-                                          value(Project.ACTIVE, true),
-                                          value(Project.PICTURE, project.get(Project.PICTURE)));
-
-      for (Glob item : repository.findLinkedTo(project, ProjectItem.PROJECT)) {
-
-        FieldValues values = FieldValuesBuilder.initWithoutKeyFields(item)
-          .set(ProjectItem.PROJECT, newProject.get(Project.ID))
-          .set(ProjectItem.FIRST_MONTH, Month.offset(item.get(ProjectItem.FIRST_MONTH), offset))
-          .remove(ProjectItem.SERIES)
-          .get();
-
-        Glob newItem = repository.create(ProjectItem.TYPE, values.toArray());
-
-        for (Glob projectAmount : repository.findLinkedTo(item, ProjectItemAmount.PROJECT_ITEM)) {
-          FieldValues amountValues =
-            FieldValuesBuilder.initWithoutKeyFields(projectAmount)
-              .set(ProjectItemAmount.PROJECT_ITEM, newItem.get(ProjectItem.ID))
-              .set(ProjectItemAmount.MONTH, Month.offset(projectAmount.get(ProjectItemAmount.MONTH), offset))
-              .get();
-          repository.create(ProjectItemAmount.TYPE, amountValues.toArray());
-        }
-
-        for (Glob projectTransfer : repository.findLinkedTo(item, ProjectTransfer.PROJECT_ITEM)) {
-          FieldValues transferValues =
-            FieldValuesBuilder.initWithoutKeyFields(projectTransfer)
-              .set(ProjectTransfer.PROJECT_ITEM, newItem.get(ProjectItem.ID))
-              .get();
-          repository.create(ProjectTransfer.TYPE, transferValues.toArray());
-        }
-      }
+      Project.duplicate(project, newProjectName, monthOffset, repository);
     }
     finally {
-      repository.completeChangeSet();
       dialog.setVisible(false);
     }
   }
@@ -143,14 +110,14 @@ public class DuplicateProjectDialog {
     }
 
     public void actionPerformed(ActionEvent e) {
-      String name = DuplicateProjectDialog.this.duplicateProject.get(DuplicateProject.NAME);
+      String name = DuplicateProjectDialog.this.duplicateProject.get(ProjectDuplicate.NAME);
       if (Strings.isNullOrEmpty(name)) {
         String errorMessage = Lang.get("projectEdition.error.noProjectName");
         ErrorTip.show(nameField, errorMessage, directory, TipPosition.BOTTOM_LEFT);
         return;
       }
 
-      createDuplicate(name, duplicateProject.get(DuplicateProject.FIRST_MONTH));
+      createDuplicate(name, duplicateProject.get(ProjectDuplicate.FIRST_MONTH));
     }
   }
 
@@ -159,7 +126,7 @@ public class DuplicateProjectDialog {
       if (duplicateProject == null) {
         return "";
       }
-      return Month.getFullLabel(duplicateProject.get(DuplicateProject.FIRST_MONTH));
+      return Month.getFullLabel(duplicateProject.get(ProjectDuplicate.FIRST_MONTH));
     }
 
     public String getMaxText() {
@@ -167,15 +134,15 @@ public class DuplicateProjectDialog {
     }
 
     public int getCurrentMonth(Glob duplicateProject, GlobRepository repository) {
-      return duplicateProject.get(DuplicateProject.FIRST_MONTH);
+      return duplicateProject.get(ProjectDuplicate.FIRST_MONTH);
     }
 
     public void setMonth(Glob duplicateProject, int selectedMonthId, GlobRepository repository) {
-      repository.update(duplicateProject.getKey(), DuplicateProject.FIRST_MONTH, selectedMonthId);
+      repository.update(duplicateProject.getKey(), ProjectDuplicate.FIRST_MONTH, selectedMonthId);
     }
   }
 
-  public static class DuplicateProject {
+  public static class ProjectDuplicate {
     public static GlobType TYPE;
 
     @org.globsframework.metamodel.annotations.Key
@@ -185,7 +152,7 @@ public class DuplicateProjectDialog {
     public static IntegerField FIRST_MONTH;
 
     static {
-      GlobTypeLoader.init(DuplicateProject.class, "duplicateInfo");
+      GlobTypeLoader.init(ProjectDuplicate.class, "duplicateInfo");
     }
   }
 }

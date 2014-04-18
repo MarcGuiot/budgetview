@@ -2,6 +2,7 @@ package org.designup.picsou.model.util;
 
 import com.budgetview.shared.utils.Amounts;
 import junit.framework.TestCase;
+import org.globsframework.utils.TestUtils;
 
 public class AmountsTest extends TestCase {
 
@@ -50,5 +51,21 @@ public class AmountsTest extends TestCase {
     assertEquals(10.0, Amounts.upperOrder(9));
     assertEquals(100.0, Amounts.upperOrder(80));
     assertEquals(1000.0, Amounts.upperOrder(999));
+  }
+
+  public void testSplit() throws Exception {
+    TestUtils.assertEquals(Amounts.split(500.00, 3), 166.00, 166.00, 168.00);
+    TestUtils.assertEquals(Amounts.split(-160.00, 3), -54.00, -54.00, -52.00);
+    TestUtils.assertEquals(Amounts.split(-160.00, 0));
+    TestUtils.assertEquals(Amounts.split(-160.00, 2), -80.00, -80.00);
+    TestUtils.assertEquals(Amounts.split(0.00, 2), 0, 0);
+    TestUtils.assertEquals(Amounts.split(0.00, 0));
+  }
+
+  public void testReduceTotal() throws Exception {
+    TestUtils.assertEquals(Amounts.adjustTotal(new Double[]{500.00, 250.00, 50.00}, 400.00), 250.00, 125.00, 25.00);
+    TestUtils.assertEquals(Amounts.adjustTotal(new Double[]{500.00, 250.00, 50.00}, 500.00), 312.50, 156.25, 31.25);
+    TestUtils.assertEquals(Amounts.adjustTotal(new Double[]{-50.00, 50.00}, 200.00), 50.00, 150.00);
+
   }
 }

@@ -11,6 +11,9 @@ import org.globsframework.model.utils.GlobMatchers;
 
 import java.util.Set;
 
+import static org.globsframework.model.FieldValue.value;
+import static org.globsframework.model.utils.GlobMatchers.*;
+
 public class DeferredAccountTrigger implements ChangeSetListener {
   public void globsChanged(ChangeSet changeSet, final GlobRepository repository) {
     if (changeSet.containsChanges(Account.TYPE)) {
@@ -26,9 +29,8 @@ public class DeferredAccountTrigger implements ChangeSetListener {
             if (repository.get(key).get(Account.CARD_TYPE).equals(AccountCardType.DEFERRED.getId())) {
               Glob deferredSeries =
                 repository.getAll(Series.TYPE,
-                                  GlobMatchers.and(
-                                    GlobMatchers.fieldEquals(Series.BUDGET_AREA, BudgetArea.OTHER.getId()),
-                                    GlobMatchers.fieldEquals(Series.FROM_ACCOUNT, key.get(Account.ID)))).getFirst();
+                                  and(fieldEquals(Series.BUDGET_AREA, BudgetArea.OTHER.getId()),
+                                      fieldEquals(Series.FROM_ACCOUNT, key.get(Account.ID)))).getFirst();
               if (deferredSeries != null) {
                 repository.update(deferredSeries.getKey(), Series.NAME, values.get(Account.NAME));
               }
@@ -58,11 +60,11 @@ public class DeferredAccountTrigger implements ChangeSetListener {
     if (changedTypes.contains(Account.TYPE)) {
       final GlobList deferredSeries =
         repository.getAll(Series.TYPE,
-                          GlobMatchers.and(
-                            GlobMatchers.fieldEquals(Series.BUDGET_AREA, BudgetArea.OTHER.getId()),
-                            GlobMatchers.isNotNull(Series.FROM_ACCOUNT)));
+                          and(
+                            fieldEquals(Series.BUDGET_AREA, BudgetArea.OTHER.getId()),
+                            isNotNull(Series.FROM_ACCOUNT)));
       repository.safeApply(Account.TYPE,
-                           GlobMatchers.fieldEquals(Account.CARD_TYPE, AccountCardType.DEFERRED.getId()),
+                           fieldEquals(Account.CARD_TYPE, AccountCardType.DEFERRED.getId()),
                            new GlobFunctor() {
                              public void run(Glob glob, GlobRepository repository) throws Exception {
                                Integer accountId = glob.get(Account.ID);
@@ -82,10 +84,10 @@ public class DeferredAccountTrigger implements ChangeSetListener {
       repository.startChangeSet();
       final GlobList deferredSeries =
         repository.getAll(Series.TYPE,
-                          GlobMatchers.and(GlobMatchers.fieldEquals(Series.BUDGET_AREA, BudgetArea.OTHER.getId()),
-                                           GlobMatchers.fieldEquals(Series.FROM_ACCOUNT, key.get(Account.ID))));
+                          and(fieldEquals(Series.BUDGET_AREA, BudgetArea.OTHER.getId()),
+                              fieldEquals(Series.FROM_ACCOUNT, key.get(Account.ID))));
       for (Glob series : deferredSeries) {
-        SeriesDeletionTrigger.propagateSeriesDeletion(series.getKey(), repository);
+        SeriesDeletionTrigger.propagateSeriesDeletion(series.getKey(), true, repository);
       }
       repository.delete(deferredSeries);
     }
@@ -97,12 +99,12 @@ public class DeferredAccountTrigger implements ChangeSetListener {
   private void createDeferredSeries(Glob glob, GlobRepository repository) {
     Integer accountId = glob.get(Account.ID);
     Glob series = repository.create(Series.TYPE,
-                                    FieldValue.value(Series.NAME, glob.get(Account.NAME)),
-                                    FieldValue.value(Series.BUDGET_AREA, BudgetArea.OTHER.getId()),
-                                    FieldValue.value(Series.FROM_ACCOUNT, accountId),
-                                    FieldValue.value(Series.IS_AUTOMATIC, false),
-                                    FieldValue.value(Series.INITIAL_AMOUNT, 0.),
-                                    FieldValue.value(Series.TARGET_ACCOUNT, accountId));
+                                    value(Series.NAME, glob.get(Account.NAME)),
+                                    value(Series.BUDGET_AREA, BudgetArea.OTHER.getId()),
+                                    value(Series.FROM_ACCOUNT, accountId),
+                                    value(Series.IS_AUTOMATIC, false),
+                                    value(Series.INITIAL_AMOUNT, 0.),
+                                    value(Series.TARGET_ACCOUNT, accountId));
     SeriesBudgetTrigger budget = new SeriesBudgetTrigger(repository);
     budget.updateSeriesBudget(series, repository);
   }

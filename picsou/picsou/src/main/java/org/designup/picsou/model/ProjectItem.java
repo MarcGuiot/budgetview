@@ -1,6 +1,7 @@
 package org.designup.picsou.model;
 
 import com.budgetview.shared.utils.PicsouGlobSerializer;
+import org.designup.picsou.gui.model.ProjectItemStat;
 import org.designup.picsou.model.util.ClosedMonthRange;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.annotations.*;
@@ -9,8 +10,6 @@ import org.globsframework.metamodel.fields.*;
 import org.globsframework.metamodel.index.NotUniqueIndex;
 import org.globsframework.metamodel.utils.GlobTypeLoader;
 import org.globsframework.model.*;
-import org.globsframework.model.format.GlobPrinter;
-import org.globsframework.model.utils.GlobMatchers;
 import org.globsframework.utils.Utils;
 import org.globsframework.utils.exceptions.UnexpectedApplicationState;
 import org.globsframework.utils.serialization.SerializedByteArrayOutput;
@@ -20,7 +19,7 @@ import org.globsframework.utils.serialization.SerializedOutput;
 
 import java.util.SortedSet;
 
-import static org.globsframework.model.utils.GlobMatchers.fieldEquals;
+import static org.globsframework.model.utils.GlobMatchers.*;
 
 public class ProjectItem {
   public static GlobType TYPE;
@@ -138,7 +137,7 @@ public class ProjectItem {
     if (series == null) {
       return null;
     }
-    GlobList items = repository.getAll(ProjectItem.TYPE, GlobMatchers.linkedTo(series, ProjectItem.SERIES));
+    GlobList items = repository.getAll(ProjectItem.TYPE, linkedTo(series, ProjectItem.SERIES));
     if (items.isEmpty()) {
       return null;
     }
@@ -159,6 +158,43 @@ public class ProjectItem {
       return 0;
     }
     return numbers.last() + 1;
+  }
+
+  public static Glob duplicate(Glob item, String itemLabel, Glob targetProject, int monthOffset, GlobRepository repository) {
+    FieldValues values = FieldValuesBuilder.initWithoutKeyFields(item)
+      .set(PROJECT, targetProject.get(Project.ID))
+      .set(LABEL, itemLabel)
+      .set(FIRST_MONTH, Month.offset(item.get(FIRST_MONTH), monthOffset))
+      .remove(SERIES)
+      .get();
+
+    Glob duplicate = repository.create(TYPE, values.toArray());
+
+    for (Glob projectAmount : repository.findLinkedTo(item, ProjectItemAmount.PROJECT_ITEM)) {
+      FieldValues amountValues =
+        FieldValuesBuilder.initWithoutKeyFields(projectAmount)
+          .set(ProjectItemAmount.PROJECT_ITEM, duplicate.get(ID))
+          .set(ProjectItemAmount.MONTH, Month.offset(projectAmount.get(ProjectItemAmount.MONTH), monthOffset))
+          .get();
+      repository.create(ProjectItemAmount.TYPE, amountValues.toArray());
+    }
+
+    for (Glob projectTransfer : repository.findLinkedTo(item, ProjectTransfer.PROJECT_ITEM)) {
+      FieldValues transferValues =
+        FieldValuesBuilder.initWithoutKeyFields(projectTransfer)
+          .set(ProjectTransfer.PROJECT_ITEM, duplicate.get(ID))
+          .get();
+      repository.create(ProjectTransfer.TYPE, transferValues.toArray());
+    }
+
+    return duplicate;
+  }
+
+  public static void deleteAll(Glob item, GlobRepository repository) {
+    repository.delete(ProjectTransfer.TYPE, linkedTo(item, ProjectTransfer.PROJECT_ITEM));
+    repository.delete(ProjectItemAmount.TYPE, linkedTo(item, ProjectItemAmount.PROJECT_ITEM));
+    repository.delete(ProjectItemStat.TYPE, linkedTo(item, ProjectItemStat.PROJECT_ITEM));
+    repository.delete(item);
   }
 
   public static class Serializer implements PicsouGlobSerializer {

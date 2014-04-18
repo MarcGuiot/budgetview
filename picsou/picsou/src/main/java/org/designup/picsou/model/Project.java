@@ -22,6 +22,7 @@ import org.globsframework.utils.serialization.SerializedOutput;
 import java.util.HashSet;
 import java.util.Set;
 
+import static org.globsframework.model.FieldValue.value;
 import static org.globsframework.model.utils.GlobMatchers.fieldEquals;
 import static org.globsframework.model.utils.GlobMatchers.linkedTo;
 
@@ -74,8 +75,7 @@ public class Project {
     if (items.size() > 1) {
       throw new UnexpectedApplicationState("More than 1 project item for series " + series + " : " + items);
     }
-    Glob item = items.getFirst();
-    return repository.findLinkTarget(item, ProjectItem.PROJECT);
+    return repository.findLinkTarget(items.getFirst(), ProjectItem.PROJECT);
   }
 
   public static Range<Integer> getMonthRange(Glob project, GlobRepository repository) {
@@ -111,6 +111,22 @@ public class Project {
 
   public static Set<Integer> getSeriesIds(Glob project, GlobRepository repository) {
     return repository.findLinkedTo(project, ProjectItem.PROJECT).getValueSet(ProjectItem.SERIES);
+  }
+
+  public static void duplicate(Glob project, String newProjectName, int offset, GlobRepository repository) {
+    repository.startChangeSet();
+    try {
+      Glob newProject = repository.create(TYPE,
+                                          value(NAME, newProjectName),
+                                          value(ACTIVE, true),
+                                          value(PICTURE, project.get(PICTURE)));
+      for (Glob item : repository.findLinkedTo(project, ProjectItem.PROJECT)) {
+        ProjectItem.duplicate(item, item.get(ProjectItem.LABEL), newProject, offset, repository);
+      }
+    }
+    finally {
+      repository.completeChangeSet();
+    }
   }
 
   public static class Serializer implements PicsouGlobSerializer {
