@@ -23,6 +23,7 @@ import org.globsframework.model.repository.LocalGlobRepository;
 import org.globsframework.model.repository.LocalGlobRepositoryBuilder;
 import org.globsframework.model.utils.GlobBuilder;
 import org.globsframework.model.utils.GlobFunctor;
+import org.globsframework.model.utils.GlobMatcher;
 import org.globsframework.model.utils.GlobMatchers;
 import org.globsframework.utils.Log;
 import org.globsframework.utils.Utils;
@@ -130,10 +131,10 @@ public class UpgradeTrigger implements ChangeSetListener {
       updateOpenCloseAccount(repository);
       deleteDuplicateSynchro(repository);
     }
-    if (currentJarVersion < 132) {
+    if (currentJarVersion < 133) {
       projectUpgrade.updateProjectSeriesAndGroups(repository);
     }
-    if (currentJarVersion < 132) {
+    if (currentJarVersion < 133) {
       updateTargetAccount(repository);
     }
 
@@ -232,6 +233,21 @@ public class UpgradeTrigger implements ChangeSetListener {
       Set<Integer> accountId2 = updateTargetAccount(repository, series2, repository.findLinkTarget(series2, Series.TARGET_ACCOUNT));
       if (accountId1.size() > 1 || accountId2.size() > 1) {
         // que faire?
+      }
+    }
+
+    for (final Glob series : allSeries) {
+      final Integer targetAccount = series.get(Series.TARGET_ACCOUNT);
+      if (targetAccount != null) {
+        repository.safeApply(Transaction.TYPE,
+                             GlobMatchers.and(GlobMatchers.fieldEquals(Transaction.PLANNED, true),
+                                              GlobMatchers.fieldEquals(Transaction.SERIES, series.get(Series.ID))),
+                             new GlobFunctor() {
+                               public void run(Glob glob, GlobRepository repository) throws Exception {
+                                 repository.update(glob.getKey(), Transaction.ACCOUNT, targetAccount);
+                               }
+                             }
+        );
       }
     }
   }

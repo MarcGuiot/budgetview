@@ -124,7 +124,8 @@ public class ProjectTransferTest extends LoggedInFunctionalTestCase {
     currentProject
       .setName("Trip")
       .addExpenseItem(0, "Item 1", 201012, -100.00)
-      .addTransferItem(1, "Transfer", 200.00, "Savings account", "Main account");
+      .addTransferItem(1, "Transfer", 200.00, "Savings account", "Main account")
+      .addTransferItem(2, "Savings", 200.00, "Main account", "Savings account");
 
     views.selectData();
     currentProject.backToList();
@@ -136,6 +137,15 @@ public class ProjectTransferTest extends LoggedInFunctionalTestCase {
       .checkName("Trip")
       .editTransfer(1)
       .checkLabel("Transfer")
+      .cancel();
+
+    views.selectBudget();
+    budgetView.savings.editProjectForSeries("Savings");
+    views.checkHomeSelected();
+    currentProject
+      .checkName("Trip")
+      .editTransfer(2)
+      .checkLabel("Savings")
       .cancel();
 
     currentProject.backToList();
@@ -151,7 +161,7 @@ public class ProjectTransferTest extends LoggedInFunctionalTestCase {
       .validate();
 
     views.selectBudget();
-    budgetView.savings.checkSeriesList("Transfer");
+    budgetView.savings.checkSeriesList("Savings", "Transfer");
   }
 
   public void testMustSelectDifferentFromAndToAccounts() throws Exception {
@@ -441,6 +451,54 @@ public class ProjectTransferTest extends LoggedInFunctionalTestCase {
     budgetView.savings.checkSeries("Transfer", 0.00, 30.00);
     timeline.selectMonth(201102);
     budgetView.savings.checkSeries("Transfer", 0.00, 20.00);
+
+    timeline.selectAll();
+    transactions.showPlannedTransactions().initAmountContent()
+      .add("11/02/2011", "Planned: Transfer", 20.00, "Transfer", 1030.00, 1030.00, "Savings account 1")
+      .add("11/02/2011", "Planned: Transfer", -20.00, "Transfer", 1970.00, 1970.00, "Main account 1")
+      .add("11/01/2011", "Planned: Transfer", 30.00, "Transfer", 1010.00, 1010.00, "Savings account 1")
+      .add("11/01/2011", "Planned: Transfer", -30.00, "Transfer", 1990.00, 1990.00, "Main account 1")
+      .add("11/12/2010", "Planned: Transfer", 80.00, "Transfer", 980.00, 980.00, "Savings account 1")
+      .add("11/12/2010", "Planned: Transfer", -80.00, "Transfer", 2020.00, 2020.00, "Main account 1")
+      .add("01/12/2010", "TRANSFER FROM SAVINGS ACCOUNT 1", -100.00, "To categorize", 900.00, 900.00, "Savings account 1")
+      .add("01/12/2010", "AN OPERATION", 1000.00, "To categorize", 1000.00, 1000.00, "Savings account 1")
+      .add("01/12/2010", "TRANSFER 1", 100.00, "To categorize", 2100.00, 2100.00, "Main account 1")
+      .add("01/12/2010", "INCOME", 1000.00, "To categorize", 2000.00, 2000.00, "Main account 1")
+      .add("01/11/2010", "INCOME", 1000.00, "To categorize", 1000.00, 1000.00, "Main account 1")
+      .check();
+
+    currentProject.toggleAndEditTransfer(0)
+      .setMonthAmount(0, 100)
+      .setMonthAmount(1, 50)
+      .validate();
+    transactions.initAmountContent()
+      .add("11/02/2011", "Planned: Transfer", 20.00, "Transfer", 1070.00, 1070.00, "Savings account 1")
+      .add("11/02/2011", "Planned: Transfer", -20.00, "Transfer", 1930.00, 1930.00, "Main account 1")
+      .add("11/01/2011", "Planned: Transfer", 50.00, "Transfer", 1050.00, 1050.00, "Savings account 1")
+      .add("11/01/2011", "Planned: Transfer", -50.00, "Transfer", 1950.00, 1950.00, "Main account 1")
+      .add("11/12/2010", "Planned: Transfer", 100.00, "Transfer", 1000.00, 1000.00, "Savings account 1")
+      .add("11/12/2010", "Planned: Transfer", -100.00, "Transfer", 2000.00, 2000.00, "Main account 1")
+      .add("01/12/2010", "TRANSFER FROM SAVINGS ACCOUNT 1", -100.00, "To categorize", 900.00, 900.00, "Savings account 1")
+      .add("01/12/2010", "AN OPERATION", 1000.00, "To categorize", 1000.00, 1000.00, "Savings account 1")
+      .add("01/12/2010", "TRANSFER 1", 100.00, "To categorize", 2100.00, 2100.00, "Main account 1")
+      .add("01/12/2010", "INCOME", 1000.00, "To categorize", 2000.00, 2000.00, "Main account 1")
+      .add("01/11/2010", "INCOME", 1000.00, "To categorize", 1000.00, 1000.00, "Main account 1")
+      .check();
+
+    currentProject.slideToNextMonth();
+    transactions.initAmountContent()
+      .add("11/03/2011", "Planned: Transfer", 20.00, "Transfer", 1070.00, 1070.00, "Savings account 1")
+      .add("11/03/2011", "Planned: Transfer", -20.00, "Transfer", 1930.00, 1930.00, "Main account 1")
+      .add("11/02/2011", "Planned: Transfer", 50.00, "Transfer", 1050.00, 1050.00, "Savings account 1")
+      .add("11/02/2011", "Planned: Transfer", -50.00, "Transfer", 1950.00, 1950.00, "Main account 1")
+      .add("11/01/2011", "Planned: Transfer", 100.00, "Transfer", 1000.00, 1000.00, "Savings account 1")
+      .add("11/01/2011", "Planned: Transfer", -100.00, "Transfer", 2000.00, 2000.00, "Main account 1")
+      .add("01/12/2010", "TRANSFER FROM SAVINGS ACCOUNT 1", -100.00, "To categorize", 900.00, 900.00, "Savings account 1")
+      .add("01/12/2010", "AN OPERATION", 1000.00, "To categorize", 1000.00, 1000.00, "Savings account 1")
+      .add("01/12/2010", "TRANSFER 1", 100.00, "To categorize", 2100.00, 2100.00, "Main account 1")
+      .add("01/12/2010", "INCOME", 1000.00, "To categorize", 2000.00, 2000.00, "Main account 1")
+      .add("01/11/2010", "INCOME", 1000.00, "To categorize", 1000.00, 1000.00, "Main account 1")
+      .check();
   }
 
   public void testDuplicatingAProjectWithMonthTransfers() throws Exception {

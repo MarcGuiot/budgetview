@@ -10,6 +10,7 @@ import org.globsframework.metamodel.fields.*;
 import org.globsframework.metamodel.index.NotUniqueIndex;
 import org.globsframework.metamodel.utils.GlobTypeLoader;
 import org.globsframework.model.*;
+import org.globsframework.model.utils.GlobMatchers;
 import org.globsframework.utils.Utils;
 import org.globsframework.utils.exceptions.UnexpectedApplicationState;
 import org.globsframework.utils.serialization.SerializedByteArrayOutput;
@@ -138,8 +139,12 @@ public class ProjectItem {
       return null;
     }
     GlobList items = repository.getAll(ProjectItem.TYPE, linkedTo(series, ProjectItem.SERIES));
-    if (items.isEmpty()) {
-      return null;
+    Integer mirrorSeriesId = series.get(Series.MIRROR_SERIES);
+    if (items.isEmpty() && mirrorSeriesId != null) {
+      items = repository.getAll(ProjectItem.TYPE, fieldEquals(ProjectItem.SERIES, mirrorSeriesId));
+      if (items.isEmpty()) {
+        return null;
+      }
     }
     if (items.size() > 1) {
       throw new UnexpectedApplicationState("More than 1 project for series " + series + " : " + items);
