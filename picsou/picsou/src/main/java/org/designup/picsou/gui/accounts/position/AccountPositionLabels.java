@@ -93,8 +93,14 @@ public abstract class AccountPositionLabels {
       if (list.isEmpty() || list.get(0).get(Account.POSITION_DATE) == null) {
         return "";
       }
-      return Lang.get(key, Formatting.toString(list.get(0).get(Account.POSITION_DATE)));
+      Glob account = list.get(0);
+      return Lang.get(key, getAccountPositionDate(account));
     }
+
+  }
+
+  public static String getAccountPositionDate(Glob account) {
+    return Formatting.toString(account.get(Account.POSITION_DATE));
   }
 
   private class EstimatedPositionStringifier implements GlobListStringifier {

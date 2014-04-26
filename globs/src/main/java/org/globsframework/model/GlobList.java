@@ -382,6 +382,34 @@ public class GlobList extends ArrayList<Glob> {
     return map;
   }
 
+  public Integer getMaxValue(IntegerField field) {
+    Integer result = null;
+    for (Glob glob : this) {
+      Integer value = glob.get(field);
+      if (result == null) {
+        result = value;
+      }
+      else if ((value != null) && (value > result)) {
+        result = value;
+      }
+    }
+    return result;
+  }
+
+  public Integer getMinValue(IntegerField field) {
+    Integer result = null;
+    for (Glob glob : this) {
+      Integer value = glob.get(field);
+      if (result == null) {
+        result = value;
+      }
+      else if ((value != null) && (value < result)) {
+        result = value;
+      }
+    }
+    return result;
+  }
+
   public Double getSum(DoubleField field) {
     Double result = null;
     for (Glob glob : this) {
@@ -395,6 +423,7 @@ public class GlobList extends ArrayList<Glob> {
     }
     return result;
   }
+
 
   public GlobList getTargets(Link link, GlobRepository repository) {
     GlobList result = new GlobList();

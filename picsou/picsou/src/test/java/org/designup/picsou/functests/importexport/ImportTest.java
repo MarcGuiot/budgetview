@@ -191,7 +191,7 @@ public class ImportTest extends LoggedInFunctionalTestCase {
     operations.openImportDialog()
       .setFilePath(firstQif)
       .acceptFile()
-      .checkAvailableAccounts("Cash", "Main")
+      .checkAvailableAccounts("Main", "Cash")
       .createNewAccount(SOCIETE_GENERALE, "SG", "12345", 100.0)
       .completeImport();
 

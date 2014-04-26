@@ -20,7 +20,7 @@ public abstract class AbstractHistoChecker<T extends AbstractHistoChecker> exten
     HistoChart chart = getChart();
     HistoDataset dataset = chart.getCurrentDataset();
     if (!datasetClass.isAssignableFrom(dataset.getClass())) {
-      throw new AssertionFailedError("Unexpected dataset type: " + dataset.getClass().getSimpleName());
+      throw new AssertionFailedError("Unexpected dataset type: " + dataset.getClass());
     }
     return (T)dataset;
   }
@@ -54,16 +54,17 @@ public abstract class AbstractHistoChecker<T extends AbstractHistoChecker> exten
     clickColumn(columnIndex, Key.Modifier.NONE, false);
   }
 
-  private void clickColumn(int columnIndex, Key.Modifier modifier, boolean useRightClick) {
+  private T clickColumn(int columnIndex, Key.Modifier modifier, boolean useRightClick) {
     HistoChart chart = getChart();
     chart.setSize(200,200);
     chart.paint(Empty.NULL_GRAPHICS_2D);
     int x = chart.getX(columnIndex);
     int y = chart.getSize().height / 2;
     click(chart, x, y, modifier, useRightClick);
+    return (T)this;
   }
 
-  public void clickColumnId(int month) {
+  public T clickColumnId(int month) {
     HistoChart chart = getChart();
     HistoDataset dataset = chart.getCurrentDataset();
     int columnIndex = dataset.getIndex(month);
@@ -72,6 +73,7 @@ public abstract class AbstractHistoChecker<T extends AbstractHistoChecker> exten
     }
 
     clickColumn(columnIndex);
+    return (T)this;
   }
 
   public void checkSelectedIds(Integer... ids) {

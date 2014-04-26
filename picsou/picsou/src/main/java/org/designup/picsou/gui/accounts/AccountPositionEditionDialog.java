@@ -3,7 +3,6 @@ package org.designup.picsou.gui.accounts;
 import com.budgetview.shared.utils.AmountFormat;
 import org.designup.picsou.gui.components.dialogs.CancelAction;
 import org.designup.picsou.gui.components.dialogs.PicsouDialog;
-import org.designup.picsou.gui.description.PicsouDescriptionService;
 import org.designup.picsou.model.Account;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobsPanelBuilder;

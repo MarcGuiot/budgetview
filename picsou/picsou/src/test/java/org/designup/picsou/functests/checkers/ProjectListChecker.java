@@ -28,7 +28,7 @@ public class ProjectListChecker extends ViewChecker {
     checkComponentVisible(getProjectViewPanel(), JPanel.class, "projectCreationView", true);
   }
 
-  public void checkDetailsShown() {
+  public void checkProjectsShown() {
     views.selectHome();
     checkComponentVisible(mainWindow, JPanel.class, "projectView", true);
     assertThat(new Assertion() {
@@ -42,7 +42,7 @@ public class ProjectListChecker extends ViewChecker {
     });
   }
 
-  public void checkDetailsHidden() {
+  public void checkProjectsHidden() {
     views.selectHome();
     checkComponentVisible(mainWindow, JPanel.class, "projectView", false);
     assertThat(new Assertion() {
@@ -56,7 +56,7 @@ public class ProjectListChecker extends ViewChecker {
     });
   }
 
-  public void hideDetails() {
+  public void hideProjects() {
     Button button = mainWindow.getButton("hideProjectDetails");
     button.click();
   }

@@ -27,7 +27,7 @@ public class TransactionCreationTest extends LoggedInFunctionalTestCase {
     transactionCreation
       .checkHidden()
       .show()
-      .checkAccounts("Cash", "Main")
+      .checkAccounts("Main", "Cash")
       .checkSelectedAccount("Main")
       .selectAccount("Cash")
       .checkNegativeAmountsSelected()
@@ -56,7 +56,7 @@ public class TransactionCreationTest extends LoggedInFunctionalTestCase {
 
     transactionCreation
       .checkShowing()
-      .checkAccounts("Cash", "Main", "Misc")
+      .checkAccounts("Main", "Cash", "Misc")
       .checkSelectedAccount("Cash")
       .selectAccount("Misc")
       .checkNegativeAmountsSelected()

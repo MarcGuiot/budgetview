@@ -1315,18 +1315,13 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
       .setAsSavings()
       .validate();
 
-//    budgetView.savings.editSeries("From Account n. 111222").deleteCurrentSeries();
-//    budgetView.savings.editSeries("To Account n. 111222").deleteCurrentSeries();
-//    budgetView.savings.editSeries("From Account n. 00001123").deleteCurrentSeries();
-//    budgetView.savings.editSeries("To Account n. 00001123").deleteCurrentSeries();
-
     categorization.selectAllTransactions()
       .selectSavings()
       .createSeries()
       .setName("Epargne")
-      .checkToContentEquals("External account", OfxBuilder.DEFAULT_ACCOUNT_NAME, "Account n. 111222")
+      .checkToContentEquals("External account", "Account n. 111222", OfxBuilder.DEFAULT_ACCOUNT_NAME)
       .setToAccount("Account n. 111222")
-      .checkFromContentEquals("External account", OfxBuilder.DEFAULT_ACCOUNT_NAME, "Account n. 111222")
+      .checkFromContentEquals("External account", "Account n. 111222", OfxBuilder.DEFAULT_ACCOUNT_NAME)
       .setFromAccount("External account")
       .validate();
 
@@ -1489,7 +1484,7 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
       .checkToContentEquals("Account n. 00001123")
       .checkToAccount("Account n. 00001123")
       .setFromAccount("CODEVI")
-      .checkFromContentEquals("External account", "CODEVI")
+      .checkFromContentEquals("CODEVI", "External account")
       .validate();
 
     SeriesEditionDialogChecker seriesEdition = categorization.selectTransaction("Virement de l'Epargne")
@@ -1500,7 +1495,7 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
       .selectBank("CIC")
       .setPosition(0)
       .validate();
-    seriesEdition.checkFromContentEquals("External account", "CODEVI", "Livret A")
+    seriesEdition.checkFromContentEquals("Livret A", "External account", "CODEVI")
       .setFromAccount("Livret A")
       .validate();
 

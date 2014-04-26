@@ -311,11 +311,13 @@ public class HistoChart extends JPanel implements Disposable {
       }
     });
 
-    addMouseWheelListener(new MouseWheelListener() {
-      public void mouseWheelMoved(MouseWheelEvent e) {
-        selectionManager.notifyScroll(e.getWheelRotation());
-      }
-    });
+    if (config.useWheelScroll) {
+      addMouseWheelListener(new MouseWheelListener() {
+        public void mouseWheelMoved(MouseWheelEvent e) {
+          selectionManager.notifyScroll(e.getWheelRotation());
+        }
+      });
+    }
   }
 
   private Font getLabelFont(HistoDataset dataset, int columnIndex) {

@@ -8,6 +8,7 @@ import org.designup.picsou.gui.utils.FrameSize;
 import org.designup.picsou.importer.analyzer.TransactionAnalyzerFactory;
 import org.designup.picsou.model.*;
 import org.designup.picsou.triggers.AccountInitialPositionTrigger;
+import org.designup.picsou.triggers.AccountSequenceTrigger;
 import org.designup.picsou.triggers.PositionTrigger;
 import org.designup.picsou.triggers.SeriesBudgetTrigger;
 import org.designup.picsou.triggers.savings.UpdateMirrorSeriesChangeSetVisitor;
@@ -133,9 +134,8 @@ public class UpgradeTrigger implements ChangeSetListener {
     }
     if (currentJarVersion < 133) {
       projectUpgrade.updateProjectSeriesAndGroups(repository);
-    }
-    if (currentJarVersion < 133) {
       updateTargetAccount(repository);
+      AccountSequenceTrigger.resetSequence(repository);
     }
 
     FrameSize frameSize = FrameSize.init(directory.get(JFrame.class));

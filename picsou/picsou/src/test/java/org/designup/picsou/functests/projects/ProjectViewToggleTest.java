@@ -2,6 +2,8 @@ package org.designup.picsou.functests.projects;
 
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
+import org.designup.picsou.model.Account;
+import org.globsframework.model.format.GlobPrinter;
 
 public class ProjectViewToggleTest extends LoggedInFunctionalTestCase {
   protected void setUp() throws Exception {
@@ -16,22 +18,22 @@ public class ProjectViewToggleTest extends LoggedInFunctionalTestCase {
       .addTransaction("2013/12/01", 1000.00, "Income")
       .load();
 
-    projects.checkDetailsHidden();
+    projects.checkProjectsHidden();
     projectChart.checkShowsCreation();
     projectChart.checkShowDetailsButtonHidden();
 
     projectChart.create();
-    projects.checkDetailsShown();
+    projects.checkProjectsShown();
     currentProject.setName("MyProject")
       .addExpenseItem(0, "Item1", 201312, -100.00);
     projectChart.checkShowDetailsButtonHidden();
 
-    projects.hideDetails();
-    projects.checkDetailsHidden();
+    projects.hideProjects();
+    projects.checkProjectsHidden();
     projectChart.checkShowDetailsButtonShown();
 
     projectChart.select("MyProject");
-    projects.checkDetailsShown();
+    projects.checkProjectsShown();
     projectChart.checkShowDetailsButtonHidden();
   }
 
@@ -40,16 +42,16 @@ public class ProjectViewToggleTest extends LoggedInFunctionalTestCase {
       .addTransaction("2013/12/01", 1000.00, "Income")
       .load();
 
-    projects.checkDetailsHidden();
+    projects.checkProjectsHidden();
     projectChart.checkShowDetailsButtonHidden();
     projectChart.checkShowsCreation();
 
     projectChart.create();
-    projects.checkDetailsShown();
+    projects.checkProjectsShown();
     projectChart.checkShowDetailsButtonHidden();
 
     currentProject.cancelNameEdition();
-    projects.checkDetailsHidden();
+    projects.checkProjectsHidden();
     projectChart.checkShowDetailsButtonHidden();
     projectChart.checkShowsCreation();
   }
@@ -60,24 +62,31 @@ public class ProjectViewToggleTest extends LoggedInFunctionalTestCase {
       .addTransaction("2013/12/01", 1000.00, "Income")
       .load();
 
-    projects.checkDetailsHidden();
-    summary.getMainChart().checkRange(201306, 201412);
-    summary.getSavingsChart().checkRange(201306, 201412);
+    OfxBuilder.init(this)
+      .addBankAccount(-1, 10674, "00002234", 2800.00, "2013/12/10")
+      .addTransaction("2013/12/10", 3000.00, "WorldCo")
+      .load();
+
+    mainAccounts.edit("Account n. 00002234").setAsSavings().validate();
+
+    projects.checkProjectsHidden();
+    summary.getAccountChart("Account n. 00001123").checkRange(201306, 201412);
+    summary.getAccountChart("Account n. 00002234").checkRange(201306, 201412);
 
     timeline.selectMonth(201312);
     projectChart.create();
-    projects.checkDetailsShown();
+    projects.checkProjectsShown();
     currentProject.setName("MyProject");
     checkChartsRange(201310, 201407);
 
-    projects.hideDetails();
-    projects.checkDetailsHidden();
+    projects.hideProjects();
+    projects.checkProjectsHidden();
     checkChartsRange(201306, 201412);
   }
 
   private void checkChartsRange(int firstMonth, int lastMonth) {
     projectChart.getChart().checkRange(firstMonth, lastMonth);
-    summary.getMainChart().checkRange(firstMonth, lastMonth);
-    summary.getSavingsChart().checkRange(firstMonth, lastMonth);
+    summary.getAccountChart("Account n. 00001123").checkRange(firstMonth, lastMonth);
+    summary.getAccountChart("Account n. 00002234").checkRange(firstMonth, lastMonth);
   }
 }

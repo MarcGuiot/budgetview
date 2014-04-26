@@ -1,5 +1,6 @@
 package org.designup.picsou.functests.analysis;
 
+import org.designup.picsou.functests.checkers.components.HistoDailyChecker;
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
 import org.designup.picsou.model.TransactionType;
@@ -244,6 +245,62 @@ public class SeriesEvolutionHistoChartTest extends LoggedInFunctionalTestCase {
       .checkLineColumn(2, "S", "2009", 100.00)
       .checkLineColumn(3, "O", "2009", -100.00)
       .checkLineColumn(6, "J", "2010", -700.00);
+  }
+
+  public void testScrolling() throws Exception {
+    operations.openPreferences().setFutureMonthsCount(24).validate();
+
+    OfxBuilder.init(this)
+      .addBankAccount(-1, 10674, "00000123", 2800.0, "2009/07/10")
+      .addTransaction("2009/07/28", 3000.00, "WorldCo")
+      .addTransaction("2008/01/28", 3000.00, "WorldCo")
+      .load();
+
+    views.selectHome();
+    seriesAnalysis.select("Main accounts");
+    seriesAnalysis.histoChart
+      .checkRange(200807,201001);
+
+    seriesAnalysis.histoChart
+      .scroll(-8)
+      .checkRange(200801,200907);
+
+    seriesAnalysis.histoChart
+      .scroll(+1)
+      .checkRange(200802,200908);
+
+    timeline.selectMonth("2009/12");
+    seriesAnalysis.histoChart
+      .checkRange(200807,201001);
+
+    seriesAnalysis.histoChart
+      .scroll(-1)
+      .checkRange(200806, 200912);
+
+    seriesAnalysis.histoChart
+      .scroll(+1)
+      .checkRange(200807,201001);
+
+    seriesAnalysis.histoChart
+      .scroll(+20)
+      .checkRange(201001,201107);
+
+    seriesAnalysis.histoChart
+      .scroll(-1)
+      .checkRange(200912,201106);
+
+    seriesAnalysis.histoChart
+      .scroll(-20)
+      .checkRange(200804,200910);
+
+    seriesAnalysis.histoChart
+      .scroll(+1)
+      .checkRange(200805,200911);
+
+    seriesAnalysis.histoChart
+      .clickColumnId(200911)
+      .checkRange(200807,201001);
+    timeline.checkSelection("2009/11");
   }
 
   public void testClickingInColumnsNavigatesToCorrespondingMonth() throws Exception {

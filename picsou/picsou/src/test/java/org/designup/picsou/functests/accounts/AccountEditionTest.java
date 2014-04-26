@@ -262,7 +262,7 @@ public class AccountEditionTest extends LoggedInFunctionalTestCase {
       .setName("edf")
       .selectAllMonths()
       .setAmount(50)
-      .checkTargetAccounts("Closed main", "Main")
+      .checkTargetAccounts("Main", "Closed main")
       .setTargetAccount("Main")
       .validate();
 

@@ -41,10 +41,6 @@ public class ImportFileAction extends AbstractAction {
     return new ImportFileAction(text, repository, directory, defaulAccount, true, false);
   }
 
-  static public ImportFileAction sync(final GlobRepository repository, final Directory directory, GlobList importedAccounts) {
-    return new ImportFileAction(Lang.get("import"), repository, directory, importedAccounts, false, true);
-  }
-
   private ImportFileAction(String text, final GlobRepository repository, final Directory directory,
                            boolean usePreference, final boolean isSynchro) {
     super(text);

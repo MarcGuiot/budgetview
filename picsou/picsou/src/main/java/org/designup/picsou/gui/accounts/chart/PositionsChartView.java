@@ -17,6 +17,7 @@ import org.designup.picsou.model.Transaction;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.SelectionService;
 import org.globsframework.gui.splits.PanelBuilder;
+import org.globsframework.gui.splits.SplitsNode;
 import org.globsframework.gui.splits.utils.Disposable;
 import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
@@ -89,8 +90,8 @@ public abstract class PositionsChartView extends View implements HistoChartRange
     builder.add(componentName, getChart());
   }
 
-  public void registerComponents(PanelBuilder builder) {
-    builder.add(componentName, getChart());
+  public SplitsNode<HistoChart> registerComponents(PanelBuilder builder) {
+    return builder.add(componentName, getChart());
   }
 
   public HistoChart getChart() {
@@ -106,7 +107,7 @@ public abstract class PositionsChartView extends View implements HistoChartRange
   }
 
   protected void processDoubleClick(NavigationService navigationService) {
-
+    navigationService.gotoBudget();
   }
 
   public void dispose() {

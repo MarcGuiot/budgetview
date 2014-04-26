@@ -26,9 +26,21 @@ public class AccountPositionsChartView extends PositionsChartView {
   private HistoDailyColors dailyColors;
   private DisposableGroup disposables = new DisposableGroup();
 
-  public AccountPositionsChartView(Integer accountId, String componentName, HistoChartRange range,
-                                   final GlobRepository repository, final Directory directory) {
-    super(range, new HistoChartConfig(false, false, false, false, false, false, false, true, true, true),
+  public static AccountPositionsChartView stripped(Integer accountId, String componentName, HistoChartRange range,
+                                                   final GlobRepository repository, final Directory directory) {
+    return new AccountPositionsChartView(accountId, componentName, range, repository, directory,
+                                         new HistoChartConfig(false, false, false, false, false, false, false, true, true, true));
+  }
+
+  public static AccountPositionsChartView full(Integer accountId, String componentName, HistoChartRange range,
+                                               final GlobRepository repository, final Directory directory) {
+    return new AccountPositionsChartView(accountId, componentName, range, repository, directory,
+                                         new HistoChartConfig(true, false, true, true, true, true, true, true, true, true));
+  }
+
+  private AccountPositionsChartView(Integer accountId, String componentName, HistoChartRange range,
+                                    final GlobRepository repository, final Directory directory, HistoChartConfig config) {
+    super(range, config,
           componentName, repository, directory);
     this.accountId = accountId;
 
@@ -73,7 +85,6 @@ public class AccountPositionsChartView extends PositionsChartView {
       Integer monthId = objectKey.get(Day.MONTH);
       showTransactions(transactions, monthId, directory.get(SelectionService.class), repository, directory);
     }
-
   }
 
   protected void updateChart(HistoChartBuilder histoChartBuilder, Integer currentMonthId, boolean resetPosition) {

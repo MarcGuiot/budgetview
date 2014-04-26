@@ -4,6 +4,7 @@ import org.designup.picsou.gui.browsing.BrowsingService;
 import org.designup.picsou.model.Account;
 import org.designup.picsou.model.Bank;
 import org.designup.picsou.utils.Lang;
+import org.globsframework.gui.splits.utils.Disposable;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.*;
 import org.globsframework.model.format.DescriptionService;
@@ -14,7 +15,7 @@ import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.util.Set;
 
-public class GotoAccountWebsiteAction extends AbstractAction implements ChangeSetListener {
+public class GotoAccountWebsiteAction extends AbstractAction implements ChangeSetListener, Disposable {
   private String url;
   private GlobRepository repository;
   private Key accountKey;
@@ -75,5 +76,9 @@ public class GotoAccountWebsiteAction extends AbstractAction implements ChangeSe
       bankName = descriptionService.getStringifier(Bank.TYPE).toString(bank, repository);
     }
     return Lang.get("accountView.goto.website", bankName);
+  }
+
+  public void dispose() {
+    repository.removeChangeListener(this);
   }
 }

@@ -241,7 +241,8 @@
     <style selector="label.alignActualAmount" foreground="block.inner.item" font="-,plain,12" marginLeft="5"/>
 
     <style selector=".secondaryInnerBlock" opaque="true" background="block.inner.secondary.bg" border="line(block.inner.border)"/>
-    <style selector="label.secondarySectionTitle" font="-,bold,14" weightY="0.1"
+    <style selector="label.secondarySectionTitle" font="-,bold,12
+    " weightY="0.1"
            foreground="block.inner.secondary.section.title" anchor="southwest" marginTop="10" marginLeft="10"/>
     <style selector="label.secondarySectionSubtitle" font="-,plain,11" weightY="0.1"
            foreground="block.inner.secondary.section.subtitle" anchor="southeast" marginTop="2"/>

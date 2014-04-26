@@ -10,14 +10,6 @@ public class JPopupButton extends JButton {
 
   private PopupMenuFactory factory;
 
-  public JPopupButton(String text) {
-    this(text, new PopupMenuFactory() {
-      public JPopupMenu createPopup() {
-        return new JPopupMenu();
-      }
-    });
-  }
-
   public JPopupButton(String text, final JPopupMenu menu) {
     this(text, new PopupMenuFactory() {
       public JPopupMenu createPopup() {

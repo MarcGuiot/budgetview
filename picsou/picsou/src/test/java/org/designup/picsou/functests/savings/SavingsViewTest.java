@@ -60,35 +60,40 @@ public class SavingsViewTest extends LoggedInFunctionalTestCase {
     budgetView.savings.alignAndPropagate("Epargne");
 
     views.selectHome();
-    summary.getSavingsChart()
-      .checkColumnCount(13)
-      .checkDailyColumn(0, "J", "2009", 400.00, true)
-      .checkDailyColumn(1, "A", "2009", 600.00)
-      .checkDailyColumn(2, "S", "2009", 800.00)
-      .checkDailyColumn(3, "O", "2009", 1000.00)
-      .checkDailyColumn(6, "J", "2010", 1600.00);
+    summary.getAccountChart("ING")
+      .checkRange(200907, 201007)
+      .checkValue(200907, 1, 200.00)
+      .checkValue(200907, 10, 400.00)
+      .checkValue(200908, 11, 600.00)
+      .checkValue(200909, 11, 800.00)
+      .checkValue(200910, 11, 1000.00)
+      .checkValue(200911, 11, 1200.00)
+      .checkValue(200912, 11, 1400.00)
+      .checkValue(201001, 11, 1600.00)
+      .checkValue(201002, 11, 1800.00)
+      .checkValue(201003, 11, 2000.00)
+      .checkValue(201004, 11, 2200.00)
+      .checkValue(201005, 11, 2400.00)
+      .checkValue(201006, 11, 2600.00)
+      .checkValue(201007, 11, 2800.00);
 
     savingsAccounts.editPosition("ING").setAmount(300.00).validate();
 
     views.selectHome();
-    summary.getSavingsChart()
-      .checkColumnCount(13)
-      .checkDailyColumn(0, "J", "2009", 300.00, true)
-      .checkDailyColumn(1, "A", "2009", 500.00)
-      .checkDailyColumn(2, "S", "2009", 700.00)
-      .checkDailyColumn(3, "O", "2009", 900.00)
-      .checkDailyColumn(6, "J", "2010", 1500.00);
+    summary.getAccountChart("ING")
+      .checkRange(200907, 201007)
+      .checkValue(200907, 1, 100.00)
+      .checkValue(200912, 11, 1300.00)
+      .checkValue(201007, 11, 2700.00);
 
     operations.openPreferences().setFutureMonthsCount(6).validate();
 
     views.selectHome();
-    summary.getSavingsChart()
-      .checkColumnCount(7)
-      .checkDailyColumn(0, "J", "2009", 300.00, true)
-      .checkDailyColumn(1, "A", "2009", 500.00)
-      .checkDailyColumn(2, "S", "2009", 700.00)
-      .checkDailyColumn(3, "O", "2009", 900.00)
-      .checkDailyColumn(6, "J", "2010", 1500.00);
+    summary.getAccountChart("ING")
+      .checkRange(200907, 201001)
+      .checkValue(200907, 1, 100.00)
+      .checkValue(200910, 11, 900.00)
+      .checkValue(201001, 11, 1500.00);
   }
 
   public void testWithBeginOfAccount() throws Exception {

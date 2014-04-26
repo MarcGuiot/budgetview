@@ -11,6 +11,7 @@ public class HistoChartConfig {
   public final boolean columnClickEnabled;
   public final boolean objectClickEnabled;
   public final boolean drawInnerAnnotations;
+  public boolean useWheelScroll;
 
   public HistoChartConfig(boolean drawLabels,
                           boolean drawSections,
@@ -32,5 +33,9 @@ public class HistoChartConfig {
     this.columnClickEnabled = columnClickEnabled;
     this.objectClickEnabled = objectClickEnabled;
     this.drawInnerAnnotations = drawInnerAnnotations;
+  }
+
+  public void setUseWheelScroll(boolean useWheelScroll) {
+    this.useWheelScroll = useWheelScroll;
   }
 }
