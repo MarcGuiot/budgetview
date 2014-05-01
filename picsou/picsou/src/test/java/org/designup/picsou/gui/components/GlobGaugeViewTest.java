@@ -15,9 +15,7 @@ import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.GlobRepositoryBuilder;
-import org.globsframework.model.format.GlobPrinter;
 import org.globsframework.model.utils.GlobBuilder;
-import org.globsframework.model.utils.GlobMatchers;
 
 import java.util.Arrays;
 
@@ -29,91 +27,69 @@ public class GlobGaugeViewTest extends GuiTestCase {
   private Gauge gauge;
   private Glob obj1;
   private Glob obj2;
-  private Glob obj3;
-  private Glob obj4;
+  private org.globsframework.model.Key key1;
 
   protected void setUp() throws Exception {
     super.setUp();
     repository = GlobRepositoryBuilder.createEmpty();
+    key1 = org.globsframework.model.Key.create(MyObject.TYPE, 1);
     obj1 = create(1, 15.0, 20.0);
     obj2 = create(2, 5.0, 10.0);
-    obj3 = create(3, 10.0, 10.0);
-    obj4 = create(4, null, null);
 
-    GlobGaugeView view = new GlobGaugeView(MyObject.TYPE, BudgetArea.VARIABLE,
+    GlobGaugeView view = new GlobGaugeView(key1,
+                                           BudgetArea.VARIABLE,
                                            MyObject.ACTUAL, MyObject.TARGET, MyObject.PAST_REMAINING, MyObject.FUTURE_REMAINING,
                                            MyObject.PAST_OVERRUN, MyObject.FUTURE_OVERRUN,
                                            MyObject.ACTIVE,
-                                           GlobMatchers.not(fieldEquals(MyObject.ID, 3)),
                                            repository, directory);
     gauge = view.getComponent();
   }
 
-  public void testSelection() throws Exception {
-    checkGauge(0d, 0d, false);
-
-    selectionService.select(obj1);
-    checkGauge(15.0d, 20.0d);
-
-    selectionService.select(Arrays.asList(obj1, obj2), MyObject.TYPE);
-    checkGauge(20.0d, 30.0d);
-
-    selectionService.select(Arrays.asList(obj1, obj2, obj3), MyObject.TYPE);
-    checkGauge(20.0d, 30.0d);
-
-    selectionService.select(obj3); // Excluded by matcher
-    checkGauge(0d, 0d, false);
-  }
-
   public void testNullsAreIgnored() throws Exception {
-    selectionService.select(Arrays.asList(obj1, obj4), MyObject.TYPE);
-    checkGauge(15.0d, 20.0d);
+    repository.update(key1, MyObject.ACTUAL, null);
+    checkGauge(0.0, 20.0);
   }
 
   public void testModification() throws Exception {
-    selectionService.select(Arrays.asList(obj1, obj2), MyObject.TYPE);
-    checkGauge(20.0d, 30.0d);
-
     repository.update(obj1.getKey(),
                       value(MyObject.ACTUAL, 25.0),
                       value(MyObject.TARGET, 50.0));
-    checkGauge(30.0d, 60.0d);
+    checkGauge(25.0d, 50.0d);
 
     repository.delete(obj2.getKey());
     checkGauge(25.0d, 50.0d);
 
-    Glob obj5 = create(5, 20d, 20d);
-    checkGauge(25.0d, 50.0d);
+    repository.delete(obj1.getKey());
+    checkGauge(0.0d, 0.0d, false);
 
-    selectionService.select(Arrays.asList(obj1, obj5), MyObject.TYPE);
-    checkGauge(45.0d, 70.0d);
-  }
+    repository.create(obj1.getKey(),
+                      value(MyObject.ACTUAL, 15.0),
+                      value(MyObject.TARGET, 40.0));
+    checkGauge(15.0d, 40.0d);
 
-  public void testActive() throws Exception {
-    selectionService.select(obj1);
-    checkGauge(15.0d, 20.0d);
-
-    repository.update(obj1.getKey(),
-                      value(MyObject.ACTIVE, false));
-    checkGauge(15.0d, 20.0d, false);
+    create(5, 20d, 20d);
+    checkGauge(15.0d, 40.0d);
   }
 
   public void testReset() throws Exception {
-    Glob obj6 =
+    Glob newObj1 =
       GlobBuilder.init(MyObject.TYPE)
-        .set(MyObject.ID, 6)
-        .set(MyObject.ACTUAL, 4.0)
-        .set(MyObject.TARGET, 7.0)
+        .set(MyObject.ID, 1)
+        .set(MyObject.ACTUAL, 10.0)
+        .set(MyObject.TARGET, 20.0)
+        .get();
+    Glob newObj2 =
+      GlobBuilder.init(MyObject.TYPE)
+        .set(MyObject.ID, 2)
+        .set(MyObject.ACTUAL, 20.0)
+        .set(MyObject.TARGET, 40.0)
         .get();
 
-    selectionService.select(obj1);
-    checkGauge(15.0d, 20.0d);
+    repository.reset(new GlobList(newObj1, newObj2), MyObject.TYPE);
+    checkGauge(10.0d, 20.0d);
 
-    repository.reset(new GlobList(obj6), MyObject.TYPE);
+    repository.reset(new GlobList(newObj2), MyObject.TYPE);
     checkGauge(0.0d, 0.0d, false);
-
-    selectionService.select(obj6);
-    checkGauge(4.0d, 7.0d, true);
   }
 
   private void checkGauge(double actual, double target) {

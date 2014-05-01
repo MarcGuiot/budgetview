@@ -865,27 +865,6 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
     budgetView.variable.checkOrder("Leisures", "Groceries");
   }
 
-  public void testGaugeWidthsAreAdjustedDependingOnTheirRespectiveSizes() throws Exception {
-    operations.openPreferences().setFutureMonthsCount(2).validate();
-
-    OfxBuilder.init(this)
-      .addTransaction("2008/07/10", -50.00, "Auchan")
-      .addTransaction("2008/07/01", -150.00, "Auchan")
-      .addTransaction("2008/07/05", -50.00, "FNAC")
-      .addTransaction("2008/07/20", -50.00, "FNAC")
-      .addTransaction("2008/07/05", -25.00, "Zara")
-      .addTransaction("2008/07/20", -25.00, "Zara")
-      .load();
-
-    categorization.setNewVariable("Auchan", "Groceries", -200.00);
-    categorization.setNewVariable("FNAC", "Leisures", -50.00);
-    categorization.setNewVariable("Zara", "Clothes", -50.00);
-
-    budgetView.variable.checkGaugeWidthRatio("Groceries", 1.0);
-    budgetView.variable.checkGaugeWidthRatio("Leisures", 0.5);
-    budgetView.variable.checkGaugeWidthRatio("Clothes", 0.25);
-  }
-
   public void testDeltaGauge() throws Exception {
 
     operations.openPreferences().setFutureMonthsCount(2).validate();

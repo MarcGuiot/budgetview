@@ -2,7 +2,10 @@ package org.designup.picsou.functests.seriesgroups;
 
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
+import org.designup.picsou.gui.model.PeriodSeriesStat;
+import org.designup.picsou.model.SeriesGroup;
 import org.designup.picsou.model.TransactionType;
+import org.globsframework.model.format.GlobPrinter;
 
 public class SeriesGroupTest extends LoggedInFunctionalTestCase {
 
@@ -10,6 +13,11 @@ public class SeriesGroupTest extends LoggedInFunctionalTestCase {
     setCurrentMonth("2014/01");
     super.setUp();
     getOperations().openPreferences().setFutureMonthsCount(6).validate();
+  }
+
+  protected void tearDown() throws Exception {
+    System.out.println("\n\n\n\nSeriesGroupTest.tearDown: ");
+    super.tearDown();
   }
 
   public void testAddAndDeleteGroup() throws Exception {
@@ -28,11 +36,15 @@ public class SeriesGroupTest extends LoggedInFunctionalTestCase {
     // -- Create a group with 2 envelopes --
 
     budgetView.variable.checkGroups("Leisures", "New group...");
+
     budgetView.variable.addToNewGroup("Food", "Groceries");
     budgetView.variable.checkContent("| Groceries | 80.00  | 200.00 |\n" +
                                      "| Food      | 80.00  | 200.00 |\n" +
                                      "| Leisures  | 100.00 | 200.00 |\n" +
                                      "| Home      | 0.00   | 100.00 |\n");
+
+    budgetView.variable.checkSeriesGauge("Food", -80.00, -200.00);
+    budgetView.variable.checkSeriesGauge("Groceries", -80.00, -200.00);
     budgetView.variable.checkGroupItems("Food");
     budgetView.variable.checkGroupToggleHidden("Home");
 

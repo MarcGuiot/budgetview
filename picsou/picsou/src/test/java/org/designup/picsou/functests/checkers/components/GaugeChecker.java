@@ -146,12 +146,4 @@ public class GaugeChecker extends AbstractUIComponent {
       }
     };
   }
-
-  public Assertion widthRatioEquals(final double widthRatio) {
-    return new Assertion() {
-      public void check() {
-        Assert.assertEquals(widthRatio, gauge.getWidthRatio());
-      }
-    };
-  }
 }
