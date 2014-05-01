@@ -32,7 +32,7 @@ public class ProjectListTest extends LoggedInFunctionalTestCase {
 
     projectChart.create();
     currentProject
-      .setName("Past Aug")
+      .setNameAndValidate("Past Aug")
       .addExpenseItem(0, "Item1", 201008, -200.00)
       .addExpenseItem(1, "Item2", 201010, -200.00)
       .backToList();
@@ -46,7 +46,7 @@ public class ProjectListTest extends LoggedInFunctionalTestCase {
 
     projects.create();
     currentProject
-      .setName("Current Jan")
+      .setNameAndValidate("Current Jan")
       .addExpenseItem(0, "Item1", 201101, -200.00)
       .addExpenseItem(1, "Item2", 201102, -200.00)
       .backToList();
@@ -56,7 +56,7 @@ public class ProjectListTest extends LoggedInFunctionalTestCase {
 
     projects.create();
     currentProject
-      .setName("Current Empty")
+      .setNameAndValidate("Current Empty")
       .backToList();
 
     projects.checkCurrentProjectsSectionShown();
@@ -64,7 +64,7 @@ public class ProjectListTest extends LoggedInFunctionalTestCase {
 
     projects.create();
     currentProject
-      .setName("Past Oct")
+      .setNameAndValidate("Past Oct")
       .addExpenseItem(0, "Item1", 201010, -200.00)
       .addExpenseItem(1, "Item2", 201011, -200.00)
       .backToList();
@@ -78,7 +78,7 @@ public class ProjectListTest extends LoggedInFunctionalTestCase {
 
     projects.create();
     currentProject
-      .setName("Current Oct")
+      .setNameAndValidate("Current Oct")
       .addExpenseItem(0, "Item1", 201010, -200.00)
       .addExpenseItem(1, "Item2", 201012, -200.00)
       .backToList();
@@ -123,7 +123,7 @@ public class ProjectListTest extends LoggedInFunctionalTestCase {
 
     projectChart.create();
     currentProject
-      .setName("Past Aug")
+      .setNameAndValidate("Past Aug")
       .addExpenseItem(0, "Item1", 201008, -200.00)
       .addExpenseItem(1, "Item2", 201010, -200.00)
       .backToList();
@@ -132,7 +132,7 @@ public class ProjectListTest extends LoggedInFunctionalTestCase {
 
     projects.create();
     currentProject
-      .setName("Current Jan")
+      .setNameAndValidate("Current Jan")
       .addExpenseItem(0, "Item1", 201101, -200.00)
       .addExpenseItem(1, "Item2", 201102, -200.00)
       .backToList();
@@ -168,19 +168,19 @@ public class ProjectListTest extends LoggedInFunctionalTestCase {
 
     currentProject
       .create()
-      .setName("Past Project")
+      .setNameAndValidate("Past Project")
       .addExpenseItem(0, "Reservation", 201007, -100.00)
       .addExpenseItem(1, "Hotel", 201008, -500.00);
 
     currentProject
       .create()
-      .setName("Current Project")
+      .setNameAndValidate("Current Project")
       .addExpenseItem(0, "Reservation", 201101, -100.00)
       .addExpenseItem(1, "Hotel", 201102, -500.00);
 
     currentProject
       .create()
-      .setName("Next Project")
+      .setNameAndValidate("Next Project")
       .addExpenseItem(0, "Reservation", 201105, -100.00);
 
     projectChart.checkProjectList("Current Project", "Next Project");

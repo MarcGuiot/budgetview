@@ -225,8 +225,7 @@ public class RestartTest extends LoggedInFunctionalTestCase {
 
     projectChart.create();
     currentProject
-      .setName("MyProject")
-      .setDefaultAccount("Account n. 001111")
+      .setNameAndDefaultAccount("MyProject", "Account n. 001111")
       .addExpenseItem(0, "Booking", 200808, -200.00)
       .addExpenseItem(1, "Travel", 200810, -100.00)
       .addExpenseItem(2, "Hotel", 200810, -500.00);
@@ -295,7 +294,7 @@ public class RestartTest extends LoggedInFunctionalTestCase {
 
     projectChart.create();
     currentProject
-      .setName("Trip")
+      .setNameAndValidate("Trip")
       .addTransferItem()
       .editTransfer(0)
       .setLabel("Transfer")

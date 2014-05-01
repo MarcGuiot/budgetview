@@ -55,15 +55,14 @@
       <label ref="imageLabel" margin="5" marginRight="10" minimumSize="(170,120)" preferredSize="(170,120)"
              fill="both"/>
       <column>
-        <row marginBottom="15">
-          <component ref="projectNameEditor"/>
+        <row marginTop="8" marginBottom="10">
+          <component ref="projectEditor"/>
           <filler fill="horizontal" weightX="0.1"/>
-          <toggleButton ref="activeToggle"/>
-          <button action="modify" styleClass="editIcon" autoHideSource="activeToggle"/>
+          <toggleButton ref="activeToggle" anchor="north" marginTop="8" marginLeft="5" marginRight="5"/>
+          <button action="modify" styleClass="editIcon" autoHideSource="activeToggle" anchor="north" marginTop="5"/>
         </row>
         <row>
-          <component ref="monthSlider" marginBottom="5"/>
-          <comboBox ref="accountSelection"/>
+          <component ref="monthSlider" marginBottom="10"/>
         </row>
         <row ref="gaugePanel" opaque="false" autoHideSource="gauge">
           <component ref="gauge" styleClass="totalGauge"/>

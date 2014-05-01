@@ -52,8 +52,15 @@ public class ProjectEditionChecker extends ViewChecker {
     return this;
   }
 
-  public ProjectEditionChecker setName(String name) {
+  public ProjectEditionChecker setNameAndValidate(String name) {
     getPanel().getTextBox("projectName").setText(name);
+    return this;
+  }
+
+  public ProjectEditionChecker setNameAndDefaultAccount(String name, String accountName) {
+    getPanel().getTextBox("projectName").setText(name, false);
+    getPanel().getComboBox("accountSelection").select(accountName);
+    getPanel().getPanel("projectEditor").getButton("validate").click();
     return this;
   }
 
@@ -62,18 +69,18 @@ public class ProjectEditionChecker extends ViewChecker {
     return this;
   }
 
-  public ProjectEditionChecker editName() {
+  public ProjectEditionChecker edit() {
     getPanel().getPanel("projectPanel").getButton("modify").click();
     return this;
   }
 
   public ProjectEditionChecker clearName() {
-    getPanel().getPanel("projectNameEditor").getInputTextBox("projectNameField").setText("", false);
+    getPanel().getPanel("projectEditor").getInputTextBox("projectNameField").setText("", false);
     return this;
   }
 
   public ProjectEditionChecker checkNameEditionInProgress(String name) {
-    Panel editor = getPanel().getPanel("projectNameEditor");
+    Panel editor = getPanel().getPanel("projectEditor");
     assertThat(editor.isVisible());
     assertThat(editor.getInputTextBox("projectNameField").textEquals(name));
     return this;
@@ -85,7 +92,7 @@ public class ProjectEditionChecker extends ViewChecker {
   }
 
   public ProjectEditionChecker checkProjectNameMessage(String expectedMessage) {
-    Panel editor = getPanel().getPanel("projectNameEditor");
+    Panel editor = getPanel().getPanel("projectEditor");
     TextBox nameField = editor.getTextBox("projectNameField");
     assertThat(nameField.isVisible());
     editor.getButton("Validate").click();
@@ -94,8 +101,8 @@ public class ProjectEditionChecker extends ViewChecker {
     return this;
   }
 
-  public ProjectEditionChecker cancelNameEdition() {
-    getPanel().getPanel("projectNameEditor").getButton("cancel").click();
+  public ProjectEditionChecker cancelEdition() {
+    getPanel().getPanel("projectEditor").getButton("cancel").click();
     return this;
   }
 

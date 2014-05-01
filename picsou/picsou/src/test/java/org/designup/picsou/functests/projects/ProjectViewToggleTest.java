@@ -2,8 +2,6 @@ package org.designup.picsou.functests.projects;
 
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
-import org.designup.picsou.model.Account;
-import org.globsframework.model.format.GlobPrinter;
 
 public class ProjectViewToggleTest extends LoggedInFunctionalTestCase {
   protected void setUp() throws Exception {
@@ -24,7 +22,7 @@ public class ProjectViewToggleTest extends LoggedInFunctionalTestCase {
 
     projectChart.create();
     projects.checkProjectsShown();
-    currentProject.setName("MyProject")
+    currentProject.setNameAndValidate("MyProject")
       .addExpenseItem(0, "Item1", 201312, -100.00);
     projectChart.checkShowDetailsButtonHidden();
 
@@ -50,7 +48,7 @@ public class ProjectViewToggleTest extends LoggedInFunctionalTestCase {
     projects.checkProjectsShown();
     projectChart.checkShowDetailsButtonHidden();
 
-    currentProject.cancelNameEdition();
+    currentProject.cancelEdition();
     projects.checkProjectsHidden();
     projectChart.checkShowDetailsButtonHidden();
     projectChart.checkShowsCreation();
@@ -76,7 +74,7 @@ public class ProjectViewToggleTest extends LoggedInFunctionalTestCase {
     timeline.selectMonth(201312);
     projectChart.create();
     projects.checkProjectsShown();
-    currentProject.setName("MyProject");
+    currentProject.setNameAndValidate("MyProject");
     checkChartsRange(201310, 201407);
 
     projects.hideProjects();

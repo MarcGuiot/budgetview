@@ -2,11 +2,7 @@ package org.designup.picsou.functests.projects;
 
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
-import org.designup.picsou.model.ProjectItem;
-import org.designup.picsou.model.ProjectTransfer;
-import org.designup.picsou.model.Series;
 import org.designup.picsou.model.TransactionType;
-import org.globsframework.model.format.GlobPrinter;
 
 public class ProjectTransferTest extends LoggedInFunctionalTestCase {
   protected void setUp() throws Exception {
@@ -44,7 +40,7 @@ public class ProjectTransferTest extends LoggedInFunctionalTestCase {
 
     projectChart.create();
     currentProject
-      .setName("Trip")
+      .setNameAndValidate("Trip")
       .addTransferItem()
       .editTransfer(0)
       .checkLabel("Transfer")
@@ -122,7 +118,7 @@ public class ProjectTransferTest extends LoggedInFunctionalTestCase {
 
     projectChart.create();
     currentProject
-      .setName("Trip")
+      .setNameAndValidate("Trip")
       .addExpenseItem(0, "Item 1", 201012, -100.00)
       .addTransferItem(1, "Transfer", 200.00, "Savings account", "Main account")
       .addTransferItem(2, "Savings", 200.00, "Main account", "Savings account");
@@ -201,7 +197,7 @@ public class ProjectTransferTest extends LoggedInFunctionalTestCase {
 
     projectChart.create();
     currentProject
-      .setName("Trip")
+      .setNameAndValidate("Trip")
       .addTransferItem()
       .editTransfer(0)
       .setAmount(200.00)
@@ -232,7 +228,7 @@ public class ProjectTransferTest extends LoggedInFunctionalTestCase {
 
     projectChart.create();
     currentProject
-      .setName("Trip")
+      .setNameAndValidate("Trip")
       .addTransferItem(0, "Transfer", 200.00, "Savings account 1", "Main account 1");
     currentProject.checkProjectGauge(0.00, 0.00);
     currentProject.checkPeriod("December 2010");
@@ -254,7 +250,7 @@ public class ProjectTransferTest extends LoggedInFunctionalTestCase {
 
     projectChart.create();
     currentProject
-      .setName("Trip")
+      .setNameAndValidate("Trip")
       .addTransferItem(0, "Transfer", 200.00, "Savings account 1", "Main account 1");
     currentProject.checkProjectGauge(0.00, 0.00);
     currentProject.checkPeriod("December 2010");
@@ -275,7 +271,7 @@ public class ProjectTransferTest extends LoggedInFunctionalTestCase {
 
     projectChart.create();
     currentProject
-      .setName("Trip")
+      .setNameAndValidate("Trip")
       .addTransferItem(0, "Transfer", 200.00, "Savings account 1", "Main account 1");
     currentProject.checkProjectGauge(0.00, 0.00);
     currentProject.checkPeriod("December 2010");
@@ -301,7 +297,7 @@ public class ProjectTransferTest extends LoggedInFunctionalTestCase {
 
     projectChart.create();
     currentProject
-      .setName("Trip")
+      .setNameAndValidate("Trip")
       .addTransferItem(0, "Transfer", 200.00, "Savings account 1", "Main account 1");
     currentProject.checkProjectGauge(0.00, 0.00);
     currentProject.checkPeriod("December 2010");
@@ -369,7 +365,7 @@ public class ProjectTransferTest extends LoggedInFunctionalTestCase {
       .loadInAccount("Main account 1");
 
     projectChart.create();
-    currentProject.setName("My Project")
+    currentProject.setNameAndValidate("My Project")
       .addTransferItem(0, "Transfer", 200.00, "Savings account 1", "Main account 1");
 
     categorization.setSavings("TRANSFER FROM SAVINGS ACCOUNT 1", "Transfer");
@@ -405,7 +401,7 @@ public class ProjectTransferTest extends LoggedInFunctionalTestCase {
 
     projectChart.create();
     currentProject
-      .setName("Trip")
+      .setNameAndValidate("Trip")
       .addTransferItem(0, "Transfer", 200.00, "Savings account 1", "Main account 1");
     currentProject.checkProjectGauge(0.00, 0.00);
     currentProject.checkPeriod("December 2010");
@@ -507,7 +503,7 @@ public class ProjectTransferTest extends LoggedInFunctionalTestCase {
 
     projectChart.create();
     currentProject
-      .setName("Trip")
+      .setNameAndValidate("Trip")
       .addTransferItem(0, "Transfer", 200.00, "Savings account 1", "Main account 1");
     currentProject.checkProjectGauge(0.00, 0.00);
     currentProject.checkPeriod("December 2010");

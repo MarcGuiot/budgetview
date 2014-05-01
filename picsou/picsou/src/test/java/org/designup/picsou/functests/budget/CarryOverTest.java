@@ -404,7 +404,7 @@ public class CarryOverTest extends LoggedInFunctionalTestCase {
     views.selectHome();
     projectChart.create();
     currentProject
-      .setName("My Project")
+      .setNameAndValidate("My Project")
       .addExpenseItem(0, "Item 0", 200808, -10.00)
       .addExpenseItem(1, "Item 1", 200808, -10.00);
 
