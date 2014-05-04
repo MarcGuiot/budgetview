@@ -2,6 +2,7 @@ package org.designup.picsou.functests.projects;
 
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
+import org.designup.picsou.model.TransactionType;
 
 public class ProjectWithAccountDeletionTest extends LoggedInFunctionalTestCase {
 
@@ -70,6 +71,13 @@ public class ProjectWithAccountDeletionTest extends LoggedInFunctionalTestCase {
     budgetView.extras
       .checkContent("| Project A | 100.00 | 1000.00 |\n" +
                     "| Project B | 0.00   | 500.00  |\n");
+    transactions.showPlannedTransactions();
+    transactions.initContent()
+      .add("11/12/2010", TransactionType.PLANNED, "Planned: First 1111", "", -900.00, "First 1111")
+      .add("11/12/2010", TransactionType.PLANNED, "Planned: Item 1", "", -500.00, "Item 1")
+      .add("10/12/2010", TransactionType.PRELEVEMENT, "FIRST 1111", "", -100.00, "First 1111")
+      .add("01/12/2010", TransactionType.VIREMENT, "INCOME", "", 1000.00)
+      .check();
 
     mainAccounts.openDelete("Account n. 001111")
       .checkMessageContains("All the operations and series associated to this account will be deleted.")
@@ -79,6 +87,9 @@ public class ProjectWithAccountDeletionTest extends LoggedInFunctionalTestCase {
     budgetView.extras
       .checkNoSeriesShown()
       .hideInactiveEnveloppes();
+    transactions
+      .checkShowsPlannedTransactions()
+      .checkEmpty();
   }
 
   public void testDeletingASavingsAccount() throws Exception {

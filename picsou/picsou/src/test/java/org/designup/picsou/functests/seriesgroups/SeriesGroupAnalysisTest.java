@@ -108,6 +108,16 @@ public class SeriesGroupAnalysisTest extends LoggedInFunctionalTestCase {
       .add("Savings", "", "", "", "", "", "", "", "")
       .check();
 
+    // ------ Navigate from budget view -----
+
+    seriesAnalysis.select("Balance");
+    views.selectBudget();
+    budgetView.variable.gotoAnalysis("Groceries");
+    views.checkAnalysisSelected();
+    seriesAnalysis.checkSelected("Groceries");
+    seriesAnalysis.checkSeriesChartLabel("Main variable series");
+    seriesAnalysis.checkHistoChartLabel("Evolution of 'Groceries'");
+
     // ------ Remove series from group -----
 
     budgetView.variable.removeFromGroup("Home");
@@ -221,9 +231,5 @@ public class SeriesGroupAnalysisTest extends LoggedInFunctionalTestCase {
       .checkDiffColumn(1, "Jan", "2014", 300.00, 80.00, true)
       .checkDiffColumn(2, "Feb", "2014", 300.00, 0.00)
       .checkDiffColumn(3, "Mar", "2014", 300.00, 0.00);
-  }
-
-  public void testNavigation() throws Exception {
-    fail("tbd: vue analyse + navigation");
   }
 }
