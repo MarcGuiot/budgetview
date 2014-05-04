@@ -3,10 +3,8 @@ package org.designup.picsou.gui.series.analysis.histobuilders.range;
 import org.designup.picsou.model.CurrentMonth;
 import org.designup.picsou.model.Month;
 import org.globsframework.model.GlobRepository;
-import org.globsframework.model.Key;
 import org.globsframework.model.utils.TypeChangeSetListener;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.SortedSet;
 
@@ -29,7 +27,7 @@ public class ScrollableHistoChartRange extends AbstractHistoChartRange {
     this.monthsLater = monthsLater;
     this.centerOnSelection = centerOnSelection;
     repository.addChangeListener(new TypeChangeSetListener(Month.TYPE) {
-      protected void update(GlobRepository repository) {
+      public void update(GlobRepository repository) {
         updateBounds();
       }
     });

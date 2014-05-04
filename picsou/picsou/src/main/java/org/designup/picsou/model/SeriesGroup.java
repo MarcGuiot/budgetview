@@ -44,6 +44,22 @@ public class SeriesGroup {
     return BudgetArea.get(group.get(BUDGET_AREA));
   }
 
+  public static void deleteAll(Glob group, GlobRepository repository) {
+    if (group == null) {
+      return;
+    }
+    repository.startChangeSet();
+    try {
+      for (Glob series : repository.findLinkedTo(group, Series.GROUP)) {
+        repository.update(series.getKey(), Series.GROUP, null);
+      }
+      repository.delete(group);
+    }
+    finally {
+      repository.completeChangeSet();
+    }
+  }
+
   public static class Serializer implements PicsouGlobSerializer {
 
     public int getWriteVersion() {

@@ -9,12 +9,15 @@ import org.designup.picsou.model.Series;
 import org.designup.picsou.model.Transaction;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobsPanelBuilder;
+import org.globsframework.gui.editors.GlobLinkComboEditor;
 import org.globsframework.gui.editors.GlobMultiLineTextEditor;
 import org.globsframework.gui.editors.GlobTextEditor;
+import org.globsframework.gui.splits.utils.Disposable;
+import org.globsframework.gui.views.GlobLabelView;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
-import org.globsframework.model.utils.GlobMatchers;
+import org.globsframework.model.utils.TypeChangeSetListener;
 import org.globsframework.utils.Strings;
 import org.globsframework.utils.directory.Directory;
 
@@ -23,6 +26,10 @@ import javax.swing.*;
 import static org.globsframework.model.utils.GlobMatchers.*;
 
 public class ProjectItemExpensePanel extends ProjectItemEditionPanel {
+
+  private GlobLinkComboEditor accountSelection;
+  private GlobLabelView accountLabel;
+  private TypeChangeSetListener listener;
 
   public ProjectItemExpensePanel(Glob item, JScrollPane scrollPane, GlobRepository parentRepository, Directory directory) {
     super(item, scrollPane, parentRepository, directory);
@@ -45,10 +52,20 @@ public class ProjectItemExpensePanel extends ProjectItemEditionPanel {
       .forceSelection(itemKey);
     builder.add("urlField", urlField);
 
-    builder.addComboEditor("accountSelection", ProjectItem.ACCOUNT)
-      .setEnabled(itemKey == null || !Series.hasRealOperations(parentRepository, localRepository.get(itemKey).get(ProjectItem.SERIES)))
+    accountSelection = builder.addComboEditor("accountSelection", ProjectItem.ACCOUNT)
       .setFilter(new Account.UserAccountMatcher())
       .forceSelection(itemKey);
+
+    accountLabel = builder.addLabel("accountLabel", ProjectItem.ACCOUNT)
+      .forceSelection(itemKey);
+    builder.addDisposable(new Disposable() {
+      public void dispose() {
+        accountLabel = null;
+        accountSelection = null;
+      }
+    });
+
+    registerAccountSelectionUpdater();
 
     GlobMultiLineTextEditor descriptionField = GlobMultiLineTextEditor.init(ProjectItem.DESCRIPTION, localRepository, directory)
       .forceSelection(itemKey);
@@ -62,12 +79,38 @@ public class ProjectItemExpensePanel extends ProjectItemEditionPanel {
     return builder.load();
   }
 
+  private void registerAccountSelectionUpdater() {
+    listener = new TypeChangeSetListener(Transaction.TYPE) {
+      public void update(GlobRepository repository) {
+        if ((accountSelection == null) || (accountLabel == null)) {
+          return;
+        }
+        if (itemKey == null || !Series.hasRealOperations(parentRepository, localRepository.get(itemKey).get(ProjectItem.SERIES))) {
+          accountSelection.setVisible(true);
+          accountLabel.getComponent().setVisible(false);
+        }
+        else {
+          accountSelection.setVisible(false);
+          accountLabel.getComponent().setVisible(true);
+        }
+      }
+    };
+    parentRepository.addChangeListener(listener);
+    listener.update(parentRepository);
+    disposables.add(new Disposable() {
+      public void dispose() {
+        parentRepository.removeChangeListener(listener);
+      }
+    });
+  }
+
   protected GlobList getAssignedTransactions(Glob projectItem, GlobRepository repository) {
     Glob series = repository.findLinkTarget(projectItem, ProjectItem.SERIES);
     if (series != null) {
       return repository.getAll(Transaction.TYPE,
                                and(linkedTo(series, Transaction.SERIES),
-                                   isFalse(Transaction.PLANNED)));
+                                   isFalse(Transaction.PLANNED))
+      );
     }
     return GlobList.EMPTY;
   }
@@ -78,5 +121,9 @@ public class ProjectItemExpensePanel extends ProjectItemEditionPanel {
 
   protected boolean usesImages() {
     return true;
+  }
+
+  public void dispose() {
+    super.dispose();
   }
 }

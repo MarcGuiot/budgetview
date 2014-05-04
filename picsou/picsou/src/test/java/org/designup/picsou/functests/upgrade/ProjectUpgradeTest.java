@@ -2,12 +2,7 @@ package org.designup.picsou.functests.upgrade;
 
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.model.*;
-import org.globsframework.model.format.GlobPrinter;
 import org.globsframework.utils.Files;
-
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
 
 public class ProjectUpgradeTest extends LoggedInFunctionalTestCase {
 
@@ -47,7 +42,7 @@ public class ProjectUpgradeTest extends LoggedInFunctionalTestCase {
     currentProject.view(0).checkCategorizationWarningNotShown();
     currentProject.view(1).checkCategorizationWarningShown();
     currentProject.view(2).checkCategorizationWarningNotShown();
-    currentProject.checkDefaultAccount("Compte Perso");
+    currentProject.checkDefaultAccountLabel("Compte Perso");
 
     categorization.initContent()
       .add("15/01/2014", "Voyage", "AIR FRANCE", -30.00)
@@ -209,7 +204,7 @@ public class ProjectUpgradeTest extends LoggedInFunctionalTestCase {
       .check();
 
     projects.select("Vacances");
-    currentProject.checkDefaultAccount("Compte Joint");
+    currentProject.checkDefaultAccountLabel("Compte Joint");
     currentProject.checkItems("| Voyage - Compte Joint     | Apr | 150.00  | 250.00  |\n" +
                               "| Voyage - Compte Perso     | Apr | 300.00  | 250.00  |\n" +
                               "| Provisions - Compte Joint | Apr | +50.00  | +150.00 |\n" +

@@ -27,7 +27,7 @@ public abstract class AbstractTableSignpost extends Signpost {
   public AbstractTableSignpost(BooleanField completionField, GlobRepository repository, Directory directory) {
     super(completionField, repository, directory);
     this.changeSetListener = new TypeChangeSetListener(SignpostStatus.TYPE) {
-      protected void update(GlobRepository repository) {
+      public void update(GlobRepository repository) {
         AbstractTableSignpost.this.update(table);
       }
     };

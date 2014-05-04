@@ -37,7 +37,8 @@ public class DeleteAccountHandler {
                                                                                             TransactionType.OPEN_ACCOUNT_EVENT.getId())),
                              not(fieldEquals(Transaction.TRANSACTION_TYPE,
                                              TransactionType.CLOSE_ACCOUNT_EVENT.getId())));
-    seriesMatcher = or(linkedTo(currentAccount, Series.FROM_ACCOUNT),
+    seriesMatcher = or(linkedTo(currentAccount, Series.TARGET_ACCOUNT),
+                       linkedTo(currentAccount, Series.FROM_ACCOUNT),
                        linkedTo(currentAccount, Series.TO_ACCOUNT));
 
     ConfirmationDialog confirmDialog = new ConfirmationDialog("accountDeletion.confirm.title",

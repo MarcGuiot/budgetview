@@ -11,6 +11,8 @@ public interface ChangeSet {
 
   boolean containsCreationsOrDeletions(GlobType type);
 
+  boolean containsCreations(GlobType type);
+
   boolean containsDeletions(GlobType type);
 
   boolean containsUpdates(Field field);

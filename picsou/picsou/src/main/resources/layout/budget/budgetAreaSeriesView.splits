@@ -110,7 +110,6 @@
                         tooltipText="$budgetview.tooltip.detail.planned"/>
                 <component ref="deltaGauge"/>
               </repeat>
-              <htmlEditorPane ref="footerArea" styleClass="hints"/>
               <filler fill="vertical" weightY="0.01"/>
             </verticalBoxes>
           </scrollPane>

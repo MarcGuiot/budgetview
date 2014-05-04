@@ -2,8 +2,6 @@ package org.designup.picsou.gui.budget;
 
 import com.jidesoft.swing.JideSplitPane;
 import org.designup.picsou.gui.View;
-import org.designup.picsou.gui.budget.footers.BudgetAreaSeriesFooter;
-import org.designup.picsou.gui.budget.footers.EmptyBudgetAreaSeriesFooter;
 import org.designup.picsou.gui.budget.summary.BudgetSummaryView;
 import org.designup.picsou.gui.components.highlighting.HighlightingService;
 import org.designup.picsou.gui.components.layoutconfig.SplitPaneConfig;
@@ -51,15 +49,7 @@ public class BudgetView extends View {
   private void addBudgetAreaView(String name,
                                  BudgetArea budgetArea,
                                  GlobsPanelBuilder builder) {
-    addBudgetAreaView(name, budgetArea, new EmptyBudgetAreaSeriesFooter(), builder);
-  }
-
-  private void addBudgetAreaView(String name,
-                                 BudgetArea budgetArea,
-                                 BudgetAreaSeriesFooter footer,
-                                 GlobsPanelBuilder builder) {
-    View view = new BudgetAreaSeriesView(name, budgetArea, repository, directory, footer);
+    View view = new BudgetAreaSeriesView(name, budgetArea, repository, directory);
     view.registerComponents(builder);
-
   }
 }

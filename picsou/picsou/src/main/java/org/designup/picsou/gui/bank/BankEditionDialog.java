@@ -76,7 +76,7 @@ public class BankEditionDialog {
 
     nameFlag = new MandatoryFieldFlag("nameFlag", builder);
     localRepository.addChangeListener(new TypeChangeSetListener(Bank.TYPE) {
-      protected void update(GlobRepository repository) {
+      public void update(GlobRepository repository) {
         updateMandatoryFlag();
       }
     });

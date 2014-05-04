@@ -43,7 +43,7 @@ public class SeriesAnalysisBreadcrumb implements GlobSelectionListener {
     selectionService = directory.get(SelectionService.class);
     selectionService.addListener(this, SeriesWrapper.TYPE);
     repository.addChangeListener(new TypeChangeSetListener(Series.TYPE) {
-      protected void update(GlobRepository repository) {
+      public void update(GlobRepository repository) {
         SeriesAnalysisBreadcrumb.this.update();
       }
     });

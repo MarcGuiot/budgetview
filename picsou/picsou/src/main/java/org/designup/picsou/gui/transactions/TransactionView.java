@@ -112,7 +112,7 @@ public class TransactionView extends View implements Filterable {
     builder.add("transactionSearch", search.getPanel());
 
     repository.addChangeListener(new TypeChangeSetListener(Series.TYPE, SubSeries.TYPE) {
-      protected void update(GlobRepository repository) {
+      public void update(GlobRepository repository) {
         search.reapplyFilterIfActive();
       }
     });

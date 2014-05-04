@@ -157,6 +157,15 @@ public class ReplicationGlobRepository extends DefaultGlobRepository implements 
     }
   }
 
+  public GlobList findLinkedTo(Key target, Link link) {
+    if (managedTypes.contains(link.getSourceType())) {
+      return super.findLinkedTo(target, link);
+    }
+    else {
+      return originalRepository.findLinkedTo(target, link);
+    }
+  }
+
   public GlobList findLinkedTo(Glob target, Link link) {
     if (managedTypes.contains(link.getSourceType())) {
       return super.findLinkedTo(target, link);

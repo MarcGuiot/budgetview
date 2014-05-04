@@ -76,7 +76,7 @@ public class DefaultGlobRepository implements GlobRepository, IndexSource {
     return find(targetKey);
   }
 
-  public GlobList findLinkedTo(Glob target, Link link) {
+  public GlobList findLinkedTo(Key target, Link link) {
     if (target == null) {
       return GlobList.EMPTY;
     }
@@ -87,7 +87,7 @@ public class DefaultGlobRepository implements GlobRepository, IndexSource {
       return getAll(link.getSourceType(), GlobMatchers.fieldEquals((LinkField)link, id));
     }
 
-    Key targetKey = target.getKey();
+    Key targetKey = target;
     GlobList result = new GlobList();
     for (Glob glob : getAll(link.getSourceType())) {
       if (targetKey.equals(glob.getTargetKey(link))) {
@@ -96,6 +96,13 @@ public class DefaultGlobRepository implements GlobRepository, IndexSource {
     }
 
     return result;
+  }
+
+  public GlobList findLinkedTo(Glob target, Link link) {
+    if (target == null) {
+      return GlobList.EMPTY;
+    }
+    return findLinkedTo(target.getKey(), link);
   }
 
   public boolean contains(Key key) {
@@ -664,7 +671,7 @@ public class DefaultGlobRepository implements GlobRepository, IndexSource {
     boolean isRemoved = changeListeners.remove(listener);
     Utils.beginRemove();
     if (!isRemoved) {
-      throw new RuntimeException("BUG");
+      throw new RuntimeException("Listener not found, cannot be removed: " + listener);
     }
     Utils.endRemove();
   }

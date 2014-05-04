@@ -129,6 +129,23 @@ public class Project {
     }
   }
 
+  public static void deleteAll(org.globsframework.model.Key key, GlobRepository repository) {
+    repository.startChangeSet();
+    try {
+      Glob project = repository.find(key);
+      if (project != null) {
+        SeriesGroup.deleteAll(repository.findLinkTarget(project, Project.SERIES_GROUP), repository);
+        for (Glob item : repository.findLinkedTo(project, ProjectItem.PROJECT)) {
+          ProjectItem.deleteAll(item, repository);
+        }
+        repository.delete(ProjectStat.TYPE, linkedTo(project, ProjectStat.PROJECT));
+      }
+    }
+    finally {
+      repository.completeChangeSet();
+    }
+  }
+
   public static class Serializer implements PicsouGlobSerializer {
 
     public int getWriteVersion() {

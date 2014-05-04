@@ -17,6 +17,7 @@ import org.globsframework.utils.serialization.SerializedInput;
 import org.globsframework.utils.serialization.SerializedInputOutputFactory;
 import org.globsframework.utils.serialization.SerializedOutput;
 
+import static org.globsframework.model.FieldValue.value;
 import static org.globsframework.model.utils.GlobMatchers.*;
 
 public class Transaction {
@@ -265,6 +266,14 @@ public class Transaction {
                or(GlobMatchers.fieldStrictlyLessThan(Transaction.POSITION_MONTH, monthId),
                   and(fieldEquals(Transaction.POSITION_MONTH, monthId),
                       fieldLessOrEqual(Transaction.POSITION_DAY, day))));
+  }
+
+  public static void uncategorize(GlobList transactions, GlobRepository repository) {
+    for (Glob transaction : transactions) {
+      repository.update(transaction.getKey(),
+                        value(SERIES, Series.UNCATEGORIZED_SERIES_ID),
+                        value(SUB_SERIES, null));
+    }
   }
 
   public static class Serializer implements PicsouGlobSerializer {

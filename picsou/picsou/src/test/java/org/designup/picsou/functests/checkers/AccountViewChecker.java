@@ -174,7 +174,7 @@ public abstract class AccountViewChecker<T extends AccountViewChecker> extends V
     return PopupButton.init(getAccountPanel(accountName), "editAccount");
   }
 
-  public ConfirmationDialogChecker delete(String accountName) {
+  public ConfirmationDialogChecker openDelete(String accountName) {
     return ConfirmationDialogChecker.open(openPopup(accountName).triggerClick("Delete..."));
   }
 

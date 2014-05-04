@@ -34,7 +34,7 @@ public class ProjectManagementTest extends LoggedInFunctionalTestCase {
       .checkItemCount(0);
     currentProject.addExpenseItem()
       .editExpense(0)
-      .checkTargetAcount("Account n. 001111")
+      .checkTargetAccountCombo("Account n. 001111")
       .setLabel("Reservation")
       .checkMonth("Jan 2011")
       .setAmount(-200.00)
@@ -760,7 +760,7 @@ public class ProjectManagementTest extends LoggedInFunctionalTestCase {
                               "| Third  | Feb | 0.00 | 100.00 |");
   }
 
-  public void testWithMultipleMainAccount() throws Exception {
+  public void testWithMultipleMainAccounts() throws Exception {
     operations.hideSignposts();
     operations.openPreferences().setFutureMonthsCount(6).validate();
     OfxBuilder.init(this)
@@ -781,13 +781,11 @@ public class ProjectManagementTest extends LoggedInFunctionalTestCase {
       .addExpenseItem(0, "First 1111", 201012, -1000.00, "Account n. 001111")
       .addExpenseItem(1, "Second 2222", 201012, -100.00);
     currentProject
-      .toggleAndEditExpense(1)
-      .checkTargetAcount("Account n. 002222")
-      .cancel();
-    currentProject
       .toggleAndEditExpense(0)
-      .checkTargetAcount("Account n. 001111")
-      .cancel();
+      .checkTargetAccountCombo("Account n. 001111");
+    currentProject
+      .toggleAndEditExpense(1)
+      .checkTargetAccountCombo("Account n. 002222");
 
     timeline.selectAll();
     transactions
@@ -802,10 +800,28 @@ public class ProjectManagementTest extends LoggedInFunctionalTestCase {
       .check();
 
     categorization.selectTransaction("FIRST 1111")
-      .selectExtras().selectSeries("First 1111");
+      .selectExtras()
+      .checkGroupDoesNotContainSeries("My project", "Second 2222")
+      .selectSeries("First 1111");
+
+    currentProject
+      .editExpense(0)
+      .checkTargetAccountLabel("Account n. 001111");
+    currentProject
+      .editExpense(1)
+      .checkTargetAccountCombo("Account n. 002222");
 
     categorization.selectTransaction("SECOND 2222")
-      .selectExtras().selectSeries("Second 2222");
+      .selectExtras()
+      .checkGroupDoesNotContainSeries("My project", "First 1111")
+      .selectSeries("Second 2222");
+
+    currentProject
+      .editExpense(1)
+      .checkTargetAccountLabel("Account n. 002222");
+
+    currentProject.editExpense(0).validate();
+    currentProject.editExpense(1).validate();
 
     transactions.initAmountContent()
       .add("11/12/2010", "Planned: First 1111", -900.00, "First 1111", 100.00, 100.00, "Account n. 001111")
@@ -817,9 +833,37 @@ public class ProjectManagementTest extends LoggedInFunctionalTestCase {
 
     currentProject
       .toggleAndEditExpense(0)
-      .checkTargetAcountNotEditable()
+      .checkTargetAccountLabel("Account n. 001111")
       .cancel();
+  }
 
+  public void testCreatingAProjectWithNoAccounts() throws Exception {
+    operations.hideSignposts();
+    operations.openPreferences().setFutureMonthsCount(6).validate();
+    OfxBuilder.init(this)
+      .addBankAccount("001111", 1000.00, "2010/12/30")
+      .addTransaction("2010/12/01", 1000.00, "Income")
+      .addTransaction("2010/12/10", -100.00, "first 1111")
+      .load();
 
+    OfxBuilder.init(this)
+      .addBankAccount("002222", 00.00, "2010/12/30")
+      .addTransaction("2010/12/01", 500.00, "Income")
+      .addTransaction("2010/12/10", -400.00, "second 2222")
+      .load();
+
+    projectChart.create();
+    currentProject.setNameAndValidate("My project");
+    currentProject.checkDefaultAccountLabel("Account n. 001111");
+    currentProject.addExpenseItem(0, "Item 1", 201012, -200.00);
+    budgetView.extras.checkContent("| My project | 0.00 | 200.00 |\n");
+
+    currentProject.edit()
+      .checkDefaultAccountCombo("Account n. 001111")
+      .setDefaultAccount("Account n. 002222")
+      .validateProjectEdition();
+    currentProject.toggleAndEditExpense(0).checkTargetAccountCombo("Account n. 001111").validate();
+
+    budgetView.extras.checkContent("| My project | 0.00 | 200.00 |\n");
   }
 }

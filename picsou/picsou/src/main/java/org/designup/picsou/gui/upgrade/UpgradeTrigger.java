@@ -12,7 +12,6 @@ import org.designup.picsou.triggers.AccountSequenceTrigger;
 import org.designup.picsou.triggers.PositionTrigger;
 import org.designup.picsou.triggers.SeriesBudgetTrigger;
 import org.designup.picsou.triggers.savings.UpdateMirrorSeriesChangeSetVisitor;
-import org.designup.picsou.utils.Lang;
 import org.designup.picsou.utils.TransactionComparator;
 import org.globsframework.metamodel.Field;
 import org.globsframework.metamodel.GlobType;
@@ -24,7 +23,6 @@ import org.globsframework.model.repository.LocalGlobRepository;
 import org.globsframework.model.repository.LocalGlobRepositoryBuilder;
 import org.globsframework.model.utils.GlobBuilder;
 import org.globsframework.model.utils.GlobFunctor;
-import org.globsframework.model.utils.GlobMatcher;
 import org.globsframework.model.utils.GlobMatchers;
 import org.globsframework.utils.Log;
 import org.globsframework.utils.Utils;
@@ -133,9 +131,9 @@ public class UpgradeTrigger implements ChangeSetListener {
       deleteDuplicateSynchro(repository);
     }
     if (currentJarVersion < 133) {
-      projectUpgrade.updateProjectSeriesAndGroups(repository);
-      updateTargetAccount(repository);
       AccountSequenceTrigger.resetSequence(repository);
+      projectUpgrade.updateProjectSeriesAndGroups(repository);
+      updateTargetAccountForSeries(repository);
     }
 
     FrameSize frameSize = FrameSize.init(directory.get(JFrame.class));
@@ -154,7 +152,7 @@ public class UpgradeTrigger implements ChangeSetListener {
     repository.update(UserVersionInformation.KEY, UserVersionInformation.CURRENT_JAR_VERSION, PicsouApplication.JAR_VERSION);
   }
 
-  private void updateTargetAccount(GlobRepository repository) {
+  private void updateTargetAccountForSeries(GlobRepository repository) {
     SeriesBudgetTrigger seriesBudgetTrigger = new SeriesBudgetTrigger(repository);
     LocalGlobRepository subGlobRepository = LocalGlobRepositoryBuilder.init(repository)
       .copy(Month.TYPE, CurrentMonth.TYPE).get();

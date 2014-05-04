@@ -74,6 +74,10 @@ public class GlobRepositoryDecorator implements GlobRepository {
     return getRepository().findLinkTarget(source, link);
   }
 
+  public GlobList findLinkedTo(Key target, Link link) {
+    return getRepository().findLinkedTo(target, link);
+  }
+
   public GlobList findLinkedTo(Glob target, Link link) {
     return getRepository().findLinkedTo(target, link);
   }

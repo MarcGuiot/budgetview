@@ -301,7 +301,7 @@ public class BudgetViewChecker extends ViewChecker {
       for (int i = 0; i < seriesNames.length; i++) {
         table.addRow(seriesNames[i].getLabel(), actualAmounts[i].getLabel(), plannedAmounts[i].getLabel());
       }
-      Assert.assertEquals(expected, table.toString());
+      Assert.assertEquals(expected.trim(), table.toString().trim());
       return this;
     }
 
