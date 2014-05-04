@@ -22,7 +22,7 @@ public class ProjectMultiMonthPaymentsTest extends LoggedInFunctionalTestCase {
 
     projectChart.create();
     currentProject
-      .setName("Camera")
+      .setNameAndValidate("Camera")
       .addExpenseItem(0, "Camera Body", 201012, -80.00, 10)
       .addExpenseItem(1, "Lens", 201012, -200.00);
     projectChart.checkProject("Camera", 201012, 201109, 1000.00);
@@ -67,7 +67,7 @@ public class ProjectMultiMonthPaymentsTest extends LoggedInFunctionalTestCase {
   public void testCannotEnterZeroOrNegativeNumbersAsMonthCount() throws Exception {
     projectChart.create();
     currentProject
-      .setName("Camera")
+      .setNameAndValidate("Camera")
       .addExpenseItem()
       .editExpense(0)
       .setLabel("Body")

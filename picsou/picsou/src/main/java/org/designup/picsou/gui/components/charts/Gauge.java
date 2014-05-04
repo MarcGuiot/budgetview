@@ -13,12 +13,9 @@ public class Gauge extends ActionablePanel {
   private static final int ARC_WIDTH = 5;
   private static final int ARC_HEIGHT = 10;
 
-  private static final boolean USE_PROPORTIONAL_WIDTH = false;
-
   private static final int DEFAULT_BAR_HEIGHT = 12;
   private static final int HORIZONTAL_MARGIN = 1;
   private static final int VERTICAL_MARGIN = 0;
-  private static final double FIXED_WIDTH_RATIO = 0.2;
 
   private static final int HORIZONTAL_TEXT_MARGIN = 7;
   private static final int VERTICAL_TEXT_MARGIN = 1;
@@ -47,7 +44,6 @@ public class Gauge extends ActionablePanel {
   private FontMetrics fontMetrics;
   private int fontHeight;
   private int descent;
-  private Double maxValue;
 
   private GaugeModel model;
 
@@ -112,7 +108,7 @@ public class Gauge extends ActionablePanel {
     }
 
     int totalWidth = getWidth() - 1 - 2 * HORIZONTAL_MARGIN;
-    int width = getAdjustedWidth(totalWidth);
+    int width = totalWidth;
     int height = getHeight() - 1 - 2 * VERTICAL_MARGIN;
     int minX = HORIZONTAL_MARGIN;
 
@@ -153,26 +149,6 @@ public class Gauge extends ActionablePanel {
     drawBorder(g2, minX, barTop, width);
 
     drawText(g2);
-  }
-
-  private int getAdjustedWidth(int totalWidth) {
-    if (!USE_PROPORTIONAL_WIDTH) {
-      return totalWidth;
-    }
-    Double value = Utils.max(Math.abs(getActualValue()), Math.abs(getTargetValue()));
-    if (Math.abs(value) < 0.1) {
-      return 0;
-    }
-    int fixedWidth = (int)(FIXED_WIDTH_RATIO * totalWidth);
-    return fixedWidth + (int)((totalWidth - fixedWidth) * getWidthRatio());
-  }
-
-  public double getWidthRatio() {
-    if ((maxValue == null) || (maxValue == 0.0)) {
-      return 1.0;
-    }
-    Double value = Utils.max(Math.abs(getActualValue()), Math.abs(getTargetValue()));
-    return Math.abs(value / maxValue);
   }
 
   private void drawBorder(Graphics2D g2, int barX, int barTop, int barWidth) {
@@ -315,10 +291,6 @@ public class Gauge extends ActionablePanel {
 
   public double getBeginPercent() {
     return model.getBeginPercent();
-  }
-
-  public void setMaxValue(Double maxValue) {
-    this.maxValue = maxValue;
   }
 
   public void setActive(boolean active) {

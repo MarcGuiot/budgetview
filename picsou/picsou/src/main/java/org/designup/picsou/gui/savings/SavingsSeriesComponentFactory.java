@@ -1,5 +1,6 @@
 package org.designup.picsou.gui.savings;
 
+import com.budgetview.shared.utils.Amounts;
 import org.designup.picsou.gui.budget.SeriesEditionButtons;
 import org.designup.picsou.gui.card.NavigationService;
 import org.designup.picsou.gui.components.charts.BudgetAreaGaugeFactory;
@@ -8,12 +9,12 @@ import org.designup.picsou.gui.components.charts.GlobGaugeView;
 import org.designup.picsou.gui.components.tips.ShowDetailsTipAction;
 import org.designup.picsou.gui.description.Formatting;
 import org.designup.picsou.gui.model.PeriodSeriesStat;
+import org.designup.picsou.gui.model.SeriesType;
 import org.designup.picsou.gui.series.SeriesEditor;
 import org.designup.picsou.model.Account;
 import org.designup.picsou.model.BudgetArea;
 import org.designup.picsou.model.Month;
 import org.designup.picsou.model.Series;
-import com.budgetview.shared.utils.Amounts;
 import org.globsframework.gui.SelectionService;
 import org.globsframework.gui.splits.PanelBuilder;
 import org.globsframework.gui.splits.repeat.RepeatComponentFactory;
@@ -22,11 +23,11 @@ import org.globsframework.metamodel.fields.DoubleField;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
+import org.globsframework.model.Key;
 import org.globsframework.model.format.DescriptionService;
 import org.globsframework.model.format.GlobListStringifier;
 import org.globsframework.model.format.GlobStringifier;
 import org.globsframework.model.utils.GlobListFunctor;
-import org.globsframework.model.utils.GlobMatchers;
 import org.globsframework.utils.directory.Directory;
 
 public class SavingsSeriesComponentFactory implements RepeatComponentFactory<Glob> {
@@ -69,27 +70,15 @@ public class SavingsSeriesComponentFactory implements RepeatComponentFactory<Glo
       }
     });
 
-    Glob fromAccount = repository.findLinkTarget(series, Series.FROM_ACCOUNT);
-    Glob toAccount = repository.findLinkTarget(series, Series.TO_ACCOUNT);
-//    boolean mainAccount = account.get(Account.ID).equals(Account.MAIN_SUMMARY_ACCOUNT_ID);
-    Gauge gauge;
-//    if (fromAccount != null && fromAccount.equals(account)) {
-//      gauge = BudgetAreaGaugeFactory.createGauge(!mainAccount);
-//    }
-//    else {
-//      if (toAccount == null || !toAccount.equals(account)) {
-//        throw new UnexpectedApplicationState("No target account");
-//      }
-      gauge = BudgetAreaGaugeFactory.createGauge(false);
-//    }
+    Gauge gauge = BudgetAreaGaugeFactory.createGauge(false);
     final double multiplier = Account.getMultiplierForInOrOutputOfTheAccount(series);
-
     final GlobGaugeView gaugeView =
-      new GlobGaugeView(PeriodSeriesStat.TYPE, gauge, BudgetArea.SAVINGS, PeriodSeriesStat.AMOUNT,
+      new GlobGaugeView(Key.create(PeriodSeriesStat.TARGET_TYPE, SeriesType.SERIES.getId(),
+                                   PeriodSeriesStat.TARGET, series.get(Series.ID)),
+                        gauge, BudgetArea.SAVINGS, PeriodSeriesStat.AMOUNT,
                         PeriodSeriesStat.PLANNED_AMOUNT, PeriodSeriesStat.PAST_REMAINING, PeriodSeriesStat.FUTURE_REMAINING,
                         PeriodSeriesStat.PAST_OVERRUN, PeriodSeriesStat.FUTURE_OVERRUN,
                         PeriodSeriesStat.ACTIVE,
-                        GlobMatchers.fieldEquals(PeriodSeriesStat.TARGET, series.get(Series.ID)),
                         repository, directory) {
         protected double getValue(Glob glob, DoubleField field) {
           return multiplier * Math.abs(super.getValue(glob, field));

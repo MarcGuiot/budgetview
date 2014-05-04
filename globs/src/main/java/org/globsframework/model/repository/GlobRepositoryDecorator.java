@@ -78,10 +78,6 @@ public class GlobRepositoryDecorator implements GlobRepository {
     return getRepository().findLinkedTo(target, link);
   }
 
-  public Integer getNextId(IntegerField field, int count) {
-    return getRepository().getNextId(field, count);
-  }
-
   public Glob create(GlobType type, FieldValue... values) throws MissingInfo, ItemAlreadyExists {
     return getRepository().create(type, values);
   }

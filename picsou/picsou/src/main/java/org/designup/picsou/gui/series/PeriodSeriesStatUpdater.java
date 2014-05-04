@@ -1,10 +1,9 @@
 package org.designup.picsou.gui.series;
 
 import com.budgetview.shared.utils.Amounts;
-import org.designup.picsou.model.SignpostStatus;
 import org.designup.picsou.gui.model.PeriodSeriesStat;
-import org.designup.picsou.gui.model.SeriesType;
 import org.designup.picsou.gui.model.SeriesStat;
+import org.designup.picsou.gui.model.SeriesType;
 import org.designup.picsou.gui.series.utils.SeriesOrGroup;
 import org.designup.picsou.model.*;
 import org.globsframework.gui.GlobSelection;
@@ -53,7 +52,8 @@ public class PeriodSeriesStatUpdater implements GlobSelectionListener, ChangeSet
       selectedMonths.removeAll(changeSet.getDeleted(Month.TYPE));
       updateSelection();
     }
-    else if (changeSet.containsChanges(SeriesStat.TYPE) ||
+    else if (changeSet.containsUpdates(Series.GROUP) ||
+             changeSet.containsChanges(SeriesStat.TYPE) ||
              changeSet.containsChanges(SeriesGroup.TYPE) ||
              changeSet.containsChanges(CurrentMonth.KEY)) {
       updateSelection();
@@ -73,7 +73,8 @@ public class PeriodSeriesStatUpdater implements GlobSelectionListener, ChangeSet
       repository.safeApply(SeriesStat.TYPE,
                            and(fieldContained(SeriesStat.MONTH, selectedMonths.getValueSet(Month.ID)),
                                isSeries()),
-                           seriesStatFunctor);
+                           seriesStatFunctor
+      );
       initToUpdateField();
       initGroups();
       initEvolutionFields();
@@ -224,10 +225,12 @@ public class PeriodSeriesStatUpdater implements GlobSelectionListener, ChangeSet
                         value(PeriodSeriesStat.FUTURE_OVERRUN, futureOverrun),
                         value(PeriodSeriesStat.ABS_SUM_AMOUNT,
                               Math.abs(plannedAmount == null ? 0 : plannedAmount) > Math.abs(amount) ?
-                              Math.abs(plannedAmount == null ? 0 : plannedAmount) : Math.abs(amount)),
+                              Math.abs(plannedAmount == null ? 0 : plannedAmount) : Math.abs(amount)
+                        ),
                         value(PeriodSeriesStat.VISIBLE, visible),
                         value(PeriodSeriesStat.ACTIVE, isActive),
-                        value(PeriodSeriesStat.TO_SET, false));
+                        value(PeriodSeriesStat.TO_SET, false)
+      );
 
       stats.add(periodStat);
     }

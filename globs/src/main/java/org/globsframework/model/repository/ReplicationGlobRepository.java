@@ -3,7 +3,6 @@ package org.globsframework.model.repository;
 import org.globsframework.metamodel.Field;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.Link;
-import org.globsframework.metamodel.fields.IntegerField;
 import org.globsframework.metamodel.index.Index;
 import org.globsframework.metamodel.index.MultiFieldIndex;
 import org.globsframework.model.*;
@@ -11,8 +10,8 @@ import org.globsframework.model.delta.DefaultChangeSet;
 import org.globsframework.model.utils.ChangeVisitor;
 import org.globsframework.model.utils.GlobFunctor;
 import org.globsframework.model.utils.GlobMatcher;
-import org.globsframework.utils.collections.MultiMap;
 import org.globsframework.utils.Utils;
+import org.globsframework.utils.collections.MultiMap;
 import org.globsframework.utils.exceptions.*;
 
 import java.util.*;
@@ -164,15 +163,6 @@ public class ReplicationGlobRepository extends DefaultGlobRepository implements 
     }
     else {
       return originalRepository.findLinkedTo(target, link);
-    }
-  }
-
-  public Integer getNextId(IntegerField field, int count) {
-    if (managedTypes.contains(field.getGlobType())) {
-      return super.getNextId(field, count);
-    }
-    else {
-      return originalRepository.getNextId(field, count);
     }
   }
 

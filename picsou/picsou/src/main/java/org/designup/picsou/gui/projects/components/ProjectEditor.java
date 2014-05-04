@@ -3,6 +3,7 @@ package org.designup.picsou.gui.projects.components;
 import org.designup.picsou.gui.components.PopupGlobFunctor;
 import org.designup.picsou.gui.components.tips.ErrorTip;
 import org.designup.picsou.gui.components.tips.TipPosition;
+import org.designup.picsou.model.Account;
 import org.designup.picsou.model.Project;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobsPanelBuilder;
@@ -24,7 +25,7 @@ import org.globsframework.utils.directory.Directory;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 
-public class ProjectNameEditor {
+public class ProjectEditor {
 
   private GlobRepository parentRepository;
   private LocalGlobRepository localRepository;
@@ -44,7 +45,7 @@ public class ProjectNameEditor {
     void processEditShown(boolean shown);
   }
 
-  public ProjectNameEditor(PopupMenuFactory menuFactory, GlobRepository parentRepository, Directory directory) {
+  public ProjectEditor(PopupMenuFactory menuFactory, GlobRepository parentRepository, Directory directory) {
     this.menuFactory = menuFactory;
     this.parentRepository = parentRepository;
     this.localRepository =
@@ -87,7 +88,7 @@ public class ProjectNameEditor {
   }
 
   private void createPanel() {
-    GlobsPanelBuilder builder = new GlobsPanelBuilder(getClass(), "/layout/projects/components/projectNameEditor.splits",
+    GlobsPanelBuilder builder = new GlobsPanelBuilder(getClass(), "/layout/projects/components/projectEditor.splits",
                                                       parentRepository, directory);
 
     cards = builder.addCardHandler("projectNameCards");
@@ -102,6 +103,12 @@ public class ProjectNameEditor {
                                                         parentRepository);
 
     nameField = builder.addEditor("projectNameField", Project.NAME);
+
+    builder.addLabel("accountLabel", Project.DEFAULT_ACCOUNT);
+
+    builder.addComboEditor("accountSelection", Project.DEFAULT_ACCOUNT)
+      .setFilter(new Account.UserAccountMatcher());
+
     ValidateAction validate = new ValidateAction();
     builder.add("validate", validate);
     nameField.setValidationAction(validate);
@@ -126,6 +133,7 @@ public class ProjectNameEditor {
     }
 
     public void actionPerformed(ActionEvent e) {
+      nameField.apply();
       if (!check()) {
         return;
       }

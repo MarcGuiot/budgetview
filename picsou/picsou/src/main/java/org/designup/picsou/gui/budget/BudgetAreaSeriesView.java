@@ -12,7 +12,6 @@ import org.designup.picsou.gui.components.highlighting.HighlightUpdater;
 import org.designup.picsou.gui.components.tips.ShowDetailsTipAction;
 import org.designup.picsou.gui.components.utils.BlankAction;
 import org.designup.picsou.gui.description.AmountStringifier;
-import org.designup.picsou.gui.model.PeriodBudgetAreaStat;
 import org.designup.picsou.gui.model.PeriodSeriesStat;
 import org.designup.picsou.gui.projects.actions.CreateProjectAction;
 import org.designup.picsou.gui.savings.ToggleToSavingsAction;
@@ -26,9 +25,9 @@ import org.globsframework.gui.GlobSelection;
 import org.globsframework.gui.GlobSelectionListener;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.actions.ToggleBooleanAction;
+import org.globsframework.gui.splits.PanelBuilder;
 import org.globsframework.gui.splits.SplitsLoader;
 import org.globsframework.gui.splits.SplitsNode;
-import org.globsframework.gui.splits.PanelBuilder;
 import org.globsframework.gui.splits.repeat.Repeat;
 import org.globsframework.gui.splits.repeat.RepeatComponentFactory;
 import org.globsframework.gui.splits.utils.Disposable;
@@ -40,7 +39,6 @@ import org.globsframework.metamodel.fields.DoubleField;
 import org.globsframework.model.*;
 import org.globsframework.model.format.GlobListStringifier;
 import org.globsframework.model.utils.GlobListFunctor;
-import org.globsframework.model.utils.GlobMatchers;
 import org.globsframework.model.utils.GlobUtils;
 import org.globsframework.utils.directory.Directory;
 import org.globsframework.utils.exceptions.UnexpectedValue;
@@ -251,7 +249,7 @@ public class BudgetAreaSeriesView extends View {
 
       final Glob target = PeriodSeriesStat.findTarget(periodSeriesStat, repository);
 
-      NameLabelPopupButton nameButton = getNameButton(periodSeriesStat, target, cellBuilder);
+      NameLabelPopupButton nameButton = getNameButton(periodSeriesStat, target);
       final SplitsNode<JButton> seriesName = cellBuilder.add("seriesName", nameButton.getComponent());
       cellBuilder.addDisposable(nameButton);
 
@@ -297,18 +295,15 @@ public class BudgetAreaSeriesView extends View {
       }
 
       final GlobGaugeView gaugeView =
-        new GlobGaugeView(PeriodSeriesStat.TYPE, budgetArea,
+        new GlobGaugeView(periodSeriesStat.getKey(), budgetArea,
                           PeriodSeriesStat.AMOUNT, PeriodSeriesStat.PLANNED_AMOUNT,
                           PeriodSeriesStat.PAST_REMAINING, PeriodSeriesStat.FUTURE_REMAINING,
                           PeriodSeriesStat.PAST_OVERRUN, PeriodSeriesStat.FUTURE_OVERRUN,
                           PeriodSeriesStat.ACTIVE,
-                          GlobMatchers.keyEquals(periodSeriesStat.getKey()),
                           repository, directory);
+
       final Gauge gauge = gaugeView.getComponent();
       gauge.setActionListener(new ShowDetailsTipAction(gauge, directory));
-      gaugeView
-        .setMaxValueUpdater(Key.create(PeriodBudgetAreaStat.TYPE, budgetArea.getId()),
-                            PeriodBudgetAreaStat.ABS_SUM_AMOUNT);
       visibles.add(gaugeView);
       if (PeriodSeriesStat.isForSeries(periodSeriesStat)) {
         gaugeView.setDescriptionSource(Key.create(Series.TYPE, periodSeriesStat.get(PeriodSeriesStat.TARGET)),
@@ -360,16 +355,12 @@ public class BudgetAreaSeriesView extends View {
       cellBuilder.addDisposable(deltaGaugeView);
     }
 
-    private NameLabelPopupButton getNameButton(Glob periodSeriesStat, Glob target, PanelBuilder cellBuilder) {
+    private NameLabelPopupButton getNameButton(Glob periodSeriesStat, Glob target) {
       switch (PeriodSeriesStat.getSeriesType(periodSeriesStat)) {
         case SERIES:
-        {
           return seriesButtons.createSeriesPopupButton(target);
-        }
         case SERIES_GROUP:
-        {
           return seriesGroupButtons.createPopupButton(target);
-        }
       }
       throw new UnexpectedValue(periodSeriesStat);
     }

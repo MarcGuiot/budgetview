@@ -29,8 +29,7 @@ public interface GlobRepository extends ReadOnlyGlobRepository {
   void setTarget(Key source, Link link, Key target)
     throws ItemNotFound;
 
-  void
-  delete(Glob glob)
+  void delete(Glob glob)
     throws ItemNotFound, OperationDenied;
 
   void delete(Key key)
@@ -73,12 +72,6 @@ public interface GlobRepository extends ReadOnlyGlobRepository {
   void completeChangeSet();
 
   void completeChangeSetWithoutTriggers();
-
-  /**
-   * @deprecated Unused - at least remove the "count" parameter (caching should be done at the
-   *             GlobIdGenerator level
-   */
-  Integer getNextId(IntegerField field, int count);
 
   GlobIdGenerator getIdGenerator();
 

@@ -21,7 +21,7 @@ public class ProjectsOnOffTest extends LoggedInFunctionalTestCase {
 
     projectChart.create();
     currentProject
-      .setName("Trip")
+      .setNameAndValidate("Trip")
       .addExpenseItem(0, "Reservation", 201012, -200.00)
       .addExpenseItem(1, "Equipment", 201012, -100.00)
       .addExpenseItem(2, "Hotel", 201101, -500.00);
@@ -119,7 +119,7 @@ public class ProjectsOnOffTest extends LoggedInFunctionalTestCase {
 
     projectChart.create();
     currentProject
-      .setName("Trip")
+      .setNameAndValidate("Trip")
       .addExpenseItem(0, "Reservation", 201012, -200.00)
       .addExpenseItem(1, "Equipment", 201012, -100.00)
       .addExpenseItem(2, "Hotel", 201101, -500.00);
@@ -185,7 +185,7 @@ public class ProjectsOnOffTest extends LoggedInFunctionalTestCase {
 
     projectChart.create();
     currentProject
-      .setName("Trip")
+      .setNameAndValidate("Trip")
       .addExpenseItem(0, "Reservation", 201012, -200.00)
       .addExpenseItem(1, "Equipment", 201012, -100.00)
       .addExpenseItem(2, "Hotel", 201101, -500.00);

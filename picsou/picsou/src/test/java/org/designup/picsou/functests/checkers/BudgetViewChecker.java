@@ -194,10 +194,18 @@ public class BudgetViewChecker extends ViewChecker {
       return this;
     }
 
-    public BudgetAreaChecker checkSeries(String seriesName, double observedAmount, double plannedAmount) {
+    public BudgetAreaChecker checkSeries(String seriesName, double actual, double plannedAmount) {
       SeriesPanel seriesPanel = getSeriesPanel(seriesName);
-      seriesPanel.checkObservedAmount(observedAmount);
+      seriesPanel.checkObservedAmount(actual);
       seriesPanel.checkPlannedAmount(plannedAmount);
+      return this;
+    }
+
+    public BudgetAreaChecker checkSeriesGauge(String seriesName, double actual, double planned) {
+      SeriesPanel seriesPanel = getSeriesPanel(seriesName);
+      GaugeChecker gauge = seriesPanel.getGauge();
+      gauge.checkActualValue(actual);
+      gauge.checkTargetValue(planned);
       return this;
     }
 
@@ -383,10 +391,6 @@ public class BudgetViewChecker extends ViewChecker {
     public BudgetAreaChecker checkSeriesTooltip(String seriesName, String tooltipText) {
       assertThat(getSeriesPanel(seriesName).getGauge().tooltipContains(tooltipText));
       return this;
-    }
-
-    public void checkGaugeWidthRatio(String seriesName, double widthRatio) {
-      assertThat(getSeriesPanel(seriesName).getGauge().widthRatioEquals(widthRatio));
     }
 
     public BudgetAreaChecker checkGaugeTooltip(String seriesName, String... tooltipTextFragments) {

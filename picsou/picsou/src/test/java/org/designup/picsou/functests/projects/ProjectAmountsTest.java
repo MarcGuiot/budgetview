@@ -25,7 +25,7 @@ public class ProjectAmountsTest  extends LoggedInFunctionalTestCase {
 
     projectChart.create();
     ProjectItemEditionChecker itemEdition = currentProject
-      .setName("MyProject")
+      .setNameAndValidate("MyProject")
       .addExpenseItem()
       .editExpense(0)
       .setLabel("Item 1")
@@ -109,7 +109,7 @@ public class ProjectAmountsTest  extends LoggedInFunctionalTestCase {
 
     projectChart.create();
     currentProject
-      .setName("MyProject")
+      .setNameAndValidate("MyProject")
       .addExpenseItem()
       .editExpense(0)
       .setLabel("Item 1")
@@ -206,7 +206,7 @@ public class ProjectAmountsTest  extends LoggedInFunctionalTestCase {
 
     projectChart.create();
     currentProject
-      .setName("MyProject")
+      .setNameAndValidate("MyProject")
       .addExpenseItem()
       .editExpense(0)
       .setLabel("Item 1")

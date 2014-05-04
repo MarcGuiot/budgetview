@@ -40,7 +40,7 @@ public class SeriesGroupMenu {
                                         fieldEquals(SeriesGroup.BUDGET_AREA, series.get(Series.BUDGET_AREA)))
       .sort(SeriesGroup.NAME);
     for (Glob group : groups) {
-      menu.add(new JMenuItem(new AddToExistingSeriesGroupAction(seriesKey, group, repository, directory)));
+      menu.add(new JMenuItem(new AddToExistingSeriesGroupAction(seriesKey, group, repository)));
     }
     if (!groups.isEmpty()) {
       menu.addSeparator();

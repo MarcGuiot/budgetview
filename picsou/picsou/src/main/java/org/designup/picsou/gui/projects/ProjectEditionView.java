@@ -13,7 +13,7 @@ import org.designup.picsou.gui.projects.actions.DeleteProjectAction;
 import org.designup.picsou.gui.projects.actions.DuplicateProjectAction;
 import org.designup.picsou.gui.projects.actions.SortProjectItemsAction;
 import org.designup.picsou.gui.projects.components.DefaultPictureIcon;
-import org.designup.picsou.gui.projects.components.ProjectNameEditor;
+import org.designup.picsou.gui.projects.components.ProjectEditor;
 import org.designup.picsou.gui.projects.itemedition.ProjectItemPanelFactory;
 import org.designup.picsou.gui.projects.utils.ImageStatusUpdater;
 import org.designup.picsou.gui.projects.utils.ProjectItemComparator;
@@ -54,7 +54,7 @@ public class ProjectEditionView extends View implements GlobSelectionListener {
   private Key currentProjectKey;
 
   private GlobRepeat repeat;
-  private ProjectNameEditor projectNameEditor;
+  private ProjectEditor projectEditor;
 
   private SimpleGaugeView gauge;
   private GlobLabelView totalActual;
@@ -91,7 +91,7 @@ public class ProjectEditionView extends View implements GlobSelectionListener {
   private void updateSelection(Key projectKey, Set<Key> projectItemKeys) {
     this.currentProjectKey = projectKey;
 
-    projectNameEditor.setCurrentProject(currentProjectKey);
+    projectEditor.setCurrentProject(currentProjectKey);
     repeat.setFilter(linkedTo(currentProjectKey, ProjectItem.PROJECT));
 
     Key projectStatKey = currentProjectKey != null ? Key.create(ProjectStat.TYPE, currentProjectKey.get(Project.ID)) : null;
@@ -132,9 +132,9 @@ public class ProjectEditionView extends View implements GlobSelectionListener {
     activationToggle = builder.addToggleEditor("activeToggle", Project.ACTIVE);
     builder.add("modify", modifyAction);
 
-    projectNameEditor = new ProjectNameEditor(factory, repository, directory);
-    builder.add("projectNameEditor", projectNameEditor.getPanel());
-    projectNameEditor.setListener(new ProjectNameEditor.Listener() {
+    projectEditor = new ProjectEditor(factory, repository, directory);
+    builder.add("projectEditor", projectEditor.getPanel());
+    projectEditor.setListener(new ProjectEditor.Listener() {
       public void processEditShown(boolean shown) {
         activationToggle.getComponent().setVisible(!shown);
         addItemPanel.setVisible(!shown);
@@ -153,9 +153,6 @@ public class ProjectEditionView extends View implements GlobSelectionListener {
     builder.add("imageLabel", imageLabel.getLabel());
 
     imageStatusUpdater = new ImageStatusUpdater(Project.ACTIVE, imageLabel, repository);
-
-    builder.addComboEditor("accountSelection", Project.DEFAULT_ACCOUNT)
-      .setFilter(new Account.UserAccountMatcher());
 
     monthSlider = new MonthSlider(new ProjectPeriodSliderAdapter(), repository, directory);
     builder.add("monthSlider", monthSlider);
@@ -203,7 +200,7 @@ public class ProjectEditionView extends View implements GlobSelectionListener {
     }
 
     public void actionPerformed(ActionEvent e) {
-      projectNameEditor.edit();
+      projectEditor.edit();
     }
   }
 

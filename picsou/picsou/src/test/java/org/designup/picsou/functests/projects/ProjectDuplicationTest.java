@@ -2,11 +2,6 @@ package org.designup.picsou.functests.projects;
 
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
-import org.designup.picsou.gui.model.SeriesStat;
-import org.designup.picsou.model.ProjectItem;
-import org.designup.picsou.model.Series;
-import org.designup.picsou.model.SeriesGroup;
-import org.globsframework.model.format.GlobPrinter;
 
 public class ProjectDuplicationTest extends LoggedInFunctionalTestCase {
 
@@ -29,7 +24,7 @@ public class ProjectDuplicationTest extends LoggedInFunctionalTestCase {
 
     projectChart.create();
     currentProject
-      .setName("Camera")
+      .setNameAndValidate("Camera")
       .addExpenseItem(0, "Camera Body", 201012, -80.00, 10)
       .addExpenseItem(1, "Lens", 201012, -200.00)
       .addExpenseItem(2, "Bag", 201101, -100.00)
@@ -101,7 +96,7 @@ public class ProjectDuplicationTest extends LoggedInFunctionalTestCase {
 
     // Cannot duplicate empty projects
     projectChart.create();
-    currentProject.setName("Empty");
+    currentProject.setNameAndValidate("Empty");
     currentProject.checkDuplicateDisabled();
 
     // Name is mandatory

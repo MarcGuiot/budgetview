@@ -326,7 +326,7 @@ public class DemoGenerationTest extends LoggedInFunctionalTestCase {
 
     budgetView.extras.createProject();
     currentProject
-      .setName(project("kitchen"))
+      .setNameAndValidate(project("kitchen"))
       .setImage(imagePath("kitchen.jpg"))
       .addExpenseItem(0, project("kitchen.furniture"), firstMonth, -900.00)
       .addExpenseItem(1, project("kitchen.oven"), secondMonth, -600.00);
@@ -340,7 +340,7 @@ public class DemoGenerationTest extends LoggedInFunctionalTestCase {
     budgetView.extras.createProject();
 
     currentProject
-      .setName(project("rome"))
+      .setNameAndValidate(project("rome"))
       .setImage(imagePath("rome.jpg"))
       .addExpenseItem(0, project("rome.accomodation.booking"), thirdMonth, -200.00)
       .addExpenseItem(1, project("rome.flight"), holidaysMonth1, -450.00)

@@ -22,7 +22,7 @@ public class ProjectSlidingTest extends LoggedInFunctionalTestCase {
 
     projectChart.create();
     currentProject
-      .setName("Trip")
+      .setNameAndValidate("Trip")
       .addExpenseItem(0, "Booking", 201011, -200.00)
       .view(0)
       .checkCategorizationWarningNotShown();
@@ -86,7 +86,7 @@ public class ProjectSlidingTest extends LoggedInFunctionalTestCase {
 
     projectChart.create();
     currentProject
-      .setName("Trip")
+      .setNameAndValidate("Trip")
       .addExpenseItem(0, "Booking", 201012, -200.00)
       .addExpenseItem(1, "Travel", 201102, -100.00)
       .addExpenseItem(2, "Hotel", 201102, -400.00);
@@ -164,7 +164,7 @@ public class ProjectSlidingTest extends LoggedInFunctionalTestCase {
 
     projectChart.create();
     currentProject
-      .setName("Trip")
+      .setNameAndValidate("Trip")
       .addExpenseItem(0, "Booking", 201012, -200.00)
       .addExpenseItem(1, "Travel", 201102, -100.00)
       .addExpenseItem(2, "Hotel", 201102, -400.00)
@@ -299,7 +299,7 @@ public class ProjectSlidingTest extends LoggedInFunctionalTestCase {
 
     projectChart.create();
     currentProject
-      .setName("Trip")
+      .setNameAndValidate("Trip")
       .addExpenseItem(0, "Booking", 201012, -200.00)
       .addExpenseItem(1, "Travel", 201101, -100.00)
       .addExpenseItem(2, "Hotel", 201102, -400.00);
@@ -355,7 +355,7 @@ public class ProjectSlidingTest extends LoggedInFunctionalTestCase {
 
     projectChart.create();
     currentProject
-      .setName("Camera")
+      .setNameAndValidate("Camera")
       .addExpenseItem(0, "Camera Body", 201011, -300.00, 3)
       .addExpenseItem(1, "Lens", 201012, -100.00);
     categorization.setExtra("FNAC", "Camera Body");
