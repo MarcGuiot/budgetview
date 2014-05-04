@@ -1,7 +1,7 @@
 package org.designup.picsou.functests.upgrade;
 
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
-import org.designup.picsou.model.*;
+import org.designup.picsou.model.TransactionType;
 import org.globsframework.utils.Files;
 
 public class ProjectUpgradeTest extends LoggedInFunctionalTestCase {
@@ -223,5 +223,31 @@ public class ProjectUpgradeTest extends LoggedInFunctionalTestCase {
                     "| Du compte Livret 2        | 0.00   | 0.00   |\n" +
                     "| Vers le compte Livret 1   | 0.00   | 0.00   |\n" +
                     "| Vers le compte Livret 2   | 0.00   | 0.00   |\n");
+  }
+
+  public void testProjectsWithNoTransactions() throws Exception {
+
+    operations.restore(Files.copyResourceToTmpFile(this, "/testbackups/upgrade_jar131_project_with_no_transactions.budgetview"));
+
+    projects.select("Voyage");
+    currentProject.checkDefaultAccountLabel("Compte Joint");
+    currentProject.checkItems("| Avion    | June | 0.00 | 500.00  |\n" +
+                              "| Virement | June | 0.00 | +300.00 |");
+
+    currentProject.toggleAndEditExpense(0)
+      .checkTargetAccountCombo("Compte Joint")
+      .cancel();
+    currentProject.toggleAndEditTransfer(1)
+      .checkFromAccount("Livret 1")
+      .checkToAccount("Compte Joint")
+      .cancel();
+
+    timeline.selectMonth(201406);
+    budgetView.extras.checkContent("| Voyage | 0.00 | 500.00 |");
+    budgetView.savings.checkContent("| Virement                | 0.00 | +300.00 |\n" +
+                                    "| Du compte Livret 1      | 0.00 | 0.00    |\n" +
+                                    "| Du compte Livret 2      | 0.00 | 0.00    |\n" +
+                                    "| Vers le compte Livret 1 | 0.00 | 0.00    |\n" +
+                                    "| Vers le compte Livret 2 | 0.00 | 0.00    |");
   }
 }
