@@ -170,10 +170,12 @@ public class SeriesEditionDialog {
       .setFilter(userCreatedMainAccounts())
       .setShowEmptyOption(false);
     builder.add("targetAccountCombo", targetAccountCombo);
+    targetAccountCombo.setVisible(false);
 
     targetAccountLabel = GlobLabelView.init(Series.TARGET_ACCOUNT, localRepository, localDirectory)
       .getComponent();
     builder.add("targetAccountLabel", targetAccountLabel);
+    targetAccountLabel.setVisible(false);
 
     fromAccountsCombo = GlobLinkComboEditor.init(Series.FROM_ACCOUNT, localRepository, localDirectory)
       .setShowEmptyOption(false)
@@ -242,13 +244,12 @@ public class SeriesEditionDialog {
           dayChooser.setVisible(noneImported);
           savingsMessage.setVisible(!isValidSeries(currentSeries));
           okAction.setEnabled(isValidSeries(currentSeries));
-          setAccountComboVisible(!isSavingsSeries);
         }
+        updateTargetAccount();
         updateDateSelectors();
         updateMonthChooser();
         updateMonthSelectionCard();
         updateBudgetAreaCombo();
-        updateTargetAccount();
       }
     }, Series.TYPE);
 
@@ -330,8 +331,9 @@ public class SeriesEditionDialog {
   }
 
   private void setAccountComboVisible(boolean isEditable) {
-    targetAccountCombo.setVisible(isEditable);
-    targetAccountLabel.setVisible(!isEditable);
+    boolean isSavings = budgetArea != BudgetArea.SAVINGS;
+    targetAccountCombo.setVisible(isSavings && isEditable);
+    targetAccountLabel.setVisible((budgetArea != BudgetArea.SAVINGS) && !isEditable);
     GuiUtils.revalidate(targetAccountCombo.getComponent());
   }
 
@@ -635,7 +637,6 @@ public class SeriesEditionDialog {
     amountEditionPanel.setCurrentSeries(currentSeries.getKey());
     selectionService.select(currentSeries);
     updateMonthSelectionCard();
-    setAccountComboVisible(selectedTransactions.isEmpty());
 
     tabs.select(0);
 

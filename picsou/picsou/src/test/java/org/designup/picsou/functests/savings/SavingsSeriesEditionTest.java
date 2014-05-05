@@ -1,6 +1,5 @@
 package org.designup.picsou.functests.savings;
 
-import org.designup.picsou.functests.checkers.SeriesEditionDialogChecker;
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
 import org.designup.picsou.model.BankEntity;
@@ -23,6 +22,7 @@ public class SavingsSeriesEditionTest extends LoggedInFunctionalTestCase {
     views.selectBudget();
     budgetView.savings
       .createSeries()
+      .checkTargetAccountNotShown()
       .setFromAccount("Account n. 00001123")
       .setToAccount("Epargne LCL")
       .setName("Epargne")
@@ -30,6 +30,7 @@ public class SavingsSeriesEditionTest extends LoggedInFunctionalTestCase {
 
     budgetView.savings
       .editSeries("Epargne")
+      .checkTargetAccountNotShown()
       .checkToAccount("Epargne LCL")
       .setToAccount("Account n. 00001123")
       .setFromAccount("Epargne LCL")

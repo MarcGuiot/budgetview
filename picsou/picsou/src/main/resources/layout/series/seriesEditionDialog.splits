@@ -20,13 +20,13 @@
           <textField ref="nameField" preferredSize="(300,20)"/>
 
           <label text="$seriesEdition.budgetArea" styleClass="formLabel" autoHideSource="budgetAreaChooser"
-                 border="empty(0,10,0,4)" />
-          <comboBox ref="budgetAreaChooser"/>
+                 border="empty(0,10,0,4)"/>
+          <comboBox ref="budgetAreaChooser" visible="false"/>
 
           <label text="$seriesEdition.targetAccount" styleClass="formLabel" autoHideSource="targetAccountCombo"
                  border="empty(0,10,0,4)"/>
           <comboBox ref="targetAccountCombo"/>
-          <label ref="targetAccountLabel"/>
+          <label ref="targetAccountLabel" visible="false"/>
         </horizontalBoxes>
 
         <column autoHideSource="fromAccount" border="empty(10 ,0,15,0)">
