@@ -8,6 +8,7 @@ import org.designup.picsou.gui.components.charts.histo.line.HistoLineDataset;
 import org.globsframework.utils.TestUtils;
 import org.globsframework.utils.exceptions.InvalidParameter;
 
+import java.awt.*;
 import java.util.Arrays;
 import java.util.List;
 
@@ -140,7 +141,7 @@ public class HistoChartMetricsTest extends ChartTestCase {
                                           boolean drawSections,
                                           boolean drawInnerLabels,
                                           boolean snapToScale) {
-    return new HistoChartMetrics(panelWidth, panelHeight,
+    return new HistoChartMetrics(panelWidth, panelHeight, new Insets(0,0,0,0),
                                  new TextMetrics() {
                                    public int stringWidth(String text) {
                                      return text.length() * 5;
