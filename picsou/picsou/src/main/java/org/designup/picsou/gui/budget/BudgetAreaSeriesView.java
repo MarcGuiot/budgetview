@@ -177,7 +177,7 @@ public class BudgetAreaSeriesView extends View {
     JPopupMenu menu = new JPopupMenu();
     menu.add(seriesButtons.createSeriesAction());
     if (budgetArea == BudgetArea.EXTRAS) {
-      menu.add(new CreateProjectAction(directory));
+      menu.add(new CreateProjectAction(repository, directory));
     }
     menu.addSeparator();
     menu.add(createMonthFilteringButton());

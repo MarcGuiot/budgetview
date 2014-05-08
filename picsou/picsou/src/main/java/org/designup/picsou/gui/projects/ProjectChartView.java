@@ -10,7 +10,6 @@ import org.designup.picsou.gui.components.charts.histo.button.HistoButtonColors;
 import org.designup.picsou.gui.components.charts.histo.button.HistoButtonPainter;
 import org.designup.picsou.gui.components.charts.histo.utils.HistoChartListenerAdapter;
 import org.designup.picsou.gui.description.Formatting;
-import org.designup.picsou.gui.help.actions.GotoWebsiteAction;
 import org.designup.picsou.gui.model.ProjectStat;
 import org.designup.picsou.gui.projects.actions.CreateProjectAction;
 import org.designup.picsou.gui.projects.components.ProjectPopupMenuFactory;
@@ -35,7 +34,6 @@ import org.globsframework.model.Key;
 import org.globsframework.utils.Utils;
 import org.globsframework.utils.collections.Range;
 import org.globsframework.utils.directory.Directory;
-import org.jdesktop.swingx.action.OpenBrowserAction;
 
 import javax.swing.*;
 import java.awt.*;
@@ -179,7 +177,7 @@ public class ProjectChartView extends View {
 
     cards = builder.addCardHandler("projectChartCards");
 
-    builder.add("createProject", new CreateProjectAction(directory));
+    builder.add("createProject", new CreateProjectAction(repository, directory));
 
     builder.add("openProjectGuide", new BrowsingAction(Lang.get("projectView.creation.learnmore"), directory) {
       protected String getUrl() {

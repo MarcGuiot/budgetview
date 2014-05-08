@@ -421,4 +421,16 @@ public class ProjectEditionChecker extends ViewChecker {
     PopupButton button = new PopupButton(itemButton);
     button.checkItemDisabled(Lang.get("projectEdition.duplicate.menu"));
   }
+
+  public AccountEditionChecker checkAddExpenseWithNoAccount() {
+    return AccountEditionChecker.open(ConfirmationDialogChecker.open(getPanel().getButton("addExpenseItem").triggerClick())
+                                        .checkMessageContains("In order to prepare projects, you must first create a main bank account")
+                                        .getOkTrigger("Create an account"));
+  }
+
+  public AccountEditionChecker checkAddTransferItemWithNoAccount() {
+    return AccountEditionChecker.open(ConfirmationDialogChecker.open(getPanel().getButton("addTransferItem").triggerClick())
+                                        .checkMessageContains("In order to prepare projects, you must first create a main bank account")
+                                        .getOkTrigger("Create an account"));
+  }
 }

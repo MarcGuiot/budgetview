@@ -221,7 +221,7 @@ public class CategorizationView extends View implements TableView, Filterable {
       return createAccountAction;
     }
     if (BudgetArea.EXTRAS.equals(budgetArea)) {
-      return new CreateProjectAction(directory);
+      return new CreateProjectAction(repository, directory);
     }
     return new DisabledAction();
   }

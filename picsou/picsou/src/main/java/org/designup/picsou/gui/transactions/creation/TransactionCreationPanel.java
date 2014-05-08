@@ -2,12 +2,11 @@ package org.designup.picsou.gui.transactions.creation;
 
 import com.jidesoft.swing.AutoCompletion;
 import org.designup.picsou.gui.View;
-import org.designup.picsou.gui.accounts.AccountEditionDialog;
+import org.designup.picsou.gui.accounts.utils.AccountCreation;
 import org.designup.picsou.gui.components.AmountEditor;
 import org.designup.picsou.gui.components.dialogs.MessageType;
 import org.designup.picsou.gui.components.utils.CustomFocusTraversalPolicy;
 import org.designup.picsou.gui.components.MonthRangeBound;
-import org.designup.picsou.gui.components.dialogs.ConfirmationDialog;
 import org.designup.picsou.gui.components.dialogs.MessageDialog;
 import org.designup.picsou.gui.components.dialogs.MonthChooserDialog;
 import org.designup.picsou.gui.components.tips.DetailsTip;
@@ -427,26 +426,9 @@ public class TransactionCreationPanel extends View implements GlobSelectionListe
       repository.completeChangeSet();
     }
 
-    if (accountCombo.getItemCount() == 0) {
-      final JFrame frame = directory.get(JFrame.class);
-      ConfirmationDialog dialog = new ConfirmationDialog("transactionCreation.noAccounts.title",
-                                                         Lang.get("transactionCreation.noAccounts.message"),
-                                                         frame, directory,
-                                                         ConfirmationDialog.Mode.EXPANDED) {
-
-        protected String getOkButtonText() {
-          return Lang.get("transactionCreation.createAccount.okButton");
-        }
-
-        protected void processOk() {
-          AccountEditionDialog accountEdition = new AccountEditionDialog(frame, parentRepository, directory, true);
-          accountEdition.showWithNewAccount(AccountType.MAIN, true, AccountUpdateMode.MANUAL);
-        }
-      };
-      dialog.show();
-      if (accountCombo.getItemCount() == 0) {
-        return;
-      }
+    if (!AccountCreation.containsUserAccount(parentRepository, directory,
+                                             Lang.get("accountCreation.transactionCreation.message"))) {
+      return;
     }
 
     setVisible(true, "transactionCreation.hide");

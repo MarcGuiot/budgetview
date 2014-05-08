@@ -162,20 +162,19 @@ public class ProjectSlidingTest extends LoggedInFunctionalTestCase {
   public void testSlidingTheWholeProjectWhenTransactionsHaveAlreadyBeenAssigned() throws Exception {
     operations.openPreferences().setFutureMonthsCount(6).validate();
 
-    projectChart.create();
-    currentProject
-      .setNameAndValidate("Trip")
-      .addExpenseItem(0, "Booking", 201012, -200.00)
-      .addExpenseItem(1, "Travel", 201102, -100.00)
-      .addExpenseItem(2, "Hotel", 201102, -400.00)
-    ;
-
     OfxBuilder.init(this)
       .addBankAccount("001111", 1000.00, "2012/12/15")
       .addTransaction("2010/10/01", 1000.00, "Income")
       .addTransaction("2010/12/01", 1000.00, "Income")
       .addTransaction("2010/12/15", -100.00, "Resa")
       .load();
+
+    projectChart.create();
+    currentProject
+      .setNameAndValidate("Trip")
+      .addExpenseItem(0, "Booking", 201012, -200.00)
+      .addExpenseItem(1, "Travel", 201102, -100.00)
+      .addExpenseItem(2, "Hotel", 201102, -400.00);
 
     timeline.selectMonth("2010/12");
     categorization.setExtra("RESA", "Booking");

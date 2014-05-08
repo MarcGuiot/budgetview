@@ -32,6 +32,10 @@ public class ProjectChartChecker extends ViewChecker {
     getHomePanel().getButton("createProject").click();
   }
 
+  public ConfirmationDialogChecker createAndOpenConfirmation() {
+    return ConfirmationDialogChecker.open(getHomePanel().getButton("createProject").triggerClick());
+  }
+
   public void checkShowDetailsButtonShown() {
     Button button = mainWindow.getPanel("summaryView").getButton("showProjectDetails");
     assertThat(button.isVisible());

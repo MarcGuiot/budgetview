@@ -1,8 +1,11 @@
 package org.designup.picsou.functests.projects;
 
+import org.designup.picsou.functests.checkers.AccountEditionChecker;
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
+import org.designup.picsou.gui.accounts.utils.AccountCreation;
 import org.designup.picsou.model.TransactionType;
+import org.designup.picsou.utils.Lang;
 
 public class ProjectManagementTest extends LoggedInFunctionalTestCase {
 
@@ -241,6 +244,8 @@ public class ProjectManagementTest extends LoggedInFunctionalTestCase {
 
     operations.hideSignposts();
 
+    mainAccounts.createMainAccount("Main account", 1000.00);
+
     projectChart.create();
     currentProject
       .checkProjectNameMessage("You must provide a name for this project")
@@ -265,6 +270,8 @@ public class ProjectManagementTest extends LoggedInFunctionalTestCase {
 
   public void testCancellingANewlyCreatedProjectDeletesIt() throws Exception {
     operations.hideSignposts();
+
+    mainAccounts.createMainAccount("Main account", 1000.00);
 
     projectChart.create();
     currentProject
@@ -296,6 +303,8 @@ public class ProjectManagementTest extends LoggedInFunctionalTestCase {
   public void testProjectWithItemsNotDeletedWhenCancellingEmptyName() throws Exception {
     operations.hideSignposts();
 
+    mainAccounts.createMainAccount("Main account", 1000.00);
+
     projectChart.create();
     currentProject
       .setNameAndValidate("My project")
@@ -326,6 +335,8 @@ public class ProjectManagementTest extends LoggedInFunctionalTestCase {
 
   public void testCancellingANewlyCreatedItemDeletesIt() throws Exception {
     operations.hideSignposts();
+
+    mainAccounts.createMainAccount("Main account", 1000.00);
 
     projectChart.create();
     currentProject
@@ -865,5 +876,47 @@ public class ProjectManagementTest extends LoggedInFunctionalTestCase {
     currentProject.toggleAndEditExpense(0).checkTargetAccountCombo("Account n. 001111").validate();
 
     budgetView.extras.checkContent("| My project | 0.00 | 200.00 |\n");
+  }
+
+  public void testAtLeastOneMainAccountMustExistToCreateProjectsOrItems() throws Exception {
+    operations.hideSignposts();
+
+    AccountEditionChecker accountEdition =
+      AccountEditionChecker.open(projectChart.createAndOpenConfirmation()
+                                   .checkMessageContains("In order to prepare projects, you must first create a main bank account")
+                                   .getOkTrigger("Create an account"));
+
+    accountEdition
+      .checkIsMain()
+      .setName("Main account")
+      .selectBank("CIC")
+      .setAccountNumber("000123")
+      .setPosition(1000.00)
+      .validate();
+
+    projectChart.create();
+    currentProject.setNameAndValidate("Trip");
+
+    mainAccounts.openDelete("Main account").validate();
+
+    currentProject.checkAddExpenseWithNoAccount()
+      .checkIsMain()
+      .setName("Main account")
+      .selectBank("CIC")
+      .setAccountNumber("000123")
+      .setPosition(1000.00)
+      .validate();
+
+    mainAccounts.openDelete("Main account").validate();
+
+    currentProject.checkAddTransferItemWithNoAccount()
+      .checkIsMain()
+      .setName("Main account")
+      .selectBank("CIC")
+      .setAccountNumber("000123")
+      .setPosition(1000.00)
+      .validate();
+
+    mainAccounts.openDelete("Main account").validate();
   }
 }

@@ -36,7 +36,7 @@ public class ProjectListView extends View {
     GlobsPanelBuilder builder = new GlobsPanelBuilder(getClass(), "/layout/projects/projectListView.splits",
                                                       repository, directory);
 
-    builder.add("createProject", new CreateProjectAction(directory));
+    builder.add("createProject", new CreateProjectAction(repository, directory));
     ProjectComponentFactory componentFactory = new ProjectComponentFactory();
     builder.addRepeat("currentProjects", ProjectStat.TYPE,
                       new CurrentProjectsMatcher(), GlobComparators.ascending(ProjectStat.FIRST_MONTH), componentFactory);
