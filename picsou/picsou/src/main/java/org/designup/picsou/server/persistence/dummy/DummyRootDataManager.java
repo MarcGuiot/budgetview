@@ -34,13 +34,13 @@ public class DummyRootDataManager implements RootDataManager {
   }
 
   public Persistence.UserInfo createUserAndHiddenUser(String name, boolean autoLog, boolean isRegisteredUser,
-                                                      byte[] cryptedPassword, byte[] linkInfo, byte[] cryptedLinkInfo,
-                                                      Integer id) {
+                                          byte[] cryptedPassword, byte[] linkInfo, byte[] cryptedLinkInfo,
+                                          Integer userId) {
     this.autoLog = autoLog;
     this.cryptedPassword = cryptedPassword;
     this.linkInfo = linkInfo;
     this.cryptedLinkInfo = cryptedLinkInfo;
-    return new Persistence.UserInfo(id, true);
+    return new Persistence.UserInfo(userId, true);
   }
 
   public void deleteUser(String name, byte[] cryptedLinkInfo) {

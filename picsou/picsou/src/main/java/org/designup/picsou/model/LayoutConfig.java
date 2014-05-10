@@ -73,11 +73,13 @@ public class LayoutConfig {
       return all.getFirst();
     }
     if (createIfNeeded) {
-      return repository.create(TYPE,
-                               value(SCREEN_WIDTH, screenSize.width),
-                               value(SCREEN_HEIGHT, screenSize.height),
-                               value(FRAME_WIDTH, targetFrameSize.width),
-                               value(FRAME_HEIGHT, targetFrameSize.height));
+      if (repository.find(UserPreferences.KEY) != null) {
+        return repository.create(TYPE,
+                                 value(SCREEN_WIDTH, screenSize.width),
+                                 value(SCREEN_HEIGHT, screenSize.height),
+                                 value(FRAME_WIDTH, targetFrameSize.width),
+                                 value(FRAME_HEIGHT, targetFrameSize.height));
+      }
     }
     return null;
   }

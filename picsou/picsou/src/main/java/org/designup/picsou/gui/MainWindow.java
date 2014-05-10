@@ -115,7 +115,7 @@ public class MainWindow implements WindowManager {
         Lang.setLang(info.getLang());
       }
       registered = configService.update(info.getRepoId(), info.getCount(), info.getMail(),
-                                        info.getSignature(), info.getActivationCode(), serverAccess);
+                                        info.getSignature(), info.getActivationCode(), serverAccess, dataInMemory);
       long downloadVersion = info.getDownloadVersion();
       if (downloadVersion != -1) {
         if (downloadVersion < PicsouApplication.JAR_VERSION && downloadVersion > 57L) {
@@ -129,7 +129,7 @@ public class MainWindow implements WindowManager {
       }
     }
     else {
-      configService.update(null, 0, null, null, null, serverAccess);
+      configService.update(null, 0, null, null, null, serverAccess, dataInMemory);
     }
 
     MRJAdapter.addAboutListener(new AboutAction(directory));

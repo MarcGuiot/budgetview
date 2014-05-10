@@ -12,7 +12,6 @@ import org.designup.picsou.triggers.AccountSequenceTrigger;
 import org.designup.picsou.triggers.PositionTrigger;
 import org.designup.picsou.triggers.SeriesBudgetTrigger;
 import org.designup.picsou.triggers.savings.UpdateMirrorSeriesChangeSetVisitor;
-import org.designup.picsou.utils.Lang;
 import org.designup.picsou.utils.TransactionComparator;
 import org.globsframework.metamodel.Field;
 import org.globsframework.metamodel.GlobType;
@@ -24,7 +23,6 @@ import org.globsframework.model.repository.LocalGlobRepository;
 import org.globsframework.model.repository.LocalGlobRepositoryBuilder;
 import org.globsframework.model.utils.GlobBuilder;
 import org.globsframework.model.utils.GlobFunctor;
-import org.globsframework.model.utils.GlobMatcher;
 import org.globsframework.model.utils.GlobMatchers;
 import org.globsframework.utils.Log;
 import org.globsframework.utils.Utils;
@@ -419,7 +417,8 @@ public class UpgradeTrigger implements ChangeSetListener {
 
         }
       }
-      PositionTrigger.computeTotal(repository);
+      TransactionComparator comparator = TransactionComparator.ASCENDING_ACCOUNT;
+      PositionTrigger.computeTotal(repository, repository.getSorted(Transaction.TYPE, comparator, GlobMatchers.ALL));
     }
     finally {
       repository.completeChangeSet();

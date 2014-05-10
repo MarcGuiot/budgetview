@@ -8,6 +8,8 @@ open "budgetview.jar"
 exclude   picsou.^ExceptionHandler and
           picsou.^Main and
           picsou.Main main(*) and
+          picsou.^MainInMemory and
+          picsou.MainInMemory main(*) and
           javax.xml*.^* and
           javax.xml*.^* *(*) and
           javax.xml*.^* * and

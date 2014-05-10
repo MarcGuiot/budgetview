@@ -23,9 +23,13 @@ public class PositionTrigger implements ChangeSetListener {
 
     final Set<Integer> accountIds = new HashSet<Integer>();
     final Set<Integer> deferredAccountIds = new HashSet<Integer>();
+    Glob[] transactions = null;
     if (changeSet.containsChanges(Transaction.TYPE) ||
         changeSet.containsUpdates(Account.POSITION_WITH_PENDING) ||
         changeSet.containsChanges(Account.TYPE)) {
+      TransactionComparator comparator = TransactionComparator.ASCENDING_ACCOUNT;
+      transactions = repository.getSorted(Transaction.TYPE, comparator, GlobMatchers.ALL);
+
       final Set<Integer> updatedOperations = new HashSet<Integer>();
       final Set<Integer> createdAccount = new HashSet<Integer>();
       changeSet.safeVisit(Account.TYPE, new AccountChangesetVisitor(accountIds, deferredAccountIds, createdAccount, repository));
@@ -37,25 +41,29 @@ public class PositionTrigger implements ChangeSetListener {
         Glob glob = repository.get(created.iterator().next());
         boolean shouldUpdatePosition = glob.get(AccountPositionMode.UPDATE_ACCOUNT_POSITION, true);
         if (shouldUpdatePosition) {
-          updateTransactionImpactAccounts(repository, changeSet, updatedOperations, accountIds, createdAccount, false);
+          updateTransactionImpactAccounts(repository, changeSet, updatedOperations, accountIds, createdAccount, false, transactions);
         }
         else {
-          updateTransactionButNotAccountPosition(repository, accountIds);
+          updateTransactionButNotAccountPosition(repository, accountIds, transactions);
         }
       }
       else {
         boolean isImport = changeSet.containsChanges(TransactionImport.TYPE);
-        updateTransactionImpactAccounts(repository, changeSet, updatedOperations, accountIds, createdAccount, isImport);
+        updateTransactionImpactAccounts(repository, changeSet, updatedOperations, accountIds, createdAccount, isImport, transactions);
       }
       if (accountIds.isEmpty() && deferredAccountIds.isEmpty()) {
         return;
       }
 
-      updateDeferredAccount(repository, deferredAccountIds);
+      updateDeferredAccount(repository, deferredAccountIds, transactions);
 
-      computeTotal(repository);
+      computeTotal(repository, transactions);
     }
     if (changeSet.containsChanges(CurrentMonth.TYPE)) {
+      if (transactions == null) {
+        TransactionComparator comparator = TransactionComparator.ASCENDING_ACCOUNT;
+        transactions = repository.getSorted(Transaction.TYPE, comparator, GlobMatchers.ALL);
+      }
       Set<Integer> allAccountIds =
         repository.getAll(Account.TYPE,
                           GlobMatchers.and(
@@ -63,35 +71,45 @@ public class PositionTrigger implements ChangeSetListener {
                             GlobMatchers.not(GlobMatchers.contained(Account.ID, accountIds))))
           .getValueSet(Account.ID);
       updateTransactionImpactAccounts(repository, changeSet, Collections.<Integer>emptySet(), allAccountIds,
-                                      Collections.<Integer>emptySet(), false);
+                                      Collections.<Integer>emptySet(), false, transactions);
       Set<Integer> allDeferredAccountIds =
         repository.getAll(Account.TYPE,
                           GlobMatchers.and(
                             GlobMatchers.fieldEquals(Account.CARD_TYPE, AccountCardType.DEFERRED.getId()),
                             GlobMatchers.not(GlobMatchers.contained(Account.ID, deferredAccountIds)))).getValueSet(Account.ID);
 
-      updateDeferredAccount(repository, allDeferredAccountIds);
-      computeTotal(repository);
+      updateDeferredAccount(repository, allDeferredAccountIds, transactions);
+      computeTotal(repository, transactions);
     }
   }
 
-  public static void computeTotal(GlobRepository repository) {
-    TransactionComparator comparator = TransactionComparator.ASCENDING_ACCOUNT;
-
-    Glob[] transactions = repository.getSorted(Transaction.TYPE, comparator, GlobMatchers.ALL);
-
+  public static void computeTotal(GlobRepository repository, final Glob[] transactions) {
     computeTotalPosition(repository, transactions);
   }
 
-  private void updateDeferredAccount(GlobRepository repository, Set<Integer> deferredAccountIds) {
+  private void updateDeferredAccount(GlobRepository repository, Set<Integer> deferredAccountIds, Glob[] allTransactions) {
     for (Integer id : deferredAccountIds) {
-      TransactionComparator comparator = TransactionComparator.ASCENDING_ACCOUNT;
-
-      Glob[] transactions = repository.getSorted(Transaction.TYPE, comparator,
-                                                 GlobMatchers.fieldEquals(Transaction.ACCOUNT, id));
-
+      Glob[] transactions = extractAccountTransaction(allTransactions, id);
       computeDeferredPosition(repository, transactions, repository.get(Key.create(Account.TYPE, id)));
     }
+  }
+
+  private Glob[] extractAccountTransaction(Glob[] allTransactions, Integer accountId) {
+    int count = 0;
+    for (Glob transaction : allTransactions) {
+      if (accountId.equals(transaction.get(Transaction.ACCOUNT))){
+        count++;
+      }
+    }
+    Glob[] transactions = new Glob[count];
+    int i = 0;
+    for (Glob transaction : allTransactions) {
+      if (accountId.equals(transaction.get(Transaction.ACCOUNT))){
+        transactions[i] = transaction;
+        ++i;
+      }
+    }
+    return transactions;
   }
 
   private static void computeTotalPosition(GlobRepository repository, Glob[] transactions) {
@@ -127,7 +145,7 @@ public class PositionTrigger implements ChangeSetListener {
   }
 
 
-  private void updateTransactionButNotAccountPosition(GlobRepository repository, Set<Integer> accountIds) {
+  private void updateTransactionButNotAccountPosition(GlobRepository repository, Set<Integer> accountIds, Glob[] allTransactions) {
     Glob currentMonth = repository.get(CurrentMonth.KEY);
     for (Integer id : accountIds) {
       if (Account.SUMMARY_ACCOUNT_IDS.contains(id)) {
@@ -139,7 +157,8 @@ public class PositionTrigger implements ChangeSetListener {
         if (currentPos != null) {
           GlobMatcher futureMatcher = getMatcherForFutureOperations(id, currentMonth.get(CurrentMonth.CURRENT_MONTH),
                                                                     currentMonth.get(CurrentMonth.CURRENT_DAY));
-          Glob[] positions = getAllTransactionForAccount(id, repository);
+
+          Glob[] positions = extractAccountTransaction(allTransactions, id);
           int pivot;
           for (pivot = positions.length - 1; pivot >= 0; pivot--) {
             if (!futureMatcher.matches(positions[pivot], repository)) {
@@ -201,17 +220,18 @@ public class PositionTrigger implements ChangeSetListener {
   private void updateTransactionImpactAccounts(GlobRepository repository, ChangeSet changeSet,
                                                Set<Integer> operations, Set<Integer> accountIds,
                                                Set<Integer> createdAccounts,
-                                               boolean isImport) {
+                                               boolean isImport, Glob[] allTransactions) {
     Glob currentMonth = repository.get(CurrentMonth.KEY);
     for (Integer accountId : accountIds) {
+      Glob[] transactions = extractAccountTransaction(allTransactions, accountId);
       updateAccount(repository, changeSet, operations, isImport, currentMonth, accountId,
-                    createdAccounts.contains(accountId));
+                    createdAccounts.contains(accountId), transactions);
     }
   }
 
   private void updateAccount(GlobRepository repository, ChangeSet changeSet, Set<Integer> operations,
                              boolean isImport,
-                             Glob currentMonth, Integer accountId, boolean isCreation) {
+                             Glob currentMonth, Integer accountId, boolean isCreation, Glob[] transactions) {
     if (!Account.SUMMARY_ACCOUNT_IDS.contains(accountId)) {
       ExtractDate extractDate = new ExtractDate(accountId);
       changeSet.safeVisit(Transaction.TYPE, extractDate);
@@ -219,7 +239,6 @@ public class PositionTrigger implements ChangeSetListener {
       Integer day = currentMonth.get(CurrentMonth.CURRENT_DAY);
       GlobMatcher futureMatcher = getMatcherForFutureOperations(accountId, monthId, day);
       GlobMatcher realMatcher = Transaction.getMatcherForRealOperations(accountId, monthId, day);
-      Glob[] transactions = getAllTransactionForAccount(accountId, repository);
 
       Key accountKey = Key.create(Account.TYPE, accountId);
       Glob account = repository.get(accountKey);
@@ -315,10 +334,10 @@ public class PositionTrigger implements ChangeSetListener {
       repository.update(account.getKey(), Account.FIRST_POSITION, after);
     }
   */
-  public Glob[] getAllTransactionForAccount(int accountId, GlobRepository repository) {
-    return repository.getSorted(Transaction.TYPE, TransactionComparator.ASCENDING_ACCOUNT,
-                                GlobMatchers.and(GlobMatchers.fieldEquals(Transaction.ACCOUNT, accountId)));
-  }
+//  public Glob[] getAllTransactionForAccount(int accountId, GlobRepository repository) {
+//    return repository.getSorted(Transaction.TYPE, TransactionComparator.ASCENDING_ACCOUNT,
+//                                GlobMatchers.and(GlobMatchers.fieldEquals(Transaction.ACCOUNT, accountId)));
+//  }
 
   private GlobMatcher getMatcherForFutureOperations(int accountId, int monthId, int day) {
     return GlobMatchers.and(GlobMatchers.fieldEquals(Transaction.ACCOUNT, accountId),

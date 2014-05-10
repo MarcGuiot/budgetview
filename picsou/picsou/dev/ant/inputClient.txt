@@ -1,4 +1,5 @@
 C picsou.Main
+C picsou.MainInMemory
 C org.designup.picsou.gui.MainWindow
 C org.designup.picsou.gui.MainWindowLauncher
 C org.designup.picsou.gui.PicsouApplet

@@ -13,7 +13,7 @@ public interface RootDataManager {
   void register(byte[] mail, byte[] signature, String activationCode);
 
   Persistence.UserInfo createUserAndHiddenUser(String name, boolean autoLog, boolean isRegisteredUser, byte[] cryptedPassword,
-                                                        byte[] linkInfo, byte[] cryptedLinkInfo, Integer id);
+                                   byte[] linkInfo, byte[] cryptedLinkInfo, Integer userId);
 
   void deleteUser(String name, byte[] cryptedLinkInfo);
 
@@ -24,9 +24,9 @@ public interface RootDataManager {
   Integer allocateNewUserId(String name);
 
   void replaceUserAndHiddenUser(boolean autoLog, boolean isRegisteredUser,
-                                                String newName, byte[] newCryptedPassword, byte[] newLinkInfo, byte[] newCryptedLinkInfo,
-                                                String name, byte[] linkInfo, byte[] cryptedLinkInfo,
-                                                Integer userId);
+                                String newName, byte[] newCryptedPassword, byte[] newLinkInfo, byte[] newCryptedLinkInfo,
+                                String name, byte[] linkInfo, byte[] cryptedLinkInfo,
+                                Integer userId);
 
   void setDownloadedVersion(long version);
 
