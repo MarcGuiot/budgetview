@@ -41,7 +41,7 @@ public class SendMail {
 
 //    String[] addrs = Strings.split(s, ',');
 //    for (String addr : addrs) {
-    mailer.sendMail(Mailbox.ADMIN, destination, "nobody", subject, content);
+    mailer.sendMail(Mailbox.ADMIN, destination, "nobody", subject, content, "UTF-8", "text");
 //    }
   }
 
