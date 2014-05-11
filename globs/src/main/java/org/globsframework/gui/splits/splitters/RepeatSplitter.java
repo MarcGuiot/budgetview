@@ -24,7 +24,7 @@ public class RepeatSplitter extends AbstractSplitter {
   private String ref;
   private RepeatLayout layout;
 
-  public RepeatSplitter(SplitProperties properties, Splitter[] subSplitters) {
+  public RepeatSplitter(SplitProperties properties, Splitter[] subSplitters, SplitsContext context) {
     super(properties, null);
     ref = properties.get("ref");
     if (ref == null) {
@@ -33,7 +33,7 @@ public class RepeatSplitter extends AbstractSplitter {
 
     initSplitters(subSplitters);
 
-    layout = getLayout(properties.get("layout"), ref);
+    layout = getLayout(properties.get("layout"), ref, context);
     layout.checkHeader(headerSplitters, ref);
     layout.checkContent(contentSplitters, ref);
   }
@@ -73,7 +73,7 @@ public class RepeatSplitter extends AbstractSplitter {
     return repeatPanel.getSplitComponent();
   }
 
-  private RepeatLayout getLayout(String layoutProperty, String ref) {
+  private RepeatLayout getLayout(String layoutProperty, String ref, SplitsContext context) {
 
     if (Strings.isNullOrEmpty(layoutProperty) || "column".equalsIgnoreCase(layoutProperty)) {
       return new ColumnRepeatLayout() {
@@ -111,7 +111,7 @@ public class RepeatSplitter extends AbstractSplitter {
     }
 
     try {
-      return ClassUtils.createFromClassName(layoutProperty);
+      return ClassUtils.createFromClassName(context.getService(RepeatLayoutService.class).getClassName(layoutProperty));
     }
     catch (Exception e) {
       throw new SplitsException("Unknown layout type '" + layoutProperty + "' for repeat '" + ref +

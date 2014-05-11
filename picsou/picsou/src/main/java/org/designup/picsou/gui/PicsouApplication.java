@@ -300,6 +300,7 @@ public class PicsouApplication {
     wrapper.add(OpenRequestManager.class, openRequestManager);
     wrapper.add(ApplicationLAF.initUiService());
     wrapper.add(ApplicationLAF.initLayoutService());
+    wrapper.add(ApplicationLAF.initRepeatLayoutService());
     wrapper.add(ConfiguredPropertiesService.class, new ConfiguredPropertiesService());
     wrapper.add(new TimeService());
     wrapper.add(new UpgradeService(directory));

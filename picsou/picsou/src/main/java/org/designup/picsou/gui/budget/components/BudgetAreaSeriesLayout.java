@@ -18,7 +18,6 @@ import java.util.List;
 import static org.globsframework.utils.Utils.equal;
 
 @SuppressWarnings("UnusedDeclaration")
-@NoObfuscation
 public class BudgetAreaSeriesLayout implements RepeatLayout {
 
   public static final int ROW_HEIGHT = 22;

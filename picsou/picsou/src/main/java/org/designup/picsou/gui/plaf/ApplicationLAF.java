@@ -7,12 +7,13 @@ import org.designup.picsou.gui.components.tabs.VerticalTabToggleUI;
 import org.designup.picsou.gui.components.ui.*;
 import org.designup.picsou.gui.projects.utils.ProjectItemViewLayout;
 import org.designup.picsou.gui.series.ui.SeriesPanelUI;
-import org.globsframework.gui.splits.layout.LayoutService;
-import org.globsframework.gui.splits.ui.UIService;
 import org.globsframework.gui.splits.components.HyperlinkButtonUI;
-import org.globsframework.gui.splits.components.StyledToggleButtonUI;
-import org.globsframework.gui.splits.components.StyledPanelUI;
 import org.globsframework.gui.splits.components.ShadowedLabelUI;
+import org.globsframework.gui.splits.components.StyledPanelUI;
+import org.globsframework.gui.splits.components.StyledToggleButtonUI;
+import org.globsframework.gui.splits.layout.LayoutService;
+import org.globsframework.gui.splits.repeat.RepeatLayoutService;
+import org.globsframework.gui.splits.ui.UIService;
 
 import javax.swing.*;
 
@@ -47,7 +48,7 @@ public class ApplicationLAF {
   private static String org() {
     return "org.";
   }
-  
+
   public static UIService initUiService() {
 
     UIManager.put("JideSplitPaneDivider.gripperPainter", new SplitPaneDotsPainter());
@@ -73,10 +74,16 @@ public class ApplicationLAF {
     return uiService;
   }
 
-  public static LayoutService initLayoutService(){
+  public static LayoutService initLayoutService() {
     LayoutService layoutService = new LayoutService();
     layoutService.registerClass(ACCOUNT_BLOCK_LAYOUT, AccountBlockLayout.class);
     layoutService.registerClass(PROJECT_ITEM_VIEW_LAYOUT, ProjectItemViewLayout.class);
+    return layoutService;
+  }
+
+  public static RepeatLayoutService initRepeatLayoutService() {
+    RepeatLayoutService layoutService = new RepeatLayoutService();
+    layoutService.add(SERIES_LAYOUT, BudgetAreaSeriesLayout.class.getName());
     return layoutService;
   }
 
