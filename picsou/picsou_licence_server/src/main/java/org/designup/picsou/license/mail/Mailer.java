@@ -107,7 +107,7 @@ public class Mailer {
   }
 
 
-  private void sendMail(Mailbox mailbox, String sendTo, String replyTo, String subject, String content) throws MessagingException {
+  public void sendMail(Mailbox mailbox, String sendTo, String replyTo, String subject, String content) throws MessagingException {
 
     Properties mailProperties = new Properties();
     mailProperties.setProperty("mail.smtp.host", host);
