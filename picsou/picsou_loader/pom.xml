@@ -82,7 +82,7 @@
 
                 <jarbundler dir="${basedir}/BudgetView-mem-fr/"
                             name="BudgetView"
-                            mainclass="com.budgetview.Main"
+                            mainclass="picsou.MainInMemory"
                             jar="${basedir}/../picsou/obfuscated/budgetview.jar"
                             stubfile="dev/install/JavaApplicationStub"
                             icon="dev/images/budgetview_icon.icns"
