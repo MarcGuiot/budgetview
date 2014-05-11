@@ -1,6 +1,7 @@
 package org.designup.picsou.gui.plaf;
 
 import org.designup.picsou.gui.accounts.utils.AccountBlockLayout;
+import org.designup.picsou.gui.budget.components.BudgetAreaSeriesLayout;
 import org.designup.picsou.gui.components.tabs.VerticalTabPanelUI;
 import org.designup.picsou.gui.components.tabs.VerticalTabToggleUI;
 import org.designup.picsou.gui.components.ui.*;
@@ -33,11 +34,12 @@ public class ApplicationLAF {
   private static final String NOTIFICATION_FLAG_UI = org() + "designup.picsou.gui.components.ui.NotificationFlagUI";
   private static final String VERTICAL_TAB_TOGGLE_UI = org() + "designup.picsou.gui.components.tabs.VerticalTabToggleUI";
   private static final String VERTICAL_TAB_PANEL_UI = org() + "designup.picsou.gui.components.tabs.VerticalTabPanelUI";
+  private static final String SERES_PANEL_UI = org() + "designup.picsou.gui.series.ui.SeriesPanelUI";
 
   private static final String ACCOUNT_BLOCK_LAYOUT = org() + "designup.picsou.gui.accounts.utils.AccountBlockLayout";
   private static final String PROJECT_ITEM_VIEW_LAYOUT = org() + "designup.picsou.gui.projects.utils.ProjectItemViewLayout";
+  private static final String SERIES_LAYOUT = org() + "designup.picsou.gui.budget.components.BudgetAreaSeriesLayout";
 
-  private static final String SERES_PANEL_UI = org() + "designup.picsou.gui.series.ui.SeriesPanelUI";
 
   private ApplicationLAF() {
   }
@@ -75,6 +77,7 @@ public class ApplicationLAF {
     LayoutService layoutService = new LayoutService();
     layoutService.registerClass(ACCOUNT_BLOCK_LAYOUT, AccountBlockLayout.class);
     layoutService.registerClass(PROJECT_ITEM_VIEW_LAYOUT, ProjectItemViewLayout.class);
+    layoutService.registerClass(SERIES_LAYOUT, BudgetAreaSeriesLayout.class);
     return layoutService;
   }
 
