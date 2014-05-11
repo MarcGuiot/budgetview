@@ -5,6 +5,7 @@ import org.designup.picsou.gui.components.tabs.VerticalTabPanelUI;
 import org.designup.picsou.gui.components.tabs.VerticalTabToggleUI;
 import org.designup.picsou.gui.components.ui.*;
 import org.designup.picsou.gui.projects.utils.ProjectItemViewLayout;
+import org.designup.picsou.gui.series.ui.SeriesPanelUI;
 import org.globsframework.gui.splits.layout.LayoutService;
 import org.globsframework.gui.splits.ui.UIService;
 import org.globsframework.gui.splits.components.HyperlinkButtonUI;
@@ -36,6 +37,8 @@ public class ApplicationLAF {
   private static final String ACCOUNT_BLOCK_LAYOUT = org() + "designup.picsou.gui.accounts.utils.AccountBlockLayout";
   private static final String PROJECT_ITEM_VIEW_LAYOUT = org() + "designup.picsou.gui.projects.utils.ProjectItemViewLayout";
 
+  private static final String SERES_PANEL_UI = org() + "designup.picsou.gui.series.ui.SeriesPanelUI";
+
   private ApplicationLAF() {
   }
 
@@ -64,6 +67,7 @@ public class ApplicationLAF {
     uiService.registerClass(VERTICAL_TAB_PANEL_UI, VerticalTabPanelUI.class);
     uiService.registerClass(NOTIFICATION_FLAG_UI, NotificationFlagUI.class);
     uiService.registerClass(FLAT_SCROLLBAR_UI, FlatScrollbarUI.class);
+    uiService.registerClass(SERES_PANEL_UI, SeriesPanelUI.class);
     return uiService;
   }
 
