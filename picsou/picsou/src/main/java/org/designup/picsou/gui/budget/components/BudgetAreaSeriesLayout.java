@@ -8,6 +8,7 @@ import org.globsframework.gui.splits.layout.ComponentConstraints;
 import org.globsframework.gui.splits.layout.Fill;
 import org.globsframework.gui.splits.repeat.RepeatLayout;
 import org.globsframework.gui.views.Alignment;
+import org.globsframework.metamodel.annotations.NoObfuscation;
 import org.globsframework.utils.Strings;
 
 import javax.swing.*;
@@ -17,6 +18,7 @@ import java.util.List;
 import static org.globsframework.utils.Utils.equal;
 
 @SuppressWarnings("UnusedDeclaration")
+@NoObfuscation
 public class BudgetAreaSeriesLayout implements RepeatLayout {
 
   public static final int ROW_HEIGHT = 22;

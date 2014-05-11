@@ -4,6 +4,7 @@ import org.globsframework.gui.splits.SplitProperties;
 import org.globsframework.gui.splits.SplitsContext;
 import org.globsframework.gui.splits.Splitter;
 import org.globsframework.gui.splits.exceptions.SplitsException;
+import org.globsframework.gui.splits.layout.LayoutService;
 import org.globsframework.gui.splits.layout.WrappedColumnLayout;
 import org.globsframework.gui.splits.repeat.*;
 import org.globsframework.gui.splits.utils.ScrollableFlowLayout;

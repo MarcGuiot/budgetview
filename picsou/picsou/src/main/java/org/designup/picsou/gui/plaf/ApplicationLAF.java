@@ -77,7 +77,6 @@ public class ApplicationLAF {
     LayoutService layoutService = new LayoutService();
     layoutService.registerClass(ACCOUNT_BLOCK_LAYOUT, AccountBlockLayout.class);
     layoutService.registerClass(PROJECT_ITEM_VIEW_LAYOUT, ProjectItemViewLayout.class);
-    layoutService.registerClass(SERIES_LAYOUT, BudgetAreaSeriesLayout.class);
     return layoutService;
   }
 

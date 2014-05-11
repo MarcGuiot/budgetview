@@ -31,6 +31,7 @@ exclude   picsou.^ExceptionHandler and
           net.sourceforge.htmlunit*.^* and
           net.sourceforge.htmlunit*.^* *(*) and
           net.sourceforge.htmlunit*.^* * and
+          @*.NoObfuscation *.* and
           *.* @*.NoObfuscation * and
           *.* @*.NoObfuscation *(*) and
           *.*UI set*(*) and
