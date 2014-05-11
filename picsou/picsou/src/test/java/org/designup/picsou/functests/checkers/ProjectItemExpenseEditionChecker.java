@@ -1,12 +1,11 @@
 package org.designup.picsou.functests.checkers;
 
 import org.designup.picsou.functests.checkers.components.AmountEditorChecker;
+import org.uispec4j.ComboBox;
 import org.uispec4j.Panel;
 import org.uispec4j.TextBox;
-import org.uispec4j.assertion.UISpecAssert;
 
-import static org.uispec4j.assertion.UISpecAssert.assertFalse;
-import static org.uispec4j.assertion.UISpecAssert.assertThat;
+import static org.uispec4j.assertion.UISpecAssert.*;
 
 public class ProjectItemExpenseEditionChecker extends ProjectItemEditionChecker<ProjectItemExpenseEditionChecker> {
   public ProjectItemExpenseEditionChecker(Panel panel) {
@@ -28,18 +27,24 @@ public class ProjectItemExpenseEditionChecker extends ProjectItemEditionChecker<
     return this;
   }
 
-  public ProjectItemExpenseEditionChecker setTargetAccount(String accountName){
+  public ProjectItemExpenseEditionChecker setTargetAccount(String accountName) {
     panel.getComboBox("accountSelection").select(accountName);
     return this;
   }
 
-  public ProjectItemExpenseEditionChecker checkTargetAcount(String account) {
-    assertThat(panel.getComboBox("accountSelection").selectionEquals(account));
+  public ProjectItemExpenseEditionChecker checkTargetAccountCombo(String account) {
+    ComboBox combo = panel.getComboBox("accountSelection");
+    assertThat(combo.selectionEquals(account));
+    assertThat(combo.isVisible());
+    assertFalse(panel.getTextBox("accountLabel").isVisible());
     return this;
   }
 
-  public ProjectItemEditionChecker checkTargetAcountNotEditable() {
-    assertFalse(panel.getComboBox("accountSelection").isEditable());
+  public ProjectItemExpenseEditionChecker checkTargetAccountLabel(String account) {
+    TextBox accountLabel = panel.getTextBox("accountLabel");
+    assertThat(accountLabel.textEquals(account));
+    assertThat(accountLabel.isVisible());
+    assertFalse(panel.getComboBox("accountSelection").isVisible());
     return this;
   }
 

@@ -38,6 +38,7 @@ public class ProjectUpgrade {
   }
 
   private void setDefaultAccountsForAllProjects(GlobRepository repository) {
+    Integer defaultAccountId = Account.getDefaultMainAccountId(repository);
     for (Glob project : repository.getAll(Project.TYPE)) {
       GlobList transactions = repository.getAll(Transaction.TYPE,
                                                 and(fieldEquals(Transaction.SERIES, project.get(Project.SERIES)),
@@ -58,6 +59,9 @@ public class ProjectUpgrade {
           }
         }
         repository.update(project.getKey(), Project.DEFAULT_ACCOUNT, mostFrequentAccountId);
+      }
+      else {
+        repository.update(project.getKey(), Project.DEFAULT_ACCOUNT, defaultAccountId);
       }
     }
   }

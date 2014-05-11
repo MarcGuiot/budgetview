@@ -20,7 +20,7 @@ public class SendImportedFileAction extends AbstractAction {
     this.directory = directory;
     this.repository = repository;
     repository.addChangeListener(new TypeChangeSetListener(TransactionImport.TYPE) {
-      protected void update(GlobRepository repository) {
+      public void update(GlobRepository repository) {
         updateAction(repository);
       }
     });

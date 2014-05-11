@@ -31,7 +31,7 @@ public class ReconciliationWarningPanel {
     this.repository = repository;
     this.directory = directory;
     repository.addChangeListener(new TypeChangeSetListener(Transaction.TYPE, UserPreferences.TYPE) {
-      protected void update(GlobRepository repository) {
+      public void update(GlobRepository repository) {
         doUpdate();
       }
     });

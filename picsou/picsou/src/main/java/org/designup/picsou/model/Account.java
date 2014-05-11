@@ -2,16 +2,15 @@ package org.designup.picsou.model;
 
 import com.budgetview.shared.utils.PicsouGlobSerializer;
 import org.designup.picsou.gui.accounts.utils.MonthDay;
+import org.designup.picsou.gui.utils.Matchers;
 import org.designup.picsou.utils.Lang;
 import org.designup.picsou.utils.PicsouUtils;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.annotations.*;
+import org.globsframework.metamodel.annotations.Key;
 import org.globsframework.metamodel.fields.*;
 import org.globsframework.metamodel.utils.GlobTypeLoader;
-import org.globsframework.model.FieldSetter;
-import org.globsframework.model.FieldValues;
-import org.globsframework.model.Glob;
-import org.globsframework.model.GlobRepository;
+import org.globsframework.model.*;
 import org.globsframework.model.utils.GlobMatcher;
 import org.globsframework.utils.collections.Pair;
 import org.globsframework.utils.exceptions.ItemNotFound;
@@ -298,6 +297,11 @@ public class Account {
       }
     }
     return new Pair<Integer, Integer>(startMonth, endMonth);
+  }
+
+  public static Integer getDefaultMainAccountId(GlobRepository repository) {
+    Glob first = repository.getAll(Account.TYPE, userCreatedMainAccounts()).sort(Account.SEQUENCE).getFirst();
+    return first != null ? first.get(Account.ID) : null;
   }
 
   public static class Serializer implements PicsouGlobSerializer {

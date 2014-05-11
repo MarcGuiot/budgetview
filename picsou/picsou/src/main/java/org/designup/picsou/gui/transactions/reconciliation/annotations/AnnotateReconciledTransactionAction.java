@@ -16,7 +16,7 @@ public class AnnotateReconciledTransactionAction extends MultiSelectionAction {
   public AnnotateReconciledTransactionAction(GlobRepository repository, Directory directory) {
     super(Transaction.TYPE, repository, directory);
     repository.addChangeListener(new TypeChangeSetListener(Transaction.TYPE) {
-      protected void update(GlobRepository repository) {
+      public void update(GlobRepository repository) {
         updateLabel();
       }
     });

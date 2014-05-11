@@ -6,12 +6,15 @@ import com.budgetview.shared.gui.histochart.HistoChartMetrics;
 import com.budgetview.shared.gui.histochart.HistoDataset;
 import org.designup.picsou.gui.components.charts.histo.utils.AwtTextMetrics;
 import org.designup.picsou.gui.components.charts.histo.utils.HistoChartListenerAdapter;
+import org.globsframework.gui.splits.color.Colors;
 import org.globsframework.gui.splits.utils.Disposable;
 import org.globsframework.gui.splits.utils.DisposableGroup;
 import org.globsframework.gui.splits.utils.GuiUtils;
 import org.globsframework.model.Key;
 
 import javax.swing.*;
+import javax.swing.border.Border;
+import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
@@ -22,17 +25,17 @@ public class HistoChart extends JPanel implements Disposable {
   private HistoChartColors colors;
   private HistoPainter painter = HistoPainter.NULL;
   private HistoChartMetrics metrics;
+  private Insets insets = new Insets(0, 0, 0, 0);
   private Font selectedLabelFont;
   private Font sectionLabelFont;
   private boolean snapToScale;
   private HistoChartConfig config;
-
+  private Font defaultFont;
   private HistoSelectionManager selectionManager;
   private DisposableGroup disposables = new DisposableGroup();
 
   public static final BasicStroke SCALE_STROKE = new BasicStroke(1);
   public static final BasicStroke SCALE_ORIGIN_STROKE = new BasicStroke(1.2f);
-  private Font defaultFont;
 
   public HistoChart(HistoChartConfig config, HistoChartColors colors) {
     this.config = config;
@@ -54,6 +57,13 @@ public class HistoChart extends JPanel implements Disposable {
 
     disposables.add(colors);
     disposables.add(selectionManager);
+  }
+
+  public void setBackground(Color bg) {
+    if ("projectChartPanel".equals(getName())) {
+      System.out.println("HistoChart.setBackground: " + Colors.toString(bg));
+    }
+    super.setBackground(bg);
   }
 
   public void addListener(HistoChartListener listener) {
@@ -79,6 +89,13 @@ public class HistoChart extends JPanel implements Disposable {
     selectionManager.resetRollover(painter.getDataset());
     this.metrics = null;
     repaint();
+  }
+
+  public void setBorder(Border border) {
+    super.setBorder(border);
+    if (border != null && border instanceof EmptyBorder) {
+      this.insets = ((EmptyBorder)border).getBorderInsets();
+    }
   }
 
   public void clear() {
@@ -122,7 +139,7 @@ public class HistoChart extends JPanel implements Disposable {
     HistoDataset dataset = painter.getDataset();
 
     if (metrics == null) {
-      metrics = new HistoChartMetrics(panelWidth, panelHeight,
+      metrics = new HistoChartMetrics(panelWidth, panelHeight, insets,
                                       getTextMetrics(g, getFont()),
                                       dataset.size(),
                                       dataset.getMaxNegativeValue(), dataset.getMaxPositiveValue(),
@@ -134,7 +151,7 @@ public class HistoChart extends JPanel implements Disposable {
     g2.setFont(defaultFont);
     paintBg(g2);
     paintLabels(g2, dataset);
-    paintScale(g2, panelWidth);
+    paintScale(g2);
     paintSelectionBorder(g2, dataset);
     paintBorder(g2);
 
@@ -231,7 +248,7 @@ public class HistoChart extends JPanel implements Disposable {
     }
   }
 
-  private void paintScale(Graphics2D g2, int panelWidth) {
+  private void paintScale(Graphics2D g2) {
     if (!config.drawScale) {
       return;
     }
@@ -245,7 +262,7 @@ public class HistoChart extends JPanel implements Disposable {
         g2.setStroke(SCALE_STROKE);
         g2.setColor(colors.getScaleLineColor());
       }
-      g2.drawLine(metrics.chartX(), metrics.y(scaleValue), panelWidth, metrics.y(scaleValue));
+      g2.drawLine(metrics.chartX(), metrics.y(scaleValue), metrics.chartX() + metrics.chartWidth(), metrics.y(scaleValue));
 
       g2.setColor(colors.getLabelColor());
       String label = Integer.toString((int)scaleValue);

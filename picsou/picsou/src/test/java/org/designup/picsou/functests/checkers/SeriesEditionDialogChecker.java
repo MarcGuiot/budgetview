@@ -775,10 +775,16 @@ public class SeriesEditionDialogChecker extends SeriesAmountEditionChecker<Serie
   }
 
   public SeriesEditionDialogChecker checkReadOnlyTargetAccount(String accountName) {
-    assertFalse(dialog.getComboBox("targetAccountCombo").isVisible());
+    checkComponentVisible(dialog, JComboBox.class, "targetAccountCombo", false);
     TextBox label = dialog.getTextBox("targetAccountLabel");
     assertTrue(label.textEquals(accountName));
     assertTrue(label.isVisible());
+    return this;
+  }
+
+  public SeriesEditionDialogChecker checkTargetAccountNotShown() {
+    checkComponentVisible(dialog, JComboBox.class, "targetAccountCombo", false);
+    checkComponentVisible(dialog, JLabel.class, "targetAccountLabel", false);
     return this;
   }
 }

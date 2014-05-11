@@ -3,7 +3,6 @@ package org.designup.picsou.gui.budget;
 import org.designup.picsou.gui.View;
 import org.designup.picsou.gui.budget.components.NameLabelPopupButton;
 import org.designup.picsou.gui.budget.components.SeriesOrderManager;
-import org.designup.picsou.gui.budget.footers.BudgetAreaSeriesFooter;
 import org.designup.picsou.gui.card.NavigationService;
 import org.designup.picsou.gui.components.ComponentTextDisplay;
 import org.designup.picsou.gui.components.JPopupButton;
@@ -32,7 +31,6 @@ import org.globsframework.gui.splits.repeat.Repeat;
 import org.globsframework.gui.splits.repeat.RepeatComponentFactory;
 import org.globsframework.gui.splits.utils.Disposable;
 import org.globsframework.gui.splits.utils.GlobListener;
-import org.globsframework.gui.splits.utils.GuiUtils;
 import org.globsframework.gui.views.GlobButtonView;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.fields.DoubleField;
@@ -55,13 +53,10 @@ public class BudgetAreaSeriesView extends View {
   private Set<Integer> selectedMonthIds = Collections.emptySet();
   private List<Key> currentSeriesStat = Collections.emptyList();
 
-  private BudgetAreaSeriesFooter footerGenerator;
-
   private Repeat<Glob> seriesRepeat;
   private BudgetAreaStatFilter statFilter;
   private SeriesEditionButtons seriesButtons;
   private SeriesGroupEditionButtons seriesGroupButtons;
-  private JEditorPane footerArea = GuiUtils.createReadOnlyHtmlComponent();
 
   private SeriesOrderManager orderManager;
   private Comparator<Glob> comparator;
@@ -74,12 +69,10 @@ public class BudgetAreaSeriesView extends View {
   public BudgetAreaSeriesView(String name,
                               final BudgetArea budgetArea,
                               final GlobRepository repository,
-                              Directory directory,
-                              BudgetAreaSeriesFooter footerGenerator) {
+                              Directory directory) {
     super(repository, directory);
     this.name = name;
     this.budgetArea = budgetArea;
-    this.footerGenerator = footerGenerator;
 
     this.orderManager = new SeriesOrderManager(budgetArea, repository, directory) {
       protected void setComparator(Comparator<Glob> newComparator) {
@@ -142,7 +135,6 @@ public class BudgetAreaSeriesView extends View {
     });
     seriesRepeat.updateComplete();
     currentSeriesStat = newStat;
-    footerGenerator.update(currentSeriesStat);
 
     if (!SignpostStatus.isCompleted(SignpostStatus.SERIES_AMOUNT_SHOWN, repository)) {
       if (!newStat.isEmpty()) {
@@ -185,16 +177,13 @@ public class BudgetAreaSeriesView extends View {
     JPopupMenu menu = new JPopupMenu();
     menu.add(seriesButtons.createSeriesAction());
     if (budgetArea == BudgetArea.EXTRAS) {
-      menu.add(new CreateProjectAction(directory));
+      menu.add(new CreateProjectAction(repository, directory));
     }
     menu.addSeparator();
     menu.add(createMonthFilteringButton());
     builder.add("seriesActions", new JPopupButton(Lang.get("budgetView.actions"), menu));
 
     parentBuilder.add(name, builder);
-
-    footerGenerator.init(footerArea);
-    builder.add("footerArea", footerArea);
 
     builder.add("specificAction", getSpecificActionButton());
   }

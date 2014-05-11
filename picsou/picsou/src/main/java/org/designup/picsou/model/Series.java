@@ -20,6 +20,8 @@ import org.globsframework.utils.serialization.SerializedInput;
 import org.globsframework.utils.serialization.SerializedInputOutputFactory;
 import org.globsframework.utils.serialization.SerializedOutput;
 
+import static org.globsframework.model.utils.GlobMatchers.linkedTo;
+
 public class Series {
   public static GlobType TYPE;
 
@@ -259,6 +261,18 @@ public class Series {
     return !repository.findByIndex(Transaction.SERIES_INDEX, Transaction.SERIES, seriesId)
       .getGlobs().filter(GlobMatchers.isFalse(Transaction.PLANNED), repository)
       .isEmpty();
+  }
+
+  public static void delete(Glob series, GlobRepository repository) {
+    if (series != null) {
+      Transaction.uncategorize(repository.getAll(Transaction.TYPE, linkedTo(series, Transaction.SERIES)), repository);
+      Glob mirror = repository.findLinkTarget(series, Series.MIRROR_SERIES);
+      if (mirror != null) {
+        Transaction.uncategorize(repository.getAll(Transaction.TYPE, linkedTo(mirror, Transaction.SERIES)), repository);
+        repository.delete(mirror);
+      }
+      repository.delete(series);
+    }
   }
 
   public static class Serializer implements PicsouGlobSerializer {

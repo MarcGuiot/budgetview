@@ -131,9 +131,9 @@ public class UpgradeTrigger implements ChangeSetListener {
       deleteDuplicateSynchro(repository);
     }
     if (currentJarVersion < 133) {
-      projectUpgrade.updateProjectSeriesAndGroups(repository);
-      updateTargetAccount(repository);
       AccountSequenceTrigger.resetSequence(repository);
+      projectUpgrade.updateProjectSeriesAndGroups(repository);
+      updateTargetAccountForSeries(repository);
     }
 
     FrameSize frameSize = FrameSize.init(directory.get(JFrame.class));
@@ -152,7 +152,7 @@ public class UpgradeTrigger implements ChangeSetListener {
     repository.update(UserVersionInformation.KEY, UserVersionInformation.CURRENT_JAR_VERSION, PicsouApplication.JAR_VERSION);
   }
 
-  private void updateTargetAccount(GlobRepository repository) {
+  private void updateTargetAccountForSeries(GlobRepository repository) {
     SeriesBudgetTrigger seriesBudgetTrigger = new SeriesBudgetTrigger(repository);
     LocalGlobRepository subGlobRepository = LocalGlobRepositoryBuilder.init(repository)
       .copy(Month.TYPE, CurrentMonth.TYPE).get();

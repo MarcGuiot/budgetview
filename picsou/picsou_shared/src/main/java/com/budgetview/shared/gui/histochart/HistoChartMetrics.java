@@ -4,6 +4,7 @@ import com.budgetview.shared.gui.TextMetrics;
 import org.globsframework.utils.Utils;
 import org.globsframework.utils.exceptions.InvalidParameter;
 
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -23,8 +24,10 @@ public class HistoChartMetrics {
 
   private final double[] SCALES = {0.25, 0.5, 1, 2, 2.5, 5};
 
-  private int panelWidth;
-  private int panelHeight;
+  private final int left;
+  private final int top;
+  private int usablePanelWidth;
+  private int usablePanelHeight;
   private TextMetrics textMetrics;
   private int columnCount;
   private HistoChartConfig config;
@@ -46,6 +49,7 @@ public class HistoChartMetrics {
 
   public HistoChartMetrics(int panelWidth,
                            int panelHeight,
+                           Insets insets,
                            TextMetrics textMetrics,
                            int columnCount,
                            double maxNegativeValue,
@@ -53,8 +57,10 @@ public class HistoChartMetrics {
                            HistoChartConfig config,
                            boolean containsSections,
                            boolean snapToScale) {
-    this.panelWidth = panelWidth;
-    this.panelHeight = panelHeight;
+    this.left = insets.left;
+    this.top = insets.top;
+    this.usablePanelWidth = panelWidth - insets.left - insets.right;
+    this.usablePanelHeight = panelHeight - insets.top - insets.bottom;
     this.textMetrics = textMetrics;
     this.columnCount = columnCount;
     this.config = config;
@@ -63,13 +69,13 @@ public class HistoChartMetrics {
 
     this.scaleZoneWidth = config.drawScale || config.keepScaleZone ? scaleZoneWidth() : 0;
     this.sectionZoneHeight = config.drawLabels && config.drawSections && containsSections ? SECTION_ZONE_HEIGHT : 0;
-    this.chartWidth = panelWidth - scaleZoneWidth;
+    this.chartWidth = usablePanelWidth - scaleZoneWidth;
     this.columnWidth = columnCount != 0 ? chartWidth / columnCount : 0;
 
     this.labelZoneHeight = config.drawLabels ? LABEL_ZONE_HEIGHT : 0;
     this.labelBottomMargin = config.drawLabels ? LABEL_BOTTOM_MARGIN : 0;
 
-    this.chartHeight = panelHeight - labelZoneHeight - sectionZoneHeight;
+    this.chartHeight = this.usablePanelHeight - labelZoneHeight - sectionZoneHeight;
     this.usableChartHeight = chartHeight - (config.drawInnerLabels ? INNER_LABEL_HEIGHT : 0);
     if (maxNegativeValue != 0.0) {
       this.positiveHeight = (int)((usableChartHeight - 2 * VERTICAL_CHART_PADDING) * this.maxPositiveValue
@@ -107,36 +113,32 @@ public class HistoChartMetrics {
 
   public int middleX(int columnIndex) {
     checkIndex(columnIndex);
-    return scaleZoneWidth + columnIndex * columnWidth + columnWidth / 2;
+    return left + scaleZoneWidth + columnIndex * columnWidth + columnWidth / 2;
   }
 
   public int left(int columnIndex) {
     checkIndex(columnIndex);
-    return scaleZoneWidth + columnIndex * columnWidth;
+    return left + scaleZoneWidth + columnIndex * columnWidth;
   }
 
   public int getColumnAt(int x) {
     if ((columnWidth == 0 || x < scaleZoneWidth)) {
       return -1;
     }
-    return (x - scaleZoneWidth) / columnWidth;
+    return (x - left - scaleZoneWidth) / columnWidth;
   }
 
   public int right(int columnIndex) {
     checkIndex(columnIndex);
     if (columnIndex == columnCount - 1) {
-      return panelWidth;
+      return left + usablePanelWidth;
     }
 
     return left(columnIndex) + columnWidth;
   }
 
   public int columnTop() {
-    return sectionZoneHeight;
-  }
-
-  public int columnBottom() {
-    return columnTop() + columnHeight();
+    return top + sectionZoneHeight;
   }
 
   public int usableColumnBottom() {
@@ -178,7 +180,7 @@ public class HistoChartMetrics {
   }
 
   public int chartX() {
-    return scaleZoneWidth;
+    return left + scaleZoneWidth;
   }
 
   public int chartWidth() {
@@ -190,11 +192,11 @@ public class HistoChartMetrics {
   }
 
   public int labelTop() {
-    return sectionZoneHeight + columnHeight();
+    return top + sectionZoneHeight + columnHeight();
   }
 
   public int labelY() {
-    return panelHeight - labelBottomMargin;
+    return top + usablePanelHeight - labelBottomMargin;
   }
 
   public int labelX(String label, int index) {
@@ -239,7 +241,7 @@ public class HistoChartMetrics {
   }
 
   public int scaleX(String label) {
-    return scaleZoneWidth - RIGHT_SCALE_MARGIN - textMetrics.stringWidth(label);
+    return left + scaleZoneWidth - RIGHT_SCALE_MARGIN - textMetrics.stringWidth(label);
   }
 
   public int scaleY(double value) {
@@ -324,7 +326,7 @@ public class HistoChartMetrics {
       }
     }
 
-    sections.add(createSection(previousName, blockLeft, panelWidth));
+    sections.add(createSection(previousName, blockLeft, usablePanelWidth));
 
     return sections;
   }
@@ -332,11 +334,11 @@ public class HistoChartMetrics {
   private Section createSection(String previousName, int blockLeft, int blockRight) {
     int blockWidth = blockRight - blockLeft;
     int blockHeight = SECTION_ZONE_HEIGHT;
-    int blockY = panelHeight - blockHeight;
+    int blockY = top + usablePanelHeight - blockHeight;
     int textX = blockLeft + blockWidth / 2 - textMetrics.stringWidth(previousName) / 2;
     int textY = sectionZoneHeight - SECTION_BOTTOM_MARGIN;
     int lineY = sectionZoneHeight / 2;
-    int lineHeight = panelHeight - lineY;
+    int lineHeight = usablePanelHeight - lineY;
     return new Section(previousName, textX, textY, blockLeft, blockWidth, blockY, blockHeight, lineY, lineHeight);
   }
 }

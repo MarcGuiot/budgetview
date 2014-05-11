@@ -42,7 +42,7 @@ public class AccountDeletionTest extends LoggedInFunctionalTestCase {
 
     views.selectHome();
     mainAccounts.edit("Account n. 0000123").openDelete()
-      .checkMessageContains("All the operations associated to this account will be deleted")
+      .checkMessageContains("All the operations and series associated to this account will be deleted")
       .validate();
     mainAccounts.checkNotPresent("Account n. 0000123");
 
@@ -73,8 +73,8 @@ public class AccountDeletionTest extends LoggedInFunctionalTestCase {
     categorization.setNewVariable("Quick", "Sante");
 
     views.selectHome();
-    mainAccounts.delete("Account n. 0000123")
-      .checkMessageContains("All the operations associated to this account will be deleted")
+    mainAccounts.openDelete("Account n. 0000123")
+      .checkMessageContains("All the operations and series associated to this account will be deleted")
       .validate();
     mainAccounts.checkNotPresent("Account n. 0000123");
 

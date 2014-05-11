@@ -235,11 +235,7 @@ public class AccountEditionDialog extends AbstractAccountPanel<LocalGlobReposito
     GlobList transactions = repository.getAll(Transaction.TYPE, GlobMatchers.fieldEquals(Transaction.ACCOUNT,
                                                                                          account.get(Account.ID)));
     repository.startChangeSet();
-    for (Glob transaction : transactions) {
-      repository.update(transaction.getKey(),
-                        value(Transaction.SERIES, Series.UNCATEGORIZED_SERIES_ID),
-                        value(Transaction.SUB_SERIES, null));
-    }
+    Transaction.uncategorize(transactions, repository);
     repository.completeChangeSet();
   }
 }

@@ -10,10 +10,7 @@ import org.globsframework.xml.XmlChangeSetWriter;
 
 import java.io.IOException;
 import java.io.StringWriter;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 public class DefaultChangeSet implements MutableChangeSet {
   private MapOfMaps<GlobType, Key, DefaultDeltaGlob> deltaGlobsByKey = new MapOfMaps<GlobType, Key, DefaultDeltaGlob>();
@@ -93,7 +90,7 @@ public class DefaultChangeSet implements MutableChangeSet {
 
   private void visit(ChangeSetVisitor visitor, Collection<DefaultDeltaGlob> globs, DeltaState state) throws Exception {
     for (DefaultDeltaGlob deltaGlob : globs) {
-      if (deltaGlob.getState() == state){
+      if (deltaGlob.getState() == state) {
         deltaGlob.visit(visitor);
       }
     }
@@ -103,7 +100,7 @@ public class DefaultChangeSet implements MutableChangeSet {
     try {
       visit(type, visitor);
     }
-    catch (BreakException e){
+    catch (BreakException e) {
     }
     catch (RuntimeException e) {
       throw e;
@@ -130,7 +127,7 @@ public class DefaultChangeSet implements MutableChangeSet {
   }
 
   public boolean containsChanges(GlobType type) {
-    return !deltaGlobsByKey.get(type).isEmpty();
+    return deltaGlobsByKey.contains(type) && !deltaGlobsByKey.get(type).isEmpty();
   }
 
   public GlobType[] getChangedTypes() {
@@ -152,6 +149,9 @@ public class DefaultChangeSet implements MutableChangeSet {
   }
 
   public Set<Key> getChanged(GlobType type) {
+    if (!deltaGlobsByKey.contains(type)) {
+      return Collections.emptySet();
+    }
     Set<Key> result = new HashSet<Key>();
     for (Map.Entry entry : deltaGlobsByKey.get(type).entrySet()) {
       result.add((Key)entry.getKey());
@@ -160,6 +160,9 @@ public class DefaultChangeSet implements MutableChangeSet {
   }
 
   public Set<Key> getCreated(GlobType type) {
+    if (!deltaGlobsByKey.contains(type)) {
+      return Collections.emptySet();
+    }
     Set<Key> result = new HashSet<Key>();
     for (Map.Entry entry : deltaGlobsByKey.get(type).entrySet()) {
       DefaultDeltaGlob delta = (DefaultDeltaGlob)entry.getValue();
@@ -171,6 +174,9 @@ public class DefaultChangeSet implements MutableChangeSet {
   }
 
   public Set<Key> getUpdated(GlobType type) {
+    if (!deltaGlobsByKey.contains(type)) {
+      return Collections.emptySet();
+    }
     Set<Key> result = new HashSet<Key>();
     for (DefaultDeltaGlob delta : deltaGlobsByKey.get(type).values()) {
       if (delta.isUpdated()) {
@@ -181,6 +187,9 @@ public class DefaultChangeSet implements MutableChangeSet {
   }
 
   public Set<Key> getCreatedOrUpdated(GlobType type) {
+    if (!deltaGlobsByKey.contains(type)) {
+      return Collections.emptySet();
+    }
     Set<Key> result = new HashSet<Key>();
     for (DefaultDeltaGlob delta : deltaGlobsByKey.get(type).values()) {
       if (delta.isCreated() || delta.isUpdated()) {
@@ -191,6 +200,9 @@ public class DefaultChangeSet implements MutableChangeSet {
   }
 
   public Set<Key> getUpdated(Field field) {
+    if (!deltaGlobsByKey.contains(field.getGlobType())) {
+      return Collections.emptySet();
+    }
     Set<Key> result = new HashSet<Key>();
     for (DefaultDeltaGlob delta : deltaGlobsByKey.get(field.getGlobType()).values()) {
       if (delta.isUpdated(field)) {
@@ -201,6 +213,9 @@ public class DefaultChangeSet implements MutableChangeSet {
   }
 
   public Set<Key> getDeleted(GlobType type) {
+    if (!deltaGlobsByKey.contains(type)) {
+      return Collections.emptySet();
+    }
     Set<Key> result = new HashSet<Key>();
     for (DefaultDeltaGlob delta : deltaGlobsByKey.get(type).values()) {
       if (delta.isDeleted()) {
@@ -211,11 +226,17 @@ public class DefaultChangeSet implements MutableChangeSet {
   }
 
   public boolean isCreated(Key key) {
+    if (!deltaGlobsByKey.contains(key.getGlobType())) {
+      return false;
+    }
     DefaultDeltaGlob defaultDeltaGlob = deltaGlobsByKey.get(key.getGlobType(), key);
     return defaultDeltaGlob != null && defaultDeltaGlob.isCreated();
   }
 
   public boolean isDeleted(Key key) {
+    if (!deltaGlobsByKey.contains(key.getGlobType())) {
+      return false;
+    }
     DefaultDeltaGlob defaultDeltaGlob = deltaGlobsByKey.get(key.getGlobType(), key);
     return defaultDeltaGlob != null && defaultDeltaGlob.isDeleted();
   }
@@ -230,27 +251,45 @@ public class DefaultChangeSet implements MutableChangeSet {
   }
 
   public boolean containsCreationsOrDeletions(GlobType type) {
-    for (DefaultDeltaGlob deltaGlob : deltaGlobsByKey.get(type).values()) {
-      if (deltaGlob.isCreated() || deltaGlob.isDeleted()) {
-        return true;
+    if (deltaGlobsByKey.contains(type)) {
+      for (DefaultDeltaGlob deltaGlob : deltaGlobsByKey.get(type).values()) {
+        if (deltaGlob.isCreated() || deltaGlob.isDeleted()) {
+          return true;
+        }
+      }
+    }
+    return false;
+  }
+
+  public boolean containsCreations(GlobType type) {
+    if (deltaGlobsByKey.contains(type)) {
+      for (DefaultDeltaGlob deltaGlob : deltaGlobsByKey.get(type).values()) {
+        if (deltaGlob.isCreated()) {
+          return true;
+        }
       }
     }
     return false;
   }
 
   public boolean containsDeletions(GlobType type) {
-    for (DefaultDeltaGlob deltaGlob : deltaGlobsByKey.get(type).values()) {
-      if (deltaGlob.isDeleted()) {
-        return true;
+    if (deltaGlobsByKey.contains(type)) {
+      for (DefaultDeltaGlob deltaGlob : deltaGlobsByKey.get(type).values()) {
+        if (deltaGlob.isDeleted()) {
+          return true;
+        }
       }
     }
     return false;
   }
 
   public boolean containsUpdates(Field field) {
-    for (DefaultDeltaGlob deltaGlob : deltaGlobsByKey.get(field.getGlobType()).values()) {
-      if (deltaGlob.isUpdated(field)) {
-        return true;
+    GlobType type = field.getGlobType();
+    if (deltaGlobsByKey.contains(type)) {
+      for (DefaultDeltaGlob deltaGlob : deltaGlobsByKey.get(type).values()) {
+        if (deltaGlob.isUpdated(field)) {
+          return true;
+        }
       }
     }
     return false;
@@ -261,16 +300,18 @@ public class DefaultChangeSet implements MutableChangeSet {
   }
 
   public boolean containsChanges(Key key, Field... fields) {
-    DefaultDeltaGlob glob = deltaGlobsByKey.get(key.getGlobType(), key);
-    if (glob == null) {
-      return false;
-    }
-    if (glob.isCreated() || glob.isDeleted()) {
-      return true;
-    }
-    for (Field field : fields) {
-      if (glob.isUpdated(field)) {
+    if (deltaGlobsByKey.contains(key.getGlobType())) {
+      DefaultDeltaGlob glob = deltaGlobsByKey.get(key.getGlobType(), key);
+      if (glob == null) {
+        return false;
+      }
+      if (glob.isCreated() || glob.isDeleted()) {
         return true;
+      }
+      for (Field field : fields) {
+        if (glob.isUpdated(field)) {
+          return true;
+        }
       }
     }
     return false;

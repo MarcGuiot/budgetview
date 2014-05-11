@@ -15,7 +15,7 @@ public class ProjectCreationView extends View {
     GlobsPanelBuilder builder = new GlobsPanelBuilder(getClass(), "/layout/projects/projectCreationView.splits",
                                                       repository, directory);
 
-    builder.add("createProject", new CreateProjectAction(directory));
+    builder.add("createProject", new CreateProjectAction(repository, directory));
 
     parentBuilder.add("projectCreationView", builder);
   }

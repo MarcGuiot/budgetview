@@ -24,7 +24,7 @@ public class DemoMessageView extends View {
     banner = new FooterBanner(Lang.get("demoMessage.label"), action, false, repository, directory);
     
     repository.addChangeListener(new TypeChangeSetListener(User.TYPE) {
-      protected void update(GlobRepository repository) {
+      public void update(GlobRepository repository) {
         updateView();
       }
     });

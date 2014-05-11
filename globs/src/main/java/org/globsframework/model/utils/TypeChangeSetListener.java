@@ -39,5 +39,5 @@ public abstract class TypeChangeSetListener implements ChangeSetListener {
     }
   }
 
-  protected abstract void update(GlobRepository repository);
+  public abstract void update(GlobRepository repository);
 }

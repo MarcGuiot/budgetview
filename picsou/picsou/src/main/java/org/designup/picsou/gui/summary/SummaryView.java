@@ -67,7 +67,7 @@ public class SummaryView extends View {
                       new AccountComparator(),
                       new AccountRepeatFactory(shortRange, longRange, projects));
     repository.addChangeListener(new TypeChangeSetListener(UserPreferences.TYPE, Project.TYPE) {
-      protected void update(GlobRepository repository) {
+      public void update(GlobRepository repository) {
         updateShowProjectDetails(repository, showProjectDetails);
       }
     });

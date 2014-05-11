@@ -4,11 +4,9 @@ import org.designup.picsou.gui.projects.components.DuplicateProjectDialog;
 import org.designup.picsou.model.Project;
 import org.designup.picsou.model.ProjectItem;
 import org.designup.picsou.utils.Lang;
-import org.globsframework.gui.actions.MultiSelectionAction;
 import org.globsframework.gui.actions.SingleSelectionAction;
 import org.globsframework.gui.splits.utils.Disposable;
 import org.globsframework.model.Glob;
-import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.Key;
 import org.globsframework.model.utils.GlobMatchers;
@@ -24,7 +22,7 @@ public class DuplicateProjectAction extends SingleSelectionAction implements Dis
   public DuplicateProjectAction(GlobRepository repository, Directory directory) {
     super(Lang.get("projectEdition.duplicate.menu"), Project.TYPE, repository, directory);
     changeListener = new TypeChangeSetListener(ProjectItem.TYPE) {
-      protected void update(GlobRepository repository) {
+      public void update(GlobRepository repository) {
         doUpdate();
       }
     };

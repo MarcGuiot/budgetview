@@ -20,7 +20,7 @@ public class SkipCategorizationPanel {
     this.directory = directory;
     createPanel();
     repository.addChangeListener(new TypeChangeSetListener(SignpostStatus.TYPE) {
-      protected void update(GlobRepository repository) {
+      public void update(GlobRepository repository) {
         SkipCategorizationPanel.this.update();
       }
     });

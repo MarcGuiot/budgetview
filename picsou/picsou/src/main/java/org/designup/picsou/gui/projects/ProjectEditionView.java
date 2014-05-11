@@ -1,6 +1,7 @@
 package org.designup.picsou.gui.projects;
 
 import org.designup.picsou.gui.View;
+import org.designup.picsou.gui.accounts.utils.AccountCreation;
 import org.designup.picsou.gui.components.JPopupButton;
 import org.designup.picsou.gui.components.MonthSlider;
 import org.designup.picsou.gui.components.charts.SimpleGaugeView;
@@ -182,7 +183,7 @@ public class ProjectEditionView extends View implements GlobSelectionListener {
     builder.add("addTransferItem", new JButton(new AddItemAction("projectEdition.addItem.transfer", ProjectItemType.TRANSFER)));
 
     builder.add("backToList", new BackToListAction());
-    builder.add("createProject", new CreateProjectAction(directory));
+    builder.add("createProject", new CreateProjectAction(repository, directory));
 
     JPopupMenu displayActionsPopup = new JPopupMenu();
     displayActionsPopup.add(new SortProjectItemsAction(repository, directory));
@@ -240,6 +241,11 @@ public class ProjectEditionView extends View implements GlobSelectionListener {
     }
 
     public void actionPerformed(ActionEvent actionEvent) {
+      if (!AccountCreation.containsUserAccount(repository, directory,
+                                               Lang.get("accountCreation.projectCreation.message"))) {
+        return;
+      }
+
       repository.startChangeSet();
       try {
         String defaultLabel = itemType == ProjectItemType.TRANSFER ? Lang.get("projectView.item.transfer.defaultName") : "";

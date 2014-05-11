@@ -65,6 +65,9 @@ public class ProjectMultiMonthPaymentsTest extends LoggedInFunctionalTestCase {
   }
 
   public void testCannotEnterZeroOrNegativeNumbersAsMonthCount() throws Exception {
+
+    mainAccounts.createMainAccount("Main account", 1000.00);
+
     projectChart.create();
     currentProject
       .setNameAndValidate("Camera")

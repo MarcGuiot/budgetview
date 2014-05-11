@@ -73,7 +73,7 @@ public class DeferredCardCategorizationPanel implements SpecialCategorizationPan
 
   private void registerUpdater() {
     repository.addChangeListener(new TypeChangeSetListener(Series.TYPE) {
-      protected void update(GlobRepository repository) {
+      public void update(GlobRepository repository) {
         updateDisplay();
       }
     });

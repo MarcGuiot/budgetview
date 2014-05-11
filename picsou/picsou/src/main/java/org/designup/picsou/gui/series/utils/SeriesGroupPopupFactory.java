@@ -51,6 +51,11 @@ public class SeriesGroupPopupFactory implements DisposablePopupMenuFactory {
           directory.get(NavigationService.class).gotoDataForSeriesGroup(seriesGroup);
         }
       });
+      menu.add(new AbstractAction(Lang.get("series.goto.analysis")) {
+        public void actionPerformed(ActionEvent actionEvent) {
+          directory.get(NavigationService.class).gotoAnalysisForSeries(seriesGroup);
+        }
+      });
       menu.addSeparator();
       menu.add(new DeleteSeriesGroupAction(seriesGroup.getKey(), repository));
     }

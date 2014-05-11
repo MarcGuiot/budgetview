@@ -1,13 +1,8 @@
 package org.designup.picsou.functests.upgrade;
 
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
-import org.designup.picsou.model.*;
-import org.globsframework.model.format.GlobPrinter;
+import org.designup.picsou.model.TransactionType;
 import org.globsframework.utils.Files;
-
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
 
 public class ProjectUpgradeTest extends LoggedInFunctionalTestCase {
 
@@ -47,7 +42,7 @@ public class ProjectUpgradeTest extends LoggedInFunctionalTestCase {
     currentProject.view(0).checkCategorizationWarningNotShown();
     currentProject.view(1).checkCategorizationWarningShown();
     currentProject.view(2).checkCategorizationWarningNotShown();
-    currentProject.checkDefaultAccount("Compte Perso");
+    currentProject.checkDefaultAccountLabel("Compte Perso");
 
     categorization.initContent()
       .add("15/01/2014", "Voyage", "AIR FRANCE", -30.00)
@@ -209,7 +204,7 @@ public class ProjectUpgradeTest extends LoggedInFunctionalTestCase {
       .check();
 
     projects.select("Vacances");
-    currentProject.checkDefaultAccount("Compte Joint");
+    currentProject.checkDefaultAccountLabel("Compte Joint");
     currentProject.checkItems("| Voyage - Compte Joint     | Apr | 150.00  | 250.00  |\n" +
                               "| Voyage - Compte Perso     | Apr | 300.00  | 250.00  |\n" +
                               "| Provisions - Compte Joint | Apr | +50.00  | +150.00 |\n" +
@@ -228,5 +223,31 @@ public class ProjectUpgradeTest extends LoggedInFunctionalTestCase {
                     "| Du compte Livret 2        | 0.00   | 0.00   |\n" +
                     "| Vers le compte Livret 1   | 0.00   | 0.00   |\n" +
                     "| Vers le compte Livret 2   | 0.00   | 0.00   |\n");
+  }
+
+  public void testProjectsWithNoTransactions() throws Exception {
+
+    operations.restore(Files.copyResourceToTmpFile(this, "/testbackups/upgrade_jar131_project_with_no_transactions.budgetview"));
+
+    projects.select("Voyage");
+    currentProject.checkDefaultAccountLabel("Compte Joint");
+    currentProject.checkItems("| Avion    | June | 0.00 | 500.00  |\n" +
+                              "| Virement | June | 0.00 | +300.00 |");
+
+    currentProject.toggleAndEditExpense(0)
+      .checkTargetAccountCombo("Compte Joint")
+      .cancel();
+    currentProject.toggleAndEditTransfer(1)
+      .checkFromAccount("Livret 1")
+      .checkToAccount("Compte Joint")
+      .cancel();
+
+    timeline.selectMonth(201406);
+    budgetView.extras.checkContent("| Voyage | 0.00 | 500.00 |");
+    budgetView.savings.checkContent("| Virement                | 0.00 | +300.00 |\n" +
+                                    "| Du compte Livret 1      | 0.00 | 0.00    |\n" +
+                                    "| Du compte Livret 2      | 0.00 | 0.00    |\n" +
+                                    "| Vers le compte Livret 1 | 0.00 | 0.00    |\n" +
+                                    "| Vers le compte Livret 2 | 0.00 | 0.00    |");
   }
 }

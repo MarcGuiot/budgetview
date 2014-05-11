@@ -47,8 +47,19 @@ public class ProjectEditionChecker extends ViewChecker {
     return this;
   }
 
-  public ProjectEditionChecker checkDefaultAccount(String accountName){
-    assertThat(getPanel().getComboBox("accountSelection").selectionEquals(accountName));
+  public ProjectEditionChecker checkDefaultAccountCombo(String accountName){
+    ComboBox combo = getPanel().getComboBox("accountSelection");
+    assertThat(combo.selectionEquals(accountName));
+    assertThat(combo.isVisible());
+    checkComponentVisible(getPanel(), JLabel.class, "accountLabel", false);
+    return this;
+  }
+
+  public ProjectEditionChecker checkDefaultAccountLabel(String accountName){
+    TextBox accountLabel = getPanel().getTextBox("accountLabel");
+    assertThat(accountLabel.textEquals(accountName));
+    assertThat(accountLabel.isVisible());
+    checkComponentVisible(getPanel(), JComboBox.class, "accountSelection", false);
     return this;
   }
 
@@ -60,6 +71,11 @@ public class ProjectEditionChecker extends ViewChecker {
   public ProjectEditionChecker setNameAndDefaultAccount(String name, String accountName) {
     getPanel().getTextBox("projectName").setText(name, false);
     getPanel().getComboBox("accountSelection").select(accountName);
+    validateProjectEdition();
+    return this;
+  }
+
+  public ProjectEditionChecker validateProjectEdition() {
     getPanel().getPanel("projectEditor").getButton("validate").click();
     return this;
   }
@@ -388,7 +404,6 @@ public class ProjectEditionChecker extends ViewChecker {
 
   public void backToList() {
     getPanel().getButton("backToList").click();
-
   }
 
   public void sortItems() {
@@ -405,5 +420,17 @@ public class ProjectEditionChecker extends ViewChecker {
     final org.uispec4j.Button itemButton = getPanel().getButton("nameButton");
     PopupButton button = new PopupButton(itemButton);
     button.checkItemDisabled(Lang.get("projectEdition.duplicate.menu"));
+  }
+
+  public AccountEditionChecker checkAddExpenseWithNoAccount() {
+    return AccountEditionChecker.open(ConfirmationDialogChecker.open(getPanel().getButton("addExpenseItem").triggerClick())
+                                        .checkMessageContains("In order to prepare projects, you must first create a main bank account")
+                                        .getOkTrigger("Create an account"));
+  }
+
+  public AccountEditionChecker checkAddTransferItemWithNoAccount() {
+    return AccountEditionChecker.open(ConfirmationDialogChecker.open(getPanel().getButton("addTransferItem").triggerClick())
+                                        .checkMessageContains("In order to prepare projects, you must first create a main bank account")
+                                        .getOkTrigger("Create an account"));
   }
 }

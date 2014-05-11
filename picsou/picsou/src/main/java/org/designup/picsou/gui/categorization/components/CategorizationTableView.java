@@ -217,7 +217,7 @@ public class CategorizationTableView extends View implements TableView, Filterab
   private void installReconciliationAnnotationUpdater(final GlobTableView tableView, GlobRepository repository) {
     this.column = new ReconciliationAnnotationColumn(tableView, repository, directory);
     repository.addChangeListener(new TypeChangeSetListener(UserPreferences.TYPE) {
-      protected void update(GlobRepository repository) {
+      public void update(GlobRepository repository) {
         toggleReconciliationColumn(tableView);
       }
     });

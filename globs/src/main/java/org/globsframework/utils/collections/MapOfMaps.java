@@ -78,6 +78,10 @@ public class MapOfMaps<KEY1, KEY2, VALUE> {
     return maps.keySet();
   }
 
+  public boolean contains(KEY1 key1) {
+    return maps.containsKey(key1);
+  }
+
   public boolean containsKey(KEY1 key1, KEY2 key2) {
     return maps.containsKey(key1) && maps.get(key1).containsKey(key2);
   }

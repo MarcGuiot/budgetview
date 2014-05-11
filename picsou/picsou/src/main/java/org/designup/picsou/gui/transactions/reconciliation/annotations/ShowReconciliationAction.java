@@ -22,7 +22,7 @@ public class ShowReconciliationAction extends AbstractAction {
     this.repository = repository;
     this.directory = directory;
     repository.addChangeListener(new TypeChangeSetListener(UserPreferences.TYPE, Transaction.TYPE) {
-      protected void update(GlobRepository repository) {
+      public void update(GlobRepository repository) {
         doUpdate();
       }
     });

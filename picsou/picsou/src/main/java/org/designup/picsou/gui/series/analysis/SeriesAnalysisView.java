@@ -7,10 +7,7 @@ import org.designup.picsou.gui.components.layoutconfig.SplitPaneConfig;
 import org.designup.picsou.gui.series.analysis.components.SeriesAnalysisBreadcrumb;
 import org.designup.picsou.gui.series.analysis.histobuilders.range.ScrollableHistoChartRange;
 import org.designup.picsou.gui.series.view.SeriesWrapper;
-import org.designup.picsou.model.LayoutConfig;
-import org.designup.picsou.model.Month;
-import org.designup.picsou.model.Series;
-import org.designup.picsou.model.SubSeries;
+import org.designup.picsou.model.*;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobSelection;
 import org.globsframework.gui.GlobSelectionListener;
@@ -76,9 +73,12 @@ public class SeriesAnalysisView extends View {
         for (Glob subSeries : selection.getAll(SubSeries.TYPE)) {
           builder.add(SeriesWrapper.getWrapperForSubSeries(subSeries.get(SubSeries.ID), repository));
         }
+        for (Glob group : selection.getAll(SeriesGroup.TYPE)) {
+          builder.add(SeriesWrapper.getWrapperForSeriesGroup(group.get(SeriesGroup.ID), repository));
+        }
         selectionService.select(builder.get());
       }
-    }, Series.TYPE, SubSeries.TYPE);
+    }, Series.TYPE, SubSeries.TYPE, SeriesGroup.TYPE);
 
     SeriesAnalysisBreadcrumb breadcrumb = new SeriesAnalysisBreadcrumb(repository, directory);
     builder.add("breadcrumb", breadcrumb.getEditor());
