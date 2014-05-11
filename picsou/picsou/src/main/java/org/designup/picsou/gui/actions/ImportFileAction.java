@@ -1,5 +1,6 @@
 package org.designup.picsou.gui.actions;
 
+import org.designup.picsou.gui.PicsouApplication;
 import org.designup.picsou.gui.components.dialogs.MessageDialog;
 import org.designup.picsou.gui.components.dialogs.MessageType;
 import org.designup.picsou.gui.importer.ImportDialog;
@@ -99,7 +100,8 @@ public class ImportFileAction extends AbstractAction {
                         Glob defaultAccount, boolean usePreferedPath, GlobList importedAccounts, boolean isSynchro) {
       this.directory = directory;
       this.repository = repository;
-      if (!LicenseService.trialExpired(repository) && !User.isDemoUser(repository.get(User.KEY))) {
+      if (!LicenseService.trialExpired(repository) && !User.isDemoUser(repository.get(User.KEY))&&
+          !Boolean.getBoolean(PicsouApplication.DISABLE_IMPORT)) {
         importDialog = new ImportDialog(Lang.get("import.fileSelection.close"), files, defaultAccount,
                                         directory.get(JFrame.class),
                                         repository, directory,

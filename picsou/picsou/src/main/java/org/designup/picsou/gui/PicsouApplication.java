@@ -80,6 +80,7 @@ public class PicsouApplication {
   public static final String LICENSE_SERVER_URL = "https://register.mybudgetview.fr:443";
   public static final String MOBILE_SERVER_URL = "http://register.mybudgetview.fr:8080";
   public static final String FTP_SERVER_URL = "ftp://ftpjar.mybudgetview.fr";
+  public static final String DISABLE_IMPORT = APPNAME + ".disable.import";
 
   public static boolean EXIT_ON_DATA_ERROR = true;
 
