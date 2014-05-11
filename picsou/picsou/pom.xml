@@ -69,78 +69,78 @@
           </excludes>
         </configuration>
       </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-antrun-plugin</artifactId>
-        <version>1.3</version>
-        <executions>
-          <execution>
-            <id>install</id>
-            <phase>install</phase>
-            <configuration>
-              <tasks>
-                <mkdir dir="src/main/resources/demo"/>
-                <java fork="true" classname="org.designup.picsou.functests.general.DemoGenerationTest" failonerror="true">
-                <jvmarg line="-Doutfile=src/main/resources/demo/demo-fr.snapshot"/>
-                <jvmarg line="-DLANG=fr"/>
-                <classpath>
-                <path refid="maven.test.classpath"/>
-                </classpath>
-                </java>
-                <java fork="true" classname="org.designup.picsou.functests.general.DemoGenerationTest" failonerror="true">
-                <jvmarg line="-Doutfile=src/main/resources/demo/demo-en.snapshot"/>
-                <jvmarg line="-DLANG=en"/>
-                <classpath>
-                <path refid="maven.test.classpath"/>
-                </classpath>
-                </java>
+      <!--<plugin>-->
+        <!--<groupId>org.apache.maven.plugins</groupId>-->
+        <!--<artifactId>maven-antrun-plugin</artifactId>-->
+        <!--<version>1.3</version>-->
+        <!--<executions>-->
+          <!--<execution>-->
+            <!--<id>install</id>-->
+            <!--<phase>install</phase>-->
+            <!--<configuration>-->
+              <!--<tasks>-->
+                <!--<mkdir dir="src/main/resources/demo"/>-->
+                <!--<java fork="true" classname="org.designup.picsou.functests.general.DemoGenerationTest" failonerror="true">-->
+                <!--<jvmarg line="-Doutfile=src/main/resources/demo/demo-fr.snapshot"/>-->
+                <!--<jvmarg line="-DLANG=fr"/>-->
+                <!--<classpath>-->
+                <!--<path refid="maven.test.classpath"/>-->
+                <!--</classpath>-->
+                <!--</java>-->
+                <!--<java fork="true" classname="org.designup.picsou.functests.general.DemoGenerationTest" failonerror="true">-->
+                <!--<jvmarg line="-Doutfile=src/main/resources/demo/demo-en.snapshot"/>-->
+                <!--<jvmarg line="-DLANG=en"/>-->
+                <!--<classpath>-->
+                <!--<path refid="maven.test.classpath"/>-->
+                <!--</classpath>-->
+                <!--</java>-->
 
-                <copy file="src/main/resources/demo/demo-fr.snapshot" tofile="target/classes/demo/demo-fr.snapshot"/>
-                <copy file="src/main/resources/demo/demo-en.snapshot" tofile="target/classes/demo/demo-en.snapshot"/>
+                <!--<copy file="src/main/resources/demo/demo-fr.snapshot" tofile="target/classes/demo/demo-fr.snapshot"/>-->
+                <!--<copy file="src/main/resources/demo/demo-en.snapshot" tofile="target/classes/demo/demo-en.snapshot"/>-->
 
-                <java fork="yes"
-                      classname="org.designup.shrinker.JarShrinker" failonerror="true">
-                  <classpath>
-                    <path refid="maven.runtime.classpath"/>
-                  </classpath>
-                  <sysproperty key="with.debug" value="true"/>
-                  <arg
-                      line="dump.jar ${project.build.directory}/../dev/ant/inputDump.txt ${project.build.directory}/../dev/ant/ignoreClient.txt"/>
-                </java>
-                <manifest file="target/classes/MANIFEST.MF">
-                  <attribute name="Main-Class" value="org.designup.picsou.server.persistence.direct.Dump"/>
-                </manifest>
-                <jar update="true" jarfile="dump.jar" manifest="target/classes/MANIFEST.MF"/>
-                <java fork="yes"
-                      classname="org.designup.shrinker.JarShrinker" failonerror="true">
-                  <classpath>
-                    <path refid="maven.runtime.classpath"/>
-                  </classpath>
-                  <sysproperty key="with.debug" value="true"/>
-                  <sysproperty key="std.out.trace" value="false"/>
-                  <arg
-                      line="budgetview.jar ${project.build.directory}/../dev/ant/inputClient.txt ${project.build.directory}/../dev/ant/ignoreClient.txt"/>
-                </java>
-                <manifest file="target/classes/MANIFEST.MF">
-                  <attribute name="Main-Class" value="picsou.Main"/>
-                </manifest>
-                <jar update="true" jarfile="budgetview.jar" manifest="target/classes/MANIFEST.MF"/>
-                <jar destfile="config.jar">
-                  <fileset dir="src/main/resources" includes="banks/**"/>
-                </jar>
-                <delete dir="obfuscated"/>
-                <java fork="yes" jar="dev/Zelix/ZKM.jar">
-                  <jvmarg line="-Xmx512M"/>
-                  <arg line="-de dev/Zelix/defaultExclude.txt dev/ant/zelix.txt"/>
-                </java>
-              </tasks>
-            </configuration>
-            <goals>
-              <goal>run</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
+                <!--<java fork="yes"-->
+                      <!--classname="org.designup.shrinker.JarShrinker" failonerror="true">-->
+                  <!--<classpath>-->
+                    <!--<path refid="maven.runtime.classpath"/>-->
+                  <!--</classpath>-->
+                  <!--<sysproperty key="with.debug" value="true"/>-->
+                  <!--<arg-->
+                      <!--line="dump.jar ${project.build.directory}/../dev/ant/inputDump.txt ${project.build.directory}/../dev/ant/ignoreClient.txt"/>-->
+                <!--</java>-->
+                <!--<manifest file="target/classes/MANIFEST.MF">-->
+                  <!--<attribute name="Main-Class" value="org.designup.picsou.server.persistence.direct.Dump"/>-->
+                <!--</manifest>-->
+                <!--<jar update="true" jarfile="dump.jar" manifest="target/classes/MANIFEST.MF"/>-->
+                <!--<java fork="yes"-->
+                      <!--classname="org.designup.shrinker.JarShrinker" failonerror="true">-->
+                  <!--<classpath>-->
+                    <!--<path refid="maven.runtime.classpath"/>-->
+                  <!--</classpath>-->
+                  <!--<sysproperty key="with.debug" value="true"/>-->
+                  <!--<sysproperty key="std.out.trace" value="false"/>-->
+                  <!--<arg-->
+                      <!--line="budgetview.jar ${project.build.directory}/../dev/ant/inputClient.txt ${project.build.directory}/../dev/ant/ignoreClient.txt"/>-->
+                <!--</java>-->
+                <!--<manifest file="target/classes/MANIFEST.MF">-->
+                  <!--<attribute name="Main-Class" value="picsou.Main"/>-->
+                <!--</manifest>-->
+                <!--<jar update="true" jarfile="budgetview.jar" manifest="target/classes/MANIFEST.MF"/>-->
+                <!--<jar destfile="config.jar">-->
+                  <!--<fileset dir="src/main/resources" includes="banks/**"/>-->
+                <!--</jar>-->
+                <!--<delete dir="obfuscated"/>-->
+                <!--<java fork="yes" jar="dev/Zelix/ZKM.jar">-->
+                  <!--<jvmarg line="-Xmx512M"/>-->
+                  <!--<arg line="-de dev/Zelix/defaultExclude.txt dev/ant/zelix.txt"/>-->
+                <!--</java>-->
+              <!--</tasks>-->
+            <!--</configuration>-->
+            <!--<goals>-->
+              <!--<goal>run</goal>-->
+            <!--</goals>-->
+          <!--</execution>-->
+        <!--</executions>-->
+      <!--</plugin>-->
     </plugins>
   </build>
 
