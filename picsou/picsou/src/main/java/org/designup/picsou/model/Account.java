@@ -2,15 +2,16 @@ package org.designup.picsou.model;
 
 import com.budgetview.shared.utils.PicsouGlobSerializer;
 import org.designup.picsou.gui.accounts.utils.MonthDay;
-import org.designup.picsou.gui.utils.Matchers;
 import org.designup.picsou.utils.Lang;
 import org.designup.picsou.utils.PicsouUtils;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.annotations.*;
-import org.globsframework.metamodel.annotations.Key;
 import org.globsframework.metamodel.fields.*;
 import org.globsframework.metamodel.utils.GlobTypeLoader;
-import org.globsframework.model.*;
+import org.globsframework.model.FieldSetter;
+import org.globsframework.model.FieldValues;
+import org.globsframework.model.Glob;
+import org.globsframework.model.GlobRepository;
 import org.globsframework.model.utils.GlobMatcher;
 import org.globsframework.utils.collections.Pair;
 import org.globsframework.utils.exceptions.ItemNotFound;
@@ -22,6 +23,7 @@ import org.globsframework.utils.serialization.SerializedOutput;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.SortedSet;
 
 import static org.globsframework.model.FieldValue.value;
 
@@ -228,6 +230,29 @@ public class Account {
     return new GlobMatcher() {
       public boolean matches(Glob account, GlobRepository repository) {
         return isUserCreatedMainAccount(account);
+      }
+    };
+  }
+
+  public static GlobMatcher activeUserCreatedMainAccounts(final SortedSet<Integer> monthIds) {
+    return new GlobMatcher() {
+      public boolean matches(Glob account, GlobRepository repository) {
+        if (!Account.isUserCreatedMainAccount(account)) {
+          return false;
+        }
+        if (account.get(Account.CLOSED_DATE) != null) {
+          Integer endMonth = Month.getMonthId(account.get(Account.CLOSED_DATE));
+          if (endMonth < monthIds.first()) {
+            return false;
+          }
+        }
+        if (account.get(Account.OPEN_DATE) != null) {
+          Integer openMonth = Month.getMonthId(account.get(Account.OPEN_DATE));
+          if (openMonth > monthIds.last()) {
+            return false;
+          }
+        }
+        return true;
       }
     };
   }

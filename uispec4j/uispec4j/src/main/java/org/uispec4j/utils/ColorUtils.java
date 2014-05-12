@@ -116,7 +116,7 @@ public final class ColorUtils {
     return color.toUpperCase();
   }
 
-  private static boolean equals(Color expected, Color actual, boolean matchBySimilarity) {
+  public static boolean equals(Color expected, Color actual, boolean matchBySimilarity) {
     if (matchBySimilarity) {
       return computeHSBDistance(expected, actual) < 0.9;
     }

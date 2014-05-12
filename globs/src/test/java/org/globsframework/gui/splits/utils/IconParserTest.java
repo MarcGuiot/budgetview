@@ -4,10 +4,7 @@ import junit.framework.Assert;
 import junit.framework.TestCase;
 import org.globsframework.gui.splits.color.ColorService;
 import org.globsframework.gui.splits.color.Colors;
-import org.globsframework.gui.splits.components.ArrowIcon;
-import org.globsframework.gui.splits.components.CircledArrowIcon;
-import org.globsframework.gui.splits.components.EmptyIcon;
-import org.globsframework.gui.splits.components.RoundedRectIcon;
+import org.globsframework.gui.splits.components.*;
 import org.globsframework.gui.splits.impl.DefaultSplitsContext;
 import org.globsframework.utils.directory.DefaultDirectory;
 
@@ -92,7 +89,30 @@ public class IconParserTest extends TestCase {
     assertEquals(Color.GREEN, icon.getBorderColor());
   }
 
+  public void testOval() throws Exception {
+    OvalIcon icon = (OvalIcon)parse("oval(10,20,#FF0000,#00FF00)");
+    assertEquals(10, icon.getIconWidth());
+    assertEquals(20, icon.getIconHeight());
+    assertEquals(Color.RED, icon.getBackgroundColor());
+    assertEquals(Color.GREEN, icon.getBorderColor());
+  }
 
+  public void testOvalWithNamedColors() throws Exception {
+    colorService.set("rect.bg", Color.BLUE);
+    colorService.set("rect.border", Color.WHITE);
+
+    OvalIcon icon = (OvalIcon)parse("oval(15,25,rect.bg,rect.border)");
+    assertEquals(15, icon.getIconWidth());
+    assertEquals(25, icon.getIconHeight());
+    assertEquals(Color.BLUE, icon.getBackgroundColor());
+    assertEquals(Color.WHITE, icon.getBorderColor());
+
+    colorService.set("rect.bg", Color.PINK);
+    colorService.set("rect.border", Color.GREEN);
+    assertEquals(Color.PINK, icon.getBackgroundColor());
+    assertEquals(Color.GREEN, icon.getBorderColor());
+  }
+  
   private ArrowIcon parseArrow(String text) {
     Icon icon = parse(text);
     return (ArrowIcon)icon;

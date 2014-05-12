@@ -1,8 +1,6 @@
 package org.designup.picsou.functests.utils;
 
 import org.designup.picsou.functests.checkers.TransactionChecker;
-import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
-import org.designup.picsou.functests.utils.OfxBuilder;
 import org.designup.picsou.model.TransactionType;
 
 public abstract class LangTestCase extends LoggedInFunctionalTestCase {
@@ -30,8 +28,9 @@ public abstract class LangTestCase extends LoggedInFunctionalTestCase {
     transactions.initContent()
       .add(tableDate, TransactionType.PRELEVEMENT, "AUCHAN", "", -100.00, series)
       .check();
-    budgetView.getSummary().checkReferencePositionTitleContains(summaryDate);
-    budgetView.getSummary().getChart().checkTooltipContains(200808, 12, tooltipDate);
+    budgetView.getSummary()
+      .checkContentContains(summaryDate)
+      .getChart().checkTooltipContains(200808, 12, tooltipDate);
     mainAccounts.checkReferencePositionDateContains(summaryDate);
     mainAccounts.checkAccountUpdateDate(accountName, summaryDate);
   }

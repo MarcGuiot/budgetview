@@ -21,15 +21,6 @@
 
     <style selector="button#balanceLabel" fill="none" anchor="center"/>
 
-    <style selector="button#uncategorized" ui="underlinedButtonUI"
-           horizontalTextPosition="left" iconTextGap="2"/>
-
-    <style id="uncategorizedEnabled" selector="x"
-           icon="arrow_right_red.png" rolloverIcon="arrow_right_blue_full.png"/>
-
-    <style id="uncategorizedDisabled" selector="x"
-           icon="" rolloverIcon=""/>
-
     <style selector="panel.multiSelection"
            background="budgetSummary.multiSelection.bg"
            border="matte(1,0,1,0,budgetSummary.multiSelection.border)"/>
@@ -39,21 +30,28 @@
            horizontalAlignment="center" border="empty(5,0,5,0)"
            fill="horizontal" anchor="bottom" weightY="0"/>
 
+    <style id="accountOK" selector="x" icon="roundedRect(12,6,0,0,budgetSummary.accountStatus.ok,budgetSummary.accountStatus.ok)"/>
+    <style id="accountNOK" selector="x" icon="roundedRect(12,6,0,0,budgetSummary.accountStatus.nok,budgetSummary.accountStatus.nok)"/>
+
+    <style id="selectedAccount" selector="x" font="-,bold,12" foreground="budgetSummary.accountSelected"/>
+    <style id="unselectedAccount" selector="x" font="-,plain,12" foreground="budgetSummary.accountUnselected"/>
   </styles>
 
   <column border="empty(10,10,10,10)">
 
-    <panel opaque="true" weightY="100" background="block.inner.secondary.bg" border="line(block.inner.border)">
-      <component ref="chart" minimumSize="(100,100)" background="block.inner.secondary.bg" margin="5"/>
-    </panel>
-
-    <row marginTop="4" styleClass="subRow">
-      <label ref="lastPositionTitle" styleClass="totalAmountTitle"/>
-      <label ref="lastPositionLabel" styleClass="totalAmount"/>
-      <filler fill="horizontal"/>
-      <label text="$budgetSummaryView.uncategorized" styleClass="totalAmountTitle"/>
-      <button ref="uncategorized" styleClass="uncategorized"/>
-    </row>
+    <column opaque="true" weightY="100" background="block.inner.secondary.bg" border="line(block.inner.border)">
+      <row margin="5" weightY="0.1">
+        <repeat ref="accountSelectors" layout="verticalGrid" marginLeft="10">
+          <label ref="accountStatus" marginTop="3" />
+          <button ref="accountSelector" ui="hyperlinkButtonWithoutUnderline" font="-,plain,12"
+                  fill="none" anchor="left" marginTop="3" marginLeft="5"/>
+          <label ref="accountPosition" font="-,plain,10" marginLeft="5" marginTop="5" foreground="#808080"/>
+        </repeat>
+        <filler fill="horizontal"/>
+      </row>
+      <component ref="chart" minimumSize="(100,90)" background="block.inner.secondary.bg"
+                 weightY="10" margin="5" marginBottom="10"/>
+    </column>
 
     <panel border="empty(5,0,0,0)" autoHideSource="multiSelectionLabel">
       <panel styleClass="multiSelection">

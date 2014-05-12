@@ -13,7 +13,7 @@
 
       <verticalBoxes weightX="1">
         <label text="$budgetSummaryView.title" styleClass="blockTitle" horizontalAlignment="center"/>
-        <column styleClass="block" marginBottom="10" preferredSize="(200,200)">
+        <column styleClass="block" marginBottom="5" preferredSize="(200,200)">
           <panel ref="budgetSummaryView"/>
         </column>
 
@@ -28,9 +28,10 @@
         <panel ref="extrasBudgetView"/>
       </verticalSplit>
 
-      <verticalSplit ref="verticalSplit3" styleClass="mainDivider">
-        <panel ref="variableBudgetView"/>
-      </verticalSplit>
+      <column styleClass="mainDivider">
+        <panel ref="variableBudgetView" weightY="100"/>
+        <panel ref="uncategorizedSummaryView" weightY="0.1"/>
+      </column>
     </horizontalSplit>
 
   </column>

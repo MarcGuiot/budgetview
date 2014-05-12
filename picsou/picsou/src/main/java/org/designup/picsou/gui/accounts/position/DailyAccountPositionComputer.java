@@ -35,7 +35,7 @@ public class DailyAccountPositionComputer {
     if (!monthIdsToShow.isEmpty()) {
       for (Integer accountId : accountIds) {
         GlobMatcher accountMatcher = Matchers.transactionsForAccount(accountId);
-        Double lastValue = getLastValue(accountMatcher, monthIdsToShow, Transaction.ACCOUNT_POSITION);
+        Double lastValue = getLastValue(accountMatcher, monthIdsToShow.get(0), Transaction.ACCOUNT_POSITION, repository);
         if (lastValue == null) {
           Glob account = repository.get(Key.create(Account.TYPE, accountId));
           lastValue = account.get(Account.POSITION_WITH_PENDING);
@@ -100,7 +100,7 @@ public class DailyAccountPositionComputer {
 
     DailyAccountPositionValues positionValues = new DailyAccountPositionValues();
 
-    Double lastValue = getLastValue(accountMatcher, monthIdsToShow, position);
+    Double lastValue = getLastValue(accountMatcher, monthIdsToShow.get(0), position, repository);
 
     for (int monthId : monthIdsToShow) {
       GlobList transactions = repository.findByIndex(Transaction.POSITION_MONTH_INDEX, monthId)
@@ -144,7 +144,7 @@ public class DailyAccountPositionComputer {
       if (stat != null) {
         lastValue = stat.get(BudgetStat.END_OF_MONTH_ACCOUNT_POSITION, 0.);
         for (int i = 0; i < minValues.length; i++) {
-          if (minValues[i] == null){
+          if (minValues[i] == null) {
             minValues[i] = lastValue;
           }
         }
@@ -160,11 +160,11 @@ public class DailyAccountPositionComputer {
     return lastValue;
   }
 
-  private Double getLastValue(GlobMatcher accountMatcher, List<Integer> monthIdsToShow, DoubleField positionField) {
+  public static Double getLastValue(GlobMatcher accountMatcher, Integer currentMonthId, DoubleField positionField, GlobRepository repository) {
 
     LastGlobFunctor callback = new LastGlobFunctor(accountMatcher);
 
-    Integer monthId = monthIdsToShow.get(0);
+    Integer monthId = currentMonthId;
     monthId = Month.previous(monthId);
     while (callback.transaction == null && repository.find(Key.create(Month.TYPE, monthId)) != null) {
       repository.findByIndex(Transaction.POSITION_MONTH_INDEX, monthId).safeApply(callback, repository);
@@ -175,7 +175,7 @@ public class DailyAccountPositionComputer {
     }
 
     FirstGlobFunctor firstCallback = new FirstGlobFunctor(accountMatcher);
-    monthId = monthIdsToShow.get(0);
+    monthId = currentMonthId;
     while (firstCallback.transaction == null && repository.find(Key.create(Month.TYPE, monthId)) != null) {
       repository.findByIndex(Transaction.POSITION_MONTH_INDEX, monthId).safeApply(firstCallback, repository);
       monthId = Month.previous(monthId);

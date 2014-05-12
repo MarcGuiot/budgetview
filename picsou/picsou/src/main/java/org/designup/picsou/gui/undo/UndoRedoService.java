@@ -61,6 +61,7 @@ public class UndoRedoService {
     undoRedoInProgress = true;
     try {
       Change change = changesToUndo.removeLast();
+      System.out.println("UndoRedoService.undo: " + change);
       change.revert();
       changesToRedo.push(change);
       notifyListeners();

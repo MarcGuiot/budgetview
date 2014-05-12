@@ -236,7 +236,7 @@ public class AccountEditionTest extends LoggedInFunctionalTestCase {
     mainAccounts.checkAccountNames("Main", "Account n. 0000100");
     mainAccounts.checkAccount("Account n. 0000100", 900, "2008/10/01");
     mainAccounts.checkAccount("Main", 1000, "2008/10/01");
-    mainAccounts.checkEstimatedPosition(1900);
+    mainAccounts.checkEstimatedPosition(900);
   }
 
   public void testCreateAccountWithEndDate() throws Exception {
@@ -271,12 +271,17 @@ public class AccountEditionTest extends LoggedInFunctionalTestCase {
       .checkEndDate("2008/12/03")
       .validate();
     mainAccounts.checkAccountNames("Main", "Closed main");
-    mainAccounts.checkEstimatedPosition(1950);
+    mainAccounts.checkEstimatedPosition(950);
     mainAccounts.checkSummary(2000, "2008/10/01");
+    budgetView.getSummary()
+      .checkContent("| ok | Main*       | 1000.00 on 2008/10/01 |\n" +
+                    "| ok | Closed main | 1000.00 on 2008/10/01 |");
 
     timeline.selectMonth("2009/01");
     mainAccounts.checkAccountNames("Main");
     mainAccounts.checkEstimatedPosition(800);
+    budgetView.getSummary()
+      .checkContent("| ok | Main* | 1000.00 on 2008/10/01 |");
   }
 
   public void testBeginEndInThePastWithTransactions() throws Exception {
@@ -315,14 +320,41 @@ public class AccountEditionTest extends LoggedInFunctionalTestCase {
 
     timeline.selectMonth("2008/06");
     mainAccounts.checkAccountNames(OfxBuilder.DEFAULT_ACCOUNT_NAME, "Account n. 0000100");
-    mainAccounts.checkEstimatedPosition(-700);
+    mainAccounts.checkEstimatedPosition(200);
+    budgetView.getSummary().checkContent(
+      "| ok  | Account n. 00001123* | 0.00 on 2008/08/15 |\n" +
+      "| nok | Account n. 0000100   | 0.00 on 2008/07/01 |");
+    budgetView.getSummary().getChart()
+      .checkValue(200806, 1, 300.00)
+      .checkValue(200806, 15, 200.00)
+      .checkValue(200807, 15, 100.00);
+    budgetView.getSummary().selectAccount("Account n. 0000100");
+    budgetView.getSummary().getChart()
+      .checkValue(200806, 1, -900.00)
+      .checkValue(200807, 1, 0.00);
 
     timeline.selectMonth("2008/07");
     mainAccounts.checkAccountNames(OfxBuilder.DEFAULT_ACCOUNT_NAME, "Account n. 0000100");
-    mainAccounts.checkEstimatedPosition(100);
+    budgetView.getSummary().selectAccount(OfxBuilder.DEFAULT_ACCOUNT_NAME);
+    mainAccounts.checkEstimatedPosition(100.00);
+    budgetView.getSummary().checkContent(
+      "| ok | Account n. 00001123* | 0.00 on 2008/08/15 |\n" +
+      "| ok | Account n. 0000100   | 0.00 on 2008/07/01 |");
+    budgetView.getSummary().getChart()
+      .checkValue(200807, 1, 200.00)
+      .checkValue(200807, 15, 100.00)
+      .checkValue(200808, 15, 0.00);
+    budgetView.getSummary().selectAccount("Account n. 0000100");
+    budgetView.getSummary().getChart()
+      .checkValue(200807, 1, 0.00);
 
     timeline.selectMonth("2008/08");
     mainAccounts.checkAccountNames(OfxBuilder.DEFAULT_ACCOUNT_NAME);
+    budgetView.getSummary().checkContent(
+      "| ok | Account n. 00001123* | 0.00 on 2008/08/15 |");
+    budgetView.getSummary().getChart()
+      .checkValue(200808, 1, 100.00)
+      .checkValue(200808, 15, 0.00);
     mainAccounts.checkEstimatedPosition(0);
   }
 

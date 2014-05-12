@@ -3,35 +3,40 @@ package org.designup.picsou.gui.series;
 import org.designup.picsou.gui.model.PeriodBudgetAreaStat;
 import org.designup.picsou.gui.model.PeriodSeriesStat;
 import org.designup.picsou.gui.model.SeriesType;
+import org.designup.picsou.model.Account;
 import org.designup.picsou.model.BudgetArea;
+import org.designup.picsou.model.Month;
+import org.designup.picsou.model.Transaction;
 import org.designup.picsou.model.util.AmountMap;
+import org.globsframework.gui.SelectionService;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.*;
+import org.globsframework.utils.directory.Directory;
 
 import java.util.Set;
 
 import static org.globsframework.model.utils.GlobMatchers.fieldEquals;
 
-public class PeriodBudgetAreaTrigger implements ChangeSetListener {
+public class PeriodBudgetAreaStatUpdater implements ChangeSetListener {
 
   private GlobRepository repository;
 
   public static void init(GlobRepository repository) {
-    repository.addTrigger(new PeriodBudgetAreaTrigger(repository));
+    repository.addTrigger(new PeriodBudgetAreaStatUpdater(repository));
   }
 
-  public PeriodBudgetAreaTrigger(GlobRepository repository) {
+  public PeriodBudgetAreaStatUpdater(GlobRepository repository) {
     this.repository = repository;
   }
 
   public void globsChanged(ChangeSet changeSet, GlobRepository repository) {
-    if (changeSet.containsChanges(PeriodSeriesStat.TYPE)) {
+    if (changeSet.containsChanges(Transaction.TYPE)) {
       recomputeAll();
     }
   }
 
   public void globsReset(GlobRepository repository, Set<GlobType> changedTypes) {
-    if (changedTypes.contains(PeriodSeriesStat.TYPE)) {
+    if (changedTypes.contains(Transaction.TYPE)) {
       recomputeAll();
     }
   }

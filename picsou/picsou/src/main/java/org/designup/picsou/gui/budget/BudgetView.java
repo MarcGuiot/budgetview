@@ -3,6 +3,7 @@ package org.designup.picsou.gui.budget;
 import com.jidesoft.swing.JideSplitPane;
 import org.designup.picsou.gui.View;
 import org.designup.picsou.gui.budget.summary.BudgetSummaryView;
+import org.designup.picsou.gui.budget.summary.UncategorizedSummaryView;
 import org.designup.picsou.gui.components.highlighting.HighlightingService;
 import org.designup.picsou.gui.components.layoutconfig.SplitPaneConfig;
 import org.designup.picsou.model.BudgetArea;
@@ -30,6 +31,9 @@ public class BudgetView extends View {
 
     BudgetSummaryView budgetSummaryView = new BudgetSummaryView(repository, directory);
     budgetSummaryView.registerComponents(builder);
+
+    UncategorizedSummaryView uncategorizedSummaryView = new UncategorizedSummaryView(repository, directory);
+    uncategorizedSummaryView.registerComponents(builder);
 
     addBudgetAreaView("incomeBudgetView", BudgetArea.INCOME, builder);
     addBudgetAreaView("recurringBudgetView", BudgetArea.RECURRING, builder);

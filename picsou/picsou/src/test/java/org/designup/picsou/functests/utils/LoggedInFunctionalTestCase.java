@@ -39,6 +39,7 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
   public LicenseActivationChecker license;
   public LicenseMessageChecker licenseMessage;
   public BudgetViewChecker budgetView;
+  public UncategorizedSummaryViewChecker uncategorized;
   public SavingsViewChecker savingsView;
   public CategorizationChecker categorization;
   public SeriesAnalysisChecker seriesAnalysis;
@@ -167,6 +168,7 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
     transactionCreation = new TransactionCreationChecker(mainWindow);
     screen = new ScreenChecker(mainWindow);
     budgetView = new BudgetViewChecker(mainWindow);
+    uncategorized = new UncategorizedSummaryViewChecker(mainWindow);
     savingsView = new SavingsViewChecker(mainWindow);
     categorization = new CategorizationChecker(mainWindow);
     seriesAnalysis = new SeriesAnalysisChecker(mainWindow);
@@ -233,6 +235,7 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
     newVersion = null;
     demoMessage = null;
     budgetView = null;
+    uncategorized = null;
     savingsView = null;
     categorization = null;
     seriesAnalysis = null;

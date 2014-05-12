@@ -5,10 +5,7 @@ import org.globsframework.gui.splits.SplitsContext;
 import org.globsframework.gui.splits.color.ColorService;
 import org.globsframework.gui.splits.color.ColorUpdater;
 import org.globsframework.gui.splits.color.Colors;
-import org.globsframework.gui.splits.components.ArrowIcon;
-import org.globsframework.gui.splits.components.CircledArrowIcon;
-import org.globsframework.gui.splits.components.EmptyIcon;
-import org.globsframework.gui.splits.components.RoundedRectIcon;
+import org.globsframework.gui.splits.components.*;
 import org.globsframework.utils.Strings;
 
 import javax.swing.*;
@@ -32,17 +29,24 @@ public class IconParser {
                                                         "\\)");
 
   private static Pattern CIRCLED_ARROW_FORMAT = Pattern.compile("circledArrow\\(" +
-                                                        "[ ]*([A-z\\.#0-9]+)[ ]*" +
-                                                        "\\)");
+                                                                "[ ]*([A-z\\.#0-9]+)[ ]*" +
+                                                                "\\)");
 
   private static Pattern ROUNDED_RECT_FORMAT = Pattern.compile("roundedRect\\(" +
-                                                        "[ ]*([0-9]+)[ ]*," +
-                                                        "[ ]*([0-9]+)[ ]*," +
-                                                        "[ ]*([0-9]+)[ ]*," +
-                                                        "[ ]*([0-9]+)[ ]*," +
-                                                        "[ ]*([A-z\\.#0-9]+)[ ]*," +
-                                                        "[ ]*([A-z\\.#0-9]+)[ ]*" +
-                                                        "\\)");
+                                                               "[ ]*([0-9]+)[ ]*," +
+                                                               "[ ]*([0-9]+)[ ]*," +
+                                                               "[ ]*([0-9]+)[ ]*," +
+                                                               "[ ]*([0-9]+)[ ]*," +
+                                                               "[ ]*([A-z\\.#0-9]+)[ ]*," +
+                                                               "[ ]*([A-z\\.#0-9]+)[ ]*" +
+                                                               "\\)");
+
+  private static Pattern OVAL_FORMAT = Pattern.compile("oval\\(" +
+                                                       "[ ]*([0-9]+)[ ]*," +
+                                                       "[ ]*([0-9]+)[ ]*," +
+                                                       "[ ]*([A-z\\.#0-9]+)[ ]*," +
+                                                       "[ ]*([A-z\\.#0-9]+)[ ]*" +
+                                                       "\\)");
 
   public static Icon parse(String text, ColorService colorService, ImageLocator imageLocator, SplitsContext context) {
     if (Strings.isNullOrEmpty(text)) {
@@ -67,6 +71,11 @@ public class IconParser {
     RoundedRectIcon roundedRect = parseRoundedRect(text, colorService, context);
     if (roundedRect != null) {
       return roundedRect;
+    }
+
+    OvalIcon oval = parseOval(text, colorService, context);
+    if (oval != null) {
+      return oval;
     }
 
     return imageLocator.get(text);
@@ -146,7 +155,7 @@ public class IconParser {
     if (matcher.matches()) {
       int iconWidth = Integer.parseInt(matcher.group(1));
       int iconHeight = Integer.parseInt(matcher.group(2));
-      int arcX= Integer.parseInt(matcher.group(3));
+      int arcX = Integer.parseInt(matcher.group(3));
       int arcY = Integer.parseInt(matcher.group(4));
 
       final RoundedRectIcon icon = new RoundedRectIcon(iconWidth, iconHeight, arcX, arcY);
@@ -167,6 +176,49 @@ public class IconParser {
       }
 
       String border = matcher.group(6);
+      if (Colors.isHexaString(border)) {
+        Color color = Colors.toColor(border);
+        icon.setBorderColor(color);
+      }
+      else {
+        ColorUpdater updater = new ColorUpdater(border) {
+          public void updateColor(Color color) {
+            icon.setBorderColor(color);
+          }
+        };
+        updater.install(colorService);
+        context.addDisposable(updater);
+      }
+
+      return icon;
+    }
+    return null;
+  }
+
+  private static OvalIcon parseOval(String text, ColorService colorService, SplitsContext context) {
+    Matcher matcher = OVAL_FORMAT.matcher(text.trim());
+    if (matcher.matches()) {
+      int iconWidth = Integer.parseInt(matcher.group(1));
+      int iconHeight = Integer.parseInt(matcher.group(2));
+
+      final OvalIcon icon = new OvalIcon(iconWidth, iconHeight);
+
+      String background = matcher.group(3);
+      if (Colors.isHexaString(background)) {
+        Color color = Colors.toColor(background);
+        icon.setBackgroundColor(color);
+      }
+      else {
+        ColorUpdater updater = new ColorUpdater(background) {
+          public void updateColor(Color color) {
+            icon.setBackgroundColor(color);
+          }
+        };
+        updater.install(colorService);
+        context.addDisposable(updater);
+      }
+
+      String border = matcher.group(4);
       if (Colors.isHexaString(border)) {
         Color color = Colors.toColor(border);
         icon.setBorderColor(color);

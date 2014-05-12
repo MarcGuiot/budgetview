@@ -1,5 +1,6 @@
 package org.designup.picsou.functests.budget;
 
+import org.designup.picsou.functests.checkers.BudgetSummaryViewChecker;
 import org.designup.picsou.functests.checkers.SeriesAmountEditionDialogChecker;
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
@@ -23,8 +24,8 @@ public class BudgetSummaryViewTest extends LoggedInFunctionalTestCase {
 
     views.selectBudget();
     timeline.checkSelection("2008/07");
-    budgetView.getSummary()
-      .checkUncategorized(50.00)
+    uncategorized
+      .checkAmount(50.00)
       .gotoUncategorized();
 
     budgetView.getSummary().getChart()
@@ -54,8 +55,8 @@ public class BudgetSummaryViewTest extends LoggedInFunctionalTestCase {
 
     timeline.checkSelection("2008/07");
     timeline.selectAll();
-    budgetView.getSummary()
-      .checkUncategorized(1000.00 + 200.00 + 50.00)
+    uncategorized
+      .checkAmount(1000.00 + 200.00 + 50.00)
       .gotoUncategorized();
 
     views.checkCategorizationSelected();
@@ -68,9 +69,10 @@ public class BudgetSummaryViewTest extends LoggedInFunctionalTestCase {
     views.selectBudget();
     budgetView.getSummary()
       .checkMultiSelectionNotShown()
-      .checkReferencePosition("Position on 2008/07/05", 1500.00)
-      .checkEndPosition(2300.00)
-      .checkUncategorized(50.00);
+      .checkContent("| ok | Account n. 0001212* | 1500.00 on 2008/07/05 |")
+      .checkEndPosition(2300.00);
+    uncategorized
+      .checkAmount(50.00);
 
     budgetView.getSummary().getChart()
       .checkRange(200807, 200808)
@@ -84,17 +86,18 @@ public class BudgetSummaryViewTest extends LoggedInFunctionalTestCase {
       .checkValue(200808, 11, 3100.00);
 
     timeline.selectAll();
-
     budgetView.getSummary()
       .checkMultiSelection(4)
-      .checkEndPosition(3900.00)
-      .checkUncategorized(50.00);
+      .checkEndPosition(3900.00);
+    uncategorized
+      .checkAmount(50.00);
 
     timeline.selectMonth("2008/06");
     budgetView.getSummary()
       .checkMultiSelectionNotShown()
-      .checkEndPosition(1550.00)
-      .checkUncategorizedNotShown();
+      .checkEndPosition(1550.00);
+    uncategorized
+      .checkNotShown();
 
     views.selectCategorization();
     categorization.showAllTransactions();
@@ -104,17 +107,19 @@ public class BudgetSummaryViewTest extends LoggedInFunctionalTestCase {
     views.selectBudget();
     budgetView.getSummary()
       .checkMultiSelectionNotShown()
-      .checkReferencePosition("Position on 2008/07/05", 1500.00)
-      .checkEndPosition(2300.00)
-      .checkUncategorizedNotShown();
+      .checkContent("| ok | Account n. 0001212* | 1500.00 on 2008/07/05 |")
+      .checkEndPosition(2300.00);
+    uncategorized
+      .checkNotShown();
 
     timeline.selectMonth("2008/09");
     views.selectBudget();
     budgetView.getSummary()
       .checkMultiSelectionNotShown()
-      .checkReferencePosition("Position on 2008/07/05", 1500.00)
-      .checkEndPosition(3800.00)
-      .checkUncategorizedNotShown();
+      .checkContent("| ok | Account n. 0001212* | 1500.00 on 2008/07/05 |")
+      .checkEndPosition(3800.00);
+    uncategorized
+      .checkNotShown();
   }
 
   public void testRolloverHighlightsCorrespondingSeries() throws Exception {
@@ -400,6 +405,125 @@ public class BudgetSummaryViewTest extends LoggedInFunctionalTestCase {
     budgetView.income.checkTotalGaugeTooltips("Il vous reste <b>1100.00</b> à recevoir");
     timeline.selectMonth("2008/07");
     budgetView.income.checkGaugeBeginInError();
+  }
+
+  public void testMultipleMainAccounts() throws Exception {
+    OfxBuilder
+      .init(this)
+      .addBankAccount(-1, 10674, "000111", 1000.00, "2008/07/10")
+      .addTransaction("2008/07/05", 1000.00, "WorldCo")
+      .addTransaction("2008/07/10", -100.00, "FNAC")
+      .load();
+
+    OfxBuilder
+      .init(this)
+      .addBankAccount(-1, 10674, "000222", -2000.00, "2008/07/20")
+      .addTransaction("2008/07/15", -200.00, "Auchan")
+      .addTransaction("2008/07/20", -20.00, "McDo")
+      .load();
+
+    OfxBuilder
+      .init(this)
+      .addBankAccount(-1, 10674, "000333", 3000.00, "2008/07/30")
+      .addTransaction("2008/07/20", -300.00, "Darty")
+      .addTransaction("2008/07/25", -30.00, "Total")
+      .load();
+
+    BudgetSummaryViewChecker budgetSummary = budgetView.getSummary();
+    budgetSummary.checkContent(
+      "| ok  | Account n. 000111* | 1000.00 on 2008/07/10  |\n" +
+      "| nok | Account n. 000222  | -2000.00 on 2008/07/15 |\n" +
+      "| ok  | Account n. 000333  | 3000.00 on 2008/07/01  |"
+    );
+    budgetSummary.getChart()
+      .checkValue(200807, 1, 100.00)
+      .checkValue(200807, 5, 1100.00)
+      .checkValue(200807, 10, 1000.00);
+
+    budgetSummary.selectAccount("Account n. 000333");
+    budgetSummary.checkContent(
+      "| ok  | Account n. 000111  | 1000.00 on 2008/07/10  |\n" +
+      "| nok | Account n. 000222  | -2000.00 on 2008/07/15 |\n" +
+      "| ok  | Account n. 000333* | 3000.00 on 2008/07/01  |"
+    );
+    budgetSummary.getChart()
+      .checkValue(200807, 1, 3000.00)
+      .checkValue(200807, 20, 2700.00)
+      .checkValue(200807, 25, 2670.00);
+
+    // -- Uses global account sorting --
+
+    summary.moveAccountUp("Account n. 000333");
+    budgetSummary.checkContent(
+      "| ok  | Account n. 000333* | 3000.00 on 2008/07/01  |\n" +
+      "| ok  | Account n. 000111  | 1000.00 on 2008/07/10  |\n" +
+      "| nok | Account n. 000222  | -2000.00 on 2008/07/15 |"
+    );
+
+    // -- Reacts to deletions --
+
+    mainAccounts.openDelete("000333").validate();
+    budgetSummary.checkContent(
+      "| ok  | Account n. 000111* | 1000.00 on 2008/07/10  |\n" +
+      "| nok | Account n. 000222  | -2000.00 on 2008/07/15 |"
+    );
+    budgetSummary.getChart()
+      .checkValue(200807, 1, 100.00)
+      .checkValue(200807, 5, 1100.00)
+      .checkValue(200807, 10, 1000.00);
+  }
+
+  public void testExcludesClosedAccounts() throws Exception {
+    OfxBuilder
+      .init(this)
+      .addBankAccount(-1, 10674, "000111", 1000.00, "2008/07/10")
+      .addTransaction("2008/07/05", 1000.00, "WorldCo")
+      .addTransaction("2008/07/10", -100.00, "FNAC")
+      .addTransaction("2008/06/06", 1000.00, "WorldCo")
+      .addTransaction("2008/06/12", -110.00, "Darty")
+      .load();
+
+    OfxBuilder
+      .init(this)
+      .addBankAccount(-1, 10674, "000222", -2000.00, "2008/06/20")
+      .addTransaction("2008/06/15", -200.00, "Auchan")
+      .addTransaction("2008/06/20", -20.00, "McDo")
+      .load();
+
+    timeline.selectMonth(200807);
+    BudgetSummaryViewChecker budgetSummary = budgetView.getSummary();
+    budgetSummary.checkContent(
+      "| ok  | Account n. 000111* | 1000.00 on 2008/07/10  |\n" +
+      "| nok | Account n. 000222  | -2000.00 on 2008/06/20 |"
+    );
+    budgetSummary.selectAccount("Account n. 000222");
+    budgetSummary.checkContent(
+      "| ok  | Account n. 000111  | 1000.00 on 2008/07/10  |\n" +
+      "| nok | Account n. 000222* | -2000.00 on 2008/06/20 |" );
+    budgetSummary.getChart()
+      .checkValue(200807, 1, -2000.00);
+
+    mainAccounts.edit("Account n. 000222")
+      .setEndDate("2008/06/20")
+      .validate();
+    budgetSummary.checkContent(
+      "| ok | Account n. 000111* | 1000.00 on 2008/07/10 |");
+
+    timeline.selectMonth(200806);
+    budgetSummary.checkContent(
+      "| nok | Account n. 000111* | 1000.00 on 2008/07/10 |\n" +
+      "| nok | Account n. 000222  | 0.00 on 2008/06/20    |" );
+    budgetSummary.getChart()
+      .checkValue(200806, 1, -790.00)
+      .checkValue(200806, 6, 210.00)
+      .checkValue(200806, 12, 100.00)
+      .checkValue(200807, 5, 1100.00)
+      .checkValue(200807, 10, 1000.00);
+
+    budgetSummary.selectAccount("Account n. 000222");
+    timeline.selectMonth(200807);
+    budgetSummary.checkContent(
+      "| ok | Account n. 000111* | 1000.00 on 2008/07/10 |");
   }
 
   private void setVariableAmount(final String seriesName, final double amount) {

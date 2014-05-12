@@ -124,7 +124,7 @@
     </column>
 
     <column marginLeft="15" marginRight="15" marginBottom="10">
-      <cards ref="mainCards" marginTop="10" weightY="10.0">
+      <cards ref="mainCards" border="${mainContent.border}" weightY="10.0">
 
         <card name="home">
           <column>

@@ -30,6 +30,7 @@ import org.designup.picsou.gui.license.RegisterLicenseAction;
 import org.designup.picsou.gui.mobile.DumpMobileXmlAction;
 import org.designup.picsou.gui.mobile.EditMobileAccountAction;
 import org.designup.picsou.gui.mobile.SendMobileDataAction;
+import org.designup.picsou.gui.model.PeriodAccountStat;
 import org.designup.picsou.gui.model.PeriodBudgetAreaStat;
 import org.designup.picsou.gui.model.PeriodSeriesStat;
 import org.designup.picsou.gui.notes.ShowNotesAction;
@@ -39,7 +40,8 @@ import org.designup.picsou.gui.preferences.dev.DevOptionsAction;
 import org.designup.picsou.gui.printing.actions.PrintBudgetAction;
 import org.designup.picsou.gui.projects.ProjectView;
 import org.designup.picsou.gui.savings.SavingsView;
-import org.designup.picsou.gui.series.PeriodBudgetAreaTrigger;
+import org.designup.picsou.gui.series.PeriodAccountStatUpdater;
+import org.designup.picsou.gui.series.PeriodBudgetAreaStatUpdater;
 import org.designup.picsou.gui.series.PeriodSeriesStatUpdater;
 import org.designup.picsou.gui.series.SeriesEditor;
 import org.designup.picsou.gui.series.analysis.SeriesAnalysisView;
@@ -161,7 +163,7 @@ public class MainPanel {
     timeView = new TimeView(repository, directory);
 
     ReplicationGlobRepository replicationGlobRepository =
-      new ReplicationGlobRepository(repository, PeriodSeriesStat.TYPE, PeriodBudgetAreaStat.TYPE);
+      new ReplicationGlobRepository(repository, PeriodSeriesStat.TYPE, PeriodBudgetAreaStat.TYPE, PeriodAccountStat.TYPE);
     projectView = new ProjectView(repository, directory);
 
     BudgetToggle budgetToggle = new BudgetToggle(repository);
@@ -194,7 +196,8 @@ public class MainPanel {
     LicenseInfoView licenseInfoView = new LicenseInfoView(repository, directory);
 
     PeriodSeriesStatUpdater.init(replicationGlobRepository, directory);
-    PeriodBudgetAreaTrigger.init(replicationGlobRepository);
+    PeriodBudgetAreaStatUpdater.init(replicationGlobRepository);
+    PeriodAccountStatUpdater.init(replicationGlobRepository, directory);
 
     cardView = new CardView(repository, directory, categorizationView.getGotoBudgetSignpost());
     seriesAnalysisView = new SeriesAnalysisView(repository, directory);

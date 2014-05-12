@@ -9,10 +9,8 @@ import org.designup.picsou.gui.components.highlighting.HighlightingService;
 import org.designup.picsou.gui.components.tips.DetailsTip;
 import org.designup.picsou.gui.series.analysis.histobuilders.HistoChartBuilder;
 import org.designup.picsou.gui.series.analysis.histobuilders.range.HistoChartRange;
-import org.designup.picsou.model.Day;
-import org.designup.picsou.model.Series;
-import org.designup.picsou.model.SeriesGroup;
-import org.designup.picsou.model.Transaction;
+import org.designup.picsou.gui.utils.DaySelection;
+import org.designup.picsou.model.*;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.SelectionService;
 import org.globsframework.gui.utils.GlobSelectionBuilder;
@@ -22,12 +20,14 @@ import org.globsframework.model.GlobRepository;
 import org.globsframework.model.Key;
 import org.globsframework.utils.directory.Directory;
 
+import java.util.HashSet;
 import java.util.Set;
 
 public class MainDailyPositionsChartView extends PositionsChartView {
 
   private boolean showFullMonthLabels = false;
   private String tooltipKey;
+  private Set<Integer> accountIdSet = new HashSet<Integer>();
 
   public MainDailyPositionsChartView(HistoChartRange range, HistoChartConfig config, String componentName,
                                      final GlobRepository repository, final Directory directory, String tooltipKey) {
@@ -40,12 +40,23 @@ public class MainDailyPositionsChartView extends PositionsChartView {
     chart.addListener(new ChartListener(repository, chart, directory));
   }
 
+  public void setAccount(Glob account) {
+    accountIdSet.clear();
+    accountIdSet.add(account.get(Account.ID));
+    update();
+  }
+
+  public void clearAccount() {
+    accountIdSet.clear();
+    update();
+  }
+
   public void setShowFullMonthLabels(boolean show) {
     this.showFullMonthLabels = show;
   }
 
   protected void updateChart(HistoChartBuilder histoChartBuilder, Integer currentMonthId, boolean resetPosition) {
-    histoChartBuilder.showMainDailyHisto(currentMonthId, showFullMonthLabels, tooltipKey);
+    histoChartBuilder.showAccountDailyHisto(currentMonthId, showFullMonthLabels, accountIdSet, DaySelection.EMPTY, tooltipKey);
   }
 
   protected void processDoubleClick(NavigationService navigationService) {

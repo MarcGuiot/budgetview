@@ -4,10 +4,9 @@ import org.designup.picsou.gui.View;
 import org.designup.picsou.gui.accounts.AccountViewPanel;
 import org.designup.picsou.gui.accounts.actions.AccountPopupFactory;
 import org.designup.picsou.gui.accounts.chart.AccountPositionsChartView;
-import org.designup.picsou.gui.accounts.position.AccountPositionLabels;
+import org.designup.picsou.gui.accounts.utils.AccountPositionStringifier;
 import org.designup.picsou.gui.components.charts.histo.HistoChart;
 import org.designup.picsou.gui.components.layoutconfig.SplitPaneConfig;
-import org.designup.picsou.gui.description.Formatting;
 import org.designup.picsou.gui.description.stringifiers.AccountComparator;
 import org.designup.picsou.gui.projects.ProjectChartView;
 import org.designup.picsou.gui.series.analysis.histobuilders.range.HistoChartRange;
@@ -26,9 +25,7 @@ import org.globsframework.gui.utils.BooleanListener;
 import org.globsframework.gui.views.GlobButtonView;
 import org.globsframework.gui.views.GlobLabelView;
 import org.globsframework.model.Glob;
-import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
-import org.globsframework.model.format.GlobListStringifier;
 import org.globsframework.model.utils.TypeChangeSetListener;
 import org.globsframework.utils.directory.Directory;
 
@@ -139,18 +136,6 @@ public class SummaryView extends View {
           }
         });
       cellBuilder.addDisposable(listener);
-    }
-
-    private class AccountPositionStringifier implements GlobListStringifier {
-      public String toString(GlobList list, GlobRepository repository) {
-        if (list.isEmpty()) {
-          return "";
-        }
-        Glob account = list.get(0);
-        return Lang.get("summaryView.account.position",
-                        Formatting.toString(account.get(Account.POSITION_WITH_PENDING)),
-                        AccountPositionLabels.getAccountPositionDate(account));
-      }
     }
   }
 }
