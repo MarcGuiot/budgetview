@@ -107,8 +107,8 @@ public class Mailer {
   }
 
 
-  private void sendMail(Mailbox mailbox, String sendTo, String replyTo, String subject, String content) throws MessagingException {
-
+  public void sendMail(Mailbox mailbox, String sendTo, String replyTo, String subject, String content,
+                       final String charset, final String subtype) throws MessagingException {
     Properties mailProperties = new Properties();
     mailProperties.setProperty("mail.smtp.host", host);
     mailProperties.setProperty("mail.smtp.port", Integer.toString(port));
@@ -125,7 +125,7 @@ public class Mailer {
     message.setFrom(new InternetAddress(mailbox.getEmail()));
     message.setSubject(subject);
     message.setSentDate(new Date());
-    message.setText(content, "UTF-8", "html");
+    message.setText(content, charset, subtype);
     try {
       InternetAddress address = new InternetAddress(replyTo);
       message.setReplyTo(new Address[]{address});
@@ -249,7 +249,7 @@ public class Mailer {
     public boolean sent() {
       try {
         inc();
-        sendMail(mailbox, sendTo, replyTo, title, content);
+        sendMail(mailbox, sendTo, replyTo, title, content, "UTF-8", "html");
         return true;
       }
       catch (AddressException badAdress) {

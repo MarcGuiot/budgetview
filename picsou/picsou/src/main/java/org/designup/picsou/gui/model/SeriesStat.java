@@ -181,9 +181,8 @@ public class SeriesStat {
   }
 
   public static GlobList getAllSeriesForMonth(Integer monthId, GlobRepository repository) {
-    return repository.getAll(SeriesStat.TYPE,
-                             and(fieldEquals(SeriesStat.TARGET_TYPE, SeriesType.SERIES.getId()),
-                                 fieldEquals(SeriesStat.MONTH, monthId)));
+    return repository.findByIndex(SeriesStat.MONTH_INDEX, monthId)
+      .filter(fieldEquals(SeriesStat.TARGET_TYPE, SeriesType.SERIES.getId()), repository);
   }
 
   public static GlobMatcher linkedToSeries(final org.globsframework.model.Key seriesKey) {

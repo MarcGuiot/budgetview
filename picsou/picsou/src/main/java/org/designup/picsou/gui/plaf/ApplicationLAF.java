@@ -1,16 +1,19 @@
 package org.designup.picsou.gui.plaf;
 
 import org.designup.picsou.gui.accounts.utils.AccountBlockLayout;
+import org.designup.picsou.gui.budget.components.BudgetAreaSeriesLayout;
 import org.designup.picsou.gui.components.tabs.VerticalTabPanelUI;
 import org.designup.picsou.gui.components.tabs.VerticalTabToggleUI;
 import org.designup.picsou.gui.components.ui.*;
 import org.designup.picsou.gui.projects.utils.ProjectItemViewLayout;
-import org.globsframework.gui.splits.layout.LayoutService;
-import org.globsframework.gui.splits.ui.UIService;
+import org.designup.picsou.gui.series.ui.SeriesPanelUI;
 import org.globsframework.gui.splits.components.HyperlinkButtonUI;
-import org.globsframework.gui.splits.components.StyledToggleButtonUI;
-import org.globsframework.gui.splits.components.StyledPanelUI;
 import org.globsframework.gui.splits.components.ShadowedLabelUI;
+import org.globsframework.gui.splits.components.StyledPanelUI;
+import org.globsframework.gui.splits.components.StyledToggleButtonUI;
+import org.globsframework.gui.splits.layout.LayoutService;
+import org.globsframework.gui.splits.repeat.RepeatLayoutService;
+import org.globsframework.gui.splits.ui.UIService;
 
 import javax.swing.*;
 
@@ -32,9 +35,12 @@ public class ApplicationLAF {
   private static final String NOTIFICATION_FLAG_UI = org() + "designup.picsou.gui.components.ui.NotificationFlagUI";
   private static final String VERTICAL_TAB_TOGGLE_UI = org() + "designup.picsou.gui.components.tabs.VerticalTabToggleUI";
   private static final String VERTICAL_TAB_PANEL_UI = org() + "designup.picsou.gui.components.tabs.VerticalTabPanelUI";
+  private static final String SERES_PANEL_UI = org() + "designup.picsou.gui.series.ui.SeriesPanelUI";
 
   private static final String ACCOUNT_BLOCK_LAYOUT = org() + "designup.picsou.gui.accounts.utils.AccountBlockLayout";
   private static final String PROJECT_ITEM_VIEW_LAYOUT = org() + "designup.picsou.gui.projects.utils.ProjectItemViewLayout";
+  private static final String SERIES_LAYOUT = org() + "designup.picsou.gui.budget.components.BudgetAreaSeriesLayout";
+
 
   private ApplicationLAF() {
   }
@@ -42,7 +48,7 @@ public class ApplicationLAF {
   private static String org() {
     return "org.";
   }
-  
+
   public static UIService initUiService() {
 
     UIManager.put("JideSplitPaneDivider.gripperPainter", new SplitPaneDotsPainter());
@@ -64,13 +70,20 @@ public class ApplicationLAF {
     uiService.registerClass(VERTICAL_TAB_PANEL_UI, VerticalTabPanelUI.class);
     uiService.registerClass(NOTIFICATION_FLAG_UI, NotificationFlagUI.class);
     uiService.registerClass(FLAT_SCROLLBAR_UI, FlatScrollbarUI.class);
+    uiService.registerClass(SERES_PANEL_UI, SeriesPanelUI.class);
     return uiService;
   }
 
-  public static LayoutService initLayoutService(){
+  public static LayoutService initLayoutService() {
     LayoutService layoutService = new LayoutService();
     layoutService.registerClass(ACCOUNT_BLOCK_LAYOUT, AccountBlockLayout.class);
     layoutService.registerClass(PROJECT_ITEM_VIEW_LAYOUT, ProjectItemViewLayout.class);
+    return layoutService;
+  }
+
+  public static RepeatLayoutService initRepeatLayoutService() {
+    RepeatLayoutService layoutService = new RepeatLayoutService();
+    layoutService.add(SERIES_LAYOUT, BudgetAreaSeriesLayout.class.getName());
     return layoutService;
   }
 

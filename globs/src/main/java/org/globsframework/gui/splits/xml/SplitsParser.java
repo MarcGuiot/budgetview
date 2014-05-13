@@ -1,6 +1,9 @@
 package org.globsframework.gui.splits.xml;
 
-import org.globsframework.gui.splits.*;
+import org.globsframework.gui.splits.SplitProperties;
+import org.globsframework.gui.splits.SplitsContext;
+import org.globsframework.gui.splits.Splitter;
+import org.globsframework.gui.splits.SplitterFactory;
 import org.globsframework.gui.splits.exceptions.SplitsException;
 import org.globsframework.gui.splits.impl.DefaultSplitProperties;
 import org.globsframework.gui.splits.impl.XmlComponentNode;
@@ -10,20 +13,12 @@ import org.saxstack.parser.SaxStackParser;
 import org.saxstack.parser.XmlNode;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
-import org.xml.sax.SAXNotRecognizedException;
-import org.xml.sax.SAXNotSupportedException;
 
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
-import javax.xml.validation.Schema;
-import javax.xml.validation.Validator;
-import javax.xml.validation.ValidatorHandler;
 import java.io.Reader;
-import java.util.ArrayDeque;
-import java.util.Arrays;
-import java.util.Deque;
-import java.util.Stack;
+import java.util.*;
 
 public class SplitsParser {
 
@@ -40,18 +35,25 @@ public class SplitsParser {
     this.factory = factory;
   }
 
-  static Deque<SAXParser> parsers = new ArrayDeque<SAXParser>();
+  static List<SAXParser> parsers = new ArrayList<SAXParser>();
 
   public Splitter.SplitComponent parse(Reader reader) {
 
     SplitsBootstrapXmlNode bootstrap = new SplitsBootstrapXmlNode();
     try {
-      SAXParser parser = parsers.poll();
-      if (parser == null) {
-        parser = xmlFactory.newSAXParser();
+      SAXParser parser = null;
+      synchronized (parsers) {
+        if (parsers.size() > 1) {
+          parser = parsers.remove(parsers.size() - 1);
+        }
+        if (parser == null) {
+          parser = xmlFactory.newSAXParser();
+        }
       }
       SaxStackParser.parse(parser.getXMLReader(), bootstrap, reader);
-      parsers.add(parser);
+      synchronized (parsers) {
+        parsers.add(parser);
+      }
     }
     catch (SAXException e) {
       throw new ExceptionHolder(e);

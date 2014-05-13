@@ -19,14 +19,15 @@ import org.globsframework.utils.Log;
 
 import java.util.*;
 
-import static org.designup.picsou.model.ProjectItemType.*;
+import static org.designup.picsou.model.ProjectItemType.isExpenses;
+import static org.designup.picsou.model.ProjectItemType.isTransfer;
 import static org.globsframework.model.FieldValue.value;
 import static org.globsframework.model.utils.GlobMatchers.*;
 
 public class ProjectUpgrade {
 
   private List<Functor> functors = new ArrayList<Functor>();
-
+  private Set<Integer> managedSeries = new HashSet<Integer>();
   public void updateProjectSeriesAndGroups(GlobRepository repository) {
     ProjectToSeriesGroupTrigger.createGroupsForProjects(repository);
     setDefaultAccountsForAllProjects(repository);
@@ -134,6 +135,7 @@ public class ProjectUpgrade {
   private void createSeriesForItem(Glob item, GlobRepository repository, GlobList transactions) {
     Glob itemSeries = ProjectItemToSeriesTrigger.createSeries(item, repository);
     if (!transactions.isEmpty()) {
+      managedSeries.add(itemSeries.get(Series.ID));
       functors.add(new BindTransactionsToSeries(itemSeries, transactions));
     }
   }
@@ -145,8 +147,12 @@ public class ProjectUpgrade {
 
       final Glob series = repository.findLinkTarget(item, ProjectItem.SERIES);
       clearActualStats(series);
+      managedSeries.add(series.get(Series.ID));
       Glob mirror = repository.findLinkTarget(series, Series.MIRROR_SERIES);
-      clearActualStats(mirror);
+      if (mirror != null) {
+        managedSeries.add(mirror.get(Series.ID));
+        clearActualStats(mirror);
+      }
 
       Glob transfer = ProjectTransfer.getTransferFromItem(item, repository);
       if (!ProjectTransfer.usesMainAccounts(transfer, repository)) {
@@ -236,21 +242,23 @@ public class ProjectUpgrade {
     for (Glob project : repository.getAll(Project.TYPE)) {
       Integer seriesId = project.get(Project.SERIES);
       if (seriesId != null) {
-        repository.delete(Transaction.TYPE,
-                          and(fieldEquals(Transaction.SERIES, seriesId),
-                              isTrue(Transaction.PLANNED)));
-        Key seriesKey = Key.create(Series.TYPE, seriesId);
-        repository.update(project.getKey(), Project.SERIES, null);
-        repository.delete(SeriesStat.TYPE, SeriesStat.linkedToSeries(seriesKey));
-        repository.delete(SeriesBudget.TYPE, fieldEquals(SeriesBudget.SERIES, seriesId));
-        repository.delete(SubSeries.TYPE, fieldEquals(SubSeries.SERIES, seriesId));
-        repository.delete(seriesKey);
-        repository.update(project.getKey(), Project.SERIES, null);
+        if (!managedSeries.contains(seriesId)) {
+          repository.delete(Transaction.TYPE,
+                            and(fieldEquals(Transaction.SERIES, seriesId),
+                                isTrue(Transaction.PLANNED)));
+          Key seriesKey = Key.create(Series.TYPE, seriesId);
+          repository.update(project.getKey(), Project.SERIES, null);
+          repository.delete(SeriesStat.TYPE, SeriesStat.linkedToSeries(seriesKey));
+          repository.delete(SeriesBudget.TYPE, fieldEquals(SeriesBudget.SERIES, seriesId));
+          repository.delete(SubSeries.TYPE, fieldEquals(SubSeries.SERIES, seriesId));
+          repository.delete(seriesKey);
+          repository.update(project.getKey(), Project.SERIES, null);
 
-        GlobList transactions = repository.getAll(Transaction.TYPE, and(fieldEquals(Transaction.SERIES, seriesId)));
-        if (!transactions.isEmpty()) {
-          clearTransactionSeries(transactions, repository);
-          functors.add(new CreateMiscProjectItem(project, transactions));
+          GlobList transactions = repository.getAll(Transaction.TYPE, and(fieldEquals(Transaction.SERIES, seriesId)));
+          if (!transactions.isEmpty()) {
+            clearTransactionSeries(transactions, repository);
+            functors.add(new CreateMiscProjectItem(project, transactions));
+          }
         }
       }
     }
@@ -265,7 +273,8 @@ public class ProjectUpgrade {
       public void apply(GlobRepository repository) {
         for (Glob stat : repository.getAll(SeriesStat.TYPE,
                                            and(fieldEquals(SeriesStat.TARGET_TYPE, SeriesType.SERIES.getId()),
-                                               fieldEquals(SeriesStat.TARGET, seriesId)))) {
+                                               fieldEquals(SeriesStat.TARGET, seriesId))
+        )) {
           repository.update(stat.getKey(), SeriesStat.ACTUAL_AMOUNT, 0.00);
         }
       }

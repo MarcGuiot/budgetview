@@ -47,4 +47,12 @@ if [ -a /usr/bin/dpkg ] ; then
 fi
 
 rm -rf budgetview
+mkdir budgetview
+
+cp ../picsou/obfuscated/budgetview.jar budgetview
+cp dev/install/budgetviewInMemory.sh budgetview/budgetviewInMemory.sh
+tar cvf budgetviewInMemory.tar budgetview/budgetviewInMemory.sh budgetview/budgetview.jar
+gzip budgetviewInMemory.tar
+mv budgetviewInMemory.tar.gz budgetviewInMemory-${SOFT_VERSION}.tar.gz
+rm -rf budgetview
 

@@ -141,8 +141,8 @@ public class PRootDataManager implements RootDataManager {
   }
 
   public Persistence.UserInfo createUserAndHiddenUser(String name, boolean autoLog, boolean isRegisteredUser,
-                                                               byte[] cryptedPassword, byte[] linkInfo,
-                                                               byte[] cryptedLinkInfo, Integer userId) {
+                                          byte[] cryptedPassword, byte[] linkInfo,
+                                          byte[] cryptedLinkInfo, Integer userId) {
     try {
       Persistence.UserInfo userInfo =
         (Persistence.UserInfo)prevayler.execute(new CreateUserAndHiddenUser(name, autoLog, isRegisteredUser, cryptedPassword,

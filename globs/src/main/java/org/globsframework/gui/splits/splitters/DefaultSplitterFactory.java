@@ -46,7 +46,7 @@ public class DefaultSplitterFactory implements SplitterFactory {
       return new CardSplitter(properties, subSplitters);
     }
     else if (name.equals("repeat")) {
-      return new RepeatSplitter(properties, subSplitters);
+      return new RepeatSplitter(properties, subSplitters, context);
     }
     else if (name.equals("label")) {
       return new LabelComponent(properties, subSplitters);

@@ -51,6 +51,7 @@
                 <jar update="true" jarfile="target/budgetviewloader-1.0.jar" manifest="target/classes/MANIFEST.MF"/>
 
                 <mkdir dir="${basedir}/BudgetView-fr/"/>
+                <mkdir dir="${basedir}/BudgetView-mem-fr/"/>
                 <mkdir dir="${basedir}/BudgetView-en/"/>
 
                 <taskdef name="jarbundler"
@@ -76,6 +77,19 @@
                                 mimetypes="text/ofx text/qif text/ofc"
                                 iconFile="dev/images/budgetview_icon.icns"
                                 role="Editor"/>
+                </jarbundler>
+
+
+                <jarbundler dir="${basedir}/BudgetView-mem-fr/"
+                            name="BudgetView"
+                            mainclass="picsou.MainInMemory"
+                            jar="${basedir}/../picsou/obfuscated/budgetview.jar"
+                            stubfile="dev/install/JavaApplicationStub"
+                            icon="dev/images/budgetview_icon.icns"
+                            version="${budgetviewVersion}"
+                            jvmversion="1.5+"
+                            arguments="-l fr"
+                            vmoptions="-Xmx256m -Dapple.awt.graphics.UseQuartz=false">
                 </jarbundler>
 
                 <jarbundler dir="${basedir}/BudgetView-en/"

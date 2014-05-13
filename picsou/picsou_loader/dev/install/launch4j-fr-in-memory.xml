@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<launch4jConfig>
+  <dontWrapJar>false</dontWrapJar>
+  <headerType>gui</headerType>
+  <jar>../../../picsou/obfuscated/budgetview.jar</jar>
+  <outfile>budgetview_InMemory.exe</outfile>
+  <errTitle></errTitle>
+  <cmdLine>-l fr</cmdLine>
+  <chdir></chdir>
+  <priority>normal</priority>
+  <downloadUrl>http://java.com/download</downloadUrl>
+  <supportUrl>http://www.mybudgetview.fr/support</supportUrl>
+  <stayAlive>false</stayAlive>
+  <manifest></manifest>
+  <icon>../../dev/images/budgetview.ico</icon>
+  <jre>
+    <path></path>
+    <bundledJre64Bit>false</bundledJre64Bit>
+    <minVersion>1.5.0</minVersion>
+    <maxVersion></maxVersion>
+    <jdkPreference>preferJre</jdkPreference>
+    <runtimeBits>64/32</runtimeBits>
+    <maxHeapSize>220</maxHeapSize>
+    <opt>-Dbudgetview.data.in.memory=true</opt>
+  </jre>
+  <splash>
+    <file>../../dev/images/budgetview_startup.bmp</file>
+    <waitForWindow>true</waitForWindow>
+    <timeout>60</timeout>
+    <timeoutErr>true</timeoutErr>
+  </splash>
+  <messages>
+    <startupErr>Une erreur est survenue au d?marrage. Nous vous invitons ? nous contacter ? l&apos;adresse : support@mybudgetview.fr</startupErr>
+    <bundledJreErr>Cette application a ?t? configur?e pour ?tre install?e avec sa propre version de Java, mais celui-ci est absent ou corrompu.</bundledJreErr>
+    <jreVersionErr>Java n&apos;a pas ete trouv? sur votre ordinateur. Vous pouvez l&apos;installer depuis l&apos;addresse http://java.com/download et lancer de nouveau BudgetView</jreVersionErr>
+    <launcherErr>The registry refers to a nonexistent Java Runtime Environment installation or the runtime is corrupted.</launcherErr>
+    <instanceAlreadyExistsMsg>BudgetView ne semble pas avoir ete install? correctement. Nous vous invitons ? desinstaller puis r?installer de nouveau l&apos;application (vos donn?es ne seront pas effac?es)</instanceAlreadyExistsMsg>
+  </messages>
+</launch4jConfig>

@@ -417,7 +417,8 @@ public class UpgradeTrigger implements ChangeSetListener {
 
         }
       }
-      PositionTrigger.computeTotal(repository);
+      TransactionComparator comparator = TransactionComparator.ASCENDING_ACCOUNT;
+      PositionTrigger.computeTotal(repository, repository.getSorted(Transaction.TYPE, comparator, GlobMatchers.ALL));
     }
     finally {
       repository.completeChangeSet();

@@ -631,8 +631,13 @@ public class ConfigService {
 
   synchronized public boolean update(final byte[] repoId, final long launchCount, byte[] mailInBytes,
                                      byte[] signatureInByte, final String activationCode,
-                                     ServerAccess serverAccess) {
+                                     ServerAccess serverAccess, boolean dataInMemory) {
     this.serverAccess = serverAccess;
+    if (dataInMemory){
+      final String mail = mailInBytes == null ? null : new String(mailInBytes);
+      userState = UserStateFactory.localValidSignature(mail);
+      return true;
+    }
     boolean isValideUser;
     final String mail = mailInBytes == null ? null : new String(mailInBytes);
     if (signatureInByte != null && activationCode != null) {

@@ -9,7 +9,7 @@ import org.prevayler.Transaction;
 
 import java.util.Date;
 
-class Register implements Transaction, CustomSerializable {
+public class Register implements Transaction, CustomSerializable {
   private static final byte V1 = 1;
   private static final byte V2 = 2;
   private static final String REGISTER = "register";

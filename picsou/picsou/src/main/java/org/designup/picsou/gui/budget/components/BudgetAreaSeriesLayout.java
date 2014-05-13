@@ -8,6 +8,7 @@ import org.globsframework.gui.splits.layout.ComponentConstraints;
 import org.globsframework.gui.splits.layout.Fill;
 import org.globsframework.gui.splits.repeat.RepeatLayout;
 import org.globsframework.gui.views.Alignment;
+import org.globsframework.metamodel.annotations.NoObfuscation;
 import org.globsframework.utils.Strings;
 
 import javax.swing.*;

@@ -22,7 +22,7 @@ public class AllocateNewUserId implements TransactionWithQuery, CustomSerializab
   public AllocateNewUserId() {
   }
 
-  public Object executeAndQuery(Object prevalentSystem, Date executionTime) throws Exception {
+  public Object executeAndQuery(Object prevalentSystem, Date executionTime) {
     PRootData rootData = ((PRootData)prevalentSystem);
     return rootData.getNewUserId(executionTime, name);
   }
