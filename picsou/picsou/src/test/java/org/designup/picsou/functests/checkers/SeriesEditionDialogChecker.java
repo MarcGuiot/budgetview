@@ -787,4 +787,14 @@ public class SeriesEditionDialogChecker extends SeriesAmountEditionChecker<Serie
     checkComponentVisible(dialog, JLabel.class, "targetAccountLabel", false);
     return this;
   }
+
+  public SeriesEditionDialogChecker checkNoTargetAccountWarningShown() {
+    checkComponentVisible(dialog, JLabel.class, "noTargetAccountWarning", true);
+    return this;
+  }
+
+  public SeriesEditionDialogChecker checkNoTargetAccountWarningHidden() {
+    checkComponentVisible(dialog, JLabel.class, "noTargetAccountWarning", false);
+    return this;
+  }
 }

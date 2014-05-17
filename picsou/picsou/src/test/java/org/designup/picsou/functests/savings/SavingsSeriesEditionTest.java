@@ -23,6 +23,7 @@ public class SavingsSeriesEditionTest extends LoggedInFunctionalTestCase {
     budgetView.savings
       .createSeries()
       .checkTargetAccountNotShown()
+      .checkNoTargetAccountWarningHidden()
       .setFromAccount("Account n. 00001123")
       .setToAccount("Epargne LCL")
       .setName("Epargne")
@@ -31,6 +32,7 @@ public class SavingsSeriesEditionTest extends LoggedInFunctionalTestCase {
     budgetView.savings
       .editSeries("Epargne")
       .checkTargetAccountNotShown()
+      .checkNoTargetAccountWarningHidden()
       .checkToAccount("Epargne LCL")
       .setToAccount("Account n. 00001123")
       .setFromAccount("Epargne LCL")

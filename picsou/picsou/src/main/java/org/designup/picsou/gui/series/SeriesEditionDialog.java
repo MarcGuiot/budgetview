@@ -10,6 +10,7 @@ import org.designup.picsou.gui.description.stringifiers.MonthYearStringifier;
 import org.designup.picsou.gui.series.edition.MonthCheckBoxUpdater;
 import org.designup.picsou.gui.series.edition.SeriesForecastPanel;
 import org.designup.picsou.gui.series.subseries.SubSeriesEditionPanel;
+import org.designup.picsou.gui.series.utils.NoTargetAccountWarning;
 import org.designup.picsou.gui.series.utils.SeriesDeletionHandler;
 import org.designup.picsou.gui.time.TimeService;
 import org.designup.picsou.model.*;
@@ -176,6 +177,8 @@ public class SeriesEditionDialog {
       .getComponent();
     builder.add("targetAccountLabel", targetAccountLabel);
     targetAccountLabel.setVisible(false);
+
+    NoTargetAccountWarning.register("noTargetAccountWarning", builder, localRepository, localDirectory);
 
     fromAccountsCombo = GlobLinkComboEditor.init(Series.FROM_ACCOUNT, localRepository, localDirectory)
       .setShowEmptyOption(false)

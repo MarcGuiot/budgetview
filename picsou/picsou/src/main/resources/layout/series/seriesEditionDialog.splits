@@ -29,6 +29,9 @@
           <label ref="targetAccountLabel" visible="false"/>
         </horizontalBoxes>
 
+        <label icon="upArrow(10,10,10,8,#FF0000)" autoHideSource="noTargetAccountWarning" border="empty(0,0,0,20)" fill="none" anchor="right" weightY="0.01"/>
+        <label ref="noTargetAccountWarning" styleClass="errorMessage" border="empty(2,0,5,0)" fill="none" anchor="right" weightY="0.01"/>
+
         <column autoHideSource="fromAccount" border="empty(10 ,0,15,0)">
           <label text="$seriesEdition.accountSelection" styleClass="separatorTitle"/>
           <row styleClass="separator">

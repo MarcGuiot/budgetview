@@ -13,6 +13,7 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
 
   public void testStandardEdition() throws Exception {
     OfxBuilder.init(this)
+      .addBankAccount(-1, 10674, "000123", 1000.00, "2008/07/29")
       .addTransaction("2008/07/29", "2008/08/01", -29.00, "Free Telecom")
       .load();
 
@@ -30,6 +31,8 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
       .checkTitle("Editing a series")
       .checkName("Internet")
       .setName("Free")
+      .checkReadOnlyTargetAccount("Account n. 000123")
+      .checkNoTargetAccountWarningHidden()
       .checkChart(new Object[][]{
         {"2008", "July", 29.00, 29.00, true},
         {"2008", "August", 0.00, 29.00},
@@ -1428,13 +1431,13 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
 
   public void testCanSelectMainAccountBeforeAnyOperationIsAssigned() throws Exception {
     OfxBuilder.init(this)
-      .addBankAccount(-1, 10674, "0000123", 100.00, "2008/10/15")
-      .addTransaction("2008/01/01", -30.00, "Auchan")
+      .addBankAccount(-1, 10674, "000123", 1000.00, "2008/10/15")
+      .addTransaction("2008/10/15", -30.00, "Auchan")
       .load();
 
     OfxBuilder.init(this)
-      .addBankAccount(-1, 10674, "0000234", 100.00, "2008/10/15")
-      .addTransaction("2008/01/02", -50.00, "FNAC")
+      .addBankAccount(-1, 10674, "000234", 2000.00, "2008/10/10")
+      .addTransaction("2008/10/10", -50.00, "FNAC")
       .load();
 
     savingsAccounts.createNewAccount()
@@ -1445,16 +1448,32 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
 
     budgetView.variable.createSeries()
       .setName("Courses")
-      .checkTargetAccounts("Account n. 0000123", "Account n. 0000234")
+      .checkNoTargetAccountWarningShown()
+      .checkTargetAccounts("Account n. 000123", "Account n. 000234")
+      .setAmount(100.00)
       .validate();
 
-    categorization.setVariable("Auchan", "Courses");
+    budgetView.getSummary().selectAccount("Account n. 000123");
+    budgetView.getSummary().getChart()
+      .checkValue(200810, 1, 1000.00)
+      .checkValue(200810, 15, 970.00);
+
     budgetView.variable.editSeries("Courses")
-      .checkReadOnlyTargetAccount("Account n. 0000123")
-      .cancel();
+      .checkNoTargetAccountWarningShown()
+      .setTargetAccount("Account n. 000123")
+      .checkNoTargetAccountWarningHidden()
+      .checkAmount(100.00)
+      .validate();
+
+    budgetView.getSummary().selectAccount("Account n. 000123");
+    budgetView.getSummary().getChart()
+      .checkValue(200810, 1, 800.00)
+      .checkValue(200810, 11, 700.00)
+      .checkValue(200810, 15, 670.00);
   }
 
   public void testClosedAccount() throws Exception {
-    fail("MG : if the account is closed we must update the end date? (or not create planned operation)");
+    fail("MG: if the account is closed we must update the end date? (or not create planned operation) - \n" +
+         "RM: je propose de positionner automatiquement Series.END_DATE dans ce cas là");
   }
 }

@@ -377,16 +377,28 @@ public class PrintTest extends LoggedInFunctionalTestCase {
     BudgetReportChecker report = printer.getBudgetReport();
     report.checkPageCount(3);
 
-    fail("TBD - finaliser après que tous les tests passent - voir tri non ambigu dans DefaultPeriodSeriesStatComparator");
-
-//    report.initGaugesPage(1)
-//      .dumpCode();
+    report.initGaugesPage(1)
+      .checkTitle("Budget for april 2012")
+      .checkBlockCount(13)
+      .checkBudget(0, "Income", "0.00", "0.00")
+      .checkSeparator(1)
+      .checkBudget(2, "Recurring", "0.00", "0.00")
+      .checkSeparator(3)
+      .checkBudget(4, "Variable", "0.00", "0.00")
+      .checkSeparator(5)
+      .checkBudget(6, "Savings", "90.00", "0.00")
+      .checkSeries(7, "MainToImported", "150.00", "0.00")
+      .checkSeries(8, "ImportedToMain", "+70.00", "0.00")
+      .checkSeries(9, "MainToNonImported", "50.00", "0.00")
+      .checkSeries(10, "MainFromNonImported", "+40.00", "0.00")
+      .checkSeparator(11)
+      .checkBudget(12, "Extras", "0.00", "0.00");
   }
 
   public void testExceptionRaisedDuringPrint() throws Exception {
-    printer.setException("Boum");
+    printer.setException("Boom");
     operations.print()
-      .printWithErrorMessage("Print failed", "An error occurred: Boum");
+      .printWithErrorMessage("Print failed", "An error occurred: Boom");
   }
 
   private String getLabel(String label, int i) {
