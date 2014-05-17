@@ -1,6 +1,6 @@
 package org.designup.picsou.gui.series.utils;
 
-import org.designup.picsou.model.BudgetArea;
+import org.designup.picsou.model.Account;
 import org.designup.picsou.model.Series;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobSelection;
@@ -69,8 +69,7 @@ public class NoTargetAccountWarning implements GlobSelectionListener, ChangeSetL
       return;
     }
 
-    label.setVisible(!BudgetArea.SAVINGS.equals(BudgetArea.get(series.get(Series.BUDGET_AREA)))
-                     && series.get(Series.TARGET_ACCOUNT) == null);
+    label.setVisible(Account.needsTargetAccount(series));
   }
 
   public void dispose() {

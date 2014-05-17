@@ -329,6 +329,11 @@ public class Account {
     return first != null ? first.get(Account.ID) : null;
   }
 
+  public static boolean needsTargetAccount(Glob series) {
+    return !BudgetArea.SAVINGS.equals(BudgetArea.get(series.get(Series.BUDGET_AREA)))
+                     && series.get(Series.TARGET_ACCOUNT) == null;
+  }
+
   public static class Serializer implements PicsouGlobSerializer {
 
     public int getWriteVersion() {

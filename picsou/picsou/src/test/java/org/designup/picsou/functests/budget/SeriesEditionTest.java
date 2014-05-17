@@ -1458,7 +1458,7 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
       .checkValue(200810, 1, 1000.00)
       .checkValue(200810, 15, 970.00);
 
-    budgetView.variable.editSeries("Courses")
+    budgetView.variable.editPlannedAmountWithFullEditor("Courses")
       .checkNoTargetAccountWarningShown()
       .setTargetAccount("Account n. 000123")
       .checkNoTargetAccountWarningHidden()

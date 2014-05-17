@@ -323,6 +323,11 @@ public class BudgetViewChecker extends ViewChecker {
       return SeriesAmountEditionDialogChecker.open(button.triggerClick());
     }
 
+    public SeriesEditionDialogChecker editPlannedAmountWithFullEditor(String seriesName) {
+      Button button = getSeriesPanel(seriesName).getPlannedAmount();
+      return SeriesEditionDialogChecker.open(button.triggerClick());
+    }
+
     public void editPlannedAmountForProject(String seriesName) {
       getSeriesPanel(seriesName).getPlannedAmount().click();
     }

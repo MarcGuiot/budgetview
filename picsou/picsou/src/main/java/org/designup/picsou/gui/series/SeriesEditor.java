@@ -1,6 +1,7 @@
 package org.designup.picsou.gui.series;
 
 import org.designup.picsou.gui.card.NavigationService;
+import org.designup.picsou.model.Account;
 import org.designup.picsou.model.BudgetArea;
 import org.designup.picsou.model.Project;
 import org.designup.picsou.model.ProjectItem;
@@ -47,6 +48,12 @@ public class SeriesEditor {
     if (projectItem != null) {
       navigationService.gotoProjectItem(projectItem);
       lastSelectedSubSeriesId = null;
+      return;
+    }
+
+    if (Account.needsTargetAccount(series)) {
+      seriesEditionDialog.show(series, selectedMonthIds);
+      lastSelectedSubSeriesId = seriesEditionDialog.getLastSelectedSubSeriesId();
       return;
     }
 
