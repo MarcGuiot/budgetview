@@ -40,6 +40,8 @@
   <column border="empty(10,10,10,10)">
 
     <column opaque="true" weightY="100" background="block.inner.secondary.bg" border="line(block.inner.border)">
+      <component ref="chart" minimumSize="(100,90)" background="block.inner.secondary.bg"
+                 weightY="10" margin="5"/>
       <row margin="5" weightY="0.1">
         <repeat ref="accountSelectors" layout="verticalGrid" marginLeft="10">
           <label ref="accountStatus" marginTop="3" />
@@ -49,8 +51,6 @@
         </repeat>
         <filler fill="horizontal"/>
       </row>
-      <component ref="chart" minimumSize="(100,90)" background="block.inner.secondary.bg"
-                 weightY="10" margin="5" marginBottom="10"/>
     </column>
 
     <panel border="empty(5,0,0,0)" autoHideSource="multiSelectionLabel">
