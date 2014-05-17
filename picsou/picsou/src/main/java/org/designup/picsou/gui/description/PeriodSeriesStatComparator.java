@@ -3,14 +3,19 @@ package org.designup.picsou.gui.description;
 import org.designup.picsou.gui.model.PeriodSeriesStat;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobRepository;
+import org.globsframework.model.utils.GlobFieldComparator;
 import org.globsframework.model.utils.GlobTreeComparator;
 import org.globsframework.utils.Utils;
 
+import java.util.Comparator;
+
 public class PeriodSeriesStatComparator extends GlobTreeComparator {
   private GlobRepository repository;
+  private Comparator<Glob> comparator;
 
-  public PeriodSeriesStatComparator(GlobRepository repository) {
+  public PeriodSeriesStatComparator(GlobRepository repository, Comparator<Glob> comparator) {
     this.repository = repository;
+    this.comparator = comparator;
   }
 
   protected Glob findParent(Glob glob) {
@@ -26,7 +31,7 @@ public class PeriodSeriesStatComparator extends GlobTreeComparator {
     }
 
     if (Boolean.TRUE.equals(glob1Active)) {
-      int result = Utils.reverseCompare(glob1.get(PeriodSeriesStat.ABS_SUM_AMOUNT), glob2.get(PeriodSeriesStat.ABS_SUM_AMOUNT));
+      int result = comparator.compare(glob1, glob2);
       if (result != 0) {
         return result;
       }
