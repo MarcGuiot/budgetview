@@ -14,6 +14,7 @@ import org.designup.picsou.utils.Lang;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
+import org.globsframework.model.utils.ReverseGlobFieldComparator;
 import org.globsframework.utils.collections.MultiMap;
 import org.globsframework.utils.directory.Directory;
 
@@ -73,7 +74,8 @@ public class BudgetGaugePages {
       filter.setSelectedMonthIds(selectedMonths);
       GlobList list = new GlobList(map.get(budgetArea.getId()));
       list.filterSelf(filter, repository);
-      list.sort(new PeriodSeriesStatComparator(repository));
+      list.sort(new PeriodSeriesStatComparator(repository,
+                                               new ReverseGlobFieldComparator(PeriodSeriesStat.ABS_SUM_AMOUNT)));
       for (Glob periodStat : list) {
         addBlockToCurrentPage(new SeriesGaugeBlock(periodStat, budgetGaugeContext, currentSectionIndex++, repository));
       }

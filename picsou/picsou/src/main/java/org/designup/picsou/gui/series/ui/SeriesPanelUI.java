@@ -49,7 +49,7 @@ public class SeriesPanelUI extends BasicPanelUI {
             topY = bounds.y;
           }
           if (components.length - i < 7) {
-            drawBackground(g2, lastActiveToggle, c.getWidth(), topY, BudgetAreaSeriesLayout.ROW_HEIGHT);
+            drawBackground(g2, lastActiveToggle, c.getWidth(), topY, component.getY() - topY + BudgetAreaSeriesLayout.ROW_HEIGHT);
             return;
           }
         }

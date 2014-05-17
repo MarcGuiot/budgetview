@@ -2,9 +2,8 @@ package org.designup.picsou.gui.budget.components;
 
 import org.designup.picsou.gui.description.PeriodSeriesStatComparator;
 import org.designup.picsou.gui.model.PeriodSeriesStat;
-import org.designup.picsou.model.BudgetArea;
-import org.designup.picsou.model.SeriesOrder;
-import org.designup.picsou.model.UserPreferences;
+import org.designup.picsou.gui.model.SeriesType;
+import org.designup.picsou.model.*;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.splits.SplitsNode;
 import org.globsframework.metamodel.GlobType;
@@ -16,6 +15,7 @@ import org.globsframework.model.Glob;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.format.DescriptionService;
 import org.globsframework.model.utils.GlobFieldComparator;
+import org.globsframework.model.utils.ReverseGlobFieldComparator;
 import org.globsframework.utils.Utils;
 import org.globsframework.utils.comparators.InvertedComparator;
 import org.globsframework.utils.directory.Directory;
@@ -43,7 +43,8 @@ public abstract class SeriesOrderManager implements ChangeSetListener {
     this.repository = repository;
     this.descriptionService = directory.get(DescriptionService.class);
     this.repository.addChangeListener(this);
-    this.defaultComparator = new PeriodSeriesStatComparator(repository);
+    this.defaultComparator = new PeriodSeriesStatComparator(repository,
+                                                            new ReverseGlobFieldComparator(PeriodSeriesStat.ABS_SUM_AMOUNT));
   }
 
   public SeriesOrder getUserCurrentOrder() {
@@ -85,7 +86,7 @@ public abstract class SeriesOrderManager implements ChangeSetListener {
     for (Order order : orders) {
       Comparator<Glob> comparator = order.getComparator();
       if (comparator != null) {
-        return comparator;
+        return new PeriodSeriesStatComparator(repository, comparator);
       }
     }
     return defaultComparator;

@@ -10,6 +10,7 @@ import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.GlobRepositoryBuilder;
+import org.globsframework.model.utils.ReverseGlobFieldComparator;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -57,7 +58,8 @@ public class PeriodSeriesStatComparatorTest extends TestCase {
   }
 
   private void check(String sequence, Glob... statArray) {
-    PeriodSeriesStatComparator comparator = new PeriodSeriesStatComparator(repository);
+    PeriodSeriesStatComparator comparator = new PeriodSeriesStatComparator(repository,
+                                                                           new ReverseGlobFieldComparator(PeriodSeriesStat.ABS_SUM_AMOUNT));
     GlobList statList = new GlobList(statArray);
     boolean first = true;
     StringBuilder builder = new StringBuilder();
