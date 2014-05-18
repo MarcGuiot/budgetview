@@ -5,11 +5,10 @@ import org.designup.picsou.gui.series.edition.DeleteSeriesAction;
 import org.designup.picsou.gui.series.edition.carryover.CarryOverAction;
 import org.designup.picsou.gui.seriesgroups.ClearSeriesGroupAction;
 import org.designup.picsou.gui.seriesgroups.SeriesGroupMenu;
+import org.designup.picsou.model.ProjectItem;
 import org.designup.picsou.utils.Lang;
-import org.globsframework.gui.splits.utils.Disposable;
 import org.globsframework.gui.splits.utils.DisposableGroup;
 import org.globsframework.gui.utils.DisposablePopupMenuFactory;
-import org.globsframework.gui.utils.PopupMenuFactory;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
@@ -42,11 +41,23 @@ public class SeriesPopupFactory implements DisposablePopupMenuFactory {
   public JPopupMenu createPopup() {
     if (menu == null) {
       menu = new JPopupMenu();
-      menu.add(new AbstractAction(Lang.get("series.edit")) {
-        public void actionPerformed(ActionEvent actionEvent) {
-          editSeriesFunctor.run(new GlobList(series), repository);
-        }
-      });
+
+      final Glob projectItem = ProjectItem.findProjectItem(series, repository);
+
+      if (projectItem != null) {
+        menu.add(new AbstractAction(Lang.get("seriesGroup.goto.project")) {
+          public void actionPerformed(ActionEvent actionEvent) {
+            directory.get(NavigationService.class).gotoProjectItem(projectItem);
+          }
+        });
+      }
+      else {
+        menu.add(new AbstractAction(Lang.get("series.edit")) {
+          public void actionPerformed(ActionEvent actionEvent) {
+            editSeriesFunctor.run(new GlobList(series), repository);
+          }
+        });
+      }
       menu.addSeparator();
       menu.add(new AbstractAction(Lang.get("series.goto.operations")) {
         public void actionPerformed(ActionEvent actionEvent) {
@@ -58,26 +69,33 @@ public class SeriesPopupFactory implements DisposablePopupMenuFactory {
           directory.get(NavigationService.class).gotoAnalysisForSeries(series);
         }
       });
-      menu.addSeparator();
-
-      carryOverAction = new CarryOverAction(series.getKey(), repository, directory);
-      disposables.add(carryOverAction);
-      menu.add(carryOverAction);
-
-      menu.addSeparator();
 
       seriesGroupMenu = new SeriesGroupMenu(series.getKey(), repository, directory);
-      menu.add(seriesGroupMenu.getMenu());
 
-      ClearSeriesGroupAction clearSeriesGroupAction = new ClearSeriesGroupAction(series.getKey(), repository);
-      disposables.add(clearSeriesGroupAction);
-      menu.add(clearSeriesGroupAction);
+      if (projectItem == null) {
 
-      menu.addSeparator();
+        menu.addSeparator();
 
-      menu.add(new DeleteSeriesAction(series.getKey(), directory.get(JFrame.class), repository, directory));
+        carryOverAction = new CarryOverAction(series.getKey(), repository, directory);
+        disposables.add(carryOverAction);
+        menu.add(carryOverAction);
+
+        menu.addSeparator();
+
+        menu.add(seriesGroupMenu.getMenu());
+
+        ClearSeriesGroupAction clearSeriesGroupAction = new ClearSeriesGroupAction(series.getKey(), repository);
+        disposables.add(clearSeriesGroupAction);
+        menu.add(clearSeriesGroupAction);
+
+        menu.addSeparator();
+
+        menu.add(new DeleteSeriesAction(series.getKey(), directory.get(JFrame.class), repository, directory));
+      }
     }
+
     seriesGroupMenu.update();
+
     return menu;
   }
 

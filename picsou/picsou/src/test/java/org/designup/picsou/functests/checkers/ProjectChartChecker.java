@@ -48,6 +48,11 @@ public class ProjectChartChecker extends ViewChecker {
     UISpecAssert.assertFalse(button.isEnabled());
   }
 
+  public ProjectChartChecker checkRange(int firstMonth, int lastMonth) {
+    getChart().checkRange(firstMonth, lastMonth);
+    return this;
+  }
+
   public void checkShowsChart() {
     checkComponentVisible(getHomePanel(), JPanel.class, "projectChart", true);
   }

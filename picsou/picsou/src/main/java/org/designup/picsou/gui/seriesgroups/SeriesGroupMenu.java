@@ -7,10 +7,12 @@ import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.Key;
+import org.globsframework.model.utils.GlobMatcher;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
 
+import static org.globsframework.model.utils.GlobMatchers.and;
 import static org.globsframework.model.utils.GlobMatchers.fieldEquals;
 
 public class SeriesGroupMenu {
@@ -37,7 +39,12 @@ public class SeriesGroupMenu {
 
     Glob series = repository.get(seriesKey);
     GlobList groups = repository.getAll(SeriesGroup.TYPE,
-                                        fieldEquals(SeriesGroup.BUDGET_AREA, series.get(Series.BUDGET_AREA)))
+                                        and(fieldEquals(SeriesGroup.BUDGET_AREA, series.get(Series.BUDGET_AREA)),
+                                            new GlobMatcher() {
+                                              public boolean matches(Glob group, GlobRepository repository) {
+                                                return !SeriesGroup.isForProject(group, repository);
+                                              }
+                                            }))
       .sort(SeriesGroup.NAME);
     for (Glob group : groups) {
       menu.add(new JMenuItem(new AddToExistingSeriesGroupAction(seriesKey, group, repository)));

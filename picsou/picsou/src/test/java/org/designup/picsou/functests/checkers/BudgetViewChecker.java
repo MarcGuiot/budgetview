@@ -514,7 +514,7 @@ public class BudgetViewChecker extends ViewChecker {
       getSeriesPanel(seriesName).getSeriesButton().checkItemDisabled("Carry over next month");
     }
 
-    public BudgetAreaChecker checkGroups(String series, String... labels) {
+    public BudgetAreaChecker checkAddToGroupOptions(String series, String... labels) {
       getSeriesPanel(series).getSeriesButton().getSubMenu("Add to group")
         .checkChoices(labels);
       return this;

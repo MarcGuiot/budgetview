@@ -20,6 +20,8 @@ import org.globsframework.utils.serialization.SerializedInput;
 import org.globsframework.utils.serialization.SerializedInputOutputFactory;
 import org.globsframework.utils.serialization.SerializedOutput;
 
+import static org.globsframework.model.utils.GlobMatchers.fieldEquals;
+
 public class SeriesGroup {
 
   public static GlobType TYPE;
@@ -42,6 +44,10 @@ public class SeriesGroup {
 
   public static BudgetArea getBudgetArea(Glob group) {
     return BudgetArea.get(group.get(BUDGET_AREA));
+  }
+
+  public static boolean isForProject(Glob group, GlobRepository repository) {
+    return group != null && repository.contains(Project.TYPE, fieldEquals(Project.SERIES_GROUP, group.get(SeriesGroup.ID)));
   }
 
   public static void deleteAll(Glob group, GlobRepository repository) {

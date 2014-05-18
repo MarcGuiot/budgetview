@@ -152,8 +152,6 @@ public class ProjectListTest extends LoggedInFunctionalTestCase {
 
   public void testShowsOnlyProjectsInDisplayedTimeSpan() throws Exception {
 
-    fail("RM - en cours");
-
     operations.openPreferences().setFutureMonthsCount(6).validate();
 
     OfxBuilder.init(this)
@@ -166,8 +164,8 @@ public class ProjectListTest extends LoggedInFunctionalTestCase {
 
     timeline.selectMonth(201101);
 
+    projectChart.create();
     currentProject
-      .create()
       .setNameAndValidate("Past Project")
       .addExpenseItem(0, "Reservation", 201007, -100.00)
       .addExpenseItem(1, "Hotel", 201008, -500.00);
@@ -186,25 +184,39 @@ public class ProjectListTest extends LoggedInFunctionalTestCase {
     projectChart.checkProjectList("Current Project", "Next Project");
 
     timeline.selectMonth(201103);
-    projectChart.checkProjectList("Current Project", "Next Project");
+    projectChart
+      .checkRange(201009,201106)
+      .checkProjectList("Current Project", "Next Project");
 
     timeline.selectMonth(201102);
-    projectChart.checkProjectList("Current Project", "Next Project");
+    projectChart
+      .checkRange(201009,201106)
+      .checkProjectList("Current Project", "Next Project");
 
     timeline.selectMonth(201106);
-    projectChart.checkProjectList("Current Project", "Next Project");
+    projectChart
+      .checkRange(201009,201106)
+      .checkProjectList("Current Project", "Next Project");
 
     timeline.selectMonth(201004);
-    projectChart.checkProjectList("Past Project");
+    projectChart
+      .checkRange(201004,201101)
+      .checkProjectList("Past Project", "Current Project");
 
     projectChart.select("Past Project");
     currentProject
       .toggleAndEditExpense(0)
-      .setMonth(201109)
+      .setMonth(201001)
       .validate();
-    projectChart.checkProjectList("Current Project");
+    currentProject
+      .toggleAndEditExpense(1)
+      .setMonth(201001)
+      .validate();
+    projectChart
+      .checkRange(201004,201101)
+      .checkProjectList("Current Project");
 
     timeline.selectMonths(201006, 201105);
-    projectChart.checkProjectList("Past Project", "Current Project", "Next Project");
+    projectChart.checkProjectList("Current Project", "Next Project");
   }
 }

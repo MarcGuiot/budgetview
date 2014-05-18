@@ -3,9 +3,7 @@ package org.designup.picsou.functests.projects;
 import org.designup.picsou.functests.checkers.AccountEditionChecker;
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
-import org.designup.picsou.gui.accounts.utils.AccountCreation;
 import org.designup.picsou.model.TransactionType;
-import org.designup.picsou.utils.Lang;
 
 public class ProjectManagementTest extends LoggedInFunctionalTestCase {
 
@@ -146,98 +144,6 @@ public class ProjectManagementTest extends LoggedInFunctionalTestCase {
       .add("01/01/2011", "RESA TRAVEL PLUS", -100.00, "Reservation", 1900.00, 1900.00, "Account n. 001111")
       .add("01/01/2011", "INCOME", 1000.00, "To categorize", 2000.00, 2000.00, "Account n. 001111")
       .check();
-  }
-
-  public void testDeletingAProjectWithNoAssignedTransactions() throws Exception {
-    OfxBuilder.init(this)
-      .addBankAccount("001111", 1000.00, "2010/12/01")
-      .addTransaction("2010/12/01", 1000.00, "Income")
-      .load();
-
-    operations.openPreferences().setFutureMonthsCount(6).validate();
-    operations.hideSignposts();
-
-    projectChart.create();
-    currentProject
-      .setNameAndDefaultAccount("My project", "Account n. 001111")
-      .addExpenseItem(0, "Reservation", 201101, -200.00)
-      .addExpenseItem(1, "Hotel", 201101, -300.00)
-      .backToList();
-    projects.checkCurrentProjects("| My project | Jan | 500.00 | on |");
-
-    timeline.selectMonth(201101);
-    budgetView.extras.checkSeries("My project", 0.00, -500.00);
-    budgetView.getSummary().checkEndPosition(500.00);
-
-    views.selectHome();
-    projectChart.select("My project");
-    currentProject.delete();
-    projects.checkListPageShown();
-    projects.checkNoProjectShown();
-    projectChart.checkNoProjectShown();
-    budgetView.extras.checkNoSeriesShown();
-    budgetView.getSummary().checkEndPosition(1000.00);
-
-    categorization.selectTransaction("Income");
-    categorization.selectExtras()
-      .checkDoesNotContainSeries("My project");
-  }
-
-  public void testDeletingAProjectWithAssignedTransactions() throws Exception {
-    OfxBuilder.init(this)
-      .addBankAccount("001111", 1000.00, "2010/12/01")
-      .addTransaction("2010/12/01", 1000.00, "Income")
-      .load();
-
-    operations.openPreferences().setFutureMonthsCount(6).validate();
-    operations.hideSignposts();
-
-    projectChart.create();
-    currentProject
-      .setNameAndValidate("My project")
-      .addExpenseItem(0, "Reservation", 201101, -200.00)
-      .addExpenseItem(1, "Hotel", 201101, -500.00);
-
-    OfxBuilder.init(this)
-      .addBankAccount("001111", 800.00, "2011/01/10")
-      .addTransaction("2011/01/01", -200.00, "Resa")
-      .addTransaction("2011/01/01", -500.00, "MegaHotel")
-      .addTransaction("2011/01/01", -10.00, "Something else")
-      .load();
-
-    categorization.setExtra("Resa", "Reservation");
-    categorization.setExtra("MegaHotel", "Hotel");
-
-    views.selectHome();
-    projectChart.select("My project");
-    currentProject.openDeleteAndNavigate();
-    views.checkCategorizationSelected();
-    categorization.checkTable(new Object[][]{
-      {"01/01/2011", "Hotel", "MEGAHOTEL", -500.0},
-      {"01/01/2011", "Reservation", "RESA", -200.0},
-    });
-    categorization.checkSelectedTableRows(0, 1);
-    categorization.unselectAllTransactions();
-    categorization.showAllTransactions();
-
-    views.selectHome();
-    projectChart.select("My project");
-    currentProject
-      .deleteWithConfirmation("Existing operations",
-                              "Some operations have been assigned to this project");
-
-    views.checkCategorizationSelected();
-    categorization.checkSelectedTableRows("RESA", "MEGAHOTEL");
-    categorization.checkTable(new Object[][]{
-      {"01/01/2011", "", "MEGAHOTEL", -500.0},
-      {"01/01/2011", "", "RESA", -200.0},
-    });
-    categorization.checkSelectedTableRows(0, 1);
-
-    views.selectHome();
-    projects.checkNoProjectShown();
-    projectChart.checkNoProjectShown();
-    budgetView.getSummary().checkEndPosition(290.00);
   }
 
   public void testCannotHaveEmptyProjectOrProjectItemNames() {
@@ -414,46 +320,6 @@ public class ProjectManagementTest extends LoggedInFunctionalTestCase {
       .checkItemGauge(1, -550.00, -500.00)
       .checkItemGauge(2, 0.00, -100.00)
       .checkProjectGauge(-800.00, -900.00);
-  }
-
-  public void testTransactionsAreUnassignedWhenItemsAreDeleted() throws Exception {
-    operations.hideSignposts();
-
-    OfxBuilder.init(this)
-      .addBankAccount("001111", 1000.00, "2012/12/15")
-      .addTransaction("2012/12/01", -100.00, "SNCF")
-      .addTransaction("2012/12/10", -150.00, "Europcar")
-      .addTransaction("2012/12/15", -550.00, "Sheraton")
-      .load();
-
-    projectChart.create();
-    currentProject
-      .setNameAndValidate("My project")
-      .addExpenseItem(0, "Travel", 201212, -300.00)
-      .addExpenseItem(1, "Accomodation", 201212, -500.00);
-
-    categorization.selectTransaction("SNCF");
-    categorization.selectExtras().checkGroupContainsSeries("My project", "Travel", "Accomodation");
-    categorization.setExtra("SNCF", "Travel");
-    categorization.setExtra("EUROPCAR", "Travel");
-    categorization.setExtra("SHERATON", "Accomodation");
-
-    views.selectHome();
-    projectChart.select("My project");
-    currentProject
-      .checkItems("| Travel       | Dec | 250.00 | 300.00 |\n" +
-                  "| Accomodation | Dec | 550.00 | 500.00 |")
-      .deleteItem(0);
-
-    categorization.selectTransaction("EUROPCAR").getExtras().checkNoSeriesSelected();
-    categorization.selectTransaction("SHERATON").getExtras().checkSelectedSeries("Accomodation");
-    categorization.selectTransaction("SNCF").getExtras().checkNoSeriesSelected();
-
-    transactions.initContent()
-      .add("15/12/2012", TransactionType.PRELEVEMENT, "SHERATON", "", -550.00, "Accomodation")
-      .add("10/12/2012", TransactionType.PRELEVEMENT, "EUROPCAR", "", -150.00)
-      .add("01/12/2012", TransactionType.PRELEVEMENT, "SNCF", "", -100.00)
-      .check();
   }
 
   public void testProjectViewIsAlwaysShownWhenEditingAssociatedSeriesOrGroup() throws Exception {
@@ -918,5 +784,60 @@ public class ProjectManagementTest extends LoggedInFunctionalTestCase {
       .validate();
 
     mainAccounts.openDelete("Main account").validate();
+  }
+
+  public void testCannotAddOrRemoveSeriesFromProjectGroups() throws Exception {
+    operations.hideSignposts();
+
+    OfxBuilder.init(this)
+      .addBankAccount("001111", 1000.00, "2011/01/10")
+      .addTransaction("2011/01/01", 1000.00, "Income")
+      .addTransaction("2011/01/10", -100.00, "Resa")
+      .load();
+
+    budgetView.extras.createProject();
+    views.checkHomeSelected();
+    currentProject
+      .setNameAndValidate("My Project")
+      .addExpenseItem(0, "Reservation", 201101, -100.00)
+      .addExpenseItem(1, "Hotel", 201101, -500.00)
+      .backToList();
+
+    views.selectBudget();
+    budgetView.extras.createSeries()
+      .setName("Eric's birthday")
+      .setAmount(150.00)
+      .validate();
+    budgetView.extras.createSeries()
+      .setName("Maries's birthday")
+      .setAmount(150.00)
+      .validate();
+    budgetView.extras.expandGroup("My Project");
+    budgetView.extras.checkContent(
+      "| My Project        | 0.00 | 600.00 |\n" +
+      "| Hotel             | 0.00 | 500.00 |\n" +
+      "| Reservation       | 0.00 | 100.00 |\n" +
+      "| Eric's birthday   | 0.00 | 150.00 |\n" +
+      "| Maries's birthday | 0.00 | 150.00 |");
+
+    // -- Project groups cannot be modified --
+
+    budgetView.extras.checkSeriesActions("My Project",
+                                         "Collapse group",
+                                         "Edit project",
+                                         "Show operations",
+                                         "See in Analysis view");
+
+    // -- Cannot remove series from a project group --
+
+    budgetView.extras.checkSeriesActions("Hotel",
+                                         "Edit project",
+                                         "Show operations",
+                                         "See in Analysis view");
+
+    // -- Cannot add/remove series to/from a project group --
+
+    budgetView.extras.checkAddToGroupOptions("Eric's birthday", "New group...");
+    budgetView.extras.addToNewGroup("Eric's birthday", "Birthdays");
   }
 }

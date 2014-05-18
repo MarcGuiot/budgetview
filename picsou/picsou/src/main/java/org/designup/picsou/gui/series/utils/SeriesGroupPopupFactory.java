@@ -36,9 +36,11 @@ public class SeriesGroupPopupFactory implements DisposablePopupMenuFactory {
     if (menu == null) {
       menu = new JPopupMenu();
       menu.add(createExpandCollapseAction());
-      menu.add(new RenameSeriesGroupAction(seriesGroup.getKey(), repository, directory));
-      menu.addSeparator();
       final Glob project = Project.findProjectForGroup(seriesGroup, repository);
+      if (project == null) {
+        menu.add(new RenameSeriesGroupAction(seriesGroup.getKey(), repository, directory));
+      }
+      menu.addSeparator();
       if (project != null) {
         menu.add(new AbstractAction(Lang.get("seriesGroup.goto.project")) {
           public void actionPerformed(ActionEvent actionEvent) {
@@ -56,8 +58,10 @@ public class SeriesGroupPopupFactory implements DisposablePopupMenuFactory {
           directory.get(NavigationService.class).gotoAnalysisForSeries(seriesGroup);
         }
       });
-      menu.addSeparator();
-      menu.add(new DeleteSeriesGroupAction(seriesGroup.getKey(), repository));
+      if (project == null) {
+        menu.addSeparator();
+        menu.add(new DeleteSeriesGroupAction(seriesGroup.getKey(), repository));
+      }
     }
     return menu;
   }
@@ -65,9 +69,9 @@ public class SeriesGroupPopupFactory implements DisposablePopupMenuFactory {
   private ToggleBooleanAction createExpandCollapseAction() {
     ToggleBooleanAction expandCollapseAction =
       new ToggleBooleanAction(seriesGroup.getKey(), SeriesGroup.EXPANDED,
-                                                                       Lang.get("seriesGroup.menu.collapse"),
-                                                                       Lang.get("seriesGroup.menu.expand"),
-                                                                       repository);
+                              Lang.get("seriesGroup.menu.collapse"),
+                              Lang.get("seriesGroup.menu.expand"),
+                              repository);
     disposables.add(expandCollapseAction);
     return expandCollapseAction;
   }

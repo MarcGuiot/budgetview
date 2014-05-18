@@ -2,10 +2,7 @@ package org.designup.picsou.functests.seriesgroups;
 
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
-import org.designup.picsou.gui.model.PeriodSeriesStat;
-import org.designup.picsou.model.SeriesGroup;
 import org.designup.picsou.model.TransactionType;
-import org.globsframework.model.format.GlobPrinter;
 
 public class SeriesGroupTest extends LoggedInFunctionalTestCase {
 
@@ -13,11 +10,6 @@ public class SeriesGroupTest extends LoggedInFunctionalTestCase {
     setCurrentMonth("2014/01");
     super.setUp();
     getOperations().openPreferences().setFutureMonthsCount(6).validate();
-  }
-
-  protected void tearDown() throws Exception {
-    System.out.println("\n\n\n\nSeriesGroupTest.tearDown: ");
-    super.tearDown();
   }
 
   public void testAddAndDeleteGroup() throws Exception {
@@ -35,7 +27,7 @@ public class SeriesGroupTest extends LoggedInFunctionalTestCase {
 
     // -- Create a group with 2 envelopes --
 
-    budgetView.variable.checkGroups("Leisures", "New group...");
+    budgetView.variable.checkAddToGroupOptions("Leisures", "New group...");
 
     budgetView.variable.addToNewGroup("Food", "Groceries");
     budgetView.variable.checkContent("| Groceries | 80.00  | 200.00 |\n" +
@@ -48,7 +40,7 @@ public class SeriesGroupTest extends LoggedInFunctionalTestCase {
     budgetView.variable.checkGroupItems("Food");
     budgetView.variable.checkGroupToggleHidden("Home");
 
-    budgetView.variable.checkGroups("Leisures", "Groceries", "New group...");
+    budgetView.variable.checkAddToGroupOptions("Leisures", "Groceries", "New group...");
     budgetView.variable.addToGroup("Home", "Groceries");
 
     timeline.selectMonth(201312);
@@ -88,7 +80,7 @@ public class SeriesGroupTest extends LoggedInFunctionalTestCase {
     budgetView.variable.checkContent("| Food     | 80.00  | 200.00 |\n" +
                                      "| Leisures | 100.00 | 200.00 |\n" +
                                      "| Home     | 0.00   | 100.00 |\n");
-    budgetView.variable.checkGroups("Leisures", "New group...");
+    budgetView.variable.checkAddToGroupOptions("Leisures", "New group...");
   }
 
   public void testGroupsAreShownInCategorizationView() throws Exception {
@@ -213,11 +205,11 @@ public class SeriesGroupTest extends LoggedInFunctionalTestCase {
 
     budgetView.variable.addToNewGroup("Food", "Groceries");
 
-    budgetView.recurring.checkGroups("Electricity", "New group...");
+    budgetView.recurring.checkAddToGroupOptions("Electricity", "New group...");
     budgetView.recurring.addToNewGroup("Electricity", "Home");
 
-    budgetView.variable.checkGroups("Leisures", "Groceries", "New group...");
-    budgetView.recurring.checkGroups("Electricity", "Home", "New group...");
+    budgetView.variable.checkAddToGroupOptions("Leisures", "Groceries", "New group...");
+    budgetView.recurring.checkAddToGroupOptions("Electricity", "Home", "New group...");
   }
 
   public void testMovingASeriesToAnotherGroupOrToNoGroup() throws Exception {
