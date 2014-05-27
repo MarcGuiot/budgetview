@@ -1,6 +1,7 @@
 package org.designup.picsou.model;
 
 import com.budgetview.shared.utils.PicsouGlobSerializer;
+import org.designup.picsou.utils.TransactionComparator;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.annotations.*;
 import org.globsframework.metamodel.annotations.Key;
@@ -9,6 +10,7 @@ import org.globsframework.metamodel.index.MultiFieldNotUniqueIndex;
 import org.globsframework.metamodel.index.NotUniqueIndex;
 import org.globsframework.metamodel.utils.GlobTypeLoader;
 import org.globsframework.model.*;
+import org.globsframework.model.utils.GlobFunctor;
 import org.globsframework.model.utils.GlobMatcher;
 import org.globsframework.model.utils.GlobMatchers;
 import org.globsframework.utils.Utils;
@@ -16,6 +18,8 @@ import org.globsframework.utils.serialization.SerializedByteArrayOutput;
 import org.globsframework.utils.serialization.SerializedInput;
 import org.globsframework.utils.serialization.SerializedInputOutputFactory;
 import org.globsframework.utils.serialization.SerializedOutput;
+
+import java.util.Arrays;
 
 import static org.globsframework.model.FieldValue.value;
 import static org.globsframework.model.utils.GlobMatchers.*;
@@ -141,6 +145,30 @@ public class Transaction {
     loader.defineNonUniqueIndex(LABEL_FOR_CATEGORISATION_INDEX, LABEL_FOR_CATEGORISATION);
     loader.defineMultiFieldNotUniqueIndex(SERIES_INDEX, SERIES, POSITION_MONTH);
     loader.defineNonUniqueIndex(POSITION_MONTH_INDEX, POSITION_MONTH);
+  }
+
+  public static Glob[] getSortedByPositionDateTransactions(GlobRepository repository, final GlobMatcher filter,
+                                                           TransactionComparator comparator){
+    Glob[] transactions = new Glob[0];
+    int total = 0;
+    GlobList orderedMonth = repository.getAll(Month.TYPE).sort(Month.ID);
+    int pendingMonthCount = orderedMonth.size();
+    for (Glob month : orderedMonth) {
+      GlobList globs = repository.findByIndex(POSITION_MONTH_INDEX, month.get(Month.ID))
+        .filterSelf(filter, repository);
+      if (total + globs.size() > transactions.length){
+        transactions = Arrays.copyOf(transactions, total + globs.size() * pendingMonthCount);
+      }
+      for (Glob glob : globs) {
+        transactions[total++] = glob;
+      }
+      pendingMonthCount--;
+    }
+    if (total != transactions.length) {
+      transactions = Arrays.copyOf(transactions, total);
+    }
+    Arrays.sort(transactions, 0, total, comparator);
+    return transactions;
   }
 
   public static int fullDate(Glob transaction) {

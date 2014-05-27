@@ -1,21 +1,23 @@
 package org.designup.picsou.triggers;
 
+import com.budgetview.shared.utils.Amounts;
 import org.designup.picsou.gui.model.BudgetStat;
+import org.designup.picsou.gui.model.MainAccountStat;
 import org.designup.picsou.gui.model.SeriesStat;
 import org.designup.picsou.model.*;
-import com.budgetview.shared.utils.Amounts;
 import org.designup.picsou.utils.TransactionComparator;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.*;
-import static org.globsframework.model.FieldValue.value;
-import org.globsframework.model.utils.GlobFunctor;
 import org.globsframework.model.utils.GlobMatchers;
 import org.globsframework.utils.Log;
 import org.globsframework.utils.Utils;
 
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
+
+import static org.globsframework.model.FieldValue.value;
 
 
 /*
@@ -40,12 +42,21 @@ public class BudgetStatTrigger implements ChangeSetListener {
     repository.startChangeSet();
     try {
       repository.deleteAll(BudgetStat.TYPE);
+      repository.deleteAll(MainAccountStat.TYPE);
       BudgetStatComputer budgetStatComputer = new BudgetStatComputer(repository);
       if (budgetStatComputer.currentMonth == null) {
         return;
       }
-      repository.safeApply(Transaction.TYPE,
-                           GlobMatchers.not(GlobMatchers.fieldEquals(Transaction.ACCOUNT, Account.EXTERNAL_ACCOUNT_ID)), budgetStatComputer);
+      Set<Integer> wantedAccount = repository.getAll(Account.TYPE, GlobMatchers.fieldEquals(Account.ACCOUNT_TYPE, AccountType.MAIN.getId()))
+        .getValueSet(Account.ID);
+      Glob[] transactions = Transaction
+        .getSortedByPositionDateTransactions(repository,
+                                             GlobMatchers.contained(Transaction.ACCOUNT, wantedAccount),
+                                             TransactionComparator.ASCENDING_ACCOUNT);
+
+      for (Glob transaction : transactions) {
+        budgetStatComputer.run(transaction);
+      }
       budgetStatComputer.complete();
     }
     finally {
@@ -53,142 +64,144 @@ public class BudgetStatTrigger implements ChangeSetListener {
     }
   }
 
-  private class BudgetStatComputer implements GlobFunctor {
-    private Map<Integer, Glob> firstTransactionForMonth = new HashMap<Integer, Glob>();
-    private Map<Integer, Glob> lastTransactionForMonth = new HashMap<Integer, Glob>();
-    private Map<Integer, Double> minPosition = new HashMap<Integer, Double>();
+  private class BudgetStatComputer {
     private Map<BudgetArea, BudgetAreaAmounts> budgetAreaAmounts = new HashMap<BudgetArea, BudgetAreaAmounts>();
-    private Glob lastRealKnownTransaction;
+    private int month;
     private Glob currentMonth;
-    private Glob absoluteFirstTransaction;
+    private MinPosition minPosition;
 
     private GlobRepository repository;
 
     private BudgetStatComputer(GlobRepository repository) {
       this.repository = repository;
       currentMonth = repository.find(CurrentMonth.KEY);
+      minPosition = new MinPosition(this.repository);
     }
 
-    public void run(Glob transaction, GlobRepository repository) throws Exception {
+    public void run(Glob transaction) {
       if (transaction.get(Transaction.SUMMARY_POSITION) == null) {
         Log.write("Summary position is null for transaction : " + transaction.get(Transaction.ID) +
                   " " + transaction.get(Transaction.LABEL));
       }
 
-      Glob account = repository.findLinkTarget(transaction, Transaction.ACCOUNT);
-      if (account == null || !AccountType.MAIN.getId().equals(account.get(Account.ACCOUNT_TYPE))) {
-        return;
-      }
-
       Integer monthId = transaction.get(Transaction.POSITION_MONTH);
-
-      Double currentPosition = transaction.get(Transaction.SUMMARY_POSITION);
-      Double min = minPosition.get(monthId);
-      if (min == null || (currentPosition != null && currentPosition < min) ){
-        minPosition.put(monthId, currentPosition);
+      if (month != monthId) {
+        minPosition.newMonth(month);
+        month = monthId;
       }
 
-      Glob firstTransactionInBankMonth = firstTransactionForMonth.get(monthId);
-      if ((firstTransactionInBankMonth == null) ||
-          (TransactionComparator.ASCENDING_ACCOUNT.compare(transaction, firstTransactionInBankMonth) < 0)) {
-        firstTransactionForMonth.put(monthId, transaction);
+      Double currentPosition = transaction.get(Transaction.ACCOUNT_POSITION);
+      Double total = transaction.get(Transaction.SUMMARY_POSITION);
+      if (currentPosition != null && total != null) {
+        minPosition.add(currentPosition, transaction.get(Transaction.ACCOUNT),
+                        total, transaction.get(Transaction.PLANNED),
+                        transaction.get(Transaction.TRANSACTION_TYPE) == TransactionType.CLOSE_ACCOUNT_EVENT.getId());
       }
 
-      Glob lastTransactionInBankMonth = lastTransactionForMonth.get(monthId);
-      if ((lastTransactionInBankMonth == null)
-          || (TransactionComparator.ASCENDING_ACCOUNT.compare(transaction, lastTransactionInBankMonth) > 0)) {
-        lastTransactionForMonth.put(monthId, transaction);
-      }
-
-      if (absoluteFirstTransaction == null ||
-          (TransactionComparator.ASCENDING_ACCOUNT.compare(transaction, absoluteFirstTransaction) < 0)) {
-        absoluteFirstTransaction = transaction;
-      }
-
-      if (!transaction.isTrue(Transaction.PLANNED) &&
-          (lastRealKnownTransaction == null ||
-           TransactionComparator.ASCENDING_ACCOUNT.compare(transaction, lastRealKnownTransaction) > 0)
-          && transaction.get(Transaction.POSITION_MONTH).equals(currentMonth.get(CurrentMonth.LAST_TRANSACTION_MONTH))
-          && transaction.get(Transaction.POSITION_DAY) <= currentMonth.get(CurrentMonth.LAST_TRANSACTION_DAY)) {
-        lastRealKnownTransaction = transaction;
-      }
+//      Glob firstTransactionInBankMonth = firstTransactionForMonth.get(monthId);
+//      if ((firstTransactionInBankMonth == null) ||
+//          (TransactionComparator.ASCENDING_ACCOUNT.compare(transaction, firstTransactionInBankMonth) < 0)) {
+//        firstTransactionForMonth.put(monthId, transaction);
+//      }
+//
+//      Glob lastTransactionInBankMonth = lastTransactionForMonth.get(monthId);
+//      if ((lastTransactionInBankMonth == null)
+//          || (TransactionComparator.ASCENDING_ACCOUNT.compare(transaction, lastTransactionInBankMonth) > 0)) {
+//        lastTransactionForMonth.put(monthId, transaction);
+//      }
+//
+//      if (absoluteFirstTransaction == null ||
+//          (TransactionComparator.ASCENDING_ACCOUNT.compare(transaction, absoluteFirstTransaction) < 0)) {
+//        absoluteFirstTransaction = transaction;
+//      }
+//
+//      if (!transaction.isTrue(Transaction.PLANNED) &&
+//          (lastRealKnownTransaction == null ||
+//           TransactionComparator.ASCENDING_ACCOUNT.compare(transaction, lastRealKnownTransaction) > 0)
+//          && transaction.get(Transaction.POSITION_MONTH).equals(currentMonth.get(CurrentMonth.LAST_TRANSACTION_MONTH))
+//          && transaction.get(Transaction.POSITION_DAY) <= currentMonth.get(CurrentMonth.LAST_TRANSACTION_DAY)) {
+//        lastRealKnownTransaction = transaction;
+//      }
     }
 
     private void complete() {
       GlobList months = repository.getAll(Month.TYPE).sort(Month.ID);
-      Glob endOfMonthTransaction = null;
+//      Glob endOfMonthTransaction = null;
       for (Glob month : months) {
         Integer monthId = month.get(Month.ID);
 
-        Double beginOfMonthPosition = null;
-        Double endOfMonthPosition = null;
+//        Double beginOfMonthPosition = null;
+//        Double endOfMonthPosition = null;
+//
+//        Glob beginOfMonthTransaction = firstTransactionForMonth.get(monthId);
+//        if (beginOfMonthTransaction == null) {
+//          beginOfMonthTransaction = endOfMonthTransaction;
+//        }
+//        Glob nextLast = lastTransactionForMonth.get(monthId);
+//        endOfMonthTransaction = nextLast == null ? beginOfMonthTransaction : nextLast;
+//        if (endOfMonthTransaction == null) {
+//          endOfMonthTransaction = absoluteFirstTransaction;
+//          beginOfMonthTransaction = absoluteFirstTransaction;
+////          if (endOfMonthTransaction == null) {
+////            GlobList globList = repository.getAll(Account.TYPE,
+////                                                  GlobMatchers.fieldEquals(Account.ACCOUNT_TYPE, AccountType.MAIN.getId()));
+////            beginOfMonthPosition = 0.;
+////            for (Glob glob : globList) {
+////              Double value = glob.get(Account.FIRST_POSITION);
+////              if (value != null) {
+////                beginOfMonthPosition += value;
+////              }
+////            }
+////            endOfMonthPosition = beginOfMonthPosition;
+////          }
+//        }
 
-        Glob beginOfMonthTransaction = firstTransactionForMonth.get(monthId);
-        if (beginOfMonthTransaction == null) {
-          beginOfMonthTransaction = endOfMonthTransaction;
-        }
-        Glob nextLast = lastTransactionForMonth.get(monthId);
-        endOfMonthTransaction = nextLast == null ? beginOfMonthTransaction : nextLast;
-        if (endOfMonthTransaction == null) {
-          endOfMonthTransaction = absoluteFirstTransaction;
-          beginOfMonthTransaction = absoluteFirstTransaction;
-//          if (endOfMonthTransaction == null) {
-//            GlobList globList = repository.getAll(Account.TYPE,
-//                                                  GlobMatchers.fieldEquals(Account.ACCOUNT_TYPE, AccountType.MAIN.getId()));
-//            beginOfMonthPosition = 0.;
-//            for (Glob glob : globList) {
-//              Double value = glob.get(Account.FIRST_POSITION);
-//              if (value != null) {
-//                beginOfMonthPosition += value;
+//        if (beginOfMonthTransaction != null && endOfMonthTransaction != null) {
+//          endOfMonthPosition = endOfMonthTransaction.get(Transaction.SUMMARY_POSITION);
+//          beginOfMonthPosition = beginOfMonthTransaction.get(Transaction.SUMMARY_POSITION);
+//          if (beginOfMonthPosition != null) {
+//            if (beginOfMonthTransaction.get(Transaction.POSITION_MONTH) >= monthId) {
+//              beginOfMonthPosition = beginOfMonthPosition -
+//                                     beginOfMonthTransaction.get(Transaction.AMOUNT);
+//            }
+//            if (endOfMonthPosition != null) {
+//              if (endOfMonthTransaction.get(Transaction.POSITION_MONTH) > monthId) {
+//                endOfMonthPosition = endOfMonthPosition -
+//                                     endOfMonthTransaction.get(Transaction.AMOUNT);
 //              }
 //            }
-//            endOfMonthPosition = beginOfMonthPosition;
 //          }
-        }
+//        }
 
-        if (beginOfMonthTransaction != null && endOfMonthTransaction != null) {
-          endOfMonthPosition = endOfMonthTransaction.get(Transaction.SUMMARY_POSITION);
-          beginOfMonthPosition = beginOfMonthTransaction.get(Transaction.SUMMARY_POSITION);
-          if (beginOfMonthPosition != null) {
-            if (beginOfMonthTransaction.get(Transaction.POSITION_MONTH) >= monthId) {
-              beginOfMonthPosition = beginOfMonthPosition -
-                                     beginOfMonthTransaction.get(Transaction.AMOUNT);
-            }
-            if (endOfMonthPosition != null) {
-              if (endOfMonthTransaction.get(Transaction.POSITION_MONTH) > monthId) {
-                endOfMonthPosition = endOfMonthPosition -
-                                     endOfMonthTransaction.get(Transaction.AMOUNT);
-              }
-            }
-          }
-        }
-
-        Double minPosition = this.minPosition.get(monthId);
-        if (minPosition == null && beginOfMonthPosition != null && endOfMonthPosition != null){
-          minPosition = Math.min(beginOfMonthPosition, endOfMonthPosition);
-        }
+//        MinAccountPosition minPosition = this.minPosition.get(monthId);
+//        if (minPosition != null) {
+//          repository.create(MainAccountStat.TYPE,
+//                            value(MainAccountStat.MONTH, monthId),
+//                            value(MainAccountStat.ACCOUNT_WITH_MIN, minPosition.account.get(Account.ID)),
+//                            value(MainAccountStat.MIN_POSITION, minPosition.min),
+//                            value(MainAccountStat.SUMMARY_POSITION_AT_MIN, minPosition.total));
+//        }
         FieldValuesBuilder values =
           FieldValuesBuilder.init()
-            .set(BudgetStat.MONTH, monthId)
-            .set(BudgetStat.MIN_POSITION, minPosition)
-            .set(BudgetStat.BEGIN_OF_MONTH_ACCOUNT_POSITION, beginOfMonthPosition)
-            .set(BudgetStat.END_OF_MONTH_ACCOUNT_POSITION, endOfMonthPosition);
+            .set(BudgetStat.MONTH, monthId);
+//            .set(BudgetStat.BEGIN_OF_MONTH_ACCOUNT_POSITION, beginOfMonthPosition)
+//            .set(BudgetStat.END_OF_MONTH_ACCOUNT_POSITION, endOfMonthPosition);
 
         FieldValues budgetAreaValues = getBudgetAreaValues(repository, monthId);
         values.set(budgetAreaValues);
         values.set(BudgetStat.MONTH_BALANCE, getBalance(budgetAreaValues, monthId));
         repository.create(BudgetStat.TYPE, values.toArray());
 
-        if (lastRealKnownTransaction != null) {
-          Integer currentMonthId = lastRealKnownTransaction.get(Transaction.POSITION_MONTH);
-          if (currentMonthId.equals(monthId)) {
-            repository.update(Key.create(BudgetStat.TYPE, currentMonthId),
-                              value(BudgetStat.LAST_KNOWN_ACCOUNT_POSITION,
-                                    lastRealKnownTransaction.get(Transaction.SUMMARY_POSITION)),
-                              value(BudgetStat.LAST_KNOWN_ACCOUNT_POSITION_DAY,
-                                    lastRealKnownTransaction.get(Transaction.POSITION_DAY)));
-          }
-        }
+//        if (lastRealKnownTransaction != null) {
+//          Integer currentMonthId = lastRealKnownTransaction.get(Transaction.POSITION_MONTH);
+//          if (currentMonthId.equals(monthId)) {
+//            repository.update(Key.create(BudgetStat.TYPE, currentMonthId),
+//                              value(BudgetStat.LAST_KNOWN_ACCOUNT_POSITION,
+//                                    lastRealKnownTransaction.get(Transaction.SUMMARY_POSITION)),
+//                              value(BudgetStat.LAST_KNOWN_ACCOUNT_POSITION_DAY,
+//                                    lastRealKnownTransaction.get(Transaction.POSITION_DAY)));
+//          }
+//        }
       }
     }
 
@@ -337,13 +350,13 @@ public class BudgetStatTrigger implements ChangeSetListener {
 
       amount += seriesAmount;
       plannedAmount += seriesPlannedAmount;
-      if (seriesRemainingAmount >0){
+      if (seriesRemainingAmount > 0) {
         remainingPositiveAmount += seriesRemainingAmount;
       }
       else {
         remainingNegativeAmount += seriesRemainingAmount;
       }
-      if (serisOverrunAmount > 0){
+      if (serisOverrunAmount > 0) {
         overrunPositiveAmount += serisOverrunAmount;
       }
       else {
@@ -397,4 +410,162 @@ public class BudgetStatTrigger implements ChangeSetListener {
       return overrunPositiveAmount;
     }
   }
+
+  static class MinAccountPosition {
+    double begin;
+    double end;
+    double min = Double.NaN;
+    private boolean isFuture;
+    double minFuture = Double.NaN;
+    double total = Double.NaN;
+    double futureTotal = Double.NaN;
+    int account;
+    boolean hasOp;
+    boolean closed;
+
+    MinAccountPosition(int accountId, double begin, double total, boolean isFuture) {
+      this.begin = begin;
+      this.min = begin;
+      this.isFuture = isFuture;
+      this.account = accountId;
+    }
+
+    void reset() {
+      begin = end;
+      if (isFuture) {
+        this.minFuture = this.begin;
+        this.min = Double.NaN;
+      }
+      else {
+        this.min = this.begin;
+      }
+      hasOp = false;
+    }
+
+
+    public void push(int account, double current, double total, boolean isFuture, boolean isClosed) {
+      this.account = account;
+      closed = isClosed;
+      this.isFuture = isFuture;
+      hasOp = true;
+      if (isFuture) {
+        if (current < this.minFuture) {
+          this.minFuture = current;
+          this.futureTotal = total;
+        }
+      }
+      else {
+        if (current < this.min) {
+          this.min = current;
+          this.total = total;
+        }
+      }
+      this.end = current;
+    }
+  }
+
+  static class MinPosition {
+    final GlobRepository repository;
+    MinAccountPosition minAccountPosition =
+      new MinAccountPosition(Account.MAIN_SUMMARY_ACCOUNT_ID, Double.NEGATIVE_INFINITY, Double.NEGATIVE_INFINITY, false);
+    Map<Integer, MinAccountPosition> accountToMin = new HashMap<Integer, MinAccountPosition>();
+
+    MinPosition(GlobRepository repository) {
+      this.repository = repository;
+    }
+
+    void newMonth(int month) {
+      if (accountToMin.size() == 0) {
+        return;
+      }
+      int currentMinAccount = -1;
+      double total = 0;
+      double min = Double.POSITIVE_INFINITY;
+      MinAccountPosition minAccount = null;
+
+      for (Map.Entry<Integer, MinAccountPosition> entry : accountToMin.entrySet()) {
+        MinAccountPosition currentAccount = entry.getValue();
+        repository.create(MainAccountStat.TYPE,
+                          value(MainAccountStat.MONTH, month),
+                          value(MainAccountStat.ACCOUNT, currentAccount.account),
+                          value(MainAccountStat.BEGIN_POSITION, currentAccount.begin),
+                          value(MainAccountStat.MIN_POSITION, currentAccount.min),
+                          value(MainAccountStat.FUTURE_MIN_POSITION, currentAccount.minFuture),
+                          value(MainAccountStat.END_POSITION, currentAccount.end),
+                          value(MainAccountStat.SUMMARY_POSITION_AT_FUTURE_MIN, currentAccount.futureTotal),
+                          value(MainAccountStat.SUMMARY_POSITION_AT_MIN, currentAccount.total));
+        double minToUse;
+        double totalToUse;
+        if (!Double.isNaN(currentAccount.min)) {
+          if (!Double.isNaN(currentAccount.minFuture)) {
+            if (currentAccount.min <= currentAccount.minFuture) {
+              minToUse = currentAccount.min;
+              totalToUse = currentAccount.total;
+            }
+            else {
+              minToUse = currentAccount.minFuture;
+              totalToUse = currentAccount.futureTotal;
+            }
+          }
+          else {
+            minToUse = currentAccount.min;
+            totalToUse = currentAccount.total;
+          }
+        }
+        else {
+          minToUse = currentAccount.minFuture;
+          totalToUse = currentAccount.futureTotal;
+        }
+        if (minToUse < min) {
+          minAccount = currentAccount;
+          min = minToUse;
+          total = totalToUse;
+          currentMinAccount = entry.getKey();
+        }
+      }
+      if (minAccount == null || !minAccount.hasOp) {
+        min = minAccount == null ? minAccountPosition.total : min;
+        total = minAccountPosition.min;
+        currentMinAccount = minAccount == null ? minAccountPosition.account : currentMinAccount;
+      }
+      if (min != Double.POSITIVE_INFINITY) {
+        repository.create(MainAccountStat.TYPE,
+                          value(MainAccountStat.ACCOUNT, Account.MAIN_SUMMARY_ACCOUNT_ID),
+                          value(MainAccountStat.MONTH, month),
+                          value(MainAccountStat.MIN_ACCOUNT, currentMinAccount),
+                          value(MainAccountStat.MIN_POSITION, min),
+                          value(MainAccountStat.SUMMARY_POSITION_AT_MIN, total));
+      }
+      for (Iterator<Map.Entry<Integer, MinAccountPosition>> iterator = accountToMin.entrySet().iterator(); iterator.hasNext(); ) {
+        Map.Entry<Integer, MinAccountPosition> next = iterator.next();
+        if (next.getValue().closed) {
+          iterator.remove();
+        }
+        else {
+          next.getValue().reset();
+        }
+      }
+      minAccountPosition.reset();
+    }
+
+    void add(double current, int accountId, double total, boolean isFuture, boolean isClosed) {
+      MinAccountPosition position = accountToMin.get(accountId);
+      if (position == null) {
+        position = new MinAccountPosition(accountId, current, total, isFuture);
+        accountToMin.put(accountId, position);
+      }
+      else {
+        position.push(accountId, current, total, isFuture, isClosed);
+      }
+      // on inverse total et current pour que le critere de min soit sur le total et qu'on sauve en meme
+      // temps le current et on reinverse dans le newMonth
+      minAccountPosition.push(accountId, total, current, false, false);
+    }
+
+    public MinAccountPosition get(Integer monthId) {
+      return accountToMin.get(monthId);
+    }
+
+  }
+
 }

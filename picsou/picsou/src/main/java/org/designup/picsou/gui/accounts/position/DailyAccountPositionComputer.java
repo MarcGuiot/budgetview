@@ -96,7 +96,8 @@ public class DailyAccountPositionComputer {
     return getDailyValues(monthIdsToShow, selectedMonthId, Matchers.transactionsForSavingsAccounts(repository), DaySelection.EMPTY, Transaction.SUMMARY_POSITION);
   }
 
-  public DailyAccountPositionValues getDailyValues(List<Integer> monthIdsToShow, int selectedMonthId, GlobMatcher accountMatcher, DaySelection daySelection, final DoubleField position) {
+  public DailyAccountPositionValues getDailyValues(List<Integer> monthIdsToShow, int selectedMonthId, GlobMatcher accountMatcher,
+                                                   DaySelection daySelection, final DoubleField position) {
 
     DailyAccountPositionValues positionValues = new DailyAccountPositionValues();
 
@@ -124,7 +125,6 @@ public class DailyAccountPositionComputer {
   private Double getDailyValues(int monthId, GlobList transactions, Double previousLastValue, int maxDay,
                                 Double[] minValues, DoubleField positionField) {
     Double lastValue = previousLastValue;
-//    Double[] lastValues = new Double[maxDay];
     for (Glob transaction : transactions) {
       int day = transaction.get(Transaction.POSITION_DAY) - 1;
       minValues[day] = transaction.get(positionField);
@@ -139,17 +139,17 @@ public class DailyAccountPositionComputer {
       }
     }
 
-    if (lastValue == null) {
-      Glob stat = repository.find(Key.create(BudgetStat.TYPE, monthId));
-      if (stat != null) {
-        lastValue = stat.get(BudgetStat.END_OF_MONTH_ACCOUNT_POSITION, 0.);
-        for (int i = 0; i < minValues.length; i++) {
-          if (minValues[i] == null) {
-            minValues[i] = lastValue;
-          }
-        }
-      }
-    }
+//    if (lastValue == null) {
+//      Glob stat = repository.find(Key.create(BudgetStat.TYPE, monthId));
+//      if (stat != null) {
+//        lastValue = stat.get(BudgetStat.END_OF_MONTH_ACCOUNT_POSITION, 0.);
+//        for (int i = 0; i < minValues.length; i++) {
+//          if (minValues[i] == null) {
+//            minValues[i] = lastValue;
+//          }
+//        }
+//      }
+//    }
 
     for (int i = minValues.length - 2; i >= 0; i--) {
       if (minValues[i] == null) {

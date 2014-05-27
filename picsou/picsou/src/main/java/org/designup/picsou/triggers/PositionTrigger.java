@@ -28,7 +28,8 @@ public class PositionTrigger implements ChangeSetListener {
         changeSet.containsUpdates(Account.POSITION_WITH_PENDING) ||
         changeSet.containsChanges(Account.TYPE)) {
       TransactionComparator comparator = TransactionComparator.ASCENDING_ACCOUNT;
-      transactions = repository.getSorted(Transaction.TYPE, comparator, GlobMatchers.ALL);
+//      transactions = repository.getSorted(Transaction.TYPE, comparator, GlobMatchers.ALL);
+      transactions = Transaction.getSortedByPositionDateTransactions(repository, GlobMatchers.ALL, comparator);
 
       final Set<Integer> updatedOperations = new HashSet<Integer>();
       final Set<Integer> createdAccount = new HashSet<Integer>();
