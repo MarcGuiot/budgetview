@@ -69,9 +69,9 @@ public class FreeTrialTest extends LoggedInFunctionalTestCase {
   }
 
   public void testFeedbackUsesEmailWhenAvailable() throws Exception {
-    feedbackView.checkFeedbackLink();
+    operations.checkFeedbackLink();
 
     LicenseActivationChecker.enterLicense(mainWindow, "admin", "1234");
-    feedbackView.checkFeedbackLink();
+    operations.checkFeedbackLink();
   }
 }

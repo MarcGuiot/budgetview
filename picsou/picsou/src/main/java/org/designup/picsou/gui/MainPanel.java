@@ -1,43 +1,26 @@
 package org.designup.picsou.gui;
 
 import net.roydesign.mac.MRJAdapter;
-import org.designup.picsou.gui.about.AboutAction;
 import org.designup.picsou.gui.accounts.AccountView;
-import org.designup.picsou.gui.accounts.actions.CreateAccountAction;
-import org.designup.picsou.gui.actions.*;
-import org.designup.picsou.gui.backup.BackupAction;
-import org.designup.picsou.gui.backup.RestoreFileAction;
-import org.designup.picsou.gui.backup.RestoreSnapshotMenuAction;
+import org.designup.picsou.gui.actions.DeleteUserAction;
+import org.designup.picsou.gui.actions.ExitAction;
+import org.designup.picsou.gui.actions.ImportFileAction;
 import org.designup.picsou.gui.budget.BudgetToggle;
 import org.designup.picsou.gui.budget.BudgetView;
 import org.designup.picsou.gui.card.CardView;
 import org.designup.picsou.gui.card.NavigationService;
 import org.designup.picsou.gui.categorization.CategorizationView;
 import org.designup.picsou.gui.components.PicsouFrame;
-import org.designup.picsou.gui.components.dialogs.SendImportedFileAction;
 import org.designup.picsou.gui.components.layoutconfig.LayoutConfigService;
 import org.designup.picsou.gui.config.ConfigService;
 import org.designup.picsou.gui.feedback.FeedbackService;
-import org.designup.picsou.gui.feedback.FeedbackView;
-import org.designup.picsou.gui.feedback.actions.OpenFeedbackDialogAction;
 import org.designup.picsou.gui.help.HelpService;
-import org.designup.picsou.gui.help.actions.GotoSupportAction;
-import org.designup.picsou.gui.help.actions.GotoWebsiteAction;
-import org.designup.picsou.gui.help.actions.SendLogsAction;
-import org.designup.picsou.gui.license.LicenseExpirationAction;
 import org.designup.picsou.gui.license.LicenseInfoView;
-import org.designup.picsou.gui.license.RegisterLicenseAction;
-import org.designup.picsou.gui.mobile.DumpMobileXmlAction;
-import org.designup.picsou.gui.mobile.EditMobileAccountAction;
 import org.designup.picsou.gui.mobile.SendMobileDataAction;
 import org.designup.picsou.gui.model.PeriodAccountStat;
 import org.designup.picsou.gui.model.PeriodBudgetAreaStat;
 import org.designup.picsou.gui.model.PeriodSeriesStat;
-import org.designup.picsou.gui.notes.ShowNotesAction;
 import org.designup.picsou.gui.notifications.NotificationsFlagView;
-import org.designup.picsou.gui.preferences.PreferencesAction;
-import org.designup.picsou.gui.preferences.dev.DevOptionsAction;
-import org.designup.picsou.gui.printing.actions.PrintBudgetAction;
 import org.designup.picsou.gui.projects.ProjectView;
 import org.designup.picsou.gui.savings.SavingsView;
 import org.designup.picsou.gui.series.PeriodAccountStatUpdater;
@@ -53,22 +36,11 @@ import org.designup.picsou.gui.startup.components.OpenRequestManager;
 import org.designup.picsou.gui.summary.SummaryView;
 import org.designup.picsou.gui.summary.version.NewVersionView;
 import org.designup.picsou.gui.time.TimeView;
-import org.designup.picsou.gui.time.actions.SelectCurrentMonthAction;
-import org.designup.picsou.gui.time.actions.SelectCurrentYearAction;
-import org.designup.picsou.gui.time.actions.SelectLast12MonthsAction;
-import org.designup.picsou.gui.time.actions.SelectSinceLastJanuaryAction;
 import org.designup.picsou.gui.title.TitleView;
 import org.designup.picsou.gui.transactions.TransactionView;
-import org.designup.picsou.gui.transactions.creation.ShowCreateTransactionAction;
-import org.designup.picsou.gui.transactions.reconciliation.annotations.ShowReconciliationAction;
-import org.designup.picsou.gui.undo.RedoAction;
-import org.designup.picsou.gui.undo.UndoAction;
 import org.designup.picsou.gui.undo.UndoRedoService;
-import org.designup.picsou.gui.utils.DataCheckerAction;
-import org.designup.picsou.gui.utils.DumpDataAction;
 import org.designup.picsou.gui.utils.Gui;
-import org.designup.picsou.gui.utils.dev.*;
-import org.designup.picsou.model.AccountType;
+import org.designup.picsou.gui.utils.MenuBarBuilder;
 import org.designup.picsou.model.Month;
 import org.designup.picsou.model.SignpostStatus;
 import org.designup.picsou.model.Transaction;
@@ -78,44 +50,26 @@ import org.globsframework.gui.SelectionService;
 import org.globsframework.gui.splits.SplitsEditor;
 import org.globsframework.gui.splits.SplitsLoader;
 import org.globsframework.gui.splits.SplitsNode;
-import org.globsframework.gui.splits.utils.GuiUtils;
 import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.Key;
 import org.globsframework.model.repository.ReplicationGlobRepository;
 import org.globsframework.utils.Ref;
-import org.globsframework.utils.Utils;
 import org.globsframework.utils.directory.DefaultDirectory;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.KeyEvent;
 
 import static org.globsframework.model.utils.GlobMatchers.isFalse;
 
 public class MainPanel {
   private PicsouFrame frame;
-  private ImportFileAction importFileAction;
-  private ExportFileAction exportFileAction;
-  private OpenFeedbackDialogAction openFeedbackAction;
-  private SetPasswordAction setPasswordAction;
-  private BackupAction backupAction;
-  private RestoreFileAction restoreActionFileAction;
-  private RestoreSnapshotMenuAction restoreSnapshotMenuAction;
-  private SendImportedFileAction sendImportedFileAction;
-  private PreferencesAction preferencesAction;
-  private ExitAction exitAction;
   private static ExitAction exitActionWhitoutUserEvaluation;
-  private LogoutAction logoutAction;
-  private DeleteUserAction deleteUserAction;
   private GlobsPanelBuilder builder;
   private GlobRepository repository;
   private Directory directory;
   private WindowManager windowManager;
-  private RegisterLicenseAction registerAction;
-  private JMenuBar menuBar;
   private JPanel panel;
   private TimeView timeView;
   private CardView cardView;
@@ -124,9 +78,7 @@ public class MainPanel {
   private CategorizationView categorizationView;
   private ProjectView projectView;
   private SignpostView signpostView;
-  private Action threadsAction;
-  private EditMobileAccountAction editMobileAccountAction;
-  private PrintBudgetAction printBudgetAction;
+  private MenuBarBuilder menuBar;
 
   public static MainPanel init(GlobRepository repository, Directory directory, WindowManager mainWindow) {
     MainPanel panel = new MainPanel(repository, directory, mainWindow);
@@ -157,10 +109,11 @@ public class MainPanel {
     builder = new GlobsPanelBuilder(MainPanel.class, "/layout/picsou.splits", repository, directory);
 
     TitleView titleView = new TitleView(repository, directory);
+    timeView = new TimeView(repository, directory);
 
     transactionView = new TransactionView(repository, directory);
     categorizationView = new CategorizationView(repository, directory);
-    timeView = new TimeView(repository, directory);
+    cardView = new CardView(repository, directory, categorizationView.getGotoBudgetSignpost());
 
     ReplicationGlobRepository replicationGlobRepository =
       new ReplicationGlobRepository(repository, PeriodSeriesStat.TYPE, PeriodBudgetAreaStat.TYPE, PeriodAccountStat.TYPE);
@@ -171,27 +124,16 @@ public class MainPanel {
 
     directory.add(new NavigationService(transactionView, categorizationView, projectView, budgetToggle, repository, directory));
 
-    importFileAction = ImportFileAction.initForMenu(Lang.get("import"), repository, directory);
-    JButton importFile = new JButton(importFileAction);
+    menuBar = new MenuBarBuilder(repository, replicationGlobRepository,
+                                 windowManager, logoutService,
+                                 cardView.getHelpAction(),
+                                 directory,
+                                 new DeleteUserAction(this, repository, directory));
+
+    JButton importFile = new JButton(menuBar.getImportFileAction());
     builder.add("importFile", importFile);
     final ImportSignpost importSignpost = new ImportSignpost(repository, directory);
     importSignpost.attach(importFile);
-
-    exportFileAction = new ExportFileAction(repository, directory);
-    openFeedbackAction = new OpenFeedbackDialogAction(Lang.get("feedback"), repository, directory);
-    backupAction = new BackupAction(repository, directory);
-    restoreActionFileAction = new RestoreFileAction(repository, directory);
-    restoreSnapshotMenuAction = new RestoreSnapshotMenuAction(directory, repository);
-    sendImportedFileAction = new SendImportedFileAction(directory, repository);
-    preferencesAction = new PreferencesAction(repository, directory);
-    registerAction = new RegisterLicenseAction(repository, directory);
-    exitAction = new ExitAction(windowManager, repository, directory);
-    logoutAction = new LogoutAction(logoutService);
-    setPasswordAction = new SetPasswordAction(repository, directory);
-    deleteUserAction = new DeleteUserAction(this, repository, directory);
-    printBudgetAction = new PrintBudgetAction(replicationGlobRepository, directory);
-    editMobileAccountAction = new EditMobileAccountAction(repository, directory);
-    threadsAction = new SendStackTracesAction(repository, directory);
 
     LicenseInfoView licenseInfoView = new LicenseInfoView(repository, directory);
 
@@ -199,7 +141,6 @@ public class MainPanel {
     PeriodBudgetAreaStatUpdater.init(replicationGlobRepository);
     PeriodAccountStatUpdater.init(replicationGlobRepository, directory);
 
-    cardView = new CardView(repository, directory, categorizationView.getGotoBudgetSignpost());
     seriesAnalysisView = new SeriesAnalysisView(repository, directory);
     signpostView = new SignpostView(replicationGlobRepository, directory);
     createPanel(
@@ -216,12 +157,17 @@ public class MainPanel {
       new SavingsView(replicationGlobRepository, directory),
       new SummaryView(repository, directory),
       projectView,
-      new FeedbackView(repository, directory),
       signpostView,
       licenseInfoView,
       new NotificationsFlagView(repository, directory));
 
-    createMenuBar(frame, directory);
+    if (Gui.useMacOSMenu()) {
+      if (exitActionWhitoutUserEvaluation != null) {
+        MRJAdapter.removeQuitApplicationListener(exitActionWhitoutUserEvaluation);
+        exitActionWhitoutUserEvaluation = null;
+      }
+      MRJAdapter.addQuitApplicationListener(menuBar.getExitAction());
+    }
 
     builder.load();
   }
@@ -249,7 +195,7 @@ public class MainPanel {
   public void prepareForDisplay() {
     ImportFileAction.registerToOpenRequestManager(Lang.get("import"), repository, directory);
 
-    frame.setJMenuBar(menuBar);
+    menuBar.createMenuBar(frame);
     cardView.showInitialCard();
     transactionView.reset();
     categorizationView.reset();
@@ -276,148 +222,6 @@ public class MainPanel {
     }
   }
 
-  public void createMenuBar(final PicsouFrame frame, Directory directory) {
-    menuBar = new JMenuBar();
-
-    menuBar.add(createFileMenu());
-    menuBar.add(createEditMenu(frame, directory));
-    menuBar.add(createViewMenu(directory));
-
-    Utils.beginRemove();
-    menuBar.add(createDevMenu(directory));
-    Utils.endRemove();
-
-    menuBar.add(createHelpMenu(directory));
-  }
-
-  private JMenu createFileMenu() {
-
-    if (Gui.useMacOSMenu()) {
-      if (exitActionWhitoutUserEvaluation != null) {
-        MRJAdapter.removeQuitApplicationListener(exitActionWhitoutUserEvaluation);
-        exitActionWhitoutUserEvaluation = null;
-      }
-      MRJAdapter.addQuitApplicationListener(exitAction);
-    }
-
-    final JMenu menu = new JMenu(Lang.get("menuBar.file"));
-    menu.add(importFileAction);
-    menu.add(exportFileAction);
-    menu.addSeparator();
-    menu.add(backupAction);
-    menu.add(restoreActionFileAction);
-    menu.add(restoreSnapshotMenuAction);
-    // A Restaurer - ne fonctionne plus sur Mac
-    // MRJAdapter.setPreferencesEnabled(true);
-    // MRJAdapter.addPreferencesListener(preferencesAction);
-
-    menu.addSeparator();
-    menu.add(preferencesAction);
-
-    menu.addSeparator();
-    menu.add(registerAction);
-
-    menu.add(setPasswordAction);
-    menu.add(logoutAction);
-    menu.add(deleteUserAction);
-
-    menu.addSeparator();
-    menu.add(printBudgetAction);
-
-    menu.addSeparator();
-    menu.add(editMobileAccountAction);
-    menu.add(new SendMobileDataAction(repository, directory));
-
-    if (!Gui.useMacOSMenu()) {
-      menu.addSeparator();
-      menu.add(exitAction);
-    }
-    return menu;
-  }
-
-  private JMenu createEditMenu(PicsouFrame frame, Directory directory) {
-    final UndoAction undoAction = new UndoAction(directory);
-    final RedoAction redoAction = new RedoAction(directory);
-
-    JMenu editMenu = new JMenu(Lang.get("menuBar.edit"));
-    editMenu.add(undoAction);
-    editMenu.add(redoAction);
-
-    JRootPane rootPane = frame.getRootPane();
-    GuiUtils.addShortcut(rootPane, "UNDO", undoAction, GuiUtils.ctrl(KeyEvent.VK_Z));
-    GuiUtils.addShortcut(rootPane, "REDO", redoAction, GuiUtils.ctrl(KeyEvent.VK_Y));
-    GuiUtils.addShortcut(rootPane, "Data check", new DataCheckerAction(repository, directory),
-                         GuiUtils.ctrl(KeyEvent.VK_D));
-
-    editMenu.addSeparator();
-    CreateAccountAction createAccount =
-      new CreateAccountAction("account.create.menu", AccountType.MAIN, repository, directory, frame);
-    createAccount.setGotoAccountViewEnabled(true);
-    editMenu.add(createAccount);
-    editMenu.add(new ShowCreateTransactionAction(directory));
-
-    return editMenu;
-  }
-
-  private JMenu createDevMenu(final Directory directory) {
-    JMenu devMenu = new JMenu("[Dev]");
-    devMenu.add(new DevOptionsAction(repository, directory));
-    devMenu.add(new DumpDataAction(repository));
-    devMenu.add(new DataCheckerAction(repository, directory));
-    devMenu.add(new ThrowExceptionAction());
-    devMenu.add(new ThrowInRepoExceptionAction(repository));
-    devMenu.add(new GotoNextMonthAction(repository));
-    devMenu.add(new AddSixDayAction(repository));
-    devMenu.add(new ClearAllSignpostsAction(repository));
-    devMenu.add(new ShowUserEvaluationDialogAction(repository, directory));
-    devMenu.add(new LicenseExpirationAction(repository, directory));
-    devMenu.add(new DumpRepositoryAction(repository));
-    devMenu.add(new ChangeDateAction(repository));
-    devMenu.add(new AddAccountErrorAction(repository));
-    devMenu.add(new DumpMobileXmlAction(repository));
-    devMenu.add(threadsAction);
-    return devMenu;
-  }
-
-  private JMenu createViewMenu(Directory directory) {
-    JMenu showMenu = new JMenu(Lang.get("menuBar.view"));
-    showMenu.add(new SelectCurrentMonthAction(repository, directory));
-    showMenu.add(new SelectCurrentYearAction(repository, directory));
-    showMenu.add(new SelectLast12MonthsAction(repository, directory));
-    showMenu.add(new SelectSinceLastJanuaryAction(repository, directory));
-    showMenu.addSeparator();
-    showMenu.add(new ShowNotesAction(repository, directory));
-    showMenu.addSeparator();
-    showMenu.add(new ShowReconciliationAction(repository, directory));
-    return showMenu;
-  }
-
-  private JMenu createHelpMenu(final Directory directory) {
-    JMenu menu = new JMenu(Lang.get("menuBar.help"));
-    menu.add(new AbstractAction(Lang.get("help.index")) {
-      public void actionPerformed(ActionEvent e) {
-        directory.get(HelpService.class).show("index", frame);
-      }
-    });
-    menu.add(cardView.getHelpAction());
-
-    menu.addSeparator();
-    menu.add(new GotoWebsiteAction(directory));
-    menu.add(new GotoSupportAction(directory));
-
-    menu.addSeparator();
-    menu.add(openFeedbackAction);
-    menu.add(new SendLogsAction(directory));
-    menu.add(sendImportedFileAction);
-
-    if (!Gui.useMacOSMenu()) {
-      menu.addSeparator();
-      menu.add(new AboutAction(directory));
-    }
-
-    return menu;
-  }
-
   public void logout() {
     prepareForLogout();
     windowManager.logout();
@@ -440,7 +244,7 @@ public class MainPanel {
 
   private void prepareForLogout() {
     if (Gui.useMacOSMenu()) {
-      MRJAdapter.removeQuitApplicationListener(exitAction);
+      MRJAdapter.removeQuitApplicationListener(menuBar.getExitAction());
       if (exitActionWhitoutUserEvaluation == null) {
         exitActionWhitoutUserEvaluation = new ExitAction(windowManager, repository, directory, false);
         MRJAdapter.addQuitApplicationListener(exitActionWhitoutUserEvaluation);
@@ -449,7 +253,7 @@ public class MainPanel {
     directory.get(OpenRequestManager.class).popCallback();
   }
 
-  public void end() {
+  public void updateMobile() {
     SendMobileDataAction.sendToMobile(repository, directory.get(ConfigService.class), new Ref<String>(), false);
   }
 

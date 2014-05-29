@@ -4,7 +4,7 @@
 
   <row>
     <label text="$transaction.edition.day" styleClass="formLabel"/>
-    <textField ref="day" columns="3" marginRight="5" weightX="0.01" fill="none"/>
+    <textField ref="day" columns="3" marginRight="5" weightX="0.01" fill="none" minimumSize="(40,18)"/>
     <button ref="month" styleClass="monthEditor" weightX="0.01"/>
     <label text="$transaction.edition.amount" styleClass="formLabel"/>
     <component ref="amountEditor"/>

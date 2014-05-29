@@ -182,10 +182,10 @@ public class ProjectManagementTest extends LoggedInFunctionalTestCase {
     projectChart.create();
     currentProject
       .cancelEdition();
-    projects.checkProjectsHidden();
+    projects.checkHidden();
 
     operations.undo();
-    projects.checkProjectsShown();
+    projects.checkShown();
     projects.checkEditionShown();
     currentProject
       .checkNameEditionInProgress("")

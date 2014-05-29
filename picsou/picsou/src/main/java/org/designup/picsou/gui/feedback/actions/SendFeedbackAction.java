@@ -7,12 +7,12 @@ import org.globsframework.utils.directory.Directory;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 
-public class OpenFeedbackDialogAction extends AbstractAction {
+public class SendFeedbackAction extends AbstractAction {
 
   private GlobRepository repository;
   private Directory directory;
 
-  public OpenFeedbackDialogAction(String text, GlobRepository repository, Directory directory) {
+  public SendFeedbackAction(String text, GlobRepository repository, Directory directory) {
     super(text);
     this.repository = repository;
     this.directory = directory;

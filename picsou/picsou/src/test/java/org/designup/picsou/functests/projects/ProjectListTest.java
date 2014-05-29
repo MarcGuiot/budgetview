@@ -144,7 +144,7 @@ public class ProjectListTest extends LoggedInFunctionalTestCase {
     projects.checkCurrentProjectsSectionHidden();
     projects.checkPastProjectsSectionExpanded();
 
-    projects.checkProjectsShown();
+    projects.checkShown();
     projects.delete("Past Aug");
     projects.checkCurrentProjectsSectionHidden();
     projects.checkPastProjectsSectionHidden();

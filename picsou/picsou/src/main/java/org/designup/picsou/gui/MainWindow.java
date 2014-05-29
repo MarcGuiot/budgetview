@@ -239,12 +239,12 @@ public class MainWindow implements WindowManager {
     frame.addWindowListener(windowOpenListener);
     frame.addWindowListener(new WindowAdapter() {
       public void windowClosing(WindowEvent e) {
-        mainPanel.end();
+        mainPanel.updateMobile();
         picsouApplication.shutdown();
       }
 
       public void windowClosed(WindowEvent e) {
-        mainPanel.end();
+        mainPanel.updateMobile();
         picsouApplication.shutdown();
       }
 
@@ -326,7 +326,7 @@ public class MainWindow implements WindowManager {
   }
 
   public void logout() {
-    mainPanel.end();
+    mainPanel.updateMobile();
     //  TODO il faudrait pouvoir faire un reset sinon le repository n'est pas deconnecté
     // mais probleme avec les bank qui ne sont initialisé qu'une fois.
     initServerAccess(serverAddress, prevaylerPath, dataInMemory);

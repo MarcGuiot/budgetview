@@ -16,6 +16,7 @@ import org.designup.picsou.model.*;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.actions.SetBooleanAction;
+import org.globsframework.gui.actions.ToggleBooleanAction;
 import org.globsframework.gui.splits.PanelBuilder;
 import org.globsframework.gui.splits.SplitsLoader;
 import org.globsframework.gui.splits.SplitsNode;
@@ -50,12 +51,12 @@ public class SummaryView extends View {
     projects.registerComponents(builder);
 
     final JButton showProjectDetails =
-      new JButton(new SetBooleanAction(UserPreferences.KEY,
+      new JButton(new ToggleBooleanAction(UserPreferences.KEY,
                                        UserPreferences.SHOW_PROJECT_DETAILS,
-                                       true,
+                                       Lang.get("summaryView.hideProjectDetails"),
                                        Lang.get("summaryView.showProjectDetails"),
                                        repository));
-    builder.add("showProjectDetails", showProjectDetails);
+    builder.add("toggleProjectDetails", showProjectDetails);
 
     final SplitsNode<JLabel> projectArrow = builder.add("projectArrow", new JLabel());
 
@@ -85,12 +86,7 @@ public class SummaryView extends View {
   }
 
   private void updateShowProjectDetails(GlobRepository repository, final JButton showProjectDetails) {
-    boolean show = repository.contains(Project.TYPE);
-    Glob prefs = repository.find(UserPreferences.KEY);
-    if (prefs != null && prefs.isTrue(UserPreferences.SHOW_PROJECT_DETAILS)) {
-      show = false;
-    }
-    showProjectDetails.setEnabled(show);
+    showProjectDetails.setEnabled(repository.contains(Project.TYPE));
   }
 
   private class AccountRepeatFactory implements RepeatComponentFactory<Glob> {
