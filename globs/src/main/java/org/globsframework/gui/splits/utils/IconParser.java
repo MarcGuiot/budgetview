@@ -32,6 +32,13 @@ public class IconParser {
                                                                 "[ ]*([A-z\\.#0-9]+)[ ]*" +
                                                                 "\\)");
 
+  private static Pattern RECT_FORMAT = Pattern.compile("rect\\(" +
+                                                       "[ ]*([0-9]+)[ ]*," +
+                                                       "[ ]*([0-9]+)[ ]*," +
+                                                       "[ ]*([A-z\\.#0-9]+)[ ]*," +
+                                                       "[ ]*([A-z\\.#0-9]+)[ ]*" +
+                                                       "\\)");
+
   private static Pattern ROUNDED_RECT_FORMAT = Pattern.compile("roundedRect\\(" +
                                                                "[ ]*([0-9]+)[ ]*," +
                                                                "[ ]*([0-9]+)[ ]*," +
@@ -66,6 +73,11 @@ public class IconParser {
     CircledArrowIcon circledArrow = parseCircledArrow(text, colorService, context);
     if (circledArrow != null) {
       return circledArrow;
+    }
+
+    RectIcon rect = parseRect(text, colorService, context);
+    if (rect != null) {
+      return rect;
     }
 
     RoundedRectIcon roundedRect = parseRoundedRect(text, colorService, context);
@@ -150,49 +162,94 @@ public class IconParser {
     return null;
   }
 
+  private static RectIcon parseRect(String text, ColorService colorService, SplitsContext context) {
+    Matcher matcher = RECT_FORMAT.matcher(text.trim());
+    if (!matcher.matches()) {
+      return null;
+    }
+
+    int iconWidth = Integer.parseInt(matcher.group(1));
+    int iconHeight = Integer.parseInt(matcher.group(2));
+
+    final RectIcon icon = new RectIcon(iconWidth, iconHeight);
+
+    String background = matcher.group(3);
+    if (Colors.isHexaString(background)) {
+      Color color = Colors.toColor(background);
+      icon.setBackgroundColor(color);
+    }
+    else {
+      ColorUpdater updater = new ColorUpdater(background) {
+        public void updateColor(Color color) {
+          icon.setBackgroundColor(color);
+        }
+      };
+      updater.install(colorService);
+      context.addDisposable(updater);
+    }
+
+    String border = matcher.group(4);
+    if (Colors.isHexaString(border)) {
+      Color color = Colors.toColor(border);
+      icon.setBorderColor(color);
+    }
+    else {
+      ColorUpdater updater = new ColorUpdater(border) {
+        public void updateColor(Color color) {
+          icon.setBorderColor(color);
+        }
+      };
+      updater.install(colorService);
+      context.addDisposable(updater);
+    }
+
+    return icon;
+  }
+
   private static RoundedRectIcon parseRoundedRect(String text, ColorService colorService, SplitsContext context) {
     Matcher matcher = ROUNDED_RECT_FORMAT.matcher(text.trim());
-    if (matcher.matches()) {
-      int iconWidth = Integer.parseInt(matcher.group(1));
-      int iconHeight = Integer.parseInt(matcher.group(2));
-      int arcX = Integer.parseInt(matcher.group(3));
-      int arcY = Integer.parseInt(matcher.group(4));
-
-      final RoundedRectIcon icon = new RoundedRectIcon(iconWidth, iconHeight, arcX, arcY);
-
-      String background = matcher.group(5);
-      if (Colors.isHexaString(background)) {
-        Color color = Colors.toColor(background);
-        icon.setBackgroundColor(color);
-      }
-      else {
-        ColorUpdater updater = new ColorUpdater(background) {
-          public void updateColor(Color color) {
-            icon.setBackgroundColor(color);
-          }
-        };
-        updater.install(colorService);
-        context.addDisposable(updater);
-      }
-
-      String border = matcher.group(6);
-      if (Colors.isHexaString(border)) {
-        Color color = Colors.toColor(border);
-        icon.setBorderColor(color);
-      }
-      else {
-        ColorUpdater updater = new ColorUpdater(border) {
-          public void updateColor(Color color) {
-            icon.setBorderColor(color);
-          }
-        };
-        updater.install(colorService);
-        context.addDisposable(updater);
-      }
-
-      return icon;
+    if (!matcher.matches()) {
+      return null;
     }
-    return null;
+
+    int iconWidth = Integer.parseInt(matcher.group(1));
+    int iconHeight = Integer.parseInt(matcher.group(2));
+    int arcX = Integer.parseInt(matcher.group(3));
+    int arcY = Integer.parseInt(matcher.group(4));
+
+    final RoundedRectIcon icon = new RoundedRectIcon(iconWidth, iconHeight, arcX, arcY);
+
+    String background = matcher.group(5);
+    if (Colors.isHexaString(background)) {
+      Color color = Colors.toColor(background);
+      icon.setBackgroundColor(color);
+    }
+    else {
+      ColorUpdater updater = new ColorUpdater(background) {
+        public void updateColor(Color color) {
+          icon.setBackgroundColor(color);
+        }
+      };
+      updater.install(colorService);
+      context.addDisposable(updater);
+    }
+
+    String border = matcher.group(6);
+    if (Colors.isHexaString(border)) {
+      Color color = Colors.toColor(border);
+      icon.setBorderColor(color);
+    }
+    else {
+      ColorUpdater updater = new ColorUpdater(border) {
+        public void updateColor(Color color) {
+          icon.setBorderColor(color);
+        }
+      };
+      updater.install(colorService);
+      context.addDisposable(updater);
+    }
+
+    return icon;
   }
 
   private static OvalIcon parseOval(String text, ColorService colorService, SplitsContext context) {

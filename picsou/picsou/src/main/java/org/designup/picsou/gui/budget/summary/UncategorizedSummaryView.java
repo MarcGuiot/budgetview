@@ -46,7 +46,7 @@ public class UncategorizedSummaryView
   }
 
   public void colorsChanged(ColorLocator colorLocator) {
-    uncategorizedButton.setForeground(colorLocator.get(""));
+    uncategorizedButton.setForeground(colorLocator.get("budgetSummary.uncategorized"));
   }
 
   public void registerComponents(GlobsPanelBuilder parentBuilder) {

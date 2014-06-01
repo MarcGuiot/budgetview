@@ -1,6 +1,7 @@
 package org.globsframework.gui.splits.color;
 
 import org.globsframework.utils.Files;
+import org.globsframework.utils.Strings;
 import org.globsframework.utils.exceptions.InvalidParameter;
 import org.globsframework.utils.exceptions.ItemNotFound;
 import org.globsframework.utils.exceptions.ResourceAccessFailed;
@@ -118,7 +119,11 @@ public class ColorService implements ColorLocator {
     if (key == null) {
       throw new InvalidParameter("null key is not allowed");
     }
-    return key.toString();
+    String result = key.toString();
+    if (result.isEmpty()) {
+      throw new InvalidParameter("empty key is not allowed");
+    }
+    return result;
   }
 
   public void addListener(ColorChangeListener listener) {

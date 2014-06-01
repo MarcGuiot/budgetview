@@ -61,6 +61,14 @@ public class IconParserTest extends TestCase {
     assertEquals(15, icon.getIconHeight());
   }
 
+  public void testRect() throws Exception {
+    RectIcon icon = (RectIcon)parse("rect(10,20,#FF0000,#00FF00)");
+    assertEquals(10, icon.getIconWidth());
+    assertEquals(20, icon.getIconHeight());
+    assertEquals(Color.RED, icon.getBackgroundColor());
+    assertEquals(Color.GREEN, icon.getBorderColor());
+  }
+
   public void testRoundedRect() throws Exception {
     RoundedRectIcon icon = (RoundedRectIcon)parse("roundedRect(10,20,1,2,#FF0000,#00FF00)");
     assertEquals(10, icon.getIconWidth());

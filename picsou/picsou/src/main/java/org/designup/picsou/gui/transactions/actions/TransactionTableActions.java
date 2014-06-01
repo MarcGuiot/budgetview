@@ -2,6 +2,7 @@ package org.designup.picsou.gui.transactions.actions;
 
 import org.designup.picsou.gui.categorization.actions.CategorizeTransactionsAction;
 import org.designup.picsou.gui.transactions.shift.ShiftTransactionAction;
+import org.designup.picsou.gui.transactions.split.SplitTransactionAction;
 import org.globsframework.gui.utils.PopupMenuFactory;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.utils.directory.Directory;
@@ -12,6 +13,7 @@ public class TransactionTableActions implements PopupMenuFactory {
 
   private final EditTransactionAction edit;
   private final CategorizeTransactionsAction categorize;
+  private final SplitTransactionAction split;
   private final ShiftTransactionAction shift;
   private final DeleteTransactionAction delete;
   private final Action copy;
@@ -21,6 +23,7 @@ public class TransactionTableActions implements PopupMenuFactory {
     this.copy = copy;
     this.edit = new EditTransactionAction(repository, directory);
     this.categorize = new CategorizeTransactionsAction(repository, directory);
+    this.split = new SplitTransactionAction(repository, directory);
     this.shift = new ShiftTransactionAction(repository, directory);
     this.delete = new DeleteTransactionAction(repository, directory);
     this.editSeries = new EditTransactionSeriesAction(repository, directory);
@@ -40,6 +43,7 @@ public class TransactionTableActions implements PopupMenuFactory {
     popup.add(edit);
     popup.add(categorize);
     popup.add(editSeries);
+    popup.add(split);
     popup.add(shift);
     if (addSeparators) {
       popup.addSeparator();

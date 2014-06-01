@@ -55,7 +55,6 @@ public class ProjectViewToggleTest extends LoggedInFunctionalTestCase {
 
     currentProject.cancelEdition();
     projects.checkHidden();
-    projectChart.checkHideDetailsButtonShown();
     projectChart.checkShowsCreation();
   }
 

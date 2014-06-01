@@ -15,6 +15,8 @@ import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
+import java.util.ArrayList;
+import java.util.List;
 
 public class AccountPopupFactory implements PopupMenuFactory, Disposable {
   private final Glob account;
@@ -26,6 +28,7 @@ public class AccountPopupFactory implements PopupMenuFactory, Disposable {
   private final MoveAccountDown moveDownAction;
   private final ToggleBooleanAction toggleShowGraph;
   private boolean showGraphToggle = true;
+  private Action firstAction;
 
   public AccountPopupFactory(Glob account, GlobRepository repository, Directory directory) {
     this.account = account;
@@ -47,12 +50,20 @@ public class AccountPopupFactory implements PopupMenuFactory, Disposable {
     disposables.add(toggleShowGraph);
   }
 
+  public void setFirstAction(Action action) {
+    this.firstAction = action;
+  }
+
   public void setShowGraphToggle(boolean showGraphToggle) {
     this.showGraphToggle = showGraphToggle;
   }
 
   public JPopupMenu createPopup() {
     JPopupMenu menu = new JPopupMenu();
+    if (firstAction != null) {
+      menu.add(firstAction);
+      menu.addSeparator();
+    }
     menu.add(new AbstractAction(Lang.get("accountView.edit")) {
       public void actionPerformed(ActionEvent e) {
         AccountEditionDialog dialog = new AccountEditionDialog(repository, directory, false);

@@ -37,8 +37,8 @@ public class DailyAccountPositionComputer {
         GlobMatcher accountMatcher = Matchers.transactionsForAccount(accountId);
         Double lastValue = getLastValue(accountMatcher, monthIdsToShow.get(0), Transaction.ACCOUNT_POSITION, repository);
         if (lastValue == null) {
-          Glob account = repository.get(Key.create(Account.TYPE, accountId));
-          lastValue = account.get(Account.POSITION_WITH_PENDING);
+          Glob account = repository.find(Key.create(Account.TYPE, accountId));
+          lastValue = account != null ? account.get(Account.POSITION_WITH_PENDING) : 0.00;
         }
         lastValueForAccounts.put(accountId, lastValue);
       }
