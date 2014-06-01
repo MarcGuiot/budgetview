@@ -1,9 +1,10 @@
 package org.designup.picsou.gui.time.tooltip;
 
 import com.budgetview.shared.utils.AmountFormat;
-import org.designup.picsou.gui.model.BudgetStat;
+import org.designup.picsou.gui.model.MainAccountStat;
 import org.designup.picsou.gui.time.TimeViewPanel;
 import org.designup.picsou.gui.time.utils.TimeViewColors;
+import org.designup.picsou.model.Account;
 import org.designup.picsou.model.Month;
 import org.designup.picsou.model.Transaction;
 import org.designup.picsou.utils.Lang;
@@ -34,15 +35,22 @@ public class TimeViewTooltipHandler implements TimeViewMouseHandler {
       return;
     }
 
-    Glob budgetStat = repository.find(Key.create(BudgetStat.TYPE, monthId));
+    Glob budgetStat = repository.find(Key.create(MainAccountStat.MONTH, monthId,
+                                                 MainAccountStat.ACCOUNT, Account.MAIN_SUMMARY_ACCOUNT_ID));
     if (budgetStat == null) {
       return;
     }
+    Glob target = repository.findLinkTarget(budgetStat, MainAccountStat.MIN_ACCOUNT);
+    String accountName = target.get(Account.NAME);
+
     panel.setToolTipText(
       Lang.get("timeView.tooltip.month.standard",
                month,
                AmountFormat.toStandardValueString(minPosition),
-               Colors.toString(colors.getAmountTextColor(minPosition, Color.BLACK))));
+               Colors.toString(colors.getAmountTextColor(minPosition, Color.BLACK)),
+               accountName,
+               AmountFormat.toStandardValueString(budgetStat.get(MainAccountStat.SUMMARY_POSITION_AT_MIN))
+               ));
   }
 
   public void enterYear(int year) {
