@@ -6,6 +6,7 @@ import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.annotations.Key;
 import org.globsframework.metamodel.annotations.Target;
 import org.globsframework.metamodel.fields.DoubleField;
+import org.globsframework.metamodel.fields.IntegerField;
 import org.globsframework.metamodel.fields.LinkField;
 import org.globsframework.metamodel.utils.GlobTypeLoader;
 
@@ -30,6 +31,8 @@ public class MainAccountStat {
   public static DoubleField FUTURE_MIN_POSITION;
 
   public static DoubleField END_POSITION;
+
+  public static IntegerField ACCOUNT_COUNT;
 
   public static DoubleField SUMMARY_POSITION_AT_MIN;
 

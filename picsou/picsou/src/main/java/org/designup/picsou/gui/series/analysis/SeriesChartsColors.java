@@ -2,12 +2,14 @@ package org.designup.picsou.gui.series.analysis;
 
 import org.designup.picsou.gui.budget.summary.BudgetAreaSummaryComputer;
 import org.designup.picsou.gui.model.BudgetStat;
+import org.designup.picsou.gui.model.MainAccountStat;
 import org.designup.picsou.gui.model.SavingsBudgetStat;
 import org.designup.picsou.gui.model.SeriesStat;
 import org.designup.picsou.gui.series.view.SeriesWrapper;
 import org.designup.picsou.gui.series.view.SeriesWrapperType;
 import org.designup.picsou.gui.utils.AmountColors;
 import org.designup.picsou.gui.utils.ApplicationColors;
+import org.designup.picsou.model.Account;
 import org.designup.picsou.model.BudgetArea;
 import org.globsframework.gui.splits.color.ColorChangeListener;
 import org.globsframework.gui.splits.color.ColorLocator;
@@ -136,9 +138,10 @@ public class SeriesChartsColors implements ColorChangeListener {
 
   private Color getSummaryForeground(Integer wrapperId, Integer referenceMonthId) {
     if (SeriesWrapper.MAIN_POSITION_SUMMARY_ID.equals(wrapperId)) {
-      Glob budgetStat = parentRepository.find(Key.create(BudgetStat.TYPE, referenceMonthId));
+      Glob budgetStat = parentRepository.find(Key.create(MainAccountStat.ACCOUNT, Account.MAIN_SUMMARY_ACCOUNT_ID,
+                                                         MainAccountStat.MONTH, referenceMonthId));
       if (budgetStat != null) {
-        Double amount = budgetStat.get(BudgetStat.END_OF_MONTH_ACCOUNT_POSITION, 0.);
+        Double amount = budgetStat.get(MainAccountStat.END_POSITION, 0.);
         return amountColors.getTextColor(amount, summaryText);
       }
     }

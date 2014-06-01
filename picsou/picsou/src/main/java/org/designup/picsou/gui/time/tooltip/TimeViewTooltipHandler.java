@@ -43,14 +43,23 @@ public class TimeViewTooltipHandler implements TimeViewMouseHandler {
     Glob target = repository.findLinkTarget(budgetStat, MainAccountStat.MIN_ACCOUNT);
     String accountName = target.get(Account.NAME);
 
-    panel.setToolTipText(
-      Lang.get("timeView.tooltip.month.standard",
-               month,
-               AmountFormat.toStandardValueString(minPosition),
-               Colors.toString(colors.getAmountTextColor(minPosition, Color.BLACK)),
-               accountName,
-               AmountFormat.toStandardValueString(budgetStat.get(MainAccountStat.SUMMARY_POSITION_AT_MIN))
-               ));
+    if (budgetStat.get(MainAccountStat.ACCOUNT_COUNT) == 1){
+      panel.setToolTipText(
+        Lang.get("timeView.tooltip.month.standard.one.account",
+                 month,
+                 AmountFormat.toStandardValueString(budgetStat.get(MainAccountStat.SUMMARY_POSITION_AT_MIN)),
+                 Colors.toString(colors.getAmountTextColor(minPosition, Color.BLACK))));
+    }
+    else {
+      panel.setToolTipText(
+        Lang.get("timeView.tool tip.month.standard",
+                 month,
+                 AmountFormat.toStandardValueString(minPosition),
+                 Colors.toString(colors.getAmountTextColor(minPosition, Color.BLACK)),
+                 accountName,
+                 AmountFormat.toStandardValueString(budgetStat.get(MainAccountStat.SUMMARY_POSITION_AT_MIN))
+        ));
+    }
   }
 
   public void enterYear(int year) {

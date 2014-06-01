@@ -13,10 +13,7 @@ import org.designup.picsou.gui.components.charts.histo.diff.HistoDiffColors;
 import org.designup.picsou.gui.components.charts.histo.diff.HistoDiffLegendPanel;
 import org.designup.picsou.gui.components.charts.histo.line.HistoLineColors;
 import org.designup.picsou.gui.components.charts.histo.utils.HistoChartListenerAdapter;
-import org.designup.picsou.gui.model.BudgetStat;
-import org.designup.picsou.gui.model.SavingsBudgetStat;
-import org.designup.picsou.gui.model.SeriesStat;
-import org.designup.picsou.gui.model.SubSeriesStat;
+import org.designup.picsou.gui.model.*;
 import org.designup.picsou.gui.series.analysis.histobuilders.range.HistoChartRange;
 import org.designup.picsou.gui.series.utils.SeriesOrGroup;
 import org.designup.picsou.gui.utils.DaySelection;
@@ -383,8 +380,11 @@ public class HistoChartBuilder implements Disposable {
     builder.setKey(Account.MAIN_SUMMARY_KEY);
 
     for (int monthId : getMonthIdsToShow(selectedMonthId)) {
-      Glob stat = repository.find(Key.create(BudgetStat.TYPE, monthId));
-      Double value = stat != null ? stat.get(BudgetStat.MIN_POSITION, 0.) : 0.0;
+//      Glob stat = repository.find(Key.create(BudgetStat.TYPE, monthId));
+      Glob stat = repository.find(Key.create(MainAccountStat.ACCOUNT, Account.MAIN_SUMMARY_ACCOUNT_ID,
+                                                         MainAccountStat.MONTH, monthId));
+
+      Double value = stat != null ? stat.get(MainAccountStat.MIN_POSITION, 0.) : 0.0;
       builder.add(monthId, value, monthId == selectedMonthId);
     }
 

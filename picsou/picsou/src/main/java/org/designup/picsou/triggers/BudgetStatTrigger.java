@@ -57,6 +57,9 @@ public class BudgetStatTrigger implements ChangeSetListener {
       for (Glob transaction : transactions) {
         budgetStatComputer.run(transaction);
       }
+      if (transactions.length != 0){
+        budgetStatComputer.minPosition.newMonth(transactions[transactions.length - 1].get(Transaction.POSITION_MONTH));
+      }
       budgetStatComputer.complete();
     }
     finally {
@@ -85,10 +88,15 @@ public class BudgetStatTrigger implements ChangeSetListener {
       }
 
       Integer monthId = transaction.get(Transaction.POSITION_MONTH);
-      if (month != monthId) {
-        minPosition.newMonth(month);
-        month = monthId;
+      if (monthId < month){
+        System.out.println("BudgetStatComputer.run");
       }
+      if (month != 0 && month != monthId) {
+        while (month < monthId) {
+          minPosition.newMonth(month++);
+        }
+      }
+      month = monthId;
 
       Double currentPosition = transaction.get(Transaction.ACCOUNT_POSITION);
       Double total = transaction.get(Transaction.SUMMARY_POSITION);
@@ -414,8 +422,8 @@ public class BudgetStatTrigger implements ChangeSetListener {
   static class MinAccountPosition {
     double begin;
     double end;
-    double min = Double.NaN;
     private boolean isFuture;
+    double min = Double.NaN;
     double minFuture = Double.NaN;
     double total = Double.NaN;
     double futureTotal = Double.NaN;
@@ -423,23 +431,27 @@ public class BudgetStatTrigger implements ChangeSetListener {
     boolean hasOp;
     boolean closed;
 
-    MinAccountPosition(int accountId, double begin, double total, boolean isFuture) {
-      this.begin = begin;
-      this.min = begin;
-      this.isFuture = isFuture;
-      this.account = accountId;
+    MinAccountPosition(int account, double value, boolean isFuture, boolean closed) {
+      this.account = account;
+      this.begin = 0.;
+      if (isFuture){
+        minFuture =  value;
+      }
+      else {
+        min = value;
+      }
+      if (closed){
+        end = value;
+      }
     }
 
     void reset() {
       begin = end;
-      if (isFuture) {
-        this.minFuture = this.begin;
-        this.min = Double.NaN;
-      }
-      else {
-        this.min = this.begin;
-      }
       hasOp = false;
+      this.min = Double.NaN;
+      this.minFuture = Double.NaN;
+      this.total = Double.NaN;
+      this.futureTotal = Double.NaN;
     }
 
 
@@ -449,13 +461,13 @@ public class BudgetStatTrigger implements ChangeSetListener {
       this.isFuture = isFuture;
       hasOp = true;
       if (isFuture) {
-        if (current < this.minFuture) {
+        if (Double.isNaN(this.minFuture) || current < this.minFuture) {
           this.minFuture = current;
           this.futureTotal = total;
         }
       }
       else {
-        if (current < this.min) {
+        if (Double.isNaN(this.min) || current < this.min) {
           this.min = current;
           this.total = total;
         }
@@ -466,8 +478,7 @@ public class BudgetStatTrigger implements ChangeSetListener {
 
   static class MinPosition {
     final GlobRepository repository;
-    MinAccountPosition minAccountPosition =
-      new MinAccountPosition(Account.MAIN_SUMMARY_ACCOUNT_ID, Double.NEGATIVE_INFINITY, Double.NEGATIVE_INFINITY, false);
+    MinAccountPosition minAccountPosition = null;
     Map<Integer, MinAccountPosition> accountToMin = new HashMap<Integer, MinAccountPosition>();
 
     MinPosition(GlobRepository repository) {
@@ -534,6 +545,9 @@ public class BudgetStatTrigger implements ChangeSetListener {
                           value(MainAccountStat.MONTH, month),
                           value(MainAccountStat.MIN_ACCOUNT, currentMinAccount),
                           value(MainAccountStat.MIN_POSITION, min),
+                          value(MainAccountStat.BEGIN_POSITION, minAccountPosition.begin),
+                          value(MainAccountStat.END_POSITION, minAccountPosition.end),
+                          value(MainAccountStat.ACCOUNT_COUNT, accountToMin.size()),
                           value(MainAccountStat.SUMMARY_POSITION_AT_MIN, total));
       }
       for (Iterator<Map.Entry<Integer, MinAccountPosition>> iterator = accountToMin.entrySet().iterator(); iterator.hasNext(); ) {
@@ -551,7 +565,7 @@ public class BudgetStatTrigger implements ChangeSetListener {
     void add(double current, int accountId, double total, boolean isFuture, boolean isClosed) {
       MinAccountPosition position = accountToMin.get(accountId);
       if (position == null) {
-        position = new MinAccountPosition(accountId, current, total, isFuture);
+        position = new MinAccountPosition(accountId, current, isFuture, isClosed);
         accountToMin.put(accountId, position);
       }
       else {
@@ -559,7 +573,11 @@ public class BudgetStatTrigger implements ChangeSetListener {
       }
       // on inverse total et current pour que le critere de min soit sur le total et qu'on sauve en meme
       // temps le current et on reinverse dans le newMonth
-      minAccountPosition.push(accountId, total, current, false, false);
+      if (minAccountPosition == null){
+        minAccountPosition = new MinAccountPosition(accountId, total, false, false);
+      } else {
+        minAccountPosition.push(accountId, total, current, false, false);
+      }
     }
 
     public MinAccountPosition get(Integer monthId) {
