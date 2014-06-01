@@ -13,6 +13,7 @@ import org.globsframework.model.FieldValues;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.utils.GlobMatcher;
+import org.globsframework.model.utils.GlobMatchers;
 import org.globsframework.utils.collections.Pair;
 import org.globsframework.utils.exceptions.ItemNotFound;
 import org.globsframework.utils.serialization.SerializedByteArrayOutput;
@@ -235,6 +236,9 @@ public class Account {
   }
 
   public static GlobMatcher activeUserCreatedMainAccounts(final SortedSet<Integer> monthIds) {
+    if (monthIds.isEmpty()) {
+      return GlobMatchers.NONE;
+    }
     return new GlobMatcher() {
       public boolean matches(Glob account, GlobRepository repository) {
         if (!Account.isUserCreatedMainAccount(account)) {

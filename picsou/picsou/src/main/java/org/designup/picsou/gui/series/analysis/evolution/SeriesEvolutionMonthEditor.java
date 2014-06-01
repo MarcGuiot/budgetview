@@ -6,10 +6,7 @@ import org.designup.picsou.gui.series.SeriesEditor;
 import org.designup.picsou.gui.series.analysis.SeriesChartsColors;
 import org.designup.picsou.gui.series.view.SeriesWrapper;
 import org.designup.picsou.gui.series.view.SeriesWrapperType;
-import org.designup.picsou.model.BudgetArea;
-import org.designup.picsou.model.Series;
-import org.designup.picsou.model.SeriesGroup;
-import org.designup.picsou.model.SubSeries;
+import org.designup.picsou.model.*;
 import com.budgetview.shared.utils.Amounts;
 import org.globsframework.gui.views.GlobTableView;
 import org.globsframework.metamodel.GlobType;
@@ -132,8 +129,10 @@ public class SeriesEvolutionMonthEditor extends SeriesEvolutionEditor {
     }
 
     if (id.equals(SeriesWrapper.MAIN_POSITION_SUMMARY_ID)) {
-      Glob budgetStat = repository.find(Key.create(BudgetStat.TYPE, referenceMonthId));
-      return format(budgetStat, BudgetStat.END_OF_MONTH_ACCOUNT_POSITION, null);
+      Glob budgetStat = repository.find(Key.create(MainAccountStat.ACCOUNT, Account.MAIN_SUMMARY_ACCOUNT_ID,
+                                                   MainAccountStat.MONTH, referenceMonthId));
+//      Glob budgetStat = repository.find(Key.create(BudgetStat.TYPE, referenceMonthId));
+      return format(budgetStat, MainAccountStat.END_POSITION, null);
     }
 
     if (id.equals(SeriesWrapper.SAVINGS_POSITION_SUMMARY_ID)) {
