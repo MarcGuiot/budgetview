@@ -197,6 +197,7 @@ public class BudgetSummaryView
           Glob stat = repository.find(accountStatKey);
           boolean isOk = (stat == null) || stat.get(PeriodAccountStat.OK, true);
           statusNode.applyStyle(isOk ? "accountOK" : "accountNOK");
+          statusNode.getComponent().setToolTipText(Lang.get(isOk ? "budgetSummaryView.status.ok.tooltip" : "budgetSummaryView.status.nok.tooltip"));
         }
       };
       repository.addChangeListener(statusUpdater);
@@ -261,11 +262,14 @@ public class BudgetSummaryView
   }
 
   private void updateSelectorNode(Integer currentSelectedId, Integer accountId, SplitsNode node) {
+    JComponent component = (JComponent)node.getComponent();
     if (Utils.equal(accountId, currentSelectedId)) {
       node.applyStyle("checkedSelector");
+      component.setToolTipText(Lang.get("budgetSummaryView.selector.selected.tooltip"));
     }
     else {
       node.applyStyle("uncheckedSelector");
+      component.setToolTipText(Lang.get("budgetSummaryView.selector.unselected.tooltip"));
     }
   }
 }

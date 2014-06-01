@@ -78,7 +78,7 @@ public abstract class SeriesEvolutionEditor extends AbstractRolloverEditor {
   protected Component getComponent(Glob wrapper, boolean edit) {
 
     Integer itemId = wrapper.get(SeriesWrapper.ITEM_ID);
-    if (SeriesWrapper.isSeries(wrapper) && edit) {
+    if (SeriesWrapper.isSeries(wrapper)) {
       currentSeries = repository.get(Key.create(Series.TYPE, itemId));
     }
     else {
