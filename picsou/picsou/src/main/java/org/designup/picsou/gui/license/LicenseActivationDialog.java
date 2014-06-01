@@ -39,7 +39,6 @@ public class LicenseActivationDialog {
   private Integer activationState;
   private GlobsPanelBuilder builder;
   private GlobTextEditor mailEditor;
-  private final LicenseConfirmationPanel confirmationPanel;
   private final CloseAction closeAction;
 
   public LicenseActivationDialog(Window parent, GlobRepository repository, final Directory directory) {
@@ -52,7 +51,6 @@ public class LicenseActivationDialog {
         .copy(User.TYPE)
         .get();
 
-    confirmationPanel = new LicenseConfirmationPanel(localRepository, localDirectory);
     dialog = PicsouDialog.create(parent, directory);
 
     Glob user = localRepository.get(User.KEY);
@@ -239,6 +237,7 @@ public class LicenseActivationDialog {
   }
 
   private void showConfirmation() {
+    LicenseConfirmationFeedbackPanel confirmationPanel = new LicenseConfirmationFeedbackPanel(localRepository, localDirectory);
     confirmationPanel.install(dialog, localRepository.get(User.KEY).get(User.EMAIL), closeAction);
   }
 
