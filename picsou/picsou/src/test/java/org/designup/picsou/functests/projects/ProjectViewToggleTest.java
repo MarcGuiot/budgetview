@@ -16,23 +16,28 @@ public class ProjectViewToggleTest extends LoggedInFunctionalTestCase {
       .addTransaction("2013/12/01", 1000.00, "Income")
       .load();
 
-    projects.checkProjectsHidden();
+    projects.checkHidden();
     projectChart.checkShowsCreation();
-    projectChart.checkShowDetailsButtonHidden();
+    projectChart.checkToggleDetailsButtonHidden();
 
     projectChart.create();
-    projects.checkProjectsShown();
+    projects.checkShown();
     currentProject.setNameAndValidate("MyProject")
       .addExpenseItem(0, "Item1", 201312, -100.00);
-    projectChart.checkShowDetailsButtonHidden();
+    projectChart.checkHideDetailsButtonShown();
 
-    projects.hideProjects();
-    projects.checkProjectsHidden();
+    projectChart.hideProjectDetails();
+    projects.checkHidden();
     projectChart.checkShowDetailsButtonShown();
 
     projectChart.select("MyProject");
-    projects.checkProjectsShown();
-    projectChart.checkShowDetailsButtonHidden();
+    projects.checkShown();
+    projectChart.checkHideDetailsButtonShown();
+
+    currentProject.delete();
+    projects.checkHidden();
+    projectChart.checkShowsCreation();
+    projectChart.checkToggleDetailsButtonHidden();
   }
 
   public void testProjectDetailsAreHiddenWhenFirstProjectCreationIsCancelled() throws Exception {
@@ -40,17 +45,16 @@ public class ProjectViewToggleTest extends LoggedInFunctionalTestCase {
       .addTransaction("2013/12/01", 1000.00, "Income")
       .load();
 
-    projects.checkProjectsHidden();
-    projectChart.checkShowDetailsButtonHidden();
+    projects.checkHidden();
+    projectChart.checkToggleDetailsButtonHidden();
     projectChart.checkShowsCreation();
 
     projectChart.create();
-    projects.checkProjectsShown();
-    projectChart.checkShowDetailsButtonHidden();
+    projects.checkShown();
+    projectChart.checkHideDetailsButtonShown();
 
     currentProject.cancelEdition();
-    projects.checkProjectsHidden();
-    projectChart.checkShowDetailsButtonHidden();
+    projects.checkHidden();
     projectChart.checkShowsCreation();
   }
 
@@ -67,18 +71,18 @@ public class ProjectViewToggleTest extends LoggedInFunctionalTestCase {
 
     mainAccounts.edit("Account n. 00002234").setAsSavings().validate();
 
-    projects.checkProjectsHidden();
+    projects.checkHidden();
     summary.getAccountChart("Account n. 00001123").checkRange(201306, 201412);
     summary.getAccountChart("Account n. 00002234").checkRange(201306, 201412);
 
     timeline.selectMonth(201312);
     projectChart.create();
-    projects.checkProjectsShown();
+    projects.checkShown();
     currentProject.setNameAndValidate("MyProject");
     checkChartsRange(201310, 201407);
 
-    projects.hideProjects();
-    projects.checkProjectsHidden();
+    projectChart.hideProjectDetails();
+    projects.checkHidden();
     checkChartsRange(201306, 201412);
   }
 

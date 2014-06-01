@@ -150,7 +150,6 @@
                         <column styleClass="innerBlock" weightY="100">
                           <panel ref="summaryView"/>
                         </column>
-                        <panel ref="feedbackView" weightY="0"/>
                       </column>
                     </column>
                     <column autoHideSource="projectView">
@@ -159,10 +158,6 @@
                         <column styleClass="innerBlock" weightY="100">
                           <panel ref="projectView"/>
                         </column>
-                        <row weightY="0">
-                          <filler fill="horizontal"/>
-                          <button ref="hideProjectDetails"/>
-                        </row>
                       </column>
                     </column>
                   </horizontalSplit>

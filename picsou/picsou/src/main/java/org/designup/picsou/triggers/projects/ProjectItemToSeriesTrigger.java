@@ -88,7 +88,6 @@ public class ProjectItemToSeriesTrigger implements ChangeSetListener {
                                   isFalse(Transaction.PLANNED)))) {
             repository.update(item.getKey(), ProjectItem.SERIES, null);
             repository.delete(seriesKey);
-            repository.delete(KeyBuilder.newKey(Series.TYPE, series.get(Series.ID)));
           }
         }
         else {

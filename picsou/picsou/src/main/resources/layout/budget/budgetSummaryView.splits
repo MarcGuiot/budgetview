@@ -30,11 +30,34 @@
            horizontalAlignment="center" border="empty(5,0,5,0)"
            fill="horizontal" anchor="bottom" weightY="0"/>
 
-    <style id="accountOK" selector="x" icon="roundedRect(12,6,0,0,budgetSummary.accountStatus.ok,budgetSummary.accountStatus.ok)"/>
-    <style id="accountNOK" selector="x" icon="roundedRect(12,6,0,0,budgetSummary.accountStatus.nok,budgetSummary.accountStatus.nok)"/>
+    <style selector="#accountSelectors button" marginTop="3"/>
+    <style selector="#accountSelectors label" marginTop="3"/>
+
+    <style selector="#accountButton"
+           ui="hyperlinkButtonWithoutUnderline"
+           font="-,bold,12" cursor="hand"
+           icon="downArrow(10,18,8,8,block.inner.arrow.idle)"
+           rolloverIcon="downArrow(10,18,8,8,block.inner.arrow.rollover)"
+           pressedIcon="downArrow(10,18,8,8,block.inner.arrow.pressed)"
+           fill="none" anchor="left"
+           horizontalAlignment="left" horizontalTextPosition="right"
+           iconTextGap="2"/>
+
+    <style id="accountOK" selector="x"
+           icon="rect(14,8,budgetSummary.accountStatus.ok,budgetSummary.accountStatus.border)"/>
+    <style id="accountNOK" selector="x"
+           icon="rect(14,8,budgetSummary.accountStatus.nok,budgetSummary.accountStatus.border)"/>
 
     <style id="selectedAccount" selector="x" font="-,bold,12" foreground="budgetSummary.accountSelected"/>
     <style id="unselectedAccount" selector="x" font="-,plain,12" foreground="budgetSummary.accountUnselected"/>
+
+    <style selector="button#accountSelector" ui="basicButtonUI" preferredSize="(14,14)"
+           icon="rect(10,10,budgetSummary.accountSelector.unselected.bg,budgetSummary.accountSelector.border)"
+           rolloverIcon="rect(10,10,budgetSummary.accountSelector.rollover.bg,budgetSummary.accountSelector.border)"/>
+    <style id="checkedSelector" selector="x" icon="rect(10,10,budgetSummary.accountSelector.selected.bg,budgetSummary.accountSelector.border)"/>
+    <style id="uncheckedSelector" selector="x" icon="rect(10,10,budgetSummary.accountSelector.unselected.bg,budgetSummary.accountSelector.border)"/>
+
+    <style selector="#accountPosition" font="-,plain,10" marginLeft="8" marginTop="5" foreground="#808080"/>
   </styles>
 
   <column border="empty(10,10,10,10)">
@@ -44,10 +67,10 @@
                  weightY="10" margin="5"/>
       <row margin="5" weightY="0.1">
         <repeat ref="accountSelectors" layout="verticalGrid" marginLeft="10">
-          <label ref="accountStatus" marginTop="3" />
-          <button ref="accountSelector" ui="hyperlinkButtonWithoutUnderline" font="-,plain,12"
-                  fill="none" anchor="left" marginTop="3" marginLeft="5"/>
-          <label ref="accountPosition" font="-,plain,10" marginLeft="5" marginTop="5" foreground="#808080"/>
+          <button ref="accountSelector" marginRight="5"/>
+          <button ref="accountButton"/>
+          <label ref="accountStatus" marginLeft="5" marginRight="5"/>
+          <label ref="accountPosition"/>
         </repeat>
         <filler fill="horizontal"/>
       </row>

@@ -415,12 +415,25 @@ public class BudgetSummaryViewTest extends LoggedInFunctionalTestCase {
       .addTransaction("2008/07/10", -100.00, "FNAC")
       .load();
 
+    views.selectBudget();
+    BudgetSummaryViewChecker budgetSummary = budgetView.getSummary();
+    budgetSummary.checkContent(
+      "| ok | Account n. 000111* | 1000.00 on 2008/07/10 |\n"
+    );
+    budgetSummary.checkSelectorHidden("Account n. 000111");
+
     OfxBuilder
       .init(this)
       .addBankAccount(-1, 10674, "000222", -2000.00, "2008/07/20")
       .addTransaction("2008/07/15", -200.00, "Auchan")
       .addTransaction("2008/07/20", -20.00, "McDo")
       .load();
+    budgetSummary.checkContent(
+      "| ok  | Account n. 000111* | 1000.00 on 2008/07/10  |\n" +
+      "| nok | Account n. 000222  | -2000.00 on 2008/07/15 |\n"
+    );
+    budgetSummary.checkSelectorShown("Account n. 000111");
+    budgetSummary.checkSelectorShown("Account n. 000222");
 
     OfxBuilder
       .init(this)
@@ -429,7 +442,6 @@ public class BudgetSummaryViewTest extends LoggedInFunctionalTestCase {
       .addTransaction("2008/07/25", -30.00, "Total")
       .load();
 
-    BudgetSummaryViewChecker budgetSummary = budgetView.getSummary();
     budgetSummary.checkContent(
       "| ok  | Account n. 000111* | 1000.00 on 2008/07/10  |\n" +
       "| nok | Account n. 000222  | -2000.00 on 2008/07/15 |\n" +
@@ -467,6 +479,18 @@ public class BudgetSummaryViewTest extends LoggedInFunctionalTestCase {
       "| ok  | Account n. 000111* | 1000.00 on 2008/07/10  |\n" +
       "| nok | Account n. 000222  | -2000.00 on 2008/07/15 |"
     );
+    budgetSummary.checkSelectorShown("Account n. 000111");
+    budgetSummary.checkSelectorShown("Account n. 000222");
+    budgetSummary.getChart()
+      .checkValue(200807, 1, 100.00)
+      .checkValue(200807, 5, 1100.00)
+      .checkValue(200807, 10, 1000.00);
+
+    mainAccounts.openDelete("000222").validate();
+    budgetSummary.checkContent(
+      "| ok | Account n. 000111* | 1000.00 on 2008/07/10 |\n"
+    );
+    budgetSummary.checkSelectorHidden("Account n. 000111");
     budgetSummary.getChart()
       .checkValue(200807, 1, 100.00)
       .checkValue(200807, 5, 1100.00)
@@ -500,19 +524,25 @@ public class BudgetSummaryViewTest extends LoggedInFunctionalTestCase {
     budgetSummary.checkContent(
       "| ok  | Account n. 000111  | 1000.00 on 2008/07/10  |\n" +
       "| nok | Account n. 000222* | -2000.00 on 2008/06/20 |" );
+    budgetSummary.checkSelectorShown("Account n. 000111");
+    budgetSummary.checkSelectorShown("Account n. 000222");
     budgetSummary.getChart()
       .checkValue(200807, 1, -2000.00);
 
     mainAccounts.edit("Account n. 000222")
       .setEndDate("2008/06/20")
       .validate();
+    views.selectBudget();
     budgetSummary.checkContent(
       "| ok | Account n. 000111* | 1000.00 on 2008/07/10 |");
+    budgetSummary.checkSelectorHidden("Account n. 000111");
 
     timeline.selectMonth(200806);
     budgetSummary.checkContent(
       "| nok | Account n. 000111* | 1000.00 on 2008/07/10 |\n" +
       "| nok | Account n. 000222  | 0.00 on 2008/06/20    |" );
+    budgetSummary.checkSelectorShown("Account n. 000111");
+    budgetSummary.checkSelectorShown("Account n. 000222");
     budgetSummary.getChart()
       .checkValue(200806, 1, -790.00)
       .checkValue(200806, 6, 210.00)
@@ -524,6 +554,7 @@ public class BudgetSummaryViewTest extends LoggedInFunctionalTestCase {
     timeline.selectMonth(200807);
     budgetSummary.checkContent(
       "| ok | Account n. 000111* | 1000.00 on 2008/07/10 |");
+    budgetSummary.checkSelectorHidden("Account n. 000111");
   }
 
   private void setVariableAmount(final String seriesName, final double amount) {
@@ -549,5 +580,4 @@ public class BudgetSummaryViewTest extends LoggedInFunctionalTestCase {
       .setAmount(Math.abs(amount))
       .validate();
   }
-
 }

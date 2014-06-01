@@ -3,6 +3,7 @@ package org.designup.picsou.functests.checkers;
 import org.designup.picsou.functests.checkers.components.HistoButtonChartChecker;
 import org.designup.picsou.functests.checkers.components.PopupButton;
 import org.designup.picsou.functests.checkers.components.PopupChecker;
+import org.designup.picsou.utils.Lang;
 import org.uispec4j.Button;
 import org.uispec4j.Panel;
 import org.uispec4j.Table;
@@ -12,6 +13,7 @@ import org.uispec4j.interception.PopupMenuInterceptor;
 
 import javax.swing.*;
 
+import static org.uispec4j.assertion.UISpecAssert.assertFalse;
 import static org.uispec4j.assertion.UISpecAssert.assertThat;
 
 public class ProjectChartChecker extends ViewChecker {
@@ -37,15 +39,39 @@ public class ProjectChartChecker extends ViewChecker {
   }
 
   public void checkShowDetailsButtonShown() {
-    Button button = mainWindow.getPanel("summaryView").getButton("showProjectDetails");
+    Button button = mainWindow.getPanel("summaryView").getButton("toggleProjectDetails");
     assertThat(button.isVisible());
     assertThat(button.isEnabled());
+    assertThat(button.textEquals(Lang.get("summaryView.showProjectDetails")));
   }
 
-  public void checkShowDetailsButtonHidden() {
+  public void checkHideDetailsButtonShown() {
     views.selectHome();
-    Button button = mainWindow.getPanel("summaryView").getButton("showProjectDetails");
-    UISpecAssert.assertFalse(button.isEnabled());
+    Button button = mainWindow.getPanel("summaryView").getButton("toggleProjectDetails");
+    assertThat(button.isVisible());
+    assertThat(button.isEnabled());
+    assertThat(button.textEquals(Lang.get("summaryView.hideProjectDetails")));
+  }
+
+  public void checkToggleDetailsButtonHidden() {
+    views.selectHome();
+    Button button = mainWindow.getPanel("summaryView").getButton("toggleProjectDetails");
+    assertFalse(button.isVisible());
+    assertFalse(button.isEnabled());
+  }
+
+  public ProjectChartChecker showProjectDetails() {
+    Button button = mainWindow.getPanel("summaryView").getButton("toggleProjectDetails");
+    assertThat(button.textEquals(Lang.get("summaryView.showProjectDetails")));
+    button.click();
+    return this;
+  }
+
+  public ProjectChartChecker hideProjectDetails() {
+    Button button = mainWindow.getPanel("summaryView").getButton("toggleProjectDetails");
+    assertThat(button.textEquals(Lang.get("summaryView.hideProjectDetails")));
+    button.click();
+    return this;
   }
 
   public ProjectChartChecker checkRange(int firstMonth, int lastMonth) {

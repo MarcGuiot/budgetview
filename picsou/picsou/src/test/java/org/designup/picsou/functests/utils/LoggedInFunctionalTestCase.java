@@ -11,7 +11,6 @@ import org.designup.picsou.gui.startup.LoginPanel;
 import org.designup.picsou.gui.startup.components.SingleApplicationInstanceListener;
 import org.designup.picsou.gui.time.TimeService;
 import org.designup.picsou.gui.time.TimeViewPanel;
-import org.designup.picsou.model.Month;
 import org.designup.picsou.model.SignpostStatus;
 import org.designup.picsou.model.initial.DefaultSeriesFactory;
 import org.globsframework.model.GlobRepository;
@@ -52,7 +51,6 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
   public ProjectEditionChecker currentProject;
   public SummaryViewChecker summary;
   public SignpostViewChecker signpostView;
-  public FeedbackViewChecker feedbackView;
   public ReconciliationAnnotationChecker reconciliationAnnotations;
   public NotificationsChecker notifications;
   public PrinterChecker printer;
@@ -151,11 +149,6 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
     TimeService.setCurrentDate(currentDate);
   }
 
-  protected void nextMonth() {
-    TimeService.setCurrentDate(Month.toDate(Month.getDay(this.currentDate), Month.next(Month.getMonthId(this.currentDate))));
-  }
-
-
   protected void initCheckers() {
     waitForApplicationToLoad();
     views = new ViewSelectionChecker(mainWindow);
@@ -183,7 +176,6 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
     currentProject = new ProjectEditionChecker(mainWindow);
     summary = new SummaryViewChecker(mainWindow);
     signpostView = new SignpostViewChecker(mainWindow);
-    feedbackView = new FeedbackViewChecker(mainWindow);
     notifications = new NotificationsChecker(mainWindow);
     reconciliationAnnotations = new ReconciliationAnnotationChecker(mainWindow);
     printer = application.getPrinter();
@@ -248,7 +240,6 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
     currentProject = null;
     summary = null;
     signpostView = null;
-    feedbackView = null;
     reconciliationAnnotations = null;
     notifications = null;
     printer = null;
@@ -287,11 +278,13 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
     notRegistered = true;
   }
 
+  @SuppressWarnings("UnusedDeclaration")
   public void openApplication() throws Exception {
     currentDate = TimeService.getToday();
     operations.backupAndLaunchApplication(LoginPanel.AUTOLOG_USER, LoginPanel.AUTOLOG_USER, currentDate);
   }
 
+  @SuppressWarnings("UnusedDeclaration")
   public void openApplication(String user, String password) throws Exception {
     currentDate = TimeService.getToday();
     operations.backupAndLaunchApplication(user, password, currentDate);

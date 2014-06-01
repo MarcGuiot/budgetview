@@ -462,6 +462,12 @@ public class OperationChecker {
     confirmationDialogChecker.validate();
   }
 
+  public void checkFeedbackLink() {
+    FeedbackDialogChecker.init(getHelpMenu().getSubMenu(Lang.get("feedback")).triggerClick())
+      .checkComponents()
+      .cancel();
+  }
+
   public HelpChecker openHelp() {
     return HelpChecker.open(getHelpMenu().getSubMenu("Index").triggerClick());
   }

@@ -1,6 +1,6 @@
 <splits xmlns="http://www.globsframework.org/xml/splits.xsd">
 
-  <column ref="projectView" styleClass="projectView">
+  <column ref="projectView">
     <cards ref="cards">
       <card name="empty">
         <panel ref="projectCreationView"/>

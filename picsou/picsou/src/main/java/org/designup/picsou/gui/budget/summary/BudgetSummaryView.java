@@ -2,6 +2,8 @@ package org.designup.picsou.gui.budget.summary;
 
 import com.budgetview.shared.gui.histochart.HistoChartConfig;
 import org.designup.picsou.gui.View;
+import org.designup.picsou.gui.accounts.AccountViewPanel;
+import org.designup.picsou.gui.accounts.actions.AccountPopupFactory;
 import org.designup.picsou.gui.accounts.chart.MainDailyPositionsChartView;
 import org.designup.picsou.gui.accounts.utils.AccountPositionStringifier;
 import org.designup.picsou.gui.description.stringifiers.AccountComparator;
@@ -27,6 +29,7 @@ import org.globsframework.utils.Utils;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
+import java.awt.event.ActionEvent;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -41,12 +44,12 @@ public class BudgetSummaryView
   private JLabel multiSelectionLabel = new JLabel();
   private MainDailyPositionsChartView chartView;
   private Map<Integer, SplitsNode> selectors = new HashMap<Integer, SplitsNode>();
+  private Map<Integer, SplitsNode> buttons = new HashMap<Integer, SplitsNode>();
+  private Map<Integer, AccountPopupFactory> popups = new HashMap<Integer, AccountPopupFactory>();
   private Integer currentAccountId;
 
   public BudgetSummaryView(GlobRepository repository, Directory directory) {
     super(repository, directory);
-    repository.addChangeListener(this);
-    selectionService.addListener(this, Month.TYPE);
   }
 
   public void registerComponents(GlobsPanelBuilder parentBuilder) {
@@ -70,13 +73,18 @@ public class BudgetSummaryView
 
     parentBuilder.add("budgetSummaryView", builder);
 
+    repository.addChangeListener(this);
+    selectionService.addListener(this, Month.TYPE);
+
     updateMonthMessage();
     updateAccountSelection();
+    updateAccountSelectors();
   }
 
   public void selectionUpdated(GlobSelection selection) {
     updateMonthMessage();
     updateAccountSelection();
+    updateAccountSelectors();
   }
 
   public void updateMonthMessage() {
@@ -101,22 +109,54 @@ public class BudgetSummaryView
     }
   }
 
+  private void updateAccountSelectors() {
+    SortedSet<Integer> monthIds = selectionService.getSelection(Month.TYPE).getSortedSet(Month.ID);
+    GlobList accounts = repository.getAll(Account.TYPE, activeUserCreatedMainAccounts(monthIds));
+    boolean showMultiAccounts = accounts.size() > 1;
+    for (SplitsNode node : selectors.values()) {
+      node.getComponent().setVisible(showMultiAccounts);
+    }
+    for (final Map.Entry<Integer, AccountPopupFactory> entry : popups.entrySet()) {
+      Action selectAccountAction = null;
+      if (showMultiAccounts) {
+        selectAccountAction = new AbstractAction(Lang.get("budgetSummaryView.showGraphForAccount")) {
+          public void actionPerformed(ActionEvent e) {
+            selectAccount(entry.getKey());
+          }
+        };
+      }
+      entry.getValue().setFirstAction(selectAccountAction);
+    }
+  }
+
   public void globsChanged(ChangeSet changeSet, GlobRepository repository) {
+    boolean changed = false;
     if (changeSet.containsChanges(Month.TYPE)) {
       updateMonthMessage();
+      changed = true;
     }
     if (changeSet.containsChanges(Account.TYPE)) {
       updateAccountSelection();
+      changed = true;
+    }
+    if (changed) {
+      updateAccountSelectors();
     }
   }
 
   public void globsReset(GlobRepository repository, Set<GlobType> changedTypes) {
+    boolean changed = false;
     if (changedTypes.contains(Month.TYPE)) {
       updateMonthMessage();
+      changed = true;
     }
     if (changedTypes.contains(Account.TYPE)) {
       currentAccountId = null;
       updateAccountSelection();
+      changed = true;
+    }
+    if (changed) {
+      updateAccountSelectors();
     }
   }
 
@@ -134,19 +174,15 @@ public class BudgetSummaryView
         chartView.setAccount(repository.get(Account.MAIN_SUMMARY_KEY));
       }
     }
+    for (Map.Entry<Integer, SplitsNode> entry : buttons.entrySet()) {
+      Integer accountId = entry.getKey();
+      SplitsNode node = entry.getValue();
+      updateButtonNode(newAccountId, accountId, node);
+    }
     for (Map.Entry<Integer, SplitsNode> entry : selectors.entrySet()) {
       Integer accountId = entry.getKey();
       SplitsNode node = entry.getValue();
-      updateNode(newAccountId, accountId, node);
-    }
-  }
-
-  private void updateNode(Integer currentSelectedId, Integer accountId, SplitsNode node) {
-    if (Utils.equal(accountId, currentSelectedId)) {
-      node.applyStyle("selectedAccount");
-    }
-    else {
-      node.applyStyle("unselectedAccount");
+      updateSelectorNode(newAccountId, accountId, node);
     }
   }
 
@@ -171,28 +207,65 @@ public class BudgetSummaryView
       });
       statusUpdater.update();
 
-      GlobButtonView buttonView = GlobButtonView.init(Account.TYPE, repository, directory, new GlobListFunctor() {
-        public void run(GlobList list, GlobRepository repository) {
+      Glob account = repository.get(accountKey);
+      final AccountPopupFactory popupFactory = new AccountPopupFactory(account, repository, directory);
+      popups.put(accountId, popupFactory);
+      GlobButtonView accountButton = AccountViewPanel.createEditAccountButton(account, popupFactory, repository, directory);
+      SplitsNode<JButton> accountButtonNode = cellBuilder.add("accountButton", accountButton.getComponent());
+      cellBuilder.addDisposable(accountButton);
+      buttons.put(accountId, accountButtonNode);
+      cellBuilder.addDisposable(new Disposable() {
+        public void dispose() {
+          buttons.remove(accountId);
+        }
+      });
+      updateButtonNode(currentAccountId, accountId, accountButtonNode);
+
+      JButton selector = new JButton(new AbstractAction() {
+        public void actionPerformed(ActionEvent e) {
           selectAccount(accountId);
         }
-      })
-        .forceSelection(accountKey);
-      JButton selector = buttonView.getComponent();
+      });
       SplitsNode<JButton> selectorNode = cellBuilder.add("accountSelector", selector);
-      cellBuilder.addDisposable(buttonView);
       selectors.put(accountId, selectorNode);
       cellBuilder.addDisposable(new Disposable() {
         public void dispose() {
           selectors.remove(accountId);
         }
       });
-      updateNode(currentAccountId, accountId, selectorNode);
+      updateSelectorNode(currentAccountId, accountId, selectorNode);
 
       GlobLabelView accountPositionLabel = GlobLabelView.init(Account.TYPE, repository, directory, new AccountPositionStringifier())
         .setUpdateMatcher(ChangeSetMatchers.changesForKey(UserPreferences.KEY))
         .forceSelection(accountKey);
       cellBuilder.add("accountPosition", accountPositionLabel.getComponent());
       cellBuilder.addDisposable(accountPositionLabel);
+
+      cellBuilder.addDisposable(new Disposable() {
+        public void dispose() {
+          buttons.remove(accountId);
+          selectors.remove(accountId);
+          popups.remove(accountId);
+        }
+      });
+    }
+  }
+
+  private void updateButtonNode(Integer currentSelectedId, Integer accountId, SplitsNode node) {
+    if (Utils.equal(accountId, currentSelectedId)) {
+      node.applyStyle("selectedAccount");
+    }
+    else {
+      node.applyStyle("unselectedAccount");
+    }
+  }
+
+  private void updateSelectorNode(Integer currentSelectedId, Integer accountId, SplitsNode node) {
+    if (Utils.equal(accountId, currentSelectedId)) {
+      node.applyStyle("checkedSelector");
+    }
+    else {
+      node.applyStyle("uncheckedSelector");
     }
   }
 }

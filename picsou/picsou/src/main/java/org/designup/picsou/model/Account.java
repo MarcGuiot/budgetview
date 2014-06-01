@@ -330,7 +330,7 @@ public class Account {
   }
 
   public static boolean needsTargetAccount(Glob series) {
-    return !BudgetArea.SAVINGS.equals(BudgetArea.get(series.get(Series.BUDGET_AREA)))
+    return series != null && !BudgetArea.SAVINGS.equals(BudgetArea.get(series.get(Series.BUDGET_AREA)))
                      && series.get(Series.TARGET_ACCOUNT) == null;
   }
 
