@@ -52,7 +52,7 @@ public class TimeViewTooltipHandler implements TimeViewMouseHandler {
     }
     else {
       panel.setToolTipText(
-        Lang.get("timeView.tool tip.month.standard",
+        Lang.get("timeView.tooltip.month.standard",
                  month,
                  AmountFormat.toStandardValueString(minPosition),
                  Colors.toString(colors.getAmountTextColor(minPosition, Color.BLACK)),
