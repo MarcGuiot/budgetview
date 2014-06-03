@@ -20,19 +20,18 @@ import java.awt.event.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class LicenseConfirmationPanel implements Disposable {
+public class LicenseConfirmationFeedbackPanel implements Disposable {
 
   private GlobRepository repository;
   private Directory directory;
 
   private GlobsPanelBuilder builder;
   private JPanel panel;
-  private PicsouDialog dialog;
   private String email;
   private Action closeAction;
   private List<Question> questions = new ArrayList<Question>();
 
-  public LicenseConfirmationPanel(GlobRepository repository, Directory directory) {
+  public LicenseConfirmationFeedbackPanel(GlobRepository repository, Directory directory) {
     this.repository = repository;
     this.directory = directory;
     for (int i = 0; i < 3; i++) {
@@ -41,11 +40,10 @@ public class LicenseConfirmationPanel implements Disposable {
   }
 
   public void install(PicsouDialog dialog, String email, Action closeAction) {
-    this.dialog = dialog;
     this.email = email;
     this.closeAction = closeAction;
 
-    builder = new GlobsPanelBuilder(getClass(), "/layout/general/licenseConfirmationPanel.splits",
+    builder = new GlobsPanelBuilder(getClass(), "/layout/general/licenseConfirmationFeedbackPanel.splits",
                                     repository, directory);
 
     builder.addRepeat("questions", questions, new RepeatComponentFactory<Question>() {
@@ -92,7 +90,6 @@ public class LicenseConfirmationPanel implements Disposable {
       }
     }
     builder.append("</html>");
-    System.out.println("org.designup.picsou.gui.license.LicenseConfirmationPanel.sendMessageIfNeeded: " + builder.toString());
     directory.get(ConfigService.class).sendMail(ConfigService.SUPPORT_EMAIL,
                                                 email,
                                                 Lang.get("license.activation.feedback.email.title", email),
@@ -161,6 +158,5 @@ public class LicenseConfirmationPanel implements Disposable {
     }
     builder.dispose();
     panel = null;
-    dialog = null;
   }
 }

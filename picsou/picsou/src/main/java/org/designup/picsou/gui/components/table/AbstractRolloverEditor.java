@@ -98,13 +98,6 @@ public abstract class AbstractRolloverEditor extends AbstractCellEditor implemen
     return getComponent((Glob)value, edit);
   }
 
-  protected JLabel createLabel(String text, Color selectionForeground, Color foreground) {
-    JLabel label = new JLabel(text);
-    label.setFont(tableView.getDefaultFont());
-    label.setForeground(isSelected ? selectionForeground : foreground);
-    return label;
-  }
-
   protected <T extends JPanel> T initCellPanel(JComponent component, boolean leftAlign, T panel) {
     panel.setLayout(new BoxLayout(panel, BoxLayout.X_AXIS));
     if (leftAlign) {
