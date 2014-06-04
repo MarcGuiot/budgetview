@@ -42,22 +42,29 @@
            fill="none" anchor="left"
            horizontalAlignment="left" horizontalTextPosition="right"
            iconTextGap="2"/>
+    <style id="selectedAccount" selector="x" font="-,bold,12" foreground="budgetSummary.account.button.selected"/>
+    <style id="unselectedAccount" selector="x" font="-,plain,12" foreground="budgetSummary.account.button.unselected"/>
 
-    <style id="accountOK" selector="x"
-           icon="rect(14,8,budgetSummary.accountStatus.ok,budgetSummary.accountStatus.border)"/>
-    <style id="accountNOK" selector="x"
-           icon="rect(14,8,budgetSummary.accountStatus.nok,budgetSummary.accountStatus.border)"/>
+    <style selector="#accountStatus" ui="basicButtonUI" border="" weightX="0" weightY="0" fill="none"/>
+    <style id="account:OK:selected" selector="x"
+           icon="rect(16,10,budgetSummary.account.status.ok,budgetSummary.account.status.border.selected)"
+           rolloverIcon="rect(16,10,budgetSummary.account.status.ok,budgetSummary.account.status.border.rollover)"
+      />
+    <style id="account:NOK:selected" selector="x"
+           icon="rect(16,10,budgetSummary.account.status.nok,budgetSummary.account.status.border.selected)"
+           rolloverIcon="rect(16,10,budgetSummary.account.status.nok,budgetSummary.account.status.border.rollover)"
+      />
+    <style id="account:OK:unselected" selector="x"
+           icon="rect(16,10,budgetSummary.account.status.ok,budgetSummary.account.status.border.unselected)"
+           rolloverIcon="rect(16,10,budgetSummary.account.status.ok,budgetSummary.account.status.border.rollover)"
+      />
+    <style id="account:NOK:unselected" selector="x"
+           icon="rect(16,10,budgetSummary.account.status.nok,budgetSummary.account.status.border.unselected)"
+           rolloverIcon="rect(16,10,budgetSummary.account.status.nok,budgetSummary.account.status.border.rollover)"
+      />
 
-    <style id="selectedAccount" selector="x" font="-,bold,12" foreground="budgetSummary.accountSelected"/>
-    <style id="unselectedAccount" selector="x" font="-,plain,12" foreground="budgetSummary.accountUnselected"/>
-
-    <style selector="button#accountSelector" ui="basicButtonUI" preferredSize="(14,14)"
-           icon="rect(10,10,budgetSummary.accountSelector.unselected.bg,budgetSummary.accountSelector.border)"
-           rolloverIcon="rect(10,10,budgetSummary.accountSelector.rollover.bg,budgetSummary.accountSelector.border)"/>
-    <style id="checkedSelector" selector="x" icon="rect(10,10,budgetSummary.accountSelector.selected.bg,budgetSummary.accountSelector.border)"/>
-    <style id="uncheckedSelector" selector="x" icon="rect(10,10,budgetSummary.accountSelector.unselected.bg,budgetSummary.accountSelector.border)"/>
-
-    <style selector="#accountPosition" font="-,plain,10" marginLeft="8" marginTop="5" foreground="#808080"/>
+    <style selector="#accountPosition" font="-,plain,10" marginLeft="8" marginTop="5" foreground="#808080"
+      />
   </styles>
 
   <column border="empty(10,10,10,10)">
@@ -66,13 +73,13 @@
       <component ref="chart" minimumSize="(100,90)" background="block.inner.secondary.bg"
                  weightY="10" margin="5"/>
       <row margin="5" weightY="0.1">
-        <repeat ref="accountSelectors" layout="verticalGrid" marginLeft="10">
-          <button ref="accountSelector" marginRight="5"/>
+        <filler fill="horizontal" weightX="10"/>
+        <repeat ref="accountSelectors" layout="verticalGrid" marginLeft="10" weightX="5">
           <button ref="accountButton"/>
-          <label ref="accountStatus" marginLeft="5" marginRight="5"/>
+          <button ref="accountStatus" marginLeft="5" marginRight="5"/>
           <label ref="accountPosition"/>
         </repeat>
-        <filler fill="horizontal"/>
+        <filler fill="horizontal" weightX="100"/>
       </row>
     </column>
 

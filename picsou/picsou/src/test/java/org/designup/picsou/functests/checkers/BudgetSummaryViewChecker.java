@@ -3,13 +3,11 @@ package org.designup.picsou.functests.checkers;
 import junit.framework.Assert;
 import org.designup.picsou.functests.checkers.components.HistoDailyChecker;
 import org.designup.picsou.functests.checkers.components.PopupButton;
-import org.designup.picsou.functests.checkers.components.PopupChecker;
 import org.designup.picsou.gui.components.charts.histo.HistoSelectionManager;
 import org.designup.picsou.model.Day;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.splits.color.Colors;
 import org.globsframework.gui.splits.components.RectIcon;
-import org.globsframework.gui.splits.components.RoundedRectIcon;
 import org.globsframework.gui.splits.utils.HtmlUtils;
 import org.globsframework.model.Key;
 import org.globsframework.utils.TablePrinter;
@@ -55,14 +53,14 @@ public class BudgetSummaryViewChecker extends ViewChecker {
 
   public String getActualContent() {
     TablePrinter printer = new TablePrinter();
-    Component[] statuses = getPanel().getSwingComponents(JLabel.class, "accountStatus");
-    Component[] selectors = getPanel().getSwingComponents(JButton.class, "accountButton");
+    Component[] buttons = getPanel().getSwingComponents(JButton.class, "accountButton");
+    Component[] statuses = getPanel().getSwingComponents(JButton.class, "accountStatus");
     Component[] positions = getPanel().getSwingComponents(JLabel.class, "accountPosition");
     for (int i = 0; i < statuses.length; i++) {
-      JLabel status = ((JLabel)statuses[i]);
+      JButton status = ((JButton)statuses[i]);
       RectIcon icon = ((RectIcon)status.getIcon());
       boolean isOk = ColorUtils.equals(icon.getBackgroundColor(), OK_COLOR, true);
-      JButton selectorButton = (JButton)selectors[i];
+      JButton selectorButton = (JButton)buttons[i];
       String accountName = selectorButton.getText();
       if (selectorButton.getFont().isBold()) {
         accountName += "*";
@@ -78,29 +76,13 @@ public class BudgetSummaryViewChecker extends ViewChecker {
     PopupButton.init(getPanel(), accountName).click(Lang.get("budgetSummaryView.showGraphForAccount"));
   }
 
-  public void checkSelectorHidden(final String accountName) {
+  public void checkSelectionActionHidden(final String accountName) {
     views.selectBudget();
-    final JButton selector = (JButton)getSibling(getPanel().getButton(accountName), -1, "accountSelector");
-    UISpecAssert.assertThat(new Assertion() {
-      public void check() {
-        if (selector.isVisible()) {
-          Assert.fail("Selector for " + accountName + " unexpectedly shown");
-        }
-      }
-    });
     PopupButton.init(getPanel(), accountName).checkItemNotPresent(Lang.get("budgetSummaryView.showGraphForAccount"));
   }
 
-  public void checkSelectorShown(final String accountName) {
+  public void checkSelectionActionShown(final String accountName) {
     views.selectBudget();
-    final JButton selector = (JButton)getSibling(getPanel().getButton(accountName), -1, "accountSelector");
-    UISpecAssert.assertThat(new Assertion() {
-      public void check() {
-        if (!selector.isVisible()) {
-          Assert.fail("Selector for " + accountName + " not shown");
-        }
-      }
-    });
     PopupButton.init(getPanel(), accountName).checkContains(Lang.get("budgetSummaryView.showGraphForAccount"));
   }
 
