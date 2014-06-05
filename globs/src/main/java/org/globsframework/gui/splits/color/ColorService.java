@@ -120,7 +120,7 @@ public class ColorService implements ColorLocator {
       throw new InvalidParameter("null key is not allowed");
     }
     String result = key.toString();
-    if (result.isEmpty()) {
+    if (Strings.isNullOrEmpty(result)) {
       throw new InvalidParameter("empty key is not allowed");
     }
     return result;
