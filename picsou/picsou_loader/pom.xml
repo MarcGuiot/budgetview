@@ -51,7 +51,7 @@
                 <jar update="true" jarfile="target/budgetviewloader-1.0.jar" manifest="target/classes/MANIFEST.MF"/>
 
                 <mkdir dir="${basedir}/BudgetView-fr/"/>
-                <mkdir dir="${basedir}/BudgetView-mem-fr/"/>
+                <mkdir dir="${basedir}/BudgetView-InMemory-fr/"/>
                 <mkdir dir="${basedir}/BudgetView-en/"/>
 
                 <taskdef name="jarbundler"
