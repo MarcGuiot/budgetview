@@ -27,6 +27,22 @@ then
   exit 2
 fi
 
+if [ -a budgetviewInMemory-${SOFT_VERSION}.tar.gz ];
+then
+   scp budgetviewInMemory-${SOFT_VERSION}.tar.gz fr_mybudgetview@91.121.123.100:files/app
+fi
+
+if [ -a dev/install/BudgetViewInMemory${SOFT_VERSION}_b{JAR_VERSION}.exe ];
+then
+   scp dev/install/BudgetViewInMemory${SOFT_VERSION}_b{JAR_VERSION}.exe  fr_mybudgetview@91.121.123.100:files/app
+fi
+
+if [ -a BudgetViewInMemory-${SOFT_VERSION}-fr.dmg ];
+then
+   scp BudgetView-InMemory-${SOFT_VERSION}-fr.dmg fr_mybudgetview@91.121.123.100:files/app
+fi
+
+
 if [ -a ../../picsou_android/bin/picsou_android-debug.apk ];
 then
    scp ../../picsou_android/bin/picsou_android-debug.apk fr_mybudgetview@91.121.123.100:files/app

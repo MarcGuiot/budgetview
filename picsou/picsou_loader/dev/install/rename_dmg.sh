@@ -5,3 +5,4 @@ SOFT_VERSION=`java -jar ../picsou/obfuscated/budgetview.jar -v -soft | grep "Sof
 
 mv BudgetView-en.dmg BudgetView-${SOFT_VERSION}-en.dmg
 mv BudgetView-fr.dmg BudgetView-${SOFT_VERSION}-fr.dmg
+mv BudgetView-InMemory-fr.dmg BudgetView-InMemory-${SOFT_VERSION}-fr.dmg

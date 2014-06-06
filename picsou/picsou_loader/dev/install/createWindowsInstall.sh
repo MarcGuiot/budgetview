@@ -16,6 +16,8 @@ rm -f ../picsou/obfuscated/budgetview${JAR_VERSION}.jar
 cp ../picsou/obfuscated/budgetview.jar ../picsou/obfuscated/budgetview${JAR_VERSION}.jar
 bzip2 -c ../picsou/ChangeLogOutput.txt > ../picsou/ChangeLogOutput-${JAR_VERSION}.txt.bz2
 
+mv dev/install/budgetview_InMemory.exe dev/install/BudgetViewInMemory${SOFT_VERSION}_b{JAR_VERSION}.exe
+
 mv dev/install/budgetview.fr.exe dev/install/budgetview.exe
 cat dev/install/picsou.template.fr.mpi | sed -e "s/JAR_FOURMICS/budgetview${JAR_VERSION}/" |
     sed -e "s/SOFT_VERSION/${SOFT_VERSION}/" > dev/install/picsou.fr.mpi
