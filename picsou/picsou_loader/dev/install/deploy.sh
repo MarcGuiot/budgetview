@@ -32,9 +32,9 @@ then
    scp budgetviewInMemory-${SOFT_VERSION}.tar.gz fr_mybudgetview@91.121.123.100:files/app
 fi
 
-if [ -a dev/install/BudgetViewInMemory${SOFT_VERSION}_b{JAR_VERSION}.exe ];
+if [ -a dev/install/BudgetViewInMemory${SOFT_VERSION}_b${JAR_VERSION}.exe ];
 then
-   scp dev/install/BudgetViewInMemory${SOFT_VERSION}_b{JAR_VERSION}.exe  fr_mybudgetview@91.121.123.100:files/app
+   scp dev/install/BudgetViewInMemory${SOFT_VERSION}_b${JAR_VERSION}.exe  fr_mybudgetview@91.121.123.100:files/app
 fi
 
 if [ -a BudgetViewInMemory-${SOFT_VERSION}-fr.dmg ];
