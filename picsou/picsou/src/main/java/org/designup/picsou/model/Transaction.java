@@ -157,7 +157,7 @@ public class Transaction {
       GlobList globs = repository.findByIndex(POSITION_MONTH_INDEX, month.get(Month.ID))
         .filterSelf(filter, repository);
       if (total + globs.size() > transactions.length){
-        transactions = Arrays.copyOf(transactions, total + globs.size() * pendingMonthCount);
+        transactions = Utils.copyOf(transactions, total + globs.size() * pendingMonthCount);
       }
       for (Glob glob : globs) {
         transactions[total++] = glob;
@@ -165,7 +165,7 @@ public class Transaction {
       pendingMonthCount--;
     }
     if (total != transactions.length) {
-      transactions = Arrays.copyOf(transactions, total);
+      transactions = Utils.copyOf(transactions, total);
     }
     Arrays.sort(transactions, 0, total, comparator);
     return transactions;

@@ -51,7 +51,7 @@
                 <jar update="true" jarfile="target/budgetviewloader-1.0.jar" manifest="target/classes/MANIFEST.MF"/>
 
                 <mkdir dir="${basedir}/BudgetView-fr/"/>
-                <mkdir dir="${basedir}/BudgetView-mem-fr/"/>
+                <mkdir dir="${basedir}/BudgetView-InMemory-fr/"/>
                 <mkdir dir="${basedir}/BudgetView-en/"/>
 
                 <taskdef name="jarbundler"
@@ -80,7 +80,7 @@
                 </jarbundler>
 
 
-                <jarbundler dir="${basedir}/BudgetView-mem-fr/"
+                <jarbundler dir="${basedir}/BudgetView-InMemory-fr/"
                             name="BudgetView"
                             mainclass="picsou.MainInMemory"
                             jar="${basedir}/../picsou/obfuscated/budgetview.jar"
@@ -128,6 +128,9 @@
               <tasks unless="${GenerateMacInstall}">
                 <exec executable="hdiutil">
                   <arg line="create -srcfolder ${basedir}/BudgetView-fr/ BudgetView-fr.dmg"/>
+                </exec>
+                <exec executable="hdiutil">
+                  <arg line="create -srcfolder ${basedir}/BudgetView-InMemory-fr/ BudgetView-InMemory-fr.dmg"/>
                 </exec>
               </tasks>
             </configuration>

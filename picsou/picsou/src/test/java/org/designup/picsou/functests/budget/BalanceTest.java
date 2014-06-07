@@ -59,14 +59,14 @@ public class BalanceTest extends LoggedInFunctionalTestCase {
     transactions
       .showPlannedTransactions()
       .initAmountContent()
-      .add("19/08/2009", "Planned: Tel", -29.90, "Tel", -139.60, -159.60, "Account n. 00001123")
-      .add("11/08/2009", "Planned: Courses", -10.00, "Courses", -109.70, -129.70, "Account n. 00001123")
-      .add("19/07/2009", "Planned: Tel", -29.90, "Tel", -99.70,	-119.70, "Account n. 00001123")
-      .add("05/07/2009", "PROV", -10.00, "Courses", -20.00, -89.80, "Manual")
-      .add("19/06/2009", "Planned: Tel", -29.90, "Tel", -69.80, -79.80, "Account n. 00001123")
-      .add("11/06/2009", "Planned: Courses", -10.00, "Courses", -39.90, -49.90, "Account n. 00001123")
+      .add("19/08/2009", "Planned: Tel", -29.90, "Tel", -119.60, -159.60, OfxBuilder.DEFAULT_ACCOUNT_NAME)
+      .add("11/08/2009", "Planned: Courses", -10.00, "Courses", -40., -129.70, "Manual")
+      .add("19/07/2009", "Planned: Tel", -29.90, "Tel", -89.70,	-119.70, OfxBuilder.DEFAULT_ACCOUNT_NAME)
+      .add("05/07/2009", "PROV", -10.00, "Courses", -30.00, -89.80, "Manual")
+      .add("19/06/2009", "Planned: Tel", -29.90, "Tel", -59.80, -79.80, OfxBuilder.DEFAULT_ACCOUNT_NAME)
+      .add("11/06/2009", "Planned: Courses", -10.00, "Courses", -20., -49.90, "Manual")
       .add("22/05/2009", "PROV", -10.00, "Courses", -10.00, -39.90, "Manual")
-      .add("19/05/2009", "Planned: Tel", -29.90, "Tel", -29.90, -29.90, "Account n. 00001123")
+      .add("19/05/2009", "Planned: Tel", -29.90, "Tel", -29.90, -29.90, OfxBuilder.DEFAULT_ACCOUNT_NAME)
       .add("20/04/2009", "FREE TELECOM", -29.90, "Tel", 0.00, 0.00, OfxBuilder.DEFAULT_ACCOUNT_NAME)
       .check();
 

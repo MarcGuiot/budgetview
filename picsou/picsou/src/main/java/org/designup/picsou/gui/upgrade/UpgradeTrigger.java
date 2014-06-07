@@ -737,5 +737,4 @@ public class UpgradeTrigger implements ChangeSetListener {
       }
     }
   }
-
 }
