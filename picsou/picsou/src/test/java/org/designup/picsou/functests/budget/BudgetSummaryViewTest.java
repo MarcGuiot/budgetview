@@ -122,21 +122,33 @@ public class BudgetSummaryViewTest extends LoggedInFunctionalTestCase {
       .checkNotShown();
   }
 
-  public void testRolloverHighlightsCorrespondingSeries() throws Exception {
+  public void testChartRolloverHighlightsCorrespondingSeries() throws Exception {
 
     operations.openPreferences().setFutureMonthsCount(2).validate();
 
     OfxBuilder
       .init(this)
-      .addBankAccount(-1, 10674, "0001212", 1500.00, "2008/07/10")
+      .addBankAccount(-1, 10674, "000111", 1500.00, "2008/06/10")
       .addTransaction("2008/06/05", 1000.00, "WorldCo")
       .addTransaction("2008/06/10", -200.00, "Auchan")
       .addTransaction("2008/06/10", -500.00, "FNAC")
       .load();
 
+    OfxBuilder
+      .init(this)
+      .addBankAccount(-1, 10674, "00222", 1000.00, "2008/06/10")
+      .addTransaction("2008/06/10", -200.00, "Esso")
+      .load();
+
     categorization.setNewIncome("WorldCo", "Salary");
     categorization.setNewVariable("Auchan", "Groceries", -200.00);
+    categorization.setNewVariable("Esso", "Fuel", -60.00);
     categorization.setNewExtra("FNAC", "TV");
+
+    budgetView.getSummary().checkContent(
+      "| ok | Account n. 000111* | 1500.00 on 2008/06/10 |\n" +
+      "| ok | Account n. 00222   | 1000.00 on 2008/06/10 |"
+    );
 
     timeline.selectMonth("2008/06");
 
@@ -146,21 +158,33 @@ public class BudgetSummaryViewTest extends LoggedInFunctionalTestCase {
     budgetView.income.checkNotHighlighted("Salary");
     budgetView.variable.checkNotHighlighted("Groceries");
     budgetView.extras.checkNotHighlighted("TV");
+    budgetView.variable.checkNotHighlighted("Fuel");
 
     budgetView.getSummary().rollover(200806, 5);
     budgetView.income.checkHighlighted("Salary");
     budgetView.variable.checkNotHighlighted("Groceries");
     budgetView.extras.checkNotHighlighted("TV");
+    budgetView.variable.checkNotHighlighted("Fuel");
 
     budgetView.getSummary().rollover(200806, 10);
     budgetView.income.checkNotHighlighted("Salary");
     budgetView.variable.checkHighlighted("Groceries");
     budgetView.extras.checkHighlighted("TV");
+    budgetView.variable.checkNotHighlighted("Fuel");
 
     budgetView.getSummary().rollover(200806, 15);
     budgetView.income.checkNotHighlighted("Salary");
     budgetView.variable.checkNotHighlighted("Groceries");
     budgetView.extras.checkNotHighlighted("TV");
+
+    budgetView.getSummary().selectAccount("Account n. 00222");
+    budgetView.getSummary().rollover(200806, 10);
+    budgetView.income.checkNotHighlighted("Salary");
+    budgetView.variable.checkNotHighlighted("Groceries");
+    budgetView.extras.checkNotHighlighted("TV");
+    budgetView.variable.checkHighlighted("Fuel");
+
+    budgetView.getSummary().getChart().click(200806, 10);
   }
 
   public void testTooltipsOverun() throws Exception {

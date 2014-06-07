@@ -393,18 +393,20 @@ public class SeriesGroupTest extends LoggedInFunctionalTestCase {
     budgetView.variable.addToNewGroup("Food", "Groceries");
     budgetView.variable.addToGroup("Home", "Groceries");
 
-    budgetView.getSummary().rollover(201401, 11);
+    budgetView.getSummary().rollover(201401, 10);
     budgetView.variable.checkNotHighlighted("Groceries");
     budgetView.variable.checkHighlighted("Food");
 
     budgetView.variable.collapseGroup("Groceries");
 
-    budgetView.getSummary().rollover(201401, 11);
+    budgetView.getSummary().rollover(201401, 9);
+    budgetView.getSummary().rollover(201401, 10);
     budgetView.variable.checkHighlighted("Groceries");
 
     budgetView.variable.expandGroup("Groceries");
 
-    budgetView.getSummary().rollover(201401, 11);
+    budgetView.getSummary().rollover(201401, 9);
+    budgetView.getSummary().rollover(201401, 10);
     budgetView.variable.checkNotHighlighted("Groceries");
     budgetView.variable.checkHighlighted("Food");
   }

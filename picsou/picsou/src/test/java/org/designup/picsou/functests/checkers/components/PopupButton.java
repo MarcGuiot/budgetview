@@ -22,6 +22,10 @@ public class PopupButton extends PopupChecker {
     this.button = button;
   }
 
+  public Button getButton() {
+    return button;
+  }
+
   protected MenuItem openMenu() {
     assertThat(button.isVisible());
     assertThat(button.isEnabled());

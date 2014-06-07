@@ -1,8 +1,8 @@
 package org.designup.picsou.gui.accounts.chart;
 
+import com.budgetview.shared.gui.histochart.HistoChartConfig;
 import org.designup.picsou.gui.card.NavigationService;
 import org.designup.picsou.gui.components.charts.histo.HistoChart;
-import com.budgetview.shared.gui.histochart.HistoChartConfig;
 import org.designup.picsou.gui.components.charts.histo.HistoRollover;
 import org.designup.picsou.gui.components.charts.histo.utils.HistoChartListenerAdapter;
 import org.designup.picsou.gui.components.highlighting.HighlightingService;
@@ -22,6 +22,8 @@ import org.globsframework.utils.directory.Directory;
 
 import java.util.HashSet;
 import java.util.Set;
+
+import static org.globsframework.model.utils.GlobMatchers.*;
 
 public class MainDailyPositionsChartView extends PositionsChartView {
 
@@ -83,7 +85,7 @@ public class MainDailyPositionsChartView extends PositionsChartView {
         return;
       }
 
-      GlobList transactions = getTransactions(objectKeys.iterator().next(), repository);
+      GlobList transactions = getTransactions(objectKeys.iterator().next());
       GlobSelectionBuilder selection = new GlobSelectionBuilder();
       selection.add(new GlobList(), Series.TYPE);
       selection.add(new GlobList(), SeriesGroup.TYPE);
@@ -104,13 +106,13 @@ public class MainDailyPositionsChartView extends PositionsChartView {
     }
   }
 
-  public static void selectTransactions(Set<Key> objectKeys, HistoChart chart, GlobRepository repository, Directory directory, SelectionService selectionService) {
+  public void selectTransactions(Set<Key> objectKeys, HistoChart chart, GlobRepository repository, Directory directory, SelectionService selectionService) {
     if (objectKeys.size() != 1) {
       return;
     }
 
     Key objectKey = objectKeys.iterator().next();
-    GlobList transactions = getTransactions(objectKey, repository);
+    GlobList transactions = getTransactions(objectKey);
     if (transactions.isEmpty()) {
       DetailsTip tip =
         new DetailsTip(chart, Lang.get("seriesAnalysis.chart.histo.daily.budgetSummary.noData.tooltip",
@@ -121,5 +123,15 @@ public class MainDailyPositionsChartView extends PositionsChartView {
 
     Integer monthId = objectKey.get(Day.MONTH);
     showTransactions(transactions, monthId, selectionService, repository, directory);
+  }
+
+  protected GlobList getTransactions(Integer monthId, Integer day) {
+    if (accountIdSet.isEmpty()) {
+      return super.getTransactions(monthId, day);
+    }
+    return repository.getAll(Transaction.TYPE,
+                             and(fieldEquals(Transaction.POSITION_MONTH, monthId),
+                                 fieldEquals(Transaction.POSITION_DAY, day),
+                                 fieldIn(Transaction.ACCOUNT, accountIdSet)));
   }
 }

@@ -43,7 +43,7 @@ public class SelectedAccountPositionsChartView extends PositionsChartView {
     }
 
     Key objectKey = objectKeys.iterator().next();
-    GlobList transactions = getTransactions(objectKey, repository);
+    GlobList transactions = getTransactions(objectKey);
     if (transactions.isEmpty()) {
       DetailsTip tip =
         new DetailsTip(histoChartBuilder.getChart(), Lang.get("seriesAnalysis.chart.histo.daily.budgetSummary.noData.tooltip",

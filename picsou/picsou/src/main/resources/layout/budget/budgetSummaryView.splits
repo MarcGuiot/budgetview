@@ -45,7 +45,7 @@
     <style id="selectedAccount" selector="x" font="-,bold,12" foreground="budgetSummary.account.button.selected"/>
     <style id="unselectedAccount" selector="x" font="-,plain,12" foreground="budgetSummary.account.button.unselected"/>
 
-    <style selector="#accountStatus" ui="basicButtonUI" border="" weightX="0" weightY="0" fill="none"/>
+    <style selector="#accountStatus" ui="basicButtonUI" cursor="hand" border="" weightX="0" weightY="0" fill="none"/>
     <style id="account:OK:selected" selector="x"
            icon="rect(16,10,budgetSummary.account.status.ok,budgetSummary.account.status.border.selected)"
            rolloverIcon="rect(16,10,budgetSummary.account.status.ok,budgetSummary.account.status.border.rollover)"

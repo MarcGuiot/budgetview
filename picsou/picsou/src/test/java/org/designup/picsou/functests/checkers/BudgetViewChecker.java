@@ -458,11 +458,11 @@ public class BudgetViewChecker extends ViewChecker {
     }
 
     public void checkHighlighted(String seriesName) {
-      assertTrue(getSeriesPanel(seriesName).getObservedAmount().backgroundNear("FFFFFF"));
+      assertTrue(getSeriesPanel(seriesName).getSeriesButton().getButton().backgroundNear("FFFF00"));
     }
 
     public void checkNotHighlighted(String seriesName) {
-      assertTrue(getSeriesPanel(seriesName).getObservedAmount().backgroundNear("FFFFFF"));
+      assertTrue(getSeriesPanel(seriesName).getSeriesButton().getButton().backgroundNear("FFFFFF"));
     }
 
     public void carryExpensesOverdrawOver(String seriesName) {

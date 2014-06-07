@@ -126,14 +126,13 @@ public abstract class PositionsChartView extends View implements HistoChartRange
     directory.get(NavigationService.class).gotoDataWithPlannedTransactions();
   }
 
-  public static GlobList getTransactions(Key objectKey, GlobRepository repository) {
+  public GlobList getTransactions(Key objectKey) {
     Integer monthId = objectKey.get(Day.MONTH);
     Integer day = objectKey.get(Day.DAY);
-    return getTransactions(monthId, day, repository);
+    return getTransactions(monthId, day);
   }
 
-
-  protected static GlobList getTransactions(Integer monthId, Integer day, GlobRepository repository) {
+  protected GlobList getTransactions(Integer monthId, Integer day) {
     return repository.getAll(Transaction.TYPE,
                              and(fieldEquals(Transaction.POSITION_MONTH, monthId),
                                  fieldEquals(Transaction.POSITION_DAY, day)));

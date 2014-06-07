@@ -21,6 +21,9 @@ import org.globsframework.utils.directory.Directory;
 
 import java.util.Set;
 
+import static org.globsframework.model.utils.GlobMatchers.and;
+import static org.globsframework.model.utils.GlobMatchers.fieldEquals;
+
 public class AccountPositionsChartView extends PositionsChartView {
   private final Integer accountId;
   private HistoDailyColors dailyColors;
@@ -40,8 +43,7 @@ public class AccountPositionsChartView extends PositionsChartView {
 
   private AccountPositionsChartView(Integer accountId, String componentName, HistoChartRange range,
                                     final GlobRepository repository, final Directory directory, HistoChartConfig config) {
-    super(range, config,
-          componentName, repository, directory);
+    super(range, config, componentName, repository, directory);
     this.accountId = accountId;
 
     HistoLineColors accountColors = disposables.add(new HistoLineColors(
@@ -77,7 +79,7 @@ public class AccountPositionsChartView extends PositionsChartView {
     }
 
     Key objectKey = objectKeys.iterator().next();
-    GlobList transactions = getTransactions(objectKey, repository);
+    GlobList transactions = getTransactions(objectKey);
     if (transactions.isEmpty()) {
       selectionService.clear(Transaction.TYPE);
     }
@@ -85,6 +87,13 @@ public class AccountPositionsChartView extends PositionsChartView {
       Integer monthId = objectKey.get(Day.MONTH);
       showTransactions(transactions, monthId, directory.get(SelectionService.class), repository, directory);
     }
+  }
+
+  protected GlobList getTransactions(Integer monthId, Integer day) {
+    return repository.getAll(Transaction.TYPE,
+                             and(fieldEquals(Transaction.ACCOUNT, accountId),
+                                 fieldEquals(Transaction.POSITION_MONTH, monthId),
+                                 fieldEquals(Transaction.POSITION_DAY, day)));
   }
 
   protected void updateChart(HistoChartBuilder histoChartBuilder, Integer currentMonthId, boolean resetPosition) {
