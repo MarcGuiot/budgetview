@@ -1,6 +1,5 @@
 package org.designup.picsou.functests.general;
 
-import org.designup.picsou.functests.checkers.components.HistoDailyChecker;
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
 
@@ -52,39 +51,63 @@ public class SummaryViewTest extends LoggedInFunctionalTestCase {
       .addBankAccount(-1, 10674, "000123", 2800.00, "2011/01/10")
       .addTransaction("2011/01/10@", 3000.00, "WorldCo")
       .load();
-    mainAccounts.edit("Account n. 000123").setAsSavings().validate();
-
     OfxBuilder.init(this)
       .addBankAccount(-1, 10674, "000234", 1000.00, "2011/01/28")
       .addTransaction("2011/01/28", 3000.00, "WorldCo")
       .load();
+
     OfxBuilder.init(this)
       .addBankAccount(-1, 10674, "000345", -1400.00, "2011/01/16")
-      .addTransaction("2011/01/16", 3000.00, "WorldCo")
+      .addTransaction("2011/01/10", 3000.00, "WorldCo")
       .load();
+    mainAccounts.edit("Account n. 000345").setAsSavings().validate();
+    OfxBuilder.init(this)
+      .addBankAccount(-1, 10674, "000456", -1500.00, "2011/01/17")
+      .addTransaction("2011/01/10", 3000.00, "WorldCo")
+      .load();
+    mainAccounts.edit("Account n. 000456").setAsSavings().validate();
 
     views.selectHome();
     summary.checkAccountPosition("Account n. 000123", "2800.00 on 2011/01/10");
     summary.checkAccountPosition("Account n. 000234", "1000.00 on 2011/01/01");
-    summary.checkAccountPosition("Account n. 000345", "-1400.00 on 2011/01/01");
+    summary.checkAccountPosition("Account n. 000345", "-1400.00 on 2011/01/10");
+    summary.checkAccountPosition("Account n. 000456", "-1500.00 on 2011/01/10");
 
-    summary.checkAccounts("Account n. 000123", "Account n. 000234", "Account n. 000345");
+    summary.checkAccounts("Account n. 000123", "Account n. 000234", "Account n. 000345", "Account n. 000456");
 
     summary.moveAccountUp("Account n. 000234");
-    summary.checkAccounts("Account n. 000234", "Account n. 000123", "Account n. 000345");
+    summary.checkAccounts("Account n. 000234", "Account n. 000123", "Account n. 000345", "Account n. 000456");
 
     summary.moveAccountDown("Account n. 000123");
-    summary.checkAccounts("Account n. 000234", "Account n. 000345", "Account n. 000123");
+    summary.checkAccounts("Account n. 000234", "Account n. 000123", "Account n. 000345", "Account n. 000456");
+
+    summary.moveAccountDown("Account n. 000234");
+    summary.checkAccounts("Account n. 000123", "Account n. 000234", "Account n. 000345", "Account n. 000456");
+
+    summary.moveAccountUp("Account n. 000345");
+    summary.checkAccounts("Account n. 000123", "Account n. 000234", "Account n. 000345", "Account n. 000456");
+
+    summary.moveAccountUp("Account n. 000456");
+    summary.checkAccounts("Account n. 000123", "Account n. 000234", "Account n. 000456", "Account n. 000345");
+
+    summary.moveAccountUp("Account n. 000345");
+    summary.checkAccounts("Account n. 000123", "Account n. 000234", "Account n. 000345", "Account n. 000456");
 
     summary.checkGraphShown("Account n. 000123");
     summary.checkGraphShown("Account n. 000234");
+    summary.checkGraphShown("Account n. 000345");
+    summary.checkGraphShown("Account n. 000456");
 
     summary.hideGraph("Account n. 000123");
     summary.checkGraphHidden("Account n. 000123");
     summary.checkGraphShown("Account n. 000234");
+    summary.checkGraphShown("Account n. 000345");
+    summary.checkGraphShown("Account n. 000456");
 
     summary.hideGraph("Account n. 000123");
     summary.checkGraphShown("Account n. 000123");
     summary.checkGraphShown("Account n. 000234");
+    summary.checkGraphShown("Account n. 000345");
+    summary.checkGraphShown("Account n. 000456");
   }
 }

@@ -254,6 +254,14 @@ public class Matchers {
     };
   }
 
+  public static GlobMatcher userCreatedAccounts(final AccountType type) {
+    return new GlobMatcher() {
+      public boolean matches(Glob account, GlobRepository repository) {
+        return Account.isUserCreatedAccount(account) && type.getId().equals(account.get(Account.ACCOUNT_TYPE));
+      }
+    };
+  }
+
   public static GlobMatcher userCreatedMainAccounts() {
     return new GlobMatcher() {
       public boolean matches(Glob account, GlobRepository repository) {

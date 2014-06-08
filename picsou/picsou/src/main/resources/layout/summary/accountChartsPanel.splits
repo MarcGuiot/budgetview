@@ -1,0 +1,36 @@
+<splits xmlns="http://www.globsframework.org/xml/splits.xsd">
+
+  <styleImport file="/layout/picsouStyles.splits"/>
+  <styles>
+
+    <style selector="button#accountChartButton"
+           ui="hyperlinkButtonWithoutUnderline"
+           font="-,bold,12" cursor="hand"
+           icon="downArrow(10,18,8,8,block.inner.arrow.idle)"
+           rolloverIcon="downArrow(10,18,8,8,block.inner.arrow.rollover)"
+           pressedIcon="downArrow(10,18,8,8,block.inner.arrow.pressed)"
+           fill="none" anchor="left" marginLeft="5"
+           horizontalAlignment="left" horizontalTextPosition="right"
+           iconTextGap="2"/>
+
+    <style selector="#accountHistoChart" border="empty(5,15,0,0)" opaque="true" background="block.inner.bg"/>
+
+    <style id="accountChartShown" selector="x" visible="true" preferredSize="(200,100)"/>
+    <style id="accountChartHidden" selector="x" visible="false" preferredSize="(200,2)"/>
+
+  </styles>
+
+  <column>
+  <label ref="sectionTitle" styleClass="secondarySectionTitle"/>
+  <repeat ref="accountCharts" marginRight="20">
+    <verticalBoxes name="accountPanel">
+      <row marginTop="10" marginLeft="40">
+        <button ref="accountChartButton" styleClass="secondarySectionTitle"/>
+        <filler fill="horizontal"/>
+        <label ref="accountPositionLabel" styleClass="secondarySectionSubtitle"/>
+      </row>
+      <component ref="accountHistoChart"/>
+    </verticalBoxes>
+  </repeat>
+  </column>
+</splits>

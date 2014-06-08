@@ -10,22 +10,6 @@
            horizontalTextPosition="left" weightX="5"
            icon="rightArrow(10,14,8,8,block.item.link)"
            rolloverIcon="rightArrow(10,14,8,8,block.item.link)"/>
-
-    <style selector="button#accountChartButton"
-           ui="hyperlinkButtonWithoutUnderline"
-           font="-,bold,12" cursor="hand"
-           icon="downArrow(10,18,8,8,block.inner.arrow.idle)"
-           rolloverIcon="downArrow(10,18,8,8,block.inner.arrow.rollover)"
-           pressedIcon="downArrow(10,18,8,8,block.inner.arrow.pressed)"
-           fill="none" anchor="left" marginLeft="5"
-           horizontalAlignment="left" horizontalTextPosition="right"
-           iconTextGap="2"/>
-
-    <style selector="#accountHistoChart" border="empty(5,15,0,0)" opaque="true" background="block.inner.bg"/>
-
-    <style id="accountChartShown" selector="x" visible="true" preferredSize="(200,100)"/>
-    <style id="accountChartHidden" selector="x" visible="false" preferredSize="(200,2)"/>
-
   </styles>
 
   <panel name="summaryView" styleClass="secondaryInnerBlock">
@@ -39,16 +23,10 @@
           <label gridPos="(2,1)" ref="projectArrow" weightX="0.01" marginLeft="4" weightY="4"/>
         </grid>
 
-        <repeat ref="accountCharts" marginRight="20">
-          <verticalBoxes name="accountPanel">
-            <row marginTop="10">
-              <button ref="accountChartButton" styleClass="secondarySectionTitle"/>
-              <filler fill="horizontal"/>
-              <label ref="accountPositionLabel" styleClass="secondarySectionSubtitle"/>
-            </row>
-            <component ref="accountHistoChart"/>
-          </verticalBoxes>
-        </repeat>
+        <panel ref="mainAccountsPanel"/>
+
+        <panel ref="savingsAccountsPanel"/>
+
       </column>
     </scrollPane>
   </panel>
