@@ -18,9 +18,10 @@ import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.Key;
+import org.globsframework.model.utils.GlobMatcher;
+import org.globsframework.model.utils.GlobMatchers;
 import org.globsframework.utils.directory.Directory;
 
-import java.util.HashSet;
 import java.util.Set;
 
 import static org.globsframework.model.utils.GlobMatchers.*;
@@ -29,7 +30,7 @@ public class MainDailyPositionsChartView extends PositionsChartView {
 
   private boolean showFullMonthLabels = false;
   private String tooltipKey;
-  private Set<Integer> accountIdSet = new HashSet<Integer>();
+  private GlobMatcher accountMatcher = GlobMatchers.NONE;
 
   public MainDailyPositionsChartView(HistoChartRange range, HistoChartConfig config, String componentName,
                                      final GlobRepository repository, final Directory directory, String tooltipKey) {
@@ -42,14 +43,18 @@ public class MainDailyPositionsChartView extends PositionsChartView {
     chart.addListener(new ChartListener(repository, chart, directory));
   }
 
-  public void setAccount(Glob account) {
-    accountIdSet.clear();
-    accountIdSet.add(account.get(Account.ID));
+  public void setAccount(GlobMatcher accountMatcher) {
+    this.accountMatcher = accountMatcher;
+    update();
+  }
+
+  public void setAccount(Key accountKey) {
+    this.accountMatcher = GlobMatchers.keyEquals(accountKey);
     update();
   }
 
   public void clearAccount() {
-    accountIdSet.clear();
+    this.accountMatcher = GlobMatchers.NONE;
     update();
   }
 
@@ -58,6 +63,7 @@ public class MainDailyPositionsChartView extends PositionsChartView {
   }
 
   protected void updateChart(HistoChartBuilder histoChartBuilder, Integer currentMonthId, boolean resetPosition) {
+    Set<Integer> accountIdSet = repository.getAll(Account.TYPE, accountMatcher).getValueSet(Account.ID);
     histoChartBuilder.showAccountDailyHisto(currentMonthId, showFullMonthLabels, accountIdSet, DaySelection.EMPTY, tooltipKey);
   }
 
@@ -126,12 +132,14 @@ public class MainDailyPositionsChartView extends PositionsChartView {
   }
 
   protected GlobList getTransactions(Integer monthId, Integer day) {
+    Set<Integer> accountIdSet = repository.getAll(Account.TYPE, accountMatcher).getValueSet(Account.ID);
     if (accountIdSet.isEmpty()) {
       return super.getTransactions(monthId, day);
     }
     return repository.getAll(Transaction.TYPE,
                              and(fieldEquals(Transaction.POSITION_MONTH, monthId),
                                  fieldEquals(Transaction.POSITION_DAY, day),
-                                 fieldIn(Transaction.ACCOUNT, accountIdSet)));
+                                 fieldIn(Transaction.ACCOUNT, accountIdSet))
+    );
   }
 }

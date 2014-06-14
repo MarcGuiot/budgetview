@@ -96,7 +96,6 @@ public abstract class AccountPositionLabels {
       Glob account = list.get(0);
       return Lang.get(key, getAccountPositionDate(account));
     }
-
   }
 
   public static String getAccountPositionDate(Glob account) {

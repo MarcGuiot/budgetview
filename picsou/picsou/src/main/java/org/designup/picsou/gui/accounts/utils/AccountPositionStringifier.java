@@ -15,8 +15,12 @@ public class AccountPositionStringifier implements GlobListStringifier {
       return "";
     }
     Glob account = list.get(0);
+    Double position = account.get(Account.POSITION_WITH_PENDING);
+    if ((position == null) || (account.get(Account.POSITION_DATE) == null)) {
+      return "";
+    }
     return Lang.get("summaryView.account.position",
-                    Formatting.toString(account.get(Account.POSITION_WITH_PENDING)),
+                    Formatting.toString(position),
                     AccountPositionLabels.getAccountPositionDate(account));
   }
 }

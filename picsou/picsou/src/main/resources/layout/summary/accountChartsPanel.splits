@@ -3,13 +3,23 @@
   <styleImport file="/layout/picsouStyles.splits"/>
   <styles>
 
-    <style selector="button#accountChartButton"
+    <style selector="button#sectionTitleButton"
            ui="hyperlinkButtonWithoutUnderline"
-           font="-,bold,12" cursor="hand"
+           font="-,bold,13" cursor="hand" border=""
+           foreground="block.inner.secondary.section.title"
            icon="downArrow(10,18,8,8,block.inner.arrow.idle)"
            rolloverIcon="downArrow(10,18,8,8,block.inner.arrow.rollover)"
            pressedIcon="downArrow(10,18,8,8,block.inner.arrow.pressed)"
-           fill="none" anchor="left" marginLeft="5"
+           horizontalAlignment="left" horizontalTextPosition="right"
+           iconTextGap="2"/>
+
+    <style selector="button#accountChartButton"
+           ui="hyperlinkButtonWithoutUnderline"
+           font="-,bold,12" cursor="hand" border=""
+           icon="downArrow(10,18,8,8,block.inner.arrow.idle)"
+           rolloverIcon="downArrow(10,18,8,8,block.inner.arrow.rollover)"
+           pressedIcon="downArrow(10,18,8,8,block.inner.arrow.pressed)"
+           fill="none" anchor="southeast"
            horizontalAlignment="left" horizontalTextPosition="right"
            iconTextGap="2"/>
 
@@ -21,16 +31,19 @@
   </styles>
 
   <column>
-  <label ref="sectionTitle" styleClass="secondarySectionTitle"/>
-  <repeat ref="accountCharts" marginRight="20">
-    <verticalBoxes name="accountPanel">
-      <row marginTop="10" marginLeft="40">
-        <button ref="accountChartButton" styleClass="secondarySectionTitle"/>
-        <filler fill="horizontal"/>
-        <label ref="accountPositionLabel" styleClass="secondarySectionSubtitle"/>
-      </row>
-      <component ref="accountHistoChart"/>
-    </verticalBoxes>
-  </repeat>
+    <row marginLeft="10" marginTop="10">
+      <button ref="sectionTitleButton" styleClass="secondarySectionTitle"/>
+      <filler fill="horizontal"/>
+    </row>
+    <repeat ref="accountCharts" marginRight="20">
+      <verticalBoxes name="accountPanel">
+        <row marginTop="10" marginLeft="20">
+          <button ref="accountChartButton" styleClass="secondarySectionTitle"/>
+          <filler fill="horizontal"/>
+          <label ref="accountPositionLabel" styleClass="secondarySectionSubtitle"/>
+        </row>
+        <component ref="accountHistoChart"/>
+      </verticalBoxes>
+    </repeat>
   </column>
 </splits>

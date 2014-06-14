@@ -35,6 +35,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.SortedSet;
 
+import static org.designup.picsou.gui.utils.Matchers.userCreatedMainAccounts;
 import static org.designup.picsou.model.Account.activeUserCreatedMainAccounts;
 
 public class BudgetSummaryView
@@ -182,10 +183,10 @@ public class BudgetSummaryView
     else {
       Key newAccountKey = Key.create(Account.TYPE, newAccountId);
       if (repository.contains(newAccountKey)) {
-        chartView.setAccount(repository.get(newAccountKey));
+        chartView.setAccount(newAccountKey);
       }
       else {
-        chartView.setAccount(repository.get(Account.MAIN_SUMMARY_KEY));
+        chartView.setAccount(userCreatedMainAccounts());
       }
     }
     updateStatusNodes();

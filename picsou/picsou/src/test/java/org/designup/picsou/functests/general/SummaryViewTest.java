@@ -49,7 +49,7 @@ public class SummaryViewTest extends LoggedInFunctionalTestCase {
 
     OfxBuilder.init(this)
       .addBankAccount(-1, 10674, "000123", 2800.00, "2011/01/10")
-      .addTransaction("2011/01/10@", 3000.00, "WorldCo")
+      .addTransaction("2011/01/10", 3000.00, "WorldCo")
       .load();
     OfxBuilder.init(this)
       .addBankAccount(-1, 10674, "000234", 1000.00, "2011/01/28")
@@ -109,5 +109,60 @@ public class SummaryViewTest extends LoggedInFunctionalTestCase {
     summary.checkGraphShown("Account n. 000234");
     summary.checkGraphShown("Account n. 000345");
     summary.checkGraphShown("Account n. 000456");
+  }
+
+  public void testCanAggregateAccountGraphs() throws Exception {
+    operations.openPreferences().setFutureMonthsCount(6).validate();
+
+    views.selectHome();
+    summary.checkNoAccounts();
+
+    OfxBuilder.init(this)
+      .addBankAccount(-1, 10674, "000123", 2800.00, "2011/01/10")
+      .addTransaction("2011/01/10", 3000.00, "WorldCo")
+      .load();
+    views.selectHome();
+    summary.checkAccounts("Account n. 000123");
+
+    OfxBuilder.init(this)
+      .addBankAccount(-1, 10674, "000234", 1000.00, "2011/01/28")
+      .addTransaction("2011/01/28", 3000.00, "WorldCo")
+      .load();
+    summary.checkAccounts("Account n. 000123", "Account n. 000234");
+
+    OfxBuilder.init(this)
+      .addBankAccount(-1, 10674, "000345", -1400.00, "2011/01/16")
+      .addTransaction("2011/01/10", 3000.00, "WorldCo")
+      .load();
+    mainAccounts.edit("Account n. 000345").setAsSavings().validate();
+    OfxBuilder.init(this)
+      .addBankAccount(-1, 10674, "000456", -1500.00, "2011/01/17")
+      .addTransaction("2011/01/10", 3000.00, "WorldCo")
+      .load();
+    mainAccounts.edit("Account n. 000456").setAsSavings().validate();
+    summary.checkAccounts("Account n. 000123", "Account n. 000234", "Account n. 000345", "Account n. 000456");
+    summary.getAccountChart("Account n. 000123")
+      .checkValue(201101, 1, -200.00)
+      .checkValue(201101, 10, 2800.00);
+
+    views.selectHome();
+    summary.toggleMainAccountGraphs("Show only one graph for all accounts");
+    summary.checkAccounts("Main accounts", "Account n. 000345", "Account n. 000456");
+    summary.getMainSummaryGraph()
+      .checkValue(201101, 1, 800.00)
+      .checkValue(201101, 10, 3800.00)
+      .checkValue(201101, 28, 6800.00);
+
+    summary.toggleSavingsAccountGraphs("Show only one graph for all accounts");
+    summary.checkAccounts("Main accounts", "Savings accounts");
+    summary.getSavingsSummaryGraph()
+      .checkValue(201101, 1, -8900.00)
+      .checkValue(201101, 10, -2900.00);
+
+    summary.toggleMainAccountGraphs("Show a graph for each account");
+    summary.checkAccounts("Account n. 000123", "Account n. 000234", "Savings accounts");
+    summary.getAccountChart("Account n. 000123")
+      .checkValue(201101, 1, -200.00)
+      .checkValue(201101, 10, 2800.00);
   }
 }
