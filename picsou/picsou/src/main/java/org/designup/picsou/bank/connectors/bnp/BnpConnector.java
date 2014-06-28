@@ -133,25 +133,7 @@ public class BnpConnector extends WebBankConnector implements HttpConnectionProv
 
             String imageUrl = style.substring(i + "background-image: url(\"".length(), style.lastIndexOf(");") - 1);
 
-            final HtmlPage page = browser.getCurrentHtmlPage();
-            final WebClient webclient = page.getWebClient();
-
-            final URL url = page.getFullyQualifiedUrl(imageUrl);
-            final WebRequest request = new WebRequest(url);
-            request.setAdditionalHeader("Referer", page.getWebResponse().getWebRequest().getUrl().toExternalForm());
-            WebResponse response = webclient.loadWebResponse(request);
-            final ImageInputStream iis = ImageIO.createImageInputStream(response.getContentAsStream());
-            final Iterator<ImageReader> iter = ImageIO.getImageReaders(iis);
-            if (!iter.hasNext()) {
-              notifyErrorFound(new WebParsingError(id, "Fail to download grille " + style));
-              return;
-            }
-            ImageReader imageReader = iter.next();
-            imageReader.setInput(iis);
-            BufferedImage image = imageReader.read(0);
-            iis.close();
-            imageReader.dispose();
-
+            BufferedImage image = browser.loadImage(imageUrl);
             grill.setSize(image.getWidth(), image.getHeight());
             grill.setImage(image, new BnpKeyboardPanel.CoordinateListener() {
               public void enter(int x, int y) {

@@ -12,17 +12,17 @@
   <panel styleClass="innerDialogBlockPanel">
     <column>
 
-      <label text="1. Saisissez votre identifiant" styleClass="formSection"/>
-      <grid>
-        <textField ref="userIdField" gridPos="(0,0)" columns="10"/>
-        <button action="userIdHelp" gridPos="(0,1)" styleClass="hyperlink" font="-,plain,10" anchor="right"/>
-      </grid>
+      <row>
+        <label text="1. Identifiant" styleClass="formSection" anchor="southeast"/>
+        <textField ref="userIdField" gridPos="(0,0)" columns="10" marginLeft="20"/>
+        <button action="userIdHelp" gridPos="(0,1)" styleClass="hyperlink" font="-,plain,10" anchor="right" marginLeft="20"/>
+      </row>
 
-      <label text="2. Composez votre code secret à 6 chiffres" styleClass="formSection" marginTop="20"/>
+      <label text="2. Code secret à 6 chiffres" styleClass="formSection" marginTop="10"/>
       <row>
         <filler fill="horizontal"/>
         <grid>
-          <label ref="keyboardLabel" gridPos="(0,0,1,4)" marginRight="10"/>
+          <label ref="keyboardLabel" gridPos="(0,0,1,4)" cursor="hand" marginRight="10"/>
           <textField ref="password" gridPos="(1,0)" marginBottom="4"/>
           <button action="clearCode" gridPos="(1,1)" text="Effacer" fill="none"
                   styleClass="hyperlink" font="-,plain,10" anchor="right"/>

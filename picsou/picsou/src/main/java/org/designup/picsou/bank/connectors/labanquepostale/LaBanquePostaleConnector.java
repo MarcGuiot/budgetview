@@ -1,15 +1,21 @@
 package org.designup.picsou.bank.connectors.labanquepostale;
 
+import com.gargoylesoftware.htmlunit.HttpWebConnection;
+import com.gargoylesoftware.htmlunit.WebClient;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
 import org.designup.picsou.bank.BankConnector;
 import org.designup.picsou.bank.BankConnectorFactory;
 import org.designup.picsou.bank.connectors.WebBankConnector;
+import org.designup.picsou.bank.connectors.utils.FilteringConnection;
 import org.designup.picsou.bank.connectors.webcomponents.*;
 import org.designup.picsou.bank.connectors.webcomponents.filters.WebFilters;
-import org.designup.picsou.bank.connectors.webcomponents.utils.ImageMapper;
+import org.designup.picsou.bank.connectors.webcomponents.utils.HttpConnectionProvider;
+import org.designup.picsou.bank.connectors.webcomponents.utils.WebCommandFailed;
 import org.designup.picsou.bank.connectors.webcomponents.utils.WebConnectorLauncher;
 import org.designup.picsou.bank.connectors.webcomponents.utils.WebParsingError;
 import org.designup.picsou.gui.browsing.BrowsingAction;
+import org.designup.picsou.gui.components.tips.ErrorTip;
+import org.designup.picsou.gui.components.tips.TipPosition;
 import org.designup.picsou.model.RealAccount;
 import org.globsframework.gui.splits.SplitsBuilder;
 import org.globsframework.gui.splits.utils.Disposable;
@@ -20,13 +26,16 @@ import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 
-public class LaBanquePostaleConnector extends WebBankConnector {
+public class LaBanquePostaleConnector extends WebBankConnector implements HttpConnectionProvider {
   public static final Integer BANK_ID = 3;
 
   private static final String LOGIN_URL = "https://voscomptesenligne.labanquepostale.fr/voscomptes/canalXHTML/identif.ea?origin=particuliers";
@@ -36,7 +45,6 @@ public class LaBanquePostaleConnector extends WebBankConnector {
   private JLabel keyboardLabel;
   private LoginAction loginAction;
   private Action clearCodeAction;
-  private ImageMapper imageMapper = new ImageMapper();
 
   public static void main(String[] args) throws IOException {
     WebConnectorLauncher.show(BANK_ID, new Factory());
@@ -51,7 +59,16 @@ public class LaBanquePostaleConnector extends WebBankConnector {
   private LaBanquePostaleConnector(boolean syncExistingAccount, GlobRepository repository, Directory directory, Glob synchro) {
     super(BANK_ID, syncExistingAccount, repository, directory, synchro);
     browser.setJavascriptEnabled(true);
+    browser.setCssEnabled(true);
     browser.getClient().getCookieManager().setCookiesEnabled(true);
+  }
+
+  public HttpWebConnection getHttpConnection(WebClient client) {
+    FilteringConnection connection = new FilteringConnection(client);
+    connection.exclude(".css", "swfobject.js", "messagerie.js", "xtroi.js", "ws_q4l", "appelsyndication-hub.ea", "onsubmit.js",
+                       "google-analytics.com", "xiti.com", "bloc.html",
+                       "jquery.datepicker.js");
+    return connection;
   }
 
   protected JPanel createPanel() {
@@ -66,7 +83,7 @@ public class LaBanquePostaleConnector extends WebBankConnector {
 
     builder.add("userIdHelp", new BrowsingAction("Aide du site", directory) {
       protected String getUrl() {
-        return "https://www.labanquepostale.fr/index/particuliers/outils/aide/aide_banque_en_ligne/Aide_identification.html";
+        return "https://www.labanquepostale.fr/particuliers/outils/aide/aide_banque_en_ligne/Aide_identification.Fonct_general.html";
       }
     });
 
@@ -100,6 +117,8 @@ public class LaBanquePostaleConnector extends WebBankConnector {
 
     directory.get(ExecutorService.class)
       .submit(new Runnable() {
+        private LBPMouseListener mouseListener;
+
         public void run() {
           try {
             notifyInitialConnection();
@@ -107,19 +126,15 @@ public class LaBanquePostaleConnector extends WebBankConnector {
             notifyWaitingForUser();
 
             WebForm loginForm = homePage.getFormByName("formAccesCompte");
-
-            imageMapper.install(loginForm.getImageMapById("clavierMdp"), keyboardLabel)
-              .addListener(new ImageMapper.Listener() {
-                public void imageClicked() {
-                  try {
-                    updatePasswordField();
-                  }
-                  catch (WebParsingError e) {
-                    notifyErrorFound(e);
-                  }
-                }
-              });
-
+            WebPanel imageClavier = loginForm.getPanelById("imageclavier");
+            String imagePath = imageClavier.getBackgroundImagePath();
+            BufferedImage image = browser.loadImage(imagePath);
+            keyboardLabel.setIcon(new ImageIcon(image));
+            if (mouseListener != null) {
+              keyboardLabel.removeMouseListener(mouseListener);
+            }
+            mouseListener = new LBPMouseListener(homePage);
+            keyboardLabel.addMouseListener(mouseListener);
             notifyWaitingForUser();
 
             SwingUtilities.invokeLater(new Runnable() {
@@ -143,15 +158,8 @@ public class LaBanquePostaleConnector extends WebBankConnector {
   }
 
   private void updatePasswordField() throws WebParsingError {
-    int count = 0;
-    WebPanel clavier = browser.getCurrentPage().getPanelById("clavier");
-    for (int i = 1; i <= 6; i++) {
-      WebPanel valCode = clavier.getPanelById("val_code_" + i);
-      if (valCode.getAttributeValue("class").endsWith("_on")) {
-        count++;
-      }
-    }
-    passwordField.setText(Strings.repeat("*", count));
+    WebTextInput passwordInput = browser.getCurrentPage().getTextInputById("cvs-bloc-mdp-input");
+    passwordField.setText(passwordInput.getValue());
   }
 
   public void panelShown() {
@@ -183,6 +191,16 @@ public class LaBanquePostaleConnector extends WebBankConnector {
 
   private class LoginAction extends AbstractAction {
     public void actionPerformed(ActionEvent event) {
+
+      if (Strings.isNullOrEmpty(userIdField.getText())) {
+        ErrorTip.show(userIdField, "Vous devez saisir votre identifiant", directory, TipPosition.TOP_LEFT);
+        return;
+      }
+      if (Strings.isNullOrEmpty(passwordField.getText())) {
+        ErrorTip.show(passwordField, "Vous devez saisir votre mot de passe", directory, TipPosition.TOP_LEFT);
+        return;
+      }
+
       notifyIdentificationInProgress();
       loginAction.setEnabled(false);
       directory.get(ExecutorService.class)
@@ -303,6 +321,40 @@ public class LaBanquePostaleConnector extends WebBankConnector {
     public AccountEntry(Glob account, WebAnchor anchor) {
       this.account = account;
       this.anchor = anchor;
+    }
+  }
+
+  private class LBPMouseListener extends MouseAdapter {
+
+    private WebPage homePage;
+
+    public LBPMouseListener(WebPage homePage) {
+      this.homePage = homePage;
+    }
+
+    public void mouseClicked(MouseEvent event) {
+      if (keyboardLabel.getIcon() == null) {
+        return;
+      }
+      int index = getButtonId(event);
+      try {
+        homePage.getButtonById("val_cel_" + index).click();
+        updatePasswordField();
+      }
+      catch (WebCommandFailed e) {
+        throw new RuntimeException(e);
+      }
+      catch (WebParsingError e) {
+        throw new RuntimeException(e);
+      }
+    }
+
+    private int getButtonId(MouseEvent e) {
+      double tileWidth = keyboardLabel.getIcon().getIconWidth() / 4;
+      double tileHeight = keyboardLabel.getIcon().getIconHeight() / 4;
+      int row = (int)Math.floor(((double)e.getY()) / tileHeight);
+      int col = (int)Math.floor(((double)e.getX()) / tileWidth);
+      return (row * 4) + col;
     }
   }
 }

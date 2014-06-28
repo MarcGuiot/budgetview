@@ -2,15 +2,20 @@ package org.designup.picsou.bank.connectors.webcomponents;
 
 import com.gargoylesoftware.htmlunit.ElementNotFoundException;
 import com.gargoylesoftware.htmlunit.html.*;
+import com.gargoylesoftware.htmlunit.javascript.host.css.ComputedCSSStyleDeclaration;
+import com.gargoylesoftware.htmlunit.javascript.host.html.HTMLElement;
 import org.designup.picsou.bank.connectors.webcomponents.filters.WebFilter;
 import org.designup.picsou.bank.connectors.webcomponents.filters.WebFilters;
 import org.designup.picsou.bank.connectors.webcomponents.utils.HtmlUnit;
 import org.designup.picsou.bank.connectors.webcomponents.utils.WebParsingError;
+import org.globsframework.utils.Strings;
 import org.globsframework.utils.Utils;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Callable;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class WebContainer<T extends HtmlElement> extends WebComponent<T> {
   protected WebContainer(WebBrowser browser, T node) {
@@ -362,5 +367,21 @@ public class WebContainer<T extends HtmlElement> extends WebComponent<T> {
 
   public WebListItem getListItemById(String id) throws WebParsingError {
     return new WebListItem(browser, getElementById(id, HtmlListItem.class));
+  }
+
+  public String getBackgroundImagePath() {
+    ComputedCSSStyleDeclaration style = ((HTMLElement)node.getScriptObject()).jsxGet_currentStyle();
+    String background = style.jsxGet_backgroundImage();
+    if (Strings.isNullOrEmpty(background)) {
+      return null;
+    }
+    if (background.startsWith("url(")) {
+      Pattern urlPattern = Pattern.compile("url\\(\"[ ]*(.*)[ ]*\"\\)");
+      Matcher matcher = urlPattern.matcher(background.trim());
+      if (matcher.matches()) {
+        return matcher.group(1);
+      }
+    }
+    return background;
   }
 }

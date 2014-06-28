@@ -8,7 +8,13 @@ import org.designup.picsou.bank.connectors.webcomponents.utils.HttpConnectionPro
 import org.designup.picsou.bank.connectors.webcomponents.utils.WebCommandFailed;
 import org.designup.picsou.bank.connectors.webcomponents.utils.WebParsingError;
 
+import javax.imageio.ImageIO;
+import javax.imageio.ImageReader;
+import javax.imageio.stream.ImageInputStream;
+import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.net.URL;
+import java.util.Iterator;
 import java.util.concurrent.Callable;
 
 public class WebBrowser {
@@ -17,6 +23,7 @@ public class WebBrowser {
   private AlertHandler errorAlertHandler;
   private HttpConnectionProvider httpConnectionProvider;
   private boolean javascriptEnabled = true;
+  private boolean cssEnabled  =false;
   private BrowserVersion browserVersion = BrowserVersion.FIREFOX_10;
 
   public WebBrowser(AlertHandler errorAlertHandler) {
@@ -36,6 +43,10 @@ public class WebBrowser {
     this.javascriptEnabled = enabled;
   }
 
+  public void setCssEnabled(boolean cssEnabled) {
+    this.cssEnabled = cssEnabled;
+  }
+
   public void setHttpConnectionProvider(HttpConnectionProvider httpConnectionProvider) {
     this.httpConnectionProvider = httpConnectionProvider;
   }
@@ -43,11 +54,8 @@ public class WebBrowser {
   private void createWebClient() {
     webClient = new WebClient(browserVersion);
     webClient.setThrowExceptionOnScriptError(false);
-    webClient.setCssEnabled(false);
+    webClient.setCssEnabled(cssEnabled);
     webClient.setJavaScriptEnabled(javascriptEnabled);
-//    webClient.getOptions().setThrowExceptionOnScriptError(false);
-//    webClient.getOptions().setCssEnabled(false);
-//    webClient.getOptions().setJavaScriptEnabled(javascriptEnabled);
     webClient.setCache(new Cache());
     webClient.setWebConnection(httpConnectionProvider.getHttpConnection(webClient));
     webClient.setAjaxController(new NicelyResynchronizingAjaxController());
@@ -56,7 +64,6 @@ public class WebBrowser {
 
   public void setTimeout(int timeout) {
     getClient().setTimeout(timeout);
-//    getClient().getOptions().setTimeout(timeout);
   }
 
   public WebPage load(String url) throws WebCommandFailed {
@@ -159,6 +166,26 @@ public class WebBrowser {
       }
     }
     return new WebPage(this, currentPage);
+  }
+
+  public BufferedImage loadImage(String imageUrl) throws Exception {
+    final WebClient webclient = currentPage.getWebClient();
+
+    final URL url = currentPage.getFullyQualifiedUrl(imageUrl);
+    final WebRequest request = new WebRequest(url);
+    request.setAdditionalHeader("Referer", currentPage.getWebResponse().getWebRequest().getUrl().toExternalForm());
+    WebResponse response = webclient.loadWebResponse(request);
+    final ImageInputStream iis = ImageIO.createImageInputStream(response.getContentAsStream());
+    final Iterator<ImageReader> iter = ImageIO.getImageReaders(iis);
+    if (!iter.hasNext()) {
+      throw new WebParsingError(currentPage.getDocumentElement(), "Failed to download image '" + imageUrl + "'");
+    }
+    ImageReader imageReader = iter.next();
+    imageReader.setInput(iis);
+    BufferedImage image = imageReader.read(0);
+    iis.close();
+    imageReader.dispose();
+    return image;
   }
 
   public interface Function1Arg<T, D> {

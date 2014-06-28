@@ -34,7 +34,7 @@ public class FilteringConnection extends HttpWebConnection {
 
     WebResponse response = super.getResponse(request);
     if (debugEnabled) {
-      System.out.println(" Done in " + (response.getLoadTime() / 1000) + "s");
+      System.out.println(" Done in " + response.getLoadTime() + "ms");
     }
     return response;
   }
