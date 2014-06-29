@@ -140,7 +140,7 @@ public class UpgradeTrigger implements ChangeSetListener {
 
     //dans tout les cas :
 
-    repository.delete(Transaction.TYPE, and(fieldEquals(Transaction.PLANNED, true),
+    repository.delete(Transaction.TYPE, and(fieldEquals(Transaction.CREATED_BY_SERIES, true),
                                             fieldEquals(Transaction.AMOUNT, 0.)));
 
 
