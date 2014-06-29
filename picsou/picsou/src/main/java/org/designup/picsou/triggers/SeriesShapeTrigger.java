@@ -255,6 +255,7 @@ public class SeriesShapeTrigger implements ChangeSetListener {
           SeriesToReCompute seriesToReCompute = findValidMonth(repository, series.get(Series.ID), lastTransactionMonthId, userPreference.get(UserPreferences.MONTH_FOR_PLANNED));
           TransactionGlobFunctor transactionGlobFunctor =
             new TransactionGlobFunctor(repository, periodInMonth, monthCount, seriesToReCompute);
+          // utiliser le mois dans l'index?
           repository
             .findByIndex(Transaction.SERIES_INDEX, Transaction.SERIES, series.get(Series.ID))
             .saveApply(transactionGlobFunctor, repository);

@@ -108,7 +108,7 @@ public class ReadOnlyAccountDataManager {
 
   public static void writeSnapshot_V5(MapOfMaps<String, Integer, SerializableGlobType> data, File file,
                                       char[] password, long version, long timestamp) throws IOException {
-    FileOutputStream outputStream = new FileOutputStream(file);
+    OutputStream outputStream = new BufferedOutputStream(new FileOutputStream(file));
     SerializedOutput serializedOutput = SerializedInputOutputFactory.init(outputStream);
     serializedOutput.writeJavaString("5");
     if (password != null) {

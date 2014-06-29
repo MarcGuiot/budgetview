@@ -134,7 +134,15 @@ public class UpgradeTrigger implements ChangeSetListener {
       AccountSequenceTrigger.resetSequence(repository);
       projectUpgrade.updateProjectSeriesAndGroups(repository);
       updateTargetAccountForSeries(repository);
+      repository.delete(Transaction.TYPE, and(fieldEquals(Transaction.ACCOUNT, -1),
+                                              fieldEquals(Transaction.PLANNED, true)));
     }
+
+    //dans tout les cas :
+
+    repository.delete(Transaction.TYPE, and(fieldEquals(Transaction.PLANNED, true),
+                                            fieldEquals(Transaction.AMOUNT, 0.)));
+
 
     FrameSize frameSize = FrameSize.init(directory.get(JFrame.class));
     LayoutConfig.find(frameSize.screenSize, frameSize.targetFrameSize, repository, true);
