@@ -29,7 +29,9 @@ public class SendMail {
       content.append(next);
       content.append("\n");
     }
-    sendMail(subject, destination, content.toString());
+    for (String addr : arguments) {
+      sendMail(subject, addr, content.toString());
+    }
   }
 
   static public void sendMail(String subject, String destination, String content) throws MessagingException {
