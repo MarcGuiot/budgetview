@@ -48,6 +48,8 @@
                 title="Comment se font les mises à jour de BudgetView ?"/>
           <page file="support/faq/general/pourquoi_connexion.html"
                 title="Pourquoi BudgetView se connecte-t-il à Internet ?"/>
+          <page file="support/faq/general/sauvegarde.html"
+                title="Comment puis-je créer des sauvegardes de mes données ?"/>
           <page file="support/faq/general/utilisation_deux_ordinateurs.html"
                 title="Puis-je utiliser BudgetView sur deux ordinateurs ?"/>
           <page file="support/faq/general/remplacant_money.html"
@@ -115,6 +117,8 @@
         </page>
 
       </page>
+
+      <page file="support/versions/v3_14b.html" title="Accès privé : BudgetView v3.14b"/>
 
     </page>
 
