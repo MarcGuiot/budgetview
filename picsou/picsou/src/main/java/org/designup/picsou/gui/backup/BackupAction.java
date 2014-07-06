@@ -29,6 +29,10 @@ public class BackupAction extends AbstractBackupRestoreAction {
   }
 
   public void actionPerformed(ActionEvent event) {
+    if (Boolean.getBoolean(PicsouApplication.DISABLE_BACKUP)) {
+      MessageDialog.show("backup.inMemory.title", MessageType.INFO, frame, directory, "backup.inMemory.content");
+      return;
+    }
 
     if (LicenseService.trialInProgress(repository)) {
       MessageDialog.show("backup.trial.title", MessageType.INFO, frame, directory, "backup.trial.content");

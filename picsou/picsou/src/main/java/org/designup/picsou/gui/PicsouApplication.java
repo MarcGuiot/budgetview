@@ -58,8 +58,8 @@ import java.util.regex.Pattern;
 
 public class PicsouApplication {
 
-  public static final String APPLICATION_VERSION = "3.14a";
-  public static Long JAR_VERSION = 134L; // not final for test
+  public static final String APPLICATION_VERSION = "3.14b";
+  public static Long JAR_VERSION = 135L; // not final for test
   public static final Long BANK_CONFIG_VERSION = 7L;
 
   public static final String APPNAME = "budgetview";
@@ -80,7 +80,7 @@ public class PicsouApplication {
   public static final String LICENSE_SERVER_URL = "https://register.mybudgetview.fr:443";
   public static final String MOBILE_SERVER_URL = "http://register.mybudgetview.fr:8080";
   public static final String FTP_SERVER_URL = "ftp://ftpjar.mybudgetview.fr";
-  public static final String DISABLE_IMPORT = APPNAME + ".disable.import";
+  public static final String DISABLE_BACKUP = APPNAME + ".disable.import";
 
   public static boolean EXIT_ON_DATA_ERROR = true;
 
