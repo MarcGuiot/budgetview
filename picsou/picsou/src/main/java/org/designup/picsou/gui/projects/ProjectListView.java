@@ -5,7 +5,8 @@ import org.designup.picsou.gui.model.ProjectStat;
 import org.designup.picsou.gui.projects.actions.CreateProjectAction;
 import org.designup.picsou.gui.projects.components.ProjectButton;
 import org.designup.picsou.gui.projects.components.ProjectPopupMenuFactory;
-import org.designup.picsou.model.CurrentMonth;
+import org.designup.picsou.gui.projects.utils.CurrentProjectsMatcher;
+import org.designup.picsou.gui.projects.utils.PastProjectsMatcher;
 import org.designup.picsou.model.Project;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobsPanelBuilder;
@@ -19,7 +20,6 @@ import org.globsframework.gui.utils.PopupMenuFactory;
 import org.globsframework.gui.views.GlobLabelView;
 import org.globsframework.model.*;
 import org.globsframework.model.utils.GlobComparators;
-import org.globsframework.model.utils.GlobMatcher;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
@@ -89,20 +89,6 @@ public class ProjectListView extends View {
       ProjectPopupMenuFactory menuFactory = new ProjectPopupMenuFactory(projectKey, repository, directory);
       builder.addDisposable(menuFactory);
       return menuFactory;
-    }
-  }
-
-  private class CurrentProjectsMatcher implements GlobMatcher {
-    public boolean matches(Glob stat, GlobRepository repository) {
-      Integer lastMonth = stat.get(ProjectStat.LAST_MONTH);
-      return lastMonth == null || lastMonth >= CurrentMonth.getCurrentMonth(repository);
-    }
-  }
-
-  private class PastProjectsMatcher implements GlobMatcher {
-    public boolean matches(Glob stat, GlobRepository repository) {
-      Integer lastMonth = stat.get(ProjectStat.LAST_MONTH);
-      return lastMonth != null && lastMonth < CurrentMonth.getCurrentMonth(repository);
     }
   }
 }

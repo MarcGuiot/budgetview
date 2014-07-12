@@ -180,6 +180,7 @@ public class MenuBarBuilder {
     devMenu.add(new AddSixDayAction(repository));
     devMenu.add(new ClearAllSignpostsAction(repository));
     devMenu.add(new ShowUserEvaluationDialogAction(repository, directory));
+    devMenu.add(new DumpUserProgressMessageAction(repository, directory));
     devMenu.add(new LicenseExpirationAction(repository, directory));
     devMenu.add(new DumpRepositoryAction(repository));
     devMenu.add(new ChangeDateAction(repository));

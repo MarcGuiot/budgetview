@@ -1,11 +1,9 @@
 package org.designup.picsou.gui.mobile;
 
-import org.designup.picsou.gui.config.ConfigService;
 import org.designup.picsou.mobile.BudgetValuesUpdater;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.repository.DefaultGlobIdGenerator;
 import org.globsframework.model.repository.DefaultGlobRepository;
-import org.globsframework.utils.directory.Directory;
 import org.globsframework.xml.XmlGlobWriter;
 
 import javax.swing.*;
