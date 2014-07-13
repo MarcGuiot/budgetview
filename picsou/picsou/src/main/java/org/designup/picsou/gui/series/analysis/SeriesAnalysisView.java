@@ -3,37 +3,46 @@ package org.designup.picsou.gui.series.analysis;
 import org.designup.picsou.gui.View;
 import org.designup.picsou.gui.actions.SelectNextMonthAction;
 import org.designup.picsou.gui.actions.SelectPreviousMonthAction;
+import org.designup.picsou.gui.components.JPopupButton;
 import org.designup.picsou.gui.components.layoutconfig.SplitPaneConfig;
+import org.designup.picsou.gui.printing.actions.PrintBudgetAction;
 import org.designup.picsou.gui.series.analysis.components.SeriesAnalysisBreadcrumb;
 import org.designup.picsou.gui.series.analysis.histobuilders.range.ScrollableHistoChartRange;
 import org.designup.picsou.gui.series.view.SeriesWrapper;
+import org.designup.picsou.gui.utils.SetFieldValueAction;
 import org.designup.picsou.model.*;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobSelection;
 import org.globsframework.gui.GlobSelectionListener;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.SelectionService;
-import org.globsframework.gui.splits.utils.ToggleVisibilityAction;
 import org.globsframework.gui.utils.GlobSelectionBuilder;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobRepository;
+import org.globsframework.model.utils.KeyChangeListener;
 import org.globsframework.utils.directory.DefaultDirectory;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.SortedSet;
 
 public class SeriesAnalysisView extends View {
 
   private Directory parentDirectory;
+  private PrintBudgetAction printBudgetAction;
   private SelectionService parentSelectionService;
-  private SeriesChartsPanel chartPanel;
+  private SeriesChartsPanel charts;
   private Integer referenceMonthId;
-  private ToggleVisibilityAction tableToggleAction;
+  private JPanel chartsPanel;
+  private JPanel tablePanel;
+  private Map<AnalysisViewType, JCheckBoxMenuItem> viewSelectors = new HashMap<AnalysisViewType, JCheckBoxMenuItem>();
 
-  public SeriesAnalysisView(GlobRepository repository, Directory directory) {
+  public SeriesAnalysisView(GlobRepository repository, Directory directory, PrintBudgetAction printBudgetAction) {
     super(repository, createLocalDirectory(directory));
     this.parentDirectory = directory;
+    this.printBudgetAction = printBudgetAction;
     this.parentSelectionService = directory.get(SelectionService.class);
   }
 
@@ -59,7 +68,7 @@ public class SeriesAnalysisView extends View {
         SortedSet<Integer> monthIds = selection.getAll(Month.TYPE).getSortedSet(Month.ID);
         if (!monthIds.isEmpty()) {
           referenceMonthId = monthIds.iterator().next();
-          chartPanel.monthSelected(referenceMonthId, monthIds);
+          charts.monthSelected(referenceMonthId, monthIds);
         }
       }
     }, Month.TYPE);
@@ -83,15 +92,28 @@ public class SeriesAnalysisView extends View {
     SeriesAnalysisBreadcrumb breadcrumb = new SeriesAnalysisBreadcrumb(repository, directory);
     builder.add("breadcrumb", breadcrumb.getEditor());
 
-    this.chartPanel = new SeriesChartsPanel(new ScrollableHistoChartRange(12, 6, false, repository), repository, directory, parentSelectionService);
-    this.chartPanel.registerCharts(builder);
+    this.charts = new SeriesChartsPanel(new ScrollableHistoChartRange(12, 6, false, repository), repository, directory, parentSelectionService);
+    this.charts.registerCharts(builder);
+    this.chartsPanel = new JPanel();
+    builder.add("chartsPanel", chartsPanel);
 
-    JPanel tablePanel = new JPanel();
+    this.tablePanel = new JPanel();
     builder.add("tablePanel", tablePanel);
-    tableToggleAction = new ToggleVisibilityAction(tablePanel,
-                                                   Lang.get("seriesAnalysis.table.toggle.shown"),
-                                                   Lang.get("seriesAnalysis.table.toggle.hidden"));
-    builder.add("toggleTable", tableToggleAction);
+
+    JPopupMenu actionsMenu = new JPopupMenu();
+    for (AnalysisViewType view : AnalysisViewType.values()) {
+      JCheckBoxMenuItem menuItem = createMenuItem(view);
+      viewSelectors.put(view, menuItem);
+      actionsMenu.add(menuItem);
+    }
+    repository.addChangeListener(new KeyChangeListener(UserPreferences.KEY) {
+      public void update() {
+        updateViewType();
+      }
+    });
+    actionsMenu.addSeparator();
+    actionsMenu.add(printBudgetAction);
+    builder.add("actionsMenu", new JPopupButton(Lang.get("actions"), actionsMenu));
 
     SeriesEvolutionTableView tableView = new SeriesEvolutionTableView(repository, seriesChartsColors,
                                                                       directory, parentDirectory);
@@ -105,11 +127,39 @@ public class SeriesAnalysisView extends View {
     return builder;
   }
 
-  public void reset() {
-    chartPanel.reset();
-    referenceMonthId = null;
-    tableToggleAction.setHidden();
+  private JCheckBoxMenuItem createMenuItem(final AnalysisViewType viewType) {
+    return new JCheckBoxMenuItem(new SetFieldValueAction(viewType.getLabel(),
+                                                    UserPreferences.KEY,
+                                                    UserPreferences.ANALYSIS_VIEW_TYPE,
+                                                    viewType.getId(),
+                                                    repository));
   }
 
+  public void reset() {
+    charts.reset();
+    referenceMonthId = null;
+    updateViewType();
+  }
+
+  private void updateViewType() {
+    AnalysisViewType currentType = AnalysisViewType.get(repository);
+    switch (currentType) {
+      case CHARTS:
+        chartsPanel.setVisible(true);
+        tablePanel.setVisible(false);
+        break;
+      case TABLE:
+        chartsPanel.setVisible(false);
+        tablePanel.setVisible(true);
+        break;
+      case BOTH:
+        chartsPanel.setVisible(true);
+        tablePanel.setVisible(true);
+        break;
+    }
+    for (Map.Entry<AnalysisViewType, JCheckBoxMenuItem> entry : viewSelectors.entrySet()) {
+      entry.getValue().setSelected(entry.getKey().equals(currentType));
+    }
+  }
 }
 

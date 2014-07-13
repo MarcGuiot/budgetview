@@ -236,4 +236,8 @@ public class MenuBarBuilder {
   public ImportFileAction getImportFileAction() {
     return importFileAction;
   }
+
+  public PrintBudgetAction getPrintBudgetAction() {
+    return printBudgetAction;
+  }
 }

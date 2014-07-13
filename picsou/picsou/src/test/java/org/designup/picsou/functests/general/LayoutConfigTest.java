@@ -49,7 +49,7 @@ public class LayoutConfigTest extends LoggedInFunctionalTestCase {
     setSplitPane("categorizationSplit", 0.66);
 
     views.selectAnalysis();
-    seriesAnalysis.toggleTable();
+    seriesAnalysis.showChartsAndTable();
     checkSplitPane("analysisTableSplit", 0.65);
     setSplitPane("analysisTableSplit", 0.52);
 
@@ -74,7 +74,7 @@ public class LayoutConfigTest extends LoggedInFunctionalTestCase {
     checkSplitPane("categorizationSplit", 0.66);
 
     views.selectAnalysis();
-    seriesAnalysis.toggleTable();
+    seriesAnalysis.showChartsAndTable();
     checkSplitPane("analysisTableSplit", 0.52);
   }
 

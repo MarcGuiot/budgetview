@@ -806,7 +806,7 @@ public class DeferredTest extends LoggedInFunctionalTestCase {
       .checkSize(1)
       .checkValue("Groceries", 100.00);
 
-    seriesAnalysis.toggleTable();
+    seriesAnalysis.showChartsAndTable();
     timeline.selectMonth(200806);
     seriesAnalysis.checkNoTableRowWithLabel("Card n. 1111");
     seriesAnalysis.checkNoTableRowWithLabel("Other");

@@ -36,7 +36,7 @@ public class SeriesGroupEvolutionViewTest extends LoggedInFunctionalTestCase {
     categorization.setNewVariable("McDo", "Restaurant");
     categorization.setNewVariable("FNAC", "Leisures");
 
-    seriesAnalysis.toggleTable();
+    seriesAnalysis.showChartsAndTable();
   }
 
   public void testSelectingGroupElements() throws Exception {

@@ -37,7 +37,7 @@ public class SubSeriesEvolutionViewTest extends LoggedInFunctionalTestCase {
     categorization.setVariable("MacDo", "Food", "Restaurant");
     categorization.setVariable("OtherFoods", "Food");
 
-    seriesAnalysis.toggleTable();
+    seriesAnalysis.showChartsAndTable();
   }
 
   public void testSelectingSubSeries() throws Exception {
@@ -383,7 +383,7 @@ public class SubSeriesEvolutionViewTest extends LoggedInFunctionalTestCase {
       .validate();
 
     views.selectAnalysis();
-    seriesAnalysis.toggleTable();
+    seriesAnalysis.showChartsAndTable();
 
     String[] contentWithoutMySeries = {"Main accounts",
                                        "Balance",
