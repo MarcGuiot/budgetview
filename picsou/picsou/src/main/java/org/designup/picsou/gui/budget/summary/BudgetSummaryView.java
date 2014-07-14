@@ -130,6 +130,7 @@ public class BudgetSummaryView
 
       Glob account = repository.get(accountKey);
       final AccountPopupFactory popupFactory = new AccountPopupFactory(account, repository, directory);
+      popupFactory.setShowGraphToggle(false);
       popups.put(accountId, popupFactory);
       GlobButtonView accountButton = AccountViewPanel.createEditAccountButton(account, popupFactory, repository, directory);
       SplitsNode<JButton> accountButtonNode = cellBuilder.add("accountButton", accountButton.getComponent());

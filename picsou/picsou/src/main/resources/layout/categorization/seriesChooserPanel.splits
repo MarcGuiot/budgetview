@@ -35,9 +35,9 @@
 
       <htmlEditorPane ref="noSeriesMessage" border="empty(10)" hyperlinkListener="hyperlinkHandler"/>
       <scrollPane verticalUnitIncrement="15" weightY="100">
-        <row>
+        <row border="empty(10,0,0,0)">
           <column>
-            <panel ref="rootSeriesPanel"/>
+            <panel ref="rootSeriesPanel" weightY="0.1"/>
             <filler fill="vertical"/>
           </column>
           <column>
