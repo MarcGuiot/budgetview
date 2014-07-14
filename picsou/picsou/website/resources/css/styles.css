@@ -24,6 +24,11 @@ button.btn {
  text-align: center;
 }
 
+div.centered-image {
+ text-align: center;
+ margin-bottom: 10px;
+}
+
 .container {
   max-width: 900px;
 }
