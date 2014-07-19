@@ -95,5 +95,11 @@ public class SelectionService {
     }
   }
 
-
+  public void listenTo(SelectionService selectionService, final GlobType type) {
+    selectionService.addListener(new GlobSelectionListener() {
+      public void selectionUpdated(GlobSelection selection) {
+         select(selection.getAll(type), type);
+      }
+    }, type);
+  }
 }

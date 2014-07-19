@@ -22,4 +22,6 @@ public interface PanelBuilder {
   PanelBuilder addDisposable(Disposable disposable);
 
   void addOnLoadListener(OnLoadListener listener);
+
+  void removeOnLoadListener(OnLoadListener listener);
 }

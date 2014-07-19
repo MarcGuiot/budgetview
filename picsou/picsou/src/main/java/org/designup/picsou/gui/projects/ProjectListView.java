@@ -13,7 +13,6 @@ import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.splits.SplitsNode;
 import org.globsframework.gui.splits.PanelBuilder;
 import org.globsframework.gui.splits.repeat.RepeatComponentFactory;
-import org.globsframework.gui.splits.utils.OnLoadListener;
 import org.globsframework.gui.splits.utils.ToggleVisibilityAction;
 import org.globsframework.gui.utils.GlobBooleanNodeStyleUpdater;
 import org.globsframework.gui.utils.PopupMenuFactory;
@@ -76,13 +75,8 @@ public class ProjectListView extends View {
         new GlobBooleanNodeStyleUpdater(Project.ACTIVE, nameNode,
                                         "activeProjectName", "inactiveProjectName",
                                         repository);
+      nameUpdater.setKeyOnLoad(projectKey, builder);
       builder.addDisposable(nameUpdater);
-
-      builder.addOnLoadListener(new OnLoadListener() {
-        public void processLoad() {
-          nameUpdater.setKey(projectKey);
-        }
-      });
     }
 
     private PopupMenuFactory createPopupFactory(Key projectKey, PanelBuilder builder) {

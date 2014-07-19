@@ -11,6 +11,7 @@ import org.globsframework.gui.splits.components.RectIcon;
 import org.globsframework.gui.splits.utils.HtmlUtils;
 import org.globsframework.model.Key;
 import org.globsframework.utils.TablePrinter;
+import org.globsframework.utils.TestUtils;
 import org.uispec4j.Panel;
 import org.uispec4j.TextBox;
 import org.uispec4j.Window;
@@ -19,12 +20,12 @@ import org.uispec4j.assertion.UISpecAssert;
 import org.uispec4j.utils.ColorUtils;
 
 import javax.swing.*;
-
 import java.awt.*;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
-import static org.uispec4j.assertion.UISpecAssert.*;
+import static org.uispec4j.assertion.UISpecAssert.assertThat;
 
 public class BudgetSummaryViewChecker extends ViewChecker {
   private HistoDailyChecker chart;
@@ -33,6 +34,16 @@ public class BudgetSummaryViewChecker extends ViewChecker {
 
   public BudgetSummaryViewChecker(Window mainWindow) {
     super(mainWindow);
+  }
+
+  public BudgetSummaryViewChecker checkShowsAccounts(String... accountNames) {
+    java.util.List<String> actual = new ArrayList<String>();
+    Component[] buttons = getPanel().getSwingComponents(JButton.class, "accountButton");
+    for (Component button : buttons) {
+      actual.add(((JButton)button).getText());
+    }
+    TestUtils.assertEquals(actual, accountNames);
+    return this;
   }
 
   public BudgetSummaryViewChecker checkContent(final String expectedContent) {
@@ -44,14 +55,14 @@ public class BudgetSummaryViewChecker extends ViewChecker {
     return this;
   }
 
-  public BudgetSummaryViewChecker checkContentContains(String summaryDate) {
-    if (!getActualContent().contains(summaryDate)) {
-      Assert.fail(summaryDate + " not found in:\n" + getActualContent());
+  public BudgetSummaryViewChecker checkContentContains(String text) {
+    if (!getActualContent().contains(text)) {
+      Assert.fail(text + " not found in:\n" + getActualContent());
     }
     return this;
   }
 
-  public String getActualContent() {
+  private String getActualContent() {
     TablePrinter printer = new TablePrinter();
     Component[] buttons = getPanel().getSwingComponents(JButton.class, "accountButton");
     Component[] statuses = getPanel().getSwingComponents(JButton.class, "accountStatus");
@@ -70,6 +81,13 @@ public class BudgetSummaryViewChecker extends ViewChecker {
                      (HtmlUtils.cleanup(((JLabel)positions[i]).getText())));
     }
     return printer.toString();
+  }
+
+  public void checkAccountSelected(String accountName) {
+    JButton accountButton = getPanel().getButton(accountName).getAwtComponent();
+    if (!accountButton.getFont().isBold()) {
+      Assert.fail(accountName + " not selected - actual content:\n" + getActualContent());
+    }
   }
 
   public void selectAccount(String accountName) {
@@ -102,7 +120,7 @@ public class BudgetSummaryViewChecker extends ViewChecker {
     int columnIndex = chart.getDataset().getIndex(monthId);
     Set<Key> keys = new HashSet<Key>();
     keys.add(Key.create(Day.MONTH, monthId, Day.DAY, day));
-    selectionManager.updateRollover(columnIndex >= 0 ? columnIndex : null, keys, false, false, new Point(0,0));
+    selectionManager.updateRollover(columnIndex >= 0 ? columnIndex : null, keys, false, false, new Point(0, 0));
     return this;
   }
 

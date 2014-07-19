@@ -22,6 +22,8 @@
            pressedIcon="downArrow(10,18,8,8,block.inner.edit.pressed)"/>
     <style id="seriesEnabled" selector="x" foreground="block.item.link"/>
     <style id="seriesDisabled" selector="x" foreground="block.item.link.inactive"/>
+    <style id="seriesAccountSelected" selector="x" font="-,bold,12"/>
+    <style id="seriesAccountUnselected" selector="x" font="-,plain,12"/>
 
     <style selector="button#groupToggle" ui="hyperlinkButtonWithoutUnderline" foreground="block.item.link"/>
 

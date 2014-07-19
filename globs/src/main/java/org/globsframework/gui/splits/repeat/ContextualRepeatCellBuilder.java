@@ -50,4 +50,8 @@ public class ContextualRepeatCellBuilder implements PanelBuilder {
   public void addOnLoadListener(OnLoadListener listener) {
     repeatContext.addOnLoadListener(listener);
   }
+
+  public void removeOnLoadListener(OnLoadListener listener) {
+    repeatContext.removeOnLoadListener(listener);
+  }
 }

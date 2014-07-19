@@ -180,14 +180,17 @@ public class BudgetSummaryView
     currentAccountId = newAccountId;
     if (newAccountId == null) {
       chartView.clearAccount();
+      selectionService.clear(Account.TYPE);
     }
     else {
       Key newAccountKey = Key.create(Account.TYPE, newAccountId);
       if (repository.contains(newAccountKey)) {
         chartView.setAccount(newAccountKey);
+        selectionService.select(repository.find(newAccountKey));
       }
       else {
         chartView.setAccount(userCreatedMainAccounts());
+        selectionService.clear(Account.TYPE);
       }
     }
     updateStatusNodes();

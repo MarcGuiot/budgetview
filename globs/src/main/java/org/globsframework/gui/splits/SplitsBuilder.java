@@ -168,6 +168,10 @@ public class SplitsBuilder implements PanelBuilder, Disposable {
     onLoadListeners.add(listener);
   }
 
+  public void removeOnLoadListener(OnLoadListener listener) {
+    onLoadListeners.remove(listener);
+  }
+
   public <T extends Component> SplitsNode<T> loadWithNode() {
     context.cleanUp();
     for (Map.Entry<String, SplitsBuilder> entry : children.entrySet()) {
