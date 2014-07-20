@@ -31,7 +31,6 @@ import org.designup.picsou.gui.utils.Gui;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.SelectionService;
 import org.globsframework.gui.splits.ImageLocator;
-import org.globsframework.gui.splits.SplitsEditor;
 import org.globsframework.gui.splits.TextLocator;
 import org.globsframework.gui.splits.color.ColorService;
 import org.globsframework.gui.splits.font.FontLocator;
@@ -58,8 +57,8 @@ import java.util.regex.Pattern;
 
 public class PicsouApplication {
 
-  public static final String APPLICATION_VERSION = "3.14b";
-  public static Long JAR_VERSION = 135L; // not final for test
+  public static final String APPLICATION_VERSION = "3.14";
+  public static Long JAR_VERSION = 136L; // not final for test
   public static final Long BANK_CONFIG_VERSION = 7L;
 
   public static final String APPNAME = "budgetview";
