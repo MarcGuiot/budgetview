@@ -256,13 +256,18 @@ public class SeriesAnalysisChecker extends ExpandableTableChecker<SeriesAnalysis
 
   public void checkTableClipboardExport(String expectedClipboardContent) throws Exception {
     Clipboard.putText("something to clean up the clipboard before running the test");
-    getActionsPopup().click(Lang.get("copyTable"));
+    getTablePopup().click(Lang.get("copyTable"));
     checkClipboardContent(expectedClipboardContent);
   }
 
   private PopupButton getActionsPopup() {
     views.selectAnalysis();
     return new PopupButton(getPanel().getButton("actionsMenu"));
+  }
+
+  private PopupButton getTablePopup() {
+    views.selectAnalysis();
+    return new PopupButton(getPanel().getButton("tableActionsMenu"));
   }
 
   public SeriesAnalysisChecker checkHistoChartLabel(String text) {
@@ -303,23 +308,45 @@ public class SeriesAnalysisChecker extends ExpandableTableChecker<SeriesAnalysis
     return this;
   }
 
-  public SeriesAnalysisChecker checkTableHidden() {
+  public SeriesAnalysisChecker checkShowsChartsOnly() {
+    checkComponentVisible(getPanel(), JPanel.class, "chartsPanel", true);
     checkComponentVisible(getPanel(), JPanel.class, "tablePanel", false);
+    getActionsPopup().checkItemSelected(Lang.get("seriesAnalysis.view.charts"));
+    getActionsPopup().checkItemUnselected(Lang.get("seriesAnalysis.view.table"));
+    getActionsPopup().checkItemUnselected(Lang.get("seriesAnalysis.view.both"));
     return this;
   }
 
-  public SeriesAnalysisChecker checkTableShown() {
+  public SeriesAnalysisChecker checkShowsTableOnly() {
+    checkComponentVisible(getPanel(), JPanel.class, "chartsPanel", false);
     checkComponentVisible(getPanel(), JPanel.class, "tablePanel", true);
+    getActionsPopup().checkItemUnselected(Lang.get("seriesAnalysis.view.charts"));
+    getActionsPopup().checkItemSelected(Lang.get("seriesAnalysis.view.table"));
+    getActionsPopup().checkItemUnselected(Lang.get("seriesAnalysis.view.both"));
     return this;
   }
 
-  public SeriesAnalysisChecker toggleTable() {
-    getPanel().getButton("toggleTable").click();
+  public SeriesAnalysisChecker checkShowsChartsAndTable() {
+    checkComponentVisible(getPanel(), JPanel.class, "chartsPanel", true);
+    checkComponentVisible(getPanel(), JPanel.class, "tablePanel", true);
+    getActionsPopup().checkItemUnselected(Lang.get("seriesAnalysis.view.charts"));
+    getActionsPopup().checkItemUnselected(Lang.get("seriesAnalysis.view.table"));
+    getActionsPopup().checkItemSelected(Lang.get("seriesAnalysis.view.both"));
     return this;
   }
 
-  public SeriesAnalysisChecker checkToggleLabel(String expectedLabel) {
-    assertThat(getPanel().getButton("toggleTable").textEquals(expectedLabel));
+  public SeriesAnalysisChecker showChartsAndTable() {
+    getActionsPopup().click(Lang.get("seriesAnalysis.view.both"));
+    return this;
+  }
+
+  public SeriesAnalysisChecker showChartsOnly() {
+    getActionsPopup().click(Lang.get("seriesAnalysis.view.charts"));
+    return this;
+  }
+
+  public SeriesAnalysisChecker showTableOnly() {
+    getActionsPopup().click(Lang.get("seriesAnalysis.view.table"));
     return this;
   }
 
@@ -538,12 +565,12 @@ public class SeriesAnalysisChecker extends ExpandableTableChecker<SeriesAnalysis
   }
 
   public SeriesAnalysisChecker expandAll() {
-    getActionsPopup().click(Lang.get("expand"));
+    getTablePopup().click(Lang.get("expand"));
     return this;
   }
 
   public SeriesAnalysisChecker collapseAll() {
-    getActionsPopup().click(Lang.get("collapse"));
+    getTablePopup().click(Lang.get("collapse"));
     return this;
   }
 }

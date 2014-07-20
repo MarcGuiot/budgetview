@@ -21,6 +21,11 @@ FR:
   rm -r /Volumes/BudgetView/BudgetView.app
   cp -r ./BudgetView-fr/BudgetView.app /Volumes/BudgetView/
 
+FR-InMemory:
+  codesign -f -s "BudgetView" -i "com.budgetview.codesign" ./BudgetView-InMemory-fr/BudgetView.app
+  rm -r /Volumes/BudgetView/BudgetView.app
+  cp -r ./BudgetView-InMemory-fr/BudgetView.app /Volumes/BudgetView/
+
 EN:
   codesign -f -s "BudgetView" -i "com.budgetview.codesign" ./BudgetView-en/BudgetView.app
   rm -r /Volumes/BudgetView/BudgetView.app

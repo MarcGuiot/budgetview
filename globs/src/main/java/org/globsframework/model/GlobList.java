@@ -364,6 +364,10 @@ public class GlobList extends ArrayList<Glob> {
     return get(size() - 1);
   }
 
+  public Glob getSingle() {
+    return size() == 1 ? get(0) : null;
+  }
+
   public GlobList getAll(GlobType type) {
     GlobList result = new GlobList();
     for (Glob glob : this) {

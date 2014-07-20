@@ -604,6 +604,25 @@ public class BudgetViewChecker extends ViewChecker {
       SeriesPanelUI seriesPanelUI = (SeriesPanelUI)ui;
       TestUtils.assertSetEquals(seriesPanelUI.getGroupItemLabels(jPanel), seriesNames);
     }
+
+    public void checkPlannedSelected(String... seriesNames) {
+      for (String name : seriesNames) {
+        JButton plannedButton = getSeriesPanel(name).getPlannedAmount().getAwtComponent();
+        if (!plannedButton.getFont().isBold()) {
+          fail("Planned amount button for '" + name + " is not selected");
+        }
+
+      }
+    }
+
+    public void checkPlannedNotSelected(String... seriesNames) {
+      for (String name : seriesNames) {
+        JButton plannedButton = getSeriesPanel(name).getPlannedAmount().getAwtComponent();
+        if (plannedButton.getFont().isBold()) {
+          fail("Planned amount button for '" + name + " is unexpectedly selected");
+        }
+      }
+    }
   }
 
   public class ExtrasBudgetAreaChecker extends BudgetAreaChecker {

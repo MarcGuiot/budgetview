@@ -141,7 +141,7 @@ public class MainPanel {
     PeriodBudgetAreaStatUpdater.init(replicationGlobRepository);
     PeriodAccountStatUpdater.init(replicationGlobRepository, directory);
 
-    seriesAnalysisView = new SeriesAnalysisView(repository, directory);
+    seriesAnalysisView = new SeriesAnalysisView(repository, directory, menuBar.getPrintBudgetAction());
     signpostView = new SignpostView(replicationGlobRepository, directory);
     createPanel(
       titleView,

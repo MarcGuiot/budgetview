@@ -130,6 +130,7 @@ public class BudgetSummaryView
 
       Glob account = repository.get(accountKey);
       final AccountPopupFactory popupFactory = new AccountPopupFactory(account, repository, directory);
+      popupFactory.setShowGraphToggle(false);
       popups.put(accountId, popupFactory);
       GlobButtonView accountButton = AccountViewPanel.createEditAccountButton(account, popupFactory, repository, directory);
       SplitsNode<JButton> accountButtonNode = cellBuilder.add("accountButton", accountButton.getComponent());
@@ -179,14 +180,17 @@ public class BudgetSummaryView
     currentAccountId = newAccountId;
     if (newAccountId == null) {
       chartView.clearAccount();
+      selectionService.clear(Account.TYPE);
     }
     else {
       Key newAccountKey = Key.create(Account.TYPE, newAccountId);
       if (repository.contains(newAccountKey)) {
         chartView.setAccount(newAccountKey);
+        selectionService.select(repository.find(newAccountKey));
       }
       else {
         chartView.setAccount(userCreatedMainAccounts());
+        selectionService.clear(Account.TYPE);
       }
     }
     updateStatusNodes();

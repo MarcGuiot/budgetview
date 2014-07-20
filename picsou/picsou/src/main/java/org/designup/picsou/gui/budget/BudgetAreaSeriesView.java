@@ -23,6 +23,7 @@ import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobSelection;
 import org.globsframework.gui.GlobSelectionListener;
 import org.globsframework.gui.GlobsPanelBuilder;
+import org.globsframework.gui.SelectionService;
 import org.globsframework.gui.actions.ToggleBooleanAction;
 import org.globsframework.gui.splits.PanelBuilder;
 import org.globsframework.gui.splits.SplitsLoader;
@@ -31,6 +32,7 @@ import org.globsframework.gui.splits.repeat.Repeat;
 import org.globsframework.gui.splits.repeat.RepeatComponentFactory;
 import org.globsframework.gui.splits.utils.Disposable;
 import org.globsframework.gui.splits.utils.GlobListener;
+import org.globsframework.gui.splits.utils.OnLoadListener;
 import org.globsframework.gui.views.GlobButtonView;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.fields.DoubleField;
@@ -38,6 +40,7 @@ import org.globsframework.model.*;
 import org.globsframework.model.format.GlobListStringifier;
 import org.globsframework.model.utils.GlobListFunctor;
 import org.globsframework.model.utils.GlobUtils;
+import org.globsframework.utils.Utils;
 import org.globsframework.utils.directory.Directory;
 import org.globsframework.utils.exceptions.UnexpectedValue;
 
@@ -324,6 +327,23 @@ public class BudgetAreaSeriesView extends View {
         }
       };
       cellBuilder.addDisposable(highlightUpdater);
+
+      AccountSelectionUpdater accountSelectionListener = new AccountSelectionUpdater(cellBuilder, repository, selectionService) {
+        protected void processSelection(Integer selectedAccount) {
+          if (periodSeriesStat.exists()) {
+            switch (PeriodSeriesStat.getSeriesType(periodSeriesStat)) {
+              case SERIES:
+                plannedAmountButton.applyStyle(isSeriesAccountSelected(target, selectedAccount) ? "seriesAccountSelected" : "seriesAccountUnselected");
+                break;
+              case SERIES_GROUP:
+                plannedAmountButton.applyStyle(isSeriesAccountInGroupSelected(target, selectedAccount) ? "seriesAccountSelected" : "seriesAccountUnselected");
+                break;
+            }
+          }
+        }
+      };
+      cellBuilder.addDisposable(accountSelectionListener);
+
       gaugeView.getComponent().setName("gauge");
       cellBuilder.add("gauge", gaugeView.getComponent());
       cellBuilder.addDisposable(gaugeView);
@@ -465,6 +485,69 @@ public class BudgetAreaSeriesView extends View {
         }
       }
       return stringifier.toString(periodStatList, repository);
+    }
+  }
+
+  private abstract class AccountSelectionUpdater implements GlobSelectionListener, ChangeSetListener, Disposable, OnLoadListener {
+
+    private PanelBuilder cellBuilder;
+    private final GlobRepository repository;
+    private final SelectionService selectionService;
+
+    public AccountSelectionUpdater(PanelBuilder cellBuilder, GlobRepository repository, SelectionService selectionService) {
+      this.cellBuilder = cellBuilder;
+      this.repository = repository;
+      this.selectionService = selectionService;
+      cellBuilder.addOnLoadListener(this);
+      repository.addChangeListener(this);
+      selectionService.addListener(this, Account.TYPE);
+    }
+
+    public void globsChanged(ChangeSet changeSet, GlobRepository repository) {
+      if (changeSet.containsChanges(Series.TYPE)) {
+        doUpdate();
+      }
+    }
+
+    public void globsReset(GlobRepository repository, Set<GlobType> changedTypes) {
+      if (changedTypes.contains(Series.TYPE)) {
+        doUpdate();
+      }
+    }
+
+    public void selectionUpdated(GlobSelection selection) {
+      doUpdate();
+    }
+
+    public void processLoad() {
+      doUpdate();
+    }
+
+    private void doUpdate() {
+      Glob account = selectionService.getSelection(Account.TYPE).getSingle();
+      processSelection(account != null ? account.get(Account.ID) : null);
+    }
+
+    protected abstract void processSelection(Integer selectedAccountId);
+
+    protected boolean isSeriesAccountSelected(Glob series, Integer selectedAccount) {
+      Integer targetAccount = series.get(Series.TARGET_ACCOUNT);
+      return selectedAccount != null && Utils.equal(targetAccount, selectedAccount);
+    }
+
+    protected boolean isSeriesAccountInGroupSelected(Glob target, Integer selectedAccount) {
+      for (Glob series : repository.findLinkedTo(target, Series.GROUP)) {
+        if (isSeriesAccountSelected(series, selectedAccount)) {
+          return true;
+        }
+      }
+      return false;
+    }
+
+    public void dispose() {
+      cellBuilder.removeOnLoadListener(this);
+      repository.removeChangeListener(this);
+      selectionService.removeListener(this);
     }
   }
 }

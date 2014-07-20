@@ -151,7 +151,7 @@ public class SeriesEvolutionTableView extends View {
     menu.add(new CollapseTableAction(expansionModel));
     menu.addSeparator();
     menu.add(tableView.getCopyTableAction(Lang.get("copyTable"), 0));
-    builder.add("actionsMenu", new JPopupButton(Lang.get("actions"), menu));
+    builder.add("tableActionsMenu", new JPopupButton(Lang.get("seriesAnalysis.tableMenu"), menu));
 
     table.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT, 0), "doExpand");
     table.getActionMap().put("doExpand", new ExpandSelectionAction(expansionModel, repository, directory));

@@ -118,6 +118,9 @@ public class UserPreferences {
   @DefaultBoolean(true)
   public static BooleanField SHOW_SAVINGS_ACCOUNT_LIST_IN_SUMMARY;
 
+  @Target(AnalysisViewType.class)
+  @DefaultInteger(0)
+  public static LinkField ANALYSIS_VIEW_TYPE;
 
   static {
     GlobTypeLoader.init(UserPreferences.class, "userPreferences");
@@ -143,7 +146,7 @@ public class UserPreferences {
   public static class Serializer implements PicsouGlobSerializer {
 
     public int getWriteVersion() {
-      return 19;
+      return 20;
     }
 
     public boolean shouldBeSaved(GlobRepository repository, FieldValues fieldValues) {
@@ -190,11 +193,15 @@ public class UserPreferences {
       outputStream.writeBoolean(values.get(SHOW_PROJECT_DETAILS));
       outputStream.writeBoolean(values.get(SHOW_MAIN_ACCOUNT_LIST_IN_SUMMARY));
       outputStream.writeBoolean(values.get(SHOW_SAVINGS_ACCOUNT_LIST_IN_SUMMARY));
+      outputStream.writeInteger(values.get(ANALYSIS_VIEW_TYPE));
       return serializedByteArrayOutput.toByteArray();
     }
 
     public void deserializeData(int version, FieldSetter fieldSetter, byte[] data, Integer id) {
-      if (version == 19) {
+      if (version == 20) {
+        deserializeDataV20(fieldSetter, data);
+      }
+      else if (version == 19) {
         deserializeDataV19(fieldSetter, data);
       }
       else if (version == 18) {
@@ -253,6 +260,48 @@ public class UserPreferences {
       }
     }
 
+    private void deserializeDataV20(FieldSetter fieldSetter, byte[] data) {
+      SerializedInput input = SerializedInputOutputFactory.init(data);
+      fieldSetter.set(LAST_IMPORT_DIRECTORY, input.readUtf8String());
+      fieldSetter.set(LAST_BACKUP_RESTORE_DIRECTORY, input.readUtf8String());
+      fieldSetter.set(FUTURE_MONTH_COUNT, input.readInteger());
+      fieldSetter.set(REGISTERED_USER, input.readBoolean());
+      fieldSetter.set(CATEGORIZATION_FILTERING_MODE, input.readInteger());
+      fieldSetter.set(LAST_VALID_DAY, input.readDate());
+      fieldSetter.set(SERIES_ORDER_INCOME, input.readInteger());
+      fieldSetter.set(SERIES_ORDER_RECURRING, input.readInteger());
+      fieldSetter.set(SERIES_ORDER_VARIABLE, input.readInteger());
+      fieldSetter.set(SERIES_ORDER_SAVINGS, input.readInteger());
+      fieldSetter.set(SERIES_ORDER_EXTRA, input.readInteger());
+      fieldSetter.set(SHOW_BUDGET_AREA_DESCRIPTIONS, input.readBoolean());
+      fieldSetter.set(PERIOD_COUNT_FOR_PLANNED, input.readInteger());
+      fieldSetter.set(MONTH_FOR_PLANNED, input.readInteger());
+      fieldSetter.set(MULTIPLE_PLANNED, input.readBoolean());
+      fieldSetter.set(SHOW_RECONCILIATION, input.readBoolean());
+      fieldSetter.set(EXIT_COUNT, input.readInteger());
+      fieldSetter.set(EVALUATION_SHOWN, input.readBoolean());
+      fieldSetter.set(TRANSACTION_POS1, input.readInteger());
+      fieldSetter.set(TRANSACTION_POS2, input.readInteger());
+      fieldSetter.set(TRANSACTION_POS3, input.readInteger());
+      fieldSetter.set(TRANSACTION_POS4, input.readInteger());
+      fieldSetter.set(TRANSACTION_POS5, input.readInteger());
+      fieldSetter.set(TRANSACTION_POS6, input.readInteger());
+      fieldSetter.set(TRANSACTION_POS7, input.readInteger());
+      fieldSetter.set(TRANSACTION_POS8, input.readInteger());
+      fieldSetter.set(TRANSACTION_POS9, input.readInteger());
+      fieldSetter.set(COLOR_THEME, input.readInteger());
+      fieldSetter.set(NUMERIC_DATE_TYPE, input.readInteger());
+      fieldSetter.set(TEXT_DATE_TYPE, input.readInteger());
+      fieldSetter.set(RECONCILIATION_FILTERING_TIP_SHOWN, input.readBoolean());
+      fieldSetter.set(MAIL_FOR_MOBILE, input.readUtf8String());
+      fieldSetter.set(PASSWORD_FOR_MOBILE, input.readUtf8String());
+      fieldSetter.set(SHOW_TRANSACTION_GRAPH, input.readBoolean());
+      fieldSetter.set(SHOW_PROJECT_DETAILS, input.readBoolean());
+      fieldSetter.set(SHOW_MAIN_ACCOUNT_LIST_IN_SUMMARY, input.readBoolean());
+      fieldSetter.set(SHOW_SAVINGS_ACCOUNT_LIST_IN_SUMMARY, input.readBoolean());
+      fieldSetter.set(ANALYSIS_VIEW_TYPE, input.readInteger());
+    }
+
     private void deserializeDataV19(FieldSetter fieldSetter, byte[] data) {
       SerializedInput input = SerializedInputOutputFactory.init(data);
       fieldSetter.set(LAST_IMPORT_DIRECTORY, input.readUtf8String());
@@ -292,6 +341,7 @@ public class UserPreferences {
       fieldSetter.set(SHOW_PROJECT_DETAILS, input.readBoolean());
       fieldSetter.set(SHOW_MAIN_ACCOUNT_LIST_IN_SUMMARY, input.readBoolean());
       fieldSetter.set(SHOW_SAVINGS_ACCOUNT_LIST_IN_SUMMARY, input.readBoolean());
+      fieldSetter.set(ANALYSIS_VIEW_TYPE, AnalysisViewType.CHARTS.getId());
     }
 
     private void deserializeDataV18(FieldSetter fieldSetter, byte[] data) {
@@ -333,6 +383,7 @@ public class UserPreferences {
       fieldSetter.set(SHOW_PROJECT_DETAILS, input.readBoolean());
       fieldSetter.set(SHOW_MAIN_ACCOUNT_LIST_IN_SUMMARY, false);
       fieldSetter.set(SHOW_SAVINGS_ACCOUNT_LIST_IN_SUMMARY, false);
+      fieldSetter.set(ANALYSIS_VIEW_TYPE, AnalysisViewType.CHARTS.getId());
     }
 
     private void deserializeDataV17(FieldSetter fieldSetter, byte[] data) {
@@ -374,6 +425,7 @@ public class UserPreferences {
       fieldSetter.set(SHOW_PROJECT_DETAILS, true);
       fieldSetter.set(SHOW_MAIN_ACCOUNT_LIST_IN_SUMMARY, false);
       fieldSetter.set(SHOW_SAVINGS_ACCOUNT_LIST_IN_SUMMARY, false);
+      fieldSetter.set(ANALYSIS_VIEW_TYPE, AnalysisViewType.CHARTS.getId());
     }
 
     private void deserializeDataV16(FieldSetter fieldSetter, byte[] data) {
@@ -415,6 +467,7 @@ public class UserPreferences {
       fieldSetter.set(SHOW_PROJECT_DETAILS, true);
       fieldSetter.set(SHOW_MAIN_ACCOUNT_LIST_IN_SUMMARY, false);
       fieldSetter.set(SHOW_SAVINGS_ACCOUNT_LIST_IN_SUMMARY, false);
+      fieldSetter.set(ANALYSIS_VIEW_TYPE, AnalysisViewType.CHARTS.getId());
     }
 
     private void deserializeDataV15(FieldSetter fieldSetter, byte[] data) {
@@ -454,6 +507,7 @@ public class UserPreferences {
       fieldSetter.set(SHOW_PROJECT_DETAILS, true);
       fieldSetter.set(SHOW_MAIN_ACCOUNT_LIST_IN_SUMMARY, false);
       fieldSetter.set(SHOW_SAVINGS_ACCOUNT_LIST_IN_SUMMARY, false);
+      fieldSetter.set(ANALYSIS_VIEW_TYPE, AnalysisViewType.CHARTS.getId());
     }
 
     private void deserializeDataV14(FieldSetter fieldSetter, byte[] data) {
@@ -493,6 +547,7 @@ public class UserPreferences {
       fieldSetter.set(SHOW_PROJECT_DETAILS, true);
       fieldSetter.set(SHOW_MAIN_ACCOUNT_LIST_IN_SUMMARY, false);
       fieldSetter.set(SHOW_SAVINGS_ACCOUNT_LIST_IN_SUMMARY, false);
+      fieldSetter.set(ANALYSIS_VIEW_TYPE, AnalysisViewType.CHARTS.getId());
     }
 
     private void deserializeDataV13(FieldSetter fieldSetter, byte[] data) {
@@ -528,6 +583,7 @@ public class UserPreferences {
       fieldSetter.set(SHOW_TRANSACTION_GRAPH, true);
       fieldSetter.set(SHOW_MAIN_ACCOUNT_LIST_IN_SUMMARY, false);
       fieldSetter.set(SHOW_SAVINGS_ACCOUNT_LIST_IN_SUMMARY, false);
+      fieldSetter.set(ANALYSIS_VIEW_TYPE, AnalysisViewType.CHARTS.getId());
     }
 
     private void deserializeDataV12(FieldSetter fieldSetter, byte[] data) {
@@ -562,6 +618,7 @@ public class UserPreferences {
       fieldSetter.set(SHOW_TRANSACTION_GRAPH, true);
       fieldSetter.set(SHOW_MAIN_ACCOUNT_LIST_IN_SUMMARY, false);
       fieldSetter.set(SHOW_SAVINGS_ACCOUNT_LIST_IN_SUMMARY, false);
+      fieldSetter.set(ANALYSIS_VIEW_TYPE, AnalysisViewType.CHARTS.getId());
     }
 
     private void deserializeDataV11(FieldSetter fieldSetter, byte[] data) {
@@ -595,6 +652,7 @@ public class UserPreferences {
       fieldSetter.set(SHOW_TRANSACTION_GRAPH, true);
       fieldSetter.set(SHOW_MAIN_ACCOUNT_LIST_IN_SUMMARY, false);
       fieldSetter.set(SHOW_SAVINGS_ACCOUNT_LIST_IN_SUMMARY, false);
+      fieldSetter.set(ANALYSIS_VIEW_TYPE, AnalysisViewType.CHARTS.getId());
     }
 
     private void deserializeDataV10(FieldSetter fieldSetter, byte[] data) {
@@ -619,6 +677,7 @@ public class UserPreferences {
       fieldSetter.set(SHOW_TRANSACTION_GRAPH, true);
       fieldSetter.set(SHOW_MAIN_ACCOUNT_LIST_IN_SUMMARY, false);
       fieldSetter.set(SHOW_SAVINGS_ACCOUNT_LIST_IN_SUMMARY, false);
+      fieldSetter.set(ANALYSIS_VIEW_TYPE, AnalysisViewType.CHARTS.getId());
     }
 
     private void deserializeDataV9(FieldSetter fieldSetter, byte[] data) {
@@ -642,6 +701,7 @@ public class UserPreferences {
       fieldSetter.set(SHOW_TRANSACTION_GRAPH, true);
       fieldSetter.set(SHOW_MAIN_ACCOUNT_LIST_IN_SUMMARY, false);
       fieldSetter.set(SHOW_SAVINGS_ACCOUNT_LIST_IN_SUMMARY, false);
+      fieldSetter.set(ANALYSIS_VIEW_TYPE, AnalysisViewType.CHARTS.getId());
     }
 
     private void deserializeDataV8(FieldSetter fieldSetter, byte[] data) {
@@ -665,6 +725,7 @@ public class UserPreferences {
       fieldSetter.set(SHOW_TRANSACTION_GRAPH, true);
       fieldSetter.set(SHOW_MAIN_ACCOUNT_LIST_IN_SUMMARY, false);
       fieldSetter.set(SHOW_SAVINGS_ACCOUNT_LIST_IN_SUMMARY, false);
+      fieldSetter.set(ANALYSIS_VIEW_TYPE, AnalysisViewType.CHARTS.getId());
     }
 
     private void deserializeDataV7(FieldSetter fieldSetter, byte[] data) {
@@ -692,6 +753,7 @@ public class UserPreferences {
       fieldSetter.set(SHOW_TRANSACTION_GRAPH, true);
       fieldSetter.set(SHOW_MAIN_ACCOUNT_LIST_IN_SUMMARY, false);
       fieldSetter.set(SHOW_SAVINGS_ACCOUNT_LIST_IN_SUMMARY, false);
+      fieldSetter.set(ANALYSIS_VIEW_TYPE, AnalysisViewType.CHARTS.getId());
     }
 
     private void deserializeDataV6(FieldSetter fieldSetter, byte[] data) {
@@ -714,6 +776,7 @@ public class UserPreferences {
       fieldSetter.set(SHOW_TRANSACTION_GRAPH, true);
       fieldSetter.set(SHOW_MAIN_ACCOUNT_LIST_IN_SUMMARY, false);
       fieldSetter.set(SHOW_SAVINGS_ACCOUNT_LIST_IN_SUMMARY, false);
+      fieldSetter.set(ANALYSIS_VIEW_TYPE, AnalysisViewType.CHARTS.getId());
     }
 
     private void deserializeDataV5(FieldSetter fieldSetter, byte[] data) {
@@ -735,6 +798,7 @@ public class UserPreferences {
       fieldSetter.set(SHOW_TRANSACTION_GRAPH, true);
       fieldSetter.set(SHOW_MAIN_ACCOUNT_LIST_IN_SUMMARY, false);
       fieldSetter.set(SHOW_SAVINGS_ACCOUNT_LIST_IN_SUMMARY, false);
+      fieldSetter.set(ANALYSIS_VIEW_TYPE, AnalysisViewType.CHARTS.getId());
     }
 
     private void deserializeDataV4(FieldSetter fieldSetter, byte[] data) {
@@ -755,6 +819,7 @@ public class UserPreferences {
       fieldSetter.set(SHOW_TRANSACTION_GRAPH, true);
       fieldSetter.set(SHOW_MAIN_ACCOUNT_LIST_IN_SUMMARY, false);
       fieldSetter.set(SHOW_SAVINGS_ACCOUNT_LIST_IN_SUMMARY, false);
+      fieldSetter.set(ANALYSIS_VIEW_TYPE, AnalysisViewType.CHARTS.getId());
     }
 
     private void deserializeDataV3(FieldSetter fieldSetter, byte[] data) {
@@ -774,6 +839,7 @@ public class UserPreferences {
       fieldSetter.set(SHOW_TRANSACTION_GRAPH, true);
       fieldSetter.set(SHOW_MAIN_ACCOUNT_LIST_IN_SUMMARY, false);
       fieldSetter.set(SHOW_SAVINGS_ACCOUNT_LIST_IN_SUMMARY, false);
+      fieldSetter.set(ANALYSIS_VIEW_TYPE, AnalysisViewType.CHARTS.getId());
     }
 
     private void deserializeDataV2(FieldSetter fieldSetter, byte[] data) {
@@ -791,6 +857,7 @@ public class UserPreferences {
       fieldSetter.set(SHOW_TRANSACTION_GRAPH, true);
       fieldSetter.set(SHOW_MAIN_ACCOUNT_LIST_IN_SUMMARY, false);
       fieldSetter.set(SHOW_SAVINGS_ACCOUNT_LIST_IN_SUMMARY, false);
+      fieldSetter.set(ANALYSIS_VIEW_TYPE, AnalysisViewType.CHARTS.getId());
     }
 
     private void deserializeDataV1(FieldSetter fieldSetter, byte[] data) {
@@ -807,6 +874,7 @@ public class UserPreferences {
       fieldSetter.set(SHOW_TRANSACTION_GRAPH, true);
       fieldSetter.set(SHOW_MAIN_ACCOUNT_LIST_IN_SUMMARY, false);
       fieldSetter.set(SHOW_SAVINGS_ACCOUNT_LIST_IN_SUMMARY, false);
+      fieldSetter.set(ANALYSIS_VIEW_TYPE, AnalysisViewType.CHARTS.getId());
     }
   }
 }

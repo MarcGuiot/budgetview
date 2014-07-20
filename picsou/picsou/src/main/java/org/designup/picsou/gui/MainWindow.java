@@ -70,7 +70,7 @@ public class MainWindow implements WindowManager {
   static private ShutDownThread thread;
 
   // Il faut etre sur qu'on ne fera plus de modif dans le repository en dehors du thread de dispath swing
-  // sinon le thread de login fait un invokeLater mais comme le main est concourrent avec le thread de dispatch
+  // sinon le thread de login fait un invokeLater mais comme le main est concurrent avec le thread de dispatch
   // on a des concurrent modification
   private boolean initDone = false;
   private List<ServerAccess.UserInfo> localUsers;

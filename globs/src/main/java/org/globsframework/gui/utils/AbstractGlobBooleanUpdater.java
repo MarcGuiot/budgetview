@@ -1,6 +1,9 @@
 package org.globsframework.gui.utils;
 
+import org.globsframework.gui.splits.PanelBuilder;
 import org.globsframework.gui.splits.utils.Disposable;
+import org.globsframework.gui.splits.utils.DisposableGroup;
+import org.globsframework.gui.splits.utils.OnLoadListener;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.fields.BooleanField;
 import org.globsframework.model.*;
@@ -11,6 +14,7 @@ public abstract class AbstractGlobBooleanUpdater implements ChangeSetListener, D
   private BooleanField field;
   private GlobRepository repository;
   private Key currentKey;
+  private DisposableGroup disposables;
 
   public AbstractGlobBooleanUpdater(BooleanField field, GlobRepository repository) {
     this.field = field;
@@ -48,7 +52,31 @@ public abstract class AbstractGlobBooleanUpdater implements ChangeSetListener, D
     }
   }
 
+  public void setKeyOnLoad(final Key projectKey, final PanelBuilder builder) {
+    if (disposables == null) {
+      disposables = new DisposableGroup();
+    }
+
+    final OnLoadListener listener = new OnLoadListener() {
+      public void processLoad() {
+        setKey(projectKey);
+      }
+    };
+
+    builder.addOnLoadListener(listener);
+    disposables.add(new Disposable() {
+      public void dispose() {
+        builder.removeOnLoadListener(listener);
+      }
+    });
+  }
+
+
   public void dispose() {
+    if (disposables != null) {
+      disposables.dispose();
+    }
     repository.removeChangeListener(this);
+    currentKey = null;
   }
 }

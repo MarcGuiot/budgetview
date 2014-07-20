@@ -2,9 +2,7 @@ package org.designup.picsou.gui.series.analysis.components;
 
 import org.designup.picsou.gui.series.view.SeriesWrapper;
 import org.designup.picsou.gui.series.view.SeriesWrapperType;
-import org.designup.picsou.model.BudgetArea;
-import org.designup.picsou.model.Series;
-import org.designup.picsou.model.SubSeries;
+import org.designup.picsou.model.*;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobSelection;
 import org.globsframework.gui.GlobSelectionListener;
@@ -17,6 +15,7 @@ import org.globsframework.model.Key;
 import org.globsframework.model.utils.TypeChangeSetListener;
 import org.globsframework.utils.directory.Directory;
 import org.globsframework.utils.exceptions.InvalidParameter;
+import org.globsframework.utils.exceptions.UnexpectedValue;
 
 import javax.swing.*;
 import javax.swing.event.HyperlinkEvent;
@@ -42,7 +41,7 @@ public class SeriesAnalysisBreadcrumb implements GlobSelectionListener {
     });
     selectionService = directory.get(SelectionService.class);
     selectionService.addListener(this, SeriesWrapper.TYPE);
-    repository.addChangeListener(new TypeChangeSetListener(Series.TYPE) {
+    repository.addChangeListener(new TypeChangeSetListener(Series.TYPE, UserPreferences.TYPE) {
       public void update(GlobRepository repository) {
         SeriesAnalysisBreadcrumb.this.update();
       }
@@ -74,7 +73,7 @@ public class SeriesAnalysisBreadcrumb implements GlobSelectionListener {
       return;
     }
     if (wrappers.isEmpty()) {
-      editor.setText(Lang.get("seriesAnalysisBreadcrumb.summary"));
+      editor.setText(getBudgetLabel());
       return;
     }
 
@@ -110,6 +109,18 @@ public class SeriesAnalysisBreadcrumb implements GlobSelectionListener {
     return builder.toString();
   }
 
+  private String getBudgetLabel() {
+    switch (AnalysisViewType.get(repository)) {
+      case CHARTS:
+      case BOTH:
+        return Lang.get("seriesAnalysisBreadcrumb.summary.charts");
+      case TABLE:
+        return Lang.get("seriesAnalysisBreadcrumb.summary.table");
+      default:
+        throw new UnexpectedValue(AnalysisViewType.get(repository));
+    }
+  }
+
   public JEditorPane getEditor() {
     return editor;
   }
@@ -118,7 +129,7 @@ public class SeriesAnalysisBreadcrumb implements GlobSelectionListener {
     private StringBuilder builder = new StringBuilder();
 
     private void addBudgetLabel() {
-      builder.append(Lang.get("seriesAnalysisBreadcrumb.summary"));
+      builder.append(getBudgetLabel());
     }
 
     private void addSeriesName(Glob seriesWrapper) {
@@ -138,7 +149,7 @@ public class SeriesAnalysisBreadcrumb implements GlobSelectionListener {
 
     private void addParentBudgetAreaLink(Glob wrapper) {
       BudgetArea budgetArea;
-      
+
       SeriesWrapperType wrapperType = SeriesWrapperType.get(wrapper);
       switch (wrapperType) {
         case SERIES: {

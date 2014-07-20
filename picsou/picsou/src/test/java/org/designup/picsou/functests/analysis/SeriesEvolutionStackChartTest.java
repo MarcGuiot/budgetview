@@ -638,7 +638,7 @@ public class SeriesEvolutionStackChartTest extends LoggedInFunctionalTestCase {
     categorization.setNewVariable("Elf", "Fuel");
 
     views.selectAnalysis();
-    seriesAnalysis.toggleTable();
+    seriesAnalysis.showChartsAndTable();
 
     timeline.selectMonth("2009/07");
     seriesAnalysis.checkBudgetAndSeriesStacksShown();

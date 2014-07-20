@@ -319,7 +319,7 @@ public class SeriesEvolutionHistoChartTest extends LoggedInFunctionalTestCase {
     views.selectAnalysis();
 
     timeline.selectMonth("2009/07");
-    seriesAnalysis.toggleTable();
+    seriesAnalysis.showChartsAndTable();
     seriesAnalysis.select("Income");
     seriesAnalysis.histoChart
       .checkColumnCount(14)
@@ -394,7 +394,7 @@ public class SeriesEvolutionHistoChartTest extends LoggedInFunctionalTestCase {
     // ---- Main accounts ----
 
     views.selectAnalysis();
-    seriesAnalysis.toggleTable();
+    seriesAnalysis.showChartsAndTable();
     seriesAnalysis.select("Main accounts");
     seriesAnalysis.histoChart.checkRightClickOptions(0,
                                                      "Show transactions in Categorization view",

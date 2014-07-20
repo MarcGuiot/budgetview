@@ -220,6 +220,12 @@ public abstract class AbstractSplitsContext implements SplitsContext {
     onLoadListeners.add(listener);
   }
 
+  public void removeOnLoadListener(OnLoadListener listener) {
+    if (onLoadListeners != null) {
+      onLoadListeners.remove(listener);
+    }
+  }
+
   protected static class AutoHideListener {
     private Component targetComponent;
     private String sourceComponentName;

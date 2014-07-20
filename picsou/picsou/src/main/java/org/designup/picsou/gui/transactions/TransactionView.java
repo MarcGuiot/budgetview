@@ -227,7 +227,8 @@ public class TransactionView extends View implements Filterable {
     table.setDefaultRenderer(Glob.class,
                              new TransactionTableRenderer(table.getDefaultRenderer(Glob.class),
                                                           rendererColors,
-                                                          SERIES_COLUMN_INDEX));
+                                                          SERIES_COLUMN_INDEX)
+    );
 
     TransactionKeyListener.install(table, NOTE_COLUMN_INDEX).setDeleteEnabled(tableActions.getDelete());
 
@@ -269,7 +270,8 @@ public class TransactionView extends View implements Filterable {
       .addColumn(Lang.get("transactionView.date.bank"),
                  new TransactionDateStringifier(new InvertedComparator(TransactionComparator.ASCENDING_ACCOUNT),
                                                 Transaction.POSITION_MONTH,
-                                                Transaction.POSITION_DAY), font(dateFont))
+                                                Transaction.POSITION_DAY), font(dateFont)
+      )
       .addColumn(new TransactionSeriesColumn(view, rendererColors, descriptionService, repository, directory))
       .addColumn(Lang.get("label"),
                  descriptionService.getStringifier(Transaction.LABEL),
@@ -277,7 +279,8 @@ public class TransactionView extends View implements Filterable {
                                         new PlannedLabelCustomizer(rendererColors),
                                         new SplitTransactionCustomizer(directory),
                                         new ReconciliationCustomizer(directory),
-                                        LabelCustomizers.autoTooltip()))
+                                        LabelCustomizers.autoTooltip())
+      )
       .addColumn(Lang.get("amount"),
                  amountColumn,
                  amountStringifier);
@@ -297,7 +300,7 @@ public class TransactionView extends View implements Filterable {
     view.registerSaving(UserPreferences.KEY, new GlobTableView.FieldAccess() {
       public IntegerField getPosField(int modelIndex) {
         if (UserPreferences.TRANSACTION_POS1.getIndex() + modelIndex > UserPreferences.TRANSACTION_POS9.getIndex()) {
-          throw new RuntimeException("missing column in UserPreference");
+          throw new RuntimeException("Missing column " + modelIndex + "in UserPreferences");
         }
         return (IntegerField)UserPreferences.TYPE.getField(UserPreferences.TRANSACTION_POS1.getIndex() + modelIndex);
       }

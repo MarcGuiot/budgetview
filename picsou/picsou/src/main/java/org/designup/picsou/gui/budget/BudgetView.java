@@ -8,7 +8,9 @@ import org.designup.picsou.gui.components.highlighting.HighlightingService;
 import org.designup.picsou.gui.components.layoutconfig.SplitPaneConfig;
 import org.designup.picsou.model.BudgetArea;
 import org.designup.picsou.model.LayoutConfig;
+import org.designup.picsou.model.Month;
 import org.globsframework.gui.GlobsPanelBuilder;
+import org.globsframework.gui.SelectionService;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.utils.directory.DefaultDirectory;
 import org.globsframework.utils.directory.Directory;
@@ -22,6 +24,9 @@ public class BudgetView extends View {
   private static Directory createDirectory(Directory parentDirectory) {
     DefaultDirectory directory = new DefaultDirectory(parentDirectory);
     directory.add(new HighlightingService());
+    SelectionService localSelectionService = new SelectionService();
+    localSelectionService.listenTo(parentDirectory.get(SelectionService.class), Month.TYPE);
+    directory.add(localSelectionService);
     return directory;
   }
 
@@ -47,7 +52,6 @@ public class BudgetView extends View {
     builder.add("verticalSplit3", new JideSplitPane());
 
     parentBuilder.add("budgetView", builder);
-
   }
 
   private void addBudgetAreaView(String name,
