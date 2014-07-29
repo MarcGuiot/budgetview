@@ -36,6 +36,7 @@ import org.designup.picsou.gui.startup.components.OpenRequestManager;
 import org.designup.picsou.gui.summary.SummaryView;
 import org.designup.picsou.gui.summary.version.NewVersionView;
 import org.designup.picsou.gui.time.TimeView;
+import org.designup.picsou.gui.title.PeriodView;
 import org.designup.picsou.gui.title.TitleView;
 import org.designup.picsou.gui.transactions.TransactionView;
 import org.designup.picsou.gui.undo.UndoRedoService;
@@ -109,6 +110,7 @@ public class MainPanel {
     builder = new GlobsPanelBuilder(MainPanel.class, "/layout/picsou.splits", repository, directory);
 
     TitleView titleView = new TitleView(repository, directory);
+    PeriodView periodView = new PeriodView(repository, directory);
     timeView = new TimeView(repository, directory);
 
     transactionView = new TransactionView(repository, directory);
@@ -145,6 +147,7 @@ public class MainPanel {
     signpostView = new SignpostView(replicationGlobRepository, directory);
     createPanel(
       titleView,
+      periodView,
       transactionView,
       timeView,
       new NewVersionView(repository, directory),

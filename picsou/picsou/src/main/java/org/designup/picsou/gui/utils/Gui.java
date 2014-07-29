@@ -6,6 +6,7 @@ import org.designup.picsou.gui.plaf.PicsouMacLookAndFeel;
 import org.globsframework.gui.splits.ImageLocator;
 import org.globsframework.gui.splits.font.FontLocator;
 import org.globsframework.gui.splits.font.FontService;
+import org.globsframework.gui.splits.font.Fonts;
 import org.globsframework.gui.splits.utils.GuiUtils;
 import org.globsframework.gui.splits.utils.JarImageLocator;
 import org.globsframework.gui.utils.TableUtils;
@@ -15,7 +16,6 @@ import javax.swing.*;
 import javax.swing.table.TableColumnModel;
 import java.awt.*;
 import java.awt.event.*;
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -36,6 +36,11 @@ public class Gui {
   public static final Insets NO_INSETS = new Insets(0, 0, 0, 0);
 
   static {
+
+    Fonts.loadBase("LatoHairline", "/fonts/Lato-Hairline.ttf", Gui.class);
+    Fonts.loadBase("LatoLight", "/fonts/Lato-Light.ttf", Gui.class);
+    Fonts.loadBase("LatoRegular", "/fonts/Lato-Regular.ttf", Gui.class);
+    Fonts.setDefault("LatoRegular,plain,12");
 
     Font labelFont = new JLabel().getFont();
 
@@ -204,7 +209,7 @@ public class Gui {
            ((modifiers & InputEvent.ALT_MASK) == InputEvent.ALT_MASK) ||
            ((modifiers & InputEvent.META_MASK) == InputEvent.META_MASK);
   }
-  
+
   public static String printModifiers(int modifiers) {
     StringBuffer buffer = new StringBuffer();
     if ((modifiers & InputEvent.CTRL_MASK) == InputEvent.CTRL_MASK) {

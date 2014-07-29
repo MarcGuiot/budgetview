@@ -23,7 +23,7 @@
 
   </styles>
 
-  <panel ui="wave">
+  <panel>
     <column>
 
       <filler fill="vertical" weightY="10"/>
