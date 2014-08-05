@@ -126,19 +126,6 @@ public class SeriesWrapperUpdateTrigger implements ChangeSetListener {
           }
         }
       }
-            Glob seriesWrapper = repository.create(SeriesWrapper.TYPE,
-                                                   value(SeriesWrapper.ITEM_TYPE, SeriesWrapperType.SERIES.getId()),
-                                                   value(SeriesWrapper.ITEM_ID, key.get(Series.ID)),
-                                                   value(SeriesWrapper.PARENT, parentWrapper.get(SeriesWrapper.ID)));
-            for (Glob sub : subSeries) {
-              repository.create(SeriesWrapper.TYPE,
-                                value(SeriesWrapper.ITEM_TYPE, SeriesWrapperType.SUB_SERIES.getId()),
-                                value(SeriesWrapper.ITEM_ID, sub.get(SubSeries.ID)),
-                                value(SeriesWrapper.PARENT, seriesWrapper.get(SeriesWrapper.ID)));
-            }
-          }
-        }
-      }
 
       public void visitDeletion(Key key, FieldValues previousValues) throws Exception {
         delete(key, SeriesWrapperType.SERIES, Series.ID, repository);
