@@ -7,6 +7,7 @@ import org.designup.picsou.model.SubSeries;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.fields.IntegerField;
 import org.globsframework.model.*;
+import org.globsframework.model.format.GlobPrinter;
 import org.globsframework.model.utils.DefaultChangeSetVisitor;
 import org.globsframework.utils.Log;
 
@@ -45,7 +46,8 @@ public class SeriesWrapperUpdateTrigger implements ChangeSetListener {
             BudgetArea budgetArea = BudgetArea.get(series.get(Series.BUDGET_AREA));
             repository.update(wrapper.getKey(),
                               value(SeriesWrapper.PARENT,
-                                    SeriesWrapper.getWrapperForBudgetArea(budgetArea, repository).get(SeriesWrapper.ID)));
+                                    SeriesWrapper.getWrapperForBudgetArea(budgetArea, repository).get(SeriesWrapper.ID))
+            );
           }
         }
       }
@@ -64,15 +66,19 @@ public class SeriesWrapperUpdateTrigger implements ChangeSetListener {
         else {
           parentWrapper = SeriesWrapper.getWrapperForBudgetArea(values.get(Series.BUDGET_AREA), repository);
         }
-
-        Integer seriesId = key.get(Series.ID);
-        if (repository.findByIndex(SeriesWrapper.INDEX, SeriesWrapper.ITEM_TYPE, SeriesWrapperType.SERIES.getId())
-          .findByIndex(SeriesWrapper.ITEM_ID, seriesId)
-          .findByIndex(SeriesWrapper.PARENT, parentWrapper.get(SeriesWrapper.ID)).getGlobs().isEmpty()) {
-          repository.create(SeriesWrapper.TYPE,
-                            value(SeriesWrapper.ITEM_TYPE, SeriesWrapperType.SERIES.getId()),
-                            value(SeriesWrapper.ITEM_ID, seriesId),
-                            value(SeriesWrapper.PARENT, parentWrapper.get(SeriesWrapper.ID)));
+        if (parentWrapper == null) {
+          Log.write("Bug Empty parentWrapper for " + GlobPrinter.toString(values));
+        }
+        else {
+          Integer seriesId = key.get(Series.ID);
+          if (repository.findByIndex(SeriesWrapper.INDEX, SeriesWrapper.ITEM_TYPE, SeriesWrapperType.SERIES.getId())
+            .findByIndex(SeriesWrapper.ITEM_ID, seriesId)
+            .findByIndex(SeriesWrapper.PARENT, parentWrapper.get(SeriesWrapper.ID)).getGlobs().isEmpty()) {
+            repository.create(SeriesWrapper.TYPE,
+                              value(SeriesWrapper.ITEM_TYPE, SeriesWrapperType.SERIES.getId()),
+                              value(SeriesWrapper.ITEM_ID, seriesId),
+                              value(SeriesWrapper.PARENT, parentWrapper.get(SeriesWrapper.ID)));
+          }
         }
       }
 
@@ -103,15 +109,33 @@ public class SeriesWrapperUpdateTrigger implements ChangeSetListener {
             parentWrapper = SeriesWrapper.getWrapperForBudgetArea(series.get(Series.BUDGET_AREA), repository);
           }
 
-          Glob seriesWrapper = repository.create(SeriesWrapper.TYPE,
-                                                 value(SeriesWrapper.ITEM_TYPE, SeriesWrapperType.SERIES.getId()),
-                                                 value(SeriesWrapper.ITEM_ID, key.get(Series.ID)),
-                                                 value(SeriesWrapper.PARENT, parentWrapper.get(SeriesWrapper.ID)));
-          for (Glob sub : subSeries) {
-            repository.create(SeriesWrapper.TYPE,
-                              value(SeriesWrapper.ITEM_TYPE, SeriesWrapperType.SUB_SERIES.getId()),
-                              value(SeriesWrapper.ITEM_ID, sub.get(SubSeries.ID)),
-                              value(SeriesWrapper.PARENT, seriesWrapper.get(SeriesWrapper.ID)));
+          if (parentWrapper == null) {
+            Log.write("Bug Empty parentWrapper for " + GlobPrinter.toString(values));
+          }
+          else {
+            Glob seriesWrapper = repository.create(SeriesWrapper.TYPE,
+                                                   value(SeriesWrapper.ITEM_TYPE, SeriesWrapperType.SERIES.getId()),
+                                                   value(SeriesWrapper.ITEM_ID, key.get(Series.ID)),
+                                                   value(SeriesWrapper.PARENT, parentWrapper.get(SeriesWrapper.ID)));
+            for (Glob sub : subSeries) {
+              repository.create(SeriesWrapper.TYPE,
+                                value(SeriesWrapper.ITEM_TYPE, SeriesWrapperType.SUB_SERIES.getId()),
+                                value(SeriesWrapper.ITEM_ID, sub.get(SubSeries.ID)),
+                                value(SeriesWrapper.PARENT, seriesWrapper.get(SeriesWrapper.ID)));
+            }
+          }
+        }
+      }
+            Glob seriesWrapper = repository.create(SeriesWrapper.TYPE,
+                                                   value(SeriesWrapper.ITEM_TYPE, SeriesWrapperType.SERIES.getId()),
+                                                   value(SeriesWrapper.ITEM_ID, key.get(Series.ID)),
+                                                   value(SeriesWrapper.PARENT, parentWrapper.get(SeriesWrapper.ID)));
+            for (Glob sub : subSeries) {
+              repository.create(SeriesWrapper.TYPE,
+                                value(SeriesWrapper.ITEM_TYPE, SeriesWrapperType.SUB_SERIES.getId()),
+                                value(SeriesWrapper.ITEM_ID, sub.get(SubSeries.ID)),
+                                value(SeriesWrapper.PARENT, seriesWrapper.get(SeriesWrapper.ID)));
+            }
           }
         }
       }
@@ -153,7 +177,8 @@ public class SeriesWrapperUpdateTrigger implements ChangeSetListener {
         Integer groupId = key.get(SeriesGroup.ID);
         repository.delete(SeriesWrapper.TYPE,
                           and(fieldEquals(SeriesWrapper.ITEM_ID, groupId),
-                              fieldEquals(SeriesWrapper.ITEM_TYPE, SeriesWrapperType.SERIES_GROUP.getId())));
+                              fieldEquals(SeriesWrapper.ITEM_TYPE, SeriesWrapperType.SERIES_GROUP.getId()))
+        );
       }
     });
   }
