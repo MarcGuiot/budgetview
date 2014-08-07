@@ -9,7 +9,7 @@
 
   <cards ref="projectChartCards">
     <card name="chart">
-      <component ref="projectChart" background="sidebar.bg" opaque="true" border="empty(0,15,0,0)"/>
+      <component ref="projectChart" background="sidebar.bg" opaque="true" />
     </card>
     <card name="creation">
       <column>

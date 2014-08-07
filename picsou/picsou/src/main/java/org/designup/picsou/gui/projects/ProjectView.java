@@ -56,14 +56,6 @@ public class ProjectView extends View implements GlobSelectionListener, ChangeSe
 
     parentBuilder.add("projectView", builder.load());
 
-    JButton hideProjectDetails =
-      new JButton(new SetBooleanAction(UserPreferences.KEY,
-                                       UserPreferences.SHOW_PROJECT_DETAILS,
-                                       false,
-                                       Lang.get("summaryView.hideProjectDetails"),
-                                       repository));
-    parentBuilder.add("hideProjectDetails", hideProjectDetails);
-
     repository.addChangeListener(this);
     selectionService.addListener(this, Project.TYPE);
 

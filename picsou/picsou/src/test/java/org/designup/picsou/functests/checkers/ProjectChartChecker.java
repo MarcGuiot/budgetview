@@ -35,49 +35,9 @@ public class ProjectChartChecker extends ViewChecker {
     return ConfirmationDialogChecker.open(getProjectsPanel().getButton("createProject").triggerClick());
   }
 
-  public void checkShowDetailsButtonShown() {
-    Button button = mainWindow.getPanel("summaryView").getButton("toggleProjectDetails");
-    assertThat(button.isVisible());
-    assertThat(button.isEnabled());
-    assertThat(button.textEquals(Lang.get("summaryView.showProjectDetails")));
-  }
-
-  public void checkHideDetailsButtonShown() {
-    views.selectHome();
-    Button button = mainWindow.getPanel("summaryView").getButton("toggleProjectDetails");
-    assertThat(button.isVisible());
-    assertThat(button.isEnabled());
-    assertThat(button.textEquals(Lang.get("summaryView.hideProjectDetails")));
-  }
-
-  public void checkToggleDetailsButtonHidden() {
-    views.selectHome();
-    Button button = mainWindow.getPanel("summaryView").getButton("toggleProjectDetails");
-    assertFalse(button.isVisible());
-    assertFalse(button.isEnabled());
-  }
-
-  public ProjectChartChecker showProjectDetails() {
-    Button button = mainWindow.getPanel("summaryView").getButton("toggleProjectDetails");
-    assertThat(button.textEquals(Lang.get("summaryView.showProjectDetails")));
-    button.click();
-    return this;
-  }
-
-  public ProjectChartChecker hideProjectDetails() {
-    Button button = mainWindow.getPanel("summaryView").getButton("toggleProjectDetails");
-    assertThat(button.textEquals(Lang.get("summaryView.hideProjectDetails")));
-    button.click();
-    return this;
-  }
-
   public ProjectChartChecker checkRange(int firstMonth, int lastMonth) {
     getChart().checkRange(firstMonth, lastMonth);
     return this;
-  }
-
-  public void checkShowsChart() {
-    checkComponentVisible(getProjectsPanel(), JPanel.class, "projectChart", true);
   }
 
   public void select(String projectName) {

@@ -109,6 +109,7 @@ public class UserPreferences {
   @DefaultBoolean(false)
   public static BooleanField SHOW_TRANSACTION_GRAPH;
 
+  /** @deprecated */
   @DefaultBoolean(false)
   public static BooleanField SHOW_PROJECT_DETAILS;
 
