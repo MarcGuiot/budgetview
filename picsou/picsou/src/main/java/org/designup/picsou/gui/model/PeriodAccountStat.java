@@ -3,6 +3,7 @@ package org.designup.picsou.gui.model;
 import org.designup.picsou.model.Account;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.annotations.DefaultBoolean;
+import org.globsframework.metamodel.annotations.DefaultInteger;
 import org.globsframework.metamodel.annotations.Key;
 import org.globsframework.metamodel.annotations.Target;
 import org.globsframework.metamodel.fields.BooleanField;
@@ -19,6 +20,9 @@ public class PeriodAccountStat {
 
   @DefaultBoolean(true)
   public static BooleanField OK;
+
+  @DefaultInteger(0)
+  public static IntegerField UNCATEGORIZED_COUNT;
 
   public static IntegerField SEQUENCE;
 

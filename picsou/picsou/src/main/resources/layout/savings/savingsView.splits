@@ -11,9 +11,6 @@
 
     <style selector="#header label" anchor="center"/>
 
-    <style selector="button.toggleToMain" ui="hyperlinkButtonWithoutUnderline"
-           fill="none" anchor="left" weightX="0.01" font="-,plain,12"
-           icon="arrow_left_grey.png" rolloverIcon="arrow_left_blue.png"/>
   </styles>
 
   <panel styleClass="main">
@@ -23,13 +20,6 @@
 
       <panel styleClass="block">
         <column styleClass="innerBlock">
-
-          <row weightY="0.1" marginBottom="10">
-            <row styleClass="highlightedPanel">
-              <button action="toggleToMain" styleClass="toggleToMain" margin="3"/>
-            </row>
-            <filler fill="horizontal"/>
-          </row>
 
           <column styleClass="blockScrollBorder" weightY="100">
             <scrollPane marginTop="0" marginBottom="0" forceVerticalScroll="true" verticalUnitIncrement="10">
@@ -72,8 +62,6 @@
           <row weightY="0.1">
             <filler fill="horizontal"/>
             <grid ref="header" marginBottom="5">
-              <label text="$accountView.reference.title" gridPos="(0,0)"
-                     styleClass="totalAmountTitle" autoHideSource="totalReferenceSavingsPositionAmount"/>
               <label ref="totalReferenceSavingsPositionAmount" gridPos="(1,0)"
                      styleClass="totalAmount" tooltipText="$accountView.reference.tooltip"
                      marginLeft="10" marginRight="10"/>

@@ -63,9 +63,8 @@ public class PeriodAccountStatUpdater implements ChangeSetListener, GlobSelectio
         for (Glob account : repository.getAll(Account.TYPE, activeUserCreatedMainAccounts(monthIds))) {
           Integer accountId = account.get(Account.ID);
           Glob stat = repository.findOrCreate(Key.create(PeriodAccountStat.TYPE, accountId));
-          repository.update(stat.getKey(),
-                            value(PeriodAccountStat.OK, isAccountOk(accountId, monthIds)),
-                            value(PeriodAccountStat.SEQUENCE, account.get(Account.SEQUENCE)));
+          computeAccountStat(stat.getKey(), accountId, monthIds);
+          repository.update(stat.getKey(), value(PeriodAccountStat.SEQUENCE, account.get(Account.SEQUENCE)));
         }
       }
     }
@@ -74,17 +73,25 @@ public class PeriodAccountStatUpdater implements ChangeSetListener, GlobSelectio
     }
   }
 
-  private boolean isAccountOk(Integer accountId, SortedSet<Integer> monthIds) {
+  private void computeAccountStat(Key accountStatKey, Integer accountId, SortedSet<Integer> monthIds) {
     if (monthIds.isEmpty()) {
-      return false;
+      repository.update(accountStatKey,
+                        value(PeriodAccountStat.OK, false),
+                        value(PeriodAccountStat.UNCATEGORIZED_COUNT, 0));
+      return;
     }
+    boolean isOk = true;
     boolean transactionsFound = false;
+    int uncategorized = 0;
     for (Integer monthId : monthIds) {
       for (Glob transaction : repository.findByIndex(Transaction.POSITION_MONTH_INDEX, monthId)) {
         if (accountId.equals(transaction.get(Transaction.ACCOUNT))) {
           transactionsFound = true;
           if (transaction.get(Transaction.ACCOUNT_POSITION) < 0) {
-            return false;
+            isOk = false;
+          }
+          if (!Transaction.isCategorized(transaction)) {
+            uncategorized++;
           }
         }
       }
@@ -92,8 +99,10 @@ public class PeriodAccountStatUpdater implements ChangeSetListener, GlobSelectio
     if (!transactionsFound) {
       GlobMatcher accountMatcher = Matchers.transactionsForAccount(accountId);
       Double lastKnownPosition = DailyAccountPositionComputer.getLastValue(accountMatcher, monthIds.first(), Transaction.ACCOUNT_POSITION, repository);
-      return lastKnownPosition == null || lastKnownPosition >= 0;
+      isOk = lastKnownPosition == null || lastKnownPosition >= 0;
     }
-    return true;
+    repository.update(accountStatKey,
+                      value(PeriodAccountStat.OK, isOk),
+                      value(PeriodAccountStat.UNCATEGORIZED_COUNT, uncategorized));
   }
 }

@@ -188,7 +188,7 @@ public class QifImportTest extends LoggedInFunctionalTestCase {
       .addTransaction("2006/01/11", -2.23, "Tx 2")
       .loadFirstStartingAtZero(-3.33);
 
-    mainAccounts.checkPosition("", -3.33);
+    mainAccounts.checkPosition("Main account", -3.33);
   }
 
   public void testAutomaticallySelectAccount() throws Exception {
@@ -197,7 +197,7 @@ public class QifImportTest extends LoggedInFunctionalTestCase {
       .addTransaction("2006/01/10", -1.1, "Tx 1")
       .addTransaction("2006/01/11", -2.23, "Tx 2")
       .load(0.);
-    mainAccounts.createMainAccount("other Account", 0);
+    accounts.createMainAccount("other Account", 0);
 
     String newFile = QifBuilder
       .init(this)

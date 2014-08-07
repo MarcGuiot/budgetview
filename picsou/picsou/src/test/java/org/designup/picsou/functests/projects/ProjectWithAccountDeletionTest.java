@@ -94,13 +94,13 @@ public class ProjectWithAccountDeletionTest extends LoggedInFunctionalTestCase {
 
   public void testDeletingASavingsAccount() throws Exception {
     operations.hideSignposts();
-    mainAccounts.createNewAccount()
+    accounts.createNewAccount()
       .setName("Main account")
       .selectBank("CIC")
       .setAsMain()
       .validate();
 
-    mainAccounts.createNewAccount()
+    accounts.createNewAccount()
       .setName("Savings account")
       .selectBank("CIC")
       .setAsSavings()

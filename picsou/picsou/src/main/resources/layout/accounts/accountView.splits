@@ -2,22 +2,17 @@
 
   <styleImport file="/layout/picsouStyles.splits"/>
 
-  <column>
+  <column preferredSize="(310,800)" styleClass="sidebar">
 
-    <verticalSplit ref="accountSplit" styleClass="mainDivider">
+    <label ref="sectionTitle" styleClass="sidebarTitle"/>
 
-      <column name="mainAccountView">
-        <label text="$accountView.title.main" styleClass="blockTitle"/>
-        <panel ref="mainAccount"/>
+    <scrollPane forceVerticalScroll="true" styleClass="sidebarScrollPane" marginLeft="10" marginRight="10">
+      <column>
+        <panel ref="mainAccounts"/>
+        <panel ref="savingsAccounts"/>
       </column>
-
-      <column name="savingsAccountView">
-        <label text="$accountView.title.savings" styleClass="blockTitle"/>
-        <panel ref="savingsAccount"/>
-      </column>
-
-    </verticalSplit>
-
+    </scrollPane>
+    <button action="createAccount" styleClass="create" tooltipText="$accountView.create.tooltip"/>
   </column>
 
 </splits>

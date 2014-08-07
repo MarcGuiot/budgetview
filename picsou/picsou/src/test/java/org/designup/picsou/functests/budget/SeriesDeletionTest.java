@@ -155,13 +155,14 @@ public class SeriesDeletionTest extends LoggedInFunctionalTestCase {
   }
 
   public void testDeleteSavingsInManual() throws Exception {
-    mainAccounts.createNewAccount().setName("Main")
+    accounts.createNewAccount().setName("Main")
       .setAsMain()
       .setPosition(1000)
       .selectBank(SOCIETE_GENERALE)
       .validate();
 
-    savingsAccounts.createNewAccount().setName("Savings")
+    accounts.createNewAccount()
+      .setName("Savings")
       .selectBank(SOCIETE_GENERALE)
       .setAsSavings()
       .setPosition(1000)
@@ -225,7 +226,7 @@ public class SeriesDeletionTest extends LoggedInFunctionalTestCase {
       .setEndDate(200805)
       .validate();
 
-    savingsAccounts.createSavingsAccount("Livret", 1000.00);
+    accounts.createSavingsAccount("Livret", 1000.00);
     budgetView.savings.createSeries()
       .setName("Epargne")
       .setFromAccount("Account n. 00001123")
@@ -347,11 +348,11 @@ public class SeriesDeletionTest extends LoggedInFunctionalTestCase {
   }
 
   public void testTransferOnlyIfSameAccount() throws Exception {
-    mainAccounts.createMainAccount("her account", 10);
+    accounts.createMainAccount("her account", 10);
     OfxBuilder.init(this)
       .addTransaction("2010/12/01", 100.00, "Auchan")
       .loadInAccount("her account");
-    mainAccounts.createMainAccount("his account", 10);
+    accounts.createMainAccount("his account", 10);
 
     budgetView.variable.createSeries("courses", "her account");
     budgetView.variable.createSeries("courses sans compte");

@@ -1,21 +1,23 @@
 package org.designup.picsou.gui.accounts;
 
 import org.designup.picsou.gui.model.BudgetStat;
-import org.designup.picsou.model.*;
+import org.designup.picsou.model.Account;
+import org.designup.picsou.model.AccountType;
 import org.globsframework.metamodel.GlobType;
-import org.globsframework.model.*;
+import org.globsframework.model.ChangeSet;
+import org.globsframework.model.ChangeSetListener;
+import org.globsframework.model.GlobRepository;
 import org.globsframework.model.utils.GlobMatcher;
-import static org.globsframework.model.utils.GlobMatchers.*;
 import org.globsframework.utils.directory.Directory;
 
 import java.util.Set;
 
+import static org.globsframework.model.utils.GlobMatchers.*;
+
 public class MainAccountViewPanel extends AccountViewPanel {
 
   public MainAccountViewPanel(final GlobRepository repository, final Directory directory) {
-    super(repository, directory, createMatcher(), Account.MAIN_SUMMARY_ACCOUNT_ID);
-
-
+    super(repository, directory, createMatcher(), AccountType.MAIN, Account.MAIN_SUMMARY_ACCOUNT_ID);
 
     repository.addChangeListener(new ChangeSetListener() {
       public void globsChanged(ChangeSet changeSet, GlobRepository repository) {

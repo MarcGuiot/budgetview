@@ -155,7 +155,7 @@ public class BudgetAreaSeriesLayout implements RepeatLayout {
         int rowBottom = top + FIRST_ROW_HEIGHT + row * ROW_HEIGHT;
         switch (i % ROW_ITEM_COUNT) {
           case 0: // Series
-            layout(component, rowBottom, -3, left, components[i + 1].isEnabled() ? leftToggle : leftGauge, Alignment.RIGHT, Fill.NONE, isHeader);
+            layout(component, rowBottom, -3, left, components[i + 1].isEnabled() ? leftToggle : leftGauge, Alignment.LEFT, Fill.NONE, isHeader);
             break;
           case 1: // Group toggle
             layout(component, rowBottom, -3, leftToggle, components[i].isEnabled() ? leftGauge : leftToggle, Alignment.LEFT, Fill.NONE, isHeader);
@@ -200,8 +200,7 @@ public class BudgetAreaSeriesLayout implements RepeatLayout {
           break;
       }
       int y = isHeader ? FIRST_ROW_HEIGHT : rowBottom + yOffset - ROW_HEIGHT / 2 + size.height / 2;
-      Rectangle rect = new Rectangle(left, y, componentWidth, size.height);
-      component.setBounds(rect);
+      component.setBounds(left, y, componentWidth, size.height);
     }
 
     public void addLayoutComponent(String name, Component comp) {

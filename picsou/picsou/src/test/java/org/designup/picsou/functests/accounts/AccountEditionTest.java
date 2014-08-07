@@ -3,7 +3,10 @@ package org.designup.picsou.functests.accounts;
 import org.designup.picsou.functests.checkers.AccountEditionChecker;
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
+import org.designup.picsou.gui.model.PeriodAccountStat;
+import org.designup.picsou.model.Account;
 import org.designup.picsou.model.TransactionType;
+import org.globsframework.model.format.GlobPrinter;
 
 public class AccountEditionTest extends LoggedInFunctionalTestCase {
 
@@ -29,13 +32,13 @@ public class AccountEditionTest extends LoggedInFunctionalTestCase {
       .setAccountNumber("12345")
       .validate();
 
-    mainAccounts.checkAccountNames("My account");
+    mainAccounts.checkAccounts("My account");
   }
 
   public void testCreatingAMainAccount() throws Exception {
     views.selectHome();
 
-    mainAccounts.createNewAccount()
+    accounts.createNewAccount()
       .checkTitle("Create account")
       .checkAccountName("")
       .checkAstericsErrorOnName()
@@ -47,16 +50,16 @@ public class AccountEditionTest extends LoggedInFunctionalTestCase {
       .checkIsMain()
       .validate();
 
-    mainAccounts.checkAccountNames("Main CIC account");
+    mainAccounts.checkAccounts("Main CIC account");
   }
 
   public void testCreatingASavingsAccount() throws Exception {
     views.selectHome();
-    savingsAccounts.createNewAccount()
+    accounts.createNewAccount()
       .checkTitle("Create account")
       .setName("Savings")
       .setAccountNumber("123")
-      .checkIsSavings()
+      .setAsSavings()
       .selectBank("CIC")
       .validate();
 
@@ -79,13 +82,13 @@ public class AccountEditionTest extends LoggedInFunctionalTestCase {
       .validate();
     views.checkDataSelected();
 
-    savingsAccounts.checkAccountNames("Livret");
+    savingsAccounts.checkAccounts("Livret");
   }
 
   public void testABankMustBeSelectedWhenCreatingAnAccount() throws Exception {
     views.selectHome();
 
-    mainAccounts.createNewAccount()
+    accounts.createNewAccount()
       .setName("Main")
       .checkNoBankSelected()
       .selectAdvancedTab()
@@ -119,7 +122,7 @@ public class AccountEditionTest extends LoggedInFunctionalTestCase {
       .checkNoErrorDisplayed()
       .cancel();
 
-    mainAccounts.checkAccountNames("Account n. 0000123");
+    mainAccounts.checkAccounts("Account n. 0000123");
   }
 
   public void testAccountNamesMustBe25CharsOrLess() throws Exception {
@@ -140,13 +143,13 @@ public class AccountEditionTest extends LoggedInFunctionalTestCase {
       .checkNoErrorDisplayed()
       .validate();
 
-    mainAccounts.checkAccountNames("123456789_123456789_12345");
+    mainAccounts.checkAccounts("123456789_123456789_12345");
   }
 
   public void testChangingAMainAccountIntoASavingsAccount() throws Exception {
     views.selectHome();
 
-    mainAccounts.createNewAccount()
+    accounts.createNewAccount()
       .setName("Main CIC account")
       .selectBank("CIC")
       .checkIsMain()
@@ -158,7 +161,7 @@ public class AccountEditionTest extends LoggedInFunctionalTestCase {
       .setAsSavings()
       .validate();
 
-    savingsAccounts.checkAccountNames("Main CIC account");
+    savingsAccounts.checkAccounts("Main CIC account");
     mainAccounts.checkNoAccountsDisplayed();
   }
 
@@ -206,7 +209,7 @@ public class AccountEditionTest extends LoggedInFunctionalTestCase {
     operations.openPreferences().setFutureMonthsCount(12).validate();
 
     views.selectHome();
-    mainAccounts.createNewAccount()
+    accounts.createNewAccount()
       .setName("Main")
       .selectBank("ING Direct")
       .setPosition(1000)
@@ -228,27 +231,27 @@ public class AccountEditionTest extends LoggedInFunctionalTestCase {
       .cancel();
 
     timeline.selectMonth("2008/09");
-    mainAccounts.checkAccountNames("Account n. 0000100");
+    mainAccounts.checkAccounts("Account n. 0000100");
     mainAccounts.checkAccount("Account n. 0000100", 900, "2008/10/01");
-    mainAccounts.checkEstimatedPosition(-100);
+    mainAccounts.checkEndOfMonthPosition("Account n. 0000100", -100);
 
     timeline.selectMonth("2008/10");
-    mainAccounts.checkAccountNames("Main", "Account n. 0000100");
+    mainAccounts.checkAccounts("Main", "Account n. 0000100");
     mainAccounts.checkAccount("Account n. 0000100", 900, "2008/10/01");
     mainAccounts.checkAccount("Main", 1000, "2008/10/01");
-    mainAccounts.checkEstimatedPosition(900);
+    mainAccounts.checkEndOfMonthPosition("Account n. 0000100", 900);
   }
 
   public void testCreateAccountWithEndDate() throws Exception {
     operations.openPreferences().setFutureMonthsCount(12).validate();
     views.selectHome();
-    mainAccounts.createNewAccount()
+    accounts.createNewAccount()
       .setName("Main")
       .selectBank("ING Direct")
       .setPosition(1000)
       .validate();
 
-    mainAccounts.createNewAccount()
+    accounts.createNewAccount()
       .setName("Closed main")
       .selectBank("ING Direct")
       .setEndDate("2008/12/03")
@@ -270,18 +273,17 @@ public class AccountEditionTest extends LoggedInFunctionalTestCase {
     mainAccounts.edit("Closed main")
       .checkEndDate("2008/12/03")
       .validate();
-    mainAccounts.checkAccountNames("Main", "Closed main");
-    mainAccounts.checkEstimatedPosition(950);
-    mainAccounts.checkSummary(2000, "2008/10/01");
-    budgetView.getSummary()
-      .checkContent("| ok | Main*       | 1000.00 on 2008/10/01 |\n" +
+    mainAccounts.checkAccounts("Main", "Closed main");
+    mainAccounts.checkEndOfMonthPosition("Main", 950);
+    mainAccounts.checkReferencePosition(2000, "2008/10/01");
+    mainAccounts
+      .checkContent("| ok | Main        | 1000.00 on 2008/10/01 |\n" +
                     "| ok | Closed main | 1000.00 on 2008/10/01 |");
 
     timeline.selectMonth("2009/01");
-    mainAccounts.checkAccountNames("Main");
-    mainAccounts.checkEstimatedPosition(800);
-    budgetView.getSummary()
-      .checkContent("| ok | Main* | 1000.00 on 2008/10/01 |");
+    mainAccounts.checkAccounts("Main");
+    mainAccounts.checkEndOfMonthPosition("Main", 800);
+    accounts.checkContent("| ok | Main | 1000.00 on 2008/10/01 |");
   }
 
   public void testBeginEndInThePastWithTransactions() throws Exception {
@@ -311,57 +313,58 @@ public class AccountEditionTest extends LoggedInFunctionalTestCase {
       .validate();
 
     timeline.selectMonth("2008/04");
-    mainAccounts.checkAccountNames(OfxBuilder.DEFAULT_ACCOUNT_NAME);
-    mainAccounts.checkEstimatedPosition(400);
+    mainAccounts.checkAccounts(OfxBuilder.DEFAULT_ACCOUNT_NAME);
+    mainAccounts.checkEndOfMonthPosition(OfxBuilder.DEFAULT_ACCOUNT_NAME, 400);
 
     timeline.selectMonth("2008/05");
-    mainAccounts.checkAccountNames(OfxBuilder.DEFAULT_ACCOUNT_NAME);
-    mainAccounts.checkEstimatedPosition(300);
+    mainAccounts.checkAccounts(OfxBuilder.DEFAULT_ACCOUNT_NAME);
+    mainAccounts.checkEndOfMonthPosition(OfxBuilder.DEFAULT_ACCOUNT_NAME, 300);
 
     timeline.selectMonth("2008/06");
-    mainAccounts.checkAccountNames(OfxBuilder.DEFAULT_ACCOUNT_NAME, "Account n. 0000100");
-    mainAccounts.checkEstimatedPosition(200);
-    budgetView.getSummary().checkContent(
-      "| ok  | Account n. 00001123* | 0.00 on 2008/08/15 |\n" +
-      "| nok | Account n. 0000100   | 0.00 on 2008/07/01 |");
-    budgetView.getSummary().getChart()
+    mainAccounts.checkAccounts(OfxBuilder.DEFAULT_ACCOUNT_NAME, "Account n. 0000100");
+    mainAccounts.checkEndOfMonthPosition(OfxBuilder.DEFAULT_ACCOUNT_NAME, 200);
+
+    accounts.checkContent(
+      "| ok  | Account n. 00001123 | 0.00 on 2008/08/15 |\n" +
+      "| nok | Account n. 0000100  | 0.00 on 2008/07/01 |");
+    mainAccounts.getChart("Account n. 00001123")
       .checkValue(200806, 1, 300.00)
       .checkValue(200806, 15, 200.00)
       .checkValue(200807, 15, 100.00);
-    budgetView.getSummary().selectAccount("Account n. 0000100");
-    budgetView.getSummary().getChart()
+    mainAccounts.select("Account n. 0000100");
+    mainAccounts.getChart("Account n. 0000100")
       .checkValue(200806, 1, -900.00)
       .checkValue(200807, 1, 0.00);
 
     timeline.selectMonth("2008/07");
-    mainAccounts.checkAccountNames(OfxBuilder.DEFAULT_ACCOUNT_NAME, "Account n. 0000100");
-    budgetView.getSummary().selectAccount(OfxBuilder.DEFAULT_ACCOUNT_NAME);
-    mainAccounts.checkEstimatedPosition(100.00);
-    budgetView.getSummary().checkContent(
-      "| ok | Account n. 00001123* | 0.00 on 2008/08/15 |\n" +
-      "| ok | Account n. 0000100   | 0.00 on 2008/07/01 |");
-    budgetView.getSummary().getChart()
+    mainAccounts.checkAccounts(OfxBuilder.DEFAULT_ACCOUNT_NAME, "Account n. 0000100");
+    mainAccounts.select(OfxBuilder.DEFAULT_ACCOUNT_NAME);
+    mainAccounts.checkEndOfMonthPosition(OfxBuilder.DEFAULT_ACCOUNT_NAME, 100.00);
+    accounts.checkContent(
+      "| ok | Account n. 00001123 | 0.00 on 2008/08/15 |\n" +
+      "| ok | Account n. 0000100  | 0.00 on 2008/07/01 |");
+    mainAccounts.getChart("Account n. 00001123")
       .checkValue(200807, 1, 200.00)
       .checkValue(200807, 15, 100.00)
       .checkValue(200808, 15, 0.00);
-    budgetView.getSummary().selectAccount("Account n. 0000100");
-    budgetView.getSummary().getChart()
+    mainAccounts.select("Account n. 0000100");
+    mainAccounts.getChart("Account n. 0000100")
       .checkValue(200807, 1, 0.00);
 
     timeline.selectMonth("2008/08");
-    mainAccounts.checkAccountNames(OfxBuilder.DEFAULT_ACCOUNT_NAME);
-    budgetView.getSummary().checkContent(
-      "| ok | Account n. 00001123* | 0.00 on 2008/08/15 |");
-    budgetView.getSummary().getChart()
+    mainAccounts.checkAccounts(OfxBuilder.DEFAULT_ACCOUNT_NAME);
+    accounts.checkContent(
+      "| ok | Account n. 00001123 | 0.00 on 2008/08/15 |");
+    mainAccounts.getChart("Account n. 00001123")
       .checkValue(200808, 1, 100.00)
       .checkValue(200808, 15, 0.00);
-    mainAccounts.checkEstimatedPosition(0);
+    mainAccounts.checkEndOfMonthPosition("Account n. 00001123", 0);
   }
 
   public void testCreateCard() throws Exception {
     operations.openPreferences().setFutureMonthsCount(4).validate();
     views.selectHome();
-    AccountEditionChecker newAccount = mainAccounts.createNewAccount();
+    AccountEditionChecker newAccount = accounts.createNewAccount();
     AccountEditionChecker accountEditionChecker = newAccount
       .setName("Carte a débit Différé")
       .selectBank("ING Direct")
@@ -399,7 +402,7 @@ public class AccountEditionTest extends LoggedInFunctionalTestCase {
 
     operations.openPreferences().setFutureMonthsCount(12).validate();
     views.selectHome();
-    AccountEditionChecker newAccount = mainAccounts.createNewAccount();
+    AccountEditionChecker newAccount = accounts.createNewAccount();
     newAccount
       .setName("Carte a DD")
       .selectBank("ING Direct")
@@ -410,12 +413,12 @@ public class AccountEditionTest extends LoggedInFunctionalTestCase {
   }
 
   public void testAccountViewDisplaysLinksToWebsites() throws Exception {
-    mainAccounts.createNewAccount()
+    accounts.createNewAccount()
       .setName("Account 1")
       .selectBank("BNP Paribas")
       .validate();
 
-    mainAccounts.createNewAccount()
+    accounts.createNewAccount()
       .setName("No site account")
       .selectBank("Other")
       .validate();

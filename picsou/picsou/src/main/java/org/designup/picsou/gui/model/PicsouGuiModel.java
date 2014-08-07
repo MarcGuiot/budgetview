@@ -34,12 +34,13 @@ public class PicsouGuiModel {
   }
 
   public static GlobType[] getUserSpecificTypes() {
-    Collection<GlobType> types = new ArrayList<GlobType>(MODEL.getAll());
     Set<GlobType> typeNotToRemove = MODEL.getConstants().getTypes();
     typeNotToRemove.addAll(Arrays.asList(PreTransactionTypeMatcher.TYPE, BankFormat.TYPE,
                                          User.TYPE, AppVersionInformation.TYPE));
-    types.removeAll(typeNotToRemove);
-    return types.toArray(new GlobType[types.size()]);
+
+    Collection<GlobType> allTypes = new ArrayList<GlobType>(MODEL.getAll());
+    allTypes.removeAll(typeNotToRemove);
+    return allTypes.toArray(new GlobType[allTypes.size()]);
   }
 
 }

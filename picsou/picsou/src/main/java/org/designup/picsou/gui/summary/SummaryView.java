@@ -60,7 +60,7 @@ public class SummaryView extends View {
 
     parentBuilder.add("summaryView", builder);
 
-    parentBuilder.add("summaryProjectSplit", SplitPaneConfig.create(directory, LayoutConfig.HOME_SUMMARY_PROJECTS));
+    // parentBuilder.add("summaryProjectSplit", SplitPaneConfig.create(directory, LayoutConfig.HOME_SUMMARY_PROJECTS));
 
     parentBuilder.addLoader(new SplitsLoader() {
       public void load(Component component, SplitsNode node) {

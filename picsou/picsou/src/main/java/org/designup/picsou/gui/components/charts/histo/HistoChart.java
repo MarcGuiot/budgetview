@@ -6,7 +6,6 @@ import com.budgetview.shared.gui.histochart.HistoChartMetrics;
 import com.budgetview.shared.gui.histochart.HistoDataset;
 import org.designup.picsou.gui.components.charts.histo.utils.AwtTextMetrics;
 import org.designup.picsou.gui.components.charts.histo.utils.HistoChartListenerAdapter;
-import org.globsframework.gui.splits.color.Colors;
 import org.globsframework.gui.splits.utils.Disposable;
 import org.globsframework.gui.splits.utils.DisposableGroup;
 import org.globsframework.gui.splits.utils.GuiUtils;
@@ -57,13 +56,6 @@ public class HistoChart extends JPanel implements Disposable {
 
     disposables.add(colors);
     disposables.add(selectionManager);
-  }
-
-  public void setBackground(Color bg) {
-    if ("projectChartPanel".equals(getName())) {
-      System.out.println("HistoChart.setBackground: " + Colors.toString(bg));
-    }
-    super.setBackground(bg);
   }
 
   public void addListener(HistoChartListener listener) {
@@ -185,19 +177,11 @@ public class HistoChart extends JPanel implements Disposable {
       int left = metrics.left(i);
       int right = metrics.right(i);
 
-      if (dataset.isSelected(i)) {
-        g2.setColor(colors.getSelectedColumnColor());
-        g2.fillRect(left, metrics.columnTop(), metrics.columnWidth(), columnHeight);
+      g2.setColor(dataset.isSelected(i) ? colors.getSelectedColumnColor() : colors.getChartBgColor());
+      g2.fillRect(left, metrics.columnTop(), metrics.columnWidth(), columnHeight);
 
-        g2.setColor(colors.getSelectedLabelBackgroundColor());
-        g2.fillRect(left, metrics.labelTop(), metrics.columnWidth(), metrics.labelZoneHeightWithMargin());
-      }
-      else {
-        g2.setColor(colors.getChartBgColor());
-        g2.fillRect(left, metrics.columnTop(), metrics.columnWidth(), columnHeight);
-        g2.setColor(getBackground());
-        g2.fillRect(left, metrics.labelTop(), metrics.columnWidth(), metrics.labelZoneHeightWithMargin());
-      }
+      g2.setColor(colors.getLabelBgColor());
+      g2.fillRect(left, metrics.labelTop(), metrics.columnWidth(), metrics.labelZoneHeightWithMargin());
 
       if (config.drawColumnDividers) {
         colors.setColumnDividerStyle(g2);

@@ -54,11 +54,6 @@ public class BudgetViewChecker extends ViewChecker {
     return -1;
   }
 
-  public BudgetSummaryViewChecker getSummary() {
-    views.selectBudget();
-    return new BudgetSummaryViewChecker(mainWindow);
-  }
-
   protected String convert(double amount, BudgetArea budgetArea) {
     StringBuilder builder = new StringBuilder();
     if (budgetArea == BudgetArea.SAVINGS) {
@@ -91,14 +86,13 @@ public class BudgetViewChecker extends ViewChecker {
 
     public void checkTitle(String title) {
       Panel budgetPanel = getPanel();
-      TextBox label = budgetPanel.getTextBox("budgetAreaTitle");
+      Button label = budgetPanel.getButton("budgetAreaTitle");
       assertThat(label.textEquals(title));
     }
 
     public Panel getPanel() {
       views.selectBudget();
       if (panel == null) {
-        SavingsViewChecker.toggleToMainIfNeeded(mainWindow);
         panel = mainWindow.getPanel(panelName);
       }
       return panel;
@@ -210,7 +204,7 @@ public class BudgetViewChecker extends ViewChecker {
     }
 
     protected SeriesPanel getSeriesPanel(String seriesName) {
-      Button seriesButton = getPanel().getButton(seriesName);
+      Button seriesButton = getPanel().getPanel("seriesRepeat").getButton(seriesName);
       JPanel panel = (JPanel)seriesButton.getContainer().getAwtContainer();
       int index = getIndex(panel, seriesButton.getAwtComponent());
       return new SeriesPanel(panel, index, budgetArea);
@@ -378,7 +372,7 @@ public class BudgetViewChecker extends ViewChecker {
     }
 
     protected PopupButton getActionPopup() {
-      return new PopupButton(getPanel().getButton("seriesActions"));
+      return new PopupButton(getPanel().getButton("budgetAreaTitle"));
     }
 
     public void checkSeriesActions(String seriesName, String... actions) {
@@ -609,7 +603,7 @@ public class BudgetViewChecker extends ViewChecker {
       for (String name : seriesNames) {
         JButton plannedButton = getSeriesPanel(name).getPlannedAmount().getAwtComponent();
         if (!plannedButton.getFont().isBold()) {
-          fail("Planned amount button for '" + name + " is not selected");
+          fail("Planned amount button for '" + name + "' is not selected");
         }
 
       }
@@ -639,22 +633,6 @@ public class BudgetViewChecker extends ViewChecker {
 
     public SavingsBudgetAreaChecker(String panelName) {
       super(panelName, BudgetArea.SAVINGS);
-    }
-
-    public void toggleSavingsView() {
-      getSpecificActionButton().click();
-    }
-
-    public void checkNoToggleSavingsViewSignpostShown() {
-      checkNoSignpostVisible(mainWindow);
-    }
-
-    public void checkToggleSavingsViewSignpostShown(String text) {
-      checkSignpostVisible(getPanel(), getSpecificActionButton(), text);
-    }
-
-    private Button getSpecificActionButton() {
-      return getPanel().getButton("specificAction");
     }
 
     public SavingsBudgetAreaChecker createSavingSeries(String name, String fromAccount, String toAccount) {

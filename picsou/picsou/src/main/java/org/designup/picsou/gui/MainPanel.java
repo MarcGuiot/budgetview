@@ -11,8 +11,10 @@ import org.designup.picsou.gui.card.CardView;
 import org.designup.picsou.gui.card.NavigationService;
 import org.designup.picsou.gui.categorization.CategorizationView;
 import org.designup.picsou.gui.components.PicsouFrame;
+import org.designup.picsou.gui.components.highlighting.HighlightingService;
 import org.designup.picsou.gui.components.layoutconfig.LayoutConfigService;
 import org.designup.picsou.gui.config.ConfigService;
+import org.designup.picsou.gui.dashboard.DashboardView;
 import org.designup.picsou.gui.feedback.FeedbackService;
 import org.designup.picsou.gui.help.HelpService;
 import org.designup.picsou.gui.license.LicenseInfoView;
@@ -37,10 +39,10 @@ import org.designup.picsou.gui.summary.SummaryView;
 import org.designup.picsou.gui.summary.version.NewVersionView;
 import org.designup.picsou.gui.time.TimeView;
 import org.designup.picsou.gui.title.PeriodView;
-import org.designup.picsou.gui.title.TitleView;
 import org.designup.picsou.gui.transactions.TransactionView;
 import org.designup.picsou.gui.undo.UndoRedoService;
 import org.designup.picsou.gui.utils.Gui;
+import org.designup.picsou.gui.utils.MainPanelContainer;
 import org.designup.picsou.gui.utils.MenuBarBuilder;
 import org.designup.picsou.model.Month;
 import org.designup.picsou.model.SignpostStatus;
@@ -109,7 +111,8 @@ public class MainPanel {
 
     builder = new GlobsPanelBuilder(MainPanel.class, "/layout/picsou.splits", repository, directory);
 
-    TitleView titleView = new TitleView(repository, directory);
+    builder.add("mainPanel", new MainPanelContainer(directory));
+
     PeriodView periodView = new PeriodView(repository, directory);
     timeView = new TimeView(repository, directory);
 
@@ -121,7 +124,7 @@ public class MainPanel {
       new ReplicationGlobRepository(repository, PeriodSeriesStat.TYPE, PeriodBudgetAreaStat.TYPE, PeriodAccountStat.TYPE);
     projectView = new ProjectView(repository, directory);
 
-    BudgetToggle budgetToggle = new BudgetToggle(repository);
+    BudgetToggle budgetToggle = new BudgetToggle(repository, directory);
     budgetToggle.registerComponents(builder);
 
     directory.add(new NavigationService(transactionView, categorizationView, projectView, budgetToggle, repository, directory));
@@ -143,16 +146,18 @@ public class MainPanel {
     PeriodBudgetAreaStatUpdater.init(replicationGlobRepository);
     PeriodAccountStatUpdater.init(replicationGlobRepository, directory);
 
+    directory.add(new HighlightingService());
+
     seriesAnalysisView = new SeriesAnalysisView(repository, directory, menuBar.getPrintBudgetAction());
     signpostView = new SignpostView(replicationGlobRepository, directory);
     createPanel(
-      titleView,
       periodView,
+      new AccountView(replicationGlobRepository, directory),
+      new DashboardView(repository, directory),
       transactionView,
       timeView,
       new NewVersionView(repository, directory),
       new DemoMessageView(repository, directory),
-      new AccountView(repository, directory),
       categorizationView,
       cardView,
       new BudgetView(replicationGlobRepository, directory),

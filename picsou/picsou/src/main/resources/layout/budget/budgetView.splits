@@ -2,37 +2,18 @@
 
   <styleImport file="/layout/picsouStyles.splits"/>
 
-  <styles>
-    <style selector=".budgetLabelBlock" marginBottom="10"/>
-    <style selector=".budgetLabelBlock label" foreground="budgetLabel.text" marginTop="5" font="-,plain,10"/>
-  </styles>
+  <horizontalSplit ref="horizontalSplit" styleClass="mainDivider">
 
-  <column styleClass="main">
+    <verticalSplit ref="verticalSplit1" styleClass="mainDivider" weightX="1" marginTop="10" marginBottom="10">
+      <panel ref="incomeBudgetView" weightY="1"/>
+      <panel ref="recurringBudgetView" weightY="3"/>
+      <panel ref="savingsBudgetView" weightY="1"/>
+    </verticalSplit>
 
-    <horizontalSplit ref="horizontalSplit" styleClass="mainDivider">
+    <verticalSplit ref="verticalSplit2" styleClass="mainDivider" weightX="1" marginTop="10" marginBottom="10">
+      <panel ref="variableBudgetView" weightY="3"/>
+      <panel ref="extrasBudgetView" weightY="1"/>
+    </verticalSplit>
 
-      <verticalBoxes weightX="1">
-        <label text="$budgetSummaryView.title" styleClass="blockTitle" horizontalAlignment="center"/>
-        <column styleClass="block" marginBottom="5" preferredSize="(200,200)">
-          <panel ref="budgetSummaryView"/>
-        </column>
-
-        <verticalSplit ref="verticalSplit1" weightY="10" alignmentX="0.5" styleClass="mainDivider">
-          <panel ref="incomeBudgetView"/>
-          <panel ref="savingsBudgetView"/>
-        </verticalSplit>
-      </verticalBoxes>
-
-      <verticalSplit ref="verticalSplit2" styleClass="mainDivider">
-        <panel ref="recurringBudgetView"/>
-        <panel ref="extrasBudgetView"/>
-      </verticalSplit>
-
-      <column styleClass="mainDivider">
-        <panel ref="variableBudgetView" weightY="100"/>
-        <panel ref="uncategorizedSummaryView" weightY="0.1"/>
-      </column>
-    </horizontalSplit>
-
-  </column>
+  </horizontalSplit>
 </splits>

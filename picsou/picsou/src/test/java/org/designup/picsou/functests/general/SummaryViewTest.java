@@ -67,7 +67,7 @@ public class SummaryViewTest extends LoggedInFunctionalTestCase {
       .load();
     mainAccounts.edit("Account n. 000456").setAsSavings().validate();
 
-    views.selectHome();
+    views.selectProjects();
     summary.checkAccountPosition("Account n. 000123", "2800.00 on 2011/01/10");
     summary.checkAccountPosition("Account n. 000234", "1000.00 on 2011/01/01");
     summary.checkAccountPosition("Account n. 000345", "-1400.00 on 2011/01/10");
@@ -114,7 +114,7 @@ public class SummaryViewTest extends LoggedInFunctionalTestCase {
   public void testCanAggregateAccountGraphs() throws Exception {
     operations.openPreferences().setFutureMonthsCount(6).validate();
 
-    views.selectHome();
+    views.selectProjects();
     summary.checkNoAccounts();
 
     OfxBuilder.init(this)

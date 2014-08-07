@@ -88,7 +88,7 @@ public class SignpostView extends View {
 
   private void updateCard() {
     if (SignpostSectionType.isAllCompleted(repository)) {
-      cardHandler.show("summary");
+      cardHandler.show("dashboard");
     }
     else {
       cardHandler.show("signposts");

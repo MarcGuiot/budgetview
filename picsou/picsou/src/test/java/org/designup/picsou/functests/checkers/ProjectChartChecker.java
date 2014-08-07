@@ -1,14 +1,11 @@
 package org.designup.picsou.functests.checkers;
 
 import org.designup.picsou.functests.checkers.components.HistoButtonChartChecker;
-import org.designup.picsou.functests.checkers.components.PopupButton;
 import org.designup.picsou.functests.checkers.components.PopupChecker;
 import org.designup.picsou.utils.Lang;
 import org.uispec4j.Button;
 import org.uispec4j.Panel;
-import org.uispec4j.Table;
 import org.uispec4j.Window;
-import org.uispec4j.assertion.UISpecAssert;
 import org.uispec4j.interception.PopupMenuInterceptor;
 
 import javax.swing.*;
@@ -26,16 +23,16 @@ public class ProjectChartChecker extends ViewChecker {
   }
 
   public void checkShowsCreation() {
-    checkComponentVisible(getHomePanel(), JButton.class, "createProject", true);
-    checkComponentVisible(getHomePanel(), JPanel.class, "projectChart", false);
+    checkComponentVisible(getProjectsPanel(), JButton.class, "createProject", true);
+    checkComponentVisible(getProjectsPanel(), JPanel.class, "projectChart", false);
   }
 
   public void create() {
-    getHomePanel().getButton("createProject").click();
+    getProjectsPanel().getButton("createProject").click();
   }
 
   public ConfirmationDialogChecker createAndOpenConfirmation() {
-    return ConfirmationDialogChecker.open(getHomePanel().getButton("createProject").triggerClick());
+    return ConfirmationDialogChecker.open(getProjectsPanel().getButton("createProject").triggerClick());
   }
 
   public void checkShowDetailsButtonShown() {
@@ -80,7 +77,7 @@ public class ProjectChartChecker extends ViewChecker {
   }
 
   public void checkShowsChart() {
-    checkComponentVisible(getHomePanel(), JPanel.class, "projectChart", true);
+    checkComponentVisible(getProjectsPanel(), JPanel.class, "projectChart", true);
   }
 
   public void select(String projectName) {
@@ -92,11 +89,13 @@ public class ProjectChartChecker extends ViewChecker {
   }
 
   public ProjectChartChecker checkNoProjectShown() {
+    views.selectProjects();
     getChart().checkNoElementShown();
     return this;
   }
 
   public ProjectChartChecker checkProjectList(String... projectNames) {
+    views.selectProjects();
     getChart().checkElementNames(projectNames);
     return this;
   }
@@ -109,15 +108,15 @@ public class ProjectChartChecker extends ViewChecker {
 
   public HistoButtonChartChecker getChart() {
     if (chart == null) {
-      views.selectHome();
-      chart = new HistoButtonChartChecker(mainWindow, "home", "projectChart");
+      views.selectProjects();
+      chart = new HistoButtonChartChecker(mainWindow, "summaryView", "projectChart");
     }
     return chart;
   }
 
-  private Panel getHomePanel() {
+  private Panel getProjectsPanel() {
     if (homePanel == null) {
-      views.selectHome();
+      views.selectProjects();
       homePanel = mainWindow.getPanel("projectChartPanel");
     }
     return homePanel;

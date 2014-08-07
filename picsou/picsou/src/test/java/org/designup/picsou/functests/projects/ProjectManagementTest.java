@@ -56,7 +56,7 @@ public class ProjectManagementTest extends LoggedInFunctionalTestCase {
 
     timeline.selectMonth("2011/01");
     budgetView.extras.checkSeries("My project", 0, -200.00);
-    budgetView.getSummary().checkEndPosition(1700.00);
+    mainAccounts.checkEndOfMonthPosition("Account n. 001111", 1700.00);
 
     views.selectHome();
     projects.select("My project");
@@ -81,7 +81,7 @@ public class ProjectManagementTest extends LoggedInFunctionalTestCase {
       "| My project | Jan | 800.00 | on |"
     );
     budgetView.extras.checkSeries("My project", 0, -200.00);
-    budgetView.getSummary().checkEndPosition(1700.00);
+    mainAccounts.checkEndOfMonthPosition("Account n. 001111", 1700.00);
     budgetView.extras.checkContent("| My project | 0.00 | 200.00 |\n");
     budgetView.extras.expandGroup("My project");
     budgetView.extras.checkContent("| My project  | 0.00 | 200.00 |\n" +
@@ -89,13 +89,13 @@ public class ProjectManagementTest extends LoggedInFunctionalTestCase {
 
     timeline.selectMonth("2011/02");
     budgetView.extras.checkSeries("My project", 0, -600.00);
-    budgetView.getSummary().checkEndPosition(1100.00);
+    mainAccounts.checkEndOfMonthPosition("Account n. 001111", 1100.00);
 
     views.selectCategorization();
     categorization.selectTransaction("Resa Travel Plus");
     categorization.selectExtras().checkContainsSeries("Reservation", "Travel", "Hotel");
 
-    views.selectHome();
+    views.selectProjects();
     projectChart.select("My project");
     currentProject
       .checkItems("| Reservation | Jan | 0.00 | 200.00 |\n" +
@@ -113,9 +113,9 @@ public class ProjectManagementTest extends LoggedInFunctionalTestCase {
     timeline.selectMonth("2011/02");
     projectChart.checkProject("My project", 201101, 201102, 700.00);
     budgetView.extras.checkSeries("My project", 0, -500.00);
-    budgetView.getSummary().checkEndPosition(1300.00);
+    mainAccounts.checkEndOfMonthPosition("Account n. 001111", 1300.00);
 
-    views.selectHome();
+    views.selectProjects();
     projectChart.select("My project");
     currentProject
       .checkItems("| Reservation | Jan | 100.00 | 200.00 |\n" +
@@ -138,7 +138,7 @@ public class ProjectManagementTest extends LoggedInFunctionalTestCase {
 
     timeline.selectMonth("2011/01");
     budgetView.extras.checkSeries("My project", -100.00, -200.00);
-    budgetView.getSummary().checkEndPosition(1800.00);
+    mainAccounts.checkEndOfMonthPosition("Account n. 001111", 1800.00);
 
     transactions.initAmountContent()
       .add("01/01/2011", "RESA TRAVEL PLUS", -100.00, "Reservation", 1900.00, 1900.00, "Account n. 001111")
@@ -150,7 +150,7 @@ public class ProjectManagementTest extends LoggedInFunctionalTestCase {
 
     operations.hideSignposts();
 
-    mainAccounts.createMainAccount("Main account", 1000.00);
+    accounts.createMainAccount("Main account", 1000.00);
 
     projectChart.create();
     currentProject
@@ -177,7 +177,7 @@ public class ProjectManagementTest extends LoggedInFunctionalTestCase {
   public void testCancellingANewlyCreatedProjectDeletesIt() throws Exception {
     operations.hideSignposts();
 
-    mainAccounts.createMainAccount("Main account", 1000.00);
+    accounts.createMainAccount("Main account", 1000.00);
 
     projectChart.create();
     currentProject
@@ -209,7 +209,7 @@ public class ProjectManagementTest extends LoggedInFunctionalTestCase {
   public void testProjectWithItemsNotDeletedWhenCancellingEmptyName() throws Exception {
     operations.hideSignposts();
 
-    mainAccounts.createMainAccount("Main account", 1000.00);
+    accounts.createMainAccount("Main account", 1000.00);
 
     projectChart.create();
     currentProject
@@ -242,7 +242,7 @@ public class ProjectManagementTest extends LoggedInFunctionalTestCase {
   public void testCancellingANewlyCreatedItemDeletesIt() throws Exception {
     operations.hideSignposts();
 
-    mainAccounts.createMainAccount("Main account", 1000.00);
+    accounts.createMainAccount("Main account", 1000.00);
 
     projectChart.create();
     currentProject
@@ -397,7 +397,7 @@ public class ProjectManagementTest extends LoggedInFunctionalTestCase {
       .setNameAndValidate("My project")
       .addExpenseItem(0, "Trip", 201101, -150.00);
 
-    views.checkHomeSelected();
+    views.checkProjectsSelected();
     projectChart.checkProjectList("My project");
     projectChart.select("My project");
     currentProject
@@ -526,7 +526,7 @@ public class ProjectManagementTest extends LoggedInFunctionalTestCase {
       .check();
 
     timeline.selectMonth("2010/12");
-    views.selectHome();
+    views.selectProjects();
     currentProject.view(0).showTransactionsThroughMenu();
     views.checkDataSelected();
     timeline.checkSelection("2010/11", "2010/12");
@@ -615,6 +615,7 @@ public class ProjectManagementTest extends LoggedInFunctionalTestCase {
       .addTransaction("2010/12/10", -100.00, "Resa")
       .load();
 
+    views.selectProjects();
     projectChart.create();
     currentProject
       .setNameAndValidate("My project")

@@ -122,10 +122,6 @@
            icon="arrow_down.png" rolloverIcon="arrow_down_roll.png"
            styleClass="hyperlink" foreground="#0000FF"/>
 
-    <!-- Main panel -->
-
-    <style selector="panel.main" opaque="false"/>
-
     <!-- Dialog -->
 
     <ui name="dialog" class="org.globsframework.gui.splits.components.StyledPanelUI"
@@ -256,20 +252,6 @@
            fill="none" anchor="right" horizontalAlignment="right"
            foreground="block.item.link"/>
 
-    <!-- Inner block selection -->
-    <style id="selectedPanel" selector="x" opaque="true"
-           background="block.inner.highlight.selected.bg"
-           border="line(block.inner.highlight.selected.border)"/>
-    <style id="selectedRolloverPanel" selector="x" opaque="true"
-           background="block.inner.highlight.selected.bg.rollover"
-           border="line(block.inner.highlight.selected.border.rollover)"/>
-    <style id="unselectedPanel" selector="x" opaque="true"
-           background="block.inner.bg"
-           border=""/>
-    <style id="unselectedRolloverPanel" selector="x" opaque="true"
-           background="block.inner.highlight.unselected.bg.rollover"
-           border="line(block.inner.highlight.unselected.border.rollover)"/>
-
     <!-- Block footer -->
     <style selector=".footer" background="block.footer.bg" border="matte(1,0,0,0,block.footer.top)"
            opaque="true"/>
@@ -351,14 +333,16 @@
            fill="none" weightX="0" cursor="hand"/>
 
     <!-- Navigation widgets -->
+
     <style selector=".navigationWidgetLabel"
            foreground="navigationView.text" opaque="false" font="-,plain,11"
            fill="horizontal" margin="0"/>
 
     <!-- Gauge -->
+
     <style selector=".totalGauge"
            opaque="false"
-           fill="horizontal" weightX="100"
+           fill="horizontal"
            marginLeft="10" marginRight="10"
            borderColor="gauge.total.border" rolloverBorderColor="gauge.total.border.rollover"
            emptyColorTop="gauge.total.empty.top" emptyColorBottom="gauge.total.empty.bottom"
@@ -382,6 +366,7 @@
             />
 
     <!-- Selection toggles -->
+
     <style selector="toggleButton.budgetAreaSelector" opaque="false"
            foreground="toggle.selector.budgetArea" font="-,bold,12"
            marginRight="2" fill="horizontal" anchor="center" weightY="0"/>
@@ -393,6 +378,7 @@
            font="-,plain,12" fill="none" anchor="west"/>
 
     <!-- Split panes -->
+
     <style selector="horizontalSplit" showGripper="false" dividerSize="12" opaque="false"/>
     <style selector="verticalSplit" showGripper="false" dividerSize="8" opaque="false"/>
     <style selector="horizontalSplit.mainDivider" showGripper="true" foreground="splitpane.main.handle"/>
@@ -401,16 +387,36 @@
     <style selector="verticalSplit.blockDivider" showGripper="true" foreground="splitpane.block.handle"/>
 
     <!-- Inner dialog blocks -->
+
     <ui name="dialogBlockUI" class="org.globsframework.gui.splits.components.StyledPanelUI"
         topColor="dialogBlock.bg" bottomColor="dialogBlock.bg" borderColor="dialogBlock.border"
         borderWidth="2" cornerRadius="10"/>
     <style selector=".dialogBlock" ui="dialogBlockUI" opaque="true"/>
 
     <!-- Repeat header labels -->
+
     <style selector="repeat header label" font="-,plain,11"
            foreground="block.inner.columnTitle" horizontalTextPosition="center"
            fill="none" anchor="center"/>
 
+    <!-- Sidebar -->
+
+    <style selector=".sidebarTitle" font="LatoLight,plain,30" weightX="0"
+           marginLeft="10" marginTop="10" marginBottom="20"
+           foreground="sidebar.title" anchor="west"/>
+
+    <style selector=".sidebarSectionTitle" font="LatoLight,plain,14"
+           fill="none" anchor="south" weightX="0"
+           foreground="sidebar.sectionTitle"/>
+
+    <style selector=".sidebarSeparator" marginTop="1" border="matte(1,0,0,0,sidebar.separator)"/>
+
+    <style selector=".sidebarScrollPane"  border="" opaque="false"
+           viewportOpaque="true" viewportBackground="sidebar.bg"/>
+
+    <!-- Sidebar -->
+
+    <style selector=".content" border="empty(10)" opaque="true" background="content.bg"/>
   </styles>
 
 </splits>

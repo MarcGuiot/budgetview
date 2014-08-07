@@ -26,8 +26,7 @@ import org.globsframework.utils.directory.Directory;
 
 import java.util.Set;
 
-import static org.globsframework.model.utils.GlobMatchers.and;
-import static org.globsframework.model.utils.GlobMatchers.fieldEquals;
+import static org.globsframework.model.utils.GlobMatchers.*;
 
 public abstract class PositionsChartView extends View implements HistoChartRangeListener, Disposable {
   protected HistoChartBuilder histoChartBuilder;

@@ -1,12 +1,11 @@
 package org.designup.picsou.gui.savings;
 
+import com.budgetview.shared.gui.histochart.HistoChartConfig;
 import org.designup.picsou.gui.View;
 import org.designup.picsou.gui.accounts.actions.CreateAccountAction;
 import org.designup.picsou.gui.accounts.position.AccountPositionLabels;
 import org.designup.picsou.gui.accounts.position.SavingsAccountPositionLabels;
 import org.designup.picsou.gui.budget.SeriesEditionButtons;
-import org.designup.picsou.gui.card.NavigationService;
-import com.budgetview.shared.gui.histochart.HistoChartConfig;
 import org.designup.picsou.gui.components.charts.histo.HistoChartColors;
 import org.designup.picsou.gui.series.analysis.histobuilders.AccountHistoChartUpdater;
 import org.designup.picsou.gui.series.analysis.histobuilders.HistoChartBuilder;
@@ -14,13 +13,12 @@ import org.designup.picsou.gui.series.analysis.histobuilders.range.ScrollableHis
 import org.designup.picsou.gui.utils.DaySelection;
 import org.designup.picsou.gui.utils.Matchers;
 import org.designup.picsou.model.*;
-import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobSelection;
 import org.globsframework.gui.GlobSelectionListener;
 import org.globsframework.gui.GlobsPanelBuilder;
+import org.globsframework.gui.components.GlobRepeat;
 import org.globsframework.gui.splits.PanelBuilder;
 import org.globsframework.gui.splits.repeat.RepeatComponentFactory;
-import org.globsframework.gui.components.GlobRepeat;
 import org.globsframework.gui.views.GlobLabelView;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
@@ -29,9 +27,6 @@ import org.globsframework.model.Key;
 import org.globsframework.model.utils.GlobMatcher;
 import org.globsframework.model.utils.GlobMatchers;
 import org.globsframework.utils.directory.Directory;
-
-import javax.swing.*;
-import java.awt.event.ActionEvent;
 
 public class SavingsView extends View implements GlobSelectionListener {
   private Matchers.AccountDateMatcher accountDateMatcher;
@@ -56,8 +51,6 @@ public class SavingsView extends View implements GlobSelectionListener {
     SeriesEditionButtons seriesButtons = new SeriesEditionButtons(BudgetArea.SAVINGS, repository, directory);
     seriesButtons.setNames("createSavingsSeries");
     seriesButtons.registerButtons(builder);
-
-    builder.add("toggleToMain", new ToggleToMainAction());
 
     builder.add("createSavingsAccount", new CreateAccountAction(AccountType.SAVINGS, repository, directory));
 
@@ -131,17 +124,6 @@ public class SavingsView extends View implements GlobSelectionListener {
       };
       cellBuilder.addDisposable(updater);
       cellBuilder.add("savingsAccountChart", histoChartBuilder.getChart());
-    }
-
-  }
-
-  private class ToggleToMainAction extends AbstractAction {
-    private ToggleToMainAction() {
-      super(Lang.get("savingsView.toggleToMain"));
-    }
-
-    public void actionPerformed(ActionEvent actionEvent) {
-      directory.get(NavigationService.class).gotoBudgetForMainAccounts();
     }
   }
 }

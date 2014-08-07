@@ -580,12 +580,11 @@ public class OfxImportTest extends LoggedInFunctionalTestCase {
       .initContent()
       .add("10/08/2008", TransactionType.CREDIT_CARD, "VIREMENT", "", -50.00)
       .check();
-    views.selectBudget();
-    budgetView.getSummary().checkEndPosition(10.00);
+    mainAccounts.checkEndOfMonthPosition("Card n. 1234", 10.00);
   }
 
   public void testIfAnAccountAlreadyExistWeAskToAssociateToIt() throws Exception {
-    mainAccounts.createMainAccount("First account", 100);
+    accounts.createMainAccount("First account", 100);
 
     String ofxFile = OfxBuilder.init(this)
       .addBankAccount(BankEntity.GENERIC_BANK_ENTITY_ID, 111, "111", 1000.00, "2008/08/10")
@@ -616,7 +615,7 @@ public class OfxImportTest extends LoggedInFunctionalTestCase {
   }
 
   public void testCreateTwoAccountsInOfxAndCheckOnlyOneIsAvailable() throws Exception {
-    mainAccounts.createMainAccount("First account", 100);
+    accounts.createMainAccount("First account", 100);
     String ofxFile = OfxBuilder.init(this)
       .addBankAccount(BankEntity.GENERIC_BANK_ENTITY_ID, 111, "111", 1000.00, "2008/08/10")
       .addTransaction("2008/08/10", -50.00, "Virement 111")
@@ -638,7 +637,7 @@ public class OfxImportTest extends LoggedInFunctionalTestCase {
     importDialog
       .completeLastStep();
 
-    mainAccounts.checkAccountNames("Account n. 222", "First account");
+    mainAccounts.checkAccounts("Account n. 222", "First account");
   }
 
   public void testCreateTwoAccountsEndSkipFirst() throws Exception {
@@ -660,15 +659,15 @@ public class OfxImportTest extends LoggedInFunctionalTestCase {
       .setMainAccount()
       .selectBank("Other")
       .completeImport();
-    mainAccounts.checkAccountNames("Account n. 222");
+    mainAccounts.checkAccounts("Account n. 222");
   }
 
   public void testAutomaticallySelectsAccountWhenSeveralAccountsHaveTheSameNumber() throws Exception {
 
     // Cas de l'import de fichiers LCL où les comptes courant et carte ont le même numéro de compte
 
-    mainAccounts.createMainAccount("Account A", 100.00);
-    mainAccounts.createMainAccount("Account B", 100.00);
+    accounts.createMainAccount("Account A", 100.00);
+    accounts.createMainAccount("Account B", 100.00);
 
     OfxBuilder
       .init(this)

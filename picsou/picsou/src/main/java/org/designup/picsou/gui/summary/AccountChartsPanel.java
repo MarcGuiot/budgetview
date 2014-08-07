@@ -168,6 +168,7 @@ public class AccountChartsPanel {
       chartView.setAccount(Account.isMain(account) ? userCreatedMainAccounts() : userCreatedSavingsAccounts());
       SplitsNode<HistoChart> node = chartView.registerComponents(cellBuilder);
       node.applyStyle("accountChartShown");
+      cellBuilder.addDisposable(chartView);
 
       BooleanFieldListener listener =
         BooleanFieldListener.install(UserPreferences.KEY,

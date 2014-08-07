@@ -89,6 +89,10 @@ public class HistoChartBuilder implements Disposable {
     histoChartLegend = null;
   }
 
+  public boolean isDisposed() {
+    return histoChart == null;
+  }
+
   private void initColors(Directory directory) {
     balanceColors = disposables.add(new HistoDiffColors(
       "histo.balance.line",

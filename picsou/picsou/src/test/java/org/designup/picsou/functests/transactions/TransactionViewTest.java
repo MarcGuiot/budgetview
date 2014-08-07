@@ -184,7 +184,7 @@ public class TransactionViewTest extends LoggedInFunctionalTestCase {
       .addTransaction("2006/01/11", -100.0, "Virement")
       .load();
 
-    savingsAccounts.createSavingsAccount("Epargne", 1000.);
+    accounts.createSavingsAccount("Epargne", 1000.);
 
     transactions.categorize(0);
     categorization
@@ -205,6 +205,7 @@ public class TransactionViewTest extends LoggedInFunctionalTestCase {
     categorization.selectTransaction("Virement")
       .setUncategorized();
 
+    savingsAccounts.select("Epargne");
     savingsView.editSeries("Epargne", "Epargne")
       .setName("NEW NAME FOR EPARGNE")
       .setFromAccount("External account")
@@ -212,6 +213,7 @@ public class TransactionViewTest extends LoggedInFunctionalTestCase {
       .setAmount("100")
       .validate();
 
+    savingsAccounts.unselect("Epargne");
     transactions
       .initContent()
       .add("11/01/2006", TransactionType.VIREMENT, "NEW NAME FOR EPARGNE", "", 100.00, "NEW NAME FOR EPARGNE")
@@ -354,7 +356,7 @@ public class TransactionViewTest extends LoggedInFunctionalTestCase {
   }
 
   public void testDeleteATransactionWithMirrorSavings() throws Exception {
-    savingsAccounts.createSavingsAccount("Epargne LCL", 1000.00);
+    accounts.createSavingsAccount("Epargne LCL", 1000.00);
     categorization
       .selectTransactions("sg")
       .selectSavings().createSeries()

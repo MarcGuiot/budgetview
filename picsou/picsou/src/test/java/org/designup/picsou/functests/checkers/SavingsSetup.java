@@ -41,7 +41,7 @@ public class SavingsSetup {
       .setAsSavings()
       .selectBank("ING Direct")
       .validate();
-    testCase.savingsAccounts.createNewAccount()
+    testCase.accounts.createNewAccount()
       .setName("Non-imported Savings")
       .setAsSavings()
       .selectBank("ING Direct")

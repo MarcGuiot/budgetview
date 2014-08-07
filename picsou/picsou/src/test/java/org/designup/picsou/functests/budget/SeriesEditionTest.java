@@ -1165,7 +1165,7 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
 
   public void testCreatingAnAccountFromTheSeriesDialog() throws Exception {
 
-    mainAccounts.createMainAccount("Main", 0.0);
+    accounts.createMainAccount("Main", 0.0);
 
     SeriesEditionDialogChecker dialog = budgetView.savings.createSeries().setName("ING");
 
@@ -1403,7 +1403,8 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
     OfxBuilder.init(this)
       .addTransaction("2008/01/01", -29.00, "Auchan") // pour creer des mois dans le passe
       .load();
-    savingsAccounts.createSavingsAccount("ING", 1000.);
+    accounts.createSavingsAccount("ING", 1000.00);
+    savingsAccounts.select("ING");
     savingsView.createSeries()
       .setName("Epargne")
       .setFromAccount("External account")
@@ -1440,7 +1441,8 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
       .addTransaction("2008/10/10", -50.00, "FNAC")
       .load();
 
-    savingsAccounts.createNewAccount()
+    accounts.createNewAccount()
+      .setAsSavings()
       .setName("Livret")
       .selectBank("ING Direct")
       .setPosition(2000.00)
@@ -1453,8 +1455,7 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
       .setAmount(100.00)
       .validate();
 
-    budgetView.getSummary().selectAccount("Account n. 000123");
-    budgetView.getSummary().getChart()
+    mainAccounts.getChart("Account n. 000123")
       .checkValue(200810, 1, 1000.00)
       .checkValue(200810, 15, 970.00);
 
@@ -1465,8 +1466,7 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
       .checkAmount(100.00)
       .validate();
 
-    budgetView.getSummary().selectAccount("Account n. 000123");
-    budgetView.getSummary().getChart()
+    mainAccounts.getChart("Account n. 000123")
       .checkValue(200810, 1, 800.00)
       .checkValue(200810, 11, 700.00)
       .checkValue(200810, 15, 670.00);

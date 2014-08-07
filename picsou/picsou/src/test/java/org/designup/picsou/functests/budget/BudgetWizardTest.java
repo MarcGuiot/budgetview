@@ -44,7 +44,7 @@ public class BudgetWizardTest extends LoggedInFunctionalTestCase {
     double expensesFor200808 = 30 + 1500 + 300 + 100 + 100;
     double balanceFor200808 = incomeFor200808 - expensesFor200808;
 
-    budgetView.getSummary().checkEndPosition(0.00);
+    mainAccounts.checkEndOfMonthPosition(OfxBuilder.DEFAULT_ACCOUNT_NAME, 0.00);
     budgetView.income.checkTotalObserved(incomeFor200807);
     budgetView.recurring.checkTotalObserved(-1530.00);
     budgetView.savings.checkTotalObserved(100.);
@@ -55,13 +55,13 @@ public class BudgetWizardTest extends LoggedInFunctionalTestCase {
     timeline.checkMonthTooltip("2008/07", -880.00);
 
     timeline.selectMonth("2008/08");
-    mainAccounts.checkEstimatedPosition(1000 + balanceFor200808);
+    mainAccounts.checkEndOfMonthPosition(OfxBuilder.DEFAULT_ACCOUNT_NAME, 1000 + balanceFor200808);
 
     budgetView.recurring.checkTotalPlanned(-30 - 1500);
     budgetView.variable.checkTotalPlanned(-300 - 100);
 
     timeline.selectAll();
-    mainAccounts.checkEstimatedPosition(1000 + incomeFor200808 - expensesFor200808);
+    mainAccounts.checkEndOfMonthPosition(OfxBuilder.DEFAULT_ACCOUNT_NAME, 1000 + incomeFor200808 - expensesFor200808);
     budgetView.income.checkTotalPlanned(4400);
 
     timeline.selectMonth("2008/08");
@@ -70,7 +70,7 @@ public class BudgetWizardTest extends LoggedInFunctionalTestCase {
       .setTargetAccount("Account n. 00001123")
       .setAmount(170)
       .validate();
-    budgetView.getSummary().checkEndPosition(1000.00);
+    mainAccounts.checkEndOfMonthPosition(OfxBuilder.DEFAULT_ACCOUNT_NAME, 1000.00);
   }
 
   public void testTwoMonths() throws Exception {
@@ -99,7 +99,7 @@ public class BudgetWizardTest extends LoggedInFunctionalTestCase {
 
     views.selectBudget();
 
-    budgetView.getSummary().checkEndPosition(1529.90);
+    mainAccounts.checkEndOfMonthPosition(OfxBuilder.DEFAULT_ACCOUNT_NAME, 1529.90);
 
     timeline.checkMonthTooltip("2008/07", 29.90);
 
@@ -111,7 +111,7 @@ public class BudgetWizardTest extends LoggedInFunctionalTestCase {
       .setRecurring("Loyer", "rental");
 
     views.selectBudget();
-    budgetView.getSummary().checkEndPosition(1410.00);
+    mainAccounts.checkEndOfMonthPosition(OfxBuilder.DEFAULT_ACCOUNT_NAME, 1410.00);
 
     seriesAnalysis.balanceChart.getLeftDataset()
       .checkSize(1)
@@ -122,12 +122,12 @@ public class BudgetWizardTest extends LoggedInFunctionalTestCase {
       .checkValue("Variable", 90.00);
 
     views.selectHome();
-    mainAccounts.checkEstimatedPosition(1410);
+    mainAccounts.checkEndOfMonthPosition(OfxBuilder.DEFAULT_ACCOUNT_NAME, 1410);
     timeline.checkMonthTooltip("2008/08", 0.0);
 
     timeline.selectMonths("2008/07", "2008/08");
-    budgetView.getSummary().checkEndPosition(1410);
-    mainAccounts.checkEstimatedPosition(1410);
+    mainAccounts.checkEndOfMonthPosition(OfxBuilder.DEFAULT_ACCOUNT_NAME, 1410);
+    mainAccounts.checkEndOfMonthPosition(OfxBuilder.DEFAULT_ACCOUNT_NAME, 1410);
     seriesAnalysis.balanceChart.getLeftDataset()
       .checkSize(1)
       .checkValue("Income", 3000.00);
@@ -137,7 +137,7 @@ public class BudgetWizardTest extends LoggedInFunctionalTestCase {
       .checkValue("Variable", 180.00);
 
     timeline.selectMonth("2008/09");
-    mainAccounts.checkEstimatedPosition(1420 + 1500 - 1529.90 - 80 - 10 - 10);
+    mainAccounts.checkEndOfMonthPosition(OfxBuilder.DEFAULT_ACCOUNT_NAME, 1420 + 1500 - 1529.90 - 80 - 10 - 10);
     seriesAnalysis.balanceChart.getLeftDataset()
       .checkSize(1)
       .checkValue("Income", 1500.00);
@@ -164,7 +164,7 @@ public class BudgetWizardTest extends LoggedInFunctionalTestCase {
     timeline.selectMonth("2008/07");
     views.selectHome();
     views.selectBudget();
-    budgetView.getSummary().checkEndPosition(500);
+    mainAccounts.checkEndOfMonthPosition(OfxBuilder.DEFAULT_ACCOUNT_NAME, 500);
   }
 
   public void testWithPositiveEnvelope() throws Exception {
@@ -185,11 +185,11 @@ public class BudgetWizardTest extends LoggedInFunctionalTestCase {
     categorization.setNewIncome("Salaire", "Salaire");
 
     views.selectBudget();
-    budgetView.getSummary().checkEndPosition(100.00);
+    mainAccounts.checkEndOfMonthPosition(OfxBuilder.DEFAULT_ACCOUNT_NAME, 100.00);
 
     timeline.selectMonth("2008/08");
-    budgetView.getSummary().checkEndPosition(1440.00);
-    mainAccounts.checkEstimatedPosition(1440.00);
+    mainAccounts.checkEndOfMonthPosition(OfxBuilder.DEFAULT_ACCOUNT_NAME, 1440.00);
+    mainAccounts.checkEndOfMonthPosition(OfxBuilder.DEFAULT_ACCOUNT_NAME, 1440.00);
     timeline.checkMonthTooltip("2008/08", -100.00);
   }
 }

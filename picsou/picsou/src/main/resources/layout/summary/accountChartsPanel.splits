@@ -42,7 +42,7 @@
           <filler fill="horizontal"/>
           <label ref="accountPositionLabel" styleClass="secondarySectionSubtitle"/>
         </row>
-        <component ref="accountHistoChart"/>
+        <component ref="accountHistoChart" background="sidebar.bg"/>
       </verticalBoxes>
     </repeat>
   </column>

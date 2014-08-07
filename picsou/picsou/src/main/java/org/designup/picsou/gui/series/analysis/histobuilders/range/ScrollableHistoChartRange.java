@@ -104,7 +104,12 @@ public class ScrollableHistoChartRange extends AbstractHistoChartRange {
   }
 
   private void centerOnCurrentMonth(Integer selectedMonthId) {
-    center(CurrentMonth.getCurrentMonth(repository));
+    Integer currentMonth = CurrentMonth.findCurrentMonth(repository);
+    if (currentMonth == null) {
+      return;
+    }
+
+    center(currentMonth);
 
     if (selectedMonthId < rangeStart) {
       alignLeft(selectedMonthId);

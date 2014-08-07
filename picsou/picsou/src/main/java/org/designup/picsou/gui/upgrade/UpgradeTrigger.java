@@ -137,12 +137,14 @@ public class UpgradeTrigger implements ChangeSetListener {
       repository.delete(Transaction.TYPE, and(fieldEquals(Transaction.ACCOUNT, -1),
                                               fieldEquals(Transaction.PLANNED, true)));
     }
+    if (currentJarVersion < 137) {
+      repository.deleteAll(LayoutConfig.TYPE);
+    }
 
-    //dans tout les cas :
+      //dans tout les cas :
 
     repository.delete(Transaction.TYPE, and(fieldEquals(Transaction.CREATED_BY_SERIES, true),
                                             fieldEquals(Transaction.AMOUNT, 0.)));
-
 
     FrameSize frameSize = FrameSize.init(directory.get(JFrame.class));
     LayoutConfig.find(frameSize.screenSize, frameSize.targetFrameSize, repository, true);

@@ -172,7 +172,7 @@ public class PlanificationTest extends LoggedInFunctionalTestCase {
   }
 
   public void testExtraSeriesWithSingleMonthProfile() throws Exception {
-    mainAccounts.createMainAccount("Main", 0.);
+    accounts.createMainAccount("Main", 0.);
     operations.openPreferences().setFutureMonthsCount(6).validate();
 
     timeline.selectMonth("2008/09");

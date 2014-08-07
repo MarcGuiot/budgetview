@@ -1,45 +1,68 @@
 package org.designup.picsou.functests.checkers;
 
 import junit.framework.Assert;
-import org.designup.picsou.functests.checkers.components.HistoChartChecker;
 import org.designup.picsou.functests.checkers.components.HistoDailyChecker;
 import org.designup.picsou.functests.checkers.components.PopupButton;
-import org.designup.picsou.functests.checkers.components.PopupChecker;
+import org.designup.picsou.gui.components.charts.histo.HistoSelectionManager;
 import org.designup.picsou.gui.description.Formatting;
+import org.designup.picsou.model.Day;
 import org.designup.picsou.utils.Lang;
+import org.globsframework.gui.splits.color.Colors;
+import org.globsframework.gui.splits.components.RectIcon;
 import org.globsframework.utils.Dates;
+import org.globsframework.utils.TablePrinter;
 import org.globsframework.utils.TestUtils;
+import org.uispec4j.Button;
 import org.uispec4j.*;
+import org.uispec4j.Key;
+import org.uispec4j.Panel;
+import org.uispec4j.Window;
+import org.uispec4j.assertion.Assertion;
 import org.uispec4j.assertion.UISpecAssert;
 import org.uispec4j.finder.ComponentMatcher;
 import org.uispec4j.interception.WindowInterceptor;
+import org.uispec4j.utils.ColorUtils;
 
 import javax.swing.*;
+import java.awt.*;
 import java.util.*;
+import java.util.List;
 
 import static org.uispec4j.assertion.UISpecAssert.assertThat;
 import static org.uispec4j.finder.ComponentMatchers.*;
 
-public abstract class AccountViewChecker<T extends AccountViewChecker> extends ViewChecker {
+public abstract class TypedAccountViewChecker<T extends TypedAccountViewChecker> extends ViewChecker {
   protected Window mainWindow;
   protected String panelName;
   protected Panel accountsPanel;
 
-  public AccountViewChecker(Window mainWindow, String panelName) {
+  private static final Color OK_COLOR = Colors.toColor("#73ff73");
+
+  public TypedAccountViewChecker(Window mainWindow, String panelName) {
     super(mainWindow);
     this.mainWindow = mainWindow;
     this.panelName = panelName;
   }
 
-  public void checkAccountNames(String... expectedNames) {
+  public T checkAccounts(String... expectedNames) {
     org.globsframework.utils.TestUtils.assertSetEquals(getDisplayedAccounts(), expectedNames);
+    return (T)this;
   }
 
-  public void select(String accountName, String... others) {
+  public T select(String accountName, String... others) {
     getAccountPanel(accountName).getToggleButton("selectAccount").select();
     for (String other : others) {
       Mouse.click(getAccountPanel(other), Key.Modifier.SHIFT);
     }
+    return (T)this;
+  }
+
+  public T unselect(String accountName, String... others) {
+    getAccountPanel(accountName).getToggleButton("selectAccount").unselect();
+    for (String other : others) {
+      Mouse.click(getAccountPanel(other), Key.Modifier.SHIFT);
+    }
+    return (T)this;
   }
 
   public void checkNoAccountsSelected() {
@@ -52,7 +75,7 @@ public abstract class AccountViewChecker<T extends AccountViewChecker> extends V
   }
 
   private List<String> getSelectedAccounts() {
-    Panel accountsPanel = getAccountsPanel();
+    Panel accountsPanel = getPanel();
     UIComponent[] toggles = accountsPanel.getUIComponents(ToggleButton.class);
     List<String> actual = new ArrayList<String>();
     for (UIComponent toggle : toggles) {
@@ -64,7 +87,7 @@ public abstract class AccountViewChecker<T extends AccountViewChecker> extends V
   }
 
   private Set<String> getDisplayedAccounts() {
-    UIComponent[] uiComponents = getAccountsPanel().getUIComponents(Button.class, "editAccount");
+    UIComponent[] uiComponents = getPanel().getUIComponents(Button.class, "editAccount");
     Set<String> existingNames = new HashSet<String>();
     for (UIComponent uiComponent : uiComponents) {
       Button button = (Button)uiComponent;
@@ -74,7 +97,7 @@ public abstract class AccountViewChecker<T extends AccountViewChecker> extends V
   }
 
   public T checkAccountOrder(String... accounts) {
-    UIComponent[] uiComponents = getAccountsPanel().getUIComponents(Button.class, "editAccount");
+    UIComponent[] uiComponents = getPanel().getUIComponents(Button.class, "editAccount");
     List<String> existingNames = new ArrayList<String>();
     for (UIComponent uiComponent : uiComponents) {
       Button button = (Button)uiComponent;
@@ -94,11 +117,11 @@ public abstract class AccountViewChecker<T extends AccountViewChecker> extends V
   }
 
   public void checkAccount(String accountName, double balance, String updateDate) {
-    Panel parentPanel = getAccountPanel(accountName);
-    assertThat(parentPanel.getButton("accountPosition").textEquals(toString(balance)));
+    Panel accountPanel = getAccountPanel(accountName);
+    assertThat(accountPanel.getButton("accountPosition").textEquals(toString(balance)));
     if (updateDate != null) {
       Date date = Dates.parse(updateDate);
-      UISpecAssert.assertTrue(parentPanel.getTextBox("accountUpdateDate").textEquals(Formatting.toString(date)));
+      UISpecAssert.assertTrue(accountPanel.getTextBox("accountUpdateDate").textEquals(Formatting.toString(date)));
     }
   }
 
@@ -120,34 +143,27 @@ public abstract class AccountViewChecker<T extends AccountViewChecker> extends V
     UISpecAssert.assertTrue(parentPanel.getTextBox("accountUpdateDate").textEquals("2006/02/01"));
   }
 
-  public T checkSummary(double amount, String updateDate) {
+  public T checkReferencePosition(double amount, String updateDate) {
     Date date = Dates.parse(updateDate);
-    assertThat(getAccountsPanel().getTextBox("referencePosition").textEquals(toString(amount)));
-    assertThat(getAccountsPanel().getTextBox("referencePositionDate").textEquals("on " + Formatting.toString(date)));
-    return (T)this;
-  }
-
-  public T checkReferencePositionDate(String text) {
-    assertThat(getAccountsPanel().getTextBox("referencePositionDate").textEquals(text));
+    assertThat(getPanel().getTextBox("referencePosition").textEquals(toString(amount)));
+    assertThat(getPanel().getTextBox("referencePositionDate").textEquals("on " + Formatting.toString(date)));
     return (T)this;
   }
 
   public T checkReferencePositionDateContains(String text) {
-    assertThat(getAccountsPanel().getTextBox("referencePositionDate").textContains(text));
+    assertThat(getPanel().getTextBox("referencePositionDate").textContains(text));
     return (T)this;
   }
 
-
-  public void checkPosition(String accountName, double position){
+  public void checkPosition(String accountName, double position) {
     Panel parentPanel = getAccountPanel(accountName);
     UISpecAssert.assertTrue(parentPanel.getButton("accountPosition").textEquals(toString(position)));
   }
 
-  public abstract T checkEstimatedPosition(double amount);
-
-  public abstract T checkNoEstimatedPosition();
-
-  public abstract T checkEstimatedPositionDate(String text);
+  public T checkEndOfMonthPosition(String accountName, double amount) {
+    getChart(accountName).checkEndOfMonthValue(amount);
+    return (T)this;
+  }
 
   public AccountPositionEditionChecker editPosition(String accountName) {
     Panel parentPanel = getAccountPanel(accountName);
@@ -178,14 +194,20 @@ public abstract class AccountViewChecker<T extends AccountViewChecker> extends V
     return ConfirmationDialogChecker.open(openPopup(accountName).triggerClick("Delete..."));
   }
 
+  public T rollover(String accountName, int monthId, int day) {
+    HistoDailyChecker chart = getChart(accountName);
+    HistoSelectionManager selectionManager = chart.getChart().getSelectionManager();
+    int columnIndex = chart.getDataset().getIndex(monthId);
+    Set<org.globsframework.model.Key> keys = new HashSet<org.globsframework.model.Key>();
+    keys.add(org.globsframework.model.Key.create(Day.MONTH, monthId, Day.DAY, day));
+    selectionManager.updateRollover(columnIndex >= 0 ? columnIndex : null, keys, false, false, new Point(0, 0));
+    return (T)this;
+  }
+
   private Panel getAccountPanel(final String accountName) {
-    views.selectData();
     Button account = null;
     try {
-      final ComponentMatcher componentMatcher =
-        and(innerNameIdentity("editAccount"),
-            displayedNameSubstring(accountName));
-      account = getAccountsPanel().getButton(componentMatcher);
+      account = getPanel().getButton(accountName);
     }
     catch (Throwable e) {
       Assert.fail("Account '" + accountName + "' not found - available accounts: " + getDisplayedAccounts());
@@ -194,33 +216,7 @@ public abstract class AccountViewChecker<T extends AccountViewChecker> extends V
   }
 
   public AccountEditionChecker createNewAccount() {
-    return AccountEditionChecker.open(getAccountsPanel().getButton("createAccount").triggerClick());
-  }
-
-  public void createSavingsAccount(String name, Double position) {
-    AccountEditionChecker accountEditionChecker = createNewAccount()
-      .setName(name)
-      .setAccountNumber("1234")
-      .selectBank("LCL")
-      .setAsSavings()
-      .checkIsSavings();
-    if (position != null) {
-      accountEditionChecker
-        .setPosition(position);
-    }
-    accountEditionChecker
-      .validate();
-  }
-
-  public void createMainAccount(String name, double balance) {
-    createNewAccount()
-      .setName(name)
-      .setAccountNumber("4321")
-      .selectBank("CIC")
-      .setAsMain()
-      .checkIsMain()
-      .setPosition(balance)
-      .validate();
+    return AccountEditionChecker.open(getPanel().getButton("createAccount").triggerClick());
   }
 
   public void checkAccountWebsite(String accountName, String linkText, String expectedUrl) {
@@ -232,7 +228,7 @@ public abstract class AccountViewChecker<T extends AccountViewChecker> extends V
     button.checkItemDisabled(Lang.get("accountView.goto.website.disabled"));
   }
 
-  private Panel getAccountsPanel() {
+  private Panel getPanel() {
     if (accountsPanel == null) {
       views.selectData();
       accountsPanel = mainWindow.getPanel(panelName);
@@ -240,7 +236,42 @@ public abstract class AccountViewChecker<T extends AccountViewChecker> extends V
     return accountsPanel;
   }
 
-  public HistoDailyChecker initChart(String accountName) {
+  public HistoDailyChecker getChart(String accountName) {
     return new HistoDailyChecker(getAccountPanel(accountName), "accountPositionsChart");
+  }
+
+  public T checkContent(final String expectedContent) {
+    UISpecAssert.assertThat(new Assertion() {
+      public void check() {
+        Assert.assertEquals(expectedContent.trim(), TypedAccountViewChecker.getActualContent(getPanel()).trim());
+      }
+    });
+    return (T)this;
+  }
+
+  static String getActualContent(Panel panel) {
+    TablePrinter printer = new TablePrinter();
+    Component[] buttons = panel.getSwingComponents(JButton.class, "editAccount");
+    Component[] statuses = panel.getSwingComponents(JButton.class, "accountStatus");
+    Component[] positions = panel.getSwingComponents(JButton.class, "accountPosition");
+    Component[] dates = panel.getSwingComponents(JLabel.class, "accountUpdateDate");
+    for (int i = 0; i < statuses.length; i++) {
+      boolean isOk = isAccountOK(statuses[i]);
+      JButton selectorButton = (JButton)buttons[i];
+      String accountName = selectorButton.getText();
+      if (selectorButton.getFont().isBold()) {
+        accountName += "*";
+      }
+      printer.addRow(isOk ? "ok" : "nok",
+                     accountName,
+                     ((JButton)positions[i]).getText() + " on " + ((JLabel)dates[i]).getText());
+    }
+    return printer.toString();
+  }
+
+  private static boolean isAccountOK(Component statusButton) {
+    JButton status = (JButton)statusButton;
+    RectIcon icon = ((RectIcon)status.getIcon());
+    return ColorUtils.equals(icon.getBackgroundColor(), OK_COLOR, true);
   }
 }

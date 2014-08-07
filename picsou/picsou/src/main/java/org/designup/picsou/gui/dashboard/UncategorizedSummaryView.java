@@ -1,4 +1,4 @@
-package org.designup.picsou.gui.budget.summary;
+package org.designup.picsou.gui.dashboard;
 
 import org.designup.picsou.gui.View;
 import org.designup.picsou.gui.card.NavigationService;
@@ -50,7 +50,7 @@ public class UncategorizedSummaryView
   }
 
   public void registerComponents(GlobsPanelBuilder parentBuilder) {
-    GlobsPanelBuilder builder = new GlobsPanelBuilder(getClass(), "/layout/budget/uncategorizedSummaryView.splits",
+    GlobsPanelBuilder builder = new GlobsPanelBuilder(getClass(), "/layout/dashboard/uncategorizedSummaryView.splits",
                                                       repository, directory);
     builder.add("uncategorizedSummaryView", panel);
     builder.add("uncategorized", uncategorizedButton);

@@ -120,11 +120,10 @@ public class ShiftTransactionTest extends LoggedInFunctionalTestCase {
     mainAccounts.checkAccount("Account n. 00001234", 100.00, "2008/07/15");
     timeline.selectMonth("2008/06");
 
-    budgetView.getSummary().checkEndPosition(112.00);
+    mainAccounts.checkEndOfMonthPosition("Account n. 00001234", 112.00);
 
     timeline.selectMonth("2008/07");
-    budgetView.getSummary()
-      .checkEndPosition(87.00);
+    mainAccounts.checkEndOfMonthPosition("Account n. 00001234", 87.00);
 
     timeline.selectMonth("2008/06");
     budgetView.recurring.checkTotalAmounts(-25.00, -25.00);
@@ -137,15 +136,15 @@ public class ShiftTransactionTest extends LoggedInFunctionalTestCase {
 
     // Account positions are unchanged
     timeline.selectMonth("2008/06");
-    mainAccounts.checkEstimatedPosition(112.00);
+    mainAccounts.checkEndOfMonthPosition("Account n. 00001234", 112.00);
     timeline.selectMonth("2008/07");
-    mainAccounts.checkEstimatedPosition(100.00);
+    mainAccounts.checkEndOfMonthPosition("Account n. 00001234", 100.00);
 
     // Balances are updated
     timeline.selectMonth("2008/06");
-    budgetView.getSummary().checkEndPosition(112.00);
+    mainAccounts.checkEndOfMonthPosition("Account n. 00001234", 112.00);
     timeline.selectMonth("2008/07");
-    budgetView.getSummary().checkEndPosition(100.00);
+    mainAccounts.checkEndOfMonthPosition("Account n. 00001234", 100.00);
 
     // Series are updated
     timeline.selectMonth("2008/06");
@@ -166,9 +165,9 @@ public class ShiftTransactionTest extends LoggedInFunctionalTestCase {
 
     mainAccounts.checkAccount("Account n. 00001234", 100.00, "2008/07/15");
     timeline.selectMonth("2008/06");
-    mainAccounts.checkEstimatedPosition(112.00);
+    mainAccounts.checkEndOfMonthPosition("Account n. 00001234", 112.00);
     timeline.selectMonth("2008/07");
-    mainAccounts.checkEstimatedPosition(87.00);
+    mainAccounts.checkEndOfMonthPosition("Account n. 00001234", 87.00);
 
     timeline.selectMonth("2008/06");
     budgetView.recurring.checkTotalAmounts(-25.00, -25.00);
@@ -190,9 +189,9 @@ public class ShiftTransactionTest extends LoggedInFunctionalTestCase {
 
     // Account positions are unchanged
     timeline.selectMonth("2008/06");
-    mainAccounts.checkEstimatedPosition(112.00);
+    mainAccounts.checkEndOfMonthPosition("Account n. 00001234", 112.00);
     timeline.selectMonth("2008/07");
-    mainAccounts.checkEstimatedPosition(97.00);
+    mainAccounts.checkEndOfMonthPosition("Account n. 00001234", 97.00);
 
     // Series are updated
     timeline.selectMonth("2008/06");
@@ -271,7 +270,7 @@ public class ShiftTransactionTest extends LoggedInFunctionalTestCase {
       .addTransaction("2008/07/05", -30.00, "Epargne / July")
       .load();
 
-    savingsAccounts.createSavingsAccount("Epargne", 0.);
+    accounts.createSavingsAccount("Epargne", 0.);
 
     budgetView.savings.createSeries()
       .setName("Epargne")

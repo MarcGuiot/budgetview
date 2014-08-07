@@ -3,7 +3,7 @@
   <styleImport file="/layout/picsouStyles.splits"/>
   <styles>
 
-    <style selector="button#editAccount"
+    <style selector="button#editAccount" ui="hyperlinkButtonWithoutUnderline"
            anchor="left" weightX="100"
            font="-,plain,14" cursor="hand"
            icon="downArrow(10,18,8,8,block.inner.arrow.idle)"
@@ -14,7 +14,7 @@
            iconTextGap="2"/>
 
     <style selector="button#accountPosition"
-           font="-,bold,16" foreground="block.inner.link.big"/>
+           font="-,plain,14" foreground="block.inner.link.big"/>
 
     <style selector="toggleButton#selectAccount"
            weightX="0" cursor="hand"
@@ -29,52 +29,50 @@
 
     <style selector="#accountPanel" opaque="true" background="block.inner.bg"/>
 
-    <style selector=".summaryFooter" marginTop="6" border="${accountPanel.summaryFooter.border}"/>
+    <style selector="#accountStatus" ui="basicButtonUI" cursor="hand" border="" weightX="0" weightY="0" fill="none"/>
+    <style id="account:OK" selector="x"
+           icon="rect(16,10,accountView.status.ok,accountView.status.border.unselected)"
+           rolloverIcon="rect(16,10,accountView.status.ok,accountView.status.border.rollover)"/>
+    <style id="account:NOK" selector="x"
+           icon="rect(16,10,accountView.status.nok,accountView.status.border.unselected)"
+           rolloverIcon="rect(16,10,accountView.status.nok,accountView.status.border.rollover)"/>
 
-    <style selector=".summaryFooter label" fill="none" anchor="center"/>
+    <!-- Block selection -->
 
+    <style id="selectedPanel" selector="x" opaque="true"
+           background="block.inner.highlight.selected.bg"
+           border="line(block.inner.highlight.selected.border)"/>
+    <style id="selectedRolloverPanel" selector="x" opaque="true"
+           background="block.inner.highlight.selected.bg.rollover"
+           border="line(block.inner.highlight.selected.border)"/>
+    <style id="unselectedPanel" selector="x" opaque="true"
+           background="sidebar.bg"
+           border="line(sidebar.bg)"/>
+    <style id="unselectedRolloverPanel" selector="x" opaque="true"
+           background="sidebar.bg"
+           border="line(sidebar.bg)"/>
   </styles>
 
-  <panel styleClass="block">
-    <column styleClass="innerBlock">
-      <column styleClass="blockScrollBorder">
-        <scrollPane marginTop="0" marginBottom="0" weightY="100" forceVerticalScroll="true">
-          <column ref="unselect">
-            <repeat ref="accountRepeat" marginTop="5" marginBottom="15">
-              <panel ref="accountPanel" margin="3">
-                <panel margin="2" layout="org.designup.picsou.gui.accounts.utils.AccountBlockLayout" opaque="false">
-                  <button ref="editAccount" styleClass="itemLink"/>
-                  <component ref="accountPositionsChart"/>
-                  <button ref="accountPosition" anchor="east" styleClass="hyperlinkWithoutUnderline"
-                          preferredSize="(150,20)"/>
-                  <label ref="accountUpdateDate" styleClass="subitem"/>
-                  <toggleButton ref="selectAccount"/>
-                </panel>
-              </panel>
-            </repeat>
-            <filler fill="vertical"/>
-          </column>
-        </scrollPane>
-
-        <row styleClass="footer">
-          <filler fill="horizontal"/>
-          <button action="createAccount" styleClass="create" tooltipText="$accountView.create.tooltip"/>
-        </row>
-      </column>
-
-      <row styleClass="summaryFooter">
-
-        <filler fill="horizontal"/>
-
-        <label text="$accountView.reference.title"
-               styleClass="totalAmountTitle" autoHideSource="referencePosition"/>
-        <label ref="referencePositionDate"
-               styleClass="totalAmountTitle" autoHideSource="referencePosition"
-               marginLeft="5" marginRight="10"/>
-        <label ref="referencePosition"
-               styleClass="totalAmount" tooltipText="$accountView.reference.tooltip"/>
-
-      </row>
-    </column>
-  </panel>
+  <column>
+    <row>
+      <label ref="accountListTitle" styleClass="sidebarSectionTitle"/>
+      <filler fill="horizontal"/>
+      <label ref="referencePosition" styleClass="sidebarSectionTitle" tooltipText="$accountView.reference.tooltip"/>
+      <label ref="referencePositionDate" styleClass="sidebarSectionTitle" font="LatoLight,plain,12" autoHideSource="referencePosition" marginLeft="5"/>
+    </row>
+    <repeat ref="accountRepeat" styleClass="sidebarSeparator" marginBottom="15">
+      <panel ref="accountPanel" marginTop="2">
+        <panel marginTop="4" layout="org.designup.picsou.gui.accounts.utils.AccountBlockLayout"
+               opaque="false" cursor="hand">
+          <button ref="editAccount"/>
+          <button ref="accountStatus"/>
+          <button ref="uncategorized"/>
+          <component ref="accountPositionsChart" background="sidebar.bg"/>
+          <button ref="accountPosition" anchor="east" styleClass="hyperlinkWithoutUnderline"/>
+          <label ref="accountUpdateDate" font="LatoLight,plain,12"/>
+          <toggleButton ref="selectAccount"/>
+        </panel>
+      </panel>
+    </repeat>
+  </column>
 </splits>

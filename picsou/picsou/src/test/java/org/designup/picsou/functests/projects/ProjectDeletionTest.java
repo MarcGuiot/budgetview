@@ -31,7 +31,7 @@ public class ProjectDeletionTest extends LoggedInFunctionalTestCase {
 
     timeline.selectMonth(201101);
     budgetView.extras.checkSeries("My project", 0.00, -500.00);
-    budgetView.getSummary().checkEndPosition(500.00);
+    mainAccounts.checkEndOfMonthPosition("Account n. 001111", 500.00);
 
     views.selectHome();
     projectChart.select("My project");
@@ -40,7 +40,7 @@ public class ProjectDeletionTest extends LoggedInFunctionalTestCase {
     projects.checkNoProjectShown();
     projectChart.checkNoProjectShown();
     budgetView.extras.checkNoSeriesShown();
-    budgetView.getSummary().checkEndPosition(1000.00);
+    mainAccounts.checkEndOfMonthPosition("Account n. 001111", 1000.00);
 
     categorization.selectTransaction("Income");
     categorization.selectExtras()
@@ -86,9 +86,8 @@ public class ProjectDeletionTest extends LoggedInFunctionalTestCase {
 
     views.selectHome();
     projectChart.select("My project");
-    currentProject
-      .deleteWithConfirmation("Existing operations",
-                              "Some operations have been assigned to this project");
+    currentProject.deleteWithConfirmation("Existing operations",
+                                          "Some operations have been assigned to this project");
 
     views.checkCategorizationSelected();
     categorization.checkSelectedTableRows("RESA", "MEGAHOTEL");
@@ -101,7 +100,7 @@ public class ProjectDeletionTest extends LoggedInFunctionalTestCase {
     views.selectHome();
     projects.checkNoProjectShown();
     projectChart.checkNoProjectShown();
-    budgetView.getSummary().checkEndPosition(290.00);
+    mainAccounts.checkEndOfMonthPosition("Account n. 001111", 290.00);
   }
 
   public void testTransactionsAreUnassignedWhenItemsAreDeleted() throws Exception {

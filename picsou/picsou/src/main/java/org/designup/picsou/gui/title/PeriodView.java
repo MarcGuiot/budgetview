@@ -6,6 +6,7 @@ import org.designup.picsou.gui.description.stringifiers.MonthListStringifier;
 import org.designup.picsou.gui.description.stringifiers.MonthRangeFormatter;
 import org.designup.picsou.model.Month;
 import org.designup.picsou.model.Transaction;
+import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobSelection;
 import org.globsframework.gui.GlobSelectionListener;
 import org.globsframework.gui.GlobsPanelBuilder;
@@ -41,11 +42,11 @@ public class PeriodView extends View implements GlobSelectionListener {
 
   private void updateLabel() {
     if (!repository.contains(Transaction.TYPE)) {
-      periodTitle.setText("");
+      periodTitle.setText(Lang.get("title.nodata"));
       return;
     }
     if (months.isEmpty()) {
-      periodTitle.setText("");
+      periodTitle.setText(Lang.get("title.noperiod"));
       return;
     }
     periodTitle.setText(MonthListStringifier.toString(months, MonthRangeFormatter.STANDARD));

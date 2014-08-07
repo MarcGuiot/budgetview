@@ -15,14 +15,6 @@ public abstract class ViewChecker extends GuiChecker {
     this.views = new ViewSelectionChecker(mainWindow);
   }
 
-  public void checkVisible(boolean visible) {
-    UIComponent component = getMainComponent();
-    Assert.assertEquals(visible, component != null);
-    if (component != null) {
-      UISpecAssert.assertEquals(visible, component.isVisible());
-    }
-  }
-
   protected UIComponent getMainComponent() {
     return mainWindow;
   }

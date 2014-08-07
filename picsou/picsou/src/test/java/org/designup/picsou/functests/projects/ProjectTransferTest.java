@@ -14,13 +14,13 @@ public class ProjectTransferTest extends LoggedInFunctionalTestCase {
 
   public void testWithSavings() throws Exception {
 
-    mainAccounts.createNewAccount()
+    accounts.createNewAccount()
       .setName("Main account")
       .selectBank("CIC")
       .setAsMain()
       .validate();
 
-    mainAccounts.createNewAccount()
+    accounts.createNewAccount()
       .setName("Savings account")
       .selectBank("CIC")
       .setAsSavings()
@@ -161,19 +161,19 @@ public class ProjectTransferTest extends LoggedInFunctionalTestCase {
   }
 
   public void testMustSelectDifferentFromAndToAccounts() throws Exception {
-    mainAccounts.createNewAccount()
+    accounts.createNewAccount()
       .setName("Main Account 1")
       .selectBank("CIC")
       .setAsMain()
       .validate();
 
-    mainAccounts.createNewAccount()
+    accounts.createNewAccount()
       .setName("Main Account 2")
       .selectBank("CIC")
       .setAsMain()
       .validate();
 
-    mainAccounts.createNewAccount()
+    accounts.createNewAccount()
       .setName("Savings Account 1")
       .selectBank("CIC")
       .setAsSavings()
@@ -555,7 +555,7 @@ public class ProjectTransferTest extends LoggedInFunctionalTestCase {
   }
 
   private void createMainAccount(String mainAccountName) {
-    mainAccounts.createNewAccount()
+    accounts.createNewAccount()
       .setName(mainAccountName)
       .selectBank("CIC")
       .setAsMain()
@@ -570,7 +570,7 @@ public class ProjectTransferTest extends LoggedInFunctionalTestCase {
   }
 
   private void createSavingsAccount(String savingsAccountName) {
-    savingsAccounts.createNewAccount()
+    accounts.createNewAccount()
       .setName(savingsAccountName)
       .selectBank("CIC")
       .setAsSavings()

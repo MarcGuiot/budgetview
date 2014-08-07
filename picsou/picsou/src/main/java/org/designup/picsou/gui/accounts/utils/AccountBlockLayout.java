@@ -2,10 +2,22 @@ package org.designup.picsou.gui.accounts.utils;
 
 import org.globsframework.utils.exceptions.UnexpectedApplicationState;
 
-import javax.swing.*;
 import java.awt.*;
 
 public class AccountBlockLayout implements LayoutManager {
+
+  private boolean initialized = false;
+  private Component editAccount;
+  private Component accountPosition;
+  private Component accountUpdateDate;
+  private Component selectAccount;
+  private Component accountStatus;
+  private Component uncategorized;
+  private Component positionsChart;
+
+  private static final int HORIZONTAL_MARGIN = 5;
+  private static final int VERTICAL_MARGIN = 2;
+  private static final int CHART_HEIGHT = 70;
 
   public void addLayoutComponent(String name, Component comp) {
   }
@@ -14,143 +26,118 @@ public class AccountBlockLayout implements LayoutManager {
   }
 
   public Dimension preferredLayoutSize(Container parent) {
-    return new Dimension(Integer.MAX_VALUE, 60);
+    if (!initialized) {
+      init(parent);
+    }
+    return new Dimension(Integer.MAX_VALUE, getMinHeight());
   }
 
   public Dimension minimumLayoutSize(Container parent) {
-    return new Dimension(50,50);
+    if (!initialized) {
+      init(parent);
+    }
+    return new Dimension(getMinWidth(), getMinHeight());
   }
 
-  public void layoutContainer(Container parent) {
-    Metrics metrics = createMetrics(parent);
+  public int getMinHeight() {
+    int chartHeight = positionsChart.isVisible() ? VERTICAL_MARGIN + CHART_HEIGHT : 0;
+    return getFirstRowHeight() + VERTICAL_MARGIN + accountUpdateDate.getPreferredSize().height + chartHeight;
+  }
+
+  public int getMinWidth() {
+    return editAccount.getPreferredSize().width +
+           uncategorized.getPreferredSize().width +
+           accountStatus.getPreferredSize().width +
+           accountPosition.getPreferredSize().width +
+           selectAccount.getPreferredSize().width +
+           4 * HORIZONTAL_MARGIN;
+  }
+
+  private void init(Container parent) {
     for (Component component : parent.getComponents()) {
       if (component.getName().equals("editAccount")) {
-        metrics.layoutAccountName(component);
+        editAccount = component;
       }
       else if (component.getName().equals("accountPosition")) {
-        metrics.layoutPosition(component);
+        accountPosition = component;
       }
       else if (component.getName().equals("accountUpdateDate")) {
-        metrics.layoutPositionDate(component);
+        accountUpdateDate = component;
       }
       else if (component.getName().equals("selectAccount")) {
-        metrics.layoutSelectAccount(component);
+        selectAccount = component;
+      }
+      else if (component.getName().equals("accountStatus")) {
+        accountStatus = component;
+      }
+      else if (component.getName().equals("uncategorized")) {
+        uncategorized = component;
       }
       else if (component.getName().equals("accountPositionsChart")) {
-        metrics.layoutChart(component);
+        positionsChart = component;
       }
       else {
         throw new UnexpectedApplicationState("Unexpected component found in layout: " + component);
       }
     }
+    initialized = true;
   }
 
-  private Metrics createMetrics(Container parent) {
-    Metrics metrics = new Metrics(parent);
-    for (Component component : parent.getComponents()) {
-      if (component.getName().equals("editAccount")) {
-        metrics.initAccountName(component);
-      }
-      else if (component.getName().equals("accountPosition")) {
-        metrics.initAccountPosition(component);
-      }
-      else if (component.getName().equals("accountUpdateDate")) {
-        metrics.initAccountPositionDate(component);
-      }
-      else if (component.getName().equals("selectAccount")) {
-        metrics.initSelectAccount(component);
-      }
+  public void layoutContainer(Container parent) {
+    if (!initialized) {
+      init(parent);
     }
-    return metrics;
+
+    Insets insets = parent.getInsets();
+    int top = insets.top;
+    int left = insets.left;
+    int width = parent.getSize().width;
+    int right = width - insets.right;
+
+    int firstRowHeight = getFirstRowHeight();
+    int editAccountTop = top + firstRowHeight / 2 - editAccount.getPreferredSize().height / 2;
+    int editAccountWidth = editAccount.getPreferredSize().width;
+    editAccount.setBounds(left, editAccountTop,
+                          editAccountWidth, editAccount.getPreferredSize().height);
+
+    int positionRight = right - selectAccount.getPreferredSize().width - HORIZONTAL_MARGIN;
+    int positionTop = top + firstRowHeight / 2 - accountPosition.getPreferredSize().height / 2;
+    int positionLeft = positionRight - accountPosition.getPreferredSize().width;
+    accountPosition.setBounds(positionLeft, positionTop,
+                              accountPosition.getPreferredSize().width, accountPosition.getPreferredSize().height);
+
+    int accountStatusTop = top + firstRowHeight / 2 - accountStatus.getPreferredSize().height / 2;
+    int accountStatusLeft = positionRight - Math.max(accountPosition.getPreferredSize().width, getMaxPositionWidth()) - HORIZONTAL_MARGIN;
+    accountStatus.setBounds(accountStatusLeft, accountStatusTop,
+                            accountStatus.getPreferredSize().width, accountStatus.getPreferredSize().height);
+
+    int uncategorizedTop = top + firstRowHeight / 2 - accountStatus.getPreferredSize().height / 2;
+    int uncategorizedLeft = left + editAccount.getPreferredSize().width + HORIZONTAL_MARGIN;
+    uncategorized.setBounds(uncategorizedLeft, uncategorizedTop,
+                            uncategorized.getPreferredSize().width, uncategorized.getPreferredSize().height);
+
+    int accountUpdateDateTop = top + firstRowHeight + VERTICAL_MARGIN;
+    int accountUpdateDateLeft = positionRight - accountUpdateDate.getPreferredSize().width;
+    accountUpdateDate.setBounds(accountUpdateDateLeft, accountUpdateDateTop,
+                                accountUpdateDate.getPreferredSize().width, accountUpdateDate.getPreferredSize().height);
+
+    int selectAccountLeft = right - selectAccount.getPreferredSize().width;
+    int selectAccountTop = top + (firstRowHeight + VERTICAL_MARGIN + accountUpdateDate.getPreferredSize().height) / 2 - selectAccount.getPreferredSize().height / 2;
+    selectAccount.setBounds(selectAccountLeft, selectAccountTop,
+                            selectAccount.getPreferredSize().width, selectAccount.getPreferredSize().height);
+
+    if (positionsChart.isVisible()) {
+      int chartTop = accountUpdateDateTop + accountUpdateDate.getPreferredSize().height + VERTICAL_MARGIN;
+      positionsChart.setBounds(left, chartTop,
+                               width, CHART_HEIGHT);
+    }
   }
 
-  private class Metrics {
+  public int getFirstRowHeight() {
+    return Math.max(editAccount.getSize().height, uncategorized.getSize().height);
+  }
 
-    private static final int CHART_HEIGHT = 35;
-    private static final int CHART_LEFT_MARGIN = 10;
-    private static final int TITLE_BOTTOM_MARGIN = 5;
-    private static final int SELECT_RIGHT_MARGIN = 4;
-    private static final int POSITION_BOTTOM_MARGIN = 4;
-
-    private int titleHeight;
-    private int titleWidth;
-    private int positionWidth;
-    private int positionHeight;
-    private int maxPositionWidth;
-    private int positionDateWidth;
-    private int positionDateHeight;
-    private int selectWidth;
-    private int selectHeight;
-    private int top;
-    private int bottom;
-    private int left;
-    private int right;
-    private int width;
-
-    public Metrics(Container target) {
-      Insets insets = target.getInsets();
-      top = insets.top;
-      bottom = target.getHeight() - insets.bottom;
-      left = insets.left;
-      width = target.getWidth();
-      right = width - insets.right;
-    }
-
-    public void initAccountName(Component component) {
-      Dimension size = component.getPreferredSize();
-      titleHeight = size.height;
-      titleWidth= size.width;
-    }
-
-    public void initAccountPosition(Component component) {
-      Dimension size = component.getPreferredSize();
-      positionWidth =  size.width;
-      positionHeight =  size.height;
-
-      JButton button = (JButton)component;
-      FontMetrics metrics = button.getFontMetrics(button.getFont());
-      maxPositionWidth = Math.max(metrics.stringWidth("000.000.00"), positionWidth);
-    }
-
-    public void initAccountPositionDate(Component component) {
-      Dimension size = component.getPreferredSize();
-      positionDateWidth =  size.width;
-      positionDateHeight =  size.height;
-    }
-
-    public void initSelectAccount(Component component) {
-      Dimension size = component.getPreferredSize();
-      selectWidth =  size.width;
-      selectHeight =  size.height;
-    }
-
-    public void layoutAccountName(Component component) {
-      component.setBounds(top, left,
-                          titleWidth, titleHeight);
-    }
-
-    public void layoutPosition(Component component) {
-      component.setBounds(right - selectWidth - SELECT_RIGHT_MARGIN - positionWidth,
-                          top + titleHeight + TITLE_BOTTOM_MARGIN,
-                          positionWidth, positionHeight);
-    }
-
-    public void layoutPositionDate(Component component) {
-      component.setBounds(right - selectWidth - SELECT_RIGHT_MARGIN - positionDateWidth,
-                          top + titleHeight + TITLE_BOTTOM_MARGIN + positionHeight + POSITION_BOTTOM_MARGIN,
-                          positionDateWidth, positionDateHeight);
-    }
-
-    public void layoutSelectAccount(Component component) {
-      component.setBounds(right - selectWidth,
-                          top + titleHeight + TITLE_BOTTOM_MARGIN + positionHeight / 2 - selectHeight / 2,
-                          selectWidth, selectHeight);
-    }
-
-    public void layoutChart(Component component) {
-      component.setBounds(CHART_LEFT_MARGIN,
-                          top + titleHeight + TITLE_BOTTOM_MARGIN,
-                          width - CHART_LEFT_MARGIN - selectWidth - SELECT_RIGHT_MARGIN - maxPositionWidth - TITLE_BOTTOM_MARGIN, CHART_HEIGHT);
-    }
+  public int getMaxPositionWidth() {
+    return accountPosition.getFontMetrics(accountPosition.getFont()).stringWidth("1.000.000.00");
   }
 }

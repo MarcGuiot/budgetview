@@ -67,11 +67,14 @@
     <style selector="button#notificationsFlag" ui="notificationsFlagUI" opaque="false"
            foreground="notifications.flag.text" fill="none" anchor="center"
            autoHideIfDisabled="true" marginLeft="10"/>
+
+    <style selector=".sidebar" opaque="true" background="sidebar.bg" border="matte(0,0,0,1,sidebar.border)"/>
+    <style selector=".content" opaque="true" background="content.bg"/>
   </styles>
 
-  <row>
+  <column ref="mainPanel" background="header.bg" opaque="true">
 
-    <column name="actionsBar" background="header.bg" opaque="true">
+    <column name="actionsBar" opaque="false">
       <row marginLeft="10" marginRight="5" marginTop="28">
         <button name="backView" action="backView" styleClass="backforward" tooltipText="$back"/>
         <button name="forwardView" action="forwardView" styleClass="backforward" tooltipText="$forward"/>
@@ -79,141 +82,106 @@
       <repeat ref="viewToggles" layout="column" marginTop="40" marginRight="5">
         <toggleButton ref="toggle" styleClass="masterViewSelector" marginBottom="2"/>
       </repeat>
-      <button ref="importFile" icon="header_import.png" styleClass="iconOnly" marginLeft="5" marginRight="5"
-              fill="none" anchor="center" marginTop="30" tooltipText="$import.tooltip"/>
       <button ref="notificationsFlag" marginTop="30" marginLeft="5" marginRight="5"/>
       <filler fill="vertical"/>
     </column>
 
-    <column name="backgroundPanel" styleClass="main" background="header.bg">
-
-      <column name="mainWindowHeader" background="header.bg" opaque="true" weightY="0.1">
-        <horizontalBoxes marginTop="3" marginLeft="0" marginRight="15" marginBottom="8">
-          <row>
-            <row weightX="0.1" preferredSize="(210,16)">
-              <label ref="periodTitle" opaque="false" font="LatoLight,plain,22"
-                     foreground="views.title" anchor="south" marginBottom="2"/>
-              <filler fill="horizontal"/>
-            </row>
-            <row weightX="100" weightY="0.1" name="time" marginLeft="20" marginTop="0" marginRight="20">
-              <column>
-                <filler fill="vertical"/>
-                <button ref="prevPeriod" gridPos="(0,1)"
-                        ui="arrowLeft" styleClass="periodButton"
-                        tooltipText="$timeView.tooltip.previous"/>
-                <button ref="firstPeriod" gridPos="(0,0)"
-                        ui="doubleArrowLeft" styleClass="doublePeriodButton"
-                        tooltipText="$timeView.tooltip.first"/>
-              </column>
-              <component ref="timeView" gridPos="(1,0,1,2)"
-                         fill="horizontal" anchor="center"
-                         marginLeft="2" marginRight="2"
-                         weightX="1000.0" weightY="100.0" border="empty"/>
-              <column>
-                <filler fill="vertical"/>
-                <button ref="nextPeriod" gridPos="(2,0)"
-                        ui="arrowRight" styleClass="periodButton" tooltipText="$timeView.tooltip.next"/>
-                <button ref="lastPeriod" gridPos="(2,1)"
-                        ui="doubleArrowRight" styleClass="doublePeriodButton"
-                        tooltipText="$timeView.tooltip.last"/>
-              </column>
-            </row>
+    <panel name="timeviewHeader" opaque="false">
+      <horizontalBoxes marginTop="3" marginLeft="0" marginRight="15" marginBottom="8">
+        <row>
+          <row weightX="0.1" preferredSize="(210,16)">
+            <label ref="periodTitle" opaque="false" font="LatoLight,plain,22"
+                   foreground="header.title" anchor="south" marginBottom="2"/>
+            <filler fill="horizontal"/>
           </row>
-        </horizontalBoxes>
-      </column>
-
-      <column marginLeft="15" marginRight="15" marginBottom="10">
-
-        <label ref="sectionTitle" opaque="false" font="Arial,bold,18" weightX="0"
-               horizontalAlignment="center" foreground="views.title" shadowDirection="northwest"
-               shadowColor="views.title.shadow" anchor="south"/>
-
-        <cards ref="mainCards" border="${mainContent.border}" weightY="10.0">
-
-          <card name="home">
+          <row weightX="100" weightY="0.1" name="time" marginLeft="20" marginTop="0" marginRight="20">
             <column>
-              <cards ref="signpostCard" weightY="100">
-                <card name="signposts">
-                  <column>
-                    <label text="$summaryView.title" styleClass="blockTitle"/>
-                    <column styleClass="block">
-                      <column styleClass="innerBlock"
-                              opaque="true" background="block.inner.bg"
-                              border="line(block.inner.border)" marginTop="10" weightY="100">
-                        <panel ref="signpostView"/>
-                      </column>
-                    </column>
-                  </column>
-                </card>
-                <card name="summary">
-                  <column>
-                    <horizontalSplit ref="summaryProjectSplit" weightY="2" styleClass="mainDivider">
-                      <column>
-                        <label text="$summaryView.title" styleClass="blockTitle"/>
-                        <column styleClass="block">
-                          <column styleClass="innerBlock" weightY="100">
-                            <panel ref="summaryView"/>
-                          </column>
-                        </column>
-                      </column>
-                      <column autoHideSource="projectView">
-                        <label text="$projectView.title" styleClass="blockTitle"/>
-                        <column styleClass="block">
-                          <column styleClass="innerBlock" weightY="100">
-                            <panel ref="projectView"/>
-                          </column>
-                        </column>
-                      </column>
-                    </horizontalSplit>
-                  </column>
-                </card>
-              </cards>
-
-              <column weightY="0.1" autoHideSource="licenseInfo">
-                <panel ref="licenseInfo" marginTop="10"/>
-              </column>
-
+              <filler fill="vertical"/>
+              <button ref="prevPeriod" gridPos="(0,1)"
+                      ui="arrowLeft" styleClass="periodButton"
+                      tooltipText="$timeView.tooltip.previous"/>
+              <button ref="firstPeriod" gridPos="(0,0)"
+                      ui="doubleArrowLeft" styleClass="doublePeriodButton"
+                      tooltipText="$timeView.tooltip.first"/>
             </column>
-          </card>
+            <component ref="timeView" gridPos="(1,0,1,2)"
+                       fill="horizontal" anchor="center"
+                       marginLeft="2" marginRight="2"
+                       weightX="1000.0" weightY="100.0" border="empty"/>
+            <column>
+              <filler fill="vertical"/>
+              <button ref="nextPeriod" gridPos="(2,0)"
+                      ui="arrowRight" styleClass="periodButton" tooltipText="$timeView.tooltip.next"/>
+              <button ref="lastPeriod" gridPos="(2,1)"
+                      ui="doubleArrowRight" styleClass="doublePeriodButton"
+                      tooltipText="$timeView.tooltip.last"/>
+            </column>
+          </row>
+        </row>
+        <button ref="importFile" icon="header_import.png" styleClass="iconOnly" marginLeft="5" marginRight="5"
+                fill="none" anchor="south" marginBottom="5" tooltipText="$import.tooltip"/>
+      </horizontalBoxes>
+    </panel>
 
-          <card name="categorization">
-            <panel ref="categorizationView"/>
-          </card>
+    <panel ref="accountView" styleClass="sidebar"/>
 
-          <card name="budget">
-            <cards ref="budgetToggle">
-              <card name="main">
-                <panel ref="budgetView"/>
-              </card>
-              <card name="savings">
-                <panel ref="savingsView"/>
-              </card>
-            </cards>
-          </card>
+    <panel name="categorizationSelector" styleClass="sidebar" preferredSize="(50,50)"/>
 
-          <card name="analysis">
-            <panel ref="seriesAnalysisView"/>
-          </card>
+    <panel name="analysisSelector" styleClass="sidebar" preferredSize="(50,50)"/>
 
-          <card name="data">
-            <horizontalSplit ref="accountTransactionSplit" styleClass="mainDivider">
-              <column weightX="1" minimumSize="(300,200)" preferredSize="(300,700)">
-                <panel ref="accountView"/>
-              </column>
-
-              <column weightX="2.5">
-                <panel ref="transactionView"/>
-              </column>
-            </horizontalSplit>
-          </card>
-        </cards>
-
-        <panel ref="newVersionView" weightY="0"/>
-
-        <panel ref="demoMessageView" weightY="0"/>
-
-      </column>
+    <column name="projectsSelector" styleClass="sidebar" preferredSize="(500,50)">
+      <label text="$cards.projects" styleClass="sidebarTitle"/>
+      <panel ref="summaryView"/>
     </column>
 
-  </row>
+    <column name="home" styleClass="content">
+      <cards ref="signpostCard">
+        <card name="signposts">
+          <panel ref="signpostView"/>
+        </card>
+        <card name="dashboard">
+          <panel ref="dashboardView"/>
+        </card>
+      </cards>
+
+      <column weightY="0.1" autoHideSource="licenseInfo">
+        <panel ref="licenseInfo" marginTop="10"/>
+      </column>
+
+    </column>
+
+    <panel name="categorization" styleClass="content">
+      <panel ref="categorizationView"/>
+    </panel>
+
+    <panel name="budget" styleClass="content">
+      <cards ref="budgetToggle">
+        <card name="main">
+          <panel ref="budgetView"/>
+        </card>
+        <card name="savings">
+          <panel ref="savingsView"/>
+        </card>
+      </cards>
+    </panel>
+
+    <panel name="analysis" styleClass="content">
+      <panel ref="seriesAnalysisView"/>
+    </panel>
+
+    <panel name="data" styleClass="content">
+      <panel ref="transactionView"/>
+    </panel>
+
+    <column name="projects" styleClass="content">
+      <panel ref="projectView"/>
+    </column>
+
+    <column name="footer" styleClass="content">
+      <panel ref="newVersionView" weightY="0"/>
+      <panel ref="demoMessageView" weightY="0"/>
+    </column>
+
+  </column>
+
 </splits>

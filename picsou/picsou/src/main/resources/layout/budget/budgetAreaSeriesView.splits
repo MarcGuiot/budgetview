@@ -3,8 +3,7 @@
   <styleImport file="/layout/picsouStyles.splits"/>
   <styles>
     <style selector="#budgetAreaSeriesView .amount" font="-,plain,11" anchor="right"/>
-    <style selector="label.totalAmount" font="-,bold,16" weightY="10" anchor="center" marginBottom="2"/>
-    <style selector="label.totalAmountTitle" weightX="0" anchor="center"/>
+    <style selector="label.totalAmount" font="LatoLight,plain,12" weightY="10" anchor="center" marginBottom="2"/>
 
     <style selector="repeat header label" font="-,plain,11"
            foreground="block.inner.columnTitle" horizontalTextPosition="right"
@@ -60,71 +59,53 @@
 
   </styles>
 
-  <column name="budgetAreaSeriesView" styleClass="main">
+  <column name="budgetAreaSeriesView" opaque="false" preferredSize="(300,400)">
 
-    <label ref="budgetAreaTitle" styleClass="blockTitle"/>
+      <row name="total" weightY="0" marginLeft="15" marginRight="15" border="${budget.blockHeader.border}">
+        <button ref="budgetAreaTitle" tooltipText="$budgetView.actions.tooltip" font="LatoRegular,plain,18"
+                ui="hyperlinkButtonWithoutUnderline" foreground="block.footer.button"
+                fill="none" iconTextGap="2"
+                icon="downArrow(10,10,8,8,block.footer.arrow.default)"
+                rolloverIcon="downArrow(10,10,8,8,block.footer.arrow.rollover)"/>
+        <filler fill="horizontal"/>
+        <component ref="totalGauge" styleClass="totalGauge" minimumSize="(60,20)" preferredSize="(60,20)"
+                   fill="horizontal" anchor="center" marginBottom="0" marginLeft="10" marginRight="10"/>
+        <label ref="totalObservedAmount" styleClass="totalAmount"
+               tooltipText="$budgetview.tooltip.total.observed"/>
+        <label text="/" styleClass="totalAmount" marginLeft="5" marginRight="5"/>
+        <label ref="totalPlannedAmount" styleClass="totalAmount" foreground=""
+               tooltipText="$budgetview.tooltip.total.planned"/>
+      </row>
 
-    <panel styleClass="block" preferredSize="(300,400)">
-      <column border="${budget.block.border}">
-
-        <grid name="total" weightY="0" marginLeft="15" marginRight="15">
-          <label ref="totalObservedAmount" styleClass="totalAmount" gridPos="(1,0)"
-                 tooltipText="$budgetview.tooltip.total.observed"/>
-          <component ref="totalGauge" styleClass="totalGauge" gridPos="(2,0,1,1)"
-                     fill="horizontal" anchor="center" marginBottom="0"/>
-          <label ref="totalPlannedAmount" styleClass="totalAmount" gridPos="(3,0)" foreground=""
-                 tooltipText="$budgetview.tooltip.total.planned"/>
-        </grid>
-
-        <grid name="total" weightY="0" marginLeft="5" marginRight="5" border="${budget.blockHeader.border}">
-          <label text="$budgetview.observed" styleClass="totalAmountTitle" gridPos="(0,0)" marginRight="5"/>
-          <label ref="totalObservedAmount" styleClass="totalAmount" gridPos="(1,0)"
-                 tooltipText="$budgetview.tooltip.total.observed"/>
-          <component ref="totalGauge" styleClass="totalGauge" gridPos="(2,0,1,1)"
-                     fill="horizontal" anchor="center" marginBottom="0"/>
-          <label ref="totalPlannedAmount" styleClass="totalAmount" gridPos="(3,0)" foreground=""
-                 tooltipText="$budgetview.tooltip.total.planned"/>
-          <label text="$budgetview.planned" styleClass="totalAmountTitle" gridPos="(4,0)" marginLeft="5"/>
-        </grid>
-        
-        <column styleClass="blockScrollBorder" weightY="10">
-          <scrollPane verticalUnitIncrement="10" forceVerticalScroll="true" weightY="10">
-            <verticalBoxes>
-              <repeat ref="seriesRepeat" styleClass="innerBlock" layout="org.designup.picsou.gui.budget.components.BudgetAreaSeriesLayout"
-                      margin="5" marginTop="0">
-                <header>
-                  <button ref="titleSeries" styleClass="itemLink" text="$budgetview.columnTitle.series"/>
-                  <label/>
-                  <label/>
-                  <button ref="titleAmountReal" styleClass="itemLink" text="$budgetview.columnTitle.real"/>
-                  <label/>
-                  <button ref="titleAmountPlanned" styleClass="itemLink" text="$budgetview.columnTitle.planned"
-                          anchor="left"/>
-                  <label/>
-                </header>
-                <button ref="seriesName"/>
-                <button ref="groupToggle"/>
-                <component ref="gauge" styleClass="detailGauge"/>
-                <button ref=  "observedSeriesAmount"
-                        tooltipText="$budgetview.tooltip.detail.observed" font="-,plain,10"/>
-                <label name="slash" styleClass="slash"/>
-                <button ref="plannedSeriesAmount"
-                        tooltipText="$budgetview.tooltip.detail.planned"/>
-                <component ref="deltaGauge"/>
-              </repeat>
-              <filler fill="vertical" weightY="0.01"/>
-            </verticalBoxes>
-          </scrollPane>
-
-          <row styleClass="footer" weightY="0.01">
-            <button ref="specificAction"/>
-            <filler fill="horizontal"/>
-            <button ref="seriesActions" tooltipText="$budgetView.actions.tooltip"
-                    icon="downArrow(10,10,8,8,block.footer.arrow.default)" rolloverIcon="downArrow(10,10,8,8,block.footer.arrow.rollover)"/>
-          </row>
-        </column>
+      <column styleClass="blockScrollBorder" weightY="10" marginLeft="15" marginRight="15" >
+        <scrollPane verticalUnitIncrement="10" forceVerticalScroll="true" weightY="10">
+          <verticalBoxes>
+            <repeat ref="seriesRepeat" styleClass="innerBlock"
+                    layout="org.designup.picsou.gui.budget.components.BudgetAreaSeriesLayout"
+                    marginBottom="5">
+              <header>
+                <button ref="titleSeries" styleClass="itemLink" text="$budgetview.columnTitle.series"/>
+                <label/>
+                <label/>
+                <button ref="titleAmountReal" styleClass="itemLink" text="$budgetview.columnTitle.real"/>
+                <label/>
+                <button ref="titleAmountPlanned" styleClass="itemLink" text="$budgetview.columnTitle.planned"
+                        anchor="left"/>
+                <label/>
+              </header>
+              <button ref="seriesName"/>
+              <button ref="groupToggle"/>
+              <component ref="gauge" styleClass="detailGauge"/>
+              <button ref="observedSeriesAmount"
+                      tooltipText="$budgetview.tooltip.detail.observed" font="-,plain,10"/>
+              <label name="slash" styleClass="slash"/>
+              <button ref="plannedSeriesAmount"
+                      tooltipText="$budgetview.tooltip.detail.planned"/>
+              <component ref="deltaGauge"/>
+            </repeat>
+          </verticalBoxes>
+        </scrollPane>
       </column>
-    </panel>
+    </column>
 
-  </column>
 </splits>

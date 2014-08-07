@@ -1,7 +1,6 @@
 package org.designup.picsou.gui.series.analysis.histobuilders;
 
 import org.designup.picsou.gui.time.TimeService;
-import org.designup.picsou.model.CurrentMonth;
 import org.globsframework.gui.GlobSelection;
 import org.globsframework.gui.GlobSelectionListener;
 import org.globsframework.gui.SelectionService;
@@ -44,21 +43,25 @@ public abstract class HistoChartUpdater implements GlobSelectionListener, Dispos
   private void registerChangeSetListener(GlobRepository repository, final GlobType[] types) {
     this.changeSetListener = new ChangeSetListener() {
       public void globsChanged(ChangeSet changeSet, GlobRepository repository) {
-        if (repository == null) {
-          return;
-        }
-        for (GlobType type : types) {
-          if (changeSet.containsChanges(type)) {
-            update(true);
-            return;
+        if (!isDisposed()) {
+          for (GlobType type : types) {
+            if (changeSet.containsChanges(type)) {
+              update(true);
+              return;
+            }
           }
+        }
+        else {
+          return;
         }
       }
 
       public void globsReset(GlobRepository repository, Set<GlobType> changedTypes) {
-        for (GlobType type : Utils.list(selectionType, types)) {
-          if (changedTypes.contains(type)) {
-            update(true);
+        if (!isDisposed()) {
+          for (GlobType type : Utils.list(selectionType, types)) {
+            if (changedTypes.contains(type)) {
+              update(true);
+            }
           }
         }
       }
@@ -67,36 +70,49 @@ public abstract class HistoChartUpdater implements GlobSelectionListener, Dispos
   }
 
   public void selectionUpdated(GlobSelection selection) {
-    this.currentMonths = selection.getAll(selectionType).getSortedSet(selectionMonthField);
-    this.currentMonthId = currentMonths.isEmpty() ? null : currentMonths.last();
+    if (isDisposed()) {
+      return;
+    }
+    updateCurrentMonth();
     update(true);
   }
 
   public void update(final boolean resetPosition) {
-    if ((repository != null) && repository.contains(CurrentMonth.TYPE)) {
-      update(currentMonthId == null ? todayId : currentMonthId, resetPosition);
+    if (currentMonthId == null) {
+      updateCurrentMonth();
     }
+    update(currentMonthId == null ? todayId : currentMonthId, resetPosition);
   }
 
   public Integer getCurrentMonthId() {
     if (currentMonths == null || currentMonths.isEmpty() || currentMonthId == null) {
-      this.currentMonths = directory.get(SelectionService.class).getSelection(selectionType).getSortedSet(selectionMonthField);
-      this.currentMonthId = currentMonths.isEmpty() ? null : currentMonths.last();
+      updateCurrentMonth();
     }
     return currentMonthId;
   }
 
+  public void updateCurrentMonth() {
+    if (isDisposed()) {
+      return;
+    }
+    this.currentMonths = directory.get(SelectionService.class).getSelection(selectionType).getSortedSet(selectionMonthField);
+    this.currentMonthId = currentMonths.isEmpty() ? null : currentMonths.last();
+  }
+
+  protected abstract void update(Integer currentMonthId, boolean resetPosition);
+
   public void dispose() {
-    if (repository != null) {
-      repository.removeChangeListener(changeSetListener);
+    if (isDisposed()) {
+      throw new RuntimeException("Double dispose");
     }
-    if (directory != null) {
-      directory.get(SelectionService.class).removeListener(this);
-    }
+    repository.removeChangeListener(changeSetListener);
+    directory.get(SelectionService.class).removeListener(this);
     repository = null;
     directory = null;
     changeSetListener = null;
   }
 
-  protected abstract void update(Integer currentMonthId, boolean resetPosition);
+  public boolean isDisposed() {
+    return HistoChartUpdater.this.repository == null;
+  }
 }

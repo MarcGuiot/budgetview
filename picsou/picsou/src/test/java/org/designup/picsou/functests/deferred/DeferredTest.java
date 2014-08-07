@@ -719,7 +719,7 @@ public class DeferredTest extends LoggedInFunctionalTestCase {
       .add("23/08/2011", "DIFFE 1", -12.00, "courses", -12.00, 76.00, "card 1111")
       .check();
 
-    mainAccounts.checkSummary(23., "2011/09/02");
+    mainAccounts.checkReferencePosition(23., "2011/09/02");
     resetWindow();
   }
 
@@ -831,7 +831,7 @@ public class DeferredTest extends LoggedInFunctionalTestCase {
       .setRecurring("CHEQUE N°5", "course");
     categorization.editSeries("course").setAmount(300).setPropagationEnabled().validate();
 
-    mainAccounts.createNewAccount()
+    accounts.createNewAccount()
       .setName("Compte differé")
       .selectBank("CIC")
       .setAsDeferredCard()
@@ -859,7 +859,7 @@ public class DeferredTest extends LoggedInFunctionalTestCase {
 
     mainAccounts.checkPosition("Compte differé", -35);
     mainAccounts.checkPosition("Account n. 00001123", 0);
-    mainAccounts.checkSummary(0, "2009/12/08");
+    mainAccounts.checkReferencePosition(0, "2009/12/08");
 
     timeline.selectAll();
     transactions.showPlannedTransactions().initAmountContent()
@@ -895,7 +895,7 @@ public class DeferredTest extends LoggedInFunctionalTestCase {
     budgetView.recurring.createSeries().setName("course").setAmount(300).setPropagationEnabled()
       .setTargetAccount("Account n. 00001123").validate();
 
-    mainAccounts.createNewAccount()
+    accounts.createNewAccount()
       .setName("Compte differé")
       .selectBank("CIC")
       .setAsDeferredCard()
@@ -926,7 +926,7 @@ public class DeferredTest extends LoggedInFunctionalTestCase {
 
     mainAccounts.checkPosition("Compte differé", -35);
     mainAccounts.checkPosition("Account n. 00001123", 0);
-    mainAccounts.checkSummary(0, "2009/11/09");
+    mainAccounts.checkReferencePosition(0, "2009/11/09");
 
     timeline.selectAll();
     transactions.showPlannedTransactions().initAmountContent()

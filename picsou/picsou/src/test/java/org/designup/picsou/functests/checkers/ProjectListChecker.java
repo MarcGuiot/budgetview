@@ -1,15 +1,10 @@
 package org.designup.picsou.functests.checkers;
 
 import junit.framework.Assert;
-import junit.framework.AssertionFailedError;
 import org.designup.picsou.functests.checkers.components.PopupChecker;
 import org.designup.picsou.gui.projects.components.ProjectButton;
-import org.globsframework.gui.splits.components.ArrowIcon;
-import org.globsframework.gui.splits.components.EmptyIcon;
 import org.globsframework.utils.TablePrinter;
 import org.uispec4j.*;
-import org.uispec4j.assertion.Assertion;
-import org.uispec4j.assertion.UISpecAssert;
 import org.uispec4j.interception.PopupMenuInterceptor;
 
 import javax.swing.*;
@@ -31,29 +26,11 @@ public class ProjectListChecker extends ViewChecker {
   public void checkShown() {
     views.selectHome();
     checkComponentVisible(mainWindow, JPanel.class, "projectView", true);
-    assertThat(new Assertion() {
-      public void check() {
-        JLabel label = (JLabel)mainWindow.getTextBox("projectArrow").getAwtComponent();
-        Icon icon = label.getIcon();
-        if (!(icon instanceof ArrowIcon)) {
-          throw new AssertionFailedError("Actual projectArrow icon: " + icon);
-        }
-      }
-    });
   }
 
   public void checkHidden() {
     views.selectHome();
     checkComponentVisible(mainWindow, JPanel.class, "projectView", false);
-    assertThat(new Assertion() {
-      public void check() {
-        JLabel label = (JLabel)mainWindow.getTextBox("projectArrow").getAwtComponent();
-        Icon icon = label.getIcon();
-        if (!(icon instanceof EmptyIcon)) {
-          throw new AssertionFailedError("Actual projectArrow icon: " + icon);
-        }
-      }
-    });
   }
 
   public ProjectListChecker checkListPageShown() {
@@ -116,6 +93,7 @@ public class ProjectListChecker extends ViewChecker {
   }
 
   public void delete(final String projectName) {
+    views.selectProjects();
     PopupChecker popup = new PopupChecker() {
       protected MenuItem openMenu() {
         Button button = getPanel().getTextBox(projectName)

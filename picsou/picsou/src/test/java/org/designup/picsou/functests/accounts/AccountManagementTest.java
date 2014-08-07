@@ -16,7 +16,7 @@ public class AccountManagementTest extends LoggedInFunctionalTestCase {
       .load();
 
     mainAccounts.checkAccount("Account n. 10101010", 1.23, "2006/01/10");
-    mainAccounts.checkSummary(1.23, "2006/01/10");
+    mainAccounts.checkReferencePosition(1.23, "2006/01/10");
     transactions.initAmountContent()
       .add("10/01/2006", "BLAH", -1.00, "To categorize", 1.23, 1.23, "Account n. 10101010")
       .check();
@@ -41,7 +41,7 @@ public class AccountManagementTest extends LoggedInFunctionalTestCase {
 
     mainAccounts.checkAccount("Account n. 123123123", 0, "2006/01/15");
     mainAccounts.checkAccount("Card n. 1000-2000-30", -9, "2006/01/28");
-    mainAccounts.checkSummary(0, "2006/01/15");
+    mainAccounts.checkReferencePosition(0, "2006/01/15");
 
     timeline.selectAll();
     transactions.initAmountContent()
@@ -65,7 +65,7 @@ public class AccountManagementTest extends LoggedInFunctionalTestCase {
       .load();
 
     mainAccounts.checkAccount("Account n. 10101010", 12345.60, "2006/05/01");
-    mainAccounts.checkSummary(12345.60, "2006/05/01");
+    mainAccounts.checkReferencePosition(12345.60, "2006/05/01");
   }
 
   public void testNothingShownForQifFiles() throws Exception {
@@ -121,11 +121,7 @@ public class AccountManagementTest extends LoggedInFunctionalTestCase {
       .openDelete()
       .validate();
 
-    mainAccounts
-      .checkNoAccountsDisplayed()
-      .checkNoEstimatedPosition();
-
-    budgetView.getSummary().checkNoEstimatedPosition();
+    mainAccounts.checkNoAccountsDisplayed();
   }
 
   public void testNavigatingToOperations() throws Exception {
@@ -158,7 +154,7 @@ public class AccountManagementTest extends LoggedInFunctionalTestCase {
 
   public void testAccountWithoutPosition() throws Exception {
     views.selectHome();
-    AccountEditionChecker accountEditionChecker = mainAccounts.createNewAccount()
+    AccountEditionChecker accountEditionChecker = accounts.createNewAccount()
       .setName("no position");
     accountEditionChecker
       .openBankSelection()
@@ -185,7 +181,7 @@ public class AccountManagementTest extends LoggedInFunctionalTestCase {
 
     mainAccounts.checkAccount("123", 10, "2008/07/28");
     mainAccounts.checkAccount("321", 10, "2008/07/29");
-    mainAccounts.checkSummary(20, "2008/07/29");
+    mainAccounts.checkReferencePosition(20, "2008/07/29");
 
     OfxBuilder.init(this)
       .addBankAccount("123", -10, "2008/08/14")
@@ -194,7 +190,7 @@ public class AccountManagementTest extends LoggedInFunctionalTestCase {
 
     mainAccounts.checkAccount("123", -10, "2008/08/14");
     mainAccounts.checkAccount("321", 10, "2008/07/29");
-    mainAccounts.checkSummary(0, "2008/08/14");
+    mainAccounts.checkReferencePosition(0, "2008/08/14");
     operations.checkDataIsOk();
   }
 
@@ -212,7 +208,7 @@ public class AccountManagementTest extends LoggedInFunctionalTestCase {
       .addTransaction("2008/07/30", -550, "second account ")
       .load();
 
-    mainAccounts.checkSummary(20, "2008/07/30");
+    mainAccounts.checkReferencePosition(20, "2008/07/30");
   }
 
   public void testFindAccountWthOneOperation() throws Exception {
@@ -262,18 +258,18 @@ public class AccountManagementTest extends LoggedInFunctionalTestCase {
     timeline.selectMonth(200805);
 
     mainAccounts.checkAccount("Account n. 111", +1000.00, "2008/05/24");
-    mainAccounts.initChart("Account n. 111")
+    mainAccounts.getChart("Account n. 111")
       .checkValue(200805, 1, 1500.00)
       .checkValue(200805, 20, 1100.00)
       .checkValue(200805, 24, 1000.00);
 
     savingsAccounts.checkAccount("Account n. 222", +10000.00, "2008/05/20");
-    savingsAccounts.initChart("Account n. 222")
+    savingsAccounts.getChart("Account n. 222")
       .checkValue(200805, 1, 9000.00)
       .checkValue(200805, 20, 10000.00);
 
     savingsAccounts.checkAccount("Account n. 333", +100.00, "2008/04/10");
-    savingsAccounts.initChart("Account n. 333")
+    savingsAccounts.getChart("Account n. 333")
       .checkValue(200805, 1, 100.00);
   }
 }

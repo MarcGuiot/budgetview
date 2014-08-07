@@ -19,6 +19,10 @@ public class LangSelectionTest extends LangTestCase {
     super.tearDown();
   }
 
+  protected String getAccountName() {
+    return "Account n. 007";
+  }
+
   public void testDateFormats() throws Exception {
 
     OfxBuilder.init(this)

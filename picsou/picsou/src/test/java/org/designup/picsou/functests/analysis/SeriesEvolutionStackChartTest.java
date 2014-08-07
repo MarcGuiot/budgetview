@@ -33,7 +33,8 @@ public class SeriesEvolutionStackChartTest extends LoggedInFunctionalTestCase {
       .load();
 
     views.selectHome();
-    savingsAccounts.createNewAccount()
+    accounts.createNewAccount()
+      .setAsSavings()
       .setName("Livret")
       .selectBank("ING Direct")
       .setPosition(0)
@@ -184,7 +185,8 @@ public class SeriesEvolutionStackChartTest extends LoggedInFunctionalTestCase {
       .addTransaction("2009/06/18", -100.00, "Virt Epargne")
       .load();
 
-    savingsAccounts.createNewAccount()
+    accounts.createNewAccount()
+      .setAsSavings()
       .setName("Livret")
       .selectBank("ING Direct")
       .setPosition(0)
@@ -681,7 +683,8 @@ public class SeriesEvolutionStackChartTest extends LoggedInFunctionalTestCase {
       .load();
 
     views.selectHome();
-    savingsAccounts.createNewAccount()
+    accounts.createNewAccount()
+      .setAsSavings()
       .setName("Livret")
       .selectBank("ING Direct")
       .setPosition(0)
@@ -852,7 +855,8 @@ public class SeriesEvolutionStackChartTest extends LoggedInFunctionalTestCase {
       .addTransaction("2008/07/12", -95.00, "Virement")
       .load();
 
-    savingsAccounts.createNewAccount()
+    accounts.createNewAccount()
+      .setAsSavings()
       .setName("Livret")
       .selectBank("ING Direct")
       .setAccountNumber("333")

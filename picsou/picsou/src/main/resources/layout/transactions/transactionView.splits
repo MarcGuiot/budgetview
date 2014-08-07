@@ -4,46 +4,39 @@
 
   <column name="transactionView">
 
-    <label text="$transactionView.operations.title" styleClass="blockTitle"/>
-    <panel styleClass="block">
-      <column styleClass="innerBlock" margin="10" marginLeft="15" marginRight="15">
+    <verticalSplit styleClass="blockDivider" opaque="false" margin="10" marginLeft="15" marginRight="15">
+      <column>
+        <row>
+          <filler fill="horizontal"/>
+          <component ref="transactionSearch"/>
+          <button ref="actionsMenu" styleClass="actionsButton" marginLeft="20"/>
+        </row>
+        <row border="empty(5,0,5,0)" autoHideSource="customFilterMessage" weightY="0.1">
+          <panel ref="customFilterMessage"/>
+        </row>
+        <scrollPane borderPos="center" viewportBackground="transactions.bg"
+                    border="line(transaction.border)" opaque="true"
+                    marginTop="5" marginBottom="0">
+          <table ref="transactionsTable" background="transactions.bg" rowHeight="20"
+                 autoResizeMode="JTable.AUTO_RESIZE_OFF"/>
+        </scrollPane>
 
-
-        <verticalSplit ref="transactionChartSplit" styleClass="blockDivider" opaque="false">
-          <column>
-            <row>
-              <filler fill="horizontal"/>
-              <component ref="transactionSearch"/>
-              <button ref="actionsMenu" styleClass="actionsButton" marginLeft="20"/>
-            </row>
-            <row border="empty(5,0,5,0)" autoHideSource="customFilterMessage">
-              <panel ref="customFilterMessage"/>
-            </row>
-            <scrollPane borderPos="center" viewportBackground="transactions.bg"
-                        border="line(transaction.border)" opaque="true"
-                        marginTop="5" marginBottom="0">
-              <table ref="transactionsTable" background="transactions.bg" rowHeight="20"
-                     autoResizeMode="JTable.AUTO_RESIZE_OFF"/>
-            </scrollPane>
-
-            <row autoHideSource="sum">
-              <filler fill="horizontal"/>
-              <label text="$amount" styleClass="formLabelTop"
-                     border="empty(0,0,0,5)" tooltipText="$amount.tooltip"/>
-              <label ref="sum" font="-,bold,12"/>
-            </row>
-          </column>
-
-          <column opaque="true"
-                  background="block.inner.secondary.bg" border="line(block.inner.border)" autoHideSource="accountChart">
-            <label ref="accountChartLegend" anchor="center" fill="none" font="-,plain,11"/>
-            <panel ref="accountChart" margin="5" background="block.inner.secondary.bg"/>
-          </column>
-
-        </verticalSplit>
-
+        <row autoHideSource="sum">
+          <filler fill="horizontal"/>
+          <label text="$amount" styleClass="formLabelTop"
+                 border="empty(0,0,0,5)" tooltipText="$amount.tooltip"/>
+          <label ref="sum" font="-,bold,12"/>
+        </row>
       </column>
-    </panel>
+
+      <column opaque="true"
+              background="block.inner.secondary.bg" border="line(block.inner.border)" autoHideSource="accountChart">
+        <label ref="accountChartLegend" anchor="center" fill="none" font="-,plain,11"/>
+        <panel ref="accountChart" margin="5" background="block.inner.secondary.bg"/>
+      </column>
+
+    </verticalSplit>
+
   </column>
 
 </splits>

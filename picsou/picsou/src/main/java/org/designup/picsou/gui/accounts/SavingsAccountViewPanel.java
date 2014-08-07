@@ -1,19 +1,17 @@
 package org.designup.picsou.gui.accounts;
 
-import org.designup.picsou.gui.accounts.position.AccountPositionLabels;
-import org.designup.picsou.gui.accounts.position.SavingsAccountPositionLabels;
 import org.designup.picsou.model.Account;
 import org.designup.picsou.model.AccountType;
 import org.globsframework.model.GlobRepository;
-import org.globsframework.model.Key;
 import org.globsframework.model.utils.GlobMatcher;
-import static org.globsframework.model.utils.GlobMatchers.*;
 import org.globsframework.utils.directory.Directory;
+
+import static org.globsframework.model.utils.GlobMatchers.*;
 
 public class SavingsAccountViewPanel extends AccountViewPanel {
 
   public SavingsAccountViewPanel(final GlobRepository repository, final Directory directory) {
-    super(repository, directory, createMatcher(), Account.SAVINGS_SUMMARY_ACCOUNT_ID);
+    super(repository, directory, createMatcher(), AccountType.SAVINGS, Account.SAVINGS_SUMMARY_ACCOUNT_ID);
   }
 
   private static GlobMatcher createMatcher() {

@@ -12,14 +12,10 @@
            icon="arrow_right_red.png" rolloverIcon="arrow_right_blue_full.png"/>
   </styles>
 
-  <column ref="uncategorizedSummaryView" styleClass="main" border="empty(10,0,0,0)">
-    <panel styleClass="block" preferredSize="(300,400)">
-      <row border="${budget.block.border}">
+  <row ref="uncategorizedSummaryView">
         <filler fill="horizontal"/>
         <label text="$uncategorizedSummaryView.title" styleClass="totalAmountTitle"/>
         <button ref="uncategorized" styleClass="uncategorized"/>
-      </row>
-    </panel>
-  </column>
+  </row>
 
 </splits>

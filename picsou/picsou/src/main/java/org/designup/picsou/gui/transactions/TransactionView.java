@@ -9,7 +9,6 @@ import org.designup.picsou.gui.components.filtering.FilterManager;
 import org.designup.picsou.gui.components.filtering.Filterable;
 import org.designup.picsou.gui.components.filtering.components.FilterClearingPanel;
 import org.designup.picsou.gui.components.filtering.components.TextFilterPanel;
-import org.designup.picsou.gui.components.layoutconfig.SplitPaneConfig;
 import org.designup.picsou.gui.components.table.DefaultTableCellPainter;
 import org.designup.picsou.gui.components.table.PicsouTableHeaderPainter;
 import org.designup.picsou.gui.description.Formatting;
@@ -141,9 +140,7 @@ public class TransactionView extends View implements Filterable {
     GlobLabelView legend = builder.addLabel("accountChartLegend", Account.TYPE, new LegendStringifier(directory));
     selectionService.addListener(legend, Month.TYPE);
 
-    builder.add("transactionChartSplit", SplitPaneConfig.create(directory, LayoutConfig.ACCOUNTS_TRANSACTION_CHART));
-
-    parentBuilder.add("accountTransactionSplit", SplitPaneConfig.create(directory, LayoutConfig.ACCOUNTS_HORIZONTAL));
+//    builder.add("transactionChartSplit", SplitPaneConfig.create(directory, LayoutConfig.ACCOUNTS_TRANSACTION_CHART));
 
     parentBuilder.add("transactionView", builder);
   }

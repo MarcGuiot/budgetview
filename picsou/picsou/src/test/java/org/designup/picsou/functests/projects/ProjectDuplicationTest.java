@@ -94,7 +94,7 @@ public class ProjectDuplicationTest extends LoggedInFunctionalTestCase {
 
   public void testDuplicationErrorsAndCancel() throws Exception {
 
-    mainAccounts.createMainAccount("Main account", 1000.00);
+    accounts.createMainAccount("Main account", 1000.00);
 
     // Cannot duplicate empty projects
     projectChart.create();

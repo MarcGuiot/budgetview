@@ -31,14 +31,14 @@ public class SummaryViewChecker extends ViewChecker {
   }
 
   public Panel getAccountPanel(String name) {
-    views.selectHome();
+    views.selectProjects();
     Button button = getPanel().getButton(name);
     return button.getContainer("accountPanel");
   }
 
   private Panel getPanel() {
     if (panel == null) {
-      views.selectHome();
+      views.selectProjects();
       panel = mainWindow.getPanel("summaryView");
     }
     return panel;
@@ -90,11 +90,13 @@ public class SummaryViewChecker extends ViewChecker {
   }
 
   public void toggleMainAccountGraphs(String text) {
+    views.selectProjects();
     PopupButton toggle = new PopupButton(getPanel().getPanel("mainAccountsPanel").getButton("sectionTitleButton"));
     toggle.click(text);
   }
 
   public void toggleSavingsAccountGraphs(String text) {
+    views.selectProjects();
     PopupButton toggle = new PopupButton(getPanel().getPanel("savingsAccountsPanel").getButton("sectionTitleButton"));
     toggle.click(text);
   }

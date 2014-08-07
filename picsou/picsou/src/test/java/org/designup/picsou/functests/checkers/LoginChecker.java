@@ -95,7 +95,7 @@ public class LoginChecker extends GuiChecker {
   }
 
   public void waitForApplicationToLoad() {
-    UISpecAssert.waitUntil(window.containsSwingComponent(TimeViewPanel.class), 10000);
+    UISpecAssert.waitUntil(window.containsSwingComponent(JPanel.class, "mainPanel"), 10000);
   }
 
   public void checkConfirmPasswordVisible(boolean visible) {

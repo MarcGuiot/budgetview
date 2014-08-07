@@ -40,12 +40,20 @@ public class ViewSelectionChecker extends GuiChecker {
     select("data");
   }
 
+  public void selectProjects() {
+    select("projects");
+  }
+
   public void checkHomeSelected() {
     assertSelected("home");
   }
 
   public void checkDataSelected() {
     assertSelected("data");
+  }
+
+  public void checkProjectsSelected() {
+    assertSelected("projects");
   }
 
   public void checkCategorizationSelected() {

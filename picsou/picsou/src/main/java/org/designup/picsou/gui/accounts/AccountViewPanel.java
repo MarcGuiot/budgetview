@@ -1,15 +1,17 @@
 package org.designup.picsou.gui.accounts;
 
+import com.budgetview.shared.gui.histochart.HistoChartConfig;
 import org.designup.picsou.gui.accounts.actions.AccountPopupFactory;
-import org.designup.picsou.gui.accounts.actions.CreateAccountAction;
-import org.designup.picsou.gui.accounts.chart.AccountPositionsChartView;
+import org.designup.picsou.gui.accounts.chart.MainDailyPositionsChartView;
+import org.designup.picsou.gui.accounts.components.AccountStatusButton;
 import org.designup.picsou.gui.accounts.position.AccountPositionLabels;
+import org.designup.picsou.gui.budget.summary.UncategorizedButton;
 import org.designup.picsou.gui.card.NavigationService;
 import org.designup.picsou.gui.components.PopupGlobFunctor;
 import org.designup.picsou.gui.description.Formatting;
 import org.designup.picsou.gui.description.stringifiers.AccountComparator;
 import org.designup.picsou.gui.model.SavingsBudgetStat;
-import org.designup.picsou.gui.series.analysis.histobuilders.range.SelectionHistoChartRange;
+import org.designup.picsou.gui.series.analysis.histobuilders.range.ScrollableHistoChartRange;
 import org.designup.picsou.gui.utils.Matchers;
 import org.designup.picsou.model.Account;
 import org.designup.picsou.model.AccountType;
@@ -27,16 +29,15 @@ import org.globsframework.gui.components.GlobUnselectPanel;
 import org.globsframework.gui.splits.PanelBuilder;
 import org.globsframework.gui.splits.SplitsNode;
 import org.globsframework.gui.splits.repeat.RepeatComponentFactory;
+import org.globsframework.gui.utils.AbstractGlobBooleanUpdater;
+import org.globsframework.gui.utils.GlobBooleanVisibilityUpdater;
 import org.globsframework.gui.views.AbstractGlobTextView;
 import org.globsframework.gui.views.GlobButtonView;
 import org.globsframework.gui.views.GlobLabelView;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.*;
 import org.globsframework.model.format.GlobListStringifier;
-import org.globsframework.model.utils.ChangeSetMatchers;
-import org.globsframework.model.utils.GlobListFunctor;
-import org.globsframework.model.utils.GlobMatcher;
-import org.globsframework.model.utils.GlobMatchers;
+import org.globsframework.model.utils.*;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
@@ -45,6 +46,7 @@ import java.util.Set;
 public abstract class AccountViewPanel {
   protected GlobRepository repository;
   protected Directory directory;
+  private AccountType accountType;
   private GlobMatcher accountTypeMatcher;
   private GlobMatcher filterMatcherWithDates;
   private Integer summaryId;
@@ -53,10 +55,11 @@ public abstract class AccountViewPanel {
   private GlobRepeat accountRepeat;
 
   public AccountViewPanel(final GlobRepository repository, final Directory directory,
-                          GlobMatcher accountMatcher, Integer summaryId) {
+                          GlobMatcher accountMatcher, AccountType accountType, Integer summaryId) {
     this.repository = repository;
     this.directory = directory;
     this.accountTypeMatcher = accountMatcher;
+    this.accountType = accountType;
     this.summaryId = summaryId;
 
     directory.get(SelectionService.class).addListener(new GlobSelectionListener() {
@@ -69,17 +72,9 @@ public abstract class AccountViewPanel {
       }
     }, Month.TYPE);
 
-    repository.addChangeListener(new ChangeSetListener() {
-      public void globsChanged(ChangeSet changeSet, GlobRepository repository) {
-        if (changeSet.containsChanges(SavingsBudgetStat.TYPE)) {
-          updateEstimatedPosition();
-        }
-      }
-
-      public void globsReset(GlobRepository repository, Set<GlobType> changedTypes) {
-        if (changedTypes.contains(SavingsBudgetStat.TYPE)) {
-          updateEstimatedPosition();
-        }
+    repository.addChangeListener(new TypeChangeSetListener(SavingsBudgetStat.TYPE) {
+      public void update(GlobRepository repository) {
+        updateEstimatedPosition();
       }
     });
   }
@@ -95,16 +90,14 @@ public abstract class AccountViewPanel {
                                                           "referencePositionDate",
                                                           "accountView.total.date");
 
-    JLabel labelTypeName = new JLabel();
-    builder.add("labelTypeName", labelTypeName);
+    JLabel labelTypeName = new JLabel(Lang.get(accountType == AccountType.MAIN ? "accountView.title.main" : "accountView.title.savings"));
+    builder.add("accountListTitle", labelTypeName);
 
     builder.add("unselect", GlobUnselectPanel.init(Account.TYPE, directory).getComponent());
 
     accountRepeat = builder.addRepeat("accountRepeat", Account.TYPE, accountTypeMatcher,
                                       new AccountComparator(),
                                       new AccountRepeatFactory());
-
-    builder.add("createAccount", new CreateAccountAction(getAccountType(), repository, directory));
 
     panel = builder.load();
   }
@@ -134,20 +127,31 @@ public abstract class AccountViewPanel {
                                 repository, directory, account.getKey());
       cellBuilder.addDisposable(toggle);
 
+      AccountStatusButton.create(account.getKey(), cellBuilder, "accountStatus", repository, directory);
+
+      UncategorizedButton.create(account.getKey(), cellBuilder, "uncategorized", repository, directory);
+
       final AccountPopupFactory popupFactory = new AccountPopupFactory(account, repository, directory);
-      popupFactory.setShowGraphToggle(false);
+      popupFactory.setShowGraphToggle(true);
       add("editAccount",
           createEditAccountButton(account, popupFactory, repository, directory), account, cellBuilder);
 
       add("showAccount",
           createShowAccountButton(repository, directory), account, cellBuilder);
 
-      AccountPositionsChartView positionsChart =
-        AccountPositionsChartView.stripped(account.get(Account.ID),
-                                           "accountPositionsChart",
-                                           new SelectionHistoChartRange(repository, directory), repository, directory);
-      positionsChart.registerComponents(cellBuilder);
-      cellBuilder.addDisposable(positionsChart);
+      MainDailyPositionsChartView chartView =
+        new MainDailyPositionsChartView(new ScrollableHistoChartRange(0, 1, true, repository),
+                                        new HistoChartConfig(true, false, true, true, true, true, false, true, false, true),
+                                        "accountPositionsChart", repository, directory, "daily.budgetSummary");
+      chartView.setAccount(account.getKey());
+      chartView.installHighlighting();
+      chartView.setShowFullMonthLabels(true);
+      chartView.registerComponents(cellBuilder);
+      cellBuilder.addDisposable(chartView);
+
+      GlobBooleanVisibilityUpdater chartUpdater =
+        GlobBooleanVisibilityUpdater.init(account.getKey(), Account.SHOW_GRAPH, chartView.getChart(), repository);
+      cellBuilder.addDisposable(chartUpdater);
 
       GlobSelectionToggle selectionToggle = new GlobSelectionToggle(account.getKey(), repository, directory);
       cellBuilder.add("selectAccount", selectionToggle.getComponent());
