@@ -1,13 +1,12 @@
 package org.designup.picsou.functests.checkers;
 
-import org.designup.picsou.gui.time.TimeViewPanel;
 import org.designup.picsou.utils.Lang;
 import org.uispec4j.*;
 import org.uispec4j.assertion.UISpecAssert;
-import static org.uispec4j.assertion.UISpecAssert.assertFalse;
-import static org.uispec4j.assertion.UISpecAssert.assertThat;
 
 import javax.swing.*;
+
+import static org.uispec4j.assertion.UISpecAssert.*;
 
 public class LoginChecker extends GuiChecker {
   private Window window;

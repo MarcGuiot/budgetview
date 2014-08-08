@@ -1,6 +1,6 @@
 <splits xmlns="http://www.globsframework.org/xml/splits.xsd">
 
-  <styleImport file="/layout/picsouStyles.splits"/>
+  <styleImport file="/layout/commonStyles.splits"/>
   <styles>
     <style selector="datePicker" fill="horizontal" weightX="100" weightY="0"/>
     <style selector="label.columnTitle" fill="horizontal" marginBottom="5"

@@ -111,7 +111,7 @@ public class MainPanel {
       }
     });
 
-    builder = new GlobsPanelBuilder(MainPanel.class, "/layout/picsou.splits", repository, directory);
+    builder = new GlobsPanelBuilder(MainPanel.class, "/layout/mainPanel.splits", repository, directory);
 
     builder.add("mainPanel", new MainPanelContainer(directory));
 

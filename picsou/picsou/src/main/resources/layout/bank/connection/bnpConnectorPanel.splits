@@ -1,6 +1,6 @@
 <splits xmlns="http://www.globsframework.org/xml/splits.xsd">
 
-  <styleImport file="/layout/picsouStyles.splits"/>
+  <styleImport file="/layout/commonStyles.splits"/>
   <styles>
     <style selector="label#keyboardLabel" cursor="hand" preferredSize="(136,136)"
            icon="roundedRect(136,136,4,4,#F0F0F0,#E0E0E0)" anchor="top"/>

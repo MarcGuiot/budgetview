@@ -19,7 +19,6 @@ import org.uispec4j.Panel;
 import org.uispec4j.Window;
 import org.uispec4j.assertion.Assertion;
 import org.uispec4j.assertion.UISpecAssert;
-import org.uispec4j.finder.ComponentMatcher;
 import org.uispec4j.interception.WindowInterceptor;
 import org.uispec4j.utils.ColorUtils;
 
@@ -29,16 +28,15 @@ import java.util.*;
 import java.util.List;
 
 import static org.uispec4j.assertion.UISpecAssert.assertThat;
-import static org.uispec4j.finder.ComponentMatchers.*;
 
-public abstract class TypedAccountViewChecker<T extends TypedAccountViewChecker> extends ViewChecker {
+public abstract class AccountViewPanelChecker<T extends AccountViewPanelChecker> extends ViewChecker {
   protected Window mainWindow;
   protected String panelName;
   protected Panel accountsPanel;
 
   private static final Color OK_COLOR = Colors.toColor("#73ff73");
 
-  public TypedAccountViewChecker(Window mainWindow, String panelName) {
+  public AccountViewPanelChecker(Window mainWindow, String panelName) {
     super(mainWindow);
     this.mainWindow = mainWindow;
     this.panelName = panelName;
@@ -243,7 +241,7 @@ public abstract class TypedAccountViewChecker<T extends TypedAccountViewChecker>
   public T checkContent(final String expectedContent) {
     UISpecAssert.assertThat(new Assertion() {
       public void check() {
-        Assert.assertEquals(expectedContent.trim(), TypedAccountViewChecker.getActualContent(getPanel()).trim());
+        Assert.assertEquals(expectedContent.trim(), AccountViewPanelChecker.getActualContent(getPanel()).trim());
       }
     });
     return (T)this;

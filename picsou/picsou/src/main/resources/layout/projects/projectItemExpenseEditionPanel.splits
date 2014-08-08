@@ -1,5 +1,5 @@
 <splits xmlns="http://www.globsframework.org/xml/splits.xsd">
-  <styleImport file="/layout/picsouStyles.splits"/>
+  <styleImport file="/layout/commonStyles.splits"/>
   <styleImport file="/layout/projects/styles/projectStyles.splits"/>
 
   <styles>
