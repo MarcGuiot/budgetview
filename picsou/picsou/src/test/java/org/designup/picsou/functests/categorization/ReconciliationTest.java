@@ -525,18 +525,6 @@ public class ReconciliationTest extends LoggedInFunctionalTestCase {
       .check();
   }
 
-  public void testReconciliationWithAShiftedTransaction() throws Exception {
-    fail("tbd - voir les impacts sur le shift");
-  }
-
-  public void testReconciledTransactionsAreAutomaticallyAnnotated() throws Exception {
-    fail("tbd - les opérations réconciliées sont-elles automatiquement pointées ?");
-  }
-
-  public void testShiftManualOpNotPossible() throws Exception {
-    fail("tdb");
-  }
-
   public void testManualOnly() throws Exception {
     operations.openPreferences().setFutureMonthsCount(2).validate();
     accounts.createMainAccount("Main", 1000.00);

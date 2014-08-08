@@ -305,7 +305,7 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
     this.password = passwd;
     mainWindow = getMainWindow();
     LoginChecker loginChecker = new LoginChecker(mainWindow);
-    loginChecker.logExistingUser(user, password, false);
+    loginChecker.logExistingUser(user, password);
     repository = ((PicsouFrame)mainWindow.getAwtComponent()).getRepository();
     initCheckers();
   }

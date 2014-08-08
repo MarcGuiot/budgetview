@@ -125,7 +125,7 @@
 
     <panel ref="accountView" styleClass="sidebar"/>
 
-    <panel name="categorizationSelector" styleClass="sidebar" preferredSize="(50,50)"/>
+    <panel ref="categorizationSelectionView" styleClass="sidebar" preferredSize="(500,50)"/>
 
     <panel name="analysisSelector" styleClass="sidebar" preferredSize="(50,50)"/>
 

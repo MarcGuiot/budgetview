@@ -99,7 +99,7 @@ public class MainPanelLayout implements LayoutManager {
       else if ("accountView".equals(name)) {
         sidebars[ACCOUNT_VIEW] = comp;
       }
-      else if ("categorizationSelector".equals(name)) {
+      else if ("categorizationSelectionView".equals(name)) {
         sidebars[CATEGORIZATION_SELECTOR] = comp;
       }
       else if ("analysisSelector".equals(name)) {

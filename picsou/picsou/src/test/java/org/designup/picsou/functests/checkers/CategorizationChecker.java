@@ -32,10 +32,19 @@ public class CategorizationChecker extends ViewChecker {
   public static final int LABEL_COLUMN_INDEX = 2;
   public static final int AMOUNT_COLUMN_INDEX = 3;
   private Panel panel;
+  private Panel selectionPanel;
   private boolean useDisplayedDates;
 
   public CategorizationChecker(Window mainWindow) {
     super(mainWindow);
+  }
+
+  Panel getSelectionPanel() {
+    if (selectionPanel == null) {
+      views.selectCategorization();
+      selectionPanel = mainWindow.getPanel("categorizationSelectionView");
+    }
+    return selectionPanel;
   }
 
   Panel getPanel() {
@@ -213,11 +222,11 @@ public class CategorizationChecker extends ViewChecker {
   }
 
   public void search(String searchString) {
-    getPanel().getTextBox("searchField").setText(searchString);
+    getSelectionPanel().getTextBox("searchField").setText(searchString);
   }
 
   public void checkSearchCleared() {
-    assertThat(getPanel().getTextBox("searchField").textIsEmpty());
+    assertThat(getSelectionPanel().getTextBox("searchField").textIsEmpty());
   }
 
   public TransactionEditionChecker edit(int rowIndex) {
@@ -486,7 +495,7 @@ public class CategorizationChecker extends ViewChecker {
 
   public Table getTable() {
     views.selectCategorization();
-    Table table = getPanel().getTable("transactionsToCategorize");
+    Table table = getSelectionPanel().getTable("transactionsToCategorize");
     int offset = 0;
     if (isReconciliationShown(table)) {
       offset = 1;
@@ -779,12 +788,12 @@ public class CategorizationChecker extends ViewChecker {
   }
 
   public CategorizationChecker checkCustomFilterVisible(boolean visible) {
-    assertEquals(visible, getPanel().getPanel("customFilter").isVisible());
+    assertEquals(visible, getSelectionPanel().getPanel("customFilter").isVisible());
     return this;
   }
 
   public void clearCustomFilter() {
-    getPanel().getPanel("customFilter").getButton().click();
+    getSelectionPanel().getPanel("customFilter").getButton().click();
   }
 
   public CategorizationChecker selectUncategorized() {
@@ -824,7 +833,7 @@ public class CategorizationChecker extends ViewChecker {
   }
 
   private void checkTransactionFilterMode(final CategorizationFilteringMode mode) {
-    assertThat(getPanel().getComboBox("transactionFilterCombo").selectionEquals(mode.toString()));
+    assertThat(getSelectionPanel().getComboBox("transactionFilterCombo").selectionEquals(mode.toString()));
   }
 
   public void showAllTransactions() {
@@ -847,11 +856,11 @@ public class CategorizationChecker extends ViewChecker {
   }
 
   public void checkFilteringModes(String... entries) {
-    assertThat(getPanel().getComboBox("transactionFilterCombo").contentEquals(entries));
+    assertThat(getSelectionPanel().getComboBox("transactionFilterCombo").contentEquals(entries));
   }
 
   private void selectTransactionFilterMode(CategorizationFilteringMode mode) {
-    getPanel().getComboBox("transactionFilterCombo").select(mode.toString());
+    getSelectionPanel().getComboBox("transactionFilterCombo").select(mode.toString());
   }
 
   public void showLastImportedFileOnly() {
@@ -863,12 +872,12 @@ public class CategorizationChecker extends ViewChecker {
   }
 
   public CategorizationChecker checkSelectionSignpostDisplayed(String message) {
-    checkSignpostVisible(getPanel(), getTable(), message);
+    checkSignpostVisible(getSelectionPanel(), getTable(), message);
     return this;
   }
 
   public CategorizationChecker checkFirstCategorizationSignpostDisplayed(String message) {
-    checkSignpostVisible(getPanel(), getTable(), message);
+    checkSignpostVisible(getSelectionPanel(), getTable(), message);
     return this;
   }
 
@@ -878,17 +887,17 @@ public class CategorizationChecker extends ViewChecker {
   }
 
   public CategorizationChecker checkSkipMessageHidden() {
-    checkComponentVisible(getPanel(), JPanel.class, "skipCategorizationPanel", false);
+    checkComponentVisible(getSelectionPanel(), JPanel.class, "skipCategorizationPanel", false);
     return this;
   }
 
   public CategorizationChecker checkSkipMessageDisplayed() {
-    checkComponentVisible(getPanel(), JPanel.class, "skipCategorizationPanel", true);
+    checkComponentVisible(getSelectionPanel(), JPanel.class, "skipCategorizationPanel", true);
     return this;
   }
 
   public CategorizationChecker skipAndCloseSignpostDialog() {
-    TextBox message = getPanel().getPanel("skipCategorizationPanel").getTextBox("skipCategorizationMessage");
+    TextBox message = getSelectionPanel().getPanel("skipCategorizationPanel").getTextBox("skipCategorizationMessage");
     SignpostDialogChecker
       .open(message.triggerClickOnHyperlink("click"))
       .close();
@@ -942,14 +951,14 @@ public class CategorizationChecker extends ViewChecker {
   }
 
   public CategorizationChecker checkReconciliationWarningShown(String text) {
-    checkComponentVisible(getPanel(), JPanel.class, "reconciliationWarningPanel", true);
-    assertTrue(getPanel().getPanel("reconciliationWarningPanel")
+    checkComponentVisible(getSelectionPanel(), JPanel.class, "reconciliationWarningPanel", true);
+    assertTrue(getSelectionPanel().getPanel("reconciliationWarningPanel")
                  .getTextBox("message").textEquals(text));
     return this;
   }
 
   public CategorizationChecker clickReconciliationWarningButton(String link) {
-    getPanel().getPanel("reconciliationWarningPanel").getTextBox("message").clickOnHyperlink(link);
+    getSelectionPanel().getPanel("reconciliationWarningPanel").getTextBox("message").clickOnHyperlink(link);
     return this;
   }
 

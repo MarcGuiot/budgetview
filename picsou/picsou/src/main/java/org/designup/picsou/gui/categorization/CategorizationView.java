@@ -9,26 +9,19 @@ import org.designup.picsou.gui.categorization.reconciliation.ReconciliationWarni
 import org.designup.picsou.gui.categorization.special.*;
 import org.designup.picsou.gui.categorization.utils.FilteredRepeats;
 import org.designup.picsou.gui.categorization.utils.SeriesCreationHandler;
-import org.designup.picsou.gui.components.JPopupButton;
-import org.designup.picsou.gui.components.filtering.Filterable;
 import org.designup.picsou.gui.components.layoutconfig.SplitPaneConfig;
 import org.designup.picsou.gui.description.SeriesAndGroupsComparator;
 import org.designup.picsou.gui.help.HyperlinkHandler;
 import org.designup.picsou.gui.projects.actions.CreateProjectAction;
 import org.designup.picsou.gui.series.SeriesEditor;
-import org.designup.picsou.gui.signpost.Signpost;
 import org.designup.picsou.gui.signpost.guides.CategorizationAreaSignpost;
-import org.designup.picsou.gui.signpost.guides.GotoBudgetSignpost;
 import org.designup.picsou.gui.signpost.sections.SkipCategorizationPanel;
 import org.designup.picsou.gui.transactions.TransactionDetailsView;
-import org.designup.picsou.gui.transactions.creation.TransactionCreationPanel;
-import org.designup.picsou.gui.utils.TableView;
 import org.designup.picsou.model.*;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobSelection;
 import org.globsframework.gui.GlobSelectionListener;
 import org.globsframework.gui.GlobsPanelBuilder;
-import org.globsframework.gui.SelectionService;
 import org.globsframework.gui.actions.DisabledAction;
 import org.globsframework.gui.components.ShowHideButton;
 import org.globsframework.gui.splits.PanelBuilder;
@@ -37,82 +30,36 @@ import org.globsframework.gui.splits.utils.GuiUtils;
 import org.globsframework.gui.views.GlobLabelView;
 import org.globsframework.model.*;
 import org.globsframework.model.format.GlobListStringifier;
-import org.globsframework.model.utils.GlobMatcher;
-import org.globsframework.utils.directory.DefaultDirectory;
-import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
-import javax.swing.event.TableModelListener;
 import java.awt.event.ActionEvent;
 import java.util.Arrays;
 
 import static org.globsframework.model.FieldValue.value;
 import static org.globsframework.model.utils.GlobMatchers.fieldEquals;
 
-public class CategorizationView extends View implements TableView, Filterable {
+public class CategorizationView extends View {
 
-  private Directory parentDirectory;
-
-  private GlobList currentTransactions = new GlobList();
-  private CategorizationTableView categorizationTableView;
+  private final CategorizationSelectionView selectionView;
+  private final GlobRepository repository;
   private FilteredRepeats seriesRepeat;
 
-  private Signpost signpost;
-  private CategorizationLevel categorizationLevel;
-  private TransactionCreationPanel transactionCreation;
-
-  public CategorizationView(final GlobRepository repository, Directory parentDirectory) {
-    super(repository, createLocalDirectory(parentDirectory));
+  public CategorizationView(final CategorizationSelectionView selectionView, GlobRepository repository) {
+    super(repository, selectionView.getDirectory());
+    this.selectionView = selectionView;
+    this.repository = repository;
     this.seriesRepeat = new FilteredRepeats(repository, directory);
-    this.parentDirectory = parentDirectory;
-    parentDirectory.get(SelectionService.class).addListener(new GlobSelectionListener() {
-      public void selectionUpdated(GlobSelection selection) {
-        selectionService.select(selection.getAll(Month.TYPE), Month.TYPE);
-        categorizationTableView.updateTableFilter();
-      }
-    }, Month.TYPE);
-
-    categorizationLevel = new CategorizationLevel(repository, directory);
-
-    this.signpost = new GotoBudgetSignpost(categorizationLevel, repository, parentDirectory);
   }
 
-  public void registerComponents(GlobsPanelBuilder builder) {
-    builder.add("categorizationView", createPanelBuilder());
-  }
-
-  public void setFilter(GlobMatcher matcher) {
-    categorizationTableView.setFilter(matcher);
-  }
-
-  public Signpost getGotoBudgetSignpost() {
-    return signpost;
-  }
-
-  private GlobsPanelBuilder createPanelBuilder() {
+  public void registerComponents(GlobsPanelBuilder parentBuilder) {
 
     GlobsPanelBuilder builder = new GlobsPanelBuilder(getClass(), "/layout/categorization/categorizationView.splits",
                                                       this.repository, directory);
 
     builder.add("hyperlinkHandler", new HyperlinkHandler(directory));
 
-    CategorizationGaugePanel gauge = new CategorizationGaugePanel(categorizationLevel, repository, parentDirectory);
-    builder.add("gaugePanel", gauge.getPanel());
-
-    categorizationTableView = new CategorizationTableView(currentTransactions, repository, directory);
-    categorizationTableView.registerComponents(builder);
-
-    transactionCreation = new TransactionCreationPanel(repository, directory, parentDirectory);
-    transactionCreation.registerComponents(builder);
-
-    builder.add("actionsMenu", new JPopupButton(Lang.get("budgetView.actions"),
-                                                new CategorizationTablePopupFactory(categorizationTableView.getTable(),
-                                                                                    transactionCreation,
-                                                                                    categorizationTableView.getActions(),
-                                                                                    repository, directory)));
-
     builder.addLabel("transactionLabel", Transaction.TYPE, new GlobListStringifier() {
-      public String toString(GlobList list, GlobRepository repository) {
+      public String toString(GlobList list, GlobRepository repository1) {
         if (list.isEmpty()) {
           return null;
         }
@@ -126,6 +73,7 @@ public class CategorizationView extends View implements TableView, Filterable {
     SkipCategorizationPanel skipPanel = new SkipCategorizationPanel(repository, directory);
     builder.add("skipCategorizationPanel", skipPanel.getPanel());
 
+    CategorizationTableView categorizationTableView = selectionView.getTableView();
     CategorizationSelector selector = new CategorizationSelector(categorizationTableView.getToReconcileMatcher(),
                                                                  categorizationTableView.getColors(),
                                                                  repository, directory);
@@ -139,41 +87,25 @@ public class CategorizationView extends View implements TableView, Filterable {
     addOtherSeriesChooser("otherSeriesChooser", builder);
 
     TransactionDetailsView transactionDetailsView =
-      new TransactionDetailsView(repository, directory, this, categorizationTableView.getActions());
+      new TransactionDetailsView(repository, directory, selectionView, categorizationTableView.getActions());
     transactionDetailsView.registerComponents(builder);
 
     initSelectionListener();
-    categorizationTableView.updateTableFilter();
 
     JPanel budgetAreaSelectionPanel = new JPanel();
     builder.add("budgetAreaSelectionPanel", budgetAreaSelectionPanel);
     CategorizationAreaSignpost areaSignpost = new CategorizationAreaSignpost(repository, directory);
     areaSignpost.attach(budgetAreaSelectionPanel);
 
-    ReconciliationWarningPanel reconciliationWarningPanel =
-      new ReconciliationWarningPanel(this, repository, directory);
-    builder.add("reconciliationWarningPanel", reconciliationWarningPanel.getPanel());
+//    builder.add("categorizationSplit", SplitPaneConfig.create(directory, LayoutConfig.CATEGORIZATION_HORIZONTAL));
 
-    builder.add("categorizationSplit", SplitPaneConfig.create(directory, LayoutConfig.CATEGORIZATION_HORIZONTAL));
-
-    return builder;
-  }
-
-  public void addTableListener(TableModelListener listener) {
-    categorizationTableView.addTableListener(listener);
-  }
-
-  public GlobList getDisplayedGlobs() {
-    return categorizationTableView.getDisplayedGlobs();
+    parentBuilder.add("categorizationView", builder);
   }
 
   private void initSelectionListener() {
     selectionService.addListener(new GlobSelectionListener() {
       public void selectionUpdated(GlobSelection selection) {
-        currentTransactions.clear();
-        currentTransactions.addAll(selection.getAll(Transaction.TYPE));
-        seriesRepeat.update(currentTransactions);
-        categorizationTableView.updateSelection();
+        seriesRepeat.update(selectionView.getCurrentTransactions());
       }
     }, Transaction.TYPE);
   }
@@ -198,7 +130,7 @@ public class CategorizationView extends View implements TableView, Filterable {
     builder.add("showDescription", descriptionHandler.getShowAction());
     builder.add("hideDescription", descriptionHandler.getHideAction());
 
-    SeriesRepeatPanel repeatPanel = new SeriesRepeatPanel(budgetArea, null, seriesRepeat, currentTransactions, repository, directory);
+    SeriesRepeatPanel repeatPanel = new SeriesRepeatPanel(budgetArea, null, seriesRepeat, selectionView.getCurrentTransactions(), repository, directory);
     builder.add("rootSeriesPanel", repeatPanel.getPanel());
 
     builder.addRepeat("groupRepeat", SeriesGroup.TYPE,
@@ -250,18 +182,6 @@ public class CategorizationView extends View implements TableView, Filterable {
     parentBuilder.add(name, builder);
   }
 
-  public void highlightTransactionCreation() {
-    transactionCreation.showTip();
-  }
-
-  public void reset() {
-    categorizationTableView.reset();
-  }
-
-  public void setFilteringMode(CategorizationFilteringMode mode) {
-    categorizationTableView.setFilteringMode(mode);
-  }
-
   public class SpecialCategorizationRepeatFactory implements RepeatComponentFactory<SpecialCategorizationPanel> {
     public void registerComponents(PanelBuilder cellBuilder, SpecialCategorizationPanel categorizationPanel) {
 
@@ -288,21 +208,6 @@ public class CategorizationView extends View implements TableView, Filterable {
     }
   }
 
-  private static Directory createLocalDirectory(Directory directory) {
-    Directory localDirectory = new DefaultDirectory(directory);
-    SelectionService selectionService = new SelectionService();
-    localDirectory.add(selectionService);
-    return localDirectory;
-  }
-
-  public void show(GlobList transactions, boolean forceShowUncategorized) {
-    categorizationTableView.show(transactions, forceShowUncategorized);
-  }
-
-  public void showWithMode(CategorizationFilteringMode filteringMode) {
-    categorizationTableView.showWithMode(filteringMode);
-  }
-
   private class CreateSeriesAction extends AbstractAction {
     private final BudgetArea budgetArea;
     private FieldValue[] forcedValues;
@@ -314,7 +219,7 @@ public class CategorizationView extends View implements TableView, Filterable {
     }
 
     public void actionPerformed(ActionEvent e) {
-      Key key = SeriesEditor.get(directory).showNewSeries(currentTransactions,
+      Key key = SeriesEditor.get(directory).showNewSeries(selectionView.getCurrentTransactions(),
                                                           selectionService.getSelection(Month.TYPE),
                                                           budgetArea,
                                                           forcedValues);
@@ -322,7 +227,7 @@ public class CategorizationView extends View implements TableView, Filterable {
       if (key != null && series != null) {
         try {
           repository.startChangeSet();
-          for (Glob transaction : currentTransactions) {
+          for (Glob transaction : selectionView.getCurrentTransactions()) {
             if (!categorize(series, transaction)) {
               Glob mirrorSeries = repository.findLinkTarget(series, Series.MIRROR_SERIES);
               if (mirrorSeries != null) {
@@ -361,7 +266,7 @@ public class CategorizationView extends View implements TableView, Filterable {
       cellBuilder.add("groupLabel", groupLabel);
 
       BudgetArea budgetArea = BudgetArea.get(group.get(SeriesGroup.BUDGET_AREA));
-      final SeriesRepeatPanel panel = new SeriesRepeatPanel(budgetArea, group, seriesRepeat, currentTransactions, repository, directory);
+      final SeriesRepeatPanel panel = new SeriesRepeatPanel(budgetArea, group, seriesRepeat, selectionView.getCurrentTransactions(), repository, directory);
       cellBuilder.add("seriesPanel", panel.getPanel());
       panel.addAutoHide(groupLabel);
       cellBuilder.addDisposable(panel);

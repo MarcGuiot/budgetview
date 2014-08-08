@@ -67,7 +67,7 @@ public abstract class ReconnectFuncTest extends ServerFuncTestCase {
 
     initWindow(false);
     LoginChecker loginChecker = new LoginChecker(window);
-    loginChecker.logExistingUser("user", "_passd1", false);
+    loginChecker.logExistingUser("user", "_passd1");
 
     new ViewSelectionChecker(window).selectData();
     new TransactionChecker(window).initContent()

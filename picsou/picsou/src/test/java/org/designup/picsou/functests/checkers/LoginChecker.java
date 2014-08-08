@@ -76,13 +76,12 @@ public class LoginChecker extends GuiChecker {
     return this;
   }
 
-  public void logExistingUser(String user, String password, final boolean showWelcomeMessage) throws Exception {
+  public void logExistingUser(String user, String password) throws Exception {
     enterUserName(user);
     enterPassword(password);
     Trigger trigger = new Trigger() {
       public void run() throws Exception {
         loginButton.click();
-        checkNoErrorDisplayed();
         waitForApplicationToLoad();
       }
     };
@@ -120,7 +119,7 @@ public class LoginChecker extends GuiChecker {
   public SlaValidationDialogChecker clickEnterAndGetSlaDialog() {
     return SlaValidationDialogChecker.init(loginButton.triggerClick());
   }
-  
+
   public LoginChecker checkUserSelectionAvailable() {
     checkComponentVisible(window, JButton.class, "selectUser", true);
     return this;
