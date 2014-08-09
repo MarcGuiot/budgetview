@@ -15,7 +15,7 @@ import org.designup.picsou.gui.description.Formatting;
 import org.designup.picsou.gui.description.stringifiers.TransactionDateStringifier;
 import org.designup.picsou.gui.model.Card;
 import org.designup.picsou.gui.printing.actions.PrintTransactionsAction;
-import org.designup.picsou.gui.series.analysis.histobuilders.range.SelectionHistoChartRange;
+import org.designup.picsou.gui.analysis.histobuilders.range.SelectionHistoChartRange;
 import org.designup.picsou.gui.transactions.actions.TransactionTableActions;
 import org.designup.picsou.gui.transactions.columns.*;
 import org.designup.picsou.gui.transactions.search.TransactionFilterPanel;

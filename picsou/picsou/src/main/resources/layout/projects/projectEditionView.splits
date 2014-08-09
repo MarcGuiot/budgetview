@@ -12,26 +12,20 @@
         unselectedBgColor="projectView.onoff.unselected.bg"
         unselectedBorderColor="projectView.onoff.unselected.border"
         unselectedTextColor="projectView.onoff.unselected.text"
-        rolloverTextColor="projectView.onoff.text.rollover"
-      />
+        rolloverTextColor="projectView.onoff.text.rollover"/>
 
     <style selector="#monthSlider"
            font="-,plain,11" fixedWidth="false"
            marginLeft="10" marginRight="10"
            foreground="projectView.view.month.text"
            iconColor="projectView.view.month.arrow"
-           rolloverIconColor="#0000FF"
-      />
+           rolloverIconColor="#0000FF"/>
 
     <style selector="toggleButton#activeToggle" ui="onOffToggle"
            weightX="0" fill="none" anchor="center"
            minimumSize="(26,14)" preferredSize="(26,14)"/>
 
-    <style selector="button.navigation" ui="hyperlinkButtonWithoutUnderline"
-           foreground="block.item.link" font="-,plain,12" marginTop="10" fill="none" anchor="southeast"/>
-
     <style selector="button#backToList"
-           marginLeft="10" anchor="left"
            icon="leftArrow(10,14,8,8,block.item.link)"
            rolloverIcon="leftArrow(10,14,8,8,block.item.link)"/>
 
@@ -39,19 +33,14 @@
     <style selector=".addItemLabel" foreground="block.footer.button" marginRight="5"/>
     <style selector="button.smallButton" marginLeft="5" marginRight="5"/>
 
+    <style selector="button.navigation" ui="hyperlinkButtonWithoutUnderline"
+           foreground="block.item.link" font="-,plain,13"/>
+
   </styles>
 
-  <column styleClass="secondaryInnerBlock">
+  <column name="projectEditionView">
 
-    <row>
-      <button action="backToList" name="backToList" styleClass="navigation"/>
-      <filler fill="horizontal"/>
-      <button action="createProject" name="createProject" styleClass="navigation"
-              tooltipText="$projectView.create.tooltip"/>
-    </row>
-
-    <row name="projectPanel" margin="10" marginTop="5" weightY="0.1" opaque="true" background="block.inner.bg"
-         border="matte(1,1,1,1,projectView.border)">
+    <row name="projectPanel" weightY="0.1">
       <label ref="imageLabel" margin="5" marginRight="10" minimumSize="(170,120)" preferredSize="(170,120)"
              fill="both"/>
       <column>
@@ -74,11 +63,11 @@
       </column>
     </row>
 
-    <column styleClass="blockScrollBorder" border="matte(1,1,1,1,projectView.border)" weightY="100.0"
-            margin="10" marginTop="0">
+    <column styleClass="blockScrollBorder" weightY="100.0"
+            marginTop="10" marginBottom="10">
       <scrollPane forceVerticalScroll="true" ref="scroller">
         <column>
-          <repeat ref="items" layout="column">
+          <repeat ref="items" layout="column" border="matte(1,0,0,0,projectView.item.border)">
             <panel ref="projectItemPanel" border="matte(0,0,1,0,projectView.item.border)"/>
           </repeat>
           <row ref="addItemPanel" marginTop="10">
@@ -92,7 +81,8 @@
       </scrollPane>
     </column>
 
-    <row margin="10" marginTop="0" marginBottom="5">
+    <row>
+      <button action="backToList" name="backToList" styleClass="navigation"/>
       <filler fill="horizontal"/>
       <button ref="displayActions" styleClass="actionsButton" foreground="block.item.link"/>
     </row>

@@ -11,7 +11,7 @@ import org.designup.picsou.gui.components.PopupGlobFunctor;
 import org.designup.picsou.gui.description.Formatting;
 import org.designup.picsou.gui.description.stringifiers.AccountComparator;
 import org.designup.picsou.gui.model.SavingsBudgetStat;
-import org.designup.picsou.gui.series.analysis.histobuilders.range.ScrollableHistoChartRange;
+import org.designup.picsou.gui.analysis.histobuilders.range.ScrollableHistoChartRange;
 import org.designup.picsou.gui.utils.Matchers;
 import org.designup.picsou.model.Account;
 import org.designup.picsou.model.AccountType;
@@ -29,19 +29,16 @@ import org.globsframework.gui.components.GlobUnselectPanel;
 import org.globsframework.gui.splits.PanelBuilder;
 import org.globsframework.gui.splits.SplitsNode;
 import org.globsframework.gui.splits.repeat.RepeatComponentFactory;
-import org.globsframework.gui.utils.AbstractGlobBooleanUpdater;
 import org.globsframework.gui.utils.GlobBooleanVisibilityUpdater;
 import org.globsframework.gui.views.AbstractGlobTextView;
 import org.globsframework.gui.views.GlobButtonView;
 import org.globsframework.gui.views.GlobLabelView;
-import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.*;
 import org.globsframework.model.format.GlobListStringifier;
 import org.globsframework.model.utils.*;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
-import java.util.Set;
 
 public abstract class AccountViewPanel {
   protected GlobRepository repository;

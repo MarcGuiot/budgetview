@@ -20,7 +20,7 @@ public class ProjectSlidingTest extends LoggedInFunctionalTestCase {
       .addTransaction("2010/11/15", -50.00, "Resa")
       .load();
 
-    projectChart.create();
+    projects.createFirst();
     currentProject
       .setNameAndValidate("Trip")
       .addExpenseItem(0, "Booking", 201011, -200.00)
@@ -36,7 +36,7 @@ public class ProjectSlidingTest extends LoggedInFunctionalTestCase {
     currentProject.view(0)
       .checkCategorizationWarningNotShown();
 
-    projectChart.select("Trip");
+    projects.select("Trip");
     currentProject.toggleAndEditExpense(0)
       .setMonth(201012)
       .validate();
@@ -84,7 +84,7 @@ public class ProjectSlidingTest extends LoggedInFunctionalTestCase {
       .addTransaction("2010/11/15", -100.00, "Resa")
       .load();
 
-    projectChart.create();
+    projects.createFirst();
     currentProject
       .setNameAndValidate("Trip")
       .addExpenseItem(0, "Booking", 201012, -200.00)
@@ -94,7 +94,7 @@ public class ProjectSlidingTest extends LoggedInFunctionalTestCase {
     // --- Slide to January - March 2011
 
     views.selectHome();
-    projectChart.select("Trip");
+    projects.select("Trip");
     currentProject
       .setFirstMonth(201101)
       .checkPeriod("January - March 2011")
@@ -169,7 +169,7 @@ public class ProjectSlidingTest extends LoggedInFunctionalTestCase {
       .addTransaction("2010/12/15", -100.00, "Resa")
       .load();
 
-    projectChart.create();
+    projects.createFirst();
     currentProject
       .setNameAndValidate("Trip")
       .addExpenseItem(0, "Booking", 201012, -200.00)
@@ -186,7 +186,7 @@ public class ProjectSlidingTest extends LoggedInFunctionalTestCase {
     // --- Slide to January - March 2011
 
     views.selectHome();
-    projectChart.select("Trip");
+    projects.select("Trip");
     currentProject
       .setFirstMonth(201101)
       .checkPeriod("January - March 2011")
@@ -296,7 +296,7 @@ public class ProjectSlidingTest extends LoggedInFunctionalTestCase {
       .addTransaction("2010/12/15", -100.00, "Air France")
       .load();
 
-    projectChart.create();
+    projects.createFirst();
     currentProject
       .setNameAndValidate("Trip")
       .addExpenseItem(0, "Booking", 201012, -200.00)
@@ -352,7 +352,7 @@ public class ProjectSlidingTest extends LoggedInFunctionalTestCase {
       .addTransaction("2010/12/15", -200.00, "FNAC")
       .load();
 
-    projectChart.create();
+    projects.createFirst();
     currentProject
       .setNameAndValidate("Camera")
       .addExpenseItem(0, "Camera Body", 201011, -300.00, 3)

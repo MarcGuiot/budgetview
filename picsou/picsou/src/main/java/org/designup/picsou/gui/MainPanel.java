@@ -5,6 +5,7 @@ import org.designup.picsou.gui.accounts.AccountView;
 import org.designup.picsou.gui.actions.DeleteUserAction;
 import org.designup.picsou.gui.actions.ExitAction;
 import org.designup.picsou.gui.actions.ImportFileAction;
+import org.designup.picsou.gui.analysis.AnalysisSelector;
 import org.designup.picsou.gui.budget.BudgetToggle;
 import org.designup.picsou.gui.budget.BudgetView;
 import org.designup.picsou.gui.card.CardView;
@@ -30,13 +31,13 @@ import org.designup.picsou.gui.series.PeriodAccountStatUpdater;
 import org.designup.picsou.gui.series.PeriodBudgetAreaStatUpdater;
 import org.designup.picsou.gui.series.PeriodSeriesStatUpdater;
 import org.designup.picsou.gui.series.SeriesEditor;
-import org.designup.picsou.gui.series.analysis.SeriesAnalysisView;
+import org.designup.picsou.gui.analysis.AnalysisView;
 import org.designup.picsou.gui.signpost.SignpostView;
 import org.designup.picsou.gui.signpost.guides.ImportSignpost;
 import org.designup.picsou.gui.startup.components.DemoMessageView;
 import org.designup.picsou.gui.startup.components.LogoutService;
 import org.designup.picsou.gui.startup.components.OpenRequestManager;
-import org.designup.picsou.gui.summary.SummaryView;
+import org.designup.picsou.gui.summary.ProjectSelector;
 import org.designup.picsou.gui.summary.version.NewVersionView;
 import org.designup.picsou.gui.time.TimeView;
 import org.designup.picsou.gui.title.PeriodView;
@@ -78,7 +79,7 @@ public class MainPanel {
   private TimeView timeView;
   private CardView cardView;
   private TransactionView transactionView;
-  private SeriesAnalysisView seriesAnalysisView;
+  private AnalysisView analysisView;
   private CategorizationView categorizationView;
   private ProjectView projectView;
   private SignpostView signpostView;
@@ -151,7 +152,7 @@ public class MainPanel {
 
     directory.add(new HighlightingService());
 
-    seriesAnalysisView = new SeriesAnalysisView(repository, directory, menuBar.getPrintBudgetAction());
+    analysisView = new AnalysisView(repository, directory, menuBar.getPrintBudgetAction());
     signpostView = new SignpostView(replicationGlobRepository, directory);
     createPanel(
       periodView,
@@ -165,9 +166,10 @@ public class MainPanel {
       categorizationView,
       cardView,
       new BudgetView(replicationGlobRepository, directory),
-      seriesAnalysisView,
+      new AnalysisSelector(repository, directory),
+      analysisView,
       new SavingsView(replicationGlobRepository, directory),
-      new SummaryView(repository, directory),
+      new ProjectSelector(repository, directory),
       projectView,
       signpostView,
       licenseInfoView,
@@ -218,7 +220,7 @@ public class MainPanel {
     projectView.reset();
 
     windowManager.setPanel(panel);
-    seriesAnalysisView.reset();
+    analysisView.reset();
     timeView.selectCurrentMonth();
     selectLastMonthWithATransaction(repository, directory);
     timeView.centerToSelected();

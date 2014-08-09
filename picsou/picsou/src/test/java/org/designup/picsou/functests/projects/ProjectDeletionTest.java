@@ -21,24 +21,24 @@ public class ProjectDeletionTest extends LoggedInFunctionalTestCase {
     operations.openPreferences().setFutureMonthsCount(6).validate();
     operations.hideSignposts();
 
-    projectChart.create();
+    projects.createFirst();
     currentProject
       .setNameAndDefaultAccount("My project", "Account n. 001111")
       .addExpenseItem(0, "Reservation", 201101, -200.00)
       .addExpenseItem(1, "Hotel", 201101, -300.00)
       .backToList();
-    projects.checkCurrentProjects("| My project | Jan | 500.00 | on |");
+    projectList.checkCurrentProjects("| My project | Jan | 500.00 | on |");
 
     timeline.selectMonth(201101);
     budgetView.extras.checkSeries("My project", 0.00, -500.00);
     mainAccounts.checkEndOfMonthPosition("Account n. 001111", 500.00);
 
     views.selectHome();
-    projectChart.select("My project");
+    projects.select("My project");
     currentProject.delete();
-    projects.checkListPageShown();
+    projectList.checkListPageShown();
+    projectList.checkNoProjectShown();
     projects.checkNoProjectShown();
-    projectChart.checkNoProjectShown();
     budgetView.extras.checkNoSeriesShown();
     mainAccounts.checkEndOfMonthPosition("Account n. 001111", 1000.00);
 
@@ -56,7 +56,7 @@ public class ProjectDeletionTest extends LoggedInFunctionalTestCase {
     operations.openPreferences().setFutureMonthsCount(6).validate();
     operations.hideSignposts();
 
-    projectChart.create();
+    projects.createFirst();
     currentProject
       .setNameAndValidate("My project")
       .addExpenseItem(0, "Reservation", 201101, -200.00)
@@ -73,7 +73,7 @@ public class ProjectDeletionTest extends LoggedInFunctionalTestCase {
     categorization.setExtra("MegaHotel", "Hotel");
 
     views.selectHome();
-    projectChart.select("My project");
+    projects.select("My project");
     currentProject.openDeleteAndNavigate();
     views.checkCategorizationSelected();
     categorization.checkTable(new Object[][]{
@@ -85,7 +85,7 @@ public class ProjectDeletionTest extends LoggedInFunctionalTestCase {
     categorization.showAllTransactions();
 
     views.selectHome();
-    projectChart.select("My project");
+    projects.select("My project");
     currentProject.deleteWithConfirmation("Existing operations",
                                           "Some operations have been assigned to this project");
 
@@ -98,8 +98,8 @@ public class ProjectDeletionTest extends LoggedInFunctionalTestCase {
     categorization.checkSelectedTableRows(0, 1);
 
     views.selectHome();
+    projectList.checkNoProjectShown();
     projects.checkNoProjectShown();
-    projectChart.checkNoProjectShown();
     mainAccounts.checkEndOfMonthPosition("Account n. 001111", 290.00);
   }
 
@@ -113,7 +113,7 @@ public class ProjectDeletionTest extends LoggedInFunctionalTestCase {
       .addTransaction("2012/12/15", -550.00, "Sheraton")
       .load();
 
-    projectChart.create();
+    projects.createFirst();
     currentProject
       .setNameAndValidate("My project")
       .addExpenseItem(0, "Travel", 201212, -300.00)
@@ -126,7 +126,7 @@ public class ProjectDeletionTest extends LoggedInFunctionalTestCase {
     categorization.setExtra("SHERATON", "Accomodation");
 
     views.selectHome();
-    projectChart.select("My project");
+    projects.select("My project");
     currentProject
       .checkItems("| Travel       | Dec | 250.00 | 300.00 |\n" +
                   "| Accomodation | Dec | 550.00 | 500.00 |")

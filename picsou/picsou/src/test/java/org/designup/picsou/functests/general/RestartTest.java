@@ -223,7 +223,7 @@ public class RestartTest extends LoggedInFunctionalTestCase {
 
     operations.openPreferences().setFutureMonthsCount(6).validate();
 
-    projectChart.create();
+    projects.create();
     currentProject
       .setNameAndDefaultAccount("MyProject", "Account n. 001111")
       .addExpenseItem(0, "Booking", 200808, -200.00)
@@ -232,8 +232,8 @@ public class RestartTest extends LoggedInFunctionalTestCase {
     categorization.selectTransaction("RESA")
       .selectExtras().selectSeries("Booking");
 
-    projectChart.checkProjectList("MyProject");
-    projectChart.checkProject("MyProject", 200808, 200810, 800.00);
+    projects.checkProjectList("MyProject");
+    projects.checkProject("MyProject", 200808, 200810, 800.00);
     currentProject.checkProjectGauge(-150.00, -800.00);
 
     timeline.selectMonth("2008/08");
@@ -247,10 +247,10 @@ public class RestartTest extends LoggedInFunctionalTestCase {
 
     restartApplication();
 
-    projectChart.checkProjectList("MyProject");
-    projectChart.checkProject("MyProject", 200808, 200810, 800.00);
+    projects.checkProjectList("MyProject");
+    projects.checkProject("MyProject", 200808, 200810, 800.00);
 
-    projectChart.select("MyProject");
+    projects.select("MyProject");
     currentProject
       .checkProjectGauge(-150.00, -800.00)
       .checkItems("| Booking | Aug | 150.00 | 200.00 |\n" +
@@ -292,7 +292,7 @@ public class RestartTest extends LoggedInFunctionalTestCase {
       .addTransaction("2008/12/01", -100.00, "Transfer 1")
       .loadInAccount("Savings account 1");
 
-    projectChart.create();
+    projects.create();
     currentProject
       .setNameAndValidate("Trip")
       .addTransferItem()
@@ -314,7 +314,7 @@ public class RestartTest extends LoggedInFunctionalTestCase {
     restartApplication();
 
     views.selectHome();
-    projects.select("Trip");
+    projectList.select("Trip");
     currentProject.checkProjectGauge(0.00, -300.00);
     currentProject.checkPeriod("January - March 2009");
 

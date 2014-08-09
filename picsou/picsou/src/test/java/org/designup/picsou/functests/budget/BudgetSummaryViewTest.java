@@ -228,7 +228,7 @@ public class BudgetSummaryViewTest extends LoggedInFunctionalTestCase {
     // -- Uses global account sorting --
 
     views.selectBudget();
-    summary.moveAccountUp("Account n. 000333");
+    projects.moveAccountUp("Account n. 000333");
     mainAccounts.checkContent(
       "| ok  | Account n. 000333 | 3000.00 on 2008/07/01  |\n" +
       "| ok  | Account n. 000111 | 1000.00 on 2008/07/10  |\n" +

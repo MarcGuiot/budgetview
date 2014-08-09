@@ -4,13 +4,13 @@
 
   <horizontalSplit ref="horizontalSplit" styleClass="mainDivider">
 
-    <verticalSplit ref="verticalSplit1" styleClass="mainDivider" weightX="1" marginTop="10" marginBottom="10">
+    <verticalSplit ref="verticalSplit1" styleClass="mainDivider" weightX="1">
       <panel ref="incomeBudgetView" weightY="1"/>
       <panel ref="recurringBudgetView" weightY="3"/>
       <panel ref="savingsBudgetView" weightY="1"/>
     </verticalSplit>
 
-    <verticalSplit ref="verticalSplit2" styleClass="mainDivider" weightX="1" marginTop="10" marginBottom="10">
+    <verticalSplit ref="verticalSplit2" styleClass="mainDivider" weightX="1">
       <panel ref="variableBudgetView" weightY="3"/>
       <panel ref="extrasBudgetView" weightY="1"/>
     </verticalSplit>

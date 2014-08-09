@@ -31,7 +31,7 @@
            foreground="timeview.period.arrow"
            minimumSize="(20,14)" preferredSize="(20,14)"/>
     <style selector="button.doublePeriodButton"
-           anchor="south" margin="2" marginBottom="10"
+           anchor="south" margin="2" marginBottom="0"
            foreground="timeview.period.arrow"
            minimumSize="(20,10)" preferredSize="(20,10)"/>
 
@@ -52,11 +52,6 @@
     <style selector="button#backView" ui="backArrow"/>
     <style selector="button#forwardView" ui="forwardArrow" marginRight="5"/>
 
-    <style selector="button#hideProjectDetails"
-           ui="hyperlinkButtonWithoutUnderline" foreground="summary.navigation.link"
-           font="-,plain,12" icon="button_delete.png"
-           horizontalTextPosition="right" fill="none" anchor="right" marginRight="10" marginBottom="10"/>
-
     <!-- Notifications flag -->
     <ui name="notificationsFlagUI" class="org.designup.picsou.gui.components.ui.NotificationFlagUI"
         balloonColor="notifications.flag.balloon"
@@ -67,8 +62,6 @@
            foreground="notifications.flag.text" fill="none" anchor="center"
            autoHideIfDisabled="true" marginLeft="10"/>
 
-    <style selector=".sidebar" opaque="true" background="sidebar.bg" border="matte(0,0,0,1,sidebar.border)"/>
-    <style selector=".content" opaque="true" background="content.bg"/>
   </styles>
 
   <column ref="mainPanel" background="header.bg" opaque="true">
@@ -117,24 +110,21 @@
             </column>
           </row>
         </row>
-        <button ref="importFile" icon="header_import.png" styleClass="iconOnly" marginLeft="5" marginRight="5"
-                fill="none" anchor="south" marginBottom="5" tooltipText="$import.tooltip"/>
+        <button ref="importFile" icon="header_import.png" styleClass="iconOnly"
+                marginTop="10" marginBottom="0" tooltipText="$import.tooltip"/>
       </horizontalBoxes>
     </panel>
 
     <panel ref="accountView" styleClass="sidebar"/>
 
-    <panel ref="categorizationSelectionView" styleClass="sidebar" preferredSize="(500,50)"/>
+    <panel ref="categorizationSelectionView" styleClass="sidebar"/>
 
-    <panel name="analysisSelector" styleClass="sidebar" preferredSize="(50,50)"/>
+    <panel ref="analysisSelector" styleClass="sidebar" preferredSize="(200,50)"/>
 
-    <column name="projectsSelector" styleClass="sidebar" preferredSize="(500,50)">
-      <label text="$cards.projects" styleClass="sidebarTitle"/>
-      <panel ref="summaryView"/>
-    </column>
+    <panel ref="projectSelector" styleClass="sidebar"/>
 
     <column name="home" styleClass="content">
-      <cards ref="signpostCard">
+      <cards ref="signpostCard" styleClass="innerContent">
         <card name="signposts">
           <panel ref="signpostView"/>
         </card>
@@ -144,17 +134,17 @@
       </cards>
 
       <column weightY="0.1" autoHideSource="licenseInfo">
-        <panel ref="licenseInfo" marginTop="10"/>
+        <panel ref="licenseInfo" marginBottom="10"/>
       </column>
 
     </column>
 
-    <panel name="categorization" styleClass="content">
-      <panel ref="categorizationView"/>
+    <panel name="categorization" styleClass="content" preferredSize="(500,50)">
+      <panel ref="categorizationView" styleClass="innerContent"/>
     </panel>
 
     <panel name="budget" styleClass="content">
-      <cards ref="budgetToggle">
+      <cards ref="budgetToggle" styleClass="innerContent">
         <card name="main">
           <panel ref="budgetView"/>
         </card>
@@ -165,20 +155,20 @@
     </panel>
 
     <panel name="analysis" styleClass="content">
-      <panel ref="seriesAnalysisView"/>
+      <panel ref="seriesAnalysisView" styleClass="innerContent"/>
     </panel>
 
     <panel name="data" styleClass="content">
-      <panel ref="transactionView"/>
+      <panel ref="transactionView" styleClass="innerContent"/>
     </panel>
 
-    <column name="projects" styleClass="content">
-      <panel ref="projectView"/>
+    <column name="projects" styleClass="content" preferredSize="(480,50)">
+      <panel ref="projectView" styleClass="innerContent"/>
     </column>
 
     <column name="footer" styleClass="content">
-      <panel ref="newVersionView" weightY="0"/>
-      <panel ref="demoMessageView" weightY="0"/>
+      <panel ref="newVersionView" styleClass="innerContent"/>
+      <panel ref="demoMessageView" styleClass="innerContent"/>
     </column>
 
   </column>

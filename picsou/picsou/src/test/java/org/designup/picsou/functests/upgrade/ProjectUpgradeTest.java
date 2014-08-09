@@ -30,8 +30,8 @@ public class ProjectUpgradeTest extends LoggedInFunctionalTestCase {
       .add("15/01/2014", "AIR FRANCE", -30.00, "Voyage", 2390.00, 2390.00, "Compte Perso")
       .check();
 
-    projects.checkCurrentProjects("| Voyage Rome | Jan | 1080.00 | on |");
-    projects.select("Voyage Rome");
+    projectList.checkCurrentProjects("| Voyage Rome | Jan | 1080.00 | on |");
+    projectList.select("Voyage Rome");
     currentProject.checkItems("| Voyage          | Jan | 180.00  | 200.00  |\n" +
                               "| Prepa Rome      | Feb | 30.00   | 80.00   |\n" +
                               "| Hotel           | Mar | 0.00    | 300.00  |\n" +
@@ -89,8 +89,8 @@ public class ProjectUpgradeTest extends LoggedInFunctionalTestCase {
 
   public void testSeveralTransactionsAssignedToRootProjectSeries() throws Exception {
     operations.restore(Files.copyResourceToTmpFile(this, "/testbackups/upgrade_jar131_projects_multi_root.budgetview"));
-    projects.checkCurrentProjects("| Voyage Rome | Jan | 1080.00 | on |");
-    projects.select("Voyage Rome");
+    projectList.checkCurrentProjects("| Voyage Rome | Jan | 1080.00 | on |");
+    projectList.select("Voyage Rome");
     currentProject.checkItems("| Voyage     | Jan | 180.00 | 200.00 |\n" +
                               "| Prepa Rome | Feb | 0.00   | 80.00  |\n" +
                               "| Hotel      | Mar | 0.00   | 300.00 |\n" +
@@ -128,8 +128,8 @@ public class ProjectUpgradeTest extends LoggedInFunctionalTestCase {
 
   public void testOlderVersion() throws Exception {
     operations.restore(Files.copyResourceToTmpFile(this, "/testbackups/upgrade_jar96_projects.budgetview"));
-    projects.checkCurrentProjects("| Voyage Rome | Jan | 500.00 | on |");
-    projects.select("Voyage Rome");
+    projectList.checkCurrentProjects("| Voyage Rome | Jan | 500.00 | on |");
+    projectList.select("Voyage Rome");
     currentProject.checkItems("| Voyage 1   | Jan | 30.00  | 150.00 |\n" +
                               "| Voyage 2   | Feb | 150.00 | 150.00 |\n" +
                               "| Hotel      | Mar | 0.00   | 200.00 |\n" +
@@ -168,8 +168,8 @@ public class ProjectUpgradeTest extends LoggedInFunctionalTestCase {
 
   public void testProjectsWithVariousTranferItems() throws Exception {
     operations.restoreWithPassword(Files.copyResourceToTmpFile(this, "/testbackups/upgrade_jar125_projets_multi_transfers.budgetview"), "pwd");
-    projects.checkCurrentProjects("| Vacances | Apr | 300.00 | on |");
-    projects.select("Vacances");
+    projectList.checkCurrentProjects("| Vacances | Apr | 300.00 | on |");
+    projectList.select("Vacances");
     currentProject.checkItems("| Courant > Epargne | Apr | +100.00 | +50.00  |\n" +
                               "| Externe > Epargne | Apr | +300.00 | +300.00 |\n" +
                               "| Epargne > Externe | Apr | +100.00 | +100.00 |\n" +
@@ -203,7 +203,7 @@ public class ProjectUpgradeTest extends LoggedInFunctionalTestCase {
       .add("05/04/2014", TransactionType.PRELEVEMENT, "AIR FRANCE", "", -300.00, "Voyage - Compte Perso")
       .check();
 
-    projects.select("Vacances");
+    projectList.select("Vacances");
     currentProject.checkDefaultAccountLabel("Compte Joint");
     currentProject.checkItems("| Voyage - Compte Joint     | Apr | 150.00  | 250.00  |\n" +
                               "| Voyage - Compte Perso     | Apr | 300.00  | 250.00  |\n" +
@@ -212,7 +212,7 @@ public class ProjectUpgradeTest extends LoggedInFunctionalTestCase {
                               "| Other - Compte Joint      | Apr | 30.00   | 0.00    |\n" +
                               "| Other - Compte Perso      | Apr | 20.00   | 0.00    |");
     currentProject.backToList();
-    projects.checkCurrentProjects("| Vacances | Apr | 500.00 | on |");
+    projectList.checkCurrentProjects("| Vacances | Apr | 500.00 | on |");
 
     views.selectBudget();
     budgetView.savings
@@ -229,7 +229,7 @@ public class ProjectUpgradeTest extends LoggedInFunctionalTestCase {
 
     operations.restore(Files.copyResourceToTmpFile(this, "/testbackups/upgrade_jar131_project_with_no_transactions.budgetview"));
 
-    projects.select("Voyage");
+    projectList.select("Voyage");
     currentProject.checkDefaultAccountLabel("Compte Joint");
     currentProject.checkItems("| Avion    | June | 0.00 | 500.00  |\n" +
                               "| Virement | June | 0.00 | +300.00 |");

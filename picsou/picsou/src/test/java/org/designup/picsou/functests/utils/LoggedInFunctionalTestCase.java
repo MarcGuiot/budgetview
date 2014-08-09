@@ -47,10 +47,9 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
   public DemoMessageChecker demoMessage;
   public ImportPanelChecker importPanel;
   public NotesViewChecker notes;
-  public ProjectChartChecker projectChart;
-  public ProjectListChecker projects;
+  public ProjectSelectorChecker projects;
+  public ProjectListChecker projectList;
   public ProjectEditionChecker currentProject;
-  public SummaryViewChecker summary;
   public SignpostViewChecker signpostView;
   public ReconciliationAnnotationChecker reconciliationAnnotations;
   public NotificationsChecker notifications;
@@ -173,10 +172,9 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
     demoMessage = new DemoMessageChecker(mainWindow);
     importPanel = new ImportPanelChecker(mainWindow);
     notes = new NotesViewChecker(operations, mainWindow);
-    projectChart = new ProjectChartChecker(mainWindow);
-    projects = new ProjectListChecker(mainWindow);
+    projectList = new ProjectListChecker(mainWindow);
     currentProject = new ProjectEditionChecker(mainWindow);
-    summary = new SummaryViewChecker(mainWindow);
+    projects = new ProjectSelectorChecker(mainWindow);
     signpostView = new SignpostViewChecker(mainWindow);
     notifications = new NotificationsChecker(mainWindow);
     reconciliationAnnotations = new ReconciliationAnnotationChecker(mainWindow);
@@ -238,10 +236,9 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
     licenseMessage = null;
     importPanel = null;
     notes = null;
-    projectChart = null;
     projects = null;
+    projectList = null;
     currentProject = null;
-    summary = null;
     signpostView = null;
     reconciliationAnnotations = null;
     notifications = null;

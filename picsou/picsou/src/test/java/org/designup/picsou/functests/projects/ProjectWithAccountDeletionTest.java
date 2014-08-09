@@ -26,7 +26,7 @@ public class ProjectWithAccountDeletionTest extends LoggedInFunctionalTestCase {
       .addTransaction("2010/12/10", -400.00, "Second 2222")
       .load();
 
-    projectChart.create();
+    projects.createFirst();
     currentProject
       .setNameAndDefaultAccount("Project A", "Account n. 001111")
       .addExpenseItem(0, "First 1111", 201012, -1000.00, "Account n. 001111")
@@ -50,8 +50,8 @@ public class ProjectWithAccountDeletionTest extends LoggedInFunctionalTestCase {
       .checkGroupDoesNotContainSeries("Project A", "First 1111")
       .selectSeries("Second 2222");
 
+    projects.create();
     currentProject
-      .create()
       .setNameAndDefaultAccount("Project B", "Account n. 001111")
       .addExpenseItem(0, "Item 1", 201012, -500.00);
 
@@ -65,7 +65,7 @@ public class ProjectWithAccountDeletionTest extends LoggedInFunctionalTestCase {
       .validate();
 
     currentProject.backToList();
-    projects.checkCurrentProjects("| Project B | Dec | 500.00  | on |\n" +
+    projectList.checkCurrentProjects("| Project B | Dec | 500.00  | on |\n" +
                                   "| Project A | Dec | 1100.00 | on |");
 
     budgetView.extras
@@ -83,7 +83,7 @@ public class ProjectWithAccountDeletionTest extends LoggedInFunctionalTestCase {
       .checkMessageContains("All the operations and series associated to this account will be deleted.")
       .validate();
 
-    projects.checkNoCurrentProjects();
+    projectList.checkNoCurrentProjects();
     budgetView.extras
       .checkNoSeriesShown()
       .hideInactiveEnveloppes();
@@ -118,8 +118,8 @@ public class ProjectWithAccountDeletionTest extends LoggedInFunctionalTestCase {
       .addTransaction("2010/12/01", 1000.00, "Blah")
       .loadInAccount("Savings account");
 
-    views.selectHome();
-    projectChart.create();
+    views.selectProjects();
+    projects.createFirst();
     currentProject
       .setNameAndValidate("Trip")
       .addTransferItem()
@@ -163,7 +163,7 @@ public class ProjectWithAccountDeletionTest extends LoggedInFunctionalTestCase {
       .addTransaction("2010/12/10", -400.00, "Second 2222")
       .load();
 
-    projectChart.create();
+    projects.createFirst();
     currentProject
       .setNameAndDefaultAccount("Project A", "Account n. 001111")
       .addExpenseItem(0, "First 1111", 201012, -1000.00, "Account n. 001111")

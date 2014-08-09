@@ -5,7 +5,7 @@
   <styles>
   </styles>
 
-  <column name="dashboardView" styleClass="content">
+  <column name="dashboardView">
     <panel ref="uncategorizedSummaryView"/>
   </column>
 

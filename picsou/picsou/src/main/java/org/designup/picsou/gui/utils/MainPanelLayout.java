@@ -30,6 +30,13 @@ public class MainPanelLayout implements LayoutManager {
   private static final int ANALYSIS = 4;
   private static final int PROJECTS = 5;
 
+  private StretchMode stretchMode = StretchMode.FIXED_SIDEBAR;
+
+  private enum StretchMode {
+    FIXED_SIDEBAR,
+    FIXED_CONTENT
+  }
+
   public void addLayoutComponent(String name, Component comp) {
   }
 
@@ -49,26 +56,32 @@ public class MainPanelLayout implements LayoutManager {
       case HOME:
         currentSidebar = ACCOUNT_VIEW;
         currentContentPanel = HOME;
+        stretchMode = StretchMode.FIXED_SIDEBAR;
         break;
       case BUDGET:
         currentSidebar = ACCOUNT_VIEW;
         currentContentPanel = BUDGET;
+        stretchMode = StretchMode.FIXED_SIDEBAR;
         break;
       case DATA:
         currentSidebar = ACCOUNT_VIEW;
         currentContentPanel = DATA;
+        stretchMode = StretchMode.FIXED_SIDEBAR;
         break;
       case CATEGORIZATION:
         currentSidebar = CATEGORIZATION_SELECTOR;
         currentContentPanel = CATEGORIZATION;
+        stretchMode = StretchMode.FIXED_CONTENT;
         break;
       case ANALYSIS:
         currentSidebar = ANALYSIS_SELECTOR;
         currentContentPanel = ANALYSIS;
+        stretchMode = StretchMode.FIXED_SIDEBAR;
         break;
       case PROJECTS:
         currentSidebar = PROJECTS_SELECTOR;
         currentContentPanel = PROJECTS;
+        stretchMode = StretchMode.FIXED_CONTENT;
         break;
       default:
         throw new InvalidParameter("Unexpected card: " + card);
@@ -105,7 +118,7 @@ public class MainPanelLayout implements LayoutManager {
       else if ("analysisSelector".equals(name)) {
         sidebars[ANALYSIS_SELECTOR] = comp;
       }
-      else if ("projectsSelector".equals(name)) {
+      else if ("projectSelector".equals(name)) {
         sidebars[PROJECTS_SELECTOR] = comp;
       }
       else if ("home".equals(name)) {
@@ -156,15 +169,29 @@ public class MainPanelLayout implements LayoutManager {
     int sidebarTop = top + timeviewHeight;
     int sidebarLeft = left + actionsBarWidth;
     int sidebarHeight = bottom - sidebarTop;
-    int sidebarWidth = sidebars[currentSidebar].getPreferredSize().width;
+
+    int sidebarWidth;
+    int contentWidth;
+    switch (stretchMode) {
+      case FIXED_SIDEBAR:
+        sidebarWidth = sidebars[currentSidebar].getPreferredSize().width;
+        contentWidth = width - actionsBarWidth - sidebarWidth;
+        break;
+      case FIXED_CONTENT:
+        contentWidth = contentPanels[currentContentPanel].getPreferredSize().width;
+        sidebarWidth = width - actionsBarWidth - contentWidth;
+        break;
+      default:
+        throw new InvalidParameter("Unexpected mode " + stretchMode);
+    }
+
     int footerHeight = footer.isVisible() ? footer.getPreferredSize().height : 0;
-    int footerWidth = width - actionsBarWidth - sidebarWidth;
     int footerTop = bottom - footerHeight;
     int footerLeft = sidebarLeft + sidebarWidth;
+    int footerWidth = contentWidth;
     int contentTop = sidebarTop;
     int contentLeft = sidebarLeft + sidebarWidth;
     int contentHeight = sidebarHeight - footerHeight;
-    int contentWidth = footerWidth;
 
     actionsBar.setBounds(left, top, actionsBar.getPreferredSize().width, height);
     timeviewHeader.setBounds(sidebarLeft, top, timeviewWidth, timeviewHeight);

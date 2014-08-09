@@ -16,14 +16,15 @@ public class ProjectViewToggleTest extends LoggedInFunctionalTestCase {
       .addTransaction("2013/12/01", 1000.00, "Income")
       .load();
 
-    projects.checkHidden();
-    projectChart.checkShowsCreation();
+    projectList.checkHidden();
+    projects.checkShowsCreation();
 
-    projectChart.create();
-    projects.checkShown();
+    projects.createFirst();
+    projects.checkShowsChart();
+    projectList.checkShown();
 
     currentProject.cancelEdition();
-    projects.checkHidden();
-    projectChart.checkShowsCreation();
+    projectList.checkHidden();
+    projects.checkShowsCreation();
   }
 }

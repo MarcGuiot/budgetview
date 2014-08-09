@@ -61,7 +61,7 @@ public class SavingsViewTest extends LoggedInFunctionalTestCase {
     budgetView.savings.alignAndPropagate("Epargne");
 
     views.selectHome();
-    summary.getAccountChart("Livret")
+    projects.getAccountChart("Livret")
       .checkRange(200907, 201007)
       .checkValue(200907, 1, 200.00)
       .checkValue(200907, 10, 400.00)
@@ -81,7 +81,7 @@ public class SavingsViewTest extends LoggedInFunctionalTestCase {
     savingsAccounts.editPosition("Livret").setAmount(300.00).validate();
 
     views.selectHome();
-    summary.getAccountChart("Livret")
+    projects.getAccountChart("Livret")
       .checkRange(200907, 201007)
       .checkValue(200907, 1, 100.00)
       .checkValue(200912, 11, 1300.00)
@@ -90,7 +90,7 @@ public class SavingsViewTest extends LoggedInFunctionalTestCase {
     operations.openPreferences().setFutureMonthsCount(6).validate();
 
     views.selectHome();
-    summary.getAccountChart("Livret")
+    projects.getAccountChart("Livret")
       .checkRange(200907, 201001)
       .checkValue(200907, 1, 100.00)
       .checkValue(200910, 11, 900.00)

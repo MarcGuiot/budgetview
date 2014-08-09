@@ -182,12 +182,12 @@ public class NavigationService implements GlobSelectionListener {
           .add(projectItem)
           .get());
     }
-    gotoCard(Card.HOME);
+    gotoCard(Card.PROJECTS);
   }
 
   public void gotoNewProject() {
     projectView.createProject();
-    gotoCard(Card.HOME);
+    gotoCard(Card.PROJECTS);
   }
 
   public void highlightTransactionCreation() {

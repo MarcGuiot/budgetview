@@ -401,9 +401,11 @@
 
     <!-- Sidebar -->
 
+    <style selector=".sidebar" opaque="true" background="sidebar.bg" border="matte(0,0,0,1,sidebar.border)"/>
+
     <style selector=".sidebarTitle" font="LatoLight,plain,30" weightX="0"
            marginLeft="10" marginTop="10" marginBottom="20"
-           foreground="sidebar.title" anchor="west"/>
+           foreground="sidebar.title" fill="horizontal" anchor="west"/>
 
     <style selector=".sidebarSectionTitle" font="LatoLight,plain,14"
            fill="none" anchor="south" weightX="0"
@@ -414,9 +416,11 @@
     <style selector=".sidebarScrollPane"  border="" opaque="false"
            viewportOpaque="true" viewportBackground="sidebar.bg"/>
 
-    <!-- Sidebar -->
+    <!-- Content -->
 
-    <style selector=".content" border="empty(10)" opaque="true" background="content.bg"/>
+    <style selector=".content" opaque="true" background="content.bg"/>
+    <style selector=".innerContent" border="empty(10)"/>
+
   </styles>
 
 </splits>

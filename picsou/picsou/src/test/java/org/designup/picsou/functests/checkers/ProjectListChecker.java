@@ -117,7 +117,7 @@ public class ProjectListChecker extends ViewChecker {
 
   private Panel getProjectViewPanel() {
     if (projectViewPanel == null) {
-      views.selectHome();
+      views.selectProjects();
       projectViewPanel = mainWindow.getPanel("projectView");
     }
     return projectViewPanel;

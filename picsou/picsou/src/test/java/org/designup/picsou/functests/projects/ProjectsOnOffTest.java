@@ -19,7 +19,7 @@ public class ProjectsOnOffTest extends LoggedInFunctionalTestCase {
 
     operations.openPreferences().setFutureMonthsCount(3).validate();
 
-    projectChart.create();
+    projects.createFirst();
     currentProject
       .setNameAndValidate("Trip")
       .addExpenseItem(0, "Reservation", 201012, -200.00)
@@ -36,7 +36,7 @@ public class ProjectsOnOffTest extends LoggedInFunctionalTestCase {
     timeline.selectMonth("2010/12");
     views.selectHome();
 
-    projectChart.select("Trip");
+    projects.select("Trip");
     currentProject.setInactive();
     currentProject.checkProjectGauge(0.00, -800.00);
     budgetView.extras.checkNoSeriesShown();
@@ -45,8 +45,8 @@ public class ProjectsOnOffTest extends LoggedInFunctionalTestCase {
 
     views.selectHome();
     currentProject.backToList();
-    projects.checkCurrentProjects("| Trip | Dec | 800.00 | off |");
-    projects.select("Trip");
+    projectList.checkCurrentProjects("| Trip | Dec | 800.00 | off |");
+    projectList.select("Trip");
     currentProject.setActive();
     budgetView.extras.checkSeries("Trip", 0.00, -300.00);
     categorization.selectTransaction("Expense 1").selectExtras()
@@ -57,8 +57,8 @@ public class ProjectsOnOffTest extends LoggedInFunctionalTestCase {
 
     views.selectHome();
     currentProject.backToList();
-    projects.checkCurrentProjects("| Trip | Dec | 800.00 | on |");
-    projects.select("Trip");
+    projectList.checkCurrentProjects("| Trip | Dec | 800.00 | on |");
+    projectList.select("Trip");
 
     currentProject.view(0).setInactive();
     budgetView.extras.checkSeries("Trip", 0.00, -100.00);
@@ -117,7 +117,7 @@ public class ProjectsOnOffTest extends LoggedInFunctionalTestCase {
 
     operations.openPreferences().setFutureMonthsCount(3).validate();
 
-    projectChart.create();
+    projects.createFirst();
     currentProject
       .setNameAndValidate("Trip")
       .addExpenseItem(0, "Reservation", 201012, -200.00)
@@ -129,7 +129,7 @@ public class ProjectsOnOffTest extends LoggedInFunctionalTestCase {
     timeline.selectMonth("2010/12");
 
     views.selectHome();
-    projectChart.select("Trip");
+    projects.select("Trip");
     currentProject.setInactive();
     currentProject.checkProjectGauge(-200.00, -800.00);
     budgetView.extras.checkSeries("Trip", -200.00, 0.00);
@@ -183,7 +183,7 @@ public class ProjectsOnOffTest extends LoggedInFunctionalTestCase {
 
     operations.openPreferences().setFutureMonthsCount(3).validate();
 
-    projectChart.create();
+    projects.createFirst();
     currentProject
       .setNameAndValidate("Trip")
       .addExpenseItem(0, "Reservation", 201012, -200.00)

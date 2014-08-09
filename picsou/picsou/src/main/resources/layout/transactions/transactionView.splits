@@ -4,7 +4,7 @@
 
   <column name="transactionView">
 
-    <verticalSplit styleClass="blockDivider" opaque="false" margin="10" marginLeft="15" marginRight="15">
+    <verticalSplit styleClass="blockDivider" opaque="false">
       <column>
         <row>
           <filler fill="horizontal"/>

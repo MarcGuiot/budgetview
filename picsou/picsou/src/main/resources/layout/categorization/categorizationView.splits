@@ -8,7 +8,7 @@
     <style selector="scrollPane" viewportBackground="dialog.block"/>
 
     <style selector="#budgetAreas label.title" font="-,bold,12"
-           fill="none" anchor="center" marginTop="10" marginBottom="20"/>
+           fill="none" anchor="center" marginTop="10" marginBottom="10"/>
 
     <ui name="budgetAreaSelector" class="org.designup.picsou.gui.components.tabs.VerticalTabToggleUI"
         rolloverTextColor="categorization.budgetAreaSelector.text.rollover"
@@ -28,98 +28,91 @@
     <style selector="x" id="downArrowHidden" icon="empty(50,20)"/>
   </styles>
 
-  <column name="categorizationView" styleClass="main">
+  <column name="categorizationView">
 
-    <column weightY="10.0" styleClass="mainDivider" opaque="false">
-
-      <column weightY="0.1" minimumSize="(200,100)"
-              opaque="true" background="categorization.transactionDetails.bg"
-              border="line(categorization.transactionDetails.border)">
-        <panel ref="transactionDetails" margin="5"/>
-      </column>
-
-      <label ref="downArrow" anchor="center"/>
-
-      <panel ref="reconciliationNavigationPanel" weightY="0.1"/>
-
-      <cards ref="categorizationCard" weightY="100">
-
-        <card name="noSelection">
-          <panel name="noSelectionPanel" opaque="false"/>
-        </card>
-
-        <card name="reconciliation">
-          <panel ref="reconciliationPanel" border="${categorization.reconciliationPanel.border}"/>
-        </card>
-
-        <card name="series">
-
-          <row weightX="0.1" name="seriesPanel" border="line(categorization.transactionDetails.border)">
-            <column ref="budgetAreaSelectionPanel" weightX="0.1">
-              <repeat ref="budgetAreaToggles" layout="column" gridWrapLimit="4" margin="5" marginRight="0">
-                <toggleButton ref="budgetAreaToggle" styleClass="budgetAreaSelector" anchor="left"/>
-              </repeat>
-              <filler fill="vertical"/>
-            </column>
-
-            <cards ref="seriesCard" weightX="100">
-
-              <card name="uncategorized">
-                <column styleClass="budgetAreaSelection">
-                  <htmlEditorPane ref="uncategorizedMessage"
-                                  hyperlinkListener="hyperlinkHandler"/>
-                  <filler fill="vertical"/>
-                </column>
-              </card>
-
-              <card name="revertToUncategorized">
-                <column styleClass="budgetAreaSelection">
-                  <htmlEditorPane name="revertToUncategorizedMessage" styleClass="multiLineLabel"
-                                  text="$categorization.revert.uncategorized.message"/>
-                  <button action="uncategorizeSelected" fill="none" anchor="center"/>
-                  <filler fill="vertical"/>
-                </column>
-              </card>
-
-              <card name="multipleAreas">
-                <column styleClass="budgetAreaSelection">
-                  <htmlEditorPane name="multipleAreasMessage" text="$categorization.multiple.areas"
-                                  hyperlinkListener="hyperlinkHandler"/>
-                  <filler fill="vertical"/>
-                </column>
-              </card>
-
-              <card name="income">
-                <panel ref="incomeSeriesChooser"/>
-              </card>
-
-              <card name="recurring">
-                <panel ref="recurringSeriesChooser"/>
-              </card>
-
-              <card name="variable">
-                <panel ref="variableSeriesChooser"/>
-              </card>
-
-              <card name="extras">
-                <panel ref="extrasSeriesChooser"/>
-              </card>
-
-              <card name="savings">
-                <panel ref="savingsSeriesChooser"/>
-              </card>
-
-              <card name="other">
-                <panel ref="otherSeriesChooser"/>
-              </card>
-
-            </cards>
-
-          </row>
-        </card>
-      </cards>
-
+    <column weightY="0.1" minimumSize="(200,100)">
+      <panel ref="transactionDetails" margin="5"/>
     </column>
+
+    <label ref="downArrow" anchor="center"/>
+
+    <panel ref="reconciliationNavigationPanel" weightY="0.1"/>
+
+    <cards ref="categorizationCard" weightY="100">
+
+      <card name="noSelection">
+        <panel name="noSelectionPanel" opaque="false"/>
+      </card>
+
+      <card name="reconciliation">
+        <panel ref="reconciliationPanel" border="${categorization.reconciliationPanel.border}"/>
+      </card>
+
+      <card name="series">
+
+        <row weightX="0.1" name="seriesPanel">
+          <column ref="budgetAreaSelectionPanel" weightX="0.1">
+            <repeat ref="budgetAreaToggles" layout="column" gridWrapLimit="4" margin="5" marginRight="0">
+              <toggleButton ref="budgetAreaToggle" styleClass="budgetAreaSelector" anchor="left"/>
+            </repeat>
+            <filler fill="vertical"/>
+          </column>
+
+          <cards ref="seriesCard" weightX="100" border="matte(1,0,1,1,categorization.transactionDetails.border)">
+
+            <card name="uncategorized">
+              <column styleClass="budgetAreaSelection">
+                <htmlEditorPane ref="uncategorizedMessage" hyperlinkListener="hyperlinkHandler"/>
+                <filler fill="vertical"/>
+              </column>
+            </card>
+
+            <card name="revertToUncategorized">
+              <column styleClass="budgetAreaSelection">
+                <htmlEditorPane name="revertToUncategorizedMessage" styleClass="multiLineLabel"
+                                text="$categorization.revert.uncategorized.message"/>
+                <button action="uncategorizeSelected" fill="none" anchor="center"/>
+                <filler fill="vertical"/>
+              </column>
+            </card>
+
+            <card name="multipleAreas">
+              <column styleClass="budgetAreaSelection">
+                <htmlEditorPane name="multipleAreasMessage" text="$categorization.multiple.areas"
+                                hyperlinkListener="hyperlinkHandler"/>
+                <filler fill="vertical"/>
+              </column>
+            </card>
+
+            <card name="income">
+              <panel ref="incomeSeriesChooser"/>
+            </card>
+
+            <card name="recurring">
+              <panel ref="recurringSeriesChooser"/>
+            </card>
+
+            <card name="variable">
+              <panel ref="variableSeriesChooser"/>
+            </card>
+
+            <card name="extras">
+              <panel ref="extrasSeriesChooser"/>
+            </card>
+
+            <card name="savings">
+              <panel ref="savingsSeriesChooser"/>
+            </card>
+
+            <card name="other">
+              <panel ref="otherSeriesChooser"/>
+            </card>
+
+          </cards>
+
+        </row>
+      </card>
+    </cards>
 
   </column>
 </splits>

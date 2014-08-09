@@ -18,7 +18,7 @@
           <column>
             <filler fill="vertical"/>
             <label text="$projectView.creation.text" foreground="projectView.create"/>
-            <button action="createProject" styleClass="smallButton" margin="15" font="-,bold,12" />
+            <button action="createFirstProject" styleClass="smallButton" margin="15" font="-,bold,12" />
             <button action="openProjectGuide" styleClass="hyperlink" font="-,plain,11"/>
             <filler fill="vertical"/>
           </column>

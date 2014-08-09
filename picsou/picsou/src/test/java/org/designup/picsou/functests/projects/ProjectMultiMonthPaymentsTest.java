@@ -20,12 +20,12 @@ public class ProjectMultiMonthPaymentsTest extends LoggedInFunctionalTestCase {
       .addTransaction("2010/12/15", -200.00, "FNAC")
       .load();
 
-    projectChart.create();
+    projects.createFirst();
     currentProject
       .setNameAndValidate("Camera")
       .addExpenseItem(0, "Camera Body", 201012, -80.00, 10)
       .addExpenseItem(1, "Lens", 201012, -200.00);
-    projectChart.checkProject("Camera", 201012, 201109, 1000.00);
+    projects.checkProject("Camera", 201012, 201109, 1000.00);
     currentProject
       .checkPeriod("December 2010 - September 2011")
       .checkProjectGauge(0.00, -1000.00)
@@ -39,7 +39,7 @@ public class ProjectMultiMonthPaymentsTest extends LoggedInFunctionalTestCase {
       .setAmount(-150.00)
       .setMonthCount(5)
       .validate();
-    projectChart.checkProject("Camera", 201012, 201104, 950.00);
+    projects.checkProject("Camera", 201012, 201104, 950.00);
     currentProject
       .checkPeriod("December 2010 - April 2011")
       .checkProjectGauge(-200.00, -950.00)
@@ -68,7 +68,7 @@ public class ProjectMultiMonthPaymentsTest extends LoggedInFunctionalTestCase {
 
     accounts.createMainAccount("Main account", 1000.00);
 
-    projectChart.create();
+    projects.createFirst();
     currentProject
       .setNameAndValidate("Camera")
       .addExpenseItem()
