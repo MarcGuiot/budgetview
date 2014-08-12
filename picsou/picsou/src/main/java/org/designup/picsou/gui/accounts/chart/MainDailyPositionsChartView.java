@@ -1,15 +1,14 @@
 package org.designup.picsou.gui.accounts.chart;
 
 import com.budgetview.shared.gui.histochart.HistoChartConfig;
+import org.designup.picsou.gui.analysis.histobuilders.HistoChartBuilder;
+import org.designup.picsou.gui.analysis.histobuilders.range.HistoChartRange;
 import org.designup.picsou.gui.card.NavigationService;
 import org.designup.picsou.gui.components.charts.histo.HistoChart;
 import org.designup.picsou.gui.components.charts.histo.HistoRollover;
-import org.designup.picsou.gui.components.charts.histo.HistoSelection;
 import org.designup.picsou.gui.components.charts.histo.utils.HistoChartListenerAdapter;
 import org.designup.picsou.gui.components.highlighting.HighlightingService;
 import org.designup.picsou.gui.components.tips.DetailsTip;
-import org.designup.picsou.gui.analysis.histobuilders.HistoChartBuilder;
-import org.designup.picsou.gui.analysis.histobuilders.range.HistoChartRange;
 import org.designup.picsou.gui.utils.DaySelection;
 import org.designup.picsou.model.*;
 import org.designup.picsou.utils.Lang;
@@ -64,13 +63,6 @@ public class MainDailyPositionsChartView extends PositionsChartView {
     }
     Set<Integer> accountIdSet = repository.getAll(Account.TYPE, accountMatcher).getValueSet(Account.ID);
     histoChartBuilder.showAccountDailyHisto(currentMonthId, showFullMonthLabels, accountIdSet, DaySelection.EMPTY, tooltipKey);
-  }
-
-  protected void processClick(HistoSelection selection, Set<Key> objectKeys, NavigationService navigationService) {
-    GlobList selectedAccounts = selectionService.getSelection(Account.TYPE).filter(accountMatcher, repository);
-    if (selectedAccounts.isEmpty()) {
-      selectionService.select(repository.getAll(Account.TYPE, accountMatcher), Account.TYPE);
-    }
   }
 
   protected void processDoubleClick(NavigationService navigationService) {

@@ -102,7 +102,6 @@ public abstract class PositionsChartView extends View implements HistoChartRange
   protected abstract void updateChart(HistoChartBuilder histoChartBuilder, Integer currentMonthId, boolean resetPosition);
 
   protected void processClick(HistoSelection selection, Set<Key> objectKeys, NavigationService navigationService) {
-
   }
 
   protected void processDoubleClick(NavigationService navigationService) {

@@ -8,6 +8,7 @@ import org.designup.picsou.gui.accounts.position.AccountPositionLabels;
 import org.designup.picsou.gui.budget.summary.UncategorizedButton;
 import org.designup.picsou.gui.card.NavigationService;
 import org.designup.picsou.gui.components.PopupGlobFunctor;
+import org.designup.picsou.gui.components.charts.histo.HistoSelection;
 import org.designup.picsou.gui.description.Formatting;
 import org.designup.picsou.gui.description.stringifiers.AccountComparator;
 import org.designup.picsou.gui.model.SavingsBudgetStat;
@@ -39,6 +40,7 @@ import org.globsframework.model.utils.*;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
+import java.util.Set;
 
 public abstract class AccountViewPanel {
   protected GlobRepository repository;
@@ -138,8 +140,13 @@ public abstract class AccountViewPanel {
 
       MainDailyPositionsChartView chartView =
         new MainDailyPositionsChartView(new ScrollableHistoChartRange(0, 1, true, repository),
-                                        new HistoChartConfig(true, false, true, true, true, true, false, true, false, true),
-                                        "accountPositionsChart", repository, directory, "daily.budgetSummary");
+                                        new HistoChartConfig(true, false, true, false, false, true, false, true, false, true),
+                                        "accountPositionsChart", repository, directory, "daily.budgetSummary") {
+          protected void processClick(HistoSelection selection, Set<Key> objectKeys, NavigationService navigationService) {
+            System.out.println("AccountRepeatFactory.processClick: ");
+            selectionService.select(account);
+          }
+        };
       chartView.setAccount(account.getKey());
       chartView.installHighlighting();
       chartView.setShowFullMonthLabels(true);

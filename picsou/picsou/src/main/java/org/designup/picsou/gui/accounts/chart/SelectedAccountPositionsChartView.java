@@ -38,6 +38,10 @@ public class SelectedAccountPositionsChartView extends PositionsChartView {
   }
 
   protected void processClick(HistoSelection selection, Set<Key> objectKeys, NavigationService navigationService) {
+    selectTransactionsOnClick(objectKeys);
+  }
+
+  protected void selectTransactionsOnClick(Set<Key> objectKeys) {
     if (objectKeys.size() != 1) {
       return;
     }

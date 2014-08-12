@@ -17,7 +17,9 @@ public class AccountBlockLayout implements LayoutManager {
 
   private static final int HORIZONTAL_MARGIN = 5;
   private static final int VERTICAL_MARGIN = 2;
-  private static final int CHART_HEIGHT = 70;
+  private static final int CHART_HEIGHT = 80;
+  private static final int CHART_PADDING = 4;
+  private static final int CHART_LEFT_PADDING = 15;
 
   public void addLayoutComponent(String name, Component comp) {
   }
@@ -128,8 +130,8 @@ public class AccountBlockLayout implements LayoutManager {
 
     if (positionsChart.isVisible()) {
       int chartTop = accountUpdateDateTop + accountUpdateDate.getPreferredSize().height + VERTICAL_MARGIN;
-      positionsChart.setBounds(left, chartTop,
-                               width, CHART_HEIGHT);
+      positionsChart.setBounds(left + CHART_LEFT_PADDING, chartTop + CHART_PADDING,
+                               width - CHART_PADDING - CHART_LEFT_PADDING, CHART_HEIGHT - 2 * CHART_PADDING);
     }
   }
 
