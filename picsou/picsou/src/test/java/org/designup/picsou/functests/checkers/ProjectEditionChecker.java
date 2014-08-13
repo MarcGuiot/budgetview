@@ -32,11 +32,6 @@ public class ProjectEditionChecker extends ViewChecker {
     super(mainWindow);
   }
 
-  public ProjectEditionChecker create() {
-    getPanel().getButton("createProject").click();
-    return this;
-  }
-
   public ProjectEditionChecker checkTitle(String text) {
     assertThat(getPanel().getTextBox("title").textEquals(text));
     return this;
@@ -123,6 +118,7 @@ public class ProjectEditionChecker extends ViewChecker {
   }
 
   public ProjectEditionChecker setImage(String path) {
+    views.selectProjects();
     PopupChecker checker = new PopupChecker() {
       protected MenuItem openMenu() {
         TextBox imageLabel = getPanel().getTextBox("imageLabel");
@@ -339,8 +335,8 @@ public class ProjectEditionChecker extends ViewChecker {
   }
 
   private Trigger getDeleteTrigger() {
-    final org.uispec4j.Button itemButton = getPanel().getButton("nameButton");
-    PopupButton button = new PopupButton(itemButton);
+    views.selectProjects();
+    PopupButton button = getPopup();
     return button.triggerClick("Delete");
   }
 
@@ -388,6 +384,7 @@ public class ProjectEditionChecker extends ViewChecker {
 
   private Panel getPanel() {
     if (panel == null) {
+      views.selectProjects();
       panel = mainWindow.getPanel("projectEditionView");
     }
     return panel;
@@ -411,15 +408,17 @@ public class ProjectEditionChecker extends ViewChecker {
   }
 
   public ProjectDuplicationDialogChecker openDuplicate() {
+    return ProjectDuplicationDialogChecker.open(getPopup().triggerClick(Lang.get("projectEdition.duplicate.menu")));
+  }
+
+  public PopupButton getPopup() {
+    views.selectProjects();
     final org.uispec4j.Button itemButton = getPanel().getButton("nameButton");
-    PopupButton button = new PopupButton(itemButton);
-    return ProjectDuplicationDialogChecker.open(button.triggerClick(Lang.get("projectEdition.duplicate.menu")));
+    return new PopupButton(itemButton);
   }
 
   public void checkDuplicateDisabled() {
-    final org.uispec4j.Button itemButton = getPanel().getButton("nameButton");
-    PopupButton button = new PopupButton(itemButton);
-    button.checkItemDisabled(Lang.get("projectEdition.duplicate.menu"));
+    getPopup().checkItemDisabled(Lang.get("projectEdition.duplicate.menu"));
   }
 
   public AccountEditionChecker checkAddExpenseWithNoAccount() {

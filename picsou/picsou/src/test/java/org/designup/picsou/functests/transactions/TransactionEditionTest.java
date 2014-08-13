@@ -88,7 +88,7 @@ public class TransactionEditionTest extends LoggedInFunctionalTestCase {
       .addTransaction("2008/08/10", -100.00, "Virement")
       .load();
 
-    savingsAccounts.createSavingsAccount("Livret", 1000.00);
+    accounts.createSavingsAccount("Livret", 1000.00);
     budgetView.savings.createSeries()
       .setName("ToSavings")
       .setFromAccount("Account n. 00001123")
@@ -175,7 +175,7 @@ public class TransactionEditionTest extends LoggedInFunctionalTestCase {
   }
 
   public void testEditAmountAndDateOfManualTransaction() throws Exception {
-    mainAccounts.createNewAccount()
+    accounts.createNewAccount()
       .setName("Cash")
       .setAccountNumber("012345")
       .selectBank("CIC")
@@ -227,7 +227,7 @@ public class TransactionEditionTest extends LoggedInFunctionalTestCase {
       .addTransaction("2008/08/19", -35.00, "MacDo")
       .load();
 
-    mainAccounts.createNewAccount()
+    accounts.createNewAccount()
       .setName("Cash")
       .setAccountNumber("012345")
       .selectBank("CIC")
@@ -245,7 +245,7 @@ public class TransactionEditionTest extends LoggedInFunctionalTestCase {
   }
 
   public void testCannotEditDateAndAmountsForMultiSelection() throws Exception {
-    mainAccounts.createNewAccount()
+    accounts.createNewAccount()
       .setName("Cash")
       .setAccountNumber("012345")
       .selectBank("CIC")
@@ -285,7 +285,7 @@ public class TransactionEditionTest extends LoggedInFunctionalTestCase {
   }
 
   public void testAllAmountsAreProperlyUpdatedWhenATransactionIsEdited() throws Exception {
-    mainAccounts.createNewAccount()
+    accounts.createNewAccount()
       .setName("Cash")
       .setAccountNumber("012345")
       .selectBank("CIC")

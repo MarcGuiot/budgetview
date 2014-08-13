@@ -886,6 +886,12 @@ div#faq-footer A:hover {
   background: #F4F4F4;
 }
 
+#changelog h3 {
+  font-size: 14pt;
+  font-style: bold;
+  color: #222;
+}
+
 #changelog span.date {
   margin-left: 10px;
   font-size: 10pt;

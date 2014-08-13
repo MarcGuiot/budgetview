@@ -19,6 +19,9 @@ public abstract class AbstractHistoChecker<T extends AbstractHistoChecker> exten
   protected <T extends HistoDataset> T getDataset(Class<T> datasetClass) {
     HistoChart chart = getChart();
     HistoDataset dataset = chart.getCurrentDataset();
+    if (dataset == HistoDataset.NULL) {
+      throw new AssertionFailedError("Current dataset is NULL");
+    }
     if (!datasetClass.isAssignableFrom(dataset.getClass())) {
       throw new AssertionFailedError("Unexpected dataset type: " + dataset.getClass());
     }

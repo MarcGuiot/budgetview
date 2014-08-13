@@ -18,7 +18,7 @@ import org.globsframework.utils.serialization.SerializedInput;
 import org.globsframework.utils.serialization.SerializedInputOutputFactory;
 import org.globsframework.utils.serialization.SerializedOutput;
 
-import java.util.SortedSet;
+import java.util.Date;
 
 public class CurrentMonth {
 
@@ -49,7 +49,11 @@ public class CurrentMonth {
   }
 
   public static Integer getLastTransactionMonth(GlobRepository repository) {
-    Glob currentMonth = repository.get(CurrentMonth.KEY);
+    Glob currentMonth = repository.find(CurrentMonth.KEY);
+    if (currentMonth == null) {
+      Date date = new Date();
+      return Month.getMonthId(date);
+    }
     Glob month = repository.findLinkTarget(currentMonth, LAST_TRANSACTION_MONTH);
     if (month == null) {
       month = repository.findLinkTarget(currentMonth, CURRENT_MONTH);
@@ -61,7 +65,12 @@ public class CurrentMonth {
   }
 
   public static Integer getLastTransactionDay(GlobRepository repository) {
-    return repository.get(CurrentMonth.KEY).get(LAST_TRANSACTION_DAY);
+    Glob currentMonth = repository.find(CurrentMonth.KEY);
+    if (currentMonth == null) {
+      Date date = new Date();
+      return Month.getDay(date);
+    }
+    return currentMonth.get(LAST_TRANSACTION_DAY);
   }
 
   public static Integer getCurrentMonth(GlobRepository repository) {

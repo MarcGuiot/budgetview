@@ -7,10 +7,10 @@ import org.designup.picsou.gui.components.charts.histo.HistoChart;
 import org.designup.picsou.gui.components.charts.histo.HistoChartColors;
 import org.designup.picsou.gui.components.charts.histo.HistoSelection;
 import org.designup.picsou.gui.components.charts.histo.utils.HistoChartListenerAdapter;
-import org.designup.picsou.gui.series.analysis.histobuilders.AccountHistoChartUpdater;
-import org.designup.picsou.gui.series.analysis.histobuilders.HistoChartBuilder;
-import org.designup.picsou.gui.series.analysis.histobuilders.HistoChartRangeListener;
-import org.designup.picsou.gui.series.analysis.histobuilders.range.HistoChartRange;
+import org.designup.picsou.gui.analysis.histobuilders.AccountHistoChartUpdater;
+import org.designup.picsou.gui.analysis.histobuilders.HistoChartBuilder;
+import org.designup.picsou.gui.analysis.histobuilders.HistoChartRangeListener;
+import org.designup.picsou.gui.analysis.histobuilders.range.HistoChartRange;
 import org.designup.picsou.model.Day;
 import org.designup.picsou.model.Month;
 import org.designup.picsou.model.Transaction;
@@ -26,8 +26,7 @@ import org.globsframework.utils.directory.Directory;
 
 import java.util.Set;
 
-import static org.globsframework.model.utils.GlobMatchers.and;
-import static org.globsframework.model.utils.GlobMatchers.fieldEquals;
+import static org.globsframework.model.utils.GlobMatchers.*;
 
 public abstract class PositionsChartView extends View implements HistoChartRangeListener, Disposable {
   protected HistoChartBuilder histoChartBuilder;
@@ -103,7 +102,6 @@ public abstract class PositionsChartView extends View implements HistoChartRange
   protected abstract void updateChart(HistoChartBuilder histoChartBuilder, Integer currentMonthId, boolean resetPosition);
 
   protected void processClick(HistoSelection selection, Set<Key> objectKeys, NavigationService navigationService) {
-
   }
 
   protected void processDoubleClick(NavigationService navigationService) {

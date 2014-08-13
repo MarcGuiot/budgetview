@@ -80,8 +80,8 @@ public class SynchroTest extends LoggedInFunctionalTestCase {
       .setMainAccount()
       .completeImport();
 
-    mainAccounts.checkAccountNames("principal");
-    savingsAccounts.checkAccountNames("secondary", "Livret A");
+    mainAccounts.checkAccounts("principal");
+    savingsAccounts.checkAccounts("secondary", "Livret A");
     savingsAccounts.checkAccount("secondary", 10, null);
 
     notifications.checkHidden();
@@ -94,7 +94,7 @@ public class SynchroTest extends LoggedInFunctionalTestCase {
       .doImportAndWaitForCompletion()
       .complete();
 
-    savingsAccounts.checkAccountNames("secondary", "Livret A");
+    savingsAccounts.checkAccounts("secondary", "Livret A");
     savingsAccounts.checkAccount("secondary", 10, null);
     notifications.openDialog()
       .checkMessageCount(1)

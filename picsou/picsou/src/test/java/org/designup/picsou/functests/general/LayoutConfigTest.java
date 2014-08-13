@@ -24,6 +24,9 @@ public class LayoutConfigTest extends LoggedInFunctionalTestCase {
   }
 
   public void test() throws Exception {
+
+    fail("RM: en cours de redesign V4");
+
     resize(mainWindow, 900, 700);
     assertThat(mainWindow.sizeEquals(900, 700));
     views.selectHome();

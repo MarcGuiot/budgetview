@@ -21,21 +21,21 @@ public class CarryOverTest extends LoggedInFunctionalTestCase {
       .setNewVariable("Auchan", "Courses", -100.00);
 
     budgetView.variable.checkSeries("Courses", -150.00, -100.00);
-    budgetView.getSummary().checkEndPosition(200.00);
+    mainAccounts.checkEndOfMonthPosition("Account n. 0001234", 200.00);
 
     timeline.selectMonths("2008/09");
     budgetView.variable.checkSeries("Courses", 0.00, -100.00);
-    budgetView.getSummary().checkEndPosition(1100.00);
+    mainAccounts.checkEndOfMonthPosition("Account n. 0001234", 1100.00);
 
     timeline.selectMonths("2008/08");
     budgetView.variable.carryExpensesOverdrawOver("Courses");
 
-    budgetView.getSummary().checkEndPosition(200.00);
+    mainAccounts.checkEndOfMonthPosition("Account n. 0001234", 200.00);
     budgetView.variable.checkSeries("Courses", -150.00, -150.00);
 
     timeline.selectMonths("2008/09");
     budgetView.variable.checkSeries("Courses", 0.00, -50.00);
-    budgetView.getSummary().checkEndPosition(1150.00);
+    mainAccounts.checkEndOfMonthPosition("Account n. 0001234", 1150.00);
 
     timeline.selectMonths("2008/08");
     budgetView.variable.checkCarryOverDisabled("Courses");
@@ -58,21 +58,21 @@ public class CarryOverTest extends LoggedInFunctionalTestCase {
 
     timeline.selectMonths("2008/08");
     budgetView.variable.checkSeries("Courses", -50.00, -100.00);
-    budgetView.getSummary().checkEndPosition(150.00);
+    mainAccounts.checkEndOfMonthPosition("Account n. 0001234", 150.00);
 
     timeline.selectMonths("2008/09");
     budgetView.variable.checkSeries("Courses", 0.00, -100.00);
-    budgetView.getSummary().checkEndPosition(1050.00);
+    mainAccounts.checkEndOfMonthPosition("Account n. 0001234", 1050.00);
 
     timeline.selectMonths("2008/08");
     budgetView.variable.carryExpensesRemainderOver("Courses");
 
-    budgetView.getSummary().checkEndPosition(200.00);
+    mainAccounts.checkEndOfMonthPosition("Account n. 0001234", 200.00);
     budgetView.variable.checkSeries("Courses", -50.00, -50.00);
 
     timeline.selectMonths("2008/09");
     budgetView.variable.checkSeries("Courses", 0.00, -150.00);
-    budgetView.getSummary().checkEndPosition(1050.00);
+    mainAccounts.checkEndOfMonthPosition("Account n. 0001234", 1050.00);
 
     timeline.selectMonths("2008/08");
     budgetView.variable.checkCarryOverDisabled("Courses");
@@ -95,21 +95,21 @@ public class CarryOverTest extends LoggedInFunctionalTestCase {
 
     timeline.selectMonths("2008/08");
     budgetView.variable.checkSeries("Courses", 50.00, -100.00);
-    budgetView.getSummary().checkEndPosition(50.00);
+    mainAccounts.checkEndOfMonthPosition("Account n. 0001234", 50.00);
 
     timeline.selectMonths("2008/09");
     budgetView.variable.checkSeries("Courses", 0.00, -100.00);
-    budgetView.getSummary().checkEndPosition(950.00);
+    mainAccounts.checkEndOfMonthPosition("Account n. 0001234", 950.00);
 
     timeline.selectMonths("2008/08");
     budgetView.variable.carryExpensesRemainderOver("Courses");
 
-    budgetView.getSummary().checkEndPosition(200.00);
+    mainAccounts.checkEndOfMonthPosition("Account n. 0001234", 200.00);
     budgetView.variable.checkSeries("Courses", 50.00, 50.00);
 
     timeline.selectMonths("2008/09");
     budgetView.variable.checkSeries("Courses", 0.00, -250.00);
-    budgetView.getSummary().checkEndPosition(950.00);
+    mainAccounts.checkEndOfMonthPosition("Account n. 0001234", 950.00);
 
     timeline.selectMonths("2008/08");
     budgetView.variable.checkCarryOverDisabled("Courses");
@@ -131,11 +131,11 @@ public class CarryOverTest extends LoggedInFunctionalTestCase {
       .setNewVariable("Auchan", "Courses", -100.00);
 
     budgetView.variable.checkSeries("Courses", -250.00, -100.00);
-    budgetView.getSummary().checkEndPosition(200.00);
+    mainAccounts.checkEndOfMonthPosition("Account n. 0001234", 200.00);
 
     timeline.selectMonths("2008/09");
     budgetView.variable.checkSeries("Courses", 0.00, -100.00);
-    budgetView.getSummary().checkEndPosition(1100.00);
+    mainAccounts.checkEndOfMonthPosition("Account n. 0001234", 1100.00);
 
     timeline.selectMonths("2008/08");
     budgetView.variable.carryExpensesOverdrawOverWithDialog("Courses")
@@ -144,7 +144,7 @@ public class CarryOverTest extends LoggedInFunctionalTestCase {
     budgetView.variable.checkSeries("Courses", -250.00, -100.00);
     timeline.selectMonths("2008/09");
     budgetView.variable.checkSeries("Courses", 0.00, -100.00);
-    budgetView.getSummary().checkEndPosition(1100.00);
+    mainAccounts.checkEndOfMonthPosition("Account n. 0001234", 1100.00);
 
     timeline.selectMonth("2008/08");
     budgetView.variable.carryExpensesOverdrawOverWithDialog("Courses")
@@ -152,11 +152,11 @@ public class CarryOverTest extends LoggedInFunctionalTestCase {
       .selectOption("Carry 100.00 over next month and leave 50.00 this month.")
       .validate();
     budgetView.variable.checkSeries("Courses", -250.00, -200.00);
-    budgetView.getSummary().checkEndPosition(200.00);
+    mainAccounts.checkEndOfMonthPosition("Account n. 0001234", 200.00);
 
     timeline.selectMonth("2008/09");
     budgetView.variable.checkSeries("Courses", 0.00, 0.00);
-    budgetView.getSummary().checkEndPosition(1200.00);
+    mainAccounts.checkEndOfMonthPosition("Account n. 0001234", 1200.00);
 
     timeline.selectMonth("2008/08");
     budgetView.variable.carryExpensesOverdrawOverWithConfirm("Courses")
@@ -166,11 +166,11 @@ public class CarryOverTest extends LoggedInFunctionalTestCase {
 
     timeline.selectMonths("2008/09");
     budgetView.variable.checkSeries("Courses", 0.00, 0.00);
-    budgetView.getSummary().checkEndPosition(1200.00);
+    mainAccounts.checkEndOfMonthPosition("Account n. 0001234", 1200.00);
 
     timeline.selectMonths("2008/10");
     budgetView.variable.checkSeries("Courses", 0.00, -50.00);
-    budgetView.getSummary().checkEndPosition(2150.00);
+    mainAccounts.checkEndOfMonthPosition("Account n. 0001234", 2150.00);
   }
 
   public void testExpensesOverdrawCarriedOverSeveralMonths() throws Exception {
@@ -194,16 +194,16 @@ public class CarryOverTest extends LoggedInFunctionalTestCase {
       .selectOption("Carry 150.00 over the next months.")
       .validate();
 
-    budgetView.getSummary().checkEndPosition(200.00);
+    mainAccounts.checkEndOfMonthPosition("Account n. 0001234", 200.00);
     budgetView.variable.checkSeries("Courses", -250.00, -250.00);
 
     timeline.selectMonths("2008/09");
     budgetView.variable.checkSeries("Courses", 0.00, 0.00);
-    budgetView.getSummary().checkEndPosition(1200.00);
+    mainAccounts.checkEndOfMonthPosition("Account n. 0001234", 1200.00);
 
     timeline.selectMonths("2008/10");
     budgetView.variable.checkSeries("Courses", 0.00, -50.00);
-    budgetView.getSummary().checkEndPosition(2150.00);
+    mainAccounts.checkEndOfMonthPosition("Account n. 0001234", 2150.00);
 
     timeline.selectMonths("2008/08");
     budgetView.variable.checkCarryOverDisabled("Courses");
@@ -236,7 +236,7 @@ public class CarryOverTest extends LoggedInFunctionalTestCase {
       .close();
 
     budgetView.variable.checkSeries("Courses", -250.00, -100.00);
-    budgetView.getSummary().checkEndPosition(200.00);
+    mainAccounts.checkEndOfMonthPosition("Account n. 0001234", 200.00);
     budgetView.variable.checkCarryExpensesOverdrawOverEnabled("Courses");
   }
 
@@ -261,16 +261,16 @@ public class CarryOverTest extends LoggedInFunctionalTestCase {
       .selectOption("Carry 400.00 over the next months.")
       .validate();
 
-    budgetView.getSummary().checkEndPosition(200.00);
+    mainAccounts.checkEndOfMonthPosition("Account n. 0001234", 200.00);
     budgetView.variable.checkSeries("Courses", -500.00, -500.00);
 
     timeline.selectMonths("2008/09");
     budgetView.variable.checkSeries("Courses", 0.00, 0.00);
-    budgetView.getSummary().checkEndPosition(1200.00);
+    mainAccounts.checkEndOfMonthPosition("Account n. 0001234", 1200.00);
 
     timeline.selectMonths("2008/10");
     budgetView.variable.checkSeries("Courses", 0.00, 0.00);
-    budgetView.getSummary().checkEndPosition(2200.00);
+    mainAccounts.checkEndOfMonthPosition("Account n. 0001234", 2200.00);
 
     timeline.selectMonths("2008/08");
     budgetView.variable.checkCarryOverDisabled("Courses");
@@ -293,21 +293,21 @@ public class CarryOverTest extends LoggedInFunctionalTestCase {
 
     timeline.selectMonths("2008/08");
     budgetView.income.checkSeries("Salary", 800.00, 1000.00);
-    budgetView.getSummary().checkEndPosition(400.00);
+    mainAccounts.checkEndOfMonthPosition("Account n. 0001234", 400.00);
 
     timeline.selectMonths("2008/09");
     budgetView.income.checkSeries("Salary", 0.00, 1000.00);
-    budgetView.getSummary().checkEndPosition(1300.00);
+    mainAccounts.checkEndOfMonthPosition("Account n. 0001234", 1300.00);
 
     timeline.selectMonths("2008/08");
     budgetView.income.carryIncomeRemainderOver("Salary");
 
-    budgetView.getSummary().checkEndPosition(200.00);
+    mainAccounts.checkEndOfMonthPosition("Account n. 0001234", 200.00);
     budgetView.income.checkSeries("Salary", 800.00, 800.00);
 
     timeline.selectMonths("2008/09");
     budgetView.income.checkSeries("Salary", 0.00, 1200.00);
-    budgetView.getSummary().checkEndPosition(1300.00);
+    mainAccounts.checkEndOfMonthPosition("Account n. 0001234", 1300.00);
 
     timeline.selectMonths("2008/08");
     budgetView.income.checkCarryOverDisabled("Salary");
@@ -330,21 +330,21 @@ public class CarryOverTest extends LoggedInFunctionalTestCase {
 
     timeline.selectMonths("2008/08");
     budgetView.income.checkSeries("Salary", 1200.00, 1000.00);
-    budgetView.getSummary().checkEndPosition(200.00);
+    mainAccounts.checkEndOfMonthPosition("Account n. 0001234", 200.00);
 
     timeline.selectMonths("2008/09");
     budgetView.income.checkSeries("Salary", 0.00, 1000.00);
-    budgetView.getSummary().checkEndPosition(1100.00);
+    mainAccounts.checkEndOfMonthPosition("Account n. 0001234", 1100.00);
 
     timeline.selectMonths("2008/08");
     budgetView.income.carryIncomeOverrunOver("Salary");
 
-    budgetView.getSummary().checkEndPosition(200.00);
+    mainAccounts.checkEndOfMonthPosition("Account n. 0001234", 200.00);
     budgetView.income.checkSeries("Salary", 1200.00, 1200.00);
 
     timeline.selectMonths("2008/09");
     budgetView.income.checkSeries("Salary", 0.00, 800.00);
-    budgetView.getSummary().checkEndPosition(900.00);
+    mainAccounts.checkEndOfMonthPosition("Account n. 0001234", 900.00);
 
     timeline.selectMonths("2008/08");
     budgetView.income.checkCarryOverDisabled("Salary");
@@ -367,21 +367,21 @@ public class CarryOverTest extends LoggedInFunctionalTestCase {
 
     timeline.selectMonths("2008/08");
     budgetView.income.checkSeries("Salary", -500.00, 1000.00);
-    budgetView.getSummary().checkEndPosition(1700.00);
+    mainAccounts.checkEndOfMonthPosition("Account n. 0001234", 1700.00);
 
     timeline.selectMonths("2008/09");
     budgetView.income.checkSeries("Salary", 0.00, 1000.00);
-    budgetView.getSummary().checkEndPosition(2600.00);
+    mainAccounts.checkEndOfMonthPosition("Account n. 0001234", 2600.00);
 
     timeline.selectMonths("2008/08");
     budgetView.income.carryIncomeRemainderOver("Salary");
 
-    budgetView.getSummary().checkEndPosition(200.00);
+    mainAccounts.checkEndOfMonthPosition("Account n. 0001234", 200.00);
     budgetView.income.checkSeries("Salary", -500.00, -500.00);
 
     timeline.selectMonths("2008/09");
     budgetView.income.checkSeries("Salary", 0.00, 2500.00);
-    budgetView.getSummary().checkEndPosition(2600.00);
+    mainAccounts.checkEndOfMonthPosition("Account n. 0001234", 2600.00);
 
     timeline.selectMonths("2008/08");
     budgetView.income.checkCarryOverDisabled("Salary");
@@ -402,14 +402,14 @@ public class CarryOverTest extends LoggedInFunctionalTestCase {
     timeline.selectMonth("2008/08");
 
     views.selectHome();
-    projectChart.create();
+    projects.createFirst();
     currentProject
       .setNameAndValidate("My Project")
       .addExpenseItem(0, "Item 0", 200808, -10.00)
       .addExpenseItem(1, "Item 1", 200808, -10.00);
 
     budgetView.extras.expandGroup("My Project")
-      .checkCarryOverDisabled("Item 0");
+      .checkCarryOverNotShown("Item 0");
   }
 
   public void testPostponesEndDateIfNeededButCannotGoPastLastMonth() throws Exception {
@@ -437,7 +437,7 @@ public class CarryOverTest extends LoggedInFunctionalTestCase {
       .setEndDate(200808)
       .validate();
     budgetView.variable.carryExpensesRemainderOver("Courses");
-    budgetView.getSummary().checkEndPosition(200.00);
+    mainAccounts.checkEndOfMonthPosition("Account n. 0001234", 200.00);
 
     budgetView.variable.editSeries("Courses")
       .checkEndDate("Sep 2008")
@@ -446,7 +446,7 @@ public class CarryOverTest extends LoggedInFunctionalTestCase {
 
     timeline.selectMonth("2008/09");
     budgetView.variable.checkSeries("Courses", 0.00, -50.00);
-    budgetView.getSummary().checkEndPosition(1150.00);
+    mainAccounts.checkEndOfMonthPosition("Account n. 0001234", 1150.00);
   }
 
   public void testUsesNextMonthRegardlessOfPeriodicity() throws Exception {
@@ -471,18 +471,18 @@ public class CarryOverTest extends LoggedInFunctionalTestCase {
       .validate();
 
     budgetView.recurring.checkSeries("Energy", -50.00, -100.00);
-    budgetView.getSummary().checkEndPosition(150.00);
+    mainAccounts.checkEndOfMonthPosition("Account n. 0001234", 150.00);
 
     timeline.selectMonths("2008/08");
     budgetView.recurring.carryExpensesRemainderOver("Energy");
 
     timeline.selectMonth("2008/09");
     budgetView.recurring.checkSeries("Energy", 0.00, -50.00);
-    budgetView.getSummary().checkEndPosition(1150.00);
+    mainAccounts.checkEndOfMonthPosition("Account n. 0001234", 1150.00);
 
     timeline.selectMonth("2008/10");
     budgetView.recurring.checkSeries("Energy", 0.00, -100.00);
-    budgetView.getSummary().checkEndPosition(2050.00);
+    mainAccounts.checkEndOfMonthPosition("Account n. 0001234", 2050.00);
 
     timeline.selectMonths("2008/08");
     budgetView.recurring.editSeries("Energy")
@@ -510,15 +510,15 @@ public class CarryOverTest extends LoggedInFunctionalTestCase {
 
     timeline.selectMonths("2008/07");
     budgetView.variable.checkSeries("Courses", -250.00, -100.00);
-    budgetView.getSummary().checkEndPosition(-750.00);
+    mainAccounts.checkEndOfMonthPosition("Account n. 0001234", -750.00);
 
     timeline.selectMonths("2008/08");
     budgetView.variable.checkSeries("Courses", -50.00, -100.00);
-    budgetView.getSummary().checkEndPosition(150.00);
+    mainAccounts.checkEndOfMonthPosition("Account n. 0001234", 150.00);
 
     timeline.selectMonths("2008/09");
     budgetView.variable.checkSeries("Courses", 0.00, -100.00);
-    budgetView.getSummary().checkEndPosition(1050.00);
+    mainAccounts.checkEndOfMonthPosition("Account n. 0001234", 1050.00);
 
     timeline.selectMonths("2008/07");
     budgetView.variable.carryExpensesOverdrawOverWithDialog("Courses")
@@ -528,11 +528,11 @@ public class CarryOverTest extends LoggedInFunctionalTestCase {
 
     timeline.selectMonth("2008/08");
     budgetView.variable.checkSeries("Courses", -50.00, -50.00);
-    budgetView.getSummary().checkEndPosition(200.00);
+    mainAccounts.checkEndOfMonthPosition("Account n. 0001234", 200.00);
 
     timeline.selectMonth("2008/09");
     budgetView.variable.checkSeries("Courses", 0.00, -100.00);
-    budgetView.getSummary().checkEndPosition(1100.00);
+    mainAccounts.checkEndOfMonthPosition("Account n. 0001234", 1100.00);
 
     timeline.selectMonth("2008/07");
     budgetView.variable.carryExpensesOverdrawOverWithConfirm("Courses")
@@ -542,11 +542,11 @@ public class CarryOverTest extends LoggedInFunctionalTestCase {
 
     timeline.selectMonths("2008/09");
     budgetView.variable.checkSeries("Courses", 0.00, 0.00);
-    budgetView.getSummary().checkEndPosition(1200.00);
+    mainAccounts.checkEndOfMonthPosition("Account n. 0001234", 1200.00);
 
     timeline.selectMonths("2008/10");
     budgetView.variable.checkSeries("Courses", 0.00, -100.00);
-    budgetView.getSummary().checkEndPosition(2100.00);
+    mainAccounts.checkEndOfMonthPosition("Account n. 0001234", 2100.00);
   }
 
   public void testSavingsRemainderWithAutoFilledAccount() throws Exception {
@@ -559,9 +559,8 @@ public class CarryOverTest extends LoggedInFunctionalTestCase {
       .addTransaction("2008/08/10", -200.00, "Virt ING")
       .load();
 
-    savingsAccounts
-      .createNewAccount()
-      .checkIsSavings()
+    accounts.createNewAccount()
+      .setAsSavings()
       .setName("ING")
       .selectBank("ING Direct")
       .setPosition(500)

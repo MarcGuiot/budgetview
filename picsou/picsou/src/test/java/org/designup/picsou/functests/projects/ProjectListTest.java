@@ -28,77 +28,77 @@ public class ProjectListTest extends LoggedInFunctionalTestCase {
 
     operations.openPreferences().setFutureMonthsCount(3).validate();
 
-    projects.checkCreationPageShown();
+    projectList.checkCreationPageShown();
 
-    projectChart.create();
+    projects.createFirst();
     currentProject
       .setNameAndValidate("Past Aug")
       .addExpenseItem(0, "Item1", 201008, -200.00)
       .addExpenseItem(1, "Item2", 201010, -200.00)
       .backToList();
 
-    projects
+    projectList
       .checkListPageShown()
       .checkCurrentProjectsSectionHidden()
       .checkPastProjectsSectionCollapsed()
       .expandPastProjectsSection()
       .checkPastProjectsSectionExpanded();
 
-    projects.create();
+    projectList.create();
     currentProject
       .setNameAndValidate("Current Jan")
       .addExpenseItem(0, "Item1", 201101, -200.00)
       .addExpenseItem(1, "Item2", 201102, -200.00)
       .backToList();
 
-    projects.checkCurrentProjectsSectionShown();
-    projects.checkPastProjectsSectionExpanded();
+    projectList.checkCurrentProjectsSectionShown();
+    projectList.checkPastProjectsSectionExpanded();
 
-    projects.create();
+    projectList.create();
     currentProject
       .setNameAndValidate("Current Empty")
       .backToList();
 
-    projects.checkCurrentProjectsSectionShown();
-    projects.checkPastProjectsSectionExpanded();
+    projectList.checkCurrentProjectsSectionShown();
+    projectList.checkPastProjectsSectionExpanded();
 
-    projects.create();
+    projectList.create();
     currentProject
       .setNameAndValidate("Past Oct")
       .addExpenseItem(0, "Item1", 201010, -200.00)
       .addExpenseItem(1, "Item2", 201011, -200.00)
       .backToList();
 
-    projects
+    projectList
       .checkPastProjectsSectionExpanded()
       .collapsePastProjectsSection()
       .checkPastProjectsSectionCollapsed()
       .expandPastProjectsSection()
       .checkPastProjectsSectionExpanded();
 
-    projects.create();
+    projectList.create();
     currentProject
       .setNameAndValidate("Current Oct")
       .addExpenseItem(0, "Item1", 201010, -200.00)
       .addExpenseItem(1, "Item2", 201012, -200.00)
       .backToList();
 
-    projects.checkCurrentProjects(
+    projectList.checkCurrentProjects(
       "| Current Empty |     | 0.00   | on |\n" +
       "| Current Oct   | Oct | 400.00 | on |\n" +
       "| Current Jan   | Jan | 400.00 | on |"
     );
 
-    projects.checkPastProjects(
+    projectList.checkPastProjects(
       "| Past Oct | Oct | 400.00 | on |\n" +
       "| Past Aug | Aug | 400.00 | on |"
     );
 
-    projects.select("Current Jan");
+    projectList.select("Current Jan");
     timeline.checkSelection("2011/01");
     currentProject.backToList();
 
-    projects.select("Past Oct");
+    projectList.select("Past Oct");
     timeline.checkSelection("2010/10");
     currentProject.backToList();
 
@@ -121,33 +121,33 @@ public class ProjectListTest extends LoggedInFunctionalTestCase {
 
     operations.openPreferences().setFutureMonthsCount(3).validate();
 
-    projectChart.create();
+    projects.createFirst();
     currentProject
       .setNameAndValidate("Past Aug")
       .addExpenseItem(0, "Item1", 201008, -200.00)
       .addExpenseItem(1, "Item2", 201010, -200.00)
       .backToList();
 
-    projects.expandPastProjectsSection();
+    projectList.expandPastProjectsSection();
 
-    projects.create();
+    projectList.create();
     currentProject
       .setNameAndValidate("Current Jan")
       .addExpenseItem(0, "Item1", 201101, -200.00)
       .addExpenseItem(1, "Item2", 201102, -200.00)
       .backToList();
 
-    projects.checkCurrentProjectsSectionShown();
-    projects.checkPastProjectsSectionExpanded();
+    projectList.checkCurrentProjectsSectionShown();
+    projectList.checkPastProjectsSectionExpanded();
 
-    projects.delete("Current Jan");
-    projects.checkCurrentProjectsSectionHidden();
-    projects.checkPastProjectsSectionExpanded();
+    projectList.delete("Current Jan");
+    projectList.checkCurrentProjectsSectionHidden();
+    projectList.checkPastProjectsSectionExpanded();
 
-    projects.checkShown();
-    projects.delete("Past Aug");
-    projects.checkCurrentProjectsSectionHidden();
-    projects.checkPastProjectsSectionHidden();
+    projectList.checkShown();
+    projectList.delete("Past Aug");
+    projectList.checkCurrentProjectsSectionHidden();
+    projectList.checkPastProjectsSectionHidden();
   }
 
   public void testShowsOnlyProjectsInDisplayedTimeSpan() throws Exception {
@@ -164,46 +164,46 @@ public class ProjectListTest extends LoggedInFunctionalTestCase {
 
     timeline.selectMonth(201101);
 
-    projectChart.create();
+    projects.createFirst();
     currentProject
       .setNameAndValidate("Past Project")
       .addExpenseItem(0, "Reservation", 201007, -100.00)
       .addExpenseItem(1, "Hotel", 201008, -500.00);
 
+    projects.create();
     currentProject
-      .create()
       .setNameAndValidate("Current Project")
       .addExpenseItem(0, "Reservation", 201101, -100.00)
       .addExpenseItem(1, "Hotel", 201102, -500.00);
 
+    projects.create();
     currentProject
-      .create()
       .setNameAndValidate("Next Project")
       .addExpenseItem(0, "Reservation", 201105, -100.00);
 
-    projectChart.checkProjectList("Current Project", "Next Project");
+    projects.checkProjectList("Current Project", "Next Project");
 
     timeline.selectMonth(201103);
-    projectChart
+    projects
       .checkRange(201009,201106)
       .checkProjectList("Current Project", "Next Project");
 
     timeline.selectMonth(201102);
-    projectChart
+    projects
       .checkRange(201009,201106)
       .checkProjectList("Current Project", "Next Project");
 
     timeline.selectMonth(201106);
-    projectChart
+    projects
       .checkRange(201009,201106)
       .checkProjectList("Current Project", "Next Project");
 
     timeline.selectMonth(201004);
-    projectChart
+    projects
       .checkRange(201004,201101)
       .checkProjectList("Past Project", "Current Project");
 
-    projectChart.select("Past Project");
+    projects.select("Past Project");
     currentProject
       .toggleAndEditExpense(0)
       .setMonth(201001)
@@ -212,11 +212,11 @@ public class ProjectListTest extends LoggedInFunctionalTestCase {
       .toggleAndEditExpense(1)
       .setMonth(201001)
       .validate();
-    projectChart
+    projects
       .checkRange(201004,201101)
       .checkProjectList("Current Project");
 
     timeline.selectMonths(201006, 201105);
-    projectChart.checkProjectList("Current Project", "Next Project");
+    projects.checkProjectList("Current Project", "Next Project");
   }
 }

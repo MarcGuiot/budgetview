@@ -1,44 +1,22 @@
 package org.designup.picsou.gui.budget;
 
-import com.jidesoft.swing.JideSplitPane;
 import org.designup.picsou.gui.View;
-import org.designup.picsou.gui.budget.summary.BudgetSummaryView;
-import org.designup.picsou.gui.budget.summary.UncategorizedSummaryView;
-import org.designup.picsou.gui.components.highlighting.HighlightingService;
 import org.designup.picsou.gui.components.layoutconfig.SplitPaneConfig;
 import org.designup.picsou.model.BudgetArea;
 import org.designup.picsou.model.LayoutConfig;
-import org.designup.picsou.model.Month;
 import org.globsframework.gui.GlobsPanelBuilder;
-import org.globsframework.gui.SelectionService;
 import org.globsframework.model.GlobRepository;
-import org.globsframework.utils.directory.DefaultDirectory;
 import org.globsframework.utils.directory.Directory;
 
 public class BudgetView extends View {
 
-  public BudgetView(GlobRepository repository, Directory parentDirectory) {
-    super(repository, createDirectory(parentDirectory));
-  }
-
-  private static Directory createDirectory(Directory parentDirectory) {
-    DefaultDirectory directory = new DefaultDirectory(parentDirectory);
-    directory.add(new HighlightingService());
-    SelectionService localSelectionService = new SelectionService();
-    localSelectionService.listenTo(parentDirectory.get(SelectionService.class), Month.TYPE);
-    directory.add(localSelectionService);
-    return directory;
+  public BudgetView(GlobRepository repository, Directory directory) {
+    super(repository, directory);
   }
 
   public void registerComponents(GlobsPanelBuilder parentBuilder) {
     GlobsPanelBuilder builder = new GlobsPanelBuilder(getClass(), "/layout/budget/budgetView.splits",
                                                       repository, directory);
-
-    BudgetSummaryView budgetSummaryView = new BudgetSummaryView(repository, directory);
-    budgetSummaryView.registerComponents(builder);
-
-    UncategorizedSummaryView uncategorizedSummaryView = new UncategorizedSummaryView(repository, directory);
-    uncategorizedSummaryView.registerComponents(builder);
 
     addBudgetAreaView("incomeBudgetView", BudgetArea.INCOME, builder);
     addBudgetAreaView("recurringBudgetView", BudgetArea.RECURRING, builder);
@@ -46,10 +24,9 @@ public class BudgetView extends View {
     addBudgetAreaView("extrasBudgetView", BudgetArea.EXTRAS, builder);
     addBudgetAreaView("savingsBudgetView", BudgetArea.SAVINGS, builder);
 
-    builder.add("horizontalSplit", SplitPaneConfig.create(directory, LayoutConfig.BUDGET_HORIZONTAL_1, LayoutConfig.BUDGET_HORIZONTAL_2));
-    builder.add("verticalSplit1", SplitPaneConfig.create(directory, LayoutConfig.BUDGET_VERTICAL_LEFT));
-    builder.add("verticalSplit2", SplitPaneConfig.create(directory, LayoutConfig.BUDGET_VERTICAL_CENTER));
-    builder.add("verticalSplit3", new JideSplitPane());
+    builder.add("horizontalSplit", SplitPaneConfig.create(directory, LayoutConfig.BUDGET_HORIZONTAL_1));
+    builder.add("verticalSplit1", SplitPaneConfig.create(directory, LayoutConfig.BUDGET_VERTICAL_LEFT_1, LayoutConfig.BUDGET_VERTICAL_LEFT_2));
+    builder.add("verticalSplit2", SplitPaneConfig.create(directory, LayoutConfig.BUDGET_VERTICAL_RIGHT_1));
 
     parentBuilder.add("budgetView", builder);
   }

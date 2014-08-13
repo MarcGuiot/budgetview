@@ -3,7 +3,7 @@ package org.designup.picsou.functests.checkers;
 import junit.framework.Assert;
 import junit.framework.AssertionFailedError;
 import org.designup.picsou.functests.checkers.components.*;
-import org.designup.picsou.gui.series.analysis.SeriesEvolutionTableView;
+import org.designup.picsou.gui.analysis.SeriesEvolutionTableView;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.utils.Strings;
 import org.globsframework.utils.Utils;

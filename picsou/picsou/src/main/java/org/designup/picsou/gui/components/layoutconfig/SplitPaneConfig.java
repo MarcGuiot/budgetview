@@ -28,6 +28,7 @@ public class SplitPaneConfig implements LayoutConfigListener {
     this.directory = directory;
     this.fields = fields;
     directory.get(LayoutConfigService.class).addListener(this);
+    splitPane.setProportionalLayout(true);
     splitPane.addPropertyChangeListener("proportions", new PropertyChangeListener() {
       public void propertyChange(PropertyChangeEvent evt) {
         if (initCompleted) {
@@ -51,8 +52,15 @@ public class SplitPaneConfig implements LayoutConfigListener {
 
   public void updateComponent(Glob layoutConfig) {
     double[] proportions = new double[fields.length];
+    double total = 0;
     for (int i = 0; i < fields.length; i++) {
       proportions[i] = layoutConfig.get(fields[i]);
+      total += proportions[i];
+    }
+    if (total > 1.0) {
+      for (int i = 0; i < fields.length; i++) {
+        proportions[i] = proportions[i] / total;
+      }
     }
     splitPane.setProportions(proportions);
     initCompleted = true;

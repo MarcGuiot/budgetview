@@ -12,13 +12,13 @@ public class ReconciliationTest extends LoggedInFunctionalTestCase {
 
   public void testImportingTransactionsInAManualAccount() throws Exception {
 
-    mainAccounts.createNewAccount()
+    accounts.createNewAccount()
       .setName("Account 1")
       .selectBank("CIC")
       .setAccountNumber("00123")
       .setPosition(100.00)
       .validate();
-    mainAccounts.createNewAccount()
+    accounts.createNewAccount()
       .setName("Account 2")
       .selectBank("CIC")
       .setAccountNumber("00234")
@@ -118,7 +118,7 @@ public class ReconciliationTest extends LoggedInFunctionalTestCase {
 
     categorization.checkReconciliationWarningHidden();
 
-    mainAccounts.createNewAccount()
+    accounts.createNewAccount()
       .setName("Account 1")
       .selectBank("CIC")
       .setAccountNumber("00123")
@@ -191,7 +191,7 @@ public class ReconciliationTest extends LoggedInFunctionalTestCase {
       .add("01/05/2012", "", "VELIZY AUCHAN", -50.00)
       .check();
 
-    mainAccounts.checkSummary(1000.00, "2012/05/01");
+    mainAccounts.checkReferencePosition(1000.00, "2012/05/01");
     mainAccounts.checkPosition("Account n. 00123", 1000);
     transactionCreation
       .show()
@@ -204,13 +204,13 @@ public class ReconciliationTest extends LoggedInFunctionalTestCase {
       .check();
 
     mainAccounts.checkPosition("Account n. 00123", 1000);
-    mainAccounts.checkSummary(1000.00, "2012/05/01");
+    mainAccounts.checkReferencePosition(1000.00, "2012/05/01");
 
     setCurrentDate("2012/05/22");
     restartApplicationFromBackup();
 
     mainAccounts.checkPosition("Account n. 00123", 1000);
-    mainAccounts.checkSummary(1000.00, "2012/05/01");
+    mainAccounts.checkReferencePosition(1000.00, "2012/05/01");
 
     OfxBuilder.init(this)
       .addBankAccount("00123", 1000.00, "2012/05/15")
@@ -218,7 +218,7 @@ public class ReconciliationTest extends LoggedInFunctionalTestCase {
       .load();
 
     mainAccounts.checkPosition("Account n. 00123", 900);
-    mainAccounts.checkSummary(900.00, "2012/05/21");
+    mainAccounts.checkReferencePosition(900.00, "2012/05/21");
 
     categorization.initContent()
       .add("20/05/2012", "", "[R] AUCHAN 1", -50.00)
@@ -239,7 +239,7 @@ public class ReconciliationTest extends LoggedInFunctionalTestCase {
     categorization.getReconciliation().select("CHEQUE N°00012345").reconcile();
 
     mainAccounts.checkPosition("Account n. 00123", 900);
-    mainAccounts.checkSummary(900.00, "2012/05/21");
+    mainAccounts.checkReferencePosition(900.00, "2012/05/21");
 
     categorization.initContent()
       .add("20/05/2012", "", "[R] AUCHAN 1", -50.00)
@@ -249,7 +249,7 @@ public class ReconciliationTest extends LoggedInFunctionalTestCase {
   }
 
   public void testManualOperationAreNotTakenInAccountWithImport() throws Exception {
-    mainAccounts.createMainAccount("Main", 1000.00);
+    accounts.createMainAccount("Main", 1000.00);
 
     transactionCreation
       .show()
@@ -278,7 +278,7 @@ public class ReconciliationTest extends LoggedInFunctionalTestCase {
 
   public void testKeepingAManualTransaction() throws Exception {
 
-    mainAccounts.createMainAccount("Main", 1000.00);
+    accounts.createMainAccount("Main", 1000.00);
 
     transactionCreation
       .show()
@@ -290,7 +290,7 @@ public class ReconciliationTest extends LoggedInFunctionalTestCase {
       .check();
 
     mainAccounts.checkPosition("Main", 1000.);
-    mainAccounts.checkSummary(1000.00, "2012/05/01");
+    mainAccounts.checkReferencePosition(1000.00, "2012/05/01");
 
     notifications.checkHidden();
 
@@ -313,7 +313,7 @@ public class ReconciliationTest extends LoggedInFunctionalTestCase {
       .check();
 
     mainAccounts.checkPosition("Main", 850);
-    mainAccounts.checkSummary(850.00, "2012/05/11");
+    mainAccounts.checkReferencePosition(850.00, "2012/05/11");
     notifications.checkVisible(1)
       .openDialog()
       .checkMessageCount(1)
@@ -340,7 +340,7 @@ public class ReconciliationTest extends LoggedInFunctionalTestCase {
       .check();
 
     mainAccounts.checkPosition("Main", 750);
-    mainAccounts.checkSummary(750.00, "2012/05/11");
+    mainAccounts.checkReferencePosition(750.00, "2012/05/11");
 
     // à l'import suivant la transaction n'est plus marquée toReconcile
     OfxBuilder.init(this)
@@ -357,7 +357,7 @@ public class ReconciliationTest extends LoggedInFunctionalTestCase {
   }
 
   public void testNavigation() throws Exception {
-    mainAccounts.createMainAccount("Main", 1000.00);
+    accounts.createMainAccount("Main", 1000.00);
 
     categorization.checkReconciliationSwitchLinksHidden();
 
@@ -415,7 +415,7 @@ public class ReconciliationTest extends LoggedInFunctionalTestCase {
   }
 
   public void testReconciliationWithASplitTransaction() throws Exception {
-    mainAccounts.createMainAccount("Main", 1000.00);
+    accounts.createMainAccount("Main", 1000.00);
 
     transactionCreation
       .show()
@@ -442,7 +442,7 @@ public class ReconciliationTest extends LoggedInFunctionalTestCase {
 
   public void testAtImportManualOperationAreShift() throws Exception {
     operations.openPreferences().setFutureMonthsCount(2).validate();
-    mainAccounts.createMainAccount("Main", 1000.00);
+    accounts.createMainAccount("Main", 1000.00);
 
     transactionCreation
       .show()
@@ -493,7 +493,7 @@ public class ReconciliationTest extends LoggedInFunctionalTestCase {
       .addTransaction("2012/05/10", -100.00, "Virement")
       .load();
 
-    savingsAccounts.createSavingsAccount("Epargne LCL", 1000.);
+    accounts.createSavingsAccount("Epargne LCL", 1000.);
 
     categorization
       .selectTransactions("Virement")
@@ -525,21 +525,9 @@ public class ReconciliationTest extends LoggedInFunctionalTestCase {
       .check();
   }
 
-  public void testReconciliationWithAShiftedTransaction() throws Exception {
-    fail("tbd - voir les impacts sur le shift");
-  }
-
-  public void testReconciledTransactionsAreAutomaticallyAnnotated() throws Exception {
-    fail("tbd - les opérations réconciliées sont-elles automatiquement pointées ?");
-  }
-
-  public void testShiftManualOpNotPossible() throws Exception {
-    fail("tdb");
-  }
-
   public void testManualOnly() throws Exception {
     operations.openPreferences().setFutureMonthsCount(2).validate();
-    mainAccounts.createMainAccount("Main", 1000.00);
+    accounts.createMainAccount("Main", 1000.00);
 
     transactionCreation
       .show()

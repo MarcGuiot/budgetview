@@ -37,6 +37,7 @@ public class TransactionChecker extends ViewChecker {
   private Table amountTable;
   private TextBox searchField;
   private boolean useDisplayedDates;
+  private Panel transactionView;
 
   public static TransactionChecker init(Window window) {
     return new TransactionChecker(window);
@@ -57,7 +58,7 @@ public class TransactionChecker extends ViewChecker {
   public Table getTable() {
     if (table == null) {
       views.selectData();
-      table = mainWindow.getTable("transactionsTable");
+      table = getPanel().getTable("transactionsTable");
       table.setCellValueConverter(TransactionView.DATE_COLUMN_INDEX, new DateCellConverter(useDisplayedDates));
       table.setCellValueConverter(TransactionView.BANK_DATE_COLUMN_INDEX, new BankDateCellConverter(useDisplayedDates));
       table.setCellValueConverter(TransactionView.SERIES_COLUMN_INDEX, new SeriesCellConverter(true));
@@ -159,26 +160,32 @@ public class TransactionChecker extends ViewChecker {
 
   public TextBox getSearchField() {
     if (searchField == null) {
-      views.selectData();
-      searchField = mainWindow.getInputTextBox("searchField");
+      searchField = getPanel().getInputTextBox("searchField");
     }
     return searchField;
   }
 
   public TransactionChecker checkClearFilterButtonShown() {
     views.selectData();
-    checkComponentVisible(this.mainWindow, JPanel.class, "customFilterMessage", true);
+    checkComponentVisible(getPanel(), JPanel.class, "customFilterMessage", true);
     return this;
+  }
+
+  public Panel getPanel() {
+    if (transactionView == null) {
+      transactionView = mainWindow.getPanel("transactionView");
+    }
+    return transactionView;
   }
 
   public TransactionChecker checkClearFilterButtonHidden() {
     views.selectData();
-    checkComponentVisible(this.mainWindow, JPanel.class, "customFilterMessage", false);
+    checkComponentVisible(getPanel(), JPanel.class, "customFilterMessage", false);
     return this;
   }
 
   public TransactionChecker clearCurrentFilter() {
-    Panel panel = this.mainWindow.getPanel("customFilterMessage");
+    Panel panel = getPanel().getPanel("customFilterMessage");
     assertTrue(panel.isVisible());
     Button button = panel.getButton();
     button.click();
@@ -193,7 +200,7 @@ public class TransactionChecker extends ViewChecker {
   private Table getAmountTable() {
     if (amountTable == null) {
       views.selectData();
-      amountTable = mainWindow.getTable(Transaction.TYPE.getName());
+      amountTable = mainWindow.getPanel("transactionView").getTable(Transaction.TYPE.getName());
       amountTable.setCellValueConverter(TransactionView.DATE_COLUMN_INDEX, new DateCellConverter());
       amountTable.setCellValueConverter(TransactionView.SERIES_COLUMN_INDEX, new SeriesCellConverter(false));
     }
@@ -206,10 +213,6 @@ public class TransactionChecker extends ViewChecker {
 
   public void checkSelectedRow(int row) {
     assertTrue(table.rowIsSelected(row));
-  }
-
-  public void checkNoSelection() {
-    assertTrue(table.selectionIsEmpty());
   }
 
   public void checkNotEmpty() {
@@ -372,7 +375,7 @@ public class TransactionChecker extends ViewChecker {
 
   private PopupButton openActionPopup() {
     views.selectData();
-    return new PopupButton(mainWindow.getButton("actionsMenu"));
+    return new PopupButton(getPanel().getButton("actionsMenu"));
   }
 
   public void copyTable() {
@@ -499,6 +502,10 @@ public class TransactionChecker extends ViewChecker {
                                          TransactionView.AMOUNT_COLUMN_INDEX,
                                          expectedColor));
     return this;
+  }
+
+  public void checkVisible(boolean visible) {
+    checkComponentVisible(mainWindow, JPanel.class, "data", visible);
   }
 
   public class TransactionAmountChecker {

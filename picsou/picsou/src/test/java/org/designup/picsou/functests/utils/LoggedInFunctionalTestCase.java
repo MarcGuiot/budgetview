@@ -30,6 +30,7 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
   public ViewSelectionChecker views;
   public TimeViewChecker timeline;
   public OperationChecker operations;
+  public AccountViewChecker accounts;
   public MainAccountViewChecker mainAccounts;
   public SavingsAccountViewChecker savingsAccounts;
   public TransactionChecker transactions;
@@ -46,10 +47,9 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
   public DemoMessageChecker demoMessage;
   public ImportPanelChecker importPanel;
   public NotesViewChecker notes;
-  public ProjectChartChecker projectChart;
-  public ProjectListChecker projects;
+  public ProjectSelectorChecker projects;
+  public ProjectListChecker projectList;
   public ProjectEditionChecker currentProject;
-  public SummaryViewChecker summary;
   public SignpostViewChecker signpostView;
   public ReconciliationAnnotationChecker reconciliationAnnotations;
   public NotificationsChecker notifications;
@@ -152,6 +152,7 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
   protected void initCheckers() {
     waitForApplicationToLoad();
     views = new ViewSelectionChecker(mainWindow);
+    accounts = new AccountViewChecker(mainWindow);
     mainAccounts = new MainAccountViewChecker(mainWindow);
     savingsAccounts = new SavingsAccountViewChecker(mainWindow);
     operations = new OperationChecker(mainWindow);
@@ -171,10 +172,9 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
     demoMessage = new DemoMessageChecker(mainWindow);
     importPanel = new ImportPanelChecker(mainWindow);
     notes = new NotesViewChecker(operations, mainWindow);
-    projectChart = new ProjectChartChecker(mainWindow);
-    projects = new ProjectListChecker(mainWindow);
+    projectList = new ProjectListChecker(mainWindow);
     currentProject = new ProjectEditionChecker(mainWindow);
-    summary = new SummaryViewChecker(mainWindow);
+    projects = new ProjectSelectorChecker(mainWindow);
     signpostView = new SignpostViewChecker(mainWindow);
     notifications = new NotificationsChecker(mainWindow);
     reconciliationAnnotations = new ReconciliationAnnotationChecker(mainWindow);
@@ -216,6 +216,7 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
 
   protected void clearCheckers() {
     views = null;
+    accounts = null;
     mainAccounts = null;
     savingsAccounts = null;
     timeline = null;
@@ -235,10 +236,9 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
     licenseMessage = null;
     importPanel = null;
     notes = null;
-    projectChart = null;
     projects = null;
+    projectList = null;
     currentProject = null;
-    summary = null;
     signpostView = null;
     reconciliationAnnotations = null;
     notifications = null;
@@ -302,7 +302,7 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
     this.password = passwd;
     mainWindow = getMainWindow();
     LoginChecker loginChecker = new LoginChecker(mainWindow);
-    loginChecker.logExistingUser(user, password, false);
+    loginChecker.logExistingUser(user, password);
     repository = ((PicsouFrame)mainWindow.getAwtComponent()).getRepository();
     initCheckers();
   }

@@ -1,6 +1,5 @@
 package org.designup.picsou.functests.budget;
 
-import org.designup.picsou.functests.checkers.BudgetSummaryViewChecker;
 import org.designup.picsou.functests.checkers.SeriesEditionDialogChecker;
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
@@ -112,7 +111,8 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
   }
 
   public void testSavingsSeries() throws Exception {
-    savingsAccounts.createNewAccount()
+    accounts.createNewAccount()
+      .setAsSavings()
       .setName("Livret")
       .selectBank("ING Direct")
       .setPosition(1000)
@@ -195,9 +195,8 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
     budgetView.income.checkTotalAmounts(3540.0, 3540.00);
     budgetView.income.checkSeries("Salary", 3540.0, 3540.0);
 
-    budgetView.getSummary()
-      .checkEndPosition(-3366.00)
-      .getChart()
+    mainAccounts.checkEndOfMonthPosition(OfxBuilder.DEFAULT_ACCOUNT_NAME, -3366.00);
+    mainAccounts.getChart(OfxBuilder.DEFAULT_ACCOUNT_NAME)
       .checkRange(200807, 200808)
       .checkCurrentDay(200808, 2)
       .checkValue(200807, 1, -3366.00)
@@ -289,10 +288,10 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
 
     budgetView.income.checkTotalAmounts(0.00, 3540.00);
     budgetView.income.checkSeries("Salary", 0.00, 3540.00);
-    budgetView.getSummary().checkEndPosition(-3366.00);
+    mainAccounts.checkEndOfMonthPosition(OfxBuilder.DEFAULT_ACCOUNT_NAME, -3366.00);
 
     timeline.selectMonth("2008/07");
-    budgetView.getSummary().checkEndPosition(0.00);
+    mainAccounts.checkEndOfMonthPosition(OfxBuilder.DEFAULT_ACCOUNT_NAME, 0.00);
   }
 
   public void testSeveralMonthsShowOrNotSeries() throws Exception {
@@ -470,7 +469,7 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
   }
 
   public void testDeactivatingSeriesBudgets() throws Exception {
-    mainAccounts.createNewAccount()
+    accounts.createNewAccount()
       .setName("Main")
       .selectBank("ING Direct")
       .setPosition(0)
@@ -942,8 +941,7 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
       .load();
 
     views.selectBudget();
-    BudgetSummaryViewChecker budgetSummary = budgetView.getSummary();
-    budgetSummary.checkShowsAccounts("Account n. 000111", "Account n. 000222", "Account n. 000333");
+    accounts.checkShowsAccounts("Account n. 000111", "Account n. 000222", "Account n. 000333");
 
     categorization.setNewIncome("WorldCo", "Salary");
     categorization.setNewVariable("Auchan", "Groceries");
@@ -955,16 +953,20 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
     budgetView.variable.addToNewGroup("Leisures 111", "Leisures");
     budgetView.variable.addToGroup("Leisures 222", "Leisures");
 
+    budgetView.income.checkPlannedNotSelected("Salary");
+    budgetView.variable.checkPlannedNotSelected("Leisures", "Food", "Groceries", "Leisures 111", "Leisures 222");
+
+    mainAccounts.select("Account n. 000111");
     budgetView.income.checkPlannedSelected("Salary");
     budgetView.variable.checkPlannedSelected("Leisures", "Leisures 111");
     budgetView.variable.checkPlannedNotSelected("Food", "Groceries", "Leisures 222");
 
-    budgetSummary.selectAccount("Account n. 000333");
+    mainAccounts.select("Account n. 000333");
     budgetView.income.checkPlannedNotSelected("Salary");
     budgetView.variable.checkPlannedSelected("Food", "Restaurant");
     budgetView.variable.checkPlannedNotSelected("Groceries", "Leisures", "Leisures 111", "Leisures 222");
 
-    budgetSummary.selectAccount("Account n. 000222");
+    mainAccounts.select("Account n. 000222");
     budgetView.income.checkPlannedNotSelected("Salary");
     budgetView.variable.checkPlannedSelected("Food", "Groceries", "Leisures", "Leisures 222");
     budgetView.variable.checkPlannedNotSelected("Restaurant", "Leisures 111");
@@ -974,26 +976,26 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
     budgetView.variable.checkPlannedSelected("Food", "Leisures", "Leisures 222");
     budgetView.variable.checkPlannedNotSelected("Leisures 111");
 
-    budgetSummary.selectAccount("Account n. 000333");
+    mainAccounts.select("Account n. 000333");
     budgetView.income.checkPlannedNotSelected("Salary");
     budgetView.variable.checkPlannedSelected("Food");
     budgetView.variable.checkPlannedNotSelected("Leisures", "Leisures 111", "Leisures 222");
 
-    budgetSummary.selectAccount("Account n. 000111");
+    mainAccounts.select("Account n. 000111");
     budgetView.variable.openDeleteSeries("Leisures 111").uncategorize();
     budgetView.income.checkPlannedSelected("Salary");
     budgetView.variable.checkPlannedSelected();
     budgetView.variable.checkPlannedNotSelected("Leisures", "Leisures 222", "Food");
 
-    budgetSummary.selectAccount("Account n. 000222");
+    mainAccounts.select("Account n. 000222");
     budgetView.variable.deleteGroup("Food");
     budgetView.income.checkPlannedNotSelected("Salary");
     budgetView.variable.checkPlannedSelected("Groceries", "Leisures", "Leisures 222");
     budgetView.variable.checkPlannedNotSelected("Restaurant");
 
     mainAccounts.openDelete("Account n. 000222").validate();
-    budgetSummary.checkAccountSelected("Account n. 000111");
-    budgetView.income.checkPlannedSelected("Salary");
+    mainAccounts.checkNoAccountsSelected();
+    budgetView.income.checkPlannedNotSelected("Salary");
     budgetView.variable.checkPlannedNotSelected("Restaurant");
   }
 }

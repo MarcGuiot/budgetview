@@ -99,7 +99,7 @@ public class LoginTest extends StartUpFunctionalTestCase {
       .check();
 
     openNewLoginWindow(false);
-    login.logExistingUser("toto", "p4ssw0rd", false);
+    login.logExistingUser("toto", "p4ssw0rd");
     getTransactionView()
       .initContent()
       .add("11/01/2006", TransactionType.CHECK, "CHEQUE N°12345", "", -12.00)
@@ -175,7 +175,7 @@ public class LoginTest extends StartUpFunctionalTestCase {
         operations.logout();
       }
 
-      login.logExistingUser("toto", "p4ssw0rd", false);
+      login.logExistingUser("toto", "p4ssw0rd");
 
       {
         CategorizationChecker categorization = new CategorizationChecker(window);
@@ -200,7 +200,7 @@ public class LoginTest extends StartUpFunctionalTestCase {
     checkBankOnImport(filePath);
 
     openNewLoginWindow(false);
-    login.logExistingUser("toto", "p4ssw0rd", false);
+    login.logExistingUser("toto", "p4ssw0rd");
     checkBankOnImport(filePath);
   }
 
@@ -322,7 +322,7 @@ public class LoginTest extends StartUpFunctionalTestCase {
     getCategorizationView().setNewVariable("Menu K", "Food");
 
     openNewLoginWindow(false);
-    login.logExistingUser("toto", "p4ssw0rd", false);
+    login.logExistingUser("toto", "p4ssw0rd");
 
     login.checkLoggedIn();
     OfxBuilder

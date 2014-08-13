@@ -17,4 +17,8 @@ public class LangEnTest extends LangTestCase {
       .getBankDownload()
       .checkContainsBanks("Other");
   }
+
+  protected String getAccountName() {
+    return "Account n. 007";
+  }
 }

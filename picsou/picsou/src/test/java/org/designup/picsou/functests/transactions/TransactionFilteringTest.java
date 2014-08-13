@@ -190,7 +190,7 @@ public class TransactionFilteringTest extends LoggedInFunctionalTestCase {
       .addTransaction("2006/04/20", -300.0, "Transaction 2a")
       .load();
 
-    mainAccounts.createNewAccount()
+    accounts.createNewAccount()
       .setName("Account n. 3")
       .selectBank("CIC")
       .setPosition(10000.00)

@@ -33,8 +33,6 @@ public class UncategorizedSummaryViewChecker extends ViewChecker {
 
   private Panel getPanel() {
     if (panel == null) {
-      views.selectBudget();
-      SavingsViewChecker.toggleToMainIfNeeded(mainWindow);
       panel = mainWindow.getPanel("uncategorizedSummaryView");
     }
     return panel;

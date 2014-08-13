@@ -1,0 +1,12 @@
+<splits xmlns="http://www.globsframework.org/xml/splits.xsd">
+
+  <styleImport file="/layout/commonStyles.splits"/>
+
+  <styles>
+  </styles>
+
+  <column name="dashboardView">
+    <panel ref="uncategorizedSummaryView"/>
+  </column>
+
+</splits>

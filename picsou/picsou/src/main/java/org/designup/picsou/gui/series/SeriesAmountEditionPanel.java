@@ -3,7 +3,7 @@ package org.designup.picsou.gui.series;
 import org.designup.picsou.gui.components.AmountEditor;
 import org.designup.picsou.gui.description.stringifiers.MonthListStringifier;
 import org.designup.picsou.gui.description.stringifiers.SeriesPeriodicityAndScopeStringifier;
-import org.designup.picsou.gui.series.analysis.SeriesAmountChartPanel;
+import org.designup.picsou.gui.analysis.SeriesAmountChartPanel;
 import org.designup.picsou.gui.series.edition.AlignSeriesBudgetAmountsAction;
 import org.designup.picsou.gui.series.edition.SeriesBudgetSliderAdapter;
 import org.designup.picsou.gui.series.utils.SeriesAmountLabelStringifier;

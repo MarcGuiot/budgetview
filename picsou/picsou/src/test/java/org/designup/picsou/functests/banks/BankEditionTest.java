@@ -189,13 +189,13 @@ public class BankEditionTest extends LoggedInFunctionalTestCase {
 
   public void testEditingBanksFromAccountView() throws Exception {
 
-    mainAccounts.createNewAccount()
+    accounts.createNewAccount()
       .setName("TestAccount")
       .selectNewBank("TestBank", "http://www.testbank.net")
       .setPosition(100.00)
       .validate();
 
-    mainAccounts.createNewAccount()
+    accounts.createNewAccount()
       .setName("OtherAccount")
       .selectBank("TestBank")
       .setPosition(100.00)
@@ -244,7 +244,7 @@ public class BankEditionTest extends LoggedInFunctionalTestCase {
   }
 
   public void testCancelEditionAndDeletion() throws Exception {
-    mainAccounts.createNewAccount()
+    accounts.createNewAccount()
       .setName("TestAccount")
       .selectNewBank("TestBank", "http://www.testbank.net")
       .setPosition(100.00)

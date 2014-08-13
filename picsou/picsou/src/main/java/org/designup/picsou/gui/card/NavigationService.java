@@ -1,10 +1,9 @@
 package org.designup.picsou.gui.card;
 
 import org.designup.picsou.gui.budget.BudgetToggle;
-import org.designup.picsou.gui.categorization.CategorizationView;
+import org.designup.picsou.gui.categorization.CategorizationSelectionView;
 import org.designup.picsou.gui.categorization.components.CategorizationFilteringMode;
 import org.designup.picsou.gui.model.Card;
-import org.designup.picsou.gui.projects.ProjectEditionView;
 import org.designup.picsou.gui.projects.ProjectView;
 import org.designup.picsou.gui.transactions.TransactionView;
 import org.designup.picsou.model.*;
@@ -12,7 +11,6 @@ import org.designup.picsou.model.util.ClosedMonthRange;
 import org.globsframework.gui.GlobSelection;
 import org.globsframework.gui.GlobSelectionListener;
 import org.globsframework.gui.SelectionService;
-import org.globsframework.gui.utils.DefaultGlobSelection;
 import org.globsframework.gui.utils.GlobSelectionBuilder;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
@@ -29,7 +27,7 @@ public class NavigationService implements GlobSelectionListener {
 
   private SelectionService selectionService;
   private TransactionView transactionView;
-  private CategorizationView categorizationView;
+  private CategorizationSelectionView categorizationSelectionView;
   private ProjectView projectView;
   private BudgetToggle budgetToggle;
   private GlobRepository repository;
@@ -39,13 +37,13 @@ public class NavigationService implements GlobSelectionListener {
   private Stack<Card> forwardStack = new Stack<Card>();
 
   public NavigationService(TransactionView transactionView,
-                           CategorizationView categorizationView,
+                           CategorizationSelectionView categorizationSelectionView,
                            ProjectView projectView,
                            BudgetToggle budgetToggle,
                            GlobRepository repository,
                            Directory directory) {
     this.transactionView = transactionView;
-    this.categorizationView = categorizationView;
+    this.categorizationSelectionView = categorizationSelectionView;
     this.projectView = projectView;
     this.budgetToggle = budgetToggle;
     this.repository = repository;
@@ -80,22 +78,22 @@ public class NavigationService implements GlobSelectionListener {
   }
 
   public void gotoCategorizationAndShowAll() {
-    categorizationView.setFilteringMode(CategorizationFilteringMode.ALL);
+    categorizationSelectionView.setFilteringMode(CategorizationFilteringMode.ALL);
     gotoCategorization();
   }
 
   public void gotoCategorization(GlobList transactions, boolean showAllUncategorized) {
-    categorizationView.show(transactions, showAllUncategorized);
+    categorizationSelectionView.show(transactions, showAllUncategorized);
     gotoCategorization();
   }
 
   public void gotoCategorizationForSelectedMonths() {
-    categorizationView.showWithMode(CategorizationFilteringMode.SELECTED_MONTHS);
+    categorizationSelectionView.showWithMode(CategorizationFilteringMode.SELECTED_MONTHS);
     gotoCategorization();
   }
 
   public void gotoUncategorizedForSelectedMonths() {
-    categorizationView.showWithMode(CategorizationFilteringMode.UNCATEGORIZED_SELECTED_MONTHS);
+    categorizationSelectionView.showWithMode(CategorizationFilteringMode.UNCATEGORIZED_SELECTED_MONTHS);
     gotoCategorization();
   }
 
@@ -184,17 +182,17 @@ public class NavigationService implements GlobSelectionListener {
           .add(projectItem)
           .get());
     }
-    gotoCard(Card.HOME);
+    gotoCard(Card.PROJECTS);
   }
 
   public void gotoNewProject() {
     projectView.createProject();
-    gotoCard(Card.HOME);
+    gotoCard(Card.PROJECTS);
   }
 
   public void highlightTransactionCreation() {
     select(Card.CATEGORIZATION, true);
-    categorizationView.highlightTransactionCreation();
+    categorizationSelectionView.highlightTransactionCreation();
   }
 
   public boolean backEnabled() {

@@ -1,6 +1,5 @@
 package org.designup.picsou.functests.checkers;
 
-import junit.framework.Assert;
 import org.designup.picsou.functests.checkers.components.GaugeChecker;
 import org.designup.picsou.gui.components.charts.Gauge;
 import org.uispec4j.*;
@@ -20,30 +19,6 @@ public class SavingsViewChecker extends ViewChecker {
     super(mainWindow);
   }
 
-  public void checkNoEstimatedTotalPosition() {
-    assertThat(getPanel().getTextBox("totalEstimatedSavingsPositionAmount").textEquals("-"));
-  }
-
-  public void checkTotalReferencePosition(String amount, String updateDate) {
-    TextBox position = getPanel().getTextBox("totalReferenceSavingsPositionAmount");
-    assertThat(position.isVisible());
-    assertThat(position.textEquals(amount));
-
-    TextBox date = getPanel().getTextBox("totalReferenceSavingsPositionDate");
-    assertThat(date.isVisible());
-    assertThat(date.textContains(updateDate));
-  }
-
-  public SavingsViewChecker checkNoEstimatedPosition() {
-    Assert.fail("TBD");
-    return this;
-  }
-
-  public SavingsViewChecker checkTotalEstimatedPosition(double amount) {
-    checkTotalEstimatedPosition(toString(amount));
-    return this;
-  }
-
   public SavingsViewChecker checkTotalEstimatedPosition(String amount) {
     TextBox position = getPanel().getTextBox("totalEstimatedSavingsPositionAmount");
     assertThat(position.isVisible());
@@ -60,10 +35,6 @@ public class SavingsViewChecker extends ViewChecker {
   public void checkTotalEstimatedPosition(String amount, String updateDate) {
     checkTotalEstimatedPosition(amount);
     checkTotalEstimatedPositionDate(updateDate);
-  }
-
-  public void checkTotalEstimatedPositionColor(String color) {
-    assertThat(getPanel().getTextBox("totalEstimatedSavingsPositionAmount").foregroundNear(color));
   }
 
   public void checkContainsSeries(String accountName, String seriesName) {
@@ -87,25 +58,10 @@ public class SavingsViewChecker extends ViewChecker {
     return getPanel().getButton(accountName + "." + seriesName + ".observedSeriesAmount");
   }
 
-  public void checkNoAccounts() {
-    checkComponentVisible(getPanel(), JPanel.class, "savingsAccountPanel", false);
-  }
-
-  public void checkAccountWithNoPosition(String accountName) {
-    Panel accountPanel = getAccountTitleBlock(accountName);
-    assertThat(accountPanel.getTextBox("estimatedAccountPosition." + accountName).textEquals("-"));
-    assertTrue(accountPanel.getTextBox("estimatedAccountPositionDate." + accountName).isVisible());
-  }
-
   public void checkAccount(String accountName, Double position, String updateDate) {
     Panel accountPanel = getAccountTitleBlock(accountName);
     assertTrue(accountPanel.getTextBox("estimatedAccountPosition." + accountName).textEquals(toString(position)));
     assertTrue(accountPanel.getTextBox("estimatedAccountPositionDate." + accountName).textEquals("on " + updateDate));
-  }
-
-  public void checkEstimatedPosition(String accountName, double position) {
-    Panel accountPanel = getAccountTitleBlock(accountName);
-    assertTrue(accountPanel.getTextBox("estimatedAccountPosition." + accountName).textEquals(toString(position)));
   }
 
   private Panel getAccountTitleBlock(String accountName) {
@@ -124,10 +80,6 @@ public class SavingsViewChecker extends ViewChecker {
 
   private Panel getPanel() {
     if (savingsView == null) {
-      views.selectBudget();
-      if (mainWindow.containsUIComponent(Panel.class, "savingsBudgetView").isTrue()) {
-        mainWindow.getPanel("savingsBudgetView").getButton("specificAction").click();
-      }
       savingsView = mainWindow.getPanel("savingsView");
     }
 
@@ -174,15 +126,5 @@ public class SavingsViewChecker extends ViewChecker {
   public SavingsViewChecker alignAndPropagate(String accountName, String seriesName) {
     editSeries(accountName, seriesName).alignPlannedAndActual().setPropagationEnabled().validate();
     return this;
-  }
-
-  public static void toggleToMainIfNeeded(Window mainWindow) {
-    if (mainWindow.containsUIComponent(Button.class, "toggleToMain").isTrue()) {
-      mainWindow.getButton("toggleToMain").click();
-    }
-  }
-
-  public void returnToBudgetView() {
-    toggleToMainIfNeeded(mainWindow);
   }
 }

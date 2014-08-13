@@ -22,7 +22,7 @@ public class ProjectDuplicationTest extends LoggedInFunctionalTestCase {
       .addTransaction("2010/12/15", -200.00, "FNAC")
       .load();
 
-    projectChart.create();
+    projects.createFirst();
     currentProject
       .setNameAndValidate("Camera")
       .addExpenseItem(0, "Camera Body", 201012, -80.00, 10)
@@ -43,7 +43,7 @@ public class ProjectDuplicationTest extends LoggedInFunctionalTestCase {
       .setFirstMonth(201106)
       .validate();
 
-    projectChart.checkProjectList("Camera", "Other camera");
+    projects.checkProjectList("Camera", "Other camera");
     currentProject.checkName("Other camera")
       .checkItems("| Camera Body | June | 0.00 | 800.00 |\n" +
                   "| Lens        | June | 0.00 | 200.00 |\n" +
@@ -94,10 +94,10 @@ public class ProjectDuplicationTest extends LoggedInFunctionalTestCase {
 
   public void testDuplicationErrorsAndCancel() throws Exception {
 
-    mainAccounts.createMainAccount("Main account", 1000.00);
+    accounts.createMainAccount("Main account", 1000.00);
 
     // Cannot duplicate empty projects
-    projectChart.create();
+    projects.createFirst();
     currentProject.setNameAndValidate("Empty");
     currentProject.checkDuplicateDisabled();
 
@@ -110,15 +110,15 @@ public class ProjectDuplicationTest extends LoggedInFunctionalTestCase {
       .setFirstMonth(201302)
       .validate();
     currentProject.backToList();
-    projects.checkCurrentProjects("| Empty | Dec | 100.00 | on |\n" +
+    projectList.checkCurrentProjects("| Empty | Dec | 100.00 | on |\n" +
                                   "| Copy  | Feb | 100.00 | on |");
 
     // Cancel
-    projectChart.duplicate("Empty")
+    projects.duplicate("Empty")
       .setName("Other")
       .cancel();
     currentProject.backToList();
-    projects.checkCurrentProjects("| Empty | Dec | 100.00 | on |\n" +
+    projectList.checkCurrentProjects("| Empty | Dec | 100.00 | on |\n" +
                                   "| Copy  | Feb | 100.00 | on |");
   }
 }

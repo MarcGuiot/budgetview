@@ -1,0 +1,56 @@
+<splits xmlns="http://www.globsframework.org/xml/splits.xsd">
+
+  <styleImport file="/layout/commonStyles.splits"/>
+  <styles>
+    <style selector="label.categorizationStep" font="-,bold,12" foreground="#333333"
+           fill="horizontal" horizontalAlignment="left"
+           marginTop="15" marginBottom="10" border="matte(0,0,1,0,#AAAAAA)"/>
+    <style selector="scrollPane" viewportBackground="dialog.block"/>
+
+    <style selector="button.showTransactionCreation"
+           font="-,plain,11"
+           icon="rightArrow(10,12,9,9,categorization.createTransaction.button.arrow)"
+           rolloverIcon="rightArrow(10,12,9,9,categorization.createTransaction.button.arrow.rollover)"/>
+  </styles>
+
+  <column name="categorizationSelectionView">
+
+    <label text="$cards.categorization" styleClass="sidebarTitle"/>
+
+    <column marginLeft="10" marginRight="10">
+
+      <panel ref="gaugePanel" opaque="false"/>
+
+      <row marginBottom="5">
+        <label text="$categorization.filter.label" styleClass="formLabel"
+               foreground="gauge.categorization.label" marginRight="5"/>
+        <comboBox ref="transactionFilterCombo"/>
+        <button ref="actionsMenu" styleClass="actionsButton" marginLeft="10"/>
+      </row>
+
+      <panel ref="reconciliationWarningPanel" border="empty(0,0,10,0)"/>
+      <row autoHideSource="customFilterMessage" border="empty(10,0,10,0)">
+        <panel ref="customFilterMessage"/>
+      </row>
+      <scrollPane viewportBackground="#FFFFFF" border="line(transaction.border)"
+                  marginBottom="0" weightY="100">
+        <table ref="transactionsToCategorize" rowHeight="20"/>
+      </scrollPane>
+
+      <row border="empty(5)">
+        <button ref="showHideTransactionCreation" styleClass="showTransactionCreation"/>
+        <filler fill="horizontal"/>
+        <panel ref="transactionSearch" fill="none" weightX="0.01"/>
+      </row>
+
+      <label text="$transactionCreation.title" styleClass="separatorTitle" border="empty(15,0,0,0)"
+             autoHideSource="transactionCreation"/>
+
+      <panel ref="transactionCreation"/>
+
+      <panel ref="skipCategorizationPanel"/>
+
+    </column>
+
+  </column>
+</splits>

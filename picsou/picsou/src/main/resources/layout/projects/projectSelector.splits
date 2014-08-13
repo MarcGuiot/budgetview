@@ -1,0 +1,39 @@
+<splits xmlns="http://www.globsframework.org/xml/splits.xsd">
+
+  <styleImport file="/layout/commonStyles.splits"/>
+  <styles>
+
+    <style selector="button#toggleProjectDetails" ui="hyperlinkButtonWithoutUnderline"
+           foreground="block.item.link" font="-,plain,12" marginTop="10" marginLeft="10" anchor="right"
+           horizontalTextPosition="left" weightX="5"
+           icon="rightArrow(10,14,8,8,block.item.link)"
+           rolloverIcon="rightArrow(10,14,8,8,block.item.link)"/>
+
+    <style selector="button.navigation" ui="hyperlinkButtonWithoutUnderline"
+           foreground="block.item.link" font="-,plain,13" marginTop="10" fill="none" anchor="southeast"/>
+  </styles>
+
+  <column name="projectSelector" background="sidebar.bg">
+
+    <label text="$cards.projects" styleClass="sidebarTitle"/>
+
+    <scrollPane forceVerticalScroll="true" styleClass="sidebarScrollPane" marginLeft="10" marginRight="10">
+      <column>
+        <row>
+          <label text="$summaryView.projects.title" styleClass="secondarySectionTitle"/>
+          <filler fill="horizontal"/>
+          <button action="createProject" name="createProject" styleClass="navigation"
+                  tooltipText="$projectView.create.tooltip"/>
+        </row>
+        <panel ref="projectChartPanel"
+               marginTop="5" weightY="8" preferredSize="(200,140)" background="sidebar.bg"/>
+
+        <panel ref="mainAccountsPanel"/>
+
+        <panel ref="savingsAccountsPanel"/>
+
+      </column>
+    </scrollPane>
+  </column>
+
+</splits>

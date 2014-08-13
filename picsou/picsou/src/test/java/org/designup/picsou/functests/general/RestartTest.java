@@ -40,7 +40,7 @@ public class RestartTest extends LoggedInFunctionalTestCase {
       .load();
 
     views.selectHome();
-    mainAccounts.checkEstimatedPosition(0.00);
+    mainAccounts.checkEndOfMonthPosition(OfxBuilder.DEFAULT_ACCOUNT_NAME, 0.00);
 
     views.selectData();
     transactions.initContent()
@@ -52,7 +52,7 @@ public class RestartTest extends LoggedInFunctionalTestCase {
     operations.checkUndoNotAvailable();
 
     views.selectHome();
-    mainAccounts.checkEstimatedPosition(0.00);
+    mainAccounts.checkEndOfMonthPosition(OfxBuilder.DEFAULT_ACCOUNT_NAME, 0.00);
 
     views.selectData();
     transactions.initContent()
@@ -72,7 +72,7 @@ public class RestartTest extends LoggedInFunctionalTestCase {
 
     timeline.selectMonth("2008/09");
     budgetView.income.checkSeries("Salary", 0.0, 1000.0);
-    mainAccounts.checkEstimatedPosition(1000.0);
+    mainAccounts.checkEndOfMonthPosition(OfxBuilder.DEFAULT_ACCOUNT_NAME, 1000.0);
     seriesAnalysis.balanceChart.getLeftDataset()
       .checkSize(1)
       .checkValue("Income", 1000.00);
@@ -82,7 +82,7 @@ public class RestartTest extends LoggedInFunctionalTestCase {
     timeline.selectMonth("2008/08");
     budgetView.income.checkTotalAmounts(1000.0, 1000.0);
 
-    mainAccounts.checkEstimatedPosition(0.0);
+    mainAccounts.checkEndOfMonthPosition(OfxBuilder.DEFAULT_ACCOUNT_NAME, 0.0);
 
     restartApplication();
 
@@ -128,7 +128,7 @@ public class RestartTest extends LoggedInFunctionalTestCase {
 
   public void testBudgetView() throws Exception {
 
-    mainAccounts.createMainAccount("Manual", 0);
+    accounts.createMainAccount("Manual", 0);
     views.selectBudget();
     budgetView.variable.createSeries()
       .setName("Courant")
@@ -156,14 +156,14 @@ public class RestartTest extends LoggedInFunctionalTestCase {
       .setAmount("1000")
       .validate();
 
-    budgetView.getSummary().checkEndPosition(-600.00);
+    mainAccounts.checkEndOfMonthPosition("Manual", -600.00);
     budgetView.recurring.clickTitleSeriesName().checkOrder("EDF", "Loyer");
 
     restartApplication();
 
     views.selectBudget();
     timeline.selectMonth("2008/08");
-    budgetView.getSummary().checkEndPosition(-600.00);
+    mainAccounts.checkEndOfMonthPosition("Manual", -600.00);
     budgetView.recurring.checkOrder("EDF", "Loyer");
   }
 
@@ -223,7 +223,7 @@ public class RestartTest extends LoggedInFunctionalTestCase {
 
     operations.openPreferences().setFutureMonthsCount(6).validate();
 
-    projectChart.create();
+    projects.create();
     currentProject
       .setNameAndDefaultAccount("MyProject", "Account n. 001111")
       .addExpenseItem(0, "Booking", 200808, -200.00)
@@ -232,25 +232,25 @@ public class RestartTest extends LoggedInFunctionalTestCase {
     categorization.selectTransaction("RESA")
       .selectExtras().selectSeries("Booking");
 
-    projectChart.checkProjectList("MyProject");
-    projectChart.checkProject("MyProject", 200808, 200810, 800.00);
+    projects.checkProjectList("MyProject");
+    projects.checkProject("MyProject", 200808, 200810, 800.00);
     currentProject.checkProjectGauge(-150.00, -800.00);
 
     timeline.selectMonth("2008/08");
     budgetView.extras.checkSeries("MyProject", -150.00, -200.00);
-    budgetView.getSummary().checkEndPosition(950.00);
+    mainAccounts.checkEndOfMonthPosition("Account n. 001111", 950.00);
 
     timeline.selectMonth("2008/10");
     budgetView.extras.checkSeries("MyProject", 0, -600.00);
 
-    budgetView.getSummary().checkEndPosition(350.00);
+    mainAccounts.checkEndOfMonthPosition("Account n. 001111", 350.00);
 
     restartApplication();
 
-    projectChart.checkProjectList("MyProject");
-    projectChart.checkProject("MyProject", 200808, 200810, 800.00);
+    projects.checkProjectList("MyProject");
+    projects.checkProject("MyProject", 200808, 200810, 800.00);
 
-    projectChart.select("MyProject");
+    projects.select("MyProject");
     currentProject
       .checkProjectGauge(-150.00, -800.00)
       .checkItems("| Booking | Aug | 150.00 | 200.00 |\n" +
@@ -259,18 +259,18 @@ public class RestartTest extends LoggedInFunctionalTestCase {
 
     timeline.selectMonth("2008/08");
     budgetView.extras.checkSeries("MyProject", -150.00, -200.00);
-    budgetView.getSummary().checkEndPosition(950.00);
+    mainAccounts.checkEndOfMonthPosition("Account n. 001111", 950.00);
 
     timeline.selectMonth("2008/10");
     budgetView.extras.checkSeries("MyProject", 0, -600.00);
-    budgetView.getSummary().checkEndPosition(350.00);
+    mainAccounts.checkEndOfMonthPosition("Account n. 001111", 350.00);
   }
 
   public void testProjectsWithMultiMonthTransfers() throws Exception {
 
     operations.openPreferences().setFutureMonthsCount(12).validate();
 
-    mainAccounts.createNewAccount()
+    accounts.createNewAccount()
       .setName("Main account 1")
       .selectBank("CIC")
       .setAsMain()
@@ -282,7 +282,7 @@ public class RestartTest extends LoggedInFunctionalTestCase {
       .addTransaction("2008/12/01", 100.00, "Transfer 1")
       .loadInAccount("Main account 1");
 
-    mainAccounts.createNewAccount()
+    accounts.createNewAccount()
       .setName("Savings account 1")
       .selectBank("CIC")
       .setAsSavings()
@@ -292,7 +292,7 @@ public class RestartTest extends LoggedInFunctionalTestCase {
       .addTransaction("2008/12/01", -100.00, "Transfer 1")
       .loadInAccount("Savings account 1");
 
-    projectChart.create();
+    projects.create();
     currentProject
       .setNameAndValidate("Trip")
       .addTransferItem()
@@ -314,7 +314,7 @@ public class RestartTest extends LoggedInFunctionalTestCase {
     restartApplication();
 
     views.selectHome();
-    projects.select("Trip");
+    projectList.select("Trip");
     currentProject.checkProjectGauge(0.00, -300.00);
     currentProject.checkPeriod("January - March 2009");
 
@@ -548,7 +548,7 @@ public class RestartTest extends LoggedInFunctionalTestCase {
 
   public void testChangeDayChangeTransactionFromPlannedToRealAndViceversaForNotImportedAccount() throws Exception {
     operations.openPreferences().setFutureMonthsCount(2).validate();
-    savingsAccounts.createSavingsAccount("Epargne", 1000.);
+    accounts.createSavingsAccount("Epargne", 1000.);
     budgetView.savings.createSeries()
       .setName("CAF")
       .setFromAccount("External account")
@@ -584,7 +584,7 @@ public class RestartTest extends LoggedInFunctionalTestCase {
   public void testSavingsSeries() throws Exception {
     operations.openPreferences().setFutureMonthsCount(2).validate();
 
-    savingsAccounts.createSavingsAccount("Epargne", 1000.);
+    accounts.createSavingsAccount("Epargne", 1000.);
 
     budgetView.savings.createSeries()
       .setName("CAF")
@@ -596,11 +596,11 @@ public class RestartTest extends LoggedInFunctionalTestCase {
       .validate();
 
     timeline.selectMonth("2008/08");
-    savingsAccounts.checkEstimatedPosition("Epargne", 1300);
+    savingsAccounts.checkEndOfMonthPosition("Epargne", 1300);
     timeline.selectMonth("2008/09");
-    savingsAccounts.checkEstimatedPosition("Epargne", 1600);
+    savingsAccounts.checkEndOfMonthPosition("Epargne", 1600);
     timeline.selectMonth("2008/10");
-    savingsAccounts.checkEstimatedPosition("Epargne", 1900);
+    savingsAccounts.checkEndOfMonthPosition("Epargne", 1900);
 
     timeline.selectAll();
     transactions
@@ -614,20 +614,21 @@ public class RestartTest extends LoggedInFunctionalTestCase {
     timeline.selectMonth("2008/08");
     budgetView.savings.checkTotalAmounts(0, 0);
 
+    savingsAccounts.select("Epargne");
     savingsView.checkSeriesAmounts("Epargne", "CAF", 300, 300);
 
     restartApplication();
 
+    savingsAccounts.select("Epargne");
     savingsView.checkSeriesAmounts("Epargne", "CAF", 300, 300);
     timeline.selectMonth("2008/08");
 
-    views.selectHome();
     timeline.selectMonth("2008/08");
-    savingsAccounts.checkEstimatedPosition("Epargne", 1300);
+    savingsAccounts.checkEndOfMonthPosition("Epargne", 1300);
     timeline.selectMonth("2008/09");
-    savingsAccounts.checkEstimatedPosition("Epargne", 1600);
+    savingsAccounts.checkEndOfMonthPosition("Epargne", 1600);
     timeline.selectMonth("2008/10");
-    savingsAccounts.checkEstimatedPosition("Epargne", 1900);
+    savingsAccounts.checkEndOfMonthPosition("Epargne", 1900);
 
     views.selectData();
     timeline.selectAll();
@@ -754,7 +755,7 @@ public class RestartTest extends LoggedInFunctionalTestCase {
 
   public void testUserMustSelectAccountForTransactionCreation() throws Exception {
 
-    mainAccounts.createNewAccount()
+    accounts.createNewAccount()
       .setName("Cash")
       .setAccountNumber("012345")
       .setPosition(100.)
@@ -799,7 +800,7 @@ public class RestartTest extends LoggedInFunctionalTestCase {
   }
 
   public void testAutoCompletionIsProperlyInitializedOnRestart() throws Exception {
-    mainAccounts.createNewAccount()
+    accounts.createNewAccount()
       .setName("Main")
       .selectBank("CIC")
       .setPosition(1000.00)

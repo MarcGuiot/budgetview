@@ -1,8 +1,6 @@
 package org.designup.picsou.functests.checkers;
 
-import org.designup.picsou.gui.plaf.WavePanelUI;
 import org.globsframework.gui.splits.color.Colors;
-import org.globsframework.gui.splits.components.StyledPanelUI;
 import org.uispec4j.Panel;
 import org.uispec4j.TextBox;
 import org.uispec4j.Window;
@@ -46,16 +44,15 @@ public class ScreenChecker {
   }
 
   public void checkBackgroundColorIsStandard() {
-    checkBackgroundTopColor("6ea2c4");
+    checkBackgroundTopColor("454545");
   }
 
   public void checkBackgroundColorIsClassic() {
-    checkBackgroundTopColor("1565CB");
+    checkBackgroundTopColor("266C9E");
   }
 
   private void checkBackgroundTopColor(String color) {
-    JPanel panel = (JPanel)mainWindow.getPanel("backgroundPanel").getAwtComponent();
-    WavePanelUI ui = (WavePanelUI)panel.getUI();
-    ColorUtils.assertEquals(Colors.toColor(color), ui.getTopColor());
+    JPanel panel = (JPanel)mainWindow.getPanel("mainPanel").getAwtComponent();
+    ColorUtils.assertEquals(Colors.toColor(color), panel.getBackground());
   }
 }

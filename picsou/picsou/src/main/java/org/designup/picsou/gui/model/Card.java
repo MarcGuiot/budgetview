@@ -19,7 +19,8 @@ public enum Card implements GlobConstantContainer {
   CATEGORIZATION("categorization", 1),
   BUDGET("budget", 2),
   ANALYSIS("analysis", 3),
-  DATA("data", 4);
+  DATA("data", 4),
+  PROJECTS("projects", 5);
 
   public static GlobType TYPE;
 
@@ -70,6 +71,8 @@ public enum Card implements GlobConstantContainer {
         return ANALYSIS;
       case 4:
         return DATA;
+      case 5:
+        return PROJECTS;
     }
     throw new ItemNotFound(id + " is not associated to any Card enum value");
   }

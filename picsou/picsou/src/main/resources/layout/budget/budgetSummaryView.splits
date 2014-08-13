@@ -1,6 +1,6 @@
 <splits xmlns="http://www.globsframework.org/xml/splits.xsd">
 
-  <styleImport file="/layout/picsouStyles.splits"/>
+  <styleImport file="/layout/commonStyles.splits"/>
 
   <styles>
     <style selector="button.roundedButton" fill="none" weightX="0"/>
@@ -44,24 +44,6 @@
            iconTextGap="2"/>
     <style id="selectedAccount" selector="x" font="-,bold,12" foreground="budgetSummary.account.button.selected"/>
     <style id="unselectedAccount" selector="x" font="-,plain,12" foreground="budgetSummary.account.button.unselected"/>
-
-    <style selector="#accountStatus" ui="basicButtonUI" cursor="hand" border="" weightX="0" weightY="0" fill="none"/>
-    <style id="account:OK:selected" selector="x"
-           icon="rect(16,10,budgetSummary.account.status.ok,budgetSummary.account.status.border.selected)"
-           rolloverIcon="rect(16,10,budgetSummary.account.status.ok,budgetSummary.account.status.border.rollover)"
-      />
-    <style id="account:NOK:selected" selector="x"
-           icon="rect(16,10,budgetSummary.account.status.nok,budgetSummary.account.status.border.selected)"
-           rolloverIcon="rect(16,10,budgetSummary.account.status.nok,budgetSummary.account.status.border.rollover)"
-      />
-    <style id="account:OK:unselected" selector="x"
-           icon="rect(16,10,budgetSummary.account.status.ok,budgetSummary.account.status.border.unselected)"
-           rolloverIcon="rect(16,10,budgetSummary.account.status.ok,budgetSummary.account.status.border.rollover)"
-      />
-    <style id="account:NOK:unselected" selector="x"
-           icon="rect(16,10,budgetSummary.account.status.nok,budgetSummary.account.status.border.unselected)"
-           rolloverIcon="rect(16,10,budgetSummary.account.status.nok,budgetSummary.account.status.border.rollover)"
-      />
 
     <style selector="#accountPosition" font="-,plain,10" marginLeft="8" marginTop="5" foreground="#808080"
       />

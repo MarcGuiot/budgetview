@@ -30,7 +30,7 @@ public class ImportPanelChecker extends ViewChecker {
   private Panel getPanel() {
     if (panel == null) {
       views.selectData();
-      panel = mainWindow.getPanel("mainWindowHeader");
+      panel = mainWindow.getPanel("timeviewHeader");
     }
     return panel;
   }

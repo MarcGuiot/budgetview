@@ -11,6 +11,9 @@ import java.util.SortedSet;
 public class ColorTest extends TestCase {
 
   public void test() throws Exception {
+
+    fail("RM: en cours de redesign V4");
+
     ColorTheme[] themes = ColorTheme.values();
     for (int i = 1; i < themes.length; i++) {
       SortedSet<Object> reference = load(themes[0]);

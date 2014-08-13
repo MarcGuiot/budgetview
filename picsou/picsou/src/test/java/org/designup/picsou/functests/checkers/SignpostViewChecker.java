@@ -16,14 +16,14 @@ public class SignpostViewChecker extends ViewChecker {
   public SignpostViewChecker checkSignpostViewShown() {
     views.selectHome();
     checkComponentVisible(mainWindow, JPanel.class, "signpostView", true);
-    checkComponentVisible(mainWindow, JPanel.class, "summaryView", false);
+    checkComponentVisible(mainWindow, JPanel.class, "dashboardView", false);
     return this;
   }
 
   public SignpostViewChecker checkSummaryViewShown() {
     views.selectHome();
     checkComponentVisible(mainWindow, JPanel.class, "signpostView", false);
-    checkComponentVisible(mainWindow, JPanel.class, "summaryView", true);
+    checkComponentVisible(mainWindow, JPanel.class, "dashboardView", true);
     return this;
   }
 

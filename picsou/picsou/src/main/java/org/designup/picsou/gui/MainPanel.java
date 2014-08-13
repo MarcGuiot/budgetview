@@ -5,14 +5,18 @@ import org.designup.picsou.gui.accounts.AccountView;
 import org.designup.picsou.gui.actions.DeleteUserAction;
 import org.designup.picsou.gui.actions.ExitAction;
 import org.designup.picsou.gui.actions.ImportFileAction;
+import org.designup.picsou.gui.analysis.AnalysisSelector;
 import org.designup.picsou.gui.budget.BudgetToggle;
 import org.designup.picsou.gui.budget.BudgetView;
 import org.designup.picsou.gui.card.CardView;
 import org.designup.picsou.gui.card.NavigationService;
+import org.designup.picsou.gui.categorization.CategorizationSelectionView;
 import org.designup.picsou.gui.categorization.CategorizationView;
 import org.designup.picsou.gui.components.PicsouFrame;
+import org.designup.picsou.gui.components.highlighting.HighlightingService;
 import org.designup.picsou.gui.components.layoutconfig.LayoutConfigService;
 import org.designup.picsou.gui.config.ConfigService;
+import org.designup.picsou.gui.dashboard.DashboardView;
 import org.designup.picsou.gui.feedback.FeedbackService;
 import org.designup.picsou.gui.help.HelpService;
 import org.designup.picsou.gui.license.LicenseInfoView;
@@ -27,19 +31,20 @@ import org.designup.picsou.gui.series.PeriodAccountStatUpdater;
 import org.designup.picsou.gui.series.PeriodBudgetAreaStatUpdater;
 import org.designup.picsou.gui.series.PeriodSeriesStatUpdater;
 import org.designup.picsou.gui.series.SeriesEditor;
-import org.designup.picsou.gui.series.analysis.SeriesAnalysisView;
+import org.designup.picsou.gui.analysis.AnalysisView;
 import org.designup.picsou.gui.signpost.SignpostView;
 import org.designup.picsou.gui.signpost.guides.ImportSignpost;
 import org.designup.picsou.gui.startup.components.DemoMessageView;
 import org.designup.picsou.gui.startup.components.LogoutService;
 import org.designup.picsou.gui.startup.components.OpenRequestManager;
-import org.designup.picsou.gui.summary.SummaryView;
+import org.designup.picsou.gui.summary.ProjectSelector;
 import org.designup.picsou.gui.summary.version.NewVersionView;
 import org.designup.picsou.gui.time.TimeView;
-import org.designup.picsou.gui.title.TitleView;
+import org.designup.picsou.gui.title.PeriodView;
 import org.designup.picsou.gui.transactions.TransactionView;
 import org.designup.picsou.gui.undo.UndoRedoService;
 import org.designup.picsou.gui.utils.Gui;
+import org.designup.picsou.gui.utils.MainPanelContainer;
 import org.designup.picsou.gui.utils.MenuBarBuilder;
 import org.designup.picsou.model.Month;
 import org.designup.picsou.model.SignpostStatus;
@@ -74,11 +79,12 @@ public class MainPanel {
   private TimeView timeView;
   private CardView cardView;
   private TransactionView transactionView;
-  private SeriesAnalysisView seriesAnalysisView;
+  private AnalysisView analysisView;
   private CategorizationView categorizationView;
   private ProjectView projectView;
   private SignpostView signpostView;
   private MenuBarBuilder menuBar;
+  private CategorizationSelectionView categorizationSelectionView;
 
   public static MainPanel init(GlobRepository repository, Directory directory, WindowManager mainWindow) {
     MainPanel panel = new MainPanel(repository, directory, mainWindow);
@@ -106,23 +112,26 @@ public class MainPanel {
       }
     });
 
-    builder = new GlobsPanelBuilder(MainPanel.class, "/layout/picsou.splits", repository, directory);
+    builder = new GlobsPanelBuilder(MainPanel.class, "/layout/mainPanel.splits", repository, directory);
 
-    TitleView titleView = new TitleView(repository, directory);
+    builder.add("mainPanel", new MainPanelContainer(directory));
+
+    PeriodView periodView = new PeriodView(repository, directory);
     timeView = new TimeView(repository, directory);
 
     transactionView = new TransactionView(repository, directory);
-    categorizationView = new CategorizationView(repository, directory);
-    cardView = new CardView(repository, directory, categorizationView.getGotoBudgetSignpost());
+    categorizationSelectionView = new CategorizationSelectionView(repository, directory);
+    categorizationView = new CategorizationView(categorizationSelectionView, repository);
+    cardView = new CardView(repository, directory, categorizationSelectionView.getGotoBudgetSignpost());
 
     ReplicationGlobRepository replicationGlobRepository =
       new ReplicationGlobRepository(repository, PeriodSeriesStat.TYPE, PeriodBudgetAreaStat.TYPE, PeriodAccountStat.TYPE);
     projectView = new ProjectView(repository, directory);
 
-    BudgetToggle budgetToggle = new BudgetToggle(repository);
+    BudgetToggle budgetToggle = new BudgetToggle(repository, directory);
     budgetToggle.registerComponents(builder);
 
-    directory.add(new NavigationService(transactionView, categorizationView, projectView, budgetToggle, repository, directory));
+    directory.add(new NavigationService(transactionView, categorizationSelectionView, projectView, budgetToggle, repository, directory));
 
     menuBar = new MenuBarBuilder(repository, replicationGlobRepository,
                                  windowManager, logoutService,
@@ -141,21 +150,26 @@ public class MainPanel {
     PeriodBudgetAreaStatUpdater.init(replicationGlobRepository);
     PeriodAccountStatUpdater.init(replicationGlobRepository, directory);
 
-    seriesAnalysisView = new SeriesAnalysisView(repository, directory, menuBar.getPrintBudgetAction());
+    directory.add(new HighlightingService());
+
+    analysisView = new AnalysisView(repository, directory, menuBar.getPrintBudgetAction());
     signpostView = new SignpostView(replicationGlobRepository, directory);
     createPanel(
-      titleView,
+      periodView,
+      new AccountView(replicationGlobRepository, directory),
+      new DashboardView(repository, directory),
       transactionView,
       timeView,
       new NewVersionView(repository, directory),
       new DemoMessageView(repository, directory),
-      new AccountView(repository, directory),
+      categorizationSelectionView,
       categorizationView,
       cardView,
       new BudgetView(replicationGlobRepository, directory),
-      seriesAnalysisView,
+      new AnalysisSelector(repository, directory),
+      analysisView,
       new SavingsView(replicationGlobRepository, directory),
-      new SummaryView(repository, directory),
+      new ProjectSelector(repository, directory),
       projectView,
       signpostView,
       licenseInfoView,
@@ -198,7 +212,7 @@ public class MainPanel {
     menuBar.createMenuBar(frame);
     cardView.showInitialCard();
     transactionView.reset();
-    categorizationView.reset();
+    categorizationSelectionView.reset();
     directory.get(NavigationService.class).reset();
     directory.get(UndoRedoService.class).reset();
     directory.get(HelpService.class).reset();
@@ -206,7 +220,7 @@ public class MainPanel {
     projectView.reset();
 
     windowManager.setPanel(panel);
-    seriesAnalysisView.reset();
+    analysisView.reset();
     timeView.selectCurrentMonth();
     selectLastMonthWithATransaction(repository, directory);
     timeView.centerToSelected();

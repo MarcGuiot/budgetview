@@ -13,10 +13,10 @@ import org.designup.picsou.gui.description.Formatting;
 import org.designup.picsou.gui.model.ProjectStat;
 import org.designup.picsou.gui.projects.actions.CreateProjectAction;
 import org.designup.picsou.gui.projects.components.ProjectPopupMenuFactory;
-import org.designup.picsou.gui.series.analysis.histobuilders.HistoButtonDatasetBuilder;
-import org.designup.picsou.gui.series.analysis.histobuilders.HistoChartRangeListener;
-import org.designup.picsou.gui.series.analysis.histobuilders.HistoChartUpdater;
-import org.designup.picsou.gui.series.analysis.histobuilders.range.HistoChartRange;
+import org.designup.picsou.gui.analysis.histobuilders.HistoButtonDatasetBuilder;
+import org.designup.picsou.gui.analysis.histobuilders.HistoChartRangeListener;
+import org.designup.picsou.gui.analysis.histobuilders.HistoChartUpdater;
+import org.designup.picsou.gui.analysis.histobuilders.range.HistoChartRange;
 import org.designup.picsou.model.BudgetArea;
 import org.designup.picsou.model.Month;
 import org.designup.picsou.model.Project;
@@ -49,6 +49,7 @@ public class ProjectChartView extends View {
   private final ProjectPopupMenuFactory popupMenuFactory;
   private HistoChartRangeListener rangeListener;
   private CardHandler cards;
+  private CreateProjectAction createProjectAction;
 
   public ProjectChartView(final HistoChartRange range, final GlobRepository repository, final Directory directory) {
     super(repository, directory);
@@ -177,7 +178,8 @@ public class ProjectChartView extends View {
 
     cards = builder.addCardHandler("projectChartCards");
 
-    builder.add("createProject", new CreateProjectAction(repository, directory));
+    builder.add("createFirstProject", new CreateProjectAction(repository, directory));
+    createProjectAction = new CreateProjectAction(repository, directory);
 
     builder.add("openProjectGuide", new BrowsingAction(Lang.get("projectView.creation.learnmore"), directory) {
       protected String getUrl() {
@@ -195,6 +197,8 @@ public class ProjectChartView extends View {
         TypePresenceListener.install(Project.TYPE, repository, new BooleanListener() {
           public void apply(boolean containsProjects) {
             cards.show(containsProjects ? "chart" : "creation");
+            histoChart.setVisible(containsProjects);
+            createProjectAction.setEnabled(containsProjects);
           }
         });
       }
@@ -210,5 +214,9 @@ public class ProjectChartView extends View {
                       Formatting.toString(stat.get(ProjectStat.PLANNED_AMOUNT), BudgetArea.EXTRAS));
     }
     return null;
+  }
+
+  public Action getCreateProjectAction() {
+    return createProjectAction;
   }
 }

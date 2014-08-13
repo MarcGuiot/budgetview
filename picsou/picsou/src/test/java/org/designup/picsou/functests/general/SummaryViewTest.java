@@ -23,7 +23,7 @@ public class SummaryViewTest extends LoggedInFunctionalTestCase {
     categorization.setNewIncome("WorldCo", "Income");
     categorization.setNewRecurring("Foncia", "Loyer");
 
-    summary.getAccountChart("Account n. 00000123")
+    projects.getAccountChart("Account n. 00000123")
       .checkEndOfMonthValue(4000.00)
       .checkRange(201012, 201107)
       .checkSelected(201101);
@@ -38,7 +38,7 @@ public class SummaryViewTest extends LoggedInFunctionalTestCase {
       .load();
 
     views.selectHome();
-    summary.getAccountChart("Account n. 00000123").doubleClick();
+    projects.getAccountChart("Account n. 00000123").doubleClick();
 
     views.checkBudgetSelected();
     timeline.checkSelection("2010/12");
@@ -67,68 +67,68 @@ public class SummaryViewTest extends LoggedInFunctionalTestCase {
       .load();
     mainAccounts.edit("Account n. 000456").setAsSavings().validate();
 
-    views.selectHome();
-    summary.checkAccountPosition("Account n. 000123", "2800.00 on 2011/01/10");
-    summary.checkAccountPosition("Account n. 000234", "1000.00 on 2011/01/01");
-    summary.checkAccountPosition("Account n. 000345", "-1400.00 on 2011/01/10");
-    summary.checkAccountPosition("Account n. 000456", "-1500.00 on 2011/01/10");
+    views.selectProjects();
+    projects.checkAccountPosition("Account n. 000123", "2800.00 on 2011/01/10");
+    projects.checkAccountPosition("Account n. 000234", "1000.00 on 2011/01/01");
+    projects.checkAccountPosition("Account n. 000345", "-1400.00 on 2011/01/10");
+    projects.checkAccountPosition("Account n. 000456", "-1500.00 on 2011/01/10");
 
-    summary.checkAccounts("Account n. 000123", "Account n. 000234", "Account n. 000345", "Account n. 000456");
+    projects.checkAccounts("Account n. 000123", "Account n. 000234", "Account n. 000345", "Account n. 000456");
 
-    summary.moveAccountUp("Account n. 000234");
-    summary.checkAccounts("Account n. 000234", "Account n. 000123", "Account n. 000345", "Account n. 000456");
+    projects.moveAccountUp("Account n. 000234");
+    projects.checkAccounts("Account n. 000234", "Account n. 000123", "Account n. 000345", "Account n. 000456");
 
-    summary.moveAccountDown("Account n. 000123");
-    summary.checkAccounts("Account n. 000234", "Account n. 000123", "Account n. 000345", "Account n. 000456");
+    projects.moveAccountDown("Account n. 000123");
+    projects.checkAccounts("Account n. 000234", "Account n. 000123", "Account n. 000345", "Account n. 000456");
 
-    summary.moveAccountDown("Account n. 000234");
-    summary.checkAccounts("Account n. 000123", "Account n. 000234", "Account n. 000345", "Account n. 000456");
+    projects.moveAccountDown("Account n. 000234");
+    projects.checkAccounts("Account n. 000123", "Account n. 000234", "Account n. 000345", "Account n. 000456");
 
-    summary.moveAccountUp("Account n. 000345");
-    summary.checkAccounts("Account n. 000123", "Account n. 000234", "Account n. 000345", "Account n. 000456");
+    projects.moveAccountUp("Account n. 000345");
+    projects.checkAccounts("Account n. 000123", "Account n. 000234", "Account n. 000345", "Account n. 000456");
 
-    summary.moveAccountUp("Account n. 000456");
-    summary.checkAccounts("Account n. 000123", "Account n. 000234", "Account n. 000456", "Account n. 000345");
+    projects.moveAccountUp("Account n. 000456");
+    projects.checkAccounts("Account n. 000123", "Account n. 000234", "Account n. 000456", "Account n. 000345");
 
-    summary.moveAccountUp("Account n. 000345");
-    summary.checkAccounts("Account n. 000123", "Account n. 000234", "Account n. 000345", "Account n. 000456");
+    projects.moveAccountUp("Account n. 000345");
+    projects.checkAccounts("Account n. 000123", "Account n. 000234", "Account n. 000345", "Account n. 000456");
 
-    summary.checkGraphShown("Account n. 000123");
-    summary.checkGraphShown("Account n. 000234");
-    summary.checkGraphShown("Account n. 000345");
-    summary.checkGraphShown("Account n. 000456");
+    projects.checkGraphShown("Account n. 000123");
+    projects.checkGraphShown("Account n. 000234");
+    projects.checkGraphShown("Account n. 000345");
+    projects.checkGraphShown("Account n. 000456");
 
-    summary.hideGraph("Account n. 000123");
-    summary.checkGraphHidden("Account n. 000123");
-    summary.checkGraphShown("Account n. 000234");
-    summary.checkGraphShown("Account n. 000345");
-    summary.checkGraphShown("Account n. 000456");
+    projects.hideGraph("Account n. 000123");
+    projects.checkGraphHidden("Account n. 000123");
+    projects.checkGraphShown("Account n. 000234");
+    projects.checkGraphShown("Account n. 000345");
+    projects.checkGraphShown("Account n. 000456");
 
-    summary.hideGraph("Account n. 000123");
-    summary.checkGraphShown("Account n. 000123");
-    summary.checkGraphShown("Account n. 000234");
-    summary.checkGraphShown("Account n. 000345");
-    summary.checkGraphShown("Account n. 000456");
+    projects.hideGraph("Account n. 000123");
+    projects.checkGraphShown("Account n. 000123");
+    projects.checkGraphShown("Account n. 000234");
+    projects.checkGraphShown("Account n. 000345");
+    projects.checkGraphShown("Account n. 000456");
   }
 
   public void testCanAggregateAccountGraphs() throws Exception {
     operations.openPreferences().setFutureMonthsCount(6).validate();
 
-    views.selectHome();
-    summary.checkNoAccounts();
+    views.selectProjects();
+    projects.checkNoAccounts();
 
     OfxBuilder.init(this)
       .addBankAccount(-1, 10674, "000123", 2800.00, "2011/01/10")
       .addTransaction("2011/01/10", 3000.00, "WorldCo")
       .load();
     views.selectHome();
-    summary.checkAccounts("Account n. 000123");
+    projects.checkAccounts("Account n. 000123");
 
     OfxBuilder.init(this)
       .addBankAccount(-1, 10674, "000234", 1000.00, "2011/01/28")
       .addTransaction("2011/01/28", 3000.00, "WorldCo")
       .load();
-    summary.checkAccounts("Account n. 000123", "Account n. 000234");
+    projects.checkAccounts("Account n. 000123", "Account n. 000234");
 
     OfxBuilder.init(this)
       .addBankAccount(-1, 10674, "000345", -1400.00, "2011/01/16")
@@ -140,28 +140,28 @@ public class SummaryViewTest extends LoggedInFunctionalTestCase {
       .addTransaction("2011/01/10", 3000.00, "WorldCo")
       .load();
     mainAccounts.edit("Account n. 000456").setAsSavings().validate();
-    summary.checkAccounts("Account n. 000123", "Account n. 000234", "Account n. 000345", "Account n. 000456");
-    summary.getAccountChart("Account n. 000123")
+    projects.checkAccounts("Account n. 000123", "Account n. 000234", "Account n. 000345", "Account n. 000456");
+    projects.getAccountChart("Account n. 000123")
       .checkValue(201101, 1, -200.00)
       .checkValue(201101, 10, 2800.00);
 
     views.selectHome();
-    summary.toggleMainAccountGraphs("Show only one graph for all accounts");
-    summary.checkAccounts("Main accounts", "Account n. 000345", "Account n. 000456");
-    summary.getMainSummaryGraph()
+    projects.toggleMainAccountGraphs("Show only one graph for all accounts");
+    projects.checkAccounts("Main accounts", "Account n. 000345", "Account n. 000456");
+    projects.getMainSummaryGraph()
       .checkValue(201101, 1, 800.00)
       .checkValue(201101, 10, 3800.00)
       .checkValue(201101, 28, 6800.00);
 
-    summary.toggleSavingsAccountGraphs("Show only one graph for all accounts");
-    summary.checkAccounts("Main accounts", "Savings accounts");
-    summary.getSavingsSummaryGraph()
+    projects.toggleSavingsAccountGraphs("Show only one graph for all accounts");
+    projects.checkAccounts("Main accounts", "Savings accounts");
+    projects.getSavingsSummaryGraph()
       .checkValue(201101, 1, -8900.00)
       .checkValue(201101, 10, -2900.00);
 
-    summary.toggleMainAccountGraphs("Show a graph for each account");
-    summary.checkAccounts("Account n. 000123", "Account n. 000234", "Savings accounts");
-    summary.getAccountChart("Account n. 000123")
+    projects.toggleMainAccountGraphs("Show a graph for each account");
+    projects.checkAccounts("Account n. 000123", "Account n. 000234", "Savings accounts");
+    projects.getAccountChart("Account n. 000123")
       .checkValue(201101, 1, -200.00)
       .checkValue(201101, 10, 2800.00);
   }

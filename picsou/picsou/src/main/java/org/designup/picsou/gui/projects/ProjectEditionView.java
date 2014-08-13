@@ -183,7 +183,6 @@ public class ProjectEditionView extends View implements GlobSelectionListener {
     builder.add("addTransferItem", new JButton(new AddItemAction("projectEdition.addItem.transfer", ProjectItemType.TRANSFER)));
 
     builder.add("backToList", new BackToListAction());
-    builder.add("createProject", new CreateProjectAction(repository, directory));
 
     JPopupMenu displayActionsPopup = new JPopupMenu();
     displayActionsPopup.add(new SortProjectItemsAction(repository, directory));

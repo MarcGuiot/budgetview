@@ -15,7 +15,7 @@ public class SetPasswordTest extends LoggedInFunctionalTestCase {
 
     password = "password1";
 
-    LoginChecker.init(mainWindow).logExistingUser("user1", password, true);
+    LoginChecker.init(mainWindow).logExistingUser("user1", password);
 
     operations.changeAccountIdentifiers()
       .changePassword(password, "user2", "password2")
@@ -25,7 +25,7 @@ public class SetPasswordTest extends LoggedInFunctionalTestCase {
     operations.logout();
 
     password = "password2";
-    LoginChecker.init(mainWindow).logExistingUser("user2", password, true);
+    LoginChecker.init(mainWindow).logExistingUser("user2", password);
   }
 
   public void testRenameFromAnonymous() throws Exception {
@@ -40,6 +40,6 @@ public class SetPasswordTest extends LoggedInFunctionalTestCase {
     operations.logout();
 
     password = "password1";
-    loginChecker.logExistingUser("user1", password, false);
+    loginChecker.logExistingUser("user1", password);
   }
 }

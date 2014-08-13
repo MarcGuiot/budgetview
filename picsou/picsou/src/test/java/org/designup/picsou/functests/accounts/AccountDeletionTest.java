@@ -86,7 +86,7 @@ public class AccountDeletionTest extends LoggedInFunctionalTestCase {
 
   public void testDeletingAnEmptyAccount() throws Exception {
     views.selectHome();
-    mainAccounts.createNewAccount()
+    accounts.createNewAccount()
       .setName("Main")
       .selectBank("CIC")
       .validate();
@@ -123,8 +123,9 @@ public class AccountDeletionTest extends LoggedInFunctionalTestCase {
       .selectBank("ING Direct")
       .setAsSavings()
       .validate();
-    savingsAccounts.createNewAccount()
+    accounts.createNewAccount()
       .setName("Codevi")
+      .setAsSavings()
       .selectBank("ING Direct")
       .validate();
 

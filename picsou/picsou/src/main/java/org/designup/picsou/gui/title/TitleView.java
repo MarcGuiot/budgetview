@@ -1,10 +1,7 @@
 package org.designup.picsou.gui.title;
 
 import org.designup.picsou.gui.View;
-import org.designup.picsou.gui.description.stringifiers.MonthListStringifier;
-import org.designup.picsou.gui.description.stringifiers.MonthRangeFormatter;
 import org.designup.picsou.gui.model.Card;
-import org.designup.picsou.model.Month;
 import org.designup.picsou.model.Transaction;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobSelection;
@@ -16,24 +13,19 @@ import org.globsframework.model.GlobRepository;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
-import java.util.Set;
-import java.util.Collections;
 
 public class TitleView extends View implements GlobSelectionListener {
 
   private JLabel sectionTitle = new JLabel();
-  private JLabel periodTitle = new JLabel();
-  private Set<Integer> months = Collections.emptySet();
   private Card card = Card.HOME;
 
   public TitleView(GlobRepository repository, Directory directory) {
     super(repository, directory);
-    directory.get(SelectionService.class).addListener(this, Card.TYPE, Month.TYPE);
+    directory.get(SelectionService.class).addListener(this, Card.TYPE);
   }
 
   public void registerComponents(GlobsPanelBuilder builder) {
     builder.add("sectionTitle", sectionTitle);
-    builder.add("periodTitle", periodTitle);
     updateLabel();
   }
 
@@ -44,33 +36,18 @@ public class TitleView extends View implements GlobSelectionListener {
         card = Card.get(cards.get(0).get(Card.ID));
       }
     }
-    if (selection.isRelevantForType(Month.TYPE)) {
-      months = selection.getAll(Month.TYPE).getValueSet(Month.ID);
-    }
     updateLabel();
   }
 
   private void updateLabel() {
-    if (!repository.contains(Transaction.TYPE)) {
-      updateText(Lang.get("title.nodata"), "");
-      return;
-    }
     if (card == null) {
-      updateText(Lang.get("title.nocard"), "");
+      updateText(Lang.get("title.nocard"));
       return;
     }
-    if (months.isEmpty()) {
-      updateText(Lang.get("title.noperiod"), "");
-      return;
-    }
-
-    updateText(Lang.get("title.card", card.getLabel()),
-               MonthListStringifier.toString(months, MonthRangeFormatter.STANDARD));
+    updateText(Lang.get("title.card", card.getLabel()));
   }
 
-  private void updateText(String sectionText, String periodText) {
+  private void updateText(String sectionText) {
     sectionTitle.setText(sectionText);
-    periodTitle.setText(periodText);
   }
-
 }

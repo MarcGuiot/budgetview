@@ -1,6 +1,6 @@
 <splits xmlns="http://www.globsframework.org/xml/splits.xsd">
 
-  <styleImport file="/layout/picsouStyles.splits"/>
+  <styleImport file="/layout/commonStyles.splits"/>
   <styles>
     <style selector="label.image" anchor="center" margin="20"/>
     <style selector="textArea" margin="10"/>
@@ -9,7 +9,7 @@
 
   <cards ref="projectChartCards">
     <card name="chart">
-      <component ref="projectChart" background="block.inner.bg" opaque="true" border="empty(0,15,0,0)"/>
+      <component ref="projectChart" background="sidebar.bg" opaque="true" />
     </card>
     <card name="creation">
       <column>
@@ -18,7 +18,7 @@
           <column>
             <filler fill="vertical"/>
             <label text="$projectView.creation.text" foreground="projectView.create"/>
-            <button action="createProject" styleClass="smallButton" margin="15" font="-,bold,12" />
+            <button action="createFirstProject" styleClass="smallButton" margin="15" font="-,bold,12" />
             <button action="openProjectGuide" styleClass="hyperlink" font="-,plain,11"/>
             <filler fill="vertical"/>
           </column>

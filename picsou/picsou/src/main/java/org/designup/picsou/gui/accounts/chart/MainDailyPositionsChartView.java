@@ -1,14 +1,14 @@
 package org.designup.picsou.gui.accounts.chart;
 
 import com.budgetview.shared.gui.histochart.HistoChartConfig;
+import org.designup.picsou.gui.analysis.histobuilders.HistoChartBuilder;
+import org.designup.picsou.gui.analysis.histobuilders.range.HistoChartRange;
 import org.designup.picsou.gui.card.NavigationService;
 import org.designup.picsou.gui.components.charts.histo.HistoChart;
 import org.designup.picsou.gui.components.charts.histo.HistoRollover;
 import org.designup.picsou.gui.components.charts.histo.utils.HistoChartListenerAdapter;
 import org.designup.picsou.gui.components.highlighting.HighlightingService;
 import org.designup.picsou.gui.components.tips.DetailsTip;
-import org.designup.picsou.gui.series.analysis.histobuilders.HistoChartBuilder;
-import org.designup.picsou.gui.series.analysis.histobuilders.range.HistoChartRange;
 import org.designup.picsou.gui.utils.DaySelection;
 import org.designup.picsou.model.*;
 import org.designup.picsou.utils.Lang;
@@ -53,16 +53,14 @@ public class MainDailyPositionsChartView extends PositionsChartView {
     update();
   }
 
-  public void clearAccount() {
-    this.accountMatcher = GlobMatchers.NONE;
-    update();
-  }
-
   public void setShowFullMonthLabels(boolean show) {
     this.showFullMonthLabels = show;
   }
 
   protected void updateChart(HistoChartBuilder histoChartBuilder, Integer currentMonthId, boolean resetPosition) {
+    if (histoChartBuilder.isDisposed()) {
+      return;
+    }
     Set<Integer> accountIdSet = repository.getAll(Account.TYPE, accountMatcher).getValueSet(Account.ID);
     histoChartBuilder.showAccountDailyHisto(currentMonthId, showFullMonthLabels, accountIdSet, DaySelection.EMPTY, tooltipKey);
   }

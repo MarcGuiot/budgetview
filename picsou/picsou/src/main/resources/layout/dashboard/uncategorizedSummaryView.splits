@@ -1,0 +1,21 @@
+<splits xmlns="http://www.globsframework.org/xml/splits.xsd">
+
+  <styleImport file="/layout/commonStyles.splits"/>
+
+  <styles>
+    <ui name="underlinedButtonUI" class="org.globsframework.gui.splits.components.HyperlinkButtonUI"
+        underline="true" useNormalColorWhenDisabled="true" autoHideEnabled="false"
+        lineColor="block.total.underline"/>
+
+    <style selector="button#uncategorized" ui="underlinedButtonUI" foreground="block.total.error"
+           horizontalTextPosition="left" iconTextGap="2" font="-,bold,14"
+           icon="arrow_right_red.png" rolloverIcon="arrow_right_blue_full.png"/>
+  </styles>
+
+  <row ref="uncategorizedSummaryView">
+        <filler fill="horizontal"/>
+        <label text="$uncategorizedSummaryView.title" styleClass="totalAmountTitle"/>
+        <button ref="uncategorized" styleClass="uncategorized"/>
+  </row>
+
+</splits>

@@ -1,6 +1,6 @@
 <splits xmlns="http://www.globsframework.org/xml/splits.xsd">
 
-  <styleImport file="/layout/picsouStyles.splits"/>
+  <styleImport file="/layout/commonStyles.splits"/>
   <styles>
     <style selector="label.sectionTitle" font="-,bold,14" marginTop="10" marginBottom="10"/>
     <style selector="htmlEditorPane.multiLineLabel" font="-,plain,11"/>

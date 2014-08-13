@@ -4,8 +4,8 @@ import com.budgetview.shared.gui.histochart.HistoChartConfig;
 import org.designup.picsou.gui.card.NavigationService;
 import org.designup.picsou.gui.components.charts.histo.HistoSelection;
 import org.designup.picsou.gui.components.tips.DetailsTip;
-import org.designup.picsou.gui.series.analysis.histobuilders.HistoChartBuilder;
-import org.designup.picsou.gui.series.analysis.histobuilders.range.HistoChartRange;
+import org.designup.picsou.gui.analysis.histobuilders.HistoChartBuilder;
+import org.designup.picsou.gui.analysis.histobuilders.range.HistoChartRange;
 import org.designup.picsou.gui.utils.DaySelection;
 import org.designup.picsou.gui.utils.Matchers;
 import org.designup.picsou.model.Account;
@@ -38,6 +38,10 @@ public class SelectedAccountPositionsChartView extends PositionsChartView {
   }
 
   protected void processClick(HistoSelection selection, Set<Key> objectKeys, NavigationService navigationService) {
+    selectTransactionsOnClick(objectKeys);
+  }
+
+  protected void selectTransactionsOnClick(Set<Key> objectKeys) {
     if (objectKeys.size() != 1) {
       return;
     }

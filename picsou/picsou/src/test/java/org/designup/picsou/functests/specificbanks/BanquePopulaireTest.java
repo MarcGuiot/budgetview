@@ -89,7 +89,7 @@ public class BanquePopulaireTest extends SpecificBankTestCase {
 
     operations.importOfxOnAccount(getFile("banque_pop_en_cours.ofx"), "Card n. 123123123");
 
-    mainAccounts.checkAccountNames("Card n. 123123123", "Account n. 123123123");
+    mainAccounts.checkAccounts("Card n. 123123123", "Account n. 123123123");
 
     timeline.selectAll();
     categorization.selectTransaction("CARTE FACTURETTES CB VOTRE RELEVE ARRETE AU 30/01/09")
@@ -137,7 +137,7 @@ public class BanquePopulaireTest extends SpecificBankTestCase {
     operations.importOfxFile(getFile("banque_pop.ofx"));
     operations.importOfxOnAccount(getFile("banque_pop_facturette.ofx"),"Card n. 123123123");
     operations.importOfxOnAccount(getFile("banque_pop_en_cours.ofx"), "Card n. 123123123");
-    mainAccounts.checkAccountNames("Card n. 123123123", "Account n. 123123123");
+    mainAccounts.checkAccounts("Card n. 123123123", "Account n. 123123123");
   }
 
   public void testNewFormat() throws Exception {
@@ -146,13 +146,13 @@ public class BanquePopulaireTest extends SpecificBankTestCase {
     operations.importOfxFile(getFile("CyberPlus_CB_1_20110723224838.ofx"), "Banque Populaire");
     operations.importOfxFile(getFile("CyberPlus_OP_1_20110723225107.ofx"));
 
-    mainAccounts.checkAccountNames("Account n. 01019640927", "Card n. 01019640927");
+    mainAccounts.checkAccounts("Account n. 01019640927", "Card n. 01019640927");
 
     operations.importOfxFile(getFile("CyberPlus_CB_1_20110723224814.ofx"));
     operations.importOfxFile(getFile("CyberPlus_CB_1_20110723224838.ofx"));
     operations.importOfxFile(getFile("CyberPlus_OP_1_20110723225107.ofx"));
 
-    mainAccounts.checkAccountNames("Account n. 01019640927", "Card n. 01019640927");
+    mainAccounts.checkAccounts("Account n. 01019640927", "Card n. 01019640927");
 
   }
 }

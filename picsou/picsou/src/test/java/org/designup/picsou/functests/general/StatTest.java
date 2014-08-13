@@ -123,10 +123,10 @@ public class StatTest extends LoggedInFunctionalTestCase {
     categorization.setRecurring("Carouf", "courses");
 
     timeline.selectMonth("2008/06");
-    budgetView.getSummary().checkEndPosition(80);
+    mainAccounts.checkEndOfMonthPosition(OfxBuilder.DEFAULT_ACCOUNT_NAME, 80);
 
     timeline.selectMonth("2008/07");
-    budgetView.getSummary().checkEndPosition(200 - 170);
+    mainAccounts.checkEndOfMonthPosition(OfxBuilder.DEFAULT_ACCOUNT_NAME, 200 - 170);
   }
 
   public void testWithIncomeReimbursement() throws Exception {
@@ -139,9 +139,9 @@ public class StatTest extends LoggedInFunctionalTestCase {
     categorization.setNewVariable("Auchan", "courses")
       .editSeries("courses").alignPlannedAndActual().setPropagationEnabled().validate();
 
-    budgetView.getSummary().checkEndPosition(0);
+    mainAccounts.checkEndOfMonthPosition(OfxBuilder.DEFAULT_ACCOUNT_NAME, 0);
 
-    mainAccounts.checkEstimatedPosition(0);
+    mainAccounts.checkEndOfMonthPosition(OfxBuilder.DEFAULT_ACCOUNT_NAME, 0);
     mainAccounts.checkAccount(OfxBuilder.DEFAULT_ACCOUNT_NAME, 0., "2008/06/15");
 
     OfxBuilder
@@ -159,9 +159,9 @@ public class StatTest extends LoggedInFunctionalTestCase {
       .add("15/07/2008", TransactionType.PRELEVEMENT, "Auchan", "", -90.00, "courses")
       .add("01/07/2008", TransactionType.PRELEVEMENT, "Salaire", "", -200.00, "Salaire")
       .check();
-    mainAccounts.checkEstimatedPosition(110);
+    mainAccounts.checkEndOfMonthPosition(OfxBuilder.DEFAULT_ACCOUNT_NAME, 110);
 
-    budgetView.getSummary().checkEndPosition(110);
+    mainAccounts.checkEndOfMonthPosition(OfxBuilder.DEFAULT_ACCOUNT_NAME, 110);
 
     budgetView.income.editSeries("Salaire")
       .selectMonth(200807)
@@ -176,8 +176,8 @@ public class StatTest extends LoggedInFunctionalTestCase {
       .add("01/07/2008", TransactionType.PRELEVEMENT, "Salaire", "", -200.00, "Salaire")
       .check();
 
-    mainAccounts.checkEstimatedPosition(-290);
+    mainAccounts.checkEndOfMonthPosition(OfxBuilder.DEFAULT_ACCOUNT_NAME, -290);
 
-    budgetView.getSummary().checkEndPosition(-290);
+    mainAccounts.checkEndOfMonthPosition(OfxBuilder.DEFAULT_ACCOUNT_NAME, -290);
   }
 }

@@ -25,7 +25,7 @@ public class ProjectManagementTest extends LoggedInFunctionalTestCase {
     operations.openPreferences().setFutureMonthsCount(6).validate();
     operations.hideSignposts();
 
-    projectChart.create();
+    projects.createFirst();
     currentProject
       .setDefaultAccount("Account n. 001111")
       .checkProjectGaugeHidden()
@@ -46,20 +46,20 @@ public class ProjectManagementTest extends LoggedInFunctionalTestCase {
       .checkItemCount(1)
       .checkItem(0, "Reservation", "Jan", 0.00, -200.00);
 
-    projectChart.checkProjectList("My project");
-    projectChart.checkProject("My project", 201101, 201101, 200.00);
+    projects.checkProjectList("My project");
+    projects.checkProject("My project", 201101, 201101, 200.00);
     currentProject.backToList();
-    projects.checkCurrentProjects(
+    projectList.checkCurrentProjects(
       "| My project | Jan | 200.00 | on |"
     );
-    projects.checkNoPastProjects();
+    projectList.checkNoPastProjects();
 
     timeline.selectMonth("2011/01");
     budgetView.extras.checkSeries("My project", 0, -200.00);
-    budgetView.getSummary().checkEndPosition(1700.00);
+    mainAccounts.checkEndOfMonthPosition("Account n. 001111", 1700.00);
 
     views.selectHome();
-    projects.select("My project");
+    projectList.select("My project");
     currentProject
       .addExpenseItem(1, "Travel", 201102, -100.00)
       .checkItemCount(2)
@@ -74,14 +74,14 @@ public class ProjectManagementTest extends LoggedInFunctionalTestCase {
                   "| Hotel       | Feb | 0.00 | 500.00 |")
       .checkProjectGauge(0.00, -800.00);
 
-    projectChart.checkProjectList("My project");
-    projectChart.checkProject("My project", 201101, 201102, 800.00);
+    projects.checkProjectList("My project");
+    projects.checkProject("My project", 201101, 201102, 800.00);
     currentProject.backToList();
-    projects.checkCurrentProjects(
+    projectList.checkCurrentProjects(
       "| My project | Jan | 800.00 | on |"
     );
     budgetView.extras.checkSeries("My project", 0, -200.00);
-    budgetView.getSummary().checkEndPosition(1700.00);
+    mainAccounts.checkEndOfMonthPosition("Account n. 001111", 1700.00);
     budgetView.extras.checkContent("| My project | 0.00 | 200.00 |\n");
     budgetView.extras.expandGroup("My project");
     budgetView.extras.checkContent("| My project  | 0.00 | 200.00 |\n" +
@@ -89,14 +89,14 @@ public class ProjectManagementTest extends LoggedInFunctionalTestCase {
 
     timeline.selectMonth("2011/02");
     budgetView.extras.checkSeries("My project", 0, -600.00);
-    budgetView.getSummary().checkEndPosition(1100.00);
+    mainAccounts.checkEndOfMonthPosition("Account n. 001111", 1100.00);
 
     views.selectCategorization();
     categorization.selectTransaction("Resa Travel Plus");
     categorization.selectExtras().checkContainsSeries("Reservation", "Travel", "Hotel");
 
-    views.selectHome();
-    projectChart.select("My project");
+    views.selectProjects();
+    projects.select("My project");
     currentProject
       .checkItems("| Reservation | Jan | 0.00 | 200.00 |\n" +
                   "| Travel      | Feb | 0.00 | 100.00 |\n" +
@@ -111,12 +111,12 @@ public class ProjectManagementTest extends LoggedInFunctionalTestCase {
     categorization.setExtra("Resa Travel Plus", "Reservation");
 
     timeline.selectMonth("2011/02");
-    projectChart.checkProject("My project", 201101, 201102, 700.00);
+    projects.checkProject("My project", 201101, 201102, 700.00);
     budgetView.extras.checkSeries("My project", 0, -500.00);
-    budgetView.getSummary().checkEndPosition(1300.00);
+    mainAccounts.checkEndOfMonthPosition("Account n. 001111", 1300.00);
 
-    views.selectHome();
-    projectChart.select("My project");
+    views.selectProjects();
+    projects.select("My project");
     currentProject
       .checkItems("| Reservation | Jan | 100.00 | 200.00 |\n" +
                   "| Hotel       | Feb | 0.00   | 500.00 |")
@@ -131,14 +131,14 @@ public class ProjectManagementTest extends LoggedInFunctionalTestCase {
       .checkProjectGauge(-100.00, -200.00);
 
     timeline.selectMonth("2011/01");
-    projectChart.checkProject("My project", 201101, 201101, 200.00);
+    projects.checkProject("My project", 201101, 201101, 200.00);
 
     timeline.selectMonth("2011/02");
     budgetView.extras.checkSeriesNotPresent("My project");
 
     timeline.selectMonth("2011/01");
     budgetView.extras.checkSeries("My project", -100.00, -200.00);
-    budgetView.getSummary().checkEndPosition(1800.00);
+    mainAccounts.checkEndOfMonthPosition("Account n. 001111", 1800.00);
 
     transactions.initAmountContent()
       .add("01/01/2011", "RESA TRAVEL PLUS", -100.00, "Reservation", 1900.00, 1900.00, "Account n. 001111")
@@ -150,9 +150,9 @@ public class ProjectManagementTest extends LoggedInFunctionalTestCase {
 
     operations.hideSignposts();
 
-    mainAccounts.createMainAccount("Main account", 1000.00);
+    accounts.createMainAccount("Main account", 1000.00);
 
-    projectChart.create();
+    projects.createFirst();
     currentProject
       .checkProjectNameMessage("You must provide a name for this project")
       .setNameAndValidate("My project")
@@ -171,37 +171,37 @@ public class ProjectManagementTest extends LoggedInFunctionalTestCase {
     currentProject
       .checkNoErrorTipDisplayed();
 
-    projectChart.checkProject("My project", 201101, 201101, 200.00);
+    projects.checkProject("My project", 201101, 201101, 200.00);
   }
 
   public void testCancellingANewlyCreatedProjectDeletesIt() throws Exception {
     operations.hideSignposts();
 
-    mainAccounts.createMainAccount("Main account", 1000.00);
+    accounts.createMainAccount("Main account", 1000.00);
 
-    projectChart.create();
+    projects.createFirst();
     currentProject
       .cancelEdition();
-    projects.checkHidden();
+    projectList.checkHidden();
 
     operations.undo();
-    projects.checkShown();
-    projects.checkEditionShown();
+    projectList.checkShown();
+    projectList.checkEditionShown();
     currentProject
       .checkNameEditionInProgress("")
       .backToList();
 
-    projects
+    projectList
       .checkCreationPageShown();
 
     operations.undo();
-    projects.checkEditionShown();
+    projectList.checkEditionShown();
     currentProject
       .checkNameEditionInProgress("")
       .setNameAndValidate("New Project")
       .backToList();
 
-    projects
+    projectList
       .checkListPageShown()
       .checkCurrentProjects("| New Project |  | 0.00 | on |");
   }
@@ -209,17 +209,17 @@ public class ProjectManagementTest extends LoggedInFunctionalTestCase {
   public void testProjectWithItemsNotDeletedWhenCancellingEmptyName() throws Exception {
     operations.hideSignposts();
 
-    mainAccounts.createMainAccount("Main account", 1000.00);
+    accounts.createMainAccount("Main account", 1000.00);
 
-    projectChart.create();
+    projects.createFirst();
     currentProject
       .setNameAndValidate("My project")
       .addExpenseItem(0, "Item 1", 201212, -300.00)
       .backToList();
 
-    projects.checkCurrentProjects("| My project | Dec | 300.00 | on |");
+    projectList.checkCurrentProjects("| My project | Dec | 300.00 | on |");
 
-    projects.select("My project");
+    projectList.select("My project");
     currentProject.edit()
       .clearName()
       .cancelEdition();
@@ -227,24 +227,24 @@ public class ProjectManagementTest extends LoggedInFunctionalTestCase {
     currentProject
       .checkName("My project")
       .backToList();
-    projects.checkCurrentProjects("| My project | Dec | 300.00 | on |");
+    projectList.checkCurrentProjects("| My project | Dec | 300.00 | on |");
 
-    projects.select("My project");
+    projectList.select("My project");
     currentProject.edit()
       .clearName()
       .backToList();
-    projects.checkCurrentProjects("| My project | Dec | 300.00 | on |");
+    projectList.checkCurrentProjects("| My project | Dec | 300.00 | on |");
 
-    projects.select("My project");
+    projectList.select("My project");
     currentProject.checkNoEditionInProgress();
   }
 
   public void testCancellingANewlyCreatedItemDeletesIt() throws Exception {
     operations.hideSignposts();
 
-    mainAccounts.createMainAccount("Main account", 1000.00);
+    accounts.createMainAccount("Main account", 1000.00);
 
-    projectChart.create();
+    projects.createFirst();
     currentProject
       .setNameAndValidate("My project")
       .addExpenseItem()
@@ -261,7 +261,7 @@ public class ProjectManagementTest extends LoggedInFunctionalTestCase {
       .addTransaction("2011/01/01", 1000.00, "Income")
       .load();
 
-    projectChart.create();
+    projects.createFirst();
     currentProject
       .setNameAndValidate("My project")
       .addExpenseItem(0, "Item 1", 201101, 100.00)
@@ -270,7 +270,7 @@ public class ProjectManagementTest extends LoggedInFunctionalTestCase {
     categorization.selectTransaction("Income");
     categorization.selectExtras().checkGroupContainsSeries("My project", "Item 1", "Item 2");
 
-    projectChart.select("My project");
+    projects.select("My project");
     currentProject.toggleAndEditExpense(0)
       .setLabel("NewItem1")
       .validate();
@@ -289,7 +289,7 @@ public class ProjectManagementTest extends LoggedInFunctionalTestCase {
       .addTransaction("2012/12/15", -550.00, "Sheraton")
       .load();
 
-    projectChart.create();
+    projects.createFirst();
     currentProject
       .setNameAndValidate("My project")
       .addExpenseItem(0, "Travel", 201212, -300.00)
@@ -308,7 +308,7 @@ public class ProjectManagementTest extends LoggedInFunctionalTestCase {
     categorization.setExtra("SHERATON", "Accomodation");
 
     views.selectHome();
-    projectChart.select("My project");
+    projects.select("My project");
     currentProject
       .checkItems("| Travel       | Dec | 250.00 | 300.00 |\n" +
                   "| Accomodation | Dec | 550.00 | 500.00 |")
@@ -333,7 +333,7 @@ public class ProjectManagementTest extends LoggedInFunctionalTestCase {
       .load();
 
     budgetView.extras.createProject();
-    views.checkHomeSelected();
+    views.checkProjectsSelected();
     currentProject
       .setNameAndValidate("My Project")
       .addExpenseItem(0, "Reservation", 201101, -100.00)
@@ -343,7 +343,7 @@ public class ProjectManagementTest extends LoggedInFunctionalTestCase {
     views.selectBudget();
     budgetView.extras.editProjectForGroup("My Project");
     views.checkHomeSelected();
-    projects.checkEditionShown();
+    projectList.checkEditionShown();
     currentProject
       .checkName("My Project")
       .checkItems("| Reservation | Jan | 0.00 | 100.00 |\n" +
@@ -354,8 +354,8 @@ public class ProjectManagementTest extends LoggedInFunctionalTestCase {
     budgetView.extras
       .expandGroup("My project")
       .editPlannedAmountForProject("Reservation");
-    views.checkHomeSelected();
-    projects.checkEditionShown();
+    views.checkProjectsSelected();
+    projectList.checkEditionShown();
     currentProject
       .checkName("My Project")
       .editExpense(0)
@@ -371,8 +371,8 @@ public class ProjectManagementTest extends LoggedInFunctionalTestCase {
 
     categorization.selectExtras().selectSeries("Reservation");
     categorization.selectExtras().editProjectSeries("Reservation");
-    views.checkHomeSelected();
-    projects.checkEditionShown();
+    views.checkProjectsSelected();
+    projectList.checkEditionShown();
     currentProject
       .checkName("My Project")
       .cancelExpenseEdition(0)
@@ -397,9 +397,9 @@ public class ProjectManagementTest extends LoggedInFunctionalTestCase {
       .setNameAndValidate("My project")
       .addExpenseItem(0, "Trip", 201101, -150.00);
 
-    views.checkHomeSelected();
-    projectChart.checkProjectList("My project");
-    projectChart.select("My project");
+    views.checkProjectsSelected();
+    projects.checkProjectList("My project");
+    projects.select("My project");
     currentProject
       .checkItems("| Trip | Jan | 0.00 | 150.00 |");
   }
@@ -414,13 +414,13 @@ public class ProjectManagementTest extends LoggedInFunctionalTestCase {
       .addTransaction("2011/01/05", 100.00, "Resa")
       .load();
 
-    projectChart.create();
+    projects.createFirst();
     currentProject
       .setNameAndValidate("My project")
       .addExpenseItem(0, "Bonus", 201101, 1000.00);
 
-    projectChart.checkProjectList("My project");
-    projectChart.select("My project");
+    projects.checkProjectList("My project");
+    projects.select("My project");
 
     budgetView.extras.checkSeries("My project", 0, 1000.00);
   }
@@ -436,12 +436,12 @@ public class ProjectManagementTest extends LoggedInFunctionalTestCase {
       .addTransaction("2010/12/01", 1000.00, "Income")
       .load();
 
-    projectChart.create();
+    projects.createFirst();
     currentProject
       .setNameAndValidate("My project")
       .addExpenseItem(0, "Reservation", 201012, -200.00);
 
-    projectChart.selectMonth(201101);
+    projects.selectMonth(201101);
     timeline.checkSelection("2011/01");
   }
 
@@ -455,13 +455,13 @@ public class ProjectManagementTest extends LoggedInFunctionalTestCase {
       .addTransaction("2010/11/15", -100.00, "Resa")
       .load();
 
-    projectChart.create();
+    projects.createFirst();
     currentProject
       .setNameAndValidate("Trip")
       .addExpenseItem(0, "Booking", 201011, -200.00);
 
+    projects.create();
     currentProject
-      .create()
       .setNameAndValidate("Another project")
       .addExpenseItem(0, "Another item", 201011, -200.00);
 
@@ -475,7 +475,7 @@ public class ProjectManagementTest extends LoggedInFunctionalTestCase {
       .check();
     transactions.editProject(0);
 
-    views.checkHomeSelected();
+    views.checkProjectsSelected();
     currentProject
       .checkName("Trip");
   }
@@ -493,7 +493,7 @@ public class ProjectManagementTest extends LoggedInFunctionalTestCase {
       .addTransaction("2010/12/15", -250.00, "Sheraton")
       .load();
 
-    projectChart.create();
+    projects.createFirst();
     currentProject
       .setNameAndValidate("Trip")
       .addExpenseItem(0, "Booking", 201011, -250.00)
@@ -526,7 +526,7 @@ public class ProjectManagementTest extends LoggedInFunctionalTestCase {
       .check();
 
     timeline.selectMonth("2010/12");
-    views.selectHome();
+    views.selectProjects();
     currentProject.view(0).showTransactionsThroughMenu();
     views.checkDataSelected();
     timeline.checkSelection("2010/11", "2010/12");
@@ -546,7 +546,7 @@ public class ProjectManagementTest extends LoggedInFunctionalTestCase {
       .addTransaction("2010/12/10", -100.00, "Resa")
       .load();
 
-    projectChart.create();
+    projects.createFirst();
     currentProject
       .setNameAndValidate("My project")
       .addExpenseItem()
@@ -589,7 +589,7 @@ public class ProjectManagementTest extends LoggedInFunctionalTestCase {
       .addTransaction("2010/12/10", -100.00, "Resa")
       .load();
 
-    projectChart.create();
+    projects.createFirst();
     currentProject
       .setNameAndValidate("My project")
       .addExpenseItem()
@@ -615,7 +615,8 @@ public class ProjectManagementTest extends LoggedInFunctionalTestCase {
       .addTransaction("2010/12/10", -100.00, "Resa")
       .load();
 
-    projectChart.create();
+    views.selectProjects();
+    projects.createFirst();
     currentProject
       .setNameAndValidate("My project")
       .addExpenseItem(0, "First", 201102, -100.00)
@@ -651,8 +652,8 @@ public class ProjectManagementTest extends LoggedInFunctionalTestCase {
       .addTransaction("2010/12/01", 500.00, "Income")
       .addTransaction("2010/12/10", -400.00, "second 2222")
       .load();
-    projectChart.create();
 
+    projects.createFirst();
     currentProject
       .setNameAndDefaultAccount("My project", "Account n. 002222")
       .addExpenseItem(0, "First 1111", 201012, -1000.00, "Account n. 001111")
@@ -729,7 +730,7 @@ public class ProjectManagementTest extends LoggedInFunctionalTestCase {
       .addTransaction("2010/12/10", -400.00, "second 2222")
       .load();
 
-    projectChart.create();
+    projects.createFirst();
     currentProject.setNameAndValidate("My project");
     currentProject.checkDefaultAccountLabel("Account n. 001111");
     currentProject.addExpenseItem(0, "Item 1", 201012, -200.00);
@@ -748,7 +749,7 @@ public class ProjectManagementTest extends LoggedInFunctionalTestCase {
     operations.hideSignposts();
 
     AccountEditionChecker accountEdition =
-      AccountEditionChecker.open(projectChart.createAndOpenConfirmation()
+      AccountEditionChecker.open(projects.createFirstAndOpenConfirmation()
                                    .checkMessageContains("In order to prepare projects, you must first create a main bank account")
                                    .getOkTrigger("Create an account"));
 
@@ -760,7 +761,7 @@ public class ProjectManagementTest extends LoggedInFunctionalTestCase {
       .setPosition(1000.00)
       .validate();
 
-    projectChart.create();
+    projects.createFirst();
     currentProject.setNameAndValidate("Trip");
 
     mainAccounts.openDelete("Main account").validate();
@@ -796,7 +797,7 @@ public class ProjectManagementTest extends LoggedInFunctionalTestCase {
       .load();
 
     budgetView.extras.createProject();
-    views.checkHomeSelected();
+    views.checkProjectsSelected();
     currentProject
       .setNameAndValidate("My Project")
       .addExpenseItem(0, "Reservation", 201101, -100.00)

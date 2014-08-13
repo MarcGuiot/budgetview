@@ -748,7 +748,8 @@ public class SeriesEvolutionViewTest extends LoggedInFunctionalTestCase {
       .addTransaction("2008/07/12", -95.00, "Virement")
       .load();
 
-    savingsAccounts.createNewAccount()
+    accounts.createNewAccount()
+      .setAsSavings()
       .setName("Livret")
       .selectBank("ING Direct")
       .setAccountNumber("333")

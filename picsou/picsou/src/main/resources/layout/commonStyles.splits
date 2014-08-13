@@ -1,0 +1,426 @@
+<splits xmlns="http://www.globsframework.org/xml/splits.xsd">
+
+  <styles>
+
+    <ui name="scrollPaneUI"
+        class="org.designup.picsou.gui.components.ui.FlatScrollbarUI"
+        color="scrollBar.idle" rolloverColor="scrollBar.rollover" background="scrollBar.bg"/>
+    <style selector="scrollPane" scrollbarUI="scrollPaneUI" background="#FFFFFF"/>
+
+    <!-- Default form elements -->
+
+    <style selector="button" opaque="false"/>
+    <style selector="checkBox" opaque="false"/>
+    <style selector="comboBox" opaque="false"/>
+
+    <style selector=" no selection" id="SeriesActivated" foreground="#000000"/>
+    <style selector=" no selection" id="SeriesNotActivated" foreground="#777777"/>
+
+    <style selector="textArea.multiLineLabel"
+           foreground="help.messages.text" opaque="false"
+           editable="false" lineWrap="true" wrapStyleWord="true"/>
+
+    <style selector="scrollPane.textArea"
+           border="" opaque="false" viewportOpaque="false"/>
+
+    <style selector="htmlEditorPane"
+           foreground="help.messages.text" opaque="false"/>
+    <style selector="scrollPane htmlEditorPane" border="empty(10)"/>
+
+    <style selector="htmlEditorPane.hints"
+           foreground="block.inner.hints"/>
+
+    <style selector="htmlEditorPane.note" font="-,plain,11"
+           foreground="help.messages.text" opaque="false"/>
+
+    <style selector="label.message"
+           fill="horizontal" horizontalAlignment="left"
+           anchor="center" weightX="10.0"/>
+
+    <style selector="label.header"
+           font="-,plain,11" foreground="import.header.label"
+           marginTop="5" marginBottom="3" fill="none" anchor="southwest"/>
+
+    <!-- Form elements -->
+
+    <style selector="label.formLabel"
+           font="-,plain,12" foreground="import.form.label"
+           anchor="east" marginRight="10" weightX="0"/>
+
+    <style selector="label.formLabelRight"
+           font="-,plain,12" foreground="import.form.label"
+           anchor="west" marginLeft="10" weightX="0"/>
+
+    <style selector="label.formLabelTop"
+           font="-,plain,12" foreground="import.form.label"
+           anchor="west"/>
+
+    <style selector="label.formLabelMandatorySign" text="*"
+           font="-,plain,12" foreground="import.form.mandatory"
+           anchor="west" marginLeft="5" weightX="0"/>
+
+    <style selector="label.formLabelMandatoryLegend"
+           font="-,plain,11" foreground="import.form.mandatory"
+           fill="none" anchor="east" horizontalAlignment="right"
+           marginRight="5" weightX="0"/>
+
+    <style selector="label.formSection"
+           font="-,bold,12" anchor="left" marginBottom="10" foreground="#222222"/>
+
+    <style selector="checkBox.formElement"
+           font="-,plain,12" foreground="import.form.label"
+           anchor="east" marginRight="10" weightX="0"/>
+
+    <style selector="textField" fill="horizontal" weightX="10.0"/>
+
+    <style id="mandatoryFieldFlagHidden" selector="x" foreground="#FFFFFF"
+           icon="empty(12,12)"/>
+    <style id="mandatoryFieldFlagShown" selector="x" foreground="#FF0000"
+           icon="leftArrow(12,12,10,10,field.mandatory)"/>
+    <style selector="label.mandatoryFieldFlag" marginLeft="4"/>
+
+    <style selector="row.buttons"
+           fill="horizontal" anchor="center"
+           marginTop="10" marginBottom="10" marginLeft="40" marginRight="40"/>
+
+    <style selector="row.buttons button" fill="horizontal" weightX="10"/>
+
+    <style selector="table" intercellSpacing="(0,0)" showGrid="false"/>
+
+    <style selector="scrollPane" opaque="true" viewportBackground="block.inner.bg"/>
+
+    <style selector="button.iconOnly" weightX="0"
+           text="" opaque="false" borderPainted="false" cursor="hand"/>
+
+    <style selector="button.editIcon" weightX="0" cursor="hand"
+           icon="magnifier_small.png" rolloverIcon="magnifier_rollover.png" pressedIcon="magnifier_rollover.png"
+           preferredSize="(18,18)" text="" opaque="false" borderPainted="false"/>
+
+    <style selector="button.helpIcon" weightX="0" cursor="hand" fill="none" anchor="center"
+           icon="help_button_grey.png" rolloverIcon="help_button_blue.png" pressedIcon="help_button_pressed.png"
+           preferredSize="(22,22)" text="" opaque="false" borderPainted="false"/>
+
+    <style selector="button.remove" weightX="0"
+           text="" opaque="false" borderPainted="false" icon="button_delete.png"
+           cursor="hand"/>
+
+    <style selector="button.monthEditor" ui="hyperlinkButtonWithoutUnderline"
+           icon="button_calendar.png"
+           pressedIcon="button_calendar_pressed.png"
+           disabledIcon="button_calendar_disabled.png"
+           rolloverIcon="button_calendar_rollover.png"
+           font="-,plain,12" foreground="import.form.label"
+           horizontalTextPosition="left"
+           horizontalAlignment="left" fill="none" anchor="east"/>
+
+    <style selector="cards" opaque="false"/>
+
+    <style selector="radioButton" opaque="false"/>
+
+    <style selector="button.actionsButton" tooltipText="$budgetView.actions.tooltip"
+           ui="hyperlinkButton" weightX="0"
+           icon="arrow_down.png" rolloverIcon="arrow_down_roll.png"
+           styleClass="hyperlink" foreground="#0000FF"/>
+
+    <!-- Dialog -->
+
+    <ui name="dialog" class="org.globsframework.gui.splits.components.StyledPanelUI"
+        topColor="dialog.bg.top" bottomColor="dialog.bg.bottom"/>
+    <style selector=".dialog" opaque="true" ui="dialog"/>
+    <style selector=".innerDialog" opaque="false" margin="15" marginBottom="10"/>
+    <style selector=".innerDialogContent" opaque="false" margin="15"/>
+
+    <style selector=".innerDialogBlock" opaque="true" border="line(#BBBBBB)" background="dialog.block"/>
+    <style selector=".innerDialogBlockPanel" opaque="true" background="dialog.block"/>
+
+    <style selector=".dialog label" foreground="dialog.text" opaque="false"/>
+    <style selector=".dialog textArea" foreground="dialog.text"/>
+    <style selector=".dialog htmlEditorPane" foreground="dialog.text" opaque="false"/>
+    <style selector=".dialog checkBox" foreground="dialog.text" opaque="false"/>
+
+    <style selector=".dialog label.title"
+           font="-,bold,20" foreground="dialog.title"
+           fill="none" anchor="center" marginTop="0" marginBottom="15"/>
+
+    <style selector=".separator" opaque="false" marginTop="0"
+           border="matte(1,0,0,0,dialog.separator)"/>
+
+    <style selector="label.separatorTitle"
+           font="-,plain,10" foreground="dialog.separator.title"/>
+
+    <style selector="label.errorMessage" horizontalAlignment="center" foreground="#FF0000" font="-,bold,12"
+           fill="horizontal" anchor="center"/>
+
+    <style selector="textArea.message"
+           opaque="false" editable="false" lineWrap="true" wrapStyleWord="true"
+           font="-,plain,11"
+           fill="horizontal" anchor="center"/>
+
+      <style selector="textArea.errorMessage"
+           opaque="false" editable="false" lineWrap="true" wrapStyleWord="true"
+           foreground="#FF0000" font="-,bold,12"
+           fill="horizontal" anchor="center"/>
+
+    <style selector="htmlEditorPane.errorMessage"
+           foreground="#FF0000" font="-,bold,12" fill="horizontal" anchor="center"/>
+
+    <style selector="htmlEditorPane.importantMessage"
+           foreground="#000000" font="-,bold,12" fill="horizontal" anchor="center"/>
+
+    <!-- Hyperlinks -->
+
+    <ui name="hyperlinkButton" class="org.globsframework.gui.splits.components.HyperlinkButtonUI"/>
+    <style selector="button.hyperlink" ui="hyperlinkButton" fill="none" anchor="right" foreground="hyperlink"/>
+    <style selector="button.help" ui="hyperlinkButton" fill="none" anchor="right"/>
+
+    <ui name="hyperlinkButtonWithoutUnderline" class="org.globsframework.gui.splits.components.HyperlinkButtonUI"
+        underline="false"/>
+    <style selector="button.hyperlinkWithoutUnderline" ui="hyperlinkButtonWithoutUnderline"
+           fill="none" anchor="right" foreground="hyperlink"/>
+
+    <style selector="button.leftArrowLink" ui="hyperlinkButtonWithoutUnderline"
+           icon="leftArrow(12,14,8,8, hyperlink)" iconTextGap="3"
+           horizontalTextPosition="right" horizontalAlignment="center"
+           fill="none" anchor="right" foreground="hyperlink"/>
+
+    <style selector="button.rightArrowLink" ui="hyperlinkButtonWithoutUnderline"
+           icon="rightArrow(12,14,8,8, hyperlink)" iconTextGap="3"
+           horizontalTextPosition="left" horizontalAlignment="center"
+           fill="none" anchor="right" foreground="hyperlink"/>
+
+    <ui name="basicButtonUI" class="javax.swing.plaf.basic.BasicButtonUI"/>
+
+    <!-- Dialog components -->
+
+    <ui name="showHideButtonUI" class="org.globsframework.gui.splits.components.HyperlinkButtonUI"
+        underline="false" rolloverColor="hyperlink"/>
+    <style selector="button.showHide"  ui="showHideButtonUI"
+           showIcon="rightArrow(10,14,8,8,dialog.text)" hideIcon="downArrow(10,14,8,8,dialog.text)"
+           fill="none" anchor="left" foreground="dialog.text" font="-,plain,11"/>
+
+    <!-- Blocks and inner blocks -->
+
+    <ui name="block" class="org.globsframework.gui.splits.components.StyledPanelUI"
+        topColor="block.structure.top" bottomColor="block.structure.bottom"
+        borderColor="block.structure.border" bevelTopColor="block.structure.bevel.top"
+        borderWidth="1" cornerRadius="15"/>
+    <style selector=".block" ui="block" opaque="false" marginBottom="0"/>
+    <style selector=".block .innerBlock" margin="8"/>
+    <style selector=".budgetAreaSelection" opaque="true" background="block.inner.bg"/>
+
+    <style selector=".budgetAreaSelection htmlEditorPane" border="empty(10)"/>
+    <style selector=".budgetAreaSelection textArea" border="empty(10)"/>
+
+    <ui name="shadowedTitle" class="org.globsframework.gui.splits.components.ShadowedLabelUI"
+        shadowDirection="northwest" shadowColor="block.title.shadow"/>
+    <ui name="basicTitle" class="javax.swing.plaf.basic.BasicLabelUI"/>
+    <style selector="label.blockTitle" anchor="center" ui="${block.title.ui}"
+           foreground="block.title" marginBottom="5" font="-,bold,13" weightY="0"/>
+    <style selector="label.totalAmountTitle" foreground="block.total.title" font="-,plain,10"
+           fill="none" anchor="bottom" weightY="0"/>
+    <style selector=".totalAmount" foreground="block.total" font="-,bold,14"
+           fill="none" anchor="top" weightY="1"/>
+
+    <style selector=".innerBlockBackground"
+           opaque="true" background="block.inner.bg" border="line(block.inner.border)"
+           marginBottom="10" weightY="100"/>
+    <style selector=".innerBlock scrollPane" border="matte(1,1,0,1,block.inner.border)"
+           marginBottom="10" weightY="100"/>
+
+    <style selector=".innerBlock label.item" foreground="block.inner.item" font="-,bold,13" anchor="top"/>
+    <style selector=".innerBlock label.subitem" foreground="block.inner.subitem" font="-,plain,10" anchor="top"/>
+    <style selector=".innerBlock label.amount" foreground="block.inner.amount" font="-,bold,12" anchor="top"/>
+    <style selector=".innerBlock label.largeAmount" foreground="block.inner.amount" font="-,bold,13" anchor="top"/>
+    <style selector=".innerBlock .hyperlink" foreground="block.inner.hyperlink" font="-,plain,10"/>
+
+    <style selector=".innerBlock"  foreground="block.inner.item"/>
+    <style selector="label.alignActualAmount" foreground="block.inner.item" font="-,plain,12" marginLeft="5"/>
+
+    <style selector=".secondaryInnerBlock" opaque="true" background="block.inner.secondary.bg" border="line(block.inner.border)"/>
+    <style selector="label.secondarySectionTitle" font="-,bold,13" weightY="0.1"
+           foreground="block.inner.secondary.section.title" anchor="southwest" marginTop="10" marginLeft="10"/>
+    <style selector="label.secondarySectionSubtitle" font="-,plain,11" weightY="0.1"
+           foreground="block.inner.secondary.section.subtitle" anchor="southeast" marginTop="2"/>
+
+    <style selector="button.amountLink" ui="hyperlinkButtonWithoutUnderline"
+           fill="none" anchor="right" horizontalAlignment="right"
+           foreground="block.amount.link" font="-,bold,11"/>
+    <style selector="button.itemLink" ui="hyperlinkButtonWithoutUnderline"
+           fill="none" anchor="right" horizontalAlignment="right"
+           foreground="block.item.link"/>
+    <style selector="button.itemLinkUnderlined" ui="hyperlinkButton"
+           fill="none" anchor="right" horizontalAlignment="right"
+           foreground="block.item.link"/>
+
+    <!-- Block footer -->
+    <style selector=".footer" background="block.footer.bg" border="matte(1,0,0,0,block.footer.top)"
+           opaque="true"/>
+    <style selector=".footer button" ui="hyperlinkButtonWithoutUnderline" foreground="block.footer.button"
+           marginTop="2" marginBottom="2" fill="none" iconTextGap="2"/>
+    <style selector=".footer label" foreground="block.footer.label" marginTop="2" marginBottom="2" anchor="center"/>
+
+    <style selector=".blockScrollBorder" border="line(block.inner.border)"/>
+    <style selector=".blockScrollBorder scrollPane" border="none" marginBottom="0"/>
+
+    <style selector=".preFooter" opaque="true" background="block.prefooter.bg"
+           border="matte(1,0,0,0,block.prefooter.top)"/>
+
+    <!-- Highlighted panel -->
+    <ui name="highlightedPanel" class="org.globsframework.gui.splits.components.StyledPanelUI"
+        topColor="highlightedPanel.top" bottomColor="highlightedPanel.bottom"
+        borderColor="highlightedPanel.border"
+        borderWidth="1" cornerRadius="6"/>
+    <style selector=".highlightedPanel"  ui="highlightedPanel"/>
+
+    <!-- Custom rounded buttons -->
+    <ui name="customButtonSmallUI" class="org.designup.picsou.gui.components.ui.CustomButtonUI"
+        borderColor="customButton.small.border"
+        topColor="customButton.small.bg.top"
+        bottomColor="customButton.small.bg.bottom"
+        rolloverTextColor="customButton.small.text.rollover"
+        pressedTextColor="customButton.small.text.pressed"
+        disabledTextColor="customButton.small.text.disabled"/>
+    <style selector="button.smallButton" ui="customButtonSmallUI"
+           font="-,plain,11" foreground="customButton.small.text" weightX="0.01" fill="none" anchor="center"/>
+
+
+    <!-- Icon buttons -->
+
+    <style selector=".iconButtonGroup" opaque="false" marginTop="5" weightY="0"/>
+
+    <ui name="standardIconButton" class="org.designup.picsou.gui.plaf.ButtonPanelItemUI"
+        border="iconbutton.border"
+        borderTop="iconbutton.border.top"
+        borderBottom="iconbutton.border.bottom"
+        pressedTopColor="iconbutton.pressed.top"
+        pressedBottomColor="iconbutton.pressed.bottom"
+        normalTopColor="iconbutton.normal.top"
+        normalBottomColor="iconbutton.normal.bottom"/>
+    <style selector=".iconButtonGroup button" ui='standardIconButton' fill='none' weightX='0'/>
+    <style selector=".iconButtonGroup toggleButton" ui='standardIconButton' fill='none' weightX='0'/>
+
+    <ui name="dialogIconButton" class="org.designup.picsou.gui.plaf.ButtonPanelItemUI"
+        border="dialog.iconbutton.border"
+        borderTop="dialog.iconbutton.border.top"
+        borderBottom="dialog.iconbutton.border.bottom"
+        pressedTopColor="dialog.iconbutton.pressed.top"
+        pressedBottomColor="dialog.iconbutton.pressed.bottom"
+        normalTopColor="dialog.iconbutton.normal.top"
+        normalBottomColor="dialog.iconbutton.normal.bottom"/>
+    <style selector=".dialog .iconButtonGroup button" ui='dialogIconButton' fill='none' weightX='0'/>
+    <style selector=".dialog .iconButtonGroup toggleButton" ui='dialogIconButton' fill='none' weightX='0'/>
+
+    <style selector=".iconButtonGroup button.create"
+           icon="button_plus.png" disabledIcon="button_plus_disabled.png"/>
+    <style selector=".iconButtonGroup button.delete"
+           icon="button_minus.png" disabledIcon="button_minus_disabled.png"/>
+    <style selector=".iconButtonGroup button.rename"
+           icon="button_rename.png" disabledIcon="button_rename_disabled.png"/>
+    <style selector=".iconButtonGroup button.up"
+           icon="button_up.png" disabledIcon="button_up_disabled.png"/>
+    <style selector=".iconButtonGroup button.down"
+           icon="button_down.png" disabledIcon="button_down_disabled.png"/>
+    <style selector=".iconButtonGroup button.expand"
+           icon="button_expand.png"/>
+    <style selector=".iconButtonGroup button.collapse"
+           icon="button_collapse.png"/>
+    <style selector=".iconButtonGroup button.align_value"
+           icon="button_align_value.png" disabledIcon="button_align_value_disabled.png"
+           tooltipText="$seriesAmountEdition.alignValue.tooltip"/>
+
+    <style selector="button.icon" text="" opaque="false" borderPainted="false"
+           minimumSize="(18,20)" preferredSize="(18,20)" maximumSize="(18,20)"
+           fill="none" weightX="0" cursor="hand"/>
+
+    <!-- Navigation widgets -->
+
+    <style selector=".navigationWidgetLabel"
+           foreground="navigationView.text" opaque="false" font="-,plain,11"
+           fill="horizontal" margin="0"/>
+
+    <!-- Gauge -->
+
+    <style selector=".totalGauge"
+           opaque="false"
+           fill="horizontal"
+           marginLeft="10" marginRight="10"
+           borderColor="gauge.total.border" rolloverBorderColor="gauge.total.border.rollover"
+           emptyColorTop="gauge.total.empty.top" emptyColorBottom="gauge.total.empty.bottom"
+           filledColorTop="gauge.total.filled.top" filledColorBottom="gauge.total.filled.bottom"
+           overrunColorTop="gauge.total.overrun.top" overrunColorBottom="gauge.total.overrun.bottom"
+           overrunErrorColorTop="gauge.total.warning.top" overrunErrorColorBottom="gauge.total.warning.bottom"/>
+
+    <style selector=".detailGauge"
+           opaque="false" font="-,plain,12"
+           foreground="gauge.detail.fg" background="block.inner.bg"
+           fill="horizontal" anchor="center" preferredSize="(40,22)" weightX="10"
+           borderColor="gauge.detail.border" rolloverBorderColor="gauge.detail.border.rollover"
+           emptyColorTop="gauge.detail.empty.top" emptyColorBottom="gauge.detail.empty.bottom"
+           filledColorTop="gauge.detail.filled.top" filledColorBottom="gauge.detail.filled.bottom"
+           overrunColorTop="gauge.detail.overrun.top" overrunColorBottom="gauge.detail.overrun.bottom"
+           overrunErrorColorTop="gauge.detail.warning.top" overrunErrorColorBottom="gauge.detail.warning.bottom"
+           rolloverLabelColor="gauge.detail.label.rollover" labelShadowColor="gauge.detail.label.shadow"
+           inactiveLabelColor="gauge.detail.label.inactive"
+           highlightedBackgroundColor="gauge.detail.bg.highlighted"
+           highlightedLabelColor="gauge.detail.label.highlighted"
+            />
+
+    <!-- Selection toggles -->
+
+    <style selector="toggleButton.budgetAreaSelector" opaque="false"
+           foreground="toggle.selector.budgetArea" font="-,bold,12"
+           marginRight="2" fill="horizontal" anchor="center" weightY="0"/>
+    <style selector="radioButton.selector" opaque="false"
+           font="-,plain,12" cursor='hand'
+           marginRight="2" fill="none" anchor="center" weightY="0"/>
+    <style selector="radioButton.subSeriesSelector" opaque="false"
+           foreground="toggle.selector.subSeries" cursor='hand'
+           font="-,plain,12" fill="none" anchor="west"/>
+
+    <!-- Split panes -->
+
+    <style selector="horizontalSplit" showGripper="false" dividerSize="12" opaque="false"/>
+    <style selector="verticalSplit" showGripper="false" dividerSize="8" opaque="false"/>
+    <style selector="horizontalSplit.mainDivider" showGripper="true" foreground="splitpane.main.handle"/>
+    <style selector="verticalSplit.mainDivider" showGripper="true" foreground="splitpane.main.handle"/>
+    <style selector="horizontalSplit.blockDivider" showGripper="true" foreground="splitpane.block.handle"/>
+    <style selector="verticalSplit.blockDivider" showGripper="true" foreground="splitpane.block.handle"/>
+
+    <!-- Inner dialog blocks -->
+
+    <ui name="dialogBlockUI" class="org.globsframework.gui.splits.components.StyledPanelUI"
+        topColor="dialogBlock.bg" bottomColor="dialogBlock.bg" borderColor="dialogBlock.border"
+        borderWidth="2" cornerRadius="10"/>
+    <style selector=".dialogBlock" ui="dialogBlockUI" opaque="true"/>
+
+    <!-- Repeat header labels -->
+
+    <style selector="repeat header label" font="-,plain,11"
+           foreground="block.inner.columnTitle" horizontalTextPosition="center"
+           fill="none" anchor="center"/>
+
+    <!-- Sidebar -->
+
+    <style selector=".sidebar" opaque="true" background="sidebar.bg" border="matte(0,0,0,1,sidebar.border)"/>
+
+    <style selector=".sidebarTitle" font="LatoLight,plain,30" weightX="0"
+           marginLeft="10" marginTop="10" marginBottom="20"
+           foreground="sidebar.title" fill="horizontal" anchor="west"/>
+
+    <style selector=".sidebarSectionTitle" font="LatoLight,plain,14"
+           fill="none" anchor="south" weightX="0"
+           foreground="sidebar.sectionTitle"/>
+
+    <style selector=".sidebarSeparator" marginTop="1" border="matte(1,0,0,0,sidebar.separator)"/>
+
+    <style selector=".sidebarScrollPane"  border="" opaque="false"
+           viewportOpaque="true" viewportBackground="sidebar.bg"/>
+
+    <!-- Content -->
+
+    <style selector=".content" opaque="true" background="content.bg"/>
+    <style selector=".innerContent" border="empty(10)"/>
+
+  </styles>
+
+</splits>

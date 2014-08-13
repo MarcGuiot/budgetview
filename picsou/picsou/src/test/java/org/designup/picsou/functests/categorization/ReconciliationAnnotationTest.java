@@ -360,7 +360,7 @@ public class ReconciliationAnnotationTest extends LoggedInFunctionalTestCase {
 
   public void testManuallyCreatedTransactionsAreNotAutomaticallyReconciled() throws Exception {
 
-    mainAccounts.createNewAccount()
+    accounts.createNewAccount()
       .setName("Cash")
       .setAccountNumber("012345")
       .selectBank("CIC")

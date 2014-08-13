@@ -13,12 +13,12 @@ public class TransactionCreationTest extends LoggedInFunctionalTestCase {
 
     timeline.checkSelection("2008/08");
 
-    mainAccounts.createNewAccount()
+    accounts.createNewAccount()
       .setName("Main")
       .selectBank("CIC")
       .validate();
 
-    mainAccounts.createNewAccount()
+    accounts.createNewAccount()
       .setName("Cash")
       .setAccountNumber("012345")
       .selectBank("CIC")
@@ -46,7 +46,7 @@ public class TransactionCreationTest extends LoggedInFunctionalTestCase {
 
     categorization.checkSelectedTableRow("TRANSACTION 1");
 
-    mainAccounts.createNewAccount()
+    accounts.createNewAccount()
       .setName("Misc")
       .setAccountNumber("012345")
       .selectBank("CIC")
@@ -113,7 +113,7 @@ public class TransactionCreationTest extends LoggedInFunctionalTestCase {
 
     operations.openPreferences().setFutureMonthsCount(3).validate();
 
-    mainAccounts.createNewAccount()
+    accounts.createNewAccount()
       .setName("Cash")
       .setAccountNumber("012345")
       .selectBank("CIC")
@@ -163,7 +163,7 @@ public class TransactionCreationTest extends LoggedInFunctionalTestCase {
   }
 
   public void testCreateButtonValidatesAllFields() throws Exception {
-    mainAccounts.createNewAccount()
+    accounts.createNewAccount()
       .setName("Cash")
       .setAccountNumber("012345")
       .selectBank("CIC")
@@ -187,7 +187,7 @@ public class TransactionCreationTest extends LoggedInFunctionalTestCase {
     restartApplication(true);
     setDeleteLocalPrevayler(false);
 
-    mainAccounts.createNewAccount()
+    accounts.createNewAccount()
       .setName("Cash")
       .setAccountNumber("012345")
       .setPosition(100.)
@@ -231,14 +231,14 @@ public class TransactionCreationTest extends LoggedInFunctionalTestCase {
   }
 
   public void testMirrorTransactionIsUpdated() throws Exception {
-    mainAccounts.createNewAccount()
+    accounts.createNewAccount()
       .setName("Cash")
       .setAccountNumber("012345")
       .setPosition(100.00)
       .selectBank("CIC")
       .validate();
 
-    mainAccounts.createSavingsAccount("Livret A", 100.00);
+    accounts.createSavingsAccount("Livret A", 100.00);
 
     budgetView.savings
       .createSeries()
@@ -298,7 +298,7 @@ public class TransactionCreationTest extends LoggedInFunctionalTestCase {
 
     operations.hideSignposts();
 
-    mainAccounts.createNewAccount()
+    accounts.createNewAccount()
       .setName("Cash")
       .setAccountNumber("012345")
       .setPosition(100.00)
@@ -339,7 +339,7 @@ public class TransactionCreationTest extends LoggedInFunctionalTestCase {
   public void testSelectingTheMonth() throws Exception {
     operations.openPreferences().setFutureMonthsCount(2).validate();
 
-    mainAccounts.createNewAccount()
+    accounts.createNewAccount()
       .setName("Cash")
       .setAccountNumber("012345")
       .setPosition(100.00)
@@ -425,7 +425,7 @@ public class TransactionCreationTest extends LoggedInFunctionalTestCase {
     operations.changeDate();
     operations.openPreferences().setFutureMonthsCount(4).validate();
 
-    mainAccounts.createNewAccount()
+    accounts.createNewAccount()
       .setName("Main account")
       .setAccountNumber("012345")
       .setPosition(1000.00)
@@ -525,7 +525,7 @@ public class TransactionCreationTest extends LoggedInFunctionalTestCase {
   }
 
   public void testAutoCompletion() throws Exception {
-    mainAccounts.createNewAccount()
+    accounts.createNewAccount()
       .setName("Main")
       .selectBank("CIC")
       .setPosition(1000.00)
@@ -541,7 +541,7 @@ public class TransactionCreationTest extends LoggedInFunctionalTestCase {
   }
 
   public void testModifiedLabelsWhichAreNotUsedAnymoreAreExcludedFromAutocompletion() throws Exception {
-    mainAccounts.createNewAccount()
+    accounts.createNewAccount()
       .setName("Main")
       .selectBank("CIC")
       .setPosition(1000.00)
@@ -612,7 +612,7 @@ public class TransactionCreationTest extends LoggedInFunctionalTestCase {
   }
 
   public void testDoNotUpdateAccountPosition() throws Exception {
-    mainAccounts.createNewAccount()
+    accounts.createNewAccount()
       .setName("Main")
       .selectBank("CIC")
       .setPosition(1000.00)
@@ -688,7 +688,7 @@ public class TransactionCreationTest extends LoggedInFunctionalTestCase {
       .add("15/08/2008", "MCDO", -15.00, "course", 0.00, 0.00, "Account n. 00001123")
       .check();
     mainAccounts.checkPosition("Account n. 00001123", 0);
-    mainAccounts.checkSummary(0, "2008/08/15");
+    mainAccounts.checkReferencePosition(0, "2008/08/15");
   }
 
   public void testUpdateAccountPositionInDifferentImportedAccountWithPlanned() throws Exception {
@@ -703,7 +703,7 @@ public class TransactionCreationTest extends LoggedInFunctionalTestCase {
       .setNewRecurring("Burger King", "course")
       .setRecurring("McDo", "course");
 
-    mainAccounts.createNewAccount()
+    accounts.createNewAccount()
       .setName("Main")
       .selectBank("CIC")
       .setPosition(1000.00)
@@ -724,7 +724,7 @@ public class TransactionCreationTest extends LoggedInFunctionalTestCase {
 
     mainAccounts.checkPosition("Account n. 00001123", 0);
     mainAccounts.checkPosition("Main", 990);
-    mainAccounts.checkSummary(990, "2008/08/15");
+    mainAccounts.checkReferencePosition(990, "2008/08/15");
   }
 
   public void testDifferentDateForEachAccount() throws Exception {
@@ -732,7 +732,7 @@ public class TransactionCreationTest extends LoggedInFunctionalTestCase {
       .addTransaction("2008/08/15", -15, "Auchan")
       .load();
 
-    mainAccounts.createNewAccount()
+    accounts.createNewAccount()
       .setName("Main")
       .selectBank("CIC")
       .setPosition(1000.00)
@@ -745,13 +745,13 @@ public class TransactionCreationTest extends LoggedInFunctionalTestCase {
       .create(28, "manual op", -50.00)
       .create(31, "manual op", -50.00);
 
-    mainAccounts.checkSummary(850, "2008/08/31");
+    mainAccounts.checkReferencePosition(850, "2008/08/31");
 
     transactionCreation
       .selectAccount(OfxBuilder.DEFAULT_ACCOUNT_NAME)
       .createToBeReconciled(16, "Auchan", -50.00);
 
-    mainAccounts.checkSummary(850, "2008/08/31");
+    mainAccounts.checkReferencePosition(850, "2008/08/31");
 
     views.selectCategorization();
     categorization
@@ -778,6 +778,6 @@ public class TransactionCreationTest extends LoggedInFunctionalTestCase {
     mainAccounts.checkAccountUpdateDate("Account n. 00001123", "2008/08/15");
     mainAccounts.checkPosition("Main", 850);
     mainAccounts.checkAccountUpdateDate("Main", "2008/08/31");
-    mainAccounts.checkSummary(850, "2008/08/31");
+    mainAccounts.checkReferencePosition(850, "2008/08/31");
   }
 }

@@ -9,14 +9,10 @@ import org.designup.picsou.gui.components.JPopupButton;
 import org.designup.picsou.gui.components.charts.*;
 import org.designup.picsou.gui.components.highlighting.HighlightUpdater;
 import org.designup.picsou.gui.components.tips.ShowDetailsTipAction;
-import org.designup.picsou.gui.components.utils.BlankAction;
 import org.designup.picsou.gui.description.AmountStringifier;
 import org.designup.picsou.gui.model.PeriodSeriesStat;
 import org.designup.picsou.gui.projects.actions.CreateProjectAction;
-import org.designup.picsou.gui.savings.ToggleToSavingsAction;
 import org.designup.picsou.gui.series.SeriesEditor;
-import org.designup.picsou.gui.signpost.Signpost;
-import org.designup.picsou.gui.signpost.guides.SavingsViewToggleSignpost;
 import org.designup.picsou.gui.signpost.guides.SeriesAmountSignpost;
 import org.designup.picsou.model.*;
 import org.designup.picsou.utils.Lang;
@@ -153,7 +149,6 @@ public class BudgetAreaSeriesView extends View {
     GlobsPanelBuilder builder = new GlobsPanelBuilder(getClass(), "/layout/budget/budgetAreaSeriesView.splits",
                                                       repository, directory);
 
-    builder.add("budgetAreaTitle", new JLabel(budgetArea.getLabel()));
     JLabel amountLabel = builder.add("totalObservedAmount", new JLabel()).getComponent();
     JLabel plannedLabel = builder.add("totalPlannedAmount", new JLabel()).getComponent();
 
@@ -184,21 +179,9 @@ public class BudgetAreaSeriesView extends View {
     }
     menu.addSeparator();
     menu.add(createMonthFilteringButton());
-    builder.add("seriesActions", new JPopupButton(Lang.get("budgetView.actions"), menu));
+    builder.add("budgetAreaTitle", new JPopupButton(budgetArea.getLabel(), menu));
 
     parentBuilder.add(name, builder);
-
-    builder.add("specificAction", getSpecificActionButton());
-  }
-
-  private JButton getSpecificActionButton() {
-    if (budgetArea.equals(BudgetArea.SAVINGS)) {
-      JButton button = new JButton(new ToggleToSavingsAction(repository, directory));
-      Signpost signpost = new SavingsViewToggleSignpost(repository, directory);
-      signpost.attach(button);
-      return button;
-    }
-    return new JButton(new BlankAction());
   }
 
   private JMenuItem createMonthFilteringButton() {
@@ -241,7 +224,7 @@ public class BudgetAreaSeriesView extends View {
 
       final Glob target = PeriodSeriesStat.findTarget(periodSeriesStat, repository);
 
-      NameLabelPopupButton nameButton = getNameButton(periodSeriesStat, target);
+      final NameLabelPopupButton nameButton = getNameButton(periodSeriesStat, target);
       final SplitsNode<JButton> seriesName = cellBuilder.add("seriesName", nameButton.getComponent());
       cellBuilder.addDisposable(nameButton);
 

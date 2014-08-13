@@ -78,7 +78,8 @@ public class HistoDailyChecker extends AbstractHistoChecker<HistoDailyChecker> {
     HistoDailyDataset dataset = getDataset();
     int monthIndex = dataset.getIndex(monthId);
     if (monthIndex < 0) {
-      Assert.fail("Month " + monthId + " not found");
+      Assert.fail("Month " + monthId + " not found" +
+                  "\nDataset content:\n" + dataset);
     }
     Double actual = dataset.getValue(monthIndex, dayId - 1);
     if (!Amounts.equal(actual, expectedValue)) {

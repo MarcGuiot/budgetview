@@ -9,7 +9,7 @@ import org.designup.picsou.gui.components.JPopupButton;
 import org.designup.picsou.gui.components.charts.histo.HistoChart;
 import org.designup.picsou.gui.description.stringifiers.AccountComparator;
 import org.designup.picsou.gui.projects.ProjectChartView;
-import org.designup.picsou.gui.series.analysis.histobuilders.range.HistoChartRange;
+import org.designup.picsou.gui.analysis.histobuilders.range.HistoChartRange;
 import org.designup.picsou.model.Account;
 import org.designup.picsou.model.AccountType;
 import org.designup.picsou.model.UserPreferences;
@@ -62,7 +62,7 @@ public class AccountChartsPanel {
   }
 
   private void createPanel() {
-    GlobsPanelBuilder builder = new GlobsPanelBuilder(getClass(), "/layout/summary/accountChartsPanel.splits",
+    GlobsPanelBuilder builder = new GlobsPanelBuilder(getClass(), "/layout/projects/components/accountChartsPanel.splits",
                                                       repository, directory);
 
     final BooleanField showListField =
@@ -168,6 +168,7 @@ public class AccountChartsPanel {
       chartView.setAccount(Account.isMain(account) ? userCreatedMainAccounts() : userCreatedSavingsAccounts());
       SplitsNode<HistoChart> node = chartView.registerComponents(cellBuilder);
       node.applyStyle("accountChartShown");
+      cellBuilder.addDisposable(chartView);
 
       BooleanFieldListener listener =
         BooleanFieldListener.install(UserPreferences.KEY,

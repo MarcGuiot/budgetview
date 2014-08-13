@@ -400,43 +400,6 @@ public class SignpostSequenceTest extends LoggedInFunctionalTestCase {
     checkNoSignpostVisible();
   }
 
-  public void testSavingsViewSignpostIsShownWhenFirstNonMainSavingsSeriesIsCreated() throws Exception {
-
-    // Skip initial guiding sequence
-    views.selectData();
-    OfxBuilder
-      .init(this)
-      .addTransaction("2010/05/29", -10, "auchan")
-      .load();
-
-    categorization.selectAllTransactions();
-    categorization.selectVariable().selectNewSeries("Misc");
-    budgetView.variable.editPlannedAmount("Misc")
-      .setAmount(10.00)
-      .validate();
-    views.selectBudget();
-    checkNoSignpostVisible();
-
-    savingsAccounts.createNewAccount()
-      .setName("Livret")
-      .selectBank("ING Direct")
-      .validate();
-
-    budgetView.savings.checkNoToggleSavingsViewSignpostShown();
-
-    budgetView.savings.createSeries()
-      .setName("External series")
-      .setFromAccount("Livret")
-      .setToAccount("External")
-      .validate();
-
-    budgetView.savings.checkToggleSavingsViewSignpostShown("Click to see all savings envelopes");
-
-    budgetView.savings.toggleSavingsView();
-    savingsView.returnToBudgetView();
-    budgetView.savings.checkNoToggleSavingsViewSignpostShown();
-  }
-
   public void testSignpostsNotShownAfterRestore() throws Exception {
     views.selectData();
     importPanel.checkImportSignpostDisplayed("Click here to import your operations");

@@ -14,13 +14,13 @@ public class ProjectTransferTest extends LoggedInFunctionalTestCase {
 
   public void testWithSavings() throws Exception {
 
-    mainAccounts.createNewAccount()
+    accounts.createNewAccount()
       .setName("Main account")
       .selectBank("CIC")
       .setAsMain()
       .validate();
 
-    mainAccounts.createNewAccount()
+    accounts.createNewAccount()
       .setName("Savings account")
       .selectBank("CIC")
       .setAsSavings()
@@ -38,7 +38,7 @@ public class ProjectTransferTest extends LoggedInFunctionalTestCase {
       .addTransaction("2010/12/01", 1000.00, "Blah")
       .loadInAccount("Savings account");
 
-    projectChart.create();
+    projects.createFirst();
     currentProject
       .setNameAndValidate("Trip")
       .addTransferItem()
@@ -85,9 +85,9 @@ public class ProjectTransferTest extends LoggedInFunctionalTestCase {
       .checkToAccount("Main account")
       .cancel();
     currentProject.backToList();
-    projects.checkCurrentProjects("| Trip | Dec | 0.00 | on |");
+    projectList.checkCurrentProjects("| Trip | Dec | 0.00 | on |");
 
-    projects.select("Trip");
+    projectList.select("Trip");
     budgetView.extras.checkSeriesNotPresent("Trip");
     budgetView.savings.checkSeries("Transfer", 0.00, -200.00);
     categorization.selectTransaction("Transfer 1").selectSavings()
@@ -116,7 +116,7 @@ public class ProjectTransferTest extends LoggedInFunctionalTestCase {
       .addTransaction("2010/12/01", 1000.00, "Blah")
       .loadInAccount("Savings account");
 
-    projectChart.create();
+    projects.createFirst();
     currentProject
       .setNameAndValidate("Trip")
       .addExpenseItem(0, "Item 1", 201012, -100.00)
@@ -128,7 +128,7 @@ public class ProjectTransferTest extends LoggedInFunctionalTestCase {
 
     views.selectBudget();
     budgetView.savings.editProjectForSeries("Transfer");
-    views.checkHomeSelected();
+    views.checkProjectsSelected();
     currentProject
       .checkName("Trip")
       .editTransfer(1)
@@ -137,7 +137,7 @@ public class ProjectTransferTest extends LoggedInFunctionalTestCase {
 
     views.selectBudget();
     budgetView.savings.editProjectForSeries("Savings");
-    views.checkHomeSelected();
+    views.checkProjectsSelected();
     currentProject
       .checkName("Trip")
       .editTransfer(2)
@@ -148,7 +148,7 @@ public class ProjectTransferTest extends LoggedInFunctionalTestCase {
 
     views.selectBudget();
     budgetView.savings.editPlannedAmountForProject("Transfer");
-    views.checkHomeSelected();
+    views.checkProjectsSelected();
     currentProject
       .checkName("Trip")
       .editTransfer(1)
@@ -161,19 +161,19 @@ public class ProjectTransferTest extends LoggedInFunctionalTestCase {
   }
 
   public void testMustSelectDifferentFromAndToAccounts() throws Exception {
-    mainAccounts.createNewAccount()
+    accounts.createNewAccount()
       .setName("Main Account 1")
       .selectBank("CIC")
       .setAsMain()
       .validate();
 
-    mainAccounts.createNewAccount()
+    accounts.createNewAccount()
       .setName("Main Account 2")
       .selectBank("CIC")
       .setAsMain()
       .validate();
 
-    mainAccounts.createNewAccount()
+    accounts.createNewAccount()
       .setName("Savings Account 1")
       .selectBank("CIC")
       .setAsSavings()
@@ -195,7 +195,7 @@ public class ProjectTransferTest extends LoggedInFunctionalTestCase {
       .addTransaction("2010/12/01", 1000.00, "Blah")
       .loadInAccount("Savings Account 1");
 
-    projectChart.create();
+    projects.createFirst();
     currentProject
       .setNameAndValidate("Trip")
       .addTransferItem()
@@ -226,7 +226,7 @@ public class ProjectTransferTest extends LoggedInFunctionalTestCase {
     createMainAccount("Main account 1");
     createSavingsAccount("Savings account 1");
 
-    projectChart.create();
+    projects.createFirst();
     currentProject
       .setNameAndValidate("Trip")
       .addTransferItem(0, "Transfer", 200.00, "Savings account 1", "Main account 1");
@@ -248,7 +248,7 @@ public class ProjectTransferTest extends LoggedInFunctionalTestCase {
     createMainAccount("Main account 1");
     createSavingsAccount("Savings account 1");
 
-    projectChart.create();
+    projects.createFirst();
     currentProject
       .setNameAndValidate("Trip")
       .addTransferItem(0, "Transfer", 200.00, "Savings account 1", "Main account 1");
@@ -269,7 +269,7 @@ public class ProjectTransferTest extends LoggedInFunctionalTestCase {
     createMainAccount("Main account 1");
     createSavingsAccount("Savings account 1");
 
-    projectChart.create();
+    projects.createFirst();
     currentProject
       .setNameAndValidate("Trip")
       .addTransferItem(0, "Transfer", 200.00, "Savings account 1", "Main account 1");
@@ -295,7 +295,7 @@ public class ProjectTransferTest extends LoggedInFunctionalTestCase {
     createSavingsAccount("Savings account 1");
     createSavingsAccount("Savings account 2");
 
-    projectChart.create();
+    projects.createFirst();
     currentProject
       .setNameAndValidate("Trip")
       .addTransferItem(0, "Transfer", 200.00, "Savings account 1", "Main account 1");
@@ -364,7 +364,7 @@ public class ProjectTransferTest extends LoggedInFunctionalTestCase {
       .addTransaction("2010/12/15", 100.00, "Other 2")
       .loadInAccount("Main account 1");
 
-    projectChart.create();
+    projects.createFirst();
     currentProject.setNameAndValidate("My Project")
       .addTransferItem(0, "Transfer", 200.00, "Savings account 1", "Main account 1");
 
@@ -399,7 +399,7 @@ public class ProjectTransferTest extends LoggedInFunctionalTestCase {
     createMainAccount("Main account 1");
     createSavingsAccount("Savings account 1");
 
-    projectChart.create();
+    projects.createFirst();
     currentProject
       .setNameAndValidate("Trip")
       .addTransferItem(0, "Transfer", 200.00, "Savings account 1", "Main account 1");
@@ -501,7 +501,7 @@ public class ProjectTransferTest extends LoggedInFunctionalTestCase {
     createMainAccount("Main account 1");
     createSavingsAccount("Savings account 1");
 
-    projectChart.create();
+    projects.createFirst();
     currentProject
       .setNameAndValidate("Trip")
       .addTransferItem(0, "Transfer", 200.00, "Savings account 1", "Main account 1");
@@ -555,7 +555,7 @@ public class ProjectTransferTest extends LoggedInFunctionalTestCase {
   }
 
   private void createMainAccount(String mainAccountName) {
-    mainAccounts.createNewAccount()
+    accounts.createNewAccount()
       .setName(mainAccountName)
       .selectBank("CIC")
       .setAsMain()
@@ -570,7 +570,7 @@ public class ProjectTransferTest extends LoggedInFunctionalTestCase {
   }
 
   private void createSavingsAccount(String savingsAccountName) {
-    savingsAccounts.createNewAccount()
+    accounts.createNewAccount()
       .setName(savingsAccountName)
       .selectBank("CIC")
       .setAsSavings()

@@ -166,7 +166,7 @@ public class ImportTest extends LoggedInFunctionalTestCase {
   public void testManualInputAccountsAreShownInQifImport() throws Exception {
 
     // Create account in import mode
-    mainAccounts.createNewAccount()
+    accounts.createNewAccount()
       .setName("Main")
       .setAccountNumber("012345")
       .selectBank("CIC")
@@ -176,7 +176,7 @@ public class ImportTest extends LoggedInFunctionalTestCase {
       .loadInAccount("Main");
 
     // Create account in manual mode
-    mainAccounts.createNewAccount()
+    accounts.createNewAccount()
       .setName("Cash")
       .selectBank("Other")
       .validate();
@@ -195,7 +195,7 @@ public class ImportTest extends LoggedInFunctionalTestCase {
       .createNewAccount(SOCIETE_GENERALE, "SG", "12345", 100.0)
       .completeImport();
 
-    mainAccounts.checkAccountNames("Main", "Cash", "SG");
+    mainAccounts.checkAccounts("Main", "Cash", "SG");
   }
 
   public void testSettingInitialBalanceForQifFiles() throws Exception {
@@ -247,7 +247,7 @@ public class ImportTest extends LoggedInFunctionalTestCase {
       .createNewAccount(SOCIETE_GENERALE, "Second account", "00022", 12.30)
       .completeImport();
 
-    mainAccounts.checkAccountNames("Main account", "Second account");
+    mainAccounts.checkAccounts("Main account", "Second account");
 
     String secondSecondQif = QifBuilder
       .init(this)
@@ -324,7 +324,7 @@ public class ImportTest extends LoggedInFunctionalTestCase {
       .completeImport();
 
     views.selectHome();
-    mainAccounts.checkAccountNames("Main account");
+    mainAccounts.checkAccounts("Main account");
   }
 
   public void testOfxWithUnknownBankEntities() throws Exception {
@@ -531,7 +531,7 @@ public class ImportTest extends LoggedInFunctionalTestCase {
 
     operations.importQifFile(file1, SOCIETE_GENERALE, 100.00);
 
-    mainAccounts.createNewAccount()
+    accounts.createNewAccount()
       .setName("other")
       .setPosition(100)
       .setAccountNumber("1213")
@@ -861,7 +861,7 @@ public class ImportTest extends LoggedInFunctionalTestCase {
       .completeImportWithNext();
 
     mainAccounts.checkPosition("Account n. 111", 100.);
-    mainAccounts.checkAccountNames("Account n. 111", "Account n. 112", "Account n. 113");
+    mainAccounts.checkAccounts("Account n. 111", "Account n. 112", "Account n. 113");
 
     notifications.checkHidden();
 
@@ -995,7 +995,7 @@ public class ImportTest extends LoggedInFunctionalTestCase {
       .setMainAccount()
       .completeImportWithNext();
 
-    mainAccounts.checkAccountNames("Account n. 00001123", "Account n. 112", "Account n. 113");
+    mainAccounts.checkAccounts("Account n. 00001123", "Account n. 112", "Account n. 113");
   }
 
   public void testAssociatToAccountAndDeleteIt() throws Exception {
@@ -1029,7 +1029,7 @@ public class ImportTest extends LoggedInFunctionalTestCase {
 //      .add("08/06/2008", TransactionType.VIREMENT, "V'LIB", "", 2.00)
 //      .check();
 
-    mainAccounts.checkSummary(0., "2008/06/08");
+    mainAccounts.checkReferencePosition(0., "2008/06/08");
   }
 
   public void testMixDate() throws Exception {
@@ -1057,7 +1057,7 @@ public class ImportTest extends LoggedInFunctionalTestCase {
       .add("05/06/2008", "V'LIB", 2.00, "To categorize", -2.00, -2.00, "Account n. 00001123")
       .check();
 
-    mainAccounts.checkSummary(4., "2008/06/09");
+    mainAccounts.checkReferencePosition(4., "2008/06/09");
   }
 
   public void testImportAndChangeDate() throws Exception {

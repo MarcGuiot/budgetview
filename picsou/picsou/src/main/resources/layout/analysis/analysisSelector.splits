@@ -1,0 +1,19 @@
+<splits xmlns="http://www.globsframework.org/xml/splits.xsd">
+
+  <styleImport file="/layout/commonStyles.splits"/>
+  <styles>
+
+  </styles>
+
+  <column name="analysisSelector" styleClass="sidebar">
+
+    <label text="$cards.analysis" styleClass="sidebarTitle"/>
+
+    <column>
+
+    </column>
+
+    <filler fill="vertical"/>
+
+  </column>
+</splits>

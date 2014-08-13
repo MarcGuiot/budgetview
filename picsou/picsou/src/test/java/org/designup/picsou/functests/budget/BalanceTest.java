@@ -20,7 +20,7 @@ public class BalanceTest extends LoggedInFunctionalTestCase {
       .addTransaction("2009/04/20", -29.90, "Free Telecom")
       .load();
 
-    mainAccounts.createNewAccount()
+    accounts.createNewAccount()
       .setName("Manual")
       .selectBank("CIC")
       .setPosition(0)
@@ -61,7 +61,7 @@ public class BalanceTest extends LoggedInFunctionalTestCase {
       .initAmountContent()
       .add("19/08/2009", "Planned: Tel", -29.90, "Tel", -119.60, -159.60, OfxBuilder.DEFAULT_ACCOUNT_NAME)
       .add("11/08/2009", "Planned: Courses", -10.00, "Courses", -40., -129.70, "Manual")
-      .add("19/07/2009", "Planned: Tel", -29.90, "Tel", -89.70,	-119.70, OfxBuilder.DEFAULT_ACCOUNT_NAME)
+      .add("19/07/2009", "Planned: Tel", -29.90, "Tel", -89.70, -119.70, OfxBuilder.DEFAULT_ACCOUNT_NAME)
       .add("05/07/2009", "PROV", -10.00, "Courses", -30.00, -89.80, "Manual")
       .add("19/06/2009", "Planned: Tel", -29.90, "Tel", -59.80, -79.80, OfxBuilder.DEFAULT_ACCOUNT_NAME)
       .add("11/06/2009", "Planned: Courses", -10.00, "Courses", -20., -49.90, "Manual")
@@ -72,12 +72,12 @@ public class BalanceTest extends LoggedInFunctionalTestCase {
 
     timeline.selectMonth("2009/05");
     mainAccounts
-      .checkEstimatedPosition(-39.90)
+      .checkEndOfMonthPosition(OfxBuilder.DEFAULT_ACCOUNT_NAME, -29.90)
       .checkAccount("Manual", 0, "2009/04/01");
 
     timeline.selectMonth("2009/06");
     mainAccounts
-      .checkEstimatedPosition(-79.80)
+      .checkEndOfMonthPosition(OfxBuilder.DEFAULT_ACCOUNT_NAME, -59.80)
       .checkAccount("Manual", 0, "2009/04/01");
   }
 
@@ -96,13 +96,13 @@ public class BalanceTest extends LoggedInFunctionalTestCase {
       .validate();
 
     timeline.selectMonth("2009/04");
-    budgetView.getSummary().checkEndPosition(0.00);
+    mainAccounts.checkEndOfMonthPosition(OfxBuilder.DEFAULT_ACCOUNT_NAME, 0.00);
 
     timeline.selectMonth("2009/05");
-    budgetView.getSummary().checkEndPosition(0.00);
+    mainAccounts.checkEndOfMonthPosition(OfxBuilder.DEFAULT_ACCOUNT_NAME, 0.00);
 
     timeline.selectMonth("2009/06");
-    budgetView.getSummary().checkEndPosition(0.00);
+    mainAccounts.checkEndOfMonthPosition(OfxBuilder.DEFAULT_ACCOUNT_NAME, 0.00);
   }
 
   public void testSavingsWithMonthWithoutTransaction() throws Exception {
@@ -123,29 +123,27 @@ public class BalanceTest extends LoggedInFunctionalTestCase {
 
     // sur compte courant
     timeline.selectMonth("2008/08");
-    mainAccounts.checkEstimatedPosition(1000);
+    mainAccounts.checkEndOfMonthPosition("Account n. 111", 1000);
 
     timeline.selectMonth("2008/07");
-    mainAccounts.checkEstimatedPosition(900);
+    mainAccounts.checkEndOfMonthPosition("Account n. 111", 900);
 
     timeline.selectMonth("2008/06");
-    mainAccounts.checkEstimatedPosition(900);
+    mainAccounts.checkEndOfMonthPosition("Account n. 111", 900);
 
     // sur savings
     timeline.selectMonth("2008/06");
     savingsAccounts
-      .checkEstimatedPositionDate("2008/06/30")
-      .checkEstimatedPosition(300);
+      .checkAccounts("Account n. 00001123")
+      .checkEndOfMonthPosition("Account n. 00001123", 300.00);
 
     timeline.selectMonth("2008/07");
     savingsAccounts
-      .checkEstimatedPositionDate("2008/07/31")
-      .checkEstimatedPosition(300);
+      .checkEndOfMonthPosition("Account n. 00001123", 300.00);
 
     timeline.selectMonth("2008/08");
     savingsAccounts
-      .checkEstimatedPositionDate("2008/08/31")
-      .checkEstimatedPosition(0);
+      .checkEndOfMonthPosition("Account n. 00001123", 0.00);
   }
 
   public void testMissingBalanceAtBeginningIfNoOperation() throws Exception {
@@ -167,25 +165,25 @@ public class BalanceTest extends LoggedInFunctionalTestCase {
 
     // sur compte courant
     timeline.selectMonth("2008/07");
-    mainAccounts.checkEstimatedPosition(300);
+    mainAccounts.checkEndOfMonthPosition(OfxBuilder.DEFAULT_ACCOUNT_NAME, 300);
 
     timeline.selectMonth("2008/06");
-    mainAccounts.checkEstimatedPosition(300);
+    mainAccounts.checkEndOfMonthPosition(OfxBuilder.DEFAULT_ACCOUNT_NAME, 300);
 
     // sur savings
     timeline.selectMonth("2008/06");
-    savingsAccounts.checkEstimatedPosition(900);
+    savingsAccounts.checkEndOfMonthPosition("Account n. 111", 900);
 
     timeline.selectMonth("2008/07");
-    savingsAccounts.checkEstimatedPosition(900);
+    savingsAccounts.checkEndOfMonthPosition("Account n. 111", 900);
 
     timeline.selectMonth("2008/08");
-    savingsAccounts.checkEstimatedPosition(1000);
+    savingsAccounts.checkEndOfMonthPosition("Account n. 111", 1000);
   }
 
   public void testBalanceWithMissingOperationInFuture() throws Exception {
     OfxBuilder.init(this)
-      .addBankAccount(BankEntity.GENERIC_BANK_ENTITY_ID, 111, "111", 1000., "2008/08/15")  //compte d'épargne
+      .addBankAccount(BankEntity.GENERIC_BANK_ENTITY_ID, 111, "111", 1000.00, "2008/08/15")  //compte d'épargne
       .addTransaction("2008/08/12", 100.00, "P3 CE")
       .addTransaction("2008/06/11", 100.00, "P2 CE")
       .load();
@@ -222,45 +220,51 @@ public class BalanceTest extends LoggedInFunctionalTestCase {
       .toggleMonth(1, 3, 6)
       .validate();
 
+    mainAccounts.checkReferencePosition(0.00, "2008/08/12");
+    savingsAccounts.checkReferencePosition(1000.00, "2008/08/12");
+
     // sur compte courant
     timeline.selectMonth("2009/06");
-    mainAccounts.checkEstimatedPosition(-1000);
-    savingsAccounts.checkEstimatedPosition(1700);
+    mainAccounts.checkEndOfMonthPosition(OfxBuilder.DEFAULT_ACCOUNT_NAME, -1000);
+    savingsAccounts.checkEndOfMonthPosition("Account n. 111", 1700);
+
+    mainAccounts.checkReferencePosition(0.00, "2008/08/12");
+    savingsAccounts.checkReferencePosition(1000.00, "2008/08/12");
 
     timeline.selectMonth("2009/05");
-    mainAccounts.checkEstimatedPosition(-1000);
-    savingsAccounts.checkEstimatedPosition(1700);
+    mainAccounts.checkEndOfMonthPosition(OfxBuilder.DEFAULT_ACCOUNT_NAME, -1000);
+    savingsAccounts.checkEndOfMonthPosition("Account n. 111", 1700);
 
     timeline.selectMonth("2009/04");
-    mainAccounts.checkEstimatedPosition(-800);
-    savingsAccounts.checkEstimatedPosition(1600);
+    mainAccounts.checkEndOfMonthPosition(OfxBuilder.DEFAULT_ACCOUNT_NAME, -800);
+    savingsAccounts.checkEndOfMonthPosition("Account n. 111", 1600);
 
     timeline.selectMonth("2009/03");
-    mainAccounts.checkEstimatedPosition(-700);
-    savingsAccounts.checkEstimatedPosition(1500);
+    mainAccounts.checkEndOfMonthPosition(OfxBuilder.DEFAULT_ACCOUNT_NAME, -700);
+    savingsAccounts.checkEndOfMonthPosition("Account n. 111", 1500);
 
     timeline.selectMonth("2009/02");
-    mainAccounts.checkEstimatedPosition(-700);
-    savingsAccounts.checkEstimatedPosition(1500);
+    mainAccounts.checkEndOfMonthPosition(OfxBuilder.DEFAULT_ACCOUNT_NAME, -700);
+    savingsAccounts.checkEndOfMonthPosition("Account n. 111", 1500);
 
     timeline.selectMonth("2009/01");
-    mainAccounts.checkEstimatedPosition(-600);
-    savingsAccounts.checkEstimatedPosition(1400);
+    mainAccounts.checkEndOfMonthPosition(OfxBuilder.DEFAULT_ACCOUNT_NAME, -600);
+    savingsAccounts.checkEndOfMonthPosition("Account n. 111", 1400);
 
     timeline.selectMonth("2008/12");
-    mainAccounts.checkEstimatedPosition(-500);
-    savingsAccounts.checkEstimatedPosition(1400);
+    mainAccounts.checkEndOfMonthPosition(OfxBuilder.DEFAULT_ACCOUNT_NAME, -500);
+    savingsAccounts.checkEndOfMonthPosition("Account n. 111", 1400);
 
     timeline.selectMonth("2008/08");
-    mainAccounts.checkEstimatedPosition(0);
-    savingsAccounts.checkEstimatedPosition(1000);
+    mainAccounts.checkEndOfMonthPosition(OfxBuilder.DEFAULT_ACCOUNT_NAME, 0);
+    savingsAccounts.checkEndOfMonthPosition("Account n. 111", 1000);
 
     timeline.selectMonth("2008/07");
-    mainAccounts.checkEstimatedPosition(200);
-    savingsAccounts.checkEstimatedPosition(900);
+    mainAccounts.checkEndOfMonthPosition(OfxBuilder.DEFAULT_ACCOUNT_NAME, 200);
+    savingsAccounts.checkEndOfMonthPosition("Account n. 111", 900);
 
     timeline.selectMonth("2008/06");
-    mainAccounts.checkEstimatedPosition(200);
-    savingsAccounts.checkEstimatedPosition(900);
+    mainAccounts.checkEndOfMonthPosition(OfxBuilder.DEFAULT_ACCOUNT_NAME, 200);
+    savingsAccounts.checkEndOfMonthPosition("Account n. 111", 900);
   }
 }

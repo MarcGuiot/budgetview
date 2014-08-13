@@ -1,6 +1,6 @@
 <splits xmlns="http://www.globsframework.org/xml/splits.xsd">
 
-  <styleImport file="/layout/picsouStyles.splits"/>
+  <styleImport file="/layout/commonStyles.splits"/>
   <styles>
     <style selector="radioButton" font="-,bold,12" marginLeft="10"/>
     <style selector="htmlEditorPane.radioDescription" marginBottom="10" marginLeft="10" anchor="top"/>

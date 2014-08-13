@@ -16,11 +16,11 @@ public class HistoChartColors implements ColorChangeListener, Disposable {
   private Color scaleOriginLineColor;
   private Color scaleTextColor;
   private Color labelColor;
+  private Color labelBgColor;
   private Color selectedLabelColor;
   private Color rolloverLabelColor;
   private Color sectionLineColor;
   private Color selectedColumnColor;
-  private Color selectedLabelBackgroundColor;
   private Color selectedColumnBorder;
   private Color columnDividerColor;
 
@@ -50,10 +50,10 @@ public class HistoChartColors implements ColorChangeListener, Disposable {
     this.scaleTextColor = colorLocator.get(prefix + ".scale.text");
     this.sectionLineColor = colorLocator.get(prefix + ".section.line");
     this.labelColor = colorLocator.get(prefix + ".label");
+    this.labelBgColor = colorLocator.get(prefix + ".label.bg");
     this.selectedLabelColor = colorLocator.get(prefix + ".label.selected");
     this.rolloverLabelColor = colorLocator.get(prefix + ".label.rollover");
     this.selectedColumnColor = colorLocator.get(prefix + ".selection.bg");
-    this.selectedLabelBackgroundColor = colorLocator.get(prefix + ".selection.label.bg");
     this.selectedColumnBorder = colorLocator.get(prefix + ".selection.border");
     this.columnDividerColor = colorLocator.get(prefix + ".column.divider");
   }
@@ -82,6 +82,10 @@ public class HistoChartColors implements ColorChangeListener, Disposable {
     return labelColor;
   }
 
+  public Color getLabelBgColor() {
+    return labelBgColor;
+  }
+
   public Color getSelectedLabelColor() {
     return selectedLabelColor;
   }
@@ -96,10 +100,6 @@ public class HistoChartColors implements ColorChangeListener, Disposable {
 
   public Color getSelectedColumnColor() {
     return selectedColumnColor;
-  }
-
-  public Color getSelectedLabelBackgroundColor() {
-    return selectedLabelBackgroundColor;
   }
 
   public Color getSelectedColumnBorder() {

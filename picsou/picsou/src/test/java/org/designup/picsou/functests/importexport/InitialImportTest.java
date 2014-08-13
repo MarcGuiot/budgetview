@@ -20,11 +20,8 @@ public class InitialImportTest extends LoggedInFunctionalTestCase {
     views.checkDataSignpostVisible();
     views.selectData();
     importPanel.checkImportSignpostDisplayed("Click here to import your operations");
-    mainAccounts.checkNoEstimatedPosition();
 
     views.selectBudget();
-    budgetView.getSummary()
-      .checkNoEstimatedPosition();
     timeline.checkMonthTooltip("2008/08", "August 2008");
 
     views.selectHome();
@@ -43,7 +40,7 @@ public class InitialImportTest extends LoggedInFunctionalTestCase {
     timeline.checkSelection("2008/08");
 
     views.selectHome();
-    mainAccounts.checkEstimatedPosition(125.00);
+    mainAccounts.checkEndOfMonthPosition("Account n. 120901111", 125.00);
 
     timeline.checkYearTooltip(2008, "2008");
   }
