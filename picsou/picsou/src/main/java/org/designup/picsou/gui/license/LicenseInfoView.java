@@ -6,6 +6,7 @@ import org.designup.picsou.gui.startup.components.LogoutService;
 import org.designup.picsou.gui.time.TimeService;
 import org.designup.picsou.gui.utils.ApplicationColors;
 import org.designup.picsou.model.User;
+import org.designup.picsou.model.UserActivationState;
 import org.designup.picsou.model.UserPreferences;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobsPanelBuilder;
@@ -157,27 +158,27 @@ public class LicenseInfoView extends View {
       return "";
     }
 
-    switch (state) {
-      case User.ACTIVATION_FAILED_MAIL_SENT:
+    switch (UserActivationState.get(state)) {
+      case ACTIVATION_FAILED_MAIL_SENT:
         return Lang.get("license.activation.failed.mailSent", user.get(User.EMAIL));
 
-      case User.ACTIVATION_FAILED_CAN_NOT_CONNECT:
-      case User.ACTIVATION_FAILED_HTTP_REQUEST:
+      case ACTIVATION_FAILED_CAN_NOT_CONNECT:
+      case ACTIVATION_FAILED_HTTP_REQUEST:
         return Lang.get("license.remote.connect");
 
-      case User.ACTIVATION_FAILED_MAIL_UNKNOWN: {
+      case ACTIVATION_FAILED_MAIL_UNKNOWN: {
         return Lang.get("license.mail.unknown");
       }
 
-      case User.ACTIVATION_FAILED_BAD_SIGNATURE: {
+      case ACTIVATION_FAILED_BAD_SIGNATURE: {
         return Lang.get("license.activation.failed");
       }
 
-      case User.ACTIVATION_FAILED_MAIL_NOT_SENT: {
+      case ACTIVATION_FAILED_MAIL_NOT_SENT: {
         return Lang.get("license.code.invalid");
       }
 
-      case User.STARTUP_CHECK_KILL_USER: {
+      case STARTUP_CHECK_KILL_USER: {
         if (days < 0) {
         return Lang.get("license.registered.user.killed");
       }
@@ -186,7 +187,7 @@ public class LicenseInfoView extends View {
         }
       }
 
-      case User.STARTUP_CHECK_MAIL_SENT: {
+      case STARTUP_CHECK_MAIL_SENT: {
         if (days < 0) {
         return Lang.get("license.registered.user.killed.mail.sent");
         }
@@ -195,7 +196,7 @@ public class LicenseInfoView extends View {
         }
       }
 
-      case User.STARTUP_CHECK_JAR_VERSION: {
+      case STARTUP_CHECK_JAR_VERSION: {
         return Lang.get("license.registered.user.killed.jar.updated.manually");
       }
 

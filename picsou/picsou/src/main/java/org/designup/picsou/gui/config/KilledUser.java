@@ -1,6 +1,7 @@
 package org.designup.picsou.gui.config;
 
 import org.designup.picsou.model.User;
+import org.designup.picsou.model.UserActivationState;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.utils.directory.Directory;
 import org.globsframework.utils.exceptions.InvalidState;
@@ -32,10 +33,10 @@ class KilledUser implements UserState {
       repository.update(User.KEY, User.IS_REGISTERED_USER, false);
       repository.update(User.KEY, User.EMAIL, mail);
       if (mailSent) {
-        repository.update(User.KEY, User.ACTIVATION_STATE, User.STARTUP_CHECK_MAIL_SENT);
+        repository.update(User.KEY, User.ACTIVATION_STATE, UserActivationState.STARTUP_CHECK_MAIL_SENT.getId());
       }
       else {
-        repository.update(User.KEY, User.ACTIVATION_STATE, User.STARTUP_CHECK_KILL_USER);
+        repository.update(User.KEY, User.ACTIVATION_STATE, UserActivationState.STARTUP_CHECK_KILL_USER.getId());
       }
     }
     finally {

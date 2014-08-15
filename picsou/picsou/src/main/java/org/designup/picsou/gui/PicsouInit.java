@@ -72,7 +72,7 @@ public class PicsouInit {
         .get();
 
     repository.findOrCreate(User.KEY,
-                            value(User.ACTIVATION_STATE, badJarVersion ? User.STARTUP_CHECK_JAR_VERSION : null),
+                            value(User.ACTIVATION_STATE, badJarVersion ? UserActivationState.STARTUP_CHECK_JAR_VERSION.getId() : null),
                             value(User.IS_REGISTERED_USER, registeredUser));
     repository.findOrCreate(AppVersionInformation.KEY,
                             value(AppVersionInformation.LATEST_AVALAIBLE_JAR_VERSION, PicsouApplication.JAR_VERSION),

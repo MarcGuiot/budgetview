@@ -6,6 +6,7 @@ import org.designup.picsou.gui.config.ConfigService;
 import org.designup.picsou.gui.help.HyperlinkHandler;
 import org.designup.picsou.gui.undo.UndoRedoService;
 import org.designup.picsou.model.User;
+import org.designup.picsou.model.UserActivationState;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.SelectionService;
@@ -36,7 +37,7 @@ public class LicenseActivationDialog {
   private JEditorPane askForNewCodeMessage = new JEditorPane();
   private ProgressPanel progressPanel = new ProgressPanel();
   private ActivateAction activateAction = new ActivateAction();
-  private Integer activationState;
+  private UserActivationState activationState;
   private GlobsPanelBuilder builder;
   private GlobTextEditor mailEditor;
   private final CloseAction closeAction;
@@ -130,21 +131,21 @@ public class LicenseActivationDialog {
           activateAction.setEnabled(true);
           connectionMessage.setVisible(false);
           Glob user = repository.get(User.KEY);
-          activationState = user.get(User.ACTIVATION_STATE);
+          activationState = UserActivationState.get(user.get(User.ACTIVATION_STATE));
           if (activationState != null) {
-            if (activationState == User.ACTIVATION_OK) {
+            if (activationState == UserActivationState.ACTIVATION_OK) {
               showConfirmation();
             }
-            else if (activationState == User.ACTIVATION_FAILED_MAIL_SENT) {
+            else if (activationState == UserActivationState.ACTIVATION_FAILED_MAIL_SENT) {
               updateDialogState("license.activation.failed.mailSent", localRepository.get(User.KEY).get(User.EMAIL));
             }
-            else if (activationState == User.ACTIVATION_FAILED_MAIL_SENT) {
+            else if (activationState == UserActivationState.ACTIVATION_FAILED_MAIL_SENT) {
               updateDialogState("license.code.invalid", localRepository.get(User.KEY).get(User.EMAIL));
             }
-            else if (activationState == User.ACTIVATION_FAILED_MAIL_UNKNOWN) {
+            else if (activationState == UserActivationState.ACTIVATION_FAILED_MAIL_UNKNOWN) {
               updateDialogState("license.mail.unknown");
             }
-            else if (activationState != User.ACTIVATION_IN_PROGRESS) {
+            else if (activationState != UserActivationState.ACTIVATION_IN_PROGRESS) {
               updateDialogState("license.activation.failed");
             }
           }
@@ -221,7 +222,7 @@ public class LicenseActivationDialog {
         Utils.endRemove();
       }
       if (checkContainsValidChange()) {
-        localRepository.update(User.KEY, User.ACTIVATION_STATE, User.ACTIVATION_IN_PROGRESS);
+        localRepository.update(User.KEY, User.ACTIVATION_STATE, UserActivationState.ACTIVATION_IN_PROGRESS.getId());
         progressPanel.start();
         localRepository.commitChanges(false);
         localDirectory.get(UndoRedoService.class).cleanUndo();
