@@ -4,10 +4,7 @@ import org.apache.commons.lang3.RandomStringUtils;
 import org.designup.picsou.gui.license.LicenseService;
 import com.budgetview.shared.utils.PicsouGlobSerializer;
 import org.globsframework.metamodel.GlobType;
-import org.globsframework.metamodel.annotations.DefaultBoolean;
-import org.globsframework.metamodel.annotations.DefaultInteger;
-import org.globsframework.metamodel.annotations.Key;
-import org.globsframework.metamodel.annotations.Target;
+import org.globsframework.metamodel.annotations.*;
 import org.globsframework.metamodel.fields.*;
 import org.globsframework.metamodel.utils.GlobTypeLoader;
 import org.globsframework.model.FieldSetter;
@@ -109,10 +106,6 @@ public class UserPreferences {
   @DefaultBoolean(false)
   public static BooleanField SHOW_TRANSACTION_GRAPH;
 
-  /** @deprecated */
-  @DefaultBoolean(false)
-  public static BooleanField SHOW_PROJECT_DETAILS;
-
   @DefaultBoolean(true)
   public static BooleanField SHOW_MAIN_ACCOUNT_LIST_IN_SUMMARY;
 
@@ -122,6 +115,9 @@ public class UserPreferences {
   @Target(AnalysisViewType.class)
   @DefaultInteger(0)
   public static LinkField ANALYSIS_VIEW_TYPE;
+
+  @DefaultDouble(-100.00)
+  public static DoubleField RAINY_WEATHER_THRESHOLD;
 
   static {
     GlobTypeLoader.init(UserPreferences.class, "userPreferences");
@@ -147,7 +143,7 @@ public class UserPreferences {
   public static class Serializer implements PicsouGlobSerializer {
 
     public int getWriteVersion() {
-      return 20;
+      return 21;
     }
 
     public boolean shouldBeSaved(GlobRepository repository, FieldValues fieldValues) {
@@ -191,15 +187,18 @@ public class UserPreferences {
       outputStream.writeUtf8String(values.get(MAIL_FOR_MOBILE));
       outputStream.writeUtf8String(values.get(PASSWORD_FOR_MOBILE));
       outputStream.writeBoolean(values.get(SHOW_TRANSACTION_GRAPH));
-      outputStream.writeBoolean(values.get(SHOW_PROJECT_DETAILS));
       outputStream.writeBoolean(values.get(SHOW_MAIN_ACCOUNT_LIST_IN_SUMMARY));
       outputStream.writeBoolean(values.get(SHOW_SAVINGS_ACCOUNT_LIST_IN_SUMMARY));
       outputStream.writeInteger(values.get(ANALYSIS_VIEW_TYPE));
+      outputStream.writeDouble(values.get(RAINY_WEATHER_THRESHOLD));
       return serializedByteArrayOutput.toByteArray();
     }
 
     public void deserializeData(int version, FieldSetter fieldSetter, byte[] data, Integer id) {
-      if (version == 20) {
+      if (version == 21) {
+        deserializeDataV21(fieldSetter, data);
+      }
+      else if (version == 20) {
         deserializeDataV20(fieldSetter, data);
       }
       else if (version == 19) {
@@ -261,6 +260,48 @@ public class UserPreferences {
       }
     }
 
+    private void deserializeDataV21(FieldSetter fieldSetter, byte[] data) {
+      SerializedInput input = SerializedInputOutputFactory.init(data);
+      fieldSetter.set(LAST_IMPORT_DIRECTORY, input.readUtf8String());
+      fieldSetter.set(LAST_BACKUP_RESTORE_DIRECTORY, input.readUtf8String());
+      fieldSetter.set(FUTURE_MONTH_COUNT, input.readInteger());
+      fieldSetter.set(REGISTERED_USER, input.readBoolean());
+      fieldSetter.set(CATEGORIZATION_FILTERING_MODE, input.readInteger());
+      fieldSetter.set(LAST_VALID_DAY, input.readDate());
+      fieldSetter.set(SERIES_ORDER_INCOME, input.readInteger());
+      fieldSetter.set(SERIES_ORDER_RECURRING, input.readInteger());
+      fieldSetter.set(SERIES_ORDER_VARIABLE, input.readInteger());
+      fieldSetter.set(SERIES_ORDER_SAVINGS, input.readInteger());
+      fieldSetter.set(SERIES_ORDER_EXTRA, input.readInteger());
+      fieldSetter.set(SHOW_BUDGET_AREA_DESCRIPTIONS, input.readBoolean());
+      fieldSetter.set(PERIOD_COUNT_FOR_PLANNED, input.readInteger());
+      fieldSetter.set(MONTH_FOR_PLANNED, input.readInteger());
+      fieldSetter.set(MULTIPLE_PLANNED, input.readBoolean());
+      fieldSetter.set(SHOW_RECONCILIATION, input.readBoolean());
+      fieldSetter.set(EXIT_COUNT, input.readInteger());
+      fieldSetter.set(EVALUATION_SHOWN, input.readBoolean());
+      fieldSetter.set(TRANSACTION_POS1, input.readInteger());
+      fieldSetter.set(TRANSACTION_POS2, input.readInteger());
+      fieldSetter.set(TRANSACTION_POS3, input.readInteger());
+      fieldSetter.set(TRANSACTION_POS4, input.readInteger());
+      fieldSetter.set(TRANSACTION_POS5, input.readInteger());
+      fieldSetter.set(TRANSACTION_POS6, input.readInteger());
+      fieldSetter.set(TRANSACTION_POS7, input.readInteger());
+      fieldSetter.set(TRANSACTION_POS8, input.readInteger());
+      fieldSetter.set(TRANSACTION_POS9, input.readInteger());
+      fieldSetter.set(COLOR_THEME, input.readInteger());
+      fieldSetter.set(NUMERIC_DATE_TYPE, input.readInteger());
+      fieldSetter.set(TEXT_DATE_TYPE, input.readInteger());
+      fieldSetter.set(RECONCILIATION_FILTERING_TIP_SHOWN, input.readBoolean());
+      fieldSetter.set(MAIL_FOR_MOBILE, input.readUtf8String());
+      fieldSetter.set(PASSWORD_FOR_MOBILE, input.readUtf8String());
+      fieldSetter.set(SHOW_TRANSACTION_GRAPH, input.readBoolean());
+      fieldSetter.set(SHOW_MAIN_ACCOUNT_LIST_IN_SUMMARY, input.readBoolean());
+      fieldSetter.set(SHOW_SAVINGS_ACCOUNT_LIST_IN_SUMMARY, input.readBoolean());
+      fieldSetter.set(ANALYSIS_VIEW_TYPE, input.readInteger());
+      fieldSetter.set(RAINY_WEATHER_THRESHOLD, input.readDouble());
+    }
+
     private void deserializeDataV20(FieldSetter fieldSetter, byte[] data) {
       SerializedInput input = SerializedInputOutputFactory.init(data);
       fieldSetter.set(LAST_IMPORT_DIRECTORY, input.readUtf8String());
@@ -297,7 +338,7 @@ public class UserPreferences {
       fieldSetter.set(MAIL_FOR_MOBILE, input.readUtf8String());
       fieldSetter.set(PASSWORD_FOR_MOBILE, input.readUtf8String());
       fieldSetter.set(SHOW_TRANSACTION_GRAPH, input.readBoolean());
-      fieldSetter.set(SHOW_PROJECT_DETAILS, input.readBoolean());
+      input.readBoolean(); // SHOW_PROJECT_DETAILS
       fieldSetter.set(SHOW_MAIN_ACCOUNT_LIST_IN_SUMMARY, input.readBoolean());
       fieldSetter.set(SHOW_SAVINGS_ACCOUNT_LIST_IN_SUMMARY, input.readBoolean());
       fieldSetter.set(ANALYSIS_VIEW_TYPE, input.readInteger());
@@ -339,7 +380,7 @@ public class UserPreferences {
       fieldSetter.set(MAIL_FOR_MOBILE, input.readUtf8String());
       fieldSetter.set(PASSWORD_FOR_MOBILE, input.readUtf8String());
       fieldSetter.set(SHOW_TRANSACTION_GRAPH, input.readBoolean());
-      fieldSetter.set(SHOW_PROJECT_DETAILS, input.readBoolean());
+      input.readBoolean(); // SHOW_PROJECT_DETAILS
       fieldSetter.set(SHOW_MAIN_ACCOUNT_LIST_IN_SUMMARY, input.readBoolean());
       fieldSetter.set(SHOW_SAVINGS_ACCOUNT_LIST_IN_SUMMARY, input.readBoolean());
       fieldSetter.set(ANALYSIS_VIEW_TYPE, AnalysisViewType.CHARTS.getId());
@@ -381,7 +422,7 @@ public class UserPreferences {
       fieldSetter.set(MAIL_FOR_MOBILE, input.readUtf8String());
       fieldSetter.set(PASSWORD_FOR_MOBILE, input.readUtf8String());
       fieldSetter.set(SHOW_TRANSACTION_GRAPH, input.readBoolean());
-      fieldSetter.set(SHOW_PROJECT_DETAILS, input.readBoolean());
+      input.readBoolean(); // SHOW_PROJECT_DETAILS
       fieldSetter.set(SHOW_MAIN_ACCOUNT_LIST_IN_SUMMARY, false);
       fieldSetter.set(SHOW_SAVINGS_ACCOUNT_LIST_IN_SUMMARY, false);
       fieldSetter.set(ANALYSIS_VIEW_TYPE, AnalysisViewType.CHARTS.getId());
@@ -423,7 +464,7 @@ public class UserPreferences {
       fieldSetter.set(MAIL_FOR_MOBILE, input.readUtf8String());
       fieldSetter.set(PASSWORD_FOR_MOBILE, input.readUtf8String());
       fieldSetter.set(SHOW_TRANSACTION_GRAPH, input.readBoolean());
-      fieldSetter.set(SHOW_PROJECT_DETAILS, true);
+      input.readBoolean(); // SHOW_PROJECT_DETAILS
       fieldSetter.set(SHOW_MAIN_ACCOUNT_LIST_IN_SUMMARY, false);
       fieldSetter.set(SHOW_SAVINGS_ACCOUNT_LIST_IN_SUMMARY, false);
       fieldSetter.set(ANALYSIS_VIEW_TYPE, AnalysisViewType.CHARTS.getId());
@@ -465,7 +506,7 @@ public class UserPreferences {
       fieldSetter.set(MAIL_FOR_MOBILE, input.readUtf8String());
       fieldSetter.set(PASSWORD_FOR_MOBILE, input.readUtf8String());
       fieldSetter.set(SHOW_TRANSACTION_GRAPH, true);
-      fieldSetter.set(SHOW_PROJECT_DETAILS, true);
+      input.readBoolean(); // SHOW_PROJECT_DETAILS
       fieldSetter.set(SHOW_MAIN_ACCOUNT_LIST_IN_SUMMARY, false);
       fieldSetter.set(SHOW_SAVINGS_ACCOUNT_LIST_IN_SUMMARY, false);
       fieldSetter.set(ANALYSIS_VIEW_TYPE, AnalysisViewType.CHARTS.getId());
@@ -505,7 +546,7 @@ public class UserPreferences {
       fieldSetter.set(TEXT_DATE_TYPE, input.readInteger());
       fieldSetter.set(RECONCILIATION_FILTERING_TIP_SHOWN, input.readBoolean());
       fieldSetter.set(SHOW_TRANSACTION_GRAPH, true);
-      fieldSetter.set(SHOW_PROJECT_DETAILS, true);
+      input.readBoolean(); // SHOW_PROJECT_DETAILS
       fieldSetter.set(SHOW_MAIN_ACCOUNT_LIST_IN_SUMMARY, false);
       fieldSetter.set(SHOW_SAVINGS_ACCOUNT_LIST_IN_SUMMARY, false);
       fieldSetter.set(ANALYSIS_VIEW_TYPE, AnalysisViewType.CHARTS.getId());
@@ -545,7 +586,7 @@ public class UserPreferences {
       fieldSetter.set(TEXT_DATE_TYPE, input.readInteger());
       fieldSetter.set(SHOW_TRANSACTION_GRAPH, false);
       fieldSetter.set(SHOW_TRANSACTION_GRAPH, true);
-      fieldSetter.set(SHOW_PROJECT_DETAILS, true);
+      input.readBoolean(); // SHOW_PROJECT_DETAILS
       fieldSetter.set(SHOW_MAIN_ACCOUNT_LIST_IN_SUMMARY, false);
       fieldSetter.set(SHOW_SAVINGS_ACCOUNT_LIST_IN_SUMMARY, false);
       fieldSetter.set(ANALYSIS_VIEW_TYPE, AnalysisViewType.CHARTS.getId());

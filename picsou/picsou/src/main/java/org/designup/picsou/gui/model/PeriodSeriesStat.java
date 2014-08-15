@@ -146,24 +146,6 @@ public class PeriodSeriesStat {
     return findUnique(series.get(Series.GROUP), SeriesType.SERIES_GROUP, repository);
   }
 
-  public static GlobMatcher seriesMatcher() {
-    return new GlobMatcher() {
-      public boolean matches(Glob stat, GlobRepository repository) {
-        return stat != null &&
-               SeriesType.SERIES.getId().equals(stat.get(PeriodSeriesStat.TARGET_TYPE));
-      }
-    };
-  }
-
-  public static GlobMatcher groupsMatcher() {
-    return new GlobMatcher() {
-      public boolean matches(Glob stat, GlobRepository repository) {
-        return stat != null &&
-               SeriesType.SERIES_GROUP.getId().equals(stat.get(PeriodSeriesStat.TARGET_TYPE));
-      }
-    };
-  }
-
   public static SeriesType getSeriesType(Glob periodSeriesStat) {
     return SeriesType.get(periodSeriesStat.get(TARGET_TYPE));
   }

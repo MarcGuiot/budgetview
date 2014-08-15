@@ -404,9 +404,9 @@ public class TransactionPlannedTrigger implements ChangeSetListener {
         IntegerField field = SeriesShape.getField(i);
         Integer percent = seriesShape.get(field);
         percent = percent == null ? 0 : percent;
-        int day = SeriesShape.getDay(period, i, monthId, series.get(Series.BUDGET_AREA).equals(BudgetArea.INCOME.getId()));
+        int day = SeriesShape.getDay(period, i, monthId);
         if (minDay != 0 && day < minDay) {
-          int nextDay = SeriesShape.getDay(period, i + 1, monthId, series.get(Series.BUDGET_AREA).equals(BudgetArea.INCOME.getId()));
+          int nextDay = SeriesShape.getDay(period, i + 1, monthId);
           if (nextDay < minDay && i != period) {
             percentToPropagate += percent;
           }

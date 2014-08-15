@@ -55,16 +55,4 @@ public class AmountFormat {
       return "+" + INTEGER_FORMAT.format(value);
     }
   }
-
-  public static String toStringWithPlus(Double value) {
-    if (value == null) {
-      return "";
-    }
-    if (value <= 0) {
-      return DECIMAL_FORMAT.format(value);
-    }
-    else {
-      return "+" + DECIMAL_FORMAT.format(value);
-    }
-  }
 }

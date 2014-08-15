@@ -16,7 +16,7 @@ public class ProjectViewToggleTest extends LoggedInFunctionalTestCase {
       .addTransaction("2013/12/01", 1000.00, "Income")
       .load();
 
-    projectList.checkHidden();
+    projectList.checkShown();
     projects.checkShowsCreation();
 
     projects.createFirst();
@@ -24,7 +24,7 @@ public class ProjectViewToggleTest extends LoggedInFunctionalTestCase {
     projectList.checkShown();
 
     currentProject.cancelEdition();
-    projectList.checkHidden();
+    projectList.checkShown();
     projects.checkShowsCreation();
   }
 }

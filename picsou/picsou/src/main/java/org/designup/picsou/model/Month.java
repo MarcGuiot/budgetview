@@ -169,14 +169,14 @@ public class Month {
     }
     int month = toMonth(monthId);
     int year = toYear(monthId);
-    return Lang.get("month." + toMonth(month) + ".long") + " " + year;
+    return getFullMonthLabel(toMonth(month)) + " " + year;
   }
 
   public static String getFullMonthLabel(Integer monthId) {
     if (monthId == null) {
       return "";
     }
-    return Lang.get("month." + toMonth(monthId) + ".long");
+    return Lang.capitalizeMonth(Lang.get("month." + toMonth(monthId) + ".long"));
   }
 
   public static String getFullMonthLabelWith4DigitYear(int monthId) {

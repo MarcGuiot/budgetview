@@ -123,7 +123,6 @@ public class PicsouInit {
     repository.addTrigger(new ProjectItemToStatTrigger());
     repository.addTrigger(new ProjectItemToSeriesBudgetTrigger());
     repository.addTrigger(new ProjectItemToProjectStatTrigger());
-    repository.addTrigger(new HideProjectDetailsTrigger());
     repository.addTrigger(new SavingsAccountUpdateSeriesTrigger());
     repository.addTrigger(new SavingsUpdateSeriesMirrorTrigger());
     repository.addTrigger(new SavingsDateActiveBudgetTrigger());
@@ -154,6 +153,7 @@ public class PicsouInit {
     repository.addTrigger(new PlannedSeriesStatTrigger());
     repository.addTrigger(new SeriesStatSummaryTrigger());
     repository.addTrigger(new BudgetStatTrigger());
+    repository.addTrigger(new AccountWeatherTrigger());
     repository.addTrigger(new SavingsBudgetStatTrigger());
     repository.addTrigger(new SubSeriesStatTrigger());
     repository.addTrigger(new SeriesStatToProjectStatTrigger());

@@ -7,7 +7,6 @@ import org.globsframework.metamodel.annotations.DefaultDouble;
 import org.globsframework.metamodel.annotations.Key;
 import org.globsframework.metamodel.annotations.Target;
 import org.globsframework.metamodel.fields.DoubleField;
-import org.globsframework.metamodel.fields.IntegerField;
 import org.globsframework.metamodel.fields.LinkField;
 import org.globsframework.metamodel.utils.GlobTypeLoader;
 import org.globsframework.utils.exceptions.UnexpectedApplicationState;
@@ -20,17 +19,7 @@ public class BudgetStat {
   public static LinkField MONTH;
 
   @DefaultDouble(0.0)
-  public static DoubleField BEGIN_OF_MONTH_ACCOUNT_POSITION;
-
-  @DefaultDouble(0.0)
-  public static DoubleField END_OF_MONTH_ACCOUNT_POSITION;
-
-  @DefaultDouble(0.0)
   public static DoubleField MONTH_BALANCE;
-
-  public static DoubleField LAST_KNOWN_ACCOUNT_POSITION;
-
-  public static IntegerField LAST_KNOWN_ACCOUNT_POSITION_DAY;
 
   @DefaultDouble(0.0)
   public static DoubleField INCOME;
@@ -195,9 +184,6 @@ public class BudgetStat {
   public static DoubleField SAVINGS_IN_NEGATIVE_OVERRUN;
 
   @DefaultDouble(0.0)
-  public static DoubleField SAVINGS_OUT;
-
-  @DefaultDouble(0.0)
   public static DoubleField SAVINGS_OUT_POSITIVE_REMAINING;
 
   @DefaultDouble(0.0)
@@ -220,8 +206,6 @@ public class BudgetStat {
 
   @DefaultDouble(0.0)
   public static DoubleField UNCATEGORIZED_ABS;
-
-  public static DoubleField MIN_POSITION;
 
   public static DoubleField[] EXPENSE_FIELDS;
   public static DoubleField[] EXPENSE_REMAINING_FIELDS;

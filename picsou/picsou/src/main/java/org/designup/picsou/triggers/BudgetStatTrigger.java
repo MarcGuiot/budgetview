@@ -29,13 +29,16 @@ public class BudgetStatTrigger implements ChangeSetListener {
 
   public void globsChanged(ChangeSet changeSet, GlobRepository repository) {
     if (changeSet.containsChanges(Transaction.TYPE) || changeSet.containsChanges(SeriesBudget.TYPE)
-        || changeSet.containsUpdates(Series.BUDGET_AREA)) {
+        || changeSet.containsUpdates(Series.BUDGET_AREA) || changeSet.containsChanges(CurrentMonth.TYPE)) {
       computeStat(repository);
     }
   }
 
   public void globsReset(GlobRepository repository, Set<GlobType> changedTypes) {
-    computeStat(repository);
+    if (changedTypes.contains(Transaction.TYPE) || changedTypes.contains(SeriesBudget.TYPE) ||
+        changedTypes.contains(Series.TYPE) || changedTypes.contains(CurrentMonth.TYPE)) {
+      computeStat(repository);
+    }
   }
 
   private void computeStat(GlobRepository repository) {
@@ -60,7 +63,7 @@ public class BudgetStatTrigger implements ChangeSetListener {
       for (Glob transaction : transactions) {
         budgetStatComputer.run(transaction);
       }
-      if (transactions.length != 0){
+      if (transactions.length != 0) {
         budgetStatComputer.minPosition.newMonth(transactions[transactions.length - 1].get(Transaction.POSITION_MONTH));
       }
       budgetStatComputer.complete();
@@ -91,7 +94,7 @@ public class BudgetStatTrigger implements ChangeSetListener {
       }
 
       Integer monthId = transaction.get(Transaction.POSITION_MONTH);
-      if (monthId < month){
+      if (monthId < month) {
         System.out.println("BudgetStatComputer.run");
       }
       if (month != 0 && month != monthId) {
@@ -267,7 +270,7 @@ public class BudgetStatTrigger implements ChangeSetListener {
       double seriesAmount = Utils.zeroIfNull(seriesStat.get(SeriesStat.ACTUAL_AMOUNT));
       double seriesPlannedAmount = Utils.zeroIfNull(seriesStat.get(SeriesStat.PLANNED_AMOUNT));
       double seriesRemainingAmount = Utils.zeroIfNull(seriesStat.get(SeriesStat.REMAINING_AMOUNT));
-      double serisOverrunAmount = Utils.zeroIfNull(seriesStat.get(SeriesStat.OVERRUN_AMOUNT));
+      double seriesOverrunAmount = Utils.zeroIfNull(seriesStat.get(SeriesStat.OVERRUN_AMOUNT));
 
       amount += seriesAmount;
       plannedAmount += seriesPlannedAmount;
@@ -277,11 +280,11 @@ public class BudgetStatTrigger implements ChangeSetListener {
       else {
         remainingNegativeAmount += seriesRemainingAmount;
       }
-      if (serisOverrunAmount > 0) {
-        overrunPositiveAmount += serisOverrunAmount;
+      if (seriesOverrunAmount > 0) {
+        overrunPositiveAmount += seriesOverrunAmount;
       }
       else {
-        overrunNegativeAmount += serisOverrunAmount;
+        overrunNegativeAmount += seriesOverrunAmount;
       }
 
       int monthId = seriesStat.get(SeriesStat.MONTH);
@@ -332,10 +335,9 @@ public class BudgetStatTrigger implements ChangeSetListener {
     }
   }
 
-  static class MinAccountPosition {
+  private static class MinAccountPosition {
     double begin;
     double end;
-    private boolean isFuture;
     double min = Double.NaN;
     double minFuture = Double.NaN;
     double total = Double.NaN;
@@ -347,13 +349,13 @@ public class BudgetStatTrigger implements ChangeSetListener {
     MinAccountPosition(int account, double value, boolean isFuture, boolean closed) {
       this.account = account;
       this.begin = 0.;
-      if (isFuture){
-        minFuture =  value;
+      if (isFuture) {
+        minFuture = value;
       }
       else {
         min = value;
       }
-      if (closed){
+      if (closed) {
         end = value;
       }
     }
@@ -367,11 +369,9 @@ public class BudgetStatTrigger implements ChangeSetListener {
       this.futureTotal = Double.NaN;
     }
 
-
     public void push(int account, double current, double total, boolean isFuture, boolean isClosed) {
       this.account = account;
       closed = isClosed;
-      this.isFuture = isFuture;
       hasOp = true;
       if (isFuture) {
         if (Double.isNaN(this.minFuture) || current < this.minFuture) {
@@ -486,9 +486,10 @@ public class BudgetStatTrigger implements ChangeSetListener {
       }
       // on inverse total et current pour que le critere de min soit sur le total et qu'on sauve en meme
       // temps le current et on reinverse dans le newMonth
-      if (minAccountPosition == null){
+      if (minAccountPosition == null) {
         minAccountPosition = new MinAccountPosition(accountId, total, false, false);
-      } else {
+      }
+      else {
         minAccountPosition.push(accountId, total, current, false, false);
       }
     }

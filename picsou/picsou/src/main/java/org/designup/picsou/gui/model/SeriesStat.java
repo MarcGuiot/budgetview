@@ -104,12 +104,6 @@ public class SeriesStat {
                                                MONTH, monthId);
   }
 
-  public static org.globsframework.model.Key keyForSeries(Glob series, Integer monthId) {
-    return org.globsframework.model.Key.create(TARGET, series.get(Series.ID),
-                                               TARGET_TYPE, SeriesType.SERIES.getId(),
-                                               MONTH, monthId);
-  }
-
   public static Glob findSeries(FieldValues seriesStatValues, GlobRepository repository) {
     if (!SeriesType.SERIES.getId().equals(seriesStatValues.get(TARGET_TYPE))) {
       throw new InvalidParameter("Unexpected type for: " + seriesStatValues);
@@ -128,13 +122,6 @@ public class SeriesStat {
     return repository.find(org.globsframework.model.Key.create(TARGET, seriesId,
                                                                TARGET_TYPE, SeriesType.SERIES.getId(),
                                                                MONTH, monthId));
-  }
-
-  public static Glob getGroup(FieldValues values, GlobRepository repository) {
-    if (!SeriesType.SERIES_GROUP.getId().equals(values.get(TARGET_TYPE))) {
-      throw new InvalidParameter("Unexpected type for: " + values);
-    }
-    return repository.get(org.globsframework.model.Key.create(Series.TYPE, values.get(TARGET)));
   }
 
   public static GlobMatcher isSeries() {

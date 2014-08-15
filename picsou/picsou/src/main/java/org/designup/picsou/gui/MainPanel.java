@@ -16,11 +16,13 @@ import org.designup.picsou.gui.components.PicsouFrame;
 import org.designup.picsou.gui.components.highlighting.HighlightingService;
 import org.designup.picsou.gui.components.layoutconfig.LayoutConfigService;
 import org.designup.picsou.gui.config.ConfigService;
+import org.designup.picsou.gui.dashboard.DashboardStatUpdater;
 import org.designup.picsou.gui.dashboard.DashboardView;
 import org.designup.picsou.gui.feedback.FeedbackService;
 import org.designup.picsou.gui.help.HelpService;
 import org.designup.picsou.gui.license.LicenseInfoView;
 import org.designup.picsou.gui.mobile.SendMobileDataAction;
+import org.designup.picsou.gui.model.DashboardStat;
 import org.designup.picsou.gui.model.PeriodAccountStat;
 import org.designup.picsou.gui.model.PeriodBudgetAreaStat;
 import org.designup.picsou.gui.model.PeriodSeriesStat;
@@ -149,6 +151,7 @@ public class MainPanel {
     PeriodSeriesStatUpdater.init(replicationGlobRepository, directory);
     PeriodBudgetAreaStatUpdater.init(replicationGlobRepository);
     PeriodAccountStatUpdater.init(replicationGlobRepository, directory);
+    DashboardStatUpdater.init(repository);
 
     directory.add(new HighlightingService());
 

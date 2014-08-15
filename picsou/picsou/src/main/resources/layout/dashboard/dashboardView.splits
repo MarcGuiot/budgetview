@@ -1,12 +1,42 @@
 <splits xmlns="http://www.globsframework.org/xml/splits.xsd">
 
   <styleImport file="/layout/commonStyles.splits"/>
-
   <styles>
+    <style selector="button.widget"
+           opaque="false" borderPainted="false" cursor="hand" font="LatoLight,plain,44"
+           fill="none" anchor="center" weightY="0.1"/>
+    <style selector="htmlEditorPane.label" font="LatoLight,plain,14" weightY="0.1" fill="none" anchor="center"/>
+
+    <style id="textOK" selector="x" foreground="dashboard.text.ok"/>
+    <style id="textNOK" selector="x" foreground="dashboard.text.nok"/>
+
+    <style id="importOK" selector="x" icon="dashboard/import_ok.png" horizontalTextPosition="left" iconTextGap="2"/>
+    <style id="importNOK" selector="x" icon="dashboard/import_nok.png" horizontalTextPosition="left" iconTextGap="2"/>
+
   </styles>
 
   <column name="dashboardView">
-    <panel ref="uncategorizedSummaryView"/>
+    <filler fill="vertical" weightY="50"/>
+    <grid weightY="1">
+      <button ref="importWidget" styleClass="widget" gridPos="(0,0)"/>
+      <htmlEditorPane ref="importLegend" styleClass="label" gridPos="(0,1)"/>
+
+      <button ref="weatherWidget" styleClass="widget" gridPos="(1,0)"/>
+      <htmlEditorPane ref="weatherLegend" styleClass="label" gridPos="(1,1)"/>
+
+      <button ref="mainAccountsWidget" styleClass="widget" gridPos="(2,0)"/>
+      <htmlEditorPane ref="mainAccountsLegend" styleClass="label" gridPos="(2,1)"/>
+
+      <button ref="uncategorizedWidget" styleClass="widget" gridPos="(0,2)"/>
+      <htmlEditorPane ref="uncategorizedLegend" styleClass="label" gridPos="(0,3)"/>
+
+      <button ref="remainderWidget" styleClass="widget" gridPos="(1,2)"/>
+      <htmlEditorPane ref="remainderLegend" styleClass="label" gridPos="(1,3)"/>
+
+      <button ref="allAccountsWidget" styleClass="widget" gridPos="(2,2)"/>
+      <htmlEditorPane ref="allAccountsLegend" styleClass="label" gridPos="(2,3)"/>
+    </grid>
+    <filler fill="vertical" weightY="100"/>
   </column>
 
 </splits>

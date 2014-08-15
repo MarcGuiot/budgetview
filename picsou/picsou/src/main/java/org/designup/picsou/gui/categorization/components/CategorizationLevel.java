@@ -73,9 +73,7 @@ public class CategorizationLevel implements ChangeSetListener {
     GlobMatcher monthFilter =
       filterOnCurrentMonth ? GlobMatchers.fieldIn(Transaction.MONTH, selectedMonths) : GlobMatchers.ALL;
     GlobList transactions =
-      repository.getAll(Transaction.TYPE, and(isFalse(Transaction.PLANNED), monthFilter,
-                                              not(fieldEquals(Transaction.TRANSACTION_TYPE, TransactionType.OPEN_ACCOUNT_EVENT.getId())),
-                                              not(fieldEquals(Transaction.TRANSACTION_TYPE, TransactionType.CLOSE_ACCOUNT_EVENT.getId()))));
+      repository.getAll(Transaction.TYPE, and(Transaction.getMatcherForRealOperations(), monthFilter));
 
     hasNoTransactions = transactions.isEmpty();
 

@@ -1,4 +1,4 @@
-package org.designup.picsou.gui.dashboard;
+package org.designup.picsou.gui.series;
 
 import org.designup.picsou.gui.View;
 import org.designup.picsou.gui.card.NavigationService;
@@ -114,4 +114,3 @@ public class UncategorizedSummaryView
     }
   }
 }
-

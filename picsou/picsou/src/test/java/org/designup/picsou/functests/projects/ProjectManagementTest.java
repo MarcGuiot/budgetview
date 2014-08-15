@@ -180,9 +180,9 @@ public class ProjectManagementTest extends LoggedInFunctionalTestCase {
     accounts.createMainAccount("Main account", 1000.00);
 
     projects.createFirst();
-    currentProject
-      .cancelEdition();
-    projectList.checkHidden();
+    currentProject.cancelEdition();
+    projectList.checkShown();
+    projects.checkShowsCreation();
 
     operations.undo();
     projectList.checkShown();
