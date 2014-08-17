@@ -1,6 +1,7 @@
-package org.designup.picsou.functests.checkers;
+package org.designup.picsou.functests.checkers.license;
 
 import junit.framework.Assert;
+import org.designup.picsou.functests.checkers.ViewChecker;
 import org.uispec4j.TextBox;
 import org.uispec4j.Window;
 

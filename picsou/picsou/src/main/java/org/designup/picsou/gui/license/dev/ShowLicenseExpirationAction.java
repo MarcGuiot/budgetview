@@ -1,16 +1,17 @@
-package org.designup.picsou.gui.license;
+package org.designup.picsou.gui.license.dev;
 
+import org.designup.picsou.gui.license.activation.LicenseExpirationDialog;
 import org.globsframework.utils.directory.Directory;
 import org.globsframework.model.GlobRepository;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 
-public class LicenseExpirationAction extends AbstractAction {
+public class ShowLicenseExpirationAction extends AbstractAction {
   private GlobRepository repository;
   private Directory directory;
 
-  public LicenseExpirationAction(GlobRepository repository, Directory directory) {
+  public ShowLicenseExpirationAction(GlobRepository repository, Directory directory) {
     super("[show expiration]");
     this.repository = repository;
     this.directory = directory;

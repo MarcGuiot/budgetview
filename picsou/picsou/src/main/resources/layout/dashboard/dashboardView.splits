@@ -37,6 +37,11 @@
       <htmlEditorPane ref="allAccountsLegend" styleClass="label" gridPos="(2,3)"/>
     </grid>
     <filler fill="vertical" weightY="100"/>
+
+    <panel ref="premiumPromotionPanel"/>
+    <panel ref="premiumTrialPanel"/>
+    <panel ref="premiumRegisteredPanel"/>
+
   </column>
 
 </splits>

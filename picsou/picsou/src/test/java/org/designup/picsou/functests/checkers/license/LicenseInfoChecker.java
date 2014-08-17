@@ -1,4 +1,4 @@
-package org.designup.picsou.functests.checkers;
+package org.designup.picsou.functests.checkers.license;
 
 import org.uispec4j.TextBox;
 import org.uispec4j.Window;

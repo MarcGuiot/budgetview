@@ -1,12 +1,13 @@
-package org.designup.picsou.gui.license;
+package org.designup.picsou.gui.license.activation;
 
 import org.designup.picsou.gui.components.ProgressPanel;
 import org.designup.picsou.gui.components.dialogs.PicsouDialog;
 import org.designup.picsou.gui.config.ConfigService;
 import org.designup.picsou.gui.help.HyperlinkHandler;
 import org.designup.picsou.gui.undo.UndoRedoService;
+import org.designup.picsou.model.LicenseActivationState;
+import org.designup.picsou.model.PremiumEvolutionState;
 import org.designup.picsou.model.User;
-import org.designup.picsou.model.UserActivationState;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.SelectionService;
@@ -25,6 +26,8 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.util.concurrent.ExecutorService;
 
+import static org.globsframework.model.FieldValue.value;
+
 public class LicenseActivationDialog {
   private PicsouDialog dialog;
   private GlobRepository repository;
@@ -37,7 +40,7 @@ public class LicenseActivationDialog {
   private JEditorPane askForNewCodeMessage = new JEditorPane();
   private ProgressPanel progressPanel = new ProgressPanel();
   private ActivateAction activateAction = new ActivateAction();
-  private UserActivationState activationState;
+  private LicenseActivationState activationState;
   private GlobsPanelBuilder builder;
   private GlobTextEditor mailEditor;
   private final CloseAction closeAction;
@@ -55,7 +58,7 @@ public class LicenseActivationDialog {
     dialog = PicsouDialog.create(parent, directory);
 
     Glob user = localRepository.get(User.KEY);
-    builder = new GlobsPanelBuilder(getClass(), "/layout/general/licenseActivationDialog.splits",
+    builder = new GlobsPanelBuilder(getClass(), "/layout/license/activation/licenseActivationDialog.splits",
                                     localRepository, this.localDirectory);
 
     builder.add("hyperlinkHandler", new HyperlinkHandler(directory, dialog) {
@@ -131,21 +134,21 @@ public class LicenseActivationDialog {
           activateAction.setEnabled(true);
           connectionMessage.setVisible(false);
           Glob user = repository.get(User.KEY);
-          activationState = UserActivationState.get(user.get(User.ACTIVATION_STATE));
+          activationState = LicenseActivationState.get(user.get(User.LICENSE_ACTIVATION_STATE));
           if (activationState != null) {
-            if (activationState == UserActivationState.ACTIVATION_OK) {
+            if (activationState == LicenseActivationState.ACTIVATION_OK) {
               showConfirmation();
             }
-            else if (activationState == UserActivationState.ACTIVATION_FAILED_MAIL_SENT) {
+            else if (activationState == LicenseActivationState.ACTIVATION_FAILED_MAIL_SENT) {
               updateDialogState("license.activation.failed.mailSent", localRepository.get(User.KEY).get(User.EMAIL));
             }
-            else if (activationState == UserActivationState.ACTIVATION_FAILED_MAIL_SENT) {
+            else if (activationState == LicenseActivationState.ACTIVATION_FAILED_MAIL_SENT) {
               updateDialogState("license.code.invalid", localRepository.get(User.KEY).get(User.EMAIL));
             }
-            else if (activationState == UserActivationState.ACTIVATION_FAILED_MAIL_UNKNOWN) {
+            else if (activationState == LicenseActivationState.ACTIVATION_FAILED_MAIL_UNKNOWN) {
               updateDialogState("license.mail.unknown");
             }
-            else if (activationState != UserActivationState.ACTIVATION_IN_PROGRESS) {
+            else if (activationState != LicenseActivationState.ACTIVATION_IN_PROGRESS) {
               updateDialogState("license.activation.failed");
             }
           }
@@ -222,7 +225,7 @@ public class LicenseActivationDialog {
         Utils.endRemove();
       }
       if (checkContainsValidChange()) {
-        localRepository.update(User.KEY, User.ACTIVATION_STATE, UserActivationState.ACTIVATION_IN_PROGRESS.getId());
+        localRepository.update(User.KEY, User.LICENSE_ACTIVATION_STATE, LicenseActivationState.ACTIVATION_IN_PROGRESS.getId());
         progressPanel.start();
         localRepository.commitChanges(false);
         localDirectory.get(UndoRedoService.class).cleanUndo();

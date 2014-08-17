@@ -2,12 +2,12 @@ package org.designup.picsou.model;
 
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.annotations.DefaultBoolean;
+import org.globsframework.metamodel.annotations.DefaultInteger;
 import org.globsframework.metamodel.annotations.Key;
 import org.globsframework.metamodel.annotations.Target;
 import org.globsframework.metamodel.fields.*;
 import org.globsframework.metamodel.utils.GlobTypeLoader;
 import org.globsframework.model.Glob;
-import org.globsframework.model.GlobRepository;
 
 public class User {
 
@@ -24,8 +24,12 @@ public class User {
   public static StringField ACTIVATION_CODE;
   public static BlobField SIGNATURE;
 
-  @Target(UserActivationState.class)
-  public static LinkField ACTIVATION_STATE;
+  @Target(PremiumEvolutionState.class)
+  @DefaultInteger(0)
+  public static LinkField PREMIUM_EVOLUTION_STATE;
+
+  @Target(LicenseActivationState.class)
+  public static LinkField LICENSE_ACTIVATION_STATE;
 
   @DefaultBoolean(false)
   public static BooleanField CONNECTED;
@@ -45,5 +49,12 @@ public class User {
 
   public static boolean isDemoUser(Glob user) {
     return user.isTrue(User.IS_DEMO_USER);
+  }
+
+  public static PremiumEvolutionState getPremiumEvolutionState(Glob user) {
+    if (user == null) {
+      return null;
+    }
+    return PremiumEvolutionState.get(user.get(PREMIUM_EVOLUTION_STATE));
   }
 }

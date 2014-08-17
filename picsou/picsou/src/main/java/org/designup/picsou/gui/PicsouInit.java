@@ -72,7 +72,7 @@ public class PicsouInit {
         .get();
 
     repository.findOrCreate(User.KEY,
-                            value(User.ACTIVATION_STATE, badJarVersion ? UserActivationState.STARTUP_CHECK_JAR_VERSION.getId() : null),
+                            value(User.LICENSE_ACTIVATION_STATE, badJarVersion ? LicenseActivationState.STARTUP_CHECK_JAR_VERSION.getId() : null),
                             value(User.IS_REGISTERED_USER, registeredUser));
     repository.findOrCreate(AppVersionInformation.KEY,
                             value(AppVersionInformation.LATEST_AVALAIBLE_JAR_VERSION, PicsouApplication.JAR_VERSION),
@@ -106,6 +106,7 @@ public class PicsouInit {
   }
 
   public static void initTriggers(ServerAccess serverAccess, Directory directory, final GlobRepository repository) {
+    repository.addTrigger(new UserRegistrationTrigger());
     repository.addTrigger(new CurrentMonthTrigger());
     repository.addTrigger(new MonthTrigger(directory));
     repository.addTrigger(new AccountInitialPositionTrigger());

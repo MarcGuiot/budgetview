@@ -29,8 +29,8 @@ import org.designup.picsou.gui.startup.AppPaths;
 import org.designup.picsou.gui.utils.KeyService;
 import org.designup.picsou.importer.analyzer.TransactionAnalyzerFactory;
 import org.designup.picsou.model.AppVersionInformation;
+import org.designup.picsou.model.LicenseActivationState;
 import org.designup.picsou.model.User;
-import org.designup.picsou.model.UserActivationState;
 import org.designup.picsou.model.UserPreferences;
 import org.designup.picsou.utils.Inline;
 import org.designup.picsou.utils.Lang;
@@ -413,12 +413,12 @@ public class ConfigService {
         SwingUtilities.invokeLater(new ComputeRegisterResponse(repository, response));
       }
       else {
-        updateRepository(repository, UserActivationState.ACTIVATION_FAILED_HTTP_REQUEST);
+        updateRepository(repository, LicenseActivationState.ACTIVATION_FAILED_HTTP_REQUEST);
       }
     }
     catch (final Exception e) {
       updateConnectionStatus(e);
-      updateRepository(repository, UserActivationState.ACTIVATION_FAILED_CAN_NOT_CONNECT);
+      updateRepository(repository, LicenseActivationState.ACTIVATION_FAILED_CAN_NOT_CONNECT);
       // pas de stack (juste les message) risque de faciliter le piratage
       Thread thread = new Thread() {
         public void run() {
@@ -453,10 +453,10 @@ public class ConfigService {
     return postMethod;
   }
 
-  private void updateRepository(final GlobRepository repository, final UserActivationState cause) {
+  private void updateRepository(final GlobRepository repository, final LicenseActivationState cause) {
     SwingUtilities.invokeLater(new Runnable() {
       public void run() {
-        repository.update(User.KEY, User.ACTIVATION_STATE, cause.getId());
+        repository.update(User.KEY, User.LICENSE_ACTIVATION_STATE, cause.getId());
       }
     });
   }
@@ -466,7 +466,7 @@ public class ConfigService {
     try {
       Header header = response.getFirstHeader(HEADER_MAIL_UNKNOWN);
       if (header != null && "true".equalsIgnoreCase(header.getValue())) {
-        repository.update(User.KEY, User.ACTIVATION_STATE, UserActivationState.ACTIVATION_FAILED_MAIL_UNKNOWN.getId());
+        repository.update(User.KEY, User.LICENSE_ACTIVATION_STATE, LicenseActivationState.ACTIVATION_FAILED_MAIL_UNKNOWN.getId());
       }
       else {
         Header signature = response.getFirstHeader(HEADER_SIGNATURE);
@@ -477,10 +477,10 @@ public class ConfigService {
         else {
           Header isMailSentHeader = response.getFirstHeader(HEADER_ACTIVATION_CODE_NOT_VALIDE_MAIL_SENT);
           if (isMailSentHeader != null && "true".equalsIgnoreCase(isMailSentHeader.getValue())) {
-            repository.update(User.KEY, User.ACTIVATION_STATE, UserActivationState.ACTIVATION_FAILED_MAIL_SENT.getId());
+            repository.update(User.KEY, User.LICENSE_ACTIVATION_STATE, LicenseActivationState.ACTIVATION_FAILED_MAIL_SENT.getId());
           }
           else {
-            repository.update(User.KEY, User.ACTIVATION_STATE, UserActivationState.ACTIVATION_FAILED_MAIL_NOT_SENT.getId());
+            repository.update(User.KEY, User.LICENSE_ACTIVATION_STATE, LicenseActivationState.ACTIVATION_FAILED_MAIL_NOT_SENT.getId());
           }
         }
       }

@@ -1,5 +1,7 @@
 package org.designup.picsou.functests.useraccounts;
 
+import org.designup.picsou.functests.checkers.license.LicenseActivationChecker;
+import org.designup.picsou.functests.checkers.license.LicenseInfoChecker;
 import org.designup.picsou.functests.utils.StartUpFunctionalTestCase;
 import org.designup.picsou.functests.checkers.*;
 import org.designup.picsou.functests.checkers.components.TimeViewChecker;

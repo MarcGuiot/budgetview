@@ -77,14 +77,6 @@ public class SingleFieldKey extends Key {
     return (byte[])value;
   }
 
-  public Boolean get(BooleanField field, boolean defaultIfNull) {
-    checkIsKeyField(field);
-    if (value == null) {
-      return defaultIfNull;
-    }
-    return (Boolean)value;
-  }
-
   public Boolean get(BooleanField field) {
     checkIsKeyField(field);
     return (Boolean)value;
@@ -104,11 +96,6 @@ public class SingleFieldKey extends Key {
     return (Double)value;
   }
 
-  public Double get(DoubleField field, double valueIfNull) throws ItemNotFound {
-    checkIsKeyField(field);
-    return (Double)value;
-  }
-
   public Object getValue(Field field) {
     checkIsKeyField(field);
     return value;
@@ -117,11 +104,6 @@ public class SingleFieldKey extends Key {
   public Integer get(IntegerField field) {
     checkIsKeyField(field);
     return (Integer)value;
-  }
-
-  public int get(IntegerField field, int valueIfNull) throws ItemNotFound {
-    Integer value = get(field);
-    return value == null ? valueIfNull : value;
   }
 
   public Integer get(LinkField field) {
@@ -141,12 +123,6 @@ public class SingleFieldKey extends Key {
   public Date get(TimeStampField field) {
     checkIsKeyField(field);
     return (Date)value;
-  }
-
-  private void checkIsKeyField(Field field) {
-    if (!keyField.equals(field)) {
-      throw new ItemNotFound("'" + field.getName() + "' is not a key of type " + getGlobType().getName());
-    }
   }
 
   // optimized - do not use generated code

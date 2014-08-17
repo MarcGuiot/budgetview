@@ -22,7 +22,7 @@ public class SeriesAmountLabelStringifier implements GlobListStringifier {
 
     if (autoSelectFutureMonths) {
       Integer firstMonth = monthIds.first();
-      return Lang.get("seriesAmountEdition.period.from", Month.getFullMonthLabelWith4DigitYear(firstMonth).toLowerCase());
+      return Lang.get("seriesAmountEdition.period.from", Month.getFullMonthLabelWith4DigitYear(firstMonth, true).toLowerCase());
     }
 
     String monthDescription = MonthListStringifier.toString(monthIds);

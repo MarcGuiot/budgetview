@@ -1,16 +1,13 @@
 package org.designup.picsou.license.functests;
 
-import org.designup.picsou.functests.checkers.LicenseActivationChecker;
-import org.designup.picsou.functests.checkers.SlaValidationDialogChecker;
+import org.designup.picsou.functests.checkers.license.LicenseActivationChecker;
 import org.designup.picsou.functests.checkers.ApplicationChecker;
 import org.designup.picsou.gui.PicsouApplication;
 import org.designup.picsou.gui.time.TimeService;
 import org.designup.picsou.gui.config.ConfigService;
 import org.designup.picsou.license.ConnectedTestCase;
 import org.globsframework.utils.Dates;
-import org.uispec4j.Trigger;
 import org.uispec4j.Window;
-import org.uispec4j.interception.WindowInterceptor;
 
 public class RegistrationTest extends ConnectedTestCase {
   private ApplicationChecker application;

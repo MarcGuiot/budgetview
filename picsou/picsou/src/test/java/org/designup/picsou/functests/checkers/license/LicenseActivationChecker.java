@@ -1,5 +1,6 @@
-package org.designup.picsou.functests.checkers;
+package org.designup.picsou.functests.checkers.license;
 
+import org.designup.picsou.functests.checkers.GuiChecker;
 import org.designup.picsou.gui.components.ProgressPanel;
 import org.designup.picsou.utils.Lang;
 import org.uispec4j.*;
@@ -14,8 +15,8 @@ public class LicenseActivationChecker extends GuiChecker {
 
   public LicenseActivationChecker(Window dialog) {
     this.dialog = dialog;
-    //on le met comme champs sinon uispec trouve le mauvais composent
-    // lorsque q'un autre composant (message) contient 'mail'
+    //on le met comme champ sinon uispec trouve le mauvais composant
+    // lorsque qu'un autre composant (message) contient 'mail'
   }
 
   public static LicenseActivationChecker open(Window window) {

@@ -94,7 +94,7 @@ public class PicsouDescriptionService extends DefaultDescriptionService {
           if (glob == null) {
             return null;
           }
-          return Month.getFullLabel(glob.get(Month.ID));
+          return Month.getFullLabel(glob.get(Month.ID), true);
         }
       };
     }

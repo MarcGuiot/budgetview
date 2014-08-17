@@ -1,5 +1,6 @@
-package org.designup.picsou.functests.checkers;
+package org.designup.picsou.functests.checkers.license;
 
+import org.designup.picsou.functests.checkers.GuiChecker;
 import org.uispec4j.Window;
 import org.uispec4j.assertion.UISpecAssert;
 

@@ -41,7 +41,7 @@ public class SeriesPeriodicityAndScopeStringifier implements GlobListStringifier
   }
 
   private String toString(Integer firstMonth) {
-    return Month.getFullMonthLabelWith4DigitYear(firstMonth);
+    return Month.getFullMonthLabelWith4DigitYear(firstMonth, true);
   }
 
   private static final MonthRangeFormatter RANGE_FORMATER = new MonthRangeFormatter() {
@@ -58,15 +58,15 @@ public class SeriesPeriodicityAndScopeStringifier implements GlobListStringifier
 
     public String monthRangeInYear(int firstMonthId, int lastMonthId, int year) {
       return Lang.get("monthRange.monthRangeInYear",
-                      Month.getFullMonthLabel(firstMonthId),
-                      Month.getFullMonthLabel(lastMonthId),
+                      Month.getFullMonthLabel(firstMonthId, true),
+                      Month.getFullMonthLabel(lastMonthId, true),
                       Integer.toString(year));
     }
 
     public String monthRangeAcrossYears(int firstMonthId, int lastMonthId) {
       return Lang.get("monthRange.monthRangeAcrossYears",
-                      Month.getFullLabel(firstMonthId),
-                      Month.getFullLabel(lastMonthId));
+                      Month.getFullLabel(firstMonthId, true),
+                      Month.getFullLabel(lastMonthId, true));
     }
   };
 }

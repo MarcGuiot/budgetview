@@ -1,4 +1,4 @@
-package org.designup.picsou.gui.license;
+package org.designup.picsou.gui.license.activation;
 
 import org.designup.picsou.gui.config.ConfigService;
 import org.designup.picsou.model.User;
@@ -6,7 +6,6 @@ import org.globsframework.model.GlobRepository;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
-import java.lang.reflect.InvocationTargetException;
 
 public class LicenseCheckerThread extends Thread {
   private Directory directory;

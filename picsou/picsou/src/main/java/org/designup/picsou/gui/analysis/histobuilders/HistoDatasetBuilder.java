@@ -25,7 +25,7 @@ public class HistoDatasetBuilder {
   }
 
   protected String getMonthLabel(int monthId) {
-    return Month.getFullMonthLabelWith4DigitYear(monthId);
+    return Month.getFullMonthLabelWith4DigitYear(monthId, true);
   }
 
   protected String getSection(int monthId) {

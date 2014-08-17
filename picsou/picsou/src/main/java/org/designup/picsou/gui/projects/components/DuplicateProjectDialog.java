@@ -126,7 +126,7 @@ public class DuplicateProjectDialog {
       if (duplicateProject == null) {
         return "";
       }
-      return Month.getFullLabel(duplicateProject.get(ProjectDuplicate.FIRST_MONTH));
+      return Month.getFullLabel(duplicateProject.get(ProjectDuplicate.FIRST_MONTH), true);
     }
 
     public String getMaxText() {

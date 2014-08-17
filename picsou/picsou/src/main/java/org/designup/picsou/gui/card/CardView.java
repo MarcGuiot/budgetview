@@ -1,6 +1,7 @@
 package org.designup.picsou.gui.card;
 
 import org.designup.picsou.gui.View;
+import org.designup.picsou.gui.license.PremiumEvolution;
 import org.designup.picsou.gui.signpost.Signpost;
 import org.designup.picsou.gui.card.utils.NavigationAction;
 import org.designup.picsou.gui.card.utils.NavigationIcons;
@@ -11,6 +12,7 @@ import org.designup.picsou.gui.signpost.guides.GotoDataSignpost;
 import org.designup.picsou.gui.signpost.guides.SkipAndGotoBudgetSignpost;
 import org.designup.picsou.gui.utils.Gui;
 import org.designup.picsou.model.Month;
+import org.designup.picsou.model.PremiumEvolutionState;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobSelection;
 import org.globsframework.gui.GlobSelectionListener;
@@ -50,7 +52,7 @@ public class CardView extends View implements GlobSelectionListener {
     final ButtonGroup masterGroup = new ButtonGroup();
     final ImageLocator images = directory.get(ImageLocator.class);
     for (Card card : CARDS) {
-      JToggleButton toggle = new JToggleButton(new ToggleAction(card));
+      final JToggleButton toggle = new JToggleButton(new ToggleAction(card));
       toggle.setIcon(NavigationIcons.get(images, card));
       toggle.setRolloverEnabled(true);
       toggle.setRolloverIcon(NavigationIcons.getRollover(images, card));
@@ -60,18 +62,27 @@ public class CardView extends View implements GlobSelectionListener {
       masterGroup.add(toggle);
       toggles[card.getId()] = toggle;
 
-      if (card.equals(Card.BUDGET)) {
-        categorizationCompletionSignpost.attach(toggle);
-        Signpost signpost = new SkipAndGotoBudgetSignpost(repository, directory);
-        signpost.attach(toggle);
-      }
-      else if (card.equals(Card.DATA)) {
-        Signpost signpost = new GotoDataSignpost(repository, directory);
-        signpost.attach(toggle);
-      }
-      else if (card.equals(Card.CATEGORIZATION)) {
-        Signpost signpost = new GotoCategorizationSignpost(repository, directory);
-        signpost.attach(toggle);
+      switch (card) {
+        case BUDGET:
+          categorizationCompletionSignpost.attach(toggle);
+          Signpost gotoBudgetSignpost = new SkipAndGotoBudgetSignpost(repository, directory);
+          gotoBudgetSignpost.attach(toggle);
+          break;
+        case DATA:
+          Signpost gotoDataSignpost = new GotoDataSignpost(repository, directory);
+          gotoDataSignpost.attach(toggle);
+          break;
+        case CATEGORIZATION:
+          Signpost gotoCategorizationSignpost = new GotoCategorizationSignpost(repository, directory);
+          gotoCategorizationSignpost.attach(toggle);
+          break;
+        case PROJECTS:
+          PremiumEvolution.addListener(repository, new PremiumEvolution.Listener() {
+            public void processState(PremiumEvolutionState state) {
+              toggle.setVisible(state.isPremiumFeaturesEnabled());
+            }
+          });
+          break;
       }
     }
 

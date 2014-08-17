@@ -163,24 +163,25 @@ public class Month {
     return yyyymmdd % 100;
   }
 
-  public static String getFullLabel(Integer monthId) {
+  public static String getFullLabel(Integer monthId, boolean capitalizeAccordingToLanguage) {
     if (monthId == null) {
       return "";
     }
     int month = toMonth(monthId);
     int year = toYear(monthId);
-    return getFullMonthLabel(toMonth(month)) + " " + year;
+    return getFullMonthLabel(toMonth(month), capitalizeAccordingToLanguage) + " " + year;
   }
 
-  public static String getFullMonthLabel(Integer monthId) {
+  public static String getFullMonthLabel(Integer monthId, boolean capitalizeAccordingToLanguage) {
     if (monthId == null) {
       return "";
     }
-    return Lang.capitalizeMonth(Lang.get("month." + toMonth(monthId) + ".long"));
+    String text = Lang.get("month." + toMonth(monthId) + ".long");
+    return capitalizeAccordingToLanguage ? Lang.capitalizeMonth(text) : text;
   }
 
-  public static String getFullMonthLabelWith4DigitYear(int monthId) {
-    return getFullMonthLabel(monthId) + " " + toYear(monthId);
+  public static String getFullMonthLabelWith4DigitYear(int monthId, boolean capitalizeAccordingToLanguage) {
+    return getFullMonthLabel(monthId, capitalizeAccordingToLanguage) + " " + toYear(monthId);
   }
 
   public static String getShortMonthLabel(Integer monthId) {

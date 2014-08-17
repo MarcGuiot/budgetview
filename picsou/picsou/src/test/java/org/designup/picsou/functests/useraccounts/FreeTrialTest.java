@@ -1,6 +1,6 @@
 package org.designup.picsou.functests.useraccounts;
 
-import org.designup.picsou.functests.checkers.LicenseActivationChecker;
+import org.designup.picsou.functests.checkers.license.LicenseActivationChecker;
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.gui.time.TimeService;
 import org.globsframework.utils.Dates;

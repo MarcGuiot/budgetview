@@ -44,7 +44,7 @@ public class DbChecker {
     sqlService = null;
   }
 
-  public void registerMail(String email, String code) {
+  public void   registerMail(String email, String code) {
     SqlConnection connection = getConnection();
     connection.getCreateBuilder(License.TYPE)
       .set(License.MAIL, email)

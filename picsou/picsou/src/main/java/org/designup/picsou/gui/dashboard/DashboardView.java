@@ -2,6 +2,9 @@ package org.designup.picsou.gui.dashboard;
 
 import org.designup.picsou.gui.View;
 import org.designup.picsou.gui.dashboard.widgets.*;
+import org.designup.picsou.gui.license.registered.PremiumRegisteredPanel;
+import org.designup.picsou.gui.license.promotion.PremiumPromotionPanel;
+import org.designup.picsou.gui.license.promotion.PremiumTrialPanel;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.utils.directory.Directory;
@@ -32,6 +35,15 @@ public class DashboardView extends View {
 
     MainAccountsWidget mainAccounts = new MainAccountsWidget(repository, directory);
     mainAccounts.register(builder, "mainAccountsWidget", "mainAccountsLegend");
+
+    PremiumPromotionPanel premiumPromotion = new PremiumPromotionPanel(repository, directory);
+    premiumPromotion.registerComponents(builder);
+
+    PremiumTrialPanel premiumRegistered= new PremiumTrialPanel(repository, directory);
+    premiumRegistered.registerComponents(builder);
+
+    PremiumRegisteredPanel premiumTrial = new PremiumRegisteredPanel(repository, directory);
+    premiumTrial.registerComponents(builder);
 
     parentBuilder.add("dashboardView", builder);
   }

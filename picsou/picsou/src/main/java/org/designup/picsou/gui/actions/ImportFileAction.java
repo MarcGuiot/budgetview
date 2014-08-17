@@ -1,10 +1,9 @@
 package org.designup.picsou.gui.actions;
 
-import org.designup.picsou.gui.PicsouApplication;
 import org.designup.picsou.gui.components.dialogs.MessageDialog;
 import org.designup.picsou.gui.components.dialogs.MessageType;
 import org.designup.picsou.gui.importer.ImportDialog;
-import org.designup.picsou.gui.license.LicenseActivationDialog;
+import org.designup.picsou.gui.license.activation.LicenseActivationDialog;
 import org.designup.picsou.gui.license.LicenseService;
 import org.designup.picsou.gui.startup.components.OpenRequestManager;
 import org.designup.picsou.model.SignpostStatus;

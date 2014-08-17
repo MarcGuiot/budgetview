@@ -1,0 +1,14 @@
+<splits xmlns="http://www.globsframework.org/xml/splits.xsd">
+
+  <styleImport file="/layout/commonStyles.splits"/>
+
+  <column ref="premiumPromotionPanel">
+    <label text="$license.premium.promotion.title.try"/>
+    <row>
+      <filler fill="horizontal"/>
+      <button action="activateTrial"/>
+      <filler fill="horizontal"/>
+    </row>
+  </column>
+
+</splits>

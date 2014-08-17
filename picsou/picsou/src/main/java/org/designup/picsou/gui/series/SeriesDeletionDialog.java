@@ -71,7 +71,7 @@ public class SeriesDeletionDialog {
     builder.add("setEndDate", new SetEndDateAction(lastMonth));
     JEditorPane setEndDateMessage =
       GuiUtils.createReadOnlyHtmlComponent(Lang.get("seriesDeletion.setEndDate.message",
-                                                    Month.getFullLabel(lastMonth)));
+                                                    Month.getFullLabel(lastMonth, true)));
     builder.add("setEndDateMessage", setEndDateMessage);
 
     // Uncategorize

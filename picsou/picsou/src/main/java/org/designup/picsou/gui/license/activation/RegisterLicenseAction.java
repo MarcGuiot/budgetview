@@ -1,4 +1,4 @@
-package org.designup.picsou.gui.license;
+package org.designup.picsou.gui.license.activation;
 
 import org.globsframework.model.GlobRepository;
 import org.globsframework.utils.directory.Directory;

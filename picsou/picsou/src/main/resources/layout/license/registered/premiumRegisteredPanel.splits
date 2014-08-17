@@ -1,0 +1,13 @@
+<splits xmlns="http://www.globsframework.org/xml/splits.xsd">
+
+  <styleImport file="/layout/commonStyles.splits"/>
+
+  <column ref="premiumRegisteredPanel">
+    <row>
+      <filler fill="horizontal"/>
+      <label text="$license.premium.registered.message"/>
+      <filler fill="horizontal"/>
+    </row>
+  </column>
+
+</splits>

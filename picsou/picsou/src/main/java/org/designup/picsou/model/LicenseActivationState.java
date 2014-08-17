@@ -10,7 +10,7 @@ import org.globsframework.utils.exceptions.InvalidParameter;
 
 import static org.globsframework.model.FieldValue.value;
 
-public enum UserActivationState implements GlobConstantContainer {
+public enum LicenseActivationState implements GlobConstantContainer {
   ACTIVATION_IN_PROGRESS(1),
   ACTIVATION_OK(2),
   ACTIVATION_FAILED_BAD_SIGNATURE(3),
@@ -32,12 +32,12 @@ public enum UserActivationState implements GlobConstantContainer {
 
   private int id;
 
-  UserActivationState(int id) {
+  LicenseActivationState(int id) {
     this.id = id;
   }
 
   static {
-    GlobTypeLoader.init(UserActivationState.class, "userActivationState");
+    GlobTypeLoader.init(LicenseActivationState.class, "userActivationState");
   }
 
   public ReadOnlyGlob getGlob() {
@@ -48,7 +48,7 @@ public enum UserActivationState implements GlobConstantContainer {
     return id;
   }
 
-  public static UserActivationState get(Integer state) {
+  public static LicenseActivationState get(Integer state) {
     if (state == null) {
       return null;
     }

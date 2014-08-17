@@ -2,6 +2,7 @@ package org.designup.picsou.functests.checkers;
 
 import junit.framework.Assert;
 import org.designup.picsou.functests.checkers.components.AmountEditorChecker;
+import org.designup.picsou.functests.checkers.license.LicenseActivationChecker;
 import org.designup.picsou.utils.Lang;
 import org.uispec4j.*;
 

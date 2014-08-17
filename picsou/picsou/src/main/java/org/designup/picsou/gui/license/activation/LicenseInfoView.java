@@ -1,12 +1,13 @@
-package org.designup.picsou.gui.license;
+package org.designup.picsou.gui.license.activation;
 
 import org.designup.picsou.gui.View;
 import org.designup.picsou.gui.help.HyperlinkHandler;
+import org.designup.picsou.gui.license.LicenseService;
 import org.designup.picsou.gui.startup.components.LogoutService;
 import org.designup.picsou.gui.time.TimeService;
 import org.designup.picsou.gui.utils.ApplicationColors;
+import org.designup.picsou.model.LicenseActivationState;
 import org.designup.picsou.model.User;
-import org.designup.picsou.model.UserActivationState;
 import org.designup.picsou.model.UserPreferences;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobsPanelBuilder;
@@ -93,7 +94,7 @@ public class LicenseInfoView extends View {
       return;
     }
 
-    Integer state = user.get(User.ACTIVATION_STATE);
+    Integer state = user.get(User.LICENSE_ACTIVATION_STATE);
     if (user.get(User.EMAIL) == null && state == null && (days > LicenseService.TRIAL_SHOWN_DURATION)) {
       licenseMessage.setVisible(false);
       licenseMessage.setText("");
@@ -106,7 +107,7 @@ public class LicenseInfoView extends View {
   
   public void registerComponents(GlobsPanelBuilder parentBuilder) {
 
-    GlobsPanelBuilder builder = new GlobsPanelBuilder(getClass(), "/layout/general/licenseInfoView.splits",
+    GlobsPanelBuilder builder = new GlobsPanelBuilder(getClass(), "/layout/license/activation/licenseInfoView.splits",
                                                       repository, directory);
 
     builder.add("licenseInfoMessage", licenseMessage);
@@ -126,10 +127,7 @@ public class LicenseInfoView extends View {
   }
 
   private long getDaysLeft(Glob userPreferences) {
-    Date date = userPreferences.get(UserPreferences.LAST_VALID_DAY);
-    if (date == null) {
-      date = new Date();
-    }
+    Date date = userPreferences.get(UserPreferences.LAST_VALID_DAY, new Date());
     return (date.getTime() - TimeService.getToday().getTime()) / Millis.ONE_DAY;
   }
 
@@ -158,7 +156,7 @@ public class LicenseInfoView extends View {
       return "";
     }
 
-    switch (UserActivationState.get(state)) {
+    switch (LicenseActivationState.get(state)) {
       case ACTIVATION_FAILED_MAIL_SENT:
         return Lang.get("license.activation.failed.mailSent", user.get(User.EMAIL));
 

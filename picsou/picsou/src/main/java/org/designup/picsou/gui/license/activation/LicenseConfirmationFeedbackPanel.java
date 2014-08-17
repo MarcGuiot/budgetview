@@ -1,4 +1,4 @@
-package org.designup.picsou.gui.license;
+package org.designup.picsou.gui.license.activation;
 
 import org.designup.picsou.gui.components.dialogs.PicsouDialog;
 import org.designup.picsou.gui.components.utils.CustomFocusTraversalPolicy;
@@ -43,7 +43,7 @@ public class LicenseConfirmationFeedbackPanel implements Disposable {
     this.email = email;
     this.closeAction = closeAction;
 
-    builder = new GlobsPanelBuilder(getClass(), "/layout/general/licenseConfirmationFeedbackPanel.splits",
+    builder = new GlobsPanelBuilder(getClass(), "/layout/license/activation/licenseConfirmationFeedbackPanel.splits",
                                     repository, directory);
 
     builder.addRepeat("questions", questions, new RepeatComponentFactory<Question>() {

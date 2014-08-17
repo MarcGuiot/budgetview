@@ -37,7 +37,7 @@ public class WeatherWidget extends DashboardWidget {
       legend.setText("");
     }
     else {
-      String month = Month.getFullMonthLabel(repository.get(DashboardStat.KEY).get(DashboardStat.LAST_FORECAST_MONTH));
+      String month = Month.getFullMonthLabel(repository.get(DashboardStat.KEY).get(DashboardStat.LAST_FORECAST_MONTH), true);
       switch (weather) {
         case SUNNY:
           widgetButton.setIcon(SUNNY_ICON);

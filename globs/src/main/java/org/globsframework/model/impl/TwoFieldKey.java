@@ -117,6 +117,14 @@ public class TwoFieldKey extends Key {
     return null;
   }
 
+  public Date get(DateField field, Date valueIfNull) throws ItemNotFound {
+    Date value = get(field);
+    if (value == null) {
+      return valueIfNull;
+    }
+    return value;
+  }
+
   public Double get(DoubleField field) {
     checkIsKeyField(field);
     if (field == keyField1) {
@@ -198,12 +206,6 @@ public class TwoFieldKey extends Key {
       return (Date)value2;
     }
     return null;
-  }
-
-  private void checkIsKeyField(Field field) {
-    if (!keyField1.equals(field) && !keyField2.equals(field)) {
-      throw new ItemNotFound("'" + field.getName() + "' is not a key of type " + getGlobType().getName());
-    }
   }
 
   // optimized - do not use generated code

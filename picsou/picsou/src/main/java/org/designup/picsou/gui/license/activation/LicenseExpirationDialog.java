@@ -1,4 +1,4 @@
-package org.designup.picsou.gui.license;
+package org.designup.picsou.gui.license.activation;
 
 import org.designup.picsou.gui.components.ProgressPanel;
 import org.designup.picsou.gui.components.dialogs.PicsouDialog;
@@ -35,7 +35,7 @@ public class LicenseExpirationDialog {
   public LicenseExpirationDialog(Window parent, final GlobRepository repository, final Directory directory) {
     localGlobRepository = LocalGlobRepositoryBuilder.init(repository)
       .copy(User.TYPE).get();
-    builder = new GlobsPanelBuilder(getClass(), "/layout/general/licenseExpirationDialog.splits",
+    builder = new GlobsPanelBuilder(getClass(), "/layout/license/activation/licenseExpirationDialog.splits",
                                     localGlobRepository, directory);
 
     builder.add("mailResponse", response);

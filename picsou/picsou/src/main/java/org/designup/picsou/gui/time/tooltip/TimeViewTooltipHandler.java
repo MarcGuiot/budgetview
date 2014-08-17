@@ -28,7 +28,7 @@ public class TimeViewTooltipHandler implements TimeViewMouseHandler {
   }
 
   public void enterMonth(int monthId) {
-    String month = Month.getFullLabel(monthId);
+    String month = Month.getFullLabel(monthId, true);
     Double minPosition = panel.getMinPosition(monthId);
     if (!repository.contains(Transaction.TYPE) || (minPosition == null)) {
       panel.setToolTipText(Lang.get("timeView.tooltip.month.noData", month));
