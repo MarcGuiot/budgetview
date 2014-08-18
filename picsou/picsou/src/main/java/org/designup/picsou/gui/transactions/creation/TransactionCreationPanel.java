@@ -393,13 +393,6 @@ public class TransactionCreationPanel extends View implements GlobSelectionListe
       return;
     }
 
-    if (LicenseService.trialExpired(parentRepository)) {
-      LicenseActivationDialog dialog = new LicenseActivationDialog(directory.get(JFrame.class),
-                                                                   repository, directory);
-      dialog.showExpiration();
-      return;
-    }
-
     AutoCompletion autoCompletion =
       new AutoCompletion(labelField, new AutoCompletionModel(parentRepository));
     autoCompletion.setStrict(false);

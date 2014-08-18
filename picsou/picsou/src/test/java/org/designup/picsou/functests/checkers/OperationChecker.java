@@ -279,27 +279,10 @@ public class OperationChecker {
     return backup(TestUtils.getFileName(test));
   }
 
-  public String backup(TestCase test, boolean trial) {
-    return backup(TestUtils.getFileName(test), trial);
-  }
-
   public String backup(String filePath) {
-    return backup(filePath, false);
-  }
-
-  public String backup(String filePath, boolean warnTrial) {
     final Ref<String> selectedFile = new Ref<String>();
     WindowInterceptor interceptor = WindowInterceptor
       .init(getBackupTrigger());
-    if (warnTrial) {
-      interceptor.process(new WindowHandler() {
-        public Trigger process(Window window) throws Exception {
-          MessageDialogChecker checker = new MessageDialogChecker(window);
-          checker.checkInfoMessageContains("Backup is possible during the trial period but restore is not possible.");
-          return checker.triggerClose();
-        }
-      });
-    }
     interceptor
       .process(FileChooserHandler.init().select(filePath))
       .process(new WindowHandler() {
@@ -325,20 +308,6 @@ public class OperationChecker {
         }
       })
       .run();
-  }
-
-  public void restoreNotAvailable() {
-    WindowInterceptor
-      .init(getRestoreTrigger())
-      .process(new WindowHandler() {
-        public Trigger process(Window window) throws Exception {
-          MessageDialogChecker dialogChecker = new MessageDialogChecker(window);
-          dialogChecker.checkInfoMessageContains("Restore is not possible during trial period.");
-          return dialogChecker.triggerClose();
-        }
-      })
-      .run();
-
   }
 
   public void restoreWithPassword(String filePath, final String password) {
