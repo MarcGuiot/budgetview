@@ -26,38 +26,38 @@ public class FreeTrialTest extends LoggedInFunctionalTestCase {
   }
 
   public void testMessageIsNotDisplayedInitially() throws Exception {
-    licenseMessage.checkHidden();
+    license.checkInfoMessageHidden();
   }
 
   public void test15DaysLeft() throws Exception {
 
     TimeService.setCurrentDate(Dates.parse("2008/10/01"));
     restartApplication();
-    licenseMessage.checkVisible("15 days left for trying BudgetView.");
+    license.checkInfoMessage("15 days left for trying BudgetView.");
 
     LicenseActivationChecker.enterLicense(mainWindow, "admin", "1234");
-    licenseMessage.checkHidden();
+    license.checkInfoMessageHidden();
   }
 
   public void testOneDayLeft() throws Exception {
     TimeService.setCurrentDate(Dates.parse("2008/10/15"));
 
     restartApplication();
-    licenseMessage.checkVisible("You have one day left for trying BudgetView.");
+    license.checkInfoMessage("You have one day left for trying BudgetView.");
   }
 
   public void testLastDay() throws Exception {
     TimeService.setCurrentDate(Dates.parse("2008/10/16"));
 
     restartApplication();
-    licenseMessage.checkVisible("This is your last day for trying BudgetView.");
+    license.checkInfoMessage("This is your last day for trying BudgetView.");
   }
 
   public void testTrialOver() throws Exception {
     TimeService.setCurrentDate(Dates.parse("2008/10/18"));
 
     restartApplication();
-    licenseMessage.checkVisible("Your free trial period is over.");
+    license.checkInfoMessage("Your free trial period is over.");
   }
 
   public void testCannotCreateTransactionsWhenTrialIsOver() throws Exception {

@@ -4,7 +4,6 @@ import org.designup.picsou.functests.checkers.*;
 import org.designup.picsou.functests.checkers.components.TimeViewChecker;
 import org.designup.picsou.functests.checkers.license.LicenseActivationChecker;
 import org.designup.picsou.functests.checkers.license.LicenseChecker;
-import org.designup.picsou.functests.checkers.license.LicenseMessageChecker;
 import org.designup.picsou.functests.checkers.printing.PrinterChecker;
 import org.designup.picsou.gui.PicsouApplication;
 import org.designup.picsou.gui.browsing.BrowsingService;
@@ -41,7 +40,6 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
   public TransactionDetailsChecker transactionDetails;
   public TransactionCreationChecker transactionCreation;
   public LicenseChecker license;
-  public LicenseMessageChecker licenseMessage;
   public BudgetViewChecker budgetView;
   public UncategorizedSummaryViewChecker uncategorized;
   public SavingsViewChecker savingsView;
@@ -172,7 +170,6 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
     categorization = new CategorizationChecker(mainWindow);
     seriesAnalysis = new SeriesAnalysisChecker(mainWindow);
     license = new LicenseChecker(mainWindow);
-    licenseMessage = new LicenseMessageChecker(mainWindow);
     newVersion = new NewVersionChecker(mainWindow);
     demoMessage = new DemoMessageChecker(mainWindow);
     importPanel = new ImportPanelChecker(mainWindow);
@@ -239,7 +236,6 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
     categorization = null;
     seriesAnalysis = null;
     license = null;
-    licenseMessage = null;
     importPanel = null;
     notes = null;
     projects = null;
