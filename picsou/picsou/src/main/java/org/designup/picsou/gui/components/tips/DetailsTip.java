@@ -55,7 +55,7 @@ public class DetailsTip implements Disposable {
 
   public void show() {
     balloonTip = new BalloonTip(component,
-                                text,
+                                new JLabel(text),
                                 createStyle(),
                                 BalloonTip.Orientation.LEFT_ABOVE,
                                 BalloonTip.AttachLocation.NORTHEAST,

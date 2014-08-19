@@ -17,7 +17,7 @@ public class TipChecker {
   public TipChecker checkText(final String text) {
     UISpecAssert.assertThat(new Assertion() {
       public void check() {
-        Assert.assertEquals(text, tip.getText());
+        Assert.assertEquals(text, getText());
       }
     });
     return this;
@@ -26,8 +26,8 @@ public class TipChecker {
   public TipChecker checkTextContains(final String text) {
     UISpecAssert.assertThat(new Assertion() {
       public void check() {
-        if (!tip.getText().contains(text)) {
-          Assert.fail("Text '" + text + "' not found. Actual: \n" + tip.getText());
+        if (!getText().contains(text)) {
+          Assert.fail("Text '" + text + "' not found. Actual: \n" + getText());
         }
       }
     });
@@ -37,7 +37,7 @@ public class TipChecker {
   public TipChecker checkVisible() {
     UISpecAssert.assertThat(new Assertion() {
       public void check() {
-        Assert.assertTrue("Tip not visible - text: " + tip.getText(), tip.isVisible());
+        Assert.assertTrue("Tip not visible - text: " + getText(), tip.isVisible());
       }
     });
     return this;
@@ -46,8 +46,12 @@ public class TipChecker {
   public void checkHidden() {
     UISpecAssert.assertThat(new Assertion() {
       public void check() {
-        Assert.assertFalse("Tip not visible - text: " + tip.getText(), tip.isVisible());
+        Assert.assertFalse("Tip not visible - text: " + getText(), tip.isVisible());
       }
     });
+  }
+
+  String getText(){
+    return ((JLabel)tip.getContents()).getText();
   }
 }

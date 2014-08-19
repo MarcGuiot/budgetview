@@ -128,7 +128,7 @@ public abstract class Signpost implements Disposable {
       return;
     }
     if (isShowing()) {
-      balloonTip.setText(text);
+      ((JLabel)balloonTip.getContents()).setText(text);
     }
     else {
       balloonTip = createBalloonTip(component, text);
