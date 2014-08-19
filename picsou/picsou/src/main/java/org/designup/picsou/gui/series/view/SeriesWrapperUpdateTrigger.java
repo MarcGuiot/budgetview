@@ -247,7 +247,7 @@ public class SeriesWrapperUpdateTrigger implements ChangeSetListener {
         Glob seriesWrapper =
           SeriesWrapper.getWrapperForSeries(subSeries.get(SubSeries.SERIES), repository);
         if (seriesWrapper == null) {
-          Log.write("Missing parent " + subSeries.get(SubSeries.SERIES));
+          Log.write("Missing parent " + GlobPrinter.toString(subSeries));
         }
         else {
           repository.create(SeriesWrapper.TYPE,
