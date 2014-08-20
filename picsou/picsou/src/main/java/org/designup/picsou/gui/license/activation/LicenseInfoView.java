@@ -2,30 +2,24 @@ package org.designup.picsou.gui.license.activation;
 
 import org.designup.picsou.gui.View;
 import org.designup.picsou.gui.help.HyperlinkHandler;
-import org.designup.picsou.gui.license.LicenseService;
 import org.designup.picsou.gui.startup.components.LogoutService;
-import org.designup.picsou.gui.time.TimeService;
 import org.designup.picsou.gui.utils.ApplicationColors;
 import org.designup.picsou.model.LicenseActivationState;
 import org.designup.picsou.model.User;
-import org.designup.picsou.model.UserPreferences;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.splits.utils.GuiUtils;
-import org.globsframework.metamodel.GlobType;
-import org.globsframework.model.ChangeSet;
-import org.globsframework.model.ChangeSetListener;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobRepository;
-import org.globsframework.utils.Millis;
+import org.globsframework.model.utils.KeyChangeListener;
+import org.globsframework.utils.Strings;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
-import java.util.Date;
-import java.util.Set;
 
 public class LicenseInfoView extends View {
+  private JPanel panel = new JPanel();
   private JEditorPane licenseMessage;
   private boolean forceHidden;
 
@@ -56,107 +50,72 @@ public class LicenseInfoView extends View {
     });
     ApplicationColors.installLinkColor(licenseMessage, "licenseMessage", "notesView.introBlock.link", directory);
 
-    repository.addChangeListener(new ChangeSetListener() {
-      public void globsChanged(ChangeSet changeSet, GlobRepository repository) {
-        if (changeSet.containsChanges(User.KEY) || changeSet.containsChanges(UserPreferences.KEY)) {
-          update(repository);
-        }
-      }
-
-      public void globsReset(GlobRepository repository, Set<GlobType> changedTypes) {
-        update(repository);
+    repository.addChangeListener(new KeyChangeListener(User.KEY) {
+      public void update() {
+        updateMessage(repository);
       }
     });
-    update(repository);
+    updateMessage(repository);
   }
 
-  private void update(GlobRepository repository) {
+  private void updateMessage(GlobRepository repository) {
     if (forceHidden) {
       licenseMessage.setVisible(false);
       return;
     }
 
     Glob user = repository.find(User.KEY);
-    Glob userPreferences = repository.find(UserPreferences.KEY);
-    if (user == null || userPreferences == null) {
+    if (user == null) {
       return;
     }
+
     if (User.isDemoUser(user)) {
-      licenseMessage.setText(Lang.get("demo.license.info.message"));
-      licenseMessage.setVisible(true);
+      showMessage(Lang.get("demo.license.info.message"));
       return;
     }
 
-    long days = getDaysLeft(userPreferences);
-    if (user.isTrue(User.IS_REGISTERED_USER)) {
-      licenseMessage.setVisible(false);
-      licenseMessage.setText("");
-      return;
-    }
-
-    Integer state = user.get(User.LICENSE_ACTIVATION_STATE);
-    if (user.get(User.EMAIL) == null && state == null && (days > LicenseService.TRIAL_SHOWN_DURATION)) {
-      licenseMessage.setVisible(false);
-      licenseMessage.setText("");
-      return;
-    }
-
-    licenseMessage.setText(getTrialMessage(user, days, state));
-    licenseMessage.setVisible(true);
+    showMessage(getRegistrationMessage(user));
   }
-  
+
+  private void showMessage(String message) {
+    if (Strings.isNullOrEmpty(message)) {
+      licenseMessage.setText("");
+      licenseMessage.setVisible(false);
+    }
+    else {
+      licenseMessage.setText("<html>" + message + "</message>");
+      licenseMessage.setVisible(true);
+    }
+  }
+
   public void registerComponents(GlobsPanelBuilder parentBuilder) {
 
     GlobsPanelBuilder builder = new GlobsPanelBuilder(getClass(), "/layout/license/activation/licenseInfoView.splits",
                                                       repository, directory);
 
+    builder.add("licenseInfoView", panel);
     builder.add("licenseInfoMessage", licenseMessage);
     builder.add("hide", new HideAction());
 
-    parentBuilder.add("licenseInfo", builder);
+    parentBuilder.add("licenseInfoView", builder);
   }
 
-  private String getTrialMessage(Glob user, long days, Integer state) {
-    StringBuilder htmlText = new StringBuilder();
-    htmlText.append("<html>");
-    htmlText.append(getDaysLeftMessage(user, days, state));
-    htmlText.append(' ');
-    htmlText.append(getRegisterMessage(user, days, state));
-    htmlText.append("</html>");
-    return htmlText.toString();
-  }
+  private String getRegistrationMessage(Glob user) {
 
-  private long getDaysLeft(Glob userPreferences) {
-    Date date = userPreferences.get(UserPreferences.LAST_VALID_DAY, new Date());
-    return (date.getTime() - TimeService.getToday().getTime()) / Millis.ONE_DAY;
-  }
-
-  private String getDaysLeftMessage(Glob user, long days, Integer state) {
-    if (days > 1) {
-      return Lang.get("license.info.day.count", days);
+    if (user.isTrue(User.IS_REGISTERED_USER)) {
+      return Lang.get("license.activation.ok", user.get(User.EMAIL));
     }
-    else if (days == 1) {
-      return Lang.get("license.info.one.day");
-    }
-    else if (days == 0) {
-      return Lang.get("license.info.last.day");
-    }
-    else if (licenseExpired(user, state)) {
-      return Lang.get("license.expiration.message");
-    }
-    return "";
-  }
 
-  private boolean licenseExpired(Glob user, Integer state) {
-    return user.get(User.EMAIL) == null || state == null;
-  }
-
-  private String getRegisterMessage(Glob user, long days, Integer state) {
-    if (state == null) {
+    LicenseActivationState activationState = LicenseActivationState.get(user.get(User.LICENSE_ACTIVATION_STATE));
+    if (activationState == null) {
       return "";
     }
 
-    switch (LicenseActivationState.get(state)) {
+    switch (activationState) {
+
+      case ACTIVATION_IN_PROGRESS:
+        return Lang.get("license.activation.inProgress", user.get(User.EMAIL));
+
       case ACTIVATION_FAILED_MAIL_SENT:
         return Lang.get("license.activation.failed.mailSent", user.get(User.EMAIL));
 
@@ -164,39 +123,23 @@ public class LicenseInfoView extends View {
       case ACTIVATION_FAILED_HTTP_REQUEST:
         return Lang.get("license.remote.connect");
 
-      case ACTIVATION_FAILED_MAIL_UNKNOWN: {
+      case ACTIVATION_FAILED_MAIL_UNKNOWN:
         return Lang.get("license.mail.unknown");
-      }
 
-      case ACTIVATION_FAILED_BAD_SIGNATURE: {
+      case ACTIVATION_FAILED_BAD_SIGNATURE:
         return Lang.get("license.activation.failed");
-      }
 
-      case ACTIVATION_FAILED_MAIL_NOT_SENT: {
+      case ACTIVATION_FAILED_MAIL_NOT_SENT:
         return Lang.get("license.code.invalid");
-      }
 
-      case STARTUP_CHECK_KILL_USER: {
-        if (days < 0) {
+      case STARTUP_CHECK_KILL_USER:
         return Lang.get("license.registered.user.killed");
-      }
-        else {
-          return Lang.get("license.registered.user.killed.trial");
-        }
-      }
 
-      case STARTUP_CHECK_MAIL_SENT: {
-        if (days < 0) {
+      case STARTUP_CHECK_MAIL_SENT:
         return Lang.get("license.registered.user.killed.mail.sent");
-        }
-        else {
-          return Lang.get("license.registered.user.killed.trial.mail.sent");
-        }
-      }
 
-      case STARTUP_CHECK_JAR_VERSION: {
+      case STARTUP_CHECK_JAR_VERSION:
         return Lang.get("license.registered.user.killed.jar.updated.manually");
-      }
 
       default:
         return "";
@@ -211,7 +154,7 @@ public class LicenseInfoView extends View {
 
     public void actionPerformed(ActionEvent actionEvent) {
       forceHidden = true;
-      update(repository);
+      updateMessage(repository);
     }
   }
 

@@ -24,10 +24,6 @@ public class User {
   public static StringField ACTIVATION_CODE;
   public static BlobField SIGNATURE;
 
-  @Target(PremiumEvolutionState.class)
-  @DefaultInteger(0)
-  public static LinkField PREMIUM_EVOLUTION_STATE;
-
   @Target(LicenseActivationState.class)
   public static LinkField LICENSE_ACTIVATION_STATE;
 
@@ -49,12 +45,5 @@ public class User {
 
   public static boolean isDemoUser(Glob user) {
     return user.isTrue(User.IS_DEMO_USER);
-  }
-
-  public static PremiumEvolutionState getPremiumEvolutionState(Glob user) {
-    if (user == null) {
-      return null;
-    }
-    return PremiumEvolutionState.get(user.get(PREMIUM_EVOLUTION_STATE));
   }
 }

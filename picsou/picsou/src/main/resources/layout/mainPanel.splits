@@ -133,9 +133,7 @@
         </card>
       </cards>
 
-      <column weightY="0.1" autoHideSource="licenseInfo">
-        <panel ref="licenseInfo" marginBottom="10"/>
-      </column>
+      <panel ref="licenseInfoView" weightY="0.1" marginBottom="10"/>
 
     </column>
 

@@ -22,6 +22,7 @@ public class PicsouModel {
                           PreTransactionTypeMatcher.TYPE,
                           TransactionImport.TYPE,
                           UserPreferences.TYPE,
+                          AddOns.TYPE,
                           Series.TYPE,
                           SubSeries.TYPE,
                           SeriesToCategory.TYPE,

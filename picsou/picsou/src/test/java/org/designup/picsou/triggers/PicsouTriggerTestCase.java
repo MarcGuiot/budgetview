@@ -28,15 +28,15 @@ public abstract class PicsouTriggerTestCase extends PicsouTestCase {
     repository.addTrigger(new TransactionPlannedTrigger());
     repository.addTrigger(new PlannedSeriesStatTrigger());
     repository.create(CurrentMonth.KEY,
-                      FieldValue.value(CurrentMonth.LAST_TRANSACTION_MONTH, 200808),
-                      FieldValue.value(CurrentMonth.LAST_TRANSACTION_DAY, 1)
+                      value(CurrentMonth.LAST_TRANSACTION_MONTH, 200808),
+                      value(CurrentMonth.LAST_TRANSACTION_DAY, 1)
     );
     repository.create(Key.create(Series.TYPE, Series.UNCATEGORIZED_SERIES_ID),
                       value(Series.PROFILE_TYPE, ProfileType.IRREGULAR.getId()),
                       value(Series.IS_AUTOMATIC, false),
                       value(Series.BUDGET_AREA, BudgetArea.VARIABLE.getId()));
-    repository.create(UserPreferences.KEY, FieldValue.value(UserPreferences.MONTH_FOR_PLANNED, 1),
-                      FieldValue.value(UserPreferences.PERIOD_COUNT_FOR_PLANNED, 6));
+    repository.create(UserPreferences.KEY, value(UserPreferences.MONTH_FOR_PLANNED, 1),
+                      value(UserPreferences.PERIOD_COUNT_FOR_PLANNED, 6));
   }
 
   protected void createSeries(int seriesId, double amount) {

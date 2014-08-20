@@ -2,11 +2,11 @@
 
   <styleImport file="/layout/commonStyles.splits"/>
 
-  <column ref="premiumPromotionPanel">
-    <label text="$license.premium.promotion.title.try"/>
+  <column ref="addOnsView">
+    <label text="$addons.title"/>
     <row>
       <filler fill="horizontal"/>
-      <button action="activateTrial"/>
+      <button action="buy"/>
       <filler fill="horizontal"/>
     </row>
   </column>

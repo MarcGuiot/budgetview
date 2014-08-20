@@ -136,6 +136,7 @@ public class SignpostStatus {
   }
 
   public static void setInitialGuidanceCompleted(GlobRepository repository) {
+    repository.findOrCreate(KEY);
     repository.update(KEY, CURRENT_SECTION, SignpostSectionType.COMPLETED.getId());
   }
 
@@ -143,11 +144,6 @@ public class SignpostStatus {
                                         GlobRepository repository) {
     repository.findOrCreate(KEY);
     repository.update(KEY, AMOUNT_SERIES, seriesKey.get(Series.ID));
-  }
-
-  public static boolean isAmountSeries(GlobRepository repository, org.globsframework.model.Key key) {
-    return Utils.equal(key.get(Series.ID),
-                       repository.findOrCreate(KEY).get(AMOUNT_SERIES));
   }
 
   public static void setPeriodicitySeriesKey(org.globsframework.model.Key seriesKey,

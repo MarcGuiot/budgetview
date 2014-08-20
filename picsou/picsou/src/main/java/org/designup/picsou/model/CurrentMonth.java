@@ -94,6 +94,11 @@ public class CurrentMonth {
     return repository.getAll(Month.TYPE).getSortedSet(Month.ID).last();
   }
 
+  public static Date getAsDate(GlobRepository repository) {
+    Glob currentMonth = repository.get(KEY);
+    return Month.toDate(currentMonth.get(CURRENT_MONTH), currentMonth.get(CURRENT_DAY));
+  }
+
   public static class Serializer implements PicsouGlobSerializer {
 
     public byte[] serializeData(FieldValues values) {

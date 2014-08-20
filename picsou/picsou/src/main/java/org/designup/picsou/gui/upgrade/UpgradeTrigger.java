@@ -141,6 +141,8 @@ public class UpgradeTrigger implements ChangeSetListener {
       repository.deleteAll(LayoutConfig.TYPE);
     }
 
+    repository.findOrCreate(AddOns.KEY);
+
       //dans tout les cas :
 
     repository.delete(Transaction.TYPE, and(fieldEquals(Transaction.CREATED_BY_SERIES, true),

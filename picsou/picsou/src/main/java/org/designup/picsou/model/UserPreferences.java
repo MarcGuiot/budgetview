@@ -1,8 +1,7 @@
 package org.designup.picsou.model;
 
-import org.apache.commons.lang3.RandomStringUtils;
-import org.designup.picsou.gui.license.LicenseService;
 import com.budgetview.shared.utils.PicsouGlobSerializer;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.annotations.*;
 import org.globsframework.metamodel.fields.*;
@@ -53,8 +52,6 @@ public class UserPreferences {
 
   @Target(SeriesOrder.class)
   public static LinkField SERIES_ORDER_EXTRA;
-
-  public static DateField LAST_VALID_DAY;
 
   @DefaultInteger(10)
   public static IntegerField PERIOD_COUNT_FOR_PLANNED;
@@ -158,7 +155,6 @@ public class UserPreferences {
       outputStream.writeInteger(values.get(FUTURE_MONTH_COUNT));
       outputStream.writeBoolean(values.get(REGISTERED_USER));
       outputStream.writeInteger(values.get(CATEGORIZATION_FILTERING_MODE));
-      outputStream.writeDate(values.get(LAST_VALID_DAY));
       outputStream.writeInteger(values.get(SERIES_ORDER_INCOME));
       outputStream.writeInteger(values.get(SERIES_ORDER_RECURRING));
       outputStream.writeInteger(values.get(SERIES_ORDER_VARIABLE));
@@ -267,7 +263,6 @@ public class UserPreferences {
       fieldSetter.set(FUTURE_MONTH_COUNT, input.readInteger());
       fieldSetter.set(REGISTERED_USER, input.readBoolean());
       fieldSetter.set(CATEGORIZATION_FILTERING_MODE, input.readInteger());
-      fieldSetter.set(LAST_VALID_DAY, input.readDate());
       fieldSetter.set(SERIES_ORDER_INCOME, input.readInteger());
       fieldSetter.set(SERIES_ORDER_RECURRING, input.readInteger());
       fieldSetter.set(SERIES_ORDER_VARIABLE, input.readInteger());
@@ -309,7 +304,7 @@ public class UserPreferences {
       fieldSetter.set(FUTURE_MONTH_COUNT, input.readInteger());
       fieldSetter.set(REGISTERED_USER, input.readBoolean());
       fieldSetter.set(CATEGORIZATION_FILTERING_MODE, input.readInteger());
-      fieldSetter.set(LAST_VALID_DAY, input.readDate());
+      input.readDate(); // LAST_VALID_DAY
       fieldSetter.set(SERIES_ORDER_INCOME, input.readInteger());
       fieldSetter.set(SERIES_ORDER_RECURRING, input.readInteger());
       fieldSetter.set(SERIES_ORDER_VARIABLE, input.readInteger());
@@ -351,7 +346,7 @@ public class UserPreferences {
       fieldSetter.set(FUTURE_MONTH_COUNT, input.readInteger());
       fieldSetter.set(REGISTERED_USER, input.readBoolean());
       fieldSetter.set(CATEGORIZATION_FILTERING_MODE, input.readInteger());
-      fieldSetter.set(LAST_VALID_DAY, input.readDate());
+      input.readDate(); // LAST_VALID_DAY
       fieldSetter.set(SERIES_ORDER_INCOME, input.readInteger());
       fieldSetter.set(SERIES_ORDER_RECURRING, input.readInteger());
       fieldSetter.set(SERIES_ORDER_VARIABLE, input.readInteger());
@@ -393,7 +388,7 @@ public class UserPreferences {
       fieldSetter.set(FUTURE_MONTH_COUNT, input.readInteger());
       fieldSetter.set(REGISTERED_USER, input.readBoolean());
       fieldSetter.set(CATEGORIZATION_FILTERING_MODE, input.readInteger());
-      fieldSetter.set(LAST_VALID_DAY, input.readDate());
+      input.readDate(); // LAST_VALID_DAY
       fieldSetter.set(SERIES_ORDER_INCOME, input.readInteger());
       fieldSetter.set(SERIES_ORDER_RECURRING, input.readInteger());
       fieldSetter.set(SERIES_ORDER_VARIABLE, input.readInteger());
@@ -435,7 +430,7 @@ public class UserPreferences {
       fieldSetter.set(FUTURE_MONTH_COUNT, input.readInteger());
       fieldSetter.set(REGISTERED_USER, input.readBoolean());
       fieldSetter.set(CATEGORIZATION_FILTERING_MODE, input.readInteger());
-      fieldSetter.set(LAST_VALID_DAY, input.readDate());
+      input.readDate(); // LAST_VALID_DAY
       fieldSetter.set(SERIES_ORDER_INCOME, input.readInteger());
       fieldSetter.set(SERIES_ORDER_RECURRING, input.readInteger());
       fieldSetter.set(SERIES_ORDER_VARIABLE, input.readInteger());
@@ -477,7 +472,7 @@ public class UserPreferences {
       fieldSetter.set(FUTURE_MONTH_COUNT, input.readInteger());
       fieldSetter.set(REGISTERED_USER, input.readBoolean());
       fieldSetter.set(CATEGORIZATION_FILTERING_MODE, input.readInteger());
-      fieldSetter.set(LAST_VALID_DAY, input.readDate());
+      input.readDate(); // LAST_VALID_DAY
       fieldSetter.set(SERIES_ORDER_INCOME, input.readInteger());
       fieldSetter.set(SERIES_ORDER_RECURRING, input.readInteger());
       fieldSetter.set(SERIES_ORDER_VARIABLE, input.readInteger());
@@ -519,7 +514,7 @@ public class UserPreferences {
       fieldSetter.set(FUTURE_MONTH_COUNT, input.readInteger());
       fieldSetter.set(REGISTERED_USER, input.readBoolean());
       fieldSetter.set(CATEGORIZATION_FILTERING_MODE, input.readInteger());
-      fieldSetter.set(LAST_VALID_DAY, input.readDate());
+      input.readDate(); // LAST_VALID_DAY
       fieldSetter.set(SERIES_ORDER_INCOME, input.readInteger());
       fieldSetter.set(SERIES_ORDER_RECURRING, input.readInteger());
       fieldSetter.set(SERIES_ORDER_VARIABLE, input.readInteger());
@@ -559,7 +554,7 @@ public class UserPreferences {
       fieldSetter.set(FUTURE_MONTH_COUNT, input.readInteger());
       fieldSetter.set(REGISTERED_USER, input.readBoolean());
       fieldSetter.set(CATEGORIZATION_FILTERING_MODE, input.readInteger());
-      fieldSetter.set(LAST_VALID_DAY, input.readDate());
+      input.readDate(); // LAST_VALID_DAY
       fieldSetter.set(SERIES_ORDER_INCOME, input.readInteger());
       fieldSetter.set(SERIES_ORDER_RECURRING, input.readInteger());
       fieldSetter.set(SERIES_ORDER_VARIABLE, input.readInteger());
@@ -599,7 +594,7 @@ public class UserPreferences {
       fieldSetter.set(FUTURE_MONTH_COUNT, input.readInteger());
       fieldSetter.set(REGISTERED_USER, input.readBoolean());
       fieldSetter.set(CATEGORIZATION_FILTERING_MODE, input.readInteger());
-      fieldSetter.set(LAST_VALID_DAY, input.readDate());
+      input.readDate(); // LAST_VALID_DAY
       fieldSetter.set(SERIES_ORDER_INCOME, input.readInteger());
       fieldSetter.set(SERIES_ORDER_RECURRING, input.readInteger());
       fieldSetter.set(SERIES_ORDER_VARIABLE, input.readInteger());
@@ -635,7 +630,7 @@ public class UserPreferences {
       fieldSetter.set(FUTURE_MONTH_COUNT, input.readInteger());
       fieldSetter.set(REGISTERED_USER, input.readBoolean());
       fieldSetter.set(CATEGORIZATION_FILTERING_MODE, input.readInteger());
-      fieldSetter.set(LAST_VALID_DAY, input.readDate());
+      input.readDate(); // LAST_VALID_DAY
       fieldSetter.set(SERIES_ORDER_INCOME, input.readInteger());
       fieldSetter.set(SERIES_ORDER_RECURRING, input.readInteger());
       fieldSetter.set(SERIES_ORDER_VARIABLE, input.readInteger());
@@ -670,7 +665,7 @@ public class UserPreferences {
       fieldSetter.set(FUTURE_MONTH_COUNT, input.readInteger());
       fieldSetter.set(REGISTERED_USER, input.readBoolean());
       fieldSetter.set(CATEGORIZATION_FILTERING_MODE, input.readInteger());
-      fieldSetter.set(LAST_VALID_DAY, input.readDate());
+      input.readDate(); // LAST_VALID_DAY
       fieldSetter.set(SERIES_ORDER_INCOME, input.readInteger());
       fieldSetter.set(SERIES_ORDER_RECURRING, input.readInteger());
       fieldSetter.set(SERIES_ORDER_VARIABLE, input.readInteger());
@@ -704,7 +699,7 @@ public class UserPreferences {
       fieldSetter.set(FUTURE_MONTH_COUNT, input.readInteger());
       fieldSetter.set(REGISTERED_USER, input.readBoolean());
       fieldSetter.set(CATEGORIZATION_FILTERING_MODE, input.readInteger());
-      fieldSetter.set(LAST_VALID_DAY, input.readDate());
+      input.readDate(); // LAST_VALID_DAY
       fieldSetter.set(SERIES_ORDER_INCOME, input.readInteger());
       fieldSetter.set(SERIES_ORDER_RECURRING, input.readInteger());
       fieldSetter.set(SERIES_ORDER_VARIABLE, input.readInteger());
@@ -729,7 +724,7 @@ public class UserPreferences {
       fieldSetter.set(FUTURE_MONTH_COUNT, input.readInteger());
       fieldSetter.set(REGISTERED_USER, input.readBoolean());
       fieldSetter.set(CATEGORIZATION_FILTERING_MODE, input.readInteger());
-      fieldSetter.set(LAST_VALID_DAY, input.readDate());
+      input.readDate(); // LAST_VALID_DAY
       fieldSetter.set(SERIES_ORDER_INCOME, input.readInteger());
       fieldSetter.set(SERIES_ORDER_RECURRING, input.readInteger());
       fieldSetter.set(SERIES_ORDER_VARIABLE, input.readInteger());
@@ -753,7 +748,7 @@ public class UserPreferences {
       fieldSetter.set(FUTURE_MONTH_COUNT, input.readInteger());
       fieldSetter.set(REGISTERED_USER, input.readBoolean());
       fieldSetter.set(CATEGORIZATION_FILTERING_MODE, input.readInteger());
-      fieldSetter.set(LAST_VALID_DAY, input.readDate());
+      input.readDate(); // LAST_VALID_DAY
       fieldSetter.set(SERIES_ORDER_INCOME, input.readInteger());
       fieldSetter.set(SERIES_ORDER_RECURRING, input.readInteger());
       fieldSetter.set(SERIES_ORDER_VARIABLE, input.readInteger());
@@ -781,7 +776,7 @@ public class UserPreferences {
       input.readInteger(); // CURRENT_WIZARD_PAGE
       input.readBoolean(); // SHOW_CATEGORIZATION_HELP_MESSAGE
       input.readBoolean(); // SHOW_VARIABLE_EDITION_MESSAGE
-      fieldSetter.set(LAST_VALID_DAY, input.readDate());
+      input.readDate(); // LAST_VALID_DAY
       fieldSetter.set(SERIES_ORDER_INCOME, input.readInteger());
       fieldSetter.set(SERIES_ORDER_RECURRING, input.readInteger());
       fieldSetter.set(SERIES_ORDER_VARIABLE, input.readInteger());
@@ -809,7 +804,7 @@ public class UserPreferences {
       input.readInteger(); // CURRENT_WIZARD_PAGE
       input.readBoolean(); // SHOW_CATEGORIZATION_HELP_MESSAGE
       input.readBoolean(); // SHOW_VARIABLE_EDITION_MESSAGE
-      fieldSetter.set(LAST_VALID_DAY, input.readDate());
+      input.readDate(); // LAST_VALID_DAY
       fieldSetter.set(SHOW_BUDGET_AREA_DESCRIPTIONS, true);
       fieldSetter.set(PERIOD_COUNT_FOR_PLANNED, 6);
       fieldSetter.set(MONTH_FOR_PLANNED, 1);
@@ -831,7 +826,7 @@ public class UserPreferences {
       input.readBoolean(); // SHOW_BUDGET_VIEW_WIZARD
       input.readBoolean(); // SHOW_CATEGORIZATION_HELP_MESSAGE
       input.readBoolean(); // SHOW_VARIABLE_EDITION_MESSAGE
-      fieldSetter.set(LAST_VALID_DAY, input.readDate());
+      input.readDate(); // LAST_VALID_DAY
       fieldSetter.set(SHOW_BUDGET_AREA_DESCRIPTIONS, true);
       fieldSetter.set(PERIOD_COUNT_FOR_PLANNED, 6);
       fieldSetter.set(MONTH_FOR_PLANNED, 1);
@@ -852,7 +847,7 @@ public class UserPreferences {
       fieldSetter.set(CATEGORIZATION_FILTERING_MODE, input.readInteger());
       input.readBoolean(); // SHOW_BUDGET_VIEW_WIZARD
       input.readBoolean(); // SHOW_CATEGORIZATION_HELP_MESSAGE
-      fieldSetter.set(LAST_VALID_DAY, input.readDate());
+      input.readDate(); // LAST_VALID_DAY
       fieldSetter.set(SHOW_BUDGET_AREA_DESCRIPTIONS, true);
       fieldSetter.set(PERIOD_COUNT_FOR_PLANNED, 6);
       fieldSetter.set(MONTH_FOR_PLANNED, 1);
@@ -872,7 +867,7 @@ public class UserPreferences {
       fieldSetter.set(CATEGORIZATION_FILTERING_MODE, input.readInteger());
       input.readBoolean(); // SHOW_BUDGET_VIEW_WIZARD
       input.readBoolean(); // SHOW_CATEGORIZATION_HELP_MESSAGE
-      fieldSetter.set(LAST_VALID_DAY, input.readDate());
+      input.readDate(); // LAST_VALID_DAY
       fieldSetter.set(SHOW_BUDGET_AREA_DESCRIPTIONS, true);
       fieldSetter.set(PERIOD_COUNT_FOR_PLANNED, 6);
       fieldSetter.set(MONTH_FOR_PLANNED, 1);
@@ -890,7 +885,7 @@ public class UserPreferences {
       fieldSetter.set(FUTURE_MONTH_COUNT, input.readInteger());
       fieldSetter.set(REGISTERED_USER, input.readBoolean());
       fieldSetter.set(CATEGORIZATION_FILTERING_MODE, input.readInteger());
-      fieldSetter.set(LAST_VALID_DAY, LicenseService.getEndOfTrialPeriod());
+      input.readDate(); // LAST_VALID_DAY
       fieldSetter.set(SHOW_BUDGET_AREA_DESCRIPTIONS, true);
       fieldSetter.set(PERIOD_COUNT_FOR_PLANNED, 6);
       fieldSetter.set(MONTH_FOR_PLANNED, 1);
@@ -907,7 +902,7 @@ public class UserPreferences {
       fieldSetter.set(LAST_IMPORT_DIRECTORY, input.readJavaString());
       fieldSetter.set(FUTURE_MONTH_COUNT, input.readInteger());
       fieldSetter.set(REGISTERED_USER, input.readBoolean());
-      fieldSetter.set(LAST_VALID_DAY, LicenseService.getEndOfTrialPeriod());
+      input.readDate(); // LAST_VALID_DAY
       fieldSetter.set(SHOW_BUDGET_AREA_DESCRIPTIONS, true);
       fieldSetter.set(PERIOD_COUNT_FOR_PLANNED, 6);
       fieldSetter.set(MONTH_FOR_PLANNED, 1);

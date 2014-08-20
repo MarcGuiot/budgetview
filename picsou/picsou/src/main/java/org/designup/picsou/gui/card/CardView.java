@@ -1,25 +1,24 @@
 package org.designup.picsou.gui.card;
 
 import org.designup.picsou.gui.View;
-import org.designup.picsou.gui.license.PremiumEvolution;
-import org.designup.picsou.gui.signpost.Signpost;
 import org.designup.picsou.gui.card.utils.NavigationAction;
 import org.designup.picsou.gui.card.utils.NavigationIcons;
 import org.designup.picsou.gui.help.HelpService;
 import org.designup.picsou.gui.model.Card;
+import org.designup.picsou.gui.signpost.Signpost;
 import org.designup.picsou.gui.signpost.guides.GotoCategorizationSignpost;
 import org.designup.picsou.gui.signpost.guides.GotoDataSignpost;
 import org.designup.picsou.gui.signpost.guides.SkipAndGotoBudgetSignpost;
 import org.designup.picsou.gui.utils.Gui;
+import org.designup.picsou.model.AddOns;
 import org.designup.picsou.model.Month;
-import org.designup.picsou.model.PremiumEvolutionState;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobSelection;
 import org.globsframework.gui.GlobSelectionListener;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.splits.ImageLocator;
-import org.globsframework.gui.splits.layout.CardHandler;
 import org.globsframework.gui.splits.PanelBuilder;
+import org.globsframework.gui.splits.layout.CardHandler;
 import org.globsframework.gui.splits.repeat.RepeatComponentFactory;
 import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
@@ -77,11 +76,11 @@ public class CardView extends View implements GlobSelectionListener {
           gotoCategorizationSignpost.attach(toggle);
           break;
         case PROJECTS:
-          PremiumEvolution.addListener(repository, new PremiumEvolution.Listener() {
-            public void processState(PremiumEvolutionState state) {
-              toggle.setVisible(state.isPremiumFeaturesEnabled());
-            }
-          });
+//          AddOns.addListener(repository, AddOns.PROJECTS, new AddOns.Listener() {
+//            public void processAddOn(boolean enabled) {
+//              toggle.setVisible(enabled);
+//            }
+//          });
           break;
       }
     }

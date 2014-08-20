@@ -16,7 +16,6 @@ import org.designup.picsou.gui.help.actions.GotoWebsiteAction;
 import org.designup.picsou.gui.help.actions.SendLogsAction;
 import org.designup.picsou.gui.license.dev.ShowLicenseExpirationAction;
 import org.designup.picsou.gui.license.activation.RegisterLicenseAction;
-import org.designup.picsou.gui.license.dev.SimulateLicenseExpirationAction;
 import org.designup.picsou.gui.license.dev.SimulateLicenseRegistrationAction;
 import org.designup.picsou.gui.mobile.DumpMobileXmlAction;
 import org.designup.picsou.gui.mobile.EditMobileAccountAction;
@@ -182,8 +181,8 @@ public class MenuBarBuilder {
     devMenu.add(new ThrowInRepoExceptionAction(repository));
     devMenu.add(new AddAccountErrorAction(repository));
     devMenu.addSeparator();
-    devMenu.add(new GotoNextMonthAction(repository));
-    devMenu.add(new AddSixDayAction(repository));
+    devMenu.add(new Goto10OfNextMonthAction(repository));
+    devMenu.add(new AddSixDaysAction(repository));
     devMenu.add(new ChangeDateAction(repository));
     devMenu.addSeparator();
     devMenu.add(new ClearAllSignpostsAction(repository));
@@ -191,7 +190,6 @@ public class MenuBarBuilder {
     devMenu.add(new DumpUserProgressMessageAction(repository, directory));
     devMenu.addSeparator();
     devMenu.add(new SimulateLicenseRegistrationAction(repository));
-    devMenu.add(new SimulateLicenseExpirationAction(repository));
     devMenu.add(new ShowLicenseExpirationAction(repository, directory));
     devMenu.addSeparator();
     devMenu.add(new DumpMobileXmlAction(repository));

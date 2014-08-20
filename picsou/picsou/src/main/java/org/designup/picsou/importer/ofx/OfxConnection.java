@@ -192,7 +192,6 @@ public class OfxConnection {
     System.out.println("OfxConnection.main " + globList);
     for (AccountInfo accountInfo : globList) {
       System.out.println("OfxConnection.main " + accountInfo.number + " " + accountInfo.accType);
-      OutputStream outputFile = new ByteArrayOutputStream();
       Glob glob = repository.create(RealAccount.TYPE,
                                     value(RealAccount.ACC_TYPE, accountInfo.accType),
                                     value(RealAccount.BANK_ID, accountInfo.bankId),
@@ -214,52 +213,5 @@ public class OfxConnection {
       fromDate = format.format(bankCalendar.getTime());
     }
     return fromDate;
-  }
-
-  private static class InstitutionNode extends DefaultXmlNode {
-    String fid;
-    String id;
-    String org;
-    String name;
-    String url;
-
-    public XmlNode getSubNode(String childName, Attributes xmlAttrs) {
-      if (childName.equals("financialInstitutionId")) {
-        return new DefaultXmlNode() {
-          public void setValue(String value) {
-            fid = value;
-          }
-        };
-      }
-      if (childName.equals("id")) {
-        return new DefaultXmlNode() {
-          public void setValue(String value) {
-            id = value;
-          }
-        };
-      }
-      if (childName.equals("name")) {
-        return new DefaultXmlNode() {
-          public void setValue(String value) {
-            name = value;
-          }
-        };
-      }
-      if (childName.equals("OFXURL")) {
-        return new DefaultXmlNode() {
-          public void setValue(String value) {
-            url = value;
-          }
-        };
-      }
-      if (childName.equals("organization")) {
-        return new DefaultXmlNode() {
-          public void setValue(String value) {
-            org = value;
-          }
-        };
-      }
-      return super.getSubNode(childName, xmlAttrs);
-    }
   }
 }

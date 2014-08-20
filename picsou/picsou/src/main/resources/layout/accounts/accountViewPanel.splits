@@ -61,10 +61,10 @@
       <label ref="referencePositionDate" styleClass="sidebarSectionTitle" font="LatoLight,plain,12" autoHideSource="referencePosition" marginLeft="5"/>
     </row>
     <repeat ref="accountRepeat" styleClass="sidebarSeparator" marginBottom="15"
-            opaque="true" background="sidebar.bg" >
+            opaque="true" background="sidebar.bg">
       <panel ref="accountPanel" marginTop="2">
         <panel marginTop="4" layout="org.designup.picsou.gui.accounts.utils.AccountBlockLayout"
-               opaque="true" background="sidebar.bg" cursor="hand">
+               cursor="hand">
           <button ref="editAccount"/>
           <button ref="accountStatus"/>
           <button ref="uncategorized"/>

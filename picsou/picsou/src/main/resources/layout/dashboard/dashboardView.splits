@@ -38,9 +38,7 @@
     </grid>
     <filler fill="vertical" weightY="100"/>
 
-    <panel ref="premiumPromotionPanel"/>
-    <panel ref="premiumTrialPanel"/>
-    <panel ref="premiumRegisteredPanel"/>
+    <panel ref="addOnsView"/>
 
   </column>
 

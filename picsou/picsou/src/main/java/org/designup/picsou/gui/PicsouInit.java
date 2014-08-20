@@ -7,7 +7,6 @@ import org.designup.picsou.gui.backup.BackupService;
 import org.designup.picsou.gui.browsing.BrowsingService;
 import org.designup.picsou.gui.config.ConfigService;
 import org.designup.picsou.gui.config.RegistrationTrigger;
-import org.designup.picsou.gui.license.LicenseService;
 import org.designup.picsou.gui.model.PicsouGuiModel;
 import org.designup.picsou.gui.preferences.components.ColorThemeUpdater;
 import org.designup.picsou.gui.series.view.SeriesWrapperUpdateTrigger;
@@ -106,7 +105,6 @@ public class PicsouInit {
   }
 
   public static void initTriggers(ServerAccess serverAccess, Directory directory, final GlobRepository repository) {
-    repository.addTrigger(new UserRegistrationTrigger());
     repository.addTrigger(new CurrentMonthTrigger());
     repository.addTrigger(new MonthTrigger(directory));
     repository.addTrigger(new AccountInitialPositionTrigger());
@@ -321,12 +319,6 @@ public class PicsouInit {
                               value(UserVersionInformation.CURRENT_BANK_CONFIG_VERSION, PicsouApplication.BANK_CONFIG_VERSION),
                               value(UserVersionInformation.CURRENT_SOFTWARE_VERSION, PicsouApplication.APPLICATION_VERSION));
 
-      Glob userPreferences = repository.findOrCreate(UserPreferences.KEY);
-      if (userPreferences.get(UserPreferences.LAST_VALID_DAY) == null) {
-        repository.update(userPreferences.getKey(), UserPreferences.LAST_VALID_DAY,
-                          LicenseService.getEndOfTrialPeriod());
-      }
-
       FrameSize frameSize = FrameSize.init(directory.get(JFrame.class));
       LayoutConfig.find(frameSize.screenSize, frameSize.targetFrameSize, repository, true);
 
@@ -335,6 +327,9 @@ public class PicsouInit {
                               value(CurrentMonth.LAST_TRANSACTION_MONTH, 0),
                               value(CurrentMonth.CURRENT_MONTH, TimeService.getCurrentMonth()),
                               value(CurrentMonth.CURRENT_DAY, TimeService.getCurrentDay()));
+
+      repository.findOrCreate(AddOns.KEY);
+
       repository.findOrCreate(Account.MAIN_SUMMARY_KEY,
                               value(Account.ACCOUNT_TYPE, AccountType.MAIN.getId()),
                               value(Account.IS_IMPORTED_ACCOUNT, true));

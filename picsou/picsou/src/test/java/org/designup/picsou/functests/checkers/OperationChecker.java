@@ -1,11 +1,13 @@
 package org.designup.picsou.functests.checkers;
 
 import junit.framework.TestCase;
-import org.designup.picsou.functests.checkers.license.LicenseActivationChecker;
 import org.designup.picsou.functests.checkers.mobile.CreateMobileAccountChecker;
 import org.designup.picsou.functests.checkers.mobile.EditMobileAccountChecker;
 import org.designup.picsou.functests.checkers.printing.PrintDialogChecker;
 import org.designup.picsou.gui.PicsouApplication;
+import org.designup.picsou.gui.utils.dev.AddSixDaysAction;
+import org.designup.picsou.gui.utils.dev.Goto10OfNextMonthAction;
+import org.designup.picsou.gui.utils.dev.GotoPastTrialExpirationAction;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.utils.Dates;
 import org.globsframework.utils.Ref;
@@ -689,5 +691,17 @@ public class OperationChecker {
 
   public MessageDialogChecker sendDataToServer() {
     return MessageDialogChecker.open(getFileMenu().getSubMenu(Lang.get("mobile.menu.send.data")).triggerClick());
+  }
+
+  public void addSixDays() {
+    getDevMenu().getSubMenu(AddSixDaysAction.LABEL).click();
+  }
+
+  public void goto10OfNextMonth() {
+    getDevMenu().getSubMenu(Goto10OfNextMonthAction.LABEL).click();
+  }
+
+  public void gotoPastTrialExpiration() {
+    getDevMenu().getSubMenu(GotoPastTrialExpirationAction.LABEL).click();
   }
 }

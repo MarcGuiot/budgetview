@@ -145,8 +145,6 @@ public class MainPanel {
     final ImportSignpost importSignpost = new ImportSignpost(repository, directory);
     importSignpost.attach(importFile);
 
-    LicenseInfoView licenseInfoView = new LicenseInfoView(repository, directory);
-
     PeriodSeriesStatUpdater.init(replicationGlobRepository, directory);
     PeriodBudgetAreaStatUpdater.init(replicationGlobRepository);
     PeriodAccountStatUpdater.init(replicationGlobRepository, directory);
@@ -160,6 +158,7 @@ public class MainPanel {
       periodView,
       new AccountView(replicationGlobRepository, directory),
       new DashboardView(repository, directory),
+      new LicenseInfoView(repository, directory),
       transactionView,
       timeView,
       new NewVersionView(repository, directory),
@@ -174,7 +173,6 @@ public class MainPanel {
       new ProjectSelector(repository, directory),
       projectView,
       signpostView,
-      licenseInfoView,
       new NotificationsFlagView(repository, directory));
 
     if (Gui.useMacOSMenu()) {

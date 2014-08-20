@@ -6,7 +6,6 @@ import org.designup.picsou.gui.config.ConfigService;
 import org.designup.picsou.gui.help.HyperlinkHandler;
 import org.designup.picsou.gui.undo.UndoRedoService;
 import org.designup.picsou.model.LicenseActivationState;
-import org.designup.picsou.model.PremiumEvolutionState;
 import org.designup.picsou.model.User;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobsPanelBuilder;
@@ -136,20 +135,22 @@ public class LicenseActivationDialog {
           Glob user = repository.get(User.KEY);
           activationState = LicenseActivationState.get(user.get(User.LICENSE_ACTIVATION_STATE));
           if (activationState != null) {
-            if (activationState == LicenseActivationState.ACTIVATION_OK) {
-              showConfirmation();
-            }
-            else if (activationState == LicenseActivationState.ACTIVATION_FAILED_MAIL_SENT) {
-              updateDialogState("license.activation.failed.mailSent", localRepository.get(User.KEY).get(User.EMAIL));
-            }
-            else if (activationState == LicenseActivationState.ACTIVATION_FAILED_MAIL_SENT) {
-              updateDialogState("license.code.invalid", localRepository.get(User.KEY).get(User.EMAIL));
-            }
-            else if (activationState == LicenseActivationState.ACTIVATION_FAILED_MAIL_UNKNOWN) {
-              updateDialogState("license.mail.unknown");
-            }
-            else if (activationState != LicenseActivationState.ACTIVATION_IN_PROGRESS) {
-              updateDialogState("license.activation.failed");
+            switch (activationState) {
+              case ACTIVATION_IN_PROGRESS:
+                break;
+              case ACTIVATION_OK:
+                showConfirmation();
+                break;
+              case ACTIVATION_FAILED_MAIL_UNKNOWN:
+                updateDialogState("license.mail.unknown");
+                break;
+              case ACTIVATION_FAILED_MAIL_SENT:
+                updateDialogState("license.activation.failed.mailSent", localRepository.get(User.KEY).get(User.EMAIL));
+// TODO: quel code pour ce message ?
+//                updateDialogState("license.code.invalid", localRepository.get(User.KEY).get(User.EMAIL));
+                break;
+              default:
+                updateDialogState("license.activation.failed");
             }
           }
         }
