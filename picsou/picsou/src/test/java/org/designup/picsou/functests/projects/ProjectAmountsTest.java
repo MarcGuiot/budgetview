@@ -11,6 +11,7 @@ public class ProjectAmountsTest  extends LoggedInFunctionalTestCase {
     setInitialGuidesShown(true);
     super.setUp();
     operations.hideSignposts();
+    addOns.activateProjects();
   }
 
   public void testSwitchingBackAndForthBetweenAmountModes() throws Exception {

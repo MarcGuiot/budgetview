@@ -9,6 +9,7 @@ public class ProjectViewToggleTest extends LoggedInFunctionalTestCase {
     super.setUp();
     operations.hideSignposts();
     operations.openPreferences().setFutureMonthsCount(12).validate();
+    addOns.activateProjects();
   }
 
   public void testProjectDetailsAreHiddenWhenFirstProjectCreationIsCancelled() throws Exception {

@@ -2,13 +2,9 @@ package org.designup.picsou.model;
 
 import com.budgetview.shared.utils.PicsouGlobSerializer;
 import org.globsframework.metamodel.GlobType;
-import org.globsframework.metamodel.annotations.DefaultInteger;
 import org.globsframework.metamodel.annotations.Key;
-import org.globsframework.metamodel.annotations.Target;
 import org.globsframework.metamodel.fields.BooleanField;
-import org.globsframework.metamodel.fields.DateField;
 import org.globsframework.metamodel.fields.IntegerField;
-import org.globsframework.metamodel.fields.LinkField;
 import org.globsframework.metamodel.utils.GlobTypeLoader;
 import org.globsframework.model.FieldSetter;
 import org.globsframework.model.FieldValues;
@@ -30,6 +26,8 @@ public class AddOns {
   public static IntegerField ID;
 
   public static BooleanField PROJECTS;
+  public static BooleanField GROUPS;
+  public static BooleanField ANALYSIS;
 
   static {
     GlobTypeLoader.init(AddOns.class, "addOns");
@@ -38,6 +36,11 @@ public class AddOns {
 
   public static Glob get(GlobRepository repository) {
     return repository.get(KEY);
+  }
+
+  public static boolean isEnabled(BooleanField field, GlobRepository repository) {
+    Glob addons = repository.find(KEY);
+    return addons == null ? false : addons.isTrue(field);
   }
 
   public interface Listener {
@@ -71,6 +74,8 @@ public class AddOns {
       SerializedByteArrayOutput serializedByteArrayOutput = new SerializedByteArrayOutput();
       SerializedOutput outputStream = serializedByteArrayOutput.getOutput();
       outputStream.writeBoolean(values.get(PROJECTS));
+      outputStream.writeBoolean(values.get(GROUPS));
+      outputStream.writeBoolean(values.get(ANALYSIS));
       return serializedByteArrayOutput.toByteArray();
     }
 
@@ -83,6 +88,8 @@ public class AddOns {
     private void deserializeDataV1(FieldSetter fieldSetter, byte[] data) {
       SerializedInput input = SerializedInputOutputFactory.init(data);
       fieldSetter.set(PROJECTS, input.readBoolean());
+      fieldSetter.set(GROUPS, input.readBoolean());
+      fieldSetter.set(ANALYSIS, input.readBoolean());
     }
   }
 }

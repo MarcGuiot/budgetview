@@ -388,6 +388,7 @@ public class CarryOverTest extends LoggedInFunctionalTestCase {
   }
 
   public void testNotShownForProjectGroups() throws Exception {
+    addOns.activateProjects();
     operations.openPreferences()
       .setFutureMonthsCount(2)
       .validate();

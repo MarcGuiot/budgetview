@@ -11,6 +11,7 @@ public class SeriesEvolutionHistoChartTest extends LoggedInFunctionalTestCase {
     setCurrentMonth("2009/07");
     super.setUp();
     operations.openPreferences().setFutureMonthsCount(12).validate();
+    addOns.activateAnalysis();
   }
 
   public void testStandardCase() throws Exception {

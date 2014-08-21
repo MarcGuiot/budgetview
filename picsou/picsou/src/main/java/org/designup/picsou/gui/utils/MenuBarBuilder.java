@@ -4,6 +4,7 @@ import org.designup.picsou.gui.WindowManager;
 import org.designup.picsou.gui.about.AboutAction;
 import org.designup.picsou.gui.accounts.actions.CreateAccountAction;
 import org.designup.picsou.gui.actions.*;
+import org.designup.picsou.gui.addons.dev.ToggleAllAddOnsAction;
 import org.designup.picsou.gui.backup.BackupAction;
 import org.designup.picsou.gui.backup.RestoreFileAction;
 import org.designup.picsou.gui.backup.RestoreSnapshotMenuAction;
@@ -191,6 +192,9 @@ public class MenuBarBuilder {
     devMenu.addSeparator();
     devMenu.add(new SimulateLicenseRegistrationAction(repository));
     devMenu.add(new ShowLicenseExpirationAction(repository, directory));
+    devMenu.addSeparator();
+    devMenu.add(ToggleAllAddOnsAction.enableAll(repository));
+    devMenu.add(ToggleAllAddOnsAction.disableAll(repository));
     devMenu.addSeparator();
     devMenu.add(new DumpMobileXmlAction(repository));
     devMenu.add(threadsAction);

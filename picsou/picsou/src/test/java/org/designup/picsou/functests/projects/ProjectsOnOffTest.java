@@ -8,6 +8,7 @@ public class ProjectsOnOffTest extends LoggedInFunctionalTestCase {
     setCurrentMonth("2010/12");
     super.setUp();
     operations.hideSignposts();
+    addOns.activateProjects();
   }
 
   public void testDisablingProjectElements() throws Exception {

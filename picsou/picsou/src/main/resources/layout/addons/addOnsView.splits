@@ -1,13 +1,28 @@
 <splits xmlns="http://www.globsframework.org/xml/splits.xsd">
 
   <styleImport file="/layout/commonStyles.splits"/>
+  <styleImport file="/layout/components/verticalTabStyles.splits"/>
+  <styles>
+    <style selector="label.title" font="LatoLight,plain,28" marginBottom="10" marginTop="20"/>
+  </styles>
+
 
   <column ref="addOnsView">
-    <label text="$addons.title"/>
+    <label text="$addons.title" styleClass="title"/>
     <row>
-      <filler fill="horizontal"/>
-      <button action="buy"/>
-      <filler fill="horizontal"/>
+      <column styleClass="verticalTabSelectionPanel">
+        <repeat ref="addOnSelectors" layout="column">
+          <toggleButton ref="addOnSelector" styleClass="verticalTabSelector"/>
+        </repeat>
+        <filler fill="vertical"/>
+      </column>
+      <column styleClass="verticalTabContentPanel">
+        <filler fill="vertical"/>
+        <row>
+          <filler fill="horizontal"/>
+          <button action="buy"/>
+        </row>
+      </column>
     </row>
   </column>
 

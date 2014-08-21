@@ -62,6 +62,7 @@ public class RestartTest extends LoggedInFunctionalTestCase {
 
   public void testSeries() throws Exception {
     operations.openPreferences().setFutureMonthsCount(1).validate();
+    addOns.activateAnalysis();
 
     OfxBuilder.init(this)
       .addTransaction("2008/08/26", 1000, "Company")
@@ -215,6 +216,8 @@ public class RestartTest extends LoggedInFunctionalTestCase {
   }
 
   public void testProjects() throws Exception {
+    addOns.activateProjects();
+
     OfxBuilder.init(this)
       .addBankAccount("001111", 1000.00, "2008/08/30")
       .addTransaction("2008/08/01", 1000.00, "Income")
@@ -269,6 +272,7 @@ public class RestartTest extends LoggedInFunctionalTestCase {
   public void testProjectsWithMultiMonthTransfers() throws Exception {
 
     operations.openPreferences().setFutureMonthsCount(12).validate();
+    addOns.activateProjects();
 
     accounts.createNewAccount()
       .setName("Main account 1")

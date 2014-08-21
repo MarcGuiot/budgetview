@@ -30,6 +30,7 @@ import org.globsframework.gui.components.GlobUnselectPanel;
 import org.globsframework.gui.splits.PanelBuilder;
 import org.globsframework.gui.splits.SplitsNode;
 import org.globsframework.gui.splits.repeat.RepeatComponentFactory;
+import org.globsframework.gui.splits.utils.OnLoadListener;
 import org.globsframework.gui.utils.GlobBooleanVisibilityUpdater;
 import org.globsframework.gui.views.AbstractGlobTextView;
 import org.globsframework.gui.views.GlobButtonView;
@@ -119,12 +120,12 @@ public abstract class AccountViewPanel {
     public void registerComponents(PanelBuilder cellBuilder, final Glob account) {
 
       SplitsNode<JPanel> accountPanel = cellBuilder.add("accountPanel", new JPanel());
-      GlobSelectablePanel toggle =
+      final GlobSelectablePanel selectablePanel =
         new GlobSelectablePanel(accountPanel,
                                 "selectedPanel", "unselectedPanel",
                                 "selectedRolloverPanel", "unselectedRolloverPanel",
                                 repository, directory, account.getKey());
-      cellBuilder.addDisposable(toggle);
+      cellBuilder.addDisposable(selectablePanel);
 
       AccountStatusButton.create(account.getKey(), cellBuilder, "accountStatus", repository, directory);
 
@@ -143,7 +144,6 @@ public abstract class AccountViewPanel {
                                         new HistoChartConfig(true, false, true, false, false, true, false, true, false, true),
                                         "accountPositionsChart", repository, directory, "daily.budgetSummary") {
           protected void processClick(HistoSelection selection, Set<Key> objectKeys, NavigationService navigationService) {
-            System.out.println("AccountRepeatFactory.processClick: ");
             selectionService.select(account);
           }
         };

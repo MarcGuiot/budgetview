@@ -10,6 +10,7 @@ public class ProjectSlidingTest extends LoggedInFunctionalTestCase {
     setCurrentMonth("2010/12");
     super.setUp();
     operations.hideSignposts();
+    addOns.activateProjects();
   }
 
   public void testMovingProjectItemsWhenThereAreAlreadyAssociatedTransactions() throws Exception {

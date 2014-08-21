@@ -8,6 +8,7 @@ public class SeriesGroupAnalysisTest extends LoggedInFunctionalTestCase {
     setCurrentMonth("2014/01");
     super.setUp();
     getOperations().openPreferences().setFutureMonthsCount(2).validate();
+    addOns.activateAnalysis();
   }
 
   public void testATreeNodeIsAddedInTheAnalysisTableForEachGroup() throws Exception {

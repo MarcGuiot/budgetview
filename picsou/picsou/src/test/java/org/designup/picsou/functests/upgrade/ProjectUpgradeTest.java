@@ -10,6 +10,7 @@ public class ProjectUpgradeTest extends LoggedInFunctionalTestCase {
     setCurrentMonth("2014/02");
     super.setUp();
     operations.openPreferences().setFutureMonthsCount(6).validate();
+    addOns.activateProjects();
   }
 
   public void testCompleteCaseForJar131() throws Exception {

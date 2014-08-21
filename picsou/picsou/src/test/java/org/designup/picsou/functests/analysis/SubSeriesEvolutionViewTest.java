@@ -9,6 +9,7 @@ public class SubSeriesEvolutionViewTest extends LoggedInFunctionalTestCase {
     setCurrentMonth("2012/05");
     super.setUp();
     operations.openPreferences().setFutureMonthsCount(2).validate();
+    addOns.activateAnalysis();
 
     OfxBuilder.init(this)
       .addBankAccount(-1, 10674, "00000123", -125.0, "2012/05/12")

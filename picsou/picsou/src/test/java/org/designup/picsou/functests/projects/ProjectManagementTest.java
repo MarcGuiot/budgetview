@@ -11,6 +11,7 @@ public class ProjectManagementTest extends LoggedInFunctionalTestCase {
     setCurrentMonth("2010/12");
     setInitialGuidesShown(true);
     super.setUp();
+    addOns.activateProjects();
   }
 
   public void testCreatingAProject() throws Exception {

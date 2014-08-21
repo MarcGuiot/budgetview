@@ -19,14 +19,17 @@ import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.splits.ImageLocator;
 import org.globsframework.gui.splits.PanelBuilder;
 import org.globsframework.gui.splits.layout.CardHandler;
+import org.globsframework.gui.splits.repeat.Repeat;
 import org.globsframework.gui.splits.repeat.RepeatComponentFactory;
 import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
+import org.globsframework.model.utils.TypeChangeSetListener;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
-import java.util.Arrays;
+import java.util.ArrayList;
+import java.util.List;
 
 public class CardView extends View implements GlobSelectionListener {
   private CardHandler cards;
@@ -75,25 +78,35 @@ public class CardView extends View implements GlobSelectionListener {
           Signpost gotoCategorizationSignpost = new GotoCategorizationSignpost(repository, directory);
           gotoCategorizationSignpost.attach(toggle);
           break;
-        case PROJECTS:
-//          AddOns.addListener(repository, AddOns.PROJECTS, new AddOns.Listener() {
-//            public void processAddOn(boolean enabled) {
-//              toggle.setVisible(enabled);
-//            }
-//          });
-          break;
       }
     }
 
-    builder.addRepeat("viewToggles", Arrays.asList(CARDS), new RepeatComponentFactory<Card>() {
+    final Repeat<Card> repeat = builder.addRepeat("viewToggles", getActiveCards(), new RepeatComponentFactory<Card>() {
       public void registerComponents(PanelBuilder cellBuilder, Card card) {
         cellBuilder.add("toggle", toggles[card.getId()]);
+      }
+    });
+    repository.addChangeListener(new TypeChangeSetListener(AddOns.TYPE) {
+      public void update(GlobRepository repository) {
+        repeat.set(getActiveCards());
       }
     });
 
     addBackForwardActions(builder);
 
     showCard(NavigationService.INITIAL_CARD);
+  }
+
+  public List<Card> getActiveCards() {
+    List<Card> result = new ArrayList<Card>();
+    for (Card card : CARDS) {
+      if (((card == Card.PROJECTS) && !AddOns.isEnabled(AddOns.PROJECTS, repository)) ||
+          ((card == Card.ANALYSIS) && !AddOns.isEnabled(AddOns.ANALYSIS, repository))) {
+        continue;
+      }
+      result.add(card);
+    }
+    return result;
   }
 
   public void showInitialCard() {

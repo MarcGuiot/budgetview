@@ -12,6 +12,7 @@ public class SeriesEvolutionViewTest extends LoggedInFunctionalTestCase {
     setCurrentMonth("2008/07");
     super.setUp();
     operations.openPreferences().setFutureMonthsCount(6).validate();
+    addOns.activateAnalysis();
   }
 
   public void testStandardDisplay() throws Exception {

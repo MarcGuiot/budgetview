@@ -62,9 +62,9 @@
     </row>
     <repeat ref="accountRepeat" styleClass="sidebarSeparator" marginBottom="15"
             opaque="true" background="sidebar.bg">
-      <panel ref="accountPanel" marginTop="2">
+      <panel ref="accountPanel" marginTop="2" opaque="false">
         <panel marginTop="4" layout="org.designup.picsou.gui.accounts.utils.AccountBlockLayout"
-               cursor="hand">
+               cursor="hand" opaque="false">
           <button ref="editAccount"/>
           <button ref="accountStatus"/>
           <button ref="uncategorized"/>

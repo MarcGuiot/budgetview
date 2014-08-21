@@ -308,6 +308,7 @@ public class BackupRestoreTest extends LoggedInFunctionalTestCase {
     changeUser("user", "password");
     operations.openPreferences().setFutureMonthsCount(2).validate();
     operations.hideSignposts();
+    addOns.activateAnalysis();
 
     OfxBuilder.init(this)
       .addTransaction("2008/05/01", 1000.00, "Salaire")

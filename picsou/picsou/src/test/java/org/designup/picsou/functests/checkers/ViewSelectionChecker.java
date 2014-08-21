@@ -2,11 +2,14 @@ package org.designup.picsou.functests.checkers;
 
 import org.uispec4j.Panel;
 import org.uispec4j.ToggleButton;
+import org.uispec4j.UIComponent;
 import org.uispec4j.Window;
 import static org.uispec4j.assertion.UISpecAssert.assertTrue;
 import org.uispec4j.assertion.UISpecAssert;
 import org.designup.picsou.gui.model.Card;
 import junit.framework.Assert;
+
+import java.awt.*;
 
 public class ViewSelectionChecker extends GuiChecker {
   private Window window;
@@ -82,8 +85,8 @@ public class ViewSelectionChecker extends GuiChecker {
   }
 
   private ToggleButton getSelectedToggle() {
-    for (Card card : Card.values()) {
-      ToggleButton button = getToggle(card.getName());
+    for (UIComponent component : getTogglesPanel().getUIComponents(ToggleButton.class)) {
+      ToggleButton button = (ToggleButton)component;
       if (button.isSelected().isTrue()) {
         return button;
       }

@@ -9,6 +9,7 @@ public class ProjectWithAccountDeletionTest extends LoggedInFunctionalTestCase {
   protected void setUp() throws Exception {
     setCurrentMonth("2010/12");
     super.setUp();
+    addOns.activateProjects();
   }
 
   public void testDeletingAccounts() throws Exception {

@@ -10,6 +10,7 @@ public class ProjectTransferTest extends LoggedInFunctionalTestCase {
     super.setUp();
     operations.hideSignposts();
     operations.openPreferences().setFutureMonthsCount(12).validate();
+    addOns.activateProjects();
   }
 
   public void testWithSavings() throws Exception {

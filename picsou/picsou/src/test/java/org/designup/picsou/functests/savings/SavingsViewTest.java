@@ -42,6 +42,7 @@ public class SavingsViewTest extends LoggedInFunctionalTestCase {
 
     operations.openPreferences().setFutureMonthsCount(12).validate();
     operations.hideSignposts();
+    addOns.activateProjects();
 
     OfxBuilder.init(this)
       .addBankAccount(-1, 10674, "00000123", 1000.0, "2009/07/30")
