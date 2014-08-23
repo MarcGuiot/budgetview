@@ -5,9 +5,14 @@ import org.globsframework.gui.splits.SplitProperties;
 import org.globsframework.gui.splits.SplitsContext;
 import org.globsframework.gui.splits.Splitter;
 import org.globsframework.gui.splits.SplitsNode;
+import org.globsframework.gui.splits.color.ColorService;
+import org.globsframework.gui.splits.color.ColorUpdater;
+import org.globsframework.gui.splits.color.Colors;
 import org.globsframework.gui.splits.layout.Anchor;
 import org.globsframework.gui.splits.layout.ComponentConstraints;
 import org.globsframework.gui.splits.layout.Fill;
+
+import java.awt.*;
 
 public class MovableSplit extends DefaultComponent<JideSplitPane> {
   private Direction direction;
@@ -31,7 +36,7 @@ public class MovableSplit extends DefaultComponent<JideSplitPane> {
   }
 
   protected String[] getExcludedParameters() {
-    return new String[]{"dividerSize"};
+    return new String[]{"dividerSize", "handleColor"};
   }
 
   public SplitComponent createRawStretch(SplitsContext context) {
@@ -80,6 +85,7 @@ public class MovableSplit extends DefaultComponent<JideSplitPane> {
     splitPane.setProportions(proportions);
 
     setDividerProperties(splitPane);
+    setHandleProperties(splitPane, context);
     return new SplitComponent(new ComponentConstraints(splitPane, Fill.BOTH, Anchor.CENTER, totalWeightX, totalWeightY),
                               splitsNode);
   }
@@ -90,6 +96,28 @@ public class MovableSplit extends DefaultComponent<JideSplitPane> {
       splitPane.setDividerSize(size);
     }
   }
+
+
+  private void setHandleProperties(final JideSplitPane splitPane, SplitsContext context) {
+    final String handleColor = getProperties().getString("handleColor");
+
+    if (handleColor != null) {
+      if (Colors.isHexaString(handleColor)) {
+        splitPane.putClientProperty("handleColor", Colors.toColor(handleColor));
+      }
+      else if (handleColor.length() == 0) {
+        splitPane.putClientProperty("handleColor", null);
+      }
+      else {
+        ColorUpdater updater = new ColorUpdater(handleColor) {
+          public void updateColor(Color color) {
+            splitPane.putClientProperty("handleColor", color);
+          }
+        };
+        updater.install(context.getService(ColorService.class));
+        context.addDisposable(updater);
+      }
+    }  }
 
   public String getName() {
     return direction.name;

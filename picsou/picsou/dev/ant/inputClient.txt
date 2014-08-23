@@ -26,7 +26,7 @@ C org.globsframework.gui.splits.components.ShadowedLabelUI
 C org.globsframework.gui.splits.components.HyperlinkButtonUI
 C org.designup.picsou.gui.components.ui.CustomButtonUI
 C org.designup.picsou.gui.components.RoundButtonUI
-C org.designup.picsou.gui.plaf.SplitPaneDotsPainter
+C org.designup.picsou.gui.plaf.SplitPaneLinePainter
 C com.jidesoft.plaf.aqua.AquaJideUtils
 C org.apache.commons.logging.impl.Jdk14Logger
 C org.jdesktop.swingx.plaf.LookAndFeelAddons

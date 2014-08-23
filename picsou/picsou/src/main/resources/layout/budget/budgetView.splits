@@ -6,16 +6,16 @@
 
     <verticalSplit ref="verticalSplit1" styleClass="mainDivider" weightX="1">
       <panel ref="incomeBudgetView" weightY="1"/>
-      <panel ref="recurringBudgetView" weightY="3"/>
-      <panel ref="savingsBudgetView" weightY="1"/>
+      <panel ref="recurringBudgetView" weightY="3" marginTop="5"/>
+      <panel ref="savingsBudgetView" weightY="1" marginTop="5"/>
     </verticalSplit>
 
     <column>
       <verticalSplit ref="verticalSplit2" styleClass="mainDivider" weightX="1" weightY="100">
         <panel ref="variableBudgetView" weightY="2"/>
-        <panel ref="extrasBudgetView" weightY="1"/>
+        <panel ref="extrasBudgetView" weightY="1" marginTop="5"/>
       </verticalSplit>
-      <panel ref="uncategorizedSummaryView" weightY="0.1"/>
+      <panel ref="uncategorizedSummaryView" weightY="0.1" border="empty(10,0,0,0)"/>
     </column>
 
   </horizontalSplit>
