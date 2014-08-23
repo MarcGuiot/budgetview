@@ -4,8 +4,9 @@
   <styleImport file="/layout/components/verticalTabStyles.splits"/>
   <styles>
     <style selector="label.title" font="LatoLight,plain,28" marginBottom="10" marginTop="20"/>
+    <style id="addOnEnabled" selector="x" icon="roundedRect(10,15,1,2,addons.selected.bg,addons.selected.border)"/>
+    <style id="addOnDisabled" selector="x" icon="roundedRect(10,15,1,2,addons.unselected.bg,addons.unselected.border)"/>
   </styles>
-
 
   <column ref="addOnsView">
     <label text="$addons.title" styleClass="title"/>

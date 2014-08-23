@@ -10,7 +10,8 @@
   <style selector="toggleButton.verticalTabSelector" ui="verticalTabSelectorUI" margin="0" marginRight="2"
          font="-,bold,12" cursor="hand" rolloverEnabled="true"
          foreground="verticalTab.selector.text"
-         fill="horizontal" anchor="center" weightY="0"/>
+         fill="horizontal" anchor="right" weightY="0"
+         horizontalTextPosition="left"/>
 
   <ui name="verticalTabSelectionPanelUI" class="org.designup.picsou.gui.components.tabs.VerticalTabPanelUI"
       innerBorderColor="verticalTab.content.border" outerBorderColor="verticalTab.selectionPanel.border"

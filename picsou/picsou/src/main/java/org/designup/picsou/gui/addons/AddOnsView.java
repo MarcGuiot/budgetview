@@ -6,9 +6,13 @@ import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.editors.GlobToggleEditor;
 import org.globsframework.gui.splits.PanelBuilder;
+import org.globsframework.gui.splits.SplitsNode;
 import org.globsframework.gui.splits.repeat.RepeatComponentFactory;
+import org.globsframework.gui.splits.utils.Disposable;
 import org.globsframework.gui.splits.utils.OnLoadListener;
+import org.globsframework.model.Glob;
 import org.globsframework.model.GlobRepository;
+import org.globsframework.model.utils.KeyChangeListener;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
@@ -54,8 +58,23 @@ public class AddOnsView extends View {
           select(addOn);
         }
       });
-      cellBuilder.add("addOnSelector", toggle);
+      final SplitsNode<JToggleButton> addOnNode = cellBuilder.add("addOnSelector", toggle);
       group.add(toggle);
+
+      final KeyChangeListener updater = new KeyChangeListener(AddOns.KEY) {
+        public void update() {
+          Glob addOns = repository.find(AddOns.KEY);
+          boolean enabled = addOns != null && addOns.isTrue(addOn.getField());
+          addOnNode.applyStyle(enabled ? "addOnEnabled" : "addOnDisabled");
+        }
+      };
+      repository.addChangeListener(updater);
+      cellBuilder.addDisposable(new Disposable() {
+        public void dispose() {
+          repository.removeChangeListener(updater);
+        }
+      });
+      updater.update();
     }
   }
 

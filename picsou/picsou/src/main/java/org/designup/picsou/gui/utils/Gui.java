@@ -40,6 +40,7 @@ public class Gui {
     Fonts.loadBase("LatoHairline", "/fonts/Lato-Hairline.ttf", Gui.class);
     Fonts.loadBase("LatoLight", "/fonts/Lato-Light.ttf", Gui.class);
     Fonts.loadBase("LatoRegular", "/fonts/Lato-Regular.ttf", Gui.class);
+    Fonts.loadBase("LatoBold", "/fonts/Lato-Bold.ttf", Gui.class);
     Fonts.setDefault("LatoRegular,plain,12");
 
     Font labelFont = new JLabel().getFont();
