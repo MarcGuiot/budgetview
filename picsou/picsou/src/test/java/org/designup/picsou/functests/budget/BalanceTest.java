@@ -70,7 +70,6 @@ public class BalanceTest extends LoggedInFunctionalTestCase {
       .add("20/04/2009", "FREE TELECOM", -29.90, "Tel", 0.00, 0.00, OfxBuilder.DEFAULT_ACCOUNT_NAME)
       .check();
 
-    openApplication();
     timeline.selectMonth("2009/05");
     mainAccounts
       .checkEndOfMonthPosition(OfxBuilder.DEFAULT_ACCOUNT_NAME, -29.90)
