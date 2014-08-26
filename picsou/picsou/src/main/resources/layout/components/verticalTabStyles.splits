@@ -1,0 +1,27 @@
+<splits xmlns="http://www.globsframework.org/xml/splits.xsd">
+
+<styles>
+  <ui name="verticalTabSelectorUI" class="org.designup.picsou.gui.components.tabs.VerticalTabToggleUI"
+      selectedTextColor="verticalTab.selector.text.selected"
+      rolloverTextColor="verticalTab.selector.text.rollover"
+      disabledTextColor="verticalTab.selector.text.disabled"
+      bgColor="verticalTab.bg"
+      borderColor="verticalTab.content.border"/>
+  <style selector="toggleButton.verticalTabSelector" ui="verticalTabSelectorUI" margin="0" marginRight="2"
+         font="-,bold,12" cursor="hand" rolloverEnabled="true"
+         foreground="verticalTab.selector.text"
+         fill="horizontal" anchor="center" weightY="0"/>
+
+  <ui name="verticalTabSelectionPanelUI" class="org.designup.picsou.gui.components.tabs.VerticalTabPanelUI"
+      innerBorderColor="verticalTab.content.border" outerBorderColor="verticalTab.selectionPanel.border"
+      contentBgColor="verticalTab.content.bg"/>
+  <style selector=".verticalTabSelectionPanel" ui="verticalTabSelectionPanelUI"
+         background="verticalTab.selection.bg" weightX="0.1"/>
+  <style selector=".verticalTabSelectionPanel repeat"  margin="5" marginRight="0"/>
+
+  <style selector=".verticalTabContentPanel"
+         weightX="100" border="matte(1,0,1,1,verticalTab.content.border)"
+         background="verticalTab.content.bg"/>
+</styles>
+
+</splits>

@@ -64,7 +64,7 @@ public class SeriesShape {
     throw new RuntimeException("not valid period " + period);
   }
 
-  public static int getDay(int periodCount, int period, int monthId, boolean isPositive) {
+  public static int getDay(int periodCount, int period, int monthId) {
     int day = 0;
     if (periodCount <= 4) {
       day = getMiddle4(period);

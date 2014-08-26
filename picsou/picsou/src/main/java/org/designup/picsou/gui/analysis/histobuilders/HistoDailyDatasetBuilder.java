@@ -31,7 +31,7 @@ public class HistoDailyDatasetBuilder extends HistoDatasetBuilder {
   }
 
   protected String getLabel(int monthId) {
-    return showFullMonthLabels ? Month.getFullMonthLabel(monthId) : Month.getShortMonthLabel(monthId);
+    return showFullMonthLabels ? Month.getFullMonthLabel(monthId, true) : Month.getShortMonthLabel(monthId);
   }
 
   private String getCurrentDayLabel(Integer currentMonthId, Integer currentDayId) {

@@ -33,6 +33,11 @@ public abstract class AbstractFieldValuesWithPrevious implements FieldValuesWith
     return (Date)doGet(field);
   }
 
+  public Date get(DateField field, Date valueIfNull) throws ItemNotFound {
+    Date value = get(field);
+    return value == null ? valueIfNull : value;
+  }
+
   public Date get(TimeStampField field) throws ItemNotFound {
     return (Date)doGet(field);
   }

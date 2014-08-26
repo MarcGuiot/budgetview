@@ -1,9 +1,11 @@
 package org.designup.picsou.functests.useraccounts;
 
-import org.designup.picsou.functests.utils.StartUpFunctionalTestCase;
 import org.designup.picsou.functests.checkers.*;
 import org.designup.picsou.functests.checkers.components.TimeViewChecker;
+import org.designup.picsou.functests.checkers.license.LicenseActivationChecker;
+import org.designup.picsou.functests.checkers.license.LicenseChecker;
 import org.designup.picsou.functests.utils.OfxBuilder;
+import org.designup.picsou.functests.utils.StartUpFunctionalTestCase;
 import org.designup.picsou.gui.PicsouApplication;
 import org.designup.picsou.gui.startup.components.SingleApplicationInstanceListener;
 import org.designup.picsou.model.TransactionType;
@@ -346,9 +348,9 @@ public class LoginTest extends StartUpFunctionalTestCase {
   public void testLoginInDemoMode() throws Exception {
     login.clickDemoLink();
     checkDemoMode();
-    LicenseInfoChecker licenseInfo = getLicenseMessageView();
-    licenseInfo.checkMessage("demo account");
-    licenseInfo.clickLink("logout");
+    getLicense()
+      .checkInfoMessage("demo account")
+      .clickLink("logout");
     login.checkComponentsVisible();
   }
 
@@ -380,8 +382,8 @@ public class LoginTest extends StartUpFunctionalTestCase {
   public void testLicenseInfoInDemoMode() throws Exception {
     login.clickDemoLink();
 
-    LicenseInfoChecker licenseInfo = new LicenseInfoChecker(window);
-    licenseInfo.checkMessage("demo account");
+    LicenseChecker license = new LicenseChecker(window);
+    license.checkInfoMessage("demo account");
   }
 
   public void testAutoLogin() throws Exception {
@@ -493,10 +495,10 @@ public class LoginTest extends StartUpFunctionalTestCase {
     return new CategorizationChecker(window);
   }
 
-  private LicenseInfoChecker getLicenseMessageView() {
+  private LicenseChecker getLicense() {
     ViewSelectionChecker views = new ViewSelectionChecker(window);
     views.selectHome();
-    return new LicenseInfoChecker(window);
+    return new LicenseChecker(window);
   }
 
   private void checkBankOnImport(final String path) {

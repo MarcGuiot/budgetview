@@ -17,6 +17,8 @@ public interface FieldValues extends Serializable {
 
   Date get(DateField field) throws ItemNotFound;
 
+  Date get(DateField field, Date valueIfNull) throws ItemNotFound;
+
   Date get(TimeStampField field) throws ItemNotFound;
 
   Integer get(IntegerField field) throws ItemNotFound;
@@ -75,6 +77,9 @@ public interface FieldValues extends Serializable {
     }
 
     public Date get(DateField field) throws ItemNotFound {
+      throw new ItemNotFound(field.getName());
+    }
+    public Date get(DateField field, Date valueIfNull) throws ItemNotFound {
       throw new ItemNotFound(field.getName());
     }
 

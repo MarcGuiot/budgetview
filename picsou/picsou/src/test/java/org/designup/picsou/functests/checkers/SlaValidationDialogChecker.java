@@ -1,9 +1,10 @@
 package org.designup.picsou.functests.checkers;
 
+import org.globsframework.utils.exceptions.UnexpectedApplicationState;
 import org.uispec4j.*;
+import org.uispec4j.interception.WindowInterceptor;
 
 import static org.uispec4j.assertion.UISpecAssert.*;
-import org.uispec4j.interception.WindowInterceptor;
 
 public class SlaValidationDialogChecker extends GuiChecker {
   private Window dialog;
@@ -45,9 +46,22 @@ public class SlaValidationDialogChecker extends GuiChecker {
       dialog.getCheckBox().select();
     }
     catch (ItemNotFoundException e) {
-      throw new ItemNotFoundException(
-        "Unexpected dialog shown\n" +
-        "=> An exception is probably thrown on application startup. Try to start the application manually to check out.", e);
+      UIComponent[] textBoxes = dialog.getUIComponents(TextBox.class);
+      if (textBoxes.length > 0) {
+        StringBuilder builder = new StringBuilder("Error dialog shown with text:\n");
+        for (UIComponent textBox : textBoxes) {
+          builder
+            .append("-------\n")
+            .append(((TextBox)textBox).getText().trim()).append('\n');
+        }
+        builder.append("-------\n");
+        throw new UnexpectedApplicationState(builder.toString());
+      }
+      else {
+        throw new ItemNotFoundException(
+          "Unexpected dialog shown\n" +
+          "=> An exception is probably thrown on application startup. Try to start the application manually to check out.", e);
+      }
     }
     return this;
   }

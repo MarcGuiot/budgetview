@@ -75,6 +75,7 @@ public class BudgetWizardTest extends LoggedInFunctionalTestCase {
 
   public void testTwoMonths() throws Exception {
 
+    addOns.activateAnalysis();
     operations.openPreferences().setFutureMonthsCount(12).validate();
     OfxBuilder.init(this)
       .addTransaction("2008/07/07", -29.90, "Free")

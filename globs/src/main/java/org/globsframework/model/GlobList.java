@@ -3,10 +3,7 @@ package org.globsframework.model;
 import org.globsframework.metamodel.Field;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.Link;
-import org.globsframework.metamodel.fields.BooleanField;
-import org.globsframework.metamodel.fields.DoubleField;
-import org.globsframework.metamodel.fields.IntegerField;
-import org.globsframework.metamodel.fields.StringField;
+import org.globsframework.metamodel.fields.*;
 import org.globsframework.model.utils.*;
 import org.globsframework.utils.Utils;
 import org.globsframework.utils.exceptions.UnexpectedApplicationState;
@@ -247,12 +244,9 @@ public class GlobList extends ArrayList<Glob> {
   public SortedSet<Integer> getSortedSet(IntegerField field) {
     SortedSet<Integer> result = new TreeSet<Integer>();
     for (FieldValues values : this) {
-      Integer e = values.get(field);
-      if (e != null) {
-        result.add(e);
-      }
-      else {
-//        throw new RuntimeException("Null value can not be sorted.");
+      Integer value = values.get(field);
+      if (value != null) {
+        result.add(value);
       }
     }
     return result;
@@ -265,9 +259,6 @@ public class GlobList extends ArrayList<Glob> {
       if (value != null) {
         result.add(value);
       }
-      else {
-//        throw new RuntimeException("Null value can not be sorted.");
-      }
     }
     return result;
   }
@@ -279,8 +270,16 @@ public class GlobList extends ArrayList<Glob> {
       if (e != null) {
         result.add(e);
       }
-      else {
-//        throw new RuntimeException("Null value can not be sorted.");
+    }
+    return result;
+  }
+
+  public SortedSet<Date> getSortedSet(DateField field) {
+    SortedSet<Date> result = new TreeSet<Date>();
+    for (FieldValues values : this) {
+      Date e = values.get(field);
+      if (e != null) {
+        result.add(e);
       }
     }
     return result;

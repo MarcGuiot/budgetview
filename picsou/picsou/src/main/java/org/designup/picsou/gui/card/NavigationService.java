@@ -92,6 +92,11 @@ public class NavigationService implements GlobSelectionListener {
     gotoCategorization();
   }
 
+  public void gotoUncategorized() {
+    categorizationSelectionView.showWithMode(CategorizationFilteringMode.UNCATEGORIZED);
+    gotoCategorization();
+  }
+
   public void gotoUncategorizedForSelectedMonths() {
     categorizationSelectionView.showWithMode(CategorizationFilteringMode.UNCATEGORIZED_SELECTED_MONTHS);
     gotoCategorization();

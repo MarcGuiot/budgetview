@@ -92,20 +92,6 @@ public class ThreeFieldKey extends Key {
     return null;
   }
 
-  public Boolean get(BooleanField field, boolean defaultIfNull) {
-    checkIsKeyField(field);
-    if (field == keyField1) {
-      return (Boolean)(value1 == null ? defaultIfNull : value1);
-    }
-    if (field == keyField2) {
-      return (Boolean)(value2 == null ? defaultIfNull : value2);
-    }
-    if (field == keyField3) {
-      return (Boolean)(value3 == null ? defaultIfNull : value3);
-    }
-    return null;
-  }
-
   public Boolean get(BooleanField field) {
     checkIsKeyField(field);
     if (field == keyField1) {
@@ -152,10 +138,6 @@ public class ThreeFieldKey extends Key {
     return null;
   }
 
-  public Double get(DoubleField field, double valueIfNull) throws ItemNotFound {
-    return get(field);
-  }
-
   public Object getValue(Field field) {
     checkIsKeyField(field);
     if (field == keyField1) {
@@ -182,11 +164,6 @@ public class ThreeFieldKey extends Key {
       return (Integer)value3;
     }
     return null;
-  }
-
-  public int get(IntegerField field, int valueIfNull) throws ItemNotFound {
-    Integer value = get(field);
-    return value == null ? valueIfNull : value;
   }
 
   public Integer get(LinkField field) {
@@ -234,12 +211,6 @@ public class ThreeFieldKey extends Key {
       return (Date)value3;
     }
     return null;
-  }
-
-  private void checkIsKeyField(Field field) {
-    if (!keyField1.equals(field) && !keyField2.equals(field) && !keyField3.equals(field)) {
-      throw new ItemNotFound("'" + field.getName() + "' is not a key of type " + getGlobType().getName());
-    }
   }
 
   // optimized - do not use generated code

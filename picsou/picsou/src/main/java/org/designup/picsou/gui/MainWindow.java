@@ -19,7 +19,7 @@ import org.designup.picsou.gui.components.dialogs.MessageDialog;
 import org.designup.picsou.gui.components.dialogs.MessageType;
 import org.designup.picsou.gui.components.layoutconfig.LayoutConfigService;
 import org.designup.picsou.gui.config.ConfigService;
-import org.designup.picsou.gui.license.LicenseCheckerThread;
+import org.designup.picsou.gui.license.activation.LicenseCheckerThread;
 import org.designup.picsou.gui.startup.LoginPanel;
 import org.designup.picsou.gui.startup.SlaValidationDialog;
 import org.designup.picsou.gui.time.TimeService;

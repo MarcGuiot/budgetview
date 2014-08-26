@@ -3,11 +3,9 @@ package org.designup.picsou.triggers;
 import org.designup.picsou.client.ServerAccess;
 import org.designup.picsou.gui.PicsouApplication;
 import org.designup.picsou.gui.utils.KeyService;
+import org.designup.picsou.model.LicenseActivationState;
 import org.designup.picsou.model.User;
-import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.*;
-
-import java.util.Set;
 
 public class RegisterLicenseTrigger extends AbstractChangeSetListener {
   private ServerAccess serverAccess;
@@ -44,11 +42,11 @@ public class RegisterLicenseTrigger extends AbstractChangeSetListener {
               byte[] mailAsByte = mail.getBytes();
               if (KeyService.checkSignature(mailAsByte, signature)) {
                 serverAccess.localRegister(mailAsByte, signature, activationCode, PicsouApplication.JAR_VERSION);
-                repository.update(User.KEY, User.ACTIVATION_STATE, User.ACTIVATION_OK);
+                repository.update(User.KEY, User.LICENSE_ACTIVATION_STATE, LicenseActivationState.ACTIVATION_OK.getId());
                 repository.update(User.KEY, User.IS_REGISTERED_USER, true);
               }
               else {
-                repository.update(User.KEY, User.ACTIVATION_STATE, User.ACTIVATION_FAILED_BAD_SIGNATURE);
+                repository.update(User.KEY, User.LICENSE_ACTIVATION_STATE, LicenseActivationState.ACTIVATION_FAILED_BAD_SIGNATURE.getId());
               }
             }
           }

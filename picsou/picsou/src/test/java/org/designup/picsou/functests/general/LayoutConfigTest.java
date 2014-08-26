@@ -16,6 +16,7 @@ public class LayoutConfigTest extends LoggedInFunctionalTestCase {
     setDeleteLocalPrevayler(true);
     super.setUp();
     setDeleteLocalPrevayler(false);
+    addOns.activateAnalysis();
   }
 
   protected void tearDown() throws Exception {

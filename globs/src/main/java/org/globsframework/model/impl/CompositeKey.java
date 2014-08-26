@@ -161,10 +161,6 @@ public class CompositeKey extends Key {
     return (Double)doGet(field);
   }
 
-  public Double get(DoubleField field, double valueIfNull) throws ItemNotFound {
-    return get(field);
-  }
-
   public Date get(DateField field) {
     return (Date)doGet(field);
   }
@@ -175,11 +171,6 @@ public class CompositeKey extends Key {
 
   public Integer get(IntegerField field) {
     return (Integer)doGet(field);
-  }
-
-  public int get(IntegerField field, int valueIfNull) throws ItemNotFound {
-    Integer value = get(field);
-    return value == null ? valueIfNull : value;
   }
 
   public Integer get(LinkField field) {
@@ -204,14 +195,6 @@ public class CompositeKey extends Key {
 
   public byte[] get(BlobField field) {
     return (byte[])doGet(field);
-  }
-
-  public Boolean get(BooleanField field, boolean defaultIfNull) {
-    Object value = doGet(field);
-    if (value == null) {
-      return defaultIfNull;
-    }
-    return (Boolean)value;
   }
 
   public Long get(LongField field) {

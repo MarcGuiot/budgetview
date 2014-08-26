@@ -10,6 +10,7 @@ public class ProjectDeletionTest extends LoggedInFunctionalTestCase {
     setCurrentMonth("2010/12");
     setInitialGuidesShown(true);
     super.setUp();
+    addOns.activateProjects();
   }
 
   public void testDeletingAProjectWithNoAssignedTransactions() throws Exception {

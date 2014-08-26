@@ -2,7 +2,11 @@ package org.designup.picsou.license.functests;
 
 import junit.framework.Assert;
 import junit.framework.AssertionFailedError;
-import org.designup.picsou.functests.checkers.*;
+import org.designup.picsou.functests.checkers.ApplicationChecker;
+import org.designup.picsou.functests.checkers.LoginChecker;
+import org.designup.picsou.functests.checkers.OperationChecker;
+import org.designup.picsou.functests.checkers.license.LicenseActivationChecker;
+import org.designup.picsou.functests.checkers.license.LicenseChecker;
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.gui.PicsouApplication;
 import org.designup.picsou.gui.time.TimeService;
@@ -20,7 +24,6 @@ import org.globsframework.model.GlobList;
 import org.globsframework.sqlstreams.SqlConnection;
 import org.globsframework.sqlstreams.constraints.Constraints;
 import org.globsframework.utils.Dates;
-import org.uispec4j.TextBox;
 import org.uispec4j.Trigger;
 import org.uispec4j.Window;
 import org.uispec4j.interception.WindowInterceptor;
@@ -30,7 +33,7 @@ public class LicenseActivationTest extends ConnectedTestCase {
   private PicsouApplication picsouApplication;
   private Window window;
   private LoginChecker login;
-  private LicenseMessageChecker licenseMessage;
+  private LicenseChecker license;
 
   private static final String MAIL = "alfred@free.fr";
   private static final String SECOND_PATH = "tmp/otherprevayler";
@@ -83,7 +86,7 @@ public class LicenseActivationTest extends ConnectedTestCase {
       picsouApplication = application.getApplication();
     }
     login = new LoginChecker(window);
-    licenseMessage = new LicenseMessageChecker(window);
+    license = new LicenseChecker(window);
   }
 
   public void testConnectAtStartup() throws Exception {
@@ -115,7 +118,7 @@ public class LicenseActivationTest extends ConnectedTestCase {
     TimeService.setCurrentDate(Dates.parse("2008/10/10"));
     startApplication(false);
     login.logExistingUser("user", "passw@rd");
-    checkLicenseExpired();
+    checkUserNotRegistered();
   }
 
   public void testResendsActivationKeyIfCountDecreases() throws Exception {
@@ -133,10 +136,10 @@ public class LicenseActivationTest extends ConnectedTestCase {
     login.logNewUser("user", "passw@rd");
 
     db.checkRepoIdIsUpdated(1L, Constraints.notEqual(RepoInfo.REPO_ID, repoId));
-    licenseMessage.checkHidden();
+    license.checkInfoMessageHidden();
 
     LicenseActivationChecker.enterBadLicense(window, MAIL, "1234", "Activation failed. An email was sent at " + MAIL + " with further information.");
-    licenseMessage.checkVisible("Activation failed. An email was sent");
+    license.checkInfoMessage("Activation failed. An email was sent");
     Email email = mailServer.checkReceivedMail(MAIL);
     email.checkContains("To prevent anyone else from using your code");
     String emailcontent = email.getContent();
@@ -164,7 +167,7 @@ public class LicenseActivationTest extends ConnectedTestCase {
     System.setProperty(PicsouApplication.LOCAL_PREVAYLER_PATH_PROPERTY, pathToData);
     startApplication(false);
     login.logExistingUser("user", "passw@rd");
-    checkKilled();
+    license.checkKilled();
     exit();
   }
 
@@ -246,13 +249,12 @@ public class LicenseActivationTest extends ConnectedTestCase {
       .enterLicenseAndActivate("titi@foo.org", "az")
       .checkErrorMessage("Activation failed")
       .close();
-    checkMessage("46 days left for trying BudgetView");
     checkMessage("This activation code is not valid. You can request");
     TimeService.setCurrentDate(Dates.parse("2008/10/10"));
     exit();
     startApplication(false);
     this.login.logExistingUser("user", "passw@rd");
-    checkLicenseExpired();
+    checkUserNotRegistered();
   }
 
   public void testStartRegistrationAndStopServer() throws Exception {
@@ -268,14 +270,13 @@ public class LicenseActivationTest extends ConnectedTestCase {
     license.checkErrorMessage("You must be connected to the Internet")
       .close();
 
-    checkMessage("46 days left for trying BudgetView");
     checkMessage("Cannot connect to remote server");
 
     exit();
     TimeService.setCurrentDate(Dates.parse("2008/10/10"));
     startApplication(false);
     login.logExistingUser("user", "passw@rd");
-    checkLicenseExpired();
+    checkUserNotRegistered();
   }
 
   public void testEmptyActivationCode() throws Exception {
@@ -294,18 +295,17 @@ public class LicenseActivationTest extends ConnectedTestCase {
     license.checkErrorMessage("Activation failed");
     license.close();
 
-    checkMessage("46 days left for trying BudgetView");
     checkMessage("This activation code is not valid. You can request");
 
     exit();
     TimeService.setCurrentDate(Dates.parse("2008/10/10"));
     startApplication(false);
     login.logExistingUser("user", "passw@rd");
-    checkLicenseExpired();
+    checkUserNotRegistered();
   }
 
   private void checkMessage(final String messageText) {
-    licenseMessage.checkVisible(messageText);
+    license.checkInfoMessage(messageText);
   }
 
   public void testRegisterAndReRegisterToOtherFailedAndSendAMail() throws Exception {
@@ -334,7 +334,7 @@ public class LicenseActivationTest extends ConnectedTestCase {
     LicenseActivationChecker.enterBadLicense(window, email, "1234",
                                              "Activation failed. An email was sent at " + MAIL + " with further information.");
     mailServer.checkReceivedMail(email);
-    checkWithMailKilled();
+    license.checkMailKilled(MAIL);
   }
 
   public void testSendCodeFromActivation() throws Exception {
@@ -398,9 +398,8 @@ public class LicenseActivationTest extends ConnectedTestCase {
     startApplication(false);
     login.logExistingUser("user", "passw@rd");
 
-    LicenseInfoChecker licenseInfo = new LicenseInfoChecker(window);
-    LicenseExpirationChecker expirationChecker = licenseInfo.clickNewLicense();
-    expirationChecker
+    LicenseChecker license = new LicenseChecker(window);
+    license.requestNewLicense()
       .checkMail("alfred@free.fr")
       .sendKey()
       .close();
@@ -423,31 +422,11 @@ public class LicenseActivationTest extends ConnectedTestCase {
   private String checkMailAndExtractCode() throws InterruptedException {
     String email = mailServer.checkReceivedMail(MAIL).getContent();
     int start = email.indexOf(ACTIVATION_CODE);
-    if (start == -1){
+    if (start == -1) {
       fail(ACTIVATION_CODE + " not found in " + email);
     }
     int index = start + ACTIVATION_CODE.length();
     return email.substring(index, index + 4);
-  }
-
-  public void testTrialVersionIsOver() throws Exception {
-    login.logNewUser("user", "passw@rd");
-    exit();
-    TimeService.setCurrentDate(Dates.parse("2008/10/10"));
-    System.setProperty(PicsouApplication.DELETE_LOCAL_PREVAYLER_PROPERTY, "false");
-    startApplication(false);
-    login.logExistingUser("user", "passw@rd");
-    LicenseInfoChecker licenseInfo = new LicenseInfoChecker(window);
-    licenseInfo.checkMessage("Your free trial period is over.");
-  }
-
-  public void testActivationFailedDuringTrial() throws Exception {
-    db.registerMail(MAIL, "4321");
-    LoginChecker loginChecker = new LoginChecker(window);
-    loginChecker.logNewUser("user", "passw@rd");
-    LicenseActivationChecker.enterBadLicense(window, MAIL, "1234", "Activation failed");
-    checkActivationFailed();
-    checkDaysLeftMessage();
   }
 
   public void testMultipleActivation() throws Exception {
@@ -497,7 +476,7 @@ public class LicenseActivationTest extends ConnectedTestCase {
     System.setProperty(PicsouApplication.LOCAL_PREVAYLER_PATH_PROPERTY, PATH_TO_DATA);
     startApplication(false);
     login.logExistingUser("user", "passw@rd");
-    checkDaysLeftMessage();
+    license.checkUserIsRegistered();
     exit();
 
     System.setProperty(PicsouApplication.DELETE_LOCAL_PREVAYLER_PROPERTY, "false");
@@ -586,26 +565,12 @@ public class LicenseActivationTest extends ConnectedTestCase {
     checkValidLicense(false);
   }
 
-  private void checkLicenseExpired() {
-    OperationChecker operations = new OperationChecker(window);
-    Window dialog = WindowInterceptor.getModalDialog(operations.getImportTrigger());
-    LicenseActivationChecker licenseActivation = new LicenseActivationChecker(dialog);
-    licenseActivation.close();
-    checkMessageOver();
+  private void checkUserNotRegistered() {
+    license.checkUserNotRegistered();
   }
 
   private void checkValidLicense(final boolean anonymous) {
-    OperationChecker operation = new OperationChecker(window);
-    Window dialog = WindowInterceptor.getModalDialog(operation.getImportTrigger());
-    ImportDialogChecker importDialog = new ImportDialogChecker(dialog);
-    importDialog.close();
-    TextBox messageBox = window.getTextBox("licenseInfoMessage");
-    if (!anonymous) {
-      assertFalse("licenseInfoMessage shown with text: " + messageBox.getText(), messageBox.isVisible());
-    }
-    else {
-      assertTrue("licenseInfoMessage not shown", messageBox.isVisible());
-    }
+    license.checkUserIsRegistered();
   }
 
   private void restartAppAndLogAndDispose() throws Exception {
@@ -643,35 +608,6 @@ public class LicenseActivationTest extends ConnectedTestCase {
 
     db.checkLicenseCount(MAIL, 1);
     return repoId;
-  }
-
-  private void checkDaysLeftMessage() {
-    licenseMessage.checkVisible("days left");
-  }
-
-  private TextBox getMessageBox() {
-    return window.getTextBox("licenseInfoMessage");
-  }
-
-  private void checkMessageOver() {
-    checkMessage("Your free trial period is over");
-  }
-
-  private void checkWithMailKilled() {
-    licenseMessage.checkVisible("Activation failed. An email was sent at " + MAIL + " with further information.");
-  }
-
-  private void checkActivationFailed() {
-    TextBox message = getMessageBox();
-    assertThat(message.isVisible());
-    assertTrue(message.textContains("This activation code is not valid."));
-    assertTrue(message.textContains("You can request"));
-  }
-
-  private void checkKilled() {
-    TextBox message = getMessageBox();
-    assertThat(message.isVisible());
-    assertTrue(message.textContains("You are not allowed to import data anymore"));
   }
 
   private void register(DbChecker db, String email, final String code) throws InterruptedException {

@@ -134,19 +134,6 @@ public class AccountChartsPanel {
         BooleanFieldListener.installNodeStyle(account.getKey(), Account.SHOW_GRAPH,
                                               chartNode, "accountChartShown", "accountChartHidden", repository);
       cellBuilder.addDisposable(showHide);
-
-      BooleanFieldListener listener =
-        BooleanFieldListener.install(UserPreferences.KEY,
-                                     UserPreferences.SHOW_PROJECT_DETAILS,
-                                     repository, new BooleanListener() {
-            public void apply(boolean showProjects) {
-              HistoChartRange newRange = showProjects ? shortRange : longRange;
-              projects.setRange(newRange);
-              accountChart.setRange(newRange);
-            }
-          }
-        );
-      cellBuilder.addDisposable(listener);
     }
 
     public void registerSummaryAccountComponents(PanelBuilder cellBuilder, Glob account) {
@@ -169,20 +156,6 @@ public class AccountChartsPanel {
       SplitsNode<HistoChart> node = chartView.registerComponents(cellBuilder);
       node.applyStyle("accountChartShown");
       cellBuilder.addDisposable(chartView);
-
-      BooleanFieldListener listener =
-        BooleanFieldListener.install(UserPreferences.KEY,
-                                     UserPreferences.SHOW_PROJECT_DETAILS,
-                                     repository, new BooleanListener() {
-            public void apply(boolean showProjects) {
-              HistoChartRange newRange = showProjects ? shortRange : longRange;
-              projects.setRange(newRange);
-              chartView.setRange(newRange);
-            }
-          }
-        );
-      cellBuilder.addDisposable(listener);
     }
   }
-
 }

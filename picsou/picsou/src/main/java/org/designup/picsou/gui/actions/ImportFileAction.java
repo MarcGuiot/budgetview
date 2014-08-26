@@ -1,10 +1,9 @@
 package org.designup.picsou.gui.actions;
 
-import org.designup.picsou.gui.PicsouApplication;
 import org.designup.picsou.gui.components.dialogs.MessageDialog;
 import org.designup.picsou.gui.components.dialogs.MessageType;
 import org.designup.picsou.gui.importer.ImportDialog;
-import org.designup.picsou.gui.license.LicenseActivationDialog;
+import org.designup.picsou.gui.license.activation.LicenseActivationDialog;
 import org.designup.picsou.gui.license.LicenseService;
 import org.designup.picsou.gui.startup.components.OpenRequestManager;
 import org.designup.picsou.model.SignpostStatus;
@@ -63,16 +62,6 @@ public class ImportFileAction extends AbstractAction {
     });
   }
 
-  private ImportFileAction(String text, final GlobRepository repository, final Directory directory, GlobList importedAccounts,
-                           boolean usePreference, boolean isSynchro) {
-    super(text);
-    this.repository = repository;
-    this.directory = directory;
-    this.importedAccounts = importedAccounts;
-    this.usePreference = usePreference;
-    this.isSynchro = isSynchro;
-  }
-
   private ImportFileAction(String text, final GlobRepository repository, final Directory directory, Glob defaulAccount,
                            boolean usePreference, boolean isSynchro) {
     super(text);
@@ -100,7 +89,7 @@ public class ImportFileAction extends AbstractAction {
                         Glob defaultAccount, boolean usePreferedPath, GlobList importedAccounts, boolean isSynchro) {
       this.directory = directory;
       this.repository = repository;
-      if (!LicenseService.trialExpired(repository) && !User.isDemoUser(repository.get(User.KEY))) {
+      if (!User.isDemoUser(repository.get(User.KEY))) {
         importDialog = new ImportDialog(Lang.get("import.fileSelection.close"), files, defaultAccount,
                                         directory.get(JFrame.class),
                                         repository, directory,

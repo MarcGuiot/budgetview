@@ -30,7 +30,7 @@ public class ProjectPeriodSliderAdapter implements MonthSliderAdapter {
     int maxMonthId = -1;
     int maxLabelWidth = -1;
     for (int monthId = 200001; monthId <= 200012; monthId++) {
-      int monthWidth = Month.getFullMonthLabel(monthId).length();
+      int monthWidth = Month.getFullMonthLabel(monthId, true).length();
       if (monthWidth > maxLabelWidth) {
         maxLabelWidth = monthWidth;
         maxMonthId = monthId;

@@ -83,8 +83,8 @@ public class GlobDeltaGaugeView extends AbstractGlobComponentHolder<GlobDeltaGau
       return "";
     }
 
-    String previousMonthLabel = Month.getFullMonthLabelWith4DigitYear(previousMonth).toLowerCase();
-    String newMonthLabel = Month.getFullMonthLabelWith4DigitYear(newMonth).toLowerCase();
+    String previousMonthLabel = Month.getFullMonthLabelWith4DigitYear(previousMonth, true).toLowerCase();
+    String newMonthLabel = Month.getFullMonthLabelWith4DigitYear(newMonth, true).toLowerCase();
 
     if (Amounts.isNullOrZero(newValue) && Amounts.isNullOrZero(previousValue)) {
       return Lang.get("deltaGauge.alwayszero", previousMonthLabel, newMonthLabel);

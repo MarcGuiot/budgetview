@@ -49,7 +49,7 @@ public class SeriesAmountEditionChecker<T extends SeriesAmountEditionChecker> ex
 
   public T setAmount(double value) {
     if (value < 0) {
-      Assert.fail("Use a poitive amount and call selectNegativeAmounts()");
+      Assert.fail("Use a positive amount and call selectNegativeAmounts()");
     }
     return setAmount(Double.toString(value));
   }

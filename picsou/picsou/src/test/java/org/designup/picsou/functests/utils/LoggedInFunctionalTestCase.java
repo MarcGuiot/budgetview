@@ -2,6 +2,8 @@ package org.designup.picsou.functests.utils;
 
 import org.designup.picsou.functests.checkers.*;
 import org.designup.picsou.functests.checkers.components.TimeViewChecker;
+import org.designup.picsou.functests.checkers.license.LicenseActivationChecker;
+import org.designup.picsou.functests.checkers.license.LicenseChecker;
 import org.designup.picsou.functests.checkers.printing.PrinterChecker;
 import org.designup.picsou.gui.PicsouApplication;
 import org.designup.picsou.gui.browsing.BrowsingService;
@@ -29,15 +31,16 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
   public ScreenChecker screen;
   public ViewSelectionChecker views;
   public TimeViewChecker timeline;
+  public DashboardChecker dashboard;
   public OperationChecker operations;
+  public AddOnsChecker addOns;
   public AccountViewChecker accounts;
   public MainAccountViewChecker mainAccounts;
   public SavingsAccountViewChecker savingsAccounts;
   public TransactionChecker transactions;
   public TransactionDetailsChecker transactionDetails;
   public TransactionCreationChecker transactionCreation;
-  public LicenseActivationChecker license;
-  public LicenseMessageChecker licenseMessage;
+  public LicenseChecker license;
   public BudgetViewChecker budgetView;
   public UncategorizedSummaryViewChecker uncategorized;
   public SavingsViewChecker savingsView;
@@ -66,7 +69,7 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
 
   public static String SOCIETE_GENERALE = "Société Générale";
 
-  private boolean notRegistered = false;
+  private boolean registered = true;
   protected boolean createDefaultSeries = false;
   protected String user = "anonymous";
   protected String password = null;
@@ -113,8 +116,8 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
 
     initCheckers();
 
-    if (!notRegistered) {
-      LicenseActivationChecker.enterLicense(mainWindow, "admin", "1234");
+    if (registered) {
+      license.register();
       operations.openPreferences()
         .setFutureMonthsCount(0)
         .validate();
@@ -156,7 +159,9 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
     mainAccounts = new MainAccountViewChecker(mainWindow);
     savingsAccounts = new SavingsAccountViewChecker(mainWindow);
     operations = new OperationChecker(mainWindow);
+    addOns = new AddOnsChecker(mainWindow);
     timeline = new TimeViewChecker(mainWindow);
+    dashboard = new DashboardChecker(mainWindow);
     transactions = new TransactionChecker(mainWindow);
     transactionDetails = new TransactionDetailsChecker(mainWindow);
     transactionCreation = new TransactionCreationChecker(mainWindow);
@@ -166,8 +171,7 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
     savingsView = new SavingsViewChecker(mainWindow);
     categorization = new CategorizationChecker(mainWindow);
     seriesAnalysis = new SeriesAnalysisChecker(mainWindow);
-    license = new LicenseActivationChecker(mainWindow);
-    licenseMessage = new LicenseMessageChecker(mainWindow);
+    license = new LicenseChecker(mainWindow);
     newVersion = new NewVersionChecker(mainWindow);
     demoMessage = new DemoMessageChecker(mainWindow);
     importPanel = new ImportPanelChecker(mainWindow);
@@ -220,10 +224,12 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
     mainAccounts = null;
     savingsAccounts = null;
     timeline = null;
+    dashboard = null;
     transactions = null;
     transactionDetails = null;
     transactionCreation = null;
     operations = null;
+    addOns = null;
     screen = null;
     newVersion = null;
     demoMessage = null;
@@ -233,7 +239,6 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
     categorization = null;
     seriesAnalysis = null;
     license = null;
-    licenseMessage = null;
     importPanel = null;
     notes = null;
     projects = null;
@@ -275,7 +280,7 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
   }
 
   public void setNotRegistered() {
-    notRegistered = true;
+    registered = false;
   }
 
   @SuppressWarnings("UnusedDeclaration")
@@ -328,7 +333,7 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
     repository = ((PicsouFrame)mainWindow.getAwtComponent()).getRepository();
 
     initCheckers();
-    if (!notRegistered) {
+    if (registered) {
       LicenseActivationChecker.enterLicense(mainWindow, "admin", "1234");
     }
   }
@@ -353,7 +358,7 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
     LoginChecker loginChecker = new LoginChecker(mainWindow);
     loginChecker.logNewUser(user, password);
     initCheckers();
-    if (!notRegistered) {
+    if (registered) {
       LicenseActivationChecker.enterLicense(mainWindow, "admin", "1234");
     }
   }

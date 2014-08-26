@@ -8,6 +8,7 @@ public class ProjectMultiMonthPaymentsTest extends LoggedInFunctionalTestCase {
     setCurrentMonth("2010/12");
     super.setUp();
     operations.hideSignposts();
+    addOns.activateProjects();
   }
 
   public void testMultiMonthPaymentsWithSameAmounts() throws Exception {

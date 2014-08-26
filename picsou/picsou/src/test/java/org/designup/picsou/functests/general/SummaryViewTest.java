@@ -8,6 +8,7 @@ public class SummaryViewTest extends LoggedInFunctionalTestCase {
   protected void setUp() throws Exception {
     setCurrentMonth("2011/01");
     super.setUp();
+    addOns.activateProjects();
   }
 
   public void test() throws Exception {

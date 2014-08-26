@@ -72,7 +72,7 @@ public class CategorizationSelector implements GlobSelectionListener, ChangeSetL
     categorizationCard = new CategorizationCard(builder.addCardHandler("categorizationCard"));
     seriesCard = builder.addCardHandler("seriesCard");
 
-    title = builder.add("budgetAreaSelectorTitle", new JLabel()).getComponent();
+    title = builder.add("verticalTabSelectorTitle", new JLabel()).getComponent();
 
     multiBudgetAreaToggle = new JToggleButton(new AbstractAction() {
       public void actionPerformed(ActionEvent e) {

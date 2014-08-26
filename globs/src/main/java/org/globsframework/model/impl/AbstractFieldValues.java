@@ -24,6 +24,14 @@ public abstract class AbstractFieldValues implements FieldValues {
     return (Date)doGet(field);
   }
 
+  public Date get(DateField field, Date valueIfNull) {
+    Object date = doGet(field);
+    if (date == null) {
+      return valueIfNull;
+    }
+    return (Date)date;
+  }
+
   public Date get(TimeStampField field) {
     return (Date)doGet(field);
   }

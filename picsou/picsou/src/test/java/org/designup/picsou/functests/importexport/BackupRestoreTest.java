@@ -36,19 +36,6 @@ public class BackupRestoreTest extends LoggedInFunctionalTestCase {
     super.tearDown();
   }
 
-  public void testRestoreIsNotPossibleAndBackupWarnsThatRestoreIsNotPossibleDuringTheTrialPeriod() throws Exception {
-    setDeleteLocalPrevayler(true);
-    setNotRegistered();
-    restartApplication(true);
-    OfxBuilder.init(this)
-      .addTransaction("2008/08/26", 1000, "Company")
-      .addTransaction("2008/08/10", -400.0, "Auchan")
-      .load();
-    operations.backup(this, true);
-
-    operations.restoreNotAvailable();
-  }
-
   public void testBackupAndRestore() throws Exception {
 
     OfxBuilder.init(this)
@@ -321,6 +308,7 @@ public class BackupRestoreTest extends LoggedInFunctionalTestCase {
     changeUser("user", "password");
     operations.openPreferences().setFutureMonthsCount(2).validate();
     operations.hideSignposts();
+    addOns.activateAnalysis();
 
     OfxBuilder.init(this)
       .addTransaction("2008/05/01", 1000.00, "Salaire")

@@ -174,6 +174,8 @@ public class BudgetSummaryViewTest extends LoggedInFunctionalTestCase {
   }
 
   public void testMultipleMainAccounts() throws Exception {
+    addOns.activateProjects();
+
     OfxBuilder
       .init(this)
       .addBankAccount(-1, 10674, "000111", 1000.00, "2008/07/10")

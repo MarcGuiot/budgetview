@@ -10,6 +10,7 @@ public class ProjectDuplicationTest extends LoggedInFunctionalTestCase {
     setInitialGuidesShown(true);
     super.setUp();
     operations.hideSignposts();
+    addOns.activateProjects();
   }
 
   public void testDuplicateSimpleProject() throws Exception {

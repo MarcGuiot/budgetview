@@ -29,6 +29,7 @@ public class SignpostSequenceTest extends LoggedInFunctionalTestCase {
   }
 
   public void testCompleteSequence() throws Exception {
+    addOns.activateAnalysis();
 
     signpostView.checkSignpostViewShown();
 
@@ -475,6 +476,7 @@ public class SignpostSequenceTest extends LoggedInFunctionalTestCase {
   public void testSwitchingToTheDemoAccountAndBackPreservesSignposts() throws Exception {
 
     demoMessage.checkHidden();
+    addOns.activateAnalysis();
 
     // === Goto data ===
 

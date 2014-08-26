@@ -12,6 +12,7 @@ public class VerticalTabToggleUI extends BasicToggleButtonUI {
 
   private Color rolloverTextColor = Color.RED;
   private Color disabledTextColor = Color.GRAY;
+  private Color selectedTextColor = Color.BLACK;
 
   private Color bgColor;
   private Color borderColor;
@@ -64,6 +65,9 @@ public class VerticalTabToggleUI extends BasicToggleButtonUI {
     else if (model.isRollover()) {
       g.setColor(rolloverTextColor);
     }
+    else if (model.isSelected()) {
+      g.setColor(selectedTextColor);
+    }
     else {
       g.setColor(component.getForeground());
     }
@@ -90,6 +94,10 @@ public class VerticalTabToggleUI extends BasicToggleButtonUI {
 
   public void setRolloverTextColor(Color rolloverTextColor) {
     this.rolloverTextColor = rolloverTextColor;
+  }
+
+  public void setSelectedTextColor(Color selectedTextColor) {
+    this.selectedTextColor = selectedTextColor;
   }
 
   public void setDisabledTextColor(Color disabledTextColor) {

@@ -2,14 +2,10 @@ package org.designup.picsou.gui.projects;
 
 import org.designup.picsou.gui.View;
 import org.designup.picsou.model.Project;
-import org.designup.picsou.model.UserPreferences;
-import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobSelection;
 import org.globsframework.gui.GlobSelectionListener;
 import org.globsframework.gui.GlobsPanelBuilder;
-import org.globsframework.gui.actions.SetBooleanAction;
 import org.globsframework.gui.splits.layout.CardHandler;
-import org.globsframework.gui.utils.BooleanFieldListener;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.*;
 import org.globsframework.utils.directory.Directory;
@@ -38,17 +34,13 @@ public class ProjectView extends View implements GlobSelectionListener, ChangeSe
 
     JPanel panel = new JPanel();
     builder.add("projectView", panel);
-    BooleanFieldListener.installShowHide(panel,
-                                         UserPreferences.KEY,
-                                         UserPreferences.SHOW_PROJECT_DETAILS,
-                                         repository);
 
     ProjectCreationView projectCreationView = new ProjectCreationView(repository, directory);
     projectCreationView.registerComponents(builder);
 
     projectListView = new ProjectListView(repository, directory);
     projectListView.registerComponents(builder);
-    
+
     ProjectEditionView projectEditionView = new ProjectEditionView(repository, directory);
     projectEditionView.registerComponents(builder);
 
@@ -75,7 +67,6 @@ public class ProjectView extends View implements GlobSelectionListener, ChangeSe
       Set<Key> created = changeSet.getCreated(Project.TYPE);
       if (created.size() > 0) {
         selectionService.select(repository.get(created.iterator().next()));
-        repository.update(UserPreferences.KEY, UserPreferences.SHOW_PROJECT_DETAILS, true);
       }
       else {
         switchToListIfNeeded();
@@ -94,7 +85,6 @@ public class ProjectView extends View implements GlobSelectionListener, ChangeSe
       cards.show("empty");
       return;
     }
-    repository.update(UserPreferences.KEY, UserPreferences.SHOW_PROJECT_DETAILS, true);
     currentKeys = selectionService.getSelection(Project.TYPE).getKeySet();
     if (currentKeys.size() == 1) {
       cards.show("edit");

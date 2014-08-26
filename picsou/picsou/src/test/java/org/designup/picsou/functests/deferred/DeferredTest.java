@@ -771,6 +771,7 @@ public class DeferredTest extends LoggedInFunctionalTestCase {
   }
 
   public void testDeferredSpecificSeriesNotShownInAnalysisView() throws Exception {
+    addOns.activateAnalysis();
     operations.openPreferences().setFutureMonthsCount(2).validate();
     OfxBuilder.init(this)
       .addCardAccount("1111", 100, "2008/06/30")

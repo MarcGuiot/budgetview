@@ -55,6 +55,10 @@ public class Lang {
     return get(defaultKey, arguments);
   }
 
+  public static String capitalizeMonth(String month) {
+    return "fr".equalsIgnoreCase(LOCALE.getLanguage()) ? month.toLowerCase() : month;
+  }
+
   public static MessageFormat getFormat(String key) {
     String message = getMessage(key);
     return createMessageFormatFromText(message);

@@ -1,7 +1,6 @@
 package org.designup.picsou.gui.description;
 
 import com.budgetview.shared.utils.AmountFormat;
-import com.budgetview.shared.utils.Amounts;
 import org.designup.picsou.model.BudgetArea;
 import org.designup.picsou.model.Month;
 import org.designup.picsou.model.NumericDateType;
@@ -45,6 +44,9 @@ public class Formatting extends AmountFormat {
   }
 
   public static String toString(Date date) {
+    if (date == null) {
+      return "";
+    }
     return dateFormat.format(date);
   }
 
@@ -75,7 +77,7 @@ public class Formatting extends AmountFormat {
 
   public static String getFullLabel(int month, int day) {
     return fullLabelFormat.format(
-      new Object[]{Integer.toString(Month.toYear(month)), Month.getFullMonthLabel(month), day});
+      new Object[]{Integer.toString(Month.toYear(month)), Month.getFullMonthLabel(month, true), day});
   }
 
   private static void updateWithDefaults() {

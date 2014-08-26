@@ -1,31 +1,35 @@
 package org.designup.picsou.gui.card;
 
 import org.designup.picsou.gui.View;
-import org.designup.picsou.gui.signpost.Signpost;
 import org.designup.picsou.gui.card.utils.NavigationAction;
 import org.designup.picsou.gui.card.utils.NavigationIcons;
 import org.designup.picsou.gui.help.HelpService;
 import org.designup.picsou.gui.model.Card;
+import org.designup.picsou.gui.signpost.Signpost;
 import org.designup.picsou.gui.signpost.guides.GotoCategorizationSignpost;
 import org.designup.picsou.gui.signpost.guides.GotoDataSignpost;
 import org.designup.picsou.gui.signpost.guides.SkipAndGotoBudgetSignpost;
 import org.designup.picsou.gui.utils.Gui;
+import org.designup.picsou.model.AddOns;
 import org.designup.picsou.model.Month;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobSelection;
 import org.globsframework.gui.GlobSelectionListener;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.splits.ImageLocator;
-import org.globsframework.gui.splits.layout.CardHandler;
 import org.globsframework.gui.splits.PanelBuilder;
+import org.globsframework.gui.splits.layout.CardHandler;
+import org.globsframework.gui.splits.repeat.Repeat;
 import org.globsframework.gui.splits.repeat.RepeatComponentFactory;
 import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
+import org.globsframework.model.utils.TypeChangeSetListener;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
-import java.util.Arrays;
+import java.util.ArrayList;
+import java.util.List;
 
 public class CardView extends View implements GlobSelectionListener {
   private CardHandler cards;
@@ -50,7 +54,7 @@ public class CardView extends View implements GlobSelectionListener {
     final ButtonGroup masterGroup = new ButtonGroup();
     final ImageLocator images = directory.get(ImageLocator.class);
     for (Card card : CARDS) {
-      JToggleButton toggle = new JToggleButton(new ToggleAction(card));
+      final JToggleButton toggle = new JToggleButton(new ToggleAction(card));
       toggle.setIcon(NavigationIcons.get(images, card));
       toggle.setRolloverEnabled(true);
       toggle.setRolloverIcon(NavigationIcons.getRollover(images, card));
@@ -60,30 +64,49 @@ public class CardView extends View implements GlobSelectionListener {
       masterGroup.add(toggle);
       toggles[card.getId()] = toggle;
 
-      if (card.equals(Card.BUDGET)) {
-        categorizationCompletionSignpost.attach(toggle);
-        Signpost signpost = new SkipAndGotoBudgetSignpost(repository, directory);
-        signpost.attach(toggle);
-      }
-      else if (card.equals(Card.DATA)) {
-        Signpost signpost = new GotoDataSignpost(repository, directory);
-        signpost.attach(toggle);
-      }
-      else if (card.equals(Card.CATEGORIZATION)) {
-        Signpost signpost = new GotoCategorizationSignpost(repository, directory);
-        signpost.attach(toggle);
+      switch (card) {
+        case BUDGET:
+          categorizationCompletionSignpost.attach(toggle);
+          Signpost gotoBudgetSignpost = new SkipAndGotoBudgetSignpost(repository, directory);
+          gotoBudgetSignpost.attach(toggle);
+          break;
+        case DATA:
+          Signpost gotoDataSignpost = new GotoDataSignpost(repository, directory);
+          gotoDataSignpost.attach(toggle);
+          break;
+        case CATEGORIZATION:
+          Signpost gotoCategorizationSignpost = new GotoCategorizationSignpost(repository, directory);
+          gotoCategorizationSignpost.attach(toggle);
+          break;
       }
     }
 
-    builder.addRepeat("viewToggles", Arrays.asList(CARDS), new RepeatComponentFactory<Card>() {
+    final Repeat<Card> repeat = builder.addRepeat("viewToggles", getActiveCards(), new RepeatComponentFactory<Card>() {
       public void registerComponents(PanelBuilder cellBuilder, Card card) {
         cellBuilder.add("toggle", toggles[card.getId()]);
+      }
+    });
+    repository.addChangeListener(new TypeChangeSetListener(AddOns.TYPE) {
+      public void update(GlobRepository repository) {
+        repeat.set(getActiveCards());
       }
     });
 
     addBackForwardActions(builder);
 
     showCard(NavigationService.INITIAL_CARD);
+  }
+
+  public List<Card> getActiveCards() {
+    List<Card> result = new ArrayList<Card>();
+    for (Card card : CARDS) {
+      if (((card == Card.PROJECTS) && !AddOns.isEnabled(AddOns.PROJECTS, repository)) ||
+          ((card == Card.ANALYSIS) && !AddOns.isEnabled(AddOns.ANALYSIS, repository))) {
+        continue;
+      }
+      result.add(card);
+    }
+    return result;
   }
 
   public void showInitialCard() {

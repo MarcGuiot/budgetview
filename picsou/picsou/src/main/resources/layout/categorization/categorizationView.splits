@@ -1,6 +1,8 @@
 <splits xmlns="http://www.globsframework.org/xml/splits.xsd">
 
   <styleImport file="/layout/commonStyles.splits"/>
+  <styleImport file="/layout/components/verticalTabStyles.splits"/>
+  
   <styles>
     <style selector="label.categorizationStep" font="-,bold,12" foreground="#333333"
            fill="horizontal" horizontalAlignment="left"
@@ -10,19 +12,12 @@
     <style selector="#budgetAreas label.title" font="-,bold,12"
            fill="none" anchor="center" marginTop="10" marginBottom="10"/>
 
-    <ui name="budgetAreaSelector" class="org.designup.picsou.gui.components.tabs.VerticalTabToggleUI"
-        rolloverTextColor="categorization.budgetAreaSelector.text.rollover"
-        disabledTextColor="categorization.budgetAreaSelector.text.disabled"
-        bgColor="categorization.budgetAreaSelector.bg"
-        borderColor="categorization.budgetAreaSelector.border"/>
-    <style selector="toggleButton.budgetAreaSelector" ui="budgetAreaSelector" margin="0"
-           font="-,bold,12" cursor="hand" rolloverEnabled="true"
-           foreground="categorization.budgetAreaSelector.text"/>
-
-    <ui name="budgetAreaSelectionPanel" class="org.designup.picsou.gui.components.tabs.VerticalTabPanelUI"
-        innerBorderColor="categorization.budgetAreaSelector.border"/>
-    <style selector="#budgetAreaSelectionPanel" ui="budgetAreaSelectionPanel"
-           background="categorization.transactionDetails.bg"/>
+    <style selector="radioButton.selector" opaque="false"
+           font="-,plain,12" cursor='hand'
+           marginRight="2" fill="none" anchor="center" weightY="0"/>
+    <style selector="radioButton.subSeriesSelector" opaque="false"
+           foreground="toggle.selector.subSeries" cursor='hand'
+           font="-,plain,12" fill="none" anchor="west"/>
 
     <style selector="x" id="downArrowShown" icon="downArrow(50,20,40,10,categorization.downArrow)"/>
     <style selector="x" id="downArrowHidden" icon="empty(50,20)"/>
@@ -51,14 +46,14 @@
       <card name="series">
 
         <row weightX="0.1" name="seriesPanel">
-          <column ref="budgetAreaSelectionPanel" weightX="0.1">
-            <repeat ref="budgetAreaToggles" layout="column" gridWrapLimit="4" margin="5" marginRight="0">
-              <toggleButton ref="budgetAreaToggle" styleClass="budgetAreaSelector" anchor="left"/>
+          <column ref="budgetAreaSelectionPanel" styleClass="verticalTabSelectionPanel">
+            <repeat ref="budgetAreaToggles" layout="column" gridWrapLimit="4">
+              <toggleButton ref="budgetAreaToggle" styleClass="verticalTabSelector" anchor="left"/>
             </repeat>
             <filler fill="vertical"/>
           </column>
 
-          <cards ref="seriesCard" weightX="100" border="matte(1,0,1,1,categorization.transactionDetails.border)">
+          <cards ref="seriesCard" styleClass="verticalTabContentPanel">
 
             <card name="uncategorized">
               <column styleClass="budgetAreaSelection">

@@ -5,6 +5,9 @@ import org.designup.picsou.functests.checkers.mobile.CreateMobileAccountChecker;
 import org.designup.picsou.functests.checkers.mobile.EditMobileAccountChecker;
 import org.designup.picsou.functests.checkers.printing.PrintDialogChecker;
 import org.designup.picsou.gui.PicsouApplication;
+import org.designup.picsou.gui.utils.dev.AddSixDaysAction;
+import org.designup.picsou.gui.utils.dev.Goto10OfNextMonthAction;
+import org.designup.picsou.gui.utils.dev.GotoPastTrialExpirationAction;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.utils.Dates;
 import org.globsframework.utils.Ref;
@@ -278,27 +281,10 @@ public class OperationChecker {
     return backup(TestUtils.getFileName(test));
   }
 
-  public String backup(TestCase test, boolean trial) {
-    return backup(TestUtils.getFileName(test), trial);
-  }
-
   public String backup(String filePath) {
-    return backup(filePath, false);
-  }
-
-  public String backup(String filePath, boolean warnTrial) {
     final Ref<String> selectedFile = new Ref<String>();
     WindowInterceptor interceptor = WindowInterceptor
       .init(getBackupTrigger());
-    if (warnTrial) {
-      interceptor.process(new WindowHandler() {
-        public Trigger process(Window window) throws Exception {
-          MessageDialogChecker checker = new MessageDialogChecker(window);
-          checker.checkInfoMessageContains("Backup is possible during the trial period but restore is not possible.");
-          return checker.triggerClose();
-        }
-      });
-    }
     interceptor
       .process(FileChooserHandler.init().select(filePath))
       .process(new WindowHandler() {
@@ -324,20 +310,6 @@ public class OperationChecker {
         }
       })
       .run();
-  }
-
-  public void restoreNotAvailable() {
-    WindowInterceptor
-      .init(getRestoreTrigger())
-      .process(new WindowHandler() {
-        public Trigger process(Window window) throws Exception {
-          MessageDialogChecker dialogChecker = new MessageDialogChecker(window);
-          dialogChecker.checkInfoMessageContains("Restore is not possible during trial period.");
-          return dialogChecker.triggerClose();
-        }
-      })
-      .run();
-
   }
 
   public void restoreWithPassword(String filePath, final String password) {
@@ -719,5 +691,17 @@ public class OperationChecker {
 
   public MessageDialogChecker sendDataToServer() {
     return MessageDialogChecker.open(getFileMenu().getSubMenu(Lang.get("mobile.menu.send.data")).triggerClick());
+  }
+
+  public void addSixDays() {
+    getDevMenu().getSubMenu(AddSixDaysAction.LABEL).click();
+  }
+
+  public void goto10OfNextMonth() {
+    getDevMenu().getSubMenu(Goto10OfNextMonthAction.LABEL).click();
+  }
+
+  public void gotoPastTrialExpiration() {
+    getDevMenu().getSubMenu(GotoPastTrialExpirationAction.LABEL).click();
   }
 }

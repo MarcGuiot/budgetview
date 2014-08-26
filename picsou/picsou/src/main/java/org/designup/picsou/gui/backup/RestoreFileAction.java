@@ -21,11 +21,6 @@ public class RestoreFileAction extends AbstractRestoreAction {
 
   public void actionPerformed(ActionEvent e) {
 
-    if (LicenseService.trialInProgress(repository)) {
-      MessageDialog.show("restore.trial.title", MessageType.INFO, frame, directory, "restore.trial.content");
-      return;
-    }
-
     JFileChooser chooser = getFileChooser();
     chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
     int returnVal = chooser.showOpenDialog(frame);

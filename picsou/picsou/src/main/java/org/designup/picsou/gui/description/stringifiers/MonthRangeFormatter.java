@@ -23,7 +23,7 @@ public interface MonthRangeFormatter {
     }
 
     public String monthRangeAcrossYears(int firstMonthId, int lastMonthId) {
-      return Month.getFullLabel(firstMonthId) + " - " + Month.getFullLabel(lastMonthId);
+      return Month.getFullLabel(firstMonthId, true) + " - " + Month.getFullLabel(lastMonthId, true);
     }
   };
 
@@ -31,14 +31,14 @@ public interface MonthRangeFormatter {
 
     public String monthRangeInYear(int firstMonthId, int lastMonthId, int year) {
       if (firstMonthId == lastMonthId) {
-        return Month.getFullMonthLabel(firstMonthId) + " " + Integer.toString(year);
+        return Month.getFullMonthLabel(firstMonthId, true) + " " + Integer.toString(year);
       }
-      return Month.getFullMonthLabel(firstMonthId) + " - " + Month.getFullMonthLabel(lastMonthId) +
+      return Month.getFullMonthLabel(firstMonthId, true) + " - " + Month.getFullMonthLabel(lastMonthId, true) +
              " " + Integer.toString(year);
     }
 
     public String monthRangeAcrossYears(int firstMonthId, int lastMonthId) {
-      return Month.getFullLabel(firstMonthId) + " - " + Month.getFullLabel(lastMonthId);
+      return Month.getFullLabel(firstMonthId, true) + " - " + Month.getFullLabel(lastMonthId, true);
     }
   };
 }

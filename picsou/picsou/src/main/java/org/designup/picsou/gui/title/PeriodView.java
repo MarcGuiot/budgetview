@@ -3,7 +3,6 @@ package org.designup.picsou.gui.title;
 import org.designup.picsou.gui.View;
 import org.designup.picsou.gui.description.stringifiers.AbstractMonthRangeFormatter;
 import org.designup.picsou.gui.description.stringifiers.MonthListStringifier;
-import org.designup.picsou.gui.description.stringifiers.MonthRangeFormatter;
 import org.designup.picsou.model.Month;
 import org.designup.picsou.model.Transaction;
 import org.designup.picsou.utils.Lang;
@@ -49,18 +48,17 @@ public class PeriodView extends View implements GlobSelectionListener {
       periodTitle.setText(Lang.get("title.noperiod"));
       return;
     }
-    periodTitle.setText(MonthListStringifier.toString(months, MonthRangeFormatter.STANDARD));
     periodTitle.setText(MonthListStringifier.toString(months, new AbstractMonthRangeFormatter() {
       public String monthRangeInYear(int firstMonthId, int lastMonthId, int year) {
         if (firstMonthId == lastMonthId) {
-          return "<html><b>" + Month.getFullMonthLabel(firstMonthId) + "</b> " + Integer.toString(year) + "</html>";
+          return "<html><b>" + Month.getFullMonthLabel(firstMonthId, false) + "</b> " + Integer.toString(year) + "</html>";
         }
-        return "<html><b>" + Month.getFullMonthLabel(firstMonthId) + " - " + Month.getFullMonthLabel(lastMonthId) +
+        return "<html><b>" + Month.getFullMonthLabel(firstMonthId, false) + " - " + Month.getFullMonthLabel(lastMonthId, false) +
                "</b> " + Integer.toString(year) + "</html>";
       }
 
       public String monthRangeAcrossYears(int firstMonthId, int lastMonthId) {
-        return Month.getFullLabel(firstMonthId) + " - " + Month.getFullLabel(lastMonthId);
+        return Month.getFullLabel(firstMonthId, false) + " - " + Month.getFullLabel(lastMonthId, false);
       }
     }));
   }

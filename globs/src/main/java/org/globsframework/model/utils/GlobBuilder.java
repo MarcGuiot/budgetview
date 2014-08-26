@@ -128,15 +128,15 @@ public class GlobBuilder implements FieldValues.Functor, FieldSetter, FieldValue
   }
 
   public Double get(DoubleField field, double valueIfNull) throws ItemNotFound {
-    Double aDouble = fieldValuesBuilder.get().get(field);
-    if (aDouble == null){
-      return valueIfNull;
-    }
-    return aDouble;
+    return fieldValuesBuilder.get().get(field, valueIfNull);
   }
 
   public Date get(DateField field) throws ItemNotFound {
     return fieldValuesBuilder.get().get(field);
+  }
+
+  public Date get(DateField field, Date valueIfNull) throws ItemNotFound {
+    return fieldValuesBuilder.get().get(field, valueIfNull);
   }
 
   public Date get(TimeStampField field) throws ItemNotFound {

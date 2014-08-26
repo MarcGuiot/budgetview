@@ -130,7 +130,7 @@ public class PrintBudgetDialog {
   private class CurrentMonthAction extends PeriodSelectionAction {
 
     protected String getLabel(Integer currentMonthId) {
-      return Lang.get("print.dialog.option.month", Month.getFullLabel(currentMonthId));
+      return Lang.get("print.dialog.option.month", Month.getFullLabel(currentMonthId, true));
     }
 
     protected ClosedMonthRange getTargetRange(int currentMonthId) {

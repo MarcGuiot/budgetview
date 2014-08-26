@@ -10,6 +10,7 @@ public class ProjectListTest extends LoggedInFunctionalTestCase {
     setInitialGuidesShown(true);
     super.setUp();
     operations.hideSignposts();
+    addOns.activateProjects();
   }
 
   public void testCurrentAndPreviousProjectsAreShownOnSeparateListsAndOrderedDifferently() throws Exception {

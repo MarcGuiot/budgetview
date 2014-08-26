@@ -1,7 +1,7 @@
 package org.designup.picsou.license.functests;
 
 import org.designup.picsou.functests.checkers.ApplicationChecker;
-import org.designup.picsou.functests.checkers.LicenseActivationChecker;
+import org.designup.picsou.functests.checkers.license.LicenseActivationChecker;
 import org.designup.picsou.functests.checkers.MessageDialogChecker;
 import org.designup.picsou.functests.checkers.NewVersionChecker;
 import org.designup.picsou.functests.utils.OfxBuilder;

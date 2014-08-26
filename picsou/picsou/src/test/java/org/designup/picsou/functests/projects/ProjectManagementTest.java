@@ -11,6 +11,7 @@ public class ProjectManagementTest extends LoggedInFunctionalTestCase {
     setCurrentMonth("2010/12");
     setInitialGuidesShown(true);
     super.setUp();
+    addOns.activateProjects();
   }
 
   public void testCreatingAProject() throws Exception {
@@ -180,9 +181,9 @@ public class ProjectManagementTest extends LoggedInFunctionalTestCase {
     accounts.createMainAccount("Main account", 1000.00);
 
     projects.createFirst();
-    currentProject
-      .cancelEdition();
-    projectList.checkHidden();
+    currentProject.cancelEdition();
+    projectList.checkShown();
+    projects.checkShowsCreation();
 
     operations.undo();
     projectList.checkShown();

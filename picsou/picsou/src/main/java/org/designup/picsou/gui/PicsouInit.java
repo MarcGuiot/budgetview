@@ -7,7 +7,6 @@ import org.designup.picsou.gui.backup.BackupService;
 import org.designup.picsou.gui.browsing.BrowsingService;
 import org.designup.picsou.gui.config.ConfigService;
 import org.designup.picsou.gui.config.RegistrationTrigger;
-import org.designup.picsou.gui.license.LicenseService;
 import org.designup.picsou.gui.model.PicsouGuiModel;
 import org.designup.picsou.gui.preferences.components.ColorThemeUpdater;
 import org.designup.picsou.gui.series.view.SeriesWrapperUpdateTrigger;
@@ -72,7 +71,7 @@ public class PicsouInit {
         .get();
 
     repository.findOrCreate(User.KEY,
-                            value(User.ACTIVATION_STATE, badJarVersion ? User.STARTUP_CHECK_JAR_VERSION : null),
+                            value(User.LICENSE_ACTIVATION_STATE, badJarVersion ? LicenseActivationState.STARTUP_CHECK_JAR_VERSION.getId() : null),
                             value(User.IS_REGISTERED_USER, registeredUser));
     repository.findOrCreate(AppVersionInformation.KEY,
                             value(AppVersionInformation.LATEST_AVALAIBLE_JAR_VERSION, PicsouApplication.JAR_VERSION),
@@ -123,7 +122,6 @@ public class PicsouInit {
     repository.addTrigger(new ProjectItemToStatTrigger());
     repository.addTrigger(new ProjectItemToSeriesBudgetTrigger());
     repository.addTrigger(new ProjectItemToProjectStatTrigger());
-    repository.addTrigger(new HideProjectDetailsTrigger());
     repository.addTrigger(new SavingsAccountUpdateSeriesTrigger());
     repository.addTrigger(new SavingsUpdateSeriesMirrorTrigger());
     repository.addTrigger(new SavingsDateActiveBudgetTrigger());
@@ -154,6 +152,7 @@ public class PicsouInit {
     repository.addTrigger(new PlannedSeriesStatTrigger());
     repository.addTrigger(new SeriesStatSummaryTrigger());
     repository.addTrigger(new BudgetStatTrigger());
+    repository.addTrigger(new AccountWeatherTrigger());
     repository.addTrigger(new SavingsBudgetStatTrigger());
     repository.addTrigger(new SubSeriesStatTrigger());
     repository.addTrigger(new SeriesStatToProjectStatTrigger());
@@ -320,12 +319,6 @@ public class PicsouInit {
                               value(UserVersionInformation.CURRENT_BANK_CONFIG_VERSION, PicsouApplication.BANK_CONFIG_VERSION),
                               value(UserVersionInformation.CURRENT_SOFTWARE_VERSION, PicsouApplication.APPLICATION_VERSION));
 
-      Glob userPreferences = repository.findOrCreate(UserPreferences.KEY);
-      if (userPreferences.get(UserPreferences.LAST_VALID_DAY) == null) {
-        repository.update(userPreferences.getKey(), UserPreferences.LAST_VALID_DAY,
-                          LicenseService.getEndOfTrialPeriod());
-      }
-
       FrameSize frameSize = FrameSize.init(directory.get(JFrame.class));
       LayoutConfig.find(frameSize.screenSize, frameSize.targetFrameSize, repository, true);
 
@@ -334,6 +327,9 @@ public class PicsouInit {
                               value(CurrentMonth.LAST_TRANSACTION_MONTH, 0),
                               value(CurrentMonth.CURRENT_MONTH, TimeService.getCurrentMonth()),
                               value(CurrentMonth.CURRENT_DAY, TimeService.getCurrentDay()));
+
+      repository.findOrCreate(AddOns.KEY);
+
       repository.findOrCreate(Account.MAIN_SUMMARY_KEY,
                               value(Account.ACCOUNT_TYPE, AccountType.MAIN.getId()),
                               value(Account.IS_IMPORTED_ACCOUNT, true));

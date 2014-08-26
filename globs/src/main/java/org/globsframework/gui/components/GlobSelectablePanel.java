@@ -90,7 +90,7 @@ public class GlobSelectablePanel implements GlobSelectionListener, Disposable {
     update();
   }
 
-  private void update() {
+  public void update() {
     node.applyStyle(getCurrentStyle());
   }
 

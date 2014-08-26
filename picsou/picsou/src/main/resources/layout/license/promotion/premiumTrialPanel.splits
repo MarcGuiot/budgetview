@@ -1,0 +1,15 @@
+<splits xmlns="http://www.globsframework.org/xml/splits.xsd">
+
+  <styleImport file="/layout/commonStyles.splits"/>
+
+  <column ref="premiumTrialPanel">
+    <label text="$license.premium.trial.title"/>
+    <row>
+      <label ref="daysLeft"/>
+      <filler fill="horizontal"/>
+      <button action="purchaseLicense"/>
+      <filler fill="horizontal"/>
+    </row>
+  </column>
+
+</splits>

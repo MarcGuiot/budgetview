@@ -2,14 +2,12 @@ package org.designup.picsou.model;
 
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.annotations.DefaultBoolean;
+import org.globsframework.metamodel.annotations.DefaultInteger;
 import org.globsframework.metamodel.annotations.Key;
-import org.globsframework.metamodel.fields.BlobField;
-import org.globsframework.metamodel.fields.BooleanField;
-import org.globsframework.metamodel.fields.IntegerField;
-import org.globsframework.metamodel.fields.StringField;
+import org.globsframework.metamodel.annotations.Target;
+import org.globsframework.metamodel.fields.*;
 import org.globsframework.metamodel.utils.GlobTypeLoader;
 import org.globsframework.model.Glob;
-import org.globsframework.model.GlobRepository;
 
 public class User {
 
@@ -25,7 +23,9 @@ public class User {
   public static StringField EMAIL;
   public static StringField ACTIVATION_CODE;
   public static BlobField SIGNATURE;
-  public static IntegerField ACTIVATION_STATE;
+
+  @Target(LicenseActivationState.class)
+  public static LinkField LICENSE_ACTIVATION_STATE;
 
   @DefaultBoolean(false)
   public static BooleanField CONNECTED;
@@ -37,21 +37,6 @@ public class User {
 
   @DefaultBoolean(false)
   public static BooleanField AUTO_LOGIN;
-
-  public static final int ACTIVATION_IN_PROGRESS = 1;
-  public static final int ACTIVATION_OK = 2;
-  public static final int ACTIVATION_FAILED_BAD_SIGNATURE = 3;
-  public static final int ACTIVATION_FAILED_CAN_NOT_CONNECT = 4;
-  public static final int ACTIVATION_FAILED_HTTP_REQUEST = 5;
-  public static final int ACTIVATION_FAILED_MAIL_UNKNOWN = 6;
-  // On n'a pas envoyé au serveur les mail, signature et code d'activation alors que c'est un utilisateur
-  // enregistré (donc a priori le repo a ete modifié manuellement)
-  public static final int ACTIVATION_FAILED_MAIL_SENT = 8;
-  public static final int ACTIVATION_FAILED_MAIL_NOT_SENT = 9;
-  public static final int STARTUP_CHECK_KILL_USER = 10;
-  public static final int STARTUP_CHECK_MAIL_SENT = 11;
-  public static final int STARTUP_CHECK_JAR_VERSION = 12;
-
 
   static {
     GlobTypeLoader.init(User.class);

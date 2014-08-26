@@ -145,7 +145,7 @@ public class ShiftTransactionAction extends SingleSelectionAction implements Cha
   private void openSeriesErrorDialog() {
     ConfirmationDialog dialog =
       new ConfirmationDialog("shift.transaction.seriesError.title",
-                             Lang.get("shift.transaction.seriesError.message", Month.getFullLabel(targetMonth)),
+                             Lang.get("shift.transaction.seriesError.message", Month.getFullLabel(targetMonth, true)),
                              directory.get(JFrame.class),
                              directory) {
         protected void processOk() {

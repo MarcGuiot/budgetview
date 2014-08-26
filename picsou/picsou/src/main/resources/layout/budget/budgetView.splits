@@ -10,10 +10,13 @@
       <panel ref="savingsBudgetView" weightY="1"/>
     </verticalSplit>
 
-    <verticalSplit ref="verticalSplit2" styleClass="mainDivider" weightX="1">
-      <panel ref="variableBudgetView" weightY="3"/>
-      <panel ref="extrasBudgetView" weightY="1"/>
-    </verticalSplit>
+    <column>
+      <verticalSplit ref="verticalSplit2" styleClass="mainDivider" weightX="1" weightY="100">
+        <panel ref="variableBudgetView" weightY="2"/>
+        <panel ref="extrasBudgetView" weightY="1"/>
+      </verticalSplit>
+      <panel ref="uncategorizedSummaryView" weightY="0.1"/>
+    </column>
 
   </horizontalSplit>
 </splits>

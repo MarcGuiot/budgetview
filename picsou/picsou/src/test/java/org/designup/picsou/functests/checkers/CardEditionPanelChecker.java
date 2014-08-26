@@ -36,7 +36,7 @@ public class CardEditionPanelChecker extends GuiChecker {
     if (monthId == 0) {
       return "From begining";
     }
-    String month = Month.getFullMonthLabel(monthId);
+    String month = Month.getFullMonthLabel(monthId, true);
     String labelForMonth;
     if (Lang.find("account.deferred.repeat.label." + Month.toMonth(monthId)) != null) {
       labelForMonth = Lang.get("account.deferred.repeat.label." + Month.toMonth(monthId), Month.toYear(monthId));

@@ -34,10 +34,6 @@ public class BackupAction extends AbstractBackupRestoreAction {
       return;
     }
 
-    if (LicenseService.trialInProgress(repository)) {
-      MessageDialog.show("backup.trial.title", MessageType.INFO, frame, directory, "backup.trial.content");
-    }
-
     JFileChooser chooser = getFileChooser();
     chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
     chooser.setSelectedFile(getSafeBackupFile());

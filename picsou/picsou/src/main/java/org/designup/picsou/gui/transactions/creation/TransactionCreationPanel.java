@@ -13,7 +13,7 @@ import org.designup.picsou.gui.components.tips.DetailsTip;
 import org.designup.picsou.gui.description.stringifiers.MonthFieldListStringifier;
 import org.designup.picsou.gui.description.stringifiers.MonthRangeFormatter;
 import org.designup.picsou.gui.help.actions.HelpAction;
-import org.designup.picsou.gui.license.LicenseActivationDialog;
+import org.designup.picsou.gui.license.activation.LicenseActivationDialog;
 import org.designup.picsou.gui.license.LicenseService;
 import org.designup.picsou.gui.startup.components.AutoCategorizationFunctor;
 import org.designup.picsou.gui.utils.Matchers;
@@ -390,13 +390,6 @@ public class TransactionCreationPanel extends View implements GlobSelectionListe
 
     if (User.isDemoUser(repository.get(User.KEY))) {
       MessageDialog.show("demo.transaction.creation.title", MessageType.INFO, directory.get(JFrame.class), directory, "demo.transaction.creation.content");
-      return;
-    }
-
-    if (LicenseService.trialExpired(parentRepository)) {
-      LicenseActivationDialog dialog = new LicenseActivationDialog(directory.get(JFrame.class),
-                                                                   repository, directory);
-      dialog.showExpiration();
       return;
     }
 

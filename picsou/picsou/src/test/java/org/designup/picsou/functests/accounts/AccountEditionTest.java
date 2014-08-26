@@ -69,7 +69,6 @@ public class AccountEditionTest extends LoggedInFunctionalTestCase {
   }
 
   public void testCreatingAnAccountThroughTheMainMenu() throws Exception {
-    views.selectHome();
     operations.createAccount().cancel();
     views.checkDataSelected();
 

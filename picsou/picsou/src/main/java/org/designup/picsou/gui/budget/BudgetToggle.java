@@ -9,6 +9,7 @@ import org.globsframework.gui.GlobSelectionListener;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.SelectionService;
 import org.globsframework.gui.splits.layout.CardHandler;
+import org.globsframework.gui.splits.utils.OnLoadListener;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.utils.directory.Directory;
 
@@ -45,6 +46,10 @@ public class BudgetToggle implements GlobSelectionListener {
 
   public void registerComponents(GlobsPanelBuilder builder) {
     cards = builder.addCardHandler("budgetToggle");
-    cards.show("main");
+    builder.addOnLoadListener(new OnLoadListener() {
+      public void processLoad() {
+        cards.show("main");
+      }
+    });
   }
 }

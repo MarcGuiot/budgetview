@@ -281,6 +281,13 @@ public class Transaction {
                             type.equals(TransactionType.CLOSE_ACCOUNT_EVENT.getId()));
   }
 
+  public static GlobMatcher getMatcherForRealOperations() {
+    return and(isNotTrue(TO_RECONCILE),
+               isFalse(PLANNED),
+               not(fieldEquals(TRANSACTION_TYPE, TransactionType.OPEN_ACCOUNT_EVENT.getId())),
+               not(fieldEquals(TRANSACTION_TYPE, TransactionType.CLOSE_ACCOUNT_EVENT.getId())));
+  }
+
   public static GlobMatcher getMatcherForRealOperations(int accountId) {
     return and(fieldEquals(ACCOUNT, accountId),
                isNotTrue(TO_RECONCILE),
