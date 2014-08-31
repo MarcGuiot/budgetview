@@ -65,6 +65,8 @@ public class ViewsManagementTest extends LoggedInFunctionalTestCase {
   }
 
   public void testTooltips() throws Exception {
+    addOns.activateProjects();
+    addOns.activateAnalysis();
     views.checkAllTooltipsPresent();
   }
 }

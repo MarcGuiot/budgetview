@@ -91,7 +91,7 @@ public class Lang {
     return Files.loadStreamToString(stream, "UTF-8");
   }
 
-  private static String getFile(String dir, String fileName) {
+  public static String getFile(String dir, String fileName) {
     String content = findFile(dir, fileName);
     if (content == null) {
       throw new ResourceAccessFailed("File " + getFilePath(dir, fileName));

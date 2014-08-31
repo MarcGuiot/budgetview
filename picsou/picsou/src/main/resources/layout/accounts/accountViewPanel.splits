@@ -67,7 +67,6 @@
                cursor="hand" opaque="false">
           <button ref="editAccount"/>
           <button ref="accountStatus"/>
-          <button ref="uncategorized"/>
           <component ref="accountPositionsChart" background="sidebar.bg"/>
           <button ref="accountPosition" anchor="east" styleClass="hyperlinkWithoutUnderline"/>
           <label ref="accountUpdateDate" font="LatoLight,plain,12"/>

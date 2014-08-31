@@ -1,25 +1,22 @@
 package org.designup.picsou.functests.utils;
 
-import org.globsframework.utils.Files;
+import org.designup.picsou.utils.Lang;
 import org.globsframework.utils.Log;
 import org.globsframework.utils.TestUtils;
 import org.uispec4j.UISpec4J;
 import org.uispec4j.UISpecTestCase;
 import org.uispec4j.utils.DummyRepaintManager;
-import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
-import org.designup.picsou.utils.Lang;
+import sun.awt.AWTAutoShutdown;
 
 import java.io.File;
 import java.util.Locale;
 
-import sun.awt.AWTAutoShutdown;
-
 public abstract class FunctionalTestCase extends UISpecTestCase {
-  
+
   static {
     TestUtils.clearTmpDir();
     Locale.setDefault(Lang.ROOT);
-    UISpec4J.setWindowInterceptionTimeLimit(15000);
+    UISpec4J.setWindowInterceptionTimeLimit(25000);
     UISpec4J.setAssertionTimeLimit(1000);
     DummyRepaintManager.init();
   }

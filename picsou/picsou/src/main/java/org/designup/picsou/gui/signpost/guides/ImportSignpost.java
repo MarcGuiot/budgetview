@@ -1,21 +1,19 @@
 package org.designup.picsou.gui.signpost.guides;
 
 import net.java.balloontip.BalloonTip;
-import org.designup.picsou.gui.signpost.Signpost;
+import org.designup.picsou.gui.signpost.PersistentSignpost;
 import org.designup.picsou.model.SignpostStatus;
 import org.designup.picsou.model.Transaction;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.ChangeSet;
 import org.globsframework.model.ChangeSetListener;
-import org.globsframework.model.Glob;
 import org.globsframework.model.GlobRepository;
-import org.globsframework.model.format.GlobPrinter;
 import org.globsframework.utils.directory.Directory;
 
 import java.util.Set;
 
-public class ImportSignpost extends Signpost implements ChangeSetListener {
+public class ImportSignpost extends PersistentSignpost implements ChangeSetListener {
 
   public ImportSignpost(GlobRepository repository, Directory directory) {
     super(SignpostStatus.IMPORT_STARTED, repository, directory);

@@ -10,7 +10,7 @@ import org.designup.picsou.gui.components.filtering.components.FilterClearingPan
 import org.designup.picsou.gui.components.table.PicsouTableHeaderPainter;
 import org.designup.picsou.gui.description.stringifiers.SeriesDescriptionStringifier;
 import org.designup.picsou.gui.description.stringifiers.TransactionDateStringifier;
-import org.designup.picsou.gui.signpost.Signpost;
+import org.designup.picsou.gui.signpost.PersistentSignpost;
 import org.designup.picsou.gui.signpost.guides.CategorizationSelectionSignpost;
 import org.designup.picsou.gui.signpost.guides.FirstCategorizationDoneSignpost;
 import org.designup.picsou.gui.signpost.guides.ReconciliationSignpost;
@@ -156,12 +156,12 @@ public class CategorizationTableView extends View implements TableView, Filterab
     installDoubleClickHandler();
     registerBankFormatExporter(transactionTable);
 
-    Signpost signpost = new CategorizationSelectionSignpost(repository, directory);
+    PersistentSignpost signpost = new CategorizationSelectionSignpost(repository, directory);
     signpost.attach(table);
-    Signpost firstCategorization = new FirstCategorizationDoneSignpost(repository, directory);
+    PersistentSignpost firstCategorization = new FirstCategorizationDoneSignpost(repository, directory);
     firstCategorization.attach(table);
 
-    Signpost reconciliation = new ReconciliationSignpost(repository, directory);
+    PersistentSignpost reconciliation = new ReconciliationSignpost(repository, directory);
     reconciliation.attach(table);
     installReconciliationAnnotationUpdater(transactionTable, repository);
 

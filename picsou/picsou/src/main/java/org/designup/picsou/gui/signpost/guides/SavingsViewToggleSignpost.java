@@ -1,7 +1,7 @@
 package org.designup.picsou.gui.signpost.guides;
 
 import net.java.balloontip.BalloonTip;
-import org.designup.picsou.gui.signpost.Signpost;
+import org.designup.picsou.gui.signpost.PersistentSignpost;
 import org.designup.picsou.model.Account;
 import org.designup.picsou.model.BudgetArea;
 import org.designup.picsou.model.Series;
@@ -17,7 +17,7 @@ import org.globsframework.utils.directory.Directory;
 
 import java.util.Set;
 
-public class SavingsViewToggleSignpost extends Signpost implements ChangeSetListener {
+public class SavingsViewToggleSignpost extends PersistentSignpost implements ChangeSetListener {
 
   public SavingsViewToggleSignpost(GlobRepository repository, Directory directory) {
     super(SignpostStatus.SAVINGS_VIEW_TOGGLE_SHOWN, repository, directory);

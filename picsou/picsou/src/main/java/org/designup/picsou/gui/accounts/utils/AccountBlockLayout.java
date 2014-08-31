@@ -12,7 +12,6 @@ public class AccountBlockLayout implements LayoutManager {
   private Component accountUpdateDate;
   private Component selectAccount;
   private Component accountStatus;
-  private Component uncategorized;
   private Component positionsChart;
 
   private static final int HORIZONTAL_MARGIN = 5;
@@ -48,7 +47,6 @@ public class AccountBlockLayout implements LayoutManager {
 
   public int getMinWidth() {
     return editAccount.getPreferredSize().width +
-           uncategorized.getPreferredSize().width +
            accountStatus.getPreferredSize().width +
            accountPosition.getPreferredSize().width +
            selectAccount.getPreferredSize().width +
@@ -71,9 +69,6 @@ public class AccountBlockLayout implements LayoutManager {
       }
       else if (component.getName().equals("accountStatus")) {
         accountStatus = component;
-      }
-      else if (component.getName().equals("uncategorized")) {
-        uncategorized = component;
       }
       else if (component.getName().equals("accountPositionsChart")) {
         positionsChart = component;
@@ -113,11 +108,6 @@ public class AccountBlockLayout implements LayoutManager {
     accountStatus.setBounds(accountStatusLeft, accountStatusTop,
                             accountStatus.getPreferredSize().width, accountStatus.getPreferredSize().height);
 
-    int uncategorizedTop = top + firstRowHeight / 2 - accountStatus.getPreferredSize().height / 2;
-    int uncategorizedLeft = left + editAccount.getPreferredSize().width + HORIZONTAL_MARGIN;
-    uncategorized.setBounds(uncategorizedLeft, uncategorizedTop,
-                            uncategorized.getPreferredSize().width, uncategorized.getPreferredSize().height);
-
     int accountUpdateDateTop = top + firstRowHeight + VERTICAL_MARGIN;
     int accountUpdateDateLeft = positionRight - accountUpdateDate.getPreferredSize().width;
     accountUpdateDate.setBounds(accountUpdateDateLeft, accountUpdateDateTop,
@@ -136,7 +126,7 @@ public class AccountBlockLayout implements LayoutManager {
   }
 
   public int getFirstRowHeight() {
-    return Math.max(editAccount.getSize().height, uncategorized.getSize().height);
+    return editAccount.getSize().height;
   }
 
   public int getMaxPositionWidth() {

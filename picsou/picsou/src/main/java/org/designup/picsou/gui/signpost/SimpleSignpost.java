@@ -10,7 +10,7 @@ import org.globsframework.utils.directory.Directory;
 
 import java.util.Set;
 
-public class SimpleSignpost extends Signpost implements ChangeSetListener {
+public class SimpleSignpost extends PersistentSignpost implements ChangeSetListener {
   private String text;
   protected BooleanField prerequisiteField;
 

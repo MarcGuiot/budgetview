@@ -9,6 +9,9 @@ import org.globsframework.utils.Utils;
 import org.globsframework.utils.exceptions.ItemNotFound;
 import org.globsframework.utils.exceptions.UnexpectedApplicationState;
 
+import java.util.Iterator;
+import java.util.Map;
+
 class DefaultDeltaGlob extends AbstractFieldValuesWithPrevious implements DeltaGlob {
 
   private Key key;
@@ -296,4 +299,23 @@ class DefaultDeltaGlob extends AbstractFieldValuesWithPrevious implements DeltaG
 
     return reverse;
   }
+
+  public String toString() {
+    StringBuilder builder = new StringBuilder();
+    builder.append(state).append("-").append(key).append(" => ");
+    builder.append('[');
+    Field[] fields = key.getGlobType().getFields();
+    for (int i = 0; i < fields.length; i++) {
+      Field field = fields[i];
+      builder.append(field.getName());
+      builder.append('=');
+      builder.append(getValue(field));
+      if (i < fields.length - 1) {
+        builder.append(',');
+      }
+    }
+    builder.append(']');
+    return builder.toString();
+  }
+
 }

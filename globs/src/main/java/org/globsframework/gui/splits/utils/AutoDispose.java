@@ -9,6 +9,30 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class AutoDispose {
+
+  public static void register(JComponent component, Disposable disposable) {
+    if (component instanceof AbstractButton) {
+      registerButtonActivation((AbstractButton)component, disposable);
+    }
+    else if (component instanceof JComboBox) {
+      registerComboSelection((JComboBox)component, disposable);
+    }
+    else if (component instanceof JTextField) {
+      registerTextEdition((JTextField)component, disposable);
+    }
+
+  }
+
+  public static void registerButtonActivation(final AbstractButton button,
+                                              final Disposable disposable) {
+    button.addActionListener(new ActionListener() {
+      public void actionPerformed(ActionEvent e) {
+        disposable.dispose();
+        button.removeActionListener(this);
+      }
+    });
+  }
+
   public static void registerComboSelection(final JComboBox comboBox,
                                             final Disposable disposable) {
     comboBox.addActionListener(new ActionListener() {

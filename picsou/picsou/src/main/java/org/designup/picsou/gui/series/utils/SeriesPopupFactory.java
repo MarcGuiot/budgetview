@@ -5,6 +5,7 @@ import org.designup.picsou.gui.series.edition.DeleteSeriesAction;
 import org.designup.picsou.gui.series.edition.carryover.CarryOverAction;
 import org.designup.picsou.gui.seriesgroups.ClearSeriesGroupAction;
 import org.designup.picsou.gui.seriesgroups.SeriesGroupMenu;
+import org.designup.picsou.model.AddOns;
 import org.designup.picsou.model.ProjectItem;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.splits.utils.DisposableGroup;
@@ -82,13 +83,15 @@ public class SeriesPopupFactory implements DisposablePopupMenuFactory {
 
         menu.addSeparator();
 
-        menu.add(seriesGroupMenu.getMenu());
+        if (AddOns.isEnabled(AddOns.GROUPS, repository)) {
+          menu.add(seriesGroupMenu.getMenu());
 
-        ClearSeriesGroupAction clearSeriesGroupAction = new ClearSeriesGroupAction(series.getKey(), repository);
-        disposables.add(clearSeriesGroupAction);
-        menu.add(clearSeriesGroupAction);
+          ClearSeriesGroupAction clearSeriesGroupAction = new ClearSeriesGroupAction(series.getKey(), repository);
+          disposables.add(clearSeriesGroupAction);
+          menu.add(clearSeriesGroupAction);
 
-        menu.addSeparator();
+          menu.addSeparator();
+        }
 
         menu.add(new DeleteSeriesAction(series.getKey(), directory.get(JFrame.class), repository, directory));
       }

@@ -1,70 +1,47 @@
 package org.designup.picsou.gui.signpost;
 
 import net.java.balloontip.BalloonTip;
-import net.java.balloontip.styles.ModernBalloonStyle;
+import net.java.balloontip.styles.BalloonTipStyle;
+import org.designup.picsou.gui.components.tips.BalloonTipHolder;
 import org.designup.picsou.gui.components.tips.PatchedBallonTip;
+import org.designup.picsou.gui.signpost.components.SignpostStyleUpdater;
 import org.designup.picsou.gui.utils.Gui;
 import org.designup.picsou.model.SignpostStatus;
 import org.globsframework.gui.SelectionService;
-import org.globsframework.gui.splits.color.ColorChangeListener;
-import org.globsframework.gui.splits.color.ColorLocator;
-import org.globsframework.gui.splits.color.ColorService;
 import org.globsframework.gui.splits.utils.Disposable;
-import org.globsframework.metamodel.fields.BooleanField;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.utils.KeyChangeListener;
 import org.globsframework.utils.directory.Directory;
 import org.globsframework.utils.exceptions.InvalidState;
 
 import javax.swing.*;
-import java.awt.*;
 import java.awt.event.HierarchyEvent;
 import java.awt.event.HierarchyListener;
 
-public abstract class Signpost implements Disposable {
+public abstract class Signpost implements BalloonTipHolder, Disposable {
 
   protected JComponent component;
-  private BooleanField completionField;
   protected GlobRepository repository;
   protected Directory directory;
   protected SelectionService selectionService;
 
   private BalloonTip balloonTip;
+  private SignpostStyleUpdater styleUpdater;
+  protected BalloonTipStyle balloonTipStyle;
   private BalloonTip.Orientation orientation;
   private BalloonTip.AttachLocation attachLocation;
 
-  protected ModernBalloonStyle balloonStyle;
-
-  public Color fillTopColor;
-  public Color fillBottomColor;
-  public Color borderColor;
-
-  protected Signpost(BooleanField completionField, GlobRepository repository, Directory directory) {
-    this.completionField = completionField;
+  protected Signpost(GlobRepository repository, Directory directory) {
     this.repository = repository;
     this.directory = directory;
     this.selectionService = directory.get(SelectionService.class);
     this.orientation = BalloonTip.Orientation.RIGHT_BELOW;
     this.attachLocation = BalloonTip.AttachLocation.SOUTH;
-
-    directory.get(ColorService.class).addListener(new ColorChangeListener() {
-      public void colorsChanged(ColorLocator colorLocator) {
-        fillTopColor = colorLocator.get("signpost.bg.top");
-        fillBottomColor = colorLocator.get("signpost.bg.bottom");
-        borderColor = colorLocator.get("signpost.border");
-        balloonStyle = createBalloonStyle();
-        if (balloonTip != null) {
-          balloonTip.setStyle(balloonStyle);
-        }
-      }
-    });
+    this.styleUpdater = SignpostStyleUpdater.install(this, directory);
   }
 
-  private ModernBalloonStyle createBalloonStyle() {
-    ModernBalloonStyle style =
-      new ModernBalloonStyle(15, 7, fillTopColor, fillBottomColor, borderColor);
-    style.setBorderThickness(2);
-    return style;
+  public void setStyle(BalloonTipStyle style) {
+    this.balloonTipStyle = style;
   }
 
   protected void setLocation(BalloonTip.Orientation orientation, BalloonTip.AttachLocation attachLocation) {
@@ -74,7 +51,7 @@ public abstract class Signpost implements Disposable {
 
   public void attach(JComponent component) {
     if (this.component != null) {
-      throw new InvalidState("A component is already set for " + getClass().getSimpleName());
+      throw new InvalidState("Signpost '" + getClass().getSimpleName() + "' is already attached to component " + this.component);
     }
     this.component = component;
     setup();
@@ -111,9 +88,7 @@ public abstract class Signpost implements Disposable {
 
   protected abstract void init();
 
-  public boolean isCompleted() {
-    return SignpostStatus.isCompleted(completionField, repository);
-  }
+  public abstract boolean isCompleted();
 
   protected boolean canShow() {
     return !isCompleted();
@@ -139,14 +114,18 @@ public abstract class Signpost implements Disposable {
 
   protected BalloonTip createBalloonTip(JComponent component, String text) {
     return new PatchedBallonTip(component,
-                          text,
-                          getBalloonStyle(),
-                          orientation,
-                          attachLocation,
-                          40, 20, false);
+                                text,
+                                balloonTipStyle,
+                                orientation,
+                                attachLocation,
+                                40, 20, false);
   }
 
   public void hide() {
+    if (styleUpdater != null) {
+      styleUpdater.dispose();
+      styleUpdater = null;
+    }
     if (balloonTip != null) {
       balloonTip.closeBalloon();
       balloonTip = null;
@@ -155,14 +134,5 @@ public abstract class Signpost implements Disposable {
 
   public void dispose() {
     hide();
-    complete();
-  }
-
-  protected void complete() {
-    SignpostStatus.setCompleted(completionField, repository);
-  }
-
-  public ModernBalloonStyle getBalloonStyle() {
-    return balloonStyle;
   }
 }

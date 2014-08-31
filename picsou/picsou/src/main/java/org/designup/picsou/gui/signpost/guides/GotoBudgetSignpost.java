@@ -2,7 +2,7 @@ package org.designup.picsou.gui.signpost.guides;
 
 import org.designup.picsou.gui.categorization.components.CategorizationLevel;
 import org.designup.picsou.gui.model.Card;
-import org.designup.picsou.gui.signpost.Signpost;
+import org.designup.picsou.gui.signpost.PersistentSignpost;
 import org.designup.picsou.model.SignpostStatus;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobSelection;
@@ -12,7 +12,7 @@ import org.globsframework.model.GlobRepository;
 import org.globsframework.utils.Updatable;
 import org.globsframework.utils.directory.Directory;
 
-public class GotoBudgetSignpost extends Signpost implements Updatable {
+public class GotoBudgetSignpost extends PersistentSignpost implements Updatable {
   private CategorizationLevel categorizationLevel;
 
   public GotoBudgetSignpost(CategorizationLevel categorizationLevel,

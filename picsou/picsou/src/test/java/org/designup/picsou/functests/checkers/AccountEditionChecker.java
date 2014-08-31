@@ -242,7 +242,7 @@ public class AccountEditionChecker extends GuiChecker {
   }
 
   public AccountEditionChecker setAsSavings() {
-    getTypeCombo().select("Savings");
+    getTypeCombo().select(Lang.get("account.type.savings"));
     return this;
   }
 

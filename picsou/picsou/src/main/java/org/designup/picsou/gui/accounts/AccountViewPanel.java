@@ -5,7 +5,6 @@ import org.designup.picsou.gui.accounts.actions.AccountPopupFactory;
 import org.designup.picsou.gui.accounts.chart.MainDailyPositionsChartView;
 import org.designup.picsou.gui.accounts.components.AccountStatusButton;
 import org.designup.picsou.gui.accounts.position.AccountPositionLabels;
-import org.designup.picsou.gui.budget.summary.UncategorizedButton;
 import org.designup.picsou.gui.card.NavigationService;
 import org.designup.picsou.gui.components.PopupGlobFunctor;
 import org.designup.picsou.gui.components.charts.histo.HistoSelection;
@@ -30,7 +29,6 @@ import org.globsframework.gui.components.GlobUnselectPanel;
 import org.globsframework.gui.splits.PanelBuilder;
 import org.globsframework.gui.splits.SplitsNode;
 import org.globsframework.gui.splits.repeat.RepeatComponentFactory;
-import org.globsframework.gui.splits.utils.OnLoadListener;
 import org.globsframework.gui.utils.GlobBooleanVisibilityUpdater;
 import org.globsframework.gui.views.AbstractGlobTextView;
 import org.globsframework.gui.views.GlobButtonView;
@@ -128,8 +126,6 @@ public abstract class AccountViewPanel {
       cellBuilder.addDisposable(selectablePanel);
 
       AccountStatusButton.create(account.getKey(), cellBuilder, "accountStatus", repository, directory);
-
-      UncategorizedButton.create(account.getKey(), cellBuilder, "uncategorized", repository, directory);
 
       final AccountPopupFactory popupFactory = new AccountPopupFactory(account, repository, directory);
       popupFactory.setShowGraphToggle(true);

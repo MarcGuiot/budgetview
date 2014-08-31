@@ -10,11 +10,11 @@ public class ProjectUpgradeTest extends LoggedInFunctionalTestCase {
     setCurrentMonth("2014/02");
     super.setUp();
     operations.openPreferences().setFutureMonthsCount(6).validate();
-    addOns.activateProjects();
   }
 
   public void testCompleteCaseForJar131() throws Exception {
     operations.restore(Files.copyResourceToTmpFile(this, "/testbackups/upgrade_jar131_projects.budgetview"));
+    addOns.activateProjects();
 
     operations.selectAllMonthsSinceJanuary();
     transactions.initAmountContent()
@@ -90,6 +90,8 @@ public class ProjectUpgradeTest extends LoggedInFunctionalTestCase {
 
   public void testSeveralTransactionsAssignedToRootProjectSeries() throws Exception {
     operations.restore(Files.copyResourceToTmpFile(this, "/testbackups/upgrade_jar131_projects_multi_root.budgetview"));
+    addOns.activateProjects();
+
     projectList.checkCurrentProjects("| Voyage Rome | Jan | 1080.00 | on |");
     projectList.select("Voyage Rome");
     currentProject.checkItems("| Voyage     | Jan | 180.00 | 200.00 |\n" +
@@ -129,6 +131,8 @@ public class ProjectUpgradeTest extends LoggedInFunctionalTestCase {
 
   public void testOlderVersion() throws Exception {
     operations.restore(Files.copyResourceToTmpFile(this, "/testbackups/upgrade_jar96_projects.budgetview"));
+    addOns.activateProjects();
+
     projectList.checkCurrentProjects("| Voyage Rome | Jan | 500.00 | on |");
     projectList.select("Voyage Rome");
     currentProject.checkItems("| Voyage 1   | Jan | 30.00  | 150.00 |\n" +
@@ -169,6 +173,8 @@ public class ProjectUpgradeTest extends LoggedInFunctionalTestCase {
 
   public void testProjectsWithVariousTranferItems() throws Exception {
     operations.restoreWithPassword(Files.copyResourceToTmpFile(this, "/testbackups/upgrade_jar125_projets_multi_transfers.budgetview"), "pwd");
+    addOns.activateProjects();
+
     projectList.checkCurrentProjects("| Vacances | Apr | 300.00 | on |");
     projectList.select("Vacances");
     currentProject.checkItems("| Courant > Epargne | Apr | +100.00 | +50.00  |\n" +
@@ -191,6 +197,7 @@ public class ProjectUpgradeTest extends LoggedInFunctionalTestCase {
   public void testProjetItemsUsingSeveralAccountsAreSplitted() throws Exception {
 
     operations.restore(Files.copyResourceToTmpFile(this, "/testbackups/upgrade_jar131_projets_multi_comptes.budgetview"));
+    addOns.activateProjects();
 
     transactions.initContent()
       .add("10/04/2014", TransactionType.PRELEVEMENT, "VIRT JOINT > LIVRET1", "", -50.00, "Provisions - Compte Joint")
@@ -229,6 +236,7 @@ public class ProjectUpgradeTest extends LoggedInFunctionalTestCase {
   public void testProjectsWithNoTransactions() throws Exception {
 
     operations.restore(Files.copyResourceToTmpFile(this, "/testbackups/upgrade_jar131_project_with_no_transactions.budgetview"));
+    addOns.activateProjects();
 
     projectList.select("Voyage");
     currentProject.checkDefaultAccountLabel("Compte Joint");

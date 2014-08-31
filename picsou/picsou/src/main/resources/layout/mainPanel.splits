@@ -133,7 +133,7 @@
         </card>
       </cards>
 
-      <panel ref="licenseInfoView" weightY="0.1" marginBottom="10"/>
+      <panel ref="licenseInfoView" weightY="0.1"/>
 
     </column>
 
