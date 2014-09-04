@@ -17,7 +17,6 @@ public class MainAccountWeather {
   @Target(Account.class)
   public static LinkField ACCOUNT;
 
-  @Key
   @Target(WeatherType.class)
   public static LinkField WEATHER;
 

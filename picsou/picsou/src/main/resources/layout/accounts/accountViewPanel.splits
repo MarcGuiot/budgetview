@@ -29,13 +29,7 @@
 
     <style selector="#accountPanel" opaque="true" background="block.inner.bg"/>
 
-    <style selector="#accountStatus" ui="basicButtonUI" cursor="hand" border="" weightX="0" weightY="0" fill="none"/>
-    <style id="account:OK" selector="x"
-           icon="rect(16,10,accountView.status.ok,accountView.status.border.unselected)"
-           rolloverIcon="rect(16,10,accountView.status.ok,accountView.status.border.rollover)"/>
-    <style id="account:NOK" selector="x"
-           icon="rect(16,10,accountView.status.nok,accountView.status.border.unselected)"
-           rolloverIcon="rect(16,10,accountView.status.nok,accountView.status.border.rollover)"/>
+    <style selector="#accountWeather" ui="basicButtonUI" cursor="hand" border="" weightX="0" weightY="0" fill="none"/>
 
     <!-- Block selection -->
 
@@ -66,7 +60,7 @@
         <panel marginTop="4" layout="org.designup.picsou.gui.accounts.utils.AccountBlockLayout"
                cursor="hand" opaque="false">
           <button ref="editAccount"/>
-          <button ref="accountStatus"/>
+          <button ref="accountWeather"/>
           <component ref="accountPositionsChart" background="sidebar.bg"/>
           <button ref="accountPosition" anchor="east" styleClass="hyperlinkWithoutUnderline"/>
           <label ref="accountUpdateDate" font="LatoLight,plain,12"/>

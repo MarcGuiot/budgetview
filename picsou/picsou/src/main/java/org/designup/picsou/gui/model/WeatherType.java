@@ -59,5 +59,9 @@ public enum WeatherType implements GlobConstantContainer {
   public boolean worseThan(WeatherType other) {
     return id > other.id;
   }
+
+  public String getName() {
+    return name().toLowerCase();
+  }
 }
 
