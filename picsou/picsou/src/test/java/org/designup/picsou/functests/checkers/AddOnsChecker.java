@@ -21,6 +21,10 @@ public class AddOnsChecker extends ViewChecker {
     enable(AddOns.ANALYSIS);
   }
 
+  public void activateGroups() {
+    enable(AddOns.GROUPS);
+  }
+
   private void enable(BooleanField field) {
     if (repository == null) {
       repository = ((PicsouFrame)mainWindow.getAwtComponent()).getRepository();

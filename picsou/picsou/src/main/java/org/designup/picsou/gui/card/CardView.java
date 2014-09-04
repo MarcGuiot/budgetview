@@ -5,7 +5,8 @@ import org.designup.picsou.gui.card.utils.NavigationAction;
 import org.designup.picsou.gui.card.utils.NavigationIcons;
 import org.designup.picsou.gui.help.HelpService;
 import org.designup.picsou.gui.model.Card;
-import org.designup.picsou.gui.signpost.Signpost;
+import org.designup.picsou.gui.signpost.PersistentSignpost;
+import org.designup.picsou.gui.signpost.SignpostService;
 import org.designup.picsou.gui.signpost.guides.GotoCategorizationSignpost;
 import org.designup.picsou.gui.signpost.guides.GotoDataSignpost;
 import org.designup.picsou.gui.signpost.guides.SkipAndGotoBudgetSignpost;
@@ -38,9 +39,9 @@ public class CardView extends View implements GlobSelectionListener {
   private JToggleButton[] toggles = new JToggleButton[Card.values().length];
   private static final Card[] CARDS = {Card.HOME, Card.BUDGET, Card.DATA, Card.CATEGORIZATION, Card.PROJECTS, Card.ANALYSIS};
   private CardView.ViewHelpAction viewHelpAction;
-  private Signpost categorizationCompletionSignpost;
+  private PersistentSignpost categorizationCompletionSignpost;
 
-  public CardView(GlobRepository repository, Directory directory, Signpost completionSignpost) {
+  public CardView(GlobRepository repository, Directory directory, PersistentSignpost completionSignpost) {
     super(repository, directory);
     this.selectionService.addListener(this, Card.TYPE);
     this.viewHelpAction = new ViewHelpAction();
@@ -53,6 +54,7 @@ public class CardView extends View implements GlobSelectionListener {
 
     final ButtonGroup masterGroup = new ButtonGroup();
     final ImageLocator images = directory.get(ImageLocator.class);
+    final SignpostService signposts = directory.get(SignpostService.class);
     for (Card card : CARDS) {
       final JToggleButton toggle = new JToggleButton(new ToggleAction(card));
       toggle.setIcon(NavigationIcons.get(images, card));
@@ -63,19 +65,20 @@ public class CardView extends View implements GlobSelectionListener {
       Gui.configureIconButton(toggle, name, NavigationIcons.DIMENSION);
       masterGroup.add(toggle);
       toggles[card.getId()] = toggle;
+      signposts.registerComponent(getSignpostId(card), toggle);
 
       switch (card) {
         case BUDGET:
           categorizationCompletionSignpost.attach(toggle);
-          Signpost gotoBudgetSignpost = new SkipAndGotoBudgetSignpost(repository, directory);
+          PersistentSignpost gotoBudgetSignpost = new SkipAndGotoBudgetSignpost(repository, directory);
           gotoBudgetSignpost.attach(toggle);
           break;
         case DATA:
-          Signpost gotoDataSignpost = new GotoDataSignpost(repository, directory);
+          PersistentSignpost gotoDataSignpost = new GotoDataSignpost(repository, directory);
           gotoDataSignpost.attach(toggle);
           break;
         case CATEGORIZATION:
-          Signpost gotoCategorizationSignpost = new GotoCategorizationSignpost(repository, directory);
+          PersistentSignpost gotoCategorizationSignpost = new GotoCategorizationSignpost(repository, directory);
           gotoCategorizationSignpost.attach(toggle);
           break;
       }
@@ -95,6 +98,10 @@ public class CardView extends View implements GlobSelectionListener {
     addBackForwardActions(builder);
 
     showCard(NavigationService.INITIAL_CARD);
+  }
+
+  public static String getSignpostId(Card card) {
+    return "card." + card.getName().toLowerCase();
   }
 
   public List<Card> getActiveCards() {

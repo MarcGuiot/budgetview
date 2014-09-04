@@ -33,6 +33,7 @@ import org.designup.picsou.gui.series.PeriodBudgetAreaStatUpdater;
 import org.designup.picsou.gui.series.PeriodSeriesStatUpdater;
 import org.designup.picsou.gui.series.SeriesEditor;
 import org.designup.picsou.gui.analysis.AnalysisView;
+import org.designup.picsou.gui.signpost.SignpostService;
 import org.designup.picsou.gui.signpost.SignpostView;
 import org.designup.picsou.gui.signpost.guides.ImportSignpost;
 import org.designup.picsou.gui.startup.components.DemoMessageView;
@@ -104,6 +105,7 @@ public class MainPanel {
     directory.add(new LayoutConfigService(repository, directory));
     LogoutService logoutService = new MainPanelLogoutService();
     directory.add(LogoutService.class, logoutService);
+    directory.add(new SignpostService(directory));
 
     directory.addFactory(SeriesEditor.class, new Directory.Factory<SeriesEditor>() {
       public SeriesEditor create() {

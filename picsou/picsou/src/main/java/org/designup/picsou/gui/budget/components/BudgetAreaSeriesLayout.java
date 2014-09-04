@@ -8,7 +8,6 @@ import org.globsframework.gui.splits.layout.ComponentConstraints;
 import org.globsframework.gui.splits.layout.Fill;
 import org.globsframework.gui.splits.repeat.RepeatLayout;
 import org.globsframework.gui.views.Alignment;
-import org.globsframework.metamodel.annotations.NoObfuscation;
 import org.globsframework.utils.Strings;
 
 import javax.swing.*;
@@ -180,9 +179,6 @@ public class BudgetAreaSeriesLayout implements RepeatLayout {
     }
 
     private void layout(Component component, int rowBottom, int yOffset, int columnLeft, int columnRight, Alignment alignment, Fill fill, boolean isHeader) {
-      if (isHeader) {
-        alignment = Alignment.CENTER;
-      }
       Dimension size = component.getPreferredSize();
       int columnWidth = columnRight - columnLeft;
       int componentWidth = Math.min(columnRight - columnLeft, size.width);

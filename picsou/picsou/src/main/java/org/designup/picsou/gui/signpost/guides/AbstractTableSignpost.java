@@ -1,8 +1,8 @@
 package org.designup.picsou.gui.signpost.guides;
 
 import net.java.balloontip.BalloonTip;
-import net.java.balloontip.TableCellBalloonTip;
-import org.designup.picsou.gui.signpost.Signpost;
+import net.java.balloontip.TablecellBalloonTip;
+import org.designup.picsou.gui.signpost.PersistentSignpost;
 import org.designup.picsou.model.SignpostStatus;
 import org.designup.picsou.model.Transaction;
 import org.globsframework.gui.GlobSelection;
@@ -18,7 +18,7 @@ import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import java.awt.event.ComponentListener;
 
-public abstract class AbstractTableSignpost extends Signpost {
+public abstract class AbstractTableSignpost extends PersistentSignpost {
   private JTable table;
   private TableModelListener tableListener;
   protected GlobSelectionListener selectionListener;
@@ -57,7 +57,7 @@ public abstract class AbstractTableSignpost extends Signpost {
   protected BalloonTip createBalloonTip(JComponent component, String text) {
     return new TableCellBalloonTip(table, new JLabel(text),
                                    getRow(), getColumn(),
-                                   getBalloonStyle(),
+                                   balloonTipStyle,
                                    BalloonTip.Orientation.RIGHT_BELOW,
                                    BalloonTip.AttachLocation.CENTER,
                                    20, 20, false) {

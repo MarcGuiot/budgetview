@@ -51,7 +51,7 @@ public class ApplicationLAF {
 
   public static UIService initUiService() {
 
-    UIManager.put("JideSplitPaneDivider.gripperPainter", new SplitPaneDotsPainter());
+    UIManager.put("JideSplitPaneDivider.gripperPainter", new SplitPaneLinePainter());
 
     UIService uiService = new UIService();
     uiService.registerClass(PANEL_UI, WavePanelUI.class);

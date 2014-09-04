@@ -1,11 +1,8 @@
 package org.designup.picsou.gui.components.tips;
 
 import net.java.balloontip.BalloonTip;
-import net.java.balloontip.styles.RoundedBalloonStyle;
+import net.java.balloontip.styles.BalloonTipStyle;
 import org.designup.picsou.gui.utils.Gui;
-import org.globsframework.gui.splits.color.ColorChangeListener;
-import org.globsframework.gui.splits.color.ColorLocator;
-import org.globsframework.gui.splits.color.ColorService;
 import org.globsframework.gui.splits.utils.Disposable;
 import org.globsframework.gui.splits.utils.GuiUtils;
 import org.globsframework.utils.directory.Directory;
@@ -14,39 +11,39 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 
-public class DetailsTip implements Disposable {
+public class DetailsTip implements BalloonTipHolder, Disposable {
 
   private BalloonTip balloonTip;
-  private Color fillColor;
-  private Color borderColor;
   private HierarchyListener visibilityUpdater;
   private JComponent component;
   private String text;
-  private Directory directory;
   private AWTEventListener mouseListener;
   private boolean clickThrough;
   private TipPosition position = TipPosition.TOP_RIGHT;
-  private ColorChangeListener colorListener;
+  private TipAnchor anchor = TipAnchor.NORTHEAST;
+  private BalloonTipStyle balloonStyle;
+  private Disposable styleUpdater;
 
   public DetailsTip(final JComponent component, String text, Directory directory) {
     this.component = component;
     this.text = text;
-    this.directory = directory;
+    this.styleUpdater = initUpdater(directory);
+  }
 
-    colorListener = new ColorChangeListener() {
-      public void colorsChanged(ColorLocator colorLocator) {
-        fillColor = colorLocator.get("detailsTip.bg");
-        borderColor = colorLocator.get("detailsTip.border");
-        if (balloonTip != null) {
-          balloonTip.setStyle(createStyle());
-        }
-      }
-    };
-    directory.get(ColorService.class).addListener(colorListener);
+  protected Disposable initUpdater(Directory directory) {
+    return DetailsTipStyleUpdater.install(this, directory);
+  }
+
+  public void setStyle(BalloonTipStyle balloonStyle) {
+    this.balloonStyle = balloonStyle;
   }
 
   public void setPosition(TipPosition position) {
     this.position = position;
+  }
+
+  public void setAnchor(TipAnchor anchor) {
+    this.anchor = anchor;
   }
 
   public void setClickThrough() {
@@ -56,11 +53,11 @@ public class DetailsTip implements Disposable {
   public void show() {
     balloonTip = new BalloonTip(component,
                                 new JLabel(text),
-                                createStyle(),
+                                balloonStyle,
                                 BalloonTip.Orientation.LEFT_ABOVE,
-                                BalloonTip.AttachLocation.NORTHEAST,
+                                anchor.getLocation(),
                                 0, 20,
-                                false){
+                                false) {
     };
     balloonTip.setPositioner(position.getPositioner());
     balloonTip.setVisible(true);
@@ -94,7 +91,6 @@ public class DetailsTip implements Disposable {
         registerMouseListener();
       }
     });
-
   }
 
   private void registerMouseListener() {
@@ -105,18 +101,18 @@ public class DetailsTip implements Disposable {
           if (mouseEvent.getID() != MouseEvent.MOUSE_PRESSED) {
             return;
           }
-          if ((mouseEvent.getComponent() == component) && (!clickThrough)) {
+          if ((mouseEvent.getComponent() == component) && !clickThrough) {
+            System.out.println("DetailsTip.eventDispatched: consume");
             mouseEvent.consume();
+          }
+          else {
+            System.out.println("DetailsTip.eventDispatched: don't consume");
           }
           dispose();
         }
       }
     };
     Toolkit.getDefaultToolkit().addAWTEventListener(mouseListener, AWTEvent.MOUSE_EVENT_MASK);
-  }
-
-  private RoundedBalloonStyle createStyle() {
-    return new RoundedBalloonStyle(5, 5, fillColor, borderColor);
   }
 
   public void dispose() {
@@ -129,8 +125,8 @@ public class DetailsTip implements Disposable {
                             "ESCAPE", KeyStroke.getKeyStroke("ESCAPE"));
     component.removeHierarchyListener(visibilityUpdater);
 
-    directory.get(ColorService.class).removeListener(colorListener);
-    colorListener = null;
+    styleUpdater.dispose();
+    styleUpdater = null;
 
     component = null;
     balloonTip.closeBalloon();

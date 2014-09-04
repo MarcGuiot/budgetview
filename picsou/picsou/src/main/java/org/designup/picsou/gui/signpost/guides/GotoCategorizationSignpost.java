@@ -1,7 +1,7 @@
 package org.designup.picsou.gui.signpost.guides;
 
 import org.designup.picsou.gui.model.Card;
-import org.designup.picsou.gui.signpost.Signpost;
+import org.designup.picsou.gui.signpost.PersistentSignpost;
 import org.designup.picsou.model.SignpostStatus;
 import org.designup.picsou.model.Transaction;
 import org.designup.picsou.utils.Lang;
@@ -17,7 +17,7 @@ import org.globsframework.utils.directory.Directory;
 
 import java.util.Set;
 
-public class GotoCategorizationSignpost extends Signpost implements GlobSelectionListener, ChangeSetListener {
+public class GotoCategorizationSignpost extends PersistentSignpost implements GlobSelectionListener, ChangeSetListener {
   public GotoCategorizationSignpost(GlobRepository repository, Directory directory) {
     super(SignpostStatus.GOTO_CATEGORIZATION_DONE, repository, directory);
   }

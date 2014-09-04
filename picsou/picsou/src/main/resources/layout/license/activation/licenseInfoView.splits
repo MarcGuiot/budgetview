@@ -11,7 +11,7 @@
            font="-,bold,12" fill="both"/>
   </styles>
 
-  <panel autoHideSource="licenseInfoMessage" styleClass="licenseInfoPanel"
+  <panel ref="licenseInfoView" autoHideSource="licenseInfoMessage" styleClass="licenseInfoPanel"
          border="empty(10,0,0,10)">
     <row styleClass="licenseInfoBorder">
       <htmlEditorPane ref="licenseInfoMessage"/>

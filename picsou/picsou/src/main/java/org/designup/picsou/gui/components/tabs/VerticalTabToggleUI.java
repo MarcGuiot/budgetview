@@ -1,14 +1,16 @@
 package org.designup.picsou.gui.components.tabs;
 
-import org.globsframework.gui.splits.utils.GuiUtils;
-
 import javax.swing.*;
 import javax.swing.plaf.basic.BasicToggleButtonUI;
 import java.awt.*;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
+import java.awt.image.BufferedImage;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 
 public class VerticalTabToggleUI extends BasicToggleButtonUI {
+
+  public static final int MARGIN_LEFT = 5;
+  public static final int MARGIN_RIGHT= 10;
 
   private Color rolloverTextColor = Color.RED;
   private Color disabledTextColor = Color.GRAY;
@@ -17,6 +19,7 @@ public class VerticalTabToggleUI extends BasicToggleButtonUI {
   private Color bgColor;
   private Color borderColor;
   private Font boldFont;
+  private BufferedImage iconImage;
 
   protected void installDefaults(final AbstractButton button) {
     super.installDefaults(button);
@@ -24,41 +27,77 @@ public class VerticalTabToggleUI extends BasicToggleButtonUI {
     button.setOpaque(false);
     button.setBorderPainted(false);
     button.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+    button.setHorizontalTextPosition(SwingConstants.LEFT);
+    button.addPropertyChangeListener(AbstractButton.ICON_CHANGED_PROPERTY, new PropertyChangeListener() {
+      public void propertyChange(PropertyChangeEvent evt) {
+        iconImage = null;
+        recomputeWidth(button);
+      }
+    });
 
-    final Font defaultFont = button.getFont();
-    boldFont = defaultFont.deriveFont(defaultFont.getStyle() ^ Font.BOLD);
+    button.addPropertyChangeListener(AbstractButton.TEXT_CHANGED_PROPERTY, new PropertyChangeListener() {
+      public void propertyChange(PropertyChangeEvent evt) {
+        recomputeWidth(button);
+      }
+    });
 
-    button.getModel().addItemListener(new ItemListener() {
-      public void itemStateChanged(ItemEvent e) {
-        button.setFont(button.isSelected() ? boldFont : defaultFont);
+    button.addPropertyChangeListener("font", new PropertyChangeListener() {
+      public void propertyChange(PropertyChangeEvent evt) {
+        recomputeWidth(button);
       }
     });
   }
 
-  protected void paintButtonPressed(Graphics g, AbstractButton button) {
+  private void recomputeWidth(AbstractButton button) {
+    FontMetrics fm = button.getFontMetrics(button.getFont());
+    int width = MARGIN_LEFT + fm.stringWidth(button.getText()) + MARGIN_RIGHT;
+    if (button.getIcon() != null) {
+      width += button.getIcon().getIconWidth() + button.getIconTextGap();
+    }
+    Dimension size = new Dimension(width, button.getPreferredSize().height);
+    button.setMinimumSize(size);
+    button.setPreferredSize(size);
+  }
+
+  public void paint(Graphics g, JComponent c) {
+
+    JToggleButton button = (JToggleButton)c;
     button.setOpaque(false);
 
     Graphics2D g2 = (Graphics2D)g;
     g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
-    Dimension size = button.getSize();
-    int width = size.width;
-    int height = size.height - 1;
+    Rectangle bounds = button.getBounds();
+    int width = bounds.width;
+    int height = bounds.height - 1;
 
-    g2.setColor(bgColor);
-    g2.fillRect(0, 0, width, height);
+    if (button.getModel().isSelected()) {
+      g2.setColor(bgColor);
+      g2.fillRect(0, 0, width, height);
 
-    g2.setColor(borderColor);
-    g2.drawLine(0, 0, width, 0);
-    g2.drawLine(0, 0, 0, height);
-    g2.drawLine(0, height, width, height);
-  }
+      g2.setColor(borderColor);
+      g2.drawLine(0, 0, width, 0);
+      g2.drawLine(0, 0, 0, height);
+      g2.drawLine(0, height, width, height);
+    }
 
-  protected void paintText(Graphics g, JComponent component, Rectangle textRect, String text) {
-    AbstractButton button = (AbstractButton)component;
+    int left = bounds.x + MARGIN_LEFT;
+    int textX = left;
+
+    Icon icon = button.getIcon();
+    if (icon != null) {
+      if (iconImage == null) {
+        iconImage = new BufferedImage(icon.getIconWidth(), icon.getIconHeight(), BufferedImage.TYPE_INT_RGB);
+        icon.paintIcon(new JPanel(), iconImage.getGraphics(), 0, 0);
+      }
+
+      textX += icon.getIconWidth() + button.getIconTextGap();
+      int iconX = left;
+      int iconY = (height / 2) - (icon.getIconHeight() / 2);
+      g2.drawImage(iconImage, iconX, iconY, null);
+    }
+
     ButtonModel model = button.getModel();
-    FontMetrics fm = g.getFontMetrics(boldFont);
-    int mnemonicIndex = button.getDisplayedMnemonicIndex();
     if (!button.isEnabled()) {
       g.setColor(disabledTextColor);
     }
@@ -69,19 +108,11 @@ public class VerticalTabToggleUI extends BasicToggleButtonUI {
       g.setColor(selectedTextColor);
     }
     else {
-      g.setColor(component.getForeground());
+      g.setColor(button.getForeground());
     }
 
-    g.setFont(boldFont);
-    g.drawString(text,
-                 textRect.x + getTextShiftOffset(),
-                 textRect.y + (fm.getMaxAscent() - fm.getMaxDescent()) + getTextShiftOffset() + 2);
-
-    if (mnemonicIndex > 0) {
-      GuiUtils.drawUnderlineCharAt(g, text, mnemonicIndex,
-                                   textRect.x + getTextShiftOffset(),
-                                   textRect.y + (fm.getMaxAscent() - fm.getMaxDescent()) + getTextShiftOffset());
-    }
+    FontMetrics fm = g.getFontMetrics(button.getFont());
+    g.drawString(button.getText(), textX, (height + fm.getHeight()) / 2 - fm.getDescent() + 1);
   }
 
   public void setBgColor(Color bgColor) {

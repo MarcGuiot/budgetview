@@ -61,7 +61,7 @@
 
   <column name="budgetAreaSeriesView" opaque="false" preferredSize="(300,400)">
 
-      <row name="total" weightY="0" marginLeft="15" marginRight="15" border="${budget.blockHeader.border}">
+      <row name="total" weightY="0" marginLeft="10" marginRight="10">
         <button ref="budgetAreaTitle" tooltipText="$budgetView.actions.tooltip" font="LatoRegular,plain,18"
                 ui="hyperlinkButtonWithoutUnderline" foreground="block.footer.button"
                 fill="none" iconTextGap="2"
@@ -77,13 +77,13 @@
                tooltipText="$budgetview.tooltip.total.planned"/>
       </row>
 
-      <column styleClass="blockScrollBorder" weightY="10" marginLeft="15" marginRight="15" >
+      <column styleClass="blockScrollBorder" weightY="10" marginLeft="10" marginRight="10" >
         <scrollPane verticalUnitIncrement="10" forceVerticalScroll="true">
           <verticalBoxes>
             <repeat ref="seriesRepeat" styleClass="innerBlock"
                     layout="org.designup.picsou.gui.budget.components.BudgetAreaSeriesLayout">
               <header>
-                <button ref="titleSeries" styleClass="itemLink" text="$budgetview.columnTitle.series"/>
+                <button ref="titleSeries" styleClass="itemLink" text="$budgetview.columnTitle.series" border="empty(0,18,0,18)"/>
                 <label/>
                 <label/>
                 <button ref="titleAmountReal" styleClass="itemLink" text="$budgetview.columnTitle.real"/>

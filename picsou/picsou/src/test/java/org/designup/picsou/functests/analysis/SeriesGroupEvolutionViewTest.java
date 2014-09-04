@@ -10,6 +10,7 @@ public class SeriesGroupEvolutionViewTest extends LoggedInFunctionalTestCase {
     super.setUp();
     operations.openPreferences().setFutureMonthsCount(2).validate();
     addOns.activateAnalysis();
+    addOns.activateGroups();
 
     OfxBuilder.init(this)
       .addBankAccount(-1, 10674, "00000123", -125.0, "2014/05/12")

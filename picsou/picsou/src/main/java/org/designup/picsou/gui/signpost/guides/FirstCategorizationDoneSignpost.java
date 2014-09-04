@@ -1,8 +1,8 @@
 package org.designup.picsou.gui.signpost.guides;
 
 import net.java.balloontip.BalloonTip;
-import net.java.balloontip.TableCellBalloonTip;
-import org.designup.picsou.gui.signpost.Signpost;
+import net.java.balloontip.TablecellBalloonTip;
+import org.designup.picsou.gui.signpost.PersistentSignpost;
 import org.designup.picsou.gui.utils.Matchers;
 import org.designup.picsou.model.SignpostSectionType;
 import org.designup.picsou.model.SignpostStatus;
@@ -22,7 +22,7 @@ import javax.swing.event.AncestorListener;
 import java.awt.event.ComponentListener;
 import java.util.Set;
 
-public class FirstCategorizationDoneSignpost extends Signpost implements ChangeSetListener, GlobSelectionListener {
+public class FirstCategorizationDoneSignpost extends PersistentSignpost implements ChangeSetListener, GlobSelectionListener {
 
   private JTable table;
 
@@ -94,7 +94,7 @@ public class FirstCategorizationDoneSignpost extends Signpost implements ChangeS
     }
     return new TableCellBalloonTip(table, new JLabel(text),
                                    selectedRow, 1,
-                                   getBalloonStyle(),
+                                   balloonTipStyle,
                                    BalloonTip.Orientation.RIGHT_ABOVE,
                                    BalloonTip.AttachLocation.CENTER,
                                    20, 20, false) {

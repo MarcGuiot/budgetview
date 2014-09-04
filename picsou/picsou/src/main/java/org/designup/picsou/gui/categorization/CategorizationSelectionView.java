@@ -6,7 +6,7 @@ import org.designup.picsou.gui.categorization.reconciliation.ReconciliationWarni
 import org.designup.picsou.gui.components.JPopupButton;
 import org.designup.picsou.gui.components.filtering.Filterable;
 import org.designup.picsou.gui.help.HyperlinkHandler;
-import org.designup.picsou.gui.signpost.Signpost;
+import org.designup.picsou.gui.signpost.PersistentSignpost;
 import org.designup.picsou.gui.signpost.guides.GotoBudgetSignpost;
 import org.designup.picsou.gui.signpost.sections.SkipCategorizationPanel;
 import org.designup.picsou.gui.transactions.creation.TransactionCreationPanel;
@@ -33,7 +33,7 @@ public class CategorizationSelectionView extends View implements TableView, Filt
   private GlobList currentTransactions = new GlobList();
   private CategorizationTableView categorizationTableView;
 
-  private Signpost signpost;
+  private PersistentSignpost signpost;
   private CategorizationLevel categorizationLevel;
   private TransactionCreationPanel transactionCreation;
 
@@ -52,7 +52,7 @@ public class CategorizationSelectionView extends View implements TableView, Filt
     this.signpost = new GotoBudgetSignpost(categorizationLevel, repository, parentDirectory);
   }
 
-  public Signpost getGotoBudgetSignpost() {
+  public PersistentSignpost getGotoBudgetSignpost() {
     return signpost;
   }
 

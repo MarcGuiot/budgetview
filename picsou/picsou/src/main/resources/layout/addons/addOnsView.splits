@@ -3,26 +3,50 @@
   <styleImport file="/layout/commonStyles.splits"/>
   <styleImport file="/layout/components/verticalTabStyles.splits"/>
   <styles>
-    <style selector="label.title" font="LatoLight,plain,28" marginBottom="10" marginTop="20"/>
+    <style selector="label.title" font="LatoBold,plain,20" marginBottom="4" marginTop="4" marginLeft="10"/>
+    <style id="addOnEnabled" selector="x" icon="roundedRect(10,15,1,2,addons.selected.bg,addons.selected.border)"/>
+    <style id="addOnDisabled" selector="x" icon="roundedRect(10,15,1,2,addons.unselected.bg,addons.unselected.border)"/>
+
+    <style selector="label.activated" icon="status_completed.png" font="LatoLight,plain,16" foreground="addons.activated"
+           fill="none" anchor="center" marginTop="20" iconTextGap="10"/>
+    <style selector="label#image" fill="none" anchor="center"/>
+
+    <style selector="#buy" fill="none" anchor="center"/>
   </styles>
 
-
-  <column ref="addOnsView">
-    <label text="$addons.title" styleClass="title"/>
-    <row>
+  <column ref="addOnsView" opaque="true" background="verticalTab.selection.bg">
+    <label text="$addons.title" styleClass="title" foreground="addons.title"/>
+    <row marginRight="4" marginBottom="4">
       <column styleClass="verticalTabSelectionPanel">
         <repeat ref="addOnSelectors" layout="column">
           <toggleButton ref="addOnSelector" styleClass="verticalTabSelector"/>
         </repeat>
         <filler fill="vertical"/>
       </column>
-      <column styleClass="verticalTabContentPanel">
-        <filler fill="vertical"/>
-        <row>
-          <filler fill="horizontal"/>
-          <button action="buy"/>
-        </row>
-      </column>
+      <row styleClass="verticalTabContentPanel">
+        <scrollPane forceVerticalScroll="true" weightX="10" border="">
+          <column>
+            <row>
+              <label ref="image" weightX="1"/>
+              <cards ref="cards" weightX="1">
+                <card name="enabled">
+                  <column>
+                    <label text="$addons.activated" styleClass="activated"/>
+                    <filler fill="vertical"/>
+                  </column>
+                </card>
+                <card name="disabled">
+                  <column>
+                    <button action="buy" preferredSize="(60,25)"/>
+                    <button action="gotoDemoAccount" styleClass="hyperlink"/>
+                  </column>
+                </card>
+              </cards>
+            </row>
+            <htmlEditorPane ref="editor" useImageLocator="true" opaque="false" foreground="block.text"/>
+          </column>
+        </scrollPane>
+      </row>
     </row>
   </column>
 

@@ -919,6 +919,9 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
   }
 
   public void testPlannedAmountsAreHightlightedWhenAnAccountIsSelected() throws Exception {
+
+    addOns.activateGroups();
+
     OfxBuilder
       .init(this)
       .addBankAccount(-1, 10674, "000111", 1000.00, "2008/07/10")

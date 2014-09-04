@@ -10,6 +10,7 @@ public class SeriesGroupTest extends LoggedInFunctionalTestCase {
     setCurrentMonth("2014/01");
     super.setUp();
     getOperations().openPreferences().setFutureMonthsCount(6).validate();
+    addOns.activateGroups();
   }
 
   public void testAddAndDeleteGroup() throws Exception {
