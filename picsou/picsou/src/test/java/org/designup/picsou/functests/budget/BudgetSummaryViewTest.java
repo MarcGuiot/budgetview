@@ -2,6 +2,8 @@ package org.designup.picsou.functests.budget;
 
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
+import org.designup.picsou.gui.model.MainAccountStat;
+import org.globsframework.model.format.GlobPrinter;
 
 public class BudgetSummaryViewTest extends LoggedInFunctionalTestCase {
 
@@ -65,7 +67,7 @@ public class BudgetSummaryViewTest extends LoggedInFunctionalTestCase {
 
     timeline.selectMonth("2008/07");
     views.selectBudget();
-    accounts.checkContent("| ok | Account n. 0001212 | 1500.00 on 2008/07/05 |");
+    accounts.checkContent("| Account n. 0001212 | 1500.00 on 2008/07/05 | sunny |");
     mainAccounts.checkEndOfMonthPosition("Account n. 0001212", 2300.00);
     uncategorized.checkAmount(50.00);
 
@@ -96,7 +98,7 @@ public class BudgetSummaryViewTest extends LoggedInFunctionalTestCase {
     timeline.selectMonth("2008/07");
     views.selectBudget();
     mainAccounts
-      .checkContent("| ok | Account n. 0001212 | 1500.00 on 2008/07/05 |")
+      .checkContent("| Account n. 0001212 | 1500.00 on 2008/07/05 | sunny |")
       .checkEndOfMonthPosition("Account n. 0001212", 2300.00);
     uncategorized
       .checkNotShown();
@@ -104,7 +106,7 @@ public class BudgetSummaryViewTest extends LoggedInFunctionalTestCase {
     timeline.selectMonth("2008/09");
     views.selectBudget();
     mainAccounts
-      .checkContent("| ok | Account n. 0001212 | 1500.00 on 2008/07/05 |")
+      .checkContent("| Account n. 0001212 | 1500.00 on 2008/07/05 | sunny |")
       .checkEndOfMonthPosition("Account n. 0001212", 3800.00);
     uncategorized
       .checkNotShown();
@@ -133,9 +135,9 @@ public class BudgetSummaryViewTest extends LoggedInFunctionalTestCase {
     categorization.setNewVariable("Esso", "Fuel", -60.00);
     categorization.setNewExtra("FNAC", "TV");
 
-    accounts.checkContent(
-      "| ok | Account n. 000111 | 1500.00 on 2008/06/10 |\n" +
-      "| ok | Account n. 00222  | 1000.00 on 2008/06/10 |"
+    accounts. checkContent(
+      "| Account n. 000111 | 1500.00 on 2008/06/10 | sunny |\n" +
+      "| Account n. 00222  | 1000.00 on 2008/06/10 | sunny |"
     );
 
     timeline.selectMonth("2008/06");
@@ -185,7 +187,7 @@ public class BudgetSummaryViewTest extends LoggedInFunctionalTestCase {
 
     views.selectBudget();
     mainAccounts.checkContent(
-      "| ok | Account n. 000111 | 1000.00 on 2008/07/10 |\n"
+      "| Account n. 000111 | 1000.00 on 2008/07/10 | sunny |\n"
     );
 
     OfxBuilder
@@ -195,8 +197,8 @@ public class BudgetSummaryViewTest extends LoggedInFunctionalTestCase {
       .addTransaction("2008/07/20", -20.00, "McDo")
       .load();
     mainAccounts.checkContent(
-      "| ok  | Account n. 000111 | 1000.00 on 2008/07/10  |\n" +
-      "| nok | Account n. 000222 | -2000.00 on 2008/07/15 |\n"
+      "| Account n. 000111 | 1000.00 on 2008/07/10  | sunny |\n" +
+      "| Account n. 000222 | -2000.00 on 2008/07/15 | rainy |\n"
     );
 
     OfxBuilder
@@ -207,9 +209,9 @@ public class BudgetSummaryViewTest extends LoggedInFunctionalTestCase {
       .load();
 
     mainAccounts.checkContent(
-      "| ok  | Account n. 000111 | 1000.00 on 2008/07/10  |\n" +
-      "| nok | Account n. 000222 | -2000.00 on 2008/07/15 |\n" +
-      "| ok  | Account n. 000333 | 3000.00 on 2008/07/01  |"
+      "| Account n. 000111 | 1000.00 on 2008/07/10  | sunny |\n" +
+      "| Account n. 000222 | -2000.00 on 2008/07/15 | rainy |\n" +
+      "| Account n. 000333 | 3000.00 on 2008/07/01  | sunny |"
     );
     mainAccounts.getChart("Account n. 000111")
       .checkValue(200807, 1, 100.00)
@@ -218,9 +220,9 @@ public class BudgetSummaryViewTest extends LoggedInFunctionalTestCase {
 
     mainAccounts.select("Account n. 000333");
     mainAccounts.checkContent(
-      "| ok  | Account n. 000111 | 1000.00 on 2008/07/10  |\n" +
-      "| nok | Account n. 000222 | -2000.00 on 2008/07/15 |\n" +
-      "| ok  | Account n. 000333 | 3000.00 on 2008/07/01  |"
+      "| Account n. 000111 | 1000.00 on 2008/07/10  | sunny |\n" +
+      "| Account n. 000222 | -2000.00 on 2008/07/15 | rainy |\n" +
+      "| Account n. 000333 | 3000.00 on 2008/07/01  | sunny |"
     );
     mainAccounts.getChart("Account n. 000333")
       .checkValue(200807, 1, 3000.00)
@@ -232,9 +234,9 @@ public class BudgetSummaryViewTest extends LoggedInFunctionalTestCase {
     views.selectBudget();
     projects.moveAccountUp("Account n. 000333");
     mainAccounts.checkContent(
-      "| ok  | Account n. 000333 | 3000.00 on 2008/07/01  |\n" +
-      "| ok  | Account n. 000111 | 1000.00 on 2008/07/10  |\n" +
-      "| nok | Account n. 000222 | -2000.00 on 2008/07/15 |"
+      "| Account n. 000333 | 3000.00 on 2008/07/01  | sunny |\n" +
+      "| Account n. 000111 | 1000.00 on 2008/07/10  | sunny |\n" +
+      "| Account n. 000222 | -2000.00 on 2008/07/15 | rainy |"
     );
 
     // -- Reacts to deletions --
@@ -242,8 +244,8 @@ public class BudgetSummaryViewTest extends LoggedInFunctionalTestCase {
     views.selectBudget();
     mainAccounts.openDelete("000333").validate();
     mainAccounts.checkContent(
-      "| ok  | Account n. 000111 | 1000.00 on 2008/07/10  |\n" +
-      "| nok | Account n. 000222 | -2000.00 on 2008/07/15 |"
+      "| Account n. 000111 | 1000.00 on 2008/07/10  | sunny |\n" +
+      "| Account n. 000222 | -2000.00 on 2008/07/15 | rainy |"
     );
     mainAccounts.getChart("Account n. 000111")
       .checkValue(200807, 1, 100.00)
@@ -252,7 +254,7 @@ public class BudgetSummaryViewTest extends LoggedInFunctionalTestCase {
 
     mainAccounts.openDelete("000222").validate();
     mainAccounts.checkContent(
-      "| ok | Account n. 000111 | 1000.00 on 2008/07/10 |\n"
+      "| Account n. 000111 | 1000.00 on 2008/07/10 | sunny |\n"
     );
     mainAccounts.getChart("Account n. 000111")
       .checkValue(200807, 1, 100.00)
@@ -279,13 +281,13 @@ public class BudgetSummaryViewTest extends LoggedInFunctionalTestCase {
 
     timeline.selectMonth(200807);
     mainAccounts.checkContent(
-      "| ok  | Account n. 000111 | 1000.00 on 2008/07/10  |\n" +
-      "| nok | Account n. 000222 | -2000.00 on 2008/06/20 |"
+      "| Account n. 000111 | 1000.00 on 2008/07/10  | sunny |\n" +
+      "| Account n. 000222 | -2000.00 on 2008/06/20 | rainy |"
     );
     mainAccounts.select("Account n. 000222");
     mainAccounts.checkContent(
-      "| ok  | Account n. 000111 | 1000.00 on 2008/07/10  |\n" +
-      "| nok | Account n. 000222 | -2000.00 on 2008/06/20 |"
+      "| Account n. 000111 | 1000.00 on 2008/07/10  | sunny |\n" +
+      "| Account n. 000222 | -2000.00 on 2008/06/20 | rainy |"
     );
     mainAccounts.getChart("Account n. 000222")
       .checkValue(200807, 1, -2000.00);
@@ -295,12 +297,12 @@ public class BudgetSummaryViewTest extends LoggedInFunctionalTestCase {
       .validate();
     views.selectBudget();
     mainAccounts.checkContent(
-      "| ok | Account n. 000111 | 1000.00 on 2008/07/10 |");
+      "| Account n. 000111 | 1000.00 on 2008/07/10 | sunny |");
 
     timeline.selectMonth(200806);
     mainAccounts.checkContent(
-      "| nok | Account n. 000111 | 1000.00 on 2008/07/10 |\n" +
-      "| nok | Account n. 000222 | 0.00 on 2008/06/20    |");
+      "| Account n. 000111 | 1000.00 on 2008/07/10 | sunny |\n" +
+      "| Account n. 000222 | 0.00 on 2008/06/20    | -     |");
     mainAccounts.getChart("Account n. 000111")
       .checkValue(200806, 1, -790.00)
       .checkValue(200806, 6, 210.00)
@@ -310,6 +312,6 @@ public class BudgetSummaryViewTest extends LoggedInFunctionalTestCase {
 
     timeline.selectMonth(200807);
     mainAccounts.checkContent(
-      "| ok | Account n. 000111 | 1000.00 on 2008/07/10 |");
+      "| Account n. 000111 | 1000.00 on 2008/07/10 | sunny |");
   }
 }

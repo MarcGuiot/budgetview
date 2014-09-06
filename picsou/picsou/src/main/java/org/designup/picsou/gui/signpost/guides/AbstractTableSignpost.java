@@ -1,7 +1,7 @@
 package org.designup.picsou.gui.signpost.guides;
 
 import net.java.balloontip.BalloonTip;
-import net.java.balloontip.TablecellBalloonTip;
+import net.java.balloontip.TableCellBalloonTip;
 import org.designup.picsou.gui.signpost.PersistentSignpost;
 import org.designup.picsou.model.SignpostStatus;
 import org.designup.picsou.model.Transaction;
@@ -55,12 +55,12 @@ public abstract class AbstractTableSignpost extends PersistentSignpost {
   }
 
   protected BalloonTip createBalloonTip(JComponent component, String text) {
-    return new TablecellBalloonTip(table, text,
+    return new TableCellBalloonTip(table, new JLabel(text),
                                    getRow(), getColumn(),
                                    balloonTipStyle,
                                    BalloonTip.Orientation.RIGHT_BELOW,
                                    BalloonTip.AttachLocation.CENTER,
-                                   20, 20, false){
+                                   20, 20, false) {
       public void closeBalloon() {
         super.closeBalloon();
         if (topLevelContainer != null) {
@@ -69,7 +69,7 @@ public abstract class AbstractTableSignpost extends PersistentSignpost {
               topLevelContainer.removeComponentListener(listener);
             }
           }
-          if (attachedComponent != null){
+          if (attachedComponent != null) {
             for (AncestorListener listener : attachedComponent.getAncestorListeners()) {
               if (listener.getClass().getName().startsWith("net.java.balloontip")) {
                 attachedComponent.removeAncestorListener(listener);

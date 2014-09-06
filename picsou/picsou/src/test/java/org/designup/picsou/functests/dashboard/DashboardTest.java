@@ -30,7 +30,7 @@ public class DashboardTest extends LoggedInFunctionalTestCase {
       "| 0     | Days since your last import                                            |\n" +
       "| 4 >   | Transactions to categorize                                             |\n" +
       "| sunny | No overdraw forecast for your main accounts until the end of September |\n" +
-      "| 0     | Available on you main accounts until the end of September              |\n" +
+      "| +1250 | Available on you main accounts until the end of September              |\n" +
       "| +1250 | Total amount for your main accounts on 2014/08/09                      |\n");
 
     categorization.setNewIncome("WorldCo", "Salary");
@@ -113,6 +113,4 @@ public class DashboardTest extends LoggedInFunctionalTestCase {
   public void testTODO() throws Exception {
     fail("cas où il n'y a pas d'opérations prévues - sunny?");
   }
-
-
 }

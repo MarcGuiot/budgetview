@@ -18,6 +18,7 @@ import java.util.Map;
 import java.util.Set;
 
 import static org.globsframework.model.FieldValue.value;
+import static org.globsframework.model.utils.GlobMatchers.*;
 
 
 /*
@@ -46,45 +47,46 @@ public class BudgetStatTrigger implements ChangeSetListener {
     try {
       repository.deleteAll(BudgetStat.TYPE);
       repository.deleteAll(MainAccountStat.TYPE);
-      BudgetStatComputer budgetStatComputer = new BudgetStatComputer(repository);
-      if (budgetStatComputer.currentMonth == null) {
+      MainAccountStateBuilder mainAccountStateBuilder = new MainAccountStateBuilder(repository);
+      if (mainAccountStateBuilder.currentMonth == null) {
         return;
       }
-      Set<Integer> wantedAccount = repository.getAll(Account.TYPE,
-                                                     GlobMatchers.and(
-                                                       GlobMatchers.fieldEquals(Account.ACCOUNT_TYPE, AccountType.MAIN.getId()),
-                                                       GlobMatchers.not(GlobMatchers.fieldEquals(Account.CARD_TYPE, AccountCardType.DEFERRED.getId()))))
-        .getValueSet(Account.ID);
-      Glob[] transactions = Transaction
-        .getSortedByPositionDateTransactions(repository,
-                                             GlobMatchers.contained(Transaction.ACCOUNT, wantedAccount),
-                                             TransactionComparator.ASCENDING_ACCOUNT);
-
-      for (Glob transaction : transactions) {
-        budgetStatComputer.run(transaction);
-      }
-      if (transactions.length != 0) {
-        budgetStatComputer.minPosition.newMonth(transactions[transactions.length - 1].get(Transaction.POSITION_MONTH));
-      }
-      budgetStatComputer.complete();
+      computeStat(repository, Account.MAIN_SUMMARY_ACCOUNT_ID, AccountType.MAIN);
+      computeStat(repository, Account.SAVINGS_SUMMARY_ACCOUNT_ID, AccountType.SAVINGS);
+      mainAccountStateBuilder.complete();
     }
     finally {
       repository.completeChangeSet();
     }
   }
 
+  private boolean computeStat(GlobRepository repository, int summaryAccountId, AccountType accountType) {
+    BudgetStatComputer budgetStatComputer = new BudgetStatComputer(repository, summaryAccountId);
+    Set<Integer> wantedAccount =
+      repository.getAll(Account.TYPE,
+                        and(fieldEquals(Account.ACCOUNT_TYPE, accountType.getId()),
+                            not(fieldEquals(Account.CARD_TYPE, AccountCardType.DEFERRED.getId()))))
+        .getValueSet(Account.ID);
+    Glob[] transactions = Transaction
+      .getSortedByPositionDateTransactions(repository,
+                                           GlobMatchers.contained(Transaction.ACCOUNT, wantedAccount),
+                                           TransactionComparator.ASCENDING_ACCOUNT);
+
+    for (Glob transaction : transactions) {
+      budgetStatComputer.run(transaction);
+    }
+    if (transactions.length != 0) {
+      budgetStatComputer.minPosition.newMonth(transactions[transactions.length - 1].get(Transaction.POSITION_MONTH));
+    }
+    return false;
+  }
+
   private class BudgetStatComputer {
-    private Map<BudgetArea, BudgetAreaAmounts> budgetAreaAmounts = new HashMap<BudgetArea, BudgetAreaAmounts>();
     private int month;
-    private Glob currentMonth;
     private MinPosition minPosition;
 
-    private GlobRepository repository;
-
-    private BudgetStatComputer(GlobRepository repository) {
-      this.repository = repository;
-      currentMonth = repository.find(CurrentMonth.KEY);
-      minPosition = new MinPosition(this.repository);
+    private BudgetStatComputer(GlobRepository repository, final int summaryAccountId) {
+      minPosition = new MinPosition(repository, summaryAccountId);
     }
 
     public void run(Glob transaction) {
@@ -94,9 +96,6 @@ public class BudgetStatTrigger implements ChangeSetListener {
       }
 
       Integer monthId = transaction.get(Transaction.POSITION_MONTH);
-      if (monthId < month) {
-        System.out.println("BudgetStatComputer.run");
-      }
       if (month != 0 && month != monthId) {
         while (month < monthId) {
           minPosition.newMonth(month++);
@@ -111,6 +110,18 @@ public class BudgetStatTrigger implements ChangeSetListener {
                         total, transaction.get(Transaction.PLANNED),
                         transaction.get(Transaction.TRANSACTION_TYPE) == TransactionType.CLOSE_ACCOUNT_EVENT.getId());
       }
+    }
+
+  }
+
+  static class MainAccountStateBuilder {
+    private Map<BudgetArea, BudgetAreaAmounts> budgetAreaAmounts = new HashMap<BudgetArea, BudgetAreaAmounts>();
+    private GlobRepository repository;
+    private Glob currentMonth;
+
+    MainAccountStateBuilder(GlobRepository repository) {
+      this.repository = repository;
+      currentMonth = repository.find(CurrentMonth.KEY);
     }
 
     private void complete() {
@@ -249,10 +260,9 @@ public class BudgetStatTrigger implements ChangeSetListener {
 
       return values.get();
     }
-
   }
 
-  private class BudgetAreaAmounts {
+  static class BudgetAreaAmounts {
     private BudgetArea budgetArea;
     private double amount;
     private double plannedAmount;
@@ -393,9 +403,11 @@ public class BudgetStatTrigger implements ChangeSetListener {
     final GlobRepository repository;
     MinAccountPosition minAccountPosition = null;
     Map<Integer, MinAccountPosition> accountToMin = new HashMap<Integer, MinAccountPosition>();
+    private int summaryAccountId;
 
-    MinPosition(GlobRepository repository) {
+    MinPosition(GlobRepository repository, final int summaryAccountId) {
       this.repository = repository;
+      this.summaryAccountId = summaryAccountId;
     }
 
     void newMonth(int month) {
@@ -454,7 +466,7 @@ public class BudgetStatTrigger implements ChangeSetListener {
       }
       if (min != Double.POSITIVE_INFINITY) {
         repository.create(MainAccountStat.TYPE,
-                          value(MainAccountStat.ACCOUNT, Account.MAIN_SUMMARY_ACCOUNT_ID),
+                          value(MainAccountStat.ACCOUNT, summaryAccountId),
                           value(MainAccountStat.MONTH, month),
                           value(MainAccountStat.MIN_ACCOUNT, currentMinAccount),
                           value(MainAccountStat.MIN_POSITION, min),

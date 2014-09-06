@@ -52,7 +52,7 @@ public class DetailsTip implements BalloonTipHolder, Disposable {
 
   public void show() {
     balloonTip = new BalloonTip(component,
-                                text,
+                                new JLabel(text),
                                 balloonStyle,
                                 BalloonTip.Orientation.LEFT_ABOVE,
                                 anchor.getLocation(),

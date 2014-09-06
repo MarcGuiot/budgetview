@@ -9,9 +9,6 @@ import org.globsframework.utils.Utils;
 import org.globsframework.utils.exceptions.ItemNotFound;
 import org.globsframework.utils.exceptions.UnexpectedApplicationState;
 
-import java.util.Iterator;
-import java.util.Map;
-
 class DefaultDeltaGlob extends AbstractFieldValuesWithPrevious implements DeltaGlob {
 
   private Key key;

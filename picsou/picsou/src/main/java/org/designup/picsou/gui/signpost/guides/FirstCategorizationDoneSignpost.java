@@ -1,7 +1,7 @@
 package org.designup.picsou.gui.signpost.guides;
 
 import net.java.balloontip.BalloonTip;
-import net.java.balloontip.TablecellBalloonTip;
+import net.java.balloontip.TableCellBalloonTip;
 import org.designup.picsou.gui.signpost.PersistentSignpost;
 import org.designup.picsou.gui.utils.Matchers;
 import org.designup.picsou.model.SignpostSectionType;
@@ -92,7 +92,7 @@ public class FirstCategorizationDoneSignpost extends PersistentSignpost implemen
     if (selectedRow == -1) {
       selectedRow = 0;
     }
-    return new TablecellBalloonTip(table, text,
+    return new TableCellBalloonTip(table, new JLabel(text),
                                    selectedRow, 1,
                                    balloonTipStyle,
                                    BalloonTip.Orientation.RIGHT_ABOVE,

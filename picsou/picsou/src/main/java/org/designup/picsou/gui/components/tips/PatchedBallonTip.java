@@ -20,12 +20,13 @@ public class PatchedBallonTip extends BalloonTip {
 
   public PatchedBallonTip(JComponent attachedComponent, String text, BalloonTipStyle style,
                           Orientation orientation, AttachLocation attachLocation,
-                          int horizontalOffset, int verticalOffset, boolean useCloseButton) {
-    super(attachedComponent, text, style, orientation, attachLocation, horizontalOffset, verticalOffset, useCloseButton);
+                          int horizontalOffset,
+                          int verticalOffset, boolean useCloseButton) {
+    super(attachedComponent, new JLabel(text), style, orientation, attachLocation, horizontalOffset, verticalOffset, useCloseButton);
   }
 
   public PatchedBallonTip(JComponent attachedComponent, String text, BalloonTipStyle style, BalloonTipPositioner positioner, boolean useCloseButton) {
-    super(attachedComponent, text, style, positioner, useCloseButton);
+    super(attachedComponent, new JLabel(text), style, positioner, getDefaultCloseButton());
   }
 
   public void closeBalloon() {

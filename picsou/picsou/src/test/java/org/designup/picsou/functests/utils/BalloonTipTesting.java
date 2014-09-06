@@ -14,6 +14,7 @@ import org.uispec4j.finder.ComponentFinder;
 import org.uispec4j.finder.ComponentMatchers;
 import org.uispec4j.utils.Utils;
 
+import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
 
@@ -41,7 +42,7 @@ public class BalloonTipTesting {
   }
 
   private static String getText(BalloonTip balloon) {
-    return balloon.getText();
+    return ((JLabel)balloon.getContents()).getText();
   }
 
   private static BalloonTip getBalloonTip(Component enclosingSwingPanel,
@@ -123,7 +124,7 @@ public class BalloonTipTesting {
       java.util.List<String> labels = new ArrayList<String>();
       for (Component component : tips) {
         BalloonTip tip = (BalloonTip)component;
-        labels.add(tip.getText());
+        labels.add(((JLabel)tip.getContents()).getText());
       }
       Assert.fail(tips.length + " tips shown : " + labels);
     }
