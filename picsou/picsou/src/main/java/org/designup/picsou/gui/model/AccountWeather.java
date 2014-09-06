@@ -9,8 +9,10 @@ import org.globsframework.metamodel.fields.DoubleField;
 import org.globsframework.metamodel.fields.IntegerField;
 import org.globsframework.metamodel.fields.LinkField;
 import org.globsframework.metamodel.utils.GlobTypeLoader;
+import org.globsframework.model.Glob;
+import org.globsframework.model.GlobRepository;
 
-public class MainAccountWeather {
+public class AccountWeather {
   public static GlobType TYPE;
 
   @Key
@@ -26,6 +28,10 @@ public class MainAccountWeather {
   public static DoubleField FUTURE_MIN;
 
   static {
-    GlobTypeLoader.init(MainAccountWeather.class);
+    GlobTypeLoader.init(AccountWeather.class);
+  }
+
+  public static boolean isForMainAccount(Glob accountWeather, GlobRepository repository) {
+    return Account.isMain(repository.findLinkTarget(accountWeather, ACCOUNT));
   }
 }

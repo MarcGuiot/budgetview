@@ -1,7 +1,7 @@
 package org.designup.picsou.gui.time.tooltip;
 
 import com.budgetview.shared.utils.AmountFormat;
-import org.designup.picsou.gui.model.MainAccountStat;
+import org.designup.picsou.gui.model.AccountStat;
 import org.designup.picsou.gui.time.TimeViewPanel;
 import org.designup.picsou.gui.time.utils.TimeViewColors;
 import org.designup.picsou.model.Account;
@@ -35,19 +35,19 @@ public class TimeViewTooltipHandler implements TimeViewMouseHandler {
       return;
     }
 
-    Glob budgetStat = repository.find(Key.create(MainAccountStat.MONTH, monthId,
-                                                 MainAccountStat.ACCOUNT, Account.MAIN_SUMMARY_ACCOUNT_ID));
+    Glob budgetStat = repository.find(Key.create(AccountStat.MONTH, monthId,
+                                                 AccountStat.ACCOUNT, Account.MAIN_SUMMARY_ACCOUNT_ID));
     if (budgetStat == null) {
       return;
     }
-    Glob target = repository.findLinkTarget(budgetStat, MainAccountStat.MIN_ACCOUNT);
+    Glob target = repository.findLinkTarget(budgetStat, AccountStat.MIN_ACCOUNT);
     String accountName = target.get(Account.NAME);
 
-    if (budgetStat.get(MainAccountStat.ACCOUNT_COUNT) == 1){
+    if (budgetStat.get(AccountStat.ACCOUNT_COUNT) == 1){
       panel.setToolTipText(
         Lang.get("timeView.tooltip.month.standard.one.account",
                  month,
-                 AmountFormat.toStandardValueString(budgetStat.get(MainAccountStat.SUMMARY_POSITION_AT_MIN)),
+                 AmountFormat.toStandardValueString(budgetStat.get(AccountStat.SUMMARY_POSITION_AT_MIN)),
                  Colors.toString(colors.getAmountTextColor(minPosition, Color.BLACK))));
     }
     else {
@@ -57,7 +57,7 @@ public class TimeViewTooltipHandler implements TimeViewMouseHandler {
                  AmountFormat.toStandardValueString(minPosition),
                  Colors.toString(colors.getAmountTextColor(minPosition, Color.BLACK)),
                  accountName,
-                 AmountFormat.toStandardValueString(budgetStat.get(MainAccountStat.SUMMARY_POSITION_AT_MIN))
+                 AmountFormat.toStandardValueString(budgetStat.get(AccountStat.SUMMARY_POSITION_AT_MIN))
         ));
     }
   }

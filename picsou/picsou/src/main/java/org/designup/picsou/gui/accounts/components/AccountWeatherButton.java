@@ -1,7 +1,7 @@
 package org.designup.picsou.gui.accounts.components;
 
 import org.designup.picsou.gui.components.tips.DetailsTip;
-import org.designup.picsou.gui.model.MainAccountWeather;
+import org.designup.picsou.gui.model.AccountWeather;
 import org.designup.picsou.gui.model.WeatherType;
 import org.designup.picsou.gui.utils.Gui;
 import org.designup.picsou.model.Account;
@@ -45,7 +45,7 @@ public class AccountWeatherButton implements Disposable {
   private AccountWeatherButton(Key accountKey, final GlobRepository repository, Directory directory) {
     this.repository = repository;
     this.directory = directory;
-    this.accountWeatherKey = Key.create(MainAccountWeather.TYPE, accountKey.get(Account.ID));
+    this.accountWeatherKey = Key.create(AccountWeather.TYPE, accountKey.get(Account.ID));
     this.updater = new KeyChangeListener(accountWeatherKey) {
       public void update() {
         Glob weather = repository.find(accountWeatherKey);
@@ -54,7 +54,7 @@ public class AccountWeatherButton implements Disposable {
           weatherButton.setToolTipText(null);
         }
         else {
-          WeatherType weatherType = WeatherType.get(weather.get(MainAccountWeather.WEATHER));
+          WeatherType weatherType = WeatherType.get(weather.get(AccountWeather.WEATHER));
           weatherButton.setIcon(getIcon(weatherType));
           weatherButton.setToolTipText(getTooltipText(weatherType));
         }

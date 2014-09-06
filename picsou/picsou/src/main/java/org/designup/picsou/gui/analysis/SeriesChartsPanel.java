@@ -63,7 +63,7 @@ public class SeriesChartsPanel implements GlobSelectionListener {
   private static final Set<GlobType> USED_TYPES =
     new HashSet<GlobType>(Arrays.asList(BudgetStat.TYPE, Series.TYPE, SubSeries.TYPE,
                                         SavingsBudgetStat.TYPE, PeriodSeriesStat.TYPE, SeriesStat.TYPE, SubSeriesStat.TYPE,
-                                        MainAccountStat.TYPE));
+                                        AccountStat.TYPE));
   private StackToggleController stackToggle;
 
   public SeriesChartsPanel(HistoChartRange range,

@@ -2,8 +2,6 @@ package org.designup.picsou.functests.budget;
 
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
-import org.designup.picsou.gui.model.MainAccountStat;
-import org.globsframework.model.format.GlobPrinter;
 
 public class BudgetSummaryViewTest extends LoggedInFunctionalTestCase {
 

@@ -1,8 +1,8 @@
 package org.designup.picsou.gui.analysis;
 
 import org.designup.picsou.gui.budget.summary.BudgetAreaSummaryComputer;
+import org.designup.picsou.gui.model.AccountStat;
 import org.designup.picsou.gui.model.BudgetStat;
-import org.designup.picsou.gui.model.MainAccountStat;
 import org.designup.picsou.gui.model.SavingsBudgetStat;
 import org.designup.picsou.gui.model.SeriesStat;
 import org.designup.picsou.gui.series.view.SeriesWrapper;
@@ -138,10 +138,10 @@ public class SeriesChartsColors implements ColorChangeListener {
 
   private Color getSummaryForeground(Integer wrapperId, Integer referenceMonthId) {
     if (SeriesWrapper.MAIN_POSITION_SUMMARY_ID.equals(wrapperId)) {
-      Glob budgetStat = parentRepository.find(Key.create(MainAccountStat.ACCOUNT, Account.MAIN_SUMMARY_ACCOUNT_ID,
-                                                         MainAccountStat.MONTH, referenceMonthId));
+      Glob budgetStat = parentRepository.find(Key.create(AccountStat.ACCOUNT, Account.MAIN_SUMMARY_ACCOUNT_ID,
+                                                         AccountStat.MONTH, referenceMonthId));
       if (budgetStat != null) {
-        Double amount = budgetStat.get(MainAccountStat.END_POSITION, 0.);
+        Double amount = budgetStat.get(AccountStat.END_POSITION, 0.);
         return amountColors.getTextColor(amount, summaryText);
       }
     }

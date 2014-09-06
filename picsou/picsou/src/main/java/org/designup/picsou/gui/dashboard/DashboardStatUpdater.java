@@ -1,7 +1,7 @@
 package org.designup.picsou.gui.dashboard;
 
+import org.designup.picsou.gui.model.AccountWeather;
 import org.designup.picsou.gui.model.DashboardStat;
-import org.designup.picsou.gui.model.MainAccountWeather;
 import org.designup.picsou.gui.model.WeatherType;
 import org.designup.picsou.gui.time.TimeService;
 import org.designup.picsou.model.*;
@@ -32,7 +32,7 @@ public class DashboardStatUpdater implements ChangeSetListener {
   }
 
   public void globsChanged(ChangeSet changeSet, GlobRepository repository) {
-    if (changeSet.containsChanges(MainAccountWeather.TYPE) || changeSet.containsChanges(CurrentMonth.TYPE)) {
+    if (changeSet.containsChanges(AccountWeather.TYPE) || changeSet.containsChanges(CurrentMonth.TYPE)) {
       updateWeather(repository);
     }
     if (changeSet.containsChanges(Account.TYPE)) {
@@ -47,7 +47,7 @@ public class DashboardStatUpdater implements ChangeSetListener {
   }
 
   public void globsReset(GlobRepository repository, Set<GlobType> changedTypes) {
-    if (changedTypes.contains(MainAccountWeather.TYPE) || changedTypes.contains(CurrentMonth.TYPE) ||
+    if (changedTypes.contains(AccountWeather.TYPE) || changedTypes.contains(CurrentMonth.TYPE) ||
         changedTypes.contains(Account.TYPE) || changedTypes.contains(TransactionImport.TYPE) ||
         changedTypes.contains(Transaction.TYPE)) {
       updateAll(repository);
@@ -81,15 +81,17 @@ public class DashboardStatUpdater implements ChangeSetListener {
     WeatherType summaryWeather = WeatherType.SUNNY;
     double summaryMin = 0;
     Integer lastMonth = Integer.MAX_VALUE;
-    for (Glob accountWeather : repository.getAll(MainAccountWeather.TYPE)) {
-      Double min = accountWeather.get(MainAccountWeather.FUTURE_MIN);
-      if (!Double.isNaN(min)) {
-        summaryMin += min;
+    for (Glob accountWeather : repository.getAll(AccountWeather.TYPE)) {
+      if (AccountWeather.isForMainAccount(accountWeather, repository)) {
+        Double min = accountWeather.get(AccountWeather.FUTURE_MIN);
+        if (!Double.isNaN(min)) {
+          summaryMin += min;
+        }
       }
-      WeatherType weather = WeatherType.get(accountWeather.get(MainAccountWeather.WEATHER));
+      WeatherType weather = WeatherType.get(accountWeather.get(AccountWeather.WEATHER));
       summaryWeather = weather.worseThan(summaryWeather) ? weather : summaryWeather;
-      if (accountWeather.get(MainAccountWeather.LAST_FORECAST_MONTH) < lastMonth) {
-        lastMonth = accountWeather.get(MainAccountWeather.LAST_FORECAST_MONTH);
+      if (accountWeather.get(AccountWeather.LAST_FORECAST_MONTH) < lastMonth) {
+        lastMonth = accountWeather.get(AccountWeather.LAST_FORECAST_MONTH);
       }
     }
     if (Utils.equal(lastMonth, Integer.MAX_VALUE)) {

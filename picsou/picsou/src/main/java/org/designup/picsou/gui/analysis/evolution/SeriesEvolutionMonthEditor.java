@@ -129,10 +129,10 @@ public class SeriesEvolutionMonthEditor extends SeriesEvolutionEditor {
     }
 
     if (id.equals(SeriesWrapper.MAIN_POSITION_SUMMARY_ID)) {
-      Glob budgetStat = repository.find(Key.create(MainAccountStat.ACCOUNT, Account.MAIN_SUMMARY_ACCOUNT_ID,
-                                                   MainAccountStat.MONTH, referenceMonthId));
+      Glob budgetStat = repository.find(Key.create(AccountStat.ACCOUNT, Account.MAIN_SUMMARY_ACCOUNT_ID,
+                                                   AccountStat.MONTH, referenceMonthId));
 //      Glob budgetStat = repository.find(Key.create(BudgetStat.TYPE, referenceMonthId));
-      return format(budgetStat, MainAccountStat.END_POSITION, null);
+      return format(budgetStat, AccountStat.END_POSITION, null);
     }
 
     if (id.equals(SeriesWrapper.SAVINGS_POSITION_SUMMARY_ID)) {
