@@ -102,11 +102,7 @@ public class DetailsTip implements BalloonTipHolder, Disposable {
             return;
           }
           if ((mouseEvent.getComponent() == component) && !clickThrough) {
-            System.out.println("DetailsTip.eventDispatched: consume");
             mouseEvent.consume();
-          }
-          else {
-            System.out.println("DetailsTip.eventDispatched: don't consume");
           }
           dispose();
         }

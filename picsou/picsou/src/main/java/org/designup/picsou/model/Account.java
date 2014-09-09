@@ -235,6 +235,32 @@ public class Account {
     };
   }
 
+  public static GlobMatcher activeUserCreatedAccounts(final SortedSet<Integer> monthIds) {
+    if (monthIds.isEmpty()) {
+      return GlobMatchers.NONE;
+    }
+    return new GlobMatcher() {
+      public boolean matches(Glob account, GlobRepository repository) {
+        if (!Account.isUserCreatedAccount(account)) {
+          return false;
+        }
+        if (account.get(Account.CLOSED_DATE) != null) {
+          Integer endMonth = Month.getMonthId(account.get(Account.CLOSED_DATE));
+          if (endMonth < monthIds.first()) {
+            return false;
+          }
+        }
+        if (account.get(Account.OPEN_DATE) != null) {
+          Integer openMonth = Month.getMonthId(account.get(Account.OPEN_DATE));
+          if (openMonth > monthIds.last()) {
+            return false;
+          }
+        }
+        return true;
+      }
+    };
+  }
+
   public static GlobMatcher activeUserCreatedMainAccounts(final SortedSet<Integer> monthIds) {
     if (monthIds.isEmpty()) {
       return GlobMatchers.NONE;

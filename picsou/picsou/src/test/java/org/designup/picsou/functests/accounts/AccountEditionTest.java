@@ -276,13 +276,13 @@ public class AccountEditionTest extends LoggedInFunctionalTestCase {
     mainAccounts.checkEndOfMonthPosition("Main", 950);
     mainAccounts.checkReferencePosition(2000, "2008/10/01");
     mainAccounts
-      .checkContent("| ok | Main        | 1000.00 on 2008/10/01 |\n" +
-                    "| ok | Closed main | 1000.00 on 2008/10/01 |");
+      .checkContent("| Main        | 1000.00 on 2008/10/01 | sunny |\n" +
+                    "| Closed main | 1000.00 on 2008/10/01 | sunny |");
 
     timeline.selectMonth("2009/01");
     mainAccounts.checkAccounts("Main");
     mainAccounts.checkEndOfMonthPosition("Main", 800);
-    accounts.checkContent("| ok | Main | 1000.00 on 2008/10/01 |");
+    accounts.checkContent("| Main | 1000.00 on 2008/10/01 | sunny |");
   }
 
   public void testBeginEndInThePastWithTransactions() throws Exception {
@@ -324,8 +324,8 @@ public class AccountEditionTest extends LoggedInFunctionalTestCase {
     mainAccounts.checkEndOfMonthPosition(OfxBuilder.DEFAULT_ACCOUNT_NAME, 200);
 
     accounts.checkContent(
-      "| ok  | Account n. 00001123 | 0.00 on 2008/08/15 |\n" +
-      "| nok | Account n. 0000100  | 0.00 on 2008/07/01 |");
+      "| Account n. 00001123 | 0.00 on 2008/08/15 | sunny |\n" +
+      "| Account n. 0000100  | 0.00 on 2008/07/01 | -     |");
     mainAccounts.getChart("Account n. 00001123")
       .checkValue(200806, 1, 300.00)
       .checkValue(200806, 15, 200.00)
@@ -340,8 +340,8 @@ public class AccountEditionTest extends LoggedInFunctionalTestCase {
     mainAccounts.select(OfxBuilder.DEFAULT_ACCOUNT_NAME);
     mainAccounts.checkEndOfMonthPosition(OfxBuilder.DEFAULT_ACCOUNT_NAME, 100.00);
     accounts.checkContent(
-      "| ok | Account n. 00001123 | 0.00 on 2008/08/15 |\n" +
-      "| ok | Account n. 0000100  | 0.00 on 2008/07/01 |");
+      "| Account n. 00001123 | 0.00 on 2008/08/15 | sunny |\n" +
+      "| Account n. 0000100  | 0.00 on 2008/07/01 | -     |");
     mainAccounts.getChart("Account n. 00001123")
       .checkValue(200807, 1, 200.00)
       .checkValue(200807, 15, 100.00)
@@ -353,7 +353,7 @@ public class AccountEditionTest extends LoggedInFunctionalTestCase {
     timeline.selectMonth("2008/08");
     mainAccounts.checkAccounts(OfxBuilder.DEFAULT_ACCOUNT_NAME);
     accounts.checkContent(
-      "| ok | Account n. 00001123 | 0.00 on 2008/08/15 |");
+      "| Account n. 00001123 | 0.00 on 2008/08/15 | sunny |");
     mainAccounts.getChart("Account n. 00001123")
       .checkValue(200808, 1, 100.00)
       .checkValue(200808, 15, 0.00);

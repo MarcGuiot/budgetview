@@ -3,7 +3,7 @@
   <styleImport file="/layout/commonStyles.splits"/>
   <styles>
     <style selector="button.widget"
-           opaque="false" borderPainted="false" cursor="hand" font="LatoLight,plain,44" border="empty"
+           opaque="false" ui="basicButtonUI" borderPainted="false" cursor="hand" font="LatoLight,plain,44" border="empty"
            fill="none" anchor="center" weightY="0.1"/>
     <style selector="htmlEditorPane.label" font="LatoLight,plain,14" weightY="1" fill="horizontal" anchor="center"/>
 
@@ -17,7 +17,7 @@
 
   <column name="dashboardView">
 
-    <column weightY="1" marginTop="20" marginBottom="30">
+    <column weightY="1" marginTop="20" marginBottom="50">
       <filler fill="vertical"/>
       <grid>
         <button ref="importWidget" styleClass="widget" gridPos="(0,0)"/>

@@ -1,7 +1,7 @@
 package org.designup.picsou.gui.time;
 
+import org.designup.picsou.gui.model.AccountStat;
 import org.designup.picsou.gui.model.BudgetStat;
-import org.designup.picsou.gui.model.MainAccountStat;
 import org.designup.picsou.gui.time.mousestates.MouseState;
 import org.designup.picsou.gui.time.mousestates.ReleasedMouseState;
 import org.designup.picsou.gui.time.selectable.Selectable;
@@ -163,12 +163,12 @@ public class TimeViewPanel extends JPanel implements MouseListener, MouseMotionL
   }
 
   public Double getMinPosition(int monthId) {
-    Glob balance = repository.find(Key.create(MainAccountStat.MONTH, monthId,
-                                              MainAccountStat.ACCOUNT, Account.MAIN_SUMMARY_ACCOUNT_ID));
+    Glob balance = repository.find(Key.create(AccountStat.MONTH, monthId,
+                                              AccountStat.ACCOUNT, Account.MAIN_SUMMARY_ACCOUNT_ID));
     if (balance == null) {
       return 0.0;
     }
-    return balance.get(MainAccountStat.MIN_POSITION, 0.);
+    return balance.get(AccountStat.MIN_POSITION, 0.);
   }
 
   public void mouseWheelMoved(MouseWheelEvent e) {

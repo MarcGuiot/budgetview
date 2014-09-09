@@ -1,8 +1,8 @@
 package org.designup.picsou.triggers;
 
 import com.budgetview.shared.utils.Amounts;
+import org.designup.picsou.gui.model.AccountStat;
 import org.designup.picsou.gui.model.BudgetStat;
-import org.designup.picsou.gui.model.MainAccountStat;
 import org.designup.picsou.gui.model.SeriesStat;
 import org.designup.picsou.model.*;
 import org.designup.picsou.utils.TransactionComparator;
@@ -18,6 +18,7 @@ import java.util.Map;
 import java.util.Set;
 
 import static org.globsframework.model.FieldValue.value;
+import static org.globsframework.model.utils.GlobMatchers.*;
 
 
 /*
@@ -45,8 +46,8 @@ public class BudgetStatTrigger implements ChangeSetListener {
     repository.startChangeSet();
     try {
       repository.deleteAll(BudgetStat.TYPE);
-      repository.deleteAll(MainAccountStat.TYPE);
-      MainAccountStateBuilder mainAccountStateBuilder = new MainAccountStateBuilder(repository);
+      repository.deleteAll(AccountStat.TYPE);
+      AccountStatBuilder mainAccountStateBuilder = new AccountStatBuilder(repository);
       if (mainAccountStateBuilder.currentMonth == null) {
         return;
       }
@@ -61,12 +62,11 @@ public class BudgetStatTrigger implements ChangeSetListener {
 
   private boolean computeStat(GlobRepository repository, int summaryAccountId, AccountType accountType) {
     BudgetStatComputer budgetStatComputer = new BudgetStatComputer(repository, summaryAccountId);
-    Set<Integer> wantedAccount = repository.getAll(Account.TYPE,
-                                                   GlobMatchers.and(
-                                                     GlobMatchers.fieldEquals(Account.ACCOUNT_TYPE, accountType.getId()),
-                                                     GlobMatchers.not(GlobMatchers.fieldEquals(Account.CARD_TYPE, AccountCardType.DEFERRED.getId())))
-    )
-      .getValueSet(Account.ID);
+    Set<Integer> wantedAccount =
+      repository.getAll(Account.TYPE,
+                        and(fieldEquals(Account.ACCOUNT_TYPE, accountType.getId()),
+                            not(fieldEquals(Account.CARD_TYPE, AccountCardType.DEFERRED.getId()))))
+        .getValueSet(Account.ID);
     Glob[] transactions = Transaction
       .getSortedByPositionDateTransactions(repository,
                                            GlobMatchers.contained(Transaction.ACCOUNT, wantedAccount),
@@ -85,7 +85,6 @@ public class BudgetStatTrigger implements ChangeSetListener {
     private int month;
     private MinPosition minPosition;
 
-
     private BudgetStatComputer(GlobRepository repository, final int summaryAccountId) {
       minPosition = new MinPosition(repository, summaryAccountId);
     }
@@ -99,7 +98,8 @@ public class BudgetStatTrigger implements ChangeSetListener {
       Integer monthId = transaction.get(Transaction.POSITION_MONTH);
       if (month != 0 && month != monthId) {
         while (month < monthId) {
-          minPosition.newMonth(month++);
+          minPosition.newMonth(month);
+          month = Month.next(month);
         }
       }
       month = monthId;
@@ -115,13 +115,12 @@ public class BudgetStatTrigger implements ChangeSetListener {
 
   }
 
-
-  static class MainAccountStateBuilder {
+  static class AccountStatBuilder {
     private Map<BudgetArea, BudgetAreaAmounts> budgetAreaAmounts = new HashMap<BudgetArea, BudgetAreaAmounts>();
     private GlobRepository repository;
     private Glob currentMonth;
 
-    MainAccountStateBuilder(GlobRepository repository) {
+    AccountStatBuilder(GlobRepository repository) {
       this.repository = repository;
       currentMonth = repository.find(CurrentMonth.KEY);
     }
@@ -423,15 +422,15 @@ public class BudgetStatTrigger implements ChangeSetListener {
 
       for (Map.Entry<Integer, MinAccountPosition> entry : accountToMin.entrySet()) {
         MinAccountPosition currentAccount = entry.getValue();
-        repository.create(MainAccountStat.TYPE,
-                          value(MainAccountStat.MONTH, month),
-                          value(MainAccountStat.ACCOUNT, currentAccount.account),
-                          value(MainAccountStat.BEGIN_POSITION, currentAccount.begin),
-                          value(MainAccountStat.MIN_POSITION, currentAccount.min),
-                          value(MainAccountStat.FUTURE_MIN_POSITION, currentAccount.minFuture),
-                          value(MainAccountStat.END_POSITION, currentAccount.end),
-                          value(MainAccountStat.SUMMARY_POSITION_AT_FUTURE_MIN, currentAccount.futureTotal),
-                          value(MainAccountStat.SUMMARY_POSITION_AT_MIN, currentAccount.total));
+        repository.create(AccountStat.TYPE,
+                          value(AccountStat.MONTH, month),
+                          value(AccountStat.ACCOUNT, currentAccount.account),
+                          value(AccountStat.BEGIN_POSITION, currentAccount.begin),
+                          value(AccountStat.MIN_POSITION, currentAccount.min),
+                          value(AccountStat.FUTURE_MIN_POSITION, currentAccount.minFuture),
+                          value(AccountStat.END_POSITION, currentAccount.end),
+                          value(AccountStat.SUMMARY_POSITION_AT_FUTURE_MIN, currentAccount.futureTotal),
+                          value(AccountStat.SUMMARY_POSITION_AT_MIN, currentAccount.total));
         double minToUse;
         double totalToUse;
         if (!Double.isNaN(currentAccount.min)) {
@@ -467,15 +466,15 @@ public class BudgetStatTrigger implements ChangeSetListener {
         currentMinAccount = minAccount == null ? minAccountPosition.account : currentMinAccount;
       }
       if (min != Double.POSITIVE_INFINITY) {
-        repository.create(MainAccountStat.TYPE,
-                          value(MainAccountStat.ACCOUNT, summaryAccountId),
-                          value(MainAccountStat.MONTH, month),
-                          value(MainAccountStat.MIN_ACCOUNT, currentMinAccount),
-                          value(MainAccountStat.MIN_POSITION, min),
-                          value(MainAccountStat.BEGIN_POSITION, minAccountPosition.begin),
-                          value(MainAccountStat.END_POSITION, minAccountPosition.end),
-                          value(MainAccountStat.ACCOUNT_COUNT, accountToMin.size()),
-                          value(MainAccountStat.SUMMARY_POSITION_AT_MIN, total));
+        repository.create(AccountStat.TYPE,
+                          value(AccountStat.ACCOUNT, summaryAccountId),
+                          value(AccountStat.MONTH, month),
+                          value(AccountStat.MIN_ACCOUNT, currentMinAccount),
+                          value(AccountStat.MIN_POSITION, min),
+                          value(AccountStat.BEGIN_POSITION, minAccountPosition.begin),
+                          value(AccountStat.END_POSITION, minAccountPosition.end),
+                          value(AccountStat.ACCOUNT_COUNT, accountToMin.size()),
+                          value(AccountStat.SUMMARY_POSITION_AT_MIN, total));
       }
       for (Iterator<Map.Entry<Integer, MinAccountPosition>> iterator = accountToMin.entrySet().iterator(); iterator.hasNext(); ) {
         Map.Entry<Integer, MinAccountPosition> next = iterator.next();

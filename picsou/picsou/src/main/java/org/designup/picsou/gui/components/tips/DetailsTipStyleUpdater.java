@@ -27,8 +27,8 @@ public class DetailsTipStyleUpdater implements Disposable {
 
     colorListener = new ColorChangeListener() {
       public void colorsChanged(ColorLocator colorLocator) {
-        fillColor = colorLocator.get("detailsTip.border");
-        borderColor = colorLocator.get("detailsTip.bg");
+        fillColor = colorLocator.get("detailsTip.bg");
+        borderColor = colorLocator.get("detailsTip.border");
           tipHolder.setStyle(createStyle());
       }
     };

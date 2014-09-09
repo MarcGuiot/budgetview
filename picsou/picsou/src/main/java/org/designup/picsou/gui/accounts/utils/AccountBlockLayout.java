@@ -11,7 +11,7 @@ public class AccountBlockLayout implements LayoutManager {
   private Component accountPosition;
   private Component accountUpdateDate;
   private Component selectAccount;
-  private Component accountStatus;
+  private Component accountWeather;
   private Component positionsChart;
 
   private static final int HORIZONTAL_MARGIN = 5;
@@ -47,7 +47,7 @@ public class AccountBlockLayout implements LayoutManager {
 
   public int getMinWidth() {
     return editAccount.getPreferredSize().width +
-           accountStatus.getPreferredSize().width +
+           accountWeather.getPreferredSize().width +
            accountPosition.getPreferredSize().width +
            selectAccount.getPreferredSize().width +
            4 * HORIZONTAL_MARGIN;
@@ -67,8 +67,8 @@ public class AccountBlockLayout implements LayoutManager {
       else if (component.getName().equals("selectAccount")) {
         selectAccount = component;
       }
-      else if (component.getName().equals("accountStatus")) {
-        accountStatus = component;
+      else if (component.getName().equals("accountWeather")) {
+        accountWeather = component;
       }
       else if (component.getName().equals("accountPositionsChart")) {
         positionsChart = component;
@@ -92,10 +92,6 @@ public class AccountBlockLayout implements LayoutManager {
     int right = width - insets.right;
 
     int firstRowHeight = getFirstRowHeight();
-    int editAccountTop = top + firstRowHeight / 2 - editAccount.getPreferredSize().height / 2;
-    int editAccountWidth = editAccount.getPreferredSize().width;
-    editAccount.setBounds(left, editAccountTop,
-                          editAccountWidth, editAccount.getPreferredSize().height);
 
     int positionRight = right - selectAccount.getPreferredSize().width - HORIZONTAL_MARGIN;
     int positionTop = top + firstRowHeight / 2 - accountPosition.getPreferredSize().height / 2;
@@ -103,23 +99,32 @@ public class AccountBlockLayout implements LayoutManager {
     accountPosition.setBounds(positionLeft, positionTop,
                               accountPosition.getPreferredSize().width, accountPosition.getPreferredSize().height);
 
-    int accountStatusTop = top + firstRowHeight / 2 - accountStatus.getPreferredSize().height / 2;
-    int accountStatusLeft = positionRight - Math.max(accountPosition.getPreferredSize().width, getMaxPositionWidth()) - HORIZONTAL_MARGIN;
-    accountStatus.setBounds(accountStatusLeft, accountStatusTop,
-                            accountStatus.getPreferredSize().width, accountStatus.getPreferredSize().height);
-
     int accountUpdateDateTop = top + firstRowHeight + VERTICAL_MARGIN;
     int accountUpdateDateLeft = positionRight - accountUpdateDate.getPreferredSize().width;
+    int secondRowHeight = accountUpdateDate.getPreferredSize().height;
     accountUpdateDate.setBounds(accountUpdateDateLeft, accountUpdateDateTop,
-                                accountUpdateDate.getPreferredSize().width, accountUpdateDate.getPreferredSize().height);
+                                accountUpdateDate.getPreferredSize().width, secondRowHeight);
+
+    int accountWeatherTop = top + (firstRowHeight + VERTICAL_MARGIN + secondRowHeight) / 2 - accountWeather.getPreferredSize().height / 2;
+    int accountWeatherLeft =
+      positionRight
+      - Math.max(accountPosition.getPreferredSize().width, accountUpdateDate.getPreferredSize().width)
+      - accountWeather.getPreferredSize().width
+      - HORIZONTAL_MARGIN;
+    accountWeather.setBounds(accountWeatherLeft, accountWeatherTop,
+                            accountWeather.getPreferredSize().width, accountWeather.getPreferredSize().height);
 
     int selectAccountLeft = right - selectAccount.getPreferredSize().width;
-    int selectAccountTop = top + (firstRowHeight + VERTICAL_MARGIN + accountUpdateDate.getPreferredSize().height) / 2 - selectAccount.getPreferredSize().height / 2;
+    int selectAccountTop = top + (firstRowHeight + VERTICAL_MARGIN + secondRowHeight) / 2 - selectAccount.getPreferredSize().height / 2;
     selectAccount.setBounds(selectAccountLeft, selectAccountTop,
                             selectAccount.getPreferredSize().width, selectAccount.getPreferredSize().height);
 
+    int editAccountTop = top + firstRowHeight / 2 - editAccount.getPreferredSize().height / 2;
+    int editAccountWidth = editAccount.getPreferredSize().width;
+    editAccount.setBounds(left, editAccountTop, editAccountWidth, editAccount.getPreferredSize().height);
+
     if (positionsChart.isVisible()) {
-      int chartTop = accountUpdateDateTop + accountUpdateDate.getPreferredSize().height + VERTICAL_MARGIN;
+      int chartTop = accountUpdateDateTop + secondRowHeight + VERTICAL_MARGIN;
       positionsChart.setBounds(left + CHART_LEFT_PADDING, chartTop + CHART_PADDING,
                                width - CHART_PADDING - CHART_LEFT_PADDING, CHART_HEIGHT - 2 * CHART_PADDING);
     }
@@ -127,9 +132,5 @@ public class AccountBlockLayout implements LayoutManager {
 
   public int getFirstRowHeight() {
     return editAccount.getSize().height;
-  }
-
-  public int getMaxPositionWidth() {
-    return accountPosition.getFontMetrics(accountPosition.getFont()).stringWidth("1.000.000.00");
   }
 }

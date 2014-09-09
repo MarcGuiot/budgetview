@@ -3,7 +3,7 @@ package org.designup.picsou.gui.accounts;
 import com.budgetview.shared.gui.histochart.HistoChartConfig;
 import org.designup.picsou.gui.accounts.actions.AccountPopupFactory;
 import org.designup.picsou.gui.accounts.chart.MainDailyPositionsChartView;
-import org.designup.picsou.gui.accounts.components.AccountStatusButton;
+import org.designup.picsou.gui.accounts.components.AccountWeatherButton;
 import org.designup.picsou.gui.accounts.position.AccountPositionLabels;
 import org.designup.picsou.gui.card.NavigationService;
 import org.designup.picsou.gui.components.PopupGlobFunctor;
@@ -125,7 +125,7 @@ public abstract class AccountViewPanel {
                                 repository, directory, account.getKey());
       cellBuilder.addDisposable(selectablePanel);
 
-      AccountStatusButton.create(account.getKey(), cellBuilder, "accountStatus", repository, directory);
+      AccountWeatherButton.create(account.getKey(), cellBuilder, "accountWeather", repository, directory);
 
       final AccountPopupFactory popupFactory = new AccountPopupFactory(account, repository, directory);
       popupFactory.setShowGraphToggle(true);

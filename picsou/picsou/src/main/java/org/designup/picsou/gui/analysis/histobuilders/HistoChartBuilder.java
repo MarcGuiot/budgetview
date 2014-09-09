@@ -385,10 +385,10 @@ public class HistoChartBuilder implements Disposable {
 
     for (int monthId : getMonthIdsToShow(selectedMonthId)) {
 //      Glob stat = repository.find(Key.create(BudgetStat.TYPE, monthId));
-      Glob stat = repository.find(Key.create(MainAccountStat.ACCOUNT, Account.MAIN_SUMMARY_ACCOUNT_ID,
-                                                         MainAccountStat.MONTH, monthId));
+      Glob stat = repository.find(Key.create(AccountStat.ACCOUNT, Account.MAIN_SUMMARY_ACCOUNT_ID,
+                                                         AccountStat.MONTH, monthId));
 
-      Double value = stat != null ? stat.get(MainAccountStat.MIN_POSITION, 0.) : 0.0;
+      Double value = stat != null ? stat.get(AccountStat.MIN_POSITION, 0.) : 0.0;
       builder.add(monthId, value, monthId == selectedMonthId);
     }
 

@@ -3,6 +3,7 @@ package org.designup.picsou.functests.checkers;
 import junit.framework.Assert;
 import org.designup.picsou.functests.checkers.components.HistoDailyChecker;
 import org.designup.picsou.functests.checkers.components.PopupButton;
+import org.designup.picsou.gui.accounts.components.AccountWeatherButton;
 import org.designup.picsou.gui.components.charts.histo.HistoSelectionManager;
 import org.designup.picsou.gui.description.Formatting;
 import org.designup.picsou.model.Day;
@@ -250,26 +251,35 @@ public abstract class AccountViewPanelChecker<T extends AccountViewPanelChecker>
   static String getActualContent(Panel panel) {
     TablePrinter printer = new TablePrinter();
     Component[] buttons = panel.getSwingComponents(JButton.class, "editAccount");
-    Component[] statuses = panel.getSwingComponents(JButton.class, "accountStatus");
+    Component[] weathers = panel.getSwingComponents(JButton.class, "accountWeather");
     Component[] positions = panel.getSwingComponents(JButton.class, "accountPosition");
     Component[] dates = panel.getSwingComponents(JLabel.class, "accountUpdateDate");
-    for (int i = 0; i < statuses.length; i++) {
-      boolean isOk = isAccountOK(statuses[i]);
+    for (int i = 0; i < weathers.length; i++) {
+      String weather = getWeather(weathers[i]);
       JButton selectorButton = (JButton)buttons[i];
       String accountName = selectorButton.getText();
       if (selectorButton.getFont().isBold()) {
         accountName += "*";
       }
-      printer.addRow(isOk ? "ok" : "nok",
-                     accountName,
-                     ((JButton)positions[i]).getText() + " on " + ((JLabel)dates[i]).getText());
+      printer.addRow(accountName,
+                     ((JButton)positions[i]).getText() + " on " + ((JLabel)dates[i]).getText(),
+                     weather);
     }
     return printer.toString();
   }
 
-  private static boolean isAccountOK(Component statusButton) {
-    JButton status = (JButton)statusButton;
-    RectIcon icon = ((RectIcon)status.getIcon());
-    return ColorUtils.equals(icon.getBackgroundColor(), OK_COLOR, true);
+  private static String getWeather(Component weather) {
+    JButton status = (JButton)weather;
+    Icon icon = (status.getIcon());
+    if (icon == AccountWeatherButton.SUNNY_ICON) {
+      return "sunny";
+    }
+    else if (icon == AccountWeatherButton.CLOUDY_ICON) {
+      return "cloudy";
+    }
+    else if (icon == AccountWeatherButton.RAINY_ICON) {
+      return "rainy";
+    }
+    return "-";
   }
 }

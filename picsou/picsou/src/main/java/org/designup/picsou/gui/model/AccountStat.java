@@ -10,7 +10,7 @@ import org.globsframework.metamodel.fields.IntegerField;
 import org.globsframework.metamodel.fields.LinkField;
 import org.globsframework.metamodel.utils.GlobTypeLoader;
 
-public class MainAccountStat {
+public class AccountStat {
   public static GlobType TYPE;
 
   @Key
@@ -39,6 +39,6 @@ public class MainAccountStat {
   public static DoubleField SUMMARY_POSITION_AT_FUTURE_MIN;
 
   static {
-    GlobTypeLoader.init(MainAccountStat.class);
+    GlobTypeLoader.init(AccountStat.class);
   }
 }

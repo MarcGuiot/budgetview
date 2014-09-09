@@ -18,7 +18,7 @@ public class DashboardChecker extends ViewChecker {
   }
 
   public void checkContent(String expected) {
-    Assert.assertEquals(expected, getContent());
+    Assert.assertEquals(expected.trim(), getContent().trim());
   }
 
   private String getContent() {

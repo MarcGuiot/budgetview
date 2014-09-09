@@ -61,7 +61,9 @@ public class SiteUploader {
       }
     });
     for (String path : remoteHandles.keySet()) {
-      access.delete(path);
+      if (!path.endsWith(".htaccess")) {
+        access.delete(path);
+      }
     }
     access.complete();
   }

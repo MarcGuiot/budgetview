@@ -16,7 +16,7 @@ public class AnalysisAddOn extends AddOn {
   }
 
   protected void processPostActivation(Directory directory) {
-    directory.get(SignpostService.class).show(CardView.getSignpostId(Card.BUDGET),
+    directory.get(SignpostService.class).show(CardView.getSignpostId(Card.ANALYSIS),
                                               Lang.get("addons.analysis.signpost"),
                                               TipPosition.BOTTOM_RIGHT,
                                               TipAnchor.SOUTH);

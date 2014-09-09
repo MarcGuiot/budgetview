@@ -38,6 +38,7 @@ public class SignpostService {
     };
     detailsTip.setPosition(position);
     detailsTip.setAnchor(anchor);
+    detailsTip.setClickThrough();
     detailsTip.show();
     return detailsTip;
   }

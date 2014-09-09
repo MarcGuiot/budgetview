@@ -27,11 +27,11 @@ public class DashboardTest extends LoggedInFunctionalTestCase {
       .load();
 
     dashboard.checkContent(
-      "| 0     | Days since your last import                                            |\n" +
-      "| 4 >   | Transactions to categorize                                             |\n" +
-      "| sunny | No overdraw forecast for your main accounts until the end of September |\n" +
-      "| 0     | Available on you main accounts until the end of September              |\n" +
-      "| +1250 | Total amount for your main accounts on 2014/08/09                      |\n");
+      "| 0     | Days since your last import                                       |\n" +
+      "| 4 >   | Transactions to categorize                                        |\n" +
+      "| sunny | No overdraw forecast for your accounts until the end of September |\n" +
+      "| +1250 | Available on you main accounts until the end of September         |\n" +
+      "| +1250 | Total amount for your main accounts on 2014/08/09                 |\n");
 
     categorization.setNewIncome("WorldCo", "Salary");
     categorization.setNewRecurring("Free", "Internet");
@@ -39,21 +39,21 @@ public class DashboardTest extends LoggedInFunctionalTestCase {
     categorization.setNewVariable("FNAC", "Leisures", -200.00);
 
     dashboard.checkContent(
-      "| 0     | Days since your last import                                                    |\n" +
-      "| OK    | All your transactions are categorized                                          |\n" +
-      "| rainy | Important overdraw forecast for your main accounts before the end of September |\n" +
-      "| +750  | Available on you main accounts until the end of September                      |\n" +
-      "| +1250 | Total amount for your main accounts on 2014/08/09                              |\n");
+      "| 0     | Days since your last import                                               |\n" +
+      "| OK    | All your transactions are categorized                                     |\n" +
+      "| rainy | Important overdraw forecast for your accounts before the end of September |\n" +
+      "| +750  | Available on you main accounts until the end of September                 |\n" +
+      "| +1250 | Total amount for your main accounts on 2014/08/09                         |\n");
 
     mainAccounts.editPosition("Account n. 000123")
       .setAmount(100.00)
       .validate();
 
-    dashboard.checkContent("| 0     | Days since your last import                                                    |\n" +
-                           "| OK    | All your transactions are categorized                                          |\n" +
-                           "| rainy | Important overdraw forecast for your main accounts before the end of September |\n" +
-                           "| +600  | Available on you main accounts until the end of September                      |\n" +
-                           "| +1100 | Total amount for your main accounts on 2014/08/09                              |\n");
+    dashboard.checkContent("| 0     | Days since your last import                                               |\n" +
+                           "| OK    | All your transactions are categorized                                     |\n" +
+                           "| rainy | Important overdraw forecast for your accounts before the end of September |\n" +
+                           "| +600  | Available on you main accounts until the end of September                 |\n" +
+                           "| +1100 | Total amount for your main accounts on 2014/08/09                         |\n");
 
     OfxBuilder.init(this)
       .addBankAccount(-1, 10674, "000345", 5000.0, "2014/08/15")
@@ -64,12 +64,12 @@ public class DashboardTest extends LoggedInFunctionalTestCase {
       .validate();
 
     dashboard.checkContent(
-      "| 0     | Days since your last import                                                    |\n" +
-      "| 1 >   | Transactions to categorize                                                     |\n" +
-      "| rainy | Important overdraw forecast for your main accounts before the end of September |\n" +
-      "| +600  | Available on you main accounts until the end of September                      |\n" +
-      "| +1100 | Total amount for your main accounts on 2014/08/09                              |\n" +
-      "| +6100 | Total amount for all your accounts on 2014/07/28                               |\n");
+      "| 0     | Days since your last import                                               |\n" +
+      "| 1 >   | Transactions to categorize                                                |\n" +
+      "| rainy | Important overdraw forecast for your accounts before the end of September |\n" +
+      "| +600  | Available on you main accounts until the end of September                 |\n" +
+      "| +1100 | Total amount for your main accounts on 2014/08/09                         |\n" +
+      "| +6100 | Total amount for all your accounts on 2014/07/28                          |\n");
 
     timeline.selectMonth("2014/08");
     budgetView.savings.createSeries()
@@ -81,24 +81,24 @@ public class DashboardTest extends LoggedInFunctionalTestCase {
       .validate();
 
     dashboard.checkContent(
-      "| 0      | Days since your last import                                                |\n" +
-      "| 1 >    | Transactions to categorize                                                 |\n" +
-      "| cloudy | Light overdraw forecast for your main accounts before the end of September |\n" +
-      "| +850   | Available on you main accounts until the end of September                  |\n" +
-      "| +1100  | Total amount for your main accounts on 2014/08/09                          |\n" +
-      "| +6100  | Total amount for all your accounts on 2014/07/28                           |\n");
+      "| 0      | Days since your last import                                           |\n" +
+      "| 1 >    | Transactions to categorize                                            |\n" +
+      "| cloudy | Light overdraw forecast for your accounts before the end of September |\n" +
+      "| +850   | Available on you main accounts until the end of September             |\n" +
+      "| +1100  | Total amount for your main accounts on 2014/08/09                     |\n" +
+      "| +6100  | Total amount for all your accounts on 2014/07/28                      |\n");
 
     budgetView.savings.editPlannedAmount("Transfer")
       .setAmount(500.00)
       .validate();
 
     dashboard.checkContent(
-      "| 0     | Days since your last import                                            |\n" +
-      "| 1 >   | Transactions to categorize                                             |\n" +
-      "| sunny | No overdraw forecast for your main accounts until the end of September |\n" +
-      "| +1100 | Available on you main accounts until the end of September              |\n" +
-      "| +1100 | Total amount for your main accounts on 2014/08/09                      |\n" +
-      "| +6100 | Total amount for all your accounts on 2014/07/28                       |\n");
+      "| 0     | Days since your last import                                       |\n" +
+      "| 1 >   | Transactions to categorize                                        |\n" +
+      "| sunny | No overdraw forecast for your accounts until the end of September |\n" +
+      "| +1100 | Available on you main accounts until the end of September         |\n" +
+      "| +1100 | Total amount for your main accounts on 2014/08/09                 |\n" +
+      "| +6100 | Total amount for all your accounts on 2014/07/28                  |\n");
   }
 
   public void testDaysSinceLastImport() throws Exception {
@@ -113,6 +113,4 @@ public class DashboardTest extends LoggedInFunctionalTestCase {
   public void testTODO() throws Exception {
     fail("cas où il n'y a pas d'opérations prévues - sunny?");
   }
-
-
 }
