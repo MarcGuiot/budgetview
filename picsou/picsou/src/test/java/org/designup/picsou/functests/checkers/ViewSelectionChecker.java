@@ -8,8 +8,11 @@ import static org.uispec4j.assertion.UISpecAssert.assertTrue;
 import org.uispec4j.assertion.UISpecAssert;
 import org.designup.picsou.gui.model.Card;
 import junit.framework.Assert;
+import sun.swing.SwingUtilities2;
 
+import javax.swing.*;
 import java.awt.*;
+import java.lang.reflect.InvocationTargetException;
 
 public class ViewSelectionChecker extends GuiChecker {
   private Window window;

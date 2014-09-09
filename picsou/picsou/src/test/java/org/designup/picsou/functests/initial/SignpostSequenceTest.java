@@ -324,6 +324,7 @@ public class SignpostSequenceTest extends LoggedInFunctionalTestCase {
     restartApplication();
 
     // === Amount signpost is shown on restart ===
+    System.out.println("SignpostSequenceTest.testRestartDuringCategorization select budget");
     views.selectBudget();
     budgetView.variable.checkAmountSignpostDisplayed(
       "Misc", "Click on the planned amounts to set your own values");
@@ -615,8 +616,10 @@ public class SignpostSequenceTest extends LoggedInFunctionalTestCase {
 
     categorization.skipAndCloseSignpostDialog();
 
+    System.out.println("SignpostSequenceTest.testStartEnteringTransactionsManually signpost budget");
     categorization.checkSkipAndGotoBudgetSignpostShown();
 
+    System.out.println("SignpostSequenceTest.testStartEnteringTransactionsManually goto budget");
     views.selectBudget();
     budgetView.variable.checkAmountSignpostDisplayed(
       "Groceries", "Click on the planned amounts to set your own values");
