@@ -28,7 +28,7 @@ public class DummyRepaintManager extends RepaintManager {
   }
 
   public Dimension getDoubleBufferMaximumSize() {
-    return Empty.NULL_DIMENSION;
+    return new Dimension(Empty.NULL_DIMENSION);
   }
 
   public Image getOffscreenBuffer(Component c, int proposedWidth, int proposedHeight) {
