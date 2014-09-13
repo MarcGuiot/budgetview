@@ -1,6 +1,5 @@
 package org.designup.picsou.gui;
 
-import org.designup.picsou.gui.description.Formatting;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.SelectionService;
 import org.globsframework.gui.splits.color.ColorService;
@@ -8,8 +7,6 @@ import org.globsframework.gui.splits.font.FontLocator;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.format.DescriptionService;
 import org.globsframework.utils.directory.Directory;
-
-import java.text.DecimalFormat;
 
 public abstract class View {
   protected GlobRepository repository;

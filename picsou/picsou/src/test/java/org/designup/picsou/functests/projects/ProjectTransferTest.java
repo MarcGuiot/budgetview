@@ -2,7 +2,9 @@ package org.designup.picsou.functests.projects;
 
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
+import org.designup.picsou.model.Account;
 import org.designup.picsou.model.TransactionType;
+import org.globsframework.model.format.GlobPrinter;
 
 public class ProjectTransferTest extends LoggedInFunctionalTestCase {
   protected void setUp() throws Exception {
@@ -287,6 +289,10 @@ public class ProjectTransferTest extends LoggedInFunctionalTestCase {
       .validate();
 
     budgetView.extras.checkNoSeriesShown();
+
+    fail("[RM] v4 : Les from/to des deux enveloppes mirroir se retrouvent avec les mêmes from/to - revoir ProjectTransferToSeriesTrigger + UpdateMirrorSeriesChangeSetVisitor");
+    operations.dumpRepository();
+
     budgetView.savings.checkSeries("Transfer", 0.00, 200.00);
   }
 

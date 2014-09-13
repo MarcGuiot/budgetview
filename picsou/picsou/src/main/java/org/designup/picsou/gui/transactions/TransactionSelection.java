@@ -2,7 +2,6 @@ package org.designup.picsou.gui.transactions;
 
 import org.designup.picsou.gui.components.filtering.FilterClearer;
 import org.designup.picsou.gui.components.filtering.FilterManager;
-import org.designup.picsou.gui.components.filtering.FilterSetBuilder;
 import org.designup.picsou.model.Account;
 import org.designup.picsou.model.BudgetArea;
 import org.designup.picsou.model.Month;
@@ -15,9 +14,12 @@ import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.utils.directory.Directory;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.Set;
 
-import static org.designup.picsou.gui.utils.Matchers.*;
+import static org.designup.picsou.gui.utils.Matchers.transactionsForMonths;
 
 public class TransactionSelection implements GlobSelectionListener {
 
@@ -50,9 +52,7 @@ public class TransactionSelection implements GlobSelectionListener {
       currentMonths = selection.getAll(Month.TYPE).getValueSet(Month.ID);
     }
 
-    filterManager.set(FilterSetBuilder.init()
-      .set(MONTHS_FILTER, transactionsForMonths(currentMonths))
-      .get());
+    filterManager.set(MONTHS_FILTER, "", transactionsForMonths(currentMonths));
   }
 
   private class SeriesFilterClearer implements FilterClearer {
@@ -62,9 +62,9 @@ public class TransactionSelection implements GlobSelectionListener {
 
     public void clear() {
       selectionService.select(GlobSelectionBuilder.init()
-        .add(repository.get(BudgetArea.ALL.getKey()))
-        .add(GlobList.EMPTY, Series.TYPE)
-        .get());
+                                .add(repository.get(BudgetArea.ALL.getKey()))
+                                .add(GlobList.EMPTY, Series.TYPE)
+                                .get());
     }
   }
 }

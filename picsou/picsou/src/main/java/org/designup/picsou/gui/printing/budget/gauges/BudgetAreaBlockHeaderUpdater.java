@@ -1,4 +1,4 @@
-package org.designup.picsou.gui.budget;
+package org.designup.picsou.gui.printing.budget.gauges;
 
 import org.designup.picsou.gui.budget.summary.BudgetAreaSummaryComputer;
 import org.designup.picsou.gui.components.TextDisplay;
@@ -8,13 +8,13 @@ import org.designup.picsou.model.BudgetArea;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.utils.directory.Directory;
 
-public class BudgetAreaHeaderUpdater extends BudgetAreaSummaryComputer {
+public class BudgetAreaBlockHeaderUpdater extends BudgetAreaSummaryComputer {
   private TextDisplay amountLabel;
   private TextDisplay plannedLabel;
   protected Gauge gauge;
 
-  public BudgetAreaHeaderUpdater(TextDisplay amountLabel, TextDisplay plannedLabel, Gauge gauge,
-                                 GlobRepository repository, Directory directory) {
+  public BudgetAreaBlockHeaderUpdater(TextDisplay amountLabel, TextDisplay plannedLabel, Gauge gauge,
+                                      GlobRepository repository, Directory directory) {
     super(repository, directory);
 
     this.amountLabel = amountLabel;

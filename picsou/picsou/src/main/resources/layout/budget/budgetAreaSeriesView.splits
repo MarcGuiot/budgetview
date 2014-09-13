@@ -19,10 +19,9 @@
            iconTextGap="4" icon="empty(10,18)"
            rolloverIcon="downArrow(10,18,8,8,block.inner.edit.rollover)"
            pressedIcon="downArrow(10,18,8,8,block.inner.edit.pressed)"/>
+
     <style id="seriesEnabled" selector="x" foreground="block.item.link"/>
     <style id="seriesDisabled" selector="x" foreground="block.item.link.inactive"/>
-    <style id="seriesAccountSelected" selector="x" font="-,bold,12"/>
-    <style id="seriesAccountUnselected" selector="x" font="-,plain,12"/>
 
     <style selector="button#groupToggle" ui="hyperlinkButtonWithoutUnderline" foreground="block.item.link"/>
 
@@ -41,12 +40,19 @@
     <style selector="#total label" marginBottom="0"/>
 
     <style selector="#deltaGauge"
+           background="block.inner.bg" opaque="false"
+           preferredSize="(12,12)"/>
+    <style id="activeDeltaGauge" selector="x"
            positiveColor="deltaGauge.positive"
            neutralColor="deltaGauge.neutral"
            negativeColor="deltaGauge.negative"
-           noPreviousValueColor="deltaGauge.noPreviousValue"
-           background="block.inner.bg" opaque="false"
-           preferredSize="(12,12)"/>
+           noPreviousValueColor="deltaGauge.noPreviousValue"/>
+    <style id="inactiveDeltaGauge" selector="x"
+           positiveColor="deltaGauge.inactive"
+           neutralColor="deltaGauge.inactive"
+           negativeColor="deltaGauge.inactive"
+           noPreviousValueColor="deltaGauge.inactive"/>
+
 
     <style id="highlightedAmount" selector="x" opaque="true"
            background="block.inner.highlight.selected.bg"/>

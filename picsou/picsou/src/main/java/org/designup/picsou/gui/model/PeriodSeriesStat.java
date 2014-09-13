@@ -16,7 +16,10 @@ import org.globsframework.metamodel.utils.GlobTypeLoader;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.utils.GlobMatcher;
+import org.globsframework.utils.Utils;
 import org.globsframework.utils.exceptions.InvalidParameter;
+
+import java.util.Set;
 
 import static org.globsframework.model.FieldValue.value;
 
@@ -29,6 +32,9 @@ public class PeriodSeriesStat {
   @Key
   @Target(SeriesType.class)
   public static LinkField TARGET_TYPE;
+
+  @Target(BudgetArea.class)
+  public static LinkField BUDGET_AREA;
 
   @DefaultDouble(0.0)
   public static DoubleField AMOUNT;
@@ -163,4 +169,37 @@ public class PeriodSeriesStat {
     }
     throw new InvalidParameter("Unexpected type for " + periodStat);
   }
+
+
+  public static GlobMatcher statsForAccounts(final Set<Integer> accountIds) {
+    return new GlobMatcher() {
+      public boolean matches(Glob periodStat, GlobRepository repository) {
+        Glob target = findTarget(periodStat, repository);
+        if (target == null) {
+          return false;
+        }
+        switch (getSeriesType(periodStat)) {
+          case SERIES:
+            return isSeriesAccountSelected(target, accountIds);
+          case SERIES_GROUP:
+            return isSeriesAccountInGroupSelected(target, accountIds, repository);
+        }
+        throw new InvalidParameter("Unexpected type for " + periodStat);
+      }
+    };
+  }
+
+  protected static boolean isSeriesAccountSelected(Glob series, final Set<Integer> accountIds) {
+    return accountIds.contains(series.get(Series.TARGET_ACCOUNT));
+  }
+
+  protected static boolean isSeriesAccountInGroupSelected(Glob target, final Set<Integer> accountIds, GlobRepository repository) {
+    for (Glob series : repository.findLinkedTo(target, Series.GROUP)) {
+      if (isSeriesAccountSelected(series, accountIds)) {
+        return true;
+      }
+    }
+    return false;
+  }
+
 }

@@ -1,13 +1,16 @@
 package org.designup.picsou.gui.components.filtering;
 
+import org.designup.picsou.utils.Lang;
 import org.globsframework.model.utils.GlobMatcher;
 import org.globsframework.model.utils.GlobMatchers;
+import org.globsframework.utils.Strings;
 
 import java.util.*;
 
 public class FilterManager {
   private Filterable filterable;
   private Map<String, GlobMatcher> filters = new HashMap<String, GlobMatcher>();
+  private Map<String, String> labels = new HashMap<String, String>();
   private List<String> clearableNames = new ArrayList<String>();
   private List<FilterClearer> clearers = new ArrayList<FilterClearer>();
   private List<FilterListener> listeners = new ArrayList<FilterListener>();
@@ -30,37 +33,43 @@ public class FilterManager {
     clearableNames.addAll(clearer.getAssociatedFilters());
   }
 
-  public void set(FilterSet filterSet) {
-    List<String> changedFilters = new ArrayList<String>();
-    for (Map.Entry<String, GlobMatcher> entry : filterSet.getEntries()) {
-      String name = entry.getKey();
-      changedFilters.add(name);
-      setSilently(name, entry.getValue());
-    }
-    updateAndNotify(changedFilters);
-  }
-
-  public void set(String name, GlobMatcher matcher) {
-    setSilently(name, matcher);
+  public void set(String name, String label, GlobMatcher matcher) {
+    setSilently(name, label, matcher);
     updateAndNotify(Collections.singletonList(name));
   }
 
-  private void setSilently(String name, GlobMatcher matcher) {
+  public void replaceAllWith(String name, String label, GlobMatcher matcher) {
+    List<String> changedFilters = new ArrayList<String>();
+    changedFilters.addAll(filters.keySet());
+    changedFilters.add(name);
+    filters.clear();
+    labels.clear();
+    setSilently(name, label, matcher);
+    updateAndNotify(changedFilters);
+  }
+
+  private void setSilently(String name, String label, GlobMatcher matcher) {
     if ((matcher == GlobMatchers.ALL) || (matcher == null)) {
       removeSilently(name);
     }
     else {
       filters.put(name, matcher);
+      labels.put(name, label);
     }
   }
 
-  public void replaceAllWith(String name, GlobMatcher matcher) {
-    List<String> changedFilters = new ArrayList<String>();
-    changedFilters.addAll(filters.keySet());
-    changedFilters.add(name);
-    filters.clear();
-    setSilently(name, matcher);
-    updateAndNotify(changedFilters);
+  public void clear(String name) {
+    List<FilterClearer> toClear = new ArrayList<FilterClearer>();
+    for (FilterClearer clearer : clearers) {
+      if (clearer.getAssociatedFilters().contains(name)) {
+        clearer.clear();
+        toClear.add(clearer);
+      }
+    }
+    for (FilterClearer clearer : toClear) {
+      clearers.remove(clearer);
+      clearableNames.removeAll(clearer.getAssociatedFilters());
+    }
   }
 
   public void remove(String name) {
@@ -74,6 +83,7 @@ public class FilterManager {
       return false;
     }
     filters.remove(name);
+    labels.remove(name);
     return true;
   }
 
@@ -81,7 +91,7 @@ public class FilterManager {
     return !Collections.disjoint(filters.keySet(), clearableNames);
   }
 
-  public void clear() {
+  public void removeAll() {
     List<String> removedFilters = new ArrayList<String>();
     try {
       changeInProgress = true;
@@ -92,6 +102,7 @@ public class FilterManager {
           if (matcher != null) {
             removedFilters.add(name);
           }
+          labels.remove(name);
         }
         clearer.clear();
       }
@@ -106,6 +117,7 @@ public class FilterManager {
     List<String> changedFilters = new ArrayList<String>();
     changedFilters.addAll(filters.keySet());
     filters.clear();
+    labels.clear();
     updateAndNotify(changedFilters);
   }
 
@@ -126,4 +138,21 @@ public class FilterManager {
     }
   }
 
+  public String getLabel() {
+    if (labels.isEmpty()) {
+      return "";
+    }
+    String result = null;
+    for (String label : labels.values()) {
+      if (Strings.isNotEmpty(label)) {
+        if (result == null) {
+          result = label;
+        }
+        else {
+          return Lang.get("filter.multi");
+        }
+      }
+    }
+    return result;
+  }
 }

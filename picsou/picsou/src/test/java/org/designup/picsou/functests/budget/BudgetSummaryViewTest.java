@@ -167,9 +167,6 @@ public class BudgetSummaryViewTest extends LoggedInFunctionalTestCase {
 
     mainAccounts.select("Account n. 00222");
     mainAccounts.rollover("Account n. 00222", 200806, 10);
-    budgetView.income.checkNotHighlighted("Salary");
-    budgetView.variable.checkNotHighlighted("Groceries");
-    budgetView.extras.checkNotHighlighted("TV");
     budgetView.variable.checkHighlighted("Fuel");
   }
 

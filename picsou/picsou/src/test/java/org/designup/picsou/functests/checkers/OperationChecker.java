@@ -562,15 +562,19 @@ public class OperationChecker {
   }
 
   public void nextMonth() {
-    getDevMenu().getSubMenu("goto to 10 of next month").click();
+    getDevMenu().getSubMenu(Goto10OfNextMonthAction.LABEL).click();
   }
 
   public void nextSixDays() {
-    getDevMenu().getSubMenu("Add 6 days").click();
+    getDevMenu().getSubMenu(AddSixDaysAction.LABEL).click();
   }
 
   public void hideSignposts() {
     getDevMenu().getSubMenu("[Hide signposts]").click();
+  }
+
+  public void dumpRepository() {
+    getDevMenu().getSubMenu("[Dump repository]").click();
   }
 
   public void dumpData() {

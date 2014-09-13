@@ -28,7 +28,7 @@ import java.util.TreeSet;
 
 import static org.uispec4j.assertion.UISpecAssert.*;
 
-public class CategorizationChecker extends ViewChecker {
+public class CategorizationChecker extends FilteredViewChecker<CategorizationChecker> {
   public static final int LABEL_COLUMN_INDEX = 2;
   public static final int AMOUNT_COLUMN_INDEX = 3;
   private Panel panel;
@@ -36,7 +36,7 @@ public class CategorizationChecker extends ViewChecker {
   private boolean useDisplayedDates;
 
   public CategorizationChecker(Window mainWindow) {
-    super(mainWindow);
+    super(mainWindow, "categorizationSelectionView", "customFilterMessage");
   }
 
   Panel getSelectionPanel() {

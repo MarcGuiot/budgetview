@@ -30,7 +30,7 @@ import java.util.ArrayList;
 
 import static org.uispec4j.assertion.UISpecAssert.*;
 
-public class TransactionChecker extends ViewChecker {
+public class TransactionChecker extends FilteredViewChecker<TransactionChecker> {
   public static final String TO_CATEGORIZE = "To categorize";
 
   private Table table;
@@ -44,7 +44,7 @@ public class TransactionChecker extends ViewChecker {
   }
 
   public TransactionChecker(Window window) {
-    super(window);
+    super(window, "transactionView", "customFilterMessage");
   }
 
   public void checkEmpty() {
@@ -165,32 +165,12 @@ public class TransactionChecker extends ViewChecker {
     return searchField;
   }
 
-  public TransactionChecker checkClearFilterButtonShown() {
-    views.selectData();
-    checkComponentVisible(getPanel(), JPanel.class, "customFilterMessage", true);
-    return this;
-  }
 
   public Panel getPanel() {
     if (transactionView == null) {
       transactionView = mainWindow.getPanel("transactionView");
     }
     return transactionView;
-  }
-
-  public TransactionChecker checkClearFilterButtonHidden() {
-    views.selectData();
-    checkComponentVisible(getPanel(), JPanel.class, "customFilterMessage", false);
-    return this;
-  }
-
-  public TransactionChecker clearCurrentFilter() {
-    Panel panel = getPanel().getPanel("customFilterMessage");
-    assertTrue(panel.isVisible());
-    Button button = panel.getButton();
-    button.click();
-    assertFalse(panel.isVisible());
-    return this;
   }
 
   public TransactionAmountChecker initAmountContent() {

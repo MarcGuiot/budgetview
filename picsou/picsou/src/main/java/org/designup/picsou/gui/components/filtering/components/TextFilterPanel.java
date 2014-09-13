@@ -3,6 +3,7 @@ package org.designup.picsou.gui.components.filtering.components;
 import org.designup.picsou.gui.components.filtering.FilterClearer;
 import org.designup.picsou.gui.components.filtering.FilterManager;
 import org.designup.picsou.gui.utils.ApplicationColors;
+import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.splits.color.ColorChangeListener;
 import org.globsframework.gui.splits.color.ColorLocator;
@@ -89,7 +90,7 @@ public abstract class TextFilterPanel {
       textField.setBackground(Color.WHITE);
     }
     else {
-      filterManager.set(SEARCH_FILTER, createMatcher(text));
+      filterManager.set(SEARCH_FILTER, Lang.get("filter.text", text), createMatcher(text));
       textField.setBackground(backgroundColor);
     }
   }
@@ -99,7 +100,7 @@ public abstract class TextFilterPanel {
     if (Strings.isNullOrEmpty(text)) {
       return;
     }
-    filterManager.set(SEARCH_FILTER, createMatcher(text));
+    filterManager.set(SEARCH_FILTER, Lang.get("filter.text", text), createMatcher(text));
   }
 
   protected abstract GlobMatcher createMatcher(String searchFilter);

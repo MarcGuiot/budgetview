@@ -152,6 +152,18 @@ public class SeriesStat {
     };
   }
 
+  public static GlobMatcher isNotMirror() {
+    return new GlobMatcher() {
+      public boolean matches(Glob seriesStat, GlobRepository repository) {
+        if ((seriesStat == null) || !SeriesType.SERIES.getId().equals(seriesStat.get(TARGET_TYPE))) {
+          return false;
+        }
+        Glob series = repository.find(org.globsframework.model.Key.create(Series.TYPE, seriesStat.get(SeriesStat.TARGET)));
+        return series != null && !series.isTrue(Series.IS_MIRROR);
+      }
+    };
+  }
+
   public static GlobMatcher isRoot() {
     return new GlobMatcher() {
       public boolean matches(Glob seriesStat, GlobRepository repository) {
@@ -202,7 +214,7 @@ public class SeriesStat {
           Glob group = repository.find(org.globsframework.model.Key.create(SeriesGroup.TYPE, seriesStat.get(TARGET)));
           return group != null && Utils.equal(group.get(SeriesGroup.BUDGET_AREA), budgetArea.getId());
         }
-        throw new  InvalidParameter("Unexpected value: " + seriesStat.get(TARGET_TYPE));
+        throw new InvalidParameter("Unexpected value: " + seriesStat.get(TARGET_TYPE));
       }
     };
   }

@@ -2,6 +2,9 @@
 
   <styleImport file="/layout/commonStyles.splits"/>
   <styles>
+    <style selector="label.filterText" foreground="filter.message.label" font="-,plain,10"
+           marginLeft="5" marginRight="5" marginTop="2"/>
+
     <ui name="hyperlinkButton" class="org.globsframework.gui.splits.components.HyperlinkButtonUI"
         lineColor="filter.message.link.underline"/>
     <style selector="button.highlightedLink" ui="hyperlinkButton"
@@ -11,6 +14,9 @@
   </styles>
 
   <row ref="panel" background="highlightedPanel.top" border="matte(1,0,1,0,highlightedPanel.border)" opaque="true">
+    <label text="$filter.label" styleClass="filterText"/>
+    <label ref="filterLabel"/>
+    <filler fill="horizontal"/>
     <button action="cancel" styleClass="highlightedLink" />
   </row>
 

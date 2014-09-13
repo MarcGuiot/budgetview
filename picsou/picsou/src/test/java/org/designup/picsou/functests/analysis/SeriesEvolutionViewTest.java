@@ -933,7 +933,7 @@ public class SeriesEvolutionViewTest extends LoggedInFunctionalTestCase {
       .add("10/06/2009", TransactionType.PRELEVEMENT, "AUCHAN", "", -250.00, "Groceries")
       .add("01/06/2009", TransactionType.VIREMENT, "WORLDCO", "", 300.00, "John's")
       .check();
-    transactions.checkClearFilterButtonHidden();
+    transactions.checkNoFilterMessageShown();
 
     // ---- Main accounts ----
 
@@ -957,7 +957,7 @@ public class SeriesEvolutionViewTest extends LoggedInFunctionalTestCase {
       .add("10/06/2009", TransactionType.PRELEVEMENT, "AUCHAN", "", -250.00, "Groceries")
       .add("01/06/2009", TransactionType.VIREMENT, "WORLDCO", "", 300.00, "John's")
       .check();
-    transactions.checkClearFilterButtonShown();
+    transactions.checkFilterMessage("2 accounts");
     transactions.clearCurrentFilter();
 
     // ---- Savings accounts ----
@@ -974,7 +974,7 @@ public class SeriesEvolutionViewTest extends LoggedInFunctionalTestCase {
     transactions.initContent()
       .add("10/06/2009", TransactionType.PRELEVEMENT, "VIRT SUR ING", "", -200.00, "Virt vers livret")
       .check();
-    transactions.checkClearFilterButtonShown();
+    transactions.checkFilterMessage("Account: ING");
     transactions.clearCurrentFilter();
 
     // ---- BudgetArea ----
@@ -1002,7 +1002,7 @@ public class SeriesEvolutionViewTest extends LoggedInFunctionalTestCase {
       .add("15/07/2009", TransactionType.VIREMENT, "BIG INC.", "", 350.00, "Mary's")
       .add("01/07/2009", TransactionType.VIREMENT, "WORLDCO", "", 320.00, "John's")
       .check();
-    transactions.checkClearFilterButtonShown();
+    transactions.checkFilterMessage("2 transactions");
     transactions.clearCurrentFilter();
 
     // ---- Series ----
@@ -1030,7 +1030,7 @@ public class SeriesEvolutionViewTest extends LoggedInFunctionalTestCase {
       .add("15/07/2009", TransactionType.PRELEVEMENT, "AUCHAN", "", -140.00, "Groceries")
       .add("10/07/2009", TransactionType.PRELEVEMENT, "AUCHAN", "", -200.00, "Groceries")
       .check();
-    transactions.checkClearFilterButtonShown();
+    transactions.checkFilterMessage("Envelope");
     transactions.clearCurrentFilter();
 
     views.selectAnalysis();
@@ -1065,7 +1065,7 @@ public class SeriesEvolutionViewTest extends LoggedInFunctionalTestCase {
       .add("20/07/2009", TransactionType.PRELEVEMENT, "ORANGE", "", -60.00, "Mobile")
       .add("20/07/2009", TransactionType.PRELEVEMENT, "FREE", "", -30.00, "Internet")
       .check();
-    transactions.checkClearFilterButtonShown();
+    transactions.checkFilterMessage("2 envelopes");
     transactions.clearCurrentFilter();
 
     // ---- Uncategorized budget area ----
@@ -1096,7 +1096,7 @@ public class SeriesEvolutionViewTest extends LoggedInFunctionalTestCase {
       .add("20/06/2009", TransactionType.PRELEVEMENT, "UNKNOWN2", "", -100.00)
       .add("20/06/2009", TransactionType.VIREMENT, "UNKNOWN1", "", 50.00)
       .check();
-    transactions.checkClearFilterButtonShown();
+    transactions.checkFilterMessage("3 transactions");
     transactions.clearCurrentFilter();
   }
 }

@@ -4,12 +4,16 @@ import org.designup.picsou.gui.View;
 import org.designup.picsou.gui.budget.components.NameLabelPopupButton;
 import org.designup.picsou.gui.budget.components.SeriesOrderManager;
 import org.designup.picsou.gui.card.NavigationService;
-import org.designup.picsou.gui.components.ComponentTextDisplay;
 import org.designup.picsou.gui.components.JPopupButton;
-import org.designup.picsou.gui.components.charts.*;
+import org.designup.picsou.gui.components.charts.DeltaGauge;
+import org.designup.picsou.gui.components.charts.Gauge;
+import org.designup.picsou.gui.components.charts.GlobDeltaGaugeView;
+import org.designup.picsou.gui.components.charts.GlobGaugeView;
+import org.designup.picsou.gui.components.filtering.Filterable;
 import org.designup.picsou.gui.components.highlighting.HighlightUpdater;
 import org.designup.picsou.gui.components.tips.ShowDetailsTipAction;
 import org.designup.picsou.gui.description.AmountStringifier;
+import org.designup.picsou.gui.model.PeriodBudgetAreaStat;
 import org.designup.picsou.gui.model.PeriodSeriesStat;
 import org.designup.picsou.gui.projects.actions.CreateProjectAction;
 import org.designup.picsou.gui.series.SeriesEditor;
@@ -19,7 +23,6 @@ import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobSelection;
 import org.globsframework.gui.GlobSelectionListener;
 import org.globsframework.gui.GlobsPanelBuilder;
-import org.globsframework.gui.SelectionService;
 import org.globsframework.gui.actions.ToggleBooleanAction;
 import org.globsframework.gui.splits.PanelBuilder;
 import org.globsframework.gui.splits.SplitsLoader;
@@ -28,15 +31,14 @@ import org.globsframework.gui.splits.repeat.Repeat;
 import org.globsframework.gui.splits.repeat.RepeatComponentFactory;
 import org.globsframework.gui.splits.utils.Disposable;
 import org.globsframework.gui.splits.utils.GlobListener;
-import org.globsframework.gui.splits.utils.OnLoadListener;
 import org.globsframework.gui.views.GlobButtonView;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.fields.DoubleField;
 import org.globsframework.model.*;
 import org.globsframework.model.format.GlobListStringifier;
 import org.globsframework.model.utils.GlobListFunctor;
+import org.globsframework.model.utils.GlobMatcher;
 import org.globsframework.model.utils.GlobUtils;
-import org.globsframework.utils.Utils;
 import org.globsframework.utils.directory.Directory;
 import org.globsframework.utils.exceptions.UnexpectedValue;
 
@@ -46,7 +48,7 @@ import java.awt.event.ActionEvent;
 import java.util.*;
 import java.util.List;
 
-public class BudgetAreaSeriesView extends View {
+public class BudgetAreaSeriesView extends View implements Filterable {
   private String name;
   private BudgetArea budgetArea;
   private Set<Integer> selectedMonthIds = Collections.emptySet();
@@ -60,7 +62,7 @@ public class BudgetAreaSeriesView extends View {
   private SeriesOrderManager orderManager;
   private Comparator<Glob> comparator;
   private JMenuItem monthFilteringButton;
-  private Collection<SeriesRepeatComponentFactory.SeriesButtonsUpdater> updaters =
+  private Collection<SeriesRepeatComponentFactory.SeriesButtonsUpdater> signpostUpdaters =
     new ArrayList<SeriesRepeatComponentFactory.SeriesButtonsUpdater>();
 
   public static final String IS_GROUP_ELEMENT_PROPERTY = "budgetAreaSeriesView.isGroupElement";
@@ -111,8 +113,13 @@ public class BudgetAreaSeriesView extends View {
     });
   }
 
+  public void setFilter(GlobMatcher matcher) {
+    statFilter.setAccountMatcher(matcher);
+    updateRepeat();
+  }
+
   private void updateRepeat() {
-    for (SeriesRepeatComponentFactory.SeriesButtonsUpdater updater : updaters) {
+    for (SeriesRepeatComponentFactory.SeriesButtonsUpdater updater : signpostUpdaters) {
       updater.releaseSignpost();
     }
     List<Key> newStat = repository.getAll(PeriodSeriesStat.TYPE, statFilter)
@@ -138,7 +145,7 @@ public class BudgetAreaSeriesView extends View {
     if (!SignpostStatus.isCompleted(SignpostStatus.SERIES_AMOUNT_SHOWN, repository)) {
       if (!newStat.isEmpty()) {
         Key key = newStat.get(0);
-        for (SeriesRepeatComponentFactory.SeriesButtonsUpdater updater : updaters) {
+        for (SeriesRepeatComponentFactory.SeriesButtonsUpdater updater : signpostUpdaters) {
           updater.updateSignpost(key);
         }
       }
@@ -149,23 +156,31 @@ public class BudgetAreaSeriesView extends View {
     GlobsPanelBuilder builder = new GlobsPanelBuilder(getClass(), "/layout/budget/budgetAreaSeriesView.splits",
                                                       repository, directory);
 
-    JLabel amountLabel = builder.add("totalObservedAmount", new JLabel()).getComponent();
-    JLabel plannedLabel = builder.add("totalPlannedAmount", new JLabel()).getComponent();
+    Key statKey = Key.create(PeriodBudgetAreaStat.TYPE, budgetArea.getId());
 
-    Gauge totalGauge = BudgetAreaGaugeFactory.createGauge(budgetArea);
+    JLabel amountLabel = new JLabel();
+    builder.add("totalObservedAmount", amountLabel);
+    JLabel plannedAmountLabel = new JLabel();
+    builder.add("totalPlannedAmount", plannedAmountLabel);
+
+    GlobGaugeView totalGaugeView =
+      new GlobGaugeView(statKey,
+                        budgetArea,
+                        PeriodBudgetAreaStat.AMOUNT,
+                        PeriodBudgetAreaStat.PLANNED_AMOUNT,
+                        PeriodBudgetAreaStat.PAST_REMAINING,
+                        PeriodBudgetAreaStat.FUTURE_REMAINING,
+                        PeriodBudgetAreaStat.PAST_OVERRUN,
+                        PeriodBudgetAreaStat.FUTURE_OVERRUN,
+                        PeriodBudgetAreaStat.ACTIVE,
+                        repository, directory);
+    Gauge totalGauge = totalGaugeView.getComponent();
     totalGauge.setActionListener(new ShowDetailsTipAction(totalGauge, directory));
     builder.add("totalGauge", totalGauge);
 
-    BudgetAreaHeaderUpdater headerUpdater =
-      new BudgetAreaHeaderUpdater(ComponentTextDisplay.create(amountLabel),
-                                  ComponentTextDisplay.create(plannedLabel),
-                                  totalGauge,
-                                  repository, directory);
-    headerUpdater.setColors("block.total",
-                            "block.total.overrun.error",
-                            "block.total.overrun.positive");
-
-    BudgetAreaHeader.init(budgetArea, headerUpdater, repository, directory);
+    BudgetAreaHeaderComponentsUpdater.init(budgetArea, statKey,
+                                           amountLabel, plannedAmountLabel,
+                                           repository, directory);
 
     statFilter = new BudgetAreaStatFilter(budgetArea);
 
@@ -255,20 +270,6 @@ public class BudgetAreaSeriesView extends View {
         }
       });
 
-      final SeriesButtonsUpdater updater = new SeriesButtonsUpdater(periodSeriesStat.getKey(),
-                                                                    seriesName,
-                                                                    observedAmountButton,
-                                                                    plannedAmountButton);
-      cellBuilder.addDisposable(updater);
-      if (budgetArea == BudgetArea.VARIABLE && !SignpostStatus.isCompleted(SignpostStatus.SERIES_AMOUNT_SHOWN, repository)) {
-        cellBuilder.addDisposable(new Disposable() {
-          public void dispose() {
-            updaters.remove(updater);
-          }
-        });
-        updaters.add(updater);
-      }
-
       final GlobGaugeView gaugeView =
         new GlobGaugeView(periodSeriesStat.getKey(), budgetArea,
                           PeriodSeriesStat.AMOUNT, PeriodSeriesStat.PLANNED_AMOUNT,
@@ -276,7 +277,6 @@ public class BudgetAreaSeriesView extends View {
                           PeriodSeriesStat.PAST_OVERRUN, PeriodSeriesStat.FUTURE_OVERRUN,
                           PeriodSeriesStat.ACTIVE,
                           repository, directory);
-
       final Gauge gauge = gaugeView.getComponent();
       gauge.setActionListener(new ShowDetailsTipAction(gauge, directory));
       visibles.add(gaugeView);
@@ -311,22 +311,6 @@ public class BudgetAreaSeriesView extends View {
       };
       cellBuilder.addDisposable(highlightUpdater);
 
-      AccountSelectionUpdater accountSelectionListener = new AccountSelectionUpdater(cellBuilder, repository, selectionService) {
-        protected void processSelection(Integer selectedAccount) {
-          if (periodSeriesStat.exists()) {
-            switch (PeriodSeriesStat.getSeriesType(periodSeriesStat)) {
-              case SERIES:
-                plannedAmountButton.applyStyle(isSeriesAccountSelected(target, selectedAccount) ? "seriesAccountSelected" : "seriesAccountUnselected");
-                break;
-              case SERIES_GROUP:
-                plannedAmountButton.applyStyle(isSeriesAccountInGroupSelected(target, selectedAccount) ? "seriesAccountSelected" : "seriesAccountUnselected");
-                break;
-            }
-          }
-        }
-      };
-      cellBuilder.addDisposable(accountSelectionListener);
-
       gaugeView.getComponent().setName("gauge");
       cellBuilder.add("gauge", gaugeView.getComponent());
       cellBuilder.addDisposable(gaugeView);
@@ -345,6 +329,18 @@ public class BudgetAreaSeriesView extends View {
       cellBuilder.add("deltaGauge", deltaGauge);
       deltaGauge.setActionListener(new ShowDetailsTipAction(deltaGauge, directory));
       cellBuilder.addDisposable(deltaGaugeView);
+
+      final SeriesButtonsUpdater updater = new SeriesButtonsUpdater(periodSeriesStat.getKey(),
+                                                                    seriesName, observedAmountButton, plannedAmountButton);
+      cellBuilder.addDisposable(updater);
+      if (budgetArea == BudgetArea.VARIABLE && !SignpostStatus.isCompleted(SignpostStatus.SERIES_AMOUNT_SHOWN, repository)) {
+        cellBuilder.addDisposable(new Disposable() {
+          public void dispose() {
+            signpostUpdaters.remove(updater);
+          }
+        });
+        signpostUpdaters.add(updater);
+      }
     }
 
     private NameLabelPopupButton getNameButton(Glob periodSeriesStat, Glob target) {
@@ -468,69 +464,6 @@ public class BudgetAreaSeriesView extends View {
         }
       }
       return stringifier.toString(periodStatList, repository);
-    }
-  }
-
-  private abstract class AccountSelectionUpdater implements GlobSelectionListener, ChangeSetListener, Disposable, OnLoadListener {
-
-    private PanelBuilder cellBuilder;
-    private final GlobRepository repository;
-    private final SelectionService selectionService;
-
-    public AccountSelectionUpdater(PanelBuilder cellBuilder, GlobRepository repository, SelectionService selectionService) {
-      this.cellBuilder = cellBuilder;
-      this.repository = repository;
-      this.selectionService = selectionService;
-      cellBuilder.addOnLoadListener(this);
-      repository.addChangeListener(this);
-      selectionService.addListener(this, Account.TYPE);
-    }
-
-    public void globsChanged(ChangeSet changeSet, GlobRepository repository) {
-      if (changeSet.containsChanges(Series.TYPE)) {
-        doUpdate();
-      }
-    }
-
-    public void globsReset(GlobRepository repository, Set<GlobType> changedTypes) {
-      if (changedTypes.contains(Series.TYPE)) {
-        doUpdate();
-      }
-    }
-
-    public void selectionUpdated(GlobSelection selection) {
-      doUpdate();
-    }
-
-    public void processLoad() {
-      doUpdate();
-    }
-
-    private void doUpdate() {
-      Glob account = selectionService.getSelection(Account.TYPE).getSingle();
-      processSelection(account != null ? account.get(Account.ID) : null);
-    }
-
-    protected abstract void processSelection(Integer selectedAccountId);
-
-    protected boolean isSeriesAccountSelected(Glob series, Integer selectedAccount) {
-      Integer targetAccount = series.get(Series.TARGET_ACCOUNT);
-      return selectedAccount != null && Utils.equal(targetAccount, selectedAccount);
-    }
-
-    protected boolean isSeriesAccountInGroupSelected(Glob target, Integer selectedAccount) {
-      for (Glob series : repository.findLinkedTo(target, Series.GROUP)) {
-        if (isSeriesAccountSelected(series, selectedAccount)) {
-          return true;
-        }
-      }
-      return false;
-    }
-
-    public void dispose() {
-      cellBuilder.removeOnLoadListener(this);
-      repository.removeChangeListener(this);
-      selectionService.removeListener(this);
     }
   }
 }

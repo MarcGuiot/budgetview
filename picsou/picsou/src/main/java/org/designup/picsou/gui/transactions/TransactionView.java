@@ -3,11 +3,12 @@ package org.designup.picsou.gui.transactions;
 import org.designup.picsou.gui.View;
 import org.designup.picsou.gui.accounts.chart.SelectedAccountPositionsChartView;
 import org.designup.picsou.gui.accounts.utils.AccountFilter;
+import org.designup.picsou.gui.analysis.histobuilders.range.SelectionHistoChartRange;
 import org.designup.picsou.gui.card.utils.GotoCardAction;
 import org.designup.picsou.gui.components.JPopupButton;
 import org.designup.picsou.gui.components.filtering.FilterManager;
 import org.designup.picsou.gui.components.filtering.Filterable;
-import org.designup.picsou.gui.components.filtering.components.FilterClearingPanel;
+import org.designup.picsou.gui.components.filtering.components.FilterMessagePanel;
 import org.designup.picsou.gui.components.filtering.components.TextFilterPanel;
 import org.designup.picsou.gui.components.table.DefaultTableCellPainter;
 import org.designup.picsou.gui.components.table.PicsouTableHeaderPainter;
@@ -15,7 +16,6 @@ import org.designup.picsou.gui.description.Formatting;
 import org.designup.picsou.gui.description.stringifiers.TransactionDateStringifier;
 import org.designup.picsou.gui.model.Card;
 import org.designup.picsou.gui.printing.actions.PrintTransactionsAction;
-import org.designup.picsou.gui.analysis.histobuilders.range.SelectionHistoChartRange;
 import org.designup.picsou.gui.transactions.actions.TransactionTableActions;
 import org.designup.picsou.gui.transactions.columns.*;
 import org.designup.picsou.gui.transactions.search.TransactionFilterPanel;
@@ -51,7 +51,6 @@ import org.globsframework.utils.directory.Directory;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.util.Collections;
 import java.util.Set;
 
 import static org.globsframework.gui.views.utils.LabelCustomizers.font;
@@ -98,13 +97,13 @@ public class TransactionView extends View implements Filterable {
     GlobsPanelBuilder builder = new GlobsPanelBuilder(getClass(), "/layout/transactions/transactionView.splits",
                                                       repository, directory);
 
-    AccountFilter.init(filterManager, repository, directory);
-    addShowPlannedTransactionsCheckbox(builder);
+    AccountFilter.initForTransactions(filterManager, repository, directory);
+    addShowPlannedTransactionsCheckbox();
     builder.add(view.getComponent());
 
     builder.add("gotoCategorization", new GotoCardAction(Card.CATEGORIZATION, directory));
 
-    FilterClearingPanel filterClearingPanel = new FilterClearingPanel(filterManager, repository, directory);
+    FilterMessagePanel filterClearingPanel = new FilterMessagePanel(filterManager, repository, directory);
     builder.add("customFilterMessage", filterClearingPanel.getPanel());
 
     search = new TransactionFilterPanel(filterManager, repository, directory);
@@ -148,7 +147,7 @@ public class TransactionView extends View implements Filterable {
   public void clearFilters() {
     selectionService.clear(Account.TYPE);
     search.reset();
-    filterManager.clear();
+    filterManager.removeAll();
   }
 
   /**
@@ -177,18 +176,21 @@ public class TransactionView extends View implements Filterable {
   }
 
   public void setTransactionsFilter(GlobList transactions) {
-    filterManager.set(TransactionSelection.SERIES_FILTER, fieldIn(Transaction.ID, transactions.getValueSet(Transaction.ID)));
+    String label = transactions.size() == 1 ? Lang.get("filter.transaction.one") : Lang.get("filter.transaction.several", transactions.size());
+    filterManager.set(TransactionSelection.SERIES_FILTER, label, fieldIn(Transaction.ID, transactions.getValueSet(Transaction.ID)));
   }
 
   public void setSeriesFilter(Glob series) {
-    setSeriesFilter(Collections.singleton(series.get(Series.ID)));
+    String label = Lang.get("filter.series.single", series.get(Series.NAME));
+    filterManager.set(TransactionSelection.SERIES_FILTER, label, Matchers.transactionsForSeries(series.get(Series.ID)));
   }
 
   public void setSeriesFilter(Set<Integer> seriesIds) {
-    filterManager.set(TransactionSelection.SERIES_FILTER, Matchers.transactionsForSeries(seriesIds));
+    String label = seriesIds.size() == 1 ? Lang.get("filter.series.one") : Lang.get("filter.series.several", seriesIds.size());
+    filterManager.set(TransactionSelection.SERIES_FILTER, label, Matchers.transactionsForSeries(seriesIds));
   }
 
-  private void addShowPlannedTransactionsCheckbox(GlobsPanelBuilder builder) {
+  private void addShowPlannedTransactionsCheckbox() {
     showPlannedTransactionsCheckbox = new JCheckBoxMenuItem(Lang.get("transactionView.showPlannedTransactions"));
     showPlannedTransactionsCheckbox.addActionListener(new AbstractAction() {
       public void actionPerformed(ActionEvent e) {

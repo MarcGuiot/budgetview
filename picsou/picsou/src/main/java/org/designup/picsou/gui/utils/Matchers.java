@@ -8,6 +8,7 @@ import org.globsframework.model.GlobRepository;
 import org.globsframework.model.Key;
 import org.globsframework.model.utils.GlobMatcher;
 import org.globsframework.model.utils.GlobMatchers;
+import org.globsframework.utils.Utils;
 
 import java.util.Collections;
 import java.util.Date;
@@ -66,6 +67,19 @@ public class Matchers {
 
       public String toString() {
         return "transactions for BudgetAreas " + budgetAreaIds;
+      }
+    };
+  }
+
+  public static GlobMatcher transactionsForSeries(final Integer targetSeriesId) {
+    return new GlobMatcher() {
+      public boolean matches(Glob transaction, GlobRepository repository) {
+        Integer seriesId = transaction.get(Transaction.SERIES);
+        return Utils.equal(targetSeriesId, seriesId);
+      }
+
+      public String toString() {
+        return "transaction for series " + targetSeriesId;
       }
     };
   }

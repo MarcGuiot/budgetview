@@ -6,6 +6,8 @@ import org.globsframework.model.*;
 import org.globsframework.utils.collections.Pair;
 import org.designup.picsou.model.*;
 
+import static org.globsframework.model.utils.GlobMatchers.*;
+
 public class SavingsDateActiveBudgetTrigger extends DefaultChangeSetListener {
   public void globsChanged(ChangeSet changeSet, final GlobRepository repository) {
     changeSet.safeVisit(Account.TYPE, new ChangeSetVisitor() {
@@ -30,9 +32,9 @@ public class SavingsDateActiveBudgetTrigger extends DefaultChangeSetListener {
       return;
     }
     GlobList list = repository.getAll(Series.TYPE,
-                                      GlobMatchers.and(GlobMatchers.fieldEquals(Series.BUDGET_AREA, BudgetArea.SAVINGS.getId()),
-                                                       GlobMatchers.or(GlobMatchers.fieldEquals(Series.FROM_ACCOUNT, account.get(Account.ID)),
-                                                                       GlobMatchers.fieldEquals(Series.TO_ACCOUNT, account.get(Account.ID)))));
+                                      and(fieldEquals(Series.BUDGET_AREA, BudgetArea.SAVINGS.getId()),
+                                          or(fieldEquals(Series.FROM_ACCOUNT, account.get(Account.ID)),
+                                             fieldEquals(Series.TO_ACCOUNT, account.get(Account.ID)))));
     for (Glob series : list) {
       Pair<Integer,Integer> month = Account.getValidMonth(series, repository);
       ReadOnlyGlobRepository.MultiFieldIndexed index = repository.findByIndex(SeriesBudget.SERIES_INDEX, SeriesBudget.SERIES, series.get(Series.ID));

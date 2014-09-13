@@ -1,7 +1,7 @@
 package org.designup.picsou.gui.budget.summary;
 
 import junit.framework.TestCase;
-import org.designup.picsou.gui.budget.BudgetAreaHeaderUpdater;
+import org.designup.picsou.gui.printing.budget.gauges.BudgetAreaBlockHeaderUpdater;
 import org.designup.picsou.gui.components.ComponentTextDisplay;
 import org.designup.picsou.gui.components.charts.Gauge;
 import org.designup.picsou.gui.model.BudgetStat;
@@ -217,7 +217,7 @@ public class BudgetAreaSummaryComputerTest extends TestCase {
       directory.add(new ColorService());
 
       this.computer =
-        new BudgetAreaHeaderUpdater(
+        new BudgetAreaBlockHeaderUpdater(
           ComponentTextDisplay.create(amountLabel), ComponentTextDisplay.create(plannedLabel), gauge,
           repository, directory);
 

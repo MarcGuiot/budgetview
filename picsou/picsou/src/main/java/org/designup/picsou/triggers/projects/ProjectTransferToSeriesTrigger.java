@@ -8,6 +8,7 @@ import org.globsframework.utils.Utils;
 import java.util.Set;
 
 import static org.globsframework.model.FieldValue.value;
+import static org.globsframework.model.utils.GlobMatchers.linkedTo;
 
 public class ProjectTransferToSeriesTrigger implements ChangeSetListener {
   public void globsChanged(ChangeSet changeSet, final GlobRepository repository) {
@@ -80,7 +81,18 @@ public class ProjectTransferToSeriesTrigger implements ChangeSetListener {
 
   private void deleteSavingsSeries(Key key, FieldValues previousValues, GlobRepository repository) {
     Key seriesKey = Key.create(Series.TYPE, previousValues.get(ProjectItem.SERIES));
-    repository.delete(seriesKey);
+    Glob series = repository.find(seriesKey);
+    if (series != null) {
+      Integer mirrorId = series.get(Series.MIRROR_SERIES);
+      if (mirrorId != null) {
+        Glob mirror = repository.find(Key.create(Series.TYPE, mirrorId));
+        if (mirror != null) {
+          Transaction.uncategorize(repository.getAll(Transaction.TYPE, linkedTo(series, Transaction.SERIES)), repository);
+          repository.delete(mirror);
+        }
+      }
+      repository.delete(series);
+    }
 
     Glob item = repository.find(Key.create(ProjectItem.TYPE, key.get(ProjectTransfer.PROJECT_ITEM)));
     ProjectItemToSeriesTrigger.createSeries(item.getKey(), item, repository);

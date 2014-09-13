@@ -132,17 +132,18 @@
           <panel ref="dashboardView"/>
         </card>
       </cards>
-
       <panel ref="licenseInfoView" weightY="0.1"/>
-
     </column>
 
     <panel name="categorization" styleClass="content" preferredSize="(500,50)">
       <panel ref="categorizationView" styleClass="innerContent"/>
     </panel>
 
-    <panel name="budget" styleClass="content">
-      <cards ref="budgetToggle" styleClass="innerContent">
+    <column name="budget" styleClass="content">
+      <row border="empty(10,10,5,10)" autoHideSource="accountFilterMessage" weightY="0.1">
+        <panel ref="accountFilterMessage"/>
+      </row>
+      <cards ref="budgetToggle" styleClass="innerContent" weightY="100">
         <card name="main">
           <panel ref="budgetView"/>
         </card>
@@ -150,7 +151,7 @@
           <panel ref="savingsView"/>
         </card>
       </cards>
-    </panel>
+    </column>
 
     <panel name="analysis" styleClass="content">
       <panel ref="seriesAnalysisView" styleClass="innerContent"/>

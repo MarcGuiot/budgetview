@@ -51,6 +51,7 @@ import java.awt.event.KeyEvent;
 public class MenuBarBuilder {
 
   private final GlobRepository repository;
+  private ReplicationGlobRepository replicationGlobRepository;
   private final Directory directory;
 
   private ImportFileAction importFileAction;
@@ -73,6 +74,7 @@ public class MenuBarBuilder {
 
   public MenuBarBuilder(GlobRepository repository, ReplicationGlobRepository replicationGlobRepository, WindowManager windowManager, LogoutService logoutService, Action viewHelpAction, Directory directory, DeleteUserAction deleteUserAction) {
     this.repository = repository;
+    this.replicationGlobRepository = replicationGlobRepository;
     this.directory = directory;
 
     this.viewHelpAction = viewHelpAction;
@@ -175,7 +177,7 @@ public class MenuBarBuilder {
     JMenu devMenu = new JMenu("[Dev]");
     devMenu.add(new DevOptionsAction(repository, directory));
     devMenu.addSeparator();
-    devMenu.add(new DumpRepositoryAction(repository));
+    devMenu.add(new DumpRepositoryAction(replicationGlobRepository));
     devMenu.add(new DumpDataAction(repository));
     devMenu.add(new DataCheckerAction(repository, directory));
     devMenu.add(new ThrowExceptionAction());

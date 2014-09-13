@@ -1,7 +1,5 @@
 package org.designup.picsou.gui.printing.budget.gauges;
 
-import org.designup.picsou.gui.budget.BudgetAreaHeader;
-import org.designup.picsou.gui.budget.BudgetAreaHeaderUpdater;
 import org.designup.picsou.gui.components.TextDisplayHolder;import org.designup.picsou.gui.components.charts.Gauge;
 import org.designup.picsou.gui.printing.PrintStyle;
 import org.designup.picsou.gui.printing.utils.PageBlock;
@@ -42,9 +40,9 @@ public class BudgetAreaGaugeBlock implements PageBlock {
     TextDisplayHolder actualLabel = new TextDisplayHolder();
     TextDisplayHolder plannedLabel = new TextDisplayHolder();
     gauge = new Gauge();
-    BudgetAreaHeaderUpdater headerUpdater =
-      new BudgetAreaHeaderUpdater(actualLabel, plannedLabel, gauge, repository, localDirectory);
-    BudgetAreaHeader.init(budgetArea, headerUpdater, repository, localDirectory);
+    BudgetAreaBlockHeaderUpdater headerUpdater =
+      new BudgetAreaBlockHeaderUpdater(actualLabel, plannedLabel, gauge, repository, localDirectory);
+    BudgetAreaBlockHeader.init(budgetArea, headerUpdater, repository, localDirectory);
 
     selectionService.select(repository.getAll(Month.TYPE, fieldIn(Month.ID, selectedMonths)),
                             Month.TYPE);

@@ -87,6 +87,7 @@ public class MainPanel {
   private SignpostView signpostView;
   private MenuBarBuilder menuBar;
   private CategorizationSelectionView categorizationSelectionView;
+  private BudgetToggle budgetToggle;
 
   public static MainPanel init(GlobRepository repository, Directory directory, WindowManager mainWindow) {
     MainPanel panel = new MainPanel(repository, directory, mainWindow);
@@ -131,7 +132,9 @@ public class MainPanel {
       new ReplicationGlobRepository(repository, PeriodSeriesStat.TYPE, PeriodBudgetAreaStat.TYPE, PeriodAccountStat.TYPE);
     projectView = new ProjectView(repository, directory);
 
-    BudgetToggle budgetToggle = new BudgetToggle(repository, directory);
+    BudgetView budgetView = new BudgetView(replicationGlobRepository, directory);
+
+    budgetToggle = new BudgetToggle(replicationGlobRepository, directory);
     budgetToggle.registerComponents(builder);
 
     directory.add(new NavigationService(transactionView, categorizationSelectionView, projectView, budgetToggle, repository, directory));
@@ -168,7 +171,7 @@ public class MainPanel {
       categorizationSelectionView,
       categorizationView,
       cardView,
-      new BudgetView(replicationGlobRepository, directory),
+      budgetView,
       new AnalysisSelector(repository, directory),
       analysisView,
       new SavingsView(replicationGlobRepository, directory),
@@ -213,11 +216,13 @@ public class MainPanel {
 
     menuBar.createMenuBar(frame);
     cardView.showInitialCard();
+    budgetToggle.reset();
     transactionView.reset();
     categorizationSelectionView.reset();
     directory.get(NavigationService.class).reset();
     directory.get(UndoRedoService.class).reset();
     directory.get(HelpService.class).reset();
+    directory.get(SelectionService.class).clearAll();
     signpostView.reset();
     projectView.reset();
 

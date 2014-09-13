@@ -4,15 +4,16 @@
 
   <column name="transactionView">
 
+    <row border="empty(0,0,5,0)" autoHideSource="customFilterMessage" weightY="0.1">
+      <panel ref="customFilterMessage"/>
+    </row>
+
     <verticalSplit styleClass="blockDivider" opaque="false">
       <column>
         <row>
           <filler fill="horizontal"/>
           <component ref="transactionSearch"/>
           <button ref="actionsMenu" styleClass="actionsButton" marginLeft="20"/>
-        </row>
-        <row border="empty(5,0,5,0)" autoHideSource="customFilterMessage" weightY="0.1">
-          <panel ref="customFilterMessage"/>
         </row>
         <scrollPane borderPos="center" viewportBackground="transactions.bg"
                     border="line(transaction.border)" opaque="true"

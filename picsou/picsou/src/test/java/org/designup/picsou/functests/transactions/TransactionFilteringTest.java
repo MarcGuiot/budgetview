@@ -27,6 +27,7 @@ public class TransactionFilteringTest extends LoggedInFunctionalTestCase {
       .checkValue(200605, 1, 1200.00);
 
     mainAccounts.select("Account n. 1");
+    transactions.checkFilterMessage("Account: Account n. 1");
     transactions.initContent()
       .add("08/05/2006", TransactionType.PRELEVEMENT, "TRANSACTION 1C", "", -400.00)
       .add("02/05/2006", TransactionType.PRELEVEMENT, "TRANSACTION 1B", "", -300.00)
@@ -39,6 +40,7 @@ public class TransactionFilteringTest extends LoggedInFunctionalTestCase {
       .checkValue(200605, 1, 1200.00);
     transactions.clearCurrentFilter();
 
+    transactions.checkNoFilterMessageShown();
     timeline.selectMonth(200604);
     transactions.initContent()
       .add("15/04/2006", TransactionType.PRELEVEMENT, "TRANSACTION 1A", "", -200.00)
@@ -50,6 +52,7 @@ public class TransactionFilteringTest extends LoggedInFunctionalTestCase {
       .checkValue(200604, 14, 1400.00);
 
     mainAccounts.select("Account n. 1");
+    transactions.checkFilterMessage("Account: Account n. 1");
     transactions.initContent()
       .add("15/04/2006", TransactionType.PRELEVEMENT, "TRANSACTION 1A", "", -200.00)
       .check();
@@ -94,7 +97,7 @@ public class TransactionFilteringTest extends LoggedInFunctionalTestCase {
 
     mainAccounts.select("Account n. 1");
     mainAccounts.checkSelectedAccounts("Account n. 1");
-    transactions.checkClearFilterButtonShown();
+    transactions.checkFilterMessage("Account: Account n. 1");
     transactions.initAmountContent()
       .add("11/05/2006", "TRANSACTION 1C", -100.00, "To categorize", 500.00, 1500.00, "Account n. 1")
       .add("08/05/2006", "TRANSACTION 1B", -200.00, "To categorize", 600.00, 1800.00, "Account n. 1")
@@ -118,7 +121,7 @@ public class TransactionFilteringTest extends LoggedInFunctionalTestCase {
 
     mainAccounts.select("Account n. 2");
     mainAccounts.checkSelectedAccounts("Account n. 2");
-    transactions.checkClearFilterButtonShown();
+    transactions.checkFilterMessage("Account: Account n. 2");
     transactions.initAmountContent()
       .add("10/05/2006", "TRANSACTION 2B", -200.00, "To categorize", 1000.00, 1600.00, "Account n. 2")
       .add("05/05/2006", "TRANSACTION 2A", -300.00, "To categorize", 1200.00, 2000.00, "Account n. 2")
@@ -131,7 +134,7 @@ public class TransactionFilteringTest extends LoggedInFunctionalTestCase {
       .checkValue(200605, 3, 1500.00);
 
     savingsAccounts.select("Account n. 3");
-    transactions.checkClearFilterButtonShown();
+    transactions.checkFilterMessage("Account: Account n. 3");
     transactions.initContent()
       .add("08/05/2006", TransactionType.PRELEVEMENT, "TRANSACTION 3A", "", -1000.00)
       .check();
@@ -143,7 +146,7 @@ public class TransactionFilteringTest extends LoggedInFunctionalTestCase {
 
     transactions.clearCurrentFilter();
     mainAccounts.checkNoAccountsSelected();
-    transactions.checkClearFilterButtonHidden();
+    transactions.checkNoFilterMessageShown();
     transactions.initAmountContent()
       .add("11/05/2006", "TRANSACTION 1C", -100.00, "To categorize", 500.00, 1500.00, "Account n. 1")
       .add("10/05/2006", "TRANSACTION 2B", -200.00, "To categorize", 1000.00, 1600.00, "Account n. 2")
@@ -240,7 +243,7 @@ public class TransactionFilteringTest extends LoggedInFunctionalTestCase {
 
     mainAccounts.select("Account n. 3");
     mainAccounts.checkSelectedAccounts("Account n. 3");
-    transactions.checkClearFilterButtonShown();
+    transactions.checkFilterMessage("Account: Account n. 3");
     transactions.checkEmpty();
     transactions.checkGraph("Account n. 3 - april 2006")
       .checkRange(200604, 200604)
@@ -250,7 +253,7 @@ public class TransactionFilteringTest extends LoggedInFunctionalTestCase {
 
     transactions.clearCurrentFilter();
     mainAccounts.checkNoAccountsSelected();
-    transactions.checkClearFilterButtonHidden();
+    transactions.checkNoFilterMessageShown();
     timeline.selectMonths(200604, 200605);
     transactions.initContent()
       .add("08/05/2006", TransactionType.PRELEVEMENT, "TRANSACTION 1C", "", -200.00)

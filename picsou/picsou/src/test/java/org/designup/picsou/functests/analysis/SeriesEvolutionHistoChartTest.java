@@ -1,6 +1,5 @@
 package org.designup.picsou.functests.analysis;
 
-import org.designup.picsou.functests.checkers.components.HistoDailyChecker;
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
 import org.designup.picsou.model.TransactionType;
@@ -486,7 +485,7 @@ public class SeriesEvolutionHistoChartTest extends LoggedInFunctionalTestCase {
       .add("15/06/2009", TransactionType.PRELEVEMENT, "AUCHAN", "", -200.00, "Groceries")
       .add("10/06/2009", TransactionType.PRELEVEMENT, "AUCHAN", "", -250.00, "Groceries")
       .check();
-    transactions.checkClearFilterButtonShown();
+    transactions.checkFilterMessage("Envelope");
     transactions.clearCurrentFilter();
 
     views.selectAnalysis();

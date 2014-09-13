@@ -1,4 +1,4 @@
-package org.designup.picsou.gui.budget;
+package org.designup.picsou.gui.printing.budget.gauges;
 
 import org.designup.picsou.gui.model.BudgetStat;
 import org.designup.picsou.model.BudgetArea;
@@ -18,25 +18,25 @@ import java.util.Set;
 
 import static org.globsframework.model.utils.GlobMatchers.fieldIn;
 
-public class BudgetAreaHeader {
+public class BudgetAreaBlockHeader {
 
   private BudgetArea budgetArea;
-  private BudgetAreaHeaderUpdater headerUpdater;
+  private BudgetAreaBlockHeaderUpdater headerUpdater;
   private GlobRepository repository;
 
   private Set<Integer> selectedMonthIds = Collections.emptySet();
 
-  public static BudgetAreaHeader init(BudgetArea budgetArea,
-                                      BudgetAreaHeaderUpdater headerUpdater,
+  public static BudgetAreaBlockHeader init(BudgetArea budgetArea,
+                                      BudgetAreaBlockHeaderUpdater headerUpdater,
                                       GlobRepository repository,
                                       Directory directory) {
-    return new BudgetAreaHeader(budgetArea, headerUpdater, repository, directory);
+    return new BudgetAreaBlockHeader(budgetArea, headerUpdater, repository, directory);
   }
 
-  private BudgetAreaHeader(BudgetArea budgetArea,
-                           BudgetAreaHeaderUpdater headerUpdater,
-                           GlobRepository repository,
-                           Directory directory) {
+  private BudgetAreaBlockHeader(BudgetArea budgetArea,
+                                BudgetAreaBlockHeaderUpdater headerUpdater,
+                                GlobRepository repository,
+                                Directory directory) {
     this.budgetArea = budgetArea;
     this.headerUpdater = headerUpdater;
     this.repository = repository;
@@ -70,5 +70,4 @@ public class BudgetAreaHeader {
     budgetStat.addAll(repository.getAll(BudgetStat.TYPE, fieldIn(BudgetStat.MONTH, selectedMonthIds)));
     headerUpdater.update(budgetStat, budgetArea);
   }
-
 }

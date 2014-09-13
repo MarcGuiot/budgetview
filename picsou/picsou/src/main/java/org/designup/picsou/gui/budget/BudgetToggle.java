@@ -1,9 +1,13 @@
 package org.designup.picsou.gui.budget;
 
+import org.designup.picsou.gui.View;
+import org.designup.picsou.gui.accounts.utils.AccountFilter;
+import org.designup.picsou.gui.components.filtering.FilterManager;
+import org.designup.picsou.gui.components.filtering.Filterable;
+import org.designup.picsou.gui.components.filtering.components.FilterMessagePanel;
 import org.designup.picsou.model.Account;
 import org.designup.picsou.model.AccountType;
 import org.designup.picsou.model.SignpostStatus;
-import org.designup.picsou.model.UserPreferences;
 import org.globsframework.gui.GlobSelection;
 import org.globsframework.gui.GlobSelectionListener;
 import org.globsframework.gui.GlobsPanelBuilder;
@@ -11,17 +15,18 @@ import org.globsframework.gui.SelectionService;
 import org.globsframework.gui.splits.layout.CardHandler;
 import org.globsframework.gui.splits.utils.OnLoadListener;
 import org.globsframework.model.GlobRepository;
+import org.globsframework.model.utils.GlobMatcher;
 import org.globsframework.utils.directory.Directory;
 
 import java.util.Set;
 
-public class BudgetToggle implements GlobSelectionListener {
+public class BudgetToggle extends View implements GlobSelectionListener {
 
   private CardHandler cards;
-  private GlobRepository repository;
+  private FilterManager filterManager;
 
   public BudgetToggle(GlobRepository repository, Directory directory) {
-    this.repository = repository;
+    super(repository, directory);
     directory.get(SelectionService.class).addListener(this, Account.TYPE);
   }
 
@@ -48,8 +53,18 @@ public class BudgetToggle implements GlobSelectionListener {
     cards = builder.addCardHandler("budgetToggle");
     builder.addOnLoadListener(new OnLoadListener() {
       public void processLoad() {
-        cards.show("main");
+        showMain();
       }
     });
+
+    filterManager = new FilterManager(Filterable.NO_OP);
+    AccountFilter.initForPeriodStat(filterManager, repository, directory);
+
+    FilterMessagePanel accountFilterMessage = new FilterMessagePanel(filterManager, repository, directory);
+    builder.add("accountFilterMessage", accountFilterMessage.getPanel());
+  }
+
+  public void reset() {
+    filterManager.reset();
   }
 }

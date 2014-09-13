@@ -21,6 +21,7 @@ public class TransactionSearchTest extends LoggedInFunctionalTestCase {
 
     TextBox searchField = transactions.getSearchField();
     searchField.setText("pizza");
+    transactions.checkFilterMessage("Text: pizza");
     transactions.initContent()
       .add("18/07/2008", TransactionType.PRELEVEMENT, "Pizza Hut", "miam", -10.00)
       .add("17/07/2008", TransactionType.PRELEVEMENT, "Pizza Lapino", "beurk", -20.00)
@@ -28,6 +29,7 @@ public class TransactionSearchTest extends LoggedInFunctionalTestCase {
       .check();
 
     searchField.clear();
+    transactions.checkNoFilterMessageShown();
     transactions.initContent()
       .add("20/07/2008", TransactionType.PRELEVEMENT, "Fouquet's", "un café", -500.00)
       .add("19/07/2008", TransactionType.PRELEVEMENT, "Léon", "mmhhh", -50.00)
@@ -37,6 +39,7 @@ public class TransactionSearchTest extends LoggedInFunctionalTestCase {
       .check();
 
     searchField.appendText("a");
+    transactions.checkFilterMessage("Text: a");
     transactions.initContent()
       .add("20/07/2008", TransactionType.PRELEVEMENT, "Fouquet's", "un café", -500.00)
       .add("18/07/2008", TransactionType.PRELEVEMENT, "Pizza Hut", "miam", -10.00)
@@ -45,12 +48,14 @@ public class TransactionSearchTest extends LoggedInFunctionalTestCase {
       .check();
 
     searchField.insertText("c", 0);
+    transactions.checkFilterMessage("Text: ca");
     transactions.initContent()
       .add("20/07/2008", TransactionType.PRELEVEMENT, "Fouquet's", "un café", -500.00)
       .check();
 
     searchField.pressKey(Key.DELETE);
     assertEquals("a", searchField.getText());
+    transactions.checkFilterMessage("Text: a");
     transactions.initContent()
       .add("20/07/2008", TransactionType.PRELEVEMENT, "Fouquet's", "un café", -500.00)
       .add("18/07/2008", TransactionType.PRELEVEMENT, "Pizza Hut", "miam", -10.00)
@@ -59,19 +64,23 @@ public class TransactionSearchTest extends LoggedInFunctionalTestCase {
       .check();
 
     searchField.setText("50.");
+    transactions.checkFilterMessage("Text: 50.");
     transactions.initContent()
       .add("19/07/2008", TransactionType.PRELEVEMENT, "Léon", "mmhhh", -50.00)
       .check();
 
     searchField.setText("unknown");
+    transactions.checkFilterMessage("Text: unknown");
     transactions.checkEmpty();
 
     searchField.setText("50.");
+    transactions.checkFilterMessage("Text: 50.");
     transactions.initContent()
       .add("19/07/2008", TransactionType.PRELEVEMENT, "Léon", "mmhhh", -50.00)
       .check();
     
     searchField.setText("é");
+    transactions.checkFilterMessage("Text: é");
     transactions.initContent()
       .add("20/07/2008", TransactionType.PRELEVEMENT, "Fouquet's", "un café", -500.00)
       .add("19/07/2008", TransactionType.PRELEVEMENT, "Léon", "mmhhh", -50.00)
@@ -79,6 +88,7 @@ public class TransactionSearchTest extends LoggedInFunctionalTestCase {
       .check();
 
     searchField.setText("É");
+    transactions.checkFilterMessage("Text: É");
     transactions.initContent()
       .add("20/07/2008", TransactionType.PRELEVEMENT, "Fouquet's", "un café", -500.00)
       .add("19/07/2008", TransactionType.PRELEVEMENT, "Léon", "mmhhh", -50.00)
@@ -86,6 +96,7 @@ public class TransactionSearchTest extends LoggedInFunctionalTestCase {
       .check();
 
     searchField.setText("e");
+    transactions.checkFilterMessage("Text: e");
     transactions.initContent()
       .add("20/07/2008", TransactionType.PRELEVEMENT, "Fouquet's", "un café", -500.00)
       .add("19/07/2008", TransactionType.PRELEVEMENT, "Léon", "mmhhh", -50.00)
@@ -109,10 +120,10 @@ public class TransactionSearchTest extends LoggedInFunctionalTestCase {
     categorization.setVariable("FNAC", "Leisures");
 
     timeline.selectAll();
-    transactions.checkClearFilterButtonHidden();
+    transactions.checkNoFilterMessageShown();
 
     transactions.setSearchText("vi");
-    transactions.checkClearFilterButtonShown();
+    transactions.checkFilterMessage("Text: vi");
     transactions.initContent()
       .add("20/07/2008", TransactionType.PRELEVEMENT, "Vinci", "", -5.00, "Transports")
       .add("15/07/2008", TransactionType.PRELEVEMENT, "Virgin", "", -50.00, "Leisures")
@@ -121,13 +132,14 @@ public class TransactionSearchTest extends LoggedInFunctionalTestCase {
       .check();
 
     timeline.selectMonth("2008/07");
-    transactions.checkClearFilterButtonShown();
+    transactions.checkFilterMessage("Text: vi");
     transactions.initContent()
       .add("20/07/2008", TransactionType.PRELEVEMENT, "Vinci", "", -5.00, "Transports")
       .add("15/07/2008", TransactionType.PRELEVEMENT, "Virgin", "", -50.00, "Leisures")
       .check();
 
     transactions.clearSearch();
+    transactions.checkNoFilterMessageShown();
     transactions.initContent()
       .add("20/07/2008", TransactionType.PRELEVEMENT, "Vinci", "", -5.00, "Transports")
       .add("15/07/2008", TransactionType.PRELEVEMENT, "FNAC", "", -500.00, "Leisures")
@@ -135,7 +147,7 @@ public class TransactionSearchTest extends LoggedInFunctionalTestCase {
       .check();
 
     transactions.setSearchText("FN");
-    transactions.checkClearFilterButtonShown();
+    transactions.checkFilterMessage("Text: FN");
     transactions.initContent()
       .add("15/07/2008", TransactionType.PRELEVEMENT, "FNAC", "", -500.00, "Leisures")
       .check();
@@ -148,7 +160,7 @@ public class TransactionSearchTest extends LoggedInFunctionalTestCase {
       .check();
     transactions.checkSearchTextIsEmpty();
     mainAccounts.checkNoAccountsSelected();
-    transactions.checkClearFilterButtonHidden();
+    transactions.checkNoFilterMessageShown();
   }
 
   public void testSearchTakesIntoAccountWhetherPlannedTransactionsAreShownOrNot() throws Exception {
@@ -249,6 +261,7 @@ public class TransactionSearchTest extends LoggedInFunctionalTestCase {
     categorization.setVariable("Pizza Pino", "Alimentation", "Italien");
 
     categorization.search("Italien");
+    categorization.checkFilterMessage("Text: Italien");
     categorization.initContent()
       .add("18/07/2008", "Gastronomie / Italienne", "Pizza Hut", -10.00)
       .add("17/07/2008", "Alimentation / Italien", "Pizza Lapino", -20.00)
@@ -257,7 +270,7 @@ public class TransactionSearchTest extends LoggedInFunctionalTestCase {
     
     TextBox searchField = transactions.getSearchField();
     searchField.setText("Italien");
-    transactions.checkClearFilterButtonShown();
+    transactions.checkFilterMessage("Text: Italien");
     transactions.initContent()
       .add("18/07/2008", TransactionType.PRELEVEMENT, "PIZZA HUT", "miam", -10.00, "Gastronomie / Italienne")
       .add("17/07/2008", TransactionType.PRELEVEMENT, "PIZZA LAPINO", "beurk", -20.00, "Alimentation / Italien")

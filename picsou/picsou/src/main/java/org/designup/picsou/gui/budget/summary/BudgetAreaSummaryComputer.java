@@ -23,7 +23,6 @@ public abstract class BudgetAreaSummaryComputer implements ColorChangeListener {
   protected TotalBudgetAreaAmounts totalAmounts;
   protected Color normalAmountColor;
   protected Color errorOverrunAmountColor;
-
   protected Color positiveOverrunAmountColor;
   private String normalAmountColorKey = "block.inner.amount";
   private String errorOverrunAmountColorKey = "block.inner.amount.overrun.error";
@@ -85,7 +84,6 @@ public abstract class BudgetAreaSummaryComputer implements ColorChangeListener {
   }
 
   static boolean isFutureOrPresentMonth(Glob budgetStat, final Integer currentMonthId) {
-
     Integer monthId = budgetStat.getType() == BudgetStat.TYPE ?
                       budgetStat.get(BudgetStat.MONTH) :
                       budgetStat.get(SavingsBudgetStat.MONTH);

@@ -6,7 +6,8 @@ public enum TipPosition {
   TOP_LEFT,
   TOP_RIGHT,
   BOTTOM_LEFT,
-  BOTTOM_RIGHT;
+  BOTTOM_RIGHT,
+  CENTER;
 
   BalloonTipPositioner getPositioner() {
     switch (this) {
@@ -18,6 +19,8 @@ public enum TipPosition {
         return new LeftBelowPositioner(10, 20);
       case BOTTOM_RIGHT:
         return new RightBelowPositioner(10, 20);
+      case CENTER:
+        return new CenteredPositioner(10);
     }
     throw new RuntimeException("Undefined position");
   }

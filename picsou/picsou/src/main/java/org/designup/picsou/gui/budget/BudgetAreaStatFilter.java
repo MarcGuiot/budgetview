@@ -6,6 +6,7 @@ import org.designup.picsou.gui.utils.MonthMatcher;
 import org.designup.picsou.model.*;
 import org.globsframework.model.*;
 import org.globsframework.model.utils.GlobMatcher;
+import org.globsframework.model.utils.GlobMatchers;
 import org.globsframework.utils.Utils;
 
 import java.util.Collections;
@@ -17,6 +18,7 @@ public class BudgetAreaStatFilter implements GlobMatcher {
   private boolean monthFilteringEnabled = true;
   private Set<Integer> selectedMonthIds = Collections.emptySet();
   private BudgetArea budgetArea;
+  private GlobMatcher accountMatcher = GlobMatchers.ALL;
 
   public BudgetAreaStatFilter(BudgetArea budgetArea) {
     this.budgetArea = budgetArea;
@@ -43,6 +45,10 @@ public class BudgetAreaStatFilter implements GlobMatcher {
 
   public boolean matches(Glob periodSeriesStat, GlobRepository repository) {
     if (!periodSeriesStat.isTrue(PeriodSeriesStat.VISIBLE)) {
+      return false;
+    }
+
+    if (!accountMatcher.matches(periodSeriesStat, repository)) {
       return false;
     }
 
@@ -81,5 +87,9 @@ public class BudgetAreaStatFilter implements GlobMatcher {
     }
     boolean activeMonthsInPeriod = !(selectedMonthIds.size() == notActive);
     return activeMonthsInPeriod && seriesDateFilter.matches(series, repository);
+  }
+
+  public void setAccountMatcher(GlobMatcher matcher) {
+    accountMatcher = matcher;
   }
 }

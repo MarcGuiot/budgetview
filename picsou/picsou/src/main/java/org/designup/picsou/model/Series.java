@@ -20,6 +20,8 @@ import org.globsframework.utils.serialization.SerializedInput;
 import org.globsframework.utils.serialization.SerializedInputOutputFactory;
 import org.globsframework.utils.serialization.SerializedOutput;
 
+import java.util.Set;
+
 import static org.globsframework.model.utils.GlobMatchers.linkedTo;
 
 public class Series {
@@ -68,7 +70,7 @@ public class Series {
   public static BooleanField SHOULD_REPORT;
 
   /**
-   * sert pour en savings mais aussi pour les compte carte a debit differe
+   * sert pour les savings mais aussi pour les compte carte a debit differe
    */
   @Target(Account.class)
   public static LinkField FROM_ACCOUNT;
@@ -251,6 +253,15 @@ public class Series {
   public static boolean isSavingToExternal(FieldValues series) {
     return series.get(Series.BUDGET_AREA).equals(BudgetArea.SAVINGS.getId()) &&
            series.get(Series.TARGET_ACCOUNT).equals(Account.EXTERNAL_ACCOUNT_ID);
+  }
+
+  public static boolean isForAccount(Glob series, Set<Integer> accountIds) {
+    return (series != null) && accountIds.contains(series.get(TARGET_ACCOUNT));
+  }
+
+  public static boolean isForMainOrUnknownAccount(Glob series, GlobRepository repository) {
+    Glob account = repository.findLinkTarget(series, TARGET_ACCOUNT);
+    return account == null || Account.isMain(account);
   }
 
   public static boolean isUncategorized(Integer seriesId) {

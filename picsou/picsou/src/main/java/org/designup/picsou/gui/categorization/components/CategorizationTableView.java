@@ -6,7 +6,7 @@ import org.designup.picsou.gui.components.filtering.FilterClearer;
 import org.designup.picsou.gui.components.filtering.FilterListener;
 import org.designup.picsou.gui.components.filtering.FilterManager;
 import org.designup.picsou.gui.components.filtering.Filterable;
-import org.designup.picsou.gui.components.filtering.components.FilterClearingPanel;
+import org.designup.picsou.gui.components.filtering.components.FilterMessagePanel;
 import org.designup.picsou.gui.components.table.PicsouTableHeaderPainter;
 import org.designup.picsou.gui.description.stringifiers.SeriesDescriptionStringifier;
 import org.designup.picsou.gui.description.stringifiers.TransactionDateStringifier;
@@ -184,7 +184,7 @@ public class CategorizationTableView extends View implements TableView, Filterab
     TransactionFilterPanel search = new TransactionFilterPanel(filterManager, repository, directory);
     builder.add("transactionSearch", search.getPanel());
 
-    FilterClearingPanel filterClearingPanel = new FilterClearingPanel(filterManager, repository, directory);
+    FilterMessagePanel filterClearingPanel = new FilterMessagePanel(filterManager, repository, directory);
     builder.add("customFilterMessage", filterClearingPanel.getPanel());
 
     repository.addChangeListener(new DefaultChangeSetListener() {
@@ -247,7 +247,7 @@ public class CategorizationTableView extends View implements TableView, Filterab
   }
 
   public void reset() {
-    filterManager.clear();
+    filterManager.removeAll();
   }
 
   public void colorsChanged(ColorLocator colorLocator) {
@@ -356,8 +356,9 @@ public class CategorizationTableView extends View implements TableView, Filterab
       filterManager.reset();
     }
     else {
-      filterManager.clear();
+      filterManager.removeAll();
       filterManager.replaceAllWith(TRANSACTIONS_FILTER,
+                                   Lang.get("filter.transaction.several", transactions.size()),
                                    fieldIn(Transaction.ID, transactions.getValueSet(Transaction.ID)));
     }
     updateTableFilter();

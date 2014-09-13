@@ -1,15 +1,17 @@
 package org.designup.picsou.gui.utils.dev;
 
+import org.designup.picsou.gui.model.PeriodBudgetAreaStat;
+import org.designup.picsou.gui.model.PeriodSeriesStat;
+import org.designup.picsou.model.Account;
+import org.designup.picsou.model.BudgetArea;
 import org.designup.picsou.model.Series;
-import org.designup.picsou.model.SeriesBudget;
-import org.designup.picsou.triggers.SeriesBudgetTrigger;
-import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.format.GlobPrinter;
-import org.globsframework.model.utils.GlobMatchers;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
+
+import static org.globsframework.model.utils.GlobMatchers.fieldEquals;
 
 public class DumpRepositoryAction extends AbstractAction {
 
@@ -21,9 +23,18 @@ public class DumpRepositoryAction extends AbstractAction {
   }
 
   public void actionPerformed(ActionEvent actionEvent) {
-    GlobPrinter.print(repository, Series.TYPE);
-    
-    GlobList seriesBudget = repository.getAll(SeriesBudget.TYPE, GlobMatchers.fieldEquals(SeriesBudget.SERIES, 290));
-    GlobPrinter.print(seriesBudget);
+    doPrint(repository);
+  }
+
+  public static void doPrint(GlobRepository repository) {
+
+    BudgetArea area = BudgetArea.INCOME;
+
+    System.out.println("\n\n******************************************************************************************");
+    GlobPrinter.print(repository.getAll(Account.TYPE, Account.userCreatedAccounts()));
+    GlobPrinter.print(repository.getAll(Series.TYPE, fieldEquals(Series.BUDGET_AREA, area.getId())));
+    GlobPrinter.print(repository.getAll(PeriodSeriesStat.TYPE, fieldEquals(PeriodSeriesStat.BUDGET_AREA, area.getId())));
+    GlobPrinter.print(repository.getAll(PeriodBudgetAreaStat.TYPE, fieldEquals(PeriodBudgetAreaStat.BUDGET_AREA, area.getId())));
+    System.out.println("******************************************************************************************\n\n");
   }
 }

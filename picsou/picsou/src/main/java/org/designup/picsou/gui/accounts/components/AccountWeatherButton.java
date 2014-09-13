@@ -1,6 +1,8 @@
 package org.designup.picsou.gui.accounts.components;
 
 import org.designup.picsou.gui.components.tips.DetailsTip;
+import org.designup.picsou.gui.components.tips.TipAnchor;
+import org.designup.picsou.gui.components.tips.TipPosition;
 import org.designup.picsou.gui.model.AccountWeather;
 import org.designup.picsou.gui.model.WeatherType;
 import org.designup.picsou.gui.utils.Gui;
@@ -82,6 +84,8 @@ public class AccountWeatherButton implements Disposable {
     weatherButton = new JButton(new AbstractAction() {
       public void actionPerformed(ActionEvent e) {
         DetailsTip tip = new DetailsTip(weatherButton, weatherButton.getToolTipText(), directory);
+        tip.setPosition(TipPosition.CENTER);
+        tip.setAnchor(TipAnchor.NORTH);
         tip.show();
       }
     });

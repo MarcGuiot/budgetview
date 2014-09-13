@@ -363,7 +363,7 @@
            inactiveLabelColor="gauge.detail.label.inactive"
            highlightedBackgroundColor="gauge.detail.bg.highlighted"
            highlightedLabelColor="gauge.detail.label.highlighted"
-            />
+      />
 
     <!-- Split panes -->
 

@@ -12,6 +12,7 @@ import org.designup.picsou.model.BudgetArea;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.utils.TablePrinter;
 import org.globsframework.utils.TestUtils;
+import org.globsframework.utils.Utils;
 import org.uispec4j.Button;
 import org.uispec4j.Panel;
 import org.uispec4j.*;
@@ -98,9 +99,14 @@ public class BudgetViewChecker extends ViewChecker {
       return panel;
     }
 
-    public BudgetAreaChecker checkTotalAmounts(double observed, double planned) {
-      checkTotalObserved(observed);
-      checkTotalPlanned(planned);
+    public BudgetAreaChecker checkTotalAmounts(final double observed, final double planned) {
+      assertThat(new Assertion() {
+        public void check() {
+          String expected = convert(observed) + "/" + convert(planned);
+          String actual = getPanel().getTextBox("totalObservedAmount").getText() + "/" + getPanel().getTextBox("totalPlannedAmount").getText();
+          Assert.assertEquals(expected, actual);
+        }
+      });
       return this;
     }
 

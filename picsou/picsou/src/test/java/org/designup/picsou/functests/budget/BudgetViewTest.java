@@ -134,8 +134,8 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
     budgetView.savings.alignAndPropagate("Epargne");
 
     budgetView.savings.checkTitle("Savings");
-    budgetView.savings.checkTotalAmounts(25.0, 25.0);
     budgetView.savings.checkSeries("Epargne", 25.0, 25.0);
+    budgetView.savings.checkTotalAmounts(25.0, 25.0);
 
     views.selectCategorization();
     categorization.getSavings().checkSelectedSeries("Epargne");
@@ -916,89 +916,5 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
     budgetView.income.editSeries("Salary").setAmount(0.00).validate();
     budgetView.income.checkDeltaGauge("Salary", 1200.0, 0.0, -1.00,
                                       "The amount was 1200.00 in august 2008, and it is set to zero in september 2008");
-  }
-
-  public void testPlannedAmountsAreHightlightedWhenAnAccountIsSelected() throws Exception {
-
-    addOns.activateGroups();
-
-    OfxBuilder
-      .init(this)
-      .addBankAccount(-1, 10674, "000111", 1000.00, "2008/07/10")
-      .addTransaction("2008/07/05", 1000.00, "WorldCo")
-      .addTransaction("2008/07/10", -100.00, "FNAC")
-      .load();
-
-    OfxBuilder
-      .init(this)
-      .addBankAccount(-1, 10674, "000222", -2000.00, "2008/07/20")
-      .addTransaction("2008/07/15", -200.00, "Auchan")
-      .addTransaction("2008/07/20", -300.00, "Darty")
-      .load();
-
-    OfxBuilder
-      .init(this)
-      .addBankAccount(-1, 10674, "000333", 3000.00, "2008/07/30")
-      .addTransaction("2008/07/25", -30.00, "Total")
-      .addTransaction("2008/07/20", -20.00, "McDo")
-      .load();
-
-    views.selectBudget();
-    accounts.checkShowsAccounts("Account n. 000111", "Account n. 000222", "Account n. 000333");
-
-    categorization.setNewIncome("WorldCo", "Salary");
-    categorization.setNewVariable("Auchan", "Groceries");
-    categorization.setNewVariable("McDo", "Restaurant");
-    budgetView.variable.addToNewGroup("Groceries", "Food");
-    budgetView.variable.addToGroup("Restaurant", "Food");
-    categorization.setNewVariable("FNAC", "Leisures 111");
-    categorization.setNewVariable("Darty", "Leisures 222");
-    budgetView.variable.addToNewGroup("Leisures 111", "Leisures");
-    budgetView.variable.addToGroup("Leisures 222", "Leisures");
-
-    budgetView.income.checkPlannedNotSelected("Salary");
-    budgetView.variable.checkPlannedNotSelected("Leisures", "Food", "Groceries", "Leisures 111", "Leisures 222");
-
-    mainAccounts.select("Account n. 000111");
-    budgetView.income.checkPlannedSelected("Salary");
-    budgetView.variable.checkPlannedSelected("Leisures", "Leisures 111");
-    budgetView.variable.checkPlannedNotSelected("Food", "Groceries", "Leisures 222");
-
-    mainAccounts.select("Account n. 000333");
-    budgetView.income.checkPlannedNotSelected("Salary");
-    budgetView.variable.checkPlannedSelected("Food", "Restaurant");
-    budgetView.variable.checkPlannedNotSelected("Groceries", "Leisures", "Leisures 111", "Leisures 222");
-
-    mainAccounts.select("Account n. 000222");
-    budgetView.income.checkPlannedNotSelected("Salary");
-    budgetView.variable.checkPlannedSelected("Food", "Groceries", "Leisures", "Leisures 222");
-    budgetView.variable.checkPlannedNotSelected("Restaurant", "Leisures 111");
-
-    budgetView.variable.collapseGroup("Food");
-    budgetView.income.checkPlannedNotSelected("Salary");
-    budgetView.variable.checkPlannedSelected("Food", "Leisures", "Leisures 222");
-    budgetView.variable.checkPlannedNotSelected("Leisures 111");
-
-    mainAccounts.select("Account n. 000333");
-    budgetView.income.checkPlannedNotSelected("Salary");
-    budgetView.variable.checkPlannedSelected("Food");
-    budgetView.variable.checkPlannedNotSelected("Leisures", "Leisures 111", "Leisures 222");
-
-    mainAccounts.select("Account n. 000111");
-    budgetView.variable.openDeleteSeries("Leisures 111").uncategorize();
-    budgetView.income.checkPlannedSelected("Salary");
-    budgetView.variable.checkPlannedSelected();
-    budgetView.variable.checkPlannedNotSelected("Leisures", "Leisures 222", "Food");
-
-    mainAccounts.select("Account n. 000222");
-    budgetView.variable.deleteGroup("Food");
-    budgetView.income.checkPlannedNotSelected("Salary");
-    budgetView.variable.checkPlannedSelected("Groceries", "Leisures", "Leisures 222");
-    budgetView.variable.checkPlannedNotSelected("Restaurant");
-
-    mainAccounts.openDelete("Account n. 000222").validate();
-    mainAccounts.checkNoAccountsSelected();
-    budgetView.income.checkPlannedNotSelected("Salary");
-    budgetView.variable.checkPlannedNotSelected("Restaurant");
   }
 }

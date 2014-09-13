@@ -125,8 +125,8 @@ public class AccountBlockLayout implements LayoutManager {
 
     if (positionsChart.isVisible()) {
       int chartTop = accountUpdateDateTop + secondRowHeight + VERTICAL_MARGIN;
-      positionsChart.setBounds(left + CHART_LEFT_PADDING, chartTop + CHART_PADDING,
-                               width - CHART_PADDING - CHART_LEFT_PADDING, CHART_HEIGHT - 2 * CHART_PADDING);
+      positionsChart.setBounds(left + CHART_LEFT_PADDING, chartTop,
+                               width - CHART_PADDING - CHART_LEFT_PADDING, CHART_HEIGHT - CHART_PADDING);
     }
   }
 

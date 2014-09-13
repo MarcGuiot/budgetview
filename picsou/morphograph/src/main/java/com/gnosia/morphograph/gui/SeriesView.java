@@ -37,7 +37,7 @@ public class SeriesView implements GlobSelectionListener {
     nextAction = new NextAction();
     builder.add("next", nextAction);
     builder.setSource(SeriesView.class, "/layout/series.xml");
-    panel = (JPanel)builder.load();
+    panel = builder.load();
     panel.setOpaque(true);
     exoPanelContainer.setOpaque(true);
   }
@@ -81,11 +81,6 @@ public class SeriesView implements GlobSelectionListener {
     SingleComponentPanels.install(exoPanelContainer, exoView.getPanel()).setOpaque(true);
     frame.validate();
     frame.repaint();
-  }
-
-  private Component parseSplitsFile(SplitsBuilder builder, String fileName) {
-    builder.setSource(getClass(), fileName);
-    return builder.load();
   }
 
   private void clearPanel() {
