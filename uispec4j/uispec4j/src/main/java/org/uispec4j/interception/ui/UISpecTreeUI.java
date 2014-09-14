@@ -18,14 +18,14 @@ public class UISpecTreeUI extends BasicTreeUI {
   }
 
   public Dimension getPreferredSize(JComponent c) {
-    return Empty.NULL_DIMENSION;
+    return new Dimension(Empty.NULL_DIMENSION);
   }
 
   public Dimension getMaximumSize(JComponent c) {
-    return Empty.NULL_DIMENSION;
+    return new Dimension(Empty.NULL_DIMENSION);
   }
 
   public Dimension getMinimumSize(JComponent c) {
-    return Empty.NULL_DIMENSION;
+    return new Dimension(Empty.NULL_DIMENSION);
   }
 }

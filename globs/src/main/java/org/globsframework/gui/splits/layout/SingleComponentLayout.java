@@ -26,7 +26,7 @@ public class SingleComponentLayout implements LayoutManager {
 
   public Dimension preferredLayoutSize(Container parent) {
     Component component = getSingleComponent(parent);
-    Dimension size = component.getPreferredSize();
+    Dimension size = new Dimension(component.getPreferredSize());
     size.width += insets.right + insets.left;
     size.height += insets.top + insets.bottom;
     return size;
@@ -34,7 +34,7 @@ public class SingleComponentLayout implements LayoutManager {
 
   public Dimension minimumLayoutSize(Container parent) {
     Component component = getSingleComponent(parent);
-    Dimension size = component.getMinimumSize();
+    Dimension size = new Dimension(component.getMinimumSize());
     size.width += insets.right + insets.left;
     size.height += insets.top + insets.bottom;
     return size;
@@ -43,8 +43,8 @@ public class SingleComponentLayout implements LayoutManager {
   public void layoutContainer(Container parent) {
     Component component = getSingleComponent(parent);
     component.setBounds(insets.left, insets.top,
-                            parent.getWidth() - insets.right - insets.left,
-                            parent.getHeight() - insets.top - insets.bottom);
+                        parent.getWidth() - insets.right - insets.left,
+                        parent.getHeight() - insets.top - insets.bottom);
   }
 
   private Component getSingleComponent(Container parent) {

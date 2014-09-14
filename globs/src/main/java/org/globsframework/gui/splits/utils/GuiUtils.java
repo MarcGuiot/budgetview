@@ -283,7 +283,7 @@ public class GuiUtils {
       parentSize = maxSize;
     }
 
-    Dimension windowSize = window.getSize();
+    Dimension windowSize = new Dimension(window.getSize());
     if (windowSize.width > maxSize.width) {
       windowSize.width = maxSize.width;
     }
@@ -310,7 +310,7 @@ public class GuiUtils {
   public static Dimension getMaxSize(Window frame) {
     Toolkit toolkit = Toolkit.getDefaultToolkit();
     GraphicsConfiguration config = frame.getGraphicsConfiguration();
-    Dimension availableScreenSize = toolkit.getScreenSize();
+    Dimension availableScreenSize = new Dimension(toolkit.getScreenSize());
     Insets insets = toolkit.getScreenInsets(config);
     availableScreenSize.width -= (insets.left + insets.right);
     availableScreenSize.height -= (insets.top + insets.bottom);

@@ -29,6 +29,9 @@ public class MainPanelContainer extends JPanel implements GlobSelectionListener 
     Glob currentCard = selection.getAll(Card.TYPE).getFirst();
     if (currentCard != null) {
       layout.setCard(Card.get(currentCard));
+      invalidate();
+//      revalidate();
+//      validate();
     }
   }
 }

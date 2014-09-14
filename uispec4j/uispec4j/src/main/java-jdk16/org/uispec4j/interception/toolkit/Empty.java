@@ -223,11 +223,11 @@ public final class Empty {
     }
 
     public Dimension getMinimumSize() {
-      return NULL_DIMENSION;
+      return new Dimension(NULL_DIMENSION);
     }
 
     public Dimension getPreferredSize() {
-      return NULL_DIMENSION;
+      return new Dimension(NULL_DIMENSION);
     }
 
     public Toolkit getToolkit() {
@@ -253,14 +253,14 @@ public final class Empty {
     }
 
     public Dimension minimumSize() {
-      return NULL_DIMENSION;
+      return new Dimension(NULL_DIMENSION);
     }
 
     public void paint(Graphics g) {
     }
 
     public Dimension preferredSize() {
-      return NULL_DIMENSION;
+      return new Dimension(NULL_DIMENSION);
     }
 
     public boolean prepareImage(Image img, int w, int h, ImageObserver o) {
@@ -640,19 +640,19 @@ public final class Empty {
     }
 
     public Dimension getMinimumSize() {
-      return NULL_DIMENSION;
+      return new Dimension(NULL_DIMENSION);
     }
 
     public Dimension getPreferredSize() {
-      return NULL_DIMENSION;
+      return new Dimension(NULL_DIMENSION);
     }
 
     public Dimension minimumSize() {
-      return NULL_DIMENSION;
+      return new Dimension(NULL_DIMENSION);
     }
 
     public Dimension preferredSize() {
-      return NULL_DIMENSION;
+      return new Dimension(NULL_DIMENSION);
     }
 
     public void setFont(Font f) {

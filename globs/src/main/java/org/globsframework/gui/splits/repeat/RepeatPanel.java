@@ -138,7 +138,8 @@ public class RepeatPanel implements Repeat {
 
   public void updateComplete() {
     updateInProgress = false;
-    GuiUtils.revalidate(panel);
+    panel.validate();
+//    GuiUtils.revalidate(panel);
     panel.repaint();
     updateVisibility();
   }
