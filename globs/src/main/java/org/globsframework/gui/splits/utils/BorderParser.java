@@ -118,7 +118,7 @@ public class BorderParser {
                               "- etched\n" +
                               "- bevel(lowered)\n" +
                               "- bevel(raised)\n" +
-                              "- matte(1,2,3,4,#00FF00\n" +
+                              "- matte(1,2,3,4,#00FF00)\n" +
                               "- line(#00FF00)");
   }
 }

@@ -113,4 +113,8 @@ public class DashboardTest extends LoggedInFunctionalTestCase {
   public void testTODO() throws Exception {
     fail("cas où il n'y a pas d'opérations prévues - sunny?");
   }
+
+  public void testAccountFiltering() throws Exception {
+    fail("tbd");
+  }
 }
