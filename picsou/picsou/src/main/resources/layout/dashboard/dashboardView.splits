@@ -6,7 +6,8 @@
            opaque="false" ui="basicButtonUI" borderPainted="false" cursor="hand" font="LatoLight,plain,40"
            border="empty"
            fill="none" anchor="center" weightY="0.1"/>
-    <style selector="htmlEditorPane.label" font="LatoLight,plain,14" weightY="1" fill="horizontal" anchor="center"/>
+    <style selector="htmlEditorPane.label" font="LatoLight,plain,13" foreground="dashboard.text"
+           weightY="1" fill="horizontal" anchor="center"/>
 
     <style id="textOK" selector="x" foreground="dashboard.text.ok"/>
     <style id="textNOK" selector="x" foreground="dashboard.text.nok"/>
@@ -14,14 +15,14 @@
     <style id="importOK" selector="x" icon="dashboard/import_ok.png" horizontalTextPosition="left" iconTextGap="2"/>
     <style id="importNOK" selector="x" icon="dashboard/import_nok.png" horizontalTextPosition="left" iconTextGap="2"/>
 
-    <style selector=".separatorRow" border="matte(1,0,1,0,dashboard.separator)" marginBottom="10" marginLeft="30" marginRight="30"/>
-    <style selector=".separatorRow .widget" font="LatoLight,plain,36"/>
+    <style selector=".separatorRow" border="matte(1,0,1,0,dashboard.separator)" opaque="true" background="dashboard.bg" marginBottom="10" marginLeft="30" marginRight="30"/>
+    <style selector=".separatorRow .widget" font="LatoLight,plain,32"/>
 
   </styles>
 
   <column name="dashboardView">
 
-    <row weightY="1" marginTop="20" marginBottom="30">
+    <row weightY="6" marginTop="20" marginBottom="30">
       <filler fill="horizontal"/>
       <column>
         <filler fill="vertical"/>
@@ -42,7 +43,7 @@
       <filler fill="horizontal"/>
     </row>
 
-    <row styleClass="separatorRow">
+    <row styleClass="separatorRow" weightY="0.1">
       <filler fill="horizontal"/>
       <button ref="importWidget" styleClass="widget"/>
       <htmlEditorPane ref="importLegend" styleClass="label" marginRight="30"/>
@@ -51,7 +52,7 @@
       <filler fill="horizontal"/>
     </row>
 
-    <panel ref="addOnsView" weightY="100"/>
+    <panel ref="addOnsView" weightY="4" marginTop="15"/>
 
   </column>
 
