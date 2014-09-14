@@ -28,7 +28,7 @@ public class DashboardTest extends LoggedInFunctionalTestCase {
 
     dashboard.checkContent(
       "| 0     | Days since your last import                                       |\n" +
-      "| 4 >   | Transactions to categorize                                        |\n" +
+      "| 4     | Transactions to categorize                                        |\n" +
       "| sunny | No overdraw forecast for your accounts until the end of September |\n" +
       "| +1250 | Available on you main accounts until the end of September         |\n" +
       "| +1250 | Total amount for your main accounts on 2014/08/09                 |\n");
@@ -65,7 +65,7 @@ public class DashboardTest extends LoggedInFunctionalTestCase {
 
     dashboard.checkContent(
       "| 0     | Days since your last import                                               |\n" +
-      "| 1 >   | Transactions to categorize                                                |\n" +
+      "| 1     | Transactions to categorize                                                |\n" +
       "| rainy | Important overdraw forecast for your accounts before the end of September |\n" +
       "| +600  | Available on you main accounts until the end of September                 |\n" +
       "| +1100 | Total amount for your main accounts on 2014/08/09                         |\n" +
@@ -82,7 +82,7 @@ public class DashboardTest extends LoggedInFunctionalTestCase {
 
     dashboard.checkContent(
       "| 0      | Days since your last import                                           |\n" +
-      "| 1 >    | Transactions to categorize                                            |\n" +
+      "| 1      | Transactions to categorize                                            |\n" +
       "| cloudy | Light overdraw forecast for your accounts before the end of September |\n" +
       "| +850   | Available on you main accounts until the end of September             |\n" +
       "| +1100  | Total amount for your main accounts on 2014/08/09                     |\n" +
@@ -94,7 +94,7 @@ public class DashboardTest extends LoggedInFunctionalTestCase {
 
     dashboard.checkContent(
       "| 0     | Days since your last import                                       |\n" +
-      "| 1 >   | Transactions to categorize                                        |\n" +
+      "| 1     | Transactions to categorize                                        |\n" +
       "| sunny | No overdraw forecast for your accounts until the end of September |\n" +
       "| +1100 | Available on you main accounts until the end of September         |\n" +
       "| +1100 | Total amount for your main accounts on 2014/08/09                 |\n" +

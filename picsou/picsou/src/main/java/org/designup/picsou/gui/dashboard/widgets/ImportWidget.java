@@ -18,7 +18,6 @@ public class ImportWidget extends DashboardWidget {
     int days = dashboardStat.get(DashboardStat.DAYS_SINCE_LAST_IMPORT, 0);
     widgetButton.setText(Integer.toString(days));
     setWidgetStyle(days == 0 ? "textOK" : "textNOK");
-    setWidgetStyle(days == 0 ? "importOK" : "importNOK");
     legend.setText(Lang.get("importWidget.legend"));
   }
 }

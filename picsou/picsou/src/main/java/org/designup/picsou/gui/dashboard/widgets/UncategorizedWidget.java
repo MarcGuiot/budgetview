@@ -26,7 +26,7 @@ public class UncategorizedWidget extends DashboardWidget {
       legend.setText(Lang.get("uncategorizedWidget.legend.ok"));
     }
     else {
-      widgetButton.setText(Integer.toString(count) + " >");
+      widgetButton.setText(Integer.toString(count));
       setWidgetStyle("textNOK");
       legend.setText(Lang.get("uncategorizedWidget.legend.nok"));
     }

@@ -12,9 +12,6 @@
     <style id="textOK" selector="x" foreground="dashboard.text.ok"/>
     <style id="textNOK" selector="x" foreground="dashboard.text.nok"/>
 
-    <style id="importOK" selector="x" icon="dashboard/import_ok.png" horizontalTextPosition="left" iconTextGap="2"/>
-    <style id="importNOK" selector="x" icon="dashboard/import_nok.png" horizontalTextPosition="left" iconTextGap="2"/>
-
     <style selector=".separatorRow" border="matte(1,0,1,0,dashboard.separator)" opaque="true" background="dashboard.bg" marginBottom="10" marginLeft="30" marginRight="30"/>
     <style selector=".separatorRow .widget" font="LatoLight,plain,32"/>
 
@@ -46,7 +43,7 @@
     <row styleClass="separatorRow" weightY="0.1">
       <filler fill="horizontal"/>
       <button ref="importWidget" styleClass="widget"/>
-      <htmlEditorPane ref="importLegend" styleClass="label" marginRight="30"/>
+      <htmlEditorPane ref="importLegend" styleClass="label" marginRight="50"/>
       <button ref="uncategorizedWidget" styleClass="widget" ui="hyperlinkButtonWithoutUnderline"/>
       <htmlEditorPane ref="uncategorizedLegend" styleClass="label"/>
       <filler fill="horizontal"/>
