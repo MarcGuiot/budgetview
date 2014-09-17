@@ -260,22 +260,12 @@ public class SeriesWrapper {
 
     // && !Utils.equal(seriesValues.get(Series.TARGET_ACCOUNT), Account.MAIN_SUMMARY_ACCOUNT_ID)) {
     if (BudgetArea.SAVINGS.getId().equals(budgetAreaId)) {
-      Glob target = repository.findLinkTarget(seriesValues, Series.TO_ACCOUNT);
-      if (target != null && target.get(Account.ID) == Account.EXTERNAL_ACCOUNT_ID){
-        return true;
-      }
-      Glob fromAccount = repository.findLinkTarget(seriesValues, Series.FROM_ACCOUNT);
-      if (fromAccount != null && fromAccount.get(Account.ID) == Account.EXTERNAL_ACCOUNT_ID){
-        return true;
-      }
-      return false;
+      Integer targetAccountId = seriesValues.get(Series.TARGET_ACCOUNT);
+      return targetAccountId != null && Account.EXTERNAL_ACCOUNT_ID != targetAccountId;
     }
-
     Integer seriesId = seriesValues.get(Series.ID);
     return !seriesId.equals(Series.UNCATEGORIZED_SERIES_ID) &&
-           !seriesId.equals(Series.ACCOUNT_SERIES_ID) &&
-           !Series.isSavingToExternal(seriesValues) &&
-           !seriesValues.isTrue(Series.IS_MIRROR);
+           !seriesId.equals(Series.ACCOUNT_SERIES_ID);
   }
 
   public static org.globsframework.model.Key createSeriesStatKey(Glob wrapper, int monthId) {
