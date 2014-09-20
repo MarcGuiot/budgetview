@@ -42,7 +42,7 @@ public class AccountBlockLayout implements LayoutManager {
 
   public int getMinHeight() {
     int chartHeight = positionsChart.isVisible() ? VERTICAL_MARGIN + CHART_HEIGHT : 0;
-    return getFirstRowHeight() + VERTICAL_MARGIN + accountUpdateDate.getPreferredSize().height + chartHeight;
+    return getFirstRowHeight() + 2 * VERTICAL_MARGIN + accountUpdateDate.getPreferredSize().height + chartHeight;
   }
 
   public int getMinWidth() {

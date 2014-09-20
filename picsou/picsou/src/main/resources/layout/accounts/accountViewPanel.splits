@@ -18,11 +18,11 @@
 
     <style selector="toggleButton#selectAccount"
            weightX="0" cursor="hand"
-           icon="rightArrow(18,18,10,12,block.inner.arrow.unselected)"
-           selectedIcon="rightArrow(18,18,10,12,block.inner.arrow.selected)"
-           rolloverIcon="rightArrow(18,18,10,12,block.inner.arrow.rollover)"
-           pressedIcon="rightArrow(18,18,10,12,block.inner.arrow.pressed)"
-           preferredSize="(18,18)" text="" opaque="false" borderPainted="false"/>
+           icon="rightArrow(22,18,14,16,block.inner.arrow.unselected)"
+           selectedIcon="rightArrow(22,18,14,16,block.inner.arrow.selected)"
+           rolloverIcon="rightArrow(22,18,14,16,block.inner.arrow.rollover)"
+           pressedIcon="rightArrow(22,18,14,16,block.inner.arrow.pressed)"
+           preferredSize="(22,18)" text="" opaque="false" borderPainted="false"/>
 
     <style selector=".left label.totalAmount"
            fill="horizontal" horizontalAlignment="left" marginLeft="10"/>
