@@ -98,13 +98,14 @@ public class UpdateMirrorSeriesChangeSetVisitor implements ChangeSetVisitor {
     }
     Glob mirrorSeries = localRepository.create(Key.create(Series.TYPE, newSeriesId), seriesFieldValues);
     localRepository.update(key, Series.MIRROR_SERIES, mirrorSeries.get(Series.ID));
-    FindMirrorGlobFunctor globFunctor = new FindMirrorGlobFunctor();
-    localRepository.findByIndex(SeriesBudget.SERIES_INDEX, SeriesBudget.SERIES, key.get(Series.ID))
-      .saveApply(globFunctor, localRepository);
-    localRepository.update(key, Series.TARGET_ACCOUNT,
-                           globFunctor.from ? series.get(Series.FROM_ACCOUNT) : series.get(Series.TO_ACCOUNT));
+//    FindMirrorGlobFunctor globFunctor = new FindMirrorGlobFunctor();
+//    localRepository.findByIndex(SeriesBudget.SERIES_INDEX, SeriesBudget.SERIES, key.get(Series.ID))
+//      .saveApply(globFunctor, localRepository);
+//    localRepository.update(key, Series.TARGET_ACCOUNT,
+//                           globFunctor.from ? series.get(Series.FROM_ACCOUNT) : series.get(Series.TO_ACCOUNT));
     localRepository.update(mirrorSeries.getKey(), Series.TARGET_ACCOUNT,
-                           globFunctor.from ? series.get(Series.TO_ACCOUNT) : series.get(Series.FROM_ACCOUNT));
+                           series.get(Series.TO_ACCOUNT).equals(series.get(Series.TARGET_ACCOUNT)) ? series.get(Series.FROM_ACCOUNT)
+                                                                                              : series.get(Series.TO_ACCOUNT));
     return newSeriesId;
   }
 
