@@ -1,7 +1,6 @@
 package org.designup.picsou.gui.utils.dev;
 
-import org.designup.picsou.model.Series;
-import org.designup.picsou.model.SeriesBudget;
+import org.designup.picsou.model.*;
 import org.designup.picsou.triggers.SeriesBudgetTrigger;
 import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
@@ -21,9 +20,6 @@ public class DumpRepositoryAction extends AbstractAction {
   }
 
   public void actionPerformed(ActionEvent actionEvent) {
-    GlobPrinter.print(repository, Series.TYPE);
-    
-    GlobList seriesBudget = repository.getAll(SeriesBudget.TYPE, GlobMatchers.fieldEquals(SeriesBudget.SERIES, 290));
-    GlobPrinter.print(seriesBudget);
+    GlobPrinter.print(repository, Series.TYPE, SeriesGroup.TYPE, Project.TYPE, ProjectItem.TYPE);
   }
 }

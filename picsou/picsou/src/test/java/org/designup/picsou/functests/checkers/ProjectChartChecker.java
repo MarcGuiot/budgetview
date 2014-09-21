@@ -84,6 +84,7 @@ public class ProjectChartChecker extends ViewChecker {
   }
 
   public void select(String projectName) {
+    views.selectHome();
     getChart().click(projectName, false);
   }
 

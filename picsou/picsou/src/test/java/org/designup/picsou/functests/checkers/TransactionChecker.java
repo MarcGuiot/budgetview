@@ -424,6 +424,13 @@ public class TransactionChecker extends ViewChecker {
     return this;
   }
 
+  public TransactionChecker sortByLabel() {
+    getTable()
+      .getHeader()
+      .click(TransactionView.LABEL_COLUMN_INDEX);
+    return this;
+  }
+
   public TransactionChecker sortByBankDate() {
     getTable()
       .getHeader()

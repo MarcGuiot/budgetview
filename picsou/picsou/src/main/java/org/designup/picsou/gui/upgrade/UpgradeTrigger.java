@@ -3,6 +3,7 @@ package org.designup.picsou.gui.upgrade;
 import com.budgetview.shared.utils.Amounts;
 import org.designup.picsou.gui.PicsouApplication;
 import org.designup.picsou.gui.PicsouInit;
+import org.designup.picsou.gui.projects.utils.ProjectErrorsUpgrade;
 import org.designup.picsou.gui.projects.utils.ProjectUpgrade;
 import org.designup.picsou.gui.utils.FrameSize;
 import org.designup.picsou.importer.analyzer.TransactionAnalyzerFactory;
@@ -130,6 +131,7 @@ public class UpgradeTrigger implements ChangeSetListener {
       updateOpenCloseAccount(repository);
       deleteDuplicateSynchro(repository);
     }
+
     if (currentJarVersion < 133) {
       AccountSequenceTrigger.resetSequence(repository);
       projectUpgrade.updateProjectSeriesAndGroups(repository);
@@ -138,7 +140,11 @@ public class UpgradeTrigger implements ChangeSetListener {
                                               fieldEquals(Transaction.PLANNED, true)));
     }
 
-    //dans tout les cas :
+    if (currentJarVersion < 139) {
+      ProjectErrorsUpgrade.createMissingGroupsAndSeries(repository);
+    }
+
+      //dans tout les cas :
 
     repository.delete(Transaction.TYPE, and(fieldEquals(Transaction.CREATED_BY_SERIES, true),
                                             fieldEquals(Transaction.AMOUNT, 0.)));
