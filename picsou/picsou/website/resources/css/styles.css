@@ -350,6 +350,24 @@ a.showLink:hover, a.hideLink:hover {
   margin-bottom: 15px;
 }
 
+.platform-download .upgrade-warning {
+  margin-top: 10px;
+  margin-left:30px;
+  margin-right:30px;
+  padding: 10px;
+  border: solid 1px #DDD;
+  background: #FFFFDD;
+
+}
+
+.platform-download .upgrade-warning p {
+  margin: 0;
+}
+
+.platform-download .upgrade-warning a.highlighted {
+  font-weight: bold;
+}
+
 #trademarks {
   margin-top: 20px;
   text-align: center;
