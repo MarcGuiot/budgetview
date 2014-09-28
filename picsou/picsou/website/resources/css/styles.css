@@ -20,6 +20,7 @@ button.btn {
   font-size: 18px;
 }
 
+
 .centered {
  text-align: center;
 }
@@ -35,6 +36,24 @@ div.centered-image {
 
 a.highlighted {
   border-bottom: 1px dashed #428BCA;
+}
+
+.warning-block {
+  margin-top: 10px;
+  margin-left:30px;
+  margin-right:30px;
+  padding: 10px;
+  border: solid 1px #DDD;
+  background: #FFFFDD;
+
+}
+
+.warning-block p {
+  margin: 0;
+}
+
+.warning-block a.highlighted {
+  font-weight: bold;
 }
 
 /* ========= Header & NavBar ========= */
@@ -348,24 +367,6 @@ a.showLink:hover, a.hideLink:hover {
   text-align: center;
   margin-top: 15px;
   margin-bottom: 15px;
-}
-
-.platform-download .upgrade-warning {
-  margin-top: 10px;
-  margin-left:30px;
-  margin-right:30px;
-  padding: 10px;
-  border: solid 1px #DDD;
-  background: #FFFFDD;
-
-}
-
-.platform-download .upgrade-warning p {
-  margin: 0;
-}
-
-.platform-download .upgrade-warning a.highlighted {
-  font-weight: bold;
 }
 
 #trademarks {
