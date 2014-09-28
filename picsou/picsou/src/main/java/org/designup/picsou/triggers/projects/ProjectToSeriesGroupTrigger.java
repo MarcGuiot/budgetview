@@ -1,9 +1,11 @@
 package org.designup.picsou.triggers.projects;
 
 import org.designup.picsou.model.*;
+import org.designup.picsou.triggers.DeleteUnusedSeriesGroupTrigger;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.*;
 import org.globsframework.model.utils.DefaultChangeSetVisitor;
+import org.globsframework.utils.Utils;
 
 import java.util.Set;
 
@@ -40,8 +42,7 @@ public class ProjectToSeriesGroupTrigger extends AbstractChangeSetListener {
           Glob project = repository.get(key);
           Key groupKey = project.getTargetKey(Project.SERIES_GROUP);
           if (repository.contains(groupKey)) {
-            repository.update(groupKey,
-                              value(SeriesGroup.NAME, values.get(Project.NAME)));
+            repository.update(groupKey, SeriesGroup.NAME, values.get(Project.NAME));
           }
         }
       }
@@ -54,7 +55,7 @@ public class ProjectToSeriesGroupTrigger extends AbstractChangeSetListener {
     }
   }
 
-  public  static void createGroupsForProjects(GlobRepository repository) {
+  public static void createGroupsForProjects(GlobRepository repository) {
     for (Glob project : repository.getAll(ProjectItem.TYPE, isExpenses()).getTargets(ProjectItem.PROJECT, repository)) {
       if (repository.findLinkTarget(project, Project.SERIES_GROUP) == null) {
         createGroup(project, repository);
@@ -63,13 +64,24 @@ public class ProjectToSeriesGroupTrigger extends AbstractChangeSetListener {
   }
 
   public static Glob createGroup(Glob project, GlobRepository repository) {
-    Glob group;
-    group = repository.create(SeriesGroup.TYPE,
-                              value(SeriesGroup.BUDGET_AREA, BudgetArea.EXTRAS.getId()),
-                              value(SeriesGroup.NAME, project.get(Project.NAME)),
-                              value(SeriesGroup.EXPANDED, false));
-    repository.update(project.getKey(),
-                      value(Project.SERIES_GROUP, group.get(SeriesGroup.ID)));
+    Glob group = repository.create(SeriesGroup.TYPE,
+                                   value(SeriesGroup.BUDGET_AREA, BudgetArea.EXTRAS.getId()),
+                                   value(SeriesGroup.NAME, project.get(Project.NAME)),
+                                   value(SeriesGroup.EXPANDED, false));
+    repository.update(project.getKey(), Project.SERIES_GROUP, group.get(SeriesGroup.ID));
+
+    Integer newGroupId = group.get(SeriesGroup.ID);
+    for (Glob item : repository.findLinkedTo(project, ProjectItem.PROJECT)) {
+      Glob series = repository.findLinkTarget(item, ProjectItem.SERIES);
+      if (series != null && ProjectItem.usesExtrasSeries(item)) {
+        Integer previousGroupId = series.get(Series.GROUP);
+        if (!Utils.equal(newGroupId, previousGroupId)) {
+          repository.update(series.getKey(), Series.GROUP, group.get(SeriesGroup.ID));
+          DeleteUnusedSeriesGroupTrigger.deleteGroupIfNeeded(previousGroupId, repository);
+        }
+      }
+    }
+
     return group;
   }
 }

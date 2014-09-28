@@ -166,6 +166,15 @@ public class ProjectUpgradeTest extends LoggedInFunctionalTestCase {
     timeline.selectMonth(201403);
     budgetView.extras.checkContent("| Voyage Rome | 0.00 | 200.00 |\n" +
                                    "| Hotel       | 0.00 | 200.00 |\n");
+
+    currentProject.backToList();
+
+    timeline.selectMonth(201402);
+    views.selectBudget();
+    budgetView.extras.editProjectForSeries("Voyage 2");
+
+    views.checkHomeSelected();
+    currentProject.checkName("Voyage Rome");
   }
 
   public void testProjectsWithVariousTranferItems() throws Exception {
