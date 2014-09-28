@@ -8,6 +8,7 @@ import org.apache.commons.net.ftp.FTPReply;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 public class FtpFileAccess extends AbstractFileAccess {
@@ -52,14 +53,38 @@ public class FtpFileAccess extends AbstractFileAccess {
   public List<FileHandle> listAllFiles() throws IOException {
     System.out.print("Listing remote files");
     List<FileHandle> result = new ArrayList<FileHandle>();
-    listDirectory(rootPath, 0, result);
+    listDirectory(rootPath, 0, result, getTimeOffset());
     System.out.println();
+    return result;
+  }
+
+  private long getTimeOffset() throws IOException {
+    FTPClient ftp = getFTP();
+      ftp.setFileType(FTP.ASCII_FILE_TYPE);
+    long result = 0;
+    try {
+      String tmpFile = "siteweaver_timestamp.txt";
+      ftp.storeFile(tmpFile, new ByteArrayInputStream("test".getBytes("UTF-8")));
+      for (FTPFile ftpFile : ftp.listFiles(tmpFile)) {
+        if (ftpFile.getName().equals(tmpFile)) {
+          Calendar remote = ftpFile.getTimestamp();
+          Calendar local = Calendar.getInstance();
+          result = local.getTimeInMillis() - remote.getTimeInMillis();
+          break;
+        }
+      }
+      ftp.deleteFile(tmpFile);
+    }
+    catch (Exception e) {
+      throw new RuntimeException(e);
+    }
     return result;
   }
 
   private void listDirectory(String currentDir,
                              int level,
-                             List<FileHandle> result) throws IOException {
+                             List<FileHandle> result,
+                             long timeOffset) throws IOException {
     FTPFile[] subFiles = getFTP().listFiles(currentDir);
     System.out.print(".");
     if (subFiles != null && subFiles.length > 0) {
@@ -69,14 +94,18 @@ public class FtpFileAccess extends AbstractFileAccess {
           continue;
         }
         if (subFile.isDirectory()) {
-          listDirectory(currentDir + "/" + currentFileName, level + 1, result);
+          listDirectory(currentDir + "/" + currentFileName, level + 1, result, timeOffset);
         }
         else {
           String path = currentDir + "/" + currentFileName;
           if (rootPath.length() > 1) {
             path = path.substring(rootPath.length());
           }
-          result.add(new FileHandle(path, subFile.getTimestamp().getTimeInMillis()));
+          long timestamp = subFile.getTimestamp().getTimeInMillis() + timeOffset;
+          if (subFile.getSize() == 0) {
+            timestamp = 0;
+          }
+          result.add(new FileHandle(path, timestamp));
         }
       }
     }
@@ -133,6 +162,7 @@ public class FtpFileAccess extends AbstractFileAccess {
       public void updateFile(String name, InputStream inputStream) throws IOException {
         System.out.println("upload " + name);
         FTPClient ftp = getFTP();
+        ftp.deleteFile(name);
         if (isTextField(name)) {
           ftp.setFileType(FTP.ASCII_FILE_TYPE);
         }
