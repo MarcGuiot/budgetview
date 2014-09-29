@@ -139,6 +139,7 @@ public class ProjectItemToSeriesBudgetTrigger extends AbstractChangeSetListener 
     }
 
     // Set all SeriesBudget planned amounts according to the active items
+    Glob series = repository.get(seriesKey);
     if (project.isTrue(Project.ACTIVE) && item.isTrue(ProjectItem.ACTIVE)) {
       Integer firstMonthId = item.get(ProjectItem.FIRST_MONTH);
       Integer lastMonthId = ProjectItem.getLastMonth(item);
