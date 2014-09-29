@@ -5,6 +5,7 @@ import org.designup.picsou.gui.PicsouApplication;
 import org.designup.picsou.gui.PicsouInit;
 import org.designup.picsou.gui.projects.utils.ProjectErrorsUpgrade;
 import org.designup.picsou.gui.projects.utils.ProjectUpgrade;
+import org.designup.picsou.gui.series.utils.SeriesErrorsUpgrade;
 import org.designup.picsou.gui.utils.FrameSize;
 import org.designup.picsou.importer.analyzer.TransactionAnalyzerFactory;
 import org.designup.picsou.model.*;
@@ -140,11 +141,13 @@ public class UpgradeTrigger implements ChangeSetListener {
                                               fieldEquals(Transaction.PLANNED, true)));
     }
 
-    if (currentJarVersion < 139) {
+    if (currentJarVersion < 140) {
       ProjectErrorsUpgrade.createMissingGroupsAndSeries(repository);
     }
 
-      //dans tout les cas :
+    //dans tout les cas :
+
+    SeriesErrorsUpgrade.fixMissingGroups(repository);
 
     repository.delete(Transaction.TYPE, and(fieldEquals(Transaction.CREATED_BY_SERIES, true),
                                             fieldEquals(Transaction.AMOUNT, 0.)));
