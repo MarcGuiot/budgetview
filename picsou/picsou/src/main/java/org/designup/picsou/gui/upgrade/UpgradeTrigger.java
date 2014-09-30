@@ -143,6 +143,7 @@ public class UpgradeTrigger implements ChangeSetListener {
 
     if (currentJarVersion < 140) {
       ProjectErrorsUpgrade.createMissingGroupsAndSeries(repository);
+      ProjectErrorsUpgrade.fixIncoherentFromToInTransferSeries(repository);
     }
 
     //dans tout les cas :
