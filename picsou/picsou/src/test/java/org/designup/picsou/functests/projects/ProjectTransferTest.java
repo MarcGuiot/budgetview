@@ -279,14 +279,50 @@ public class ProjectTransferTest extends LoggedInFunctionalTestCase {
     budgetView.extras.checkNoSeriesShown();
     budgetView.savings.checkSeries("Transfer", 0.00, -200.00);
 
+    transactions.showPlannedTransactions()
+      .initAmountContent()
+      .add("11/12/2010", "Planned: Transfer", -200.00, "Transfer", 700.00, 700.00, "Savings account 1")
+      .add("11/12/2010", "Planned: Transfer", 200.00, "Transfer", 2300.00, 2300.00, "Main account 1")
+      .add("01/12/2010", "TRANSFER FROM SAVINGS ACCOUNT 1", -100.00, "To categorize", 900.00, 900.00, "Savings account 1")
+      .add("01/12/2010", "AN OPERATION", 1000.00, "To categorize", 1000.00, 1000.00, "Savings account 1")
+      .add("01/12/2010", "TRANSFER 1", 100.00, "To categorize", 2100.00, 2100.00, "Main account 1")
+      .add("01/12/2010", "INCOME", 1000.00, "To categorize", 2000.00, 2000.00, "Main account 1")
+      .check();
+
+
+
     currentProject
       .toggleAndEditTransfer(0)
       .setFromAccount("Main account 1")
       .setToAccount("Savings account 1")
       .validate();
+    transactions
+      .initAmountContent()
+      .add("11/12/2010", "Planned: Transfer", 200.00, "Transfer", 1100.00, 1100.00, "Savings account 1")
+      .add("11/12/2010", "Planned: Transfer", -200.00, "Transfer", 1900.00, 1900.00, "Main account 1")
+      .add("01/12/2010", "TRANSFER FROM SAVINGS ACCOUNT 1", -100.00, "To categorize", 900.00, 900.00, "Savings account 1")
+      .add("01/12/2010", "AN OPERATION", 1000.00, "To categorize", 1000.00, 1000.00, "Savings account 1")
+      .add("01/12/2010", "TRANSFER 1", 100.00, "To categorize", 2100.00, 2100.00, "Main account 1")
+      .add("01/12/2010", "INCOME", 1000.00, "To categorize", 2000.00, 2000.00, "Main account 1")
+      .check();
 
     budgetView.extras.checkNoSeriesShown();
     budgetView.savings.checkSeries("Transfer", 0.00, 200.00);
+    projectChart.select("Trip");
+    currentProject.setInactive();
+    currentProject.setActive();
+    budgetView.savings.checkSeries("Transfer", 0.00, 200.00);
+
+    transactions
+      .initAmountContent()
+      .add("11/12/2010", "Planned: Transfer", 200.00, "Transfer", 1100.00, 1100.00, "Savings account 1")
+      .add("11/12/2010", "Planned: Transfer", -200.00, "Transfer", 1900.00, 1900.00, "Main account 1")
+      .add("01/12/2010", "TRANSFER FROM SAVINGS ACCOUNT 1", -100.00, "To categorize", 900.00, 900.00, "Savings account 1")
+      .add("01/12/2010", "AN OPERATION", 1000.00, "To categorize", 1000.00, 1000.00, "Savings account 1")
+      .add("01/12/2010", "TRANSFER 1", 100.00, "To categorize", 2100.00, 2100.00, "Main account 1")
+      .add("01/12/2010", "INCOME", 1000.00, "To categorize", 2000.00, 2000.00, "Main account 1")
+      .check();
+
   }
 
   public void testChangingProjectItemAccountsWithExistingTransactions() throws Exception {

@@ -1,9 +1,7 @@
 package org.designup.picsou.functests.upgrade;
 
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
-import org.designup.picsou.model.Transaction;
 import org.designup.picsou.model.TransactionType;
-import org.globsframework.model.format.GlobPrinter;
 import org.globsframework.utils.Files;
 
 public class ProjectUpgradeTest extends LoggedInFunctionalTestCase {
