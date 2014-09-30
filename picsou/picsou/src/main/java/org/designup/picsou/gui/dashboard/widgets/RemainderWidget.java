@@ -22,7 +22,8 @@ public class RemainderWidget extends DashboardWidget {
     setWidgetStyle(remainder >= 0 ? "textOK" : "textNOK");
     widgetButton.setText(Formatting.toStandardValueString(remainder));
 
+    String postfix = dashboardStat.isTrue(DashboardStat.SINGLE_MAIN_ACCOUNT) ? "single" : "multi";
     String month = Month.getFullMonthLabel(repository.get(DashboardStat.KEY).get(DashboardStat.LAST_FORECAST_MONTH), true);
-    legend.setText(Lang.get(remainder >= 0 ? "remainderWidget.title.positive" : "remainderWidget.title.negative", month));
+    legend.setText(Lang.get(remainder >= 0 ? "remainderWidget.title.positive." + postfix : "remainderWidget.title.negative." + postfix, month));
   }
 }

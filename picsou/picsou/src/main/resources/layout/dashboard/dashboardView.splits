@@ -19,6 +19,10 @@
 
   <column name="dashboardView">
 
+    <row border="empty(0,0,5,0)" autoHideSource="accountFilterMessage" weightY="0.1">
+      <panel ref="accountFilterMessage"/>
+    </row>
+
     <row weightY="6" marginTop="20" marginBottom="30">
       <filler fill="horizontal"/>
       <column>

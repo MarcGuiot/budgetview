@@ -309,6 +309,13 @@ public class GlobList extends ArrayList<Glob> {
     return sort(new GlobFieldsComparator(field));
   }
 
+  public GlobList reverseSort(Field field) {
+    if (field == null) {
+      return this;
+    }
+    return sort(new ReverseGlobFieldComparator(field));
+  }
+
   public GlobList sort(Comparator<Glob> comparator) {
     Collections.sort(this, comparator);
     return this;

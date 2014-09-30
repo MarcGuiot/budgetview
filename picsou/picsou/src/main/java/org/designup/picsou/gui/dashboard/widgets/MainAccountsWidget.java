@@ -20,7 +20,8 @@ public class MainAccountsWidget extends DashboardWidget {
     Double amount = dashboardStat.get(DashboardStat.TOTAL_MAIN_ACCOUNTS, 0.00);
     setWidgetStyle(amount >= 0 ? "textOK" : "textNOK");
     widgetButton.setText(Formatting.toStandardValueString(amount));
-    legend.setText(Lang.get("mainAccountsWidget.legend",
-                            Formatting.toString(dashboardStat.get(DashboardStat.TOTAL_MAIN_ACCOUNTS_DATE))));
+    String key =
+      dashboardStat.isTrue(DashboardStat.SINGLE_MAIN_ACCOUNT) ? "mainAccountsWidget.legend.single" : "mainAccountsWidget.legend.multi";
+    legend.setText(Lang.get(key, Formatting.toString(dashboardStat.get(DashboardStat.TOTAL_MAIN_ACCOUNTS_DATE))));
   }
 }

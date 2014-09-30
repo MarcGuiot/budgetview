@@ -31,10 +31,11 @@ public class DashboardStat {
   public static DoubleField REMAINDER;
 
   public static DoubleField TOTAL_MAIN_ACCOUNTS;
+  public static BooleanField SINGLE_MAIN_ACCOUNT;
   public static DateField TOTAL_MAIN_ACCOUNTS_DATE;
   public static DoubleField TOTAL_ALL_ACCOUNTS;
   public static DateField TOTAL_ALL_ACCOUNTS_DATE;
-  public static BooleanField HAS_SAVINGS_ACCOUNTS;
+  public static BooleanField SHOW_ALL_ACCOUNTS;
 
   static {
     GlobTypeLoader.init(DashboardStat.class);

@@ -17,7 +17,7 @@ public class AllAccountsWidget extends DashboardWidget {
   }
 
   protected void doUpdate(Glob dashboardStat, GlobRepository repository) {
-    if (dashboardStat.isTrue(DashboardStat.HAS_SAVINGS_ACCOUNTS)) {
+    if (dashboardStat.isTrue(DashboardStat.SHOW_ALL_ACCOUNTS)) {
       widgetButton.setVisible(true);
       legend.setVisible(true);
       Double amount = dashboardStat.get(DashboardStat.TOTAL_ALL_ACCOUNTS, 0.00);

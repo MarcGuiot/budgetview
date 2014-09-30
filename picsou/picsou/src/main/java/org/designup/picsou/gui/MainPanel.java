@@ -88,6 +88,7 @@ public class MainPanel {
   private MenuBarBuilder menuBar;
   private CategorizationSelectionView categorizationSelectionView;
   private BudgetToggle budgetToggle;
+  private DashboardView dashboardView;
 
   public static MainPanel init(GlobRepository repository, Directory directory, WindowManager mainWindow) {
     MainPanel panel = new MainPanel(repository, directory, mainWindow);
@@ -153,16 +154,17 @@ public class MainPanel {
     PeriodSeriesStatUpdater.init(replicationGlobRepository, directory);
     PeriodBudgetAreaStatUpdater.init(replicationGlobRepository);
     PeriodAccountStatUpdater.init(replicationGlobRepository, directory);
-    DashboardStatUpdater.init(repository);
+    DashboardStatUpdater.init(repository, directory);
 
     directory.add(new HighlightingService());
 
     analysisView = new AnalysisView(repository, directory, menuBar.getPrintBudgetAction());
     signpostView = new SignpostView(replicationGlobRepository, directory);
+    dashboardView = new DashboardView(repository, directory);
     createPanel(
       periodView,
       new AccountView(replicationGlobRepository, directory),
-      new DashboardView(repository, directory),
+      dashboardView,
       new LicenseInfoView(repository, directory),
       transactionView,
       timeView,
@@ -217,6 +219,7 @@ public class MainPanel {
     menuBar.createMenuBar(frame);
     cardView.showInitialCard();
     budgetToggle.reset();
+    dashboardView.reset();
     transactionView.reset();
     categorizationSelectionView.reset();
     directory.get(NavigationService.class).reset();

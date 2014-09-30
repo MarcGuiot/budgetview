@@ -37,19 +37,20 @@ public class WeatherWidget extends DashboardWidget {
       legend.setText("");
     }
     else {
-      String month = Month.getFullMonthLabel(repository.get(DashboardStat.KEY).get(DashboardStat.LAST_FORECAST_MONTH), true);
+      String month = Month.getFullMonthLabel(dashboardStat.get(DashboardStat.LAST_FORECAST_MONTH), true);
+      String postfix = dashboardStat.isTrue(DashboardStat.SINGLE_MAIN_ACCOUNT) ? "single" : "multi";
       switch (weather) {
         case SUNNY:
           widgetButton.setIcon(SUNNY_ICON);
-          legend.setText(Lang.get("weatherWidget.legend.sunny", month));
+          legend.setText(Lang.get("weatherWidget.legend.sunny." + postfix, month));
           break;
         case CLOUDY:
           widgetButton.setIcon(CLOUDY_ICON);
-          legend.setText(Lang.get("weatherWidget.legend.cloudy", month));
+          legend.setText(Lang.get("weatherWidget.legend.cloudy." + postfix, month));
           break;
         case RAINY:
           widgetButton.setIcon(RAINY_ICON);
-          legend.setText(Lang.get("weatherWidget.legend.rainy", month));
+          legend.setText(Lang.get("weatherWidget.legend.rainy." + postfix, month));
           break;
       }
     }
