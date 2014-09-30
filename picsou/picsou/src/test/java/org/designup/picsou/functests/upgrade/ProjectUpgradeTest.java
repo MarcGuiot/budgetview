@@ -311,4 +311,18 @@ public class ProjectUpgradeTest extends LoggedInFunctionalTestCase {
                                    "| Trip to Rome | 200.00 | 200.00 |\n" +
                                    "| Gifts        | 0.00   | 0.00   |");
   }
+
+  public void testInvertedFromToInTransfer() throws Exception {
+    operations.restore(Files.copyResourceToTmpFile(this, "/testbackups/upgrade_jar139_project_with_invalid_from_to_transfer.budgetview"));
+
+    projects.select("Rome");
+    currentProject
+      .checkDefaultAccountLabel("Compte 00000123456")
+      .checkItems("| Voyage   | Sep | 0.00 | 500.00  |\n" +
+                  "| Virement | Sep | 0.00 | +400.00 |\n");
+
+    budgetView.savings.checkContent("| Virement                 | 0.00   | +400.00 |\n" +
+                                    "| Vers le Compte 000123321 | 200.00 | 250.00  |\n" +
+                                    "| Du Compte 000123321      | 0.00   | 0.00    |");
+  }
 }
