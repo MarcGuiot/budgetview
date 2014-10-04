@@ -1,18 +1,13 @@
 package org.designup.picsou.gui.budget;
 
 import org.designup.picsou.gui.View;
-import org.designup.picsou.gui.components.filtering.Filterable;
 import org.designup.picsou.gui.components.layoutconfig.SplitPaneConfig;
 import org.designup.picsou.gui.series.UncategorizedSummaryView;
 import org.designup.picsou.model.BudgetArea;
 import org.designup.picsou.model.LayoutConfig;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.model.GlobRepository;
-import org.globsframework.model.utils.GlobMatcher;
 import org.globsframework.utils.directory.Directory;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class BudgetView extends View {
 
@@ -36,7 +31,7 @@ public class BudgetView extends View {
 
     UncategorizedSummaryView uncategorized = new UncategorizedSummaryView(repository, directory);
     uncategorized.registerComponents(builder);
-    
+
     parentBuilder.add("budgetView", builder);
   }
 

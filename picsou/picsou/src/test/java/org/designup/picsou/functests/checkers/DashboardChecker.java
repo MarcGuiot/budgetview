@@ -9,12 +9,12 @@ import org.uispec4j.Window;
 
 import javax.swing.*;
 
-public class DashboardChecker extends ViewChecker {
+public class DashboardChecker extends FilteredViewChecker<DashboardChecker> {
 
   private Panel panel;
 
   public DashboardChecker(Window mainWindow) {
-    super(mainWindow);
+    super(mainWindow, "dashboardView", "accountFilterMessage");
   }
 
   public void checkContent(String expected) {
