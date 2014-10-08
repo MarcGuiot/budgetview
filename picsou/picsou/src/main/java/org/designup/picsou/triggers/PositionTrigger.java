@@ -172,14 +172,14 @@ public class PositionTrigger implements ChangeSetListener {
             Glob position = positions[j];
             if (!openClose.isOpenOrClose(position)) {
               repository.update(position.getKey(), Transaction.ACCOUNT_POSITION, tmp);
-              tmp -= position.get(Transaction.AMOUNT);
+              tmp -= position.get(Transaction.AMOUNT, 0.);
             }
           }
           tmp = currentPos;
           for (int j = pivot + 1; j < positions.length; j++) {
             Glob position = positions[j];
             if (!openClose.isOpenOrClose(position)) {
-              tmp += position.get(Transaction.AMOUNT);
+              tmp += position.get(Transaction.AMOUNT, 0.);
               repository.update(position.getKey(), Transaction.ACCOUNT_POSITION, tmp);
             }
           }
@@ -189,7 +189,7 @@ public class PositionTrigger implements ChangeSetListener {
                               value(Transaction.ACCOUNT_POSITION, 0.));
           }
           if (openClose.openOperation != null && positions.length > 1) {
-            double value = (positions[1].get(Transaction.ACCOUNT_POSITION)) - positions[1].get(Transaction.AMOUNT);
+            double value = (positions[1].get(Transaction.ACCOUNT_POSITION)) - positions[1].get(Transaction.AMOUNT, 0.);
             repository.update(openClose.openOperation.getKey(), value(Transaction.AMOUNT, value),
                               value(Transaction.ACCOUNT_POSITION, 0.));
           }
@@ -309,9 +309,9 @@ public class PositionTrigger implements ChangeSetListener {
   private void updateFirstTransactionFromPivotPosition(Glob[] transactions, int pivot, GlobRepository repository, Glob account) {
     double beforePosition;
     if (pivot != 0) {
-      beforePosition = transactions[pivot].get(Transaction.ACCOUNT_POSITION) - transactions[pivot].get(Transaction.AMOUNT);
+      beforePosition = transactions[pivot].get(Transaction.ACCOUNT_POSITION) - transactions[pivot].get(Transaction.AMOUNT, 0.);
       for (int i = pivot - 1; i > 0; i--) {
-        beforePosition -= transactions[i].get(Transaction.AMOUNT);
+        beforePosition -= transactions[i].get(Transaction.AMOUNT, 0.);
       }
       if (!transactions[0].get(Transaction.TRANSACTION_TYPE).equals(TransactionType.OPEN_ACCOUNT_EVENT.getId())) {
         throw new RuntimeException("Bug : first transaction is not open account transaction.");
@@ -382,7 +382,7 @@ public class PositionTrigger implements ChangeSetListener {
         amount = 0;
         transactionMonthId = transaction.get(Transaction.POSITION_MONTH);
       }
-      amount += transaction.get(Transaction.AMOUNT);
+      amount += transaction.get(Transaction.AMOUNT, 0.);
       repository.update(transaction.getKey(), Transaction.ACCOUNT_POSITION, amount);
     }
 
@@ -493,12 +493,12 @@ public class PositionTrigger implements ChangeSetListener {
       Integer tt = closeTransaction.get(Transaction.TRANSACTION_TYPE);
       if (tt != null && tt == TransactionType.CLOSE_ACCOUNT_EVENT.getId()) {
         repository.update(closeTransaction.getKey(), Transaction.AMOUNT, -(closeTransaction.get(Transaction.ACCOUNT_POSITION))
-                                                                         + closeTransaction.get(Transaction.AMOUNT));
+                                                                         + closeTransaction.get(Transaction.AMOUNT, 0.));
         repository.update(closeTransaction.getKey(), Transaction.ACCOUNT_POSITION, 0.);
       }
       else {
         repository.update(account.getKey(), Account.CLOSE_POSITION, -(closeTransaction.get(Transaction.ACCOUNT_POSITION))
-                                                                    + closeTransaction.get(Transaction.AMOUNT));
+                                                                    + closeTransaction.get(Transaction.AMOUNT, 0.));
       }
     }
   }
@@ -522,7 +522,7 @@ public class PositionTrigger implements ChangeSetListener {
         closeTransaction = transaction;
       }
       else {
-        positionBefore = positionBefore + transaction.get(Transaction.AMOUNT);
+        positionBefore = positionBefore + transaction.get(Transaction.AMOUNT, 0.);
         repository.update(transaction.getKey(), Transaction.ACCOUNT_POSITION, positionBefore);
         update.update(transaction);
         lastTransaction = transaction;
@@ -582,7 +582,7 @@ public class PositionTrigger implements ChangeSetListener {
         repository.update(transaction.getKey(), Transaction.SUMMARY_POSITION, null);
         continue;
       }
-      position += transaction.get(Transaction.AMOUNT);
+      position += transaction.get(Transaction.AMOUNT, 0.);
       repository.update(transaction.getKey(), Transaction.SUMMARY_POSITION, position);
       boolean isFutureOp = futureMatcher.matches(transaction, repository);
       if (!deferredAccounts.contains(accountId) && !isFutureOp && canUpdate) {

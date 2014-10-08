@@ -58,11 +58,12 @@ public class ProjectTransferToSeriesTrigger implements ChangeSetListener {
     Glob series = repository.create(Series.TYPE,
                                     value(Series.BUDGET_AREA, BudgetArea.SAVINGS.getId()),
                                     value(Series.NAME, item.get(ProjectItem.LABEL)),
+                                    value(Series.ACTIVE, item.get(ProjectItem.ACTIVE)),
                                     value(Series.IS_AUTOMATIC, false),
                                     value(Series.IS_INITIAL, false),
                                     value(Series.INITIAL_AMOUNT, null),
                                     value(Series.FROM_ACCOUNT, projectTransfer.get(ProjectTransfer.FROM_ACCOUNT)),
-                                    value(Series.TARGET_ACCOUNT, projectTransfer.get(ProjectTransfer.FROM_ACCOUNT)),
+                                    value(Series.TARGET_ACCOUNT, projectTransfer.get(ProjectTransfer.TO_ACCOUNT)),
                                     value(Series.TO_ACCOUNT, projectTransfer.get(ProjectTransfer.TO_ACCOUNT)),
                                     value(Series.FIRST_MONTH, firstMonth),
                                     value(Series.LAST_MONTH, lastMonth));
@@ -73,9 +74,17 @@ public class ProjectTransferToSeriesTrigger implements ChangeSetListener {
   private void updateSavingsSeries(Key projectTransferKey, FieldValues values, GlobRepository repository) {
     Glob item = ProjectTransfer.getItemFromTransfer(projectTransferKey, repository);
     Key seriesKey = Key.create(Series.TYPE, item.get(ProjectItem.SERIES));
+    int targetAccount;
+    Glob series = repository.get(seriesKey);
+    if (Utils.equal(series.get(Series.FROM_ACCOUNT), series.get(Series.TARGET_ACCOUNT))){
+      targetAccount = values.get(ProjectTransfer.FROM_ACCOUNT);
+    }
+    else /*if (Utils.equal(series.get(Series.TO_ACCOUNT), series.get(Series.TARGET_ACCOUNT)))*/ {
+      targetAccount = values.get(ProjectTransfer.TO_ACCOUNT);
+    }
     repository.update(seriesKey,
                       value(Series.FROM_ACCOUNT, values.get(ProjectTransfer.FROM_ACCOUNT)),
-                      value(Series.TARGET_ACCOUNT, values.get(ProjectTransfer.FROM_ACCOUNT)),
+                      value(Series.TARGET_ACCOUNT, targetAccount),
                       value(Series.TO_ACCOUNT, values.get(ProjectTransfer.TO_ACCOUNT)));
   }
 

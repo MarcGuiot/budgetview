@@ -169,6 +169,15 @@ public class ProjectUpgradeTest extends LoggedInFunctionalTestCase {
     timeline.selectMonth(201403);
     budgetView.extras.checkContent("| Voyage Rome | 0.00 | 200.00 |\n" +
                                    "| Hotel       | 0.00 | 200.00 |\n");
+
+    currentProject.backToList();
+
+    timeline.selectMonth(201402);
+    views.selectBudget();
+    budgetView.extras.editProjectForSeries("Voyage 2");
+
+    views.checkHomeSelected();
+    currentProject.checkName("Voyage Rome");
   }
 
   public void testProjectsWithVariousTranferItems() throws Exception {
@@ -182,16 +191,16 @@ public class ProjectUpgradeTest extends LoggedInFunctionalTestCase {
                               "| Epargne > Externe | Apr | +100.00 | +100.00 |\n" +
                               "| Voyage            | Apr | 0.00    | 300.00  |\n");
 
+    transactions.sortByLabel();
     transactions.initContent()
-      .add("05/04/2014", TransactionType.VIREMENT, "VERS EPARGNE", "", 50.00, "Courant > Epargne")
-      .add("05/04/2014", TransactionType.MANUAL, "DE EXTERNE", "", 100.00, "Externe > Epargne")
+      .add("01/04/2014", TransactionType.VIREMENT, "COURANT > EPARGNE", "", 50.00, "Courant > Epargne")
+      .add("01/04/2014", TransactionType.PRELEVEMENT, "COURANT > EPARGNE", "", -50.00, "Courant > Epargne")
       .add("05/04/2014", TransactionType.MANUAL, "DE COURANT", "", 50.00, "Courant > Epargne")
-      .add("05/04/2014", TransactionType.MANUAL, "VERS EXTERNE", "", -100.00, "Epargne > Externe")
-      .add("05/04/2014", TransactionType.MANUAL, "VERS EPARGNE", "", -50.00, "Courant > Epargne")
-      .add("05/04/2014", TransactionType.PRELEVEMENT, "DE COURANT", "", -50.00, "Courant > Epargne")
+      .add("05/04/2014", TransactionType.MANUAL, "DE EXTERNE", "", 100.00, "Externe > Epargne")
       .add("01/04/2014", TransactionType.PRELEVEMENT, "EPARGNE > EXTERNE", "", -100.00, "Epargne > Externe")
       .add("01/04/2014", TransactionType.VIREMENT, "EXTERNE > EPARGNE", "", 200.00, "Externe > Epargne")
-      .check();
+      .add("05/04/2014", TransactionType.MANUAL, "VERS EPARGNE", "", -50.00, "Courant > Epargne")
+      .add("05/04/2014", TransactionType.MANUAL, "VERS EXTERNE", "", -100.00, "Epargne > Externe");
   }
 
   public void testProjetItemsUsingSeveralAccountsAreSplitted() throws Exception {
@@ -199,6 +208,7 @@ public class ProjectUpgradeTest extends LoggedInFunctionalTestCase {
     operations.restore(Files.copyResourceToTmpFile(this, "/testbackups/upgrade_jar131_projets_multi_comptes.budgetview"));
     addOns.activateProjects();
 
+    timeline.selectMonth(201404);
     transactions.initContent()
       .add("10/04/2014", TransactionType.PRELEVEMENT, "VIRT JOINT > LIVRET1", "", -50.00, "Provisions - Compte Joint")
       .add("09/04/2014", TransactionType.PRELEVEMENT, "SNCF", "", -80.00, "Voyage - Compte Joint")
@@ -258,5 +268,68 @@ public class ProjectUpgradeTest extends LoggedInFunctionalTestCase {
                                     "| Du compte Livret 2      | 0.00 | 0.00    |\n" +
                                     "| Vers le compte Livret 1 | 0.00 | 0.00    |\n" +
                                     "| Vers le compte Livret 2 | 0.00 | 0.00    |");
+  }
+
+  public void testBackupCorruptedWithDisabledProjectGroupError() throws Exception {
+    operations.restoreWithPassword(Files.copyResourceToTmpFile(this, "/testbackups/upgrade_jar138_disabled_project_group_error.budgetview"), "pwd");
+
+    projects.select("iPad");
+    currentProject
+      .checkDefaultAccountLabel("Main account")
+      .checkItems("| FNAC | Sep | 0.00 | 500.00 |");
+    budgetView.extras.checkContent("| Trip to Rome | 200.00 | 200.00 |\n" +
+                                   "| Gifts        | 0.00   | 0.00   |");
+
+    currentProject.setActive();
+    budgetView.extras.checkContent("| iPad         | 0.00   | 500.00 |\n" +
+                                   "| Trip to Rome | 200.00 | 200.00 |\n" +
+                                   "| Gifts        | 0.00   | 0.00   |");
+    budgetView.extras.expandGroup("iPad");
+    budgetView.extras.checkContent("| iPad         | 0.00   | 500.00 |\n" +
+                                   "| FNAC         | 0.00   | 500.00 |\n" +
+                                   "| Trip to Rome | 200.00 | 200.00 |\n" +
+                                   "| Gifts        | 0.00   | 0.00   |");
+  }
+
+  public void testBackupCorruptedWithDisabledProjectSavingsError() throws Exception {
+    operations.restoreWithPassword(Files.copyResourceToTmpFile(this, "/testbackups/upgrade_jar138_disabled_project_savings_error.budgetview"), "pwd");
+
+    budgetView.savings.checkContent("| Regular savings | 200.00 | 200.00 |\n" +
+                                    "| Trip payment    | 0.00   | 0.00   |");
+    budgetView.extras.checkContent("| Trip to Rome | 200.00 | 200.00 |\n" +
+                                   "| Gifts        | 0.00   | 0.00   |");
+
+    projects.select("iPad");
+    currentProject
+      .checkDefaultAccountLabel("Main account")
+      .checkItems("| FNAC      | Sep | 0.00 | 500.00  |\n" +
+                  "| Virt iPad | Sep | 0.00 | +400.00 |\n");
+
+    currentProject.setActive();
+    budgetView.savings.checkContent("| Virt iPad       | 0.00   | +400.00 |\n" +
+                                    "| Regular savings | 200.00 | 200.00  |\n" +
+                                    "| Trip payment    | 0.00   | 0.00    |");
+    budgetView.extras.checkContent("| iPad         | 0.00   | 500.00 |\n" +
+                                   "| Trip to Rome | 200.00 | 200.00 |\n" +
+                                   "| Gifts        | 0.00   | 0.00   |");
+    budgetView.extras.expandGroup("iPad");
+    budgetView.extras.checkContent("| iPad         | 0.00   | 500.00 |\n" +
+                                   "| FNAC         | 0.00   | 500.00 |\n" +
+                                   "| Trip to Rome | 200.00 | 200.00 |\n" +
+                                   "| Gifts        | 0.00   | 0.00   |");
+  }
+
+  public void testInvertedFromToInTransfer() throws Exception {
+    operations.restore(Files.copyResourceToTmpFile(this, "/testbackups/upgrade_jar139_project_with_invalid_from_to_transfer.budgetview"));
+
+    projects.select("Rome");
+    currentProject
+      .checkDefaultAccountLabel("Compte 00000123456")
+      .checkItems("| Voyage   | Sep | 0.00 | 500.00  |\n" +
+                  "| Virement | Sep | 0.00 | +400.00 |\n");
+
+    budgetView.savings.checkContent("| Virement                 | 0.00   | +400.00 |\n" +
+                                    "| Vers le Compte 000123321 | 200.00 | 250.00  |\n" +
+                                    "| Du Compte 000123321      | 0.00   | 0.00    |");
   }
 }

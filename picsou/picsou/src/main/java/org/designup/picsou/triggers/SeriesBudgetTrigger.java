@@ -5,7 +5,9 @@ import org.globsframework.metamodel.fields.IntegerField;
 import org.globsframework.model.*;
 import org.globsframework.utils.collections.Pair;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 
 import static org.globsframework.model.FieldValue.value;
 
@@ -71,11 +73,12 @@ public class SeriesBudgetTrigger extends AbstractChangeSetListener {
     toIndex = Arrays.binarySearch(monthIds, toDate);
     Glob currentMonth = repository.get(CurrentMonth.KEY);
     if (fromIndex >= 0 && toIndex >= 0) {
-      Calendar calendar = Calendar.getInstance();
       for (int i = fromIndex; i <= toIndex; i++) {
         int monthId = monthIds[i];
-        boolean active = series.isTrue(Series.getMonthField(monthId)) && (monthId >= startEndValidMonth.getFirst()
-                                                                          && monthId <= startEndValidMonth.getSecond());
+        boolean active = series.isTrue(Series.ACTIVE) &&
+                         series.isTrue(Series.getMonthField(monthId)) &&
+                         (monthId >= startEndValidMonth.getFirst() &&
+                          monthId <= startEndValidMonth.getSecond());
         Glob seriesBudget = monthWithBudget.remove(monthId);
         if (seriesBudget == null) {
           Glob existingSeriesBudget =

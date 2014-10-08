@@ -12,7 +12,8 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 
 import static org.globsframework.model.FieldValue.value;
-import static org.globsframework.model.utils.GlobMatchers.*;
+import static org.globsframework.model.utils.GlobMatchers.isFalse;
+import static org.globsframework.model.utils.GlobMatchers.linkedTo;
 
 public class ProjectItemToSeriesBudgetTrigger extends AbstractChangeSetListener {
 
@@ -87,7 +88,7 @@ public class ProjectItemToSeriesBudgetTrigger extends AbstractChangeSetListener 
 
     Key seriesKey = Key.create(Series.TYPE, seriesId);
 
-    if (repository.find(seriesKey) == null){
+    if (repository.find(seriesKey) == null) {
       return;
     }
 
@@ -139,12 +140,13 @@ public class ProjectItemToSeriesBudgetTrigger extends AbstractChangeSetListener 
     }
 
     // Set all SeriesBudget planned amounts according to the active items
+    Glob series = repository.get(seriesKey);
     if (project.isTrue(Project.ACTIVE) && item.isTrue(ProjectItem.ACTIVE)) {
       Integer firstMonthId = item.get(ProjectItem.FIRST_MONTH);
       Integer lastMonthId = ProjectItem.getLastMonth(item);
       for (int monthId = firstMonthId; monthId <= lastMonthId; monthId = Month.next(monthId)) {
         Glob seriesBudget = SeriesBudget.find(seriesId, monthId, repository);
-        double planned = seriesBudget.get(SeriesBudget.PLANNED_AMOUNT, 0) + getPlanned(item, monthId, repository);
+        double planned = getPlanned(series, item, monthId, repository);
         repository.update(seriesBudget.getKey(),
                           value(SeriesBudget.PLANNED_AMOUNT, planned),
                           value(SeriesBudget.ACTIVE, true));
@@ -152,13 +154,20 @@ public class ProjectItemToSeriesBudgetTrigger extends AbstractChangeSetListener 
     }
   }
 
-  private Double getPlanned(Glob item, int monthId, GlobRepository repository) {
+  private Double getPlanned(Glob series, Glob item, int monthId, GlobRepository repository) {
     if (ProjectItemType.TRANSFER.equals(ProjectItemType.get(item))) {
       Glob transfer = ProjectTransfer.getTransferFromItem(item, repository);
       if (!ProjectTransfer.usesSavingsAccounts(transfer, repository)) {
         return 0.00;
       }
+      Double amount = ProjectItem.getAmount(item, monthId, repository);
+      if (Utils.equal(series.get(Series.TARGET_ACCOUNT), series.get(Series.FROM_ACCOUNT))) {
+        return -Math.abs(amount);
+      }
+      return Math.abs(amount);
     }
-    return ProjectItem.getAmount(item, monthId, repository);
+    else {
+      return ProjectItem.getAmount(item, monthId, repository);
+    }
   }
 }

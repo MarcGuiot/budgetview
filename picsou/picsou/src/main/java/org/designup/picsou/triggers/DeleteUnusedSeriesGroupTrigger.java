@@ -15,17 +15,17 @@ public class DeleteUnusedSeriesGroupTrigger implements ChangeSetListener {
     changeSet.safeVisit(Series.TYPE, new DefaultChangeSetVisitor() {
       public void visitUpdate(Key key, FieldValuesWithPrevious values) throws Exception {
         if (values.contains(Series.GROUP)) {
-          deletePreviousGroupIfNeeded(values.getPrevious(Series.GROUP), repository);
+          deleteGroupIfNeeded(values.getPrevious(Series.GROUP), repository);
         }
       }
 
       public void visitDeletion(Key key, FieldValues previousValues) throws Exception {
-        deletePreviousGroupIfNeeded(previousValues.get(Series.GROUP), repository);
+        deleteGroupIfNeeded(previousValues.get(Series.GROUP), repository);
       }
     });
   }
 
-  private void deletePreviousGroupIfNeeded(Integer previousGroupId, GlobRepository repository) {
+  public static void deleteGroupIfNeeded(Integer previousGroupId, GlobRepository repository) {
     if ((previousGroupId != null) &&
         repository.contains(Key.create(SeriesGroup.TYPE, previousGroupId)) &&
         !repository.contains(Series.TYPE, fieldEquals(Series.GROUP, previousGroupId))) {
@@ -36,7 +36,7 @@ public class DeleteUnusedSeriesGroupTrigger implements ChangeSetListener {
   public void globsReset(GlobRepository repository, Set<GlobType> changedTypes) {
     if (changedTypes.contains(Series.TYPE) || changedTypes.contains(SeriesGroup.TYPE)) {
       for (Glob group : repository.getAll(SeriesGroup.TYPE)) {
-        deletePreviousGroupIfNeeded(group.get(SeriesGroup.ID), repository);
+        deleteGroupIfNeeded(group.get(SeriesGroup.ID), repository);
       }
     }
   }

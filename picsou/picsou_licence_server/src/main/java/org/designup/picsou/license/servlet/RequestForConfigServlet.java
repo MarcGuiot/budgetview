@@ -274,16 +274,17 @@ public class RequestForConfigServlet extends HttpServlet {
       logInfo("unknown_mail mail = " + mail);
     }
     else {
+      resp.setHeader(ConfigService.HEADER_IS_VALIDE, "true");
       for (Glob license : globList) {
         if (license.get(License.REPO_ID) != null && license.get(License.REPO_ID).equals(repoId)) {
           if (count < license.get(License.ACCESS_COUNT)) {
-            resp.setHeader(ConfigService.HEADER_IS_VALIDE, "false");
+//            resp.setHeader(ConfigService.HEADER_IS_VALIDE, "false");
             if (Utils.equal(activationCode, license.get(License.LAST_ACTIVATION_CODE))) {
-              String code = LicenseGenerator.generateActivationCode();
-              updateNewActivationCodeRequest.execute(mail, code);
-              db.commit();
-              resp.setHeader(ConfigService.HEADER_MAIL_SENT, "true");
-              mailer.reSendExistingLicenseOnError(lang, code, mail);
+//              String code = LicenseGenerator.generateActivationCode();
+//              updateNewActivationCodeRequest.execute(mail, code);
+//              db.commit();
+//              resp.setHeader(ConfigService.HEADER_MAIL_SENT, "true");
+//              mailer.reSendExistingLicenseOnError(lang, code, mail);
               logInfo("Run_count_decrease_send_new_license_to mail = " + mail);
             }
             else {
@@ -295,19 +296,19 @@ public class RequestForConfigServlet extends HttpServlet {
             if (Utils.equal(activationCode, license.get(License.LAST_ACTIVATION_CODE))) {
               updateLastAccessRequest.execute(license.get(License.ID), count, new Date());
               db.commit();
-              resp.setHeader(ConfigService.HEADER_IS_VALIDE, "true");
               logInfo("ok_for mail = " + mail + " count = " + count);
               return license.get(License.GROUP_ID);
             }
             else {
-              resp.setHeader(ConfigService.HEADER_IS_VALIDE, "false");
-              resp.setHeader(ConfigService.HEADER_ACTIVATION_CODE_NOT_VALIDE_MAIL_NOT_SENT, "true");
+//              resp.setHeader(ConfigService.HEADER_IS_VALIDE, "false");
+//              resp.setHeader(ConfigService.HEADER_ACTIVATION_CODE_NOT_VALIDE_MAIL_NOT_SENT, "true");
               logInfo("Different_code_for mail = " + mail);
               return null;
             }
           }
         }
       }
+      logger.warn("For " + mail + " repo id not found ");
     }
     return null;
   }

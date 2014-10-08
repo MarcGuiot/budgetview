@@ -65,7 +65,6 @@ public class Files {
     }
   }
 
-
   public static String loadStreamToString(InputStream stream, final String charsetName) throws IOFailure {
     try {
       return loadStreamToString(new InputStreamReader(stream, charsetName));
@@ -150,14 +149,14 @@ public class Files {
     copyStream(inputStream, new FileOutputStream(file));
   }
 
-  public static String copyResourceToTmpFile(Object obj, String resourceName) throws IOException{
+  public static String copyResourceToTmpFile(Object obj, String resourceName) throws IOException {
     InputStream stream = obj.getClass().getResourceAsStream(resourceName);
-    if (stream == null){
-      throw new RuntimeException("Fail to find " + resourceName);
+    if (stream == null) {
+      throw new FileNotFoundException("Failed to find " + resourceName);
     }
     int i = resourceName.indexOf(".");
     String extention = "tmp";
-    if (i >-1){
+    if (i > -1) {
       extention = resourceName.substring(i, resourceName.length());
     }
 
