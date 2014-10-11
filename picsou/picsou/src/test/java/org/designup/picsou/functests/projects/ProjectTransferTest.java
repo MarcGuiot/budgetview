@@ -315,7 +315,7 @@ public class ProjectTransferTest extends LoggedInFunctionalTestCase {
     operations.dumpRepository();
 
     budgetView.savings.checkSeries("Transfer", 0.00, 200.00);
-    projectChart.select("Trip");
+    projects.select("Trip");
     currentProject.setInactive();
     currentProject.setActive();
     budgetView.savings.checkSeries("Transfer", 0.00, 200.00);

@@ -8,6 +8,11 @@ public class ProjectRestartTest extends RestartTestCase {
     return "2008/08/30";
   }
 
+  protected void setUp() throws Exception {
+    super.setUp();
+    addOns.activateProjects();
+  }
+
   public void testDefaultCase() throws Exception {
     OfxBuilder.init(this)
       .addBankAccount("001111", 1000.00, "2008/08/30")
@@ -17,7 +22,7 @@ public class ProjectRestartTest extends RestartTestCase {
 
     operations.openPreferences().setFutureMonthsCount(6).validate();
 
-    projectChart.create();
+    projects.createFirst();
     currentProject
       .setNameAndDefaultAccount("MyProject", "Account n. 001111")
       .addExpenseItem(0, "Booking", 200808, -200.00)
@@ -26,25 +31,33 @@ public class ProjectRestartTest extends RestartTestCase {
     categorization.selectTransaction("RESA")
       .selectExtras().selectSeries("Booking");
 
-    projectChart.checkProjectList("MyProject");
-    projectChart.checkProject("MyProject", 200808, 200810, 800.00);
+    projects.checkProjectList("MyProject");
+    projects.checkProject("MyProject", 200808, 200810, 800.00);
     currentProject.checkProjectGauge(-150.00, -800.00);
 
     timeline.selectMonth("2008/08");
     budgetView.extras.checkSeries("MyProject", -150.00, -200.00);
-    budgetView.getSummary().checkEndPosition(950.00);
+
+    timeline.selectAll();
+    transactions
+      .showPlannedTransactions()
+      .initAmountContent()
+      .add("11/10/2008", "Planned: Hotel", -500.00, "Hotel", 350.00, 350.00, "Account n. 001111")
+      .add("11/10/2008", "Planned: Travel", -100.00, "Travel", 850.00, 850.00, "Account n. 001111")
+      .add("15/08/2008", "Planned: Booking", -50.00, "Booking", 950.00, 950.00, "Account n. 001111")
+      .add("15/08/2008", "RESA", -150.00, "Booking", 1000.00, 1000.00, "Account n. 001111")
+      .add("01/08/2008", "INCOME", 1000.00, "To categorize", 1150.00, 1150.00, "Account n. 001111")
+      .check();
 
     timeline.selectMonth("2008/10");
     budgetView.extras.checkSeries("MyProject", 0, -600.00);
 
-    budgetView.getSummary().checkEndPosition(350.00);
-
     restartApplication();
 
-    projectChart.checkProjectList("MyProject");
-    projectChart.checkProject("MyProject", 200808, 200810, 800.00);
+    projects.checkProjectList("MyProject");
+    projects.checkProject("MyProject", 200808, 200810, 800.00);
 
-    projectChart.select("MyProject");
+    projects.select("MyProject");
     currentProject
       .checkProjectGauge(-150.00, -800.00)
       .checkItems("| Booking | Aug | 150.00 | 200.00 |\n" +
@@ -53,18 +66,29 @@ public class ProjectRestartTest extends RestartTestCase {
 
     timeline.selectMonth("2008/08");
     budgetView.extras.checkSeries("MyProject", -150.00, -200.00);
-    budgetView.getSummary().checkEndPosition(950.00);
 
     timeline.selectMonth("2008/10");
     budgetView.extras.checkSeries("MyProject", 0, -600.00);
-    budgetView.getSummary().checkEndPosition(350.00);
+
+    timeline.selectAll();
+    transactions
+      .showPlannedTransactions()
+      .initAmountContent()
+      .add("11/10/2008", "Planned: Hotel", -500.00, "Hotel", 350.00, 350.00, "Account n. 001111")
+      .add("11/10/2008", "Planned: Travel", -100.00, "Travel", 850.00, 850.00, "Account n. 001111")
+      .add("15/08/2008", "Planned: Booking", -50.00, "Booking", 950.00, 950.00, "Account n. 001111")
+      .add("15/08/2008", "RESA", -150.00, "Booking", 1000.00, 1000.00, "Account n. 001111")
+      .add("01/08/2008", "INCOME", 1000.00, "To categorize", 1150.00, 1150.00, "Account n. 001111")
+      .check();
+
   }
 
   public void testProjectsWithMultiMonthTransfers() throws Exception {
 
     operations.openPreferences().setFutureMonthsCount(12).validate();
 
-    mainAccounts.createNewAccount()
+    views.selectHome();
+    accounts.createNewAccount()
       .setName("Main account 1")
       .selectBank("CIC")
       .setAsMain()
@@ -76,7 +100,7 @@ public class ProjectRestartTest extends RestartTestCase {
       .addTransaction("2008/12/01", 100.00, "Transfer 1")
       .loadInAccount("Main account 1");
 
-    mainAccounts.createNewAccount()
+    accounts.createNewAccount()
       .setName("Savings account 1")
       .selectBank("CIC")
       .setAsSavings()
@@ -86,7 +110,7 @@ public class ProjectRestartTest extends RestartTestCase {
       .addTransaction("2008/12/01", -100.00, "Transfer 1")
       .loadInAccount("Savings account 1");
 
-    projectChart.create();
+    projects.createFirst();
     currentProject
       .setNameAndValidate("Trip")
       .addTransferItem()
@@ -142,7 +166,7 @@ public class ProjectRestartTest extends RestartTestCase {
 
     operations.openPreferences().setFutureMonthsCount(6).validate();
 
-    projectChart.create();
+    projects.createFirst();
     currentProject
       .setNameAndDefaultAccount("MyProject", "Account n. 001111")
       .addExpenseItem(0, "Booking", 200808, -200.00)
@@ -153,11 +177,11 @@ public class ProjectRestartTest extends RestartTestCase {
 
     restartApplication();
 
-    projectChart.checkProjectList("MyProject");
-    projectChart.checkProject("MyProject", 200808, 200810, 800.00);
+    projects.checkProjectList("MyProject");
+    projects.checkProject("MyProject", 200808, 200810, 800.00);
     budgetView.extras.checkNoSeriesShown();
 
-    projectChart.select("MyProject");
+    projects.select("MyProject");
 
     currentProject.setActive();
     categorization.selectTransaction("RESA")
@@ -170,11 +194,15 @@ public class ProjectRestartTest extends RestartTestCase {
 
     timeline.selectMonth("2008/08");
     budgetView.extras.checkSeries("MyProject", -150.00, -200.00);
-    budgetView.getSummary().checkEndPosition(950.00);
+
+    transactions.showPlannedTransactions().initAmountContent().add("15/08/2008", "Planned: Booking", -50.00, "Booking", 950.00, 950.00, "Account n. 001111")
+      .add("15/08/2008", "RESA", -150.00, "Booking", 1000.00, 1000.00, "Account n. 001111")
+      .add("01/08/2008", "INCOME", 1000.00, "To categorize", 1150.00, 1150.00, "Account n. 001111")
+      .check();
+
 
     timeline.selectMonth("2008/10");
     budgetView.extras.checkSeries("MyProject", 0, -600.00);
-    budgetView.getSummary().checkEndPosition(350.00);
   }
 
 }
