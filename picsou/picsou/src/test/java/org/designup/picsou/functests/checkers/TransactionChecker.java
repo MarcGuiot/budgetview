@@ -407,6 +407,13 @@ public class TransactionChecker extends FilteredViewChecker<TransactionChecker> 
     return this;
   }
 
+  public TransactionChecker sortByLabel() {
+    getTable()
+      .getHeader()
+      .click(TransactionView.LABEL_COLUMN_INDEX);
+    return this;
+  }
+
   public TransactionChecker sortByBankDate() {
     getTable()
       .getHeader()

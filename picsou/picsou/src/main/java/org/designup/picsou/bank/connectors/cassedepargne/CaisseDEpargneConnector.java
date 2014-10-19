@@ -270,6 +270,7 @@ public class CaisseDEpargneConnector extends WebBankConnector implements HttpCon
             cptdmte0.findFirst(WebFilters.and(WebFilters.tagEquals(HtmlAnchor.TAG_NAME), WebFilters.textContentContains("Mes comptes")))
               .asAnchor()
               .click();
+            waitJavaScript(2000);
             WebPage currentPage = browser.getCurrentPage();
 //            browser.setToTopLevelWindow();
             currentPage.getAnchor(WebFilters.textContentContains("Télécharger des opérations")).click();

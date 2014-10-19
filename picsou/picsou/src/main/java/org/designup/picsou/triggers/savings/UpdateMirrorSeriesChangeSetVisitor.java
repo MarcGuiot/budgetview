@@ -9,6 +9,7 @@ import org.globsframework.model.*;
 import org.globsframework.model.repository.GlobIdGenerator;
 import org.globsframework.model.utils.GlobFunctor;
 import org.globsframework.model.utils.GlobMatchers;
+import org.globsframework.utils.Utils;
 
 public class UpdateMirrorSeriesChangeSetVisitor implements ChangeSetVisitor {
   private GlobRepository localRepository;
@@ -42,24 +43,40 @@ public class UpdateMirrorSeriesChangeSetVisitor implements ChangeSetVisitor {
             }
           }
         });
-        if (values.contains(Series.FROM_ACCOUNT) && values.getPrevious(Series.FROM_ACCOUNT) != null) {
-          if (values.getPrevious(Series.FROM_ACCOUNT).equals(series.get(Series.TARGET_ACCOUNT))) {
-            localRepository.update(series.getKey(), Series.TARGET_ACCOUNT, series.get(Series.FROM_ACCOUNT));
-          }
-          else {
-            localRepository.update(mirror.getKey(), Series.TARGET_ACCOUNT, values.get(Series.FROM_ACCOUNT));
-          }
-          localRepository.update(mirror.getKey(), Series.FROM_ACCOUNT, values.get(Series.FROM_ACCOUNT));
+
+        if (Utils.equal(series.get(Series.TARGET_ACCOUNT), series.get(Series.FROM_ACCOUNT))){
+          localRepository.update(mirror.getKey(), Series.TARGET_ACCOUNT, series.get(Series.TO_ACCOUNT));
         }
-        if (values.contains(Series.TO_ACCOUNT) && values.getPrevious(Series.TO_ACCOUNT) != null) {
-          if (values.getPrevious(Series.TO_ACCOUNT).equals(series.get(Series.TARGET_ACCOUNT))) {
-            localRepository.update(series.getKey(), Series.TARGET_ACCOUNT, series.get(Series.TO_ACCOUNT));
-          }
-          else {
-            localRepository.update(mirror.getKey(), Series.TARGET_ACCOUNT, values.get(Series.TO_ACCOUNT));
-          }
-          localRepository.update(mirror.getKey(), Series.TO_ACCOUNT, values.get(Series.TO_ACCOUNT));
+        else if (Utils.equal(series.get(Series.TARGET_ACCOUNT), series.get(Series.TO_ACCOUNT))){
+          localRepository.update(mirror.getKey(), Series.TARGET_ACCOUNT, series.get(Series.FROM_ACCOUNT));
         }
+        else {
+          localRepository.update(series.getKey(), Series.TARGET_ACCOUNT, series.get(Series.FROM_ACCOUNT));
+          localRepository.update(mirror.getKey(), Series.TARGET_ACCOUNT, series.get(Series.TO_ACCOUNT));
+        }
+
+//        if (values.contains(Series.FROM_ACCOUNT)) {
+//          if (values.getPrevious(Series.FROM_ACCOUNT) != null) {
+//            if (values.getPrevious(Series.FROM_ACCOUNT).equals(series.get(Series.TARGET_ACCOUNT))) {
+//              localRepository.update(series.getKey(), Series.TARGET_ACCOUNT, series.get(Series.FROM_ACCOUNT));
+//            }
+//            else {
+//              localRepository.update(mirror.getKey(), Series.TARGET_ACCOUNT, values.get(Series.FROM_ACCOUNT));
+//            }
+//          }
+//          localRepository.update(mirror.getKey(), Series.FROM_ACCOUNT, values.get(Series.FROM_ACCOUNT));
+//        }
+//        if (values.contains(Series.TO_ACCOUNT)) {
+//          if (values.getPrevious(Series.TO_ACCOUNT) != null) {
+//            if (values.getPrevious(Series.TO_ACCOUNT).equals(series.get(Series.TARGET_ACCOUNT))) {
+//              localRepository.update(series.getKey(), Series.TARGET_ACCOUNT, series.get(Series.TO_ACCOUNT));
+//            }
+//            else {
+//              localRepository.update(mirror.getKey(), Series.TARGET_ACCOUNT, values.get(Series.TO_ACCOUNT));
+//            }
+//          }
+//          localRepository.update(mirror.getKey(), Series.TO_ACCOUNT, values.get(Series.TO_ACCOUNT));
+//        }
       }
     }
   }
@@ -72,7 +89,8 @@ public class UpdateMirrorSeriesChangeSetVisitor implements ChangeSetVisitor {
                                                         seriesId)
       .getGlobs().filterSelf(GlobMatchers.and(GlobMatchers.isFalse(Transaction.PLANNED),
                                               GlobMatchers.isFalse(Transaction.CREATED_BY_SERIES)),
-                             localRepository);
+                             localRepository
+      );
     for (Glob transaction : transactions) {
       localRepository.update(transaction.getKey(),
                              FieldValue.value(Transaction.SERIES, Series.UNCATEGORIZED_SERIES_ID),
@@ -83,29 +101,49 @@ public class UpdateMirrorSeriesChangeSetVisitor implements ChangeSetVisitor {
 
   public static Integer createMirrorSeries(Key key, GlobRepository localRepository) {
     Glob series = localRepository.find(key);
-    if (series == null || series.get(Series.MIRROR_SERIES) != null ||
-        !series.get(Series.BUDGET_AREA).equals(BudgetArea.SAVINGS.getId())) {
+    if (series == null || !series.get(Series.BUDGET_AREA).equals(BudgetArea.SAVINGS.getId())) {
       return null;
     }
 
-    FieldValue seriesFieldValues[] = series.toArray();
-    GlobIdGenerator generator = localRepository.getIdGenerator();
-    int newSeriesId = generator.getNextId(Series.ID, 1);
-    for (int i = 0; i < seriesFieldValues.length; i++) {
-      if (seriesFieldValues[i].getField().equals(Series.MIRROR_SERIES)) {
-        seriesFieldValues[i] = new FieldValue(Series.MIRROR_SERIES, key.get(Series.ID));
+    Glob mirrorSeries;
+    if (series.get(Series.MIRROR_SERIES) == null) {
+      FieldValue seriesFieldValues[] = series.toArray();
+      GlobIdGenerator generator = localRepository.getIdGenerator();
+      int newSeriesId = generator.getNextId(Series.ID, 1);
+      for (int i = 0; i < seriesFieldValues.length; i++) {
+        if (seriesFieldValues[i].getField().equals(Series.MIRROR_SERIES)) {
+          seriesFieldValues[i] = new FieldValue(Series.MIRROR_SERIES, key.get(Series.ID));
+        }
       }
+      mirrorSeries = localRepository.create(Key.create(Series.TYPE, newSeriesId), seriesFieldValues);
+      localRepository.update(key, Series.MIRROR_SERIES, mirrorSeries.get(Series.ID));
     }
-    Glob mirrorSeries = localRepository.create(Key.create(Series.TYPE, newSeriesId), seriesFieldValues);
-    localRepository.update(key, Series.MIRROR_SERIES, mirrorSeries.get(Series.ID));
-    FindMirrorGlobFunctor globFunctor = new FindMirrorGlobFunctor();
-    localRepository.findByIndex(SeriesBudget.SERIES_INDEX, SeriesBudget.SERIES, key.get(Series.ID))
-      .saveApply(globFunctor, localRepository);
-    localRepository.update(key, Series.TARGET_ACCOUNT,
-                           globFunctor.from ? series.get(Series.FROM_ACCOUNT) : series.get(Series.TO_ACCOUNT));
-    localRepository.update(mirrorSeries.getKey(), Series.TARGET_ACCOUNT,
-                           globFunctor.from ? series.get(Series.TO_ACCOUNT) : series.get(Series.FROM_ACCOUNT));
-    return newSeriesId;
+    else {
+      mirrorSeries = localRepository.findLinkTarget(series, Series.MIRROR_SERIES);
+    }
+//    FindMirrorGlobFunctor globFunctor = new FindMirrorGlobFunctor();
+//    localRepository.findByIndex(SeriesBudget.SERIES_INDEX, SeriesBudget.SERIES, key.get(Series.ID))
+//      .saveApply(globFunctor, localRepository);
+//    localRepository.update(key, Series.TARGET_ACCOUNT,
+//                           globFunctor.from ? series.get(Series.FROM_ACCOUNT) : series.get(Series.TO_ACCOUNT));
+    if (series.get(Series.TARGET_ACCOUNT) == null && mirrorSeries.get(Series.TARGET_ACCOUNT) == null) {
+      localRepository.update(series.getKey(), Series.TARGET_ACCOUNT, series.get(Series.FROM_ACCOUNT));
+      localRepository.update(mirrorSeries.getKey(), Series.TARGET_ACCOUNT, series.get(Series.TO_ACCOUNT));
+    }
+    else if (series.get(Series.TARGET_ACCOUNT) != null) {
+      localRepository.update(mirrorSeries.getKey(), Series.TARGET_ACCOUNT,
+                             series.get(Series.TO_ACCOUNT).equals(series.get(Series.TARGET_ACCOUNT)) ?
+                             series.get(Series.FROM_ACCOUNT) : series.get(Series.TO_ACCOUNT)
+      );
+    }
+    else if (mirrorSeries.get(Series.TARGET_ACCOUNT) != null) {
+      localRepository.update(series.getKey(), Series.TARGET_ACCOUNT,
+                             mirrorSeries.get(Series.TO_ACCOUNT).equals(mirrorSeries.get(Series.TARGET_ACCOUNT)) ?
+                             mirrorSeries.get(Series.FROM_ACCOUNT) : mirrorSeries.get(Series.TO_ACCOUNT)
+      );
+    }
+
+    return mirrorSeries.get(Series.ID);
   }
 
   private static class FindMirrorGlobFunctor implements GlobFunctor {

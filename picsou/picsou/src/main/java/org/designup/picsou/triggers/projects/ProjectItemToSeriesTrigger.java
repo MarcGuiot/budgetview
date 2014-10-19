@@ -27,14 +27,14 @@ public class ProjectItemToSeriesTrigger implements ChangeSetListener {
         if (!ProjectItem.usesExtrasSeries(item)) {
           return;
         }
-        if (values.contains(ProjectItem.ACCOUNT)){
+        if (values.contains(ProjectItem.ACCOUNT)) {
           Glob series = repository.findLinkTarget(repository.get(itemKey), ProjectItem.SERIES);
           if (series != null) {
             repository.update(series.getKey(), value(Series.TARGET_ACCOUNT, values.get(ProjectItem.ACCOUNT)));
           }
         }
         if (values.contains(ProjectItem.ACTIVE)) {
-          createOrDeleteSeriesForItem(item, repository);
+          updateActiveStateForSeries(item, repository);
           return;
         }
         if (values.contains(ProjectItem.LABEL)) {
@@ -61,40 +61,27 @@ public class ProjectItemToSeriesTrigger implements ChangeSetListener {
       public void visitUpdate(Key projectKey, FieldValuesWithPrevious values) throws Exception {
         if (values.contains(Project.ACTIVE)) {
           for (Glob item : repository.getAll(ProjectItem.TYPE, linkedTo(projectKey, ProjectItem.PROJECT))) {
-            createOrDeleteSeriesForItem(item, repository);
+            updateActiveStateForSeries(item, repository);
           }
         }
       }
     });
   }
 
-  public static void createOrDeleteSeriesForItem(Glob item, GlobRepository repository) {
+  public void updateActiveStateForSeries(Glob item, GlobRepository repository) {
+    Glob series = repository.findLinkTarget(item, ProjectItem.SERIES);
+    if (series == null) {
+      createSeries(item.getKey(), item, repository);
+      return;
+    }
+
     Glob project = repository.findLinkTarget(item, ProjectItem.PROJECT);
     boolean active = project.isTrue(Project.ACTIVE) && item.isTrue(ProjectItem.ACTIVE);
-    if (active && item.get(ProjectItem.SERIES) == null) {
-      createSeries(item.getKey(), item, repository);
-    }
-    else if (!active && item.get(ProjectItem.SERIES) != null) {
-      Integer seriesId = item.get(ProjectItem.SERIES);
-      Key seriesKey = Key.create(Series.TYPE, seriesId);
-      if (repository.contains(seriesKey) &&
-          !repository.contains(Transaction.TYPE,
-                               and(fieldEquals(Transaction.SERIES, seriesId),
-                                   isFalse(Transaction.PLANNED)))) {
-        Glob series = repository.get(seriesKey);
-        if (series.get(Series.MIRROR_SERIES) != null){
-          if (!repository.contains(Transaction.TYPE,
-                              and(fieldEquals(Transaction.SERIES, seriesId),
-                                  isFalse(Transaction.PLANNED)))) {
-            repository.update(item.getKey(), ProjectItem.SERIES, null);
-            repository.delete(seriesKey);
-          }
-        }
-        else {
-          repository.update(item.getKey(), ProjectItem.SERIES, null);
-          repository.delete(seriesKey);
-        }
-      }
+    repository.update(series.getKey(), value(Series.ACTIVE, active));
+
+    Integer mirrorId = series.get(Series.MIRROR_SERIES);
+    if (mirrorId != null) {
+      repository.update(Key.create(Series.TYPE, mirrorId), value(Series.ACTIVE, active));
     }
   }
 
@@ -115,6 +102,7 @@ public class ProjectItemToSeriesTrigger implements ChangeSetListener {
                         value(Series.GROUP, project.get(Project.SERIES_GROUP)),
                         value(Series.BUDGET_AREA, BudgetArea.EXTRAS.getId()),
                         value(Series.NAME, projectItemValues.get(ProjectItem.LABEL)),
+                        value(Series.ACTIVE, projectItemValues.get(ProjectItem.ACTIVE)),
                         value(Series.TARGET_ACCOUNT, projectItemValues.get(ProjectItem.ACCOUNT)),
                         value(Series.IS_AUTOMATIC, false),
                         value(Series.FIRST_MONTH, firstMonth),
@@ -125,9 +113,19 @@ public class ProjectItemToSeriesTrigger implements ChangeSetListener {
 
   public void globsReset(GlobRepository repository, Set<GlobType> changedTypes) {
     if (changedTypes.contains(ProjectItem.TYPE)) {
-      for (Glob item : repository.getAll(ProjectItem.TYPE)) {
-        if (item.isTrue(ProjectItem.ACTIVE) && item.get(ProjectItem.SERIES) == null) {
+      createMissingSeries(repository);
+    }
+  }
+
+  public static void createMissingSeries(GlobRepository repository) {
+    for (Glob item : repository.getAll(ProjectItem.TYPE)) {
+      if (item.get(ProjectItem.SERIES) == null) {
+        if (ProjectItem.usesExtrasSeries(item)) {
           createSeries(item.getKey(), item, repository);
+        }
+        else {
+          Glob transfer = ProjectTransfer.getTransferFromItem(item, repository);
+          ProjectTransferToSeriesTrigger.createSavingsSeries(transfer.getKey(), repository);
         }
       }
     }

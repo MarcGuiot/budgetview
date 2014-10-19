@@ -3,7 +3,9 @@ package org.designup.picsou.gui.upgrade;
 import com.budgetview.shared.utils.Amounts;
 import org.designup.picsou.gui.PicsouApplication;
 import org.designup.picsou.gui.PicsouInit;
+import org.designup.picsou.gui.projects.utils.ProjectErrorsUpgrade;
 import org.designup.picsou.gui.projects.utils.ProjectUpgrade;
+import org.designup.picsou.gui.series.utils.SeriesErrorsUpgrade;
 import org.designup.picsou.gui.utils.FrameSize;
 import org.designup.picsou.importer.analyzer.TransactionAnalyzerFactory;
 import org.designup.picsou.model.*;
@@ -130,6 +132,7 @@ public class UpgradeTrigger implements ChangeSetListener {
       updateOpenCloseAccount(repository);
       deleteDuplicateSynchro(repository);
     }
+
     if (currentJarVersion < 133) {
       AccountSequenceTrigger.resetSequence(repository);
       projectUpgrade.updateProjectSeriesAndGroups(repository);
@@ -141,10 +144,19 @@ public class UpgradeTrigger implements ChangeSetListener {
       repository.deleteAll(LayoutConfig.TYPE);
     }
 
+    if (currentJarVersion < 140) {
+      ProjectErrorsUpgrade.createMissingGroupsAndSeries(repository);
+      ProjectErrorsUpgrade.fixIncoherentFromToInTransferSeries(repository);
+    }
+    if (currentJarVersion < 141){
+      updateTargetAccountForSeries(repository);
+    }
+
+    //dans tout les cas :
+
+    SeriesErrorsUpgrade.fixMissingGroups(repository);
+
     repository.findOrCreate(AddOns.KEY);
-
-      //dans tout les cas :
-
     repository.delete(Transaction.TYPE, and(fieldEquals(Transaction.CREATED_BY_SERIES, true),
                                             fieldEquals(Transaction.AMOUNT, 0.)));
 
@@ -241,6 +253,7 @@ public class UpgradeTrigger implements ChangeSetListener {
       Glob series2 = repository.get(entry.getValue());
       Set<Integer> accountId1 = updateTargetAccount(repository, series1, repository.findLinkTarget(series1, Series.TARGET_ACCOUNT));
       Set<Integer> accountId2 = updateTargetAccount(repository, series2, repository.findLinkTarget(series2, Series.TARGET_ACCOUNT));
+      updateIfNull(repository, series1, series2);
       if (accountId1.size() > 1 || accountId2.size() > 1) {
         // que faire?
       }
@@ -259,6 +272,29 @@ public class UpgradeTrigger implements ChangeSetListener {
                              }
         );
       }
+    }
+  }
+
+  private void updateIfNull(GlobRepository repository, Glob series1, Glob series2) {
+    if (series1.get(Series.TARGET_ACCOUNT) == null || series2.get(Series.TARGET_ACCOUNT) == null){
+      GlobList budget = repository.findLinkedTo(series1, SeriesBudget.SERIES);
+      for (Glob glob : budget) {
+        if (glob.get(SeriesBudget.PLANNED_AMOUNT, 0.) > 0){
+          repository.update(series1.getKey(), Series.TARGET_ACCOUNT, series1.get(Series.TO_ACCOUNT));
+          repository.update(series2.getKey(), Series.TARGET_ACCOUNT, series1.get(Series.FROM_ACCOUNT));
+          return;
+        }
+      }
+      budget = repository.findLinkedTo(series2, SeriesBudget.SERIES);
+      for (Glob glob : budget) {
+        if (glob.get(SeriesBudget.PLANNED_AMOUNT, 0.) > 0){
+          repository.update(series2.getKey(), Series.TARGET_ACCOUNT, series1.get(Series.TO_ACCOUNT));
+          repository.update(series1.getKey(), Series.TARGET_ACCOUNT, series1.get(Series.FROM_ACCOUNT));
+          return;
+        }
+      }
+      repository.update(series1.getKey(), Series.TARGET_ACCOUNT, series1.get(Series.TO_ACCOUNT));
+      repository.update(series2.getKey(), Series.TARGET_ACCOUNT, series1.get(Series.FROM_ACCOUNT));
     }
   }
 

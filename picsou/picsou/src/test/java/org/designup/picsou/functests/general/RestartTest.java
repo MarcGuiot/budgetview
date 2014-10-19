@@ -4,8 +4,8 @@ import org.designup.picsou.functests.checkers.ApplicationChecker;
 import org.designup.picsou.functests.checkers.CategorizationGaugeChecker;
 import org.designup.picsou.functests.checkers.LoginChecker;
 import org.designup.picsou.functests.checkers.PreferencesChecker;
-import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
+import org.designup.picsou.functests.utils.RestartTestCase;
 import org.designup.picsou.gui.time.TimeService;
 import org.designup.picsou.model.ColorTheme;
 import org.designup.picsou.model.TransactionType;
@@ -18,20 +18,10 @@ import java.io.FileOutputStream;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
 
-public class RestartTest extends LoggedInFunctionalTestCase {
+public class RestartTest extends RestartTestCase {
 
-  protected void setUp() throws Exception {
-    resetWindow();
-    setCurrentDate("2008/08/30");
-    setInMemory(false);
-    setDeleteLocalPrevayler(true);
-    super.setUp();
-    setDeleteLocalPrevayler(false);
-  }
-
-  protected void tearDown() throws Exception {
-    resetWindow();
-    super.tearDown();
+  protected String getCurrentDate() {
+    return "2008/08/30";
   }
 
   public void testTransactionsOnly() throws Exception {
@@ -821,5 +811,4 @@ public class RestartTest extends LoggedInFunctionalTestCase {
       .setDay(16)
       .checkLabelAutocompletion("Au", "AUCHAN");
   }
-
 }
