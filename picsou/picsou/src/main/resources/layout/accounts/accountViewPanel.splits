@@ -1,8 +1,8 @@
 <splits xmlns="http://www.globsframework.org/xml/splits.xsd">
 
   <styleImport file="/layout/commonStyles.splits"/>
+  <styleImport file="/layout/sidebarStyles.splits"/>
   <styles>
-
     <style selector="button#editAccount" ui="hyperlinkButtonWithoutUnderline"
            anchor="left" weightX="100"
            font="-,plain,14" cursor="hand"
@@ -16,35 +16,12 @@
     <style selector="button#accountPosition"
            font="-,plain,14" foreground="block.inner.link.big"/>
 
-    <style selector="toggleButton#selectAccount"
-           weightX="0" cursor="hand"
-           icon="rightArrow(22,18,14,16,block.inner.arrow.unselected)"
-           selectedIcon="rightArrow(22,18,14,16,block.inner.arrow.selected)"
-           rolloverIcon="rightArrow(22,18,14,16,block.inner.arrow.rollover)"
-           pressedIcon="rightArrow(22,18,14,16,block.inner.arrow.pressed)"
-           preferredSize="(22,18)" text="" opaque="false" borderPainted="false"/>
-
     <style selector=".left label.totalAmount"
            fill="horizontal" horizontalAlignment="left" marginLeft="10"/>
 
     <style selector="#accountPanel" opaque="true" background="block.inner.bg"/>
 
     <style selector="#accountWeather" ui="basicButtonUI" cursor="hand" border="" weightX="0" weightY="0" fill="none"/>
-
-    <!-- Block selection -->
-
-    <style id="selectedPanel" selector="x" opaque="true"
-           background="block.inner.highlight.selected.bg"
-           border="line(block.inner.highlight.selected.border)"/>
-    <style id="selectedRolloverPanel" selector="x" opaque="true"
-           background="block.inner.highlight.selected.bg.rollover"
-           border="line(block.inner.highlight.selected.border)"/>
-    <style id="unselectedPanel" selector="x" opaque="true"
-           background="sidebar.bg"
-           border="line(sidebar.bg)"/>
-    <style id="unselectedRolloverPanel" selector="x" opaque="true"
-           background="sidebar.bg"
-           border="line(sidebar.bg)"/>
   </styles>
 
   <column>
@@ -64,7 +41,7 @@
           <component ref="accountPositionsChart" background="sidebar.bg"/>
           <button ref="accountPosition" anchor="east" styleClass="hyperlinkWithoutUnderline"/>
           <label ref="accountUpdateDate" font="LatoLight,plain,12"/>
-          <toggleButton ref="selectAccount"/>
+          <toggleButton ref="selectAccount" styleClass="sidebarSelectionArrow"/>
         </panel>
       </panel>
     </repeat>

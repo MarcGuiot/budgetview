@@ -1349,7 +1349,7 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
     budgetView.variable.checkTotalGauge(-29., -29.);
     budgetView.variable.checkSeries("Internet", -29., -29.);
 
-    seriesAnalysis.initContent()
+    seriesAnalysis.table().initContent()
       .add("Main accounts", "", "", "", "", "", "", "", "")
       .add("Balance", "", "-29.00", "", "", "", "", "", "")
       .add("Savings accounts", "", "", "", "", "", "", "", "")

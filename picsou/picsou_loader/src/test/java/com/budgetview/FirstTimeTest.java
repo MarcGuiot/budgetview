@@ -736,10 +736,10 @@ public class FirstTimeTest extends UISpecTestCase {
     checker.selectMonths("2008/10");
 
     SeriesAnalysisChecker seriesAnalysis = new SeriesAnalysisChecker(window);
-    seriesAnalysis.balanceChart.getLeftDataset()
+    seriesAnalysis.budget().balanceChart.getLeftDataset()
       .checkSize(1)
       .checkValue("Income", 2000.00);
-    seriesAnalysis.balanceChart.getRightDataset()
+    seriesAnalysis.budget().balanceChart.getRightDataset()
       .checkSize(3)
       .checkValue("Recurring", 1413.90)
       .checkValue("Variable", 370.00)

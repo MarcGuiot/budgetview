@@ -42,6 +42,7 @@ public class GlobSelectablePanel implements GlobSelectionListener, Disposable {
   private WindowMouseTracker windowTracker;
   private MouseTracker tracker;
   private GlobSelectablePanel.FrameDeactivatedListener frameDeactivatedListener;
+  private boolean unselectEnabled = true;
 
   public GlobSelectablePanel(SplitsNode<JPanel> panelNode,
                              String selectedStyle, String unselectedStyle,
@@ -68,6 +69,10 @@ public class GlobSelectablePanel implements GlobSelectionListener, Disposable {
     panel.addMouseMotionListener(tracker);
     frameDeactivatedListener = new FrameDeactivatedListener();
     panel.addPropertyChangeListener("Frame.active", frameDeactivatedListener);
+  }
+
+  public void setUnselectEnabled(boolean unselectEnabled) {
+    this.unselectEnabled = unselectEnabled;
   }
 
   private void checkKeyTypes(Key[] otherKeys) {
@@ -125,8 +130,10 @@ public class GlobSelectablePanel implements GlobSelectionListener, Disposable {
       if (glob != null) {
         GlobList currentSelection = selectionService.getSelection(selectionKey.getGlobType());
         if (currentSelection.contains(glob)) {
-          currentSelection.remove(glob);
-          selectionService.select(currentSelection, selectionKey.getGlobType());
+          if (unselectEnabled) {
+            currentSelection.remove(glob);
+            selectionService.select(currentSelection, selectionKey.getGlobType());
+          }
         }
         else {
           if (mouseEvent.isShiftDown()) {

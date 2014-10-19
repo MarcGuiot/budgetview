@@ -71,6 +71,7 @@ import java.awt.*;
 import static org.globsframework.model.utils.GlobMatchers.isFalse;
 
 public class MainPanel {
+  private final AnalysisSelector analysisSelector;
   private PicsouFrame frame;
   private static ExitAction exitActionWhitoutUserEvaluation;
   private GlobsPanelBuilder builder;
@@ -158,7 +159,8 @@ public class MainPanel {
 
     directory.add(new HighlightingService());
 
-    analysisView = new AnalysisView(repository, directory, menuBar.getPrintBudgetAction());
+    analysisView = new AnalysisView(repository, directory);
+    analysisSelector = new AnalysisSelector(repository, directory);
     signpostView = new SignpostView(replicationGlobRepository, directory);
     dashboardView = new DashboardView(repository, directory);
     createPanel(
@@ -174,7 +176,7 @@ public class MainPanel {
       categorizationView,
       cardView,
       budgetView,
-      new AnalysisSelector(repository, directory),
+      analysisSelector,
       analysisView,
       new SavingsView(replicationGlobRepository, directory),
       new ProjectSelector(repository, directory),
@@ -231,6 +233,7 @@ public class MainPanel {
 
     windowManager.setPanel(panel);
     analysisView.reset();
+    analysisSelector.reset();
     timeView.selectCurrentMonth();
     selectLastMonthWithATransaction(repository, directory);
     timeView.centerToSelected();

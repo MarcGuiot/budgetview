@@ -1,6 +1,7 @@
 <splits xmlns="http://www.globsframework.org/xml/splits.xsd">
 
   <styleImport file="/layout/commonStyles.splits"/>
+  <styleImport file="/layout/sidebarStyles.splits"/>
 
   <styles>
 
@@ -154,7 +155,7 @@
     </column>
 
     <panel name="analysis" styleClass="content">
-      <panel ref="seriesAnalysisView" styleClass="innerContent"/>
+      <panel ref="analysisView" styleClass="innerContent"/>
     </panel>
 
     <panel name="data" styleClass="content">

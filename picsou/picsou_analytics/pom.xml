@@ -21,7 +21,7 @@
         <artifactId>maven-compiler-plugin</artifactId>
         <configuration>
           <source>1.5</source>
-          <target>1.5</target>
+          <target>1.5</target>æ
         </configuration>
       </plugin>
       <plugin>

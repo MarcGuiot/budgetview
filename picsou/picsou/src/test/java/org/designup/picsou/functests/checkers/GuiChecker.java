@@ -143,9 +143,4 @@ public abstract class GuiChecker {
     Mouse.released(component, useRightClick, modifier, x, y);
     Mouse.exit(component, x, y);
   }
-
-  protected void rightClick(JComponent component) {
-    Rectangle bounds = component.getBounds();
-    click(component, bounds.x, bounds.y, Key.Modifier.NONE, true);
-  }
 }

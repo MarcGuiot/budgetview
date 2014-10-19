@@ -1,291 +1,75 @@
 package org.designup.picsou.functests.checkers;
 
-import junit.framework.Assert;
-import junit.framework.AssertionFailedError;
-import org.designup.picsou.functests.checkers.components.*;
-import org.designup.picsou.gui.analysis.SeriesEvolutionTableView;
-import org.designup.picsou.utils.Lang;
-import org.globsframework.utils.Strings;
-import org.globsframework.utils.Utils;
+import org.designup.picsou.functests.checkers.analysis.BudgetAnalysisChecker;
+import org.designup.picsou.functests.checkers.analysis.TableAnalysisChecker;
 import org.uispec4j.Button;
-import org.uispec4j.*;
 import org.uispec4j.Panel;
 import org.uispec4j.Window;
-import org.uispec4j.interception.PopupMenuInterceptor;
-import org.uispec4j.utils.ColorUtils;
-import org.uispec4j.utils.KeyUtils;
 
 import javax.swing.*;
-import java.awt.*;
-import java.util.Arrays;
-import java.util.SortedSet;
-import java.util.TreeSet;
 
-import static org.uispec4j.assertion.UISpecAssert.*;
+import static org.uispec4j.assertion.UISpecAssert.assertFalse;
 
-public class SeriesAnalysisChecker extends ExpandableTableChecker<SeriesAnalysisChecker> {
+public class SeriesAnalysisChecker extends ViewChecker {
 
-  public final HistoChartChecker histoChart;
-  public final StackChecker balanceChart;
-  public final StackChecker seriesChart;
-  public final StackChecker groupSeriesChart;
-  public final StackChecker subSeriesChart;
+  private static final String PANEL_NAME = "analysisView";
 
-  private Table table;
-
-  private static final String PANEL_NAME = "seriesAnalysisView";
-  private int COLUMN_COUNT = 10;
   private Panel panel;
+  private TableAnalysisChecker tableAnalysisChecker;
+  private BudgetAnalysisChecker budgetAnalysisChecker;
+  private Panel analysisSelector;
+  private Button tableSelector;
+  private Button budgetSelector;
 
   public SeriesAnalysisChecker(Window mainWindow) {
     super(mainWindow);
-    this.histoChart = new HistoChartChecker(mainWindow, "seriesAnalysisView", "histoChart");
-    this.balanceChart = new StackChecker(mainWindow, PANEL_NAME, "balanceChart");
-    this.seriesChart = new StackChecker(mainWindow, PANEL_NAME, "seriesChart");
-    this.groupSeriesChart = new StackChecker(mainWindow, PANEL_NAME, "groupChart");
-    this.subSeriesChart = new StackChecker(mainWindow, PANEL_NAME, "subSeriesChart");
   }
 
-  public void checkBreadcrumb(String text) {
-    assertThat(getPanel().getTextBox("breadcrumb").textEquals(text));
-  }
-
-  public void clickBreadcrumb(String link) {
-    getPanel().getTextBox("breadcrumb").clickOnHyperlink(link);
-  }
-
-  public SeriesTableChecker initContent() {
-    return new SeriesTableChecker(-1);
-  }
-
-  public SeriesTableChecker initContent(int maxColumns) {
-    return new SeriesTableChecker(maxColumns);
-  }
-
-  public SeriesAnalysisChecker checkRowLabels(String... labels) {
-    assertThat(getTable().columnEquals(1, labels));
-    return this;
-  }
-
-  public void checkColumnNames(String... names) {
-    assertThat(getTable().getHeader().contentEquals(COLUMN_COUNT, Utils.join("", names)));
-  }
-
-  public void checkRow(String label, String... values) {
-    Table table = getTable();
-    int index = getRow(label, table);
-    assertThat(table.rowEquals(index, 0, COLUMN_COUNT, Utils.join(new String[]{"", label}, values)));
-  }
-
-  public SeriesAnalysisChecker unselectAll() {
-    getTable().clearSelection();
-    return this;
-  }
-
-  public SeriesAnalysisChecker select(String... labels) {
-    if (labels.length != 0) {
-      getTable().selectRowsWithText(SeriesEvolutionTableView.LABEL_COLUMN_INDEX, labels);
+  public TableAnalysisChecker table() {
+    views.selectAnalysis();
+    selectTable();
+    if (tableAnalysisChecker == null) {
+      tableAnalysisChecker = new TableAnalysisChecker(mainWindow);
     }
-    else {
-      getTable().clearSelection();
+    return tableAnalysisChecker;
+  }
+
+  public void selectTable() {
+    if (tableSelector == null) {
+      tableSelector = getSelector("selector:table");
     }
-    return this;
+    tableSelector.click();
   }
 
-  public void clearSelection() {
-    getTable().clearSelection();
-  }
-
-  public SeriesAnalysisChecker checkSelected(String... labels) {
-    Table table = getTable();
-    int[] rowIndices = getRows(table, labels);
-    assertThat(table.rowsAreSelected(rowIndices));
-    return this;
-  }
-
-  private int[] getRows(Table table, String[] labels) {
-    SortedSet<Integer> indices = new TreeSet<Integer>();
-    for (String label : labels) {
-      for (int index : table.getRowIndices(SeriesEvolutionTableView.LABEL_COLUMN_INDEX, label)) {
-        indices.add(index);
-      }
+  public BudgetAnalysisChecker budget() {
+    views.selectAnalysis();
+    selectBudget();
+    if (budgetAnalysisChecker == null) {
+      budgetAnalysisChecker = new BudgetAnalysisChecker(mainWindow);
     }
-    return Utils.toArray(indices);
+    return budgetAnalysisChecker;
   }
 
-  public void checkNoSelection() {
-    assertThat(getTable().selectionIsEmpty());
-  }
-
-  private int getRow(String label, Table table) {
-    return table.getRowIndex(SeriesEvolutionTableView.LABEL_COLUMN_INDEX, label);
-  }
-
-  public void doubleClickOnRow(String label) {
-    Table table = getTable();
-    int index = getRow(label, table);
-    table.doubleClick(index, 1);
-  }
-
-  protected Table getTable() {
-    if (table == null) {
-      views.selectAnalysis();
-      table = mainWindow.getTable("seriesEvolutionTable");
-      table.setCellValueConverter(0, new BlankColumnConverter());
-      ColumnConverter converter = new ColumnConverter();
-      for (int i = 1; i < 3 + table.getColumnCount() - 1; i++) {
-        table.setCellValueConverter(i, converter);
-      }
+  public void selectBudget() {
+    if (budgetSelector == null) {
+      budgetSelector = getSelector("selector:budget");
     }
-    return table;
+    budgetSelector.click();
   }
 
-  protected int getLabelColumnIndex() {
-    return SeriesEvolutionTableView.LABEL_COLUMN_INDEX;
+  private org.uispec4j.Button getSelector(String buttonName) {
+    if (analysisSelector == null) {
+      analysisSelector = mainWindow.getPanel("analysisSelector");
+    }
+    return analysisSelector.getButton(buttonName);
   }
 
   protected Panel getPanel() {
+    views.selectAnalysis();
     if (panel == null) {
-      views.selectAnalysis();
       panel = mainWindow.getPanel(PANEL_NAME);
     }
     return panel;
-  }
-
-  public SeriesEditionDialogChecker editSeries(String rowLabel) {
-    Table table = getTable();
-    int row = getRow(rowLabel.toUpperCase(), table);
-    if (row == -1) {
-      row = table.getRowIndex(getLabelColumnIndex(), rowLabel);
-    }
-    return SeriesEditionDialogChecker.open(table.editCell(row, getLabelColumnIndex()).getButton().triggerClick());
-  }
-
-  public SeriesAmountEditionDialogChecker editSeries(String rowLabel, String columnLabel) {
-    Table table = getTable();
-    int row = getRow(rowLabel.toUpperCase(), table);
-    if (row == -1) {
-      row = table.getRowIndex(getLabelColumnIndex(), rowLabel);
-    }
-    int column = table.getHeader().findColumnIndex(columnLabel);
-    table.selectRow(row);
-    return SeriesAmountEditionDialogChecker.open(table.editCell(row, column).getButton().triggerClick());
-  }
-
-  public void checkTableIsEmpty(String... labels) {
-    SeriesAnalysisChecker.SeriesTableChecker checker = initContent();
-    String[] values = new String[COLUMN_COUNT];
-    Arrays.fill(values, "");
-    for (String label : labels) {
-      checker.add(label, values);
-    }
-    checker.check();
-  }
-
-  public void checkNoTableRowWithLabel(String seriesName) {
-    assertFalse("'" + seriesName + "' unexpectedly shown", getTable().containsRow(getLabelColumnIndex(), seriesName));
-  }
-
-  public SeriesAnalysisChecker checkForeground(String rowLabel, String columnLabel, String expectedColor) {
-    Table table = getTable();
-    int row = getRow(rowLabel, table);
-    int column = table.getHeader().findColumnIndex(columnLabel);
-    final JComponent component = getTextComponent(row, column);
-    ColorUtils.assertSimilar("Error at (" + row + "," + column + ") - value=" + table.getContentAt(row, column),
-                             expectedColor, component.getForeground());
-    return this;
-  }
-
-  private JComponent getTextComponent(int row, int column) {
-    final Component renderer = table.getSwingRendererComponentAt(row, column);
-    org.uispec4j.Panel panel = new org.uispec4j.Panel((JPanel)renderer);
-    JButton button = panel.findSwingComponent(JButton.class);
-    if (button != null) {
-      return button;
-    }
-
-    JLabel label = panel.findSwingComponent(JLabel.class);
-    if (label != null) {
-      return label;
-    }
-
-    throw new AssertionFailedError("unexpected component: " + panel.getDescription());
-  }
-
-  public void checkSelectionClipboardExport(int[] indices, String expectedClipboardContent) throws Exception {
-
-    Clipboard.putText("something to clean up the clipboard before running the test");
-
-    Table table = getTable();
-    table.selectRows(indices);
-    KeyUtils.pressKey(table, org.uispec4j.Key.plaformSpecificCtrl(org.uispec4j.Key.C));
-    checkClipboardContent(expectedClipboardContent);
-
-    Clipboard.putText("something to clean up the clipboard before running the test");
-
-    PopupMenuInterceptor
-      .run(getTable().triggerRightClick(indices[0], 0))
-      .getSubMenu("Copy")
-      .click();
-    checkClipboardContent(expectedClipboardContent);
-  }
-
-  private void checkClipboardContent(String expectedClipboardContent) throws Exception {
-    assertRowsEqual(expectedClipboardContent, Clipboard.getContentAsText());
-  }
-
-  private void assertRowsEqual(String expected, String actual) {
-    String[] expectedRows = expected.split("\n");
-    String[] actualRows = expected.split("\n");
-    if (!rowsEqual(expectedRows, actualRows)) {
-      Assert.assertEquals(expected, actual);
-    }
-  }
-
-  private boolean rowsEqual(String[] expectedRows, String[] actualRows) {
-    if (expectedRows.length != actualRows.length) {
-      return false;
-    }
-    for (int i = 0; i < expectedRows.length; i++) {
-      if (!actualRows[i].startsWith(expectedRows[i])) {
-        return false;
-      }
-    }
-    return true;
-  }
-
-  public void checkTableClipboardExport(String expectedClipboardContent) throws Exception {
-    Clipboard.putText("something to clean up the clipboard before running the test");
-    getTablePopup().click(Lang.get("copyTable"));
-    checkClipboardContent(expectedClipboardContent);
-  }
-
-  private PopupButton getActionsPopup() {
-    views.selectAnalysis();
-    return new PopupButton(getPanel().getButton("actionsMenu"));
-  }
-
-  private PopupButton getTablePopup() {
-    views.selectAnalysis();
-    return new PopupButton(getPanel().getButton("tableActionsMenu"));
-  }
-
-  public SeriesAnalysisChecker checkHistoChartLabel(String text) {
-    TextBox textBox = getPanel().getTextBox("histoChartLabel");
-    Assert.assertEquals(text, org.uispec4j.utils.Utils.cleanupHtml(textBox.getText()));
-    return this;
-  }
-
-  public SeriesAnalysisChecker checkBalanceChartLabel(String text) {
-    TextBox textBox = getPanel().getTextBox("balanceChartLabel");
-    Assert.assertEquals(text, org.uispec4j.utils.Utils.cleanupHtml(textBox.getText()));
-    return this;
-  }
-
-  public SeriesAnalysisChecker checkSeriesChartLabel(String text) {
-    TextBox textBox = getPanel().getTextBox("seriesChartLabel");
-    Assert.assertEquals(text, org.uispec4j.utils.Utils.cleanupHtml(textBox.getText()));
-    return this;
   }
 
   public SeriesAnalysisChecker selectNextMonth() {
@@ -308,269 +92,15 @@ public class SeriesAnalysisChecker extends ExpandableTableChecker<SeriesAnalysis
     return this;
   }
 
-  public SeriesAnalysisChecker checkShowsChartsOnly() {
+  public SeriesAnalysisChecker checkBudgetShown() {
     checkComponentVisible(getPanel(), JPanel.class, "chartsPanel", true);
     checkComponentVisible(getPanel(), JPanel.class, "tablePanel", false);
-    getActionsPopup().checkItemSelected(Lang.get("seriesAnalysis.view.charts"));
-    getActionsPopup().checkItemUnselected(Lang.get("seriesAnalysis.view.table"));
-    getActionsPopup().checkItemUnselected(Lang.get("seriesAnalysis.view.both"));
     return this;
   }
 
-  public SeriesAnalysisChecker checkShowsTableOnly() {
+  public SeriesAnalysisChecker checkTableShown() {
     checkComponentVisible(getPanel(), JPanel.class, "chartsPanel", false);
     checkComponentVisible(getPanel(), JPanel.class, "tablePanel", true);
-    getActionsPopup().checkItemUnselected(Lang.get("seriesAnalysis.view.charts"));
-    getActionsPopup().checkItemSelected(Lang.get("seriesAnalysis.view.table"));
-    getActionsPopup().checkItemUnselected(Lang.get("seriesAnalysis.view.both"));
-    return this;
-  }
-
-  public SeriesAnalysisChecker checkShowsChartsAndTable() {
-    checkComponentVisible(getPanel(), JPanel.class, "chartsPanel", true);
-    checkComponentVisible(getPanel(), JPanel.class, "tablePanel", true);
-    getActionsPopup().checkItemUnselected(Lang.get("seriesAnalysis.view.charts"));
-    getActionsPopup().checkItemUnselected(Lang.get("seriesAnalysis.view.table"));
-    getActionsPopup().checkItemSelected(Lang.get("seriesAnalysis.view.both"));
-    return this;
-  }
-
-  public SeriesAnalysisChecker showChartsAndTable() {
-    getActionsPopup().click(Lang.get("seriesAnalysis.view.both"));
-    return this;
-  }
-
-  public SeriesAnalysisChecker showChartsOnly() {
-    getActionsPopup().click(Lang.get("seriesAnalysis.view.charts"));
-    return this;
-  }
-
-  public SeriesAnalysisChecker showTableOnly() {
-    getActionsPopup().click(Lang.get("seriesAnalysis.view.table"));
-    return this;
-  }
-
-  public SeriesAnalysisChecker checkLegendShown(String lineText, String fillText) {
-    Panel legendPanel = getPanel().getPanel("histoChartLegend");
-    assertThat(legendPanel.isVisible());
-    assertThat(legendPanel.getTextBox("lineLabelText").textEquals(lineText));
-    assertThat(legendPanel.getTextBox("fillLabelText").textEquals(fillText));
-    return this;
-  }
-
-  public SeriesAnalysisChecker checkLegendHidden() {
-    Panel legendPanel = getPanel().getPanel("histoChartLegend");
-    assertFalse(legendPanel.isVisible());
-    return this;
-  }
-
-  public SeriesAnalysisChecker checkGroupSeriesAndSubSeriesStacksShown() {
-    balanceChart.checkHidden();
-    seriesChart.checkHidden();
-    groupSeriesChart.checkVisible();
-    subSeriesChart.checkVisible();
-    return this;
-  }
-
-  public SeriesAnalysisChecker checkSeriesAndGroupSeriesStacksShown() {
-    balanceChart.checkHidden();
-    seriesChart.checkVisible();
-    groupSeriesChart.checkVisible();
-    subSeriesChart.checkHidden();
-    return this;
-  }
-
-  public SeriesAnalysisChecker checkBudgetAndSeriesStacksShown() {
-    balanceChart.checkVisible();
-    seriesChart.checkVisible();
-    groupSeriesChart.checkHidden();
-    subSeriesChart.checkHidden();
-    return this;
-  }
-
-  public SeriesAnalysisChecker checkSubSeriesStackShown() {
-    balanceChart.checkHidden();
-    seriesChart.checkVisible();
-    subSeriesChart.checkVisible();
-    return this;
-  }
-
-  public SeriesAnalysisChecker checkGotoBudgetShown() {
-    Button gotoUpButton = panel.getButton("gotoUpButton");
-    assertTrue(gotoUpButton.isVisible());
-    assertTrue(gotoUpButton.textEquals(Lang.get("seriesAnalysis.toggleController.gotoBudget")));
-    return this;
-  }
-
-  public SeriesAnalysisChecker checkGotoUpHidden() {
-    assertFalse(panel.getButton("gotoUpButton").isVisible());
-    return this;
-  }
-
-  public SeriesAnalysisChecker checkGotoDownHidden() {
-    assertFalse(panel.getButton("gotoDownButton").isVisible());
-    return this;
-  }
-
-  public SeriesAnalysisChecker checkGotoDownToGroupSeriesShown() {
-    Button gotoDownButton = panel.getButton("gotoDownButton");
-    assertTrue(gotoDownButton.isVisible());
-    assertTrue(gotoDownButton.textEquals(Lang.get("seriesAnalysis.toggleController.gotoGroupSeries")));
-    return this;
-  }
-
-  public SeriesAnalysisChecker checkGotoUpToGroupSeriesShown() {
-    Button gotoUpButton = panel.getButton("gotoUpButton");
-    assertTrue(gotoUpButton.isVisible());
-    assertTrue(gotoUpButton.textEquals(Lang.get("seriesAnalysis.toggleController.gotoGroupSeries")));
-    return this;
-  }
-
-  public SeriesAnalysisChecker checkGotoSubSeriesShown() {
-    Button gotoDownButton = panel.getButton("gotoDownButton");
-    assertTrue(gotoDownButton.isVisible());
-    assertTrue(gotoDownButton.textEquals(Lang.get("seriesAnalysis.toggleController.gotoSubSeries")));
-    return this;
-  }
-
-  public SeriesAnalysisChecker checkStackButtonsHidden() {
-    assertFalse(panel.getButton("gotoUpButton").isVisible());
-    assertFalse(panel.getButton("gotoDownButton").isVisible());
-    return this;
-  }
-
-  public SeriesAnalysisChecker gotoUp() {
-    Button button = panel.getButton("gotoUpButton");
-    assertThat(button.isVisible());
-    assertThat(button.isEnabled());
-    button.click();
-    return this;
-  }
-
-  public SeriesAnalysisChecker gotoDown() {
-    Button button = panel.getButton("gotoDownButton");
-    assertThat(button.isVisible());
-    assertThat(button.isEnabled());
-    button.click();
-    return this;
-  }
-
-  public class SeriesTableChecker extends TableChecker {
-
-    private int maxColumns;
-
-    public SeriesTableChecker(int maxColumns) {
-      this.maxColumns = maxColumns;
-    }
-
-    public SeriesTableChecker add(String label, String... monthValues) {
-      super.add(Utils.join(new String[]{"", label}, monthValues));
-      return this;
-    }
-
-    protected Table getTable() {
-      return SeriesAnalysisChecker.this.getTable();
-    }
-
-    public void dumpCode() {
-      StringBuilder builder = new StringBuilder();
-      Table table = getTable();
-      for (int row = 0; row < table.getRowCount(); row++) {
-        builder.append("  .add(");
-        int columnCount = getColumnCount();
-        for (int col = 1; col < columnCount; col++) {
-          if (col > 1) {
-            builder.append(", ");
-          }
-          builder.append('"').append(table.getContentAt(row, col)).append('"');
-        }
-        builder.append(")\n");
-      }
-      builder.append("  .check();\n");
-      Assert.fail("Write this:\n" + builder.toString());
-    }
-
-    public void check() {
-      Object[][] expectedContent = rows.toArray(new Object[rows.size()][]);
-      org.uispec4j.assertion.UISpecAssert.assertTrue(getTable().blockEquals(0, 0, getColumnCount(), rows.size(), expectedContent));
-    }
-
-    private int getColumnCount() {
-      return maxColumns >= 0 ? maxColumns : COLUMN_COUNT;
-    }
-  }
-
-  private class BlankColumnConverter implements TableCellValueConverter {
-    public Object getValue(int row, int column, Component renderedComponent, Object modelObject) {
-      return "";
-    }
-  }
-
-  private class ColumnConverter implements TableCellValueConverter {
-    public Object getValue(int row, int column, Component renderedComponent, Object modelObject) {
-      org.uispec4j.Panel panel = new org.uispec4j.Panel((JPanel)renderedComponent);
-      JButton button = panel.findSwingComponent(JButton.class);
-      if (button != null) {
-        return Strings.toString(button.getText());
-      }
-
-      JLabel label = panel.findSwingComponent(JLabel.class);
-      if (label != null) {
-        return Strings.toString(label.getText());
-      }
-
-      return "Nothing found";
-    }
-  }
-
-  public void checkRightClickOptions(String item, String... options) {
-    openRightClickPopup(item, 1).checkChoices(options);
-  }
-
-  public void checkRightClickOptions(String[] items, String... options) {
-    openRightClickPopup(items, 1).checkChoices(options);
-  }
-
-  public void rightClickAndSelect(String item, String option) {
-    openRightClickPopup(item, 1).click(option);
-  }
-
-  public void rightClickAndSelect(String[] items, String option) {
-    openRightClickPopup(items, 1).click(option);
-  }
-
-  public SeriesEditionDialogChecker rightClickAndEditSeries(final String item, final String option) {
-    PopupChecker popupChecker = openRightClickPopup(item, 1);
-    return SeriesEditionDialogChecker.open(popupChecker.triggerClick(option));
-  }
-
-  private PopupChecker openRightClickPopup(final String item, final int column) {
-    return new PopupChecker() {
-      protected org.uispec4j.MenuItem openMenu() {
-        Table table = getTable();
-        return PopupMenuInterceptor.run(table.triggerRightClick(getRow(item, table), column));
-      }
-    };
-  }
-
-  private PopupChecker openRightClickPopup(final String[] items, final int columnIndex) {
-    return new PopupChecker() {
-      protected org.uispec4j.MenuItem openMenu() {
-        Table table = getTable();
-        int[] rows = getRows(table, items);
-        table.selectRows(rows);
-        return PopupMenuInterceptor.run(table.triggerRightClick(rows[0], columnIndex));
-      }
-    };
-  }
-
-  public SeriesAnalysisChecker expandAll() {
-    getTablePopup().click(Lang.get("expand"));
-    return this;
-  }
-
-  public SeriesAnalysisChecker collapseAll() {
-    getTablePopup().click(Lang.get("collapse"));
     return this;
   }
 }

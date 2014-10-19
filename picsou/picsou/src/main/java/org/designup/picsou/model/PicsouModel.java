@@ -52,7 +52,8 @@ public class PicsouModel {
                           Picture.TYPE,
                           ProjectItemAmount.TYPE,
                           LayoutConfig.TYPE,
-                          SeriesGroup.TYPE
+                          SeriesGroup.TYPE,
+                          AnalysisViewType.TYPE
                           )
       .get();
 

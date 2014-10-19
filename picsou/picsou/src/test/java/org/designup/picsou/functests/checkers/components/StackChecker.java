@@ -111,6 +111,7 @@ public class StackChecker extends GuiChecker {
   }
 
   private PopupChecker openRightClickPopup(final String item) {
+    select(item);
     return new PopupChecker() {
       protected org.uispec4j.MenuItem openMenu() {
         return PopupMenuInterceptor.run(new Trigger() {

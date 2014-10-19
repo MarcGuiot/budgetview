@@ -1,6 +1,7 @@
 <splits xmlns="http://www.globsframework.org/xml/splits.xsd">
 
   <styleImport file="/layout/commonStyles.splits"/>
+  <styleImport file="/layout/sidebarStyles.splits"/>
   <styles>
     <style selector="label.categorizationStep" font="-,bold,12" foreground="#333333"
            fill="horizontal" horizontalAlignment="left"

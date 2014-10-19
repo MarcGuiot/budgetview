@@ -290,6 +290,15 @@ public class GlobList extends ArrayList<Glob> {
     return result.toArray(new Integer[result.size()]);
   }
 
+  public boolean contains(Key key) {
+    for (Glob glob : this) {
+      if (glob.getKey().equals(key)) {
+        return true;
+      }
+    }
+    return false;
+  }
+
   public boolean containsValue(IntegerField field, Integer value) {
     for (Glob glob : this) {
       if (Utils.equal(glob.get(field), value)) {

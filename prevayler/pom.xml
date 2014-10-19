@@ -18,21 +18,6 @@
           <target>1.5</target>
         </configuration>
       </plugin>
-      <!--<filters>-->
-      <!--<filter>src/main/filters/filter.properties</filter>-->
-      <!--</filters>-->
-      <!--<resources>-->
-      <!--<resource>-->
-      <!--<directory>src/main/java</directory>-->
-      <!--<excludes>-->
-      <!--<exclude>**/*.java</exclude>-->
-      <!--</excludes>-->
-      <!--</resource>-->
-      <!--<resource>-->
-      <!--<directory>src/main/resources</directory>-->
-      <!--<filtering>true</filtering>-->
-      <!--</resource>-->
-      <!--</resources>-->
     </plugins>
   </build>
 
@@ -48,22 +33,6 @@
       <artifactId>log4j</artifactId>
       <version>1.2.14</version>
     </dependency>
-    <!--<dependency>-->
-      <!--<groupId>piccolo</groupId>-->
-      <!--<artifactId>piccolo</artifactId>-->
-      <!--<version>1.0.4</version>-->
-    <!--</dependency>-->
-
-    <!--<dependency>-->
-    <!--<groupId>xerces</groupId>-->
-    <!--<artifactId>xmlParserAPIs</artifactId>-->
-    <!--<version>2.6.2</version>-->
-    <!--</dependency>-->
-    <!--<dependency>-->
-    <!--<groupId>xerces</groupId>-->
-    <!--<artifactId>xercesImpl</artifactId>-->
-    <!--<version>2.8.1</version>-->
-    <!--</dependency>-->
   </dependencies>
 
   <scm>
@@ -74,21 +43,5 @@
     <tag/>
     <url/>
   </scm>
-
-  <!--<ciManagement>-->
-  <!--<system>continuum</system>-->
-  <!--<notifiers>-->
-  <!--<notifier>-->
-  <!--<type>mail</type>-->
-  <!--<sendOnError>true</sendOnError>-->
-  <!--<sendOnFailure>true</sendOnFailure>-->
-  <!--<sendOnSuccess>false</sendOnSuccess>-->
-  <!--<sendOnWarning>false</sendOnWarning>-->
-  <!--<configuration>-->
-  <!--<address>severine.tardif@bi-sam.com</address>-->
-  <!--</configuration>-->
-  <!--</notifier>-->
-  <!--</notifiers>-->
-  <!--</ciManagement>-->
 
 </project>

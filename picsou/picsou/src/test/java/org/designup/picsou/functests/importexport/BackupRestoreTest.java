@@ -333,7 +333,7 @@ public class BackupRestoreTest extends LoggedInFunctionalTestCase {
     operations.hideSignposts();
     operations.restoreWithPassword(path, "password");
     views.selectAnalysis();
-    seriesAnalysis.checkRow("Salaire", "1000.00", "1000.00", "1000.00", "1000.00", "1000.00", "1000.00", "1000.00", "1000.00", "1000.00", "1000.00");
+    seriesAnalysis.table().checkRow("Salaire", "1000.00", "1000.00", "1000.00", "1000.00", "1000.00", "1000.00", "1000.00", "1000.00", "1000.00", "1000.00");
     operations.checkDataIsOk();
   }
 }

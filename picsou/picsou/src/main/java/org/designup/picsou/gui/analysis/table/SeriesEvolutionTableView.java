@@ -1,13 +1,13 @@
-package org.designup.picsou.gui.analysis;
+package org.designup.picsou.gui.analysis.table;
 
 import org.designup.picsou.gui.View;
+import org.designup.picsou.gui.analysis.SeriesChartsBackgroundPainter;
+import org.designup.picsou.gui.analysis.SeriesChartsColors;
 import org.designup.picsou.gui.card.NavigationPopup;
 import org.designup.picsou.gui.components.JPopupButton;
 import org.designup.picsou.gui.components.table.PicsouTableHeaderPainter;
 import org.designup.picsou.gui.components.expansion.*;
 import org.designup.picsou.gui.model.SeriesStat;
-import org.designup.picsou.gui.analysis.evolution.SeriesEvolutionLabelColumn;
-import org.designup.picsou.gui.analysis.evolution.SeriesEvolutionMonthColumn;
 import org.designup.picsou.gui.series.view.*;
 import org.designup.picsou.gui.utils.Gui;
 import org.designup.picsou.model.Month;
@@ -55,11 +55,13 @@ public class SeriesEvolutionTableView extends View {
   private SeriesChartsColors seriesChartsColors;
   private SeriesExpansionModel expansionModel;
   private int lastWidth;
+  private String name;
 
-  protected SeriesEvolutionTableView(GlobRepository repository,
+  protected SeriesEvolutionTableView(String name, GlobRepository repository,
                                      SeriesChartsColors seriesChartsColors,
                                      Directory directory, Directory parentDirectory) {
     super(repository, directory);
+    this.name = name;
     this.seriesChartsColors = seriesChartsColors;
     this.parentSelectionService = parentDirectory.get(SelectionService.class);
   }
@@ -136,7 +138,7 @@ public class SeriesEvolutionTableView extends View {
     }
     expansionModel.completeInit();
 
-    builder.add("seriesEvolutionTable", table);
+    builder.add(name, table);
 
     final JScrollPane scrollPane = new JScrollPane();
     builder.add("tableScrollPane", scrollPane);

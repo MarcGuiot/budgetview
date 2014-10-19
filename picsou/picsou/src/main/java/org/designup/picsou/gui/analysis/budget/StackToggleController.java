@@ -1,4 +1,4 @@
-package org.designup.picsou.gui.analysis.components;
+package org.designup.picsou.gui.analysis.budget;
 
 import org.designup.picsou.gui.analysis.utils.SeriesWrapperSelection;
 import org.designup.picsou.utils.Lang;

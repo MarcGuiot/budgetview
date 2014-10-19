@@ -1,0 +1,37 @@
+<splits xmlns="http://www.globsframework.org/xml/splits.xsd">
+
+  <styleImport file="/layout/commonStyles.splits"/>
+  <styles>
+
+    <style selector="button.rightArrow" ui="basicButtonUI"
+           preferredSize="(16,16)"
+           icon="rightArrow(12,16,10,10,seriesEvolution.nextprev)"
+           rolloverIcon="rightArrow(12,16,10,10,seriesEvolution.nextprev.rollover)" weightX="0.01"
+           text="" opaque="false" borderPainted="false" cursor="hand"/>
+
+    <style selector="button.leftArrow" ui="basicButtonUI"
+           preferredSize="(16,16)"
+           icon="leftArrow(12,16,10,10,seriesEvolution.nextprev)"
+           rolloverIcon="leftArrow(12,16,10,10,seriesEvolution.nextprev.rollover)" weightX="0.01"
+           text="" opaque="false" borderPainted="false" cursor="hand"/>
+
+  </styles>
+
+  <column name="tableAnalysisView" styleClass="main">
+
+    <column name="tablePanel" styleClass="blockScrollBorder" weightY="3">
+      <scrollPane ref="tableScrollPane" verticalUnitIncrement="10" border="matte(1,1,0,1,block.scroll.border)"
+                  horizontalScrollbarPolicy="never">
+        <table ref="analysisTable" rowHeight="20" border="none"/>
+      </scrollPane>
+
+      <row styleClass="footer">
+        <button ref="tableActionsMenu" styleClass="actionsButton" marginLeft="5"/>
+        <filler fill="horizontal"/>
+        <button action="previousMonth" styleClass="leftArrow" tooltipText="$series.previous.tooltip"/>
+        <button action="nextMonth" styleClass="rightArrow" tooltipText="$series.next.tooltip"/>
+      </row>
+    </column>
+
+  </column>
+</splits>

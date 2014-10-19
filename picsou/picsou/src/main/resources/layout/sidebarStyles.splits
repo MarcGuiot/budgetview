@@ -1,0 +1,56 @@
+<splits xmlns="http://www.globsframework.org/xml/splits.xsd">
+
+  <styles>
+
+    <style selector=".sidebar" opaque="true" background="sidebar.bg" border="matte(0,0,0,1,sidebar.border)"/>
+
+    <style selector=".sidebarTitle" font="LatoLight,plain,30" weightX="0"
+           marginLeft="10" marginTop="10" marginBottom="20"
+           foreground="sidebar.title" fill="horizontal" anchor="west"/>
+
+    <style selector=".sidebarSectionTitle" font="LatoLight,plain,14"
+           fill="none" anchor="south" weightX="0"
+           foreground="sidebar.sectionTitle"/>
+
+    <style selector=".sidebarSeparator" marginTop="1" border="matte(1,0,0,0,sidebar.separator)"/>
+
+    <style selector=".sidebarScrollPane"  border="" opaque="false"
+           viewportOpaque="true" viewportBackground="sidebar.bg"/>
+
+    <!-- Selection panel -->
+
+    <style id="selectedPanel" selector="x" opaque="true"
+           background="block.inner.highlight.selected.bg"
+           border="line(block.inner.highlight.selected.border)"/>
+    <style id="selectedRolloverPanel" selector="x" opaque="true"
+           background="block.inner.highlight.selected.bg.rollover"
+           border="line(block.inner.highlight.selected.border)"/>
+    <style id="unselectedPanel" selector="x" opaque="true"
+           background="sidebar.bg"
+           border="line(sidebar.bg)"/>
+    <style id="unselectedRolloverPanel" selector="x" opaque="true"
+           background="sidebar.bg"
+           border="line(sidebar.bg)"/>
+
+    <!-- Selection toggle arrow -->
+
+    <style selector="toggleButton.sidebarSelectionArrow"
+           weightX="0" cursor="hand"
+           icon="rightArrow(22,18,14,16,block.inner.arrow.unselected)"
+           selectedIcon="rightArrow(22,18,14,16,block.inner.arrow.selected)"
+           rolloverIcon="rightArrow(22,18,14,16,block.inner.arrow.rollover)"
+           pressedIcon="rightArrow(22,18,14,16,block.inner.arrow.pressed)"
+           preferredSize="(22,18)" text="" opaque="false" borderPainted="false"/>
+
+    <style selector="button.sidebarSelectionArrow"
+           weightX="0" cursor="hand"
+           rolloverIcon="rightArrow(22,18,14,16,block.inner.arrow.rollover)"
+           pressedIcon="rightArrow(22,18,14,16,block.inner.arrow.pressed)"
+           preferredSize="(22,18)" text="" opaque="false" borderPainted="false"/>
+    <style id="sidebarSelectionArrowSelected" selector="x"
+           icon="rightArrow(22,18,14,16,block.inner.arrow.selected)"/>
+    <style id="sidebarSelectionArrowUnselected" selector="x"
+           icon="rightArrow(22,18,14,16,block.inner.arrow.unselected)"/>
+
+  </styles>
+</splits>

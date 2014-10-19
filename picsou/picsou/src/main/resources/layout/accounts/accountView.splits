@@ -1,6 +1,7 @@
 <splits xmlns="http://www.globsframework.org/xml/splits.xsd">
 
   <styleImport file="/layout/commonStyles.splits"/>
+  <styleImport file="/layout/sidebarStyles.splits"/>
 
   <column preferredSize="(310,800)" styleClass="sidebar">
 

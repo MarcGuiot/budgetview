@@ -128,6 +128,7 @@ public abstract class AccountViewPanel {
       AccountWeatherButton.create(account.getKey(), cellBuilder, "accountWeather", repository, directory);
 
       final AccountPopupFactory popupFactory = new AccountPopupFactory(account, repository, directory);
+      popupFactory.setShowSelectionToggle(true);
       popupFactory.setShowGraphToggle(true);
       add("editAccount",
           createEditAccountButton(account, popupFactory, repository, directory), account, cellBuilder);

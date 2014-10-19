@@ -1,4 +1,4 @@
-package org.designup.picsou.gui.analysis.evolution;
+package org.designup.picsou.gui.analysis.table;
 
 import org.designup.picsou.gui.description.Formatting;
 import org.designup.picsou.gui.model.*;

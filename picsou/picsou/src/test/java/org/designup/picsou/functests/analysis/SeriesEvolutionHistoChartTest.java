@@ -33,31 +33,32 @@ public class SeriesEvolutionHistoChartTest extends LoggedInFunctionalTestCase {
     categorization.setNewIncome("Big Inc.", "Mary's");
 
     timeline.selectMonth("2009/07");
-    seriesAnalysis.select("To categorize");
-    seriesAnalysis.histoChart
+    seriesAnalysis.table().select("To categorize");
+    seriesAnalysis.budget().histoChart
       .checkLineColumn(0, "J", "2009", 50.00)
       .checkLineColumn(1, "J", "2009", 20.00, true);
-    seriesAnalysis
+    seriesAnalysis.budget()
       .checkHistoChartLabel("Operations to categorize")
       .checkLegendHidden();
-    seriesAnalysis.histoChart.checkTooltip(1, "Amount to categorize for July 2009: 20.00");
-    seriesAnalysis.histoChart.checkTooltip(-1, "");
-    seriesAnalysis.histoChart.checkTooltip(10, "Amount to categorize for April 2010: 0.00");
+    seriesAnalysis.budget().histoChart
+      .checkTooltip(1, "Amount to categorize for July 2009: 20.00")
+      .checkTooltip(-1, "")
+      .checkTooltip(10, "Amount to categorize for April 2010: 0.00");
 
     timeline.selectMonth("2009/06");
-    seriesAnalysis.select("Balance");
-    seriesAnalysis.histoChart
+    seriesAnalysis.table().select("Balance");
+    seriesAnalysis.budget().histoChart
       .checkColumnCount(14)
       .checkDiffColumn(0, "June", "2009", 650.00, 450.00, true);
-    seriesAnalysis
+    seriesAnalysis.budget()
       .checkHistoChartLabel("Global balance evolution")
       .checkLegendShown("Expenses", "Income");
-    seriesAnalysis.histoChart.checkTooltip(1, "July 2009: Income: 670.00 - Expenses: 450.00");
-    seriesAnalysis.histoChart.checkTooltip(-1, "");
-    seriesAnalysis.histoChart.checkTooltip(10, "April 2010: Income: 670.00 - Expenses: 450.00");
+    seriesAnalysis.budget().histoChart.checkTooltip(1, "July 2009: Income: 670.00 - Expenses: 450.00");
+    seriesAnalysis.budget().histoChart.checkTooltip(-1, "");
+    seriesAnalysis.budget().histoChart.checkTooltip(10, "April 2010: Income: 670.00 - Expenses: 450.00");
 
     timeline.selectMonth("2009/07");
-    seriesAnalysis.histoChart
+    seriesAnalysis.budget().histoChart
       .checkColumnCount(14)
       .checkDiffColumn(0, "June", "2009", 650.00, 450.00)
       .checkDiffColumn(1, "Jul", "2009", 670.00, 450.00, true)
@@ -65,49 +66,49 @@ public class SeriesEvolutionHistoChartTest extends LoggedInFunctionalTestCase {
       .checkDiffColumn(3, "Sep", "2009", 670.00, 450.00)
       .checkDiffColumn(4, "Oct", "2009", 670.00, 450.00)
       .checkDiffColumn(5, "Nov", "2009", 670.00, 450.00);
-    seriesAnalysis
+    seriesAnalysis.budget()
       .checkHistoChartLabel("Global balance evolution")
       .checkLegendShown("Expenses", "Income");
-    seriesAnalysis.histoChart.checkTooltip(3, "September 2009: Income: 670.00 - Expenses: 450.00");
+    seriesAnalysis.budget().histoChart.checkTooltip(3, "September 2009: Income: 670.00 - Expenses: 450.00");
 
     timeline.selectMonth("2009/06");
-    seriesAnalysis.select("Income");
-    seriesAnalysis.histoChart
+    seriesAnalysis.table().select("Income");
+    seriesAnalysis.budget().histoChart
       .checkDiffColumn(0, "June", "2009", 650.00, 650.00, true)
       .checkDiffColumn(1, "Jul", "2009", 650.00, 670.00);
-    seriesAnalysis
+    seriesAnalysis.budget()
       .checkHistoChartLabel("Budget area Income evolution")
       .checkLegendShown("Actual", "Planned");
-    seriesAnalysis.histoChart.checkTooltip(0, "June 2009: Planned: 650.00 - Actual: 650.00");
-    seriesAnalysis.histoChart.checkTooltip(1, "July 2009: Planned: 650.00 - Actual: 670.00");
+    seriesAnalysis.budget().histoChart.checkTooltip(0, "June 2009: Planned: 650.00 - Actual: 650.00");
+    seriesAnalysis.budget().histoChart.checkTooltip(1, "July 2009: Planned: 650.00 - Actual: 670.00");
 
-    seriesAnalysis.select("John's");
-    seriesAnalysis.histoChart
+    seriesAnalysis.table().select("John's");
+    seriesAnalysis.budget().histoChart
       .checkDiffColumn(0, "June", "2009", 300.00, 300.00, true)
       .checkDiffColumn(1, "Jul", "2009", 300.00, 320.00);
-    seriesAnalysis
+    seriesAnalysis.budget()
       .checkHistoChartLabel("Evolution of 'John's'")
       .checkLegendShown("Actual", "Planned");
-    seriesAnalysis.histoChart.checkTooltip(1, "July 2009: Planned: 300.00 - Actual: 320.00");
+    seriesAnalysis.budget().histoChart.checkTooltip(1, "July 2009: Planned: 300.00 - Actual: 320.00");
 
     timeline.selectMonth("2009/07");
-    seriesAnalysis.select("Income");
-    seriesAnalysis.histoChart
+    seriesAnalysis.table().select("Income");
+    seriesAnalysis.budget().histoChart
       .checkDiffColumn(0, "June", "2009", 650.00, 650.00)
       .checkDiffColumn(1, "Jul", "2009", 650.00, 670.00, true);
-    seriesAnalysis.select("John's");
-    seriesAnalysis.histoChart
+    seriesAnalysis.table().select("John's");
+    seriesAnalysis.budget().histoChart
       .checkDiffColumn(0, "June", "2009", 300.00, 300.00)
       .checkDiffColumn(1, "Jul", "2009", 300.00, 320.00, true);
-    seriesAnalysis
+    seriesAnalysis.budget()
       .checkHistoChartLabel("Evolution of 'John's'")
       .checkLegendShown("Actual", "Planned");
 
-    seriesAnalysis.editSeries("John's", "June 2009")
+    seriesAnalysis.table().editSeries("John's", "June 2009")
       .setAmount(500)
       .setPropagationEnabled()
       .validate();
-    seriesAnalysis.histoChart
+    seriesAnalysis.budget().histoChart
       .checkDiffColumn(0, "June", "2009", 500.00, 300.00)
       .checkDiffColumn(1, "Jul", "2009", 500.00, 320.00, true);
   }
@@ -126,7 +127,7 @@ public class SeriesEvolutionHistoChartTest extends LoggedInFunctionalTestCase {
     timeline.selectMonth("2009/07");
 
     views.selectAnalysis();
-    seriesAnalysis.histoChart
+    seriesAnalysis.budget().histoChart
       .checkColumnCount(19)
       .checkDiffColumn(0, "Jul", "2008", 0.00, 0.00)
       .checkDiffColumn(10, "May", "2009", 0.00, 0.00)
@@ -150,18 +151,18 @@ public class SeriesEvolutionHistoChartTest extends LoggedInFunctionalTestCase {
 
     timeline.selectMonth("2009/07");
 
-    seriesAnalysis.select("Groceries");
-    seriesAnalysis.histoChart
+    seriesAnalysis.table().select("Groceries");
+    seriesAnalysis.budget().histoChart
       .checkDiffColumn(0, "June", "2009", 400.00, 500.00)
       .checkDiffColumn(1, "Jul", "2009", 400.00, 200.00, true);
 
-    seriesAnalysis.select("Groceries", "TV");
-    seriesAnalysis.histoChart
+    seriesAnalysis.table().select("Groceries", "TV");
+    seriesAnalysis.budget().histoChart
       .checkDiffColumn(0, "June", "2009", 400.00, 500.00)
       .checkDiffColumn(1, "Jul", "2009", 1400.00, 1200.00, true);
 
-    seriesAnalysis.select("Salary", "Groceries", "TV");
-    seriesAnalysis.histoChart
+    seriesAnalysis.table().select("Salary", "Groceries", "TV");
+    seriesAnalysis.budget().histoChart
       .checkDiffColumn(0, "June", "2009", 1600.00, 1500.00)
       .checkDiffColumn(1, "Jul", "2009", 600.00, 800.00, true);
   }
@@ -184,38 +185,38 @@ public class SeriesEvolutionHistoChartTest extends LoggedInFunctionalTestCase {
     budgetView.savings.alignAndPropagate("Epargne");
 
     views.selectAnalysis();
-    seriesAnalysis.select("Main accounts");
-    seriesAnalysis.histoChart
+    seriesAnalysis.table().select("Main accounts");
+    seriesAnalysis.budget().histoChart
       .checkColumnCount(13)
       .checkLineColumn(0, "J", "2009", 1000.00, true)
       .checkLineColumn(1, "A", "2009", 800.00)
       .checkLineColumn(2, "S", "2009", 600.00)
       .checkLineColumn(3, "O", "2009", 400.00)
       .checkLineColumn(6, "J", "2010", -200.00);
-    seriesAnalysis
+    seriesAnalysis.budget()
       .checkHistoChartLabel("End of month position evolution")
       .checkLegendHidden();
-    seriesAnalysis.histoChart.checkTooltip(2, "End of September 2009 position: 600.00");
+    seriesAnalysis.budget().histoChart.checkTooltip(2, "End of September 2009 position: 600.00");
 
-    seriesAnalysis.select("Savings accounts");
-    seriesAnalysis.histoChart
+    seriesAnalysis.table().select("Savings accounts");
+    seriesAnalysis.budget().histoChart
       .checkColumnCount(13)
       .checkLineColumn(0, "J", "2009", 400.00, true)
       .checkLineColumn(1, "A", "2009", 600.00)
       .checkLineColumn(2, "S", "2009", 800.00)
       .checkLineColumn(3, "O", "2009", 1000.00)
       .checkLineColumn(6, "J", "2010", 1600.00);
-    seriesAnalysis
+    seriesAnalysis.budget()
       .checkHistoChartLabel("End of month position evolution")
       .checkLegendHidden();
-    seriesAnalysis.histoChart.checkTooltip(2, "End of September 2009 position: 800.00");
+    seriesAnalysis.budget().histoChart.checkTooltip(2, "End of September 2009 position: 800.00");
 
     views.selectHome();
 
     savingsAccounts.editPosition("ING").setAmount(300.00).validate();
 
     views.selectAnalysis();
-    seriesAnalysis.histoChart
+    seriesAnalysis.budget().histoChart
       .checkColumnCount(13)
       .checkLineColumn(0, "J", "2009", 300.00, true)
       .checkLineColumn(1, "A", "2009", 500.00)
@@ -223,8 +224,8 @@ public class SeriesEvolutionHistoChartTest extends LoggedInFunctionalTestCase {
       .checkLineColumn(3, "O", "2009", 900.00)
       .checkLineColumn(6, "J", "2010", 1500.00);
 
-    seriesAnalysis.select("Main accounts");
-    seriesAnalysis.histoChart
+    seriesAnalysis.table().select("Main accounts");
+    seriesAnalysis.budget().histoChart
       .checkColumnCount(13)
       .checkLineColumn(0, "J", "2009", 1000.00, true)
       .checkLineColumn(1, "A", "2009", 800.00)
@@ -238,7 +239,7 @@ public class SeriesEvolutionHistoChartTest extends LoggedInFunctionalTestCase {
       .validate();
 
     views.selectAnalysis();
-    seriesAnalysis.histoChart
+    seriesAnalysis.budget().histoChart
       .checkColumnCount(13)
       .checkLineColumn(0, "J", "2009", 500.00, true)
       .checkLineColumn(1, "A", "2009", 300.00)
@@ -257,49 +258,49 @@ public class SeriesEvolutionHistoChartTest extends LoggedInFunctionalTestCase {
       .load();
 
     views.selectHome();
-    seriesAnalysis.select("Main accounts");
-    seriesAnalysis.histoChart
-      .checkRange(200807,201001);
+    seriesAnalysis.table().select("Main accounts");
+    seriesAnalysis.budget().histoChart
+      .checkRange(200807, 201001);
 
-    seriesAnalysis.histoChart
+    seriesAnalysis.budget().histoChart
       .scroll(-8)
-      .checkRange(200801,200907);
+      .checkRange(200801, 200907);
 
-    seriesAnalysis.histoChart
+    seriesAnalysis.budget().histoChart
       .scroll(+1)
-      .checkRange(200802,200908);
+      .checkRange(200802, 200908);
 
     timeline.selectMonth("2009/12");
-    seriesAnalysis.histoChart
-      .checkRange(200807,201001);
+    seriesAnalysis.budget().histoChart
+      .checkRange(200807, 201001);
 
-    seriesAnalysis.histoChart
+    seriesAnalysis.budget().histoChart
       .scroll(-1)
       .checkRange(200806, 200912);
 
-    seriesAnalysis.histoChart
+    seriesAnalysis.budget().histoChart
       .scroll(+1)
-      .checkRange(200807,201001);
+      .checkRange(200807, 201001);
 
-    seriesAnalysis.histoChart
+    seriesAnalysis.budget().histoChart
       .scroll(+20)
-      .checkRange(201001,201107);
+      .checkRange(201001, 201107);
 
-    seriesAnalysis.histoChart
+    seriesAnalysis.budget().histoChart
       .scroll(-1)
-      .checkRange(200912,201106);
+      .checkRange(200912, 201106);
 
-    seriesAnalysis.histoChart
+    seriesAnalysis.budget().histoChart
       .scroll(-20)
-      .checkRange(200804,200910);
+      .checkRange(200804, 200910);
 
-    seriesAnalysis.histoChart
+    seriesAnalysis.budget().histoChart
       .scroll(+1)
-      .checkRange(200805,200911);
+      .checkRange(200805, 200911);
 
-    seriesAnalysis.histoChart
+    seriesAnalysis.budget().histoChart
       .clickColumnId(200911)
-      .checkRange(200807,201001);
+      .checkRange(200807, 201001);
     timeline.checkSelection("2009/11");
   }
 
@@ -319,24 +320,24 @@ public class SeriesEvolutionHistoChartTest extends LoggedInFunctionalTestCase {
     views.selectAnalysis();
 
     timeline.selectMonth("2009/07");
-    seriesAnalysis.showChartsAndTable();
-    seriesAnalysis.select("Income");
-    seriesAnalysis.histoChart
+    seriesAnalysis.budget();
+    seriesAnalysis.table().select("Income");
+    seriesAnalysis.budget().histoChart
       .checkColumnCount(14)
       .checkDiffColumn(0, "June", "2009", 320.00, 320.00)
       .checkDiffColumn(1, "Jul", "2009", 320.00, 320.00, true);
 
-    seriesAnalysis.histoChart.clickColumn(6);
+    seriesAnalysis.budget().histoChart.clickColumn(6);
 
     timeline.checkSelection("2009/12");
-    seriesAnalysis.checkSelected("Income");
-    seriesAnalysis.expandAll();
+    seriesAnalysis.table().checkSelected("Income");
+    seriesAnalysis.table().expandAll();
 
-    seriesAnalysis.select("John's");
-    seriesAnalysis.histoChart.clickColumn(0);
+    seriesAnalysis.table().select("John's");
+    seriesAnalysis.budget().histoChart.clickColumn(0);
     timeline.checkSelection("2009/06");
 
-    seriesAnalysis.histoChart.clickColumn(2);
+    seriesAnalysis.budget().histoChart.clickColumn(2);
     timeline.checkSelection("2009/08");
   }
 
@@ -377,10 +378,10 @@ public class SeriesEvolutionHistoChartTest extends LoggedInFunctionalTestCase {
     // ---- Balance ----
 
     views.selectAnalysis();
-    seriesAnalysis.histoChart.checkRightClickOptions(0,
-                                                     "Show transactions in Categorization view",
-                                                     "Show transactions in Accounts view");
-    seriesAnalysis.histoChart.rightClickAndSelect(0, "Show transactions in Categorization view");
+    seriesAnalysis.budget().histoChart.checkRightClickOptions(0,
+                                                              "Show transactions in Categorization view",
+                                                              "Show transactions in Accounts view");
+    seriesAnalysis.budget().histoChart.rightClickAndSelect(0, "Show transactions in Categorization view");
     views.checkCategorizationSelected();
     categorization.initContent()
       .add("10/06/2009", "Groceries", "AUCHAN", -250.00)
@@ -394,12 +395,12 @@ public class SeriesEvolutionHistoChartTest extends LoggedInFunctionalTestCase {
     // ---- Main accounts ----
 
     views.selectAnalysis();
-    seriesAnalysis.showChartsAndTable();
-    seriesAnalysis.select("Main accounts");
-    seriesAnalysis.histoChart.checkRightClickOptions(0,
-                                                     "Show transactions in Categorization view",
-                                                     "Show transactions in Accounts view");
-    seriesAnalysis.histoChart.rightClickAndSelect(0, "Show transactions in Accounts view");
+    seriesAnalysis.budget();
+    seriesAnalysis.table().select("Main accounts");
+    seriesAnalysis.budget().histoChart.checkRightClickOptions(0,
+                                                              "Show transactions in Categorization view",
+                                                              "Show transactions in Accounts view");
+    seriesAnalysis.budget().histoChart.rightClickAndSelect(0, "Show transactions in Accounts view");
     mainAccounts.checkSelectedAccounts("Account n. 00000234", "Account n. 00000123");
     savingsAccounts.checkNoAccountsSelected();
     transactions.initContent()
@@ -413,11 +414,11 @@ public class SeriesEvolutionHistoChartTest extends LoggedInFunctionalTestCase {
     // ---- Savings accounts ----
 
     views.selectAnalysis();
-    seriesAnalysis.select("Savings accounts");
-    seriesAnalysis.histoChart.checkRightClickOptions(0,
-                                                     "Show transactions in Categorization view",
-                                                     "Show transactions in Accounts view");
-    seriesAnalysis.histoChart.rightClickAndSelect(0, "Show transactions in Accounts view");
+    seriesAnalysis.table().select("Savings accounts");
+    seriesAnalysis.budget().histoChart.checkRightClickOptions(0,
+                                                              "Show transactions in Categorization view",
+                                                              "Show transactions in Accounts view");
+    seriesAnalysis.budget().histoChart.rightClickAndSelect(0, "Show transactions in Accounts view");
     savingsAccounts.checkSelectedAccounts("ING");
     mainAccounts.checkNoAccountsSelected();
     transactions.initContent()
@@ -427,11 +428,11 @@ public class SeriesEvolutionHistoChartTest extends LoggedInFunctionalTestCase {
     // ---- Uncategorized ----
 
     views.selectAnalysis();
-    seriesAnalysis.select("To categorize");
-    seriesAnalysis.histoChart.checkRightClickOptions(1,
-                                                     "Show transactions in Categorization view",
-                                                     "Show transactions in Accounts view");
-    seriesAnalysis.histoChart.rightClickAndSelect(1, "Show transactions in Categorization view");
+    seriesAnalysis.table().select("To categorize");
+    seriesAnalysis.budget().histoChart.checkRightClickOptions(1,
+                                                              "Show transactions in Categorization view",
+                                                              "Show transactions in Accounts view");
+    seriesAnalysis.budget().histoChart.rightClickAndSelect(1, "Show transactions in Categorization view");
     timeline.checkSelection("2009/07");
     categorization.checkShowsUncategorizedTransactionsForSelectedMonths();
     categorization.initContent()
@@ -443,11 +444,11 @@ public class SeriesEvolutionHistoChartTest extends LoggedInFunctionalTestCase {
     // ---- BudgetArea ----
 
     views.selectAnalysis();
-    seriesAnalysis.select("Income");
-    seriesAnalysis.histoChart.checkRightClickOptions(0,
-                                                     "Show transactions in Categorization view",
-                                                     "Show transactions in Accounts view");
-    seriesAnalysis.histoChart.rightClickAndSelect(0, "Show transactions in Categorization view");
+    seriesAnalysis.table().select("Income");
+    seriesAnalysis.budget().histoChart.checkRightClickOptions(0,
+                                                              "Show transactions in Categorization view",
+                                                              "Show transactions in Accounts view");
+    seriesAnalysis.budget().histoChart.rightClickAndSelect(0, "Show transactions in Categorization view");
     timeline.checkSelection("2009/06");
     categorization.checkShowsSelectedMonthsOnly();
     categorization.initContent()
@@ -456,11 +457,11 @@ public class SeriesEvolutionHistoChartTest extends LoggedInFunctionalTestCase {
       .check();
 
     views.selectAnalysis();
-    seriesAnalysis.select("Income", "Variable");
-    seriesAnalysis.histoChart.checkRightClickOptions(0,
-                                                     "Show transactions in Categorization view",
-                                                     "Show transactions in Accounts view");
-    seriesAnalysis.histoChart.rightClickAndSelect(0, "Show transactions in Categorization view");
+    seriesAnalysis.table().select("Income", "Variable");
+    seriesAnalysis.budget().histoChart.checkRightClickOptions(0,
+                                                              "Show transactions in Categorization view",
+                                                              "Show transactions in Accounts view");
+    seriesAnalysis.budget().histoChart.rightClickAndSelect(0, "Show transactions in Categorization view");
     categorization.checkShowsSelectedMonthsOnly();
     categorization.initContent()
       .add("10/06/2009", "Groceries", "AUCHAN", -250.00)
@@ -472,12 +473,12 @@ public class SeriesEvolutionHistoChartTest extends LoggedInFunctionalTestCase {
     // ---- Series ----
 
     views.selectAnalysis();
-    seriesAnalysis.select("Groceries");
-    seriesAnalysis.histoChart.checkRightClickOptions(0,
-                                                     "Show transactions in Categorization view",
-                                                     "Show transactions in Accounts view",
-                                                     "Edit");
-    seriesAnalysis.histoChart.rightClickAndSelect(0, "Show transactions in Accounts view");
+    seriesAnalysis.table().select("Groceries");
+    seriesAnalysis.budget().histoChart.checkRightClickOptions(0,
+                                                              "Show transactions in Categorization view",
+                                                              "Show transactions in Accounts view",
+                                                              "Edit");
+    seriesAnalysis.budget().histoChart.rightClickAndSelect(0, "Show transactions in Accounts view");
     timeline.checkSelection("2009/06");
     categorization.checkShowsSelectedMonthsOnly();
     views.checkDataSelected();
@@ -489,7 +490,7 @@ public class SeriesEvolutionHistoChartTest extends LoggedInFunctionalTestCase {
     transactions.clearCurrentFilter();
 
     views.selectAnalysis();
-    seriesAnalysis.histoChart.rightClickAndEditSeries(1, "Edit")
+    seriesAnalysis.budget().histoChart.rightClickAndEditSeries(1, "Edit")
       .checkName("Groceries")
       .checkMonthSelected(200907)
       .checkAmount(500.00)

@@ -114,10 +114,10 @@ public class BudgetWizardTest extends LoggedInFunctionalTestCase {
     views.selectBudget();
     mainAccounts.checkEndOfMonthPosition(OfxBuilder.DEFAULT_ACCOUNT_NAME, 1410.00);
 
-    seriesAnalysis.balanceChart.getLeftDataset()
+    seriesAnalysis.budget().balanceChart.getLeftDataset()
       .checkSize(1)
       .checkValue("Income", 1500.00);
-    seriesAnalysis.balanceChart.getRightDataset()
+    seriesAnalysis.budget().balanceChart.getRightDataset()
       .checkSize(2)
       .checkValue("Recurring", 1529.90)
       .checkValue("Variable", 90.00);
@@ -129,20 +129,20 @@ public class BudgetWizardTest extends LoggedInFunctionalTestCase {
     timeline.selectMonths("2008/07", "2008/08");
     mainAccounts.checkEndOfMonthPosition(OfxBuilder.DEFAULT_ACCOUNT_NAME, 1410);
     mainAccounts.checkEndOfMonthPosition(OfxBuilder.DEFAULT_ACCOUNT_NAME, 1410);
-    seriesAnalysis.balanceChart.getLeftDataset()
+    seriesAnalysis.budget().balanceChart.getLeftDataset()
       .checkSize(1)
       .checkValue("Income", 3000.00);
-    seriesAnalysis.balanceChart.getRightDataset()
+    seriesAnalysis.budget().balanceChart.getRightDataset()
       .checkSize(2)
       .checkValue("Recurring", 3059.80)
       .checkValue("Variable", 180.00);
 
     timeline.selectMonth("2008/09");
     mainAccounts.checkEndOfMonthPosition(OfxBuilder.DEFAULT_ACCOUNT_NAME, 1420 + 1500 - 1529.90 - 80 - 10 - 10);
-    seriesAnalysis.balanceChart.getLeftDataset()
+    seriesAnalysis.budget().balanceChart.getLeftDataset()
       .checkSize(1)
       .checkValue("Income", 1500.00);
-    seriesAnalysis.balanceChart.getRightDataset()
+    seriesAnalysis.budget().balanceChart.getRightDataset()
       .checkSize(2)
       .checkValue("Recurring", 1529.90)
       .checkValue("Variable", 90.00);

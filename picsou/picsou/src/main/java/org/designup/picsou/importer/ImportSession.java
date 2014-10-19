@@ -243,8 +243,6 @@ public class ImportSession {
     if (matchingAccounts.size() == 1) {
       Glob first = matchingAccounts.getFirst();
       localRepository.update(account.getKey(), RealAccount.ACCOUNT, first.get(RealAccount.ACCOUNT));
-//      RealAccount.copy(localRepository, matchingAccount.getFirst(), account);
-//      localRepository.delete(account.getKey());
     }
     return localRepository.get(account.getKey());
   }
@@ -278,7 +276,6 @@ public class ImportSession {
       if (value) {
         referenceRepository.update(importKey, TransactionImport.IS_WITH_SERIES, value);
       }
-//    importKey = createCurrentImport(typedStream, localRepository);
       setCurrentImport(allNewTransactions, localRepository);
       localRepository.deleteAll(ImportedTransaction.TYPE);
     }

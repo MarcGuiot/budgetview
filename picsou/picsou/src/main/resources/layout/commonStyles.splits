@@ -387,23 +387,6 @@
            foreground="block.inner.columnTitle" horizontalTextPosition="center"
            fill="none" anchor="center"/>
 
-    <!-- Sidebar -->
-
-    <style selector=".sidebar" opaque="true" background="sidebar.bg" border="matte(0,0,0,1,sidebar.border)"/>
-
-    <style selector=".sidebarTitle" font="LatoLight,plain,30" weightX="0"
-           marginLeft="10" marginTop="10" marginBottom="20"
-           foreground="sidebar.title" fill="horizontal" anchor="west"/>
-
-    <style selector=".sidebarSectionTitle" font="LatoLight,plain,14"
-           fill="none" anchor="south" weightX="0"
-           foreground="sidebar.sectionTitle"/>
-
-    <style selector=".sidebarSeparator" marginTop="1" border="matte(1,0,0,0,sidebar.separator)"/>
-
-    <style selector=".sidebarScrollPane"  border="" opaque="false"
-           viewportOpaque="true" viewportBackground="sidebar.bg"/>
-
     <!-- Content -->
 
     <style selector=".content" opaque="true" background="content.bg"/>

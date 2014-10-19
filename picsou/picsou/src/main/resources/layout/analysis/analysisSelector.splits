@@ -1,17 +1,21 @@
 <splits xmlns="http://www.globsframework.org/xml/splits.xsd">
 
   <styleImport file="/layout/commonStyles.splits"/>
+  <styleImport file="/layout/sidebarStyles.splits"/>
   <styles>
-
+    <style selector="button.selector" foreground=""/>
   </styles>
 
   <column name="analysisSelector" styleClass="sidebar">
 
     <label text="$cards.analysis" styleClass="sidebarTitle"/>
 
-    <column>
-
-    </column>
+    <repeat ref="repeat" layout="column" marginLeft="10" marginRight="10">
+      <row ref="selectionPanel" layout="org.designup.picsou.gui.analysis.utils.AnalysisSelectorLayout">
+        <button ref="selector" styleClass="hyperlinkWithoutUnderline" foreground="block.inner.item"/>
+        <button ref="arrow" styleClass="sidebarSelectionArrow"/>
+      </row>
+    </repeat>
 
     <filler fill="vertical"/>
 

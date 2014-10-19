@@ -11,7 +11,7 @@ import org.designup.picsou.gui.components.charts.stack.StackChartColors;
 import org.designup.picsou.gui.components.charts.stack.StackChartDataset;
 import org.designup.picsou.gui.components.charts.stack.utils.StackChartAdapter;
 import org.designup.picsou.gui.model.*;
-import org.designup.picsou.gui.analysis.components.StackToggleController;
+import org.designup.picsou.gui.analysis.budget.StackToggleController;
 import org.designup.picsou.gui.analysis.histobuilders.HistoChartBuilder;
 import org.designup.picsou.gui.analysis.histobuilders.range.HistoChartRange;
 import org.designup.picsou.gui.series.utils.SeriesOrGroup;

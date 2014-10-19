@@ -6,6 +6,7 @@ import org.designup.picsou.gui.accounts.utils.GotoAccountWebsiteAction;
 import org.designup.picsou.model.Account;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.actions.ToggleBooleanAction;
+import org.globsframework.gui.actions.ToggleSelectionAction;
 import org.globsframework.gui.splits.utils.Disposable;
 import org.globsframework.gui.splits.utils.DisposableGroup;
 import org.globsframework.gui.utils.PopupMenuFactory;
@@ -26,11 +27,19 @@ public class AccountPopupFactory implements PopupMenuFactory, Disposable {
   private final MoveAccountDown moveDownAction;
   private final ToggleBooleanAction toggleShowGraph;
   private boolean showGraphToggle = true;
+  private boolean showSelectionToggle = false;
+  private final ToggleSelectionAction selectionAction;
 
   public AccountPopupFactory(Glob account, GlobRepository repository, Directory directory) {
     this.account = account;
     this.repository = repository;
     this.directory = directory;
+
+    this.selectionAction = new ToggleSelectionAction(account.getKey(),
+                                                     Lang.get("account.action.select"),
+                                                     Lang.get("account.action.unselect"),
+                                                     repository, directory);
+    disposables.add(selectionAction);
 
     this.gotoWebsiteAction = new GotoAccountWebsiteAction(account, repository, directory);
     disposables.add(gotoWebsiteAction);
@@ -47,12 +56,21 @@ public class AccountPopupFactory implements PopupMenuFactory, Disposable {
     disposables.add(toggleShowGraph);
   }
 
-  public void setShowGraphToggle(boolean showGraphToggle) {
-    this.showGraphToggle = showGraphToggle;
+  public void setShowGraphToggle(boolean show) {
+    this.showGraphToggle = show;
+  }
+
+  public void setShowSelectionToggle(boolean show) {
+    this.showSelectionToggle = show;
   }
 
   public JPopupMenu createPopup() {
     JPopupMenu menu = new JPopupMenu();
+
+    if (showSelectionToggle) {
+      menu.add(selectionAction);
+      menu.addSeparator();
+    }
     menu.add(new AbstractAction(Lang.get("accountView.edit")) {
       public void actionPerformed(ActionEvent e) {
         AccountEditionDialog dialog = new AccountEditionDialog(repository, directory, false);

@@ -32,10 +32,24 @@ public class AddOnsView extends View {
                                                       repository, directory);
 
     builder.add("addOnsView", panel);
+    repository.addChangeListener(new KeyChangeListener(AddOns.KEY) {
+      public void update() {
+        updateVisibility();
+      }
+    });
 
     builder.addRepeat("addOnSelectors", addOnService.getAddOns(), new AddOnSelectorFactory());
 
     parentBuilder.add("addOnsView", builder);
+    parentBuilder.addOnLoadListener(new OnLoadListener() {
+      public void processLoad() {
+        updateVisibility();
+      }
+    });
+  }
+
+  private void updateVisibility() {
+    panel.setVisible(!AddOns.allEnabled(repository));
   }
 
   private class AddOnSelectorFactory implements RepeatComponentFactory<AddOn> {

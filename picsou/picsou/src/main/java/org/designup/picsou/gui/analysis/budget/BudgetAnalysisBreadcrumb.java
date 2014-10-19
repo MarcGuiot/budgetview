@@ -1,4 +1,4 @@
-package org.designup.picsou.gui.analysis.components;
+package org.designup.picsou.gui.analysis.budget;
 
 import org.designup.picsou.gui.series.view.SeriesWrapper;
 import org.designup.picsou.gui.series.view.SeriesWrapperType;
@@ -14,19 +14,18 @@ import org.globsframework.model.GlobRepository;
 import org.globsframework.model.Key;
 import org.globsframework.model.utils.TypeChangeSetListener;
 import org.globsframework.utils.directory.Directory;
-import org.globsframework.utils.exceptions.InvalidParameter;
 import org.globsframework.utils.exceptions.UnexpectedValue;
 
 import javax.swing.*;
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
 
-public class SeriesAnalysisBreadcrumb implements GlobSelectionListener {
+public class BudgetAnalysisBreadcrumb implements GlobSelectionListener {
   private GlobRepository repository;
   private JEditorPane editor;
   private SelectionService selectionService;
 
-  public SeriesAnalysisBreadcrumb(GlobRepository repository, Directory directory) {
+  public BudgetAnalysisBreadcrumb(GlobRepository repository, Directory directory) {
     this.repository = repository;
     this.editor = GuiUtils.createReadOnlyHtmlComponent();
     editor.addHyperlinkListener(new HyperlinkListener() {
@@ -43,7 +42,7 @@ public class SeriesAnalysisBreadcrumb implements GlobSelectionListener {
     selectionService.addListener(this, SeriesWrapper.TYPE);
     repository.addChangeListener(new TypeChangeSetListener(Series.TYPE, UserPreferences.TYPE) {
       public void update(GlobRepository repository) {
-        SeriesAnalysisBreadcrumb.this.update();
+        BudgetAnalysisBreadcrumb.this.update();
       }
     });
     update();
@@ -82,6 +81,11 @@ public class SeriesAnalysisBreadcrumb implements GlobSelectionListener {
 
   private String getHtml(Glob wrapper) {
     BreadcrumbBuilder builder = new BreadcrumbBuilder();
+    add(wrapper, builder, true);
+    return builder.toString();
+  }
+
+  private void add(Glob wrapper, BreadcrumbBuilder builder, boolean tail) {
     switch (SeriesWrapperType.get(wrapper)) {
       case SUMMARY:
         builder.addBudgetLabel();
@@ -89,30 +93,45 @@ public class SeriesAnalysisBreadcrumb implements GlobSelectionListener {
       case BUDGET_AREA:
         builder.addBudgetLink();
         builder.addSeparator();
-        builder.addBudgetAreaName(wrapper);
+        if (tail) {
+          builder.addBudgetAreaName(wrapper);
+        }
+        else {
+          builder.addBudgetAreaLink(wrapper);
+        }
+        break;
+      case SERIES_GROUP:
+        add(SeriesWrapper.getParent(wrapper, repository), builder, false);
+        builder.addSeparator();
+        if (tail) {
+          builder.addGroupName(wrapper);
+        }
+        else {
+          builder.addGroupLink(wrapper);
+        }
         break;
       case SERIES:
-        builder.addBudgetLink();
+        add(SeriesWrapper.getParent(wrapper, repository), builder, false);
         builder.addSeparator();
-        builder.addParentBudgetAreaLink(wrapper);
-        builder.addSeparator();
-        builder.addSeriesName(wrapper);
+        if (tail) {
+          builder.addSeriesName(wrapper);
+        }
+        else {
+          builder.addSeriesLink(wrapper);
+        }
         break;
       case SUB_SERIES:
-        builder.addBudgetLink();
+        add(SeriesWrapper.getParent(wrapper, repository), builder, false);
         builder.addSeparator();
-        builder.addParentBudgetAreaLink(wrapper);
-        builder.addSeparator();
-        builder.addSeriesLink(wrapper);
+        builder.addSubSeriesName(wrapper);
         break;
     }
-    return builder.toString();
   }
 
   private String getBudgetLabel() {
     switch (AnalysisViewType.get(repository)) {
-      case CHARTS:
-      case BOTH:
+      case BUDGET:
+      case SERIES:
         return Lang.get("seriesAnalysisBreadcrumb.summary.charts");
       case TABLE:
         return Lang.get("seriesAnalysisBreadcrumb.summary.table");
@@ -137,43 +156,38 @@ public class SeriesAnalysisBreadcrumb implements GlobSelectionListener {
       addBold(series.get(Series.NAME));
     }
 
-    private void addSeriesLink(Glob subSeriesWrapper) {
-      Glob subSeries = SeriesWrapper.getSubSeries(subSeriesWrapper, repository);
-      Glob series = repository.findLinkTarget(subSeries, SubSeries.SERIES);
-      addLink(subSeriesWrapper.get(SeriesWrapper.PARENT), series.get(Series.NAME));
+    private void addSeriesLink(Glob seriesWrapper) {
+      Glob series = SeriesWrapper.getSeries(seriesWrapper, repository);
+      addLink(seriesWrapper.get(SeriesWrapper.ID), series.get(Series.NAME));
+    }
+
+    private void addGroupName(Glob seriesWrapper) {
+      Glob group = SeriesWrapper.getGroup(seriesWrapper, repository);
+      addBold(group.get(SeriesGroup.NAME));
+    }
+
+    private void addGroupLink(Glob groupWrapper) {
+      Glob group = SeriesWrapper.getGroup(groupWrapper, repository);
+      addLink(groupWrapper.get(SeriesWrapper.ID), group.get(SeriesGroup.NAME));
+    }
+
+    private void addSubSeriesName(Glob seriesWrapper) {
+      Glob subSeries = SeriesWrapper.getSubSeries(seriesWrapper, repository);
+      addBold(subSeries.get(SubSeries.NAME));
     }
 
     private void addBudgetLink() {
       addLink(SeriesWrapper.BALANCE_SUMMARY_ID, Lang.get("seriesAnalysisBreadcrumb.top"));
     }
 
-    private void addParentBudgetAreaLink(Glob wrapper) {
-      BudgetArea budgetArea;
-
-      SeriesWrapperType wrapperType = SeriesWrapperType.get(wrapper);
-      switch (wrapperType) {
-        case SERIES: {
-          Glob series = SeriesWrapper.getSeries(wrapper, repository);
-          budgetArea = Series.getBudgetArea(series);
-          break;
-        }
-        case SUB_SERIES: {
-          Glob subSeries = SeriesWrapper.getSubSeries(wrapper, repository);
-          Glob series = repository.findLinkTarget(subSeries, SubSeries.SERIES);
-          budgetArea = Series.getBudgetArea(series);
-          break;
-        }
-        default:
-          throw new InvalidParameter("Unexpected type " + wrapperType + " for " + wrapper);
-      }
-
-      Glob wrapperForBudgetArea = SeriesWrapper.getWrapperForBudgetArea(budgetArea, repository);
-      addLink(wrapperForBudgetArea.get(SeriesWrapper.ID), budgetArea.getLabel());
-    }
-
     private void addBudgetAreaName(Glob wrapperForBudgetArea) {
       BudgetArea budgetArea = SeriesWrapper.getBudgetArea(wrapperForBudgetArea);
       addBold(budgetArea.getLabel());
+    }
+
+    private void addBudgetAreaLink(Glob wrapperForBudgetArea) {
+      BudgetArea budgetArea = SeriesWrapper.getBudgetArea(wrapperForBudgetArea);
+      addLink(wrapperForBudgetArea.get(SeriesWrapper.ID), budgetArea.getLabel());
     }
 
     private void addBold(String text) {

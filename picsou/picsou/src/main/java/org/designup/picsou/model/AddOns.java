@@ -1,6 +1,7 @@
 package org.designup.picsou.model;
 
 import com.budgetview.shared.utils.PicsouGlobSerializer;
+import org.globsframework.metamodel.Field;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.annotations.DefaultDouble;
 import org.globsframework.metamodel.annotations.Key;
@@ -43,6 +44,19 @@ public class AddOns {
   public static boolean isEnabled(BooleanField field, GlobRepository repository) {
     Glob addons = repository.find(KEY);
     return addons == null ? false : addons.isTrue(field);
+  }
+
+  public static boolean allEnabled(GlobRepository repository) {
+    Glob addons = repository.find(KEY);
+    if (addons == null) {
+      return false;
+    }
+    for (Field field : TYPE.getFields()) {
+      if ((field instanceof BooleanField) && !addons.isTrue((BooleanField)field)) {
+        return false;
+      }
+    }
+    return true;
   }
 
   public interface Listener {

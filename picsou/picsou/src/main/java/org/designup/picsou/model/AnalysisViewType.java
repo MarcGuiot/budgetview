@@ -14,9 +14,9 @@ import org.globsframework.utils.exceptions.InvalidParameter;
 import static org.globsframework.model.FieldValue.value;
 
 public enum AnalysisViewType implements GlobConstantContainer {
-  CHARTS(0),
-  TABLE(1),
-  BOTH(2);
+  BUDGET(0),
+  SERIES(2),
+  TABLE(1);
 
   public static GlobType TYPE;
 
@@ -34,31 +34,39 @@ public enum AnalysisViewType implements GlobConstantContainer {
   }
 
   public ReadOnlyGlob getGlob() {
-    return new ReadOnlyGlob(ProfileType.TYPE,
-                            value(ProfileType.ID, id));
+    return new ReadOnlyGlob(AnalysisViewType.TYPE,
+                            value(AnalysisViewType.ID, id));
   }
 
   public String getLabel() {
-    return Lang.get("seriesAnalysis.view." + name().toLowerCase());
+    return Lang.get("analysisViewType." + name().toLowerCase());
   }
 
   public int getId() {
     return id;
   }
 
+  public static AnalysisViewType get(Glob glob) {
+    return get(glob.get(ID));
+  }
+
   public static AnalysisViewType get(GlobRepository repository) {
     Glob glob = repository.find(UserPreferences.KEY);
     if (glob == null) {
-      return CHARTS;
+      return BUDGET;
     }
     Integer viewType = glob.get(UserPreferences.ANALYSIS_VIEW_TYPE);
+    return get(viewType);
+  }
+
+  public static AnalysisViewType get(Integer viewType) {
     switch (viewType) {
       case 0:
-        return CHARTS;
+        return BUDGET;
       case 1:
         return TABLE;
       case 2:
-        return BOTH;
+        return SERIES;
       default:
         throw new InvalidParameter("Unknown value: " + viewType);
     }
