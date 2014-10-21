@@ -65,7 +65,7 @@ public class ProjectUpgradeTest extends LoggedInFunctionalTestCase {
     budgetView.extras.checkContent("| Voyage Rome | 60.00 | 50.00 |\n" +
                                    "| Voyage      | 30.00 | 50.00 |\n" +
                                    "| Prepa Rome  | 30.00 | 0.00  |\n");
-    budgetView.savings.checkContent("| Provisions Rome       | 50.00 | 50.00 |\n" +
+    budgetView.transfers.checkContent("| Provisions Rome       | 50.00 | 50.00 |\n" +
                                     "| Du compte Livret      | 0.00  | 0.00  |\n" +
                                     "| Vers le compte Livret | 0.00  | 0.00  |\n");
 
@@ -74,7 +74,7 @@ public class ProjectUpgradeTest extends LoggedInFunctionalTestCase {
                                    "| Voyage      | 150.00 | 150.00 |\n" +
                                    "| Prepa Rome  | 0.00   | 80.00  |\n" +
                                    "| Other       | 70.00  | 0.00   |\n");
-    budgetView.savings.checkContent("| Provisions Rome       | 50.00 | 50.00 |\n" +
+    budgetView.transfers.checkContent("| Provisions Rome       | 50.00 | 50.00 |\n" +
                                     "| Du compte Livret      | 0.00  | 0.00  |\n" +
                                     "| Vers le compte Livret | 0.00  | 0.00  |\n");
 
@@ -82,7 +82,7 @@ public class ProjectUpgradeTest extends LoggedInFunctionalTestCase {
     budgetView.extras.checkContent("| Voyage Rome | 0.00 | 800.00 |\n" +
                                    "| Sorties     | 0.00 | 500.00 |\n" +
                                    "| Hotel       | 0.00 | 300.00 |\n");
-    budgetView.savings.checkContent("| Virement Rome         | 0.00 | +500.00 |\n" +
+    budgetView.transfers.checkContent("| Virement Rome         | 0.00 | +500.00 |\n" +
                                     "| Provisions Rome       | 0.00 | 50.00   |\n" +
                                     "| Du compte Livret      | 0.00 | 0.00    |\n" +
                                     "| Vers le compte Livret | 0.00 | 0.00    |\n");
@@ -233,7 +233,7 @@ public class ProjectUpgradeTest extends LoggedInFunctionalTestCase {
     projectList.checkCurrentProjects("| Vacances | Apr | 500.00 | on |");
 
     views.selectBudget();
-    budgetView.savings
+    budgetView.transfers
       .checkTotalAmounts(250.00, 250.00)
       .checkContent("| Provisions - Compte Perso | 200.00 | 125.00 |\n" +
                     "| Provisions - Compte Joint | 50.00  | 125.00 |\n" +
@@ -263,7 +263,7 @@ public class ProjectUpgradeTest extends LoggedInFunctionalTestCase {
 
     timeline.selectMonth(201406);
     budgetView.extras.checkContent("| Voyage | 0.00 | 500.00 |");
-    budgetView.savings.checkContent("| Virement                | 0.00 | +300.00 |\n" +
+    budgetView.transfers.checkContent("| Virement                | 0.00 | +300.00 |\n" +
                                     "| Du compte Livret 1      | 0.00 | 0.00    |\n" +
                                     "| Du compte Livret 2      | 0.00 | 0.00    |\n" +
                                     "| Vers le compte Livret 1 | 0.00 | 0.00    |\n" +
@@ -295,7 +295,7 @@ public class ProjectUpgradeTest extends LoggedInFunctionalTestCase {
   public void testBackupCorruptedWithDisabledProjectSavingsError() throws Exception {
     operations.restoreWithPassword(Files.copyResourceToTmpFile(this, "/testbackups/upgrade_jar138_disabled_project_savings_error.budgetview"), "pwd");
 
-    budgetView.savings.checkContent("| Regular savings | 200.00 | 200.00 |\n" +
+    budgetView.transfers.checkContent("| Regular savings | 200.00 | 200.00 |\n" +
                                     "| Trip payment    | 0.00   | 0.00   |");
     budgetView.extras.checkContent("| Trip to Rome | 200.00 | 200.00 |\n" +
                                    "| Gifts        | 0.00   | 0.00   |");
@@ -307,7 +307,7 @@ public class ProjectUpgradeTest extends LoggedInFunctionalTestCase {
                   "| Virt iPad | Sep | 0.00 | +400.00 |\n");
 
     currentProject.setActive();
-    budgetView.savings.checkContent("| Virt iPad       | 0.00   | +400.00 |\n" +
+    budgetView.transfers.checkContent("| Virt iPad       | 0.00   | +400.00 |\n" +
                                     "| Regular savings | 200.00 | 200.00  |\n" +
                                     "| Trip payment    | 0.00   | 0.00    |");
     budgetView.extras.checkContent("| iPad         | 0.00   | 500.00 |\n" +
@@ -329,7 +329,7 @@ public class ProjectUpgradeTest extends LoggedInFunctionalTestCase {
       .checkItems("| Voyage   | Sep | 0.00 | 500.00  |\n" +
                   "| Virement | Sep | 0.00 | +400.00 |\n");
 
-    budgetView.savings.checkContent("| Virement                 | 0.00   | +400.00 |\n" +
+    budgetView.transfers.checkContent("| Virement                 | 0.00   | +400.00 |\n" +
                                     "| Vers le Compte 000123321 | 200.00 | 250.00  |\n" +
                                     "| Du Compte 000123321      | 0.00   | 0.00    |");
   }

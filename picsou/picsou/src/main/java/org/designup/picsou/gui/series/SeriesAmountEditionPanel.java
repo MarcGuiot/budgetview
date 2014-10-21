@@ -333,8 +333,8 @@ public class SeriesAmountEditionPanel {
     BudgetArea budgetArea = BudgetArea.get(series.get(Series.BUDGET_AREA));
     double multiplier = Account.getMultiplierForInOrOutputOfTheAccount(series);
     boolean isUsuallyPositive = budgetArea.isIncome() ||
-                                (budgetArea == BudgetArea.SAVINGS && multiplier > 0);
-    amountEditor.update(isUsuallyPositive, budgetArea == BudgetArea.SAVINGS);
+                                (budgetArea == BudgetArea.TRANSFER && multiplier > 0);
+    amountEditor.update(isUsuallyPositive, budgetArea == BudgetArea.TRANSFER);
   }
 
   private void doSelectMonths(Glob series, Set<Integer> monthIds) {

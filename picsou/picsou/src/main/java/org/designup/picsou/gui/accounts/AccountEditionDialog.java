@@ -97,7 +97,7 @@ public class AccountEditionDialog extends AbstractAccountPanel<LocalGlobReposito
                 return false;
               }
               Glob series = repository.findLinkTarget(item, Transaction.SERIES);
-              if (!series.get(Series.BUDGET_AREA).equals(BudgetArea.SAVINGS.getId())) {
+              if (!series.get(Series.BUDGET_AREA).equals(BudgetArea.TRANSFER.getId())) {
                 return true;
               }
               return !(series.get(Series.FROM_ACCOUNT).equals(currentAccount.get(Account.ID))

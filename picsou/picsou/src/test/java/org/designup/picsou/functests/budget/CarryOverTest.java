@@ -567,27 +567,27 @@ public class CarryOverTest extends LoggedInFunctionalTestCase {
       .setPosition(500)
       .validate();
 
-    budgetView.savings.createSavingSeries("To account ING", "Account n. 00000123", "ING");
+    budgetView.transfers.createSavingSeries("To account ING", "Account n. 00000123", "ING");
 
-    budgetView.savings.editSeries("To account ING")
+    budgetView.transfers.editSeries("To account ING")
       .setPropagationEnabled()
       .setAmount(400)
       .validate();
 
     categorization
       .selectTransaction("VIRT ING")
-      .selectSavings()
+      .selectTransfers()
       .checkSeriesIsActive("To account ING")
       .selectSeries("To account ING");
 
-    budgetView.savings.checkSeries("To account ING", 200.00, 400.00);
+    budgetView.transfers.checkSeries("To account ING", 200.00, 400.00);
 
     timeline.selectMonth("2008/08");
-    budgetView.savings.carryExpensesRemainderOver("To account ING");
-    budgetView.savings.checkSeries("To account ING", 200.00, 200.00);
+    budgetView.transfers.carryExpensesRemainderOver("To account ING");
+    budgetView.transfers.checkSeries("To account ING", 200.00, 200.00);
 
     timeline.selectMonth("2008/09");
-    budgetView.savings.checkSeries("To account ING", 0.00, 600.00);
+    budgetView.transfers.checkSeries("To account ING", 0.00, 600.00);
     
     timeline.selectMonths("2008/08", "2008/09", "2008/10");
     transactions
@@ -624,31 +624,31 @@ public class CarryOverTest extends LoggedInFunctionalTestCase {
       .selectBank("ING Direct")
       .validate();
 
-    budgetView.savings.createSavingSeries("To account ING", "Account n. 00000123", "ING");
+    budgetView.transfers.createSavingSeries("To account ING", "Account n. 00000123", "ING");
 
-    budgetView.savings.editSeries("To account ING")
+    budgetView.transfers.editSeries("To account ING")
       .setPropagationEnabled()
       .setAmount(400)
       .validate();
 
     categorization
       .selectTransaction("VIRT ING - MAIN")
-      .selectSavings()
+      .selectTransfers()
       .selectSeries("To account ING");
 
     categorization
       .selectTransaction("VIRT ING - SAVINGS")
-      .selectSavings()
+      .selectTransfers()
       .selectSeries("To account ING");
 
-    budgetView.savings.checkSeries("To account ING", 200.00, 400.00);
+    budgetView.transfers.checkSeries("To account ING", 200.00, 400.00);
 
     timeline.selectMonth("2008/08");
-    budgetView.savings.carryExpensesRemainderOver("To account ING");
-    budgetView.savings.checkSeries("To account ING", 200.00, 200.00);
+    budgetView.transfers.carryExpensesRemainderOver("To account ING");
+    budgetView.transfers.checkSeries("To account ING", 200.00, 200.00);
 
     timeline.selectMonth("2008/09");
-    budgetView.savings.checkSeries("To account ING", 0.00, 600.00);
+    budgetView.transfers.checkSeries("To account ING", 0.00, 600.00);
 
     timeline.selectMonths("2008/08", "2008/09", "2008/10");
     transactions

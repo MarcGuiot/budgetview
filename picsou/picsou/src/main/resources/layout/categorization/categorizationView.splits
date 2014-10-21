@@ -95,8 +95,8 @@
               <panel ref="extrasSeriesChooser"/>
             </card>
 
-            <card name="savings">
-              <panel ref="savingsSeriesChooser"/>
+            <card name="transfer">
+              <panel ref="transferSeriesChooser"/>
             </card>
 
             <card name="other">

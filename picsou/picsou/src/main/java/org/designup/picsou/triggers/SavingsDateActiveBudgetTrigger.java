@@ -1,7 +1,6 @@
 package org.designup.picsou.triggers;
 
 import org.globsframework.model.utils.DefaultChangeSetListener;
-import org.globsframework.model.utils.GlobMatchers;
 import org.globsframework.model.*;
 import org.globsframework.utils.collections.Pair;
 import org.designup.picsou.model.*;
@@ -32,7 +31,7 @@ public class SavingsDateActiveBudgetTrigger extends DefaultChangeSetListener {
       return;
     }
     GlobList list = repository.getAll(Series.TYPE,
-                                      and(fieldEquals(Series.BUDGET_AREA, BudgetArea.SAVINGS.getId()),
+                                      and(fieldEquals(Series.BUDGET_AREA, BudgetArea.TRANSFER.getId()),
                                           or(fieldEquals(Series.FROM_ACCOUNT, account.get(Account.ID)),
                                              fieldEquals(Series.TO_ACCOUNT, account.get(Account.ID)))));
     for (Glob series : list) {

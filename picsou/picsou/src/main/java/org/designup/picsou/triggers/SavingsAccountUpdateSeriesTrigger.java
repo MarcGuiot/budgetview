@@ -27,7 +27,7 @@ public class SavingsAccountUpdateSeriesTrigger extends AbstractChangeSetListener
 
   private void deleteCreatedBySeries(Key key, GlobRepository repository) {
     GlobList savingSeries = repository.getAll(Series.TYPE,
-                                              fieldEquals(Series.BUDGET_AREA, BudgetArea.SAVINGS.getId()));
+                                              fieldEquals(Series.BUDGET_AREA, BudgetArea.TRANSFER.getId()));
     repository.startChangeSet();
     try {
       for (Glob series : savingSeries) {

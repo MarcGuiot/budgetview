@@ -22,7 +22,7 @@ public class BudgetAreaStatFilter implements GlobMatcher {
 
   public BudgetAreaStatFilter(BudgetArea budgetArea) {
     this.budgetArea = budgetArea;
-    if (budgetArea == BudgetArea.SAVINGS) {
+    if (budgetArea == BudgetArea.TRANSFER) {
       seriesDateFilter = Matchers.seriesDateSavings();
     }
     else {

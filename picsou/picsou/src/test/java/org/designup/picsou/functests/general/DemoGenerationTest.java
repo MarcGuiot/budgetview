@@ -271,7 +271,7 @@ public class DemoGenerationTest extends LoggedInFunctionalTestCase {
                                  account("main"),
                                  account("savings"));
 
-    budgetView.savings.editSeries(series("savings"))
+    budgetView.transfers.editSeries(series("savings"))
       .selectFirstMonth()
       .setPropagationEnabled()
       .setAmount(200)
@@ -366,7 +366,7 @@ public class DemoGenerationTest extends LoggedInFunctionalTestCase {
 
     views.selectBudget();
     timeline.selectMonth(Month.toString(Month.next(thirdMonth)));
-    budgetView.savings.createSeries()
+    budgetView.transfers.createSeries()
       .setName(series("savings.trip"))
       .setFromAccount(account("main"))
       .setToAccount(account("provisions"))
@@ -376,7 +376,7 @@ public class DemoGenerationTest extends LoggedInFunctionalTestCase {
       .setAmount(400)
       .validate();
 
-    budgetView.savings.createSeries()
+    budgetView.transfers.createSeries()
       .setName(series("trip.payment"))
       .setFromAccount(account("provisions"))
       .setToAccount(account("main"))

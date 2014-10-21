@@ -56,7 +56,7 @@ public class ProjectTransferToSeriesTrigger implements ChangeSetListener {
     Integer firstMonth = item.get(ProjectItem.FIRST_MONTH);
     Integer lastMonth = ProjectItem.getLastMonth(item);
     Glob series = repository.create(Series.TYPE,
-                                    value(Series.BUDGET_AREA, BudgetArea.SAVINGS.getId()),
+                                    value(Series.BUDGET_AREA, BudgetArea.TRANSFER.getId()),
                                     value(Series.NAME, item.get(ProjectItem.LABEL)),
                                     value(Series.ACTIVE, item.get(ProjectItem.ACTIVE)),
                                     value(Series.IS_AUTOMATIC, false),

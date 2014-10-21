@@ -75,7 +75,7 @@ public class SavingsSeriesComponentFactory implements RepeatComponentFactory<Glo
     final GlobGaugeView gaugeView =
       new GlobGaugeView(Key.create(PeriodSeriesStat.TARGET_TYPE, SeriesType.SERIES.getId(),
                                    PeriodSeriesStat.TARGET, series.get(Series.ID)),
-                        gauge, BudgetArea.SAVINGS, PeriodSeriesStat.AMOUNT,
+                        gauge, BudgetArea.TRANSFER, PeriodSeriesStat.AMOUNT,
                         PeriodSeriesStat.PLANNED_AMOUNT, PeriodSeriesStat.PAST_REMAINING, PeriodSeriesStat.FUTURE_REMAINING,
                         PeriodSeriesStat.PAST_OVERRUN, PeriodSeriesStat.FUTURE_OVERRUN,
                         PeriodSeriesStat.ACTIVE,

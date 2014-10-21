@@ -314,7 +314,7 @@ public class RestartTest extends RestartTestCase {
 
     timeline.selectMonth(200901);
     budgetView.extras.checkSeries("Trip", 0.00, -300.00);
-    budgetView.savings.checkSeries("Transfer", 0.00, -100.00);
+    budgetView.transfers.checkSeries("Transfer", 0.00, -100.00);
 
     currentProject
       .toggleAndEditTransfer(0)
@@ -324,13 +324,13 @@ public class RestartTest extends RestartTestCase {
       .validate();
 
     timeline.selectMonth(200901);
-    budgetView.savings.checkSeries("Transfer", 0.00, -100.00);
+    budgetView.transfers.checkSeries("Transfer", 0.00, -100.00);
 
     timeline.selectMonth(200902);
-    budgetView.savings.checkSeries("Transfer", 0.00, -200.00);
+    budgetView.transfers.checkSeries("Transfer", 0.00, -200.00);
 
     timeline.selectMonth(200903);
-    budgetView.savings.checkSeries("Transfer", 0.00, -300.00);
+    budgetView.transfers.checkSeries("Transfer", 0.00, -300.00);
 
   }
 
@@ -543,7 +543,7 @@ public class RestartTest extends RestartTestCase {
   public void testChangeDayChangeTransactionFromPlannedToRealAndViceversaForNotImportedAccount() throws Exception {
     operations.openPreferences().setFutureMonthsCount(2).validate();
     accounts.createSavingsAccount("Epargne", 1000.);
-    budgetView.savings.createSeries()
+    budgetView.transfers.createSeries()
       .setName("CAF")
       .setFromAccount("External account")
       .setToAccount("Epargne")
@@ -580,7 +580,7 @@ public class RestartTest extends RestartTestCase {
 
     accounts.createSavingsAccount("Epargne", 1000.);
 
-    budgetView.savings.createSeries()
+    budgetView.transfers.createSeries()
       .setName("CAF")
       .setFromAccount("External account")
       .setToAccount("Epargne")
@@ -606,7 +606,7 @@ public class RestartTest extends RestartTestCase {
       .check();
 
     timeline.selectMonth("2008/08");
-    budgetView.savings.checkTotalAmounts(0, 0);
+    budgetView.transfers.checkTotalAmounts(0, 0);
 
     savingsAccounts.select("Epargne");
     savingsView.checkSeriesAmounts("Epargne", "CAF", 300, 300);

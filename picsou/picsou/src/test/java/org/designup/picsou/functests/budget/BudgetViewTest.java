@@ -131,11 +131,11 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
     categorization.setNewSavings("Virt Compte Epargne", "Epargne", "Account n. 00001123", "Livret");
 
     views.selectBudget();
-    budgetView.savings.alignAndPropagate("Epargne");
+    budgetView.transfers.alignAndPropagate("Epargne");
 
-    budgetView.savings.checkTitle("Savings");
-    budgetView.savings.checkSeries("Epargne", 25.0, 25.0);
-    budgetView.savings.checkTotalAmounts(25.0, 25.0);
+    budgetView.transfers.checkTitle("Savings");
+    budgetView.transfers.checkSeries("Epargne", 25.0, 25.0);
+    budgetView.transfers.checkTotalAmounts(25.0, 25.0);
 
     views.selectCategorization();
     categorization.getSavings().checkSelectedSeries("Epargne");

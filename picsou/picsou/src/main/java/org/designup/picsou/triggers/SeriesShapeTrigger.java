@@ -321,7 +321,7 @@ public class SeriesShapeTrigger implements ChangeSetListener {
     public TransactionGlobFunctor(GlobRepository repository, int periodCount, int monthCount, SeriesToReCompute seriesToReCompute) {
       Glob series = repository.find(Key.create(Series.TYPE, seriesToReCompute.seriesId));
       BudgetArea budgetArea = BudgetArea.get(series.get(Series.BUDGET_AREA));
-      if (budgetArea == BudgetArea.SAVINGS) {
+      if (budgetArea == BudgetArea.TRANSFER) {
         positif = series.get(Series.TO_ACCOUNT).equals(series.get(Series.TARGET_ACCOUNT));
       }
       else {

@@ -240,7 +240,7 @@ public class TransactionCreationTest extends LoggedInFunctionalTestCase {
 
     accounts.createSavingsAccount("Livret A", 100.00);
 
-    budgetView.savings
+    budgetView.transfers
       .createSeries()
       .setName("virement manuel vers livret A")
       .setFromAccount("Cash")
@@ -255,7 +255,7 @@ public class TransactionCreationTest extends LoggedInFunctionalTestCase {
       .enterLabelWithoutValidating("Transaction 1")
       .create();
     categorization.selectTransaction("Transaction 1")
-      .selectSavings()
+      .selectTransfers()
       .selectSeries("virement manuel vers livret A");
 
     mainAccounts.checkPosition("Cash", 90.00);
@@ -273,7 +273,7 @@ public class TransactionCreationTest extends LoggedInFunctionalTestCase {
       .enterLabelWithoutValidating("Transaction 2")
       .create();
     categorization.selectTransaction("Transaction 2")
-      .selectSavings()
+      .selectTransfers()
       .selectSeries("virement manuel vers livret A");
 
     mainAccounts.checkPosition("Cash", 80.00);
@@ -287,7 +287,7 @@ public class TransactionCreationTest extends LoggedInFunctionalTestCase {
       .enterLabelWithoutValidating("Transaction 3")
       .create();
     categorization.selectTransaction("Transaction 3")
-      .selectSavings()
+      .selectTransfers()
       .selectSeries("virement manuel vers livret A");
 
     mainAccounts.checkPosition("Cash", 60.00);

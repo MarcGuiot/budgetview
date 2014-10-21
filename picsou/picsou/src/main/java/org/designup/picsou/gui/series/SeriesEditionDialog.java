@@ -237,7 +237,7 @@ public class SeriesEditionDialog {
       public void selectionUpdated(GlobSelection selection) {
         setCurrentSeries(selectionService.getSelection(Series.TYPE).getFirst());
         if (currentSeries != null) {
-          boolean isSavingsSeries = currentSeries.get(Series.BUDGET_AREA).equals(BudgetArea.SAVINGS.getId());
+          boolean isSavingsSeries = currentSeries.get(Series.BUDGET_AREA).equals(BudgetArea.TRANSFER.getId());
           fromAccountsCombo.setVisible(isSavingsSeries);
           toAccountsCombo.setVisible(isSavingsSeries);
           dayChooser.setSelectedItem(currentSeries.get(Series.DAY));
@@ -300,7 +300,7 @@ public class SeriesEditionDialog {
   }
 
   private boolean isValidSeries(Glob series) {
-    return !series.get(Series.BUDGET_AREA).equals(BudgetArea.SAVINGS.getId()) ||
+    return !series.get(Series.BUDGET_AREA).equals(BudgetArea.TRANSFER.getId()) ||
            ((series.get(Series.FROM_ACCOUNT) != null && series.get(Series.TO_ACCOUNT) != null) &&
             !series.get(Series.FROM_ACCOUNT).equals(series.get(Series.TO_ACCOUNT)));
   }
@@ -334,9 +334,9 @@ public class SeriesEditionDialog {
   }
 
   private void setAccountComboVisible(boolean isEditable) {
-    boolean isSavings = budgetArea != BudgetArea.SAVINGS;
+    boolean isSavings = budgetArea != BudgetArea.TRANSFER;
     targetAccountCombo.setVisible(isSavings && isEditable);
-    targetAccountLabel.setVisible((budgetArea != BudgetArea.SAVINGS) && !isEditable);
+    targetAccountLabel.setVisible((budgetArea != BudgetArea.TRANSFER) && !isEditable);
     GuiUtils.revalidate(targetAccountCombo.getComponent());
   }
 
@@ -567,7 +567,7 @@ public class SeriesEditionDialog {
 
     loadSeries(localRepository, repository);
 
-    if (budgetArea == BudgetArea.SAVINGS) {
+    if (budgetArea == BudgetArea.TRANSFER) {
       Set<Integer> positiveAccount = new HashSet<Integer>();
       Set<Integer> negativeAccount = new HashSet<Integer>();
       for (Glob transaction : selectedTransactions) {

@@ -365,7 +365,7 @@ public class Account {
   public static Pair<Integer, Integer> getValidMonth(Glob series, GlobRepository repository) {
     int startMonth = 0;
     int endMonth = Integer.MAX_VALUE;
-    if (series.get(Series.BUDGET_AREA).equals(BudgetArea.SAVINGS.getId())) {
+    if (series.get(Series.BUDGET_AREA).equals(BudgetArea.TRANSFER.getId())) {
       Glob fromAccount = repository.findLinkTarget(series, Series.FROM_ACCOUNT);
       Glob toAccount = repository.findLinkTarget(series, Series.TO_ACCOUNT);
       Date fromOpenDate = fromAccount != null ? fromAccount.get(OPEN_DATE) : null;
@@ -394,7 +394,7 @@ public class Account {
   }
 
   public static boolean needsTargetAccount(Glob series) {
-    return series != null && !BudgetArea.SAVINGS.equals(BudgetArea.get(series.get(Series.BUDGET_AREA)))
+    return series != null && !BudgetArea.TRANSFER.equals(BudgetArea.get(series.get(Series.BUDGET_AREA)))
                      && series.get(Series.TARGET_ACCOUNT) == null;
   }
 

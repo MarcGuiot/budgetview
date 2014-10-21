@@ -34,7 +34,7 @@ public class BudgetWizardTest extends LoggedInFunctionalTestCase {
 
     timeline.selectMonth("2008/07");
     views.selectBudget();
-    budgetView.savings.alignAndPropagate("Epargne");
+    budgetView.transfers.alignAndPropagate("Epargne");
 
     double incomeFor200807 = 2200;
     double expensesFor200807 = (30 + 1500) + (300 + 100) + 200 + 100 + 20;
@@ -47,7 +47,7 @@ public class BudgetWizardTest extends LoggedInFunctionalTestCase {
     mainAccounts.checkEndOfMonthPosition(OfxBuilder.DEFAULT_ACCOUNT_NAME, 0.00);
     budgetView.income.checkTotalObserved(incomeFor200807);
     budgetView.recurring.checkTotalObserved(-1530.00);
-    budgetView.savings.checkTotalObserved(100.);
+    budgetView.transfers.checkTotalObserved(100.);
 
     views.selectHome();
 

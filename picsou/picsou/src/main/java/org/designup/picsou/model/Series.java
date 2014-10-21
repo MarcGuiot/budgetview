@@ -249,7 +249,7 @@ public class Series {
   }
 
   public static boolean isSavingToExternal(FieldValues series) {
-    return series.get(Series.BUDGET_AREA).equals(BudgetArea.SAVINGS.getId()) &&
+    return series.get(Series.BUDGET_AREA).equals(BudgetArea.TRANSFER.getId()) &&
            series.get(Series.TARGET_ACCOUNT).equals(Account.EXTERNAL_ACCOUNT_ID);
   }
 

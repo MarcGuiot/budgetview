@@ -71,7 +71,7 @@ public class DashboardTest extends LoggedInFunctionalTestCase {
       "| +6100 | Total amount for all your accounts on 2014/07/28                          |\n");
 
     timeline.selectMonth("2014/08");
-    budgetView.savings.createSeries()
+    budgetView.transfers.createSeries()
       .setName("Transfer")
       .setFromAccount("Account n. 000345")
       .setToAccount("Account n. 000123")
@@ -87,7 +87,7 @@ public class DashboardTest extends LoggedInFunctionalTestCase {
       "| +1100  | Total amount for your main accounts on 2014/08/09                     |\n" +
       "| +6100  | Total amount for all your accounts on 2014/07/28                      |\n");
 
-    budgetView.savings.editPlannedAmount("Transfer")
+    budgetView.transfers.editPlannedAmount("Transfer")
       .setAmount(500.00)
       .validate();
 

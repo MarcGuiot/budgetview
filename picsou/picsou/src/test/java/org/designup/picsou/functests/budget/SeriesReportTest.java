@@ -122,7 +122,7 @@ public abstract class SeriesReportTest extends LoggedInFunctionalTestCase {
       .setAsSavings()
       .validate();
     views.selectBudget();
-    budgetView.savings.createSeries()
+    budgetView.transfers.createSeries()
       .setName("CA")
       .setFromAccount("Main accounts")
       .setToAccount("Account n. 111")
@@ -132,14 +132,14 @@ public abstract class SeriesReportTest extends LoggedInFunctionalTestCase {
       .validate();
 
     categorization.setSavings("Virement", "CA");
-    budgetView.savings.checkSeries("CA", 50, 100);
+    budgetView.transfers.checkSeries("CA", 50, 100);
     operations.nextMonth();
 
     timeline.selectMonth("2008/08");
-    budgetView.savings.checkSeries("CA", 50, 50);
+    budgetView.transfers.checkSeries("CA", 50, 50);
 
     timeline.selectMonth("2008/09");
-    budgetView.savings.checkSeries("CA", 0, 150);
+    budgetView.transfers.checkSeries("CA", 0, 150);
     savingsView.checkSeriesAmounts("Account n. 111", "CA", 0, 150);
   }
 

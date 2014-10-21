@@ -881,10 +881,10 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
       .load();
 
     categorization.selectTableRow(0);
-    categorization.selectSavings()
+    categorization.selectTransfers()
       .selectAndCreateSavingsSeries("Epargne", "Account n. 00001123");
 
-    budgetView.savings.align("Epargne");
+    budgetView.transfers.align("Epargne");
 
     timeline.selectMonths("2008/06", "2008/07");
     transactions
@@ -894,7 +894,7 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
       .add("29/06/2008", TransactionType.PRELEVEMENT, "Virement", "", -100.00, "Epargne")
       .check();
 
-    categorization.selectSavings().editSeries("Epargne")
+    categorization.selectTransfers().editSeries("Epargne")
       .setRepeatIrregular()
       .checkChart(new Object[][]{
         {"2008", "June", 100.00, 100.00, true},
@@ -915,20 +915,20 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
       .load();
 
     categorization.selectTableRow(0);
-    categorization.selectSavings()
+    categorization.selectTransfers()
       .selectAndCreateSavingsSeries("Epargne", "Account n. 00001123");
 
-    categorization.selectSavings()
+    categorization.selectTransfers()
       .editSeries("Epargne")
       .setRepeatIrregular()
       .setRepeatEveryTwoMonths()
       .validate();
 
-    categorization.selectSavings().editSeries("Epargne")
+    categorization.selectTransfers().editSeries("Epargne")
       .setRepeatIrregular()
       .validate();
 
-    categorization.selectSavings().editSeries("Epargne")
+    categorization.selectTransfers().editSeries("Epargne")
       .setRepeatIrregular()
       .setRepeatEveryTwoMonths()
       .validate();
@@ -940,16 +940,16 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
       .load();
 
     categorization.selectTableRow(0);
-    categorization.selectSavings()
+    categorization.selectTransfers()
       .selectAndCreateSavingsSeries("Epargne", "Account n. 00001123");
-    categorization.selectSavings().editSeries("Epargne")
+    categorization.selectTransfers().editSeries("Epargne")
       .setRepeatIrregular()
       .setEndDate(200807)
       .validate();
 
     operations.openPreferences().setFutureMonthsCount(2).validate();
 
-    categorization.selectSavings().editSeries("Epargne")
+    categorization.selectTransfers().editSeries("Epargne")
       .setEndDate(200810)
       .validate();
     timeline.checkSpanEquals("2008/06", "2008/10");
@@ -966,14 +966,14 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
       .addTransaction("2008/07/04", -10.00, "McDo")
       .load();
     categorization.selectTransactions("Virement");
-    categorization.selectSavings()
+    categorization.selectTransfers()
       .selectAndCreateSavingsSeries("Epargne", "Account n. 00001123");
 
-    categorization.selectSavings().editSeries("Epargne")
+    categorization.selectTransfers().editSeries("Epargne")
       .setRepeatEveryTwoMonths()
       .validate();
     timeline.selectMonth("2008/06");
-    budgetView.savings.alignAndPropagate("Epargne");
+    budgetView.transfers.alignAndPropagate("Epargne");
 
     timeline.selectAll();
     transactions
@@ -1000,18 +1000,18 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
       .addTransaction("2008/07/04", -10.00, "McDo")
       .load();
     categorization.selectTransactions("Virement");
-    categorization.selectSavings()
+    categorization.selectTransfers()
       .selectAndCreateSavingsSeries("Epargne", "Account n. 00001123");
 
     operations.openPreferences().setFutureMonthsCount(1).validate();
-    categorization.selectSavings().editSeries("Epargne")
+    categorization.selectTransfers().editSeries("Epargne")
       .selectMonth(200809)
       .setAmount("0")
       .setRepeatEveryTwoMonths()
       .validate();
 
     timeline.selectMonth("2008/06");
-    budgetView.savings.alignAndPropagate("Epargne");
+    budgetView.transfers.alignAndPropagate("Epargne");
 
     timeline.selectAll();
     transactions
@@ -1167,7 +1167,7 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
 
     accounts.createMainAccount("Main", 0.0);
 
-    SeriesEditionDialogChecker dialog = budgetView.savings.createSeries().setName("ING");
+    SeriesEditionDialogChecker dialog = budgetView.transfers.createSeries().setName("ING");
 
     dialog.createAccount()
       .setName("Virt ING")
@@ -1188,10 +1188,10 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
       .checkIsSavings()
       .cancel();
 
-    budgetView.savings.editSeries("ING")
+    budgetView.transfers.editSeries("ING")
       .checkToAccount("Virt ING")
       .validate();
-    budgetView.savings.checkOrder("ING");
+    budgetView.transfers.checkOrder("ING");
   }
 
   public void testCreateDeleteCreateBudget() throws Exception {
@@ -1375,7 +1375,7 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
     categorization.selectTransaction("salaire")
       .selectUncategorized().setUncategorized();
     categorization.setNewSavings("salaire", "complement", "external", "Account n. 00001123");
-    budgetView.savings.editSeries("complement")
+    budgetView.transfers.editSeries("complement")
       .checkBudgetAreaIsHidden()
       .validate();
   }

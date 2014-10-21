@@ -48,7 +48,7 @@ public class SavingsView extends View implements GlobSelectionListener {
 
   private void createSavingsBlock(GlobsPanelBuilder builder) {
 
-    SeriesEditionButtons seriesButtons = new SeriesEditionButtons(BudgetArea.SAVINGS, repository, directory);
+    SeriesEditionButtons seriesButtons = new SeriesEditionButtons(BudgetArea.TRANSFER, repository, directory);
     seriesButtons.setNames("createSavingsSeries");
     seriesButtons.registerButtons(builder);
 

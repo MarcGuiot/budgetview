@@ -6,7 +6,7 @@ import org.globsframework.utils.directory.Directory;
 
 public class NoSeriesMessageFactory {
   public static DynamicMessage create(BudgetArea budgetArea, GlobRepository repository, Directory directory) {
-    if (BudgetArea.SAVINGS.equals(budgetArea)) {
+    if (BudgetArea.TRANSFER.equals(budgetArea)) {
       return new NoSavingsSeriesMessage(repository, directory);
     }
     return new NoSeriesMessage(budgetArea, repository, directory);

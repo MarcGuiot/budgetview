@@ -5,11 +5,9 @@ import org.designup.picsou.gui.accounts.actions.CreateAccountAction;
 import org.designup.picsou.gui.categorization.components.*;
 import org.designup.picsou.gui.categorization.components.messages.DynamicMessage;
 import org.designup.picsou.gui.categorization.components.messages.NoSeriesMessageFactory;
-import org.designup.picsou.gui.categorization.reconciliation.ReconciliationWarningPanel;
 import org.designup.picsou.gui.categorization.special.*;
 import org.designup.picsou.gui.categorization.utils.FilteredRepeats;
 import org.designup.picsou.gui.categorization.utils.SeriesCreationHandler;
-import org.designup.picsou.gui.components.layoutconfig.SplitPaneConfig;
 import org.designup.picsou.gui.description.SeriesAndGroupsComparator;
 import org.designup.picsou.gui.help.HyperlinkHandler;
 import org.designup.picsou.gui.projects.actions.CreateProjectAction;
@@ -83,7 +81,7 @@ public class CategorizationView extends View {
     addSeriesChooser("recurringSeriesChooser", BudgetArea.RECURRING, builder);
     addSeriesChooser("variableSeriesChooser", BudgetArea.VARIABLE, builder);
     addSeriesChooser("extrasSeriesChooser", BudgetArea.EXTRAS, builder);
-    addSeriesChooser("savingsSeriesChooser", BudgetArea.SAVINGS, builder);
+    addSeriesChooser("transferSeriesChooser", BudgetArea.TRANSFER, builder);
     addOtherSeriesChooser("otherSeriesChooser", builder);
 
     TransactionDetailsView transactionDetailsView =
@@ -147,7 +145,7 @@ public class CategorizationView extends View {
   }
 
   private Action getAdditionalAction(BudgetArea budgetArea) {
-    if (BudgetArea.SAVINGS.equals(budgetArea)) {
+    if (BudgetArea.TRANSFER.equals(budgetArea)) {
       CreateAccountAction createAccountAction = new CreateAccountAction(AccountType.SAVINGS, repository, directory);
       createAccountAction.setAccountTypeEditable(false);
       return createAccountAction;

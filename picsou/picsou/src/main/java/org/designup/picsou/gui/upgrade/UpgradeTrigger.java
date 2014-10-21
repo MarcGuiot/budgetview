@@ -88,7 +88,7 @@ public class UpgradeTrigger implements ChangeSetListener {
       SignpostStatus.setAllCompleted(repository);
     }
     if (currentJarVersion < 54) {
-      repository.safeApply(Series.TYPE, GlobMatchers.fieldEquals(Series.BUDGET_AREA, BudgetArea.SAVINGS.getId()), new GlobFunctor() {
+      repository.safeApply(Series.TYPE, GlobMatchers.fieldEquals(Series.BUDGET_AREA, BudgetArea.TRANSFER.getId()), new GlobFunctor() {
         public void run(Glob glob, GlobRepository repository) throws Exception {
           repository.update(glob.getKey(), Series.IS_AUTOMATIC, Boolean.FALSE);
         }
@@ -185,7 +185,7 @@ public class UpgradeTrigger implements ChangeSetListener {
     Map<Key, Key> saving;
     GlobList allSeries = repository.getAll(Series.TYPE,
                                            GlobMatchers.and(
-                                             GlobMatchers.not(GlobMatchers.fieldEquals(Series.BUDGET_AREA, BudgetArea.SAVINGS.getId())),
+                                             GlobMatchers.not(GlobMatchers.fieldEquals(Series.BUDGET_AREA, BudgetArea.TRANSFER.getId())),
                                              GlobMatchers.not(GlobMatchers.fieldEquals(Series.BUDGET_AREA, BudgetArea.OTHER.getId())))
     );
     GlobIdGenerator idGenerator = repository.getIdGenerator();
@@ -237,7 +237,7 @@ public class UpgradeTrigger implements ChangeSetListener {
         }
       }
     }
-    GlobList allSavingsSeries = repository.getAll(Series.TYPE, GlobMatchers.fieldEquals(Series.BUDGET_AREA, BudgetArea.SAVINGS.getId()));
+    GlobList allSavingsSeries = repository.getAll(Series.TYPE, GlobMatchers.fieldEquals(Series.BUDGET_AREA, BudgetArea.TRANSFER.getId()));
     saving = new HashMap<Key, Key>();
     for (Glob series : allSavingsSeries) {
       if (!saving.containsKey(series.getKey())) {
@@ -474,7 +474,7 @@ public class UpgradeTrigger implements ChangeSetListener {
   }
 
   private void correctSavingMirror(GlobRepository repository) {
-    GlobList savingsSeries = repository.getAll(Series.TYPE, GlobMatchers.fieldEquals(Series.BUDGET_AREA, BudgetArea.SAVINGS.getId()));
+    GlobList savingsSeries = repository.getAll(Series.TYPE, GlobMatchers.fieldEquals(Series.BUDGET_AREA, BudgetArea.TRANSFER.getId()));
     for (Glob series : savingsSeries) {
       Glob mirrorSeries = repository.findLinkTarget(series, Series.MIRROR_SERIES);
       if (mirrorSeries.get(Series.TARGET_ACCOUNT).equals(series.get(Series.TARGET_ACCOUNT))) {
@@ -493,7 +493,7 @@ public class UpgradeTrigger implements ChangeSetListener {
     repository.findOrCreate(Account.EXTERNAL_KEY,
                             value(Account.IS_IMPORTED_ACCOUNT, Boolean.FALSE)
     );
-    GlobList savingsSeries = repository.getAll(Series.TYPE, GlobMatchers.fieldEquals(Series.BUDGET_AREA, BudgetArea.SAVINGS.getId()));
+    GlobList savingsSeries = repository.getAll(Series.TYPE, GlobMatchers.fieldEquals(Series.BUDGET_AREA, BudgetArea.TRANSFER.getId()));
     for (Glob series : savingsSeries) {
       updateSavingsSeries(repository, series);
     }
@@ -538,7 +538,7 @@ public class UpgradeTrigger implements ChangeSetListener {
   }
 
   private void createMirorSeries(GlobRepository repository, HashMap<Integer, Key[]> seriesToOp) {
-    GlobList savingsSeries = repository.getAll(Series.TYPE, GlobMatchers.fieldEquals(Series.BUDGET_AREA, BudgetArea.SAVINGS.getId()));
+    GlobList savingsSeries = repository.getAll(Series.TYPE, GlobMatchers.fieldEquals(Series.BUDGET_AREA, BudgetArea.TRANSFER.getId()));
     for (Glob series : savingsSeries) {
       Integer mirrorSeries = series.get(Series.MIRROR_SERIES);
       if (mirrorSeries == null) {
@@ -574,7 +574,7 @@ public class UpgradeTrigger implements ChangeSetListener {
   }
 
   private void updateSavings(GlobRepository repository) {
-    GlobList series = repository.getAll(Series.TYPE, GlobMatchers.fieldEquals(Series.BUDGET_AREA, BudgetArea.SAVINGS.getId()));
+    GlobList series = repository.getAll(Series.TYPE, GlobMatchers.fieldEquals(Series.BUDGET_AREA, BudgetArea.TRANSFER.getId()));
     for (Glob oneSeries : series) {
       updateAccount(repository, oneSeries, Series.FROM_ACCOUNT);
       updateAccount(repository, oneSeries, Series.TO_ACCOUNT);

@@ -27,7 +27,7 @@ public enum BudgetArea implements GlobConstantContainer {
   RECURRING("RECURRING", 1, false, true),
   VARIABLE("VARIABLE", 2, false, false),
   EXTRAS("EXTRAS", 4, false, false),
-  SAVINGS("SAVINGS", 5, false, false),
+  TRANSFER("TRANSFER", 5, false, false),
   UNCATEGORIZED("UNCATEGORIZED", 6, false, true),
   OTHER("OTHER", 7, false, true);
 
@@ -44,7 +44,7 @@ public enum BudgetArea implements GlobConstantContainer {
   private boolean income;
   private boolean automatic;
 
-  public static final BudgetArea[] INCOME_AND_EXPENSES_AREAS = {INCOME, RECURRING, VARIABLE, EXTRAS, SAVINGS};
+  public static final BudgetArea[] INCOME_AND_EXPENSES_AREAS = {INCOME, RECURRING, VARIABLE, EXTRAS, TRANSFER};
 
   BudgetArea(String name, int id, boolean isIncome, final boolean automatic) {
     this.automatic = automatic;
@@ -100,7 +100,7 @@ public enum BudgetArea implements GlobConstantContainer {
       case 4:
         return EXTRAS;
       case 5:
-        return SAVINGS;
+        return TRANSFER;
       case 6:
         return UNCATEGORIZED;
       case 7:

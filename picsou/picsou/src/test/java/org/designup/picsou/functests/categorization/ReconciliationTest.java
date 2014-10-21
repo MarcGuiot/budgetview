@@ -497,14 +497,14 @@ public class ReconciliationTest extends LoggedInFunctionalTestCase {
 
     categorization
       .selectTransactions("Virement")
-      .selectSavings().createSeries()
+      .selectTransfers().createSeries()
       .setName("Epargne")
       .setFromAccount("Account n. 00001123")
       .setToAccount("Epargne LCL")
       .validate();
     views.selectBudget();
     timeline.selectMonth("2012/04");
-    budgetView.savings.alignAndPropagate("Epargne");
+    budgetView.transfers.alignAndPropagate("Epargne");
     views.selectCategorization();
     transactionCreation
       .show()

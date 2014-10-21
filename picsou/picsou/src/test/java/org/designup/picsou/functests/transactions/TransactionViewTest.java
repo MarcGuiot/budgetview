@@ -188,7 +188,7 @@ public class TransactionViewTest extends LoggedInFunctionalTestCase {
 
     transactions.categorize(0);
     categorization
-      .selectSavings().createSeries()
+      .selectTransfers().createSeries()
       .setName("Epargne")
       .setFromAccount("Account n. 00001123")
       .setToAccount("Epargne")
@@ -359,7 +359,7 @@ public class TransactionViewTest extends LoggedInFunctionalTestCase {
     accounts.createSavingsAccount("Epargne LCL", 1000.00);
     categorization
       .selectTransactions("sg")
-      .selectSavings().createSeries()
+      .selectTransfers().createSeries()
       .setName("Epargne")
       .setFromAccount("Account n. 00001123")
       .setToAccount("Epargne LCL")

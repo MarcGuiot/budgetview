@@ -138,7 +138,7 @@ public class ProjectRestartTest extends RestartTestCase {
 
     timeline.selectMonth(200901);
     budgetView.extras.checkSeries("Trip", 0.00, -300.00);
-    budgetView.savings.checkSeries("Transfer", 0.00, -100.00);
+    budgetView.transfers.checkSeries("Transfer", 0.00, -100.00);
 
     currentProject
       .toggleAndEditTransfer(0)
@@ -148,13 +148,13 @@ public class ProjectRestartTest extends RestartTestCase {
       .validate();
 
     timeline.selectMonth(200901);
-    budgetView.savings.checkSeries("Transfer", 0.00, -100.00);
+    budgetView.transfers.checkSeries("Transfer", 0.00, -100.00);
 
     timeline.selectMonth(200902);
-    budgetView.savings.checkSeries("Transfer", 0.00, -200.00);
+    budgetView.transfers.checkSeries("Transfer", 0.00, -200.00);
 
     timeline.selectMonth(200903);
-    budgetView.savings.checkSeries("Transfer", 0.00, -300.00);
+    budgetView.transfers.checkSeries("Transfer", 0.00, -300.00);
   }
 
   public void testDisabledProject() throws Exception {

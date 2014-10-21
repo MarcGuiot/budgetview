@@ -6,7 +6,7 @@ import org.designup.picsou.model.BankEntity;
 
 public class SavingsSeriesEditionTest extends LoggedInFunctionalTestCase {
 
-  public void testSavings() throws Exception {
+  public void testSavingsTransfer() throws Exception {
     OfxBuilder.init(this)
       .addTransaction("2008/06/04", -10.00, "McDo")
       .load();
@@ -21,7 +21,7 @@ public class SavingsSeriesEditionTest extends LoggedInFunctionalTestCase {
       .validate();
 
     views.selectBudget();
-    budgetView.savings
+    budgetView.transfers
       .createSeries()
       .checkTargetAccountNotShown()
       .checkNoTargetAccountWarningHidden()
@@ -30,7 +30,7 @@ public class SavingsSeriesEditionTest extends LoggedInFunctionalTestCase {
       .setName("Epargne")
       .validate();
 
-    budgetView.savings
+    budgetView.transfers
       .editSeries("Epargne")
       .checkTargetAccountNotShown()
       .checkNoTargetAccountWarningHidden()
@@ -47,7 +47,7 @@ public class SavingsSeriesEditionTest extends LoggedInFunctionalTestCase {
       .validate();
   }
 
-  public void testSwitchingBetweenSavingsSeries() throws Exception {
+  public void testSwitchingBetweenTransferSeries() throws Exception {
     OfxBuilder.init(this)
       .addTransaction("2008/06/04", -10.00, "McDo")
       .load();
@@ -70,7 +70,7 @@ public class SavingsSeriesEditionTest extends LoggedInFunctionalTestCase {
       .validate();
 
     views.selectBudget();
-    budgetView.savings
+    budgetView.transfers
       .createSeries()
       .setName("Epargne")
       .setFromAccount("Account n. 00001123")
@@ -78,7 +78,7 @@ public class SavingsSeriesEditionTest extends LoggedInFunctionalTestCase {
       .checkOkEnabled(true)
       .validate();
 
-    budgetView.savings
+    budgetView.transfers
       .createSeries()
       .setName("Veranda")
       .setToAccount("Account n. 00001123")
@@ -90,7 +90,7 @@ public class SavingsSeriesEditionTest extends LoggedInFunctionalTestCase {
       .validate();
 
     timeline.selectMonth("2008/10");
-    budgetView.savings.editSeries("Veranda")
+    budgetView.transfers.editSeries("Veranda")
       .checkRepeatsASingleMonth()
       .checkSingleMonthDate("Oct 2008")
       .checkFromAccount("Epargne CA")
@@ -98,7 +98,7 @@ public class SavingsSeriesEditionTest extends LoggedInFunctionalTestCase {
       .checkRepeatsASingleMonth()
       .cancel();
 
-    budgetView.savings.editSeries("Epargne")
+    budgetView.transfers.editSeries("Epargne")
       .checkFromAccount("Account n. 00001123")
       .checkToAccount("Epargne LCL")
       .cancel();
@@ -120,7 +120,7 @@ public class SavingsSeriesEditionTest extends LoggedInFunctionalTestCase {
       .validate();
 
     views.selectBudget();
-    budgetView.savings
+    budgetView.transfers
       .createSeries()
       .setName("Epargne")
       .setFromAccount("Account n. 00001123")
@@ -128,14 +128,12 @@ public class SavingsSeriesEditionTest extends LoggedInFunctionalTestCase {
       .validate();
 
     views.selectCategorization();
-
     categorization.selectTransactions("McDo")
-      .selectSavings()
+      .selectTransfers()
       .editSeries("Epargne")
       .setToAccount("External account")
       .checkToAccount("External account")
       .cancel();
-
   }
 
   public void testMirrorSeriesAreNotVisibleInSeriesList() throws Exception {
@@ -153,13 +151,13 @@ public class SavingsSeriesEditionTest extends LoggedInFunctionalTestCase {
       .validate();
 
     views.selectBudget();
-    budgetView.savings.createSeries()
+    budgetView.transfers.createSeries()
       .setName("CA")
       .setFromAccount("Account n. 00001123")
       .setToAccount("Account n. 111")
       .validate();
 
-    budgetView.savings
+    budgetView.transfers
       .checkSeriesPresent("CA");
   }
 
@@ -178,7 +176,7 @@ public class SavingsSeriesEditionTest extends LoggedInFunctionalTestCase {
       .validate();
     views.selectBudget();
 
-    budgetView.savings
+    budgetView.transfers
       .createSeries()
       .setFromAccount("Account n. 00001123")
       .setToAccount("Epargne LCL")
@@ -206,22 +204,22 @@ public class SavingsSeriesEditionTest extends LoggedInFunctionalTestCase {
       .setAsSavings()
       .validate();
     views.selectBudget();
-    budgetView.savings.createSeries()
+    budgetView.transfers.createSeries()
       .setName("CA")
       .setFromAccount("Account n. 00001123")
       .setToAccount("Account n. 111")
       .validate();
     views.selectCategorization();
     categorization.selectTableRow(0)
-      .selectSavings()
+      .selectTransfers()
       .editSeries("CA")
       .setName("Other")
       .validate();
 
     views.selectBudget();
-    budgetView.savings.checkSeriesPresent("Other");
+    budgetView.transfers.checkSeriesPresent("Other");
 
-    budgetView.savings.editSeries("Other")
+    budgetView.transfers.editSeries("Other")
       .selectAllMonths().setAmount(50).validate();
     fail("Pourquoi il y a avait CA et non Other?");
     savingsView.editSeries("Account n. 111", "Other")
@@ -230,7 +228,7 @@ public class SavingsSeriesEditionTest extends LoggedInFunctionalTestCase {
 
     mainAccounts.select("Account n. 00001123");
     views.checkBudgetSelected();
-    budgetView.savings.editSeries("Other")
+    budgetView.transfers.editSeries("Other")
       .validate();
   }
 
@@ -248,7 +246,7 @@ public class SavingsSeriesEditionTest extends LoggedInFunctionalTestCase {
       .validate();
 
     views.selectBudget();
-    budgetView.savings
+    budgetView.transfers
       .createSeries()
       .setName("Epargne")
       .checkFromAccount("")

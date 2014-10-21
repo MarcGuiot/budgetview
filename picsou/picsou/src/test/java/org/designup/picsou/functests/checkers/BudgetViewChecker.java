@@ -12,7 +12,6 @@ import org.designup.picsou.model.BudgetArea;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.utils.TablePrinter;
 import org.globsframework.utils.TestUtils;
-import org.globsframework.utils.Utils;
 import org.uispec4j.Button;
 import org.uispec4j.Panel;
 import org.uispec4j.*;
@@ -35,7 +34,7 @@ public class BudgetViewChecker extends ViewChecker {
   public final BudgetAreaChecker recurring;
   public final BudgetAreaChecker variable;
   public final ExtrasBudgetAreaChecker extras;
-  public final SavingsBudgetAreaChecker savings;
+  public final SavingsBudgetAreaChecker transfers;
 
   public BudgetViewChecker(Window mainWindow) {
     super(mainWindow);
@@ -43,7 +42,7 @@ public class BudgetViewChecker extends ViewChecker {
     this.recurring = new BudgetAreaChecker("recurringBudgetView", BudgetArea.RECURRING);
     this.variable = new BudgetAreaChecker("variableBudgetView", BudgetArea.VARIABLE);
     this.extras = new ExtrasBudgetAreaChecker("extrasBudgetView");
-    this.savings = new SavingsBudgetAreaChecker("savingsBudgetView");
+    this.transfers = new SavingsBudgetAreaChecker("savingsBudgetView");
   }
 
   private int getIndex(JPanel panel, Component component) {
@@ -57,7 +56,7 @@ public class BudgetViewChecker extends ViewChecker {
 
   protected String convert(double amount, BudgetArea budgetArea) {
     StringBuilder builder = new StringBuilder();
-    if (budgetArea == BudgetArea.SAVINGS) {
+    if (budgetArea == BudgetArea.TRANSFER) {
       if (amount < 0) {
         builder.append("+");
       }
@@ -638,7 +637,7 @@ public class BudgetViewChecker extends ViewChecker {
   public class SavingsBudgetAreaChecker extends BudgetAreaChecker {
 
     public SavingsBudgetAreaChecker(String panelName) {
-      super(panelName, BudgetArea.SAVINGS);
+      super(panelName, BudgetArea.TRANSFER);
     }
 
     public SavingsBudgetAreaChecker createSavingSeries(String name, String fromAccount, String toAccount) {

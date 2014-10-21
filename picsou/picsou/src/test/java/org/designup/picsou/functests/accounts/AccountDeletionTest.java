@@ -130,17 +130,17 @@ public class AccountDeletionTest extends LoggedInFunctionalTestCase {
       .validate();
 
     views.selectBudget();
-    budgetView.savings.createSeries()
+    budgetView.transfers.createSeries()
       .setName("Series 1 for Livret")
       .setFromAccount("Account n. 0000100")
       .setToAccount("Livret")
       .validate();
-    budgetView.savings.createSeries()
+    budgetView.transfers.createSeries()
       .setName("Series 2 for Livret")
       .setFromAccount("Livret")
       .setToAccount("Account n. 0000100")
       .validate();
-    budgetView.savings.createSeries()
+    budgetView.transfers.createSeries()
       .setName("Series 3 for Codevi")
       .setFromAccount("Account n. 0000100")
       .setToAccount("Codevi")
@@ -154,8 +154,8 @@ public class AccountDeletionTest extends LoggedInFunctionalTestCase {
     savingsAccounts.checkNotPresent("Livret");
 
     views.selectBudget();
-    budgetView.savings.checkSeriesNotPresent("Series 1 for Livret", "Series 2 for Livret");
-    budgetView.savings.checkSeriesPresent("Series 3 for Codevi");
+    budgetView.transfers.checkSeriesNotPresent("Series 1 for Livret", "Series 2 for Livret");
+    budgetView.transfers.checkSeriesPresent("Series 3 for Codevi");
 
     views.selectData();
     transactions.initContent()

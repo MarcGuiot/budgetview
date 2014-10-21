@@ -26,7 +26,7 @@ public class SavingsViewTest extends LoggedInFunctionalTestCase {
     categorization.setNewSavings("Virt", "Epargne", "Account n. 00000123", "Livret");
 
     views.selectBudget();
-    budgetView.savings.alignAndPropagate("Epargne");
+    budgetView.transfers.alignAndPropagate("Epargne");
 
     savingsAccounts.select("Livret");
     savingsView.checkContainsSeries("Livret", "Epargne");
@@ -59,9 +59,9 @@ public class SavingsViewTest extends LoggedInFunctionalTestCase {
     categorization.setNewSavings("Virt", "Epargne", "Account n. 00000123", "Livret");
 
     views.selectBudget();
-    budgetView.savings.alignAndPropagate("Epargne");
+    budgetView.transfers.alignAndPropagate("Epargne");
 
-    views.selectHome();
+    views.selectProjects();
     projects.getAccountChart("Livret")
       .checkRange(200907, 201007)
       .checkValue(200907, 1, 200.00)
@@ -145,7 +145,7 @@ public class SavingsViewTest extends LoggedInFunctionalTestCase {
 
     views.selectBudget();
     mainAccounts.select("Account n. 00000123");
-    budgetView.savings.alignAndPropagate("Epargne");
+    budgetView.transfers.alignAndPropagate("Epargne");
 
     timeline.selectMonth("2009/07");
     savingsAccounts
@@ -211,7 +211,7 @@ public class SavingsViewTest extends LoggedInFunctionalTestCase {
     categorization.setNewSavings("Virt", "Epargne", "Livret", "Account n. 00000123");
 
     views.selectBudget();
-    budgetView.savings.alignAndPropagate("Epargne");
+    budgetView.transfers.alignAndPropagate("Epargne");
 
     savingsAccounts.select("Livret");
     savingsView.createSeries()

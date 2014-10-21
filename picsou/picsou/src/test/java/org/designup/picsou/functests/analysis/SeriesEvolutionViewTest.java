@@ -763,7 +763,7 @@ public class SeriesEvolutionViewTest extends LoggedInFunctionalTestCase {
       .addTransaction("2008/07/12", +95.00, "Virt livret")
       .loadInAccount("Livret");
 
-    budgetView.savings.createSavingSeries("To account Livret", "Account n. 00001123", "Livret");
+    budgetView.transfers.createSavingSeries("To account Livret", "Account n. 00001123", "Livret");
     categorization.setSavings("Virement", "To account Livret");
     categorization.setSavings("Virt livret", "To account Livret");
 

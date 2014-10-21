@@ -55,7 +55,7 @@ public class SeriesDeletionHandler {
     if (transactionsForSeries.isEmpty()) {
       doDelete(action);
     }
-    else if (BudgetArea.SAVINGS.getId().equals(currentSeries.get(Series.BUDGET_AREA))) {
+    else if (BudgetArea.TRANSFER.getId().equals(currentSeries.get(Series.BUDGET_AREA))) {
       ConfirmationDialog confirmationDialog = new ConfirmationDialog("seriesDeletion.title",
                                                                      Lang.get("seriesDeletion.savings.message"),
                                                                      dialog, directory,

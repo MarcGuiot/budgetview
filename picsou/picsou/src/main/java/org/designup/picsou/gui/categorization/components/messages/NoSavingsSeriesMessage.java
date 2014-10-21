@@ -1,6 +1,5 @@
 package org.designup.picsou.gui.categorization.components.messages;
 
-import org.designup.picsou.gui.categorization.components.messages.NoSeriesMessage;
 import org.designup.picsou.model.Account;
 import org.designup.picsou.model.BudgetArea;
 import org.designup.picsou.model.AccountType;
@@ -18,7 +17,7 @@ import java.util.Set;
 
 public class NoSavingsSeriesMessage extends NoSeriesMessage {
   public NoSavingsSeriesMessage(GlobRepository repository, Directory directory) {
-    super(BudgetArea.SAVINGS, repository, directory);
+    super(BudgetArea.TRANSFER, repository, directory);
 
     updateMessage();
 
@@ -46,7 +45,7 @@ public class NoSavingsSeriesMessage extends NoSeriesMessage {
 
   private void updateMessage() {
     if (!repository.contains(Account.TYPE, Matchers.userCreatedSavingsAccounts())) {
-      setText(Lang.get("categorization.noseries.savings.noaccount"));
+      setText(Lang.get("categorization.noseries.transfer.noaccount"));
     }
     else {
       setDefaultText();

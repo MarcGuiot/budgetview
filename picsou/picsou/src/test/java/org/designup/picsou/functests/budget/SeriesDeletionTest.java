@@ -177,14 +177,14 @@ public class SeriesDeletionTest extends LoggedInFunctionalTestCase {
       .create();
 
     categorization.selectTransactions("Financement")
-      .selectSavings().createSeries()
+      .selectTransfers().createSeries()
       .setName("Savings Series")
       .setFromAccount("Savings")
       .setToAccount("Main")
       .validate();
 
     categorization.selectTransactions("Financement")
-      .selectSavings()
+      .selectTransfers()
       .editSeries("Savings Series")
       .deleteSavingsSeriesWithConfirmation();
 
@@ -227,7 +227,7 @@ public class SeriesDeletionTest extends LoggedInFunctionalTestCase {
       .validate();
 
     accounts.createSavingsAccount("Livret", 1000.00);
-    budgetView.savings.createSeries()
+    budgetView.transfers.createSeries()
       .setName("Epargne")
       .setFromAccount("Account n. 00001123")
       .setToAccount("Livret")

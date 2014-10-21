@@ -5,7 +5,7 @@ import org.designup.picsou.model.BudgetArea;
 
 public class BudgetAreaGaugeFactory {
   public static Gauge createGauge(BudgetArea area) {
-    return createGauge(area == BudgetArea.SAVINGS);
+    return createGauge(area == BudgetArea.TRANSFER);
   }
 
   public static Gauge createGauge(boolean invert) {

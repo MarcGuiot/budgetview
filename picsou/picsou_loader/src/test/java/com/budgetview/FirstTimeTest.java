@@ -411,7 +411,7 @@ public class FirstTimeTest extends UISpecTestCase {
     transaction
       .showPlannedTransactions()
       .initAmountContent()
-      .add("31/10/2008", "REGULAR SAVINGS", 100.00, "Regular savings", 750.10, 2486.10, "Compte 00001123")
+      .add("31/10/2008", "REGULAR TRANSFERS", 100.00, "Regular savings", 750.10, 2486.10, "Compte 00001123")
       .add("27/10/2008", "Planned: Ecole", -40.00, "Ecole", 2386.10, "Main accounts")
       .add("27/10/2008", "Planned: Income 1", 2000.00, "Income 1", 2426.10, "Main accounts")
       .add("22/10/2008", "Planned: Groceries", -150.00, "Groceries", 650.10, 426.10, "Compte 00001123")
@@ -611,7 +611,7 @@ public class FirstTimeTest extends UISpecTestCase {
     BudgetViewChecker budgetView = new BudgetViewChecker(window);
     budgetView.income.editSeries("Income 1").setName("Revenu").validate();
 
-    budgetView.savings.editSeries("Regular savings")
+    budgetView.transfers.editSeries("Regular savings")
       .setFromAccount("Main accounts")
       .validate();
 

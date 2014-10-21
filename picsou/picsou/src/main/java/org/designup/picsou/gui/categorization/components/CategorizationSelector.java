@@ -34,7 +34,7 @@ public class CategorizationSelector implements GlobSelectionListener, ChangeSetL
   private BudgetArea[] budgetAreas =
     {BudgetArea.UNCATEGORIZED,
      BudgetArea.INCOME, BudgetArea.RECURRING, BudgetArea.VARIABLE,
-     BudgetArea.SAVINGS, BudgetArea.EXTRAS, BudgetArea.OTHER};
+     BudgetArea.TRANSFER, BudgetArea.EXTRAS, BudgetArea.OTHER};
 
   private GlobRepository repository;
   private Directory directory;
@@ -228,7 +228,7 @@ public class CategorizationSelector implements GlobSelectionListener, ChangeSetL
       if (AccountType.SAVINGS.getId().equals(account.get(Account.ACCOUNT_TYPE))) {
         enableValidBudgetAreas(false);
         if (areas.size() == 1) {
-          select(BudgetArea.SAVINGS, true);
+          select(BudgetArea.TRANSFER, true);
         }
         return;
       }
@@ -262,7 +262,7 @@ public class CategorizationSelector implements GlobSelectionListener, ChangeSetL
   private void enableValidBudgetAreas(boolean enableAll) {
     for (Map.Entry<BudgetArea, JToggleButton> entry : toggles.entrySet()) {
       entry.getValue().setEnabled(enableAll
-                                  || entry.getKey() == BudgetArea.SAVINGS
+                                  || entry.getKey() == BudgetArea.TRANSFER
                                   || entry.getKey() == BudgetArea.UNCATEGORIZED);
     }
   }

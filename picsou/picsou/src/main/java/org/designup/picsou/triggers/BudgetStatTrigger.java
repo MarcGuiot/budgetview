@@ -160,8 +160,8 @@ public class BudgetStatTrigger implements ChangeSetListener {
 
       budgetAreaAmounts.clear();
       Integer lastTransactionMonthId = currentMonth.get(CurrentMonth.LAST_TRANSACTION_MONTH);
-      BudgetAreaAmounts savingsInAmounts = new BudgetAreaAmounts(BudgetArea.SAVINGS);
-      BudgetAreaAmounts savingsOutAmounts = new BudgetAreaAmounts(BudgetArea.SAVINGS);
+      BudgetAreaAmounts savingsInAmounts = new BudgetAreaAmounts(BudgetArea.TRANSFER);
+      BudgetAreaAmounts savingsOutAmounts = new BudgetAreaAmounts(BudgetArea.TRANSFER);
 
       for (Glob stat : SeriesStat.getAllSeriesForMonth(monthId, repository)) {
         Glob series = SeriesStat.getSeries(stat, repository);
@@ -173,7 +173,7 @@ public class BudgetStatTrigger implements ChangeSetListener {
           budgetAreaAmounts.put(budgetArea, amounts);
         }
 
-        if (budgetArea.equals(BudgetArea.SAVINGS)) {
+        if (budgetArea.equals(BudgetArea.TRANSFER)) {
           Glob fromAccount = repository.findLinkTarget(series, Series.FROM_ACCOUNT);
           Glob toAccount = repository.findLinkTarget(series, Series.TO_ACCOUNT);
           if (!(fromAccount != null && AccountType.MAIN.getId().equals(fromAccount.get(Account.ACCOUNT_TYPE))

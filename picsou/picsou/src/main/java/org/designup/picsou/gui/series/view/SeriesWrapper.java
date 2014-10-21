@@ -10,12 +10,10 @@ import org.globsframework.metamodel.fields.IntegerField;
 import org.globsframework.metamodel.fields.LinkField;
 import org.globsframework.metamodel.index.MultiFieldUniqueIndex;
 import org.globsframework.metamodel.utils.GlobTypeLoader;
-import org.globsframework.model.FieldValues;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.format.GlobPrinter;
-import org.globsframework.utils.Utils;
 import org.globsframework.utils.exceptions.InvalidParameter;
 import org.globsframework.utils.exceptions.InvalidState;
 import org.globsframework.utils.exceptions.ItemAmbiguity;
@@ -259,7 +257,7 @@ public class SeriesWrapper {
     }
 
     // && !Utils.equal(seriesValues.get(Series.TARGET_ACCOUNT), Account.MAIN_SUMMARY_ACCOUNT_ID)) {
-    if (BudgetArea.SAVINGS.getId().equals(budgetAreaId)) {
+    if (BudgetArea.TRANSFER.getId().equals(budgetAreaId)) {
       Integer targetAccountId = seriesValues.get(Series.TARGET_ACCOUNT);
       return targetAccountId != null && Account.EXTERNAL_ACCOUNT_ID != targetAccountId;
     }

@@ -67,7 +67,7 @@ public class SavingsBudgetStat {
 
   public static DoubleField getObserved(BudgetArea budgetArea) {
     switch (budgetArea) {
-      case SAVINGS:
+      case TRANSFER:
         return SAVINGS_IN;
     }
     throw new UnexpectedApplicationState(budgetArea.getName() + " not managed");
@@ -75,7 +75,7 @@ public class SavingsBudgetStat {
 
   public static DoubleField getPlanned(BudgetArea budgetArea) {
     switch (budgetArea) {
-      case SAVINGS:
+      case TRANSFER:
         return SAVINGS_IN_PLANNED;
     }
     throw new UnexpectedApplicationState(budgetArea.getName() + " not managed");
@@ -83,7 +83,7 @@ public class SavingsBudgetStat {
 
   public static DoubleField getRemaining(BudgetArea budgetArea) {
     switch (budgetArea) {
-      case SAVINGS:
+      case TRANSFER:
         return SAVINGS_IN_REMAINING;
     }
     throw new UnexpectedApplicationState(budgetArea.getName() + " not managed");
@@ -91,7 +91,7 @@ public class SavingsBudgetStat {
 
   public static DoubleField getOverrun(BudgetArea budgetArea) {
     switch (budgetArea) {
-      case SAVINGS:
+      case TRANSFER:
         return SAVINGS_IN_OVERRUN;
     }
     throw new UnexpectedApplicationState(budgetArea.getName() + " not managed");

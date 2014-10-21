@@ -23,7 +23,7 @@ public class BudgetView extends View {
     addBudgetAreaView("recurringBudgetView", BudgetArea.RECURRING, builder);
     addBudgetAreaView("variableBudgetView", BudgetArea.VARIABLE, builder);
     addBudgetAreaView("extrasBudgetView", BudgetArea.EXTRAS, builder);
-    addBudgetAreaView("savingsBudgetView", BudgetArea.SAVINGS, builder);
+    addBudgetAreaView("savingsBudgetView", BudgetArea.TRANSFER, builder);
 
     builder.add("horizontalSplit", SplitPaneConfig.create(directory, LayoutConfig.BUDGET_HORIZONTAL_1));
     builder.add("verticalSplit1", SplitPaneConfig.create(directory, LayoutConfig.BUDGET_VERTICAL_LEFT_1, LayoutConfig.BUDGET_VERTICAL_LEFT_2));

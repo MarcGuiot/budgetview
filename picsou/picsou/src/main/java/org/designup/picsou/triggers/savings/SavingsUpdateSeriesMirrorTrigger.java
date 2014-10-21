@@ -17,7 +17,7 @@ public class SavingsUpdateSeriesMirrorTrigger extends DefaultChangeSetListener {
       public void visitCreation(Key key, FieldValues values) throws Exception {
         Integer seriesId = values.get(SeriesBudget.SERIES);
         Glob series = repository.get(Key.create(Series.TYPE, seriesId));
-        if (!series.get(Series.BUDGET_AREA).equals(BudgetArea.SAVINGS.getId())){
+        if (!series.get(Series.BUDGET_AREA).equals(BudgetArea.TRANSFER.getId())){
           return;
         }
         Integer mirrorSeriesId = series.get(Series.MIRROR_SERIES);
@@ -52,7 +52,7 @@ public class SavingsUpdateSeriesMirrorTrigger extends DefaultChangeSetListener {
         Glob budget = repository.get(key);
         Integer seriesId = budget.get(SeriesBudget.SERIES);
         Glob series = repository.get(Key.create(Series.TYPE, seriesId));
-        if (!series.get(Series.BUDGET_AREA).equals(BudgetArea.SAVINGS.getId())){
+        if (!series.get(Series.BUDGET_AREA).equals(BudgetArea.TRANSFER.getId())){
           return;
         }
         Integer mirrorSeriesId = series.get(Series.MIRROR_SERIES);
@@ -78,7 +78,7 @@ public class SavingsUpdateSeriesMirrorTrigger extends DefaultChangeSetListener {
         if (series == null) {
           return;
         }
-        if (!series.get(Series.BUDGET_AREA).equals(BudgetArea.SAVINGS.getId())){
+        if (!series.get(Series.BUDGET_AREA).equals(BudgetArea.TRANSFER.getId())){
           return;
         }
         Integer mirrorSeriesId = series.get(Series.MIRROR_SERIES);

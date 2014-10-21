@@ -224,7 +224,7 @@ public class BudgetStat {
         return VARIABLE_POSITIVE_REMAINING;
       case INCOME:
         return INCOME_POSITIVE_REMAINING;
-      case SAVINGS:
+      case TRANSFER:
         return SAVINGS_POSITIVE_REMAINING;
       case RECURRING:
         return RECURRING_POSITIVE_REMAINING;
@@ -242,7 +242,7 @@ public class BudgetStat {
         return VARIABLE_NEGATIVE_REMAINING;
       case INCOME:
         return INCOME_NEGATIVE_REMAINING;
-      case SAVINGS:
+      case TRANSFER:
         return SAVINGS_NEGATIVE_REMAINING;
       case RECURRING:
         return RECURRING_NEGATIVE_REMAINING;
@@ -260,7 +260,7 @@ public class BudgetStat {
         return VARIABLE;
       case INCOME:
         return INCOME;
-      case SAVINGS:
+      case TRANSFER:
         return SAVINGS;
       case RECURRING:
         return RECURRING;
@@ -278,7 +278,7 @@ public class BudgetStat {
         return VARIABLE_PLANNED;
       case INCOME:
         return INCOME_PLANNED;
-      case SAVINGS:
+      case TRANSFER:
         return SAVINGS_PLANNED;
       case RECURRING:
         return RECURRING_PLANNED;
@@ -296,7 +296,7 @@ public class BudgetStat {
         return VARIABLE_SUMMARY;
       case INCOME:
         return INCOME_SUMMARY;
-      case SAVINGS:
+      case TRANSFER:
         return SAVINGS_SUMMARY;
       case RECURRING:
         return RECURRING_SUMMARY;
@@ -314,7 +314,7 @@ public class BudgetStat {
         return VARIABLE_POSITIVE_OVERRUN;
       case INCOME:
         return INCOME_POSITIVE_OVERRUN;
-      case SAVINGS:
+      case TRANSFER:
         return SAVINGS_POSITIVE_OVERRUN;
       case RECURRING:
         return RECURRING_POSITIVE_OVERRUN;
@@ -332,7 +332,7 @@ public class BudgetStat {
         return VARIABLE_NEGATIVE_OVERRUN;
       case INCOME:
         return INCOME_NEGATIVE_OVERRUN;
-      case SAVINGS:
+      case TRANSFER:
         return SAVINGS_NEGATIVE_OVERRUN;
       case RECURRING:
         return RECURRING_NEGATIVE_OVERRUN;

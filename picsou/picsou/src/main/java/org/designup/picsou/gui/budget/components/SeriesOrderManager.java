@@ -2,7 +2,6 @@ package org.designup.picsou.gui.budget.components;
 
 import org.designup.picsou.gui.description.PeriodSeriesStatComparator;
 import org.designup.picsou.gui.model.PeriodSeriesStat;
-import org.designup.picsou.gui.model.SeriesType;
 import org.designup.picsou.model.*;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.splits.SplitsNode;
@@ -261,7 +260,7 @@ public abstract class SeriesOrderManager implements ChangeSetListener {
         return UserPreferences.SERIES_ORDER_VARIABLE;
       case EXTRAS:
         return UserPreferences.SERIES_ORDER_EXTRA;
-      case SAVINGS:
+      case TRANSFER:
         return UserPreferences.SERIES_ORDER_SAVINGS;
       default:
         throw new InvalidParameter("Unexpected budgetArea " + budgetArea);

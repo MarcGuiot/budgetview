@@ -1102,7 +1102,7 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
     views.selectCategorization();
     categorization
       .selectTransactions("Virement")
-      .selectSavings();
+      .selectTransfers();
 
     categorization.createAccount()
       .setName("Epargne")
@@ -1113,7 +1113,7 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
       .validate();
 
     categorization
-      .selectSavings()
+      .selectTransfers()
       .createSeries()
       .setFromAccount("Account n. 00001123")
       .setToAccount("Epargne")
@@ -1134,7 +1134,7 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
 
     categorization
       .selectTransactions("Virement")
-      .selectSavings()
+      .selectTransfers()
       .checkNoSeriesMessage("No savings account is declared")
       .clickSeriesMessageAccountCreationLink("create a savings account")
       .checkIsSavings()
@@ -1150,11 +1150,11 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
     views.selectCategorization();
     categorization
       .selectTransactions("Virement")
-      .selectSavings()
+      .selectTransfers()
       .checkNoSeriesMessage("There are no savings series");
 
     views.selectBudget();
-    budgetView.savings.createSeries()
+    budgetView.transfers.createSeries()
       .setName("My savings")
       .setFromAccount("Account n. 00001123")
       .setToAccount("Epargne")
@@ -1162,17 +1162,17 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
 
     views.selectCategorization();
     categorization
-      .selectSavings()
+      .selectTransfers()
       .checkNoSeriesMessageHidden();
 
     views.selectBudget();
-    budgetView.savings.editSeries("My savings")
+    budgetView.transfers.editSeries("My savings")
       .deleteCurrentSeries();
 
     views.selectCategorization();
     categorization
       .selectTransactions("Virement")
-      .selectSavings()
+      .selectTransfers()
       .checkNoSeriesMessage("There are no savings series");
 
     views.selectHome();
@@ -1181,7 +1181,7 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
     views.selectCategorization();
     categorization
       .selectTransactions("Virement")
-      .selectSavings()
+      .selectTransfers()
       .checkNoSeriesMessage("No savings account is declared");
   }
 
@@ -1193,7 +1193,7 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
 
     views.selectCategorization();
     categorization.selectTableRows(0)
-      .selectSavings()
+      .selectTransfers()
       .createSavingsAccount()
       .checkIsSavings()
       .checkAccountTypeNotEditable()
@@ -1507,7 +1507,7 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
       .checkDescriptionShown()
       .hideDescription();
 
-    categorization.selectSavings()
+    categorization.selectTransfers()
       .checkDescriptionHidden()
       .showDescription();
 
@@ -1542,7 +1542,7 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
       .load();
 
     categorization.selectTransaction("OTHER");
-    categorization.selectSavings().checkMessageHidden();
+    categorization.selectTransfers().checkMessageHidden();
 
     categorization.selectTransaction("SAVINGS 1.1");
     categorization.checkSavingsPreSelected()

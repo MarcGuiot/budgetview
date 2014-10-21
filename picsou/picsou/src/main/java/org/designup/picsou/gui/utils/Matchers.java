@@ -135,7 +135,7 @@ public class Matchers {
   public static MonthMatcher seriesDateSavings() {
     return new SeriesFirstEndDateFilter(true, false, false) {
       protected boolean isEligible(Glob series, GlobRepository repository) {
-        if (series.get(Series.BUDGET_AREA).equals(BudgetArea.SAVINGS.getId())) {
+        if (series.get(Series.BUDGET_AREA).equals(BudgetArea.TRANSFER.getId())) {
           Glob target = repository.findLinkTarget(series, Series.TARGET_ACCOUNT);
           return target != null && AccountType.MAIN.getId().equals(target.get(Account.ACCOUNT_TYPE));
         }
@@ -147,7 +147,7 @@ public class Matchers {
   public static MonthMatcher seriesDateSavingsAndAccountFilter(final Integer accountId) {
     return new SeriesFirstEndDateFilter(true, false, false) {
       protected boolean isEligible(Glob series, GlobRepository repository) {
-        if (series.get(Series.BUDGET_AREA).equals(BudgetArea.SAVINGS.getId())) {
+        if (series.get(Series.BUDGET_AREA).equals(BudgetArea.TRANSFER.getId())) {
           return series.get(Series.TARGET_ACCOUNT).equals(accountId);
         }
         return false;

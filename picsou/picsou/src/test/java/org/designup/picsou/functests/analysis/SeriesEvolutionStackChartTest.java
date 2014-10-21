@@ -51,7 +51,7 @@ public class SeriesEvolutionStackChartTest extends LoggedInFunctionalTestCase {
 
     timeline.selectMonth("2009/06");
     views.selectBudget();
-    budgetView.savings.alignAndPropagate("Virt Livret");
+    budgetView.transfers.alignAndPropagate("Virt Livret");
 
     views.selectAnalysis();
 
@@ -202,7 +202,7 @@ public class SeriesEvolutionStackChartTest extends LoggedInFunctionalTestCase {
 
     timeline.selectMonths("2009/06", "2009/07");
 
-    budgetView.savings.alignAndPropagate("Virt Livret");
+    budgetView.transfers.alignAndPropagate("Virt Livret");
 
     seriesAnalysis.budget().balanceChart.select("Income");
     seriesAnalysis.budget().balanceChart.getLeftDataset()
@@ -864,7 +864,7 @@ public class SeriesEvolutionStackChartTest extends LoggedInFunctionalTestCase {
       .setPosition(10.00)
       .validate();
 
-    budgetView.savings.createSavingSeries("To account Livret", "Account n. 00001123", "Livret");
+    budgetView.transfers.createSavingSeries("To account Livret", "Account n. 00001123", "Livret");
 
     OfxBuilder.init(this)
       .addBankAccount("333", 20, "2008/07/12")

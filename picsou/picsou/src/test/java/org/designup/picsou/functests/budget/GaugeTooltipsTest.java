@@ -68,22 +68,22 @@ public class GaugeTooltipsTest extends LoggedInFunctionalTestCase {
     categorization.setNewSavings("prelevement", "financement", "external account", "Account n. 00001123");
     views.selectBudget();
     setSavingsAmount("epargne", 20);
-    budgetView.savings
+    budgetView.transfers
       .checkSeriesGaugeRemaining("epargne", 0., false)
       .checkGaugeTooltip("epargne", "<p>Vous avez épargné <b>10.00</b> de plus que prévu</p>");
 
     setSavingsAmount("epargne", 40);
-    budgetView.savings
+    budgetView.transfers
       .checkSeriesGaugeRemaining("epargne", -10., false)
       .checkGaugeTooltip("epargne", "Vous avez épargné <b>10.00</b> de moins que prévu");
 
     setSavingsAmount("epargne", 30);
     setSavingsAmount("financement", 40);
-    budgetView.savings
+    budgetView.transfers
       .checkSeriesGaugeRemaining("financement", 10., false)
       .checkGaugeTooltip("financement", "Il restait <b>10.00</b> à retirer de l'épargne");
 
-    budgetView.savings
+    budgetView.transfers
       .checkTotalGaugeTooltips("Il restait <b>10.00</b> à retirer de l'épargne");
   }
 
@@ -97,18 +97,18 @@ public class GaugeTooltipsTest extends LoggedInFunctionalTestCase {
     categorization.setNewSavings("prelevement", "financement", "external account", "Account n. 00001123");
     views.selectBudget();
     setSavingsAmount("epargne", 20);
-    budgetView.savings
+    budgetView.transfers
       .checkSeriesGaugeRemaining("epargne", 0., false)
       .checkGaugeTooltip("epargne", "Vous avez épargné <b>10.00</b> de plus que prévu");
 
     setSavingsAmount("epargne", 40);
-    budgetView.savings
+    budgetView.transfers
       .checkSeriesGaugeRemaining("epargne", -10., false)
       .checkGaugeTooltip("epargne", "Il vous reste <b>10.00</b> à épargner");
 
     setSavingsAmount("financement", 20);
 
-    budgetView.savings
+    budgetView.transfers
       .checkSeriesGaugeRemaining("financement", 0., true)
       .checkGaugeTooltip("financement", "Vous avez retiré <b>10.00</b> de plus que prévu")
       .checkTotalGaugeTooltips("Vous avez épargné <b>10.00</b> de moins que prévu",
@@ -116,7 +116,7 @@ public class GaugeTooltipsTest extends LoggedInFunctionalTestCase {
 
     setSavingsAmount("epargne", 30);
     setSavingsAmount("financement", 40);
-    budgetView.savings
+    budgetView.transfers
       .checkSeriesGaugeRemaining("financement", 10., false)
       .checkGaugeTooltip("financement", "Il reste <b>10.00</b> à retirer de l'épargne");
   }
@@ -273,7 +273,7 @@ public class GaugeTooltipsTest extends LoggedInFunctionalTestCase {
   }
 
   private void setSavingsAmount(final String seriesName, final double amount) {
-    SeriesAmountEditionDialogChecker seriesAmountEditionChecker = budgetView.savings.editPlannedAmount(seriesName);
+    SeriesAmountEditionDialogChecker seriesAmountEditionChecker = budgetView.transfers.editPlannedAmount(seriesName);
     seriesAmountEditionChecker
       .setAmount(Math.abs(amount))
       .validate();

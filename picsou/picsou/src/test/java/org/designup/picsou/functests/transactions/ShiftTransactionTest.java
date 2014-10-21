@@ -272,18 +272,18 @@ public class ShiftTransactionTest extends LoggedInFunctionalTestCase {
 
     accounts.createSavingsAccount("Epargne", 0.);
 
-    budgetView.savings.createSeries()
+    budgetView.transfers.createSeries()
       .setName("Epargne")
       .setFromAccount("Account n. 00001123")
       .setToAccount("Epargne")
       .validate();
 
-    categorization.selectAllTransactions().selectSavings().selectSeries("Epargne");
+    categorization.selectAllTransactions().selectTransfers().selectSeries("Epargne");
 
     categorization.selectTransaction("Epargne / July");
     transactionDetails.shift();
     timeline.selectMonth("2008/06");
-    budgetView.savings.alignAndPropagate("Epargne");
+    budgetView.transfers.alignAndPropagate("Epargne");
 
     timeline.selectAll();
     transactions

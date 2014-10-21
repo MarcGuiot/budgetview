@@ -17,7 +17,7 @@ public class ImportedToNotImportedAccountTransactionTrigger extends AbstractChan
             && !values.isTrue(Transaction.MIRROR)
             && !values.isTrue(Transaction.PLANNED)) {
           Glob series = repository.get(Key.create(Series.TYPE, seriesId));
-          if (series.get(Series.BUDGET_AREA).equals(BudgetArea.SAVINGS.getId())) {
+          if (series.get(Series.BUDGET_AREA).equals(BudgetArea.TRANSFER.getId())) {
             Glob fromAccount = repository.findLinkTarget(series, Series.FROM_ACCOUNT);
             Glob toAccount = repository.findLinkTarget(series, Series.TO_ACCOUNT);
             if (Account.shouldCreateMirrorTransaction(fromAccount, toAccount)) {

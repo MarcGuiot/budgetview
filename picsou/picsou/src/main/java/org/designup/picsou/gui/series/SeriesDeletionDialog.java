@@ -193,7 +193,7 @@ public class SeriesDeletionDialog {
       return (series != null)
              && !series.getKey().equals(currentSeries.getKey())
              && ((series.get(Series.TARGET_ACCOUNT) == null) || series.get(Series.TARGET_ACCOUNT).equals(targetAccount))
-             && !BudgetArea.SAVINGS.getId().equals(series.get(Series.BUDGET_AREA))
+             && !BudgetArea.TRANSFER.getId().equals(series.get(Series.BUDGET_AREA))
              && !series.getKey().get(Series.ID).equals(Series.ACCOUNT_SERIES_ID);
     }
   }

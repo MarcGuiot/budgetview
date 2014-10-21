@@ -496,7 +496,7 @@ public class SeriesChartsPanel implements GlobSelectionListener {
       }
       Glob series = repository.find(seriesOrGroup.getKey());
       if (series == null ||
-          !series.get(Series.BUDGET_AREA).equals(BudgetArea.SAVINGS.getId()) ||
+          !series.get(Series.BUDGET_AREA).equals(BudgetArea.TRANSFER.getId()) ||
           Series.isSavingToExternal(series)) {
         continue;
       }

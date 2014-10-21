@@ -101,7 +101,7 @@ public class UpdateMirrorSeriesChangeSetVisitor implements ChangeSetVisitor {
 
   public static Integer createMirrorSeries(Key key, GlobRepository localRepository) {
     Glob series = localRepository.find(key);
-    if (series == null || !series.get(Series.BUDGET_AREA).equals(BudgetArea.SAVINGS.getId())) {
+    if (series == null || !series.get(Series.BUDGET_AREA).equals(BudgetArea.TRANSFER.getId())) {
       return null;
     }
 

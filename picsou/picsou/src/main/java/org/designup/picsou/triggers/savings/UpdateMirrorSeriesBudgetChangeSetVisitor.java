@@ -26,7 +26,7 @@ public class UpdateMirrorSeriesBudgetChangeSetVisitor implements ChangeSetVisito
   private void updateMirror(Key key, FieldValues values) {
     Glob budget = localRepository.get(key);
     final Glob series = localRepository.find(Key.create(Series.TYPE, budget.get(SeriesBudget.SERIES)));
-    if (!series.get(Series.BUDGET_AREA).equals(BudgetArea.SAVINGS.getId())){
+    if (!series.get(Series.BUDGET_AREA).equals(BudgetArea.TRANSFER.getId())){
       return;
     }
     Glob fromAccount = localRepository.findLinkTarget(series, Series.FROM_ACCOUNT);

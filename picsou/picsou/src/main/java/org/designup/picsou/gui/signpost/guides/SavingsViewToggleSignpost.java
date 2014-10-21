@@ -46,7 +46,7 @@ public class SavingsViewToggleSignpost extends PersistentSignpost implements Cha
 
   private boolean containsExternalSavingsSeries(GlobRepository repository) {
     for (Glob series : repository.getAll(Series.TYPE)) {
-      if (BudgetArea.get(series.get(Series.BUDGET_AREA)) == BudgetArea.SAVINGS) {
+      if (BudgetArea.get(series.get(Series.BUDGET_AREA)) == BudgetArea.TRANSFER) {
         if (!isMainAccount(series, Series.FROM_ACCOUNT, repository) &&
             !isMainAccount(series, Series.TO_ACCOUNT, repository)) {
           return true;

@@ -124,8 +124,8 @@ public class CategorizationChecker extends FilteredViewChecker<CategorizationChe
     return new ExtrasBudgetAreaCategorizationChecker(this);
   }
 
-  public SavingsCategorizationChecker selectSavings() {
-    return new SavingsCategorizationChecker(this, BudgetArea.SAVINGS);
+  public TransferCategorizationChecker selectTransfers() {
+    return new TransferCategorizationChecker(this, BudgetArea.TRANSFER);
   }
 
   public OtherCategorizationChecker selectOther() {
@@ -156,7 +156,7 @@ public class CategorizationChecker extends FilteredViewChecker<CategorizationChe
       if (area == BudgetArea.ALL) {
         continue;
       }
-      if (area == BudgetArea.SAVINGS || area == BudgetArea.UNCATEGORIZED) {
+      if (area == BudgetArea.TRANSFER || area == BudgetArea.UNCATEGORIZED) {
         assertTrue(getPanel().getToggleButton(area.getName()).isEnabled());
       }
       else {
@@ -181,7 +181,7 @@ public class CategorizationChecker extends FilteredViewChecker<CategorizationChe
   }
 
   public CategorizationChecker checkSavingsPreSelected() {
-    assertThat(getPanel().getToggleButton(BudgetArea.SAVINGS.getName()).isSelected());
+    assertThat(getPanel().getToggleButton(BudgetArea.TRANSFER.getName()).isSelected());
     return this;
   }
 
@@ -247,13 +247,13 @@ public class CategorizationChecker extends FilteredViewChecker<CategorizationChe
       .select(to).reconcile();
   }
 
-  public class SavingsCategorizationChecker extends BudgetAreaCategorizationChecker {
-    private SavingsCategorizationChecker(CategorizationChecker categorizationChecker, BudgetArea budgetArea) {
+  public class TransferCategorizationChecker extends BudgetAreaCategorizationChecker {
+    private TransferCategorizationChecker(CategorizationChecker categorizationChecker, BudgetArea budgetArea) {
       super(categorizationChecker, budgetArea);
     }
 
-    public SavingsCategorizationChecker selectAndCreateSavingsSeries(String savingsName, String fromAccount) {
-      selectSavings().createSeries()
+    public TransferCategorizationChecker selectAndCreateSavingsSeries(String savingsName, String fromAccount) {
+      selectTransfers().createSeries()
         .setName(savingsName)
         .setFromAccount(fromAccount)
         .setToAccount("External account")
@@ -261,8 +261,8 @@ public class CategorizationChecker extends FilteredViewChecker<CategorizationChe
       return this;
     }
 
-    public SavingsCategorizationChecker selectAndCreateSavingsSeries(String savingsName, String fromAccount, String toAccount) {
-      selectSavings().createSeries()
+    public TransferCategorizationChecker selectAndCreateSavingsSeries(String savingsName, String fromAccount, String toAccount) {
+      selectTransfers().createSeries()
         .setName(savingsName)
         .setFromAccount(fromAccount)
         .setToAccount(toAccount)
@@ -271,7 +271,7 @@ public class CategorizationChecker extends FilteredViewChecker<CategorizationChe
     }
 
     public AccountEditionChecker createSavingsAccount() {
-      selectSavings();
+      selectTransfers();
       return AccountEditionChecker.open(getPanel().getButton("New account").triggerClick());
     }
   }
@@ -297,7 +297,7 @@ public class CategorizationChecker extends FilteredViewChecker<CategorizationChe
   }
 
   public BudgetAreaCategorizationChecker getSavings() {
-    return checkSelectedAndReturn(BudgetArea.SAVINGS);
+    return checkSelectedAndReturn(BudgetArea.TRANSFER);
   }
 
   public CategorizationChecker checkToCategorize() {
@@ -315,7 +315,7 @@ public class CategorizationChecker extends FilteredViewChecker<CategorizationChe
   }
 
   public CategorizationChecker checkSavingsSeriesIsSelected(String seriesName) {
-    return checkSeriesIsSelected(BudgetArea.SAVINGS, seriesName);
+    return checkSeriesIsSelected(BudgetArea.TRANSFER, seriesName);
   }
 
   public CategorizationChecker checkIncomeSeriesIsSelected(String seriesName) {
@@ -759,7 +759,7 @@ public class CategorizationChecker extends FilteredViewChecker<CategorizationChe
     for (int index : getRowIndices(label)) {
       if (first) {
         selectTableRows(index);
-        selectSavings().createSeries()
+        selectTransfers().createSeries()
           .setName(seriesName)
           .setFromAccount(fromAccount)
           .setToAccount(toAccount)
@@ -775,7 +775,7 @@ public class CategorizationChecker extends FilteredViewChecker<CategorizationChe
 
   private CategorizationChecker setSavings(int rowIndex, String seriesName) {
     selectTableRows(rowIndex);
-    selectSavings().selectSeries(seriesName);
+    selectTransfers().selectSeries(seriesName);
     return this;
   }
 
