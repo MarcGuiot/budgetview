@@ -6,7 +6,7 @@ import org.designup.picsou.gui.actions.DeleteUserAction;
 import org.designup.picsou.gui.actions.ExitAction;
 import org.designup.picsou.gui.actions.ImportFileAction;
 import org.designup.picsou.gui.analysis.AnalysisSelector;
-import org.designup.picsou.gui.budget.BudgetToggle;
+import org.designup.picsou.gui.analysis.AnalysisView;
 import org.designup.picsou.gui.budget.BudgetView;
 import org.designup.picsou.gui.card.CardView;
 import org.designup.picsou.gui.card.NavigationService;
@@ -27,12 +27,10 @@ import org.designup.picsou.gui.model.PeriodBudgetAreaStat;
 import org.designup.picsou.gui.model.PeriodSeriesStat;
 import org.designup.picsou.gui.notifications.NotificationsFlagView;
 import org.designup.picsou.gui.projects.ProjectView;
-import org.designup.picsou.gui.savings.SavingsView;
 import org.designup.picsou.gui.series.PeriodAccountStatUpdater;
 import org.designup.picsou.gui.series.PeriodBudgetAreaStatUpdater;
 import org.designup.picsou.gui.series.PeriodSeriesStatUpdater;
 import org.designup.picsou.gui.series.SeriesEditor;
-import org.designup.picsou.gui.analysis.AnalysisView;
 import org.designup.picsou.gui.signpost.SignpostService;
 import org.designup.picsou.gui.signpost.SignpostView;
 import org.designup.picsou.gui.signpost.guides.ImportSignpost;
@@ -88,8 +86,8 @@ public class MainPanel {
   private SignpostView signpostView;
   private MenuBarBuilder menuBar;
   private CategorizationSelectionView categorizationSelectionView;
-  private BudgetToggle budgetToggle;
   private DashboardView dashboardView;
+  private final BudgetView budgetView;
 
   public static MainPanel init(GlobRepository repository, Directory directory, WindowManager mainWindow) {
     MainPanel panel = new MainPanel(repository, directory, mainWindow);
@@ -134,12 +132,9 @@ public class MainPanel {
       new ReplicationGlobRepository(repository, PeriodSeriesStat.TYPE, PeriodBudgetAreaStat.TYPE, PeriodAccountStat.TYPE);
     projectView = new ProjectView(repository, directory);
 
-    BudgetView budgetView = new BudgetView(replicationGlobRepository, directory);
+    budgetView = new BudgetView(replicationGlobRepository, directory);
 
-    budgetToggle = new BudgetToggle(replicationGlobRepository, directory);
-    budgetToggle.registerComponents(builder);
-
-    directory.add(new NavigationService(transactionView, categorizationSelectionView, projectView, budgetToggle, repository, directory));
+    directory.add(new NavigationService(transactionView, categorizationSelectionView, projectView, repository, directory));
 
     menuBar = new MenuBarBuilder(repository, replicationGlobRepository,
                                  windowManager, logoutService,
@@ -178,7 +173,6 @@ public class MainPanel {
       budgetView,
       analysisSelector,
       analysisView,
-      new SavingsView(replicationGlobRepository, directory),
       new ProjectSelector(repository, directory),
       projectView,
       signpostView,
@@ -220,7 +214,7 @@ public class MainPanel {
 
     menuBar.createMenuBar(frame);
     cardView.showInitialCard();
-    budgetToggle.reset();
+    budgetView.reset();
     dashboardView.reset();
     transactionView.reset();
     categorizationSelectionView.reset();

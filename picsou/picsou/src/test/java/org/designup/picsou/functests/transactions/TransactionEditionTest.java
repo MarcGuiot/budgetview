@@ -89,13 +89,13 @@ public class TransactionEditionTest extends LoggedInFunctionalTestCase {
       .load();
 
     accounts.createSavingsAccount("Livret", 1000.00);
-    budgetView.transfers.createSeries()
+    budgetView.transfer.createSeries()
       .setName("ToSavings")
       .setFromAccount("Account n. 00001123")
       .setToAccount("Livret")
       .validate();
 
-    categorization.setSavings("Virement", "ToSavings");
+    categorization.setTransfer("Virement", "ToSavings");
 
     timeline.selectAll();
     transactions.initAmountContent()

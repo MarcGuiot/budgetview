@@ -9,6 +9,7 @@ import org.uispec4j.Mouse;
 import org.uispec4j.Panel;
 import org.uispec4j.Trigger;
 import org.uispec4j.assertion.Assertion;
+import org.uispec4j.assertion.UISpecAssert;
 
 public class GaugeChecker extends AbstractUIComponent {
 
@@ -70,8 +71,15 @@ public class GaugeChecker extends AbstractUIComponent {
     return text.replace("<html>", "").replace("</html>", "");
   }
 
-  public GaugeChecker checkDescriptionContains(String text) {
-    Assert.assertTrue(gauge.getToolTipText(), gauge.getToolTipText().contains(text));
+  public GaugeChecker checkDescriptionContains(final String text) {
+    UISpecAssert.assertThat(new Assertion() {
+      public void check() {
+        if (!gauge.getToolTipText().contains(text)) {
+          Assert.fail("Toolip: " + gauge.getToolTipText() + "' does not contain\n" +
+                      "        " + text);
+        }
+      }
+    });
     return this;
   }
 

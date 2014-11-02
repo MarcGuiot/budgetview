@@ -186,6 +186,10 @@ public class PeriodSeriesStat {
         }
         throw new InvalidParameter("Unexpected type for " + periodStat);
       }
+
+      public String toString() {
+        return "accounts:" + accountIds;
+      }
     };
   }
 

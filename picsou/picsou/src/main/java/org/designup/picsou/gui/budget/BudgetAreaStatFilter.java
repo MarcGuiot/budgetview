@@ -22,12 +22,7 @@ public class BudgetAreaStatFilter implements GlobMatcher {
 
   public BudgetAreaStatFilter(BudgetArea budgetArea) {
     this.budgetArea = budgetArea;
-    if (budgetArea == BudgetArea.TRANSFER) {
-      seriesDateFilter = Matchers.seriesDateSavings();
-    }
-    else {
-      seriesDateFilter = Matchers.seriesActiveInPeriod(budgetArea.getId(), true, false, false);
-    }
+    this.seriesDateFilter = Matchers.seriesActiveInPeriod(budgetArea.getId(), true, false, false);
   }
 
   public void toggleMonthFilteringEnabled() {
@@ -91,5 +86,16 @@ public class BudgetAreaStatFilter implements GlobMatcher {
 
   public void setAccountMatcher(GlobMatcher matcher) {
     accountMatcher = matcher;
+  }
+
+  public String toString() {
+    return new StringBuilder()
+      .append("BudgetStatFilter")
+      .append("\n  budgetArea: ").append(budgetArea)
+      .append("\n  dates: ").append(seriesDateFilter)
+      .append("\n  monthFiltering: ").append(monthFilteringEnabled)
+      .append("\n  selectedMonthIds: ").append(selectedMonthIds)
+      .append("\n  accounts: ").append(accountMatcher)
+      .toString();
   }
 }

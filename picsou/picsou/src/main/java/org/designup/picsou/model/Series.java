@@ -4,12 +4,10 @@ import com.budgetview.shared.utils.PicsouGlobSerializer;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.annotations.*;
+import org.globsframework.metamodel.annotations.Key;
 import org.globsframework.metamodel.fields.*;
 import org.globsframework.metamodel.utils.GlobTypeLoader;
-import org.globsframework.model.FieldSetter;
-import org.globsframework.model.FieldValues;
-import org.globsframework.model.Glob;
-import org.globsframework.model.GlobRepository;
+import org.globsframework.model.*;
 import org.globsframework.model.utils.GlobMatcher;
 import org.globsframework.model.utils.GlobMatchers;
 import org.globsframework.utils.Strings;
@@ -248,14 +246,33 @@ public class Series {
     return toAccount.get(Account.ID).equals(series.get(TARGET_ACCOUNT));
   }
 
-  public static boolean isSavingToExternal(FieldValues series) {
+  public static boolean isTransfer(FieldValues series) {
+    return BudgetArea.TRANSFER.getId().equals(series.get(Series.BUDGET_AREA));
+  }
+
+  public static boolean isTransferToExternal(FieldValues series) {
     return series.get(Series.BUDGET_AREA).equals(BudgetArea.TRANSFER.getId()) &&
            series.get(Series.TARGET_ACCOUNT).equals(Account.EXTERNAL_ACCOUNT_ID);
   }
 
-  public static boolean isForAccount(Glob series, Set<Integer> accountIds) {
-    return (series != null) && accountIds.contains(series.get(TARGET_ACCOUNT));
+  public static boolean shouldInvertAmounts(Glob series, Integer referenceAccountId, GlobRepository repository) {
+    if (referenceAccountId == null) {
+      return false;
+    }
+    Glob account = repository.find(org.globsframework.model.Key.create(Account.TYPE, referenceAccountId));
+    if (account == null || !isTransfer(series)) {
+      return false;
+    }
+
+    if (series.get(FROM_ACCOUNT).equals(series.get(TARGET_ACCOUNT))) {
+      return referenceAccountId.equals(series.get(TO_ACCOUNT));
+    }
+    else if (series.get(TO_ACCOUNT).equals(series.get(TARGET_ACCOUNT))) {
+      return referenceAccountId.equals(series.get(FROM_ACCOUNT));
+    }
+    return false;
   }
+
 
   public static boolean isForMainOrUnknownAccount(Glob series, GlobRepository repository) {
     Glob account = repository.findLinkTarget(series, TARGET_ACCOUNT);

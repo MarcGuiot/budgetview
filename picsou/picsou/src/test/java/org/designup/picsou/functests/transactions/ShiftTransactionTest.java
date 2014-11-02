@@ -272,7 +272,7 @@ public class ShiftTransactionTest extends LoggedInFunctionalTestCase {
 
     accounts.createSavingsAccount("Epargne", 0.);
 
-    budgetView.transfers.createSeries()
+    budgetView.transfer.createSeries()
       .setName("Epargne")
       .setFromAccount("Account n. 00001123")
       .setToAccount("Epargne")
@@ -283,7 +283,7 @@ public class ShiftTransactionTest extends LoggedInFunctionalTestCase {
     categorization.selectTransaction("Epargne / July");
     transactionDetails.shift();
     timeline.selectMonth("2008/06");
-    budgetView.transfers.alignAndPropagate("Epargne");
+    budgetView.transfer.alignAndPropagate("Epargne");
 
     timeline.selectAll();
     transactions

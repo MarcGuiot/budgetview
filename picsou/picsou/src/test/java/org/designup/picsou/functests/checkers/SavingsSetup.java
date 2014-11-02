@@ -48,15 +48,15 @@ public class SavingsSetup {
       .setPosition(5000.00)
       .validate();
 
-    testCase.categorization.setNewSavings("MAIN TO IMPORTED", "MainToImported", "Main", "Imported Savings");
-    testCase.categorization.setSavings("IMPORTED FROM MAIN", "MainToImported");
-    testCase.categorization.setNewSavings("MAIN FROM IMPORTED", "ImportedToMain", "Imported Savings", "Main");
-    testCase.categorization.setSavings("IMPORTED TO MAIN", "ImportedToMain");
-    testCase.categorization.setNewSavings("MAIN TO NON IMPORTED", "MainToNonImported", "Main", "Non-imported Savings");
-    testCase.categorization.setNewSavings("MAIN FROM NON IMPORTED", "MainFromNonImported", "Non-imported Savings", "Main");
-    testCase.categorization.setNewSavings("IMPORTED FROM NON IMPORTED", "ImportedFromNonImported", "Non-imported Savings", "Imported Savings");
-    testCase.categorization.setNewSavings("IMPORTED FROM EXTERNAL", "ImportedFromExternal", "External account", "Imported Savings");
-    testCase.categorization.setNewSavings("IMPORTED TO EXTERNAL", "ImportedToExternal", "Imported Savings", "External account");
+    testCase.categorization.setNewTransfer("MAIN TO IMPORTED", "MainToImported", "Main", "Imported Savings");
+    testCase.categorization.setTransfer("IMPORTED FROM MAIN", "MainToImported");
+    testCase.categorization.setNewTransfer("MAIN FROM IMPORTED", "ImportedToMain", "Imported Savings", "Main");
+    testCase.categorization.setTransfer("IMPORTED TO MAIN", "ImportedToMain");
+    testCase.categorization.setNewTransfer("MAIN TO NON IMPORTED", "MainToNonImported", "Main", "Non-imported Savings");
+    testCase.categorization.setNewTransfer("MAIN FROM NON IMPORTED", "MainFromNonImported", "Non-imported Savings", "Main");
+    testCase.categorization.setNewTransfer("IMPORTED FROM NON IMPORTED", "ImportedFromNonImported", "Non-imported Savings", "Imported Savings");
+    testCase.categorization.setNewTransfer("IMPORTED FROM EXTERNAL", "ImportedFromExternal", "External account", "Imported Savings");
+    testCase.categorization.setNewTransfer("IMPORTED TO EXTERNAL", "ImportedToExternal", "Imported Savings", "External account");
 
   }
 }

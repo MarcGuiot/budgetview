@@ -74,7 +74,8 @@ public class GlobPrinter {
   private GlobRepository repository;
   private Set<GlobType> types;
   private GlobList globs;
-  private List<Field> excludedFields = Collections.emptyList();
+  private List<Field> excludedFields = new ArrayList<Field>();
+  private Map<GlobType, Field[]> fieldsForType = new HashMap<GlobType, Field[]>();
 
   private GlobPrinter(GlobRepository repository) {
     this.repository = repository;
@@ -94,8 +95,13 @@ public class GlobPrinter {
     return this;
   }
 
+  public GlobPrinter showFields(GlobType type, Field... fields) {
+    fieldsForType.put(type, fields);
+    return this;
+  }
+
   public GlobPrinter exclude(Field... fields) {
-    this.excludedFields = Arrays.asList(fields);
+    this.excludedFields.addAll(Arrays.asList(fields));
     return this;
   }
 
@@ -133,13 +139,18 @@ public class GlobPrinter {
 
   private String[] createRow(GlobType type, Glob glob) {
     List<String> row = new ArrayList<String>();
-    for (Field field : type.getFields()) {
+    for (Field field : getFields(type)) {
       if (excludedFields.contains(field)) {
         continue;
       }
       row.add(getValue(glob, field, glob.getValue(field)));
     }
     return row.toArray(new String[row.size()]);
+  }
+
+  private Field[] getFields(GlobType type) {
+    Field[] fields = fieldsForType.get(type);
+    return fields != null ? fields : type.getFields();
   }
 
   private String getValue(Glob glob, Field field, Object value) {
@@ -171,7 +182,7 @@ public class GlobPrinter {
 
   private String[] createHeaderRow(GlobType type) {
     List<String> row = new ArrayList<String>();
-    for (Field field : type.getFields()) {
+    for (Field field : getFields(type)) {
       if (excludedFields.contains(field)) {
         continue;
       }

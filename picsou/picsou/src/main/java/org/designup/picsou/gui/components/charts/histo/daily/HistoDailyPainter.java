@@ -9,6 +9,7 @@ import org.designup.picsou.gui.components.charts.histo.HistoPainter;
 import org.designup.picsou.gui.components.charts.histo.HistoRollover;
 import org.designup.picsou.gui.components.charts.histo.utils.HorizontalBlocksClickMap;
 import org.globsframework.model.Key;
+import org.globsframework.utils.exceptions.InvalidParameter;
 
 import java.awt.*;
 import java.util.Collections;

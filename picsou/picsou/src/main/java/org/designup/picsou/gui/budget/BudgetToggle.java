@@ -23,7 +23,6 @@ import java.util.Set;
 public class BudgetToggle extends View implements GlobSelectionListener {
 
   private CardHandler cards;
-  private FilterManager filterManager;
 
   public BudgetToggle(GlobRepository repository, Directory directory) {
     super(repository, directory);
@@ -46,7 +45,6 @@ public class BudgetToggle extends View implements GlobSelectionListener {
 
   public void showSavings() {
     cards.show("savings");
-    SignpostStatus.setCompleted(SignpostStatus.SAVINGS_VIEW_TOGGLE_SHOWN, repository);
   }
 
   public void registerComponents(GlobsPanelBuilder builder) {
@@ -56,15 +54,6 @@ public class BudgetToggle extends View implements GlobSelectionListener {
         showMain();
       }
     });
-
-    filterManager = new FilterManager(Filterable.NO_OP);
-    AccountFilter.initForPeriodStat(filterManager, repository, directory);
-
-    FilterMessagePanel accountFilterMessage = new FilterMessagePanel(filterManager, repository, directory);
-    builder.add("accountFilterMessage", accountFilterMessage.getPanel());
   }
 
-  public void reset() {
-    filterManager.reset();
-  }
 }

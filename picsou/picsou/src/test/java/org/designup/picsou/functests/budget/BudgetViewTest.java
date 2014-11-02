@@ -122,23 +122,24 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
       .addTransaction("2008/07/12", -25.00, "Virt Compte Epargne")
       .loadInNewAccount();
 
-    views.selectData();
     transactions.initContent()
       .add("12/07/2008", TransactionType.PRELEVEMENT, "Virt Compte Epargne", "", -25.00)
       .check();
 
-    views.selectCategorization();
-    categorization.setNewSavings("Virt Compte Epargne", "Epargne", "Account n. 00001123", "Livret");
+    categorization.setNewTransfer("Virt Compte Epargne", "Epargne", "Account n. 00001123", "Livret");
 
     views.selectBudget();
-    budgetView.transfers.alignAndPropagate("Epargne");
+    budgetView.transfer.alignAndPropagate("Epargne");
 
-    budgetView.transfers.checkTitle("Savings");
-    budgetView.transfers.checkSeries("Epargne", 25.0, 25.0);
-    budgetView.transfers.checkTotalAmounts(25.0, 25.0);
+    budgetView.transfer.checkTitle("Transfers");
+    budgetView.transfer.checkSeries("Epargne", "25.00", "25.00");
+    budgetView.transfer.checkTotalAmounts("25.00", "25.00");
 
-    views.selectCategorization();
     categorization.getSavings().checkSelectedSeries("Epargne");
+
+    savingsAccounts.select("Livret");
+    budgetView.transfer.checkSeries("Epargne", "+25.00", "+25.00");
+    budgetView.transfer.checkTotalAmounts("+25.00", "+25.00");
   }
 
   public void testUnset() throws Exception {

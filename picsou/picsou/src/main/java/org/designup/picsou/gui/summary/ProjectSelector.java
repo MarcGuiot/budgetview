@@ -35,7 +35,5 @@ public class ProjectSelector extends View {
     builder.add("savingsAccountsPanel", savingsAccountsPanel.getPanel());
 
     parentBuilder.add("projectSelector", builder);
-
-    // parentBuilder.add("summaryProjectSplit", SplitPaneConfig.create(directory, LayoutConfig.HOME_SUMMARY_PROJECTS));
   }
 }

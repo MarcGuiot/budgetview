@@ -21,7 +21,7 @@ public class SavingsSeriesEditionTest extends LoggedInFunctionalTestCase {
       .validate();
 
     views.selectBudget();
-    budgetView.transfers
+    budgetView.transfer
       .createSeries()
       .checkTargetAccountNotShown()
       .checkNoTargetAccountWarningHidden()
@@ -30,7 +30,7 @@ public class SavingsSeriesEditionTest extends LoggedInFunctionalTestCase {
       .setName("Epargne")
       .validate();
 
-    budgetView.transfers
+    budgetView.transfer
       .editSeries("Epargne")
       .checkTargetAccountNotShown()
       .checkNoTargetAccountWarningHidden()
@@ -70,7 +70,7 @@ public class SavingsSeriesEditionTest extends LoggedInFunctionalTestCase {
       .validate();
 
     views.selectBudget();
-    budgetView.transfers
+    budgetView.transfer
       .createSeries()
       .setName("Epargne")
       .setFromAccount("Account n. 00001123")
@@ -78,7 +78,7 @@ public class SavingsSeriesEditionTest extends LoggedInFunctionalTestCase {
       .checkOkEnabled(true)
       .validate();
 
-    budgetView.transfers
+    budgetView.transfer
       .createSeries()
       .setName("Veranda")
       .setToAccount("Account n. 00001123")
@@ -90,7 +90,7 @@ public class SavingsSeriesEditionTest extends LoggedInFunctionalTestCase {
       .validate();
 
     timeline.selectMonth("2008/10");
-    budgetView.transfers.editSeries("Veranda")
+    budgetView.transfer.editSeries("Veranda")
       .checkRepeatsASingleMonth()
       .checkSingleMonthDate("Oct 2008")
       .checkFromAccount("Epargne CA")
@@ -98,7 +98,7 @@ public class SavingsSeriesEditionTest extends LoggedInFunctionalTestCase {
       .checkRepeatsASingleMonth()
       .cancel();
 
-    budgetView.transfers.editSeries("Epargne")
+    budgetView.transfer.editSeries("Epargne")
       .checkFromAccount("Account n. 00001123")
       .checkToAccount("Epargne LCL")
       .cancel();
@@ -120,7 +120,7 @@ public class SavingsSeriesEditionTest extends LoggedInFunctionalTestCase {
       .validate();
 
     views.selectBudget();
-    budgetView.transfers
+    budgetView.transfer
       .createSeries()
       .setName("Epargne")
       .setFromAccount("Account n. 00001123")
@@ -151,13 +151,13 @@ public class SavingsSeriesEditionTest extends LoggedInFunctionalTestCase {
       .validate();
 
     views.selectBudget();
-    budgetView.transfers.createSeries()
+    budgetView.transfer.createSeries()
       .setName("CA")
       .setFromAccount("Account n. 00001123")
       .setToAccount("Account n. 111")
       .validate();
 
-    budgetView.transfers
+    budgetView.transfer
       .checkSeriesPresent("CA");
   }
 
@@ -176,7 +176,7 @@ public class SavingsSeriesEditionTest extends LoggedInFunctionalTestCase {
       .validate();
     views.selectBudget();
 
-    budgetView.transfers
+    budgetView.transfer
       .createSeries()
       .setFromAccount("Account n. 00001123")
       .setToAccount("Epargne LCL")
@@ -204,31 +204,32 @@ public class SavingsSeriesEditionTest extends LoggedInFunctionalTestCase {
       .setAsSavings()
       .validate();
     views.selectBudget();
-    budgetView.transfers.createSeries()
-      .setName("CA")
+    budgetView.transfer.createSeries()
+      .setName("To 111")
       .setFromAccount("Account n. 00001123")
       .setToAccount("Account n. 111")
       .validate();
     views.selectCategorization();
     categorization.selectTableRow(0)
       .selectTransfers()
-      .editSeries("CA")
-      .setName("Other")
+      .editSeries("To 111")
+      .setName("To 111 new")
       .validate();
 
     views.selectBudget();
-    budgetView.transfers.checkSeriesPresent("Other");
+    budgetView.transfer.checkSeriesPresent("To 111 new");
 
-    budgetView.transfers.editSeries("Other")
+    budgetView.transfer.editSeries("To 111 new")
       .selectAllMonths().setAmount(50).validate();
-    fail("Pourquoi il y a avait CA et non Other?");
-    savingsView.editSeries("Account n. 111", "Other")
-      .checkName("Other")
+
+    budgetView.transfer.editSeries("To 111 new")
+      .checkName("To 111 new")
       .validate();
 
     mainAccounts.select("Account n. 00001123");
     views.checkBudgetSelected();
-    budgetView.transfers.editSeries("Other")
+    budgetView.transfer.editSeries("To 111 new")
+      .checkName("To 111 new")
       .validate();
   }
 
@@ -246,7 +247,7 @@ public class SavingsSeriesEditionTest extends LoggedInFunctionalTestCase {
       .validate();
 
     views.selectBudget();
-    budgetView.transfers
+    budgetView.transfer
       .createSeries()
       .setName("Epargne")
       .checkFromAccount("")
@@ -269,23 +270,23 @@ public class SavingsSeriesEditionTest extends LoggedInFunctionalTestCase {
       .validate();
 
     savingsAccounts.select("Epargne LCL");
-    savingsView.createSeries()
+    budgetView.transfer.createSeries()
       .setName("Savings Plan")
       .setFromAccount("Epargne LCL")
       .setToAccount("External account")
       .setDescription("Savings for the kids")
       .validate();
-    savingsView.checkSeriesTooltip("Epargne LCL", "Savings Plan", "Savings for the kids");
+    budgetView.transfer.checkSeriesTooltip("Savings Plan", "Savings for the kids");
 
-    savingsView.editSeries("Epargne LCL", "Savings Plan")
+    budgetView.transfer.editSeries("Savings Plan")
       .checkDescription("Savings for the kids")
       .setDescription("Savings for the Porsche")
       .validate();
-    savingsView.checkSeriesTooltip("Epargne LCL", "Savings Plan", "Savings for the Porsche");
+    budgetView.transfer.checkSeriesTooltip("Savings Plan", "Savings for the Porsche");
 
-    savingsView.editSeries("Epargne LCL", "Savings Plan")
+    budgetView.transfer.editSeries("Savings Plan")
       .setDescription("")
       .validate();
-    savingsView.checkSeriesTooltip("Epargne LCL", "Savings Plan", "");
+    budgetView.transfer.checkSeriesTooltip("Savings Plan", "");
   }
 }

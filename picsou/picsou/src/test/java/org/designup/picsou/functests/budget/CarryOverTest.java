@@ -567,9 +567,9 @@ public class CarryOverTest extends LoggedInFunctionalTestCase {
       .setPosition(500)
       .validate();
 
-    budgetView.transfers.createSavingSeries("To account ING", "Account n. 00000123", "ING");
+    budgetView.transfer.createSavingSeries("To account ING", "Account n. 00000123", "ING");
 
-    budgetView.transfers.editSeries("To account ING")
+    budgetView.transfer.editSeries("To account ING")
       .setPropagationEnabled()
       .setAmount(400)
       .validate();
@@ -580,14 +580,14 @@ public class CarryOverTest extends LoggedInFunctionalTestCase {
       .checkSeriesIsActive("To account ING")
       .selectSeries("To account ING");
 
-    budgetView.transfers.checkSeries("To account ING", 200.00, 400.00);
+    budgetView.transfer.checkSeries("To account ING", "200.00", "400.00");
 
     timeline.selectMonth("2008/08");
-    budgetView.transfers.carryExpensesRemainderOver("To account ING");
-    budgetView.transfers.checkSeries("To account ING", 200.00, 200.00);
+    budgetView.transfer.carryExpensesRemainderOver("To account ING");
+    budgetView.transfer.checkSeries("To account ING", "200.00", "200.00");
 
     timeline.selectMonth("2008/09");
-    budgetView.transfers.checkSeries("To account ING", 0.00, 600.00);
+    budgetView.transfer.checkSeries("To account ING", "0.00", "600.00");
     
     timeline.selectMonths("2008/08", "2008/09", "2008/10");
     transactions
@@ -624,9 +624,9 @@ public class CarryOverTest extends LoggedInFunctionalTestCase {
       .selectBank("ING Direct")
       .validate();
 
-    budgetView.transfers.createSavingSeries("To account ING", "Account n. 00000123", "ING");
+    budgetView.transfer.createSavingSeries("To account ING", "Account n. 00000123", "ING");
 
-    budgetView.transfers.editSeries("To account ING")
+    budgetView.transfer.editSeries("To account ING")
       .setPropagationEnabled()
       .setAmount(400)
       .validate();
@@ -641,14 +641,14 @@ public class CarryOverTest extends LoggedInFunctionalTestCase {
       .selectTransfers()
       .selectSeries("To account ING");
 
-    budgetView.transfers.checkSeries("To account ING", 200.00, 400.00);
+    budgetView.transfer.checkSeries("To account ING", "200.00", "400.00");
 
     timeline.selectMonth("2008/08");
-    budgetView.transfers.carryExpensesRemainderOver("To account ING");
-    budgetView.transfers.checkSeries("To account ING", 200.00, 200.00);
+    budgetView.transfer.carryExpensesRemainderOver("To account ING");
+    budgetView.transfer.checkSeries("To account ING", "200.00", "200.00");
 
     timeline.selectMonth("2008/09");
-    budgetView.transfers.checkSeries("To account ING", 0.00, 600.00);
+    budgetView.transfer.checkSeries("To account ING", "0.00", "600.00");
 
     timeline.selectMonths("2008/08", "2008/09", "2008/10");
     transactions

@@ -46,7 +46,7 @@ public class SeriesGroupAnalysisTest extends LoggedInFunctionalTestCase {
       .add("Home", "50.00", "100.00", "100.00", "100.00", "", "", "", "")
       .add("Leisures", "", "200.00", "200.00", "200.00", "", "", "", "")
       .add("Extras", "", "", "", "", "", "", "", "")
-      .add("Savings", "", "", "", "", "", "", "", "")
+      .add("Transfers", "", "", "", "", "", "", "", "")
       .check();
 
     seriesAnalysis.table().toggleExpansion("Groceries");
@@ -62,7 +62,7 @@ public class SeriesGroupAnalysisTest extends LoggedInFunctionalTestCase {
       .add("Groceries", "120.00", "300.00", "300.00", "300.00", "", "", "", "")
       .add("Leisures", "", "200.00", "200.00", "200.00", "", "", "", "")
       .add("Extras", "", "", "", "", "", "", "", "")
-      .add("Savings", "", "", "", "", "", "", "", "")
+      .add("Transfers", "", "", "", "", "", "", "", "")
       .check();
     seriesAnalysis.table().toggleExpansion("Groceries");
 
@@ -84,7 +84,7 @@ public class SeriesGroupAnalysisTest extends LoggedInFunctionalTestCase {
       .add("Home", "50.00", "100.00", "100.00", "100.00", "", "", "", "")
       .add("Leisures", "", "200.00", "200.00", "200.00", "", "", "", "")
       .add("Extras", "", "", "", "", "", "", "", "")
-      .add("Savings", "", "", "", "", "", "", "", "")
+      .add("Transfers", "", "", "", "", "", "", "", "")
       .check();
 
     // ------ Change amount -----
@@ -107,7 +107,7 @@ public class SeriesGroupAnalysisTest extends LoggedInFunctionalTestCase {
       .add("Home", "50.00", "100.00", "100.00", "100.00", "", "", "", "")
       .add("Leisures", "", "200.00", "200.00", "200.00", "", "", "", "")
       .add("Extras", "", "", "", "", "", "", "", "")
-      .add("Savings", "", "", "", "", "", "", "", "")
+      .add("Transfers", "", "", "", "", "", "", "", "")
       .check();
 
     // ------ Navigate from budget view -----
@@ -137,7 +137,7 @@ public class SeriesGroupAnalysisTest extends LoggedInFunctionalTestCase {
       .add("Leisures", "", "200.00", "200.00", "200.00", "", "", "", "")
       .add("Home", "50.00", "100.00", "100.00", "100.00", "", "", "", "")
       .add("Extras", "", "", "", "", "", "", "", "")
-      .add("Savings", "", "", "", "", "", "", "", "")
+      .add("Transfers", "", "", "", "", "", "", "", "")
       .check();
 
     // ------ Undo : recreates series -----
@@ -157,7 +157,7 @@ public class SeriesGroupAnalysisTest extends LoggedInFunctionalTestCase {
       .add("Home", "50.00", "100.00", "100.00", "100.00", "", "", "", "")
       .add("Leisures", "", "200.00", "200.00", "200.00", "", "", "", "")
       .add("Extras", "", "", "", "", "", "", "", "")
-      .add("Savings", "", "", "", "", "", "", "", "")
+      .add("Transfers", "", "", "", "", "", "", "", "")
       .check();
 
     seriesAnalysis.table().toggleExpansion("Groceries");
@@ -172,7 +172,7 @@ public class SeriesGroupAnalysisTest extends LoggedInFunctionalTestCase {
       .add("Variable", "120.00", "550.00", "500.00", "500.00", "", "", "", "")
       .add("Groceries", "120.00", "550.00", "500.00", "500.00", "", "", "", "")
       .add("Extras", "", "", "", "", "", "", "", "")
-      .add("Savings", "", "", "", "", "", "", "", "")
+      .add("Transfers", "", "", "", "", "", "", "", "")
       .check();
 
     // ------ Delete group -----
@@ -191,7 +191,7 @@ public class SeriesGroupAnalysisTest extends LoggedInFunctionalTestCase {
       .add("Home", "50.00", "100.00", "100.00", "100.00", "", "", "", "")
       .add("Leisures", "", "200.00", "200.00", "200.00", "", "", "", "")
       .add("Extras", "", "", "", "", "", "", "", "")
-      .add("Savings", "", "", "", "", "", "", "", "")
+      .add("Transfers", "", "", "", "", "", "", "", "")
       .check();
   }
 

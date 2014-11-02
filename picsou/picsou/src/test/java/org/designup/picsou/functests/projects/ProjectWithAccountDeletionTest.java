@@ -140,13 +140,13 @@ public class ProjectWithAccountDeletionTest extends LoggedInFunctionalTestCase {
 
     currentProject.checkItems("| Transfer | Dec | 0.00 | +200.00 |\n" +
                               "| Trip     | Dec | 0.00 | 50.00   |");
-    budgetView.transfers.checkContent("| Transfer | 0.00 | +200.00 |");
+    budgetView.transfer.checkContent("| Transfer | 0.00 | +200.00 |");
     budgetView.extras.checkContent("| Trip | 0.00 | 50.00 |");
 
     savingsAccounts.openDelete("Savings account").validate();
 
     currentProject.checkItems("| Trip | Dec | 0.00 | 50.00 |");
-    budgetView.transfers.checkNoSeriesShown();
+    budgetView.transfer.checkNoSeriesShown();
     budgetView.extras.checkContent("| Trip | 0.00 | 50.00 |");
   }
 

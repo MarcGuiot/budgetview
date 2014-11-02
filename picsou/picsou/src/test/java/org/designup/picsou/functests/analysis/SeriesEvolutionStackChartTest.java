@@ -47,11 +47,11 @@ public class SeriesEvolutionStackChartTest extends LoggedInFunctionalTestCase {
     categorization.setNewRecurring("Free", "Internet");
     categorization.setNewRecurring("Orange", "Mobile");
     categorization.setNewVariable("Auchan", "Groceries", -450.);
-    categorization.setNewSavings("Virt Epargne", "Virt Livret", "Account n. 00001123", "Livret");
+    categorization.setNewTransfer("Virt Epargne", "Virt Livret", "Account n. 00001123", "Livret");
 
     timeline.selectMonth("2009/06");
     views.selectBudget();
-    budgetView.transfers.alignAndPropagate("Virt Livret");
+    budgetView.transfer.alignAndPropagate("Virt Livret");
 
     views.selectAnalysis();
 
@@ -62,12 +62,12 @@ public class SeriesEvolutionStackChartTest extends LoggedInFunctionalTestCase {
       .checkSize(3)
       .checkValue("Recurring", 80.00)
       .checkValue("Variable", 450.00)
-      .checkValue("Savings", 100.00);
+      .checkValue("Transfers", 100.00);
     seriesAnalysis.budget().checkBalanceChartLabel("Main accounts balance");
     seriesAnalysis.budget().seriesChart.getSingleDataset()
-      .checkSize(3)
+      .checkSize(4)
       .checkValue("Groceries", 450.00)
-//      .checkValue("Virt Livret", 100.00)
+      .checkValue("Virt Livret", 100.00)
       .checkValue("Mobile", 50.00)
       .checkValue("Internet", 30.00);
     seriesAnalysis.budget().checkSeriesChartLabel("Main series");
@@ -75,9 +75,9 @@ public class SeriesEvolutionStackChartTest extends LoggedInFunctionalTestCase {
     timeline.selectMonth("2009/07");
     checkStandardCaseMainBalance();
     seriesAnalysis.budget().seriesChart.getSingleDataset()
-      .checkSize(3)
+      .checkSize(4)
       .checkValue("Groceries", 450.00)
-//      .checkValue("Virt Livret", 100.00)
+      .checkValue("Virt Livret", 100.00)
       .checkValue("Mobile", 60.00)
       .checkValue("Internet", 30.00);
     seriesAnalysis.budget().checkSeriesChartLabel("Main series");
@@ -85,9 +85,9 @@ public class SeriesEvolutionStackChartTest extends LoggedInFunctionalTestCase {
     seriesAnalysis.table().select("Balance");
     checkStandardCaseMainBalance();
     seriesAnalysis.budget().seriesChart.getSingleDataset()
-      .checkSize(3)
+      .checkSize(4)
       .checkValue("Groceries", 450.00)
-//      .checkValue("Virt Livret", 100.00)
+      .checkValue("Virt Livret", 100.00)
       .checkValue("Mobile", 60.00)
       .checkValue("Internet", 30.00);
     seriesAnalysis.budget().checkSeriesChartLabel("Main series");
@@ -95,9 +95,9 @@ public class SeriesEvolutionStackChartTest extends LoggedInFunctionalTestCase {
     seriesAnalysis.table().select("Main accounts");
     checkStandardCaseMainBalance();
     seriesAnalysis.budget().seriesChart.getSingleDataset()
-      .checkSize(3)
+      .checkSize(4)
       .checkValue("Groceries", 450.00)
-//      .checkValue("Virt Livret", 100.00)
+      .checkValue("Virt Livret", 100.00)
       .checkValue("Mobile", 60.00)
       .checkValue("Internet", 30.00);
     seriesAnalysis.budget().checkSeriesChartLabel("Main series");
@@ -110,7 +110,7 @@ public class SeriesEvolutionStackChartTest extends LoggedInFunctionalTestCase {
       .checkSize(3)
       .checkValue("Recurring", 90.00)
       .checkValue("Variable", 450.00)
-      .checkValue("Savings", 100.00);
+      .checkValue("Transfers", 100.00);
     seriesAnalysis.budget().seriesChart.getSingleDataset()
       .checkSize(2)
       .checkValue("Mary's", 350.00)
@@ -125,7 +125,7 @@ public class SeriesEvolutionStackChartTest extends LoggedInFunctionalTestCase {
       .checkSize(3)
       .checkValue("Recurring", 90.00)
       .checkValue("Variable", 450.00)
-      .checkValue("Savings", 100.00);
+      .checkValue("Transfers", 100.00);
     seriesAnalysis.budget().checkBalanceChartLabel("Main accounts balance");
     seriesAnalysis.budget().seriesChart.getSingleDataset()
       .checkSize(2)
@@ -141,7 +141,7 @@ public class SeriesEvolutionStackChartTest extends LoggedInFunctionalTestCase {
       .checkSize(3)
       .checkValue("Recurring", 90.00, true)
       .checkValue("Variable", 450.00)
-      .checkValue("Savings", 100.00);
+      .checkValue("Transfers", 100.00);
     seriesAnalysis.budget().checkBalanceChartLabel("Main accounts balance");
     seriesAnalysis.budget().seriesChart.getSingleDataset()
       .checkSize(2)
@@ -157,7 +157,7 @@ public class SeriesEvolutionStackChartTest extends LoggedInFunctionalTestCase {
       .checkSize(3)
       .checkValue("Recurring", 90.00, true)
       .checkValue("Variable", 450.00)
-      .checkValue("Savings", 100.00);
+      .checkValue("Transfers", 100.00);
     seriesAnalysis.budget().checkBalanceChartLabel("Main accounts balance");
     seriesAnalysis.budget().seriesChart.getSingleDataset()
       .checkSize(2)
@@ -198,11 +198,11 @@ public class SeriesEvolutionStackChartTest extends LoggedInFunctionalTestCase {
     categorization.setNewRecurring("Free", "Internet");
     categorization.setNewRecurring("Orange", "Mobile");
     categorization.setNewVariable("Auchan", "Groceries", -600.00);
-    categorization.setNewSavings("Virt Epargne", "Virt Livret", "Account n. 00001123", "Livret");
+    categorization.setNewTransfer("Virt Epargne", "Virt Livret", "Account n. 00001123", "Livret");
 
     timeline.selectMonths("2009/06", "2009/07");
 
-    budgetView.transfers.alignAndPropagate("Virt Livret");
+    budgetView.transfer.alignAndPropagate("Virt Livret");
 
     seriesAnalysis.budget().balanceChart.select("Income");
     seriesAnalysis.budget().balanceChart.getLeftDataset()
@@ -211,7 +211,7 @@ public class SeriesEvolutionStackChartTest extends LoggedInFunctionalTestCase {
     seriesAnalysis.budget().balanceChart.getRightDataset()
       .checkSize(3)
       .checkValue("Variable", 1100.00)
-      .checkValue("Savings", 200.00)
+      .checkValue("Transfers", 200.00)
       .checkValue("Recurring", 160.00);
     seriesAnalysis.budget().seriesChart.getSingleDataset()
       .checkSize(2)
@@ -227,7 +227,7 @@ public class SeriesEvolutionStackChartTest extends LoggedInFunctionalTestCase {
     seriesAnalysis.budget().balanceChart.getRightDataset()
       .checkSize(3)
       .checkValue("Variable", 1100.00, true)
-      .checkValue("Savings", 200.00)
+      .checkValue("Transfers", 200.00)
       .checkValue("Recurring", 160.00);
     seriesAnalysis.budget().seriesChart.getLeftDataset()
       .checkSize(2)
@@ -246,7 +246,7 @@ public class SeriesEvolutionStackChartTest extends LoggedInFunctionalTestCase {
     seriesAnalysis.budget().balanceChart.getRightDataset()
       .checkSize(3)
       .checkValue("Variable", 1100.00, true)
-      .checkValue("Savings", 200.00)
+      .checkValue("Transfers", 200.00)
       .checkValue("Recurring", 160.00);
     seriesAnalysis.budget().seriesChart.getLeftDataset()
       .checkSize(2)
@@ -265,7 +265,7 @@ public class SeriesEvolutionStackChartTest extends LoggedInFunctionalTestCase {
     seriesAnalysis.budget().balanceChart.getRightDataset()
       .checkSize(3)
       .checkValue("Variable", 1100.00, true)
-      .checkValue("Savings", 200.00)
+      .checkValue("Transfers", 200.00)
       .checkValue("Recurring", 160.00, true);
     seriesAnalysis.budget().checkBalanceChartLabel("Main accounts balance");
     seriesAnalysis.budget().seriesChart.getLeftDataset()
@@ -287,7 +287,7 @@ public class SeriesEvolutionStackChartTest extends LoggedInFunctionalTestCase {
     seriesAnalysis.budget().balanceChart.getRightDataset()
       .checkSize(3)
       .checkValue("Variable", 1100.00, true)
-      .checkValue("Savings", 200.00)
+      .checkValue("Transfers", 200.00)
       .checkValue("Recurring", 160.00, true);
     seriesAnalysis.budget().checkBalanceChartLabel("Main accounts balance");
     seriesAnalysis.budget().seriesChart.getLeftDataset()
@@ -388,7 +388,7 @@ public class SeriesEvolutionStackChartTest extends LoggedInFunctionalTestCase {
       .checkSize(3)
       .checkValue("Recurring", 90.00)
       .checkValue("Variable", 450.00)
-      .checkValue("Savings", 100.00);
+      .checkValue("Transfers", 100.00);
   }
 
   public void testClickNavigation() throws Exception {
@@ -697,7 +697,7 @@ public class SeriesEvolutionStackChartTest extends LoggedInFunctionalTestCase {
     categorization.setNewRecurring("Free", "Internet");
     categorization.setNewRecurring("Orange", "Mobile");
     categorization.setNewVariable("Auchan", "Groceries", -450.00);
-    categorization.setNewSavings("Virt Epargne", "Virt Livret", "Account n. 00001123", "Livret");
+    categorization.setNewTransfer("Virt Epargne", "Virt Livret", "Account n. 00001123", "Livret");
     categorization.showUncategorizedTransactionsOnly();
 
     timeline.selectMonth(200907);
@@ -851,7 +851,6 @@ public class SeriesEvolutionStackChartTest extends LoggedInFunctionalTestCase {
   }
 
   public void testMirrorSavingsSeriesAreNotShown() throws Exception {
-
     OfxBuilder.init(this)
       .addTransaction("2008/07/12", -95.00, "Virement")
       .load();
@@ -864,21 +863,33 @@ public class SeriesEvolutionStackChartTest extends LoggedInFunctionalTestCase {
       .setPosition(10.00)
       .validate();
 
-    budgetView.transfers.createSavingSeries("To account Livret", "Account n. 00001123", "Livret");
+    budgetView.transfer.createSavingSeries("To account Livret", "Account n. 00001123", "Livret");
 
     OfxBuilder.init(this)
       .addBankAccount("333", 20, "2008/07/12")
       .addTransaction("2008/07/12", +95.00, "Virt livret")
       .loadInAccount("Livret");
 
-    categorization.setSavings("Virement", "To account Livret");
-    categorization.setSavings("Virt livret", "To account Livret");
+    categorization.setTransfer("Virement", "To account Livret");
+    categorization.setTransfer("Virt livret", "To account Livret");
 
     seriesAnalysis.budget().seriesChart.getSingleDataset()
-      .checkSize(0);
-      //.checkValue("To account Livret", 95.00);
+      .checkSize(1)
+      .checkValue("To account Livret", 95.00);
 
-//    seriesAnalysis.budget().seriesChart.select("To account Livret");
-//    seriesAnalysis.table().checkSelected("To account Livret");
+    seriesAnalysis.budget().seriesChart.select("To account Livret");
+    seriesAnalysis.table().initContent()
+      .add("Main accounts", "", "", "", "", "", "", "", "")
+      .add("Balance", "", "-95.00", "", "", "", "", "", "")
+      .add("Savings accounts", "", "105.00", "105.00", "105.00", "105.00", "105.00", "105.00", "105.00")
+      .add("To categorize", "", "", "", "", "", "", "", "")
+      .add("Income", "", "", "", "", "", "", "", "")
+      .add("Recurring", "", "", "", "", "", "", "", "")
+      .add("Variable", "", "", "", "", "", "", "", "")
+      .add("Extras", "", "", "", "", "", "", "", "")
+      .add("Transfers", "", "95.00", "", "", "", "", "", "")
+      .add("To account Livret", "", "95.00", "", "", "", "", "", "")
+      .check();
+    seriesAnalysis.table().checkSelected("To account Livret");
   }
 }

@@ -34,7 +34,7 @@ public class BudgetViewChecker extends ViewChecker {
   public final BudgetAreaChecker recurring;
   public final BudgetAreaChecker variable;
   public final ExtrasBudgetAreaChecker extras;
-  public final SavingsBudgetAreaChecker transfers;
+  public final SavingsBudgetAreaChecker transfer;
 
   public BudgetViewChecker(Window mainWindow) {
     super(mainWindow);
@@ -42,7 +42,7 @@ public class BudgetViewChecker extends ViewChecker {
     this.recurring = new BudgetAreaChecker("recurringBudgetView", BudgetArea.RECURRING);
     this.variable = new BudgetAreaChecker("variableBudgetView", BudgetArea.VARIABLE);
     this.extras = new ExtrasBudgetAreaChecker("extrasBudgetView");
-    this.transfers = new SavingsBudgetAreaChecker("savingsBudgetView");
+    this.transfer = new SavingsBudgetAreaChecker("savingsBudgetView");
   }
 
   private int getIndex(JPanel panel, Component component) {
@@ -56,12 +56,7 @@ public class BudgetViewChecker extends ViewChecker {
 
   protected String convert(double amount, BudgetArea budgetArea) {
     StringBuilder builder = new StringBuilder();
-    if (budgetArea == BudgetArea.TRANSFER) {
-      if (amount < 0) {
-        builder.append("+");
-      }
-    }
-    else if (budgetArea.isIncome()) {
+    if (budgetArea.isIncome()) {
       builder.append(amount < 0 ? "-" : "");
     }
     else {
@@ -98,15 +93,19 @@ public class BudgetViewChecker extends ViewChecker {
       return panel;
     }
 
-    public BudgetAreaChecker checkTotalAmounts(final double observed, final double planned) {
+    public BudgetAreaChecker checkTotalAmounts(final String observed, final String planned) {
       assertThat(new Assertion() {
         public void check() {
-          String expected = convert(observed) + "/" + convert(planned);
+          String expected = observed + "/" + planned;
           String actual = getPanel().getTextBox("totalObservedAmount").getText() + "/" + getPanel().getTextBox("totalPlannedAmount").getText();
           Assert.assertEquals(expected, actual);
         }
       });
       return this;
+    }
+
+      public BudgetAreaChecker checkTotalAmounts(final double observed, final double planned) {
+        return checkTotalAmounts(convert(observed), convert(planned));
     }
 
     public BudgetAreaChecker checkTotalObserved(double observed) {
@@ -190,6 +189,12 @@ public class BudgetViewChecker extends ViewChecker {
       assertThat(getPanel().getTextBox("totalPlannedAmount")
                    .tooltipEquals("Planned with overrun: " + Formatting.DECIMAL_FORMAT.format(newAmount) +
                                   " - Overrun: " + Formatting.DECIMAL_FORMAT.format(overrun)));
+      return this;
+    }
+
+    public BudgetAreaChecker checkSeries(String seriesName, String actual, String planned) {
+      SeriesPanel seriesPanel = getSeriesPanel(seriesName);
+      seriesPanel.checkAmounts(actual, planned);
       return this;
     }
 
@@ -340,7 +345,7 @@ public class BudgetViewChecker extends ViewChecker {
     }
 
     protected Button getObservedAmountButton(String seriesName) {
-      return getSeriesPanel(seriesName).getObservedAmount();
+      return getSeriesPanel(seriesName).getActualAmount();
     }
 
     protected DeltaGaugeChecker getDeltaGauge(String seriesName) {
@@ -678,7 +683,7 @@ public class BudgetViewChecker extends ViewChecker {
       return new GaugeChecker((Gauge)getComponent(GAUGE_OFFSET));
     }
 
-    public Button getObservedAmount() {
+    public Button getActualAmount() {
       return new Button((JButton)getComponent(OBSERVED_LABEL_OFFSET));
     }
 
@@ -691,7 +696,7 @@ public class BudgetViewChecker extends ViewChecker {
     }
 
     public void checkObservedAmount(double amount) {
-      assertThat(getObservedAmount().textEquals(convert(amount, budgetArea)));
+      assertThat(getActualAmount().textEquals(convert(amount, budgetArea)));
     }
 
     public void checkPlannedAmount(double amount) {
@@ -700,6 +705,11 @@ public class BudgetViewChecker extends ViewChecker {
 
     public DeltaGaugeChecker getDeltaGauge() {
       return new DeltaGaugeChecker((DeltaGauge)getComponent(DELTA_GAUGE_OFFSET));
+    }
+
+    public void checkAmounts(String actual, String planned) {
+      Assert.assertEquals(actual + "/" + planned,
+                          getActualAmount().getLabel() + "/" + getPlannedAmount().getLabel());
     }
   }
 }

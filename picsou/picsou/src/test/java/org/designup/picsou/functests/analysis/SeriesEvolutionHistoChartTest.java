@@ -180,9 +180,9 @@ public class SeriesEvolutionHistoChartTest extends LoggedInFunctionalTestCase {
       .setPosition(200)
       .validate();
 
-    categorization.setNewSavings("Virt", "Epargne", "Account n. 00000123", "ING");
+    categorization.setNewTransfer("Virt", "Epargne", "Account n. 00000123", "ING");
 
-    budgetView.transfers.alignAndPropagate("Epargne");
+    budgetView.transfer.alignAndPropagate("Epargne");
 
     views.selectAnalysis();
     seriesAnalysis.table().select("Main accounts");
@@ -373,7 +373,7 @@ public class SeriesEvolutionHistoChartTest extends LoggedInFunctionalTestCase {
       .setName("ING")
       .selectBank("ING Direct")
       .validate();
-    categorization.setNewSavings("Virt", "Epargne", "ING", "Account n. 00000123");
+    categorization.setNewTransfer("Virt", "Epargne", "ING", "Account n. 00000123");
 
     // ---- Balance ----
 

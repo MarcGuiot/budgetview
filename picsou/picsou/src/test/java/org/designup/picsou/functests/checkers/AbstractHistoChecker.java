@@ -8,6 +8,8 @@ import com.budgetview.shared.gui.histochart.HistoDataset;
 import org.uispec4j.*;
 import org.uispec4j.MenuItem;
 import org.uispec4j.Panel;
+import org.uispec4j.assertion.Assertion;
+import org.uispec4j.assertion.UISpecAssert;
 import org.uispec4j.interception.PopupMenuInterceptor;
 import org.uispec4j.interception.toolkit.Empty;
 
@@ -16,16 +18,20 @@ import java.util.TreeSet;
 
 public abstract class AbstractHistoChecker<T extends AbstractHistoChecker> extends GuiChecker {
 
-  protected <T extends HistoDataset> T getDataset(Class<T> datasetClass) {
-    HistoChart chart = getChart();
-    HistoDataset dataset = chart.getCurrentDataset();
-    if (dataset == HistoDataset.NULL) {
-      throw new AssertionFailedError("Current dataset is NULL");
-    }
-    if (!datasetClass.isAssignableFrom(dataset.getClass())) {
-      throw new AssertionFailedError("Unexpected dataset type: " + dataset.getClass());
-    }
-    return (T)dataset;
+  protected <T extends HistoDataset> T getDataset(final Class<T> datasetClass) {
+    final HistoChart chart = getChart();
+    UISpecAssert.assertThat(new Assertion() {
+      public void check() {
+        HistoDataset dataset = chart.getCurrentDataset();
+        if (dataset == HistoDataset.NULL) {
+          throw new AssertionFailedError("Current dataset is NULL");
+        }
+        if (!datasetClass.isAssignableFrom(dataset.getClass())) {
+          throw new AssertionFailedError("Unexpected dataset type: " + dataset.getClass());
+        }
+      }
+    });
+    return (T)chart.getCurrentDataset();
   }
 
   protected HistoDataset getDataset() {

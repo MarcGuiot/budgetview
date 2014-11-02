@@ -141,17 +141,7 @@
     </panel>
 
     <column name="budget" styleClass="content">
-      <row border="empty(10,10,5,10)" autoHideSource="accountFilterMessage" weightY="0.1">
-        <panel ref="accountFilterMessage"/>
-      </row>
-      <cards ref="budgetToggle" styleClass="innerContent" weightY="100">
-        <card name="main">
-          <panel ref="budgetView"/>
-        </card>
-        <card name="savings">
-          <panel ref="savingsView"/>
-        </card>
-      </cards>
+      <panel ref="budgetView"/>
     </column>
 
     <panel name="analysis" styleClass="content">

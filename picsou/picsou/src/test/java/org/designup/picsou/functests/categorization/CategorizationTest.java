@@ -1151,10 +1151,10 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
     categorization
       .selectTransactions("Virement")
       .selectTransfers()
-      .checkNoSeriesMessage("There are no savings series");
+      .checkNoSeriesMessage("There are no transfer series");
 
     views.selectBudget();
-    budgetView.transfers.createSeries()
+    budgetView.transfer.createSeries()
       .setName("My savings")
       .setFromAccount("Account n. 00001123")
       .setToAccount("Epargne")
@@ -1166,14 +1166,14 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
       .checkNoSeriesMessageHidden();
 
     views.selectBudget();
-    budgetView.transfers.editSeries("My savings")
+    budgetView.transfer.editSeries("My savings")
       .deleteCurrentSeries();
 
     views.selectCategorization();
     categorization
       .selectTransactions("Virement")
       .selectTransfers()
-      .checkNoSeriesMessage("There are no savings series");
+      .checkNoSeriesMessage("There are no transfer series");
 
     views.selectHome();
     savingsAccounts.edit("Epargne").openDelete().validate();
@@ -1545,36 +1545,36 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
     categorization.selectTransfers().checkMessageHidden();
 
     categorization.selectTransaction("SAVINGS 1.1");
-    categorization.checkSavingsPreSelected()
+    categorization.checkTransfersPreSelected()
       .getSavings()
       .checkMessage("This operation is part of a savings account. Edit this account.");
 
     categorization.selectTransactions("SAVINGS 1.1", "SAVINGS 1.2");
-    categorization.checkSavingsPreSelected()
+    categorization.checkTransfersPreSelected()
       .getSavings()
       .checkMessage("These operations are part of a savings account. Edit this account.");
 
     categorization.selectTransactions("SAVINGS 1.1", "SAVINGS 1.2");
-    categorization.checkSavingsPreSelected()
+    categorization.checkTransfersPreSelected()
       .getSavings()
       .checkMessage("These operations are part of a savings account. Edit this account.");
 
     categorization.selectTransactions("SAVINGS 1.1", "SAVINGS 2");
-    categorization.checkSavingsPreSelected()
+    categorization.checkTransfersPreSelected()
       .getSavings()
       .checkMessage("These operations are part of several savings accounts.");
 
     categorization.selectTransaction("SAVINGS 1.1");
 
-    categorization.checkSavingsPreSelected()
-      .checkAllButSavingBudgetAreaAreDisabled()
+    categorization.checkTransfersPreSelected()
+      .checkAllButTransferBudgetAreaAreDisabled()
       .getSavings()
       .checkMessage("This operation is part of a savings account. Edit this account.")
       .clickMessageToEditAccount("Edit this account.")
       .setAsMain()
       .validate();
 
-    categorization.checkSavingsPreSelected();
+    categorization.checkTransfersPreSelected();
     categorization.checkAllBudgetAreasAreEnabled();
 
     categorization.selectVariable().selectNewSeries("Misc");

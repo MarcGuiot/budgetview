@@ -259,81 +259,6 @@ public class RestartTest extends RestartTestCase {
     mainAccounts.checkEndOfMonthPosition("Account n. 001111", 350.00);
   }
 
-  public void testProjectsWithMultiMonthTransfers() throws Exception {
-
-    operations.openPreferences().setFutureMonthsCount(12).validate();
-    addOns.activateProjects();
-
-    accounts.createNewAccount()
-      .setName("Main account 1")
-      .selectBank("CIC")
-      .setAsMain()
-      .validate();
-    OfxBuilder.init(this)
-      .addBankAccount("001111", 1000.00, "2008/12/01")
-      .addTransaction("2008/11/01", 1000.00, "Income")
-      .addTransaction("2008/12/01", 1000.00, "Income")
-      .addTransaction("2008/12/01", 100.00, "Transfer 1")
-      .loadInAccount("Main account 1");
-
-    accounts.createNewAccount()
-      .setName("Savings account 1")
-      .selectBank("CIC")
-      .setAsSavings()
-      .validate();
-    OfxBuilder.init(this)
-      .addBankAccount("00222", 1000.00, "2008/12/01")
-      .addTransaction("2008/12/01", -100.00, "Transfer 1")
-      .loadInAccount("Savings account 1");
-
-    projects.createFirst();
-    currentProject
-      .setNameAndValidate("Trip")
-      .addTransferItem()
-      .editTransfer(0)
-      .setLabel("Transfer")
-      .setFromAccount("Savings account 1")
-      .setToAccount("Main account 1")
-      .switchToSeveralMonths()
-      .switchToMonthEditor()
-      .setMonth(200901)
-      .setTableMonthCount(3)
-      .setMonthAmount(0, 100.00)
-      .setMonthAmount(1, 200.00)
-      .setMonthAmount(2, 300.00)
-      .validate();
-    currentProject
-      .addExpenseItem(1, "Expense", 200901, -300.00);
-
-    restartApplication();
-
-    views.selectHome();
-    projectList.select("Trip");
-    currentProject.checkProjectGauge(0.00, -300.00);
-    currentProject.checkPeriod("January - March 2009");
-
-    timeline.selectMonth(200901);
-    budgetView.extras.checkSeries("Trip", 0.00, -300.00);
-    budgetView.transfers.checkSeries("Transfer", 0.00, -100.00);
-
-    currentProject
-      .toggleAndEditTransfer(0)
-      .checkMonthAmounts("| Jan 2009 | 100.00 |\n" +
-                         "| Feb 2009 | 200.00 |\n" +
-                         "| Mar 2009 | 300.00 |")
-      .validate();
-
-    timeline.selectMonth(200901);
-    budgetView.transfers.checkSeries("Transfer", 0.00, -100.00);
-
-    timeline.selectMonth(200902);
-    budgetView.transfers.checkSeries("Transfer", 0.00, -200.00);
-
-    timeline.selectMonth(200903);
-    budgetView.transfers.checkSeries("Transfer", 0.00, -300.00);
-
-  }
-
   public void testRestartAfterCurrentMonthChanged() throws Exception {
     OfxBuilder.init(this)
       .addTransaction("2008/08/26", 1000, "Company")
@@ -543,7 +468,7 @@ public class RestartTest extends RestartTestCase {
   public void testChangeDayChangeTransactionFromPlannedToRealAndViceversaForNotImportedAccount() throws Exception {
     operations.openPreferences().setFutureMonthsCount(2).validate();
     accounts.createSavingsAccount("Epargne", 1000.);
-    budgetView.transfers.createSeries()
+    budgetView.transfer.createSeries()
       .setName("CAF")
       .setFromAccount("External account")
       .setToAccount("Epargne")
@@ -580,7 +505,7 @@ public class RestartTest extends RestartTestCase {
 
     accounts.createSavingsAccount("Epargne", 1000.);
 
-    budgetView.transfers.createSeries()
+    budgetView.transfer.createSeries()
       .setName("CAF")
       .setFromAccount("External account")
       .setToAccount("Epargne")
@@ -606,15 +531,15 @@ public class RestartTest extends RestartTestCase {
       .check();
 
     timeline.selectMonth("2008/08");
-    budgetView.transfers.checkTotalAmounts(0, 0);
+    budgetView.transfer.checkTotalAmounts(0, 0);
 
     savingsAccounts.select("Epargne");
-    savingsView.checkSeriesAmounts("Epargne", "CAF", 300, 300);
+    budgetView.transfer.checkSeries("CAF", "+300.00", "+300.00");
 
     restartApplication();
 
     savingsAccounts.select("Epargne");
-    savingsView.checkSeriesAmounts("Epargne", "CAF", 300, 300);
+    budgetView.transfer.checkSeries("CAF", "+300.00", "+300.00");
     timeline.selectMonth("2008/08");
 
     timeline.selectMonth("2008/08");

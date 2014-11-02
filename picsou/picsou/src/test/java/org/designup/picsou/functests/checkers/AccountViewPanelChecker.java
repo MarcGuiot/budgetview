@@ -48,19 +48,13 @@ public abstract class AccountViewPanelChecker<T extends AccountViewPanelChecker>
     return (T)this;
   }
 
-  public T select(String accountName, String... others) {
+  public T select(String accountName) {
     getAccountPanel(accountName).getToggleButton("selectAccount").select();
-    for (String other : others) {
-      Mouse.click(getAccountPanel(other), Key.Modifier.SHIFT);
-    }
     return (T)this;
   }
 
-  public T unselect(String accountName, String... others) {
+  public T unselect(String accountName) {
     getAccountPanel(accountName).getToggleButton("selectAccount").unselect();
-    for (String other : others) {
-      Mouse.click(getAccountPanel(other), Key.Modifier.SHIFT);
-    }
     return (T)this;
   }
 

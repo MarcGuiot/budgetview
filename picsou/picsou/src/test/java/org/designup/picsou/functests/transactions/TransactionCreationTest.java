@@ -240,7 +240,7 @@ public class TransactionCreationTest extends LoggedInFunctionalTestCase {
 
     accounts.createSavingsAccount("Livret A", 100.00);
 
-    budgetView.transfers
+    budgetView.transfer
       .createSeries()
       .setName("virement manuel vers livret A")
       .setFromAccount("Cash")

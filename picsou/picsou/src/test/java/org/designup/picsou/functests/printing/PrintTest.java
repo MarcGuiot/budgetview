@@ -89,7 +89,7 @@ public class PrintTest extends LoggedInFunctionalTestCase {
       .checkSeries(8, "Groceries", "200.00", "100.00")
       .checkSeries(9, "Leisures", "50.00", "100.00")
       .checkSeparator(10)
-      .checkBudget(11, "Savings", "0.00", "0.00")
+      .checkBudget(11, "Transfers", "0.00", "0.00")
       .checkSeparator(12)
       .checkBudget(13, "Extras", "0.00", "0.00");
 
@@ -158,7 +158,7 @@ public class PrintTest extends LoggedInFunctionalTestCase {
       .checkSeries(8, "Groceries", "450.00", "200.00")
       .checkSeries(9, "Leisures", "150.00", "200.00")
       .checkSeparator(10)
-      .checkBudget(11, "Savings", "0.00", "0.00")
+      .checkBudget(11, "Transfers", "0.00", "0.00")
       .checkSeparator(12)
       .checkBudget(13, "Extras", "0.00", "0.00");
 
@@ -221,7 +221,7 @@ public class PrintTest extends LoggedInFunctionalTestCase {
       .checkSeries(5, "Groceries", "250.00", "200.00")
       .checkSeries(6, "Leisures", "0.00", "100.00")
       .checkSeparator(7)
-      .checkBudget(8, "Savings", "0.00", "0.00")
+      .checkBudget(8, "Transfers", "0.00", "0.00")
       .checkSeparator(9)
       .checkBudget(10, "Extras", "0.00", "0.00");
 
@@ -266,7 +266,7 @@ public class PrintTest extends LoggedInFunctionalTestCase {
       .checkSeries(5, "Groceries", "250.00", "200.00")
       .checkSeries(6, "Leisures", "0.00", "100.00")
       .checkSeparator(7)
-      .checkBudget(8, "Savings", "0.00", "0.00")
+      .checkBudget(8, "Transfers", "0.00", "0.00")
       .checkSeparator(9)
       .checkBudget(10, "Extras", "0.00", "0.00");
 
@@ -311,7 +311,7 @@ public class PrintTest extends LoggedInFunctionalTestCase {
       .checkSeries(5, "Groceries", "0.00", "200.00")
       .checkSeries(6, "Leisures", "0.00", "100.00")
       .checkSeparator(7)
-      .checkBudget(8, "Savings", "0.00", "0.00")
+      .checkBudget(8, "Transfers", "0.00", "0.00")
       .checkSeparator(9)
       .checkBudget(10, "Extras", "0.00", "0.00");
 
@@ -386,7 +386,7 @@ public class PrintTest extends LoggedInFunctionalTestCase {
       .checkSeparator(3)
       .checkBudget(4, "Variable", "0.00", "0.00")
       .checkSeparator(5)
-      .checkBudget(6, "Savings", "90.00", "0.00")
+      .checkBudget(6, "Transfers", "90.00", "0.00")
       .checkSeries(7, "MainToImported", "150.00", "0.00")
       .checkSeries(8, "ImportedToMain", "+70.00", "0.00")
       .checkSeries(9, "MainToNonImported", "50.00", "0.00")

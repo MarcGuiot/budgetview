@@ -30,7 +30,8 @@ import static org.globsframework.model.utils.GlobMatchers.*;
 public class PeriodSeriesStatUpdater implements GlobSelectionListener, ChangeSetListener {
 
   private GlobList selectedMonths = GlobList.EMPTY;
-  private GlobMatcher seriesForAccountMatcher = GlobMatchers.ALL;
+  private Integer selectedAccountId = null;
+  private GlobMatcher selectedAccountSeriesMatcher = GlobMatchers.ALL;
   private GlobRepository repository;
   private Directory directory;
 
@@ -50,25 +51,31 @@ public class PeriodSeriesStatUpdater implements GlobSelectionListener, ChangeSet
       selectedMonths = selection.getAll(Month.TYPE);
     }
     if (selection.isRelevantForType(Account.TYPE)) {
-      final Set<Integer> accountIds = selection.getAll(Account.TYPE).getValueSet(Account.ID);
-      if (accountIds.isEmpty()) {
+      GlobList accounts = selection.getAll(Account.TYPE);
+      if (accounts.isEmpty()) {
         filterAllAccounts();
       }
       else {
-        seriesForAccountMatcher = new GlobMatcher() {
-          public boolean matches(Glob series, GlobRepository repository) {
-            return Series.isForAccount(series, accountIds);
-          }
-        };
+        filterSingleAccount(accounts.getFirst().get(Account.ID));
       }
     }
     updateSelection();
   }
 
   public void filterAllAccounts() {
-    seriesForAccountMatcher = new GlobMatcher() {
+    selectedAccountId = null;
+    selectedAccountSeriesMatcher = new GlobMatcher() {
       public boolean matches(Glob series, GlobRepository repository) {
         return Series.isForMainOrUnknownAccount(series, repository);
+      }
+    };
+  }
+
+  public void filterSingleAccount(final Integer accountId) {
+    selectedAccountId = accountId;
+    selectedAccountSeriesMatcher = new GlobMatcher() {
+      public boolean matches(Glob series, GlobRepository repository) {
+        return (series != null) && Utils.equal(accountId, series.get(Series.TARGET_ACCOUNT));
       }
     };
   }
@@ -84,9 +91,14 @@ public class PeriodSeriesStatUpdater implements GlobSelectionListener, ChangeSet
       update = true;
     }
     if (changeSet.containsUpdates(Series.GROUP) ||
+        changeSet.containsUpdates(Series.BUDGET_AREA) ||
         changeSet.containsChanges(SeriesStat.TYPE) ||
         changeSet.containsChanges(SeriesGroup.TYPE) ||
         changeSet.containsChanges(CurrentMonth.KEY)) {
+      update = true;
+    }
+    if (changeSet.containsUpdates(Account.ACCOUNT_TYPE)) {
+      filterAllAccounts();
       update = true;
     }
     if (update) {
@@ -201,7 +213,7 @@ public class PeriodSeriesStatUpdater implements GlobSelectionListener, ChangeSet
 
   private void resetStats() {
     repository.deleteAll(PeriodSeriesStat.TYPE);
-    for (Glob series : repository.getAll(Series.TYPE, seriesForAccountMatcher)) {
+    for (Glob series : repository.getAll(Series.TYPE, selectedAccountSeriesMatcher)) {
       repository.create(PeriodSeriesStat.TYPE,
                         value(PeriodSeriesStat.TARGET_TYPE, SeriesType.SERIES.getId()),
                         value(PeriodSeriesStat.TARGET, series.get(Series.ID)),
@@ -226,35 +238,36 @@ public class PeriodSeriesStatUpdater implements GlobSelectionListener, ChangeSet
     public void run(Glob seriesStat, GlobRepository remote) throws Exception {
       Integer seriesId = seriesStat.get(SeriesStat.TARGET);
       Glob series = remote.get(Key.create(Series.TYPE, seriesId));
-      if (!seriesForAccountMatcher.matches(series, remote)) {
+      if (!selectedAccountSeriesMatcher.matches(series, remote)) {
         return;
       }
 
       Glob group = remote.findLinkTarget(series, Series.GROUP);
       boolean visible = (group == null) || group.isTrue(SeriesGroup.EXPANDED);
+      double signModifier = Series.shouldInvertAmounts(series, selectedAccountId, repository) ? -1 : 1;
 
       Glob periodStat = PeriodSeriesStat.findOrCreateForSeries(seriesId, repository);
-      double amount = periodStat.get(PeriodSeriesStat.AMOUNT) +
-                      Utils.zeroIfNull(seriesStat.get(SeriesStat.ACTUAL_AMOUNT));
+      double amount = (periodStat.get(PeriodSeriesStat.AMOUNT) +
+                      Utils.zeroIfNull(seriesStat.get(SeriesStat.ACTUAL_AMOUNT))) * signModifier;
       Double plannedAmount;
       if (periodStat.get(PeriodSeriesStat.PLANNED_AMOUNT) == null && seriesStat.get(SeriesStat.PLANNED_AMOUNT) == null) {
         plannedAmount = null;
       }
       else {
-        plannedAmount = periodStat.get(PeriodSeriesStat.PLANNED_AMOUNT, 0) +
-                        seriesStat.get(SeriesStat.PLANNED_AMOUNT, 0);
+        plannedAmount = (periodStat.get(PeriodSeriesStat.PLANNED_AMOUNT, 0) +
+                        seriesStat.get(SeriesStat.PLANNED_AMOUNT, 0)) * signModifier;
       }
       double pastRemaining = periodStat.get(PeriodSeriesStat.PAST_REMAINING);
       double futureRemaining = periodStat.get(PeriodSeriesStat.FUTURE_REMAINING);
       double pastOverrun = periodStat.get(PeriodSeriesStat.PAST_OVERRUN);
       double futureOverrun = periodStat.get(PeriodSeriesStat.FUTURE_OVERRUN);
       if (seriesStat.get(SeriesStat.MONTH) < monthId) {
-        pastRemaining += seriesStat.get(SeriesStat.REMAINING_AMOUNT);
-        pastOverrun += seriesStat.get(SeriesStat.OVERRUN_AMOUNT);
+        pastRemaining += seriesStat.get(SeriesStat.REMAINING_AMOUNT) * signModifier;
+        pastOverrun += seriesStat.get(SeriesStat.OVERRUN_AMOUNT) * signModifier;
       }
       else {
-        futureRemaining += seriesStat.get(SeriesStat.REMAINING_AMOUNT);
-        futureOverrun += seriesStat.get(SeriesStat.OVERRUN_AMOUNT);
+        futureRemaining += seriesStat.get(SeriesStat.REMAINING_AMOUNT) * signModifier;
+        futureOverrun += seriesStat.get(SeriesStat.OVERRUN_AMOUNT) * signModifier;
       }
 
       boolean isActive = Amounts.isNotZero(amount) || seriesStat.isTrue(SeriesStat.ACTIVE) || periodStat.isTrue(PeriodSeriesStat.ACTIVE);

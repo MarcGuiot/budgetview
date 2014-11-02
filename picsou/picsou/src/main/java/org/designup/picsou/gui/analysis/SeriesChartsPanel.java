@@ -450,7 +450,7 @@ public class SeriesChartsPanel implements GlobSelectionListener {
                                                  fieldIn(SeriesStat.MONTH, selectedMonthIds),
                                                  fieldEquals(SeriesStat.TARGET_TYPE, SeriesType.SERIES.getId()),
                                                  not(fieldEquals(SeriesStat.TARGET, Series.UNCATEGORIZED_SERIES_ID))))) {
-      if (!Series.isSavingToExternal(SeriesStat.findSeries(seriesStat, repository))) {
+      if (!Series.isTransferToExternal(SeriesStat.findSeries(seriesStat, repository))) {
         categorized += Math.abs(seriesStat.get(SeriesStat.ACTUAL_AMOUNT, 0.00));
       }
     }
@@ -497,7 +497,7 @@ public class SeriesChartsPanel implements GlobSelectionListener {
       Glob series = repository.find(seriesOrGroup.getKey());
       if (series == null ||
           !series.get(Series.BUDGET_AREA).equals(BudgetArea.TRANSFER.getId()) ||
-          Series.isSavingToExternal(series)) {
+          Series.isTransferToExternal(series)) {
         continue;
       }
 

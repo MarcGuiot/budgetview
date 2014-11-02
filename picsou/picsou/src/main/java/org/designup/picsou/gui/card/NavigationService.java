@@ -1,6 +1,5 @@
 package org.designup.picsou.gui.card;
 
-import org.designup.picsou.gui.budget.BudgetToggle;
 import org.designup.picsou.gui.categorization.CategorizationSelectionView;
 import org.designup.picsou.gui.categorization.components.CategorizationFilteringMode;
 import org.designup.picsou.gui.model.Card;
@@ -29,7 +28,6 @@ public class NavigationService implements GlobSelectionListener {
   private TransactionView transactionView;
   private CategorizationSelectionView categorizationSelectionView;
   private ProjectView projectView;
-  private BudgetToggle budgetToggle;
   private GlobRepository repository;
 
   private Card currentCard = INITIAL_CARD;
@@ -39,13 +37,11 @@ public class NavigationService implements GlobSelectionListener {
   public NavigationService(TransactionView transactionView,
                            CategorizationSelectionView categorizationSelectionView,
                            ProjectView projectView,
-                           BudgetToggle budgetToggle,
                            GlobRepository repository,
                            Directory directory) {
     this.transactionView = transactionView;
     this.categorizationSelectionView = categorizationSelectionView;
     this.projectView = projectView;
-    this.budgetToggle = budgetToggle;
     this.repository = repository;
     this.selectionService = directory.get(SelectionService.class);
     this.selectionService.addListener(this, Card.TYPE);
@@ -61,16 +57,6 @@ public class NavigationService implements GlobSelectionListener {
 
   public void gotoBudget() {
     gotoCard(Card.BUDGET);
-  }
-
-  public void gotoBudgetForMainAccounts() {
-    gotoCard(Card.BUDGET);
-    budgetToggle.showMain();
-  }
-
-  public void gotoBudgetForSavingsAccounts() {
-    gotoCard(Card.BUDGET);
-    budgetToggle.showSavings();
   }
 
   public void gotoCategorization() {

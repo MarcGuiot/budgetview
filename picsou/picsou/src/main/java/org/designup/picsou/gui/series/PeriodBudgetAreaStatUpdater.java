@@ -4,9 +4,11 @@ import org.designup.picsou.gui.model.PeriodBudgetAreaStat;
 import org.designup.picsou.gui.model.PeriodSeriesStat;
 import org.designup.picsou.gui.model.SeriesType;
 import org.designup.picsou.model.BudgetArea;
+import org.designup.picsou.model.Series;
 import org.designup.picsou.model.Transaction;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.*;
+import org.globsframework.model.format.GlobPrinter;
 
 import java.util.Set;
 

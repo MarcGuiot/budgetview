@@ -256,11 +256,13 @@ public class SeriesWrapper {
       return false;
     }
 
-    // && !Utils.equal(seriesValues.get(Series.TARGET_ACCOUNT), Account.MAIN_SUMMARY_ACCOUNT_ID)) {
     if (BudgetArea.TRANSFER.getId().equals(budgetAreaId)) {
       Integer targetAccountId = seriesValues.get(Series.TARGET_ACCOUNT);
-      return targetAccountId != null && Account.EXTERNAL_ACCOUNT_ID != targetAccountId;
+      return targetAccountId != null &&
+             Account.EXTERNAL_ACCOUNT_ID != targetAccountId &&
+             seriesValues.get(Series.FROM_ACCOUNT).equals(seriesValues.get(Series.TARGET_ACCOUNT));
     }
+
     Integer seriesId = seriesValues.get(Series.ID);
     return !seriesId.equals(Series.UNCATEGORIZED_SERIES_ID) &&
            !seriesId.equals(Series.ACCOUNT_SERIES_ID);

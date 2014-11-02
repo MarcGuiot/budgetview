@@ -51,9 +51,6 @@ public abstract class HistoChartUpdater implements GlobSelectionListener, Dispos
             }
           }
         }
-        else {
-          return;
-        }
       }
 
       public void globsReset(GlobRepository repository, Set<GlobType> changedTypes) {

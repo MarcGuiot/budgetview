@@ -29,7 +29,7 @@ public class GaugeTooltipsTest extends LoggedInFunctionalTestCase {
     setVariableAmount("courses", 130);
     budgetView.variable
       .checkSeriesGaugeRemaining("courses", 0., true)
-      .checkGaugeTooltip("habillement", "Il reste <b>40.00</b> à dépenser")
+      .checkGaugeTooltip("habillement", "Il vous reste <b>40.00</b> à dépenser")
       .checkTotalErrorOverrun()
       .checkTotalAmounts(-180, -200)
       .checkTotalDescription(40., 20., 200. + 20.);
@@ -64,27 +64,27 @@ public class GaugeTooltipsTest extends LoggedInFunctionalTestCase {
       .addTransaction("2008/06/04", 30, "prelevement")
       .load();
     views.selectCategorization();
-    categorization.setNewSavings("virement", "epargne", "Account n. 00001123", "external account");
-    categorization.setNewSavings("prelevement", "financement", "external account", "Account n. 00001123");
+    categorization.setNewTransfer("virement", "epargne", "Account n. 00001123", "external account");
+    categorization.setNewTransfer("prelevement", "financement", "external account", "Account n. 00001123");
     views.selectBudget();
-    setSavingsAmount("epargne", 20);
-    budgetView.transfers
+    setTransferAmount("epargne", 20);
+    budgetView.transfer
       .checkSeriesGaugeRemaining("epargne", 0., false)
-      .checkGaugeTooltip("epargne", "<p>Vous avez épargné <b>10.00</b> de plus que prévu</p>");
+      .checkGaugeTooltip("epargne", "<p>Vous avez viré <b>10.00</b> de plus que prévu</p>");
 
-    setSavingsAmount("epargne", 40);
-    budgetView.transfers
+    setTransferAmount("epargne", 40);
+    budgetView.transfer
       .checkSeriesGaugeRemaining("epargne", -10., false)
-      .checkGaugeTooltip("epargne", "Vous avez épargné <b>10.00</b> de moins que prévu");
+      .checkGaugeTooltip("epargne", "Vous avez viré <b>10.00</b> de moins que prévu");
 
-    setSavingsAmount("epargne", 30);
-    setSavingsAmount("financement", 40);
-    budgetView.transfers
+    setTransferAmount("epargne", 30);
+    setTransferAmount("financement", 40);
+    budgetView.transfer
       .checkSeriesGaugeRemaining("financement", 10., false)
-      .checkGaugeTooltip("financement", "Il restait <b>10.00</b> à retirer de l'épargne");
+      .checkGaugeTooltip("financement", "Il restait <b>10.00</b> à virer");
 
-    budgetView.transfers
-      .checkTotalGaugeTooltips("Il restait <b>10.00</b> à retirer de l'épargne");
+    budgetView.transfer
+      .checkTotalGaugeTooltips("Il restait <b>10.00</b> à virer");
   }
 
   public void testGaugeInSavings() throws Exception {
@@ -93,35 +93,35 @@ public class GaugeTooltipsTest extends LoggedInFunctionalTestCase {
       .addTransaction("2008/07/04", 30, "prelevement")
       .load();
     views.selectCategorization();
-    categorization.setNewSavings("virement", "epargne", "Account n. 00001123", "external account");
-    categorization.setNewSavings("prelevement", "financement", "external account", "Account n. 00001123");
+    categorization.setNewTransfer("virement", "epargne", "Account n. 00001123", "external account");
+    categorization.setNewTransfer("prelevement", "financement", "external account", "Account n. 00001123");
     views.selectBudget();
-    setSavingsAmount("epargne", 20);
-    budgetView.transfers
+    setTransferAmount("epargne", 20);
+    budgetView.transfer
       .checkSeriesGaugeRemaining("epargne", 0., false)
-      .checkGaugeTooltip("epargne", "Vous avez épargné <b>10.00</b> de plus que prévu");
+      .checkGaugeTooltip("epargne", "Vous avez viré <b>10.00</b> de plus que prévu");
 
-    setSavingsAmount("epargne", 40);
-    budgetView.transfers
+    setTransferAmount("epargne", 40);
+    budgetView.transfer
       .checkSeriesGaugeRemaining("epargne", -10., false)
-      .checkGaugeTooltip("epargne", "Il vous reste <b>10.00</b> à épargner");
+      .checkGaugeTooltip("epargne", "Il vous reste <b>10.00</b> à virer");
 
-    setSavingsAmount("financement", 20);
+    setTransferAmount("financement", 20);
 
-    budgetView.transfers
+    budgetView.transfer
       .checkSeriesGaugeRemaining("financement", 0., true)
       .checkGaugeTooltip("financement", "Vous avez retiré <b>10.00</b> de plus que prévu")
-      .checkTotalGaugeTooltips("Vous avez épargné <b>10.00</b> de moins que prévu",
-                               "Il vous reste <b>10.00</b> à épargner");
+      .checkTotalGaugeTooltips("Vous avez viré <b>10.00</b> de moins que prévu",
+                               "Il vous reste <b>10.00</b> à virer");
 
-    setSavingsAmount("epargne", 30);
-    setSavingsAmount("financement", 40);
-    budgetView.transfers
+    setTransferAmount("epargne", 30);
+    setTransferAmount("financement", 40);
+    budgetView.transfer
       .checkSeriesGaugeRemaining("financement", 10., false)
-      .checkGaugeTooltip("financement", "Il reste <b>10.00</b> à retirer de l'épargne");
+      .checkGaugeTooltip("financement", "Il vous reste <b>10.00</b> à virer");
   }
 
-  public void testEnveloppeWithPositive() throws Exception {
+  public void testEnvelopeWithPositive() throws Exception {
     OfxBuilder.init(this)
       .addTransaction("2008/07/04", 30, "remboursement")
       .addTransaction("2008/07/04", -150, "Auchan")
@@ -138,7 +138,7 @@ public class GaugeTooltipsTest extends LoggedInFunctionalTestCase {
 
     budgetView.variable.checkTotalAmounts(-120, -100)
       .checkTotalTooltips(10, 110)
-      .checkTotalGaugeTooltips("Il reste <b>10.00</b> à recevoir",
+      .checkTotalGaugeTooltips("Il vous reste <b>10.00</b> à recevoir",
                                "Vous avez dépensé <b>10.00</b> de plus que prévu");
 
     setVariableAmount("SECU", 30);
@@ -148,12 +148,12 @@ public class GaugeTooltipsTest extends LoggedInFunctionalTestCase {
 
     setVariableAmount("SECU", 40);
     budgetView.variable.checkTotalAmounts(-120, -110)
-      .checkTotalGaugeTooltips("Il reste <b>10.00</b> à recevoir");
+      .checkTotalGaugeTooltips("Il vous reste <b>10.00</b> à recevoir");
 
     setVariableAmount("courses", 180);
-    budgetView.variable.checkTotalGaugeTooltips("Il reste <b>20.00</b> à dépenser")
+    budgetView.variable.checkTotalGaugeTooltips("Il vous reste <b>20.00</b> à dépenser")
       .checkGaugeTooltip("SECU", "Il vous reste <b>10.00</b> à recevoir")
-      .checkGaugeTooltip("courses", "Il reste <b>30.00</b> à dépenser");
+      .checkGaugeTooltip("courses", "Il vous reste <b>30.00</b> à dépenser");
 
     setVariableAmount("courses", 120);
 
@@ -183,7 +183,7 @@ public class GaugeTooltipsTest extends LoggedInFunctionalTestCase {
 
     timeline.selectAll();
     String nonDepense = "Vous avez dépensé <b>150.00</b> de moins que prévu";
-    String reste = "Il reste <b>30.00</b> à dépenser";
+    String reste = "Il vous reste <b>30.00</b> à dépenser";
     budgetView.variable
       .checkGaugeTooltip("courses", nonDepense, reste)
       .checkTotalGaugeTooltips(nonDepense, reste)
@@ -272,8 +272,8 @@ public class GaugeTooltipsTest extends LoggedInFunctionalTestCase {
       .validate();
   }
 
-  private void setSavingsAmount(final String seriesName, final double amount) {
-    SeriesAmountEditionDialogChecker seriesAmountEditionChecker = budgetView.transfers.editPlannedAmount(seriesName);
+  private void setTransferAmount(final String seriesName, final double amount) {
+    SeriesAmountEditionDialogChecker seriesAmountEditionChecker = budgetView.transfer.editPlannedAmount(seriesName);
     seriesAmountEditionChecker
       .setAmount(Math.abs(amount))
       .validate();

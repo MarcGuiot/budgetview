@@ -61,7 +61,7 @@ public class SubSeriesEvolutionViewTest extends LoggedInFunctionalTestCase {
       .add("Groceries", "80.00", "100.00", "")
       .add("Restaurant", "25.00", "60.00", "")
       .add("Extras", "", "", "")
-      .add("Savings", "", "", "")
+      .add("Transfers", "", "", "")
       .check();
 
     seriesAnalysis.table().select("Food");
@@ -394,7 +394,7 @@ public class SubSeriesEvolutionViewTest extends LoggedInFunctionalTestCase {
                                        "Recurring", "Energy",
                                        "Variable", "Food", "Fouquet's", "Groceries", "Restaurant",
                                        "Extras",
-                                       "Savings"};
+                                       "Transfers"};
     seriesAnalysis.table().checkRowLabels(contentWithoutMySeries);
 
     budgetView.variable.editSeries("MySeries")
@@ -409,7 +409,7 @@ public class SubSeriesEvolutionViewTest extends LoggedInFunctionalTestCase {
                                     "Recurring", "Energy",
                                     "Variable", "Food", "Fouquet's", "Groceries", "Restaurant", "MySeries", "Sub1", "Sub2",
                                     "Extras",
-                                    "Savings"};
+                                    "Transfers"};
     seriesAnalysis.table().checkRowLabels(contentWithMySeries);
 
     budgetView.variable.editSeries("MySeries")

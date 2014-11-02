@@ -107,7 +107,7 @@ public class SynchroTest extends LoggedInFunctionalTestCase {
       .shouldUpdatePosition().setNotToBeReconciled().create(23, "new op", 90);
 
     savingsAccounts.checkPosition("secondary", 100);
-    budgetView.transfers.createSavingSeries("To account Livret A", "principal", "Livret A");
+    budgetView.transfer.createSavingSeries("To account Livret A", "principal", "Livret A");
     categorization.selectTransaction("virement vers livret A")
       .selectTransfers()
       .selectSeries("To account Livret A");

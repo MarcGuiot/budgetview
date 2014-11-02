@@ -206,7 +206,7 @@ public class TransactionViewTest extends LoggedInFunctionalTestCase {
       .setUncategorized();
 
     savingsAccounts.select("Epargne");
-    savingsView.editSeries("Epargne", "Epargne")
+    budgetView.transfer.editSeries("Epargne")
       .setName("NEW NAME FOR EPARGNE")
       .setFromAccount("External account")
       .selectAllMonths()

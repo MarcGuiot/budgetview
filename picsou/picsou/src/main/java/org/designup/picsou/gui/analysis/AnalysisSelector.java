@@ -49,6 +49,7 @@ public class AnalysisSelector extends View {
                                       "selectedPanel", "unselectedPanel",
                                       "selectedRolloverPanel", "unselectedRolloverPanel",
                                       repository, directory, key);
+      selectablePanel.setMultiSelectionEnabled(false);
       selectablePanel.setUnselectEnabled(false);
       cellBuilder.addDisposable(selectablePanel);
 

@@ -203,19 +203,19 @@ public class BalanceTest extends LoggedInFunctionalTestCase {
     categorization.selectTransactions("P3 CE", "P2 CE");
 
     categorization.selectTransfers()
-      .selectAndCreateSavingsSeries("Epargne", "Account n. 00001123", "Account n. 111");
+      .selectAndCreateTransferSeries("Epargne", "Account n. 00001123", "Account n. 111");
 
     categorization.selectTransactions("V3 CC", "V2 CC")
       .selectTransfers().selectSeries("Epargne");
 
-    budgetView.transfers.alignAndPropagate("Epargne");
+    budgetView.transfer.alignAndPropagate("Epargne");
 
     budgetView.recurring.editSeries("Courses")
       .setRepeatCustom()
       .setPeriodMonths(1, 5, 9)
       .validate();
 
-    budgetView.transfers.editSeries("Epargne")
+    budgetView.transfer.editSeries("Epargne")
       .setRepeatCustom()
       .toggleMonth(1, 3, 6)
       .validate();

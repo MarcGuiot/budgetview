@@ -504,7 +504,7 @@ public class ReconciliationTest extends LoggedInFunctionalTestCase {
       .validate();
     views.selectBudget();
     timeline.selectMonth("2012/04");
-    budgetView.transfers.alignAndPropagate("Epargne");
+    budgetView.transfer.alignAndPropagate("Epargne");
     views.selectCategorization();
     transactionCreation
       .show()
@@ -513,7 +513,7 @@ public class ReconciliationTest extends LoggedInFunctionalTestCase {
       .createToBeReconciled(12, "op 2", 40.00);
     categorization.selectTransaction("[R] op 1").switchToReconciliation().keepManualTransaction();
     categorization.selectTransaction("[R] op 2").switchToReconciliation().keepManualTransaction();
-    categorization.setSavings("op 1", "Epargne");
+    categorization.setTransfer("op 1", "Epargne");
 
     // est-ce vraiment ce qu'on attends (creation de l'operation miroir)
     transactions.initAmountContent()

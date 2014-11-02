@@ -5,8 +5,6 @@ import org.designup.picsou.exporter.ofx.OfxExporter;
 import org.designup.picsou.functests.checkers.ImportDialogChecker;
 import org.designup.picsou.functests.checkers.OperationChecker;
 import org.designup.picsou.model.*;
-import static org.designup.picsou.model.Transaction.*;
-import static org.globsframework.model.FieldValue.value;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.GlobRepositoryBuilder;
@@ -14,12 +12,14 @@ import org.globsframework.model.Key;
 import org.globsframework.utils.Dates;
 import org.globsframework.utils.TestUtils;
 import org.globsframework.utils.exceptions.ResourceAccessFailed;
-import org.uispec4j.utils.Chrono;
 
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Date;
+
+import static org.designup.picsou.model.Transaction.*;
+import static org.globsframework.model.FieldValue.value;
 
 public class OfxBuilder {
 

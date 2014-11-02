@@ -37,7 +37,7 @@ public enum SeriesType implements GlobConstantContainer {
   }
 
   public ReadOnlyGlob getGlob() {
-    return new ReadOnlyGlob(ProfileType.TYPE,
+    return new ReadOnlyGlob(SeriesType.TYPE,
                             value(SeriesType.ID, id));
   }
 

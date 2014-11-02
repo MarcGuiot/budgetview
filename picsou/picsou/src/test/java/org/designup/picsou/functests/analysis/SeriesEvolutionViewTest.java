@@ -82,7 +82,7 @@ public class SeriesEvolutionViewTest extends LoggedInFunctionalTestCase {
       .add("Extras", "", "", "", "", "", "+100.00", "300.00", "")
       .add("Christmas", "", "", "", "", "", "", "300.00", "")
       .add("Lottery", "", "", "", "", "", "+100.00", "", "")
-      .add("Savings", "", "", "", "", "", "", "", "")
+      .add("Transfers", "", "", "", "", "", "", "", "")
       .check();
 
     table.unselectAll();
@@ -140,7 +140,7 @@ public class SeriesEvolutionViewTest extends LoggedInFunctionalTestCase {
       .add("Variable", "450.00", "480.00", "480.00", "480.00", "480.00", "480.00", "480.00", "480.00")
       .add("Groceries", "450.00", "480.00", "480.00", "480.00", "480.00", "480.00", "480.00", "480.00")
       .add("Extras", "", "", "", "", "", "", "", "")
-      .add("Savings", "", "", "", "", "", "", "", "")
+      .add("Transfers", "", "", "", "", "", "", "", "")
       .check();
   }
 
@@ -176,7 +176,7 @@ public class SeriesEvolutionViewTest extends LoggedInFunctionalTestCase {
       .add("Variable", "450.00", "480.00", "480.00", "480.00", "480.00", "480.00", "480.00", "480.00")
       .add("Groceries", "450.00", "480.00", "480.00", "480.00", "480.00", "480.00", "480.00", "480.00")
       .add("Extras", "", "", "", "", "", "", "", "")
-      .add("Savings", "", "", "", "", "", "", "", "")
+      .add("Transfers", "", "", "", "", "", "", "", "")
       .check();
   }
 
@@ -188,7 +188,7 @@ public class SeriesEvolutionViewTest extends LoggedInFunctionalTestCase {
     );
     seriesAnalysis.table().checkEmpty(
       "Main accounts", "Balance", "Savings accounts", "To categorize",
-      "Income", "Recurring", "Variable", "Extras", "Savings");
+      "Income", "Recurring", "Variable", "Extras", "Transfers");
   }
 
   public void testColumnNamesAreUpdatedOnMonthSelection() throws Exception {
@@ -253,7 +253,7 @@ public class SeriesEvolutionViewTest extends LoggedInFunctionalTestCase {
       .add("Recurring", "", "", "", "", "", "", "", "")
       .add("Variable", "", "", "", "", "", "", "", "")
       .add("Extras", "", "", "", "", "", "", "", "")
-      .add("Savings", "", "", "", "", "", "", "", "")
+      .add("Transfers", "", "", "", "", "", "", "", "")
       .check();
 
     seriesAnalysis.table().editSeries("John's", "Jul 2008")
@@ -273,7 +273,7 @@ public class SeriesEvolutionViewTest extends LoggedInFunctionalTestCase {
       .add("Recurring", "", "", "", "", "", "", "", "")
       .add("Variable", "", "", "", "", "", "", "", "")
       .add("Extras", "", "", "", "", "", "", "", "")
-      .add("Savings", "", "", "", "", "", "", "", "")
+      .add("Transfers", "", "", "", "", "", "", "", "")
       .check();
 
     seriesAnalysis.table().editSeries("John's", "Sep 2008")
@@ -293,7 +293,7 @@ public class SeriesEvolutionViewTest extends LoggedInFunctionalTestCase {
       .add("Recurring", "", "", "", "", "", "", "", "")
       .add("Variable", "", "", "", "", "", "", "", "")
       .add("Extras", "", "", "", "", "", "", "", "")
-      .add("Savings", "", "", "", "", "", "", "", "")
+      .add("Transfers", "", "", "", "", "", "", "", "")
       .check();
 
     seriesAnalysis.table().editSeries("John's", "Sep 2008")
@@ -316,7 +316,7 @@ public class SeriesEvolutionViewTest extends LoggedInFunctionalTestCase {
       .add("Recurring", "", "", "", "", "", "", "", "")
       .add("Variable", "", "", "", "", "", "", "", "")
       .add("Extras", "", "", "", "", "", "", "", "")
-      .add("Savings", "", "", "", "", "", "", "", "")
+      .add("Transfers", "", "", "", "", "", "", "", "")
       .check();
 
     seriesAnalysis.table().editSeries("John's", "Sep 2008")
@@ -336,7 +336,7 @@ public class SeriesEvolutionViewTest extends LoggedInFunctionalTestCase {
       .add("Recurring", "", "", "", "", "", "", "", "")
       .add("Variable", "", "", "", "", "", "", "", "")
       .add("Extras", "", "", "", "", "", "", "", "")
-      .add("Savings", "", "", "", "", "", "", "", "")
+      .add("Transfers", "", "", "", "", "", "", "", "")
       .check();
   }
 
@@ -414,7 +414,7 @@ public class SeriesEvolutionViewTest extends LoggedInFunctionalTestCase {
       .add("Recurring", "", "", "", "", "", "", "", "")
       .add("Variable", "", "", "", "", "", "", "", "")
       .add("Extras", "", "", "", "", "", "", "", "")
-      .add("Savings", "", "", "", "", "", "", "", "")
+      .add("Transfers", "", "", "", "", "", "", "", "")
       .check();
 
     seriesAnalysis.table().editSeries("John's").deleteCurrentSeriesWithConfirmation();
@@ -429,7 +429,7 @@ public class SeriesEvolutionViewTest extends LoggedInFunctionalTestCase {
       .add("Recurring", "", "", "", "", "", "", "", "")
       .add("Variable", "", "", "", "", "", "", "", "")
       .add("Extras", "", "", "", "", "", "", "", "")
-      .add("Savings", "", "", "", "", "", "", "", "")
+      .add("Transfers", "", "", "", "", "", "", "", "")
       .check();
   }
 
@@ -483,10 +483,10 @@ public class SeriesEvolutionViewTest extends LoggedInFunctionalTestCase {
                          "Income", "Salary", "Salary 2",
                          "Recurring",
                          "Variable", "Groceries", "Meat", "Vegetables",
-                         "Extras", "Savings"};
+                         "Extras", "Transfers"};
 
     String[] collapsed = {"Main accounts", "Balance", "Savings accounts", "To categorize",
-                          "Income", "Recurring", "Variable", "Extras", "Savings"};
+                          "Income", "Recurring", "Variable", "Extras", "Transfers"};
 
     TableAnalysisChecker table = seriesAnalysis.table();
     table.checkRowLabels(expanded);
@@ -515,7 +515,7 @@ public class SeriesEvolutionViewTest extends LoggedInFunctionalTestCase {
                                           "Recurring", "Internet",
                                           "Variable", "Groceries", "Meat", "Vegetables",
                                           "Extras",
-                                          "Savings");
+                                          "Transfers");
 
     seriesAnalysis.table().doubleClickOnRow("Income");
     seriesAnalysis.table().checkExpanded("Income", false);
@@ -524,7 +524,7 @@ public class SeriesEvolutionViewTest extends LoggedInFunctionalTestCase {
                                           "Recurring", "Internet",
                                           "Variable", "Groceries", "Meat", "Vegetables",
                                           "Extras",
-                                          "Savings");
+                                          "Transfers");
 
     seriesAnalysis.table().doubleClickOnRow("Groceries");
     seriesAnalysis.table().checkExpanded("Groceries", false);
@@ -533,7 +533,7 @@ public class SeriesEvolutionViewTest extends LoggedInFunctionalTestCase {
                                           "Recurring", "Internet",
                                           "Variable", "Groceries",
                                           "Extras",
-                                          "Savings");
+                                          "Transfers");
 
     seriesAnalysis.table().expandAll();
     seriesAnalysis.table().checkRowLabels("Main accounts", "Balance", "Savings accounts", "To categorize",
@@ -541,7 +541,7 @@ public class SeriesEvolutionViewTest extends LoggedInFunctionalTestCase {
                                           "Recurring", "Internet",
                                           "Variable", "Groceries", "Meat", "Vegetables",
                                           "Extras",
-                                          "Savings");
+                                          "Transfers");
 
     // Expansion disabled for budget areas without series
     categorization.selectTransactions("GlobalCorp", "WorldCo").setUncategorized();
@@ -582,7 +582,7 @@ public class SeriesEvolutionViewTest extends LoggedInFunctionalTestCase {
                       "Recurring",
                       "Variable", "Groceries",
                       "Extras",
-                      "Savings")
+                      "Transfers")
       .checkSelected("Groceries");
 
     seriesAnalysis.table()
@@ -763,9 +763,9 @@ public class SeriesEvolutionViewTest extends LoggedInFunctionalTestCase {
       .addTransaction("2008/07/12", +95.00, "Virt livret")
       .loadInAccount("Livret");
 
-    budgetView.transfers.createSavingSeries("To account Livret", "Account n. 00001123", "Livret");
-    categorization.setSavings("Virement", "To account Livret");
-    categorization.setSavings("Virt livret", "To account Livret");
+    budgetView.transfer.createSavingSeries("To account Livret", "Account n. 00001123", "Livret");
+    categorization.setTransfer("Virement", "To account Livret");
+    categorization.setTransfer("Virt livret", "To account Livret");
 
     seriesAnalysis.budget();
     seriesAnalysis.table().expandAll();
@@ -778,8 +778,8 @@ public class SeriesEvolutionViewTest extends LoggedInFunctionalTestCase {
       .add("Recurring", "", "", "", "", "", "", "", "")
       .add("Variable", "", "", "", "", "", "", "", "")
       .add("Extras", "", "", "", "", "", "", "", "")
-      .add("Savings", "", "95.00", "", "", "", "", "", "")
-//      .add("To account Livret", "", "95.00", "", "", "", "", "", "")
+      .add("Transfers", "", "95.00", "", "", "", "", "", "")
+      .add("To account Livret", "", "95.00", "", "", "", "", "", "")
       .check();
   }
 
@@ -878,7 +878,7 @@ public class SeriesEvolutionViewTest extends LoggedInFunctionalTestCase {
       .setName("ING")
       .selectBank("ING Direct")
       .validate();
-    categorization.setNewSavings("Virt sur ING", "Virt vers livret", "ING", "Account n. 00000123");
+    categorization.setNewTransfer("Virt sur ING", "Virt vers livret", "ING", "Account n. 00000123");
 
     views.selectCategorization();
     categorization.setNewIncome("WorldCo", "John's");
@@ -886,7 +886,7 @@ public class SeriesEvolutionViewTest extends LoggedInFunctionalTestCase {
     categorization.setNewRecurring("Free", "Internet");
     categorization.setNewRecurring("Orange", "Mobile");
     categorization.setNewVariable("Auchan", "Groceries", -450.00);
-    categorization.setNewSavings("Virt vers ING", "Virt de livret", "Account n. 00000123", "ING");
+    categorization.setNewTransfer("Virt vers ING", "Virt de livret", "Account n. 00000123", "ING");
 
     seriesAnalysis.budget();
 

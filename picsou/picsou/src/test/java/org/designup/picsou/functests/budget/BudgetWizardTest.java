@@ -22,34 +22,30 @@ public class BudgetWizardTest extends LoggedInFunctionalTestCase {
       .addTransaction("2008/07/13", -200, "Air France")
       .addTransaction("2008/07/15", -100, "VIRT ING")
       .load();
+    timeline.checkDisplays("2008/07", "2008/08");
 
     views.selectCategorization();
     categorization.setNewRecurring("Free", "Internet");
     categorization.setNewRecurring("Loyer", "Rental");
-    categorization.setNewVariable("Auchan", "Groceries", -300.);
-    categorization.setNewVariable("FNAC", "Equipment", -100.);
+    categorization.setNewVariable("Auchan", "Groceries", -300.00);
+    categorization.setNewVariable("FNAC", "Equipment", -100.00);
     categorization.setNewIncome("Salaire", "Salaire");
     categorization.setNewExtra("Air France", "Trips");
-    categorization.setNewSavings("VIRT ING", "Epargne", "Account n. 00001123", "External account");
+    categorization.setNewTransfer("VIRT ING", "Epargne", "Account n. 00001123", "External account");
 
     timeline.selectMonth("2008/07");
     views.selectBudget();
-    budgetView.transfers.alignAndPropagate("Epargne");
+    budgetView.transfer.alignAndPropagate("Epargne");
 
     double incomeFor200807 = 2200;
-    double expensesFor200807 = (30 + 1500) + (300 + 100) + 200 + 100 + 20;
-    double balanceFor200807 = incomeFor200807 - expensesFor200807;
-
     double incomeFor200808 = 2200;
     double expensesFor200808 = 30 + 1500 + 300 + 100 + 100;
     double balanceFor200808 = incomeFor200808 - expensesFor200808;
 
     mainAccounts.checkEndOfMonthPosition(OfxBuilder.DEFAULT_ACCOUNT_NAME, 0.00);
     budgetView.income.checkTotalObserved(incomeFor200807);
-    budgetView.recurring.checkTotalObserved(-1530.00);
-    budgetView.transfers.checkTotalObserved(100.);
-
-    views.selectHome();
+    budgetView.recurring.checkTotalAmounts("1530.00", "1530.00");
+    budgetView.transfer.checkTotalAmounts("100.00", "100.00");
 
     mainAccounts.changePosition(OfxBuilder.DEFAULT_ACCOUNT_NAME, 1000, "VIRT ING");
     timeline.checkMonthTooltip("2008/07", -880.00);
@@ -57,12 +53,12 @@ public class BudgetWizardTest extends LoggedInFunctionalTestCase {
     timeline.selectMonth("2008/08");
     mainAccounts.checkEndOfMonthPosition(OfxBuilder.DEFAULT_ACCOUNT_NAME, 1000 + balanceFor200808);
 
-    budgetView.recurring.checkTotalPlanned(-30 - 1500);
-    budgetView.variable.checkTotalPlanned(-300 - 100);
+    budgetView.recurring.checkTotalAmounts("0.00", "1530.00");
+    budgetView.variable.checkTotalAmounts("0.00", "400.00");
 
     timeline.selectAll();
     mainAccounts.checkEndOfMonthPosition(OfxBuilder.DEFAULT_ACCOUNT_NAME, 1000 + incomeFor200808 - expensesFor200808);
-    budgetView.income.checkTotalPlanned(4400);
+    budgetView.income.checkTotalAmounts("2200.00", "4400.00");
 
     timeline.selectMonth("2008/08");
     budgetView.extras.createSeries()

@@ -1,6 +1,10 @@
 package org.designup.picsou.gui.budget;
 
 import org.designup.picsou.gui.View;
+import org.designup.picsou.gui.accounts.utils.AccountFilter;
+import org.designup.picsou.gui.components.filtering.FilterManager;
+import org.designup.picsou.gui.components.filtering.Filterable;
+import org.designup.picsou.gui.components.filtering.components.FilterMessagePanel;
 import org.designup.picsou.gui.components.layoutconfig.SplitPaneConfig;
 import org.designup.picsou.gui.series.UncategorizedSummaryView;
 import org.designup.picsou.model.BudgetArea;
@@ -10,6 +14,8 @@ import org.globsframework.model.GlobRepository;
 import org.globsframework.utils.directory.Directory;
 
 public class BudgetView extends View {
+
+  private FilterManager filterManager;
 
   public BudgetView(GlobRepository repository, Directory directory) {
     super(repository, directory);
@@ -32,6 +38,12 @@ public class BudgetView extends View {
     UncategorizedSummaryView uncategorized = new UncategorizedSummaryView(repository, directory);
     uncategorized.registerComponents(builder);
 
+    filterManager = new FilterManager(Filterable.NO_OP);
+    AccountFilter.initForPeriodStat(filterManager, repository, directory);
+
+    FilterMessagePanel accountFilterMessage = new FilterMessagePanel(filterManager, repository, directory);
+    builder.add("accountFilterMessage", accountFilterMessage.getPanel());
+
     parentBuilder.add("budgetView", builder);
   }
 
@@ -40,5 +52,9 @@ public class BudgetView extends View {
                                  GlobsPanelBuilder builder) {
     BudgetAreaSeriesView view = new BudgetAreaSeriesView(name, budgetArea, repository, directory);
     view.registerComponents(builder);
+  }
+
+  public void reset() {
+    filterManager.reset();
   }
 }

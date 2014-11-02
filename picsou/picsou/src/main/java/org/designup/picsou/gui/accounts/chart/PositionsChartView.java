@@ -48,7 +48,7 @@ public abstract class PositionsChartView extends View implements HistoChartRange
     histoChartBuilder = new HistoChartBuilder(config, createChartColors(directory), range,
                                               repository, directory,
                                               directory.get(SelectionService.class));
-    updater = new AccountHistoChartUpdater(histoChartBuilder, repository, directory) {
+    updater = new AccountHistoChartUpdater(repository, directory) {
       protected void update(Integer currentMonthId, boolean resetPosition) {
         updateChart(histoChartBuilder, currentMonthId, true);
       }

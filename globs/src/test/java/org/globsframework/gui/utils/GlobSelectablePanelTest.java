@@ -288,4 +288,66 @@ public class GlobSelectablePanelTest extends GuiComponentTestCase {
                    e.getMessage());
     }
   }
+
+  public void testMultiSelectionDisabled() throws Exception {
+
+    DummySplitsNode node1 = new DummySplitsNode();
+    GlobSelectablePanel panel1 = new GlobSelectablePanel(node1,
+                                                         "selected", "unselected",
+                                                         "selectedRollover", "unselectedRollover",
+                                                         repository, directory, key1);
+    panel1.setMultiSelectionEnabled(false);
+
+    JPanel jPanel1 = node1.getComponent();
+
+    DummySplitsNode node2 = new DummySplitsNode();
+    GlobSelectablePanel panel2 = new GlobSelectablePanel(node2,
+                                                         "selected", "unselected",
+                                                         "selectedRollover", "unselectedRollover",
+                                                         repository, directory, key2);
+    panel2.setMultiSelectionEnabled(false);
+    JPanel jPanel2 = node2.getComponent();
+
+    DummySelectionListener selectionListener =
+      DummySelectionListener.register(selectionService, DummyObject.TYPE);
+    node1.checkLastStyle(null);
+    node2.checkLastStyle(null);
+
+    Mouse.enter(jPanel1, 1, 1);
+    Mouse.click(new Panel(jPanel1), org.uispec4j.Key.Modifier.SHIFT);
+    Mouse.exit(jPanel1, 1, 1);
+    selectionListener.assertEquals("<log>" +
+                                   "  <selection types='dummyObject'>" +
+                                   "    <item key='dummyObject[id=1]'/>" +
+                                   "  </selection>" +
+                                   "</log>");
+    node1.checkLastStyle("selected");
+    node2.checkLastStyle("unselected");
+
+    Mouse.enter(jPanel2, 1, 1);
+    Mouse.click(new Panel(jPanel2), org.uispec4j.Key.Modifier.SHIFT);
+    Mouse.exit(jPanel2, 1, 1);
+    selectionListener.assertEquals("<log>" +
+                                   "  <selection types='dummyObject'>" +
+                                   "    <item key='dummyObject[id=2]'/>" +
+                                   "  </selection>" +
+                                   "</log>");
+    node1.checkLastStyle("unselected");
+    node2.checkLastStyle("selected");
+
+    Mouse.enter(jPanel1, 1, 1);
+    Mouse.click(new Panel(jPanel1), org.uispec4j.Key.Modifier.SHIFT);
+    selectionListener.assertEquals("<log>" +
+                                   "  <selection types='dummyObject'>" +
+                                   "    <item key='dummyObject[id=1]'/>" +
+                                   "  </selection>" +
+                                   "</log>");
+    node1.checkLastStyle("selectedRollover");
+    node2.checkLastStyle("unselected");
+
+    Mouse.drag(jPanel2, 1, 1);
+    selectionListener.assertEquals("<log/>");
+    node1.checkLastStyle("selectedRollover");
+    node2.checkLastStyle("unselected");
+  }
 }

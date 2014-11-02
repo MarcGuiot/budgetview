@@ -123,6 +123,7 @@ public abstract class AccountViewPanel {
                                 "selectedPanel", "unselectedPanel",
                                 "selectedRolloverPanel", "unselectedRolloverPanel",
                                 repository, directory, account.getKey());
+      selectablePanel.setMultiSelectionEnabled(false);
       cellBuilder.addDisposable(selectablePanel);
 
       AccountWeatherButton.create(account.getKey(), cellBuilder, "accountWeather", repository, directory);

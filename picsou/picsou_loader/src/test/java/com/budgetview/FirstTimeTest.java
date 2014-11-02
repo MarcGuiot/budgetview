@@ -131,7 +131,7 @@ public class FirstTimeTest extends UISpecTestCase {
     CategorizationChecker categorization = new CategorizationChecker(window);
     categorization
       .setVariable("MUTUELLE", "Health")
-      .setNewSavings("EPARGNE", "Regular savings", "Account n. 00001123", "External account");
+      .setNewTransfer("EPARGNE", "Regular savings", "Account n. 00001123", "External account");
 
     categorization.editSeries("Regular savings")
       .selectMonth(200809)
@@ -611,13 +611,13 @@ public class FirstTimeTest extends UISpecTestCase {
     BudgetViewChecker budgetView = new BudgetViewChecker(window);
     budgetView.income.editSeries("Income 1").setName("Revenu").validate();
 
-    budgetView.transfers.editSeries("Regular savings")
+    budgetView.transfer.editSeries("Regular savings")
       .setFromAccount("Main accounts")
       .validate();
 
     views.selectCategorization();
     CategorizationChecker categorization = new CategorizationChecker(window);
-    categorization.setSavings("EPARGNE", "Regular savings");
+    categorization.setTransfer("EPARGNE", "Regular savings");
 
     TimeViewChecker checker = new TimeViewChecker(window);
     checker.selectMonths("2008/09", "2008/10", "2008/11");

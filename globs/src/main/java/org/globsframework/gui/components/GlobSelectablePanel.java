@@ -43,6 +43,7 @@ public class GlobSelectablePanel implements GlobSelectionListener, Disposable {
   private MouseTracker tracker;
   private GlobSelectablePanel.FrameDeactivatedListener frameDeactivatedListener;
   private boolean unselectEnabled = true;
+  private boolean multiSelectionEnabled = true;
 
   public GlobSelectablePanel(SplitsNode<JPanel> panelNode,
                              String selectedStyle, String unselectedStyle,
@@ -69,6 +70,10 @@ public class GlobSelectablePanel implements GlobSelectionListener, Disposable {
     panel.addMouseMotionListener(tracker);
     frameDeactivatedListener = new FrameDeactivatedListener();
     panel.addPropertyChangeListener("Frame.active", frameDeactivatedListener);
+  }
+
+  public void setMultiSelectionEnabled(boolean multiSelectionEnabled) {
+    this.multiSelectionEnabled = multiSelectionEnabled;
   }
 
   public void setUnselectEnabled(boolean unselectEnabled) {
@@ -136,7 +141,7 @@ public class GlobSelectablePanel implements GlobSelectionListener, Disposable {
           }
         }
         else {
-          if (mouseEvent.isShiftDown()) {
+          if (multiSelectionEnabled && mouseEvent.isShiftDown()) {
             addToSelection();
           }
           else {
@@ -152,7 +157,7 @@ public class GlobSelectablePanel implements GlobSelectionListener, Disposable {
       }
 
       setRollover();
-      if (mouseEvent.getButton() == MouseEvent.BUTTON1) {
+      if (multiSelectionEnabled && mouseEvent.getButton() == MouseEvent.BUTTON1) {
         addToSelection();
       }
       update();
@@ -176,7 +181,8 @@ public class GlobSelectablePanel implements GlobSelectionListener, Disposable {
     }
 
     public void mouseDragged(MouseEvent mouseEvent) {
-      addToSelection();
+      if (multiSelectionEnabled)
+        addToSelection();
     }
 
     public void mouseMoved(MouseEvent e) {

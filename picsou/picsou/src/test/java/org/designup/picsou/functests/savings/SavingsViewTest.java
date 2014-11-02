@@ -23,19 +23,19 @@ public class SavingsViewTest extends LoggedInFunctionalTestCase {
       .setPosition(200)
       .validate();
 
-    categorization.setNewSavings("Virt", "Epargne", "Account n. 00000123", "Livret");
+    categorization.setNewTransfer("Virt", "Epargne", "Account n. 00000123", "Livret");
 
     views.selectBudget();
-    budgetView.transfers.alignAndPropagate("Epargne");
+    budgetView.transfer.alignAndPropagate("Epargne");
 
     savingsAccounts.select("Livret");
-    savingsView.checkContainsSeries("Livret", "Epargne");
-    savingsView.checkSeriesAmounts("Livret", "Epargne", 200, 200);
-    savingsView.editPlannedAmount("Livret", "Epargne")
+    budgetView.transfer.checkSeriesPresent("Epargne");
+    budgetView.transfer.checkSeries("Epargne", "+200.00", "+200.00");
+    budgetView.transfer.editPlannedAmount("Epargne")
       .checkAmountTogglesAreNotVisible()
       .setAmount(300)
       .validate();
-    savingsView.checkSeriesAmounts("Livret", "Epargne", 200, 300);
+    budgetView.transfer.checkSeries("Epargne", "+200.00", "+300.00");
   }
 
   public void testSavingsAccountsEvolution() throws Exception {
@@ -56,10 +56,10 @@ public class SavingsViewTest extends LoggedInFunctionalTestCase {
       .setPosition(200)
       .validate();
 
-    categorization.setNewSavings("Virt", "Epargne", "Account n. 00000123", "Livret");
+    categorization.setNewTransfer("Virt", "Epargne", "Account n. 00000123", "Livret");
 
     views.selectBudget();
-    budgetView.transfers.alignAndPropagate("Epargne");
+    budgetView.transfer.alignAndPropagate("Epargne");
 
     views.selectProjects();
     projects.getAccountChart("Livret")
@@ -113,7 +113,7 @@ public class SavingsViewTest extends LoggedInFunctionalTestCase {
       .setPosition(0)
       .setStartDate("2009/07/02")
       .validate();
-    categorization.setNewSavings("Virt", "Epargne", "Account n. 00000123", "Livret");
+    categorization.setNewTransfer("Virt", "Epargne", "Account n. 00000123", "Livret");
 
     timeline.selectMonth("2009/06");
     savingsAccounts.checkNoAccountsDisplayed();
@@ -141,11 +141,11 @@ public class SavingsViewTest extends LoggedInFunctionalTestCase {
       .validate();
 
     views.selectCategorization();
-    categorization.setNewSavings("Virt", "Epargne", "Account n. 00000123", "Livret");
+    categorization.setNewTransfer("Virt", "Epargne", "Account n. 00000123", "Livret");
 
     views.selectBudget();
     mainAccounts.select("Account n. 00000123");
-    budgetView.transfers.alignAndPropagate("Epargne");
+    budgetView.transfer.alignAndPropagate("Epargne");
 
     timeline.selectMonth("2009/07");
     savingsAccounts
@@ -153,17 +153,19 @@ public class SavingsViewTest extends LoggedInFunctionalTestCase {
       .setEndDate("2009/11/02")
       .validate();
     savingsAccounts.select("Livret");
-    savingsView.checkTotalEstimatedPosition("200.00", "2009/07/31");
+    budgetView.transfer
+      .checkContent("| Epargne | +200.00 | +200.00 |");
 
     operations.openPreferences()
       .setFutureMonthsCount(6)
       .validate();
 
     timeline.selectMonth("2009/11");
-    savingsView.checkTotalEstimatedPosition("0.00", "2009/11/30");
+    budgetView.transfer
+      .checkContent("| Epargne | 0.00 | +200.00 |");
 
     timeline.selectMonth("2009/12");
-    savingsView.checkTotalEstimatedPosition("-", "2009/12/31");
+    budgetView.transfer.checkNoSeriesShown();
 
     timeline.selectMonth("2009/10");
     savingsAccounts.edit("Livret")
@@ -171,10 +173,11 @@ public class SavingsViewTest extends LoggedInFunctionalTestCase {
       .validate();
 
     timeline.selectMonth("2009/10");
-    savingsView.checkTotalEstimatedPosition("0.00", "2009/10/31");
+    budgetView.transfer
+      .checkContent("| Epargne | 0.00 | +200.00 |");
 
     timeline.selectMonth("2009/12");
-    savingsView.checkTotalEstimatedPosition("-", "2009/12/31");
+    budgetView.transfer.checkNoSeriesShown();
 
     timeline.selectMonth("2009/10");
     savingsAccounts.edit("Livret")
@@ -182,13 +185,23 @@ public class SavingsViewTest extends LoggedInFunctionalTestCase {
       .validate();
 
     timeline.selectMonth("2009/08");
-    savingsView.checkTotalEstimatedPosition("400.00", "2009/08/31");
+    budgetView.transfer
+      .checkContent("| Epargne | 0.00 | +200.00 |");
 
     timeline.selectMonth("2009/10");
-    savingsView.checkTotalEstimatedPosition("0.00", "2009/10/31");
+    budgetView.transfer
+      .checkContent("| Epargne | 0.00 | +200.00 |");
 
     timeline.selectMonth("2009/12");
-    savingsView.checkTotalEstimatedPosition("-", "2009/12/31");
+    budgetView.transfer.checkNoSeriesShown();
+
+    timeline.selectMonths(200908, 200909, 200910, 200911, 200912);
+    transactions.showPlannedTransactions();
+    transactions.initAmountContent()
+      .add("11/10/2009", "Planned: Epargne", 200.00, "Epargne", 800.00, 0.00, "Livret")
+      .add("11/09/2009", "Planned: Epargne", 200.00, "Epargne", 600.00, 600.00, "Livret")
+      .add("11/08/2009", "Planned: Epargne", 200.00, "Epargne", 400.00, 400.00, "Livret")
+      .check();
   }
 
   public void testAutomaticCreation() throws Exception {
@@ -208,13 +221,13 @@ public class SavingsViewTest extends LoggedInFunctionalTestCase {
       .validate();
 
     views.selectCategorization();
-    categorization.setNewSavings("Virt", "Epargne", "Livret", "Account n. 00000123");
+    categorization.setNewTransfer("Virt", "Epargne", "Livret", "Account n. 00000123");
 
     views.selectBudget();
-    budgetView.transfers.alignAndPropagate("Epargne");
+    budgetView.transfer.alignAndPropagate("Epargne");
 
     savingsAccounts.select("Livret");
-    savingsView.createSeries()
+    budgetView.transfer.createSeries()
       .setName("External")
       .setFromAccount("External account")
       .setToAccount("Livret")

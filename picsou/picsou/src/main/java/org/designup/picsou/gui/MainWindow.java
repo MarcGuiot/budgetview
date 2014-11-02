@@ -37,7 +37,9 @@ import org.globsframework.utils.Log;
 import org.globsframework.utils.Strings;
 import org.globsframework.utils.directory.Directory;
 import org.globsframework.utils.exceptions.InvalidState;
+import org.globsframework.utils.exceptions.UnexpectedApplicationState;
 
+import javax.crypto.BadPaddingException;
 import javax.swing.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
@@ -517,6 +519,13 @@ public class MainWindow implements WindowManager {
           }
         });
       }
+      catch (UnexpectedApplicationState e) {
+        SwingUtilities.invokeLater(new Runnable() {
+          public void run() {
+            feedbackLoadingData.displayErrorMessage("data.load.error.journal");
+          }
+        });
+      }
       catch (UserAlreadyExists e) {
         SwingUtilities.invokeLater(new Runnable() {
           public void run() {
@@ -555,7 +564,6 @@ public class MainWindow implements WindowManager {
         e.printStackTrace();
       }
       catch (final Exception e) {
-        e.printStackTrace();
         SwingUtilities.invokeLater(new Runnable() {
           public void run() {
             feedbackLoadingData.displayErrorMessage("login.server.connection.failure");
