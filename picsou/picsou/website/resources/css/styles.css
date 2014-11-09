@@ -20,7 +20,6 @@ button.btn {
   font-size: 18px;
 }
 
-
 .centered {
  text-align: center;
 }
@@ -54,6 +53,11 @@ a.highlighted {
 
 .warning-block a.highlighted {
   font-weight: bold;
+}
+
+.warning-block hr {
+  margin-top: 10px;
+  margin-bottom: 10px;
 }
 
 /* ========= Header & NavBar ========= */
@@ -896,7 +900,7 @@ div#faq-footer A:hover {
 
 /* ========= CHANGE LOG ========== */
 
-#changelog h2 {
+.log h2 {
   text-align:center;
   border-top: solid 1px #DDD;
   border-bottom: solid 1px #DDD;
@@ -905,13 +909,13 @@ div#faq-footer A:hover {
   background: #F4F4F4;
 }
 
-#changelog h3 {
+.log h3 {
   font-size: 14pt;
   font-style: bold;
   color: #222;
 }
 
-#changelog span.date {
+.log span.date {
   margin-left: 10px;
   font-size: 10pt;
   font-weight: normal;
