@@ -185,21 +185,25 @@ public class Account {
   }
 
   public static boolean isMain(Glob account) {
-    return account != null && AccountType.MAIN.getId().equals(account.get(ACCOUNT_TYPE));
-  }
-
-  public static boolean isMain(Integer accountId, GlobRepository repository) {
-    if (accountId == null) {
+    if (account == null) {
       return false;
     }
+    if (account.get(ID).equals(MAIN_SUMMARY_ACCOUNT_ID)) {
+      return true;
+    }
+    return AccountType.MAIN.getId().equals(account.get(ACCOUNT_TYPE));
+  }
+
+  public static boolean isUserOrSummaryMain(Glob account) {
+    if (account == null) {
+      return false;
+    }
+    Integer accountId = account.get(ID);
     if (accountId.equals(MAIN_SUMMARY_ACCOUNT_ID)) {
       return true;
     }
-    else if (accountId < 0) {
-      return false;
-    }
-    Glob account = repository.get(org.globsframework.model.Key.create(Account.TYPE, accountId));
-    return AccountType.MAIN.getId().equals(account.get(Account.ACCOUNT_TYPE));
+    return accountId > 0 &&
+           AccountType.MAIN.getId().equals(account.get(Account.ACCOUNT_TYPE));
   }
 
   public static boolean isSavings(Glob account) {
@@ -227,10 +231,10 @@ public class Account {
     return (account != null) && !SUMMARY_ACCOUNT_IDS.contains(account.get(Account.ID));
   }
 
-  public static GlobMatcher userCreatedAccounts() {
+  public static GlobMatcher userOrSummaryMainAccounts() {
     return new GlobMatcher() {
       public boolean matches(Glob account, GlobRepository repository) {
-        return isUserCreatedAccount(account);
+        return isUserOrSummaryMain(account);
       }
     };
   }
@@ -395,7 +399,7 @@ public class Account {
 
   public static boolean needsTargetAccount(Glob series) {
     return series != null && !BudgetArea.TRANSFER.equals(BudgetArea.get(series.get(Series.BUDGET_AREA)))
-                     && series.get(Series.TARGET_ACCOUNT) == null;
+           && series.get(Series.TARGET_ACCOUNT) == null;
   }
 
   public static class Serializer implements PicsouGlobSerializer {
@@ -638,8 +642,8 @@ public class Account {
       Boolean isCard = input.readBoolean();
       isCard = isCard == null ? false : isCard;
       fieldSetter.set(CARD_TYPE, isCard ?
-                                 AccountCardType.DEFERRED.getId()
-                                        : AccountCardType.NOT_A_CARD.getId());
+        AccountCardType.DEFERRED.getId()
+        : AccountCardType.NOT_A_CARD.getId());
     }
 
     private void deserializeDataV6(FieldSetter fieldSetter, byte[] data) {

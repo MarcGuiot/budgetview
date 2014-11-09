@@ -26,7 +26,7 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
       .setFromAccount("Account n. 00001123")
       .checkFromContentEquals("Account n. 00001123")
       .setToAccount("Epargne LCL")
-      .checkToContentEquals("External account", "Epargne LCL")
+      .checkToContentEquals("Epargne LCL", "External account")
       .validate();
 
     views.selectBudget();
@@ -1170,12 +1170,12 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
 
     budgetView.transfer.editSeries("Virt Epargne")
       .checkFromContentEquals("Account n. 00001123")
-      .checkToContentEquals("External account", "Livret")
+      .checkToContentEquals("Livret", "External account")
       .validate();
 
     savingsAccounts.select("Livret");
     budgetView.transfer.editSeries("Virt Epargne")
-      .checkFromContentEquals("External account", "Account n. 00001123")
+      .checkFromContentEquals("Account n. 00001123", "External account")
       .checkToContentEquals("Livret")
       .validate();
   }
@@ -1332,9 +1332,9 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
       .selectTransfers()
       .createSeries()
       .setName("Virt Epargne")
-      .checkToContentEquals("External account", "Account n. 111222", OfxBuilder.DEFAULT_ACCOUNT_NAME)
+      .checkToContentEquals("Account n. 111222", OfxBuilder.DEFAULT_ACCOUNT_NAME, "External account")
       .setToAccount("Account n. 111222")
-      .checkFromContentEquals("External account", "Account n. 111222", OfxBuilder.DEFAULT_ACCOUNT_NAME)
+      .checkFromContentEquals("Account n. 111222", OfxBuilder.DEFAULT_ACCOUNT_NAME, "External account")
       .setFromAccount("External account")
       .validate();
 
@@ -1399,7 +1399,7 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
       .createSeries()
       .setName("Virt Epargne")
       .checkFromContentEquals("Account n. 111222")
-      .checkToContentEquals("External account", OfxBuilder.DEFAULT_ACCOUNT_NAME)
+      .checkToContentEquals(OfxBuilder.DEFAULT_ACCOUNT_NAME, "External account")
       .setToAccount(OfxBuilder.DEFAULT_ACCOUNT_NAME)
       .validate();
 
@@ -1508,7 +1508,7 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
       .selectBank("CIC")
       .setPosition(0)
       .validate();
-    seriesEdition.checkFromContentEquals("Livret A", "External account", "CODEVI")
+    seriesEdition.checkFromContentEquals("Livret A", "CODEVI", "External account")
       .setFromAccount("Livret A")
       .validate();
 

@@ -3,10 +3,7 @@ package org.designup.picsou.functests.accounts;
 import org.designup.picsou.functests.checkers.AccountEditionChecker;
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
-import org.designup.picsou.gui.model.PeriodAccountStat;
-import org.designup.picsou.model.Account;
 import org.designup.picsou.model.TransactionType;
-import org.globsframework.model.format.GlobPrinter;
 
 public class AccountEditionTest extends LoggedInFunctionalTestCase {
 
@@ -264,7 +261,7 @@ public class AccountEditionTest extends LoggedInFunctionalTestCase {
       .setName("edf")
       .selectAllMonths()
       .setAmount(50)
-      .checkTargetAccounts("Main", "Closed main")
+      .checkAvailableTargetAccounts("Main", "Closed main", "Main accounts")
       .setTargetAccount("Main")
       .validate();
 

@@ -1452,7 +1452,7 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
     budgetView.variable.createSeries()
       .setName("Courses")
       .checkNoTargetAccountWarningShown()
-      .checkTargetAccounts("Account n. 000123", "Account n. 000234")
+      .checkAvailableTargetAccounts("Account n. 000123", "Account n. 000234", "Main accounts")
       .setAmount(100.00)
       .validate();
 

@@ -6,9 +6,8 @@ import org.designup.picsou.model.*;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
+import org.globsframework.utils.Utils;
 
-import java.util.Collections;
-import java.util.List;
 import java.util.Set;
 
 public class CategorizationMatchers {
@@ -21,12 +20,10 @@ public class CategorizationMatchers {
   }
 
   public static class DefaultCategorizationFilter implements CategorizationFilter {
-    private List<Glob> transactions = Collections.emptyList();
+    private GlobList transactions = new GlobList();
     private MonthMatcher monthFilter;
-    private Integer budgetAreaId;
 
     public DefaultCategorizationFilter(final Integer budgetAreaId) {
-      this.budgetAreaId = budgetAreaId;
       monthFilter = Matchers.seriesActiveInPeriod(budgetAreaId, false, true, true);
     }
 
@@ -41,9 +38,9 @@ public class CategorizationMatchers {
         return false;
       }
 
-      if (series.get(Series.BUDGET_AREA).equals(BudgetArea.OTHER.getId()) &&
-          series.get(Series.FROM_ACCOUNT) != null) {
-        return checkInMain(repository);
+      if ((series.get(Series.BUDGET_AREA).equals(BudgetArea.OTHER.getId()) && series.get(Series.FROM_ACCOUNT) != null) ||
+          Utils.equal(Account.MAIN_SUMMARY_ACCOUNT_ID, series.get(Series.TARGET_ACCOUNT))) {
+        return transactionsAreAllInMainAccounts(transactions, repository);
       }
 
       Glob targetAccount = repository.findLinkTarget(series, Series.TARGET_ACCOUNT);
@@ -80,7 +77,7 @@ public class CategorizationMatchers {
       return "CategorizationFilter(" + monthFilter + ")";
     }
 
-    private boolean checkInMain(GlobRepository repository) {
+    private boolean transactionsAreAllInMainAccounts(GlobList transactions, GlobRepository repository) {
       for (Glob transaction : transactions) {
         Glob account = repository.findLinkTarget(transaction, Transaction.ACCOUNT);
         if (!Account.isMain(account)) {

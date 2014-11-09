@@ -1,14 +1,13 @@
 package org.designup.picsou.gui.description.stringifiers;
 
-import org.designup.picsou.gui.time.TimeService;
-import static org.designup.picsou.model.Account.*;
-
 import org.designup.picsou.model.Account;
 import org.globsframework.model.Glob;
 import org.globsframework.utils.Utils;
 
 import java.util.Comparator;
-import java.util.Date;
+
+import static org.designup.picsou.model.Account.ID;
+import static org.designup.picsou.model.Account.NAME;
 
 public class AccountComparator implements Comparator<Glob> {
 
@@ -20,6 +19,15 @@ public class AccountComparator implements Comparator<Glob> {
       return -1;
     }
     if (account2 == null) {
+      return 1;
+    }
+    if (!Account.isUserCreatedAccount(account1) && !Account.isUserCreatedAccount(account2)) {
+      return account2.get(ID) - account1.get(ID);
+    }
+    else if (Account.isUserCreatedAccount(account1) && !Account.isUserCreatedAccount(account2)) {
+      return -1;
+    }
+    else if (!Account.isUserCreatedAccount(account1) && Account.isUserCreatedAccount(account2)) {
       return 1;
     }
     Integer sequence1 = account1.get(Account.SEQUENCE);

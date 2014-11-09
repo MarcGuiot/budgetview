@@ -35,8 +35,6 @@ public abstract class AccountViewPanelChecker<T extends AccountViewPanelChecker>
   protected String panelName;
   protected Panel accountsPanel;
 
-  private static final Color OK_COLOR = Colors.toColor("#73ff73");
-
   public AccountViewPanelChecker(Window mainWindow, String panelName) {
     super(mainWindow);
     this.mainWindow = mainWindow;
@@ -206,10 +204,6 @@ public abstract class AccountViewPanelChecker<T extends AccountViewPanelChecker>
       Assert.fail("Account '" + accountName + "' not found - available accounts: " + getDisplayedAccounts());
     }
     return account.getContainer("accountPanel");
-  }
-
-  public AccountEditionChecker createNewAccount() {
-    return AccountEditionChecker.open(getPanel().getButton("createAccount").triggerClick());
   }
 
   public void checkAccountWebsite(String accountName, String linkText, String expectedUrl) {

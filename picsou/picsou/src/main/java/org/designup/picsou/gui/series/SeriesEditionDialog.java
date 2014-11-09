@@ -49,7 +49,6 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.*;
 
-import static org.designup.picsou.model.Account.userCreatedMainAccounts;
 import static org.globsframework.model.FieldValue.value;
 import static org.globsframework.model.utils.GlobMatchers.*;
 
@@ -168,7 +167,7 @@ public class SeriesEditionDialog {
     accountFilter = createAccountFilter();
 
     targetAccountCombo = GlobLinkComboEditor.init(Series.TARGET_ACCOUNT, localRepository, localDirectory)
-      .setFilter(userCreatedMainAccounts())
+      .setFilter(Account.userOrSummaryMainAccounts())
       .setShowEmptyOption(false);
     builder.add("targetAccountCombo", targetAccountCombo);
     targetAccountCombo.setVisible(false);
@@ -571,11 +570,7 @@ public class SeriesEditionDialog {
       Set<Integer> positiveAccount = new HashSet<Integer>();
       Set<Integer> negativeAccount = new HashSet<Integer>();
       for (Glob transaction : selectedTransactions) {
-//        Glob account = repository.findLinkTarget(transaction, Transaction.ACCOUNT);
         Integer accountId = transaction.get(Transaction.ACCOUNT);
-//        if (Account.isMain(account)) {
-//          accountId = Account.MAIN_SUMMARY_ACCOUNT_ID;
-//        }
         if (transaction.get(Transaction.AMOUNT) >= 0) {
           positiveAccount.add(accountId);
         }

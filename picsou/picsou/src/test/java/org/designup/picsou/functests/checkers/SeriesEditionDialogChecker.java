@@ -767,7 +767,14 @@ public class SeriesEditionDialogChecker extends SeriesAmountEditionChecker<Serie
     return this;
   }
 
-  public SeriesEditionDialogChecker checkTargetAccounts(String... accounts) {
+  public SeriesEditionDialogChecker checkTargetAccount(String account) {
+    ComboBox combo = dialog.getComboBox("targetAccountCombo");
+    assertThat(combo.selectionEquals(account));
+    assertThat(combo.isVisible());
+    return this;
+  }
+
+  public SeriesEditionDialogChecker checkAvailableTargetAccounts(String... accounts) {
     ComboBox combo = dialog.getComboBox("targetAccountCombo");
     assertThat(combo.contentEquals(accounts));
     assertThat(combo.isVisible());
