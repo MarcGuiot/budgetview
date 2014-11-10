@@ -8,11 +8,16 @@
            marginLeft="10" marginTop="10" marginBottom="20"
            foreground="sidebar.title" fill="horizontal" anchor="west"/>
 
-    <style selector=".sidebarSectionTitle" font="LatoLight,plain,14"
+    <!-- Sections -->
+
+    <style selector=".sidebarSectionTitleRow" opaque="true" background="sidebar.sectionTitle.bg"/>
+
+    <style selector=".sidebarSectionTitle" font="LatoRegular,plain,14"
            fill="none" anchor="south" weightX="0"
            foreground="sidebar.sectionTitle"/>
+    <style selector=".sidebarSectionTitle label" marginTop="2" marginBottom="2"/>
 
-    <style selector=".sidebarSeparator" marginTop="1" border="matte(1,0,0,0,sidebar.separator)"/>
+    <style selector=".sidebarSeparator" marginTop="1" border="matte(0,0,1,0,sidebar.separator)"/>
 
     <style selector=".sidebarScrollPane"  border="" opaque="false"
            viewportOpaque="true" viewportBackground="sidebar.bg"/>
@@ -34,23 +39,23 @@
 
     <!-- Selection toggle arrow -->
 
-    <style selector="toggleButton.sidebarSelectionArrow"
+    <style selector="toggleButton.sidebarSelectionButton"
            weightX="0" cursor="hand"
-           icon="rightArrow(22,18,14,16,block.inner.arrow.unselected)"
-           selectedIcon="rightArrow(22,18,14,16,block.inner.arrow.selected)"
-           rolloverIcon="rightArrow(22,18,14,16,block.inner.arrow.rollover)"
-           pressedIcon="rightArrow(22,18,14,16,block.inner.arrow.pressed)"
-           preferredSize="(22,18)" text="" opaque="false" borderPainted="false"/>
+           icon="oval(18,18,sidebar.selection.unselected.bg, sidebar.selection.unselected.border)"
+           selectedIcon="oval(18,18,sidebar.selection.selected.bg, sidebar.selection.selected.border)"
+           rolloverIcon="oval(18,18,sidebar.selection.rollover.bg, sidebar.selection.rollover.border)"
+           pressedIcon="oval(18,18,sidebar.selection.pressed.bg, sidebar.selection.pressed.border)"
+           preferredSize="(18,18)" text="" opaque="false" borderPainted="false"/>
 
-    <style selector="button.sidebarSelectionArrow"
+    <style selector="button.sidebarSelectionButton"
            weightX="0" cursor="hand"
-           rolloverIcon="rightArrow(22,18,14,16,block.inner.arrow.rollover)"
-           pressedIcon="rightArrow(22,18,14,16,block.inner.arrow.pressed)"
-           preferredSize="(22,18)" text="" opaque="false" borderPainted="false"/>
-    <style id="sidebarSelectionArrowSelected" selector="x"
-           icon="rightArrow(22,18,14,16,block.inner.arrow.selected)"/>
-    <style id="sidebarSelectionArrowUnselected" selector="x"
-           icon="rightArrow(22,18,14,16,block.inner.arrow.unselected)"/>
+           rolloverIcon="oval(18,18,sidebar.selection.rollover.bg, sidebar.selection.rollover.border)"
+           pressedIcon="oval(18,18,sidebar.selection.pressed.bg, sidebar.selection.pressed.border)"
+           preferredSize="(18,18)" text="" opaque="false" borderPainted="false"/>
+    <style id="sidebarSelectionButtonSelected" selector="x"
+           icon="oval(18,18,sidebar.selection.selected.bg, sidebar.selection.selected.border)"/>
+    <style id="sidebarSelectionButtonUnselected" selector="x"
+           icon="oval(18,18,sidebar.selection.unselected.bg, sidebar.selection.unselected.border)"/>
 
   </styles>
 </splits>

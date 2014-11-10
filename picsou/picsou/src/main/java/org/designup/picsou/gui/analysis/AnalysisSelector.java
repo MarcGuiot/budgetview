@@ -62,8 +62,8 @@ public class AnalysisSelector extends View {
 
       SplitsNode<JButton> arrow = cellBuilder.add("arrow", new JButton(selectAction));
       cellBuilder.addDisposable(GlobSelectionNodeStyleUpdater.init(key, arrow,
-                                                                   "sidebarSelectionArrowSelected",
-                                                                   "sidebarSelectionArrowUnselected",
+                                                                   "sidebarSelectionButtonSelected",
+                                                                   "sidebarSelectionButtonUnselected",
                                                                    directory));
     }
 

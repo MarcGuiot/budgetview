@@ -7,12 +7,13 @@ import java.awt.*;
 public class AnalysisSelectorLayout implements LayoutManager {
 
   private static final int HEIGHT = 30;
+  private static final int HORIZONTAL_MARGIN = 5;
+  private static final int TOGGLE_BUTTON_MARGIN = 10;
 
   private boolean initialized = false;
   private Component button;
-  private Component toggle;
 
-  private static final int HORIZONTAL_MARGIN = 5;
+  private Component toggle;
 
   public void addLayoutComponent(String name, Component comp) {
   }
@@ -61,16 +62,14 @@ public class AnalysisSelectorLayout implements LayoutManager {
     Insets insets = parent.getInsets();
     int top = insets.top;
     int left = insets.left;
-    int width = parent.getSize().width;
     int height = parent.getSize().height;
-    int right = width - insets.right;
 
-    int buttonLeft = left + HORIZONTAL_MARGIN;
-    int buttonTop = top + height / 2 - button.getPreferredSize().height / 2;
-    button.setBounds(buttonLeft, buttonTop, button.getPreferredSize().width, button.getPreferredSize().height);
-
-    int toggleLeft = right - HORIZONTAL_MARGIN - toggle.getPreferredSize().width;
+    int toggleLeft = left + HORIZONTAL_MARGIN;
     int toggleTop = top + height / 2 - toggle.getPreferredSize().height / 2;
     toggle.setBounds(toggleLeft, toggleTop, toggle.getPreferredSize().width, toggle.getPreferredSize().height);
+
+    int buttonLeft = toggleLeft + toggle.getPreferredSize().width + TOGGLE_BUTTON_MARGIN;
+    int buttonTop = top + height / 2 - button.getPreferredSize().height / 2;
+    button.setBounds(buttonLeft, buttonTop, button.getPreferredSize().width, button.getPreferredSize().height);
   }
 }

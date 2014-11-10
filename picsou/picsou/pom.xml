@@ -12,10 +12,6 @@
       <id>jide</id>
       <url>http://download.java.net/maven/2/</url>
     </repository>
-    <repository>
-      <id>google-api-services</id>
-      <url>http://mavenrepo.google-api-java-client.googlecode.com/hg</url>
-    </repository>
   </repositories>
 
   <build>
@@ -169,11 +165,6 @@
       <version>0.9.7</version>
     </dependency>
     <dependency>
-      <groupId>com.apple</groupId>
-      <artifactId>laf</artifactId>
-      <version>1.0</version>
-    </dependency>
-    <dependency>
       <groupId>net.roydesign.mac</groupId>
       <artifactId>MRJAdapter</artifactId>
       <version>1.0</version>
@@ -258,12 +249,6 @@
       <artifactId>balloontip</artifactId>
       <version>1.2.4.1</version>
     </dependency>
-    <dependency>
-      <groupId>com.google.apis</groupId>
-      <artifactId>google-api-services-drive</artifactId>
-      <version>v1-rev1-1.5.1-beta</version>
-    </dependency>
-
   </dependencies>
 
   <profiles>

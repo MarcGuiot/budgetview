@@ -13,8 +13,10 @@
            horizontalTextPosition="right"
            iconTextGap="2"/>
 
-    <style selector="button#accountPosition"
-           font="-,plain,14" foreground="block.inner.link.big"/>
+    <style selector="#accountPosition"
+           font="LatoLight,plain,12" foreground="block.inner.link.big"/>
+    <style selector="#accountUpdateDate"
+           font="LatoLight,plain,10"/>
 
     <style selector=".left label.totalAmount"
            fill="horizontal" horizontalAlignment="left" marginLeft="10"/>
@@ -25,23 +27,23 @@
   </styles>
 
   <column>
-    <row>
-      <label ref="accountListTitle" styleClass="sidebarSectionTitle"/>
+    <row styleClass="sidebarSectionTitleRow">
+      <label ref="accountListTitle" styleClass="sidebarSectionTitle" marginLeft="5"/>
       <filler fill="horizontal"/>
       <label ref="referencePosition" styleClass="sidebarSectionTitle" tooltipText="$accountView.reference.tooltip"/>
-      <label ref="referencePositionDate" styleClass="sidebarSectionTitle" font="LatoLight,plain,12" autoHideSource="referencePosition" marginLeft="5"/>
+      <label ref="referencePositionDate" styleClass="sidebarSectionTitle" font="LatoRegular,plain,11" autoHideSource="referencePosition" marginLeft="5" marginRight="5"/>
     </row>
-    <repeat ref="accountRepeat" styleClass="sidebarSeparator" marginBottom="15"
+    <repeat ref="accountRepeat" marginBottom="15"
             opaque="true" background="sidebar.bg">
       <panel ref="accountPanel" marginTop="2" opaque="false">
         <panel marginTop="4" layout="org.designup.picsou.gui.accounts.utils.AccountBlockLayout"
-               cursor="hand" opaque="false">
+               cursor="hand" opaque="false" styleClass="sidebarSeparator">
+          <toggleButton ref="selectAccount" styleClass="sidebarSelectionButton"/>
           <button ref="editAccount"/>
           <button ref="accountWeather"/>
           <component ref="accountPositionsChart" background="sidebar.bg"/>
-          <button ref="accountPosition" anchor="east" styleClass="hyperlinkWithoutUnderline"/>
-          <label ref="accountUpdateDate" font="LatoLight,plain,12"/>
-          <toggleButton ref="selectAccount" styleClass="sidebarSelectionArrow"/>
+          <button ref="accountPosition" styleClass="hyperlinkWithoutUnderline"/>
+          <label ref="accountUpdateDate"/>
         </panel>
       </panel>
     </repeat>
