@@ -127,8 +127,8 @@ public class DeleteTransactionDialog {
         }
 
         Glob account = repository.findLinkTarget(toDelete, Transaction.ACCOUNT);
-        if (account != null && toDelete.get(Transaction.ID).equals(account.get(Account.TRANSACTION_ID))) {
-          repository.update(account.getKey(), Account.TRANSACTION_ID, null);
+        if (account != null && toDelete.get(Transaction.ID).equals(account.get(Account.LAST_TRANSACTION))) {
+          repository.update(account.getKey(), Account.LAST_TRANSACTION, null);
         }
         repository.delete(toDelete);
       }

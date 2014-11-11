@@ -94,18 +94,12 @@ public class AccountPositionEditionPanel {
   }
 
   private void updateTransactionInfo(Glob account, GlobRepository transactionsRepository) {
-//    Integer transactionId = account.get(Account.TRANSACTION_ID);
-//    if (transactionId != null) {
-//      transaction = transactionsRepository.find(Key.create(Transaction.TYPE, transactionId));
-//    }
-//    if (transaction == null){
     Glob currentMonth = transactionsRepository.get(CurrentMonth.KEY);
     transaction = transactionsRepository.getAll(Transaction.TYPE,
                                                 Transaction.getMatcherForRealOperations(account.get(Account.ID),
                                                                                         currentMonth.get(CurrentMonth.CURRENT_MONTH),
                                                                                         currentMonth.get(CurrentMonth.CURRENT_DAY)))
       .sort(TransactionComparator.ASCENDING_ACCOUNT).getLast();
-//    }
     if (transaction != null) {
       selectionService.select(transaction);
     }
@@ -116,7 +110,7 @@ public class AccountPositionEditionPanel {
 
   public void apply() {
     if (transaction != null) {
-      repository.update(account.getKey(), Account.TRANSACTION_ID, transaction.get(Transaction.ID));
+      repository.update(account.getKey(), Account.LAST_TRANSACTION, transaction.get(Transaction.ID));
     }
   }
 

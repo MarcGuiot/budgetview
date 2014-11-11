@@ -69,7 +69,7 @@ public class Account {
   public static DoubleField LAST_IMPORT_POSITION;
 
   @Target(Transaction.class)
-  public static LinkField TRANSACTION_ID;
+  public static LinkField LAST_TRANSACTION;
 
   public static DateField POSITION_DATE;
 
@@ -420,7 +420,7 @@ public class Account {
       outputStream.writeInteger(values.get(BRANCH_ID));
       outputStream.writeUtf8String(values.get(NAME));
       outputStream.writeDouble(values.get(POSITION_WITH_PENDING));
-      outputStream.writeInteger(values.get(TRANSACTION_ID));
+      outputStream.writeInteger(values.get(LAST_TRANSACTION));
       outputStream.writeDate(values.get(POSITION_DATE));
       outputStream.writeInteger(values.get(ACCOUNT_TYPE));
       outputStream.writeInteger(values.get(UPDATE_MODE));
@@ -492,7 +492,7 @@ public class Account {
       fieldSetter.set(BRANCH_ID, input.readInteger());
       fieldSetter.set(NAME, input.readUtf8String());
       fieldSetter.set(POSITION_WITH_PENDING, input.readDouble());
-      fieldSetter.set(TRANSACTION_ID, input.readInteger());
+      fieldSetter.set(LAST_TRANSACTION, input.readInteger());
       fieldSetter.set(POSITION_DATE, input.readDate());
       fieldSetter.set(ACCOUNT_TYPE, input.readInteger());
       fieldSetter.set(UPDATE_MODE, input.readInteger());
@@ -524,7 +524,7 @@ public class Account {
       fieldSetter.set(BRANCH_ID, input.readInteger());
       fieldSetter.set(NAME, input.readUtf8String());
       fieldSetter.set(POSITION_WITH_PENDING, input.readDouble());
-      fieldSetter.set(TRANSACTION_ID, input.readInteger());
+      fieldSetter.set(LAST_TRANSACTION, input.readInteger());
       fieldSetter.set(POSITION_DATE, input.readDate());
       fieldSetter.set(ACCOUNT_TYPE, input.readInteger());
       fieldSetter.set(UPDATE_MODE, input.readInteger());
@@ -555,7 +555,7 @@ public class Account {
       fieldSetter.set(BRANCH_ID, input.readInteger());
       fieldSetter.set(NAME, input.readUtf8String());
       fieldSetter.set(POSITION_WITH_PENDING, input.readDouble());
-      fieldSetter.set(TRANSACTION_ID, input.readInteger());
+      fieldSetter.set(LAST_TRANSACTION, input.readInteger());
       fieldSetter.set(POSITION_DATE, input.readDate());
       fieldSetter.set(ACCOUNT_TYPE, input.readInteger());
       fieldSetter.set(UPDATE_MODE, input.readInteger());
@@ -584,7 +584,7 @@ public class Account {
       fieldSetter.set(BRANCH_ID, input.readInteger());
       fieldSetter.set(NAME, input.readUtf8String());
       fieldSetter.set(POSITION_WITH_PENDING, input.readDouble());
-      fieldSetter.set(TRANSACTION_ID, input.readInteger());
+      fieldSetter.set(LAST_TRANSACTION, input.readInteger());
       fieldSetter.set(POSITION_DATE, input.readDate());
       fieldSetter.set(ACCOUNT_TYPE, input.readInteger());
       fieldSetter.set(UPDATE_MODE, input.readInteger());
@@ -605,7 +605,7 @@ public class Account {
       fieldSetter.set(BRANCH_ID, input.readInteger());
       fieldSetter.set(NAME, input.readUtf8String());
       fieldSetter.set(POSITION_WITH_PENDING, input.readDouble());
-      fieldSetter.set(TRANSACTION_ID, input.readInteger());
+      fieldSetter.set(LAST_TRANSACTION, input.readInteger());
       fieldSetter.set(POSITION_DATE, input.readDate());
       fieldSetter.set(ACCOUNT_TYPE, input.readInteger());
       fieldSetter.set(UPDATE_MODE, input.readInteger());
@@ -625,7 +625,7 @@ public class Account {
       fieldSetter.set(BRANCH_ID, input.readInteger());
       fieldSetter.set(NAME, input.readUtf8String());
       fieldSetter.set(POSITION_WITH_PENDING, input.readDouble());
-      fieldSetter.set(TRANSACTION_ID, input.readInteger());
+      fieldSetter.set(LAST_TRANSACTION, input.readInteger());
       fieldSetter.set(POSITION_DATE, input.readDate());
       readAndUpdateCardType(fieldSetter, input);
       fieldSetter.set(ACCOUNT_TYPE, input.readInteger());
@@ -653,7 +653,7 @@ public class Account {
       fieldSetter.set(BRANCH_ID, input.readInteger());
       fieldSetter.set(NAME, input.readUtf8String());
       fieldSetter.set(POSITION_WITH_PENDING, input.readDouble());
-      fieldSetter.set(TRANSACTION_ID, input.readInteger());
+      fieldSetter.set(LAST_TRANSACTION, input.readInteger());
       fieldSetter.set(POSITION_DATE, input.readDate());
       readAndUpdateCardType(fieldSetter, input);
       fieldSetter.set(ACCOUNT_TYPE, input.readInteger());
@@ -672,7 +672,7 @@ public class Account {
       fieldSetter.set(BRANCH_ID, input.readInteger());
       fieldSetter.set(NAME, input.readUtf8String());
       fieldSetter.set(POSITION_WITH_PENDING, input.readDouble());
-      fieldSetter.set(TRANSACTION_ID, input.readInteger());
+      fieldSetter.set(LAST_TRANSACTION, input.readInteger());
       fieldSetter.set(POSITION_DATE, input.readDate());
       readAndUpdateCardType(fieldSetter, input);
       fieldSetter.set(ACCOUNT_TYPE, input.readInteger());
@@ -688,7 +688,7 @@ public class Account {
       fieldSetter.set(BRANCH_ID, input.readInteger());
       fieldSetter.set(NAME, input.readUtf8String());
       fieldSetter.set(POSITION_WITH_PENDING, input.readDouble());
-      fieldSetter.set(TRANSACTION_ID, input.readInteger());
+      fieldSetter.set(LAST_TRANSACTION, input.readInteger());
       fieldSetter.set(POSITION_DATE, input.readDate());
       readAndUpdateCardType(fieldSetter, input);
       fieldSetter.set(ACCOUNT_TYPE, input.readInteger());
@@ -704,7 +704,7 @@ public class Account {
       fieldSetter.set(BRANCH_ID, input.readInteger());
       fieldSetter.set(NAME, input.readUtf8String());
       fieldSetter.set(POSITION_WITH_PENDING, input.readDouble());
-      fieldSetter.set(TRANSACTION_ID, input.readInteger());
+      fieldSetter.set(LAST_TRANSACTION, input.readInteger());
       fieldSetter.set(POSITION_DATE, input.readDate());
       readAndUpdateCardType(fieldSetter, input);
       fieldSetter.set(ACCOUNT_TYPE, input.readInteger());
@@ -719,7 +719,7 @@ public class Account {
       fieldSetter.set(BRANCH_ID, input.readInteger());
       fieldSetter.set(NAME, input.readUtf8String());
       fieldSetter.set(POSITION_WITH_PENDING, input.readDouble());
-      fieldSetter.set(TRANSACTION_ID, input.readInteger());
+      fieldSetter.set(LAST_TRANSACTION, input.readInteger());
       fieldSetter.set(POSITION_DATE, input.readDate());
       readAndUpdateCardType(fieldSetter, input);
       fieldSetter.set(ACCOUNT_TYPE, AccountType.MAIN.getId());
@@ -734,7 +734,7 @@ public class Account {
       fieldSetter.set(BRANCH_ID, input.readInteger());
       fieldSetter.set(NAME, input.readJavaString());
       fieldSetter.set(POSITION_WITH_PENDING, input.readDouble());
-      fieldSetter.set(TRANSACTION_ID, input.readInteger());
+      fieldSetter.set(LAST_TRANSACTION, input.readInteger());
       fieldSetter.set(POSITION_DATE, input.readDate());
       readAndUpdateCardType(fieldSetter, input);
       fieldSetter.set(ACCOUNT_TYPE, AccountType.MAIN.getId());

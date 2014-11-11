@@ -261,8 +261,8 @@ public class PositionTrigger implements ChangeSetListener {
         }
       }
       else if (!isCreation && (changeSet.containsChanges(accountKey, Account.PAST_POSITION) ||
-                               changeSet.containsChanges(accountKey, Account.TRANSACTION_ID))) {
-        Integer trnId = account.get(Account.TRANSACTION_ID);
+                               changeSet.containsChanges(accountKey, Account.LAST_TRANSACTION))) {
+        Integer trnId = account.get(Account.LAST_TRANSACTION);
         // si on modifie le solde du compte via une operation particulier
         if (trnId != null) {
           for (int i = 0; i < transactions.length; i++) {
@@ -477,17 +477,17 @@ public class PositionTrigger implements ChangeSetListener {
 
       if (lastRealTransaction != null) {
         repository.update(account.getKey(),
-                          value(Account.TRANSACTION_ID, lastRealTransaction.get(Transaction.ID)),
+                          value(Account.LAST_TRANSACTION, lastRealTransaction.get(Transaction.ID)),
                           value(Account.PAST_POSITION, lastRealTransaction.get(Transaction.ACCOUNT_POSITION)));
       }
       else if (lastTransaction != null) {
         repository.update(account.getKey(),
-                          value(Account.TRANSACTION_ID, lastTransaction.get(Transaction.ID)),
+                          value(Account.LAST_TRANSACTION, lastTransaction.get(Transaction.ID)),
                           value(Account.PAST_POSITION, lastTransaction.get(Transaction.ACCOUNT_POSITION)));
       }
       else if (openTransaction != null) {
         repository.update(account.getKey(),
-                          value(Account.TRANSACTION_ID, openTransaction.get(Transaction.ID)),
+                          value(Account.LAST_TRANSACTION, openTransaction.get(Transaction.ID)),
                           value(Account.PAST_POSITION, openTransaction.get(Transaction.ACCOUNT_POSITION)));
       }
       Integer tt = closeTransaction.get(Transaction.TRANSACTION_TYPE);

@@ -12,10 +12,11 @@ import org.globsframework.model.Key;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.Date;
 
-public class GlobSelectionToggle implements GlobSelectionListener, ChangeListener, Disposable {
+public class GlobSelectionToggle implements GlobSelectionListener, ActionListener, Disposable {
   private JToggleButton toggleButton;
   private GlobRepository repository;
   private SelectionService selectionService;
@@ -29,7 +30,7 @@ public class GlobSelectionToggle implements GlobSelectionListener, ChangeListene
     this.selectionKey = key;
     this.type = key.getGlobType();
 
-    this.toggleButton.addChangeListener(this);
+    this.toggleButton.addActionListener(this);
 
     this.selectionService = directory.get(SelectionService.class);
     this.selectionService.addListener(this, type);
@@ -50,7 +51,7 @@ public class GlobSelectionToggle implements GlobSelectionListener, ChangeListene
     }
   }
 
-  public void stateChanged(ChangeEvent changeEvent) {
+  public void actionPerformed(ActionEvent actionEvent) {
     if (selectionInProgress) {
       return;
     }

@@ -100,16 +100,25 @@ public class DashboardStatUpdater implements ChangeSetListener, GlobSelectionLis
         return imports.getFirst().get(TransactionImport.IMPORT_DATE);
       }
     }
-    else {
-      for (Glob transactionImport : imports) {
-        for (Glob transaction : repository.findLinkedTo(transactionImport, Transaction.IMPORT)) {
-          if (selectedAccounts.contains(transaction.get(Transaction.ACCOUNT))) {
-            return transactionImport.get(TransactionImport.IMPORT_DATE);
+    Date last = null;
+    for (Integer accountId : selectedAccounts) {
+      Glob account = repository.find(Key.create(Account.TYPE, accountId));
+      if (account != null) {
+        Glob lastTransaction = repository.findLinkTarget(account, Account.LAST_TRANSACTION);
+        if (lastTransaction != null) {
+          Glob transactionImport = repository.findLinkTarget(lastTransaction, Transaction.IMPORT);
+          if (transactionImport != null) {
+            Date date = transactionImport.get(TransactionImport.IMPORT_DATE);
+            if (date != null) {
+              if (last == null || date.compareTo(last) > 0) {
+                last = date;
+              }
+            }
           }
         }
       }
     }
-    return null;
+    return last;
   }
 
   public void updateWeather(Set<Integer> accountIds) {
