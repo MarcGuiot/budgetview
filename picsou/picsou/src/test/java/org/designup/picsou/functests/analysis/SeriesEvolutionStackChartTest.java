@@ -776,7 +776,11 @@ public class SeriesEvolutionStackChartTest extends LoggedInFunctionalTestCase {
     seriesAnalysis.table().select("To categorize");
     seriesAnalysis.budget();
     seriesAnalysis.checkBudgetShown();
-    System.out.println("SeriesEvolutionStackChartTest.testPopupMenus");
+    seriesAnalysis.budget().seriesChart.getSingleDataset()
+      .checkSize(3)
+      .checkValue("UNKNOWN2", 100.00)
+      .checkValue("UNKNOWN1", 50.00)
+      .checkValue("UNKNOWN3", 20.00);
     seriesAnalysis.budget().seriesChart.checkRightClickOptions("UNKNOWN2",
                                                                "Show transactions in Categorization view",
                                                                "Show transactions in Accounts view");

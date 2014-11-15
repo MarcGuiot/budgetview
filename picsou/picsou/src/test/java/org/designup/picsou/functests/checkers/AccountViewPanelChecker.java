@@ -47,12 +47,16 @@ public abstract class AccountViewPanelChecker<T extends AccountViewPanelChecker>
   }
 
   public T select(String accountName) {
-    getAccountPanel(accountName).getToggleButton("selectAccount").select();
+    ToggleButton selectAccount = getAccountPanel(accountName).getToggleButton("selectAccount");
+    UISpecAssert.assertFalse("Already selected", selectAccount.isSelected());
+    selectAccount.click();
     return (T)this;
   }
 
   public T unselect(String accountName) {
-    getAccountPanel(accountName).getToggleButton("selectAccount").unselect();
+    ToggleButton selectAccount = getAccountPanel(accountName).getToggleButton("selectAccount");
+    assertThat("Not selected", selectAccount.isSelected());
+    selectAccount.click();
     return (T)this;
   }
 

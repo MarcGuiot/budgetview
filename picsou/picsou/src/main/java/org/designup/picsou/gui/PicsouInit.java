@@ -319,8 +319,7 @@ public class PicsouInit {
                               value(UserVersionInformation.CURRENT_BANK_CONFIG_VERSION, PicsouApplication.BANK_CONFIG_VERSION),
                               value(UserVersionInformation.CURRENT_SOFTWARE_VERSION, PicsouApplication.APPLICATION_VERSION));
 
-      FrameSize frameSize = FrameSize.init(directory.get(JFrame.class));
-      LayoutConfig.find(frameSize.screenSize, frameSize.targetFrameSize, repository, true);
+      LayoutConfig.find(FrameSize.init(directory.get(JFrame.class)), repository, true);
 
       repository.findOrCreate(CurrentMonth.KEY,
                               value(CurrentMonth.LAST_TRANSACTION_DAY, 0),

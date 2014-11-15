@@ -34,13 +34,13 @@ public class LayoutConfigService {
 
     public void globsReset(GlobRepository repository, Set<GlobType> changedTypes) {
       if (changedTypes.contains(LayoutConfig.TYPE)) {
-        updateComponents();
+        updateComponents(false);
       }
     }
   }
 
   public void show(final JFrame frame) {
-    updateComponents();
+    updateComponents(true);
     frame.addComponentListener(new ComponentAdapter() {
       public void componentResized(ComponentEvent e) {
         Dimension newSize = frame.getSize();
@@ -50,10 +50,10 @@ public class LayoutConfigService {
     GuiUtils.showCentered(frame);
   }
 
-  private void updateComponents() {
+  private void updateComponents(boolean createIfNeeded) {
     JFrame frame = directory.get(JFrame.class);
     FrameSize frameSize = FrameSize.init(directory.get(JFrame.class));
-    Glob layoutConfig = LayoutConfig.find(frameSize.screenSize, frameSize.targetFrameSize, repository, false);
+    Glob layoutConfig = LayoutConfig.find(frameSize, repository, createIfNeeded);
     if (layoutConfig == null) {
       return;
     }
@@ -65,7 +65,7 @@ public class LayoutConfigService {
 
   public void updateFields(FieldValues values) {
     FrameSize frameSize = FrameSize.init(directory.get(JFrame.class));
-    Glob layoutConfig = LayoutConfig.find(frameSize.screenSize, frameSize.targetFrameSize, repository, true);
+    Glob layoutConfig = LayoutConfig.find(frameSize, repository, true);
     repository.update(layoutConfig.getKey(), values.toArray());
   }
 
@@ -80,7 +80,7 @@ public class LayoutConfigService {
 
   private void storeFrameSize(Dimension newSize, JFrame frame, GlobRepository repository) {
     FrameSize frameSize = FrameSize.init(frame);
-    Glob layoutConfig = LayoutConfig.find(frameSize.screenSize, frameSize.targetFrameSize, repository, true);
+    Glob layoutConfig = LayoutConfig.find(frameSize, repository, true);
     if (layoutConfig == null) {
       return;
     }

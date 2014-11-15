@@ -148,7 +148,7 @@ public class UpgradeTrigger implements ChangeSetListener {
       ProjectErrorsUpgrade.createMissingGroupsAndSeries(repository);
       ProjectErrorsUpgrade.fixIncoherentFromToInTransferSeries(repository);
     }
-    if (currentJarVersion < 141){
+    if (currentJarVersion < 141) {
       updateTargetAccountForSeries(repository);
     }
 
@@ -160,8 +160,10 @@ public class UpgradeTrigger implements ChangeSetListener {
     repository.delete(Transaction.TYPE, and(fieldEquals(Transaction.CREATED_BY_SERIES, true),
                                             fieldEquals(Transaction.AMOUNT, 0.)));
 
-    FrameSize frameSize = FrameSize.init(directory.get(JFrame.class));
-    LayoutConfig.find(frameSize.screenSize, frameSize.targetFrameSize, repository, true);
+    Glob config = LayoutConfig.find(FrameSize.init(directory.get(JFrame.class)), repository, true);
+    if (currentJarVersion < 141) {
+      resetLayout(config, repository);
+    }
 
     UserPreferences.initMobilePassword(repository, false);
 
@@ -174,6 +176,16 @@ public class UpgradeTrigger implements ChangeSetListener {
     }
 
     repository.update(UserVersionInformation.KEY, UserVersionInformation.CURRENT_JAR_VERSION, PicsouApplication.JAR_VERSION);
+  }
+
+  private void resetLayout(Glob config, GlobRepository repository) {
+    if (config != null) {
+      repository.update(config.getKey(),
+                        value(LayoutConfig.BUDGET_HORIZONTAL_1, 0.5),
+                        value(LayoutConfig.BUDGET_VERTICAL_LEFT_1, 0.2),
+                        value(LayoutConfig.BUDGET_VERTICAL_LEFT_2, 0.5),
+                        value(LayoutConfig.BUDGET_VERTICAL_RIGHT_1, 0.6));
+    }
   }
 
   private void updateTargetAccountForSeries(GlobRepository repository) {
@@ -276,10 +288,10 @@ public class UpgradeTrigger implements ChangeSetListener {
   }
 
   private void updateIfNull(GlobRepository repository, Glob series1, Glob series2) {
-    if (series1.get(Series.TARGET_ACCOUNT) == null || series2.get(Series.TARGET_ACCOUNT) == null){
+    if (series1.get(Series.TARGET_ACCOUNT) == null || series2.get(Series.TARGET_ACCOUNT) == null) {
       GlobList budget = repository.findLinkedTo(series1, SeriesBudget.SERIES);
       for (Glob glob : budget) {
-        if (glob.get(SeriesBudget.PLANNED_AMOUNT, 0.) > 0){
+        if (glob.get(SeriesBudget.PLANNED_AMOUNT, 0.) > 0) {
           repository.update(series1.getKey(), Series.TARGET_ACCOUNT, series1.get(Series.TO_ACCOUNT));
           repository.update(series2.getKey(), Series.TARGET_ACCOUNT, series1.get(Series.FROM_ACCOUNT));
           return;
@@ -287,7 +299,7 @@ public class UpgradeTrigger implements ChangeSetListener {
       }
       budget = repository.findLinkedTo(series2, SeriesBudget.SERIES);
       for (Glob glob : budget) {
-        if (glob.get(SeriesBudget.PLANNED_AMOUNT, 0.) > 0){
+        if (glob.get(SeriesBudget.PLANNED_AMOUNT, 0.) > 0) {
           repository.update(series2.getKey(), Series.TARGET_ACCOUNT, series1.get(Series.TO_ACCOUNT));
           repository.update(series1.getKey(), Series.TARGET_ACCOUNT, series1.get(Series.FROM_ACCOUNT));
           return;

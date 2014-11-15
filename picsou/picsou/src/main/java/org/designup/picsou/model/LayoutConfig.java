@@ -1,6 +1,7 @@
 package org.designup.picsou.model;
 
 import com.budgetview.shared.utils.PicsouGlobSerializer;
+import org.designup.picsou.gui.utils.FrameSize;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.annotations.DefaultDouble;
 import org.globsframework.metamodel.annotations.Key;
@@ -34,13 +35,13 @@ public class LayoutConfig {
   @DefaultDouble(0.5)
   public static DoubleField HOME_SUMMARY_PROJECTS;
 
-  @DefaultDouble(0.34)
+  @DefaultDouble(0.5)
   public static DoubleField BUDGET_HORIZONTAL_1;
 
-  @DefaultDouble(0.25)
+  @DefaultDouble(0.20)
   public static DoubleField BUDGET_VERTICAL_LEFT_1;
 
-  @DefaultDouble(0.75)
+  @DefaultDouble(0.5)
   public static DoubleField BUDGET_VERTICAL_LEFT_2;
 
   @DefaultDouble(0.6)
@@ -65,20 +66,20 @@ public class LayoutConfig {
     GlobTypeLoader.init(LayoutConfig.class, "layoutConfig");
   }
 
-  public static Glob find(Dimension screenSize, Dimension targetFrameSize, GlobRepository repository, boolean createIfNeeded) {
+  public static Glob find(FrameSize frameSize, GlobRepository repository, boolean createIfNeeded) {
     GlobList all = repository.getAll(LayoutConfig.TYPE,
-                                     and(fieldEquals(SCREEN_WIDTH, screenSize.width),
-                                         fieldEquals(SCREEN_HEIGHT, screenSize.height)));
+                                     and(fieldEquals(SCREEN_WIDTH, frameSize.screenSize.width),
+                                         fieldEquals(SCREEN_HEIGHT, frameSize.screenSize.height)));
     if (!all.isEmpty()) {
       return all.getFirst();
     }
     if (createIfNeeded) {
       if (repository.find(UserPreferences.KEY) != null) {
         return repository.create(TYPE,
-                                 value(SCREEN_WIDTH, screenSize.width),
-                                 value(SCREEN_HEIGHT, screenSize.height),
-                                 value(FRAME_WIDTH, targetFrameSize.width),
-                                 value(FRAME_HEIGHT, targetFrameSize.height));
+                                 value(SCREEN_WIDTH, frameSize.screenSize.width),
+                                 value(SCREEN_HEIGHT, frameSize.screenSize.height),
+                                 value(FRAME_WIDTH, frameSize.targetFrameSize.width),
+                                 value(FRAME_HEIGHT, frameSize.targetFrameSize.height));
       }
     }
     return null;

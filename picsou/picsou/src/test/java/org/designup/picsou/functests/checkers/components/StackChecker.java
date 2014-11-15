@@ -112,11 +112,15 @@ public class StackChecker extends GuiChecker {
 
   private PopupChecker openRightClickPopup(final String item) {
     select(item);
+    final StackChart chart = getChart();
+    if (!chart.isVisible()) {
+      Assert.fail("Chart is not visible");
+    }
     return new PopupChecker() {
       protected org.uispec4j.MenuItem openMenu() {
         return PopupMenuInterceptor.run(new Trigger() {
           public void run() throws Exception {
-            doClick(getChart(), item, Key.Modifier.NONE, true);
+            doClick(chart, item, Key.Modifier.NONE, true);
           }
         });
       }

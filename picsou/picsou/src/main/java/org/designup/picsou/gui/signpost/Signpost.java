@@ -108,6 +108,7 @@ public abstract class Signpost implements BalloonTipHolder, Disposable {
     else {
       balloonTip = createBalloonTip(component, text);
       boolean visible = Gui.isVisibleInWindow(component);
+      System.out.println("Signpost.show - " + balloonTip.getTopLevelContainer());
       balloonTip.setVisible(visible);
     }
   }

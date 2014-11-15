@@ -20,4 +20,9 @@ public class FrameSize {
     this.screenSize = screenSize;
     this.targetFrameSize = targetFrameSize;
   }
+
+  public String toString() {
+    return "FrameSize: screen:" + screenSize.width + "x" + screenSize.height +
+           " - targetFrame:" + targetFrameSize.width + "x" + targetFrameSize.height;
+  }
 }
