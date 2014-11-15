@@ -3,7 +3,7 @@ package org.designup.picsou.gui.signpost;
 import net.java.balloontip.BalloonTip;
 import net.java.balloontip.styles.BalloonTipStyle;
 import org.designup.picsou.gui.components.tips.BalloonTipHolder;
-import org.designup.picsou.gui.components.tips.PatchedBallonTip;
+import org.designup.picsou.gui.components.tips.CustomBalloonTip;
 import org.designup.picsou.gui.signpost.components.SignpostStyleUpdater;
 import org.designup.picsou.gui.utils.Gui;
 import org.designup.picsou.model.SignpostStatus;
@@ -107,14 +107,12 @@ public abstract class Signpost implements BalloonTipHolder, Disposable {
     }
     else {
       balloonTip = createBalloonTip(component, text);
-      boolean visible = Gui.isVisibleInWindow(component);
-      System.out.println("Signpost.show - " + balloonTip.getTopLevelContainer());
-      balloonTip.setVisible(visible);
+      balloonTip.setVisible(true);
     }
   }
 
   protected BalloonTip createBalloonTip(JComponent component, String text) {
-    return new PatchedBallonTip(component,
+    return new CustomBalloonTip(component,
                                 text,
                                 balloonTipStyle,
                                 orientation,

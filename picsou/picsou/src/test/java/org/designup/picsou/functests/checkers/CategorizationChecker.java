@@ -730,15 +730,6 @@ public class CategorizationChecker extends FilteredViewChecker<CategorizationChe
     return this;
   }
 
-  public CategorizationChecker setExtra(String label, String seriesName, String subSeriesName) {
-    int[] indices = getRowIndices(label);
-    for (int index : indices) {
-      selectTableRow(index);
-      selectExtras().selectSubSeries(seriesName, subSeriesName);
-    }
-    return this;
-  }
-
   int[] getRowIndices(String label) {
     int[] index = getTable().getRowIndices(LABEL_COLUMN_INDEX, label.toUpperCase());
     if (index.length <= 0) {
@@ -869,11 +860,6 @@ public class CategorizationChecker extends FilteredViewChecker<CategorizationChe
 
   public void showUncategorizedTransactionsOnly() {
     selectTransactionFilterMode(CategorizationFilteringMode.UNCATEGORIZED);
-  }
-
-  public CategorizationChecker checkSelectionSignpostDisplayed(String message) {
-    checkSignpostVisible(getSelectionPanel(), getTable(), message);
-    return this;
   }
 
   public CategorizationChecker checkFirstCategorizationSignpostDisplayed(String message) {

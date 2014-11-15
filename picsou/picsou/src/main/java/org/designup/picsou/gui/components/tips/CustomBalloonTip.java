@@ -8,24 +8,24 @@ import javax.swing.*;
 import javax.swing.event.AncestorListener;
 import java.awt.event.ComponentListener;
 
-public class PatchedBallonTip extends BalloonTip {
+public class CustomBalloonTip extends BalloonTip {
 
-  public PatchedBallonTip(JComponent attachedComponent, String text) {
+  public CustomBalloonTip(JComponent attachedComponent, String text) {
     super(attachedComponent, text);
   }
 
-  public PatchedBallonTip(JComponent attachedComponent, String text, BalloonTipStyle style, boolean useCloseButton) {
+  public CustomBalloonTip(JComponent attachedComponent, String text, BalloonTipStyle style, boolean useCloseButton) {
     super(attachedComponent, text, style, useCloseButton);
   }
 
-  public PatchedBallonTip(JComponent attachedComponent, String text, BalloonTipStyle style,
+  public CustomBalloonTip(JComponent attachedComponent, String text, BalloonTipStyle style,
                           Orientation orientation, AttachLocation attachLocation,
                           int horizontalOffset,
                           int verticalOffset, boolean useCloseButton) {
     super(attachedComponent, new JLabel(text), style, orientation, attachLocation, horizontalOffset, verticalOffset, useCloseButton);
   }
 
-  public PatchedBallonTip(JComponent attachedComponent, String text, BalloonTipStyle style, BalloonTipPositioner positioner, boolean useCloseButton) {
+  public CustomBalloonTip(JComponent attachedComponent, String text, BalloonTipStyle style, BalloonTipPositioner positioner, boolean useCloseButton) {
     super(attachedComponent, new JLabel(text), style, positioner, getDefaultCloseButton());
   }
 

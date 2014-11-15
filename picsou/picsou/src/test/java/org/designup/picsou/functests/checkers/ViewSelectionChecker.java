@@ -130,6 +130,10 @@ public class ViewSelectionChecker extends GuiChecker {
     checkSignpostVisible(window, getToggle("categorization"), message);
   }
 
+  public void checkNoSignpostVisible() {
+    checkNoSignpostVisible(getTogglesPanel());
+  }
+
   private Panel getTogglesPanel() {
     if (cardsPanel == null) {
       cardsPanel = window.getPanel("viewToggles");

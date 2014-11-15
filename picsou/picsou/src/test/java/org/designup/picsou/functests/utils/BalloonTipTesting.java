@@ -37,12 +37,15 @@ public class BalloonTipTesting {
       public void check() {
         final BalloonTip balloon = getBalloonTip(enclosingWindow, targetUIComponent);
         Assert.assertEquals(text, Utils.cleanupHtml(getText(balloon)));
+        if (!targetUIComponent.isVisible()) {
+          Assert.fail("Component is not visible");
+        }
       }
     });
   }
 
   private static String getText(BalloonTip balloon) {
-    return ((JLabel)balloon.getContents()).getText();
+    return ((JLabel) balloon.getContents()).getText();
   }
 
   private static BalloonTip getBalloonTip(Component enclosingSwingPanel,
@@ -52,7 +55,7 @@ public class BalloonTipTesting {
     ComponentFinder finder = new ComponentFinder(window.getAwtContainer(), window);
     Component[] tips = finder.getComponents(ComponentMatchers.fromClass(BalloonTip.class));
     for (Component component : tips) {
-      BalloonTip tip = (BalloonTip)component;
+      BalloonTip tip = (BalloonTip) component;
       if (tip.getAttachedComponent() == targetSwingComponent) {
         return tip;
       }
@@ -68,7 +71,7 @@ public class BalloonTipTesting {
   private static String toString(Component[] tips) {
     StringBuilder builder = new StringBuilder();
     for (Component component : tips) {
-      BalloonTip tip = (BalloonTip)component;
+      BalloonTip tip = (BalloonTip) component;
       if (!tip.isVisible()) {
         continue;
       }
@@ -83,7 +86,7 @@ public class BalloonTipTesting {
 
   private static org.uispec4j.Window getEnclosingWindow(Component enclosingPanel) {
     if (enclosingPanel instanceof java.awt.Window) {
-      return new org.uispec4j.Window((java.awt.Window)enclosingPanel);
+      return new org.uispec4j.Window((java.awt.Window) enclosingPanel);
 
     }
     return new org.uispec4j.Window(GuiUtils.getEnclosingFrame(enclosingPanel));
@@ -98,7 +101,7 @@ public class BalloonTipTesting {
     if (actual.length > 0) {
       StringBuilder builder = new StringBuilder("Visible tips:\n");
       for (Component component : actual) {
-        BalloonTip tip = (BalloonTip)component;
+        BalloonTip tip = (BalloonTip) component;
         builder.append(Utils.cleanupHtml(getText(tip)));
         String componentName = tip.getAttachedComponent().getName();
         if (Strings.isNotEmpty(componentName)) {
@@ -112,7 +115,7 @@ public class BalloonTipTesting {
 
   private static Component[] getBalloonTipComponents(Container panel) {
     ComponentFinder finder = new ComponentFinder(panel, new Panel(panel));
-    return finder.getComponents(and(fromClass(BalloonTip.class), visible(true)));
+    return finder.getComponents(and(fromClass(BalloonTip.class)));
   }
 
   public static void checkSingleBalloonVisible(Panel enclosingPanel) {
@@ -123,18 +126,11 @@ public class BalloonTipTesting {
     else if (tips.length > 1) {
       java.util.List<String> labels = new ArrayList<String>();
       for (Component component : tips) {
-        BalloonTip tip = (BalloonTip)component;
-        labels.add(((JLabel)tip.getContents()).getText());
+        BalloonTip tip = (BalloonTip) component;
+        labels.add(((JLabel) tip.getContents()).getText());
       }
       Assert.fail(tips.length + " tips shown : " + labels);
     }
-  }
-
-  public static void closeTip(Panel enclosingWindow,
-                              UIComponent targetUIComponent) {
-    BalloonTip tip = getBalloonTip(enclosingWindow.getAwtComponent(),
-                                   targetUIComponent.getAwtComponent());
-    tip.closeBalloon();
   }
 
   public static TipChecker getTip(Panel enclosingWindow,
