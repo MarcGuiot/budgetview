@@ -13,8 +13,6 @@ import org.designup.picsou.gui.components.tips.DetailsTip;
 import org.designup.picsou.gui.description.stringifiers.MonthFieldListStringifier;
 import org.designup.picsou.gui.description.stringifiers.MonthRangeFormatter;
 import org.designup.picsou.gui.help.actions.HelpAction;
-import org.designup.picsou.gui.license.activation.LicenseActivationDialog;
-import org.designup.picsou.gui.license.LicenseService;
 import org.designup.picsou.gui.startup.components.AutoCategorizationFunctor;
 import org.designup.picsou.gui.utils.Matchers;
 import org.designup.picsou.model.*;
@@ -400,7 +398,7 @@ public class TransactionCreationPanel extends View implements GlobSelectionListe
     try {
       repository.startChangeSet();
       repository.update(SignpostStatus.KEY,
-                        value(SignpostStatus.GOTO_DATA_DONE, true),
+                        value(SignpostStatus.INIT_STARTED, true),
                         value(SignpostStatus.GOTO_CATEGORIZATION_DONE, true),
                         value(SignpostStatus.IMPORT_STARTED, true),
                         value(SignpostStatus.WELCOME_SHOWN, true));

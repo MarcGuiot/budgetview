@@ -31,6 +31,7 @@ import org.designup.picsou.gui.series.PeriodAccountStatUpdater;
 import org.designup.picsou.gui.series.PeriodBudgetAreaStatUpdater;
 import org.designup.picsou.gui.series.PeriodSeriesStatUpdater;
 import org.designup.picsou.gui.series.SeriesEditor;
+import org.designup.picsou.gui.signpost.WelcomeView;
 import org.designup.picsou.gui.signpost.SignpostService;
 import org.designup.picsou.gui.signpost.SignpostView;
 import org.designup.picsou.gui.signpost.guides.ImportSignpost;
@@ -175,6 +176,7 @@ public class MainPanel {
       analysisView,
       new ProjectSelector(repository, directory),
       projectView,
+      new WelcomeView(replicationGlobRepository, directory),
       signpostView,
       new NotificationsFlagView(repository, directory));
 

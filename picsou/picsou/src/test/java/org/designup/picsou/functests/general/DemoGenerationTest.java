@@ -65,8 +65,7 @@ public class DemoGenerationTest extends LoggedInFunctionalTestCase {
     initCheckers();
 
     operations.openPreferences().setFutureMonthsCount(12).validate();
-    addOns.activateProjects();
-    addOns.activateAnalysis();
+    addOns.activateAll();
   }
 
   protected Locale getDefaultLocale() {

@@ -59,6 +59,24 @@ public class AddOns {
     return true;
   }
 
+  public static void enable(BooleanField field, GlobRepository repository) {
+    repository.update(AddOns.KEY, field, true);
+  }
+
+  public static void enableAll(GlobRepository repository) {
+    repository.startChangeSet();
+    try {
+      for (Field field : TYPE.getFields()) {
+        if (field instanceof BooleanField) {
+          repository.update(KEY, field, Boolean.TRUE);
+        }
+      }
+    }
+    finally {
+      repository.completeChangeSet();
+    }
+  }
+
   public interface Listener {
     void processAddOn(boolean enabled);
   }

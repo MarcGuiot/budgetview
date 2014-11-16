@@ -1,7 +1,7 @@
 package org.designup.picsou.gui.signpost.guides;
 
 import net.java.balloontip.BalloonTip;
-import org.designup.picsou.gui.signpost.PersistentSignpost;
+import org.designup.picsou.gui.signpost.SimpleSignpost;
 import org.designup.picsou.model.SignpostStatus;
 import org.designup.picsou.model.Transaction;
 import org.designup.picsou.utils.Lang;
@@ -13,10 +13,10 @@ import org.globsframework.utils.directory.Directory;
 
 import java.util.Set;
 
-public class ImportSignpost extends PersistentSignpost implements ChangeSetListener {
+public class ImportSignpost extends SimpleSignpost implements ChangeSetListener {
 
   public ImportSignpost(GlobRepository repository, Directory directory) {
-    super(SignpostStatus.IMPORT_STARTED, repository, directory);
+    super(Lang.get("signpost.import"), SignpostStatus.IMPORT_STARTED, SignpostStatus.WELCOME_SHOWN, repository, directory);
     setLocation(BalloonTip.Orientation.RIGHT_BELOW, BalloonTip.AttachLocation.SOUTHWEST);
   }
 
@@ -38,16 +38,14 @@ public class ImportSignpost extends PersistentSignpost implements ChangeSetListe
   }
 
   protected boolean canShow() {
-    return SignpostStatus.isCompleted(SignpostStatus.GOTO_DATA_DONE, repository) && super.canShow();
+    return SignpostStatus.isCompleted(SignpostStatus.WELCOME_SHOWN, repository) && super.canShow();
   }
 
-  private void update() {
-
+  protected void update() {
     if (SignpostStatus.isCompleted(SignpostStatus.IMPORT_STARTED, repository)) {
       dispose();
       return;
     }
-
     if (!repository.contains(Transaction.TYPE) && canShow()) {
       show(Lang.get("signpost.import"));
     }

@@ -31,13 +31,14 @@ public class SignpostSequenceTest extends LoggedInFunctionalTestCase {
   public void testCompleteSequence() throws Exception {
     addOns.activateAnalysis();
 
+    welcomeView.checkWelcomeViewShown();
+    checkNoSignpostVisible();
+    welcomeView.start();
+
     signpostView.checkSignpostViewShown();
 
     // === Import ===
 
-    views.checkDataSignpostVisible();
-
-    views.selectData();
     importPanel.checkImportSignpostDisplayed("Click here to import your operations");
 
     importPanel.openImport().close();
@@ -124,7 +125,7 @@ public class SignpostSequenceTest extends LoggedInFunctionalTestCase {
       .close();
 
     views.checkHomeSelected();
-    signpostView.checkSummaryViewShown();
+    signpostView.checkDashboardViewShown();
 
     // === Restart ===
 
@@ -132,7 +133,7 @@ public class SignpostSequenceTest extends LoggedInFunctionalTestCase {
 
     views.selectHome();
     checkNoSignpostVisible();
-    signpostView.checkSummaryViewShown();
+    signpostView.checkDashboardViewShown();
 
     views.selectBudget();
     checkNoSignpostVisible();
@@ -142,6 +143,7 @@ public class SignpostSequenceTest extends LoggedInFunctionalTestCase {
   }
 
   public void testSeriesHighlightInBudgetPhase() throws Exception {
+    welcomeView.start();
     signpostView.checkSignpostViewShown();
 
     // === Import ===
@@ -198,11 +200,12 @@ public class SignpostSequenceTest extends LoggedInFunctionalTestCase {
       .validate();
     budgetView.variable.checkPlannedNotHighlighted("Clothing");
 
-    signpostView.checkSummaryViewShown();
+    signpostView.checkDashboardViewShown();
   }
 
   public void testSeriesUnsetOnlyTakesCurrentSelectionIntoAccount() throws Exception {
 
+    welcomeView.start();
     views.selectData();
     importPanel.checkImportSignpostDisplayed("Click here to import your operations");
     importPanel.openImport().close();
@@ -231,11 +234,11 @@ public class SignpostSequenceTest extends LoggedInFunctionalTestCase {
       .close();
     budgetView.variable.checkPlannedNotHighlighted("Groceries");
 
-    signpostView.checkSummaryViewShown();
+    signpostView.checkDashboardViewShown();
   }
 
   public void testSkipCategorization() throws Exception {
-    views.selectData();
+    welcomeView.start();
     importPanel.checkImportSignpostDisplayed("Click here to import your operations");
     importPanel.openImport().close();
     checkNoSignpostVisible();
@@ -296,7 +299,7 @@ public class SignpostSequenceTest extends LoggedInFunctionalTestCase {
       .close();
 
     views.checkHomeSelected();
-    signpostView.checkSummaryViewShown();
+    signpostView.checkDashboardViewShown();
 
     views.selectBudget();
     checkNoSignpostVisible();
@@ -334,6 +337,7 @@ public class SignpostSequenceTest extends LoggedInFunctionalTestCase {
   }
 
   public void testRestartDuringBudgetTuning() throws Exception {
+    welcomeView.start();
     signpostView.checkSignpostViewShown();
 
     // === Import ===
@@ -395,7 +399,7 @@ public class SignpostSequenceTest extends LoggedInFunctionalTestCase {
       .close();
 
     views.checkHomeSelected();
-    signpostView.checkSummaryViewShown();
+    signpostView.checkDashboardViewShown();
     checkNoSignpostVisible();
 
     views.selectBudget();
@@ -406,7 +410,7 @@ public class SignpostSequenceTest extends LoggedInFunctionalTestCase {
   }
 
   public void testSignpostsNotShownAfterRestore() throws Exception {
-    views.selectData();
+    welcomeView.start();
     importPanel.checkImportSignpostDisplayed("Click here to import your operations");
     importPanel.openImport().close();
     OfxBuilder
@@ -421,7 +425,7 @@ public class SignpostSequenceTest extends LoggedInFunctionalTestCase {
       .setAmount(10.00)
       .validate();
     budgetView.variable.checkPlannedNotHighlighted("Groceries");
-    signpostView.checkSummaryViewShown();
+    signpostView.checkDashboardViewShown();
 
     setDeleteLocalPrevayler(true);
     String backupFilePath = operations.backup(this);
@@ -429,10 +433,11 @@ public class SignpostSequenceTest extends LoggedInFunctionalTestCase {
     restartApplication(true);
 
     operations.restore(backupFilePath);
-    signpostView.checkSummaryViewShown();
+    signpostView.checkDashboardViewShown();
   }
 
   public void testImportMoneyWithOneUncategorized() throws Exception {
+    welcomeView.start();
     signpostView.checkSignpostViewShown();
 
     operations.openImportDialog()
@@ -458,6 +463,7 @@ public class SignpostSequenceTest extends LoggedInFunctionalTestCase {
   }
 
   public void testImportMoneyWithAllCategorised() throws Exception {
+    welcomeView.start();
     signpostView.checkSignpostViewShown();
 
     operations.openImportDialog()
@@ -484,12 +490,12 @@ public class SignpostSequenceTest extends LoggedInFunctionalTestCase {
 
     // === Goto data ===
 
-    views.checkDataSignpostVisible();
-
     gotoDemoAccountAndBack();
+
+    welcomeView.checkWelcomeViewShown();
+    welcomeView.start();
     signpostView.checkSignpostViewShown();
     demoMessage.checkHidden();
-    views.checkDataSignpostVisible();
 
     // === Import file ===
 
@@ -573,11 +579,11 @@ public class SignpostSequenceTest extends LoggedInFunctionalTestCase {
       .close();
 
     views.checkHomeSelected();
-    signpostView.checkSummaryViewShown();
+    signpostView.checkDashboardViewShown();
   }
 
   public void testStartEnteringTransactionsManually() throws Exception {
-
+    welcomeView.start();
     signpostView.checkSignpostViewShown();
 
     operations.openImportDialog()
@@ -637,7 +643,7 @@ public class SignpostSequenceTest extends LoggedInFunctionalTestCase {
       .close();
 
     views.checkHomeSelected();
-    signpostView.checkSummaryViewShown();
+    signpostView.checkDashboardViewShown();
 
     views.selectBudget();
     checkNoSignpostVisible();
@@ -651,8 +657,8 @@ public class SignpostSequenceTest extends LoggedInFunctionalTestCase {
   }
 
   private void gotoDemoAccountAndBack(boolean checkData) {
-    signpostView.gotoDemoAccount();
-    signpostView.checkSummaryViewShown();
+    welcomeView.gotoDemoAccount();
+    signpostView.checkDashboardViewShown();
     demoMessage.checkVisible();
     checkNoSignpostVisible();
     if (checkData) {

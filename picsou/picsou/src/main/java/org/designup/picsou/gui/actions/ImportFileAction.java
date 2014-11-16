@@ -4,7 +4,6 @@ import org.designup.picsou.gui.components.dialogs.MessageDialog;
 import org.designup.picsou.gui.components.dialogs.MessageType;
 import org.designup.picsou.gui.importer.ImportDialog;
 import org.designup.picsou.gui.license.activation.LicenseActivationDialog;
-import org.designup.picsou.gui.license.LicenseService;
 import org.designup.picsou.gui.startup.components.OpenRequestManager;
 import org.designup.picsou.model.SignpostStatus;
 import org.designup.picsou.model.User;
@@ -30,7 +29,7 @@ public class ImportFileAction extends AbstractAction {
   private GlobRepository repository;
 
   static public ImportFileAction initForMenu(String text, final GlobRepository repository, final Directory directory) {
-    return new ImportFileAction(text, repository, directory, (Glob)null, true, false);
+    return new ImportFileAction(text, repository, directory, (Glob) null, true, false);
   }
 
   static public void registerToOpenRequestManager(String text, final GlobRepository repository, final Directory directory) {

@@ -2,7 +2,6 @@ package org.designup.picsou.gui.signpost;
 
 import org.designup.picsou.gui.View;
 import org.designup.picsou.gui.help.HyperlinkHandler;
-import org.designup.picsou.gui.signpost.actions.GotoDemoAccountAction;
 import org.designup.picsou.gui.signpost.sections.BudgetSectionPanel;
 import org.designup.picsou.gui.signpost.sections.CategorizationSectionPanel;
 import org.designup.picsou.gui.signpost.sections.ImportSectionPanel;
@@ -10,10 +9,10 @@ import org.designup.picsou.gui.signpost.sections.SignpostSectionPanel;
 import org.designup.picsou.model.SignpostSectionType;
 import org.designup.picsou.model.SignpostStatus;
 import org.globsframework.gui.GlobsPanelBuilder;
+import org.globsframework.gui.splits.PanelBuilder;
 import org.globsframework.gui.splits.SplitsLoader;
 import org.globsframework.gui.splits.SplitsNode;
 import org.globsframework.gui.splits.layout.CardHandler;
-import org.globsframework.gui.splits.PanelBuilder;
 import org.globsframework.gui.splits.repeat.RepeatComponentFactory;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.ChangeSet;
@@ -55,8 +54,6 @@ public class SignpostView extends View {
                         }
                       });
 
-    builder.add("gotoDemoAccount", new GotoDemoAccountAction(directory));
-
     parentBuilder.add("signpostView", builder);
 
     builder.addLoader(new SplitsLoader() {
@@ -90,8 +87,11 @@ public class SignpostView extends View {
     if (SignpostSectionType.isAllCompleted(repository)) {
       cardHandler.show("dashboard");
     }
-    else {
+    else if (SignpostStatus.isCompleted(SignpostStatus.WELCOME_SHOWN, repository)) {
       cardHandler.show("signposts");
+    }
+    else {
+      cardHandler.show("intro");
     }
   }
 

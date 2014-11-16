@@ -52,6 +52,7 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
   public ProjectSelectorChecker projects;
   public ProjectListChecker projectList;
   public ProjectEditionChecker currentProject;
+  public WelcomeViewChecker welcomeView;
   public SignpostViewChecker signpostView;
   public ReconciliationAnnotationChecker reconciliationAnnotations;
   public NotificationsChecker notifications;
@@ -177,6 +178,7 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
     projectList = new ProjectListChecker(mainWindow);
     currentProject = new ProjectEditionChecker(mainWindow);
     projects = new ProjectSelectorChecker(mainWindow);
+    welcomeView = new WelcomeViewChecker(mainWindow);
     signpostView = new SignpostViewChecker(mainWindow);
     notifications = new NotificationsChecker(mainWindow);
     reconciliationAnnotations = new ReconciliationAnnotationChecker(mainWindow);
@@ -241,6 +243,7 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
     projects = null;
     projectList = null;
     currentProject = null;
+    welcomeView = null;
     signpostView = null;
     reconciliationAnnotations = null;
     notifications = null;

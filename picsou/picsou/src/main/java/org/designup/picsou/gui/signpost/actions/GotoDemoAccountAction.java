@@ -12,7 +12,6 @@ public class GotoDemoAccountAction extends AbstractAction {
   private Directory directory;
 
   public GotoDemoAccountAction(Directory directory) {
-    super(Lang.get("signpostView.gotoDemo.button"));
     this.directory = directory;
   }
 

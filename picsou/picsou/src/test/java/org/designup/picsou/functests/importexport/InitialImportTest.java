@@ -17,10 +17,6 @@ public class InitialImportTest extends LoggedInFunctionalTestCase {
   public void testInitialImport() throws Exception {
     newVersion.checkNoNewVersionShown();
 
-    views.checkDataSignpostVisible();
-    views.selectData();
-    importPanel.checkImportSignpostDisplayed("Click here to import your operations");
-
     views.selectBudget();
     timeline.checkMonthTooltip("2008/08", "August 2008");
 

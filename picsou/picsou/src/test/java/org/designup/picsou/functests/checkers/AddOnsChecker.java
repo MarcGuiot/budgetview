@@ -13,6 +13,10 @@ public class AddOnsChecker extends ViewChecker {
     super(mainWindow);
   }
 
+  public void activateAll() {
+    AddOns.enableAll(getRepository());
+  }
+
   public void activateProjects() {
     enable(AddOns.PROJECTS);
   }
@@ -26,9 +30,13 @@ public class AddOnsChecker extends ViewChecker {
   }
 
   private void enable(BooleanField field) {
+    AddOns.enable(field, getRepository());
+  }
+
+  private GlobRepository getRepository() {
     if (repository == null) {
-      repository = ((PicsouFrame)mainWindow.getAwtComponent()).getRepository();
+      repository = ((PicsouFrame) mainWindow.getAwtComponent()).getRepository();
     }
-    repository.update(AddOns.KEY, field, true);
+    return repository;
   }
 }

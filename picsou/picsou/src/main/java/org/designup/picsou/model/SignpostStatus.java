@@ -32,8 +32,9 @@ public class SignpostStatus {
   @Key
   public static IntegerField ID;
 
+  public static BooleanField INIT_STARTED;
   public static BooleanField WELCOME_SHOWN;
-  public static BooleanField GOTO_DATA_DONE;
+
   @NoObfuscation
   public static BooleanField IMPORT_STARTED;
   public static BooleanField GOTO_CATEGORIZATION_DONE;
@@ -70,7 +71,7 @@ public class SignpostStatus {
   public static void init(GlobRepository repository) {
     repository.startChangeSet();
     try {
-      setCompleted(SignpostStatus.WELCOME_SHOWN, repository);
+      setCompleted(SignpostStatus.IMPORT_STARTED, repository, repository.contains(Transaction.TYPE));
       Glob status = repository.get(KEY);
       if (status.get(CURRENT_SECTION) == SignpostSectionType.NOT_STARTED.getId()) {
         repository.update(KEY, CURRENT_SECTION, SignpostSectionType.IMPORT.id);
@@ -98,8 +99,12 @@ public class SignpostStatus {
   }
   
   public static void setCompleted(BooleanField completionField, GlobRepository repository) {
+    setCompleted(completionField, repository, true);
+  }
+
+  public static void setCompleted(BooleanField completionField, GlobRepository repository, boolean value) {
     repository.findOrCreate(KEY);
-    repository.update(KEY, completionField, true);
+    repository.update(KEY, completionField, value);
   }
 
   public static void setAllCompleted(GlobRepository repository) {
@@ -124,7 +129,7 @@ public class SignpostStatus {
     setCompleted(CATEGORIZATION_AREA_SELECTION_DONE, repository);
     setCompleted(FIRST_CATEGORIZATION_DONE, repository);
     setCompleted(GOTO_CATEGORIZATION_DONE, repository);
-    setCompleted(GOTO_DATA_DONE, repository);
+    setCompleted(INIT_STARTED, repository);
     setCompleted(IMPORT_STARTED, repository);
     repository.completeChangeSet();
   }
@@ -212,7 +217,7 @@ public class SignpostStatus {
       SerializedOutput outputStream = serializedByteArrayOutput.getOutput();
       outputStream.writeBoolean(values.get(IMPORT_STARTED));
       outputStream.writeBoolean(values.get(WELCOME_SHOWN));
-      outputStream.writeBoolean(values.get(GOTO_DATA_DONE));
+      outputStream.writeBoolean(values.get(INIT_STARTED));
       outputStream.writeBoolean(values.get(GOTO_CATEGORIZATION_DONE));
       outputStream.writeBoolean(values.get(CATEGORIZATION_SELECTION_DONE));
       outputStream.writeBoolean(values.get(CATEGORIZATION_AREA_SELECTION_DONE));
@@ -235,7 +240,7 @@ public class SignpostStatus {
       SerializedInput input = SerializedInputOutputFactory.init(data);
       fieldSetter.set(IMPORT_STARTED, input.readBoolean());
       fieldSetter.set(WELCOME_SHOWN, input.readBoolean());
-      fieldSetter.set(GOTO_DATA_DONE, input.readBoolean());
+      fieldSetter.set(INIT_STARTED, input.readBoolean());
       fieldSetter.set(GOTO_CATEGORIZATION_DONE, input.readBoolean());
       fieldSetter.set(CATEGORIZATION_SELECTION_DONE, input.readBoolean());
       fieldSetter.set(CATEGORIZATION_AREA_SELECTION_DONE, input.readBoolean());
@@ -256,7 +261,7 @@ public class SignpostStatus {
       SerializedInput input = SerializedInputOutputFactory.init(data);
       fieldSetter.set(IMPORT_STARTED, input.readBoolean());
       fieldSetter.set(WELCOME_SHOWN, input.readBoolean());
-      fieldSetter.set(GOTO_DATA_DONE, input.readBoolean());
+      fieldSetter.set(INIT_STARTED, input.readBoolean());
       fieldSetter.set(GOTO_CATEGORIZATION_DONE, input.readBoolean());
       fieldSetter.set(CATEGORIZATION_SELECTION_DONE, input.readBoolean());
       fieldSetter.set(CATEGORIZATION_AREA_SELECTION_DONE, input.readBoolean());
@@ -279,7 +284,7 @@ public class SignpostStatus {
       SerializedInput input = SerializedInputOutputFactory.init(data);
       fieldSetter.set(IMPORT_STARTED, input.readBoolean());
       fieldSetter.set(WELCOME_SHOWN, input.readBoolean());
-      fieldSetter.set(GOTO_DATA_DONE, input.readBoolean());
+      fieldSetter.set(INIT_STARTED, input.readBoolean());
       fieldSetter.set(GOTO_CATEGORIZATION_DONE, input.readBoolean());
       fieldSetter.set(CATEGORIZATION_SELECTION_DONE, input.readBoolean());
       fieldSetter.set(CATEGORIZATION_AREA_SELECTION_DONE, input.readBoolean());
@@ -301,7 +306,7 @@ public class SignpostStatus {
       SerializedInput input = SerializedInputOutputFactory.init(data);
       fieldSetter.set(IMPORT_STARTED, input.readBoolean());
       fieldSetter.set(WELCOME_SHOWN, input.readBoolean());
-      fieldSetter.set(GOTO_DATA_DONE, input.readBoolean());
+      fieldSetter.set(INIT_STARTED, input.readBoolean());
       fieldSetter.set(GOTO_CATEGORIZATION_DONE, input.readBoolean());
       fieldSetter.set(CATEGORIZATION_SELECTION_DONE, input.readBoolean());
       fieldSetter.set(CATEGORIZATION_AREA_SELECTION_DONE, input.readBoolean());
@@ -322,7 +327,7 @@ public class SignpostStatus {
       SerializedInput input = SerializedInputOutputFactory.init(data);
       fieldSetter.set(IMPORT_STARTED, input.readBoolean());
       fieldSetter.set(WELCOME_SHOWN, input.readBoolean());
-      fieldSetter.set(GOTO_DATA_DONE, input.readBoolean());
+      fieldSetter.set(INIT_STARTED, input.readBoolean());
       fieldSetter.set(GOTO_CATEGORIZATION_DONE, input.readBoolean());
       fieldSetter.set(CATEGORIZATION_SELECTION_DONE, input.readBoolean());
       fieldSetter.set(CATEGORIZATION_AREA_SELECTION_DONE, input.readBoolean());
@@ -341,7 +346,7 @@ public class SignpostStatus {
       SerializedInput input = SerializedInputOutputFactory.init(data);
       fieldSetter.set(IMPORT_STARTED, input.readBoolean());
       fieldSetter.set(WELCOME_SHOWN, input.readBoolean());
-      fieldSetter.set(GOTO_DATA_DONE, input.readBoolean());
+      fieldSetter.set(INIT_STARTED, input.readBoolean());
       fieldSetter.set(GOTO_CATEGORIZATION_DONE, input.readBoolean());
       fieldSetter.set(CATEGORIZATION_SELECTION_DONE, input.readBoolean());
       fieldSetter.set(CATEGORIZATION_AREA_SELECTION_DONE, input.readBoolean());
@@ -362,7 +367,7 @@ public class SignpostStatus {
       SerializedInput input = SerializedInputOutputFactory.init(data);
       fieldSetter.set(IMPORT_STARTED, input.readBoolean());
       fieldSetter.set(WELCOME_SHOWN, input.readBoolean());
-      fieldSetter.set(GOTO_DATA_DONE, input.readBoolean());
+      fieldSetter.set(INIT_STARTED, input.readBoolean());
       fieldSetter.set(GOTO_CATEGORIZATION_DONE, input.readBoolean());
       fieldSetter.set(CATEGORIZATION_SELECTION_DONE, input.readBoolean());
       fieldSetter.set(CATEGORIZATION_AREA_SELECTION_DONE, input.readBoolean());
@@ -382,7 +387,7 @@ public class SignpostStatus {
       SerializedInput input = SerializedInputOutputFactory.init(data);
       fieldSetter.set(IMPORT_STARTED, input.readBoolean());
       fieldSetter.set(WELCOME_SHOWN, input.readBoolean());
-      fieldSetter.set(GOTO_DATA_DONE, true);
+      fieldSetter.set(INIT_STARTED, true);
       fieldSetter.set(GOTO_CATEGORIZATION_DONE, true);
       fieldSetter.set(CATEGORIZATION_SELECTION_DONE, input.readBoolean());
       fieldSetter.set(CATEGORIZATION_AREA_SELECTION_DONE, input.readBoolean());
@@ -404,7 +409,7 @@ public class SignpostStatus {
       SerializedInput input = SerializedInputOutputFactory.init(data);
       fieldSetter.set(IMPORT_STARTED, input.readBoolean());
       fieldSetter.set(WELCOME_SHOWN, input.readBoolean());
-      fieldSetter.set(GOTO_DATA_DONE, true);
+      fieldSetter.set(INIT_STARTED, true);
       fieldSetter.set(GOTO_CATEGORIZATION_DONE, true);
       fieldSetter.set(CATEGORIZATION_SELECTION_DONE, input.readBoolean());
       fieldSetter.set(CATEGORIZATION_AREA_SELECTION_DONE, input.readBoolean());
@@ -425,7 +430,7 @@ public class SignpostStatus {
       SerializedInput input = SerializedInputOutputFactory.init(data);
       fieldSetter.set(IMPORT_STARTED, input.readBoolean());
       fieldSetter.set(WELCOME_SHOWN, input.readBoolean());
-      fieldSetter.set(GOTO_DATA_DONE, true);
+      fieldSetter.set(INIT_STARTED, true);
       fieldSetter.set(GOTO_CATEGORIZATION_DONE, true);
       fieldSetter.set(CATEGORIZATION_SELECTION_DONE, input.readBoolean());
       fieldSetter.set(CATEGORIZATION_AREA_SELECTION_DONE, input.readBoolean());

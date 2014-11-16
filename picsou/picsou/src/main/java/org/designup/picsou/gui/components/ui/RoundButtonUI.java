@@ -1,7 +1,5 @@
 package org.designup.picsou.gui.components.ui;
 
-import org.globsframework.gui.splits.utils.GuiUtils;
-
 import javax.swing.*;
 import javax.swing.plaf.basic.BasicButtonUI;
 import java.awt.*;
@@ -26,7 +24,7 @@ public class RoundButtonUI extends BasicButtonUI {
   public void installUI(JComponent component) {
     super.installUI(component);
 
-    JButton button = (JButton)component;
+    JButton button = (JButton) component;
     button.setOpaque(false);
     button.setBorderPainted(false);
     button.setFocusPainted(false);
@@ -58,8 +56,8 @@ public class RoundButtonUI extends BasicButtonUI {
 
   public void paint(Graphics g, JComponent c) {
 
-    JButton button = (JButton)c;
-    Graphics2D g2 = (Graphics2D)g.create();
+    JButton button = (JButton) c;
+    Graphics2D g2 = (Graphics2D) g.create();
     g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
     if (button.getModel().isPressed()) {

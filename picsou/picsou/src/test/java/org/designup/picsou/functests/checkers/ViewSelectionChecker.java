@@ -122,10 +122,6 @@ public class ViewSelectionChecker extends GuiChecker {
     }
   }
 
-  public void checkDataSignpostVisible() {
-    checkSignpostVisible(window, getToggle("data"), "Accounts");
-  }
-
   public void checkCategorizationSignpostVisible(String message) {
     checkSignpostVisible(window, getToggle("categorization"), message);
   }

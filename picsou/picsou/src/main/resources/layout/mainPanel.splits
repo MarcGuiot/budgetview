@@ -126,6 +126,9 @@
 
     <column name="home" styleClass="content">
       <cards ref="signpostCard" styleClass="innerContent">
+        <card name="intro">
+          <panel ref="welcomeView"/>
+        </card>
         <card name="signposts">
           <panel ref="signpostView"/>
         </card>

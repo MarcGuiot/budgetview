@@ -30,8 +30,6 @@ public class MainPanelContainer extends JPanel implements GlobSelectionListener 
     if (currentCard != null) {
       layout.setCard(Card.get(currentCard));
       invalidate();
-//      revalidate();
-//      validate();
     }
   }
 }

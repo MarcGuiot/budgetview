@@ -20,8 +20,6 @@ import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.Key;
-import static org.globsframework.model.utils.GlobMatchers.fieldIn;
-
 import org.globsframework.model.repository.LocalGlobRepository;
 import org.globsframework.model.repository.LocalGlobRepositoryBuilder;
 import org.globsframework.utils.directory.DefaultDirectory;
@@ -33,8 +31,12 @@ import java.awt.event.ActionEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
-import java.util.*;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+import static org.globsframework.model.utils.GlobMatchers.fieldIn;
 
 public class ImportDialog implements RealAccountImporter {
   private GlobRepository parentRepository;
@@ -101,7 +103,8 @@ public class ImportDialog implements RealAccountImporter {
     dialog.setCloseAction(new AbstractAction() {
       public void actionPerformed(ActionEvent e) {
         dialog.setVisible(false);
-        controller.complete();
+        if (controller != null)
+          controller.complete();
       }
     });
   }
@@ -117,10 +120,10 @@ public class ImportDialog implements RealAccountImporter {
 
   private void loadLocalRepository(GlobRepository repository) {
     GlobType[] globTypes = {Bank.TYPE, BankEntity.TYPE, MonthDay.TYPE,
-                            Account.TYPE, AccountUpdateMode.TYPE, BudgetArea.TYPE,
-                            Transaction.TYPE, Month.TYPE, UserPreferences.TYPE, CurrentMonth.TYPE, RealAccount.TYPE,
-                            Series.TYPE, SubSeries.TYPE, ImportedSeries.TYPE, TransactionImport.TYPE, CsvMapping.TYPE,
-                            Synchro.TYPE};
+      Account.TYPE, AccountUpdateMode.TYPE, BudgetArea.TYPE,
+      Transaction.TYPE, Month.TYPE, UserPreferences.TYPE, CurrentMonth.TYPE, RealAccount.TYPE,
+      Series.TYPE, SubSeries.TYPE, ImportedSeries.TYPE, TransactionImport.TYPE, CsvMapping.TYPE,
+      Synchro.TYPE};
 
     if (localRepository == null) {
       this.localRepository = LocalGlobRepositoryBuilder.init(repository)
@@ -173,7 +176,7 @@ public class ImportDialog implements RealAccountImporter {
   }
 
   public void show() {
-    final PicsouFrame frame = (PicsouFrame)parentDirectory.get(JFrame.class);
+    final PicsouFrame frame = (PicsouFrame) parentDirectory.get(JFrame.class);
     if (frame.isIconified()) {
       frame.addWindowListener(new WindowAdapter() {
         public void windowDeiconified(WindowEvent e) {
@@ -247,7 +250,7 @@ public class ImportDialog implements RealAccountImporter {
       Glob glob = localRepository.get(transaction);
       Integer account = glob.get(Transaction.ACCOUNT);
       DoubleRef value = accounts.get(account);
-      if (value == null){
+      if (value == null) {
         value = new DoubleRef();
         accounts.put(account, value);
       }

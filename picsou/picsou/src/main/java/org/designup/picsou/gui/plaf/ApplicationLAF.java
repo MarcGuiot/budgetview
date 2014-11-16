@@ -22,6 +22,7 @@ public class ApplicationLAF {
   private static final String PANEL_UI = org() + "designup.picsou.gui.plaf.WavePanelUI";
   private static final String LINK_BUTTON_UI = org() + "globsframework.gui.splits.components.HyperlinkButtonUI";
   private static final String CUSTOM_BUTTON_UI = org() + "designup.picsou.gui.components.ui.CustomButtonUI";
+  private static final String FLAT_BUTTON_UI = org() + "designup.picsou.gui.components.ui.FlatButtonUI";
   private static final String STYLED_TOGGLE_BUTTON_UI = org() + "globsframework.gui.splits.components.StyledToggleButtonUI";
   private static final String STYLED_PANEL_UI = org() + "globsframework.gui.splits.components.StyledPanelUI";
   private static final String SHADOWED_LABEL_UI = org() + "globsframework.gui.splits.components.ShadowedLabelUI";
@@ -29,6 +30,7 @@ public class ApplicationLAF {
   private static final String BUTTON_PANEL_UI = org() + "designup.picsou.gui.plaf.ButtonPanelItemUI";
   private static final String ARROW_BUTTON_UI = org() + "designup.picsou.gui.components.ui.ArrowButtonUI";
   private static final String PLUS_MINUS_TOGGLE_UI = org() + "designup.picsou.gui.components.ui.PlusMinusToggleUI";
+  private static final String LINE_LABEL_UI = org() + "designup.picsou.gui.components.ui.LineLabelUI";
   private static final String ON_OFF_TOGGLE_UI = org() + "designup.picsou.gui.components.ui.OnOffToggleUI";
   private static final String ROUND_BUTTON_UI = org() + "designup.picsou.gui.components.ui.RoundButtonUI";
   private static final String FLAT_SCROLLBAR_UI = org() + "designup.picsou.gui.components.ui.FlatScrollbarUI";
@@ -57,6 +59,7 @@ public class ApplicationLAF {
     uiService.registerClass(PANEL_UI, WavePanelUI.class);
     uiService.registerClass(LINK_BUTTON_UI, HyperlinkButtonUI.class);
     uiService.registerClass(CUSTOM_BUTTON_UI, CustomButtonUI.class);
+    uiService.registerClass(FLAT_BUTTON_UI, FlatButtonUI.class);
     uiService.registerClass(STYLED_TOGGLE_BUTTON_UI, StyledToggleButtonUI.class);
     uiService.registerClass(STYLED_PANEL_UI, StyledPanelUI.class);
     uiService.registerClass(SHADOWED_LABEL_UI, ShadowedLabelUI.class);
@@ -65,6 +68,7 @@ public class ApplicationLAF {
     uiService.registerClass(BUTTON_PANEL_UI, ButtonPanelItemUI.class);
     uiService.registerClass(ARROW_BUTTON_UI, ArrowButtonUI.class);
     uiService.registerClass(PLUS_MINUS_TOGGLE_UI, PlusMinusToggleUI.class);
+    uiService.registerClass(LINE_LABEL_UI, LineLabelUI.class);
     uiService.registerClass(ON_OFF_TOGGLE_UI, OnOffToggleUI.class);
     uiService.registerClass(VERTICAL_TAB_TOGGLE_UI, VerticalTabToggleUI.class);
     uiService.registerClass(VERTICAL_TAB_PANEL_UI, VerticalTabPanelUI.class);

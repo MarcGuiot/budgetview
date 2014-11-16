@@ -1,0 +1,71 @@
+<splits xmlns="http://www.globsframework.org/xml/splits.xsd">
+
+  <styleImport file="/layout/commonStyles.splits"/>
+  <styleImport file="/layout/signpost/signpostStyles.splits"/>
+  <styles>
+
+    <style selector="label.contentTitle" font="LatoBold,plain,24" foreground="signpostView.title"
+           fill="none" anchor="center" marginBottom="30"/>
+    <style selector="label.intro" font="LatoBold,plain,14"
+           fill="none" anchor="center" marginBottom="20"/>
+
+    <style selector="label.number" font="LatoBold,plain,40" fill="none" anchor="center"/>
+    <style selector="htmlEditorPane.text" font="LatoBold,plain,13" fill="horizontal" anchor="center"/>
+
+    <ui name="horizontalSeparatorUI" class="org.designup.picsou.gui.components.ui.LineLabelUI"/>
+    <style selector="label.horizontalSeparator" ui="horizontalSeparatorUI"
+           foreground="splitpane.main.handle" background="content.bg"
+           fill="horizontal" marginTop="10" marginBottom="10"/>
+
+    <style selector=".actionsPanel label" font="LatoRegular,plain,14" fill="none" anchor="center"/>
+    <ui name="flatButtonUI" class="org.designup.picsou.gui.components.ui.FlatButtonUI"
+        bgColor="welcomeView.button"
+        disabledBgColor="welcomeView.button.disabled"
+        rolloverBgColor="welcomeView.button.rollover"/>
+    <style selector=".actionsPanel button" ui="flatButtonUI"
+           font="LatoRegular,plain,16" marginTop="15"
+           foreground="welcomeView.button.text" weightX="0.01" fill="none" anchor="center"/>
+
+  </styles>
+
+  <row opaque="true" background="block.inner.bg">
+    <filler fill="horizontal"/>
+    <column name="welcomeIntro">
+
+      <row>
+        <label icon="/dashboard/cloudy.png"/>
+        <label text="$welcomeView.title" styleClass="contentTitle"/>
+      </row>
+
+      <filler fill="vertical"/>
+
+      <label styleClass="horizontalSeparator"/>
+
+      <label text="$welcomeView.intro" styleClass="intro"/>
+      <grid>
+        <label text="1" gridPos="(0,0)" styleClass="number"/>
+        <htmlEditorPane text="$welcomeView.text.1" gridPos="(1,0)" styleClass="text"/>
+        <label text="2" gridPos="(0,1)" styleClass="number"/>
+        <htmlEditorPane text="$welcomeView.text.2" gridPos="(1,1)" styleClass="text"/>
+        <label text="3" gridPos="(0,2)" styleClass="number"/>
+        <htmlEditorPane text="$welcomeView.text.3" gridPos="(1,2)" styleClass="text"/>
+      </grid>
+
+      <label styleClass="horizontalSeparator"/>
+
+      <filler fill="vertical"/>
+
+      <grid styleClass="actionsPanel">
+        <label text="$welcomeView.demo.label" gridPos="(0,0)"/>
+        <button action="demo" text="$welcomeView.demo.button" gridPos="(0,1)"/>
+        <label text="$welcomeView.start.label" gridPos="(1,0)"/>
+        <button action="start" text="$welcomeView.start.button" gridPos="(1,1)"/>
+      </grid>
+
+      <filler fill="vertical"/>
+
+    </column>
+    <filler fill="horizontal"/>
+  </row>
+
+</splits>

@@ -8,7 +8,6 @@ import org.designup.picsou.gui.model.Card;
 import org.designup.picsou.gui.signpost.PersistentSignpost;
 import org.designup.picsou.gui.signpost.SignpostService;
 import org.designup.picsou.gui.signpost.guides.GotoCategorizationSignpost;
-import org.designup.picsou.gui.signpost.guides.GotoDataSignpost;
 import org.designup.picsou.gui.signpost.guides.SkipAndGotoBudgetSignpost;
 import org.designup.picsou.gui.utils.Gui;
 import org.designup.picsou.model.AddOns;
@@ -72,10 +71,6 @@ public class CardView extends View implements GlobSelectionListener {
           categorizationCompletionSignpost.attach(toggle);
           PersistentSignpost gotoBudgetSignpost = new SkipAndGotoBudgetSignpost(repository, directory);
           gotoBudgetSignpost.attach(toggle);
-          break;
-        case DATA:
-          PersistentSignpost gotoDataSignpost = new GotoDataSignpost(repository, directory);
-          gotoDataSignpost.attach(toggle);
           break;
         case CATEGORIZATION:
           PersistentSignpost gotoCategorizationSignpost = new GotoCategorizationSignpost(repository, directory);
