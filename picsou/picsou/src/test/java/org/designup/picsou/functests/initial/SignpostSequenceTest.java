@@ -31,16 +31,19 @@ public class SignpostSequenceTest extends LoggedInFunctionalTestCase {
   public void testCompleteSequence() throws Exception {
     addOns.activateAnalysis();
 
+    views.selectHome();
     welcomeView.checkWelcomeViewShown();
+    accounts.checkHidden();
     checkNoSignpostVisible();
     welcomeView.start();
+    accounts.checkHidden();
 
     signpostView.checkSignpostViewShown();
+    accounts.checkHidden();
 
     // === Import ===
 
     importPanel.checkImportSignpostDisplayed("Click here to import your operations");
-
     importPanel.openImport().close();
     checkNoSignpostVisible();
 
@@ -58,6 +61,10 @@ public class SignpostSequenceTest extends LoggedInFunctionalTestCase {
     // === Categorization selection ===
 
     views.checkDataSelected();
+    views.checkCategorizationSignpostVisible("Categorization");
+
+    views.selectHome();
+    accounts.checkHidden();
     views.checkCategorizationSignpostVisible("Categorization");
 
     views.selectCategorization();
@@ -86,6 +93,9 @@ public class SignpostSequenceTest extends LoggedInFunctionalTestCase {
     views.selectBudget();
     budgetView.variable.checkAmountSignpostDisplayed(
       "Groceries", "Click on the planned amounts to set your own values");
+
+    views.selectHome();
+    accounts.checkHidden();
 
     // === Editing series amounts in SeriesEvolution does not remove budget view signpost ===
 
@@ -120,12 +130,12 @@ public class SignpostSequenceTest extends LoggedInFunctionalTestCase {
     budgetView.variable.checkPlannedUnsetAndHighlighted("Clothing");
     views.selectBudget();
     SignpostDialogChecker
-      .open(
-        budgetView.variable.editPlannedAmount("Clothing").setAmount(10.00).triggerValidate())
+      .open(budgetView.variable.editPlannedAmount("Clothing").setAmount(10.00).triggerValidate())
       .close();
 
     views.checkHomeSelected();
     signpostView.checkDashboardViewShown();
+    accounts.checkShown();
 
     // === Restart ===
 
@@ -326,6 +336,8 @@ public class SignpostSequenceTest extends LoggedInFunctionalTestCase {
     views.selectBudget();
     budgetView.variable.checkAmountSignpostDisplayed(
       "Misc", "Click on the planned amounts to set your own values");
+    views.selectHome();
+    accounts.checkHidden();
 
     // === Restart ===
     restartApplication();
@@ -334,6 +346,8 @@ public class SignpostSequenceTest extends LoggedInFunctionalTestCase {
     views.selectBudget();
     budgetView.variable.checkAmountSignpostDisplayed(
       "Misc", "Click on the planned amounts to set your own values");
+    views.selectHome();
+    accounts.checkHidden();
   }
 
   public void testRestartDuringBudgetTuning() throws Exception {

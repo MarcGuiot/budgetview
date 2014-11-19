@@ -1,10 +1,14 @@
 package org.designup.picsou.gui.utils;
 
 import org.designup.picsou.gui.model.Card;
+import org.designup.picsou.model.SignpostStatus;
 import org.globsframework.gui.GlobSelection;
 import org.globsframework.gui.GlobSelectionListener;
 import org.globsframework.gui.SelectionService;
 import org.globsframework.model.Glob;
+import org.globsframework.model.GlobRepository;
+import org.globsframework.model.repository.ReplicationGlobRepository;
+import org.globsframework.model.utils.KeyChangeListener;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
@@ -13,9 +17,18 @@ import java.awt.*;
 public class MainPanelContainer extends JPanel implements GlobSelectionListener {
 
   private MainPanelLayout layout;
+  private GlobRepository repository;
+  private SelectionService selectionService;
 
-  public MainPanelContainer(Directory directory) {
+  public MainPanelContainer(ReplicationGlobRepository repository, Directory directory) {
+    this.repository = repository;
+    this.selectionService = directory.get(SelectionService.class);
     directory.get(SelectionService.class).addListener(this, Card.TYPE);
+    repository.addChangeListener(new KeyChangeListener(SignpostStatus.KEY) {
+      public void update() {
+        updateLayout();
+      }
+    });
   }
 
   public void setLayout(LayoutManager mgr) {
@@ -26,10 +39,16 @@ public class MainPanelContainer extends JPanel implements GlobSelectionListener 
   }
 
   public void selectionUpdated(GlobSelection selection) {
-    Glob currentCard = selection.getAll(Card.TYPE).getFirst();
-    if (currentCard != null) {
-      layout.setCard(Card.get(currentCard));
-      invalidate();
+    updateLayout();
+  }
+
+  private void updateLayout() {
+    if (layout != null) {
+      Glob currentCard = selectionService.getSelection(Card.TYPE).getFirst();
+      if (currentCard != null) {
+        layout.setCard(Card.get(currentCard), SignpostStatus.isInitialGuidanceCompleted(repository));
+        invalidate();
+      }
     }
   }
 }

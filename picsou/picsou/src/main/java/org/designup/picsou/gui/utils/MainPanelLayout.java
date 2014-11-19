@@ -31,8 +31,10 @@ public class MainPanelLayout implements LayoutManager {
   private static final int PROJECTS = 5;
 
   private StretchMode stretchMode = StretchMode.FIXED_SIDEBAR;
+  private boolean initialGuidanceCompleted;
 
   private enum StretchMode {
+    NO_SIDEBAR,
     FIXED_SIDEBAR,
     FIXED_CONTENT
   }
@@ -51,12 +53,13 @@ public class MainPanelLayout implements LayoutManager {
     return new Dimension(50, 50);
   }
 
-  public void setCard(Card card) {
+  public void setCard(Card card, boolean initialGuidanceCompleted) {
+    this.initialGuidanceCompleted = initialGuidanceCompleted;
     switch (card) {
       case HOME:
         currentSidebar = ACCOUNT_VIEW;
         currentContentPanel = HOME;
-        stretchMode = StretchMode.FIXED_SIDEBAR;
+        stretchMode = this.initialGuidanceCompleted ? StretchMode.FIXED_SIDEBAR : StretchMode.NO_SIDEBAR;
         break;
       case BUDGET:
         currentSidebar = ACCOUNT_VIEW;
@@ -93,7 +96,7 @@ public class MainPanelLayout implements LayoutManager {
 
   public void updateComponents() {
     for (int i = 0; i < sidebars.length; i++) {
-      sidebars[i].setVisible(i == currentSidebar);
+      sidebars[i].setVisible((stretchMode != StretchMode.NO_SIDEBAR) && (i == currentSidebar));
     }
     for (int i = 0; i < contentPanels.length; i++) {
       contentPanels[i].setVisible(i == currentContentPanel);
@@ -173,6 +176,10 @@ public class MainPanelLayout implements LayoutManager {
     int sidebarWidth;
     int contentWidth;
     switch (stretchMode) {
+      case NO_SIDEBAR:
+        sidebarWidth = 0;
+        contentWidth = width - sidebarWidth;
+        break;
       case FIXED_SIDEBAR:
         sidebarWidth = sidebars[currentSidebar].getPreferredSize().width;
         contentWidth = width - actionsBarWidth - sidebarWidth;

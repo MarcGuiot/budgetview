@@ -119,8 +119,6 @@ public class MainPanel {
 
     builder = new GlobsPanelBuilder(MainPanel.class, "/layout/mainPanel.splits", repository, directory);
 
-    builder.add("mainPanel", new MainPanelContainer(directory));
-
     PeriodView periodView = new PeriodView(repository, directory);
     timeView = new TimeView(repository, directory);
 
@@ -131,6 +129,9 @@ public class MainPanel {
 
     ReplicationGlobRepository replicationGlobRepository =
       new ReplicationGlobRepository(repository, PeriodSeriesStat.TYPE, PeriodBudgetAreaStat.TYPE, PeriodAccountStat.TYPE);
+
+    builder.add("mainPanel", new MainPanelContainer(replicationGlobRepository, directory));
+
     projectView = new ProjectView(repository, directory);
 
     budgetView = new BudgetView(replicationGlobRepository, directory);

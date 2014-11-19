@@ -84,4 +84,14 @@ public class AccountViewChecker extends ViewChecker {
     }
     return this;
   }
+
+  public AccountViewChecker checkHidden() {
+    checkComponentVisible(mainWindow, JPanel.class, "accountView", false);
+    return this;
+  }
+
+  public AccountViewChecker checkShown() {
+    checkComponentVisible(mainWindow, JPanel.class, "accountView", true);
+    return this;
+  }
 }
