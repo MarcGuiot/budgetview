@@ -95,8 +95,6 @@ public class CategorizationView extends View {
     CategorizationAreaSignpost areaSignpost = new CategorizationAreaSignpost(repository, directory);
     areaSignpost.attach(budgetAreaSelectionPanel);
 
-//    builder.add("categorizationSplit", SplitPaneConfig.create(directory, LayoutConfig.CATEGORIZATION_HORIZONTAL));
-
     parentBuilder.add("categorizationView", builder);
   }
 

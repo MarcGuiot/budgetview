@@ -104,6 +104,7 @@ public class AnalysisView extends View {
     for (AnalysisViewPanel viewPanel : viewPanels) {
       viewPanel.reset();
     }
+    parentSelectionService.select(AnalysisViewType.BUDGET.getGlob());
     referenceMonthId = null;
   }
 

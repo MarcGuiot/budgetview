@@ -54,6 +54,8 @@ public class SeriesEvolutionViewTest extends LoggedInFunctionalTestCase {
       .validate();
 
     timeline.selectMonth("2008/07");
+
+    seriesAnalysis.checkBudgetShown();
     seriesAnalysis.table().checkColumnNames(
       "", "June 2008", "Jul 2008", "Aug 2008", "Sep 2008", "Oct 2008", "Nov 2008", "Dec 2008", "Jan 2009"
     );
