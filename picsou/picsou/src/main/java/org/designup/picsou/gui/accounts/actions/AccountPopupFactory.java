@@ -50,7 +50,7 @@ public class AccountPopupFactory implements PopupMenuFactory, Disposable {
     this.moveDownAction = new MoveAccountDown(account.getKey(), repository);
     disposables.add(moveDownAction);
 
-    this.toggleShowGraph = new ToggleBooleanAction(account.getKey(), Account.SHOW_GRAPH,
+    this.toggleShowGraph = new ToggleBooleanAction(account.getKey(), Account.SHOW_CHART,
                                                    Lang.get("account.chart.hide"), Lang.get("account.chart.show"),
                                                    repository);
     disposables.add(toggleShowGraph);

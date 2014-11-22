@@ -395,7 +395,7 @@ public class SynchroTest extends LoggedInFunctionalTestCase {
       .setMainAccount()
       .completeImport();
 
-    mainAccounts.checkPosition("principal", 100.);
+    mainAccounts.checkPosition("principal", 100.00);
 
     String path2 = QifBuilder
       .init(this)

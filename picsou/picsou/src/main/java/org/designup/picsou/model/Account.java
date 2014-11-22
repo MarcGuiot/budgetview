@@ -130,7 +130,7 @@ public class Account {
   public static LinkField CLOSED_TRANSACTION;
 
   @DefaultBoolean(true)
-  public static BooleanField SHOW_GRAPH;
+  public static BooleanField SHOW_CHART;
 
   public static IntegerField SEQUENCE;
 
@@ -206,7 +206,7 @@ public class Account {
            AccountType.MAIN.getId().equals(account.get(Account.ACCOUNT_TYPE));
   }
 
-  public static boolean isSavings(Glob account) {
+  public static boolean isSavings(FieldValues account) {
     return account != null && AccountType.SAVINGS.getId().equals(account.get(ACCOUNT_TYPE));
   }
 
@@ -441,7 +441,7 @@ public class Account {
       outputStream.writeInteger(values.get(DEFERRED_MONTH_SHIFT));
       outputStream.writeDouble(values.get(PAST_POSITION));
       outputStream.writeInteger(values.get(DEFERRED_TARGET_ACCOUNT));
-      outputStream.writeBoolean(values.get(SHOW_GRAPH));
+      outputStream.writeBoolean(values.get(SHOW_CHART));
       outputStream.writeInteger(values.get(SEQUENCE));
       return serializedByteArrayOutput.toByteArray();
     }
@@ -513,7 +513,7 @@ public class Account {
       fieldSetter.set(DEFERRED_MONTH_SHIFT, input.readInteger());
       fieldSetter.set(PAST_POSITION, input.readDouble());
       fieldSetter.set(DEFERRED_TARGET_ACCOUNT, input.readInteger());
-      fieldSetter.set(SHOW_GRAPH, input.readBoolean());
+      fieldSetter.set(SHOW_CHART, input.readBoolean());
       fieldSetter.set(SEQUENCE, input.readInteger());
     }
 
@@ -545,7 +545,7 @@ public class Account {
       fieldSetter.set(DEFERRED_MONTH_SHIFT, input.readInteger());
       fieldSetter.set(PAST_POSITION, input.readDouble());
       fieldSetter.set(DEFERRED_TARGET_ACCOUNT, input.readInteger());
-      fieldSetter.set(SHOW_GRAPH, true);
+      fieldSetter.set(SHOW_CHART, true);
     }
 
     private void deserializeDataV10(FieldSetter fieldSetter, byte[] data) {

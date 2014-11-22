@@ -21,7 +21,6 @@ import org.globsframework.gui.splits.PanelBuilder;
 import org.globsframework.gui.splits.SplitsNode;
 import org.globsframework.gui.splits.repeat.RepeatComponentFactory;
 import org.globsframework.gui.utils.BooleanFieldListener;
-import org.globsframework.gui.utils.BooleanListener;
 import org.globsframework.gui.views.GlobButtonView;
 import org.globsframework.gui.views.GlobLabelView;
 import org.globsframework.metamodel.fields.BooleanField;
@@ -131,7 +130,7 @@ public class AccountChartsPanel {
       final SplitsNode<HistoChart> chartNode = accountChart.registerComponents(cellBuilder);
 
       BooleanFieldListener showHide =
-        BooleanFieldListener.installNodeStyle(account.getKey(), Account.SHOW_GRAPH,
+        BooleanFieldListener.installNodeStyle(account.getKey(), Account.SHOW_CHART,
                                               chartNode, "accountChartShown", "accountChartHidden", repository);
       cellBuilder.addDisposable(showHide);
     }

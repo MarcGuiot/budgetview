@@ -57,7 +57,11 @@ public abstract class PopupChecker {
 
   private void setCheckBoxSelected(String menuItem, String message, boolean selected) {
     MenuItem menu = openMenu();
-    JCheckBoxMenuItem item = (JCheckBoxMenuItem)menu.getSubMenu(menuItem).getAwtComponent();
+    Component awtComponent = menu.getSubMenu(menuItem).getAwtComponent();
+    if (!(awtComponent instanceof JCheckBoxMenuItem)) {
+      Assert.fail("Selection is possible only for CheckBox items. For other items types use click(option).");
+    }
+    JCheckBoxMenuItem item = (JCheckBoxMenuItem) awtComponent;
     Assert.assertEquals(message, !selected, item.isSelected());
     item.doClick();
     close(menu);

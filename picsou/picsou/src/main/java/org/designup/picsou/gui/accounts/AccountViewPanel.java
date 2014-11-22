@@ -152,7 +152,7 @@ public abstract class AccountViewPanel {
       cellBuilder.addDisposable(chartView);
 
       GlobBooleanVisibilityUpdater chartUpdater =
-        GlobBooleanVisibilityUpdater.init(account.getKey(), Account.SHOW_GRAPH, chartView.getChart(), repository);
+        GlobBooleanVisibilityUpdater.init(account.getKey(), Account.SHOW_CHART, chartView.getChart(), repository);
       cellBuilder.addDisposable(chartUpdater);
 
       GlobSelectionToggle selectionToggle = new GlobSelectionToggle(account.getKey(), repository, directory);

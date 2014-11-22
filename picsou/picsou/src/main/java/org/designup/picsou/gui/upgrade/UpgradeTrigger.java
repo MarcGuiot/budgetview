@@ -7,6 +7,7 @@ import org.designup.picsou.gui.projects.utils.ProjectErrorsUpgrade;
 import org.designup.picsou.gui.projects.utils.ProjectUpgrade;
 import org.designup.picsou.gui.series.utils.SeriesErrorsUpgrade;
 import org.designup.picsou.gui.utils.FrameSize;
+import org.designup.picsou.gui.utils.Matchers;
 import org.designup.picsou.importer.analyzer.TransactionAnalyzerFactory;
 import org.designup.picsou.model.*;
 import org.designup.picsou.triggers.AccountInitialPositionTrigger;
@@ -150,6 +151,7 @@ public class UpgradeTrigger implements ChangeSetListener {
     }
     if (currentJarVersion < 141) {
       updateTargetAccountForSeries(repository);
+      updageAccountGraphs(repository);
     }
 
     //dans tout les cas :
@@ -176,6 +178,12 @@ public class UpgradeTrigger implements ChangeSetListener {
     }
 
     repository.update(UserVersionInformation.KEY, UserVersionInformation.CURRENT_JAR_VERSION, PicsouApplication.JAR_VERSION);
+  }
+
+  private void updageAccountGraphs(GlobRepository repository) {
+    for (Glob account : repository.getAll(Account.TYPE, Matchers.userCreatedAccounts())) {
+      repository.update(account.getKey(), Account.SHOW_CHART, !Account.isSavings(account));
+    }
   }
 
   private void resetLayout(Glob config, GlobRepository repository) {

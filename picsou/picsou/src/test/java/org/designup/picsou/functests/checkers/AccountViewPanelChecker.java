@@ -4,24 +4,21 @@ import junit.framework.Assert;
 import org.designup.picsou.functests.checkers.components.HistoDailyChecker;
 import org.designup.picsou.functests.checkers.components.PopupButton;
 import org.designup.picsou.gui.accounts.components.AccountWeatherButton;
+import org.designup.picsou.gui.components.charts.histo.HistoChart;
 import org.designup.picsou.gui.components.charts.histo.HistoSelectionManager;
 import org.designup.picsou.gui.description.Formatting;
 import org.designup.picsou.model.Day;
 import org.designup.picsou.utils.Lang;
-import org.globsframework.gui.splits.color.Colors;
-import org.globsframework.gui.splits.components.RectIcon;
 import org.globsframework.utils.Dates;
 import org.globsframework.utils.TablePrinter;
 import org.globsframework.utils.TestUtils;
 import org.uispec4j.Button;
-import org.uispec4j.*;
-import org.uispec4j.Key;
 import org.uispec4j.Panel;
+import org.uispec4j.*;
 import org.uispec4j.Window;
 import org.uispec4j.assertion.Assertion;
 import org.uispec4j.assertion.UISpecAssert;
 import org.uispec4j.interception.WindowInterceptor;
-import org.uispec4j.utils.ColorUtils;
 
 import javax.swing.*;
 import java.awt.*;
@@ -35,7 +32,7 @@ public abstract class AccountViewPanelChecker<T extends AccountViewPanelChecker>
   protected String panelName;
   protected Panel accountsPanel;
 
-  public AccountViewPanelChecker(Window mainWindow, String panelName) {
+  protected AccountViewPanelChecker(Window mainWindow, String panelName) {
     super(mainWindow);
     this.mainWindow = mainWindow;
     this.panelName = panelName;
@@ -43,21 +40,21 @@ public abstract class AccountViewPanelChecker<T extends AccountViewPanelChecker>
 
   public T checkAccounts(String... expectedNames) {
     org.globsframework.utils.TestUtils.assertSetEquals(getDisplayedAccounts(), expectedNames);
-    return (T)this;
+    return (T) this;
   }
 
   public T select(String accountName) {
     ToggleButton selectAccount = getAccountPanel(accountName).getToggleButton("selectAccount");
     UISpecAssert.assertFalse("Already selected", selectAccount.isSelected());
     selectAccount.click();
-    return (T)this;
+    return (T) this;
   }
 
   public T unselect(String accountName) {
     ToggleButton selectAccount = getAccountPanel(accountName).getToggleButton("selectAccount");
     assertThat("Not selected", selectAccount.isSelected());
     selectAccount.click();
-    return (T)this;
+    return (T) this;
   }
 
   public void checkNoAccountsSelected() {
@@ -74,7 +71,7 @@ public abstract class AccountViewPanelChecker<T extends AccountViewPanelChecker>
     UIComponent[] toggles = accountsPanel.getUIComponents(ToggleButton.class);
     List<String> actual = new ArrayList<String>();
     for (UIComponent toggle : toggles) {
-      if (((ToggleButton)toggle).isSelected().isTrue()) {
+      if (((ToggleButton) toggle).isSelected().isTrue()) {
         actual.add(toggle.getContainer("accountPanel").getButton("editAccount").getLabel());
       }
     }
@@ -85,7 +82,7 @@ public abstract class AccountViewPanelChecker<T extends AccountViewPanelChecker>
     UIComponent[] uiComponents = getPanel().getUIComponents(Button.class, "editAccount");
     Set<String> existingNames = new HashSet<String>();
     for (UIComponent uiComponent : uiComponents) {
-      Button button = (Button)uiComponent;
+      Button button = (Button) uiComponent;
       existingNames.add(button.getLabel());
     }
     return existingNames;
@@ -95,16 +92,16 @@ public abstract class AccountViewPanelChecker<T extends AccountViewPanelChecker>
     UIComponent[] uiComponents = getPanel().getUIComponents(Button.class, "editAccount");
     List<String> existingNames = new ArrayList<String>();
     for (UIComponent uiComponent : uiComponents) {
-      Button button = (Button)uiComponent;
+      Button button = (Button) uiComponent;
       existingNames.add(button.getLabel());
     }
     TestUtils.assertEquals(existingNames, accounts);
-    return (T)this;
+    return (T) this;
   }
 
   public T checkNoAccountsDisplayed() {
     TestUtils.assertEmpty(getDisplayedAccounts());
-    return (T)this;
+    return (T) this;
   }
 
   public void checkNotPresent(String accountName) {
@@ -142,12 +139,12 @@ public abstract class AccountViewPanelChecker<T extends AccountViewPanelChecker>
     Date date = Dates.parse(updateDate);
     assertThat(getPanel().getTextBox("referencePosition").textEquals(toString(amount)));
     assertThat(getPanel().getTextBox("referencePositionDate").textEquals("on " + Formatting.toString(date)));
-    return (T)this;
+    return (T) this;
   }
 
   public T checkReferencePositionDateContains(String text) {
     assertThat(getPanel().getTextBox("referencePositionDate").textContains(text));
-    return (T)this;
+    return (T) this;
   }
 
   public void checkPosition(String accountName, double position) {
@@ -157,7 +154,25 @@ public abstract class AccountViewPanelChecker<T extends AccountViewPanelChecker>
 
   public T checkEndOfMonthPosition(String accountName, double amount) {
     getChart(accountName).checkEndOfMonthValue(amount);
-    return (T)this;
+    return (T) this;
+  }
+
+  public void showChart(String accountName) {
+    openPopup(accountName).click(Lang.get("account.chart.show"));
+  }
+
+  public void hideChart(String accountName) {
+    openPopup(accountName).click(Lang.get("account.chart.hide"));
+  }
+
+  public T checkChartShown(String accountName) {
+    checkComponentVisible(getAccountPanel(accountName), HistoChart.class, "accountPositionsChart", true);
+    return (T) this;
+  }
+
+  public T checkChartHidden(String accountName) {
+    checkComponentVisible(getAccountPanel(accountName), HistoChart.class, "accountPositionsChart", false);
+    return (T) this;
   }
 
   public AccountPositionEditionChecker editPosition(String accountName) {
@@ -169,7 +184,7 @@ public abstract class AccountViewPanelChecker<T extends AccountViewPanelChecker>
   public T changePosition(String accountName, final double balance, final String operationLabel) {
     editPosition(accountName)
       .setAmountAndEnter(balance);
-    return (T)this;
+    return (T) this;
   }
 
   public AccountEditionChecker edit(String accountName) {
@@ -196,7 +211,7 @@ public abstract class AccountViewPanelChecker<T extends AccountViewPanelChecker>
     Set<org.globsframework.model.Key> keys = new HashSet<org.globsframework.model.Key>();
     keys.add(org.globsframework.model.Key.create(Day.MONTH, monthId, Day.DAY, day));
     selectionManager.updateRollover(columnIndex >= 0 ? columnIndex : null, keys, false, false, new Point(0, 0));
-    return (T)this;
+    return (T) this;
   }
 
   private Panel getAccountPanel(final String accountName) {
@@ -237,7 +252,7 @@ public abstract class AccountViewPanelChecker<T extends AccountViewPanelChecker>
         Assert.assertEquals(expectedContent.trim(), AccountViewPanelChecker.getActualContent(getPanel()).trim());
       }
     });
-    return (T)this;
+    return (T) this;
   }
 
   static String getActualContent(Panel panel) {
@@ -248,20 +263,20 @@ public abstract class AccountViewPanelChecker<T extends AccountViewPanelChecker>
     Component[] dates = panel.getSwingComponents(JLabel.class, "accountUpdateDate");
     for (int i = 0; i < weathers.length; i++) {
       String weather = getWeather(weathers[i]);
-      JButton selectorButton = (JButton)buttons[i];
+      JButton selectorButton = (JButton) buttons[i];
       String accountName = selectorButton.getText();
       if (selectorButton.getFont().isBold()) {
         accountName += "*";
       }
       printer.addRow(accountName,
-                     ((JButton)positions[i]).getText() + " on " + ((JLabel)dates[i]).getText(),
+                     ((JButton) positions[i]).getText() + " on " + ((JLabel) dates[i]).getText(),
                      weather);
     }
     return printer.toString();
   }
 
   private static String getWeather(Component weather) {
-    JButton status = (JButton)weather;
+    JButton status = (JButton) weather;
     Icon icon = (status.getIcon());
     if (icon == AccountWeatherButton.SUNNY_ICON) {
       return "sunny";

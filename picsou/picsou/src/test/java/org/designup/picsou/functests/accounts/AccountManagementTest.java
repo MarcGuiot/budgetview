@@ -258,6 +258,7 @@ public class AccountManagementTest extends LoggedInFunctionalTestCase {
     timeline.selectMonth(200805);
 
     mainAccounts.checkAccount("Account n. 111", +1000.00, "2008/05/24");
+    mainAccounts.checkChartShown("Account n. 111");
     mainAccounts.getChart("Account n. 111")
       .checkValue(200805, 1, 1500.00)
       .checkValue(200805, 20, 1100.00)
@@ -271,5 +272,25 @@ public class AccountManagementTest extends LoggedInFunctionalTestCase {
     savingsAccounts.checkAccount("Account n. 333", +100.00, "2008/04/10");
     savingsAccounts.getChart("Account n. 333")
       .checkValue(200805, 1, 100.00);
+  }
+
+  public void testSavingsChartsAreHidden() throws Exception {
+    accounts.createMainAccount("Account 1", 1000.00);
+    mainAccounts.checkChartShown("Account 1");
+
+    accounts.createSavingsAccount("Account 2", 10000.00);
+    savingsAccounts.checkChartHidden("Account 2");
+
+    mainAccounts.edit("Account 1").setAsSavings().validate();
+    savingsAccounts.checkChartHidden("Account 1");
+
+    savingsAccounts.showChart("Account 1");
+    savingsAccounts.checkChartShown("Account 1");
+
+    savingsAccounts.hideChart("Account 1");
+    savingsAccounts.checkChartHidden("Account 1");
+
+    savingsAccounts.edit("Account 1").setAsMain().validate();
+    mainAccounts.checkChartShown("Account 1");
   }
 }
