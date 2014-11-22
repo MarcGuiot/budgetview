@@ -159,10 +159,10 @@
       <panel ref="projectView" styleClass="innerContent"/>
     </column>
 
-    <column name="footer" styleClass="content">
-      <panel ref="newVersionView" styleClass="innerContent"/>
-      <panel ref="demoMessageView" styleClass="innerContent"/>
-    </column>
+    <verticalBoxes name="footer" styleClass="content">
+      <panel ref="newVersionView"/>
+      <panel ref="demoMessageView"/>
+    </verticalBoxes>
 
   </column>
 

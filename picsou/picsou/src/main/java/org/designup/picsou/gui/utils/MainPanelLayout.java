@@ -167,11 +167,17 @@ public class MainPanelLayout implements LayoutManager {
     int height = bottom - top;
 
     int actionsBarWidth = actionsBar.getPreferredSize().width;
+
+    int footerHeight = footer.isVisible() ? footer.getPreferredSize().height : 0;
+    int footerTop = bottom - footerHeight;
+    int footerLeft = left + actionsBarWidth;
+    int footerWidth = width - actionsBarWidth;
+
     int timeviewWidth = width - actionsBarWidth;
     int timeviewHeight = timeviewHeader.getPreferredSize().height;
     int sidebarTop = top + timeviewHeight;
     int sidebarLeft = left + actionsBarWidth;
-    int sidebarHeight = bottom - sidebarTop;
+    int sidebarHeight = footerTop - sidebarTop;
 
     int sidebarWidth;
     int contentWidth;
@@ -192,13 +198,9 @@ public class MainPanelLayout implements LayoutManager {
         throw new InvalidParameter("Unexpected mode " + stretchMode);
     }
 
-    int footerHeight = footer.isVisible() ? footer.getPreferredSize().height : 0;
-    int footerTop = bottom - footerHeight;
-    int footerLeft = sidebarLeft + sidebarWidth;
-    int footerWidth = contentWidth;
     int contentTop = sidebarTop;
     int contentLeft = sidebarLeft + sidebarWidth;
-    int contentHeight = sidebarHeight - footerHeight;
+    int contentHeight = sidebarHeight;
 
     actionsBar.setBounds(left, top, actionsBar.getPreferredSize().width, height);
     timeviewHeader.setBounds(sidebarLeft, top, timeviewWidth, timeviewHeight);

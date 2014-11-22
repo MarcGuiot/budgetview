@@ -28,6 +28,7 @@ public class DemoMessageView extends View {
         updateView();
       }
     });
+    updateView();
   }
 
   public void registerComponents(GlobsPanelBuilder builder) {

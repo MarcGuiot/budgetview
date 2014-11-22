@@ -6,7 +6,7 @@
     <ui name="newVersionPanelUI" class="org.globsframework.gui.splits.components.StyledPanelUI"
         topColor="footerBanner.top" bottomColor="footerBanner.bottom"
         borderColor="footerBanner.border" borderWidth="1" cornerRadius="10"/>
-    <style selector="#footerBannerPanel" ui="newVersionPanelUI" marginTop="10" opaque="false"/>
+    <style selector="#footerBannerPanel" ui="newVersionPanelUI" opaque="false"/>
 
     <style selector="label#message" font="-,bold,13"/>
 
