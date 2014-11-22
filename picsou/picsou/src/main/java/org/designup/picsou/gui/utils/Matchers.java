@@ -148,6 +148,15 @@ public class Matchers {
                             GlobMatchers.not(GlobMatchers.fieldEquals(Series.ID, Series.ACCOUNT_SERIES_ID)));
   }
 
+  public static GlobMatcher accountsNotClosedAsOf(final Date date) {
+    return new GlobMatcher() {
+      public boolean matches(Glob account, GlobRepository repository) {
+        Date endDate = account.get(Account.CLOSED_DATE);
+        return endDate == null || endDate.after(date);
+      }
+    };
+  }
+
   public static abstract class SeriesFirstEndDateFilter implements MonthMatcher {
     private boolean showOnlyForActiveMonths;
     private boolean showOnlyIfAvailableOnAllMonths;

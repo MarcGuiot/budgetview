@@ -109,15 +109,9 @@ public class ImportSession {
     importService.run(typedInputStream, referenceRepository, importRepository, directory, dialog);
     importRepository.completeChangeSet();
     changes = importRepository.getCurrentChanges();
-    changes.safeVisit(RealAccount.TYPE, new ChangeSetVisitor() {
+    changes.safeVisit(RealAccount.TYPE, new DefaultChangeSetVisitor() {
       public void visitCreation(Key key, FieldValues values) throws Exception {
         tmpAccountIds.add(key.get(RealAccount.ID));
-      }
-
-      public void visitUpdate(Key key, FieldValuesWithPrevious values) throws Exception {
-      }
-
-      public void visitDeletion(Key key, FieldValues previousValues) throws Exception {
       }
     });
     changes.safeVisit(ImportedTransaction.TYPE, new DefaultChangeSetVisitor() {

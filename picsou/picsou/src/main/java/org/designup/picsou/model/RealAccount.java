@@ -105,38 +105,33 @@ public class RealAccount {
 
   }
 
-  public static boolean areStrictlyEquivalent(Glob account, Glob glob) {
-    return (Strings.isNotEmpty(account.get(NAME)) || Strings.isNotEmpty(account.get(NUMBER)))
+  public static boolean areStrictlyEquivalent(Glob realAccount1, Glob realAccount2) {
+    return (Strings.isNotEmpty(realAccount1.get(NAME)) || Strings.isNotEmpty(realAccount1.get(NUMBER)))
            &&
-           account.get(BANK) != null &&
-           Utils.equalIgnoreCase(account.get(NAME), glob.get(NAME)) &&
-           Utils.equalIgnoreCase(account.get(NUMBER), glob.get(NUMBER)) &&
-           Utils.equal(account.get(BANK), glob.get(BANK)) &&
-           Utils.equal(account.get(BANK_ENTITY), glob.get(BANK_ENTITY)) &&
-           Utils.equal(account.get(ACC_TYPE), glob.get(ACC_TYPE)) &&
-           Utils.equal(account.get(BANK_ID), glob.get(BANK_ID)) &&
-           Utils.equal(account.get(CARD_TYPE), glob.get(CARD_TYPE)) &&
-           Utils.equal(account.get(SAVINGS), glob.get(SAVINGS)) &&
-           !Utils.equal(account.get(ID), glob.get(ID));
+           realAccount1.get(BANK) != null &&
+           Utils.equalIgnoreCase(realAccount1.get(NAME), realAccount2.get(NAME)) &&
+           Utils.equalIgnoreCase(realAccount1.get(NUMBER), realAccount2.get(NUMBER)) &&
+           Utils.equal(realAccount1.get(BANK), realAccount2.get(BANK)) &&
+           Utils.equal(realAccount1.get(BANK_ENTITY), realAccount2.get(BANK_ENTITY)) &&
+           Utils.equal(realAccount1.get(ACC_TYPE), realAccount2.get(ACC_TYPE)) &&
+           Utils.equal(realAccount1.get(BANK_ID), realAccount2.get(BANK_ID)) &&
+           Utils.equal(realAccount1.get(CARD_TYPE), realAccount2.get(CARD_TYPE)) &&
+           Utils.equal(realAccount1.get(SAVINGS), realAccount2.get(SAVINGS)) &&
+           !Utils.equal(realAccount1.get(ID), realAccount2.get(ID));
   }
 
-  static public boolean areEquivalent(Glob account, Glob glob) {
-    return (Strings.isNotEmpty(account.get(NAME)) || Strings.isNotEmpty(account.get(NUMBER))) &&
-           Utils.equalIgnoreCase(account.get(NAME), glob.get(NAME)) &&
-           Utils.equalIgnoreCase(account.get(NUMBER), glob.get(NUMBER)) &&
-           Utils.equal(account.get(SAVINGS), glob.get(SAVINGS)) &&
-           !Utils.equal(account.get(ID), glob.get(ID));
+  static public boolean areEquivalent(Glob realAccount1, Glob realAccount2) {
+    return (Strings.isNotEmpty(realAccount1.get(NAME)) || Strings.isNotEmpty(realAccount1.get(NUMBER))) &&
+           Utils.equalIgnoreCase(realAccount1.get(NAME), realAccount2.get(NAME)) &&
+           Utils.equalIgnoreCase(realAccount1.get(NUMBER), realAccount2.get(NUMBER)) &&
+           Utils.equal(realAccount1.get(SAVINGS), realAccount2.get(SAVINGS)) &&
+           !Utils.equal(realAccount1.get(ID), realAccount2.get(ID));
   }
 
-  static public boolean areNearEquivalent(Glob account, Glob glob) {
-    return Utils.equalIgnoreCase(account.get(NAME), glob.get(NAME)) &&
-           Utils.equalIgnoreCase(account.get(NUMBER), glob.get(NUMBER)) &&
-           !Utils.equal(account.get(ID), glob.get(ID));
-  }
-
-  public static boolean haveSameNumber(Glob account, Glob glob) {
-    return Utils.equalIgnoreCase(account.get(NUMBER), glob.get(NUMBER)) &&
-           !Utils.equal(account.get(ID), glob.get(ID));
+  static public boolean areNearEquivalent(Glob realAccount1, Glob realAccount2) {
+    return Utils.equalIgnoreCase(realAccount1.get(NAME), realAccount2.get(NAME)) &&
+           Utils.equalIgnoreCase(realAccount1.get(NUMBER), realAccount2.get(NUMBER)) &&
+           !Utils.equal(realAccount1.get(ID), realAccount2.get(ID));
   }
 
   public static Glob createAccountFromImported(Glob importedAccount, GlobRepository repository, boolean isImported) {

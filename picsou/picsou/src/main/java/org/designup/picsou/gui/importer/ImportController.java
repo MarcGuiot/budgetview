@@ -98,10 +98,10 @@ public class ImportController implements RealAccountImporter {
         return;
       }
     }
-    for (Glob glob : realAccountWithoutImport) {
-      Glob target = localRepository.findLinkTarget(glob, RealAccount.ACCOUNT);
+    for (Glob realAccount : realAccountWithoutImport) {
+      Glob target = localRepository.findLinkTarget(realAccount, RealAccount.ACCOUNT);
       if (target != null) {
-        String amount = glob.get(RealAccount.POSITION);
+        String amount = realAccount.get(RealAccount.POSITION);
         if (Strings.isNotEmpty(amount)){
           localRepository.update(target.getKey(), value(Account.LAST_IMPORT_POSITION, Amounts.extractAmount(amount)));
         }

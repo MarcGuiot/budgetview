@@ -11,7 +11,8 @@ import org.designup.picsou.model.TransactionType;
 import org.globsframework.model.Glob;
 import org.globsframework.utils.Files;
 
-import java.io.*;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -85,7 +86,7 @@ public class SynchroTest extends LoggedInFunctionalTestCase {
     savingsAccounts.checkAccount("secondary", 10, null);
 
     notifications.checkHidden();
-//openApplication();
+
     importPanel.openImport()
       .startSynchro()
       .selectAccount("secondary")
@@ -242,18 +243,18 @@ public class SynchroTest extends LoggedInFunctionalTestCase {
     final ArrayList<OfxConnection.AccountInfo> accountInfoArrayList = new ArrayList<OfxConnection.AccountInfo>();
 
     OfxConnection.register(new OfxConnection() {
-      public List<AccountInfo> getAccounts(String user, String password, String date, String url, String org, String fid, String uuid, final boolean v2) {
-        AccountInfo account1 = new AccountInfo(null, "1223", "any");
-        accountInfoArrayList.add(account1);
-        return accountInfoArrayList;
-      }
+                             public List<AccountInfo> getAccounts(String user, String password, String date, String url, String org, String fid, String uuid, final boolean v2) {
+                               AccountInfo account1 = new AccountInfo(null, "1223", "any");
+                               accountInfoArrayList.add(account1);
+                               return accountInfoArrayList;
+                             }
 
-      public String loadOperation(Glob realAccount, String fromDate, String user, String password, String url, String org, String fid, final String uuid, final boolean v2) throws IOException {
-        assertEquals("a", user);
-        assertEquals("b", password);
-        return Files.loadStreamToString(new FileInputStream(fileName), "UTF-8");
-      }
-    }
+                             public String loadOperation(Glob realAccount, String fromDate, String user, String password, String url, String org, String fid, final String uuid, final boolean v2) throws IOException {
+                               assertEquals("a", user);
+                               assertEquals("b", password);
+                               return Files.loadStreamToString(new FileInputStream(fileName), "UTF-8");
+                             }
+                           }
     );
 
     ImportDialogChecker dialogChecker = operations.openImportDialog();
@@ -419,5 +420,56 @@ public class SynchroTest extends LoggedInFunctionalTestCase {
       .doImportAndWaitForPreview()
       .completeImport();
     mainAccounts.checkPosition("principal", 90);
+  }
+
+  public void testClosedAccountsAreNotShown() throws Exception {
+    String path = OfxBuilder
+      .init(this)
+      .addBankAccount(30004, 12345, "000123", 100.00, "2006/01/23")
+      .addTransaction("2008/07/23", -10.00, "Menu K")
+      .addBankAccount(30004, 12345, "000246", 200.00, "2006/01/23")
+      .addTransaction("2008/08/23", -20.00, "FNAC")
+      .save();
+
+    operations.openImportDialog().openSynchro("Other")
+      .createAccount("000123", "account1", "", path)
+      .createAccount("000246", "account2", "", path)
+      .doImportAndWaitForPreview()
+      .checkAccount("Account n. 000123")
+      .setMainAccount()
+      .doImport()
+      .checkAccount("Account n. 000246")
+      .setMainAccount()
+      .completeImport();
+
+    operations.openImportDialog()
+      .checkSynchroAvailableForAccounts("Account n. 000123", "Account n. 000246")
+      .close();
+
+    mainAccounts.edit("Account n. 000123")
+      .setEndDate("2008/07/25")
+      .validate();
+
+    operations.openImportDialog()
+      .checkSynchroAvailableForAccounts("Account n. 000246")
+      .close();
+
+    timeline.selectMonth(200807);
+    mainAccounts.edit("Account n. 000123")
+      .setEndDate("2008/09/30")
+      .validate();
+
+    timeline.selectMonth(200808);
+    operations.openImportDialog()
+      .checkSynchroAvailableForAccounts("Account n. 000123", "Account n. 000246")
+      .close();
+
+    mainAccounts.edit("Account n. 000246")
+      .setEndDate("2008/08/23")
+      .validate();
+
+    operations.openImportDialog()
+      .checkSynchroAvailableForAccounts("Account n. 000123")
+      .close();
   }
 }
