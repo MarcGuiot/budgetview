@@ -2,7 +2,10 @@ package org.designup.picsou.functests.projects;
 
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
-import org.designup.picsou.model.TransactionType;
+import org.designup.picsou.gui.model.SeriesStat;
+import org.designup.picsou.model.*;
+import org.globsframework.model.format.GlobPrinter;
+import org.globsframework.utils.Log;
 
 public class ProjectTransferTest extends LoggedInFunctionalTestCase {
   protected void setUp() throws Exception {
@@ -306,15 +309,7 @@ public class ProjectTransferTest extends LoggedInFunctionalTestCase {
       .check();
 
     budgetView.extras.checkNoSeriesShown();
-
-    fail("[RM] v4 : Les from/to des deux enveloppes mirroir se retrouvent avec les mêmes from/to - revoir ProjectTransferToSeriesTrigger + UpdateMirrorSeriesChangeSetVisitor");
-    operations.dumpRepository();
-
-    budgetView.transfer.checkSeries("Transfer", "0.00", "+200.00");
-    projects.select("Trip");
-    currentProject.setInactive();
-    currentProject.setActive();
-    budgetView.transfer.checkSeries("Transfer", "0.00", "+200.00");
+    budgetView.transfer.checkSeries("Transfer", "0.00", "200.00");
 
     transactions
       .initAmountContent()
@@ -326,6 +321,19 @@ public class ProjectTransferTest extends LoggedInFunctionalTestCase {
       .add("01/12/2010", "INCOME", 1000.00, "To categorize", 2000.00, 2000.00, "Main account 1")
       .check();
 
+    projects.select("Trip");
+    currentProject.setInactive();
+    currentProject.setActive();
+    budgetView.transfer.checkSeries("Transfer", "0.00", "200.00");
+    transactions
+      .initAmountContent()
+      .add("11/12/2010", "Planned: Transfer", 200.00, "Transfer", 1100.00, 1100.00, "Savings account 1")
+      .add("11/12/2010", "Planned: Transfer", -200.00, "Transfer", 1900.00, 1900.00, "Main account 1")
+      .add("01/12/2010", "TRANSFER FROM SAVINGS ACCOUNT 1", -100.00, "To categorize", 900.00, 900.00, "Savings account 1")
+      .add("01/12/2010", "AN OPERATION", 1000.00, "To categorize", 1000.00, 1000.00, "Savings account 1")
+      .add("01/12/2010", "TRANSFER 1", 100.00, "To categorize", 2100.00, 2100.00, "Main account 1")
+      .add("01/12/2010", "INCOME", 1000.00, "To categorize", 2000.00, 2000.00, "Main account 1")
+      .check();
   }
 
   public void testChangingProjectItemAccountsWithExistingTransactions() throws Exception {

@@ -3,7 +3,9 @@ package org.designup.picsou.triggers.projects;
 import org.designup.picsou.model.*;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.*;
+import org.globsframework.model.format.GlobPrinter;
 import org.globsframework.model.utils.DefaultChangeSetVisitor;
+import org.globsframework.utils.Log;
 
 import java.util.Set;
 
@@ -77,11 +79,11 @@ public class ProjectItemToSeriesTrigger implements ChangeSetListener {
 
     Glob project = repository.findLinkTarget(item, ProjectItem.PROJECT);
     boolean active = project.isTrue(Project.ACTIVE) && item.isTrue(ProjectItem.ACTIVE);
-    repository.update(series.getKey(), value(Series.ACTIVE, active));
+    repository.update(series.getKey(), Series.ACTIVE, active);
 
     Integer mirrorId = series.get(Series.MIRROR_SERIES);
     if (mirrorId != null) {
-      repository.update(Key.create(Series.TYPE, mirrorId), value(Series.ACTIVE, active));
+      repository.update(Key.create(Series.TYPE, mirrorId), Series.ACTIVE, active);
     }
   }
 

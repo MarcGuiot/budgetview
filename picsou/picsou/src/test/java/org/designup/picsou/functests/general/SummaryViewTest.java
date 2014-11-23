@@ -96,20 +96,20 @@ public class SummaryViewTest extends LoggedInFunctionalTestCase {
 
     projects.checkGraphShown("Account n. 000123");
     projects.checkGraphShown("Account n. 000234");
-    projects.checkGraphShown("Account n. 000345");
-    projects.checkGraphShown("Account n. 000456");
+    projects.checkGraphHidden("Account n. 000345");
+    projects.checkGraphHidden("Account n. 000456");
 
     projects.hideGraph("Account n. 000123");
     projects.checkGraphHidden("Account n. 000123");
     projects.checkGraphShown("Account n. 000234");
-    projects.checkGraphShown("Account n. 000345");
-    projects.checkGraphShown("Account n. 000456");
+    projects.checkGraphHidden("Account n. 000345");
+    projects.checkGraphHidden("Account n. 000456");
 
     projects.hideGraph("Account n. 000123");
     projects.checkGraphShown("Account n. 000123");
     projects.checkGraphShown("Account n. 000234");
-    projects.checkGraphShown("Account n. 000345");
-    projects.checkGraphShown("Account n. 000456");
+    projects.checkGraphHidden("Account n. 000345");
+    projects.checkGraphHidden("Account n. 000456");
   }
 
   public void testCanAggregateAccountGraphs() throws Exception {

@@ -402,6 +402,24 @@ public class Account {
            && series.get(Series.TARGET_ACCOUNT) == null;
   }
 
+  public static void adjustMirror(Glob series, Glob mirror, GlobRepository localRepository) {
+    if (mirror == null) {
+      return;
+    }
+
+    Integer target = series.get(Series.TARGET_ACCOUNT);
+    Integer from = series.get(Series.TO_ACCOUNT);
+    Integer to = series.get(Series.FROM_ACCOUNT);
+    Integer mirrorTarget = target == from ? to : from;
+
+    System.out.println("Account.adjustMirror(" + mirror.get(Series.ID) + ") : from:" + to + " - to:" + from + " - target:" + mirrorTarget);
+
+    localRepository.update(mirror.getKey(),
+                           value(Series.TARGET_ACCOUNT, mirrorTarget),
+                           value(Series.FROM_ACCOUNT, to),
+                           value(Series.TO_ACCOUNT, from));
+  }
+
   public static class Serializer implements PicsouGlobSerializer {
 
     public int getWriteVersion() {

@@ -55,7 +55,7 @@ public class GlobPrinter {
   public static void print(Glob glob) {
     print(glob, new OutputStreamWriter(System.out));
   }
-  
+
   public static void print(Glob glob, Writer writer) {
     PrintWriter printer = new PrintWriter(writer);
     printer.println("===== " + glob + " ======");
@@ -74,6 +74,7 @@ public class GlobPrinter {
   private GlobRepository repository;
   private Set<GlobType> types;
   private GlobList globs;
+  private String[] filters;
   private List<Field> excludedFields = new ArrayList<Field>();
   private Map<GlobType, Field[]> fieldsForType = new HashMap<GlobType, Field[]>();
 
@@ -92,6 +93,11 @@ public class GlobPrinter {
     if (shownTypes.length > 0) {
       this.types = new HashSet<GlobType>(Arrays.asList(shownTypes));
     }
+    return this;
+  }
+
+  public GlobPrinter setTextFilters(String... textFilters) {
+    this.filters = textFilters;
     return this;
   }
 
@@ -128,7 +134,21 @@ public class GlobPrinter {
     List<Object[]> rows = new ArrayList<Object[]>();
     String[] headerRow = createHeaderRow(type);
     for (Glob glob : globs) {
-      rows.add(createRow(type, glob));
+      String[] row = createRow(type, glob);
+      if (filters != null) {
+        boolean found = false;
+        for (int i = 0; i < row.length && !found; i++) {
+          for (int j = 0; j < filters.length && !found; j++) {
+            if (row[i].contains(filters[j])) {
+              found = true;
+            }
+          }
+        }
+        if (found)
+          rows.add(row);
+      }
+      else
+        rows.add(row);
     }
 
     TablePrinter.print(headerRow, rows, true, printer);
@@ -158,13 +178,13 @@ public class GlobPrinter {
       return "";
     }
     if ((field instanceof DateField)) {
-      return Dates.toString((Date)value);
+      return Dates.toString((Date) value);
     }
     if ((field instanceof TimeStampField)) {
-      return Dates.toTimestampString((Date)value);
+      return Dates.toTimestampString((Date) value);
     }
     if (field instanceof LinkField) {
-      LinkField link = (LinkField)field;
+      LinkField link = (LinkField) field;
       StringField namingField = GlobTypeUtils.findNamingField(link.getTargetType());
       if (namingField != null) {
         Glob target = repository != null ? repository.findLinkTarget(glob, link) : null;

@@ -91,6 +91,7 @@ public class PeriodSeriesStatUpdater implements GlobSelectionListener, ChangeSet
       update = true;
     }
     if (changeSet.containsUpdates(Series.GROUP) ||
+        changeSet.containsUpdates(Series.TARGET_ACCOUNT) ||
         changeSet.containsUpdates(Series.BUDGET_AREA) ||
         changeSet.containsChanges(SeriesStat.TYPE) ||
         changeSet.containsChanges(SeriesGroup.TYPE) ||
