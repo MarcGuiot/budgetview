@@ -14,7 +14,11 @@ public class RegisterLicenseAction extends AbstractAction {
   private Directory directory;
 
   public RegisterLicenseAction(GlobRepository repository, Directory directory) {
-    super(Lang.get("license.register"));
+    this(Lang.get("license.register"), repository, directory);
+  }
+
+  public RegisterLicenseAction(String text, GlobRepository repository, Directory directory) {
+    super(text);
     this.parent = directory.get(JFrame.class);
     this.repository = repository;
     this.directory = directory;

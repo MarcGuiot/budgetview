@@ -4,9 +4,14 @@
 
     <style selector=".sidebar" opaque="true" background="sidebar.bg" border="matte(0,0,0,1,sidebar.border)"/>
 
-    <style selector=".sidebarTitle" font="LatoLight,plain,30" weightX="0"
+    <!-- Components -->
+
+    <style selector=".sidebar .sidebarTitle" font="LatoLight,plain,30" weightX="0"
            marginLeft="10" marginTop="10" marginBottom="20"
            foreground="sidebar.title" fill="horizontal" anchor="west"/>
+
+    <style selector=".sidebar label.sidebarLabel" foreground="sidebar.label" marginLeft="10" marginRight="10"/>
+
 
     <!-- Sections -->
 

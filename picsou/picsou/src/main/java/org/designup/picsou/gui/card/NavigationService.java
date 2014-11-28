@@ -1,6 +1,6 @@
 package org.designup.picsou.gui.card;
 
-import org.designup.picsou.gui.categorization.CategorizationSelectionView;
+import org.designup.picsou.gui.categorization.CategorizationSelector;
 import org.designup.picsou.gui.categorization.components.CategorizationFilteringMode;
 import org.designup.picsou.gui.model.Card;
 import org.designup.picsou.gui.projects.ProjectView;
@@ -26,7 +26,7 @@ public class NavigationService implements GlobSelectionListener {
 
   private SelectionService selectionService;
   private TransactionView transactionView;
-  private CategorizationSelectionView categorizationSelectionView;
+  private CategorizationSelector categorizationSelector;
   private ProjectView projectView;
   private GlobRepository repository;
 
@@ -35,12 +35,12 @@ public class NavigationService implements GlobSelectionListener {
   private Stack<Card> forwardStack = new Stack<Card>();
 
   public NavigationService(TransactionView transactionView,
-                           CategorizationSelectionView categorizationSelectionView,
+                           CategorizationSelector categorizationSelector,
                            ProjectView projectView,
                            GlobRepository repository,
                            Directory directory) {
     this.transactionView = transactionView;
-    this.categorizationSelectionView = categorizationSelectionView;
+    this.categorizationSelector = categorizationSelector;
     this.projectView = projectView;
     this.repository = repository;
     this.selectionService = directory.get(SelectionService.class);
@@ -64,27 +64,27 @@ public class NavigationService implements GlobSelectionListener {
   }
 
   public void gotoCategorizationAndShowAll() {
-    categorizationSelectionView.setFilteringMode(CategorizationFilteringMode.ALL);
+    categorizationSelector.setFilteringMode(CategorizationFilteringMode.ALL);
     gotoCategorization();
   }
 
   public void gotoCategorization(GlobList transactions, boolean showAllUncategorized) {
-    categorizationSelectionView.show(transactions, showAllUncategorized);
+    categorizationSelector.show(transactions, showAllUncategorized);
     gotoCategorization();
   }
 
   public void gotoCategorizationForSelectedMonths() {
-    categorizationSelectionView.showWithMode(CategorizationFilteringMode.SELECTED_MONTHS);
+    categorizationSelector.showWithMode(CategorizationFilteringMode.SELECTED_MONTHS);
     gotoCategorization();
   }
 
   public void gotoUncategorized() {
-    categorizationSelectionView.showWithMode(CategorizationFilteringMode.UNCATEGORIZED);
+    categorizationSelector.showWithMode(CategorizationFilteringMode.UNCATEGORIZED);
     gotoCategorization();
   }
 
   public void gotoUncategorizedForSelectedMonths() {
-    categorizationSelectionView.showWithMode(CategorizationFilteringMode.UNCATEGORIZED_SELECTED_MONTHS);
+    categorizationSelector.showWithMode(CategorizationFilteringMode.UNCATEGORIZED_SELECTED_MONTHS);
     gotoCategorization();
   }
 
@@ -183,7 +183,7 @@ public class NavigationService implements GlobSelectionListener {
 
   public void highlightTransactionCreation() {
     select(Card.CATEGORIZATION, true);
-    categorizationSelectionView.highlightTransactionCreation();
+    categorizationSelector.highlightTransactionCreation();
   }
 
   public boolean backEnabled() {

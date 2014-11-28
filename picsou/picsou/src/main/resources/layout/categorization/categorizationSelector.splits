@@ -14,7 +14,7 @@
            rolloverIcon="rightArrow(10,12,9,9,categorization.createTransaction.button.arrow.rollover)"/>
   </styles>
 
-  <column name="categorizationSelectionView">
+  <column name="categorizationSelector" styleClass="sidebar">
 
     <label text="$cards.categorization" styleClass="sidebarTitle"/>
 

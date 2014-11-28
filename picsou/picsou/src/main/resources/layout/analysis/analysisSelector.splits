@@ -6,7 +6,7 @@
     <style selector="button.selector" foreground=""/>
   </styles>
 
-  <column name="analysisSelector" styleClass="sidebar">
+  <column name="analysisSelector" styleClass="sidebar" preferredSize="(200,50)">
 
     <label text="$cards.analysis" styleClass="sidebarTitle"/>
 

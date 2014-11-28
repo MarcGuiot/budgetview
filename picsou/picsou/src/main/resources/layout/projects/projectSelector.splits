@@ -13,7 +13,7 @@
            foreground="block.item.link" font="-,plain,13" marginTop="10" fill="none" anchor="southeast"/>
   </styles>
 
-  <column name="projectSelector" background="sidebar.bg">
+  <column name="projectSelector" styleClass="sidebar">
 
     <label text="$cards.projects" styleClass="sidebarTitle"/>
 

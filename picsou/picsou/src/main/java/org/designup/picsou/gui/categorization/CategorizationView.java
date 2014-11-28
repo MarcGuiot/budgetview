@@ -38,11 +38,11 @@ import static org.globsframework.model.utils.GlobMatchers.fieldEquals;
 
 public class CategorizationView extends View {
 
-  private final CategorizationSelectionView selectionView;
+  private final CategorizationSelector selectionView;
   private final GlobRepository repository;
   private FilteredRepeats seriesRepeat;
 
-  public CategorizationView(final CategorizationSelectionView selectionView, GlobRepository repository) {
+  public CategorizationView(final CategorizationSelector selectionView, GlobRepository repository) {
     super(repository, selectionView.getDirectory());
     this.selectionView = selectionView;
     this.repository = repository;
@@ -72,7 +72,7 @@ public class CategorizationView extends View {
     builder.add("skipCategorizationPanel", skipPanel.getPanel());
 
     CategorizationTableView categorizationTableView = selectionView.getTableView();
-    CategorizationSelector selector = new CategorizationSelector(categorizationTableView.getToReconcileMatcher(),
+    org.designup.picsou.gui.categorization.components.CategorizationSelector selector = new org.designup.picsou.gui.categorization.components.CategorizationSelector(categorizationTableView.getToReconcileMatcher(),
                                                                  categorizationTableView.getColors(),
                                                                  repository, directory);
     selector.registerComponents(builder);

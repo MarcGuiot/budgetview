@@ -149,6 +149,6 @@ public class ReconciliationAnnotationChecker extends ViewChecker {
   }
 
   private Panel getPanel() {
-    return mainWindow.getPanel("categorizationSelectionView");
+    return mainWindow.getPanel("categorizationSelector");
   }
 }

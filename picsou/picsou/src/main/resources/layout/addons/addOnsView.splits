@@ -19,31 +19,33 @@
     <style selector="#buy" fill="none" anchor="center"/>
   </styles>
 
-  <column ref="addOnsView" preferredSize="(500,225)">
-    <label text="$addons.title" styleClass="title" foreground="addons.title" fill="none" anchor="center"/>
+  <column ref="addonsView">
     <scrollPane weightX="10" border="">
-      <repeat ref="addOnSelectors" layout="row">
-        <column>
-          <label ref="image"/>
-          <label ref="label"/>
-          <filler fill="vertical"/>
-          <cards ref="cards">
-            <card name="enabled">
-              <column>
-                <label text="$addons.activated" styleClass="activated"/>
-                <filler fill="vertical"/>
-              </column>
-            </card>
-            <card name="disabled">
-              <column>
-                <button action="buy" fill="none" anchor="center"/>
-                <button action="gotoDemoAccount" styleClass="hyperlink" font="LatoLight,plain,12" fill="none"
-                        anchor="center"/>
-              </column>
-            </card>
-          </cards>
-        </column>
-      </repeat>
+      <column>
+        <repeat ref="addOnSelectors" layout="row">
+          <column>
+            <label ref="image"/>
+            <label ref="label"/>
+            <filler fill="vertical"/>
+            <cards ref="cards">
+              <card name="enabled">
+                <column>
+                  <label text="$addons.activated" styleClass="activated"/>
+                  <filler fill="vertical"/>
+                </column>
+              </card>
+              <card name="disabled">
+                <column>
+                  <button action="buy" fill="none" anchor="center"/>
+                  <button action="gotoDemoAccount" styleClass="hyperlink" font="LatoLight,plain,12" fill="none"
+                          anchor="center"/>
+                </column>
+              </card>
+            </cards>
+          </column>
+        </repeat>
+        <filler fill="vertical"/>
+      </column>
     </scrollPane>
   </column>
 

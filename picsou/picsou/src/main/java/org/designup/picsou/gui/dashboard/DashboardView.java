@@ -47,10 +47,6 @@ public class DashboardView extends View {
     MainAccountsWidget mainAccounts = new MainAccountsWidget(repository, directory);
     mainAccounts.register(builder, "mainAccountsWidget", "mainAccountsLegend");
 
-    AddOnsView addons = new AddOnsView(repository, directory);
-    addons.registerComponents(builder);
-
-
     parentBuilder.add("dashboardView", builder);
   }
 

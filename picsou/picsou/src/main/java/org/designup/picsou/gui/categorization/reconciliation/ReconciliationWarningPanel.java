@@ -1,6 +1,6 @@
 package org.designup.picsou.gui.categorization.reconciliation;
 
-import org.designup.picsou.gui.categorization.CategorizationSelectionView;
+import org.designup.picsou.gui.categorization.CategorizationSelector;
 import org.designup.picsou.gui.categorization.components.CategorizationFilteringMode;
 import org.designup.picsou.gui.help.HyperlinkHandler;
 import org.designup.picsou.gui.utils.Matchers;
@@ -20,13 +20,13 @@ import javax.swing.*;
 
 public class ReconciliationWarningPanel {
 
-  private CategorizationSelectionView selectionView;
+  private CategorizationSelector selectionView;
   private GlobRepository repository;
   private Directory directory;
   private JPanel panel;
   private JEditorPane message;
 
-  public ReconciliationWarningPanel(CategorizationSelectionView selectionView, GlobRepository repository, Directory directory) {
+  public ReconciliationWarningPanel(CategorizationSelector selectionView, GlobRepository repository, Directory directory) {
     this.selectionView = selectionView;
     this.repository = repository;
     this.directory = directory;

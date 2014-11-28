@@ -19,6 +19,8 @@
 
   <column name="dashboardView">
 
+    <filler fill="vertical" weightY="20"/>
+
     <row border="empty(0,0,5,0)" autoHideSource="accountFilterMessage" weightY="0.1">
       <panel ref="accountFilterMessage"/>
     </row>
@@ -53,7 +55,7 @@
       <filler fill="horizontal"/>
     </row>
 
-    <panel ref="addOnsView" weightY="4" marginTop="15"/>
+    <filler fill="vertical" weightY="50"/>
 
   </column>
 

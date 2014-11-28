@@ -116,13 +116,15 @@
       </horizontalBoxes>
     </panel>
 
-    <panel ref="accountView" styleClass="sidebar"/>
+    <panel ref="accountView"/>
 
-    <panel ref="categorizationSelectionView" styleClass="sidebar"/>
+    <panel ref="categorizationSelector"/>
 
-    <panel ref="analysisSelector" styleClass="sidebar" preferredSize="(200,50)"/>
+    <panel ref="analysisSelector"/>
 
-    <panel ref="projectSelector" styleClass="sidebar"/>
+    <panel ref="projectSelector"/>
+
+    <panel ref="addonsSelector"/>
 
     <column name="home" styleClass="content">
       <cards ref="signpostCard" styleClass="innerContent">
@@ -157,6 +159,10 @@
 
     <column name="projects" styleClass="content" preferredSize="(480,50)">
       <panel ref="projectView" styleClass="innerContent"/>
+    </column>
+
+    <column name="addons" styleClass="content">
+      <panel ref="addonsView" styleClass="innerContent"/>
     </column>
 
     <verticalBoxes name="footer" styleClass="content">

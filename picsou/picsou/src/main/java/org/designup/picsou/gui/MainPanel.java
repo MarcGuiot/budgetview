@@ -5,12 +5,14 @@ import org.designup.picsou.gui.accounts.AccountView;
 import org.designup.picsou.gui.actions.DeleteUserAction;
 import org.designup.picsou.gui.actions.ExitAction;
 import org.designup.picsou.gui.actions.ImportFileAction;
+import org.designup.picsou.gui.addons.AddOnsSelector;
+import org.designup.picsou.gui.addons.AddOnsView;
 import org.designup.picsou.gui.analysis.AnalysisSelector;
 import org.designup.picsou.gui.analysis.AnalysisView;
 import org.designup.picsou.gui.budget.BudgetView;
 import org.designup.picsou.gui.card.CardView;
 import org.designup.picsou.gui.card.NavigationService;
-import org.designup.picsou.gui.categorization.CategorizationSelectionView;
+import org.designup.picsou.gui.categorization.CategorizationSelector;
 import org.designup.picsou.gui.categorization.CategorizationView;
 import org.designup.picsou.gui.components.PicsouFrame;
 import org.designup.picsou.gui.components.highlighting.HighlightingService;
@@ -86,7 +88,7 @@ public class MainPanel {
   private ProjectView projectView;
   private SignpostView signpostView;
   private MenuBarBuilder menuBar;
-  private CategorizationSelectionView categorizationSelectionView;
+  private CategorizationSelector categorizationSelector;
   private DashboardView dashboardView;
   private final BudgetView budgetView;
 
@@ -123,9 +125,9 @@ public class MainPanel {
     timeView = new TimeView(repository, directory);
 
     transactionView = new TransactionView(repository, directory);
-    categorizationSelectionView = new CategorizationSelectionView(repository, directory);
-    categorizationView = new CategorizationView(categorizationSelectionView, repository);
-    cardView = new CardView(repository, directory, categorizationSelectionView.getGotoBudgetSignpost());
+    categorizationSelector = new CategorizationSelector(repository, directory);
+    categorizationView = new CategorizationView(categorizationSelector, repository);
+    cardView = new CardView(repository, directory, categorizationSelector.getGotoBudgetSignpost());
 
     ReplicationGlobRepository replicationGlobRepository =
       new ReplicationGlobRepository(repository, PeriodSeriesStat.TYPE, PeriodBudgetAreaStat.TYPE, PeriodAccountStat.TYPE);
@@ -136,7 +138,7 @@ public class MainPanel {
 
     budgetView = new BudgetView(replicationGlobRepository, directory);
 
-    directory.add(new NavigationService(transactionView, categorizationSelectionView, projectView, repository, directory));
+    directory.add(new NavigationService(transactionView, categorizationSelector, projectView, repository, directory));
 
     menuBar = new MenuBarBuilder(repository, replicationGlobRepository,
                                  windowManager, logoutService,
@@ -169,7 +171,7 @@ public class MainPanel {
       timeView,
       new NewVersionView(repository, directory),
       new DemoMessageView(repository, directory),
-      categorizationSelectionView,
+      categorizationSelector,
       categorizationView,
       cardView,
       budgetView,
@@ -178,8 +180,11 @@ public class MainPanel {
       new ProjectSelector(repository, directory),
       projectView,
       new WelcomeView(replicationGlobRepository, directory),
+      new AddOnsSelector(repository, directory),
+      new AddOnsView(repository, directory),
       signpostView,
-      new NotificationsFlagView(repository, directory));
+      new NotificationsFlagView(repository, directory)
+    );
 
     if (Gui.useMacOSMenu()) {
       if (exitActionWhitoutUserEvaluation != null) {
@@ -220,7 +225,7 @@ public class MainPanel {
     budgetView.reset();
     dashboardView.reset();
     transactionView.reset();
-    categorizationSelectionView.reset();
+    categorizationSelector.reset();
     directory.get(NavigationService.class).reset();
     directory.get(UndoRedoService.class).reset();
     directory.get(HelpService.class).reset();

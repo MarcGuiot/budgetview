@@ -1,0 +1,22 @@
+<splits xmlns="http://www.globsframework.org/xml/splits.xsd">
+
+  <styleImport file="/layout/commonStyles.splits"/>
+  <styleImport file="/layout/sidebarStyles.splits"/>
+  <styles>
+    <style selector="button" fill="none" anchor="center" marginTop="10"/>
+  </styles>
+
+  <column name="analysisSelector" styleClass="sidebar">
+
+    <label text="$cards.addons" styleClass="sidebarTitle"/>
+
+    <label text="$addonsSelector.buy.label" styleClass="sidebarLabel"/>
+    <button action="buy"/>
+
+    <label text="$addonsSelector.activate.label" styleClass="sidebarLabel" marginTop="20"/>
+    <button action="activate"/>
+
+    <filler fill="vertical"/>
+
+  </column>
+</splits>

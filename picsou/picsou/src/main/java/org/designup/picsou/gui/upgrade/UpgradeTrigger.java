@@ -111,9 +111,6 @@ public class UpgradeTrigger implements ChangeSetListener {
     if (currentJarVersion < 68) {
       correctSavingMirror(repository);
     }
-    if (currentJarVersion < 85) {
-      updateColorTheme(repository);
-    }
     if (currentJarVersion < 90) {
       fixHiddenProjectSeriesBudget(repository);
     }
@@ -152,6 +149,7 @@ public class UpgradeTrigger implements ChangeSetListener {
     if (currentJarVersion < 141) {
       updateTargetAccountForSeries(repository);
       updageAccountGraphs(repository);
+      updateColorTheme(repository);
     }
 
     //dans tout les cas :
@@ -785,12 +783,9 @@ public class UpgradeTrigger implements ChangeSetListener {
   }
 
   private void updateColorTheme(GlobRepository repository) {
-    Glob prefs = repository.find(UserPreferences.KEY);
-    if (prefs.get(UserPreferences.COLOR_THEME) == null) {
-      repository.update(UserPreferences.KEY,
-                        UserPreferences.COLOR_THEME,
-                        ColorTheme.STANDARD.getId());
-    }
+    repository.update(UserPreferences.KEY,
+                      UserPreferences.COLOR_THEME,
+                      ColorTheme.STANDARD.getId());
   }
 
   private void fixHiddenProjectSeriesBudget(GlobRepository repository) {

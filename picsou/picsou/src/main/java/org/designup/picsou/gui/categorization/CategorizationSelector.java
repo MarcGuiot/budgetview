@@ -27,7 +27,7 @@ import org.globsframework.utils.directory.Directory;
 
 import javax.swing.event.TableModelListener;
 
-public class CategorizationSelectionView extends View implements TableView, Filterable {
+public class CategorizationSelector extends View implements TableView, Filterable {
   private Directory parentDirectory;
 
   private GlobList currentTransactions = new GlobList();
@@ -37,7 +37,7 @@ public class CategorizationSelectionView extends View implements TableView, Filt
   private CategorizationLevel categorizationLevel;
   private TransactionCreationPanel transactionCreation;
 
-  public CategorizationSelectionView(final GlobRepository repository, Directory parentDirectory) {
+  public CategorizationSelector(final GlobRepository repository, Directory parentDirectory) {
     super(repository, createLocalDirectory(parentDirectory));
     this.parentDirectory = parentDirectory;
     parentDirectory.get(SelectionService.class).addListener(new GlobSelectionListener() {
@@ -58,7 +58,7 @@ public class CategorizationSelectionView extends View implements TableView, Filt
 
   public void registerComponents(GlobsPanelBuilder parentBuilder) {
 
-    GlobsPanelBuilder builder = new GlobsPanelBuilder(getClass(), "/layout/categorization/categorizationSelectionView.splits",
+    GlobsPanelBuilder builder = new GlobsPanelBuilder(getClass(), "/layout/categorization/categorizationSelector.splits",
                                                       repository, directory);
 
     builder.add("hyperlinkHandler", new HyperlinkHandler(directory));
@@ -102,7 +102,7 @@ public class CategorizationSelectionView extends View implements TableView, Filt
 
 //    builder.add("categorizationSplit", SplitPaneConfig.create(directory, LayoutConfig.CATEGORIZATION_HORIZONTAL));
 
-    parentBuilder.add("categorizationSelectionView", builder);
+    parentBuilder.add("categorizationSelector", builder);
   }
 
   public void setFilter(GlobMatcher matcher) {

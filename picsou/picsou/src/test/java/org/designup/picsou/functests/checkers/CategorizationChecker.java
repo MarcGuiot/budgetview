@@ -36,13 +36,13 @@ public class CategorizationChecker extends FilteredViewChecker<CategorizationChe
   private boolean useDisplayedDates;
 
   public CategorizationChecker(Window mainWindow) {
-    super(mainWindow, "categorizationSelectionView", "customFilterMessage");
+    super(mainWindow, "categorizationSelector", "customFilterMessage");
   }
 
   Panel getSelectionPanel() {
     if (selectionPanel == null) {
       views.selectCategorization();
-      selectionPanel = mainWindow.getPanel("categorizationSelectionView");
+      selectionPanel = mainWindow.getPanel("categorizationSelector");
     }
     return selectionPanel;
   }
