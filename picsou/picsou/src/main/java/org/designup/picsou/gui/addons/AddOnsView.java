@@ -9,6 +9,7 @@ import org.globsframework.gui.splits.PanelBuilder;
 import org.globsframework.gui.splits.layout.CardHandler;
 import org.globsframework.gui.splits.repeat.RepeatComponentFactory;
 import org.globsframework.gui.splits.utils.Disposable;
+import org.globsframework.gui.splits.utils.GuiUtils;
 import org.globsframework.gui.splits.utils.OnLoadListener;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.utils.KeyChangeListener;
@@ -61,6 +62,8 @@ public class AddOnsView extends View {
 
       cellBuilder.add("buy", new BuyAddOnAction(addOn));
       cellBuilder.add("gotoDemoAccount", new ShowInDemoAccountAction(directory));
+
+      cellBuilder.add("description", GuiUtils.createReadOnlyHtmlComponent(addOn.getDescription()));
 
       cellBuilder.addOnLoadListener(new OnLoadListener() {
         public void processLoad() {

@@ -44,7 +44,7 @@ public abstract class AddOn {
   protected abstract void processPostActivation(Directory directory);
 
   public String getDescription() {
-    return Lang.getFile("addons", field.getName().toLowerCase() + ".html");
+    return Lang.get("addons." + field.getName().toLowerCase() + ".description");
   }
 
   public boolean isEnabled(GlobRepository repository) {

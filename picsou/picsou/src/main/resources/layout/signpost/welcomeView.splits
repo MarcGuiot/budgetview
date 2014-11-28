@@ -12,11 +12,6 @@
     <style selector="label.number" font="LatoBold,plain,40" fill="none" anchor="center"/>
     <style selector="htmlEditorPane.text" font="LatoBold,plain,13" fill="horizontal" anchor="center"/>
 
-    <ui name="horizontalSeparatorUI" class="org.designup.picsou.gui.components.ui.LineLabelUI"/>
-    <style selector="label.horizontalSeparator" ui="horizontalSeparatorUI"
-           foreground="splitpane.main.handle" background="content.bg"
-           fill="horizontal" marginTop="10" marginBottom="10"/>
-
     <style selector=".actionsPanel label" font="LatoRegular,plain,14" fill="none" anchor="center"/>
     <ui name="flatButtonUI" class="org.designup.picsou.gui.components.ui.FlatButtonUI"
         bgColor="welcomeView.button"

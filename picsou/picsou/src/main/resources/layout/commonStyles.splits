@@ -148,6 +148,11 @@
     <style selector="label.separatorTitle"
            font="-,plain,10" foreground="dialog.separator.title"/>
 
+    <ui name="horizontalSeparatorUI" class="org.designup.picsou.gui.components.ui.LineLabelUI"/>
+    <style selector="label.horizontalSeparator" ui="horizontalSeparatorUI"
+           foreground="splitpane.main.handle" background="content.bg"
+           fill="horizontal" border="empty(10,0,10,0)"/>
+
     <style selector="label.errorMessage" horizontalAlignment="center" foreground="#FF0000" font="-,bold,12"
            fill="horizontal" anchor="center"/>
 
