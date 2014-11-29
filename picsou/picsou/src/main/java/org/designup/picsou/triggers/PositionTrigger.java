@@ -28,8 +28,7 @@ public class PositionTrigger implements ChangeSetListener {
         changeSet.containsUpdates(Account.POSITION_WITH_PENDING) ||
         changeSet.containsChanges(Account.TYPE)) {
       TransactionComparator comparator = TransactionComparator.ASCENDING_ACCOUNT;
-//      transactions = repository.getSorted(Transaction.TYPE, comparator, GlobMatchers.ALL);
-      transactions = Transaction.getSortedByPositionDateTransactions(repository, GlobMatchers.ALL, comparator);
+      transactions = Transaction.getAllSortedByPositionDate(repository, GlobMatchers.ALL, comparator);
 
       final Set<Integer> updatedOperations = new HashSet<Integer>();
       final Set<Integer> createdAccount = new HashSet<Integer>();
@@ -325,20 +324,6 @@ public class PositionTrigger implements ChangeSetListener {
     }
 
   }
-
-  /* private void updateFirstTransaction(Glob[] transactions, int pivot, GlobRepository repository, Glob account) {
-      double after = transactions[pivot].get(Transaction.ACCOUNT_POSITION) - transactions[pivot].get(Transaction.AMOUNT);
-      for (int i = pivot - 1; i >= 1; i--) {
-        after -= transactions[i].get(Transaction.AMOUNT);
-      }
-      repository.update(transactions[0].getKey(), Transaction.AMOUNT, after);
-      repository.update(account.getKey(), Account.FIRST_POSITION, after);
-    }
-  */
-//  public Glob[] getAllTransactionForAccount(int accountId, GlobRepository repository) {
-//    return repository.getSorted(Transaction.TYPE, TransactionComparator.ASCENDING_ACCOUNT,
-//                                GlobMatchers.and(GlobMatchers.fieldEquals(Transaction.ACCOUNT, accountId)));
-//  }
 
   private GlobMatcher getMatcherForFutureOperations(int accountId, int monthId, int day) {
     return GlobMatchers.and(GlobMatchers.fieldEquals(Transaction.ACCOUNT, accountId),

@@ -128,12 +128,12 @@ public class PicsouInit {
     repository.addTrigger(new UpdateActiveBudgetTrigger());
     repository.addTrigger(new ConfigUpgradeTrigger(directory));
     repository.addTrigger(new SeriesRenameTrigger());
-    repository.addTrigger(new AccountDeleteTrigger());
+    repository.addTrigger(new AccountDeletionTrigger());
     repository.addTrigger(new AccountSequenceTrigger());
     repository.addTrigger(new SeriesDeletionTrigger());
     repository.addTrigger(new SubSeriesDeletionTrigger());
     repository.addTrigger(new RegistrationTrigger(directory));
-    repository.addTrigger(new RegisterLicenseTrigger(serverAccess));
+    repository.addTrigger(new LicenseRegistrationTrigger(serverAccess));
     repository.addTrigger(new DayTrigger());
     repository.addTrigger(new DeferredAccountTrigger());
     repository.addTrigger(new DeferredCardDayTrigger());
@@ -146,7 +146,7 @@ public class PicsouInit {
     repository.addTrigger(new ObservedSeriesStatTrigger());
     repository.addTrigger(new PastTransactionUpdateSeriesBudgetTrigger());
     repository.addTrigger(new SeriesShapeTrigger());
-    repository.addTrigger(new TransactionPlannedTrigger());
+    repository.addTrigger(new PlannedTransactionCreationTrigger());
     repository.addTrigger(new UpdateAccountOnTransactionDelete());
     repository.addTrigger(new PositionTrigger());
     repository.addTrigger(new PlannedSeriesStatTrigger());

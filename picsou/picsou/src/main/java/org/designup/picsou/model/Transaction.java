@@ -147,8 +147,8 @@ public class Transaction {
     loader.defineNonUniqueIndex(POSITION_MONTH_INDEX, POSITION_MONTH);
   }
 
-  public static Glob[] getSortedByPositionDateTransactions(GlobRepository repository, final GlobMatcher filter,
-                                                           TransactionComparator comparator){
+  public static Glob[] getAllSortedByPositionDate(GlobRepository repository, final GlobMatcher filter,
+                                                  TransactionComparator comparator){
     Glob[] transactions = new Glob[0];
     int total = 0;
     GlobList orderedMonth = repository.getAll(Month.TYPE).sort(Month.ID);

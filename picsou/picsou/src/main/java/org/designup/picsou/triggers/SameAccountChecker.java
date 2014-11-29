@@ -14,10 +14,6 @@ public class SameAccountChecker {
   private Set<Integer> accounts = new HashSet<Integer>();
   private Key summaryAccountId;
 
-  public SameAccountChecker(Glob account, GlobRepository repository) {
-    update(repository, account.get(Account.ACCOUNT_TYPE));
-  }
-
   public SameAccountChecker(Integer accountType, GlobRepository repository) {
     update(repository, accountType);
   }

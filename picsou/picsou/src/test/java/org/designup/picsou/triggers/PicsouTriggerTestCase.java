@@ -3,7 +3,7 @@ package org.designup.picsou.triggers;
 import org.designup.picsou.gui.time.TimeService;
 import org.designup.picsou.model.*;
 import org.designup.picsou.utils.PicsouTestCase;
-import org.globsframework.model.FieldValue;
+
 import static org.globsframework.model.FieldValue.value;
 import org.globsframework.model.Key;
 import org.globsframework.model.utils.GlobMatcher;
@@ -25,7 +25,7 @@ public abstract class PicsouTriggerTestCase extends PicsouTestCase {
     repository.addTrigger(new SeriesDeletionTrigger());
     repository.addTrigger(new ObservedSeriesStatTrigger());
     repository.addTrigger(new PastTransactionUpdateSeriesBudgetTrigger());
-    repository.addTrigger(new TransactionPlannedTrigger());
+    repository.addTrigger(new PlannedTransactionCreationTrigger());
     repository.addTrigger(new PlannedSeriesStatTrigger());
     repository.create(CurrentMonth.KEY,
                       value(CurrentMonth.LAST_TRANSACTION_MONTH, 200808),

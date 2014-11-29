@@ -7,10 +7,10 @@ import org.designup.picsou.model.LicenseActivationState;
 import org.designup.picsou.model.User;
 import org.globsframework.model.*;
 
-public class RegisterLicenseTrigger extends AbstractChangeSetListener {
+public class LicenseRegistrationTrigger extends AbstractChangeSetListener {
   private ServerAccess serverAccess;
 
-  public RegisterLicenseTrigger(ServerAccess serverAccess) {
+  public LicenseRegistrationTrigger(ServerAccess serverAccess) {
     this.serverAccess = serverAccess;
   }
 

@@ -68,9 +68,9 @@ public class BudgetStatTrigger implements ChangeSetListener {
                             not(fieldEquals(Account.CARD_TYPE, AccountCardType.DEFERRED.getId()))))
         .getValueSet(Account.ID);
     Glob[] transactions = Transaction
-      .getSortedByPositionDateTransactions(repository,
-                                           GlobMatchers.contained(Transaction.ACCOUNT, wantedAccount),
-                                           TransactionComparator.ASCENDING_ACCOUNT);
+      .getAllSortedByPositionDate(repository,
+                                  GlobMatchers.contained(Transaction.ACCOUNT, wantedAccount),
+                                  TransactionComparator.ASCENDING_ACCOUNT);
 
     for (Glob transaction : transactions) {
       budgetStatComputer.run(transaction);

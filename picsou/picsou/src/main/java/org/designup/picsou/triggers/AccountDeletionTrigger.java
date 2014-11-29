@@ -12,7 +12,7 @@ import java.util.Set;
 
 import static org.globsframework.model.utils.GlobMatchers.*;
 
-public class AccountDeleteTrigger extends DefaultChangeSetListener {
+public class AccountDeletionTrigger extends DefaultChangeSetListener {
   public void globsChanged(ChangeSet changeSet, GlobRepository repository) {
     if (changeSet.containsCreations(Account.TYPE)) {
       for (Key accountKey : changeSet.getCreated(Account.TYPE)) {
