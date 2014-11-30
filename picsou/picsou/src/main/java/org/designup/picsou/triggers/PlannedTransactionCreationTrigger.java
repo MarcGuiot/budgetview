@@ -242,38 +242,39 @@ public class PlannedTransactionCreationTrigger implements ChangeSetListener {
       return;
     }
 
-    AmountForDay[] amountsForDays =
-      getDayAmounts(series, monthId, seriesBudget.get(SeriesBudget.PLANNED_AMOUNT), repository);
+    DayAmountsCollector dayAmounts = new DayAmountsCollector();
+    computeDayAmounts(series, monthId, seriesBudget.get(SeriesBudget.PLANNED_AMOUNT), dayAmounts, repository);
+
     double actualAmount = seriesBudget.get(SeriesBudget.ACTUAL_AMOUNT, 0.00);
-    for (AmountForDay amountForDay : amountsForDays) {
-      Double plannedAmount = amountForDay.amount;
+    for (DayAmount dayAmount : dayAmounts) {
+      Double plannedAmount = dayAmount.amount;
       double remainder = plannedAmount - actualAmount;
       if (((plannedAmount > 0 && remainder > 0) || (plannedAmount < 0 && remainder < 0)) && !Amounts.isNearZero(remainder)) {
-        amountForDay.amount = remainder;
+        dayAmount.amount = remainder;
         break;
       }
       else {
-        actualAmount -= amountForDay.amount;
-        amountForDay.amount = 0;
+        actualAmount -= dayAmount.amount;
+        dayAmount.amount = 0;
       }
     }
 
-    for (AmountForDay amountForDay : amountsForDays) {
+    for (DayAmount dayAmount : dayAmounts) {
       Glob existingTransaction = null;
       if (plannedTransactionsForMonth.size() != 0) {
         existingTransaction = plannedTransactionsForMonth.remove(0);
       }
-      if (amountForDay.amount != 0) {
+      if (dayAmount.amount != 0) {
         if (existingTransaction != null) {
           repository.update(existingTransaction.getKey(),
-                            value(Transaction.AMOUNT, amountForDay.amount),
-                            value(Transaction.DAY, amountForDay.day),
-                            value(Transaction.POSITION_DAY, amountForDay.day),
-                            value(Transaction.BANK_DAY, amountForDay.day),
-                            value(Transaction.BUDGET_DAY, amountForDay.day));
+                            value(Transaction.AMOUNT, dayAmount.amount),
+                            value(Transaction.DAY, dayAmount.day),
+                            value(Transaction.POSITION_DAY, dayAmount.day),
+                            value(Transaction.BANK_DAY, dayAmount.day),
+                            value(Transaction.BUDGET_DAY, dayAmount.day));
         }
         else {
-          createPlannedTransaction(amountForDay.accountId, series, monthId, amountForDay.day, amountForDay.amount, repository);
+          createPlannedTransaction(dayAmount.accountId, series, monthId, dayAmount.day, dayAmount.amount, repository);
         }
       }
       else {
@@ -301,29 +302,31 @@ public class PlannedTransactionCreationTrigger implements ChangeSetListener {
   public void globsReset(GlobRepository repository, Set<GlobType> changedTypes) {
   }
 
-  private static class AmountForDay {
+  private static class DayAmount {
     final int accountId;
     final int day;
     double amount;
 
-    AmountForDay(int accountId, int day, double amount) {
+    DayAmount(int accountId, int day, double amount) {
       this.accountId = accountId;
       this.day = day;
       this.amount = amount;
     }
   }
 
-  private static AmountForDay[] getDayAmounts(Glob series, int monthId, double amount, GlobRepository repository) {
-    final List<AmountForDay> amountsForDays = new ArrayList<AmountForDay>();
-    computePlanned(series, repository, monthId, amount, new DeclarePlanned() {
-      public void declare(int account, int day, double amountForPeriod) {
-        amountsForDays.add(new AmountForDay(account, day, amountForPeriod));
-      }
-    });
-    return amountsForDays.toArray(new AmountForDay[amountsForDays.size()]);
+  private static class DayAmountsCollector implements Iterable<DayAmount> {
+    final List<DayAmount> amountsForDays = new ArrayList<DayAmount>();
+
+    public void add(int account, int day, double amount) {
+      amountsForDays.add(new DayAmount(account, day, amount));
+    }
+
+    public Iterator<DayAmount> iterator() {
+      return amountsForDays.iterator();
+    }
   }
 
-  private static void computePlanned(Glob series, GlobRepository repository, int monthId, double amount, final DeclarePlanned declarePlanned) {
+  private static void computeDayAmounts(Glob series, int monthId, double amount, final DayAmountsCollector dayAmountsCollector, GlobRepository repository) {
     Integer minDay = 0;
     Glob currentMonth = repository.get(CurrentMonth.KEY);
     if ((currentMonth.get(CurrentMonth.LAST_TRANSACTION_MONTH) == monthId)) {
@@ -339,22 +342,22 @@ public class PlannedTransactionCreationTrigger implements ChangeSetListener {
     Glob toAccount = repository.findLinkTarget(series, Series.TO_ACCOUNT);
     if (series.get(Series.MIRROR_SERIES) != null) {
       if (fromAccount == null || toAccount == null) {
-        Log.write("Series " + series.get(Series.NAME) + " is a saving series with both accounts imported" +
-                  " but one of the account is missing.");
+        Log.write("Series '" + series.get(Series.NAME) + "' is a saving series with both accounts imported" +
+                  " but one of the accounts is missing.");
         return;
       }
-      computePlanned(series, repository, monthId, amount, minDay, declarePlanned, targetAccount);
+      computeDayAmountsForAccount(series, monthId, amount, targetAccount, minDay, dayAmountsCollector, repository);
     }
     else if (Account.MAIN_SUMMARY_ACCOUNT_ID == targetAccount) {
       Integer[] accountIds = repository.getAll(Account.TYPE, Account.activeUserCreatedMainAccounts(monthId)).getValues(Account.ID);
       System.out.println("\n\n##### Calling splitAmount for seriesId:" + series.get(Series.ID) + " - monthId:" + monthId + " ################");
       double[] amounts = splitAmount(amount, accountIds, series.get(Series.ID), currentMonth, repository);
       for (int i = 0; i < accountIds.length; i++) {
-        computePlanned(series, repository, monthId, amounts[i], minDay, declarePlanned, accountIds[i]);
+        computeDayAmountsForAccount(series, monthId, amounts[i], accountIds[i], minDay, dayAmountsCollector, repository);
       }
     }
     else {
-      computePlanned(series, repository, monthId, amount, minDay, declarePlanned, targetAccount);
+      computeDayAmountsForAccount(series, monthId, amount, targetAccount, minDay, dayAmountsCollector, repository);
     }
   }
 
@@ -400,12 +403,8 @@ public class PlannedTransactionCreationTrigger implements ChangeSetListener {
     return adjusted;
   }
 
-  interface DeclarePlanned {
-    void declare(int account, int day, double amountForPeriod);
-  }
-
-  private static void computePlanned(Glob series, GlobRepository repository, int monthId, double amount,
-                                     Integer minDay, final DeclarePlanned planned, int account) {
+  private static void computeDayAmountsForAccount(Glob series, int monthId, double amount, int account, Integer minDay,
+                                                  final DayAmountsCollector dayAmounts, GlobRepository repository) {
     Integer seriesId = series.get(Series.ID);
 
     Integer period = repository.get(UserPreferences.KEY).get(UserPreferences.PERIOD_COUNT_FOR_PLANNED);
@@ -418,7 +417,7 @@ public class PlannedTransactionCreationTrigger implements ChangeSetListener {
       }
     }
     if (seriesShape != null && seriesShape.get(SeriesShape.FIXED_DATE) != null) {
-      planned.declare(account, Math.max(minDay, Month.getDay(seriesShape.get(SeriesShape.FIXED_DATE), monthId)), amount);
+      dayAmounts.add(account, Math.max(minDay, Month.getDay(seriesShape.get(SeriesShape.FIXED_DATE), monthId)), amount);
     }
     else {
       if (seriesShape == null
@@ -443,7 +442,7 @@ public class PlannedTransactionCreationTrigger implements ChangeSetListener {
             if (!Amounts.isNearZero(amountForPeriod)) {
               alreadyAssignedAmount += amountForPeriod;
               percentToPropagate = 0;
-              planned.declare(account, minDay, amountForPeriod);
+              dayAmounts.add(account, minDay, amountForPeriod);
             }
           }
         }
@@ -452,7 +451,7 @@ public class PlannedTransactionCreationTrigger implements ChangeSetListener {
           if (!Amounts.isNearZero(amountForPeriod)) {
             alreadyAssignedAmount += amountForPeriod;
             percentToPropagate = 0;
-            planned.declare(account, day, amountForPeriod);
+            dayAmounts.add(account, day, amountForPeriod);
           }
         }
       }
