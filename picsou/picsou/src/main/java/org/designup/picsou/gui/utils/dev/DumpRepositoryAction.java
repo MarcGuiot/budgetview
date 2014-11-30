@@ -5,6 +5,7 @@ import org.designup.picsou.gui.model.SeriesStat;
 import org.designup.picsou.model.ProjectTransfer;
 import org.designup.picsou.model.Series;
 import org.designup.picsou.model.SeriesBudget;
+import org.designup.picsou.model.Transaction;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.format.GlobPrinter;
@@ -26,6 +27,7 @@ public class DumpRepositoryAction extends AbstractAction {
   }
 
   public void doPrint(GlobType... types) {
+    System.out.println("Max Transaction.ID: " + repository.getAll(Transaction.TYPE).getMaxValue(Transaction.ID) + " / " + Integer.MAX_VALUE);
     GlobPrinter.init(repository)
       .showOnly(types)
       .setTextFilters("100", "101")

@@ -66,6 +66,6 @@ public class AmountsTest extends TestCase {
     TestUtils.assertEquals(Amounts.adjustTotal(new Double[]{500.00, 250.00, 50.00}, 400.00), 250.00, 125.00, 25.00);
     TestUtils.assertEquals(Amounts.adjustTotal(new Double[]{500.00, 250.00, 50.00}, 500.00), 312.50, 156.25, 31.25);
     TestUtils.assertEquals(Amounts.adjustTotal(new Double[]{-50.00, 50.00}, 200.00), 50.00, 150.00);
-
+    TestUtils.assertEquals(Amounts.adjustTotal(new Double[]{-20.00, 80.00}, 200.00), 50.00, 150.00);
   }
 }

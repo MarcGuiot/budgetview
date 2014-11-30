@@ -31,7 +31,6 @@ public class SubSeriesStatTrigger implements ChangeSetListener {
           if (!values.contains(Transaction.SUB_SERIES) || !values.contains(Transaction.AMOUNT)) {
             return;
           }
-
           add(key, repository);
         }
 

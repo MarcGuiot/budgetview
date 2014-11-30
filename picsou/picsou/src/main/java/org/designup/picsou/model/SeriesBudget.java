@@ -75,6 +75,14 @@ public class SeriesBudget {
       .getGlobs();
   }
 
+  public static Glob get(Integer seriesId, Integer monthId, GlobRepository repository) {
+    return repository
+      .findByIndex(SeriesBudget.SERIES_INDEX, SeriesBudget.SERIES, seriesId)
+      .findByIndex(SeriesBudget.MONTH, monthId)
+      .getGlobs()
+      .getFirst();
+  }
+
   public static Glob findOrCreate(Integer seriesId, Integer monthId, GlobRepository repository) {
     Glob result = find(seriesId, monthId, repository);
     if (result != null) {

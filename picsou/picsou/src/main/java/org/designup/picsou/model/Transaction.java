@@ -311,6 +311,11 @@ public class Transaction {
     }
   }
 
+  public static GlobList getAllForSeriesAndMonth(Integer seriesId, Integer monthId, GlobRepository repository) {
+    return repository.findByIndex(SERIES_INDEX, SERIES, seriesId)
+        .findByIndex(POSITION_MONTH, monthId).getGlobs();
+  }
+
   public static class Serializer implements PicsouGlobSerializer {
 
     public int getWriteVersion() {

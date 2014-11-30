@@ -55,4 +55,8 @@ public class AmountMap {
     }
     return builder.toString();
   }
+
+  public boolean isEmpty() {
+    return amounts.isEmpty();
+  }
 }

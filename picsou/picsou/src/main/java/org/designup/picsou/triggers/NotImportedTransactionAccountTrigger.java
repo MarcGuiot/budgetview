@@ -1,7 +1,6 @@
 package org.designup.picsou.triggers;
 
 import org.designup.picsou.model.*;
-import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.*;
 import static org.globsframework.model.FieldValue.value;
 import static org.globsframework.model.utils.GlobMatchers.*;
@@ -220,8 +219,7 @@ public class NotImportedTransactionAccountTrigger extends AbstractChangeSetListe
   }
 
   private void deleteTransaction(Glob seriesBudget, Integer seriesId, Glob series, GlobRepository repository) {
-    GlobList transactions = repository.findByIndex(Transaction.SERIES_INDEX, Transaction.SERIES, seriesId)
-      .findByIndex(Transaction.POSITION_MONTH, seriesBudget.get(SeriesBudget.MONTH)).getGlobs();
+    GlobList transactions = Transaction.getAllForSeriesAndMonth(seriesId, seriesBudget.get(SeriesBudget.MONTH), repository);
     Integer fromAccount = series.get(Series.FROM_ACCOUNT);
     Integer toAccount = series.get(Series.TO_ACCOUNT);
     if (fromAccount != null) {
@@ -244,8 +242,7 @@ public class NotImportedTransactionAccountTrigger extends AbstractChangeSetListe
     Integer targetAccountId = series.get(Series.TARGET_ACCOUNT);
 
     Glob currentMonth = repository.get(CurrentMonth.KEY);
-    GlobList transactions = repository.findByIndex(Transaction.SERIES_INDEX, Transaction.SERIES, seriesId)
-      .findByIndex(Transaction.POSITION_MONTH, seriesBudget.get(SeriesBudget.MONTH)).getGlobs();
+    GlobList transactions = Transaction.getAllForSeriesAndMonth(seriesId, seriesBudget.get(SeriesBudget.MONTH), repository);
 
     GlobList transactionForAccount =
       transactions.filter(fieldEquals(Transaction.ACCOUNT, targetAccountId), repository);

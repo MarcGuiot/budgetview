@@ -2,6 +2,7 @@ package org.designup.picsou.functests.budget;
 
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
+import org.globsframework.utils.Log;
 
 public class MultiAccountSeriesTest extends LoggedInFunctionalTestCase {
 
@@ -36,15 +37,15 @@ public class MultiAccountSeriesTest extends LoggedInFunctionalTestCase {
       .add("11/11/2014", "Planned: Leisures", -300.00, "Leisures", 700.00, 700.00, "Main1")
       .check();
 
-    // 2. When adding a second account, the envelope distributes 33% on each
+    // 2. When adding a second account, the envelope distributes 50% on each
     accounts.createMainAccount("Main2", 2000.00);
     transactions.initAmountContent()
-      .add("11/01/2015", "Planned: Leisures", -150.00, "Leisures", 100.00, 100.00, "Main1")
-      .add("11/01/2015", "Planned: Leisures", -150.00, "Leisures", 250.00, 250.00, "Main2")
-      .add("11/12/2014", "Planned: Leisures", -150.00, "Leisures", 400.00, 400.00, "Main1")
-      .add("11/12/2014", "Planned: Leisures", -150.00, "Leisures", 550.00, 550.00, "Main2")
-      .add("11/11/2014", "Planned: Leisures", -150.00, "Leisures", 700.00, 700.00, "Main1")
-      .add("11/11/2014", "Planned: Leisures", -150.00, "Leisures", 850.00, 850.00, "Main2")
+      .add("11/01/2015", "Planned: Leisures", -150.00, "Leisures", 1550.00, 2100.00, "Main2")
+      .add("11/01/2015", "Planned: Leisures", -150.00, "Leisures", 550.00, 2250.00, "Main1")
+      .add("11/12/2014", "Planned: Leisures", -150.00, "Leisures", 1700.00, 2400.00, "Main2")
+      .add("11/12/2014", "Planned: Leisures", -150.00, "Leisures", 700.00, 2550.00, "Main1")
+      .add("11/11/2014", "Planned: Leisures", -150.00, "Leisures", 1850.00, 2700.00, "Main2")
+      .add("11/11/2014", "Planned: Leisures", -150.00, "Leisures", 850.00, 2850.00, "Main1")
       .check();
 
     // 3. When adding a third account, the envelope distributes 33% on each
@@ -53,16 +54,16 @@ public class MultiAccountSeriesTest extends LoggedInFunctionalTestCase {
       .selectBank("CIC")
       .setPosition(3000)
       .validate();
-    transactions.initAmountContent()  // TODO: revoir les soldes des comptes
-      .add("11/01/2015", "Planned: Leisures", -100.00, "Leisures", 700.00, 5100.00, "Main1")
+    transactions.initAmountContent()
+      .add("11/01/2015", "Planned: Leisures", -100.00, "Leisures", 2700.00, 5100.00, "Main3")
       .add("11/01/2015", "Planned: Leisures", -100.00, "Leisures", 1700.00, 5200.00, "Main2")
-      .add("11/01/2015", "Planned: Leisures", -100.00, "Leisures", 2700.00, 5300.00, "Main3")
-      .add("11/12/2014", "Planned: Leisures", -100.00, "Leisures", 800.00, 5400.00, "Main1")
-      .add("11/12/2014", "Planned: Leisures", -100.00, "Leisures", 1800.00, 55000.00, "Main2")
-      .add("11/12/2014", "Planned: Leisures", -100.00, "Leisures", 28000.00, 5600.00, "Main3")
-      .add("11/11/2014", "Planned: Leisures", -100.00, "Leisures", 9000.00, 5700.00, "Main1")
-      .add("11/11/2014", "Planned: Leisures", -100.00, "Leisures", 19000.00, 5850.00, "Main2")
-      .add("11/11/2014", "Planned: Leisures", -100.00, "Leisures", 2900.00, 5900.00, "Main3")
+      .add("11/01/2015", "Planned: Leisures", -100.00, "Leisures", 700.00, 5300.00, "Main1")
+      .add("11/12/2014", "Planned: Leisures", -100.00, "Leisures", 2800.00, 5400.00, "Main3")
+      .add("11/12/2014", "Planned: Leisures", -100.00, "Leisures", 1800.00, 5500.00, "Main2")
+      .add("11/12/2014", "Planned: Leisures", -100.00, "Leisures", 800.00, 5600.00, "Main1")
+      .add("11/11/2014", "Planned: Leisures", -100.00, "Leisures", 2900.00, 5700.00, "Main3")
+      .add("11/11/2014", "Planned: Leisures", -100.00, "Leisures", 1900.00, 5800.00, "Main2")
+      .add("11/11/2014", "Planned: Leisures", -100.00, "Leisures", 900.00, 5900.00, "Main1")
       .check();
   }
 
@@ -87,7 +88,7 @@ public class MultiAccountSeriesTest extends LoggedInFunctionalTestCase {
 
     mainAccounts.edit("Account n. 000111").setName("Main1").validate();
     mainAccounts.edit("Account n. 000222").setName("Main2").validate();
-    
+
     budgetView.variable.createSeries()
       .setName("Leisures")
       .checkAvailableTargetAccounts("Main1", "Main2", "Main accounts")
@@ -95,6 +96,8 @@ public class MultiAccountSeriesTest extends LoggedInFunctionalTestCase {
       .selectNegativeAmounts()
       .setAmount(300.00)
       .validate();
+
+    Log.banner("TEST");
 
     categorization.setVariable("LEISURE1", "Leisures");
     categorization.setVariable("LEISURE2", "Leisures");
@@ -113,6 +116,14 @@ public class MultiAccountSeriesTest extends LoggedInFunctionalTestCase {
       .check();
   }
 
+  public void testExistingTransactionsNotForAllAccounts() throws Exception {
+    fail("tbd");
+  }
+
+  public void testLooksInThePastForNonMonthlyPeriodicity() throws Exception {
+    fail("tbd");
+  }
+
   public void testSwitchingFromMultiToMonoAccountAndBackWithoutAssignedTransactions() throws Exception {
     accounts.createMainAccount("Main1", 1000.00);
     accounts.createMainAccount("Main2", 2000.00);
@@ -126,36 +137,36 @@ public class MultiAccountSeriesTest extends LoggedInFunctionalTestCase {
       .selectNegativeAmounts()
       .setAmount(300.00)
       .validate();
-
     budgetView.variable.checkContent("| Leisures | 0.00 | 300.00 |");
 
     transactions.showPlannedTransactions();
     timeline.selectMonths(201411, 201412, 201501);
+    budgetView.variable.checkContent("| Leisures | 0.00 | 900.00 |");
     transactions.initAmountContent()
-      .add("11/01/2015", "Planned: Leisures", -150.00, "Leisures", 100.00, 100.00, "Main1")
-      .add("11/01/2015", "Planned: Leisures", -150.00, "Leisures", 250.00, 250.00, "Main2")
-      .add("11/12/2014", "Planned: Leisures", -150.00, "Leisures", 400.00, 400.00, "Main1")
-      .add("11/12/2014", "Planned: Leisures", -150.00, "Leisures", 550.00, 550.00, "Main2")
-      .add("11/11/2014", "Planned: Leisures", -150.00, "Leisures", 700.00, 700.00, "Main1")
-      .add("11/11/2014", "Planned: Leisures", -150.00, "Leisures", 850.00, 850.00, "Main2")
+      .add("11/01/2015", "Planned: Leisures", -150.00, "Leisures", 1550.00, 2100.00, "Main2")
+      .add("11/01/2015", "Planned: Leisures", -150.00, "Leisures", 550.00, 2250.00, "Main1")
+      .add("11/12/2014", "Planned: Leisures", -150.00, "Leisures", 1700.00, 2400.00, "Main2")
+      .add("11/12/2014", "Planned: Leisures", -150.00, "Leisures", 700.00, 2550.00, "Main1")
+      .add("11/11/2014", "Planned: Leisures", -150.00, "Leisures", 1850.00, 2700.00, "Main2")
+      .add("11/11/2014", "Planned: Leisures", -150.00, "Leisures", 850.00, 2850.00, "Main1")
       .check();
 
     // 2. Switch to mono-account
     budgetView.variable.editSeries("Leisures")
       .setTargetAccount("Main2")
       .validate();
-    budgetView.variable.checkContent("| Leisures | 0.00 | 300.00 |");
+    budgetView.variable.checkContent("| Leisures | 0.00 | 900.00 |");
     transactions.initAmountContent()
-      .add("11/01/2015", "Planned: Leisures", -300.00, "Leisures", 100.00, 100.00, "Main2")
-      .add("11/12/2014", "Planned: Leisures", -300.00, "Leisures", 400.00, 400.00, "Main2")
-      .add("11/11/2014", "Planned: Leisures", -300.00, "Leisures", 700.00, 700.00, "Main2")
+      .add("11/01/2015", "Planned: Leisures", -300.00, "Leisures", 1100.00, 2100.00, "Main2")
+      .add("11/12/2014", "Planned: Leisures", -300.00, "Leisures", 1400.00, 2400.00, "Main2")
+      .add("11/11/2014", "Planned: Leisures", -300.00, "Leisures", 1700.00, 2700.00, "Main2")
       .check();
 
     // 3. Switch back to multi-account
     budgetView.variable.editSeries("Leisures")
       .setTargetAccount("Main accounts")
       .validate();
-    budgetView.variable.checkContent("| Leisures | 0.00 | 300.00 |");
+    budgetView.variable.checkContent("| Leisures | 0.00 | 900.00 |");
     transactions.initAmountContent()
       .add("11/01/2015", "Planned: Leisures", -150.00, "Leisures", 100.00, 100.00, "Main1")
       .add("11/01/2015", "Planned: Leisures", -150.00, "Leisures", 250.00, 250.00, "Main2")
