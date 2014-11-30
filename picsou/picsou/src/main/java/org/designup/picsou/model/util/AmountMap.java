@@ -7,13 +7,6 @@ import java.util.Set;
 public class AmountMap {
   private Map<Integer, Double> amounts = new HashMap<Integer, Double>();
 
-  public void setMax(Integer id, Double newValue) {
-    Double previousValue = amounts.get(id);
-    if ((previousValue == null) || (previousValue < newValue)) {
-      amounts.put(id, newValue);
-    }
-  }
-
   public void add(int id, Double amount) {
     if (amount == null) {
       return;
@@ -44,15 +37,18 @@ public class AmountMap {
 
   public String toString() {
     StringBuilder builder = new StringBuilder();
+    builder.append("[");
     boolean first = true;
     for (Map.Entry<Integer, Double> entry : amounts.entrySet()) {
       if (!first) {
-        builder.append(',');
+        builder.append(", ");
       }
       builder.append(entry.getKey())
         .append(":")
         .append(entry.getValue());
+      first = false;
     }
+    builder.append("]");
     return builder.toString();
   }
 

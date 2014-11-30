@@ -296,16 +296,20 @@ public class BudgetViewChecker extends ViewChecker {
       return this;
     }
 
-    public BudgetAreaChecker checkContent(String expected) {
-      Panel seriesRepeat = getPanel().getPanel("seriesRepeat");
-      UIComponent[] seriesNames = seriesRepeat.getUIComponents(Button.class, "seriesName");
-      UIComponent[] actualAmounts = seriesRepeat.getUIComponents(Button.class, "observedSeriesAmount");
-      UIComponent[] plannedAmounts = seriesRepeat.getUIComponents(Button.class, "plannedSeriesAmount");
-      TablePrinter table = new TablePrinter();
-      for (int i = 0; i < seriesNames.length; i++) {
-        table.addRow(seriesNames[i].getLabel(), actualAmounts[i].getLabel(), plannedAmounts[i].getLabel());
-      }
-      Assert.assertEquals(expected.trim(), table.toString().trim());
+    public BudgetAreaChecker checkContent(final String expected) {
+      UISpecAssert.assertThat(new Assertion() {
+        public void check() {
+          Panel seriesRepeat = getPanel().getPanel("seriesRepeat");
+          UIComponent[] seriesNames = seriesRepeat.getUIComponents(Button.class, "seriesName");
+          UIComponent[] actualAmounts = seriesRepeat.getUIComponents(Button.class, "observedSeriesAmount");
+          UIComponent[] plannedAmounts = seriesRepeat.getUIComponents(Button.class, "plannedSeriesAmount");
+          TablePrinter table = new TablePrinter();
+          for (int i = 0; i < seriesNames.length; i++) {
+            table.addRow(seriesNames[i].getLabel(), actualAmounts[i].getLabel(), plannedAmounts[i].getLabel());
+          }
+          Assert.assertEquals(expected.trim(), table.toString().trim());
+        }
+      });
       return this;
     }
 

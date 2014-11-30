@@ -2,7 +2,6 @@ package org.designup.picsou.functests.budget;
 
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
-import org.globsframework.utils.Log;
 
 public class MultiAccountSeriesTest extends LoggedInFunctionalTestCase {
 
@@ -72,16 +71,16 @@ public class MultiAccountSeriesTest extends LoggedInFunctionalTestCase {
       .init(this)
       .addBankAccount("000111", 1000.00, "2014/11/10")
       .addTransaction("2014/11/05", -10.00, "LEISURE1")
-      .addTransaction("2014/10/06", -20.00, "LEISURE1")
-      .addTransaction("2014/09/06", -70.00, "LEISURE1")
+      .addTransaction("2014/10/06", -30.00, "LEISURE1")
+      .addTransaction("2014/09/06", -60.00, "LEISURE1")
       .addTransaction("2014/08/06", -50.00, "LEISURE1") // Ignored
       .load();
 
     OfxBuilder
       .init(this)
       .addBankAccount("000222", 2000.00, "2014/11/10") // Half the amounts of the other account
-      .addTransaction("2014/11/06", -5.00, "LEISURE2")
-      .addTransaction("2014/10/07", -10.00, "LEISURE2")
+      .addTransaction("2014/11/06", -10.00, "LEISURE2")
+      .addTransaction("2014/10/07", -5.00, "LEISURE2")
       .addTransaction("2014/09/03", -35.00, "LEISURE2")
       .addTransaction("2014/08/06", -500.00, "LEISURE2") // Ignored
       .load();
@@ -97,30 +96,178 @@ public class MultiAccountSeriesTest extends LoggedInFunctionalTestCase {
       .setAmount(300.00)
       .validate();
 
-    Log.banner("TEST");
+    categorization.setVariable("LEISURE1", "Leisures");
+    categorization.setVariable("LEISURE2", "Leisures");
+
+    transactions.showPlannedTransactions();
+    timeline.selectMonths(201411, 201412, 201501);
+    transactions.initAmountContent()
+      .add("11/01/2015", "Planned: Leisures", -200.00, "Leisures", 410.00, 2120.00, "Main1")
+      .add("04/01/2015", "Planned: Leisures", -100.00, "Leisures", 1710.00, 2320.00, "Main2")
+      .add("11/12/2014", "Planned: Leisures", -200.00, "Leisures", 610.00, 2420.00, "Main1")
+      .add("04/12/2014", "Planned: Leisures", -100.00, "Leisures", 1810.00, 2620.00, "Main2")
+      .add("11/11/2014", "Planned: Leisures", -190.00, "Leisures", 810.00, 2720.00, "Main1")
+      .add("06/11/2014", "Planned: Leisures", -90.00, "Leisures", 1910.00, 2910.00, "Main2")
+      .add("06/11/2014", "LEISURE2", -10.00, "Leisures", 2000.00, 3000.00, "Main2")
+      .add("05/11/2014", "LEISURE1", -10.00, "Leisures", 1000.00, 3010.00, "Main1")
+      .check();
+  }
+
+  public void testPlansTransactionsOnlyForAccountsInWhichTheEnvelopeHasBeenUsed() throws Exception {
+    OfxBuilder
+      .init(this)
+      .addBankAccount("000111", 1000.00, "2014/11/10")
+      .addTransaction("2014/11/05", -10.00, "LEISURE1")
+      .addTransaction("2014/10/06", -20.00, "LEISURE1")
+      .addTransaction("2014/09/06", -70.00, "LEISURE1")
+      .load();
+
+    OfxBuilder
+      .init(this)
+      .addBankAccount("000222", 2000.00, "2014/11/10") // Half the amounts of the other account
+      .addTransaction("2014/11/06", -5.00, "LEISURE2")
+      .addTransaction("2014/10/07", -10.00, "LEISURE2")
+      .addTransaction("2014/09/03", -35.00, "LEISURE2")
+      .load();
+
+    OfxBuilder
+      .init(this)
+      .addBankAccount("000333", 3000.00, "2014/11/10") // Not related with this envelope => no planned for this one
+      .addTransaction("2014/11/05", -75.00, "OTHER")
+      .addTransaction("2014/10/04", -35.00, "OTHER")
+      .addTransaction("2014/09/03", -20.00, "OTHER")
+      .addTransaction("2014/08/02", -50.00, "OTHER")
+      .load();
+
+    mainAccounts.edit("Account n. 000111").setName("Main1").validate();
+    mainAccounts.edit("Account n. 000222").setName("Main2").validate();
+    mainAccounts.edit("Account n. 000333").setName("Main3").validate();
+
+    budgetView.variable.createSeries()
+      .setName("Leisures")
+      .checkAvailableTargetAccounts("Main1", "Main2", "Main3", "Main accounts")
+      .setTargetAccount("Main accounts")
+      .selectNegativeAmounts()
+      .setAmount(300.00)
+      .validate();
 
     categorization.setVariable("LEISURE1", "Leisures");
     categorization.setVariable("LEISURE2", "Leisures");
 
     transactions.showPlannedTransactions();
     timeline.selectMonths(201411, 201412, 201501);
-    transactions.initAmountContent() // TODO: revoir les soldes des comptes
-      .add("11/01/2015", "Planned: Leisures", -200.00, "Leisures", 100.00, 100.00, "Main1")
-      .add("11/01/2015", "Planned: Leisures", -100.00, "Leisures", 250.00, 250.00, "Main2")
-      .add("11/12/2014", "Planned: Leisures", -200.00, "Leisures", 400.00, 400.00, "Main1")
-      .add("11/12/2014", "Planned: Leisures", -100.00, "Leisures", 550.00, 550.00, "Main2")
-      .add("11/11/2014", "Planned: Leisures", -195.00, "Leisures", 700.00, 700.00, "Main1")
-      .add("11/11/2014", "Planned: Leisures", -90.00, "Leisures", 850.00, 850.00, "Main2")
-      .add("06/11/2014", "LEISURE2", -5.00, "Leisures", 2000.00, 3000.00, "Account n. 000222")
-      .add("05/11/2014", "LEISURE1", -10.00, "Leisures", 1000.00, 3005.00, "Account n. 000111")
+    transactions.initAmountContent()
+      .add("11/01/2015", "Planned: Leisures", -100.00, "Leisures", 1705.00, 5115.00, "Main2")
+      .add("11/01/2015", "Planned: Leisures", -200.00, "Leisures", 410.00, 5215.00, "Main1")
+      .add("11/12/2014", "Planned: Leisures", -100.00, "Leisures", 1805.00, 5415.00, "Main2")
+      .add("11/12/2014", "Planned: Leisures", -200.00, "Leisures", 610.00, 5515.00, "Main1")
+      .add("11/11/2014", "Planned: Leisures", -95.00, "Leisures", 1905.00, 5715.00, "Main2")
+      .add("11/11/2014", "Planned: Leisures", -190.00, "Leisures", 810.00, 5810.00, "Main1")
+      .add("06/11/2014", "LEISURE2", -5.00, "Leisures", 2000.00, 6000.00, "Main2")
+      .add("05/11/2014", "OTHER", -75.00, "To categorize", 3000.00, 6005.00, "Main3")
+      .add("05/11/2014", "LEISURE1", -10.00, "Leisures", 1000.00, 6080.00, "Main1")
       .check();
   }
 
-  public void testExistingTransactionsNotForAllAccounts() throws Exception {
-    fail("tbd");
+  public void testLooksInThePastForNonMonthlyPeriodicity() throws Exception {
+    OfxBuilder
+      .init(this)
+      .addBankAccount("000111", 1000.00, "2014/11/10")
+      .addTransaction("2014/11/05", -5.00, "LEISURE1")
+      .addTransaction("2014/09/06", -25.00, "LEISURE1")
+      .addTransaction("2014/05/06", -70.00, "LEISURE1")
+      .addTransaction("2014/03/06", -20.00, "LEISURE1")
+      .load();
+
+    OfxBuilder
+      .init(this)
+      .addBankAccount("000222", 2000.00, "2014/11/10") // Half the amounts of the other account
+      .addTransaction("2014/11/06", -5.00, "LEISURE2")
+      .addTransaction("2014/09/07", -10.00, "LEISURE2")
+      .addTransaction("2014/05/03", -35.00, "LEISURE2")
+      .addTransaction("2014/02/03", -20.00, "LEISURE2")
+      .load();
+
+    OfxBuilder
+      .init(this)
+      .addBankAccount("000333", 3000.00, "2014/11/10") // Not related with this envelope => no planned for this one
+      .addTransaction("2014/11/06", -5.00, "OTHER")
+      .addTransaction("2014/10/07", -10.00, "OTHER")
+      .addTransaction("2014/09/03", -35.00, "OTHER")
+      .addTransaction("2014/08/06", -500.00, "OTHER")
+      .load();
+
+    mainAccounts.edit("Account n. 000111").setName("Main1").validate();
+    mainAccounts.edit("Account n. 000222").setName("Main2").validate();
+    mainAccounts.edit("Account n. 000333").setName("Main3").validate();
+
+    budgetView.variable.createSeries()
+      .setName("Leisures")
+      .checkAvailableTargetAccounts("Main1", "Main2", "Main3", "Main accounts")
+      .setTargetAccount("Main accounts")
+      .selectNegativeAmounts()
+      .setAmount(300.00)
+      .validate();
+
+    categorization.setVariable("LEISURE1", "Leisures");
+    categorization.setVariable("LEISURE2", "Leisures");
+
+    transactions.showPlannedTransactions();
+    timeline.selectMonths(201411, 201412, 201501);
+    transactions.initAmountContent()
+      .add("11/01/2015", "Planned: Leisures", -100.00, "Leisures", 1705.00, 5110.00, "Main2")
+      .add("11/01/2015", "Planned: Leisures", -200.00, "Leisures", 405.00, 5210.00, "Main1")
+      .add("11/12/2014", "Planned: Leisures", -100.00, "Leisures", 1805.00, 5410.00, "Main2")
+      .add("11/12/2014", "Planned: Leisures", -200.00, "Leisures", 605.00, 5510.00, "Main1")
+      .add("11/11/2014", "Planned: Leisures", -95.00, "Leisures", 1905.00, 5710.00, "Main2")
+      .add("11/11/2014", "Planned: Leisures", -195.00, "Leisures", 805.00, 5805.00, "Main1")
+      .add("06/11/2014", "OTHER", -5.00, "To categorize", 3000.00, 6000.00, "Main3")
+      .add("06/11/2014", "LEISURE2", -5.00, "Leisures", 2000.00, 6005.00, "Main2")
+      .add("05/11/2014", "LEISURE1", -5.00, "Leisures", 1000.00, 6010.00, "Main1")
+      .check();
   }
 
-  public void testLooksInThePastForNonMonthlyPeriodicity() throws Exception {
+  public void testExistingAmountForAnAccountExceedsThePlannedAmount() throws Exception {
+    OfxBuilder
+      .init(this)
+      .addBankAccount("000111", 1000.00, "2014/11/10")
+      .addTransaction("2014/11/05", -5.00, "LEISURE1")
+      .addTransaction("2014/09/06", -25.00, "LEISURE1")
+      .addTransaction("2014/05/06", -70.00, "LEISURE1")
+      .addTransaction("2014/03/06", -20.00, "LEISURE1")
+      .load();
+
+    OfxBuilder
+      .init(this)
+      .addBankAccount("000222", 2000.00, "2014/11/10") // Half the amounts of the other account
+      .addTransaction("2014/11/06", -105.00, "LEISURE2")
+      .addTransaction("2014/09/07", -10.00, "LEISURE2")
+      .addTransaction("2014/05/03", -35.00, "LEISURE2")
+      .addTransaction("2014/02/03", -20.00, "LEISURE2")
+      .load();
+
+    mainAccounts.edit("Account n. 000111").setName("Main1").validate();
+    mainAccounts.edit("Account n. 000222").setName("Main2").validate();
+
+    budgetView.variable.createSeries()
+      .setName("Leisures")
+      .checkAvailableTargetAccounts("Main1", "Main2", "Main accounts")
+      .setTargetAccount("Main accounts")
+      .selectNegativeAmounts()
+      .setAmount(300.00)
+      .validate();
+
+    categorization.setVariable("LEISURE1", "Leisures");
+    categorization.setVariable("LEISURE2", "Leisures");
+
+    transactions.showPlannedTransactions();
+    timeline.selectMonths(201411, 201412, 201501);
+    fail("tbd");
+    transactions.initAmountContent()
+      .dumpCode();
+  }
+
+  public void testMultiTransactionsShape() throws Exception {
     fail("tbd");
   }
 
@@ -168,84 +315,13 @@ public class MultiAccountSeriesTest extends LoggedInFunctionalTestCase {
       .validate();
     budgetView.variable.checkContent("| Leisures | 0.00 | 900.00 |");
     transactions.initAmountContent()
-      .add("11/01/2015", "Planned: Leisures", -150.00, "Leisures", 100.00, 100.00, "Main1")
-      .add("11/01/2015", "Planned: Leisures", -150.00, "Leisures", 250.00, 250.00, "Main2")
-      .add("11/12/2014", "Planned: Leisures", -150.00, "Leisures", 400.00, 400.00, "Main1")
-      .add("11/12/2014", "Planned: Leisures", -150.00, "Leisures", 550.00, 550.00, "Main2")
-      .add("11/11/2014", "Planned: Leisures", -150.00, "Leisures", 700.00, 700.00, "Main1")
-      .add("11/11/2014", "Planned: Leisures", -150.00, "Leisures", 850.00, 850.00, "Main2")
+      .add("11/01/2015", "Planned: Leisures", -150.00, "Leisures", 1550.00, 2100.00, "Main2")
+      .add("11/01/2015", "Planned: Leisures", -150.00, "Leisures", 550.00, 2250.00, "Main1")
+      .add("11/12/2014", "Planned: Leisures", -150.00, "Leisures", 1700.00, 2400.00, "Main2")
+      .add("11/12/2014", "Planned: Leisures", -150.00, "Leisures", 700.00, 2550.00, "Main1")
+      .add("11/11/2014", "Planned: Leisures", -150.00, "Leisures", 1850.00, 2700.00, "Main2")
+      .add("11/11/2014", "Planned: Leisures", -150.00, "Leisures", 850.00, 2850.00, "Main1")
       .check();
-  }
-
-  public void testSwitchingFromMultiToMonoAccountWithAssignedTransactions() throws Exception {
-    OfxBuilder
-      .init(this)
-      .addBankAccount("000111", 1000.00, "2014/11/10")
-      .addTransaction("2014/11/05", -10.00, "LEISURE1")
-      .addTransaction("2014/10/06", -20.00, "LEISURE1")
-      .addTransaction("2014/09/06", -70.00, "LEISURE1")
-      .load();
-
-    OfxBuilder
-      .init(this)
-      .addBankAccount("000222", 2000.00, "2014/11/10")
-      .addTransaction("2014/11/06", -5.00, "LEISURE2")
-      .addTransaction("2014/10/07", -10.00, "LEISURE2")
-      .addTransaction("2014/09/03", -35.00, "LEISURE2")
-      .load();
-
-    mainAccounts.edit("Account n. 000111").setName("Main1").validate();
-    mainAccounts.edit("Account n. 000222").setName("Main2").validate();
-
-    budgetView.variable.createSeries()
-      .setName("Leisures")
-      .checkAvailableTargetAccounts("Main1", "Main2", "Main accounts")
-      .setTargetAccount("Main accounts")
-      .selectNegativeAmounts()
-      .setAmount(300.00)
-      .validate();
-
-    categorization.setVariable("LEISURE1", "Leisures");
-    categorization.setVariable("LEISURE2", "Leisures");
-    budgetView.variable.checkContent("| Leisures | 15.00 | 300.00 |");
-
-    // 1. Check multi
-    transactions.showPlannedTransactions();
-    timeline.selectMonths(201410, 201411, 201412, 201501);
-    transactions.initAmountContent().dumpCode();
-    transactions.initAmountContent() // TODO revoir les soldes des comptes
-      .add("11/01/2015", "Planned: Leisures", -150.00, "Leisures", 100.00, 100.00, "Main1")
-      .add("11/01/2015", "Planned: Leisures", -150.00, "Leisures", 250.00, 250.00, "Main2")
-      .add("11/12/2014", "Planned: Leisures", -150.00, "Leisures", 400.00, 400.00, "Main1")
-      .add("11/12/2014", "Planned: Leisures", -150.00, "Leisures", 550.00, 550.00, "Main2")
-      .add("11/11/2014", "Planned: Leisures", -140.00, "Leisures", 700.00, 700.00, "Main1")
-      .add("11/11/2014", "Planned: Leisures", -145.00, "Leisures", 850.00, 850.00, "Main2")
-      .add("06/11/2014", "LEISURE2", -5.00, "Leisures", 2000.00, 3000.00, "Main2")
-      .add("05/11/2014", "LEISURE1", -10.00, "Leisures", 1000.00, 3005.00, "Main1")
-      .add("07/10/2014", "LEISURE2", -10.00, "Leisures", 2005.00, 3015.00, "Main2")
-      .add("06/10/2014", "LEISURE1", -20.00, "Leisures", 1010.00, 3025.00, "Main1")
-      .check();
-
-    // 2. Switch to mono
-    budgetView.variable.editSeries("Leisures")
-      .setTargetAccount("Main2")
-      .validate();
-    transactions.initAmountContent() // TODO revoir les soldes des comptes
-      .add("11/01/2015", "Planned: Leisures", -300.00, "Leisures", 100.00, 100.00, "Main2")
-      .add("11/12/2014", "Planned: Leisures", -300.00, "Leisures", 400.00, 400.00, "Main2")
-      .add("11/11/2014", "Planned: Leisures", -285.00, "Leisures", 700.00, 700.00, "Main2")
-      .add("06/11/2014", "LEISURE2", -5.00, "Leisures", 2000.00, 3000.00, "Main2")
-      .add("05/11/2014", "LEISURE1", -10.00, "Leisures", 1000.00, 3005.00, "Main1")
-      .add("07/10/2014", "LEISURE2", -10.00, "Leisures", 2005.00, 3015.00, "Main2")
-      .add("06/10/2014", "LEISURE1", -20.00, "Leisures", 1010.00, 3025.00, "Main1")
-      .check();
-
-    // 3. Switch back to multi
-    budgetView.variable.editSeries("Leisures")
-      .setTargetAccount("Main accounts")
-      .validate();
-    transactions.initAmountContent() // TODO remettre le tableau de l'étape 1
-      .dumpCode();
   }
 
   public void testMultiAccountsNotProposedForTransferSeries() throws Exception {

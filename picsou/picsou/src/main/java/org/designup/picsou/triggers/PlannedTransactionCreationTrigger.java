@@ -242,22 +242,11 @@ public class PlannedTransactionCreationTrigger implements ChangeSetListener {
       return;
     }
 
-    DayAmountsCollector dayAmounts = new DayAmountsCollector();
-    computeDayAmounts(series, monthId, seriesBudget.get(SeriesBudget.PLANNED_AMOUNT), dayAmounts, repository);
-
-    double actualAmount = seriesBudget.get(SeriesBudget.ACTUAL_AMOUNT, 0.00);
-    for (DayAmount dayAmount : dayAmounts) {
-      Double plannedAmount = dayAmount.amount;
-      double remainder = plannedAmount - actualAmount;
-      if (((plannedAmount > 0 && remainder > 0) || (plannedAmount < 0 && remainder < 0)) && !Amounts.isNearZero(remainder)) {
-        dayAmount.amount = remainder;
-        break;
-      }
-      else {
-        actualAmount -= dayAmount.amount;
-        dayAmount.amount = 0;
-      }
-    }
+    DayAmountsCollector dayAmounts =
+      computeDayAmounts(series, monthId,
+                        seriesBudget.get(SeriesBudget.PLANNED_AMOUNT),
+                        seriesBudget.get(SeriesBudget.ACTUAL_AMOUNT, 0.00),
+                        repository);
 
     for (DayAmount dayAmount : dayAmounts) {
       Glob existingTransaction = null;
@@ -315,18 +304,31 @@ public class PlannedTransactionCreationTrigger implements ChangeSetListener {
   }
 
   private static class DayAmountsCollector implements Iterable<DayAmount> {
-    final List<DayAmount> amountsForDays = new ArrayList<DayAmount>();
+    final List<DayAmount> dayAmounts = new ArrayList<DayAmount>();
 
     public void add(int account, int day, double amount) {
-      amountsForDays.add(new DayAmount(account, day, amount));
+      dayAmounts.add(new DayAmount(account, day, amount));
+    }
+
+    public List<DayAmount> account(int accountId) {
+      List<DayAmount> result = new ArrayList<DayAmount>();
+      for (DayAmount amountsForDay : dayAmounts) {
+        if (accountId == amountsForDay.accountId) {
+          result.add(amountsForDay);
+        }
+      }
+      return result;
     }
 
     public Iterator<DayAmount> iterator() {
-      return amountsForDays.iterator();
+      return dayAmounts.iterator();
     }
   }
 
-  private static void computeDayAmounts(Glob series, int monthId, double amount, final DayAmountsCollector dayAmountsCollector, GlobRepository repository) {
+  private static DayAmountsCollector computeDayAmounts(Glob series, int monthId, double amount, double actual, GlobRepository repository) {
+
+    final DayAmountsCollector dayAmounts = new DayAmountsCollector();
+
     Integer minDay = 0;
     Glob currentMonth = repository.get(CurrentMonth.KEY);
     if ((currentMonth.get(CurrentMonth.LAST_TRANSACTION_MONTH) == monthId)) {
@@ -335,33 +337,61 @@ public class PlannedTransactionCreationTrigger implements ChangeSetListener {
 
     Integer targetAccount = series.get(Series.TARGET_ACCOUNT);
     if (targetAccount == null) {
-      return;
+      return dayAmounts;
+    }
+
+    if (Account.MAIN_SUMMARY_ACCOUNT_ID == targetAccount) {
+      Integer[] accountIds = repository.getAll(Account.TYPE, Account.activeUserCreatedMainAccounts(monthId)).getSortedArray(Account.ID);
+      System.out.println("\n\n##### Calling splitAmount for seriesId:" + series.get(Series.ID) + " - monthId:" + monthId + " ################");
+      double[] amounts = splitAmountBetweenAccounts(amount, accountIds, series.get(Series.ID), currentMonth, repository);
+      for (int i = 0; i < accountIds.length; i++) {
+        computeDayAmountsForAccount(series, monthId, amounts[i], accountIds[i], minDay, dayAmounts, repository);
+      }
+      AmountMap actualForTargetMonth = new AmountMap();
+      GlobList transactions =
+        Transaction.getAllForSeriesAndMonth(series.get(Series.ID), monthId, repository)
+          .filterSelf(isFalse(Transaction.PLANNED), repository);
+      for (Glob transaction : transactions) {
+        actualForTargetMonth.add(transaction.get(Transaction.ACCOUNT), transaction.get(Transaction.AMOUNT));
+      }
+      System.out.println("substracting actuals for " + monthId + ": " + actualForTargetMonth);
+      for (int i = 0; i < accountIds.length; i++) {
+        adjustDayAmountsWithActual(dayAmounts.account(accountIds[i]), actualForTargetMonth.get(accountIds[i], 0.00));
+      }
+      return dayAmounts;
     }
 
     Glob fromAccount = repository.findLinkTarget(series, Series.FROM_ACCOUNT);
     Glob toAccount = repository.findLinkTarget(series, Series.TO_ACCOUNT);
     if (series.get(Series.MIRROR_SERIES) != null) {
       if (fromAccount == null || toAccount == null) {
-        Log.write("Series '" + series.get(Series.NAME) + "' is a saving series with both accounts imported" +
+        Log.write("Series '" + series.get(Series.NAME) + "' is a savings series with both accounts imported" +
                   " but one of the accounts is missing.");
-        return;
-      }
-      computeDayAmountsForAccount(series, monthId, amount, targetAccount, minDay, dayAmountsCollector, repository);
-    }
-    else if (Account.MAIN_SUMMARY_ACCOUNT_ID == targetAccount) {
-      Integer[] accountIds = repository.getAll(Account.TYPE, Account.activeUserCreatedMainAccounts(monthId)).getValues(Account.ID);
-      System.out.println("\n\n##### Calling splitAmount for seriesId:" + series.get(Series.ID) + " - monthId:" + monthId + " ################");
-      double[] amounts = splitAmount(amount, accountIds, series.get(Series.ID), currentMonth, repository);
-      for (int i = 0; i < accountIds.length; i++) {
-        computeDayAmountsForAccount(series, monthId, amounts[i], accountIds[i], minDay, dayAmountsCollector, repository);
+        return dayAmounts;
       }
     }
-    else {
-      computeDayAmountsForAccount(series, monthId, amount, targetAccount, minDay, dayAmountsCollector, repository);
+
+    computeDayAmountsForAccount(series, monthId, amount, targetAccount, minDay, dayAmounts, repository);
+    adjustDayAmountsWithActual(dayAmounts, actual);
+    return dayAmounts;
+  }
+
+  private static void adjustDayAmountsWithActual(Iterable<DayAmount> dayAmounts, double actualForAccount) {
+    for (DayAmount dayAmount : dayAmounts) {
+      Double plannedAmount = dayAmount.amount;
+      double remainder = plannedAmount - actualForAccount;
+      if (((plannedAmount > 0 && remainder > 0) || (plannedAmount < 0 && remainder < 0)) && !Amounts.isNearZero(remainder)) {
+        dayAmount.amount = remainder;
+        break;
+      }
+      else {
+        actualForAccount -= dayAmount.amount;
+        dayAmount.amount = 0;
+      }
     }
   }
 
-  private static double[] splitAmount(double amount, Integer[] accountIds, Integer seriesId, Glob currentMonth, GlobRepository repository) {
+  private static double[] splitAmountBetweenAccounts(double amount, Integer[] accountIds, Integer seriesId, Glob currentMonth, GlobRepository repository) {
     if (accountIds.length == 0) {
       return new double[0];
     }
@@ -369,7 +399,7 @@ public class PlannedTransactionCreationTrigger implements ChangeSetListener {
       return new double[]{amount};
     }
 
-    AmountMap amounts = new AmountMap();
+    AmountMap actualAmounts = new AmountMap();
     int past = 0;
     for (int monthId = currentMonth.get(CurrentMonth.LAST_TRANSACTION_MONTH);
          repository.contains(Key.create(Month.TYPE, monthId)) && (past < 3);
@@ -385,25 +415,27 @@ public class PlannedTransactionCreationTrigger implements ChangeSetListener {
         Integer accountId = transaction.get(Transaction.ACCOUNT);
         Double transactionAmount = transaction.get(Transaction.AMOUNT);
         System.out.println("  - add:" + transactionAmount + " to:" + accountId);
-        amounts.add(accountId, transactionAmount);
+        actualAmounts.add(accountId, transactionAmount);
       }
     }
 
-    if (amounts.isEmpty()) {
+    if (actualAmounts.isEmpty()) {
       return Amounts.split(amount, accountIds.length);
     }
 
     Double[] values = new Double[accountIds.length];
     for (int i = 0; i < accountIds.length; i++) {
-      values[i] = amounts.get(accountIds[i], 0.00);
+      values[i] = actualAmounts.get(accountIds[i], 0.00);
       System.out.println("  " + accountIds[i] + " => " + values[i]);
     }
+    System.out.println("  accountIds = " + Arrays.toString(accountIds));
+    System.out.println("  values = " + Arrays.toString(values));
     double[] adjusted = Amounts.adjustTotal(values, amount);
     System.out.println("  adjusted = " + Arrays.toString(adjusted));
     return adjusted;
   }
 
-  private static void computeDayAmountsForAccount(Glob series, int monthId, double amount, int account, Integer minDay,
+  private static void computeDayAmountsForAccount(Glob series, int monthId, double amount, int accountId, Integer minDay,
                                                   final DayAmountsCollector dayAmounts, GlobRepository repository) {
     Integer seriesId = series.get(Series.ID);
 
@@ -417,7 +449,7 @@ public class PlannedTransactionCreationTrigger implements ChangeSetListener {
       }
     }
     if (seriesShape != null && seriesShape.get(SeriesShape.FIXED_DATE) != null) {
-      dayAmounts.add(account, Math.max(minDay, Month.getDay(seriesShape.get(SeriesShape.FIXED_DATE), monthId)), amount);
+      dayAmounts.add(accountId, Math.max(minDay, Month.getDay(seriesShape.get(SeriesShape.FIXED_DATE), monthId)), amount);
     }
     else {
       if (seriesShape == null
@@ -442,7 +474,7 @@ public class PlannedTransactionCreationTrigger implements ChangeSetListener {
             if (!Amounts.isNearZero(amountForPeriod)) {
               alreadyAssignedAmount += amountForPeriod;
               percentToPropagate = 0;
-              dayAmounts.add(account, minDay, amountForPeriod);
+              dayAmounts.add(accountId, minDay, amountForPeriod);
             }
           }
         }
@@ -451,7 +483,7 @@ public class PlannedTransactionCreationTrigger implements ChangeSetListener {
           if (!Amounts.isNearZero(amountForPeriod)) {
             alreadyAssignedAmount += amountForPeriod;
             percentToPropagate = 0;
-            dayAmounts.add(account, day, amountForPeriod);
+            dayAmounts.add(accountId, day, amountForPeriod);
           }
         }
       }
