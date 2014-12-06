@@ -46,6 +46,12 @@ public class Month {
     }
   }
 
+  public static String toCompactString(int yyyymm, int day) {
+    synchronized (MONTH_FORMAT){
+      return toYearString(yyyymm) + MONTH_FORMAT.format(Month.toMonth(yyyymm)) + MONTH_FORMAT.format(day);
+    }
+  }
+
   public static String toYearString(int yyyymm) {
     return Integer.toString(Month.toYear(yyyymm));
   }

@@ -262,13 +262,70 @@ public class MultiAccountSeriesTest extends LoggedInFunctionalTestCase {
 
     transactions.showPlannedTransactions();
     timeline.selectMonths(201411, 201412, 201501);
-    fail("tbd");
     transactions.initAmountContent()
       .dumpCode();
   }
 
   public void testMultiTransactionsShape() throws Exception {
-    fail("tbd");
+
+    OfxBuilder
+      .init(this)
+      .addBankAccount("000111", 1000.00, "2014/11/20")
+      .addTransaction("2014/11/20", -10.00, "LEISURE1")
+      .addTransaction("2014/11/05", -40.00, "LEISURE1")
+      .addTransaction("2014/10/20", -10.00, "LEISURE1")
+      .addTransaction("2014/10/06", -40.00, "LEISURE1")
+      .addTransaction("2014/09/20", -10.00, "LEISURE1")
+      .addTransaction("2014/09/06", -40.00, "LEISURE1")
+      .addTransaction("2014/08/12", -30.00, "LEISURE1") // Ignored
+      .load();
+
+    OfxBuilder
+      .init(this)
+      .addBankAccount("000222", 2000.00, "2014/11/20")
+      .addTransaction("2014/11/20", -30.00, "LEISURE2")
+      .addTransaction("2014/11/05", -70.00, "LEISURE2")
+      .addTransaction("2014/10/20", -30.00, "LEISURE2")
+      .addTransaction("2014/10/06", -70.00, "LEISURE2")
+      .addTransaction("2014/09/20", -30.00, "LEISURE2")
+      .addTransaction("2014/09/06", -70.00, "LEISURE2")
+      .addTransaction("2014/08/12", -35.00, "LEISURE2") // Ignored
+      .load();
+
+    mainAccounts.edit("Account n. 000111").setName("Main1").validate();
+    mainAccounts.edit("Account n. 000222").setName("Main2").validate();
+
+    budgetView.variable.createSeries()
+      .setName("Leisures")
+      .checkAvailableTargetAccounts("Main1", "Main2", "Main accounts")
+      .setTargetAccount("Main accounts")
+      .selectNegativeAmounts()
+      .setAmount(300.00)
+      .validate();
+
+    categorization.setVariable("LEISURE1", "Leisures");
+    categorization.setVariable("LEISURE2", "Leisures");
+
+    transactions.showPlannedTransactions();
+    timeline.selectMonths(201411, 201412, 201501);
+    transactions.initAmountContent()
+      .add("19/01/2015", "Planned: Leisures", -54.00, "Leisures", 1470.00, 2210.00, "Main2")
+      .add("19/01/2015", "Planned: Leisures", -27.00, "Leisures", 740.00, 2264.00, "Main1")
+      .add("04/01/2015", "Planned: Leisures", -146.00, "Leisures", 1524.00, 2291.00, "Main2")
+      .add("04/01/2015", "Planned: Leisures", -73.00, "Leisures", 767.00, 2437.00, "Main1")
+      .add("19/12/2014", "Planned: Leisures", -54.00, "Leisures", 1670.00, 2510.00, "Main2")
+      .add("19/12/2014", "Planned: Leisures", -27.00, "Leisures", 840.00, 2564.00, "Main1")
+      .add("04/12/2014", "Planned: Leisures", -146.00, "Leisures", 1724.00, 2591.00, "Main2")
+      .add("04/12/2014", "Planned: Leisures", -73.00, "Leisures", 867.00, 2737.00, "Main1")
+      .add("20/11/2014", "LEISURE2", -30.00, "Leisures", 1870.00, 2810.00, "Main2")
+      .add("20/11/2014", "LEISURE1", -10.00, "Leisures", 940.00, 2840.00, "Main1")
+      .add("19/11/2014", "Planned: Leisures", -54.00, "Leisures", 1900.00, 2850.00, "Main2")
+      .add("19/11/2014", "Planned: Leisures", -27.00, "Leisures", 950.00, 2904.00, "Main1")
+      .add("05/11/2014", "Planned: Leisures", -46.00, "Leisures", 1954.00, 2931.00, "Main2")
+      .add("05/11/2014", "Planned: Leisures", -23.00, "Leisures", 977.00, 2977.00, "Main1")
+      .add("05/11/2014", "LEISURE2", -70.00, "Leisures", 2000.00, 3000.00, "Main2")
+      .add("05/11/2014", "LEISURE1", -40.00, "Leisures", 1000.00, 3070.00, "Main1")
+      .check();
   }
 
   public void testSwitchingFromMultiToMonoAccountAndBackWithoutAssignedTransactions() throws Exception {
