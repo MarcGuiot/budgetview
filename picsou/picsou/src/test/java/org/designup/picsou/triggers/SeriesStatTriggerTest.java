@@ -1,7 +1,6 @@
 package org.designup.picsou.triggers;
 
 import org.designup.picsou.gui.model.SeriesStat;
-import org.designup.picsou.model.Category;
 import org.designup.picsou.model.Series;
 import org.designup.picsou.model.SeriesBudget;
 import org.designup.picsou.model.Transaction;
@@ -14,7 +13,7 @@ public class SeriesStatTriggerTest extends PicsouTriggerTestCase {
     createSeries(10, 150.0);
     listener.assertNoChanges(SeriesStat.TYPE);
 
-    createMonth(200807);
+    createMonths(200807);
     listener.assertLastChangesEqual(SeriesStat.TYPE,
                                     "<create type='seriesStat' target='10' targetType='0' month='200807' overrunAmount='0.0'" +
                                     "        plannedAmount='150.0' remainingAmount='150.0' active='true'/>" +
@@ -70,7 +69,7 @@ public class SeriesStatTriggerTest extends PicsouTriggerTestCase {
 
   public void testTransactionChangeAmount() throws Exception {
     createSeries(10, 150.0);
-    createMonth(200807);
+    createMonths(200807);
     createTransaction(10, 10, 200807, 10.0);
     updateTransactionAmount(10, 5.0);
     listener.assertLastChangesEqual(SeriesStat.TYPE,
@@ -81,7 +80,7 @@ public class SeriesStatTriggerTest extends PicsouTriggerTestCase {
   public void testChangeSerie() throws Exception {
     createSeries(10, 150.0);
     createSeries(20, 50.0);
-    createMonth(200807);
+    createMonths(200807);
     createTransaction(10, 10, 200807, 10.0);
     repository.startChangeSet();
     updateTransactionAmount(10, 5.0);

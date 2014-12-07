@@ -404,4 +404,11 @@ public class Utils {
     return copy;
   }
 
+  public static Integer[] box(int[] array) {
+    Integer[] result = new Integer[array.length];
+    for (int i = 0; i < array.length; i++) {
+      result[i] = array[i];
+    }
+    return result;
+  }
 }

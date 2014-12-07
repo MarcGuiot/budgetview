@@ -8,6 +8,7 @@ import org.designup.picsou.triggers.utils.SeriesAndMonths;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.fields.IntegerField;
 import org.globsframework.model.*;
+import org.globsframework.model.format.GlobPrinter;
 import org.globsframework.utils.Log;
 import org.globsframework.utils.Utils;
 
@@ -350,20 +351,16 @@ public class PlannedTransactionCreationTrigger implements ChangeSetListener {
     if (Account.MAIN_SUMMARY_ACCOUNT_ID == targetAccount) {
       Integer[] accountIds = repository.getAll(Account.TYPE, Account.activeUserCreatedMainAccounts(monthId)).getSortedArray(Account.ID);
       System.out.println("\n\n##### Computing day amounts for seriesId:" + series.get(Series.ID) + " - monthId:" + monthId + " ################");
-      double[] amounts = splitAmountBetweenAccounts(amount, accountIds, series.get(Series.ID), currentMonth, repository);
+      AmountMap actualAmounts = getActualsForTargetMonth(series, monthId, repository);
+      System.out.println("  actuals: " + actualAmounts);
+      double[] plannedAmounts = splitAmountBetweenAccounts(amount, accountIds, series.get(Series.ID), currentMonth, repository);
+      levelPlannedWhenExceeded(accountIds, plannedAmounts, actualAmounts);
+      System.out.println("  planned: " + plannedAmounts);
       for (int i = 0; i < accountIds.length; i++) {
-        computeDayAmountsForAccount(series, monthId, amounts[i], accountIds[i], minDay, dayAmounts, repository);
+        computeDayAmountsForAccount(series, monthId, plannedAmounts[i], accountIds[i], minDay, dayAmounts, repository);
       }
-      AmountMap actualForTargetMonth = new AmountMap();
-      GlobList transactions =
-        Transaction.getAllForSeriesAndMonth(series.get(Series.ID), monthId, repository)
-          .filterSelf(isFalse(Transaction.PLANNED), repository);
-      for (Glob transaction : transactions) {
-        actualForTargetMonth.add(transaction.get(Transaction.ACCOUNT), transaction.get(Transaction.AMOUNT));
-      }
-      System.out.println("  -actuals: " + actualForTargetMonth);
       for (int i = 0; i < accountIds.length; i++) {
-        adjustDayAmountsWithActual(dayAmounts.account(accountIds[i]), actualForTargetMonth.get(accountIds[i], 0.00));
+        adjustDayAmountsWithActual(dayAmounts.account(accountIds[i]), actualAmounts.get(accountIds[i], 0.00));
       }
       System.out.println("  ==> " + dayAmounts);
       return dayAmounts;
@@ -384,11 +381,67 @@ public class PlannedTransactionCreationTrigger implements ChangeSetListener {
     return dayAmounts;
   }
 
+  public static void levelPlannedWhenExceeded(Integer[] accountIds, double[] plannedAmounts, AmountMap actualAmounts) {
+    if (accountIds.length == 1) {
+      return;
+    }
+    if (accountIds.length != plannedAmounts.length) {
+      throw new RuntimeException("accounts:" + accountIds.length + " / planned:" + plannedAmounts.length);
+    }
+    double toRedistribute = 0;
+    for (int i = 0; i < accountIds.length; i++) {
+      double actual = actualAmounts.get(accountIds[i], 0.00);
+      double planned = plannedAmounts[i];
+      if (Amounts.sameSign(actual, planned) && Math.abs(actual) > Math.abs(planned)) {
+        toRedistribute += actual - planned;
+        plannedAmounts[i] = actual;
+      }
+    }
+    System.out.println("  toRedistribute: " + toRedistribute);
+    for (int i = 0; i < accountIds.length; i++) {
+      double actual = actualAmounts.get(accountIds[i], 0.00);
+      double planned = plannedAmounts[i];
+      if (Amounts.equal(actual, planned)) {
+        continue;
+      }
+      if (Amounts.sameSign(actual, planned)) {
+        if (Math.abs(planned) > Math.abs(actual)) {
+          double diff = planned - actual;
+          if (Amounts.sameSign(toRedistribute, diff)) {
+            if (Math.abs(toRedistribute) <= Math.abs(diff)) {
+              plannedAmounts[i] -= toRedistribute;
+              toRedistribute = 0;
+            }
+            else {
+              plannedAmounts[i] -= diff;
+              toRedistribute -= diff;
+            }
+          }
+        }
+      }
+      if (Amounts.isNearZero(toRedistribute)) {
+        return;
+      }
+    }
+
+  }
+
+  private static AmountMap getActualsForTargetMonth(Glob series, int monthId, GlobRepository repository) {
+    AmountMap actualForTargetMonth = new AmountMap();
+    GlobList transactions =
+      Transaction.getAllForSeriesAndMonth(series.get(Series.ID), monthId, repository)
+        .filterSelf(isFalse(Transaction.PLANNED), repository);
+    for (Glob transaction : transactions) {
+      actualForTargetMonth.add(transaction.get(Transaction.ACCOUNT), transaction.get(Transaction.AMOUNT));
+    }
+    return actualForTargetMonth;
+  }
+
   private static void adjustDayAmountsWithActual(Iterable<DayAmount> dayAmounts, double actualForAccount) {
     for (DayAmount dayAmount : dayAmounts) {
       Double plannedAmount = dayAmount.amount;
       double remainder = plannedAmount - actualForAccount;
-      if (((plannedAmount > 0 && remainder > 0) || (plannedAmount < 0 && remainder < 0)) && !Amounts.isNearZero(remainder)) {
+      if (!Amounts.isNearZero(remainder) && Amounts.isSameSign(plannedAmount, remainder)) {
         dayAmount.amount = remainder;
         break;
       }
@@ -453,43 +506,44 @@ public class PlannedTransactionCreationTrigger implements ChangeSetListener {
         seriesShape = repository.find(Key.create(SeriesShape.TYPE, mirrorId));
       }
     }
+
     if (seriesShape != null && seriesShape.get(SeriesShape.FIXED_DATE) != null) {
       dayAmounts.add(accountId, Math.max(minDay, Month.getDay(seriesShape.get(SeriesShape.FIXED_DATE), monthId)), amount);
+      return;
     }
-    else {
-      if (seriesShape == null
-          || seriesShape.get(SeriesShape.TOTAL, 0) == 0
-          || Math.abs(amount / seriesShape.get(SeriesShape.TOTAL)) > 3) {
-        seriesShape = SeriesShape.getDefault(key, period);
-      }
-      Integer percentToPropagate = 0;
-      double alreadyAssignedAmount = 0;
-      for (int i = 1; i <= period; i++) {
-        IntegerField field = SeriesShape.getField(i);
-        Integer percent = seriesShape.get(field);
-        percent = percent == null ? 0 : percent;
-        int day = SeriesShape.getDay(period, i, monthId);
-        if (minDay != 0 && day < minDay) {
-          int nextDay = SeriesShape.getDay(period, i + 1, monthId);
-          if (nextDay < minDay && i != period) {
-            percentToPropagate += percent;
-          }
-          else {
-            double amountForPeriod = getAmount(alreadyAssignedAmount, amount, percentToPropagate + percent, i == period);
-            if (!Amounts.isNearZero(amountForPeriod)) {
-              alreadyAssignedAmount += amountForPeriod;
-              percentToPropagate = 0;
-              dayAmounts.add(accountId, minDay, amountForPeriod);
-            }
-          }
+
+    if (seriesShape == null
+        || seriesShape.get(SeriesShape.TOTAL, 0) == 0
+        || Math.abs(amount / seriesShape.get(SeriesShape.TOTAL)) > 3) {
+      seriesShape = SeriesShape.getDefault(key, period);
+    }
+    Integer percentToPropagate = 0;
+    double alreadyAssignedAmount = 0;
+    for (int i = 1; i <= period; i++) {
+      IntegerField field = SeriesShape.getField(i);
+      Integer percent = seriesShape.get(field);
+      percent = percent == null ? 0 : percent;
+      int day = SeriesShape.getDay(period, i, monthId);
+      if (minDay != 0 && day < minDay) {
+        int nextDay = SeriesShape.getDay(period, i + 1, monthId);
+        if (nextDay < minDay && i != period) {
+          percentToPropagate += percent;
         }
         else {
           double amountForPeriod = getAmount(alreadyAssignedAmount, amount, percentToPropagate + percent, i == period);
           if (!Amounts.isNearZero(amountForPeriod)) {
             alreadyAssignedAmount += amountForPeriod;
             percentToPropagate = 0;
-            dayAmounts.add(accountId, day, amountForPeriod);
+            dayAmounts.add(accountId, minDay, amountForPeriod);
           }
+        }
+      }
+      else {
+        double amountForPeriod = getAmount(alreadyAssignedAmount, amount, percentToPropagate + percent, i == period);
+        if (!Amounts.isNearZero(amountForPeriod)) {
+          alreadyAssignedAmount += amountForPeriod;
+          percentToPropagate = 0;
+          dayAmounts.add(accountId, day, amountForPeriod);
         }
       }
     }

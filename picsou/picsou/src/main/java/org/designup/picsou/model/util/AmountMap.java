@@ -26,7 +26,7 @@ public class AmountMap {
     return amounts.get(id);
   }
 
-  public Double get(Integer id, Double defaultValue) {
+  public double get(Integer id, Double defaultValue) {
     Double value = get(id);
     return value != null ? amounts.get(id) : defaultValue;
   }
