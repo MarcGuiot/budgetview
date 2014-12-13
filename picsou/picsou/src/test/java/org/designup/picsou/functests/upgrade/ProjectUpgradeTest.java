@@ -34,8 +34,6 @@ public class ProjectUpgradeTest extends LoggedInFunctionalTestCase {
     projectList.checkCurrentProjects("| Voyage Rome | Jan | 1080.00 | on |");
     projectList.select("Voyage Rome");
 
-    operations.dumpRepository();
-
     currentProject.checkItems("| Voyage          | Jan | 180.00  | 200.00  |\n" +
                               "| Prepa Rome      | Feb | 30.00   | 80.00   |\n" +
                               "| Hotel           | Mar | 0.00    | 300.00  |\n" +
@@ -179,7 +177,7 @@ public class ProjectUpgradeTest extends LoggedInFunctionalTestCase {
     views.selectBudget();
     budgetView.extras.editProjectForSeries("Voyage 2");
 
-    views.checkHomeSelected();
+    views.checkProjectsSelected();
     currentProject.checkName("Voyage Rome");
   }
 
@@ -214,36 +212,41 @@ public class ProjectUpgradeTest extends LoggedInFunctionalTestCase {
     timeline.selectMonth(201404);
     transactions.initContent()
       .add("10/04/2014", TransactionType.PRELEVEMENT, "VIRT JOINT > LIVRET1", "", -50.00, "Provisions - Compte Joint")
-      .add("09/04/2014", TransactionType.PRELEVEMENT, "SNCF", "", -80.00, "Voyage - Compte Joint")
-      .add("08/04/2014", TransactionType.MANUAL, "MCDO", "", -30.00, "Other - Compte Joint")
-      .add("08/04/2014", TransactionType.PRELEVEMENT, "SNCF", "", -70.00, "Voyage - Compte Joint")
-      .add("07/04/2014", TransactionType.PRELEVEMENT, "SUBWAY", "", -20.00, "Other - Compte Perso")
+      .add("09/04/2014", TransactionType.PRELEVEMENT, "SNCF", "", -80.00, "Voyage")
+      .add("08/04/2014", TransactionType.MANUAL, "MCDO", "", -30.00, "Other")
+      .add("08/04/2014", TransactionType.PRELEVEMENT, "SNCF", "", -70.00, "Voyage")
+      .add("07/04/2014", TransactionType.PRELEVEMENT, "SUBWAY", "", -20.00, "Other")
       .add("06/04/2014", TransactionType.VIREMENT, "VIRT JOINT > PERSO", "", 200.00, "Provisions - Compte Perso")
       .add("06/04/2014", TransactionType.VIREMENT, "VIRT LIVRET1", "", 50.00, "Provisions - Compte Joint")
       .add("06/04/2014", TransactionType.PRELEVEMENT, "VIRT PERSO > LIVRET1", "", -200.00, "Provisions - Compte Perso")
-      .add("05/04/2014", TransactionType.PRELEVEMENT, "AIR FRANCE", "", -300.00, "Voyage - Compte Perso")
+      .add("05/04/2014", TransactionType.PRELEVEMENT, "AIR FRANCE", "", -300.00, "Voyage")
       .check();
 
     projectList.select("Vacances");
     currentProject.checkDefaultAccountLabel("Compte Joint");
-    currentProject.checkItems("| Voyage - Compte Joint     | Apr | 150.00  | 250.00  |\n" +
-                              "| Voyage - Compte Perso     | Apr | 300.00  | 250.00  |\n" +
+    currentProject.checkItems("| Voyage                    | Apr | 450.00  | 500.00  |\n" +
                               "| Provisions - Compte Joint | Apr | +50.00  | +150.00 |\n" +
                               "| Provisions - Compte Perso | Apr | +200.00 | +150.00 |\n" +
-                              "| Other - Compte Joint      | Apr | 30.00   | 0.00    |\n" +
-                              "| Other - Compte Perso      | Apr | 20.00   | 0.00    |");
+                              "| Other                     | Apr | 50.00   | 0.00    |");
     currentProject.backToList();
     projectList.checkCurrentProjects("| Vacances | Apr | 500.00 | on |");
 
     views.selectBudget();
     budgetView.transfer
-      .checkTotalAmounts(250.00, 250.00)
+      .checkTotalAmounts(-250.00, -250.00)
       .checkContent("| Provisions - Compte Perso | 200.00 | 125.00 |\n" +
                     "| Provisions - Compte Joint | 50.00  | 125.00 |\n" +
                     "| Du compte Livret 1        | 0.00   | 0.00   |\n" +
                     "| Du compte Livret 2        | 0.00   | 0.00   |\n" +
                     "| Vers le compte Livret 1   | 0.00   | 0.00   |\n" +
                     "| Vers le compte Livret 2   | 0.00   | 0.00   |\n");
+
+    budgetView.extras
+      .checkContent("| Vacances | 500.00 | 500.00 |")
+      .expandGroup("Vacances")
+      .checkContent("| Vacances | 500.00 | 500.00 |\n" +
+                    "| Voyage   | 450.00 | 500.00 |\n" +
+                    "| Other    | 50.00  | 0.00   |");
   }
 
   public void testProjectsWithNoTransactions() throws Exception {
@@ -257,7 +260,7 @@ public class ProjectUpgradeTest extends LoggedInFunctionalTestCase {
                               "| Virement | June | 0.00 | +300.00 |");
 
     currentProject.toggleAndEditExpense(0)
-      .checkTargetAccountCombo("Compte Joint")
+      .checkTargetAccountCombo("Main accounts")
       .cancel();
     currentProject.toggleAndEditTransfer(1)
       .checkFromAccount("Livret 1")
@@ -267,10 +270,10 @@ public class ProjectUpgradeTest extends LoggedInFunctionalTestCase {
     timeline.selectMonth(201406);
     budgetView.extras.checkContent("| Voyage | 0.00 | 500.00 |");
     budgetView.transfer.checkContent("| Virement                | 0.00 | +300.00 |\n" +
-                                    "| Du compte Livret 1      | 0.00 | 0.00    |\n" +
-                                    "| Du compte Livret 2      | 0.00 | 0.00    |\n" +
-                                    "| Vers le compte Livret 1 | 0.00 | 0.00    |\n" +
-                                    "| Vers le compte Livret 2 | 0.00 | 0.00    |");
+                                     "| Du compte Livret 1      | 0.00 | 0.00    |\n" +
+                                     "| Du compte Livret 2      | 0.00 | 0.00    |\n" +
+                                     "| Vers le compte Livret 1 | 0.00 | 0.00    |\n" +
+                                     "| Vers le compte Livret 2 | 0.00 | 0.00    |");
   }
 
   public void testBackupCorruptedWithDisabledProjectGroupError() throws Exception {
@@ -297,6 +300,7 @@ public class ProjectUpgradeTest extends LoggedInFunctionalTestCase {
 
   public void testBackupCorruptedWithDisabledProjectSavingsError() throws Exception {
     operations.restoreWithPassword(Files.copyResourceToTmpFile(this, "/testbackups/upgrade_jar138_disabled_project_savings_error.budgetview"), "pwd");
+    addOns.activateProjects();
 
     budgetView.transfer.checkContent("| Regular savings | 200.00 | 200.00 |\n" +
                                     "| Trip payment    | 0.00   | 0.00   |");
@@ -325,6 +329,7 @@ public class ProjectUpgradeTest extends LoggedInFunctionalTestCase {
 
   public void testInvertedFromToInTransfer() throws Exception {
     operations.restore(Files.copyResourceToTmpFile(this, "/testbackups/upgrade_jar139_project_with_invalid_from_to_transfer.budgetview"));
+    addOns.activateProjects();
 
     projects.select("Rome");
     currentProject

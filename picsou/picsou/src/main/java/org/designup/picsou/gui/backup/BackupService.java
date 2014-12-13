@@ -105,6 +105,7 @@ public class BackupService {
       }, serverData, readPasswordBasedEncryptor, globModel);
     }
     catch (Exception e) {
+      e.printStackTrace();
       return Status.DECRYPT_FAILED;
     }
 

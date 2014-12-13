@@ -1,15 +1,15 @@
 package org.designup.picsou.client.http;
 
+import com.budgetview.shared.utils.PicsouGlobSerializer;
 import org.designup.picsou.client.ClientTransport;
 import org.designup.picsou.client.SerializableDeltaGlobSerializer;
 import org.designup.picsou.client.SerializableGlobSerializer;
 import org.designup.picsou.client.ServerAccess;
 import org.designup.picsou.client.exceptions.BadConnection;
-import org.designup.picsou.client.exceptions.UserAlreadyExists;
 import org.designup.picsou.client.exceptions.BadPassword;
+import org.designup.picsou.client.exceptions.UserAlreadyExists;
 import org.designup.picsou.server.model.SerializableGlobType;
 import org.designup.picsou.server.model.ServerDelta;
-import com.budgetview.shared.utils.PicsouGlobSerializer;
 import org.designup.picsou.server.serialization.SerializationManager;
 import org.globsframework.metamodel.GlobModel;
 import org.globsframework.metamodel.GlobType;
@@ -79,7 +79,7 @@ public class EncrypterToTransportServerAccess implements ServerAccess {
     try {
       this.name = name;
       PasswordBasedEncryptor passwordBasedEncryptor = new MD5PasswordBasedEncryptor(salt, password, count);
-      RedirectPasswordBasedEncryptor encryptor = (RedirectPasswordBasedEncryptor)directory.get(PasswordBasedEncryptor.class);
+      RedirectPasswordBasedEncryptor encryptor = (RedirectPasswordBasedEncryptor) directory.get(PasswordBasedEncryptor.class);
       encryptor.setPasswordBasedEncryptor(passwordBasedEncryptor);
 
       SerializedByteArrayOutput request = new SerializedByteArrayOutput();
@@ -112,7 +112,7 @@ public class EncrypterToTransportServerAccess implements ServerAccess {
       throw new InvalidState(e);
     }
     finally {
-      if (response != null){
+      if (response != null) {
         response.close();
       }
     }
@@ -120,7 +120,7 @@ public class EncrypterToTransportServerAccess implements ServerAccess {
 
   public void deleteUser(String name, char[] password) {
     PasswordBasedEncryptor passwordBasedEncryptor = new MD5PasswordBasedEncryptor(salt, password, count);
-    RedirectPasswordBasedEncryptor encryptor = (RedirectPasswordBasedEncryptor)directory.get(PasswordBasedEncryptor.class);
+    RedirectPasswordBasedEncryptor encryptor = (RedirectPasswordBasedEncryptor) directory.get(PasswordBasedEncryptor.class);
     encryptor.setPasswordBasedEncryptor(passwordBasedEncryptor);
 
     linkInfo = requestLinkInfo(name, password, passwordBasedEncryptor);
@@ -147,7 +147,7 @@ public class EncrypterToTransportServerAccess implements ServerAccess {
     this.name = name;
 
     PasswordBasedEncryptor passwordBasedEncryptor = new MD5PasswordBasedEncryptor(salt, password, count);
-    RedirectPasswordBasedEncryptor encryptor = (RedirectPasswordBasedEncryptor)directory.get(PasswordBasedEncryptor.class);
+    RedirectPasswordBasedEncryptor encryptor = (RedirectPasswordBasedEncryptor) directory.get(PasswordBasedEncryptor.class);
     encryptor.setPasswordBasedEncryptor(passwordBasedEncryptor);
 
     SerializedByteArrayOutput request = new SerializedByteArrayOutput();
@@ -172,13 +172,13 @@ public class EncrypterToTransportServerAccess implements ServerAccess {
   public boolean rename(String newName, char[] newPassword, char[] previousPassword) throws UserAlreadyExists, BadPassword {
 
     PasswordBasedEncryptor newPasswordBasedEncryptor = new MD5PasswordBasedEncryptor(salt, newPassword, count);
-    RedirectPasswordBasedEncryptor encryptor = (RedirectPasswordBasedEncryptor)directory.get(PasswordBasedEncryptor.class);
+    RedirectPasswordBasedEncryptor encryptor = (RedirectPasswordBasedEncryptor) directory.get(PasswordBasedEncryptor.class);
 
     PasswordBasedEncryptor confirmPasswordBasedEncryptor = new MD5PasswordBasedEncryptor(salt, previousPassword, count);
     byte[] previousLinkInfo = linkInfo;
 
     if (!Arrays.equals(confirmPasswordBasedEncryptor.encrypt(SOME_TEXT_TO_CHECK),
-                       encryptor.encrypt(SOME_TEXT_TO_CHECK))){
+                       encryptor.encrypt(SOME_TEXT_TO_CHECK))) {
       throw new BadPassword(this.name + " not identified correctly");
     }
 
@@ -210,10 +210,10 @@ public class EncrypterToTransportServerAccess implements ServerAccess {
     SerializedInput input = clientTransport.rename(sessionId, confirmation.toByteArray());
     Boolean done = input.readBoolean();
     input.close();
-    if (!done){
-        return false;
+    if (!done) {
+      return false;
     }
-    else{
+    else {
       encryptor.setPasswordBasedEncryptor(newPasswordBasedEncryptor);
       this.name = newName;
     }
@@ -226,7 +226,7 @@ public class EncrypterToTransportServerAccess implements ServerAccess {
     SerializedInput input = clientTransport.getSnapshotInfos(sessionId, outputStream.toByteArray());
     int count = input.readNotNullInt();
     List<SnapshotInfo> snapshotInfos = new ArrayList<SnapshotInfo>(count);
-    for (int i = 0; i < count; i++){
+    for (int i = 0; i < count; i++) {
       // keep order
       long timestamp = input.readNotNullLong();
       long version = input.readNotNullLong();
@@ -269,7 +269,7 @@ public class EncrypterToTransportServerAccess implements ServerAccess {
 
   public List<UserInfo> getLocalUsers() {
     SerializedInput input = clientTransport.getLocalUsers();
-    if (input == null){
+    if (input == null) {
       return Collections.emptyList();
     }
     int size = input.readNotNullInt();
@@ -303,7 +303,7 @@ public class EncrypterToTransportServerAccess implements ServerAccess {
     try {
       int i = 0;
       for (char c : name) {
-        tab[i] = (byte)c;
+        tab[i] = (byte) c;
         i++;
       }
       return passwordEncryptor.encrypt(tab);
@@ -392,28 +392,16 @@ public class EncrypterToTransportServerAccess implements ServerAccess {
     GlobList result = new GlobList(data.size());
 
     for (String globTypeName : data.keys()) {
-      GlobType globType;
-      if (globTypeName.equals("currenMonth")) {
-        globType = globModel.getType("currentMonth");
-      }
-      else if (globTypeName.equals("bb") || globTypeName.equals("ab")) {  // version 88->91 : ab, 92 : bb  pour csvMapping
-        globType = globModel.getType("csvMapping");
-      }
-      else if (globTypeName.equals("r")){
-        globType = globModel.getType("accountPositionError");
-      }
-      else {
-        globType = globModel.getType(globTypeName);
-      }
+      GlobType globType = getGlobType(globModel, globTypeName);
       PicsouGlobSerializer globSerializer =
         globType.getProperty(SerializationManager.SERIALIZATION_PROPERTY, null);
       if (globSerializer == null) {
-        if (!SerializationManager.REMOVED_GLOB.contains(globType)){
+        if (!SerializationManager.REMOVED_GLOB.contains(globType)) {
           throw new RuntimeException("missing serialializer for " + globTypeName);
         }
         continue;
       }
-      IntegerField field = (IntegerField)globType.getKeyFields()[0];
+      IntegerField field = (IntegerField) globType.getKeyFields()[0];
       Integer id;
       Integer maxId = 0;
       for (Map.Entry<Integer, SerializableGlobType> globEntry : data.get(globTypeName).entrySet()) {
@@ -430,6 +418,23 @@ public class EncrypterToTransportServerAccess implements ServerAccess {
       idUpdater.update(field, maxId);
     }
     return result;
+  }
+
+  public static GlobType getGlobType(GlobModel globModel, String globTypeName) {
+    GlobType globType;
+    if (globTypeName.equals("currenMonth")) {
+      globType = globModel.getType("currentMonth");
+    }
+    else if (globTypeName.equals("bb") || globTypeName.equals("ab")) {  // version 88->91 : ab, 92 : bb  pour csvMapping
+      globType = globModel.getType("csvMapping");
+    }
+    else if (globTypeName.equals("r")) {
+      globType = globModel.getType("accountPositionError");
+    }
+    else {
+      globType = globModel.getType(globTypeName);
+    }
+    return globType;
   }
 
   public void disconnect() {

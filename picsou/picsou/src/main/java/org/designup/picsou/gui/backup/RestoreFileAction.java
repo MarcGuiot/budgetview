@@ -20,7 +20,6 @@ public class RestoreFileAction extends AbstractRestoreAction {
   }
 
   public void actionPerformed(ActionEvent e) {
-
     JFileChooser chooser = getFileChooser();
     chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
     int returnVal = chooser.showOpenDialog(frame);
@@ -32,7 +31,7 @@ public class RestoreFileAction extends AbstractRestoreAction {
     }
   }
 
-  class RestoreFile implements RestoreDetail {
+  private class RestoreFile implements RestoreDetail {
     private File file;
 
     RestoreFile(File file) {

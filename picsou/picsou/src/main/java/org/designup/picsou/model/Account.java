@@ -14,6 +14,7 @@ import org.globsframework.model.Glob;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.utils.GlobMatcher;
 import org.globsframework.model.utils.GlobMatchers;
+import org.globsframework.utils.Utils;
 import org.globsframework.utils.collections.Pair;
 import org.globsframework.utils.exceptions.ItemNotFound;
 import org.globsframework.utils.serialization.SerializedByteArrayOutput;
@@ -810,6 +811,12 @@ public class Account {
   public static class UserSavingAccountMatcher implements GlobMatcher {
     public boolean matches(Glob account, GlobRepository repository) {
       return isUserCreatedSavingsAccount(account);
+    }
+  }
+
+  public static class MainAccountMatcher implements GlobMatcher {
+    public boolean matches(Glob account, GlobRepository repository) {
+      return account != null && Utils.equal(account.get(Account.ACCOUNT_TYPE), AccountType.MAIN.getId());
     }
   }
 

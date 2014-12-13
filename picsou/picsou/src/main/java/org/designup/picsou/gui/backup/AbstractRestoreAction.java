@@ -8,9 +8,9 @@ import org.designup.picsou.model.CurrentMonth;
 import org.designup.picsou.model.Month;
 import org.globsframework.gui.SelectionService;
 import org.globsframework.model.Glob;
+import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.Key;
-import org.globsframework.model.GlobList;
 import org.globsframework.utils.Log;
 import org.globsframework.utils.directory.Directory;
 
@@ -43,14 +43,13 @@ public abstract class AbstractRestoreAction extends AbstractBackupRestoreAction 
           action.showConfirmationDialog();
           return;
         }
-        else {
-          AskPasswordDialog dialog =
-            new AskPasswordDialog("restore.password.title", "restore.password.label", "restore.password.message", directory);
-          password = dialog.show();
-          if (password == null || password.length == 0) {
-            restoreMonthSelection(currentSelection);
-            return;
-          }
+
+        AskPasswordDialog dialog =
+          new AskPasswordDialog("restore.password.title", "restore.password.label", "restore.password.message", directory);
+        password = dialog.show();
+        if (password == null || password.length == 0) {
+          restoreMonthSelection(currentSelection);
+          return;
         }
       }
     }
@@ -65,7 +64,7 @@ public abstract class AbstractRestoreAction extends AbstractBackupRestoreAction 
     GlobList months = new GlobList();
     for (Key key : currentSelection) {
       Glob month = repository.find(key);
-      if (month != null){
+      if (month != null) {
         months.add(month);
       }
     }

@@ -321,29 +321,13 @@ public class ProjectUpgrade {
     }
 
     public void apply(GlobRepository repository) {
-      Set<Integer> accountIds = transactions.getSortedSet(Transaction.ACCOUNT);
-      for (Integer accountId : accountIds) {
-        String suffix = "";
-        if (accountIds.size() > 1) {
-          Glob account = repository.find(Key.create(Account.TYPE, accountId));
-          if (account != null) {
-            suffix = " - " + account.get(Account.NAME);
-          }
-        }
-        processAccount(accountId, suffix, repository);
-      }
-    }
-
-    private void processAccount(Integer accountId, String suffix, GlobRepository repository) {
-
-      GlobList accountTransactions = transactions.filter(fieldEquals(Transaction.ACCOUNT, accountId), repository);
-
-      SortedSet<Integer> monthIds = accountTransactions.getSortedSet(Transaction.BUDGET_MONTH);
+      SortedSet<Integer> monthIds = transactions.getSortedSet(Transaction.BUDGET_MONTH);
       Integer projectId = project.get(Project.ID);
       Glob item = repository.create(ProjectItem.TYPE,
                                     value(ProjectItem.ITEM_TYPE, ProjectItemType.EXPENSE.getId()),
-                                    value(ProjectItem.LABEL, Lang.get("project.upgrade.misc") + suffix),
+                                    value(ProjectItem.LABEL, Lang.get("project.upgrade.misc")),
                                     value(ProjectItem.FIRST_MONTH, monthIds.first()),
+                                    value(ProjectItem.ACCOUNT, Account.MAIN_SUMMARY_ACCOUNT_ID),
                                     value(ProjectItem.PROJECT, projectId),
                                     value(ProjectItem.SEQUENCE_NUMBER, ProjectItem.getNextSequenceNumber(projectId, repository)));
       if (monthIds.size() == 1) {
@@ -368,7 +352,7 @@ public class ProjectUpgrade {
 
       Glob newSeries = ProjectItemToSeriesTrigger.createSeries(item, repository);
 
-      for (Glob transaction : accountTransactions) {
+      for (Glob transaction : transactions) {
         repository.update(transaction.getKey(), Transaction.SERIES, newSeries.get(Series.ID));
       }
     }

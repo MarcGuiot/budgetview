@@ -502,7 +502,6 @@ public class UserPreferences {
       fieldSetter.set(MAIL_FOR_MOBILE, input.readUtf8String());
       fieldSetter.set(PASSWORD_FOR_MOBILE, input.readUtf8String());
       fieldSetter.set(SHOW_TRANSACTION_GRAPH, true);
-      input.readBoolean(); // SHOW_PROJECT_DETAILS
       fieldSetter.set(SHOW_MAIN_ACCOUNT_LIST_IN_SUMMARY, false);
       fieldSetter.set(SHOW_SAVINGS_ACCOUNT_LIST_IN_SUMMARY, false);
       fieldSetter.set(ANALYSIS_VIEW_TYPE, AnalysisViewType.BUDGET.getId());
@@ -542,7 +541,6 @@ public class UserPreferences {
       fieldSetter.set(TEXT_DATE_TYPE, input.readInteger());
       fieldSetter.set(RECONCILIATION_FILTERING_TIP_SHOWN, input.readBoolean());
       fieldSetter.set(SHOW_TRANSACTION_GRAPH, true);
-      input.readBoolean(); // SHOW_PROJECT_DETAILS
       fieldSetter.set(SHOW_MAIN_ACCOUNT_LIST_IN_SUMMARY, false);
       fieldSetter.set(SHOW_SAVINGS_ACCOUNT_LIST_IN_SUMMARY, false);
       fieldSetter.set(ANALYSIS_VIEW_TYPE, AnalysisViewType.BUDGET.getId());
@@ -582,7 +580,6 @@ public class UserPreferences {
       fieldSetter.set(TEXT_DATE_TYPE, input.readInteger());
       fieldSetter.set(SHOW_TRANSACTION_GRAPH, false);
       fieldSetter.set(SHOW_TRANSACTION_GRAPH, true);
-      input.readBoolean(); // SHOW_PROJECT_DETAILS
       fieldSetter.set(SHOW_MAIN_ACCOUNT_LIST_IN_SUMMARY, false);
       fieldSetter.set(SHOW_SAVINGS_ACCOUNT_LIST_IN_SUMMARY, false);
       fieldSetter.set(ANALYSIS_VIEW_TYPE, AnalysisViewType.BUDGET.getId());
