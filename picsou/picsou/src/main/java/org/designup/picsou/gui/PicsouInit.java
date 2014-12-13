@@ -143,7 +143,7 @@ public class PicsouInit {
     repository.addTrigger(new IrregularSeriesBudgetCreationTrigger());
     repository.addTrigger(new NotImportedTransactionAccountTrigger());
     repository.addTrigger(new ImportedToNotImportedAccountTransactionTrigger());
-    repository.addTrigger(new ObservedSeriesStatTrigger());
+    repository.addTrigger(new ActualSeriesStatTrigger());
     repository.addTrigger(new PastTransactionUpdateSeriesBudgetTrigger());
     repository.addTrigger(new SeriesShapeTrigger());
     repository.addTrigger(new PlannedTransactionCreationTrigger());

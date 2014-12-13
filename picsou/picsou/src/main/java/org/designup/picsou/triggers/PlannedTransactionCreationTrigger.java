@@ -8,7 +8,6 @@ import org.designup.picsou.triggers.utils.SeriesAndMonths;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.fields.IntegerField;
 import org.globsframework.model.*;
-import org.globsframework.model.format.GlobPrinter;
 import org.globsframework.utils.Log;
 import org.globsframework.utils.Utils;
 
@@ -70,7 +69,10 @@ public class PlannedTransactionCreationTrigger implements ChangeSetListener {
         Integer newSeriesId;
         Integer newMonth;
         Integer previousMonth;
-        Glob transaction = repository.get(key);
+        Glob transaction = repository.find(key);
+        if (transaction == null) {
+          return;
+        }
         if (values.contains(Transaction.SERIES)) {
           previousSeriesId = values.getPrevious(Transaction.SERIES);
           newSeriesId = values.get(Transaction.SERIES);
@@ -350,19 +352,15 @@ public class PlannedTransactionCreationTrigger implements ChangeSetListener {
 
     if (Account.MAIN_SUMMARY_ACCOUNT_ID == targetAccount) {
       Integer[] accountIds = repository.getAll(Account.TYPE, Account.activeUserCreatedMainAccounts(monthId)).getSortedArray(Account.ID);
-      System.out.println("\n\n##### Computing day amounts for seriesId:" + series.get(Series.ID) + " - monthId:" + monthId + " ################");
       AmountMap actualAmounts = getActualsForTargetMonth(series, monthId, repository);
-      System.out.println("  actuals: " + actualAmounts);
       double[] plannedAmounts = splitAmountBetweenAccounts(amount, accountIds, series.get(Series.ID), currentMonth, repository);
       levelPlannedWhenExceeded(accountIds, plannedAmounts, actualAmounts);
-      System.out.println("  planned: " + plannedAmounts);
       for (int i = 0; i < accountIds.length; i++) {
         computeDayAmountsForAccount(series, monthId, plannedAmounts[i], accountIds[i], minDay, dayAmounts, repository);
       }
       for (int i = 0; i < accountIds.length; i++) {
         adjustDayAmountsWithActual(dayAmounts.account(accountIds[i]), actualAmounts.get(accountIds[i], 0.00));
       }
-      System.out.println("  ==> " + dayAmounts);
       return dayAmounts;
     }
 
@@ -397,7 +395,6 @@ public class PlannedTransactionCreationTrigger implements ChangeSetListener {
         plannedAmounts[i] = actual;
       }
     }
-    System.out.println("  toRedistribute: " + toRedistribute);
     for (int i = 0; i < accountIds.length; i++) {
       double actual = actualAmounts.get(accountIds[i], 0.00);
       double planned = plannedAmounts[i];
@@ -486,11 +483,7 @@ public class PlannedTransactionCreationTrigger implements ChangeSetListener {
     for (int i = 0; i < accountIds.length; i++) {
       values[i] = actualAmounts.get(accountIds[i], 0.00);
     }
-    System.out.println("  accountIds = " + Arrays.toString(accountIds));
-    System.out.println("  values = " + Arrays.toString(values));
-    double[] adjusted = Amounts.adjustTotal(values, amount);
-    System.out.println("  adjusted = " + Arrays.toString(adjusted));
-    return adjusted;
+    return Amounts.adjustTotal(values, amount);
   }
 
   private static void computeDayAmountsForAccount(Glob series, int monthId, double amount, int accountId, Integer minDay,
@@ -563,7 +556,6 @@ public class PlannedTransactionCreationTrigger implements ChangeSetListener {
   }
 
   public static void createPlannedTransaction(Glob series, int monthId, Integer day, double amount, GlobRepository repository) {
-    System.out.println("PlannedTransactionCreationTrigger.createPlannedTransaction");
     Glob month = repository.get(CurrentMonth.KEY);
     if ((month.get(CurrentMonth.LAST_TRANSACTION_MONTH) == monthId)
         && ((day == null) ||
@@ -580,7 +572,6 @@ public class PlannedTransactionCreationTrigger implements ChangeSetListener {
   }
 
   private static void createPlannedTransaction(int accountId, Glob series, int monthId, int day, double amount, GlobRepository repository) {
-    System.out.println("  create transaction: " + accountId + "/" + Month.toCompactString(monthId, day) + "/" + amount);
     Integer seriesId = series.get(Series.ID);
     repository.create(Transaction.TYPE,
                       value(Transaction.ACCOUNT, accountId),

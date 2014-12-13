@@ -14,6 +14,7 @@ import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.Key;
+import org.globsframework.model.format.GlobPrinter;
 import org.globsframework.model.utils.GlobFieldsComparator;
 import org.globsframework.utils.Log;
 
@@ -28,6 +29,7 @@ public class ProjectUpgrade {
 
   private List<Functor> functors = new ArrayList<Functor>();
   private Set<Integer> managedSeries = new HashSet<Integer>();
+
   public void updateProjectSeriesAndGroups(GlobRepository repository) {
     ProjectToSeriesGroupTrigger.createGroupsForProjects(repository);
     setDefaultAccountsForAllProjects(repository);
@@ -78,57 +80,10 @@ public class ProjectUpgrade {
                                                 and(fieldEquals(Transaction.SERIES, seriesId),
                                                     fieldEquals(Transaction.SUB_SERIES, subSeriesId),
                                                     isFalse(Transaction.PLANNED)));
-      repository.update(item.getKey(), ProjectItem.SUB_SERIES, null);
-
-      Glob project = repository.findLinkTarget(item, ProjectItem.PROJECT);
-      Set<Integer> accountIdSet = transactions.getValueSet(Transaction.ACCOUNT);
-      Integer[] accountIds = accountIdSet.toArray(new Integer[accountIdSet.size()]);
-      if (accountIds.length < 2) {
-        createSeriesForItem(item, repository, transactions);
-        repository.update(item.getKey(),
-                          value(ProjectItem.ACCOUNT,
-                                accountIds.length == 1 ? accountIds[0] : project.get(Project.DEFAULT_ACCOUNT)));
-      }
-      else {
-        String itemLabel = item.get(ProjectItem.LABEL);
-        Glob[] itemForAccounts = new Glob[accountIds.length];
-        for (int i = 0; i < accountIds.length; i++) {
-          itemForAccounts[i] = i == 0 ? item : ProjectItem.duplicate(item, "", project, 0, repository);
-          String newItemLabel = itemLabel;
-          Integer accountId = accountIds[i];
-          if (accountId != null) {
-            Glob account = repository.find(Key.create(Account.TYPE, accountId));
-            newItemLabel += " - " + account.get(Account.NAME);
-          }
-          repository.update(itemForAccounts[i].getKey(),
-                            value(ProjectItem.ACCOUNT, accountId),
-                            value(ProjectItem.LABEL, newItemLabel));
-          GlobList accountTransactions = transactions.filter(fieldEquals(Transaction.ACCOUNT, accountId), repository);
-          createSeriesForItem(itemForAccounts[i], repository, accountTransactions);
-        }
-        double[] planned = Amounts.split(ProjectItem.getTotalPlannedAmount(item, repository), accountIds.length);
-        for (int i = 0; i < itemForAccounts.length; i++) {
-          reducePlannedForItem(itemForAccounts[i], planned[i], repository);
-        }
-      }
-
-      clearTransactionSeries(transactions, repository);
-    }
-  }
-
-  private void reducePlannedForItem(Glob item, double planned, GlobRepository repository) {
-    if (item.isTrue(ProjectItem.USE_SAME_AMOUNTS)) {
       repository.update(item.getKey(),
-                        ProjectItem.PLANNED_AMOUNT,
-                        Amounts.normalize(planned / item.get(ProjectItem.MONTH_COUNT)));
-    }
-    else {
-      GlobList amounts = repository.findLinkedTo(item, ProjectItemAmount.PROJECT_ITEM);
-      Glob[] amountsArray = amounts.toArray();
-      double[] plannedAmounts = Amounts.adjustTotal(amounts.getValues(ProjectItemAmount.PLANNED_AMOUNT), planned);
-      for (int i = 0; i < amountsArray.length; i++) {
-        repository.update(amountsArray[i].getKey(), ProjectItemAmount.PLANNED_AMOUNT, plannedAmounts[i]);
-      }
+                        value(ProjectItem.SUB_SERIES, null),
+                        value(ProjectItem.ACCOUNT, Account.MAIN_SUMMARY_ACCOUNT_ID));
+      createSeriesForItem(item, repository, transactions);
     }
   }
 
@@ -137,6 +92,7 @@ public class ProjectUpgrade {
     if (!transactions.isEmpty()) {
       managedSeries.add(itemSeries.get(Series.ID));
       functors.add(new BindTransactionsToSeries(itemSeries, transactions));
+      clearTransactionSeries(transactions, repository);
     }
   }
 
@@ -273,8 +229,7 @@ public class ProjectUpgrade {
       public void apply(GlobRepository repository) {
         for (Glob stat : repository.getAll(SeriesStat.TYPE,
                                            and(fieldEquals(SeriesStat.TARGET_TYPE, SeriesType.SERIES.getId()),
-                                               fieldEquals(SeriesStat.TARGET, seriesId))
-        )) {
+                                               fieldEquals(SeriesStat.TARGET, seriesId)))) {
           repository.update(stat.getKey(), SeriesStat.ACTUAL_AMOUNT, 0.00);
         }
       }
@@ -311,6 +266,22 @@ public class ProjectUpgrade {
     functors.clear();
   }
 
+  private void reducePlannedForItem(Glob item, double planned, GlobRepository repository) {
+    if (item.isTrue(ProjectItem.USE_SAME_AMOUNTS)) {
+      repository.update(item.getKey(),
+                        ProjectItem.PLANNED_AMOUNT,
+                        Amounts.normalize(planned / item.get(ProjectItem.MONTH_COUNT)));
+    }
+    else {
+      GlobList amounts = repository.findLinkedTo(item, ProjectItemAmount.PROJECT_ITEM);
+      Glob[] amountsArray = amounts.toArray();
+      double[] plannedAmounts = Amounts.adjustTotal(amounts.getValues(ProjectItemAmount.PLANNED_AMOUNT), planned);
+      for (int i = 0; i < amountsArray.length; i++) {
+        repository.update(amountsArray[i].getKey(), ProjectItemAmount.PLANNED_AMOUNT, plannedAmounts[i]);
+      }
+    }
+  }
+
   private interface Functor {
     void apply(GlobRepository repository);
   }
@@ -326,12 +297,16 @@ public class ProjectUpgrade {
     }
 
     public void apply(GlobRepository repository) {
-      for (Glob transaction : transactions) {
-        if (transaction.exists()) {
-          repository.update(transaction.getKey(),
-                            value(Transaction.SERIES, seriesId),
-                            value(Transaction.SUB_SERIES, null));
-        }
+      setTransactionSeries(transactions, seriesId, repository);
+    }
+  }
+
+  public static void setTransactionSeries(GlobList transactions, Integer seriesId, GlobRepository repository) {
+    for (Glob transaction : transactions) {
+      if (transaction.exists()) {
+        repository.update(transaction.getKey(),
+                          value(Transaction.SERIES, seriesId),
+                          value(Transaction.SUB_SERIES, null));
       }
     }
   }
@@ -346,7 +321,6 @@ public class ProjectUpgrade {
     }
 
     public void apply(GlobRepository repository) {
-
       Set<Integer> accountIds = transactions.getSortedSet(Transaction.ACCOUNT);
       for (Integer accountId : accountIds) {
         String suffix = "";

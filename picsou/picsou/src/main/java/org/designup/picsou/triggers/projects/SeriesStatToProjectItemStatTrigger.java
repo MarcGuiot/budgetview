@@ -1,6 +1,5 @@
 package org.designup.picsou.triggers.projects;
 
-import com.budgetview.shared.utils.Amounts;
 import org.designup.picsou.gui.model.ProjectItemStat;
 import org.designup.picsou.gui.model.SeriesStat;
 import org.designup.picsou.model.ProjectItem;

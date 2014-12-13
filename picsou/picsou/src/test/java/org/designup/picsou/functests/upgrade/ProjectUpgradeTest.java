@@ -33,6 +33,9 @@ public class ProjectUpgradeTest extends LoggedInFunctionalTestCase {
 
     projectList.checkCurrentProjects("| Voyage Rome | Jan | 1080.00 | on |");
     projectList.select("Voyage Rome");
+
+    operations.dumpRepository();
+
     currentProject.checkItems("| Voyage          | Jan | 180.00  | 200.00  |\n" +
                               "| Prepa Rome      | Feb | 30.00   | 80.00   |\n" +
                               "| Hotel           | Mar | 0.00    | 300.00  |\n" +

@@ -7,7 +7,7 @@ import org.designup.picsou.model.Transaction;
 import static org.globsframework.model.FieldValue.value;
 import org.globsframework.model.Key;
 
-public class SeriesStatTriggerTest extends PicsouTriggerTestCase {
+public class ActualSeriesStatTriggerTest extends PicsouTriggerTestCase {
 
   public void testStandardCreation() throws Exception {
     createSeries(10, 150.0);

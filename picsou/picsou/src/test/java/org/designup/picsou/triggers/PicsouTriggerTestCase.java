@@ -24,7 +24,7 @@ public abstract class PicsouTriggerTestCase extends PicsouTestCase {
     repository.addTrigger(new MonthsToSeriesBudgetTrigger(directory));
     repository.addTrigger(new SeriesBudgetTrigger(repository));
     repository.addTrigger(new SeriesDeletionTrigger());
-    repository.addTrigger(new ObservedSeriesStatTrigger());
+    repository.addTrigger(new ActualSeriesStatTrigger());
     repository.addTrigger(new PastTransactionUpdateSeriesBudgetTrigger());
     repository.addTrigger(new PlannedTransactionCreationTrigger());
     repository.addTrigger(new PlannedSeriesStatTrigger());

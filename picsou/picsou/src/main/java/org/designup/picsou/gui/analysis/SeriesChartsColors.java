@@ -201,10 +201,10 @@ public class SeriesChartsColors implements ColorChangeListener {
       return seriesText;
     }
 
-    Double observed = seriesStat.get(SeriesStat.ACTUAL_AMOUNT);
+    Double actual = seriesStat.get(SeriesStat.ACTUAL_AMOUNT);
     Double planned = seriesStat.get(SeriesStat.PLANNED_AMOUNT);
-    if ((observed != null) && (planned != null)) {
-      if ((observed < 0) && (observed < planned)) {
+    if ((actual != null) && (planned != null)) {
+      if ((actual < 0) && (actual < planned)) {
         return seriesErrorText;
       }
     }

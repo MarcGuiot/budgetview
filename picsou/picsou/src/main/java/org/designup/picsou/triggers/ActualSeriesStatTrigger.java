@@ -13,7 +13,7 @@ import org.globsframework.utils.Utils;
 
 import java.util.Set;
 
-public class ObservedSeriesStatTrigger implements ChangeSetListener {
+public class ActualSeriesStatTrigger implements ChangeSetListener {
   public void globsChanged(ChangeSet changeSet, final GlobRepository repository) {
     processTransactions(changeSet, repository);
   }
