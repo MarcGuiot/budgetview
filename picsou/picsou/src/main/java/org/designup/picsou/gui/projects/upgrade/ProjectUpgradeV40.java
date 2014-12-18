@@ -1,4 +1,4 @@
-package org.designup.picsou.gui.projects.utils;
+package org.designup.picsou.gui.projects.upgrade;
 
 import com.budgetview.shared.utils.Amounts;
 import org.designup.picsou.gui.model.SeriesStat;
@@ -25,7 +25,7 @@ import static org.designup.picsou.model.ProjectItemType.isTransfer;
 import static org.globsframework.model.FieldValue.value;
 import static org.globsframework.model.utils.GlobMatchers.*;
 
-public class ProjectUpgrade {
+public class ProjectUpgradeV40 {
 
   private List<Functor> functors = new ArrayList<Functor>();
   private Set<Integer> managedSeries = new HashSet<Integer>();

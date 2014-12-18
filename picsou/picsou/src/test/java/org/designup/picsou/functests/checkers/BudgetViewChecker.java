@@ -574,7 +574,7 @@ public class BudgetViewChecker extends ViewChecker {
       return this;
     }
 
-    public BudgetAreaChecker checkGroupToggleHidden(String groupName) {
+    public BudgetAreaChecker checkGroupToggleNotShown(String groupName) {
       Button toggle = getSeriesPanel(groupName).getToggleButton();
       assertThat(toggle.textEquals(""));
       assertFalse(toggle.isEnabled());

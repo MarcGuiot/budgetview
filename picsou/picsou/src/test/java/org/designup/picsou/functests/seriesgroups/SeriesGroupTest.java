@@ -39,7 +39,7 @@ public class SeriesGroupTest extends LoggedInFunctionalTestCase {
     budgetView.variable.checkSeriesGauge("Food", -80.00, -200.00);
     budgetView.variable.checkSeriesGauge("Groceries", -80.00, -200.00);
     budgetView.variable.checkGroupItems("Food");
-    budgetView.variable.checkGroupToggleHidden("Home");
+    budgetView.variable.checkGroupToggleNotShown("Home");
 
     budgetView.variable.checkAddToGroupOptions("Leisures", "Groceries", "New group...");
     budgetView.variable.addToGroup("Home", "Groceries");

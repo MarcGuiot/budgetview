@@ -4,7 +4,8 @@ import com.budgetview.shared.utils.Amounts;
 import org.designup.picsou.gui.PicsouApplication;
 import org.designup.picsou.gui.PicsouInit;
 import org.designup.picsou.gui.projects.utils.ProjectErrorsUpgrade;
-import org.designup.picsou.gui.projects.utils.ProjectUpgrade;
+import org.designup.picsou.gui.projects.upgrade.ProjectUpgradeV40;
+import org.designup.picsou.gui.series.upgrade.SeriesUpgradeV40;
 import org.designup.picsou.gui.series.utils.SeriesErrorsUpgrade;
 import org.designup.picsou.gui.utils.FrameSize;
 import org.designup.picsou.gui.utils.Matchers;
@@ -13,7 +14,6 @@ import org.designup.picsou.model.*;
 import org.designup.picsou.triggers.AccountInitialPositionTrigger;
 import org.designup.picsou.triggers.AccountSequenceTrigger;
 import org.designup.picsou.triggers.PositionTrigger;
-import org.designup.picsou.triggers.SeriesBudgetTrigger;
 import org.designup.picsou.triggers.savings.UpdateMirrorSeriesChangeSetVisitor;
 import org.designup.picsou.utils.TransactionComparator;
 import org.globsframework.metamodel.Field;
@@ -21,9 +21,6 @@ import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.fields.LinkField;
 import org.globsframework.model.*;
 import org.globsframework.model.format.GlobPrinter;
-import org.globsframework.model.repository.GlobIdGenerator;
-import org.globsframework.model.repository.LocalGlobRepository;
-import org.globsframework.model.repository.LocalGlobRepositoryBuilder;
 import org.globsframework.model.utils.GlobBuilder;
 import org.globsframework.model.utils.GlobFunctor;
 import org.globsframework.model.utils.GlobMatchers;
@@ -40,7 +37,7 @@ import static org.globsframework.model.utils.GlobMatchers.*;
 public class UpgradeTrigger implements ChangeSetListener {
   private Directory directory;
   private HashMap<Integer, Key[]> savingsSeriesToOp = new HashMap<Integer, Key[]>();
-  private ProjectUpgrade projectUpgrade = new ProjectUpgrade();
+  private ProjectUpgradeV40 projectUpgrade = new ProjectUpgradeV40();
 
   public UpgradeTrigger(Directory directory) {
     this.directory = directory;
@@ -134,7 +131,7 @@ public class UpgradeTrigger implements ChangeSetListener {
     if (currentJarVersion < 133) {
       AccountSequenceTrigger.resetSequence(repository);
       projectUpgrade.updateProjectSeriesAndGroups(repository);
-      updateTargetAccountForSeries(repository);
+      SeriesUpgradeV40.updateTargetAccountForSeries(repository);
       repository.delete(Transaction.TYPE, and(fieldEquals(Transaction.ACCOUNT, -1),
                                               fieldEquals(Transaction.PLANNED, true)));
     }
@@ -147,7 +144,7 @@ public class UpgradeTrigger implements ChangeSetListener {
       ProjectErrorsUpgrade.fixIncoherentFromToInTransferSeries(repository);
     }
     if (currentJarVersion < 141) {
-      updateTargetAccountForSeries(repository);
+      SeriesUpgradeV40.updateTargetAccountForSeries(repository);
       updageAccountGraphs(repository);
       updateColorTheme(repository);
     }
@@ -192,143 +189,6 @@ public class UpgradeTrigger implements ChangeSetListener {
                         value(LayoutConfig.BUDGET_VERTICAL_LEFT_2, 0.5),
                         value(LayoutConfig.BUDGET_VERTICAL_RIGHT_1, 0.6));
     }
-  }
-
-  private void updateTargetAccountForSeries(GlobRepository repository) {
-    SeriesBudgetTrigger seriesBudgetTrigger = new SeriesBudgetTrigger(repository);
-    LocalGlobRepository subGlobRepository = LocalGlobRepositoryBuilder.init(repository)
-      .copy(Month.TYPE, CurrentMonth.TYPE).get();
-    subGlobRepository.addTrigger(seriesBudgetTrigger);
-
-    Map<Key, Key> saving;
-    GlobList allSeries = repository.getAll(Series.TYPE,
-                                           GlobMatchers.and(
-                                             GlobMatchers.not(GlobMatchers.fieldEquals(Series.BUDGET_AREA, BudgetArea.TRANSFER.getId())),
-                                             GlobMatchers.not(GlobMatchers.fieldEquals(Series.BUDGET_AREA, BudgetArea.OTHER.getId())))
-    );
-    GlobIdGenerator idGenerator = repository.getIdGenerator();
-    for (Glob series : allSeries) {
-      if (BudgetArea.UNCATEGORIZED.getId().equals(series.get(Series.BUDGET_AREA))) {
-        continue;
-      }
-      GlobList operations = repository.findByIndex(Transaction.SERIES_INDEX, Transaction.SERIES, series.get(Series.ID))
-        .getGlobs().filter(GlobMatchers.isFalse(Transaction.PLANNED), repository);
-      Set<Integer> accounts = new HashSet<Integer>();
-      for (Glob glob : operations) {
-        accounts.add(glob.get(Transaction.ACCOUNT));
-      }
-      if (accounts.size() == 0) {
-        // nothing
-      }
-      else if (accounts.size() == 1) {
-        repository.update(series.getKey(), Series.TARGET_ACCOUNT, accounts.iterator().next());
-      }
-      else {
-        String seriesName = series.get(Series.NAME);
-        Glob groups = repository.create(SeriesGroup.TYPE,
-                                        value(SeriesGroup.NAME, seriesName),
-                                        value(SeriesGroup.BUDGET_AREA, series.get(Series.BUDGET_AREA)),
-                                        value(SeriesGroup.EXPANDED, false));
-        boolean first = true;
-        Key key = series.getKey();
-        for (Integer account : accounts) {
-          if (!first) {
-            key = Key.create(Series.TYPE, idGenerator.getNextId(Series.ID, 1));
-            subGlobRepository.startChangeSet();
-            subGlobRepository.create(key, series.toArray());
-            subGlobRepository.update(key, value(Series.INITIAL_AMOUNT, 0.));
-            subGlobRepository.completeChangeSet();
-            subGlobRepository.commitChanges(false);
-          }
-          first = false;
-          String accoutName = repository.get(KeyBuilder.newKey(Account.TYPE, account))
-            .get(Account.NAME);
-          repository.update(key,
-                            value(Series.NAME, accoutName),
-                            value(Series.GROUP, groups.get(SeriesGroup.ID)),
-                            value(Series.TARGET_ACCOUNT, account));
-          for (Glob op : operations) {
-            if (op.get(Transaction.ACCOUNT).equals(account)) {
-              repository.update(op.getKey(), value(Transaction.SERIES, key.get(Series.ID)));
-            }
-          }
-        }
-      }
-    }
-    GlobList allSavingsSeries = repository.getAll(Series.TYPE, GlobMatchers.fieldEquals(Series.BUDGET_AREA, BudgetArea.TRANSFER.getId()));
-    saving = new HashMap<Key, Key>();
-    for (Glob series : allSavingsSeries) {
-      if (!saving.containsKey(series.getKey())) {
-        Glob target = repository.findLinkTarget(series, Series.MIRROR_SERIES);
-        if (target != null) {
-          saving.put(target.getKey(), series.getKey());
-        }
-      }
-    }
-
-    for (Map.Entry<Key, Key> entry : saving.entrySet()) {
-      Glob series1 = repository.get(entry.getKey());
-      Glob series2 = repository.get(entry.getValue());
-      Set<Integer> accountId1 = updateTargetAccount(repository, series1, repository.findLinkTarget(series1, Series.TARGET_ACCOUNT));
-      Set<Integer> accountId2 = updateTargetAccount(repository, series2, repository.findLinkTarget(series2, Series.TARGET_ACCOUNT));
-      updateIfNull(repository, series1, series2);
-      if (accountId1.size() > 1 || accountId2.size() > 1) {
-        // que faire?
-      }
-    }
-
-    for (final Glob series : allSeries) {
-      final Integer targetAccount = series.get(Series.TARGET_ACCOUNT);
-      if (targetAccount != null) {
-        repository.safeApply(Transaction.TYPE,
-                             GlobMatchers.and(GlobMatchers.fieldEquals(Transaction.PLANNED, true),
-                                              GlobMatchers.fieldEquals(Transaction.SERIES, series.get(Series.ID))),
-                             new GlobFunctor() {
-                               public void run(Glob glob, GlobRepository repository) throws Exception {
-                                 repository.update(glob.getKey(), Transaction.ACCOUNT, targetAccount);
-                               }
-                             }
-        );
-      }
-    }
-  }
-
-  private void updateIfNull(GlobRepository repository, Glob series1, Glob series2) {
-    if (series1.get(Series.TARGET_ACCOUNT) == null || series2.get(Series.TARGET_ACCOUNT) == null) {
-      GlobList budget = repository.findLinkedTo(series1, SeriesBudget.SERIES);
-      for (Glob glob : budget) {
-        if (glob.get(SeriesBudget.PLANNED_AMOUNT, 0.) > 0) {
-          repository.update(series1.getKey(), Series.TARGET_ACCOUNT, series1.get(Series.TO_ACCOUNT));
-          repository.update(series2.getKey(), Series.TARGET_ACCOUNT, series1.get(Series.FROM_ACCOUNT));
-          return;
-        }
-      }
-      budget = repository.findLinkedTo(series2, SeriesBudget.SERIES);
-      for (Glob glob : budget) {
-        if (glob.get(SeriesBudget.PLANNED_AMOUNT, 0.) > 0) {
-          repository.update(series2.getKey(), Series.TARGET_ACCOUNT, series1.get(Series.TO_ACCOUNT));
-          repository.update(series1.getKey(), Series.TARGET_ACCOUNT, series1.get(Series.FROM_ACCOUNT));
-          return;
-        }
-      }
-      repository.update(series1.getKey(), Series.TARGET_ACCOUNT, series1.get(Series.TO_ACCOUNT));
-      repository.update(series2.getKey(), Series.TARGET_ACCOUNT, series1.get(Series.FROM_ACCOUNT));
-    }
-  }
-
-  private Set<Integer> updateTargetAccount(GlobRepository repository, Glob series1, Glob targetAccount) {
-    Set<Integer> accounts1 = new HashSet<Integer>();
-    if (Account.isMain(targetAccount) && !Account.isUserCreatedMainAccount(targetAccount)) {
-      GlobList operations1 = repository.findByIndex(Transaction.SERIES_INDEX, Transaction.SERIES, series1.get(Series.ID))
-        .getGlobs().filter(GlobMatchers.isFalse(Transaction.PLANNED), repository);
-      for (Glob glob : operations1) {
-        accounts1.add(glob.get(Transaction.ACCOUNT));
-      }
-      if (accounts1.size() == 1) {
-        repository.update(series1.getKey(), Series.TARGET_ACCOUNT, accounts1.iterator().next());
-      }
-    }
-    return accounts1;
   }
 
   private void deleteDuplicateSynchro(GlobRepository repository) {
