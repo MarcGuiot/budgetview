@@ -131,8 +131,7 @@ public class UpgradeTrigger implements ChangeSetListener {
     if (currentJarVersion < 133) {
       AccountSequenceTrigger.resetSequence(repository);
       projectUpgrade.updateProjectSeriesAndGroups(repository);
-      SeriesUpgradeV40.updateTargetAccountForSeries(repository);
-      repository.delete(Transaction.TYPE, and(fieldEquals(Transaction.ACCOUNT, -1),
+      repository.delete(Transaction.TYPE, and(fieldEquals(Transaction.ACCOUNT, Account.MAIN_SUMMARY_ACCOUNT_ID),
                                               fieldEquals(Transaction.PLANNED, true)));
     }
     if (currentJarVersion < 137) {
