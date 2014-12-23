@@ -8,7 +8,7 @@
       <panel ref="customFilterMessage"/>
     </row>
 
-    <verticalSplit styleClass="blockDivider" opaque="false">
+    <verticalSplit styleClass="blockDivider" opaque="false" ref="transactionChartSplit">
       <column>
         <row>
           <filler fill="horizontal"/>
