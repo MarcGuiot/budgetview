@@ -1,12 +1,15 @@
 package org.designup.picsou.functests.checkers;
 
 import junit.framework.Assert;
-import org.designup.picsou.utils.Lang;
+import org.globsframework.utils.TestUtils;
 import org.uispec4j.Button;
 import org.uispec4j.Panel;
 import org.uispec4j.UIComponent;
 import org.uispec4j.Window;
 import org.uispec4j.interception.WindowInterceptor;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.uispec4j.assertion.UISpecAssert.assertThat;
 
@@ -17,6 +20,15 @@ public class NotificationsDialogChecker extends ViewChecker {
 
   protected NotificationsDialogChecker(Window dialog) {
     super(dialog);
+  }
+
+  public NotificationsDialogChecker checkContent(String... expectedMessages) {
+    List<String> actual = new ArrayList<String>();
+    for (UIComponent panel : mainWindow.getUIComponents(Panel.class, "notificationPanel")) {
+      actual.add(((Panel)panel).getTextBox("message").getText());
+    }
+    TestUtils.assertEquals(expectedMessages, actual.toArray());
+    return this;
   }
 
   public NotificationsDialogChecker checkMessageCount(int count) {
@@ -47,7 +59,7 @@ public class NotificationsDialogChecker extends ViewChecker {
     return this;
   }
 
-  public void validate() {
+  public void close() {
     mainWindow.getButton("OK").click();
   }
 }

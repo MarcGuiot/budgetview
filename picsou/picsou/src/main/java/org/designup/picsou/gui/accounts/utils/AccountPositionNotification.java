@@ -19,14 +19,13 @@ public class AccountPositionNotification extends GlobNotification {
   private Directory directory;
   private Key accountKey;
 
-  public AccountPositionNotification(GlobRepository repository, Directory directory, final Glob error, final String date, final Glob account, final int id) {
-    super(repository, id, error,
-          AccountPositionError.UPDATE_DATE, AccountPositionError.CLEARED,
-          Lang.get("messages.account.position.error.msg" + (date != null ? ".date" : ""),
-                   account.get(Account.NAME),
-                   Formatting.toString(error.get(AccountPositionError.LAST_REAL_OPERATION_POSITION)),
-                   Formatting.toString(error.get(AccountPositionError.IMPORTED_POSITION)),
-                   date));
+  public AccountPositionNotification(final Glob error, final String date, final Glob account, GlobRepository repository, Directory directory) {
+    super(error, Lang.get("messages.account.position.error.msg" + (date != null ? ".date" : ""),
+             account.get(Account.NAME),
+             Formatting.toString(error.get(AccountPositionError.LAST_REAL_OPERATION_POSITION)),
+             Formatting.toString(error.get(AccountPositionError.IMPORTED_POSITION)),
+             date), AccountPositionError.UPDATE_DATE, AccountPositionError.CLEARED,
+          repository);
     this.directory = directory;
     this.accountKey = account.getKey();
   }

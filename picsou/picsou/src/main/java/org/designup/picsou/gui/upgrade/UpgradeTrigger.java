@@ -3,8 +3,8 @@ package org.designup.picsou.gui.upgrade;
 import com.budgetview.shared.utils.Amounts;
 import org.designup.picsou.gui.PicsouApplication;
 import org.designup.picsou.gui.PicsouInit;
-import org.designup.picsou.gui.projects.utils.ProjectErrorsUpgrade;
 import org.designup.picsou.gui.projects.upgrade.ProjectUpgradeV40;
+import org.designup.picsou.gui.projects.utils.ProjectErrorsUpgrade;
 import org.designup.picsou.gui.series.upgrade.SeriesUpgradeV40;
 import org.designup.picsou.gui.series.utils.SeriesErrorsUpgrade;
 import org.designup.picsou.gui.utils.FrameSize;
@@ -37,7 +37,7 @@ import static org.globsframework.model.utils.GlobMatchers.*;
 public class UpgradeTrigger implements ChangeSetListener {
   private Directory directory;
   private HashMap<Integer, Key[]> savingsSeriesToOp = new HashMap<Integer, Key[]>();
-  private ProjectUpgradeV40 projectUpgrade = new ProjectUpgradeV40();
+  private PostProcessor postProcessor = new PostProcessor();
 
   public UpgradeTrigger(Directory directory) {
     this.directory = directory;
@@ -130,7 +130,7 @@ public class UpgradeTrigger implements ChangeSetListener {
 
     if (currentJarVersion < 133) {
       AccountSequenceTrigger.resetSequence(repository);
-      projectUpgrade.updateProjectSeriesAndGroups(repository);
+      ProjectUpgradeV40.run(repository, postProcessor);
       repository.delete(Transaction.TYPE, and(fieldEquals(Transaction.ACCOUNT, Account.MAIN_SUMMARY_ACCOUNT_ID),
                                               fieldEquals(Transaction.PLANNED, true)));
     }
@@ -143,7 +143,7 @@ public class UpgradeTrigger implements ChangeSetListener {
       ProjectErrorsUpgrade.fixIncoherentFromToInTransferSeries(repository);
     }
     if (currentJarVersion < 141) {
-      SeriesUpgradeV40.updateTargetAccountForSeries(repository);
+      SeriesUpgradeV40.run(repository, postProcessor);
       updageAccountGraphs(repository);
       updateColorTheme(repository);
     }
@@ -632,7 +632,7 @@ public class UpgradeTrigger implements ChangeSetListener {
       }
     }
     savingsSeriesToOp.clear();
-    projectUpgrade.postProcessing(repository);
+    postProcessor.run(repository);
   }
 
   private boolean isSame(Glob targetAccount, Glob transaction, GlobRepository repository) {

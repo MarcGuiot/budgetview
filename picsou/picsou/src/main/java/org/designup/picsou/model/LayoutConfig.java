@@ -14,8 +14,6 @@ import org.globsframework.utils.serialization.SerializedInput;
 import org.globsframework.utils.serialization.SerializedInputOutputFactory;
 import org.globsframework.utils.serialization.SerializedOutput;
 
-import java.awt.*;
-
 import static org.globsframework.model.FieldValue.value;
 import static org.globsframework.model.utils.GlobMatchers.*;
 
@@ -88,13 +86,12 @@ public class LayoutConfig {
   public static class Serializer implements PicsouGlobSerializer {
 
     public int getWriteVersion() {
-      return 2;
+      return 1;
     }
 
     public boolean shouldBeSaved(GlobRepository repository, FieldValues fieldValues) {
       return true;
     }
-
 
     public byte[] serializeData(FieldValues values) {
       SerializedByteArrayOutput serializedByteArrayOutput = new SerializedByteArrayOutput();
@@ -117,30 +114,9 @@ public class LayoutConfig {
     }
 
     public void deserializeData(int version, FieldSetter fieldSetter, byte[] data, Integer id) {
-      if (version == 2) {
-        deserializeDataV2(fieldSetter, data);
-      }
-      else if (version == 1) {
+      if (version == 1) {
         deserializeDataV1(fieldSetter, data);
       }
-    }
-
-    private void deserializeDataV2(FieldSetter fieldSetter, byte[] data) {
-      SerializedInput input = SerializedInputOutputFactory.init(data);
-      fieldSetter.set(SCREEN_WIDTH, input.readInteger());
-      fieldSetter.set(SCREEN_HEIGHT, input.readInteger());
-      fieldSetter.set(FRAME_WIDTH, input.readInteger());
-      fieldSetter.set(FRAME_HEIGHT, input.readInteger());
-      fieldSetter.set(HOME_SUMMARY_PROJECTS, input.readDouble());
-      fieldSetter.set(BUDGET_HORIZONTAL_1, input.readDouble());
-      fieldSetter.set(BUDGET_VERTICAL_LEFT_1, input.readDouble());
-      fieldSetter.set(BUDGET_VERTICAL_LEFT_2, input.readDouble());
-      fieldSetter.set(BUDGET_VERTICAL_RIGHT_1, input.readDouble());
-      fieldSetter.set(ACCOUNTS_HORIZONTAL, input.readDouble());
-      fieldSetter.set(ACCOUNTS_VERTICAL_LEFT, input.readDouble());
-      fieldSetter.set(ACCOUNTS_TRANSACTION_CHART, input.readDouble());
-      fieldSetter.set(CATEGORIZATION_HORIZONTAL, input.readDouble());
-      fieldSetter.set(ANALYSIS_TABLE, input.readDouble());
     }
 
     private void deserializeDataV1(FieldSetter fieldSetter, byte[] data) {
@@ -151,9 +127,9 @@ public class LayoutConfig {
       fieldSetter.set(FRAME_HEIGHT, input.readInteger());
       fieldSetter.set(HOME_SUMMARY_PROJECTS, input.readDouble());
       fieldSetter.set(BUDGET_HORIZONTAL_1, input.readDouble());
-      input.readDouble(); // BUDGET_HORIZONTAL_2
       fieldSetter.set(BUDGET_VERTICAL_LEFT_1, input.readDouble());
       fieldSetter.set(BUDGET_VERTICAL_LEFT_2, input.readDouble());
+      fieldSetter.set(BUDGET_VERTICAL_RIGHT_1, input.readDouble());
       fieldSetter.set(ACCOUNTS_HORIZONTAL, input.readDouble());
       fieldSetter.set(ACCOUNTS_VERTICAL_LEFT, input.readDouble());
       fieldSetter.set(ACCOUNTS_TRANSACTION_CHART, input.readDouble());

@@ -319,7 +319,7 @@ public class ReconciliationTest extends LoggedInFunctionalTestCase {
       .checkMessageCount(1)
       .checkMessage(0, "The last computed position for 'Main' (850.00) is not the same as the " +
                        "imported one (0.00)")
-      .validate();
+      .close();
 
     categorization.selectTransaction("[R] CHEQUE N° 12345");
 

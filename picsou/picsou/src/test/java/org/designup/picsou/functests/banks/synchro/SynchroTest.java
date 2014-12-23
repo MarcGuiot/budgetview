@@ -101,7 +101,7 @@ public class SynchroTest extends LoggedInFunctionalTestCase {
       .checkMessageCount(1)
       .checkMessage(0, "The last computed position for 'secondary' (10.00) is not the same as the " +
                        "imported one (100.00)")
-      .validate();
+      .close();
 
     views.selectCategorization();
     transactionCreation.show().selectAccount("secondary")

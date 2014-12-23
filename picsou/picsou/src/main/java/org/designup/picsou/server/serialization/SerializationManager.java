@@ -51,5 +51,6 @@ public class SerializationManager {
     LayoutConfig.TYPE.updateProperty(SERIALIZATION_PROPERTY, new LayoutConfig.Serializer());
     SeriesGroup.TYPE.updateProperty(SERIALIZATION_PROPERTY, new SeriesGroup.Serializer());
     AddOns.TYPE.updateProperty(SERIALIZATION_PROPERTY, new AddOns.Serializer());
+    StandardMessage.TYPE.updateProperty(SERIALIZATION_PROPERTY, new StandardMessage.Serializer());
   }
 }

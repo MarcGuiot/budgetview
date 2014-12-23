@@ -897,7 +897,7 @@ public class ImportTest extends LoggedInFunctionalTestCase {
       .checkMessage(1, "The last computed position for 'Account n. 113' (200.00) " +
                        "is not the same as the imported one (300.00)")
       .runAction(0)
-      .validate();
+      .close();
 
     views.checkDataSelected();
     mainAccounts.checkSelectedAccounts("Account n. 112");
@@ -913,7 +913,7 @@ public class ImportTest extends LoggedInFunctionalTestCase {
       .checkMessage(0, "The last computed position for 'Account n. 113' (200.00) is not the same as the " +
                        "imported one (300.00)")
       .clearMessage(0)
-      .validate();
+      .close();
 
     notifications.checkHidden();
   }
@@ -940,7 +940,7 @@ public class ImportTest extends LoggedInFunctionalTestCase {
       .checkMessage(0, "The last computed position for 'Account n. 111' (80.00) " +
                        "is not the same as the imported one (120.00)")
       .runAction(0)
-      .validate();
+      .close();
 
     views.checkDataSelected();
     mainAccounts.checkSelectedAccounts("Account n. 111");
@@ -952,7 +952,7 @@ public class ImportTest extends LoggedInFunctionalTestCase {
     notifications.openDialog()
       .checkMessageCount(1)
       .clearMessage(0)
-      .validate();
+      .close();
     notifications.checkHidden();
   }
 

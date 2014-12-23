@@ -20,6 +20,7 @@ import org.globsframework.model.indexing.IndexTables;
 import org.globsframework.model.utils.GlobFunctor;
 import org.globsframework.model.utils.GlobMatcher;
 import org.globsframework.model.utils.GlobMatchers;
+import org.globsframework.utils.Log;
 import org.globsframework.utils.collections.MapOfMaps;
 import org.globsframework.utils.collections.Pair;
 import org.globsframework.utils.Utils;

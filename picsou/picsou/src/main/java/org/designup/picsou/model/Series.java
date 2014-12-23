@@ -1,6 +1,7 @@
 package org.designup.picsou.model;
 
 import com.budgetview.shared.utils.PicsouGlobSerializer;
+import org.designup.picsou.gui.model.SeriesStat;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.annotations.*;
@@ -291,14 +292,26 @@ public class Series {
 
   public static void delete(Glob series, GlobRepository repository) {
     if (series != null) {
-      Transaction.uncategorize(repository.getAll(Transaction.TYPE, linkedTo(series, Transaction.SERIES)), repository);
-      Glob mirror = repository.findLinkTarget(series, Series.MIRROR_SERIES);
-      if (mirror != null) {
-        Transaction.uncategorize(repository.getAll(Transaction.TYPE, linkedTo(mirror, Transaction.SERIES)), repository);
-        repository.delete(mirror);
+      repository.startChangeSet();
+      try {
+        Transaction.uncategorize(repository.getAll(Transaction.TYPE, linkedTo(series, Transaction.SERIES)), repository);
+        Glob mirror = repository.findLinkTarget(series, Series.MIRROR_SERIES);
+        if (mirror != null) {
+          Transaction.uncategorize(repository.getAll(Transaction.TYPE, linkedTo(mirror, Transaction.SERIES)), repository);
+          doDelete(mirror, repository);
+        }
+        doDelete(series, repository);
       }
-      repository.delete(series);
+      finally {
+        repository.completeChangeSet();
+      }
     }
+  }
+
+  public static void doDelete(Glob series, GlobRepository repository) {
+    repository.delete(SeriesStat.getAllMonthsForSeries(series, repository));
+    repository.delete(SeriesBudget.getAll(series, repository));
+    repository.delete(series);
   }
 
   public static class Serializer implements PicsouGlobSerializer {

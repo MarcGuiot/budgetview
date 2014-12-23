@@ -11,12 +11,15 @@ import org.designup.picsou.bank.BankSynchroService;
 import org.designup.picsou.client.http.MD5PasswordBasedEncryptor;
 import org.designup.picsou.client.http.PasswordBasedEncryptor;
 import org.designup.picsou.client.http.RedirectPasswordBasedEncryptor;
+import org.designup.picsou.gui.accounts.utils.AccountPositionNotificationHandler;
 import org.designup.picsou.gui.addons.AddOnService;
 import org.designup.picsou.gui.components.dialogs.MessageDialog;
 import org.designup.picsou.gui.components.dialogs.MessageType;
 import org.designup.picsou.gui.config.ConfigService;
 import org.designup.picsou.gui.description.PicsouDescriptionService;
 import org.designup.picsou.gui.model.PicsouGuiModel;
+import org.designup.picsou.gui.notifications.NotificationService;
+import org.designup.picsou.gui.notifications.standard.StandardMessageNotificationHandler;
 import org.designup.picsou.gui.plaf.ApplicationLAF;
 import org.designup.picsou.gui.plaf.PicsouMacLookAndFeel;
 import org.designup.picsou.gui.printing.PrinterService;
@@ -316,6 +319,11 @@ public class PicsouApplication {
     wrapper.add(new BankSynchroService());
     wrapper.add(PrinterService.class, new DefaultPrinterService());
     wrapper.add(new AddOnService());
+
+    NotificationService notificationService = new NotificationService();
+    notificationService.addHandler(new AccountPositionNotificationHandler());
+    notificationService.addHandler(new StandardMessageNotificationHandler());
+    wrapper.add(notificationService);
   }
 
   protected void preinitDirectory(Directory directory) {

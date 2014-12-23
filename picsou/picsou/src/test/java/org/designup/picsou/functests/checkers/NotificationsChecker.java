@@ -1,13 +1,13 @@
 package org.designup.picsou.functests.checkers;
 
-import org.designup.picsou.utils.Lang;
+import junit.framework.Assert;
 import org.uispec4j.Button;
 import org.uispec4j.Window;
-import org.uispec4j.interception.WindowInterceptor;
+import org.uispec4j.assertion.Assertion;
+import org.uispec4j.assertion.UISpecAssert;
 
 import javax.swing.*;
 
-import static org.uispec4j.assertion.UISpecAssert.assertThat;
 import static org.uispec4j.assertion.UISpecAssert.assertTrue;
 
 public class NotificationsChecker extends ViewChecker {
@@ -25,6 +25,19 @@ public class NotificationsChecker extends ViewChecker {
   public NotificationsChecker checkHidden() {
     checkComponentVisible(mainWindow, JButton.class, "notificationsFlag", false);
     return this;
+  }
+
+  public void checkContent(final String... content) {
+    if (content.length == 0) {
+      checkHidden();
+      return;
+    }
+    final Button button = mainWindow.getButton("notificationsFlag");
+    assertTrue("Notification button is not visible", button.isVisible());
+    openDialog()
+      .checkContent(content)
+      .close();
+    assertTrue(button.textEquals(Integer.toString(content.length)));
   }
 
   public NotificationsDialogChecker openDialog() {

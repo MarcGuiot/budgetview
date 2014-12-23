@@ -72,6 +72,10 @@ public class TimeService {
     };
   }
 
+  public static Date getCurrentDate() {
+    return new Date(now.now());
+  }
+
   public static int getCurrentMonth() {
     return monthId;
   }

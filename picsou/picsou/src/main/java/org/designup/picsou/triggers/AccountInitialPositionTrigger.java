@@ -10,6 +10,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+import static org.globsframework.model.FieldValue.value;
+
 public class AccountInitialPositionTrigger extends AbstractChangeSetListener {
   public void globsChanged(ChangeSet changeSet, final GlobRepository repository) {
     changeSet.safeVisit(Account.TYPE, new ChangeSetVisitor() {
@@ -88,41 +90,41 @@ public class AccountInitialPositionTrigger extends AbstractChangeSetListener {
 
   public static Glob createOpenTransaction(int monthId, int day, final Double amount, GlobRepository repository, final Key accountKey) {
     Glob openTransaction = repository.create(Transaction.TYPE,
-                                             FieldValue.value(Transaction.ACCOUNT, accountKey.get(Account.ID)),
-                                             FieldValue.value(Transaction.LABEL, "open account"),
-                                             FieldValue.value(Transaction.AMOUNT, amount),
-                                             FieldValue.value(Transaction.ACCOUNT_POSITION, amount),
-                                             FieldValue.value(Transaction.POSITION_DAY, day),
-                                             FieldValue.value(Transaction.BANK_DAY, day),
-                                             FieldValue.value(Transaction.BUDGET_DAY, day),
-                                             FieldValue.value(Transaction.DAY, day),
-                                             FieldValue.value(Transaction.POSITION_MONTH, monthId),
-                                             FieldValue.value(Transaction.BANK_MONTH, monthId),
-                                             FieldValue.value(Transaction.MONTH, monthId),
-                                             FieldValue.value(Transaction.BUDGET_MONTH, monthId),
-                                             FieldValue.value(Transaction.SERIES, Series.ACCOUNT_SERIES_ID),
-                                             FieldValue.value(Transaction.TRANSACTION_TYPE,
-                                                              TransactionType.OPEN_ACCOUNT_EVENT.getId()));
+                                             value(Transaction.ACCOUNT, accountKey.get(Account.ID)),
+                                             value(Transaction.LABEL, "open account"),
+                                             value(Transaction.AMOUNT, amount),
+                                             value(Transaction.ACCOUNT_POSITION, amount),
+                                             value(Transaction.POSITION_DAY, day),
+                                             value(Transaction.BANK_DAY, day),
+                                             value(Transaction.BUDGET_DAY, day),
+                                             value(Transaction.DAY, day),
+                                             value(Transaction.POSITION_MONTH, monthId),
+                                             value(Transaction.BANK_MONTH, monthId),
+                                             value(Transaction.MONTH, monthId),
+                                             value(Transaction.BUDGET_MONTH, monthId),
+                                             value(Transaction.SERIES, Series.ACCOUNT_SERIES_ID),
+                                             value(Transaction.TRANSACTION_TYPE,
+                                                   TransactionType.OPEN_ACCOUNT_EVENT.getId()));
     repository.update(accountKey, Account.OPEN_TRANSACTION, openTransaction.get(Transaction.ID));
     return openTransaction;
   }
 
   public static void createCloseTransaction(GlobRepository repository, Key key, int day, int closeMonthId, final Double amount) {
     Glob closeTransaction = repository.create(Transaction.TYPE,
-                                              FieldValue.value(Transaction.ACCOUNT, key.get(Account.ID)),
-                                              FieldValue.value(Transaction.LABEL, "close account"),
-                                              FieldValue.value(Transaction.AMOUNT, amount),
-                                              FieldValue.value(Transaction.ACCOUNT_POSITION, 0.),
-                                              FieldValue.value(Transaction.POSITION_DAY, day),
-                                              FieldValue.value(Transaction.BANK_DAY, day),
-                                              FieldValue.value(Transaction.BUDGET_DAY, day),
-                                              FieldValue.value(Transaction.DAY, day),
-                                              FieldValue.value(Transaction.POSITION_MONTH, closeMonthId),
-                                              FieldValue.value(Transaction.BANK_MONTH, closeMonthId),
-                                              FieldValue.value(Transaction.BUDGET_MONTH, closeMonthId),
-                                              FieldValue.value(Transaction.MONTH, closeMonthId),
-                                              FieldValue.value(Transaction.SERIES, Series.ACCOUNT_SERIES_ID),
-                                              FieldValue.value(Transaction.TRANSACTION_TYPE, TransactionType.CLOSE_ACCOUNT_EVENT.getId()));
+                                              value(Transaction.ACCOUNT, key.get(Account.ID)),
+                                              value(Transaction.LABEL, "close account"),
+                                              value(Transaction.AMOUNT, amount),
+                                              value(Transaction.ACCOUNT_POSITION, 0.),
+                                              value(Transaction.POSITION_DAY, day),
+                                              value(Transaction.BANK_DAY, day),
+                                              value(Transaction.BUDGET_DAY, day),
+                                              value(Transaction.DAY, day),
+                                              value(Transaction.POSITION_MONTH, closeMonthId),
+                                              value(Transaction.BANK_MONTH, closeMonthId),
+                                              value(Transaction.BUDGET_MONTH, closeMonthId),
+                                              value(Transaction.MONTH, closeMonthId),
+                                              value(Transaction.SERIES, Series.ACCOUNT_SERIES_ID),
+                                              value(Transaction.TRANSACTION_TYPE, TransactionType.CLOSE_ACCOUNT_EVENT.getId()));
     repository.update(key, Account.CLOSED_TRANSACTION, closeTransaction.get(Transaction.ID));
   }
 
@@ -185,16 +187,16 @@ public class AccountInitialPositionTrigger extends AbstractChangeSetListener {
   public static void shiftTransactionTo(GlobRepository repository, Glob transaction, Integer monthId, Integer day,
                                         Double amount, Double accountPosition) {
     repository.update(transaction.getKey(),
-                      FieldValue.value(Transaction.AMOUNT, amount),
-                      FieldValue.value(Transaction.ACCOUNT_POSITION, accountPosition),
-                      FieldValue.value(Transaction.POSITION_DAY, day),
-                      FieldValue.value(Transaction.BANK_DAY, day),
-                      FieldValue.value(Transaction.BUDGET_DAY, day),
-                      FieldValue.value(Transaction.DAY, day),
-                      FieldValue.value(Transaction.MONTH, monthId),
-                      FieldValue.value(Transaction.POSITION_MONTH, monthId),
-                      FieldValue.value(Transaction.BUDGET_MONTH, monthId),
-                      FieldValue.value(Transaction.BANK_MONTH, monthId));
+                      value(Transaction.AMOUNT, amount),
+                      value(Transaction.ACCOUNT_POSITION, accountPosition),
+                      value(Transaction.POSITION_DAY, day),
+                      value(Transaction.BANK_DAY, day),
+                      value(Transaction.BUDGET_DAY, day),
+                      value(Transaction.DAY, day),
+                      value(Transaction.MONTH, monthId),
+                      value(Transaction.POSITION_MONTH, monthId),
+                      value(Transaction.BUDGET_MONTH, monthId),
+                      value(Transaction.BANK_MONTH, monthId));
   }
 
   private static class FirstMonthGlobFunctor implements GlobFunctor {

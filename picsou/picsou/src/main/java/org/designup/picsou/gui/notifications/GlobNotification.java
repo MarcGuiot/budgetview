@@ -9,25 +9,17 @@ import java.util.Date;
 
 public abstract class GlobNotification implements Notification {
   private GlobRepository repository;
-  private int id;
   private Glob glob;
   private DateField dateField;
   private BooleanField clearedField;
   private String message;
 
-  public GlobNotification(GlobRepository repository, int id, Glob glob,
-                          DateField dateField, BooleanField clearedField,
-                          String message) {
+  public GlobNotification(Glob glob, String message, DateField dateField, BooleanField clearedField, GlobRepository repository) {
     this.repository = repository;
-    this.id = id;
     this.glob = glob;
     this.dateField = dateField;
     this.clearedField = clearedField;
     this.message = message;
-  }
-
-  public int getId() {
-    return id;
   }
 
   public Date getDate() {

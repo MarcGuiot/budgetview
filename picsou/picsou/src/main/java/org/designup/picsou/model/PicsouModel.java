@@ -53,7 +53,8 @@ public class PicsouModel {
                           ProjectItemAmount.TYPE,
                           LayoutConfig.TYPE,
                           SeriesGroup.TYPE,
-                          AnalysisViewType.TYPE
+                          AnalysisViewType.TYPE,
+                          StandardMessage.TYPE
                           )
       .get();
 

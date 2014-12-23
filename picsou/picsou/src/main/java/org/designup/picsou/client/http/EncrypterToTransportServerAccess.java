@@ -27,6 +27,7 @@ import org.globsframework.utils.serialization.SerializedByteArrayOutput;
 import org.globsframework.utils.serialization.SerializedInput;
 import org.globsframework.utils.serialization.SerializedOutput;
 
+import javax.crypto.BadPaddingException;
 import java.security.SecureRandom;
 import java.util.*;
 
@@ -408,10 +409,15 @@ public class EncrypterToTransportServerAccess implements ServerAccess {
         id = globEntry.getKey();
         GlobBuilder builder = GlobBuilder.init(globType).setValue(field, id);
         SerializableGlobType glob = globEntry.getValue();
-        globSerializer.deserializeData(glob.getVersion(),
-                                       builder,
-                                       passwordBasedEncryptor.decrypt(glob.getData()),
-                                       id);
+        try {
+          globSerializer.deserializeData(glob.getVersion(),
+                                         builder,
+                                         passwordBasedEncryptor.decrypt(glob.getData()),
+                                         id);
+        }
+        catch (Exception e) {
+          throw new RuntimeException("Error loading type " + globType + " with version " + glob.getVersion(), e);
+        }
         result.add(builder.get());
         maxId = Math.max(maxId, id);
       }

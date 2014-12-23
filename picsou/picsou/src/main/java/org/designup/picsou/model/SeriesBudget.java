@@ -68,6 +68,17 @@ public class SeriesBudget {
     loader.defineMultiFieldUniqueIndex(SERIES_INDEX, SERIES, MONTH);
   }
 
+  public static GlobList getAll(Glob series, GlobRepository repository) {
+    return getAll(series.get(Series.ID), repository);
+
+  }
+
+  public static GlobList getAll(Integer seriesId, GlobRepository repository) {
+    return repository
+      .findByIndex(SeriesBudget.SERIES_INDEX, SeriesBudget.SERIES, seriesId)
+      .getGlobs();
+  }
+
   public static GlobList getAll(Integer seriesId, Integer monthId, GlobRepository repository) {
     return repository
       .findByIndex(SeriesBudget.SERIES_INDEX, SeriesBudget.SERIES, seriesId)

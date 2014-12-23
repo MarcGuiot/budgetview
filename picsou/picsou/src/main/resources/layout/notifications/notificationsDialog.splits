@@ -24,8 +24,8 @@
               <textArea ref="message" styleClass="message"/>
               <row>
                 <filler fill="horizontal"/>
-                <button action="action"/>
-                <label text="-" marginLeft="5" marginRight="5"/>
+                <button action="action" name="notificationAction" autoHideIfDisabled="true"/>
+                <label text="-" marginLeft="5" marginRight="5" autoHideSource="notificationAction"/>
                 <button action="delete"/>
               </row>
             </column>

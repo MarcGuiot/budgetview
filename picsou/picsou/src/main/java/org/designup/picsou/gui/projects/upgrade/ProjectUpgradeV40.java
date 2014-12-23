@@ -4,6 +4,8 @@ import com.budgetview.shared.utils.Amounts;
 import org.designup.picsou.gui.model.SeriesStat;
 import org.designup.picsou.gui.model.SeriesType;
 import org.designup.picsou.gui.transactions.utils.MirrorTransactionFinder;
+import org.designup.picsou.gui.upgrade.BindTransactionsToSeries;
+import org.designup.picsou.gui.upgrade.PostProcessor;
 import org.designup.picsou.model.*;
 import org.designup.picsou.model.util.ClosedMonthRange;
 import org.designup.picsou.triggers.projects.ProjectItemToSeriesTrigger;
@@ -14,11 +16,12 @@ import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.Key;
-import org.globsframework.model.format.GlobPrinter;
 import org.globsframework.model.utils.GlobFieldsComparator;
 import org.globsframework.utils.Log;
 
-import java.util.*;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.SortedSet;
 
 import static org.designup.picsou.model.ProjectItemType.isExpenses;
 import static org.designup.picsou.model.ProjectItemType.isTransfer;
@@ -27,16 +30,27 @@ import static org.globsframework.model.utils.GlobMatchers.*;
 
 public class ProjectUpgradeV40 {
 
-  private List<Functor> functors = new ArrayList<Functor>();
+  private final GlobRepository repository;
+  private final PostProcessor postProcessor;
   private Set<Integer> managedSeries = new HashSet<Integer>();
 
-  public void updateProjectSeriesAndGroups(GlobRepository repository) {
+  public static void run(GlobRepository repository, PostProcessor postProcessor) {
+    ProjectUpgradeV40 upgrade = new ProjectUpgradeV40(repository, postProcessor);
+    upgrade.updateProjectSeriesAndGroups();
+  }
+
+  private ProjectUpgradeV40(GlobRepository repository, PostProcessor postProcessor) {
+    this.repository = repository;
+    this.postProcessor = postProcessor;
+  }
+
+  public void updateProjectSeriesAndGroups() {
     ProjectToSeriesGroupTrigger.createGroupsForProjects(repository);
     setDefaultAccountsForAllProjects(repository);
     createSeriesForExpensesItems(repository);
     createSeriesForTransferItems(repository);
     deleteProjectLevelSeries(repository);
-    functors.add(new UpdateSequenceNumbers());
+    postProcessor.add(new UpdateSequenceNumbers());
   }
 
   private void setDefaultAccountsForAllProjects(GlobRepository repository) {
@@ -91,7 +105,7 @@ public class ProjectUpgradeV40 {
     Glob itemSeries = ProjectItemToSeriesTrigger.createSeries(item, repository);
     if (!transactions.isEmpty()) {
       managedSeries.add(itemSeries.get(Series.ID));
-      functors.add(new BindTransactionsToSeries(itemSeries, transactions));
+      postProcessor.add(new BindTransactionsToSeries(itemSeries, transactions));
       clearTransactionSeries(transactions, repository);
     }
   }
@@ -174,7 +188,7 @@ public class ProjectUpgradeV40 {
 
     GlobList sourceTransactions = allTransactions.filter(fieldEquals(Transaction.ACCOUNT, sourceAccountId), repository);
     GlobList mirrorAccountTransactions = findMirrorTransactions(sourceTransactions, targetAccountId, allTransactions, repository);
-    functors.add(new BindTransferTransactions(newItem, sourceTransactions, mirrorAccountTransactions));
+    postProcessor.add(new BindTransferTransactions(newItem, sourceTransactions, mirrorAccountTransactions));
 
     return newItem;
   }
@@ -213,7 +227,7 @@ public class ProjectUpgradeV40 {
           GlobList transactions = repository.getAll(Transaction.TYPE, and(fieldEquals(Transaction.SERIES, seriesId)));
           if (!transactions.isEmpty()) {
             clearTransactionSeries(transactions, repository);
-            functors.add(new CreateMiscProjectItem(project, transactions));
+            postProcessor.add(new CreateMiscProjectItem(project, transactions));
           }
         }
       }
@@ -225,7 +239,7 @@ public class ProjectUpgradeV40 {
       return;
     }
     final Integer seriesId = series.get(Series.ID);
-    functors.add(new Functor() {
+    postProcessor.add(new PostProcessor.Functor() {
       public void apply(GlobRepository repository) {
         for (Glob stat : repository.getAll(SeriesStat.TYPE,
                                            and(fieldEquals(SeriesStat.TARGET_TYPE, SeriesType.SERIES.getId()),
@@ -247,7 +261,7 @@ public class ProjectUpgradeV40 {
   }
 
   private void storeSeriesBinding(Glob series, GlobList transactions, GlobRepository repository) {
-    functors.add(new BindTransactionsToSeries(series, transactions));
+    postProcessor.add(new BindTransactionsToSeries(series, transactions));
     clearTransactionSeries(transactions, repository);
   }
 
@@ -257,13 +271,6 @@ public class ProjectUpgradeV40 {
                         value(Transaction.SERIES, Series.UNCATEGORIZED_SERIES_ID),
                         value(Transaction.SUB_SERIES, null));
     }
-  }
-
-  public void postProcessing(GlobRepository repository) {
-    for (Functor functor : functors) {
-      functor.apply(repository);
-    }
-    functors.clear();
   }
 
   private void reducePlannedForItem(Glob item, double planned, GlobRepository repository) {
@@ -282,36 +289,7 @@ public class ProjectUpgradeV40 {
     }
   }
 
-  private interface Functor {
-    void apply(GlobRepository repository);
-  }
-
-  private class BindTransactionsToSeries implements Functor {
-
-    private final Integer seriesId;
-    private final GlobList transactions;
-
-    public BindTransactionsToSeries(Glob series, GlobList transactions) {
-      this.seriesId = series.get(Series.ID);
-      this.transactions = transactions;
-    }
-
-    public void apply(GlobRepository repository) {
-      setTransactionSeries(transactions, seriesId, repository);
-    }
-  }
-
-  public static void setTransactionSeries(GlobList transactions, Integer seriesId, GlobRepository repository) {
-    for (Glob transaction : transactions) {
-      if (transaction.exists()) {
-        repository.update(transaction.getKey(),
-                          value(Transaction.SERIES, seriesId),
-                          value(Transaction.SUB_SERIES, null));
-      }
-    }
-  }
-
-  private class CreateMiscProjectItem implements Functor {
+  private class CreateMiscProjectItem implements PostProcessor.Functor {
     private final Glob project;
     private final GlobList transactions;
 
@@ -358,7 +336,7 @@ public class ProjectUpgradeV40 {
     }
   }
 
-  private class UpdateSequenceNumbers implements Functor {
+  private class UpdateSequenceNumbers implements PostProcessor.Functor {
     public void apply(GlobRepository repository) {
       for (Glob project : repository.getAll(Project.TYPE)) {
         GlobList items = repository.getAll(ProjectItem.TYPE, linkedTo(project, ProjectItem.PROJECT));
@@ -373,7 +351,7 @@ public class ProjectUpgradeV40 {
     }
   }
 
-  private class BindTransferTransactions implements Functor {
+  private class BindTransferTransactions implements PostProcessor.Functor {
     private Glob item;
     private GlobList seriesTransactions;
     private GlobList mirrorTransactions;
