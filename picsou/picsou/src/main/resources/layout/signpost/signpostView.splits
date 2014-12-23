@@ -6,7 +6,7 @@
     <style selector="label.contentTitle" font="LatoBold,plain,24" foreground="signpostView.title"
            fill="none" anchor="center" marginBottom="30"/>
     <style selector="label.intro" font="LatoBold,plain,14"
-           fill="none" anchor="center" marginBottom="20"/>
+           fill="none" anchor="center" margin="10" marginRight="10"/>
 
     <ui name="sectionTitleButtonUI"
         class="org.globsframework.gui.splits.components.HyperlinkButtonUI"
@@ -19,9 +19,13 @@
     <column marginLeft="20" marginRight="20">
       <label text="$signpostView.title" styleClass="contentTitle"
              marginTop="30" marginBottom="30"/>
+
+      <label styleClass="horizontalSeparator"/>
       <label text="$signpostView.intro" name="content" styleClass="intro"
-             margin="10" marginRight="10"/>
-      <column marginLeft="10">
+             />
+      <label styleClass="horizontalSeparator"/>
+
+      <column marginTop="20" marginLeft="10">
         <repeat ref="signpostRepeat" layout="row">
           <panel ref="sectionPanel" weightY="0" preferredSize="(290,300)">
             <column margin="10" marginLeft="20" marginRight="20">

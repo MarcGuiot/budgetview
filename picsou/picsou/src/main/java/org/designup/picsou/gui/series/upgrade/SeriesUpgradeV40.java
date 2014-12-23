@@ -23,6 +23,7 @@ import static org.globsframework.model.utils.GlobMatchers.*;
 
 public class SeriesUpgradeV40 {
 
+
   public static void run(GlobRepository repository, PostProcessor postProcessor) {
     SeriesUpgradeV40 upgrade = new SeriesUpgradeV40(repository, postProcessor);
     upgrade.run();
@@ -30,12 +31,15 @@ public class SeriesUpgradeV40 {
 
   private GlobRepository repository;
   private PostProcessor postProcessor;
-  private Glob defaultMainAccount;
+  private final Glob defaultMainAccount;
+  private final boolean singleMainAccount;
 
   private SeriesUpgradeV40(GlobRepository repository, PostProcessor postProcessor) {
     this.repository = repository;
     this.postProcessor = postProcessor;
-    this.defaultMainAccount = getDefaultMainAccount(repository);
+    GlobList accounts = repository.getAll(Account.TYPE, Account.userCreatedMainAccounts()).sort(new AccountComparator());
+    this.defaultMainAccount = accounts.isEmpty() ? null : accounts.getFirst();
+    this.singleMainAccount = accounts.size() == 1;
   }
 
   private void run() {
@@ -114,7 +118,9 @@ public class SeriesUpgradeV40 {
       Series.delete(series, repository);
     }
     else {
-      StandardMessageNotificationHandler.notify(Lang.get("upgrade.v40.noTransactionsSavingsSeriesAdjusted", series.get(Series.NAME), defaultMainAccount.get(Account.NAME)), repository);
+      if (!singleMainAccount) {
+        StandardMessageNotificationHandler.notify(Lang.get("upgrade.v40.noTransactionsSavingsSeriesAdjusted", series.get(Series.NAME), defaultMainAccount.get(Account.NAME)), repository);
+      }
       setMainTargetAccount(series, defaultMainAccount.get(Account.ID), repository);
     }
   }
@@ -127,14 +133,6 @@ public class SeriesUpgradeV40 {
     if (Utils.equal(series.get(Series.TO_ACCOUNT), Account.MAIN_SUMMARY_ACCOUNT_ID)) {
       repository.update(series.getKey(), Series.TO_ACCOUNT, accountId);
     }
-  }
-
-  private static Glob getDefaultMainAccount(GlobRepository repository) {
-    GlobList accounts = repository.getAll(Account.TYPE, Account.userCreatedMainAccounts()).sort(new AccountComparator());
-    if (accounts.isEmpty()) {
-      return null;
-    }
-    return accounts.getFirst();
   }
 
   private Set<Integer> updateTargetAccount(Glob series, Glob mirror, GlobRepository repository) {

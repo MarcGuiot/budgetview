@@ -1,22 +1,7 @@
 package org.designup.picsou.functests.upgrade;
 
-import junit.framework.Assert;
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
-import org.designup.picsou.functests.utils.OfxBuilder;
-import org.designup.picsou.model.Account;
-import org.designup.picsou.model.Series;
-import org.designup.picsou.model.StandardMessage;
-import org.designup.picsou.model.Transaction;
-import org.globsframework.model.ChangeSet;
-import org.globsframework.model.GlobRepository;
-import org.globsframework.model.Key;
-import org.globsframework.model.format.GlobPrinter;
-import org.globsframework.model.utils.DefaultChangeSetListener;
 import org.globsframework.utils.Files;
-import org.globsframework.utils.Log;
-import org.globsframework.utils.logging.HtmlTracker;
-
-import java.io.File;
 
 public class SeriesUpgradeTest extends LoggedInFunctionalTestCase {
 
@@ -27,6 +12,8 @@ public class SeriesUpgradeTest extends LoggedInFunctionalTestCase {
 
   public void testSeries() throws Exception {
     operations.restore(Files.copyResourceToTmpFile(this, "/testbackups/upgrade_jar131_series_with_several_accounts.budgetview"));
+
+    notifications.checkHidden();
 
     transactions.showPlannedTransactions();
     transactions.initAmountContent()
@@ -142,5 +129,26 @@ public class SeriesUpgradeTest extends LoggedInFunctionalTestCase {
       .add("15/12/2014", "Planned: SavingsB to Main", -150.00, "SavingsB to Main", 19700.00, 29900.00, "SavingsB")
       .add("15/12/2014", "Planned: Main to SavingsA", 100.00, "Main to SavingsA", 10200.00, 30050.00, "SavingsA")
       .check();
+  }
+
+  public void testNoMessagesDisplayedWhenConvertingASavingsSeriesWithNoTransactionsAndASingleMainAccount() throws Exception {
+    operations.restore(Files.copyResourceToTmpFile(this, "/testbackups/upgrade_jar131_series_transfers_no_transactions_one_main_account.budgetview"));
+
+    budgetView.transfer
+      .checkContent("| Main to SavingsA | 500.00 | 500.00 |");
+
+    notifications.checkHidden();
+
+    transactions.showPlannedTransactions();
+    transactions.initAmountContent()
+      .add("01/12/2014", "MAIN TO SAVINGSA", 500.00, "Main to SavingsA", 20500.00, 50500.00, "SavingsA")
+      .add("01/12/2014", "MAIN TO SAVINGSA", -500.00, "Main to SavingsA", 500.00, 500.00, "MainA")
+      .check();
+
+    budgetView.transfer
+      .editSeries("Main to SavingsA")
+      .checkFromAccount("MainA")
+      .checkToAccount("SavingsA")
+      .cancel();
   }
 }

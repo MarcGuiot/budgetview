@@ -6,8 +6,8 @@
 
     <style selector="label.contentTitle" font="LatoBold,plain,24" foreground="signpostView.title"
            fill="none" anchor="center" marginBottom="30"/>
-    <style selector="label.intro" font="LatoBold,plain,14"
-           fill="none" anchor="center" marginBottom="20"/>
+    <style selector="label.intro" font="LatoBold,plain,16"
+           fill="none" anchor="center" marginTop="10" marginBottom="20"/>
 
     <style selector="label.number" font="LatoBold,plain,40" fill="none" anchor="center"/>
     <style selector="htmlEditorPane.text" font="LatoBold,plain,13" fill="horizontal" anchor="center"/>
