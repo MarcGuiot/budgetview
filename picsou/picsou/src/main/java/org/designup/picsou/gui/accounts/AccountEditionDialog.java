@@ -18,8 +18,6 @@ import org.globsframework.model.repository.LocalGlobRepository;
 import org.globsframework.model.repository.LocalGlobRepositoryBuilder;
 import org.globsframework.model.utils.DefaultChangeSetListener;
 import org.globsframework.model.utils.DefaultChangeSetVisitor;
-import org.globsframework.model.utils.GlobMatcher;
-import org.globsframework.model.utils.GlobMatchers;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
@@ -86,26 +84,6 @@ public class AccountEditionDialog extends AbstractAccountPanel<LocalGlobReposito
         }
         Glob account = repository.get(currentAccount.getKey());
         setWarning(account.get(Account.ACCOUNT_TYPE), account.get(Account.CARD_TYPE));
-        if (changeSet.containsUpdates(Account.ACCOUNT_TYPE)) {
-          Integer accountType = account.get(Account.ACCOUNT_TYPE);
-          if (!AccountType.SAVINGS.getId().equals(accountType)) {
-            return;
-          }
-          GlobList transactions = parentRepository.getAll(Transaction.TYPE, new GlobMatcher() {
-            public boolean matches(Glob item, GlobRepository repository) {
-              if (!item.get(Transaction.ACCOUNT).equals(currentAccount.get(Account.ID))) {
-                return false;
-              }
-              Glob series = repository.findLinkTarget(item, Transaction.SERIES);
-              if (!series.get(Series.BUDGET_AREA).equals(BudgetArea.TRANSFER.getId())) {
-                return true;
-              }
-              return !(series.get(Series.FROM_ACCOUNT).equals(currentAccount.get(Account.ID))
-                       || series.get(Series.TO_ACCOUNT).equals(currentAccount.get(Account.ID)));
-            }
-          });
-          setSavingsWarning(!transactions.isEmpty());
-        }
       }
     });
 
@@ -207,7 +185,6 @@ public class AccountEditionDialog extends AbstractAccountPanel<LocalGlobReposito
 
           public void visitUpdate(Key key, FieldValuesWithPrevious values) throws Exception {
             if (values.contains(Account.ACCOUNT_TYPE)) {
-              uncategorize(key, parentRepository);
               localRepository.update(key, value(Account.SHOW_CHART, !Account.isSavings(values)));
             }
           }
@@ -231,13 +208,5 @@ public class AccountEditionDialog extends AbstractAccountPanel<LocalGlobReposito
     public void actionPerformed(ActionEvent e) {
       handler.delete(currentAccount, true);
     }
-  }
-
-  private void uncategorize(Key account, GlobRepository repository) {
-    GlobList transactions = repository.getAll(Transaction.TYPE, GlobMatchers.fieldEquals(Transaction.ACCOUNT,
-                                                                                         account.get(Account.ID)));
-    repository.startChangeSet();
-    Transaction.uncategorize(transactions, repository);
-    repository.completeChangeSet();
   }
 }

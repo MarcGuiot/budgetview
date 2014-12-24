@@ -246,14 +246,7 @@ public class AccountEditionChecker extends GuiChecker {
     return this;
   }
 
-  public AccountEditionChecker checkSavingsWarning() {
-    TextBox label = dialog.getTextBox("messageWarning");
-    assertThat(label.isVisible());
-    assertThat(label.foregroundNear("red"));
-    return this;
-  }
-
-  public AccountEditionChecker checkNoSavingsWarning() {
+  public AccountEditionChecker checkNoMessageDisplayed() {
     TextBox label = dialog.getTextBox("messageWarning");
     assertFalse(label.isVisible());
     return this;

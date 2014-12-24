@@ -154,13 +154,6 @@ public class AbstractAccountPanel<T extends GlobRepository> {
     warningMessage.setVisible(visible);
   }
 
-  public void setSavingsWarning(boolean visible) {
-    if (visible) {
-      warningMessage.setText(Lang.get("account.savings.warning"));
-    }
-    warningMessage.setVisible(visible);
-  }
-
   public void clearMessage() {
     if (errorTip != null) {
       errorTip.dispose();

@@ -142,7 +142,7 @@ public class AccountEditionTest extends LoggedInFunctionalTestCase {
     mainAccounts.checkAccounts("123456789_123456789_12345");
   }
 
-  public void testChangingAMainAccountIntoASavingsAccount() throws Exception {
+  public void testChangingAMainAccountIntoASavingsAccountWithNoTransactions() throws Exception {
     views.selectHome();
 
     accounts.createNewAccount()

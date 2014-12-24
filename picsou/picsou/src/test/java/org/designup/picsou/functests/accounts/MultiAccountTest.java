@@ -7,30 +7,41 @@ import org.designup.picsou.model.BankEntity;
 
 public class MultiAccountTest extends LoggedInFunctionalTestCase {
 
-  public void testChangeAccountTypeUncategorizeOperations() throws Exception {
+  public void testChangingAccountTypeOperations() throws Exception {
     OfxBuilder.init(this)
-      .addBankAccount(BankEntity.GENERIC_BANK_ENTITY_ID, 111, "111", 1000., "2008/08/10")
+      .addBankAccount(BankEntity.GENERIC_BANK_ENTITY_ID, 111, "111", 1000.00, "2008/08/10")
       .addTransaction("2008/08/10", 100.00, "Virement in")
       .load();
     OfxBuilder.init(this)
+      .addBankAccount(BankEntity.GENERIC_BANK_ENTITY_ID, 222, "222", 2000.00, "2008/08/10")
       .addTransaction("2008/08/10", -100.00, "Virement out")
       .load();
     operations.openPreferences().setFutureMonthsCount(2).validate();
+
     views.selectCategorization();
-    categorization.setNewVariable("Virement in", "epargne");
-    views.selectHome();
-    transactions.initContent()
-      .add("10/08/2008", TransactionType.PRELEVEMENT, "Virement out", "", -100.00)
-      .add("10/08/2008", TransactionType.VIREMENT, "Virement in", "", 100.00, "epargne")
-      .check();
-    this.mainAccounts.edit("Account n. 111")
-      .setAsSavings()
+    categorization.selectTransaction("Virement in");
+    categorization.selectTransfers().createSeries()
+      .setName("epargne")
+      .setFromAccount("Account n. 222")
+      .setToAccount("Account n. 111")
+      .setAmount(150)
       .validate();
-    views.selectData();
-    transactions.initContent()
-      .add("10/08/2008", TransactionType.PRELEVEMENT, "Virement out", "", -100.00)
-      .add("10/08/2008", TransactionType.VIREMENT, "Virement in", "", 100.00)
+    categorization.setTransfer("Virement out", "epargne");
+
+    transactions.initAmountContent()
+      .add("10/08/2008", "VIREMENT OUT", -100.00, "epargne", 2000.00, 3000.00, "Account n. 222")
+      .add("10/08/2008", "VIREMENT IN", 100.00, "epargne", 1000.00, 3100.00, "Account n. 111")
+      .check();
+
+    mainAccounts.edit("Account n. 111")
+      .setAsSavings()
+      .checkNoErrorDisplayed()
+      .checkNoMessageDisplayed()
+      .validate();
+
+    transactions.initAmountContent()
+      .add("10/08/2008", "VIREMENT OUT", -100.00, "epargne", 2000.00, 2000.00, "Account n. 222")
+      .add("10/08/2008", "VIREMENT IN", 100.00, "epargne", 1000.00, 1000.00, "Account n. 111")
       .check();
   }
-
 }

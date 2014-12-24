@@ -92,11 +92,7 @@ public class AccountManagementTest extends LoggedInFunctionalTestCase {
 
     mainAccounts.edit("Account n. 000123")
       .setAsSavings()
-      .checkSavingsWarning()
-      .setAsMain()
-      .checkNoSavingsWarning()
-      .setAsSavings()
-      .checkSavingsWarning()
+      .checkNoErrorDisplayed()
       .validate();
 
     transactions

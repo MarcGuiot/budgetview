@@ -10,7 +10,6 @@ import org.globsframework.metamodel.index.MultiFieldNotUniqueIndex;
 import org.globsframework.metamodel.index.NotUniqueIndex;
 import org.globsframework.metamodel.utils.GlobTypeLoader;
 import org.globsframework.model.*;
-import org.globsframework.model.utils.GlobFunctor;
 import org.globsframework.model.utils.GlobMatcher;
 import org.globsframework.model.utils.GlobMatchers;
 import org.globsframework.utils.Utils;
@@ -148,7 +147,7 @@ public class Transaction {
   }
 
   public static Glob[] getAllSortedByPositionDate(GlobRepository repository, final GlobMatcher filter,
-                                                  TransactionComparator comparator){
+                                                  TransactionComparator comparator) {
     Glob[] transactions = new Glob[0];
     int total = 0;
     GlobList orderedMonth = repository.getAll(Month.TYPE).sort(Month.ID);
@@ -156,7 +155,7 @@ public class Transaction {
     for (Glob month : orderedMonth) {
       GlobList globs = repository.findByIndex(POSITION_MONTH_INDEX, month.get(Month.ID))
         .filterSelf(filter, repository);
-      if (total + globs.size() > transactions.length){
+      if (total + globs.size() > transactions.length) {
         transactions = Utils.copyOf(transactions, total + globs.size() * pendingMonthCount);
       }
       for (Glob glob : globs) {
@@ -313,7 +312,7 @@ public class Transaction {
 
   public static GlobList getAllForSeriesAndMonth(Integer seriesId, Integer monthId, GlobRepository repository) {
     return repository.findByIndex(SERIES_INDEX, SERIES, seriesId)
-        .findByIndex(POSITION_MONTH, monthId).getGlobs();
+      .findByIndex(POSITION_MONTH, monthId).getGlobs();
   }
 
   public static class Serializer implements PicsouGlobSerializer {
