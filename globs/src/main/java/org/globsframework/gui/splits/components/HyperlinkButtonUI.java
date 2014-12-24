@@ -241,11 +241,11 @@ public class HyperlinkButtonUI extends BasicButtonUI {
     int width = computeWidth(button);
     int height = computeHeight(button);
 
-    button.setSize(width, height);
     Dimension dimension = new Dimension(width, height);
     button.setPreferredSize(dimension);
     button.setMaximumSize(dimension);
     button.setMinimumSize(dimension);
+    button.setSize(width, height);
   }
 
   private int computeWidth(AbstractButton button) {

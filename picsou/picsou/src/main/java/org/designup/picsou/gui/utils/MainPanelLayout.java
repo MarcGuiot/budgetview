@@ -217,7 +217,7 @@ public class MainPanelLayout implements LayoutManager {
 
     actionsBar.setBounds(left, top, actionsBar.getPreferredSize().width, height);
     timeviewHeader.setBounds(sidebarLeft, top, timeviewWidth, timeviewHeight);
-    sidebars[currentSidebar].setBounds(sidebarLeft, sidebarTop, sidebarWidth, sidebarHeight);
+    sidebars[currentSidebar].setBounds(sidebarLeft, sidebarTop, sidebarWidth > 0 ? sidebarWidth : sidebars[currentSidebar].getPreferredSize().width, sidebarHeight);
     contentPanels[currentContentPanel].setBounds(contentLeft, contentTop, contentWidth, contentHeight);
     footer.setBounds(footerLeft, footerTop, footerWidth, footerHeight);
   }

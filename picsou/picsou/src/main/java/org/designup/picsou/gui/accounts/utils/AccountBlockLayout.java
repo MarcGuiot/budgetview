@@ -2,6 +2,7 @@ package org.designup.picsou.gui.accounts.utils;
 
 import org.globsframework.utils.exceptions.UnexpectedApplicationState;
 
+import javax.swing.*;
 import java.awt.*;
 
 public class AccountBlockLayout implements LayoutManager {
@@ -40,12 +41,12 @@ public class AccountBlockLayout implements LayoutManager {
     return new Dimension(getMinWidth(), getMinHeight());
   }
 
-  public int getMinHeight() {
+  private int getMinHeight() {
     int chartHeight = positionsChart.isVisible() ? VERTICAL_MARGIN + CHART_HEIGHT : 0;
     return getFirstRowHeight() + 2 * VERTICAL_MARGIN + accountUpdateDate.getPreferredSize().height + chartHeight;
   }
 
-  public int getMinWidth() {
+  private int getMinWidth() {
     return editAccount.getPreferredSize().width +
            accountWeather.getPreferredSize().width +
            accountPosition.getPreferredSize().width +
@@ -114,7 +115,7 @@ public class AccountBlockLayout implements LayoutManager {
       Math.max(selectAccountRight + maxCenterWidth / 2 - editAccount.getPreferredSize().width / 2,
                selectAccountRight);
     int editAccountTop = top + firstRowHeight / 2 - editAccount.getPreferredSize().height / 2;
-    int editAccountWidth = Math.min(maxCenterWidth, editAccount.getPreferredSize().width);
+    int editAccountWidth = editAccount.getPreferredSize().width > maxCenterWidth ? maxCenterWidth : editAccount.getPreferredSize().width;
     editAccount.setBounds(editAccountLeft, editAccountTop, editAccountWidth, editAccount.getPreferredSize().height);
 
     int accountInfoWidth = accountPosition.getPreferredSize().width + HORIZONTAL_MARGIN + accountUpdateDate.getPreferredSize().width;
@@ -136,7 +137,7 @@ public class AccountBlockLayout implements LayoutManager {
     }
   }
 
-  public int getFirstRowHeight() {
+  private int getFirstRowHeight() {
     return editAccount.getSize().height;
   }
 }

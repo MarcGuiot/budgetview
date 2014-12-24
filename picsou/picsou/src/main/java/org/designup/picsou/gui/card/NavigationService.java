@@ -5,6 +5,7 @@ import org.designup.picsou.gui.categorization.components.CategorizationFiltering
 import org.designup.picsou.gui.model.Card;
 import org.designup.picsou.gui.projects.ProjectView;
 import org.designup.picsou.gui.transactions.TransactionView;
+import org.designup.picsou.gui.utils.MainPanelContainer;
 import org.designup.picsou.model.*;
 import org.designup.picsou.model.util.ClosedMonthRange;
 import org.globsframework.gui.GlobSelection;
@@ -25,6 +26,7 @@ public class NavigationService implements GlobSelectionListener {
   public static final Card INITIAL_CARD = Card.HOME;
 
   private SelectionService selectionService;
+  private MainPanelContainer mainPanelContainer;
   private TransactionView transactionView;
   private CategorizationSelector categorizationSelector;
   private ProjectView projectView;
@@ -34,11 +36,13 @@ public class NavigationService implements GlobSelectionListener {
   private Stack<Card> backStack = new Stack<Card>();
   private Stack<Card> forwardStack = new Stack<Card>();
 
-  public NavigationService(TransactionView transactionView,
+  public NavigationService(MainPanelContainer mainPanelContainer,
+                           TransactionView transactionView,
                            CategorizationSelector categorizationSelector,
                            ProjectView projectView,
                            GlobRepository repository,
                            Directory directory) {
+    this.mainPanelContainer = mainPanelContainer;
     this.transactionView = transactionView;
     this.categorizationSelector = categorizationSelector;
     this.projectView = projectView;
@@ -53,6 +57,14 @@ public class NavigationService implements GlobSelectionListener {
 
   public void gotoHome() {
     gotoCard(Card.HOME);
+  }
+
+  public void gotoHomeAfterRestore(GlobList userData) {
+    mainPanelContainer.reset(isInitCompleted(userData));
+  }
+
+  private boolean isInitCompleted(GlobList userData) {
+    return SignpostStatus.isInitialGuidanceCompleted(userData.find(SignpostStatus.KEY));
   }
 
   public void gotoBudget() {

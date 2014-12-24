@@ -5,7 +5,7 @@
   <styles>
     <style selector="button#editAccount" ui="hyperlinkButtonWithoutUnderline"
            anchor="left" weightX="100"
-           font="-,plain,14" cursor="hand"
+           font="LatoRegular,plain,14" cursor="hand"
            icon="downArrow(10,18,8,8,block.inner.arrow.idle)"
            rolloverIcon="downArrow(10,18,8,8,block.inner.arrow.rollover)"
            pressedIcon="downArrow(10,18,8,8,block.inner.arrow.pressed)"

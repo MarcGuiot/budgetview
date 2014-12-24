@@ -136,6 +136,10 @@ public class SignpostStatus {
 
   public static boolean isInitialGuidanceCompleted(GlobRepository repository) {
     Glob status = repository.find(KEY);
+    return isInitialGuidanceCompleted(status);
+  }
+
+  public static boolean isInitialGuidanceCompleted(Glob status) {
     return (status != null) && Utils.equal(status.get(CURRENT_SECTION), SignpostSectionType.COMPLETED.getId());
   }
 

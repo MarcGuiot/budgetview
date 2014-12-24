@@ -132,13 +132,14 @@ public class MainPanel {
     ReplicationGlobRepository replicationGlobRepository =
       new ReplicationGlobRepository(repository, PeriodSeriesStat.TYPE, PeriodBudgetAreaStat.TYPE, PeriodAccountStat.TYPE);
 
-    builder.add("mainPanel", new MainPanelContainer(replicationGlobRepository, directory));
+    MainPanelContainer mainPanelContainer = new MainPanelContainer(replicationGlobRepository, directory);
+    builder.add("mainPanel", mainPanelContainer);
 
     projectView = new ProjectView(repository, directory);
 
     budgetView = new BudgetView(replicationGlobRepository, directory);
 
-    directory.add(new NavigationService(transactionView, categorizationSelector, projectView, repository, directory));
+    directory.add(new NavigationService(mainPanelContainer, transactionView, categorizationSelector, projectView, repository, directory));
 
     menuBar = new MenuBarBuilder(repository, replicationGlobRepository,
                                  windowManager, logoutService,

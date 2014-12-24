@@ -1,9 +1,6 @@
 package org.designup.picsou.gui.backup;
 
-import org.designup.picsou.gui.components.dialogs.MessageDialog;
 import org.designup.picsou.gui.components.dialogs.MessageFileDialog;
-import org.designup.picsou.gui.components.dialogs.MessageType;
-import org.designup.picsou.gui.license.LicenseService;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.utils.directory.Directory;

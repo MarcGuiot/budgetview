@@ -127,4 +127,8 @@ public class ArrowIcon implements Icon {
   public Orientation getOrientation() {
     return orientation;
   }
+
+  public String toString() {
+    return "ArrowIcon(" + orientation + ", " + iconWidth + ", " + iconHeight + ", " + arrowWidth + ", " + arrowHeight + ")";
+  }
 }

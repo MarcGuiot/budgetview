@@ -454,4 +454,16 @@ public class GlobList extends ArrayList<Glob> {
     }
     return result;
   }
+
+  public Glob find(Key key) {
+    if (key == null) {
+      return null;
+    }
+    for (Glob glob : this) {
+      if (key.equals(glob.getKey())) {
+        return glob;
+      }
+    }
+    return null;
+  }
 }

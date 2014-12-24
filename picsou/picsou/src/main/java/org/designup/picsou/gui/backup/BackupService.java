@@ -6,6 +6,7 @@ import org.designup.picsou.client.http.MD5PasswordBasedEncryptor;
 import org.designup.picsou.client.http.PasswordBasedEncryptor;
 import org.designup.picsou.gui.PicsouApplication;
 import org.designup.picsou.gui.PicsouInit;
+import org.designup.picsou.gui.card.NavigationService;
 import org.designup.picsou.gui.model.PicsouGuiModel;
 import org.designup.picsou.gui.time.TimeService;
 import org.designup.picsou.gui.upgrade.UpgradeTrigger;
@@ -25,6 +26,7 @@ import org.globsframework.model.delta.DefaultChangeSet;
 import org.globsframework.model.delta.MutableChangeSet;
 import org.globsframework.model.format.GlobPrinter;
 import org.globsframework.model.repository.DefaultGlobIdGenerator;
+import org.globsframework.model.utils.GlobMatchers;
 import org.globsframework.utils.Files;
 import org.globsframework.utils.Log;
 import org.globsframework.utils.collections.MapOfMaps;
@@ -110,7 +112,6 @@ public class BackupService {
     }
 
     if (readPasswordBasedEncryptor != writeBasedEncryptor) {
-
       for (SerializableGlobType serializableGlobType : serverData.values()) {
         serializableGlobType.setData(
           writeBasedEncryptor.encrypt(
@@ -134,6 +135,9 @@ public class BackupService {
     finally {
       repository.completeChangeSet();
     }
+
+    directory.get(NavigationService.class).gotoHomeAfterRestore(userData);
+
     try {
       repository.startChangeSet();
       repository.addTriggerAtFirst(upgradeTrigger);
