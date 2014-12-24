@@ -1356,27 +1356,6 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
       .check();
   }
 
-  public void testInternalTransferSeriesHelp() throws Exception {
-    OfxBuilder
-      .init(this)
-      .addTransaction("2008/06/25", -50.00, "Transfer")
-      .load();
-
-    views.selectCategorization();
-    categorization.selectTransaction("Transfer");
-    categorization.selectOther()
-      .selectInternalTransfers()
-      .clickAndOpenSeriesEdition("create series")
-      .checkName("Internal transfers")
-      .checkSelectedProfile("Irregular")
-      .checkAmount(0.00)
-      .validate();
-
-    categorization.checkTable(new Object[][]{
-      {"25/06/2008", "Internal transfers", "Transfer", -50.00}
-    });
-  }
-
   public void testDoNotSwitchToUncategorized() throws Exception {
     operations.hideSignposts();
 

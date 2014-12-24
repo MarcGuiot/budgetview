@@ -19,10 +19,6 @@ public class OtherCategorizationChecker extends GuiChecker {
     return new DeferredCardCategorizationChecker(getPanel("deferredCard"), categorizationChecker);
   }
 
-  public HtmlCategorizationChecker selectInternalTransfers() {
-    return new HtmlCategorizationChecker(getPanel("internalTransfers"));
-  }
-
   private Panel getPanel(String categorizationPanelId) {
     return panel.getPanel(categorizationPanelId);
   }

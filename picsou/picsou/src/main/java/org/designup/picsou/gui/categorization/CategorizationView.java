@@ -164,7 +164,6 @@ public class CategorizationView extends View {
 
     java.util.List<SpecialCategorizationPanel> categorizationPanels = Arrays.asList(
       new DeferredCardCategorizationPanel(),
-      new InternalTransfersCategorizationPanel(),
       new HtmlCategorizationPanel("healthReimbursements"),
       new HtmlCategorizationPanel("loans"),
       new HtmlCategorizationPanel("cash"),

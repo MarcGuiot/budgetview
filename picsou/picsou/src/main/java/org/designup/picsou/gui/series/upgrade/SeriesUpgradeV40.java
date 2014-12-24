@@ -23,7 +23,6 @@ import static org.globsframework.model.utils.GlobMatchers.*;
 
 public class SeriesUpgradeV40 {
 
-
   public static void run(GlobRepository repository, PostProcessor postProcessor) {
     SeriesUpgradeV40 upgrade = new SeriesUpgradeV40(repository, postProcessor);
     upgrade.run();
