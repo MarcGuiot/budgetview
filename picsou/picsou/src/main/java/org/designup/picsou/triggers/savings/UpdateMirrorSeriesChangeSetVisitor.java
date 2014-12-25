@@ -82,13 +82,7 @@ public class UpdateMirrorSeriesChangeSetVisitor implements ChangeSetVisitor {
 
     Glob mirrorSeries = localRepository.findLinkTarget(series, Series.MIRROR_SERIES);
     if (mirrorSeries == null) {
-      mirrorSeries = localRepository.create(Series.TYPE,
-                                            FieldValuesBuilder.init(series)
-                                              .remove(Series.ID)
-                                              .set(Series.MIRROR_SERIES, key.get(Series.ID))
-                                              .set(Series.TARGET_ACCOUNT, null)
-                                              .toArray());
-      localRepository.update(key, Series.MIRROR_SERIES, mirrorSeries.get(Series.ID));
+      mirrorSeries = Series.createMirror(series, null, localRepository);
     }
 
     Integer target = series.get(Series.TARGET_ACCOUNT);
@@ -110,4 +104,5 @@ public class UpdateMirrorSeriesChangeSetVisitor implements ChangeSetVisitor {
 
     return mirrorSeries.get(Series.ID);
   }
+
 }

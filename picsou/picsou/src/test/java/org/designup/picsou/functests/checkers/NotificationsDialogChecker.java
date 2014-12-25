@@ -23,11 +23,15 @@ public class NotificationsDialogChecker extends ViewChecker {
   }
 
   public NotificationsDialogChecker checkContent(String... expectedMessages) {
-    List<String> actual = new ArrayList<String>();
+    StringBuffer actual = new StringBuffer();
     for (UIComponent panel : mainWindow.getUIComponents(Panel.class, "notificationPanel")) {
-      actual.add(((Panel)panel).getTextBox("message").getText());
+      actual.append(((Panel)panel).getTextBox("message").getText()).append("\n");
     }
-    TestUtils.assertEquals(expectedMessages, actual.toArray());
+    StringBuilder expected = new StringBuilder();
+    for (String message : expectedMessages) {
+      expected.append(message).append("\n");
+    }
+    Assert.assertEquals(expected.toString(), actual.toString());
     return this;
   }
 

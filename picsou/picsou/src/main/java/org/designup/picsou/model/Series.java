@@ -18,8 +18,6 @@ import org.globsframework.utils.serialization.SerializedInput;
 import org.globsframework.utils.serialization.SerializedInputOutputFactory;
 import org.globsframework.utils.serialization.SerializedOutput;
 
-import java.util.Set;
-
 import static org.globsframework.model.utils.GlobMatchers.linkedTo;
 
 public class Series {
@@ -205,7 +203,7 @@ public class Series {
 
   public static BooleanField[] getMonths() {
     return new BooleanField[]{JANUARY, FEBRUARY, MARCH, APRIL, MAY, JUNE, JULY, AUGUST,
-                              SEPTEMBER, OCTOBER, NOVEMBER, DECEMBER};
+      SEPTEMBER, OCTOBER, NOVEMBER, DECEMBER};
   }
 
   public static String getPlannedTransactionLabel(Integer seriesId, FieldValues series) {
@@ -291,7 +289,7 @@ public class Series {
   }
 
   public static void delete(Glob series, GlobRepository repository) {
-    if (series != null) {
+    if (series != null && series.exists()) {
       repository.startChangeSet();
       try {
         Transaction.uncategorize(repository.getAll(Transaction.TYPE, linkedTo(series, Transaction.SERIES)), repository);
@@ -312,6 +310,17 @@ public class Series {
     repository.delete(SeriesStat.getAllMonthsForSeries(series, repository));
     repository.delete(SeriesBudget.getAll(series, repository));
     repository.delete(series);
+  }
+
+  public static Glob createMirror(Glob series, Integer targetAccountId, GlobRepository repository) {
+    Glob mirrorSeries = repository.create(TYPE,
+                                          FieldValuesBuilder.init(series)
+                                            .remove(ID)
+                                            .set(MIRROR_SERIES, series.get(ID))
+                                            .set(TARGET_ACCOUNT, targetAccountId)
+                                            .toArray());
+    repository.update(series.getKey(), Series.MIRROR_SERIES, mirrorSeries.get(Series.ID));
+    return mirrorSeries;
   }
 
   public static class Serializer implements PicsouGlobSerializer {

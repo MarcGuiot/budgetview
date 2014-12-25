@@ -19,6 +19,10 @@ public class BindTransactionsToSeries implements PostProcessor.Functor {
   }
 
   public void apply(GlobRepository repository) {
+    run(transactions, seriesId, repository);
+  }
+
+  public static void run(GlobList transactions, Integer seriesId, GlobRepository repository) {
     for (Glob transaction : transactions) {
       if (transaction.exists()) {
         repository.update(transaction.getKey(),

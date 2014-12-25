@@ -15,10 +15,7 @@ public class SeriesUpgradeTest extends LoggedInFunctionalTestCase {
 
     notifications.checkHidden();
 
-    transactions.showPlannedTransactions();
     transactions.initAmountContent()
-      .add("15/12/2014", "Planned: Mono B", -50.00, "Mono B", 1950.00, 2900.00, "Main B")
-      .add("15/12/2014", "Planned: Mono A", -50.00, "Mono A", 950.00, 2950.00, "Main A")
       .add("10/12/2014", "MULTI AB", -50.00, "Mono AB", 1000.00, 3000.00, "Main A")
       .add("08/12/2014", "MULTI AB", -150.00, "Mono AB", 2000.00, 3050.00, "Main B")
       .add("06/12/2014", "MULTI AB", -75.00, "Mono AB", 2150.00, 3200.00, "Main B")
@@ -48,6 +45,16 @@ public class SeriesUpgradeTest extends LoggedInFunctionalTestCase {
       .checkAmount(50.00)
       .cancel();
 
+    transactions.showPlannedTransactions();
+    transactions.initAmountContent()
+      .add("15/12/2014", "Planned: Mono B", -50.00, "Mono B", 1950.00, 2900.00, "Main B")
+      .add("15/12/2014", "Planned: Mono A", -50.00, "Mono A", 950.00, 2950.00, "Main A")
+      .add("10/12/2014", "MULTI AB", -50.00, "Mono AB", 1000.00, 3000.00, "Main A")
+      .add("08/12/2014", "MULTI AB", -150.00, "Mono AB", 2000.00, 3050.00, "Main B")
+      .add("06/12/2014", "MULTI AB", -75.00, "Mono AB", 2150.00, 3200.00, "Main B")
+      .add("05/12/2014", "MONO A", -50.00, "Mono A", 1050.00, 3275.00, "Main A")
+      .check();
+
     timeline.selectMonth(201501);
     transactions.initAmountContent()
       .add("15/01/2015", "Planned: Mono B", -50.00, "Mono B", 1736.36, 2550.00, "Main B")
@@ -62,24 +69,25 @@ public class SeriesUpgradeTest extends LoggedInFunctionalTestCase {
 
     operations.restore(Files.copyResourceToTmpFile(this, "/testbackups/upgrade_jar131_series_with_savings_transfers.budgetview"));
 
+    views.selectData();
     transactions.initAmountContent()
       .add("11/12/2014", "EXTERNAL TO SAVINGSB", -200.00, "SavingsB to External", 3800.00, 6900.00, "SavingsB")
       .add("10/12/2014", "EXTERNAL TO SAVINGSA", 100.00, "External to SavingsA", 3100.00, 7100.00, "SavingsA")
-      .add("08/12/2014", "REVERSE MAINAB TO SAVINGSA", 150.00, "To categorize", 3000.00, 7000.00, "SavingsA")
-      .add("08/12/2014", "TRANSFER MAINAB TO SAVINGSA", -150.00, "To categorize", 2000.00, 3000.00, "MainB")
+      .add("08/12/2014", "REVERSE MAINAB TO SAVINGSA", 150.00, "MainAB to SavingsA (MainB)", 3000.00, 7000.00, "SavingsA")
+      .add("08/12/2014", "TRANSFER MAINAB TO SAVINGSA", -150.00, "MainAB to SavingsA (MainB)", 2000.00, 3000.00, "MainB")
       .add("06/12/2014", "REVERSE MAINB TO SAVINGSB", 75.00, "MainB to SavingsB", 4000.00, 6850.00, "SavingsB")
       .add("06/12/2014", "TRANSFER MAINB TO SAVINGSB", -75.00, "MainB to SavingsB", 2150.00, 3150.00, "MainB")
-      .add("05/12/2014", "REVERSE MAINAB TO SAVINGSA", 50.00, "To categorize", 2850.00, 6775.00, "SavingsA")
-      .add("05/12/2014", "TRANSFER MAINAB TO SAVINGSA", -50.00, "To categorize", 1000.00, 3225.00, "MainA")
-      .add("04/12/2014", "TRANSFER SAVINGSB TO MAINAB", -40.00, "To categorize", 2800.00, 6725.00, "SavingsA")
-      .add("04/12/2014", "REVERSE SAVINGSB TO MAINAB", 40.00, "To categorize", 2225.00, 3275.00, "MainB")
-      .add("03/12/2014", "TRANSFER SAVINGSB TO MAINAB", -30.00, "To categorize", 2840.00, 6765.00, "SavingsA")
-      .add("03/12/2014", "REVERSE SAVINGSB TO MAINAB", 30.00, "To categorize", 1050.00, 3235.00, "MainA")
+      .add("05/12/2014", "REVERSE MAINAB TO SAVINGSA", 50.00, "MainAB to SavingsA (MainA)", 2850.00, 6775.00, "SavingsA")
+      .add("05/12/2014", "TRANSFER MAINAB TO SAVINGSA", -50.00, "MainAB to SavingsA (MainA)", 1000.00, 3225.00, "MainA")
+      .add("04/12/2014", "TRANSFER SAVINGSB TO MAINAB", -40.00, "SavingsB to MainAB (MainB)", 2800.00, 6725.00, "SavingsA")
+      .add("04/12/2014", "REVERSE SAVINGSB TO MAINAB", 40.00, "SavingsB to MainAB (MainB)", 2225.00, 3275.00, "MainB")
+      .add("03/12/2014", "TRANSFER SAVINGSB TO MAINAB", -30.00, "SavingsB to MainAB (MainA)", 2840.00, 6765.00, "SavingsA")
+      .add("03/12/2014", "REVERSE SAVINGSB TO MAINAB", 30.00, "SavingsB to MainAB (MainA)", 1050.00, 3235.00, "MainA")
       .check();
 
     notifications.checkContent(
-      "Series 'MainAB to SavingsA' has been deleted because transactions from several main accounts were assigned to it.",
-      "Series 'SavingsB to MainAB' has been deleted because transactions from several main accounts were assigned to it.");
+      "Series 'MainAB to SavingsA' has been splitted because transactions from several main accounts were assigned to it.",
+      "Series 'SavingsB to MainAB' has been splitted because transactions from several main accounts were assigned to it.");
 
     budgetView.transfer
       .checkContent("| MainB to SavingsB | 75.00 | 75.00 |")
@@ -113,6 +121,7 @@ public class SeriesUpgradeTest extends LoggedInFunctionalTestCase {
   public void testTransfersWithNoTransactions() throws Exception {
     operations.restore(Files.copyResourceToTmpFile(this, "/testbackups/upgrade_jar131_series_transfers_no_transactions.budgetview"));
 
+    views.selectBudget();
     budgetView.transfer
       .checkContent("| SavingsB to Main | 0.00 | +150.00 |\n" +
                     "| Main to SavingsA | 0.00 | 100.00  |");
