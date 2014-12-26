@@ -282,10 +282,13 @@ public class Series {
     return UNCATEGORIZED_SERIES_ID.equals(seriesId);
   }
 
-  public static boolean hasRealOperations(final GlobRepository repository, final Integer seriesId) {
-    return !repository.findByIndex(Transaction.SERIES_INDEX, Transaction.SERIES, seriesId)
-      .getGlobs().filter(GlobMatchers.isFalse(Transaction.PLANNED), repository)
-      .isEmpty();
+  public static boolean hasRealTransactions(final GlobRepository repository, final Integer seriesId) {
+    return !getRealTransactions(seriesId, repository).isEmpty();
+  }
+
+  public static GlobList getRealTransactions(Integer seriesId, GlobRepository repository) {
+    return repository.findByIndex(Transaction.SERIES_INDEX, Transaction.SERIES, seriesId)
+      .getGlobs().filter(GlobMatchers.isFalse(Transaction.PLANNED), repository);
   }
 
   public static void delete(Glob series, GlobRepository repository) {

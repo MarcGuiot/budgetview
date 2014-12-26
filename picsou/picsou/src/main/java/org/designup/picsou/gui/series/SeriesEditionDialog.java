@@ -24,9 +24,9 @@ import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.SelectionService;
 import org.globsframework.gui.editors.GlobLinkComboEditor;
 import org.globsframework.gui.editors.GlobTextEditor;
+import org.globsframework.gui.splits.PanelBuilder;
 import org.globsframework.gui.splits.layout.CardHandler;
 import org.globsframework.gui.splits.layout.TabHandler;
-import org.globsframework.gui.splits.PanelBuilder;
 import org.globsframework.gui.splits.repeat.RepeatComponentFactory;
 import org.globsframework.gui.splits.utils.GuiUtils;
 import org.globsframework.gui.views.GlobLabelView;
@@ -327,15 +327,30 @@ public class SeriesEditionDialog {
   }
 
   private void updateTargetAccount() {
-    if (currentSeries != null) {
-      setAccountComboVisible(!Series.hasRealOperations(localRepository, currentSeries.get(Series.ID)));
+    if (currentSeries == null) {
+      return;
     }
-  }
-
-  private void setAccountComboVisible(boolean isEditable) {
-    boolean isSavings = budgetArea != BudgetArea.TRANSFER;
-    targetAccountCombo.setVisible(isSavings && isEditable);
-    targetAccountLabel.setVisible((budgetArea != BudgetArea.TRANSFER) && !isEditable);
+    if (budgetArea == BudgetArea.TRANSFER) {
+      targetAccountCombo.setVisible(false);
+      targetAccountLabel.setVisible(false);
+    }
+    else {
+      Set<Integer> accountIds = Series.getRealTransactions(currentSeries.get(Series.ID), localRepository).getValueSet(Transaction.ACCOUNT);
+      if (accountIds.size() > 1) {
+        targetAccountCombo.setVisible(false);
+        targetAccountLabel.setVisible(true);
+      }
+      else if (accountIds.size() == 1) {
+        targetAccountCombo.setFilter(Account.userOrSummaryMainAccounts(accountIds.iterator().next()));
+        targetAccountCombo.setVisible(true);
+        targetAccountLabel.setVisible(false);
+      }
+      else {
+        targetAccountCombo.setFilter(Account.userOrSummaryMainAccounts());
+        targetAccountCombo.setVisible(true);
+        targetAccountLabel.setVisible(false);
+      }
+    }
     GuiUtils.revalidate(targetAccountCombo.getComponent());
   }
 

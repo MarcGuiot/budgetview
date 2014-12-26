@@ -85,7 +85,7 @@ public class ProjectItemExpensePanel extends ProjectItemEditionPanel {
         if ((accountSelection == null) || (accountLabel == null)) {
           return;
         }
-        if (itemKey == null || !Series.hasRealOperations(parentRepository, localRepository.get(itemKey).get(ProjectItem.SERIES))) {
+        if (itemKey == null || !Series.hasRealTransactions(parentRepository, localRepository.get(itemKey).get(ProjectItem.SERIES))) {
           accountSelection.setVisible(true);
           accountLabel.getComponent().setVisible(false);
         }

@@ -232,6 +232,15 @@ public class Account {
     return (account != null) && !SUMMARY_ACCOUNT_IDS.contains(account.get(Account.ID));
   }
 
+  public static GlobMatcher userOrSummaryMainAccounts(final Integer userAccountId) {
+    return new GlobMatcher() {
+      public boolean matches(Glob account, GlobRepository repository) {
+        Integer accountId = account.get(Account.ID);
+        return Utils.equal(accountId, userAccountId) || Utils.equal(accountId, MAIN_SUMMARY_ACCOUNT_ID);
+      }
+    };
+  }
+
   public static GlobMatcher userOrSummaryMainAccounts() {
     return new GlobMatcher() {
       public boolean matches(Glob account, GlobRepository repository) {

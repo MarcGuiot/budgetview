@@ -2,8 +2,6 @@ package org.designup.picsou.functests.budget;
 
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
-import org.designup.picsou.model.Account;
-import org.globsframework.model.format.GlobPrinter;
 
 public class MultiAccountSeriesTest extends LoggedInFunctionalTestCase {
 
@@ -374,7 +372,7 @@ public class MultiAccountSeriesTest extends LoggedInFunctionalTestCase {
       .check();
   }
 
-  public void testOneOfTheAccountHasAnActualOfTheOppositeSign() throws Exception {
+  public void testOneOfTheAccountsHasAnActualOfTheOppositeSign() throws Exception {
     fail("tbd");
 
     OfxBuilder
@@ -549,5 +547,128 @@ public class MultiAccountSeriesTest extends LoggedInFunctionalTestCase {
       .checkFromContentEquals("Main1", "Savings1", "External account") // User-created + external accounts only
       .checkToContentEquals("Main1", "Savings1", "External account")
       .cancel();
+  }
+
+  public void testCanChangeTargetAccountInRelationWithAlreadyAssignedTransactions() throws Exception {
+
+    budgetView.variable.createSeries()
+      .setName("Leisures")
+      .checkAvailableTargetAccounts("Main accounts")
+      .setTargetAccount("Main accounts")
+      .selectNegativeAmounts()
+      .setAmount(300.00)
+      .validate();
+
+    timeline.selectMonth(201412);
+    transactions.showPlannedTransactions();
+    transactions.checkEmpty();
+
+    accounts.createMainAccount("Main1", 1000.00);
+    transactions.initAmountContent()
+      .add("11/12/2014", "Planned: Leisures", -300.00, "Leisures", 400.00, 400.00, "Main1")
+      .check();
+
+    accounts.createMainAccount("Main2", 2000.00);
+    transactions.initAmountContent()
+      .add("11/12/2014", "Planned: Leisures", -150.00, "Leisures", 1700.00, 2400.00, "Main2")
+      .add("11/12/2014", "Planned: Leisures", -150.00, "Leisures", 700.00, 2550.00, "Main1")
+      .check();
+
+    OfxBuilder
+      .init(this)
+      .addBankAccount("000111", 1000.00, "2014/11/20")
+      .addTransaction("2014/11/20", -10.00, "LEISURE1")
+      .addTransaction("2014/11/05", -40.00, "LEISURE1")
+      .addTransaction("2014/10/20", -10.00, "LEISURE1")
+      .addTransaction("2014/10/06", -40.00, "LEISURE1")
+      .loadInAccount("Main1");
+
+    OfxBuilder
+      .init(this)
+      .addBankAccount("000222", 2000.00, "2014/11/20")
+      .addTransaction("2014/11/20", -30.00, "LEISURE2")
+      .addTransaction("2014/11/05", -70.00, "LEISURE2")
+      .addTransaction("2014/10/20", -30.00, "LEISURE2")
+      .addTransaction("2014/10/06", -70.00, "LEISURE2")
+      .loadInAccount("Main2");
+
+    budgetView.variable.editSeries("Leisures")
+      .checkAvailableTargetAccounts("Main1", "Main2", "Main accounts")
+      .setTargetAccount("Main accounts")
+      .validate();
+    timeline.selectMonth(201412);
+    transactions.initAmountContent()
+      .add("11/12/2014", "Planned: Leisures", -150.00, "Leisures", 1500.00, 2100.00, "Main2")
+      .add("11/12/2014", "Planned: Leisures", -150.00, "Leisures", 600.00, 2250.00, "Main1")
+      .check();
+
+    categorization.setVariable("LEISURE1", "Leisures");
+    budgetView.variable.editSeries("Leisures")
+      .checkEditableTargetAccount("Main accounts")
+      .checkAvailableTargetAccounts("Main1", "Main accounts")
+      .validate();
+    timeline.selectMonths(201411, 201412);
+    transactions.initAmountContent()
+      .add("11/12/2014", "Planned: Leisures", -300.00, "Leisures", 350.00, 2150.00, "Main1")
+      .add("20/11/2014", "LEISURE2", -30.00, "To categorize", 1800.00, 2450.00, "Main2")
+      .add("20/11/2014", "LEISURE1", -10.00, "Leisures", 650.00, 2480.00, "Main1")
+      .add("11/11/2014", "Planned: Leisures", -250.00, "Leisures", 660.00, 2490.00, "Main1")
+      .add("05/11/2014", "LEISURE2", -70.00, "To categorize", 1830.00, 2740.00, "Main2")
+      .add("05/11/2014", "LEISURE1", -40.00, "Leisures", 910.00, 2810.00, "Main1")
+      .check();
+
+    budgetView.variable.editSeries("Leisures")
+      .checkAvailableTargetAccounts("Main1", "Main accounts")
+      .setTargetAccount("Main1")
+      .validate();
+    timeline.selectMonths(201411, 201412);
+    transactions.initAmountContent()
+      .add("11/12/2014", "Planned: Leisures", -300.00, "Leisures", 350.00, 2150.00, "Main1")
+      .add("20/11/2014", "LEISURE2", -30.00, "To categorize", 1800.00, 2450.00, "Main2")
+      .add("20/11/2014", "LEISURE1", -10.00, "Leisures", 650.00, 2480.00, "Main1")
+      .add("11/11/2014", "Planned: Leisures", -250.00, "Leisures", 660.00, 2490.00, "Main1")
+      .add("05/11/2014", "LEISURE2", -70.00, "To categorize", 1830.00, 2740.00, "Main2")
+      .add("05/11/2014", "LEISURE1", -40.00, "Leisures", 910.00, 2810.00, "Main1")
+      .check();
+
+    budgetView.variable.editSeries("Leisures")
+      .checkAvailableTargetAccounts("Main1", "Main accounts")
+      .setTargetAccount("Main accounts")
+      .validate();
+    categorization.setVariable("LEISURE2", "Leisures");
+    budgetView.variable.editSeries("Leisures")
+      .checkReadOnlyTargetAccount("Main accounts")
+      .validate();
+    transactions.initAmountContent()
+      .add("19/12/2014", "Planned: Leisures", -54.00, "Leisures", 1500.00, 2250.00, "Main2")
+      .add("19/12/2014", "Planned: Leisures", -27.00, "Leisures", 750.00, 2304.00, "Main1")
+      .add("04/12/2014", "Planned: Leisures", -146.00, "Leisures", 1554.00, 2331.00, "Main2")
+      .add("04/12/2014", "Planned: Leisures", -73.00, "Leisures", 777.00, 2477.00, "Main1")
+      .add("20/11/2014", "LEISURE2", -30.00, "Leisures", 1700.00, 2550.00, "Main2")
+      .add("20/11/2014", "LEISURE1", -10.00, "Leisures", 850.00, 2580.00, "Main1")
+      .add("19/11/2014", "Planned: Leisures", -54.00, "Leisures", 1730.00, 2590.00, "Main2")
+      .add("19/11/2014", "Planned: Leisures", -27.00, "Leisures", 860.00, 2644.00, "Main1")
+      .add("05/11/2014", "Planned: Leisures", -46.00, "Leisures", 1784.00, 2671.00, "Main2")
+      .add("05/11/2014", "Planned: Leisures", -23.00, "Leisures", 887.00, 2717.00, "Main1")
+      .add("05/11/2014", "LEISURE2", -70.00, "Leisures", 1830.00, 2740.00, "Main2")
+      .add("05/11/2014", "LEISURE1", -40.00, "Leisures", 910.00, 2810.00, "Main1")
+      .check();
+
+    categorization.selectTransactions("LEISURE1").setUncategorized();
+    budgetView.variable.editSeries("Leisures")
+      .checkEditableTargetAccount("Main accounts")
+      .checkAvailableTargetAccounts("Main2", "Main accounts")
+      .setTargetAccount("Main2")
+      .validate();
+    transactions.initAmountContent()
+      .add("19/12/2014", "Planned: Leisures", -90.00, "Leisures", 1300.00, 2200.00, "Main2")
+      .add("04/12/2014", "Planned: Leisures", -210.00, "Leisures", 1390.00, 2290.00, "Main2")
+      .add("20/11/2014", "LEISURE2", -30.00, "Leisures", 1600.00, 2500.00, "Main2")
+      .add("20/11/2014", "LEISURE1", -10.00, "To categorize", 900.00, 2530.00, "Main1")
+      .add("19/11/2014", "Planned: Leisures", -90.00, "Leisures", 1630.00, 2540.00, "Main2")
+      .add("05/11/2014", "Planned: Leisures", -110.00, "Leisures", 1720.00, 2630.00, "Main2")
+      .add("05/11/2014", "LEISURE2", -70.00, "Leisures", 1830.00, 2740.00, "Main2")
+      .add("05/11/2014", "LEISURE1", -40.00, "To categorize", 910.00, 2810.00, "Main1")
+      .check();
   }
 }
