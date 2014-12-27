@@ -335,11 +335,25 @@ public class DefaultGlobRepository implements GlobRepository, IndexSource {
     return create(key.getGlobType(), key, completedArray);
   }
 
+  public void update(Glob glob, Field field, Object newValue) throws InvalidParameter, ItemNotFound {
+    if (glob == null) {
+      throw new ItemNotFound("Update called for null object");
+    }
+    update(glob.getKey(), field, newValue);
+  }
+
   public void update(Key key, Field field, Object newValue) throws ItemNotFound {
     MutableGlob mutableGlob = getGlobForUpdate(key);
     if (doUpdate(mutableGlob, key, field, field.normalize(newValue))) {
       notifyListeners(true);
     }
+  }
+
+  public void update(final Glob glob, FieldValue... values) throws ItemNotFound {
+    if (glob == null) {
+      throw new ItemNotFound("Update called for null object");
+    }
+    update(glob.getKey(), values);
   }
 
   public void update(final Key key, FieldValue... values) throws ItemNotFound {

@@ -93,14 +93,14 @@ public class PastTransactionUpdateSeriesBudgetTrigger extends AbstractChangeSetL
   }
 
   private void updateSeriesBudget(Integer currentMonthId, Glob series, Integer seriesId, Integer statMonthId,
-                                  Double observedAmount, GlobRepository repository) {
+                                  Double actualAmount, GlobRepository repository) {
     ReadOnlyGlobRepository.MultiFieldIndexed budgetIndex =
       repository.findByIndex(SeriesBudget.SERIES_INDEX, SeriesBudget.SERIES, seriesId);
     Glob currentBudget = budgetIndex.findByIndex(SeriesBudget.MONTH, statMonthId).getGlobs().getFirst();
     if (currentBudget == null || !currentBudget.isTrue(SeriesBudget.ACTIVE)) {
       return;
     }
-    repository.update(currentBudget.getKey(), SeriesBudget.ACTUAL_AMOUNT, observedAmount);
+    repository.update(currentBudget.getKey(), SeriesBudget.ACTUAL_AMOUNT, actualAmount);
 
     if (!series.isTrue(Series.IS_AUTOMATIC) || statMonthId > currentMonthId) {
       return;
@@ -133,11 +133,11 @@ public class PastTransactionUpdateSeriesBudgetTrigger extends AbstractChangeSetL
         Double futureAmount;
         if ((previousStat.get(SeriesStat.ACTUAL_AMOUNT) == null
              || Amounts.isNullOrZero(previousStat.get(SeriesStat.ACTUAL_AMOUNT))
-             || (Amounts.isNotZero(observedAmount)
+             || (Amounts.isNotZero(actualAmount)
                  && Amounts.isNotZero(previousStat.get(SeriesStat.ACTUAL_AMOUNT))
-                 && !Amounts.sameSign(previousStat.get(SeriesStat.ACTUAL_AMOUNT), observedAmount))
-             || Math.abs(Utils.zeroIfNull(observedAmount)) > Math.abs(previousStat.get(SeriesStat.ACTUAL_AMOUNT)))) {
-          futureAmount = observedAmount;
+                 && !Amounts.sameSign(previousStat.get(SeriesStat.ACTUAL_AMOUNT), actualAmount))
+             || Math.abs(Utils.zeroIfNull(actualAmount)) > Math.abs(previousStat.get(SeriesStat.ACTUAL_AMOUNT)))) {
+          futureAmount = actualAmount;
         }
         else {
           futureAmount = previousStat.get(SeriesStat.ACTUAL_AMOUNT);
@@ -152,7 +152,7 @@ public class PastTransactionUpdateSeriesBudgetTrigger extends AbstractChangeSetL
         // c'est le premier
         for (Glob budget : seriesBudgets) {
           if (budget.isTrue(SeriesBudget.ACTIVE) && budget.get(SeriesBudget.MONTH) >= currentMonthId) {
-            repository.update(budget.getKey(), SeriesBudget.PLANNED_AMOUNT, Utils.zeroIfNull(observedAmount));
+            repository.update(budget.getKey(), SeriesBudget.PLANNED_AMOUNT, Utils.zeroIfNull(actualAmount));
           }
         }
       }
@@ -182,7 +182,7 @@ public class PastTransactionUpdateSeriesBudgetTrigger extends AbstractChangeSetL
 
       if (firstMonthWithObserved == statMonthId && statMonthId.equals(budget.get(SeriesBudget.MONTH))) {
         repository.update(budget.getKey(), SeriesBudget.PLANNED_AMOUNT, Utils.zeroIfNull(firstMonthAmout));
-        observedAmount = firstMonthAmout;
+        actualAmount = firstMonthAmout;
       }
 
       if (firstMonthWithObserved == 0) {
@@ -196,14 +196,14 @@ public class PastTransactionUpdateSeriesBudgetTrigger extends AbstractChangeSetL
           repository.update(budget.getKey(), SeriesBudget.PLANNED_AMOUNT, Utils.zeroIfNull(firstMonthAmout));
         }
         else {
-          repository.update(budget.getKey(), SeriesBudget.PLANNED_AMOUNT, Utils.zeroIfNull(observedAmount));
+          repository.update(budget.getKey(), SeriesBudget.PLANNED_AMOUNT, Utils.zeroIfNull(actualAmount));
         }
-        Double futureAmount = observedAmount;
+        Double futureAmount = actualAmount;
         if (budget.get(SeriesBudget.MONTH).equals(currentMonthId)) {
-          if (Amounts.isNullOrZero(observedAmount)
+          if (Amounts.isNullOrZero(actualAmount)
               || (Amounts.isNotZero(currentSeriesStat.get(SeriesStat.ACTUAL_AMOUNT))
-                  && !Amounts.sameSign(currentSeriesStat.get(SeriesStat.ACTUAL_AMOUNT), observedAmount))
-              || Math.abs(Utils.zeroIfNull(currentSeriesStat.get(SeriesStat.ACTUAL_AMOUNT))) > Math.abs(observedAmount)) {
+                  && !Amounts.sameSign(currentSeriesStat.get(SeriesStat.ACTUAL_AMOUNT), actualAmount))
+              || Math.abs(Utils.zeroIfNull(currentSeriesStat.get(SeriesStat.ACTUAL_AMOUNT))) > Math.abs(actualAmount)) {
             futureAmount = currentSeriesStat.get(SeriesStat.ACTUAL_AMOUNT);
           }
         }

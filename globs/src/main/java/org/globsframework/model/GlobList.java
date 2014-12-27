@@ -122,7 +122,7 @@ public class GlobList extends ArrayList<Glob> {
   public boolean removeAll(Set<Key> keys) {
     boolean asRemoved = false;
     for (Iterator it = this.iterator(); it.hasNext(); ) {
-      Glob glob = (Glob)it.next();
+      Glob glob = (Glob) it.next();
       if (keys.contains(glob.getKey())) {
         it.remove();
         asRemoved = true;
@@ -308,11 +308,11 @@ public class GlobList extends ArrayList<Glob> {
     return false;
   }
 
-  public GlobList sort(Field ...field) {
-    if (field == null || field.length == 0){
+  public GlobList sort(Field... field) {
+    if (field == null || field.length == 0) {
       return this;
     }
-    if (field.length == 1){
+    if (field.length == 1) {
       return sort(new GlobFieldComparator(field[0]));
     }
     return sort(new GlobFieldsComparator(field));
@@ -425,6 +425,14 @@ public class GlobList extends ArrayList<Glob> {
       else if ((value != null) && (value < result)) {
         result = value;
       }
+    }
+    return result;
+  }
+
+  public double getSum(DoubleField field, double defaultForNull) {
+    Double result = getSum(field);
+    if (result == null) {
+      return defaultForNull;
     }
     return result;
   }

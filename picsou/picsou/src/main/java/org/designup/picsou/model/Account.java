@@ -6,12 +6,10 @@ import org.designup.picsou.utils.Lang;
 import org.designup.picsou.utils.PicsouUtils;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.annotations.*;
+import org.globsframework.metamodel.annotations.Key;
 import org.globsframework.metamodel.fields.*;
 import org.globsframework.metamodel.utils.GlobTypeLoader;
-import org.globsframework.model.FieldSetter;
-import org.globsframework.model.FieldValues;
-import org.globsframework.model.Glob;
-import org.globsframework.model.GlobRepository;
+import org.globsframework.model.*;
 import org.globsframework.model.utils.GlobMatcher;
 import org.globsframework.model.utils.GlobMatchers;
 import org.globsframework.utils.Utils;
@@ -183,6 +181,14 @@ public class Account {
       bank = repository.findLinkTarget(account, Account.BANK);
     }
     return bank;
+  }
+
+  public static boolean isMain(Integer accountId, GlobRepository repository) {
+    Glob account = repository.find(org.globsframework.model.Key.create(Account.TYPE, accountId));
+    if (account == null) {
+      return false;
+    }
+    return isMain(account);
   }
 
   public static boolean isMain(Glob account) {

@@ -3,7 +3,6 @@ package org.globsframework.model.repository;
 import org.globsframework.metamodel.Field;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.Link;
-import org.globsframework.metamodel.fields.IntegerField;
 import org.globsframework.metamodel.index.Index;
 import org.globsframework.metamodel.index.MultiFieldIndex;
 import org.globsframework.model.*;
@@ -11,9 +10,9 @@ import org.globsframework.model.utils.GlobFunctor;
 import org.globsframework.model.utils.GlobMatcher;
 import org.globsframework.utils.exceptions.*;
 
+import java.util.Collection;
 import java.util.Comparator;
 import java.util.Set;
-import java.util.Collection;
 
 public class GlobRepositoryDecorator implements GlobRepository {
   protected GlobRepository repository;
@@ -106,8 +105,16 @@ public class GlobRepositoryDecorator implements GlobRepository {
     return getRepository().contains(type, matcher);
   }
 
+  public void update(Glob glob, Field field, Object newValue) throws ItemNotFound {
+    getRepository().update(glob, field, newValue);
+  }
+
   public void update(Key key, Field field, Object newValue) throws ItemNotFound {
     getRepository().update(key, field, newValue);
+  }
+
+  public void update(Glob glob, FieldValue... values) {
+    getRepository().update(glob, values);
   }
 
   public void update(Key key, FieldValue... values) {

@@ -21,10 +21,17 @@ public interface GlobRepository extends ReadOnlyGlobRepository {
   Glob findOrCreate(Key key, FieldValue... valuesForCreate)
     throws MissingInfo;
 
+  void update(Glob glob, Field field, Object newValue)
+    throws ItemNotFound;
+
   void update(Key key, Field field, Object newValue)
     throws ItemNotFound;
 
-  void update(Key key, FieldValue... values);
+  void update(Glob glob, FieldValue... values)
+    throws ItemNotFound;;
+
+  void update(Key key, FieldValue... values)
+    throws ItemNotFound;;
 
   void setTarget(Key source, Link link, Key target)
     throws ItemNotFound;

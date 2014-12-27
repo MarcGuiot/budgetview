@@ -36,12 +36,12 @@ public class SeriesUpgradeTest extends LoggedInFunctionalTestCase {
       .cancel();
 
     budgetView.variable.editSeries("Mono A")
-      .checkReadOnlyTargetAccount("Main A")
+      .checkEditableTargetAccount("Main A")
       .checkAmount(100.00)
       .cancel();
 
     budgetView.variable.editSeries("Mono B")
-      .checkReadOnlyTargetAccount("Main B")
+      .checkEditableTargetAccount("Main B")
       .checkAmount(50.00)
       .cancel();
 
@@ -71,7 +71,7 @@ public class SeriesUpgradeTest extends LoggedInFunctionalTestCase {
 
     views.selectData();
     transactions.initAmountContent()
-      .add("11/12/2014", "EXTERNAL TO SAVINGSB", -200.00, "SavingsB to External", 3800.00, 6900.00, "SavingsB")
+      .add("11/12/2014", "SAVINGSB TO EXTERNAL", -200.00, "SavingsB to External", 3800.00, 6900.00, "SavingsB")
       .add("10/12/2014", "EXTERNAL TO SAVINGSA", 100.00, "External to SavingsA", 3100.00, 7100.00, "SavingsA")
       .add("08/12/2014", "REVERSE MAINAB TO SAVINGSA", 150.00, "MainAB to SavingsA (MainB)", 3000.00, 7000.00, "SavingsA")
       .add("08/12/2014", "TRANSFER MAINAB TO SAVINGSA", -150.00, "MainAB to SavingsA (MainB)", 2000.00, 3000.00, "MainB")
@@ -79,9 +79,9 @@ public class SeriesUpgradeTest extends LoggedInFunctionalTestCase {
       .add("06/12/2014", "TRANSFER MAINB TO SAVINGSB", -75.00, "MainB to SavingsB", 2150.00, 3150.00, "MainB")
       .add("05/12/2014", "REVERSE MAINAB TO SAVINGSA", 50.00, "MainAB to SavingsA (MainA)", 2850.00, 6775.00, "SavingsA")
       .add("05/12/2014", "TRANSFER MAINAB TO SAVINGSA", -50.00, "MainAB to SavingsA (MainA)", 1000.00, 3225.00, "MainA")
-      .add("04/12/2014", "TRANSFER SAVINGSB TO MAINAB", -40.00, "SavingsB to MainAB (MainB)", 2800.00, 6725.00, "SavingsA")
+      .add("04/12/2014", "TRANSFER SAVINGSB TO MAINAB", -40.00, "SavingsB to MainAB (MainB)", 3925.00, 6725.00, "SavingsB")
       .add("04/12/2014", "REVERSE SAVINGSB TO MAINAB", 40.00, "SavingsB to MainAB (MainB)", 2225.00, 3275.00, "MainB")
-      .add("03/12/2014", "TRANSFER SAVINGSB TO MAINAB", -30.00, "SavingsB to MainAB (MainA)", 2840.00, 6765.00, "SavingsA")
+      .add("03/12/2014", "TRANSFER SAVINGSB TO MAINAB", -30.00, "SavingsB to MainAB (MainA)", 3965.00, 6765.00, "SavingsB")
       .add("03/12/2014", "REVERSE SAVINGSB TO MAINAB", 30.00, "SavingsB to MainAB (MainA)", 1050.00, 3235.00, "MainA")
       .check();
 
@@ -90,27 +90,56 @@ public class SeriesUpgradeTest extends LoggedInFunctionalTestCase {
       "Series 'SavingsB to MainAB' has been splitted because transactions from several main accounts were assigned to it.");
 
     budgetView.transfer
-      .checkContent("| MainB to SavingsB | 75.00 | 75.00 |")
-      .checkGroupToggleNotShown("MainB to SavingsB");
+      .checkContent("| MainAB to SavingsA (MainB) | 150.00 | 50.00  |\n" +
+                    "| MainB to SavingsB          | 75.00  | 75.00  |\n" +
+                    "| MainAB to SavingsA (MainA) | 50.00  | 50.00  |\n" +
+                    "| SavingsB to MainAB (MainB) | +40.00 | +25.00 |\n" +
+                    "| SavingsB to MainAB (MainA) | +30.00 | +25.00 |")
+      .checkGroupToggleNotShown("MainB to SavingsB")
+      .checkGroupToggleNotShown("MainAB to SavingsA (MainA)");
     budgetView.transfer
       .editSeries("MainB to SavingsB")
       .checkFromAccount("MainB")
       .checkToAccount("SavingsB")
       .cancel();
+    budgetView.transfer
+      .editSeries("MainAB to SavingsA (MainB)")
+      .checkFromAccount("MainB")
+      .checkToAccount("SavingsA")
+      .cancel();
+    budgetView.transfer
+      .editSeries("MainAB to SavingsA (MainA)")
+      .checkFromAccount("MainA")
+      .checkToAccount("SavingsA")
+      .cancel();
 
     savingsAccounts.select("SavingsA");
     budgetView.transfer
-      .checkContent("| External to SavingsA | +100.00 | +100.00 |");
+      .checkContent("| MainAB to SavingsA (MainB) | +150.00 | +50.00  |\n" +
+                    "| External to SavingsA       | +100.00 | +100.00 |\n" +
+                    "| MainAB to SavingsA (MainA) | +50.00  | +50.00  |");
     budgetView.transfer
       .editSeries("External to SavingsA")
       .checkFromAccount("External account")
       .checkToAccount("SavingsA")
       .cancel();
+    budgetView.transfer
+      .editSeries("MainAB to SavingsA (MainB)")
+      .checkFromAccount("MainB")
+      .checkToAccount("SavingsA")
+      .cancel();
+    budgetView.transfer
+      .editSeries("MainAB to SavingsA (MainA)")
+      .checkFromAccount("MainA")
+      .checkToAccount("SavingsA")
+      .cancel();
 
     savingsAccounts.select("SavingsB");
     budgetView.transfer
-      .checkContent("| SavingsB to External | 200.00 | 150.00 |\n" +
-                    "| MainB to SavingsB    | +75.00 | +75.00 |");
+      .checkContent("| SavingsB to External       | 200.00 | To define |\n" +
+                    "| MainB to SavingsB          | +75.00 | +75.00    |\n" +
+                    "| SavingsB to MainAB (MainB) | 40.00  | 25.00     |\n" +
+                    "| SavingsB to MainAB (MainA) | 30.00  | 25.00     |");
     budgetView.transfer
       .editSeries("SavingsB to External")
       .checkFromAccount("SavingsB")
@@ -119,9 +148,9 @@ public class SeriesUpgradeTest extends LoggedInFunctionalTestCase {
   }
 
   public void testTransfersWithNoTransactions() throws Exception {
+
     operations.restore(Files.copyResourceToTmpFile(this, "/testbackups/upgrade_jar131_series_transfers_no_transactions.budgetview"));
 
-    views.selectBudget();
     budgetView.transfer
       .checkContent("| SavingsB to Main | 0.00 | +150.00 |\n" +
                     "| Main to SavingsA | 0.00 | 100.00  |");
@@ -144,14 +173,14 @@ public class SeriesUpgradeTest extends LoggedInFunctionalTestCase {
     operations.restore(Files.copyResourceToTmpFile(this, "/testbackups/upgrade_jar131_series_transfers_no_transactions_one_main_account.budgetview"));
 
     budgetView.transfer
-      .checkContent("| Main to SavingsA | 500.00 | 500.00 |");
+      .checkContent("| Main to SavingsA | 0.00 | 500.00 |");
 
     notifications.checkHidden();
 
     transactions.showPlannedTransactions();
     transactions.initAmountContent()
-      .add("01/12/2014", "MAIN TO SAVINGSA", 500.00, "Main to SavingsA", 20500.00, 50500.00, "SavingsA")
-      .add("01/12/2014", "MAIN TO SAVINGSA", -500.00, "Main to SavingsA", 500.00, 500.00, "MainA")
+      .add("15/12/2014", "Planned: Main to SavingsA", 500.00, "Main to SavingsA", 2500.00, 5500.00, "SavingsA")
+      .add("15/12/2014", "Planned: Main to SavingsA", -500.00, "Main to SavingsA", 500.00, 500.00, "MainA")
       .check();
 
     budgetView.transfer
