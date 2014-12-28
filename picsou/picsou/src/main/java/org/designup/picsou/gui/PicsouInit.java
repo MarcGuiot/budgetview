@@ -110,7 +110,6 @@ public class PicsouInit {
     repository.addTrigger(new AccountInitialPositionTrigger());
     repository.addTrigger(new DeleteInitialSeriesTrigger());
     repository.addTrigger(new DeleteUnusedSeriesGroupTrigger());
-    repository.addTrigger(new ProjectAccountTrigger());
     repository.addTrigger(new ProjectTransferAccountChangeTrigger());
     repository.addTrigger(new ProjectToItemTrigger());
     repository.addTrigger(new ProjectItemToAmountGlobalTrigger());

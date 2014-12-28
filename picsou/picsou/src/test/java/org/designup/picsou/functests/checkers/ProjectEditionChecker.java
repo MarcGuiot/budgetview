@@ -42,14 +42,6 @@ public class ProjectEditionChecker extends ViewChecker {
     return this;
   }
 
-  public ProjectEditionChecker checkDefaultAccountCombo(String accountName){
-    ComboBox combo = getPanel().getComboBox("accountSelection");
-    assertThat(combo.selectionEquals(accountName));
-    assertThat(combo.isVisible());
-    checkComponentVisible(getPanel(), JLabel.class, "accountLabel", false);
-    return this;
-  }
-
   public ProjectEditionChecker checkDefaultAccountLabel(String accountName){
     TextBox accountLabel = getPanel().getTextBox("accountLabel");
     assertThat(accountLabel.textEquals(accountName));
@@ -60,18 +52,6 @@ public class ProjectEditionChecker extends ViewChecker {
 
   public ProjectEditionChecker setNameAndValidate(String name) {
     getPanel().getTextBox("projectName").setText(name);
-    return this;
-  }
-
-  public ProjectEditionChecker setNameAndDefaultAccount(String name, String accountName) {
-    getPanel().getTextBox("projectName").setText(name, false);
-    getPanel().getComboBox("accountSelection").select(accountName);
-    validateProjectEdition();
-    return this;
-  }
-
-  public ProjectEditionChecker validateProjectEdition() {
-    getPanel().getPanel("projectEditor").getButton("validate").click();
     return this;
   }
 

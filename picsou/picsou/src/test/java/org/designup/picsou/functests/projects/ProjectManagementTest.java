@@ -28,7 +28,6 @@ public class ProjectManagementTest extends LoggedInFunctionalTestCase {
 
     projects.createFirst();
     currentProject
-      .setDefaultAccount("Account n. 001111")
       .checkProjectGaugeHidden()
       .checkProjectButtonsHidden()
       .setNameAndValidate("My project")
@@ -36,7 +35,8 @@ public class ProjectManagementTest extends LoggedInFunctionalTestCase {
       .checkItemCount(0);
     currentProject.addExpenseItem()
       .editExpense(0)
-      .checkTargetAccountCombo("Account n. 001111")
+      .checkTargetAccountCombo("Main accounts")
+      .setTargetAccount("Account n. 001111")
       .setLabel("Reservation")
       .checkMonth("Jan 2011")
       .setAmount(-200.00)
@@ -655,16 +655,20 @@ public class ProjectManagementTest extends LoggedInFunctionalTestCase {
       .load();
 
     projects.createFirst();
+    currentProject.setNameAndValidate("My project");
     currentProject
-      .setNameAndDefaultAccount("My project", "Account n. 002222")
       .addExpenseItem(0, "First 1111", 201012, -1000.00, "Account n. 001111")
       .addExpenseItem(1, "Second 2222", 201012, -100.00);
     currentProject
       .toggleAndEditExpense(0)
-      .checkTargetAccountCombo("Account n. 001111");
+      .checkTargetAccountChoices("Account n. 001111", "Account n. 002222", "Main accounts")
+      .checkTargetAccountCombo("Account n. 001111")
+      .validate();
     currentProject
       .toggleAndEditExpense(1)
-      .checkTargetAccountCombo("Account n. 002222");
+      .checkTargetAccountCombo("Main accounts")
+      .setTargetAccount("Account n. 002222")
+      .validate();
 
     timeline.selectAll();
     transactions
@@ -684,11 +688,13 @@ public class ProjectManagementTest extends LoggedInFunctionalTestCase {
       .selectSeries("First 1111");
 
     currentProject
-      .editExpense(0)
-      .checkTargetAccountLabel("Account n. 001111");
+      .toggleAndEditExpense(0)
+      .checkTargetAccountLabel("Account n. 001111")
+      .validate();
     currentProject
-      .editExpense(1)
-      .checkTargetAccountCombo("Account n. 002222");
+      .toggleAndEditExpense(1)
+      .checkTargetAccountCombo("Account n. 002222")
+      .validate();
 
     categorization.selectTransaction("SECOND 2222")
       .selectExtras()
@@ -696,11 +702,9 @@ public class ProjectManagementTest extends LoggedInFunctionalTestCase {
       .selectSeries("Second 2222");
 
     currentProject
-      .editExpense(1)
-      .checkTargetAccountLabel("Account n. 002222");
-
-    currentProject.editExpense(0).validate();
-    currentProject.editExpense(1).validate();
+      .toggleAndEditExpense(1)
+      .checkTargetAccountLabel("Account n. 002222")
+      .validate();
 
     transactions.initAmountContent()
       .add("11/12/2010", "Planned: First 1111", -900.00, "First 1111", 100.00, 100.00, "Account n. 001111")
@@ -733,15 +737,10 @@ public class ProjectManagementTest extends LoggedInFunctionalTestCase {
 
     projects.createFirst();
     currentProject.setNameAndValidate("My project");
-    currentProject.checkDefaultAccountLabel("Account n. 001111");
     currentProject.addExpenseItem(0, "Item 1", 201012, -200.00);
     budgetView.extras.checkContent("| My project | 0.00 | 200.00 |\n");
 
-    currentProject.edit()
-      .checkDefaultAccountCombo("Account n. 001111")
-      .setDefaultAccount("Account n. 002222")
-      .validateProjectEdition();
-    currentProject.toggleAndEditExpense(0).checkTargetAccountCombo("Account n. 001111").validate();
+    currentProject.toggleAndEditExpense(0).checkTargetAccountCombo("Main accounts").validate();
 
     budgetView.extras.checkContent("| My project | 0.00 | 200.00 |\n");
   }

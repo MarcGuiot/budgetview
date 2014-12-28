@@ -104,11 +104,6 @@ public class ProjectEditor {
 
     nameField = builder.addEditor("projectNameField", Project.NAME);
 
-    builder.addLabel("accountLabel", Project.DEFAULT_ACCOUNT);
-
-    builder.addComboEditor("accountSelection", Project.DEFAULT_ACCOUNT)
-      .setFilter(new Account.UserAccountMatcher());
-
     ValidateAction validate = new ValidateAction();
     builder.add("validate", validate);
     nameField.setValidationAction(validate);

@@ -26,7 +26,6 @@ public class AccountDeletionTrigger extends DefaultChangeSetListener {
 
   public void processAccountDeletions(Set<Key> deletedKeys, GlobRepository repository) {
 
-    Set<Integer> projectIds = new HashSet<Integer>();
     Set<Glob> itemsToDelete = new HashSet<Glob>();
     Set<Glob> seriesToDelete = new HashSet<Glob>();
     for (Key accountKey : deletedKeys) {
@@ -44,6 +43,7 @@ public class AccountDeletionTrigger extends DefaultChangeSetListener {
       repository.delete(AccountPositionError.TYPE, linkedTo(accountKey, AccountPositionError.ACCOUNT));
     }
 
+    Set<Integer> projectIds = new HashSet<Integer>();
     for (Glob item : itemsToDelete) {
       projectIds.add(item.get(ProjectItem.PROJECT));
     }
@@ -58,17 +58,9 @@ public class AccountDeletionTrigger extends DefaultChangeSetListener {
       }
     }
 
-    Integer defaultMainAccountId = Account.getDefaultMainAccountId(repository);
-    Key defaultAccountKey = defaultMainAccountId != null ? Key.create(Account.TYPE, defaultMainAccountId) : null;
     for (Integer projectId : projectIds) {
       if (!repository.contains(ProjectItem.TYPE, fieldEquals(ProjectItem.PROJECT, projectId))) {
         Project.deleteAll(Key.create(Project.TYPE, projectId), repository);
-      }
-      else {
-        Glob project = repository.get(Key.create(Project.TYPE, projectId));
-        if (deletedKeys.contains(Key.create(Account.TYPE, project.get(Project.DEFAULT_ACCOUNT)))) {
-          repository.setTarget(project.getKey(), Project.DEFAULT_ACCOUNT, defaultAccountKey);
-        }
       }
     }
   }

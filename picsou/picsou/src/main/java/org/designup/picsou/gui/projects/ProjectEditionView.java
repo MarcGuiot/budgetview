@@ -254,7 +254,7 @@ public class ProjectEditionView extends View implements GlobSelectionListener {
                                       value(ProjectItem.LABEL, defaultLabel),
                                       value(ProjectItem.FIRST_MONTH, getNewItemMonth()),
                                       value(ProjectItem.PROJECT, projectId),
-                                      value(ProjectItem.ACCOUNT, repository.get(currentProjectKey).get(Project.DEFAULT_ACCOUNT)),
+                                      value(ProjectItem.ACCOUNT, Account.MAIN_SUMMARY_ACCOUNT_ID),
                                       value(ProjectItem.SEQUENCE_NUMBER, ProjectItem.getNextSequenceNumber(projectId, ProjectEditionView.this.repository)));
         if (ProjectItemType.TRANSFER.equals(itemType)) {
           repository.create(ProjectTransfer.TYPE, value(ProjectTransfer.PROJECT_ITEM, item.get(ProjectItem.ID)));

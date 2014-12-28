@@ -8,6 +8,7 @@ import org.uispec4j.Button;
 import org.uispec4j.Panel;
 import org.uispec4j.*;
 import org.uispec4j.assertion.Assertion;
+import org.uispec4j.assertion.UISpecAssert;
 import org.uispec4j.utils.Utils;
 
 import javax.swing.*;
@@ -111,25 +112,33 @@ public class BudgetAreaCategorizationChecker extends GuiChecker {
   }
 
   public BudgetAreaCategorizationChecker checkNoSeriesSelected() {
-    UIComponent[] selectors = panel.getUIComponents(RadioButton.class);
-    for (UIComponent selector : selectors) {
-      if (selector.getAwtComponent().isVisible()) {
-        assertFalse(selector.getLabel() + " selected", ((RadioButton)selector).isSelected());
+    UISpecAssert.assertThat(new Assertion() {
+      public void check() {
+        UIComponent[] selectors = panel.getUIComponents(RadioButton.class);
+        for (UIComponent selector : selectors) {
+          if (selector.getAwtComponent().isVisible()) {
+            assertFalse(selector.getLabel() + " selected", ((RadioButton)selector).isSelected());
+          }
+        }
       }
-    }
+    });
     return this;
   }
 
   public BudgetAreaCategorizationChecker checkContainsNoSeries() {
-    UIComponent[] uiComponents = panel.getUIComponents(ToggleButton.class);
-    if (uiComponents.length > 1) {
-      List<String> names = new ArrayList<String>();
-      for (UIComponent uiComponent : uiComponents) {
-        RadioButton toggle = (RadioButton)uiComponent;
-        names.add(toggle.getLabel());
+    UISpecAssert.assertThat(new Assertion() {
+      public void check() {
+        UIComponent[] uiComponents = panel.getUIComponents(ToggleButton.class);
+        if (uiComponents.length > 1) {
+          List<String> names = new ArrayList<String>();
+          for (UIComponent uiComponent : uiComponents) {
+            RadioButton toggle = (RadioButton)uiComponent;
+            names.add(toggle.getLabel());
+          }
+          fail("Unexpect toggles found: " + names);
+        }
       }
-      fail("Unexpect toggles found: " + names);
-    }
+    });
     return this;
   }
 

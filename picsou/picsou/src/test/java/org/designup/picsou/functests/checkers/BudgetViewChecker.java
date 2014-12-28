@@ -252,8 +252,12 @@ public class BudgetViewChecker extends ViewChecker {
       return this;
     }
 
-    public BudgetAreaChecker checkSeriesList(String... expectedNames) {
-      TestUtils.assertSetEquals(getActualNamesList(), expectedNames);
+    public BudgetAreaChecker checkSeriesList(final String... expectedNames) {
+      UISpecAssert.assertThat(new Assertion() {
+        public void check() {
+          TestUtils.assertSetEquals(getActualNamesList(), expectedNames);
+        }
+      });
       return this;
     }
 

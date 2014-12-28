@@ -53,7 +53,8 @@ public class ProjectItemExpensePanel extends ProjectItemEditionPanel {
     builder.add("urlField", urlField);
 
     accountSelection = builder.addComboEditor("accountSelection", ProjectItem.ACCOUNT)
-      .setFilter(new Account.MainAccountMatcher())
+      .setFilter(new Account.UserOrSummaryMainMatcher())
+      .setShowEmptyOption(false)
       .forceSelection(itemKey);
 
     accountLabel = builder.addLabel("accountLabel", ProjectItem.ACCOUNT)

@@ -829,9 +829,9 @@ public class Account {
     }
   }
 
-  public static class MainAccountMatcher implements GlobMatcher {
+  public static class UserOrSummaryMainMatcher implements GlobMatcher {
     public boolean matches(Glob account, GlobRepository repository) {
-      return account != null && Utils.equal(account.get(Account.ACCOUNT_TYPE), AccountType.MAIN.getId());
+      return isUserOrSummaryMain(account);
     }
   }
 

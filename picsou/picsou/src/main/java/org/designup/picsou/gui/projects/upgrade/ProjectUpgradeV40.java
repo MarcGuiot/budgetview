@@ -46,40 +46,10 @@ public class ProjectUpgradeV40 {
 
   public void updateProjectSeriesAndGroups() {
     ProjectToSeriesGroupTrigger.createGroupsForProjects(repository);
-    setDefaultAccountsForAllProjects(repository);
     createSeriesForExpensesItems(repository);
     createSeriesForTransferItems(repository);
     deleteProjectLevelSeries(repository);
     postProcessor.add(new UpdateSequenceNumbers());
-  }
-
-  private void setDefaultAccountsForAllProjects(GlobRepository repository) {
-    Integer defaultAccountId = Account.getDefaultMainAccountId(repository);
-    for (Glob project : repository.getAll(Project.TYPE)) {
-      GlobList transactions = repository.getAll(Transaction.TYPE,
-                                                and(fieldEquals(Transaction.SERIES, project.get(Project.SERIES)),
-                                                    isFalse(Transaction.PLANNED)));
-      if (!transactions.isEmpty()) {
-        Integer mostFrequentAccountId = null;
-        int maxCount = -1;
-        Set<Integer> accountIds = transactions.getValueSet(Transaction.ACCOUNT);
-        for (Integer accountId : accountIds) {
-          Glob account = repository.find(Key.create(Account.TYPE, accountId));
-          if ((account == null) || !Account.isUserCreatedMainAccount(account)) {
-            continue;
-          }
-          GlobList transactionsForAccount = transactions.filter(fieldEquals(Transaction.ACCOUNT, accountId), repository);
-          if (transactionsForAccount.size() > maxCount) {
-            mostFrequentAccountId = accountId;
-            maxCount = transactionsForAccount.size();
-          }
-        }
-        repository.update(project.getKey(), Project.DEFAULT_ACCOUNT, mostFrequentAccountId);
-      }
-      else {
-        repository.update(project.getKey(), Project.DEFAULT_ACCOUNT, defaultAccountId);
-      }
-    }
   }
 
   private void createSeriesForExpensesItems(GlobRepository repository) {
@@ -138,7 +108,6 @@ public class ProjectUpgradeV40 {
       allTransactions.addAll(mirrorTransactions);
 
       Glob project = repository.findLinkTarget(item, ProjectItem.PROJECT);
-      Integer projectAccountId = project.get(Project.DEFAULT_ACCOUNT);
 
       LinkField transferField;
       if (ProjectTransfer.isFromAccountAMainAccount(transfer, repository)) {
@@ -150,7 +119,7 @@ public class ProjectUpgradeV40 {
 
       Integer[] mainAccountIds = getMainUserCreatedAccounts(allTransactions, repository);
       if (mainAccountIds.length == 0) {
-        createTransferItem(item, item.get(ProjectItem.LABEL), project, transferField, projectAccountId, allTransactions, repository);
+        createTransferItem(item, item.get(ProjectItem.LABEL), project, transferField, Account.MAIN_SUMMARY_ACCOUNT_ID, allTransactions, repository);
       }
       else {
         String itemLabel = item.get(ProjectItem.LABEL);

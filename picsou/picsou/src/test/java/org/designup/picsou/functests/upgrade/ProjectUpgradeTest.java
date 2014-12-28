@@ -44,7 +44,6 @@ public class ProjectUpgradeTest extends LoggedInFunctionalTestCase {
     currentProject.view(0).checkCategorizationWarningNotShown();
     currentProject.view(1).checkCategorizationWarningShown();
     currentProject.view(2).checkCategorizationWarningNotShown();
-    currentProject.checkDefaultAccountLabel("Compte Perso");
 
     categorization.initContent()
       .add("15/01/2014", "Voyage", "AIR FRANCE", -30.00)
@@ -223,7 +222,6 @@ public class ProjectUpgradeTest extends LoggedInFunctionalTestCase {
       .check();
 
     projectList.select("Vacances");
-    currentProject.checkDefaultAccountLabel("Compte Joint");
     currentProject.checkItems("| Voyage                    | Apr | 450.00  | 500.00  |\n" +
                               "| Provisions - Compte Joint | Apr | +50.00  | +150.00 |\n" +
                               "| Provisions - Compte Perso | Apr | +200.00 | +150.00 |\n" +
@@ -255,7 +253,6 @@ public class ProjectUpgradeTest extends LoggedInFunctionalTestCase {
     addOns.activateProjects();
 
     projectList.select("Voyage");
-    currentProject.checkDefaultAccountLabel("Compte Joint");
     currentProject.checkItems("| Avion    | June | 0.00 | 500.00  |\n" +
                               "| Virement | June | 0.00 | +300.00 |");
 
@@ -282,7 +279,6 @@ public class ProjectUpgradeTest extends LoggedInFunctionalTestCase {
 
     projects.select("iPad");
     currentProject
-      .checkDefaultAccountLabel("Main account")
       .checkItems("| FNAC | Sep | 0.00 | 500.00 |");
     budgetView.extras.checkContent("| Trip to Rome | 200.00 | 200.00 |\n" +
                                    "| Gifts        | 0.00   | 0.00   |");
@@ -309,7 +305,6 @@ public class ProjectUpgradeTest extends LoggedInFunctionalTestCase {
 
     projects.select("iPad");
     currentProject
-      .checkDefaultAccountLabel("Main account")
       .checkItems("| FNAC      | Sep | 0.00 | 500.00  |\n" +
                   "| Virt iPad | Sep | 0.00 | +400.00 |\n");
 
@@ -333,7 +328,6 @@ public class ProjectUpgradeTest extends LoggedInFunctionalTestCase {
 
     projects.select("Rome");
     currentProject
-      .checkDefaultAccountLabel("Compte 00000123456")
       .checkItems("| Voyage   | Sep | 0.00 | 500.00  |\n" +
                   "| Virement | Sep | 0.00 | +400.00 |\n");
 

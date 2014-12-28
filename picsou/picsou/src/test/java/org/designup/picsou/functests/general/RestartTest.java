@@ -1,9 +1,6 @@
 package org.designup.picsou.functests.general;
 
-import org.designup.picsou.functests.checkers.ApplicationChecker;
-import org.designup.picsou.functests.checkers.CategorizationGaugeChecker;
-import org.designup.picsou.functests.checkers.LoginChecker;
-import org.designup.picsou.functests.checkers.PreferencesChecker;
+import org.designup.picsou.functests.checkers.*;
 import org.designup.picsou.functests.utils.OfxBuilder;
 import org.designup.picsou.functests.utils.RestartTestCase;
 import org.designup.picsou.gui.time.TimeService;
@@ -217,8 +214,8 @@ public class RestartTest extends RestartTestCase {
     operations.openPreferences().setFutureMonthsCount(6).validate();
 
     projects.createFirst();
+    currentProject.setNameAndValidate("MyProject");
     currentProject
-      .setNameAndDefaultAccount("MyProject", "Account n. 001111")
       .addExpenseItem(0, "Booking", 200808, -200.00)
       .addExpenseItem(1, "Travel", 200810, -100.00)
       .addExpenseItem(2, "Hotel", 200810, -500.00);

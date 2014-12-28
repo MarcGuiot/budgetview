@@ -23,8 +23,8 @@ public class ProjectDeletionTest extends LoggedInFunctionalTestCase {
     operations.hideSignposts();
 
     projects.createFirst();
+    currentProject.setNameAndValidate("My project");
     currentProject
-      .setNameAndDefaultAccount("My project", "Account n. 001111")
       .addExpenseItem(0, "Reservation", 201101, -200.00)
       .addExpenseItem(1, "Hotel", 201101, -300.00)
       .backToList();

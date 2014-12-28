@@ -32,6 +32,14 @@ public class ProjectItemExpenseEditionChecker extends ProjectItemEditionChecker<
     return this;
   }
 
+  public ProjectItemExpenseEditionChecker checkTargetAccountChoices(String... accounts) {
+    ComboBox combo = panel.getComboBox("accountSelection");
+    assertThat(combo.contentEquals(accounts));
+    assertThat(combo.isVisible());
+    assertFalse(panel.getTextBox("accountLabel").isVisible());
+    return this;
+  }
+
   public ProjectItemExpenseEditionChecker checkTargetAccountCombo(String account) {
     ComboBox combo = panel.getComboBox("accountSelection");
     assertThat(combo.selectionEquals(account));

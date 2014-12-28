@@ -23,8 +23,8 @@ public class ProjectRestartTest extends RestartTestCase {
     operations.openPreferences().setFutureMonthsCount(6).validate();
 
     projects.createFirst();
+    currentProject.setNameAndValidate("MyProject");
     currentProject
-      .setNameAndDefaultAccount("MyProject", "Account n. 001111")
       .addExpenseItem(0, "Booking", 200808, -200.00)
       .addExpenseItem(1, "Travel", 200810, -100.00)
       .addExpenseItem(2, "Hotel", 200810, -500.00);
@@ -167,8 +167,8 @@ public class ProjectRestartTest extends RestartTestCase {
     operations.openPreferences().setFutureMonthsCount(6).validate();
 
     projects.createFirst();
+    currentProject.setNameAndValidate("MyProject");
     currentProject
-      .setNameAndDefaultAccount("MyProject", "Account n. 001111")
       .addExpenseItem(0, "Booking", 200808, -200.00)
       .addExpenseItem(1, "Travel", 200810, -100.00)
       .addExpenseItem(2, "Hotel", 200810, -500.00);

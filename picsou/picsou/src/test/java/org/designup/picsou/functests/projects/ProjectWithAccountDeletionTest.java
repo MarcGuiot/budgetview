@@ -28,8 +28,8 @@ public class ProjectWithAccountDeletionTest extends LoggedInFunctionalTestCase {
       .load();
 
     projects.createFirst();
+    currentProject.setNameAndValidate("Project A");
     currentProject
-      .setNameAndDefaultAccount("Project A", "Account n. 001111")
       .addExpenseItem(0, "First 1111", 201012, -1000.00, "Account n. 001111")
       .addExpenseItem(1, "Second 2222", 201012, -100.00);
     currentProject
@@ -52,8 +52,8 @@ public class ProjectWithAccountDeletionTest extends LoggedInFunctionalTestCase {
       .selectSeries("Second 2222");
 
     projects.create();
+    currentProject.setNameAndValidate("Project B");
     currentProject
-      .setNameAndDefaultAccount("Project B", "Account n. 001111")
       .addExpenseItem(0, "Item 1", 201012, -500.00);
 
     budgetView.extras
@@ -84,13 +84,18 @@ public class ProjectWithAccountDeletionTest extends LoggedInFunctionalTestCase {
       .checkMessageContains("All the operations and series associated to this account will be deleted.")
       .validate();
 
-    projectList.checkNoCurrentProjects();
+    projectList.checkCurrentProjects("| Project B | Dec | 500.00 | on |");
     budgetView.extras
-      .checkNoSeriesShown()
+      .checkContent("| Project B | 0.00 | 500.00 |")
       .hideInactiveEnveloppes();
     transactions
       .checkShowsPlannedTransactions()
       .checkEmpty();
+
+    accounts.createMainAccount("Main3", 1000.00);
+    transactions.initAmountContent()
+      .add("11/12/2010", "Planned: Item 1", -500.00, "Item 1", 500.00, 500.00, "Main3")
+      .check();
   }
 
   public void testDeletingASavingsAccount() throws Exception {
@@ -165,8 +170,8 @@ public class ProjectWithAccountDeletionTest extends LoggedInFunctionalTestCase {
       .load();
 
     projects.createFirst();
+    currentProject.setNameAndValidate("Project A");
     currentProject
-      .setNameAndDefaultAccount("Project A", "Account n. 001111")
       .addExpenseItem(0, "First 1111", 201012, -1000.00, "Account n. 001111")
       .addExpenseItem(1, "Second 2222", 201012, -100.00, "Account n. 002222");
 
@@ -178,7 +183,6 @@ public class ProjectWithAccountDeletionTest extends LoggedInFunctionalTestCase {
       .validate();
 
     views.selectHome();
-    currentProject.checkDefaultAccountLabel("Account n. 002222");
     currentProject.checkItems("| Second 2222 | Dec | 400.00 | 100.00 |");
 
     budgetView.extras.checkContent("| Project A | 400.00 | 100.00 |");
