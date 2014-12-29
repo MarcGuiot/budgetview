@@ -419,14 +419,6 @@ public class DemoGenerationTest extends LoggedInFunctionalTestCase {
     System.out.println("Backup file saved in: " + backupPath);
   }
 
-  private String toAccount(String accountName) {
-    return Lang.get("savings.series.auto.create.name.to.savings", account(accountName));
-  }
-
-  private String fromAccount(String accountName) {
-    return Lang.get("savings.series.auto.create.name.from.savings", account(accountName));
-  }
-
   public void testCreateNextMonthFile() throws Exception {
 
     OfxBuilder.init(OFX_UPDATE_PATH)

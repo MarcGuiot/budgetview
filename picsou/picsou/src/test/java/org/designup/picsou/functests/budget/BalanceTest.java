@@ -50,7 +50,8 @@ public class BalanceTest extends LoggedInFunctionalTestCase {
     categorization.setNewRecurring("prov", "Courses");
     timeline.selectMonth("2009/05");
     categorization.editSeries("Courses")
-      .checkReadOnlyTargetAccount("Manual")
+      .checkEditableTargetAccount("Main accounts")
+      .setTargetAccount("Manual")
       .setPropagationEnabled()
       .setAmount(10)
       .validate();

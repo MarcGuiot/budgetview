@@ -78,7 +78,7 @@ public class AccountManagementTest extends LoggedInFunctionalTestCase {
     mainAccounts.checkDisplayIsEmpty("Main account");
   }
 
-  public void testChangeAccountTypeUncategorizeTransactionIfAssociatedSeriesIsNotSavings() throws Exception {
+  public void testChangeAccountTypeDoesNotUncategorizeTransactionsIfAssociatedSeriesIsNotSavings() throws Exception {
     OfxBuilder.init(this)
       .addBankAccount(-1, 10674, "000123", 100, "2008/08/26")
       .addTransaction("2008/07/26", 1000, "WorldCo")
@@ -87,7 +87,7 @@ public class AccountManagementTest extends LoggedInFunctionalTestCase {
       .load();
 
     timeline.selectAll();
-    categorization.setNewIncome("WorldCo", "income");
+    categorization.setNewIncome("WorldCo", "Income");
     categorization.setNewExtra("Epargne", "Epargne");
 
     mainAccounts.edit("Account n. 000123")
@@ -97,11 +97,10 @@ public class AccountManagementTest extends LoggedInFunctionalTestCase {
 
     transactions
       .showPlannedTransactions()
-      .initContent()
-      .add("26/08/2008", TransactionType.PLANNED, "Planned: Epargne", "", -800.00, "Epargne")
-      .add("26/08/2008", TransactionType.PRELEVEMENT, "Epargne", "", -800.00)
-      .add("26/08/2008", TransactionType.VIREMENT, "WorldCo", "", 1000.00)
-      .add("26/07/2008", TransactionType.VIREMENT, "WorldCo", "", 1000.00)
+      .initAmountContent()
+      .add("26/08/2008", "EPARGNE", -800.00, "Epargne", 100.00, 100.00, "Account n. 000123")
+      .add("26/08/2008", "WORLDCO", 1000.00, "Income", 900.00, 900.00, "Account n. 000123")
+      .add("26/07/2008", "WORLDCO", 1000.00, "Income", -100.00, -100.00, "Account n. 000123")
       .check();
   }
 

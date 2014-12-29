@@ -1,6 +1,8 @@
 package org.designup.picsou.gui.projects.upgrade;
 
 import com.budgetview.shared.utils.Amounts;
+import org.designup.picsou.gui.accounts.utils.AccountMatchers;
+import org.designup.picsou.gui.description.stringifiers.AccountComparator;
 import org.designup.picsou.gui.model.SeriesStat;
 import org.designup.picsou.gui.model.SeriesType;
 import org.designup.picsou.gui.transactions.utils.MirrorTransactionFinder;
@@ -32,6 +34,7 @@ public class ProjectUpgradeV40 {
 
   private final GlobRepository repository;
   private final PostProcessor postProcessor;
+  private final Integer defaultMainAccount;
   private Set<Integer> managedSeries = new HashSet<Integer>();
 
   public static void run(GlobRepository repository, PostProcessor postProcessor) {
@@ -42,6 +45,8 @@ public class ProjectUpgradeV40 {
   private ProjectUpgradeV40(GlobRepository repository, PostProcessor postProcessor) {
     this.repository = repository;
     this.postProcessor = postProcessor;
+    GlobList accounts = repository.getAll(Account.TYPE, AccountMatchers.userCreatedMainAccounts()).sort(new AccountComparator());
+    this.defaultMainAccount = accounts.isEmpty() ? null : accounts.getFirst().get(Account.ID);
   }
 
   public void updateProjectSeriesAndGroups() {
@@ -119,7 +124,7 @@ public class ProjectUpgradeV40 {
 
       Integer[] mainAccountIds = getMainUserCreatedAccounts(allTransactions, repository);
       if (mainAccountIds.length == 0) {
-        createTransferItem(item, item.get(ProjectItem.LABEL), project, transferField, Account.MAIN_SUMMARY_ACCOUNT_ID, allTransactions, repository);
+        createTransferItem(item, item.get(ProjectItem.LABEL), project, transferField, defaultMainAccount, allTransactions, repository);
       }
       else {
         String itemLabel = item.get(ProjectItem.LABEL);

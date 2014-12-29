@@ -1,8 +1,9 @@
 package org.designup.picsou.gui.series;
 
 import org.designup.picsou.gui.accounts.position.DailyAccountPositionComputer;
+import org.designup.picsou.gui.accounts.utils.AccountMatchers;
 import org.designup.picsou.gui.model.PeriodAccountStat;
-import org.designup.picsou.gui.utils.Matchers;
+import org.designup.picsou.gui.transactions.utils.TransactionMatchers;
 import org.designup.picsou.model.Account;
 import org.designup.picsou.model.Month;
 import org.designup.picsou.model.Transaction;
@@ -17,7 +18,7 @@ import org.globsframework.utils.directory.Directory;
 import java.util.Set;
 import java.util.SortedSet;
 
-import static org.designup.picsou.model.Account.activeUserCreatedMainAccounts;
+import static org.designup.picsou.gui.accounts.utils.AccountMatchers.activeUserCreatedMainAccounts;
 import static org.globsframework.model.FieldValue.value;
 
 public class PeriodAccountStatUpdater implements ChangeSetListener, GlobSelectionListener {
@@ -60,7 +61,7 @@ public class PeriodAccountStatUpdater implements ChangeSetListener, GlobSelectio
       repository.deleteAll(PeriodAccountStat.TYPE);
       final SortedSet<Integer> monthIds = selectionService.getSelection(Month.TYPE).getSortedSet(Month.ID);
       if (!monthIds.isEmpty()) {
-        for (Glob account : repository.getAll(Account.TYPE, activeUserCreatedMainAccounts(monthIds))) {
+        for (Glob account : repository.getAll(Account.TYPE, AccountMatchers.activeUserCreatedMainAccounts(monthIds))) {
           Integer accountId = account.get(Account.ID);
           Glob stat = repository.findOrCreate(Key.create(PeriodAccountStat.TYPE, accountId));
           computeAccountStat(stat.getKey(), accountId, monthIds);
@@ -97,7 +98,7 @@ public class PeriodAccountStatUpdater implements ChangeSetListener, GlobSelectio
       }
     }
     if (!transactionsFound) {
-      GlobMatcher accountMatcher = Matchers.transactionsForAccount(accountId);
+      GlobMatcher accountMatcher = TransactionMatchers.transactionsForAccount(accountId);
       Double lastKnownPosition = DailyAccountPositionComputer.getLastValue(accountMatcher, monthIds.first(), Transaction.ACCOUNT_POSITION, repository);
       isOk = lastKnownPosition == null || lastKnownPosition >= 0;
     }

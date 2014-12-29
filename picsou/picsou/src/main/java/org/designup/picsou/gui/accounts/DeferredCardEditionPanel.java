@@ -1,15 +1,13 @@
 package org.designup.picsou.gui.accounts;
 
-import org.designup.picsou.gui.utils.Matchers;
+import org.designup.picsou.gui.accounts.utils.AccountMatchers;
 import org.designup.picsou.model.Account;
-import org.designup.picsou.server.session.SessionService;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.SelectionService;
 import org.globsframework.gui.editors.GlobComboEditor;
 import org.globsframework.gui.editors.GlobLinkComboEditor;
 import org.globsframework.gui.splits.utils.Disposable;
-import org.globsframework.model.Glob;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.utils.GlobMatcher;
 import org.globsframework.model.utils.GlobMatchers;
@@ -17,7 +15,6 @@ import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.Collections;
 
 public class DeferredCardEditionPanel implements Disposable {
 
@@ -55,7 +52,7 @@ public class DeferredCardEditionPanel implements Disposable {
       builder
         .addComboEditor("deferredMonthShift", Account.DEFERRED_MONTH_SHIFT, new int[]{0, 1, 2, 3})
         .setRenderer(new MonthShiftRenderer());
-    accountFilter = GlobMatchers.and(Matchers.userCreatedMainAccounts(),
+    accountFilter = GlobMatchers.and(AccountMatchers.userCreatedMainAccounts(),
                                      GlobMatchers.notInSelection(Account.TYPE, directory.get(SelectionService.class)));
     deferredTargetAccount = builder.addComboEditor("deferredTargetAccount", Account.DEFERRED_TARGET_ACCOUNT)
       .setFilter(accountFilter);

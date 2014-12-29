@@ -348,26 +348,31 @@ public class SeriesDeletionTest extends LoggedInFunctionalTestCase {
   }
 
   public void testTransferOnlyIfSameAccount() throws Exception {
-    accounts.createMainAccount("her account", 10);
+    accounts.createMainAccount("Main1", 10);
     OfxBuilder.init(this)
       .addTransaction("2010/12/01", 100.00, "Auchan")
-      .loadInAccount("her account");
-    accounts.createMainAccount("his account", 10);
+      .loadInAccount("Main1");
+    accounts.createMainAccount("Main2", 10);
 
-    budgetView.variable.createSeries("courses", "her account");
-    budgetView.variable.createSeries("courses sans compte");
-    categorization.setVariable("Auchan", "courses");
-    budgetView.variable.createSeries("his courses", "his account");
-    budgetView.variable.openDeleteSeries("courses")
-      .checkTransferSeries("courses sans compte")
+    budgetView.variable.createSeries("SeriesA for Main1", "Main1");
+    categorization.setVariable("Auchan", "SeriesA for Main1");
+
+    budgetView.variable.createSeries("Series for all accounts");
+    
+    budgetView.variable.createSeries("Series for Main2", "Main2");
+    
+    budgetView.variable.openDeleteSeries("SeriesA for Main1")
+      .checkTransferSeries("Series for all accounts")
       .cancel();
-    budgetView.variable.createSeries("her courses", "her account");
-    budgetView.variable.openDeleteSeries("courses")
-      .checkTransferSeries("courses sans compte", "her courses")
-      .selectTransferSeries("courses sans compte")
+
+    budgetView.variable.createSeries("SeriesB for Main1", "Main1");
+    budgetView.variable.openDeleteSeries("SeriesA for Main1")
+      .checkTransferSeries("Series for all accounts", "SeriesB for Main1")
+      .selectTransferSeries("Series for all accounts")
       .transfer();
-    budgetView.variable.editSeries("courses sans compte")
-      .checkReadOnlyTargetAccount("her account")
+
+    budgetView.variable.editSeries("Series for all accounts")
+      .checkEditableTargetAccount("Main1")
       .cancel();
   }
 }

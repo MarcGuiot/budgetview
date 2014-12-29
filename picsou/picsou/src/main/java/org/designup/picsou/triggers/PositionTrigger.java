@@ -2,6 +2,7 @@ package org.designup.picsou.triggers;
 
 import com.budgetview.shared.utils.Amounts;
 import org.designup.picsou.gui.time.TimeService;
+import org.designup.picsou.gui.transactions.utils.TransactionMatchers;
 import org.designup.picsou.model.*;
 import org.designup.picsou.utils.TransactionComparator;
 import org.globsframework.metamodel.GlobType;
@@ -238,7 +239,7 @@ public class PositionTrigger implements ChangeSetListener {
       Integer monthId = currentMonth.get(CurrentMonth.CURRENT_MONTH);
       Integer day = currentMonth.get(CurrentMonth.CURRENT_DAY);
       GlobMatcher futureMatcher = getMatcherForFutureOperations(accountId, monthId, day);
-      GlobMatcher realMatcher = Transaction.getMatcherForRealOperations(accountId, monthId, day);
+      GlobMatcher realMatcher = TransactionMatchers.realTransactions(accountId, monthId, day);
 
       Key accountKey = Key.create(Account.TYPE, accountId);
       Glob account = repository.get(accountKey);

@@ -116,8 +116,7 @@ public class AutoCategorizationTest extends LoggedInFunctionalTestCase {
       .addTransaction("2006/01/10", -1.1, "Menu K")
       .addTransaction("2006/01/11", -1.1, "Fouquet's")
       .save();
-//    System.out.println("AutoCategorizationTest.testAutoCategorizationWithCardTransactions " + path);
-//    openApplication();
+
     operations
       .openImportDialog()
       .setFilePath(path)

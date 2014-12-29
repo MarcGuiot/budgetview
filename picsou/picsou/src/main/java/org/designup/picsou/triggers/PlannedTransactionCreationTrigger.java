@@ -1,6 +1,7 @@
 package org.designup.picsou.triggers;
 
 import com.budgetview.shared.utils.Amounts;
+import org.designup.picsou.gui.accounts.utils.AccountMatchers;
 import org.designup.picsou.gui.model.SeriesShape;
 import org.designup.picsou.model.*;
 import org.designup.picsou.model.util.AmountMap;
@@ -351,7 +352,7 @@ public class PlannedTransactionCreationTrigger implements ChangeSetListener {
     }
 
     if (Account.MAIN_SUMMARY_ACCOUNT_ID == targetAccount) {
-      Integer[] accountIds = repository.getAll(Account.TYPE, Account.activeUserCreatedMainAccounts(monthId)).getSortedArray(Account.ID);
+      Integer[] accountIds = repository.getAll(Account.TYPE, AccountMatchers.activeUserCreatedMainAccounts(monthId)).getSortedArray(Account.ID);
       AmountMap actualAmounts = getActualsForTargetMonth(series, monthId, repository);
       double[] plannedAmounts = splitAmountBetweenAccounts(amount, accountIds, series.get(Series.ID), currentMonth, repository);
       levelPlannedWhenExceeded(accountIds, plannedAmounts, actualAmounts);

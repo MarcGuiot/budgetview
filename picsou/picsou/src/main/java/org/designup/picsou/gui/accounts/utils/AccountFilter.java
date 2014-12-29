@@ -3,7 +3,7 @@ package org.designup.picsou.gui.accounts.utils;
 import org.designup.picsou.gui.components.filtering.FilterClearer;
 import org.designup.picsou.gui.components.filtering.FilterManager;
 import org.designup.picsou.gui.model.PeriodSeriesStat;
-import org.designup.picsou.gui.utils.Matchers;
+import org.designup.picsou.gui.transactions.utils.TransactionMatchers;
 import org.designup.picsou.model.Account;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobSelection;
@@ -33,7 +33,7 @@ public class AccountFilter {
       public GlobMatcher convert(GlobList selectedAccounts) {
         return selectedAccounts.isEmpty() ?
                GlobMatchers.ALL :
-               Matchers.transactionsForAccounts(selectedAccounts.getValueSet(Account.ID), repository);
+               TransactionMatchers.transactionsForAccounts(selectedAccounts.getValueSet(Account.ID), repository);
       }
     });
   }

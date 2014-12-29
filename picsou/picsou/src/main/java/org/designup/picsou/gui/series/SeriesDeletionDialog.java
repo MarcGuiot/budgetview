@@ -192,7 +192,7 @@ public class SeriesDeletionDialog {
     public boolean matches(Glob series, GlobRepository repository) {
       return (series != null)
              && !series.getKey().equals(currentSeries.getKey())
-             && ((series.get(Series.TARGET_ACCOUNT) == null) || series.get(Series.TARGET_ACCOUNT).equals(targetAccount))
+             && Series.isSeriesForAccount(series, targetAccount, repository)
              && !BudgetArea.TRANSFER.getId().equals(series.get(Series.BUDGET_AREA))
              && !series.getKey().get(Series.ID).equals(Series.ACCOUNT_SERIES_ID);
     }

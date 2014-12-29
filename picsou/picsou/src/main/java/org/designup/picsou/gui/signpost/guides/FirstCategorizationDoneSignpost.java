@@ -3,7 +3,7 @@ package org.designup.picsou.gui.signpost.guides;
 import net.java.balloontip.BalloonTip;
 import net.java.balloontip.TableCellBalloonTip;
 import org.designup.picsou.gui.signpost.PersistentSignpost;
-import org.designup.picsou.gui.utils.Matchers;
+import org.designup.picsou.gui.transactions.utils.TransactionMatchers;
 import org.designup.picsou.model.SignpostSectionType;
 import org.designup.picsou.model.SignpostStatus;
 import org.designup.picsou.model.Transaction;
@@ -126,10 +126,10 @@ public class FirstCategorizationDoneSignpost extends PersistentSignpost implemen
 
   private boolean noRemainingOperationsToCategorize() {
     return repository.contains(Transaction.TYPE) &&
-           !repository.contains(Transaction.TYPE, Matchers.uncategorizedTransactions());
+           !repository.contains(Transaction.TYPE, TransactionMatchers.uncategorizedTransactions());
   }
 
   private boolean hasCategorizedOperations() {
-    return repository.contains(Transaction.TYPE, Matchers.categorizedTransactions());
+    return repository.contains(Transaction.TYPE, TransactionMatchers.categorizedTransactions());
   }
 }

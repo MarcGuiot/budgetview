@@ -2,6 +2,7 @@ package org.designup.picsou.gui.accounts;
 
 import org.designup.picsou.gui.description.stringifiers.AccountStringifier;
 import org.designup.picsou.gui.description.stringifiers.TransactionDateStringifier;
+import org.designup.picsou.gui.transactions.utils.TransactionMatchers;
 import org.designup.picsou.gui.utils.Gui;
 import org.designup.picsou.model.Account;
 import org.designup.picsou.model.CurrentMonth;
@@ -96,9 +97,9 @@ public class AccountPositionEditionPanel {
   private void updateTransactionInfo(Glob account, GlobRepository transactionsRepository) {
     Glob currentMonth = transactionsRepository.get(CurrentMonth.KEY);
     transaction = transactionsRepository.getAll(Transaction.TYPE,
-                                                Transaction.getMatcherForRealOperations(account.get(Account.ID),
-                                                                                        currentMonth.get(CurrentMonth.CURRENT_MONTH),
-                                                                                        currentMonth.get(CurrentMonth.CURRENT_DAY)))
+                                                TransactionMatchers.realTransactions(account.get(Account.ID),
+                                                                                     currentMonth.get(CurrentMonth.CURRENT_MONTH),
+                                                                                     currentMonth.get(CurrentMonth.CURRENT_DAY)))
       .sort(TransactionComparator.ASCENDING_ACCOUNT).getLast();
     if (transaction != null) {
       selectionService.select(transaction);

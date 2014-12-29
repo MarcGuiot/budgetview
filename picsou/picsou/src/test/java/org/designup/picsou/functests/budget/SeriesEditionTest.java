@@ -31,8 +31,8 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
       .checkTitle("Editing a series")
       .checkName("Internet")
       .setName("Free")
-      .checkReadOnlyTargetAccount("Account n. 000123")
-      .checkNoTargetAccountWarningHidden()
+      .checkEditableTargetAccount("Main accounts")
+      .checkAvailableTargetAccounts("Account n. 000123", "Main accounts")
       .checkChart(new Object[][]{
         {"2008", "July", 29.00, 29.00, true},
         {"2008", "August", 0.00, 29.00},
@@ -43,7 +43,7 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
       .checkAmountLabel("Planned amount from july 2008")
       .validate();
 
-    budgetView.recurring.checkSeries("Free", -29.00, -29.00);
+    budgetView.recurring.checkContent("| Free | 29.00 | 29.00 |");
   }
 
   public void testSeriesNamesAreTrimmed() throws Exception {
@@ -1433,13 +1433,13 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
 
   public void testCanSelectMainAccountBeforeAnyOperationIsAssigned() throws Exception {
     OfxBuilder.init(this)
-      .addBankAccount(-1, 10674, "000123", 1000.00, "2008/10/15")
-      .addTransaction("2008/10/15", -30.00, "Auchan")
+      .addBankAccount(-1, 10674, "000123", 1000.00, "2008/08/15")
+      .addTransaction("2008/08/15", -30.00, "Auchan")
       .load();
 
     OfxBuilder.init(this)
-      .addBankAccount(-1, 10674, "000234", 2000.00, "2008/10/10")
-      .addTransaction("2008/10/10", -50.00, "FNAC")
+      .addBankAccount(-1, 10674, "000234", 2000.00, "2008/08/10")
+      .addTransaction("2008/08/10", -50.00, "FNAC")
       .load();
 
     accounts.createNewAccount()
@@ -1451,26 +1451,26 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
 
     budgetView.variable.createSeries()
       .setName("Courses")
-      .checkNoTargetAccountWarningShown()
+      .checkEditableTargetAccount("Main accounts")
       .checkAvailableTargetAccounts("Account n. 000123", "Account n. 000234", "Main accounts")
+      .setTargetAccount("Account n. 000123")
       .setAmount(100.00)
       .validate();
 
     mainAccounts.getChart("Account n. 000123")
-      .checkValue(200810, 1, 1000.00)
-      .checkValue(200810, 15, 970.00);
+      .checkValue(200808, 1, 1030.00)
+      .checkValue(200808, 15, 900.00);
 
-    budgetView.variable.editPlannedAmountWithFullEditor("Courses")
-      .checkNoTargetAccountWarningShown()
-      .setTargetAccount("Account n. 000123")
-      .checkNoTargetAccountWarningHidden()
+    budgetView.variable.editSeries("Courses")
+      .checkEditableTargetAccount("Account n. 000123")
+      .checkAvailableTargetAccounts("Account n. 000123", "Account n. 000234", "Main accounts")
+      .setTargetAccount("Main accounts")
       .checkAmount(100.00)
       .validate();
 
     mainAccounts.getChart("Account n. 000123")
-      .checkValue(200810, 1, 800.00)
-      .checkValue(200810, 11, 700.00)
-      .checkValue(200810, 15, 670.00);
+      .checkValue(200808, 1, 1030.00)
+      .checkValue(200808, 15, 950.00);
   }
 
   public void testClosedAccount() throws Exception {

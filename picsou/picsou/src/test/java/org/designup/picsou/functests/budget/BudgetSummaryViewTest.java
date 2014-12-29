@@ -2,6 +2,7 @@ package org.designup.picsou.functests.budget;
 
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
+import org.globsframework.utils.Log;
 
 public class BudgetSummaryViewTest extends LoggedInFunctionalTestCase {
 
@@ -135,13 +136,11 @@ public class BudgetSummaryViewTest extends LoggedInFunctionalTestCase {
 
     accounts. checkContent(
       "| Account n. 000111 | 1500.00 on 2008/06/10 | sunny |\n" +
-      "| Account n. 00222  | 1000.00 on 2008/06/10 | sunny |"
-    );
+      "| Account n. 00222  | 1000.00 on 2008/06/10 | sunny |");
 
     timeline.selectMonth("2008/06");
 
     views.selectBudget();
-
     mainAccounts.rollover("Account n. 000111", 200806, 3);
     budgetView.income.checkNotHighlighted("Salary");
     budgetView.variable.checkNotHighlighted("Groceries");

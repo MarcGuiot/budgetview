@@ -1,5 +1,6 @@
 package org.designup.picsou.gui.card;
 
+import org.designup.picsou.gui.accounts.utils.AccountMatchers;
 import org.designup.picsou.gui.categorization.actions.EditSeriesAction;
 import org.designup.picsou.gui.categorization.actions.ShowMonthTransactionsInCategorizationViewAction;
 import org.designup.picsou.gui.categorization.actions.ShowTransactionsInCategorizationViewAction;
@@ -8,7 +9,7 @@ import org.designup.picsou.gui.transactions.actions.ShowAccountTransactionsInAcc
 import org.designup.picsou.gui.transactions.actions.ShowAllTransactionsInAccountViewAction;
 import org.designup.picsou.gui.transactions.actions.ShowSeriesTransactionsInAccountViewAction;
 import org.designup.picsou.gui.transactions.actions.ShowTransactionsInAccountViewAction;
-import org.designup.picsou.gui.utils.Matchers;
+import org.designup.picsou.gui.transactions.utils.TransactionMatchers;
 import org.designup.picsou.model.*;
 import org.globsframework.gui.SelectionService;
 import org.globsframework.metamodel.GlobType;
@@ -101,30 +102,30 @@ public class NavigationPopup {
   }
 
   private void initMainAccountsPopup(JPopupMenu popup, SortedSet<Integer> monthIds) {
-    addShowInCategorization(popup, monthIds, Matchers.transactionsForMainAccounts(repository));
-    popup.add(new ShowAccountTransactionsInAccountViewAction(Matchers.userCreatedMainAccounts(),
+    addShowInCategorization(popup, monthIds, TransactionMatchers.transactionsForMainAccounts(repository));
+    popup.add(new ShowAccountTransactionsInAccountViewAction(AccountMatchers.userCreatedMainAccounts(),
                                                              repository, localDirectory));
   }
 
   private void initSavinsAccountsPopup(JPopupMenu popup, SortedSet<Integer> monthIds) {
-    addShowInCategorization(popup, monthIds, Matchers.transactionsForSavingsAccounts(repository));
-    popup.add(new ShowAccountTransactionsInAccountViewAction(Matchers.userCreatedSavingsAccounts(),
+    addShowInCategorization(popup, monthIds, TransactionMatchers.transactionsForSavingsAccounts(repository));
+    popup.add(new ShowAccountTransactionsInAccountViewAction(AccountMatchers.userCreatedSavingsAccounts(),
                                                              repository, localDirectory));
   }
 
   private void initUncategorizedPopup(JPopupMenu popup, SortedSet<Integer> monthIds) {
     popup.add(new ShowTransactionsToCategorizeAction(monthIds, repository, localDirectory));
-    addShowInAccounts(popup, monthIds, Matchers.uncategorizedTransactions());
+    addShowInAccounts(popup, monthIds, TransactionMatchers.uncategorizedTransactions());
   }
 
   private void initBudgetAreasPopup(JPopupMenu popup, SortedSet<Integer> monthIds, Set<Key> objectKeys) {
     addShowTransactionActions(popup, monthIds,
-                              Matchers.transactionsForBudgetAreas(GlobUtils.getValues(objectKeys, BudgetArea.ID)));
+                              TransactionMatchers.transactionsForBudgetAreas(GlobUtils.getValues(objectKeys, BudgetArea.ID)));
   }
 
   private void initSeriesPopup(JPopupMenu popup, SortedSet<Integer> monthIds, Set<Key> objectKeys) {
     Set<Integer> seriesIds = GlobUtils.getValues(objectKeys, Series.ID);
-    GlobMatcher matcher = Matchers.transactionsForSeries(seriesIds);
+    GlobMatcher matcher = TransactionMatchers.transactionsForSeries(seriesIds);
     addShowInCategorization(popup, monthIds, matcher);
     popup.add(new ShowSeriesTransactionsInAccountViewAction(seriesIds, localDirectory));
 
@@ -142,7 +143,7 @@ public class NavigationPopup {
       seriesIds.addAll(repository.findLinkedTo(group, Series.GROUP).getValueSet(Series.ID));
     }
     GlobUtils.getValues(objectKeys, SeriesGroup.ID);
-    GlobMatcher matcher = Matchers.transactionsForSeries(seriesIds);
+    GlobMatcher matcher = TransactionMatchers.transactionsForSeries(seriesIds);
     addShowInCategorization(popup, monthIds, matcher);
     popup.add(new ShowSeriesTransactionsInAccountViewAction(seriesIds, localDirectory));
   }

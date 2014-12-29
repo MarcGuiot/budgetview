@@ -1,5 +1,6 @@
 package org.designup.picsou.gui.categorization.components;
 
+import org.designup.picsou.gui.transactions.utils.TransactionMatchers;
 import org.designup.picsou.model.*;
 import org.globsframework.gui.GlobSelection;
 import org.globsframework.gui.GlobSelectionListener;
@@ -73,7 +74,7 @@ public class CategorizationLevel implements ChangeSetListener {
     GlobMatcher monthFilter =
       filterOnCurrentMonth ? GlobMatchers.fieldIn(Transaction.MONTH, selectedMonths) : GlobMatchers.ALL;
     GlobList transactions =
-      repository.getAll(Transaction.TYPE, and(Transaction.getMatcherForRealOperations(), monthFilter));
+      repository.getAll(Transaction.TYPE, and(TransactionMatchers.realTransactions(), monthFilter));
 
     hasNoTransactions = transactions.isEmpty();
 

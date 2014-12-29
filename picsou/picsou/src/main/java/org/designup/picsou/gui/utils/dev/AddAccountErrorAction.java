@@ -1,6 +1,6 @@
 package org.designup.picsou.gui.utils.dev;
 
-import org.designup.picsou.gui.utils.Matchers;
+import org.designup.picsou.gui.accounts.utils.AccountMatchers;
 import org.designup.picsou.model.Account;
 import org.designup.picsou.model.AccountPositionError;
 import org.globsframework.model.*;
@@ -21,7 +21,7 @@ public class AddAccountErrorAction extends AbstractAction {
   }
 
   public void actionPerformed(ActionEvent e) {
-    GlobList accounts = repository.getAll(Account.TYPE, Matchers.userCreatedMainAccounts());
+    GlobList accounts = repository.getAll(Account.TYPE, AccountMatchers.userCreatedMainAccounts());
     if (accounts.isEmpty()) {
       return;
     }

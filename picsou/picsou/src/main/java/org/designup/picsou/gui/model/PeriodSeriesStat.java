@@ -16,7 +16,6 @@ import org.globsframework.metamodel.utils.GlobTypeLoader;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.utils.GlobMatcher;
-import org.globsframework.utils.Utils;
 import org.globsframework.utils.exceptions.InvalidParameter;
 
 import java.util.Set;
@@ -180,9 +179,9 @@ public class PeriodSeriesStat {
         }
         switch (getSeriesType(periodStat)) {
           case SERIES:
-            return isSeriesAccountSelected(target, accountIds);
+            return Series.isSeriesForAccounts(target, accountIds, repository);
           case SERIES_GROUP:
-            return isSeriesAccountInGroupSelected(target, accountIds, repository);
+            return Series.isSeriesInGroupForAccount(target, accountIds, repository);
         }
         throw new InvalidParameter("Unexpected type for " + periodStat);
       }
@@ -192,18 +191,4 @@ public class PeriodSeriesStat {
       }
     };
   }
-
-  protected static boolean isSeriesAccountSelected(Glob series, final Set<Integer> accountIds) {
-    return accountIds.contains(series.get(Series.TARGET_ACCOUNT));
-  }
-
-  protected static boolean isSeriesAccountInGroupSelected(Glob target, final Set<Integer> accountIds, GlobRepository repository) {
-    for (Glob series : repository.findLinkedTo(target, Series.GROUP)) {
-      if (isSeriesAccountSelected(series, accountIds)) {
-        return true;
-      }
-    }
-    return false;
-  }
-
 }

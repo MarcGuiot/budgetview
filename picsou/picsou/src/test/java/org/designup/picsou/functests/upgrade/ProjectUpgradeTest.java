@@ -326,6 +326,8 @@ public class ProjectUpgradeTest extends LoggedInFunctionalTestCase {
     operations.restore(Files.copyResourceToTmpFile(this, "/testbackups/upgrade_jar139_project_with_invalid_from_to_transfer.budgetview"));
     addOns.activateProjects();
 
+    operations.dumpRepository();
+
     projects.select("Rome");
     currentProject
       .checkItems("| Voyage   | Sep | 0.00 | 500.00  |\n" +

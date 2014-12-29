@@ -27,7 +27,6 @@ import org.globsframework.utils.serialization.SerializedByteArrayOutput;
 import org.globsframework.utils.serialization.SerializedInput;
 import org.globsframework.utils.serialization.SerializedOutput;
 
-import javax.crypto.BadPaddingException;
 import java.security.SecureRandom;
 import java.util.*;
 
@@ -251,10 +250,6 @@ public class EncrypterToTransportServerAccess implements ServerAccess {
     return data;
   }
 
-  public void publishDataForMobile(String mail, byte[] data) {
-
-  }
-
   public void localRegister(byte[] mail, byte[] signature, String activationCode, long jarVersion) {
     clientTransport.localRegister(sessionId, privateId, mail, signature, activationCode);
     clientTransport.localDownload(sessionId, privateId, jarVersion);
@@ -407,18 +402,18 @@ public class EncrypterToTransportServerAccess implements ServerAccess {
       Integer maxId = 0;
       for (Map.Entry<Integer, SerializableGlobType> globEntry : data.get(globTypeName).entrySet()) {
         id = globEntry.getKey();
-        GlobBuilder builder = GlobBuilder.init(globType).setValue(field, id);
-        SerializableGlobType glob = globEntry.getValue();
+        GlobBuilder globBuilder = GlobBuilder.init(globType).setValue(field, id);
+        SerializableGlobType globData = globEntry.getValue();
         try {
-          globSerializer.deserializeData(glob.getVersion(),
-                                         builder,
-                                         passwordBasedEncryptor.decrypt(glob.getData()),
+          globSerializer.deserializeData(globData.getVersion(),
+                                         globBuilder,
+                                         passwordBasedEncryptor.decrypt(globData.getData()),
                                          id);
         }
         catch (Exception e) {
-          throw new RuntimeException("Error loading type " + globType + " with version " + glob.getVersion(), e);
+          throw new RuntimeException("Error loading type " + globType + " with version " + globData.getVersion(), e);
         }
-        result.add(builder.get());
+        result.add(globBuilder.get());
         maxId = Math.max(maxId, id);
       }
       idUpdater.update(field, maxId);

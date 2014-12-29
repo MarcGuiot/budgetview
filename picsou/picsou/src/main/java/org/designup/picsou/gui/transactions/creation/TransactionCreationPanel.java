@@ -3,6 +3,7 @@ package org.designup.picsou.gui.transactions.creation;
 import com.jidesoft.swing.AutoCompletion;
 import org.designup.picsou.gui.View;
 import org.designup.picsou.gui.accounts.utils.AccountCreation;
+import org.designup.picsou.gui.accounts.utils.AccountMatchers;
 import org.designup.picsou.gui.components.AmountEditor;
 import org.designup.picsou.gui.components.dialogs.MessageType;
 import org.designup.picsou.gui.components.utils.CustomFocusTraversalPolicy;
@@ -14,7 +15,6 @@ import org.designup.picsou.gui.description.stringifiers.MonthFieldListStringifie
 import org.designup.picsou.gui.description.stringifiers.MonthRangeFormatter;
 import org.designup.picsou.gui.help.actions.HelpAction;
 import org.designup.picsou.gui.startup.components.AutoCategorizationFunctor;
-import org.designup.picsou.gui.utils.Matchers;
 import org.designup.picsou.model.*;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobSelection;
@@ -102,7 +102,7 @@ public class TransactionCreationPanel extends View implements GlobSelectionListe
 
     accountCombo = builder.addComboEditor("account", Transaction.ACCOUNT)
       .setShowEmptyOption(false)
-      .setFilter(Matchers.userCreatedAccounts())
+      .setFilter(AccountMatchers.userCreatedAccounts())
       .forceSelection(PROTOTYPE_TRANSACTION_KEY)
       .getComponent();
 

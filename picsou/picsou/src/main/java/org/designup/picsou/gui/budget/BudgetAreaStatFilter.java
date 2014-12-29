@@ -1,7 +1,7 @@
 package org.designup.picsou.gui.budget;
 
 import org.designup.picsou.gui.model.PeriodSeriesStat;
-import org.designup.picsou.gui.utils.Matchers;
+import org.designup.picsou.gui.series.utils.SeriesMatchers;
 import org.designup.picsou.gui.utils.MonthMatcher;
 import org.designup.picsou.model.*;
 import org.globsframework.model.*;
@@ -22,7 +22,7 @@ public class BudgetAreaStatFilter implements GlobMatcher {
 
   public BudgetAreaStatFilter(BudgetArea budgetArea) {
     this.budgetArea = budgetArea;
-    this.seriesDateFilter = Matchers.seriesActiveInPeriod(budgetArea.getId(), true, false, false);
+    this.seriesDateFilter = SeriesMatchers.seriesActiveInPeriod(budgetArea.getId(), true, false, false);
   }
 
   public void toggleMonthFilteringEnabled() {

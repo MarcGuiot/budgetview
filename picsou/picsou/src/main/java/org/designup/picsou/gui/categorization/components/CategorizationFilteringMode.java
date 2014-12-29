@@ -1,6 +1,6 @@
 package org.designup.picsou.gui.categorization.components;
 
-import org.designup.picsou.gui.utils.Matchers;
+import org.designup.picsou.gui.transactions.utils.TransactionMatchers;
 import org.designup.picsou.model.Month;
 import org.designup.picsou.model.Series;
 import org.designup.picsou.model.Transaction;
@@ -77,11 +77,11 @@ public enum CategorizationFilteringMode {
       }
 
       case MISSING_RECONCILIATION_ANNOTATION: {
-        return Matchers.missingReconciliationAnnotation(reconciledTransactions);
+        return TransactionMatchers.missingReconciliationAnnotation(reconciledTransactions);
       }
 
       case TO_RECONCILE: {
-        return Matchers.toReconcile();
+        return TransactionMatchers.transactionsToReconcile();
       }
     }
     throw new UnexpectedApplicationState(name());

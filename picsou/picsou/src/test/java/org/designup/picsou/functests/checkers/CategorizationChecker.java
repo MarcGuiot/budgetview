@@ -548,31 +548,19 @@ public class CategorizationChecker extends FilteredViewChecker<CategorizationChe
   }
 
   public CategorizationChecker setNewIncome(String label, String seriesName) {
-    return setNewIncome(label, seriesName, null);
+    return setNewIncome(label, seriesName, null, null);
+  }
+
+  public CategorizationChecker setNewIncome(String label, String seriesName, String targetAccount) {
+    return setNewIncome(label, seriesName, null, targetAccount);
   }
 
   public CategorizationChecker setNewIncome(String label, String seriesName, Double amount) {
-    int[] indices = getRowIndices(label);
-    boolean first = true;
-    for (int index : indices) {
-      selectTableRow(index);
-      if (first) {
-        SeriesEditionDialogChecker editionDialogChecker = selectIncome()
-          .createSeries()
-          .setName(seriesName);
-        if (amount != null) {
-          editionDialogChecker
-            .selectAllMonths()
-            .setAmount(amount);
-        }
-        editionDialogChecker.validate();
-//          .selectSeries(seriesName);
-        first = false;
-      }
-      else {
-        selectIncome().selectSeries(seriesName);
-      }
-    }
+    return setNewIncome(label, seriesName, amount, null);
+  }
+
+  public CategorizationChecker setNewIncome(String label, String seriesName, Double amount, String targetAccount) {
+    setNewSeries(BudgetArea.INCOME, label, seriesName, amount, targetAccount);
     return this;
   }
 
@@ -584,29 +572,16 @@ public class CategorizationChecker extends FilteredViewChecker<CategorizationChe
   }
 
   public CategorizationChecker setNewRecurring(String label, String seriesName) {
-    return setNewRecurring(label, seriesName, null);
+    return setNewRecurring(label, seriesName, null, null);
   }
-    public CategorizationChecker setNewRecurring(String label, String seriesName, Double amount) {
-    int[] indices = getRowIndices(label);
-    boolean first = true;
-    for (int index : indices) {
-      selectTableRow(index);
-      if (first) {
-        if (amount != null){
-        selectRecurring()
-          .selectNewSeries(seriesName, amount);
-        }
-        else {
-          selectRecurring()
-            .createSeries(seriesName);
-        }
-          //.selectSeries(seriesName);
-        first = false;
-      }
-      else {
-        selectRecurring().selectSeries(seriesName);
-      }
-    }
+
+  public CategorizationChecker setNewRecurring(String label, String seriesName, Double amount) {
+    setNewRecurring(label, seriesName, amount, null);
+    return this;
+  }
+
+    public CategorizationChecker setNewRecurring(String label, String seriesName, Double amount, String targetAccount) {
+    setNewSeries(BudgetArea.RECURRING, label, seriesName, amount, targetAccount);
     return this;
   }
 
@@ -632,16 +607,25 @@ public class CategorizationChecker extends FilteredViewChecker<CategorizationChe
   }
 
   public CategorizationChecker setNewVariable(String label, String seriesName) {
-    return setNewVariable(label, seriesName, null);
+    return setNewVariable(label, seriesName, null, null);
   }
 
   public CategorizationChecker setNewVariable(String label, String seriesName, Double amount) {
+    return setNewVariable(label, seriesName, amount, null);
+  }
+
+  public CategorizationChecker setNewVariable(String label, String seriesName, Double amount, String targetAccount) {
+    setNewSeries(BudgetArea.VARIABLE, label, seriesName, amount, targetAccount);
+    return this;
+  }
+
+  private void setNewSeries(BudgetArea budgetArea, String label, String seriesName, Double amount, String targetAccount) {
     int[] indices = getRowIndices(label);
     boolean first = true;
     for (int index : indices) {
       selectTableRow(index);
       if (first) {
-        SeriesEditionDialogChecker editionDialog = selectVariable()
+        SeriesEditionDialogChecker editionDialog = selectAndReturn(budgetArea)
           .createSeries()
           .setName(seriesName);
         if (amount != null) {
@@ -657,14 +641,16 @@ public class CategorizationChecker extends FilteredViewChecker<CategorizationChe
           editionDialog
             .setAmount(Math.abs(amount));
         }
+        if (targetAccount != null) {
+          editionDialog.setTargetAccount(targetAccount);
+        }
         editionDialog.validate();
         first = false;
       }
       else {
-        selectVariable().selectSeries(seriesName);
+        selectAndReturn(budgetArea).selectSeries(seriesName);
       }
     }
-    return this;
   }
 
   public CategorizationChecker setNewVariable(int row, String seriesName) {

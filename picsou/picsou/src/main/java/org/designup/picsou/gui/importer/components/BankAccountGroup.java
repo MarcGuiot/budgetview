@@ -1,6 +1,6 @@
 package org.designup.picsou.gui.importer.components;
 
-import org.designup.picsou.gui.utils.Matchers;
+import org.designup.picsou.gui.accounts.utils.AccountMatchers;
 import org.designup.picsou.model.Account;
 import org.designup.picsou.model.CurrentMonth;
 import org.designup.picsou.model.RealAccount;
@@ -80,7 +80,7 @@ public class BankAccountGroup {
       }
     }
     GlobList accounts = realAccounts.getTargets(RealAccount.ACCOUNT, repository);
-    accounts.filterSelf(Matchers.accountsNotClosedAsOf(CurrentMonth.getAsDate(repository)), repository);
+    accounts.filterSelf(AccountMatchers.accountsNotClosedAsOf(CurrentMonth.getAsDate(repository)), repository);
     accounts.sort(new GlobFieldsComparator(Account.ACCOUNT_TYPE, true,
                                            Account.POSITION_DATE, true,
                                            Account.NAME, true));

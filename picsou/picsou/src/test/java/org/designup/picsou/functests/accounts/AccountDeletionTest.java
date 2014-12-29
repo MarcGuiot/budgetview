@@ -24,36 +24,36 @@ public class AccountDeletionTest extends LoggedInFunctionalTestCase {
       .addTransaction("2008/10/10", -15.00, "Quick")
       .load();
 
-    views.selectCategorization();
     categorization.setNewIncome("WorldCo", "Salaire");
     categorization.setNewVariable("MacDo", "Gastronomie");
     categorization.setNewVariable("Quick", "Sante");
 
-    views.selectBudget();
+    budgetView.variable.editSeries("Gastronomie")
+      .setTargetAccount("Account n. 0000123")
+      .validate();
+
     budgetView.income.checkTotalObserved(1000);
     budgetView.variable.checkTotalObserved(-30);
 
-    views.selectData();
     transactions.initContent()
       .add("10/10/2008", TransactionType.PRELEVEMENT, "Quick", "", -15.00, "Sante")
       .add("05/10/2008", TransactionType.PRELEVEMENT, "MacDo", "", -15.00, "Gastronomie")
       .add("01/10/2008", TransactionType.VIREMENT, "WorldCo", "", 1000.00, "Salaire")
       .check();
 
-    views.selectHome();
     mainAccounts.edit("Account n. 0000123").openDelete()
       .checkMessageContains("All the operations and series associated to this account will be deleted")
       .validate();
     mainAccounts.checkNotPresent("Account n. 0000123");
 
-    views.selectData();
     transactions.initContent()
       .add("10/10/2008", TransactionType.PRELEVEMENT, "Quick", "", -15.00, "Sante")
       .check();
 
-    views.selectBudget();
     budgetView.income.checkTotalObserved(0);
     budgetView.variable.checkTotalObserved(-15);
+
+    budgetView.variable.checkContent("| Sante | 15.00 | To define |");
   }
 
   public void testDeletingUsingThePopupMenu() throws Exception {
@@ -67,10 +67,13 @@ public class AccountDeletionTest extends LoggedInFunctionalTestCase {
       .addTransaction("2008/10/10", -15.00, "Quick")
       .load();
 
-    views.selectCategorization();
     categorization.setNewIncome("WorldCo", "Salaire");
     categorization.setNewVariable("MacDo", "Gastronomie");
     categorization.setNewVariable("Quick", "Sante");
+
+    budgetView.variable.editSeries("Gastronomie")
+      .setTargetAccount("Account n. 0000123")
+      .validate();
 
     views.selectHome();
     mainAccounts.openDelete("Account n. 0000123")

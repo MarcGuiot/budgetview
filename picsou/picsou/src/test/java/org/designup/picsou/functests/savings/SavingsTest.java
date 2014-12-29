@@ -61,8 +61,6 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
     timeline.selectMonth("2008/10");
     savingsAccounts.checkEndOfMonthPosition("Epargne LCL", 1500.00);
 
-    operations.dumpRepository();
-
     timeline.selectMonth("2008/06");
     savingsAccounts.select("Epargne LCL");
     budgetView.transfer

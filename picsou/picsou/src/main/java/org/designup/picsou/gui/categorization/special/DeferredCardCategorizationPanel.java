@@ -6,7 +6,7 @@ import org.designup.picsou.gui.categorization.utils.CategorizationMatchers;
 import org.designup.picsou.gui.categorization.utils.FilteredRepeats;
 import org.designup.picsou.gui.categorization.utils.SeriesCreationHandler;
 import org.designup.picsou.gui.help.HyperlinkHandler;
-import org.designup.picsou.gui.utils.Matchers;
+import org.designup.picsou.gui.series.utils.SeriesMatchers;
 import org.designup.picsou.model.BudgetArea;
 import org.designup.picsou.model.Series;
 import org.designup.picsou.utils.Lang;
@@ -85,7 +85,7 @@ public class DeferredCardCategorizationPanel implements SpecialCategorizationPan
   }
 
   private void updateDisplay() {
-    if (repository.contains(Series.TYPE, Matchers.deferredCardSeries())) {
+    if (repository.contains(Series.TYPE, SeriesMatchers.deferredCardSeries())) {
       if (repeatHandler.isEmpty()) {
         updateMessage("categorization.specialCases.deferredCard.invalidSelection");
       }

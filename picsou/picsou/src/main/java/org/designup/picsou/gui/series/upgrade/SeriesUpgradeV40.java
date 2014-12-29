@@ -1,6 +1,7 @@
 package org.designup.picsou.gui.series.upgrade;
 
 import com.budgetview.shared.utils.Amounts;
+import org.designup.picsou.gui.accounts.utils.AccountMatchers;
 import org.designup.picsou.gui.description.stringifiers.AccountComparator;
 import org.designup.picsou.gui.notifications.standard.StandardMessageNotificationHandler;
 import org.designup.picsou.gui.transactions.utils.MirrorTransactionFinder;
@@ -33,7 +34,7 @@ public class SeriesUpgradeV40 {
   private SeriesUpgradeV40(GlobRepository repository, PostProcessor postProcessor) {
     this.repository = repository;
     this.postProcessor = postProcessor;
-    GlobList accounts = repository.getAll(Account.TYPE, Account.userCreatedMainAccounts()).sort(new AccountComparator());
+    GlobList accounts = repository.getAll(Account.TYPE, AccountMatchers.userCreatedMainAccounts()).sort(new AccountComparator());
     this.defaultMainAccount = accounts.isEmpty() ? null : accounts.getFirst();
     this.singleMainAccount = accounts.size() == 1;
   }

@@ -1,5 +1,6 @@
 package org.designup.picsou.triggers;
 
+import org.designup.picsou.gui.transactions.utils.TransactionMatchers;
 import org.designup.picsou.model.*;
 import org.globsframework.model.*;
 import org.globsframework.model.utils.BreakException;
@@ -137,7 +138,7 @@ public class AccountInitialPositionTrigger extends AbstractChangeSetListener {
     FirstAndLastDateGlobFunctor firstAndLastDateGlobFunctor = new FirstAndLastDateGlobFunctor(openDate, account.get(Account.CLOSED_DATE));
     repository.apply(Transaction.TYPE,
                      GlobMatchers.and(GlobMatchers.fieldEquals(Transaction.ACCOUNT, account.get(Account.ID)),
-                                      Transaction.getMatcherForRealOperations(account.get(Account.ID))), firstAndLastDateGlobFunctor);
+                                      TransactionMatchers.realTransactions(account.get(Account.ID))), firstAndLastDateGlobFunctor);
 
     int monthId;
     int day = 1;

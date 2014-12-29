@@ -1,6 +1,7 @@
 package org.designup.picsou.gui.series;
 
 import org.designup.picsou.gui.accounts.actions.CreateAccountAction;
+import org.designup.picsou.gui.accounts.utils.AccountMatchers;
 import org.designup.picsou.gui.components.MonthRangeBound;
 import org.designup.picsou.gui.components.ReadOnlyGlobTextFieldView;
 import org.designup.picsou.gui.components.dialogs.MonthChooserDialog;
@@ -10,7 +11,6 @@ import org.designup.picsou.gui.description.stringifiers.MonthYearStringifier;
 import org.designup.picsou.gui.series.edition.MonthCheckBoxUpdater;
 import org.designup.picsou.gui.series.edition.SeriesForecastPanel;
 import org.designup.picsou.gui.series.subseries.SubSeriesEditionPanel;
-import org.designup.picsou.gui.series.utils.NoTargetAccountWarning;
 import org.designup.picsou.gui.series.utils.SeriesDeletionHandler;
 import org.designup.picsou.gui.time.TimeService;
 import org.designup.picsou.model.*;
@@ -167,7 +167,7 @@ public class SeriesEditionDialog {
     accountFilter = createAccountFilter();
 
     targetAccountCombo = GlobLinkComboEditor.init(Series.TARGET_ACCOUNT, localRepository, localDirectory)
-      .setFilter(Account.userOrSummaryMainAccounts())
+      .setFilter(AccountMatchers.userOrSummaryMainAccounts())
       .setShowEmptyOption(false);
     builder.add("targetAccountCombo", targetAccountCombo);
     targetAccountCombo.setVisible(false);
@@ -176,8 +176,6 @@ public class SeriesEditionDialog {
       .getComponent();
     builder.add("targetAccountLabel", targetAccountLabel);
     targetAccountLabel.setVisible(false);
-
-    NoTargetAccountWarning.register("noTargetAccountWarning", builder, localRepository, localDirectory);
 
     fromAccountsCombo = GlobLinkComboEditor.init(Series.FROM_ACCOUNT, localRepository, localDirectory)
       .setShowEmptyOption(false)
@@ -341,12 +339,12 @@ public class SeriesEditionDialog {
         targetAccountLabel.setVisible(true);
       }
       else if (accountIds.size() == 1) {
-        targetAccountCombo.setFilter(Account.userOrSummaryMainAccounts(accountIds.iterator().next()));
+        targetAccountCombo.setFilter(AccountMatchers.userOrSummaryMainAccounts(accountIds.iterator().next()));
         targetAccountCombo.setVisible(true);
         targetAccountLabel.setVisible(false);
       }
       else {
-        targetAccountCombo.setFilter(Account.userOrSummaryMainAccounts());
+        targetAccountCombo.setFilter(AccountMatchers.userOrSummaryMainAccounts());
         targetAccountCombo.setVisible(true);
         targetAccountLabel.setVisible(false);
       }
@@ -563,6 +561,9 @@ public class SeriesEditionDialog {
       values.set(value(Series.FROM_ACCOUNT, fromAccountId));
       values.set(value(Series.TARGET_ACCOUNT, fromAccountId));
     }
+    else if (budgetArea != BudgetArea.TRANSFER) {
+      values.set(value(Series.TARGET_ACCOUNT, Account.MAIN_SUMMARY_ACCOUNT_ID));
+    }
     if (toAccountId != null) {
       values.set(value(Series.TO_ACCOUNT, toAccountId));
     }
@@ -581,47 +582,49 @@ public class SeriesEditionDialog {
 
     loadSeries(localRepository, repository);
 
-    if (budgetArea == BudgetArea.TRANSFER) {
-      Set<Integer> positiveAccount = new HashSet<Integer>();
-      Set<Integer> negativeAccount = new HashSet<Integer>();
-      for (Glob transaction : selectedTransactions) {
-        Integer accountId = transaction.get(Transaction.ACCOUNT);
-        if (transaction.get(Transaction.AMOUNT) >= 0) {
-          positiveAccount.add(accountId);
-        }
-        else {
-          negativeAccount.add(accountId);
-        }
-      }
-      if (positiveAccount.size() == 1) {
-        toAccountsCombo
-          .setFilter(fieldEquals(Account.ID, positiveAccount.iterator().next()));
-        toAccount.set(positiveAccount.iterator().next());
+    if (budgetArea != BudgetArea.TRANSFER) {
+      return;
+    }
+
+    Set<Integer> positiveAccount = new HashSet<Integer>();
+    Set<Integer> negativeAccount = new HashSet<Integer>();
+    for (Glob transaction : selectedTransactions) {
+      Integer accountId = transaction.get(Transaction.ACCOUNT);
+      if (transaction.get(Transaction.AMOUNT) >= 0) {
+        positiveAccount.add(accountId);
       }
       else {
-        if (negativeAccount.size() == 1) {
-          toAccountsCombo.setFilter(
-            and(accountFilter,
-                GlobMatchers.not(fieldEquals(Account.ID, negativeAccount.iterator().next()))));
-        }
-        else {
-          toAccountsCombo.setFilter(accountFilter);
-        }
+        negativeAccount.add(accountId);
       }
+    }
+    if (positiveAccount.size() == 1) {
+      toAccountsCombo
+        .setFilter(fieldEquals(Account.ID, positiveAccount.iterator().next()));
+      toAccount.set(positiveAccount.iterator().next());
+    }
+    else {
       if (negativeAccount.size() == 1) {
-        fromAccountsCombo
-          .setFilter(fieldEquals(Account.ID, negativeAccount.iterator().next()));
-        fromAccount.set(negativeAccount.iterator().next());
+        toAccountsCombo.setFilter(
+          and(accountFilter,
+              GlobMatchers.not(fieldEquals(Account.ID, negativeAccount.iterator().next()))));
       }
       else {
-        if (positiveAccount.size() == 1) {
-          fromAccountsCombo.setFilter(
-            and(accountFilter,
-                GlobMatchers.not(fieldEquals(Account.ID, positiveAccount.iterator().next()))));
-        }
-        else {
-          fromAccountsCombo.setFilter(accountFilter);
-        }
+        toAccountsCombo.setFilter(accountFilter);
+      }
+    }
+    if (negativeAccount.size() == 1) {
+      fromAccountsCombo
+        .setFilter(fieldEquals(Account.ID, negativeAccount.iterator().next()));
+      fromAccount.set(negativeAccount.iterator().next());
+    }
+    else {
+      if (positiveAccount.size() == 1) {
+        fromAccountsCombo.setFilter(
+          and(accountFilter,
+              GlobMatchers.not(fieldEquals(Account.ID, positiveAccount.iterator().next()))));
+      }
+      else {
+        fromAccountsCombo.setFilter(accountFilter);
       }
     }
   }

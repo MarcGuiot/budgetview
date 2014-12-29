@@ -19,7 +19,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
-import static org.designup.picsou.gui.utils.Matchers.transactionsForMonths;
+import static org.designup.picsou.gui.transactions.utils.TransactionMatchers.transactionsForMonths;
 
 public class TransactionSelection implements GlobSelectionListener {
 

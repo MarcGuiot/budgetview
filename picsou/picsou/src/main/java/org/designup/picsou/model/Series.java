@@ -12,11 +12,14 @@ import org.globsframework.model.*;
 import org.globsframework.model.utils.GlobMatcher;
 import org.globsframework.model.utils.GlobMatchers;
 import org.globsframework.utils.Strings;
+import org.globsframework.utils.Utils;
 import org.globsframework.utils.exceptions.ItemNotFound;
 import org.globsframework.utils.serialization.SerializedByteArrayOutput;
 import org.globsframework.utils.serialization.SerializedInput;
 import org.globsframework.utils.serialization.SerializedInputOutputFactory;
 import org.globsframework.utils.serialization.SerializedOutput;
+
+import java.util.Set;
 
 import static org.globsframework.model.utils.GlobMatchers.linkedTo;
 
@@ -324,6 +327,45 @@ public class Series {
                                             .toArray());
     repository.update(series.getKey(), Series.MIRROR_SERIES, mirrorSeries.get(Series.ID));
     return mirrorSeries;
+  }
+
+  public static boolean isSeriesForAccount(Glob series, Integer selectedAccountId, GlobRepository repository) {
+    Integer targetAccount = series.get(TARGET_ACCOUNT);
+    if (Utils.equal(selectedAccountId, targetAccount)) {
+      return true;
+    }
+    if (Utils.equal(Account.MAIN_SUMMARY_ACCOUNT_ID, targetAccount)) {
+      Glob account = repository.find(org.globsframework.model.Key.create(Account.TYPE, selectedAccountId));
+      if (account != null && Account.isMain(account)) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  public static boolean isSeriesForAccounts(Glob series, final Set<Integer> accountIds, GlobRepository repository) {
+    Integer targetAccount = series.get(TARGET_ACCOUNT);
+    if (accountIds.contains(targetAccount)) {
+      return true;
+    }
+    if (Utils.equal(Account.MAIN_SUMMARY_ACCOUNT_ID, targetAccount)) {
+      for (Integer accountId : accountIds) {
+        Glob account = repository.find(org.globsframework.model.Key.create(Account.TYPE, accountId));
+        if (account != null && Account.isMain(account)) {
+          return true;
+        }
+      }
+    }
+    return false;
+  }
+
+  public static boolean isSeriesInGroupForAccount(Glob group, final Set<Integer> accountIds, GlobRepository repository) {
+    for (Glob series : repository.findLinkedTo(group, GROUP)) {
+      if (isSeriesForAccounts(series, accountIds, repository)) {
+        return true;
+      }
+    }
+    return false;
   }
 
   public static class Serializer implements PicsouGlobSerializer {

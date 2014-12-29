@@ -4,6 +4,7 @@ import org.designup.picsou.gui.accounts.AccountViewPanel;
 import org.designup.picsou.gui.accounts.actions.AccountPopupFactory;
 import org.designup.picsou.gui.accounts.chart.AccountPositionsChartView;
 import org.designup.picsou.gui.accounts.chart.MainDailyPositionsChartView;
+import org.designup.picsou.gui.accounts.utils.AccountMatchers;
 import org.designup.picsou.gui.accounts.utils.AccountPositionStringifier;
 import org.designup.picsou.gui.components.JPopupButton;
 import org.designup.picsou.gui.components.charts.histo.HistoChart;
@@ -32,7 +33,6 @@ import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
 
-import static org.designup.picsou.gui.utils.Matchers.*;
 import static org.globsframework.model.utils.GlobMatchers.fieldEquals;
 
 public class AccountChartsPanel {
@@ -87,7 +87,7 @@ public class AccountChartsPanel {
         Glob prefs = repository.find(UserPreferences.KEY);
         if (prefs != null) {
           boolean showList = prefs.isTrue(showListField);
-          repeat.setFilter(showList ? userCreatedAccounts(accountType) : fieldEquals(Account.ID, summaryId));
+          repeat.setFilter(showList ? AccountMatchers.userCreatedAccounts(accountType) : fieldEquals(Account.ID, summaryId));
         }
       }
     };
@@ -151,7 +151,7 @@ public class AccountChartsPanel {
         new MainDailyPositionsChartView(shortRange,
                                         AccountPositionsChartView.FULL_CONFIG,
                                         "accountHistoChart", repository, directory, "daily.budgetSummary");
-      chartView.setAccount(Account.isMain(account) ? userCreatedMainAccounts() : userCreatedSavingsAccounts());
+      chartView.setAccount(Account.isMain(account) ? AccountMatchers.userCreatedMainAccounts() : AccountMatchers.userCreatedSavingsAccounts());
       SplitsNode<HistoChart> node = chartView.registerComponents(cellBuilder);
       node.applyStyle("accountChartShown");
       cellBuilder.addDisposable(chartView);

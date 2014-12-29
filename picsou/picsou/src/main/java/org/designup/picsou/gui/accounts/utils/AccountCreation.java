@@ -11,7 +11,7 @@ import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
 
-import static org.designup.picsou.gui.utils.Matchers.userCreatedMainAccounts;
+import static org.designup.picsou.gui.accounts.utils.AccountMatchers.userCreatedMainAccounts;
 
 public class AccountCreation {
   public static boolean containsUserAccount(final GlobRepository repository, final Directory directory, final String message) {

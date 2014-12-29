@@ -1,12 +1,12 @@
 package org.designup.picsou.gui.feedback;
 
+import org.designup.picsou.gui.accounts.utils.AccountMatchers;
 import org.designup.picsou.gui.config.ConfigService;
 import org.designup.picsou.gui.model.ProjectStat;
 import org.designup.picsou.gui.projects.utils.CurrentProjectsMatcher;
 import org.designup.picsou.model.*;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.model.Glob;
-import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.utils.directory.Directory;
 
@@ -46,7 +46,7 @@ public class UserProgressInfoSender {
   public static int getActiveMainAccountsCount(GlobRepository repository) {
     TreeSet<Integer> monthIds = new TreeSet<Integer>();
     monthIds.add(CurrentMonth.getCurrentMonth(repository));
-    return repository.getAll(Account.TYPE, Account.activeUserCreatedMainAccounts(monthIds)).size();
+    return repository.getAll(Account.TYPE, AccountMatchers.activeUserCreatedMainAccounts(monthIds)).size();
   }
 
   private static int getCurrentProjectsCount(GlobRepository repository) {

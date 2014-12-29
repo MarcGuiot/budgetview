@@ -21,8 +21,8 @@ import org.designup.picsou.gui.transactions.actions.TransactionTableActions;
 import org.designup.picsou.gui.transactions.columns.*;
 import org.designup.picsou.gui.transactions.search.TransactionFilterPanel;
 import org.designup.picsou.gui.transactions.utils.LegendStringifier;
+import org.designup.picsou.gui.transactions.utils.TransactionMatchers;
 import org.designup.picsou.gui.utils.Gui;
-import org.designup.picsou.gui.utils.Matchers;
 import org.designup.picsou.model.*;
 import org.designup.picsou.utils.Lang;
 import org.designup.picsou.utils.TransactionComparator;
@@ -183,12 +183,12 @@ public class TransactionView extends View implements Filterable {
 
   public void setSeriesFilter(Glob series) {
     String label = Lang.get("filter.series.single", series.get(Series.NAME));
-    filterManager.set(TransactionSelection.SERIES_FILTER, label, Matchers.transactionsForSeries(series.get(Series.ID)));
+    filterManager.set(TransactionSelection.SERIES_FILTER, label, TransactionMatchers.transactionsForSeries(series.get(Series.ID)));
   }
 
   public void setSeriesFilter(Set<Integer> seriesIds) {
     String label = seriesIds.size() == 1 ? Lang.get("filter.series.one") : Lang.get("filter.series.several", seriesIds.size());
-    filterManager.set(TransactionSelection.SERIES_FILTER, label, Matchers.transactionsForSeries(seriesIds));
+    filterManager.set(TransactionSelection.SERIES_FILTER, label, TransactionMatchers.transactionsForSeries(seriesIds));
   }
 
   private void addShowPlannedTransactionsCheckbox() {

@@ -3,12 +3,12 @@ package org.designup.picsou.gui.upgrade;
 import com.budgetview.shared.utils.Amounts;
 import org.designup.picsou.gui.PicsouApplication;
 import org.designup.picsou.gui.PicsouInit;
+import org.designup.picsou.gui.accounts.utils.AccountMatchers;
 import org.designup.picsou.gui.projects.upgrade.ProjectUpgradeV40;
 import org.designup.picsou.gui.projects.utils.ProjectErrorsUpgrade;
 import org.designup.picsou.gui.series.upgrade.SeriesUpgradeV40;
 import org.designup.picsou.gui.series.utils.SeriesErrorsUpgrade;
 import org.designup.picsou.gui.utils.FrameSize;
-import org.designup.picsou.gui.utils.Matchers;
 import org.designup.picsou.importer.analyzer.TransactionAnalyzerFactory;
 import org.designup.picsou.model.*;
 import org.designup.picsou.triggers.AccountInitialPositionTrigger;
@@ -130,9 +130,9 @@ public class UpgradeTrigger implements ChangeSetListener {
 
     if (currentJarVersion < 133) {
       AccountSequenceTrigger.resetSequence(repository);
-      ProjectUpgradeV40.run(repository, postProcessor);
       repository.delete(Transaction.TYPE, and(fieldEquals(Transaction.ACCOUNT, Account.MAIN_SUMMARY_ACCOUNT_ID),
                                               fieldEquals(Transaction.PLANNED, true)));
+      ProjectUpgradeV40.run(repository, postProcessor);
     }
     if (currentJarVersion < 137) {
       repository.deleteAll(LayoutConfig.TYPE);
@@ -175,7 +175,7 @@ public class UpgradeTrigger implements ChangeSetListener {
   }
 
   private void updageAccountGraphs(GlobRepository repository) {
-    for (Glob account : repository.getAll(Account.TYPE, Matchers.userCreatedAccounts())) {
+    for (Glob account : repository.getAll(Account.TYPE, AccountMatchers.userCreatedAccounts())) {
       repository.update(account.getKey(), Account.SHOW_CHART, !Account.isSavings(account));
     }
   }

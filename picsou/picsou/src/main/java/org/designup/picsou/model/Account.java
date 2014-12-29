@@ -1,6 +1,7 @@
 package org.designup.picsou.model;
 
 import com.budgetview.shared.utils.PicsouGlobSerializer;
+import org.designup.picsou.gui.accounts.utils.AccountMatchers;
 import org.designup.picsou.gui.accounts.utils.MonthDay;
 import org.designup.picsou.utils.Lang;
 import org.designup.picsou.utils.PicsouUtils;
@@ -11,8 +12,6 @@ import org.globsframework.metamodel.fields.*;
 import org.globsframework.metamodel.utils.GlobTypeLoader;
 import org.globsframework.model.*;
 import org.globsframework.model.utils.GlobMatcher;
-import org.globsframework.model.utils.GlobMatchers;
-import org.globsframework.utils.Utils;
 import org.globsframework.utils.collections.Pair;
 import org.globsframework.utils.exceptions.ItemNotFound;
 import org.globsframework.utils.serialization.SerializedByteArrayOutput;
@@ -23,7 +22,6 @@ import org.globsframework.utils.serialization.SerializedOutput;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.SortedSet;
 
 import static org.globsframework.model.FieldValue.value;
 
@@ -238,155 +236,6 @@ public class Account {
     return (account != null) && !SUMMARY_ACCOUNT_IDS.contains(account.get(Account.ID));
   }
 
-  public static GlobMatcher userOrSummaryMainAccounts(final Integer userAccountId) {
-    return new GlobMatcher() {
-      public boolean matches(Glob account, GlobRepository repository) {
-        Integer accountId = account.get(Account.ID);
-        return Utils.equal(accountId, userAccountId) || Utils.equal(accountId, MAIN_SUMMARY_ACCOUNT_ID);
-      }
-    };
-  }
-
-  public static GlobMatcher userOrSummaryMainAccounts() {
-    return new GlobMatcher() {
-      public boolean matches(Glob account, GlobRepository repository) {
-        return isUserOrSummaryMain(account);
-      }
-    };
-  }
-
-  public static GlobMatcher userCreatedMainAccounts() {
-    return new GlobMatcher() {
-      public boolean matches(Glob account, GlobRepository repository) {
-        return isUserCreatedMainAccount(account);
-      }
-    };
-  }
-
-  public static GlobMatcher activeUserCreatedAccounts(final Integer monthId) {
-    return new GlobMatcher() {
-      public boolean matches(Glob account, GlobRepository repository) {
-        if (!Account.isUserCreatedAccount(account)) {
-          return false;
-        }
-        if (account.get(Account.CLOSED_DATE) != null) {
-          Integer endMonth = Month.getMonthId(account.get(Account.CLOSED_DATE));
-          if (endMonth < monthId) {
-            return false;
-          }
-        }
-        if (account.get(Account.OPEN_DATE) != null) {
-          Integer openMonth = Month.getMonthId(account.get(Account.OPEN_DATE));
-          if (openMonth > monthId) {
-            return false;
-          }
-        }
-        return true;
-      }
-    };
-  }
-
-  public static GlobMatcher activeUserCreatedAccounts(final SortedSet<Integer> monthIds) {
-    if (monthIds.isEmpty()) {
-      return GlobMatchers.NONE;
-    }
-    return new GlobMatcher() {
-      public boolean matches(Glob account, GlobRepository repository) {
-        if (!Account.isUserCreatedAccount(account)) {
-          return false;
-        }
-        if (account.get(Account.CLOSED_DATE) != null) {
-          Integer endMonth = Month.getMonthId(account.get(Account.CLOSED_DATE));
-          if (endMonth < monthIds.first()) {
-            return false;
-          }
-        }
-        if (account.get(Account.OPEN_DATE) != null) {
-          Integer openMonth = Month.getMonthId(account.get(Account.OPEN_DATE));
-          if (openMonth > monthIds.last()) {
-            return false;
-          }
-        }
-        return true;
-      }
-    };
-  }
-
-  public static GlobMatcher activeUserCreatedMainAccounts(final Integer monthId) {
-    return new GlobMatcher() {
-      public boolean matches(Glob account, GlobRepository repository) {
-        if (!Account.isUserCreatedMainAccount(account)) {
-          return false;
-        }
-        if (account.get(Account.CLOSED_DATE) != null) {
-          Integer endMonth = Month.getMonthId(account.get(Account.CLOSED_DATE));
-          if (endMonth < monthId) {
-            return false;
-          }
-        }
-        if (account.get(Account.OPEN_DATE) != null) {
-          Integer openMonth = Month.getMonthId(account.get(Account.OPEN_DATE));
-          if (openMonth > monthId) {
-            return false;
-          }
-        }
-        return true;
-      }
-    };
-  }
-
-  public static GlobMatcher activeUserCreatedMainAccounts(final SortedSet<Integer> monthIds) {
-    if (monthIds.isEmpty()) {
-      return GlobMatchers.NONE;
-    }
-    return new GlobMatcher() {
-      public boolean matches(Glob account, GlobRepository repository) {
-        if (!Account.isUserCreatedMainAccount(account)) {
-          return false;
-        }
-        if (account.get(Account.CLOSED_DATE) != null) {
-          Integer endMonth = Month.getMonthId(account.get(Account.CLOSED_DATE));
-          if (endMonth < monthIds.first()) {
-            return false;
-          }
-        }
-        if (account.get(Account.OPEN_DATE) != null) {
-          Integer openMonth = Month.getMonthId(account.get(Account.OPEN_DATE));
-          if (openMonth > monthIds.last()) {
-            return false;
-          }
-        }
-        return true;
-      }
-    };
-  }
-
-  public static GlobMatcher activeUserCreatedSavingsAccounts(final SortedSet<Integer> monthIds) {
-    if (monthIds.isEmpty()) {
-      return GlobMatchers.NONE;
-    }
-    return new GlobMatcher() {
-      public boolean matches(Glob account, GlobRepository repository) {
-        if (!Account.isUserCreatedSavingsAccount(account)) {
-          return false;
-        }
-        if (account.get(Account.CLOSED_DATE) != null) {
-          Integer endMonth = Month.getMonthId(account.get(Account.CLOSED_DATE));
-          if (endMonth < monthIds.first()) {
-            return false;
-          }
-        }
-        if (account.get(Account.OPEN_DATE) != null) {
-          Integer openMonth = Month.getMonthId(account.get(Account.OPEN_DATE));
-          if (openMonth > monthIds.last()) {
-            return false;
-          }
-        }
-        return true;
-      }
-    };
-  }
-
   public static boolean isUserCreatedMainAccount(Glob account) {
     return (account != null) &&
            Account.isMain(account) &&
@@ -455,7 +304,7 @@ public class Account {
   }
 
   public static Integer getDefaultMainAccountId(GlobRepository repository) {
-    Glob first = repository.getAll(Account.TYPE, userCreatedMainAccounts()).sort(Account.SEQUENCE).getFirst();
+    Glob first = repository.getAll(Account.TYPE, AccountMatchers.userCreatedMainAccounts()).sort(Account.SEQUENCE).getFirst();
     return first != null ? first.get(Account.ID) : null;
   }
 

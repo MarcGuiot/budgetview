@@ -1,10 +1,10 @@
 package org.designup.picsou.gui.categorization.components.messages;
 
+import org.designup.picsou.gui.accounts.utils.AccountMatchers;
 import org.designup.picsou.model.Account;
 import org.designup.picsou.model.BudgetArea;
 import org.designup.picsou.model.AccountType;
 import org.designup.picsou.model.AccountUpdateMode;
-import org.designup.picsou.gui.utils.Matchers;
 import org.designup.picsou.gui.accounts.AccountEditionDialog;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.metamodel.GlobType;
@@ -44,7 +44,7 @@ public class NoSavingsSeriesMessage extends NoSeriesMessage {
   }
 
   private void updateMessage() {
-    if (!repository.contains(Account.TYPE, Matchers.userCreatedSavingsAccounts())) {
+    if (!repository.contains(Account.TYPE, AccountMatchers.userCreatedSavingsAccounts())) {
       setText(Lang.get("categorization.noseries.transfer.noaccount"));
     }
     else {

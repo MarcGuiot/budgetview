@@ -168,7 +168,6 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
 
     timeline.selectMonth("2008/07");
 
-    views.selectData();
     transactions.initContent()
       .add("31/07/2008", "02/08/2008", TransactionType.PRELEVEMENT, "Auchan", "", -95.00)
       .add("30/07/2008", "01/08/2008", TransactionType.PRELEVEMENT, "Monoprix", "", -50.00)

@@ -4,6 +4,7 @@ import com.budgetview.shared.utils.Amounts;
 import org.designup.picsou.gui.model.PeriodSeriesStat;
 import org.designup.picsou.gui.model.SeriesStat;
 import org.designup.picsou.gui.model.SeriesType;
+import org.designup.picsou.gui.series.utils.SeriesMatchers;
 import org.designup.picsou.gui.series.utils.SeriesOrGroup;
 import org.designup.picsou.model.*;
 import org.globsframework.gui.GlobSelection;
@@ -64,20 +65,12 @@ public class PeriodSeriesStatUpdater implements GlobSelectionListener, ChangeSet
 
   public void filterAllAccounts() {
     selectedAccountId = null;
-    selectedAccountSeriesMatcher = new GlobMatcher() {
-      public boolean matches(Glob series, GlobRepository repository) {
-        return Series.isForMainOrUnknownAccount(series, repository);
-      }
-    };
+    selectedAccountSeriesMatcher = SeriesMatchers.seriesForMainOrUnknownAccount();
   }
 
   public void filterSingleAccount(final Integer accountId) {
     selectedAccountId = accountId;
-    selectedAccountSeriesMatcher = new GlobMatcher() {
-      public boolean matches(Glob series, GlobRepository repository) {
-        return (series != null) && Utils.equal(accountId, series.get(Series.TARGET_ACCOUNT));
-      }
-    };
+    selectedAccountSeriesMatcher = SeriesMatchers.seriesForAccount(selectedAccountId);
   }
 
   public void globsChanged(ChangeSet changeSet, GlobRepository repository) {

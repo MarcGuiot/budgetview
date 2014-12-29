@@ -1,13 +1,11 @@
 package org.designup.picsou.gui.projects.utils;
 
-import org.designup.picsou.model.ProjectItem;
-import org.designup.picsou.model.ProjectTransfer;
-import org.designup.picsou.model.Series;
-import org.designup.picsou.model.SeriesBudget;
+import org.designup.picsou.model.*;
 import org.designup.picsou.triggers.projects.ProjectItemToSeriesTrigger;
 import org.designup.picsou.triggers.projects.ProjectToSeriesGroupTrigger;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobRepository;
+import org.globsframework.model.format.GlobPrinter;
 import org.globsframework.utils.Utils;
 
 public class ProjectErrorsUpgrade {

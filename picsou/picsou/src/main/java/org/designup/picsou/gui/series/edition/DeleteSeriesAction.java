@@ -2,7 +2,7 @@ package org.designup.picsou.gui.series.edition;
 
 import org.designup.picsou.gui.series.SeriesEditionDialog;
 import org.designup.picsou.gui.series.utils.SeriesDeletionHandler;
-import org.designup.picsou.gui.utils.Matchers;
+import org.designup.picsou.gui.transactions.utils.TransactionMatchers;
 import org.designup.picsou.model.*;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.SelectionService;
@@ -50,7 +50,7 @@ public class DeleteSeriesAction extends AbstractAction {
     if (series.get(Series.MIRROR_SERIES) != null) {
       seriesIds.add(series.get(Series.MIRROR_SERIES));
     }
-    localRepository.reset(parentRepository.getAll(Transaction.TYPE, Matchers.transactionsForSeries(seriesIds)),
+    localRepository.reset(parentRepository.getAll(Transaction.TYPE, TransactionMatchers.transactionsForSeries(seriesIds)),
                           Transaction.TYPE);
 
     SeriesDeletionHandler handler = new SeriesDeletionHandler(owner,

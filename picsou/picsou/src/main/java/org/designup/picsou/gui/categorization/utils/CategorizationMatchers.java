@@ -1,6 +1,6 @@
 package org.designup.picsou.gui.categorization.utils;
 
-import org.designup.picsou.gui.utils.Matchers;
+import org.designup.picsou.gui.series.utils.SeriesMatchers;
 import org.designup.picsou.gui.utils.MonthMatcher;
 import org.designup.picsou.model.*;
 import org.globsframework.model.Glob;
@@ -24,7 +24,7 @@ public class CategorizationMatchers {
     private MonthMatcher monthFilter;
 
     public DefaultCategorizationFilter(final Integer budgetAreaId) {
-      monthFilter = Matchers.seriesActiveInPeriod(budgetAreaId, false, true, true);
+      monthFilter = SeriesMatchers.seriesActiveInPeriod(budgetAreaId, false, true, true);
     }
 
     public boolean matches(Glob series, GlobRepository repository) {

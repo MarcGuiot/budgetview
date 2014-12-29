@@ -1,9 +1,11 @@
 package org.designup.picsou.gui.dashboard;
 
+import org.designup.picsou.gui.accounts.utils.AccountMatchers;
 import org.designup.picsou.gui.model.AccountWeather;
 import org.designup.picsou.gui.model.DashboardStat;
 import org.designup.picsou.gui.model.WeatherType;
 import org.designup.picsou.gui.time.TimeService;
+import org.designup.picsou.gui.transactions.utils.TransactionMatchers;
 import org.designup.picsou.model.*;
 import org.globsframework.gui.GlobSelection;
 import org.globsframework.gui.GlobSelectionListener;
@@ -153,7 +155,7 @@ public class DashboardStatUpdater implements ChangeSetListener, GlobSelectionLis
                             repository.getAll(Transaction.TYPE,
                                               and(fieldEquals(Transaction.SERIES, Series.UNCATEGORIZED_SERIES_ID),
                                                   new AccountFieldMatcher(Transaction.ACCOUNT, selectedAccounts),
-                                                  Transaction.getMatcherForRealOperations())).size()));
+                                                  TransactionMatchers.realTransactions())).size()));
   }
 
   private void updateAmounts(Set<Integer> accountIds) {
@@ -176,8 +178,8 @@ public class DashboardStatUpdater implements ChangeSetListener, GlobSelectionLis
     Date savingsAmountDate = savingsSummary.get(Account.POSITION_DATE);
     TreeSet<Integer> months = new TreeSet<Integer>();
     months.add(Month.getMonthId(TimeService.getToday()));
-    GlobList mainAccounts = repository.getAll(Account.TYPE, Account.activeUserCreatedAccounts(months));
-    GlobList savingsAccounts = repository.getAll(Account.TYPE, Account.activeUserCreatedSavingsAccounts(months));
+    GlobList mainAccounts = repository.getAll(Account.TYPE, AccountMatchers.activeUserCreatedAccounts(months));
+    GlobList savingsAccounts = repository.getAll(Account.TYPE, AccountMatchers.activeUserCreatedSavingsAccounts(months));
     double totalMainAccounts = 0;
     Date totalMainAccountsDate = new Date();
     boolean singleMainAccount;

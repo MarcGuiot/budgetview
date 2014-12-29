@@ -3,12 +3,13 @@ package org.designup.picsou.mobile;
 import com.budgetview.shared.model.*;
 import org.designup.picsou.gui.accounts.position.DailyAccountPositionComputer;
 import org.designup.picsou.gui.accounts.position.DailyAccountPositionValues;
+import org.designup.picsou.gui.accounts.utils.AccountMatchers;
 import org.designup.picsou.gui.budget.summary.TotalBudgetAreaAmounts;
 import org.designup.picsou.gui.description.stringifiers.AccountComparator;
 import org.designup.picsou.gui.model.BudgetStat;
 import org.designup.picsou.gui.model.SeriesStat;
+import org.designup.picsou.gui.transactions.utils.TransactionMatchers;
 import org.designup.picsou.gui.utils.DaySelection;
-import org.designup.picsou.gui.utils.Matchers;
 import org.designup.picsou.model.*;
 import org.designup.picsou.utils.TransactionComparator;
 import org.globsframework.model.Glob;
@@ -170,8 +171,8 @@ public class BudgetValuesUpdater {
   private void createAccounts() {
 
     GlobMatcher matcher =
-      and(Matchers.userCreatedAccounts(),
-          new Matchers.AccountDateMatcher(Utils.set(selectedMonths)));
+      and(AccountMatchers.userCreatedAccounts(),
+          new TransactionMatchers.AccountDateMatcher(Utils.set(selectedMonths)));
     GlobList accounts =
       sourceRepository.getAll(Account.TYPE, matcher)
         .sort(new AccountComparator());

@@ -12,7 +12,7 @@ import org.designup.picsou.gui.description.Formatting;
 import org.designup.picsou.gui.description.stringifiers.AccountComparator;
 import org.designup.picsou.gui.model.SavingsBudgetStat;
 import org.designup.picsou.gui.analysis.histobuilders.range.ScrollableHistoChartRange;
-import org.designup.picsou.gui.utils.Matchers;
+import org.designup.picsou.gui.transactions.utils.TransactionMatchers;
 import org.designup.picsou.model.Account;
 import org.designup.picsou.model.AccountType;
 import org.designup.picsou.model.Month;
@@ -33,7 +33,6 @@ import org.globsframework.gui.utils.GlobBooleanVisibilityUpdater;
 import org.globsframework.gui.views.AbstractGlobTextView;
 import org.globsframework.gui.views.GlobButtonView;
 import org.globsframework.gui.views.GlobLabelView;
-import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.*;
 import org.globsframework.model.format.GlobListStringifier;
 import org.globsframework.model.utils.*;
@@ -66,7 +65,7 @@ public abstract class AccountViewPanel {
         GlobList months = selection.getAll(Month.TYPE);
         filterMatcherWithDates =
           GlobMatchers.and(accountTypeMatcher,
-                           new Matchers.AccountDateMatcher(months));
+                           new TransactionMatchers.AccountDateMatcher(months));
         accountRepeat.setFilter(filterMatcherWithDates);
       }
     }, Month.TYPE);

@@ -6,8 +6,8 @@ import org.designup.picsou.gui.components.charts.histo.HistoSelection;
 import org.designup.picsou.gui.components.tips.DetailsTip;
 import org.designup.picsou.gui.analysis.histobuilders.HistoChartBuilder;
 import org.designup.picsou.gui.analysis.histobuilders.range.HistoChartRange;
+import org.designup.picsou.gui.transactions.utils.TransactionMatchers;
 import org.designup.picsou.gui.utils.DaySelection;
-import org.designup.picsou.gui.utils.Matchers;
 import org.designup.picsou.model.Account;
 import org.designup.picsou.model.Day;
 import org.designup.picsou.model.Transaction;
@@ -72,7 +72,7 @@ public class SelectedAccountPositionsChartView extends PositionsChartView {
 
     if (accountIds == null || accountIds.isEmpty()) {
       histoChartBuilder.showDailyHisto(currentMonthId, true,
-                                       Matchers.transactionsForMainAccounts(repository),
+                                       TransactionMatchers.transactionsForMainAccounts(repository),
                                        daySelection, "daily", Transaction.SUMMARY_POSITION);
     }
     else {

@@ -3,7 +3,7 @@ package org.designup.picsou.exporter.tsv;
 import org.designup.picsou.exporter.Exporter;
 import org.designup.picsou.gui.description.stringifiers.AmountStringifier;
 import org.designup.picsou.gui.description.stringifiers.TransactionDateStringifier;
-import org.designup.picsou.gui.utils.Matchers;
+import org.designup.picsou.gui.transactions.utils.TransactionMatchers;
 import org.designup.picsou.model.Series;
 import org.designup.picsou.model.Transaction;
 import org.designup.picsou.utils.Lang;
@@ -58,7 +58,7 @@ public class TsvExporter implements Exporter {
 
     GlobList transactions =
       repository
-        .getAll(Transaction.TYPE, Matchers.exportableTransactions())
+        .getAll(Transaction.TYPE, TransactionMatchers.exportableTransactions())
         .sort(TransactionComparator.DESCENDING_SPLIT_AFTER);
 
     List<GlobStringifier> stringifiers = Arrays.asList(

@@ -16,8 +16,8 @@ import org.designup.picsou.gui.components.charts.histo.utils.HistoChartListenerA
 import org.designup.picsou.gui.model.*;
 import org.designup.picsou.gui.analysis.histobuilders.range.HistoChartRange;
 import org.designup.picsou.gui.series.utils.SeriesOrGroup;
+import org.designup.picsou.gui.transactions.utils.TransactionMatchers;
 import org.designup.picsou.gui.utils.DaySelection;
-import org.designup.picsou.gui.utils.Matchers;
 import org.designup.picsou.model.*;
 import org.globsframework.gui.SelectionService;
 import org.globsframework.gui.splits.utils.Disposable;
@@ -189,11 +189,11 @@ public class HistoChartBuilder implements Disposable {
   }
 
   public void showMainDailyHisto(int selectedMonthId, boolean showFullMonthLabels, String daily) {
-    showDailyHisto(selectedMonthId, showFullMonthLabels, Matchers.transactionsForMainAccounts(repository), DaySelection.EMPTY, daily, Transaction.SUMMARY_POSITION);
+    showDailyHisto(selectedMonthId, showFullMonthLabels, TransactionMatchers.transactionsForMainAccounts(repository), DaySelection.EMPTY, daily, Transaction.SUMMARY_POSITION);
   }
 
   public void showSavingsDailyHisto(int selectedMonthId, boolean showFullMonthLabels) {
-    showDailyHisto(selectedMonthId, showFullMonthLabels, Matchers.transactionsForSavingsAccounts(repository), DaySelection.EMPTY, "daily", Transaction.SUMMARY_POSITION);
+    showDailyHisto(selectedMonthId, showFullMonthLabels, TransactionMatchers.transactionsForSavingsAccounts(repository), DaySelection.EMPTY, "daily", Transaction.SUMMARY_POSITION);
   }
 
   public void showDailyHisto(int selectedMonthId, Integer accountId, DaySelection daySelection, String daily, final DoubleField position, HistoDailyColors colors) {

@@ -3,7 +3,7 @@ package org.designup.picsou.gui.categorization.reconciliation;
 import org.designup.picsou.gui.categorization.CategorizationSelector;
 import org.designup.picsou.gui.categorization.components.CategorizationFilteringMode;
 import org.designup.picsou.gui.help.HyperlinkHandler;
-import org.designup.picsou.gui.utils.Matchers;
+import org.designup.picsou.gui.transactions.utils.TransactionMatchers;
 import org.designup.picsou.model.Transaction;
 import org.designup.picsou.model.UserPreferences;
 import org.designup.picsou.utils.Lang;
@@ -77,10 +77,10 @@ public class ReconciliationWarningPanel {
       return;
     }
 
-    if (repository.contains(Transaction.TYPE, Matchers.transactionsToReconcile())) {
+    if (repository.contains(Transaction.TYPE, TransactionMatchers.transactionsToReconcile())) {
       panel.setVisible(true);
       GlobList transactions =
-        repository.getAll(Transaction.TYPE, Matchers.transactionsToReconcile());
+        repository.getAll(Transaction.TYPE, TransactionMatchers.transactionsToReconcile());
       message.setText(transactions.size() == 1 ?
                       Lang.get("reconciliation.warning.single") :
                       Lang.get("reconciliation.warning.multi", transactions.size()));

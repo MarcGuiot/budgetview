@@ -1,8 +1,8 @@
 package org.designup.picsou.gui.accounts.position;
 
 import com.budgetview.shared.utils.Amounts;
+import org.designup.picsou.gui.transactions.utils.TransactionMatchers;
 import org.designup.picsou.gui.utils.DaySelection;
-import org.designup.picsou.gui.utils.Matchers;
 import org.designup.picsou.model.Account;
 import org.designup.picsou.model.Month;
 import org.designup.picsou.model.Transaction;
@@ -33,7 +33,7 @@ public class DailyAccountPositionComputer {
     Map<Integer, Double> lastValueForAccounts = new HashMap<Integer, Double>();
     if (!monthIdsToShow.isEmpty()) {
       for (Integer accountId : accountIds) {
-        GlobMatcher accountMatcher = Matchers.transactionsForAccount(accountId);
+        GlobMatcher accountMatcher = TransactionMatchers.transactionsForAccount(accountId);
         Double lastValue = getLastValue(accountMatcher, monthIdsToShow.get(0), Transaction.ACCOUNT_POSITION, repository);
         if (lastValue == null) {
           Glob account = repository.find(Key.create(Account.TYPE, accountId));
@@ -55,7 +55,7 @@ public class DailyAccountPositionComputer {
       Double[] minValuesForAll = new Double[maxDayForMonth];
       for (Integer accountId : accountIds) {
 
-        GlobMatcher accountMatcher = Matchers.transactionsForAccount(accountId);
+        GlobMatcher accountMatcher = TransactionMatchers.transactionsForAccount(accountId);
 
         GlobList transactions = repository.findByIndex(Transaction.POSITION_MONTH_INDEX, monthId)
           .filterSelf(accountMatcher, repository)
@@ -83,11 +83,11 @@ public class DailyAccountPositionComputer {
   }
 
   public DailyAccountPositionValues getMainValues(List<Integer> monthIdsToShow, int selectedMonthId) {
-    return getDailyValues(monthIdsToShow, selectedMonthId, Matchers.transactionsForMainAccounts(repository), DaySelection.EMPTY, Transaction.SUMMARY_POSITION);
+    return getDailyValues(monthIdsToShow, selectedMonthId, TransactionMatchers.transactionsForMainAccounts(repository), DaySelection.EMPTY, Transaction.SUMMARY_POSITION);
   }
 
   public DailyAccountPositionValues getSavingsValues(List<Integer> monthIdsToShow, int selectedMonthId) {
-    return getDailyValues(monthIdsToShow, selectedMonthId, Matchers.transactionsForSavingsAccounts(repository), DaySelection.EMPTY, Transaction.SUMMARY_POSITION);
+    return getDailyValues(monthIdsToShow, selectedMonthId, TransactionMatchers.transactionsForSavingsAccounts(repository), DaySelection.EMPTY, Transaction.SUMMARY_POSITION);
   }
 
   public DailyAccountPositionValues getDailyValues(List<Integer> monthIdsToShow, int selectedMonthId, GlobMatcher accountMatcher,

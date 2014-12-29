@@ -41,20 +41,8 @@ public class SeriesEditionButtons {
     this.editSeriesFunctor = new EditSeriesFunctor();
 }
 
-  public void registerButtons(SplitsBuilder builder) {
-    builder.add(createButtonName, new CreateSeriesAction());
-  }
-
   public CreateSeriesAction createSeriesAction() {
     return new CreateSeriesAction();
-  }
-
-  public GlobButtonView createSeriesButton(Glob series) {
-    GlobButtonView buttonView =
-      GlobButtonView.init(Series.TYPE, repository, directory, editSeriesFunctor)
-        .forceSelection(series.getKey());
-    repository.addChangeListener(new TooltipUpdater(series.getKey(), buttonView.getComponent()));
-    return buttonView;
   }
 
   public NameLabelPopupButton createSeriesPopupButton(Glob series) {

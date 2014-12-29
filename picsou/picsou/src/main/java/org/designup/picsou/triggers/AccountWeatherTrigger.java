@@ -1,5 +1,6 @@
 package org.designup.picsou.triggers;
 
+import org.designup.picsou.gui.accounts.utils.AccountMatchers;
 import org.designup.picsou.gui.model.AccountStat;
 import org.designup.picsou.gui.model.AccountWeather;
 import org.designup.picsou.gui.model.WeatherType;
@@ -38,7 +39,7 @@ public class AccountWeatherTrigger implements ChangeSetListener {
 
     SortedSet<Integer> months = getForecastMonths(repository);
     double threshold = repository.get(UserPreferences.KEY).get(UserPreferences.RAINY_WEATHER_THRESHOLD);
-    for (Glob account : repository.getAll(Account.TYPE, Account.activeUserCreatedAccounts(months))) {
+    for (Glob account : repository.getAll(Account.TYPE, AccountMatchers.activeUserCreatedAccounts(months))) {
       Integer accountId = account.get(Account.ID);
       double periodMin = Double.MAX_VALUE;
       WeatherType weather = WeatherType.SUNNY;

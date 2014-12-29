@@ -280,28 +280,6 @@ public class Transaction {
                             type.equals(TransactionType.CLOSE_ACCOUNT_EVENT.getId()));
   }
 
-  public static GlobMatcher getMatcherForRealOperations() {
-    return and(isNotTrue(TO_RECONCILE),
-               isFalse(PLANNED),
-               not(fieldEquals(TRANSACTION_TYPE, TransactionType.OPEN_ACCOUNT_EVENT.getId())),
-               not(fieldEquals(TRANSACTION_TYPE, TransactionType.CLOSE_ACCOUNT_EVENT.getId())));
-  }
-
-  public static GlobMatcher getMatcherForRealOperations(int accountId) {
-    return and(fieldEquals(ACCOUNT, accountId),
-               isNotTrue(TO_RECONCILE),
-               isFalse(PLANNED),
-               not(fieldEquals(TRANSACTION_TYPE, TransactionType.OPEN_ACCOUNT_EVENT.getId())),
-               not(fieldEquals(TRANSACTION_TYPE, TransactionType.CLOSE_ACCOUNT_EVENT.getId())));
-  }
-
-  public static GlobMatcher getMatcherForRealOperations(int accountId, int monthId, int day) {
-    return and(getMatcherForRealOperations(accountId),
-               or(GlobMatchers.fieldStrictlyLessThan(Transaction.POSITION_MONTH, monthId),
-                  and(fieldEquals(Transaction.POSITION_MONTH, monthId),
-                      fieldLessOrEqual(Transaction.POSITION_DAY, day))));
-  }
-
   public static void uncategorize(GlobList transactions, GlobRepository repository) {
     for (Glob transaction : transactions) {
       repository.update(transaction.getKey(),
