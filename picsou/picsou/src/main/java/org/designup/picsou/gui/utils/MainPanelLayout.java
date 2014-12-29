@@ -205,6 +205,11 @@ public class MainPanelLayout implements LayoutManager {
         break;
       case FIXED_CONTENT:
         contentWidth = contentPanels[currentContentPanel].getPreferredSize().width;
+        int preferredSidebarWidth = sidebars[currentSidebar].getPreferredSize().width;
+        int spare = width - (contentWidth + preferredSidebarWidth + actionsBarWidth);
+        if (spare > 0) {
+          contentWidth += spare / 3;
+        }
         sidebarWidth = width - actionsBarWidth - contentWidth;
         break;
       default:

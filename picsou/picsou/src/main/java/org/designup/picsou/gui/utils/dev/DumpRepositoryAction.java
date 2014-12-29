@@ -20,7 +20,7 @@ public class DumpRepositoryAction extends AbstractAction {
   }
 
   public void actionPerformed(ActionEvent actionEvent) {
-    doPrint(Account.TYPE, Series.TYPE, SeriesBudget.TYPE, Project.TYPE, ProjectItem.TYPE, ProjectTransfer.TYPE);
+    doPrint(Account.TYPE, Series.TYPE, PeriodSeriesStat.TYPE);
   }
 
   public void doPrint(GlobType... types) {
