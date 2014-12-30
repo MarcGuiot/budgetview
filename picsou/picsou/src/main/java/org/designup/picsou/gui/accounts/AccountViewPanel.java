@@ -5,13 +5,13 @@ import org.designup.picsou.gui.accounts.actions.AccountPopupFactory;
 import org.designup.picsou.gui.accounts.chart.MainDailyPositionsChartView;
 import org.designup.picsou.gui.accounts.components.AccountWeatherButton;
 import org.designup.picsou.gui.accounts.position.AccountPositionLabels;
+import org.designup.picsou.gui.analysis.histobuilders.range.ScrollableHistoChartRange;
 import org.designup.picsou.gui.card.NavigationService;
 import org.designup.picsou.gui.components.PopupGlobFunctor;
 import org.designup.picsou.gui.components.charts.histo.HistoSelection;
 import org.designup.picsou.gui.description.Formatting;
 import org.designup.picsou.gui.description.stringifiers.AccountComparator;
 import org.designup.picsou.gui.model.SavingsBudgetStat;
-import org.designup.picsou.gui.analysis.histobuilders.range.ScrollableHistoChartRange;
 import org.designup.picsou.gui.transactions.utils.TransactionMatchers;
 import org.designup.picsou.model.Account;
 import org.designup.picsou.model.AccountType;
@@ -26,6 +26,7 @@ import org.globsframework.gui.components.GlobRepeat;
 import org.globsframework.gui.components.GlobSelectablePanel;
 import org.globsframework.gui.components.GlobSelectionToggle;
 import org.globsframework.gui.components.GlobUnselectPanel;
+import org.globsframework.gui.editors.GlobToggleEditor;
 import org.globsframework.gui.splits.PanelBuilder;
 import org.globsframework.gui.splits.SplitsNode;
 import org.globsframework.gui.splits.repeat.RepeatComponentFactory;
@@ -33,7 +34,10 @@ import org.globsframework.gui.utils.GlobBooleanVisibilityUpdater;
 import org.globsframework.gui.views.AbstractGlobTextView;
 import org.globsframework.gui.views.GlobButtonView;
 import org.globsframework.gui.views.GlobLabelView;
-import org.globsframework.model.*;
+import org.globsframework.model.Glob;
+import org.globsframework.model.GlobList;
+import org.globsframework.model.GlobRepository;
+import org.globsframework.model.Key;
 import org.globsframework.model.format.GlobListStringifier;
 import org.globsframework.model.utils.*;
 import org.globsframework.utils.directory.Directory;
@@ -136,6 +140,10 @@ public abstract class AccountViewPanel {
 
       add("showAccount",
           createShowAccountButton(repository, directory), account, cellBuilder);
+
+      cellBuilder.add("toggleGraph", GlobToggleEditor.init(Account.SHOW_CHART, repository, directory)
+        .forceSelection(account.getKey())
+        .getComponent());
 
       MainDailyPositionsChartView chartView =
         new MainDailyPositionsChartView(new ScrollableHistoChartRange(0, 1, true, repository),

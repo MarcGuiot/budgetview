@@ -196,6 +196,7 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
     budgetView.income.checkSeries("Salary", 3540.0, 3540.0);
 
     mainAccounts.checkEndOfMonthPosition(OfxBuilder.DEFAULT_ACCOUNT_NAME, -3366.00);
+    mainAccounts.showChart(OfxBuilder.DEFAULT_ACCOUNT_NAME);
     mainAccounts.getChart(OfxBuilder.DEFAULT_ACCOUNT_NAME)
       .checkRange(200807, 200808)
       .checkCurrentDay(200808, 2)

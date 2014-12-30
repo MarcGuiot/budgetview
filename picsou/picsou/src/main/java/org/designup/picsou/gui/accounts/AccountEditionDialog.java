@@ -180,7 +180,7 @@ public class AccountEditionDialog extends AbstractAccountPanel<LocalGlobReposito
           public void visitCreation(Key key, FieldValues values) throws Exception {
             localRepository.update(key,
                                    value(Account.POSITION_DATE, TimeService.getToday()),
-                                   value(Account.SHOW_CHART, !Account.isSavings(values)));
+                                   value(Account.SHOW_CHART, false));
           }
 
           public void visitUpdate(Key key, FieldValuesWithPrevious values) throws Exception {

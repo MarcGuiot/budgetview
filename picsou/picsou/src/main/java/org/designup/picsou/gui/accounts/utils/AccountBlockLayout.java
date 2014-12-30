@@ -14,6 +14,7 @@ public class AccountBlockLayout implements LayoutManager {
   private Component selectAccount;
   private Component accountWeather;
   private Component positionsChart;
+  private Component toggleGraph;
 
   private static final int HORIZONTAL_MARGIN = 5;
   private static final int VERTICAL_MARGIN = 2;
@@ -51,7 +52,8 @@ public class AccountBlockLayout implements LayoutManager {
            accountWeather.getPreferredSize().width +
            accountPosition.getPreferredSize().width +
            selectAccount.getPreferredSize().width +
-           4 * HORIZONTAL_MARGIN;
+           toggleGraph.getPreferredSize().width +
+           5 * HORIZONTAL_MARGIN;
   }
 
   private void init(Container parent) {
@@ -73,6 +75,9 @@ public class AccountBlockLayout implements LayoutManager {
       }
       else if (component.getName().equals("accountPositionsChart")) {
         positionsChart = component;
+      }
+      else if (component.getName().equals("toggleGraph")) {
+        toggleGraph = component;
       }
       else {
         throw new UnexpectedApplicationState("Unexpected component found in layout: " + component);
@@ -102,18 +107,20 @@ public class AccountBlockLayout implements LayoutManager {
     selectAccount.setBounds(selectAccountLeft, selectAccountTop,
                             selectAccount.getPreferredSize().width, selectAccount.getPreferredSize().height);
 
+    int toggleGraphTop = top + textRowsHeight / 2 - toggleGraph.getPreferredSize().height / 2;
+    int toggleGraphLeft = selectAccountRight + HORIZONTAL_MARGIN;
+    int toggleGraphRight = toggleGraphLeft + toggleGraph.getPreferredSize().width;
+    toggleGraph.setBounds(toggleGraphLeft, toggleGraphTop,
+                            toggleGraph.getPreferredSize().width, toggleGraph.getPreferredSize().height);
+    
     int accountWeatherTop = top + textRowsHeight / 2 - accountWeather.getPreferredSize().height / 2;
-    int accountWeatherLeft =
-      right
-      - accountWeather.getPreferredSize().width
-      - HORIZONTAL_MARGIN;
+    int accountWeatherLeft = right - accountWeather.getPreferredSize().width;
     accountWeather.setBounds(accountWeatherLeft, accountWeatherTop,
                              accountWeather.getPreferredSize().width, accountWeather.getPreferredSize().height);
 
-    int maxCenterWidth = accountWeatherLeft - selectAccountRight;
+    int maxCenterWidth = accountWeatherLeft - toggleGraphRight;
     int editAccountLeft =
-      Math.max(selectAccountRight + maxCenterWidth / 2 - editAccount.getPreferredSize().width / 2,
-               selectAccountRight);
+      Math.max(toggleGraphRight + maxCenterWidth / 2 - editAccount.getPreferredSize().width / 2, toggleGraphRight);
     int editAccountTop = top + firstRowHeight / 2 - editAccount.getPreferredSize().height / 2;
     int editAccountWidth = editAccount.getPreferredSize().width > maxCenterWidth ? maxCenterWidth : editAccount.getPreferredSize().width;
     editAccount.setBounds(editAccountLeft, editAccountTop, editAccountWidth, editAccount.getPreferredSize().height);
@@ -121,12 +128,12 @@ public class AccountBlockLayout implements LayoutManager {
     int accountInfoWidth = accountPosition.getPreferredSize().width + HORIZONTAL_MARGIN + accountUpdateDate.getPreferredSize().width;
 
     int positionTop = top + firstRowHeight + secondRowHeight - accountPosition.getPreferredSize().height;
-    int positionLeft = selectAccountRight + maxCenterWidth / 2 - accountInfoWidth / 2;
+    int positionLeft = toggleGraphRight + maxCenterWidth / 2 - accountInfoWidth / 2;
     accountPosition.setBounds(positionLeft, positionTop,
                               accountPosition.getPreferredSize().width, accountPosition.getPreferredSize().height);
 
     int accountUpdateDateTop = top + firstRowHeight + secondRowHeight - accountUpdateDate.getPreferredSize().height;
-    int accountUpdateDateLeft = selectAccountRight + maxCenterWidth / 2 + accountInfoWidth / 2 - accountUpdateDate.getPreferredSize().width;
+    int accountUpdateDateLeft = toggleGraphRight + maxCenterWidth / 2 + accountInfoWidth / 2 - accountUpdateDate.getPreferredSize().width;
     accountUpdateDate.setBounds(accountUpdateDateLeft, accountUpdateDateTop,
                                 accountUpdateDate.getPreferredSize().width, secondRowHeight);
 

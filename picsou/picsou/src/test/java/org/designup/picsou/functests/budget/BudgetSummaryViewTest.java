@@ -27,6 +27,7 @@ public class BudgetSummaryViewTest extends LoggedInFunctionalTestCase {
       .checkAmount(50.00)
       .gotoUncategorized();
 
+    mainAccounts.showChart("Account n. 0001212");
     mainAccounts.getChart("Account n. 0001212")
       .checkRange(200807, 200807)
       .checkCurrentDay(200807, 5)
@@ -70,6 +71,7 @@ public class BudgetSummaryViewTest extends LoggedInFunctionalTestCase {
     mainAccounts.checkEndOfMonthPosition("Account n. 0001212", 2300.00);
     uncategorized.checkAmount(50.00);
 
+    mainAccounts.showChart("Account n. 0001212");
     mainAccounts.getChart("Account n. 0001212")
       .checkRange(200807, 200808)
       .checkCurrentDay(200807, 5, "Jul 5")
@@ -207,6 +209,7 @@ public class BudgetSummaryViewTest extends LoggedInFunctionalTestCase {
       "| Account n. 000222 | -2000.00 on 2008/07/15 | rainy |\n" +
       "| Account n. 000333 | 3000.00 on 2008/07/01  | sunny |"
     );
+    mainAccounts.showChart("Account n. 000111");
     mainAccounts.getChart("Account n. 000111")
       .checkValue(200807, 1, 100.00)
       .checkValue(200807, 5, 1100.00)
@@ -218,6 +221,7 @@ public class BudgetSummaryViewTest extends LoggedInFunctionalTestCase {
       "| Account n. 000222 | -2000.00 on 2008/07/15 | rainy |\n" +
       "| Account n. 000333 | 3000.00 on 2008/07/01  | sunny |"
     );
+    mainAccounts.showChart("Account n. 000333");
     mainAccounts.getChart("Account n. 000333")
       .checkValue(200807, 1, 3000.00)
       .checkValue(200807, 20, 2700.00)
@@ -283,6 +287,7 @@ public class BudgetSummaryViewTest extends LoggedInFunctionalTestCase {
       "| Account n. 000111 | 1000.00 on 2008/07/10  | sunny |\n" +
       "| Account n. 000222 | -2000.00 on 2008/06/20 | rainy |"
     );
+    mainAccounts.showChart("Account n. 000222");
     mainAccounts.getChart("Account n. 000222")
       .checkValue(200807, 1, -2000.00);
 
@@ -297,6 +302,7 @@ public class BudgetSummaryViewTest extends LoggedInFunctionalTestCase {
     mainAccounts.checkContent(
       "| Account n. 000111 | 1000.00 on 2008/07/10 | sunny |\n" +
       "| Account n. 000222 | 0.00 on 2008/06/20    | -     |");
+    mainAccounts.showChart("Account n. 000111");
     mainAccounts.getChart("Account n. 000111")
       .checkValue(200806, 1, -790.00)
       .checkValue(200806, 6, 210.00)

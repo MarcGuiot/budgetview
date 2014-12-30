@@ -126,7 +126,7 @@ public class Account {
   @Target(Transaction.class)
   public static LinkField CLOSED_TRANSACTION;
 
-  @DefaultBoolean(true)
+  @DefaultBoolean(false)
   public static BooleanField SHOW_CHART;
 
   public static IntegerField SEQUENCE;

@@ -323,11 +323,13 @@ public class AccountEditionTest extends LoggedInFunctionalTestCase {
     accounts.checkContent(
       "| Account n. 00001123 | 0.00 on 2008/08/15 | sunny |\n" +
       "| Account n. 0000100  | 0.00 on 2008/07/01 | -     |");
+    mainAccounts.showChart("Account n. 00001123");
     mainAccounts.getChart("Account n. 00001123")
       .checkValue(200806, 1, 300.00)
       .checkValue(200806, 15, 200.00)
       .checkValue(200807, 15, 100.00);
     mainAccounts.select("Account n. 0000100");
+    mainAccounts.showChart("Account n. 0000100");
     mainAccounts.getChart("Account n. 0000100")
       .checkValue(200806, 1, -900.00)
       .checkValue(200807, 1, 0.00);

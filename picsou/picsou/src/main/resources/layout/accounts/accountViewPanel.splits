@@ -23,6 +23,12 @@
 
     <style selector="#accountPanel" opaque="true" background="block.inner.bg"/>
 
+    <style selector="#toggleGraph" border=""
+           text="" opaque="false" borderPainted="false" cursor="hand"
+           icon="accounts/show_account_graph.png"
+           pressedIcon="accounts/hide_account_graph.png"
+           rolloverIcon="accounts/toggle_account_graph_rollover.png"/>
+
     <style selector="#accountWeather" ui="basicButtonUI" cursor="hand" border="" weightX="0" weightY="0" fill="none"/>
   </styles>
 
@@ -40,6 +46,7 @@
                cursor="hand" opaque="false" styleClass="sidebarSeparator">
           <toggleButton ref="selectAccount" styleClass="sidebarSelectionButton"/>
           <button ref="editAccount"/>
+          <toggleButton ref="toggleGraph"/>
           <button ref="accountWeather"/>
           <component ref="accountPositionsChart" background="sidebar.bg"/>
           <button ref="accountPosition" styleClass="hyperlinkWithoutUnderline"/>

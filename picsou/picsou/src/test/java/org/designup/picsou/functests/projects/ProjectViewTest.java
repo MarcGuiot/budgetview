@@ -1,9 +1,9 @@
-package org.designup.picsou.functests.general;
+package org.designup.picsou.functests.projects;
 
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
 
-public class SummaryViewTest extends LoggedInFunctionalTestCase {
+public class ProjectViewTest extends LoggedInFunctionalTestCase {
 
   protected void setUp() throws Exception {
     setCurrentMonth("2011/01");

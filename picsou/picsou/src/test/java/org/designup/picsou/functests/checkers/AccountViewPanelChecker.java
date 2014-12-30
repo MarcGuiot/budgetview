@@ -68,7 +68,7 @@ public abstract class AccountViewPanelChecker<T extends AccountViewPanelChecker>
 
   private List<String> getSelectedAccounts() {
     Panel accountsPanel = getPanel();
-    UIComponent[] toggles = accountsPanel.getUIComponents(ToggleButton.class);
+    UIComponent[] toggles = accountsPanel.getUIComponents(ToggleButton.class, "selectAccount");
     List<String> actual = new ArrayList<String>();
     for (UIComponent toggle : toggles) {
       if (((ToggleButton) toggle).isSelected().isTrue()) {
@@ -163,6 +163,10 @@ public abstract class AccountViewPanelChecker<T extends AccountViewPanelChecker>
 
   public void hideChart(String accountName) {
     openPopup(accountName).click(Lang.get("account.chart.hide"));
+  }
+
+  public void toggleChart(String accountName) {
+    getAccountPanel(accountName).getToggleButton("toggleGraph").click();
   }
 
   public T checkChartShown(String accountName) {
