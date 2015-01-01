@@ -288,6 +288,10 @@ public class Transaction {
     }
   }
 
+  public static GlobList getAllForSeries(Integer seriesId, GlobRepository repository) {
+    return repository.findByIndex(SERIES_INDEX, SERIES, seriesId).getGlobs();
+  }
+
   public static GlobList getAllForSeriesAndMonth(Integer seriesId, Integer monthId, GlobRepository repository) {
     return repository.findByIndex(SERIES_INDEX, SERIES, seriesId)
       .findByIndex(POSITION_MONTH, monthId).getGlobs();

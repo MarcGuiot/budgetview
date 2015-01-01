@@ -162,7 +162,7 @@ public class SeriesDeletionTest extends LoggedInFunctionalTestCase {
       .load();
     OfxBuilder.init(this)
       .addBankAccount(BankEntity.GENERIC_BANK_ENTITY_ID, 1, "222", 2000.00, "2008/08/10")
-      .addTransaction("2008/08/10", 200.00, "OP1")
+      .addTransaction("2008/08/10", 200.00, "OP2")
       .load();
     mainAccounts.edit("Account n. 222")
       .setAsSavings()
@@ -179,7 +179,7 @@ public class SeriesDeletionTest extends LoggedInFunctionalTestCase {
     transactions.initAmountContent()
       .add("11/08/2008", "Planned: 111 to 222", 100.00, "111 to 222", 2100.00, 2100.00, "Account n. 222")
       .add("11/08/2008", "Planned: 111 to 222", -100.00, "111 to 222", 900.00, 900.00, "Account n. 111")
-      .add("10/08/2008", "OP1", 200.00, "To categorize", 2000.00, 2000.00, "Account n. 222")
+      .add("10/08/2008", "OP2", 200.00, "To categorize", 2000.00, 2000.00, "Account n. 222")
       .add("10/08/2008", "OP1", 100.00, "To categorize", 1000.00, 1000.00, "Account n. 111")
       .check();
 
@@ -187,7 +187,7 @@ public class SeriesDeletionTest extends LoggedInFunctionalTestCase {
 
     budgetView.transfer.checkNoSeriesShown();
     transactions.initAmountContent()
-      .add("10/08/2008", "OP1", 200.00, "To categorize", 2000.00, 2000.00, "Account n. 222")
+      .add("10/08/2008", "OP2", 200.00, "To categorize", 2000.00, 2000.00, "Account n. 222")
       .add("10/08/2008", "OP1", 100.00, "To categorize", 1000.00, 1000.00, "Account n. 111")
       .check();
   }
@@ -385,7 +385,7 @@ public class SeriesDeletionTest extends LoggedInFunctionalTestCase {
       .validate();
   }
 
-  public void testTransferOnlyIfSameAccount() throws Exception {
+  public void testTransferIsProposedForAllMainAccounts() throws Exception {
     accounts.createMainAccount("Main1", 10);
     OfxBuilder.init(this)
       .addTransaction("2010/12/01", 100.00, "Auchan")
@@ -400,17 +400,92 @@ public class SeriesDeletionTest extends LoggedInFunctionalTestCase {
     budgetView.variable.createSeries("Series for Main2", "Main2");
 
     budgetView.variable.openDeleteSeries("SeriesA for Main1")
-      .checkTransferSeries("Series for all accounts")
+      .checkTransferSeries("Series for Main2", "Series for all accounts")
       .cancel();
 
     budgetView.variable.createSeries("SeriesB for Main1", "Main1");
     budgetView.variable.openDeleteSeries("SeriesA for Main1")
-      .checkTransferSeries("Series for all accounts", "SeriesB for Main1")
+      .checkTransferSeries("Series for Main2", "Series for all accounts", "SeriesB for Main1")
       .selectTransferSeries("Series for all accounts")
       .transfer();
 
     budgetView.variable.editSeries("Series for all accounts")
-      .checkEditableTargetAccount("Main1")
+      .checkEditableTargetAccount("Main accounts")
       .cancel();
+  }
+
+  public void testDeleteWithTransferSetsTargetAccountToAllMainAccountsIfNeeded() throws Exception {
+
+    operations.openPreferences().setFutureMonthsCount(2).validate();
+
+    OfxBuilder.init(this)
+      .addBankAccount(BankEntity.GENERIC_BANK_ENTITY_ID, 1, "111", 1000.00, "2008/08/10")
+      .addTransaction("2008/08/08", 100.00, "OP1A")
+      .addTransaction("2008/08/08", 100.00, "OP1B")
+      .load();
+    OfxBuilder.init(this)
+      .addBankAccount(BankEntity.GENERIC_BANK_ENTITY_ID, 1, "222", 2000.00, "2008/08/10")
+      .addTransaction("2008/08/08", 200.00, "OP2")
+      .load();
+    OfxBuilder.init(this)
+      .addBankAccount(BankEntity.GENERIC_BANK_ENTITY_ID, 1, "333", 3000.00, "2008/08/10")
+      .addTransaction("2008/08/08", 200.00, "OP3")
+      .load();
+    mainAccounts.edit("Account n. 333")
+      .setAsSavings()
+      .validate();
+
+    categorization.setNewVariable("OP1A", "Series1A", 100.00, "Account n. 111");
+    categorization.setNewVariable("OP1B", "Series1B", 150.00, "Account n. 111");
+    categorization.setNewVariable("OP2", "Series2", 200.00, "Account n. 222");
+
+    timeline.selectMonths(200808, 200809);
+    transactions.showPlannedTransactions();
+    transactions.initAmountContent()
+      .add("11/09/2008", "Planned: Series2", 200.00, "Series2", 2200.00, 3500.00, "Account n. 222")
+      .add("11/09/2008", "Planned: Series1A", 100.00, "Series1A", 1300.00, 3300.00, "Account n. 111")
+      .add("11/09/2008", "Planned: Series1B", 150.00, "Series1B", 1200.00, 3200.00, "Account n. 111")
+      .add("11/08/2008", "Planned: Series1B", 50.00, "Series1B", 1050.00, 3050.00, "Account n. 111")
+      .add("08/08/2008", "OP3", 200.00, "To categorize", 3000.00, 3000.00, "Account n. 333")
+      .add("08/08/2008", "OP2", 200.00, "Series2", 2000.00, 3000.00, "Account n. 222")
+      .add("08/08/2008", "OP1B", 100.00, "Series1B", 1000.00, 2800.00, "Account n. 111")
+      .add("08/08/2008", "OP1A", 100.00, "Series1A", 900.00, 2700.00, "Account n. 111")
+      .check();
+
+    budgetView.variable.openDeleteSeries("Series1B")
+      .checkTransferSeries("Series1A", "Series2")
+      .selectTransferSeries("Series1A")
+      .transfer();
+
+    budgetView.variable.editSeries("Series1A")
+      .checkEditableTargetAccount("Account n. 111")
+      .validate();
+
+    transactions.initAmountContent()
+      .add("11/09/2008", "Planned: Series2", 200.00, "Series2", 2200.00, 3300.00, "Account n. 222")
+      .add("11/09/2008", "Planned: Series1A", 100.00, "Series1A", 1100.00, 3100.00, "Account n. 111")
+      .add("08/08/2008", "OP3", 200.00, "To categorize", 3000.00, 3000.00, "Account n. 333")
+      .add("08/08/2008", "OP2", 200.00, "Series2", 2000.00, 3000.00, "Account n. 222")
+      .add("08/08/2008", "OP1B", 100.00, "Series1A", 1000.00, 2800.00, "Account n. 111")
+      .add("08/08/2008", "OP1A", 100.00, "Series1A", 900.00, 2700.00, "Account n. 111")
+      .check();
+
+    budgetView.variable.openDeleteSeries("Series2")
+      .checkTransferSeries("Series1A")
+      .selectTransferSeries("Series1A")
+      .transfer();
+
+    budgetView.variable.editSeries("Series1A")
+      .checkReadOnlyTargetAccount("Main accounts")
+      .validate();
+
+    transactions.initAmountContent()
+      .add("11/09/2008", "Planned: Series1A", 50.00, "Series1A", 2050.00, 3100.00, "Account n. 222")
+      .add("11/09/2008", "Planned: Series1A", 50.00, "Series1A", 1050.00, 3050.00, "Account n. 111")
+      .add("08/08/2008", "OP3", 200.00, "To categorize", 3000.00, 3000.00, "Account n. 333")
+      .add("08/08/2008", "OP2", 200.00, "Series1A", 2000.00, 3000.00, "Account n. 222")
+      .add("08/08/2008", "OP1B", 100.00, "Series1A", 1000.00, 2800.00, "Account n. 111")
+      .add("08/08/2008", "OP1A", 100.00, "Series1A", 900.00, 2700.00, "Account n. 111")
+      .check();
   }
 }

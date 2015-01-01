@@ -183,9 +183,6 @@ public class Account {
 
   public static boolean isMain(Integer accountId, GlobRepository repository) {
     Glob account = repository.find(org.globsframework.model.Key.create(Account.TYPE, accountId));
-    if (account == null) {
-      return false;
-    }
     return isMain(account);
   }
 
