@@ -12,6 +12,10 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
+import static org.globsframework.model.utils.GlobMatchers.and;
+import static org.globsframework.model.utils.GlobMatchers.fieldEquals;
+import static org.globsframework.model.utils.GlobMatchers.not;
+
 public class SeriesMatchers {
 
   public static MonthMatcher seriesActiveInPeriod(final Integer budgetAreaId, boolean showOnlyForActiveMonths, boolean showOnlyIfAvailableOnAllMonths, boolean showOnPreviousAndNextMonth) {
@@ -22,20 +26,9 @@ public class SeriesMatchers {
     };
   }
 
-  public static MonthMatcher seriesDateSavingsAndAccountFilter(final Integer accountId) {
-    return new SeriesFirstEndDateFilter(true, false, false) {
-      protected boolean isEligible(Glob series, GlobRepository repository) {
-        if (series.get(Series.BUDGET_AREA).equals(BudgetArea.TRANSFER.getId())) {
-          return series.get(Series.TARGET_ACCOUNT).equals(accountId);
-        }
-        return false;
-      }
-    };
-  }
-
   public static GlobMatcher deferredCardSeries() {
-    return GlobMatchers.and(GlobMatchers.fieldEquals(Series.BUDGET_AREA, BudgetArea.OTHER.getId()),
-                            GlobMatchers.not(GlobMatchers.fieldEquals(Series.ID, Series.ACCOUNT_SERIES_ID)));
+    return and(fieldEquals(Series.BUDGET_AREA, BudgetArea.OTHER.getId()),
+               not(fieldEquals(Series.ID, Series.ACCOUNT_SERIES_ID)));
   }
 
   public static GlobMatcher seriesForAccount(final Integer selectedAccountId) {

@@ -12,7 +12,9 @@ import java.util.Set;
 
 public class CategorizationMatchers {
   public static CategorizationFilter deferredCardCategorizationFilter() {
-    return seriesCategorizationFilter(BudgetArea.OTHER.getId());
+    DefaultCategorizationFilter filter = new DefaultCategorizationFilter(BudgetArea.OTHER.getId());
+    filter.excludeCardAccounts = true;
+    return filter;
   }
 
   public static CategorizationFilter seriesCategorizationFilter(final Integer budgetAreaId) {
@@ -22,9 +24,16 @@ public class CategorizationMatchers {
   public static class DefaultCategorizationFilter implements CategorizationFilter {
     private GlobList transactions = new GlobList();
     private MonthMatcher monthFilter;
+    private boolean excludeCardAccounts = false;
 
     public DefaultCategorizationFilter(final Integer budgetAreaId) {
       monthFilter = SeriesMatchers.seriesActiveInPeriod(budgetAreaId, false, true, true);
+    }
+
+    public void filterDates(GlobList transactions) {
+      Set<Integer> monthIds = transactions.getValueSet(Transaction.BUDGET_MONTH);
+      this.monthFilter.filterMonths(monthIds);
+      this.transactions = transactions;
     }
 
     public boolean matches(Glob series, GlobRepository repository) {
@@ -83,17 +92,11 @@ public class CategorizationMatchers {
         if (!Account.isMain(account)) {
           return false;
         }
-        if (!AccountCardType.NOT_A_CARD.getId().equals(account.get(Account.CARD_TYPE))) {
+        if (excludeCardAccounts && !AccountCardType.NOT_A_CARD.getId().equals(account.get(Account.CARD_TYPE))) {
           return false;
         }
       }
       return true;
-    }
-
-    public void filterDates(GlobList transactions) {
-      Set<Integer> monthIds = transactions.getValueSet(Transaction.BUDGET_MONTH);
-      monthFilter.filterMonths(monthIds);
-      this.transactions = transactions;
     }
   }
 }

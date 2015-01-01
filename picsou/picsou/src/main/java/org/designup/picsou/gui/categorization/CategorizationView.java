@@ -28,6 +28,7 @@ import org.globsframework.gui.splits.utils.GuiUtils;
 import org.globsframework.gui.views.GlobLabelView;
 import org.globsframework.model.*;
 import org.globsframework.model.format.GlobListStringifier;
+import org.globsframework.model.format.GlobPrinter;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;

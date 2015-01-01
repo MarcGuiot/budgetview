@@ -1,6 +1,11 @@
 package org.designup.picsou.functests.checkers;
 
+import junit.framework.Assert;
 import org.uispec4j.Panel;
+import org.uispec4j.TextBox;
+import org.uispec4j.assertion.Assertion;
+import org.uispec4j.assertion.UISpecAssert;
+
 import static org.uispec4j.assertion.UISpecAssert.assertFalse;
 
 import javax.swing.*;
@@ -23,11 +28,23 @@ public class SpecialCaseCategorizationChecker<T extends SpecialCaseCategorizatio
   }
 
   public T checkHidden() {
-    checkComponentVisible(panel, JPanel.class, "specialCasePanel", false);
+    UISpecAssert.assertThat(new Assertion() {
+      public void check() {
+        Panel specialCase = panel.getPanel("specialCasePanel");
+        if (specialCase.isVisible().isTrue()) {
+          TextBox textBox = getSpecialCasePanel().getTextBox("message");
+          Assert.fail("Special case panel unexpectedly shown with: " + textBox.getText());
+        }
+      }
+    });
     return (T)this;
   }
 
   protected Panel getSpecialCasePanel() {
    return panel.getPanel("specialCasePanel");
+  }
+
+  protected void checkSpecialCaseMessage(String text) {
+    UISpecAssert.assertThat(getSpecialCasePanel().getTextBox("message").textEquals(text));
   }
 }

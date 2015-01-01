@@ -21,6 +21,8 @@ import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.util.Locale;
 
+import static org.uispec4j.assertion.UISpecAssert.assertThat;
+
 public abstract class GuiChecker {
   private static DecimalFormat format = new DecimalFormat("0.00", new DecimalFormatSymbols(Locale.US));
 
@@ -56,12 +58,11 @@ public abstract class GuiChecker {
                                                               final String componentName,
                                                               final boolean visible) {
     String message = componentName + " " + (visible ? "is not visible" : "is visible");
-    UISpecAssert.assertThat(message,
-                            new ComponentIsVisibleAssertion<T>(panel, swingComponentClass, componentName, visible));
+    assertThat(message, new ComponentIsVisibleAssertion<T>(panel, swingComponentClass, componentName, visible));
   }
 
   protected <T extends JComponent> void checkMessageHidden(final Panel panel, final String componentName) {
-    UISpecAssert.assertThat(new MessageIsHiddenAssertion(panel, componentName));
+    assertThat(new MessageIsHiddenAssertion(panel, componentName));
   }
 
   protected void checkSignpostVisible(Panel enclosingPanel,

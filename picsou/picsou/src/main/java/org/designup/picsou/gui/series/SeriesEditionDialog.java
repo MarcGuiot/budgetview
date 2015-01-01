@@ -472,7 +472,7 @@ public class SeriesEditionDialog {
   public Key showNewSeries(GlobList transactions, GlobList selectedMonths, BudgetArea budgetArea, FieldValue... forcedValues) {
     resetSeries();
     selectedTransactions = transactions;
-    Glob createdSeries;
+    Glob newSeries;
     try {
       localRepository.startChangeSet();
       localRepository.rollback();
@@ -494,22 +494,21 @@ public class SeriesEditionDialog {
 
       SortedSet<Integer> days = transactions.getSortedSet(Transaction.DAY);
       Integer day = days.isEmpty() ? 1 : days.last();
-      createdSeries = createSeries(label, day, fromAccount.get(), toAccount.get(), forcedValues);
+      newSeries = createSeries(label, day, fromAccount.get(), toAccount.get(), forcedValues);
     }
     finally {
       localRepository.completeChangeSet();
     }
     if (budgetArea == BudgetArea.EXTRAS) {
-      initExtraBudgetAmounts(createdSeries, transactions);
+      initExtraBudgetAmounts(newSeries, transactions);
     }
     this.createdSeries = null;
-    doShow(selectedMonths.getValueSet(Month.ID), createdSeries, true, true);
+    doShow(selectedMonths.getValueSet(Month.ID), newSeries, true, true);
     return this.createdSeries;
   }
 
   private void retrieveAssociatedTransactions(Integer seriesId) {
-    selectedTransactions = repository.findByIndex(Transaction.SERIES_INDEX, Transaction.SERIES,
-                                                  seriesId).getGlobs();
+    selectedTransactions = repository.findByIndex(Transaction.SERIES_INDEX, Transaction.SERIES, seriesId).getGlobs();
     selectedTransactions.removeAll(and(isTrue(Transaction.PLANNED),
                                        isTrue(Transaction.CREATED_BY_SERIES)),
                                    repository);

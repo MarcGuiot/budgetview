@@ -12,7 +12,9 @@ import org.designup.picsou.model.Series;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.splits.utils.GuiUtils;
+import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
+import org.globsframework.model.format.GlobPrinter;
 import org.globsframework.model.utils.TypeChangeSetListener;
 import org.globsframework.utils.Functor;
 import org.globsframework.utils.directory.Directory;
@@ -41,8 +43,6 @@ public class DeferredCardCategorizationPanel implements SpecialCategorizationPan
 
     registerUpdater();
 
-    BudgetArea budgetArea = BudgetArea.OTHER;
-
     GlobsPanelBuilder panelBuilder =
       new GlobsPanelBuilder(CategorizationView.class,
                             "/layout/categorization/specialCategorizationPanels/deferredCardCategorizationPanel.splits",
@@ -60,7 +60,7 @@ public class DeferredCardCategorizationPanel implements SpecialCategorizationPan
     message = GuiUtils.createReadOnlyHtmlComponent();
     panelBuilder.add("message", message);
 
-    repeatHandler = filteredRepeats.addRepeat(budgetArea, panelBuilder,
+    repeatHandler = filteredRepeats.addRepeat(BudgetArea.OTHER, panelBuilder,
                                               CategorizationMatchers.deferredCardCategorizationFilter());
     repeatHandler.addListener(new Functor() {
       public void run() throws Exception {

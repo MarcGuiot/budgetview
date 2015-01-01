@@ -116,11 +116,9 @@ public class DeferredTest extends LoggedInFunctionalTestCase {
 
     timeline.selectAll();
 
-    views.selectCategorization();
     categorization.setDeferred("Prelevement novembre", "Card n. 1111");
     categorization.setDeferred("Prelevement octobre", "Card n. 1111");
     categorization.setDeferred("Prelevement aout", "Card n. 1111");
-    views.selectData();
 
     transactions.initAmountContent()
       .add("30/11/2009", "AUCHAN", -60.00, "To categorize", -100.00, 900.00, "Card n. 1111")
@@ -133,8 +131,6 @@ public class DeferredTest extends LoggedInFunctionalTestCase {
       .add("14/09/2009", "AUCHAN", -35.00, "To categorize", -35.00, 1030.00, "Card n. 1111")
       .check();
 
-    // check budget
-    views.selectCategorization();
     categorization.selectTransactions("Auchan")
       .selectVariable()
       .createSeries()
@@ -143,7 +139,17 @@ public class DeferredTest extends LoggedInFunctionalTestCase {
       .setAmount("250")
       .validate();
 
-    views.selectBudget();
+    transactions.initAmountContent()
+      .add("30/11/2009", "AUCHAN", -60.00, "Course", -250.00, 750.00, "Card n. 1111")
+      .add("29/11/2009", "AUCHAN", -40.00, "Course", -190.00, 810.00, "Card n. 1111")
+      .add("28/11/2009", "PRELEVEMENT NOVEMBRE", -30.00, "Card n. 1111", 1000.00, 1000.00, "Account n. 1234")
+      .add("25/11/2009", "AUCHAN", -10.00, "Course", -30.00, 1000.00, "Card n. 1111")
+      .add("29/10/2009", "AUCHAN", -20.00, "Course", -20.00, 1000.00, "Card n. 1111")
+      .add("28/10/2009", "PRELEVEMENT OCTOBRE", 0.00, "Card n. 1111", 1030.00, 1030.00, "Account n. 1234")
+      .add("26/09/2009", "PRELEVEMENT AOUT", -50.00, "Card n. 1111", 1030.00, 1030.00, "Account n. 1234")
+      .add("14/09/2009", "AUCHAN", -35.00, "Course", -35.00, 1030.00, "Card n. 1111")
+      .check();
+
     timeline.selectMonth("2009/12");
     budgetView.variable.checkSeries("Course", -100, -250);
 
@@ -169,30 +175,21 @@ public class DeferredTest extends LoggedInFunctionalTestCase {
       .save();
     operations.importQifFileWithDeferred(deferredAccount, "Other", -100.00, "Main account");
 
-    categorization.setNewVariable("Auchan", "Courses", -200.);
-
-    timeline.selectAll();
-
-    views.selectCategorization();
-    categorization.selectTransaction("Prelevement novembre")
-      .selectOther()
-      .selectDeferred()
-      .selectSeries("Card 1111");
-    categorization.selectTransaction("Prelevement octobre")
-      .selectOther()
-      .selectDeferred()
-      .selectSeries("Card 1111");
-    views.selectData();
+    categorization.setNewVariable("Auchan", "Courses", -200.00);
+    categorization.setDeferred("Prelevement novembre", "Card 1111");
+    categorization.setDeferred("Prelevement octobre", "Card 1111");
     categorization.setDeferred("Prelevement septembre", "card 1111");
 
+    timeline.selectAll();
+    fail("TODO v4.0: les soldes des comptes carte/main ci-dessous semblent incorrects. D'où vient le -170.00 sur card 1111 ?");
     transactions.showPlannedTransactions()
       .initAmountContent()
-      .add("11/02/2010", "Planned: Courses", -200.00, "Courses", 330.00, 230.00, "Main account")
-      .add("11/01/2010", "Planned: Courses", -200.00, "Courses", 530.00, 430.00, "Main account")
-      .add("11/12/2009", "Planned: Courses", -100.00, "Courses", 730.00, 730.00, "Main account")
-      .add("30/11/2009", "Planned: Courses", -170.00, "Courses", 830.00, 830.00, "Main account")
-      .add("30/11/2009", "AUCHAN", -60.00, "Courses", -100.00, 630.00, "card 1111")
-      .add("29/11/2009", "AUCHAN", -40.00, "Courses", -40.00, 690.00, "card 1111")
+      .add("11/02/2010", "Planned: Courses", -200.00, "Courses", -200.00, 400.00, "card 1111")
+      .add("11/01/2010", "Planned: Courses", -200.00, "Courses", -200.00, 600.00, "card 1111")
+      .add("11/12/2009", "Planned: Courses", -100.00, "Courses", -100.00, 900.00, "card 1111")
+      .add("30/11/2009", "Planned: Courses", -170.00, "Courses", -200.00, 1000.00, "card 1111")
+      .add("30/11/2009", "AUCHAN", -60.00, "Courses", -200.00, 800.00, "card 1111")
+      .add("29/11/2009", "AUCHAN", -40.00, "Courses", -140.00, 860.00, "card 1111")
       .add("28/11/2009", "PRELEVEMENT NOVEMBRE", -30.00, "card 1111", 1000.00, 1000.00, "Main account")
       .add("25/11/2009", "AUCHAN", -10.00, "Courses", -30.00, 1000.00, "card 1111")
       .add("29/10/2009", "AUCHAN", -20.00, "Courses", -20.00, 1000.00, "card 1111")
@@ -201,7 +198,6 @@ public class DeferredTest extends LoggedInFunctionalTestCase {
       .add("28/09/2009", "PRELEVEMENT SEPTEMBRE", -35.00, "card 1111", 1080.00, 1080.00, "Main account")
       .add("14/09/2009", "AUCHAN", -15.00, "Courses", -15.00, 1080.00, "card 1111")
       .check();
-
   }
 
   public void testImportQifWithOperationMixInMonthWithoutTransfer() throws Exception {
@@ -340,19 +336,18 @@ public class DeferredTest extends LoggedInFunctionalTestCase {
       .addTransaction("2009/09/26", -35 - 15 /* -15 : transaction precedente non importé */, "Prelevement aout")
       .loadDeferredCard("Card n. 1111", "Account n. 1234");
 
-    views.selectCategorization();
+    categorization.setNewVariable("Auchan", "course", -30.00);
     categorization
-      .setNewVariable("Auchan", "course", -30.00);
-    categorization.setDeferred("Prelevement novembre", "1111")
+      .setDeferred("Prelevement novembre", "1111")
       .setDeferred("Prelevement octobre", "1111")
       .setDeferred("Prelevement aout", "1111");
+
     timeline.selectAll();
-    views.selectData();
     transactions
       .showPlannedTransactions()
       .initAmountContent()
-      .add("27/02/2010", "Planned: course", -30.00, "course", 940.00, 840.00, "Account n. 1234")
-      .add("27/01/2010", "Planned: course", -30.00, "course", 970.00, 870.00, "Account n. 1234")
+      .add("27/02/2010", "Planned: course", -30.00, "course", -30.00, 840.00, "Card n. 1111")
+      .add("27/01/2010", "Planned: course", -30.00, "course", -30.00, 870.00, "Card n. 1111")
       .add("30/11/2009", "AUCHAN", -60.00, "course", -100.00, 900.00, "Card n. 1111")
       .add("29/11/2009", "AUCHAN", -40.00, "course", -40.00, 960.00, "Card n. 1111")
       .add("28/11/2009", "PRELEVEMENT NOVEMBRE", -30.00, "Card n. 1111", 1000.00, 1000.00, "Account n. 1234")
@@ -379,26 +374,23 @@ public class DeferredTest extends LoggedInFunctionalTestCase {
       .loadDeferredCard("Card n. 1111", "Account n. 1234");
 
     categorization.setDeferred("Prelevement novembre", "1111");
-
     categorization.setDeferred("Prelevement septembre", "1111");
 
-    views.selectCategorization();
-    categorization
-      .setNewVariable("Auchan", "course", -200.0);
+    categorization.setNewVariable("Auchan", "course", -200.0);
+
     timeline.selectAll();
-    views.selectData();
     transactions
       .showPlannedTransactions()
       .initAmountContent()
-      .add("27/02/2010", "Planned: course", -200.00, "course", 510.00, 400.00, "Account n. 1234")
-      .add("27/01/2010", "Planned: course", -200.00, "course", 710.00, 600.00, "Account n. 1234")
-      .add("27/12/2009", "Planned: course", -90.00, "course", 910.00,	910.00, "Account n. 1234")
-      .add("07/12/2009", "AUCHAN", -10.00, "course", -110.00, 800.00, "Card n. 1111")
-      .add("30/11/2009", "AUCHAN", -60.00, "course", -100.00, 810.00, "Card n. 1111")
-      .add("29/11/2009", "AUCHAN", -40.00, "course", -40.00, 870.00, "Card n. 1111")
+      .add("27/02/2010", "Planned: course", -200.00, "course", -200.00, 400.00, "Card n. 1111")
+      .add("27/01/2010", "Planned: course", -200.00, "course", -200.00, 600.00, "Card n. 1111")
+      .add("27/12/2009", "Planned: course", -90.00, "course", -90.00, 910.00, "Card n. 1111")
+      .add("07/12/2009", "AUCHAN", -10.00, "course", -200.00, 800.00, "Card n. 1111")
+      .add("30/11/2009", "AUCHAN", -60.00, "course", -190.00, 810.00, "Card n. 1111")
+      .add("29/11/2009", "AUCHAN", -40.00, "course", -130.00, 870.00, "Card n. 1111")
       .add("28/11/2009", "PRELEVEMENT NOVEMBRE", -190.00, "Card n. 1111", 1000.00, 1000.00, "Account n. 1234")
-      .add("25/11/2009", "AUCHAN", -80.00, "course", -190.00, 1000, "Card n. 1111")
-      .add("29/10/2009", "AUCHAN", -110.00, "course", -110.00, 1000, "Card n. 1111")
+      .add("25/11/2009", "AUCHAN", -80.00, "course", -190.00, 1000.00, "Card n. 1111")
+      .add("29/10/2009", "AUCHAN", -110.00, "course", -110.00, 1000.00, "Card n. 1111")
       .add("28/09/2009", "PRELEVEMENT SEPTEMBRE", -130.00, "Card n. 1111", 1190.00, 1190.00, "Account n. 1234")
       .add("01/09/2009", "AUCHAN", -130.00, "course", -130.00, 1190.00, "Card n. 1111")
       .check();
@@ -427,19 +419,18 @@ public class DeferredTest extends LoggedInFunctionalTestCase {
     transactions
       .showPlannedTransactions()
       .initAmountContent()
-      .add("27/02/2010", "Planned: course", -200.00, "course", 430.00,	390.00, "Account n. 1234")
-      .add("27/01/2010", "Planned: course", -200.00, "course", 630.00,	590.00, "Account n. 1234")
-      .add("27/12/2009", "Planned: course", -160.00, "course", 830.00, 830.00, "Account n. 1234")
-      .add("29/11/2009", "Planned: course", -10.00, "course", 990.00, 990.00, "Account n. 1234")
-      .add("29/11/2009", "AUCHAN", -40.00, "course", -40.00, 790.00, "Card n. 1111")
+      .add("27/02/2010", "Planned: course", -200.00, "course", -200.00, 400.00, "Card n. 1111")
+      .add("27/01/2010", "Planned: course", -200.00, "course", -200.00, 600.00, "Card n. 1111")
+      .add("27/12/2009", "Planned: course", -160.00, "course", -160.00, 840.00, "Card n. 1111")
+      .add("29/11/2009", "Planned: course", -10.00, "course", -200.00, 1000.00, "Card n. 1111")
+      .add("29/11/2009", "AUCHAN", -40.00, "course", -200.00, 800.00, "Card n. 1111")
       .add("27/11/2009", "PRELEVEMENT NOVEMBRE", -190.00, "Card n. 1111", 1000.00, 1000.00, "Account n. 1234")
-      .add("25/11/2009", "AUCHAN", -80.00, "course", -190.00, 1000, "Card n. 1111")
-      .add("29/10/2009", "AUCHAN", -110.00, "course", -110.00, 1000, "Card n. 1111")
+      .add("25/11/2009", "AUCHAN", -80.00, "course", -190.00, 1000.00, "Card n. 1111")
+      .add("29/10/2009", "AUCHAN", -110.00, "course", -110.00, 1000.00, "Card n. 1111")
       .add("27/09/2009", "PRELEVEMENT SEPTEMBRE", -130.00, "Card n. 1111", 1190.00, 1190.00, "Account n. 1234")
       .add("01/09/2009", "AUCHAN", -130.00, "course", -130.00, 1190.00, "Card n. 1111")
       .check();
   }
-
 
   public void testChangeAccountType() throws Exception {
     OfxBuilder.init(this)
@@ -556,27 +547,11 @@ public class DeferredTest extends LoggedInFunctionalTestCase {
     budgetView.recurring.createSeries()
       .setName("courses").setPropagationEnabled().setTargetAccount("Main account").setAmount("200").validate();
 
-    transactions.showPlannedTransactions();
-
-    timeline.selectAll();
-//    transactions.initAmountContent()
-//      .dumpCode()
-//      .add("15/10/2011", "Planned: EDF", -40.00, "EDF", 532.00, "Main accounts")
-//      .add("15/10/2011", "Planned: salary", 200.00, "salary", 572.00, "Main accounts")
-//      .add("15/09/2011", "Planned: EDF", -40.00, "EDF", 396.00, "Main accounts")
-//      .add("15/09/2011", "Planned: salary", 200.00, "salary", 436.00, "Main accounts")
-//      .add("30/08/2011", "Planned: EDF", -40.00, "EDF", 236.00, "Main accounts")
-//      .add("30/08/2011", "Planned: salary", 200.00, "salary", 276.00, "Main accounts")
-//      .add("30/08/2011", "DIFFE 4", -12.00, "To categorize", -24.00, 372.00, "card 1111")
-//      .add("26/08/2011", "DIFFE 3", -12.00, "To categorize", -12.00, 384.00, "card 1111")
-//      .add("25/08/2011", "DIFFE 2", -12.00, "To categorize", -24.00, 76.00, "card 1111")
-//      .add("24/08/2011", "5", -12.00, "To categorize", 100.00, 100.00, "Main account")
-//      .add("23/08/2011", "DIFFE 1", -12.00, "To categorize", -12.00, 88.00, "card 1111")
-//      .check();
-
     categorization.selectTransactions("DIFFE 1", "DIFFE 2", "DIFFE 3", "DIFFE 4")
       .selectRecurring().selectSeries("courses");
 
+    timeline.selectAll();
+    transactions.showPlannedTransactions();
     transactions.initAmountContent()
       .add("15/10/2011", "Planned: courses", -200.00, "courses", 28.00, -20.00, "Main account")
       .add("15/10/2011", "Planned: EDF", -40.00, "EDF", 228.00, 180.00, "Main account")
@@ -813,7 +788,7 @@ public class DeferredTest extends LoggedInFunctionalTestCase {
     seriesAnalysis.table().checkNoTableRowWithLabel("Other");
   }
 
-  public void testDifferedAccountInManual() throws Exception {
+  public void testDeferredAccountInManual() throws Exception {
     OfxBuilder.init(this)
       .addTransaction("2009/12/08", -30., "cheque 1")
       .addTransaction("2009/12/04", -30., "cheque 2")
@@ -823,14 +798,17 @@ public class DeferredTest extends LoggedInFunctionalTestCase {
       .addTransaction("2009/11/10", -15, "cheque 5")
       .load();
 
-    views.selectCategorization();
     categorization
       .setNewRecurring("CHEQUE N°1", "course")
       .setRecurring("CHEQUE N°2", "course")
       .setRecurring("CHEQUE N°3", "course")
       .setRecurring("CHEQUE N°4", "course")
       .setRecurring("CHEQUE N°5", "course");
-    categorization.editSeries("course").setAmount(300).setPropagationEnabled().validate();
+    categorization.editSeries("course")
+      .setAmount(300)
+      .setPropagationEnabled()
+      .setTargetAccount("Account n. 00001123")
+      .validate();
 
     accounts.createNewAccount()
       .setName("Compte differé")
@@ -854,13 +832,7 @@ public class DeferredTest extends LoggedInFunctionalTestCase {
     categorization.selectTransactions("Auchan 1", "Auchan 2", "Auchan 3", "Auchan 4", "Auchan 5", "Auchan 6")
       .selectRecurring().selectSeries("course");
 
-    views.selectData();
-
     categorization.selectTransaction("VIREMENT OCTOBRE/NOVEMBRE").selectOther().selectDeferred().selectSeries("Compte differé");
-
-    mainAccounts.checkPosition("Compte differé", -35);
-    mainAccounts.checkPosition("Account n. 00001123", 0);
-    mainAccounts.checkReferencePosition(0, "2009/12/08");
 
     timeline.selectAll();
     transactions.showPlannedTransactions().initAmountContent()
@@ -885,6 +857,11 @@ public class DeferredTest extends LoggedInFunctionalTestCase {
       .add("10/11/2009", "CHEQUE N°5", -15.00, "course", 200.00, 200.00, "Account n. 00001123")
       .add("01/11/2009", "AUCHAN 1", -50.00, "course", -50.00, 70.00, "Compte differé")
       .check();
+
+    mainAccounts.checkPosition("Compte differé", -35);
+    mainAccounts.checkPosition("Account n. 00001123", 0);
+    mainAccounts.checkReferencePosition(0, "2009/12/08");
+
   }
 
   public void testShiftOneMonth() throws Exception {
@@ -925,9 +902,9 @@ public class DeferredTest extends LoggedInFunctionalTestCase {
 
     views.selectData();
 
-    mainAccounts.checkPosition("Compte differé", -35);
-    mainAccounts.checkPosition("Account n. 00001123", 0);
-    mainAccounts.checkReferencePosition(0, "2009/11/09");
+    mainAccounts.checkPosition("Compte differé", -35.00);
+    mainAccounts.checkPosition("Account n. 00001123", 0.00);
+    mainAccounts.checkReferencePosition(0.00, "2009/11/09");
 
     timeline.selectAll();
     transactions.showPlannedTransactions().initAmountContent()

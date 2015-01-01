@@ -4,6 +4,7 @@ import org.designup.picsou.gui.categorization.components.SeriesChooserComponentF
 import org.designup.picsou.gui.description.stringifiers.SeriesNameComparator;
 import org.designup.picsou.model.BudgetArea;
 import org.designup.picsou.model.Series;
+import org.designup.picsou.model.Transaction;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.components.GlobRepeat;
 import org.globsframework.gui.components.GlobRepeatListener;
@@ -116,9 +117,12 @@ public class FilteredRepeats {
   public boolean updateAndCheckMatch(Glob series, Glob transaction) {
     boolean noneMatch = false;
     for (Pair<CategorizationFilter, GlobRepeat> filter : list.values()) {
-      filter.getFirst().filterDates(new GlobList(transaction));
-      filter.getSecond().setFilter(filter.getFirst());
-      noneMatch |= filter.getFirst().matches(series, repository);
+      CategorizationFilter categorizationFilter = filter.getFirst();
+      GlobRepeat repeat = filter.getSecond();
+
+      categorizationFilter.filterDates(new GlobList(transaction));
+      repeat.setFilter(categorizationFilter);
+      noneMatch |= categorizationFilter.matches(series, repository);
     }
     return !noneMatch;
   }

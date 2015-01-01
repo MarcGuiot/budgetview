@@ -20,7 +20,7 @@ public class DeferredCardCategorizationChecker extends SpecialCaseCategorization
   }
 
   public DeferredCardCategorizationChecker checkMessage(String text) {
-    UISpecAssert.assertThat(getSpecialCasePanel().getTextBox("message").textEquals(text));
+    checkSpecialCaseMessage(text);
     return this;
   }
 

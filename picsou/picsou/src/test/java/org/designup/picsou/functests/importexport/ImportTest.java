@@ -504,7 +504,7 @@ public class ImportTest extends LoggedInFunctionalTestCase {
       .check();
   }
 
-  public void testImportFromDiferentAccountWithSameTransactionsInOfx() throws Exception {
+  public void testImportFromDifferentAccountsWithSameTransactionsInOfx() throws Exception {
     String fileName1 = OfxBuilder.init(this)
       .addBankAccount(666, 1024, "12345678a", 12.0, "2008/06/11")
       .addTransaction("2008/06/10", 1.0, "V'lib")
@@ -523,7 +523,7 @@ public class ImportTest extends LoggedInFunctionalTestCase {
       .check();
   }
 
-  public void testImportFromDiferentAccountWithSameTransactionsInQif() throws Exception {
+  public void testImportFromDifferentAccountsWithSameTransactionsInQif() throws Exception {
     String file1 = QifBuilder
       .init(this)
       .addTransaction("2006/01/09", -1, "Menu K")

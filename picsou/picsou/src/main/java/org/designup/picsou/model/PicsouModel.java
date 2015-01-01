@@ -54,8 +54,9 @@ public class PicsouModel {
                           LayoutConfig.TYPE,
                           SeriesGroup.TYPE,
                           AnalysisViewType.TYPE,
-                          StandardMessage.TYPE
-                          )
+                          StandardMessage.TYPE,
+                          AddOns.TYPE
+    )
       .get();
 
   static {
