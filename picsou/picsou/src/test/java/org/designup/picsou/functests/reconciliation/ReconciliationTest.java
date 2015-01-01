@@ -1,4 +1,4 @@
-package org.designup.picsou.functests.categorization;
+package org.designup.picsou.functests.reconciliation;
 
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;

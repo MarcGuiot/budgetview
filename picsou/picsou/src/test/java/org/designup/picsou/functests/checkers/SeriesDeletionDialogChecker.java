@@ -1,5 +1,6 @@
 package org.designup.picsou.functests.checkers;
 
+import org.uispec4j.TextBox;
 import org.uispec4j.Window;
 import org.uispec4j.Trigger;
 import org.uispec4j.interception.WindowInterceptor;
@@ -22,12 +23,14 @@ public class SeriesDeletionDialogChecker extends GuiChecker {
     this.dialog = dialog;
   }
 
-  public SeriesDeletionDialogChecker checkMessage(String seriesName) {
-    assertThat(dialog.getTextBox("introMessage").textContains(seriesName));
-    return checkMessage();
+  public SeriesDeletionDialogChecker checkExistingTransactionsMessage(String seriesName) {
+    TextBox introMessage = dialog.getTextBox("introMessage");
+    assertThat(introMessage.textContains(seriesName));
+    assertThat(introMessage.textContains("Some transactions have been associated with the envelope"));
+    return this;
   }
 
-  public SeriesDeletionDialogChecker checkMessage() {
+  public SeriesDeletionDialogChecker checkExistingTransactionsMessage() {
     assertThat(dialog.getTextBox("introMessage").textContains("Some transactions have been associated with the envelope"));
     return this;
   }

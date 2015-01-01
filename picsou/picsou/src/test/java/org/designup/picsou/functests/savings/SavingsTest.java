@@ -563,10 +563,10 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
       .addTransaction("2008/08/10", 100.00, "CAF")
       .load();
 
-    this.mainAccounts.edit("Account n. 111")
+    mainAccounts.edit("Account n. 111")
       .setAsSavings()
       .validate();
-    views.selectBudget();
+
     budgetView.transfer.createSeries()
       .setName("CAF")
       .setToAccount("Account n. 111")
@@ -574,6 +574,7 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
       .checkDateChooserIsHidden()
       .validate();
     categorization.setTransfer("CAF", "CAF");
+
     timeline.selectMonth("2008/08");
     savingsAccounts.select("Account n. 111");
     budgetView.transfer.alignAndPropagate("CAF");
@@ -603,7 +604,7 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
       .load();
     operations.openPreferences().setFutureMonthsCount(2).validate();
 
-    this.mainAccounts.edit("Account n. 111")
+    mainAccounts.edit("Account n. 111")
       .setAsSavings()
       .validate();
     categorization.showSelectedMonthsOnly();
@@ -638,7 +639,7 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
 
     operations.openPreferences().setFutureMonthsCount(2).validate();
 
-    this.mainAccounts.edit("Account n. 111")
+    mainAccounts.edit("Account n. 111")
       .setAsSavings()
       .validate();
     views.selectBudget();
@@ -686,7 +687,7 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
       .load();
     operations.openPreferences().setFutureMonthsCount(2).validate();
 
-    this.mainAccounts.edit("Account n. 111")
+    mainAccounts.edit("Account n. 111")
       .setAsSavings()
       .validate();
 
@@ -772,7 +773,7 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
       .load();
     operations.openPreferences().setFutureMonthsCount(2).validate();
 
-    this.mainAccounts.edit("Account n. 111")
+    mainAccounts.edit("Account n. 111")
       .setAsSavings()
       .validate();
     views.selectBudget();

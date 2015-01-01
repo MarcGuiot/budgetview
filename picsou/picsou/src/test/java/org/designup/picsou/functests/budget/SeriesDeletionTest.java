@@ -4,6 +4,7 @@ import org.designup.picsou.functests.checkers.SeriesDeletionDialogChecker;
 import org.designup.picsou.functests.checkers.SeriesEditionDialogChecker;
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
+import org.designup.picsou.model.BankEntity;
 import org.designup.picsou.model.TransactionType;
 
 public class SeriesDeletionTest extends LoggedInFunctionalTestCase {
@@ -86,9 +87,9 @@ public class SeriesDeletionTest extends LoggedInFunctionalTestCase {
   }
 
   public void testDeleteNewlyCreatedSeriesFromPopup() throws Exception {
-    views.selectBudget();
     budgetView.income.createSeries()
       .setName("AA")
+      .setAmount(500)
       .validate();
     budgetView.income.deleteSeries("AA");
     budgetView.income.checkNoSeriesShown();
@@ -152,6 +153,43 @@ public class SeriesDeletionTest extends LoggedInFunctionalTestCase {
 
     budgetView.variable.editSeries("Empty").deleteCurrentSeries();
     budgetView.variable.checkSeriesNotPresent("Empty");
+  }
+
+  public void testDeleteTranferWithNoTransactions() throws Exception {
+    OfxBuilder.init(this)
+      .addBankAccount(BankEntity.GENERIC_BANK_ENTITY_ID, 1, "111", 1000.00, "2008/08/10")
+      .addTransaction("2008/08/10", 100.00, "OP1")
+      .load();
+    OfxBuilder.init(this)
+      .addBankAccount(BankEntity.GENERIC_BANK_ENTITY_ID, 1, "222", 2000.00, "2008/08/10")
+      .addTransaction("2008/08/10", 200.00, "OP1")
+      .load();
+    mainAccounts.edit("Account n. 222")
+      .setAsSavings()
+      .validate();
+
+    budgetView.transfer.createSeries()
+      .setName("111 to 222")
+      .setFromAccount("Account n. 111")
+      .setToAccount("Account n. 222")
+      .setAmount(100.00)
+      .validate();
+
+    transactions.showPlannedTransactions();
+    transactions.initAmountContent()
+      .add("11/08/2008", "Planned: 111 to 222", 100.00, "111 to 222", 2100.00, 2100.00, "Account n. 222")
+      .add("11/08/2008", "Planned: 111 to 222", -100.00, "111 to 222", 900.00, 900.00, "Account n. 111")
+      .add("10/08/2008", "OP1", 200.00, "To categorize", 2000.00, 2000.00, "Account n. 222")
+      .add("10/08/2008", "OP1", 100.00, "To categorize", 1000.00, 1000.00, "Account n. 111")
+      .check();
+
+    budgetView.transfer.deleteSeries("111 to 222");
+
+    budgetView.transfer.checkNoSeriesShown();
+    transactions.initAmountContent()
+      .add("10/08/2008", "OP1", 200.00, "To categorize", 2000.00, 2000.00, "Account n. 222")
+      .add("10/08/2008", "OP1", 100.00, "To categorize", 1000.00, 1000.00, "Account n. 111")
+      .check();
   }
 
   public void testDeleteSavingsInManual() throws Exception {
@@ -236,7 +274,7 @@ public class SeriesDeletionTest extends LoggedInFunctionalTestCase {
     access.processDeleteVariable("Drinks", new DeleteHandler() {
       public void process(SeriesDeletionDialogChecker deletionDialog) {
         deletionDialog
-          .checkMessage("Drinks")
+          .checkExistingTransactionsMessage("Drinks")
           .checkTransferDisabled()
           .checkTransferSeries("Groceries", "Health", "Misc", "Salary")
           .setTransferSeriesFilter("e")
@@ -358,9 +396,9 @@ public class SeriesDeletionTest extends LoggedInFunctionalTestCase {
     categorization.setVariable("Auchan", "SeriesA for Main1");
 
     budgetView.variable.createSeries("Series for all accounts");
-    
+
     budgetView.variable.createSeries("Series for Main2", "Main2");
-    
+
     budgetView.variable.openDeleteSeries("SeriesA for Main1")
       .checkTransferSeries("Series for all accounts")
       .cancel();

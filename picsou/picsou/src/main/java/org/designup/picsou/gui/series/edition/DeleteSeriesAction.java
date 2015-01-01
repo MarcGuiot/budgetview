@@ -19,6 +19,9 @@ import java.awt.event.ActionEvent;
 import java.util.HashSet;
 import java.util.Set;
 
+import static org.globsframework.model.utils.GlobMatchers.and;
+import static org.globsframework.model.utils.GlobMatchers.isNotTrue;
+
 public class DeleteSeriesAction extends AbstractAction {
   private Key seriesKey;
   private final Window owner;
@@ -37,10 +40,10 @@ public class DeleteSeriesAction extends AbstractAction {
 
     LocalGlobRepository localRepository =
       LocalGlobRepositoryBuilder.init(parentRepository)
-      .copy(BudgetArea.TYPE, Month.TYPE, CurrentMonth.TYPE,
-            Account.TYPE, SubSeries.TYPE,
-            Bank.TYPE, BankEntity.TYPE)
-      .get();
+        .copy(BudgetArea.TYPE, Month.TYPE, CurrentMonth.TYPE,
+              Account.TYPE, SubSeries.TYPE,
+              Bank.TYPE, BankEntity.TYPE)
+        .get();
 
     SeriesEditionDialog.loadSeries(localRepository, parentRepository);
 
@@ -50,7 +53,10 @@ public class DeleteSeriesAction extends AbstractAction {
     if (series.get(Series.MIRROR_SERIES) != null) {
       seriesIds.add(series.get(Series.MIRROR_SERIES));
     }
-    localRepository.reset(parentRepository.getAll(Transaction.TYPE, TransactionMatchers.transactionsForSeries(seriesIds)),
+    localRepository.reset(parentRepository.getAll(Transaction.TYPE,
+                                                  and(TransactionMatchers.transactionsForSeries(seriesIds),
+                                                      isNotTrue(Transaction.PLANNED),
+                                                      isNotTrue(Transaction.CREATED_BY_SERIES))),
                           Transaction.TYPE);
 
     SeriesDeletionHandler handler = new SeriesDeletionHandler(owner,

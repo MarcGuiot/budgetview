@@ -268,9 +268,14 @@ public class SeriesEditionDialogChecker extends SeriesAmountEditionChecker<Serie
     return SeriesDeletionDialogChecker.init(dialog.getButton("Delete...").triggerClick());
   }
 
+  public void deleteCurrentSeriesWithoutConfirmation() {
+    dialog.getButton("Delete...").click();
+    assertFalse(dialog.isVisible());
+  }
+
   public void deleteCurrentSeriesWithConfirmation(String seriesName) {
     openDeleteDialog()
-      .checkMessage(seriesName)
+      .checkExistingTransactionsMessage(seriesName)
       .uncategorize();
     assertFalse(dialog.isVisible());
   }
@@ -292,14 +297,14 @@ public class SeriesEditionDialogChecker extends SeriesAmountEditionChecker<Serie
 
   public void deleteCurrentSeriesWithConfirmation() {
     openDeleteDialog()
-      .checkMessage()
+      .checkExistingTransactionsMessage()
       .uncategorize();
     assertFalse(dialog.isVisible());
   }
 
   public SeriesEditionDialogChecker deleteCurrentSeriesWithConfirmationAndCancel() {
     openDeleteDialog()
-      .checkMessage()
+      .checkExistingTransactionsMessage()
       .cancel();
     assertTrue(dialog.isVisible());
     return this;
@@ -405,7 +410,7 @@ public class SeriesEditionDialogChecker extends SeriesAmountEditionChecker<Serie
   }
 
   public SeriesEditionDialogChecker checkNameIsSelected() {
-    JTextField textEditor = (JTextField)dialog.getInputTextBox("nameField").getAwtComponent();
+    JTextField textEditor = (JTextField) dialog.getInputTextBox("nameField").getAwtComponent();
     Assert.assertEquals(textEditor.getText(), textEditor.getSelectedText());
     return this;
   }
