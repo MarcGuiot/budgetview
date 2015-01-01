@@ -29,7 +29,7 @@ public class TitleDisplayTest extends LoggedInFunctionalTestCase {
     timeline.checkSelection("2008/08", "2008/09", "2008/10", "2008/11", "2008/12", "2009/01", "2009/02");
 
     views.selectHome();
-    screen.checkContent("Dashboard", "August 2008 - February 2009");
+    screen.checkContent("Dashboard", "<html><b>August</b> 2008 - <b>February</b> 2009</html>");
 
     timeline.selectMonth("2008/10");
     views.selectBudget();
@@ -51,7 +51,7 @@ public class TitleDisplayTest extends LoggedInFunctionalTestCase {
 
     views.selectData();
     timeline.selectMonths("2008/08", "2008/09", "2008/10");
-    screen.checkContent("Operations", "<html><b>August - October</b> 2008</html>");
+    screen.checkContent("Operations", "<html><b>August</b> - <b>October</b> 2008</html>");
   }
 
   public void testNoMonth() throws Exception {

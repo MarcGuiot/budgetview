@@ -29,14 +29,14 @@ public class ScreenChecker {
     assertTrue(getPeriodText().textEquals(period));
   }
 
-  public TextBox getSectionText() {
+  private TextBox getSectionText() {
     if (sectionText == null) {
       sectionText = mainWindow.getTextBox("sectionTitle");
     }
     return sectionText;
   }
 
-  public TextBox getPeriodText() {
+  private TextBox getPeriodText() {
     if (periodText == null) {
       periodText = mainWindow.getTextBox("periodTitle");
     }

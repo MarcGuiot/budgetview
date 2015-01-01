@@ -49,18 +49,35 @@ public class PeriodView extends View implements GlobSelectionListener {
       return;
     }
     periodTitle.setText(MonthListStringifier.toString(months, new AbstractMonthRangeFormatter() {
+      public String year(int year) {
+        return "<html><b>" + Integer.toString(year) + "</b></html>";
+      }
+
+      public String yearRange(int firstYear, int lastYear) {
+        return "<html><b>" + Integer.toString(firstYear) + "</b> - <b>" + Integer.toString(lastYear) + "</b></html>";
+      }
+
       public String monthRangeInYear(int firstMonthId, int lastMonthId, int year) {
         if (firstMonthId == lastMonthId) {
           return "<html><b>" + Month.getFullMonthLabel(firstMonthId, false) + "</b> " + Integer.toString(year) + "</html>";
         }
-        return "<html><b>" + Month.getFullMonthLabel(firstMonthId, false) + " - " + Month.getFullMonthLabel(lastMonthId, false) +
-               "</b> " + Integer.toString(year) + "</html>";
+        return "<html><b>" + Month.getFullMonthLabel(firstMonthId, false) + "</b> - " +
+               "<b>" + Month.getFullMonthLabel(lastMonthId, false) + "</b> " + Integer.toString(year) +
+               "</html>";
       }
 
       public String monthRangeAcrossYears(int firstMonthId, int lastMonthId) {
-        return Month.getFullLabel(firstMonthId, false) + " - " + Month.getFullLabel(lastMonthId, false);
+        return "<html>" + getFullLabel(firstMonthId) + " - " + getFullLabel(lastMonthId) + "</html>";
       }
     }));
   }
 
+  private String getFullLabel(Integer monthId) {
+    if (monthId == null) {
+      return "";
+    }
+    int month = Month.toMonth(monthId);
+    int year = Month.toYear(monthId);
+    return "<b>" + Month.getFullMonthLabel(Month.toMonth(month), false) + "</b> " + year;
+  }
 }
