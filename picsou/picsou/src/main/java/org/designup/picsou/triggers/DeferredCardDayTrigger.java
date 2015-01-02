@@ -67,7 +67,6 @@ public class DeferredCardDayTrigger extends DefaultChangeSetListener {
     Glob series = repository.getAll(Series.TYPE, GlobMatchers.and(GlobMatchers.fieldEquals(Series.BUDGET_AREA, BudgetArea.OTHER.getId()),
                                                                   GlobMatchers.fieldEquals(Series.FROM_ACCOUNT, account.get(Account.ID))))
       .getFirst();
-    Calendar calendar = Calendar.getInstance();
     Integer accountId = account.get(Account.ID);
 
     ReadOnlyGlobRepository.MultiFieldIndexed indexOnDeferredCardDay =

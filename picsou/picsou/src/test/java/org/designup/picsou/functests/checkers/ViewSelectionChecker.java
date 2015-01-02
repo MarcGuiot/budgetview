@@ -1,18 +1,16 @@
 package org.designup.picsou.functests.checkers;
 
+import junit.framework.Assert;
+import org.designup.picsou.gui.model.Card;
 import org.uispec4j.Panel;
 import org.uispec4j.ToggleButton;
 import org.uispec4j.UIComponent;
 import org.uispec4j.Window;
-import static org.uispec4j.assertion.UISpecAssert.assertTrue;
 import org.uispec4j.assertion.UISpecAssert;
-import org.designup.picsou.gui.model.Card;
-import junit.framework.Assert;
-import sun.swing.SwingUtilities2;
 
 import javax.swing.*;
-import java.awt.*;
-import java.lang.reflect.InvocationTargetException;
+
+import static org.uispec4j.assertion.UISpecAssert.assertTrue;
 
 public class ViewSelectionChecker extends GuiChecker {
   private Window window;
@@ -58,6 +56,14 @@ public class ViewSelectionChecker extends GuiChecker {
     assertSelected("data");
   }
 
+  public void checkProjectsEnabled() {
+    assertEnabled("projects");
+  }
+
+  public void checkProjectsDisabled() {
+    assertDisabled("projects");
+  }
+
   public void checkProjectsSelected() {
     assertSelected("projects");
   }
@@ -70,16 +76,28 @@ public class ViewSelectionChecker extends GuiChecker {
     assertSelected("budget");
   }
 
+  public void checkAnalysisEnabled() {
+    assertEnabled("analysis");
+  }
+
+  public void checkAnalysisDisabled() {
+    assertDisabled("analysis");
+  }
+
   public void checkAnalysisSelected() {
     assertSelected("analysis");
   }
 
-  public void checkSavingsSelected() {
-    assertSelected("savings");
-  }
-
   private void select(String viewName) {
     getToggle(viewName).click();
+  }
+
+  private void assertEnabled(String viewName) {
+    checkComponentVisible(getTogglesPanel(), JToggleButton.class, viewName + "CardToggle", true);
+  }
+
+  private void assertDisabled(String viewName) {
+    checkComponentVisible(getTogglesPanel(), JToggleButton.class, viewName + "CardToggle", false);
   }
 
   private void assertSelected(String viewName) {
@@ -89,7 +107,7 @@ public class ViewSelectionChecker extends GuiChecker {
 
   private ToggleButton getSelectedToggle() {
     for (UIComponent component : getTogglesPanel().getUIComponents(ToggleButton.class)) {
-      ToggleButton button = (ToggleButton)component;
+      ToggleButton button = (ToggleButton) component;
       if (button.isSelected().isTrue()) {
         return button;
       }

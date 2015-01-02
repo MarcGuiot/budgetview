@@ -8,11 +8,13 @@ import org.globsframework.model.utils.GlobMatchers;
 
 import java.util.Set;
 
+import static org.globsframework.model.FieldValue.value;
+import static org.globsframework.model.utils.GlobMatchers.fieldEquals;
+
 public class DeferredOperationTrigger extends DefaultChangeSetListener {
   public void globsChanged(ChangeSet changeSet, final GlobRepository repository) {
     final Set<Integer> deferredAccount =
-      repository.getAll(Account.TYPE,
-                        GlobMatchers.fieldEquals(Account.CARD_TYPE, AccountCardType.DEFERRED.getId()))
+      repository.getAll(Account.TYPE, fieldEquals(Account.CARD_TYPE, AccountCardType.DEFERRED.getId()))
         .getValueSet(Account.ID);
 
     changeSet.safeVisit(Transaction.TYPE, new ChangeSetVisitor() {
@@ -58,8 +60,9 @@ public class DeferredOperationTrigger extends DefaultChangeSetListener {
           if (deferredCard != null) {
             day = deferredCard.get(DeferredCardDate.DAY);
           }
-          repository.update(key, FieldValue.value(Transaction.POSITION_MONTH, values.get(Transaction.BUDGET_MONTH)),
-                            FieldValue.value(Transaction.POSITION_DAY, Month.getDay(day, values.get(Transaction.BUDGET_MONTH))));
+          repository.update(key,
+                            value(Transaction.POSITION_MONTH, values.get(Transaction.BUDGET_MONTH)),
+                            value(Transaction.POSITION_DAY, Month.getDay(day, values.get(Transaction.BUDGET_MONTH))));
         }
       }
 
@@ -74,7 +77,7 @@ public class DeferredOperationTrigger extends DefaultChangeSetListener {
       public void visitUpdate(final Key key, final FieldValuesWithPrevious values) throws Exception {
         if (values.contains(Account.DEFERRED_DAY) || values.contains(Account.DEFERRED_MONTH_SHIFT)){
           if (AccountCardType.DEFERRED.getId().equals(repository.get(key).get(Account.CARD_TYPE))) {
-            repository.safeApply(Transaction.TYPE, GlobMatchers.fieldEquals(Transaction.ACCOUNT, key.get(Account.ID)),
+            repository.safeApply(Transaction.TYPE, fieldEquals(Transaction.ACCOUNT, key.get(Account.ID)),
                                  new GlobFunctor() {
                                    public void run(Glob glob, GlobRepository repository) throws Exception {
                                      shiftTransaction(glob.getKey(), glob, key.get(Account.ID), repository);
@@ -116,10 +119,10 @@ public class DeferredOperationTrigger extends DefaultChangeSetListener {
     else {
       deferredDay = Month.getDay(deferredCardDate.get(DeferredCardDate.DAY), deferredMonthId);
     }
-    repository.update(key, FieldValue.value(Transaction.POSITION_DAY, deferredDay),
-                      FieldValue.value(Transaction.POSITION_MONTH, deferredMonthId),
-                      FieldValue.value(Transaction.BUDGET_DAY, deferredDay),
-                      FieldValue.value(Transaction.BUDGET_MONTH, deferredMonthId));
+    repository.update(key, value(Transaction.POSITION_DAY, deferredDay),
+                      value(Transaction.POSITION_MONTH, deferredMonthId),
+                      value(Transaction.BUDGET_DAY, deferredDay),
+                      value(Transaction.BUDGET_MONTH, deferredMonthId));
   }
 
   private void updateDay(Key key, FieldValues values, GlobRepository repository, final Integer previousSeriesId) {

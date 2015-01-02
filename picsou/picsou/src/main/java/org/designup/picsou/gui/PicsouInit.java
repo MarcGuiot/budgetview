@@ -133,6 +133,7 @@ public class PicsouInit {
     repository.addTrigger(new SubSeriesDeletionTrigger());
     repository.addTrigger(new RegistrationTrigger(directory));
     repository.addTrigger(new LicenseRegistrationTrigger(serverAccess));
+    repository.addTrigger(new AddOnTrigger());
     repository.addTrigger(new DayTrigger());
     repository.addTrigger(new DeferredAccountTrigger());
     repository.addTrigger(new DeferredCardDayTrigger());

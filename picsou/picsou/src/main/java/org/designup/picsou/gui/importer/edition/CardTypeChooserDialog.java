@@ -131,7 +131,7 @@ public class CardTypeChooserDialog {
             return;
           }
           Glob account = repository.get(accountKey);
-          AccountCardType cardType = AccountCardType.get(account.get(Account.CARD_TYPE));
+          AccountCardType cardType = AccountCardType.get(account);
           if (AccountCardType.CREDIT.equals(cardType)){
             messageArea.setText(Lang.get("cardTypeChooser.credit.message"));
             messageArea.setVisible(true);

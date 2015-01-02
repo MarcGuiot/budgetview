@@ -90,10 +90,11 @@ public class LicenseActivationTest extends ConnectedTestCase {
   }
 
   public void testConnectAtStartup() throws Exception {
+
     String email = "alfred@free.fr";
     db.registerMail(email, "1234");
     register(db, email, "1234");
-    checkValidLicense(false);
+    checkValidLicense();
 
     exit();
 
@@ -103,7 +104,7 @@ public class LicenseActivationTest extends ConnectedTestCase {
 
     Glob license = db.getLicense(email, License.ACCESS_COUNT, 3L);
     assertEquals(3L, license.get(License.ACCESS_COUNT).longValue());
-    checkValidLicense(false);
+    checkValidLicense();
   }
 
   public void testMultipleAnonymousConnect() throws Exception {
@@ -175,7 +176,7 @@ public class LicenseActivationTest extends ConnectedTestCase {
     String email = "alfred@free.fr";
     db.registerMail(email, "1234");
     register(db, email, "1234");
-    checkValidLicense(false);
+    checkValidLicense();
 
     exit();
     startApplication(false);
@@ -183,18 +184,18 @@ public class LicenseActivationTest extends ConnectedTestCase {
     LicenseActivationChecker.enterBadLicense(window, "titi@foo.org", "4321", "Unknown email address");
 
     db.checkLicenseCount(email, 3);
-    checkValidLicense(false);
+    checkValidLicense();
     exit();
     startApplication(false);
     login.logExistingUser("user", "passw@rd");
-    checkValidLicense(false);
+    checkValidLicense();
   }
 
   public void testRegisterAndReRegisterWithBadActivationCode() throws Exception {
     String email = "alfred@free.fr";
     db.registerMail(email, "1234");
     register(db, email, "1234");
-    checkValidLicense(false);
+    checkValidLicense();
 
     exit();
     startApplication(false);
@@ -202,25 +203,25 @@ public class LicenseActivationTest extends ConnectedTestCase {
     LicenseActivationChecker.enterBadLicense(window, "alfred@free.fr", "4321", "Activation failed");
 
     db.checkLicenseCount(email, 3);
-    checkValidLicense(false);
+    checkValidLicense();
     exit();
     startApplication(false);
     login.logExistingUser("user", "passw@rd");
-    checkValidLicense(false);
+    checkValidLicense();
   }
 
   public void testRegisterAndReRegisterWithBadActivationCodeWithoutRestart() throws Exception {
     String email = "alfred@free.fr";
     db.registerMail(email, "1234");
     register(db, email, "1234");
-    checkValidLicense(false);
+    checkValidLicense();
     LicenseActivationChecker.enterBadLicense(window, "alfred@free.fr", "4321", "Activation failed");
 
-    checkValidLicense(false);
+    checkValidLicense();
     exit();
     startApplication(false);
     login.logExistingUser("user", "passw@rd");
-    checkValidLicense(false);
+    checkValidLicense();
   }
 
   public void testUnknownEmailAddress() throws Exception {
@@ -238,7 +239,7 @@ public class LicenseActivationTest extends ConnectedTestCase {
       .enterLicenseAndActivate("toto@zer", "1234")
       .checkActivationCompleted()
       .complete();
-    checkValidLicense(false);
+    checkValidLicense();
   }
 
   public void testRegistrationWithBadKey() throws Exception {
@@ -312,7 +313,7 @@ public class LicenseActivationTest extends ConnectedTestCase {
     String email = "alfred@free.fr";
     db.registerMail(email, "1234");
     register(db, email, "1234");
-    checkValidLicense(false);
+    checkValidLicense();
 
     exit();
 
@@ -457,7 +458,7 @@ public class LicenseActivationTest extends ConnectedTestCase {
     System.setProperty(PicsouApplication.LOCAL_PREVAYLER_PATH_PROPERTY, SECOND_PATH);
     startApplication(false);
     login.logExistingUser("user", "passw@rd");
-    checkValidLicense(false);
+    checkValidLicense();
     exit();
 
     System.setProperty(PicsouApplication.DELETE_LOCAL_PREVAYLER_PROPERTY, "true");
@@ -469,7 +470,7 @@ public class LicenseActivationTest extends ConnectedTestCase {
     String newCode = checkMailAndExtractCode();
 
     LicenseActivationChecker.enterLicense(window, MAIL, newCode);
-    checkValidLicense(false);
+    checkValidLicense();
     exit();
 
     System.setProperty(PicsouApplication.DELETE_LOCAL_PREVAYLER_PROPERTY, "false");
@@ -483,7 +484,7 @@ public class LicenseActivationTest extends ConnectedTestCase {
     System.setProperty(PicsouApplication.LOCAL_PREVAYLER_PATH_PROPERTY, SECOND_PATH);
     startApplication(false);
     login.logExistingUser("user", "passw@rd");
-    checkValidLicense(false);
+    checkValidLicense();
   }
 
   private static final String OTHERMAIL_FREE_FR = "othermail@free.Fr";
@@ -562,14 +563,14 @@ public class LicenseActivationTest extends ConnectedTestCase {
     exit();
     startApplication(false);
     login.logExistingUser("user", "passw@rd");
-    checkValidLicense(false);
+    checkValidLicense();
   }
 
   private void checkUserNotRegistered() {
     license.checkUserNotRegistered();
   }
 
-  private void checkValidLicense(final boolean anonymous) {
+  private void checkValidLicense() {
     license.checkUserIsRegistered();
   }
 
@@ -583,9 +584,9 @@ public class LicenseActivationTest extends ConnectedTestCase {
     System.setProperty(PicsouApplication.LOCAL_PREVAYLER_PATH_PROPERTY, SECOND_PATH);
     startApplication(false);
     login.logExistingUser("user", "passw@rd");
-    checkValidLicense(true);
+    checkValidLicense();
     LicenseActivationChecker.enterLicense(window, MAIL, code);
-    checkValidLicense(false);
+    checkValidLicense();
     exit();
   }
 
@@ -593,7 +594,7 @@ public class LicenseActivationTest extends ConnectedTestCase {
     System.setProperty(PicsouApplication.LOCAL_PREVAYLER_PATH_PROPERTY, pathToData);
     startApplication(false);
     login.logExistingUser("user", "passw@rd");
-    checkValidLicense(anonymous);
+    checkValidLicense();
     exit();
   }
 

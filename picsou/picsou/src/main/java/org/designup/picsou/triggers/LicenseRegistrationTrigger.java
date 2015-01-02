@@ -7,6 +7,8 @@ import org.designup.picsou.model.LicenseActivationState;
 import org.designup.picsou.model.User;
 import org.globsframework.model.*;
 
+import static org.globsframework.model.FieldValue.value;
+
 public class LicenseRegistrationTrigger extends AbstractChangeSetListener {
   private ServerAccess serverAccess;
 
@@ -42,8 +44,9 @@ public class LicenseRegistrationTrigger extends AbstractChangeSetListener {
               byte[] mailAsByte = mail.getBytes();
               if (KeyService.checkSignature(mailAsByte, signature)) {
                 serverAccess.localRegister(mailAsByte, signature, activationCode, PicsouApplication.JAR_VERSION);
-                repository.update(User.KEY, User.LICENSE_ACTIVATION_STATE, LicenseActivationState.ACTIVATION_OK.getId());
-                repository.update(User.KEY, User.IS_REGISTERED_USER, true);
+                repository.update(User.KEY,
+                                  value(User.LICENSE_ACTIVATION_STATE, LicenseActivationState.ACTIVATION_OK.getId()),
+                                  value(User.IS_REGISTERED_USER, true));
               }
               else {
                 repository.update(User.KEY, User.LICENSE_ACTIVATION_STATE, LicenseActivationState.ACTIVATION_FAILED_BAD_SIGNATURE.getId());

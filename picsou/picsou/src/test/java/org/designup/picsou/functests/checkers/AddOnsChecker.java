@@ -13,8 +13,20 @@ public class AddOnsChecker extends ViewChecker {
     super(mainWindow);
   }
 
+  public void checkRegistered() {
+    ViewSelectionChecker views = new ViewSelectionChecker(mainWindow);
+    views.checkProjectsEnabled();
+    views.checkAnalysisEnabled();
+  }
+
+  public void checkNotRegistered() {
+    ViewSelectionChecker views = new ViewSelectionChecker(mainWindow);
+    views.checkProjectsDisabled();
+    views.checkAnalysisDisabled();
+  }
+
   public void activateAll() {
-    AddOns.enableAll(getRepository());
+    AddOns.setAllEnabled(getRepository(), true);
   }
 
   public void activateProjects() {

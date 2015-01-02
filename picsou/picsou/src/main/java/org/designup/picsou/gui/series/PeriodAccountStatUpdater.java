@@ -18,7 +18,6 @@ import org.globsframework.utils.directory.Directory;
 import java.util.Set;
 import java.util.SortedSet;
 
-import static org.designup.picsou.gui.accounts.utils.AccountMatchers.activeUserCreatedMainAccounts;
 import static org.globsframework.model.FieldValue.value;
 
 public class PeriodAccountStatUpdater implements ChangeSetListener, GlobSelectionListener {

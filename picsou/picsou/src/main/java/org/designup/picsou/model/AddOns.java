@@ -63,12 +63,12 @@ public class AddOns {
     repository.update(AddOns.KEY, field, true);
   }
 
-  public static void enableAll(GlobRepository repository) {
+  public static void setAllEnabled(GlobRepository repository, boolean enabled) {
     repository.startChangeSet();
     try {
       for (Field field : TYPE.getFields()) {
         if (field instanceof BooleanField) {
-          repository.update(KEY, field, Boolean.TRUE);
+          repository.update(KEY, field, enabled);
         }
       }
     }

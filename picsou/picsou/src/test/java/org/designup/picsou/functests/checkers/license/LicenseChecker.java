@@ -1,6 +1,7 @@
 package org.designup.picsou.functests.checkers.license;
 
 import junit.framework.Assert;
+import org.designup.picsou.functests.checkers.AddOnsChecker;
 import org.designup.picsou.functests.checkers.OperationChecker;
 import org.designup.picsou.functests.checkers.ViewChecker;
 import org.designup.picsou.utils.Lang;
@@ -59,6 +60,8 @@ public class LicenseChecker extends ViewChecker {
   }
 
   public LicenseChecker checkUserIsRegistered() {
+    AddOnsChecker addons = new AddOnsChecker(mainWindow);
+    addons.checkRegistered();
     OperationChecker operations = new OperationChecker(mainWindow);
     operations.hideSignposts();
     assertThat(getInfoMessageTextBox().textContains("You are registered"));
@@ -66,6 +69,8 @@ public class LicenseChecker extends ViewChecker {
   }
 
   public void checkUserNotRegistered() {
+    AddOnsChecker addons = new AddOnsChecker(mainWindow);
+    addons.checkNotRegistered();
     checkInfoMessageHidden();
   }
 
