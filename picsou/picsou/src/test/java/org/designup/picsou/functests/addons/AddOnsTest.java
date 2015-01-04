@@ -1,13 +1,9 @@
 package org.designup.picsou.functests.addons;
 
+import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
-import org.designup.picsou.functests.utils.RestartTestCase;
 
-public class AddOnsTest extends RestartTestCase {
-
-  protected String getCurrentDate() {
-    return "2015/01/15";
-  }
+public class AddOnsTest extends LoggedInFunctionalTestCase {
 
   protected void setUp() throws Exception {
     setCurrentMonth("2015/01");
@@ -48,7 +44,9 @@ public class AddOnsTest extends RestartTestCase {
   }
 
   public void testAnalysisActionsAreHiddenWhenAddOnIsDisabled() throws Exception {
+
     addOns.activateAnalysis();
+    addOns.activateGroups();
 
     OfxBuilder.init(this)
       .addBankAccount("001111", 1000.00, "2015/01/30")

@@ -37,12 +37,6 @@ public class Project {
   @DefaultString("")
   public static StringField NAME;
 
-  /**
-   * @deprecated *
-   */
-  @Target(Series.class)
-  public static LinkField SERIES;
-
   @Target(SeriesGroup.class)
   @Required
   public static LinkField SERIES_GROUP;
@@ -53,16 +47,16 @@ public class Project {
   @Target(Picture.class)
   public static LinkField PICTURE;
 
+  /** @deprecated */
+  @Target(Series.class)
+  public static LinkField SERIES;
+
   static {
     GlobTypeLoader.init(Project.class, "project");
   }
 
   public static Glob findProjectForGroup(Glob seriesGroup, GlobRepository repository) {
     return repository.findUnique(Project.TYPE, fieldEquals(Project.SERIES_GROUP, seriesGroup.get(SeriesGroup.ID)));
-  }
-
-  public static boolean isProjectSeries(Glob series, GlobRepository repository) {
-    return findProject(series, repository) != null;
   }
 
   public static Glob findProject(Glob series, GlobRepository repository) {

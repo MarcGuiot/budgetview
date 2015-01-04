@@ -66,6 +66,7 @@ public class NavigationService implements GlobSelectionListener {
   }
 
   public void gotoHomeAfterRestore(GlobList userData) {
+    gotoHome();
     mainPanelContainer.reset(isInitCompleted(userData));
   }
 
