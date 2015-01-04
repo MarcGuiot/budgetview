@@ -10,7 +10,8 @@
            rolloverIcon="rightArrow(10,14,8,8,block.item.link)"/>
 
     <style selector="button.navigation" ui="hyperlinkButtonWithoutUnderline"
-           foreground="block.item.link" font="-,plain,13" marginTop="10" fill="none" anchor="southeast"/>
+           foreground="sidebar.sectionTitle" font="-,plain,13"
+           fill="none" anchor="east" marginRight="5"/>
   </styles>
 
   <column name="projectSelector" styleClass="sidebar">
@@ -19,14 +20,14 @@
 
     <scrollPane forceVerticalScroll="true" styleClass="sidebarScrollPane" marginLeft="10" marginRight="10">
       <column>
-        <row>
-          <label text="$summaryView.projects.title" styleClass="secondarySectionTitle"/>
+        <row styleClass="sidebarSectionTitleRow">
+          <label text="$summaryView.projects.title" styleClass="sidebarSectionTitle" marginLeft="5"/>
           <filler fill="horizontal"/>
           <button action="createProject" name="createProject" styleClass="navigation"
                   tooltipText="$projectView.create.tooltip"/>
         </row>
         <panel ref="projectChartPanel"
-               marginTop="5" weightY="8" preferredSize="(200,140)" background="sidebar.bg"/>
+               marginTop="5" weightY="8" preferredSize="(200,100)" background="sidebar.bg"/>
 
         <panel ref="mainAccountsPanel"/>
 

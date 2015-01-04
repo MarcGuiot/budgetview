@@ -42,7 +42,7 @@
            background="sidebar.bg"
            border="line(sidebar.bg)"/>
 
-    <!-- Selection toggle arrow -->
+    <!-- Selection button -->
 
     <style selector="toggleButton.sidebarSelectionButton"
            weightX="0" cursor="hand"

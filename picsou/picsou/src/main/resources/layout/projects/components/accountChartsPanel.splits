@@ -1,12 +1,12 @@
 <splits xmlns="http://www.globsframework.org/xml/splits.xsd">
 
   <styleImport file="/layout/commonStyles.splits"/>
+  <styleImport file="/layout/sidebarStyles.splits"/>
   <styles>
 
     <style selector="button#sectionTitleButton"
            ui="hyperlinkButtonWithoutUnderline"
-           font="-,bold,13" cursor="hand" border=""
-           foreground="block.inner.secondary.section.title"
+           cursor="hand" border="" marginLeft="5"
            icon="downArrow(10,18,8,8,block.inner.arrow.idle)"
            rolloverIcon="downArrow(10,18,8,8,block.inner.arrow.rollover)"
            pressedIcon="downArrow(10,18,8,8,block.inner.arrow.pressed)"
@@ -31,13 +31,13 @@
   </styles>
 
   <column>
-    <row marginLeft="10" marginTop="10">
-      <button ref="sectionTitleButton" styleClass="secondarySectionTitle"/>
+    <row marginTop="10" styleClass="sidebarSectionTitleRow">
+      <button ref="sectionTitleButton" styleClass="sidebarSectionTitle"/>
       <filler fill="horizontal"/>
     </row>
     <repeat ref="accountCharts">
       <verticalBoxes name="accountPanel">
-        <row marginTop="10" marginLeft="20">
+        <row marginTop="10">
           <button ref="accountChartButton" styleClass="secondarySectionTitle"/>
           <filler fill="horizontal"/>
           <label ref="accountPositionLabel" styleClass="secondarySectionSubtitle"/>
