@@ -1,6 +1,5 @@
 package org.designup.picsou.functests.addons;
 
-import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
 import org.designup.picsou.functests.utils.RestartTestCase;
 
@@ -48,7 +47,7 @@ public class AddOnsTest extends RestartTestCase {
     views.checkBudgetSelected();
   }
 
-  public void testAnalysisActionsHiddenWhenAddOnIsDisabled() throws Exception {
+  public void testAnalysisActionsAreHiddenWhenAddOnIsDisabled() throws Exception {
     addOns.activateAnalysis();
 
     OfxBuilder.init(this)
@@ -81,5 +80,58 @@ public class AddOnsTest extends RestartTestCase {
       .add("15/01/2015", "MCDO", -150.00, "Restaurant", 1000.00, 1000.00, "Account n. 001111")
       .add("15/01/2015", "AUCHAN", -150.00, "Groceries", 1150.00, 1150.00, "Account n. 001111")
       .check();
+  }
+
+  public void testGroupActionsAreHiddenWhenAddOnIsDisabled() throws Exception {
+
+    addOns.disableAll();
+
+    OfxBuilder.init(this)
+      .addBankAccount("001111", 1000.00, "2015/01/30")
+      .addTransaction("2015/01/01", 1000.00, "Income")
+      .addTransaction("2015/01/15", -150.00, "Auchan")
+      .addTransaction("2015/01/15", -150.00, "McDo")
+      .load();
+
+    categorization.setNewIncome("INCOME", "Salary", 1000.00);
+    categorization.setNewVariable("AUCHAN", "Groceries", 300.00);
+    categorization.setNewVariable("MCDO", "Restaurant", 200.00);
+
+    budgetView.income.checkGroupActionsHidden("Salary");
+    budgetView.variable.checkGroupActionsHidden("Groceries");
+
+    addOns.activateGroups();
+
+    budgetView.income.checkGroupActionsShown("Salary");
+    budgetView.variable.checkGroupActionsShown("Groceries");
+    budgetView.variable.addToNewGroup("Groceries", "Food");
+    budgetView.variable.addToGroup("Restaurant", "Food");
+    budgetView.variable.checkGroupToggleExpanded("Food");
+    budgetView.variable.checkDeleteGroupActionShown("Food");
+
+    addOns.disableGroups();
+
+    budgetView.income.checkGroupActionsHidden("Salary");
+    budgetView.variable.checkDeleteGroupActionShown("Food");
+    budgetView.variable.checkGroupActionsHidden("Groceries");
+    budgetView.variable.checkGroupActionsHidden("Restaurant");
+
+    budgetView.variable.deleteGroup("Food");
+    budgetView.variable.checkGroupActionsHidden("Groceries");
+    budgetView.variable.checkGroupActionsHidden("Restaurant");
+
+    addOns.activateGroups();
+
+    budgetView.income.checkGroupActionsShown("Salary");
+    budgetView.variable.checkGroupActionsShown("Groceries");
+    budgetView.variable.addToNewGroup("Groceries", "Food");
+    budgetView.variable.addToGroup("Restaurant", "Food");
+    budgetView.variable.checkGroupToggleExpanded("Food");
+    budgetView.variable.checkDeleteGroupActionShown("Food");
+
+    budgetView.variable.checkContent(
+      "| Food       | 300.00 | +500.00 |\n" +
+      "| Groceries  | 150.00 | +300.00 |\n" +
+      "| Restaurant | 150.00 | +200.00 |");
   }
 }

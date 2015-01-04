@@ -593,6 +593,24 @@ public class BudgetViewChecker extends ViewChecker {
       return this;
     }
 
+    public BudgetAreaChecker checkGroupActionsShown(String seriesName) {
+      getSeriesPanel(seriesName).getSeriesButton()
+        .checkContains(Lang.get("seriesGroup.menu"));
+      return this;
+    }
+
+    public BudgetAreaChecker checkGroupActionsHidden(String seriesName) {
+      getSeriesPanel(seriesName).getSeriesButton()
+        .checkItemNotPresent(Lang.get("seriesGroup.menu"));
+      return this;
+    }
+
+    public BudgetAreaChecker checkDeleteGroupActionShown(String seriesName) {
+      getSeriesPanel(seriesName).getSeriesButton()
+        .checkContains(Lang.get("seriesGroup.menu.delete"));
+      return this;
+    }
+
     public BudgetAreaChecker clickPlanned(String groupName) {
       getSeriesPanel(groupName).getPlannedAmount().click();
       return this;

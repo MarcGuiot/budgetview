@@ -29,6 +29,10 @@ public class AddOnsChecker extends ViewChecker {
     AddOns.setAllEnabled(getRepository(), true);
   }
 
+  public void disableAll() {
+    AddOns.setAllEnabled(getRepository(), false);
+  }
+
   public void activateProjects() {
     setEnabled(AddOns.PROJECTS, true);
   }
@@ -47,6 +51,10 @@ public class AddOnsChecker extends ViewChecker {
 
   public void activateGroups() {
     setEnabled(AddOns.GROUPS, true);
+  }
+
+  public void disableGroups() {
+    setEnabled(AddOns.GROUPS, false);
   }
 
   private void setEnabled(BooleanField field, boolean enabled) {
