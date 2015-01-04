@@ -1,13 +1,17 @@
 package org.designup.picsou.gui.card;
 
+import org.designup.picsou.gui.addons.AddOn;
 import org.designup.picsou.gui.categorization.CategorizationSelector;
 import org.designup.picsou.gui.categorization.components.CategorizationFilteringMode;
+import org.designup.picsou.gui.components.dialogs.MessageDialog;
+import org.designup.picsou.gui.components.dialogs.MessageType;
 import org.designup.picsou.gui.model.Card;
 import org.designup.picsou.gui.projects.ProjectView;
 import org.designup.picsou.gui.transactions.TransactionView;
 import org.designup.picsou.gui.utils.MainPanelContainer;
 import org.designup.picsou.model.*;
 import org.designup.picsou.model.util.ClosedMonthRange;
+import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobSelection;
 import org.globsframework.gui.GlobSelectionListener;
 import org.globsframework.gui.SelectionService;
@@ -31,6 +35,7 @@ public class NavigationService implements GlobSelectionListener {
   private CategorizationSelector categorizationSelector;
   private ProjectView projectView;
   private GlobRepository repository;
+  private Directory directory;
 
   private Card currentCard = INITIAL_CARD;
   private Stack<Card> backStack = new Stack<Card>();
@@ -47,6 +52,7 @@ public class NavigationService implements GlobSelectionListener {
     this.categorizationSelector = categorizationSelector;
     this.projectView = projectView;
     this.repository = repository;
+    this.directory = directory;
     this.selectionService = directory.get(SelectionService.class);
     this.selectionService.addListener(this, Card.TYPE);
   }
@@ -170,6 +176,10 @@ public class NavigationService implements GlobSelectionListener {
   }
 
   public void gotoProject(Glob project) {
+    if (!AddOns.isEnabled(AddOns.PROJECTS, repository)) {
+      MessageDialog.show("addons.projects.disabled.title", MessageType.INFO, directory, "addons.projects.disabled");
+      return;
+    }
     if (project != null) {
       selectionService.select(project);
     }
@@ -177,6 +187,10 @@ public class NavigationService implements GlobSelectionListener {
   }
 
   public void gotoProjectItem(Glob projectItem) {
+    if (!AddOns.isEnabled(AddOns.PROJECTS, repository)) {
+      MessageDialog.show("addons.projects.disabled.title", MessageType.INFO, directory, "addons.projects.disabled");
+      return;
+    }
     Glob project = repository.get(Key.create(Project.TYPE, projectItem.get(ProjectItem.PROJECT)));
     if (project != null) {
       selectionService.select(

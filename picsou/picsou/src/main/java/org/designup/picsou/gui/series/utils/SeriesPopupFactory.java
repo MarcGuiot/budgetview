@@ -1,5 +1,6 @@
 package org.designup.picsou.gui.series.utils;
 
+import org.designup.picsou.gui.addons.AddOn;
 import org.designup.picsou.gui.card.NavigationService;
 import org.designup.picsou.gui.series.edition.DeleteSeriesAction;
 import org.designup.picsou.gui.series.edition.carryover.CarryOverAction;
@@ -14,6 +15,7 @@ import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.utils.GlobListFunctor;
+import org.globsframework.model.utils.TypeChangeSetListener;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
@@ -29,6 +31,7 @@ public class SeriesPopupFactory implements DisposablePopupMenuFactory {
   private SeriesGroupMenu seriesGroupMenu;
   private DisposableGroup disposables = new DisposableGroup();
   private CarryOverAction carryOverAction;
+  private final TypeChangeSetListener listener;
 
   public SeriesPopupFactory(Glob series,
                             GlobListFunctor editSeriesFunctor, GlobRepository repository,
@@ -37,6 +40,13 @@ public class SeriesPopupFactory implements DisposablePopupMenuFactory {
     this.editSeriesFunctor = editSeriesFunctor;
     this.repository = repository;
     this.directory = directory;
+    listener = new TypeChangeSetListener(AddOns.TYPE) {
+      public void update(GlobRepository repository) {
+        disposables.dispose();
+        menu = null;
+      }
+    };
+    repository.addChangeListener(listener);
   }
 
   public JPopupMenu createPopup() {
@@ -65,11 +75,13 @@ public class SeriesPopupFactory implements DisposablePopupMenuFactory {
           directory.get(NavigationService.class).gotoDataForSeries(series);
         }
       });
-      menu.add(new AbstractAction(Lang.get("series.goto.analysis")) {
-        public void actionPerformed(ActionEvent actionEvent) {
-          directory.get(NavigationService.class).gotoAnalysisForSeries(series);
-        }
-      });
+      if (AddOns.isEnabled(AddOns.ANALYSIS, repository)) {
+        menu.add(new AbstractAction(Lang.get("series.goto.analysis")) {
+          public void actionPerformed(ActionEvent actionEvent) {
+            directory.get(NavigationService.class).gotoAnalysisForSeries(series);
+          }
+        });
+      }
 
       seriesGroupMenu = new SeriesGroupMenu(series.getKey(), repository, directory);
 
@@ -103,7 +115,9 @@ public class SeriesPopupFactory implements DisposablePopupMenuFactory {
   }
 
   public void dispose() {
+    repository.removeChangeListener(listener);
     disposables.dispose();
     editSeriesFunctor = null;
+    menu = null;
   }
 }

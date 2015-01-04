@@ -3,6 +3,7 @@ package org.designup.picsou.gui.series.utils;
 import org.designup.picsou.gui.card.NavigationService;
 import org.designup.picsou.gui.seriesgroups.DeleteSeriesGroupAction;
 import org.designup.picsou.gui.seriesgroups.RenameSeriesGroupAction;
+import org.designup.picsou.model.AddOns;
 import org.designup.picsou.model.Project;
 import org.designup.picsou.model.SeriesGroup;
 import org.designup.picsou.utils.Lang;
@@ -11,6 +12,7 @@ import org.globsframework.gui.splits.utils.DisposableGroup;
 import org.globsframework.gui.utils.DisposablePopupMenuFactory;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobRepository;
+import org.globsframework.model.utils.TypeChangeSetListener;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
@@ -23,6 +25,7 @@ public class SeriesGroupPopupFactory implements DisposablePopupMenuFactory {
   private Directory directory;
   private JPopupMenu menu;
   private DisposableGroup disposables = new DisposableGroup();
+  private final TypeChangeSetListener listener;
 
   public SeriesGroupPopupFactory(Glob seriesGroup,
                                  GlobRepository repository,
@@ -30,6 +33,13 @@ public class SeriesGroupPopupFactory implements DisposablePopupMenuFactory {
     this.seriesGroup = seriesGroup;
     this.repository = repository;
     this.directory = directory;
+    listener = new TypeChangeSetListener(AddOns.TYPE) {
+      public void update(GlobRepository repository) {
+        disposables.dispose();
+        menu = null;
+      }
+    };
+    repository.addChangeListener(listener);
   }
 
   public JPopupMenu createPopup() {
@@ -53,11 +63,13 @@ public class SeriesGroupPopupFactory implements DisposablePopupMenuFactory {
           directory.get(NavigationService.class).gotoDataForSeriesGroup(seriesGroup);
         }
       });
-      menu.add(new AbstractAction(Lang.get("series.goto.analysis")) {
-        public void actionPerformed(ActionEvent actionEvent) {
-          directory.get(NavigationService.class).gotoAnalysisForSeries(seriesGroup);
-        }
-      });
+      if (AddOns.isEnabled(AddOns.ANALYSIS, repository)) {
+        menu.add(new AbstractAction(Lang.get("series.goto.analysis")) {
+          public void actionPerformed(ActionEvent actionEvent) {
+            directory.get(NavigationService.class).gotoAnalysisForSeries(seriesGroup);
+          }
+        });
+      }
       if (project == null) {
         menu.addSeparator();
         menu.add(new DeleteSeriesGroupAction(seriesGroup.getKey(), repository));
@@ -77,6 +89,8 @@ public class SeriesGroupPopupFactory implements DisposablePopupMenuFactory {
   }
 
   public void dispose() {
+    repository.removeChangeListener(listener);
     disposables.dispose();
+    menu = null;
   }
 }

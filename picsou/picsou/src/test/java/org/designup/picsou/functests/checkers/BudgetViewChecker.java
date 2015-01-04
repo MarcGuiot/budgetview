@@ -464,6 +464,14 @@ public class BudgetViewChecker extends ViewChecker {
       getSeriesPanel(seriesName).getSeriesButton().click("See in Analysis view");
     }
 
+    public void checkGotoAnalysisShown(String seriesName) {
+      getSeriesPanel(seriesName).getSeriesButton().checkContains("See in Analysis view");
+    }
+
+    public void checkGotoAnalysisHidden(String seriesName) {
+      getSeriesPanel(seriesName).getSeriesButton().checkItemNotPresent("See in Analysis view");
+    }
+
     public BudgetAreaChecker checkDeltaGauge(String seriesName, Double previousValue, Double newValue, double ratio, String tooltip) {
       getDeltaGauge(seriesName).check(previousValue, newValue, ratio, tooltip);
       return this;
@@ -644,6 +652,13 @@ public class BudgetViewChecker extends ViewChecker {
 
     public void createProject() {
       getActionPopup().click(Lang.get("projectView.create"));
+    }
+
+    public void checkProjectsDisabledMessage(String name) {
+      MessageDialogChecker.open(getSeriesPanel(name).getSeriesButton().triggerClick(Lang.get("seriesGroup.goto.project")))
+        .checkTitle(Lang.get("addons.projects.disabled.title"))
+        .checkInfoMessageContains("You must activate the Projects add-on")
+        .close();
     }
   }
 

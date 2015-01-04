@@ -30,19 +30,27 @@ public class AddOnsChecker extends ViewChecker {
   }
 
   public void activateProjects() {
-    enable(AddOns.PROJECTS);
+    setEnabled(AddOns.PROJECTS, true);
+  }
+
+  public void disableProjects() {
+    setEnabled(AddOns.PROJECTS, false);
   }
 
   public void activateAnalysis() {
-    enable(AddOns.ANALYSIS);
+    setEnabled(AddOns.ANALYSIS, true);
+  }
+
+  public void disableAnalysis() {
+    setEnabled(AddOns.ANALYSIS, false);
   }
 
   public void activateGroups() {
-    enable(AddOns.GROUPS);
+    setEnabled(AddOns.GROUPS, true);
   }
 
-  private void enable(BooleanField field) {
-    AddOns.enable(field, getRepository());
+  private void setEnabled(BooleanField field, boolean enabled) {
+    AddOns.setEnabled(field, getRepository(), enabled);
   }
 
   private GlobRepository getRepository() {

@@ -1,13 +1,14 @@
 package org.designup.picsou.functests.checkers;
 
-import junit.framework.Assert;
 import org.designup.picsou.gui.components.dialogs.MessageDialog;
 import org.uispec4j.Trigger;
 import org.uispec4j.Window;
-import static org.uispec4j.assertion.UISpecAssert.*;
 import org.uispec4j.interception.WindowInterceptor;
 
 import javax.swing.*;
+
+import static org.uispec4j.assertion.UISpecAssert.assertFalse;
+import static org.uispec4j.assertion.UISpecAssert.assertThat;
 
 public class MessageDialogChecker extends GuiChecker {
   protected Window dialog;

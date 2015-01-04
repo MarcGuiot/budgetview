@@ -3,6 +3,7 @@ package org.designup.picsou.functests.checkers.components;
 import junit.framework.Assert;
 import org.uispec4j.MenuItem;
 import org.uispec4j.Trigger;
+import org.uispec4j.assertion.Assertion;
 import org.uispec4j.assertion.UISpecAssert;
 
 import javax.swing.*;
