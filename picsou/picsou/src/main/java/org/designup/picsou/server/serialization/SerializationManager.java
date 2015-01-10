@@ -52,5 +52,6 @@ public class SerializationManager {
     SeriesGroup.TYPE.updateProperty(SERIALIZATION_PROPERTY, new SeriesGroup.Serializer());
     AddOns.TYPE.updateProperty(SERIALIZATION_PROPERTY, new AddOns.Serializer());
     StandardMessage.TYPE.updateProperty(SERIALIZATION_PROPERTY, new StandardMessage.Serializer());
+    ProjectAccountGraph.TYPE.updateProperty(SERIALIZATION_PROPERTY, new ProjectAccountGraph.Serializer());
   }
 }

@@ -790,6 +790,7 @@ public class ProjectManagementTest extends LoggedInFunctionalTestCase {
   public void testCannotAddOrRemoveSeriesFromProjectGroups() throws Exception {
     operations.hideSignposts();
     addOns.activateGroups();
+    addOns.activateAnalysis();
 
     OfxBuilder.init(this)
       .addBankAccount("001111", 1000.00, "2011/01/10")

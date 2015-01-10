@@ -96,20 +96,35 @@ public class ProjectViewTest extends LoggedInFunctionalTestCase {
 
     projects.checkGraphShown("Account n. 000123");
     projects.checkGraphShown("Account n. 000234");
-    projects.checkGraphHidden("Account n. 000345");
-    projects.checkGraphHidden("Account n. 000456");
+    projects.checkGraphShown("Account n. 000345");
+    projects.checkGraphShown("Account n. 000456");
 
     projects.hideGraph("Account n. 000123");
     projects.checkGraphHidden("Account n. 000123");
     projects.checkGraphShown("Account n. 000234");
-    projects.checkGraphHidden("Account n. 000345");
-    projects.checkGraphHidden("Account n. 000456");
+    projects.checkGraphShown("Account n. 000345");
+    projects.checkGraphShown("Account n. 000456");
 
     projects.hideGraph("Account n. 000123");
     projects.checkGraphShown("Account n. 000123");
     projects.checkGraphShown("Account n. 000234");
-    projects.checkGraphHidden("Account n. 000345");
-    projects.checkGraphHidden("Account n. 000456");
+    projects.checkGraphShown("Account n. 000345");
+    projects.checkGraphShown("Account n. 000456");
+
+    mainAccounts.checkChartHidden("Account n. 000123");
+    mainAccounts.checkChartHidden("Account n. 000234");
+    savingsAccounts.checkChartHidden("Account n. 000345");
+    savingsAccounts.checkChartHidden("Account n. 000456");
+
+    views.selectBudget();
+    mainAccounts.showChart("Account n. 000123");
+    mainAccounts.checkChartShown("Account n. 000123");
+    projects.checkGraphShown("Account n. 000123");
+
+    views.selectBudget();
+    mainAccounts.hideChart("Account n. 000123");
+    mainAccounts.checkChartHidden("Account n. 000123");
+    projects.checkGraphShown("Account n. 000123");
   }
 
   public void testCanAggregateAccountGraphs() throws Exception {

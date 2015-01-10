@@ -13,11 +13,13 @@ import org.designup.picsou.gui.projects.ProjectChartView;
 import org.designup.picsou.gui.analysis.histobuilders.range.HistoChartRange;
 import org.designup.picsou.model.Account;
 import org.designup.picsou.model.AccountType;
+import org.designup.picsou.model.ProjectAccountGraph;
 import org.designup.picsou.model.UserPreferences;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.actions.ToggleBooleanAction;
 import org.globsframework.gui.components.GlobRepeat;
+import org.globsframework.gui.editors.GlobToggleEditor;
 import org.globsframework.gui.splits.PanelBuilder;
 import org.globsframework.gui.splits.SplitsNode;
 import org.globsframework.gui.splits.repeat.RepeatComponentFactory;
@@ -27,6 +29,7 @@ import org.globsframework.gui.views.GlobLabelView;
 import org.globsframework.metamodel.fields.BooleanField;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobRepository;
+import org.globsframework.model.Key;
 import org.globsframework.model.utils.GlobMatchers;
 import org.globsframework.model.utils.KeyChangeListener;
 import org.globsframework.utils.directory.Directory;
@@ -35,7 +38,7 @@ import javax.swing.*;
 
 import static org.globsframework.model.utils.GlobMatchers.fieldEquals;
 
-public class AccountChartsPanel {
+public class ProjectAccountChartsPanel {
   private final AccountType accountType;
   private final HistoChartRange shortRange;
   private final HistoChartRange longRange;
@@ -44,7 +47,7 @@ public class AccountChartsPanel {
   private final ProjectChartView projects;
   private JPanel panel;
 
-  public AccountChartsPanel(AccountType accountType, HistoChartRange shortRange, HistoChartRange longRange, GlobRepository repository, Directory directory, ProjectChartView projects) {
+  public ProjectAccountChartsPanel(AccountType accountType, HistoChartRange shortRange, HistoChartRange longRange, GlobRepository repository, Directory directory, ProjectChartView projects) {
     this.accountType = accountType;
     this.shortRange = shortRange;
     this.longRange = longRange;
@@ -61,7 +64,7 @@ public class AccountChartsPanel {
   }
 
   private void createPanel() {
-    GlobsPanelBuilder builder = new GlobsPanelBuilder(getClass(), "/layout/projects/components/accountChartsPanel.splits",
+    GlobsPanelBuilder builder = new GlobsPanelBuilder(getClass(), "/layout/projects/components/projectAccountChartsPanel.splits",
                                                       repository, directory);
 
     final BooleanField showListField =
@@ -115,7 +118,12 @@ public class AccountChartsPanel {
     }
 
     public void registerUserCreatedAccountComponents(PanelBuilder cellBuilder, Glob account) {
-      final AccountPopupFactory popupFactory = new AccountPopupFactory(account, repository, directory);
+
+      cellBuilder.add("toggleGraph", GlobToggleEditor.init(ProjectAccountGraph.SHOW, repository, directory)
+        .forceSelection(Key.create(ProjectAccountGraph.TYPE, account.get(Account.ID)))
+        .getComponent());
+
+      final AccountPopupFactory popupFactory = new AccountPopupFactory(account, repository, directory, true);
       GlobButtonView accountButton = AccountViewPanel.createEditAccountButton(account, popupFactory, repository, directory);
       cellBuilder.add("accountChartButton", accountButton.getComponent());
       cellBuilder.addDisposable(accountButton);
@@ -130,12 +138,17 @@ public class AccountChartsPanel {
       final SplitsNode<HistoChart> chartNode = accountChart.registerComponents(cellBuilder);
 
       BooleanFieldListener showHide =
-        BooleanFieldListener.installNodeStyle(account.getKey(), Account.SHOW_CHART,
+        BooleanFieldListener.installNodeStyle(Key.create(ProjectAccountGraph.TYPE, account.get(Account.ID)), ProjectAccountGraph.SHOW,
                                               chartNode, "accountChartShown", "accountChartHidden", repository);
       cellBuilder.addDisposable(showHide);
     }
 
     public void registerSummaryAccountComponents(PanelBuilder cellBuilder, Glob account) {
+
+      JToggleButton toggle = new JToggleButton();
+      toggle.setVisible(false);
+      toggle.setEnabled(false);
+      cellBuilder.add("toggleGraph", toggle);
 
       JButton hidden = new JButton(Lang.get(Account.isMain(account) ? "account.summary.main" : "account.summary.savings"));
       hidden.setVisible(false);

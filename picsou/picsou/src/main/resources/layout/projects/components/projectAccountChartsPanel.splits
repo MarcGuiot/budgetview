@@ -25,6 +25,12 @@
 
     <style selector="#accountHistoChart" opaque="true" background="sidebar.bg"/>
 
+    <style selector="#toggleGraph" border=""
+           text="" opaque="false" borderPainted="false" cursor="hand" marginRight="10"
+           icon="accounts/show_account_graph.png"
+           pressedIcon="accounts/hide_account_graph.png"
+           rolloverIcon="accounts/toggle_account_graph_rollover.png"/>
+
     <style id="accountChartShown" selector="x" visible="true" preferredSize="(200,100)"/>
     <style id="accountChartHidden" selector="x" visible="false" preferredSize="(200,2)"/>
 
@@ -37,9 +43,10 @@
     </row>
     <repeat ref="accountCharts">
       <verticalBoxes name="accountPanel">
-        <row marginTop="10">
+        <row marginTop="10" marginBottom="4">
+          <toggleButton ref="toggleGraph" weightX="0.1"/>
           <button ref="accountChartButton" styleClass="secondarySectionTitle"/>
-          <filler fill="horizontal"/>
+          <filler fill="horizontal" weightX="100"/>
           <label ref="accountPositionLabel" styleClass="secondarySectionSubtitle"/>
         </row>
         <component ref="accountHistoChart" background="sidebar.bg"/>

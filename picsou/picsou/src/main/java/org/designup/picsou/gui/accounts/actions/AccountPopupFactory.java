@@ -4,6 +4,7 @@ import org.designup.picsou.gui.accounts.AccountEditionDialog;
 import org.designup.picsou.gui.accounts.AccountPositionEditionDialog;
 import org.designup.picsou.gui.accounts.utils.GotoAccountWebsiteAction;
 import org.designup.picsou.model.Account;
+import org.designup.picsou.model.ProjectAccountGraph;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.actions.ToggleBooleanAction;
 import org.globsframework.gui.actions.ToggleSelectionAction;
@@ -12,6 +13,7 @@ import org.globsframework.gui.splits.utils.DisposableGroup;
 import org.globsframework.gui.utils.PopupMenuFactory;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobRepository;
+import org.globsframework.model.Key;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
@@ -30,12 +32,13 @@ public class AccountPopupFactory implements PopupMenuFactory, Disposable {
   private boolean showSelectionToggle = false;
   private final ToggleSelectionAction selectionAction;
 
-  public AccountPopupFactory(Glob account, GlobRepository repository, Directory directory) {
+  public AccountPopupFactory(Glob account, GlobRepository repository, Directory directory, boolean isForProjects) {
     this.account = account;
     this.repository = repository;
     this.directory = directory;
+    Key accountKey = account.getKey();
 
-    this.selectionAction = new ToggleSelectionAction(account.getKey(),
+    this.selectionAction = new ToggleSelectionAction(accountKey,
                                                      Lang.get("account.action.select"),
                                                      Lang.get("account.action.unselect"),
                                                      repository, directory);
@@ -44,15 +47,24 @@ public class AccountPopupFactory implements PopupMenuFactory, Disposable {
     this.gotoWebsiteAction = new GotoAccountWebsiteAction(account, repository, directory);
     disposables.add(gotoWebsiteAction);
 
-    this.moveUpAction = new MoveAccountUp(account.getKey(), repository);
+    this.moveUpAction = new MoveAccountUp(accountKey, repository);
     disposables.add(moveUpAction);
 
-    this.moveDownAction = new MoveAccountDown(account.getKey(), repository);
+    this.moveDownAction = new MoveAccountDown(accountKey, repository);
     disposables.add(moveDownAction);
 
-    this.toggleShowGraph = new ToggleBooleanAction(account.getKey(), Account.SHOW_CHART,
-                                                   Lang.get("account.chart.hide"), Lang.get("account.chart.show"),
-                                                   repository);
+    if (isForProjects) {
+      this.toggleShowGraph = new ToggleBooleanAction(Key.create(ProjectAccountGraph.TYPE, accountKey.get(Account.ID)),
+                                                     ProjectAccountGraph.SHOW,
+                                                     Lang.get("account.chart.hide"), Lang.get("account.chart.show"),
+                                                     repository);
+    }
+    else {
+      this.toggleShowGraph = new ToggleBooleanAction(accountKey, Account.SHOW_CHART,
+                                                     Lang.get("account.chart.hide"), Lang.get("account.chart.show"),
+                                                     repository);
+    }
+
     disposables.add(toggleShowGraph);
   }
 

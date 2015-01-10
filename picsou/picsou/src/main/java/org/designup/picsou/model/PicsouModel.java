@@ -55,7 +55,8 @@ public class PicsouModel {
                           SeriesGroup.TYPE,
                           AnalysisViewType.TYPE,
                           StandardMessage.TYPE,
-                          AddOns.TYPE
+                          AddOns.TYPE,
+                          ProjectAccountGraph.TYPE
     )
       .get();
 

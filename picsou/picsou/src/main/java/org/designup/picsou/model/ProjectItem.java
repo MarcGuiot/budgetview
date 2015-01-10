@@ -125,10 +125,6 @@ public class ProjectItem {
     return Month.offset(itemValues.get(FIRST_MONTH), offset);
   }
 
-  public static boolean usesSavingsSeries(FieldValues itemValues) {
-    return !usesExtrasSeries(itemValues);
-  }
-
   public static boolean usesExtrasSeries(FieldValues itemValues) {
     return !Utils.equal(ProjectItemType.TRANSFER.getId(), itemValues.get(ITEM_TYPE));
   }

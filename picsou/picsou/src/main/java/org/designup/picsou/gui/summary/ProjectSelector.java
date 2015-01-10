@@ -28,10 +28,10 @@ public class ProjectSelector extends View {
 
     builder.add("createProject", projects.getCreateProjectAction());
 
-    AccountChartsPanel mainAccountsPanel = new AccountChartsPanel(AccountType.MAIN, shortRange, longRange, repository, directory, projects);
+    ProjectAccountChartsPanel mainAccountsPanel = new ProjectAccountChartsPanel(AccountType.MAIN, shortRange, longRange, repository, directory, projects);
     builder.add("mainAccountsPanel", mainAccountsPanel.getPanel());
 
-    AccountChartsPanel savingsAccountsPanel = new AccountChartsPanel(AccountType.SAVINGS, shortRange, longRange, repository, directory, projects);
+    ProjectAccountChartsPanel savingsAccountsPanel = new ProjectAccountChartsPanel(AccountType.SAVINGS, shortRange, longRange, repository, directory, projects);
     builder.add("savingsAccountsPanel", savingsAccountsPanel.getPanel());
 
     parentBuilder.add("projectSelector", builder);

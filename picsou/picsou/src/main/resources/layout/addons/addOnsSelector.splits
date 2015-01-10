@@ -10,6 +10,11 @@
 
     <label text="$cards.addons" styleClass="sidebarTitle"/>
 
+    <row styleClass="sidebarSectionTitleRow" weightY="0.1" marginLeft="10" marginRight="10" marginBottom="5">
+      <label text="$addonsSelector.section" styleClass="sidebarSectionTitle" marginLeft="5"/>
+      <filler fill="horizontal"/>
+    </row>
+
     <label text="$addonsSelector.buy.label" styleClass="sidebarLabel"/>
     <button action="buy"/>
 
