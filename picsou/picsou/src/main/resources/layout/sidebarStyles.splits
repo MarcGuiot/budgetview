@@ -16,11 +16,9 @@
     <!-- Sections -->
 
     <style selector=".sidebarSectionTitleRow" opaque="true" background="sidebar.sectionTitle.bg"/>
-
     <style selector=".sidebarSectionTitle" font="LatoRegular,plain,14"
-           fill="none" anchor="south" weightX="0"
+           fill="none" anchor="center" weightX="0" marginTop="2" marginBottom="2"
            foreground="sidebar.sectionTitle"/>
-    <style selector=".sidebarSectionTitle label" marginTop="2" marginBottom="2"/>
 
     <style selector=".sidebarSeparator" marginTop="1" border="matte(0,0,1,0,sidebar.separator)"/>
 

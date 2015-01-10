@@ -2,8 +2,10 @@ package org.designup.picsou.functests.checkers;
 
 import org.designup.picsou.functests.checkers.components.GaugeChecker;
 import org.designup.picsou.gui.components.charts.Gauge;
-import org.uispec4j.*;
-import static org.uispec4j.assertion.UISpecAssert.*;
+import org.uispec4j.Panel;
+import org.uispec4j.Window;
+
+import static org.uispec4j.assertion.UISpecAssert.assertThat;
 
 public class CategorizationGaugeChecker extends ViewChecker {
   private Panel panel;
@@ -21,7 +23,7 @@ public class CategorizationGaugeChecker extends ViewChecker {
   }
 
   public void checkHidden() {
-    assertFalse(getPanel().isVisible());
+    checkComponentVisible(getPanel(), Gauge.class, "gauge", false);
   }
 
   private Panel getPanel() {

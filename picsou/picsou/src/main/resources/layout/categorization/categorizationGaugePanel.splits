@@ -1,19 +1,20 @@
 <splits xmlns="http://www.globsframework.org/xml/splits.xsd">
 
   <styleImport file="/layout/commonStyles.splits"/>
+  <styleImport file="/layout/sidebarStyles.splits"/>
 
   <styles>
     <style selector="#gauge"
            opaque="false"
            fill="horizontal" weightX="100"
-           marginLeft="10" marginRight="10"
+           marginLeft="10" marginRight="10" marginTop="0" marginBottom="0" border="empty"
            borderColor="gauge.categorization.border"
            emptyColorTop="gauge.categorization.empty.top" emptyColorBottom="gauge.categorization.empty.bottom"
            filledColorTop="gauge.categorization.filled.top" filledColorBottom="gauge.categorization.filled.bottom"/>
   </styles>
 
-  <row ref="panel" autoHideSource="gauge" border="empty(0,0,5,0)">
-    <label text="$categorization.gauge.label" foreground="gauge.categorization.label"/>
+  <row ref="panel" styleClass="sidebarSectionTitleRow">
+    <label text="$categorization.gauge.label" styleClass="sidebarSectionTitle" marginLeft="5" marginTop="0" marginBottom="0"/>
     <component ref="gauge"/>
   </row>
   

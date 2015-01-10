@@ -36,7 +36,7 @@ public class CategorizationGaugePanel implements Updatable {
     panel = builder.add("panel", new JPanel()).getComponent();
     builder.load();
 
-    panel.setVisible(false);
+    gauge.setVisible(false);
   }
 
   public JPanel getPanel() {
@@ -48,10 +48,10 @@ public class CategorizationGaugePanel implements Updatable {
     double percentage = categorizationLevel.getPercentage();
 
     if ((total == 0) || (percentage == 0)) {
-      panel.setVisible(false);
+      gauge.setVisible(false);
     }
     else {
-      panel.setVisible(true);
+      gauge.setVisible(true);
       gauge.getModel().setValues(percentage, 1.0);
     }
   }

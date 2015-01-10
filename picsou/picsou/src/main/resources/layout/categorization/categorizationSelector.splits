@@ -20,11 +20,10 @@
 
     <column marginLeft="10" marginRight="10">
 
-      <panel ref="gaugePanel" opaque="false"/>
+      <panel ref="gaugePanel" weightY="0.1" marginBottom="10" fill="horizontal"/>
 
       <row marginBottom="5">
-        <label text="$categorization.filter.label" styleClass="formLabel"
-               foreground="gauge.categorization.label" marginRight="5"/>
+        <label text="$categorization.filter.label" styleClass="formLabel" marginRight="5"/>
         <comboBox ref="transactionFilterCombo"/>
         <button ref="actionsMenu" styleClass="actionsButton" marginLeft="10"/>
       </row>
@@ -44,8 +43,12 @@
         <panel ref="transactionSearch" fill="none" weightX="0.01"/>
       </row>
 
-      <label text="$transactionCreation.title" styleClass="separatorTitle" border="empty(15,0,0,0)"
-             autoHideSource="transactionCreation"/>
+      <row autoHideSource="transactionCreation" border="empty(15,0,7,0)" fill="horizontal" weightY="0.1">
+        <row styleClass="sidebarSectionTitleRow">
+          <label text="$transactionCreation.title" styleClass="sidebarSectionTitle" marginLeft="5"/>
+          <filler fill="horizontal"/>
+        </row>
+      </row>
 
       <panel ref="transactionCreation"/>
 
