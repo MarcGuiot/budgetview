@@ -2,6 +2,8 @@
 
   <styles>
 
+    <!-- Scrollbars -->
+
     <ui name="scrollPaneUI"
         class="org.designup.picsou.gui.components.ui.FlatScrollbarUI"
         color="scrollBar.idle" rolloverColor="scrollBar.rollover" background="scrollBar.bg"/>
@@ -87,7 +89,7 @@
 
     <style selector="table" intercellSpacing="(0,0)" showGrid="false"/>
 
-    <style selector="scrollPane" opaque="true" viewportBackground="block.inner.bg"/>
+    <style selector="scrollPane" opaque="true" viewportBackground="content.bg"/>
 
     <style selector="button.iconOnly" weightX="0"  border=""
            text="" opaque="false" borderPainted="false" cursor="hand"/>
@@ -121,26 +123,6 @@
            ui="hyperlinkButton" weightX="0"
            icon="arrow_down.png" rolloverIcon="arrow_down_roll.png"
            styleClass="hyperlink" foreground="#0000FF"/>
-
-    <!-- Dialog -->
-
-    <ui name="dialog" class="org.globsframework.gui.splits.components.StyledPanelUI"
-        topColor="dialog.bg.top" bottomColor="dialog.bg.bottom"/>
-    <style selector=".dialog" opaque="true" ui="dialog"/>
-    <style selector=".innerDialog" opaque="false" margin="15" marginBottom="10"/>
-    <style selector=".innerDialogContent" opaque="false" margin="15"/>
-
-    <style selector=".innerDialogBlock" opaque="true" border="line(#BBBBBB)" background="dialog.block"/>
-    <style selector=".innerDialogBlockPanel" opaque="true" background="dialog.block"/>
-
-    <style selector=".dialog label" foreground="dialog.text" opaque="false"/>
-    <style selector=".dialog textArea" foreground="dialog.text"/>
-    <style selector=".dialog htmlEditorPane" foreground="dialog.text" opaque="false"/>
-    <style selector=".dialog checkBox" foreground="dialog.text" opaque="false"/>
-
-    <style selector=".dialog label.title"
-           font="-,bold,20" foreground="dialog.title"
-           fill="none" anchor="center" marginTop="0" marginBottom="15"/>
 
     <style selector=".separator" opaque="false" marginTop="0"
            border="matte(1,0,0,0,dialog.separator)"/>
@@ -211,7 +193,7 @@
         borderWidth="1" cornerRadius="15"/>
     <style selector=".block" ui="block" opaque="false" marginBottom="0"/>
     <style selector=".block .innerBlock" margin="8"/>
-    <style selector=".budgetAreaSelection" opaque="true" background="block.inner.bg"/>
+    <style selector=".budgetAreaSelection" opaque="true" background="content.bg"/>
 
     <style selector=".budgetAreaSelection htmlEditorPane" border="empty(10)"/>
     <style selector=".budgetAreaSelection textArea" border="empty(10)"/>
@@ -227,7 +209,7 @@
            fill="none" anchor="top" weightY="1"/>
 
     <style selector=".innerBlockBackground"
-           opaque="true" background="block.inner.bg" border="line(block.inner.border)"
+           opaque="true" background="content.bg"
            marginBottom="10" weightY="100"/>
     <style selector=".innerBlock scrollPane" border="matte(1,1,0,1,block.inner.border)"
            marginBottom="10" weightY="100"/>
@@ -241,7 +223,7 @@
     <style selector=".innerBlock"  foreground="block.inner.item"/>
     <style selector="label.alignActualAmount" foreground="block.inner.item" font="-,plain,12" marginLeft="5"/>
 
-    <style selector=".secondaryInnerBlock" opaque="true" background="block.inner.secondary.bg" border="line(block.inner.border)"/>
+    <style selector=".secondaryInnerBlock" opaque="true" background="block.inner.secondary.bg"/>
     <style selector="label.secondarySectionTitle" font="-,bold,13" weightY="0.1"
            foreground="block.inner.secondary.section.title" anchor="southwest" marginTop="10" marginLeft="10"/>
     <style selector="label.secondarySectionSubtitle" font="-,plain,11" weightY="0.1"
@@ -264,7 +246,7 @@
            marginTop="2" marginBottom="2" fill="none" iconTextGap="2"/>
     <style selector=".footer label" foreground="block.footer.label" marginTop="2" marginBottom="2" anchor="center"/>
 
-    <style selector=".blockScrollBorder" border="line(block.inner.border)"/>
+    <style selector=".blockScrollBorder" border="line(content.bg)"/>
     <style selector=".blockScrollBorder scrollPane" border="none" marginBottom="0"/>
 
     <style selector=".preFooter" opaque="true" background="block.prefooter.bg"
@@ -357,7 +339,7 @@
 
     <style selector=".detailGauge"
            opaque="false" font="-,plain,12"
-           foreground="gauge.detail.fg" background="block.inner.bg"
+           foreground="gauge.detail.fg" background="content.bg"
            fill="horizontal" anchor="center" preferredSize="(40,22)" weightX="10"
            borderColor="gauge.detail.border" rolloverBorderColor="gauge.detail.border.rollover"
            emptyColorTop="gauge.detail.empty.top" emptyColorBottom="gauge.detail.empty.bottom"

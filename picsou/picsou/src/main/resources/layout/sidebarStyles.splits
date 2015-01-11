@@ -12,6 +12,12 @@
 
     <style selector=".sidebar label.sidebarLabel" foreground="sidebar.label" marginLeft="10" marginRight="10"/>
 
+    <!-- Scrollbars -->
+
+    <ui name="scrollPaneUI"
+        class="org.designup.picsou.gui.components.ui.FlatScrollbarUI"
+        color="sidebar.scrollBar.idle" rolloverColor="sidebar.scrollBar.rollover" background="sidebar.bg"/>
+    <style selector="scrollPane" scrollbarUI="scrollPaneUI" background="#FFFFFF"/>
 
     <!-- Sections -->
 
@@ -44,7 +50,7 @@
 
     <style selector="toggleButton.sidebarSelectionButton"
            weightX="0" cursor="hand"
-           icon="oval(18,18,sidebar.selection.unselected.bg, sidebar.selection.unselected.border)"
+           icon="oval(18,18,sidebar.bg, sidebar.selection.unselected.border)"
            selectedIcon="oval(18,18,sidebar.selection.selected.bg, sidebar.selection.selected.border)"
            rolloverIcon="oval(18,18,sidebar.selection.rollover.bg, sidebar.selection.rollover.border)"
            pressedIcon="oval(18,18,sidebar.selection.pressed.bg, sidebar.selection.pressed.border)"
@@ -58,7 +64,7 @@
     <style id="sidebarSelectionButtonSelected" selector="x"
            icon="oval(18,18,sidebar.selection.selected.bg, sidebar.selection.selected.border)"/>
     <style id="sidebarSelectionButtonUnselected" selector="x"
-           icon="oval(18,18,sidebar.selection.unselected.bg, sidebar.selection.unselected.border)"/>
+           icon="oval(18,18,sidebar.bg, sidebar.selection.unselected.border)"/>
 
   </styles>
 </splits>

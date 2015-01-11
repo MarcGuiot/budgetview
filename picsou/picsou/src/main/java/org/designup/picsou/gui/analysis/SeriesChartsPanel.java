@@ -80,7 +80,7 @@ public class SeriesChartsPanel implements GlobSelectionListener {
     HistoChartConfig config = new HistoChartConfig(true, true, false, true, true, false, false, true, true, false);
     config.setUseWheelScroll(true);
     histoChartBuilder = new HistoChartBuilder(config,
-                                              new HistoChartColors(directory), range, repository, directory, parentSelectionService);
+                                              new HistoChartColors("histo", directory), range, repository, directory, parentSelectionService);
     histoChartBuilder.addListener(new HistoChartListenerAdapter() {
       public void scroll(int count) {
         updateCharts(false);

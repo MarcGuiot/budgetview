@@ -47,8 +47,8 @@ public class ScreenChecker {
     checkBackgroundTopColor("454545");
   }
 
-  public void checkBackgroundColorIsClassic() {
-    checkBackgroundTopColor("266C9E");
+  public void checkBackgroundColorIsBlue() {
+    checkBackgroundTopColor("00577D");
   }
 
   private void checkBackgroundTopColor(String color) {

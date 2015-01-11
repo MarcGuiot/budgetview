@@ -1,6 +1,7 @@
 <splits xmlns="http://www.globsframework.org/xml/splits.xsd">
 
   <styleImport file="/layout/commonStyles.splits"/>
+  <styleImport file="/layout/dialogStyles.splits"/>
 
   <panel styleClass="dialog" preferredSize="(340,180)">
     <column styleClass="innerDialog">

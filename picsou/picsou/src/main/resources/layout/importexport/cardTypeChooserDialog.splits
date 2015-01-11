@@ -1,6 +1,7 @@
 <splits xmlns="http://www.globsframework.org/xml/splits.xsd">
 
   <styleImport file="/layout/commonStyles.splits"/>
+  <styleImport file="/layout/dialogStyles.splits"/>
 
   <panel styleClass="dialog" preferredSize="(480,400)" maximumSize="(480,2000)">
     <column styleClass="innerDialog">
@@ -16,7 +17,7 @@
               <label ref="accountName" styleClass="item" anchor="left"/>
               <comboBox ref="cardTypeCombo" marginLeft="40" margin="5"/>
               <verticalBoxes marginLeft="60">
-                <textArea ref="message" styleClass="multiLineLabel" opaque="true" background="block.inner.bg"/>
+                <textArea ref="message" styleClass="multiLineLabel" opaque="true" background="content.bg"/>
               </verticalBoxes>
             </column>
           </repeat>

@@ -33,14 +33,14 @@
     <style selector="button#plannedSeriesAmount" ui="amountLinkUI"
            foreground="block.amount.planned.link" font="-,bold,11" opaque="true"/>
     <style id="plannedToSet" selector="x" background="block.amount.planned.link.toset" opaque="true"/>
-    <style id="plannedAlreadySet" selector="x" background="block.inner.bg" opaque="false"/>
+    <style id="plannedAlreadySet" selector="x" background="content.bg" opaque="false"/>
 
     <style selector="label.slash" text="/" foreground="block.amount.separator" font="-,plain,11"/>
 
     <style selector="#total label" marginBottom="0"/>
 
     <style selector="#deltaGauge"
-           background="block.inner.bg" opaque="false"
+           background="content.bg" opaque="false"
            preferredSize="(12,12)"/>
     <style id="activeDeltaGauge" selector="x"
            positiveColor="deltaGauge.positive"
@@ -57,10 +57,10 @@
     <style id="highlightedAmount" selector="x" opaque="true"
            background="block.inner.highlight.selected.bg"/>
     <style id="standardAmount" selector="x" opaque="false"
-           background="block.inner.bg"/>
+           background="content.bg"/>
 
     <ui name="bgUI" class="org.designup.picsou.gui.series.ui.SeriesPanelUI"
-        panelBackground="block.inner.bg" groupBackground="budget.group.bg"/>
+        panelBackground="content.bg" groupBackground="budget.group.bg"/>
     <style selector="#seriesRepeat" ui="bgUI"/>
 
   </styles>

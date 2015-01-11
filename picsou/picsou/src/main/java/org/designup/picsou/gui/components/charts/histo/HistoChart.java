@@ -180,9 +180,6 @@ public class HistoChart extends JPanel implements Disposable {
       g2.setColor(dataset.isSelected(i) ? colors.getSelectedColumnColor() : colors.getChartBgColor());
       g2.fillRect(left, metrics.columnTop(), metrics.columnWidth(), columnHeight);
 
-      g2.setColor(colors.getLabelBgColor());
-      g2.fillRect(left, metrics.labelTop(), metrics.columnWidth(), metrics.labelZoneHeightWithMargin());
-
       if (config.drawColumnDividers) {
         colors.setColumnDividerStyle(g2);
         g2.drawLine(right, metrics.columnTop(), right, metrics.columnTop() + columnHeight);
@@ -206,7 +203,7 @@ public class HistoChart extends JPanel implements Disposable {
         int left = metrics.left(i);
 
         g2.setColor(colors.getSelectedColumnBorder());
-        g2.drawRect(left, metrics.columnTop(), metrics.columnWidth(), columnHeight + metrics.labelZoneHeightWithMargin());
+        g2.drawRect(left, metrics.columnTop(), metrics.columnWidth(), columnHeight);
       }
     }
   }

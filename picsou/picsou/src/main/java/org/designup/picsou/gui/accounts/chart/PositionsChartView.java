@@ -66,7 +66,7 @@ public abstract class PositionsChartView extends View implements HistoChartRange
   }
 
   protected HistoChartColors createChartColors(Directory directory) {
-    return new HistoChartColors(directory);
+    return new HistoChartColors("sidebar.histo", directory);
   }
 
   public void update() {

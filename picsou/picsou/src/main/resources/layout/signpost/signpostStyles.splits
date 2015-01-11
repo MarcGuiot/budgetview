@@ -8,7 +8,7 @@
     <ui name="highlight" class="org.globsframework.gui.splits.components.StyledPanelUI"
         topColor="signpostView.section.top" bottomColor="signpostView.section.bottom"/>
     <ui name="standard" class="org.globsframework.gui.splits.components.StyledPanelUI"
-        topColor="block.inner.bg" bottomColor="block.inner.bg"/>
+        topColor="content.bg" bottomColor="content.bg"/>
     <style id="unavailablePanel" selector="x"
            ui="standard" border=""/>
     <style id="inprogressPanel" selector="x"

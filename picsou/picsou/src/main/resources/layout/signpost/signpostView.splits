@@ -14,7 +14,7 @@
     <style selector="#sectionTitle" ui="sectionTitleButtonUI" anchor="left" fill="none"/>
   </styles>
 
-  <row opaque="true" background="block.inner.bg">
+  <row opaque="true" background="content.bg">
     <filler fill="horizontal"/>
     <column marginLeft="20" marginRight="20">
       <label text="$signpostView.title" styleClass="contentTitle"

@@ -1,10 +1,8 @@
 <splits xmlns="http://www.globsframework.org/xml/splits.xsd">
 
   <styleImport file="/layout/commonStyles.splits"/>
+  <styleImport file="/layout/dialogStyles.splits"/>
   <styleImport file="/layout/signpost/signpostStyles.splits"/>
-  <styles>
-
-  </styles>
 
   <panel styleClass="dialog" preferredSize="(550,350)">
     <column styleClass="innerDialog">

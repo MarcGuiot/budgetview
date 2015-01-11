@@ -55,7 +55,7 @@ public class ProjectChartView extends View {
     super(repository, directory);
     this.range = range;
     this.histoChart = new HistoChart(new HistoChartConfig(true, false, true, false, true, true, false, true, true, true),
-                                     new HistoChartColors(directory));
+                                     new HistoChartColors("sidebar.histo", directory));
     this.updater = new HistoChartUpdater(repository, directory,
                                          Month.TYPE, Month.ID, Project.TYPE, ProjectStat.TYPE) {
       protected void update(Integer currentMonthId, boolean resetPosition) {

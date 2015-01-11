@@ -1,7 +1,6 @@
 package org.designup.picsou.functests.general;
 
 import org.designup.picsou.functests.checkers.PreferencesChecker;
-import org.designup.picsou.functests.checkers.TransactionChecker;
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
 import org.designup.picsou.model.ColorTheme;
@@ -74,24 +73,23 @@ public class PreferencesTest extends LoggedInFunctionalTestCase {
   }
 
   public void testChangeColorTheme() throws Exception {
-
     screen.checkBackgroundColorIsStandard();
 
     PreferencesChecker preferences = operations.openPreferences();
     preferences.checkColorThemeSelected(ColorTheme.STANDARD);
     screen.checkBackgroundColorIsStandard();
-    preferences.selectColorTheme(ColorTheme.CLASSIC_BLUE);
-    screen.checkBackgroundColorIsClassic();
+    preferences.selectColorTheme(ColorTheme.BLUE);
+    screen.checkBackgroundColorIsBlue();
     preferences.validate();
 
-    screen.checkBackgroundColorIsClassic();
+    screen.checkBackgroundColorIsBlue();
 
     PreferencesChecker preferences2 = operations.openPreferences();
-    preferences2.checkColorThemeSelected(ColorTheme.CLASSIC_BLUE);
+    preferences2.checkColorThemeSelected(ColorTheme.BLUE);
     preferences2.selectColorTheme(ColorTheme.STANDARD);
     screen.checkBackgroundColorIsStandard();
     preferences2.cancel();
 
-    screen.checkBackgroundColorIsClassic();
+    screen.checkBackgroundColorIsBlue();
   }
 }

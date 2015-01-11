@@ -1,14 +1,16 @@
 <splits xmlns="http://www.globsframework.org/xml/splits.xsd">
 
   <styleImport file="/layout/commonStyles.splits"/>
+  <styleImport file="/layout/dialogStyles.splits"/>
+
   <styles>
-  <style selector="button.next"
-         ui="hyperlinkButtonWithoutUnderline"
-         icon="rightArrow(10,12,9,9,hyperlink)"
-         foreground="hyperlink"
-         horizontalTextPosition="left" iconTextGap="5"
-         fill="none" anchor="right"
-         marginTop="10"/>
+    <style selector="button.next"
+           ui="hyperlinkButtonWithoutUnderline"
+           icon="rightArrow(10,12,9,9,hyperlink)"
+           foreground="hyperlink"
+           horizontalTextPosition="left" iconTextGap="5"
+           fill="none" anchor="right"
+           marginTop="10"/>
     <style selector="scrollPane" forceVerticalScroll="true"/>
     <style selector="scrollPane column" margin="10"/>
   </styles>

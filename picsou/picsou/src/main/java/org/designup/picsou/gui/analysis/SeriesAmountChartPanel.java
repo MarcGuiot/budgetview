@@ -25,7 +25,7 @@ public class SeriesAmountChartPanel {
     config.setUseWheelScroll(true);
     final HistoChartBuilder histoChartBuilder =
       new HistoChartBuilder(config,
-                            new HistoChartColors(directory), new ScrollableHistoChartRange(4, 12, true, repository),
+                            new HistoChartColors("histo", directory), new ScrollableHistoChartRange(4, 12, true, repository),
                             repository, directory, directory.get(SelectionService.class));
     histoChartBuilder.addListener(new HistoChartListenerAdapter() {
       public void scroll(int count) {

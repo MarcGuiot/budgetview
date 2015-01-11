@@ -51,28 +51,28 @@ public class AccountPositionsChartView extends PositionsChartView {
     this.accountId = accountId;
 
     HistoLineColors accountColors = disposables.add(new HistoLineColors(
-      "accountView.histo.account.line.positive",
-      "accountView.histo.account.line.negative",
-      "accountView.histo.account.fill.positive",
-      "accountView.histo.account.fill.negative",
+      "sidebar.histo.account.line.positive",
+      "sidebar.histo.account.line.negative",
+      "sidebar.histo.account.fill.positive",
+      "sidebar.histo.account.fill.negative",
       directory
     ));
 
     dailyColors = disposables.add(new HistoDailyColors(
       accountColors,
-      "accountView.histo.account.daily.current",
-      "accountView.histo.account.daily.current.annotation",
-      "accountView.histo.account.inner.label.positive",
-      "accountView.histo.account.inner.label.negative",
-      "accountView.histo.account.inner.label.line",
-      "accountView.histo.account.inner.rollover.day",
-      "accountView.histo.account.inner.selected.day",
+      "sidebar.histo.account.daily.current",
+      "sidebar.histo.account.daily.current.annotation",
+      "sidebar.histo.account.inner.label.positive",
+      "sidebar.histo.account.inner.label.negative",
+      "sidebar.histo.account.inner.label.line",
+      "sidebar.histo.account.inner.rollover.day",
+      "sidebar.histo.account.inner.selected.day",
       directory
     ));
   }
 
   protected HistoChartColors createChartColors(Directory directory) {
-    return new HistoChartColors("accountView.histo", directory);
+    return new HistoChartColors("sidebar.histo", directory);
   }
 
   protected void processClick(HistoSelection selection, Set<Key> objectKeys, NavigationService navigationService) {

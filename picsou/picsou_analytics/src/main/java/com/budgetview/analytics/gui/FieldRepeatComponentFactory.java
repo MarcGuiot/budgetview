@@ -62,7 +62,7 @@ public class FieldRepeatComponentFactory implements RepeatComponentFactory<Field
     HistoChartConfig chartConfig =
       new HistoChartConfig(true, field == fields.get(0),
                            false, true, true, true, false, true, false, false);
-    final HistoChart chart = new HistoChart(chartConfig, new HistoChartColors(directory));
+    final HistoChart chart = new HistoChart(chartConfig, new HistoChartColors("histo", directory));
 
     selectionService.addListener(new GlobSelectionListener() {
       public void selectionUpdated(GlobSelection selection) {

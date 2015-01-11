@@ -27,10 +27,6 @@ public class HistoChartColors implements ColorChangeListener, Disposable {
   private String prefix;
   private Directory directory;
 
-  public HistoChartColors(Directory directory) {
-    this("histo", directory);
-  }
-
   public HistoChartColors(String prefix, Directory directory) {
     this.prefix = prefix;
     this.directory = directory;
@@ -50,7 +46,6 @@ public class HistoChartColors implements ColorChangeListener, Disposable {
     this.scaleTextColor = colorLocator.get(prefix + ".scale.text");
     this.sectionLineColor = colorLocator.get(prefix + ".section.line");
     this.labelColor = colorLocator.get(prefix + ".label");
-    this.labelBgColor = colorLocator.get(prefix + ".label.bg");
     this.selectedLabelColor = colorLocator.get(prefix + ".label.selected");
     this.rolloverLabelColor = colorLocator.get(prefix + ".label.rollover");
     this.selectedColumnColor = colorLocator.get(prefix + ".selection.bg");
@@ -80,10 +75,6 @@ public class HistoChartColors implements ColorChangeListener, Disposable {
 
   public Color getLabelColor() {
     return labelColor;
-  }
-
-  public Color getLabelBgColor() {
-    return labelBgColor;
   }
 
   public Color getSelectedLabelColor() {

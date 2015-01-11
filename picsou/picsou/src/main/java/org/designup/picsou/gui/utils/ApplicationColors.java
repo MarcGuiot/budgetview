@@ -99,18 +99,10 @@ public enum ApplicationColors {
   private boolean canBeNull;
   private String toString;
 
-  public static final String[] COLOR_FILES = {"/colors/color.properties",
-                                              "/colors/color_classic_blue.properties",
-                                              "/colors/color_blue.properties",
-                                              "/colors/color_blue_flat.properties",
-                                              "/colors/color_green.properties",
-                                              "/colors/color_grey_flat.properties",
-                                              "/colors/color_black.properties",
-                                              "/colors/color_pink.properties",
-                                              "/colors/color_purple.properties",
-                                              "/colors/color_turquoise.properties",
-                                              "/colors/color_print.properties",
-                                              "/colors/color_black_modern.properties"};
+  public static final String[] COLOR_FILES = {
+    "/colors/color.properties",
+    "/colors/color_blue.properties",
+    "/colors/color_black.properties"};
 
   ApplicationColors() {
     this(false);
@@ -179,7 +171,7 @@ public enum ApplicationColors {
         Color color = colorLocator.get(colorKey);
 
         // Warning: the editorKit is a singleton
-        HTMLEditorKit kit = (HTMLEditorKit)editor.getEditorKit();
+        HTMLEditorKit kit = (HTMLEditorKit) editor.getEditorKit();
         StyleSheet css = kit.getStyleSheet();
         css.addRule("a." + cssClass + " { color: #" + Colors.toString(color) + "; }");
       }

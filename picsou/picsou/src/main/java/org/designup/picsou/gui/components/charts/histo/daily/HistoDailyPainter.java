@@ -113,7 +113,7 @@ public class HistoDailyPainter implements HistoPainter {
 
         if (dataset.isCurrent(monthIndex, dayIndex)) {
           g2.setColor(colors.getCurrentDayColor());
-          g2.drawLine(x, metrics.currentDayLineTop(), x, metrics.currentDayLineBottom());
+//          g2.drawLine(x, metrics.currentDayLineTop(), x, metrics.currentDayLineBottom());
 
           if (config.drawInnerAnnotations) {
             drawCurrentDayAnnotation(g2, metrics, x);

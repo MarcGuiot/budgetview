@@ -21,7 +21,7 @@
     <style selector=".left label.totalAmount"
            fill="horizontal" horizontalAlignment="left" marginLeft="10"/>
 
-    <style selector="#accountPanel" opaque="true" background="block.inner.bg"/>
+    <style selector="#accountPanel" opaque="true" background="sidebar.bg"/>
 
     <style selector="#toggleGraph" border=""
            text="" opaque="false" borderPainted="false" cursor="hand"
@@ -39,8 +39,7 @@
       <label ref="referencePosition" styleClass="sidebarSectionTitle" tooltipText="$accountView.reference.tooltip"/>
       <label ref="referencePositionDate" styleClass="sidebarSectionTitle" font="LatoRegular,plain,11" autoHideSource="referencePosition" marginLeft="5" marginRight="5"/>
     </row>
-    <repeat ref="accountRepeat" marginBottom="15"
-            opaque="true" background="sidebar.bg">
+    <repeat ref="accountRepeat" marginBottom="15" opaque="true" background="sidebar.bg">
       <panel ref="accountPanel" marginTop="2" opaque="false">
         <panel marginTop="4" layout="org.designup.picsou.gui.accounts.utils.AccountBlockLayout"
                cursor="hand" opaque="false" styleClass="sidebarSeparator">

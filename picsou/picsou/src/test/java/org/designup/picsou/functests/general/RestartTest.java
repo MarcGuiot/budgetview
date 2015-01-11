@@ -700,15 +700,15 @@ public class RestartTest extends RestartTestCase {
     screen.checkBackgroundColorIsStandard();
 
     PreferencesChecker preferences = operations.openPreferences();
-    preferences.selectColorTheme(ColorTheme.CLASSIC_BLUE);
+    preferences.selectColorTheme(ColorTheme.BLUE);
     preferences.validate();
-    screen.checkBackgroundColorIsClassic();
+    screen.checkBackgroundColorIsBlue();
 
     restartApplication();
-    screen.checkBackgroundColorIsClassic();
+    screen.checkBackgroundColorIsBlue();
 
     PreferencesChecker preferences2 = operations.openPreferences();
-    preferences2.checkColorThemeSelected(ColorTheme.CLASSIC_BLUE);
+    preferences2.checkColorThemeSelected(ColorTheme.BLUE);
     preferences2.selectColorTheme(ColorTheme.STANDARD);
     preferences2.validate();
 

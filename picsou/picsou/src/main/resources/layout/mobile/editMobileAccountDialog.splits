@@ -1,6 +1,8 @@
 <splits xmlns="http://www.globsframework.org/xml/splits.xsd">
 
   <styleImport file="/layout/commonStyles.splits"/>
+  <styleImport file="/layout/dialogStyles.splits"/>
+
   <styles>
     <style selector="label.formSection" marginTop="10"/>
   </styles>

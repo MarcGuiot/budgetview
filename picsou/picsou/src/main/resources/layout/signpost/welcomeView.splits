@@ -23,7 +23,7 @@
 
   </styles>
 
-  <row opaque="true" background="block.inner.bg">
+  <row opaque="true" background="content.bg">
     <filler fill="horizontal"/>
     <column name="welcomeIntro">
 
