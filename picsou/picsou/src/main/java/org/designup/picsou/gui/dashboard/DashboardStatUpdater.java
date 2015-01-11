@@ -1,11 +1,11 @@
 package org.designup.picsou.gui.dashboard;
 
 import org.designup.picsou.gui.accounts.utils.AccountMatchers;
+import org.designup.picsou.gui.categorization.utils.Uncategorized;
 import org.designup.picsou.gui.model.AccountWeather;
 import org.designup.picsou.gui.model.DashboardStat;
 import org.designup.picsou.gui.model.WeatherType;
 import org.designup.picsou.gui.time.TimeService;
-import org.designup.picsou.gui.transactions.utils.TransactionMatchers;
 import org.designup.picsou.model.*;
 import org.globsframework.gui.GlobSelection;
 import org.globsframework.gui.GlobSelectionListener;
@@ -22,7 +22,6 @@ import java.util.Set;
 import java.util.TreeSet;
 
 import static org.globsframework.model.FieldValue.value;
-import static org.globsframework.model.utils.GlobMatchers.*;
 
 public class DashboardStatUpdater implements ChangeSetListener, GlobSelectionListener {
 
@@ -151,11 +150,7 @@ public class DashboardStatUpdater implements ChangeSetListener, GlobSelectionLis
 
   private void updateUncategorized(Set<Integer> selectedAccounts) {
     repository.update(DashboardStat.KEY,
-                      value(DashboardStat.UNCATEGORIZED_COUNT,
-                            repository.getAll(Transaction.TYPE,
-                                              and(fieldEquals(Transaction.SERIES, Series.UNCATEGORIZED_SERIES_ID),
-                                                  new AccountFieldMatcher(Transaction.ACCOUNT, selectedAccounts),
-                                                  TransactionMatchers.realTransactions())).size()));
+                      value(DashboardStat.UNCATEGORIZED_COUNT, Uncategorized.getCount(selectedAccounts, repository)));
   }
 
   private void updateAmounts(Set<Integer> accountIds) {

@@ -42,9 +42,7 @@ public class DeleteSubSeriesFunctors {
   public static GlobFunctor uncategorize() {
     return new GlobFunctor() {
       public void run(Glob transaction, GlobRepository repository) throws Exception {
-        repository.update(transaction.getKey(),
-                          value(Transaction.SERIES, Series.UNCATEGORIZED_SERIES_ID),
-                          value(Transaction.SUB_SERIES, null));
+        Transaction.uncategorize(transaction, repository);
       }
 
       public String toString() {

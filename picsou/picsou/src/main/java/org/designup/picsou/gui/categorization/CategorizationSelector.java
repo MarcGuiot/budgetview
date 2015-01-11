@@ -100,8 +100,6 @@ public class CategorizationSelector extends View implements TableView, Filterabl
       new ReconciliationWarningPanel(this, repository, directory);
     builder.add("reconciliationWarningPanel", reconciliationWarningPanel.getPanel());
 
-//    builder.add("categorizationSplit", SplitPaneConfig.create(directory, LayoutConfig.CATEGORIZATION_HORIZONTAL));
-
     parentBuilder.add("categorizationSelector", builder);
   }
 

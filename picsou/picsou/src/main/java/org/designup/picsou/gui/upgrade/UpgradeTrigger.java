@@ -536,9 +536,7 @@ public class UpgradeTrigger implements ChangeSetListener {
                          new GlobFunctor() {
                            public void run(Glob transaction, GlobRepository repository) throws Exception {
                              if (Series.OCCASIONAL_SERIES_ID.equals(transaction.get(Transaction.SERIES))) {
-                               repository.update(transaction.getKey(),
-                                                 Transaction.SERIES,
-                                                 Series.UNCATEGORIZED_SERIES_ID);
+                               Transaction.uncategorize(transaction, repository);
                              }
                            }
                          }

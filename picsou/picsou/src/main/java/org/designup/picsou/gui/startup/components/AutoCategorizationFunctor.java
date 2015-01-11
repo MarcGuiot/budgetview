@@ -21,7 +21,7 @@ public class AutoCategorizationFunctor implements GlobFunctor {
 
   public void run(Glob transaction, final GlobRepository repository) throws Exception {
     transactionCount++;
-    if (!transaction.get(Transaction.SERIES).equals(Series.UNCATEGORIZED_SERIES_ID)){
+    if (!Transaction.isUncategorized(transaction)) {
       autocategorized++;
       return;
     }
@@ -29,7 +29,7 @@ public class AutoCategorizationFunctor implements GlobFunctor {
     if (transactionType.equals(TransactionType.CHECK.getId()) ||
         transactionType.equals(TransactionType.WITHDRAWAL.getId()) ||
         transactionType.equals(TransactionType.DEPOSIT.getId()) ||
-        !transaction.get(Transaction.SERIES).equals(Series.UNCATEGORIZED_SERIES_ID)) {
+        !Transaction.isUncategorized(transaction)) {
       return;
     }
     GlobList index = referenceRepository.findByIndex(Transaction.LABEL_FOR_CATEGORISATION_INDEX,

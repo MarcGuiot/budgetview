@@ -1,6 +1,7 @@
 package org.designup.picsou.triggers;
 
 import com.budgetview.shared.utils.Amounts;
+import org.designup.picsou.gui.categorization.utils.Uncategorized;
 import org.designup.picsou.gui.model.AccountStat;
 import org.designup.picsou.gui.model.BudgetStat;
 import org.designup.picsou.gui.model.SeriesStat;
@@ -253,11 +254,7 @@ public class BudgetStatTrigger implements ChangeSetListener {
       values.set(BudgetStat.SAVINGS_OUT_NEGATIVE_REMAINING, savingsOutAmounts.getRemainingNegativeAmount());
       values.set(BudgetStat.SAVINGS_OUT_SUMMARY, savingsOutAmounts.getSummaryAmount());
 
-      double uncategorizedAbs = 0;
-      for (Glob transaction : Transaction.getUncategorizedTransactions(monthId, repository)) {
-        uncategorizedAbs += Math.abs(transaction.get(Transaction.AMOUNT));
-      }
-      values.set(BudgetStat.UNCATEGORIZED_ABS, uncategorizedAbs);
+      values.set(BudgetStat.UNCATEGORIZED_ABS, Uncategorized.getAbsAmount(monthId, repository));
 
       return values.get();
     }

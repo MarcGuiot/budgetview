@@ -209,12 +209,7 @@ public class ProjectItemTransferPanel extends ProjectItemEditionPanel {
     protected void processOk() {
       onCommitFunctors.add(new Functor() {
         public void run() throws Exception {
-          GlobList transactions = getTransactions();
-          for (Glob transaction : transactions) {
-            parentRepository.update(transaction.getKey(),
-                                    value(Transaction.SERIES, Series.UNCATEGORIZED_SERIES_ID),
-                                    value(Transaction.SUB_SERIES, null));
-          }
+          Transaction.uncategorize(getTransactions(), parentRepository);
         }
       });
     }

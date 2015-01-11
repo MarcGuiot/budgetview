@@ -21,12 +21,12 @@ import org.designup.picsou.gui.transactions.columns.TransactionRendererColors;
 import org.designup.picsou.gui.transactions.reconciliation.annotations.ReconciliationAnnotationColumn;
 import org.designup.picsou.gui.transactions.search.TransactionFilterPanel;
 import org.designup.picsou.gui.transactions.utils.TransactionLabelCustomizer;
+import org.designup.picsou.gui.transactions.utils.TransactionMatchers;
 import org.designup.picsou.gui.utils.ApplicationColors;
 import org.designup.picsou.gui.utils.Gui;
 import org.designup.picsou.gui.utils.TableView;
 import org.designup.picsou.importer.utils.BankFormatExporter;
 import org.designup.picsou.model.Transaction;
-import org.designup.picsou.model.TransactionType;
 import org.designup.picsou.model.UserPreferences;
 import org.designup.picsou.utils.Lang;
 import org.designup.picsou.utils.TransactionComparator;
@@ -315,11 +315,7 @@ public class CategorizationTableView extends View implements TableView, Filterab
     }
 
     currentTableFilter = and(filter,
-                             not(fieldEquals(Transaction.TRANSACTION_TYPE, TransactionType.OPEN_ACCOUNT_EVENT.getId())),
-                             not(fieldEquals(Transaction.TRANSACTION_TYPE, TransactionType.CLOSE_ACCOUNT_EVENT.getId())),
-                             isFalse(Transaction.PLANNED),
-                             isFalse(Transaction.MIRROR),
-                             isFalse(Transaction.CREATED_BY_SERIES),
+                             TransactionMatchers.userCreated(),
                              getCurrentFilteringModeMatcher()
     );
 

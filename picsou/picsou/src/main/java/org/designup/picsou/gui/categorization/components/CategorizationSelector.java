@@ -283,17 +283,7 @@ public class CategorizationSelector implements GlobSelectionListener, ChangeSetL
     }
 
     public void actionPerformed(ActionEvent e) {
-      try {
-        repository.startChangeSet();
-        for (Glob transaction : selectedTransactions) {
-          repository.update(transaction.getKey(),
-                            value(Transaction.SERIES, Series.UNCATEGORIZED_SERIES_ID),
-                            value(Transaction.SUB_SERIES, null));
-        }
-      }
-      finally {
-        repository.completeChangeSet();
-      }
+      Transaction.uncategorize(selectedTransactions, repository);
     }
   }
 

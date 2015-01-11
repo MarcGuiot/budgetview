@@ -15,7 +15,6 @@ import java.util.HashSet;
 import java.util.Set;
 
 import static org.globsframework.model.utils.GlobMatchers.*;
-import static org.globsframework.model.utils.GlobMatchers.fieldEquals;
 
 public class TransactionMatchers {
   public static GlobMatcher transactionsForMainAccounts(GlobRepository repository) {
@@ -156,6 +155,25 @@ public class TransactionMatchers {
                or(GlobMatchers.fieldStrictlyLessThan(Transaction.POSITION_MONTH, monthId),
                   and(fieldEquals(Transaction.POSITION_MONTH, monthId),
                       fieldLessOrEqual(Transaction.POSITION_DAY, day))));
+  }
+
+  public static GlobMatcher uncategorizedForAccounts(Set<Integer> selectedAccounts) {
+    return and(fieldEquals(Transaction.SERIES, Series.UNCATEGORIZED_SERIES_ID),
+               fieldIn(Transaction.ACCOUNT, selectedAccounts),
+               userCreated());
+  }
+
+  public static GlobMatcher userCreated() {
+    return and(not(fieldEquals(Transaction.TRANSACTION_TYPE, TransactionType.OPEN_ACCOUNT_EVENT.getId())),
+               not(fieldEquals(Transaction.TRANSACTION_TYPE, TransactionType.CLOSE_ACCOUNT_EVENT.getId())),
+               isFalse(Transaction.PLANNED),
+               isFalse(Transaction.MIRROR),
+               isFalse(Transaction.CREATED_BY_SERIES));
+  }
+
+  public static GlobMatcher uncategorizedForMonths(Set<Integer> selectedMonthIds) {
+    return and(fieldEquals(Transaction.SERIES, Series.UNCATEGORIZED_SERIES_ID),
+               fieldIn(Transaction.BUDGET_MONTH, selectedMonthIds));
   }
 
   public static class AccountDateMatcher implements GlobMatcher {

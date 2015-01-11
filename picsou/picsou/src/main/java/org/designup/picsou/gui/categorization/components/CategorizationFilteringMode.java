@@ -2,7 +2,6 @@ package org.designup.picsou.gui.categorization.components;
 
 import org.designup.picsou.gui.transactions.utils.TransactionMatchers;
 import org.designup.picsou.model.Month;
-import org.designup.picsou.model.Series;
 import org.designup.picsou.model.Transaction;
 import org.designup.picsou.model.TransactionImport;
 import org.designup.picsou.utils.Lang;
@@ -62,7 +61,7 @@ public enum CategorizationFilteringMode {
         return fieldEquals(Transaction.IMPORT, imports.getLast().get(TransactionImport.ID));
 
       case UNCATEGORIZED:
-        return or(fieldEquals(Transaction.SERIES, Series.UNCATEGORIZED_SERIES_ID),
+        return or(TransactionMatchers.uncategorizedTransactions(),
                   keyIn(categorizedTransactions));
 
       case UNCATEGORIZED_SELECTED_MONTHS: {
@@ -71,8 +70,7 @@ public enum CategorizationFilteringMode {
           return GlobMatchers.NONE;
         }
         return
-          or(and(fieldEquals(Transaction.SERIES, Series.UNCATEGORIZED_SERIES_ID),
-                 fieldIn(Transaction.BUDGET_MONTH, selectedMonthIds)),
+          or(TransactionMatchers.uncategorizedForMonths(selectedMonthIds),
              keyIn(categorizedTransactions));
       }
 

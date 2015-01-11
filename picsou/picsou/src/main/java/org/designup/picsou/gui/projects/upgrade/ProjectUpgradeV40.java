@@ -240,11 +240,7 @@ public class ProjectUpgradeV40 {
   }
 
   private void clearTransactionSeries(GlobList transactions, GlobRepository repository) {
-    for (Glob transaction : transactions) {
-      repository.update(transaction.getKey(),
-                        value(Transaction.SERIES, Series.UNCATEGORIZED_SERIES_ID),
-                        value(Transaction.SUB_SERIES, null));
-    }
+    Transaction.uncategorize(transactions, repository);
   }
 
   private void reducePlannedForItem(Glob item, double planned, GlobRepository repository) {

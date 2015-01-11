@@ -24,6 +24,8 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.*;
 
+import static org.globsframework.model.FieldValue.value;
+
 public class DataCheckingService {
   private GlobRepository repository;
   private Directory directory;
@@ -251,15 +253,15 @@ public class DataCheckingService {
   private void checkTransactionSeries(GlobRepository repository, DataCheckReport report) {
     Set<Integer> series = repository.getAll(Series.TYPE).getValueSet(Series.ID);
     GlobList all = repository.getAll(Transaction.TYPE);
-    for (Glob glob : all) {
-      if (!series.contains(glob.get(Transaction.SERIES))) {
-        if (glob.get(Transaction.PLANNED) || glob.get(Transaction.CREATED_BY_SERIES)){
-          repository.delete(glob);
+    for (Glob transaction : all) {
+      if (!series.contains(transaction.get(Transaction.SERIES))) {
+        if (transaction.isTrue(Transaction.PLANNED) || transaction.isTrue(Transaction.CREATED_BY_SERIES)){
+          repository.delete(transaction);
         }
         else {
-          repository.update(glob.getKey(), Transaction.SERIES, Series.UNCATEGORIZED_SERIES_ID);
+          Transaction.uncategorize(transaction, repository);
         }
-        report.addError("Missing series for " + glob.get(Transaction.LABEL));
+        report.addError("Missing series for " + transaction.get(Transaction.LABEL));
       }
     }
   }
@@ -408,14 +410,7 @@ public class DataCheckingService {
             .append(" at : ")
             .append(Month.toString(transaction.get(Transaction.POSITION_MONTH), transaction.get(Transaction.POSITION_DAY)))
             .append(". Uncategorized : you must recategorize it");
-          try {
-            repository.startChangeSet();
-            repository.update(transaction.getKey(), Transaction.SERIES, Series.UNCATEGORIZED_SERIES_ID);
-            repository.update(transaction.getKey(), Transaction.SUB_SERIES, null);
-          }
-          finally {
-            repository.completeChangeSet();
-          }
+          Transaction.uncategorize(transaction, repository);
         }
       }
       else {
@@ -425,14 +420,7 @@ public class DataCheckingService {
             .append(" at : ")
             .append(Month.toString(transaction.get(Transaction.POSITION_MONTH), transaction.get(Transaction.POSITION_DAY)))
             .append(". Uncategorized : you must recategorize it");
-          try {
-            repository.startChangeSet();
-            repository.update(transaction.getKey(), Transaction.SERIES, null);
-            repository.update(transaction.getKey(), Transaction.SUB_SERIES, null);
-          }
-          finally {
-            repository.completeChangeSet();
-          }
+          Transaction.uncategorize(transaction, repository);
         }
       }
     }
@@ -457,23 +445,22 @@ public class DataCheckingService {
       this.buffer = buffer;
     }
 
-    public void run(Glob glob, GlobRepository repository) throws Exception {
-      Glob target = repository.findLinkTarget(glob, Transaction.SERIES);
+    public void run(Glob transaction, GlobRepository repository) throws Exception {
+      Glob target = repository.findLinkTarget(transaction, Transaction.SERIES);
       if (target == null) {
-        if (glob.isTrue(Transaction.PLANNED)) {
+        if (transaction.isTrue(Transaction.PLANNED)) {
           buffer.append("no series for planned transaction ");
-          transactionsToDelete.add(glob);
+          transactionsToDelete.add(transaction);
         }
         else {
           buffer.append("no series for operations : ");
-          repository.update(glob.getKey(), FieldValue.value(Transaction.SERIES, null),
-                            FieldValue.value(Transaction.SUB_SERIES, null));
+          Transaction.uncategorize(transaction, repository);
         }
-        buffer.append(glob.get(Transaction.LABEL))
+        buffer.append(transaction.get(Transaction.LABEL))
           .append(" bank date : ")
-          .append(Month.toString(glob.get(Transaction.POSITION_MONTH), glob.get(Transaction.POSITION_DAY)))
+          .append(Month.toString(transaction.get(Transaction.POSITION_MONTH), transaction.get(Transaction.POSITION_DAY)))
           .append(" user date : ")
-          .append(Month.toString(glob.get(Transaction.MONTH), glob.get(Transaction.DAY)));
+          .append(Month.toString(transaction.get(Transaction.MONTH), transaction.get(Transaction.DAY)));
       }
     }
 

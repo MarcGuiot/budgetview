@@ -35,7 +35,7 @@ public class CategorizationSelectionSignpost extends AbstractTableSignpost {
       if (table.getRowCount() != 0) {
         for (; index < table.getRowCount(); ++index) {
           Glob transaction = (Glob)table.getModel().getValueAt(index, 0);
-          if (transaction.get(Transaction.SERIES).equals(Series.UNCATEGORIZED_SERIES_ID)) {
+          if (Transaction.isUncategorized(transaction)) {
             Rectangle rect = table.getCellRect(index, 0, true);
             table.scrollRectToVisible(rect);
             break;

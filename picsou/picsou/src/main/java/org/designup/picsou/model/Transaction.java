@@ -256,18 +256,12 @@ public class Transaction {
     }
   }
 
-  public static boolean isCategorized(Glob transaction) {
-    return (transaction != null) && !Utils.equal(Series.UNCATEGORIZED_SERIES_ID, transaction.get(SERIES));
+  public static boolean isUncategorized(Glob transaction) {
+    return (transaction != null) && Utils.equal(Series.UNCATEGORIZED_SERIES_ID, transaction.get(SERIES));
   }
 
-  public static GlobList getUncategorizedTransactions(Integer monthId, GlobRepository repository) {
-    ReadOnlyGlobRepository.MultiFieldIndexed index = repository.findByIndex(SERIES_INDEX, SERIES, Series.UNCATEGORIZED_SERIES_ID);
-    GlobList prefiltered = index.findByIndex(POSITION_MONTH, Month.previous(monthId)).getGlobs();
-    prefiltered.addAll(index.findByIndex(POSITION_MONTH, monthId).getGlobs());
-    prefiltered.addAll(index.findByIndex(POSITION_MONTH, Month.next(monthId)).getGlobs());
-    return prefiltered
-      .filterSelf(fieldEquals(BUDGET_MONTH, monthId), repository)
-      .filterSelf(fieldEquals(PLANNED, false), repository);
+  public static boolean isCategorized(Glob transaction) {
+    return (transaction != null) && !Utils.equal(Series.UNCATEGORIZED_SERIES_ID, transaction.get(SERIES));
   }
 
   public static boolean isToReconcile(Glob transaction) {
@@ -281,11 +275,21 @@ public class Transaction {
   }
 
   public static void uncategorize(GlobList transactions, GlobRepository repository) {
-    for (Glob transaction : transactions) {
-      repository.update(transaction.getKey(),
-                        value(SERIES, Series.UNCATEGORIZED_SERIES_ID),
-                        value(SUB_SERIES, null));
+    try {
+      repository.startChangeSet();
+      for (Glob transaction : transactions) {
+        uncategorize(transaction, repository);
+      }
     }
+    finally {
+      repository.completeChangeSet();
+    }
+  }
+
+  public static void uncategorize(Glob transaction, GlobRepository repository) {
+    repository.update(transaction.getKey(),
+                      value(SERIES, Series.UNCATEGORIZED_SERIES_ID),
+                      value(SUB_SERIES, null));
   }
 
   public static GlobList getAllForSeries(Integer seriesId, GlobRepository repository) {

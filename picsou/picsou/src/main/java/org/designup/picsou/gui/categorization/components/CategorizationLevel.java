@@ -1,14 +1,17 @@
 package org.designup.picsou.gui.categorization.components;
 
-import org.designup.picsou.gui.transactions.utils.TransactionMatchers;
-import org.designup.picsou.model.*;
+import org.designup.picsou.gui.categorization.utils.Uncategorized;
+import org.designup.picsou.model.Month;
+import org.designup.picsou.model.SignpostStatus;
+import org.designup.picsou.model.Transaction;
+import org.designup.picsou.model.UserPreferences;
 import org.globsframework.gui.GlobSelection;
 import org.globsframework.gui.GlobSelectionListener;
 import org.globsframework.gui.SelectionService;
 import org.globsframework.metamodel.GlobType;
-import org.globsframework.model.*;
-import org.globsframework.model.utils.GlobMatcher;
-import org.globsframework.model.utils.GlobMatchers;
+import org.globsframework.model.ChangeSet;
+import org.globsframework.model.ChangeSetListener;
+import org.globsframework.model.GlobRepository;
 import org.globsframework.utils.Updatable;
 import org.globsframework.utils.directory.Directory;
 
@@ -16,8 +19,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
-
-import static org.globsframework.model.utils.GlobMatchers.*;
 
 public class CategorizationLevel implements ChangeSetListener {
 
@@ -27,7 +28,6 @@ public class CategorizationLevel implements ChangeSetListener {
   private double percentage;
   private Set<Integer> selectedMonths = Collections.emptySet();
   private boolean filterOnCurrentMonth;
-  private boolean hasNoTransactions;
 
   public CategorizationLevel(GlobRepository repository, Directory directory) {
     this.repository = repository;
@@ -64,31 +64,17 @@ public class CategorizationLevel implements ChangeSetListener {
   }
 
   public void globsReset(GlobRepository repository, Set<GlobType> changedTypes) {
-    if (changedTypes.contains(Transaction.TYPE) || changedTypes.contains(UserPreferences.TYPE)
-        || changedTypes.contains(SignpostStatus.TYPE)) {
+    if (changedTypes.contains(Transaction.TYPE) ||
+        changedTypes.contains(UserPreferences.TYPE) ||
+        changedTypes.contains(SignpostStatus.TYPE)) {
       update();
     }
   }
 
   private void update() {
-    GlobMatcher monthFilter =
-      filterOnCurrentMonth ? GlobMatchers.fieldIn(Transaction.MONTH, selectedMonths) : GlobMatchers.ALL;
-    GlobList transactions =
-      repository.getAll(Transaction.TYPE, and(TransactionMatchers.realTransactions(), monthFilter));
-
-    hasNoTransactions = transactions.isEmpty();
-
-    total = 0;
-    double uncategorized = 0;
-    for (Glob transaction : transactions) {
-      double amount = Math.abs(transaction.get(Transaction.AMOUNT));
-      total += amount;
-      if (Series.UNCATEGORIZED_SERIES_ID.equals(transaction.get(Transaction.SERIES))) {
-        uncategorized += amount;
-      }
-    }
-
-    percentage = total == 0 ? 1 : uncategorized / total;
+    Uncategorized.Level level = Uncategorized.getLevel(selectedMonths, filterOnCurrentMonth, repository);
+    this.total = level.total;
+    percentage = total == 0 ? 1 : level.uncategorized / total;
     if (percentage > 0 && percentage < 0.01) {
       percentage = 0.01;
     }

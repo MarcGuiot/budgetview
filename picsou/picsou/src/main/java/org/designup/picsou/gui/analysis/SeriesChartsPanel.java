@@ -4,6 +4,7 @@ import com.budgetview.shared.gui.histochart.HistoChartConfig;
 import com.budgetview.shared.utils.Amounts;
 import org.designup.picsou.gui.card.NavigationPopup;
 import org.designup.picsou.gui.card.NavigationService;
+import org.designup.picsou.gui.categorization.utils.Uncategorized;
 import org.designup.picsou.gui.components.charts.histo.HistoChartColors;
 import org.designup.picsou.gui.components.charts.histo.utils.HistoChartListenerAdapter;
 import org.designup.picsou.gui.components.charts.stack.StackChart;
@@ -17,6 +18,7 @@ import org.designup.picsou.gui.analysis.histobuilders.range.HistoChartRange;
 import org.designup.picsou.gui.series.utils.SeriesOrGroup;
 import org.designup.picsou.gui.series.view.SeriesWrapper;
 import org.designup.picsou.gui.series.view.SeriesWrapperType;
+import org.designup.picsou.gui.transactions.utils.TransactionMatchers;
 import org.designup.picsou.model.*;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobSelection;
@@ -463,10 +465,7 @@ public class SeriesChartsPanel implements GlobSelectionListener {
 
   private void updateUncategorizedSeriesStack() {
 
-    GlobList uncategorizedTransactions =
-      repository.getAll(Transaction.TYPE,
-                        and(fieldEquals(Transaction.SERIES, Series.UNCATEGORIZED_SERIES_ID),
-                            fieldIn(Transaction.BUDGET_MONTH, selectedMonthIds)));
+    GlobList uncategorizedTransactions = Uncategorized.getTransactions(selectedMonthIds, repository);
 
     StackChartDataset dataset = new StackChartDataset();
     for (Glob transaction : uncategorizedTransactions) {

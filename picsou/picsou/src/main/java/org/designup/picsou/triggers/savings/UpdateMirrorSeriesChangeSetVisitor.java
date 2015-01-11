@@ -9,6 +9,8 @@ import org.globsframework.model.utils.GlobMatchers;
 import org.globsframework.utils.Utils;
 
 import static org.globsframework.model.FieldValue.value;
+import static org.globsframework.model.utils.GlobMatchers.and;
+import static org.globsframework.model.utils.GlobMatchers.isFalse;
 
 public class UpdateMirrorSeriesChangeSetVisitor implements ChangeSetVisitor {
   private GlobRepository localRepository;
@@ -62,15 +64,10 @@ public class UpdateMirrorSeriesChangeSetVisitor implements ChangeSetVisitor {
   private GlobList uncategorize(final Integer seriesId) {
     GlobList transactions = localRepository.findByIndex(Transaction.SERIES_INDEX, Transaction.SERIES,
                                                         seriesId)
-      .getGlobs().filterSelf(GlobMatchers.and(GlobMatchers.isFalse(Transaction.PLANNED),
-                                              GlobMatchers.isFalse(Transaction.CREATED_BY_SERIES)),
-                             localRepository
-      );
-    for (Glob transaction : transactions) {
-      localRepository.update(transaction.getKey(),
-                             value(Transaction.SERIES, Series.UNCATEGORIZED_SERIES_ID),
-                             value(Transaction.SUB_SERIES, null));
-    }
+      .getGlobs().filterSelf(and(isFalse(Transaction.PLANNED),
+                                 isFalse(Transaction.CREATED_BY_SERIES)),
+                             localRepository);
+    Transaction.uncategorize(transactions, localRepository);
     return transactions;
   }
 
