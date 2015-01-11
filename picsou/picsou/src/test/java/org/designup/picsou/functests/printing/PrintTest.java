@@ -41,7 +41,7 @@ public class PrintTest extends LoggedInFunctionalTestCase {
     categorization.setNewVariable("FNAC", "Leisures", -100.00);
 
     timeline.selectMonth(201204);
-    operations.print()
+    operations.openPrint()
       .checkOptions("April 2012", "Year 2012")
       .selectCurrentYear()
       .print();
@@ -114,7 +114,7 @@ public class PrintTest extends LoggedInFunctionalTestCase {
     // -- April-May 2012 --
 
     timeline.selectMonths(201204, 201205);
-    operations.print()
+    operations.openPrint()
       .selectCurrentYear()
       .print();
 
@@ -202,7 +202,7 @@ public class PrintTest extends LoggedInFunctionalTestCase {
     // -- December 2011 --
 
     timeline.selectMonth(201112);
-    operations.print()
+    operations.openPrint()
       .checkOptions("December 2011", "Year 2011")
       .checkCurrentMonthSelected()
       .print();
@@ -246,7 +246,7 @@ public class PrintTest extends LoggedInFunctionalTestCase {
 
     // -- Year 2011 --
 
-    operations.print()
+    operations.openPrint()
       .checkOptions("December 2011", "Year 2011")
       .checkCurrentMonthSelected()
       .selectCurrentYear()
@@ -291,7 +291,7 @@ public class PrintTest extends LoggedInFunctionalTestCase {
     // -- Year 2011 --
 
     timeline.selectMonth(201202);
-    operations.print()
+    operations.openPrint()
       .checkOptions("February 2012", "Year 2012")
       .selectCurrentYear()
       .checkCurrentYearSelected()
@@ -348,7 +348,7 @@ public class PrintTest extends LoggedInFunctionalTestCase {
     }
 
     timeline.selectMonth(201204);
-    operations.print()
+    operations.openPrint()
       .checkOptions("April 2012", "Year 2012")
       .checkCurrentMonthSelected()
       .print();
@@ -358,21 +358,21 @@ public class PrintTest extends LoggedInFunctionalTestCase {
       .checkTitle("Variable")
       .checkRowCount(31)
       .checkRow(0, "Series", "Total", "Mar 12", "Apr 12", "May 12")
-      .checkRow(1, "Series40", "690.00", "240.00", "200.00", "250.00")
-      .checkRow(30, "Series11", "661.00", "211.00", "200.00", "250.00");
+      .checkRow(1, "Series01","651.00","201.00","200.00","250.00")
+      .checkRow(30, "Series30","680.00","230.00","200.00","250.00");
     printer.getBudgetReport().initTablePage(3)
       .checkTitle("Variable")
       .checkRowCount(11)
       .checkRow(0, "Series", "Total", "Mar 12", "Apr 12", "May 12")
-      .checkRow(1, "Series10", "660.00", "210.00", "200.00", "250.00")
-      .checkRow(10, "Series01", "651.00", "201.00", "200.00", "250.00");
+      .checkRow(1, "Series31", "681.00", "231.00", "200.00", "250.00")
+      .checkRow(10, "Series40", "690.00", "240.00", "200.00", "250.00");
   }
 
   public void testMirrorSavingsSeriesAreNotShown() throws Exception {
     SavingsSetup.run(this, 201204);
 
     timeline.selectMonth(201204);
-    operations.print().print();
+    operations.openPrint().print();
 
     BudgetReportChecker report = printer.getBudgetReport();
     report.checkPageCount(3);
@@ -397,7 +397,7 @@ public class PrintTest extends LoggedInFunctionalTestCase {
 
   public void testExceptionRaisedDuringPrint() throws Exception {
     printer.setException("Boom");
-    operations.print()
+    operations.openPrint()
       .printWithErrorMessage("Print failed", "An error occurred: Boom");
   }
 

@@ -42,4 +42,10 @@ public class DummyPrinterService implements PrinterService {
     });
     return report;
   }
+
+  public void clear() {
+    report = null;
+    exceptionMessage = null;
+    jobName = null;
+  }
 }

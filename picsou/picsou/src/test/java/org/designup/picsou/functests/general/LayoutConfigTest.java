@@ -17,6 +17,7 @@ public class LayoutConfigTest extends LoggedInFunctionalTestCase {
     super.setUp();
     setDeleteLocalPrevayler(false);
     addOns.activateAnalysis();
+    addOns.activateProjects();
   }
 
   protected void tearDown() throws Exception {
@@ -26,60 +27,34 @@ public class LayoutConfigTest extends LoggedInFunctionalTestCase {
 
   public void test() throws Exception {
 
-    fail("RM: en cours de redesign V4");
-
     resize(mainWindow, 900, 700);
     assertThat(mainWindow.sizeEquals(900, 700));
-    views.selectHome();
-    checkSplitPane("summaryProjectSplit", 0.5);
-    setSplitPane("summaryProjectSplit", 0.46);
 
     views.selectData();
-    checkSplitPane("accountSplit", 0.5);
-    setSplitPane("accountSplit", 0.35);
+    transactions.showGraph();
     checkSplitPane("transactionChartSplit", 0.75);
     setSplitPane("transactionChartSplit", 0.65);
 
     views.selectBudget();
-    checkSplitPane("horizontalSplit", 0.34, 0.33);
-    setSplitPane("horizontalSplit", 0.25, 0.35);
-    checkSplitPane("verticalSplit1", 0.5);
-    setSplitPane("verticalSplit1", 0.55);
-    checkSplitPane("verticalSplit2", 0.7);
-    setSplitPane("verticalSplit2", 0.6);
-
-    views.selectCategorization();
-    checkSplitPane("categorizationSplit", 0.5);
-    setSplitPane("categorizationSplit", 0.66);
-
-    views.selectAnalysis();
-    seriesAnalysis.budget();
-    checkSplitPane("analysisTableSplit", 0.65);
-    setSplitPane("analysisTableSplit", 0.52);
+    checkSplitPane("horizontalSplit", 0.5);
+    setSplitPane("horizontalSplit", 0.25);
+    checkSplitPane("verticalSplit1", 0.2, 0.5);
+    setSplitPane("verticalSplit1", 0.3, 0.4);
+    checkSplitPane("verticalSplit2", 0.6);
+    setSplitPane("verticalSplit2", 0.5);
 
     // -- Restart --
     restartApplication();
 
     assertThat(mainWindow.sizeEquals(900, 700));
 
-    views.selectHome();
-    checkSplitPane("summaryProjectSplit", 0.46);
-
     views.selectData();
-    checkSplitPane("accountSplit", 0.35);
     checkSplitPane("transactionChartSplit", 0.65);
 
     views.selectBudget();
-    checkSplitPane("horizontalSplit", 0.25, 0.35);
-    checkSplitPane("verticalSplit1", 0.55);
-    checkSplitPane("verticalSplit2", 0.6);
-
-    views.selectCategorization();
-    checkSplitPane("categorizationSplit", 0.66);
-
-    views.selectAnalysis();
-    seriesAnalysis.budget();
-    checkSplitPane("analysisTableSplit", 0.52);
+    checkSplitPane("horizontalSplit", 0.25);
+    checkSplitPane("verticalSplit1", 0.3, 0.4);
+    checkSplitPane("verticalSplit2", 0.5);
   }
 
   private void resize(Window mainWindow, int width, int height) {

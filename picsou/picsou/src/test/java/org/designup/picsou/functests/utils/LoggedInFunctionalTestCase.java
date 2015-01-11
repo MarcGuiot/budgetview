@@ -248,6 +248,7 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
     reconciliationAnnotations = null;
     notifications = null;
     printer = null;
+    application.resetPrint();
     application = null;
     repository = null;
   }

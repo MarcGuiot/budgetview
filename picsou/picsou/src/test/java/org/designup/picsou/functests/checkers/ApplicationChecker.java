@@ -17,7 +17,7 @@ import static org.uispec4j.assertion.UISpecAssert.assertFalse;
 public class ApplicationChecker extends GuiChecker {
   private PicsouApplication application;
   private static Window window;
-  private DummyPrinterService printService = new DummyPrinterService();
+  private static DummyPrinterService printService = new DummyPrinterService();
 
   private NewVersionChecker newVersion;
   private OperationChecker operations;
@@ -159,6 +159,10 @@ public class ApplicationChecker extends GuiChecker {
 
   public EditMobileAccountChecker openDeleteMobileAccountDialog() {
     return getOperations().deleteMobileAccountUser();
+  }
+
+  public void resetPrint() {
+    printService.clear();
   }
 
   private class DummyPicsouApplication extends PicsouApplication {

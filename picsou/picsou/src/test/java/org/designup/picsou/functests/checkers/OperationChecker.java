@@ -673,7 +673,7 @@ public class OperationChecker {
     BrowsingChecker.checkDisplay(getHelpMenu().getSubMenu(Lang.get("gotoWebsite")).triggerClick(), url);
   }
 
-  public PrintDialogChecker print() {
+  public PrintDialogChecker openPrint() {
     return PrintDialogChecker.init(getFileMenu().getSubMenu("Print...").triggerClick());
   }
 

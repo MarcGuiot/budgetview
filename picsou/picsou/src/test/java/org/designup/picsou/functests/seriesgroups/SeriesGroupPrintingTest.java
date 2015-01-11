@@ -35,7 +35,7 @@ public class SeriesGroupPrintingTest extends LoggedInFunctionalTestCase {
     budgetView.variable.addToGroup("Home", "Groceries");
 
     timeline.selectMonth(201401);
-    operations.print()
+    operations.openPrint()
       .checkOptions("January 2014", "Year 2014")
       .selectCurrentMonth()
       .print();
@@ -85,7 +85,7 @@ public class SeriesGroupPrintingTest extends LoggedInFunctionalTestCase {
       .checkSeries(9, "Home", "0.00", "100.00")
       .checkSeries(10, "Leisures", "100.00", "200.00")
       .checkSeparator(11)
-      .checkBudget(12, "Savings", "0.00", "0.00")
+      .checkBudget(12, "Transfers", "0.00", "0.00")
       .checkSeparator(13)
       .checkBudget(14, "Extras", "0.00", "0.00");
 
@@ -119,7 +119,7 @@ public class SeriesGroupPrintingTest extends LoggedInFunctionalTestCase {
     budgetView.variable.addToGroup("Home", "Groceries");
 
     timeline.selectMonth(201401);
-    operations.print()
+    operations.openPrint()
       .checkOptions("January 2014", "Year 2014")
       .selectCurrentMonth()
       .print();
@@ -140,7 +140,7 @@ public class SeriesGroupPrintingTest extends LoggedInFunctionalTestCase {
       .checkSeries(7, "Groceries", "80.00", "300.00")
       .checkSeries(8, "Leisures", "100.00", "200.00")
       .checkSeparator(9)
-      .checkBudget(10, "Savings", "0.00", "0.00")
+      .checkBudget(10, "Transfers", "0.00", "0.00")
       .checkSeparator(11)
       .checkBudget(12, "Extras", "0.00", "0.00");
 
