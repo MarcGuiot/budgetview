@@ -10,6 +10,9 @@ import org.mortbay.jetty.nio.SelectChannelConnector;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.InetAddress;
+import java.net.NetworkInterface;
+import java.util.Enumeration;
 
 public class SiteWeaver {
 
@@ -27,10 +30,8 @@ public class SiteWeaver {
     server.addConnector(connector);
 
     server.setHandler(new PageHandler(new File(args[0]), getFileAccess(args)));
-
     server.start();
-    String url = "http://" + connector.getHost() + ":" + connector.getPort();
-    System.out.println("Listening on " + url + "\n");
+    System.out.println("Listening on " + "htpp://localhost:" + connector.getPort() + "  --  " + "http://" + getHostAddress() + ":" + connector.getPort() + "\n");
     if (args.length > 1) {
       System.out.println("Available commands:\n" +
                          "  /!dump\n" +
@@ -40,6 +41,22 @@ public class SiteWeaver {
     server.join();
 
     getFileAccess(args).dispose();
+  }
+
+  public static String getHostAddress() throws Exception {
+    Enumeration e = NetworkInterface.getNetworkInterfaces();
+    while (e.hasMoreElements()) {
+      NetworkInterface n = (NetworkInterface) e.nextElement();
+      Enumeration ee = n.getInetAddresses();
+      while (ee.hasMoreElements()) {
+        InetAddress i = (InetAddress) ee.nextElement();
+        String address = i.getHostAddress();
+        if (address.startsWith("192.")) {
+          return address;
+        }
+      }
+    }
+    return "localhost";
   }
 
   private static FileAccess getFileAccess(String[] args) throws IOException {
