@@ -165,14 +165,6 @@ public class TimeViewChecker extends GuiChecker {
     return this;
   }
 
-  public TimeViewChecker checkMonthTooltip(String monthId, double position, String account, double minSummaryPosition) {
-    timeViewPanel.getMouseOverHandler().enterMonth(parseMonthId(monthId));
-    String tooltip = timeViewPanel.getToolTipText();
-    Assert.assertTrue("Expected position: " + position + " - " + tooltip,
-                      tooltip.contains("Min position for " + account + ": " + AmountFormat.toStandardValueString(position)));
-    return this;
-  }
-
   public TimeViewChecker checkMonthTooltip(String monthId, String expectedTooltip) {
     timeViewPanel.getMouseOverHandler().enterMonth(parseMonthId(monthId));
     Assert.assertEquals(expectedTooltip, timeViewPanel.getToolTipText());

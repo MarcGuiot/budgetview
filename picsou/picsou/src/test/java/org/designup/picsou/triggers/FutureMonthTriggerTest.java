@@ -22,7 +22,7 @@ public class FutureMonthTriggerTest extends PicsouTestCase {
   }
 
   public void testMoreMonthUserPreferences() throws Exception {
-    repository.addTrigger(new MonthTrigger(directory));
+    repository.addTrigger(new MonthTrigger());
     repository.create(Key.create(UserPreferences.TYPE, UserPreferences.SINGLETON_ID),
                       value(UserPreferences.FUTURE_MONTH_COUNT, 5));
     listener.assertLastChangesEqual(Month.TYPE,
@@ -36,7 +36,7 @@ public class FutureMonthTriggerTest extends PicsouTestCase {
   }
 
   public void testLessMonthUserPreferences() throws Exception {
-    repository.addTrigger(new MonthTrigger(directory));
+    repository.addTrigger(new MonthTrigger());
     repository.create(Key.create(UserPreferences.TYPE, UserPreferences.SINGLETON_ID),
                       value(UserPreferences.FUTURE_MONTH_COUNT, 5));
     listener.reset();
@@ -49,7 +49,7 @@ public class FutureMonthTriggerTest extends PicsouTestCase {
   }
 
   public void testNoMonth() throws Exception {
-    repository.addTrigger(new MonthTrigger(directory));
+    repository.addTrigger(new MonthTrigger());
     repository.create(Key.create(UserPreferences.TYPE, UserPreferences.SINGLETON_ID),
                       value(UserPreferences.FUTURE_MONTH_COUNT, 0));
     listener.assertLastChangesEqual(Month.TYPE, "<create id='200807' type='month'/>");

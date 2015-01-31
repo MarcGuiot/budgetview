@@ -93,10 +93,10 @@ public class BudgetViewChecker extends ViewChecker {
       return panel;
     }
 
-    public BudgetAreaChecker checkTotalAmounts(final String observed, final String planned) {
+    public BudgetAreaChecker checkTotalAmounts(final String actual, final String planned) {
       assertThat(new Assertion() {
         public void check() {
-          String expected = observed + "/" + planned;
+          String expected = actual + "/" + planned;
           String actual = getPanel().getTextBox("totalObservedAmount").getText() + "/" + getPanel().getTextBox("totalPlannedAmount").getText();
           Assert.assertEquals(expected, actual);
         }
@@ -104,13 +104,13 @@ public class BudgetViewChecker extends ViewChecker {
       return this;
     }
 
-      public BudgetAreaChecker checkTotalAmounts(final double observed, final double planned) {
-        return checkTotalAmounts(convert(observed), convert(planned));
+      public BudgetAreaChecker checkTotalAmounts(final double actual, final double planned) {
+        return checkTotalAmounts(convert(actual), convert(planned));
     }
 
-    public BudgetAreaChecker checkTotalObserved(double observed) {
+    public BudgetAreaChecker checkTotalObserved(double actual) {
       TextBox totalObserved = getPanel().getTextBox("totalObservedAmount");
-      UISpecAssert.assertTrue(totalObserved.textEquals(convert(observed)));
+      UISpecAssert.assertTrue(totalObserved.textEquals(convert(actual)));
       return this;
     }
 

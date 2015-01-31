@@ -178,51 +178,6 @@ public class TransactionViewTest extends LoggedInFunctionalTestCase {
     transactions.checkCategorizePopupDisabled(0,1);
   }
 
-  public void testNavigatingInCategorizationIsDisabledForMirrorAndCreatedFromSeries() throws Exception {
-    OfxBuilder
-      .init(this)
-      .addTransaction("2006/01/11", -100.0, "Virement")
-      .load();
-
-    accounts.createSavingsAccount("Epargne", 1000.);
-
-    transactions.categorize(0);
-    categorization
-      .selectTransfers().createSeries()
-      .setName("Epargne")
-      .setFromAccount("Account n. 00001123")
-      .setToAccount("Epargne")
-      .validate();
-
-    transactions
-      .initContent()
-      .add("11/01/2006", TransactionType.VIREMENT, "Virement", "", 100.00, "Epargne")
-      .add("11/01/2006", TransactionType.PRELEVEMENT, "Virement", "", -100.00, "Epargne")
-      .check();
-
-    transactions.checkCategorizeIsDisabled(0);
-
-    categorization.selectTransaction("Virement")
-      .setUncategorized();
-
-    savingsAccounts.select("Epargne");
-    budgetView.transfer.editSeries("Epargne")
-      .setName("NEW NAME FOR EPARGNE")
-      .setFromAccount("External account")
-      .selectAllMonths()
-      .setAmount("100")
-      .validate();
-
-    savingsAccounts.unselect("Epargne");
-    transactions
-      .initContent()
-      .add("11/01/2006", TransactionType.VIREMENT, "NEW NAME FOR EPARGNE", "", 100.00, "NEW NAME FOR EPARGNE")
-      .add("11/01/2006", TransactionType.PRELEVEMENT, "Virement", "", -100.00)
-      .check();
-
-    transactions.checkCategorizeIsDisabled(0);
-  }
-
   public void testMultiCategorization() throws Exception {
 
     transactions.initContent()
@@ -351,34 +306,6 @@ public class TransactionViewTest extends LoggedInFunctionalTestCase {
 
     transactions.deleteTransactionWithNote("essence2", "Removing one part");
     transactions.initContent()
-      .add("01/05/2006", TransactionType.PRELEVEMENT, "ESSENCE", "frais pro", -70.00)
-      .check();
-  }
-
-  public void testDeleteATransactionWithMirrorSavings() throws Exception {
-    accounts.createSavingsAccount("Epargne LCL", 1000.00);
-    categorization
-      .selectTransactions("sg")
-      .selectTransfers().createSeries()
-      .setName("Epargne")
-      .setFromAccount("Account n. 00001123")
-      .setToAccount("Epargne LCL")
-      .validate();
-
-    transactions.initContent()
-      .add("06/05/2006", TransactionType.PRELEVEMENT, "NOUNOU", "nourrice", -100.00)
-      .add("03/05/2006", TransactionType.PRELEVEMENT, "PEAGE", "", -30.00)
-      .add("02/05/2006", TransactionType.VIREMENT, "SG", "", 200.00, "Epargne")
-      .add("02/05/2006", TransactionType.PRELEVEMENT, "SG", "", -200.00, "Epargne")
-      .add("01/05/2006", TransactionType.PRELEVEMENT, "ESSENCE", "frais pro", -70.00)
-      .check();
-
-    transactions.checkDeletionForbidden(2, "Operations created by a series cannot be removed");
-
-    transactions.delete(3);
-    transactions.initContent()
-      .add("06/05/2006", TransactionType.PRELEVEMENT, "NOUNOU", "nourrice", -100.00)
-      .add("03/05/2006", TransactionType.PRELEVEMENT, "PEAGE", "", -30.00)
       .add("01/05/2006", TransactionType.PRELEVEMENT, "ESSENCE", "frais pro", -70.00)
       .check();
   }

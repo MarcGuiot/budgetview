@@ -59,16 +59,15 @@ public class SynchroTest extends LoggedInFunctionalTestCase {
   }
 
   public void testNoImportFile() throws Exception {
-    String path = QifBuilder
-      .init(this)
-      .addTransaction("2006/01/23", -1.1, "virement vers livret A")
+    String path = QifBuilder.init(this)
+      .addTransaction("2006/01/23", -1.10, "virement vers livret A")
       .save();
     ImportDialogChecker dialogChecker = operations.openImportDialog();
 
     OtherBankSynchroChecker synchro = dialogChecker.openSynchro("Other");
-    synchro.createAccount("principal", "principal", "100.", path);
-    synchro.createAccount("secondary", "secondary", "10.");
-    synchro.createAccount("Livret A", "Livret A", "110.");
+    synchro.createAccount("principal", "principal", "100.00", path);
+    synchro.createAccount("secondary", "secondary", "10.00");
+    synchro.createAccount("Livret A", "Livret A", "110.00");
 
     synchro.doImportAndWaitForPreview()
       .checkAccount("secondary")
@@ -81,9 +80,11 @@ public class SynchroTest extends LoggedInFunctionalTestCase {
       .setMainAccount()
       .completeImport();
 
+    dialogChecker.checkClosed();
+
     mainAccounts.checkAccounts("principal");
     savingsAccounts.checkAccounts("secondary", "Livret A");
-    savingsAccounts.checkAccount("secondary", 10, null);
+    savingsAccounts.checkAccount("secondary", 10.00, null);
 
     notifications.checkHidden();
 
@@ -91,12 +92,12 @@ public class SynchroTest extends LoggedInFunctionalTestCase {
       .startSynchro()
       .selectAccount("secondary")
       .setAmount("100")
-      .createAccount("Livret B", "Livret B", "110.")
+      .createAccount("Livret B", "Livret B", "110.00")
       .doImportAndWaitForCompletion()
       .complete();
 
     savingsAccounts.checkAccounts("secondary", "Livret A");
-    savingsAccounts.checkAccount("secondary", 10, null);
+    savingsAccounts.checkAccount("secondary", 10.00, null);
     notifications.openDialog()
       .checkMessageCount(1)
       .checkMessage(0, "The last computed position for 'secondary' (10.00) is not the same as the " +
@@ -105,9 +106,9 @@ public class SynchroTest extends LoggedInFunctionalTestCase {
 
     views.selectCategorization();
     transactionCreation.show().selectAccount("secondary")
-      .shouldUpdatePosition().setNotToBeReconciled().create(23, "new op", 90);
+      .shouldUpdatePosition().setNotToBeReconciled().create(23, "new op", 90.00);
 
-    savingsAccounts.checkPosition("secondary", 100);
+    savingsAccounts.checkPosition("secondary", 100.00);
     budgetView.transfer.createSavingSeries("To account Livret A", "principal", "Livret A");
     categorization.selectTransaction("virement vers livret A")
       .selectTransfers()
@@ -115,15 +116,14 @@ public class SynchroTest extends LoggedInFunctionalTestCase {
     transactions
       .initAmountContent()
       .add("23/01/2006", "VIREMENT VERS LIVRET A", -1.10, "To account Livret A", 100.00, 100.00, "principal")
-      .add("23/01/2006", "VIREMENT VERS LIVRET A", 1.10, "To account Livret A", 111.10, 211.10, "Livret A")
       .add("23/01/2006", "NEW OP", 90.00, "To categorize", 100.00, 210.00, "secondary")
       .check();
 
-    savingsAccounts.checkAccount("Livret A", 111.10, null);
+    savingsAccounts.checkAccount("Livret A", 110.00, null);
 
     String path2 = QifBuilder
       .init(this)
-      .addTransaction("2006/01/30", -2.2, "virement vers livret A")
+      .addTransaction("2006/01/30", -2.20, "virement vers livret A")
       .save();
 
     importPanel.openImport().startSynchro()
@@ -137,14 +137,12 @@ public class SynchroTest extends LoggedInFunctionalTestCase {
     timeline.selectAll();
     transactions.initAmountContent()
       .add("30/01/2006", "VIREMENT VERS LIVRET A", -2.20, "To account Livret A", 97.80, 97.80, "principal")
-      .add("30/01/2006", "VIREMENT VERS LIVRET A", 2.20, "To account Livret A", 113.30, 213.30, "Livret A")
       .add("23/01/2006", "VIREMENT VERS LIVRET A", -1.10, "To account Livret A", 100.00, 100.00, "principal")
-      .add("23/01/2006", "VIREMENT VERS LIVRET A", 1.10, "To account Livret A", 111.10, 211.10, "Livret A")
       .add("23/01/2006", "NEW OP", 90.00, "To categorize", 100.00, 210.00, "secondary")
       .check();
 
-    mainAccounts.changePosition("principal", 500., "");
-    savingsAccounts.checkAccount("Livret A", 113.30, null);
+    mainAccounts.changePosition("principal", 500.00, "");
+    savingsAccounts.checkAccount("Livret A", 110.00, null);
 
     setCurrentDate("2011/02/02");
     restartApplicationFromBackup();
@@ -154,7 +152,7 @@ public class SynchroTest extends LoggedInFunctionalTestCase {
       .setFile(
         QifBuilder
           .init(this)
-          .addTransaction("2011/02/01", -1000, "Autre vir. A") // pas d'auto categorization
+          .addTransaction("2011/02/01", -1000.00, "Autre vir. A") // pas d'auto categorization
           .save())
       .setAmount("1000")
       .selectAccount("Livret A")
@@ -167,20 +165,17 @@ public class SynchroTest extends LoggedInFunctionalTestCase {
       .selectTransfers()
       .selectSeries("To account Livret A");
 
-    savingsAccounts.changePosition("Livret A", 300., "");
+    savingsAccounts.changePosition("Livret A", 300.00, "");
 
-    mainAccounts.changePosition("principal", 1000., "");
-    savingsAccounts.checkAccount("Livret A", 300, null);
+    mainAccounts.changePosition("principal", 1000.00, "");
+    savingsAccounts.checkAccount("Livret A", 300.00, null);
 
     timeline.selectAll();
     transactions.initAmountContent()
       .add("01/02/2011", "AUTRE VIR. A", -1000.00, "To account Livret A", 1000.00, 1000.00, "principal")
-      .add("01/02/2011", "AUTRE VIR. A", 1000.00, "To account Livret A", 300.00, 400.00, "Livret A")
       .add("30/01/2006", "VIREMENT VERS LIVRET A", -2.20, "To account Livret A", 2000.00, 2000.00, "principal")
-      .add("30/01/2006", "VIREMENT VERS LIVRET A", 2.20, "To account Livret A", -700.00, -600.00, "Livret A")
       .add("23/01/2006", "VIREMENT VERS LIVRET A", -1.10, "To account Livret A", 2002.20, 2002.20, "principal")
-      .add("23/01/2006", "VIREMENT VERS LIVRET A", 1.10, "To account Livret A", -702.20, -602.20, "Livret A")
-      .add("23/01/2006", "NEW OP", 90.00, "To categorize", 100.00, -603.30, "secondary")
+      .add("23/01/2006", "NEW OP", 90.00, "To categorize", 100.00, 400.00, "secondary")
       .check();
   }
 
@@ -199,7 +194,7 @@ public class SynchroTest extends LoggedInFunctionalTestCase {
       .setMainAccount()
       .completeImport();
 
-    mainAccounts.checkPosition("Account n. 000123", 100.);
+    mainAccounts.checkPosition("Account n. 000123", 100.00);
   }
 
   public void testImportTwoAccountsInSameOfxFile() throws Exception {

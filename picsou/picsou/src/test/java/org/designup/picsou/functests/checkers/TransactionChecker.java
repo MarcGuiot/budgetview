@@ -408,16 +408,21 @@ public class TransactionChecker extends FilteredViewChecker<TransactionChecker> 
   }
 
   public TransactionChecker sortByLabel() {
-    getTable()
-      .getHeader()
-      .click(TransactionView.LABEL_COLUMN_INDEX);
-    return this;
+    return sortByColumn(TransactionView.LABEL_COLUMN_INDEX);
+  }
+
+  public TransactionChecker sortByEnvelope() {
+    return sortByColumn(TransactionView.SERIES_COLUMN_INDEX);
   }
 
   public TransactionChecker sortByBankDate() {
+    return sortByColumn(TransactionView.BANK_DATE_COLUMN_INDEX);
+  }
+
+  private TransactionChecker sortByColumn(int columnIndex) {
     getTable()
       .getHeader()
-      .click(TransactionView.BANK_DATE_COLUMN_INDEX);
+      .click(columnIndex);
     return this;
   }
 

@@ -11,7 +11,7 @@ import org.designup.picsou.gui.upgrade.PostProcessor;
 import org.designup.picsou.model.*;
 import org.designup.picsou.model.util.ClosedMonthRange;
 import org.designup.picsou.triggers.projects.ProjectItemToSeriesTrigger;
-import org.designup.picsou.triggers.projects.ProjectToSeriesGroupTrigger;
+import org.designup.picsou.triggers.projects.ProjectTransferToSeriesTrigger;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.metamodel.fields.LinkField;
 import org.globsframework.model.Glob;
@@ -20,6 +20,7 @@ import org.globsframework.model.GlobRepository;
 import org.globsframework.model.Key;
 import org.globsframework.model.utils.GlobFieldsComparator;
 import org.globsframework.utils.Log;
+import org.globsframework.utils.Utils;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -50,69 +51,91 @@ public class ProjectUpgradeV40 {
   }
 
   public void updateProjectSeriesAndGroups() {
-    ProjectToSeriesGroupTrigger.createGroupsForProjects(repository);
-    createSeriesForExpensesItems(repository);
-    createSeriesForTransferItems(repository);
+    createMissingGroupsForProjects(repository);
+    upgradeSeriesForExpensesItems(repository);
+    upgradeSeriesForTransferItems(repository);
     deleteProjectLevelSeries(repository);
+    fixIncoherentFromToInTransferSeries(repository);
     postProcessor.add(new UpdateSequenceNumbers());
   }
 
-  private void createSeriesForExpensesItems(GlobRepository repository) {
-    for (Glob item : repository.getAll(ProjectItem.TYPE, isExpenses())) {
-      Integer seriesId = item.get(ProjectItem.SERIES);
-      if (seriesId == null) {
-        Glob project = repository.findLinkTarget(item, ProjectItem.PROJECT);
-        seriesId = project.get(Project.SERIES);
+  private void createMissingGroupsForProjects(GlobRepository repository) {
+    for (Glob project : repository.getAll(ProjectItem.TYPE, isExpenses()).getTargets(ProjectItem.PROJECT, repository)) {
+      if (repository.findLinkTarget(project, Project.SERIES_GROUP) == null) {
+        Glob group = repository.create(SeriesGroup.TYPE,
+                                       value(SeriesGroup.BUDGET_AREA, BudgetArea.EXTRAS.getId()),
+                                       value(SeriesGroup.NAME, project.get(Project.NAME)),
+                                       value(SeriesGroup.EXPANDED, false));
+        repository.update(project.getKey(), Project.SERIES_GROUP, group.get(SeriesGroup.ID));
       }
-      Integer subSeriesId = item.get(ProjectItem.SUB_SERIES);
+    }
+  }
+
+  private void upgradeSeriesForExpensesItems(GlobRepository repository) {
+    for (Glob item : repository.getAll(ProjectItem.TYPE, isExpenses())) {
+      Glob project = repository.findLinkTarget(item, ProjectItem.PROJECT);
+      Integer projectSeriesId = project.get(Project.SERIES);
+
+      Integer itemSeriesId = item.get(ProjectItem.SERIES);
+      if ((itemSeriesId != null) && !Utils.equal(projectSeriesId, itemSeriesId)) {
+        repository.update(Key.create(Series.TYPE, itemSeriesId), Series.GROUP, project.get(Project.SERIES_GROUP));
+        repository.update(item.getKey(),
+                          value(ProjectItem.SUB_SERIES, null),
+                          value(ProjectItem.ACCOUNT, Account.MAIN_SUMMARY_ACCOUNT_ID));
+        return;
+      }
+
       GlobList transactions = repository.getAll(Transaction.TYPE,
-                                                and(fieldEquals(Transaction.SERIES, seriesId),
-                                                    fieldEquals(Transaction.SUB_SERIES, subSeriesId),
+                                                and(fieldEquals(Transaction.SERIES, projectSeriesId),
+                                                    fieldEquals(Transaction.SUB_SERIES, item.get(ProjectItem.SUB_SERIES)),
                                                     isFalse(Transaction.PLANNED)));
       repository.update(item.getKey(),
                         value(ProjectItem.SUB_SERIES, null),
                         value(ProjectItem.ACCOUNT, Account.MAIN_SUMMARY_ACCOUNT_ID));
-      createSeriesForItem(item, repository, transactions);
+      Glob itemSeries = ProjectItemToSeriesTrigger.createSeries(item, repository);
+      if (!transactions.isEmpty()) {
+        managedSeries.add(itemSeries.get(Series.ID));
+        postProcessor.add(new BindTransactionsToSeries(itemSeries, transactions));
+        clearTransactionSeries(transactions, repository);
+      }
     }
   }
 
-  private void createSeriesForItem(Glob item, GlobRepository repository, GlobList transactions) {
-    Glob itemSeries = ProjectItemToSeriesTrigger.createSeries(item, repository);
-    if (!transactions.isEmpty()) {
-      managedSeries.add(itemSeries.get(Series.ID));
-      postProcessor.add(new BindTransactionsToSeries(itemSeries, transactions));
-      clearTransactionSeries(transactions, repository);
-    }
-  }
-
-  private void createSeriesForTransferItems(GlobRepository repository) {
+  private void upgradeSeriesForTransferItems(GlobRepository repository) {
     for (final Glob item : repository.getAll(ProjectItem.TYPE, isTransfer())) {
 
       repository.update(item.getKey(), ProjectItem.SUB_SERIES, null);
 
-      final Glob series = repository.findLinkTarget(item, ProjectItem.SERIES);
-      clearActualStats(series);
-      managedSeries.add(series.get(Series.ID));
-      Glob mirror = repository.findLinkTarget(series, Series.MIRROR_SERIES);
-      if (mirror != null) {
-        managedSeries.add(mirror.get(Series.ID));
-        clearActualStats(mirror);
-      }
-
-      Glob transfer = ProjectTransfer.getTransferFromItem(item, repository);
-      if (!ProjectTransfer.usesMainAccounts(transfer, repository)) {
-        storeSeriesBinding(series, repository);
-        storeSeriesBinding(mirror, repository);
-        continue;
-      }
-
-      GlobList seriesTransactions = repository.findLinkedTo(series, Transaction.SERIES);
-      GlobList mirrorTransactions = repository.findLinkedTo(mirror, Transaction.SERIES);
       GlobList allTransactions = new GlobList();
-      allTransactions.addAll(seriesTransactions);
-      allTransactions.addAll(mirrorTransactions);
-
+      Glob transfer = ProjectTransfer.getTransferFromItem(item, repository);
       Glob project = repository.findLinkTarget(item, ProjectItem.PROJECT);
+
+      Glob series = repository.findLinkTarget(item, ProjectItem.SERIES);
+      if (series == null) {
+        series = ProjectTransferToSeriesTrigger.createSavingsSeries(transfer.getKey(), repository);
+        repository.update(item.getKey(), ProjectItem.SERIES, series.get(Series.ID));
+      }
+      else {
+        clearActualStats(series);
+        managedSeries.add(series.get(Series.ID));
+        Glob mirror = repository.findLinkTarget(series, Series.MIRROR_SERIES);
+        if (mirror != null) {
+          managedSeries.add(mirror.get(Series.ID));
+          clearActualStats(mirror);
+        }
+
+        if (!ProjectTransfer.usesMainAccounts(transfer, repository)) {
+          storeSeriesBinding(series, repository);
+          storeSeriesBinding(mirror, repository);
+          continue;
+        }
+
+        GlobList seriesTransactions = repository.findLinkedTo(series, Transaction.SERIES);
+        GlobList mirrorTransactions = repository.findLinkedTo(mirror, Transaction.SERIES);
+        allTransactions.addAll(seriesTransactions);
+        allTransactions.addAll(mirrorTransactions);
+      }
+
 
       LinkField transferField;
       if (ProjectTransfer.isFromAccountAMainAccount(transfer, repository)) {
@@ -144,8 +167,26 @@ public class ProjectUpgradeV40 {
         }
       }
 
+      Series.delete(repository.findLinkTarget(item, ProjectItem.SERIES), repository);
       ProjectItem.deleteAll(item, repository);
       clearTransactionSeries(allTransactions, repository);
+    }
+  }
+
+  private void fixIncoherentFromToInTransferSeries(GlobRepository repository) {
+    for (Glob transfer : repository.getAll(ProjectTransfer.TYPE)) {
+      Glob item = ProjectTransfer.getItemFromTransfer(transfer, repository);
+      Glob series = repository.findLinkTarget(item, ProjectItem.SERIES);
+      Integer from = series.get(Series.FROM_ACCOUNT);
+      Integer to = series.get(Series.TO_ACCOUNT);
+      Integer target = series.get(Series.TARGET_ACCOUNT);
+      for (Glob seriesBudget : repository.findLinkedTo(series, SeriesBudget.SERIES)) {
+        Double amount = seriesBudget.get(SeriesBudget.PLANNED_AMOUNT, 0.00);
+        if (((amount < 0) && Utils.equal(target, to)) ||
+            ((amount > 0) && Utils.equal(target, from))) {
+          repository.update(seriesBudget.getKey(), SeriesBudget.PLANNED_AMOUNT, -amount);
+        }
+      }
     }
   }
 
@@ -163,6 +204,8 @@ public class ProjectUpgradeV40 {
     GlobList sourceTransactions = allTransactions.filter(fieldEquals(Transaction.ACCOUNT, sourceAccountId), repository);
     GlobList mirrorAccountTransactions = findMirrorTransactions(sourceTransactions, targetAccountId, allTransactions, repository);
     postProcessor.add(new BindTransferTransactions(newItem, sourceTransactions, mirrorAccountTransactions));
+
+    ProjectTransferToSeriesTrigger.createSavingsSeries(newTransfer.getKey(), repository);
 
     return newItem;
   }
@@ -204,6 +247,7 @@ public class ProjectUpgradeV40 {
             postProcessor.add(new CreateMiscProjectItem(project, transactions));
           }
         }
+        repository.update(project, Project.SERIES, null);
       }
     }
   }
@@ -340,6 +384,7 @@ public class ProjectUpgradeV40 {
       GlobList all = new GlobList();
       all.addAll(seriesTransactions);
       all.addAll(mirrorTransactions);
+      all.keepExistingGlobsOnly(repository);
       for (Glob transaction : all) {
         if (series.get(Series.TARGET_ACCOUNT).equals(transaction.get(Transaction.ACCOUNT))) {
           repository.update(transaction.getKey(), Transaction.SERIES, series.get(Series.ID));

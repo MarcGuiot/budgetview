@@ -16,7 +16,6 @@ public class SeriesErrorsUpgrade {
       if ((groupId != null) && !repository.contains(Key.create(SeriesGroup.TYPE, groupId))) {
         fixMissingGroup(series, repository);
       }
-
     }
   }
 

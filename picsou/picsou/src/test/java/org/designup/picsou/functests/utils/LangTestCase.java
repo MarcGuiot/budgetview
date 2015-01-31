@@ -1,5 +1,6 @@
 package org.designup.picsou.functests.utils;
 
+import org.designup.picsou.functests.checkers.ImportDialogChecker;
 import org.designup.picsou.functests.checkers.TransactionChecker;
 import org.designup.picsou.model.TransactionType;
 
@@ -39,6 +40,14 @@ public abstract class LangTestCase extends LoggedInFunctionalTestCase {
     mainAccounts.getChart(getAccountName()).checkTooltipContains(200808, 12, tooltipDate);
     mainAccounts.checkReferencePositionDateContains(summaryDate);
     mainAccounts.checkAccountUpdateDate(accountName, summaryDate);
+  }
+
+  protected void checkBankListContains(String otherBank) {
+    ImportDialogChecker importDialog = operations.openImportDialog();
+    importDialog
+      .getBankDownload()
+      .checkContainsBanks(otherBank);
+    importDialog.close();
   }
 
   protected abstract String getAccountName();

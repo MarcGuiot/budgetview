@@ -73,6 +73,15 @@ public class QifBuilder {
     importDialog.completeImport(importedTransactionCount, ignoredTransactionCount, autocategorizedTransactionCount);
   }
 
+  public void loadInAccount(String accountName) throws Exception {
+    save();
+    ImportDialogChecker importDialog = operations.openImportDialog()
+      .setFilePath(fileName)
+      .acceptFile()
+      .selectAccount(accountName);
+    importDialog.completeImport();
+  }
+
   public void loadFirstStartingAtZero(double amount) throws IOException {
     save();
     operations.openImportDialog().setFilePath(fileName)

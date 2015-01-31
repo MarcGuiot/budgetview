@@ -183,28 +183,28 @@ public class BalanceTest extends LoggedInFunctionalTestCase {
   }
 
   public void testBalanceWithMissingOperationInFuture() throws Exception {
+    operations.openPreferences().setFutureMonthsCount(6).validate();
+
     OfxBuilder.init(this)
-      .addBankAccount(BankEntity.GENERIC_BANK_ENTITY_ID, 111, "111", 1000.00, "2008/08/15")  //compte d'épargne
-      .addTransaction("2008/08/12", 100.00, "P3 CE")
-      .addTransaction("2008/06/11", 100.00, "P2 CE")
-      .load();
-    OfxBuilder.init(this)
+      .addBankAccount(-1, 111, "000111", 0.00, "2008/08/15")  //compte d'épargne
       .addTransaction("2008/08/12", -100.00, "V3 CC")
       .addTransaction("2008/08/10", -100.00, "Auchan")
       .addTransaction("2008/06/11", -100.00, "V2 CC")
       .load();
-    operations.openPreferences().setFutureMonthsCount(6).validate();
-    views.selectHome();
-    mainAccounts.edit("Account n. 111")
+    OfxBuilder.init(this)
+      .addBankAccount(-1, 222, "000222", 1000.00, "2008/08/15")  //compte d'épargne
+      .addTransaction("2008/08/12", 100.00, "P3 CE")
+      .addTransaction("2008/06/11", 100.00, "P2 CE")
+      .load();
+    mainAccounts.edit("Account n. 000222")
       .setAsSavings()
       .validate();
 
-    views.selectCategorization();
     categorization.setNewRecurring("Auchan", "Courses");
     categorization.selectTransactions("P3 CE", "P2 CE");
 
     categorization.selectTransfers()
-      .selectAndCreateTransferSeries("Epargne", "Account n. 00001123", "Account n. 111");
+      .selectAndCreateTransferSeries("Epargne", "Account n. 000111", "Account n. 000222");
 
     categorization.selectTransactions("V3 CC", "V2 CC")
       .selectTransfers().selectSeries("Epargne");
@@ -214,6 +214,7 @@ public class BalanceTest extends LoggedInFunctionalTestCase {
     budgetView.recurring.editSeries("Courses")
       .setRepeatCustom()
       .setPeriodMonths(1, 5, 9)
+      .setAmount(100.00)
       .validate();
 
     budgetView.transfer.editSeries("Epargne")
@@ -224,48 +225,65 @@ public class BalanceTest extends LoggedInFunctionalTestCase {
     mainAccounts.checkReferencePosition(0.00, "2008/08/12");
     savingsAccounts.checkReferencePosition(1000.00, "2008/08/12");
 
-    // sur compte courant
     timeline.selectMonth("2009/06");
-    mainAccounts.checkEndOfMonthPosition(OfxBuilder.DEFAULT_ACCOUNT_NAME, -1000);
-    savingsAccounts.checkEndOfMonthPosition("Account n. 111", 1700);
+    mainAccounts.checkEndOfMonthPosition("Account n. 000111", -200);
+    savingsAccounts.checkEndOfMonthPosition("Account n. 000222", 1200.00);
 
     mainAccounts.checkReferencePosition(0.00, "2008/08/12");
     savingsAccounts.checkReferencePosition(1000.00, "2008/08/12");
 
     timeline.selectMonth("2009/05");
-    mainAccounts.checkEndOfMonthPosition(OfxBuilder.DEFAULT_ACCOUNT_NAME, -1000);
-    savingsAccounts.checkEndOfMonthPosition("Account n. 111", 1700);
+    budgetView.recurring.checkSeriesPresent("Courses");
+    mainAccounts.checkEndOfMonthPosition("Account n. 000111", -200.00);
+    budgetView.transfer.checkSeriesNotPresent("Epargne");
+    savingsAccounts.checkEndOfMonthPosition("Account n. 000222", 1200.00);
 
     timeline.selectMonth("2009/04");
-    mainAccounts.checkEndOfMonthPosition(OfxBuilder.DEFAULT_ACCOUNT_NAME, -800);
-    savingsAccounts.checkEndOfMonthPosition("Account n. 111", 1600);
+    budgetView.recurring.checkSeriesNotPresent("Courses");
+    mainAccounts.checkEndOfMonthPosition("Account n. 000111", -200.00);
+    budgetView.transfer.checkSeriesNotPresent("Epargne");
+    savingsAccounts.checkEndOfMonthPosition("Account n. 000222", 1200.00);
 
     timeline.selectMonth("2009/03");
-    mainAccounts.checkEndOfMonthPosition(OfxBuilder.DEFAULT_ACCOUNT_NAME, -700);
-    savingsAccounts.checkEndOfMonthPosition("Account n. 111", 1500);
+    budgetView.recurring.checkSeriesNotPresent("Courses");
+    mainAccounts.checkEndOfMonthPosition("Account n. 000111", -200.00);
+    budgetView.transfer.checkSeriesPresent("Epargne");
+    savingsAccounts.checkEndOfMonthPosition("Account n. 000222", 1200.00);
 
     timeline.selectMonth("2009/02");
-    mainAccounts.checkEndOfMonthPosition(OfxBuilder.DEFAULT_ACCOUNT_NAME, -700);
-    savingsAccounts.checkEndOfMonthPosition("Account n. 111", 1500);
+    budgetView.recurring.checkSeriesNotPresent("Courses");
+    mainAccounts.checkEndOfMonthPosition("Account n. 000111", -100.00);
+    budgetView.transfer.checkSeriesNotPresent("Epargne");
+    savingsAccounts.checkEndOfMonthPosition("Account n. 000222", 1100.00);
 
     timeline.selectMonth("2009/01");
-    mainAccounts.checkEndOfMonthPosition(OfxBuilder.DEFAULT_ACCOUNT_NAME, -600);
-    savingsAccounts.checkEndOfMonthPosition("Account n. 111", 1400);
+    budgetView.recurring.checkSeriesPresent("Courses");
+    mainAccounts.checkEndOfMonthPosition("Account n. 000111", -100.00);
+    budgetView.transfer.checkSeriesPresent("Epargne");
+    savingsAccounts.checkEndOfMonthPosition("Account n. 000222", 1100.00);
 
     timeline.selectMonth("2008/12");
-    mainAccounts.checkEndOfMonthPosition(OfxBuilder.DEFAULT_ACCOUNT_NAME, -500);
-    savingsAccounts.checkEndOfMonthPosition("Account n. 111", 1400);
+    budgetView.recurring.checkSeriesNotPresent("Courses");
+    mainAccounts.checkEndOfMonthPosition("Account n. 000111", 0.00);
+    budgetView.transfer.checkSeriesNotPresent("Epargne");
+    savingsAccounts.checkEndOfMonthPosition("Account n. 000222", 1000.00);
 
-    timeline.selectMonth("2008/08");
-    mainAccounts.checkEndOfMonthPosition(OfxBuilder.DEFAULT_ACCOUNT_NAME, 0);
-    savingsAccounts.checkEndOfMonthPosition("Account n. 111", 1000);
+    timeline.selectMonth("2008/08"); // Series present because there are actual transactions
+    budgetView.recurring.checkSeriesPresent("Courses");
+    mainAccounts.checkEndOfMonthPosition("Account n. 000111", 0.00);
+    budgetView.transfer.checkSeriesPresent("Epargne");
+    savingsAccounts.checkEndOfMonthPosition("Account n. 000222", 1000.00);
 
     timeline.selectMonth("2008/07");
-    mainAccounts.checkEndOfMonthPosition(OfxBuilder.DEFAULT_ACCOUNT_NAME, 200);
-    savingsAccounts.checkEndOfMonthPosition("Account n. 111", 900);
+    budgetView.recurring.checkSeriesNotPresent("Courses");
+    mainAccounts.checkEndOfMonthPosition("Account n. 000111", 200.00);
+    budgetView.transfer.checkSeriesNotPresent("Epargne");
+    savingsAccounts.checkEndOfMonthPosition("Account n. 000222", 900.00);
 
     timeline.selectMonth("2008/06");
-    mainAccounts.checkEndOfMonthPosition(OfxBuilder.DEFAULT_ACCOUNT_NAME, 200);
-    savingsAccounts.checkEndOfMonthPosition("Account n. 111", 900);
+    budgetView.recurring.checkSeriesNotPresent("Courses");
+    mainAccounts.checkEndOfMonthPosition("Account n. 000111", 200.00);
+    budgetView.transfer.checkSeriesPresent("Epargne");
+    savingsAccounts.checkEndOfMonthPosition("Account n. 000222", 900.00);
   }
 }

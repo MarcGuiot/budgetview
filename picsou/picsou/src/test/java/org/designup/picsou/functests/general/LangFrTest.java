@@ -13,9 +13,7 @@ public class LangFrTest extends LangTestCase {
   public void test() throws Exception {
     loadSingleTransaction("2008/08/15", "Auchan", "2008/08/20");
     checkDates("15/08/2008", "À classer", "15/08/2008", "11 août 2008", "Compte 007");
-    operations.openImportDialog()
-      .getBankDownload()
-      .checkContainsBanks("Autre");
+    checkBankListContains("Autre");
   }
 
   protected String getAccountName() {

@@ -450,45 +450,39 @@ public class SeriesEvolutionStackChartTest extends LoggedInFunctionalTestCase {
     seriesAnalysis.budget().checkBalanceChartLabel("Savings accounts balance");
     seriesAnalysis.budget().balanceChart.getLeftDataset()
       .checkSize(1)
-      .checkValue("Added to savings", 620);
+      .checkValue("Added to savings", 570);
     seriesAnalysis.budget().balanceChart.getRightDataset()
       .checkSize(1)
-      .checkValue("Substracted from savings", 630);
+      .checkValue("Substracted from savings", 370);
     seriesAnalysis.budget().checkSeriesChartLabel("Main savings series");
     seriesAnalysis.budget().seriesChart.getLeftDataset()
-      .checkSize(4)
+      .checkSize(3)
       .checkValue("MainToImported", 150)
-      .checkValue("MainToNonImported", 50)
       .checkValue("ImportedFromExternal", 200)
       .checkValue("ImportedFromNonImported", 220);
     seriesAnalysis.budget().seriesChart.getRightDataset()
-      .checkSize(4)
+      .checkSize(2)
       .checkValue("ImportedToExternal", 300)
-      .checkValue("ImportedFromNonImported", 220)
-      .checkValue("ImportedToMain", 70)
-      .checkValue("MainFromNonImported", 40);
+      .checkValue("ImportedToMain", 70);
 
     timeline.selectMonths("2009/06", "2009/07");
     seriesAnalysis.budget().checkBalanceChartLabel("Savings accounts balance");
     seriesAnalysis.budget().balanceChart.getLeftDataset()
       .checkSize(1)
-      .checkValue("Added to savings", 670.00);
+      .checkValue("Added to savings", 570.00);
     seriesAnalysis.budget().balanceChart.getRightDataset()
       .checkSize(1)
-      .checkValue("Substracted from savings", 630.00);
+      .checkValue("Substracted from savings", 370.00);
     seriesAnalysis.budget().checkSeriesChartLabel("Main savings series");
     seriesAnalysis.budget().seriesChart.getLeftDataset()
-      .checkSize(4)
-      .checkValue("MainToImported", 150.00)
-      .checkValue("MainToNonImported", 100.00)
-      .checkValue("ImportedFromExternal", 200.00)
-      .checkValue("ImportedFromNonImported", 220.00);
+      .checkSize(3)
+      .checkValue("MainToImported", 150)
+      .checkValue("ImportedFromExternal", 200)
+      .checkValue("ImportedFromNonImported", 220);
     seriesAnalysis.budget().seriesChart.getRightDataset()
-      .checkSize(4)
-      .checkValue("ImportedToExternal", 300.00)
-      .checkValue("ImportedFromNonImported", 220.00)
-      .checkValue("ImportedToMain", 70.00)
-      .checkValue("MainFromNonImported", 40.00);
+      .checkSize(2)
+      .checkValue("ImportedToExternal", 300)
+      .checkValue("ImportedToMain", 70);
   }
 
   public void testUncategorized() throws Exception {

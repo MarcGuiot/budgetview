@@ -462,9 +462,9 @@ public class RestartTest extends RestartTestCase {
     operations.checkDataIsOk();
   }
 
-  public void testChangeDayChangeTransactionFromPlannedToRealAndViceversaForNotImportedAccount() throws Exception {
+  public void testChangeDayChangesPlannedTransactionsForSavingsSeries() throws Exception {
     operations.openPreferences().setFutureMonthsCount(2).validate();
-    accounts.createSavingsAccount("Epargne", 1000.);
+    accounts.createSavingsAccount("Epargne", 1000.00);
     budgetView.transfer.createSeries()
       .setName("CAF")
       .setFromAccount("External account")
@@ -480,27 +480,28 @@ public class RestartTest extends RestartTestCase {
       .initContent()
       .add("11/10/2008", TransactionType.PLANNED, "Planned: CAF", "", 100.00, "CAF")
       .add("11/09/2008", TransactionType.PLANNED, "Planned: CAF", "", 100.00, "CAF")
-      .add("05/08/2008", TransactionType.VIREMENT, "CAF", "", 100.00, "CAF")
+      .add("11/08/2008", TransactionType.PLANNED, "Planned: CAF", "", 100.00, "CAF")
       .check();
+
     TimeService.setCurrentDate(Dates.parse("2008/09/06"));
     restartApplication();
 
-    views.selectData();
+    fail("v40: cf CurrentMonthTrigger pour gerer le nouveau mois sur globReset ? Il ne faut plus générer de planned sur aout car ce mois est passé");
+
     timeline.selectAll();
     transactions
       .showPlannedTransactions()
       .initContent()
       .add("11/11/2008", TransactionType.PLANNED, "Planned: CAF", "", 100.00, "CAF")
       .add("11/10/2008", TransactionType.PLANNED, "Planned: CAF", "", 100.00, "CAF")
-      .add("11/09/2008", TransactionType.VIREMENT, "Planned: CAF", "", 100.00, "CAF")
-      .add("05/08/2008", TransactionType.VIREMENT, "CAF", "", 100.00, "CAF")
+      .add("11/09/2008", TransactionType.PLANNED, "Planned: CAF", "", 100.00, "CAF")
       .check();
   }
 
   public void testSavingsSeries() throws Exception {
     operations.openPreferences().setFutureMonthsCount(2).validate();
 
-    accounts.createSavingsAccount("Epargne", 1000.);
+    accounts.createSavingsAccount("Epargne", 1000.00);
 
     budgetView.transfer.createSeries()
       .setName("CAF")
@@ -524,19 +525,19 @@ public class RestartTest extends RestartTestCase {
       .initContent()
       .add("11/10/2008", TransactionType.PLANNED, "Planned: CAF", "", 300.00, "CAF")
       .add("11/09/2008", TransactionType.PLANNED, "Planned: CAF", "", 300.00, "CAF")
-      .add("25/08/2008", TransactionType.PLANNED, "CAF", "", 300.00, "CAF")
+      .add("11/08/2008", TransactionType.PLANNED, "Planned: CAF", "", 300.00, "CAF")
       .check();
 
     timeline.selectMonth("2008/08");
     budgetView.transfer.checkTotalAmounts(0, 0);
 
     savingsAccounts.select("Epargne");
-    budgetView.transfer.checkSeries("CAF", "+300.00", "+300.00");
+    budgetView.transfer.checkSeries("CAF", "0.00", "+300.00");
 
     restartApplication();
 
     savingsAccounts.select("Epargne");
-    budgetView.transfer.checkSeries("CAF", "+300.00", "+300.00");
+    budgetView.transfer.checkSeries("CAF", "0.00", "+300.00");
     timeline.selectMonth("2008/08");
 
     timeline.selectMonth("2008/08");
@@ -553,7 +554,7 @@ public class RestartTest extends RestartTestCase {
       .initContent()
       .add("11/10/2008", TransactionType.PLANNED, "Planned: CAF", "", 300.00, "CAF")
       .add("11/09/2008", TransactionType.PLANNED, "Planned: CAF", "", 300.00, "CAF")
-      .add("25/08/2008", TransactionType.PLANNED, "CAF", "", 300.00, "CAF")
+      .add("11/08/2008", TransactionType.PLANNED, "Planned: CAF", "", 300.00, "CAF")
       .check();
   }
 

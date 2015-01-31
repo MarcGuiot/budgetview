@@ -113,20 +113,21 @@ public class StatTest extends LoggedInFunctionalTestCase {
   public void testBalanceIsBasedOnUserDates() throws Exception {
     OfxBuilder
       .init(this)
+      .addBankAccount("000111", 1000.00, "2008/06/31")
       .addTransaction("2008/06/01", 200.00, "Salaire")
-      .addTransaction("2008/06/15", -90.00, "Auchan")
-      .addTransaction("2008/06/30", "2008/07/01", -80.00, "Carouf")
+      .addTransaction("2008/06/15", -100.00, "Auchan")
+      .addTransaction("2008/06/30", "2008/07/01", -50.00, "Carouf")
       .load();
 
     categorization.setNewIncome("Salaire", "Salaire");
-    categorization.setNewRecurring("Auchan", "courses");
-    categorization.setRecurring("Carouf", "courses");
+    categorization.setNewRecurring("Auchan", "Courses");
+    categorization.setRecurring("Carouf", "Courses");
 
     timeline.selectMonth("2008/06");
-    mainAccounts.checkEndOfMonthPosition(OfxBuilder.DEFAULT_ACCOUNT_NAME, 80);
+    mainAccounts.checkEndOfMonthPosition("Account n. 000111", 1050.00);
 
     timeline.selectMonth("2008/07");
-    mainAccounts.checkEndOfMonthPosition(OfxBuilder.DEFAULT_ACCOUNT_NAME, 200 - 170);
+    mainAccounts.checkEndOfMonthPosition("Account n. 000111", 1100.00);
   }
 
   public void testWithIncomeReimbursement() throws Exception {

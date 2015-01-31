@@ -1,7 +1,10 @@
 package org.designup.picsou.functests.upgrade;
 
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
+import org.designup.picsou.model.ProjectItem;
+import org.designup.picsou.model.Series;
 import org.designup.picsou.model.TransactionType;
+import org.globsframework.model.format.GlobPrinter;
 import org.globsframework.utils.Files;
 
 public class ProjectUpgradeTest extends LoggedInFunctionalTestCase {
@@ -180,9 +183,23 @@ public class ProjectUpgradeTest extends LoggedInFunctionalTestCase {
     currentProject.checkName("Voyage Rome");
   }
 
-  public void testProjectsWithVariousTranferItems() throws Exception {
+  public void testProjectsWithVariousTranferItemsFromJar125() throws Exception {
     operations.restoreWithPassword(Files.copyResourceToTmpFile(this, "/testbackups/upgrade_jar125_projets_multi_transfers.budgetview"), "pwd");
     addOns.activateProjects();
+
+    timeline.selectMonth(201404);
+
+    transactions.sortByLabel();
+    transactions.initAmountContent()
+      .add("01/04/2014", "COURANT > EPARGNE", 50.00, "Courant > Epargne", 5150.00, 5150.00, "Epargne")
+      .add("01/04/2014", "COURANT > EPARGNE", -50.00, "Courant > Epargne", 950.00, 950.00, "Courant")
+      .add("05/04/2014", "DE COURANT", 50.00, "Courant > Epargne", 5100.00, 5100.00, "Epargne")
+      .add("05/04/2014", "DE EXTERNE", 100.00, "Externe > Epargne", 5200.00, 5200.00, "Epargne")
+      .add("01/04/2014", "EPARGNE > EXTERNE", -100.00, "Epargne > Externe", 5100.00, 5100.00, "Epargne")
+      .add("01/04/2014", "EXTERNE > EPARGNE", 200.00, "Externe > Epargne", 5200.00, 5200.00, "Epargne")
+      .add("05/04/2014", "VERS EPARGNE", -50.00, "Courant > Epargne", 900.00, 900.00, "Courant")
+      .add("05/04/2014", "VERS EXTERNE", -100.00, "Epargne > Externe", 5050.00, 5050.00, "Epargne")
+      .check();
 
     projectList.checkCurrentProjects("| Vacances | Apr | 300.00 | on |");
     projectList.select("Vacances");
@@ -190,17 +207,32 @@ public class ProjectUpgradeTest extends LoggedInFunctionalTestCase {
                               "| Externe > Epargne | Apr | +300.00 | +300.00 |\n" +
                               "| Epargne > Externe | Apr | +100.00 | +100.00 |\n" +
                               "| Voyage            | Apr | 0.00    | 300.00  |\n");
+  }
+
+  public void testProjectsWithVariousTranferItemsAlreadyConvertedFromJar125to139() throws Exception {
+    operations.restore(Files.copyResourceToTmpFile(this, "/testbackups/upgrade_jar125_to_139_projets_multi_transfers.budgetview"));
+    addOns.activateProjects();
+
+    timeline.selectMonth(201404);
 
     transactions.sortByLabel();
-    transactions.initContent()
-      .add("01/04/2014", TransactionType.VIREMENT, "COURANT > EPARGNE", "", 50.00, "Courant > Epargne")
-      .add("01/04/2014", TransactionType.PRELEVEMENT, "COURANT > EPARGNE", "", -50.00, "Courant > Epargne")
-      .add("05/04/2014", TransactionType.MANUAL, "DE COURANT", "", 50.00, "Courant > Epargne")
-      .add("05/04/2014", TransactionType.MANUAL, "DE EXTERNE", "", 100.00, "Externe > Epargne")
-      .add("01/04/2014", TransactionType.PRELEVEMENT, "EPARGNE > EXTERNE", "", -100.00, "Epargne > Externe")
-      .add("01/04/2014", TransactionType.VIREMENT, "EXTERNE > EPARGNE", "", 200.00, "Externe > Epargne")
-      .add("05/04/2014", TransactionType.MANUAL, "VERS EPARGNE", "", -50.00, "Courant > Epargne")
-      .add("05/04/2014", TransactionType.MANUAL, "VERS EXTERNE", "", -100.00, "Epargne > Externe");
+    transactions.initAmountContent()
+      .add("01/04/2014", "COURANT > EPARGNE", 50.00, "Courant > Epargne", 5150.00, 5150.00, "Epargne")
+      .add("01/04/2014", "COURANT > EPARGNE", -50.00, "Courant > Epargne", 950.00, 950.00, "Courant")
+      .add("05/04/2014", "DE COURANT", 50.00, "Courant > Epargne", 5100.00, 5100.00, "Epargne")
+      .add("05/04/2014", "DE EXTERNE", 100.00, "Externe > Epargne", 5200.00, 5200.00, "Epargne")
+      .add("01/04/2014", "EPARGNE > EXTERNE", -100.00, "Epargne > Externe", 5100.00, 5100.00, "Epargne")
+      .add("01/04/2014", "EXTERNE > EPARGNE", 200.00, "Externe > Epargne", 5200.00, 5200.00, "Epargne")
+      .add("05/04/2014", "VERS EPARGNE", -50.00, "Courant > Epargne", 900.00, 900.00, "Courant")
+      .add("05/04/2014", "VERS EXTERNE", -100.00, "Epargne > Externe", 5050.00, 5050.00, "Epargne")
+      .check();
+
+    projectList.checkPastProjects("| Vacances | Apr | 300.00 | on |");
+    projectList.select("Vacances");
+    currentProject.checkItems("| Courant > Epargne | Apr | +100.00 | +50.00  |\n" +
+                              "| Externe > Epargne | Apr | +300.00 | +300.00 |\n" +
+                              "| Epargne > Externe | Apr | +100.00 | +100.00 |\n" +
+                              "| Voyage            | Apr | 0.00    | 300.00  |\n");
   }
 
   public void testProjetItemsUsingSeveralAccountsAreSplitted() throws Exception {

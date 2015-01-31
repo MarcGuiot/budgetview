@@ -44,22 +44,22 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
     views.selectBudget();
 
     budgetView.recurring.checkTitle("Recurring");
-    budgetView.recurring.checkTotalAmounts(-84.0, -84.0);
-    budgetView.recurring.checkSeries("Internet", -29.0, -29.0);
-    budgetView.recurring.checkSeries("Electricity", -55.0, -55.0);
+    budgetView.recurring.checkTotalAmounts(-84.00, -84.00);
+    budgetView.recurring.checkSeries("Internet", -29.00, -29.00);
+    budgetView.recurring.checkSeries("Electricity", -55.00, -55.00);
 
     budgetView.variable.checkTitle("Variable");
-    budgetView.variable.checkTotalAmounts(-145.0, -145);
-    budgetView.variable.checkSeries("Groceries", -145.0, -145.0);
+    budgetView.variable.checkTotalAmounts(-145.00, -145);
+    budgetView.variable.checkSeries("Groceries", -145.00, -145.00);
 
     budgetView.income.checkTitle("Income");
     budgetView.income
-      .checkTotalAmounts(3740.0, 3540.00)
-      .checkTotalGauge(3740.0, 3540.00)
+      .checkTotalAmounts(3740.00, 3540.00)
+      .checkTotalGauge(3740.00, 3540.00)
       .checkTotalPositiveOverrun();
 
-    budgetView.income.checkSeries("Salary", 3540.0, 3540.0);
-    budgetView.income.checkSeries("Exceptional Income", 200.0, 0.0);
+    budgetView.income.checkSeries("Salary", 3540.00, 3540.00);
+    budgetView.income.checkSeries("Exceptional Income", 200.00, 0.00);
 
     timeline.selectMonths("2008/08");
 
@@ -72,17 +72,17 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
       .check();
 
     budgetView.recurring.checkTitle("Recurring");
-    budgetView.recurring.checkTotalAmounts(0.0, -84.0);
-    budgetView.recurring.checkSeries("Internet", -0.0, -29.0);
-    budgetView.recurring.checkSeries("Electricity", -0.0, -55.0);
+    budgetView.recurring.checkTotalAmounts(0.00, -84.00);
+    budgetView.recurring.checkSeries("Internet", -0.00, -29.00);
+    budgetView.recurring.checkSeries("Electricity", -0.00, -55.00);
 
     budgetView.variable.checkTitle("Variable");
-    budgetView.variable.checkTotalAmounts(0.0, -145);
-    budgetView.variable.checkSeries("Groceries", -0.0, -145.0);
+    budgetView.variable.checkTotalAmounts(0.00, -145);
+    budgetView.variable.checkSeries("Groceries", -0.00, -145.00);
 
     budgetView.income.checkTitle("Income");
-    budgetView.income.checkTotalAmounts(0.0, 3540.00);
-    budgetView.income.checkSeries("Salary", 0.0, 3540.0);
+    budgetView.income.checkTotalAmounts(0.00, 3540.00);
+    budgetView.income.checkSeries("Salary", 0.00, 3540.00);
     budgetView.income.checkSeries("Exceptional Income", 0, 0);
   }
 
@@ -103,8 +103,8 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
     views.selectBudget();
 
     budgetView.extras.checkTitle("Extras");
-    budgetView.extras.checkTotalAmounts(-95.0, -95.0);
-    budgetView.extras.checkSeries("Anniversaire", -95.0, -95.0);
+    budgetView.extras.checkTotalAmounts(-95.00, -95.00);
+    budgetView.extras.checkSeries("Anniversaire", -95.00, -95.00);
 
     views.selectCategorization();
     categorization.getExtras().checkSelectedSeries("Anniversaire");
@@ -138,8 +138,8 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
     categorization.getSavings().checkSelectedSeries("Epargne");
 
     savingsAccounts.select("Livret");
-    budgetView.transfer.checkSeries("Epargne", "+25.00", "+25.00");
-    budgetView.transfer.checkTotalAmounts("+25.00", "+25.00");
+    budgetView.transfer.checkSeries("Epargne", "0.00", "+25.00");
+    budgetView.transfer.checkTotalAmounts("0.00", "+25.00");
   }
 
   public void testUnset() throws Exception {
@@ -160,50 +160,47 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
 
   public void testImportWithUserDateAndBankDateAtNextMonth() throws Exception {
     OfxBuilder.init(this)
-      .addTransaction("2008/07/31", "2008/08/02", -95.00, "Auchan")
+      .addBankAccount(30066, 1234, "000111", 5000.00, "2008/08/15")
+      .addTransaction("2008/07/31", "2008/08/02", -100.00, "Auchan")
       .addTransaction("2008/07/30", "2008/08/01", -50.00, "Monoprix")
-      .addTransaction("2008/07/29", "2008/08/01", -29.00, "Free Telecom")
-      .addTransaction("2008/07/28", "2008/08/01", 3540.00, "WorldCo")
+      .addTransaction("2008/07/29", "2008/08/01", -30.00, "Free Telecom")
+      .addTransaction("2008/07/28", "2008/08/01", 3500.00, "WorldCo")
       .load();
 
-    timeline.selectMonth("2008/07");
-
-    transactions.initContent()
-      .add("31/07/2008", "02/08/2008", TransactionType.PRELEVEMENT, "Auchan", "", -95.00)
-      .add("30/07/2008", "01/08/2008", TransactionType.PRELEVEMENT, "Monoprix", "", -50.00)
-      .add("29/07/2008", "01/08/2008", TransactionType.PRELEVEMENT, "Free Telecom", "", -29.00)
-      .add("28/07/2008", "01/08/2008", TransactionType.VIREMENT, "WorldCo", "", 3540.00)
-      .check();
-
-    views.selectCategorization();
-    categorization.setNewVariable("Auchan", "Groceries", -145.00);
+    categorization.setNewVariable("Auchan", "Groceries", -150.00);
     categorization.setVariable("Monoprix", "Groceries");
     categorization.setNewRecurring("Free Telecom", "Internet");
     categorization.setNewIncome("WorldCo", "Salary");
-    timeline.selectMonth("2008/07");
-    views.selectBudget();
 
+    timeline.selectMonths(200807, 200808);
+    transactions.showPlannedTransactions()
+      .initAmountContent()
+      .add("31/07/2008", "AUCHAN", -100.00, "Groceries", 5000.00, 5000.00, "Account n. 000111")
+      .add("30/07/2008", "MONOPRIX", -50.00, "Groceries", 5100.00, 5100.00, "Account n. 000111")
+      .add("29/07/2008", "FREE TELECOM", -30.00, "Internet", 5150.00, 5150.00, "Account n. 000111")
+      .add("28/07/2008", "WORLDCO", 3500.00, "Salary", 5180.00, 5180.00, "Account n. 000111")
+      .check();
+
+    timeline.selectMonths(200807);
     budgetView.recurring.checkTitle("Recurring");
-    budgetView.recurring.checkTotalAmounts(-29.0, -29.0);
-    budgetView.recurring.checkSeries("Internet", -29.0, -29.0);
+    budgetView.recurring.checkTotalAmounts(-30.00, -30.00);
+    budgetView.recurring.checkSeries("Internet", -30.00, -30.00);
 
     budgetView.variable.checkTitle("Variable");
-    budgetView.variable.checkTotalAmounts(-145.0, -145.);
-    budgetView.variable.checkSeries("Groceries", -145.0, -145.0);
+    budgetView.variable.checkTotalAmounts(-150.00, -150.00);
+    budgetView.variable.checkSeries("Groceries", -150.00, -150.00);
 
     budgetView.income.checkTitle("Income");
-    budgetView.income.checkTotalAmounts(3540.0, 3540.00);
-    budgetView.income.checkSeries("Salary", 3540.0, 3540.0);
+    budgetView.income.checkTotalAmounts(3500.00, 3500.00);
+    budgetView.income.checkSeries("Salary", 3500.00, 3500.00);
 
-    mainAccounts.checkEndOfMonthPosition(OfxBuilder.DEFAULT_ACCOUNT_NAME, -3366.00);
-    mainAccounts.showChart(OfxBuilder.DEFAULT_ACCOUNT_NAME);
-    mainAccounts.getChart(OfxBuilder.DEFAULT_ACCOUNT_NAME)
+    mainAccounts.showChart("Account n. 000111");
+    mainAccounts.getChart("Account n. 000111")
       .checkRange(200807, 200808)
       .checkCurrentDay(200808, 2)
-      .checkValue(200807, 1, -3366.00)
-      .checkValue(200808, 1, 95.00)
-      .checkValue(200808, 2, 0.00)
-      .checkValue(200808, 27, 3366.00);
+      .checkValue(200807, 1, 1680.00)
+      .checkValue(200808, 1, 5100.00)
+      .checkValue(200808, 2, 5000.00);
   }
 
   public void testEditingASeriesWithTransactions() throws Exception {
@@ -282,7 +279,7 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
     views.selectBudget();
     timeline.checkSelection("2008/06");
     budgetView.recurring.checkTotalAmounts(0.00, -29.00);
-    budgetView.recurring.checkSeries("Internet", 0.0, -29.0);
+    budgetView.recurring.checkSeries("Internet", 0.00, -29.00);
 
     budgetView.variable.checkTotalAmounts(-50.00, -95.00);
     budgetView.variable.checkSeries("Groceries", -50.00, -95.00);
@@ -788,7 +785,7 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
     transactions
       .showPlannedTransactions()
       .initContent()
-      .add("10/08/2008", TransactionType.PLANNED, "Planned: Courses", "", -240.0, "Courses")
+      .add("10/08/2008", TransactionType.PLANNED, "Planned: Courses", "", -240.00, "Courses")
       .add("10/08/2008", TransactionType.PRELEVEMENT, "AUCHAN", "", -10.00, "Courses")
       .check();
   }
@@ -892,30 +889,30 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
     categorization.setNewVariable("Zara", "Clothes", -50.00);
 
     timeline.selectMonth("2008/08");
-    budgetView.income.checkDeltaGauge("Salary", 1000.0, 1200.0, 0.20,
+    budgetView.income.checkDeltaGauge("Salary", 1000.00, 1200.00, 0.20,
                                       "The amount is increasing - it was 1000.00 in july 2008");
-    budgetView.recurring.checkDeltaGauge("Electricity", -55.0, -55.0, 0.0,
+    budgetView.recurring.checkDeltaGauge("Electricity", -55.00, -55.00, 0.00,
                                          "The amount is the same as in july 2008");
     budgetView.variable.editPlannedAmount("Groceries").setPropagationDisabled().setAmount(250.00).validate();
-    budgetView.variable.checkDeltaGauge("Groceries", -50.0, -250.0, 1.00,
+    budgetView.variable.checkDeltaGauge("Groceries", -50.00, -250.00, 1.00,
                                         "The amount is increasing - it was 50.00 in july 2008");
-    budgetView.extras.checkDeltaGauge("Leisures", null, -50.0, 1.0,
+    budgetView.extras.checkDeltaGauge("Leisures", null, -50.00, 1.00,
                                       "This envelope was not used in july 2008");
-    budgetView.variable.checkDeltaGauge("Clothes", -100.0, -50.0, -0.5,
+    budgetView.variable.checkDeltaGauge("Clothes", -100.00, -50.00, -0.5,
                                         "The amount is decreasing - it was 100.00 in july 2008");
 
     timeline.selectMonths("2008/06", "2008/07", "2008/08");
-    budgetView.recurring.checkDeltaGauge("Electricity", -55.0, -55.0, 0.0,
+    budgetView.recurring.checkDeltaGauge("Electricity", -55.00, -55.00, 0.00,
                                          "The amount is the same as in june 2008");
-    budgetView.variable.checkDeltaGauge("Clothes", -150.0, -50.0, -0.67,
+    budgetView.variable.checkDeltaGauge("Clothes", -150.00, -50.00, -0.67,
                                         "The amount is decreasing - it was 150.00 in june 2008");
 
     timeline.selectMonth("2008/09");
     budgetView.variable.editSeries("Clothes").setAmount(0.00).validate();
-    budgetView.variable.checkDeltaGauge("Clothes", -50.0, 0.0, -1.00,
+    budgetView.variable.checkDeltaGauge("Clothes", -50.00, 0.00, -1.00,
                                         "The amount was 50.00 in august 2008, and it is set to zero in september 2008");
     budgetView.income.editSeries("Salary").setAmount(0.00).validate();
-    budgetView.income.checkDeltaGauge("Salary", 1200.0, 0.0, -1.00,
+    budgetView.income.checkDeltaGauge("Salary", 1200.00, 0.00, -1.00,
                                       "The amount was 1200.00 in august 2008, and it is set to zero in september 2008");
   }
 }

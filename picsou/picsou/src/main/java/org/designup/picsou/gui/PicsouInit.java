@@ -39,7 +39,8 @@ import org.globsframework.utils.exceptions.InvalidData;
 import picsou.AwtExceptionHandler;
 
 import javax.swing.*;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -106,7 +107,7 @@ public class PicsouInit {
 
   public static void initTriggers(ServerAccess serverAccess, Directory directory, final GlobRepository repository) {
     repository.addTrigger(new CurrentMonthTrigger());
-    repository.addTrigger(new MonthTrigger(directory));
+    repository.addTrigger(new MonthTrigger());
     repository.addTrigger(new AccountInitialPositionTrigger());
     repository.addTrigger(new DeleteInitialSeriesTrigger());
     repository.addTrigger(new DeleteUnusedSeriesGroupTrigger());
@@ -141,8 +142,6 @@ public class PicsouInit {
     repository.addTrigger(new DeferredDayChangeTrigger());
     repository.addTrigger(new MonthsToSeriesBudgetTrigger(directory));
     repository.addTrigger(new IrregularSeriesBudgetCreationTrigger());
-    repository.addTrigger(new NotImportedTransactionAccountTrigger());
-    repository.addTrigger(new ImportedToNotImportedAccountTransactionTrigger());
     repository.addTrigger(new ActualSeriesStatTrigger());
     repository.addTrigger(new PastTransactionUpdateSeriesBudgetTrigger());
     repository.addTrigger(new SeriesShapeTrigger());

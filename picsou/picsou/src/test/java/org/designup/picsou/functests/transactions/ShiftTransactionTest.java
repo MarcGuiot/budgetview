@@ -264,42 +264,6 @@ public class ShiftTransactionTest extends LoggedInFunctionalTestCase {
     categorization.checkUserDate(transactionDetails, "2008/06/30", "MONOPRIX / JULY");
   }
 
-  public void testShiftingAMirroredTransaction() throws Exception {
-    OfxBuilder.init(this)
-      .addTransaction("2008/06/25", -25.00, "Epargne / June ")
-      .addTransaction("2008/07/05", -30.00, "Epargne / July")
-      .load();
-
-    accounts.createSavingsAccount("Epargne", 0.);
-
-    budgetView.transfer.createSeries()
-      .setName("Epargne")
-      .setFromAccount("Account n. 00001123")
-      .setToAccount("Epargne")
-      .validate();
-
-    categorization.selectAllTransactions().selectTransfers().selectSeries("Epargne");
-
-    categorization.selectTransaction("Epargne / July");
-    transactionDetails.shift();
-    timeline.selectMonth("2008/06");
-    budgetView.transfer.alignAndPropagate("Epargne");
-
-    timeline.selectAll();
-    transactions
-      .showPlannedTransactions()
-      .initContent()
-      .add("27/08/2008", TransactionType.PLANNED, "Planned: Epargne", "", 55.00, "Epargne")
-      .add("27/08/2008", TransactionType.PLANNED, "Planned: Epargne", "", -55.00, "Epargne")
-      .add("27/07/2008", TransactionType.PLANNED, "Planned: Epargne", "", 55.00, "Epargne")
-      .add("27/07/2008", TransactionType.PLANNED, "Planned: Epargne", "", -55.00, "Epargne")
-      .add("05/07/2008", TransactionType.VIREMENT, "EPARGNE / JULY", "", 30.00, "Epargne")
-      .add("05/07/2008", TransactionType.PRELEVEMENT, "EPARGNE / JULY", "", -30.00, "Epargne")
-      .add("25/06/2008", TransactionType.VIREMENT, "EPARGNE / JUNE", "", 25.00, "Epargne")
-      .add("25/06/2008", TransactionType.PRELEVEMENT, "EPARGNE / JUNE", "", -25.00, "Epargne")
-      .check();
-  }
-
   public void testMonthUnShiftInDecember() throws Exception {
     OfxBuilder.init(this)
       .addTransaction("2007/12/25", -50.00, "Orange")

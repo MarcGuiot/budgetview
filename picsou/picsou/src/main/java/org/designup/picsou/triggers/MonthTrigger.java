@@ -17,9 +17,6 @@ import static org.globsframework.model.utils.GlobMatchers.*;
 
 public class MonthTrigger implements ChangeSetListener {
 
-  public MonthTrigger(Directory directory) {
-  }
-
   public void globsChanged(ChangeSet changeSet, final GlobRepository repository) {
     if (changeSet.containsChanges(UserPreferences.TYPE)) {
       changeSet.safeVisit(UserPreferences.TYPE, new DefaultChangeSetVisitor() {

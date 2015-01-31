@@ -10,38 +10,6 @@ public class TransferCategorizationTest extends LoggedInFunctionalTestCase {
     super.setUp();
   }
 
-  public void testCreatedSavingsTransactionsAreNotVisibleInCategorization() throws Exception {
-    OfxBuilder.init(this)
-      .addTransaction("2008/08/10", -100.00, "Virement")
-      .load();
-    timeline.selectAll();
-    views.selectHome();
-    views.selectCategorization();
-    categorization
-      .selectTransactions("Virement")
-      .selectTransfers();
-
-    categorization.createAccount()
-      .setName("Epargne")
-      .selectBank("ING Direct")
-      .checkIsSavings()
-      .checkAccountTypeNotEditable()
-      .setPosition(1000.0)
-      .validate();
-
-    categorization
-      .selectTransfers()
-      .createSeries()
-      .setFromAccount("Account n. 00001123")
-      .setToAccount("Epargne")
-      .setName("Epargne")
-      .validate();
-
-    categorization.initContent()
-      .add("10/08/2008", "Epargne", "Virement", -100)
-      .check();
-  }
-
   public void testSavingsHelpDisplayedWhenNoSavingsAccountAvailable() throws Exception {
     OfxBuilder.init(this)
       .addTransaction("2008/08/10", -100.00, "Virement")

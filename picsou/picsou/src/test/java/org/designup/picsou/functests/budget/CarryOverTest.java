@@ -550,7 +550,7 @@ public class CarryOverTest extends LoggedInFunctionalTestCase {
     mainAccounts.checkEndOfMonthPosition("Account n. 0001234", 2100.00);
   }
 
-  public void testSavingsRemainderWithAutoFilledAccount() throws Exception {
+  public void testSavingsRemainderWithNotImportedAccount() throws Exception {
     operations.openPreferences()
       .setFutureMonthsCount(4)
       .validate();
@@ -597,7 +597,7 @@ public class CarryOverTest extends LoggedInFunctionalTestCase {
       .add("11/10/2008", "Planned: To account ING", -400.00, "To account ING", 0.00, 0.00, "Account n. 00000123")
       .add("11/09/2008", "Planned: To account ING", 600.00, "To account ING", 1300.00, 1300.00, "ING")
       .add("11/09/2008", "Planned: To account ING", -600.00, "To account ING", 400.00, 400.00, "Account n. 00000123")
-      .add("10/08/2008", "VIRT ING", 200.00, "To account ING", 700.00, 700.00, "ING")
+      .add("11/08/2008", "Planned: To account ING", 200.00, "To account ING", 700.00, 700.00, "ING")
       .add("10/08/2008", "VIRT ING", -200.00, "To account ING", 1000.00, 1000.00, "Account n. 00000123")
       .check();
   }

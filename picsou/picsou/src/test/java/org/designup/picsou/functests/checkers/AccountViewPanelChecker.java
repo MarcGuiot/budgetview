@@ -135,10 +135,15 @@ public abstract class AccountViewPanelChecker<T extends AccountViewPanelChecker>
     UISpecAssert.assertTrue(parentPanel.getTextBox("accountUpdateDate").textEquals("2006/02/01"));
   }
 
-  public T checkReferencePosition(double amount, String updateDate) {
-    Date date = Dates.parse(updateDate);
-    assertThat(getPanel().getTextBox("referencePosition").textEquals(toString(amount)));
-    assertThat(getPanel().getTextBox("referencePositionDate").textEquals("on " + Formatting.toString(date)));
+  public T checkReferencePosition(final double amount, final String updateDate) {
+    final Date date = Dates.parse(updateDate);
+    assertThat(new Assertion() {
+      public void check() {
+        String actual = getPanel().getTextBox("referencePosition").getText() + " " + getPanel().getTextBox("referencePositionDate").getText();
+        String expected = AccountViewPanelChecker.this.toString(amount) + " on " + Formatting.toString(date);
+        Assert.assertEquals(expected, actual);
+      }
+    });
     return (T) this;
   }
 

@@ -83,45 +83,6 @@ public class TransactionEditionTest extends LoggedInFunctionalTestCase {
                                       "You cannot change the label of planned transactions.");
   }
 
-  public void testEditingATransactionAlsoChangesItsMirror() throws Exception {
-    OfxBuilder.init(this)
-      .addTransaction("2008/08/10", -100.00, "Virement")
-      .load();
-
-    accounts.createSavingsAccount("Livret", 1000.00);
-    budgetView.transfer.createSeries()
-      .setName("ToSavings")
-      .setFromAccount("Account n. 00001123")
-      .setToAccount("Livret")
-      .validate();
-
-    categorization.setTransfer("Virement", "ToSavings");
-
-    timeline.selectAll();
-    transactions.initAmountContent()
-      .add("10/08/2008", "VIREMENT", 100.00, "ToSavings", 1100.00, 1100.00, "Livret")
-      .add("10/08/2008", "VIREMENT", -100.00, "ToSavings", 0.00, 0.00, "Account n. 00001123")
-      .check();
-
-    transactions.edit(0)
-      .setLabel("Virt epargne")
-      .validate();
-
-    transactions.initAmountContent()
-      .add("10/08/2008", "VIRT EPARGNE", 100.00, "ToSavings", 1100.00, 1100.00, "Livret")
-      .add("10/08/2008", "VIRT EPARGNE", -100.00, "ToSavings", 0.00, 0.00, "Account n. 00001123")
-      .check();
-
-    transactions.edit(1)
-      .setLabel("Epargne")
-      .validate();
-
-    transactions.initAmountContent()
-      .add("10/08/2008", "EPARGNE", 100.00, "ToSavings", 1100.00, 1100.00, "Livret")
-      .add("10/08/2008", "EPARGNE", -100.00, "ToSavings", 0.00, 0.00, "Account n. 00001123")
-      .check();
-  }
-
   public void testRenamingTransactionsPreservesAutoCategorization() throws Exception {
     OfxBuilder.init(this)
       .addTransaction("2008/07/18", -30.00, "Burger King")

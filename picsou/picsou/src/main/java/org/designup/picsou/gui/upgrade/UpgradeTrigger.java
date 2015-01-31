@@ -5,7 +5,6 @@ import org.designup.picsou.gui.PicsouApplication;
 import org.designup.picsou.gui.PicsouInit;
 import org.designup.picsou.gui.accounts.utils.AccountMatchers;
 import org.designup.picsou.gui.projects.upgrade.ProjectUpgradeV40;
-import org.designup.picsou.gui.projects.utils.ProjectErrorsUpgrade;
 import org.designup.picsou.gui.series.upgrade.SeriesUpgradeV40;
 import org.designup.picsou.gui.series.utils.SeriesErrorsUpgrade;
 import org.designup.picsou.gui.utils.FrameSize;
@@ -132,29 +131,25 @@ public class UpgradeTrigger implements ChangeSetListener {
       AccountSequenceTrigger.resetSequence(repository);
       repository.delete(Transaction.TYPE, and(fieldEquals(Transaction.ACCOUNT, Account.MAIN_SUMMARY_ACCOUNT_ID),
                                               fieldEquals(Transaction.PLANNED, true)));
-      ProjectUpgradeV40.run(repository, postProcessor);
     }
     if (currentJarVersion < 137) {
       repository.deleteAll(LayoutConfig.TYPE);
     }
-
-    if (currentJarVersion < 140) {
-      ProjectErrorsUpgrade.createMissingGroupsAndSeries(repository);
-      ProjectErrorsUpgrade.fixIncoherentFromToInTransferSeries(repository);
-    }
-    if (currentJarVersion < 141) {
+    if (currentJarVersion < 142) {
+      normalizeNotImportedMirrorTransactions(repository);
+      ProjectUpgradeV40.run(repository, postProcessor);
       SeriesUpgradeV40.run(repository, postProcessor);
       updageAccountGraphs(repository);
       updateColorTheme(repository);
     }
 
-    //dans tout les cas :
+    // Dans tous les cas :
 
     SeriesErrorsUpgrade.fixMissingGroups(repository);
 
     repository.findOrCreate(AddOns.KEY);
     repository.delete(Transaction.TYPE, and(fieldEquals(Transaction.CREATED_BY_SERIES, true),
-                                            fieldEquals(Transaction.AMOUNT, 0.)));
+                                            fieldEquals(Transaction.AMOUNT, 0.00)));
 
     Glob config = LayoutConfig.find(FrameSize.init(directory.get(JFrame.class)), repository, true);
     if (currentJarVersion < 141) {
@@ -172,6 +167,14 @@ public class UpgradeTrigger implements ChangeSetListener {
     }
 
     repository.update(UserVersionInformation.KEY, UserVersionInformation.CURRENT_JAR_VERSION, PicsouApplication.JAR_VERSION);
+  }
+
+  private void normalizeNotImportedMirrorTransactions(GlobRepository repository) {
+    for (Glob transaction : repository.getAll(Transaction.TYPE, isTrue(Transaction.CREATED_BY_SERIES))) {
+      repository.update(transaction,
+                        value(Transaction.CREATED_BY_SERIES, false),
+                        value(Transaction.MIRROR, false));
+    }
   }
 
   private void updageAccountGraphs(GlobRepository repository) {

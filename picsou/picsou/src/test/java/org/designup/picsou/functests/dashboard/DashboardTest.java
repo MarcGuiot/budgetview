@@ -163,6 +163,7 @@ public class DashboardTest extends LoggedInFunctionalTestCase {
 
   public void testNothingShownBeforeFirstAccountIsCreated() throws Exception {
     fail("tbd");
+    fail("faire disparaître les signposts");
   }
 
   public void testTODO() throws Exception {

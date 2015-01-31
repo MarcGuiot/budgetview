@@ -173,7 +173,7 @@ public class SeriesUpgradeV40 {
     return Utils.equal(series1.get(Series.FROM_ACCOUNT), targetAccount1) ||
            Utils.equal(series1.get(Series.TO_ACCOUNT), targetAccount2) ||
            Utils.equal(series2.get(Series.FROM_ACCOUNT), targetAccount2) ||
-           Utils.equal(series1.get(Series.TO_ACCOUNT), targetAccount1);
+           Utils.equal(series2.get(Series.TO_ACCOUNT), targetAccount1);
   }
 
   private void rebuildTransfer(Glob multiSeries, GlobList multiTransactions, Integer[] multiAccountIds, Glob monoSeries, GlobList monoTransactions, Integer[] monoAccountIds) {

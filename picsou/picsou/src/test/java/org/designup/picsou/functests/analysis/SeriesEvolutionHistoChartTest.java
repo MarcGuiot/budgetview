@@ -170,17 +170,17 @@ public class SeriesEvolutionHistoChartTest extends LoggedInFunctionalTestCase {
   public void testAccounts() throws Exception {
     OfxBuilder.init(this)
       .addBankAccount(-1, 10674, "00000123", 1000.00, "2009/07/30")
-      .addTransaction("2009/07/10", -200.00, "Virt")
+      .addTransaction("2009/07/10", -200.00, "Virt / Courant")
       .load();
 
-    accounts.createNewAccount()
-      .setName("ING")
-      .setAsSavings()
-      .selectBank("ING Direct")
-      .setPosition(200)
-      .validate();
+    OfxBuilder.init(this)
+      .addBankAccount(-1, 10674, "000222", 400.00, "2009/07/30")
+      .addTransaction("2009/07/10", 200.00, "Virt / Epargne")
+      .load();
+    mainAccounts.setAsSavings("Account n. 000222", "ING");
 
-    categorization.setNewTransfer("Virt", "Epargne", "Account n. 00000123", "ING");
+    categorization.setNewTransfer("Virt / Courant", "Epargne", "Account n. 00000123", "ING");
+    categorization.setTransfer("Virt / Epargne", "Epargne");
 
     budgetView.transfer.alignAndPropagate("Epargne");
 

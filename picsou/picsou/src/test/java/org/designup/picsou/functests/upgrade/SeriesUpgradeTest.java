@@ -151,6 +151,7 @@ public class SeriesUpgradeTest extends LoggedInFunctionalTestCase {
 
     operations.restore(Files.copyResourceToTmpFile(this, "/testbackups/upgrade_jar131_series_transfers_no_transactions.budgetview"));
 
+    timeline.checkSelection("2014/12");
     budgetView.transfer
       .checkContent("| SavingsB to Main | 0.00 | +150.00 |\n" +
                     "| Main to SavingsA | 0.00 | 100.00  |");
@@ -160,13 +161,19 @@ public class SeriesUpgradeTest extends LoggedInFunctionalTestCase {
       "Series 'SavingsB to Main' is now using account 'MainA'."
     );
 
-    transactions.showPlannedTransactions();
-    transactions.initAmountContent()
+    transactions.showPlannedTransactions()
+      .sortByEnvelope()
+      .initAmountContent()
       .add("15/12/2014", "Planned: Main to SavingsA", -100.00, "Main to SavingsA", 1100.00, 3100.00, "MainA")
+      .add("15/12/2014", "Planned: Main to SavingsA", 100.00, "Main to SavingsA", 10100.00, 30100.00, "SavingsA")
       .add("15/12/2014", "Planned: SavingsB to Main", 150.00, "SavingsB to Main", 1200.00, 3200.00, "MainA")
-      .add("15/12/2014", "Planned: SavingsB to Main", -150.00, "SavingsB to Main", 19700.00, 29900.00, "SavingsB")
-      .add("15/12/2014", "Planned: Main to SavingsA", 100.00, "Main to SavingsA", 10200.00, 30050.00, "SavingsA")
+      .add("15/12/2014", "Planned: SavingsB to Main", -150.00, "SavingsB to Main", 19850.00, 29950.00, "SavingsB")
       .check();
+
+    mainAccounts.checkEndOfMonthPosition("MainA", 1100.00);
+    mainAccounts.checkEndOfMonthPosition("MainB", 2000.00);
+
+    fail("Pour Marc / v40: verifier que c'est bien le comportement attendu. En v3.13 le montant initial de MainA était de 1000 au 01/11/2014.");
   }
 
   public void testNoMessagesDisplayedWhenConvertingASavingsSeriesWithNoTransactionsAndASingleMainAccount() throws Exception {

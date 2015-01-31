@@ -457,7 +457,7 @@ public class SeriesEditionDialog {
 
   public void show(Glob series, Set<Integer> monthIds) {
     resetSeries();
-    retrieveAssociatedTransactions(series.get(Series.ID));
+    retrieveAssociatedTransactions(series);
     try {
       localRepository.startChangeSet();
       localRepository.rollback();
@@ -507,10 +507,14 @@ public class SeriesEditionDialog {
     return this.createdSeries;
   }
 
-  private void retrieveAssociatedTransactions(Integer seriesId) {
-    selectedTransactions = repository.findByIndex(Transaction.SERIES_INDEX, Transaction.SERIES, seriesId).getGlobs();
-    selectedTransactions.removeAll(and(isTrue(Transaction.PLANNED),
-                                       isTrue(Transaction.CREATED_BY_SERIES)),
+  private void retrieveAssociatedTransactions(Glob series) {
+    selectedTransactions = repository.findByIndex(Transaction.SERIES_INDEX, Transaction.SERIES, series.get(Series.ID)).getGlobs();
+    Integer mirrorId = series.get(Series.MIRROR_SERIES);
+    if (mirrorId != null) {
+      selectedTransactions.addAll(repository.findByIndex(Transaction.SERIES_INDEX, Transaction.SERIES, mirrorId).getGlobs());
+    }
+    selectedTransactions.removeAll(or(isTrue(Transaction.PLANNED),
+                                      isTrue(Transaction.CREATED_BY_SERIES)),
                                    repository);
   }
 
@@ -585,42 +589,42 @@ public class SeriesEditionDialog {
       return;
     }
 
-    Set<Integer> positiveAccount = new HashSet<Integer>();
-    Set<Integer> negativeAccount = new HashSet<Integer>();
+    Set<Integer> positiveAccounts = new HashSet<Integer>();
+    Set<Integer> negativeAccounts = new HashSet<Integer>();
     for (Glob transaction : selectedTransactions) {
       Integer accountId = transaction.get(Transaction.ACCOUNT);
       if (transaction.get(Transaction.AMOUNT) >= 0) {
-        positiveAccount.add(accountId);
+        positiveAccounts.add(accountId);
       }
       else {
-        negativeAccount.add(accountId);
+        negativeAccounts.add(accountId);
       }
     }
-    if (positiveAccount.size() == 1) {
+    if (positiveAccounts.size() == 1) {
       toAccountsCombo
-        .setFilter(fieldEquals(Account.ID, positiveAccount.iterator().next()));
-      toAccount.set(positiveAccount.iterator().next());
+        .setFilter(fieldEquals(Account.ID, positiveAccounts.iterator().next()));
+      toAccount.set(positiveAccounts.iterator().next());
     }
     else {
-      if (negativeAccount.size() == 1) {
+      if (negativeAccounts.size() == 1) {
         toAccountsCombo.setFilter(
           and(accountFilter,
-              GlobMatchers.not(fieldEquals(Account.ID, negativeAccount.iterator().next()))));
+              not(fieldEquals(Account.ID, negativeAccounts.iterator().next()))));
       }
       else {
         toAccountsCombo.setFilter(accountFilter);
       }
     }
-    if (negativeAccount.size() == 1) {
+    if (negativeAccounts.size() == 1) {
       fromAccountsCombo
-        .setFilter(fieldEquals(Account.ID, negativeAccount.iterator().next()));
-      fromAccount.set(negativeAccount.iterator().next());
+        .setFilter(fieldEquals(Account.ID, negativeAccounts.iterator().next()));
+      fromAccount.set(negativeAccounts.iterator().next());
     }
     else {
-      if (positiveAccount.size() == 1) {
+      if (positiveAccounts.size() == 1) {
         fromAccountsCombo.setFilter(
           and(accountFilter,
-              GlobMatchers.not(fieldEquals(Account.ID, positiveAccount.iterator().next()))));
+              not(fieldEquals(Account.ID, positiveAccounts.iterator().next()))));
       }
       else {
         fromAccountsCombo.setFilter(accountFilter);

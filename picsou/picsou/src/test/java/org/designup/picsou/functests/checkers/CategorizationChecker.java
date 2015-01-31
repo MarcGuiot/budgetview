@@ -270,6 +270,16 @@ public class CategorizationChecker extends FilteredViewChecker<CategorizationChe
       return this;
     }
 
+    public TransferCategorizationChecker selectAndCreateTransferSeries(String savingsName, String fromAccount, String toAccount, double plannedAmount) {
+      selectTransfers().createSeries()
+        .setName(savingsName)
+        .setFromAccount(fromAccount)
+        .setToAccount(toAccount)
+        .setAmount(plannedAmount)
+        .validate();
+      return this;
+    }
+
     public AccountEditionChecker createSavingsAccount() {
       selectTransfers();
       return AccountEditionChecker.open(getPanel().getButton("New account").triggerClick());

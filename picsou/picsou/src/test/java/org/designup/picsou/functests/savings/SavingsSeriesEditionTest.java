@@ -51,6 +51,7 @@ public class SavingsSeriesEditionTest extends LoggedInFunctionalTestCase {
       .load();
 
     operations.openPreferences().setFutureMonthsCount(3).validate();
+
     timeline.selectLast();
     views.selectHome();
     accounts.createNewAccount()
