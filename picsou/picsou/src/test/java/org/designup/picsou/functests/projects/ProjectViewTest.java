@@ -137,8 +137,10 @@ public class ProjectViewTest extends LoggedInFunctionalTestCase {
       .addBankAccount(-1, 10674, "000123", 2800.00, "2011/01/10")
       .addTransaction("2011/01/10", 3000.00, "WorldCo")
       .load();
-    views.selectHome();
     projects.checkAccounts("Account n. 000123");
+    projects.getAccountChart("Account n. 000123")
+      .checkValue(201101, 1, -200.00)
+      .checkValue(201101, 10, 2800.00);
 
     OfxBuilder.init(this)
       .addBankAccount(-1, 10674, "000234", 1000.00, "2011/01/28")
@@ -161,7 +163,6 @@ public class ProjectViewTest extends LoggedInFunctionalTestCase {
       .checkValue(201101, 1, -200.00)
       .checkValue(201101, 10, 2800.00);
 
-    views.selectHome();
     projects.toggleMainAccountGraphs("Show only one graph for all accounts");
     projects.checkAccounts("Main accounts", "Account n. 000345", "Account n. 000456");
     projects.getMainSummaryGraph()

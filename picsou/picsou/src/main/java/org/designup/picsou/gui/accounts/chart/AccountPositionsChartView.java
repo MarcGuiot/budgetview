@@ -35,14 +35,12 @@ public class AccountPositionsChartView extends PositionsChartView {
 
   public static AccountPositionsChartView stripped(Integer accountId, String componentName, HistoChartRange range,
                                                    final GlobRepository repository, final Directory directory) {
-    return new AccountPositionsChartView(accountId, componentName, range, repository, directory,
-                                         STRIPPED_CONFIG);
+    return new AccountPositionsChartView(accountId, componentName, range, repository, directory, STRIPPED_CONFIG);
   }
 
   public static AccountPositionsChartView full(Integer accountId, String componentName, HistoChartRange range,
                                                final GlobRepository repository, final Directory directory) {
-    return new AccountPositionsChartView(accountId, componentName, range, repository, directory,
-                                         FULL_CONFIG);
+    return new AccountPositionsChartView(accountId, componentName, range, repository, directory, FULL_CONFIG);
   }
 
   private AccountPositionsChartView(Integer accountId, String componentName, HistoChartRange range,

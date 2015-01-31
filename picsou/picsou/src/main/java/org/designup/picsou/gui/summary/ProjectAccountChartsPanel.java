@@ -108,7 +108,6 @@ public class ProjectAccountChartsPanel {
   private class AccountRepeatFactory implements RepeatComponentFactory<Glob> {
 
     public void registerComponents(PanelBuilder cellBuilder, Glob account) {
-
       if (Account.isUserCreatedAccount(account)) {
         registerUserCreatedAccountComponents(cellBuilder, account);
       }
@@ -136,6 +135,7 @@ public class ProjectAccountChartsPanel {
       final AccountPositionsChartView accountChart =
         AccountPositionsChartView.full(account.get(Account.ID), "accountHistoChart", shortRange, repository, directory);
       final SplitsNode<HistoChart> chartNode = accountChart.registerComponents(cellBuilder);
+      accountChart.update();
 
       BooleanFieldListener showHide =
         BooleanFieldListener.installNodeStyle(Key.create(ProjectAccountGraph.TYPE, account.get(Account.ID)), ProjectAccountGraph.SHOW,

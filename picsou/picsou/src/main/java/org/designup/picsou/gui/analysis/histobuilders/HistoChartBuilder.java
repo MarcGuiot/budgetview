@@ -3,6 +3,7 @@ package org.designup.picsou.gui.analysis.histobuilders;
 import com.budgetview.shared.gui.histochart.HistoChartConfig;
 import org.designup.picsou.gui.accounts.position.DailyAccountPositionComputer;
 import org.designup.picsou.gui.accounts.position.DailyAccountPositionValues;
+import org.designup.picsou.gui.analysis.histobuilders.range.HistoChartRange;
 import org.designup.picsou.gui.card.NavigationPopup;
 import org.designup.picsou.gui.components.charts.histo.HistoChart;
 import org.designup.picsou.gui.components.charts.histo.HistoChartColors;
@@ -14,7 +15,6 @@ import org.designup.picsou.gui.components.charts.histo.diff.HistoDiffLegendPanel
 import org.designup.picsou.gui.components.charts.histo.line.HistoLineColors;
 import org.designup.picsou.gui.components.charts.histo.utils.HistoChartListenerAdapter;
 import org.designup.picsou.gui.model.*;
-import org.designup.picsou.gui.analysis.histobuilders.range.HistoChartRange;
 import org.designup.picsou.gui.series.utils.SeriesOrGroup;
 import org.designup.picsou.gui.transactions.utils.TransactionMatchers;
 import org.designup.picsou.gui.utils.DaySelection;
@@ -188,16 +188,8 @@ public class HistoChartBuilder implements Disposable {
     builder.apply(accountDailyColors, "daily");
   }
 
-  public void showMainDailyHisto(int selectedMonthId, boolean showFullMonthLabels, String daily) {
-    showDailyHisto(selectedMonthId, showFullMonthLabels, TransactionMatchers.transactionsForMainAccounts(repository), DaySelection.EMPTY, daily, Transaction.SUMMARY_POSITION);
-  }
-
-  public void showSavingsDailyHisto(int selectedMonthId, boolean showFullMonthLabels) {
-    showDailyHisto(selectedMonthId, showFullMonthLabels, TransactionMatchers.transactionsForSavingsAccounts(repository), DaySelection.EMPTY, "daily", Transaction.SUMMARY_POSITION);
-  }
-
   public void showDailyHisto(int selectedMonthId, Integer accountId, DaySelection daySelection, String daily, final DoubleField position, HistoDailyColors colors) {
-    showDailyHisto(selectedMonthId, false, GlobMatchers.fieldEquals(Transaction.ACCOUNT, accountId), daySelection, daily, position, colors);
+    showDailyHisto(selectedMonthId, false, TransactionMatchers.transactionsForAccount(accountId), daySelection, daily, position, colors);
   }
 
   public void showDailyHisto(int selectedMonthId, boolean showFullMonthLabels, GlobMatcher accountMatcher, DaySelection daySelection, String daily, final DoubleField position) {
@@ -386,7 +378,7 @@ public class HistoChartBuilder implements Disposable {
     for (int monthId : getMonthIdsToShow(selectedMonthId)) {
 //      Glob stat = repository.find(Key.create(BudgetStat.TYPE, monthId));
       Glob stat = repository.find(Key.create(AccountStat.ACCOUNT, Account.MAIN_SUMMARY_ACCOUNT_ID,
-                                                         AccountStat.MONTH, monthId));
+                                             AccountStat.MONTH, monthId));
 
       Double value = stat != null ? stat.get(AccountStat.MIN_POSITION, 0.) : 0.0;
       builder.add(monthId, value, monthId == selectedMonthId);

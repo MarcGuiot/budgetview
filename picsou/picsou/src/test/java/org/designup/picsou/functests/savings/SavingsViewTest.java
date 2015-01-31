@@ -45,25 +45,23 @@ public class SavingsViewTest extends LoggedInFunctionalTestCase {
     addOns.activateProjects();
 
     OfxBuilder.init(this)
-      .addBankAccount(-1, 10674, "00000123", 1000.0, "2009/07/30")
+      .addBankAccount(-1, 10674, "000111", 1000.0, "2009/07/30")
       .addTransaction("2009/07/10", -200.00, "Virt")
       .load();
+    OfxBuilder.init(this)
+      .addBankAccount(-1, 10674, "000222", 400.00, "2009/07/30")
+      .addTransaction("2009/07/10", 200.00, "Virt")
+      .load();
+    mainAccounts.setAsSavings("Account n. 000222", "Livret");
 
-    accounts.createNewAccount()
-      .setAsSavings()
-      .setName("Livret")
-      .selectBank("ING Direct")
-      .setPosition(200)
-      .validate();
-
-    categorization.setNewTransfer("Virt", "Epargne", "Account n. 00000123", "Livret");
+    categorization.setNewTransfer("Virt", "Epargne", "Account n. 000111", "Livret");
 
     views.selectBudget();
     budgetView.transfer.alignAndPropagate("Epargne");
 
     views.selectProjects();
     projects.getAccountChart("Livret")
-      .checkRange(200907, 201007)
+      .checkRange(200907, 201004)
       .checkValue(200907, 1, 200.00)
       .checkValue(200907, 10, 400.00)
       .checkValue(200908, 11, 600.00)
@@ -74,19 +72,15 @@ public class SavingsViewTest extends LoggedInFunctionalTestCase {
       .checkValue(201001, 11, 1600.00)
       .checkValue(201002, 11, 1800.00)
       .checkValue(201003, 11, 2000.00)
-      .checkValue(201004, 11, 2200.00)
-      .checkValue(201005, 11, 2400.00)
-      .checkValue(201006, 11, 2600.00)
-      .checkValue(201007, 11, 2800.00);
+      .checkValue(201004, 11, 2200.00);
 
     savingsAccounts.editPosition("Livret").setAmount(300.00).validate();
 
     views.selectHome();
     projects.getAccountChart("Livret")
-      .checkRange(200907, 201007)
+      .checkRange(200907, 201004)
       .checkValue(200907, 1, 100.00)
-      .checkValue(200912, 11, 1300.00)
-      .checkValue(201007, 11, 2700.00);
+      .checkValue(200912, 11, 1300.00);
 
     operations.openPreferences().setFutureMonthsCount(6).validate();
 
