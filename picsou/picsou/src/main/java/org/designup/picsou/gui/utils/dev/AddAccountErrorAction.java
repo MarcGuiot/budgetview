@@ -1,6 +1,7 @@
 package org.designup.picsou.gui.utils.dev;
 
 import org.designup.picsou.gui.accounts.utils.AccountMatchers;
+import org.designup.picsou.gui.time.TimeService;
 import org.designup.picsou.model.Account;
 import org.designup.picsou.model.AccountPositionError;
 import org.globsframework.model.*;
@@ -31,7 +32,7 @@ public class AddAccountErrorAction extends AbstractAction {
     repository.update(key,
                       value(AccountPositionError.IMPORTED_POSITION, 10.00),
                       value(AccountPositionError.LAST_REAL_OPERATION_POSITION, 20.00),
-                      value(AccountPositionError.UPDATE_DATE, new Date()),
+                      value(AccountPositionError.UPDATE_DATE, TimeService.getToday()),
                       value(AccountPositionError.CLEARED, false));
   }
 }

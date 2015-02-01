@@ -8,7 +8,7 @@ import org.designup.picsou.model.TransactionType;
 public class SeriesEvolutionStackChartTest extends LoggedInFunctionalTestCase {
 
   protected void setUp() throws Exception {
-    setCurrentMonth("2009/07/30");
+    setCurrentDate("2009/07/30");
     super.setUp();
     addOns.activateAnalysis();
   }

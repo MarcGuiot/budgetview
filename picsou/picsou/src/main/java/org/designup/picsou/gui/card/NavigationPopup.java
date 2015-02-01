@@ -115,7 +115,7 @@ public class NavigationPopup {
 
   private void initUncategorizedPopup(JPopupMenu popup, SortedSet<Integer> monthIds) {
     popup.add(new ShowTransactionsToCategorizeAction(monthIds, repository, localDirectory));
-    addShowInAccounts(popup, monthIds, TransactionMatchers.uncategorizedTransactions());
+    addShowInAccounts(popup, monthIds, TransactionMatchers.uncategorized());
   }
 
   private void initBudgetAreasPopup(JPopupMenu popup, SortedSet<Integer> monthIds, Set<Key> objectKeys) {

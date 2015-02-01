@@ -93,15 +93,17 @@ public class TransactionMatchers {
     };
   }
 
-  public static GlobMatcher uncategorizedTransactions() {
-    return fieldEquals(Transaction.SERIES, Series.UNCATEGORIZED_SERIES_ID);
+  public static GlobMatcher uncategorized() {
+    return and(fieldEquals(Transaction.SERIES, Series.UNCATEGORIZED_SERIES_ID),
+               isNotTrue(Transaction.PLANNED),
+               not(fieldEquals(Transaction.TRANSACTION_TYPE, TransactionType.OPEN_ACCOUNT_EVENT.getId())),
+               not(fieldEquals(Transaction.TRANSACTION_TYPE, TransactionType.CLOSE_ACCOUNT_EVENT.getId())));
   }
 
   public static GlobMatcher categorizedTransactions() {
-    return and(
-      isNotNull(Transaction.SERIES),
-      not(fieldEquals(Transaction.SERIES, Series.UNCATEGORIZED_SERIES_ID)),
-      isNotTrue(Transaction.PLANNED)
+    return and(isNotNull(Transaction.SERIES),
+               not(fieldEquals(Transaction.SERIES, Series.UNCATEGORIZED_SERIES_ID)),
+               isNotTrue(Transaction.PLANNED)
     );
   }
 

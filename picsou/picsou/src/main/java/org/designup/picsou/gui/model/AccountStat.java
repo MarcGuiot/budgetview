@@ -36,8 +36,6 @@ public class AccountStat {
 
   public static DoubleField SUMMARY_POSITION_AT_MIN;
 
-  public static DoubleField SUMMARY_POSITION_AT_FUTURE_MIN;
-
   static {
     GlobTypeLoader.init(AccountStat.class);
   }

@@ -16,6 +16,11 @@ import java.util.Set;
 import static org.globsframework.model.utils.GlobMatchers.*;
 
 public class Uncategorized {
+
+  public static int getCount(GlobRepository repository) {
+    return repository.getAll(Transaction.TYPE, TransactionMatchers.uncategorized()).size();
+  }
+
   public static int getCount(Set<Integer> selectedAccounts, GlobRepository repository) {
     return repository.getAll(Transaction.TYPE, TransactionMatchers.uncategorizedForAccounts(selectedAccounts)).size();
   }

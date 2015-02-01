@@ -126,7 +126,7 @@ public class FirstCategorizationDoneSignpost extends PersistentSignpost implemen
 
   private boolean noRemainingOperationsToCategorize() {
     return repository.contains(Transaction.TYPE) &&
-           !repository.contains(Transaction.TYPE, TransactionMatchers.uncategorizedTransactions());
+           !repository.contains(Transaction.TYPE, TransactionMatchers.uncategorized());
   }
 
   private boolean hasCategorizedOperations() {

@@ -61,7 +61,7 @@ public enum CategorizationFilteringMode {
         return fieldEquals(Transaction.IMPORT, imports.getLast().get(TransactionImport.ID));
 
       case UNCATEGORIZED:
-        return or(TransactionMatchers.uncategorizedTransactions(),
+        return or(TransactionMatchers.uncategorized(),
                   keyIn(categorizedTransactions));
 
       case UNCATEGORIZED_SELECTED_MONTHS: {

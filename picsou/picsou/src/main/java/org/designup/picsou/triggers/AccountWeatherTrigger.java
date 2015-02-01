@@ -44,20 +44,13 @@ public class AccountWeatherTrigger implements ChangeSetListener {
       double periodMin = Double.MAX_VALUE;
       WeatherType weather = WeatherType.SUNNY;
       for (Glob accountStat : repository.getAll(AccountStat.TYPE,
-                                                and(fieldEquals(AccountStat.ACCOUNT, accountId),
-                                                    fieldIn(AccountStat.MONTH, months)))) {
+                                                       and(fieldEquals(AccountStat.ACCOUNT, accountId),
+                                                           fieldIn(AccountStat.MONTH, months)))) {
         Double monthMin = accountStat.get(AccountStat.FUTURE_MIN_POSITION, 0.00);
         if (Double.isNaN(monthMin)) {
           monthMin = accountStat.get(AccountStat.END_POSITION, 0.00);
         }
-        if (monthMin < 0.0) {
-          if (monthMin <= threshold) {
-            weather = WeatherType.RAINY;
-          }
-          else if (weather == WeatherType.SUNNY) {
-            weather = WeatherType.CLOUDY;
-          }
-        }
+        weather = getWeatherType(monthMin, threshold, weather);
         periodMin = Math.min(periodMin, monthMin);
       }
       repository.create(AccountWeather.TYPE,
@@ -66,6 +59,18 @@ public class AccountWeatherTrigger implements ChangeSetListener {
                         value(AccountWeather.LAST_FORECAST_MONTH, months.last()),
                         value(AccountWeather.FUTURE_MIN, periodMin));
     }
+  }
+
+  private WeatherType getWeatherType(Double monthMin, double threshold, WeatherType currentWeather) {
+    if (monthMin < 0.0) {
+      if (monthMin <= threshold) {
+        currentWeather = WeatherType.RAINY;
+      }
+      else if (currentWeather == WeatherType.SUNNY) {
+        currentWeather = WeatherType.CLOUDY;
+      }
+    }
+    return currentWeather;
   }
 
   private SortedSet<Integer> getForecastMonths(GlobRepository repository) {

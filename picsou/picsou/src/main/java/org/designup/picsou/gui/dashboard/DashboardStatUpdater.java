@@ -45,7 +45,9 @@ public class DashboardStatUpdater implements ChangeSetListener, GlobSelectionLis
   }
 
   public void globsChanged(ChangeSet changeSet, GlobRepository repository) {
-    if (changeSet.containsChanges(AccountWeather.TYPE) || changeSet.containsChanges(CurrentMonth.TYPE)) {
+    if (changeSet.containsChanges(AccountWeather.TYPE) ||
+        changeSet.containsChanges(CurrentMonth.TYPE) ||
+        changeSet.containsChanges(Account.TYPE)) {
       updateWeather(getSelectedAccounts());
     }
     if (changeSet.containsChanges(Account.TYPE)) {
@@ -69,19 +71,19 @@ public class DashboardStatUpdater implements ChangeSetListener, GlobSelectionLis
 
   private void updateAll() {
     repository.findOrCreate(DashboardStat.KEY);
-    Set<Integer> accountIds = getSelectedAccounts();
-    updateWeather(accountIds);
-    updateAmounts(accountIds);
-    updateImport(accountIds);
-    updateUncategorized(accountIds);
+    Set<Integer> selectedAccountIds = getSelectedAccounts();
+    updateWeather(selectedAccountIds);
+    updateAmounts(selectedAccountIds);
+    updateImport(selectedAccountIds);
+    updateUncategorized(selectedAccountIds);
   }
 
   private Set<Integer> getSelectedAccounts() {
     return selectionService.getSelection(Account.TYPE).getValueSet(Account.ID);
   }
 
-  private void updateImport(Set<Integer> selectedAccounts) {
-    Date lastDate = getLastImportDate(selectedAccounts);
+  private void updateImport(Set<Integer> selectedAccountIds) {
+    Date lastDate = getLastImportDate(selectedAccountIds);
     Integer dayCount;
     if (lastDate == null) {
       dayCount = null;
@@ -122,15 +124,15 @@ public class DashboardStatUpdater implements ChangeSetListener, GlobSelectionLis
     return last;
   }
 
-  public void updateWeather(Set<Integer> accountIds) {
+  public void updateWeather(Set<Integer> selectedAccountIds) {
     WeatherType summaryWeather = WeatherType.SUNNY;
-    double summaryMin = 0;
+    double mainSummaryMin = 0;
     Integer lastMonth = Integer.MAX_VALUE;
-    for (Glob accountWeather : repository.getAll(AccountWeather.TYPE, new AccountFieldMatcher(AccountWeather.ACCOUNT, accountIds))) {
+    for (Glob accountWeather : repository.getAll(AccountWeather.TYPE, new AccountFieldMatcher(AccountWeather.ACCOUNT, selectedAccountIds))) {
       if (AccountWeather.isForMainAccount(accountWeather, repository)) {
         Double min = accountWeather.get(AccountWeather.FUTURE_MIN);
         if (!Double.isNaN(min)) {
-          summaryMin += min;
+          mainSummaryMin += min;
         }
       }
       WeatherType weather = WeatherType.get(accountWeather.get(AccountWeather.WEATHER));
@@ -145,54 +147,54 @@ public class DashboardStatUpdater implements ChangeSetListener, GlobSelectionLis
     repository.update(DashboardStat.KEY,
                       value(DashboardStat.WEATHER, summaryWeather.getId()),
                       value(DashboardStat.LAST_FORECAST_MONTH, lastMonth),
-                      value(DashboardStat.REMAINDER, summaryMin));
+                      value(DashboardStat.REMAINDER, mainSummaryMin));
   }
 
-  private void updateUncategorized(Set<Integer> selectedAccounts) {
-    repository.update(DashboardStat.KEY,
-                      value(DashboardStat.UNCATEGORIZED_COUNT, Uncategorized.getCount(selectedAccounts, repository)));
+  private void updateUncategorized(Set<Integer> selectedAccountIds) {
+    int count = selectedAccountIds.isEmpty() ? Uncategorized.getCount(repository) : Uncategorized.getCount(selectedAccountIds, repository);
+    repository.update(DashboardStat.KEY, value(DashboardStat.UNCATEGORIZED_COUNT, count));
   }
 
-  private void updateAmounts(Set<Integer> accountIds) {
+  private void updateAmounts(Set<Integer> selectedAccountIds) {
     if (!repository.contains(Account.MAIN_SUMMARY_KEY) || !repository.contains(Account.SAVINGS_SUMMARY_KEY)) {
       repository.update(DashboardStat.KEY,
                         value(DashboardStat.TOTAL_MAIN_ACCOUNTS, 0.00),
-                        value(DashboardStat.TOTAL_MAIN_ACCOUNTS_DATE, new Date()),
+                        value(DashboardStat.TOTAL_MAIN_ACCOUNTS_DATE, TimeService.getToday()),
                         value(DashboardStat.SINGLE_MAIN_ACCOUNT, false),
                         value(DashboardStat.TOTAL_ALL_ACCOUNTS, 0.00),
-                        value(DashboardStat.TOTAL_ALL_ACCOUNTS_DATE, new Date()),
+                        value(DashboardStat.TOTAL_ALL_ACCOUNTS_DATE, TimeService.getToday()),
                         value(DashboardStat.SHOW_ALL_ACCOUNTS, false));
       return;
     }
 
     Glob mainSummary = repository.find(Account.MAIN_SUMMARY_KEY);
     double mainAmount = mainSummary.get(Account.POSITION_WITH_PENDING, 0.00);
-    Date mainAmountDate = mainSummary.get(Account.POSITION_DATE);
+    Date mainAmountDate = mainSummary.get(Account.POSITION_DATE, TimeService.getToday());
     Glob savingsSummary = repository.find(Account.SAVINGS_SUMMARY_KEY);
     double savingsAmount = savingsSummary.get(Account.POSITION_WITH_PENDING, 0.00);
-    Date savingsAmountDate = savingsSummary.get(Account.POSITION_DATE);
+    Date savingsAmountDate = savingsSummary.get(Account.POSITION_DATE, TimeService.getToday());
     TreeSet<Integer> months = new TreeSet<Integer>();
     months.add(Month.getMonthId(TimeService.getToday()));
     GlobList mainAccounts = repository.getAll(Account.TYPE, AccountMatchers.activeUserCreatedAccounts(months));
     GlobList savingsAccounts = repository.getAll(Account.TYPE, AccountMatchers.activeUserCreatedSavingsAccounts(months));
     double totalMainAccounts = 0;
-    Date totalMainAccountsDate = new Date();
+    Date totalMainAccountsDate = TimeService.getToday();
     boolean singleMainAccount;
     boolean showAllAccounts;
-    if (accountIds.isEmpty()) {
+    if (selectedAccountIds.isEmpty()) {
       totalMainAccounts = mainAmount;
       totalMainAccountsDate = mainAmountDate;
       singleMainAccount = false;
       showAllAccounts = !savingsAccounts.isEmpty();
     }
     else {
-      for (Integer accountId : accountIds) {
+      for (Integer accountId : selectedAccountIds) {
         Glob account = repository.get(Key.create(Account.TYPE, accountId));
         totalMainAccounts += account.get(Account.POSITION_WITH_PENDING, 0.00);
         totalMainAccountsDate = Utils.min(totalMainAccountsDate, account.get(Account.POSITION_DATE));
       }
-      singleMainAccount = accountIds.size() == 1;
-      showAllAccounts = accountIds.size() < mainAccounts.size() + savingsAccounts.size();
+      singleMainAccount = selectedAccountIds.size() == 1;
+      showAllAccounts = selectedAccountIds.size() < mainAccounts.size() + savingsAccounts.size();
     }
 
     repository.update(DashboardStat.KEY,

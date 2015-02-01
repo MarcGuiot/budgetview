@@ -2,6 +2,12 @@ package org.designup.picsou.functests.dashboard;
 
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
+import org.designup.picsou.gui.model.AccountStat;
+import org.designup.picsou.gui.model.AccountWeather;
+import org.designup.picsou.model.Account;
+import org.globsframework.model.format.GlobPrinter;
+
+import static org.globsframework.model.utils.GlobMatchers.fieldEquals;
 
 public class DashboardTest extends LoggedInFunctionalTestCase {
 
@@ -58,6 +64,13 @@ public class DashboardTest extends LoggedInFunctionalTestCase {
       .addBankAccount(-1, 10674, "000345", 5000.0, "2014/08/15")
       .addTransaction("2014/07/28", +100.00, "Virt")
       .load();
+    dashboard.checkContent(
+      "| 0     | Days since your last import                                               |\n" +
+      "| 1     | Transactions to categorize                                                |\n" +
+      "| rainy | Important overdraw forecast for your accounts before the end of September |\n" +
+      "| +5600 | Available on your main accounts until the end of September                |\n" +
+      "| +6100 | Total amount for your main accounts on 2014/08/09                         |");
+
     mainAccounts.edit("Account n. 000345")
       .setAsSavings()
       .validate();
@@ -156,13 +169,7 @@ public class DashboardTest extends LoggedInFunctionalTestCase {
     mainAccounts.checkNoAccountsSelected();
   }
 
-  public void testDaysSinceLastImport() throws Exception {
-    fail("positions de comptes: quelle position/date choisir dans Account? Mise à jour en cas de saisie manuelle ?");
-    fail("changement de mois avec appli ouverte");
-  }
-
   public void testNothingShownBeforeFirstAccountIsCreated() throws Exception {
-    fail("tbd");
     fail("faire disparaître les signposts");
   }
 

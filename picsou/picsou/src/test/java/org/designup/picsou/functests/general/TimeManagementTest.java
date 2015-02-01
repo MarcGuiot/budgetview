@@ -7,7 +7,7 @@ import org.designup.picsou.model.TransactionType;
 public class TimeManagementTest extends LoggedInFunctionalTestCase {
 
   protected void setUp() throws Exception {
-    setCurrentMonth("2006/03/10");
+    setCurrentDate("2006/03/10");
     super.setUp();
   }
 

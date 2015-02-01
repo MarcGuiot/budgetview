@@ -436,7 +436,7 @@ public class PositionTrigger implements ChangeSetListener {
               !Amounts.equal(lastTransaction.get(Transaction.ACCOUNT_POSITION), account.get(Account.LAST_IMPORT_POSITION))) {
             Glob accountError = repository.findOrCreate(Key.create(AccountPositionError.TYPE, account.get(Account.ID)));
             repository.update(accountError.getKey(),
-                              value(AccountPositionError.UPDATE_DATE, new Date()),
+                              value(AccountPositionError.UPDATE_DATE, TimeService.getToday()),
                               value(AccountPositionError.CLEARED, false),
                               value(AccountPositionError.IMPORTED_POSITION, account.get(Account.LAST_IMPORT_POSITION)),
                               value(AccountPositionError.LAST_REAL_OPERATION_POSITION, lastTransaction.get(Transaction.ACCOUNT_POSITION)),
