@@ -264,7 +264,7 @@ public class SeriesEditionDialogChecker extends SeriesAmountEditionChecker<Serie
     assertFalse(dialog.isVisible());
   }
 
-  public SeriesDeletionDialogChecker openDeleteDialog() {
+  public SeriesDeletionDialogChecker openDelete() {
     return SeriesDeletionDialogChecker.init(dialog.getButton("Delete...").triggerClick());
   }
 
@@ -274,7 +274,7 @@ public class SeriesEditionDialogChecker extends SeriesAmountEditionChecker<Serie
   }
 
   public void deleteCurrentSeriesWithConfirmation(String seriesName) {
-    openDeleteDialog()
+    openDelete()
       .checkExistingTransactionsMessage(seriesName)
       .uncategorize();
     assertFalse(dialog.isVisible());
@@ -296,14 +296,14 @@ public class SeriesEditionDialogChecker extends SeriesAmountEditionChecker<Serie
   }
 
   public void deleteCurrentSeriesWithConfirmation() {
-    openDeleteDialog()
+    openDelete()
       .checkExistingTransactionsMessage()
       .uncategorize();
     assertFalse(dialog.isVisible());
   }
 
   public SeriesEditionDialogChecker deleteCurrentSeriesWithConfirmationAndCancel() {
-    openDeleteDialog()
+    openDelete()
       .checkExistingTransactionsMessage()
       .cancel();
     assertTrue(dialog.isVisible());

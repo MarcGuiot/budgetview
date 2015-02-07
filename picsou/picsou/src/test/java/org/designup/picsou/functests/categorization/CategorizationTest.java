@@ -21,6 +21,8 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
       .addTransaction("2008/06/30", -1129.90, "WorldCo/june")
       .load();
 
+    uncategorized.checkAmountAndTransactions(1129.90, "| 30/06/2008 |  | WORLDCO/JUNE | -1129.90 |\n");
+
     categorization.selectTableRow(0)
       .checkLabel("WORLDCO/JUNE")
       .selectIncome()
@@ -28,6 +30,8 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
       .checkNoSeriesMessage("You must create a series")
       .selectNewSeries("Salary", "My income")
       .checkNoSeriesMessageHidden();
+
+    uncategorized.checkNotShown();
 
     transactions.checkSeries("WorldCo/june", "Salary");
 
@@ -138,6 +142,8 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
     categorization.getVariable().checkSelectedSeries("Groceries");
     categorization.selectTableRow(1);
     categorization.checkRecurringSeriesIsSelected("Internet");
+
+    uncategorized.checkNotShown();
   }
 
   public void testAssigningSeveralTransactionsAtOnce() throws Exception {
@@ -165,6 +171,10 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
       {"15/06/2008", "", "Monops", -60.00},
     });
 
+    uncategorized.checkAmountAndTransactions(100.00, "| 15/06/2008 |  | AUCHAN | -40.00 |\n" +
+                                                     "| 15/06/2008 |  | MONOPS | -60.00 |\n");
+
+    categorization.showAllTransactions();
     categorization.selectTableRows(0, 3);
     categorization.selectVariable().selectNewSeries("Groceries");
     categorization.checkTable(new Object[][]{
@@ -179,6 +189,8 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
 
     categorization.selectTableRows(0, 3);
     categorization.getVariable().checkSelectedSeries("Groceries");
+
+    uncategorized.checkNotShown();
   }
 
   public void testSelectingASeriesInABudgetAreaUnselectsPreviousSeriesInOtherBudgetAreas() throws Exception {
@@ -232,6 +244,8 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
       {"30/06/2008", "Internet", "Free", -29.90},
     });
 
+    uncategorized.checkNotShown();
+
     categorization.setUncategorized(0);
     categorization.checkTable(new Object[][]{
       {"15/06/2008", "", "Auchan", -40.00},
@@ -239,13 +253,15 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
       {"30/06/2008", "Internet", "Free", -29.90},
     });
 
+    uncategorized.checkAmountAndTransactions(40.00, "| 15/06/2008 |  | AUCHAN | -40.00 |\n");
+
+    categorization.showAllTransactions();
     categorization.selectTableRows(1, 2);
     categorization.setUncategorized();
-    categorization.checkTable(new Object[][]{
-      {"15/06/2008", "", "Auchan", -40.00},
-      {"25/06/2008", "", "France Telecom", -59.90},
-      {"30/06/2008", "", "Free", -29.90},
-    });
+
+    uncategorized.checkAmountAndTransactions(129.80, "| 15/06/2008 |  | AUCHAN         | -40.00 |\n" +
+                                                     "| 25/06/2008 |  | FRANCE TELECOM | -59.90 |\n" +
+                                                     "| 30/06/2008 |  | FREE           | -29.90 |\n");
   }
 
   public void testUnassignedTransaction() throws Exception {
@@ -295,6 +311,9 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
 
     categorization.selectTableRows(0);
     categorization.checkBudgetAreaSelectionPanelDisplayed();
+
+    uncategorized.checkAmountAndTransactions(69.90, "| 15/06/2008 |  | AUCHAN | -40.00 |\n" +
+                                                    "| 30/06/2008 |  | CAROUF | -29.90 |\n");
   }
 
   public void testUsesColorsToHighlightAmountSign() throws Exception {
@@ -396,6 +415,13 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
       {"30/06/2008", "Food", "Carouf", -29.90},
       {"17/03/2008", "Food", "MacDo", -12.00}
     });
+
+    categorization.showAllTransactions();
+    uncategorized.checkNotShown();
+
+    timeline.selectMonth(200805);
+    uncategorized.checkAmountAndTransactions(40.00, "| 15/05/2008 |  | AUCHAN | -40.00 |");
+    categorization.checkShowsUncategorizedTransactionsForSelectedMonths();
   }
 
   public void testSort() throws Exception {

@@ -2,6 +2,7 @@ package org.designup.picsou.functests.checkers;
 
 import org.uispec4j.Button;
 import org.uispec4j.Panel;
+import org.uispec4j.UIComponent;
 import org.uispec4j.Window;
 
 import static org.uispec4j.assertion.UISpecAssert.*;
@@ -14,14 +15,29 @@ public class UncategorizedSummaryViewChecker extends ViewChecker {
   }
 
   public UncategorizedSummaryViewChecker checkAmount(double amount) {
+    doCheckAmount(amount);
+    return this;
+  }
+
+  public void checkAmountAndTransactions(double amount, String expectedTableContent) {
+    Button button = doCheckAmount(amount);
+    button.click();
+    ViewSelectionChecker views = new ViewSelectionChecker(mainWindow);
+    views.checkCategorizationSelected();
+    CategorizationChecker categorization = new CategorizationChecker(mainWindow);
+    categorization.checkShowsUncategorizedTransactionsForSelectedMonths();
+    categorization.checkTableContent(expectedTableContent);
+  }
+
+
+  public Button doCheckAmount(double amount) {
     Panel uncategorizedPanel = getPanel();
     assertThat(uncategorizedPanel.isVisible());
     Button button = uncategorizedPanel.getButton("uncategorized");
     assertThat(button.textEquals(toString(amount, false)));
     assertThat(button.isEnabled());
-    return this;
+    return button;
   }
-
   public UncategorizedSummaryViewChecker checkNotShown() {
     assertFalse(getPanel().isVisible());
     return this;

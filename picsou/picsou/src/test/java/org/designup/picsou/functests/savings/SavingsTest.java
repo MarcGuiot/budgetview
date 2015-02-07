@@ -79,6 +79,8 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
     budgetView.transfer
       .checkTotalAmounts("100.00", "100.00")
       .checkContent("| Virt Epargne | 100.00 | 100.00 |");
+
+    uncategorized.checkNotShown();
   }
 
   public void testCreateSavingsSeriesAndPayFromSavings() throws Exception {
@@ -204,6 +206,8 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
     budgetView.transfer
       .checkGaugeTooltip("Virt Epargne", "Il vous reste <b>200.00</b> à virer")
       .checkGaugeTooltip("Travaux", "Il vous reste <b>400.00</b> à virer");
+
+    uncategorized.checkNotShown();
   }
 
   public void testCreateSavingsSeriesAndAssociateLaterToAccount() throws Exception {
@@ -262,6 +266,10 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
       .add("10/08/2008", "", "VERS EPARGNE", -100.00)
       .check();
 
+    uncategorized.checkAmountAndTransactions(200.00, "| 10/08/2008 |  | DE COURANT   | 100.00  |\n" +
+                                                     "| 10/08/2008 |  | VERS EPARGNE | -100.00 |");
+
+    categorization.showAllTransactions();
     categorization.selectTransactions("VERS EPARGNE")
       .selectTransfers()
       .checkContainsSeries("Virt Epargne")
@@ -287,6 +295,8 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
       .add("10/06/2008", "DE COURANT", 100.00, "Virt Epargne", 1100.00, 1100.00, "Epargne")
       .add("10/06/2008", "VERS EPARGNE", -100.00, "Virt Epargne", 200.00, 200.00, "Account n. 00001123")
       .check();
+
+    uncategorized.checkNotShown();
   }
 
   public void testCreateSavingsSeriesAndAssociateLaterToAnotherAccount() throws Exception {
@@ -336,6 +346,8 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
       .add("10/06/2008", "VIREMENT", -100.00, "Virt Epargne", 200.00, 200.00, "Account n. 00001123")
       .check();
 
+    uncategorized.checkNotShown();
+
     OfxBuilder.init(this)
       .addBankAccount("000333", 100.00, "2008/08/30")
       .addTransaction("2008/06/10", 100.00, "Virt CIC")
@@ -347,9 +359,16 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
     categorization.selectTransactions("VIRT LCL")
       .setUncategorized();
 
+    uncategorized.checkAmountAndTransactions(200.00, "| 10/08/2008 |  | VIRT CIC | 100.00 |\n" +
+                                                     "| 10/08/2008 |  | VIRT LCL | 100.00 |");
+
     budgetView.transfer.editSeries("Virt Epargne")
       .setToAccount("Epargne CIC")
       .validate();
+
+    uncategorized.checkAmountAndTransactions(300.00, "| 10/08/2008 |  | VIREMENT | -100.00 |\n" +
+                                                     "| 10/08/2008 |  | VIRT CIC | 100.00  |\n" +
+                                                     "| 10/08/2008 |  | VIRT LCL | 100.00  |");
 
     timeline.selectAll();
     transactions.initAmountContent()
@@ -370,6 +389,7 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
       .add("10/06/2008", "VIREMENT", -100.00, "To categorize", 200.00, 200.00, "Account n. 00001123")
       .check();
 
+    categorization.showAllTransactions();
     categorization.setTransfer("VIREMENT", "Virt Epargne");
     categorization.setTransfer("VIRT CIC", "Virt Epargne");
     transactions.initAmountContent()
@@ -412,12 +432,20 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
 
     categorization.selectTransactions("Virement");
     transactionDetails.split("50", "Comportement impossible?");
+
+    uncategorized.checkAmount(50.00);
+    categorization.checkTableContent("| 10/08/2008 | Virt Epargne | VIREMENT | -50.00 |\n" +
+                                     "| 10/08/2008 |              | VIREMENT | -50.00 |");
+
+    categorization.showAllTransactions();
     categorization.selectVariable().selectNewSeries("Occasional");
     transactions
       .initAmountContent()
       .add("10/08/2008", "VIREMENT", -50.00, "Virt Epargne", 0.00, 0.00, "Account n. 00001123")
       .add("10/08/2008", "VIREMENT", -50.00, "Occasional", 50.00, 50.00, "Account n. 00001123")
       .check();
+
+    uncategorized.checkNotShown();
   }
 
   public void testExternalToSavingsWithDate() throws Exception {
@@ -471,6 +499,8 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
       .add("10/06/2008", "FNAC", -100.00, "To categorize", 0.00, 0.00, "Account n. 00001123")
       .check();
 
+    uncategorized.checkAmountAndTransactions(100.00, "| 10/06/2008 |  | FNAC | -100.00 |");
+
     timeline.selectMonth("2008/06");
     budgetView.transfer.checkTotalAmounts(0, 0);
 
@@ -512,6 +542,8 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
     budgetView.transfer.editSeries("CAF")
       .checkDateChooserIsHidden()
       .cancel();
+
+    uncategorized.checkAmountAndTransactions(100.00, "| 10/06/2008 |  | FNAC | -100.00 |");
   }
 
   // ==> test de l'effet de suppression de transaction référencée dans account

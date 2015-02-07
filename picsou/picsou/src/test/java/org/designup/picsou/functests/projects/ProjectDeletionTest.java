@@ -98,9 +98,14 @@ public class ProjectDeletionTest extends LoggedInFunctionalTestCase {
     });
     categorization.checkSelectedTableRows(0, 1);
 
-    views.selectHome();
+    categorization.showAllTransactions();
+    uncategorized.checkAmountAndTransactions(710.00, "| 01/01/2011 |  | MEGAHOTEL      | -500.00 |\n" +
+                                                     "| 01/01/2011 |  | RESA           | -200.00 |\n" +
+                                                     "| 01/01/2011 |  | SOMETHING ELSE | -10.00  |");
+
     projectList.checkNoProjectShown();
     projects.checkNoProjectShown();
+
     mainAccounts.checkEndOfMonthPosition("Account n. 001111", 290.00);
   }
 
@@ -142,6 +147,8 @@ public class ProjectDeletionTest extends LoggedInFunctionalTestCase {
       .add("10/12/2012", TransactionType.PRELEVEMENT, "EUROPCAR", "", -150.00)
       .add("01/12/2012", TransactionType.PRELEVEMENT, "SNCF", "", -100.00)
       .check();
-  }
 
+    uncategorized.checkAmountAndTransactions(250.00, "| 10/12/2012 |  | EUROPCAR | -150.00 |\n" +
+                                                     "| 01/12/2012 |  | SNCF     | -100.00 |");
+  }
 }

@@ -32,20 +32,20 @@ public class SeriesDeletionTest extends LoggedInFunctionalTestCase {
 
     public void processDeleteVariable(String seriesName, DeleteHandler handler) {
       SeriesEditionDialogChecker seriesDialog = budgetView.variable.editSeries("Drinks");
-      handler.process(seriesDialog.openDeleteDialog());
+      handler.process(seriesDialog.openDelete());
       seriesDialog.checkClosed();
     }
 
     public void transferVariable(String sourceSeries, String targetSeries) {
       budgetView.variable.editSeries(sourceSeries)
-        .openDeleteDialog()
+        .openDelete()
         .selectTransferSeries(targetSeries)
         .transfer();
     }
 
     public void setEndDate(String seriesName, String month) {
       SeriesEditionDialogChecker seriesDialog = budgetView.variable.editSeries(seriesName);
-      seriesDialog.openDeleteDialog()
+      seriesDialog.openDelete()
         .checkEndDateMessageContains(month)
         .setEndDate();
       seriesDialog
@@ -116,13 +116,13 @@ public class SeriesDeletionTest extends LoggedInFunctionalTestCase {
       .validate();
     categorization.setVariable("Forfait Kro", "AA");
 
+    uncategorized.checkNotShown();
+
     views.selectBudget();
     access.uncategorizeVariable("AA");
 
     budgetView.variable.checkSeriesNotPresent("AA");
-    categorization.initContent()
-      .add("30/06/2008", "", "FORFAIT KRO", -60.00)
-      .check();
+    uncategorized.checkAmountAndTransactions(60.00, "| 30/06/2008 |  | FORFAIT KRO | -60.00 |\n");
   }
 
   public void testDeleteFromSingleSeriesEditionDialog() throws Exception {
@@ -153,6 +153,8 @@ public class SeriesDeletionTest extends LoggedInFunctionalTestCase {
 
     budgetView.variable.editSeries("Empty").deleteCurrentSeries();
     budgetView.variable.checkSeriesNotPresent("Empty");
+
+    uncategorized.checkAmountAndTransactions(60.00, "| 30/06/2008 |  | FORFAIT KRO | -60.00 |\n");
   }
 
   public void testDeleteTranferWithNoTransactions() throws Exception {
@@ -190,6 +192,9 @@ public class SeriesDeletionTest extends LoggedInFunctionalTestCase {
       .add("10/08/2008", "OP2", 200.00, "To categorize", 2000.00, 2000.00, "Account n. 222")
       .add("10/08/2008", "OP1", 100.00, "To categorize", 1000.00, 1000.00, "Account n. 111")
       .check();
+
+    uncategorized.checkAmountAndTransactions(300.00, "| 10/08/2008 |  | OP1 | 100.00 |\n" +
+                                                     "| 10/08/2008 |  | OP2 | 200.00 |\n");
   }
 
   public void testDeleteSavingsInManual() throws Exception {
@@ -319,6 +324,8 @@ public class SeriesDeletionTest extends LoggedInFunctionalTestCase {
       .checkNoStartDate()
       .checkNoEndDate()
       .validate();
+
+    uncategorized.checkNotShown();
   }
 
   public void testTransferFromSubseriesFromDialog() throws Exception {
@@ -354,6 +361,8 @@ public class SeriesDeletionTest extends LoggedInFunctionalTestCase {
     categorization.checkTable(new Object[][]{
       {"20/05/2008", "Health", "FORFAIT KRO", -30.0}
     });
+
+    uncategorized.checkNotShown();
   }
 
   public void testSetEndDateFromDialog() throws Exception {
@@ -383,6 +392,8 @@ public class SeriesDeletionTest extends LoggedInFunctionalTestCase {
     budgetView.variable.editSeries("Drinks")
       .checkEndDate("May 2008")
       .validate();
+
+    uncategorized.checkNotShown();
   }
 
   public void testTransferIsProposedForAllMainAccounts() throws Exception {
@@ -487,5 +498,8 @@ public class SeriesDeletionTest extends LoggedInFunctionalTestCase {
       .add("08/08/2008", "OP1B", 100.00, "Series1A", 1000.00, 2800.00, "Account n. 111")
       .add("08/08/2008", "OP1A", 100.00, "Series1A", 900.00, 2700.00, "Account n. 111")
       .check();
+
+    uncategorized.checkAmountAndTransactions(200.00,
+                                             "| 08/08/2008 |  | OP3 | 200.00 |\n");
   }
 }

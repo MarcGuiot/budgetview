@@ -464,6 +464,13 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
       .deleteCurrentSeriesWithConfirmation();
     editionDialogChecker.validate();
     budgetView.recurring.checkSeriesNotPresent("Groceries");
+
+    transactions.initAmountContent()
+      .add("29/07/2008", "AUCHAN", -29.00, "To categorize", 0.00, 0.00, "Account n. 00001123")
+      .add("29/06/2008", "ELF", -60.00, "Fuel", 29.00, 29.00, "Account n. 00001123")
+      .check();
+
+    uncategorized.checkAmountAndTransactions(29.00, "| 29/07/2008 |  | AUCHAN | -29.00 |\n");
   }
 
   public void testDeactivatingSeriesBudgets() throws Exception {
