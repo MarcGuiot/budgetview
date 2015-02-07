@@ -103,6 +103,8 @@ public class AccountDeletionTest extends LoggedInFunctionalTestCase {
 
   public void testDeletingASavingsAccountWithSeries() throws Exception {
 
+    operations.openPreferences().setFutureMonthsCount(2).validate();
+
     OfxBuilder.init(this)
       .addBankAccount(-1, 10674, "0000100", 900.00, "2008/10/15")
       .addTransaction("2008/10/01", 1000.00, "Salaire/oct")
@@ -113,14 +115,12 @@ public class AccountDeletionTest extends LoggedInFunctionalTestCase {
       .addTransaction("2008/10/05", 200.00, "Virement octobre")
       .load();
 
-    views.selectCategorization();
     categorization.setNewIncome("Salaire/oct", "Salaire");
     categorization.setNewVariable("Virement octobre", "Savings");
 
-    views.selectBudget();
+    timeline.selectMonth(200810);
     budgetView.income.checkTotalObserved(1000);
 
-    views.selectHome();
     mainAccounts.edit("Account n. 0000123")
       .setName("Livret")
       .selectBank("ING Direct")
@@ -132,7 +132,6 @@ public class AccountDeletionTest extends LoggedInFunctionalTestCase {
       .selectBank("ING Direct")
       .validate();
 
-    views.selectBudget();
     budgetView.transfer.createSeries()
       .setName("Series 1 for Livret")
       .setFromAccount("Account n. 0000100")
@@ -149,26 +148,24 @@ public class AccountDeletionTest extends LoggedInFunctionalTestCase {
       .setToAccount("Codevi")
       .validate();
 
-    views.selectHome();
     savingsAccounts.edit("Livret")
       .openDelete()
       .checkMessageContains("All the operations and series associated to this account will be deleted")
       .validate();
     savingsAccounts.checkNotPresent("Livret");
 
-    views.selectBudget();
     budgetView.transfer.checkSeriesNotPresent("Series 1 for Livret", "Series 2 for Livret");
     budgetView.transfer.checkSeriesPresent("Series 3 for Codevi");
 
-    views.selectData();
     transactions.initContent()
       .add("01/10/2008", TransactionType.VIREMENT, "Salaire/oct", "", 1000.00, "Salaire")
       .check();
 
-    views.selectHome();
     savingsAccounts.edit("Codevi").openDelete()
       .checkMessageContains("All the series associated to this account will be deleted")
       .validate();
     savingsAccounts.checkNotPresent("Codevi");
+
+    operations.checkDataIsOk();
   }
 }

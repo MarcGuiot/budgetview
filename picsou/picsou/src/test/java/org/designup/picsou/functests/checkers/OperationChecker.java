@@ -557,7 +557,7 @@ public class OperationChecker {
   }
 
   public void checkDataIsOk() {
-    MessageDialogChecker.open(getCheckMenu().triggerClick())
+    MessageDialogChecker.open(getDevMenu().getSubMenu("[Check data (see logs)]").triggerClick())
       .checkSuccessMessageContains("No error was found").close();
   }
 
@@ -587,10 +587,6 @@ public class OperationChecker {
 
   private MenuItem getThrowExceptionInRepositoryMenu() {
     return getDevMenu().getSubMenu("Throw exception in repository");
-  }
-
-  private MenuItem getCheckMenu() {
-    return getDevMenu().getSubMenu("[Check data (see logs)]");
   }
 
   public RestoreSnapshotChecker restoreSnapshot() {

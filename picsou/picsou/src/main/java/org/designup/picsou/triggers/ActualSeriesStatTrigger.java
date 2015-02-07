@@ -20,11 +20,11 @@ public class ActualSeriesStatTrigger implements ChangeSetListener {
 
   private void processTransactions(ChangeSet changeSet, final GlobRepository repository) {
     changeSet.safeVisit(Transaction.TYPE, new ChangeSetVisitor() {
-      public void visitCreation(Key key, FieldValues values) throws Exception {
+      public void visitCreation(Key transactionKey, FieldValues values) throws Exception {
         processTransaction(values, 1, repository, true);
       }
 
-      public void visitUpdate(Key key, FieldValuesWithPrevious values) throws Exception {
+      public void visitUpdate(Key transactionKey, FieldValuesWithPrevious values) throws Exception {
         if (!values.contains(Transaction.SERIES)
             && !values.contains(Transaction.BUDGET_MONTH)
             && !values.contains(Transaction.AMOUNT)
@@ -32,7 +32,7 @@ public class ActualSeriesStatTrigger implements ChangeSetListener {
           return;
         }
 
-        Glob transaction = repository.get(key);
+        Glob transaction = repository.get(transactionKey);
         if (transaction.isTrue(Transaction.PLANNED) || Transaction.isOpenCloseAccount(transaction)) {
           return;
         }
@@ -86,7 +86,7 @@ public class ActualSeriesStatTrigger implements ChangeSetListener {
         }
       }
 
-      public void visitDeletion(Key key, FieldValues previousValues) throws Exception {
+      public void visitDeletion(Key transactionKey, FieldValues previousValues) throws Exception {
         processTransaction(previousValues, -1, repository, false);
       }
     });
@@ -94,7 +94,9 @@ public class ActualSeriesStatTrigger implements ChangeSetListener {
 
   private void processTransaction(FieldValues values, int multiplier, GlobRepository repository, boolean throwIfNull) {
     final Integer seriesId = values.get(Transaction.SERIES);
-    if (seriesId == null || values.isTrue(Transaction.PLANNED) || Transaction.isOpenCloseAccount(values)) {
+    if (seriesId == null ||
+        values.isTrue(Transaction.PLANNED) ||
+        Transaction.isOpenCloseAccount(values)) {
       return;
     }
 

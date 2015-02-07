@@ -1,6 +1,5 @@
 package org.designup.picsou.gui.model;
 
-import org.designup.picsou.model.ProfileType;
 import org.designup.picsou.model.Series;
 import org.designup.picsou.model.SeriesGroup;
 import org.globsframework.metamodel.GlobType;
@@ -15,7 +14,7 @@ import org.globsframework.utils.exceptions.InvalidParameter;
 
 import static org.globsframework.model.FieldValue.value;
 
-public enum SeriesType implements GlobConstantContainer {
+public enum   SeriesType implements GlobConstantContainer {
   SERIES(0, Series.TYPE),
   SERIES_GROUP(1, SeriesGroup.TYPE);
 

@@ -152,18 +152,6 @@ public class SeriesStat {
     };
   }
 
-  public static GlobMatcher isNotMirror() {
-    return new GlobMatcher() {
-      public boolean matches(Glob seriesStat, GlobRepository repository) {
-        if ((seriesStat == null) || !SeriesType.SERIES.getId().equals(seriesStat.get(TARGET_TYPE))) {
-          return false;
-        }
-        Glob series = repository.find(org.globsframework.model.Key.create(Series.TYPE, seriesStat.get(SeriesStat.TARGET)));
-        return series != null && !series.isTrue(Series.IS_MIRROR);
-      }
-    };
-  }
-
   public static GlobMatcher isRoot() {
     return new GlobMatcher() {
       public boolean matches(Glob seriesStat, GlobRepository repository) {
@@ -240,6 +228,12 @@ public class SeriesStat {
 
   public static SeriesType getTargetType(Glob seriesStat) {
     return SeriesType.get(seriesStat.get(TARGET_TYPE));
+  }
+
+  public static void deleteAllForSeries(Glob series, GlobRepository repository) {
+    repository.delete(SeriesStat.TYPE,
+                             and(fieldEquals(SeriesStat.TARGET_TYPE, SeriesType.SERIES.getId()),
+                                 fieldEquals(SeriesStat.TARGET, series.get(Series.ID))));
   }
 
   public static GlobList getAllMonthsForSeries(Glob series, GlobRepository repository) {

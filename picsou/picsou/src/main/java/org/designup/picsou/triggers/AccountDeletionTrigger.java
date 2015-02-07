@@ -1,10 +1,12 @@
 package org.designup.picsou.triggers;
 
+import org.designup.picsou.gui.model.SeriesStat;
 import org.designup.picsou.model.*;
 import org.globsframework.model.ChangeSet;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.Key;
+import org.globsframework.model.format.GlobPrinter;
 import org.globsframework.model.utils.DefaultChangeSetListener;
 
 import java.util.HashSet;
@@ -26,20 +28,19 @@ public class AccountDeletionTrigger extends DefaultChangeSetListener {
 
   public void processAccountDeletions(Set<Key> deletedKeys, GlobRepository repository) {
 
-    Set<Glob> itemsToDelete = new HashSet<Glob>();
     Set<Glob> seriesToDelete = new HashSet<Glob>();
+    Set<Glob> itemsToDelete = new HashSet<Glob>();
     for (Key accountKey : deletedKeys) {
-      itemsToDelete.addAll(repository.findLinkedTo(accountKey, ProjectItem.ACCOUNT));
-      for (Glob transfer : repository.getAll(ProjectTransfer.TYPE,
-                                             or(linkedTo(accountKey, ProjectTransfer.FROM_ACCOUNT),
-                                                linkedTo(accountKey, ProjectTransfer.TO_ACCOUNT))
-      )) {
-        itemsToDelete.add(repository.findLinkTarget(transfer, ProjectTransfer.PROJECT_ITEM));
-      }
       repository.delete(Transaction.TYPE, linkedTo(accountKey, Transaction.ACCOUNT));
       seriesToDelete.addAll(repository.getAll(Series.TYPE, or(linkedTo(accountKey, Series.TARGET_ACCOUNT),
                                                               linkedTo(accountKey, Series.FROM_ACCOUNT),
                                                               linkedTo(accountKey, Series.TO_ACCOUNT))));
+      itemsToDelete.addAll(repository.findLinkedTo(accountKey, ProjectItem.ACCOUNT));
+      for (Glob transfer : repository.getAll(ProjectTransfer.TYPE,
+                                             or(linkedTo(accountKey, ProjectTransfer.FROM_ACCOUNT),
+                                                linkedTo(accountKey, ProjectTransfer.TO_ACCOUNT)))) {
+        itemsToDelete.add(repository.findLinkTarget(transfer, ProjectTransfer.PROJECT_ITEM));
+      }
       repository.delete(AccountPositionError.TYPE, linkedTo(accountKey, AccountPositionError.ACCOUNT));
     }
 

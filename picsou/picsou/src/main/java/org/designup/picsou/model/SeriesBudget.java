@@ -11,6 +11,7 @@ import org.globsframework.metamodel.fields.LinkField;
 import org.globsframework.metamodel.index.MultiFieldUniqueIndex;
 import org.globsframework.metamodel.utils.GlobTypeLoader;
 import org.globsframework.model.*;
+import org.globsframework.model.utils.GlobMatchers;
 import org.globsframework.utils.exceptions.InvalidState;
 import org.globsframework.utils.serialization.SerializedByteArrayOutput;
 import org.globsframework.utils.serialization.SerializedInput;
@@ -84,6 +85,10 @@ public class SeriesBudget {
       .findByIndex(SeriesBudget.SERIES_INDEX, SeriesBudget.SERIES, seriesId)
       .findByIndex(SeriesBudget.MONTH, monthId)
       .getGlobs();
+  }
+
+  public static void deleteAllForSeries(Glob series, GlobRepository repository) {
+    repository.delete(SeriesBudget.TYPE, GlobMatchers.fieldEquals(SeriesBudget.SERIES, series.get(Series.ID)));
   }
 
   public static Glob get(Integer seriesId, Integer monthId, GlobRepository repository) {

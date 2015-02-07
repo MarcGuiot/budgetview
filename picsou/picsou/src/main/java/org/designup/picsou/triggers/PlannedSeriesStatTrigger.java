@@ -62,7 +62,12 @@ public class PlannedSeriesStatTrigger implements ChangeSetListener {
   }
 
   private void updateSeriesStat(GlobRepository repository, final Glob seriesBudget) {
-    Key seriesStatKey = SeriesStat.createKeyForSeries(seriesBudget.get(SeriesBudget.SERIES), seriesBudget.get(SeriesBudget.MONTH));
+    Integer seriesId = seriesBudget.get(SeriesBudget.SERIES);
+    if (!repository.contains(Key.create(Series.TYPE, seriesId))) {
+      return;
+    }
+
+    Key seriesStatKey = SeriesStat.createKeyForSeries(seriesId, seriesBudget.get(SeriesBudget.MONTH));
     Glob seriesStat = repository.findOrCreate(seriesStatKey);
 
     Boolean isActive = seriesBudget.isTrue(SeriesBudget.ACTIVE);
