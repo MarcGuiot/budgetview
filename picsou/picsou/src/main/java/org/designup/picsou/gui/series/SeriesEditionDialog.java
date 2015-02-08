@@ -371,7 +371,6 @@ public class SeriesEditionDialog {
           localRepository.findByIndex(Transaction.SERIES_INDEX, Transaction.SERIES, currentSeries.get(Series.ID))
             .getGlobs()
             .filterSelf(isFalse(Transaction.PLANNED), localRepository)
-            .filterSelf(isFalse(Transaction.CREATED_BY_SERIES), localRepository)
             .sort(Transaction.BUDGET_MONTH);
         Glob firstMonth = transactions.getFirst();
         if (firstMonth == null) {
@@ -408,7 +407,6 @@ public class SeriesEditionDialog {
         GlobList transactions =
           localRepository.findByIndex(Transaction.SERIES_INDEX, Transaction.SERIES, currentSeries.get(Series.ID))
             .getGlobs()
-            .filterSelf(isFalse(Transaction.CREATED_BY_SERIES), localRepository)
             .sort(Transaction.BUDGET_MONTH);
         Glob lastMonth = transactions.getLast();
         if (lastMonth == null) {
@@ -513,9 +511,7 @@ public class SeriesEditionDialog {
     if (mirrorId != null) {
       selectedTransactions.addAll(repository.findByIndex(Transaction.SERIES_INDEX, Transaction.SERIES, mirrorId).getGlobs());
     }
-    selectedTransactions.removeAll(or(isTrue(Transaction.PLANNED),
-                                      isTrue(Transaction.CREATED_BY_SERIES)),
-                                   repository);
+    selectedTransactions.removeAll(or(isTrue(Transaction.PLANNED)), repository);
   }
 
   private void initExtraBudgetAmounts(Glob createdSeries, GlobList transactions) {

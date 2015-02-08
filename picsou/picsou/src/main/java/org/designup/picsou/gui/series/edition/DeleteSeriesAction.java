@@ -55,8 +55,7 @@ public class DeleteSeriesAction extends AbstractAction {
     }
     localRepository.reset(parentRepository.getAll(Transaction.TYPE,
                                                   and(TransactionMatchers.transactionsForSeries(seriesIds),
-                                                      isNotTrue(Transaction.PLANNED),
-                                                      isNotTrue(Transaction.CREATED_BY_SERIES))),
+                                                      isNotTrue(Transaction.PLANNED))),
                           Transaction.TYPE);
 
     SeriesDeletionHandler handler = new SeriesDeletionHandler(owner,

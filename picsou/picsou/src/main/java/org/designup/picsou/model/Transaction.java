@@ -123,6 +123,7 @@ public class Transaction {
   @DefaultBoolean(false)
   public static BooleanField MIRROR;
 
+  /** @deprecated **/
   @DefaultBoolean(false)
   public static BooleanField CREATED_BY_SERIES;
 
@@ -237,10 +238,6 @@ public class Transaction {
 
   public static boolean isMirrorTransaction(FieldValues values) {
     return values.isTrue(MIRROR);
-  }
-
-  public static boolean isCreatedBySeries(Glob transaction) {
-    return transaction.isTrue(CREATED_BY_SERIES);
   }
 
   public static boolean isManuallyCreated(Glob transaction) {

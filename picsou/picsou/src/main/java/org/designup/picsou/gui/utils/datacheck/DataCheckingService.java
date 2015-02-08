@@ -253,7 +253,7 @@ public class DataCheckingService {
     GlobList all = repository.getAll(Transaction.TYPE);
     for (Glob transaction : all) {
       if (!series.contains(transaction.get(Transaction.SERIES))) {
-        if (transaction.isTrue(Transaction.PLANNED) || transaction.isTrue(Transaction.CREATED_BY_SERIES)) {
+        if (transaction.isTrue(Transaction.PLANNED)) {
           repository.delete(transaction);
         }
         else {

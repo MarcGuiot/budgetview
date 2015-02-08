@@ -77,9 +77,7 @@ public class TransactionSeriesColumn extends HyperlinkTableColumn {
 
     HyperlinkButton button = (HyperlinkButton)jButton;
 
-    if (Transaction.isPlanned(transaction)
-        || Transaction.isMirrorTransaction(transaction)
-        || Transaction.isCreatedBySeries(transaction)) {
+    if (Transaction.isPlanned(transaction) || Transaction.isMirrorTransaction(transaction)) {
       button.setEnabled(false);
       button.setDisabledColor(isSelected ? rendererColors.getTransactionSelectedTextColor() : rendererColors.getTransactionPlannedTextColor());
       setSeriesText(button, transaction);

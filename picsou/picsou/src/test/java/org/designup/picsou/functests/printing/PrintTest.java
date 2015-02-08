@@ -379,7 +379,7 @@ public class PrintTest extends LoggedInFunctionalTestCase {
 
     report.initGaugesPage(1)
       .checkTitle("Budget for april 2012")
-      .checkBlockCount(13)
+      .checkBlockCount(16)
       .checkBudget(0, "Income", "0.00", "0.00")
       .checkSeparator(1)
       .checkBudget(2, "Recurring", "0.00", "0.00")
@@ -387,12 +387,15 @@ public class PrintTest extends LoggedInFunctionalTestCase {
       .checkBudget(4, "Variable", "0.00", "0.00")
       .checkSeparator(5)
       .checkBudget(6, "Transfers", "90.00", "0.00")
-      .checkSeries(7, "MainToImported", "150.00", "0.00")
-      .checkSeries(8, "ImportedToMain", "+70.00", "0.00")
-      .checkSeries(9, "MainToNonImported", "50.00", "0.00")
-      .checkSeries(10, "MainFromNonImported", "+40.00", "0.00")
-      .checkSeparator(11)
-      .checkBudget(12, "Extras", "0.00", "0.00");
+      .checkSeries(7, "ImportedToExternal", "300.00", "0.00")
+      .checkSeries(8, "ImportedFromNonImported", "+220.00", "0.00")
+      .checkSeries(9, "ImportedFromExternal", "+200.00", "0.00")
+      .checkSeries(10, "MainToImported", "150.00", "0.00")
+      .checkSeries(11, "ImportedToMain", "+70.00", "0.00")
+      .checkSeries(12, "MainToNonImported", "50.00", "0.00")
+      .checkSeries(13, "MainFromNonImported", "+40.00", "0.00")
+      .checkSeparator(14)
+      .checkBudget(15, "Extras", "0.00", "0.00");
   }
 
   public void testExceptionRaisedDuringPrint() throws Exception {
