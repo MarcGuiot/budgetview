@@ -186,7 +186,7 @@ public class Account {
     return isMain(account);
   }
 
-  public static boolean isMain(Glob account) {
+  public static boolean isMain(FieldValues account) {
     if (account == null) {
       return false;
     }

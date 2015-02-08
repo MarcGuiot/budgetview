@@ -276,11 +276,6 @@ public class Series {
   }
 
 
-  public static boolean isForMainOrUnknownAccount(Glob series, GlobRepository repository) {
-    Glob account = repository.findLinkTarget(series, TARGET_ACCOUNT);
-    return account == null || Account.isMain(account);
-  }
-
   public static boolean isUncategorized(Integer seriesId) {
     return UNCATEGORIZED_SERIES_ID.equals(seriesId);
   }

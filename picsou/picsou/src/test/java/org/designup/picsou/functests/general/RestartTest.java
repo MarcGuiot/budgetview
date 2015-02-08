@@ -529,16 +529,21 @@ public class RestartTest extends RestartTestCase {
       .check();
 
     timeline.selectMonth("2008/08");
-    budgetView.transfer.checkTotalAmounts(0, 0);
+    budgetView.transfer
+      .checkContent("| CAF | 0.00 | +300.00 |")
+      .checkTotalAmounts("0.00", "+300.00");
 
     savingsAccounts.select("Epargne");
-    budgetView.transfer.checkSeries("CAF", "0.00", "+300.00");
+    budgetView.transfer
+      .checkContent("| CAF | 0.00 | +300.00 |")
+      .checkTotalAmounts("0.00", "+300.00");
 
     restartApplication();
 
     savingsAccounts.select("Epargne");
-    budgetView.transfer.checkSeries("CAF", "0.00", "+300.00");
-    timeline.selectMonth("2008/08");
+    budgetView.transfer
+      .checkContent("| CAF | 0.00 | +300.00 |")
+      .checkTotalAmounts("0.00", "+300.00");
 
     timeline.selectMonth("2008/08");
     savingsAccounts.checkEndOfMonthPosition("Epargne", 1300);
@@ -547,7 +552,6 @@ public class RestartTest extends RestartTestCase {
     timeline.selectMonth("2008/10");
     savingsAccounts.checkEndOfMonthPosition("Epargne", 1900);
 
-    views.selectData();
     timeline.selectAll();
     transactions
       .showPlannedTransactions()
@@ -596,7 +600,7 @@ public class RestartTest extends RestartTestCase {
       .addTransaction("2008/08/06", 1000.00, "Salaire")
       .addTransaction("2008/08/06", -1000.00, "Loyer")
       .load();
-    views.selectCategorization();
+
     categorization.setNewIncome("Salaire", "Salaire");
     categorization.setNewVariable("Loyer", "Loyer");
 
@@ -636,13 +640,11 @@ public class RestartTest extends RestartTestCase {
       .addTransaction("2008/06/15", -40.0, "EDF")
       .addTransaction("2008/06/16", -30.0, "Monop")
       .load();
-
-    views.selectCategorization();
     categorization.setNewVariable("Auchan", "courses");
     categorization.setNewRecurring("EDF", "electricite");
 
     restartApplication();
-    views.selectCategorization();
+
     categorization.selectAllTransactions();
     categorization.checkMultipleSeriesSelection();
   }

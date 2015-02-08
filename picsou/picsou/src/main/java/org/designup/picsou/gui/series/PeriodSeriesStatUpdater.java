@@ -65,7 +65,7 @@ public class PeriodSeriesStatUpdater implements GlobSelectionListener, ChangeSet
 
   public void filterAllAccounts() {
     selectedAccountId = null;
-    selectedAccountSeriesMatcher = SeriesMatchers.seriesForMainOrUnknownAccount();
+    selectedAccountSeriesMatcher = SeriesMatchers.seriesForGlobalBudget();
   }
 
   public void filterSingleAccount(final Integer accountId) {
