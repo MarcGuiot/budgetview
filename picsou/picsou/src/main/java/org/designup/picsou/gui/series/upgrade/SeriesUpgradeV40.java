@@ -10,8 +10,10 @@ import org.designup.picsou.gui.upgrade.PostProcessor;
 import org.designup.picsou.model.*;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.model.*;
+import org.globsframework.model.format.GlobPrinter;
 import org.globsframework.model.utils.GlobFunctor;
 import org.globsframework.model.utils.GlobMatchers;
+import org.globsframework.utils.Log;
 import org.globsframework.utils.Utils;
 
 import java.util.*;

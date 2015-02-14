@@ -35,6 +35,7 @@ import org.globsframework.model.repository.LocalGlobRepository;
 import org.globsframework.model.repository.LocalGlobRepositoryBuilder;
 import org.globsframework.model.utils.GlobListActionAdapter;
 import org.globsframework.model.utils.GlobListFunctor;
+import org.globsframework.model.utils.TypeChangeSetListener;
 import org.globsframework.utils.Functor;
 import org.globsframework.utils.Strings;
 import org.globsframework.utils.directory.Directory;
@@ -244,6 +245,7 @@ public abstract class ProjectItemPanel implements Disposable {
           .copy(ProjectItem.TYPE, ProjectTransfer.TYPE, ProjectItemAmount.TYPE, Month.TYPE,
                 CurrentMonth.TYPE, Account.TYPE, Picture.TYPE)
           .get();
+      registerAutoAccountUpdater();
       this.localRepository.addTrigger(new ProjectItemToAmountLocalTrigger());
       this.editionPanel = createEditionPanel();
       this.editionPanel.addHierarchyListener(new HierarchyListener() {
@@ -260,6 +262,20 @@ public abstract class ProjectItemPanel implements Disposable {
     SwingUtilities.invokeLater(new Runnable() {
       public void run() {
         initEditionFocus();
+      }
+    });
+  }
+
+  private void registerAutoAccountUpdater() {
+    final TypeChangeSetListener listener = new TypeChangeSetListener(Account.TYPE) {
+      public void update(GlobRepository repository) {
+        localRepository.reset(parentRepository.getAll(Account.TYPE), Account.TYPE);
+      }
+    };
+    parentRepository.addChangeListener(listener);
+    disposables.add(new Disposable() {
+      public void dispose() {
+        parentRepository.removeChangeListener(listener);
       }
     });
   }

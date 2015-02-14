@@ -112,8 +112,10 @@ public class ProjectUpgradeV40 {
 
       Glob series = repository.findLinkTarget(item, ProjectItem.SERIES);
       if (series == null) {
-        series = ProjectTransferToSeriesTrigger.createSavingsSeries(transfer.getKey(), repository);
-        repository.update(item.getKey(), ProjectItem.SERIES, series.get(Series.ID));
+        series = ProjectTransferToSeriesTrigger.createSavingsSeriesIfComplete(transfer.getKey(), repository);
+        if (series != null) {
+          repository.update(item.getKey(), ProjectItem.SERIES, series.get(Series.ID));
+        }
       }
       else {
         clearActualStats(series);
@@ -147,7 +149,8 @@ public class ProjectUpgradeV40 {
 
       Integer[] mainAccountIds = getMainUserCreatedAccounts(allTransactions, repository);
       if (mainAccountIds.length == 0) {
-        createTransferItem(item, item.get(ProjectItem.LABEL), project, transferField, defaultMainAccount, allTransactions, repository);
+        Integer accountId = transfer.get(transferField) == null ? null : defaultMainAccount;
+        createTransferItem(item, item.get(ProjectItem.LABEL), project, transferField, accountId, allTransactions, repository);
       }
       else {
         String itemLabel = item.get(ProjectItem.LABEL);
@@ -177,6 +180,9 @@ public class ProjectUpgradeV40 {
     for (Glob transfer : repository.getAll(ProjectTransfer.TYPE)) {
       Glob item = ProjectTransfer.getItemFromTransfer(transfer, repository);
       Glob series = repository.findLinkTarget(item, ProjectItem.SERIES);
+      if (series == null) {
+        continue;
+      }
       Integer from = series.get(Series.FROM_ACCOUNT);
       Integer to = series.get(Series.TO_ACCOUNT);
       Integer target = series.get(Series.TARGET_ACCOUNT);
@@ -205,7 +211,7 @@ public class ProjectUpgradeV40 {
     GlobList mirrorAccountTransactions = findMirrorTransactions(sourceTransactions, targetAccountId, allTransactions, repository);
     postProcessor.add(new BindTransferTransactions(newItem, sourceTransactions, mirrorAccountTransactions));
 
-    ProjectTransferToSeriesTrigger.createSavingsSeries(newTransfer.getKey(), repository);
+    ProjectTransferToSeriesTrigger.createSavingsSeriesIfComplete(newTransfer.getKey(), repository);
 
     return newItem;
   }
@@ -378,6 +384,10 @@ public class ProjectUpgradeV40 {
 
     public void apply(GlobRepository repository) {
       Integer seriesId = item.get(ProjectItem.SERIES);
+      if (seriesId == null) {
+        return;
+      }
+
       Glob series = repository.get(Key.create(Series.TYPE, seriesId));
       Glob mirror = repository.findLinkTarget(series, Series.MIRROR_SERIES);
 

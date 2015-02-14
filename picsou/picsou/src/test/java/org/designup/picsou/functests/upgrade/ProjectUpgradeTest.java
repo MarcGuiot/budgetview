@@ -1,10 +1,7 @@
 package org.designup.picsou.functests.upgrade;
 
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
-import org.designup.picsou.model.ProjectItem;
-import org.designup.picsou.model.Series;
 import org.designup.picsou.model.TransactionType;
-import org.globsframework.model.format.GlobPrinter;
 import org.globsframework.utils.Files;
 
 public class ProjectUpgradeTest extends LoggedInFunctionalTestCase {
@@ -69,8 +66,8 @@ public class ProjectUpgradeTest extends LoggedInFunctionalTestCase {
                                    "| Voyage      | 30.00 | 50.00 |\n" +
                                    "| Prepa Rome  | 30.00 | 0.00  |\n");
     budgetView.transfer.checkContent("| Provisions Rome       | 50.00 | 50.00 |\n" +
-                                    "| Du compte Livret      | 0.00  | 0.00  |\n" +
-                                    "| Vers le compte Livret | 0.00  | 0.00  |\n");
+                                     "| Du compte Livret      | 0.00  | 0.00  |\n" +
+                                     "| Vers le compte Livret | 0.00  | 0.00  |\n");
 
     timeline.selectMonth(201402);
     budgetView.extras.checkContent("| Voyage Rome | 220.00 | 230.00 |\n" +
@@ -78,17 +75,17 @@ public class ProjectUpgradeTest extends LoggedInFunctionalTestCase {
                                    "| Prepa Rome  | 0.00   | 80.00  |\n" +
                                    "| Other       | 70.00  | 0.00   |\n");
     budgetView.transfer.checkContent("| Provisions Rome       | 50.00 | 50.00 |\n" +
-                                    "| Du compte Livret      | 0.00  | 0.00  |\n" +
-                                    "| Vers le compte Livret | 0.00  | 0.00  |\n");
+                                     "| Du compte Livret      | 0.00  | 0.00  |\n" +
+                                     "| Vers le compte Livret | 0.00  | 0.00  |\n");
 
     timeline.selectMonth(201403);
     budgetView.extras.checkContent("| Voyage Rome | 0.00 | 800.00 |\n" +
                                    "| Sorties     | 0.00 | 500.00 |\n" +
                                    "| Hotel       | 0.00 | 300.00 |\n");
     budgetView.transfer.checkContent("| Virement Rome         | 0.00 | +500.00 |\n" +
-                                    "| Provisions Rome       | 0.00 | 50.00   |\n" +
-                                    "| Du compte Livret      | 0.00 | 0.00    |\n" +
-                                    "| Vers le compte Livret | 0.00 | 0.00    |\n");
+                                     "| Provisions Rome       | 0.00 | 50.00   |\n" +
+                                     "| Du compte Livret      | 0.00 | 0.00    |\n" +
+                                     "| Vers le compte Livret | 0.00 | 0.00    |\n");
   }
 
   public void testSeveralTransactionsAssignedToRootProjectSeries() throws Exception {
@@ -331,7 +328,7 @@ public class ProjectUpgradeTest extends LoggedInFunctionalTestCase {
     addOns.activateProjects();
 
     budgetView.transfer.checkContent("| Regular savings | 200.00 | 200.00 |\n" +
-                                    "| Trip payment    | 0.00   | 0.00   |");
+                                     "| Trip payment    | 0.00   | 0.00   |");
     budgetView.extras.checkContent("| Trip to Rome | 200.00 | 200.00 |\n" +
                                    "| Gifts        | 0.00   | 0.00   |");
 
@@ -342,8 +339,8 @@ public class ProjectUpgradeTest extends LoggedInFunctionalTestCase {
 
     currentProject.setActive();
     budgetView.transfer.checkContent("| Virt iPad       | 0.00   | +400.00 |\n" +
-                                    "| Regular savings | 200.00 | 200.00  |\n" +
-                                    "| Trip payment    | 0.00   | 0.00    |");
+                                     "| Regular savings | 200.00 | 200.00  |\n" +
+                                     "| Trip payment    | 0.00   | 0.00    |");
     budgetView.extras.checkContent("| iPad         | 0.00   | 500.00 |\n" +
                                    "| Trip to Rome | 200.00 | 200.00 |\n" +
                                    "| Gifts        | 0.00   | 0.00   |");
@@ -358,15 +355,38 @@ public class ProjectUpgradeTest extends LoggedInFunctionalTestCase {
     operations.restore(Files.copyResourceToTmpFile(this, "/testbackups/upgrade_jar139_project_with_invalid_from_to_transfer.budgetview"));
     addOns.activateProjects();
 
-    operations.dumpRepository();
-
     projects.select("Rome");
     currentProject
       .checkItems("| Voyage   | Sep | 0.00 | 500.00  |\n" +
                   "| Virement | Sep | 0.00 | +400.00 |\n");
 
     budgetView.transfer.checkContent("| Virement                 | 0.00   | +400.00 |\n" +
-                                    "| Vers le Compte 000123321 | 200.00 | 250.00  |\n" +
-                                    "| Du Compte 000123321      | 0.00   | 0.00    |");
+                                     "| Vers le Compte 000123321 | 200.00 | 250.00  |\n" +
+                                     "| Du Compte 000123321      | 0.00   | 0.00    |");
+  }
+
+  public void testUpgradeFromJar141WhereSavingsSeriesHasANullFrom() throws Exception {
+    operations.restore(Files.copyResourceToTmpFile(this, "/testbackups/upgrade_jar141_project_series_with_null_from.budgetview"));
+    addOns.activateProjects();
+
+    timeline.selectMonth(201410);
+
+    projects.select("Voyage Rome");
+    currentProject
+      .editTransfer(1)
+      .checkFromAccount("Select the source account")
+      .checkToAccount("Select the target account");
+
+    accounts.createSavingsAccount("Livret", 2000.00);
+
+    currentProject
+      .editTransfer(1)
+      .setFromAccount("Livret")
+      .setToAccount("Compte 00000123456")
+      .setAmount(150.00)
+      .validate();
+
+    currentProject.checkProjectGauge(0.00, -200.00);
+    budgetView.transfer.checkContent("| Virement | 0.00 | +150.00 |");
   }
 }

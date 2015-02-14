@@ -16,8 +16,9 @@ public class ProjectTransferToSeriesTrigger implements ChangeSetListener {
       public void visitCreation(Key projectTransferKey, FieldValues values) throws Exception {
         Glob item = ProjectTransfer.getItemFromTransfer(projectTransferKey, repository);
         if (Utils.equal(ProjectItemType.get(item), ProjectItemType.TRANSFER) &&
-            ProjectTransfer.usesSavingsAccounts(values, repository)) {
-          createSavingsSeries(projectTransferKey, repository);
+            ProjectTransfer.usesSavingsAccounts(values, repository) &&
+            ProjectItem.isComplete(item, repository)) {
+          createSavingsSeriesIfComplete(projectTransferKey, repository);
         }
       }
 
@@ -32,7 +33,7 @@ public class ProjectTransferToSeriesTrigger implements ChangeSetListener {
         boolean isSavings = ProjectTransfer.usesSavingsAccounts(newTransferValues, repository);
         boolean wasSavings = ProjectTransfer.usesSavingsAccounts(previousTransferValues, repository);
         if (isSavings && !wasSavings) {
-          createSavingsSeries(projectTransferKey, repository);
+          createSavingsSeriesIfComplete(projectTransferKey, repository);
         }
         else if (wasSavings && !isSavings) {
           deleteSavingsSeries(projectTransferKey, previousTransferValues, repository);
@@ -50,9 +51,12 @@ public class ProjectTransferToSeriesTrigger implements ChangeSetListener {
   public void globsReset(GlobRepository repository, Set<GlobType> changedTypes) {
   }
 
-  public static Glob createSavingsSeries(Key projectTransferKey, GlobRepository repository) {
+  public static Glob createSavingsSeriesIfComplete(Key projectTransferKey, GlobRepository repository) {
     Glob projectTransfer = repository.get(projectTransferKey);
     Glob item = ProjectTransfer.getItemFromTransfer(projectTransferKey, repository);
+    if (!ProjectItem.isComplete(item, repository)) {
+      return null;
+    }
     Integer firstMonth = item.get(ProjectItem.FIRST_MONTH);
     Integer lastMonth = ProjectItem.getLastMonth(item);
     Glob series = repository.create(Series.TYPE,

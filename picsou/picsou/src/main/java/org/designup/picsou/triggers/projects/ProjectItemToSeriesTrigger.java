@@ -3,9 +3,7 @@ package org.designup.picsou.triggers.projects;
 import org.designup.picsou.model.*;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.*;
-import org.globsframework.model.format.GlobPrinter;
 import org.globsframework.model.utils.DefaultChangeSetVisitor;
-import org.globsframework.utils.Log;
 
 import java.util.Set;
 
@@ -127,7 +125,7 @@ public class ProjectItemToSeriesTrigger implements ChangeSetListener {
         }
         else {
           Glob transfer = ProjectTransfer.getTransferFromItem(item, repository);
-          ProjectTransferToSeriesTrigger.createSavingsSeries(transfer.getKey(), repository);
+          ProjectTransferToSeriesTrigger.createSavingsSeriesIfComplete(transfer.getKey(), repository);
         }
       }
     }

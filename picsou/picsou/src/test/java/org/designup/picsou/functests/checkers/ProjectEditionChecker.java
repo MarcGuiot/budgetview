@@ -179,6 +179,7 @@ public class ProjectEditionChecker extends ViewChecker {
   }
 
   public ProjectEditionChecker deleteItem(int index) {
+    views.selectProjects();
     view(index).delete();
     return this;
   }

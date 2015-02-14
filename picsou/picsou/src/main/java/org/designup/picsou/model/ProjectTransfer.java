@@ -65,6 +65,10 @@ public class ProjectTransfer {
     return AccountType.get(repository.find(org.globsframework.model.Key.create(Account.TYPE, accountId)));
   }
 
+  public static boolean isComplete(Glob transfer) {
+    return transfer.get(FROM_ACCOUNT) != null && transfer.get(TO_ACCOUNT) != null;
+  }
+
   public static class Serializer implements PicsouGlobSerializer {
 
     public int getWriteVersion() {

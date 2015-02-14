@@ -43,7 +43,7 @@ public class TimeViewTooltipHandler implements TimeViewMouseHandler {
     Glob target = repository.findLinkTarget(budgetStat, AccountStat.MIN_ACCOUNT);
     String accountName = target != null ? target.get(Account.NAME) : "";
 
-    if (budgetStat.get(AccountStat.ACCOUNT_COUNT) == 1){
+    if (budgetStat.get(AccountStat.ACCOUNT_COUNT) == 1) {
       panel.setToolTipText(
         Lang.get("timeView.tooltip.month.standard.one.account",
                  month,
