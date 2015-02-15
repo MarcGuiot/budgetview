@@ -347,10 +347,8 @@ public class LoginTest extends StartUpFunctionalTestCase {
 
   public void testLoginInDemoMode() throws Exception {
     login.clickDemoLink();
-    checkDemoMode();
-    getLicense()
-      .checkInfoMessage("demo account")
-      .clickLink("logout");
+    getLicense().checkInfoMessageHidden();
+    checkDemoMode().exit();
     login.checkComponentsVisible();
   }
 
@@ -377,13 +375,6 @@ public class LoginTest extends StartUpFunctionalTestCase {
 
     TransactionCreationChecker transactionCreation = new TransactionCreationChecker(window);
     transactionCreation.checkDemoMessage();
-  }
-
-  public void testLicenseInfoInDemoMode() throws Exception {
-    login.clickDemoLink();
-
-    LicenseChecker license = new LicenseChecker(window);
-    license.checkInfoMessage("demo account");
   }
 
   public void testAutoLogin() throws Exception {
@@ -477,9 +468,12 @@ public class LoginTest extends StartUpFunctionalTestCase {
     login.clickAutoLogin();
   }
 
-  private void checkDemoMode() {
+  private DemoMessageChecker checkDemoMode() {
     login.checkLoggedIn();
     getTransactionView().checkNotEmpty();
+    DemoMessageChecker demo = new DemoMessageChecker(window);
+    demo.checkVisible();
+    return demo;
   }
 
   private TransactionChecker getTransactionView() {

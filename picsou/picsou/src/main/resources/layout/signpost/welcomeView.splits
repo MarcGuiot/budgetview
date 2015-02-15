@@ -27,6 +27,8 @@
     <filler fill="horizontal"/>
     <column name="welcomeIntro">
 
+      <filler fill="vertical"/>
+
       <row>
         <label icon="/dashboard/cloudy.png"/>
         <label text="$welcomeView.title" styleClass="contentTitle"/>
