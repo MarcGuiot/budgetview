@@ -5,6 +5,7 @@ import org.designup.picsou.functests.checkers.mobile.CreateMobileAccountChecker;
 import org.designup.picsou.functests.checkers.mobile.EditMobileAccountChecker;
 import org.designup.picsou.functests.checkers.printing.PrintDialogChecker;
 import org.designup.picsou.gui.PicsouApplication;
+import org.designup.picsou.gui.addons.dev.ToggleAllAddOnsAction;
 import org.designup.picsou.gui.utils.dev.AddSixDaysAction;
 import org.designup.picsou.gui.utils.dev.Goto10OfNextMonthAction;
 import org.designup.picsou.gui.utils.dev.GotoPastTrialExpirationAction;
@@ -681,12 +682,24 @@ public class OperationChecker {
     getDevMenu().getSubMenu("[Change current date]").click();
   }
 
+  public void checkMobileAccessEnabled() {
+    assertThat(getMobileCreationMenu().isEnabled());
+  }
+
+  public void checkMobileAccessDisabled() {
+    assertFalse(getMobileCreationMenu().isEnabled());
+  }
+
   public CreateMobileAccountChecker openCreateMobileUser(){
-    return CreateMobileAccountChecker.open(getFileMenu().getSubMenu(Lang.get("mobile.user.create.action.name")).triggerClick());
+    return CreateMobileAccountChecker.open(getMobileCreationMenu().triggerClick());
+  }
+
+  public MenuItem getMobileCreationMenu() {
+    return getFileMenu().getSubMenu(Lang.get("mobile.user.create.action.name"));
   }
 
   public EditMobileAccountChecker deleteMobileAccountUser() {
-    return EditMobileAccountChecker.open(getFileMenu().getSubMenu(Lang.get("mobile.user.create.action.name")).triggerClick());
+    return EditMobileAccountChecker.open(getMobileCreationMenu().triggerClick());
   }
 
   public MessageDialogChecker sendDataToServer() {
@@ -703,5 +716,9 @@ public class OperationChecker {
 
   public void gotoPastTrialExpiration() {
     getDevMenu().getSubMenu(GotoPastTrialExpirationAction.LABEL).click();
+  }
+
+  public void enableAllAddOns() {
+    getDevMenu().getSubMenu(ToggleAllAddOnsAction.ENABLE_ALL).click();
   }
 }

@@ -29,6 +29,7 @@ public class AddOns {
   public static BooleanField PROJECTS;
   public static BooleanField GROUPS;
   public static BooleanField ANALYSIS;
+  public static BooleanField MOBILE;
 
   static {
     GlobTypeLoader.init(AddOns.class, "addOns");

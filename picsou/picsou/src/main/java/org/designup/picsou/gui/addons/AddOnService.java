@@ -2,6 +2,7 @@ package org.designup.picsou.gui.addons;
 
 import org.designup.picsou.gui.addons.specific.AnalysisAddOn;
 import org.designup.picsou.gui.addons.specific.GroupsAddOn;
+import org.designup.picsou.gui.addons.specific.MobileAddOn;
 import org.designup.picsou.gui.addons.specific.ProjectsAddOn;
 
 import java.util.ArrayList;
@@ -15,6 +16,7 @@ public class AddOnService {
     addOns.add(new ProjectsAddOn());
     addOns.add(new GroupsAddOn());
     addOns.add(new AnalysisAddOn());
+    addOns.add(new MobileAddOn());
   }
 
   public List<AddOn> getAddOns() {

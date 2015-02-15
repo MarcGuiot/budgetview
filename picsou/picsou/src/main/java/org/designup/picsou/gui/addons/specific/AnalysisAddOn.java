@@ -8,6 +8,7 @@ import org.designup.picsou.gui.model.Card;
 import org.designup.picsou.gui.signpost.SignpostService;
 import org.designup.picsou.model.AddOns;
 import org.designup.picsou.utils.Lang;
+import org.globsframework.model.GlobRepository;
 import org.globsframework.utils.directory.Directory;
 
 public class AnalysisAddOn extends AddOn {
@@ -15,7 +16,7 @@ public class AnalysisAddOn extends AddOn {
     super(AddOns.ANALYSIS, "addons/analysis.png");
   }
 
-  protected void processPostActivation(Directory directory) {
+  protected void processPostActivation(GlobRepository repository, Directory directory) {
     directory.get(SignpostService.class).show(CardView.getSignpostId(Card.ANALYSIS),
                                               Lang.get("addons.analysis.signpost"),
                                               TipPosition.BOTTOM_RIGHT,

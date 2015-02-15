@@ -9,15 +9,17 @@ import javax.swing.*;
 import java.awt.event.ActionEvent;
 
 public class ToggleAllAddOnsAction extends AbstractAction {
+  public static final String ENABLE_ALL = "[enable all add-ons]";
+  public static final String DISABLE_ALL = "[disable all add-ons]";
   private boolean value;
   private GlobRepository repository;
 
   public static ToggleAllAddOnsAction enableAll(GlobRepository repository) {
-    return new ToggleAllAddOnsAction(true, "[enable all add-ons]", repository);
+    return new ToggleAllAddOnsAction(true, ENABLE_ALL, repository);
   }
 
   public static ToggleAllAddOnsAction disableAll(GlobRepository repository) {
-    return new ToggleAllAddOnsAction(false, "[disable all add-ons]", repository);
+    return new ToggleAllAddOnsAction(false, DISABLE_ALL, repository);
   }
 
   public ToggleAllAddOnsAction(boolean value, String label, GlobRepository repository) {

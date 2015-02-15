@@ -23,6 +23,7 @@ public class ApplicationChecker extends GuiChecker {
   private OperationChecker operations;
   private ViewSelectionChecker views;
   private TransactionChecker transactions;
+  private AddOnsChecker addOns;
 
   public Window start() {
     application = new DummyPicsouApplication();
@@ -45,7 +46,7 @@ public class ApplicationChecker extends GuiChecker {
     return window;
   }
 
-  public Window startModal(){
+  public Window startModal() {
     application = new DummyPicsouApplication();
     clearCheckers();
     window = WindowInterceptor.getModalDialog(new Trigger() {
@@ -97,6 +98,7 @@ public class ApplicationChecker extends GuiChecker {
     newVersion = null;
     views = null;
     transactions = null;
+    addOns = null;
   }
 
   public Window getWindow() {
@@ -130,6 +132,14 @@ public class ApplicationChecker extends GuiChecker {
     return transactions;
   }
 
+  public AddOnsChecker getAddOns() {
+    checkApplicationStarted();
+    if (addOns == null) {
+      addOns = new AddOnsChecker(window);
+    }
+    return addOns;
+  }
+
   public NewVersionChecker getNewVersion() {
     checkApplicationStarted();
     if (newVersion == null) {
@@ -151,6 +161,18 @@ public class ApplicationChecker extends GuiChecker {
 
   public PrinterChecker getPrinter() {
     return new PrinterChecker(printService);
+  }
+
+  public void enableAllAddOns() {
+    getOperations().enableAllAddOns();
+  }
+
+  public void checkMobileAccessEnabled() {
+    getOperations().checkMobileAccessEnabled();
+  }
+
+  public void checkMobileAccessDisabled() {
+    getOperations().checkMobileAccessDisabled();
   }
 
   public CreateMobileAccountChecker openMobileAccountDialog() {

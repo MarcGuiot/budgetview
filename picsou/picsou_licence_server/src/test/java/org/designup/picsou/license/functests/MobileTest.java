@@ -22,15 +22,15 @@ import java.io.IOException;
 public class MobileTest extends ConnectedTestCase {
   private ApplicationChecker application;
   private MobileAppChecker mobileApp;
+  private static final File DIRECTORY = new File("/tmp/data/");
 
   public void setUp() throws Exception {
     super.setUp();
     startServers();
     application = new ApplicationChecker();
     application.start();
-    File directory = new File("/tmp/data/");
-    Files.deleteSubtreeOnly(directory);
-    directory.mkdir();
+    Files.deleteSubtreeOnly(DIRECTORY);
+    DIRECTORY.mkdir();
     mobileApp = new MobileAppChecker(httpPort);
   }
 
@@ -41,7 +41,15 @@ public class MobileTest extends ConnectedTestCase {
     mobileApp = null;
   }
 
+  public void testMenuAvailableOnlyWhenAddOnActivated() throws Exception {
+    application.checkMobileAccessDisabled();
+    application.enableAllAddOns();
+    application.checkMobileAccessEnabled();
+  }
+
   public void testCreateAndDeleteAccount() throws Exception {
+    application.enableAllAddOns();
+
     String mail = "testCreateDelete@mybudgetview.fr";
     SharingConnection connection = requestNewMobileAccount(mail);
     followUrl(connection.url, 302, "http://www.mybudgetview.com/mobile/account-ok", mail);
@@ -61,6 +69,7 @@ public class MobileTest extends ConnectedTestCase {
 
   public void testEmptyEmailMessage() throws Exception {
     String mail = "testEmpty@mybudgetview.fr";
+    application.enableAllAddOns();
     application.openMobileAccountDialog()
       .validateAndCheckEmailTip("You must enter your email address")
       .setEmailAndValidate(mail)
@@ -71,6 +80,7 @@ public class MobileTest extends ConnectedTestCase {
   }
 
   public void testChangePassword() throws Exception {
+    application.enableAllAddOns();
     String mail = "testChangePassword@mybudgetview.fr";
     CreateMobileAccountChecker dialog = application.openMobileAccountDialog();
     String generatedPassword = dialog
@@ -88,6 +98,8 @@ public class MobileTest extends ConnectedTestCase {
   }
 
   public void testGetData() throws Exception {
+    application.enableAllAddOns();
+
     String emailAddress = "testGetData@mybudgetview.fr";
 
     SharingConnection sharingConnection = requestNewMobileAccount(emailAddress);
@@ -126,6 +138,7 @@ public class MobileTest extends ConnectedTestCase {
   }
 
   public void testAlreadyActivated() throws Exception {
+    application.enableAllAddOns();
     String mail = "testAlreadyActivated@mybudgetview.fr";
     String url1 = requestNewMobileAccount(mail).url;
     String url2 = requestNewMobileAccount(mail).url;
@@ -134,8 +147,8 @@ public class MobileTest extends ConnectedTestCase {
   }
 
   public void testError() throws Exception {
-    File directory = new File("/tmp/data/");
-    Files.deleteWithSubtree(directory);
+    application.enableAllAddOns();
+    Files.deleteWithSubtree(DIRECTORY);
     String mail = "testError@mybudgetview.fr";
     String url = requestNewMobileAccount(mail).url;
     followUrl(url, 302, "http://www.mybudgetview.com/mobile/internal-error");
@@ -151,6 +164,8 @@ public class MobileTest extends ConnectedTestCase {
   }
 
   public void testPendingDataAreSentAtAccountCreation() throws Exception {
+    application.enableAllAddOns();
+
     String emailAddress = "testPending@mybudgetview.fr";
 
     String path = OfxBuilder
@@ -161,12 +176,11 @@ public class MobileTest extends ConnectedTestCase {
     application.getOperations().importOfxFile(path);
 
     SharingConnection sharingConnection = requestNewMobileAccount(emailAddress);
-    final File directory = new File("/tmp/data/");
     TestUtils.retry(new Runnable() {
       public void run() {
-        String[] list = directory.list();
+        String[] list = DIRECTORY.list();
         assertTrue(list != null && list.length == 1);
-        list = new File(directory, list[0]).list();
+        list = new File(DIRECTORY, list[0]).list();
         assertTrue(list != null && list.length == 2);
         assertTrue(list[0].startsWith("pending"));
         assertTrue(list[1].startsWith("pending"));
