@@ -373,14 +373,12 @@ public class MultiAccountSeriesTest extends LoggedInFunctionalTestCase {
   }
 
   public void testOneOfTheAccountsHasAnActualOfTheOppositeSign() throws Exception {
-    fail("tbd");
-
     OfxBuilder
       .init(this)
       .addBankAccount("000111", 1000.00, "2014/11/10")
-      .addTransaction("2014/11/05", -25.00, "LEISURE1")
-      .addTransaction("2014/10/06", -100.00, "LEISURE1")
-      .addTransaction("2014/09/06", -125.00, "LEISURE1")
+      .addTransaction("2014/11/05", 25.00, "LEISURE1")
+      .addTransaction("2014/10/06", 100.00, "LEISURE1")
+      .addTransaction("2014/09/06", 125.00, "LEISURE1")
       .load();
 
     OfxBuilder
@@ -408,7 +406,15 @@ public class MultiAccountSeriesTest extends LoggedInFunctionalTestCase {
     transactions.showPlannedTransactions();
     timeline.selectMonths(201411, 201412, 201501);
     transactions.initAmountContent()
-      .dumpCode();
+      .add("11/01/2015", "Planned: Leisures", -600.00, "Leisures", 450.00, 2325.00, "Main2")
+      .add("11/01/2015", "Planned: Leisures", 300.00, "Leisures", 1875.00, 2925.00, "Main1")
+      .add("11/12/2014", "Planned: Leisures", -600.00, "Leisures", 1050.00, 2625.00, "Main2")
+      .add("11/12/2014", "Planned: Leisures", 300.00, "Leisures", 1575.00, 3225.00, "Main1")
+      .add("11/11/2014", "Planned: Leisures", -350.00, "Leisures", 1650.00, 2925.00, "Main2")
+      .add("11/11/2014", "Planned: Leisures", 275.00, "Leisures", 1275.00, 3275.00, "Main1")
+      .add("06/11/2014", "LEISURE2", -250.00, "Leisures", 2000.00, 3000.00, "Main2")
+      .add("05/11/2014", "LEISURE1", 25.00, "Leisures", 1000.00, 3250.00, "Main1")
+      .check();
   }
 
   public void testMultiTransactionsShape() throws Exception {
