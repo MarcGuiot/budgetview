@@ -558,7 +558,12 @@ public class SeriesEditionDialog {
                               value(Series.DECEMBER, true));
     if (fromAccountId != null) {
       values.set(value(Series.FROM_ACCOUNT, fromAccountId));
-      values.set(value(Series.TARGET_ACCOUNT, fromAccountId));
+      if (budgetArea != BudgetArea.TRANSFER) {
+        values.set(value(Series.TARGET_ACCOUNT, Account.MAIN_SUMMARY_ACCOUNT_ID));
+      }
+      else {
+        values.set(value(Series.TARGET_ACCOUNT, fromAccountId));
+      }
     }
     else if (budgetArea != BudgetArea.TRANSFER) {
       values.set(value(Series.TARGET_ACCOUNT, Account.MAIN_SUMMARY_ACCOUNT_ID));

@@ -52,31 +52,7 @@ public class SeriesUpgradeV40 {
                                                not(fieldEquals(Series.BUDGET_AREA, BudgetArea.TRANSFER.getId())),
                                                not(fieldEquals(Series.BUDGET_AREA, BudgetArea.OTHER.getId()))));
     for (Glob series : allSeries) {
-      GlobList transactions = getTransactions(series, repository);
-      Set<Integer> accounts = transactions.getValueSet(Transaction.ACCOUNT);
-      if (accounts.size() == 0) {
-        // leave unchanged
-      }
-      else if (accounts.size() == 1) {
-        repository.update(series, Series.TARGET_ACCOUNT, accounts.iterator().next());
-      }
-      else {
-        repository.update(series, Series.TARGET_ACCOUNT, Account.MAIN_SUMMARY_ACCOUNT_ID);
-      }
-    }
-    for (final Glob series : allSeries) {
-      final Integer targetAccount = series.get(Series.TARGET_ACCOUNT);
-      if (targetAccount != null) {
-        repository.safeApply(Transaction.TYPE,
-                             and(fieldEquals(Transaction.PLANNED, true),
-                                 fieldEquals(Transaction.SERIES, series.get(Series.ID))),
-                             new GlobFunctor() {
-                               public void run(Glob glob, GlobRepository repository) throws Exception {
-                                 repository.update(glob.getKey(), Transaction.ACCOUNT, targetAccount);
-                               }
-                             }
-        );
-      }
+      repository.update(series, Series.TARGET_ACCOUNT, Account.MAIN_SUMMARY_ACCOUNT_ID);
     }
   }
 

@@ -84,6 +84,7 @@ public class DefaultSeriesFactory {
       .set(Series.NAME, getName(budgetArea, nameKey))
       .set(Series.IS_AUTOMATIC, budgetArea.isAutomatic())
       .set(Series.BUDGET_AREA, budgetArea.getId())
+      .set(Series.TARGET_ACCOUNT, budgetArea == BudgetArea.TRANSFER ? null : Account.MAIN_SUMMARY_ACCOUNT_ID)
       .set(Series.PROFILE_TYPE, profileType.getId())
       .set(Series.IS_INITIAL, Boolean.TRUE);
 

@@ -132,10 +132,8 @@ public class UpgradeTrigger implements ChangeSetListener {
       repository.delete(Transaction.TYPE, and(fieldEquals(Transaction.ACCOUNT, Account.MAIN_SUMMARY_ACCOUNT_ID),
                                               fieldEquals(Transaction.PLANNED, true)));
     }
-    if (currentJarVersion < 137) {
-      repository.deleteAll(LayoutConfig.TYPE);
-    }
     if (currentJarVersion < 142) {
+      repository.deleteAll(LayoutConfig.TYPE);
       normalizeNotImportedMirrorTransactions(repository);
       ProjectUpgradeV40.run(repository, postProcessor);
       SeriesUpgradeV40.run(repository, postProcessor);

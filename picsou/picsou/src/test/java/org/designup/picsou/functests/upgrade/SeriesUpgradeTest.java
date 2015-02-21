@@ -36,12 +36,12 @@ public class SeriesUpgradeTest extends LoggedInFunctionalTestCase {
       .cancel();
 
     budgetView.variable.editSeries("Mono A")
-      .checkEditableTargetAccount("Main A")
+      .checkEditableTargetAccount("Main accounts")
       .checkAmount(100.00)
       .cancel();
 
     budgetView.variable.editSeries("Mono B")
-      .checkEditableTargetAccount("Main B")
+      .checkEditableTargetAccount("Main accounts")
       .checkAmount(50.00)
       .cancel();
 

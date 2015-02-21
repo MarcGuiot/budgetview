@@ -2,6 +2,7 @@ package org.designup.picsou.gui.license.activation;
 
 import org.designup.picsou.gui.components.ProgressPanel;
 import org.designup.picsou.gui.components.dialogs.PicsouDialog;
+import org.designup.picsou.gui.components.utils.CustomFocusTraversalPolicy;
 import org.designup.picsou.gui.config.ConfigService;
 import org.designup.picsou.gui.help.HyperlinkHandler;
 import org.designup.picsou.gui.undo.UndoRedoService;
@@ -82,14 +83,19 @@ public class LicenseActivationDialog {
       }
     });
     mailEditor = builder.addEditor("ref-mail", User.EMAIL).setNotifyOnKeyPressed(true);
-    builder.addEditor("ref-code", User.ACTIVATION_CODE)
+    GlobTextEditor codeEditor = builder.addEditor("ref-code", User.ACTIVATION_CODE)
       .setValidationAction(activateAction)
       .setNotifyOnKeyPressed(true);
+
     GuiUtils.initHtmlComponent(askForNewCodeMessage);
     builder.add("messageSendNewCode", askForNewCodeMessage);
     updateSendNewCodeMessage(user);
 
-    builder.add("activateCode", activateAction);
+    JButton activate = new JButton(activateAction);
+    builder.add("activateCode", activate);
+
+    dialog.setFocusTraversalPolicy(
+      new CustomFocusTraversalPolicy(mailEditor.getComponent(), codeEditor.getComponent(), activate));
 
     GuiUtils.initHtmlComponent(connectionMessage);
     connectionMessage.setText(Lang.get("license.connect"));

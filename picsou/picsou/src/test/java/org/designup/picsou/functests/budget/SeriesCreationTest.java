@@ -24,6 +24,7 @@ public class SeriesCreationTest extends LoggedInFunctionalTestCase {
 
     categorization.selectIncome().createSeries()
       .setName("Prime")
+      .checkEditableTargetAccount("Main accounts")
       .checkChart(new Object[][]{
         {"2008", "May", 0.00, 0.00},
         {"2008", "June", 0.00, 0.00, true}
@@ -54,6 +55,7 @@ public class SeriesCreationTest extends LoggedInFunctionalTestCase {
 
     categorization.selectRecurring().createSeries()
       .setName("Culture")
+      .checkEditableTargetAccount("Main accounts")
       .validate();
 
     categorization.selectRecurring()
@@ -76,6 +78,7 @@ public class SeriesCreationTest extends LoggedInFunctionalTestCase {
 
     categorization.selectVariable().createSeries()
       .setName("Regime")
+      .checkEditableTargetAccount("Main accounts")
       .validate();
     categorization.selectVariable()
       .checkContainsSeries("Regime")
@@ -90,6 +93,7 @@ public class SeriesCreationTest extends LoggedInFunctionalTestCase {
     views.selectBudget();
     budgetView.extras.createSeries()
       .setName("Machine a laver")
+      .checkEditableTargetAccount("Main accounts")
       .checkSelectedProfile("Irregular")
       .checkMonthsSelected(200806)
       .checkChart(new Object[][]{
