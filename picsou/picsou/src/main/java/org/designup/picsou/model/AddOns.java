@@ -4,6 +4,7 @@ import com.budgetview.shared.utils.PicsouGlobSerializer;
 import org.globsframework.metamodel.Field;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.annotations.Key;
+import org.globsframework.metamodel.annotations.NoObfuscation;
 import org.globsframework.metamodel.fields.BooleanField;
 import org.globsframework.metamodel.fields.IntegerField;
 import org.globsframework.metamodel.utils.GlobTypeLoader;
@@ -26,9 +27,13 @@ public class AddOns {
   @Key
   public static IntegerField ID;
 
+  @NoObfuscation
   public static BooleanField PROJECTS;
+  @NoObfuscation
   public static BooleanField GROUPS;
+  @NoObfuscation
   public static BooleanField ANALYSIS;
+  @NoObfuscation
   public static BooleanField MOBILE;
 
   static {

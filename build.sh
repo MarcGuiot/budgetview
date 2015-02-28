@@ -4,7 +4,7 @@ if [ $# -eq 0 ] || [ "$1" = "demo" ]; then
   if [ `hg qnext` == "uispec" ]; then
     hg qpush
   fi;
-export JAVA_HOME=/opt/sun-jdk-1.6.0.45
+export JAVA_HOME=$JAVA_1_6_HOME
 mvn clean install -Dmaven.test.skip.exec=true -am -pl picsou/picsou -Pgen-demo
 fi;
 
@@ -12,6 +12,6 @@ if [ $# -eq 0 ] || [ "$1" == "version" ]; then
    if hg identify | grep uispec; then
       hg qpop
    fi;
-export JAVA_HOME=/opt/jdk1.5.0_22
+export JAVA_HOME=$JAVA_1_5_HOME
 mvn clean install -Dmaven.test.skip.exec=true -Pgen-version
 fi;

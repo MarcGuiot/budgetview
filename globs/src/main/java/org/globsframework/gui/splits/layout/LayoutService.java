@@ -33,7 +33,7 @@ public class LayoutService {
         instance = ClassUtils.createFromClassName(name);
       }
       catch (ClassNotFoundException e) {
-        throw new ItemNotFound("Unknown layout: " + name + " - make sure that it is registered or that it refers to a public static class reference");
+        throw new ItemNotFound("Unknown layout: " + name + " - make sure that 1/ It is registered in the UIService - 2/ It refers to a public static class reference - 3/ It is excluded from obfuscation");
       }
       if (!(instance instanceof LayoutManager)) {
         throw new InvalidParameter("Class '" + name + "' should implement LayoutManager");

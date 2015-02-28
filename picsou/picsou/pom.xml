@@ -170,6 +170,11 @@
       <version>1.0</version>
     </dependency>
     <dependency>
+      <groupId>com.apple.laf</groupId>
+      <artifactId>ui</artifactId>
+      <version>1.0</version>
+    </dependency>
+    <dependency>
       <groupId>com.budgetview</groupId>
       <artifactId>picsouShared</artifactId>
       <version>1.0</version>

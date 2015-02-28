@@ -2,6 +2,19 @@ open "budgetview.jar"
      -"budgetview.jar!demo/demo-fr.snapshot"
      -"budgetview.jar!demo/demo-en.snapshot"
      -"budgetview.jar!apple/laf/*.class"
+     -"budgetview.jar!apple/awt/CGraphics*.class"
+     -"budgetview.jar!apple/awt/CComponent.class"
+     -"budgetview.jar!apple/awt/ComponentModel.class"
+     -"budgetview.jar!apple/awt/CPeerSurfaceData.class"
+     -"budgetview.jar!apple/awt/CPrinterJob*.class"
+     -"budgetview.jar!apple/awt/CRenderer*.class"
+     -"budgetview.jar!apple/awt/CTextPipe*.class"
+     -"budgetview.jar!apple/awt/CToolkit*.class"
+     -"budgetview.jar!apple/awt/PeerImpl*.class"
+     -"budgetview.jar!apple/awt/IntegerNIORaster.class"
+     -"budgetview.jar!com/apple/laf/AquaFileChooserUI*.class"
+     -"budgetview.jar!com/apple/laf/AquaLookAndFeel*.class"
+     -"budgetview.jar!apple/awt/OSX*.class"
      -"budgetview.jar!net/roydesign/mac/*.class"
      -"budgetview.jar!net/roydesign/event/*.class";
 
@@ -10,6 +23,10 @@ exclude   picsou.^ExceptionHandler and
           picsou.Main main(*) and
           picsou.^MainInMemory and
           picsou.MainInMemory main(*) and
+          apple.awt*.^* and
+          apple.awt*.^* *(*) and
+          apple.awt*.^* * and
+          sun.java2d.opengl*.^* and
           javax.xml*.^* and
           javax.xml*.^* *(*) and
           javax.xml*.^* * and

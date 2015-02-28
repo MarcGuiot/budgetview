@@ -1,12 +1,15 @@
 package org.designup.picsou.gui.plaf;
 
 import org.designup.picsou.gui.accounts.utils.AccountBlockLayout;
+import org.designup.picsou.gui.addons.utils.AddOnPanelLayout;
+import org.designup.picsou.gui.analysis.utils.AnalysisSelectorLayout;
 import org.designup.picsou.gui.budget.components.BudgetAreaSeriesLayout;
 import org.designup.picsou.gui.components.tabs.VerticalTabPanelUI;
 import org.designup.picsou.gui.components.tabs.VerticalTabToggleUI;
 import org.designup.picsou.gui.components.ui.*;
 import org.designup.picsou.gui.projects.utils.ProjectItemViewLayout;
 import org.designup.picsou.gui.series.ui.SeriesPanelUI;
+import org.designup.picsou.gui.utils.HeaderPanelLayout;
 import org.globsframework.gui.splits.components.HyperlinkButtonUI;
 import org.globsframework.gui.splits.components.ShadowedLabelUI;
 import org.globsframework.gui.splits.components.StyledPanelUI;
@@ -41,7 +44,10 @@ public class ApplicationLAF {
 
   private static final String ACCOUNT_BLOCK_LAYOUT = org() + "designup.picsou.gui.accounts.utils.AccountBlockLayout";
   private static final String PROJECT_ITEM_VIEW_LAYOUT = org() + "designup.picsou.gui.projects.utils.ProjectItemViewLayout";
-  private static final String SERIES_LAYOUT = org() + "designup.picsou.gui.budget.components.BudgetAreaSeriesLayout";
+  private static final String BUDGET_AREA_SERIES_LAYOUT = org() + "designup.picsou.gui.budget.components.BudgetAreaSeriesLayout";
+  private static final String HEADER_PANEL_LAYOUT = org() + "designup.picsou.gui.utils.HeaderPanelLayout";
+  private static final String ADD_ON_PANEL_LAYOUT = org() + "designup.picsou.gui.addons.utils.AddOnPanelLayout";
+  private static final String ANALYSIS_SELECTOR_LAYOUT = org() + "designup.picsou.gui.analysis.utils.AnalysisSelectorLayout";
 
 
   private ApplicationLAF() {
@@ -81,13 +87,17 @@ public class ApplicationLAF {
   public static LayoutService initLayoutService() {
     LayoutService layoutService = new LayoutService();
     layoutService.registerClass(ACCOUNT_BLOCK_LAYOUT, AccountBlockLayout.class);
+    layoutService.registerClass(BUDGET_AREA_SERIES_LAYOUT, BudgetAreaSeriesLayout.class);
     layoutService.registerClass(PROJECT_ITEM_VIEW_LAYOUT, ProjectItemViewLayout.class);
+    layoutService.registerClass(HEADER_PANEL_LAYOUT, HeaderPanelLayout.class);
+    layoutService.registerClass(ADD_ON_PANEL_LAYOUT, AddOnPanelLayout.class);
+    layoutService.registerClass(ANALYSIS_SELECTOR_LAYOUT, AnalysisSelectorLayout.class);
     return layoutService;
   }
 
   public static RepeatLayoutService initRepeatLayoutService() {
     RepeatLayoutService layoutService = new RepeatLayoutService();
-    layoutService.add(SERIES_LAYOUT, BudgetAreaSeriesLayout.class.getName());
+    layoutService.add(BUDGET_AREA_SERIES_LAYOUT, BudgetAreaSeriesLayout.class.getName());
     return layoutService;
   }
 
