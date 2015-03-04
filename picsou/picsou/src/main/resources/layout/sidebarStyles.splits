@@ -54,13 +54,13 @@
            selectedIcon="oval(18,18,sidebar.selection.selected.bg, sidebar.selection.selected.border)"
            rolloverIcon="oval(18,18,sidebar.selection.rollover.bg, sidebar.selection.rollover.border)"
            pressedIcon="oval(18,18,sidebar.selection.pressed.bg, sidebar.selection.pressed.border)"
-           preferredSize="(18,18)" text="" opaque="false" borderPainted="false"/>
+           preferredSize="(20,20)" text="" opaque="false" borderPainted="false"/>
 
     <style selector="button.sidebarSelectionButton"
            weightX="0" cursor="hand"
            rolloverIcon="oval(18,18,sidebar.selection.rollover.bg, sidebar.selection.rollover.border)"
            pressedIcon="oval(18,18,sidebar.selection.pressed.bg, sidebar.selection.pressed.border)"
-           preferredSize="(18,18)" text="" opaque="false" borderPainted="false"/>
+           preferredSize="(20,20)" text="" opaque="false" borderPainted="false"/>
     <style id="sidebarSelectionButtonSelected" selector="x"
            icon="oval(18,18,sidebar.selection.selected.bg, sidebar.selection.selected.border)"/>
     <style id="sidebarSelectionButtonUnselected" selector="x"

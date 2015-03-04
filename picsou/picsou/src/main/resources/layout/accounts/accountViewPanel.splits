@@ -14,9 +14,9 @@
            iconTextGap="2"/>
 
     <style selector="#accountPosition"
-           font="LatoLight,plain,12" foreground="block.inner.link.big"/>
+           font="ArimoRegular,plain,12" foreground="block.inner.link.big"/>
     <style selector="#accountUpdateDate"
-           font="LatoLight,plain,10"/>
+           font="ArimoRegular,plain,10"/>
 
     <style selector=".left label.totalAmount"
            fill="horizontal" horizontalAlignment="left" marginLeft="10"/>
@@ -36,8 +36,8 @@
     <row styleClass="sidebarSectionTitleRow">
       <label ref="accountListTitle" styleClass="sidebarSectionTitle" marginLeft="5"/>
       <filler fill="horizontal"/>
-      <label ref="referencePosition" styleClass="sidebarSectionTitle" tooltipText="$accountView.reference.tooltip"/>
-      <label ref="referencePositionDate" styleClass="sidebarSectionTitle" font="LatoRegular,plain,11" autoHideSource="referencePosition" marginLeft="5" marginRight="5"/>
+      <label ref="referencePosition" styleClass="sidebarSectionTitle" font="ArimoRegular,plain,14" tooltipText="$accountView.reference.tooltip" anchor="south"/>
+      <label ref="referencePositionDate" styleClass="sidebarSectionTitle" font="ArimoRegular,plain,11" autoHideSource="referencePosition" marginLeft="5" marginRight="5" anchor="south"/>
     </row>
     <repeat ref="accountRepeat" marginBottom="15" opaque="true" background="sidebar.bg">
       <panel ref="accountPanel" marginTop="2" opaque="false">

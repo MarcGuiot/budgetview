@@ -13,7 +13,7 @@
         <panel ref="savingsAccounts"/>
       </column>
     </scrollPane>
-    <button action="createAccount" styleClass="create" tooltipText="$accountView.create.tooltip"/>
+    <button action="createAccount" styleClass="create" tooltipText="$accountView.create.tooltip" fill="none" anchor="center"/>
   </column>
 
 </splits>
