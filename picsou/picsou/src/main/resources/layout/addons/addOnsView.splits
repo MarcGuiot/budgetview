@@ -31,7 +31,7 @@
               <card name="disabled">
                 <column>
                   <filler fill="vertical" weightY="10"/>
-                  <button action="buy" fill="none" anchor="center"/>
+                    <!--<button action="buy" fill="none" anchor="center"/>-->
                   <button action="gotoDemoAccount" styleClass="hyperlink" font="LatoLight,plain,12" fill="none"
                           anchor="center"/>
                   <filler fill="vertical" weightY="30"/>
