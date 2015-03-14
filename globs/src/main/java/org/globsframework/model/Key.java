@@ -6,6 +6,7 @@ import org.globsframework.metamodel.fields.BooleanField;
 import org.globsframework.metamodel.fields.DateField;
 import org.globsframework.metamodel.fields.DoubleField;
 import org.globsframework.metamodel.fields.IntegerField;
+import org.globsframework.model.impl.FourFieldKey;
 import org.globsframework.model.impl.ThreeFieldKey;
 import org.globsframework.model.impl.TwoFieldKey;
 import org.globsframework.utils.exceptions.ItemNotFound;
@@ -25,6 +26,10 @@ public abstract class Key implements FieldValues {
 
   public static Key create(Field field1, Object value1, Field field2, Object value2, Field field3, Object value3) {
     return new ThreeFieldKey(field1, value1, field2, value2, field3, value3);
+  }
+
+  public static Key create(Field field1, Object value1, Field field2, Object value2, Field field3, Object value3, Field field4, Object value4) {
+    return new FourFieldKey(field1, value1, field2, value2, field3, value3, field4, value4);
   }
 
   public static KeyBuilder create(GlobType type) {

@@ -174,6 +174,15 @@ public abstract class AbstractGlob extends AbstractFieldValues implements Glob {
                                    field3, values[field3.getIndex()]);
           return key;
         }
+        case 4: {
+          Field field1 = keyFields[0];
+          Field field2 = keyFields[1];
+          Field field3 = keyFields[2];
+          Field field4 = keyFields[3];
+          key = new FourFieldKey(field1, values[field1.getIndex()], field2, values[field2.getIndex()],
+                                 field3, values[field3.getIndex()], field4, values[field4.getIndex()]);
+          return key;
+        }
       }
       KeyBuilder keyBuilder = KeyBuilder.init(type);
       for (Field field : keyFields) {

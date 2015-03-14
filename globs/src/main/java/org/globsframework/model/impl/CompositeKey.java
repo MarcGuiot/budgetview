@@ -16,7 +16,7 @@ import java.util.Date;
 public class CompositeKey extends Key {
   private GlobType type;
   private Object[] values;
-  private int hashCode = -1;
+  private int hashCode = 0;
 
   public CompositeKey(GlobType type, FieldValueGetter getter) {
     this.type = type;
@@ -125,14 +125,16 @@ public class CompositeKey extends Key {
 
   // optimized - do not use generated code
   public int hashCode() {
-    if (hashCode < 0) {
-      hashCode = 0;
-      for (Field keyField : type.getKeyFields()) {
-        Object value = getValue(keyField);
-        hashCode = 31 * hashCode + (value != null ? value.hashCode() : 0);
-        hashCode = 31 * hashCode + keyField.hashCode();
-
-      }
+    if (hashCode != 0) {
+      return hashCode;
+    }
+    hashCode = getGlobType().hashCode();
+    for (Field keyField : type.getKeyFields()) {
+      Object value = getValue(keyField);
+      hashCode = 31 * hashCode + (value != null ? value.hashCode() : 0);
+    }
+    if (hashCode == 0) {
+      hashCode = 23;
     }
     return hashCode;
   }
