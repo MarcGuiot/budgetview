@@ -50,7 +50,7 @@ public class SeriesStatToProjectStatTrigger implements ChangeSetListener {
   private void update(Glob project, GlobRepository repository) {
     double actual = 0;
     for (Integer seriesId : Project.getSeriesIds(project, repository)) {
-      for (Glob seriesStat : SeriesStat.getAllMonths(seriesId, SeriesType.SERIES, repository)) {
+      for (Glob seriesStat : SeriesStat.getAllSummaryMonths(seriesId, SeriesType.SERIES, repository)) {
         Double statActual = seriesStat.get(SeriesStat.ACTUAL_AMOUNT);
         if (statActual != null) {
           actual += statActual;

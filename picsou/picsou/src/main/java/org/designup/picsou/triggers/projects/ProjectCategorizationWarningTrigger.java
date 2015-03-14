@@ -4,7 +4,6 @@ import com.budgetview.shared.utils.Amounts;
 import org.designup.picsou.gui.model.ProjectItemStat;
 import org.designup.picsou.gui.model.SeriesStat;
 import org.designup.picsou.model.ProjectItem;
-import org.designup.picsou.model.Series;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.*;
 
@@ -41,7 +40,7 @@ public class ProjectCategorizationWarningTrigger implements ChangeSetListener {
     Set<Key> changedKeys = changeSet.getChanged(SeriesStat.TYPE);
     Set<Integer> result = new HashSet<Integer>();
     for (Key key : changedKeys) {
-      if (SeriesStat.isForSeries(key)) {
+      if (SeriesStat.isSummaryForSeries(key)) {
         result.add(key.get(SeriesStat.TARGET));
       }
     }
@@ -62,7 +61,7 @@ public class ProjectCategorizationWarningTrigger implements ChangeSetListener {
     if (projectItem.get(ProjectItem.SERIES) != null) {
       Glob series = repository.findLinkTarget(projectItem, ProjectItem.SERIES);
       if (series != null) {
-        for (Glob seriesStat : SeriesStat.getAllMonthsForSeries(series, repository)) {
+        for (Glob seriesStat : SeriesStat.getAllSummaryMonthsForSeries(series, repository)) {
           if (!monthInProjectItemRange(seriesStat.get(SeriesStat.MONTH), projectItem)
               && Amounts.isNotZero(seriesStat.get(SeriesStat.ACTUAL_AMOUNT))) {
             warning = true;

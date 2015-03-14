@@ -3,6 +3,7 @@ package org.designup.picsou.gui.series.utils;
 import org.designup.picsou.gui.model.SeriesStat;
 import org.designup.picsou.gui.model.SeriesType;
 import org.designup.picsou.gui.series.view.SeriesWrapper;
+import org.designup.picsou.model.Account;
 import org.designup.picsou.model.BudgetArea;
 import org.designup.picsou.model.Series;
 import org.designup.picsou.model.SeriesGroup;
@@ -79,13 +80,14 @@ public class SeriesOrGroup {
   }
 
   public Key createSeriesStatKey(Integer monthId) {
-    return Key.create(SeriesStat.TARGET, id,
+    return Key.create(SeriesStat.ACCOUNT, Account.ALL_SUMMARY_ACCOUNT_ID,
+                      SeriesStat.TARGET, id,
                       SeriesStat.TARGET_TYPE, type.getId(),
                       SeriesStat.MONTH, monthId);
   }
 
   public GlobList getStatsForAllMonths(GlobRepository repository) {
-    return SeriesStat.getAllMonths(id, type, repository);
+    return SeriesStat.getAllSummaryMonths(id, type, repository);
   }
 
   public static SeriesOrGroup getFromStat(Glob seriesStat) {

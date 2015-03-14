@@ -6,7 +6,6 @@ import org.globsframework.model.ChangeSet;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.Key;
-import org.globsframework.model.format.GlobPrinter;
 import org.globsframework.model.utils.DefaultChangeSetListener;
 
 import java.util.HashSet;
@@ -42,6 +41,7 @@ public class AccountDeletionTrigger extends DefaultChangeSetListener {
         itemsToDelete.add(repository.findLinkTarget(transfer, ProjectTransfer.PROJECT_ITEM));
       }
       repository.delete(AccountPositionError.TYPE, linkedTo(accountKey, AccountPositionError.ACCOUNT));
+      repository.delete(SeriesStat.TYPE, SeriesStat.isForAccount(accountKey.get(Account.ID)));
     }
 
     Set<Integer> projectIds = new HashSet<Integer>();

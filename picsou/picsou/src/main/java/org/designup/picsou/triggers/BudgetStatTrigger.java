@@ -186,7 +186,7 @@ public class BudgetStatTrigger implements ChangeSetListener {
       BudgetAreaAmounts savingsInAmounts = new BudgetAreaAmounts(BudgetArea.TRANSFER);
       BudgetAreaAmounts savingsOutAmounts = new BudgetAreaAmounts(BudgetArea.TRANSFER);
 
-      for (Glob stat : SeriesStat.getAllSeriesForMonth(monthId, repository)) {
+      for (Glob stat : SeriesStat.getAllSummarySeriesForMonth(monthId, repository)) {
         Glob series = SeriesStat.getSeries(stat, repository);
         BudgetArea budgetArea = BudgetArea.get(series.get(Series.BUDGET_AREA));
 

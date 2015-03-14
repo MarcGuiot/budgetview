@@ -245,6 +245,10 @@ public class Account {
     return !SUMMARY_ACCOUNT_IDS.contains(accountId);
   }
 
+  public static boolean isUserCreatedAccountOrAll(Glob account) {
+    return account != null && (ALL_SUMMARY_ACCOUNT_ID == account.get(Account.ID) || isUserCreatedAccount(account));
+  }
+
   public static boolean isUserCreatedSavingsAccount(Glob account) {
     return (account != null) &&
            Account.isSavings(account) &&

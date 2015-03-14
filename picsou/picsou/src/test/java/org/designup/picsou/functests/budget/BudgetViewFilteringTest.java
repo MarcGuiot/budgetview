@@ -115,4 +115,78 @@ public class BudgetViewFilteringTest extends LoggedInFunctionalTestCase {
                                      "| Restaurant   | 20.00  | 100.00 |");
     budgetView.variable.checkTotalAmounts(-120.00, -150.00);
   }
+
+  public void testActualForAGivenSeriesIsShownOnlyForSelectedAccount() throws Exception {
+    addOns.activateGroups();
+
+    OfxBuilder
+      .init(this)
+      .addBankAccount(-1, 10674, "000111", 1000.00, "2008/07/10")
+      .addTransaction("2008/07/05", 1000.00, "WorldCo")
+      .addTransaction("2008/07/10", -100.00, "FNAC")
+      .load();
+
+    OfxBuilder
+      .init(this)
+      .addBankAccount(-1, 10674, "000222", -2000.00, "2008/07/20")
+      .addTransaction("2008/07/15", -200.00, "Auchan")
+      .addTransaction("2008/07/20", -300.00, "Darty")
+      .load();
+
+    OfxBuilder
+      .init(this)
+      .addBankAccount(-1, 10674, "000333", 3000.00, "2008/07/30")
+      .addTransaction("2008/07/25", -30.00, "Total")
+      .addTransaction("2008/07/20", -20.00, "McDo")
+      .addTransaction("2008/07/15", -50.00, "Carrefour")
+      .load();
+
+    categorization.setNewIncome("WorldCo", "Salary", "Account n. 000111");
+    categorization.setNewVariable("Auchan", "Groceries", -400.00);
+    categorization.setVariable("Carrefour", "Groceries");
+    budgetView.variable.addToNewGroup("Groceries", "Food");
+    categorization.setNewVariable("McDo", "Restaurant", -50.00);
+    budgetView.variable.addToGroup("Restaurant", "Food");
+    categorization.setNewVariable("FNAC", "Leisures", -200.00);
+    categorization.setVariable("Darty", "Leisures");
+
+    budgetView.variable.checkContent("| Food       | 270.00 | 450.00 |\n" +
+                                     "| Groceries  | 250.00 | 400.00 |\n" +
+                                     "| Restaurant | 20.00  | 50.00  |\n" +
+                                     "| Leisures   | 400.00 | 200.00 |");
+
+    mainAccounts.select("Account n. 000111");
+    budgetView.variable.checkContent("| Food       | 0.00   | 450.00 |\n" +
+                                     "| Groceries  | 0.00   | 400.00 |\n" +
+                                     "| Restaurant | 0.00   | 50.00  |\n" +
+                                     "| Leisures   | 100.00 | 200.00 |");
+
+    mainAccounts.select("Account n. 000222");
+    budgetView.variable.checkContent("| Food       | 200.00 | 450.00 |\n" +
+                                     "| Groceries  | 200.00 | 400.00 |\n" +
+                                     "| Restaurant | 0.00   | 50.00  |\n" +
+                                     "| Leisures   | 300.00 | 200.00 |");
+
+    mainAccounts.select("Account n. 000333");
+    budgetView.variable.checkContent("| Food       | 70.00 | 450.00 |\n" +
+                                     "| Groceries  | 50.00 | 400.00 |\n" +
+                                     "| Restaurant | 20.00 | 50.00  |\n" +
+                                     "| Leisures   | 0.00  | 200.00 |");
+
+    budgetView.variable.collapseGroup("Food");
+    budgetView.variable.checkContent("| Food     | 70.00 | 450.00 |\n" +
+                                     "| Leisures | 0.00  | 200.00 |");
+
+    mainAccounts.select("Account n. 000222");
+    budgetView.variable.checkContent("| Food     | 200.00 | 450.00 |\n" +
+                                     "| Leisures | 300.00 | 200.00 |");
+
+    mainAccounts.select("Account n. 000333");
+    budgetView.variable.checkContent("| Food     | 70.00 | 450.00 |\n" +
+                                     "| Leisures | 0.00  | 200.00 |");
+
+    mainAccounts.unselect("Account n. 000333");
+    budgetView.variable.checkContent("| Food     | 270.00 | 450.00 |\n" +
+                                     "| Leisures | 400.00 | 200.00 |");
+  }
 }

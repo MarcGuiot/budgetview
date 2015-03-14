@@ -4,7 +4,7 @@ import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.model.TransactionType;
 import org.globsframework.utils.Files;
 
-public class ProjectUpgradeTest extends LoggedInFunctionalTestCase {
+public abstract class ProjectUpgradeTest extends LoggedInFunctionalTestCase {
 
   public void setUp() throws Exception {
     setCurrentMonth("2014/02");
@@ -181,6 +181,9 @@ public class ProjectUpgradeTest extends LoggedInFunctionalTestCase {
   }
 
   public void testProjectsWithVariousTranferItemsFromJar125() throws Exception {
+
+    fail("v40: restore me");
+
     operations.restoreWithPassword(Files.copyResourceToTmpFile(this, "/testbackups/upgrade_jar125_projets_multi_transfers.budgetview"), "pwd");
     addOns.activateProjects();
 

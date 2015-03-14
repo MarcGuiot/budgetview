@@ -7,7 +7,6 @@ import org.designup.picsou.model.Series;
 import org.designup.picsou.model.Transaction;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.*;
-import org.globsframework.model.format.GlobPrinter;
 import org.globsframework.model.utils.GlobFunctor;
 import org.globsframework.utils.Utils;
 
@@ -75,14 +74,20 @@ public class ActualSeriesStatTrigger implements ChangeSetListener {
           currentAmount = transaction.get(Transaction.AMOUNT);
         }
 
+        Integer accountId = transaction.get(Transaction.ACCOUNT);
+
         Glob previousStat = repository.find(SeriesStat.createKeyForSeries(previousSeriesId, previousMonthId));
+        Glob previousAccountStat = repository.find(SeriesStat.createKeyForSeries(accountId, previousSeriesId, previousMonthId));
         if (previousStat != null && (isPlanned == null || isPlanned)) {
           updateStat(previousStat, previousAmount, -1, repository);
+          updateStat(previousAccountStat, previousAmount, -1, repository);
         }
 
         Glob currentStat = repository.findOrCreate(SeriesStat.createKeyForSeries(currentSeriesId, currentMonthId));
+        Glob currentAccountStat = repository.findOrCreate(SeriesStat.createKeyForSeries(accountId, currentSeriesId, currentMonthId));
         if ((isPlanned == null || !isPlanned)) {
           updateStat(currentStat, currentAmount, 1, repository);
+          updateStat(currentAccountStat, currentAmount, 1, repository);
         }
       }
 
@@ -100,17 +105,11 @@ public class ActualSeriesStatTrigger implements ChangeSetListener {
       return;
     }
 
+    final Double transactionAmount = values.get(Transaction.AMOUNT);
     Glob stat = repository.findOrCreate(SeriesStat.createKeyForSeries(seriesId, values.get(Transaction.BUDGET_MONTH)));
-    if (stat != null) {
-      final Double transactionAmount = values.get(Transaction.AMOUNT);
-      updateStat(stat, transactionAmount, multiplier, repository);
-    }
-    else {
-      if (throwIfNull) {
-        throw new RuntimeException("Missing stat for month " + values.get(Transaction.BUDGET_MONTH) + " on series : " +
-                                   GlobPrinter.toString(repository.get(Key.create(Series.TYPE, seriesId))));
-      }
-    }
+    updateStat(stat, transactionAmount, multiplier, repository);
+    Glob accountStat = repository.findOrCreate(SeriesStat.createKeyForSeries(values.get(Transaction.ACCOUNT), seriesId, values.get(Transaction.BUDGET_MONTH)));
+    updateStat(accountStat, transactionAmount, multiplier, repository);
   }
 
   private void updateStat(Glob stat, Double transactionAmount, int multiplier, GlobRepository repository) {

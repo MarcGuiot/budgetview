@@ -24,7 +24,8 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.SortedSet;
 
-import static org.designup.picsou.gui.model.SeriesStat.isSeries;
+import static org.designup.picsou.gui.model.SeriesStat.isSeriesForAccount;
+import static org.designup.picsou.gui.model.SeriesStat.isSummaryForSeries;
 import static org.globsframework.model.FieldValue.value;
 import static org.globsframework.model.utils.GlobMatchers.*;
 
@@ -112,7 +113,7 @@ public class PeriodSeriesStatUpdater implements GlobSelectionListener, ChangeSet
       resetStats();
       repository.safeApply(SeriesStat.TYPE,
                            and(fieldContained(SeriesStat.MONTH, selectedMonths.getValueSet(Month.ID)),
-                               isSeries()),
+                               selectedAccountId != null ? isSeriesForAccount(selectedAccountId) : isSummaryForSeries()),
                            seriesStatFunctor
       );
       initToUpdateField();
@@ -242,9 +243,9 @@ public class PeriodSeriesStatUpdater implements GlobSelectionListener, ChangeSet
 
       Glob periodStat = PeriodSeriesStat.findOrCreateForSeries(seriesId, repository);
       double amount = (periodStat.get(PeriodSeriesStat.AMOUNT) +
-                      Utils.zeroIfNull(seriesStat.get(SeriesStat.ACTUAL_AMOUNT))) * signModifier;
+                      Utils.zeroIfNull(getActual(seriesStat))) * signModifier;
       Double plannedAmount;
-      if (periodStat.get(PeriodSeriesStat.PLANNED_AMOUNT) == null && seriesStat.get(SeriesStat.PLANNED_AMOUNT) == null) {
+      if (periodStat.get(PeriodSeriesStat.PLANNED_AMOUNT) == null && getPlanned(seriesStat) == null) {
         plannedAmount = null;
       }
       else {
@@ -313,12 +314,20 @@ public class PeriodSeriesStatUpdater implements GlobSelectionListener, ChangeSet
     }
 
     for (Glob stat : activeStats) {
-      hasObservedAmount |= Amounts.isNotZero(stat.get(SeriesStat.ACTUAL_AMOUNT));
-      hasPlannedAmountToSet |= Amounts.isUnset(stat.get(SeriesStat.PLANNED_AMOUNT));
+      hasObservedAmount |= Amounts.isNotZero(getActual(stat));
+      hasPlannedAmountToSet |= Amounts.isUnset(getPlanned(stat));
       if (hasObservedAmount && hasPlannedAmountToSet) {
         return true;
       }
     }
     return false;
+  }
+
+  private Double getPlanned(Glob stat) {
+    return stat.get(SeriesStat.PLANNED_AMOUNT);
+  }
+
+  public Double getActual(Glob seriesStat) {
+    return seriesStat.get(SeriesStat.ACTUAL_AMOUNT);
   }
 }

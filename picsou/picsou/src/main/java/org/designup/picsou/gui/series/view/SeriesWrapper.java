@@ -269,7 +269,8 @@ public class SeriesWrapper {
   }
 
   public static org.globsframework.model.Key createSeriesStatKey(Glob wrapper, int monthId) {
-    return org.globsframework.model.Key.create(SeriesStat.TARGET_TYPE, getSeriesType(wrapper).getId(),
+    return org.globsframework.model.Key.create(SeriesStat.ACCOUNT, Account.ALL_SUMMARY_ACCOUNT_ID,
+                                               SeriesStat.TARGET_TYPE, getSeriesType(wrapper).getId(),
                                                SeriesStat.TARGET, wrapper.get(ITEM_ID),
                                                SeriesStat.MONTH, monthId);
   }

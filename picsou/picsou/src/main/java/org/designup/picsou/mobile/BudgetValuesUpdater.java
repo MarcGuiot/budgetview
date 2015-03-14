@@ -132,7 +132,7 @@ public class BudgetValuesUpdater {
 
   private void createSeriesValues() {
     Set<Integer> seriesIds = new HashSet<Integer>();
-    for (Glob seriesStat : SeriesStat.getAllForSeries(selectedMonths, sourceRepository)) {
+    for (Glob seriesStat : SeriesStat.getAllSummariesForSeries(selectedMonths, sourceRepository)) {
       Glob series = SeriesStat.getSeries(seriesStat, sourceRepository);
       if (seriesStat.isTrue(SeriesStat.ACTIVE) && !series.isTrue(Series.IS_MIRROR)) {
         Integer seriesId = series.get(Series.ID);

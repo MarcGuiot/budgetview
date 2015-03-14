@@ -6,7 +6,7 @@ public abstract class AmountGenerator {
   private AmountGenerator() {
   }
 
-  public static AmountGenerator value(final double value) {
+  public static AmountGenerator fixedValue(final double value) {
     return new AmountGenerator() {
       public double get() {
         return value;

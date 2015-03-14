@@ -8,20 +8,18 @@ import org.designup.picsou.gui.printing.utils.BudgetReportUtils;
 import org.designup.picsou.gui.series.utils.SeriesOrGroup;
 import org.designup.picsou.model.BudgetArea;
 import org.designup.picsou.model.Month;
-import org.designup.picsou.model.Series;
 import org.designup.picsou.model.util.ClosedMonthRange;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
-import org.globsframework.model.Key;
 import org.globsframework.utils.Utils;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import static org.designup.picsou.gui.model.SeriesStat.isForBudgetArea;
+import static org.designup.picsou.gui.model.SeriesStat.isSummaryForBudgetArea;
 import static org.globsframework.model.utils.GlobMatchers.*;
 
 public class SeriesTable {
@@ -38,7 +36,7 @@ public class SeriesTable {
       List<SeriesRow> rows = new ArrayList<SeriesRow>();
       GlobList seriesStatList =
         repository.getAll(SeriesStat.TYPE,
-                          and(isForBudgetArea(budgetArea),
+                          and(isSummaryForBudgetArea(budgetArea),
                               fieldIn(SeriesStat.MONTH, months),
                               isTrue(SeriesStat.ACTIVE),
                               isNotNull(SeriesStat.SUMMARY_AMOUNT),

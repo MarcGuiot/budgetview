@@ -1,9 +1,6 @@
 package org.designup.picsou.gui.model;
 
-import org.designup.picsou.model.BudgetArea;
-import org.designup.picsou.model.Month;
-import org.designup.picsou.model.Series;
-import org.designup.picsou.model.SeriesGroup;
+import org.designup.picsou.model.*;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.annotations.DefaultDouble;
 import org.globsframework.metamodel.annotations.Key;
@@ -19,6 +16,7 @@ import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.utils.GlobMatcher;
+import org.globsframework.model.utils.GlobMatchers;
 import org.globsframework.utils.Utils;
 import org.globsframework.utils.exceptions.InvalidParameter;
 import org.globsframework.utils.exceptions.UnexpectedValue;
@@ -39,7 +37,12 @@ public class SeriesStat {
   @Target(SeriesType.class)
   public static LinkField TARGET_TYPE;
 
-  @Key @Target(Month.class)
+  @Key
+  @Target(Account.class)
+  public static LinkField ACCOUNT;
+
+  @Key
+  @Target(Month.class)
   public static LinkField MONTH;
 
   public static DoubleField ACTUAL_AMOUNT;
@@ -78,8 +81,16 @@ public class SeriesStat {
     throw new UnexpectedValue("Unexpected seriesStat type " + targetType + " for: " + seriesStatKey);
   }
 
+  public static org.globsframework.model.Key createKeyForSeries(Integer accountId, Integer seriesId, Integer monthId) {
+    return org.globsframework.model.Key.create(ACCOUNT, accountId,
+                                               TARGET, seriesId,
+                                               TARGET_TYPE, SeriesType.SERIES.getId(),
+                                               MONTH, monthId);
+  }
+
   public static org.globsframework.model.Key createKeyForSeries(Integer seriesId, Integer monthId) {
-    return org.globsframework.model.Key.create(TARGET, seriesId,
+    return org.globsframework.model.Key.create(ACCOUNT, Account.ALL_SUMMARY_ACCOUNT_ID,
+                                               TARGET, seriesId,
                                                TARGET_TYPE, SeriesType.SERIES.getId(),
                                                MONTH, monthId);
   }
@@ -90,16 +101,17 @@ public class SeriesStat {
     return stat != null ? stat : repository.create(key);
   }
 
-  public static boolean isForSeries(FieldValues values) {
-    return SeriesType.SERIES.getId().equals(values.get(TARGET_TYPE));
+  public static boolean isSummaryForSeries(FieldValues seriesStat) {
+    return isSummary(seriesStat) && SeriesType.SERIES.getId().equals(seriesStat.get(TARGET_TYPE));
   }
 
-  public static boolean isForGroup(FieldValues values) {
-    return SeriesType.SERIES_GROUP.getId().equals(values.get(TARGET_TYPE));
+  public static boolean isSummaryForGroup(FieldValues seriesStat) {
+    return isSummary(seriesStat) && SeriesType.SERIES_GROUP.getId().equals(seriesStat.get(TARGET_TYPE));
   }
 
-  public static org.globsframework.model.Key keyForGroup(Integer groupId, Integer monthId) {
-    return org.globsframework.model.Key.create(TARGET, groupId,
+  public static org.globsframework.model.Key keyForGroupSummary(Integer groupId, Integer monthId) {
+    return org.globsframework.model.Key.create(ACCOUNT, Account.ALL_SUMMARY_ACCOUNT_ID,
+                                               TARGET, groupId,
                                                TARGET_TYPE, SeriesType.SERIES_GROUP.getId(),
                                                MONTH, monthId);
   }
@@ -118,24 +130,49 @@ public class SeriesStat {
     return repository.get(org.globsframework.model.Key.create(Series.TYPE, seriesStatValues.get(TARGET)));
   }
 
-  public static Glob findSeries(Integer seriesId, Integer monthId, GlobRepository repository) {
-    return repository.find(org.globsframework.model.Key.create(TARGET, seriesId,
+  public static Glob findSummaryForSeries(Integer seriesId, Integer monthId, GlobRepository repository) {
+    return repository.find(org.globsframework.model.Key.create(ACCOUNT, Account.ALL_SUMMARY_ACCOUNT_ID,
+                                                               TARGET, seriesId,
                                                                TARGET_TYPE, SeriesType.SERIES.getId(),
                                                                MONTH, monthId));
   }
 
-  public static GlobMatcher isSeries() {
+  public static GlobMatcher isSummary() {
     return new GlobMatcher() {
       public boolean matches(Glob seriesStat, GlobRepository repository) {
-        return seriesStat != null && SeriesType.SERIES.getId().equals(seriesStat.get(TARGET_TYPE));
+        return seriesStat != null && isSummary(seriesStat);
       }
     };
   }
 
-  public static GlobMatcher isGroup() {
+  public static GlobMatcher isForAccount(final int accountId) {
     return new GlobMatcher() {
       public boolean matches(Glob seriesStat, GlobRepository repository) {
-        return seriesStat != null && SeriesType.SERIES_GROUP.getId().equals(seriesStat.get(TARGET_TYPE));
+        return seriesStat != null && equal(accountId, seriesStat.get(SeriesStat.ACCOUNT));
+      }
+    };
+  }
+
+  public static GlobMatcher isSeriesForAccount(final int accountId) {
+    return new GlobMatcher() {
+      public boolean matches(Glob seriesStat, GlobRepository repository) {
+        return seriesStat != null && equal(accountId, seriesStat.get(SeriesStat.ACCOUNT)) && SeriesType.SERIES.getId().equals(seriesStat.get(TARGET_TYPE));
+      }
+    };
+  }
+
+  public static GlobMatcher isSummaryForSeries() {
+    return new GlobMatcher() {
+      public boolean matches(Glob seriesStat, GlobRepository repository) {
+        return seriesStat != null && isSummary(seriesStat) && SeriesType.SERIES.getId().equals(seriesStat.get(TARGET_TYPE));
+      }
+    };
+  }
+
+  public static GlobMatcher isSummaryForGroup() {
+    return new GlobMatcher() {
+      public boolean matches(Glob seriesStat, GlobRepository repository) {
+        return seriesStat != null && isSummary(seriesStat) && SeriesType.SERIES_GROUP.getId().equals(seriesStat.get(TARGET_TYPE));
       }
     };
   }
@@ -155,21 +192,27 @@ public class SeriesStat {
   public static GlobMatcher isRoot() {
     return new GlobMatcher() {
       public boolean matches(Glob seriesStat, GlobRepository repository) {
-        if (seriesStat == null) {
+        if (seriesStat == null || !isSummary(seriesStat)) {
           return false;
         }
         if (SeriesType.SERIES_GROUP.getId().equals(seriesStat.get(TARGET_TYPE))) {
           return true;
         }
         Glob series = repository.find(org.globsframework.model.Key.create(Series.TYPE, seriesStat.get(TARGET)));
-        return series != null && series.get(Series.GROUP) == null;
+        return series != null  && series.get(Series.GROUP) == null;
       }
     };
   }
 
-  public static GlobList getAllSeriesForMonth(Integer monthId, GlobRepository repository) {
+  public static boolean isSummary(FieldValues seriesStat) {
+    return equal(Account.ALL_SUMMARY_ACCOUNT_ID, seriesStat.get(SeriesStat.ACCOUNT));
+  }
+
+  public static GlobList getAllSummarySeriesForMonth(Integer monthId, GlobRepository repository) {
     return repository.findByIndex(SeriesStat.MONTH_INDEX, monthId)
-      .filter(fieldEquals(SeriesStat.TARGET_TYPE, SeriesType.SERIES.getId()), repository);
+      .filter(GlobMatchers.and(fieldEquals(SeriesStat.ACCOUNT, Account.ALL_SUMMARY_ACCOUNT_ID),
+                               fieldEquals(SeriesStat.TARGET_TYPE, SeriesType.SERIES.getId())),
+              repository);
   }
 
   public static GlobMatcher linkedToSeries(final org.globsframework.model.Key seriesKey) {
@@ -182,16 +225,28 @@ public class SeriesStat {
     };
   }
 
-  public static GlobList getAllForSeries(Integer[] selectedMonths, GlobRepository sourceRepository) {
+  public static GlobMatcher summariesLinkedToSeries(final org.globsframework.model.Key seriesKey) {
+    return new GlobMatcher() {
+      public boolean matches(Glob seriesStat, GlobRepository repository) {
+        return (seriesStat != null) &&
+               isSummary(seriesStat) &&
+               equal(seriesStat.get(SeriesStat.TARGET_TYPE), SeriesType.SERIES.getId()) &&
+               equal(seriesStat.get(SeriesStat.TARGET), seriesKey.get(Series.ID));
+      }
+    };
+  }
+
+  public static GlobList getAllSummariesForSeries(Integer[] selectedMonths, GlobRepository sourceRepository) {
     return sourceRepository.getAll(SeriesStat.TYPE,
-                                   and(fieldEquals(SeriesStat.TARGET_TYPE, SeriesType.SERIES.getId()),
+                                   and(fieldEquals(SeriesStat.ACCOUNT, Account.ALL_SUMMARY_ACCOUNT_ID),
+                                       fieldEquals(SeriesStat.TARGET_TYPE, SeriesType.SERIES.getId()),
                                        fieldIn(SeriesStat.MONTH, selectedMonths)));
   }
 
-  public static GlobMatcher isForBudgetArea(final BudgetArea budgetArea) {
+  public static GlobMatcher isSummaryForBudgetArea(final BudgetArea budgetArea) {
     return new GlobMatcher() {
       public boolean matches(Glob seriesStat, GlobRepository repository) {
-        if (seriesStat == null) {
+        if (seriesStat == null || !isSummary(seriesStat)) {
           return false;
         }
         if (SeriesType.SERIES.getId().equals(seriesStat.get(TARGET_TYPE))) {
@@ -232,19 +287,28 @@ public class SeriesStat {
 
   public static void deleteAllForSeries(Glob series, GlobRepository repository) {
     repository.delete(SeriesStat.TYPE,
-                             and(fieldEquals(SeriesStat.TARGET_TYPE, SeriesType.SERIES.getId()),
+                      and(fieldEquals(SeriesStat.TARGET_TYPE, SeriesType.SERIES.getId()),
+                          fieldEquals(SeriesStat.TARGET, series.get(Series.ID))));
+  }
+
+  public static void deleteAllForSeriesAndMonth(Integer seriesId, Integer monthId, GlobRepository repository) {
+    repository.delete(SeriesStat.TYPE,
+                      and(fieldEquals(SeriesStat.TARGET_TYPE, SeriesType.SERIES.getId()),
+                          fieldEquals(SeriesStat.TARGET, seriesId),
+                          fieldEquals(SeriesStat.MONTH, monthId)));
+  }
+
+  public static GlobList getAllSummaryMonthsForSeries(Glob series, GlobRepository repository) {
+    return repository.getAll(SeriesStat.TYPE,
+                             and(fieldEquals(SeriesStat.ACCOUNT, Account.ALL_SUMMARY_ACCOUNT_ID),
+                                 fieldEquals(SeriesStat.TARGET_TYPE, SeriesType.SERIES.getId()),
                                  fieldEquals(SeriesStat.TARGET, series.get(Series.ID))));
   }
 
-  public static GlobList getAllMonthsForSeries(Glob series, GlobRepository repository) {
+  public static GlobList getAllSummaryMonths(Integer targetId, SeriesType type, GlobRepository repository) {
     return repository.getAll(SeriesStat.TYPE,
-                             and(fieldEquals(SeriesStat.TARGET_TYPE, SeriesType.SERIES.getId()),
-                                 fieldEquals(SeriesStat.TARGET, series.get(Series.ID))));
-  }
-
-  public static GlobList getAllMonths(Integer id, SeriesType type, GlobRepository repository) {
-    return repository.getAll(SeriesStat.TYPE,
-                             and(fieldEquals(SeriesStat.TARGET_TYPE, type.getId()),
-                                 fieldEquals(SeriesStat.TARGET, id)));
+                             and(fieldEquals(SeriesStat.ACCOUNT, Account.ALL_SUMMARY_ACCOUNT_ID),
+                                 fieldEquals(SeriesStat.TARGET_TYPE, type.getId()),
+                                 fieldEquals(SeriesStat.TARGET, targetId)));
   }
 }

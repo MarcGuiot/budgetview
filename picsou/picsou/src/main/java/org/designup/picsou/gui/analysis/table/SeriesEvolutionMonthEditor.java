@@ -91,6 +91,7 @@ public class SeriesEvolutionMonthEditor extends SeriesEvolutionEditor {
 
   private String getButtonText(Integer itemId, SeriesType seriesType, GlobType type, LinkField budgetAreaField) {
     Glob seriesStat = repository.find(KeyBuilder.init(SeriesStat.TYPE)
+                                        .set(SeriesStat.ACCOUNT, Account.ALL_SUMMARY_ACCOUNT_ID)
                                         .set(SeriesStat.MONTH, referenceMonthId)
                                         .set(SeriesStat.TARGET_TYPE, seriesType.getId())
                                         .set(SeriesStat.TARGET, itemId)

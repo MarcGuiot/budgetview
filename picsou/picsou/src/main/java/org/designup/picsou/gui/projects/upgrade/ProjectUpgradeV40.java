@@ -241,7 +241,7 @@ public class ProjectUpgradeV40 {
                                 isTrue(Transaction.PLANNED)));
           Key seriesKey = Key.create(Series.TYPE, seriesId);
           repository.update(project.getKey(), Project.SERIES, null);
-          repository.delete(SeriesStat.TYPE, SeriesStat.linkedToSeries(seriesKey));
+          repository.delete(SeriesStat.TYPE, SeriesStat.summariesLinkedToSeries(seriesKey));
           repository.delete(SeriesBudget.TYPE, fieldEquals(SeriesBudget.SERIES, seriesId));
           repository.delete(SubSeries.TYPE, fieldEquals(SubSeries.SERIES, seriesId));
           repository.delete(seriesKey);

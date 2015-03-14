@@ -1,6 +1,5 @@
 package org.designup.picsou.functests.budget;
 
-import org.designup.picsou.functests.checkers.SeriesEditionDialogChecker;
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
 import org.designup.picsou.model.TransactionType;
@@ -203,32 +202,6 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
       .checkValue(200808, 2, 5000.00);
   }
 
-  public void testEditingASeriesWithTransactions() throws Exception {
-    OfxBuilder.init(this)
-      .addTransaction("2008/07/29", "2008/08/01", -29.00, "Free Telecom")
-      .load();
-
-    timeline.selectMonth("2008/07");
-    views.selectData();
-    transactions.initContent()
-      .add("29/07/2008", "01/08/2008", TransactionType.PRELEVEMENT, "Free Telecom", "", -29.00)
-      .check();
-
-    views.selectCategorization();
-    categorization.setNewRecurring("Free Telecom", "Internet");
-
-    views.selectBudget();
-
-    budgetView.recurring.editSeries("Internet")
-      .checkTitle("Editing a series")
-      .checkName("Internet")
-      .checkBudgetArea("Recurring")
-      .setName("Free")
-      .validate();
-
-    budgetView.recurring.checkSeries("Free", -29.00, -29.00);
-  }
-
   public void testAddMonth() throws Exception {
     OfxBuilder.init(this)
       .addTransaction("2008/07/31", -95.00, "Auchan")
@@ -363,34 +336,6 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
       .checkSeries("courantMonoprix", 0., 0.);
   }
 
-  public void testEditingASeriesAmountHasNoImpactOnOtherSeries() throws Exception {
-    OfxBuilder.init(this)
-      .addTransaction("2008/07/29", "2008/08/01", -29.00, "Auchan")
-      .addTransaction("2008/06/29", "2008/08/01", -29.00, "Auchan")
-      .load();
-
-    timeline.selectMonth("2008/07");
-
-    views.selectBudget();
-    budgetView.recurring.createSeries()
-      .setName("Groceries")
-      .validate();
-    budgetView.recurring.createSeries()
-      .setName("Fuel")
-      .validate();
-
-    budgetView.recurring.checkSeries("Groceries", 0, 0);
-    budgetView.recurring.checkSeries("Fuel", 0, 0);
-
-    budgetView.recurring.editSeries("Groceries")
-      .selectMonth(200807)
-      .setAmount("200")
-      .validate();
-
-    budgetView.recurring.checkSeries("Groceries", 0.00, -200.00);
-    budgetView.recurring.checkSeries("Fuel", 0, 0);
-  }
-
   public void testReimbursementsAreShownWithAPlus() throws Exception {
     OfxBuilder.init(this)
       .addTransaction("2008/07/29", 25.00, "Secu")
@@ -420,59 +365,6 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
     budgetView.variable.checkSeries("santé", -5, -60);
   }
 
-  public void testCreateAndDeleteManySeries() throws Exception {
-    OfxBuilder.init(this)
-      .addTransaction("2008/07/29", -29.00, "Auchan")
-      .addTransaction("2008/06/29", -60.00, "ELF")
-      .load();
-
-    timeline.selectMonths("2008/06", "2008/07");
-
-    views.selectBudget();
-    budgetView.recurring.createSeries()
-      .setName("Groceries")
-      .validate();
-    budgetView.recurring.createSeries()
-      .setName("Fuel")
-      .validate();
-
-    budgetView.recurring.checkSeries("Groceries", 0, 0);
-    budgetView.recurring.checkSeries("Fuel", 0, 0);
-
-    budgetView.recurring.editSeries("Groceries")
-      .selectMonth(200807)
-      .setAmount("200")
-      .validate();
-
-    budgetView.recurring.checkSeries("Groceries", 0.00, -200.00);
-    budgetView.recurring.checkSeries("Fuel", 0, 0);
-
-    views.selectCategorization();
-    categorization.selectTransactions("ELF")
-      .selectRecurring()
-      .selectSeries("Fuel");
-
-    categorization.selectTransactions("Auchan")
-      .selectRecurring()
-      .selectSeries("Groceries");
-
-    views.selectBudget();
-    budgetView.recurring.checkSeries("Fuel", -60, -120);
-
-    SeriesEditionDialogChecker editionDialogChecker = budgetView.recurring.editSeries("Groceries");
-    editionDialogChecker
-      .deleteCurrentSeriesWithConfirmation();
-    editionDialogChecker.validate();
-    budgetView.recurring.checkSeriesNotPresent("Groceries");
-
-    transactions.initAmountContent()
-      .add("29/07/2008", "AUCHAN", -29.00, "To categorize", 0.00, 0.00, "Account n. 00001123")
-      .add("29/06/2008", "ELF", -60.00, "Fuel", 29.00, 29.00, "Account n. 00001123")
-      .check();
-
-    uncategorized.checkAmountAndTransactions(29.00, "| 29/07/2008 |  | AUCHAN | -29.00 |\n");
-  }
-
   public void testDeactivatingSeriesBudgets() throws Exception {
     accounts.createNewAccount()
       .setName("Main")
@@ -492,7 +384,7 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
     timeline.selectLast();
     transactions
       .showPlannedTransactions().initContent()
-      .add("11/08/2008", TransactionType.PLANNED, "Planned: salaire", "", 1000, "salaire")
+      .add("11/08/2008", TransactionType.PLANNED, "Planned: salaire", "", 1000.00, "salaire")
       .check();
 
     views.selectBudget();
@@ -870,56 +762,183 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
     budgetView.variable.checkOrder("Leisures", "Groceries");
   }
 
-  public void testDeltaGauge() throws Exception {
-
-    operations.openPreferences().setFutureMonthsCount(2).validate();
+  public void testOneMonth() throws Exception {
 
     OfxBuilder.init(this)
-      .addTransaction("2008/06/10", 1000.00, "WorldCo")
-      .addTransaction("2008/07/10", 1000.00, "WorldCo")
-      .addTransaction("2008/08/10", 1200.00, "WorldCo")
-      .addTransaction("2008/06/10", -55.00, "EDF")
-      .addTransaction("2008/07/10", -55.00, "EDF")
-      .addTransaction("2008/08/10", -55.00, "EDF")
-      .addTransaction("2008/07/10", -50.00, "Auchan")
-      .addTransaction("2008/08/01", -150.00, "Auchan")
-      .addTransaction("2008/08/20", -50.00, "FNAC")
-      .addTransaction("2008/06/05", -150.00, "Zara")
-      .addTransaction("2008/07/05", -100.00, "Zara")
-      .addTransaction("2008/08/10", -50.00, "Zara")
+      .addTransaction("2008/07/07", -30, "Free")
+      .addTransaction("2008/07/08", -1500.00, "Loyer")
+      .addTransaction("2008/07/09", -300, "Auchan")
+      .addTransaction("2008/07/11", -100.00, "FNAC")
+      .addTransaction("2008/07/12", 2200, "Salaire")
+      .addTransaction("2008/07/13", -20, "cheque")
+      .addTransaction("2008/07/13", -200, "Air France")
+      .addTransaction("2008/07/15", -100.00, "VIRT ING")
       .load();
+    timeline.checkDisplays("2008/07", "2008/08");
 
-    categorization.setNewIncome("WorldCo", "Salary");
-    categorization.setNewRecurring("EDF", "Electricity");
-    categorization.setNewVariable("Auchan", "Groceries", -200.00);
-    categorization.setNewExtra("FNAC", "Leisures");
-    categorization.setNewVariable("Zara", "Clothes", -50.00);
+    views.selectCategorization();
+    categorization.setNewRecurring("Free", "Internet");
+    categorization.setNewRecurring("Loyer", "Rental");
+    categorization.setNewVariable("Auchan", "Groceries", -300.00);
+    categorization.setNewVariable("FNAC", "Equipment", -100.00);
+    categorization.setNewIncome("Salaire", "Salaire");
+    categorization.setNewExtra("Air France", "Trips");
+    categorization.setNewTransfer("VIRT ING", "Epargne", "Account n. 00001123", "External account");
+
+    timeline.selectMonth("2008/07");
+    views.selectBudget();
+    budgetView.transfer.alignAndPropagate("Epargne");
+
+    double incomeFor200807 = 2200;
+    double incomeFor200808 = 2200;
+    double expensesFor200808 = 30 + 1500 + 300 + 100 + 100;
+    double balanceFor200808 = incomeFor200808 - expensesFor200808;
+
+    mainAccounts.checkEndOfMonthPosition(OfxBuilder.DEFAULT_ACCOUNT_NAME, 0.00);
+    budgetView.income.checkTotalObserved(incomeFor200807);
+    budgetView.recurring.checkTotalAmounts("1530.00", "1530.00");
+    budgetView.transfer.checkTotalAmounts("100.00", "100.00");
+
+    mainAccounts.changePosition(OfxBuilder.DEFAULT_ACCOUNT_NAME, 1000.00, "VIRT ING");
+    timeline.checkMonthTooltip("2008/07", -880.00);
 
     timeline.selectMonth("2008/08");
-    budgetView.income.checkDeltaGauge("Salary", 1000.00, 1200.00, 0.20,
-                                      "The amount is increasing - it was 1000.00 in july 2008");
-    budgetView.recurring.checkDeltaGauge("Electricity", -55.00, -55.00, 0.00,
-                                         "The amount is the same as in july 2008");
-    budgetView.variable.editPlannedAmount("Groceries").setPropagationDisabled().setAmount(250.00).validate();
-    budgetView.variable.checkDeltaGauge("Groceries", -50.00, -250.00, 1.00,
-                                        "The amount is increasing - it was 50.00 in july 2008");
-    budgetView.extras.checkDeltaGauge("Leisures", null, -50.00, 1.00,
-                                      "This envelope was not used in july 2008");
-    budgetView.variable.checkDeltaGauge("Clothes", -100.00, -50.00, -0.5,
-                                        "The amount is decreasing - it was 100.00 in july 2008");
+    mainAccounts.checkEndOfMonthPosition(OfxBuilder.DEFAULT_ACCOUNT_NAME, 1000 + balanceFor200808);
 
-    timeline.selectMonths("2008/06", "2008/07", "2008/08");
-    budgetView.recurring.checkDeltaGauge("Electricity", -55.00, -55.00, 0.00,
-                                         "The amount is the same as in june 2008");
-    budgetView.variable.checkDeltaGauge("Clothes", -150.00, -50.00, -0.67,
-                                        "The amount is decreasing - it was 150.00 in june 2008");
+    budgetView.recurring.checkTotalAmounts("0.00", "1530.00");
+    budgetView.variable.checkTotalAmounts("0.00", "400.00");
+
+    timeline.selectAll();
+    mainAccounts.checkEndOfMonthPosition(OfxBuilder.DEFAULT_ACCOUNT_NAME, 1000 + incomeFor200808 - expensesFor200808);
+    budgetView.income.checkTotalAmounts("2200.00", "4400.00");
+
+    timeline.selectMonth("2008/08");
+    budgetView.extras.createSeries()
+      .setName("Trip")
+      .setTargetAccount("Account n. 00001123")
+      .setAmount(170)
+      .validate();
+    mainAccounts.checkEndOfMonthPosition(OfxBuilder.DEFAULT_ACCOUNT_NAME, 1000.00);
+  }
+
+  public void testTwoMonths() throws Exception {
+
+    addOns.activateAnalysis();
+    operations.openPreferences().setFutureMonthsCount(12).validate();
+    OfxBuilder.init(this)
+      .addTransaction("2008/07/07", -29.90, "Free")
+      .addTransaction("2008/07/08", -1500.00, "Loyer")
+      .addTransaction("2008/07/09", -60.00, "Auchan")
+      .addTransaction("2008/07/10", -20.00, "ED")
+      .addTransaction("2008/07/11", -10.00, "FNAC")
+      .addTransaction("2008/07/12", 1500.00, "Salaire")
+      .addTransaction("2008/08/07", -29.90, "Free")
+      .addTransaction("2008/08/08", -1500.00, "Loyer")
+      .load();
+
+    timeline.selectMonth("2008/07");
+
+    views.selectCategorization();
+    categorization.setNewRecurring("Free", "internet");
+    categorization.setNewRecurring("Loyer", "rental");
+    categorization.setNewVariable("Auchan", "groceries", -80.00);
+    categorization.setVariable("ED", "groceries");
+    categorization.setNewVariable("FNAC", "Equipment", -10.00);
+    categorization.setNewIncome("Salaire", "Salaire");
+
+    views.selectBudget();
+
+    mainAccounts.checkEndOfMonthPosition(OfxBuilder.DEFAULT_ACCOUNT_NAME, 1529.90);
+
+    timeline.checkMonthTooltip("2008/07", 29.90);
+
+    timeline.selectMonth("2008/08");
+
+    views.selectCategorization();
+    categorization
+      .setRecurring("Free", "internet")
+      .setRecurring("Loyer", "rental");
+
+    views.selectBudget();
+    mainAccounts.checkEndOfMonthPosition(OfxBuilder.DEFAULT_ACCOUNT_NAME, 1410.00);
+
+    seriesAnalysis.budget().balanceChart.getLeftDataset()
+      .checkSize(1)
+      .checkValue("Income", 1500.00);
+    seriesAnalysis.budget().balanceChart.getRightDataset()
+      .checkSize(2)
+      .checkValue("Recurring", 1529.90)
+      .checkValue("Variable", 90.00);
+
+    views.selectHome();
+    mainAccounts.checkEndOfMonthPosition(OfxBuilder.DEFAULT_ACCOUNT_NAME, 1410);
+    timeline.checkMonthTooltip("2008/08", 0.0);
+
+    timeline.selectMonths("2008/07", "2008/08");
+    mainAccounts.checkEndOfMonthPosition(OfxBuilder.DEFAULT_ACCOUNT_NAME, 1410);
+    mainAccounts.checkEndOfMonthPosition(OfxBuilder.DEFAULT_ACCOUNT_NAME, 1410);
+    seriesAnalysis.budget().balanceChart.getLeftDataset()
+      .checkSize(1)
+      .checkValue("Income", 3000.00);
+    seriesAnalysis.budget().balanceChart.getRightDataset()
+      .checkSize(2)
+      .checkValue("Recurring", 3059.80)
+      .checkValue("Variable", 180.00);
 
     timeline.selectMonth("2008/09");
-    budgetView.variable.editSeries("Clothes").setAmount(0.00).validate();
-    budgetView.variable.checkDeltaGauge("Clothes", -50.00, 0.00, -1.00,
-                                        "The amount was 50.00 in august 2008, and it is set to zero in september 2008");
-    budgetView.income.editSeries("Salary").setAmount(0.00).validate();
-    budgetView.income.checkDeltaGauge("Salary", 1200.00, 0.00, -1.00,
-                                      "The amount was 1200.00 in august 2008, and it is set to zero in september 2008");
+    mainAccounts.checkEndOfMonthPosition(OfxBuilder.DEFAULT_ACCOUNT_NAME, 1420 + 1500 - 1529.90 - 80 - 10 - 10);
+    seriesAnalysis.budget().balanceChart.getLeftDataset()
+      .checkSize(1)
+      .checkValue("Income", 1500.00);
+    seriesAnalysis.budget().balanceChart.getRightDataset()
+      .checkSize(2)
+      .checkValue("Recurring", 1529.90)
+      .checkValue("Variable", 90.00);
+  }
+
+  public void testBudgetSummaryDetailsShowsActualPositionInThePast() throws Exception {
+
+    OfxBuilder.init(this)
+      .addBankAccount(-1, 10674, OfxBuilder.DEFAULT_ACCOUNT_ID, 1000.00, "2008/08/05")
+      .addTransaction("2008/07/01", 1500.00, "WorldCo")
+      .addTransaction("2008/07/05", -500.00, "Auchan")
+      .addTransaction("2008/08/01", 1500.00, "WorldCo")
+      .addTransaction("2008/08/05", -1000.00, "Auchan")
+      .load();
+
+    views.selectCategorization();
+    categorization.setNewVariable("Auchan", "Groceries");
+    categorization.setNewIncome("WorldCo", "Salary");
+
+    timeline.selectMonth("2008/07");
+    views.selectHome();
+    views.selectBudget();
+    mainAccounts.checkEndOfMonthPosition(OfxBuilder.DEFAULT_ACCOUNT_NAME, 500);
+  }
+
+  public void testWithPositiveEnvelope() throws Exception {
+
+    operations.openPreferences().setFutureMonthsCount(4).validate();
+    OfxBuilder.init(this)
+      .addTransaction("2008/07/07", -200, "ED")
+      .addTransaction("2008/07/09", 40.00, "remboursement")
+      .addTransaction("2008/07/12", 1500.00, "Salaire")
+      .addTransaction("2008/08/07", -100.00, "ED")
+      .load();
+
+    timeline.selectMonth("2008/07");
+
+    views.selectCategorization();
+    categorization.setNewRecurring("ED", "courses");
+    categorization.setNewVariable("remboursement", "secu", 40.00);
+    categorization.setNewIncome("Salaire", "Salaire");
+
+    views.selectBudget();
+    mainAccounts.checkEndOfMonthPosition(OfxBuilder.DEFAULT_ACCOUNT_NAME, 100.00);
+
+    timeline.selectMonth("2008/08");
+    mainAccounts.checkEndOfMonthPosition(OfxBuilder.DEFAULT_ACCOUNT_NAME, 1440.00);
+    mainAccounts.checkEndOfMonthPosition(OfxBuilder.DEFAULT_ACCOUNT_NAME, 1440.00);
+    timeline.checkMonthTooltip("2008/08", -100.00);
   }
 }
