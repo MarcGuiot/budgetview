@@ -45,8 +45,10 @@ public class SeriesStat {
   @Target(Month.class)
   public static LinkField MONTH;
 
+  @DefaultDouble(0.0)
   public static DoubleField ACTUAL_AMOUNT;
 
+  @DefaultDouble(0.0)
   public static DoubleField PLANNED_AMOUNT;
 
   @DefaultDouble(0.0)

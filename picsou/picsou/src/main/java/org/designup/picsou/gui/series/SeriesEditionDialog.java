@@ -242,8 +242,8 @@ public class SeriesEditionDialog {
           Glob toAccount = repository.findLinkTarget(currentSeries, Series.TO_ACCOUNT);
           boolean noneImported = Account.areNoneImported(fromAccount, toAccount);
           dayChooser.setVisible(noneImported);
-          savingsMessage.setVisible(!isValidSeries(currentSeries));
-          okAction.setEnabled(isValidSeries(currentSeries));
+          savingsMessage.setVisible(!Series.isValid(currentSeries));
+          okAction.setEnabled(Series.isValid(currentSeries));
         }
         updateTargetAccount();
         updateDateSelectors();
@@ -294,12 +294,6 @@ public class SeriesEditionDialog {
   public static GlobMatcher createAccountFilter() {
     return or(fieldEquals(Account.ID, Account.EXTERNAL_ACCOUNT_ID),
               not(contained(Account.ID, Account.SUMMARY_ACCOUNT_IDS)));
-  }
-
-  private boolean isValidSeries(Glob series) {
-    return !series.get(Series.BUDGET_AREA).equals(BudgetArea.TRANSFER.getId()) ||
-           ((series.get(Series.FROM_ACCOUNT) != null && series.get(Series.TO_ACCOUNT) != null) &&
-            !series.get(Series.FROM_ACCOUNT).equals(series.get(Series.TO_ACCOUNT)));
   }
 
   private void updateBudgetAreaCombo() {
@@ -818,9 +812,9 @@ public class SeriesEditionDialog {
     }
 
     private void update(GlobRepository repository) {
-      GlobList series = repository.getAll(Series.TYPE);
-      for (Glob glob : series) {
-        if (!isValidSeries(glob)) {
+      GlobList allSeries = repository.getAll(Series.TYPE);
+      for (Glob series : allSeries) {
+        if (!Series.isValid(series)) {
           okAction.setEnabled(false);
           return;
         }
@@ -901,8 +895,8 @@ public class SeriesEditionDialog {
             Glob toAccount = repository.findLinkTarget(series, Series.TO_ACCOUNT);
             boolean noneImported = Account.areNoneImported(fromAccount, toAccount);
             SeriesEditionDialog.this.dayChooser.setVisible(noneImported);
-            SeriesEditionDialog.this.savingsMessage.setVisible(!isValidSeries(series));
-            SeriesEditionDialog.this.okAction.setEnabled(isValidSeries(series));
+            SeriesEditionDialog.this.savingsMessage.setVisible(!Series.isValid(series));
+            SeriesEditionDialog.this.okAction.setEnabled(Series.isValid(series));
           }
         }
 

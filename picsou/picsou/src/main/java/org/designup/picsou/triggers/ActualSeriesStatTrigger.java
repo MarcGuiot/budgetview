@@ -109,10 +109,14 @@ public class ActualSeriesStatTrigger implements ChangeSetListener {
     Glob stat = repository.findOrCreate(SeriesStat.createKeyForSeries(seriesId, values.get(Transaction.BUDGET_MONTH)));
     updateStat(stat, transactionAmount, multiplier, repository);
     Glob accountStat = repository.findOrCreate(SeriesStat.createKeyForSeries(values.get(Transaction.ACCOUNT), seriesId, values.get(Transaction.BUDGET_MONTH)));
+    if (accountStat == null) System.out.println("ActualSeriesStatTrigger.processTransaction - accountStat is NULL");
     updateStat(accountStat, transactionAmount, multiplier, repository);
   }
 
   private void updateStat(Glob stat, Double transactionAmount, int multiplier, GlobRepository repository) {
+    if (stat == null) {
+      return;
+    }
     double newValue = Utils.zeroIfNull(stat.get(SeriesStat.ACTUAL_AMOUNT)) + multiplier * transactionAmount;
     if (Amounts.isNearZero(newValue)) {
       IsTransactionPresent transactionPresent = new IsTransactionPresent(stat);

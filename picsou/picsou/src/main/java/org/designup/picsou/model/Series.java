@@ -363,6 +363,12 @@ public class Series {
     return false;
   }
 
+  public static boolean isValid(Glob series) {
+    return !series.get(BUDGET_AREA).equals(BudgetArea.TRANSFER.getId()) ||
+           ((series.get(FROM_ACCOUNT) != null && series.get(TO_ACCOUNT) != null) &&
+            !series.get(FROM_ACCOUNT).equals(series.get(TO_ACCOUNT)));
+  }
+
   public static class Serializer implements PicsouGlobSerializer {
 
     public int getWriteVersion() {
