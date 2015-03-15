@@ -1,7 +1,6 @@
 package org.designup.picsou.gui.accounts.utils;
 
 import org.designup.picsou.model.Account;
-import org.designup.picsou.model.AccountCardType;
 import org.designup.picsou.model.AccountType;
 import org.designup.picsou.model.Month;
 import org.globsframework.model.Glob;
@@ -28,6 +27,14 @@ public class AccountMatchers {
     return new GlobMatcher() {
       public boolean matches(Glob account, GlobRepository repository) {
         return Account.isUserOrSummaryMain(account);
+      }
+    };
+  }
+
+  public static GlobMatcher userOrAllAccounts() {
+    return new GlobMatcher() {
+      public boolean matches(Glob account, GlobRepository repository) {
+        return Account.isUserCreatedAccountOrAll(account);
       }
     };
   }

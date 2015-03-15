@@ -160,7 +160,7 @@ public class SavingsSeriesEditionTest extends LoggedInFunctionalTestCase {
       .checkSeriesPresent("CA");
   }
 
-  public void testUseSingleMonthCreateSeriesBudget() throws Exception {
+  public void testUsingASingleMonthCreatesASingleSeriesBudget() throws Exception {
     OfxBuilder.init(this)
       .addTransaction("2008/06/04", -10.00, "McDo")
       .load();
@@ -188,7 +188,7 @@ public class SavingsSeriesEditionTest extends LoggedInFunctionalTestCase {
       .validate();
   }
 
-  public void testEditingMirrorSeriesRedirectToMainEdit() throws Exception {
+  public void testEditingMirrorSeriesRedirectsToMainEdit() throws Exception {
     OfxBuilder.init(this)
       .addBankAccount(BankEntity.GENERIC_BANK_ENTITY_ID, 111, "111", 1000., "2008/08/10")
       .addTransaction("2008/08/10", 100.00, "Virement")

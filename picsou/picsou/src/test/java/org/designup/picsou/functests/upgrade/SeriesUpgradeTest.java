@@ -36,12 +36,12 @@ public class SeriesUpgradeTest extends LoggedInFunctionalTestCase {
       .cancel();
 
     budgetView.variable.editSeries("Mono A")
-      .checkEditableTargetAccount("Main A")
+      .checkEditableTargetAccount("Main accounts")
       .checkAmount(100.00)
       .cancel();
 
     budgetView.variable.editSeries("Mono B")
-      .checkEditableTargetAccount("Main B")
+      .checkEditableTargetAccount("Main accounts")
       .checkAmount(50.00)
       .cancel();
 
@@ -89,12 +89,15 @@ public class SeriesUpgradeTest extends LoggedInFunctionalTestCase {
       "Series 'MainAB to SavingsA' has been splitted because transactions from several main accounts were assigned to it.",
       "Series 'SavingsB to MainAB' has been splitted because transactions from several main accounts were assigned to it.");
 
+
     budgetView.transfer
-      .checkContent("| MainAB to SavingsA (MainB) | 150.00 | 50.00  |\n" +
-                    "| MainB to SavingsB          | 75.00  | 75.00  |\n" +
-                    "| MainAB to SavingsA (MainA) | 50.00  | 50.00  |\n" +
-                    "| SavingsB to MainAB (MainB) | +40.00 | +25.00 |\n" +
-                    "| SavingsB to MainAB (MainA) | +30.00 | +25.00 |")
+      .checkContent("| SavingsB to External       | 200.00  | To define |\n" +
+                    "| MainAB to SavingsA (MainB) | 150.00  | 50.00     |\n" +
+                    "| External to SavingsA       | +100.00 | +100.00   |\n" +
+                    "| MainB to SavingsB          | 75.00   | 75.00     |\n" +
+                    "| MainAB to SavingsA (MainA) | 50.00   | 50.00     |\n" +
+                    "| SavingsB to MainAB (MainB) | +40.00  | +25.00    |\n" +
+                    "| SavingsB to MainAB (MainA) | +30.00  | +25.00    |")
       .checkGroupToggleNotShown("MainB to SavingsB")
       .checkGroupToggleNotShown("MainAB to SavingsA (MainA)");
     budgetView.transfer
@@ -172,8 +175,6 @@ public class SeriesUpgradeTest extends LoggedInFunctionalTestCase {
 
     mainAccounts.checkEndOfMonthPosition("MainA", 1100.00);
     mainAccounts.checkEndOfMonthPosition("MainB", 2000.00);
-
-    fail("Pour Marc / v40: verifier que c'est bien le comportement attendu. En v3.13 le montant initial de MainA était de 1000 au 01/11/2014.");
   }
 
   public void testNoMessagesDisplayedWhenConvertingASavingsSeriesWithNoTransactionsAndASingleMainAccount() throws Exception {

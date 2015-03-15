@@ -197,12 +197,12 @@ public class SeriesChooserComponentFactory implements RepeatComponentFactory<Glo
   }
 
   public static void updateTargetSeries(Glob transaction, Key seriesKey, final GlobRepository repository) {
-    Glob target = repository.findLinkTarget(transaction, Transaction.ACCOUNT);
-    Integer targetAccount = transaction.get(Transaction.ACCOUNT);
+    Integer targetAccountId = transaction.get(Transaction.ACCOUNT);
+    Glob target = repository.find(Key.create(Account.TYPE, targetAccountId));
     if (target.get(Account.CARD_TYPE).equals(AccountCardType.DEFERRED.getId())) {
-      targetAccount = target.get(Account.DEFERRED_TARGET_ACCOUNT);
+      targetAccountId = target.get(Account.DEFERRED_TARGET_ACCOUNT);
     }
-    repository.update(seriesKey, Series.TARGET_ACCOUNT, targetAccount);
+    repository.update(seriesKey, Series.TARGET_ACCOUNT, targetAccountId);
   }
 
   private void updateToggleSelection(JToggleButton selector, GlobList transactions, Key seriesKey) {

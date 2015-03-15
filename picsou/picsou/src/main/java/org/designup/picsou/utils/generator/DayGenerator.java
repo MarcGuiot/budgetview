@@ -10,7 +10,7 @@ public abstract class DayGenerator {
   private DayGenerator() {
   }
 
-  public static DayGenerator any() {
+  public static DayGenerator anyDay() {
     return new DayGenerator() {
       public int get(Integer month) {
         int actualMaximum = Month.createCalendar(month).getActualMaximum(Calendar.DAY_OF_MONTH);

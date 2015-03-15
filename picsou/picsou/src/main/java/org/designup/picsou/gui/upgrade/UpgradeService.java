@@ -47,8 +47,7 @@ public class UpgradeService {
     GlobList transactions = repository.getAll(Transaction.TYPE,
                                               GlobMatchers.and(
                                               GlobMatchers.fieldEquals(Transaction.ACCOUNT, account.get(Account.ID)),
-                                              GlobMatchers.fieldEquals(Transaction.PLANNED, false),
-                                              GlobMatchers.fieldEquals(Transaction.CREATED_BY_SERIES, false)));
+                                              GlobMatchers.fieldEquals(Transaction.PLANNED, false)));
     TransactionAnalyzerFactory analyzerFactory = directory.get(TransactionAnalyzerFactory.class);
     TransactionAnalyzer transactionAnalyzer = analyzerFactory.getAnalyzer();
     transactionAnalyzer.processTransactions(account.get(Account.BANK), transactions, repository);

@@ -122,7 +122,6 @@ public class PicsouInit {
     repository.addTrigger(new ProjectItemToStatTrigger());
     repository.addTrigger(new ProjectItemToSeriesBudgetTrigger());
     repository.addTrigger(new ProjectItemToProjectStatTrigger());
-    repository.addTrigger(new SavingsAccountUpdateSeriesTrigger());
     repository.addTrigger(new SavingsUpdateSeriesMirrorTrigger());
     repository.addTrigger(new SavingsDateActiveBudgetTrigger());
     repository.addTrigger(new UpdateActiveBudgetTrigger());

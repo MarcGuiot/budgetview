@@ -276,11 +276,6 @@ public class Series {
   }
 
 
-  public static boolean isForMainOrUnknownAccount(Glob series, GlobRepository repository) {
-    Glob account = repository.findLinkTarget(series, TARGET_ACCOUNT);
-    return account == null || Account.isMain(account);
-  }
-
   public static boolean isUncategorized(Integer seriesId) {
     return UNCATEGORIZED_SERIES_ID.equals(seriesId);
   }
@@ -313,8 +308,8 @@ public class Series {
   }
 
   public static void doDelete(Glob series, GlobRepository repository) {
-    repository.delete(SeriesStat.getAllMonthsForSeries(series, repository));
-    repository.delete(SeriesBudget.getAll(series, repository));
+    SeriesStat.deleteAllForSeries(series, repository);
+    SeriesBudget.deleteAllForSeries(series, repository);
     repository.delete(series);
   }
 

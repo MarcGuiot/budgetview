@@ -25,12 +25,12 @@ public class PlannedTransactionCreationTrigger implements ChangeSetListener {
     final SeriesAndMonths seriesAndMonths = new SeriesAndMonths();
     if (changeSet.containsChanges(UserPreferences.KEY, UserPreferences.MULTIPLE_PLANNED,
                                   UserPreferences.MONTH_FOR_PLANNED, UserPreferences.PERIOD_COUNT_FOR_PLANNED)) {
-      Glob currenMonth = repository.get(CurrentMonth.KEY);
+      Glob currentMonth = repository.get(CurrentMonth.KEY);
       SortedSet<Integer> seriesIds = repository.getAll(Series.TYPE).getSortedSet(Series.ID);
       GlobList months = repository.getAll(Month.TYPE);
       for (Integer seriesId : seriesIds) {
         for (Glob month : months) {
-          if (month.get(Month.ID) >= currenMonth.get(CurrentMonth.LAST_TRANSACTION_MONTH)) {
+          if (month.get(Month.ID) >= currentMonth.get(CurrentMonth.LAST_TRANSACTION_MONTH)) {
             seriesAndMonths.add(seriesId, month.get(Month.ID));
           }
         }

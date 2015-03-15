@@ -14,12 +14,11 @@ import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.fields.LinkField;
 import org.globsframework.model.*;
 import org.globsframework.model.utils.GlobMatcher;
+import org.globsframework.utils.Dates;
 import org.globsframework.utils.Utils;
 import org.globsframework.utils.directory.Directory;
 
-import java.util.Date;
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.*;
 
 import static org.globsframework.model.FieldValue.value;
 
@@ -53,8 +52,9 @@ public class DashboardStatUpdater implements ChangeSetListener, GlobSelectionLis
     if (changeSet.containsChanges(Account.TYPE)) {
       updateAmounts(getSelectedAccounts());
     }
-    if (changeSet.containsCreations(TransactionImport.TYPE)) {
-      updateImport(getSelectedAccounts());
+    if (changeSet.containsCreations(TransactionImport.TYPE) ||
+        changeSet.containsChanges(CurrentMonth.TYPE)) {
+      updateLastImport(getSelectedAccounts());
     }
     if (changeSet.containsChanges(Transaction.TYPE)) {
       updateUncategorized(getSelectedAccounts());
@@ -74,7 +74,7 @@ public class DashboardStatUpdater implements ChangeSetListener, GlobSelectionLis
     Set<Integer> selectedAccountIds = getSelectedAccounts();
     updateWeather(selectedAccountIds);
     updateAmounts(selectedAccountIds);
-    updateImport(selectedAccountIds);
+    updateLastImport(selectedAccountIds);
     updateUncategorized(selectedAccountIds);
   }
 
@@ -82,16 +82,16 @@ public class DashboardStatUpdater implements ChangeSetListener, GlobSelectionLis
     return selectionService.getSelection(Account.TYPE).getValueSet(Account.ID);
   }
 
-  private void updateImport(Set<Integer> selectedAccountIds) {
-    Date lastDate = getLastImportDate(selectedAccountIds);
+  private void updateLastImport(Set<Integer> selectedAccountIds) {
+    Date lastDate = Dates.last(getLastImportDate(selectedAccountIds), getLastTransactionDate(selectedAccountIds));
     Integer dayCount;
     if (lastDate == null) {
       dayCount = null;
     }
     else {
       Date today = TimeService.getToday();
-      dayCount = Month.distance(Month.getMonthId(lastDate), Month.getDay(lastDate),
-                                Month.getMonthId(today), Month.getDay(today));
+      dayCount = lastDate.after(today) ? 0 : Month.distance(Month.getMonthId(lastDate), Month.getDay(lastDate),
+                                                            Month.getMonthId(today), Month.getDay(today));
     }
     repository.update(DashboardStat.KEY, DashboardStat.DAYS_SINCE_LAST_IMPORT, dayCount);
   }
@@ -122,6 +122,22 @@ public class DashboardStatUpdater implements ChangeSetListener, GlobSelectionLis
       }
     }
     return last;
+  }
+
+  private Date getLastTransactionDate(Set<Integer> selectedAccounts) {
+    if (selectedAccounts.isEmpty()) {
+      selectedAccounts = repository.getAll(Account.TYPE, AccountMatchers.activeUserCreatedAccounts(getCurrentMonthAsASet())).getValueSet(Account.ID);
+    }
+    for (Integer accountId : selectedAccounts) {
+      Glob account = repository.find(Key.create(Account.TYPE, accountId));
+      if (account != null) {
+        Glob lastTransaction = repository.findLinkTarget(account, Account.LAST_TRANSACTION);
+        if (lastTransaction != null) {
+          return Month.toDate(lastTransaction.get(Transaction.MONTH), lastTransaction.get(Transaction.DAY));
+        }
+      }
+    }
+    return null;
   }
 
   public void updateWeather(Set<Integer> selectedAccountIds) {
@@ -173,8 +189,7 @@ public class DashboardStatUpdater implements ChangeSetListener, GlobSelectionLis
     Glob savingsSummary = repository.find(Account.SAVINGS_SUMMARY_KEY);
     double savingsAmount = savingsSummary.get(Account.POSITION_WITH_PENDING, 0.00);
     Date savingsAmountDate = savingsSummary.get(Account.POSITION_DATE, TimeService.getToday());
-    TreeSet<Integer> months = new TreeSet<Integer>();
-    months.add(Month.getMonthId(TimeService.getToday()));
+    SortedSet<Integer> months = getCurrentMonthAsASet();
     GlobList mainAccounts = repository.getAll(Account.TYPE, AccountMatchers.activeUserCreatedAccounts(months));
     GlobList savingsAccounts = repository.getAll(Account.TYPE, AccountMatchers.activeUserCreatedSavingsAccounts(months));
     double totalMainAccounts = 0;
@@ -204,6 +219,12 @@ public class DashboardStatUpdater implements ChangeSetListener, GlobSelectionLis
                       value(DashboardStat.TOTAL_ALL_ACCOUNTS, mainAmount + savingsAmount),
                       value(DashboardStat.TOTAL_ALL_ACCOUNTS_DATE, Utils.min(mainAmountDate, savingsAmountDate)),
                       value(DashboardStat.SHOW_ALL_ACCOUNTS, showAllAccounts));
+  }
+
+  private SortedSet<Integer> getCurrentMonthAsASet() {
+    TreeSet<Integer> months = new TreeSet<Integer>();
+    months.add(Month.getMonthId(TimeService.getToday()));
+    return months;
   }
 
   private static class AccountFieldMatcher implements GlobMatcher {

@@ -34,19 +34,6 @@ public abstract class AccountTypeCombo {
     };
   }
 
-  public static AccountTypeCombo createForRealAccount(GlobRepository repository) {
-    return new AccountTypeCombo(repository, RealAccount.ACCOUNT_TYPE, RealAccount.CARD_TYPE) {
-
-      public boolean isMain(Glob account) {
-        return account != null && AccountType.MAIN.getId().equals(account.get(RealAccount.ACCOUNT_TYPE));
-      }
-
-      public boolean isSavings(Glob account) {
-        return account != null && AccountType.SAVINGS.getId().equals(account.get(RealAccount.ACCOUNT_TYPE));
-      }
-    };
-  }
-
   public AccountTypeCombo(GlobRepository repository, LinkField accountType, LinkField cardType) {
     this.accountType = accountType;
     this.cardType = cardType;

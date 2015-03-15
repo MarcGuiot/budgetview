@@ -197,6 +197,16 @@ public class ProjectItem {
     repository.delete(item);
   }
 
+  public static boolean isComplete(Glob item, GlobRepository repository) {
+    if (item == null) {
+      return false;
+    }
+    if (usesExtrasSeries(item)) {
+      return true;
+    }
+    return ProjectTransfer.isComplete(ProjectTransfer.getTransferFromItem(item, repository));
+  }
+
   public static class Serializer implements PicsouGlobSerializer {
     public int getWriteVersion() {
       return 5;

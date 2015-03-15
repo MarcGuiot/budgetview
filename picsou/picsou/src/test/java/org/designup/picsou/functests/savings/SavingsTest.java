@@ -5,7 +5,11 @@ import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
 import org.designup.picsou.functests.utils.QifBuilder;
 import org.designup.picsou.model.BankEntity;
+import org.designup.picsou.model.Series;
 import org.designup.picsou.model.TransactionType;
+import org.globsframework.model.format.GlobPrinter;
+
+import static org.designup.picsou.gui.series.utils.SeriesMatchers.seriesForGlobalBudget;
 
 public class SavingsTest extends LoggedInFunctionalTestCase {
 
@@ -79,6 +83,8 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
     budgetView.transfer
       .checkTotalAmounts("100.00", "100.00")
       .checkContent("| Virt Epargne | 100.00 | 100.00 |");
+
+    uncategorized.checkNotShown();
   }
 
   public void testCreateSavingsSeriesAndPayFromSavings() throws Exception {
@@ -192,8 +198,9 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
 
     timeline.selectMonth("2008/10");
     budgetView.transfer
-      .checkNoSeriesShown() // Only visible when selecting a savings account
-      .checkTotalAmounts(0, 0);
+      .checkContent("| Travaux      | 0.00 | 400.00  |\n" +
+                    "| Virt Epargne | 0.00 | +200.00 |")
+      .checkTotalAmounts("0.00", "200.00");
 
     savingsAccounts.select("Epargne LCL");
     savingsAccounts.checkEndOfMonthPosition("Epargne LCL", 1200);
@@ -204,6 +211,8 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
     budgetView.transfer
       .checkGaugeTooltip("Virt Epargne", "Il vous reste <b>200.00</b> à virer")
       .checkGaugeTooltip("Travaux", "Il vous reste <b>400.00</b> à virer");
+
+    uncategorized.checkNotShown();
   }
 
   public void testCreateSavingsSeriesAndAssociateLaterToAccount() throws Exception {
@@ -262,6 +271,10 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
       .add("10/08/2008", "", "VERS EPARGNE", -100.00)
       .check();
 
+    uncategorized.checkAmountAndTransactions(200.00, "| 10/08/2008 |  | DE COURANT   | 100.00  |\n" +
+                                                     "| 10/08/2008 |  | VERS EPARGNE | -100.00 |");
+
+    categorization.showAllTransactions();
     categorization.selectTransactions("VERS EPARGNE")
       .selectTransfers()
       .checkContainsSeries("Virt Epargne")
@@ -287,6 +300,8 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
       .add("10/06/2008", "DE COURANT", 100.00, "Virt Epargne", 1100.00, 1100.00, "Epargne")
       .add("10/06/2008", "VERS EPARGNE", -100.00, "Virt Epargne", 200.00, 200.00, "Account n. 00001123")
       .check();
+
+    uncategorized.checkNotShown();
   }
 
   public void testCreateSavingsSeriesAndAssociateLaterToAnotherAccount() throws Exception {
@@ -336,6 +351,8 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
       .add("10/06/2008", "VIREMENT", -100.00, "Virt Epargne", 200.00, 200.00, "Account n. 00001123")
       .check();
 
+    uncategorized.checkNotShown();
+
     OfxBuilder.init(this)
       .addBankAccount("000333", 100.00, "2008/08/30")
       .addTransaction("2008/06/10", 100.00, "Virt CIC")
@@ -347,9 +364,16 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
     categorization.selectTransactions("VIRT LCL")
       .setUncategorized();
 
+    uncategorized.checkAmountAndTransactions(200.00, "| 10/08/2008 |  | VIRT CIC | 100.00 |\n" +
+                                                     "| 10/08/2008 |  | VIRT LCL | 100.00 |");
+
     budgetView.transfer.editSeries("Virt Epargne")
       .setToAccount("Epargne CIC")
       .validate();
+
+    uncategorized.checkAmountAndTransactions(300.00, "| 10/08/2008 |  | VIREMENT | -100.00 |\n" +
+                                                     "| 10/08/2008 |  | VIRT CIC | 100.00  |\n" +
+                                                     "| 10/08/2008 |  | VIRT LCL | 100.00  |");
 
     timeline.selectAll();
     transactions.initAmountContent()
@@ -370,6 +394,7 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
       .add("10/06/2008", "VIREMENT", -100.00, "To categorize", 200.00, 200.00, "Account n. 00001123")
       .check();
 
+    categorization.showAllTransactions();
     categorization.setTransfer("VIREMENT", "Virt Epargne");
     categorization.setTransfer("VIRT CIC", "Virt Epargne");
     transactions.initAmountContent()
@@ -412,12 +437,20 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
 
     categorization.selectTransactions("Virement");
     transactionDetails.split("50", "Comportement impossible?");
+
+    uncategorized.checkAmount(50.00);
+    categorization.checkTableContent("| 10/08/2008 | Virt Epargne | VIREMENT | -50.00 |\n" +
+                                     "| 10/08/2008 |              | VIREMENT | -50.00 |");
+
+    categorization.showAllTransactions();
     categorization.selectVariable().selectNewSeries("Occasional");
     transactions
       .initAmountContent()
       .add("10/08/2008", "VIREMENT", -50.00, "Virt Epargne", 0.00, 0.00, "Account n. 00001123")
       .add("10/08/2008", "VIREMENT", -50.00, "Occasional", 50.00, 50.00, "Account n. 00001123")
       .check();
+
+    uncategorized.checkNotShown();
   }
 
   public void testExternalToSavingsWithDate() throws Exception {
@@ -471,6 +504,8 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
       .add("10/06/2008", "FNAC", -100.00, "To categorize", 0.00, 0.00, "Account n. 00001123")
       .check();
 
+    uncategorized.checkAmountAndTransactions(100.00, "| 10/06/2008 |  | FNAC | -100.00 |");
+
     timeline.selectMonth("2008/06");
     budgetView.transfer.checkTotalAmounts(0, 0);
 
@@ -512,6 +547,9 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
     budgetView.transfer.editSeries("CAF")
       .checkDateChooserIsHidden()
       .cancel();
+
+    uncategorized.checkAmountAndTransactions(400.00, "| 05/08/2008 |  | CAF  | 300.00  |\n" +
+                                                     "| 10/06/2008 |  | FNAC | -100.00 |");
   }
 
   // ==> test de l'effet de suppression de transaction référencée dans account
@@ -782,11 +820,11 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
       .selectAllMonths()
       .checkAmount(200.00)
       .checkChart(new Object[][]{
-        {"2008", "July", 0.00, 200.00, true},
-        {"2008", "August", 100.00, 200.00, true},
-        {"2008", "September", 0.00, 200.00, true},
-        {"2008", "October", 0.00, 200.00, true},
-      }
+                    {"2008", "July", 0.00, 200.00, true},
+                    {"2008", "August", 100.00, 200.00, true},
+                    {"2008", "September", 0.00, 200.00, true},
+                    {"2008", "October", 0.00, 200.00, true},
+                  }
       )
       .validate();
 
@@ -864,12 +902,12 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
     mainAccounts.edit("Account n. 111222")
       .setAsSavings()
       .validate();
-    accounts.createSavingsAccount("Virt Epargne", 1000.00);
+    accounts.createSavingsAccount("Livret", 1000.00);
 
     views.selectBudget();
     budgetView.transfer.createSeries()
-      .setName("Virement CAF")
-      .setToAccount("Virt Epargne")
+      .setName("Virt Livret > Externe")
+      .setToAccount("Livret")
       .setFromAccount("External account")
       .selectAllMonths()
       .setAmount("300")
@@ -877,60 +915,63 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
       .validate();
 
     budgetView.transfer.createSeries()
-      .setName("Placement")
+      .setName("Virt 00001123 > 111222")
       .setFromAccount("Account n. 00001123")
       .setToAccount("Account n. 111222")
       .validate();
 
-    categorization.setTransfer("Virement Epargne", "Placement");
-    categorization.setTransfer("Virement vers Epargne", "Placement");
+    categorization.setTransfer("Virement Epargne", "Virt 00001123 > 111222");
+    categorization.setTransfer("Virement vers Epargne", "Virt 00001123 > 111222");
 
     timeline.selectMonth("2008/06");
-    budgetView.transfer.alignAndPropagate("Placement");
+    budgetView.transfer.alignAndPropagate("Virt 00001123 > 111222");
 
     timeline.selectAll();
     transactions
       .showPlannedTransactions()
       .initAmountContent()
-      .add("11/10/2008", "Planned: Virement CAF", 300.00, "Virement CAF", 1900.00, 5100.00, "Virt Epargne")
-      .add("04/10/2008", "Planned: Placement", -100.00, "Placement", -200.00, -200.00, "Account n. 00001123")
-      .add("04/10/2008", "Planned: Placement", 100.00, "Placement", 3200.00, 4800.00, "Account n. 111222")
-      .add("11/09/2008", "Planned: Virement CAF", 300.00, "Virement CAF", 1600.00, 4700.00, "Virt Epargne")
-      .add("04/09/2008", "Planned: Placement", -100.00, "Placement", -100.00, -100.00, "Account n. 00001123")
-      .add("04/09/2008", "Planned: Placement", 100.00, "Placement", 3100.00, 4400.00, "Account n. 111222")
-      .add("11/08/2008", "Planned: Virement CAF", 300.00, "Virement CAF", 1300.00, 4300.00, "Virt Epargne")
-      .add("06/08/2008", "VIREMENT VERS EPARGNE", -100.00, "Placement", 0.00, 0.00, "Account n. 00001123")
-      .add("06/08/2008", "VIREMENT EPARGNE", 100.00, "Placement", 3000.00, 4000.00, "Account n. 111222")
-      .add("06/07/2008", "VIREMENT VERS EPARGNE", -100.00, "Placement", 100.00, 100.00, "Account n. 00001123")
-      .add("06/07/2008", "VIREMENT EPARGNE", 100.00, "Placement", 2900.00, 3900.00, "Account n. 111222")
-      .add("06/06/2008", "VIREMENT VERS EPARGNE", -100.00, "Placement", 200.00, 200.00, "Account n. 00001123")
-      .add("06/06/2008", "VIREMENT EPARGNE", 100.00, "Placement", 2800.00, 3800.00, "Account n. 111222")
+      .add("11/10/2008", "Planned: Virt Livret > Externe", 300.00, "Virt Livret > Externe", 1900.00, 5100.00, "Livret")
+      .add("04/10/2008", "Planned: Virt 00001123 > 111222", -100.00, "Virt 00001123 > 111222", -200.00, -200.00, "Account n. 00001123")
+      .add("04/10/2008", "Planned: Virt 00001123 > 111222", 100.00, "Virt 00001123 > 111222", 3200.00, 4800.00, "Account n. 111222")
+      .add("11/09/2008", "Planned: Virt Livret > Externe", 300.00, "Virt Livret > Externe", 1600.00, 4700.00, "Livret")
+      .add("04/09/2008", "Planned: Virt 00001123 > 111222", -100.00, "Virt 00001123 > 111222", -100.00, -100.00, "Account n. 00001123")
+      .add("04/09/2008", "Planned: Virt 00001123 > 111222", 100.00, "Virt 00001123 > 111222", 3100.00, 4400.00, "Account n. 111222")
+      .add("11/08/2008", "Planned: Virt Livret > Externe", 300.00, "Virt Livret > Externe", 1300.00, 4300.00, "Livret")
+      .add("06/08/2008", "VIREMENT VERS EPARGNE", -100.00, "Virt 00001123 > 111222", 0.00, 0.00, "Account n. 00001123")
+      .add("06/08/2008", "VIREMENT EPARGNE", 100.00, "Virt 00001123 > 111222", 3000.00, 4000.00, "Account n. 111222")
+      .add("06/07/2008", "VIREMENT VERS EPARGNE", -100.00, "Virt 00001123 > 111222", 100.00, 100.00, "Account n. 00001123")
+      .add("06/07/2008", "VIREMENT EPARGNE", 100.00, "Virt 00001123 > 111222", 2900.00, 3900.00, "Account n. 111222")
+      .add("06/06/2008", "VIREMENT VERS EPARGNE", -100.00, "Virt 00001123 > 111222", 200.00, 200.00, "Account n. 00001123")
+      .add("06/06/2008", "VIREMENT EPARGNE", 100.00, "Virt 00001123 > 111222", 2800.00, 3800.00, "Account n. 111222")
       .check();
 
     timeline.selectMonth("2008/06");
-    savingsAccounts.checkEndOfMonthPosition("Virt Epargne", 1000);
+    savingsAccounts.checkEndOfMonthPosition("Livret", 1000);
     savingsAccounts.checkEndOfMonthPosition("Account n. 111222", 2800);
     savingsAccounts.checkReferencePosition(4000, "2008/08/06");
 
     timeline.selectMonth("2008/08");
-    savingsAccounts.checkEndOfMonthPosition("Virt Epargne", 1300);
+    savingsAccounts.checkEndOfMonthPosition("Livret", 1300);
     savingsAccounts.checkEndOfMonthPosition("Account n. 111222", 3000);
     savingsAccounts.checkReferencePosition(4000, "2008/08/06");
 
-    savingsAccounts.select("Virt Epargne");
-    budgetView.transfer.checkSeries("Virement CAF", 0, 300);
+    budgetView.transfer.checkContent("| Virt Livret > Externe  | 0.00   | +300.00 |\n" +
+                                     "| Virt 00001123 > 111222 | 100.00 | 100.00  |");
+
+    savingsAccounts.select("Livret");
+    budgetView.transfer.checkSeries("Virt Livret > Externe", 0, 300);
 
     savingsAccounts.select("Account n. 111222");
-    budgetView.transfer.checkSeries("Placement", 100, 100);
+    budgetView.transfer.checkSeries("Virt 00001123 > 111222", 100, 100);
 
     timeline.selectMonth("2008/09");
-    savingsAccounts.checkEndOfMonthPosition("Virt Epargne", 1600);
+    savingsAccounts.checkEndOfMonthPosition("Livret", 1600);
     savingsAccounts.checkEndOfMonthPosition("Account n. 111222", 3100);
 
-    savingsAccounts.select("Virt Epargne");
-    budgetView.transfer.checkSeries("Virement CAF", 0, 300);
+    savingsAccounts.select("Livret");
+    budgetView.transfer.checkSeries("Virt Livret > Externe", 0, 300);
     savingsAccounts.select("Account n. 111222");
-    budgetView.transfer.checkSeries("Placement", 0, 100);
+    budgetView.transfer.checkSeries("Virt 00001123 > 111222", 0, 100);
 
     mainAccounts.select("Account n. 00001123");
     timeline.selectMonth("2008/06");
@@ -941,31 +982,34 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
     budgetView.transfer.checkTotalGauge(0, -100);
 
     timeline.selectMonth("2008/06");
-    budgetView.transfer.checkSeries("Placement", "100.00", "100.00");
-    budgetView.transfer.checkSeriesNotPresent("Virement CAF");
+    budgetView.transfer.checkSeries("Virt 00001123 > 111222", "100.00", "100.00");
+    budgetView.transfer.checkSeriesNotPresent("Virt Livret > Externe");
 
     savingsAccounts.select("Account n. 111222");
-    budgetView.transfer.checkSeries("Placement", "+100.00", "+100.00");
+    budgetView.transfer.checkSeries("Virt 00001123 > 111222", "+100.00", "+100.00");
 
     timeline.selectMonth("2008/09");
     mainAccounts.select("Account n. 00001123");
-    budgetView.transfer.checkSeries("Placement", "0.00", "100.00");
-    budgetView.transfer.checkSeriesNotPresent("Virement CAF");
+    budgetView.transfer.checkSeries("Virt 00001123 > 111222", "0.00", "100.00");
+    budgetView.transfer.checkSeriesNotPresent("Virt Livret > Externe");
 
     savingsAccounts.select("Account n. 111222");
-    budgetView.transfer.checkSeries("Placement", "0.00", "+100.00");
+    budgetView.transfer.checkContent("| Virt 00001123 > 111222 | 0.00 | +100.00 |");
 
     savingsAccounts.unselect("Account n. 111222");
-    budgetView.transfer.editSeries("Placement").deleteSavingsSeriesWithConfirmation();
-    budgetView.transfer.checkSeriesNotPresent("Virement CAF");
+    budgetView.transfer.checkContent("| Virt Livret > Externe  | 0.00 | +300.00 |\n" +
+                                     "| Virt 00001123 > 111222 | 0.00 | 100.00  |");
 
-    savingsAccounts.select("Virt Epargne");
-    budgetView.transfer.editSeries("Virement CAF").deleteCurrentSeriesWithoutConfirmation();
+    budgetView.transfer.editSeries("Virt 00001123 > 111222").deleteSavingsSeriesWithConfirmation();
+    budgetView.transfer.checkContent("| Virt Livret > Externe | 0.00 | +300.00 |");
+
+    savingsAccounts.select("Livret");
+    budgetView.transfer.editSeries("Virt Livret > Externe").deleteCurrentSeriesWithoutConfirmation();
 
     String fileName = operations.backup(this);
     operations.restore(fileName);
 
-    savingsAccounts.select("Virt Epargne");
+    savingsAccounts.select("Livret");
     budgetView.transfer.checkNoSeriesShown();
   }
 
@@ -1746,7 +1790,7 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
       .initAmountContent()
       .add("04/08/2008", "Planned: From account n. 111222", -100.00, "From account n. 111222", 3000.00, 3000.00, "Account n. 111222")
       .add("04/08/2008", "Planned: To account n. 111222", 100.00, "To account n. 111222", 3100.00, 3100.00, "Account n. 111222")
-      .add("04/08/2008", "Planned: To account n. 111222", -100.00, "To account n. 111222", 0.0,0.0, "Account n. 00001123")
+      .add("04/08/2008", "Planned: To account n. 111222", -100.00, "To account n. 111222", 0.0, 0.0, "Account n. 00001123")
       .add("04/08/2008", "Planned: From account n. 111222", 100.00, "From account n. 111222", 100., 100., "Account n. 00001123")
       .add("04/07/2008", "Planned: From account n. 111222", -100.00, "From account n. 111222", 3000.00, 3000.00, "Account n. 111222")
       .add("04/07/2008", "Planned: To account n. 111222", 100.00, "To account n. 111222", 3100.00, 3100.00, "Account n. 111222")

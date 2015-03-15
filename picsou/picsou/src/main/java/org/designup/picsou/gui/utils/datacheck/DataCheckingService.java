@@ -24,8 +24,6 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.*;
 
-import static org.globsframework.model.FieldValue.value;
-
 public class DataCheckingService {
   private GlobRepository repository;
   private Directory directory;
@@ -227,7 +225,7 @@ public class DataCheckingService {
           .append(series.get(Series.ID))
           .append(series.get(Series.NAME))
           .append("\n")
-          ;
+        ;
         StringWriter writer = new StringWriter();
         found.printStackTrace(new PrintWriter(writer));
         builder.append(writer.toString())
@@ -255,7 +253,7 @@ public class DataCheckingService {
     GlobList all = repository.getAll(Transaction.TYPE);
     for (Glob transaction : all) {
       if (!series.contains(transaction.get(Transaction.SERIES))) {
-        if (transaction.isTrue(Transaction.PLANNED) || transaction.isTrue(Transaction.CREATED_BY_SERIES)){
+        if (transaction.isTrue(Transaction.PLANNED)) {
           repository.delete(transaction);
         }
         else {
@@ -286,30 +284,30 @@ public class DataCheckingService {
     Glob[] transactions = repository.getSorted(Transaction.TYPE, comparator, GlobMatchers.ALL);
     Glob currentMonth = repository.get(CurrentMonth.KEY);
     Date lastTransactionDate = Month.toDate(currentMonth.get(CurrentMonth.LAST_TRANSACTION_MONTH),
-                                    currentMonth.get(CurrentMonth.LAST_TRANSACTION_DAY));
+                                            currentMonth.get(CurrentMonth.LAST_TRANSACTION_DAY));
     for (Glob transaction : transactions) {
       Integer accountId = transaction.get(Transaction.ACCOUNT);
       Date positionDate = Month.toDate(transaction.get(Transaction.POSITION_MONTH), transaction.get(Transaction.POSITION_DAY));
       if (transaction.isTrue(Transaction.PLANNED)) {
-        if (positionDate.before(lastTransactionDate)){
-          report.addError("Planned before current date " + Dates.toString(positionDate) + " / " + 
+        if (positionDate.before(lastTransactionDate)) {
+          report.addError("Planned before current date " + Dates.toString(positionDate) + " / " +
                           Dates.toString(lastTransactionDate));
         }
       }
       else {
-        if (Account.SUMMARY_ACCOUNT_IDS.contains(transaction.get(Transaction.ACCOUNT))){
-          report.addError("Operation in summary account " + transaction.get(Transaction.LABEL));
+        if (Account.SUMMARY_ACCOUNT_IDS.contains(transaction.get(Transaction.ACCOUNT))) {
+          report.addError("Operation in summary account " + transaction.get(Transaction.ACCOUNT) + " for '" + transaction.get(Transaction.LABEL) + "'");
         }
-        if (positionDate.after(lastTransactionDate)){
+        if (positionDate.after(lastTransactionDate)) {
           report.addError("Current position date before last operation " + Dates.toString(positionDate) + " / " +
                           Dates.toString(lastTransactionDate));
         }
         Date bankDate = Month.toDate(transaction.get(Transaction.POSITION_MONTH), transaction.get(Transaction.POSITION_DAY));
-        if (bankDate.after(lastTransactionDate)){
+        if (bankDate.after(lastTransactionDate)) {
           report.addError("Current bank date before last operation " + Dates.toString(positionDate) + " / " +
                           Dates.toString(lastTransactionDate));
         }
-        if (accountId == Account.MAIN_SUMMARY_ACCOUNT_ID){
+        if (accountId == Account.MAIN_SUMMARY_ACCOUNT_ID) {
           report.addError("Main summary contains transaction");
         }
       }

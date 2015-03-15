@@ -205,4 +205,61 @@ public class ProjectRestartTest extends RestartTestCase {
     budgetView.extras.checkSeries("MyProject", 0, -600.00);
   }
 
+  public void testRestartWithIncompleteTransfer() throws Exception {
+    operations.openPreferences().setFutureMonthsCount(12).validate();
+
+    accounts.createNewAccount()
+      .setName("Main account 1")
+      .selectBank("CIC")
+      .setAsMain()
+      .validate();
+    OfxBuilder.init(this)
+      .addBankAccount("001111", 1000.00, "2008/12/01")
+      .addTransaction("2008/11/01", 1000.00, "Income")
+      .addTransaction("2008/12/01", 1000.00, "Income")
+      .addTransaction("2008/12/01", 100.00, "Transfer 1")
+      .loadInAccount("Main account 1");
+
+    accounts.createNewAccount()
+      .setName("Savings account 1")
+      .selectBank("CIC")
+      .setAsSavings()
+      .validate();
+    OfxBuilder.init(this)
+      .addBankAccount("00222", 1000.00, "2008/12/01")
+      .addTransaction("2008/12/01", -100.00, "Transfer 1")
+      .loadInAccount("Savings account 1");
+
+    projects.createFirst();
+    currentProject.setNameAndValidate("Trip");
+    currentProject.addExpenseItem(0, "Travel", 200812, -200.00);
+    currentProject
+      .addTransferItem()
+      .editTransfer(1)
+      .setLabel("Transfer");
+
+    budgetView.extras.checkContent("| Trip | 0.00 | 200.00 |");
+    budgetView.transfer.checkNoSeriesShown();
+
+    restartApplication();
+
+    projects.select("Trip");
+    currentProject.checkProjectGauge(0.00, -200.00);
+    currentProject.checkPeriod("December 2008");
+
+    timeline.selectMonth(200812);
+    budgetView.extras.checkSeries("Trip", "0.00", "200.00");
+    budgetView.extras.checkContent("| Trip | 0.00 | 200.00 |");
+
+    currentProject
+      .editTransfer(1)
+      .checkFromAccount("Select the source account")
+      .checkToAccount("Select the target account")
+      .cancel();
+    currentProject.deleteItem(1);
+
+    currentProject.checkItems("| Travel | Dec | 0.00 | 200.00 |");
+    budgetView.extras.checkContent("| Trip | 0.00 | 200.00 |");
+    budgetView.transfer.checkNoSeriesShown();
+  }
 }

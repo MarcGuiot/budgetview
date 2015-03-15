@@ -2,10 +2,7 @@ package org.globsframework.model;
 
 import org.globsframework.metamodel.Field;
 import org.globsframework.metamodel.GlobType;
-import org.globsframework.model.impl.CompositeKey;
-import org.globsframework.model.impl.SingleFieldKey;
-import org.globsframework.model.impl.ThreeFieldKey;
-import org.globsframework.model.impl.TwoFieldKey;
+import org.globsframework.model.impl.*;
 import org.globsframework.model.utils.DefaultFieldValues;
 import org.globsframework.model.utils.FieldValueGetter;
 import org.globsframework.utils.exceptions.InvalidParameter;
@@ -76,6 +73,16 @@ public class KeyBuilder {
                                field2, values.get(field2),
                                field3, values.get(field3));
     }
+    if (keyFields.length == 4) {
+      Field field1 = keyFields[0];
+      Field field2 = keyFields[1];
+      Field field3 = keyFields[2];
+      Field field4 = keyFields[3];
+      return new FourFieldKey(field1, values.get(field1),
+                              field2, values.get(field2),
+                              field3, values.get(field3),
+                              field4, values.get(field4));
+    }
     return createKey(type, new FieldValueGetter() {
       public boolean contains(Field field) {
         return values.containsKey(field);
@@ -105,6 +112,16 @@ public class KeyBuilder {
       return new ThreeFieldKey(field1, values.getValue(field1),
                                field2, values.getValue(field2),
                                field3, values.getValue(field3));
+    }
+    if (keyFields.length == 4) {
+      Field field1 = keyFields[0];
+      Field field2 = keyFields[1];
+      Field field3 = keyFields[2];
+      Field field4 = keyFields[3];
+      return new FourFieldKey(field1, values.getValue(field1),
+                              field2, values.getValue(field2),
+                              field3, values.getValue(field3),
+                              field4, values.getValue(field4));
     }
     return createKey(type, new FieldValueGetter() {
       public boolean contains(Field field) {
@@ -150,6 +167,16 @@ public class KeyBuilder {
       return new ThreeFieldKey(field1, values[field1.getIndex()],
                                field2, values[field2.getIndex()],
                                field3, values[field3.getIndex()]);
+    }
+    if (keyFields.length == 4) {
+      Field field1 = keyFields[0];
+      Field field2 = keyFields[1];
+      Field field3 = keyFields[2];
+      Field field4 = keyFields[3];
+      return new FourFieldKey(field1, values[field1.getIndex()],
+                              field2, values[field2.getIndex()],
+                              field3, values[field3.getIndex()],
+                              field4, values[field4.getIndex()]);
     }
     return createKey(type, new FieldValueGetter() {
       public boolean contains(Field field) {

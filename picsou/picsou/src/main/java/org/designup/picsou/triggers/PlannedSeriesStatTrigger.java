@@ -1,6 +1,8 @@
 package org.designup.picsou.triggers;
 
+import org.designup.picsou.gui.accounts.utils.AccountMatchers;
 import org.designup.picsou.gui.model.SeriesStat;
+import org.designup.picsou.model.Account;
 import org.designup.picsou.model.Month;
 import org.designup.picsou.model.Series;
 import org.designup.picsou.model.SeriesBudget;
@@ -17,30 +19,28 @@ public class PlannedSeriesStatTrigger implements ChangeSetListener {
   public void globsChanged(ChangeSet changeSet, final GlobRepository repository) {
     changeSet.safeVisit(SeriesBudget.TYPE, new ChangeSetVisitor() {
       public void visitCreation(Key key, FieldValues values) throws Exception {
-        Key seriesStatKey = SeriesStat.createKeyForSeries(values.get(SeriesBudget.SERIES), values.get(SeriesBudget.MONTH));
-        Glob seriesStat = repository.findOrCreate(seriesStatKey);
+        for (Integer accountId : repository.getAll(Account.TYPE, AccountMatchers.userOrAllAccounts()).getValues(Account.ID)) {
+          Key seriesStatKey = SeriesStat.createKeyForSeries(accountId, values.get(SeriesBudget.SERIES), values.get(SeriesBudget.MONTH));
+          Glob seriesStat = repository.findOrCreate(seriesStatKey);
 
-        Boolean isActive = values.isTrue(SeriesBudget.ACTIVE);
-        Pair<Double, Double> remainingAndOverrun = computeRemainingAndOverrun(values, seriesStat, isActive);
-        repository.update(seriesStatKey,
-                          value(SeriesStat.PLANNED_AMOUNT, getActiveAmount(values, isActive)),
-                          value(SeriesStat.REMAINING_AMOUNT, remainingAndOverrun.getFirst()),
-                          value(SeriesStat.OVERRUN_AMOUNT, remainingAndOverrun.getSecond()),
-                          value(SeriesStat.ACTIVE, isActive));
+          Boolean isActive = values.isTrue(SeriesBudget.ACTIVE);
+          Pair<Double, Double> remainingAndOverrun = computeRemainingAndOverrun(values, isActive, seriesStat.get(SeriesStat.ACTUAL_AMOUNT));
+          repository.update(seriesStatKey,
+                            value(SeriesStat.PLANNED_AMOUNT, getActiveAmount(values, isActive)),
+                            value(SeriesStat.REMAINING_AMOUNT, remainingAndOverrun.getFirst()),
+                            value(SeriesStat.OVERRUN_AMOUNT, remainingAndOverrun.getSecond()),
+                            value(SeriesStat.ACTIVE, isActive));
+        }
       }
 
       public void visitUpdate(Key key, FieldValuesWithPrevious values) throws Exception {
         if (values.contains(SeriesBudget.PLANNED_AMOUNT) || values.contains(SeriesBudget.ACTIVE)) {
-          updateSeriesStat(repository, repository.get(key));
+          updateSeriesStat(repository.get(key), repository);
         }
       }
 
       public void visitDeletion(Key key, FieldValues previousValues) throws Exception {
-        Key seriesStat = SeriesStat.createKeyForSeries(previousValues.get(SeriesBudget.SERIES), previousValues.get(SeriesBudget.MONTH));
-        Glob glob = repository.find(seriesStat);
-        if (glob != null) {
-          repository.delete(seriesStat);
-        }
+       SeriesStat.deleteAllForSeriesAndMonth(previousValues.get(SeriesBudget.SERIES), previousValues.get(SeriesBudget.MONTH), repository);
       }
     });
 
@@ -52,7 +52,7 @@ public class PlannedSeriesStatTrigger implements ChangeSetListener {
         Glob seriesBudget = repository.findByIndex(SeriesBudget.SERIES_INDEX, SeriesBudget.SERIES, key.get(SeriesStat.TARGET))
           .findByIndex(SeriesBudget.MONTH, key.get(SeriesStat.MONTH)).getGlobs().getFirst();
         if (seriesBudget != null) {
-          updateSeriesStat(repository, seriesBudget);
+          updateSeriesStat(seriesBudget, repository);
         }
       }
 
@@ -61,12 +61,23 @@ public class PlannedSeriesStatTrigger implements ChangeSetListener {
     });
   }
 
-  private void updateSeriesStat(GlobRepository repository, final Glob seriesBudget) {
-    Key seriesStatKey = SeriesStat.createKeyForSeries(seriesBudget.get(SeriesBudget.SERIES), seriesBudget.get(SeriesBudget.MONTH));
+  private void updateSeriesStat(final Glob seriesBudget, GlobRepository repository) {
+    Integer seriesId = seriesBudget.get(SeriesBudget.SERIES);
+    if (!repository.contains(Key.create(Series.TYPE, seriesId))) {
+      return;
+    }
+
+    for (Integer accountId : repository.getAll(Account.TYPE, AccountMatchers.userOrAllAccounts()).getValues(Account.ID)) {
+      doUpdateStat(seriesBudget, repository, seriesId, accountId);
+    }
+  }
+
+  private void doUpdateStat(Glob seriesBudget, GlobRepository repository, Integer seriesId, Integer accountId) {
+    Key seriesStatKey = SeriesStat.createKeyForSeries(accountId, seriesId, seriesBudget.get(SeriesBudget.MONTH));
     Glob seriesStat = repository.findOrCreate(seriesStatKey);
 
     Boolean isActive = seriesBudget.isTrue(SeriesBudget.ACTIVE);
-    Pair<Double, Double> remainingAndOverrun = computeRemainingAndOverrun(seriesBudget, seriesStat, isActive);
+    Pair<Double, Double> remainingAndOverrun = computeRemainingAndOverrun(seriesBudget, isActive, seriesStat.get(SeriesStat.ACTUAL_AMOUNT));
     repository.update(seriesStatKey,
                       value(SeriesStat.PLANNED_AMOUNT, getActiveAmount(seriesBudget, isActive)),
                       value(SeriesStat.REMAINING_AMOUNT, remainingAndOverrun.getFirst()),
@@ -86,25 +97,16 @@ public class PlannedSeriesStatTrigger implements ChangeSetListener {
       }
     }
     GlobList seriesBudgets = repository.getAll(SeriesBudget.TYPE);
-
     for (Glob seriesBudget : seriesBudgets) {
-      Key seriesStatKey = SeriesStat.createKeyForSeries(seriesBudget.get(SeriesBudget.SERIES), seriesBudget.get(SeriesBudget.MONTH));
-      Glob seriesStat = repository.findOrCreate(seriesStatKey);
-
-      Boolean isActive = seriesBudget.isTrue(SeriesBudget.ACTIVE);
-      Pair<Double, Double> remainingAndOverrun = computeRemainingAndOverrun(seriesBudget, seriesStat, isActive);
-
-      repository.update(seriesStatKey,
-                        value(SeriesStat.PLANNED_AMOUNT, getActiveAmount(seriesBudget, isActive)),
-                        value(SeriesStat.REMAINING_AMOUNT, remainingAndOverrun.getFirst()),
-                        value(SeriesStat.OVERRUN_AMOUNT, remainingAndOverrun.getSecond()),
-                        value(SeriesStat.ACTIVE, isActive));
+      for (Integer accountId : repository.getAll(Account.TYPE, AccountMatchers.userOrAllAccounts()).getValues(Account.ID)) {
+        doUpdateStat(seriesBudget, repository, seriesBudget.get(SeriesBudget.SERIES), accountId);
+      }
     }
   }
 
-  private Pair<Double, Double> computeRemainingAndOverrun(FieldValues seriesBudget, Glob seriesStat, Boolean isActive) {
+  private Pair<Double, Double> computeRemainingAndOverrun(FieldValues seriesBudget, Boolean isActive, Double actualValue) {
     Double plannedAmount = isActive ? seriesBudget.get(SeriesBudget.PLANNED_AMOUNT, 0) : 0.00;
-    Double obervedAmount = Amounts.zeroIfNull(seriesStat.get(SeriesStat.ACTUAL_AMOUNT));
+    Double obervedAmount = Amounts.zeroIfNull(actualValue);
     double remaining = 0;
     double overrun = 0;
 

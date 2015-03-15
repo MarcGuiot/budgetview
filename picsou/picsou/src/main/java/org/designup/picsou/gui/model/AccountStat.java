@@ -3,6 +3,7 @@ package org.designup.picsou.gui.model;
 import org.designup.picsou.model.Account;
 import org.designup.picsou.model.Month;
 import org.globsframework.metamodel.GlobType;
+import org.globsframework.metamodel.annotations.DefaultInteger;
 import org.globsframework.metamodel.annotations.Key;
 import org.globsframework.metamodel.annotations.Target;
 import org.globsframework.metamodel.fields.DoubleField;
@@ -32,6 +33,7 @@ public class AccountStat {
 
   public static DoubleField END_POSITION;
 
+  @DefaultInteger(0)
   public static IntegerField ACCOUNT_COUNT;
 
   public static DoubleField SUMMARY_POSITION_AT_MIN;

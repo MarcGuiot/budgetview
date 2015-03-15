@@ -57,6 +57,15 @@ public class AddOnsChecker extends ViewChecker {
     setEnabled(AddOns.GROUPS, false);
   }
 
+  public void activateMobile() {
+    setEnabled(AddOns.MOBILE, true);
+  }
+
+  public void disableMobile() {
+    setEnabled(AddOns.MOBILE, false);
+  }
+
+
   private void setEnabled(BooleanField field, boolean enabled) {
     AddOns.setEnabled(field, getRepository(), enabled);
   }

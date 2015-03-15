@@ -5,6 +5,7 @@ import org.designup.picsou.functests.checkers.mobile.CreateMobileAccountChecker;
 import org.designup.picsou.functests.checkers.mobile.EditMobileAccountChecker;
 import org.designup.picsou.functests.checkers.printing.PrintDialogChecker;
 import org.designup.picsou.gui.PicsouApplication;
+import org.designup.picsou.gui.addons.dev.ToggleAllAddOnsAction;
 import org.designup.picsou.gui.utils.dev.AddSixDaysAction;
 import org.designup.picsou.gui.utils.dev.Goto10OfNextMonthAction;
 import org.designup.picsou.gui.utils.dev.GotoPastTrialExpirationAction;
@@ -557,7 +558,7 @@ public class OperationChecker {
   }
 
   public void checkDataIsOk() {
-    MessageDialogChecker.open(getCheckMenu().triggerClick())
+    MessageDialogChecker.open(getDevMenu().getSubMenu("[Check data (see logs)]").triggerClick())
       .checkSuccessMessageContains("No error was found").close();
   }
 
@@ -587,10 +588,6 @@ public class OperationChecker {
 
   private MenuItem getThrowExceptionInRepositoryMenu() {
     return getDevMenu().getSubMenu("Throw exception in repository");
-  }
-
-  private MenuItem getCheckMenu() {
-    return getDevMenu().getSubMenu("[Check data (see logs)]");
   }
 
   public RestoreSnapshotChecker restoreSnapshot() {
@@ -685,12 +682,24 @@ public class OperationChecker {
     getDevMenu().getSubMenu("[Change current date]").click();
   }
 
+  public void checkMobileAccessEnabled() {
+    assertThat(getMobileCreationMenu().isEnabled());
+  }
+
+  public void checkMobileAccessDisabled() {
+    assertFalse(getMobileCreationMenu().isEnabled());
+  }
+
   public CreateMobileAccountChecker openCreateMobileUser(){
-    return CreateMobileAccountChecker.open(getFileMenu().getSubMenu(Lang.get("mobile.user.create.action.name")).triggerClick());
+    return CreateMobileAccountChecker.open(getMobileCreationMenu().triggerClick());
+  }
+
+  public MenuItem getMobileCreationMenu() {
+    return getFileMenu().getSubMenu(Lang.get("mobile.user.create.action.name"));
   }
 
   public EditMobileAccountChecker deleteMobileAccountUser() {
-    return EditMobileAccountChecker.open(getFileMenu().getSubMenu(Lang.get("mobile.user.create.action.name")).triggerClick());
+    return EditMobileAccountChecker.open(getMobileCreationMenu().triggerClick());
   }
 
   public MessageDialogChecker sendDataToServer() {
@@ -707,5 +716,9 @@ public class OperationChecker {
 
   public void gotoPastTrialExpiration() {
     getDevMenu().getSubMenu(GotoPastTrialExpirationAction.LABEL).click();
+  }
+
+  public void enableAllAddOns() {
+    getDevMenu().getSubMenu(ToggleAllAddOnsAction.ENABLE_ALL).click();
   }
 }

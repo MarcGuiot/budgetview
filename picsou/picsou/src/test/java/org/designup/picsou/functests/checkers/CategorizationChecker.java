@@ -10,11 +10,14 @@ import org.designup.picsou.model.Transaction;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.splits.color.Colors;
 import org.globsframework.model.Glob;
+import org.globsframework.utils.TablePrinter;
 import org.globsframework.utils.Utils;
 import org.uispec4j.Button;
 import org.uispec4j.*;
 import org.uispec4j.Panel;
 import org.uispec4j.Window;
+import org.uispec4j.assertion.Assertion;
+import org.uispec4j.assertion.UISpecAssert;
 import org.uispec4j.interception.PopupMenuInterceptor;
 import org.uispec4j.interception.WindowInterceptor;
 import org.uispec4j.utils.KeyUtils;
@@ -383,6 +386,24 @@ public class CategorizationChecker extends FilteredViewChecker<CategorizationChe
 
   public CategorizationChecker checkTableIsEmpty() {
     assertTrue(getTable().isEmpty());
+    return this;
+  }
+
+  public CategorizationChecker checkTableContent(final String expectedContent) {
+    UISpecAssert.assertThat(new Assertion() {
+      public void check() {
+        TablePrinter printer = new TablePrinter();
+        Table table = getTable();
+        for (int row = 0; row < table.getRowCount(); row++) {
+          Object[] rowContent = new  Object[table.getColumnCount()];
+          for (int col = 0; col < table.getColumnCount(); col++) {
+            rowContent[col] = table.getContentAt(row, col);
+          }
+          printer.addRow(rowContent);
+        }
+        Assert.assertEquals(expectedContent.trim(), printer.toString().trim());
+      }
+    });
     return this;
   }
 

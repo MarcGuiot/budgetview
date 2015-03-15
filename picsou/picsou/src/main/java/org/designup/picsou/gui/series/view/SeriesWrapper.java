@@ -250,7 +250,7 @@ public class SeriesWrapper {
     throw new InvalidState("Unexpected type found for:\n" + GlobPrinter.toString(wrapper));
   }
 
-  public static boolean shouldCreateWrapperForSeries(Glob seriesValues, GlobRepository repository) {
+  public static boolean shouldCreateWrapperForSeries(Glob seriesValues) {
     Integer budgetAreaId = seriesValues.get(Series.BUDGET_AREA);
     if (BudgetArea.OTHER.getId().equals(budgetAreaId)) {
       return false;
@@ -260,7 +260,7 @@ public class SeriesWrapper {
       Integer targetAccountId = seriesValues.get(Series.TARGET_ACCOUNT);
       return targetAccountId != null &&
              Account.EXTERNAL_ACCOUNT_ID != targetAccountId &&
-             seriesValues.get(Series.FROM_ACCOUNT).equals(seriesValues.get(Series.TARGET_ACCOUNT));
+             seriesValues.get(Series.FROM_ACCOUNT).equals(targetAccountId);
     }
 
     Integer seriesId = seriesValues.get(Series.ID);
@@ -269,7 +269,8 @@ public class SeriesWrapper {
   }
 
   public static org.globsframework.model.Key createSeriesStatKey(Glob wrapper, int monthId) {
-    return org.globsframework.model.Key.create(SeriesStat.TARGET_TYPE, getSeriesType(wrapper).getId(),
+    return org.globsframework.model.Key.create(SeriesStat.ACCOUNT, Account.ALL_SUMMARY_ACCOUNT_ID,
+                                               SeriesStat.TARGET_TYPE, getSeriesType(wrapper).getId(),
                                                SeriesStat.TARGET, wrapper.get(ITEM_ID),
                                                SeriesStat.MONTH, monthId);
   }

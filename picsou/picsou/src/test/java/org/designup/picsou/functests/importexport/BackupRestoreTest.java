@@ -73,6 +73,7 @@ public class BackupRestoreTest extends LoggedInFunctionalTestCase {
       .add("26/08/2008", TransactionType.VIREMENT, "Company", "", 1000.00, "Salaire")
       .add("10/08/2008", TransactionType.PRELEVEMENT, "Auchan", "", -400.00, "Course")
       .check();
+    uncategorized.checkNotShown();
   }
 
   public void testConfirmation() throws Exception {
@@ -284,6 +285,8 @@ public class BackupRestoreTest extends LoggedInFunctionalTestCase {
       .initContent()
       .add("26/08/2008", TransactionType.VIREMENT, "COMPANY", "", 1000.00, "Other Salaire")
       .check();
+
+    uncategorized.checkNotShown();
   }
 
   public void testRestoreNewerVersion() throws Exception {

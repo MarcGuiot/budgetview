@@ -94,7 +94,7 @@ public class UpgradeTrigger implements ChangeSetListener {
     }
     if (currentJarVersion < 59) {
       updateTargetSavings(repository);
-      createMirorSeries(repository, savingsSeriesToOp);
+      createMirrorSeries(repository, savingsSeriesToOp);
     }
 
     Glob userPreferences = repository.findOrCreate(UserPreferences.KEY);
@@ -132,10 +132,8 @@ public class UpgradeTrigger implements ChangeSetListener {
       repository.delete(Transaction.TYPE, and(fieldEquals(Transaction.ACCOUNT, Account.MAIN_SUMMARY_ACCOUNT_ID),
                                               fieldEquals(Transaction.PLANNED, true)));
     }
-    if (currentJarVersion < 137) {
-      repository.deleteAll(LayoutConfig.TYPE);
-    }
     if (currentJarVersion < 142) {
+      repository.deleteAll(LayoutConfig.TYPE);
       normalizeNotImportedMirrorTransactions(repository);
       ProjectUpgradeV40.run(repository, postProcessor);
       SeriesUpgradeV40.run(repository, postProcessor);
@@ -417,7 +415,7 @@ public class UpgradeTrigger implements ChangeSetListener {
     }
   }
 
-  private void createMirorSeries(GlobRepository repository, HashMap<Integer, Key[]> seriesToOp) {
+  private void createMirrorSeries(GlobRepository repository, HashMap<Integer, Key[]> seriesToOp) {
     GlobList savingsSeries = repository.getAll(Series.TYPE, GlobMatchers.fieldEquals(Series.BUDGET_AREA, BudgetArea.TRANSFER.getId()));
     for (Glob series : savingsSeries) {
       Integer mirrorSeries = series.get(Series.MIRROR_SERIES);

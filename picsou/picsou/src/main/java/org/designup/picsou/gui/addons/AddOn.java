@@ -38,10 +38,10 @@ public abstract class AddOn {
 
   public void activate(GlobRepository repository, Directory directory) {
     repository.update(AddOns.KEY, field, true);
-    processPostActivation(directory);
+    processPostActivation(repository, directory);
   }
 
-  protected abstract void processPostActivation(Directory directory);
+  protected abstract void processPostActivation(GlobRepository repository, Directory directory);
 
   public String getDescription() {
     return Lang.get("addons." + field.getName().toLowerCase() + ".description");

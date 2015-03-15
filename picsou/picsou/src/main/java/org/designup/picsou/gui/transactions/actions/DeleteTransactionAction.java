@@ -57,7 +57,7 @@ public class DeleteTransactionAction extends MultiSelectionAction {
     boolean hasAutoCreated = false;
     for (Iterator<Glob> iterator = transactions.iterator(); iterator.hasNext(); ) {
       Glob glob = iterator.next();
-      if (Transaction.isCreatedBySeries(glob) || Transaction.isMirrorTransaction(glob)) {
+      if (Transaction.isMirrorTransaction(glob)) {
         iterator.remove();
         hasAutoCreated = true;
       }

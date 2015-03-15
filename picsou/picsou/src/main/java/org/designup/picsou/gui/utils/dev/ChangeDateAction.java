@@ -12,6 +12,8 @@ import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.util.Date;
 
+import static org.globsframework.model.FieldValue.value;
+
 public class ChangeDateAction extends AbstractAction {
 
   private GlobRepository repository;
@@ -24,7 +26,7 @@ public class ChangeDateAction extends AbstractAction {
   public void actionPerformed(ActionEvent e) {
     int fullDate = TimeService.getCurrentFullDate();
     repository.update(CurrentMonth.KEY,
-                      FieldValue.value(CurrentMonth.CURRENT_MONTH, Month.getMonthIdFromFullDate(fullDate)),
-                      FieldValue.value(CurrentMonth.CURRENT_DAY, Month.getDayFromFullDate(fullDate)));
+                      value(CurrentMonth.CURRENT_MONTH, Month.getMonthIdFromFullDate(fullDate)),
+                      value(CurrentMonth.CURRENT_DAY, Month.getDayFromFullDate(fullDate)));
   }
 }

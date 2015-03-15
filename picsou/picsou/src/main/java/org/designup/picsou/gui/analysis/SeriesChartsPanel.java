@@ -18,7 +18,6 @@ import org.designup.picsou.gui.analysis.histobuilders.range.HistoChartRange;
 import org.designup.picsou.gui.series.utils.SeriesOrGroup;
 import org.designup.picsou.gui.series.view.SeriesWrapper;
 import org.designup.picsou.gui.series.view.SeriesWrapperType;
-import org.designup.picsou.gui.transactions.utils.TransactionMatchers;
 import org.designup.picsou.model.*;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobSelection;
@@ -448,7 +447,7 @@ public class SeriesChartsPanel implements GlobSelectionListener {
 
     double categorized = 0.0;
     for (Glob seriesStat : repository.getAll(SeriesStat.TYPE,
-                                             and(isSeries(),
+                                             and(isSummaryForSeries(),
                                                  fieldIn(SeriesStat.MONTH, selectedMonthIds),
                                                  fieldEquals(SeriesStat.TARGET_TYPE, SeriesType.SERIES.getId()),
                                                  not(fieldEquals(SeriesStat.TARGET, Series.UNCATEGORIZED_SERIES_ID))))) {

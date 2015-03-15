@@ -15,6 +15,10 @@ C org.designup.picsou.gui.components.RoundButtonUI
 C org.designup.picsou.gui.components.ui.FlatScrollbarUI
 C org.designup.picsou.gui.accounts.utils.AccountBlockLayout
 C org.designup.picsou.gui.budget.components.BudgetAreaSeriesLayout
+C org.designup.picsou.gui.utils.HeaderPanelLayout
+C org.designup.picsou.gui.addons.utils.AddOnPanelLayout
+C org.designup.picsou.gui.analysis.utils.AnalysisSelectorLayout
+C org.designup.picsou.gui.projects.utils.ProjectItemViewLayout
 C org.apache.commons.logging.impl.LogFactoryImpl
 C org.apache.commons.logging.impl.SimpleLog
 C org.apache.commons.httpclient.auth.CredentialsNotAvailableException
@@ -58,6 +62,7 @@ R i18n/
 R help/
 R images/
 R icons/
+R fonts/
 R jide/
 R docs/
 R colors/

@@ -33,7 +33,7 @@ public class SeriesStatForGroupsTrigger implements ChangeSetListener {
       }
 
       protected void addToChangedGroupsIfNeeded(Key seriesStatKey, FieldValues values) {
-        if (SeriesStat.isForGroup(seriesStatKey)) {
+        if (SeriesStat.isSummaryForGroup(seriesStatKey)) {
           return;
         }
         Glob series = SeriesStat.findSeries(values, repository);
@@ -80,7 +80,7 @@ public class SeriesStatForGroupsTrigger implements ChangeSetListener {
 
   public void globsReset(GlobRepository repository, Set<GlobType> changedTypes) {
     if (changedTypes.contains(SeriesStat.TYPE)) {
-      repository.delete(SeriesStat.TYPE, isGroup());
+      repository.delete(SeriesStat.TYPE, isSummaryForGroup());
       updateAll(repository.getAll(SeriesGroup.TYPE).getValueSet(SeriesGroup.ID), repository);
     }
   }
@@ -94,14 +94,14 @@ public class SeriesStatForGroupsTrigger implements ChangeSetListener {
   private void updateStatForGroup(Integer groupId, GlobRepository repository) {
 
     Set<Integer> seriesIds = repository.getAll(Series.TYPE, fieldEquals(Series.GROUP, groupId)).getValueSet(Series.ID);
-    GlobList seriesStatList = repository.getAll(SeriesStat.TYPE, and(isSeries(), fieldIn(SeriesStat.TARGET, seriesIds)));
+    GlobList seriesStatList = repository.getAll(SeriesStat.TYPE, and(isSummaryForSeries(), fieldIn(SeriesStat.TARGET, seriesIds)));
 
     for (Integer monthId : seriesStatList.getValueSet(SeriesStat.MONTH)) {
       FieldValuesBuilder values = new FieldValuesBuilder();
       values.set(SeriesStat.ACTIVE, false);
 
       for (Integer seriesId : seriesIds) {
-        Glob seriesStat = SeriesStat.findSeries(seriesId, monthId, repository);
+        Glob seriesStat = SeriesStat.findSummaryForSeries(seriesId, monthId, repository);
         if (seriesStat != null && seriesStat.isTrue(SeriesStat.ACTIVE)) {
           values.set(SeriesStat.ACTIVE, true);
           values.add(SeriesStat.PLANNED_AMOUNT, seriesStat.get(SeriesStat.PLANNED_AMOUNT));
@@ -112,7 +112,7 @@ public class SeriesStatForGroupsTrigger implements ChangeSetListener {
         }
       }
 
-      Key key = SeriesStat.keyForGroup(groupId, monthId);
+      Key key = SeriesStat.keyForGroupSummary(groupId, monthId);
       if (repository.contains(key)) {
         repository.delete(key);
       }

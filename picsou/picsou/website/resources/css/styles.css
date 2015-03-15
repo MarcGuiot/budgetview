@@ -26,7 +26,8 @@ button.btn {
 
 div.centered-image {
  text-align: center;
- margin-bottom: 10px;
+ margin-top: 15px;
+ margin-bottom: 15px;
 }
 
 .container {
@@ -41,6 +42,7 @@ a.highlighted {
   margin-top: 10px;
   margin-left:30px;
   margin-right:30px;
+  margin-bottom: 10px;
   padding: 10px;
   border: solid 1px #DDD;
   background: #FFFFDD;

@@ -1,11 +1,11 @@
 package org.designup.picsou.triggers.savings;
 
-import org.globsframework.model.utils.DefaultChangeSetListener;
-import org.globsframework.model.*;
-import org.globsframework.metamodel.Field;
+import org.designup.picsou.model.BudgetArea;
 import org.designup.picsou.model.Series;
 import org.designup.picsou.model.SeriesBudget;
-import org.designup.picsou.model.BudgetArea;
+import org.globsframework.metamodel.Field;
+import org.globsframework.model.*;
+import org.globsframework.model.utils.DefaultChangeSetListener;
 
 public class SavingsUpdateSeriesMirrorTrigger extends DefaultChangeSetListener {
 
@@ -17,13 +17,13 @@ public class SavingsUpdateSeriesMirrorTrigger extends DefaultChangeSetListener {
       public void visitCreation(Key key, FieldValues values) throws Exception {
         Integer seriesId = values.get(SeriesBudget.SERIES);
         Glob series = repository.get(Key.create(Series.TYPE, seriesId));
-        if (!series.get(Series.BUDGET_AREA).equals(BudgetArea.TRANSFER.getId())){
+        if (!series.get(Series.BUDGET_AREA).equals(BudgetArea.TRANSFER.getId())) {
           return;
         }
         Integer mirrorSeriesId = series.get(Series.MIRROR_SERIES);
         Glob budgetForMirror = repository.findByIndex(SeriesBudget.SERIES_INDEX, SeriesBudget.SERIES, mirrorSeriesId)
           .findByIndex(SeriesBudget.MONTH, values.get(SeriesBudget.MONTH)).getGlobs().getFirst();
-        if (budgetForMirror != null){
+        if (budgetForMirror != null) {
           return;
         }
         int sign = series.get(Series.FROM_ACCOUNT).equals(series.get(Series.TARGET_ACCOUNT)) ? -1 : 1;
@@ -37,10 +37,10 @@ public class SavingsUpdateSeriesMirrorTrigger extends DefaultChangeSetListener {
             else if (value.getField().equals(SeriesBudget.PLANNED_AMOUNT)) {
               fieldValues[i] = new FieldValue(SeriesBudget.PLANNED_AMOUNT,
                                               values.get(SeriesBudget.PLANNED_AMOUNT) == null ? null :
-                                              -sign * Math.abs(values.get(SeriesBudget.PLANNED_AMOUNT)));
+                                                -sign * Math.abs(values.get(SeriesBudget.PLANNED_AMOUNT)));
               repository.update(key, SeriesBudget.PLANNED_AMOUNT,
                                 values.get(SeriesBudget.PLANNED_AMOUNT) == null ? null :
-                                sign * Math.abs(values.get(SeriesBudget.PLANNED_AMOUNT)));
+                                  sign * Math.abs(values.get(SeriesBudget.PLANNED_AMOUNT)));
             }
           }
           repository.create(Key.create(SeriesBudget.TYPE, repository.getIdGenerator()
@@ -52,7 +52,7 @@ public class SavingsUpdateSeriesMirrorTrigger extends DefaultChangeSetListener {
         Glob budget = repository.get(key);
         Integer seriesId = budget.get(SeriesBudget.SERIES);
         Glob series = repository.get(Key.create(Series.TYPE, seriesId));
-        if (!series.get(Series.BUDGET_AREA).equals(BudgetArea.TRANSFER.getId())){
+        if (!series.get(Series.BUDGET_AREA).equals(BudgetArea.TRANSFER.getId())) {
           return;
         }
         Integer mirrorSeriesId = series.get(Series.MIRROR_SERIES);
@@ -62,7 +62,7 @@ public class SavingsUpdateSeriesMirrorTrigger extends DefaultChangeSetListener {
           values.safeApply(new FieldValues.Functor() {
             public void process(Field field, Object value) throws Exception {
               if (field.equals(SeriesBudget.PLANNED_AMOUNT)) {
-                repository.update(mirrorBudget.getKey(), field, value == null ? null : -((Double)value));
+                repository.update(mirrorBudget.getKey(), field, value == null ? null : -((Double) value));
               }
               else {
                 repository.update(mirrorBudget.getKey(), field, value);
@@ -78,7 +78,7 @@ public class SavingsUpdateSeriesMirrorTrigger extends DefaultChangeSetListener {
         if (series == null) {
           return;
         }
-        if (!series.get(Series.BUDGET_AREA).equals(BudgetArea.TRANSFER.getId())){
+        if (!series.get(Series.BUDGET_AREA).equals(BudgetArea.TRANSFER.getId())) {
           return;
         }
         Integer mirrorSeriesId = series.get(Series.MIRROR_SERIES);

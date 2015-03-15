@@ -96,6 +96,7 @@ public class BudgetStatTrigger implements ChangeSetListener {
                             value(AccountStat.MIN_POSITION, lastEnd),
                             value(AccountStat.FUTURE_MIN_POSITION, lastEnd),
                             value(AccountStat.END_POSITION, lastEnd),
+                            value(AccountStat.ACCOUNT_COUNT, accountIds.size()),
                             value(AccountStat.SUMMARY_POSITION_AT_MIN, last.get(AccountStat.SUMMARY_POSITION_AT_MIN)));
         }
         last = current;
@@ -185,7 +186,7 @@ public class BudgetStatTrigger implements ChangeSetListener {
       BudgetAreaAmounts savingsInAmounts = new BudgetAreaAmounts(BudgetArea.TRANSFER);
       BudgetAreaAmounts savingsOutAmounts = new BudgetAreaAmounts(BudgetArea.TRANSFER);
 
-      for (Glob stat : SeriesStat.getAllSeriesForMonth(monthId, repository)) {
+      for (Glob stat : SeriesStat.getAllSummarySeriesForMonth(monthId, repository)) {
         Glob series = SeriesStat.getSeries(stat, repository);
         BudgetArea budgetArea = BudgetArea.get(series.get(Series.BUDGET_AREA));
 
@@ -412,6 +413,7 @@ public class BudgetStatTrigger implements ChangeSetListener {
                           value(AccountStat.MIN_POSITION, currentAccount.min),
                           value(AccountStat.FUTURE_MIN_POSITION, currentAccount.futureMin),
                           value(AccountStat.END_POSITION, currentAccount.end),
+                          value(AccountStat.ACCOUNT_COUNT, minAccountPositions.size()),
                           value(AccountStat.SUMMARY_POSITION_AT_MIN, currentAccount.total));
         double minToUse;
         double totalToUse;

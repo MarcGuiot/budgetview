@@ -6,6 +6,7 @@ import org.designup.picsou.gui.components.DatePicker;
 import org.designup.picsou.gui.components.dialogs.CancelAction;
 import org.designup.picsou.gui.components.dialogs.PicsouDialog;
 import org.designup.picsou.gui.model.CurrentAccountInfo;
+import org.designup.picsou.gui.model.SeriesStat;
 import org.designup.picsou.gui.time.TimeService;
 import org.designup.picsou.model.*;
 import org.designup.picsou.utils.Lang;

@@ -65,12 +65,8 @@ public class LicenseInfoView extends View {
     }
 
     Glob user = repository.find(User.KEY);
-    if (user == null) {
-      return;
-    }
-
-    if (User.isDemoUser(user)) {
-      showMessage(Lang.get("demo.license.info.message"));
+    if ((user == null) || User.isDemoUser(user)) {
+      licenseMessage.setVisible(false);
       return;
     }
 

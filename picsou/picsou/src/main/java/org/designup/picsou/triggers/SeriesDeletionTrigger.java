@@ -9,7 +9,6 @@ import org.globsframework.model.*;
 import org.globsframework.model.utils.DefaultChangeSetListener;
 import org.globsframework.model.utils.DefaultChangeSetVisitor;
 import org.globsframework.model.utils.GlobFunctor;
-import org.globsframework.model.utils.GlobMatchers;
 
 import static org.designup.picsou.gui.model.SeriesStat.linkedToSeries;
 import static org.globsframework.model.FieldValue.value;

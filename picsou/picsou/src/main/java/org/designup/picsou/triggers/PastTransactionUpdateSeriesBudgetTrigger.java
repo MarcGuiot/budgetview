@@ -2,6 +2,7 @@ package org.designup.picsou.triggers;
 
 import org.designup.picsou.gui.model.SeriesStat;
 import org.designup.picsou.gui.model.SeriesType;
+import org.designup.picsou.model.Account;
 import org.designup.picsou.model.CurrentMonth;
 import org.designup.picsou.model.Series;
 import org.designup.picsou.model.SeriesBudget;
@@ -126,7 +127,8 @@ public class PastTransactionUpdateSeriesBudgetTrigger extends AbstractChangeSetL
         }
       }
       if (previousMonth != null && firstMonthWithObserved < statMonthId) {
-        Glob previousStat = repository.findOrCreate(Key.create(SeriesStat.TARGET, seriesId,
+        Glob previousStat = repository.findOrCreate(Key.create(SeriesStat.ACCOUNT, Account.ALL_SUMMARY_ACCOUNT_ID,
+                                                               SeriesStat.TARGET, seriesId,
                                                                SeriesStat.TARGET_TYPE, SeriesType.SERIES.getId(),
                                                                SeriesStat.MONTH, previousMonth));
         // Si on a un changement de signe : ex on passe de -10 a 5 on propage le changement vers 5
@@ -172,7 +174,8 @@ public class PastTransactionUpdateSeriesBudgetTrigger extends AbstractChangeSetL
       }
 
       Glob currentSeriesStat =
-        repository.findOrCreate(Key.create(SeriesStat.TARGET, seriesId,
+        repository.findOrCreate(Key.create(SeriesStat.ACCOUNT, Account.ALL_SUMMARY_ACCOUNT_ID,
+                                           SeriesStat.TARGET, seriesId,
                                            SeriesStat.TARGET_TYPE, SeriesType.SERIES.getId(),
                                            SeriesStat.MONTH, budget.get(SeriesBudget.MONTH)));
       if (firstMonthWithObserved == 0 && Amounts.isNotZero(currentSeriesStat.get(SeriesStat.ACTUAL_AMOUNT))) {

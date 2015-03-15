@@ -62,11 +62,9 @@ public class UpdateMirrorSeriesChangeSetVisitor implements ChangeSetVisitor {
   }
 
   private GlobList uncategorize(final Integer seriesId) {
-    GlobList transactions = localRepository.findByIndex(Transaction.SERIES_INDEX, Transaction.SERIES,
-                                                        seriesId)
-      .getGlobs().filterSelf(and(isFalse(Transaction.PLANNED),
-                                 isFalse(Transaction.CREATED_BY_SERIES)),
-                             localRepository);
+    GlobList transactions =
+      localRepository.findByIndex(Transaction.SERIES_INDEX, Transaction.SERIES, seriesId)
+        .getGlobs().filterSelf(isFalse(Transaction.PLANNED), localRepository);
     Transaction.uncategorize(transactions, localRepository);
     return transactions;
   }

@@ -37,6 +37,9 @@ public class Gui {
 
   static {
 
+    Fonts.loadBase("ArimoRegular", "/fonts/Arimo-Regular.ttf", Gui.class);
+    Fonts.loadBase("ArimoBold", "/fonts/Arimo-Bold.ttf", Gui.class);
+
     Fonts.loadBase("LatoHairline", "/fonts/Lato-Hairline.ttf", Gui.class);
     Fonts.loadBase("LatoLight", "/fonts/Lato-Light.ttf", Gui.class);
     Fonts.loadBase("LatoRegular", "/fonts/Lato-Regular.ttf", Gui.class);

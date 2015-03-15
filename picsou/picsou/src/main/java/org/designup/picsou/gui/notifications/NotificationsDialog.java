@@ -59,7 +59,8 @@ public class NotificationsDialog {
 
     dialog.addPanelWithButtons(builder.<JPanel>load(),
                                new ValidateAction(dialog),
-                               new CancelAction(dialog));
+                               new CancelAction(dialog),
+                               new DeleteAllNotificationsAction());
 
     dialog.pack();
     dialog.showCentered();
@@ -98,6 +99,21 @@ public class NotificationsDialog {
     public void actionPerformed(ActionEvent actionEvent) {
       notification.clear();
       notifications.remove(notification);
+      repeat.set(notifications);
+    }
+  }
+
+  private class DeleteAllNotificationsAction extends AbstractAction {
+
+    public DeleteAllNotificationsAction() {
+      super(Lang.get("notifications.deleteAll"));
+    }
+
+    public void actionPerformed(ActionEvent actionEvent) {
+      for (Notification notification : notifications) {
+        notification.clear();
+      }
+      notifications.clear();
       repeat.set(notifications);
     }
   }

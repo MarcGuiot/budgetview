@@ -22,12 +22,12 @@ mv dev/install/budgetview.fr.exe dev/install/budgetview.exe
 cat dev/install/picsou.template.fr.mpi | sed -e "s/JAR_FOURMICS/budgetview${JAR_VERSION}/" |
     sed -e "s/SOFT_VERSION/${SOFT_VERSION}/" > dev/install/picsou.fr.mpi
 
-~/dev/installer/installjammer/installjammer --build-for-release dev/install/picsou.fr.mpi
+$INSTALLJAMMER_HOME/installjammer --build-for-release dev/install/picsou.fr.mpi
 
 mv dev/install/budgetview.en.exe dev/install/budgetview.exe
 cat dev/install/picsou.template.en.mpi | sed -e "s/JAR_FOURMICS/budgetview${JAR_VERSION}/" |
     sed -e "s/SOFT_VERSION/${SOFT_VERSION}/" > dev/install/picsou.en.mpi
 
-~/dev/installer/installjammer/installjammer --build-for-release dev/install/picsou.en.mpi
+$INSTALLJAMMER_HOME/installjammer --build-for-release dev/install/picsou.en.mpi
 
 dev/install/createWindowsZip.sh

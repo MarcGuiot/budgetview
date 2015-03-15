@@ -17,7 +17,7 @@ public class SeriesStatToProjectItemStatTrigger implements ChangeSetListener {
 
     changeSet.safeVisit(SeriesStat.TYPE, new ChangeSetVisitor() {
       public void visitCreation(Key key, FieldValues values) throws Exception {
-        if (SeriesStat.isForSeries(key)) {
+        if (SeriesStat.isSummaryForSeries(key)) {
           Glob seriesStat = repository.get(key);
           Double delta = seriesStat.get(SeriesStat.ACTUAL_AMOUNT, 0.00);
           updateTargetStat(key.get(SeriesStat.TARGET), delta, repository);
@@ -25,14 +25,14 @@ public class SeriesStatToProjectItemStatTrigger implements ChangeSetListener {
       }
 
       public void visitUpdate(Key key, FieldValuesWithPrevious values) throws Exception {
-        if (SeriesStat.isForSeries(key) && values.contains(SeriesStat.ACTUAL_AMOUNT)) {
+        if (SeriesStat.isSummaryForSeries(key) && values.contains(SeriesStat.ACTUAL_AMOUNT)) {
           Double delta = values.get(SeriesStat.ACTUAL_AMOUNT, 0.00) - values.getPrevious(SeriesStat.ACTUAL_AMOUNT, 0.00);
           updateTargetStat(key.get(SeriesStat.TARGET), delta, repository);
         }
       }
 
       public void visitDeletion(Key key, FieldValues previousValues) throws Exception {
-        if (SeriesStat.isForSeries(key)) {
+        if (SeriesStat.isSummaryForSeries(key)) {
           Double delta = -previousValues.get(SeriesStat.ACTUAL_AMOUNT, 0.00);
           updateTargetStat(key.get(SeriesStat.TARGET), delta, repository);
         }

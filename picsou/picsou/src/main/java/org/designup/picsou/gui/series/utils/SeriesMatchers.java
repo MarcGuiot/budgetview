@@ -6,7 +6,7 @@ import org.designup.picsou.model.*;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.utils.GlobMatcher;
-import org.globsframework.model.utils.GlobMatchers;
+import org.globsframework.utils.Utils;
 
 import java.util.Collections;
 import java.util.HashSet;
@@ -39,10 +39,27 @@ public class SeriesMatchers {
     };
   }
 
-  public static GlobMatcher seriesForMainOrUnknownAccount() {
+  public static GlobMatcher seriesForGlobalBudget() {
     return new GlobMatcher() {
       public boolean matches(Glob series, GlobRepository repository) {
-        return Series.isForMainOrUnknownAccount(series, repository);
+        Glob account = repository.findLinkTarget(series, Series.TARGET_ACCOUNT);
+        if (account != null && !Account.isMain(account) && !Account.isSavings(account)) {
+          return false;
+        }
+        if (Series.isTransfer(series)) {
+          // Select only one of the two mirrors
+          if (Utils.equal(Account.EXTERNAL_ACCOUNT_ID, series.get(Series.FROM_ACCOUNT))) {
+            return Utils.equal(series.get(Series.TARGET_ACCOUNT), series.get(Series.TO_ACCOUNT));
+          }
+          if (Utils.equal(Account.EXTERNAL_ACCOUNT_ID, series.get(Series.TO_ACCOUNT))) {
+            return Utils.equal(series.get(Series.TARGET_ACCOUNT), series.get(Series.FROM_ACCOUNT));
+          }
+          if (Account.isMain(series.get(Series.FROM_ACCOUNT), repository)) {
+            return Utils.equal(series.get(Series.TARGET_ACCOUNT), series.get(Series.FROM_ACCOUNT));
+          }
+          return Utils.equal(series.get(Series.TARGET_ACCOUNT), series.get(Series.TO_ACCOUNT));
+        }
+        return true;
       }
     };
   }

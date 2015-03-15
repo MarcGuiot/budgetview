@@ -64,7 +64,7 @@ public class GaugeTooltipsTest extends LoggedInFunctionalTestCase {
       .addTransaction("2008/06/04", 30, "prelevement")
       .load();
     views.selectCategorization();
-    categorization.setNewTransfer("virement", "epargne", "Account n. 00001123", "external account");
+    categorization.setNewTransfer("VIREMENT", "epargne", "Account n. 00001123", "external account");
     categorization.setNewTransfer("prelevement", "financement", "external account", "Account n. 00001123");
     views.selectBudget();
     setTransferAmount("epargne", 20);

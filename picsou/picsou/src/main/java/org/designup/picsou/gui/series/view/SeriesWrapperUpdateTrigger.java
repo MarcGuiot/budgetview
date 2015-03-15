@@ -55,7 +55,7 @@ public class SeriesWrapperUpdateTrigger implements ChangeSetListener {
 
     changeSet.safeVisit(Series.TYPE, new ChangeSetVisitor() {
       public void visitCreation(Key key, FieldValues values) throws Exception {
-        if (!SeriesWrapper.shouldCreateWrapperForSeries(repository.find(key), repository)) {
+        if (!SeriesWrapper.shouldCreateWrapperForSeries(repository.find(key))) {
           return;
         }
 
@@ -223,7 +223,7 @@ public class SeriesWrapperUpdateTrigger implements ChangeSetListener {
       }
 
       for (Glob series : repository.getAll(Series.TYPE)) {
-        if (!SeriesWrapper.shouldCreateWrapperForSeries(series, repository)) {
+        if (!SeriesWrapper.shouldCreateWrapperForSeries(series)) {
           continue;
         }
 

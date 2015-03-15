@@ -186,7 +186,7 @@ public class Account {
     return isMain(account);
   }
 
-  public static boolean isMain(Glob account) {
+  public static boolean isMain(FieldValues account) {
     if (account == null) {
       return false;
     }
@@ -243,6 +243,10 @@ public class Account {
 
   public static boolean isUserCreatedAccount(int accountId) {
     return !SUMMARY_ACCOUNT_IDS.contains(accountId);
+  }
+
+  public static boolean isUserCreatedAccountOrAll(Glob account) {
+    return account != null && (ALL_SUMMARY_ACCOUNT_ID == account.get(Account.ID) || isUserCreatedAccount(account));
   }
 
   public static boolean isUserCreatedSavingsAccount(Glob account) {

@@ -169,8 +169,7 @@ public class TransactionMatchers {
     return and(not(fieldEquals(Transaction.TRANSACTION_TYPE, TransactionType.OPEN_ACCOUNT_EVENT.getId())),
                not(fieldEquals(Transaction.TRANSACTION_TYPE, TransactionType.CLOSE_ACCOUNT_EVENT.getId())),
                isFalse(Transaction.PLANNED),
-               isFalse(Transaction.MIRROR),
-               isFalse(Transaction.CREATED_BY_SERIES));
+               isFalse(Transaction.MIRROR));
   }
 
   public static GlobMatcher uncategorizedForMonths(Set<Integer> selectedMonthIds) {
