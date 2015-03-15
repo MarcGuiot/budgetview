@@ -1,13 +1,20 @@
 <h2>Une toute nouvelle présentation</h2>
 
+<p>Au cours des derniers mois, nous avons repris la logique de l'ensemble de l'interface de manière à simplifier
+    deux choses&nbsp;: la découverte de l'application par les nouveaux utilisateurs et la gestion individuelle des comptes.
+    Cela a conduit à une toute nouvelle présentation&nbsp;:</p>
+
 <div class="centered-image">
     <img src="/files/images_fr/support/versions/v4_0/nouvelle_interface.png"/>
 </div>
 
-<p>Nous avons repensé la logique de l'interface afin de faciliter la découverte et la navigation.</p>
-
+<p>Les principaux changements sont détaillés ci-dessous.</p>
 
 <h2>La météo de vos comptes</h2>
+
+<p>Gérer ses comptes, c'est tout d'abord répondre à la question : "Est-ce que l'un de mes comptes risque de passer
+    dans le rouge&nbsp;?"</p>
+<p>BudgetView 4.0 répond directement à cette question&nbsp;:</p>
 
 <div class="centered-image">
     <img src="/files/images_fr/support/versions/v4_0/meteo.png"/>
@@ -16,45 +23,67 @@
 <p>Des prévisions vous sont proposées sur chacun de vos comptes : une météo couverte ou pluvieuse indique le risque
     que votre compte passe à découvert d'ici la fin du mois prochain.</p>
 
-<h2>Multi-comptes plus souple</h2>
-
-<div class="centered-image">
-    <img src="/files/images_fr/support/versions/v4_0/enveloppes_multi_comptes.png"/>
-</div>
-
-<p>Depuis les origines de BudgetView, le calcul du prévisionnel était réalisé pour les comptes courants pris dans
-    leur ensemble - il n'était pas possible de suivre l'évolution d'un compte courant particulier.</p>
-<p>Dans la version 3.14, nous avons remédié à cela en associant chaque enveloppe à un compte donné. Il se trouve
-    cependant que cette solution était trop contraignante pour certains de nos utilisateurs, obligeant dans certains
-    cas à dupliquer plusieurs enveloppes.</p>
-<p>La version 4.0 remédie à cela en proposant un mode plus souple&nbsp;: les enveloppes sont par défaut associées à
-    l'ensemble des comptes courants, et la projection dans le futur se base sur le comportement observé au cours des
-    deux dernier mois.
-    Ainsi, si vous n'utilisez que l'un de vos comptes pour votre enveloppe Loisirs, le calcul du prévisionnel ne prendra
-    en compte que ce compte-là. Si vous avez effectué un tiers des dépenses sur un compte et deux tiers sur un autre,
-    cette
-    même répartition s'appliquera dans la prévision. </p>
-
 <h2>Fitrage par comptes</h2>
+
+<p>Les vues Tableau de Bord, Budget et Comptes présentent dorénavant une même liste de comptes sur le bord gauche&nbsp;:</p>
 
 <div class="centered-image">
     <img src="/files/images_fr/support/versions/v4_0/filtrage_compte.png"/>
 </div>
 
-<h2>Virements revus</h2>
+<p>Vous pouvez afficher ou masquer le graphe de l'évolution du solde de chacun de vos comptes, mais aussi sélectionner un
+    compte pour ne voir que les informations correspondantes dans le reste de la vue.</p>
 
-<p></p>
+<p>Avec ces évolutions, la vue spécifique des comptes d'épargne a disparu : les comptes d'épargne sont représentés
+    exactement de la même manière que les comptes courants.</p>
+
+<h2>Multi-comptes plus souple</h2>
+
+<p>Depuis les origines de BudgetView, le calcul du prévisionnel était réalisé pour les comptes courants pris dans
+    leur ensemble - il n'était pas possible de suivre l'évolution d'un compte courant en particulier.</p>
+<p>Dans la version 3.14, nous avons permis de suivre chaque compte individuellement en associant chaque enveloppe
+    à un compte donné. Il se trouve
+    cependant que cette solution était trop contraignante pour certains de nos utilisateurs, obligeant dans certains
+    cas à dupliquer plusieurs enveloppes.</p>
+<p>La version 4.0 remédie à cela en proposant un mode beaucoup plus souple&nbsp;: les enveloppes sont par défaut associées à
+    l'ensemble des comptes courants, et la projection dans le futur se base sur le comportement observé au cours des
+    deux dernier mois.</p>
+
+<div class="centered-image">
+    <img src="/files/images_fr/support/versions/v4_0/enveloppes_multi_comptes.png"/>
+</div>
+
+<p>Ainsi, si vous n'utilisez que l'un de vos comptes pour votre enveloppe Loisirs, le calcul du prévisionnel ne prendra
+    en compte que ce compte-là. Si vous avez effectué un tiers des dépenses sur un compte et deux tiers sur un autre,
+    cette même répartition s'appliquera dans la prévision. </p>
+<p>Dans les cas où vous le jugez nécessaire, il vous est toujours possible d'éditer n'importe quelle enveloppe et
+    préciser qu'elle ne s'applique qu'à un compte donné. Les projections se feront alors exclusivement sur ce compte,
+    et l'enveloppe ne sera visible dans la vue Catégorisation que lorsque vous sélectionnerez une opération de ce compte.</p>
+
+<h2>Virements</h2>
+
+<p>Nous avons revu la façon de représenter vos virements entre vos comptes. Désormais, le bloc "Epargne" de la vue
+    Budget devient "Virements" et accueille tous vos virements : virements vers ou à partir de vos comptes d'épargne,
+    mais aussi virements entre vos comptes courants.</p>
 
 <h2>Une version de base gratuite</h2>
 
-<p>BudgetView 4.0 sera une application gratuite que vous pouvez étendre en achetant des extensions payantes. Les
-    extensions sont les suivantes&nbsp:</p>
+<p>Pour faire profiter du meilleur budget prévisionnel à un plus grand nombre d'utilisateurs, nous rendons le coeur de
+    BudgetView 4.0 gratuit. Certaines fonctionnalités deviennent des extensions payantes&nbsp;:</p>
+<ul>
+    <li>La constitution de <b>groupes d'enveloppes</b> dans la vue Budget</li>
+    <li>La gestion des <b>projets</b></li>
+    <li>L'ensemble de la vue <b>analyse</b></li>
+    <li>La visualisation du budget sur <b>mobile Android</b></li>
+</ul>
+
+<p>Ces extensions sont présentées dans une vue dédiée&nbsp;:</p>
 
 <div class="centered-image">
     <img src="/files/images_fr/support/versions/v4_0/extensions.png"/>
 </div>
 
-<p>Si vous aviez acheté un code d'activation BudgetView pour les versions antérieures, celui-ci reste valable et active
+<p>Si vous aviez acheté un code d'activation BudgetView pour les versions antérieures, celui-ci reste bien sûr valable et active
     automatiquement l'ensemble des extensions disponibles.</p>
 
 <h2>Installation</h2>
@@ -71,9 +100,10 @@
 <p>Par ailleurs :</p>
 
 <div class="warning-block">
-    <p>Cette avant-première reprent l'ensemble des fonctionnalités de la version 3.14, à une exception près&nbsp;: les
-        cartes à débit différé. Pour éviter tout problème, <b>si vous utilisez une carte à débit différé, nous vous
-            recommandons de ne pas installer cette version et d'attendre la version 4.0 finale.</b></p>
+    <p>Cette avant-première reprend l'ensemble des fonctionnalités de la version 3.14, à une exception près&nbsp;: les
+        cartes à débit différé, pour lesquels il nous reste des éléments à finaliser.</p>
+    <p><b>Si vous utilisez une carte à débit différé, nous vous
+        recommandons de ne pas installer cette version et d'attendre la version 4.0 finale.</b></p>
 </div>
 
 <p>Pour installer cette nouvelle version, sélectionnez votre système ci-dessous&nbsp;:</p>
@@ -98,6 +128,8 @@
         </a>
     </div>
 </div>
+
+<h2>Tenez-nous au courant !</h2>
 
 <p>Si vous avez des commentaires ou des questions sur cette nouvelle version, ou si rencontrez des difficultés au cours la cette mise à jour, n'hésitez pas&nbsp;:
     <a href="mailto:support@mybudgetview.fr" class="highlighted">contactez-nous&nbsp;!</a>
