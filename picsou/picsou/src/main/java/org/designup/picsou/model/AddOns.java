@@ -50,19 +50,6 @@ public class AddOns {
     return addons == null ? false : addons.isTrue(field);
   }
 
-  public static boolean allEnabled(GlobRepository repository) {
-    Glob addons = repository.find(KEY);
-    if (addons == null) {
-      return false;
-    }
-    for (Field field : TYPE.getFields()) {
-      if ((field instanceof BooleanField) && !addons.isTrue((BooleanField)field)) {
-        return false;
-      }
-    }
-    return true;
-  }
-
   public static void setEnabled(BooleanField field, GlobRepository repository, boolean enabled) {
     repository.update(AddOns.KEY, field, enabled);
   }
