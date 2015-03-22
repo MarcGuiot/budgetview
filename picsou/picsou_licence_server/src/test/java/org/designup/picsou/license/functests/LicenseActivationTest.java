@@ -94,7 +94,7 @@ public class LicenseActivationTest extends ConnectedTestCase {
     String email = "alfred@free.fr";
     db.registerMail(email, "1234");
     register(db, email, "1234");
-    checkValidLicense();
+    checkValidLicense("alfred@free.fr");
 
     exit();
 
@@ -568,6 +568,10 @@ public class LicenseActivationTest extends ConnectedTestCase {
 
   private void checkUserNotRegistered() {
     license.checkUserNotRegistered();
+  }
+
+  private void checkValidLicense(String email) {
+    license.checkUserIsRegistered(email);
   }
 
   private void checkValidLicense() {

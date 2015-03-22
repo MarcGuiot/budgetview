@@ -99,6 +99,9 @@ public class LicenseInfoView extends View {
   private String getRegistrationMessage(Glob user) {
 
     if (user.isTrue(User.IS_REGISTERED_USER)) {
+      if (Strings.isNullOrEmpty(user.get(User.EMAIL))) {
+        return "";
+      }
       return Lang.get("license.activation.ok", user.get(User.EMAIL));
     }
 
