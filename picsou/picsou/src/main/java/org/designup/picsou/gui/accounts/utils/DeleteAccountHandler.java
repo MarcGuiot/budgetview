@@ -5,6 +5,7 @@ import org.designup.picsou.gui.utils.Gui;
 import org.designup.picsou.model.Series;
 import org.designup.picsou.model.Transaction;
 import org.designup.picsou.model.TransactionType;
+import org.designup.picsou.utils.Chronometer;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.splits.utils.GuiUtils;
 import org.globsframework.model.Glob;

@@ -16,27 +16,29 @@ public class ActualSeriesStatTriggerTest extends PicsouTriggerTestCase {
 
     createMonths(200807);
     listener.assertLastChangesEqual(SeriesStat.TYPE,
-                                    "<create account='-3' active='true' month='200807' overrunAmount='0.0'\n" +
-                                    "        remainingAmount='0.0' target='1' targetType='0' type='seriesStat'/>\n" +
-                                    "<create account='-3' active='true' month='200807' overrunAmount='0.0'\n" +
-                                    "        plannedAmount='150.0' remainingAmount='150.0' target='10' targetType='0' type='seriesStat'/>\n" +
-                                    "<create account='100' active='true' month='200807' overrunAmount='0.0'\n" +
-                                    "        remainingAmount='0.0' target='1' targetType='0' type='seriesStat'/>\n" +
-                                    "<create account='100' active='true' month='200807' overrunAmount='0.0'\n" +
-                                    "        plannedAmount='150.0' remainingAmount='150.0' target='10' targetType='0' type='seriesStat'/>");
+                                    "  <create account='-3' active='true' actualAmount='0.0' month='200807'\n" +
+                                    "          overrunAmount='0.0' plannedAmount='150.0' remainingAmount='150.0' target='10' targetType='0'\n" +
+                                    "          type='seriesStat'/>\n" +
+                                    "  <create account='100' active='true' actualAmount='0.0' month='200807'\n" +
+                                    "          overrunAmount='0.0' remainingAmount='0.0' target='1' targetType='0' type='seriesStat'/>\n" +
+                                    "  <create account='100' active='true' actualAmount='0.0' month='200807'\n" +
+                                    "          overrunAmount='0.0' plannedAmount='150.0' remainingAmount='150.0' target='10' targetType='0'\n" +
+                                    "          type='seriesStat'/>\n" +
+                                    "  <create account='-3' active='true' actualAmount='0.0' month='200807'\n" +
+                                    "          overrunAmount='0.0' remainingAmount='0.0' target='1' targetType='0' type='seriesStat'/>\n");
     repository.startChangeSet();
     createTransaction(10, 10, 200807, 10.0);
     createTransaction(11, 1, 200807, -20.0);
     repository.completeChangeSet();
     listener.assertLastChangesEqual(SeriesStat.TYPE,
-                                    "<update _actualAmount='(null)' _remainingAmount='150.0' account='-3' actualAmount='10.0'\n" +
-                                    "        month='200807' remainingAmount='140.0' target='10' targetType='0' type='seriesStat'/>\n" +
-                                    "<update _actualAmount='(null)' _overrunAmount='0.0' account='-3' actualAmount='-20.0'\n" +
-                                    "        month='200807' overrunAmount='-20.0' target='1' targetType='0' type='seriesStat'/>\n" +
-                                    "<create account='3' actualAmount='-20.0' month='200807' overrunAmount='0.0'\n" +
-                                    "        remainingAmount='0.0' target='1' targetType='0' type='seriesStat'/>\n" +
-                                    "<create account='3' actualAmount='10.0' month='200807' overrunAmount='0.0'\n" +
-                                    "        remainingAmount='0.0' target='10' targetType='0' type='seriesStat'/>");
+                                    "  <update _actualAmount='0.0' _overrunAmount='0.0' account='-3' actualAmount='-20.0'\n" +
+                                    "          month='200807' overrunAmount='-20.0' target='1' targetType='0' type='seriesStat'/>\n" +
+                                    "  <update _actualAmount='0.0' _remainingAmount='150.0' account='-3' actualAmount='10.0'\n" +
+                                    "          month='200807' remainingAmount='140.0' target='10' targetType='0' type='seriesStat'/>\n" +
+                                    "  <create account='3' actualAmount='10.0' month='200807' overrunAmount='0.0'\n" +
+                                    "          plannedAmount='0.0' remainingAmount='0.0' target='10' targetType='0' type='seriesStat'/>\n" +
+                                    "  <create account='3' actualAmount='-20.0' month='200807' overrunAmount='0.0'\n" +
+                                    "          plannedAmount='0.0' remainingAmount='0.0' target='1' targetType='0' type='seriesStat'/>\n");
   }
 
   public void testUnassignedTransactionSeriesAndDeleteSeries() throws Exception {
@@ -55,26 +57,28 @@ public class ActualSeriesStatTriggerTest extends PicsouTriggerTestCase {
 
     listener.assertLastChangesEqual(
       SeriesStat.TYPE,
-      "<create account='-3' active='true' actualAmount='-50.0' month='200807'\n" +
-      "        overrunAmount='-50.0' remainingAmount='0.0' target='1' targetType='0' type='seriesStat'/>\n" +
-      "<create account='3' actualAmount='-10.0' month='200807' overrunAmount='0.0'\n" +
-      "        remainingAmount='0.0' target='10' targetType='0' type='seriesStat'/>\n" +
-      "<create account='-3' active='true' actualAmount='-10.0' month='200807'\n" +
-      "        overrunAmount='0.0' plannedAmount='-100.0' remainingAmount='-90.0' target='10' targetType='0'\n" +
-      "        type='seriesStat'/>\n" +
-      "<create account='100' active='true' month='200807' overrunAmount='0.0'\n" +
-      "        remainingAmount='0.0' target='1' targetType='0' type='seriesStat'/>\n" +
-      "<create account='3' actualAmount='-20.0' month='200807' overrunAmount='0.0'\n" +
-      "        remainingAmount='0.0' target='20' targetType='0' type='seriesStat'/>\n" +
-      "<create account='100' active='true' month='200807' overrunAmount='0.0'\n" +
-      "        plannedAmount='-100.0' remainingAmount='-100.0' target='20' targetType='0' type='seriesStat'/>\n" +
-      "<create account='-3' active='true' actualAmount='-20.0' month='200807'\n" +
-      "        overrunAmount='0.0' plannedAmount='-100.0' remainingAmount='-80.0' target='20' targetType='0'\n" +
-      "        type='seriesStat'/>\n" +
-      "<create account='3' actualAmount='-50.0' month='200807' overrunAmount='0.0'\n" +
-      "        remainingAmount='0.0' target='1' targetType='0' type='seriesStat'/>\n" +
-      "<create account='100' active='true' month='200807' overrunAmount='0.0'\n" +
-      "        plannedAmount='-100.0' remainingAmount='-100.0' target='10' targetType='0' type='seriesStat'/>");
+      "  <create account='-3' active='true' actualAmount='-10.0' month='200807'\n" +
+      "          overrunAmount='0.0' plannedAmount='-100.0' remainingAmount='-90.0' target='10' targetType='0'\n" +
+      "          type='seriesStat'/>\n" +
+      "  <create account='3' actualAmount='-10.0' month='200807' overrunAmount='0.0'\n" +
+      "          plannedAmount='0.0' remainingAmount='0.0' target='10' targetType='0' type='seriesStat'/>\n" +
+      "  <create account='3' actualAmount='-50.0' month='200807' overrunAmount='0.0'\n" +
+      "          plannedAmount='0.0' remainingAmount='0.0' target='1' targetType='0' type='seriesStat'/>\n" +
+      "  <create account='-3' active='true' actualAmount='-20.0' month='200807'\n" +
+      "          overrunAmount='0.0' plannedAmount='-100.0' remainingAmount='-80.0' target='20' targetType='0'\n" +
+      "          type='seriesStat'/>\n" +
+      "  <create account='100' active='true' actualAmount='0.0' month='200807'\n" +
+      "          overrunAmount='0.0' remainingAmount='0.0' target='1' targetType='0' type='seriesStat'/>\n" +
+      "  <create account='100' active='true' actualAmount='0.0' month='200807'\n" +
+      "          overrunAmount='0.0' plannedAmount='-100.0' remainingAmount='-100.0' target='20' targetType='0'\n" +
+      "          type='seriesStat'/>\n" +
+      "  <create account='3' actualAmount='-20.0' month='200807' overrunAmount='0.0'\n" +
+      "          plannedAmount='0.0' remainingAmount='0.0' target='20' targetType='0' type='seriesStat'/>\n" +
+      "  <create account='100' active='true' actualAmount='0.0' month='200807'\n" +
+      "          overrunAmount='0.0' plannedAmount='-100.0' remainingAmount='-100.0' target='10' targetType='0'\n" +
+      "          type='seriesStat'/>\n" +
+      "  <create account='-3' active='true' actualAmount='-50.0' month='200807'\n" +
+      "          overrunAmount='-50.0' remainingAmount='0.0' target='1' targetType='0' type='seriesStat'/>\n");
 
     repository.startChangeSet();
     repository.update(Key.create(Transaction.TYPE, 2), value(Transaction.SERIES, Series.UNCATEGORIZED_SERIES_ID));
@@ -83,17 +87,18 @@ public class ActualSeriesStatTriggerTest extends PicsouTriggerTestCase {
     repository.completeChangeSet();
 
     listener.assertLastChangesEqual(SeriesStat.TYPE,
-                                    "<delete _actualAmount='-20.0' _overrunAmount='0.0' _remainingAmount='0.0' account='3'\n" +
-                                    "        month='200807' target='20' targetType='0' type='seriesStat'/>\n" +
-                                    "<delete _active='true' _overrunAmount='0.0' _plannedAmount='-100.0' _remainingAmount='-100.0'\n" +
-                                    "          account='100' month='200807' target='20' targetType='0' type='seriesStat'/>\n" +
-                                    "<delete _active='true' _actualAmount='-20.0' _overrunAmount='0.0' _plannedAmount='-100.0'\n" +
+                                    " <delete _actualAmount='-20.0' _overrunAmount='0.0' _plannedAmount='0.0' _remainingAmount='0.0'\n" +
+                                    "          account='3' month='200807' target='20' targetType='0' type='seriesStat'/>\n" +
+                                    "  <delete _active='true' _actualAmount='0.0' _overrunAmount='0.0' _plannedAmount='-100.0'\n" +
+                                    "          _remainingAmount='-100.0' account='100' month='200807' target='20' targetType='0'\n" +
+                                    "          type='seriesStat'/>\n" +
+                                    "  <delete _active='true' _actualAmount='-20.0' _overrunAmount='0.0' _plannedAmount='-100.0'\n" +
                                     "          _remainingAmount='-80.0' account='-3' month='200807' target='20' targetType='0'\n" +
                                     "          type='seriesStat'/>\n" +
-                                    "<update _actualAmount='-50.0' account='3' actualAmount='-60.0' month='200807'\n" +
-                                    "          target='1' targetType='0' type='seriesStat'/>\n" +
-                                    "<update _actualAmount='-50.0' _overrunAmount='-50.0' account='-3' actualAmount='-60.0'\n" +
-                                    "          month='200807' overrunAmount='-60.0' target='1' targetType='0' type='seriesStat'/>");
+                                    "  <update _actualAmount='-50.0' _overrunAmount='-50.0' account='-3' actualAmount='-60.0'\n" +
+                                    "          month='200807' overrunAmount='-60.0' target='1' targetType='0' type='seriesStat'/>\n" +
+                                    "  <update _actualAmount='-50.0' account='3' actualAmount='-60.0' month='200807'\n" +
+                                    "          target='1' targetType='0' type='seriesStat'/>\n");
   }
 
   public void testTransactionChangeAmount() throws Exception {
@@ -119,13 +124,13 @@ public class ActualSeriesStatTriggerTest extends PicsouTriggerTestCase {
     repository.completeChangeSet();
     listener.assertLastChangesEqual(SeriesStat.TYPE,
                                     "<update _actualAmount='10.0' _remainingAmount='140.0' account='-3' actualAmount='(null)'\n" +
-                                    "        month='200807' remainingAmount='150.0' target='10' targetType='0' type='seriesStat'/>\n" +
-                                    "<update _actualAmount='10.0' account='3' actualAmount='(null)' month='200807'\n" +
-                                    "        target='10' targetType='0' type='seriesStat'/>\n" +
-                                    "<update _actualAmount='(null)' _remainingAmount='50.0' account='-3' actualAmount='5.0'\n" +
-                                    "        month='200807' remainingAmount='45.0' target='20' targetType='0' type='seriesStat'/>\n" +
-                                    "<create account='3' actualAmount='5.0' month='200807' overrunAmount='0.0'\n" +
-                                    "        remainingAmount='0.0' target='20' targetType='0' type='seriesStat'/>");
+                                    "          month='200807' remainingAmount='150.0' target='10' targetType='0' type='seriesStat'/>\n" +
+                                    "  <update _actualAmount='10.0' account='3' actualAmount='(null)' month='200807'\n" +
+                                    "          target='10' targetType='0' type='seriesStat'/>\n" +
+                                    "  <update _actualAmount='0.0' _remainingAmount='50.0' account='-3' actualAmount='5.0'\n" +
+                                    "          month='200807' remainingAmount='45.0' target='20' targetType='0' type='seriesStat'/>\n" +
+                                    "  <create account='3' actualAmount='5.0' month='200807' overrunAmount='0.0'\n" +
+                                    "          plannedAmount='0.0' remainingAmount='0.0' target='20' targetType='0' type='seriesStat'/>");
   }
 
   public void testChangingMonths() throws Exception {
@@ -175,34 +180,38 @@ public class ActualSeriesStatTriggerTest extends PicsouTriggerTestCase {
                   "");
     listener.assertLastChangesEqual(
       SeriesStat.TYPE,
-      "<create account='100' active='true' month='200807' overrunAmount='0.0'\n" +
-      "        plannedAmount='1000.0' remainingAmount='1000.0' target='20' targetType='0' type='seriesStat'/>\n" +
-      "<create account='3' actualAmount='200.0' month='200807' overrunAmount='0.0'\n" +
-      "        remainingAmount='0.0' target='30' targetType='0' type='seriesStat'/>\n" +
-      "<create account='100' active='true' month='200807' overrunAmount='0.0'\n" +
-      "        plannedAmount='-500.0' remainingAmount='-500.0' target='30' targetType='0' type='seriesStat'/>\n" +
       "<create account='-3' active='true' actualAmount='-90.0' month='200807'\n" +
-      "        overrunAmount='0.0' plannedAmount='-100.0' remainingAmount='-10.0' target='10' targetType='0'\n" +
-      "        type='seriesStat'/>\n" +
-      "<create account='-3' active='true' month='200807' overrunAmount='0.0'\n" +
-      "        remainingAmount='0.0' target='1' targetType='0' type='seriesStat'/>\n" +
-      "<create account='100' active='true' month='200807' overrunAmount='0.0'\n" +
-      "        plannedAmount='-100.0' remainingAmount='-100.0' target='10' targetType='0' type='seriesStat'/>\n" +
-      "<create account='-3' active='true' month='200807' overrunAmount='0.0'\n" +
-      "        plannedAmount='1000.0' remainingAmount='1000.0' target='20' targetType='0' type='seriesStat'/>\n" +
-      "<create account='100' active='true' month='200807' overrunAmount='0.0'\n" +
-      "        remainingAmount='0.0' target='1' targetType='0' type='seriesStat'/>\n" +
-      "<create account='3' actualAmount='-90.0' month='200807' overrunAmount='0.0'\n" +
-      "        remainingAmount='0.0' target='10' targetType='0' type='seriesStat'/>\n" +
-      "<create account='-3' active='true' actualAmount='200.0' month='200807'\n" +
-      "        overrunAmount='0.0' plannedAmount='-500.0' remainingAmount='-700.0' target='30' targetType='0'\n" +
-      "        type='seriesStat'/>");
+      "          overrunAmount='0.0' plannedAmount='-100.0' remainingAmount='-10.0' target='10' targetType='0'\n" +
+      "          type='seriesStat'/>\n" +
+      "  <create account='3' actualAmount='-90.0' month='200807' overrunAmount='0.0'\n" +
+      "          plannedAmount='0.0' remainingAmount='0.0' target='10' targetType='0' type='seriesStat'/>\n" +
+      "  <create account='-3' active='true' actualAmount='0.0' month='200807'\n" +
+      "          overrunAmount='0.0' plannedAmount='1000.0' remainingAmount='1000.0' target='20' targetType='0'\n" +
+      "          type='seriesStat'/>\n" +
+      "  <create account='-3' active='true' actualAmount='200.0' month='200807'\n" +
+      "          overrunAmount='0.0' plannedAmount='-500.0' remainingAmount='-700.0' target='30' targetType='0'\n" +
+      "          type='seriesStat'/>\n" +
+      "  <create account='3' actualAmount='200.0' month='200807' overrunAmount='0.0'\n" +
+      "          plannedAmount='0.0' remainingAmount='0.0' target='30' targetType='0' type='seriesStat'/>\n" +
+      "  <create account='100' active='true' actualAmount='0.0' month='200807'\n" +
+      "          overrunAmount='0.0' remainingAmount='0.0' target='1' targetType='0' type='seriesStat'/>\n" +
+      "  <create account='100' active='true' actualAmount='0.0' month='200807'\n" +
+      "          overrunAmount='0.0' plannedAmount='1000.0' remainingAmount='1000.0' target='20' targetType='0'\n" +
+      "          type='seriesStat'/>\n" +
+      "  <create account='100' active='true' actualAmount='0.0' month='200807'\n" +
+      "          overrunAmount='0.0' plannedAmount='-500.0' remainingAmount='-500.0' target='30' targetType='0'\n" +
+      "          type='seriesStat'/>\n" +
+      "  <create account='100' active='true' actualAmount='0.0' month='200807'\n" +
+      "          overrunAmount='0.0' plannedAmount='-100.0' remainingAmount='-100.0' target='10' targetType='0'\n" +
+      "          type='seriesStat'/>\n" +
+      "  <create account='-3' active='true' actualAmount='0.0' month='200807'\n" +
+      "          overrunAmount='0.0' remainingAmount='0.0' target='1' targetType='0' type='seriesStat'/>");
     createTransaction(10, 20, 200807, 750.00);
     listener.assertLastChangesEqual(SeriesStat.TYPE,
-                                    "<update _actualAmount='(null)' _remainingAmount='1000.0' account='-3' actualAmount='750.0'\n" +
-                                    "        month='200807' remainingAmount='250.0' target='20' targetType='0' type='seriesStat'/>\n" +
-                                    "<create account='3' actualAmount='750.0' month='200807' overrunAmount='0.0'\n" +
-                                    "        remainingAmount='0.0' target='20' targetType='0' type='seriesStat'/>");
+                                    "  <update _actualAmount='0.0' _remainingAmount='1000.0' account='-3' actualAmount='750.0'\n" +
+                                    "          month='200807' remainingAmount='250.0' target='20' targetType='0' type='seriesStat'/>\n" +
+                                    "  <create account='3' actualAmount='750.0' month='200807' overrunAmount='0.0'\n" +
+                                    "          plannedAmount='0.0' remainingAmount='0.0' target='20' targetType='0' type='seriesStat'/>\n");
   }
 
   private void updateTransactionSeries(int transactionId, int seriesId) {
