@@ -1,10 +1,12 @@
 package org.designup.picsou.gui.accounts.utils;
 
 import org.designup.picsou.gui.components.dialogs.ConfirmationDialog;
+import org.designup.picsou.gui.utils.Gui;
 import org.designup.picsou.model.Series;
 import org.designup.picsou.model.Transaction;
 import org.designup.picsou.model.TransactionType;
 import org.designup.picsou.utils.Lang;
+import org.globsframework.gui.splits.utils.GuiUtils;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.repository.LocalGlobRepository;
@@ -45,10 +47,16 @@ public class DeleteAccountHandler {
                                                               Lang.get(getMessageKey()),
                                                               owner, localDirectory) {
       protected void processOk() {
-        localRepository.delete(currentAccount);
-        localRepository.commitChanges(false);
-        if (closeOwnerOnConfirmation) {
-          owner.setVisible(false);
+        Gui.setWaitCursor(GuiUtils.getEnclosingFrame(owner));
+        try {
+          localRepository.delete(currentAccount);
+          localRepository.commitChanges(false);
+          if (closeOwnerOnConfirmation) {
+            owner.setVisible(false);
+          }
+        }
+        finally {
+          Gui.setDefaultCursor(GuiUtils.getEnclosingFrame(owner));
         }
       }
     };
