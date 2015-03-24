@@ -27,7 +27,7 @@
                   tooltipText="$projectView.create.tooltip"/>
         </row>
         <panel ref="projectChartPanel"
-               marginTop="5" weightY="8" preferredSize="(200,100)" background="sidebar.bg"/>
+               marginTop="5" weightY="8" preferredSize="(200,150)" background="sidebar.bg"/>
 
         <panel ref="mainAccountsPanel"/>
 
