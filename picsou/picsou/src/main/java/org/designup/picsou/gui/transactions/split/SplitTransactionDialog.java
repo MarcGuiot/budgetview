@@ -258,6 +258,7 @@ public class SplitTransactionDialog {
     return localRepository.create(
       Transaction.TYPE,
       value(Transaction.ACCOUNT, sourceTransaction.get(Transaction.ACCOUNT)),
+      value(Transaction.ORIGINAL_ACCOUNT, sourceTransaction.get(Transaction.ORIGINAL_ACCOUNT)),
       value(Transaction.IMPORT, sourceTransaction.get(Transaction.IMPORT)),
       value(Transaction.LABEL, sourceTransaction.get(Transaction.LABEL)),
       value(Transaction.ORIGINAL_LABEL, sourceTransaction.get(Transaction.ORIGINAL_LABEL)),
