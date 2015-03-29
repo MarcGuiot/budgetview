@@ -1,13 +1,9 @@
 package org.designup.picsou.triggers;
 
-import org.designup.picsou.model.Account;
-import org.designup.picsou.model.AccountCardType;
-import org.designup.picsou.model.BudgetArea;
-import org.designup.picsou.model.Series;
+import org.designup.picsou.model.*;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.*;
 import org.globsframework.model.utils.GlobFunctor;
-import org.globsframework.model.utils.GlobMatchers;
 
 import java.util.Set;
 
@@ -16,6 +12,37 @@ import static org.globsframework.model.utils.GlobMatchers.*;
 
 public class DeferredAccountTrigger implements ChangeSetListener {
   public void globsChanged(ChangeSet changeSet, final GlobRepository repository) {
+    if (changeSet.containsChanges(Transaction.TYPE)) {
+      changeSet.safeVisit(Transaction.TYPE, new ChangeSetVisitor() {
+        public void visitCreation(Key key, FieldValues values) throws Exception {
+
+        }
+
+        // Lors de la categorisation de l'operation de prelevement,
+        // on verifie si le deferredTargetAccount du compte a debit differe est a jour
+        // sinon on le met a jour. il faut faire ca dans ce trigger car derriere on
+        // prend au compte ce changement pour
+        public void visitUpdate(Key key, FieldValuesWithPrevious values) throws Exception {
+          if (values.contains(Transaction.SERIES)) {
+            Integer seriesId = values.get(Transaction.SERIES);
+            Glob series = repository.get(Key.create(Series.TYPE, seriesId));
+            if (series.get(Series.BUDGET_AREA).equals(BudgetArea.OTHER.getId())
+                && series.get(Series.FROM_ACCOUNT) != null) {
+              Glob target = repository.findLinkTarget(series, Series.FROM_ACCOUNT);
+              if (target != null && target.get(Account.DEFERRED_TARGET_ACCOUNT) == null) {
+                Glob transaction = repository.get(key);
+                repository.update(target, Account.DEFERRED_TARGET_ACCOUNT, transaction.get(Transaction.ACCOUNT));
+              }
+            }
+          }
+        }
+
+        public void visitDeletion(Key key, FieldValues previousValues) throws Exception {
+
+        }
+      });
+    }
+
     if (changeSet.containsChanges(Account.TYPE)) {
       changeSet.safeVisit(Account.TYPE, new ChangeSetVisitor() {
         public void visitCreation(Key key, FieldValues values) throws Exception {
@@ -45,6 +72,7 @@ public class DeferredAccountTrigger implements ChangeSetListener {
           else if (values.getPrevious(Account.CARD_TYPE).equals(AccountCardType.DEFERRED.getId())) {
             deleteDeferredSeries(key, repository);
           }
+
         }
 
         public void visitDeletion(Key key, FieldValues previousValues) throws Exception {

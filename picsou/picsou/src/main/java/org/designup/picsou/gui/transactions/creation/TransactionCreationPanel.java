@@ -305,6 +305,7 @@ public class TransactionCreationPanel extends View implements GlobSelectionListe
         .set(Transaction.ORIGINAL_LABEL, upperCaseLabel)
         .set(Transaction.LABEL_FOR_CATEGORISATION, Transaction.anonymise(upperCaseLabel))
         .set(Transaction.TRANSACTION_TYPE, TransactionType.MANUAL.getId())
+        .set(Transaction.ORIGINAL_ACCOUNT, accountId)
         .get();
 
       Glob createdTransaction;

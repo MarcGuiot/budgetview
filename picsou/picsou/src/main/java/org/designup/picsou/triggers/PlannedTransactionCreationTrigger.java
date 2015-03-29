@@ -576,6 +576,7 @@ public class PlannedTransactionCreationTrigger implements ChangeSetListener {
     Integer seriesId = series.get(Series.ID);
     repository.create(Transaction.TYPE,
                       value(Transaction.ACCOUNT, accountId),
+                      value(Transaction.ORIGINAL_ACCOUNT, accountId),
                       value(Transaction.AMOUNT, amount),
                       value(Transaction.SERIES, seriesId),
                       value(Transaction.BANK_MONTH, monthId),

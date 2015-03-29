@@ -22,6 +22,12 @@ public class DeferredOperationTrigger extends DefaultChangeSetListener {
         Integer accountId = values.get(Transaction.ACCOUNT);
         if (deferredAccount.contains(accountId)) {
           shiftTransaction(key, values, accountId, repository);
+          Key accountKey = Key.create(Account.TYPE, accountId);
+          Glob account = repository.get(accountKey);
+          Integer mainAccountId = account.get(Account.DEFERRED_TARGET_ACCOUNT);
+          if (account.get(Account.CARD_TYPE).equals(AccountCardType.DEFERRED.getId()) && mainAccountId != null) {
+            repository.update(key, Transaction.ACCOUNT, mainAccountId);
+          }
         }
       }
 
@@ -75,7 +81,16 @@ public class DeferredOperationTrigger extends DefaultChangeSetListener {
       }
 
       public void visitUpdate(final Key key, final FieldValuesWithPrevious values) throws Exception {
-        if (values.contains(Account.DEFERRED_DAY) || values.contains(Account.DEFERRED_MONTH_SHIFT)){
+        if (values.contains(Account.DEFERRED_TARGET_ACCOUNT)) {
+          Integer newTargetAccount = values.get(Account.DEFERRED_TARGET_ACCOUNT);
+          if (newTargetAccount != null) {
+            GlobList all = repository.getAll(Transaction.TYPE, GlobMatchers.fieldEquals(Transaction.ORIGINAL_ACCOUNT, key.get(Account.ID)));
+            for (Glob glob : all) {
+              repository.update(glob.getKey(), Transaction.ACCOUNT, newTargetAccount);
+            }
+          }
+        }
+        if (values.contains(Account.DEFERRED_DAY) || values.contains(Account.DEFERRED_MONTH_SHIFT)) {
           if (AccountCardType.DEFERRED.getId().equals(repository.get(key).get(Account.CARD_TYPE))) {
             repository.safeApply(Transaction.TYPE, fieldEquals(Transaction.ACCOUNT, key.get(Account.ID)),
                                  new GlobFunctor() {

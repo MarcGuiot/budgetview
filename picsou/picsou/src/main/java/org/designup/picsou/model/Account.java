@@ -11,6 +11,7 @@ import org.globsframework.metamodel.annotations.Key;
 import org.globsframework.metamodel.fields.*;
 import org.globsframework.metamodel.utils.GlobTypeLoader;
 import org.globsframework.model.*;
+import org.globsframework.model.repository.LocalGlobRepository;
 import org.globsframework.model.utils.GlobMatcher;
 import org.globsframework.utils.collections.Pair;
 import org.globsframework.utils.exceptions.ItemNotFound;
@@ -21,6 +22,7 @@ import org.globsframework.utils.serialization.SerializedOutput;
 
 import java.util.Date;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Set;
 
 import static org.globsframework.model.FieldValue.value;
@@ -330,6 +332,20 @@ public class Account {
                            value(Series.TARGET_ACCOUNT, mirrorTarget),
                            value(Series.FROM_ACCOUNT, to),
                            value(Series.TO_ACCOUNT, from));
+  }
+
+  public static boolean isNotDeferred(Glob account) {
+    return !AccountCardType.DEFERRED.getId().equals(account.get(Account.CARD_TYPE));
+  }
+
+  public static void filterOutDeferred(Set<Integer> accountIds, GlobRepository repository) {
+    for (Iterator<Integer> iterator = accountIds.iterator(); iterator.hasNext(); ) {
+      Integer accountId = iterator.next();
+      if (repository.get(KeyBuilder.newKey(Account.TYPE, accountId))
+        .get(Account.CARD_TYPE).equals(AccountCardType.DEFERRED.getId())){
+        iterator.remove();
+      }
+    }
   }
 
   public static class Serializer implements PicsouGlobSerializer {

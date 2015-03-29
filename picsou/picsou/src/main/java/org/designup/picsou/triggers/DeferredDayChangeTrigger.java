@@ -1,13 +1,13 @@
 package org.designup.picsou.triggers;
 
-import org.designup.picsou.model.Account;
 import org.designup.picsou.model.DeferredCardDate;
-import org.designup.picsou.model.Month;
 import org.designup.picsou.model.Transaction;
 import org.globsframework.model.*;
 import org.globsframework.model.utils.DefaultChangeSetListener;
 import org.globsframework.model.utils.GlobFunctor;
-import static org.globsframework.model.utils.GlobMatchers.*;
+
+import static org.globsframework.model.utils.GlobMatchers.and;
+import static org.globsframework.model.utils.GlobMatchers.fieldEquals;
 
 public class DeferredDayChangeTrigger extends DefaultChangeSetListener {
   public void globsChanged(ChangeSet changeSet, final GlobRepository repository) {
@@ -27,7 +27,6 @@ public class DeferredDayChangeTrigger extends DefaultChangeSetListener {
         }
       });
     }
-
   }
 
   private void updateTransaction(Key key, FieldValues values, GlobRepository repository) {
@@ -35,13 +34,14 @@ public class DeferredDayChangeTrigger extends DefaultChangeSetListener {
     final Integer monthId = values.get(DeferredCardDate.MONTH);
     repository.safeApply(Transaction.TYPE,
                          and(
-                           fieldEquals(Transaction.ACCOUNT, values.get(DeferredCardDate.ACCOUNT)),
+                           fieldEquals(Transaction.ORIGINAL_ACCOUNT, values.get(DeferredCardDate.ACCOUNT)),
                            fieldEquals(Transaction.POSITION_MONTH, monthId)),
                          new GlobFunctor() {
                            public void run(Glob glob, GlobRepository repository) throws Exception {
-                               repository.update(glob.getKey(),
-                                                 FieldValue.value(Transaction.POSITION_DAY, day),
-                                                 FieldValue.value(Transaction.BUDGET_DAY, day)); }
+                             repository.update(glob.getKey(),
+                                               FieldValue.value(Transaction.POSITION_DAY, day),
+                                               FieldValue.value(Transaction.BUDGET_DAY, day));
+                           }
                          });
   }
 }

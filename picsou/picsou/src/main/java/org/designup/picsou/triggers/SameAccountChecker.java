@@ -28,7 +28,8 @@ public class SameAccountChecker {
     GlobList accounts = repository.getAll(Account.TYPE);
     for (Glob account : accounts) {
       if (accountType.equals(account.get(Account.ACCOUNT_TYPE)) &&
-          account.get(Account.ID) != Account.EXTERNAL_ACCOUNT_ID) {
+          account.get(Account.ID) != Account.EXTERNAL_ACCOUNT_ID &&
+          Account.isNotDeferred(account)) {
         this.accounts.add(account.get(Account.ID));
       }
     }

@@ -133,6 +133,7 @@ public class OfxBuilder {
                         value(LABEL, label),
                         value(ORIGINAL_LABEL, label),
                         value(ACCOUNT, currentAccount.get(Account.ID)),
+                        value(ORIGINAL_ACCOUNT, currentAccount.get(Account.ID)),
                         value(NOTE, note));
     if (parentId != null) {
       repository.update(transaction.getKey(), Transaction.SPLIT_SOURCE, parentId);

@@ -78,6 +78,7 @@ public class DataCheckingService {
 
   public boolean doCheck(DataCheckReport report) {
 
+    report.append("Current date " + TimeService.getCurrentDate());
     ExtractMonthFromTransaction extractMonthFromTransaction = new ExtractMonthFromTransaction();
     repository.safeApply(Transaction.TYPE, GlobMatchers.ALL, extractMonthFromTransaction);
 
