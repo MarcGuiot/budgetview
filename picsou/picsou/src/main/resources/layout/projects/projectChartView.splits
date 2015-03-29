@@ -9,21 +9,17 @@
 
   <cards ref="projectChartCards">
     <card name="chart">
-      <component ref="projectChart" background="sidebar.bg" opaque="true" />
+      <component ref="projectChart" background="sidebar.bg" opaque="true"/>
     </card>
     <card name="creation">
       <column>
-        <row marginTop="5" marginLeft="50" opaque="true" background="content.bg"  >
-          <filler fill="horizontal"/>
-          <column>
-            <filler fill="vertical"/>
-            <label text="$projectView.creation.text" foreground="projectView.create"/>
-            <button action="createFirstProject" styleClass="smallButton" margin="15" font="-,bold,12" />
-            <button action="openProjectGuide" styleClass="hyperlink" font="-,plain,11"/>
-            <filler fill="vertical"/>
-          </column>
-          <filler fill="horizontal"/>
-        </row>
+        <column marginTop="5" marginLeft="50" opaque="true" background="content.bg">
+          <filler fill="vertical"/>
+          <label text="$projectView.creation.text" foreground="projectView.create" anchor="center" fill="none"/>
+          <button action="createFirstProject" styleClass="smallButton" margin="15" font="-,bold,12" anchor="center"/>
+          <button action="openProjectGuide" styleClass="hyperlink" font="-,plain,11" anchor="center"/>
+          <filler fill="vertical"/>
+        </column>
       </column>
     </card>
   </cards>

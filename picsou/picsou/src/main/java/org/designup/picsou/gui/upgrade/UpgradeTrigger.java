@@ -143,6 +143,7 @@ public class UpgradeTrigger implements ChangeSetListener {
 
     // Dans tous les cas :
 
+    SeriesErrorsUpgrade.fixInvalidTransfers(repository);
     SeriesErrorsUpgrade.fixMissingGroups(repository);
 
     repository.findOrCreate(AddOns.KEY);

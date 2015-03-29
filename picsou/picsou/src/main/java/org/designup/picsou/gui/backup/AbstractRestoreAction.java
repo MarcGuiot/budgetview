@@ -6,6 +6,7 @@ import org.designup.picsou.gui.undo.UndoRedoService;
 import org.designup.picsou.gui.utils.Gui;
 import org.designup.picsou.model.CurrentMonth;
 import org.designup.picsou.model.Month;
+import org.designup.picsou.utils.Chronometer;
 import org.globsframework.gui.SelectionService;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;

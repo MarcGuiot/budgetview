@@ -1,13 +1,12 @@
 package org.designup.picsou.gui.series.utils;
 
-import org.designup.picsou.model.Project;
-import org.designup.picsou.model.ProjectItem;
-import org.designup.picsou.model.Series;
-import org.designup.picsou.model.SeriesGroup;
+import org.designup.picsou.model.*;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.Key;
+
+import static org.globsframework.model.utils.GlobMatchers.linkedTo;
 
 public class SeriesErrorsUpgrade {
   public static void fixMissingGroups(GlobRepository repository) {
@@ -33,6 +32,14 @@ public class SeriesErrorsUpgrade {
       }
       else {
         repository.update(series.getKey(), Series.GROUP, null);
+      }
+    }
+  }
+
+  public static void fixInvalidTransfers(GlobRepository repository) {
+    for (Glob series : repository.getAll(Series.TYPE, linkedTo(BudgetArea.TRANSFER.getKey(), Series.BUDGET_AREA))) {
+      if (series.exists() && !Series.isValid(series)) {
+        Series.delete(series, repository);
       }
     }
   }

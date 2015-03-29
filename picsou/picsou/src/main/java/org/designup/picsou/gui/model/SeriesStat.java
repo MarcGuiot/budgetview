@@ -45,8 +45,10 @@ public class SeriesStat {
   @Target(Month.class)
   public static LinkField MONTH;
 
+  @DefaultDouble(0.0)
   public static DoubleField ACTUAL_AMOUNT;
 
+  @DefaultDouble(0.0)
   public static DoubleField PLANNED_AMOUNT;
 
   @DefaultDouble(0.0)
@@ -243,6 +245,18 @@ public class SeriesStat {
                                        fieldIn(SeriesStat.MONTH, selectedMonths)));
   }
 
+
+  public static GlobList getAllSummaryMonthsForSeries(Glob series, GlobRepository repository) {
+    return getAllSummaryMonths(series.get(Series.ID), SeriesType.SERIES, repository);
+  }
+
+  public static GlobList getAllSummaryMonths(Integer targetId, SeriesType type, GlobRepository repository) {
+    return  repository.findByIndex(SeriesStat.SERIES_INDEX, targetId)
+      .filterSelf(and(fieldEquals(SeriesStat.ACCOUNT, Account.ALL_SUMMARY_ACCOUNT_ID),
+                      fieldEquals(SeriesStat.TARGET_TYPE, type.getId())),
+                  repository);
+  }
+
   public static GlobMatcher isSummaryForBudgetArea(final BudgetArea budgetArea) {
     return new GlobMatcher() {
       public boolean matches(Glob seriesStat, GlobRepository repository) {
@@ -286,29 +300,15 @@ public class SeriesStat {
   }
 
   public static void deleteAllForSeries(Glob series, GlobRepository repository) {
-    repository.delete(SeriesStat.TYPE,
-                      and(fieldEquals(SeriesStat.TARGET_TYPE, SeriesType.SERIES.getId()),
-                          fieldEquals(SeriesStat.TARGET, series.get(Series.ID))));
+    repository.delete(
+      repository.findByIndex(SeriesStat.SERIES_INDEX, series.get(Series.ID))
+        .filterSelf(fieldEquals(SeriesStat.TARGET_TYPE, SeriesType.SERIES.getId()), repository));
   }
 
   public static void deleteAllForSeriesAndMonth(Integer seriesId, Integer monthId, GlobRepository repository) {
-    repository.delete(SeriesStat.TYPE,
-                      and(fieldEquals(SeriesStat.TARGET_TYPE, SeriesType.SERIES.getId()),
-                          fieldEquals(SeriesStat.TARGET, seriesId),
-                          fieldEquals(SeriesStat.MONTH, monthId)));
-  }
-
-  public static GlobList getAllSummaryMonthsForSeries(Glob series, GlobRepository repository) {
-    return repository.getAll(SeriesStat.TYPE,
-                             and(fieldEquals(SeriesStat.ACCOUNT, Account.ALL_SUMMARY_ACCOUNT_ID),
-                                 fieldEquals(SeriesStat.TARGET_TYPE, SeriesType.SERIES.getId()),
-                                 fieldEquals(SeriesStat.TARGET, series.get(Series.ID))));
-  }
-
-  public static GlobList getAllSummaryMonths(Integer targetId, SeriesType type, GlobRepository repository) {
-    return repository.getAll(SeriesStat.TYPE,
-                             and(fieldEquals(SeriesStat.ACCOUNT, Account.ALL_SUMMARY_ACCOUNT_ID),
-                                 fieldEquals(SeriesStat.TARGET_TYPE, type.getId()),
-                                 fieldEquals(SeriesStat.TARGET, targetId)));
+    repository.delete(
+      repository.findByIndex(SeriesStat.SERIES_INDEX, seriesId)
+        .filterSelf(and(fieldEquals(SeriesStat.TARGET_TYPE, SeriesType.SERIES.getId()),
+                        fieldEquals(SeriesStat.MONTH, monthId)), repository));
   }
 }

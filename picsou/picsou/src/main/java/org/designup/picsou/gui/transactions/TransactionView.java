@@ -177,18 +177,15 @@ public class TransactionView extends View implements Filterable {
   }
 
   public void setTransactionsFilter(GlobList transactions) {
-    String label = transactions.size() == 1 ? Lang.get("filter.transaction.one") : Lang.get("filter.transaction.several", transactions.size());
-    filterManager.set(TransactionSelection.SERIES_FILTER, label, fieldIn(Transaction.ID, transactions.getValueSet(Transaction.ID)));
+    transactionSelection.setTransactionsFilter(transactions);
   }
 
   public void setSeriesFilter(Glob series) {
-    String label = Lang.get("filter.series.single", series.get(Series.NAME));
-    filterManager.set(TransactionSelection.SERIES_FILTER, label, TransactionMatchers.transactionsForSeries(series.get(Series.ID)));
+    transactionSelection.setSeriesFilter(series);
   }
 
   public void setSeriesFilter(Set<Integer> seriesIds) {
-    String label = seriesIds.size() == 1 ? Lang.get("filter.series.one") : Lang.get("filter.series.several", seriesIds.size());
-    filterManager.set(TransactionSelection.SERIES_FILTER, label, TransactionMatchers.transactionsForSeries(seriesIds));
+    transactionSelection.setSeriesFilter(seriesIds);
   }
 
   private void addShowPlannedTransactionsCheckbox() {

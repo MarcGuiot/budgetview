@@ -55,6 +55,7 @@ public class PicsouModel {
                           SeriesGroup.TYPE,
                           AnalysisViewType.TYPE,
                           StandardMessage.TYPE,
+                          User.TYPE,
                           AddOns.TYPE,
                           ProjectAccountGraph.TYPE
     )

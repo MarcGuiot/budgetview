@@ -2,6 +2,7 @@ package org.designup.picsou.functests.budget;
 
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
+import org.designup.picsou.model.TransactionType;
 
 public class BudgetViewFilteringTest extends LoggedInFunctionalTestCase {
 
@@ -188,5 +189,64 @@ public class BudgetViewFilteringTest extends LoggedInFunctionalTestCase {
     mainAccounts.unselect("Account n. 000333");
     budgetView.variable.checkContent("| Food     | 270.00 | 450.00 |\n" +
                                      "| Leisures | 400.00 | 200.00 |");
+  }
+
+  public void testFilteringRemovedWhenEnvelopeIsDeleted() throws Exception {
+    addOns.activateGroups();
+
+    OfxBuilder
+      .init(this)
+      .addBankAccount(-1, 10674, "000111", 1000.00, "2008/07/10")
+      .addTransaction("2008/07/05", 1000.00, "WorldCo")
+      .addTransaction("2008/07/10", -100.00, "FNAC")
+      .load();
+
+    OfxBuilder
+      .init(this)
+      .addBankAccount(-1, 10674, "000222", -2000.00, "2008/07/20")
+      .addTransaction("2008/07/15", -200.00, "Auchan")
+      .addTransaction("2008/07/20", -300.00, "Darty")
+      .load();
+
+    OfxBuilder
+      .init(this)
+      .addBankAccount(-1, 10674, "000333", 3000.00, "2008/07/30")
+      .addTransaction("2008/07/25", -30.00, "Total")
+      .addTransaction("2008/07/20", -20.00, "McDo")
+      .addTransaction("2008/07/15", -50.00, "Carrefour")
+      .load();
+
+    categorization.setNewIncome("WorldCo", "Salary", "Account n. 000111");
+    categorization.setNewVariable("Auchan", "Groceries", -400.00);
+    categorization.setVariable("Carrefour", "Groceries");
+    budgetView.variable.addToNewGroup("Groceries", "Food");
+    categorization.setNewVariable("McDo", "Restaurant", -50.00);
+    budgetView.variable.addToGroup("Restaurant", "Food");
+    categorization.setNewVariable("FNAC", "Leisures", -200.00);
+    categorization.setVariable("Darty", "Leisures");
+
+    budgetView.variable.gotoData("Restaurant");
+    transactions.checkFilterMessage("Envelope: Restaurant");
+    transactions.initContent()
+      .add("20/07/2008", TransactionType.PRELEVEMENT, "MCDO", "", -20.00, "Restaurant")
+      .check();
+
+    budgetView.variable.openDeleteSeries("Leisures").uncategorize();
+    transactions.checkFilterMessage("Envelope: Restaurant");
+    transactions.initContent()
+      .add("20/07/2008", TransactionType.PRELEVEMENT, "MCDO", "", -20.00, "Restaurant")
+      .check();
+
+    budgetView.variable.openDeleteSeries("Restaurant").uncategorize();
+    transactions.checkNoFilterMessageShown();
+    transactions.initContent()
+      .add("25/07/2008", TransactionType.PRELEVEMENT, "TOTAL", "", -30.00)
+      .add("20/07/2008", TransactionType.PRELEVEMENT, "MCDO", "", -20.00)
+      .add("20/07/2008", TransactionType.PRELEVEMENT, "DARTY", "", -300.00)
+      .add("15/07/2008", TransactionType.PRELEVEMENT, "CARREFOUR", "", -50.00, "Groceries")
+      .add("15/07/2008", TransactionType.PRELEVEMENT, "AUCHAN", "", -200.00, "Groceries")
+      .add("10/07/2008", TransactionType.PRELEVEMENT, "FNAC", "", -100.00)
+      .add("05/07/2008", TransactionType.VIREMENT, "WORLDCO", "", 1000.00, "Salary")
+      .check();
   }
 }

@@ -175,6 +175,7 @@
         <plugins>
           <plugin>
             <artifactId>maven-jar-plugin</artifactId>
+            <version>2.6</version>
             <executions>
               <execution>
                 <configuration>
@@ -216,6 +217,7 @@
         <plugins>
           <plugin>
             <artifactId>maven-jar-plugin</artifactId>
+            <version>2.6</version>
             <executions>
               <execution>
                 <configuration>

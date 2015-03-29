@@ -60,11 +60,18 @@ public class LicenseChecker extends ViewChecker {
   }
 
   public LicenseChecker checkUserIsRegistered() {
+    return checkUserIsRegistered(null);
+  }
+
+  public LicenseChecker checkUserIsRegistered(String email) {
     AddOnsChecker addons = new AddOnsChecker(mainWindow);
     addons.checkRegistered();
     OperationChecker operations = new OperationChecker(mainWindow);
     operations.hideSignposts();
-    assertThat(getInfoMessageTextBox().textContains("You are registered"));
+    if (email != null) {
+      assertThat(getInfoMessageTextBox().textContains("You are registered"));
+      assertThat(getInfoMessageTextBox().textContains(email));
+    }
     return this;
   }
 

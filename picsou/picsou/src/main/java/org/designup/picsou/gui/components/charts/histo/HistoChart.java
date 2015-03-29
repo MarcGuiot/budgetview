@@ -125,7 +125,7 @@ public class HistoChart extends JPanel implements Disposable {
 
     if (isOpaque()) {
       g2.setColor(getBackground());
-      g2.fillRect(0, 0, panelWidth, panelHeight);
+      g2.fillRect(0, 0, panelWidth, getHeight());
     }
 
     HistoDataset dataset = painter.getDataset();

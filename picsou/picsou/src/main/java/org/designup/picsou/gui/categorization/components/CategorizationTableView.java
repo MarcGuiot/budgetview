@@ -126,14 +126,20 @@ public class CategorizationTableView extends View implements TableView, Filterab
 
     repository.addChangeListener(new DefaultChangeSetListener() {
       public void globsChanged(ChangeSet changeSet, GlobRepository repository) {
-        if (changeSet.containsChanges(Transaction.TYPE) &&
-            (changeSet.containsUpdates(Transaction.SERIES) ||
-             changeSet.containsUpdates(Transaction.RECONCILIATION_ANNOTATION_SET))) {
+        if (changeSet.containsUpdates(Transaction.SERIES) ||
+            changeSet.containsUpdates(Transaction.RECONCILIATION_ANNOTATION_SET)) {
           categorizedTransactions.clear();
           categorizedTransactions.addAll(changeSet.getUpdated(Transaction.SERIES));
           reconciledTransactions.clear();
           reconciledTransactions.addAll(changeSet.getUpdated(Transaction.RECONCILIATION_ANNOTATION_SET));
           updateTableFilter();
+        }
+      }
+
+      public void globsReset(GlobRepository repository, Set<GlobType> changedTypes) {
+        if (changedTypes.contains(Transaction.TYPE)) {
+          categorizedTransactions.clear();
+          reconciledTransactions.clear();
         }
       }
     });
@@ -384,6 +390,7 @@ public class CategorizationTableView extends View implements TableView, Filterab
       }
       else {
         label.setFont(originalFont);
+        label.setForeground(colors.getTransactionTextColor());
       }
     }
   }

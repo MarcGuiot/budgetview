@@ -1,0 +1,23 @@
+1. Télécharger les certificats apple et les ajouter dans Keychain
+
+    https://developer.apple.com/account/mac/certificate/certificateList.action
+
+
+2. Sur le site apple, créer un nouveau certificat (bouton "+") de type "Developer ID" appelé "BudgetView"
+
+3. Créer un Certificate Signing Request comme indiqué, avec comme nom "BudgetView", puis l'uploader sur le site d'apple.
+
+4. Telecharger le certificat dans la KeyChain "login"
+
+--
+
+Pour vérifier la liste des certificats disponibles :
+
+  security find-identity -p codesigning ~/Library/Keychains/login.keychain
+
+
+
+
+  
+
+    

@@ -16,6 +16,7 @@ import org.designup.picsou.model.Transaction;
 import org.designup.picsou.model.User;
 import org.designup.picsou.server.model.SerializableGlobType;
 import org.designup.picsou.server.persistence.direct.ReadOnlyAccountDataManager;
+import org.designup.picsou.triggers.AddOnTrigger;
 import org.globsframework.metamodel.GlobModel;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.fields.IntegerField;
@@ -142,6 +143,7 @@ public class BackupService {
       repository.startChangeSet();
       repository.addTriggerAtFirst(upgradeTrigger);
       repository.reset(userData, PicsouGuiModel.getUserSpecificTypes());
+      AddOnTrigger.alignWithUser(repository);
     }
     finally {
       repository.completeChangeSet();
