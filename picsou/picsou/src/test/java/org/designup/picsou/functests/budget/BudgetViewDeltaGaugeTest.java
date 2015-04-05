@@ -33,6 +33,7 @@ public class BudgetViewDeltaGaugeTest extends LoggedInFunctionalTestCase {
     categorization.setNewVariable("Auchan", "Groceries", -200.00);
     categorization.setNewExtra("FNAC", "Leisures");
     categorization.setNewVariable("Zara", "Clothes", -50.00);
+    budgetView.extras.editSeries("Leisures").setStartDate(200808).validate();
 
     timeline.selectMonth("2008/08");
     budgetView.income.checkDeltaGauge("Salary", 1000.00, 1200.00, 0.20,
