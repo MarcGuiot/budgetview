@@ -102,9 +102,6 @@ public class Transaction {
   @Target(Account.class)
   public static LinkField ORIGINAL_ACCOUNT;
 
-  @DefaultBoolean(false)
-  public static BooleanField IGNORE_IN_POS;
-
   // si == null => pas une operation importée.
   @Target(TransactionImport.class)
   public static LinkField IMPORT;
@@ -340,7 +337,6 @@ public class Transaction {
       output.writeDouble(fieldValues.get(Transaction.ACCOUNT_POSITION));
       output.writeInteger(fieldValues.get(Transaction.ACCOUNT));
       output.writeInteger(fieldValues.get(Transaction.ORIGINAL_ACCOUNT));
-      output.writeBoolean(fieldValues.get(Transaction.IGNORE_IN_POS));
       output.writeInteger(fieldValues.get(Transaction.TRANSACTION_TYPE));
       output.writeBoolean(fieldValues.get(Transaction.SPLIT));
       output.writeInteger(fieldValues.get(Transaction.SPLIT_SOURCE));
@@ -419,7 +415,6 @@ public class Transaction {
       fieldSetter.set(Transaction.ACCOUNT_POSITION, input.readDouble());
       fieldSetter.set(Transaction.ACCOUNT, input.readInteger());
       fieldSetter.set(Transaction.ORIGINAL_ACCOUNT, input.readInteger());
-      fieldSetter.set(Transaction.IGNORE_IN_POS, input.readBoolean());
       fieldSetter.set(Transaction.TRANSACTION_TYPE, input.readInteger());
       fieldSetter.set(Transaction.SPLIT, input.readBoolean());
       fieldSetter.set(Transaction.SPLIT_SOURCE, input.readInteger());

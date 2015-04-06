@@ -92,7 +92,7 @@ public class DeferredOperationTrigger extends DefaultChangeSetListener {
         }
         if (values.contains(Account.DEFERRED_DAY) || values.contains(Account.DEFERRED_MONTH_SHIFT)) {
           if (AccountCardType.DEFERRED.getId().equals(repository.get(key).get(Account.CARD_TYPE))) {
-            repository.safeApply(Transaction.TYPE, fieldEquals(Transaction.ACCOUNT, key.get(Account.ID)),
+            repository.safeApply(Transaction.TYPE, fieldEquals(Transaction.ORIGINAL_ACCOUNT, key.get(Account.ID)),
                                  new GlobFunctor() {
                                    public void run(Glob glob, GlobRepository repository) throws Exception {
                                      shiftTransaction(glob.getKey(), glob, key.get(Account.ID), repository);

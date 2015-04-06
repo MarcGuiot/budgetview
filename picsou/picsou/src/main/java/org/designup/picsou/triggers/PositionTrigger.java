@@ -61,6 +61,13 @@ public class PositionTrigger implements ChangeSetListener {
       if (accountIds.isEmpty() && deferredAccountIds.isEmpty()) {
         return;
       }
+      // si le compte a debit differe n'a pas de compte associé, on force la position du compte
+      for (Integer id : deferredAccountIds) {
+        Glob deferredAccount = repository.get(KeyBuilder.newKey(Account.TYPE, id));
+        if (deferredAccount.get(Account.DEFERRED_TARGET_ACCOUNT) == null) {
+          computeDeferredPositionForNotAssociatedAccount(repository, transactions, deferredAccount);
+        }
+      }
 
       updateDeferredAccount(repository, deferredAccountIds, transactions);
 
@@ -105,8 +112,8 @@ public class PositionTrigger implements ChangeSetListener {
       Glob lastTransaction = null;
       double total = 0;
       for (Glob glob : globs) {
-        if (glob.get(Transaction.ORIGINAL_ACCOUNT).equals(id)){
-          total+=glob.get(Transaction.AMOUNT, 0.);
+        if (glob.get(Transaction.ORIGINAL_ACCOUNT).equals(id)) {
+          total += glob.get(Transaction.AMOUNT, 0.);
           lastTransaction = glob;
         }
       }
@@ -395,33 +402,37 @@ public class PositionTrigger implements ChangeSetListener {
   }
 
 
-//  private boolean computeDeferredPosition(GlobRepository repository, Glob[] transactions, Glob account) {
-//    int transactionMonthId = 0;
-//    double amount = 0;
-//    Glob lastTransaction = null;
-//    for (Glob transaction : transactions) {
-//      lastTransaction = transaction;
-//      if (transaction.get(Transaction.POSITION_MONTH) != transactionMonthId) {
-//        amount = 0;
-//        transactionMonthId = transaction.get(Transaction.POSITION_MONTH);
-//      }
-//      amount += transaction.get(Transaction.AMOUNT, 0.);
-//      repository.update(transaction.getKey(), Transaction.ACCOUNT_POSITION, amount);
-//    }
-//
-////    repository.update(account.getKey(), Account.TRANSACTION_ID, lastUpdateTransactionId);
-////    if (lastUpdateTransactionId != null) {
-////      Glob lastTransaction = repository.get(Key.create(Transaction.TYPE, lastUpdateTransactionId));
-//    if (lastTransaction != null) {
-//      repository.update(account.getKey(),
-//                        value(Account.POSITION_DATE,
-//                              Month.toDate(lastTransaction.get(Transaction.POSITION_MONTH),
-//                                           lastTransaction.get(Transaction.POSITION_DAY))),
-//                        value(Account.POSITION_WITH_PENDING, lastTransaction.get(Transaction.ACCOUNT_POSITION)));
-//    }
-//
-//    return true;
-//  }
+  private boolean computeDeferredPositionForNotAssociatedAccount(GlobRepository repository, Glob[] transactions, Glob account) {
+    int transactionMonthId = 0;
+    double amount = 0;
+    Glob lastTransaction = null;
+    Integer accountId = account.get(Account.ID);
+    for (Glob transaction : transactions) {
+      if (transaction.get(Transaction.ORIGINAL_ACCOUNT).equals(accountId)) {
+        lastTransaction = transaction;
+        if (transaction.get(Transaction.POSITION_MONTH) != transactionMonthId) {
+          amount = 0;
+          transactionMonthId = transaction.get(Transaction.POSITION_MONTH);
+        }
+        amount += transaction.get(Transaction.AMOUNT, 0.);
+        repository.update(transaction.getKey(), FieldValue.value(Transaction.ACCOUNT_POSITION, amount),
+                          FieldValue.value(Transaction.SUMMARY_POSITION, 0.));
+      }
+    }
+
+//    repository.update(account.getKey(), Account.TRANSACTION_ID, lastUpdateTransactionId);
+//    if (lastUpdateTransactionId != null) {
+//      Glob lastTransaction = repository.get(Key.create(Transaction.TYPE, lastUpdateTransactionId));
+    if (lastTransaction != null) {
+      repository.update(account.getKey(),
+                        value(Account.POSITION_DATE,
+                              Month.toDate(lastTransaction.get(Transaction.POSITION_MONTH),
+                                           lastTransaction.get(Transaction.POSITION_DAY))),
+                        value(Account.POSITION_WITH_PENDING, lastTransaction.get(Transaction.ACCOUNT_POSITION)));
+    }
+
+    return true;
+  }
 
   static class AccountUpdate {
     final GlobMatcher futureMatcher;
@@ -548,7 +559,7 @@ public class PositionTrigger implements ChangeSetListener {
       else {
         if (deferredAccountIds.contains(transaction.get(Transaction.ORIGINAL_ACCOUNT))) {
           boolean isPrelevementPresent = accountDateDeferredOperations.containsKey(transaction.get(Transaction.ORIGINAL_ACCOUNT),
-                                                                transaction.get(Transaction.POSITION_MONTH));
+                                                                                   transaction.get(Transaction.POSITION_MONTH));
           if (Transaction.fullPositionDate(transaction) > lastTrDate && !isPrelevementPresent) {
             positionBefore = positionBefore + transaction.get(Transaction.AMOUNT, 0.);
             repository.update(transaction.getKey(), Transaction.ACCOUNT_POSITION, positionBefore);
@@ -610,7 +621,8 @@ public class PositionTrigger implements ChangeSetListener {
 
 
     for (Glob transaction : transactions) {
-      if (!sameCheckerAccount.isSame(transaction.get(Transaction.ACCOUNT))) {
+      Integer mainAccountId = transaction.get(Transaction.ACCOUNT);
+      if (!sameCheckerAccount.isSame(mainAccountId)) {
         continue;
       }
       Integer accountId = transaction.get(Transaction.ORIGINAL_ACCOUNT);
@@ -800,6 +812,7 @@ public class PositionTrigger implements ChangeSetListener {
 
     public void visitDeletion(Key key, FieldValues previousValues) throws Exception {
       update(previousValues.get(Transaction.ACCOUNT));
+      update(previousValues.get(Transaction.ORIGINAL_ACCOUNT));
       updatedOperations.add(key.get(Transaction.ID));
     }
   }
