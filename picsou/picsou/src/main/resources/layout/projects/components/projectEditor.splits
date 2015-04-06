@@ -26,12 +26,18 @@
       </column>
     </card>
     <card name="edit">
-      <row>
-        <label text="$projectEdition.name" styleClass="field" marginRight="5"/>
-        <textField ref="projectNameField" anchor="right" weightX="100"/>
-        <button action="cancel" styleClass="smallButton" marginLeft="10"/>
-        <button action="validate" styleClass="smallButton" marginLeft="10"/>
-      </row>
+      <column>
+        <row>
+          <label text="$projectEdition.name" styleClass="field" marginRight="5"/>
+          <textField ref="projectNameField" anchor="right" weightX="100"/>
+        </row>
+        <row marginTop="10">
+          <filler fill="horizontal"/>
+          <button action="cancel" styleClass="smallButton" marginLeft="10"/>
+          <button action="validate" styleClass="smallButton" marginLeft="10"/>
+        </row>
+
+      </column>
     </card>
   </cards>
 </splits>

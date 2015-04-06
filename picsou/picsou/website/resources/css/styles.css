@@ -17,7 +17,12 @@ button.btn {
   color: #fff;
   background-color: #F37A32;
   border-color: #eea236;
-  font-size: 18px;
+  font-size: 20px;
+}
+
+button .subtext {
+  font-size: 12px;
+  font-weight: normal;
 }
 
 .centered {
@@ -120,7 +125,7 @@ div.container h3 {
 }
 
 #home #text {
-  margin-top: 170px;
+  margin-top: 165px;
   margin-left: -20px;
   margin-right: -10px;
   text-align: center;
@@ -171,17 +176,17 @@ div.container h3 {
 
 #home h3.legend {
   margin-top: 5px;
-  color: #FF9230;
+  color: #EF7B19;
 }
 
 #home .large-screenshot {
-  margin-left: -25px
+  margin-left: -45px
 }
 
 #home hr {
   border-color: #EEE;
-  margin-top: 10px;
-  margin-bottom: 10px;
+  margin-top: 20px;
+  margin-bottom: 20px;
 }
 
 #home #zoom h2.zoom-title {
@@ -227,7 +232,8 @@ div.container h3 {
 #home #testimonials-block {
   border: 1px solid #EEEEEE;
   background: #f0f0f0;
-  margin-top: 15px;
+  margin-top: 20px;
+  margin-bottom: 15px;
 }
 
 #home #testimonials {
@@ -295,9 +301,13 @@ a.showLink:hover, a.hideLink:hover {
 /* ========== DOWNLOAD PAGE ========== */
 
 #download-notices {
-  width: 80%;
+  width: 90%;
   margin-left: auto;
   margin-right: auto;
+}
+
+#download-notices h3 {
+  font-size: 20px;
 }
 
 #download-platforms {
@@ -324,6 +334,10 @@ a.showLink:hover, a.hideLink:hover {
   font-size: 18pt;
   line-height: 1.1em;
   color: #666;
+}
+
+#download-platforms button {
+  width: 100%;
 }
 
 #download-block {
@@ -503,17 +517,6 @@ table.field-value td.value {
   margin-top: 30px;
 }
 
-#buy #notes h2 {
-  text-align: left;
-  margin-top: 10px;
-  margin-bottom: 0px;
-  font-size: 14pt;
-}
-
-#buy #notes h2 img {
-  vertical-align: middle;
-}
-
 /* ========== BUY OK/NOK PAGE ========== */
 
 #buy-ok {
@@ -584,16 +587,19 @@ table.field-value td.value {
 
 /* ========== PRESS ========== */
 
-#press .images td {
-  padding-top: 10px;
-  padding-bottom: 10px;
-  vertical-align: middle;
+#press #images, #press #logos {
   text-align: center;
 }
 
-#press .images p {
-  font-size: 9pt;
+#press #images img, #press #logos img {
+  margin-top: 20px;
+  margin-bottom: 20px;
 }
+
+#press #images img {
+  width:60%;
+}
+
 
 /* ========== CLOSE BLOCK ========== */
 
@@ -750,7 +756,7 @@ table.field-value td.value {
   padding-top: 5px;
   padding-bottom: 5px;
   margin:0;
-  background-color: #FF9230;
+  background-color: #EF7B19;
   color: #FFF;
 }
 
@@ -909,6 +915,7 @@ div#faq-footer A:hover {
   padding-top: 4px;
   padding-bottom: 4px;
   background: #F4F4F4;
+  margin-top:30px;
 }
 
 .log h3 {
@@ -957,6 +964,48 @@ div#faq-footer A:hover {
   text-align: center;
   font-size: 12pt;
   font-weight: bold;
+}
+
+/* ========== EXTENSIONS ========== */
+
+#extensions #banner {
+  margin-top: 30px;
+}
+
+#extensions #banner h1 {
+  margin-top: 60px;
+}
+
+#extensions #mobile {
+  width: 90%;
+  margin-left:auto;
+  margin-right:auto;
+}
+
+#extensions #mobile h2 {
+margin-top: 40px;
+}
+
+#extensions h2 {
+  text-align: center;
+}
+
+#extensions h2.large {
+  border-top: 1px solid #DDD;
+  border-bottom: 1px solid #DDD;
+  margin-bottom: 40px;
+  padding: 5px;
+}
+
+#extensions #notes h2 {
+  text-align: left;
+  margin-top: 10px;
+  margin-bottom: 0px;
+  font-size: 14pt;
+}
+
+#extensions #notes h2 img {
+  vertical-align: middle;
 }
 
 /* ========== FOOTER ========== */

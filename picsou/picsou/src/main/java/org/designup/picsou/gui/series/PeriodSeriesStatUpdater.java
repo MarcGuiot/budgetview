@@ -147,18 +147,19 @@ public class PeriodSeriesStatUpdater implements GlobSelectionListener, ChangeSet
   }
 
   private void initEvolutionFields(int previousMonth, int newMonth) {
-    for (Glob stat : repository.findByIndex(SeriesStat.MONTH_INDEX, newMonth)) {
+    GlobList stats =
+      repository.findByIndex(SeriesStat.MONTH_INDEX, newMonth)
+        .filterSelf(fieldEquals(SeriesStat.ACCOUNT, selectedAccountId == null ? Account.ALL_SUMMARY_ACCOUNT_ID : selectedAccountId), repository);
+    for (Glob stat : stats) {
       SeriesOrGroup seriesOrGroup = SeriesOrGroup.getFromStat(stat);
       Glob periodSeriesStat = PeriodSeriesStat.findUnique(seriesOrGroup.id, seriesOrGroup.type, repository);
       if (periodSeriesStat == null) {
-        return;
+        continue;
       }
 
       Double newValue = stat.get(SeriesStat.SUMMARY_AMOUNT);
-
       Glob previousStat = repository.find(seriesOrGroup.createSeriesStatKey(previousMonth));
       Double previousValue = previousStat == null ? null : previousStat.get(SeriesStat.SUMMARY_AMOUNT);
-
       repository.update(periodSeriesStat.getKey(),
                         value(PeriodSeriesStat.PREVIOUS_SUMMARY_AMOUNT, previousValue),
                         value(PeriodSeriesStat.PREVIOUS_SUMMARY_MONTH, previousMonth),
@@ -243,14 +244,14 @@ public class PeriodSeriesStatUpdater implements GlobSelectionListener, ChangeSet
 
       Glob periodStat = PeriodSeriesStat.findOrCreateForSeries(seriesId, repository);
       double amount = (periodStat.get(PeriodSeriesStat.AMOUNT) +
-                      Utils.zeroIfNull(getActual(seriesStat))) * signModifier;
+                       Utils.zeroIfNull(getActual(seriesStat))) * signModifier;
       Double plannedAmount;
       if (periodStat.get(PeriodSeriesStat.PLANNED_AMOUNT) == null && getPlanned(seriesStat) == null) {
         plannedAmount = null;
       }
       else {
         plannedAmount = (periodStat.get(PeriodSeriesStat.PLANNED_AMOUNT, 0) +
-                        seriesStat.get(SeriesStat.PLANNED_AMOUNT, 0)) * signModifier;
+                         seriesStat.get(SeriesStat.PLANNED_AMOUNT, 0)) * signModifier;
       }
       double pastRemaining = periodStat.get(PeriodSeriesStat.PAST_REMAINING);
       double futureRemaining = periodStat.get(PeriodSeriesStat.FUTURE_REMAINING);
@@ -276,7 +277,7 @@ public class PeriodSeriesStatUpdater implements GlobSelectionListener, ChangeSet
                         value(PeriodSeriesStat.FUTURE_OVERRUN, futureOverrun),
                         value(PeriodSeriesStat.ABS_SUM_AMOUNT,
                               Math.abs(plannedAmount == null ? 0 : plannedAmount) > Math.abs(amount) ?
-                              Math.abs(plannedAmount == null ? 0 : plannedAmount) : Math.abs(amount)),
+                                Math.abs(plannedAmount == null ? 0 : plannedAmount) : Math.abs(amount)),
                         value(PeriodSeriesStat.VISIBLE, visible),
                         value(PeriodSeriesStat.ACTIVE, isActive),
                         value(PeriodSeriesStat.TO_SET, false)

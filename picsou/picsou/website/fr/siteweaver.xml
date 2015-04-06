@@ -15,12 +15,18 @@
 
     <page file="achat.html" title="Achetez BudgetView !" shortTitle="Achat">
       <key name="title.hide" value="true"/>
+      <key name="navbar.hide" value="true"/>
       <key name="innerTemplate" value="templates/standardPageTemplate.html"/>
 
       <page file="achat/ok.html" title="Achat terminé">
         <key name="title.hide" value="true"/>
       </page>
       <page file="achat/echec.html" title="Erreur"/>
+    </page>
+
+    <page file="extensions.html" title="Extensions">
+      <key name="title.hide" value="true"/>
+      <key name="innerTemplate" value="templates/standardPageTemplate.html"/>
     </page>
 
     <page file="support.html" title="Aide &amp; Support" shortTitle="Support">
@@ -114,7 +120,8 @@
                 title="Avez-vous prévu une version iPhone / iPad ?"/>
         </page>
 
-        <page file="support/guide_gestion_de_budget_familial.html" title="Bien gérer son budget familial" shortTitle="Guide">
+        <page file="support/guide_gestion_de_budget_familial.html" title="Bien gérer son budget familial"
+              shortTitle="Guide">
           <key name="innerTemplate" value="templates/standardPageTemplate.html"/>
         </page>
       </page>
