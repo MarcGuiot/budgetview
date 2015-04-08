@@ -1,6 +1,7 @@
 package org.designup.picsou.gui.accounts.utils;
 
 import org.designup.picsou.model.Account;
+import org.designup.picsou.model.AccountCardType;
 import org.designup.picsou.model.AccountType;
 import org.designup.picsou.model.Month;
 import org.globsframework.model.Glob;
@@ -26,7 +27,7 @@ public class AccountMatchers {
   public static GlobMatcher userOrSummaryMainAccounts() {
     return new GlobMatcher() {
       public boolean matches(Glob account, GlobRepository repository) {
-        return Account.isUserOrSummaryMain(account);
+        return Account.isUserOrSummaryMain(account) && !account.get(Account.CARD_TYPE).equals(AccountCardType.DEFERRED.getId());
       }
     };
   }
@@ -68,6 +69,9 @@ public class AccountMatchers {
   public static GlobMatcher activeMainAccountsForPlannedTransactions(final Integer monthId) {
     return new GlobMatcher() {
       public boolean matches(Glob account, GlobRepository repository) {
+        if (account.get(Account.CARD_TYPE).equals(AccountCardType.DEFERRED.getId())){
+          return false;
+        }
         if (!Account.isUserCreatedMainAccount(account)) {
           return false;
         }

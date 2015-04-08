@@ -161,7 +161,8 @@ public class AutoCategorizationFunctor implements GlobFunctor {
       if (transaction.get(Transaction.PLANNED)){
         return false;
       }
-      if (!transaction.get(Transaction.ACCOUNT).equals(findTransaction.get(Transaction.ACCOUNT))) {
+      if (!transaction.get(Transaction.ACCOUNT).equals(findTransaction.get(Transaction.ACCOUNT))
+        && !transaction.get(Transaction.ACCOUNT).equals(findTransaction.get(Transaction.ORIGINAL_ACCOUNT))) {
         return false;
       }
       if (currentSeries == null) {

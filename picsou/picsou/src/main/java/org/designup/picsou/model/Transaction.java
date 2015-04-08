@@ -1,6 +1,7 @@
 package org.designup.picsou.model;
 
 import com.budgetview.shared.utils.PicsouGlobSerializer;
+import org.apache.xpath.operations.Bool;
 import org.designup.picsou.utils.TransactionComparator;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.annotations.*;
@@ -29,6 +30,18 @@ public class Transaction {
   @Key
   public static IntegerField ID;
 
+  @NamingField
+  public static StringField LABEL;
+
+  @Target(Month.class)
+  @Required
+  public static LinkField POSITION_MONTH; // yyyymm format
+  @Required
+  public static IntegerField POSITION_DAY; // Starts at 1
+
+  @Required
+  public static DoubleField AMOUNT;
+
   @Target(Month.class)
   @Required
   public static LinkField MONTH; // yyyymm format
@@ -47,23 +60,11 @@ public class Transaction {
   @Required
   public static IntegerField BANK_DAY; // Starts at 1
 
-  @Target(Month.class)
-  @Required
-  public static LinkField POSITION_MONTH; // yyyymm format
-  @Required
-  public static IntegerField POSITION_DAY; // Starts at 1
-
-  @Required
-  public static DoubleField AMOUNT;
-
   @DoublePrecision(4)
   public static DoubleField SUMMARY_POSITION;
 
   @DoublePrecision(4)
   public static DoubleField ACCOUNT_POSITION;
-
-  @NamingField
-  public static StringField LABEL;
 
   public static StringField ORIGINAL_LABEL;
 
@@ -97,6 +98,9 @@ public class Transaction {
 
   @Target(Account.class)
   public static LinkField ACCOUNT;
+
+  @Target(Account.class)
+  public static LinkField ORIGINAL_ACCOUNT;
 
   // si == null => pas une operation importée.
   @Target(TransactionImport.class)
@@ -173,6 +177,10 @@ public class Transaction {
 
   public static int fullDate(Glob transaction) {
     return transaction.get(MONTH) * 100 + transaction.get(DAY);
+  }
+
+  public static int fullPositionDate(Glob transaction) {
+    return transaction.get(POSITION_MONTH) * 100 + transaction.get(POSITION_DAY);
   }
 
   public static int fullBankDate(Glob transaction) {
@@ -301,7 +309,7 @@ public class Transaction {
   public static class Serializer implements PicsouGlobSerializer {
 
     public int getWriteVersion() {
-      return 10;
+      return 11;
     }
 
     public boolean shouldBeSaved(GlobRepository repository, FieldValues fieldValues) {
@@ -328,6 +336,7 @@ public class Transaction {
       output.writeDouble(fieldValues.get(Transaction.SUMMARY_POSITION));
       output.writeDouble(fieldValues.get(Transaction.ACCOUNT_POSITION));
       output.writeInteger(fieldValues.get(Transaction.ACCOUNT));
+      output.writeInteger(fieldValues.get(Transaction.ORIGINAL_ACCOUNT));
       output.writeInteger(fieldValues.get(Transaction.TRANSACTION_TYPE));
       output.writeBoolean(fieldValues.get(Transaction.SPLIT));
       output.writeInteger(fieldValues.get(Transaction.SPLIT_SOURCE));
@@ -351,7 +360,10 @@ public class Transaction {
     }
 
     public void deserializeData(int version, FieldSetter fieldSetter, byte[] data, Integer id) {
-      if (version == 10) {
+      if (version == 11) {
+        deserializeDataV11(fieldSetter, data);
+      }
+      else if (version == 10) {
         deserializeDataV10(fieldSetter, data);
       }
       else if (version == 9) {
@@ -383,7 +395,7 @@ public class Transaction {
       }
     }
 
-    private void deserializeDataV10(FieldSetter fieldSetter, byte[] data) {
+    private void deserializeDataV11(FieldSetter fieldSetter, byte[] data) {
       SerializedInput input = SerializedInputOutputFactory.init(data);
       fieldSetter.set(Transaction.ORIGINAL_LABEL, input.readUtf8String());
       fieldSetter.set(Transaction.LABEL, input.readUtf8String());
@@ -402,6 +414,49 @@ public class Transaction {
       fieldSetter.set(Transaction.SUMMARY_POSITION, input.readDouble());
       fieldSetter.set(Transaction.ACCOUNT_POSITION, input.readDouble());
       fieldSetter.set(Transaction.ACCOUNT, input.readInteger());
+      fieldSetter.set(Transaction.ORIGINAL_ACCOUNT, input.readInteger());
+      fieldSetter.set(Transaction.TRANSACTION_TYPE, input.readInteger());
+      fieldSetter.set(Transaction.SPLIT, input.readBoolean());
+      fieldSetter.set(Transaction.SPLIT_SOURCE, input.readInteger());
+      fieldSetter.set(Transaction.DAY_BEFORE_SHIFT, input.readInteger());
+      fieldSetter.set(Transaction.SERIES, input.readInteger());
+      fieldSetter.set(Transaction.SUB_SERIES, input.readInteger());
+      fieldSetter.set(Transaction.PLANNED, input.readBoolean());
+      fieldSetter.set(Transaction.MIRROR, input.readBoolean());
+      fieldSetter.set(Transaction.CREATED_BY_SERIES, input.readBoolean());
+      fieldSetter.set(Transaction.NOT_IMPORTED_TRANSACTION, input.readInteger());
+      fieldSetter.set(Transaction.OFX_CHECK_NUM, input.readUtf8String());
+      fieldSetter.set(Transaction.OFX_MEMO, input.readUtf8String());
+      fieldSetter.set(Transaction.OFX_NAME, input.readUtf8String());
+      fieldSetter.set(Transaction.QIF_M, input.readUtf8String());
+      fieldSetter.set(Transaction.QIF_P, input.readUtf8String());
+      fieldSetter.set(Transaction.IS_OFX, input.readBoolean());
+      fieldSetter.set(Transaction.IMPORT, input.readInteger());
+      fieldSetter.set(Transaction.RECONCILIATION_ANNOTATION_SET, input.readBoolean());
+      fieldSetter.set(Transaction.TO_RECONCILE, input.readBoolean());
+    }
+
+    private void deserializeDataV10(FieldSetter fieldSetter, byte[] data) {
+      SerializedInput input = SerializedInputOutputFactory.init(data);
+      fieldSetter.set(Transaction.ORIGINAL_LABEL, input.readUtf8String());
+      fieldSetter.set(Transaction.LABEL, input.readUtf8String());
+      fieldSetter.set(Transaction.LABEL_FOR_CATEGORISATION, input.readUtf8String());
+      fieldSetter.set(Transaction.BANK_TRANSACTION_TYPE, input.readUtf8String());
+      fieldSetter.set(Transaction.NOTE, input.readUtf8String());
+      fieldSetter.set(Transaction.MONTH, input.readInteger());
+      fieldSetter.set(Transaction.DAY, input.readInteger());
+      fieldSetter.set(Transaction.BUDGET_MONTH, input.readInteger());
+      fieldSetter.set(Transaction.BUDGET_DAY, input.readInteger());
+      fieldSetter.set(Transaction.BANK_MONTH, input.readInteger());
+      fieldSetter.set(Transaction.BANK_DAY, input.readInteger());
+      fieldSetter.set(Transaction.POSITION_MONTH, input.readInteger());
+      fieldSetter.set(Transaction.POSITION_DAY, input.readInteger());
+      fieldSetter.set(Transaction.AMOUNT, input.readDouble());
+      fieldSetter.set(Transaction.SUMMARY_POSITION, input.readDouble());
+      fieldSetter.set(Transaction.ACCOUNT_POSITION, input.readDouble());
+      Integer accountId = input.readInteger();
+      fieldSetter.set(Transaction.ACCOUNT, accountId);
+      fieldSetter.set(Transaction.ORIGINAL_ACCOUNT, accountId);
       fieldSetter.set(Transaction.TRANSACTION_TYPE, input.readInteger());
       fieldSetter.set(Transaction.SPLIT, input.readBoolean());
       fieldSetter.set(Transaction.SPLIT_SOURCE, input.readInteger());
@@ -441,7 +496,9 @@ public class Transaction {
       fieldSetter.set(Transaction.AMOUNT, input.readDouble());
       fieldSetter.set(Transaction.SUMMARY_POSITION, input.readDouble());
       fieldSetter.set(Transaction.ACCOUNT_POSITION, input.readDouble());
-      fieldSetter.set(Transaction.ACCOUNT, input.readInteger());
+      Integer accountId = input.readInteger();
+      fieldSetter.set(Transaction.ACCOUNT, accountId);
+      fieldSetter.set(Transaction.ORIGINAL_ACCOUNT, accountId);
       fieldSetter.set(Transaction.TRANSACTION_TYPE, input.readInteger());
       fieldSetter.set(Transaction.SPLIT, input.readBoolean());
       fieldSetter.set(Transaction.SPLIT_SOURCE, input.readInteger());
@@ -484,7 +541,9 @@ public class Transaction {
       fieldSetter.set(Transaction.AMOUNT, input.readDouble());
       fieldSetter.set(Transaction.SUMMARY_POSITION, input.readDouble());
       fieldSetter.set(Transaction.ACCOUNT_POSITION, input.readDouble());
-      fieldSetter.set(Transaction.ACCOUNT, input.readInteger());
+      Integer accountId = input.readInteger();
+      fieldSetter.set(Transaction.ACCOUNT, accountId);
+      fieldSetter.set(Transaction.ORIGINAL_ACCOUNT, accountId);
       fieldSetter.set(Transaction.TRANSACTION_TYPE, input.readInteger());
       fieldSetter.set(Transaction.SPLIT, input.readBoolean());
       fieldSetter.set(Transaction.SPLIT_SOURCE, input.readInteger());
@@ -527,7 +586,9 @@ public class Transaction {
       fieldSetter.set(Transaction.AMOUNT, input.readDouble());
       fieldSetter.set(Transaction.SUMMARY_POSITION, input.readDouble());
       fieldSetter.set(Transaction.ACCOUNT_POSITION, input.readDouble());
-      fieldSetter.set(Transaction.ACCOUNT, input.readInteger());
+      Integer accountId = input.readInteger();
+      fieldSetter.set(Transaction.ACCOUNT, accountId);
+      fieldSetter.set(Transaction.ORIGINAL_ACCOUNT, accountId);
       fieldSetter.set(Transaction.TRANSACTION_TYPE, input.readInteger());
       fieldSetter.set(Transaction.SPLIT, input.readBoolean());
       fieldSetter.set(Transaction.SPLIT_SOURCE, input.readInteger());
@@ -570,7 +631,9 @@ public class Transaction {
       fieldSetter.set(Transaction.AMOUNT, input.readDouble());
       fieldSetter.set(Transaction.SUMMARY_POSITION, input.readDouble());
       fieldSetter.set(Transaction.ACCOUNT_POSITION, input.readDouble());
-      fieldSetter.set(Transaction.ACCOUNT, input.readInteger());
+      Integer accountId = input.readInteger();
+      fieldSetter.set(Transaction.ACCOUNT, accountId);
+      fieldSetter.set(Transaction.ORIGINAL_ACCOUNT, accountId);
       fieldSetter.set(Transaction.TRANSACTION_TYPE, input.readInteger());
       fieldSetter.set(Transaction.CATEGORY, input.readInteger());
       fieldSetter.set(Transaction.SPLIT, input.readBoolean());
@@ -613,7 +676,9 @@ public class Transaction {
       fieldSetter.set(Transaction.AMOUNT, input.readDouble());
       fieldSetter.set(Transaction.SUMMARY_POSITION, input.readDouble());
       fieldSetter.set(Transaction.ACCOUNT_POSITION, input.readDouble());
-      fieldSetter.set(Transaction.ACCOUNT, input.readInteger());
+      Integer accountId = input.readInteger();
+      fieldSetter.set(Transaction.ACCOUNT, accountId);
+      fieldSetter.set(Transaction.ORIGINAL_ACCOUNT, accountId);
       fieldSetter.set(Transaction.TRANSACTION_TYPE, input.readInteger());
       fieldSetter.set(Transaction.CATEGORY, input.readInteger());
       fieldSetter.set(Transaction.SPLIT, input.readBoolean());
@@ -655,7 +720,9 @@ public class Transaction {
       fieldSetter.set(Transaction.AMOUNT, input.readDouble());
       fieldSetter.set(Transaction.SUMMARY_POSITION, input.readDouble());
       fieldSetter.set(Transaction.ACCOUNT_POSITION, input.readDouble());
-      fieldSetter.set(Transaction.ACCOUNT, input.readInteger());
+      Integer accountId = input.readInteger();
+      fieldSetter.set(Transaction.ACCOUNT, accountId);
+      fieldSetter.set(Transaction.ORIGINAL_ACCOUNT, accountId);
       fieldSetter.set(Transaction.TRANSACTION_TYPE, input.readInteger());
       fieldSetter.set(Transaction.CATEGORY, input.readInteger());
       fieldSetter.set(Transaction.SPLIT, input.readBoolean());
@@ -690,7 +757,9 @@ public class Transaction {
       fieldSetter.set(Transaction.AMOUNT, input.readDouble());
       fieldSetter.set(Transaction.SUMMARY_POSITION, input.readDouble());
       fieldSetter.set(Transaction.ACCOUNT_POSITION, input.readDouble());
-      fieldSetter.set(Transaction.ACCOUNT, input.readInteger());
+      Integer accountId = input.readInteger();
+      fieldSetter.set(Transaction.ACCOUNT, accountId);
+      fieldSetter.set(Transaction.ORIGINAL_ACCOUNT, accountId);
       fieldSetter.set(Transaction.TRANSACTION_TYPE, input.readInteger());
       fieldSetter.set(Transaction.CATEGORY, input.readInteger());
       fieldSetter.set(Transaction.SPLIT, input.readBoolean());
@@ -725,7 +794,9 @@ public class Transaction {
       fieldSetter.set(Transaction.AMOUNT, amount);
       fieldSetter.set(Transaction.SUMMARY_POSITION, input.readDouble());
       fieldSetter.set(Transaction.ACCOUNT_POSITION, input.readDouble());
-      fieldSetter.set(Transaction.ACCOUNT, input.readInteger());
+      Integer accountId = input.readInteger();
+      fieldSetter.set(Transaction.ACCOUNT, accountId);
+      fieldSetter.set(Transaction.ORIGINAL_ACCOUNT, accountId);
       Integer transactionType = input.readInteger();
       if (transactionType == TransactionType.PLANNED.getId()) {
         if (amount > 0) {
@@ -770,7 +841,9 @@ public class Transaction {
       fieldSetter.set(Transaction.AMOUNT, amount);
       fieldSetter.set(Transaction.SUMMARY_POSITION, input.readDouble());
       fieldSetter.set(Transaction.ACCOUNT_POSITION, input.readDouble());
-      fieldSetter.set(Transaction.ACCOUNT, input.readInteger());
+      Integer accountId = input.readInteger();
+      fieldSetter.set(Transaction.ACCOUNT, accountId);
+      fieldSetter.set(Transaction.ORIGINAL_ACCOUNT, accountId);
       Integer transactionType = input.readInteger();
       if (transactionType == TransactionType.PLANNED.getId()) {
         if (amount > 0) {

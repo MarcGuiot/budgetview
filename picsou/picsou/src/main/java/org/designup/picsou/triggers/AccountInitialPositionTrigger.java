@@ -92,6 +92,7 @@ public class AccountInitialPositionTrigger extends AbstractChangeSetListener {
   public static Glob createOpenTransaction(int monthId, int day, final Double amount, GlobRepository repository, final Key accountKey) {
     Glob openTransaction = repository.create(Transaction.TYPE,
                                              value(Transaction.ACCOUNT, accountKey.get(Account.ID)),
+                                             value(Transaction.ORIGINAL_ACCOUNT, accountKey.get(Account.ID)),
                                              value(Transaction.LABEL, "open account"),
                                              value(Transaction.AMOUNT, amount),
                                              value(Transaction.ACCOUNT_POSITION, amount),
@@ -113,6 +114,7 @@ public class AccountInitialPositionTrigger extends AbstractChangeSetListener {
   public static void createCloseTransaction(GlobRepository repository, Key key, int day, int closeMonthId, final Double amount) {
     Glob closeTransaction = repository.create(Transaction.TYPE,
                                               value(Transaction.ACCOUNT, key.get(Account.ID)),
+                                              value(Transaction.ORIGINAL_ACCOUNT, key.get(Account.ID)),
                                               value(Transaction.LABEL, "close account"),
                                               value(Transaction.AMOUNT, amount),
                                               value(Transaction.ACCOUNT_POSITION, 0.),

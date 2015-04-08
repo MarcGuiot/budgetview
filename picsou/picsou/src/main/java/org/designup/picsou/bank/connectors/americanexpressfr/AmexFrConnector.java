@@ -205,6 +205,7 @@ public class AmexFrConnector extends WebBankConnector {
     for (WebTableRow row : table.getRowsWithoutHeaderAndFooters()) {
       FieldValuesBuilder valuesBuilder = new FieldValuesBuilder();
       valuesBuilder.set(value(Transaction.ACCOUNT, account.get(Account.ID)));
+      valuesBuilder.set(value(Transaction.ORIGINAL_ACCOUNT, account.get(Account.ID)));
       extractDate(row.getCell(0), valuesBuilder);
       extractLabel(row.getCell(1), valuesBuilder);
       extractAmount(row.getCell(2), row.getCell(3), valuesBuilder);

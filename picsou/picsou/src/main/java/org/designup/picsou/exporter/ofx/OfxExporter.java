@@ -98,7 +98,7 @@ public class OfxExporter implements Exporter {
   }
 
   private Date writeTransactions(Glob account) {
-    GlobList transactionsToWrite = new GlobList(repository.findLinkedTo(account, Transaction.ACCOUNT));
+    GlobList transactionsToWrite = new GlobList(repository.findLinkedTo(account, Transaction.ORIGINAL_ACCOUNT));
     transactionsToWrite.filterSelf(TransactionMatchers.exportableTransactions(), repository);
     Collections.sort(transactionsToWrite, TransactionComparator.ASCENDING_SPLIT_AFTER);
     Date lastDate = new Date(0);

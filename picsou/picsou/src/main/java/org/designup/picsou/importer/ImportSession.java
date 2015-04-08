@@ -370,6 +370,7 @@ public class ImportSession {
         value(Transaction.BUDGET_MONTH, userDate == null ? null : Month.getMonthId(userDate)),
         value(Transaction.BUDGET_DAY, userDate == null ? null : Month.getDay(userDate)),
         value(Transaction.ACCOUNT, accountId),
+        value(Transaction.ORIGINAL_ACCOUNT, accountId),
         value(Transaction.AMOUNT, importedTransaction.get(ImportedTransaction.AMOUNT)),
         value(Transaction.NOTE, importedTransaction.get(ImportedTransaction.NOTE)),
         value(Transaction.BANK_TRANSACTION_TYPE, TransactionAnalyzerFactory.removeBlankAndToUpercase(importedTransaction.get(ImportedTransaction.BANK_TRANSACTION_TYPE))),

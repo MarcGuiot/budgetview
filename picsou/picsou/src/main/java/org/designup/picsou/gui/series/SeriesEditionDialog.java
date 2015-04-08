@@ -328,6 +328,7 @@ public class SeriesEditionDialog {
     }
     else {
       Set<Integer> accountIds = Series.getRealTransactions(currentSeries.get(Series.ID), localRepository).getValueSet(Transaction.ACCOUNT);
+      Account.filterOutDeferred(accountIds, localRepository);
       if (accountIds.size() > 1) {
         targetAccountCombo.setVisible(false);
         targetAccountLabel.setVisible(true);

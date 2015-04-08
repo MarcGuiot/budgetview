@@ -73,7 +73,7 @@ public class TsvExporter implements Exporter {
                                      Transaction.BUDGET_DAY),
       GlobStringifiers.get(Transaction.LABEL),
       new AmountStringifier(Transaction.AMOUNT),
-      descriptionService.getStringifier(Transaction.ACCOUNT),
+      descriptionService.getStringifier(Transaction.ORIGINAL_ACCOUNT),
       GlobStringifiers.target(Transaction.SERIES, descriptionService.getStringifier(Series.BUDGET_AREA)),
       descriptionService.getStringifier(Transaction.SERIES)
     );
