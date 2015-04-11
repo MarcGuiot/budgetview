@@ -20,14 +20,11 @@ import org.globsframework.model.indexing.IndexTables;
 import org.globsframework.model.utils.GlobFunctor;
 import org.globsframework.model.utils.GlobMatcher;
 import org.globsframework.model.utils.GlobMatchers;
-import org.globsframework.utils.Log;
+import org.globsframework.utils.Utils;
 import org.globsframework.utils.collections.MapOfMaps;
 import org.globsframework.utils.collections.Pair;
-import org.globsframework.utils.Utils;
 import org.globsframework.utils.exceptions.*;
-import org.globsframework.xml.XmlGlobWriter;
 
-import java.io.StringWriter;
 import java.util.*;
 
 public class DefaultGlobRepository implements GlobRepository, IndexSource {
@@ -220,7 +217,7 @@ public class DefaultGlobRepository implements GlobRepository, IndexSource {
     int i = 0;
     for (Glob glob : globs.values(type)) {
       if (matcher.matches(glob, this)) {
-        if (i >= tmp.length){
+        if (i >= tmp.length) {
           Glob[] temporary = new Glob[tmp.length * 2];
           System.arraycopy(tmp, 0, temporary, 0, tmp.length);
           tmp = temporary;
@@ -459,7 +456,7 @@ public class DefaultGlobRepository implements GlobRepository, IndexSource {
   }
 
   public void delete(GlobList list) throws OperationDenied {
-    if (list.isEmpty()){
+    if (list.isEmpty()) {
       return;
     }
     startChangeSet();
@@ -691,6 +688,8 @@ public class DefaultGlobRepository implements GlobRepository, IndexSource {
     Utils.endRemove();
   }
 
+  static boolean dump = false;
+
   private void notifyListeners(boolean applyTriggers) {
     if (bulkDispatchingModeLevel > 0) {
       return;
@@ -705,16 +704,20 @@ public class DefaultGlobRepository implements GlobRepository, IndexSource {
 
         if (applyTriggers) {
 //          Thread.dumpStack();
-//          System.err.println("DefaultGlobRepository.notifyListeners " + changeSetToDispatch);
+          if (dump) {
+            System.err.println("DefaultGlobRepository.notifyListeners " + changeSetToDispatch);
+          }
           for (ChangeSetListener trigger : triggers) {
             this.changeSetToDispatch = new DefaultChangeSet();
             trigger.globsChanged(currentChangeSetToDispatch, this);
             currentChangeSetToDispatch.merge(changeSetToDispatch);
-//          if (!changeSetToDispatch.isEmpty()) {
-//            System.err.println(trigger + " : " + changeSetToDispatch);
-//          }
+            if (dump && !changeSetToDispatch.isEmpty()) {
+              System.err.println(trigger + " : " + changeSetToDispatch);
+            }
           }
-//        System.err.println("------------------------------------------------------------");
+          if (dump) {
+            System.err.println("------------------------------------------------------------");
+          }
         }
       }
       finally {
@@ -793,7 +796,7 @@ public class DefaultGlobRepository implements GlobRepository, IndexSource {
 
   public void checkConsistency() {
     boolean firstCall = true;
-    for (Iterator<Glob> iterator = globs.iterator(); iterator.hasNext();) {
+    for (Iterator<Glob> iterator = globs.iterator(); iterator.hasNext(); ) {
       final Glob glob = iterator.next();
       Link[] links = glob.getType().getOutboundLinks();
       for (Link link : links) {

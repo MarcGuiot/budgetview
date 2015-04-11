@@ -20,20 +20,20 @@ public class OfxExporterTest extends PicsouTestCase {
       "</bankEntity>" +
       "" +
       "<transaction id='1' month='200601' day='21'  bankMonth='200601' bankDay='24' amount='-1.1' " +
-      "             originalLabel='label1' account='2'/>" +
+      "             originalLabel='label1' account='2' originalAccount='2'/>" +
       "<transaction id='2' month='200602' day='22' bankMonth='200602' bankDay='22' amount='-1.2' " +
-      "             originalLabel='label2' account='2'" +
+      "             originalLabel='label2' account='2' originalAccount='2'" +
       "             note='my note'/>" +
       "<transaction id='3' month='200603' day='23' bankMonth='200603' bankDay='23' amount='-1.3' " +
-      "             originalLabel='card3' transactionTypeName='credit_card' account='3'/>" +
+      "             originalLabel='card3' transactionTypeName='credit_card' account='3' originalAccount='3'/>" +
       "<transaction id='4' month='200604' day='19' bankMonth='200604' bankDay='19' amount='45' " +
-      "             originalLabel='card4' transactionTypeName='credit_card' account='3'/>" +
+      "             originalLabel='card4' transactionTypeName='credit_card' account='3' originalAccount='3'/>" +
       "" +
       "<transaction id='5' planned='true' month='200605' day='19' bankMonth='200605' bankDay='19' amount='45' " +
-      "             originalLabel='Planned: card4' transactionTypeName='credit_card' account='3'/>" +
+      "             originalLabel='Planned: card4' transactionTypeName='credit_card' account='3' originalAccount='3'/>" +
       "" +
       "<transaction id='6' mirror='true' month='200605' day='19' bankMonth='200605' bankDay='19' amount='45' " +
-      "             originalLabel='Mirror: card4' transactionTypeName='credit_card' account='3'/>" +
+      "             originalLabel='Mirror: card4' transactionTypeName='credit_card' account='3' originalAccount='3'/>" +
       "");
 
     checkExport(true,

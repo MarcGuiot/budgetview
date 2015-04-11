@@ -1406,6 +1406,7 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
   }
 
   public void testCopyToClipboard() throws Exception {
+    callFailIfClipBoardDisable();
     OfxBuilder
       .init(this)
       .addTransaction("2008/06/30", -29.90, "Free Telecom")

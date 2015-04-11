@@ -5,20 +5,20 @@ import org.designup.picsou.gui.components.filtering.FilterManager;
 import org.designup.picsou.gui.model.PeriodSeriesStat;
 import org.designup.picsou.gui.transactions.utils.TransactionMatchers;
 import org.designup.picsou.model.Account;
+import org.designup.picsou.model.AccountCardType;
+import org.designup.picsou.model.Transaction;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobSelection;
 import org.globsframework.gui.GlobSelectionListener;
 import org.globsframework.gui.SelectionService;
 import org.globsframework.metamodel.GlobType;
-import org.globsframework.model.ChangeSet;
-import org.globsframework.model.ChangeSetListener;
-import org.globsframework.model.GlobList;
-import org.globsframework.model.GlobRepository;
+import org.globsframework.model.*;
 import org.globsframework.model.utils.GlobMatcher;
 import org.globsframework.model.utils.GlobMatchers;
 import org.globsframework.utils.directory.Directory;
 
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -31,9 +31,16 @@ public class AccountFilter {
                                                   Directory directory) {
     return new AccountFilter(filterManager, repository, directory, new AccountsToMatcherConverter() {
       public GlobMatcher convert(GlobList selectedAccounts) {
+        final Set<Integer> accountIds = selectedAccounts.getValueSet(Account.ID);
+        GlobMatcher  matcher = null;
+        for (Glob account : selectedAccounts) {
+          if (account.get(Account.CARD_TYPE).equals(AccountCardType.DEFERRED.getId())) {
+            matcher = GlobMatchers.or(matcher, GlobMatchers.fieldEquals(Transaction.ORIGINAL_ACCOUNT, account.get(Account.ID)));
+          }
+        }
         return selectedAccounts.isEmpty() ?
                GlobMatchers.ALL :
-               TransactionMatchers.transactionsForAccounts(selectedAccounts.getValueSet(Account.ID), repository);
+               GlobMatchers.or(matcher, TransactionMatchers.transactionsForAccounts(accountIds, repository));
       }
     });
   }

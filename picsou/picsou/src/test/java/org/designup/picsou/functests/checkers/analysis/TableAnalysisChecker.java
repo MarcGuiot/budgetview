@@ -8,6 +8,7 @@ import org.designup.picsou.functests.checkers.SeriesEditionDialogChecker;
 import org.designup.picsou.functests.checkers.components.PopupButton;
 import org.designup.picsou.functests.checkers.components.PopupChecker;
 import org.designup.picsou.functests.checkers.components.TableChecker;
+import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.gui.analysis.table.SeriesEvolutionTableView;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.utils.Strings;
@@ -190,6 +191,7 @@ public class TableAnalysisChecker extends ExpandableTableChecker<TableAnalysisCh
   }
 
   public void checkSelectionClipboardExport(int[] indices, String expectedClipboardContent) throws Exception {
+    LoggedInFunctionalTestCase.callFailIfClipBoardDisable();
 
     Clipboard.putText("something to clean up the clipboard before running the test");
 

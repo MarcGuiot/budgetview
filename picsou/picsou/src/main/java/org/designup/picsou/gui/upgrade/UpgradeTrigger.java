@@ -10,6 +10,7 @@ import org.designup.picsou.gui.series.utils.SeriesErrorsUpgrade;
 import org.designup.picsou.gui.utils.FrameSize;
 import org.designup.picsou.importer.analyzer.TransactionAnalyzerFactory;
 import org.designup.picsou.model.*;
+import org.designup.picsou.model.upgrade.DeferredAccountUpgradeV40;
 import org.designup.picsou.triggers.AccountInitialPositionTrigger;
 import org.designup.picsou.triggers.AccountSequenceTrigger;
 import org.designup.picsou.triggers.PositionTrigger;
@@ -139,6 +140,7 @@ public class UpgradeTrigger implements ChangeSetListener {
       SeriesUpgradeV40.run(repository, postProcessor);
       updageAccountGraphs(repository);
       updateColorTheme(repository);
+      DeferredAccountUpgradeV40.run(repository);
     }
 
     // Dans tous les cas :

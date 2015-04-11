@@ -22,11 +22,12 @@ public class PastTransactionUpdateSeriesBudgetTrigger extends AbstractChangeSetL
         if (series == null) {
           return;
         }
-        Integer seriesId = values.get(SeriesStat.TARGET);
-        Integer statMonthId = values.get(SeriesStat.MONTH);
-        Double amount = values.get(SeriesStat.ACTUAL_AMOUNT);
-
-        updateSeriesBudget(currentMonthId, series, seriesId, statMonthId, amount, repository);
+        if (values.get(SeriesStat.ACCOUNT) == Account.ALL_SUMMARY_ACCOUNT_ID) {
+          Integer seriesId = values.get(SeriesStat.TARGET);
+          Integer statMonthId = values.get(SeriesStat.MONTH);
+          Double amount = values.get(SeriesStat.ACTUAL_AMOUNT);
+          updateSeriesBudget(currentMonthId, series, seriesId, statMonthId, amount, repository);
+        }
       }
 
       public void visitUpdate(Key key, FieldValuesWithPrevious values) throws Exception {
@@ -36,10 +37,12 @@ public class PastTransactionUpdateSeriesBudgetTrigger extends AbstractChangeSetL
           return;
         }
         Glob seriesStat = repository.get(key);
-        Integer seriesId = seriesStat.get(SeriesStat.TARGET);
-        Integer statMonthId = seriesStat.get(SeriesStat.MONTH);
-        Double amount = seriesStat.get(SeriesStat.ACTUAL_AMOUNT);
-        updateSeriesBudget(currentMonthId, series, seriesId, statMonthId, amount, repository);
+        if (values.get(SeriesStat.ACCOUNT) == Account.ALL_SUMMARY_ACCOUNT_ID){
+          Integer seriesId = seriesStat.get(SeriesStat.TARGET);
+          Integer statMonthId = seriesStat.get(SeriesStat.MONTH);
+          Double amount = seriesStat.get(SeriesStat.ACTUAL_AMOUNT);
+          updateSeriesBudget(currentMonthId, series, seriesId, statMonthId, amount, repository);
+        }
       }
 
       public void visitDeletion(Key key, FieldValues previousValues) throws Exception {
@@ -73,19 +76,22 @@ public class PastTransactionUpdateSeriesBudgetTrigger extends AbstractChangeSetL
               previousActiveMonth = seriesBudget.get(SeriesBudget.MONTH);
             }
           }
-          Integer seriesId = oneSeries.get(Series.ID);
-          if (previousActiveMonth == null) {
-            Glob seriesStat = SeriesStat.findOrCreateForSeries(oneSeries.get(Series.ID), currentMonthId, repository);
-            Double amount = seriesStat.get(SeriesStat.ACTUAL_AMOUNT);
-            updateSeriesBudget(currentMonthId, oneSeries, seriesId, currentMonthId, amount, repository);
-          }
-          else {
-            Glob seriesStat = SeriesStat.findOrCreateForSeries(oneSeries.get(Series.ID), previousActiveMonth, repository);
-            Double amount = seriesStat.get(SeriesStat.ACTUAL_AMOUNT);
-            updateSeriesBudget(currentMonthId, oneSeries, seriesId, previousActiveMonth, amount, repository);
-          }
+            Integer seriesId = oneSeries.get(Series.ID);
+            if (previousActiveMonth == null) {
+              Glob seriesStat = SeriesStat.findOrCreateForSeries(oneSeries.get(Series.ID), currentMonthId, repository);
+              if (seriesStat.get(SeriesStat.ACCOUNT) == Account.ALL_SUMMARY_ACCOUNT_ID) {
+                Double amount = seriesStat.get(SeriesStat.ACTUAL_AMOUNT);
+                updateSeriesBudget(currentMonthId, oneSeries, seriesId, currentMonthId, amount, repository);
+              }
+            }
+            else {
+              Glob seriesStat = SeriesStat.findOrCreateForSeries(oneSeries.get(Series.ID), previousActiveMonth, repository);
+              if (seriesStat.get(SeriesStat.ACCOUNT) == Account.ALL_SUMMARY_ACCOUNT_ID) {
+                Double amount = seriesStat.get(SeriesStat.ACTUAL_AMOUNT);
+                updateSeriesBudget(currentMonthId, oneSeries, seriesId, previousActiveMonth, amount, repository);
+              }
+            }
         }
-
       }
 
       public void visitDeletion(Key key, FieldValues previousValues) throws Exception {

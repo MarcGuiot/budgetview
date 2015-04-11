@@ -675,6 +675,7 @@ public class SeriesEvolutionViewTest extends LoggedInFunctionalTestCase {
   }
 
   public void testClipboardExport() throws Exception {
+    callFailIfClipBoardDisable();
     OfxBuilder.init(this)
       .addTransaction("2008/07/12", -95.00, "Auchan")
       .addTransaction("2008/07/05", -29.00, "Free Telecom")
