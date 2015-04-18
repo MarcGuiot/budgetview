@@ -81,6 +81,7 @@ public class ProjectManagementTest extends LoggedInFunctionalTestCase {
     projectList.checkCurrentProjects(
       "| My project | Jan | 800.00 | on |"
     );
+
     budgetView.extras.checkSeries("My project", 0, -200.00);
     mainAccounts.checkEndOfMonthPosition("Account n. 001111", 1700.00);
     budgetView.extras.checkContent("| My project | 0.00 | 200.00 |\n");
@@ -343,7 +344,7 @@ public class ProjectManagementTest extends LoggedInFunctionalTestCase {
 
     views.selectBudget();
     budgetView.extras.editProjectForGroup("My Project");
-    views.checkHomeSelected();
+    views.checkProjectsSelected();
     projectList.checkEditionShown();
     currentProject
       .checkName("My Project")

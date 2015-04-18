@@ -184,7 +184,7 @@ public class NavigationService implements GlobSelectionListener {
     if (project != null) {
       selectionService.select(project);
     }
-    gotoCard(Card.HOME);
+    gotoCard(Card.PROJECTS);
   }
 
   public void gotoProjectItem(Glob projectItem) {

@@ -6,11 +6,11 @@ import org.designup.picsou.gui.accounts.chart.AccountPositionsChartView;
 import org.designup.picsou.gui.accounts.chart.MainDailyPositionsChartView;
 import org.designup.picsou.gui.accounts.utils.AccountMatchers;
 import org.designup.picsou.gui.accounts.utils.AccountPositionStringifier;
+import org.designup.picsou.gui.analysis.histobuilders.range.HistoChartAdjustableRange;
+import org.designup.picsou.gui.analysis.histobuilders.range.HistoChartRange;
 import org.designup.picsou.gui.components.JPopupButton;
 import org.designup.picsou.gui.components.charts.histo.HistoChart;
 import org.designup.picsou.gui.description.stringifiers.AccountComparator;
-import org.designup.picsou.gui.projects.ProjectChartView;
-import org.designup.picsou.gui.analysis.histobuilders.range.HistoChartRange;
 import org.designup.picsou.model.Account;
 import org.designup.picsou.model.AccountType;
 import org.designup.picsou.model.ProjectAccountGraph;
@@ -23,6 +23,7 @@ import org.globsframework.gui.editors.GlobToggleEditor;
 import org.globsframework.gui.splits.PanelBuilder;
 import org.globsframework.gui.splits.SplitsNode;
 import org.globsframework.gui.splits.repeat.RepeatComponentFactory;
+import org.globsframework.gui.splits.utils.Disposable;
 import org.globsframework.gui.utils.BooleanFieldListener;
 import org.globsframework.gui.views.GlobButtonView;
 import org.globsframework.gui.views.GlobLabelView;
@@ -36,24 +37,23 @@ import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
 
+import java.util.ArrayList;
+
 import static org.globsframework.model.utils.GlobMatchers.fieldEquals;
 
-public class ProjectAccountChartsPanel {
+public class ProjectAccountChartsPanel implements HistoChartAdjustableRange {
   private final AccountType accountType;
-  private final HistoChartRange shortRange;
-  private final HistoChartRange longRange;
   private final GlobRepository repository;
   private final Directory directory;
-  private final ProjectChartView projects;
+  private HistoChartRange currentRange;
+  private java.util.List<HistoChartAdjustableRange> charts = new ArrayList<HistoChartAdjustableRange>();
   private JPanel panel;
 
-  public ProjectAccountChartsPanel(AccountType accountType, HistoChartRange shortRange, HistoChartRange longRange, GlobRepository repository, Directory directory, ProjectChartView projects) {
+  public ProjectAccountChartsPanel(AccountType accountType, HistoChartRange range, GlobRepository repository, Directory directory) {
     this.accountType = accountType;
-    this.shortRange = shortRange;
-    this.longRange = longRange;
+    this.currentRange = range;
     this.repository = repository;
     this.directory = directory;
-    this.projects = projects;
   }
 
   public JPanel getPanel() {
@@ -105,6 +105,13 @@ public class ProjectAccountChartsPanel {
     return "accountChartsPanel:" + type.getName();
   }
 
+  public void setRange(HistoChartRange range) {
+    this.currentRange = range;
+    for (HistoChartAdjustableRange chart : charts) {
+      chart.setRange(currentRange);
+    }
+  }
+
   private class AccountRepeatFactory implements RepeatComponentFactory<Glob> {
 
     public void registerComponents(PanelBuilder cellBuilder, Glob account) {
@@ -133,7 +140,8 @@ public class ProjectAccountChartsPanel {
       cellBuilder.addDisposable(accountPositionLabel);
 
       final AccountPositionsChartView accountChart =
-        AccountPositionsChartView.full(account.get(Account.ID), "accountHistoChart", shortRange, repository, directory);
+        AccountPositionsChartView.full(account.get(Account.ID), "accountHistoChart", currentRange, repository, directory);
+      storeChart(cellBuilder, accountChart);
       final SplitsNode<HistoChart> chartNode = accountChart.registerComponents(cellBuilder);
       accountChart.update();
 
@@ -161,13 +169,23 @@ public class ProjectAccountChartsPanel {
       cellBuilder.addDisposable(accountPositionLabel);
 
       final MainDailyPositionsChartView chartView =
-        new MainDailyPositionsChartView(shortRange,
+        new MainDailyPositionsChartView(currentRange,
                                         AccountPositionsChartView.FULL_CONFIG,
                                         "accountHistoChart", repository, directory, "daily.budgetSummary");
+      storeChart(cellBuilder, chartView);
       chartView.setAccount(Account.isMain(account) ? AccountMatchers.userCreatedMainAccounts() : AccountMatchers.userCreatedSavingsAccounts());
       SplitsNode<HistoChart> node = chartView.registerComponents(cellBuilder);
       node.applyStyle("accountChartShown");
       cellBuilder.addDisposable(chartView);
     }
+  }
+
+  public void storeChart(PanelBuilder cellBuilder, final HistoChartAdjustableRange accountChart) {
+    charts.add(accountChart);
+    cellBuilder.addDisposable(new Disposable() {
+      public void dispose() {
+        charts.remove(accountChart);
+      }
+    });
   }
 }

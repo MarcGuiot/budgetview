@@ -20,18 +20,24 @@ public class ScrollableHistoChartRange extends AbstractHistoChartRange {
   private Integer rangeEnd;
   private int firstMonth;
   private int lastMonth;
+  private final TypeChangeSetListener monthListener;
 
   public ScrollableHistoChartRange(int monthsBack, int monthsLater, boolean centerOnSelection, GlobRepository repository) {
     super(repository);
     this.monthsBack = monthsBack;
     this.monthsLater = monthsLater;
     this.centerOnSelection = centerOnSelection;
-    repository.addChangeListener(new TypeChangeSetListener(Month.TYPE) {
+    this.monthListener = new TypeChangeSetListener(Month.TYPE) {
       public void update(GlobRepository repository) {
         updateBounds();
       }
-    });
+    };
+    repository.addChangeListener(monthListener);
     updateBounds();
+  }
+
+  public void dispose() {
+    repository.removeChangeListener(monthListener);
   }
 
   private void updateBounds() {

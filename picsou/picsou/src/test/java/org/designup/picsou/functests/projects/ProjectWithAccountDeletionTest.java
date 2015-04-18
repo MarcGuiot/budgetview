@@ -66,8 +66,8 @@ public class ProjectWithAccountDeletionTest extends LoggedInFunctionalTestCase {
       .validate();
 
     currentProject.backToList();
-    projectList.checkCurrentProjects("| Project B | Dec | 500.00  | on |\n" +
-                                  "| Project A | Dec | 1100.00 | on |");
+    projectList.checkCurrentProjects("| Project A | Dec | 1100.00 | on |\n" +
+                                     "| Project B | Dec | 500.00  | on |");
 
     budgetView.extras
       .checkContent("| Project A | 100.00 | 1000.00 |\n" +

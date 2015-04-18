@@ -2,6 +2,7 @@ package org.designup.picsou.gui.accounts.chart;
 
 import com.budgetview.shared.gui.histochart.HistoChartConfig;
 import org.designup.picsou.gui.analysis.histobuilders.HistoChartBuilder;
+import org.designup.picsou.gui.analysis.histobuilders.range.HistoChartAdjustableRange;
 import org.designup.picsou.gui.analysis.histobuilders.range.HistoChartRange;
 import org.designup.picsou.gui.card.NavigationService;
 import org.designup.picsou.gui.components.charts.histo.HistoChart;

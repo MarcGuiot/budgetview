@@ -2,6 +2,7 @@ package org.designup.picsou.gui.projects;
 
 import com.budgetview.shared.gui.histochart.HistoChartConfig;
 import org.designup.picsou.gui.View;
+import org.designup.picsou.gui.analysis.histobuilders.range.HistoChartAdjustableRange;
 import org.designup.picsou.gui.browsing.BrowsingAction;
 import org.designup.picsou.gui.components.charts.histo.HistoChart;
 import org.designup.picsou.gui.components.charts.histo.HistoChartColors;
@@ -39,7 +40,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.Set;
 
-public class ProjectChartView extends View {
+public class ProjectChartView extends View implements HistoChartAdjustableRange {
   private static final float BUTTON_FONT_SIZE = 12.0f;
   private HistoChartUpdater updater;
   private HistoChart histoChart;

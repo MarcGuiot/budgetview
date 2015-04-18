@@ -672,8 +672,8 @@ public class BudgetViewChecker extends ViewChecker {
       getActionPopup().click(Lang.get("projectView.create"));
     }
 
-    public void checkProjectsDisabledMessage(String name) {
-      MessageDialogChecker.open(getSeriesPanel(name).getSeriesButton().triggerClick(Lang.get("seriesGroup.goto.project")))
+    public void checkGotoProjectDisabled(String seriesName) {
+      MessageDialogChecker.open(getSeriesPanel(seriesName).getSeriesButton().triggerClick(Lang.get("seriesGroup.goto.project")))
         .checkTitle(Lang.get("addons.projects.disabled.title"))
         .checkInfoMessageContains("You must activate the Projects add-on")
         .close();

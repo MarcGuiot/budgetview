@@ -2,6 +2,7 @@ package org.designup.picsou.gui.accounts.chart;
 
 import com.budgetview.shared.gui.histochart.HistoChartConfig;
 import org.designup.picsou.gui.View;
+import org.designup.picsou.gui.analysis.histobuilders.range.HistoChartAdjustableRange;
 import org.designup.picsou.gui.card.NavigationService;
 import org.designup.picsou.gui.components.charts.histo.HistoChart;
 import org.designup.picsou.gui.components.charts.histo.HistoChartColors;
@@ -28,7 +29,10 @@ import java.util.Set;
 
 import static org.globsframework.model.utils.GlobMatchers.*;
 
-public abstract class PositionsChartView extends View implements HistoChartRangeListener, Disposable {
+public abstract class PositionsChartView
+  extends View
+  implements HistoChartAdjustableRange, HistoChartRangeListener, Disposable {
+
   protected HistoChartBuilder histoChartBuilder;
   protected String componentName;
   private AccountHistoChartUpdater updater;

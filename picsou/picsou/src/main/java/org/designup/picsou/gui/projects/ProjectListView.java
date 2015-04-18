@@ -10,18 +10,22 @@ import org.designup.picsou.gui.projects.utils.PastProjectsMatcher;
 import org.designup.picsou.model.Project;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobsPanelBuilder;
-import org.globsframework.gui.splits.SplitsNode;
 import org.globsframework.gui.splits.PanelBuilder;
+import org.globsframework.gui.splits.SplitsNode;
 import org.globsframework.gui.splits.repeat.RepeatComponentFactory;
 import org.globsframework.gui.splits.utils.ToggleVisibilityAction;
 import org.globsframework.gui.utils.GlobBooleanNodeStyleUpdater;
 import org.globsframework.gui.utils.PopupMenuFactory;
 import org.globsframework.gui.views.GlobLabelView;
-import org.globsframework.model.*;
+import org.globsframework.model.Glob;
+import org.globsframework.model.GlobRepository;
+import org.globsframework.model.Key;
 import org.globsframework.model.utils.GlobComparators;
+import org.globsframework.model.utils.GlobFieldsComparator;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
+import java.util.Comparator;
 
 public class ProjectListView extends View {
 
@@ -38,9 +42,15 @@ public class ProjectListView extends View {
     builder.add("createProject", new CreateProjectAction(repository, directory));
     ProjectComponentFactory componentFactory = new ProjectComponentFactory();
     builder.addRepeat("currentProjects", ProjectStat.TYPE,
-                      new CurrentProjectsMatcher(), GlobComparators.ascending(ProjectStat.FIRST_MONTH), componentFactory);
+                      new CurrentProjectsMatcher(),
+                      new GlobFieldsComparator(ProjectStat.FIRST_MONTH, true,
+                                               ProjectStat.PLANNED_AMOUNT, true),
+                      componentFactory);
     builder.addRepeat("pastProjects", ProjectStat.TYPE,
-                      new PastProjectsMatcher(), GlobComparators.descending(ProjectStat.LAST_MONTH), componentFactory);
+                      new PastProjectsMatcher(),
+                      new GlobFieldsComparator(ProjectStat.LAST_MONTH, false,
+                                               ProjectStat.PLANNED_AMOUNT, true),
+                      componentFactory);
 
     JPanel pastProjectsPanel = new JPanel();
     builder.add("pastProjectsPanel", pastProjectsPanel);

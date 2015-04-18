@@ -35,11 +35,11 @@ public class AddOnsTest extends LoggedInFunctionalTestCase {
     views.checkProjectsDisabled();
 
     views.selectBudget();
-    budgetView.extras.checkProjectsDisabledMessage("MyProject");
+    budgetView.extras.checkGotoProjectDisabled("MyProject");
     views.checkBudgetSelected();
 
     budgetView.extras.expandGroup("MyProject");
-    budgetView.extras.checkProjectsDisabledMessage("Booking");
+    budgetView.extras.checkGotoProjectDisabled("Booking");
     views.checkBudgetSelected();
   }
 

@@ -23,6 +23,10 @@ public abstract class AbstractHistoChartRange implements HistoChartRange {
     }
   }
 
+  public void dispose() {
+
+  }
+
   public void addListener(HistoChartRangeListener listener) {
     listeners.add(listener);
   }
