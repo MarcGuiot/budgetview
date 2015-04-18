@@ -30,11 +30,11 @@ public class SeriesUpdateTriggerTest extends PicsouTriggerTestCase {
         .getValues(Transaction.ID);
     listener.assertLastChangesEqual(
       Transaction.TYPE,
-      "  <create account='100' amount='-29.9' bankDay='18' bankMonth='200809' mirror='false'" +
+      "  <create account='100' originalAccount='100' amount='-29.9' bankDay='18' bankMonth='200809' mirror='false'" +
       "          day='18' id='" + ids[1] + "' label='free telecom' month='200809'" +
       "          budgetDay='18' budgetMonth='200809' positionDay='18' positionMonth='200809' " +
       "          planned='true' series='100' transactionType='5' type='transaction' createdBySeries='false'/>" +
-      "  <create account='100' amount='-29.9' bankDay='18' bankMonth='200808' mirror='false'" +
+      "  <create account='100' originalAccount='100' amount='-29.9' bankDay='18' bankMonth='200808' mirror='false'" +
       "          day='18' id='" + ids[0] + "' label='free telecom' month='200808'" +
       "          budgetDay='18' budgetMonth='200808' positionDay='18' positionMonth='200808' " +
       "          planned='true' series='100' transactionType='5' type='transaction' createdBySeries='false'/>" +

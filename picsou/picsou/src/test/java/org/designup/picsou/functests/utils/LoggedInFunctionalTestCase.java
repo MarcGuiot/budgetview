@@ -376,4 +376,12 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
     UISpecAssert.waitUntil(mainWindow.containsSwingComponent(TimeViewPanel.class), 10000);
   }
 
+  static boolean disableClipboard = Boolean.getBoolean("disableClipboard");
+
+  public static void callFailIfClipBoardDisable() {
+    if (disableClipboard){
+      fail("test with clipBoard disable.");
+    }
+  }
+
 }

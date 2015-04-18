@@ -71,7 +71,7 @@ public class ShiftTransactionAction extends SingleSelectionAction implements Cha
       return;
     }
 
-    Glob account = repository.findLinkTarget(transaction, Transaction.ACCOUNT);
+    Glob account = repository.findLinkTarget(transaction, Transaction.ORIGINAL_ACCOUNT);
     if (!account.get(Account.CARD_TYPE).equals(AccountCardType.NOT_A_CARD.getId())) {
       setEnabled(false);
       return;

@@ -87,7 +87,7 @@ public class PositionTrigger implements ChangeSetListener {
                               not(contained(Account.ID, accountIds))))
           .getValueSet(Account.ID);
       updateTransactionImpactAccounts(repository, changeSet, Collections.<Integer>emptySet(), allAccountIds,
-                                      Collections.<Integer>emptySet(), false, transactions, deferredAccountIds);
+                                      Collections.<Integer>emptySet(), false, transactions, allDeferredAccountIds);
 
       updateDeferredAccount(repository, allDeferredAccountIds, transactions);
       computeTotal(repository, transactions);

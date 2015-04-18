@@ -1,9 +1,9 @@
 package org.designup.picsou.functests.checkers;
 
+import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.uispec4j.*;
 import static org.uispec4j.assertion.UISpecAssert.*;
 import org.uispec4j.interception.WindowInterceptor;
-import org.globsframework.gui.splits.utils.GuiUtils;
 import junit.framework.Assert;
 
 public class MessageAndDetailsDialogChecker {
@@ -36,6 +36,7 @@ public class MessageAndDetailsDialogChecker {
   }
 
   public MessageAndDetailsDialogChecker checkCopy() throws Exception {
+    LoggedInFunctionalTestCase.callFailIfClipBoardDisable();
     dialog.getButton("copy").click();
 
     String details = dialog.getTextBox("details").getText();

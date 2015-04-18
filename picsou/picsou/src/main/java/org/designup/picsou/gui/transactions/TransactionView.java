@@ -292,7 +292,7 @@ public class TransactionView extends View implements Filterable {
       .addColumn(Lang.get("transactionView.position"),
                  balanceColumn, balanceColumn.getStringifier())
       .addColumn(Lang.get("transactionView.account.name"),
-                 descriptionService.getStringifier(Transaction.ACCOUNT));
+                 descriptionService.getStringifier(Transaction.ORIGINAL_ACCOUNT));
 
     view.registerSaving(UserPreferences.KEY, new GlobTableView.FieldAccess() {
       public IntegerField getPosField(int modelIndex) {

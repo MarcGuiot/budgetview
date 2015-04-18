@@ -1,6 +1,7 @@
 package org.designup.picsou.functests.checkers;
 
 import junit.framework.Assert;
+import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.uispec4j.Clipboard;
 import org.uispec4j.TextBox;
 import org.uispec4j.Trigger;
@@ -46,6 +47,7 @@ public class SynchroErrorDialogChecker {
   }
 
   public SynchroErrorDialogChecker checkCopy() throws Exception {
+    LoggedInFunctionalTestCase.callFailIfClipBoardDisable();
     dialog.getButton("copy").click();
 
     String details = dialog.getTextBox("details").getText();

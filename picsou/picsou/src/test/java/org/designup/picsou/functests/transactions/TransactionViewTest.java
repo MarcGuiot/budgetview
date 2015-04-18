@@ -387,6 +387,7 @@ public class TransactionViewTest extends LoggedInFunctionalTestCase {
   }
 
   public void testCopyToClipboard() throws Exception {
+    LoggedInFunctionalTestCase.callFailIfClipBoardDisable();
 
     transactions.initContent()
       .add("06/05/2006", TransactionType.PRELEVEMENT, "NOUNOU", "nourrice", -100.00)
