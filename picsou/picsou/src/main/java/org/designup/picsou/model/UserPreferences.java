@@ -4,12 +4,10 @@ import com.budgetview.shared.utils.PicsouGlobSerializer;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.annotations.*;
+import org.globsframework.metamodel.annotations.Key;
 import org.globsframework.metamodel.fields.*;
 import org.globsframework.metamodel.utils.GlobTypeLoader;
-import org.globsframework.model.FieldSetter;
-import org.globsframework.model.FieldValues;
-import org.globsframework.model.Glob;
-import org.globsframework.model.GlobRepository;
+import org.globsframework.model.*;
 import org.globsframework.utils.serialization.SerializedByteArrayOutput;
 import org.globsframework.utils.serialization.SerializedInput;
 import org.globsframework.utils.serialization.SerializedInputOutputFactory;
@@ -136,6 +134,11 @@ public class UserPreferences {
     if (prefs.get(PASSWORD_FOR_MOBILE) == null || force) {
       repository.update(KEY, PASSWORD_FOR_MOBILE, RandomStringUtils.randomAlphanumeric(6).toLowerCase());
     }
+  }
+
+  public static boolean isTrue(BooleanField field, GlobRepository repository) {
+    Glob prefs = repository.find(KEY);
+    return prefs != null && prefs.isTrue(field);
   }
 
   public static class Serializer implements PicsouGlobSerializer {

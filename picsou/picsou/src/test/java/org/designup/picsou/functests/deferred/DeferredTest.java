@@ -25,19 +25,19 @@ public class DeferredTest extends LoggedInFunctionalTestCase {
 
     mainAccounts.edit("Card n. 1111").setDeferred(27, 28, 0).validate();
 
-    //openApplication();
+
     // si on selection les trois mois ca plante en NPE.
     views.selectCategorization();
-//    categorization.selectTransaction("Auchan")
-//      .selectOther()
-//      .selectDeferred()
-//      .checkHidden()
-//      .toggle()
-//      .checkMessage("Select a transfer operation from your main account to a card account.")
-//      .checkContainsNoSeries()
-//      .checkEditSeriesButtonNotVisible()
-//      .toggle()
-//      .checkHidden();
+    categorization.selectTransaction("Auchan")
+      .selectOther()
+      .selectDeferred()
+      .checkHidden()
+      .toggle()
+      .checkMessage("Select a transfer operation from your main account to a card account.")
+      .checkContainsNoSeries()
+      .checkEditSeriesButtonNotVisible()
+      .toggle()
+      .checkHidden();
 
     categorization.selectTransaction("Prelevement")
       .selectOther()

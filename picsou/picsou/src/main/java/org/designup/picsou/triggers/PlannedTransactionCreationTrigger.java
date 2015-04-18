@@ -215,7 +215,7 @@ public class PlannedTransactionCreationTrigger implements ChangeSetListener {
         Double plannedAmount = seriesBudget.get(SeriesBudget.PLANNED_AMOUNT, 0);
         double remainder = plannedAmount - Utils.zeroIfNull(actualAmount);
         if (((plannedAmount > 0 && remainder > 0) || (plannedAmount < 0 && remainder < 0)) && !Amounts.isNearZero(remainder)) {
-          if (repository.get(UserPreferences.KEY).isTrue(UserPreferences.MULTIPLE_PLANNED)) {
+          if (UserPreferences.isTrue(UserPreferences.MULTIPLE_PLANNED, repository)) {
             distributePlannedAmountOnShape(seriesBudget, monthId, plannedTransactionsForMonth, repository);
           }
           else {

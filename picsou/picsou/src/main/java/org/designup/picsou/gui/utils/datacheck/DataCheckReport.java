@@ -1,11 +1,15 @@
 package org.designup.picsou.gui.utils.datacheck;
 
+import org.designup.picsou.gui.time.TimeService;
 import org.globsframework.utils.Log;
+
+import java.util.Date;
 
 public class DataCheckReport {
 
   private StringBuilder builder = new StringBuilder();
   private boolean hasError;
+  private Date date = TimeService.getCurrentDate();
 
   public StringBuilder append(Object message) {
     hasError = true;
@@ -33,7 +37,10 @@ public class DataCheckReport {
   }
 
   public String toString() {
-    return builder.toString();
+    if (!hasError) {
+      return "";
+    }
+    return "On " + date + ":\n" + builder.toString();
   }
 
   public void clear() {
