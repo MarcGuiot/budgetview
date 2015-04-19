@@ -13,6 +13,7 @@ import org.designup.picsou.model.*;
 import org.designup.picsou.model.upgrade.DeferredAccountUpgradeV40;
 import org.designup.picsou.triggers.AccountInitialPositionTrigger;
 import org.designup.picsou.triggers.AccountSequenceTrigger;
+import org.designup.picsou.triggers.AddOnTrigger;
 import org.designup.picsou.triggers.PositionTrigger;
 import org.designup.picsou.triggers.savings.UpdateMirrorSeriesChangeSetVisitor;
 import org.designup.picsou.utils.TransactionComparator;
@@ -141,6 +142,9 @@ public class UpgradeTrigger implements ChangeSetListener {
       updageAccountGraphs(repository);
       updateColorTheme(repository);
       DeferredAccountUpgradeV40.run(repository);
+    }
+    if (currentJarVersion < 144) {
+      AddOnTrigger.alignWithUser(repository);
     }
 
     // Dans tous les cas :

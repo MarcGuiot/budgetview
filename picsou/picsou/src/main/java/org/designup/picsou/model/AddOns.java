@@ -88,7 +88,7 @@ public class AddOns {
   public static class Serializer implements PicsouGlobSerializer {
 
     public int getWriteVersion() {
-      return 1;
+      return 2;
     }
 
     public boolean shouldBeSaved(GlobRepository repository, FieldValues fieldValues) {
@@ -101,13 +101,25 @@ public class AddOns {
       outputStream.writeBoolean(values.get(PROJECTS));
       outputStream.writeBoolean(values.get(GROUPS));
       outputStream.writeBoolean(values.get(ANALYSIS));
+      outputStream.writeBoolean(values.get(MOBILE));
       return serializedByteArrayOutput.toByteArray();
     }
 
     public void deserializeData(int version, FieldSetter fieldSetter, byte[] data, Integer id) {
-      if (version == 1) {
+      if (version == 2) {
+        deserializeDataV2(fieldSetter, data);
+      }
+      else if (version == 1) {
         deserializeDataV1(fieldSetter, data);
       }
+    }
+
+    private void deserializeDataV2(FieldSetter fieldSetter, byte[] data) {
+      SerializedInput input = SerializedInputOutputFactory.init(data);
+      fieldSetter.set(PROJECTS, input.readBoolean());
+      fieldSetter.set(GROUPS, input.readBoolean());
+      fieldSetter.set(ANALYSIS, input.readBoolean());
+      fieldSetter.set(MOBILE, input.readBoolean());
     }
 
     private void deserializeDataV1(FieldSetter fieldSetter, byte[] data) {
