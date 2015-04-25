@@ -126,9 +126,8 @@
         </page>
       </page>
 
-      <page file="support/versions/v3_14b.html" title="Avant-première : BudgetView v3.14b"/>
       <page file="support/versions/v3_14b_maj.html" title="Guide de mise à jour BudgetView 3.14"/>
-      <page file="support/versions/v4_0a.html" title="Avant-première : BudgetView 4.0a"/>
+      <page file="support/versions/v3_14b.html" title="Avant-première : BudgetView v3.14b"/>
     </page>
 
     <page file="mobile.html" title="Mobile">

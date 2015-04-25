@@ -12,8 +12,14 @@
       <page file="download/linux.html" title="Install BudgetView on your Linux PC."/>
     </page>
 
+    <page file="add_ons.html" title="Add-ons">
+      <key name="title.hide" value="true"/>
+      <key name="innerTemplate" value="templates/standardPageTemplate.html"/>
+    </page>
+
     <page file="buy.html" title="Purchase BudgetView !" shortTitle="Buy">
       <key name="title.hide" value="true"/>
+      <key name="navbar.hide" value="true"/>
       <key name="innerTemplate" value="templates/standardPageTemplate.html"/>
       <page file="buy/ok.html" title="Purchase completed">
         <key name="title.hide" value="true"/>

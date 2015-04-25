@@ -280,6 +280,11 @@ div.container h3 {
   margin-top: 20px;
 }
 
+#home #addons-ref {
+  text-align: center;
+  font-size: 22px;
+}
+
 /*=== SHOW/HIDE ===*/
 
 .more {
