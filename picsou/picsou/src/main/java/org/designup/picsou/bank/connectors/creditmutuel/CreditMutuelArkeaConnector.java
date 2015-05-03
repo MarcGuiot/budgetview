@@ -50,7 +50,7 @@ public class CreditMutuelArkeaConnector extends WebBankConnector implements Http
   private CreditMutuelArkeaConnector(boolean syncExistingAccount, Directory directory, GlobRepository repository,
                                      final Glob synchro) {
     super(BANK_ID, syncExistingAccount, repository, directory, synchro);
-    this.setBrowserVersion(BrowserVersion.FIREFOX_10);
+    this.setBrowserVersion(BrowserVersion.FIREFOX_24);
   }
 
   public HttpWebConnection getHttpConnection(WebClient client) {
@@ -171,8 +171,6 @@ public class CreditMutuelArkeaConnector extends WebBankConnector implements Http
         currentPage = browser.updateCurrentPage();
 
         tryClickDownload(currentPage);
-//        String downloadUrl = browser.getUrl() + "#TelechargementOperationPlace:";
-//        browser.load(downloadUrl);
         browser.waitForBackgroundJavaScript(5000);
         currentPage = browser.updateCurrentPage();
 

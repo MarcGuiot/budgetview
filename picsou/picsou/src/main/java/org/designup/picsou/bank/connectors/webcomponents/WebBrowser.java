@@ -24,7 +24,7 @@ public class WebBrowser {
   private HttpConnectionProvider httpConnectionProvider;
   private boolean javascriptEnabled = true;
   private boolean cssEnabled  =false;
-  private BrowserVersion browserVersion = BrowserVersion.FIREFOX_10;
+  private BrowserVersion browserVersion = BrowserVersion.FIREFOX_24;
 
   public WebBrowser(AlertHandler errorAlertHandler) {
     this.errorAlertHandler = errorAlertHandler;
@@ -53,9 +53,10 @@ public class WebBrowser {
 
   private void createWebClient() {
     webClient = new WebClient(browserVersion);
-    webClient.setThrowExceptionOnScriptError(false);
-    webClient.setCssEnabled(cssEnabled);
-    webClient.setJavaScriptEnabled(javascriptEnabled);
+    WebClientOptions options = webClient.getOptions();
+    options.setThrowExceptionOnScriptError(false);
+    options.setCssEnabled(cssEnabled);
+    options.setJavaScriptEnabled(javascriptEnabled);
     webClient.setCache(new Cache());
     webClient.setWebConnection(httpConnectionProvider.getHttpConnection(webClient));
     webClient.setAjaxController(new NicelyResynchronizingAjaxController());
@@ -63,7 +64,7 @@ public class WebBrowser {
   }
 
   public void setTimeout(int timeout) {
-    getClient().setTimeout(timeout);
+    getClient().getOptions().setTimeout(timeout);
   }
 
   public WebPage load(String url) throws WebCommandFailed {

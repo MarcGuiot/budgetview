@@ -9,7 +9,7 @@ public class HeaderPanelLayout implements LayoutManager {
   private static final int PADDING_TOP = 5;
   private static final int PADDING_BOTTOM = 10;
   private static final int PADDING_LEFT = 10;
-  private static final int PADDING_RIGHT = 10;
+  private static final int PADDING_RIGHT = 15;
 
   private boolean initialized = false;
   private Component periodTitle;

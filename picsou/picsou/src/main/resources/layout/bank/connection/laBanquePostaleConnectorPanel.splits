@@ -1,6 +1,7 @@
 <splits xmlns="http://www.globsframework.org/xml/splits.xsd">
 
   <styleImport file="/layout/commonStyles.splits"/>
+  <styleImport file="/layout/dialogStyles.splits"/>
   <styles>
     <style selector="label.keyboardLabel" cursor="hand"
            icon="roundedRect(32,31,4,4,#F0F0F0,#E0E0E0)" preferredSize="(32,31)"
@@ -11,7 +12,6 @@
 
   <panel styleClass="innerDialogBlockPanel">
     <column>
-
       <row>
         <label text="1. Identifiant" styleClass="formSection" anchor="southeast"/>
         <textField ref="userIdField" gridPos="(0,0)" columns="10" marginLeft="20"/>

@@ -28,7 +28,11 @@ public class WebContainer<T extends HtmlElement> extends WebComponent<T> {
 
   public WebPanel findPanelById(String id) throws WebParsingError {
     try {
-      return new WebPanel(browser, node.getElementById(id));
+      HtmlPage page = node.getHtmlPageOrNull();
+      if (page == null) {
+        return null;
+      }
+      return new WebPanel(browser, page.getHtmlElementById(id));
     }
     catch (ElementNotFoundException e) {
       return null;
@@ -362,7 +366,7 @@ public class WebContainer<T extends HtmlElement> extends WebComponent<T> {
   }
 
   public boolean hasId(String id) {
-    return node.hasHtmlElementWithId(id);
+    return HtmlUnit.findElementById(node, id) != null;
   }
 
   public WebListItem getListItemById(String id) throws WebParsingError {
@@ -370,8 +374,8 @@ public class WebContainer<T extends HtmlElement> extends WebComponent<T> {
   }
 
   public String getBackgroundImagePath() {
-    ComputedCSSStyleDeclaration style = ((HTMLElement)node.getScriptObject()).jsxGet_currentStyle();
-    String background = style.jsxGet_backgroundImage();
+    ComputedCSSStyleDeclaration style = ((HTMLElement)node.getScriptObject()).getCurrentStyle();
+    String background = style.getBackgroundImage();
     if (Strings.isNullOrEmpty(background)) {
       return null;
     }

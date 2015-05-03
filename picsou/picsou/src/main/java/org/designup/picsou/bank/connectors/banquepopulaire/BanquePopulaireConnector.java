@@ -44,7 +44,6 @@ public class BanquePopulaireConnector extends WebBankConnector implements HttpCo
 
   public static void main(String[] args) throws IOException {
     WebConnectorLauncher.show(12, new BanquePopulaireConnectorFactory(12));
-//    WebConnectorLauncher.show(67, new CreditAgricoleFactory(67));
   }
 
 

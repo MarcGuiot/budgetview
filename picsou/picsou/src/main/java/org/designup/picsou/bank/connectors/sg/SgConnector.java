@@ -81,7 +81,7 @@ public class SgConnector extends WebBankConnector implements HttpConnectionProvi
 
   private SgConnector(boolean syncExistingAccount, GlobRepository repository, Directory directory, Glob synchro) {
     super(BANK_ID, syncExistingAccount, repository, directory, synchro);
-    this.setBrowserVersion(BrowserVersion.INTERNET_EXPLORER_7);
+    this.setBrowserVersion(BrowserVersion.INTERNET_EXPLORER_11);
   }
 
   protected JPanel createPanel() {

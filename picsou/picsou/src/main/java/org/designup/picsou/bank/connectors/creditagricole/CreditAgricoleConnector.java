@@ -41,7 +41,6 @@ public class CreditAgricoleConnector extends WebBankConnector implements HttpCon
 
   public static void main(String[] args) throws IOException {
     WebConnectorLauncher.show(61, new CreditAgricoleFactory(61));
-//    WebConnectorLauncher.show(67, new CreditAgricoleFactory(67));
   }
 
   public CreditAgricoleConnector(int bankId, String url, GotoAutentifcation autentification,
@@ -54,21 +53,7 @@ public class CreditAgricoleConnector extends WebBankConnector implements HttpCon
   public HttpWebConnection getHttpConnection(WebClient client) {
     return new HttpWebConnection(client) {
       public WebResponse getResponse(WebRequest request) throws IOException {
-//        String s = request.getUrl().toString();
-//        System.out.println("webRequest " + s);
-//        Map<String, String> headers = request.getAdditionalHeaders();
-//        for (Map.Entry<String, String> entry : headers.entrySet()) {
-//          System.out.println("webRequest header : " + entry.getKey() + "<=>" + entry.getValue());
-//        }
-//        List<NameValuePair> parameters = request.getRequestParameters();
-//        for (NameValuePair parameter : parameters) {
-//          System.out.println("webRequest param : " + parameter.getName() + " ==> " + parameter.getValue());
-//        }
-//        String body = request.getRequestBody();
-//        System.out.println("webRequest body : " + body);
-        WebResponse response = super.getResponse(request);
-//        System.out.println("webRequest response " + response.getLoadTime() + " ms.");
-        return response;
+        return super.getResponse(request);
       }
     };
   }

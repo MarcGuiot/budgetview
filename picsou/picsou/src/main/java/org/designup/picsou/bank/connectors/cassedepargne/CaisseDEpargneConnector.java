@@ -39,7 +39,7 @@ public class CaisseDEpargneConnector extends WebBankConnector implements HttpCon
 
   public CaisseDEpargneConnector(boolean syncExistingAccount, GlobRepository repository, Directory directory, Glob synchro) {
     super(BANK_ID, syncExistingAccount, repository, directory, synchro);
-    setBrowserVersion(BrowserVersion.FIREFOX_10);
+    setBrowserVersion(BrowserVersion.FIREFOX_24);
   }
 
   public static void main(String[] args) throws IOException {

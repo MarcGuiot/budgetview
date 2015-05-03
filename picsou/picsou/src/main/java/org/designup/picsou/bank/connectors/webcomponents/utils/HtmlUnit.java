@@ -18,10 +18,21 @@ public class HtmlUnit {
 
   private static final String SEPARATOR = "------------------------------------------------------------------------\n";
 
+  public static <T extends HtmlElement> T findElementById(HtmlElement container, String id) {
+    T result = null;
+    try {
+      result = container.getHtmlPageOrNull().getHtmlElementById(id);
+    }
+    catch (com.gargoylesoftware.htmlunit.ElementNotFoundException e) {
+      return null;
+    }
+    return result;
+  }
+
   public static <T extends HtmlElement> T findElementById(HtmlElement container, String id, Class<T> expectedClass) throws WebParsingError {
     T result = null;
     try {
-      result = container.<T>getElementById(id);
+      result = container.getHtmlPageOrNull().getHtmlElementById(id);
     }
     catch (com.gargoylesoftware.htmlunit.ElementNotFoundException e) {
       return null;
@@ -33,7 +44,7 @@ public class HtmlUnit {
   public static <T extends HtmlElement> T getElementById(HtmlElement container, String id, Class<T> expectedClass) throws WebParsingError {
     T result = null;
     try {
-      result = container.<T>getElementById(id);
+      result = container.getHtmlPageOrNull().getHtmlElementById(id);
     }
     catch (com.gargoylesoftware.htmlunit.ElementNotFoundException e) {
       fail(container, "Cannot find element with id: " + id);
@@ -252,7 +263,7 @@ public class HtmlUnit {
 
   public static <T extends HtmlElement> T getElementByLabel(String text, HtmlElement container, Class<T> expectedClass) throws WebParsingError {
     String targetElementId = getTargetIdFromLabel(container, text);
-    T element = container.<T>getElementById(targetElementId);
+    T element = container.getHtmlPageOrNull().getHtmlElementById(targetElementId);
     if (!expectedClass.isAssignableFrom(element.getClass())) {
       fail(container,
            "Unexpected class '" + element.getClass().getName() + "' for component with label: " + text);
