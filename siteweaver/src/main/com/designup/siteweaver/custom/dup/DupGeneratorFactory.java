@@ -20,10 +20,10 @@ public class DupGeneratorFactory implements GeneratorFactory {
       return new InnerTemplateGenerator();
     }
     else if (generatorType.equals("title")) {
-      return new TitleGenerator(new DupTitleFormatter(tag));
+      return new TitleGenerator(new DupTitleFormatter(tag), tag.getAttributeValue("postfix", ""));
     }
     else if (generatorType.equals("h1")) {
-      return new TitleGenerator(new DupH1Formatter());
+      return new HeaderGenerator(new DupH1Formatter());
     }
     else if (generatorType.equals("base")) {
       return new BaseTagGenerator();

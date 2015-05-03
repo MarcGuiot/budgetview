@@ -8,28 +8,24 @@ import com.designup.siteweaver.model.Site;
 
 import java.io.IOException;
 
-public class TitleGenerator implements Generator {
+public class HeaderGenerator implements Generator {
 
   private Formatter formatter;
-  private String postfix;
 
   public interface Formatter {
-    public void writeTitle(Page page, String title, HtmlWriter writer);
+
+    public void writeTitle(Page page, HtmlWriter writer);
   }
 
-  public TitleGenerator(Formatter formatter, String postfix) {
+  public HeaderGenerator(Formatter formatter) {
     this.formatter = formatter;
-    this.postfix = postfix;
   }
 
   public void processPage(Site site, Page page, HtmlWriter writer, HtmlOutput htmlOutput) throws IOException {
-    String title = page.getValueForKey("title.override", false);
-    if (title == null || title.isEmpty()) {
-      title = page.getShortTitle();
+    if (page.isTrue("title.hide", false, false)) {
+      return;
     }
-    if (title == null || title.isEmpty()) {
-      title = page.getTitle();
-    }
-    formatter.writeTitle(page, title, writer);
+
+    formatter.writeTitle(page, writer);
   }
 }

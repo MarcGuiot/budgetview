@@ -4,6 +4,7 @@
   <page file="index.html" title="BudgetView" shortTitle="Accueil" template="templates/masterTemplate.html">
     <key name="innerTemplate" value="templates/homePageTemplate.html"/>
     <key name="title.hide" value="true"/>
+    <key name="title.override" value="Logiciel gratuit de gestion de comptes et de budget personnel"/>
 
     <page file="telechargement.html" title="Téléchargez BudgetView !" shortTitle="Téléchargement">
       <key name="innerTemplate" value="templates/standardPageTemplate.html"/>
@@ -61,7 +62,9 @@
           <page file="support/faq/general/utilisation_deux_ordinateurs.html"
                 title="Puis-je utiliser BudgetView sur deux ordinateurs ?"/>
           <page file="support/faq/general/remplacant_money.html"
-                title="Est-il possible d'utiliser BudgetView comme remplaçant de Money ?"/>
+                title="Est-il possible d'utiliser BudgetView comme remplaçant de Money ?">
+            <key name="title.override" value="Remplaçant de Money"/>
+          </page>
           <page file="support/faq/general/migrer_donnees_entre_ordinateurs.html"
                 title="Comment migrer mes données d'un ordinateur à un autre ?"/>
           <page file="support/faq/general/emplacement_repertoire_donnees.html"
@@ -151,6 +154,7 @@
     <file path="fonts"/>
     <file path="js"/>
     <file path="files/images"/>
+    <file path="favicon.ico"/>
   </copy>
 
   <copy>

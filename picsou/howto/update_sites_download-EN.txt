@@ -52,11 +52,11 @@ http://www.mybudgetview.com/files/app/BudgetView-3.13-en-Setup.exe
 
 Hello,
 
-I have the pleasure to announce that the 3.13 release of BudgetView is now available.
+I have the pleasure to announce that the 4.0 release of BudgetView is now available.
 
 The Windows installer file can be downloaded from the following link:
 
-- http://www.mybudgetview.com/files/app/BudgetView-3.13-en-Setup.exe
+- http://www.mybudgetview.com/files/app/BudgetView-4.0-en-Setup.exe
 
 The change log for this release is available here:
 

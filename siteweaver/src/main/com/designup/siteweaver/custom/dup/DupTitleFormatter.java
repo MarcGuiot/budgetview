@@ -15,8 +15,8 @@ public class DupTitleFormatter implements TitleGenerator.Formatter {
     postfix = tag.getAttributeValue("postfix", "");
   }
 
-  public void writeTitle(Page page, HtmlWriter writer) {
-    String title = page.getTitle().replace(" ?", "&nbsp;?").replace(" :", "&nbsp;:");
-    writer.write("<title>" + prefix + title + postfix + "</title>\n");
+  public void writeTitle(Page page, String title, HtmlWriter writer) {
+    String adjustedTitle = title.replace(" ?", "&nbsp;?").replace(" :", "&nbsp;:");
+    writer.write("<title>" + prefix + adjustedTitle + postfix + "</title>\n");
   }
 }
