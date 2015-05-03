@@ -206,7 +206,7 @@ public class Series {
 
   public static BooleanField[] getMonths() {
     return new BooleanField[]{JANUARY, FEBRUARY, MARCH, APRIL, MAY, JUNE, JULY, AUGUST,
-      SEPTEMBER, OCTOBER, NOVEMBER, DECEMBER};
+                              SEPTEMBER, OCTOBER, NOVEMBER, DECEMBER};
   }
 
   public static String getPlannedTransactionLabel(Integer seriesId, FieldValues series) {

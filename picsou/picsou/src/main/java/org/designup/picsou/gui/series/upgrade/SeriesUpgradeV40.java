@@ -10,13 +10,13 @@ import org.designup.picsou.gui.upgrade.PostProcessor;
 import org.designup.picsou.model.*;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.model.*;
-import org.globsframework.model.format.GlobPrinter;
-import org.globsframework.model.utils.GlobFunctor;
 import org.globsframework.model.utils.GlobMatchers;
-import org.globsframework.utils.Log;
 import org.globsframework.utils.Utils;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import static org.globsframework.model.FieldValue.value;
 import static org.globsframework.model.utils.GlobMatchers.*;
@@ -75,13 +75,28 @@ public class SeriesUpgradeV40 {
       GlobList transactions2 = getTransactions(series2, repository);
       Integer[] accountIds1 = getAccounts(transactions1);
       Integer[] accountIds2 = getAccounts(transactions2);
+      if ((accountIds1.length > 1) && (accountIds2.length == 0)) {
+        tryToRepairTransactionSeries(series1, transactions1, accountIds1, series2, transactions2, accountIds2);
+      }
+      else if (((accountIds1.length == 0) && (accountIds2.length > 1))) {
+        tryToRepairTransactionSeries(series2, transactions2, accountIds2, series1, transactions1, accountIds1);
+      }
+
+    }
+      for (Map.Entry<Key, Key> entry : savings.entrySet()) {
+      Glob series1 = repository.get(entry.getKey());
+      Glob series2 = repository.get(entry.getValue());
+      GlobList transactions1 = getTransactions(series1, repository);
+      GlobList transactions2 = getTransactions(series2, repository);
+      Integer[] accountIds1 = getAccounts(transactions1);
+      Integer[] accountIds2 = getAccounts(transactions2);
       if ((accountIds1.length <= 1) && (accountIds2.length <= 1)) {
         upgradeTransfer(series1, series2, transactions1, transactions2, accountIds1, accountIds2, repository);
       }
-      else if ((accountIds1.length > 1) && (accountIds2.length <= 1)) {
+      else if ((accountIds1.length > 1) && (accountIds2.length == 1)) {
         rebuildTransfer(series1, transactions1, accountIds1, series2, transactions2, accountIds2);
       }
-      else if (((accountIds1.length <= 1) && (accountIds2.length > 1))) {
+      else if (((accountIds1.length == 1) && (accountIds2.length > 1))) {
         rebuildTransfer(series2, transactions2, accountIds2, series1, transactions1, accountIds1);
       }
       else { // Should never occur - clean up the situation if it does happen
@@ -154,12 +169,38 @@ public class SeriesUpgradeV40 {
            Utils.equal(series2.get(Series.TO_ACCOUNT), targetAccount1);
   }
 
+  private void tryToRepairTransactionSeries(Glob multiSeries, GlobList multiTransactions, Integer[] multiAccountIds, Glob monoSeries, GlobList monoTransactions, Integer[] monoAccountIds){
+    if (monoAccountIds.length == 0) {
+      if (multiTransactions.getValueSet(Transaction.MIRROR).size() == 2) {
+        // on a un bug : la meme series porte les operations mirroir et normal.
+        int negativeSeries;
+        int positiveSeries;
+        if (multiSeries.get(Series.TARGET_ACCOUNT).equals(multiSeries.get(Series.FROM_ACCOUNT))) {
+          negativeSeries = multiSeries.get(Series.ID);
+          positiveSeries = monoSeries.get(Series.ID);
+        }
+        else {
+          negativeSeries = monoSeries.get(Series.ID);
+          positiveSeries = multiSeries.get(Series.ID);
+        }
+        for (Glob transaction : multiTransactions) {
+          if (transaction.get(Transaction.AMOUNT) >= 0) {
+            repository.update(transaction.getKey(), Transaction.SERIES, positiveSeries);
+          }
+          else {
+            repository.update(transaction.getKey(), Transaction.SERIES, negativeSeries);
+          }
+        }
+      }
+    }
+  }
+
   private void rebuildTransfer(Glob multiSeries, GlobList multiTransactions, Integer[] multiAccountIds, Glob monoSeries, GlobList monoTransactions, Integer[] monoAccountIds) {
     StandardMessageNotificationHandler.notify(Lang.get("upgrade.v40.multiAccountSavingsSeriesSplitted", multiSeries.get(Series.NAME)), repository);
     for (int i = 0; i < multiAccountIds.length; i++) {
       Integer accountId = multiAccountIds[i];
       GlobList accountTransactions = getAccountTransactions(multiTransactions, accountId);
-      Integer monoAccountId = monoAccountIds.length == 0 ? null : monoAccountIds[0];
+      Integer monoAccountId = monoAccountIds[0];
       GlobList mirrorTransactions = extractMirrorTransactions(accountTransactions, monoAccountId, monoTransactions);
       FieldValuesBuilder valuesBuilder = FieldValuesBuilder.init(multiSeries)
         .remove(Series.ID)

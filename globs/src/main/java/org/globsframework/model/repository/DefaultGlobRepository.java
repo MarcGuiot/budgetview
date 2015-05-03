@@ -697,8 +697,6 @@ public class DefaultGlobRepository implements GlobRepository, IndexSource {
     if (!this.changeSetToDispatch.isEmpty()) {
       MutableChangeSet currentChangeSetToDispatch = this.changeSetToDispatch;
 
-      // SVP : Laisser le code en commentaires : c'est parfois mon seul moyen de debug Marc.
-
       try {
         bulkDispatchingModeLevel++;
 
