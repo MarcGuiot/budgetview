@@ -38,6 +38,7 @@ public class BankAccountGroup {
   public static List<BankAccountGroup> getManualAccountGroups(GlobRepository repository) {
     GlobList realAccounts = repository.getAll(RealAccount.TYPE, and(isNull(RealAccount.SYNCHRO), isFalse(RealAccount.FROM_SYNCHRO)));
     GlobList accounts = realAccounts.getTargets(RealAccount.ACCOUNT, repository);
+    accounts.filterSelf(AccountMatchers.accountsNotClosedAsOf(CurrentMonth.getAsDate(repository)), repository);
     accounts.sort(new GlobFieldsComparator(Account.ACCOUNT_TYPE, true,
                                            Account.POSITION_DATE, true,
                                            Account.NAME, true));

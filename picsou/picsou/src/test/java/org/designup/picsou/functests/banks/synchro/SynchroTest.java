@@ -467,4 +467,47 @@ public class SynchroTest extends LoggedInFunctionalTestCase {
       .checkSynchroAvailableForAccounts("Account n. 000123")
       .close();
   }
+
+  public void testDeletedAccountsAreNotShown() throws Exception {
+    String path = OfxBuilder
+      .init(this)
+      .addBankAccount(30004, 12345, "000123", 100.00, "2006/01/23")
+      .addTransaction("2008/07/23", -10.00, "Menu K")
+      .addBankAccount(30004, 12345, "000246", 200.00, "2006/01/23")
+      .addTransaction("2008/08/23", -20.00, "FNAC")
+      .save();
+
+    operations.openImportDialog().openSynchro("Other")
+      .createAccount("000123", "account1", "", path)
+      .createAccount("000246", "account2", "", path)
+      .doImportAndWaitForPreview()
+      .checkAccount("Account n. 000123")
+      .setMainAccount()
+      .doImport()
+      .checkAccount("Account n. 000246")
+      .setMainAccount()
+      .completeImport();
+
+    operations.openImportDialog()
+      .checkSynchroAvailableForAccounts("Account n. 000123", "Account n. 000246")
+      .close();
+
+    mainAccounts.openDelete("Account n. 000123").validate();
+
+    operations.openImportDialog()
+      .checkSynchroAvailableForAccounts("Account n. 000246")
+      .close();
+
+    timeline.selectMonth(200807);
+    mainAccounts.openDelete("Account n. 000246").validate();
+
+    operations.openImportDialog()
+      .checkSynchroNotShown()
+      .close();
+
+    timeline.selectMonth(200808);
+    operations.openImportDialog()
+      .checkSynchroNotShown()
+      .close();
+  }
 }
