@@ -23,10 +23,8 @@ DirectoryIndex index.html
   RewriteEngine on
 
   # To redirect all users to access the site WITHOUT the 'www.' prefix,
-  # (http://www.example.com/... will be redirected to http://example.com/...)
-  # uncomment and adapt the following:
-  # RewriteCond %{HTTP_HOST} ^www\.regismedina\.com$ [NC]
-  # RewriteRule ^(.*)$ http://regismedina.com/$1 [L,R=301]
+  RewriteCond %{HTTP_HOST} !^www\.
+  RewriteRule ^(.*)$ http://www.%{HTTP_HOST}/$1 [R=301,L]
 
   # Disable Automatic Directory detection
   DirectorySlash Off
