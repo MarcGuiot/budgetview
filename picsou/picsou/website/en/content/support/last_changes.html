@@ -1,309 +1,483 @@
-<div id="changelog">
+<div id="changelog" class="log">
 
-<h2>version 3.13 <span class="date">january 11, 2013</span></h2>
+    <!------------------------------>
 
-<p>BudgetView now saves the size of the window and the various blocs in all views.
-    When launching the application, you'll then find it in the same state as you left it.</p>
-<p>You can now duplicate projects.</p>
-<p>Split transactions are now recognizable in the Budget and Categorization tables.</p>
-<p>Fixed an error that caused incorrect account positions.</p>
-<p>...and other minor evolutions and fixes.</p>
+    <h2>version 4.01 <span class="date">may 9, 2015</span></h2>
 
-<p><b>To upgrade BudgetView</b>, you just have to launch it, wait for a few seconds, and follow
-    the instructions that will appear on the screen. If you don't have BudgetView yet,
-    you can
-    <a title="Download BudgetView"
-       href="http://www.mybudgetview.com/download"
-       class="highlighted">download it now!</a>
-</p>
-<p>And as always, please do not hesitate to write us at
-    <a href="mailto:support@mybudgetview.com" class="highlighted">support@mybudgetview.com</a>
-    to tell us what you think about this release, and how we can make BudgetView even better.</p>
+    <p>This version integrates a few fixes, and clarifies the fact that BudgetView is now a free application that
+        can be optionally extended with paid add-ons.</p>
 
-<!------------------------------>
+    <h3>Installation</h3>
 
-<h2>version 3.11 <span class="date">october 13, 2013</span></h2>
-<p>This version provides a few bug fixes.</p>
-<p><b>To upgrade BudgetView</b>, you just have to launch it, wait for a few seconds, and follow
-    the instructions that will appear on the screen. If you don't have BudgetView yet,
-    you can
-    <a title="Download BudgetView"
-       href="http://www.mybudgetview.com/download"
-       class="highlighted">download it now!</a>
-</p>
-<p>And as always, please do not hesitate to write us at
-    <a href="mailto:support@mybudgetview.com" class="highlighted">support@mybudgetview.com</a>
-    to tell us what you think about this release, and how we can make BudgetView even better.</p>
+    <p>If you are using a previous version of BudgetView:</p>
 
-<!------------------------------>
+    <div class="warning-block">
+        <p>Version 4 of BudgetView introduces important changes in the way your budget
+            is represented within the software. We have extensively tested everything, through
+            a suite of more than 1500 automatic tests and through our own manual tests. However as a precaution we
+            recommend that you <b>backup your data</b> before installing the new version.</p>
+    </div>
 
-<h2>version 3.10 <span class="date">september 30, 2013</span></h2>
-<p>This version features a new way to manage your projects:</p>
-<div class="centered">
-    <img src="/files/images/support/versions/3_10/redesign_projects.png" alt="New approach to projects" style="margin:10px;"/>
-</div>
-<p>You can now;:</p>
-<ul>
-    <li>Activate/deactivate projects or project elements to perform simulations</li>
-    <li>Shift all the elements of a project to another month</li>
-    <li>Integrate recurring expenses over several months, for instance loans</li>
-    <li>Integrate transfers, for instance between your savings and main accounts</li>
-    <li>Set images to your projects, either from pictures located on your computer, or by copy/pasting them
-        from another application such as your web browser</li>
-    <li>Set notes, hyperlinks and images to project elements</li>
-</ul>
-<p>To start with, we encourage you to take some time to set images on all your projects - you'll see how
-    this gives a far better appearance to your budget!</p>
+    <p>To download this version, go to our Downloads page:
+    </p>
 
-<!------------------------------>
+    <p class="centered">
+        <a href="/download">
+            <button type="button" class="btn btn-primary">Download</button>
+        </a>
+    </p>
 
-<h2>version 3.09 <span class="date">August 16, 2013</span></h2>
-<p>This version contains a few fixes, mostly in direct connections to French banks (CIC).</p>
+    <p>And as always, please do not hesitate to write us at
+        <a href="mailto:support@mybudgetview.com" class="highlighted">support@mybudgetview.com</a>
+        to tell us what you think about this release, and how we can make BudgetView even better.</p>
 
-<!------------------------------>
+    <!------------------------------>
 
-<h2>version 3.08 <span class="date">August 6, 2013</span></h2>
-<p>This version contains a few fixes in the following areas:</p>
-<ul>
-    <li>CSV Import</li>
-    <li>Restoration of backup files.</li>
-</ul>
-<p>It also features two new color themes, available in the Preferences dialog.</p>
+    <h2>version 4.0 <span class="date">april 19, 2015</span></h2>
 
-<!------------------------------>
 
-<h2>version 3.07 <span class="date">April 29, 2013</span></h2>
-<p>This version contains minor fixes and evolutions:</p>
-<ul>
-    <li>You can now delete accounts and envelopes through the right-click pop-up menus.</li>
-    <li>The application now accepts non-standard OFX files where the account positions use a "--100.00" format
-        (with two minus signs... go figure!)</li>
-    <li>The application now accepts OFX files containing transactions but no account. </li>
-    <li>Fixed a problem which caused the application to remain in the background after quitting under Mac.</li>
-    <li>Reinforced the protection against data corruption when using several instances of BudgetView with
-        the same data directory. Please note however that this use case is still not supported, and should
-        be avoided whenever possible.</li>
-    <li>Fixed an error when updating the current date when the application remains open for a few days in a row.</li>
-    <li>Fixed an error that could lead the application to use much more memory than usual.</li>
-</ul>
+    <h3>A whole new interface</h3>
 
-<!------------------------------>
+    <p>In the last months, we have redesigned the entire interface to simplify
+        two things: the discovery of the application by new users and the management of multiple bank accounts.
+        We are now pleased to present a brand new look&amp;feel for your application:</p>
 
-<h2>version 3.06 <span class="date">April 5, 2013</span></h2>
-<ul>
-    <li>The Android companion to BudgetView is now available on
-        <a href="https://play.google.com/store/apps/details?id=com.budgetview.android">Google Play</a>.
-    </li>
-</ul>
+    <div class="centered-image">
+        <img src="/files/images_en/support/versions/v4_0/new_interface.png"/>
+    </div>
 
-<!------------------------------>
+    <p>The main changes are detailed below.</p>
 
-<h2>version 3.05 <span class="date">May 26, 2013</span></h2>
-<ul>
-    <li>It is now possible to print the list of transactions displayed in the Accounts and Categorization
-        views. To start printing, use the "Action" menus located near the transaction lists.</li>
-    <li>The Accounts view has been reorganized, and now features position graphs for each account. You
-        can click in a graph to select the corresponding transactions.</li>
-    <li>The number of ignored and auto-categorized transactions is now displayed at the last step of the
-        import.</li>
-    <li>Improved look&feel and performances on Windows.</li>
-    <li>This version also includes various fixes.</li>
-</ul>
+    <h3>A "weather forecast" for your bank accounts</h3>
 
-<!------------------------------>
+    <p>Managing a budget is first and foremost about answering one question: "Is there a risk of overdraw in the near
+        future?"</p>
 
-<h2>version 3.0 <span class="date">April 21, 2013</span></h2>
-<p>New in this version:</p>
-<ul>
-    <li>The BudgetView Android app is now available! This first version lets you visualize your budget on the go
-        with your smartphone or tablet. It is available as a preview version for now so that you can help us
-        improve it, and it should be available in Google Play in a few weeks.</li>
-</ul>
-<div class="centered">
-    <img src="/files/images/support/versions/v3_0/budgetview_android_app.png" alt="The BudgetView app for Android"/>
-</div>
-<ul>
-    <li>You can now edit a manually created transaction. To do this, just right-click on the
-        transaction and select "Edit..."</li>
-    <li>You can also move the storage directory used by BudgetView, for instance to put it on a backed up
-        or shared directory. To do this, go to the "File / Preferences" menu, and then select the "Storage" tab.
-        Please note that if you use a cloud storage system such as Dropbox or Google Drive, you need to make sure that
-        only
-        one BudgetView instance uses this directory at a given time, or your data could be corrupted.</li>
-    <li>And as always, this release includes the latest bug fixes.</li>
-</ul>
+    <p>BudgetView 4.0 answers this question directly:</p>
 
-<!------------------------------>
+    <div class="centered-image">
+        <img src="/files/images_en/support/versions/v4_0/personal_budget_forecast.png" alt="Personal budget forecast"/>
+    </div>
 
-<h2>version 2.34 <span class="date">March 11, 2013</span></h2>
-<p>New in this version:</p>
-<ul>
-    <li>CSV import: the application now manages cases where values are wrapped in quotes ('...') or double-quotes
-        ("...").</li>
-    <li>CSV export: added an Account column, and translated the column headers depending on the language used by the
-        application.</li>
-    <li>It is now possible to change the language (English/French) from the Preferences dialog.</li>
-    <li>New green color theme available in the Preferences dialog.</li>
-    <li>Fixed a few errors, for instance when importing Microsoft Money files, or when managing dates when
-        the application remains open several days in a row.</li>
-</ul>
+    <p>Forecasts are available on each of your accounts: a cloudy or rainy weather indicates a risk of overdraw by the
+        end of next month..</p>
 
-<!------------------------------>
+    <h3>Account filtering</h3>
 
-<h2>version 2.33 <span class="date">December 15, 2012</span></h2>
+    <p>The Dashboard, Budget and Account views now use the same left-hand sidebar with an overview of all your
+        accounts:</p>
 
-<ul>
-    <li>The <a href="/download/linux">Linux downloads</a> page now features
-        a ".deb" package to help you install BudgetView on your Ubuntu or Debian system.</li>
-    <li>Fixed an account position computation error that occured in some cases during the
-        upgrade to the 2.32 version.</li>
-</ul>
+    <div class="centered-image">
+        <img src="/files/images_en/support/versions/v4_0/account_filtering.png"/>
+    </div>
 
-<!------------------------------>
+    <p>You can hide or show the graph of the evolution of the balance of each account, and also select an account to
+        see only the relevant information in the rest of the view. With this new logic, you can easily monitor each
+        individual account.</p>
 
-<h2>version 2.32 <span class="date">December 3, 2012</span></h2>
+    <p>With these changes, the specific Savings Accounts view has disappeared: savings accounts are now
+        represented in exactly the same manner as current accounts.</p>
 
-<p>Manual input of transactions:</p>
-<ul>
-    <li>You can now enter transactions in all accounts, even those for which
-        you import files. You can then reconcile these transactions after subsequent imports.</li>
-    <li>When entering transactions, BudgetView now auto-completes the label, and
-        categorizes them automatically based on the existing transactions.</li>
-</ul>
 
-<p>Account management:</p>
-<ul>
-    <li>BudgetView now detects automatically discrepancies between the position of an account
-        and the corresponding sequence of transactions. This lets you detect missing or duplicate
-        transactions for this account.</li>
+    <h3>A more flexible management of multiple accounts</h3>
 
-    <li>BudgetView now handle more credit card configurations - for instance a credit card
-        for transactions between the 20 of each month, with a transfer on the 15th two months later.</li>
-</ul>
+    <p>Since the origins of BudgetView, the calculation of the forecast was made ​​for all current accounts as a
+        whole - it was not possible to follow the evolution of a specific current account.</p>
 
-<p>Analysis view:</p>
-<ul>
-    <li>A right-click on any graphic of the Analysis view now displays a pop-up menu
-        to navigate to the corresponding transactions.</li>
-    <li>Sub-envelopes are now displayed in the table located at the bottom of the Analysis view.</li>
-</ul>
+    <p>In the 3.14 release, we have allowed to follow each account individually by associating each envelope
+        to a given account. However, this solution was too restrictive for some of our users, forcing some of
+        them to duplicating several envelopes.</p>
 
-<p>Projects:</p>
-<ul>
+    <p>Version 4.0 corrects this by offering a much more flexible approach: envelopes are now by default
+        related to all current accounts, and the projection into the future is based for each account on the
+        behavior observed in the two last months.</p>
 
-    <li>Sub-envelopes are created automaticall for each item in a project. You can
-        then see the completion rate for each item in the project edition dialog.</li>
-</ul>
+    <div class="centered-image">
+        <img src="/files/images_en/support/versions/v4_0/multi_account_envelopes.png"/>
+    </div>
 
-<p>Printing:</p>
-<ul>
+    <p>Thus, if you only use one of your accounts to your envelope Leisure , the provisional calculation will take
+        into account that rate. If you have completed one third of expenditures on an account, and two thirds on
+        another, this same distribution will apply in the forecast.</p>
 
-    <li>The printed report now includes a page representing the "Budget" view,
-        with all the envelopes and the corresponding completion rates.</li>
-</ul>
+    <p>In cases where you feel it necessary , you can always edit any envelope and specify that it applies only to a
+        given account. The projections will then be made exclusively on the account, and the envelope will not be
+        visible in the Categorization view when you select an operation of this account.</p>
 
-<p>Other improvements:</p>
-<ul>
-    <li>The View menu now includes a few functions for selecting the current month, current year, etc.</li>
-    <li>Operations are now displayed in green or red, depending on their sign,
-        in the tables of the Accounts and Categorization views.</li>
-    <li>Added the main Swiss and Belgian banks</li>
-    <li>BudgetView is now compatible with the latest security mechanisms of Max OS X Mountain Lion.</li>
-</ul>
+    <h3>Transfers</h3>
 
-<!------------------------------>
+    <p>We have changed the way to represent transfers between your accounts. Now, the "Savings" block in the Budget view
+        becomes "Transfers" and welcomes all your transfers: transfers to or from your savings accounts,
+        but also transfers between your current accounts.</p>
 
-<h2>version 2.31 <span class="date">June 18, 2012</span></h2>
-<ul>
-    <li>This version provides support for Java version 1.7, eliminating an error
-        when downloading or categorizing transactions.</li>
-    <li>Two additional fixes are also included - an error in the display of sub-envelopes
-        in the Analysis table view, and another in the processing of deferred debit cards.</li>
-</ul>
+    <h3>A base version that becomes... FREE!</h3>
 
-<!------------------------------>
-
-<h2>version 2.29 <span class="date">May 18, 2012</span></h2>
-<ul>
-    <li>In the Analysis view, you can now see the details of sub-envelopes for a given envelope. To use
-        this, click on an envelope that contains sub-envelopes in the corresponding repartition chart : you will see a
-        "Show sub-envelopes" button appear just below the chart.</li>
-    <li>This version also includes a few additional bug fixes, for example when importing OFX or CSV files,
-        using the OFX direct download option with some banks, or in the display of envelopes related to
-        projects in the Budget view.</li>
-</ul>
-
-<!------------------------------>
-
-<h2>version 2.28 <span class="date">May 2, 2012</span></h2>
-<ul>
-    <li>You can now carry over the remainder or the overdraw of an envelope over the next months.
-        For instance, let's say that you spent only 100.00 out of 150.00 in leisures this month. Using this
-        function, BudgetView will automatically carry the remaining 50.00 over the next month, setting the
-        planned amount of this envelope to 200.00. To try this, click on the envelope name in the Budget
-        view and select the "Carry ... over" menu option.
-    </li>
-    <li>BudgetView now better handles non-standard date formats in OFX files</li>
-    <li>In the login screen, you can now select an user name among the list of existing
-        user accounts.</li>
-    <li>This version also includes a few additional bug fixes. For instance, BudgetView does not
-        request incoming connections anymore, and we also fixed an error that occured in some
-        specific cases when editing envelopes.</li>
-</ul>
-
-<!------------------------------>
-
-<h2>version 2.27 <span class="date">April 16, 2012</span></h2>
-<ul>
-    <li>You can now better control how transactions are planned in the future, by forcing a given
-        envelope to plan only one transaction per month, on a given day each month. This is useful for instance
-        to tell BudgetView to plan your salary as a single transaction on the 29th of every month. To use
-        this feature, click on the envelope name in the Budget view and go to the "Forecast" tab.</li>
-    <li>You can now edit the labels of transactions, by right-clicking on them in the Categorization
-        and Accounts views.</li>
-    <li>When importing files or creating accounts, you can now add your own bank to the list.</li>
-    <li>When entering a transaction, you can now select a month in the past, even if this month is
-        not displayed in the time bar at the top of the screen.</li>
-    <li>This version also includes a few bug fixes, for instance in some specific cases when importing
-        CSV files.</li>
-</ul>
-
-<!------------------------------>
-
-<h2>version 2.25 <span class="date">March 13, 2012</span></h2>
-<ul>
-    <li>You can now import CSV (Comma-Separated Values) files, coming for instance from a spreadsheet
-        program such as Excel or Numbers. For more information, please read the
-        <a href="/support/faq/import-csv">CSV import guide</a>.</li>
-    <li>Two new options are available in the preferences dialog available from the "Files / Preferences" menu:</li>
+    <p>To share the best budget forecasts with a larger number of users, we make the heart BudgetView 4.0 free.
+        Some features become paid add-ons:</p>
     <ul>
-        <li>Change the date format (for instance "March 13, 2012" instead of "13 March 2012")</li>
-        <li>Change the color theme of the application</li>
+        <li>Creating <b>envelope groups</b> in the Budget view</li>
+        <li>Managing <b>projects</b></li>
+        <li>The whole <b>analysis</b> view</li>
+        <li>the visualisation of your budget on the <b>Android app</b></li>
     </ul>
-    <li>When using the application for the first time, you now have the ability to see
-        BudgetView at work on a demo account.</li>
-    <li>The version provides a few bug fixes - for instance an error occuring when deleting an operation
-        in some cases.</li>
-</ul>
 
-<!------------------------------>
+    <p>These add-ons are presented in a new dedicated view:</p>
 
-<h2>version 2.23 <span class="date">January 29, 2012</span></h2>
-<ul>
-    <li>You can now <b>print reports</b> from BudgetView, by using the "Print..." option
-        in the File menu. Please note that this is a very first version of this feature - as always,
-        <a href="mailto:support@mybudgetview.com">your comments</a>
-        are welcome!
-    </li>
-    <li>You can now use your activation code on two different computers.</li>
-    <li>Various minor fixes and improvements.</li>
-</ul>
+    <div class="centered-image">
+        <img src="/files/images_en/support/versions/v4_0/addons.png"/>
+    </div>
 
-<!------------------------------>
+    <p>If you had bought a BudgetView activation code for earlier versions, it remains of course valid and
+        automatically activates all available add-ons.</p>
 
-<h2>version 2.17 <span class="date">November 29, 2011</span></h2>
-<ul>
-    <li>Hello world! This is the first version in English.</li>
-</ul>
+    <!------------------------------>
+
+    <h2>version 3.13 <span class="date">january 11, 2013</span></h2>
+
+    <p>BudgetView now saves the size of the window and the various blocs in all views.
+        When launching the application, you'll then find it in the same state as you left it.</p>
+
+    <p>You can now duplicate projects.</p>
+
+    <p>Split transactions are now recognizable in the Budget and Categorization tables.</p>
+
+    <p>Fixed an error that caused incorrect account positions.</p>
+
+    <p>...and other minor evolutions and fixes.</p>
+
+    <!------------------------------>
+
+    <h2>version 3.11 <span class="date">october 13, 2013</span></h2>
+
+    <p>This version provides a few bug fixes.</p>
+
+    <p><b>To upgrade BudgetView</b>, you just have to launch it, wait for a few seconds, and follow
+        the instructions that will appear on the screen. If you don't have BudgetView yet,
+        you can
+        <a title="Download BudgetView"
+           href="http://www.mybudgetview.com/download"
+           class="highlighted">download it now!</a>
+    </p>
+
+    <p>And as always, please do not hesitate to write us at
+        <a href="mailto:support@mybudgetview.com" class="highlighted">support@mybudgetview.com</a>
+        to tell us what you think about this release, and how we can make BudgetView even better.</p>
+
+    <!------------------------------>
+
+    <h2>version 3.10 <span class="date">september 30, 2013</span></h2>
+
+    <p>This version features a new way to manage your projects:</p>
+
+    <div class="centered">
+        <img src="/files/images/support/versions/3_10/redesign_projects.png" alt="New approach to projects"
+             style="margin:10px;"/>
+    </div>
+    <p>You can now;:</p>
+    <ul>
+        <li>Activate/deactivate projects or project elements to perform simulations</li>
+        <li>Shift all the elements of a project to another month</li>
+        <li>Integrate recurring expenses over several months, for instance loans</li>
+        <li>Integrate transfers, for instance between your savings and main accounts</li>
+        <li>Set images to your projects, either from pictures located on your computer, or by copy/pasting them
+            from another application such as your web browser
+        </li>
+        <li>Set notes, hyperlinks and images to project elements</li>
+    </ul>
+    <p>To start with, we encourage you to take some time to set images on all your projects - you'll see how
+        this gives a far better appearance to your budget!</p>
+
+    <!------------------------------>
+
+    <h2>version 3.09 <span class="date">August 16, 2013</span></h2>
+
+    <p>This version contains a few fixes, mostly in direct connections to French banks (CIC).</p>
+
+    <!------------------------------>
+
+    <h2>version 3.08 <span class="date">August 6, 2013</span></h2>
+
+    <p>This version contains a few fixes in the following areas:</p>
+    <ul>
+        <li>CSV Import</li>
+        <li>Restoration of backup files.</li>
+    </ul>
+    <p>It also features two new color themes, available in the Preferences dialog.</p>
+
+    <!------------------------------>
+
+    <h2>version 3.07 <span class="date">April 29, 2013</span></h2>
+
+    <p>This version contains minor fixes and evolutions:</p>
+    <ul>
+        <li>You can now delete accounts and envelopes through the right-click pop-up menus.</li>
+        <li>The application now accepts non-standard OFX files where the account positions use a "--100.00" format
+            (with two minus signs... go figure!)
+        </li>
+        <li>The application now accepts OFX files containing transactions but no account.</li>
+        <li>Fixed a problem which caused the application to remain in the background after quitting under Mac.</li>
+        <li>Reinforced the protection against data corruption when using several instances of BudgetView with
+            the same data directory. Please note however that this use case is still not supported, and should
+            be avoided whenever possible.
+        </li>
+        <li>Fixed an error when updating the current date when the application remains open for a few days in a row.
+        </li>
+        <li>Fixed an error that could lead the application to use much more memory than usual.</li>
+    </ul>
+
+    <!------------------------------>
+
+    <h2>version 3.06 <span class="date">April 5, 2013</span></h2>
+    <ul>
+        <li>The Android companion to BudgetView is now available on
+            <a href="https://play.google.com/store/apps/details?id=com.budgetview.android">Google Play</a>.
+        </li>
+    </ul>
+
+    <!------------------------------>
+
+    <h2>version 3.05 <span class="date">May 26, 2013</span></h2>
+    <ul>
+        <li>It is now possible to print the list of transactions displayed in the Accounts and Categorization
+            views. To start printing, use the "Action" menus located near the transaction lists.
+        </li>
+        <li>The Accounts view has been reorganized, and now features position graphs for each account. You
+            can click in a graph to select the corresponding transactions.
+        </li>
+        <li>The number of ignored and auto-categorized transactions is now displayed at the last step of the
+            import.
+        </li>
+        <li>Improved look&feel and performances on Windows.</li>
+        <li>This version also includes various fixes.</li>
+    </ul>
+
+    <!------------------------------>
+
+    <h2>version 3.0 <span class="date">April 21, 2013</span></h2>
+
+    <p>New in this version:</p>
+    <ul>
+        <li>The BudgetView Android app is now available! This first version lets you visualize your budget on the go
+            with your smartphone or tablet. It is available as a preview version for now so that you can help us
+            improve it, and it should be available in Google Play in a few weeks.
+        </li>
+    </ul>
+    <div class="centered">
+        <img src="/files/images/support/versions/v3_0/budgetview_android_app.png" alt="The BudgetView app for Android"/>
+    </div>
+    <ul>
+        <li>You can now edit a manually created transaction. To do this, just right-click on the
+            transaction and select "Edit..."
+        </li>
+        <li>You can also move the storage directory used by BudgetView, for instance to put it on a backed up
+            or shared directory. To do this, go to the "File / Preferences" menu, and then select the "Storage" tab.
+            Please note that if you use a cloud storage system such as Dropbox or Google Drive, you need to make sure
+            that
+            only
+            one BudgetView instance uses this directory at a given time, or your data could be corrupted.
+        </li>
+        <li>And as always, this release includes the latest bug fixes.</li>
+    </ul>
+
+    <!------------------------------>
+
+    <h2>version 2.34 <span class="date">March 11, 2013</span></h2>
+
+    <p>New in this version:</p>
+    <ul>
+        <li>CSV import: the application now manages cases where values are wrapped in quotes ('...') or double-quotes
+            ("...").
+        </li>
+        <li>CSV export: added an Account column, and translated the column headers depending on the language used by the
+            application.
+        </li>
+        <li>It is now possible to change the language (English/French) from the Preferences dialog.</li>
+        <li>New green color theme available in the Preferences dialog.</li>
+        <li>Fixed a few errors, for instance when importing Microsoft Money files, or when managing dates when
+            the application remains open several days in a row.
+        </li>
+    </ul>
+
+    <!------------------------------>
+
+    <h2>version 2.33 <span class="date">December 15, 2012</span></h2>
+
+    <ul>
+        <li>The <a href="/download/linux">Linux downloads</a> page now features
+            a ".deb" package to help you install BudgetView on your Ubuntu or Debian system.
+        </li>
+        <li>Fixed an account position computation error that occured in some cases during the
+            upgrade to the 2.32 version.
+        </li>
+    </ul>
+
+    <!------------------------------>
+
+    <h2>version 2.32 <span class="date">December 3, 2012</span></h2>
+
+    <p>Manual input of transactions:</p>
+    <ul>
+        <li>You can now enter transactions in all accounts, even those for which
+            you import files. You can then reconcile these transactions after subsequent imports.
+        </li>
+        <li>When entering transactions, BudgetView now auto-completes the label, and
+            categorizes them automatically based on the existing transactions.
+        </li>
+    </ul>
+
+    <p>Account management:</p>
+    <ul>
+        <li>BudgetView now detects automatically discrepancies between the position of an account
+            and the corresponding sequence of transactions. This lets you detect missing or duplicate
+            transactions for this account.
+        </li>
+
+        <li>BudgetView now handle more credit card configurations - for instance a credit card
+            for transactions between the 20 of each month, with a transfer on the 15th two months later.
+        </li>
+    </ul>
+
+    <p>Analysis view:</p>
+    <ul>
+        <li>A right-click on any graphic of the Analysis view now displays a pop-up menu
+            to navigate to the corresponding transactions.
+        </li>
+        <li>Sub-envelopes are now displayed in the table located at the bottom of the Analysis view.</li>
+    </ul>
+
+    <p>Projects:</p>
+    <ul>
+
+        <li>Sub-envelopes are created automaticall for each item in a project. You can
+            then see the completion rate for each item in the project edition dialog.
+        </li>
+    </ul>
+
+    <p>Printing:</p>
+    <ul>
+
+        <li>The printed report now includes a page representing the "Budget" view,
+            with all the envelopes and the corresponding completion rates.
+        </li>
+    </ul>
+
+    <p>Other improvements:</p>
+    <ul>
+        <li>The View menu now includes a few functions for selecting the current month, current year, etc.</li>
+        <li>Operations are now displayed in green or red, depending on their sign,
+            in the tables of the Accounts and Categorization views.
+        </li>
+        <li>Added the main Swiss and Belgian banks</li>
+        <li>BudgetView is now compatible with the latest security mechanisms of Max OS X Mountain Lion.</li>
+    </ul>
+
+    <!------------------------------>
+
+    <h2>version 2.31 <span class="date">June 18, 2012</span></h2>
+    <ul>
+        <li>This version provides support for Java version 1.7, eliminating an error
+            when downloading or categorizing transactions.
+        </li>
+        <li>Two additional fixes are also included - an error in the display of sub-envelopes
+            in the Analysis table view, and another in the processing of deferred debit cards.
+        </li>
+    </ul>
+
+    <!------------------------------>
+
+    <h2>version 2.29 <span class="date">May 18, 2012</span></h2>
+    <ul>
+        <li>In the Analysis view, you can now see the details of sub-envelopes for a given envelope. To use
+            this, click on an envelope that contains sub-envelopes in the corresponding repartition chart : you will see
+            a
+            "Show sub-envelopes" button appear just below the chart.
+        </li>
+        <li>This version also includes a few additional bug fixes, for example when importing OFX or CSV files,
+            using the OFX direct download option with some banks, or in the display of envelopes related to
+            projects in the Budget view.
+        </li>
+    </ul>
+
+    <!------------------------------>
+
+    <h2>version 2.28 <span class="date">May 2, 2012</span></h2>
+    <ul>
+        <li>You can now carry over the remainder or the overdraw of an envelope over the next months.
+            For instance, let's say that you spent only 100.00 out of 150.00 in leisures this month. Using this
+            function, BudgetView will automatically carry the remaining 50.00 over the next month, setting the
+            planned amount of this envelope to 200.00. To try this, click on the envelope name in the Budget
+            view and select the "Carry ... over" menu option.
+        </li>
+        <li>BudgetView now better handles non-standard date formats in OFX files</li>
+        <li>In the login screen, you can now select an user name among the list of existing
+            user accounts.
+        </li>
+        <li>This version also includes a few additional bug fixes. For instance, BudgetView does not
+            request incoming connections anymore, and we also fixed an error that occured in some
+            specific cases when editing envelopes.
+        </li>
+    </ul>
+
+    <!------------------------------>
+
+    <h2>version 2.27 <span class="date">April 16, 2012</span></h2>
+    <ul>
+        <li>You can now better control how transactions are planned in the future, by forcing a given
+            envelope to plan only one transaction per month, on a given day each month. This is useful for instance
+            to tell BudgetView to plan your salary as a single transaction on the 29th of every month. To use
+            this feature, click on the envelope name in the Budget view and go to the "Forecast" tab.
+        </li>
+        <li>You can now edit the labels of transactions, by right-clicking on them in the Categorization
+            and Accounts views.
+        </li>
+        <li>When importing files or creating accounts, you can now add your own bank to the list.</li>
+        <li>When entering a transaction, you can now select a month in the past, even if this month is
+            not displayed in the time bar at the top of the screen.
+        </li>
+        <li>This version also includes a few bug fixes, for instance in some specific cases when importing
+            CSV files.
+        </li>
+    </ul>
+
+    <!------------------------------>
+
+    <h2>version 2.25 <span class="date">March 13, 2012</span></h2>
+    <ul>
+        <li>You can now import CSV (Comma-Separated Values) files, coming for instance from a spreadsheet
+            program such as Excel or Numbers. For more information, please read the
+            <a href="/support/faq/import-csv">CSV import guide</a>.
+        </li>
+        <li>Two new options are available in the preferences dialog available from the "Files / Preferences" menu:</li>
+        <ul>
+            <li>Change the date format (for instance "March 13, 2012" instead of "13 March 2012")</li>
+            <li>Change the color theme of the application</li>
+        </ul>
+        <li>When using the application for the first time, you now have the ability to see
+            BudgetView at work on a demo account.
+        </li>
+        <li>The version provides a few bug fixes - for instance an error occuring when deleting an operation
+            in some cases.
+        </li>
+    </ul>
+
+    <!------------------------------>
+
+    <h2>version 2.23 <span class="date">January 29, 2012</span></h2>
+    <ul>
+        <li>You can now <b>print reports</b> from BudgetView, by using the "Print..." option
+            in the File menu. Please note that this is a very first version of this feature - as always,
+            <a href="mailto:support@mybudgetview.com">your comments</a>
+            are welcome!
+        </li>
+        <li>You can now use your activation code on two different computers.</li>
+        <li>Various minor fixes and improvements.</li>
+    </ul>
+
+    <!------------------------------>
+
+    <h2>version 2.17 <span class="date">November 29, 2011</span></h2>
+    <ul>
+        <li>Hello world! This is the first version in English.</li>
+    </ul>
 
 </div>
