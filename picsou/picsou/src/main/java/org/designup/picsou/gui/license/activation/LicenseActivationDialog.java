@@ -152,8 +152,6 @@ public class LicenseActivationDialog {
                 break;
               case ACTIVATION_FAILED_MAIL_SENT:
                 updateDialogState("license.activation.failed.mailSent", localRepository.get(User.KEY).get(User.EMAIL));
-// TODO: quel code pour ce message ?
-//                updateDialogState("license.code.invalid", localRepository.get(User.KEY).get(User.EMAIL));
                 break;
               default:
                 updateDialogState("license.activation.failed");
