@@ -1,0 +1,13 @@
+1/ Run from directory 'picsou':
+
+  java -Xmx512m -jar ./picsou/dev/Zelix/ZKM.jar
+
+2/ Close setup wizard
+
+3/ Open menu Tools / Stack Trace Translate
+
+4/ Set the change log file
+
+5/ Add the budgetview(123).jar file to the classpath
+
+6/ Copy the stack trace and click Translate

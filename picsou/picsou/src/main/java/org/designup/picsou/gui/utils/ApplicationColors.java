@@ -102,7 +102,11 @@ public enum ApplicationColors {
   public static final String[] COLOR_FILES = {
     "/colors/color.properties",
     "/colors/color_blue.properties",
-    "/colors/color_black.properties"};
+    "/colors/color_black.properties",
+    "/colors/color_turquoise.properties",
+    "/colors/color_pink.properties",
+    "/colors/color_green.properties"
+  };
 
   ApplicationColors() {
     this(false);

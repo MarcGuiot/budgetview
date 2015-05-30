@@ -13,16 +13,6 @@
            horizontalAlignment="left" horizontalTextPosition="right"
            iconTextGap="2"/>
 
-    <style selector="button#accountChartButton"
-           ui="hyperlinkButtonWithoutUnderline"
-           font="-,bold,12" cursor="hand" border=""
-           icon="downArrow(10,18,8,8,block.inner.arrow.idle)"
-           rolloverIcon="downArrow(10,18,8,8,block.inner.arrow.rollover)"
-           pressedIcon="downArrow(10,18,8,8,block.inner.arrow.pressed)"
-           fill="none" anchor="southeast"
-           horizontalAlignment="left" horizontalTextPosition="right"
-           iconTextGap="2"/>
-
     <style selector="#accountHistoChart" opaque="true" background="sidebar.bg"/>
 
     <style selector="#toggleGraph" border=""
@@ -45,7 +35,7 @@
       <verticalBoxes name="accountPanel">
         <row marginTop="10" marginBottom="4">
           <toggleButton ref="toggleGraph" weightX="0.1"/>
-          <button ref="accountChartButton" styleClass="secondarySectionTitle"/>
+          <button ref="accountChartButton" styleClass="dropdown"/>
           <filler fill="horizontal" weightX="100"/>
           <label ref="accountPositionLabel" styleClass="secondarySectionSubtitle"/>
         </row>

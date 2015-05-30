@@ -3,20 +3,13 @@
   <styleImport file="/layout/commonStyles.splits"/>
   <styleImport file="/layout/sidebarStyles.splits"/>
   <styles>
-    <style selector="button#editAccount" ui="hyperlinkButtonWithoutUnderline"
-           anchor="left" weightX="100"
-           font="LatoRegular,plain,14" cursor="hand"
-           icon="downArrow(10,18,8,8,block.inner.arrow.idle)"
-           rolloverIcon="downArrow(10,18,8,8,block.inner.arrow.rollover)"
-           pressedIcon="downArrow(10,18,8,8,block.inner.arrow.pressed)"
-           horizontalAlignment="left"
-           horizontalTextPosition="right"
-           iconTextGap="2"/>
 
     <style selector="#accountPosition"
-           font="ArimoRegular,plain,12" foreground="block.inner.link.big"/>
+           font="ArimoRegular,plain,12"
+           foreground="sidebar.label.secondary"/>
     <style selector="#accountUpdateDate"
-           font="ArimoRegular,plain,10"/>
+           font="ArimoRegular,plain,10"
+           foreground="sidebar.label.secondary"/>
 
     <style selector=".left label.totalAmount"
            fill="horizontal" horizontalAlignment="left" marginLeft="10"/>
@@ -44,7 +37,7 @@
         <panel marginTop="4" layout="org.designup.picsou.gui.accounts.utils.AccountBlockLayout"
                cursor="hand" opaque="false" styleClass="sidebarSeparator">
           <toggleButton ref="selectAccount" styleClass="sidebarSelectionButton"/>
-          <button ref="editAccount"/>
+          <button ref="editAccount" styleClass="dropdown"/>
           <toggleButton ref="toggleGraph"/>
           <button ref="accountWeather"/>
           <component ref="accountPositionsChart" background="sidebar.bg"/>

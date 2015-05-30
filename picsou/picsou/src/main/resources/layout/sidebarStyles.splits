@@ -12,6 +12,20 @@
 
     <style selector=".sidebar label.sidebarLabel" foreground="sidebar.label" marginLeft="10" marginRight="10"/>
 
+    <ui name="dropdownButtonUI" class="org.globsframework.gui.splits.components.HyperlinkButtonUI"
+        underline="false" rolloverColor="sidebar.dropdown.rollover"/>
+    <style selector=".dropdown" ui="dropdownButtonUI"
+           foreground="sidebar.dropdown"
+           anchor="left" weightX="100"
+           font="LatoRegular,plain,14" cursor="hand"
+           icon="downArrow(10,18,8,8,sidebar.dropdown.arrow)"
+           rolloverIcon="downArrow(10,18,8,8,sidebar.dropdown.arrow.rollover)"
+           pressedIcon="downArrow(10,18,8,8,sidebar.dropdown.arrow.pressed)"
+           horizontalAlignment="left"
+           horizontalTextPosition="right"
+           iconTextGap="2"/>
+
+
     <!-- Scrollbars -->
 
     <ui name="scrollPaneUI"
@@ -34,11 +48,11 @@
     <!-- Selection panel -->
 
     <style id="selectedPanel" selector="x" opaque="true"
-           background="block.inner.highlight.selected.bg"
-           border="line(block.inner.highlight.selected.border)"/>
+           background="sidebar.selection.block.bg"
+           border="line(sidebar.selection.block.border)"/>
     <style id="selectedRolloverPanel" selector="x" opaque="true"
-           background="block.inner.highlight.selected.bg.rollover"
-           border="line(block.inner.highlight.selected.border)"/>
+           background="sidebar.selection.block.bg.rollover"
+           border="line(sidebar.selection.block.border)"/>
     <style id="unselectedPanel" selector="x" opaque="true"
            background="sidebar.bg"
            border="line(sidebar.bg)"/>

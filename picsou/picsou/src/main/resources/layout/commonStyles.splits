@@ -161,7 +161,7 @@
     <style selector="button.help" ui="hyperlinkButton" fill="none" anchor="right"/>
 
     <ui name="hyperlinkButtonWithoutUnderline" class="org.globsframework.gui.splits.components.HyperlinkButtonUI"
-        underline="false"/>
+        rolloverColor="hyperlink.rollover" underline="false"/>
     <style selector="button.hyperlinkWithoutUnderline" ui="hyperlinkButtonWithoutUnderline"
            fill="none" anchor="right" foreground="hyperlink"/>
 

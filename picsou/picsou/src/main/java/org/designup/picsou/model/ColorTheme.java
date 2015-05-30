@@ -14,7 +14,10 @@ import static org.globsframework.model.FieldValue.value;
 public enum ColorTheme implements GlobConstantContainer {
 
   STANDARD(1, "colors/color.properties", "themes/theme_classic.properties", "standard.png"),
-  BLUE(2, "colors/color_blue.properties", "themes/theme_classic.properties", "blue.png");
+  BLUE(2, "colors/color_blue.properties", "themes/theme_classic.properties", "blue.png"),
+  PINK(3, "colors/color_pink.properties", "themes/theme_classic.properties", "pink.png"),
+  BLACK(4, "colors/color_black.properties", "themes/theme_classic.properties", "black.png"),
+  TURQUOISE(5, "colors/color_turquoise.properties", "themes/theme_classic.properties", "turquoise.png");
 
   private final int id;
   private final String colorFilePath;
@@ -73,6 +76,12 @@ public enum ColorTheme implements GlobConstantContainer {
         return STANDARD;
       case 2:
         return BLUE;
+      case 3:
+        return PINK;
+      case 4:
+        return BLACK;
+      case 5:
+        return TURQUOISE;
     }
     throw new InvalidParameter("Unexpected value: " + id);
   }

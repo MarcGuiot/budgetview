@@ -55,7 +55,7 @@
 
 
     <style id="highlightedAmount" selector="x" opaque="true"
-           background="block.inner.highlight.selected.bg"/>
+           background="sidebar.selection.block.bg"/>
     <style id="standardAmount" selector="x" opaque="false"
            background="content.bg"/>
 

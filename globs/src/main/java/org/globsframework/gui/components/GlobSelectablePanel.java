@@ -4,6 +4,9 @@ import org.globsframework.gui.GlobSelection;
 import org.globsframework.gui.GlobSelectionListener;
 import org.globsframework.gui.SelectionService;
 import org.globsframework.gui.splits.SplitsNode;
+import org.globsframework.gui.splits.color.ColorChangeListener;
+import org.globsframework.gui.splits.color.ColorLocator;
+import org.globsframework.gui.splits.color.ColorService;
 import org.globsframework.gui.splits.utils.Disposable;
 import org.globsframework.gui.splits.utils.GuiUtils;
 import org.globsframework.metamodel.GlobType;
@@ -26,7 +29,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-public class GlobSelectablePanel implements GlobSelectionListener, Disposable {
+public class GlobSelectablePanel implements GlobSelectionListener, Disposable, ColorChangeListener {
   private SplitsNode<JPanel> node;
   private String selectedStyle;
   private String unselectedStyle;
@@ -34,6 +37,7 @@ public class GlobSelectablePanel implements GlobSelectionListener, Disposable {
   private String unselectedRolloverStyle;
   private GlobRepository repository;
   private SelectionService selectionService;
+  private ColorService colorService;
   private Key selectionKey;
   private List<Key> keys;
   private GlobType type;
@@ -57,12 +61,14 @@ public class GlobSelectablePanel implements GlobSelectionListener, Disposable {
     this.unselectedRolloverStyle = unselectedRolloverStyle;
     this.repository = repository;
     this.selectionService = directory.get(SelectionService.class);
+    this.colorService = directory.get(ColorService.class);
     this.selectionKey = key;
     this.keys = Utils.joinedList(key, otherKeys);
     this.type = key.getGlobType();
     checkKeyTypes(otherKeys);
 
     selectionService.addListener(this, type);
+    colorService.addListener(this);
 
     Component panel = node.getComponent();
     tracker = new MouseTracker();
@@ -121,9 +127,14 @@ public class GlobSelectablePanel implements GlobSelectionListener, Disposable {
       panel.removePropertyChangeListener(frameDeactivatedListener);
     }
     selectionService.removeListener(this);
+    colorService.removeListener(this);
     if (windowTracker != null) {
       windowTracker.dispose();
     }
+  }
+
+  public void colorsChanged(ColorLocator colorLocator) {
+    node.reapplyStyle();
   }
 
   private class MouseTracker extends java.awt.event.MouseAdapter implements MouseMotionListener {
