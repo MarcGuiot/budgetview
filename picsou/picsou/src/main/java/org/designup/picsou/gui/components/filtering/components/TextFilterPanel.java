@@ -38,7 +38,7 @@ public abstract class TextFilterPanel {
     this.colorService = directory.get(ColorService.class);
     this.listener = new ColorChangeListener() {
       public void colorsChanged(ColorLocator colorLocator) {
-        backgroundColor = colorLocator.get(ApplicationColors.TRANSACTION_SEARCH_FIELD);
+        backgroundColor = colorLocator.get("transaction.search.field");
         if (textField != null) {
           if (Strings.isNotEmpty(textField.getText())) {
             textField.setBackground(backgroundColor);

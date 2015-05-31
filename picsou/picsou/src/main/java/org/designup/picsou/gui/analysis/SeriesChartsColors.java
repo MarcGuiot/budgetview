@@ -8,7 +8,6 @@ import org.designup.picsou.gui.model.SeriesStat;
 import org.designup.picsou.gui.series.view.SeriesWrapper;
 import org.designup.picsou.gui.series.view.SeriesWrapperType;
 import org.designup.picsou.gui.utils.AmountColors;
-import org.designup.picsou.gui.utils.ApplicationColors;
 import org.designup.picsou.model.Account;
 import org.designup.picsou.model.BudgetArea;
 import org.globsframework.gui.splits.color.ColorChangeListener;
@@ -63,7 +62,10 @@ public class SeriesChartsColors implements ColorChangeListener {
     amountColors = new AmountColors(directory);
     budgetAreaColorUpdater = new BudgetAreaColorUpdater(parentRepository, directory);
 
-    selectionBackground = ApplicationColors.createTableSelectionBackgroundPainter(colorService);
+    selectionBackground = new GradientPainter("seriesEvolution.selection.bg.top",
+                                              "seriesEvolution.selection.bg.bottom",
+                                              "seriesEvolution.selection.border",
+                                              colorService);
     summaryBg = new FillPainter("seriesEvolution.summary.bg", colorService);
     summaryCurrentBg = new FillPainter("seriesEvolution.summary.bg.current", colorService);
     budgetAreaBg = new GradientPainter("seriesEvolution.budgetArea.bg.top",
@@ -78,7 +80,7 @@ public class SeriesChartsColors implements ColorChangeListener {
     seriesOddBg = new FillPainter("seriesEvolution.series.bg.odd", colorService);
     seriesCurrentEvenBg = new FillPainter("seriesEvolution.series.bg.current.even", colorService);
     seriesCurrentOddBg = new FillPainter("seriesEvolution.series.bg.current.odd", colorService);
-    plainSelectionBackground = new FillPainter(ApplicationColors.TABLE_SELECTED_BG, colorService);
+    plainSelectionBackground = new FillPainter("seriesEvolution.table.selected.bg", colorService);
   }
 
   public void colorsChanged(ColorLocator colors) {
@@ -87,7 +89,7 @@ public class SeriesChartsColors implements ColorChangeListener {
     seriesText = colors.get("seriesEvolution.series.text.normal");
     seriesErrorText = colors.get("seriesEvolution.series.text.error");
     subSeriesText = colors.get("seriesEvolution.subSeries.text");
-    selectionText = colors.get(ApplicationColors.CATEGORIES_SELECTED_FG);
+    selectionText = colors.get("seriesEvolution.selected.fg");
     uncategorizedText = colors.get("seriesEvolution.uncategorized");
   }
 

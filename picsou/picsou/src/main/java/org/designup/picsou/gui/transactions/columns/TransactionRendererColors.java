@@ -1,8 +1,7 @@
 package org.designup.picsou.gui.transactions.columns;
 
-import org.designup.picsou.gui.utils.ApplicationColors;
-import org.designup.picsou.model.Transaction;
 import com.budgetview.shared.utils.Amounts;
+import org.designup.picsou.model.Transaction;
 import org.globsframework.gui.splits.color.ColorChangeListener;
 import org.globsframework.gui.splits.color.ColorLocator;
 import org.globsframework.gui.splits.color.ColorService;
@@ -17,7 +16,6 @@ public class TransactionRendererColors implements ColorChangeListener {
   private Color selectionBgColor;
   private Color evenRowsBgColor;
   private Color oddRowsBgColor;
-  private Color rolloverCategoryColor;
   private Color transactionTextColor;
   private Color transactionTextPositiveColor;
   private Color transactionTextNegativeColor;
@@ -28,7 +26,6 @@ public class TransactionRendererColors implements ColorChangeListener {
   private Color transactionReconciliationColor;
   private Color splitSourceColor;
   private Color splitChildColor;
-  private Color categoryColor;
   private ColorService colorService;
   private Integer splitGroupSourceId;
 
@@ -44,21 +41,19 @@ public class TransactionRendererColors implements ColorChangeListener {
   }
 
   public void colorsChanged(ColorLocator colorLocator) {
-    selectionBgColor = colorLocator.get(ApplicationColors.TABLE_SELECTED_BG);
-    evenRowsBgColor = colorLocator.get(ApplicationColors.TABLE_EVEN_ROWS_BG);
-    oddRowsBgColor = colorLocator.get(ApplicationColors.TABLE_ODD_ROWS_BG);
-    rolloverCategoryColor = colorLocator.get(ApplicationColors.CATEGORY_ROLLOVER_LABEL);
-    categoryColor = colorLocator.get(ApplicationColors.CATEGORY_LABEL);
-    transactionTextColor = colorLocator.get(ApplicationColors.TABLE_TEXT);
-    transactionTextPositiveColor = colorLocator.get(ApplicationColors.TABLE_TEXT_POSITIVE);
-    transactionTextNegativeColor = colorLocator.get(ApplicationColors.TABLE_TEXT_NEGATIVE);
-    transactionSelectedTextColor = colorLocator.get(ApplicationColors.TRANSACTION_SELECTED_TEXT);
-    transactionPlannedTextColor = colorLocator.get(ApplicationColors.TRANSACTION_TEXT_PLANNED);
-    transactionLinkTextColor = colorLocator.get(ApplicationColors.TRANSACTION_TEXT_LINK);
-    transactionErrorTextColor = colorLocator.get(ApplicationColors.TABLE_TEXT_ERROR);
-    transactionReconciliationColor = colorLocator.get(ApplicationColors.TRANSACTION_RECONCILIATION);
-    splitSourceColor = colorLocator.get(ApplicationColors.TRANSACTION_SPLIT_SOURCE_BG);
-    splitChildColor = colorLocator.get(ApplicationColors.TRANSACTION_SPLIT_BG);
+    selectionBgColor = colorLocator.get("transactionTable.selected.bg");
+    evenRowsBgColor = colorLocator.get("transactionTable.even.rows.bg");
+    oddRowsBgColor = colorLocator.get("transactionTable.odd.rows.bg");
+    transactionTextColor = colorLocator.get("transactionTable.text");
+    transactionTextPositiveColor = colorLocator.get("transactionTable.text.positive");
+    transactionTextNegativeColor = colorLocator.get("transactionTable.text.negative");
+    transactionSelectedTextColor = colorLocator.get("transactionTable.text.selected");
+    transactionPlannedTextColor = colorLocator.get("transactionTable.text.planned");
+    transactionLinkTextColor = colorLocator.get("transactionTable.text.link");
+    transactionErrorTextColor = colorLocator.get("transactionTable.text.error");
+    transactionReconciliationColor = colorLocator.get("transactionTable.reconciliation");
+    splitSourceColor = colorLocator.get("transactionTable.split.source.bg");
+    splitChildColor = colorLocator.get("transactionTable.split.bg");
   }
 
   public Color getEvenRowsBgColor() {
@@ -67,14 +62,6 @@ public class TransactionRendererColors implements ColorChangeListener {
 
   public Color getOddRowsBgColor() {
     return oddRowsBgColor;
-  }
-
-  public Color getRolloverCategoryColor() {
-    return rolloverCategoryColor;
-  }
-
-  public Color getCategoryColor() {
-    return categoryColor;
   }
 
   public Color getTransactionTextColor() {
@@ -164,7 +151,7 @@ public class TransactionRendererColors implements ColorChangeListener {
     this.splitGroupSourceId = splitGroupSourceId;
   }
 
-  public void dispose(){
+  public void dispose() {
     colorService.removeListener(this);
   }
 

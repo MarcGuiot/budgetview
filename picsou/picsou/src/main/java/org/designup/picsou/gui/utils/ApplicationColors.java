@@ -45,46 +45,6 @@ public enum ApplicationColors {
   PERIOD_BALANCE_MINUS_1,
   PERIOD_BALANCE_MINUS_05,
 
-  TABLE_EVEN_ROWS_BG,
-  TABLE_ODD_ROWS_BG,
-  TABLE_SELECTED_BG,
-  TABLE_TEXT,
-  TABLE_TEXT_POSITIVE,
-  TABLE_TEXT_NEGATIVE,
-  TABLE_TEXT_ERROR,
-  TABLE_LINK_NORMAL,
-  TABLE_LINK_SELECTED,
-
-  TRANSACTION_TABLE_HEADER_STD_BORDER,
-  TRANSACTION_TABLE_HEADER_STD_LIGHT,
-  TRANSACTION_TABLE_HEADER_STD_MEDIUM,
-  TRANSACTION_TABLE_HEADER_STD_DARK,
-  TRANSACTION_TABLE_HEADER_TITLE,
-  TRANSACTION_TABLE_HEADER_FILTERED_BORDER,
-  TRANSACTION_TABLE_HEADER_FILTERED_LIGHT,
-  TRANSACTION_TABLE_HEADER_FILTERED_MEDIUM,
-  TRANSACTION_TABLE_HEADER_FILTERED_DARK,
-  TRANSACTION_TABLE_HEADER_FILTERED_TITLE,
-
-  TRANSACTION_ERROR_TEXT,
-  TRANSACTION_RECONCILIATION,
-  TRANSACTION_TEXT_PLANNED,
-  TRANSACTION_TEXT_LINK,
-  TRANSACTION_SELECTED_TEXT,
-  TRANSACTION_SEARCH_FIELD,
-  TRANSACTION_SPLIT_SOURCE_BG,
-  TRANSACTION_SPLIT_BG,
-
-  CATEGORY_ROLLOVER_LABEL,
-  CATEGORY_LABEL,
-  CATEGORY_TITLE,
-  CATEGORIES_SELECTED_FG,
-  CATEGORIES_SELECTED_BORDER,
-  CATEGORIES_SELECTED_BG,
-  CATEGORIES_SELECTED_BG_TOP,
-  CATEGORIES_SELECTED_BG_BOTTOM,
-  CATEGORIES_BG,
-
   BUTTON_NO_FOCUS_COLOR_BORDER,
   BUTTON_NO_FOCUS_COLOR_SHADOW,
   BUTTON_FOCUS_COLOR_BORDER,
@@ -165,7 +125,7 @@ public enum ApplicationColors {
 
   public static void setSelectionColors(JTable table, ColorLocator colors) {
     table.setSelectionBackground(colors.get("transaction.selected.bg"));
-    table.setSelectionForeground(colors.get("transaction.selected.text"));
+    table.setSelectionForeground(colors.get("transactionTable.text.selected"));
   }
 
   public static void installLinkColor(final JEditorPane editor, final String cssClass, final String colorKey, Directory directory) {
@@ -180,12 +140,5 @@ public enum ApplicationColors {
         css.addRule("a." + cssClass + " { color: #" + Colors.toString(color) + "; }");
       }
     });
-  }
-
-  public static GradientPainter createTableSelectionBackgroundPainter(ColorService colorService) {
-    return new GradientPainter(CATEGORIES_SELECTED_BG_TOP,
-                               CATEGORIES_SELECTED_BG_BOTTOM,
-                               CATEGORIES_SELECTED_BORDER,
-                               colorService);
   }
 }

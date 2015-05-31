@@ -20,9 +20,9 @@ public class DefaultTableCellPainter implements CellPainter, ColorChangeListener
   }
 
   public void colorsChanged(ColorLocator colorLocator) {
-    evenRowsBg = colorLocator.get(ApplicationColors.TABLE_EVEN_ROWS_BG);
-    oddRowsBg = colorLocator.get(ApplicationColors.TABLE_ODD_ROWS_BG);
-    selectionBg = colorLocator.get(ApplicationColors.TABLE_SELECTED_BG);
+    evenRowsBg = colorLocator.get("transactionTable.even.rows.bg");
+    oddRowsBg = colorLocator.get("transactionTable.odd.rows.bg");
+    selectionBg = colorLocator.get("transactionTable.selected.bg");
   }
   
   public void paint(Graphics g, Glob glob, int row, int column, boolean isSelected, boolean hasFocus, int width, int height) {

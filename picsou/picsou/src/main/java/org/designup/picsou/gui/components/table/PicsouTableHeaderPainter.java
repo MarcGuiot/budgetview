@@ -1,6 +1,5 @@
 package org.designup.picsou.gui.components.table;
 
-import org.designup.picsou.gui.utils.ApplicationColors;
 import org.globsframework.gui.splits.color.ColorChangeListener;
 import org.globsframework.gui.splits.color.ColorLocator;
 import org.globsframework.gui.splits.color.ColorService;
@@ -28,7 +27,7 @@ public class PicsouTableHeaderPainter implements CellPainter, ColorChangeListene
 
   public static PicsouTableHeaderPainter install(GlobTableView tableView, Directory directory) {
     PicsouTableHeaderPainter headerPainter = new PicsouTableHeaderPainter(tableView, directory);
-    tableView.setHeaderCustomizer(new PicsouTableHeaderCustomizer(directory, ApplicationColors.TRANSACTION_TABLE_HEADER_TITLE),
+    tableView.setHeaderCustomizer(new PicsouTableHeaderCustomizer(directory, "transactionTable.header.title"),
                                   headerPainter);
     return headerPainter;
   }
@@ -46,15 +45,15 @@ public class PicsouTableHeaderPainter implements CellPainter, ColorChangeListene
   }
 
   public void colorsChanged(ColorLocator colorLocator) {
-    lightColor = colorLocator.get(ApplicationColors.TRANSACTION_TABLE_HEADER_STD_LIGHT);
-    mediumColor = colorLocator.get(ApplicationColors.TRANSACTION_TABLE_HEADER_STD_MEDIUM);
-    darkColor = colorLocator.get(ApplicationColors.TRANSACTION_TABLE_HEADER_STD_DARK);
-    borderColor = colorLocator.get(ApplicationColors.TRANSACTION_TABLE_HEADER_STD_BORDER);
+    lightColor = colorLocator.get("transactionTable.header.std.light");
+    mediumColor = colorLocator.get("transactionTable.header.std.medium");
+    darkColor = colorLocator.get("transactionTable.header.std.dark");
+    borderColor = colorLocator.get("transactionTable.header.std.border");
 
-    filteredLightColor = colorLocator.get(ApplicationColors.TRANSACTION_TABLE_HEADER_FILTERED_LIGHT);
-    filteredMediumColor = colorLocator.get(ApplicationColors.TRANSACTION_TABLE_HEADER_FILTERED_MEDIUM);
-    filteredDarkColor = colorLocator.get(ApplicationColors.TRANSACTION_TABLE_HEADER_FILTERED_DARK);
-    filteredBorderColor = colorLocator.get(ApplicationColors.TRANSACTION_TABLE_HEADER_FILTERED_BORDER);
+    filteredLightColor = colorLocator.get("transactionTable.header.filtered.light");
+    filteredMediumColor = colorLocator.get("transactionTable.header.filtered.medium");
+    filteredDarkColor = colorLocator.get("transactionTable.header.filtered.dark");
+    filteredBorderColor = colorLocator.get("transactionTable.header.filtered.border");
   }
 
   public void paint(Graphics g, Glob glob,
@@ -64,7 +63,7 @@ public class PicsouTableHeaderPainter implements CellPainter, ColorChangeListene
 
     int adjustedHeight = height - 1;
 
-    Graphics2D g2 = (Graphics2D)g;
+    Graphics2D g2 = (Graphics2D) g;
     g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
     int middleY = adjustedHeight / 2;
