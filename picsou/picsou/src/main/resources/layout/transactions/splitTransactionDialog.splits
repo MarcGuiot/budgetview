@@ -13,8 +13,8 @@
 
       <label text="$split.transaction.table" styleClass="separatorTitle" marginTop="10"/>
       <row styleClass="separator" weightY="100">
-        <scrollPane viewportBackground="transactions.bg" border="etched" margin="5">
-          <table ref="transaction" background="transactions.bg" intercellSpacing="(0,0)" showGrid="false"/>
+        <scrollPane viewportBackground="transactionTable.bg" border="etched" margin="5">
+          <table ref="transaction" background="transactionTable.bg" intercellSpacing="(0,0)" showGrid="false"/>
         </scrollPane>
       </row>
 

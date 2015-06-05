@@ -124,7 +124,7 @@ public enum ApplicationColors {
   }
 
   public static void setSelectionColors(JTable table, ColorLocator colors) {
-    table.setSelectionBackground(colors.get("transaction.selected.bg"));
+    table.setSelectionBackground(colors.get("transactionTable.selected.bg"));
     table.setSelectionForeground(colors.get("transactionTable.text.selected"));
   }
 

@@ -32,7 +32,7 @@
       <row autoHideSource="customFilterMessage" border="empty(10,0,10,0)">
         <panel ref="customFilterMessage"/>
       </row>
-      <scrollPane viewportBackground="#FFFFFF" border="line(transaction.border)"
+      <scrollPane viewportBackground="transactionTable.viewport.bg" border="line(transactionTable.border)"
                   marginBottom="0" weightY="100">
         <table ref="transactionsToCategorize" rowHeight="20"/>
       </scrollPane>

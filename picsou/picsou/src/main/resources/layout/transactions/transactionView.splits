@@ -15,10 +15,10 @@
           <component ref="transactionSearch"/>
           <button ref="actionsMenu" styleClass="actionsButton" marginLeft="20"/>
         </row>
-        <scrollPane borderPos="center" viewportBackground="transactions.bg"
-                    border="line(transaction.border)" opaque="true"
+        <scrollPane borderPos="center" viewportBackground="transactionTable.bg"
+                    border="line(transactionTable.border)" opaque="true"
                     marginTop="5" marginBottom="0">
-          <table ref="transactionsTable" background="transactions.bg" rowHeight="20"
+          <table ref="transactionsTable" background="transactionTable.bg" rowHeight="20"
                  autoResizeMode="JTable.AUTO_RESIZE_OFF"/>
         </scrollPane>
 

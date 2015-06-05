@@ -42,8 +42,8 @@ public class TransactionRendererColors implements ColorChangeListener {
 
   public void colorsChanged(ColorLocator colorLocator) {
     selectionBgColor = colorLocator.get("transactionTable.selected.bg");
-    evenRowsBgColor = colorLocator.get("transactionTable.even.rows.bg");
-    oddRowsBgColor = colorLocator.get("transactionTable.odd.rows.bg");
+    evenRowsBgColor = colorLocator.get("transactionTable.rows.even.bg");
+    oddRowsBgColor = colorLocator.get("transactionTable.rows.odd.bg");
     transactionTextColor = colorLocator.get("transactionTable.text");
     transactionTextPositiveColor = colorLocator.get("transactionTable.text.positive");
     transactionTextNegativeColor = colorLocator.get("transactionTable.text.negative");
