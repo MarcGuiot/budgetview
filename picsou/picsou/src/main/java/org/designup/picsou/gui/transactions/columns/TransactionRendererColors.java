@@ -28,6 +28,19 @@ public class TransactionRendererColors implements ColorChangeListener {
   private Color splitChildColor;
   private ColorService colorService;
   private Integer splitGroupSourceId;
+  private String selectionBgKey;
+  private String evenRowBgKey;
+  private String oddRowsBgKey;
+  private String transactionTextKey;
+  private String transactionTextPositiveKey;
+  private String transactionTextNegativeKey;
+  private String transactionSelectedTextKey;
+  private String transactionPlannedTextKey;
+  private String transactionLinkTextKey;
+  private String transactionErrorTextKey;
+  private String transactionReconciliationKey;
+  private String splitSourceKey;
+  private String splitChildKey;
 
   public enum Mode {
     DEFAULT,
@@ -35,25 +48,38 @@ public class TransactionRendererColors implements ColorChangeListener {
     NEGATIVE
   }
 
-  public TransactionRendererColors(Directory directory) {
+  public TransactionRendererColors(String selectionBg, String evenRowBg, String oddRowBg, String text, String positiveText, String negativeText, String selectedText, String plannedText, String linkText, String errorText, String reconciliation, String splitSource, String splitChild, Directory directory) {
     colorService = directory.get(ColorService.class);
     colorService.addListener(this);
+    this.selectionBgKey = selectionBg;
+    this.evenRowBgKey = evenRowBg;
+    this.oddRowsBgKey = oddRowBg;
+    this.transactionTextKey = text;
+    this.transactionTextPositiveKey = positiveText;
+    this.transactionTextNegativeKey = negativeText;
+    this.transactionSelectedTextKey = selectedText;
+    this.transactionPlannedTextKey = plannedText;
+    this.transactionLinkTextKey = linkText;
+    this.transactionErrorTextKey = errorText;
+    this.transactionReconciliationKey = reconciliation;
+    this.splitSourceKey = splitSource;
+    this.splitChildKey = splitChild;
   }
 
   public void colorsChanged(ColorLocator colorLocator) {
-    selectionBgColor = colorLocator.get("transactionTable.selected.bg");
-    evenRowsBgColor = colorLocator.get("transactionTable.rows.even.bg");
-    oddRowsBgColor = colorLocator.get("transactionTable.rows.odd.bg");
-    transactionTextColor = colorLocator.get("transactionTable.text");
-    transactionTextPositiveColor = colorLocator.get("transactionTable.text.positive");
-    transactionTextNegativeColor = colorLocator.get("transactionTable.text.negative");
-    transactionSelectedTextColor = colorLocator.get("transactionTable.text.selected");
-    transactionPlannedTextColor = colorLocator.get("transactionTable.text.planned");
-    transactionLinkTextColor = colorLocator.get("transactionTable.text.link");
-    transactionErrorTextColor = colorLocator.get("transactionTable.text.error");
-    transactionReconciliationColor = colorLocator.get("transactionTable.reconciliation");
-    splitSourceColor = colorLocator.get("transactionTable.split.source.bg");
-    splitChildColor = colorLocator.get("transactionTable.split.bg");
+    selectionBgColor = colorLocator.get(selectionBgKey);
+    evenRowsBgColor = colorLocator.get(evenRowBgKey);
+    oddRowsBgColor = colorLocator.get(oddRowsBgKey);
+    transactionTextColor = colorLocator.get(transactionTextKey);
+    transactionTextPositiveColor = colorLocator.get(transactionTextPositiveKey);
+    transactionTextNegativeColor = colorLocator.get(transactionTextNegativeKey);
+    transactionSelectedTextColor = colorLocator.get(transactionSelectedTextKey);
+    transactionPlannedTextColor = colorLocator.get(transactionPlannedTextKey);
+    transactionLinkTextColor = colorLocator.get(transactionLinkTextKey);
+    transactionErrorTextColor = colorLocator.get(transactionErrorTextKey);
+    transactionReconciliationColor = colorLocator.get(transactionReconciliationKey);
+    splitSourceColor = colorLocator.get(splitSourceKey);
+    splitChildColor = colorLocator.get(splitChildKey);
   }
 
   public Color getEvenRowsBgColor() {

@@ -3,6 +3,7 @@ package org.designup.picsou.gui.components.table;
 import org.globsframework.gui.splits.color.ColorChangeListener;
 import org.globsframework.gui.splits.color.ColorLocator;
 import org.globsframework.gui.splits.color.ColorService;
+import org.globsframework.gui.splits.color.Colors;
 import org.globsframework.gui.views.CellPainter;
 import org.globsframework.gui.views.GlobTableView;
 import org.globsframework.model.Glob;
@@ -11,49 +12,29 @@ import org.globsframework.utils.directory.Directory;
 import java.awt.*;
 import java.awt.geom.Rectangle2D;
 
-public class PicsouTableHeaderPainter implements CellPainter, ColorChangeListener {
-  private Color lightColor;
-  private Color mediumColor;
-  private Color darkColor;
-  private Color borderColor;
-  private Color filteredLightColor;
-  private Color filteredMediumColor;
-  private Color filteredDarkColor;
-  private Color filteredBorderColor;
+public abstract class TableHeaderPainter implements CellPainter, ColorChangeListener {
+  protected Color lightColor;
+  protected Color mediumColor;
+  protected Color darkColor;
+  protected Color borderColor;
+  protected Color filteredLightColor;
+  protected Color filteredMediumColor;
+  protected Color filteredDarkColor;
+  protected Color filteredBorderColor;
 
   private boolean filtered = false;
   private GlobTableView tableView;
   private ColorService colorService;
 
-  public static PicsouTableHeaderPainter install(GlobTableView tableView, Directory directory) {
-    PicsouTableHeaderPainter headerPainter = new PicsouTableHeaderPainter(tableView, directory);
-    tableView.setHeaderCustomizer(new PicsouTableHeaderCustomizer(directory, "transactionTable.header.title"),
-                                  headerPainter);
-    return headerPainter;
-  }
-
-  private PicsouTableHeaderPainter(GlobTableView tableView, Directory directory) {
-    colorService = directory.get(ColorService.class);
-    colorService.addListener(this);
+  protected TableHeaderPainter(GlobTableView tableView, Directory directory) {
+    this.colorService = directory.get(ColorService.class);
+    this.colorService.addListener(this);
     this.tableView = tableView;
-
   }
 
   public void setFiltered(boolean filtered) {
     this.filtered = filtered;
     this.tableView.getComponent().getTableHeader().repaint();
-  }
-
-  public void colorsChanged(ColorLocator colorLocator) {
-    lightColor = colorLocator.get("transactionTable.header.std.light");
-    mediumColor = colorLocator.get("transactionTable.header.std.medium");
-    darkColor = colorLocator.get("transactionTable.header.std.dark");
-    borderColor = colorLocator.get("transactionTable.header.std.border");
-
-    filteredLightColor = colorLocator.get("transactionTable.header.filtered.light");
-    filteredMediumColor = colorLocator.get("transactionTable.header.filtered.medium");
-    filteredDarkColor = colorLocator.get("transactionTable.header.filtered.dark");
-    filteredBorderColor = colorLocator.get("transactionTable.header.filtered.border");
   }
 
   public void paint(Graphics g, Glob glob,

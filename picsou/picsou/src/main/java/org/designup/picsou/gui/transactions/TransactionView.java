@@ -12,7 +12,8 @@ import org.designup.picsou.gui.components.filtering.components.FilterMessagePane
 import org.designup.picsou.gui.components.filtering.components.TextFilterPanel;
 import org.designup.picsou.gui.components.layoutconfig.SplitPaneConfig;
 import org.designup.picsou.gui.components.table.DefaultTableCellPainter;
-import org.designup.picsou.gui.components.table.PicsouTableHeaderPainter;
+import org.designup.picsou.gui.components.table.TableHeaderPainter;
+import org.designup.picsou.gui.components.table.TransactionTableHeaderPainter;
 import org.designup.picsou.gui.description.Formatting;
 import org.designup.picsou.gui.description.stringifiers.TransactionDateStringifier;
 import org.designup.picsou.gui.model.Card;
@@ -21,7 +22,6 @@ import org.designup.picsou.gui.transactions.actions.TransactionTableActions;
 import org.designup.picsou.gui.transactions.columns.*;
 import org.designup.picsou.gui.transactions.search.TransactionFilterPanel;
 import org.designup.picsou.gui.transactions.utils.LegendStringifier;
-import org.designup.picsou.gui.transactions.utils.TransactionMatchers;
 import org.designup.picsou.gui.utils.Gui;
 import org.designup.picsou.model.*;
 import org.designup.picsou.utils.Lang;
@@ -81,16 +81,33 @@ public class TransactionView extends View implements Filterable {
   private GlobMatcher showPlannedTransactionsMatcher = HIDE_PLANNED_MATCHER;
   private GlobMatcher filter = GlobMatchers.ALL;
   private FilterManager filterManager;
-  private PicsouTableHeaderPainter headerPainter;
+  private TableHeaderPainter headerPainter;
   private JCheckBoxMenuItem showPlannedTransactionsCheckbox;
   private TextFilterPanel search;
   private TransactionTableActions tableActions;
 
   public TransactionView(GlobRepository repository, Directory directory) {
     super(repository, directory);
-    rendererColors = new TransactionRendererColors(directory);
+    rendererColors = createRendererColors(directory);
     createTable();
     this.transactionSelection = new TransactionSelection(filterManager, repository, directory);
+  }
+
+  public static TransactionRendererColors createRendererColors(Directory directory) {
+    return new TransactionRendererColors("transactionTable.selected.bg",
+                                         "transactionTable.rows.even.bg",
+                                         "transactionTable.rows.odd.bg",
+                                         "transactionTable.text",
+                                         "transactionTable.text.positive",
+                                         "transactionTable.text.negative",
+                                         "transactionTable.text.selected",
+                                         "transactionTable.text.planned",
+                                         "transactionTable.text.link",
+                                         "transactionTable.text.error",
+                                         "transactionTable.reconciliation",
+                                         "transactionTable.split.source.bg",
+                                         "transactionTable.split.bg",
+                                         directory);
   }
 
   public void registerComponents(GlobsPanelBuilder parentBuilder) {
@@ -213,7 +230,7 @@ public class TransactionView extends View implements Filterable {
     this.view = createGlobTableView(repository, descriptionService, directory, rendererColors);
     this.view.setDefaultFont(Gui.DEFAULT_TABLE_FONT);
 
-    headerPainter = PicsouTableHeaderPainter.install(view, directory);
+    headerPainter = TransactionTableHeaderPainter.install(view, directory);
     this.filterManager = new FilterManager(this);
 
     JTable table = view.getComponent();
@@ -299,7 +316,7 @@ public class TransactionView extends View implements Filterable {
         if (UserPreferences.TRANSACTION_POS1.getIndex() + modelIndex > UserPreferences.TRANSACTION_POS9.getIndex()) {
           throw new RuntimeException("Missing column " + modelIndex + "in UserPreferences");
         }
-        return (IntegerField)UserPreferences.TYPE.getField(UserPreferences.TRANSACTION_POS1.getIndex() + modelIndex);
+        return (IntegerField) UserPreferences.TYPE.getField(UserPreferences.TRANSACTION_POS1.getIndex() + modelIndex);
       }
     }, repository);
     return view;

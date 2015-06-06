@@ -7,7 +7,8 @@ import org.designup.picsou.gui.components.filtering.FilterListener;
 import org.designup.picsou.gui.components.filtering.FilterManager;
 import org.designup.picsou.gui.components.filtering.Filterable;
 import org.designup.picsou.gui.components.filtering.components.FilterMessagePanel;
-import org.designup.picsou.gui.components.table.PicsouTableHeaderPainter;
+import org.designup.picsou.gui.components.table.CategorizationTableHeaderPainter;
+import org.designup.picsou.gui.components.table.TableHeaderPainter;
 import org.designup.picsou.gui.description.stringifiers.SeriesDescriptionStringifier;
 import org.designup.picsou.gui.description.stringifiers.TransactionDateStringifier;
 import org.designup.picsou.gui.signpost.PersistentSignpost;
@@ -80,7 +81,7 @@ public class CategorizationTableView extends View implements TableView, Filterab
   private Color envelopeSeriesLabelBackgroundColor;
 
   private TransactionRendererColors colors;
-  private PicsouTableHeaderPainter headerPainter;
+  private TableHeaderPainter headerPainter;
   private CategorizationTableActions actions;
 
   private GlobList currentTransactions;
@@ -90,7 +91,20 @@ public class CategorizationTableView extends View implements TableView, Filterab
   public CategorizationTableView(GlobList currentTransactions, GlobRepository repository, Directory directory) {
     super(repository, directory);
     this.currentTransactions = currentTransactions;
-    this.colors = new TransactionRendererColors(directory);
+    this.colors = new TransactionRendererColors("categorizationTable.selected.bg", 
+                                                "categorizationTable.rows.even.bg",
+                                                "categorizationTable.rows.odd.bg", 
+                                                "categorizationTable.text",
+                                                "categorizationTable.text.positive",
+                                                "categorizationTable.text.negative",
+                                                "categorizationTable.text.selected",
+                                                "categorizationTable.text.planned",
+                                                "categorizationTable.text.link",
+                                                "categorizationTable.text.error",
+                                                "categorizationTable.reconciliation",
+                                                "categorizationTable.split.source.bg",
+                                                "categorizationTable.split.bg",
+                                                directory);
     this.colorService.addListener(this);
   }
 
@@ -150,7 +164,7 @@ public class CategorizationTableView extends View implements TableView, Filterab
                              transactionComparator,
                              new OnChangeLabelCustomizer(fontSize(9)),
                              repository, directory);
-    headerPainter = PicsouTableHeaderPainter.install(transactionTable, directory);
+    headerPainter = CategorizationTableHeaderPainter.install(transactionTable, directory);
     actions = new CategorizationTableActions(transactionTable.getCopySelectionAction(Lang.get("copy")),
                                              repository, directory);
     transactionTable.setPopupFactory(actions);

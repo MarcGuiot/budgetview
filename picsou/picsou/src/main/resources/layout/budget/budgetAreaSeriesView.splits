@@ -55,7 +55,7 @@
 
 
     <style id="highlightedAmount" selector="x" opaque="true"
-           background="sidebar.selection.block.bg"/>
+           background="budget.highlight.bg"/>
     <style id="standardAmount" selector="x" opaque="false"
            background="content.bg"/>
 
@@ -101,11 +101,9 @@
               <button ref="seriesName"/>
               <button ref="groupToggle"/>
               <component ref="gauge" styleClass="detailGauge"/>
-              <button ref="observedSeriesAmount"
-                      tooltipText="$budgetview.tooltip.detail.observed" font="-,plain,10"/>
+              <button ref="observedSeriesAmount" tooltipText="$budgetview.tooltip.detail.observed" font="-,plain,10"/>
               <label name="slash" styleClass="slash"/>
-              <button ref="plannedSeriesAmount"
-                      tooltipText="$budgetview.tooltip.detail.planned"/>
+              <button ref="plannedSeriesAmount" tooltipText="$budgetview.tooltip.detail.planned"/>
               <component ref="deltaGauge"/>
             </repeat>
           </verticalBoxes>

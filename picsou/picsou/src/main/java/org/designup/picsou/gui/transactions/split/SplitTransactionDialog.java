@@ -1,11 +1,13 @@
 package org.designup.picsou.gui.transactions.split;
 
 import org.designup.picsou.gui.categorization.components.CompactSeriesStringifier;
-import org.designup.picsou.gui.components.table.PicsouTableHeaderPainter;
+import org.designup.picsou.gui.components.table.TableHeaderPainter;
 import org.designup.picsou.gui.components.dialogs.PicsouDialog;
+import org.designup.picsou.gui.components.table.TransactionTableHeaderPainter;
 import org.designup.picsou.gui.components.tips.ErrorTip;
 import org.designup.picsou.gui.description.Formatting;
 import org.designup.picsou.gui.help.HyperlinkHandler;
+import org.designup.picsou.gui.transactions.TransactionView;
 import org.designup.picsou.gui.transactions.columns.AbstractTransactionEditor;
 import org.designup.picsou.gui.transactions.columns.TransactionKeyListener;
 import org.designup.picsou.gui.transactions.columns.TransactionNoteEditor;
@@ -72,7 +74,7 @@ public class SplitTransactionDialog {
   private GlobRepository parentRepository;
   private GlobTableView tableView;
   private GlobsPanelBuilder builder;
-  private PicsouTableHeaderPainter headerPainter;
+  private TableHeaderPainter headerPainter;
   private SplitTransactionDialog.AddAction addAction;
 
   public SplitTransactionDialog(GlobRepository repository, Directory directory) {
@@ -87,7 +89,7 @@ public class SplitTransactionDialog {
     SelectionService selectionService = new SelectionService();
     localDirectory.add(selectionService);
     descriptionService = localDirectory.get(DescriptionService.class);
-    rendererColors = new TransactionRendererColors(localDirectory);
+    rendererColors = TransactionView.createRendererColors(directory);
 
     parentSelectionService = directory.get(SelectionService.class);
 
@@ -169,7 +171,7 @@ public class SplitTransactionDialog {
     tableView.setFilter(GlobMatchers.isNotNull(Transaction.AMOUNT));
 
     tableView.setDefaultFont(Gui.DEFAULT_TABLE_FONT);
-    headerPainter = PicsouTableHeaderPainter.install(tableView, localDirectory);
+    headerPainter = TransactionTableHeaderPainter.install(tableView, localDirectory);
 
     DeleteSplitTransactionColumn deleteSplitColumn = new DeleteSplitTransactionColumn();
 

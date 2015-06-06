@@ -1,18 +1,18 @@
 package org.designup.picsou.gui.analysis.table;
 
+import com.budgetview.shared.utils.Amounts;
 import org.designup.picsou.gui.View;
 import org.designup.picsou.gui.analysis.SeriesChartsBackgroundPainter;
 import org.designup.picsou.gui.analysis.SeriesChartsColors;
 import org.designup.picsou.gui.card.NavigationPopup;
 import org.designup.picsou.gui.components.JPopupButton;
-import org.designup.picsou.gui.components.table.PicsouTableHeaderPainter;
 import org.designup.picsou.gui.components.expansion.*;
+import org.designup.picsou.gui.components.table.TransactionTableHeaderPainter;
 import org.designup.picsou.gui.model.SeriesStat;
 import org.designup.picsou.gui.series.view.*;
 import org.designup.picsou.gui.utils.Gui;
 import org.designup.picsou.model.Month;
 import org.designup.picsou.model.Series;
-import com.budgetview.shared.utils.Amounts;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobSelection;
 import org.globsframework.gui.GlobSelectionListener;
@@ -24,7 +24,10 @@ import org.globsframework.gui.utils.PopupMenuFactory;
 import org.globsframework.gui.utils.TableUtils;
 import org.globsframework.gui.views.CellPainter;
 import org.globsframework.gui.views.GlobTableView;
-import org.globsframework.model.*;
+import org.globsframework.model.ChangeSet;
+import org.globsframework.model.Glob;
+import org.globsframework.model.GlobList;
+import org.globsframework.model.GlobRepository;
 import org.globsframework.model.format.GlobStringifiers;
 import org.globsframework.model.utils.DefaultChangeSetListener;
 import org.globsframework.model.utils.GlobMatcher;
@@ -33,9 +36,13 @@ import org.globsframework.utils.directory.Directory;
 import javax.swing.*;
 import javax.swing.table.TableColumn;
 import java.awt.*;
-import java.awt.event.*;
-import java.util.*;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
+import java.awt.event.KeyEvent;
+import java.util.ArrayList;
+import java.util.Enumeration;
 import java.util.List;
+import java.util.SortedSet;
 
 import static org.globsframework.utils.Utils.intRange;
 
@@ -117,7 +124,7 @@ public class SeriesEvolutionTableView extends View {
 
     tableView.setPopupFactory(new TablePopupFactory());
 
-    PicsouTableHeaderPainter.install(tableView, directory);
+    TransactionTableHeaderPainter.install(tableView, directory);
 
     table = tableView.getComponent();
     table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
