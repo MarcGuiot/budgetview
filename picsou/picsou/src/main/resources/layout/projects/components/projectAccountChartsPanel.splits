@@ -24,6 +24,9 @@
     <style id="accountChartShown" selector="x" visible="true" preferredSize="(200,100)"/>
     <style id="accountChartHidden" selector="x" visible="false" preferredSize="(200,2)"/>
 
+    <style selector="label.secondarySectionSubtitle" font="-,plain,11" weightY="0.1"
+           foreground="sidebar.label" anchor="southeast" marginTop="2"/>
+
   </styles>
 
   <column>
