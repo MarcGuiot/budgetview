@@ -1,7 +1,7 @@
 package org.designup.picsou.gui.analysis.table;
 
-import org.designup.picsou.gui.components.table.AbstractRolloverEditor;
 import org.designup.picsou.gui.analysis.SeriesChartsColors;
+import org.designup.picsou.gui.components.table.AbstractRolloverEditor;
 import org.designup.picsou.gui.series.view.SeriesWrapper;
 import org.designup.picsou.gui.series.view.SeriesWrapperType;
 import org.designup.picsou.model.Series;
@@ -59,10 +59,8 @@ public abstract class SeriesEvolutionEditor extends AbstractRolloverEditor {
   }
 
   protected void complete(Action action) {
-
     rendererButton = createHyperlinkButton(action);
     rendererPanel = initCellPanel(rendererButton, true, new PaintablePanel());
-
     editorButton = createHyperlinkButton(action);
     editorPanel = initCellPanel(editorButton, true, new PaintablePanel());
   }
@@ -78,11 +76,13 @@ public abstract class SeriesEvolutionEditor extends AbstractRolloverEditor {
   protected Component getComponent(Glob wrapper, boolean edit) {
 
     Integer itemId = wrapper.get(SeriesWrapper.ITEM_ID);
-    if (SeriesWrapper.isSeries(wrapper)) {
-      currentSeries = repository.get(Key.create(Series.TYPE, itemId));
-    }
-    else {
-      currentSeries = null;
+    if (edit) {
+      if (SeriesWrapper.isSeries(wrapper)) {
+        currentSeries = repository.get(Key.create(Series.TYPE, itemId));
+      }
+      else {
+        currentSeries = null;
+      }
     }
 
     String text = getText(wrapper);

@@ -1,13 +1,13 @@
 package org.designup.picsou.gui.analysis.table;
 
+import com.budgetview.shared.utils.Amounts;
+import org.designup.picsou.gui.analysis.SeriesChartsColors;
 import org.designup.picsou.gui.description.Formatting;
 import org.designup.picsou.gui.model.*;
 import org.designup.picsou.gui.series.SeriesEditor;
-import org.designup.picsou.gui.analysis.SeriesChartsColors;
 import org.designup.picsou.gui.series.view.SeriesWrapper;
 import org.designup.picsou.gui.series.view.SeriesWrapperType;
 import org.designup.picsou.model.*;
-import com.budgetview.shared.utils.Amounts;
 import org.globsframework.gui.views.GlobTableView;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.fields.DoubleField;
@@ -33,7 +33,6 @@ public class SeriesEvolutionMonthEditor extends SeriesEvolutionEditor {
                                        GlobRepository repository, Directory directory,
                                        SeriesChartsColors colors) {
     super(offset, view, directory.get(DescriptionService.class), repository, directory, colors);
-
     complete(new OpenSeriesAmountEditionDialogAction(directory));
   }
 
@@ -108,9 +107,9 @@ public class SeriesEvolutionMonthEditor extends SeriesEvolutionEditor {
 
   private String getSubSeriesButtonText(Integer itemId) {
     Glob subSeriesStat = repository.find(KeyBuilder.init(SubSeriesStat.TYPE)
-                                        .set(SubSeriesStat.MONTH, referenceMonthId)
-                                        .set(SubSeriesStat.SUB_SERIES, itemId)
-                                        .get());
+                                           .set(SubSeriesStat.MONTH, referenceMonthId)
+                                           .set(SubSeriesStat.SUB_SERIES, itemId)
+                                           .get());
     if (subSeriesStat == null) {
       return "";
     }
@@ -132,7 +131,6 @@ public class SeriesEvolutionMonthEditor extends SeriesEvolutionEditor {
     if (id.equals(SeriesWrapper.MAIN_POSITION_SUMMARY_ID)) {
       Glob budgetStat = repository.find(Key.create(AccountStat.ACCOUNT, Account.MAIN_SUMMARY_ACCOUNT_ID,
                                                    AccountStat.MONTH, referenceMonthId));
-//      Glob budgetStat = repository.find(Key.create(BudgetStat.TYPE, referenceMonthId));
       return format(budgetStat, AccountStat.END_POSITION, null);
     }
 
