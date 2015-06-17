@@ -83,15 +83,21 @@ public class CreditAgricoleConnector extends WebBankConnector implements HttpCon
                                          new GotoAutentifcation() {
 
                                            public boolean go(WebPage webPage, String code) throws WebCommandFailed, WebParsingError {
-                                             WebPanel comptes = webPage.getPanelById("btnComptes");
-                                             if (comptes.hasId("inputcomptes")) {
-                                               comptes.getTextInputById("inputcomptes").setText(code);
-                                               comptes.getAnchorWithRef("#").click();
-                                               return true;
+                                             if (webPage.hasId("btnComptes")) {
+                                               WebPanel comptes = webPage.getPanelById("btnComptes");
+                                               if (comptes.hasId("inputcomptes")) {
+                                                 comptes.getTextInputById("inputcomptes").setText(code);
+                                                 comptes.getAnchorWithRef("#").click();
+                                                 return true;
+                                               }
+                                               else {
+                                                 WebAnchor ref = webPage.getAnchorWithRef("javascript:bamv3_validation();");
+                                                 ref.click();
+                                                 return false;
+                                               }
                                              }
                                              else {
-                                               WebAnchor ref = webPage.getAnchorWithRef("javascript:bamv3_validation();");
-                                               ref.click();
+                                               webPage.getAnchorById("comptes").click();
                                                return false;
                                              }
                                            }
@@ -184,6 +190,7 @@ public class CreditAgricoleConnector extends WebBankConnector implements HttpCon
               });
             }
             else {
+              browser.waitForBackgroundJavaScript(2000);
               indent = browser.getCurrentPage().getPanelById("contenu");
               WebTextInput ccpte = indent.getTextInputByName("CCPTE");
               ccpte.setText(codeField.getText());
