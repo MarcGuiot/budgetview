@@ -55,115 +55,115 @@ public class SeriesEvolutionStackChartTest extends LoggedInFunctionalTestCase {
 
     views.selectAnalysis();
 
-    seriesAnalysis.budget().balanceChart.getLeftDataset()
+    analysis.budget().balanceChart.getLeftDataset()
       .checkSize(1)
       .checkValue("Income", 650.00);
-    seriesAnalysis.budget().balanceChart.getRightDataset()
+    analysis.budget().balanceChart.getRightDataset()
       .checkSize(3)
       .checkValue("Recurring", 80.00)
       .checkValue("Variable", 450.00)
       .checkValue("Transfers", 100.00);
-    seriesAnalysis.budget().checkBalanceChartLabel("Main accounts balance");
-    seriesAnalysis.budget().seriesChart.getSingleDataset()
+    analysis.budget().checkBalanceChartLabel("Main accounts balance");
+    analysis.budget().seriesChart.getSingleDataset()
       .checkSize(4)
       .checkValue("Groceries", 450.00)
       .checkValue("Virt Livret", 100.00)
       .checkValue("Mobile", 50.00)
       .checkValue("Internet", 30.00);
-    seriesAnalysis.budget().checkSeriesChartLabel("Main series");
+    analysis.budget().checkSeriesChartLabel("Main series");
 
     timeline.selectMonth("2009/07");
     checkStandardCaseMainBalance();
-    seriesAnalysis.budget().seriesChart.getSingleDataset()
+    analysis.budget().seriesChart.getSingleDataset()
       .checkSize(4)
       .checkValue("Groceries", 450.00)
       .checkValue("Virt Livret", 100.00)
       .checkValue("Mobile", 60.00)
       .checkValue("Internet", 30.00);
-    seriesAnalysis.budget().checkSeriesChartLabel("Main series");
+    analysis.budget().checkSeriesChartLabel("Main series");
 
-    seriesAnalysis.table().select("Balance");
+    analysis.table().select("Balance");
     checkStandardCaseMainBalance();
-    seriesAnalysis.budget().seriesChart.getSingleDataset()
+    analysis.budget().seriesChart.getSingleDataset()
       .checkSize(4)
       .checkValue("Groceries", 450.00)
       .checkValue("Virt Livret", 100.00)
       .checkValue("Mobile", 60.00)
       .checkValue("Internet", 30.00);
-    seriesAnalysis.budget().checkSeriesChartLabel("Main series");
+    analysis.budget().checkSeriesChartLabel("Main series");
 
-    seriesAnalysis.table().select("Main accounts");
+    analysis.table().select("Main accounts");
     checkStandardCaseMainBalance();
-    seriesAnalysis.budget().seriesChart.getSingleDataset()
+    analysis.budget().seriesChart.getSingleDataset()
       .checkSize(4)
       .checkValue("Groceries", 450.00)
       .checkValue("Virt Livret", 100.00)
       .checkValue("Mobile", 60.00)
       .checkValue("Internet", 30.00);
-    seriesAnalysis.budget().checkSeriesChartLabel("Main series");
+    analysis.budget().checkSeriesChartLabel("Main series");
 
-    seriesAnalysis.table().select("Income");
-    seriesAnalysis.budget().balanceChart.getLeftDataset()
+    analysis.table().select("Income");
+    analysis.budget().balanceChart.getLeftDataset()
       .checkSize(1)
       .checkValue("Income", 670.00, true);
-    seriesAnalysis.budget().balanceChart.getRightDataset()
+    analysis.budget().balanceChart.getRightDataset()
       .checkSize(3)
       .checkValue("Recurring", 90.00)
       .checkValue("Variable", 450.00)
       .checkValue("Transfers", 100.00);
-    seriesAnalysis.budget().seriesChart.getSingleDataset()
+    analysis.budget().seriesChart.getSingleDataset()
       .checkSize(2)
       .checkValue("Mary's", 350.00)
       .checkValue("John's", 320.00);
-    seriesAnalysis.budget().checkSeriesChartLabel("Main income series");
+    analysis.budget().checkSeriesChartLabel("Main income series");
 
-    seriesAnalysis.table().select("Mary's");
-    seriesAnalysis.budget().balanceChart.getLeftDataset()
+    analysis.table().select("Mary's");
+    analysis.budget().balanceChart.getLeftDataset()
       .checkSize(1)
       .checkValue("Income", 670.00, true);
-    seriesAnalysis.budget().balanceChart.getRightDataset()
+    analysis.budget().balanceChart.getRightDataset()
       .checkSize(3)
       .checkValue("Recurring", 90.00)
       .checkValue("Variable", 450.00)
       .checkValue("Transfers", 100.00);
-    seriesAnalysis.budget().checkBalanceChartLabel("Main accounts balance");
-    seriesAnalysis.budget().seriesChart.getSingleDataset()
+    analysis.budget().checkBalanceChartLabel("Main accounts balance");
+    analysis.budget().seriesChart.getSingleDataset()
       .checkSize(2)
       .checkValue("Mary's", 350.00, true)
       .checkValue("John's", 320.00);
-    seriesAnalysis.budget().checkSeriesChartLabel("Main income series");
+    analysis.budget().checkSeriesChartLabel("Main income series");
 
-    seriesAnalysis.table().select("Recurring");
-    seriesAnalysis.budget().balanceChart.getLeftDataset()
+    analysis.table().select("Recurring");
+    analysis.budget().balanceChart.getLeftDataset()
       .checkSize(1)
       .checkValue("Income", 670.00);
-    seriesAnalysis.budget().balanceChart.getRightDataset()
+    analysis.budget().balanceChart.getRightDataset()
       .checkSize(3)
       .checkValue("Recurring", 90.00, true)
       .checkValue("Variable", 450.00)
       .checkValue("Transfers", 100.00);
-    seriesAnalysis.budget().checkBalanceChartLabel("Main accounts balance");
-    seriesAnalysis.budget().seriesChart.getSingleDataset()
+    analysis.budget().checkBalanceChartLabel("Main accounts balance");
+    analysis.budget().seriesChart.getSingleDataset()
       .checkSize(2)
       .checkValue("Mobile", 60.00)
       .checkValue("Internet", 30.00);
-    seriesAnalysis.budget().checkSeriesChartLabel("Main recurring series");
+    analysis.budget().checkSeriesChartLabel("Main recurring series");
 
-    seriesAnalysis.table().select("Internet");
-    seriesAnalysis.budget().balanceChart.getLeftDataset()
+    analysis.table().select("Internet");
+    analysis.budget().balanceChart.getLeftDataset()
       .checkSize(1)
       .checkValue("Income", 670.00);
-    seriesAnalysis.budget().balanceChart.getRightDataset()
+    analysis.budget().balanceChart.getRightDataset()
       .checkSize(3)
       .checkValue("Recurring", 90.00, true)
       .checkValue("Variable", 450.00)
       .checkValue("Transfers", 100.00);
-    seriesAnalysis.budget().checkBalanceChartLabel("Main accounts balance");
-    seriesAnalysis.budget().seriesChart.getSingleDataset()
+    analysis.budget().checkBalanceChartLabel("Main accounts balance");
+    analysis.budget().seriesChart.getSingleDataset()
       .checkSize(2)
       .checkValue("Mobile", 60.00)
       .checkValue("Internet", 30.00, true);
-    seriesAnalysis.budget().checkSeriesChartLabel("Main recurring series");
+    analysis.budget().checkSeriesChartLabel("Main recurring series");
   }
 
   public void testMultiSelection() throws Exception {
@@ -204,105 +204,105 @@ public class SeriesEvolutionStackChartTest extends LoggedInFunctionalTestCase {
 
     budgetView.transfer.alignAndPropagate("Virt Livret");
 
-    seriesAnalysis.budget().balanceChart.select("Income");
-    seriesAnalysis.budget().balanceChart.getLeftDataset()
+    analysis.budget().balanceChart.select("Income");
+    analysis.budget().balanceChart.getLeftDataset()
       .checkSize(1)
       .checkValue("Income", 2200.00, true);
-    seriesAnalysis.budget().balanceChart.getRightDataset()
+    analysis.budget().balanceChart.getRightDataset()
       .checkSize(3)
       .checkValue("Variable", 1100.00)
       .checkValue("Transfers", 200.00)
       .checkValue("Recurring", 160.00);
-    seriesAnalysis.budget().seriesChart.getSingleDataset()
+    analysis.budget().seriesChart.getSingleDataset()
       .checkSize(2)
       .checkValue("Mary's", 1000.00)
       .checkValue("John's", 1200.00);
-    seriesAnalysis.budget().checkSeriesChartLabel("Main income series");
-    seriesAnalysis.budget().checkHistoChartLabel("Budget area Income evolution");
+    analysis.budget().checkSeriesChartLabel("Main income series");
+    analysis.budget().checkHistoChartLabel("Budget area Income evolution");
 
-    seriesAnalysis.budget().balanceChart.addToSelection("Variable");
-    seriesAnalysis.budget().balanceChart.getLeftDataset()
+    analysis.budget().balanceChart.addToSelection("Variable");
+    analysis.budget().balanceChart.getLeftDataset()
       .checkSize(1)
       .checkValue("Income", 2200.00, true);
-    seriesAnalysis.budget().balanceChart.getRightDataset()
+    analysis.budget().balanceChart.getRightDataset()
       .checkSize(3)
       .checkValue("Variable", 1100.00, true)
       .checkValue("Transfers", 200.00)
       .checkValue("Recurring", 160.00);
-    seriesAnalysis.budget().seriesChart.getLeftDataset()
+    analysis.budget().seriesChart.getLeftDataset()
       .checkSize(2)
       .checkValue("Mary's", 1000.00)
       .checkValue("John's", 1200.00);
-    seriesAnalysis.budget().seriesChart.getRightDataset()
+    analysis.budget().seriesChart.getRightDataset()
       .checkSize(1)
       .checkValue("Groceries", 1100.00);
-    seriesAnalysis.budget().checkSeriesChartLabel("Series for 2 budget areas");
-    seriesAnalysis.budget().checkHistoChartLabel("2 Budget areas evolution");
+    analysis.budget().checkSeriesChartLabel("Series for 2 budget areas");
+    analysis.budget().checkHistoChartLabel("2 Budget areas evolution");
 
-    seriesAnalysis.budget().seriesChart.addToSelection("Mary's");
-    seriesAnalysis.budget().balanceChart.getLeftDataset()
+    analysis.budget().seriesChart.addToSelection("Mary's");
+    analysis.budget().balanceChart.getLeftDataset()
       .checkSize(1)
       .checkValue("Income", 2200.00, true);
-    seriesAnalysis.budget().balanceChart.getRightDataset()
+    analysis.budget().balanceChart.getRightDataset()
       .checkSize(3)
       .checkValue("Variable", 1100.00, true)
       .checkValue("Transfers", 200.00)
       .checkValue("Recurring", 160.00);
-    seriesAnalysis.budget().seriesChart.getLeftDataset()
+    analysis.budget().seriesChart.getLeftDataset()
       .checkSize(2)
       .checkValue("Mary's", 1000.00, true)
       .checkValue("John's", 1200.00);
-    seriesAnalysis.budget().seriesChart.getRightDataset()
+    analysis.budget().seriesChart.getRightDataset()
       .checkSize(1)
       .checkValue("Groceries", 1100.00);
-    seriesAnalysis.budget().checkSeriesChartLabel("Series for 2 budget areas");
-    seriesAnalysis.budget().checkHistoChartLabel("Evolution of 'Mary's'");
+    analysis.budget().checkSeriesChartLabel("Series for 2 budget areas");
+    analysis.budget().checkHistoChartLabel("Evolution of 'Mary's'");
 
-    seriesAnalysis.budget().balanceChart.addToSelection("Recurring");
-    seriesAnalysis.budget().balanceChart.getLeftDataset()
+    analysis.budget().balanceChart.addToSelection("Recurring");
+    analysis.budget().balanceChart.getLeftDataset()
       .checkSize(1)
       .checkValue("Income", 2200.00, true);
-    seriesAnalysis.budget().balanceChart.getRightDataset()
+    analysis.budget().balanceChart.getRightDataset()
       .checkSize(3)
       .checkValue("Variable", 1100.00, true)
       .checkValue("Transfers", 200.00)
       .checkValue("Recurring", 160.00, true);
-    seriesAnalysis.budget().checkBalanceChartLabel("Main accounts balance");
-    seriesAnalysis.budget().seriesChart.getLeftDataset()
+    analysis.budget().checkBalanceChartLabel("Main accounts balance");
+    analysis.budget().seriesChart.getLeftDataset()
       .checkSize(2)
       .checkValue("Mary's", 1000.00, true)
       .checkValue("John's", 1200.00);
-    seriesAnalysis.budget().seriesChart.getRightDataset()
+    analysis.budget().seriesChart.getRightDataset()
       .checkSize(3)
       .checkValue("Groceries", 1100.00)
       .checkValue("Mobile", 100.00)
       .checkValue("Internet", 60.00);
-    seriesAnalysis.budget().checkSeriesChartLabel("Series for 3 budget areas");
-    seriesAnalysis.budget().checkHistoChartLabel("Evolution of 'Mary's'");
+    analysis.budget().checkSeriesChartLabel("Series for 3 budget areas");
+    analysis.budget().checkHistoChartLabel("Evolution of 'Mary's'");
 
-    seriesAnalysis.budget().seriesChart.addToSelection("Groceries");
-    seriesAnalysis.budget().balanceChart.getLeftDataset()
+    analysis.budget().seriesChart.addToSelection("Groceries");
+    analysis.budget().balanceChart.getLeftDataset()
       .checkSize(1)
       .checkValue("Income", 2200.00, true);
-    seriesAnalysis.budget().balanceChart.getRightDataset()
+    analysis.budget().balanceChart.getRightDataset()
       .checkSize(3)
       .checkValue("Variable", 1100.00, true)
       .checkValue("Transfers", 200.00)
       .checkValue("Recurring", 160.00, true);
-    seriesAnalysis.budget().checkBalanceChartLabel("Main accounts balance");
-    seriesAnalysis.budget().seriesChart.getLeftDataset()
+    analysis.budget().checkBalanceChartLabel("Main accounts balance");
+    analysis.budget().seriesChart.getLeftDataset()
       .checkSize(2)
       .checkValue("Mary's", 1000.00, true)
       .checkValue("John's", 1200.00);
-    seriesAnalysis.budget().seriesChart.getRightDataset()
+    analysis.budget().seriesChart.getRightDataset()
       .checkSize(3)
       .checkValue("Groceries", 1100.00, true)
       .checkValue("Mobile", 100.00)
       .checkValue("Internet", 60.00);
-    seriesAnalysis.budget().checkSeriesChartLabel("Series for 3 budget areas");
-    seriesAnalysis.budget().checkHistoChartLabel("Evolution of 2 envelopes");
+    analysis.budget().checkSeriesChartLabel("Series for 3 budget areas");
+    analysis.budget().checkHistoChartLabel("Evolution of 2 envelopes");
 
-    seriesAnalysis.table().checkSelected("Income", "Variable", "Recurring", "Mary's", "Groceries");
+    analysis.table().checkSelected("Income", "Variable", "Recurring", "Mary's", "Groceries");
   }
 
   public void testChartsAreUpdatedWhenSeriesAreModified() throws Exception {
@@ -324,67 +324,67 @@ public class SeriesEvolutionStackChartTest extends LoggedInFunctionalTestCase {
 
     timeline.selectMonths("2009/06", "2009/07");
 
-    seriesAnalysis.budget().balanceChart.select("Income");
-    seriesAnalysis.budget().seriesChart.addToSelection("Mary's");
-    seriesAnalysis.budget().balanceChart.getLeftDataset()
+    analysis.budget().balanceChart.select("Income");
+    analysis.budget().seriesChart.addToSelection("Mary's");
+    analysis.budget().balanceChart.getLeftDataset()
       .checkSize(1)
       .checkValue("Income", 2200.00, true);
-    seriesAnalysis.budget().balanceChart.getRightDataset()
+    analysis.budget().balanceChart.getRightDataset()
       .checkSize(1)
       .checkValue("Variable", 1100.00);
-    seriesAnalysis.budget().seriesChart.getSingleDataset()
+    analysis.budget().seriesChart.getSingleDataset()
       .checkSize(2)
       .checkValue("Mary's", 1000.00, true)
       .checkValue("John's", 1200.00);
-    seriesAnalysis.budget().checkSeriesChartLabel("Main income series");
-    seriesAnalysis.budget().checkHistoChartLabel("Evolution of 'Mary's'");
+    analysis.budget().checkSeriesChartLabel("Main income series");
+    analysis.budget().checkHistoChartLabel("Evolution of 'Mary's'");
 
     budgetView.income.editSeries("Mary's").deleteCurrentSeriesWithConfirmation();
-    seriesAnalysis.budget().balanceChart.getLeftDataset()
+    analysis.budget().balanceChart.getLeftDataset()
       .checkSize(1)
       .checkValue("Income", 1200.00, true);
-    seriesAnalysis.budget().balanceChart.getRightDataset()
+    analysis.budget().balanceChart.getRightDataset()
       .checkSize(1)
       .checkValue("Variable", 1100.00);
-    seriesAnalysis.budget().seriesChart.getSingleDataset()
+    analysis.budget().seriesChart.getSingleDataset()
       .checkSize(1)
       .checkValue("John's", 1200.00);
-    seriesAnalysis.budget().checkSeriesChartLabel("Main income series");
-    seriesAnalysis.budget().checkHistoChartLabel("Budget area Income evolution");
+    analysis.budget().checkSeriesChartLabel("Main income series");
+    analysis.budget().checkHistoChartLabel("Budget area Income evolution");
 
-    seriesAnalysis.budget().seriesChart.select("John's");
+    analysis.budget().seriesChart.select("John's");
     budgetView.income.editSeries("John's").setName("Main").validate();
-    seriesAnalysis.budget().balanceChart.getLeftDataset()
+    analysis.budget().balanceChart.getLeftDataset()
       .checkSize(1)
       .checkValue("Income", 1200.00, true);
-    seriesAnalysis.budget().balanceChart.getRightDataset()
+    analysis.budget().balanceChart.getRightDataset()
       .checkSize(1)
       .checkValue("Variable", 1100.00);
-    seriesAnalysis.budget().seriesChart.getSingleDataset()
+    analysis.budget().seriesChart.getSingleDataset()
       .checkSize(1)
       .checkValue("Main", 1200.00, true);
-    seriesAnalysis.budget().checkSeriesChartLabel("Main income series");
-    seriesAnalysis.budget().checkHistoChartLabel("Evolution of 'Main'");
+    analysis.budget().checkSeriesChartLabel("Main income series");
+    analysis.budget().checkHistoChartLabel("Evolution of 'Main'");
 
-    seriesAnalysis.budget().balanceChart.select("Variable");
-    seriesAnalysis.budget().seriesChart.addToSelection("Groceries");
-    seriesAnalysis.budget().seriesChart.getSingleDataset()
+    analysis.budget().balanceChart.select("Variable");
+    analysis.budget().seriesChart.addToSelection("Groceries");
+    analysis.budget().seriesChart.getSingleDataset()
       .checkSize(1)
       .checkValue("Groceries", 1100.00, true);
     budgetView.variable.editSeries("Groceries").setAmount(800.00).validate();
-    seriesAnalysis.budget().seriesChart.getSingleDataset()
+    analysis.budget().seriesChart.getSingleDataset()
       .checkSize(1)
       .checkValue("Groceries", 1300.00, true);
-    seriesAnalysis.budget().checkSeriesChartLabel("Main variable series");
-    seriesAnalysis.budget().checkHistoChartLabel("Evolution of 'Groceries'");
+    analysis.budget().checkSeriesChartLabel("Main variable series");
+    analysis.budget().checkHistoChartLabel("Evolution of 'Groceries'");
   }
 
   private void checkStandardCaseMainBalance() {
-    seriesAnalysis.budget().balanceChart.getLeftDataset()
+    analysis.budget().balanceChart.getLeftDataset()
       .checkSize(1)
       .checkValue("Income", 670.00);
 
-    seriesAnalysis.budget().balanceChart.getRightDataset()
+    analysis.budget().balanceChart.getRightDataset()
       .checkSize(3)
       .checkValue("Recurring", 90.00)
       .checkValue("Variable", 450.00)
@@ -410,76 +410,76 @@ public class SeriesEvolutionStackChartTest extends LoggedInFunctionalTestCase {
 
     views.selectAnalysis();
 
-    seriesAnalysis.budget().seriesChart.getSingleDataset()
+    analysis.budget().seriesChart.getSingleDataset()
       .checkSize(3)
       .checkValue("Groceries", 400.00)
       .checkValue("Mobile", 100.00)
       .checkValue("Internet", 50.00);
 
-    seriesAnalysis.budget().seriesChart.select("Groceries");
-    seriesAnalysis.table().checkSelected("Groceries");
-    seriesAnalysis.budget().checkBudgetAndSeriesStacksShown();
-    seriesAnalysis.budget().balanceChart.getLeftDataset()
+    analysis.budget().seriesChart.select("Groceries");
+    analysis.table().checkSelected("Groceries");
+    analysis.budget().checkBudgetAndSeriesStacksShown();
+    analysis.budget().balanceChart.getLeftDataset()
       .checkSize(1)
       .checkValue("Income", 500.00);
-    seriesAnalysis.budget().balanceChart.getRightDataset()
+    analysis.budget().balanceChart.getRightDataset()
       .checkSize(2)
       .checkValue("Variable", 400.00, true)
       .checkValue("Recurring", 150.00);
 
-    seriesAnalysis.budget().balanceChart.select("Recurring");
-    seriesAnalysis.table().checkSelected("Recurring");
-    seriesAnalysis.budget().checkBudgetAndSeriesStacksShown();
-    seriesAnalysis.budget().seriesChart.getSingleDataset()
+    analysis.budget().balanceChart.select("Recurring");
+    analysis.table().checkSelected("Recurring");
+    analysis.budget().checkBudgetAndSeriesStacksShown();
+    analysis.budget().seriesChart.getSingleDataset()
       .checkSize(2)
       .checkValue("Mobile", 100.00)
       .checkValue("Internet", 50.00);
 
-    seriesAnalysis.budget().seriesChart.select("Mobile");
-    seriesAnalysis.table().checkSelected("Mobile");
+    analysis.budget().seriesChart.select("Mobile");
+    analysis.table().checkSelected("Mobile");
 
-    seriesAnalysis.budget().seriesChart.select("Mobile", "Internet");
-    seriesAnalysis.table().checkSelected("Mobile", "Internet");
+    analysis.budget().seriesChart.select("Mobile", "Internet");
+    analysis.table().checkSelected("Mobile", "Internet");
   }
 
   public void testSavings() throws Exception {
 
     SavingsSetup.run(this, 200906);
 
-    seriesAnalysis.table().select("Savings accounts");
-    seriesAnalysis.budget().checkBalanceChartLabel("Savings accounts balance");
-    seriesAnalysis.budget().balanceChart.getLeftDataset()
+    analysis.table().select("Savings accounts");
+    analysis.budget().checkBalanceChartLabel("Savings accounts balance");
+    analysis.budget().balanceChart.getLeftDataset()
       .checkSize(1)
       .checkValue("Added to savings", 570);
-    seriesAnalysis.budget().balanceChart.getRightDataset()
+    analysis.budget().balanceChart.getRightDataset()
       .checkSize(1)
       .checkValue("Substracted from savings", 370);
-    seriesAnalysis.budget().checkSeriesChartLabel("Main savings series");
-    seriesAnalysis.budget().seriesChart.getLeftDataset()
+    analysis.budget().checkSeriesChartLabel("Main savings series");
+    analysis.budget().seriesChart.getLeftDataset()
       .checkSize(3)
       .checkValue("MainToImported", 150)
       .checkValue("ImportedFromExternal", 200)
       .checkValue("ImportedFromNonImported", 220);
-    seriesAnalysis.budget().seriesChart.getRightDataset()
+    analysis.budget().seriesChart.getRightDataset()
       .checkSize(2)
       .checkValue("ImportedToExternal", 300)
       .checkValue("ImportedToMain", 70);
 
     timeline.selectMonths("2009/06", "2009/07");
-    seriesAnalysis.budget().checkBalanceChartLabel("Savings accounts balance");
-    seriesAnalysis.budget().balanceChart.getLeftDataset()
+    analysis.budget().checkBalanceChartLabel("Savings accounts balance");
+    analysis.budget().balanceChart.getLeftDataset()
       .checkSize(1)
       .checkValue("Added to savings", 570.00);
-    seriesAnalysis.budget().balanceChart.getRightDataset()
+    analysis.budget().balanceChart.getRightDataset()
       .checkSize(1)
       .checkValue("Substracted from savings", 370.00);
-    seriesAnalysis.budget().checkSeriesChartLabel("Main savings series");
-    seriesAnalysis.budget().seriesChart.getLeftDataset()
+    analysis.budget().checkSeriesChartLabel("Main savings series");
+    analysis.budget().seriesChart.getLeftDataset()
       .checkSize(3)
       .checkValue("MainToImported", 150)
       .checkValue("ImportedFromExternal", 200)
       .checkValue("ImportedFromNonImported", 220);
-    seriesAnalysis.budget().seriesChart.getRightDataset()
+    analysis.budget().seriesChart.getRightDataset()
       .checkSize(2)
       .checkValue("ImportedToExternal", 300)
       .checkValue("ImportedToMain", 70);
@@ -503,38 +503,38 @@ public class SeriesEvolutionStackChartTest extends LoggedInFunctionalTestCase {
     categorization.setNewVariable("Auchan", "Groceries");
 
     views.selectAnalysis();
-    seriesAnalysis.table().select("To categorize");
+    analysis.table().select("To categorize");
 
     timeline.selectMonth("2009/06");
-    seriesAnalysis.budget().balanceChart.getSingleDataset()
+    analysis.budget().balanceChart.getSingleDataset()
       .checkSize(1)
       .checkValue("Categorized", 200.00);
-    seriesAnalysis.budget().checkBalanceChartLabel("Total amount of uncategorized operations");
-    seriesAnalysis.budget().seriesChart.getSingleDataset()
+    analysis.budget().checkBalanceChartLabel("Total amount of uncategorized operations");
+    analysis.budget().seriesChart.getSingleDataset()
       .checkSize(0);
-    seriesAnalysis.budget().checkSeriesChartLabel("Main operations to categorize");
+    analysis.budget().checkSeriesChartLabel("Main operations to categorize");
 
     timeline.selectMonth("2009/07");
-    seriesAnalysis.budget().balanceChart.getSingleDataset()
+    analysis.budget().balanceChart.getSingleDataset()
       .checkSize(2)
       .checkValue("Categorized", 400.00 + 500.00)
       .checkValue("To categorize", 200.00 + 200.00);
-    seriesAnalysis.budget().seriesChart.getSingleDataset()
+    analysis.budget().seriesChart.getSingleDataset()
       .checkSize(2)
       .checkValue("UNKNOWN 1", 200.00)
       .checkValue("UNKNOWN 2 WITH A ...", 200.00);
 
     timeline.selectMonth("2009/08");
-    seriesAnalysis.budget().balanceChart.getSingleDataset()
+    analysis.budget().balanceChart.getSingleDataset()
       .checkSize(2)
       .checkValue("Categorized", 300.00)
       .checkValue("To categorize", 100.00 + 100.00);
-    seriesAnalysis.budget().seriesChart.getSingleDataset()
+    analysis.budget().seriesChart.getSingleDataset()
       .checkSize(2)
       .checkValue("UNKNOWN 3", 100.00)
       .checkValue("UNKNOWN 4", 100.00);
 
-    seriesAnalysis.budget().seriesChart.select("UNKNOWN 3");
+    analysis.budget().seriesChart.select("UNKNOWN 3");
     views.checkCategorizationSelected();
     categorization.checkShowsUncategorizedTransactionsOnly();
     categorization.checkSelectedTableRow("UNKNOWN 3");
@@ -542,23 +542,23 @@ public class SeriesEvolutionStackChartTest extends LoggedInFunctionalTestCase {
     categorization.setNewVariable("UNKNOWN 3", "Misc");
 
     views.selectAnalysis();
-    seriesAnalysis.table().checkSelected("To categorize");
+    analysis.table().checkSelected("To categorize");
 
     timeline.selectMonth("2009/08");
-    seriesAnalysis.budget().balanceChart.getSingleDataset()
+    analysis.budget().balanceChart.getSingleDataset()
       .checkSize(2)
       .checkValue("Categorized", 300.00 + 100.00)
       .checkValue("To categorize", 100.00);
-    seriesAnalysis.budget().seriesChart.getSingleDataset()
+    analysis.budget().seriesChart.getSingleDataset()
       .checkSize(1)
       .checkValue("UNKNOWN 4", 100.00);
 
     timeline.selectMonths("2009/07", "2009/08");
-    seriesAnalysis.budget().balanceChart.getSingleDataset()
+    analysis.budget().balanceChart.getSingleDataset()
       .checkSize(2)
       .checkValue("Categorized", 400.00 + 500.00 + 300.00 + 100.00)
       .checkValue("To categorize", 200.00 + 200.00 + 100.00);
-    seriesAnalysis.budget().seriesChart.getSingleDataset()
+    analysis.budget().seriesChart.getSingleDataset()
       .checkSize(3)
       .checkValue("UNKNOWN 2 WITH A ...", 200.00)
       .checkValue("UNKNOWN 1", 200.00)
@@ -586,35 +586,35 @@ public class SeriesEvolutionStackChartTest extends LoggedInFunctionalTestCase {
     categorization.setNewExtra("Check n. 12345", "Gift");
     categorization.setNewExtra("Fouquet's", "Dining");
 
-    seriesAnalysis.budget().balanceChart.getLeftDataset()
+    analysis.budget().balanceChart.getLeftDataset()
       .checkSize(2)
       .checkValue("Income", 500.00)
       .checkValue("Extras", 250.00);
-    seriesAnalysis.budget().balanceChart.getRightDataset()
+    analysis.budget().balanceChart.getRightDataset()
       .checkSize(2)
       .checkValue("Variable", 400.00)
       .checkValue("Recurring", 150.00);
 
-    seriesAnalysis.budget().seriesChart.getSingleDataset()
+    analysis.budget().seriesChart.getSingleDataset()
       .checkSize(4)
       .checkValue("Groceries", 400.00)
       .checkValue("Dining", 200.00)
       .checkValue("Mobile", 100.00)
       .checkValue("Internet", 50.00);
 
-    seriesAnalysis.table().select("Extras");
-    seriesAnalysis.budget().balanceChart.getLeftDataset()
+    analysis.table().select("Extras");
+    analysis.budget().balanceChart.getLeftDataset()
       .checkSize(2)
       .checkValue("Income", 500.00)
       .checkValue("Extras", 250.00, true);
-    seriesAnalysis.budget().balanceChart.getRightDataset()
+    analysis.budget().balanceChart.getRightDataset()
       .checkSize(2)
       .checkValue("Variable", 400.00)
       .checkValue("Recurring", 150.00);
-    seriesAnalysis.budget().seriesChart.getLeftDataset()
+    analysis.budget().seriesChart.getLeftDataset()
       .checkSize(1)
       .checkValue("Gift", 450.00);
-    seriesAnalysis.budget().seriesChart.getRightDataset()
+    analysis.budget().seriesChart.getRightDataset()
       .checkSize(1)
       .checkValue("Dining", 200.00);
   }
@@ -635,24 +635,24 @@ public class SeriesEvolutionStackChartTest extends LoggedInFunctionalTestCase {
     categorization.setNewVariable("Elf", "Fuel");
 
     views.selectAnalysis();
-    seriesAnalysis.budget();
+    analysis.budget();
 
     timeline.selectMonth("2009/07");
-    seriesAnalysis.budget().checkBudgetAndSeriesStacksShown();
-    seriesAnalysis.budget().balanceChart.getLeftDataset()
+    analysis.budget().checkBudgetAndSeriesStacksShown();
+    analysis.budget().balanceChart.getLeftDataset()
       .checkSize(1)
       .checkValue("Income", 300.00);
-    seriesAnalysis.budget().balanceChart.getRightDataset()
+    analysis.budget().balanceChart.getRightDataset()
       .checkSize(1)
       .checkValue("Variable", 550.00);
-    seriesAnalysis.budget().seriesChart.getSingleDataset()
+    analysis.budget().seriesChart.getSingleDataset()
       .checkSize(2)
       .checkValue("Groceries", 450.00)
       .checkValue("Fuel", 100.00);
 
-    seriesAnalysis.table().collapseAll();
-    seriesAnalysis.budget().seriesChart.select("Groceries");
-    seriesAnalysis.table().checkSelected("Groceries");
+    analysis.table().collapseAll();
+    analysis.budget().seriesChart.select("Groceries");
+    analysis.table().checkSelected("Groceries");
   }
 
   public void testPopupMenus() throws Exception {
@@ -698,10 +698,10 @@ public class SeriesEvolutionStackChartTest extends LoggedInFunctionalTestCase {
 
     // ---- BudgetArea ----
 
-    seriesAnalysis.budget().balanceChart.checkRightClickOptions("Income",
+    analysis.budget().balanceChart.checkRightClickOptions("Income",
                                                                 "Show transactions in Categorization view",
                                                                 "Show transactions in Accounts view");
-    seriesAnalysis.budget().balanceChart.rightClickAndSelect("Income", "Show transactions in Categorization view");
+    analysis.budget().balanceChart.rightClickAndSelect("Income", "Show transactions in Categorization view");
     views.checkCategorizationSelected();
     categorization.checkShowsSelectedMonthsOnly();
     categorization.initContent()
@@ -712,12 +712,12 @@ public class SeriesEvolutionStackChartTest extends LoggedInFunctionalTestCase {
     // ---- Series ----
 
     views.selectAnalysis();
-    seriesAnalysis.budget().balanceChart.select("Variable");
-    seriesAnalysis.budget().seriesChart.checkRightClickOptions("Groceries",
+    analysis.budget().balanceChart.select("Variable");
+    analysis.budget().seriesChart.checkRightClickOptions("Groceries",
                                                                "Show transactions in Categorization view",
                                                                "Show transactions in Accounts view",
                                                                "Edit");
-    seriesAnalysis.budget().seriesChart.rightClickAndSelect("Groceries", "Show transactions in Categorization view");
+    analysis.budget().seriesChart.rightClickAndSelect("Groceries", "Show transactions in Categorization view");
     views.checkCategorizationSelected();
     categorization.checkShowsSelectedMonthsOnly();
     categorization.initContent()
@@ -726,7 +726,7 @@ public class SeriesEvolutionStackChartTest extends LoggedInFunctionalTestCase {
       .check();
 
     views.selectAnalysis();
-    seriesAnalysis.budget().seriesChart.rightClickAndEditSeries("Groceries", "Edit")
+    analysis.budget().seriesChart.rightClickAndEditSeries("Groceries", "Edit")
       .checkName("Groceries")
       .checkAmount(450.00)
       .validate();
@@ -734,13 +734,13 @@ public class SeriesEvolutionStackChartTest extends LoggedInFunctionalTestCase {
     // ---- Multi-series ----
 
     views.selectAnalysis();
-    seriesAnalysis.budget().balanceChart.select("Recurring");
-    seriesAnalysis.budget().seriesChart
+    analysis.budget().balanceChart.select("Recurring");
+    analysis.budget().seriesChart
       .select("Mobile", "Internet")
       .checkRightClickOptions("Internet",
                               "Show transactions in Categorization view",
                               "Show transactions in Accounts view");
-    seriesAnalysis.budget().seriesChart.rightClickAndSelect("Internet", "Show transactions in Categorization view");
+    analysis.budget().seriesChart.rightClickAndSelect("Internet", "Show transactions in Categorization view");
     views.checkCategorizationSelected();
     categorization.checkShowsSelectedMonthsOnly();
     categorization.initContent()
@@ -752,11 +752,11 @@ public class SeriesEvolutionStackChartTest extends LoggedInFunctionalTestCase {
 
     timeline.selectMonths(200906, 200907);
     views.selectAnalysis();
-    seriesAnalysis.table().select("To categorize");
-    seriesAnalysis.budget().balanceChart.checkRightClickOptions("To categorize",
+    analysis.table().select("To categorize");
+    analysis.budget().balanceChart.checkRightClickOptions("To categorize",
                                                                 "Show transactions in Categorization view",
                                                                 "Show transactions in Accounts view");
-    seriesAnalysis.budget().balanceChart.rightClickAndSelect("To categorize", "Show transactions in Categorization view");
+    analysis.budget().balanceChart.rightClickAndSelect("To categorize", "Show transactions in Categorization view");
     views.checkCategorizationSelected();
     categorization.checkShowsUncategorizedTransactionsForSelectedMonths();
     categorization.initContent()
@@ -767,18 +767,18 @@ public class SeriesEvolutionStackChartTest extends LoggedInFunctionalTestCase {
 
     // ---- Uncategorized transactions ----
 
-    seriesAnalysis.table().select("To categorize");
-    seriesAnalysis.budget();
-    seriesAnalysis.checkBudgetShown();
-    seriesAnalysis.budget().seriesChart.getSingleDataset()
+    analysis.table().select("To categorize");
+    analysis.budget();
+    analysis.checkBudgetShown();
+    analysis.budget().seriesChart.getSingleDataset()
       .checkSize(3)
       .checkValue("UNKNOWN2", 100.00)
       .checkValue("UNKNOWN1", 50.00)
       .checkValue("UNKNOWN3", 20.00);
-    seriesAnalysis.budget().seriesChart.checkRightClickOptions("UNKNOWN2",
+    analysis.budget().seriesChart.checkRightClickOptions("UNKNOWN2",
                                                                "Show transactions in Categorization view",
                                                                "Show transactions in Accounts view");
-    seriesAnalysis.budget().seriesChart.rightClickAndSelect("UNKNOWN2", "Show transactions in Categorization view");
+    analysis.budget().seriesChart.rightClickAndSelect("UNKNOWN2", "Show transactions in Categorization view");
     categorization.checkShowsUncategorizedTransactionsForSelectedMonths();
     categorization.initContent()
       .add("20/06/2009", "", "UNKNOWN1", 50.00)
@@ -814,12 +814,12 @@ public class SeriesEvolutionStackChartTest extends LoggedInFunctionalTestCase {
     // -- Click in existing selection ==> preserve
 
     views.selectAnalysis();
-    seriesAnalysis.budget().balanceChart
+    analysis.budget().balanceChart
       .select("Income");
-    seriesAnalysis.budget().seriesChart
+    analysis.budget().seriesChart
       .select("John's")
       .addToSelection("Mary's");
-    seriesAnalysis.budget().seriesChart
+    analysis.budget().seriesChart
       .rightClickAndSelect("John's", "Show transactions in Accounts view");
     views.checkDataSelected();
     transactions.initContent()
@@ -827,24 +827,24 @@ public class SeriesEvolutionStackChartTest extends LoggedInFunctionalTestCase {
       .add("01/06/2009", TransactionType.VIREMENT, "WORLDCO", "", 300.00, "John's")
       .check();
     views.selectAnalysis();
-    seriesAnalysis.table().checkSelected("John's", "Mary's");
+    analysis.table().checkSelected("John's", "Mary's");
 
     // -- Click in existing selection ==> change
 
     views.selectAnalysis();
-    seriesAnalysis.budget().balanceChart
+    analysis.budget().balanceChart
       .select("Income");
-    seriesAnalysis.budget().seriesChart
+    analysis.budget().seriesChart
       .select("John's");
 
-    seriesAnalysis.budget().seriesChart
+    analysis.budget().seriesChart
       .rightClickAndSelect("Mary's", "Show transactions in Accounts view");
     views.checkDataSelected();
     transactions.initContent()
       .add("15/06/2009", TransactionType.VIREMENT, "BIG INC.", "", 350.00, "Mary's")
       .check();
     views.selectAnalysis();
-    seriesAnalysis.table().checkSelected("Mary's");
+    analysis.table().checkSelected("Mary's");
 
   }
 
@@ -871,12 +871,12 @@ public class SeriesEvolutionStackChartTest extends LoggedInFunctionalTestCase {
     categorization.setTransfer("Virement", "To account Livret");
     categorization.setTransfer("Virt livret", "To account Livret");
 
-    seriesAnalysis.budget().seriesChart.getSingleDataset()
+    analysis.budget().seriesChart.getSingleDataset()
       .checkSize(1)
       .checkValue("To account Livret", 95.00);
 
-    seriesAnalysis.budget().seriesChart.select("To account Livret");
-    seriesAnalysis.table().initContent()
+    analysis.budget().seriesChart.select("To account Livret");
+    analysis.table().initContent()
       .add("Main accounts", "", "", "", "", "", "", "", "")
       .add("Balance", "", "-95.00", "", "", "", "", "", "")
       .add("Savings accounts", "", "105.00", "105.00", "105.00", "105.00", "105.00", "105.00", "105.00")
@@ -888,6 +888,6 @@ public class SeriesEvolutionStackChartTest extends LoggedInFunctionalTestCase {
       .add("Transfers", "", "95.00", "", "", "", "", "", "")
       .add("To account Livret", "", "95.00", "", "", "", "", "", "")
       .check();
-    seriesAnalysis.table().checkSelected("To account Livret");
+    analysis.table().checkSelected("To account Livret");
   }
 }

@@ -1,6 +1,7 @@
 package org.designup.picsou.functests.checkers;
 
 import org.designup.picsou.functests.checkers.analysis.BudgetAnalysisChecker;
+import org.designup.picsou.functests.checkers.analysis.EvolutionAnalysisChecker;
 import org.designup.picsou.functests.checkers.analysis.TableAnalysisChecker;
 import org.uispec4j.Button;
 import org.uispec4j.Panel;
@@ -10,18 +11,20 @@ import javax.swing.*;
 
 import static org.uispec4j.assertion.UISpecAssert.assertFalse;
 
-public class SeriesAnalysisChecker extends ViewChecker {
+public class AnalysisChecker extends ViewChecker {
 
   private static final String PANEL_NAME = "analysisView";
 
   private Panel panel;
   private TableAnalysisChecker tableAnalysisChecker;
   private BudgetAnalysisChecker budgetAnalysisChecker;
+  private EvolutionAnalysisChecker evolutionAnalysisChecker;
   private Panel analysisSelector;
   private Button tableSelector;
   private Button budgetSelector;
+  private Button evolutionSelector;
 
-  public SeriesAnalysisChecker(Window mainWindow) {
+  public AnalysisChecker(Window mainWindow) {
     super(mainWindow);
   }
 
@@ -57,6 +60,22 @@ public class SeriesAnalysisChecker extends ViewChecker {
     budgetSelector.click();
   }
 
+  public EvolutionAnalysisChecker evolution() {
+    views.selectAnalysis();
+    selectEvolution();
+    if (evolutionAnalysisChecker == null) {
+      evolutionAnalysisChecker = new EvolutionAnalysisChecker(mainWindow);
+    }
+    return evolutionAnalysisChecker;
+  }
+
+  public void selectEvolution() {
+    if (budgetSelector == null) {
+      budgetSelector = getSelector("selector:evolution");
+    }
+    budgetSelector.click();
+  }
+
   private org.uispec4j.Button getSelector(String buttonName) {
     if (analysisSelector == null) {
       analysisSelector = mainWindow.getPanel("analysisSelector");
@@ -72,33 +91,33 @@ public class SeriesAnalysisChecker extends ViewChecker {
     return panel;
   }
 
-  public SeriesAnalysisChecker selectNextMonth() {
+  public AnalysisChecker selectNextMonth() {
     getPanel().getButton("nextMonth").click();
     return this;
   }
 
-  public SeriesAnalysisChecker checkNextMonthSelectionDisabled() {
+  public AnalysisChecker checkNextMonthSelectionDisabled() {
     assertFalse(getPanel().getButton("nextMonth").isEnabled());
     return this;
   }
 
-  public SeriesAnalysisChecker selectPreviousMonth() {
+  public AnalysisChecker selectPreviousMonth() {
     getPanel().getButton("previousMonth").click();
     return this;
   }
 
-  public SeriesAnalysisChecker checkPreviousMonthSelectionDisabled() {
+  public AnalysisChecker checkPreviousMonthSelectionDisabled() {
     assertFalse(getPanel().getButton("previousMonth").isEnabled());
     return this;
   }
 
-  public SeriesAnalysisChecker checkBudgetShown() {
+  public AnalysisChecker checkBudgetShown() {
     checkComponentVisible(getPanel(), JPanel.class, "chartsPanel", true);
     checkComponentVisible(getPanel(), JPanel.class, "tablePanel", false);
     return this;
   }
 
-  public SeriesAnalysisChecker checkTableShown() {
+  public AnalysisChecker checkTableShown() {
     checkComponentVisible(getPanel(), JPanel.class, "chartsPanel", false);
     checkComponentVisible(getPanel(), JPanel.class, "tablePanel", true);
     return this;

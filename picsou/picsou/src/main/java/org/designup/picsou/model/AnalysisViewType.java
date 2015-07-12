@@ -15,7 +15,7 @@ import static org.globsframework.model.FieldValue.value;
 
 public enum AnalysisViewType implements GlobConstantContainer {
   BUDGET(0),
-  SERIES(2),
+  EVOLUTION(2),
   TABLE(1);
 
   public static GlobType TYPE;
@@ -66,7 +66,7 @@ public enum AnalysisViewType implements GlobConstantContainer {
       case 1:
         return TABLE;
       case 2:
-        return SERIES;
+        return EVOLUTION;
       default:
         throw new InvalidParameter("Unknown value: " + viewType);
     }

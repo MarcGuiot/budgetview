@@ -61,10 +61,10 @@ public class RestartTest extends RestartTestCase {
     timeline.selectMonth("2008/09");
     budgetView.income.checkSeries("Salary", 0.0, 1000.0);
     mainAccounts.checkEndOfMonthPosition(OfxBuilder.DEFAULT_ACCOUNT_NAME, 1000.0);
-    seriesAnalysis.budget().balanceChart.getLeftDataset()
+    analysis.budget().balanceChart.getLeftDataset()
       .checkSize(1)
       .checkValue("Income", 1000.00);
-    seriesAnalysis.budget().balanceChart.getRightDataset()
+    analysis.budget().balanceChart.getRightDataset()
       .checkEmpty();
 
     timeline.selectMonth("2008/08");
@@ -78,10 +78,10 @@ public class RestartTest extends RestartTestCase {
 
     budgetView.income.checkTotalAmounts(1000.0, 1000.0);
 
-    seriesAnalysis.budget().balanceChart.getLeftDataset()
+    analysis.budget().balanceChart.getLeftDataset()
       .checkSize(1)
       .checkValue("Income", 1000.00);
-    seriesAnalysis.budget().balanceChart.getRightDataset()
+    analysis.budget().balanceChart.getRightDataset()
       .checkEmpty();
     budgetView.income.checkSeries("Salary", 1000.0, 1000.0);
 

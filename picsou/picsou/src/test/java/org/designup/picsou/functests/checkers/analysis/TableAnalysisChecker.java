@@ -44,6 +44,9 @@ public class TableAnalysisChecker extends ExpandableTableChecker<TableAnalysisCh
   public void checkRow(String label, String... values) {
     Table table = getTable();
     int index = getRow(label, table);
+    if (index < 0) {
+      Assert.fail("No row found with label: " + label + "\nActual content:\n" + table);
+    }
     assertThat(table.rowEquals(index, 0, COLUMN_COUNT, Utils.join(new String[]{"", label}, values)));
   }
 
@@ -161,7 +164,8 @@ public class TableAnalysisChecker extends ExpandableTableChecker<TableAnalysisCh
   }
 
   public void checkNoTableRowWithLabel(String seriesName) {
-    assertFalse("'" + seriesName + "' unexpectedly shown", getTable().containsRow(getLabelColumnIndex(), seriesName));
+    Table table = getTable();
+    assertFalse("'" + seriesName + "' unexpectedly shown: \n" + table, getTable().containsRow(getLabelColumnIndex(), seriesName));
   }
 
   public TableAnalysisChecker checkForeground(String rowLabel, String columnLabel, String expectedColor) {

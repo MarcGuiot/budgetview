@@ -1,6 +1,5 @@
 package org.designup.picsou.gui.analysis.table;
 
-import com.budgetview.shared.utils.Amounts;
 import org.designup.picsou.gui.View;
 import org.designup.picsou.gui.analysis.SeriesChartsBackgroundPainter;
 import org.designup.picsou.gui.analysis.SeriesChartsColors;
@@ -39,11 +38,12 @@ import java.awt.*;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.event.KeyEvent;
-import java.util.ArrayList;
-import java.util.Enumeration;
+import java.util.*;
 import java.util.List;
-import java.util.SortedSet;
 
+import static org.globsframework.model.utils.GlobMatchers.fieldEquals;
+import static org.globsframework.model.utils.GlobMatchers.not;
+import static org.globsframework.model.utils.GlobMatchers.or;
 import static org.globsframework.utils.Utils.intRange;
 
 public class SeriesEvolutionTableView extends View {
@@ -87,7 +87,20 @@ public class SeriesEvolutionTableView extends View {
 
     // attention CategoryExpansionModel doit etre enregistré comme listener de changetSet avant la table.
     expansionModel = new SeriesExpansionModel(repository, tableAdapter, directory);
-    expansionModel.setBaseMatcher(new ActiveSeriesMatcher());
+    expansionModel.setBaseMatcher(or(not(fieldEquals(SeriesWrapper.ITEM_TYPE, SeriesWrapperType.SERIES.getId())),
+                                     new SeriesWrapperMatchers.ActiveSeries() {
+                                       public Iterable<Integer> getMonthRange() {
+                                         if (monthColumns.isEmpty()) {
+                                           return Collections.emptyList();
+                                         }
+                                         return Month.range(monthColumns.get(0).getReferenceMonthId(),
+                                                            monthColumns.get(monthColumns.size() - 1).getReferenceMonthId());
+                                       }
+
+                                       public Integer getReferenceMonthId() {
+                                         return referenceMonthId;
+                                       }
+                                     }));
 
     SeriesWrapperStringifier stringifier = new SeriesWrapperStringifier(repository, directory);
 
@@ -251,30 +264,6 @@ public class SeriesEvolutionTableView extends View {
       i++;
     }
     return size;
-  }
-
-  private class ActiveSeriesMatcher implements GlobMatcher {
-    public boolean matches(Glob wrapper, GlobRepository repository) {
-      if (!SeriesWrapperType.SERIES.isOfType(wrapper)) {
-        return true;
-      }
-
-      if (referenceMonthId == null) {
-        return false;
-      }
-
-      for (int offset = -1; offset < -1 + monthColumnsCount; offset++) {
-        int monthId = Month.offset(referenceMonthId, offset);
-        Glob seriesStat = repository.find(SeriesStat.createKeyForSeries(wrapper.get(SeriesWrapper.ITEM_ID), monthId));
-        if ((seriesStat != null) &&
-            (Amounts.isNotZero(seriesStat.get(SeriesStat.PLANNED_AMOUNT))
-             || Amounts.isNotZero(seriesStat.get(SeriesStat.ACTUAL_AMOUNT)))) {
-          return true;
-        }
-      }
-
-      return false;
-    }
   }
 
   private class SeriesWrapperMatcher implements GlobMatcher {

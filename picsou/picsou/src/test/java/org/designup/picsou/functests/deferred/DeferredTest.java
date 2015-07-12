@@ -798,20 +798,20 @@ public class DeferredTest extends LoggedInFunctionalTestCase {
       .check();
 
     timeline.selectMonth(200806);
-    seriesAnalysis.budget().balanceChart
+    analysis.budget().balanceChart
       .getRightDataset()
       .checkSize(1)
       .checkValue("Variable", 100.00);
 
-    seriesAnalysis.budget().seriesChart
+    analysis.budget().seriesChart
       .getSingleDataset()
       .checkSize(1)
       .checkValue("Groceries", 100.00);
 
-    seriesAnalysis.budget();
+    analysis.budget();
     timeline.selectMonth(200806);
-    seriesAnalysis.table().checkNoTableRowWithLabel("Card n. 1111");
-    seriesAnalysis.table().checkNoTableRowWithLabel("Other");
+    analysis.table().checkNoTableRowWithLabel("Card n. 1111");
+    analysis.table().checkNoTableRowWithLabel("Other");
   }
 
   public void testDeferredAccountInManual() throws Exception {

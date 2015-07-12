@@ -36,6 +36,9 @@
       <card name="budget">
         <panel ref="budgetAnalysis"/>
       </card>
+      <card name="evolution">
+        <panel ref="evolutionAnalysis"/>
+      </card>
       <card name="table">
         <panel ref="tableAnalysis"/>
       </card>

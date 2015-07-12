@@ -5,7 +5,6 @@ import org.designup.picsou.model.AnalysisViewType;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.actions.SelectGlobAction;
 import org.globsframework.gui.components.GlobSelectablePanel;
-import org.globsframework.gui.components.GlobSelectionToggle;
 import org.globsframework.gui.splits.ImageLocator;
 import org.globsframework.gui.splits.PanelBuilder;
 import org.globsframework.gui.splits.SplitsNode;
@@ -17,7 +16,8 @@ import org.globsframework.utils.directory.Directory;
 import org.globsframework.utils.exceptions.UnexpectedValue;
 
 import javax.swing.*;
-import java.util.Arrays;
+
+import static java.util.Arrays.asList;
 
 public class AnalysisSelector extends View {
 
@@ -30,7 +30,7 @@ public class AnalysisSelector extends View {
                                                       repository, directory);
 
     builder.addRepeat("repeat",
-                      Arrays.asList(AnalysisViewType.BUDGET, AnalysisViewType.TABLE),
+                      asList(AnalysisViewType.BUDGET, AnalysisViewType.EVOLUTION, AnalysisViewType.TABLE),
                       new AccountTypeComponentFactory());
 
     parentBuilder.add("analysisSelector", builder);
@@ -71,10 +71,10 @@ public class AnalysisSelector extends View {
       switch (type) {
         case BUDGET:
           return "analysis/analysis_composition.png";
+        case EVOLUTION:
+          return "analysis/analysis_evolution.png";
         case TABLE:
           return "analysis/analysis_table.png";
-        case SERIES:
-          return "analysis/analysis_evolution.png";
       }
       throw new UnexpectedValue(type);
     }

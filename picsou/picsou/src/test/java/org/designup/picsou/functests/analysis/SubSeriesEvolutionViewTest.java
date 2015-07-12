@@ -38,15 +38,15 @@ public class SubSeriesEvolutionViewTest extends LoggedInFunctionalTestCase {
     categorization.setVariable("MacDo", "Food", "Restaurant");
     categorization.setVariable("OtherFoods", "Food");
 
-    seriesAnalysis.budget();
+    analysis.budget();
   }
 
   public void testSelectingSubSeries() throws Exception {
 
-    seriesAnalysis.budget()
+    analysis.budget()
       .checkBudgetAndSeriesStacksShown()
       .checkStackButtonsHidden();
-    seriesAnalysis.table().initContent(5)
+    analysis.table().initContent(5)
       .add("Main accounts", "-115.00", "-125.00", "125.00")
       .add("Balance", "-155.00", "-10.00", "250.00")
       .add("Savings accounts", "", "", "")
@@ -64,105 +64,105 @@ public class SubSeriesEvolutionViewTest extends LoggedInFunctionalTestCase {
       .add("Transfers", "", "", "")
       .check();
 
-    seriesAnalysis.table().select("Food");
-    seriesAnalysis.budget()
+    analysis.table().select("Food");
+    analysis.budget()
       .checkBudgetAndSeriesStacksShown()
       .checkGotoSubSeriesShown().gotoDown()
       .checkGotoBudgetShown();
-    seriesAnalysis.budget().seriesChart.getSingleDataset()
+    analysis.budget().seriesChart.getSingleDataset()
       .checkSize(1)
       .checkValue("Food", 260.00, true);
-    seriesAnalysis.budget().subSeriesChart.getSingleDataset()
+    analysis.budget().subSeriesChart.getSingleDataset()
       .checkSize(3)
       .checkValue("Groceries", 100.00)
       .checkValue("Food", 100.00)
       .checkValue("Restaurant", 60.00);
 
-    seriesAnalysis.table().checkExpansionEnabled("Salary", false);
+    analysis.table().checkExpansionEnabled("Salary", false);
 
-    seriesAnalysis.table().checkExpansionEnabled("Food", true);
-    seriesAnalysis.table().checkExpanded("Food", true);
-    seriesAnalysis.table().toggleExpansion("Food");
-    seriesAnalysis.budget().subSeriesChart.select("Restaurant");
-    seriesAnalysis.table().checkExpanded("Food", true);
-    seriesAnalysis.budget()
+    analysis.table().checkExpansionEnabled("Food", true);
+    analysis.table().checkExpanded("Food", true);
+    analysis.table().toggleExpansion("Food");
+    analysis.budget().subSeriesChart.select("Restaurant");
+    analysis.table().checkExpanded("Food", true);
+    analysis.budget()
       .checkSubSeriesStackShown()
       .checkGotoBudgetShown();
-    seriesAnalysis.budget().seriesChart.getSingleDataset()
+    analysis.budget().seriesChart.getSingleDataset()
       .checkSize(1)
       .checkValue("Food", 260.00, true);
-    seriesAnalysis.budget().subSeriesChart.getSingleDataset()
+    analysis.budget().subSeriesChart.getSingleDataset()
       .checkSize(3)
       .checkValue("Groceries", 100.00)
       .checkValue("Food", 100.00)
       .checkValue("Restaurant", 60.00, true);
-    seriesAnalysis.budget().histoChart
+    analysis.budget().histoChart
       .checkColumnCount(4)
       .checkLineColumn(0, "Apr", "2012", 25.00)
       .checkLineColumn(1, "May", "2012", 60.00, true)
       .checkLineColumn(2, "June", "2012", 0.00)
       .checkLineColumn(3, "Jul", "2012", 0.00);
-    seriesAnalysis.table().checkSelected("Restaurant");
+    analysis.table().checkSelected("Restaurant");
 
-    seriesAnalysis.budget().subSeriesChart.select("Groceries");
-    seriesAnalysis.budget()
+    analysis.budget().subSeriesChart.select("Groceries");
+    analysis.budget()
       .checkSubSeriesStackShown()
       .checkGotoBudgetShown();
-    seriesAnalysis.budget().seriesChart.getSingleDataset()
+    analysis.budget().seriesChart.getSingleDataset()
       .checkSize(1)
       .checkValue("Food", 260.00, true);
-    seriesAnalysis.budget().subSeriesChart.getSingleDataset()
+    analysis.budget().subSeriesChart.getSingleDataset()
       .checkSize(3)
       .checkValue("Groceries", 100.00, true)
       .checkValue("Food", 100.00)
       .checkValue("Restaurant", 60.00);
-    seriesAnalysis.budget().histoChart
+    analysis.budget().histoChart
       .checkColumnCount(4)
       .checkLineColumn(0, "Apr", "2012", 80.00)
       .checkLineColumn(1, "May", "2012", 100.00, true)
       .checkLineColumn(2, "June", "2012", 0.00)
       .checkLineColumn(3, "Jul", "2012", 0.00);
-    seriesAnalysis.table().checkSelected("Groceries");
+    analysis.table().checkSelected("Groceries");
 
-    seriesAnalysis.budget().gotoUp();
-    seriesAnalysis.table().select("Restaurant");
-    seriesAnalysis.budget()
+    analysis.budget().gotoUp();
+    analysis.table().select("Restaurant");
+    analysis.budget()
       .checkSubSeriesStackShown()
       .checkGotoBudgetShown();
-    seriesAnalysis.budget().seriesChart.getSingleDataset()
+    analysis.budget().seriesChart.getSingleDataset()
       .checkSize(1)
       .checkValue("Food", 260.00, true);
-    seriesAnalysis.budget().subSeriesChart.getSingleDataset()
+    analysis.budget().subSeriesChart.getSingleDataset()
       .checkSize(3)
       .checkValue("Groceries", 100.00)
       .checkValue("Food", 100.00)
       .checkValue("Restaurant", 60.00, true);
-    seriesAnalysis.budget().histoChart
+    analysis.budget().histoChart
       .checkColumnCount(4)
       .checkLineColumn(0, "Apr", "2012", 25.00)
       .checkLineColumn(1, "May", "2012", 60.00, true)
       .checkLineColumn(2, "June", "2012", 0.00)
       .checkLineColumn(3, "Jul", "2012", 0.00);
 
-    seriesAnalysis.budget()
+    analysis.budget()
       .gotoUp()
       .checkBudgetAndSeriesStacksShown()
       .checkGotoSubSeriesShown();
-    seriesAnalysis.budget().balanceChart.getRightDataset()
+    analysis.budget().balanceChart.getRightDataset()
       .checkSize(2)
       .checkValue("Variable", 260.00, true)
       .checkValue("Recurring", 50.00);
 
     budgetView.variable.gotoAnalysis("Food");
-    seriesAnalysis.budget()
+    analysis.budget()
       .checkBudgetAndSeriesStacksShown()
       .checkGotoSubSeriesShown()
       .gotoDown()
       .checkSubSeriesStackShown();
-    seriesAnalysis.budget().seriesChart.getSingleDataset()
+    analysis.budget().seriesChart.getSingleDataset()
       .checkSize(1)
       .checkValue("Food", 260.00, true);
-    seriesAnalysis.budget().subSeriesChart.getSingleDataset()
+    analysis.budget().subSeriesChart.getSingleDataset()
       .checkSize(3)
       .checkValue("Groceries", 100.00)
       .checkValue("Food", 100.00)
@@ -171,74 +171,74 @@ public class SubSeriesEvolutionViewTest extends LoggedInFunctionalTestCase {
 
   public void testDeletingAndAddingSubSeries() throws Exception {
 
-    seriesAnalysis.table().select("Food");
-    seriesAnalysis.budget().gotoDown();
-    seriesAnalysis.budget().subSeriesChart.select("Restaurant");
-    seriesAnalysis.budget().seriesChart.getSingleDataset()
+    analysis.table().select("Food");
+    analysis.budget().gotoDown();
+    analysis.budget().subSeriesChart.select("Restaurant");
+    analysis.budget().seriesChart.getSingleDataset()
       .checkSize(1)
       .checkValue("Food", 260.00, true);
 
-    seriesAnalysis.budget().seriesChart.rightClickAndEditSeries("Food", "Edit")
+    analysis.budget().seriesChart.rightClickAndEditSeries("Food", "Edit")
       .gotoSubSeriesTab()
       .deleteSubSeriesAndConfirm("Restaurant")
       .validate();
 
-    seriesAnalysis.table().select("Food");
-    seriesAnalysis.budget()
+    analysis.table().select("Food");
+    analysis.budget()
       .checkSubSeriesStackShown()
       .checkGotoBudgetShown();
-    seriesAnalysis.table().checkSelected("Food");
-    seriesAnalysis.budget().seriesChart.getSingleDataset()
+    analysis.table().checkSelected("Food");
+    analysis.budget().seriesChart.getSingleDataset()
       .checkSize(1)
       .checkValue("Food", 260.00, true);
-    seriesAnalysis.budget().subSeriesChart.getSingleDataset()
+    analysis.budget().subSeriesChart.getSingleDataset()
       .checkSize(2)
       .checkValue("Groceries", 100.00)
       .checkValue("Food", 160.00);
 
-    seriesAnalysis.budget().gotoUp();
-    seriesAnalysis.budget().balanceChart.getRightDataset()
+    analysis.budget().gotoUp();
+    analysis.budget().balanceChart.getRightDataset()
       .checkSize(2)
       .checkValue("Variable", 260.00, true)
       .checkValue("Recurring", 50.00);
 
-    seriesAnalysis.budget().gotoDown();
-    seriesAnalysis.table().checkExpanded("Food", true);
-    seriesAnalysis.table().toggleExpansion("Food");
+    analysis.budget().gotoDown();
+    analysis.table().checkExpanded("Food", true);
+    analysis.table().toggleExpansion("Food");
     budgetView.variable.editSeries("Food")
       .gotoSubSeriesTab()
       .addSubSeries("FastFood")
       .validate();
 
     views.selectAnalysis();
-    seriesAnalysis.table().select("Balance");
-    seriesAnalysis.budget().checkBudgetAndSeriesStacksShown();
+    analysis.table().select("Balance");
+    analysis.budget().checkBudgetAndSeriesStacksShown();
 
-    seriesAnalysis.table().select("Food");
-    seriesAnalysis.table().checkExpanded("Food", true);
-    seriesAnalysis.budget().gotoDown();
+    analysis.table().select("Food");
+    analysis.table().checkExpanded("Food", true);
+    analysis.budget().gotoDown();
 
     categorization.setVariable("MacDo", "Food", "FastFood");
 
     views.selectAnalysis();
-    seriesAnalysis.budget().seriesChart.getSingleDataset()
+    analysis.budget().seriesChart.getSingleDataset()
       .checkSize(1)
       .checkValue("Food", 260.00, true);
-    seriesAnalysis.budget().subSeriesChart.getSingleDataset()
+    analysis.budget().subSeriesChart.getSingleDataset()
       .checkSize(3)
       .checkValue("Groceries", 100.00)
       .checkValue("Food", 100.00)
       .checkValue("FastFood", 60.00);
 
-    seriesAnalysis.budget().gotoUp();
-    seriesAnalysis.budget().balanceChart.getRightDataset()
+    analysis.budget().gotoUp();
+    analysis.budget().balanceChart.getRightDataset()
       .checkSize(2)
       .checkValue("Variable", 260.00, true)
       .checkValue("Recurring", 50.00);
 
-    seriesAnalysis.budget().gotoDown();
+    analysis.budget().gotoDown();
 
-    seriesAnalysis.budget().seriesChart
+    analysis.budget().seriesChart
       .rightClickAndEditSeries("Food", "Edit")
       .gotoSubSeriesTab()
       .deleteSubSeriesAndConfirm("FastFood")
@@ -247,11 +247,11 @@ public class SubSeriesEvolutionViewTest extends LoggedInFunctionalTestCase {
       .checkSubSeriesListIsEmpty()
       .validate();
 
-    seriesAnalysis.budget()
+    analysis.budget()
       .checkBudgetAndSeriesStacksShown()
       .checkStackButtonsHidden();
 
-    seriesAnalysis.budget().balanceChart.getRightDataset()
+    analysis.budget().balanceChart.getRightDataset()
       .checkSize(2)
       .checkValue("Variable", 260.00, true)
       .checkValue("Recurring", 50.00);
@@ -259,12 +259,12 @@ public class SubSeriesEvolutionViewTest extends LoggedInFunctionalTestCase {
 
   public void testCreatingUnassigningAndDeletingTransactions() throws Exception {
 
-    seriesAnalysis.table().select("Food");
-    seriesAnalysis.budget().gotoDown();
-    seriesAnalysis.budget().seriesChart.getSingleDataset()
+    analysis.table().select("Food");
+    analysis.budget().gotoDown();
+    analysis.budget().seriesChart.getSingleDataset()
       .checkSize(1)
       .checkValue("Food", 260.00, true);
-    seriesAnalysis.budget().subSeriesChart.getSingleDataset()
+    analysis.budget().subSeriesChart.getSingleDataset()
       .checkSize(3)
       .checkValue("Groceries", 100.00)
       .checkValue("Food", 100.00)
@@ -272,10 +272,10 @@ public class SubSeriesEvolutionViewTest extends LoggedInFunctionalTestCase {
 
     categorization.setVariable("MacDo", "Food", "Groceries");
 
-    seriesAnalysis.budget().seriesChart.getSingleDataset()
+    analysis.budget().seriesChart.getSingleDataset()
       .checkSize(1)
       .checkValue("Food", 260.00, true);
-    seriesAnalysis.budget().subSeriesChart.getSingleDataset()
+    analysis.budget().subSeriesChart.getSingleDataset()
       .checkSize(2)
       .checkValue("Groceries", 160.00)
       .checkValue("Food", 100.00);
@@ -293,10 +293,10 @@ public class SubSeriesEvolutionViewTest extends LoggedInFunctionalTestCase {
     // -- REASSIGN --
 
     categorization.selectTableRow(2).selectVariable().selectSubSeries("Food", "Restaurant");
-    seriesAnalysis.budget().seriesChart.getSingleDataset()
+    analysis.budget().seriesChart.getSingleDataset()
       .checkSize(1)
       .checkValue("Food", 260.00, true);
-    seriesAnalysis.budget().subSeriesChart.getSingleDataset()
+    analysis.budget().subSeriesChart.getSingleDataset()
       .checkSize(3)
       .checkValue("Groceries", 140.00)
       .checkValue("Food", 100.00)
@@ -314,10 +314,10 @@ public class SubSeriesEvolutionViewTest extends LoggedInFunctionalTestCase {
       .check();
     categorization.selectTableRow(3);
     transactionDetails.shift();
-    seriesAnalysis.budget().seriesChart.getSingleDataset()
+    analysis.budget().seriesChart.getSingleDataset()
       .checkSize(1)
       .checkValue("Food", 220.00, true);
-    seriesAnalysis.budget().subSeriesChart.getSingleDataset()
+    analysis.budget().subSeriesChart.getSingleDataset()
       .checkSize(3)
       .checkValue("Groceries", 100.00)
       .checkValue("Food", 100.00)
@@ -326,10 +326,10 @@ public class SubSeriesEvolutionViewTest extends LoggedInFunctionalTestCase {
     // -- UNDO --
 
     operations.undo();
-    seriesAnalysis.budget().seriesChart.getSingleDataset()
+    analysis.budget().seriesChart.getSingleDataset()
       .checkSize(1)
       .checkValue("Food", 260.00, true);
-    seriesAnalysis.budget().subSeriesChart.getSingleDataset()
+    analysis.budget().subSeriesChart.getSingleDataset()
       .checkSize(3)
       .checkValue("Groceries", 140.00)
       .checkValue("Food", 100.00)
@@ -346,10 +346,10 @@ public class SubSeriesEvolutionViewTest extends LoggedInFunctionalTestCase {
       .add("01/05/2012", "Salary", "WORLDCO", 300.00)
       .check();
     categorization.delete(3).validate();
-    seriesAnalysis.budget().seriesChart.getSingleDataset()
+    analysis.budget().seriesChart.getSingleDataset()
       .checkSize(1)
       .checkValue("Food", 220.00, true);
-    seriesAnalysis.budget().subSeriesChart.getSingleDataset()
+    analysis.budget().subSeriesChart.getSingleDataset()
       .checkSize(3)
       .checkValue("Groceries", 100.00)
       .checkValue("Food", 100.00)
@@ -365,10 +365,10 @@ public class SubSeriesEvolutionViewTest extends LoggedInFunctionalTestCase {
       .add("01/05/2012", "Salary", "WORLDCO", 300.00)
       .check();
     categorization.setVariable("AUCHAN", "Food");
-    seriesAnalysis.budget().seriesChart.getSingleDataset()
+    analysis.budget().seriesChart.getSingleDataset()
       .checkSize(1)
       .checkValue("Food", 220.00, true);
-    seriesAnalysis.budget().subSeriesChart.getSingleDataset()
+    analysis.budget().subSeriesChart.getSingleDataset()
       .checkSize(2)
       .checkValue("Food", 200.00)
       .checkValue("Restaurant", 20.00);
@@ -384,7 +384,7 @@ public class SubSeriesEvolutionViewTest extends LoggedInFunctionalTestCase {
       .validate();
 
     views.selectAnalysis();
-    seriesAnalysis.budget();
+    analysis.budget();
 
     String[] contentWithoutMySeries = {"Main accounts",
                                        "Balance",
@@ -395,7 +395,7 @@ public class SubSeriesEvolutionViewTest extends LoggedInFunctionalTestCase {
                                        "Variable", "Food", "Fouquet's", "Groceries", "Restaurant",
                                        "Extras",
                                        "Transfers"};
-    seriesAnalysis.table().checkRowLabels(contentWithoutMySeries);
+    analysis.table().checkRowLabels(contentWithoutMySeries);
 
     budgetView.variable.editSeries("MySeries")
       .setAmount(500.00)
@@ -410,12 +410,12 @@ public class SubSeriesEvolutionViewTest extends LoggedInFunctionalTestCase {
                                     "Variable", "Food", "Fouquet's", "Groceries", "Restaurant", "MySeries", "Sub1", "Sub2",
                                     "Extras",
                                     "Transfers"};
-    seriesAnalysis.table().checkRowLabels(contentWithMySeries);
+    analysis.table().checkRowLabels(contentWithMySeries);
 
     budgetView.variable.editSeries("MySeries")
       .selectAllMonths()
       .setAmount(0.00)
       .validate();
-    seriesAnalysis.table().checkRowLabels(contentWithoutMySeries);
+    analysis.table().checkRowLabels(contentWithoutMySeries);
   }
 }

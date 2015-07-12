@@ -38,9 +38,9 @@ public class SeriesAmountChartPanel {
                                     SeriesBudget.MONTH,
                                     SeriesBudget.TYPE) {
       protected void update(Integer monthId, boolean resetPosition) {
-        if (currentSeriesId != null) {
+        if ((currentSeriesId != null)  && (selectedMonthId != null)) {
           histoChartBuilder.showSeriesBudget(currentSeriesId,
-                                             SeriesAmountChartPanel.this.selectedMonthId,
+                                             selectedMonthId,
                                              currentMonths, resetPosition);
         }
       }

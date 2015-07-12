@@ -8,14 +8,13 @@ import org.globsframework.gui.splits.PanelBuilder;
 import org.globsframework.gui.splits.repeat.Repeat;
 import org.globsframework.gui.splits.repeat.RepeatComponentFactory;
 import org.globsframework.gui.components.GlobRepeat;
-import org.globsframework.gui.components.GlobRepeatListener;
 import org.globsframework.gui.views.*;
+import org.globsframework.gui.views.utils.GlobRepeatUpdater;
 import org.globsframework.metamodel.Field;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.Link;
 import org.globsframework.metamodel.fields.*;
 import org.globsframework.model.Glob;
-import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.Key;
 import org.globsframework.model.format.DescriptionService;
@@ -202,6 +201,7 @@ public class GlobsPanelBuilder extends SplitsBuilder {
     Repeat<Glob> repeat = builder.addRepeat(name, model.getAll(), factory);
     builder.addDisposable(model);
     updater.set(model, repeat);
+    builder.addDisposable(updater);
     return updater;
   }
 
@@ -214,6 +214,7 @@ public class GlobsPanelBuilder extends SplitsBuilder {
     Repeat<Glob> repeat = builder.addRepeat(name, model.getAll(), factory);
     builder.addDisposable(model);
     updater.set(model, repeat);
+    builder.addDisposable(updater);
     return updater;
   }
 
@@ -231,106 +232,4 @@ public class GlobsPanelBuilder extends SplitsBuilder {
     componentHolders.clear();
   }
 
-  private static class GlobRepeatUpdater implements GlobViewModel.Listener, GlobRepeat {
-    private GlobViewModel model;
-    private Repeat<Glob> repeat;
-    private List<GlobRepeatListener> listeners;
-    boolean inUpdate = false;
-
-    public void globInserted(int index) {
-      repeat.insert(model.get(index), index);
-      if (!inUpdate){
-        notifyListeners();
-      }
-    }
-
-    public void globUpdated(int index) {
-    }
-
-    public void globRemoved(int index) {
-      repeat.remove(index);
-      if (!inUpdate) {
-        notifyListeners();
-      }
-    }
-
-    public void globMoved(int previousIndex, int newIndex) {
-      repeat.move(previousIndex, newIndex);
-      if (!inUpdate) {
-        notifyListeners();
-      }
-    }
-
-    public void globListPreReset() {
-    }
-
-    public void globListReset() {
-      if ((repeat != null) && (model != null)) {
-        repeat.set(model.getAll());
-        if (!inUpdate){
-          notifyListeners();
-        }
-      }
-    }
-
-    public void startUpdate() {
-      inUpdate = true;
-      repeat.startUpdate();
-    }
-
-    public void updateComplete() {
-      inUpdate = false;
-      repeat.updateComplete();
-      notifyListeners();
-    }
-
-    public void set(GlobViewModel model, Repeat<Glob> repeat) {
-      this.model = model;
-      this.repeat = repeat;
-      notifyListeners();
-    }
-
-    public GlobList getCurrentGlobs() {
-      return model.getAll();
-    }
-
-    public void setFilter(GlobMatcher matcher) {
-      model.setFilter(matcher, false);
-    }
-
-    public boolean isEmpty() {
-      return model.size() == 0;
-    }
-
-    public int size() {
-      return model.size();
-    }
-
-    public void addListener(GlobRepeatListener listener) {
-      if (listeners == null) {
-        listeners = new ArrayList<GlobRepeatListener>();
-      }
-      listeners.add(listener);
-    }
-
-    public void removeListener(GlobRepeatListener listener) {
-      listeners.remove(listener);
-      if (listeners.isEmpty()) {
-        listeners = null;
-      }
-    }
-
-    public void refresh() {
-      model.refresh();
-    }
-
-    private void notifyListeners() {
-      if (listeners != null) {
-        GlobList currentList = model.getAll();
-        for (GlobRepeatListener listener : listeners) {
-          listener.listChanged(currentList);
-        }
-      }
-    }
-  }
 }

@@ -9,6 +9,7 @@ import org.globsframework.utils.exceptions.InvalidParameter;
 
 import java.awt.*;
 import java.util.*;
+import java.util.List;
 
 public class HistoSelectionManager implements Disposable {
 
@@ -99,7 +100,8 @@ public class HistoSelectionManager implements Disposable {
 
     HistoSelection selection = new DefaultHistoSelection(columnIds);
     Set<Key> objectKeys = rollover.getObjectKeys();
-    for (HistoChartListener listener : listeners) {
+    List<HistoChartListener> listenersCopyForConcurrentAccess = new ArrayList<HistoChartListener>(listeners);
+    for (HistoChartListener listener : listenersCopyForConcurrentAccess) {
       if (isRightClick) {
         listener.processRightClick(selection, objectKeys, mouseLocation);
       }

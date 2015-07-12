@@ -50,7 +50,10 @@ public class SplitsBuilder implements PanelBuilder, Disposable {
   }
 
   public void dispose() {
-    context.dispose();
+    if (context != null) {
+      context.dispose();
+    }
+    context = null;
   }
 
   private <T> void addIfMissing(Directory directory, Class<T> serviceClass, T service) {

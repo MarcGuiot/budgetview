@@ -1,0 +1,53 @@
+<splits xmlns="http://www.globsframework.org/xml/splits.xsd">
+
+  <styleImport file="/layout/commonStyles.splits"/>
+  <styles>
+
+    <style selector="#selectionPanel" margin="10" marginTop="5" cursor="hand" background="content.bg"/>
+    <style id="selectedPanel" selector="x" opaque="true"
+           background="content.selectionPanel.bg"
+           border="line(content.selectionPanel.border)"/>
+    <style id="selectedRolloverPanel" selector="x" opaque="true"
+           background="content.selectionPanel.bg.rollover"
+           border="line(content.selectionPanel.border)"/>
+    <style id="unselectedPanel" selector="x" opaque="true"
+           background="content.bg"
+           border="line(content.bg)"/>
+    <style id="unselectedRolloverPanel" selector="x" opaque="true"
+           background="content.bg"
+           border="line(content.bg)"/>
+
+    <style selector="#budgetArea"/>
+
+  </styles>
+
+  <column name="seriesAnalysisView" styleClass="main">
+
+    <row marginBottom="5" weightY="0.1" border="matte(0,0,1,0,content.border)">
+      <filler fill="horizontal" weightX="20"/>
+      <repeat ref="budgetAreas" layout="row" fill="horizontal" weightX="5">
+        <panel ref="selectionPanel">
+          <label ref="budgetArea" font="-,plain,14" margin="10" horizontalAlignment="center"/>
+        </panel>
+      </repeat>
+      <filler fill="horizontal" weightX="20"/>
+    </row>
+
+    <scrollPane verticalUnitIncrement="10" border="" forceVerticalScroll="true" weightY="100">
+      <column marginRight="10">
+        <panel ref="budgetAreasChart" preferredSize="(200,180)" background="content.bg" marginBottom="15"/>
+
+        <repeat ref="seriesRepeat" border="matte(1,0,0  ,0,content.border)">
+          <column marginTop="10" name="seriesPanel">
+            <button ref="seriesButton" styleClass="actionsButton" fill="none" anchor="left"/>
+            <panel ref="seriesChart" preferredSize="(200,115)" background="content.bg"/>
+          </column>
+        </repeat>
+
+        <filler fill="vertical"/>
+
+      </column>
+    </scrollPane>
+
+  </column>
+</splits>

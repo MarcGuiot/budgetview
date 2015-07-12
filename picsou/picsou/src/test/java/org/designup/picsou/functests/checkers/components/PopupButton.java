@@ -18,6 +18,10 @@ public class PopupButton extends PopupChecker {
     return new PopupButton(enclosingPanel.getButton(buttonName));
   }
 
+  public static PopupButton init(Button button) {
+    return new PopupButton(button);
+  }
+
   public PopupButton(Button button) {
     this.button = button;
   }

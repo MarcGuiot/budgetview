@@ -164,4 +164,18 @@ public class GlobListStringifiers {
       }
     };
   }
+
+  public static GlobListStringifier single(final GlobStringifier stringifier, final String textForMulti) {
+    return new GlobListStringifier() {
+      public String toString(GlobList list, GlobRepository repository) {
+        if (list.isEmpty()) {
+          return "";
+        }
+        if (list.size() > 1) {
+          return textForMulti;
+        }
+        return stringifier.toString(list.getFirst(), repository);
+      }
+    };
+  }
 }

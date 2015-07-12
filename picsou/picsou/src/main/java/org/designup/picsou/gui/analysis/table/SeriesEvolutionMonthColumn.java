@@ -44,6 +44,10 @@ public class SeriesEvolutionMonthColumn implements GlobTableColumn {
     return Month.getShortMonthLabelWithYear(referenceMonthId);
   }
 
+  public Integer getReferenceMonthId() {
+    return referenceMonthId;
+  }
+
   public TableCellRenderer getRenderer() {
     return editor;
   }

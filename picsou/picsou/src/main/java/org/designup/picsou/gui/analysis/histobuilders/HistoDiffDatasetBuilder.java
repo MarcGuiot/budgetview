@@ -18,7 +18,8 @@ public class HistoDiffDatasetBuilder extends HistoDatasetBuilder {
 
   private HistoDiffDataset dataset;
   private int lastMonthWithTransactions;
-  private boolean hasPositive;
+  private int positiveCount = 0;
+  private int negativeCount = 0;
   private HistoDiffLegendPanel legend;
 
   HistoDiffDatasetBuilder(HistoChart histoChart, JLabel label, HistoDiffLegendPanel legend, GlobRepository repository, String tooltipKey) {
@@ -46,7 +47,13 @@ public class HistoDiffDatasetBuilder extends HistoDatasetBuilder {
                      isCurrentMonth(monthId), isSelectedMonth,
                      monthId > lastMonthWithTransactions);
 
-    hasPositive |= adjustedReference > 0 || adjustedActual > 0;
+    if (adjustedReference > 0 || adjustedActual > 0) {
+      positiveCount++;
+    }
+    else if (adjustedReference < 0 || adjustedActual < 0) {
+      negativeCount++;
+    }
+
   }
 
   public void addEmpty(int monthId, boolean isSelectedMonth) {
@@ -65,7 +72,11 @@ public class HistoDiffDatasetBuilder extends HistoDatasetBuilder {
   }
 
   private void complete() {
-    if (!hasPositive) {
+    if (negativeCount + positiveCount == 0) {
+      return;
+    }
+    double ratio = (double)positiveCount / (double)(positiveCount + negativeCount);
+    if (ratio < 0.3) {
       dataset.setInverted();
     }
   }

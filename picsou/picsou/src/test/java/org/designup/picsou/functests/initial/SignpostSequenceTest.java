@@ -100,7 +100,7 @@ public class SignpostSequenceTest extends LoggedInFunctionalTestCase {
     // === Editing series amounts in SeriesEvolution does not remove budget view signpost ===
 
     views.selectAnalysis();
-    seriesAnalysis.table().editSeries("Groceries", "May 2010").validate();
+    analysis.table().editSeries("Groceries", "May 2010").validate();
     views.selectBudget();
     budgetView.variable.checkAmountSignpostDisplayed(
       "Groceries", "Click on the planned amounts to set your own values");
@@ -563,7 +563,7 @@ public class SignpostSequenceTest extends LoggedInFunctionalTestCase {
     // === Editing series amounts in SeriesEvolution does not remove budget view signpost ===
 
     views.selectAnalysis();
-    seriesAnalysis.table().editSeries("Groceries", "May 2010").validate();
+    analysis.table().editSeries("Groceries", "May 2010").validate();
 
     // === Series amounts ===
 

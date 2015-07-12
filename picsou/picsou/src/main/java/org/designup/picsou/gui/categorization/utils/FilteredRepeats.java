@@ -83,8 +83,8 @@ public class FilteredRepeats {
         list.remove(filterId);
         if (listener != null) {
           repeat.removeListener(listener);
+          listener = null;
         }
-        listener = null;
       }
     };
   }

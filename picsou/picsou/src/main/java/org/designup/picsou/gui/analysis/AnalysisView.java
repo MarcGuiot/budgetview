@@ -2,6 +2,7 @@ package org.designup.picsou.gui.analysis;
 
 import org.designup.picsou.gui.View;
 import org.designup.picsou.gui.analysis.budget.BudgetAnalysisView;
+import org.designup.picsou.gui.analysis.evolution.EvolutionAnalysisView;
 import org.designup.picsou.gui.analysis.table.TableAnalysisView;
 import org.designup.picsou.gui.analysis.utils.AnalysisViewPanel;
 import org.designup.picsou.gui.series.view.SeriesWrapper;
@@ -11,12 +12,10 @@ import org.globsframework.gui.GlobSelectionListener;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.SelectionService;
 import org.globsframework.gui.splits.layout.CardHandler;
-import org.globsframework.gui.splits.utils.OnLoadListener;
 import org.globsframework.gui.utils.GlobSelectionBuilder;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
-import org.globsframework.model.utils.KeyChangeListener;
 import org.globsframework.utils.directory.DefaultDirectory;
 import org.globsframework.utils.directory.Directory;
 
@@ -54,6 +53,7 @@ public class AnalysisView extends View {
     SeriesChartsColors seriesChartsColors = new SeriesChartsColors(repository, directory);
     viewPanels = new ArrayList<AnalysisViewPanel>();
     viewPanels.add(new BudgetAnalysisView("budgetAnalysis", repository, parentDirectory, directory, seriesChartsColors));
+    viewPanels.add(new EvolutionAnalysisView("evolutionAnalysis", repository, parentDirectory, directory, seriesChartsColors));
     viewPanels.add(new TableAnalysisView("tableAnalysis", repository, parentDirectory, directory, seriesChartsColors));
 
     parentSelectionService.addListener(new GlobSelectionListener() {
@@ -117,6 +117,9 @@ public class AnalysisView extends View {
     switch (AnalysisViewType.get(selection.getFirst())) {
       case BUDGET:
         cards.show("budget");
+        break;
+      case EVOLUTION:
+        cards.show("evolution");
         break;
       case TABLE:
         cards.show("table");

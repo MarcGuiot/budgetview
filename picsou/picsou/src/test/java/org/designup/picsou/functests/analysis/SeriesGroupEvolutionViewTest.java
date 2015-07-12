@@ -38,15 +38,15 @@ public class SeriesGroupEvolutionViewTest extends LoggedInFunctionalTestCase {
     categorization.setNewVariable("McDo", "Restaurant");
     categorization.setNewVariable("FNAC", "Leisures");
 
-    seriesAnalysis.budget();
+    analysis.budget();
   }
 
   public void testSelectingGroupElements() throws Exception {
 
-    seriesAnalysis.budget()
+    analysis.budget()
       .checkBudgetAndSeriesStacksShown()
       .checkStackButtonsHidden();
-    seriesAnalysis.budget().seriesChart.getSingleDataset()
+    analysis.budget().seriesChart.getSingleDataset()
       .checkSize(4)
       .checkValue("Groceries", 225.00)
       .checkValue("Energy", 100.00)
@@ -56,156 +56,156 @@ public class SeriesGroupEvolutionViewTest extends LoggedInFunctionalTestCase {
     budgetView.variable.addToNewGroup("Groceries", "Food");
     budgetView.variable.addToGroup("Restaurant", "Food");
 
-    seriesAnalysis.budget().checkBudgetAndSeriesStacksShown();
-    seriesAnalysis.budget().seriesChart.getSingleDataset()
+    analysis.budget().checkBudgetAndSeriesStacksShown();
+    analysis.budget().seriesChart.getSingleDataset()
       .checkSize(3)
       .checkValue("Food", 250.00)
       .checkValue("Energy", 100.00)
       .checkValue("Leisures", 80.00);
 
-    seriesAnalysis.table().select("Food");
-    seriesAnalysis.budget()
+    analysis.table().select("Food");
+    analysis.budget()
       .checkBudgetAndSeriesStacksShown()
       .checkGotoUpHidden()
       .checkGotoDownToGroupSeriesShown();
-    seriesAnalysis.budget()
+    analysis.budget()
       .gotoDown()
       .checkSeriesAndGroupSeriesStacksShown()
       .checkGotoBudgetShown();
-    seriesAnalysis.budget().seriesChart.getSingleDataset()
+    analysis.budget().seriesChart.getSingleDataset()
       .checkSize(2)
       .checkValue("Food", 250.00, true)
       .checkValue("Leisures", 80.00);
-    seriesAnalysis.budget().groupSeriesChart.getSingleDataset()
+    analysis.budget().groupSeriesChart.getSingleDataset()
       .checkSize(2)
       .checkValue("Groceries", 225.00)
       .checkValue("Restaurant", 25.00);
 
-    seriesAnalysis.budget()
+    analysis.budget()
       .gotoUp()
       .checkBudgetAndSeriesStacksShown();
-    seriesAnalysis.budget().balanceChart.getLeftDataset()
+    analysis.budget().balanceChart.getLeftDataset()
       .checkSize(1)
       .checkValue("Income", 1000.00);
-    seriesAnalysis.budget().balanceChart.getRightDataset()
+    analysis.budget().balanceChart.getRightDataset()
       .checkSize(2)
       .checkValue("Variable", 330.00, true)
       .checkValue("Recurring", 100.00);
-    seriesAnalysis.budget().seriesChart.getSingleDataset()
+    analysis.budget().seriesChart.getSingleDataset()
       .checkSize(2)
       .checkValue("Food", 250.00, true)
       .checkValue("Leisures", 80.00);
 
-    seriesAnalysis.budget().seriesChart.select("Food");
-    seriesAnalysis.budget().checkBudgetAndSeriesStacksShown()
+    analysis.budget().seriesChart.select("Food");
+    analysis.budget().checkBudgetAndSeriesStacksShown()
       .gotoDown()
       .checkSeriesAndGroupSeriesStacksShown();
-    seriesAnalysis.budget().seriesChart.getSingleDataset()
+    analysis.budget().seriesChart.getSingleDataset()
       .checkSize(2)
       .checkValue("Food", 250.00, true)
       .checkValue("Leisures", 80.00);
-    seriesAnalysis.budget().groupSeriesChart.getSingleDataset()
+    analysis.budget().groupSeriesChart.getSingleDataset()
       .checkSize(2)
       .checkValue("Groceries", 225.00)
       .checkValue("Restaurant", 25.00);
 
-    seriesAnalysis.budget().checkGotoDownHidden();
-    seriesAnalysis.budget().groupSeriesChart.select("Groceries");
-    seriesAnalysis.budget()
+    analysis.budget().checkGotoDownHidden();
+    analysis.budget().groupSeriesChart.select("Groceries");
+    analysis.budget()
       .checkSeriesAndGroupSeriesStacksShown()
       .checkGotoSubSeriesShown()
       .gotoDown()
       .checkGroupSeriesAndSubSeriesStacksShown();
-    seriesAnalysis.budget().groupSeriesChart.getSingleDataset()
+    analysis.budget().groupSeriesChart.getSingleDataset()
       .checkSize(2)
       .checkValue("Groceries", 225.00, true)
       .checkValue("Restaurant", 25.00);
-    seriesAnalysis.budget().subSeriesChart.getSingleDataset()
+    analysis.budget().subSeriesChart.getSingleDataset()
       .checkSize(2)
       .checkValue("Other", 175.00)
       .checkValue("Local", 50.00);
 
-    seriesAnalysis.budget()
+    analysis.budget()
       .checkGotoDownHidden()
       .gotoUp()
       .checkSeriesAndGroupSeriesStacksShown();
-    seriesAnalysis.budget().seriesChart.getSingleDataset()
+    analysis.budget().seriesChart.getSingleDataset()
       .checkSize(2)
       .checkValue("Food", 250.00, true)
       .checkValue("Leisures", 80.00);
-    seriesAnalysis.budget().groupSeriesChart.getSingleDataset()
+    analysis.budget().groupSeriesChart.getSingleDataset()
       .checkSize(2)
       .checkValue("Groceries", 225.00, true)
       .checkValue("Restaurant", 25.00);
 
-    seriesAnalysis.table().select("Restaurant");
-    seriesAnalysis.budget()
+    analysis.table().select("Restaurant");
+    analysis.budget()
       .checkGotoDownHidden()
       .checkSeriesAndGroupSeriesStacksShown();
-    seriesAnalysis.budget().seriesChart.getSingleDataset()
+    analysis.budget().seriesChart.getSingleDataset()
       .checkSize(2)
       .checkValue("Food", 250.00, true)
       .checkValue("Leisures", 80.00);
-    seriesAnalysis.budget().groupSeriesChart.getSingleDataset()
+    analysis.budget().groupSeriesChart.getSingleDataset()
       .checkSize(2)
       .checkValue("Groceries", 225.00)
       .checkValue("Restaurant", 25.00, true);
 
-    seriesAnalysis.table().select("Groceries");
-    seriesAnalysis.budget()
+    analysis.table().select("Groceries");
+    analysis.budget()
       .checkSeriesAndGroupSeriesStacksShown()
       .checkGotoBudgetShown()
       .checkGotoSubSeriesShown();
-    seriesAnalysis.budget().seriesChart.getSingleDataset()
+    analysis.budget().seriesChart.getSingleDataset()
       .checkSize(2)
       .checkValue("Food", 250.00, true)
       .checkValue("Leisures", 80.00);
-    seriesAnalysis.budget().groupSeriesChart.getSingleDataset()
+    analysis.budget().groupSeriesChart.getSingleDataset()
       .checkSize(2)
       .checkValue("Groceries", 225.00, true)
       .checkValue("Restaurant", 25.00);
 
-    seriesAnalysis.budget()
+    analysis.budget()
       .gotoUp()
       .checkBudgetAndSeriesStacksShown()
       .checkGotoUpHidden()
       .checkGotoDownToGroupSeriesShown();
-    seriesAnalysis.budget().balanceChart.getLeftDataset()
+    analysis.budget().balanceChart.getLeftDataset()
       .checkSize(1)
       .checkValue("Income", 1000.00);
-    seriesAnalysis.budget().balanceChart.getRightDataset()
+    analysis.budget().balanceChart.getRightDataset()
       .checkSize(2)
       .checkValue("Variable", 330.00, true)
       .checkValue("Recurring", 100.00);
-    seriesAnalysis.budget().seriesChart.getSingleDataset()
+    analysis.budget().seriesChart.getSingleDataset()
       .checkSize(2)
       .checkValue("Food", 250.00, true)
       .checkValue("Leisures", 80.00);
 
-    seriesAnalysis.table().select("Local");
-    seriesAnalysis.budget()
+    analysis.table().select("Local");
+    analysis.budget()
       .checkGroupSeriesAndSubSeriesStacksShown()
       .checkGotoDownHidden()
       .checkGotoUpToGroupSeriesShown();
-    seriesAnalysis.budget().groupSeriesChart.getSingleDataset()
+    analysis.budget().groupSeriesChart.getSingleDataset()
       .checkSize(2)
       .checkValue("Groceries", 225.00, true)
       .checkValue("Restaurant", 25.00);
-    seriesAnalysis.budget().subSeriesChart.getSingleDataset()
+    analysis.budget().subSeriesChart.getSingleDataset()
       .checkSize(2)
       .checkValue("Other", 175.00)
       .checkValue("Local", 50.00, true);
 
-    seriesAnalysis.budget()
+    analysis.budget()
       .gotoUp()
       .checkSeriesAndGroupSeriesStacksShown()
       .checkGotoBudgetShown()
       .checkGotoSubSeriesShown();
-    seriesAnalysis.budget().seriesChart.getSingleDataset()
+    analysis.budget().seriesChart.getSingleDataset()
       .checkSize(2)
       .checkValue("Food", 250.00, true)
       .checkValue("Leisures", 80.00);
-    seriesAnalysis.budget().groupSeriesChart.getSingleDataset()
+    analysis.budget().groupSeriesChart.getSingleDataset()
       .checkSize(2)
       .checkValue("Groceries", 225.00, true)
       .checkValue("Restaurant", 25.00);
@@ -215,30 +215,30 @@ public class SeriesGroupEvolutionViewTest extends LoggedInFunctionalTestCase {
     budgetView.variable.addToNewGroup("Groceries", "Food");
     budgetView.variable.addToGroup("Restaurant", "Food");
 
-    seriesAnalysis.table().select("Groceries");
-    seriesAnalysis.budget()
+    analysis.table().select("Groceries");
+    analysis.budget()
       .checkSeriesAndGroupSeriesStacksShown()
       .checkGotoBudgetShown();
-    seriesAnalysis.budget().seriesChart.getSingleDataset()
+    analysis.budget().seriesChart.getSingleDataset()
       .checkSize(2)
       .checkValue("Food", 250.00, true)
       .checkValue("Leisures", 80.00);
-    seriesAnalysis.budget().groupSeriesChart.getSingleDataset()
+    analysis.budget().groupSeriesChart.getSingleDataset()
       .checkSize(2)
       .checkValue("Groceries", 225.00, true)
       .checkValue("Restaurant", 25.00);
 
     budgetView.variable.addToNewGroup("Groceries", "NewGroup");
-    seriesAnalysis.budget()
+    analysis.budget()
       .checkBudgetAndSeriesStacksShown();
-    seriesAnalysis.budget().balanceChart.getLeftDataset()
+    analysis.budget().balanceChart.getLeftDataset()
       .checkSize(1)
       .checkValue("Income", 1000.00);
-    seriesAnalysis.budget().balanceChart.getRightDataset()
+    analysis.budget().balanceChart.getRightDataset()
       .checkSize(2)
       .checkValue("Variable", 330.00)
       .checkValue("Recurring", 100.00);
-    seriesAnalysis.budget().seriesChart.getSingleDataset()
+    analysis.budget().seriesChart.getSingleDataset()
       .checkSize(4)
       .checkValue("NewGroup", 225.00)
       .checkValue("Energy", 100.00)
@@ -246,9 +246,9 @@ public class SeriesGroupEvolutionViewTest extends LoggedInFunctionalTestCase {
       .checkValue("Food", 25.00);
 
     budgetView.variable.deleteGroup("NewGroup");
-    seriesAnalysis.budget()
+    analysis.budget()
       .checkBudgetAndSeriesStacksShown();
-    seriesAnalysis.budget().seriesChart.getSingleDataset()
+    analysis.budget().seriesChart.getSingleDataset()
       .checkSize(4)
       .checkValue("Groceries", 225.00)
       .checkValue("Energy", 100.00)
@@ -256,9 +256,9 @@ public class SeriesGroupEvolutionViewTest extends LoggedInFunctionalTestCase {
       .checkValue("Food", 25.00);
 
     budgetView.variable.deleteGroup("Food");
-    seriesAnalysis.budget()
+    analysis.budget()
       .checkBudgetAndSeriesStacksShown();
-    seriesAnalysis.budget().seriesChart.getSingleDataset()
+    analysis.budget().seriesChart.getSingleDataset()
       .checkSize(4)
       .checkValue("Groceries", 225.00)
       .checkValue("Energy", 100.00)

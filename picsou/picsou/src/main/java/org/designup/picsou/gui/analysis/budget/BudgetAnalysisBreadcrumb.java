@@ -131,7 +131,7 @@ public class BudgetAnalysisBreadcrumb implements GlobSelectionListener {
   private String getBudgetLabel() {
     switch (AnalysisViewType.get(repository)) {
       case BUDGET:
-      case SERIES:
+      case EVOLUTION:
         return Lang.get("seriesAnalysisBreadcrumb.summary.charts");
       case TABLE:
         return Lang.get("seriesAnalysisBreadcrumb.summary.table");

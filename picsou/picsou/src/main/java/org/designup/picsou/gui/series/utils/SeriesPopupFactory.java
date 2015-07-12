@@ -1,6 +1,5 @@
 package org.designup.picsou.gui.series.utils;
 
-import org.designup.picsou.gui.addons.AddOn;
 import org.designup.picsou.gui.card.NavigationService;
 import org.designup.picsou.gui.series.edition.DeleteSeriesAction;
 import org.designup.picsou.gui.series.edition.carryover.CarryOverAction;

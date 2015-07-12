@@ -32,7 +32,7 @@ public class SeriesGroupAnalysisTest extends LoggedInFunctionalTestCase {
 
     // ------ Analysis table -----
 
-    seriesAnalysis.table().initContent()
+    analysis.table().initContent()
       .add("Main accounts", "270.00", "-320.00", "-880.00", "-1440.00", "", "", "", "")
       .add("Balance", "-120.00", "-590.00", "-560.00", "-560.00", "", "", "", "")
       .add("Savings accounts", "", "", "", "", "", "", "", "")
@@ -49,8 +49,8 @@ public class SeriesGroupAnalysisTest extends LoggedInFunctionalTestCase {
       .add("Transfers", "", "", "", "", "", "", "", "")
       .check();
 
-    seriesAnalysis.table().toggleExpansion("Groceries");
-    seriesAnalysis.table().initContent()
+    analysis.table().toggleExpansion("Groceries");
+    analysis.table().initContent()
       .add("Main accounts", "270.00", "-320.00", "-880.00", "-1440.00", "", "", "", "")
       .add("Balance", "-120.00", "-590.00", "-560.00", "-560.00", "", "", "", "")
       .add("Savings accounts", "", "", "", "", "", "", "", "")
@@ -64,13 +64,13 @@ public class SeriesGroupAnalysisTest extends LoggedInFunctionalTestCase {
       .add("Extras", "", "", "", "", "", "", "", "")
       .add("Transfers", "", "", "", "", "", "", "", "")
       .check();
-    seriesAnalysis.table().toggleExpansion("Groceries");
+    analysis.table().toggleExpansion("Groceries");
 
     // ------ Add series to group -----
 
     timeline.selectMonth(201401);
     budgetView.variable.addToGroup("Leisures", "Groceries");
-    seriesAnalysis.table().initContent()
+    analysis.table().initContent()
       .add("Main accounts", "270.00", "-320.00", "-880.00", "-1440.00", "", "", "", "")
       .add("Balance", "-120.00", "-590.00", "-560.00", "-560.00", "", "", "", "")
       .add("Savings accounts", "", "", "", "", "", "", "", "")
@@ -93,7 +93,7 @@ public class SeriesGroupAnalysisTest extends LoggedInFunctionalTestCase {
     budgetView.variable.editSeries("Food")
       .setAmount(250.00)
       .validate();
-    seriesAnalysis.table().initContent()
+    analysis.table().initContent()
       .add("Main accounts", "270.00", "-370.00", "-930.00", "-1490.00", "", "", "", "")
       .add("Balance", "-120.00", "-640.00", "-560.00", "-560.00", "", "", "", "")
       .add("Savings accounts", "", "", "", "", "", "", "", "")
@@ -112,18 +112,18 @@ public class SeriesGroupAnalysisTest extends LoggedInFunctionalTestCase {
 
     // ------ Navigate from budget view -----
 
-    seriesAnalysis.table().select("Balance");
+    analysis.table().select("Balance");
     views.selectBudget();
     budgetView.variable.gotoAnalysis("Groceries");
     views.checkAnalysisSelected();
-    seriesAnalysis.table().checkSelected("Groceries");
-    seriesAnalysis.budget().checkSeriesChartLabel("Main variable series");
-    seriesAnalysis.budget().checkHistoChartLabel("Evolution of 'Groceries'");
+    analysis.table().checkSelected("Groceries");
+    analysis.budget().checkSeriesChartLabel("Main variable series");
+    analysis.budget().checkHistoChartLabel("Evolution of 'Groceries'");
 
     // ------ Remove series from group -----
 
     budgetView.variable.removeFromGroup("Home");
-    seriesAnalysis.table().initContent()
+    analysis.table().initContent()
       .add("Main accounts", "270.00", "-370.00", "-930.00", "-1490.00", "", "", "", "")
       .add("Balance", "-120.00", "-640.00", "-560.00", "-560.00", "", "", "", "")
       .add("Savings accounts", "", "", "", "", "", "", "", "")
@@ -143,7 +143,7 @@ public class SeriesGroupAnalysisTest extends LoggedInFunctionalTestCase {
     // ------ Undo : recreates series -----
 
     operations.undo();
-    seriesAnalysis.table().initContent()
+    analysis.table().initContent()
       .add("Main accounts", "270.00", "-370.00", "-930.00", "-1490.00", "", "", "", "")
       .add("Balance", "-120.00", "-640.00", "-560.00", "-560.00", "", "", "", "")
       .add("Savings accounts", "", "", "", "", "", "", "", "")
@@ -160,8 +160,8 @@ public class SeriesGroupAnalysisTest extends LoggedInFunctionalTestCase {
       .add("Transfers", "", "", "", "", "", "", "", "")
       .check();
 
-    seriesAnalysis.table().toggleExpansion("Groceries");
-    seriesAnalysis.table().initContent()
+    analysis.table().toggleExpansion("Groceries");
+    analysis.table().initContent()
       .add("Main accounts", "270.00", "-370.00", "-930.00", "-1490.00", "", "", "", "")
       .add("Balance", "-120.00", "-640.00", "-560.00", "-560.00", "", "", "", "")
       .add("Savings accounts", "", "", "", "", "", "", "", "")
@@ -178,7 +178,7 @@ public class SeriesGroupAnalysisTest extends LoggedInFunctionalTestCase {
     // ------ Delete group -----
 
     budgetView.variable.deleteGroup("Groceries");
-    seriesAnalysis.table().initContent()
+    analysis.table().initContent()
       .add("Main accounts", "270.00", "-370.00", "-930.00", "-1490.00", "", "", "", "")
       .add("Balance", "-120.00", "-640.00", "-560.00", "-560.00", "", "", "", "")
       .add("Savings accounts", "", "", "", "", "", "", "", "")
@@ -214,20 +214,20 @@ public class SeriesGroupAnalysisTest extends LoggedInFunctionalTestCase {
     budgetView.variable.addToNewGroup("Food", "Groceries");
     budgetView.variable.addToGroup("Home", "Groceries");
 
-    seriesAnalysis.table().select("Groceries");
+    analysis.table().select("Groceries");
 
-    seriesAnalysis.budget().balanceChart.getLeftDataset().checkEmpty();
-    seriesAnalysis.budget().balanceChart.getRightDataset()
+    analysis.budget().balanceChart.getLeftDataset().checkEmpty();
+    analysis.budget().balanceChart.getRightDataset()
       .checkSize(2)
       .checkValue("Variable", 500.00, true)
       .checkValue("Recurring", 60.00);
 
-    seriesAnalysis.budget().seriesChart.getSingleDataset()
+    analysis.budget().seriesChart.getSingleDataset()
       .checkSize(2)
       .checkValue("Groceries", 300.00, true)
       .checkValue("Leisures", 200.00);
 
-    seriesAnalysis.budget().histoChart
+    analysis.budget().histoChart
       .checkColumnCount(4)
       .checkDiffColumn(0, "Dec", "2013", 300.00, 120.00)
       .checkDiffColumn(1, "Jan", "2014", 300.00, 80.00, true)

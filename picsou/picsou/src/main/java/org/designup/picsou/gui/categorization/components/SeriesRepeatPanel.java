@@ -73,12 +73,18 @@ public class SeriesRepeatPanel implements Disposable {
   }
 
   public void dispose() {
-    repository.removeChangeListener(listener);
-    listener = null;
-    builder.dispose();
-    builder = null;
-    handler.dispose();
-    handler = null;
+    if (listener != null) {
+      repository.removeChangeListener(listener);
+      listener = null;
+    }
+    if (builder != null) {
+      builder.dispose();
+      builder = null;
+    }
+    if (handler != null) {
+      handler.dispose();
+      handler = null;
+    }
   }
 
   private class GroupMatcher implements CategorizationFilter {

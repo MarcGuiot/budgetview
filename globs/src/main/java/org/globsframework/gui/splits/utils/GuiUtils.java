@@ -192,7 +192,7 @@ public class GuiUtils {
   }
 
   public static void revalidate(final JComponent component) {
-    SwingUtilities.invokeLater(new Runnable() {
+    runLater(new Runnable() {
       public void run() {
         component.revalidate();
       }
@@ -413,12 +413,16 @@ public class GuiUtils {
         runnable.run();
       }
       else {
-        SwingUtilities.invokeLater(runnable);
+        runLater(runnable);
       }
     }
     catch (Exception e) {
       throw new RuntimeException(e);
     }
+  }
+
+  public static void runLater(Runnable runnable) {
+    SwingUtilities.invokeLater(runnable);
   }
 
   public static void opacify(Container container) {

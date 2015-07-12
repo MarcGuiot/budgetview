@@ -53,6 +53,9 @@ public class GlobViewModel implements ChangeSetListener, Disposable {
   }
 
   private void initList(boolean notify) {
+    if (repository == null) {
+      return;
+    }
     if (notify) {
       listener.globListPreReset();
     }
@@ -81,7 +84,10 @@ public class GlobViewModel implements ChangeSetListener, Disposable {
   }
 
   public void dispose() {
-    repository.removeChangeListener(this);
+    if (repository != null) {
+      repository.removeChangeListener(this);
+      repository = null;
+    }
   }
 
   public int indexOf(final Glob glob) {
@@ -198,9 +204,6 @@ public class GlobViewModel implements ChangeSetListener, Disposable {
     public void visitCreation(Key key, FieldValues values) throws Exception {
       Glob glob = repository.get(key);
       if (matcher.matches(glob, repository)) {
-//        if (globs.contains(glob)) {
-//          throw new ItemAlreadyExists("Glob " + glob + " already present in " + globs);
-//        }
         int index = globs.add(glob);
         listener.globInserted(index);
       }

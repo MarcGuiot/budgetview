@@ -48,11 +48,11 @@
     <!-- Selection panel -->
 
     <style id="selectedPanel" selector="x" opaque="true"
-           background="sidebar.selection.block.bg"
-           border="line(sidebar.selection.block.border)"/>
+           background="sidebar.selectionPanel.bg"
+           border="line(sidebar.selectionPanel.border)"/>
     <style id="selectedRolloverPanel" selector="x" opaque="true"
-           background="sidebar.selection.block.bg.rollover"
-           border="line(sidebar.selection.block.border)"/>
+           background="sidebar.selectionPanel.bg.rollover"
+           border="line(sidebar.selectionPanel.border)"/>
     <style id="unselectedPanel" selector="x" opaque="true"
            background="sidebar.bg"
            border="line(sidebar.bg)"/>
