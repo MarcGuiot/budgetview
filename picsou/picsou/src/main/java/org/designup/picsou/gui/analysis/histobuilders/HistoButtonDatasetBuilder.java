@@ -11,13 +11,13 @@ public class HistoButtonDatasetBuilder extends HistoDatasetBuilder {
 
   private HistoButtonDataset dataset = new HistoButtonDataset("");
 
-  public HistoButtonDatasetBuilder(HistoChart histoChart, JLabel label, GlobRepository repository) {
-    super(histoChart, label, repository);
+  public HistoButtonDatasetBuilder(HistoChart histoChart, JLabel label, GlobRepository repository, HistoLabelUpdater labelUpdater) {
+    super(histoChart, label, repository, labelUpdater);
   }
 
   public void addColumn(int monthId, boolean isSelectedMonth) {
     dataset.addColumn(monthId,
-                      getLabel(monthId), getMonthLabel(monthId), getSection(monthId),
+                      getLabel(monthId), getTooltipLabel(monthId), getSection(monthId),
                       isCurrentMonth(monthId), isFutureMonth(monthId), isSelectedMonth);
   }
 

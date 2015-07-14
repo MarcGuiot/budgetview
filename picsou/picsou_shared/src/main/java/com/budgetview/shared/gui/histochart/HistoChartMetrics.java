@@ -90,6 +90,14 @@ public class HistoChartMetrics {
     innerLabelY = columnTop() + chartHeight - INNER_LABEL_BOTTOM_MARGIN;
   }
 
+  public static int usableColumnWidth(int totalChartWidth, int columnCount) {
+    if (columnCount == 0) {
+      return 0;
+    }
+    int usableChartWidth = totalChartWidth - RIGHT_SCALE_MARGIN;
+    return usableChartWidth / columnCount;
+  }
+
   private double adjustLimit(double value, boolean snapToScale) {
     if (!snapToScale) {
       return value;

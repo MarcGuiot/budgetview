@@ -3,7 +3,7 @@ package org.designup.picsou.functests.analysis;
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
 
-public class AnalysisSeriesViewTest extends LoggedInFunctionalTestCase {
+public class AnalysisEvolutionViewTest extends LoggedInFunctionalTestCase {
   protected void setUp() throws Exception {
     setCurrentMonth("2015/07");
     super.setUp();
@@ -47,19 +47,19 @@ public class AnalysisSeriesViewTest extends LoggedInFunctionalTestCase {
     analysis.evolution()
       .initSeriesGraph("Groceries")
       .checkColumnCount(13)
-      .checkDiffColumn(0, "Jan", "2015", 100.00, 10.00)
-      .checkDiffColumn(1, "Feb", "2015", 100.00, 20.00)
-      .checkDiffColumn(2, "Mar", "2015", 100.00, 0.00)
-      .checkDiffColumn(3, "Apr", "2015", 100.00, 40.00)
-      .checkDiffColumn(4, "May", "2015", 100.00, 0.00)
-      .checkDiffColumn(5, "June", "2015", 100.00, 60.00)
-      .checkDiffColumn(6, "Jul", "2015", 100.00, 70.00, true)
-      .checkDiffColumn(7, "Aug", "2015", 100.00, 0.00)
-      .checkDiffColumn(8, "Sep", "2015", 100.00, 0.00)
-      .checkDiffColumn(9, "Oct", "2015", 100.00, 0.00)
-      .checkDiffColumn(10, "Nov", "2015", 100.00, 0.00)
-      .checkDiffColumn(11, "Dec", "2015", 100.00, 0.00)
-      .checkDiffColumn(12, "Jan", "2016", 100.00, 0.00);
+      .checkDiffColumn(0, "J", "2015", 100.00, 10.00)
+      .checkDiffColumn(1, "F", "2015", 100.00, 20.00)
+      .checkDiffColumn(2, "M", "2015", 100.00, 0.00)
+      .checkDiffColumn(3, "A", "2015", 100.00, 40.00)
+      .checkDiffColumn(4, "M", "2015", 100.00, 0.00)
+      .checkDiffColumn(5, "J", "2015", 100.00, 60.00)
+      .checkDiffColumn(6, "J", "2015", 100.00, 70.00, true)
+      .checkDiffColumn(7, "A", "2015", 100.00, 0.00)
+      .checkDiffColumn(8, "S", "2015", 100.00, 0.00)
+      .checkDiffColumn(9, "O", "2015", 100.00, 0.00)
+      .checkDiffColumn(10, "N", "2015", 100.00, 0.00)
+      .checkDiffColumn(11, "D", "2015", 100.00, 0.00)
+      .checkDiffColumn(12, "J", "2016", 100.00, 0.00);
 
     analysis.evolution()
       .selectRecurring()
@@ -68,36 +68,36 @@ public class AnalysisSeriesViewTest extends LoggedInFunctionalTestCase {
     analysis.evolution()
       .initBudgetAreaGraph()
       .checkColumnCount(13)
-      .checkDiffColumn(0, "Jan", "2015", 0.00, 0.00)
-      .checkDiffColumn(1, "Feb", "2015", 0.00, 0.00)
-      .checkDiffColumn(2, "Mar", "2015", 0.00, 0.00)
-      .checkDiffColumn(3, "Apr", "2015", 0.00, 0.00)
-      .checkDiffColumn(4, "May", "2015", 0.00, 0.00)
-      .checkDiffColumn(5, "June", "2015", 30.00, 30.00)
-      .checkDiffColumn(6, "Jul", "2015", 80.00, 80.00, true)
-      .checkDiffColumn(7, "Aug", "2015", 30.00, 0.00)
-      .checkDiffColumn(8, "Sep", "2015", 80.00, 0.00)
-      .checkDiffColumn(9, "Oct", "2015", 30.00, 0.00)
-      .checkDiffColumn(10, "Nov", "2015", 80.00, 0.00)
-      .checkDiffColumn(11, "Dec", "2015", 30.00, 0.00)
-      .checkDiffColumn(12, "Jan", "2016", 80.00, 0.00);
+      .checkDiffColumn(0, "J", "2015", 0.00, 0.00)
+      .checkDiffColumn(1, "F", "2015", 0.00, 0.00)
+      .checkDiffColumn(2, "M", "2015", 0.00, 0.00)
+      .checkDiffColumn(3, "A", "2015", 0.00, 0.00)
+      .checkDiffColumn(4, "M", "2015", 0.00, 0.00)
+      .checkDiffColumn(5, "J", "2015", 30.00, 30.00)
+      .checkDiffColumn(6, "J", "2015", 80.00, 80.00, true)
+      .checkDiffColumn(7, "A", "2015", 30.00, 0.00)
+      .checkDiffColumn(8, "S", "2015", 80.00, 0.00)
+      .checkDiffColumn(9, "O", "2015", 30.00, 0.00)
+      .checkDiffColumn(10, "N", "2015", 80.00, 0.00)
+      .checkDiffColumn(11, "D", "2015", 30.00, 0.00)
+      .checkDiffColumn(12, "J", "2016", 80.00, 0.00);
 
     analysis.evolution()
       .initSeriesGraph("Energy")
       .checkColumnCount(13)
-      .checkDiffColumn(0, "Jan", "2015", 0.00, 0.00)
-      .checkDiffColumn(1, "Feb", "2015", 0.00, 0.00)
-      .checkDiffColumn(2, "Mar", "2015", 0.00, 0.00)
-      .checkDiffColumn(3, "Apr", "2015", 0.00, 0.00)
-      .checkDiffColumn(4, "May", "2015", 0.00, 0.00)
-      .checkDiffColumn(5, "June", "2015", 0.00, 0.00)
-      .checkDiffColumn(6, "Jul", "2015", 50.00, 50.00, true)
-      .checkDiffColumn(7, "Aug", "2015", 0.00, 0.00)
-      .checkDiffColumn(8, "Sep", "2015", 50.00, 0.00)
-      .checkDiffColumn(9, "Oct", "2015", 0.00, 0.00)
-      .checkDiffColumn(10, "Nov", "2015", 50.00, 0.00)
-      .checkDiffColumn(11, "Dec", "2015", 0.00, 0.00)
-      .checkDiffColumn(12, "Jan", "2016", 50.00, 0.00);
+      .checkDiffColumn(0, "J", "2015", 0.00, 0.00)
+      .checkDiffColumn(1, "F", "2015", 0.00, 0.00)
+      .checkDiffColumn(2, "M", "2015", 0.00, 0.00)
+      .checkDiffColumn(3, "A", "2015", 0.00, 0.00)
+      .checkDiffColumn(4, "M", "2015", 0.00, 0.00)
+      .checkDiffColumn(5, "J", "2015", 0.00, 0.00)
+      .checkDiffColumn(6, "J", "2015", 50.00, 50.00, true)
+      .checkDiffColumn(7, "A", "2015", 0.00, 0.00)
+      .checkDiffColumn(8, "S", "2015", 50.00, 0.00)
+      .checkDiffColumn(9, "O", "2015", 0.00, 0.00)
+      .checkDiffColumn(10, "N", "2015", 50.00, 0.00)
+      .checkDiffColumn(11, "D", "2015", 0.00, 0.00)
+      .checkDiffColumn(12, "J", "2016", 50.00, 0.00);
   }
 
   public void testEditingAndDeletingSeries() throws Exception {

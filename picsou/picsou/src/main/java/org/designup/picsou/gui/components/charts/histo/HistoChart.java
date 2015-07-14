@@ -58,6 +58,12 @@ public class HistoChart extends JPanel implements Disposable {
     disposables.add(selectionManager);
   }
 
+  public int getMaxLabelSize(int columnCount) {
+    int usableColumnWidth = HistoChartMetrics.usableColumnWidth(getWidth(), columnCount);
+    int mCharWidth = getFontMetrics(getFont()).stringWidth("m");
+    return usableColumnWidth / mCharWidth;
+  }
+
   public void addListener(HistoChartListener listener) {
     selectionManager.addListener(listener);
   }
@@ -86,7 +92,7 @@ public class HistoChart extends JPanel implements Disposable {
   public void setBorder(Border border) {
     super.setBorder(border);
     if (border != null && border instanceof EmptyBorder) {
-      this.insets = ((EmptyBorder)border).getBorderInsets();
+      this.insets = ((EmptyBorder) border).getBorderInsets();
     }
   }
 
@@ -116,7 +122,7 @@ public class HistoChart extends JPanel implements Disposable {
   }
 
   public void paint(Graphics g) {
-    BufferedImage image = ((Graphics2D)g).getDeviceConfiguration().createCompatibleImage(getWidth(), getHeight(), Transparency.TRANSLUCENT);
+    BufferedImage image = ((Graphics2D) g).getDeviceConfiguration().createCompatibleImage(getWidth(), getHeight(), Transparency.TRANSLUCENT);
     Graphics2D g2 = image.createGraphics();
     g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
@@ -151,7 +157,7 @@ public class HistoChart extends JPanel implements Disposable {
     painter.paint(g2, metrics, config, selectionManager.getRollover());
 
     paintSections(g2, dataset);
-    ((Graphics2D)g).drawImage(image, null, null);
+    ((Graphics2D) g).drawImage(image, null, null);
   }
 
   private TextMetrics getTextMetrics(Graphics g, Font font) {
@@ -246,7 +252,7 @@ public class HistoChart extends JPanel implements Disposable {
       g2.drawLine(metrics.chartX(), metrics.y(scaleValue), metrics.chartX() + metrics.chartWidth(), metrics.y(scaleValue));
 
       g2.setColor(colors.getLabelColor());
-      String label = Integer.toString((int)scaleValue);
+      String label = Integer.toString((int) scaleValue);
       g2.drawString(label, metrics.scaleX(label), metrics.scaleY(scaleValue));
     }
   }

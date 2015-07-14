@@ -173,8 +173,8 @@ public class HistoChartBuilder implements Disposable {
 
   public void showAccountDailyHisto(final int selectedMonthId, boolean showFullMonthLabels, Set<Integer> accountIds, final DaySelection daySelection, String daily) {
 
-    final HistoDailyDatasetBuilder builder = createDailyDataset(daily, showFullMonthLabels);
     List<Integer> monthIdsToShow = getMonthIdsToShow(selectedMonthId);
+    final HistoDailyDatasetBuilder builder = createDailyDataset(monthIdsToShow.size(), daily, showFullMonthLabels);
 
     DailyAccountPositionComputer computer = new DailyAccountPositionComputer(repository);
     final DailyAccountPositionValues positionValues = computer.getAccountDailyValues(monthIdsToShow, selectedMonthId, showFullMonthLabels, accountIds, daySelection, daily);
@@ -197,9 +197,10 @@ public class HistoChartBuilder implements Disposable {
   }
 
   private void showDailyHisto(int selectedMonthId, boolean showFullMonthLabels, GlobMatcher accountMatcher, DaySelection daySelection, String daily, DoubleField position, HistoDailyColors colors) {
-    final HistoDailyDatasetBuilder builder = createDailyDataset(daily, showFullMonthLabels);
 
     List<Integer> monthIdsToShow = getMonthIdsToShow(selectedMonthId);
+    final HistoDailyDatasetBuilder builder = createDailyDataset(monthIdsToShow.size(), daily, showFullMonthLabels);
+
     if (monthIdsToShow.isEmpty()) {
       return;
     }
@@ -221,10 +222,11 @@ public class HistoChartBuilder implements Disposable {
       range.reset();
     }
 
-    HistoDiffDatasetBuilder builder = createDiffDataset("mainBalance");
+    List<Integer> monthIdsToShow = getMonthIdsToShow(selectedMonthId);
+    HistoDiffDatasetBuilder builder = createDiffDataset(monthIdsToShow.size(), "mainBalance");
     builder.setKey(BudgetArea.ALL.getKey());
 
-    for (int monthId : getMonthIdsToShow(selectedMonthId)) {
+    for (int monthId : monthIdsToShow) {
       Glob budgetStat = repository.find(Key.create(BudgetStat.TYPE, monthId));
       if (budgetStat != null) {
         Double income = budgetStat.get(BudgetStat.INCOME_SUMMARY);
@@ -246,10 +248,11 @@ public class HistoChartBuilder implements Disposable {
       range.reset();
     }
 
-    HistoDiffDatasetBuilder builder = createDiffDataset("budgetArea");
+    List<Integer> monthIdsToShow = getMonthIdsToShow(selectedMonthId);
+    HistoDiffDatasetBuilder builder = createDiffDataset(monthIdsToShow.size(), "budgetArea");
     builder.setKeys(BudgetArea.getKeys(budgetAreas));
 
-    for (int monthId : getMonthIdsToShow(selectedMonthId)) {
+    for (int monthId : monthIdsToShow) {
       Glob budgetStat = repository.find(Key.create(BudgetStat.TYPE, monthId));
       if (budgetStat != null) {
         double totalPlanned = 0;
@@ -282,10 +285,12 @@ public class HistoChartBuilder implements Disposable {
     if (resetPosition) {
       range.reset();
     }
-    HistoLineDatasetBuilder builder = createLineDataset("uncategorized");
+
+    List<Integer> monthIdsToShow = getMonthIdsToShow(selectedMonthId);
+    HistoLineDatasetBuilder builder = createLineDataset(monthIdsToShow.size(), "uncategorized");
     builder.setKey(Series.UNCATEGORIZED_SERIES);
 
-    for (int monthId : getMonthIdsToShow(selectedMonthId)) {
+    for (int monthId : monthIdsToShow) {
       Glob budgetStat = repository.find(Key.create(BudgetStat.TYPE, monthId));
       double value = budgetStat != null ? budgetStat.get(BudgetStat.UNCATEGORIZED_ABS) : 0.0;
       builder.add(monthId, value, monthId == selectedMonthId);
@@ -299,10 +304,11 @@ public class HistoChartBuilder implements Disposable {
       range.reset();
     }
 
-    HistoDiffDatasetBuilder builder = createDiffDataset("series");
+    List<Integer> monthIdsToShow = getMonthIdsToShow(selectedMonthId);
+    HistoDiffDatasetBuilder builder = createDiffDataset(monthIdsToShow.size(), "series");
     builder.setKeys(SeriesOrGroup.createKeys(seriesOrGroups));
 
-    for (int monthId : getMonthIdsToShow(selectedMonthId)) {
+    for (int monthId : monthIdsToShow) {
       double totalActual = 0.00;
       double totalPlanned = 0.00;
       for (SeriesOrGroup seriesOrGroup : seriesOrGroups) {
@@ -336,10 +342,11 @@ public class HistoChartBuilder implements Disposable {
       range.reset();
     }
 
-    HistoLineDatasetBuilder builder = createLineDataset("subSeries");
+    List<Integer> monthIdsToShow = getMonthIdsToShow(selectedMonthId);
+    HistoLineDatasetBuilder builder = createLineDataset(monthIdsToShow.size(), "subSeries");
     builder.setKeys(GlobUtils.createKeys(SubSeries.TYPE, subSeriesIds));
 
-    for (int monthId : getMonthIdsToShow(selectedMonthId)) {
+    for (int monthId : monthIdsToShow) {
       double actual = 0.00;
       for (Integer subSeriesId : subSeriesIds) {
         Glob stat = repository.find(SubSeriesStat.createKey(subSeriesId, monthId));
@@ -372,11 +379,11 @@ public class HistoChartBuilder implements Disposable {
       range.reset();
     }
 
-    HistoLineDatasetBuilder builder = createLineDataset("mainAccounts");
+    List<Integer> monthIdsToShow = getMonthIdsToShow(selectedMonthId);
+    HistoLineDatasetBuilder builder = createLineDataset(monthIdsToShow.size(), "mainAccounts");
     builder.setKey(Account.MAIN_SUMMARY_KEY);
 
-    for (int monthId : getMonthIdsToShow(selectedMonthId)) {
-//      Glob stat = repository.find(Key.create(BudgetStat.TYPE, monthId));
+    for (int monthId : monthIdsToShow) {
       Glob stat = repository.find(Key.create(AccountStat.ACCOUNT, Account.MAIN_SUMMARY_ACCOUNT_ID,
                                              AccountStat.MONTH, monthId));
 
@@ -392,10 +399,11 @@ public class HistoChartBuilder implements Disposable {
       range.reset();
     }
 
-    HistoLineDatasetBuilder builder = createLineDataset("savingsAccounts");
+    List<Integer> monthIdsToShow = getMonthIdsToShow(selectedMonthId);
+    HistoLineDatasetBuilder builder = createLineDataset(monthIdsToShow.size(), "savingsAccounts");
     builder.setKey(Account.SAVINGS_SUMMARY_KEY);
 
-    for (int monthId : getMonthIdsToShow(selectedMonthId)) {
+    for (int monthId : monthIdsToShow) {
       Glob stat = SavingsBudgetStat.findSummary(monthId, repository);
       Double value = stat != null ? stat.get(SavingsBudgetStat.END_OF_MONTH_POSITION) : 0.0;
       builder.add(monthId, value, monthId == selectedMonthId);
@@ -415,10 +423,9 @@ public class HistoChartBuilder implements Disposable {
       return;
     }
 
-    HistoDiffDatasetBuilder builder = createDiffDataset("series");
+    List<Integer> monthsIdsToShow = getMonthIdsToShow(selectedMonthId);
+    HistoDiffDatasetBuilder builder = createDiffDataset(monthsIdsToShow.size(), "series");
     builder.setKey(Key.create(Series.TYPE, seriesId));
-
-    List<Integer> monthsToShow = getMonthIdsToShow(selectedMonthId);
 
     GlobList list =
       repository.findByIndex(SeriesBudget.SERIES_INDEX, SeriesBudget.SERIES, seriesId)
@@ -430,7 +437,7 @@ public class HistoChartBuilder implements Disposable {
 
     for (Glob seriesBudget : list) {
       Integer monthId = seriesBudget.get(SeriesBudget.MONTH);
-      if (!monthsToShow.contains(monthId)) {
+      if (!monthsIdsToShow.contains(monthId)) {
         continue;
       }
       Double planned = adjust(seriesBudget.get(SeriesBudget.PLANNED_AMOUNT, 0.), multiplier);
@@ -445,25 +452,25 @@ public class HistoChartBuilder implements Disposable {
 
   private Double adjust(Double value, double multiplier) {
     if (value == null) {
-      return value;
+      return null;
     }
     return value * multiplier;
   }
 
-  private HistoLineDatasetBuilder createLineDataset(String tooltipKey) {
-    return new HistoLineDatasetBuilder(histoChart, histoChartLabel, repository, tooltipKey) {
+  private HistoLineDatasetBuilder createLineDataset(int monthCount, String tooltipKey) {
+    return new HistoLineDatasetBuilder(histoChart, histoChartLabel, repository, tooltipKey, HistoLabelUpdater.get(histoChart, monthCount)) {
       protected void updateLegend() {
         histoChartLegend.hide();
       }
     };
   }
 
-  private HistoDiffDatasetBuilder createDiffDataset(String tooktipKey) {
-    return new HistoDiffDatasetBuilder(histoChart, histoChartLabel, histoChartLegend, repository, tooktipKey);
+  private HistoDiffDatasetBuilder createDiffDataset(int monthCount, String tooktipKey) {
+    return new HistoDiffDatasetBuilder(histoChart, histoChartLabel, histoChartLegend, repository, tooktipKey, HistoLabelUpdater.get(histoChart, monthCount));
   }
 
-  private HistoDailyDatasetBuilder createDailyDataset(String tooktipKey, boolean showFullMonthLabels) {
-    return new HistoDailyDatasetBuilder(histoChart, histoChartLabel, repository, tooktipKey, showFullMonthLabels) {
+  private HistoDailyDatasetBuilder createDailyDataset(int monthCount, String tooktipKey, boolean showFullMonthLabels) {
+    return new HistoDailyDatasetBuilder(histoChart, histoChartLabel, repository, tooktipKey, HistoLabelUpdater.get(histoChart, monthCount, showFullMonthLabels)) {
       protected void updateLegend() {
         histoChartLegend.hide();
       }

@@ -13,18 +13,20 @@ public class HistoDatasetBuilder {
   protected final HistoChart histoChart;
   protected final JLabel label;
   protected final GlobRepository repository;
+  private HistoLabelUpdater labelUpdater;
 
-  public HistoDatasetBuilder(HistoChart histoChart, JLabel label, GlobRepository repository) {
+  public HistoDatasetBuilder(HistoChart histoChart, JLabel label, GlobRepository repository, HistoLabelUpdater labelUpdater) {
     this.histoChart = histoChart;
     this.label = label;
     this.repository = repository;
+    this.labelUpdater = labelUpdater;
   }
 
   protected String getLabel(int monthId) {
-    return Month.getShortMonthLabel(monthId);
+    return labelUpdater.getLabel(monthId);
   }
 
-  protected String getMonthLabel(int monthId) {
+  protected String getTooltipLabel(int monthId) {
     return Month.getFullMonthLabelWith4DigitYear(monthId, true);
   }
 

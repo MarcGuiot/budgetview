@@ -235,6 +235,7 @@ public class SeriesEvolutionTableView extends View {
       monthColumnsCount++;
       SeriesEvolutionMonthColumn monthColumn =
         new SeriesEvolutionMonthColumn(monthColumnsCount - 2, tableView, repository, directory, seriesChartsColors);
+      monthColumn.setReferenceMonthId(referenceMonthId);
       monthColumns.add(monthColumn);
       tableView.addColumn(monthColumn);
       rolloverMouseMotionListener.addColumn(monthColumnsCount + 1);

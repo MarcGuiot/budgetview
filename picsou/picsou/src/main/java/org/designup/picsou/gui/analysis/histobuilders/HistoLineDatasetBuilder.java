@@ -15,8 +15,8 @@ public class HistoLineDatasetBuilder extends HistoDatasetBuilder {
   private HistoLineDataset dataset;
   private boolean hasPositive;
 
-  public HistoLineDatasetBuilder(HistoChart histoChart, JLabel label, GlobRepository repository, String tooltipKey) {
-    super(histoChart, label, repository);
+  public HistoLineDatasetBuilder(HistoChart histoChart, JLabel label, GlobRepository repository, String tooltipKey, HistoLabelUpdater labelUpdater) {
+    super(histoChart, label, repository, labelUpdater);
     this.dataset = new HistoLineDataset("seriesAnalysis.chart.histo." + tooltipKey + ".tooltip");
   }
 
@@ -28,7 +28,7 @@ public class HistoLineDatasetBuilder extends HistoDatasetBuilder {
 
   public void add(int monthId, double value, boolean isSelectedMonth) {
     dataset.add(monthId, value,
-                getLabel(monthId), getMonthLabel(monthId), getSection(monthId),
+                getLabel(monthId), getTooltipLabel(monthId), getSection(monthId),
                 isCurrentMonth(monthId), isFutureMonth(monthId), isSelectedMonth);
     hasPositive |= value > 0;
   }

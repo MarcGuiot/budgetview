@@ -2,6 +2,7 @@ package org.designup.picsou.gui.projects;
 
 import com.budgetview.shared.gui.histochart.HistoChartConfig;
 import org.designup.picsou.gui.View;
+import org.designup.picsou.gui.analysis.histobuilders.HistoLabelUpdater;
 import org.designup.picsou.gui.analysis.histobuilders.range.HistoChartAdjustableRange;
 import org.designup.picsou.gui.browsing.BrowsingAction;
 import org.designup.picsou.gui.components.charts.histo.HistoChart;
@@ -38,7 +39,7 @@ import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.Set;
+import java.util.*;
 
 public class ProjectChartView extends View implements HistoChartAdjustableRange {
   private static final float BUTTON_FONT_SIZE = 12.0f;
@@ -152,8 +153,9 @@ public class ProjectChartView extends View implements HistoChartAdjustableRange 
       range.reset();
     }
 
-    HistoButtonDatasetBuilder dataset = new HistoButtonDatasetBuilder(histoChart, new JLabel(), repository);
-    for (Integer monthId : range.getMonthIds(currentMonthId)) {
+    java.util.List<Integer> monthIds = range.getMonthIds(currentMonthId);
+    HistoButtonDatasetBuilder dataset = new HistoButtonDatasetBuilder(histoChart, new JLabel(), repository, HistoLabelUpdater.get(histoChart, monthIds.size()));
+    for (Integer monthId : monthIds) {
       dataset.addColumn(monthId, Utils.equal(monthId, currentMonthId));
     }
     GlobList selectedProjects = selectionService.getSelection(Project.TYPE);

@@ -22,8 +22,8 @@ public class HistoDiffDatasetBuilder extends HistoDatasetBuilder {
   private int negativeCount = 0;
   private HistoDiffLegendPanel legend;
 
-  HistoDiffDatasetBuilder(HistoChart histoChart, JLabel label, HistoDiffLegendPanel legend, GlobRepository repository, String tooltipKey) {
-    super(histoChart, label, repository);
+  HistoDiffDatasetBuilder(HistoChart histoChart, JLabel label, HistoDiffLegendPanel legend, GlobRepository repository, String tooltipKey, HistoLabelUpdater labelUpdater) {
+    super(histoChart, label, repository, labelUpdater);
     this.legend = legend;
     this.dataset = new HistoDiffDataset("seriesAnalysis.chart.histo." + tooltipKey + ".tooltip");
     this.lastMonthWithTransactions = CurrentMonth.getLastTransactionMonth(repository);
@@ -43,7 +43,7 @@ public class HistoDiffDatasetBuilder extends HistoDatasetBuilder {
     this.dataset.add(monthId,
                      adjustedReference,
                      adjustedActual,
-                     getLabel(monthId), getMonthLabel(monthId), getSection(monthId),
+                     getLabel(monthId), getTooltipLabel(monthId), getSection(monthId),
                      isCurrentMonth(monthId), isSelectedMonth,
                      monthId > lastMonthWithTransactions);
 
@@ -53,7 +53,6 @@ public class HistoDiffDatasetBuilder extends HistoDatasetBuilder {
     else if (adjustedReference < 0 || adjustedActual < 0) {
       negativeCount++;
     }
-
   }
 
   public void addEmpty(int monthId, boolean isSelectedMonth) {

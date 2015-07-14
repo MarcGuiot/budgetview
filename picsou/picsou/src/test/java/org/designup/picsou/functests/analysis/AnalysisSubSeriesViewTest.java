@@ -3,7 +3,7 @@ package org.designup.picsou.functests.analysis;
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
 
-public class SubSeriesEvolutionViewTest extends LoggedInFunctionalTestCase {
+public class AnalysisSubSeriesViewTest extends LoggedInFunctionalTestCase {
 
   protected void setUp() throws Exception {
     setCurrentMonth("2012/05");

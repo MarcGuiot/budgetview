@@ -97,6 +97,8 @@ public class EvolutionAnalysisView extends AnalysisViewPanel {
                             new HistoChartColors("histo", directory), range, repository, directory, parentDirectory.get(SelectionService.class));
     builder.addDisposable(histoChartBuilder);
     builder.add("budgetAreasChart", histoChartBuilder.getChart());
+    builder.add("histoChartLabel", histoChartBuilder.getLabel());
+    builder.add("histoChartLegend", histoChartBuilder.getLegend());
 
     SeriesEditionButtons seriesButtons = new SeriesEditionButtons(currentBudgetArea, repository, parentDirectory);
     seriesRepeat = GlobsPanelBuilder.addRepeat("seriesRepeat", SeriesWrapper.TYPE, seriesMatcher, comparator,
@@ -164,6 +166,7 @@ public class EvolutionAnalysisView extends AnalysisViewPanel {
   }
 
   private class SeriesFactory implements RepeatComponentFactory<Glob> {
+    private static final int DEFAULT_SERIES_CHART_HEIGHT = 115;
     private SeriesEditionButtons seriesButtons;
 
     public SeriesFactory(SeriesEditionButtons seriesButtons) {
@@ -176,24 +179,30 @@ public class EvolutionAnalysisView extends AnalysisViewPanel {
       cellBuilder.add("seriesButton", button.getComponent());
       cellBuilder.addDisposable(button);
 
-      final HistoChartBuilder histoChartBuilder =
+      final HistoChartBuilder seriesChartBuilder =
         new HistoChartBuilder(histoChartConfig,
                               new HistoChartColors("histo", directory), range, repository, directory, parentDirectory.get(SelectionService.class));
-      cellBuilder.addDisposable(histoChartBuilder);
-      cellBuilder.add("seriesChart", histoChartBuilder.getChart());
+      cellBuilder.addDisposable(seriesChartBuilder);
+      cellBuilder.add("seriesChart", seriesChartBuilder.getChart());
 
-      final SeriesChart chart = new SeriesChart(series, histoChartBuilder);
-      chart.update();
+      final SeriesChart chart = new SeriesChart(series, seriesChartBuilder);
       seriesCharts.add(chart);
       cellBuilder.addDisposable(new Disposable() {
         public void dispose() {
           seriesCharts.remove(chart);
         }
       });
+      cellBuilder.addDisposable(chart);
+
+      GuiUtils.runLater(new Runnable() {
+        public void run() {
+          chart.update();
+        }
+      });
     }
   }
 
-  private class SeriesChart {
+  private class SeriesChart implements Disposable {
     private HistoChartBuilder histoChartBuilder;
     private Set<SeriesOrGroup> selectedSeriesOrGroups = new HashSet<SeriesOrGroup>();
 
@@ -203,11 +212,20 @@ public class EvolutionAnalysisView extends AnalysisViewPanel {
     }
 
     public void update() {
+      if (histoChartBuilder == null) {
+        return;
+      }
       if ((referenceMonthId == null) || repository.find(CurrentMonth.KEY) == null) {
         histoChartBuilder.clear();
         return;
       }
       histoChartBuilder.showSeriesHisto(selectedSeriesOrGroups, referenceMonthId, false);
+    }
+
+    public void dispose() {
+      histoChartBuilder.dispose();
+      histoChartBuilder = null;
+      selectedSeriesOrGroups.clear();
     }
   }
 }

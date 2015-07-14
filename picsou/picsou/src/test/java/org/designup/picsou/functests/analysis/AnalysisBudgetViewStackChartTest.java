@@ -5,7 +5,7 @@ import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
 import org.designup.picsou.model.TransactionType;
 
-public class SeriesEvolutionStackChartTest extends LoggedInFunctionalTestCase {
+public class AnalysisBudgetViewStackChartTest extends LoggedInFunctionalTestCase {
 
   protected void setUp() throws Exception {
     setCurrentDate("2009/07/30");

@@ -16,8 +16,10 @@
     <style id="unselectedRolloverPanel" selector="x" opaque="true"
            background="content.bg"
            border="line(content.bg)"/>
-
     <style selector="#budgetArea"/>
+
+    <style selector="label.chartLabel" fill="horizontal" horizontalAlignment="center" anchor="center" weightY="0"
+           font="LatoLight,plain,14" foreground="seriesAnalysis.chart.label" opaque="false"/>
 
   </styles>
 
@@ -35,7 +37,14 @@
 
     <scrollPane verticalUnitIncrement="10" border="" forceVerticalScroll="true" weightY="100">
       <column marginRight="10">
-        <panel ref="budgetAreasChart" preferredSize="(200,180)" background="content.bg" marginBottom="15"/>
+        <row weightY="0.1" margin="10" marginBottom="20">
+          <filler fill="horizontal"/>
+          <label ref="histoChartLabel" styleClass="chartLabel"/>
+          <panel ref="histoChartLegend" weightY="0.01" marginBottom="2" marginLeft="20" fill="none"
+                 anchor="south"/>
+          <filler fill="horizontal"/>
+        </row>
+        <panel ref="budgetAreasChart" preferredSize="(200,180)" background="content.bg" marginBottom="20"/>
 
         <repeat ref="seriesRepeat" border="matte(1,0,0  ,0,content.border)">
           <column marginTop="10" name="seriesPanel">
