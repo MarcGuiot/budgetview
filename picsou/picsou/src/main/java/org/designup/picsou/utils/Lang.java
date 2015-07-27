@@ -99,7 +99,7 @@ public class Lang {
     return content;
   }
 
-  private static String getFilePath(String dir, String fileName) {
+  public static String getFilePath(String dir, String fileName) {
     String langDir = LOCALE.getLanguage();
     if (Strings.isNullOrEmpty(langDir) || langDir.equals("__")) {
       langDir = "en";

@@ -13,7 +13,7 @@ import java.util.Locale;
 
 public class DemoGenerationTest extends LoggedInFunctionalTestCase {
 
-  private static final String LANG = "en";
+  private static final String LANG = "fr";
 
   private static final String PREVAYLER_DIR = "tmp/demo/";
   private static final String OFX_PATH = "tmp/demo.ofx";

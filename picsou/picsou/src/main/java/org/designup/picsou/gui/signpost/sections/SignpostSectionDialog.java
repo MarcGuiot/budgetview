@@ -28,10 +28,14 @@ public class SignpostSectionDialog {
     this.directory = directory;
   }
 
-  public void show(SignpostSection completedSection) {
-    PicsouDialog dialog = createDialog(completedSection);
-    dialog.showCentered();
-    builder.dispose();
+  public void show(final SignpostSection completedSection) {
+    GuiUtils.runLater(new Runnable() {
+      public void run() {
+        PicsouDialog dialog = createDialog(completedSection);
+        dialog.showCentered();
+        builder.dispose();
+      }
+    });
   }
 
   private PicsouDialog createDialog(SignpostSection completedSection) {

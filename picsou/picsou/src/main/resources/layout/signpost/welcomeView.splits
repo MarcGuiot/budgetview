@@ -4,13 +4,12 @@
   <styleImport file="/layout/signpost/signpostStyles.splits"/>
   <styles>
 
-    <style selector="label.contentTitle" font="LatoBold,plain,24" foreground="signpostView.title"
+    <style selector="label.contentTitle" font="LatoRegular,plain,36" foreground="signpostView.title"
            fill="none" anchor="center" marginBottom="30"/>
-    <style selector="label.intro" font="LatoBold,plain,16"
+    <style selector="label.intro" font="LatoRegular,plain,16"
            fill="none" anchor="center" marginTop="10" marginBottom="20"/>
 
     <style selector="label.number" font="LatoBold,plain,40" fill="none" anchor="center"/>
-    <style selector="htmlEditorPane.text" font="LatoBold,plain,13" fill="horizontal" anchor="center"/>
 
     <style selector=".actionsPanel label" font="LatoRegular,plain,14" fill="none" anchor="center"/>
     <ui name="flatButtonUI" class="org.designup.picsou.gui.components.ui.FlatButtonUI"
@@ -18,7 +17,7 @@
         disabledBgColor="welcomeView.button.disabled"
         rolloverBgColor="welcomeView.button.rollover"/>
     <style selector=".actionsPanel button" ui="flatButtonUI"
-           font="LatoRegular,plain,16" marginTop="15"
+           font="LatoRegular,plain,20" marginTop="15"
            foreground="welcomeView.button.text" weightX="0.01" fill="none" anchor="center"/>
 
   </styles>
@@ -29,30 +28,15 @@
 
       <filler fill="vertical"/>
 
-      <row>
-        <label icon="dashboard/cloudy.png"/>
-        <label text="$welcomeView.title" styleClass="contentTitle"/>
-      </row>
+      <label text="$welcomeView.title" styleClass="contentTitle" marginBottom="40"/>
 
-      <filler fill="vertical"/>
+      <label text="$welcomeView.intro" styleClass="intro" marginBottom="20"/>
 
       <label styleClass="horizontalSeparator"/>
-
-      <label text="$welcomeView.intro" styleClass="intro"/>
-      <grid>
-        <label text="1" gridPos="(0,0)" styleClass="number"/>
-        <htmlEditorPane text="$welcomeView.text.1" gridPos="(1,0)" styleClass="text"/>
-        <label text="2" gridPos="(0,1)" styleClass="number"/>
-        <htmlEditorPane text="$welcomeView.text.2" gridPos="(1,1)" styleClass="text"/>
-        <label text="3" gridPos="(0,2)" styleClass="number"/>
-        <htmlEditorPane text="$welcomeView.text.3" gridPos="(1,2)" styleClass="text"/>
-      </grid>
-
+      <label ref="image" margin="10"/>
       <label styleClass="horizontalSeparator"/>
 
-      <filler fill="vertical"/>
-
-      <grid styleClass="actionsPanel">
+      <grid styleClass="actionsPanel" marginTop="30">
         <label text="$welcomeView.demo.label" gridPos="(0,0)"/>
         <button action="demo" text="$welcomeView.demo.button" gridPos="(0,1)"/>
         <label text="$welcomeView.start.label" gridPos="(1,0)"/>
