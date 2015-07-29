@@ -4,11 +4,6 @@
   <styleImport file="/layout/signpost/signpostStyles.splits"/>
   <styles>
 
-    <style selector="label.contentTitle" font="LatoRegular,plain,36" foreground="signpostView.title"
-           fill="none" anchor="center" marginBottom="30"/>
-    <style selector="label.intro" font="LatoRegular,plain,16"
-           fill="none" anchor="center" marginTop="10" marginBottom="20"/>
-
     <style selector="label.number" font="LatoBold,plain,40" fill="none" anchor="center"/>
 
     <style selector=".actionsPanel label" font="LatoRegular,plain,14" fill="none" anchor="center"/>
@@ -24,13 +19,14 @@
 
   <row opaque="true" background="content.bg">
     <filler fill="horizontal"/>
+
     <column name="welcomeIntro">
 
       <filler fill="vertical"/>
 
-      <label text="$welcomeView.title" styleClass="contentTitle" marginBottom="40"/>
+      <label text="$welcomeView.title" styleClass="contentTitle"/>
 
-      <label text="$welcomeView.intro" styleClass="intro" marginBottom="20"/>
+      <label text="$welcomeView.intro" styleClass="intro"/>
 
       <label styleClass="horizontalSeparator"/>
       <label ref="image" margin="10"/>

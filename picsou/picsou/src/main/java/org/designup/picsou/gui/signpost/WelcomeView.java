@@ -21,14 +21,14 @@ public class WelcomeView extends View {
     GlobsPanelBuilder builder = new GlobsPanelBuilder(getClass(), "/layout/signpost/welcomeView.splits",
                                                       repository, directory);
 
-    ImageIcon image = directory.get(ImageLocator.class).get(Lang.getFilePath("guidance", "welcome.png"));
+    ImageIcon image = directory.get(ImageLocator.class).get(Lang.getFilePath("welcome", "welcome.png"));
     builder.add("image", new JLabel(image));
 
     builder.add("demo", new GotoDemoAccountAction(directory));
     builder.add("start", new SetBooleanAction(SignpostStatus.KEY,
-                                                         SignpostStatus.WELCOME_SHOWN,
-                                                         true, "Start",
-                                                         repository));
+                                              SignpostStatus.WELCOME_SHOWN,
+                                              true, "Start",
+                                              repository));
 
     parentBuilder.add("welcomeView", builder);
   }

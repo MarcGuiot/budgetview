@@ -48,7 +48,6 @@ public class BudgetAreaSeriesLayout implements RepeatLayout {
       }
       row++;
     }
-//    panel.validate();  //=> validate is called by the repeatPanel
   }
 
   public void insert(JPanel panel, ComponentConstraints[] constraints, int row) {
@@ -56,14 +55,12 @@ public class BudgetAreaSeriesLayout implements RepeatLayout {
       Component component = constraints[col].getComponent();
       panel.add(component, row * ROW_ITEM_COUNT + col);
     }
-//    panel.validate();
   }
 
   public void remove(JPanel panel, int row) {
     for (int col = 0; col < ROW_ITEM_COUNT; col++) {
       panel.remove(row * ROW_ITEM_COUNT);
     }
-//    panel.validate();
   }
 
   public void move(JPanel panel, int previousRow, int newRow) {

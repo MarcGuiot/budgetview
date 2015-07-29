@@ -4,20 +4,22 @@ import org.designup.picsou.gui.model.Card;
 import org.designup.picsou.model.SignpostSectionType;
 import org.designup.picsou.utils.Lang;
 
-public enum SignpostSection {
+public enum  SignpostSection {
 
-  IMPORT(SignpostSectionType.IMPORT, Card.DATA, "import"),
-  CATEGORIZATION(SignpostSectionType.CATEGORIZATION, Card.CATEGORIZATION, "categorization"),
-  BUDGET(SignpostSectionType.BUDGET, Card.BUDGET, "budget");
+  IMPORT(SignpostSectionType.IMPORT, Card.DATA, "import", "header_import.png"),
+  CATEGORIZATION(SignpostSectionType.CATEGORIZATION, Card.CATEGORIZATION, "categorization", "cards/categorization.png"),
+  BUDGET(SignpostSectionType.BUDGET, Card.BUDGET, "budget", "cards/budget.png");
 
   private SignpostSectionType type;
   private Card card;
   private String key;
+  private String iconPath;
 
-  private SignpostSection(SignpostSectionType type, Card card, String key) {
+  private SignpostSection(SignpostSectionType type, Card card, String key, String iconPath) {
     this.type = type;
     this.card = card;
     this.key = key;
+    this.iconPath = iconPath;
   }
 
   public String getLabel() {
@@ -49,7 +51,7 @@ public enum SignpostSection {
   }
 
   public String getIconPath() {
-    return "signpostView/signpostView_" + key + ".png";
+    return iconPath;
   }
 
   public String toString() {

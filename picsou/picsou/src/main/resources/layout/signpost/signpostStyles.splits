@@ -2,6 +2,12 @@
   <styles>
     <style selector=".content" font="-,plain,14" foreground="signpostView.content" anchor="center"/>
 
+    <style selector="label.contentTitle" font="LatoRegular,plain,36" foreground="signpostView.title"
+           fill="none" anchor="center" marginBottom="30"/>
+
+    <style selector="label.intro" font="LatoRegular,plain,16"
+           fill="none" anchor="center" marginTop="10" marginBottom="20"/>
+
     <style selector=".signpostSection" marginTop="5" marginBottom="5"/>
 
     <style selector="#sectionPanel" marginTop="5" marginBottom="5" opaque="true"/>
@@ -36,6 +42,11 @@
            foreground="signpostView.section.description.inprogress"/>
     <style id="completedDescription" selector="x"
            foreground="signpostView.section.description.completed"/>
+
+    <style selector="#sectionButton" iconTextGap="10"/>
+    <style id="unavailableButton" selector="x" enabled="false"/>
+    <style id="inprogressButton" selector="x" enabled="true"/>
+    <style id="completedButton" selector="x" enabled="false"/>
 
   </styles>
 
