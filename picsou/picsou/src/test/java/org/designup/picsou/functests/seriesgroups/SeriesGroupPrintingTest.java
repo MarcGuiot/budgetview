@@ -61,14 +61,14 @@ public class SeriesGroupPrintingTest extends LoggedInFunctionalTestCase {
 
     january2014Report.getOverviewPage().getHistoChart()
       .checkColumnCount(8)
-      .checkDiffColumn(0, "Dec", "2013", 0.00, 120.00)
-      .checkDiffColumn(1, "Jan", "2014", 1000.00, 560.00, true)
-      .checkDiffColumn(2, "Feb", "2014", 1000.00, 560.00)
-      .checkDiffColumn(3, "Mar", "2014", 1000.00, 560.00)
-      .checkDiffColumn(4, "Apr", "2014", 1000.00, 560.00)
-      .checkDiffColumn(5, "May", "2014", 1000.00, 560.00)
-      .checkDiffColumn(6, "June", "2014", 1000.00, 560.00)
-      .checkDiffColumn(7, "Jul", "2014", 1000.00, 560.00);
+      .checkDiffColumn(0, "D", "2013", 0.00, 120.00)
+      .checkDiffColumn(1, "J", "2014", 1000.00, 560.00, true)
+      .checkDiffColumn(2, "F", "2014", 1000.00, 560.00)
+      .checkDiffColumn(3, "M", "2014", 1000.00, 560.00)
+      .checkDiffColumn(4, "A", "2014", 1000.00, 560.00)
+      .checkDiffColumn(5, "M", "2014", 1000.00, 560.00)
+      .checkDiffColumn(6, "J", "2014", 1000.00, 560.00)
+      .checkDiffColumn(7, "J", "2014", 1000.00, 560.00);
 
     january2014Report.initGaugesPage(1)
       .checkTitle("Budget for january 2014")

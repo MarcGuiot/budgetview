@@ -2,31 +2,31 @@
 <globs>
   <bankFormat id='99'>
 
-    <bank name="Boursorama" url="http://www.boursorama.com/" id="1000">
+    <bank name="Boursorama" country="fr" url="http://www.boursorama.com/" id="1000">
       <bankEntity id="40618"/>
     </bank>
 
-    <bank name="Credit du Nord" url="http://www.credit-du-nord.fr/" id="1002">
+    <bank name="Credit du Nord" country="fr" url="http://www.credit-du-nord.fr/" id="1002">
       <bankEntity id="30076"/>
     </bank>
 
-    <bank name="Monabanq." url="http://www.monabanq.com" id="1003">
+    <bank name="Monabanq." country="fr" url="http://www.monabanq.com" id="1003">
       <bankEntity id="14690"/>
     </bank>
 
-    <bank name="Fortuneo" url="http://www.fortuneo.fr" id="1004">
+    <bank name="Fortuneo" country="fr" url="http://www.fortuneo.fr" id="1004">
       <bankEntity id="14518"/>
     </bank>
 
-    <bank name="BRED - Banque Populaire" url="http://www.bred.fr" id="1005">
+    <bank name="BRED - Banque Populaire" country="fr" url="http://www.bred.fr" id="1005">
       <bankEntity id="10107"/>
     </bank>
 
-    <bank name="Cortal Consors" url="http://www.cortalconsors.fr" id="1006">
+    <bank name="Cortal Consors" country="fr" url="http://www.cortalconsors.fr" id="1006">
       <bankEntity id="18889"/>
     </bank>
 
-    <bank name="BforBank" url="http://www.bforbank.com" id="1007">
+    <bank name="BforBank" country="fr" url="http://www.bforbank.com" id="1007">
       <bankEntity id="16218"/>
     </bank>
 
@@ -34,15 +34,15 @@
       <bankEntity id="12869"/>
     </bank>
 
-    <bank name="Banque Palatine" url="https://www.palatine.fr" id="1009">
+    <bank name="Banque Palatine" country="fr" url="https://www.palatine.fr" id="1009">
       <bankEntity id="40978"/>
     </bank>
 
-    <bank name="Groupama Banque" url="http://www.groupamabanque.com/" id="1010">
+    <bank name="Groupama Banque" country="fr" url="http://www.groupamabanque.com/" id="1010">
       <bankEntity id="18370"/>
     </bank>
 
-    <bank name="SMC - Société Marseillaise de Crédit" url="http://www.smc.fr" id="1011">
+    <bank name="SMC - Société Marseillaise de Crédit" country="fr" url="http://www.smc.fr" id="1011">
       <bankEntity id="30077"/>
     </bank>
 

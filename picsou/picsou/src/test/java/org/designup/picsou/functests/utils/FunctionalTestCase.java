@@ -36,11 +36,15 @@ public abstract class FunctionalTestCase extends UISpecTestCase {
 
   protected void tearDown() throws Exception {
     super.tearDown();
-//    System.gc();
-//    long freeMem = Runtime.getRuntime().freeMemory();
-//    long maxMem = Runtime.getRuntime().maxMemory();
-//    long totalMem = Runtime.getRuntime().totalMemory();
-//    System.out.println("FunctionalTestCase.tearDown " + freeMem  + " " + maxMem + " " + totalMem);
+//    dumpMemUsage();
+  }
+
+  private void dumpMemUsage() {
+    System.gc();
+    long freeMem = Runtime.getRuntime().freeMemory();
+    long maxMem = Runtime.getRuntime().maxMemory();
+    long totalMem = Runtime.getRuntime().totalMemory();
+    System.out.println("FunctionalTestCase.tearDown " + freeMem  + " " + maxMem + " " + totalMem);
   }
 
   protected static String createPrevaylerRepository() {

@@ -2,7 +2,7 @@
 <globs>
   <bankFormat id='20'>
 
-    <bank name="Dexia" url="http://www.dexia.be/fr/particulier/" id="20">
+    <bank name="Dexia" country="be" url="http://www.dexia.be/fr/particulier/" id="20">
       <bankEntity id="13148"/>
     </bank>
 

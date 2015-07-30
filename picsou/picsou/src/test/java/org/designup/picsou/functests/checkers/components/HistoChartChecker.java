@@ -8,6 +8,7 @@ import org.designup.picsou.gui.components.charts.histo.daily.HistoDailyDataset;
 import org.designup.picsou.gui.components.charts.histo.diff.HistoDiffDataset;
 import org.designup.picsou.gui.components.charts.histo.line.HistoLineDataset;
 import org.designup.picsou.gui.description.Formatting;
+import org.globsframework.utils.Strings;
 import org.globsframework.utils.TablePrinter;
 import org.uispec4j.Mouse;
 import org.uispec4j.Panel;
@@ -90,7 +91,7 @@ public class HistoChartChecker extends AbstractHistoChecker<HistoChartChecker> {
     TablePrinter expected = createPrinter();
     for (Object[] row : content) {
       expected.addRow(row[0],
-                      row[1].toString().substring(0, 3),
+                      Strings.cut(row[1].toString(), 1),
                       Formatting.toString((Double)row[2]),
                       Formatting.toString((Double)row[3]),
                       row.length > 4 ? (Boolean)row[4] : "");
@@ -100,7 +101,7 @@ public class HistoChartChecker extends AbstractHistoChecker<HistoChartChecker> {
     HistoDiffDataset dataset = getDataset(HistoDiffDataset.class);
     for (int i = 0; i < dataset.size(); i++) {
       actual.addRow(dataset.getSection(i),
-                    dataset.getLabel(i).substring(0, 3),
+                    Strings.cut(dataset.getLabel(i), 1),
                     Formatting.toString(dataset.getActualValue(i)),
                     Formatting.toString(dataset.getReferenceValue(i)),
                     dataset.isSelected(i) ? "true" : "");

@@ -2,7 +2,7 @@
 <globs>
   <bankFormat id='10'>
 
-    <bank name="ING Direct" url="https://secure.ingdirect.fr" id="10">
+    <bank name="ING Direct" country="fr" url="https://secure.ingdirect.fr" id="10">
       <bankEntity id="14559"/>
     </bank>
   </bankFormat>

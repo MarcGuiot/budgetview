@@ -44,6 +44,15 @@ public class AccountEditionChecker extends GuiChecker {
     return this;
   }
 
+  public AccountEditionChecker selectBank(String country, String bankName) {
+    BankChooserChecker.open(getBankButton().triggerClick())
+      .selectCountry(country)
+      .selectBank(bankName)
+      .validate();
+    assertThat(dialog.getTextBox("bankLabel").textEquals(bankName));
+    return this;
+  }
+
   public AccountEditionChecker selectNewBank(String bankName, String url) {
     BankChooserChecker.open(getBankButton().triggerClick())
       .addNewBank(bankName, url)

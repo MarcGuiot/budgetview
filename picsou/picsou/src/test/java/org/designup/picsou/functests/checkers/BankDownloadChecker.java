@@ -5,11 +5,10 @@ import org.uispec4j.TextBox;
 import org.uispec4j.Window;
 import org.uispec4j.assertion.UISpecAssert;
 
+import javax.swing.*;
+
 import static org.uispec4j.assertion.UISpecAssert.assertFalse;
 import static org.uispec4j.assertion.UISpecAssert.assertThat;
-import org.uispec4j.interception.WindowInterceptor;
-
-import javax.swing.*;
 
 public class BankDownloadChecker extends BankChooserPanelChecker<BankDownloadChecker> {
 

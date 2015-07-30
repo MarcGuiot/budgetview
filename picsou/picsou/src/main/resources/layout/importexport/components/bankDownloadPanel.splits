@@ -13,7 +13,7 @@
     <style selector="button.backButton"
            marginTop="5" fill="none" anchor="left"
            ui="hyperlinkButton" foreground="hyperlink"
-           font="-,plain,11"
+           font="-,plain,12"
            icon="leftArrow(10,14,8,8, #222222)"
            rolloverIcon="leftArrow(10,14,8,8, #0000FF)"/>
   </styles>

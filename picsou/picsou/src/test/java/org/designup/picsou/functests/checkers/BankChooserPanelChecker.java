@@ -1,7 +1,7 @@
 package org.designup.picsou.functests.checkers;
 
 import org.designup.picsou.functests.checkers.components.PopupButton;
-import org.uispec4j.Panel;
+import org.uispec4j.ListBox;
 import org.uispec4j.Trigger;
 import org.uispec4j.Window;
 
@@ -26,6 +26,14 @@ public class BankChooserPanelChecker<T extends BankChooserPanelChecker> extends 
 
   public T checkContainsBanks(String... banks) {
     assertThat(window.getListBox("bankList").contains(banks));
+    return (T)this;
+  }
+
+  public T checkBanksNotPresent(String... banks) {
+    ListBox bankList = window.getListBox("bankList");
+    for (String bank : banks) {
+      assertFalse(bankList.contains(bank));
+    }
     return (T)this;
   }
 
@@ -109,6 +117,17 @@ public class BankChooserPanelChecker<T extends BankChooserPanelChecker> extends 
       .checkTitle(title)
       .checkInfoMessageContains(message)
       .close();
+    return (T)this;
+  }
+
+  public T checkCountry(String country) {
+    assertThat(window.getButton("countrySelector").textEquals(country));
+    return (T)this;
+  }
+
+  public T selectCountry(String country) {
+    PopupButton popupButton = new PopupButton(window.getButton("countrySelector"));
+    popupButton.click(country);
     return (T)this;
   }
 }

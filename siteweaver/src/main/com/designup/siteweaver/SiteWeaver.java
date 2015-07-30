@@ -19,10 +19,8 @@ public class SiteWeaver {
   public static void main(String args[]) throws Exception {
 
     checkUsage(args);
-    checkJavaVersion();
 
     Server server = new Server();
-
     Connector connector = new SelectChannelConnector();
     connector.setHost("localhost");
     connector.setPort(8080);
@@ -79,16 +77,6 @@ public class SiteWeaver {
       System.exit(-1);
     }
   }
-
-  private static void checkJavaVersion() {
-    String javaVersion = System.getProperty("java.version");
-    if (javaVersion.compareTo("1.1.2") < 0) {
-      System.out.println("WARNING: Swing must be run with a " +
-                         "1.1.2 or higher version VM!!!");
-      System.exit(-1);
-    }
-  }
-
 }
 
 

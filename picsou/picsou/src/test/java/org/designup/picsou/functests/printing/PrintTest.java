@@ -71,9 +71,9 @@ public class PrintTest extends LoggedInFunctionalTestCase {
     year2012Report.getOverviewPage().getHistoChart()
       .checkColumnCount(3)
       .checkColumnCount(3)
-      .checkDiffColumn(0, "Mar", "2012", 1000.00, 700.00)
-      .checkDiffColumn(1, "Apr", "2012", 1500.00, 700.00, true)
-      .checkDiffColumn(2, "May", "2012", 1500.00, 800.00);
+      .checkDiffColumn(0, "M", "2012", 1000.00, 700.00)
+      .checkDiffColumn(1, "A", "2012", 1500.00, 700.00, true)
+      .checkDiffColumn(2, "M", "2012", 1500.00, 800.00);
 
     year2012Report.initGaugesPage(1)
       .checkTitle("Budget for april 2012")
@@ -140,9 +140,9 @@ public class PrintTest extends LoggedInFunctionalTestCase {
 
     multiSelectionReport.getOverviewPage().getHistoChart()
       .checkColumnCount(3)
-      .checkDiffColumn(0, "Mar", "2012", 1000.00, 700.00)
-      .checkDiffColumn(1, "Apr", "2012", 1500.00, 700.00)
-      .checkDiffColumn(2, "May", "2012", 1500.00, 800.00, true);
+      .checkDiffColumn(0, "M", "2012", 1000.00, 700.00)
+      .checkDiffColumn(1, "A", "2012", 1500.00, 700.00)
+      .checkDiffColumn(2, "M", "2012", 1500.00, 800.00, true);
 
     multiSelectionReport.initGaugesPage(1)
       .checkTitle("Budget for april - may 2012")
@@ -234,15 +234,15 @@ public class PrintTest extends LoggedInFunctionalTestCase {
 
     monthReport.getOverviewPage().getHistoChart()
       .checkColumnCount(9)
-      .checkDiffColumn(0, "Nov", "2011", 0.00, 0.00)
-      .checkDiffColumn(1, "Dec", "2011", 0.00, 250.00, true)
-      .checkDiffColumn(2, "Jan", "2012", 0.00, 220.00)
-      .checkDiffColumn(3, "Feb", "2012", 0.00, 0.00)
-      .checkDiffColumn(4, "Mar", "2012", 0.00, 0.00)
-      .checkDiffColumn(5, "Apr", "2012", 0.00, 50.00)
-      .checkDiffColumn(6, "May", "2012", 0.00, 300.00)
-      .checkDiffColumn(7, "June", "2012", 0.00, 300.00)
-      .checkDiffColumn(8, "Jul", "2012", 0.00, 300.00);
+      .checkDiffColumn(0, "N", "2011", 0.00, 0.00)
+      .checkDiffColumn(1, "D", "2011", 0.00, 250.00, true)
+      .checkDiffColumn(2, "J", "2012", 0.00, 220.00)
+      .checkDiffColumn(3, "F", "2012", 0.00, 0.00)
+      .checkDiffColumn(4, "M", "2012", 0.00, 0.00)
+      .checkDiffColumn(5, "A", "2012", 0.00, 50.00)
+      .checkDiffColumn(6, "M", "2012", 0.00, 300.00)
+      .checkDiffColumn(7, "J", "2012", 0.00, 300.00)
+      .checkDiffColumn(8, "J", "2012", 0.00, 300.00);
 
     // -- Year 2011 --
 
@@ -278,15 +278,15 @@ public class PrintTest extends LoggedInFunctionalTestCase {
 
     year2011Report.getOverviewPage().getHistoChart()
       .checkColumnCount(9)
-      .checkDiffColumn(0, "Apr", "2011", 0.00, 100.00)
-      .checkDiffColumn(1, "May", "2011", 0.00, 0.00)
-      .checkDiffColumn(2, "June", "2011", 0.00, 150.00)
-      .checkDiffColumn(3, "Jul", "2011", 0.00, 0.00)
-      .checkDiffColumn(4, "Aug", "2011", 0.00, 0.00)
-      .checkDiffColumn(5, "Sep", "2011", 0.00, 200.00)
-      .checkDiffColumn(6, "Oct", "2011", 0.00, 0.00)
-      .checkDiffColumn(7, "Nov", "2011", 0.00, 0.00)
-      .checkDiffColumn(8, "Dec", "2011", 0.00, 250.00, true);
+      .checkDiffColumn(0, "A", "2011", 0.00, 100.00)
+      .checkDiffColumn(1, "M", "2011", 0.00, 0.00)
+      .checkDiffColumn(2, "J", "2011", 0.00, 150.00)
+      .checkDiffColumn(3, "J", "2011", 0.00, 0.00)
+      .checkDiffColumn(4, "A", "2011", 0.00, 0.00)
+      .checkDiffColumn(5, "S", "2011", 0.00, 200.00)
+      .checkDiffColumn(6, "O", "2011", 0.00, 0.00)
+      .checkDiffColumn(7, "N", "2011", 0.00, 0.00)
+      .checkDiffColumn(8, "D", "2011", 0.00, 250.00, true);
 
     // -- Year 2011 --
 
@@ -324,13 +324,13 @@ public class PrintTest extends LoggedInFunctionalTestCase {
 
     year2012Report.getOverviewPage().getHistoChart()
       .checkColumnCount(7)
-      .checkDiffColumn(0, "Jan", "2012", 0.00, 220.00)
-      .checkDiffColumn(1, "Feb", "2012", 0.00, 0.00, true)
-      .checkDiffColumn(2, "Mar", "2012", 0.00, 0.00)
-      .checkDiffColumn(3, "Apr", "2012", 0.00, 50.00)
-      .checkDiffColumn(4, "May", "2012", 0.00, 300.00)
-      .checkDiffColumn(5, "June", "2012", 0.00, 300.00)
-      .checkDiffColumn(6, "Jul", "2012", 0.00, 300.00);
+      .checkDiffColumn(0, "J", "2012", 0.00, 220.00)
+      .checkDiffColumn(1, "F", "2012", 0.00, 0.00, true)
+      .checkDiffColumn(2, "M", "2012", 0.00, 0.00)
+      .checkDiffColumn(3, "A", "2012", 0.00, 50.00)
+      .checkDiffColumn(4, "M", "2012", 0.00, 300.00)
+      .checkDiffColumn(5, "J", "2012", 0.00, 300.00)
+      .checkDiffColumn(6, "J", "2012", 0.00, 300.00);
   }
 
   public void testTablePagination() throws Exception {

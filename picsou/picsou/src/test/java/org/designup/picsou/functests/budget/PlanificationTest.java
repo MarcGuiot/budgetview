@@ -54,9 +54,9 @@ public class PlanificationTest extends LoggedInFunctionalTestCase {
     timeline.selectAll();
     budgetView.variable.editSeries("Courant")
       .checkChart(new Object[][]{
-        {"2008", "June", 100.00, 100.00, true},
-        {"2008", "July", 0.00, 100.00, true},
-        {"2008", "August", 0.00, 100.00, true},
+        {"2008", "J", 100.00, 100.00, true},
+        {"2008", "J", 0.00, 100.00, true},
+        {"2008", "A", 0.00, 100.00, true},
       }).validate();
 
     transactions

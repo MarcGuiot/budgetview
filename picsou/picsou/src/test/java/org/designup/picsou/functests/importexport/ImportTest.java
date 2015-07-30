@@ -570,6 +570,7 @@ public class ImportTest extends LoggedInFunctionalTestCase {
       .checkContainsBanks("BNP Paribas", "CIC", "Crédit Agricole", "ING Direct", "Société Générale")
       .checkNoBankSelected()
       .checkManualDownloadHidden()
+      .selectCountry("All")
       .selectBank("CIC")
       .checkManualDownloadAvailable()
       .selectManualDownload()
@@ -577,10 +578,11 @@ public class ImportTest extends LoggedInFunctionalTestCase {
 
     bankDownload
       .goBackToBankSelection()
+      .selectCountry("All")
       .setFilter("crédit")
       .checkContainsBanks("Crédit Agricole", "Chesterfield Federal Credit Union", "Other")
       .setFilter("BNP")
-      .checkBankListEquals("BNP Paribas", "BNPPF", "Other")
+      .checkBankListEquals("BNP Paribas", "BNP Paribas Fortis", "Other")
       .selectBank("BNP Paribas")
       .checkManualDownloadAvailable()
       .selectManualDownload()

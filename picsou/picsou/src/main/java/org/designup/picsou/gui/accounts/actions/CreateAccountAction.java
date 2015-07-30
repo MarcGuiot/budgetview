@@ -61,7 +61,4 @@ public class CreateAccountAction extends AbstractAction {
     putValue(Action.SHORT_DESCRIPTION, Lang.get("newAccount." + accountType.name().toLowerCase() + ".tooltip"));
   }
 
-  public void setAccountInfo(Glob defaultAccountInfo) {
-    this.defaultAccountInfo = defaultAccountInfo;
-  }
 }

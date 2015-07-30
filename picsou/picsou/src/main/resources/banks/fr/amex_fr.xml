@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <globs>
   <bankFormat id='16'>
-    <bank name="American Express (France)" url="https://www.americanexpress.com/france/" id="16"
+    <bank name="American Express (France)" country="fr" url="https://www.americanexpress.com/france/" id="16"
           synchroEnabled="true" icon="banks/amex.png">
       <bankEntity id="16820"/>
     </bank>

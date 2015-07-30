@@ -2,15 +2,11 @@
 <globs>
   <bankFormat id='12'>
 
-    <bank name="Banque Populaire" url="http://www.banquepopulaire.fr" id='12'>
+    <bank name="Banque Populaire" country="fr" url="http://www.banquepopulaire.fr" id='12'>
       <bankEntity id="10807"/>
     </bank>
 
-      <!--<bank name="Banque Populaire" url="https://www.ibps.bpbfc.banquepopulaire.fr" id='200'>-->
-          <!--<bankEntity id=""/>-->
-      <!--</bank>-->
-
-      <transactionMatcher ofxName="FACTURETTE CB.*"
+    <transactionMatcher ofxName="FACTURETTE CB.*"
                         label="{MEMO.0}" originalLabel="{MEMO.0}"
                         transactionTypeName="credit_card"/>
 

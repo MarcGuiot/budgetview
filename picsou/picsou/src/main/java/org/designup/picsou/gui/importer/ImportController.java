@@ -94,7 +94,6 @@ public class ImportController implements RealAccountImporter {
     if (!isSynchro) {
       if (!realAccountWithoutImport.isEmpty()) {
         importDialog.showNoImport(realAccountWithoutImport.remove(0), first);
-        Log.write("Import:next: noAccount");
         return;
       }
     }

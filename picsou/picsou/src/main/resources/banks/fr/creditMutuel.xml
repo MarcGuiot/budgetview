@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <globs>
     <bankFormat id='7'>
-        <bank name="Crédit Mutuel" url="https://www.creditmutuel.fr" id='7' invalidPosition="true"
+        <bank name="Crédit Mutuel" country="fr" url="https://www.creditmutuel.fr" id='7' invalidPosition="true"
               icon="banks/credit_mutuel.png">
             <bankEntity id="16306"/>
             <bankEntity id="10278"/>
@@ -91,7 +91,6 @@
 
         <bank id='214' name="Crédit Mutuel Sud-Est" url="https://www.creditmutuel.fr/cmse/fr/index.html"
               downloadUrl="https://www.creditmutuel.fr/cmse/fr/banques/index.html" synchroEnabled="false">
-            <!--<bankEntity id="XXX"/>-->
         </bank>
         <bank id='215' name="Crédit Mutuel Ile-de-France" url="https://www.creditmutuel.fr/cmidf/fr/banques/accueil.html"
               downloadUrl="https://www.creditmutuel.fr/cmidf/fr/banques/accueil.html" synchroEnabled="false">
@@ -100,7 +99,6 @@
 
         <bank id='216' name="Crédit Mutuel Massif Central" url="https://www.cmmc.fr"
               downloadUrl="https://www.cmmc.fr" synchroEnabled="false">
-            <!--<bankEntity id="11628"/>-->
         </bank>
 
         <transactionMatcher qifP="CARTE[\s]+(\d{2}/\d{2})[\s]+(.*)"

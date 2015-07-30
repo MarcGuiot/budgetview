@@ -2,7 +2,7 @@
 <globs>
   <bankFormat id='13'>
 
-    <bank name="BNPPF" id="13" url="https://www.bnpparibasfortis.be">
+    <bank name="BNP Paribas Fortis" country="be" id="13" url="https://www.bnpparibasfortis.be">
       <bankEntity label="FORTIS"/>
       <bankEntity label="BNPPF"/>
     </bank>

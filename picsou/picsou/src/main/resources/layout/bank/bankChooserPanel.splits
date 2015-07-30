@@ -10,6 +10,9 @@
     <row>
       <label icon="button_magnifier.png" marginRight="5"/>
       <textField ref="bankEditor"/>
+      <button ref="countrySelector"
+              icon="arrow_down.png" rolloverIcon="arrow_down_roll.png" fill="none" iconTextGap="2"
+              ui="hyperlinkButtonWithoutUnderline" foreground="block.footer.button"/>
     </row>
     <column styleClass="blockScrollBorder">
       <scrollPane>

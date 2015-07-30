@@ -2,7 +2,7 @@
 <globs>
   <bankFormat id='3'>
 
-    <bank name="La Banque Postale" url="https://www.labanquepostale.fr" id='3' icon="banks/labanquepostale.png"
+    <bank name="La Banque Postale" country="fr" url="https://www.labanquepostale.fr" id='3' icon="banks/labanquepostale.png"
           synchroEnabled="true">
       <bankEntity id="20041"/>
     </bank>

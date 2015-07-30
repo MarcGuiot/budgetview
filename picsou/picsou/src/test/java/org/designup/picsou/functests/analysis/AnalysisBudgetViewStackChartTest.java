@@ -767,6 +767,7 @@ public class AnalysisBudgetViewStackChartTest extends LoggedInFunctionalTestCase
 
     // ---- Uncategorized transactions ----
 
+    views.selectAnalysis();
     analysis.table().select("To categorize");
     analysis.budget();
     analysis.checkBudgetShown();

@@ -602,6 +602,7 @@ public class SignpostSequenceTest extends LoggedInFunctionalTestCase {
 
     operations.openImportDialog()
       .getBankDownload()
+      .selectCountry("France")
       .selectBank("CIC")
       .enterTransactionsManually();
 

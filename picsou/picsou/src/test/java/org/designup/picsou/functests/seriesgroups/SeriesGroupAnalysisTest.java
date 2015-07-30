@@ -229,9 +229,9 @@ public class SeriesGroupAnalysisTest extends LoggedInFunctionalTestCase {
 
     analysis.budget().histoChart
       .checkColumnCount(4)
-      .checkDiffColumn(0, "Dec", "2013", 300.00, 120.00)
-      .checkDiffColumn(1, "Jan", "2014", 300.00, 80.00, true)
-      .checkDiffColumn(2, "Feb", "2014", 300.00, 0.00)
-      .checkDiffColumn(3, "Mar", "2014", 300.00, 0.00);
+      .checkDiffColumn(0, "D", "2013", 300.00, 120.00)
+      .checkDiffColumn(1, "J", "2014", 300.00, 80.00, true)
+      .checkDiffColumn(2, "F", "2014", 300.00, 0.00)
+      .checkDiffColumn(3, "M", "2014", 300.00, 0.00);
   }
 }

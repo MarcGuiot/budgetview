@@ -166,6 +166,7 @@ public class BankEditionTest extends LoggedInFunctionalTestCase {
 
     ImportDialogChecker thirdImportDialog = operations.openImportDialog();
     thirdImportDialog.getBankDownload()
+      .selectCountry("All")
       .selectBank("NewBank")
       .deleteAndCancel()
       .checkContainsBanks("NewBank")
@@ -296,5 +297,60 @@ public class BankEditionTest extends LoggedInFunctionalTestCase {
     transactions.initContent()
       .add("30/08/2008", TransactionType.PRELEVEMENT, "MACDO", "", -50.00)
       .check();
+  }
+
+  public void testVBanksAreFilteredByCountry() throws Exception {
+    ImportDialogChecker importDialog = operations.openImportDialog();
+    importDialog.getBankDownload()
+      .checkCountry("All")
+      .checkContainsBanks("CIC", "Credit Suisse", "BNP Paribas Fortis", "Bank One");
+    importDialog.close();
+
+    accounts.createNewAccount()
+      .setName("Account 1")
+      .setAsMain()
+      .selectBank("Credit Suisse")
+      .setPosition(100.00)
+      .validate();
+
+    importDialog = operations.openImportDialog();
+    importDialog.getBankDownload()
+      .checkCountry("Switzerland")
+      .checkContainsBanks("Credit Suisse")
+      .checkBanksNotPresent("CIC", "BNP Paribas Fortis", "Bank One")
+      .selectCountry("France")
+      .checkContainsBanks("Boursorama", "CIC", "Société Générale")
+      .checkBanksNotPresent("Credit Suisse", "BNP Paribas Fortis", "Bank One");
+    importDialog.close();
+
+    accounts.createNewAccount()
+      .setName("Account 2")
+      .setAsSavings()
+      .selectBank("France", "CIC")
+      .setPosition(200.00)
+      .validate();
+
+    importDialog = operations.openImportDialog();
+    importDialog.getBankDownload()
+      .checkCountry("All")
+      .checkContainsBanks("CIC", "Credit Suisse", "BNP Paribas Fortis", "Bank One");
+    importDialog.close();
+
+    mainAccounts.openDelete("Account 1").validate();
+
+    importDialog = operations.openImportDialog();
+    importDialog.getBankDownload()
+      .checkCountry("France")
+      .checkContainsBanks("Boursorama", "CIC", "Société Générale")
+      .checkBanksNotPresent("Credit Suisse", "BNP Paribas Fortis", "Bank One");
+    importDialog.close();
+
+    savingsAccounts.openDelete("Account 2").validate();
+
+    importDialog = operations.openImportDialog();
+    importDialog.getBankDownload()
+      .checkCountry("All")
+      .checkContainsBanks("CIC", "Credit Suisse", "BNP Paribas Fortis", "Bank One");
+    importDialog.close();
   }
 }

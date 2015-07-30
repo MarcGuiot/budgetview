@@ -30,6 +30,9 @@ public class Bank {
   public static StringField SHORT_NAME;
 
   @DefaultString("") @NoObfuscation
+  public static StringField COUNTRY;
+
+  @DefaultString("") @NoObfuscation
   public static StringField URL;
 
   @NamingField @NoObfuscation
@@ -72,7 +75,7 @@ public class Bank {
   public static class Serializer implements PicsouGlobSerializer {
 
     public int getWriteVersion() {
-      return 6;
+      return 7;
     }
 
     public boolean shouldBeSaved(GlobRepository repository, FieldValues fieldValues) {
@@ -86,6 +89,7 @@ public class Bank {
       outputStream.writeUtf8String(values.get(SHORT_NAME));
       outputStream.writeUtf8String(values.get(URL));
       outputStream.writeUtf8String(values.get(ICON));
+      outputStream.writeUtf8String(values.get(COUNTRY));
       outputStream.writeUtf8String(values.get(DOWNLOAD_URL));
       outputStream.writeUtf8String(values.get(FID));
       outputStream.writeUtf8String(values.get(ORG));
@@ -97,7 +101,10 @@ public class Bank {
     }
 
     public void deserializeData(int version, FieldSetter fieldSetter, byte[] data, Integer id) {
-      if (version == 6) {
+      if (version == 7) {
+        deserializeDataV7(fieldSetter, data);
+      }
+      else if (version == 6) {
         deserializeDataV6(fieldSetter, data);
       }
       else if (version == 5) {
@@ -115,6 +122,22 @@ public class Bank {
       else if (version == 1) {
         deserializeDataV1(fieldSetter, data);
       }
+    }
+
+    private void deserializeDataV7(FieldSetter fieldSetter, byte[] data) {
+      SerializedInput input = SerializedInputOutputFactory.init(data);
+      fieldSetter.set(NAME, input.readUtf8String());
+      fieldSetter.set(SHORT_NAME, input.readUtf8String());
+      fieldSetter.set(URL, input.readUtf8String());
+      fieldSetter.set(ICON, input.readUtf8String());
+      fieldSetter.set(COUNTRY, input.readUtf8String());
+      fieldSetter.set(DOWNLOAD_URL, input.readUtf8String());
+      fieldSetter.set(FID, input.readUtf8String());
+      fieldSetter.set(ORG, input.readUtf8String());
+      fieldSetter.set(INVALID_POSITION, input.readBoolean());
+      fieldSetter.set(OFX_DOWNLOAD, input.readBoolean());
+      fieldSetter.set(SYNCHRO_ENABLED, input.readBoolean());
+      fieldSetter.set(USER_CREATED, input.readBoolean());
     }
 
     private void deserializeDataV6(FieldSetter fieldSetter, byte[] data) {
