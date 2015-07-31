@@ -17,9 +17,6 @@ public class UserEvaluationEntry {
   @Required
   public static DateField DATE;
 
-  @Required
-  public static IntegerField WEEK_ID;
-
   public static BooleanField SATISFIED;
 
   static {

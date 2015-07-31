@@ -8,8 +8,6 @@ import org.globsframework.model.GlobRepository;
 import org.globsframework.model.format.GlobPrinter;
 import org.globsframework.model.utils.GlobFunctor;
 import org.globsframework.utils.Strings;
-import org.globsframework.utils.exceptions.InvalidParameter;
-import org.globsframework.utils.exceptions.InvalidState;
 
 import java.util.Date;
 
@@ -29,7 +27,7 @@ public class UserEntriesFunctor implements GlobFunctor {
     if (Strings.isNotEmpty(email)) {
       repository.update(user.getKey(), User.EMAIL, email);
     }
-    
+
     Date date = entry.get(LogEntry.DATE);
     LogEntryType entryType = LogEntryType.get(entry.get(LogEntry.ENTRY_TYPE));
     switch (entryType) {
@@ -40,10 +38,10 @@ public class UserEntriesFunctor implements GlobFunctor {
         updateDates(user, date, repository);
         break;
       case PURCHASE:
-        if (user.get(User.PURCHASE_DATE) != null) {
-          throw new InvalidState("Purchase date already exists for " + user);
+        if (user.get(User.PURCHASE_DATE) != null && date.after(user.get(User.PURCHASE_DATE))) {
+          break;
         }
-        repository.update(user.getKey(), 
+        repository.update(user.getKey(),
                           value(User.PURCHASE_DATE, date),
                           value(User.PING_COUNT_ON_PURCHASE, user.get(User.PING_COUNT)),
                           value(User.DAYS_BEFORE_PURCHASE, getDaysBeforePurchase(user, date)));
@@ -59,9 +57,6 @@ public class UserEntriesFunctor implements GlobFunctor {
         Integer pingCount = user.get(User.PING_COUNT);
         int newPingCount = pingCount != null ? pingCount + 1 : 1;
         repository.update(user.getKey(), User.PING_COUNT, newPingCount);
-        if (newPingCount == 2) {
-          repository.update(user.getKey(), User.PROBABLE_EVALUATION_DATE, date);
-        }
       default:
     }
   }

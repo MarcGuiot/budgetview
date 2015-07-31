@@ -11,8 +11,10 @@ public class WeeksTest extends TestCase {
   }
 
   public void testNext() throws Exception {
+    assertEquals(201151, Weeks.next(201150));
     assertEquals(201152, Weeks.next(201151));
     assertEquals(201201, Weeks.next(201152));
+    assertEquals(201202, Weeks.next(201201));
   }
 
   public void testFirstDay() throws Exception {

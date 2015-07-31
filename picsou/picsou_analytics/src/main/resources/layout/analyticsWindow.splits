@@ -13,14 +13,33 @@
     </column>
 
     <tabs weightX="2">
-      <tab title="Performance">
+      <tab title="Cohorts">
         <column margin="15">
-          <repeat ref="performanceCharts" layout="column">
+          <repeat ref="cohortCharts" layout="column">
             <column marginTop="10">
               <label ref="chartTitle"/>
               <panel ref="chart"/>
             </column>
           </repeat>
+        </column>
+      </tab>
+
+      <tab title="Volumes">
+        <column margin="15">
+          <repeat ref="volumeCharts" layout="column">
+            <column marginTop="10">
+              <label ref="chartTitle"/>
+              <panel ref="chart"/>
+            </column>
+          </repeat>
+        </column>
+      </tab>
+
+      <tab title="Week data">
+        <column margin="15">
+          <scrollPane>
+            <table ref="weekTable"/>
+          </scrollPane>
         </column>
       </tab>
 

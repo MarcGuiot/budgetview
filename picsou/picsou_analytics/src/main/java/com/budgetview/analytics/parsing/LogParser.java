@@ -1,9 +1,7 @@
 package com.budgetview.analytics.parsing;
 
-import com.budgetview.analytics.model.LogEntry;
-import com.budgetview.analytics.model.LogEntryType;
-import com.budgetview.analytics.model.UserEvaluationEntry;
-import com.budgetview.analytics.model.UserProgressInfoEntry;
+import com.budgetview.analytics.model.*;
+import org.globsframework.model.FieldValuesBuilder;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.utils.exceptions.InvalidParameter;
 
@@ -26,44 +24,21 @@ public class LogParser {
   private static Pattern IP_FORMAT = Pattern.compile("ip = ([0-9\\.]+)");
   private static Pattern REPO_ID_FORMAT = Pattern.compile("id =[ ]*([A-z0-9/+=]+)");
   private static Pattern MAIL_FORMAT = Pattern.compile("mail =[ ]*([A-z0-9-_@\\.]+)");
-  private static Pattern USER_PROGRESS_FORMAT_OBFUSCATED =
-    Pattern.compile("INFO ([0-9]+ [A-z]+ [0-9]+) [0-9:,]+ - use info =[ ]*use:[ ]*([0-9]+),[ ]*" +
-                    "initialStepsCompleted:[ ]*([a-z]+),[ ]*" +
-                    "g:[ ]*([a-z]+)[ ]*, " +
-                    "i:[ ]*([a-z]+)[ ]*, " +
-                    "j:[ ]*([a-z]+)[ ]*, " +
-                    "k:[ ]*([a-z]+)[ ]*, " +
-                    "l:[ ]*([a-z]+)[ ]*, " +
-                    "m:[ ]*([a-z]+)[ ]*");
+
   private static Pattern USER_PROGRESS_FORMAT =
-    Pattern.compile("INFO ([0-9]+ [A-z]+ [0-9]+) [0-9:,]+ - use info =[ ]*use:[ ]*([0-9]+),[ ]*" +
-                    "initialStepsCompleted:[ ]*([a-z]+),[ ]*" +
-                    "importStarted:[ ]*([a-z]+)[ ]*, " +
-                    "categorizationSelectionDone:[ ]*([a-z]+)[ ]*, " +
-                    "categorizationAreaSelectionDone:[ ]*([a-z]+)[ ]*, " +
-                    "firstCategorizationDone:[ ]*([a-z]+)[ ]*, " +
-                    "categorizationSkipped:[ ]*([a-z]+)[ ]*, " +
-                    "gotoBudgetShown:[ ]*([a-z]+)[ ]*");
-  private static Pattern USER_PROGRESS_FORMAT_WITH_LANG =
-    Pattern.compile("INFO ([0-9]+ [A-z]+ [0-9]+) [0-9:,]+ - use info =[ ]*use:[ ]*([0-9]+),[ ]*" +
-                    "initialStepsCompleted:[ ]*([a-z]+),[ ]*" +
-                    "importStarted:[ ]*([a-z]+)[ ]*, " +
-                    "categorizationSelectionDone:[ ]*([a-z]+)[ ]*, " +
-                    "categorizationAreaSelectionDone:[ ]*([a-z]+)[ ]*, " +
-                    "firstCategorizationDone:[ ]*([a-z]+)[ ]*, " +
-                    "categorizationSkipped:[ ]*([a-z]+)[ ]*, " +
-                    "gotoBudgetShown:[ ]*([a-z]+)[ ]*" +
-                    "lang:[ ]*([a-z]+)[ ]*");
+    Pattern.compile("INFO ([0-9]+ [A-z]+ [0-9]+) [0-9:,]+ - use info =[ ]*(.*)[ ]*");
+
   private static Pattern USER_EVALUATION_FORMAT =
     Pattern.compile("INFO ([0-9]+ [A-z]+ [0-9]+) [0-9:,]+ -.*User evaluation[ ]*:[ ]*([A-z]*).*");
 
   private static Pattern[] IGNORED_PATTERNS = new Pattern[]{
     Pattern.compile("INFO [0-9]+ [A-z]+ [0-9]+ [0-9:,]+ - mail sent.*"),
+    Pattern.compile("INFO [0-9]+ [A-z]+ [0-9]+ [0-9:,]+ - Mail to send.*"),
     Pattern.compile("INFO [0-9]+ [A-z]+ [0-9]+ [0-9:,]+ - mail from.*"),
     Pattern.compile("INFO [0-9]+ [A-z]+ [0-9]+ [0-9:,]+ - License activation ok.*"),
     Pattern.compile("INFO [0-9]+ [A-z]+ [0-9]+ [0-9:,]+ - new jar version mail.*"),
     Pattern.compile("INFO [0-9]+ [A-z]+ [0-9]+ [0-9:,]+ - mail :.*"),
-    Pattern.compile("INFO [0-9]+ [A-z]+ [0-9]+ [0-9:,]+ - No mail sent"),
+    Pattern.compile("INFO [0-9]+ [A-z]+ [0-9]+ [0-9:,]+ - No mail sent.*"),
     Pattern.compile("INFO [0-9]+ [A-z]+ [0-9]+ [0-9:,]+ - Mail sent with new code.*"),
     Pattern.compile("INFO [0-9]+ [A-z]+ [0-9]+ [0-9:,]+ - receive new User[ ]+:.*"),
     Pattern.compile("INFO [0-9]+ [A-z]+ [0-9]+ [0-9:,]+ - NewUser :.*"),
@@ -73,11 +48,26 @@ public class LogParser {
     Pattern.compile("INFO [0-9]+ [A-z]+ [0-9]+ [0-9:,]+ - No mail sent (activation failed).*"),
     Pattern.compile("INFO [0-9]+ [A-z]+ [0-9]+ [0-9:,]+ - item_number.*"),
     Pattern.compile("INFO [0-9]+ [A-z]+ [0-9]+ [0-9:,]+ - thread [0-9]+ msg :.*"),
+    Pattern.compile("INFO [0-9]+ [A-z]+ [0-9]+ [0-9:,]+ - duplicate line.*"),
+    Pattern.compile("INFO [0-9]+ [A-z]+ [0-9]+ [0-9:,]+ - unknown user.*"),
+    Pattern.compile("INFO [0-9]+ [A-z]+ [0-9]+ [0-9:,]+ - Invalidating previous.*"),
+    Pattern.compile("INFO [0-9]+ [A-z]+ [0-9]+ [0-9:,]+ - Bad ask for code from.*"),
+    Pattern.compile("INFO [0-9]+ [A-z]+ [0-9]+ [0-9:,]+ - init server.*"),
+    Pattern.compile("INFO [0-9]+ [A-z]+ [0-9]+ [0-9:,]+ - starting server.*"),
+    Pattern.compile("INFO [0-9]+ [A-z]+ [0-9]+ [0-9:,]+ - reason_code=.*"),
   };
 
   public static final SimpleDateFormat DEFAULT_DATE_FORMAT = new SimpleDateFormat("dd MMM yyyy");
 
-  public void load(Reader input, GlobRepository repository) {
+  private GlobRepository repository;
+  private Date firstDate;
+  private Date lastDate;
+
+  public LogParser(GlobRepository repository) {
+    this.repository = repository;
+  }
+
+  public void load(Reader input) {
     String line = null;
     try {
       BufferedReader reader = new BufferedReader(input);
@@ -99,42 +89,7 @@ public class LogParser {
         Matcher progressMatcher = USER_PROGRESS_FORMAT.matcher(trimmed);
         if (progressMatcher.matches()) {
           processProgress(parseDate(progressMatcher.group(1)),
-                          parseInt(progressMatcher.group(2)),
-                          parseBoolean(progressMatcher.group(3)),
-                          parseBoolean(progressMatcher.group(4)),
-                          parseBoolean(progressMatcher.group(5)),
-                          parseBoolean(progressMatcher.group(6)),
-                          parseBoolean(progressMatcher.group(7)),
-                          parseBoolean(progressMatcher.group(8)),
-                          parseBoolean(progressMatcher.group(9)),
-                          repository);
-          continue;
-        }
-        Matcher progressMatcherWithLang = USER_PROGRESS_FORMAT_WITH_LANG.matcher(trimmed);
-        if (progressMatcherWithLang.matches()) {
-          processProgress(parseDate(progressMatcherWithLang.group(1)),
-                          parseInt(progressMatcherWithLang.group(2)),
-                          parseBoolean(progressMatcherWithLang.group(3)),
-                          parseBoolean(progressMatcherWithLang.group(4)),
-                          parseBoolean(progressMatcherWithLang.group(5)),
-                          parseBoolean(progressMatcherWithLang.group(6)),
-                          parseBoolean(progressMatcherWithLang.group(7)),
-                          parseBoolean(progressMatcherWithLang.group(8)),
-                          parseBoolean(progressMatcherWithLang.group(9)),
-                          repository);
-          continue;
-        }
-        Matcher oldProgressMatcher = USER_PROGRESS_FORMAT_OBFUSCATED.matcher(trimmed);
-        if (oldProgressMatcher.matches()) {
-          processProgress(parseDate(oldProgressMatcher.group(1)),
-                          parseInt(oldProgressMatcher.group(2)),
-                          parseBoolean(oldProgressMatcher.group(3)),
-                          parseBoolean(oldProgressMatcher.group(4)),
-                          parseBoolean(oldProgressMatcher.group(5)),
-                          parseBoolean(oldProgressMatcher.group(6)),
-                          parseBoolean(oldProgressMatcher.group(7)),
-                          parseBoolean(oldProgressMatcher.group(8)),
-                          parseBoolean(oldProgressMatcher.group(9)),
+                          progressMatcher.group(2),
                           repository);
           continue;
         }
@@ -164,6 +119,13 @@ public class LogParser {
     }
   }
 
+  public void complete() {
+    repository.findOrCreate(LogPeriod.KEY);
+    repository.update(LogPeriod.KEY,
+                      value(LogPeriod.FIRST_DATE, firstDate),
+                      value(LogPeriod.LAST_DATE, lastDate));
+  }
+
   private void processCommand(String date, String entryType, String args, GlobRepository repository) {
     if (entryType.equals("ok_for")) {
       return;
@@ -191,19 +153,18 @@ public class LogParser {
 
   private Date parseDate(String date) {
     try {
-      return DEFAULT_DATE_FORMAT.parse(date);
+      Date parsedDate = DEFAULT_DATE_FORMAT.parse(date);
+      if (firstDate == null || firstDate.after(parsedDate)) {
+        firstDate = parsedDate;
+      }
+      if (lastDate == null || lastDate.before(parsedDate)) {
+        lastDate = parsedDate;
+      }
+      return parsedDate;
     }
     catch (ParseException e) {
       throw new RuntimeException("Invalid date format: " + date, e);
     }
-  }
-
-  private boolean parseBoolean(String text) {
-    return Boolean.parseBoolean(text);
-  }
-
-  private int parseInt(String text) {
-    return Integer.parseInt(text);
   }
 
   private String parseArg(String text, Pattern pattern) {
@@ -230,25 +191,13 @@ public class LogParser {
     throw new InvalidParameter("Unknown command type: " + command);
   }
 
-  private void processProgress(Date date,
-                               int count,
-                               boolean initialStepsCompleted,
-                               boolean importDone,
-                               boolean categorizationSelectionDone,
-                               boolean categorizationAreaSelectionDone,
-                               boolean firstCategorizationDone,
-                               boolean categorizationSkipped,
-                               boolean gotoBudgetShown,
+  private void processProgress(Date date, String content,
                                GlobRepository repository) {
-    repository.create(UserProgressInfoEntry.TYPE,
-                      value(UserProgressInfoEntry.DATE, date),
-                      value(UserProgressInfoEntry.COUNT, count),
-                      value(UserProgressInfoEntry.INITIAL_STEPS_COMPLETED, initialStepsCompleted),
-                      value(UserProgressInfoEntry.IMPORT_STARTED, importDone),
-                      value(UserProgressInfoEntry.CATEGORIZATION_SELECTION_DONE, categorizationSelectionDone),
-                      value(UserProgressInfoEntry.CATEGORIZATION_AREA_SELECTION_DONE, categorizationAreaSelectionDone),
-                      value(UserProgressInfoEntry.FIRST_CATEGORIZATION_DONE, firstCategorizationDone),
-                      value(UserProgressInfoEntry.CATEGORIZATION_SKIPPED, categorizationSkipped),
-                      value(UserProgressInfoEntry.GOTO_BUDGET_SHOWN, gotoBudgetShown));
+
+    FieldValuesBuilder values = new FieldValuesBuilder();
+    values.set(UserProgressInfoEntry.DATE, date);
+    UserProgressParser.parseValues(content.trim(), values);
+
+    repository.create(UserProgressInfoEntry.TYPE, values.get().toArray());
   }
 }

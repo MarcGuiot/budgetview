@@ -2,8 +2,8 @@ package com.budgetview.analytics.gui;
 
 import com.budgetview.analytics.model.Experiment;
 import com.budgetview.analytics.model.User;
-import com.budgetview.analytics.model.WeekPerfStat;
-import com.budgetview.analytics.model.WeekUsageStat;
+import com.budgetview.analytics.model.WeekStats;
+import com.budgetview.analytics.model.WeekUsageStats;
 import com.budgetview.analytics.utils.Weeks;
 import org.designup.picsou.gui.utils.Gui;
 import org.globsframework.gui.GlobSelection;
@@ -27,24 +27,29 @@ import java.util.Arrays;
 import java.util.List;
 
 import static org.globsframework.gui.views.utils.LabelCustomizers.ALIGN_CENTER;
+import static org.globsframework.model.utils.GlobComparators.ascending;
 import static org.globsframework.model.utils.GlobComparators.descending;
 
 public class AnalyticsWindow {
 
-  private static final List<Field> PERF_CHART_FIELDS =
-    Arrays.asList(WeekPerfStat.NEW_USERS,
-                  WeekPerfStat.RETENTION_RATIO,
-                  WeekPerfStat.EVALUATIONS_RESULT,
-                  WeekPerfStat.POTENTIAL_BUYERS,
-                  WeekPerfStat.REVENUE_RATIO,
-                  WeekPerfStat.PURCHASES);
+  private static final List<Field> COHORT_CHART_FIELDS =
+    Arrays.asList(WeekStats.NEW_USERS,
+                  WeekStats.ACTIVATION_RATIO,
+                  WeekStats.RETENTION_RATIO,
+                  WeekStats.REVENUE_RATIO);
+
+  private static final List<Field> VOLUME_CHART_FIELDS =
+    Arrays.asList((Field)WeekStats.NEW_USERS,
+                  WeekStats.TOTAL_ACTIVE_USERS,
+                  WeekStats.TOTAL_PAID_ACTIVE_USERS,
+                  WeekStats.NEW_PURCHASES);
 
   private static final List<Field> USER_PROGRESS_FIELDS =
-    Arrays.asList((Field)WeekUsageStat.COMPLETION_RATE_ON_FIRST_TRY,
-                  WeekUsageStat.LOSS_BEFORE_FIRST_IMPORT,
-                  WeekUsageStat.LOSS_DURING_FIRST_IMPORT,
-                  WeekUsageStat.LOSS_DURING_FIRST_CATEGORIZATION,
-                  WeekUsageStat.LOSS_AFTER_FIRST_CATEGORIZATION);
+    Arrays.asList((Field)WeekUsageStats.COMPLETION_RATE_ON_FIRST_TRY,
+                  WeekUsageStats.LOSS_BEFORE_FIRST_IMPORT,
+                  WeekUsageStats.LOSS_DURING_FIRST_IMPORT,
+                  WeekUsageStats.LOSS_DURING_FIRST_CATEGORIZATION,
+                  WeekUsageStats.LOSS_AFTER_FIRST_CATEGORIZATION);
 
   private GlobRepository repository;
   private Directory directory;
@@ -72,7 +77,9 @@ public class AnalyticsWindow {
                                                       repository, directory);
 
     addExperimentElements(builder);
-    addPerfElements(builder);
+    addCohortElements(builder);
+    addVolumeElements(builder);
+    addWeekElements(builder);
     addUserElements(builder);
     addUserProgressElements(builder);
 
@@ -87,15 +94,15 @@ public class AnalyticsWindow {
       public void selectionUpdated(GlobSelection selection) {
         GlobList experiments = selection.getAll(Experiment.TYPE);
         if (experiments.isEmpty()) {
-          selectionService.clear(WeekPerfStat.TYPE);
-          selectionService.clear(WeekUsageStat.TYPE);
+          selectionService.clear(WeekStats.TYPE);
+          selectionService.clear(WeekUsageStats.TYPE);
           selectionService.clear(User.TYPE);
           return;
         }
 
         int weekId = experiments.getFirst().get(Experiment.WEEK);
-        selectStat(weekId, WeekPerfStat.TYPE);
-        selectStat(weekId, WeekUsageStat.TYPE);
+        selectStat(weekId, WeekStats.TYPE);
+        selectStat(weekId, WeekUsageStats.TYPE);
 
         GlobList users =
           repository.getAll(User.TYPE,
@@ -125,26 +132,51 @@ public class AnalyticsWindow {
     Gui.setColumnSizes(table.getComponent(), new int[]{10});
   }
 
-  private void addPerfElements(GlobsPanelBuilder builder) {
-    builder.addRepeat("performanceCharts", PERF_CHART_FIELDS,
-                      new FieldRepeatComponentFactory(WeekPerfStat.ID, PERF_CHART_FIELDS,
+  private void addCohortElements(GlobsPanelBuilder builder) {
+    builder.addRepeat("cohortCharts", COHORT_CHART_FIELDS,
+                      new FieldRepeatComponentFactory(WeekStats.ID, COHORT_CHART_FIELDS,
                                                       repository, directory));
+  }
+
+  private void addVolumeElements(GlobsPanelBuilder builder) {
+    builder.addRepeat("volumeCharts", VOLUME_CHART_FIELDS,
+                      new FieldRepeatComponentFactory(WeekStats.ID, VOLUME_CHART_FIELDS,
+                                                      repository, directory));
+  }
+
+  private void addWeekElements(GlobsPanelBuilder builder) {
+
+    builder.addTable("weekTable", WeekStats.TYPE, ascending(WeekStats.ID))
+      .addColumn(WeekStats.ID)
+      .addColumn(WeekStats.NEW_USERS)
+      .addColumn(WeekStats.ACTIVATION_COUNT)
+      .addColumn(WeekStats.ACTIVATION_RATIO)
+      .addColumn(WeekStats.RETENTION_COUNT)
+      .addColumn(WeekStats.RETENTION_RATIO)
+      .addColumn(WeekStats.REVENUE_COUNT)
+      .addColumn(WeekStats.REVENUE_RATIO)
+      .addColumn(WeekStats.NEW_PURCHASES)
+      .addColumn(WeekStats.TOTAL_ACTIVE_USERS)
+      .addColumn(WeekStats.TOTAL_PAID_ACTIVE_USERS);
   }
 
   private void addUserProgressElements(GlobsPanelBuilder builder) {
     builder.addRepeat("userProgressCharts", USER_PROGRESS_FIELDS,
-                      new FieldRepeatComponentFactory(WeekUsageStat.ID, USER_PROGRESS_FIELDS,
+                      new FieldRepeatComponentFactory(WeekUsageStats.ID, USER_PROGRESS_FIELDS,
                                                       repository, directory));
   }
 
   private void addUserElements(GlobsPanelBuilder builder) {
     builder.addTable("users", User.TYPE, descending(User.FIRST_DATE))
-      .setFilter(GlobMatchers.isNotNull(User.EMAIL))
+      .addColumn(User.ID)
       .addColumn(User.EMAIL)
       .addColumn(User.FIRST_DATE)
       .addColumn(User.LAST_DATE)
       .addColumn(User.PING_COUNT)
+      .addColumn(User.ACTIVATED)
+      .addColumn(User.RETAINED)
       .addColumn(User.DAYS_BEFORE_PURCHASE)
-      .addColumn(User.PURCHASE_DATE);
+      .addColumn(User.PURCHASE_DATE)
+      .addColumn(User.LOST);
   }
 }

@@ -1,7 +1,6 @@
 package com.budgetview.analytics.model;
 
 import org.globsframework.metamodel.GlobType;
-import org.globsframework.metamodel.annotations.DefaultInteger;
 import org.globsframework.metamodel.annotations.Key;
 import org.globsframework.metamodel.annotations.Required;
 import org.globsframework.metamodel.fields.DateField;
@@ -9,7 +8,7 @@ import org.globsframework.metamodel.fields.DoubleField;
 import org.globsframework.metamodel.fields.IntegerField;
 import org.globsframework.metamodel.utils.GlobTypeLoader;
 
-public class WeekUsageStat {
+public class WeekUsageStats {
 
   public static GlobType TYPE;
 
@@ -34,7 +33,7 @@ public class WeekUsageStat {
   public static DoubleField LOSS_AFTER_SECOND_CATEGORIZATION;
 
   static {
-    GlobTypeLoader.init(WeekUsageStat.class);
+    GlobTypeLoader.init(WeekUsageStats.class);
   }
 
 }

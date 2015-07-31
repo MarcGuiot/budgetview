@@ -1,6 +1,7 @@
 package com.budgetview.analytics.model;
 
 import org.globsframework.metamodel.GlobType;
+import org.globsframework.metamodel.annotations.DefaultInteger;
 import org.globsframework.metamodel.annotations.Key;
 import org.globsframework.metamodel.annotations.Required;
 import org.globsframework.metamodel.fields.BooleanField;
@@ -18,7 +19,6 @@ public class UserProgressInfoEntry {
   public static DateField DATE;
 
   public static IntegerField COUNT;
-
   public static BooleanField INITIAL_STEPS_COMPLETED;
   public static BooleanField IMPORT_STARTED;
   public static BooleanField CATEGORIZATION_SELECTION_DONE;

@@ -28,4 +28,5 @@ public class Days {
     DateTime lastDayOfWeek = date.plusDays(7 - dayOfWeek);
     return lastDayOfWeek.toDate();
   }
+
 }

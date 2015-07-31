@@ -17,13 +17,13 @@ public class UserProgressCountFunctor implements GlobFunctor {
     boolean firstTry = count == 1;
     boolean secondTry = count == 2;
 
-    boolean initialStepsCompleted = userProgress.get(UserProgressInfoEntry.INITIAL_STEPS_COMPLETED);
-    boolean importStarted = userProgress.get(UserProgressInfoEntry.IMPORT_STARTED);
-    boolean categorizationSelectionDone = userProgress.get(UserProgressInfoEntry.CATEGORIZATION_SELECTION_DONE);
-    boolean categorizationAreaSelectionDone = userProgress.get(UserProgressInfoEntry.CATEGORIZATION_AREA_SELECTION_DONE);
-    boolean firstCategorizationDone = userProgress.get(UserProgressInfoEntry.FIRST_CATEGORIZATION_DONE);
-    boolean categorizationSkipped = userProgress.get(UserProgressInfoEntry.CATEGORIZATION_SKIPPED);
-    boolean gotoBudgetShown = userProgress.get(UserProgressInfoEntry.GOTO_BUDGET_SHOWN);
+    boolean initialStepsCompleted = userProgress.get(UserProgressInfoEntry.INITIAL_STEPS_COMPLETED, false);
+    boolean importStarted = userProgress.get(UserProgressInfoEntry.IMPORT_STARTED, false);
+    boolean categorizationSelectionDone = userProgress.get(UserProgressInfoEntry.CATEGORIZATION_SELECTION_DONE, false);
+    boolean categorizationAreaSelectionDone = userProgress.get(UserProgressInfoEntry.CATEGORIZATION_AREA_SELECTION_DONE, false);
+    boolean firstCategorizationDone = userProgress.get(UserProgressInfoEntry.FIRST_CATEGORIZATION_DONE, false);
+    boolean categorizationSkipped = userProgress.get(UserProgressInfoEntry.CATEGORIZATION_SKIPPED, false);
+    boolean gotoBudgetShown = userProgress.get(UserProgressInfoEntry.GOTO_BUDGET_SHOWN, false);
 
     count(WeekUsageCount.FIRST_TRY_COUNT, firstTry,
           repository, userProgress);

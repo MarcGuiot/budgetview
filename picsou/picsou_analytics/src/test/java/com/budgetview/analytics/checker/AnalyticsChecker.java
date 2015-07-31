@@ -3,7 +3,7 @@ package com.budgetview.analytics.checker;
 import com.budgetview.analytics.Analytics;
 import com.budgetview.analytics.model.User;
 import com.budgetview.analytics.model.UserProgressInfoEntry;
-import com.budgetview.analytics.model.WeekPerfStat;
+import com.budgetview.analytics.model.WeekStats;
 import junit.framework.Assert;
 import junit.framework.TestCase;
 import org.designup.picsou.functests.importexport.QifImportTest;
@@ -47,7 +47,7 @@ public class AnalyticsChecker {
   }
 
   public void checkWeekPerf(int weekId, FieldValue... values) {
-    doCheck(WeekPerfStat.TYPE, WeekPerfStat.ID, weekId, values);
+    doCheck(WeekStats.TYPE, WeekStats.ID, weekId, values);
   }
 
   private void doCheck(GlobType type, Field field, Object value, FieldValue[] values) {
