@@ -45,21 +45,28 @@
 
       <tab title="Users">
         <column margin="15">
-          <label text="Known users"/>
           <scrollPane>
             <table ref="users"/>
           </scrollPane>
         </column>
       </tab>
 
-      <tab title="User progress">
+      <tab title="Onboarding">
         <column margin="15">
-          <repeat ref="userProgressCharts" layout="column">
+          <repeat ref="onboardingCharts" layout="column">
             <column marginTop="10">
               <label ref="chartTitle"/>
               <panel ref="chart"/>
             </column>
           </repeat>
+        </column>
+      </tab>
+
+      <tab title="Onboarding data">
+        <column margin="15">
+          <scrollPane>
+            <table ref="onboarding"/>
+          </scrollPane>
         </column>
       </tab>
 

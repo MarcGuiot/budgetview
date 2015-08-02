@@ -2,7 +2,7 @@ package com.budgetview.analytics;
 
 import com.budgetview.analytics.checker.AnalyticsChecker;
 import com.budgetview.analytics.model.User;
-import com.budgetview.analytics.model.UserProgressInfoEntry;
+import com.budgetview.analytics.model.OnboardingInfoEntry;
 import junit.framework.TestCase;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.GlobRepositoryBuilder;
@@ -75,13 +75,12 @@ public class AnalyticsTest extends TestCase {
       .load();
 
     analytics.checkUseInfo(parseDate("20120101"),
-                           value(UserProgressInfoEntry.INITIAL_STEPS_COMPLETED, true),
-                           value(UserProgressInfoEntry.IMPORT_STARTED, false),
-                           value(UserProgressInfoEntry.CATEGORIZATION_SELECTION_DONE, true),
-                           value(UserProgressInfoEntry.CATEGORIZATION_AREA_SELECTION_DONE, false),
-                           value(UserProgressInfoEntry.FIRST_CATEGORIZATION_DONE, true),
-                           value(UserProgressInfoEntry.CATEGORIZATION_SKIPPED, false),
-                           value(UserProgressInfoEntry.GOTO_BUDGET_SHOWN, true));
+                           value(OnboardingInfoEntry.INITIAL_STEPS_COMPLETED, true),
+                           value(OnboardingInfoEntry.IMPORT_STARTED, false),
+                           value(OnboardingInfoEntry.CATEGORIZATION_SELECTION_DONE, true),
+                           value(OnboardingInfoEntry.FIRST_CATEGORIZATION_DONE, true),
+                           value(OnboardingInfoEntry.CATEGORIZATION_SKIPPED, false),
+                           value(OnboardingInfoEntry.GOTO_BUDGET_SHOWN, true));
   }
 
   public void testUserProgressParsing() throws Exception {
@@ -90,13 +89,12 @@ public class AnalyticsTest extends TestCase {
       .load();
 
     analytics.checkUseInfo(parseDate("20120101"),
-                           value(UserProgressInfoEntry.INITIAL_STEPS_COMPLETED, true),
-                           value(UserProgressInfoEntry.IMPORT_STARTED, false),
-                           value(UserProgressInfoEntry.CATEGORIZATION_SELECTION_DONE, true),
-                           value(UserProgressInfoEntry.CATEGORIZATION_AREA_SELECTION_DONE, false),
-                           value(UserProgressInfoEntry.FIRST_CATEGORIZATION_DONE, true),
-                           value(UserProgressInfoEntry.CATEGORIZATION_SKIPPED, false),
-                           value(UserProgressInfoEntry.GOTO_BUDGET_SHOWN, true));
+                           value(OnboardingInfoEntry.INITIAL_STEPS_COMPLETED, true),
+                           value(OnboardingInfoEntry.IMPORT_STARTED, false),
+                           value(OnboardingInfoEntry.CATEGORIZATION_SELECTION_DONE, true),
+                           value(OnboardingInfoEntry.FIRST_CATEGORIZATION_DONE, true),
+                           value(OnboardingInfoEntry.CATEGORIZATION_SKIPPED, false),
+                           value(OnboardingInfoEntry.GOTO_BUDGET_SHOWN, true));
   }
 
   public void testUserEvaluation() throws Exception {

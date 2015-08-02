@@ -1,7 +1,6 @@
 package com.budgetview.analytics.model;
 
 import org.globsframework.metamodel.GlobType;
-import org.globsframework.metamodel.annotations.DefaultInteger;
 import org.globsframework.metamodel.annotations.Key;
 import org.globsframework.metamodel.annotations.Required;
 import org.globsframework.metamodel.fields.BooleanField;
@@ -9,7 +8,7 @@ import org.globsframework.metamodel.fields.DateField;
 import org.globsframework.metamodel.fields.IntegerField;
 import org.globsframework.metamodel.utils.GlobTypeLoader;
 
-public class UserProgressInfoEntry {
+public class OnboardingInfoEntry {
   public static GlobType TYPE;
 
   @Key
@@ -28,6 +27,6 @@ public class UserProgressInfoEntry {
   public static BooleanField GOTO_BUDGET_SHOWN;
 
   static {
-    GlobTypeLoader.init(UserProgressInfoEntry.class);
+    GlobTypeLoader.init(OnboardingInfoEntry.class);
   }
 }

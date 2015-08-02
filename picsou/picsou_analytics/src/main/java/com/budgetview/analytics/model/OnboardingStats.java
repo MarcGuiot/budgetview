@@ -5,10 +5,11 @@ import org.globsframework.metamodel.annotations.DefaultInteger;
 import org.globsframework.metamodel.annotations.Key;
 import org.globsframework.metamodel.annotations.Required;
 import org.globsframework.metamodel.fields.DateField;
+import org.globsframework.metamodel.fields.DoubleField;
 import org.globsframework.metamodel.fields.IntegerField;
 import org.globsframework.metamodel.utils.GlobTypeLoader;
 
-public class WeekUsageCount {
+public class OnboardingStats {
 
   public static GlobType TYPE;
 
@@ -31,25 +32,15 @@ public class WeekUsageCount {
   public static IntegerField CATEGORIZATION_FINISHED_ON_FIRST_TRY;
 
   @DefaultInteger(0)
-  public static IntegerField COMPLETED_ON_FIRST_TRY;
+  public static IntegerField ONBOARDING_COMPLETED_ON_FIRST_TRY;
 
-  @DefaultInteger(0)
-  public static IntegerField SECOND_TRY_COUNT;
+  public static DoubleField FIRST_TRY_COMPLETION_RATIO;
+  public static DoubleField BOUNCE_BEFORE_IMPORT_RATIO;
+  public static DoubleField COMPLETE_IMPORT_RATIO;
+  public static DoubleField COMPLETE_CATEGORIZATION_RATIO;
 
-  @DefaultInteger(0)
-  public static IntegerField IMPORT_STARTED_ON_SECOND_TRY;
-
-  @DefaultInteger(0)
-  public static IntegerField CATEGORIZATION_STARTED_ON_SECOND_TRY;
-
-  @DefaultInteger(0)
-  public static IntegerField CATEGORIZATION_FINISHED_ON_SECOND_TRY;
-
-  @DefaultInteger(0)
-  public static IntegerField COMPLETED_ON_SECOND_TRY;
 
   static {
-    GlobTypeLoader.init(WeekUsageCount.class);
+    GlobTypeLoader.init(OnboardingStats.class);
   }
-
 }

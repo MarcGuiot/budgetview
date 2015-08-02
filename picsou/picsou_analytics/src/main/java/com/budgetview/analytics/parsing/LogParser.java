@@ -195,9 +195,9 @@ public class LogParser {
                                GlobRepository repository) {
 
     FieldValuesBuilder values = new FieldValuesBuilder();
-    values.set(UserProgressInfoEntry.DATE, date);
-    UserProgressParser.parseValues(content.trim(), values);
+    values.set(OnboardingInfoEntry.DATE, date);
+    OnboardingParser.parseValues(content.trim(), values);
 
-    repository.create(UserProgressInfoEntry.TYPE, values.get().toArray());
+    repository.create(OnboardingInfoEntry.TYPE, values.get().toArray());
   }
 }

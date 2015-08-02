@@ -36,10 +36,6 @@ public class AnalyticsUtils {
     return result / 10;
   }
 
-  public static double lossRatio(int before, int after, int lost) {
-    return round2(((double)before - (double)after) / (double)lost);
-  }
-
   public static double ratio(int nominator, int denominator) {
     return round2((double)nominator / (double)denominator);
   }

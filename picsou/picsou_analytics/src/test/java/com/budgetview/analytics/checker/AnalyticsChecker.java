@@ -2,7 +2,7 @@ package com.budgetview.analytics.checker;
 
 import com.budgetview.analytics.Analytics;
 import com.budgetview.analytics.model.User;
-import com.budgetview.analytics.model.UserProgressInfoEntry;
+import com.budgetview.analytics.model.OnboardingInfoEntry;
 import com.budgetview.analytics.model.WeekStats;
 import junit.framework.Assert;
 import junit.framework.TestCase;
@@ -43,7 +43,7 @@ public class AnalyticsChecker {
   }
 
   public void checkUseInfo(Date date, FieldValue... values) {
-    doCheck(UserProgressInfoEntry.TYPE, UserProgressInfoEntry.DATE, date, values);
+    doCheck(OnboardingInfoEntry.TYPE, OnboardingInfoEntry.DATE, date, values);
   }
 
   public void checkWeekPerf(int weekId, FieldValue... values) {

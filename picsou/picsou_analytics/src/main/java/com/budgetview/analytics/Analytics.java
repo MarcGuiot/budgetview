@@ -21,7 +21,7 @@ public class Analytics {
 
     GlobPrinter.print(repository.getAll(WeekStats.TYPE).sort(WeekStats.ID));
 //    GlobPrinter.print(repository.getAll(User.TYPE, GlobMatchers.isNotNull(User.PURCHASE_DATE)).sort(User.PURCHASE_DATE));
-    GlobPrinter.print(repository.getAll(WeekUsageStats.TYPE).sort(WeekUsageStats.LAST_DAY));
+    GlobPrinter.print(repository.getAll(OnboardingStats.TYPE).sort(OnboardingStats.LAST_DAY));
   }
 
   public static GlobRepository load(String[] args) throws InvalidParameter, IOException {
@@ -81,14 +81,14 @@ public class Analytics {
       .safeApply(new ActiveUsersCountFunctor(repository), repository)
       .safeApply(new PurchaseCountFunctor(), repository);
 
-    repository.getAll(UserProgressInfoEntry.TYPE)
-      .safeApply(new UserProgressCountFunctor(), repository);
+    repository.getAll(OnboardingInfoEntry.TYPE)
+      .safeApply(new OnboardingCountFunctor(), repository);
 
     repository.getAll(WeekStats.TYPE)
       .safeApply(new WeekRatiosFunctor(), repository);
 
-    repository.getAll(WeekUsageCount.TYPE)
-      .safeApply(new UserProgressStatFunctor(), repository);
+    repository.getAll(OnboardingStats.TYPE)
+      .safeApply(new OnboardingStatFunctor(), repository);
 
     repository.completeChangeSet();
   }

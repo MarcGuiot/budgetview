@@ -1,9 +1,9 @@
 package com.budgetview.analytics.gui;
 
 import com.budgetview.analytics.model.Experiment;
+import com.budgetview.analytics.model.OnboardingStats;
 import com.budgetview.analytics.model.User;
 import com.budgetview.analytics.model.WeekStats;
-import com.budgetview.analytics.model.WeekUsageStats;
 import com.budgetview.analytics.utils.Weeks;
 import org.designup.picsou.gui.utils.Gui;
 import org.globsframework.gui.GlobSelection;
@@ -39,17 +39,14 @@ public class AnalyticsWindow {
                   WeekStats.REVENUE_RATIO);
 
   private static final List<Field> VOLUME_CHART_FIELDS =
-    Arrays.asList((Field)WeekStats.NEW_USERS,
+    Arrays.asList((Field) WeekStats.NEW_USERS,
                   WeekStats.TOTAL_ACTIVE_USERS,
                   WeekStats.TOTAL_PAID_ACTIVE_USERS,
                   WeekStats.NEW_PURCHASES);
 
-  private static final List<Field> USER_PROGRESS_FIELDS =
-    Arrays.asList((Field)WeekUsageStats.COMPLETION_RATE_ON_FIRST_TRY,
-                  WeekUsageStats.LOSS_BEFORE_FIRST_IMPORT,
-                  WeekUsageStats.LOSS_DURING_FIRST_IMPORT,
-                  WeekUsageStats.LOSS_DURING_FIRST_CATEGORIZATION,
-                  WeekUsageStats.LOSS_AFTER_FIRST_CATEGORIZATION);
+  private static final List<Field> ONBOARDING_FIELDS =
+    Arrays.asList((Field) OnboardingStats.FIRST_TRY_COUNT,
+                  OnboardingStats.FIRST_TRY_COMPLETION_RATIO);
 
   private GlobRepository repository;
   private Directory directory;
@@ -81,7 +78,7 @@ public class AnalyticsWindow {
     addVolumeElements(builder);
     addWeekElements(builder);
     addUserElements(builder);
-    addUserProgressElements(builder);
+    addOnboardingElements(builder);
 
     setupSelectionListeners();
 
@@ -95,14 +92,14 @@ public class AnalyticsWindow {
         GlobList experiments = selection.getAll(Experiment.TYPE);
         if (experiments.isEmpty()) {
           selectionService.clear(WeekStats.TYPE);
-          selectionService.clear(WeekUsageStats.TYPE);
+          selectionService.clear(OnboardingStats.TYPE);
           selectionService.clear(User.TYPE);
           return;
         }
 
         int weekId = experiments.getFirst().get(Experiment.WEEK);
         selectStat(weekId, WeekStats.TYPE);
-        selectStat(weekId, WeekUsageStats.TYPE);
+        selectStat(weekId, OnboardingStats.TYPE);
 
         GlobList users =
           repository.getAll(User.TYPE,
@@ -160,12 +157,6 @@ public class AnalyticsWindow {
       .addColumn(WeekStats.TOTAL_PAID_ACTIVE_USERS);
   }
 
-  private void addUserProgressElements(GlobsPanelBuilder builder) {
-    builder.addRepeat("userProgressCharts", USER_PROGRESS_FIELDS,
-                      new FieldRepeatComponentFactory(WeekUsageStats.ID, USER_PROGRESS_FIELDS,
-                                                      repository, directory));
-  }
-
   private void addUserElements(GlobsPanelBuilder builder) {
     builder.addTable("users", User.TYPE, descending(User.FIRST_DATE))
       .addColumn(User.ID)
@@ -178,5 +169,24 @@ public class AnalyticsWindow {
       .addColumn(User.DAYS_BEFORE_PURCHASE)
       .addColumn(User.PURCHASE_DATE)
       .addColumn(User.LOST);
+  }
+
+  private void addOnboardingElements(GlobsPanelBuilder builder) {
+    builder.addRepeat("onboardingCharts", ONBOARDING_FIELDS,
+                      new FieldRepeatComponentFactory(OnboardingStats.ID, ONBOARDING_FIELDS,
+                                                      repository, directory));
+
+    builder.addTable("onboarding", OnboardingStats.TYPE, descending(OnboardingStats.LAST_DAY))
+      .addColumn(OnboardingStats.LAST_DAY)
+      .addColumn(OnboardingStats.FIRST_TRY_COUNT)
+      .addColumn(OnboardingStats.IMPORT_STARTED_ON_FIRST_TRY)
+      .addColumn(OnboardingStats.CATEGORIZATION_STARTED_ON_FIRST_TRY)
+      .addColumn(OnboardingStats.CATEGORIZATION_FINISHED_ON_FIRST_TRY)
+      .addColumn(OnboardingStats.ONBOARDING_COMPLETED_ON_FIRST_TRY)
+      .addColumn(OnboardingStats.FIRST_TRY_COMPLETION_RATIO)
+      .addColumn(OnboardingStats.BOUNCE_BEFORE_IMPORT_RATIO)
+      .addColumn(OnboardingStats.COMPLETE_IMPORT_RATIO)
+      .addColumn(OnboardingStats.COMPLETE_CATEGORIZATION_RATIO);
+
   }
 }
