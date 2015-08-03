@@ -66,6 +66,16 @@ public class ImportDialogChecker extends GuiChecker {
     return this;
   }
 
+  public ImportDialogChecker checkFileImportEnabled() {
+    assertTrue(getImportButton().isEnabled());
+    return this;
+  }
+
+  public ImportDialogChecker checkFileImportDisabled() {
+    assertFalse(getImportButton().isEnabled());
+    return this;
+  }
+
   public ImportDialogChecker acceptFile() {
     getImportButton().click();
     return this;

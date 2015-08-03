@@ -36,6 +36,7 @@ public class ImportedFileSelectionPanel extends AbstractImportStepPanel implemen
   private JEditorPane importMessage = new JEditorPane();
   private String lastExceptionDetails;
   private BankDownloadPanel bankDownload;
+  private ImportAction importAction;
 
   public ImportedFileSelectionPanel(PicsouDialog dialog,
                                     String textForCloseButton,
@@ -61,8 +62,10 @@ public class ImportedFileSelectionPanel extends AbstractImportStepPanel implemen
     builder.add("importMessage", importMessage);
     builder.add("filePanel", filePanel);
     builder.add("fileField", fileField);
-    builder.add("browseFiles", new BrowseFilesAction(fileField, localRepository, usePreferredPath, dialog));
-    builder.add("import", new ImportAction());
+    importAction = new ImportAction();
+    builder.add("browseFiles", new BrowseFilesAction(importAction, fileField, localRepository, usePreferredPath, dialog));
+    builder.add("import", importAction);
+    updateImportAction();
     builder.add("close", new AbstractAction(textForCloseButton) {
       public void actionPerformed(ActionEvent e) {
         controller.complete();
@@ -92,8 +95,13 @@ public class ImportedFileSelectionPanel extends AbstractImportStepPanel implemen
     fileField.getDocument().addDocumentListener(new AbstractDocumentListener() {
       protected void documentChanged(DocumentEvent e) {
         clearErrorMessage();
+        updateImportAction();
       }
     });
+  }
+
+  private void updateImportAction() {
+    importAction.setEnabled(Strings.isNotEmpty(fileField.getText()));
   }
 
   private void clearErrorMessage() {

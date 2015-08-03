@@ -27,23 +27,22 @@ public class ImportTest extends LoggedInFunctionalTestCase {
       .addTransaction("2006/01/10", -1.1, "Menu K")
       .save();
 
-    operations.openImportDialog()
+    ImportDialogChecker importDialog = operations.openImportDialog();
+    importDialog
       .checkNoErrorMessage()
       .checkHeaderMessage("Select an OFX or QIF file to import")
-      .acceptFile()
-      .checkErrorMessage("login.data.file.required")
+      .checkFileImportDisabled()
       .setFilePath("blah.ofx")
+      .checkFileImportEnabled()
       .checkNoErrorMessage()
       .acceptFile()
-      .checkErrorMessage("login.data.file.not.found")
+      .checkErrorMessage("login.data.file.not.found");
+    importDialog
       .browseAndSelect(path)
-      .checkFilePath(path)
-      .checkNoErrorMessage()
-      .acceptFile()
-      .setMainAccount()
       .checkFileContent(new Object[][]{
         {"2006/01/10", "Menu K", "-1.10"}
       })
+      .setMainAccount()
       .completeImport();
 
     transactions

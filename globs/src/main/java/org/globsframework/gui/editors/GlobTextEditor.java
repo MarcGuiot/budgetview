@@ -22,10 +22,6 @@ public class GlobTextEditor extends AbstractGlobTextEditor<JTextField, GlobTextE
     super(field, component, repository, directory);
   }
 
-  protected void registerActions() {
-//    textComponent.addActionListener(validationAction);
-  }
-
   public GlobTextEditor setValidationAction(Action action) {
     if (this.validationAction != null){
       textComponent.removeActionListener(validationAction);

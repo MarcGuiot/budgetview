@@ -64,13 +64,9 @@ public abstract class AbstractGlobTextEditor<COMPONENT_TYPE extends JTextCompone
     textComponent.setEnabled(false);
     textComponent.setEditable(false);
     textComponent.setText("");
-    registerActions();
     registerFocusLostListener();
     registerActionListener();
     registerKeyPressedListener();
-  }
-
-  protected void registerActions() {
   }
 
   private void registerKeyPressedListener() {
