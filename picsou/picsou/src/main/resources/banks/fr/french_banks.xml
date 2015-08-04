@@ -30,7 +30,7 @@
       <bankEntity id="16218"/>
     </bank>
 
-    <bank name="Banque Accord" url="http://www.banque-accord.fr" id="1008">
+    <bank name="Banque Accord" country="fr" url="http://www.banque-accord.fr" id="1008">
       <bankEntity id="12869"/>
     </bank>
 

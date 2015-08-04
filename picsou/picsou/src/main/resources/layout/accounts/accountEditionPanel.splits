@@ -1,6 +1,12 @@
 <splits xmlns="http://www.globsframework.org/xml/splits.xsd">
 
   <styleImport file="/layout/commonStyles.splits"/>
+  <styles>
+    <style selector="button#bankSelector"
+           anchor="southwest" font="-,bold,12" foreground="hyperlink" border="empty(2,0,0,2)"
+           icon="downArrow(10,18,8,8,hyperlink)"
+           iconTextGap="5" horizontalAlignment="left" horizontalTextPosition="left"/>
+  </styles>
 
   <cards ref="cards">
     <card name="editable">
@@ -15,7 +21,6 @@
 
           <label text="$account.bank" gridPos="(0,1)" styleClass="formLabel"/>
           <row gridPos="(1,1,4,1)" marginBottom="10">
-            <label ref="bankLabel" font="-,bold,12" border="empty(0,0,0,5)" horizontalAlignment="left" weightY="0.01"/>
             <button ref="bankSelector" styleClass="itemLink"/>
             <label ref="bankFlag" styleClass="mandatoryFieldFlag"/>
             <filler fill="horizontal"/>

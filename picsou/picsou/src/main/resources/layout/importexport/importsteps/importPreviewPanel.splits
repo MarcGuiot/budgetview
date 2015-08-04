@@ -42,12 +42,12 @@
 
       <panel ref="dateSelectionPanel"/>
 
-      <column weightY="0.01">
-        <label ref="accountSelectionLabel" styleClass="formLabel" autoHideSource="accountCombo"
-               fill="none" anchor="center" marginBottom="5"/>
-        <comboBox ref="accountCombo"
-                  fill="none" anchor="center" marginBottom="5"/>
-      </column>
+      <row weightY="0.01" margin="10" autoHideSource="accountCombo">
+        <filler fill="horizontal"/>
+        <label ref="accountSelectionLabel" styleClass="formLabel"/>
+        <comboBox ref="accountCombo"/>
+        <filler fill="horizontal"/>
+      </row>
 
       <panel weightY="0.01" background="import.preview.account.bg" border="line(dialog.border)">
         <panel ref="accountEditionPanel" margin="10"/>

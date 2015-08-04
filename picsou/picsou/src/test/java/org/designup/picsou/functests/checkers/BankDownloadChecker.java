@@ -63,7 +63,7 @@ public class BankDownloadChecker extends BankChooserPanelChecker<BankDownloadChe
   }
 
   public void enterTransactionsManually() {
-    window.getTextBox("manualInput").clickOnHyperlink("enter transactions manually");
+    window.getButton("manualEntry").click();
     assertFalse(window.isVisible());
   }
 }

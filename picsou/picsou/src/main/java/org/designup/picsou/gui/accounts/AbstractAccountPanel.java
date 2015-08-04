@@ -18,7 +18,6 @@ import org.globsframework.gui.SelectionService;
 import org.globsframework.gui.editors.GlobTextEditor;
 import org.globsframework.gui.splits.SplitsLoader;
 import org.globsframework.gui.splits.SplitsNode;
-import org.globsframework.gui.splits.utils.Disposable;
 import org.globsframework.metamodel.fields.DoubleField;
 import org.globsframework.model.*;
 import org.globsframework.model.format.DescriptionService;
@@ -47,8 +46,7 @@ public class AbstractAccountPanel<T extends GlobRepository> {
   private SelectionService selectionService;
   protected AccountTypeCombo accountTypeCombo;
   protected GlobTextEditor nameField;
-  private JLabel accountBank;
-  private AccountBankAction bankSelectionAction;
+  private BankSelectionAction bankSelectionAction;
   private JButton bankSelectionButton;
   private ErrorTip errorTip;
   private MandatoryFieldFlag nameFlag;
@@ -73,9 +71,7 @@ public class AbstractAccountPanel<T extends GlobRepository> {
     builder.add("accountTypeHelp", new HelpAction(Lang.get("account.panel.type.help"), "accountTypes",
                                                   Lang.get("help"), localDirectory, dialog));
 
-    accountBank = builder.add("bankLabel", new JLabel()).getComponent();
-
-    bankSelectionAction = new AccountBankAction(dialog);
+    bankSelectionAction = new BankSelectionAction(dialog);
     bankSelectionButton = new JButton(bankSelectionAction);
     builder.add("bankSelector", bankSelectionButton);
     bankFlag = new MandatoryFieldFlag("bankFlag", builder);
@@ -254,10 +250,10 @@ public class AbstractAccountPanel<T extends GlobRepository> {
     nameField.getComponent().requestFocus();
   }
 
-  private class AccountBankAction extends AbstractAction implements GlobSelectionListener {
+  private class BankSelectionAction extends AbstractAction implements GlobSelectionListener {
     private Window dialog;
 
-    public AccountBankAction(Window dialog) {
+    public BankSelectionAction(Window dialog) {
       this.dialog = dialog;
     }
 
@@ -291,19 +287,16 @@ public class AbstractAccountPanel<T extends GlobRepository> {
 
   private void updateBank(Glob account) {
     if (account == null) {
-      accountBank.setText("");
       bankSelectionAction.setText(Lang.get("account.bankSelector.choose"));
     }
     else {
       Glob bank = localRepository.findLinkTarget(account, Account.BANK);
       if (bank == null) {
-        accountBank.setText("");
         bankSelectionAction.setText(Lang.get("account.bankSelector.choose"));
       }
       else {
-        accountBank.setText(localDirectory.get(DescriptionService.class).getStringifier(Bank.TYPE)
-                              .toString(bank, localRepository));
-        bankSelectionAction.setText(Lang.get("account.bankSelector.modify"));
+        DescriptionService descriptionService = localDirectory.get(DescriptionService.class);
+        bankSelectionAction.setText(descriptionService.getStringifier(Bank.TYPE).toString(bank, localRepository));
       }
     }
   }

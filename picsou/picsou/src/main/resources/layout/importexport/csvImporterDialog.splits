@@ -4,13 +4,13 @@
   <styleImport file="/layout/dialogStyles.splits"/>
 
   <styles>
-    <style selector="header label" font="-,plain,11"
+    <style selector="header label" font="-,plain,12"
            foreground="block.inner.columnTitle" horizontalTextPosition="right"
            fill="none"/>
     <style selector="column#association" margin="4"/>
     <style selector="label#first" font="-,bold,13" fill="none" anchor="right"
            marginRight="10" marginBottom="5" marginTop="5"/>
-    <style selector="label#second" marginLeft="10" font="-,plain,11" fill="none" anchor="right" marginRight="10"/>
+    <style selector="label#second" marginLeft="10" font="-,plain,12" fill="none" anchor="right" marginRight="10"/>
     <style selector="comboBox#dataName"  marginBottom="5" marginTop="5"/>
     <style selector="scrollPane" border="matte(1,1,0,1,block.inner.border)"/>
   </styles>

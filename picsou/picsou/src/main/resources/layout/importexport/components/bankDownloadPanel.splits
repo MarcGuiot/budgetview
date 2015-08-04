@@ -5,13 +5,13 @@
 
   <styles>
     <style selector="htmlEditorPane" hyperlinkListener="hyperlinkHandler"/>
-    <style selector="htmlEditorPane.multiLineLabel" font="-,plain,11"/>
+    <style selector="htmlEditorPane.multiLineLabel" font="-,plain,12"/>
     <style selector="button.synchronize" marginTop="10" fill="none" anchor="center"/>
     <style selector="button.rightButton" fill="none" anchor="right" weightX="0.1"/>
     <style selector="label.nextArrow" border="empty(0,5,0,0)" icon="rightArrow(18,18,12,12,#999999)"/>
     <style selector=".accountPanel" weightY="50"/>
-    <style selector="button.backButton"
-           marginTop="5" fill="none" anchor="left"
+    <style selector="button.backButton" border="empty(5,0,0,0)"
+           fill="none" anchor="left"
            ui="hyperlinkButton" foreground="hyperlink"
            font="-,plain,12"
            icon="leftArrow(10,14,8,8, #222222)"
@@ -25,7 +25,7 @@
         <column>
           <column weightY="1">
             <label icon="import_synchro.png" text="$import.synchroSelection.synchro.title" styleClass="sectionTitle"/>
-            <htmlEditorPane text="$import.synchroSelection.synchro.intro" marginBottom="5" font="-,plain,11"
+            <htmlEditorPane text="$import.synchroSelection.synchro.intro" marginBottom="5" font="-,plain,12"
                             styleClass="multiLineLabel"/>
             <row>
               <component ref="synchroAccountsPanel" styleClass="accountPanel"/>
@@ -54,10 +54,10 @@
           <label icon="import_bank.png" text="$import.fileSelection.bank.title" styleClass="sectionTitle"
                  marginTop="10"/>
 
-          <htmlEditorPane text="$bankDownload.select" marginBottom="5" font="-,plain,11" styleClass="multiLineLabel"
+          <htmlEditorPane text="$bankDownload.select" marginBottom="5" font="-,plain,12" styleClass="multiLineLabel"
                           weightY="0.1"/>
 
-          <row marginLeft="10" weightY="100">
+          <row marginTop="5" marginLeft="10" weightY="100">
 
             <column weightX="2" preferredSize="(200,200)">
               <panel ref="bankChooserPanel"/>

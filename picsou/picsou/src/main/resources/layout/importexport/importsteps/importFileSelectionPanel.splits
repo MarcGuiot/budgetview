@@ -5,7 +5,7 @@
   <styleImport file="/layout/importexport/components/importDialogStyles.splits"/>
 
   <styles>
-    <style selector="htmlEditorPane.multiLineLabel" font="-,plain,11"/>
+    <style selector="htmlEditorPane.multiLineLabel" font="-,plain,12"/>
   </styles>
 
   <panel styleClass="dialog" preferredSize="(600,690)">

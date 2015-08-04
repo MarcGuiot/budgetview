@@ -6,9 +6,8 @@ import org.designup.picsou.utils.Lang;
 import org.globsframework.model.format.Formats;
 import org.globsframework.utils.Dates;
 import org.jdesktop.swingx.JXDatePicker;
-import org.uispec4j.ComboBox;
-import org.uispec4j.TextBox;
-import org.uispec4j.Trigger;
+import org.uispec4j.*;
+import org.uispec4j.Button;
 import org.uispec4j.assertion.Assertion;
 import org.uispec4j.assertion.UISpecAssert;
 import org.uispec4j.interception.WindowInterceptor;
@@ -37,27 +36,30 @@ public class AccountEditionChecker extends GuiChecker {
   }
 
   public AccountEditionChecker selectBank(String bankName) {
-    BankChooserChecker.open(getBankButton().triggerClick())
+    Button bankButton = getBankButton();
+    BankChooserChecker.open(bankButton.triggerClick())
       .selectBank(bankName)
       .validate();
-    assertThat(dialog.getTextBox("bankLabel").textEquals(bankName));
+    assertThat(bankButton.textEquals(bankName));
     return this;
   }
 
   public AccountEditionChecker selectBank(String country, String bankName) {
-    BankChooserChecker.open(getBankButton().triggerClick())
+    org.uispec4j.Button bankButton = getBankButton();
+    BankChooserChecker.open(bankButton.triggerClick())
       .selectCountry(country)
       .selectBank(bankName)
       .validate();
-    assertThat(dialog.getTextBox("bankLabel").textEquals(bankName));
+    assertThat(bankButton.textEquals(bankName));
     return this;
   }
 
   public AccountEditionChecker selectNewBank(String bankName, String url) {
-    BankChooserChecker.open(getBankButton().triggerClick())
+    Button bankButton = getBankButton();
+    BankChooserChecker.open(bankButton.triggerClick())
       .addNewBank(bankName, url)
       .validate();
-    assertThat(dialog.getTextBox("bankLabel").textEquals(bankName));
+    assertThat(bankButton.textEquals(bankName));
     return this;
   }
 
@@ -113,14 +115,12 @@ public class AccountEditionChecker extends GuiChecker {
   }
 
   public AccountEditionChecker checkNoBankSelected() {
-    assertThat(dialog.getTextBox("bankLabel").textEquals(""));
     assertThat(getBankButton().textEquals("Click to select a bank"));
     return this;
   }
 
   public AccountEditionChecker checkSelectedBank(String name) {
-    assertThat(dialog.getTextBox("bankLabel").textEquals(name));
-    assertThat(getBankButton().textEquals("Modify"));
+    assertThat(getBankButton().textEquals(name));
     return this;
   }
   

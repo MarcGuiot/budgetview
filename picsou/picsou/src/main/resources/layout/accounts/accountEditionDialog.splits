@@ -13,7 +13,8 @@
            anchor="right" fill="none" weightX="0" marginLeft="5" font="-,plain,11"/>
 
     <style selector="button#bankSelector"
-           anchor="southeast" font="-,plain,11" icon="arrow_down_roll.png"
+           anchor="southwest" font="-,bold,12" foreground="hyperlink" border="empty(2,0,0,2)"
+           icon="downArrow(10,18,8,8,hyperlink)"
            iconTextGap="5" horizontalAlignment="left" horizontalTextPosition="left"/>
   </styles>
 
@@ -27,17 +28,13 @@
         <tab title="$account.tab.standard">
           <column margin="15">
             <grid defaultMarginBottom="5">
-              <label text="$account.name" gridPos="(0,0)" styleClass="formLabel"/>
+              <label text="$account.name" gridPos="(0,0)" styleClass="formLabel" marginBottom="10"/>
               <textField ref="name" gridPos="(1,0)" marginBottom="10"/>
-              <label ref="nameFlag" gridPos="(2,0)" styleClass="mandatoryFieldFlag"/>
+              <label ref="nameFlag" gridPos="(2,0)" styleClass="mandatoryFieldFlag" marginBottom="10"/>
 
-              <label text="$account.bank" gridPos="(0,1)" styleClass="formLabel"/>
-              <row gridPos="(1,1)" marginBottom="10">
-                <label ref="bankLabel" font="-,bold,12" border="empty(0,0,0,5)"/>
-                <button ref="bankSelector" styleClass="itemLink"/>
-                <filler fill="horizontal"/>
-              </row>
-              <label ref="bankFlag" gridPos="(2,1)" styleClass="mandatoryFieldFlag"/>
+              <label text="$account.bank" gridPos="(0,1)" styleClass="formLabel" marginBottom="10"/>
+              <button gridPos="(1,1)" ref="bankSelector" styleClass="itemLink" marginBottom="10"/>
+              <label ref="bankFlag" gridPos="(2,1)" styleClass="mandatoryFieldFlag" marginBottom="10"/>
 
               <label text="$account.position" gridPos="(0,2)" styleClass="formLabel" autoHideSource="position"/>
               <textField ref="position" gridPos="(1,2)"/>

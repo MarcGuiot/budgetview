@@ -10,123 +10,123 @@
 
         </bank>
 
-        <bank id="51" url="https://www.ca-alpesprovence.fr" name="Crédit Agricole Alpes Provence" shortName="Crédit Agricole"  synchroEnabled="true" icon="banks/credit_agricole.png">
+        <bank id="51" country="fr" url="https://www.ca-alpesprovence.fr" name="Crédit Agricole Alpes Provence" shortName="Crédit Agricole"  synchroEnabled="true" icon="banks/credit_agricole.png">
             <bankEntity id="11306"/>
         </bank>
-        <bank id="52" url="https://www.ca-anjou-maine.fr" name="Crédit Agricole Anjou Maine" shortName="Crédit Agricole"  synchroEnabled="true" icon="banks/credit_agricole.png">
+        <bank id="52" country="fr" url="https://www.ca-anjou-maine.fr" name="Crédit Agricole Anjou Maine" shortName="Crédit Agricole"  synchroEnabled="true" icon="banks/credit_agricole.png">
             <bankEntity id="17906"/>
         </bank>
-        <bank id="53" url="https://www.ca-atlantique-vendee.fr" name="Crédit Agricole Atlantique Vendée" shortName="Crédit Agricole"  synchroEnabled="true" icon="banks/credit_agricole.png">
+        <bank id="53" country="fr" url="https://www.ca-atlantique-vendee.fr" name="Crédit Agricole Atlantique Vendée" shortName="Crédit Agricole"  synchroEnabled="true" icon="banks/credit_agricole.png">
             <bankEntity id="14706"/>
         </bank>
-        <bank id="54" url="https://www.ca-aquitaine.fr" name="Crédit Agricole Aquitaine" shortName="Crédit Agricole"  synchroEnabled="true" icon="banks/credit_agricole.png">
+        <bank id="54" country="fr" url="https://www.ca-aquitaine.fr" name="Crédit Agricole Aquitaine" shortName="Crédit Agricole"  synchroEnabled="true" icon="banks/credit_agricole.png">
             <bankEntity id="13306"/>
         </bank>
-        <bank id="55" url="https://www.ca-briepicardie.fr" name="Crédit Agricole Brie Picardie" shortName="Crédit Agricole"  synchroEnabled="true" icon="banks/credit_agricole.png">
+        <bank id="55" country="fr" url="https://www.ca-briepicardie.fr" name="Crédit Agricole Brie Picardie" shortName="Crédit Agricole"  synchroEnabled="true" icon="banks/credit_agricole.png">
             <bankEntity id="18706"/>
         </bank>
-        <bank id="56" url="https://www.ca-centrest.fr" name="Crédit Agricole Centre Est" shortName="Crédit Agricole"  synchroEnabled="true" icon="banks/credit_agricole.png">
+        <bank id="56" country="fr" url="https://www.ca-centrest.fr" name="Crédit Agricole Centre Est" shortName="Crédit Agricole"  synchroEnabled="true" icon="banks/credit_agricole.png">
             <bankEntity id="17806"/>
         </bank>
-        <bank id="57" url="https://www.ca-centrefrance.fr" name="Crédit Agricole Centre France" shortName="Crédit Agricole"  synchroEnabled="true" icon="banks/credit_agricole.png">
+        <bank id="57" country="fr" url="https://www.ca-centrefrance.fr" name="Crédit Agricole Centre France" shortName="Crédit Agricole"  synchroEnabled="true" icon="banks/credit_agricole.png">
             <bankEntity id="16806"/>
         </bank>
-        <bank id="58" url="https://www.ca-centreloire.fr" name="Crédit Agricole Centre Loire" shortName="Crédit Agricole"  synchroEnabled="true" icon="banks/credit_agricole.png">
+        <bank id="58" country="fr" url="https://www.ca-centreloire.fr" name="Crédit Agricole Centre Loire" shortName="Crédit Agricole"  synchroEnabled="true" icon="banks/credit_agricole.png">
             <bankEntity id="14806"/>
         </bank>
-        <bank id="59" url="https://www.ca-centreouest.fr" name="Crédit Agricole Centre Ouest" shortName="Crédit Agricole"  synchroEnabled="true" icon="banks/credit_agricole.png">
+        <bank id="59" country="fr" url="https://www.ca-centreouest.fr" name="Crédit Agricole Centre Ouest" shortName="Crédit Agricole"  synchroEnabled="true" icon="banks/credit_agricole.png">
             <bankEntity id="19506"/>
         </bank>
-        <bank id="60" url="https://www.ca-cb.fr" name="Crédit Agricole Champagne Bourgogne" shortName="Crédit Agricole"  synchroEnabled="true" icon="banks/credit_agricole.png">
+        <bank id="60" country="fr" url="https://www.ca-cb.fr" name="Crédit Agricole Champagne Bourgogne" shortName="Crédit Agricole"  synchroEnabled="true" icon="banks/credit_agricole.png">
             <bankEntity id="11006"/>
         </bank>
-        <bank id="61" url="https://www.ca-charente-perigord.fr" name="Crédit Agricole Charente Périgord" shortName="Crédit Agricole"  synchroEnabled="true" icon="banks/credit_agricole.png">
+        <bank id="61" country="fr" url="https://www.ca-charente-perigord.fr" name="Crédit Agricole Charente Périgord" shortName="Crédit Agricole"  synchroEnabled="true" icon="banks/credit_agricole.png">
             <bankEntity id="12406"/>
         </bank>
-        <bank id="62" url="https://www.ca-cmds.fr" name="Crédit Agricole Charente-Maritime Deux-Sèvres" shortName="Crédit Agricole"  synchroEnabled="true" icon="banks/credit_agricole.png">
+        <bank id="62" country="fr" url="https://www.ca-cmds.fr" name="Crédit Agricole Charente-Maritime Deux-Sèvres" shortName="Crédit Agricole"  synchroEnabled="true" icon="banks/credit_agricole.png">
             <bankEntity id="11706"/>
         </bank>
-        <bank id="63" url="https://www.ca-corse.fr" name="Crédit Agricole Corse" shortName="Crédit Agricole"  synchroEnabled="true" icon="banks/credit_agricole.png">
+        <bank id="63" country="fr" url="https://www.ca-corse.fr" name="Crédit Agricole Corse" shortName="Crédit Agricole"  synchroEnabled="true" icon="banks/credit_agricole.png">
             <bankEntity id="12006"/>
         </bank>
-        <bank id="64" url="https://www.ca-cotesdarmor.fr" name="Crédit Agricole Côtes d'Armor" shortName="Crédit Agricole"  synchroEnabled="true" icon="banks/credit_agricole.png">
+        <bank id="64" country="fr" url="https://www.ca-cotesdarmor.fr" name="Crédit Agricole Côtes d'Armor" shortName="Crédit Agricole"  synchroEnabled="true" icon="banks/credit_agricole.png">
             <bankEntity id="12206"/>
         </bank>
-        <bank id="65" url="https://www.ca-des-savoie.fr" name="Crédit Agricole Des Savoie" shortName="Crédit Agricole"  synchroEnabled="true" icon="banks/credit_agricole.png">
+        <bank id="65" country="fr" url="https://www.ca-des-savoie.fr" name="Crédit Agricole Des Savoie" shortName="Crédit Agricole"  synchroEnabled="true" icon="banks/credit_agricole.png">
             <bankEntity id="18106"/>
         </bank>
-        <bank id="66" url="https://www.ca-finistere.fr" name="Crédit Agricole Finistere" shortName="Crédit Agricole"  synchroEnabled="true" icon="banks/credit_agricole.png">
+        <bank id="66" country="fr" url="https://www.ca-finistere.fr" name="Crédit Agricole Finistere" shortName="Crédit Agricole"  synchroEnabled="true" icon="banks/credit_agricole.png">
             <bankEntity id="12906"/>
         </bank>
-        <bank id="67" url="https://www.ca-paris.fr" name="Crédit Agricole Ile-de-France" shortName="Crédit Agricole"  synchroEnabled="true" icon="banks/credit_agricole.png">
+        <bank id="67" country="fr" url="https://www.ca-paris.fr" name="Crédit Agricole Ile-de-France" shortName="Crédit Agricole"  synchroEnabled="true" icon="banks/credit_agricole.png">
             <bankEntity id="18206"/>
         </bank>
-        <bank id="68" url="https://www.ca-illeetvilaine.fr" name="Crédit Agricole Ille-et-Vilaine" shortName="Crédit Agricole"  synchroEnabled="true" icon="banks/credit_agricole.png">
+        <bank id="68" country="fr" url="https://www.ca-illeetvilaine.fr" name="Crédit Agricole Ille-et-Vilaine" shortName="Crédit Agricole"  synchroEnabled="true" icon="banks/credit_agricole.png">
             <bankEntity id="13606"/>
         </bank>
-        <bank id="69" url="https://www.ca-languedoc.fr" name="Crédit Agricole Languedoc" shortName="Crédit Agricole"  synchroEnabled="true" icon="banks/credit_agricole.png">
+        <bank id="69" country="fr" url="https://www.ca-languedoc.fr" name="Crédit Agricole Languedoc" shortName="Crédit Agricole"  synchroEnabled="true" icon="banks/credit_agricole.png">
             <!--<bankEntity id="13006"/>-->
             <bankEntity id="13506"/>
         </bank>
-        <bank id="70" url="https://www.ca-loirehauteloire.fr" name="Crédit Agricole Loire Haute Loire" shortName="Crédit Agricole"  synchroEnabled="true" icon="banks/credit_agricole.png">
+        <bank id="70" country="fr" url="https://www.ca-loirehauteloire.fr" name="Crédit Agricole Loire Haute Loire" shortName="Crédit Agricole"  synchroEnabled="true" icon="banks/credit_agricole.png">
             <bankEntity id="14506"/>
         </bank>
-        <bank id="71" url="https://www.ca-lorraine.fr" name="Crédit Agricole Lorraine" shortName="Crédit Agricole"  synchroEnabled="true" icon="banks/credit_agricole.png">
+        <bank id="71" country="fr" url="https://www.ca-lorraine.fr" name="Crédit Agricole Lorraine" shortName="Crédit Agricole"  synchroEnabled="true" icon="banks/credit_agricole.png">
             <bankEntity id="16106"/>
         </bank>
-        <bank id="72" url="https://www.ca-martinique.fr" name="Crédit Agricole Martinique Guyane" shortName="Crédit Agricole"  synchroEnabled="true" icon="banks/credit_agricole.png">
+        <bank id="72" country="fr" url="https://www.ca-martinique.fr" name="Crédit Agricole Martinique Guyane" shortName="Crédit Agricole"  synchroEnabled="true" icon="banks/credit_agricole.png">
             <bankEntity id="19806"/>
         </bank>
-        <bank id="73" url="https://www.ca-morbihan.fr" name="Crédit Agricole Morbihan" shortName="Crédit Agricole"  synchroEnabled="true" icon="banks/credit_agricole.png">
+        <bank id="73" country="fr" url="https://www.ca-morbihan.fr" name="Crédit Agricole Morbihan" shortName="Crédit Agricole"  synchroEnabled="true" icon="banks/credit_agricole.png">
             <bankEntity id="16006"/>
         </bank>
-        <bank id="74" url="https://www.ca-norddefrance.fr" name="Crédit Agricole Nord de France" shortName="Crédit Agricole"  synchroEnabled="true" icon="banks/credit_agricole.png">
+        <bank id="74" country="fr" url="https://www.ca-norddefrance.fr" name="Crédit Agricole Nord de France" shortName="Crédit Agricole"  synchroEnabled="true" icon="banks/credit_agricole.png">
             <bankEntity id="16706"/>
         </bank>
-        <bank id="75" url="https://www.ca-nord-est.fr" name="Crédit Agricole Nord Est" shortName="Crédit Agricole"  synchroEnabled="true" icon="banks/credit_agricole.png">
+        <bank id="75" country="fr" url="https://www.ca-nord-est.fr" name="Crédit Agricole Nord Est" shortName="Crédit Agricole"  synchroEnabled="true" icon="banks/credit_agricole.png">
             <bankEntity id="10206"/>
         </bank>
-        <bank id="76" url="https://www.ca-nmp.fr" name="Crédit Agricole Nord Midi-Pyrénées" shortName="Crédit Agricole"  synchroEnabled="true" icon="banks/credit_agricole.png">
+        <bank id="76" country="fr" url="https://www.ca-nmp.fr" name="Crédit Agricole Nord Midi-Pyrénées" shortName="Crédit Agricole"  synchroEnabled="true" icon="banks/credit_agricole.png">
             <bankEntity id="11206"/>
         </bank>
-        <bank id="77" url="https://www.ca-normandie.fr" name="Crédit Agricole Normandie" shortName="Crédit Agricole"  synchroEnabled="true" icon="banks/credit_agricole.png">
+        <bank id="77" country="fr" url="https://www.ca-normandie.fr" name="Crédit Agricole Normandie" shortName="Crédit Agricole"  synchroEnabled="true" icon="banks/credit_agricole.png">
             <bankEntity id="16606"/>
         </bank>
-        <bank id="78" url="https://www.ca-normandie-seine.fr" name="Crédit Agricole Normandie Seine" shortName="Crédit Agricole"  synchroEnabled="true" icon="banks/credit_agricole.png">
+        <bank id="78" country="fr" url="https://www.ca-normandie-seine.fr" name="Crédit Agricole Normandie Seine" shortName="Crédit Agricole"  synchroEnabled="true" icon="banks/credit_agricole.png">
             <bankEntity id="18306"/>
         </bank>
-        <bank id="79" url="https://www.ca-pca.fr" name="Crédit Agricole Provence Côte d'Azur" shortName="Crédit Agricole"  synchroEnabled="true" icon="banks/credit_agricole.png">
+        <bank id="79" country="fr" url="https://www.ca-pca.fr" name="Crédit Agricole Provence Côte d'Azur" shortName="Crédit Agricole"  synchroEnabled="true" icon="banks/credit_agricole.png">
             <bankEntity id="19106"/>
         </bank>
-        <bank id="80" url="https://www.lefil.com" name="Crédit Agricole Pyrénées Gascogne" shortName="Crédit Agricole"  synchroEnabled="true" icon="banks/credit_agricole.png">
+        <bank id="80" country="fr" url="https://www.lefil.com" name="Crédit Agricole Pyrénées Gascogne" shortName="Crédit Agricole"  synchroEnabled="true" icon="banks/credit_agricole.png">
             <bankEntity id="16906"/>
         </bank>
-        <bank id="81" url="https://www.ca-reunion.fr" name="Crédit Agricole Réunion" shortName="Crédit Agricole"  synchroEnabled="true" icon="banks/credit_agricole.png">
+        <bank id="81" country="fr" url="https://www.ca-reunion.fr" name="Crédit Agricole Réunion" shortName="Crédit Agricole"  synchroEnabled="true" icon="banks/credit_agricole.png">
             <bankEntity id="19906"/>
         </bank>
-        <bank id="82" url="https://www.ca-sudrhonealpes.fr" name="Crédit Agricole Sud Rhône Alpes" shortName="Crédit Agricole"  synchroEnabled="true" icon="banks/credit_agricole.png">
+        <bank id="82" country="fr" url="https://www.ca-sudrhonealpes.fr" name="Crédit Agricole Sud Rhône Alpes" shortName="Crédit Agricole"  synchroEnabled="true" icon="banks/credit_agricole.png">
             <bankEntity id="13906"/>
         </bank>
-        <bank id="83" url="https://www.ca-sudmed.fr" name="Crédit Agricole Sud Méditerranée" shortName="Crédit Agricole"  synchroEnabled="true" icon="banks/credit_agricole.png">
+        <bank id="83" country="fr" url="https://www.ca-sudmed.fr" name="Crédit Agricole Sud Méditerranée" shortName="Crédit Agricole"  synchroEnabled="true" icon="banks/credit_agricole.png">
             <bankEntity id="17106"/>
         </bank>
-        <bank id="84" url="https://www.ca-toulouse31.fr" name="Crédit Agricole Toulouse 31" shortName="Crédit Agricole"  synchroEnabled="true" icon="banks/credit_agricole.png">
+        <bank id="84" country="fr" url="https://www.ca-toulouse31.fr" name="Crédit Agricole Toulouse 31" shortName="Crédit Agricole"  synchroEnabled="true" icon="banks/credit_agricole.png">
             <bankEntity id="13106"/>
         </bank>
-        <bank id="85" url="https://www.ca-tourainepoitou.fr" name="Crédit Agricole Tourraine Poitou" shortName="Crédit Agricole"  synchroEnabled="true" icon="banks/credit_agricole.png">
+        <bank id="85" country="fr" url="https://www.ca-tourainepoitou.fr" name="Crédit Agricole Tourraine Poitou" shortName="Crédit Agricole"  synchroEnabled="true" icon="banks/credit_agricole.png">
             <bankEntity id="19406"/>
         </bank>
-        <bank id="86" url="https://www.ca-franchecomte.fr/" name="Crédit Agricole Franche Comté" shortName="Crédit Agricole"  synchroEnabled="true" icon="banks/credit_agricole.png">
+        <bank id="86" country="fr" url="https://www.ca-franchecomte.fr/" name="Crédit Agricole Franche Comté" shortName="Crédit Agricole"  synchroEnabled="true" icon="banks/credit_agricole.png">
             <bankEntity id="12506"/>
         </bank>
-        <bank id="87" url="https://www.ca-valdefrance.fr/" name="Crédit Agricole Val de France" shortName="Crédit Agricole"  synchroEnabled="true" icon="banks/credit_agricole.png">
+        <bank id="87" country="fr" url="https://www.ca-valdefrance.fr/" name="Crédit Agricole Val de France" shortName="Crédit Agricole"  synchroEnabled="true" icon="banks/credit_agricole.png">
             <bankEntity id="14406"/>
         </bank>
-        <bank id="88" url="https://www.ca-guadeloupe.fr/" name="Crédit Agricole de la Guadeloupe" shortName="Crédit Agricole"  synchroEnabled="true" icon="banks/credit_agricole.png">
+        <bank id="88" country="fr" url="https://www.ca-guadeloupe.fr/" name="Crédit Agricole de la Guadeloupe" shortName="Crédit Agricole"  synchroEnabled="true" icon="banks/credit_agricole.png">
             <bankEntity id="14006"/>
         </bank>
 
-        <bank id="99" url="https://www.alsace-enligne.credit-agricole.fr" name="Crédit Agricole Alsace Vosges" shortName="Crédit Agricole" synchroEnabled="false">
+        <bank id="99" country="fr" url="https://www.alsace-enligne.credit-agricole.fr" name="Crédit Agricole Alsace Vosges" shortName="Crédit Agricole" synchroEnabled="false">
             <bankEntity id="17206"/>
         </bank>
 

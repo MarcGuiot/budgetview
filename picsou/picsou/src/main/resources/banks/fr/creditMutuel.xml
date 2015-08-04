@@ -15,89 +15,89 @@
     </bankFormat>
 
     <bankFormat id='15'>
-        <bank id='200' name="Crédit Mutuel Sud-Ouest (Arkéa)" url="https://www.cmso.com/banque/assurance/credit-mutuel/web/j_6/accueil"
+        <bank id='200' name="Crédit Mutuel Sud-Ouest (Arkéa)" country="fr" url="https://www.cmso.com/banque/assurance/credit-mutuel/web/j_6/accueil"
               downloadUrl="https://www.cmso.com/banque/assurance/credit-mutuel/web/j_6/accueil" synchroEnabled="false">
             <bankEntity id="15589"/>
         </bank>
 
-        <bank id='201' name="Crédit Mutuel Anjou" url="https://www.creditmutuel.fr/cma/fr/banques/accueil.html"
+        <bank id='201' name="Crédit Mutuel Anjou" country="fr" url="https://www.creditmutuel.fr/cma/fr/banques/accueil.html"
               downloadUrl="https://www.creditmutuel.fr/cma/fr/banques/accueil.html" synchroEnabled="false">
             <bankEntity id="15829"/>
         </bank>
 
-        <bank id='202' name="Crédit Mutuel Antilles-Guyane" url="https://www.creditmutuel.fr/cmag/fr/"
+        <bank id='202' name="Crédit Mutuel Antilles-Guyane" country="fr" url="https://www.creditmutuel.fr/cmag/fr/"
               downloadUrl="https://www.creditmutuel.fr/cmag/fr/" synchroEnabled="false">
             <bankEntity id="16159"/>
             <bankEntity id="15358"/> <!--Crédit Mutuel Guadeloupe Outre-Mer -->
         </bank>
 
-        <bank id='203' name="Crédit Mutuel Bretagne" url="https://www.cmb.fr"
+        <bank id='203' name="Crédit Mutuel Bretagne" country="fr" url="https://www.cmb.fr"
               downloadUrl="https://www.cmb.fr" synchroEnabled="false">
             <bankEntity id="17149"/>
         </bank>
 
-        <bank id='204' name="Crédit Mutuel Normandie" url="https://www.creditmutuel.fr/cmnormandie/fr/banques/accueil.html"
+        <bank id='204' name="Crédit Mutuel Normandie" country="fr" url="https://www.creditmutuel.fr/cmnormandie/fr/banques/accueil.html"
               downloadUrl="https://www.creditmutuel.fr/cmnormandie/fr/banques/accueil.html" synchroEnabled="false">
             <bankEntity id="15959"/>
         </bank>
 
-        <bank id='205' name="Crédit Mutuel centre" url="https://www.creditmutuel.fr/cmc/fr/banques/accueil.html"
+        <bank id='205' name="Crédit Mutuel centre" country="fr" url="https://www.creditmutuel.fr/cmc/fr/banques/accueil.html"
               downloadUrl="https://www.creditmutuel.fr/cmc/fr/banques/accueil.html" synchroEnabled="false">
             <bankEntity id="15459"/>
         </bank>
 
 
-        <bank id='206' name="Crédit Mutuel Centre Est Europe" url="https://www.creditmutuel.fr/cmcee/fr/banques/accueil.html"
+        <bank id='206' name="Crédit Mutuel Centre Est Europe" country="fr" url="https://www.creditmutuel.fr/cmcee/fr/banques/accueil.html"
               downloadUrl="https://www.creditmutuel.fr/cmcee/fr/banques/accueil.html" synchroEnabled="false">
             <!--<bankEntity id="xxx"/>-->
         </bank>
 
-        <bank id='207' name="Crédit Mutuel Dauphiné-Vivarais" url="https://www.creditmutuel.fr/cmdv/fr/banques/accueil.html"
+        <bank id='207' name="Crédit Mutuel Dauphiné-Vivarais" country="fr" url="https://www.creditmutuel.fr/cmdv/fr/banques/accueil.html"
               downloadUrl="https://www.creditmutuel.fr/cmdv/fr/banques/accueil.html" synchroEnabled="false">
             <!--<bankEntity id="xxxx"/>-->
         </bank>
 
-        <bank id='208' name="Crédit Mutuel Loire-Atlantique, Centre Ouest" url="https://www.creditmutuel.fr/cmlaco/fr/banques/accueil.html"
+        <bank id='208' name="Crédit Mutuel Loire-Atlantique, Centre Ouest" country="fr" url="https://www.creditmutuel.fr/cmlaco/fr/banques/accueil.html"
               downloadUrl="https://www.creditmutuel.fr/cmlaco/fr/banques/accueil.html" synchroEnabled="false">
             <bankEntity id="16179"/>
             <bankEntity id="15749"/> <!-- banque federale -->
         </bank>
 
-        <bank id='209' name="Crédit Mutuel Maine-Anjou, Basse-Normandie" url="https://www.creditmutuel.fr/cmmabn/fr/banques/index.html"
+        <bank id='209' name="Crédit Mutuel Maine-Anjou, Basse-Normandie" country="fr" url="https://www.creditmutuel.fr/cmmabn/fr/banques/index.html"
               downloadUrl="https://www.creditmutuel.fr/cmmabn/fr/banques/index.html" synchroEnabled="false">
             <bankEntity id="15489"/>
         </bank>
 
-        <bank id='210' name="Crédit Mutuel Méditerranéen" url="https://www.creditmutuel.fr/cmm/fr/banques/accueil.html"
+        <bank id='210' name="Crédit Mutuel Méditerranéen" country="fr" url="https://www.creditmutuel.fr/cmm/fr/banques/accueil.html"
               downloadUrl="https://www.creditmutuel.fr/cmm/fr/banques/index.html" synchroEnabled="false">
             <bankEntity id="15899"/>
         </bank>
 
-        <bank id='211' name="Crédit Mutuel Midi-Atlantique" url="https://www.creditmutuel.fr/cmma/fr/banques/accueil.html"
+        <bank id='211' name="Crédit Mutuel Midi-Atlantique" country="fr" url="https://www.creditmutuel.fr/cmma/fr/banques/accueil.html"
               downloadUrl="https://www.creditmutuel.fr/cmma/fr/banques/index.html" synchroEnabled="false">
             <!--<bankEntity id="11628"/>-->
         </bank>
 
-        <bank id='212' name="Crédit Mutuel Nord Europe" url="https://www.creditmutuel.fr/cmne/fr/index.html"
+        <bank id='212' name="Crédit Mutuel Nord Europe" country="fr" url="https://www.creditmutuel.fr/cmne/fr/index.html"
               downloadUrl="https://www.creditmutuel.fr/cmne/fr/identification/index.html" synchroEnabled="false">
             <bankEntity id="13298"/>
             <bankEntity id="15629"/>
         </bank>
 
-        <bank id='213' name="Crédit Mutuel Océan" url="https://www.creditmutuel.fr/cmo/fr/index.html"
+        <bank id='213' name="Crédit Mutuel Océan" country="fr" url="https://www.creditmutuel.fr/cmo/fr/index.html"
               downloadUrl="https://www.creditmutuel.fr/cmo/fr/index.html" synchroEnabled="false">
             <bankEntity id="15519"/>
         </bank>
 
-        <bank id='214' name="Crédit Mutuel Sud-Est" url="https://www.creditmutuel.fr/cmse/fr/index.html"
+        <bank id='214' name="Crédit Mutuel Sud-Est" country="fr" url="https://www.creditmutuel.fr/cmse/fr/index.html"
               downloadUrl="https://www.creditmutuel.fr/cmse/fr/banques/index.html" synchroEnabled="false">
         </bank>
-        <bank id='215' name="Crédit Mutuel Ile-de-France" url="https://www.creditmutuel.fr/cmidf/fr/banques/accueil.html"
+        <bank id='215' name="Crédit Mutuel Ile-de-France" country="fr" url="https://www.creditmutuel.fr/cmidf/fr/banques/accueil.html"
               downloadUrl="https://www.creditmutuel.fr/cmidf/fr/banques/accueil.html" synchroEnabled="false">
             <bankEntity id="11628"/>
         </bank>
 
-        <bank id='216' name="Crédit Mutuel Massif Central" url="https://www.cmmc.fr"
+        <bank id='216' name="Crédit Mutuel Massif Central" country="fr" url="https://www.cmmc.fr"
               downloadUrl="https://www.cmmc.fr" synchroEnabled="false">
         </bank>
 
