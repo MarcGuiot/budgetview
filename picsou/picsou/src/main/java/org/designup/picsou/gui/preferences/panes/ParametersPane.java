@@ -12,6 +12,7 @@ import org.globsframework.utils.Utils;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -23,9 +24,9 @@ public class ParametersPane implements PreferencesPane {
                                                       "/layout/general/preferences/parametersPane.splits",
                                                       repository, directory);
 
-    int[] items = new int[]{12, 18, 24, 36};
+    int[] items = new int[]{12, 18, 24, 36, 48, 60};
     Utils.beginRemove();
-    items = new int[]{0, 1, 2, 3, 4, 6, 12, 18, 24, 36};
+    items = new int[]{0, 1, 2, 3, 4, 6, 12, 18, 24, 36, 48, 60};
     Utils.endRemove();
 
     builder.addComboEditor("futureMonth", UserPreferences.KEY,
