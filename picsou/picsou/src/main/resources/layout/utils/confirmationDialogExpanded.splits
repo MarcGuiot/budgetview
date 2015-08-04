@@ -3,13 +3,15 @@
   <styleImport file="/layout/commonStyles.splits"/>
   <styleImport file="/layout/dialogStyles.splits"/>
 
-  <panel styleClass="dialog" preferredSize="(500,500)" opaque="true">
-    <column styleClass="innerDialog">
-      <label ref="title" styleClass="title"/>
-      <scrollPane forceVerticalScroll="true" marginBottom="10">
-        <htmlEditorPane ref="message" hyperlinkListener="hyperlinkHandler"/>
-      </scrollPane>
-    </column>
-  </panel>
+  <column styleClass="dialog" preferredSize="(500,500)">
+    <label ref="title" styleClass="title"/>
+    <panel styleClass="innerDialog">
+      <column styleClass="innerDialogContent">
+        <scrollPane forceVerticalScroll="true" marginBottom="10">
+          <htmlEditorPane ref="message" hyperlinkListener="hyperlinkHandler"/>
+        </scrollPane>
+      </column>
+    </panel>
+  </column>
 
 </splits>

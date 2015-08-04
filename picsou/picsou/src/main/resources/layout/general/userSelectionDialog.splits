@@ -7,16 +7,20 @@
     <style selector="label.formLabel" fill="horizontal" horizontalAlignment="left" marginBottom="4"/>
   </styles>
 
-  <panel styleClass="dialog" preferredSize="(380,370)" opaque="true">
-    <column styleClass="innerDialog">
-      <label text="$userSelection.title" styleClass="title"/>
-      <label text="$userSelection.intro" styleClass="formLabel"/>
-      <column styleClass="blockScrollBorder">
-        <scrollPane>
-          <list ref="userList"/>
-        </scrollPane>
+  <column styleClass="dialog" preferredSize="(380,370)">
+    <label text="$userSelection.title" styleClass="title"/>
+
+    <panel styleClass="innerDialog">
+      <column styleClass="innerDialogContent">
+
+        <label text="$userSelection.intro" styleClass="formLabel"/>
+        <column styleClass="blockScrollBorder">
+          <scrollPane>
+            <list ref="userList"/>
+          </scrollPane>
+        </column>
       </column>
-    </column>
-  </panel>
+    </panel>
+  </column>
 
 </splits>

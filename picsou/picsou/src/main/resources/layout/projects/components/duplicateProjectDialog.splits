@@ -3,22 +3,24 @@
   <styleImport file="/layout/commonStyles.splits"/>
   <styleImport file="/layout/dialogStyles.splits"/>
 
-  <panel styleClass="dialog" preferredSize="(480,230)">
-    <column styleClass="innerDialog">
-      <label text="$projectEdition.duplicate.title" name="title" styleClass="title"/>
+  <column styleClass="dialog" preferredSize="(480,230)">
+    <label text="$projectEdition.duplicate.title" name="title" styleClass="title"/>
+    <panel styleClass="innerDialog">
+      <column styleClass="innerDialogContent">
 
-      <column styleClass="innerDialogBlock" margin="10" marginTop="5" weightY="100">
-        <htmlEditorPane ref="message" margin="10"/>
-        <grid margin="10" marginTop="5">
-          <label text="$projectEdition.duplicate.name" gridPos="(0,0)" anchor="right" marginRight="10"/>
-          <textField ref="nameField" gridPos="(1,0)"/>
-          <label text="$projectEdition.duplicate.firstMonth" gridPos="(0,1)"
-                 anchor="right" marginRight="10" marginTop="10"/>
-          <component ref="firstMonth" gridPos="(1,1)" marginTop="15"/>
-        </grid>
-        <filler fill="vertical"/>
+        <column styleClass="innerDialogBlock" margin="10" marginTop="5" weightY="100">
+          <htmlEditorPane ref="message" margin="10"/>
+          <grid margin="10" marginTop="5">
+            <label text="$projectEdition.duplicate.name" gridPos="(0,0)" anchor="right" marginRight="10"/>
+            <textField ref="nameField" gridPos="(1,0)"/>
+            <label text="$projectEdition.duplicate.firstMonth" gridPos="(0,1)"
+                   anchor="right" marginRight="10" marginTop="10"/>
+            <component ref="firstMonth" gridPos="(1,1)" marginTop="15"/>
+          </grid>
+          <filler fill="vertical"/>
+        </column>
       </column>
-    </column>
-  </panel>
+    </panel>
+  </column>
 
 </splits>

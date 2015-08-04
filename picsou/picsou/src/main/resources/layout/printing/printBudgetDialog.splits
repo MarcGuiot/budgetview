@@ -6,27 +6,29 @@
     <style selector="radioButton" marginLeft="20"/>
   </styles>
 
-  <panel styleClass="dialog" preferredSize="(430,200)">
-    <column styleClass="innerDialog">
+  <column styleClass="dialog" preferredSize="(430,200)">
 
-      <label text="$print.dialog.title" styleClass="title"/>
+    <label text="$print.dialog.title" styleClass="title"/>
 
-      <row>
-        <label icon="print.png" marginRight="5"/>
-        <column>
-          <htmlEditorPane text="$print.dialog.choice" marginTop="5" marginBottom="10" weightY="0.1"/>
+    <panel styleClass="innerDialog">
+      <column styleClass="innerDialogContent">
 
-          <radioButton ref="currentMonth"/>
-          <radioButton ref="currentYear"/>
+        <row>
+          <label icon="print.png" marginRight="5"/>
+          <column>
+            <htmlEditorPane text="$print.dialog.choice" marginTop="5" marginBottom="10" weightY="0.1"/>
 
-          <filler fill="vertical"/>
-        </column>
-      </row>
+            <radioButton ref="currentMonth"/>
+            <radioButton ref="currentYear"/>
 
+            <filler fill="vertical"/>
+          </column>
+        </row>
 
-      <filler fill="vertical"/>
+        <filler fill="vertical"/>
 
-    </column>
-  </panel>
+      </column>
+    </panel>
+  </column>
 
 </splits>

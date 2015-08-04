@@ -3,12 +3,14 @@
   <styleImport file="/layout/commonStyles.splits"/>
   <styleImport file="/layout/dialogStyles.splits"/>
 
-  <panel styleClass="dialog" preferredSize="(400,250)">
-    <column styleClass="innerDialog">
-      <label ref="title" styleClass="title"/>
-      <htmlEditorPane ref="message" marginBottom="10" hyperlinkListener="hyperlinkHandler"/>
-      <filler fill="vertical"/>
-    </column>
-  </panel>
+  <column styleClass="dialog" preferredSize="(400,250)">
+    <label ref="title" styleClass="title"/>
+    <panel styleClass="innerDialog">
+      <column styleClass="innerDialogContent">
+        <htmlEditorPane ref="message" marginBottom="10" hyperlinkListener="hyperlinkHandler"/>
+        <filler fill="vertical"/>
+      </column>
+    </panel>
+  </column>
 
 </splits>

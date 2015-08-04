@@ -414,7 +414,9 @@ public class ImportDialogChecker extends GuiChecker {
   }
 
   public ImportDialogChecker setMainAccount() {
-    getAccountEditionChecker().setAsMain();
+    getAccountEditionChecker()
+      .checkAccountTypeEditable()
+      .setAsMain();
     return this;
   }
 

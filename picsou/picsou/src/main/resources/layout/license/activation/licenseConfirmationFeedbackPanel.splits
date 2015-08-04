@@ -7,30 +7,28 @@
     <style selector="textArea" editable="true" lineWrap="true" wrapStyleWord="true" fill="both"/>
   </styles>
 
-  <panel styleClass="dialog" minimumSize="(500,500)" preferredSize="(640,600)" opaque="true">
-    <column styleClass="innerDialog">
-      <label name="title" text="$license.title" styleClass="title"/>
-      <column styleClass="innerDialogBlock" margin="10" marginTop="5" weightY="100">
-        <column margin="10">
-          <row>
-            <label icon="status_completed.png" marginRight="10" anchor="center"/>
-            <htmlEditorPane text="$license.activation.ok.content" name="completionMessage"/>
-          </row>
-          <htmlEditorPane text="$license.activation.feedback.intro" name="completionMessage"/>
+  <column styleClass="dialog" minimumSize="(500,500)" preferredSize="(640,600)">
+    <label name="title" text="$license.title" styleClass="title"/>
+    <panel styleClass="innerDialog">
+      <column styleClass="innerDialogContent">
+        <row>
+          <label icon="status_completed.png" marginRight="10" anchor="center"/>
+          <htmlEditorPane text="$license.activation.ok.content" name="completionMessage"/>
+        </row>
+        <htmlEditorPane text="$license.activation.feedback.intro" name="completionMessage"/>
 
-          <repeat ref="questions" layout="column" weightY="100" margin="10">
-            <column>
-              <label ref="question" styleClass="question"/>
-              <scrollPane ref="scroll" forceVerticalScroll="true">
-                <textArea ref="answer"/>
-              </scrollPane>
-            </column>
-          </repeat>
+        <repeat ref="questions" layout="column" weightY="100" margin="10">
+          <column>
+            <label ref="question" styleClass="question"/>
+            <scrollPane ref="scroll" forceVerticalScroll="true">
+              <textArea ref="answer"/>
+            </scrollPane>
+          </column>
+        </repeat>
 
-          <htmlEditorPane text="$license.activation.feedback.footer" name="completionMessage"/>
-        </column>
+        <htmlEditorPane text="$license.activation.feedback.footer" name="completionMessage"/>
       </column>
-    </column>
-  </panel>
+    </panel>
+  </column>
 
 </splits>

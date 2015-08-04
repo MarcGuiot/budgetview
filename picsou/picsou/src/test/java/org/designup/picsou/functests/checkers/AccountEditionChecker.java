@@ -282,6 +282,7 @@ public class AccountEditionChecker extends GuiChecker {
   }
 
   public AccountEditionChecker checkAccountTypeEditable() {
+    assertThat(dialog.containsSwingComponent(JComboBox.class, "type"));
     assertTrue(getTypeCombo().isEnabled());
     return this;
   }
@@ -293,10 +294,6 @@ public class AccountEditionChecker extends GuiChecker {
 
   public ComboBox getTypeCombo() {
     return dialog.getComboBox("type");
-  }
-
-  public ComboBox getUpdateModeCombo() {
-    return dialog.getComboBox("updateMode");
   }
 
   public AccountEditionChecker checkBankValidationError(String message) {
@@ -391,54 +388,8 @@ public class AccountEditionChecker extends GuiChecker {
     return this;
   }
 
-  public AccountEditionChecker setFromBeginningDay(int day) {
-    cardEditionPanelChecker.setDayFromBegining(day);
-    return this;
-  }
-
-  public AccountEditionChecker addMonth() {
-    cardEditionPanelChecker.addMonth();
-    return this;
-  }
-
-  public AccountEditionChecker checkMonth(int month) {
-    cardEditionPanelChecker.checkMonth(month);
-    return this;
-  }
-
   public AccountEditionChecker setDay(int month, int day) {
     cardEditionPanelChecker.setDay(month, day);
-    return this;
-  }
-
-  public AccountEditionChecker checkFromBeginningDay(int day) {
-    cardEditionPanelChecker.checkFromBeginningDay(day);
-    return this;
-  }
-
-  public AccountEditionChecker checkBeginningUnchangeable() {
-    cardEditionPanelChecker.checkBeginningUnchangeable();
-    return this;
-  }
-
-  public AccountEditionChecker checkDay(int month, int day) {
-    cardEditionPanelChecker.checkDay(month, day);
-    return this;
-  }
-
-  public AccountEditionChecker changeMonth(int month, int newMonth) {
-    cardEditionPanelChecker.changeMonth(month, newMonth);
-    checkMonth(newMonth);
-    return this;
-  }
-
-  public AccountEditionChecker checkFromBeginning() {
-    cardEditionPanelChecker.checkFromBeginning();
-    return this;
-  }
-
-  public AccountEditionChecker checkPeriod(Integer[][] periods) {
-    cardEditionPanelChecker.checkPeriod(periods);
     return this;
   }
 

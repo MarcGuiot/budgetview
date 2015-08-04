@@ -8,28 +8,31 @@
     <style selector="label.message"/>
   </styles>
 
-  <panel styleClass="dialog" preferredSize="(600,500)" opaque="true">
-    <column styleClass="innerDialog">
+  <column styleClass="dialog" preferredSize="(600,500)">
 
-      <label text="$slaValidation.title" name="titleLabel" styleClass="title"/>
+    <label text="$slaValidation.title" name="titleLabel" styleClass="title"/>
 
-      <label text="$slaValidation.message" styleClass="message"/>
+    <panel styleClass="innerDialog">
+      <column styleClass="innerDialogContent">
 
-      <scrollPane weightY="100">
-        <htmlEditorPane ref="editor" opaque="false" foreground="#222222"/>
-      </scrollPane>
+        <label text="$slaValidation.message" styleClass="message"/>
 
-      <row>
-        <filler fill="horizontal"/>
-        <checkBox ref="checkBox" text="$slaValidation.checkBox"/>
-      </row>
+        <scrollPane weightY="100">
+          <htmlEditorPane ref="editor" opaque="false" foreground="#222222"/>
+        </scrollPane>
 
-      <column minimumSize="(200,30)" preferredSize="(200,30)">
-        <label ref="errorMessage" text="$slaValidation.error"
-               styleClass="errorMessage" anchor="east" fill="none"/>
+        <row>
+          <filler fill="horizontal"/>
+          <checkBox ref="checkBox" text="$slaValidation.checkBox"/>
+        </row>
+
+        <column minimumSize="(200,30)" preferredSize="(200,30)">
+          <label ref="errorMessage" text="$slaValidation.error"
+                 styleClass="errorMessage" anchor="east" fill="none"/>
+        </column>
+
       </column>
-
-    </column>
-  </panel>
+    </panel>
+  </column>
 
 </splits>

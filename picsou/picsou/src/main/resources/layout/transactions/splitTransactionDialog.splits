@@ -3,37 +3,38 @@
   <styleImport file="/layout/commonStyles.splits"/>
   <styleImport file="/layout/dialogStyles.splits"/>
 
-  <panel styleClass="dialog" preferredSize="(500,370)">
+  <column styleClass="dialog" preferredSize="(500,370)">
 
-    <column styleClass="innerDialog">
+    <label text="$split.transaction.title" name="title" styleClass="title"/>
 
-      <label text="$split.transaction.title" name="title" styleClass="title"/>
+    <panel styleClass="innerDialog">
+      <column styleClass="innerDialogContent">
 
-      <htmlEditorPane text="$split.transaction.help" hyperlinkListener="hyperlinkHandler"/>
+        <htmlEditorPane text="$split.transaction.help" hyperlinkListener="hyperlinkHandler"/>
 
-      <label text="$split.transaction.table" styleClass="separatorTitle" marginTop="10"/>
-      <row styleClass="separator" weightY="100">
-        <scrollPane viewportBackground="transactionTable.bg" border="etched" margin="5">
-          <table ref="transaction" background="transactionTable.bg" intercellSpacing="(0,0)" showGrid="false"/>
-        </scrollPane>
-      </row>
+        <label text="$split.transaction.table" styleClass="separatorTitle" marginTop="10"/>
+        <row styleClass="separator" weightY="100">
+          <scrollPane viewportBackground="transactionTable.bg" border="etched" margin="5">
+            <table ref="transaction" background="transactionTable.bg" intercellSpacing="(0,0)" showGrid="false"/>
+          </scrollPane>
+        </row>
 
-      <label text="$split.transaction.initial.title" styleClass="separatorTitle" marginTop="15"/>
-      <row styleClass="separator">
-        <grid marginLeft="20" marginRight="20" defaultMarginTop="10">
-          <label text="$split.transaction.amount" gridPos="(0,0)" fill="none" anchor="east"
-                 marginRight="10"/>
-          <textField ref="amount" gridPos="(1,0)" fill="horizontal" weightX="100"/>
+        <label text="$split.transaction.initial.title" styleClass="separatorTitle" marginTop="15"/>
+        <row styleClass="separator">
+          <grid marginLeft="20" marginRight="20" defaultMarginTop="10">
+            <label text="$split.transaction.amount" gridPos="(0,0)" fill="none" anchor="east"
+                   marginRight="10"/>
+            <textField ref="amount" gridPos="(1,0)" fill="horizontal" weightX="100"/>
 
-          <label text="$split.transaction.note" gridPos="(0,1)" fill="none" anchor="east"
-                 marginRight="10"/>
-          <textField ref="note" gridPos="(1,1)" fill="horizontal" weightX="100"/>
-        </grid>
-        <button action="add" fill="none" anchor="north" marginTop="10"/>
-      </row>
+            <label text="$split.transaction.note" gridPos="(0,1)" fill="none" anchor="east"
+                   marginRight="10"/>
+            <textField ref="note" gridPos="(1,1)" fill="horizontal" weightX="100"/>
+          </grid>
+          <button action="add" fill="none" anchor="north" marginTop="10"/>
+        </row>
 
-    </column>
-
-  </panel>
+      </column>
+    </panel>
+  </column>
 
 </splits>

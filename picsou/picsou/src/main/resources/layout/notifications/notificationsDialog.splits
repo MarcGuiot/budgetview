@@ -14,29 +14,31 @@
            ui="hyperlinkButtonWithoutUnderline" weightX="0.1" foreground="hyperlink"/>
   </styles>
 
-  <panel styleClass="dialog" preferredSize="(600, 300)">
-    <column styleClass="innerDialog">
-      <label text="$notifications.title" name="title" styleClass="title"/>
+  <column styleClass="dialog" preferredSize="(600, 300)">
+    <label text="$notifications.title" name="title" styleClass="title"/>
+    <panel styleClass="innerDialog">
+      <column styleClass="innerDialogContent">
 
-      <scrollPane forceVerticalScroll="true">
-        <column margin="10">
-          <repeat ref="messages">
-            <column name="notificationPanel" border="matte(0,0,1,0,block.inner.separator)">
-              <label ref="date"/>
-              <textArea ref="message" styleClass="message"/>
-              <row>
-                <filler fill="horizontal"/>
-                <button action="action" name="notificationAction" autoHideIfDisabled="true"/>
-                <label text="-" marginLeft="5" marginRight="5" autoHideSource="notificationAction"/>
-                <button action="delete"/>
-              </row>
-            </column>
-          </repeat>
-          <filler fill="vertical"/>
-        </column>
-      </scrollPane>
+        <scrollPane forceVerticalScroll="true">
+          <column margin="10">
+            <repeat ref="messages">
+              <column name="notificationPanel" border="matte(0,0,1,0,block.inner.separator)">
+                <label ref="date"/>
+                <textArea ref="message" styleClass="message"/>
+                <row>
+                  <filler fill="horizontal"/>
+                  <button action="action" name="notificationAction" autoHideIfDisabled="true"/>
+                  <label text="-" marginLeft="5" marginRight="5" autoHideSource="notificationAction"/>
+                  <button action="delete"/>
+                </row>
+              </column>
+            </repeat>
+            <filler fill="vertical"/>
+          </column>
+        </scrollPane>
 
-    </column>
-  </panel>
+      </column>
+    </panel>
+  </column>
 
 </splits>

@@ -3,13 +3,15 @@
   <styleImport file="/layout/commonStyles.splits"/>
   <styleImport file="/layout/dialogStyles.splits"/>
 
-  <panel styleClass="dialog" preferredSize="(480,230)">
-    <column styleClass="innerDialog">
-      <label text="$subseries.delete.title" name="title" styleClass="title"/>
-      <htmlEditorPane text="$subseries.delete.message"/>
-      <comboBox ref="combo" marginLeft="10" marginRight="10"/>
-      <filler fill="vertical"/>
-    </column>
-  </panel>
+  <column styleClass="dialog" preferredSize="(480,230)">
+    <label text="$subseries.delete.title" name="title" styleClass="title"/>
+    <panel styleClass="innerDialog">
+      <column styleClass="innerDialogContent">
+        <htmlEditorPane text="$subseries.delete.message"/>
+        <comboBox ref="combo" marginLeft="10" marginRight="10"/>
+        <filler fill="vertical"/>
+      </column>
+    </panel>
+  </column>
 
 </splits>

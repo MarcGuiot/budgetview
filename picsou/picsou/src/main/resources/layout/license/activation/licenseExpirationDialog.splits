@@ -1,23 +1,28 @@
-<splits xmlns="http://www.globsframework.org/xml/splits.xsd">
+<splits xmlns="http://www.globsframework.org/xml/splits.xsd" xmlns="">
 
   <styleImport file="/layout/commonStyles.splits"/>
   <styleImport file="/layout/dialogStyles.splits"/>
 
-  <panel styleClass="dialog" minimumSize="(470,180)" preferredSize="(540,220)" opaque="true">
+  <column styleClass="dialog" minimumSize="(470,180)" preferredSize="(540,220)">
+
+    <label text="$license.ask.for.code" name="title" styleClass="title"/>
+
     <column styleClass="innerDialog">
-      <label text="$license.ask.for.code" name="title" styleClass="title"/>
-      <htmlEditorPane name="askMailMessage" text="$license.ask.message.mail"/>
-      <row margin="10">
-        <label text="$license.ask.mail"/>
-        <textField ref="mailAdress" columns="50" marginLeft="10" marginRight="10" weightX="100.0"/>
-        <button action="sendMail"/>
-      </row>
-      <label ref="mailResponse" styleClass="errorMessage"/>
-      <row preferredSize="(30,30)" minimumSize="(30,30)">
-        <component ref="sendState" visible="false"/>
-      </row>
-      <filler fill="vertical"/>
+      <column styleClass="innerDialogContent">
+
+        <htmlEditorPane name="askMailMessage" text="$license.ask.message.mail"/>
+        <row margin="10">
+          <label text="$license.ask.mail"/>
+          <textField ref="mailAdress" columns="50" marginLeft="10" marginRight="10" weightX="100.0"/>
+          <button action="sendMail"/>
+        </row>
+        <label ref="mailResponse" styleClass="errorMessage"/>
+        <row preferredSize="(30,30)" minimumSize="(30,30)">
+          <component ref="sendState" visible="false"/>
+        </row>
+        <filler fill="vertical"/>
+      </column>
     </column>
-  </panel>
+  </column>
 
 </splits>

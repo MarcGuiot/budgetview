@@ -3,22 +3,22 @@
   <styleImport file="/layout/commonStyles.splits"/>
   <styleImport file="/layout/dialogStyles.splits"/>
 
-  <panel styleClass="dialog" preferredSize="(450,220)" opaque="true">
+  <column styleClass="dialog" preferredSize="(450,220)">
+
+    <label text="$exportDialog.title" name="title" styleClass="title"/>
+
     <column styleClass="innerDialog">
-
-      <label text="$exportDialog.title" name="title" styleClass="title"/>
-
-      <label text="$exportDialog.intro" marginBottom="10"/>
-
-      <repeat ref="types">
-        <column>
-          <radioButton ref="radio"/>
-          <htmlEditorPane ref="description" styleClass="note"
-                          marginLeft="20" opaque="false" foreground="#222222"/>
-        </column>
-      </repeat>
-
+      <column styleClass="innerDialogContent">
+        <label text="$exportDialog.intro" marginBottom="10"/>
+        <repeat ref="types">
+          <column>
+            <radioButton ref="radio"/>
+            <htmlEditorPane ref="description" styleClass="note"
+                            marginLeft="20" opaque="false" foreground="#222222"/>
+          </column>
+        </repeat>
+      </column>
     </column>
-  </panel>
+  </column>
 
 </splits>

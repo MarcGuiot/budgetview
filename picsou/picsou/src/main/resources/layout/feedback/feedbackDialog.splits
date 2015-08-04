@@ -9,25 +9,29 @@
     <style selector="textArea" lineWrap="true" wrapStyleWord="true" fill="both"/>
   </styles>
 
-  <panel styleClass="dialog" minimumSize="(400,180)" preferredSize="(500,500)" opaque="true">
-    <column styleClass="innerDialog">
-      <label name="title" text="$feedback.title" styleClass="title"/>
+  <column styleClass="dialog" minimumSize="(400,180)" preferredSize="(500,500)">
 
-      <htmlEditorPane text="$feedback.intro" styleClass="multiLineLabel" marginBottom="5"/>
+    <label name="title" text="$feedback.title" styleClass="title"/>
 
-      <row>
-        <label text="$feedback.fromMail" styleClass="formLabel"/>
-        <textField ref="fromMail"/>
-      </row>
+    <panel styleClass="innerDialog">
+      <column styleClass="innerDialogContent">
 
-      <label text="$feedback.content" styleClass="formLabelTop"/>
-      <scrollPane forceVerticalScroll="true" weightY="100">
-        <textArea ref="mailContent"/>
-      </scrollPane>
+        <htmlEditorPane text="$feedback.intro" styleClass="multiLineLabel" marginBottom="5"/>
 
-      <checkBox ref="addLogs"/>
+        <row>
+          <label text="$feedback.fromMail" styleClass="formLabel"/>
+          <textField ref="fromMail"/>
+        </row>
 
-    </column>
-  </panel>
+        <label text="$feedback.content" styleClass="formLabelTop"/>
+        <scrollPane forceVerticalScroll="true" weightY="100">
+          <textArea ref="mailContent"/>
+        </scrollPane>
+
+        <checkBox ref="addLogs"/>
+
+      </column>
+    </panel>
+  </column>
 
 </splits>

@@ -18,12 +18,14 @@
            iconTextGap="5" horizontalAlignment="left" horizontalTextPosition="left"/>
   </styles>
 
-  <panel styleClass="dialog" preferredSize="(550,450)">
-    <column styleClass="innerDialog">
+  <column styleClass="dialog" preferredSize="(550,450)">
 
-      <label ref="title" styleClass="title"/>
+    <label ref="title" styleClass="title"/>
 
-      <tabs ref="tabs">
+    <panel styleClass="innerDialog">
+    <column styleClass="innerDialogContent">
+
+    <tabs ref="tabs">
 
         <tab title="$account.tab.standard">
           <column margin="15">
@@ -86,6 +88,7 @@
       </tabs>
 
     </column>
-  </panel>
+    </panel>
+  </column>
 
 </splits>

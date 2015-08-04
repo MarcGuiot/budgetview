@@ -62,7 +62,6 @@ public class SingleInstanceTest extends StartUpFunctionalTestCase {
     }
     assertEquals(0, errorCount);
 
-
     ImportDialogChecker importer = new ImportDialogChecker(importDialog);
 
     String step2File = OfxBuilder.init(this)

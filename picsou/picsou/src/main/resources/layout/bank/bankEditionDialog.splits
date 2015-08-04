@@ -3,24 +3,24 @@
   <styleImport file="/layout/commonStyles.splits"/>
   <styleImport file="/layout/dialogStyles.splits"/>
 
-  <panel styleClass="dialog" preferredSize="(450,140)">
+  <column styleClass="dialog" preferredSize="(450,140)">
 
-    <column styleClass="innerDialog">
+    <label ref="title" styleClass="title"/>
 
-      <label ref="title" styleClass="title"/>
+    <panel styleClass="innerDialog">
+      <column styleClass="innerDialogContent">
+        <grid>
+          <label gridPos="(0,0)" text="$bank.edition.name" styleClass="formLabel"/>
+          <textField gridPos="(1,0)" ref="nameField"/>
+          <label ref="nameFlag" gridPos="(2,0)" styleClass="mandatoryFieldFlag"/>
 
-      <grid>
-        <label gridPos="(0,0)" text="$bank.edition.name" styleClass="formLabel"/>
-        <textField gridPos="(1,0)" ref="nameField"/>
-        <label ref="nameFlag" gridPos="(2,0)" styleClass="mandatoryFieldFlag"/>
+          <label gridPos="(0,1)" text="$bank.edition.url" styleClass="formLabel"/>
+          <textField gridPos="(1,1)" ref="urlField"/>
+        </grid>
 
-        <label gridPos="(0,1)" text="$bank.edition.url" styleClass="formLabel"/>
-        <textField gridPos="(1,1)" ref="urlField"/>
-      </grid>
-
-      <filler fill="vertical"/>
-    </column>
-
-  </panel>
+        <filler fill="vertical"/>
+      </column>
+    </panel>
+  </column>
 
 </splits>

@@ -3,43 +3,44 @@
   <styleImport file="/layout/commonStyles.splits"/>
   <styleImport file="/layout/dialogStyles.splits"/>
 
-  <panel styleClass="dialog" preferredSize="(600,600)">
-    <column styleClass="innerDialog">
+  <column styleClass="dialog" preferredSize="(600,600)">
+    <label name="title" text="aboutDialog" visible="false"/>
+    <panel styleClass="innerDialog">
+      <column styleClass="innerDialogContent">
 
-      <label name="title" text="aboutDialog" visible="false"/>
-
-      <row>
-        <filler fill="horizontal"/>
-        <label icon="app_icon_128.png" fill="none"/>
-        <column>
-          <filler fill="vertical"/>
-          <label text="$application" font="-,bold,20"/>
-          <label ref="versionLabel" marginBottom="10"/>
-          <label text="$about.authors" marginBottom="10"/>
-          <button action="website" styleClass="hyperlinkWithoutUnderline" fill="none" anchor="left"/>
-          <filler fill="vertical"/>
-        </column>
-        <filler fill="horizontal"/>
-      </row>
+        <row>
+          <filler fill="horizontal"/>
+          <label icon="app_icon_128.png" fill="none"/>
+          <column>
+            <filler fill="vertical"/>
+            <label text="$application" font="-,bold,20"/>
+            <label ref="versionLabel" marginBottom="10"/>
+            <label text="$about.authors" marginBottom="10"/>
+            <button action="website" styleClass="hyperlinkWithoutUnderline" fill="none" anchor="left"/>
+            <filler fill="vertical"/>
+          </column>
+          <filler fill="horizontal"/>
+        </row>
 
 
-      <tabs weightY="100">
+        <tabs weightY="100">
 
-        <tab title="$about.configuration">
-          <scrollPane margin="10">
-            <htmlEditorPane ref="configurationArea"/>
-          </scrollPane>
-        </tab>
+          <tab title="$about.configuration">
+            <scrollPane margin="10">
+              <htmlEditorPane ref="configurationArea"/>
+            </scrollPane>
+          </tab>
 
-        <tab title="$about.licenses">
-          <scrollPane margin="10">
-            <htmlEditorPane ref="licensesArea"/>
-          </scrollPane>
-        </tab>
+          <tab title="$about.licenses">
+            <scrollPane margin="10">
+              <htmlEditorPane ref="licensesArea"/>
+            </scrollPane>
+          </tab>
 
-      </tabs>
+        </tabs>
 
-    </column>
-  </panel>
+      </column>
+    </panel>
+  </column>
 
 </splits>

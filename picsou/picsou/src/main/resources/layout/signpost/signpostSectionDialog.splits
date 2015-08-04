@@ -4,30 +4,32 @@
   <styleImport file="/layout/dialogStyles.splits"/>
   <styleImport file="/layout/signpost/signpostStyles.splits"/>
 
-  <panel styleClass="dialog" preferredSize="(550,350)">
-    <column styleClass="innerDialog">
+  <column styleClass="dialog" preferredSize="(550,350)">
+    <label ref="title" styleClass="title"/>
+    <panel styleClass="innerDialog">
+      <column styleClass="innerDialogContent">
 
-      <label ref="title" styleClass="title"/>
 
-      <column styleClass="blockScrollBorder" weightY="100.0">
-        <scrollPane forceVerticalScroll="true" verticalUnitIncrement="10">
-          <column>
-            <row weightY="5">
-              <column weightX="1">
-                <repeat ref="sections" margin="10">
-                  <panel ref="sectionPanel">
-                    <label ref="sectionTitle" margin="10"/>
-                  </panel>
-                </repeat>
-                <filler fill="vertical"/>
-              </column>
-              <htmlEditorPane ref="message" styleClass="content" weightX="4"/>
-            </row>
-            <filler fill="vertical"/>
-          </column>
-        </scrollPane>
+        <column styleClass="blockScrollBorder" weightY="100.0">
+          <scrollPane forceVerticalScroll="true" verticalUnitIncrement="10">
+            <column>
+              <row weightY="5">
+                <column weightX="1">
+                  <repeat ref="sections" margin="10">
+                    <panel ref="sectionPanel">
+                      <label ref="sectionTitle" margin="10"/>
+                    </panel>
+                  </repeat>
+                  <filler fill="vertical"/>
+                </column>
+                <htmlEditorPane ref="message" styleClass="content" weightX="4"/>
+              </row>
+              <filler fill="vertical"/>
+            </column>
+          </scrollPane>
+        </column>
       </column>
-    </column>
-  </panel>
+    </panel>
+  </column>
 
 </splits>

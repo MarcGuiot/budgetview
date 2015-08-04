@@ -3,26 +3,26 @@
   <styleImport file="/layout/commonStyles.splits"/>
   <styleImport file="/layout/dialogStyles.splits"/>
 
-  <panel styleClass="dialog" preferredSize="(500,300)" opaque="true">
-    <column styleClass="innerDialog">
+  <column styleClass="dialog" preferredSize="(500,300)">
 
-      <label text="$chooseOrCreate.title" name="title" styleClass="title"/>
+    <label text="$chooseOrCreate.title" name="title" styleClass="title"/>
 
-      <column>
-        <scrollPane forceVerticalScroll="true">
-          <column margin="10">
-            <repeat ref="repeat">
-              <column>
-                <row name="parent">
-                  <label ref="accounts" marginLeft="30" marginRight="10"/>
-                  <comboBox ref="accountsCombo" marginRight="30"/>
-                </row>
-              </column>
-            </repeat>
-            <filler fill="vertical"/>
-          </column>
-        </scrollPane>
+    <panel styleClass="innerDialog">
+      <column styleClass="innerDialogContent">
+          <scrollPane forceVerticalScroll="true">
+            <column margin="10">
+              <repeat ref="repeat">
+                <column>
+                  <row name="parent">
+                    <label ref="accounts" marginLeft="30" marginRight="10"/>
+                    <comboBox ref="accountsCombo" marginRight="30"/>
+                  </row>
+                </column>
+              </repeat>
+              <filler fill="vertical"/>
+            </column>
+          </scrollPane>
       </column>
-    </column>
-  </panel>
+    </panel>
+  </column>
 </splits>

@@ -7,12 +7,16 @@
     <style selector="label.formLabel" fill="horizontal" horizontalAlignment="left" marginBottom="4"/>
   </styles>
 
-  <panel styleClass="dialog" preferredSize="(380,370)" opaque="true">
-    <column styleClass="innerDialog">
-      <label text="$bank.chooser.title" styleClass="title"/>
-      <label text="$bank.chooser.editLabel" styleClass="formLabel"/>
-      <panel ref="bankChooserPanel"/>
-    </column>
-  </panel>
+  <column styleClass="dialog" preferredSize="(380,370)">
+
+    <label text="$bank.chooser.title" styleClass="title"/>
+
+    <panel styleClass="innerDialog">
+      <column styleClass="innerDialogContent">
+        <label text="$bank.chooser.editLabel" styleClass="formLabel"/>
+        <panel ref="bankChooserPanel"/>
+      </column>
+    </panel>
+  </column>
 
 </splits>

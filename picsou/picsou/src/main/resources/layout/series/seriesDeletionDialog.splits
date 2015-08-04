@@ -9,48 +9,51 @@
     <style selector="button" fill="none" anchor="center" weightX="0.1"/>
   </styles>
 
-  <panel styleClass="dialog" preferredSize="(550, 530)" opaque="true">
-    <column styleClass="innerDialog">
-      <label text="$seriesDeletion.title" name="title" styleClass="title"/>
+  <column styleClass="dialog" preferredSize="(550, 530)" opaque="true">
+    <label text="$seriesDeletion.title" name="title" styleClass="title"/>
 
-      <htmlEditorPane ref="introMessage"/>
+    <panel styleClass="innerDialog">
+      <column styleClass="innerDialogContent">
 
-      <!-- TRANSFER -->
+        <htmlEditorPane ref="introMessage"/>
 
-      <column styleClass="separator">
-        <label text="$seriesDeletion.transfer.title" styleClass="sectionTitle"/>
-        <row>
-          <htmlEditorPane text="$seriesDeletion.transfer.message" styleClass="multiLineLabel"/>
-          <column>
-            <scrollPane>
-              <list ref="seriesList"/>
-            </scrollPane>
-            <row>
-              <label icon="button_magnifier.png" marginRight="5"/>
-              <textField ref="seriesFilter"/>
-            </row>
-          </column>
-          <button action="transfer"/>
-        </row>
+        <!-- TRANSFER -->
+
+        <column styleClass="separator">
+          <label text="$seriesDeletion.transfer.title" styleClass="sectionTitle"/>
+          <row>
+            <htmlEditorPane text="$seriesDeletion.transfer.message" styleClass="multiLineLabel"/>
+            <column>
+              <scrollPane>
+                <list ref="seriesList"/>
+              </scrollPane>
+              <row>
+                <label icon="button_magnifier.png" marginRight="5"/>
+                <textField ref="seriesFilter"/>
+              </row>
+            </column>
+            <button action="transfer"/>
+          </row>
+        </column>
+
+        <column styleClass="separator">
+          <label text="$seriesDeletion.setEndDate.title" styleClass="sectionTitle"/>
+          <row>
+            <htmlEditorPane ref="setEndDateMessage" styleClass="multiLineLabel"/>
+            <button action="setEndDate"/>
+          </row>
+        </column>
+
+        <column styleClass="separator">
+          <label text="$seriesDeletion.uncategorize.title" styleClass="sectionTitle"/>
+          <row>
+            <htmlEditorPane text="$seriesDeletion.uncategorize.message" styleClass="multiLineLabel"/>
+            <button action="uncategorize"/>
+          </row>
+        </column>
+
       </column>
-
-      <column styleClass="separator">
-        <label text="$seriesDeletion.setEndDate.title" styleClass="sectionTitle"/>
-        <row>
-          <htmlEditorPane ref="setEndDateMessage" styleClass="multiLineLabel"/>
-          <button action="setEndDate"/>
-        </row>
-      </column>
-
-      <column styleClass="separator">
-        <label text="$seriesDeletion.uncategorize.title" styleClass="sectionTitle"/>
-        <row>
-          <htmlEditorPane text="$seriesDeletion.uncategorize.message" styleClass="multiLineLabel"/>
-          <button action="uncategorize"/>
-        </row>
-      </column>
-
-    </column>
-  </panel>
+    </panel>
+  </column>
 
 </splits>

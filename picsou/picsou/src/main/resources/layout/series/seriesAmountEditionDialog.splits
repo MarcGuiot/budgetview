@@ -4,25 +4,22 @@
   <styleImport file="/layout/dialogStyles.splits"/>
   <styles>
     <style selector="label.title" marginBottom="5" weightY="0.1"/>
-    <style selector="label.subtitle" font="-,plain,10"  foreground="dialog.subtitle"
+    <style selector="label.subtitle" font="-,plain,10" foreground="dialog.subtitle"
            weightY="0.1" fill="none" anchor="north" marginBottom="10"/>
   </styles>
 
-  <panel styleClass="dialog" preferredSize="(480,400)">
+  <column styleClass="dialog" preferredSize="(480,400)">
+    <label name="title" text="$seriesAmountEdition.title" styleClass="title"/>
 
-    <column styleClass="innerDialog">
+    <panel styleClass="innerDialog">
+      <column styleClass="innerDialogContent">
 
-      <label name="title" text="$seriesAmountEdition.title" styleClass="title"/>
-
-      <label ref="seriesName" styleClass="subtitle"/>
-
-      <column name="innerBlock" styleClass="dialogBlock" weightY="10">
-
-        <panel ref="editionPanel"/>
-
+        <label ref="seriesName" styleClass="subtitle"/>
+        <column name="innerBlock" styleClass="dialogBlock" weightY="10">
+          <panel ref="editionPanel"/>
+        </column>
       </column>
-    </column>
-
-  </panel>
+    </panel>
+  </column>
 
 </splits>

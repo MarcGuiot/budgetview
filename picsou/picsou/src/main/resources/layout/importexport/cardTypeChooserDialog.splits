@@ -3,29 +3,32 @@
   <styleImport file="/layout/commonStyles.splits"/>
   <styleImport file="/layout/dialogStyles.splits"/>
 
-  <panel styleClass="dialog" preferredSize="(480,400)" maximumSize="(480,2000)">
-    <column styleClass="innerDialog">
+  <column styleClass="dialog" preferredSize="(480,400)" maximumSize="(480,2000)">
 
-      <label text="$cardTypeChooser.title" name="title" styleClass="title"/>
+    <label text="$cardTypeChooser.title" name="title" styleClass="title"/>
 
-      <label text="$cardTypeChooser.message"/>
+    <panel styleClass="innerDialog">
+      <column styleClass="innerDialogContent">
 
-      <scrollPane forceVerticalScroll="true">
-        <column margin="10">
-          <repeat ref="cardTypeRepeat" styleClass="innerBlock">
-            <column ref="accountPanel" marginBottom="10">
-              <label ref="accountName" styleClass="item" anchor="left"/>
-              <comboBox ref="cardTypeCombo" marginLeft="40" margin="5"/>
-              <verticalBoxes marginLeft="60">
-                <textArea ref="message" styleClass="multiLineLabel" opaque="true" background="content.bg"/>
-              </verticalBoxes>
-            </column>
-          </repeat>
-          <filler fill="vertical"/>
-        </column>
-      </scrollPane>
+        <label text="$cardTypeChooser.message"/>
 
-    </column>
-  </panel>
+        <scrollPane forceVerticalScroll="true">
+          <column margin="10">
+            <repeat ref="cardTypeRepeat" styleClass="innerBlock">
+              <column ref="accountPanel" marginBottom="10">
+                <label ref="accountName" styleClass="item" anchor="left"/>
+                <comboBox ref="cardTypeCombo" marginLeft="40" margin="5"/>
+                <verticalBoxes marginLeft="60">
+                  <textArea ref="message" styleClass="multiLineLabel" opaque="true" background="content.bg"/>
+                </verticalBoxes>
+              </column>
+            </repeat>
+            <filler fill="vertical"/>
+          </column>
+        </scrollPane>
+
+      </column>
+    </panel>
+  </column>
 
 </splits>

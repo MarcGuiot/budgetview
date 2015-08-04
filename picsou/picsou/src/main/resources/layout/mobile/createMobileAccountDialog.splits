@@ -6,68 +6,64 @@
     <style selector="label.formSection" marginTop="10"/>
   </styles>
 
-  <panel styleClass="dialog" preferredSize="(560,580)" opaque="true">
+  <column styleClass="dialog" preferredSize="(560,580)">
+
+    <label text="$mobile.dialog.title" name="title" styleClass="title"/>
+
     <column styleClass="innerDialog">
+      <column styleClass="innerDialogContent">
 
-      <label text="$mobile.dialog.title" name="title" styleClass="title"/>
+        <cards ref="cards">
 
-      <column styleClass="innerDialogBlock" margin="10" marginTop="5" weightY="100">
+          <card name="activation">
+            <column>
+              <htmlEditorPane text="$mobile.dialog.intro.message" styleClass="multiLineLabel" margin="10"
+                              marginBottom="10" weightY="1"/>
 
-        <column margin="10">
+              <button icon="googleplay.png" action="gotoGooglePlay" styleClass="iconOnly" anchor="center" margin="5"/>
 
-          <cards ref="cards">
+              <htmlEditorPane text="$mobile.dialog.intro.activate" styleClass="multiLineLabel" margin="10"
+                              marginBottom="5" weightY="1"/>
 
-            <card name="activation">
-              <column>
-                <htmlEditorPane text="$mobile.dialog.intro.message" styleClass="multiLineLabel" margin="10"
-                                marginBottom="10" weightY="1"/>
+              <row>
+                <filler fill="horizontal"/>
+                <grid>
+                  <label text="$mobile.mail" gridPos="(0,0)" styleClass="formLabel"/>
+                  <textField ref="emailField" gridPos="(1,0,2,1)" columns="60"/>
+                  <label text="$mobile.password" gridPos="(0,1)" styleClass="formLabel" marginTop="10"/>
+                  <component ref="passwordEdition" gridPos="(2,1)" marginTop="10" weightY="0.01"/>
+                </grid>
+                <filler fill="horizontal"/>
+              </row>
 
-                <button icon="googleplay.png" action="gotoGooglePlay" styleClass="iconOnly" anchor="center" margin="5"/>
+              <button ref="activateMobileAccount" fill="none" margin="10" marginTop="20" anchor="center"/>
+              <component ref="progress" gridPos="(4,0)" fill="none" margin="10" anchor="center"
+                         weightX="0.1"/>
 
-                <htmlEditorPane text="$mobile.dialog.intro.activate" styleClass="multiLineLabel" margin="10"
-                                marginBottom="5" weightY="1"/>
+              <htmlEditorPane ref="message" styleClass="errorMessage" border="empty(10,0,10,0)"/>
 
-                <row>
-                  <filler fill="horizontal"/>
-                  <grid>
-                    <label text="$mobile.mail" gridPos="(0,0)" styleClass="formLabel"/>
-                    <textField ref="emailField" gridPos="(1,0,2,1)" columns="60"/>
-                    <label text="$mobile.password" gridPos="(0,1)" styleClass="formLabel" marginTop="10"/>
-                    <component ref="passwordEdition" gridPos="(2,1)" marginTop="10" weightY="0.01"/>
-                  </grid>
-                  <filler fill="horizontal"/>
-                </row>
+              <filler fill="vertical"/>
 
-                <button ref="activateMobileAccount" fill="none" margin="10" marginTop="20" anchor="center"/>
-                <component ref="progress" gridPos="(4,0)" fill="none" margin="10" anchor="center"
-                           weightX="0.1"/>
+            </column>
 
-                <htmlEditorPane ref="message" styleClass="errorMessage" border="empty(10,0,10,0)"/>
+          </card>
 
-                <filler fill="vertical"/>
+          <card name="confirmation">
+            <panel ref="confirmMobileAccount"/>
+          </card>
 
-              </column>
-
-            </card>
-
-            <card name="confirmation">
-              <panel ref="confirmMobileAccount"/>
-            </card>
-
-          </cards>
-
-        </column>
+        </cards>
       </column>
-
-      <row weightY="1" marginLeft="10" marginRight="10">
-        <label icon="security_lock.png" anchor="center" marginRight="10" weightX="0.1"/>
-        <row border="matte(0,1,0,0,#BBBBBB)" weightX="100">
-          <htmlEditorPane styleClass="multiLineLabel" text="$mobile.security" foreground="dialog.text.footer"
-                          anchor="top" marginLeft="10" font="-,plain,10"/>
-        </row>
-      </row>
-
     </column>
-  </panel>
+
+    <row weightY="1" marginLeft="10" marginRight="10">
+      <label icon="security_lock.png" anchor="center" marginRight="10" weightX="0.1"/>
+      <row border="matte(0,1,0,0,#BBBBBB)" weightX="100">
+        <htmlEditorPane styleClass="multiLineLabel" text="$mobile.security" foreground="dialog.text.footer"
+                        anchor="top" marginLeft="10" font="-,plain,10"/>
+      </row>
+    </row>
+
+  </column>
 
 </splits>

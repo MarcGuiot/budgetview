@@ -13,30 +13,33 @@
     <style id="error" selector="x" foreground="#FF0000"/>
   </styles>
 
-  <panel styleClass="dialog" preferredSize="(600,690)">
+  <column styleClass="dialog" preferredSize="(600,690)">
+
+    <label text="$import.preview.title" name="title" styleClass="title"/>
 
     <column styleClass="innerDialog">
+      <column styleClass="innerDialogContent">
 
-      <label text="$import.preview.title" name="title" styleClass="title"/>
+        <htmlEditorPane text="$import.account.message" weightY="0.1"/>
 
-      <htmlEditorPane text="$import.account.message" weightY="0.1"/>
+        <column styleClass="innerDialogBlock" margin="10" marginTop="5" weightY="100">
+          <panel ref="accountPanel" background="dialog.block" margin="10"/>
+          <filler fill="vertical"/>
+        </column>
 
-      <column styleClass="innerDialogBlock" margin="10" marginTop="5" weightY="100">
-        <panel ref="accountPanel" background="dialog.block" margin="10"/>
-        <filler fill="vertical"/>
+        <filler fill="vertical" weightY="50"/>
+
       </column>
+    </column>
 
-      <filler fill="vertical" weightY="50"/>
-
+    <row>
+      <filler fill="horizontal"/>
       <row>
         <filler fill="horizontal"/>
-        <row>
-          <filler fill="horizontal"/>
-          <button name="ignore" action="ignore" margin="10" marginRight="0" fill="horizontal"/>
-          <button name="import" action="import" margin="10" fill="horizontal"/>
-          <button name="close" action="close" margin="10" marginRight="0" fill="horizontal"/>
-        </row>
+        <button name="ignore" action="ignore" margin="10" marginRight="0" fill="horizontal"/>
+        <button name="import" action="import" margin="10" fill="horizontal"/>
+        <button name="close" action="close" margin="10" marginRight="0" fill="horizontal"/>
       </row>
-    </column>
-  </panel>
+    </row>
+  </column>
 </splits>

@@ -7,71 +7,65 @@
     <style selector="label.formSection" marginTop="10"/>
   </styles>
 
-  <panel styleClass="dialog" preferredSize="(560,500)" opaque="true">
-    <column styleClass="innerDialog">
+  <column styleClass="dialog" preferredSize="(560,500)">
+    <label text="$mobile.dialog.edit.title" name="title" styleClass="title"/>
+    <panel styleClass="innerDialog">
+      <column styleClass="innerDialogContent">
 
-      <label text="$mobile.dialog.edit.title" name="title" styleClass="title"/>
+        <cards ref="cards">
 
-      <column styleClass="innerDialogBlock" margin="10" marginTop="5" weightY="100">
+          <card name="activation">
+            <column>
+              <htmlEditorPane text="$mobile.dialog.edit.intro.message" styleClass="multiLineLabel" margin="10"
+                              marginBottom="5" weightY="1"/>
 
-        <column margin="10">
+              <row marginTop="10">
+                <filler fill="horizontal"/>
+                <grid>
+                  <label text="$mobile.delete.mail" gridPos="(0,0)" styleClass="formLabel"/>
+                  <textField ref="emailField" gridPos="(1,0,2,1)" columns="60"/>
+                  <component ref="passwordEdition" gridPos="(2,1)" marginTop="10" weightY="0.01"/>
+                </grid>
+                <filler fill="horizontal"/>
+              </row>
 
-          <cards ref="cards">
+              <htmlEditorPane text="$mobile.dialog.reactivate.message" styleClass="multiLineLabel" margin="10"
+                              marginTop="15" marginBottom="5" weightY="1"/>
+              <button ref="activateMobileAccount" fill="none" marginTop="10" anchor="center"/>
 
-            <card name="activation">
-              <column>
-                <htmlEditorPane text="$mobile.dialog.edit.intro.message" styleClass="multiLineLabel" margin="10"
-                                marginBottom="5" weightY="1"/>
+              <htmlEditorPane text="$mobile.dialog.delete.message" styleClass="multiLineLabel" margin="10"
+                              marginTop="15" marginBottom="5" weightY="1"/>
+              <button ref="delete" gridPos="(2,0)" fill="none" marginTop="10" anchor="center"/>
 
-                <row marginTop="10">
-                  <filler fill="horizontal"/>
-                  <grid>
-                    <label text="$mobile.delete.mail" gridPos="(0,0)" styleClass="formLabel"/>
-                    <textField ref="emailField" gridPos="(1,0,2,1)" columns="60"/>
-                    <component ref="passwordEdition" gridPos="(2,1)" marginTop="10" weightY="0.01"/>
-                  </grid>
-                  <filler fill="horizontal"/>
-                </row>
+              <component ref="progress" gridPos="(3,0)" fill="none" marginLeft="10" anchor="center"
+                         weightX="0.1"/>
 
-                <htmlEditorPane text="$mobile.dialog.reactivate.message" styleClass="multiLineLabel" margin="10"
-                                marginTop="15" marginBottom="5" weightY="1"/>
-                <button ref="activateMobileAccount" fill="none" marginTop="10" anchor="center"/>
+              <htmlEditorPane ref="message" styleClass="errorMessage" border="empty(10,0,10,0)"/>
+              <filler fill="vertical"/>
 
-                <htmlEditorPane text="$mobile.dialog.delete.message" styleClass="multiLineLabel" margin="10"
-                                marginTop="15" marginBottom="5" weightY="1"/>
-                <button ref="delete" gridPos="(2,0)" fill="none" marginTop="10" anchor="center"/>
+            </column>
 
-                <component ref="progress" gridPos="(3,0)" fill="none" marginLeft="10" anchor="center"
-                           weightX="0.1"/>
+          </card>
 
-                <htmlEditorPane ref="message" styleClass="errorMessage" border="empty(10,0,10,0)"/>
-                <filler fill="vertical"/>
+          <card name="confirmActivation">
+            <panel ref="confirmMobileAccount"/>
+          </card>
 
-              </column>
+          <card name="confirmDeletion">
+            <column>
+              <filler fill="vertical" weightY="50"/>
+              <row>
+                <label icon="status_completed.png" marginRight="10" anchor="top"/>
+                <htmlEditorPane text="$mobile.dialog.delete.confirmation" name="deletionMessage"/>
+              </row>
+              <filler fill="vertical" weightY="100"/>
+            </column>
+          </card>
 
-            </card>
+        </cards>
 
-            <card name="confirmActivation">
-              <panel ref="confirmMobileAccount"/>
-            </card>
-
-            <card name="confirmDeletion">
-              <column>
-                <filler fill="vertical" weightY="50"/>
-                <row>
-                  <label icon="status_completed.png" marginRight="10" anchor="top"/>
-                  <htmlEditorPane text="$mobile.dialog.delete.confirmation" name="deletionMessage"/>
-                </row>
-                <filler fill="vertical" weightY="100"/>
-              </column>
-            </card>
-
-          </cards>
-
-        </column>
       </column>
-
-    </column>
-  </panel>
+    </panel>
+  </column>
 
 </splits>

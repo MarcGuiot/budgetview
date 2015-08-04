@@ -7,19 +7,24 @@
     <style selector="repeat "/>
   </styles>
 
-  <panel styleClass="dialog" preferredSize="(450,350)" opaque="true">
-    <column styleClass="innerDialog">
-      <label text="$restore.snapshot.title" styleClass="title"/>
-      <htmlEditorPane text="$restore.snapshot.intro" weightY="0.1"/>
-      <scrollPane forceVerticalScroll="true" marginTop="20" weightY="100">
-        <repeat ref="versionRepeat" layout="verticalGrid" margin="10">
-          <row>
-            <button name="date" action="dateRef" styleClass="hyperlinkWithoutUnderline"
-                    fill="none" anchor="left" marginTop="5"/>
-          </row>
-        </repeat>
-      </scrollPane>
-    </column>
-  </panel>
+  <column styleClass="dialog" preferredSize="(450,450)">
+
+    <label text="$restore.snapshot.title" styleClass="title"/>
+
+    <panel styleClass="innerDialog">
+      <column styleClass="innerDialogContent">
+
+        <htmlEditorPane text="$restore.snapshot.intro" weightY="0.1"/>
+        <scrollPane forceVerticalScroll="true" marginTop="20" weightY="100" styleClass="innerDialogBlock">
+          <repeat ref="versionRepeat" layout="verticalGrid" margin="10">
+            <row>
+              <button name="date" action="dateRef" styleClass="hyperlinkWithoutUnderline"
+                      fill="none" anchor="left" marginTop="5"/>
+            </row>
+          </repeat>
+        </scrollPane>
+      </column>
+    </panel>
+  </column>
 
 </splits>

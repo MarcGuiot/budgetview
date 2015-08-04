@@ -3,14 +3,18 @@
   <styleImport file="/layout/commonStyles.splits"/>
   <styleImport file="/layout/dialogStyles.splits"/>
 
-  <panel styleClass="dialog">
+  <column styleClass="dialog">
+
+    <label text="$bankEntityEdition.title" name="title" styleClass="title"/>
+
     <column styleClass="innerDialog">
-      <label text="$bankEntityEdition.title" name="title" styleClass="title"/>
+      <column styleClass="innerDialogContent">
 
-      <panel ref="editionPanel"/>
+        <panel ref="editionPanel"/>
 
-      <filler fill="vertical"/>
+        <filler fill="vertical"/>
+      </column>
     </column>
-  </panel>
+  </column>
 
 </splits>

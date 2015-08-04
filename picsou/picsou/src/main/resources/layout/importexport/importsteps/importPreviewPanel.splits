@@ -9,62 +9,64 @@
            fill="none" anchor="left" font="-,bold,12" marginBottom="5"/>
   </styles>
 
-  <panel styleClass="dialog" preferredSize="(600,690)">
+  <column styleClass="dialog" preferredSize="(600,690)">
+
+    <label text="$import.preview.title" name="title" styleClass="title"/>
 
     <column styleClass="innerDialog">
+      <column styleClass="innerDialogContent">
 
-      <label text="$import.preview.title" name="title" styleClass="title"/>
+        <label text="$import.file.to.import" marginBottom="5"/>
+        <label ref="fileName"/>
 
-      <label text="$import.file.to.import" marginBottom="5"/>
-      <label ref="fileName"/>
+        <htmlEditorPane ref="accountCountInfo"/>
 
-      <htmlEditorPane ref="accountCountInfo"/>
-
-      <cards ref="mainCardOperations">
-        <card name="cardOperations">
-          <column>
-            <scrollPane maximumSize="(400,300)" weightY="500">
-              <table ref="table"/>
-            </scrollPane>
-            <label icon="downArrow(50,15,50,15,categorization.downArrow)"
-                   fill="none" anchor="center" weightY="0.01" marginBottom="5"/>
-          </column>
-        </card>
-        <card name="noOperations">
-          <scrollPane forceVerticalScroll="true">
+        <cards ref="mainCardOperations">
+          <card name="cardOperations">
             <column>
-              <htmlEditorPane ref="noOperationLabel" styleClass="importantMessage" margin="10"/>
-              <filler fill="vertical"/>
+              <scrollPane maximumSize="(400,300)" weightY="500" styleClass="innerDialogBlock">
+                <table ref="table"/>
+              </scrollPane>
+              <label icon="downArrow(50,15,50,15,categorization.downArrow)"
+                     fill="none" anchor="center" weightY="0.01" marginBottom="5"/>
             </column>
-          </scrollPane>
-        </card>
-      </cards>
+          </card>
+          <card name="noOperations">
+            <scrollPane forceVerticalScroll="true">
+              <column>
+                <htmlEditorPane ref="noOperationLabel" styleClass="importantMessage" margin="10"/>
+                <filler fill="vertical"/>
+              </column>
+            </scrollPane>
+          </card>
+        </cards>
 
-      <panel ref="dateSelectionPanel"/>
+        <panel ref="dateSelectionPanel"/>
 
-      <row weightY="0.01" margin="10" autoHideSource="accountCombo">
-        <filler fill="horizontal"/>
-        <label ref="accountSelectionLabel" styleClass="formLabel"/>
-        <comboBox ref="accountCombo"/>
-        <filler fill="horizontal"/>
-      </row>
+        <row weightY="0.01" margin="10" autoHideSource="accountCombo">
+          <filler fill="horizontal"/>
+          <label ref="accountSelectionLabel" styleClass="formLabel"/>
+          <comboBox ref="accountCombo"/>
+          <filler fill="horizontal"/>
+        </row>
 
-      <panel weightY="0.01" background="import.preview.account.bg" border="line(dialog.border)">
-        <panel ref="accountEditionPanel" margin="10"/>
-      </panel>
+        <panel weightY="0.01" styleClass="innerDialogBlock">
+          <panel ref="accountEditionPanel" margin="10"/>
+        </panel>
 
-      <panel minimumSize="(200,20)" opaque="false" marginTop="5">
-        <htmlEditorPane ref="importMessage" styleClass="errorMessage"/>
-      </panel>
+        <panel minimumSize="(200,20)" opaque="false" marginTop="5">
+          <htmlEditorPane ref="importMessage" styleClass="errorMessage"/>
+        </panel>
 
-      <row>
-        <filler fill="horizontal"/>
-        <button action="finish" margin="10" fill="horizontal"/>
-        <button action="skipFile" margin="10" marginRight="0" fill="horizontal"/>
-      </row>
-
+      </column>
     </column>
 
-  </panel>
+    <row>
+      <filler fill="horizontal"/>
+      <button action="finish" margin="10" fill="horizontal"/>
+      <button action="skipFile" margin="10" marginRight="0" fill="horizontal"/>
+    </row>
+
+  </column>
 
 </splits>

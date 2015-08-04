@@ -3,20 +3,21 @@
   <styleImport file="/layout/commonStyles.splits"/>
   <styleImport file="/layout/dialogStyles.splits"/>
 
-  <panel styleClass="dialog" preferredSize="(500,180)">
+  <column styleClass="dialog" preferredSize="(500,180)">
 
-    <column styleClass="innerDialog">
+    <label text="$transaction.delete.title" name="title" styleClass="title"/>
 
-      <label text="$transaction.delete.title" name="title" styleClass="title"/>
+    <panel styleClass="innerDialog">
+      <column styleClass="innerDialogContent">
 
-      <htmlEditorPane ref="message" marginBottom="10"/>
+        <htmlEditorPane ref="message" marginBottom="10"/>
 
-      <checkBox ref="updateAccountPosition"
-                text="$transactionCreation.updateAccount"
-                marginTop="10"/>
+        <checkBox ref="updateAccountPosition"
+                  text="$transactionCreation.updateAccount"
+                  marginTop="10"/>
 
-    </column>
-
-  </panel>
+      </column>
+    </panel>
+  </column>
 
 </splits>

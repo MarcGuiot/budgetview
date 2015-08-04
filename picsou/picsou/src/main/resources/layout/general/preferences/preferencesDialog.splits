@@ -6,26 +6,27 @@
     <style selector=".tabContent" margin="10"/>
   </styles>
 
-  <panel styleClass="dialog" preferredSize="(620, 430)" opaque="true">
-    <column styleClass="innerDialog">
+  <column styleClass="dialog" preferredSize="(620, 430)">
+    <label text="$preferences.title" name="title" styleClass="title"/>
+    <panel styleClass="innerDialog">
+      <column styleClass="innerDialogContent">
 
-      <label text="$preferences.title" name="title" styleClass="title"/>
+        <tabs>
+          <tab title="$preferences.tab.theme">
+            <panel ref="colorsPane" styleClass="tabContent"/>
+          </tab>
 
-      <tabs>
-        <tab title="$preferences.tab.theme">
-          <panel ref="colorsPane" styleClass="tabContent"/>
-        </tab>
+          <tab title="$preferences.tab.params">
+            <panel ref="parametersPane" styleClass="tabContent"/>
+          </tab>
 
-        <tab title="$preferences.tab.params">
-          <panel ref="parametersPane" styleClass="tabContent"/>
-        </tab>
+          <tab title="$preferences.tab.storage">
+            <panel ref="dataPathPane" styleClass="tabContent"/>
+          </tab>
+        </tabs>
 
-        <tab title="$preferences.tab.storage">
-          <panel ref="dataPathPane" styleClass="tabContent"/>
-        </tab>
-      </tabs>
-
-    </column>
-  </panel>
+      </column>
+    </panel>
+  </column>
 
 </splits>

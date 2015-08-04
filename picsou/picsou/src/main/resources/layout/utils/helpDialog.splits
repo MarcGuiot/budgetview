@@ -11,30 +11,33 @@
            opaque="false" foreground="block.text" marginTop="10" marginBottom="10"/>
   </styles>
 
-  <panel styleClass="dialog" preferredSize="(600,600)" opaque="true">
-    <column styleClass="innerDialog">
+  <column styleClass="dialog" preferredSize="(600,600)">
 
-      <label ref="title"/>
+    <label ref="title"/>
 
-      <column styleClass="blockScrollBorder">
-        <scrollPane weightY="100">
-          <htmlEditorPane ref="editor" useImageLocator="true" opaque="false" foreground="block.text"/>
-        </scrollPane>
+    <panel styleClass="innerDialog">
+      <column styleClass="innerDialogContent">
 
-        <row name="wizardControls" styleClass="footer" weightY="0.1" margin="0">
-          <button action="back" name="back" tooltipText="$helpDialog.back.tooltip"
-                  icon="button_prev.png" disabledIcon="button_prev_disabled.png"/>
-          <button action="forward" name="forward" tooltipText="$helpDialog.forward.tooltip"
-                  icon="button_next.png" disabledIcon="button_next_disabled.png"/>
-          <filler fill="horizontal"/>
-          <button action="home"/>
-        </row>
+        <column styleClass="blockScrollBorder">
+          <scrollPane weightY="100">
+            <htmlEditorPane ref="editor" useImageLocator="true" opaque="false" foreground="block.text"/>
+          </scrollPane>
+
+          <row name="wizardControls" styleClass="footer" weightY="0.1" margin="0">
+            <button action="back" name="back" tooltipText="$helpDialog.back.tooltip"
+                    icon="button_prev.png" disabledIcon="button_prev_disabled.png"/>
+            <button action="forward" name="forward" tooltipText="$helpDialog.forward.tooltip"
+                    icon="button_next.png" disabledIcon="button_next_disabled.png"/>
+            <filler fill="horizontal"/>
+            <button action="home"/>
+          </row>
+        </column>
+
+        <htmlEditorPane text="$helpDialog.message.bottom" name="bottomMessage"
+                        hyperlinkListener="hyperlinkHandler" marginTop="5" marginBottom="5"/>
+
       </column>
-
-      <htmlEditorPane text="$helpDialog.message.bottom" name="bottomMessage"
-                      hyperlinkListener="hyperlinkHandler" marginTop="5" marginBottom="5"/>
-
-    </column>
-  </panel>
+    </panel>
+  </column>
 
 </splits>

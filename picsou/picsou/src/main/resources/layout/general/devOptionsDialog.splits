@@ -3,19 +3,21 @@
   <styleImport file="/layout/commonStyles.splits"/>
   <styleImport file="/layout/dialogStyles.splits"/>
 
-  <panel styleClass="dialog" preferredSize="(600, 500)" opaque="true">
-    <column styleClass="innerDialog">
+  <column styleClass="dialog" preferredSize="(600, 500)">
 
-      <label text="Dev Options" name="title" styleClass="title"/>
+    <label text="Dev Options" name="title" styleClass="title"/>
+    <panel styleClass="innerDialog">
+      <column styleClass="innerDialogContent">
 
-      <grid weightY="0.1">
-        <label gridPos="(0,0)" text="$preferences.timespan.back" styleClass="formLabel" marginTop="5"/>
-        <comboBox gridPos="(1,0)" ref="monthBack" marginTop="5"/>
-        <label gridPos="(0,1)" text="$preferences.timespan.period" styleClass="formLabel" marginTop="5"/>
-        <comboBox gridPos="(1,1)" ref="period" marginTop="5"/>
-      </grid>
+        <grid weightY="0.1">
+          <label gridPos="(0,0)" text="$preferences.timespan.back" styleClass="formLabel" marginTop="5"/>
+          <comboBox gridPos="(1,0)" ref="monthBack" marginTop="5"/>
+          <label gridPos="(0,1)" text="$preferences.timespan.period" styleClass="formLabel" marginTop="5"/>
+          <comboBox gridPos="(1,1)" ref="period" marginTop="5"/>
+        </grid>
 
-    </column>
-  </panel>
+      </column>
+    </panel>
+  </column>
 
 </splits>

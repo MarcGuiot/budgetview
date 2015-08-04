@@ -8,23 +8,26 @@
     <style selector="htmlEditorPane.radioDescription" marginBottom="10" marginLeft="10" anchor="top"/>
   </styles>
 
-  <panel styleClass="dialog" preferredSize="(550, 340)" opaque="true">
-    <column styleClass="innerDialog">
-      <label text="$data.path.transferMode.title" styleClass="title"/>
-      <scrollPane forceVerticalScroll="true">
-        <row>
-          <label icon="status_question.png" weightX="1" marginLeft="10" marginRight="5" marginTop="10" fill="none" anchor="top"/>
-          <column weightX="100">
-            <htmlEditorPane text="$data.path.transferMode.content" marginBottom="10" anchor="top"/>
-            <radioButton ref="overwriteRadio"/>
-            <htmlEditorPane text="$data.path.transferMode.overwrite.description" styleClass="radioDescription"/>
-            <radioButton ref="useRadio"/>
-            <htmlEditorPane text="$data.path.transferMode.use.description" styleClass="radioDescription"/>
-            <filler fill="vertical"/>
-          </column>
-        </row>
-      </scrollPane>
-    </column>
-  </panel>
+  <column styleClass="dialog" preferredSize="(550, 340)">
+    <label text="$data.path.transferMode.title" styleClass="title"/>
+    <panel styleClass="innerDialog">
+      <column styleClass="innerDialogContent">
+        <scrollPane forceVerticalScroll="true">
+          <row>
+            <label icon="status_question.png" weightX="1" marginLeft="10" marginRight="5" marginTop="10" fill="none"
+                   anchor="top"/>
+            <column weightX="100">
+              <htmlEditorPane text="$data.path.transferMode.content" marginBottom="10" anchor="top"/>
+              <radioButton ref="overwriteRadio"/>
+              <htmlEditorPane text="$data.path.transferMode.overwrite.description" styleClass="radioDescription"/>
+              <radioButton ref="useRadio"/>
+              <htmlEditorPane text="$data.path.transferMode.use.description" styleClass="radioDescription"/>
+              <filler fill="vertical"/>
+            </column>
+          </row>
+        </scrollPane>
+      </column>
+    </panel>
+  </column>
 
 </splits>

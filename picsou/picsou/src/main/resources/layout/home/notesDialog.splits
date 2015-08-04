@@ -3,17 +3,20 @@
   <styleImport file="/layout/commonStyles.splits"/>
   <styleImport file="/layout/dialogStyles.splits"/>
 
-  <panel styleClass="dialog" preferredSize="(400,400)">
-    <column styleClass="innerDialog">
+  <column styleClass="dialog" preferredSize="(400,400)">
 
-      <label text="$notesDialog.title" styleClass="title"/>
+    <label text="$notesDialog.title" styleClass="title"/>
 
-      <scrollPane verticalUnitIncrement="10" forceVerticalScroll="true" border="line(block.inner.border)"
-                  marginBottom="0">
-        <textArea ref="notesEditor" lineWrap="true" wrapStyleWord="true" margin="5" fill="both"/>
-      </scrollPane>
+    <panel styleClass="innerDialog">
+      <column styleClass="innerDialogContent">
 
-    </column>
-  </panel>
+        <scrollPane verticalUnitIncrement="10" forceVerticalScroll="true" styleClass="innerDialogBlock"
+                    marginBottom="0">
+          <textArea ref="notesEditor" lineWrap="true" wrapStyleWord="true" margin="5" fill="both"/>
+        </scrollPane>
+
+      </column>
+    </panel>
+  </column>
 
 </splits>

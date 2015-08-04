@@ -3,15 +3,18 @@
   <styleImport file="/layout/commonStyles.splits"/>
   <styleImport file="/layout/dialogStyles.splits"/>
 
-  <panel styleClass="dialog" preferredSize="(550,160)">
-    <column styleClass="innerDialog">
+  <column styleClass="dialog" preferredSize="(550,160)">
+    <label ref="title" styleClass="title"/>
 
-      <label ref="title"  styleClass="title"/>
-      <htmlEditorPane ref="message" marginBottom="10"/>
-      <textArea ref="filePath" styleClass="multiLineLabel" marginLeft="20"/>
-      <filler fill="vertical"/>
+    <panel styleClass="innerDialog">
+      <column styleClass="innerDialogContent">
 
-    </column>
-  </panel>
+        <htmlEditorPane ref="message" marginBottom="10"/>
+        <textArea ref="filePath" styleClass="multiLineLabel" marginLeft="20"/>
+        <filler fill="vertical"/>
+
+      </column>
+    </panel>
+  </column>
 
 </splits>

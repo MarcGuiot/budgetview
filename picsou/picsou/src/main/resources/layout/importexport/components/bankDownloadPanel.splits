@@ -1,6 +1,7 @@
 <splits xmlns="http://www.globsframework.org/xml/splits.xsd">
 
   <styleImport file="/layout/commonStyles.splits"/>
+  <styleImport file="/layout/dialogStyles.splits"/>
   <styleImport file="/layout/importexport/components/importDialogStyles.splits"/>
 
   <styles>
@@ -59,7 +60,7 @@
 
           <row marginTop="5" marginLeft="10" weightY="100">
 
-            <column weightX="2" preferredSize="(200,200)">
+            <column weightX="2" preferredSize="(200,200)" styleClass="innerDialogBlock">
               <panel ref="bankChooserPanel"/>
             </column>
 

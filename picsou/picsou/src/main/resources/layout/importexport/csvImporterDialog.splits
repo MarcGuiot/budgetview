@@ -11,30 +11,32 @@
     <style selector="label#first" font="-,bold,13" fill="none" anchor="right"
            marginRight="10" marginBottom="5" marginTop="5"/>
     <style selector="label#second" marginLeft="10" font="-,plain,12" fill="none" anchor="right" marginRight="10"/>
-    <style selector="comboBox#dataName"  marginBottom="5" marginTop="5"/>
+    <style selector="comboBox#dataName" marginBottom="5" marginTop="5"/>
     <style selector="scrollPane" border="matte(1,1,0,1,block.inner.border)"/>
   </styles>
 
-  <panel styleClass="dialog" preferredSize="(600,650)">
+  <column styleClass="dialog" preferredSize="(600,650)">
+
+    <label text="$import.csv.title" name="title" styleClass="title"/>
 
     <column styleClass="innerDialog">
+      <column styleClass="innerDialogContent">
 
-      <label text="$import.csv.title" name="title" styleClass="title"/>
+        <htmlEditorPane text="$import.csv.intro" marginTop="5" marginBottom="5" weightY="0.1"/>
 
-      <htmlEditorPane text="$import.csv.intro" marginTop="5"  marginBottom="5" weightY="0.1"/>
-      
-      <scrollPane forceVerticalScroll="true" weightY="100">
-        <repeat ref="csvAssociationsRepeat" layout="verticalGrid">
-          <column name="association">
-            <label ref="first"/>
-            <label ref="second"/>
-          </column>
-          <comboBox ref="dataName"/>
-        </repeat>
-      </scrollPane>
+        <scrollPane forceVerticalScroll="true" weightY="100">
+          <repeat ref="csvAssociationsRepeat" layout="verticalGrid">
+            <column name="association">
+              <label ref="first"/>
+              <label ref="second"/>
+            </column>
+            <comboBox ref="dataName"/>
+          </repeat>
+        </scrollPane>
 
-      <htmlEditorPane ref="message" marginTop="5" marginBottom="10" weightY="0.1"/>
+        <htmlEditorPane ref="message" marginTop="5" marginBottom="10" weightY="0.1"/>
 
+      </column>
     </column>
-  </panel>
+  </column>
 </splits>

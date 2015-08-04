@@ -158,7 +158,7 @@ public class PicsouDialog extends JDialog {
     if (colorUpdater != null) {
       colorUpdater.dispose();
     }
-    colorUpdater = new BackgroundColorUpdater("dialog.bg.bottom", contentPane);
+    colorUpdater = new BackgroundColorUpdater("dialog.bg", contentPane);
     colorUpdater.install(colorService);
     super.setContentPane(contentPane);
   }
@@ -228,6 +228,7 @@ public class PicsouDialog extends JDialog {
     this.directory = directory;
     setTitle(Lang.get("application"));
     colorService = directory.get(ColorService.class);
+    setBackground(colorService.get("dialog.bg"));
 
     if (GuiUtils.isMacOSX()) {
       addWindowFocusListener(new WindowFocusListener() {
@@ -266,7 +267,7 @@ public class PicsouDialog extends JDialog {
 
   public void showCentered() {
     if (colorUpdater == null) {
-      colorUpdater = new BackgroundColorUpdater("dialog.bg.bottom", getContentPane());
+      colorUpdater = new BackgroundColorUpdater("dialog.bg", getContentPane());
       colorUpdater.install(colorService);
     }
     GuiUtils.showCentered(this);

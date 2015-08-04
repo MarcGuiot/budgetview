@@ -3,14 +3,16 @@
   <styleImport file="/layout/commonStyles.splits"/>
   <styleImport file="/layout/dialogStyles.splits"/>
 
-  <panel styleClass="dialog" preferredSize="(480,230)">
-    <column styleClass="innerDialog">
-      <label text="$series.carryOver.dialog.title" name="title" styleClass="title"/>
-      <htmlEditorPane ref="message"/>
-      <radioButton ref="single"/>
-      <radioButton ref="several"/>
-      <filler fill="vertical"/>
-    </column>
-  </panel>
+  <column styleClass="dialog" preferredSize="(480,230)">
+    <label text="$series.carryOver.dialog.title" name="title" styleClass="title"/>
+    <panel styleClass="innerDialog">
+      <column styleClass="innerDialogContent">
+        <htmlEditorPane ref="message"/>
+        <radioButton ref="single"/>
+        <radioButton ref="several"/>
+        <filler fill="vertical"/>
+      </column>
+    </panel>
+  </column>
 
 </splits>

@@ -2,17 +2,14 @@
 
   <styleImport file="/layout/commonStyles.splits"/>
 
-  <styles>
-    <style selector="button.addBank" ui="hyperlinkButton" marginTop="5" foreground="#0000FF"/>
-  </styles>
-
   <column>
-    <row>
-      <label icon="button_magnifier.png" marginRight="5"/>
-      <textField ref="bankEditor"/>
+    <row background="block.footer.bg" border="matte(0,0,1,0,block.footer.top)" opaque="true">
+      <label icon="button_magnifier.png" marginRight="5" marginTop="2" marginBottom="2"/>
+      <textField ref="bankEditor" marginTop="2" marginBottom="2"/>
       <button ref="countrySelector"
               icon="arrow_down.png" rolloverIcon="arrow_down_roll.png" fill="none" iconTextGap="2"
-              ui="hyperlinkButtonWithoutUnderline" foreground="block.footer.button"/>
+              ui="hyperlinkButtonWithoutUnderline" foreground="block.footer.button"
+              marginTop="2" marginBottom="2"/>
     </row>
     <column styleClass="blockScrollBorder">
       <scrollPane>
