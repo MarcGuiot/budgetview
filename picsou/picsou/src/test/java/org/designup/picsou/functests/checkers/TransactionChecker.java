@@ -333,24 +333,28 @@ public class TransactionChecker extends FilteredViewChecker<TransactionChecker> 
     editNote(getIndexOf(transactionLabel), note);
   }
 
+  public TransactionChecker showPlannedTransactions() {
+    getShowPlannedCheckBox().select();
+    return this;
+  }
+
   public TransactionChecker hidePlannedTransactions() {
-    openActionPopup().unselect(Lang.get("transactionView.showPlannedTransactions"));
+    getShowPlannedCheckBox().unselect();
     return this;
   }
 
   public TransactionChecker checkShowsPlannedTransactions() {
-    openActionPopup().checkItemSelected(Lang.get("transactionView.showPlannedTransactions"));
+    assertThat(getShowPlannedCheckBox().isSelected());
     return this;
   }
 
   public TransactionChecker checkHidesPlannedTransactions() {
-    openActionPopup().checkItemUnselected(Lang.get("transactionView.showPlannedTransactions"));
+    assertFalse(getShowPlannedCheckBox().isSelected());
     return this;
   }
 
-  public TransactionChecker showPlannedTransactions() {
-    openActionPopup().select(Lang.get("transactionView.showPlannedTransactions"));
-    return this;
+  private CheckBox getShowPlannedCheckBox() {
+    return getPanel().getCheckBox(Lang.get("transactionView.showPlannedTransactions"));
   }
 
   private PopupButton openActionPopup() {

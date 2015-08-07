@@ -11,6 +11,7 @@
     <verticalSplit styleClass="blockDivider" opaque="false" ref="transactionChartSplit">
       <column>
         <row>
+          <checkBox ref="showPlanned"/>
           <filler fill="horizontal"/>
           <component ref="transactionSearch"/>
           <button ref="actionsMenu" styleClass="actionsButton" marginLeft="20"/>

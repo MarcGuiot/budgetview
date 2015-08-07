@@ -82,7 +82,7 @@ public class TransactionView extends View implements Filterable {
   private GlobMatcher filter = GlobMatchers.ALL;
   private FilterManager filterManager;
   private TableHeaderPainter headerPainter;
-  private JCheckBoxMenuItem showPlannedTransactionsCheckbox;
+  private JCheckBox showPlannedTransactionsCheckbox;
   private TextFilterPanel search;
   private TransactionTableActions tableActions;
 
@@ -124,6 +124,8 @@ public class TransactionView extends View implements Filterable {
     FilterMessagePanel filterClearingPanel = new FilterMessagePanel(filterManager, repository, directory);
     builder.add("customFilterMessage", filterClearingPanel.getPanel());
 
+    builder.add("showPlanned", showPlannedTransactionsCheckbox);
+
     search = new TransactionFilterPanel(filterManager, repository, directory);
     builder.add("transactionSearch", search.getPanel());
 
@@ -136,7 +138,6 @@ public class TransactionView extends View implements Filterable {
     JPopupMenu tablePopup = new JPopupMenu();
     tableActions.addActions(tablePopup, false);
     tablePopup.addSeparator();
-    tablePopup.add(showPlannedTransactionsCheckbox);
     tablePopup.add(view.getCopyTableAction(Lang.get("copyTable")));
     tablePopup.add(new PrintTransactionsAction(view, repository, directory));
     tablePopup.addSeparator();
@@ -206,7 +207,7 @@ public class TransactionView extends View implements Filterable {
   }
 
   private void addShowPlannedTransactionsCheckbox() {
-    showPlannedTransactionsCheckbox = new JCheckBoxMenuItem(Lang.get("transactionView.showPlannedTransactions"));
+    showPlannedTransactionsCheckbox = new JCheckBox(Lang.get("transactionView.showPlannedTransactions"));
     showPlannedTransactionsCheckbox.addActionListener(new AbstractAction() {
       public void actionPerformed(ActionEvent e) {
         updateShowTransactionsMatcher();
