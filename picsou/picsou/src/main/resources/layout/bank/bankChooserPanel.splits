@@ -5,7 +5,7 @@
   <column>
     <row background="block.footer.bg" border="matte(0,0,1,0,block.footer.top)" opaque="true">
       <label icon="button_magnifier.png" marginRight="5" marginTop="2" marginBottom="2"/>
-      <textField ref="bankEditor" marginTop="2" marginBottom="2"/>
+      <textField ref="bankEditor" marginTop="3" marginBottom="2"/>
       <button ref="countrySelector"
               icon="arrow_down.png" rolloverIcon="arrow_down_roll.png" fill="none" iconTextGap="2"
               ui="hyperlinkButtonWithoutUnderline" foreground="block.footer.button"

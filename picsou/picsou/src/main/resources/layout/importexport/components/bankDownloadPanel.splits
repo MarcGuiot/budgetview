@@ -10,8 +10,7 @@
     <style selector="button.synchronize" marginTop="10" fill="none" anchor="center"/>
     <style selector="button.rightButton" fill="none" anchor="right" weightX="0.1"/>
     <style selector="label.nextArrow" border="empty(0,5,0,0)" icon="rightArrow(18,18,12,12,#999999)"/>
-    <style selector=".accountPanel" weightY="50"/>
-    <style selector="button.backButton" border="empty(5,0,0,0)"
+    <style selector="button.backButton" border="empty(10,0,0,0)"
            fill="none" anchor="left"
            ui="hyperlinkButton" foreground="hyperlink"
            font="-,plain,12"
@@ -29,7 +28,7 @@
             <htmlEditorPane text="$import.synchroSelection.synchro.intro" marginBottom="5" font="-,plain,12"
                             styleClass="multiLineLabel"/>
             <row>
-              <component ref="synchroAccountsPanel" styleClass="accountPanel"/>
+              <component ref="synchroAccountsPanel" styleClass="innerDialogBlock" weightY="50"/>
               <button action="startSynchro" styleClass="rightButton"/>
               <label styleClass="nextArrow"/>
             </row>
@@ -38,7 +37,7 @@
           <column styleClass="separator" weightY="1" marginTop="15">
             <label icon="import_bank.png" text="$import.fileSelection.bank.title" styleClass="sectionTitle"
                    marginTop="20"/>
-            <component ref="manualAccountsPanel" styleClass="accountPanel"/>
+            <component ref="manualAccountsPanel" styleClass="innerDialogBlock" weightY="50"/>
             <row>
               <htmlEditorPane text="$import.synchroSelection.bankSelection.message" styleClass="multiLineLabel"
                               weightX="100"/>

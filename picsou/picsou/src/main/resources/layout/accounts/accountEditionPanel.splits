@@ -21,7 +21,7 @@
 
           <label text="$account.bank" gridPos="(0,1)" styleClass="formLabel"/>
           <row gridPos="(1,1,4,1)" marginBottom="10">
-            <button ref="bankSelector" styleClass="itemLink"/>
+            <button ref="bankSelector" styleClass="itemLink" marginTop="2"/>
             <label ref="bankFlag" styleClass="mandatoryFieldFlag"/>
             <filler fill="horizontal"/>
           </row>
