@@ -1,14 +1,14 @@
 package org.designup.picsou.gui.signpost.utils;
 
+import org.designup.picsou.gui.components.layout.CustomLayout;
 import org.globsframework.utils.exceptions.UnexpectedApplicationState;
 
 import java.awt.*;
 
-public class SignpostSectionLayout implements LayoutManager {
+public class SignpostSectionLayout extends CustomLayout {
 
   private static final int MIN_DESCRIPTION_HEIGHT = 40;
 
-  private boolean initialized = false;
   private Component title;
   private Component description;
   private Component button;
@@ -18,37 +18,25 @@ public class SignpostSectionLayout implements LayoutManager {
   private static final int VERTICAL_MARGIN = 10;
   private static final int BOTTOM_MARGIN = 30;
 
-  public void addLayoutComponent(String name, Component comp) {
+  public int getPreferredWidth() {
+    return Integer.MAX_VALUE;
   }
 
-  public void removeLayoutComponent(Component comp) {
+  public int getPreferredHeight() {
+    return getMinHeight();
   }
 
-  public Dimension preferredLayoutSize(Container parent) {
-    if (!initialized) {
-      init(parent);
-    }
-    return new Dimension(Integer.MAX_VALUE, getMinHeight());
-  }
-
-  public Dimension minimumLayoutSize(Container parent) {
-    if (!initialized) {
-      init(parent);
-    }
-    return new Dimension(getMinWidth(), getMinHeight());
-  }
-
-  private int getMinHeight() {
+  public int getMinHeight() {
     return title.getPreferredSize().height + MIN_DESCRIPTION_HEIGHT + button.getPreferredSize().height +
            TOP_MARGIN + BOTTOM_MARGIN + 2 * VERTICAL_MARGIN;
   }
 
-  private int getMinWidth() {
+  public int getMinWidth() {
     return title.getPreferredSize().width +
            2 * HORIZONTAL_MARGIN;
   }
 
-  private void init(Container parent) {
+  public void init(Container parent) {
     for (Component component : parent.getComponents()) {
       if (component.getName().equals("sectionTitle")) {
         title = component;
@@ -63,19 +51,9 @@ public class SignpostSectionLayout implements LayoutManager {
         throw new UnexpectedApplicationState("Unexpected component found in layout: " + component);
       }
     }
-    initialized = true;
   }
 
-  public void layoutContainer(Container parent) {
-    if (!initialized) {
-      init(parent);
-    }
-
-    Insets insets = parent.getInsets();
-    int top = insets.top;
-    int left = insets.left;
-    int width = parent.getSize().width;
-    int height = parent.getSize().height;
+  public void layoutComponents(int top, int bottom, int left, int right, int width, int height) {
 
     int componentLeft = left + HORIZONTAL_MARGIN;
     int componentWidth = width - 2 * HORIZONTAL_MARGIN;

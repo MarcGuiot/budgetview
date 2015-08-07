@@ -1,13 +1,12 @@
 package org.designup.picsou.gui.accounts.utils;
 
+import org.designup.picsou.gui.components.layout.CustomLayout;
 import org.globsframework.utils.exceptions.UnexpectedApplicationState;
 
-import javax.swing.*;
 import java.awt.*;
 
-public class AccountBlockLayout implements LayoutManager {
+public class AccountBlockLayout extends CustomLayout {
 
-  private boolean initialized = false;
   private Component editAccount;
   private Component accountPosition;
   private Component accountUpdateDate;
@@ -22,32 +21,20 @@ public class AccountBlockLayout implements LayoutManager {
   private static final int CHART_PADDING = 4;
   private static final int CHART_LEFT_PADDING = 4;
 
-  public void addLayoutComponent(String name, Component comp) {
+  public int getPreferredWidth() {
+    return Integer.MAX_VALUE;
   }
 
-  public void removeLayoutComponent(Component comp) {
+  public int getPreferredHeight() {
+    return getMinHeight();
   }
 
-  public Dimension preferredLayoutSize(Container parent) {
-    if (!initialized) {
-      init(parent);
-    }
-    return new Dimension(Integer.MAX_VALUE, getMinHeight());
-  }
-
-  public Dimension minimumLayoutSize(Container parent) {
-    if (!initialized) {
-      init(parent);
-    }
-    return new Dimension(getMinWidth(), getMinHeight());
-  }
-
-  private int getMinHeight() {
+  protected int getMinHeight() {
     int chartHeight = positionsChart.isVisible() ? VERTICAL_MARGIN + CHART_HEIGHT : 0;
     return getFirstRowHeight() + 2 * VERTICAL_MARGIN + accountUpdateDate.getPreferredSize().height + chartHeight;
   }
 
-  private int getMinWidth() {
+  protected int getMinWidth() {
     return editAccount.getPreferredSize().width +
            accountWeather.getPreferredSize().width +
            accountPosition.getPreferredSize().width +
@@ -56,7 +43,7 @@ public class AccountBlockLayout implements LayoutManager {
            5 * HORIZONTAL_MARGIN;
   }
 
-  private void init(Container parent) {
+  protected void init(Container parent) {
     for (Component component : parent.getComponents()) {
       if (component.getName().equals("editAccount")) {
         editAccount = component;
@@ -83,20 +70,9 @@ public class AccountBlockLayout implements LayoutManager {
         throw new UnexpectedApplicationState("Unexpected component found in layout: " + component);
       }
     }
-    initialized = true;
   }
 
-  public void layoutContainer(Container parent) {
-    if (!initialized) {
-      init(parent);
-    }
-
-    Insets insets = parent.getInsets();
-    int top = insets.top;
-    int left = insets.left;
-    int width = parent.getSize().width;
-    int right = width - insets.right;
-
+  public void layoutComponents(int top, int bottom, int left, int right, int totalWidth, int totalHeight) {
     int firstRowHeight = getFirstRowHeight();
     int secondRowHeight = accountUpdateDate.getPreferredSize().height;
     int textRowsHeight = firstRowHeight + VERTICAL_MARGIN + secondRowHeight;
@@ -104,43 +80,41 @@ public class AccountBlockLayout implements LayoutManager {
     int selectAccountTop = top + textRowsHeight / 2 - selectAccount.getPreferredSize().height / 2;
     int selectAccountLeft = left + HORIZONTAL_MARGIN;
     int selectAccountRight = selectAccountLeft + selectAccount.getPreferredSize().width;
-    selectAccount.setBounds(selectAccountLeft, selectAccountTop,
-                            selectAccount.getPreferredSize().width, selectAccount.getPreferredSize().height);
+    layout(selectAccount, selectAccountLeft, selectAccountTop);
 
     int toggleGraphTop = top + textRowsHeight / 2 - toggleGraph.getPreferredSize().height / 2;
     int toggleGraphLeft = selectAccountRight + HORIZONTAL_MARGIN;
     int toggleGraphRight = toggleGraphLeft + toggleGraph.getPreferredSize().width;
-    toggleGraph.setBounds(toggleGraphLeft, toggleGraphTop,
-                            toggleGraph.getPreferredSize().width, toggleGraph.getPreferredSize().height);
-    
+    layout(toggleGraph, toggleGraphLeft, toggleGraphTop);
+
     int accountWeatherTop = top + textRowsHeight / 2 - accountWeather.getPreferredSize().height / 2;
     int accountWeatherLeft = right - accountWeather.getPreferredSize().width;
-    accountWeather.setBounds(accountWeatherLeft, accountWeatherTop,
-                             accountWeather.getPreferredSize().width, accountWeather.getPreferredSize().height);
+    layout(accountWeather, accountWeatherLeft, accountWeatherTop);
 
     int maxCenterWidth = accountWeatherLeft - toggleGraphRight;
     int editAccountLeft =
       Math.max(toggleGraphRight + maxCenterWidth / 2 - editAccount.getPreferredSize().width / 2, toggleGraphRight);
     int editAccountTop = top + firstRowHeight / 2 - editAccount.getPreferredSize().height / 2;
     int editAccountWidth = editAccount.getPreferredSize().width > maxCenterWidth ? maxCenterWidth : editAccount.getPreferredSize().width;
-    editAccount.setBounds(editAccountLeft, editAccountTop, editAccountWidth, editAccount.getPreferredSize().height);
+    layout(editAccount, editAccountLeft, editAccountTop, editAccountWidth, editAccount.getPreferredSize().height);
 
     int accountInfoWidth = accountPosition.getPreferredSize().width + HORIZONTAL_MARGIN + accountUpdateDate.getPreferredSize().width;
 
     int positionTop = top + firstRowHeight + secondRowHeight - accountPosition.getPreferredSize().height;
     int positionLeft = toggleGraphRight + maxCenterWidth / 2 - accountInfoWidth / 2;
-    accountPosition.setBounds(positionLeft, positionTop,
-                              accountPosition.getPreferredSize().width, accountPosition.getPreferredSize().height);
+    layout(accountPosition, positionLeft, positionTop);
 
     int accountUpdateDateTop = top + firstRowHeight + secondRowHeight - accountUpdateDate.getPreferredSize().height;
     int accountUpdateDateLeft = toggleGraphRight + maxCenterWidth / 2 + accountInfoWidth / 2 - accountUpdateDate.getPreferredSize().width;
-    accountUpdateDate.setBounds(accountUpdateDateLeft, accountUpdateDateTop,
-                                accountUpdateDate.getPreferredSize().width, secondRowHeight);
+    layout(accountUpdateDate,
+           accountUpdateDateLeft, accountUpdateDateTop,
+           accountUpdateDate.getPreferredSize().width, secondRowHeight);
 
     if (positionsChart.isVisible()) {
       int chartTop = accountUpdateDateTop + secondRowHeight + VERTICAL_MARGIN;
-      positionsChart.setBounds(left + CHART_LEFT_PADDING, chartTop,
-                               width - CHART_PADDING - CHART_LEFT_PADDING, CHART_HEIGHT - CHART_PADDING);
+      layout(positionsChart,
+             left + CHART_LEFT_PADDING, chartTop,
+             totalWidth - CHART_PADDING - CHART_LEFT_PADDING, CHART_HEIGHT - CHART_PADDING);
     }
   }
 

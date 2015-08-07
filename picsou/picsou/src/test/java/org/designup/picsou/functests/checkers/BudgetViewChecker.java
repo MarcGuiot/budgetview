@@ -97,7 +97,7 @@ public class BudgetViewChecker extends ViewChecker {
       assertThat(new Assertion() {
         public void check() {
           String expected = actual + "/" + planned;
-          String actual = getPanel().getTextBox("totalObservedAmount").getText() + "/" + getPanel().getTextBox("totalPlannedAmount").getText();
+          String actual = getPanel().getTextBox("totalActualAmount").getText() + "/" + getPanel().getTextBox("totalPlannedAmount").getText();
           Assert.assertEquals(expected, actual);
         }
       });
@@ -109,7 +109,7 @@ public class BudgetViewChecker extends ViewChecker {
     }
 
     public BudgetAreaChecker checkTotalObserved(double actual) {
-      TextBox totalObserved = getPanel().getTextBox("totalObservedAmount");
+      TextBox totalObserved = getPanel().getTextBox("totalActualAmount");
       UISpecAssert.assertTrue(totalObserved.textEquals(convert(actual)));
       return this;
     }

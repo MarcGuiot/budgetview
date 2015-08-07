@@ -3,7 +3,8 @@
   <styleImport file="/layout/commonStyles.splits"/>
   <styles>
     <style selector="#budgetAreaSeriesView .amount" font="-,plain,11" anchor="right"/>
-    <style selector="label.totalAmount" font="-,plain,12" weightY="10" anchor="center" marginBottom="2"/>
+
+    <style selector="label.totalAmount" foreground="block.total" font="-,plain,12"/>
 
     <style selector="repeat header label" font="-,plain,11"
            foreground="block.inner.columnTitle" horizontalTextPosition="right"
@@ -37,8 +38,6 @@
 
     <style selector="label.slash" text="/" foreground="block.amount.separator" font="-,plain,11"/>
 
-    <style selector="#total label" marginBottom="0"/>
-
     <style selector="#deltaGauge"
            background="content.bg" opaque="false"
            preferredSize="(12,12)"/>
@@ -53,7 +52,6 @@
            negativeColor="deltaGauge.inactive"
            noPreviousValueColor="deltaGauge.inactive"/>
 
-
     <style id="highlightedAmount" selector="x" opaque="true"
            background="budget.highlight.bg"/>
     <style id="standardAmount" selector="x" opaque="false"
@@ -67,20 +65,17 @@
 
   <column name="budgetAreaSeriesView" opaque="false" preferredSize="(300,400)">
 
-      <row name="total" weightY="0" marginLeft="10" marginRight="10">
+      <row name="total" weightY="0" marginLeft="10" marginRight="10"
+           layout="org.designup.picsou.gui.budget.utils.BudgetAreaHeaderLayout">
         <button ref="budgetAreaTitle" tooltipText="$budgetView.actions.tooltip" font="LatoRegular,plain,18"
                 ui="hyperlinkButtonWithoutUnderline" foreground="block.footer.button"
-                fill="none" iconTextGap="2"
+                iconTextGap="2"
                 icon="downArrow(10,10,8,8,block.footer.arrow.default)"
                 rolloverIcon="downArrow(10,10,8,8,block.footer.arrow.rollover)"/>
-        <filler fill="horizontal"/>
-        <component ref="totalGauge" styleClass="totalGauge" minimumSize="(60,20)" preferredSize="(60,20)"
-                   fill="horizontal" anchor="center" marginBottom="0" marginLeft="10" marginRight="10"/>
-        <label ref="totalObservedAmount" styleClass="totalAmount"
-               tooltipText="$budgetview.tooltip.total.observed"/>
-        <label text="/" styleClass="totalAmount" marginLeft="5" marginRight="5"/>
-        <label ref="totalPlannedAmount" styleClass="totalAmount" foreground=""
-               tooltipText="$budgetview.tooltip.total.planned"/>
+        <component ref="totalGauge" styleClass="totalGauge" preferredSize="(60,20)"/>
+        <label ref="totalActualAmount" styleClass="totalAmount" tooltipText="$budgetview.tooltip.total.observed"/>
+        <label text="/" name="totalSlash" styleClass="totalAmount"/>
+        <label ref="totalPlannedAmount" styleClass="totalAmount" foreground="" tooltipText="$budgetview.tooltip.total.planned"/>
       </row>
 
       <column styleClass="blockScrollBorder" weightY="10" marginLeft="10" marginRight="10" >

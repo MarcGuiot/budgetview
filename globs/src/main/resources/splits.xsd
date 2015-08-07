@@ -746,6 +746,7 @@
     <xs:attribute name="visible" type="xs:boolean"/>
     <xs:attribute name="enabled" type="xs:boolean"/>
     <xs:attribute name="ui" type="xs:string"/>
+    <xs:attribute name="layout" type="xs:string"/>
   </xs:attributeGroup>
 
   <xs:attributeGroup name="componentAttributes">

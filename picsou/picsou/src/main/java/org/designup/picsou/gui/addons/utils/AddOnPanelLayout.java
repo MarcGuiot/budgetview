@@ -1,12 +1,12 @@
 package org.designup.picsou.gui.addons.utils;
 
+import org.designup.picsou.gui.components.layout.CustomLayout;
 import org.globsframework.utils.exceptions.UnexpectedApplicationState;
 
 import java.awt.*;
 
-public class AddOnPanelLayout implements LayoutManager {
+public class AddOnPanelLayout extends CustomLayout {
 
-  private static final int HEIGHT = 30;
   private static final int HORIZONTAL_MARGIN = 5;
   private static final int MIN_DESCRIPTION_WIDTH = 40;
   private static final int VERTICAL_MARGIN = 10;
@@ -16,7 +16,6 @@ public class AddOnPanelLayout implements LayoutManager {
   private static final int SEPARATOR_MARGIN = 10;
   private static final int SEPARATOR_HEIGHT = 2;
 
-  private boolean initialized = false;
   private Component image;
   private Component label;
   private Component cards;
@@ -29,22 +28,20 @@ public class AddOnPanelLayout implements LayoutManager {
   public void removeLayoutComponent(Component comp) {
   }
 
-  public Dimension preferredLayoutSize(Container parent) {
-    if (!initialized) {
-      init(parent);
-    }
-    return new Dimension(Integer.MAX_VALUE, getImageHeight() + 2 * SEPARATOR_MARGIN + SEPARATOR_HEIGHT);
+  public int getPreferredWidth() {
+    return Integer.MAX_VALUE;
   }
 
-  public Dimension minimumLayoutSize(Container parent) {
-    if (!initialized) {
-      init(parent);
-    }
-    return new Dimension(getMinWidth(), getImageHeight() + 2 * SEPARATOR_MARGIN + SEPARATOR_HEIGHT);
+  public int getPreferredHeight() {
+    return getMinHeight();
   }
 
   public int getMinWidth() {
     return getLabelWidth() + image.getWidth() + MIN_DESCRIPTION_WIDTH + 4 * HORIZONTAL_MARGIN;
+  }
+
+  public int getMinHeight() {
+    return getImageHeight() + 2 * SEPARATOR_MARGIN + SEPARATOR_HEIGHT;
   }
 
   public int getLabelWidth() {
@@ -59,7 +56,7 @@ public class AddOnPanelLayout implements LayoutManager {
     return Math.max(image.getPreferredSize().height, IMAGE_MIN_HEIGHT);
   }
 
-  private void init(Container parent) {
+  public void init(Container parent) {
     for (Component component : parent.getComponents()) {
       if (component.getName().contains("image")) {
         image = component;
@@ -80,19 +77,9 @@ public class AddOnPanelLayout implements LayoutManager {
         throw new UnexpectedApplicationState("Unexpected component found in layout: " + component);
       }
     }
-    initialized = true;
   }
 
-  public void layoutContainer(Container parent) {
-    if (!initialized) {
-      init(parent);
-    }
-
-    Insets insets = parent.getInsets();
-    int top = insets.top;
-    int left = insets.left;
-    int height = parent.getSize().height - 1;
-    int width = parent.getSize().width - 1;
+  public void layoutComponents(int top, int bottom, int left, int right, int width, int height) {
 
     separator.setBounds(left, height - SEPARATOR_MARGIN - SEPARATOR_HEIGHT, width, SEPARATOR_HEIGHT);
     int innerHeight = height - 2 * SEPARATOR_MARGIN - SEPARATOR_HEIGHT;

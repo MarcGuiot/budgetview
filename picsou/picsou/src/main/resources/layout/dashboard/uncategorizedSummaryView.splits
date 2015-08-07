@@ -3,6 +3,10 @@
   <styleImport file="/layout/commonStyles.splits"/>
 
   <styles>
+
+    <style selector="label.totalAmountTitle" foreground="block.total.title" font="-,plain,10"
+           fill="none" anchor="bottom" weightY="0"/>
+
     <ui name="underlinedButtonUI" class="org.globsframework.gui.splits.components.HyperlinkButtonUI"
         underline="true" useNormalColorWhenDisabled="true" autoHideEnabled="false"
         lineColor="block.total.underline"/>

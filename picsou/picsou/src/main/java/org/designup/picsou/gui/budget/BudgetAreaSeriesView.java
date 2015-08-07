@@ -158,8 +158,8 @@ public class BudgetAreaSeriesView extends View implements Filterable {
 
     Key statKey = Key.create(PeriodBudgetAreaStat.TYPE, budgetArea.getId());
 
-    JLabel amountLabel = new JLabel();
-    builder.add("totalObservedAmount", amountLabel);
+    JLabel actualAmountLabel = new JLabel();
+    builder.add("totalActualAmount", actualAmountLabel);
     JLabel plannedAmountLabel = new JLabel();
     builder.add("totalPlannedAmount", plannedAmountLabel);
 
@@ -179,7 +179,7 @@ public class BudgetAreaSeriesView extends View implements Filterable {
     builder.add("totalGauge", totalGauge);
 
     BudgetAreaHeaderComponentsUpdater.init(budgetArea, statKey,
-                                           amountLabel, plannedAmountLabel,
+                                           actualAmountLabel, plannedAmountLabel,
                                            repository, directory);
 
     statFilter = new BudgetAreaStatFilter(budgetArea);
