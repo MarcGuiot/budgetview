@@ -124,12 +124,6 @@
            icon="arrow_down.png" rolloverIcon="arrow_down_roll.png"
            styleClass="hyperlink" foreground="#0000FF"/>
 
-    <style selector=".separator" opaque="false" marginTop="0"
-           border="matte(1,0,0,0,dialog.separator)"/>
-
-    <style selector="label.separatorTitle"
-           font="-,plain,10" foreground="dialog.separator.title"/>
-
     <ui name="horizontalSeparatorUI" class="org.designup.picsou.gui.components.ui.LineLabelUI"/>
     <style selector="label.horizontalSeparator" ui="horizontalSeparatorUI"
            foreground="splitpane.main.handle" background="content.bg"
@@ -157,7 +151,7 @@
     <!-- Hyperlinks -->
 
     <ui name="hyperlinkButton" class="org.globsframework.gui.splits.components.HyperlinkButtonUI"/>
-    <style selector="button.hyperlink" ui="hyperlinkButton" fill="none" anchor="right" foreground="hyperlink"/>
+    <style selector="button.hyperlink" ui="hyperlinkButton" fill="none" anchor="right" foreground="hyperlink" cursor="hand"/>
     <style selector="button.help" ui="hyperlinkButton" fill="none" anchor="right"/>
 
     <ui name="hyperlinkButtonWithoutUnderline" class="org.globsframework.gui.splits.components.HyperlinkButtonUI"

@@ -91,7 +91,7 @@ public class SavingsSeriesEditionTest extends LoggedInFunctionalTestCase {
     timeline.selectMonth("2008/10");
     budgetView.transfer.editSeries("Veranda")
       .checkRepeatsASingleMonth()
-      .checkSingleMonthDate("Oct 2008")
+      .checkSingleMonth("october 2008")
       .checkFromAccount("Epargne CA")
       .checkToAccount("Account n. 00001123")
       .checkRepeatsASingleMonth()
@@ -273,17 +273,20 @@ public class SavingsSeriesEditionTest extends LoggedInFunctionalTestCase {
       .setName("Savings Plan")
       .setFromAccount("Epargne LCL")
       .setToAccount("External account")
+      .showDescription()
       .setDescription("Savings for the kids")
       .validate();
     budgetView.transfer.checkSeriesTooltip("Savings Plan", "Savings for the kids");
 
     budgetView.transfer.editSeries("Savings Plan")
+      .showDescription()
       .checkDescription("Savings for the kids")
       .setDescription("Savings for the Porsche")
       .validate();
     budgetView.transfer.checkSeriesTooltip("Savings Plan", "Savings for the Porsche");
 
     budgetView.transfer.editSeries("Savings Plan")
+      .showDescription()
       .setDescription("")
       .validate();
     budgetView.transfer.checkSeriesTooltip("Savings Plan", "");

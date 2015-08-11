@@ -2,18 +2,15 @@
 <splits xmlns="http://www.globsframework.org/xml/splits.xsd">
 
   <styleImport file="/layout/commonStyles.splits"/>
+  <styleImport file="/layout/dialogStyles.splits"/>
 
-  <column>
-    <htmlEditorPane text="$seriesEdition.forecast.message"/>
-    <checkBox ref="forceSingleOperationCheckbox" text="$seriesEdition.forecast.checkbox"
-              foreground="help.messages.text"/>
-    <row>
-      <label text="$seriesEdition.forecast.day1" marginLeft="20" foreground="help.messages.text"/>
-      <comboBox ref="forceSingleOperationDayCombo" foreground="help.messages.text"/>
-      <label text="$seriesEdition.forecast.day2" foreground="help.messages.text"/>
-      <filler fill="horizontal"/>
-    </row>
-    <filler fill="vertical"/>
-  </column>
+  <row>
+    <label text="$seriesEdition.forecast.intro"/>
+    <comboBox ref="forecastModeCombo"/>
+    <label text="$seriesEdition.forecast.day1" autoHideSource="forecastDayCombo"/>
+    <comboBox ref="forecastDayCombo"/>
+    <label text="$seriesEdition.forecast.day2" autoHideSource="forecastDayCombo"/>
+    <filler fill="horizontal"/>
+  </row>
 
 </splits>

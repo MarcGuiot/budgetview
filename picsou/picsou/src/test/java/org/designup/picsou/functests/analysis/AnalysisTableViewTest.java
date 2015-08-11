@@ -301,8 +301,7 @@ public class AnalysisTableViewTest extends LoggedInFunctionalTestCase {
     analysis.table().editSeries("John's", "Sep 2008")
       .checkPositiveAmountsSelected()
       .checkAmount(500.00)
-      .checkPeriodicity("Every month")
-      .editSeries()
+      .checkRepeatsEveryMonth()
       .setRepeatEveryTwoMonths()
       .setEndDate(200812)
       .validate();
@@ -324,7 +323,8 @@ public class AnalysisTableViewTest extends LoggedInFunctionalTestCase {
     analysis.table().editSeries("John's", "Sep 2008")
       .checkPositiveAmountsSelected()
       .setAmount(500.00)
-      .checkPeriodicity("Every two months until december 2008")
+      .checkRepeatsEveryTwoMonths()
+      .checkEndDate("december 2008")
       .validate();
 
     analysis.table().initContent()
@@ -468,7 +468,7 @@ public class AnalysisTableViewTest extends LoggedInFunctionalTestCase {
 
     budgetView.variable.createSeries()
       .setName("Groceries")
-      .gotoSubSeriesTab()
+      .editSubSeries()
       .addSubSeries("Meat")
       .addSubSeries("Vegetables")
       .validate();
@@ -565,7 +565,7 @@ public class AnalysisTableViewTest extends LoggedInFunctionalTestCase {
 
     budgetView.variable.createSeries()
       .setName("Groceries")
-      .gotoSubSeriesTab()
+      .editSubSeries()
       .addSubSeries("Meat")
       .addSubSeries("Vegetables")
       .validate();

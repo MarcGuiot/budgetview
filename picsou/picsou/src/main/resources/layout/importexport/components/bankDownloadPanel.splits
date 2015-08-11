@@ -10,12 +10,6 @@
     <style selector="button.synchronize" marginTop="10" fill="none" anchor="center"/>
     <style selector="button.rightButton" fill="none" anchor="right" weightX="0.1"/>
     <style selector="label.nextArrow" border="empty(0,5,0,0)" icon="rightArrow(18,18,12,12,#999999)"/>
-    <style selector="button.backButton" border="empty(10,0,0,0)"
-           fill="none" anchor="left"
-           ui="hyperlinkButton" foreground="hyperlink"
-           font="-,plain,12"
-           icon="leftArrow(10,14,8,8, #222222)"
-           rolloverIcon="leftArrow(10,14,8,8, #0000FF)"/>
   </styles>
 
   <column>

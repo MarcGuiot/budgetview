@@ -11,7 +11,7 @@ public class SubSeriesEditionTest extends LoggedInFunctionalTestCase {
 
     budgetView.variable.createSeries()
       .setName("Series")
-      .gotoSubSeriesTab()
+      .editSubSeries()
       .addSubSeries("SubSeries 1")
       .addSubSeries("SubSeries 2")
       .validate();
@@ -65,7 +65,7 @@ public class SubSeriesEditionTest extends LoggedInFunctionalTestCase {
     SeriesEditionDialogChecker dialog = budgetView.variable.createSeries();
     dialog
       .setName("series1")
-      .gotoSubSeriesTab()
+      .editSubSeries()
       .checkNoSubSeriesMessage()
       .checkAddSubSeriesEnabled(false);
     dialog
@@ -99,7 +99,7 @@ public class SubSeriesEditionTest extends LoggedInFunctionalTestCase {
 
     categorization.selectVariable().createSeries()
       .setName("Health")
-      .gotoSubSeriesTab()
+      .editSubSeries()
       .addSubSeries("Pharmacy")
       .validate();
 
@@ -127,7 +127,7 @@ public class SubSeriesEditionTest extends LoggedInFunctionalTestCase {
 
     categorization.selectVariable().createSeries()
       .setName("Groceries")
-      .gotoSubSeriesTab()
+      .editSubSeries()
       .addSubSeries("Food")
       .validate();
 
@@ -139,7 +139,7 @@ public class SubSeriesEditionTest extends LoggedInFunctionalTestCase {
     });
 
     categorization.getVariable().editSeries("Groceries")
-      .gotoSubSeriesTab()
+      .editSubSeries()
       .renameSubSeries("Food", "Misc")
       .validate();
 
@@ -156,7 +156,7 @@ public class SubSeriesEditionTest extends LoggedInFunctionalTestCase {
     SeriesEditionDialogChecker dialog = budgetView.variable.createSeries();
     dialog
       .setName("series1")
-      .gotoSubSeriesTab()
+      .editSubSeries()
       .addSubSeries("subSeries1")
       .addSubSeries("subSeries2")
       .checkRenameSubSeriesMessage("subSeries2", "subSeries1", "A sub-series with this name already exists")
@@ -175,7 +175,7 @@ public class SubSeriesEditionTest extends LoggedInFunctionalTestCase {
       .setName("Maison")
       .selectAllMonths()
       .setAmount(20)
-      .gotoSubSeriesTab()
+      .editSubSeries()
       .addSubSeries("Entretien")
       .validate();
 
@@ -187,7 +187,7 @@ public class SubSeriesEditionTest extends LoggedInFunctionalTestCase {
       .check();
 
     budgetView.variable.editSeries("Maison")
-      .gotoSubSeriesTab()
+      .editSubSeries()
       .renameSubSeries("Entretien", "Travaux")
       .validate();
 
@@ -198,7 +198,7 @@ public class SubSeriesEditionTest extends LoggedInFunctionalTestCase {
 
     SeriesEditionDialogChecker editionDialogChecker = budgetView.variable.editSeries("Maison");
     editionDialogChecker
-      .gotoSubSeriesTab()
+      .editSubSeries()
       .deleteSubSeriesWithConfirmation("Travaux")
       .validate();
     editionDialogChecker.validate();
@@ -221,7 +221,7 @@ public class SubSeriesEditionTest extends LoggedInFunctionalTestCase {
     categorization.selectTransaction("Tx1");
     categorization.selectVariable().createSeries()
       .setName("series1")
-      .gotoSubSeriesTab()
+      .editSubSeries()
       .addSubSeries("subSeries1")
       .addSubSeries("subSeries2")
       .addSubSeries("subSeries3")
@@ -242,7 +242,7 @@ public class SubSeriesEditionTest extends LoggedInFunctionalTestCase {
 
     SeriesEditionDialogChecker seriesDialog = categorization.getVariable().editSeries("series1");
     seriesDialog
-      .gotoSubSeriesTab()
+      .editSubSeries()
       .deleteSubSeriesWithConfirmation("subSeries1", "subSeries3")
       .checkDeletionOptions("Move them to envelope 'series1'",
                             "Move them to sub-envelope 'subSeries2'",
@@ -265,7 +265,7 @@ public class SubSeriesEditionTest extends LoggedInFunctionalTestCase {
     categorization.selectTransaction("Tx2");
     SeriesEditionDialogChecker dialog2 = categorization.selectVariable().editSeries("series1");
     dialog2
-      .gotoSubSeriesTab()
+      .editSubSeries()
       .deleteSubSeriesWithConfirmation("subSeries2")
       .checkDeletionOptions("Move them to envelope 'series1'",
                             "Move them to sub-envelope 'subSeries4'",
@@ -287,7 +287,7 @@ public class SubSeriesEditionTest extends LoggedInFunctionalTestCase {
     categorization.selectTransaction("Tx2");
     SeriesEditionDialogChecker dialog3 = categorization.selectVariable().editSeries("series1");
     dialog3
-      .gotoSubSeriesTab()
+      .editSubSeries()
       .deleteSubSeriesWithConfirmation("subSeries4")
       .checkDeletionOptions("Move them to envelope 'series1'",
                             "Move them to sub-envelope 'subSeries5'",
@@ -307,7 +307,7 @@ public class SubSeriesEditionTest extends LoggedInFunctionalTestCase {
 
     categorization.selectTransaction("Tx2");
     categorization.selectVariable().editSeries("series1")
-      .gotoSubSeriesTab()
+      .editSubSeries()
       .deleteSubSeries("subSeries5")
       .checkSubSeriesListIsEmpty()
       .validate();

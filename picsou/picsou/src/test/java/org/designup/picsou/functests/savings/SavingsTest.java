@@ -1668,7 +1668,10 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
       .setFromAccount("Account n. 00001123")
       .setToAccount("External account")
       .validate();
-    budgetView.transfer.editPlannedAmount("Main to Savings").setPropagationEnabled().setAmountAndValidate("500");
+    budgetView.transfer.editPlannedAmount("Main to Savings")
+      .setPropagationEnabled()
+      .setAmount("500")
+      .validate();
     budgetView.transfer.editSeries("Main to Savings")
       .selectMonth(200808)
       .checkAmount("500.00")
@@ -1684,7 +1687,10 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
       .setToAccount("Account n. 00001123")
       .setFromAccount("External account")
       .validate();
-    budgetView.transfer.editPlannedAmount("Savings to Main").setPropagationEnabled().setAmountAndValidate("500");
+    budgetView.transfer.editPlannedAmount("Savings to Main")
+      .setPropagationEnabled()
+      .setAmount("500")
+      .validate();
     budgetView.transfer.editSeries("Savings to Main")
       .selectMonth(200808)
       .checkAmount("500.00")

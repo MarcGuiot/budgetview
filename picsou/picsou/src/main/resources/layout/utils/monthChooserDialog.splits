@@ -16,17 +16,22 @@
     <style selector=".monthBlock label" marginTop="10" marginBottom="5"/>
     <style selector=".monthBlock repeat" margin="5"/>
 
-
     <ui name="monthToggle" class="org.globsframework.gui.splits.components.StyledToggleButtonUI"
         borderWidth="1" cornerRadius="10"
         topColor="monthChooser.top"
         bottomColor="monthChooser.bottom"
         borderColor="monthChooser.border"/>
     <style selector="toggleButton.monthSelector" ui="monthToggle" opaque="false" foreground="monthChooser.text"/>
+
+    <ui name="hyperlinkSelector" class="org.globsframework.gui.splits.components.HyperlinkButtonUI"
+        autoHideEnabled="false"/>
+    <style selector="noneSelector" foreground="hyperlink" cursor="hand"
+           disabledIcon="button_delete.png" icon="button_delete.png"
+           fill="none" anchor="center" border="empty(20,0,10,0)" marginTop="10"/>
   </styles>
 
-  <column styleClass="dialog" opaque="true">
-    <label name="title" text="monthChooserDialog" visible="false"/>
+  <column styleClass="dialog">
+    <label ref="title" styleClass="title"/>
     <panel styleClass="innerDialog">
       <column styleClass="innerDialogContent">
         <row styleClass="buttonGroup" marginTop="5" marginBottom="10">
@@ -59,6 +64,8 @@
             </repeat>
           </column>
         </row>
+
+        <button ref="selectNone" styleClass="noneSelector"/>
 
       </column>
     </panel>

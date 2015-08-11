@@ -25,7 +25,7 @@ public class SeriesAmountEditionTest extends LoggedInFunctionalTestCase {
     // First update with propagation + switching to manual mode
     views.selectBudget();
     budgetView.recurring.editPlannedAmount("Internet")
-      .checkAmountLabel("Planned amount for july 2008")
+      .checkAmountLabel("for july 2008")
       .checkNegativeAmountsSelected()
       .checkAmount(29.00)
       .checkAmountIsSelected()
@@ -43,7 +43,8 @@ public class SeriesAmountEditionTest extends LoggedInFunctionalTestCase {
       .checkAmount(100.00)
       .checkAmountIsSelected()
       .checkPropagationDisabled()
-      .setAmountAndValidate("150");
+      .setAmount("150")
+      .validate();
     budgetView.recurring.checkSeries("Internet", -29.00, -150.00);
     timeline.selectMonth("2008/08");
     budgetView.recurring.checkSeries("Internet", 0.00, -100.00);
@@ -53,7 +54,8 @@ public class SeriesAmountEditionTest extends LoggedInFunctionalTestCase {
     budgetView.recurring.editPlannedAmount("Internet")
       .checkAmountIsEmpty()
       .checkPropagationDisabled()
-      .setAmountAndValidate("200");
+      .setAmount("200")
+      .validate();
     timeline.selectMonth("2008/07");
     budgetView.recurring.checkSeries("Internet", -29.00, -200.00);
     timeline.selectMonth("2008/08");
@@ -69,7 +71,8 @@ public class SeriesAmountEditionTest extends LoggedInFunctionalTestCase {
       .checkPropagationDisabled()
       .checkAmount(200.00)
       .setPropagationEnabled()
-      .setAmountAndValidate("300");
+      .setAmount("300")
+      .validate();
     timeline.selectMonth("2008/07");
     budgetView.recurring.checkSeries("Internet", -29.00, -300.00);
     timeline.selectMonth("2008/08");
@@ -80,7 +83,7 @@ public class SeriesAmountEditionTest extends LoggedInFunctionalTestCase {
     budgetView.recurring.checkSeries("Internet", 0.00, -300.00);
   }
 
-  public void testAmountEditionDialogPeriodicityLabels() throws Exception {
+  public void testAmountEditionPeriodicityLabels() throws Exception {
 
     operations.openPreferences().setFutureMonthsCount(4).validate();
 
@@ -95,16 +98,16 @@ public class SeriesAmountEditionTest extends LoggedInFunctionalTestCase {
     views.selectBudget();
 
     budgetView.recurring.editPlannedAmount("Internet")
-      .checkAmountLabel("Planned amount for july 2008")
-      .checkPeriodicity("Every month")
+      .checkAmountLabel("for july 2008")
+      .checkRepeatsEveryMonth()
       .validate();
 
     budgetView.recurring.editSeries("Internet")
       .setRepeatEveryTwoMonths()
       .validate();
     budgetView.recurring.editPlannedAmount("Internet")
-      .checkAmountLabel("Planned amount for july 2008")
-      .checkPeriodicity("Every two months")
+      .checkAmountLabel("for july 2008")
+      .checkRepeatsEveryTwoMonths()
       .validate();
 
     budgetView.recurring.editSeries("Internet")
@@ -112,8 +115,9 @@ public class SeriesAmountEditionTest extends LoggedInFunctionalTestCase {
       .setEndDate(200810)
       .validate();
     budgetView.recurring.editPlannedAmount("Internet")
-      .checkAmountLabel("Planned amount for july 2008")
-      .checkPeriodicity("Every two months until october 2008")
+      .checkAmountLabel("for july 2008")
+      .checkRepeatsEveryTwoMonths()
+      .checkEndDate("october 2008")
       .validate();
 
     budgetView.recurring.editSeries("Internet")
@@ -121,8 +125,10 @@ public class SeriesAmountEditionTest extends LoggedInFunctionalTestCase {
       .setStartDate(200807)
       .validate();
     budgetView.recurring.editPlannedAmount("Internet")
-      .checkAmountLabel("Planned amount for july 2008")
-      .checkPeriodicity("Every two months from july to october 2008")
+      .checkAmountLabel("for july 2008")
+      .checkRepeatsEveryTwoMonths()
+      .checkStartDate("july 2008")
+      .checkEndDate("october 2008")
       .validate();
 
     budgetView.recurring.editSeries("Internet")
@@ -130,8 +136,10 @@ public class SeriesAmountEditionTest extends LoggedInFunctionalTestCase {
       .setEndDate(200807)
       .validate();
     budgetView.recurring.editPlannedAmount("Internet")
-      .checkAmountLabel("Planned amount for july 2008")
-      .checkPeriodicity("July 2008 only")
+      .checkAmountLabel("for july 2008")
+      .checkRepeatsEveryMonth()
+      .checkStartDate("july 2008")
+      .checkEndDate("july 2008")
       .validate();
 
     budgetView.recurring.editSeries("Internet")
@@ -139,8 +147,9 @@ public class SeriesAmountEditionTest extends LoggedInFunctionalTestCase {
       .clearEndDate()
       .validate();
     budgetView.recurring.editPlannedAmount("Internet")
-      .checkAmountLabel("Planned amount for july 2008")
-      .checkPeriodicity("Irregular from july 2008")
+      .checkAmountLabel("for july 2008")
+      .checkRepeatsIrregularly()
+      .checkStartDate("july 2008")
       .validate();
 
     budgetView.recurring.editSeries("Internet")
@@ -149,7 +158,9 @@ public class SeriesAmountEditionTest extends LoggedInFunctionalTestCase {
       .setEndDate(200812)
       .validate();
     budgetView.recurring.editPlannedAmount("Internet")
-      .checkPeriodicity("Custom from january to december 2008")
+      .checkRepeatsWithCustomPattern()
+      .checkStartDate("january 2008")
+      .checkEndDate("december 2008")
       .validate();
 
     budgetView.recurring.editSeries("Internet")
@@ -158,7 +169,9 @@ public class SeriesAmountEditionTest extends LoggedInFunctionalTestCase {
       .setEndDate(200912)
       .validate();
     budgetView.recurring.editPlannedAmount("Internet")
-      .checkPeriodicity("Custom from 2008 to 2009")
+      .checkRepeatsWithCustomPattern()
+      .checkStartDate("january 2008")
+      .checkEndDate("december 2009")
       .validate();
   }
 
@@ -173,7 +186,7 @@ public class SeriesAmountEditionTest extends LoggedInFunctionalTestCase {
 
     views.selectBudget();
     budgetView.recurring.editPlannedAmount("Internet")
-      .checkAmountLabel("Planned amount for july 2008")
+      .checkAmountLabel("for july 2008")
       .checkAmount(29.00)
       .checkAmountIsSelected()
       .setAmount("100")
@@ -212,13 +225,13 @@ public class SeriesAmountEditionTest extends LoggedInFunctionalTestCase {
     // First update with propagation + switching to manual mode
     views.selectBudget();
     budgetView.recurring.editPlannedAmount("Internet")
-      .checkSeriesName("Internet")
+      .checkName("Internet")
       .checkNegativeAmountsSelected()
-      .checkAmountLabel("Planned amount for july 2008")
+      .checkAmountLabel("for july 2008")
       .setAmount("100")
       .checkPropagationDisabled()
       .setPropagationEnabled()
-      .checkAmountLabel("Planned amount from july 2008")
+      .checkAmountLabel("from july 2008")
       .validate();
     budgetView.recurring.checkSeries("Internet", -29.00, -100.00);
     timeline.selectMonth("2008/08");
@@ -240,7 +253,7 @@ public class SeriesAmountEditionTest extends LoggedInFunctionalTestCase {
 
     timeline.selectMonths("2008/08");
     budgetView.recurring.editPlannedAmount("Internet")
-      .checkSeriesName("Internet")      
+      .checkName("Internet")
       .checkAmount(29.00)
       .alignPlannedAndActual()
       .setPropagationEnabled()
@@ -264,7 +277,7 @@ public class SeriesAmountEditionTest extends LoggedInFunctionalTestCase {
 
     views.selectBudget();
     budgetView.income.editPlannedAmount("Salary")
-      .checkSeriesName("Salary")
+      .checkName("Salary")
       .checkPositiveAmountsSelected()
       .checkAmount(1500.00)
       .checkActualAmount("1500.00")
@@ -277,63 +290,6 @@ public class SeriesAmountEditionTest extends LoggedInFunctionalTestCase {
     budgetView.income.checkSeries("Salary", 1500.00, 1500.00);
     timeline.selectMonth("2008/08");
     budgetView.income.checkSeries("Salary", 0.00, 1500.00);
-  }
-
-  public void testUsingTheSliderToSetThePlannedAmount() throws Exception {
-    operations.openPreferences().setFutureMonthsCount(2).validate();
-
-    OfxBuilder.init(this)
-      .addTransaction("2008/07/29", +1500.00, "WorldCo")
-      .addTransaction("2008/07/29", -29.00, "Free Telecom")
-      .load();
-
-    timeline.selectMonth("2008/07");
-    views.selectCategorization();
-    categorization.setNewRecurring("Free Telecom", "Internet");
-    categorization.setNewIncome("WorldCo", "Salary");
-
-    views.selectBudget();
-    budgetView.recurring.editPlannedAmount("Internet")
-      .checkAmount(29.00)
-      .checkSliderLabels("0", "25", "50", "75", "100", "125", "150", "175", "200")
-      .checkSliderPosition(100 * 29 / 200)
-      .setSliderPosition(100 * 40 / 200)
-      .checkAmount(40.00)
-      .checkNegativeAmountsSelected()
-      .validate();
-    budgetView.recurring.checkSeries("Internet", -29.00, -40.00);
-
-    budgetView.recurring.editPlannedAmount("Internet")
-      .checkAmount(40.00)
-      .checkNegativeAmountsSelected()
-      .setAmount(200.00)
-      .checkSliderLabels("0", "100", "200", "300", "400", "500")
-      .checkSliderPosition(100 * 200 / 500)
-      .setSliderPosition(100 * 30 / 500)
-      .selectPositiveAmounts()
-      .checkAmount(30.00)
-      .validate();
-    budgetView.recurring.checkSeries("Internet", -29.00, +30.00);
-
-    budgetView.recurring.editPlannedAmount("Internet")
-      .checkAmount(30.00)
-      .selectNegativeAmounts()
-      .checkSliderLabels("0", "25", "50", "75", "100", "125", "150", "175", "200")
-      .checkSliderPosition(100 * 30 / 200)
-      .checkAmount(30.00)
-      .validate();
-    budgetView.recurring.checkSeries("Internet", -29.00, -30.00);
-
-    budgetView.income.editPlannedAmount("Salary")
-      .checkAmount(1500)
-      .checkPositiveAmountsSelected()
-      .checkSliderLabels("0", "1000", "2000", "3000", "4000", "5000")
-      .checkSliderPosition(100 * 1500 / 5000)
-      .setSliderPosition(100 * 1700 / 5000)
-      .checkAmount(1700.00)
-      .checkPositiveAmountsSelected()
-      .validate();
-    budgetView.income.checkSeries("Salary", +1500, +1700);
   }
 
   public void testUsingTheChartToEditSeveralMonthsAtOnce() throws Exception {
@@ -351,16 +307,16 @@ public class SeriesAmountEditionTest extends LoggedInFunctionalTestCase {
     views.selectBudget();
     budgetView.recurring.editPlannedAmount("Internet")
       .checkSelectedMonths(201008)
-      .checkAmountLabel("Planned amount for august 2010")
+      .checkAmountLabel("for august 2010")
       .setPropagationEnabled()
       .checkSelectedMonths(201008, 201009, 201010)
-      .checkAmountLabel("Planned amount from august 2010")
-      .clickMonth(201009)
+      .checkAmountLabel("from august 2010")
+      .selectMonth(201009)
       .checkSelectedMonths(201009, 201010)
-      .checkAmountLabel("Planned amount from september 2010")
+      .checkAmountLabel("from september 2010")
       .setAmount(50.00)
       .setPropagationDisabled()
-      .checkAmountLabel("Planned amount for september 2010")
+      .checkAmountLabel("for september 2010")
       .validate();
 
     timeline.selectMonth("2010/08");
@@ -400,7 +356,7 @@ public class SeriesAmountEditionTest extends LoggedInFunctionalTestCase {
       .checkChartColumn(0, "A", "2010", 40.00, 29.00, true)
       .checkChartColumn(1, "S", "2010", 40.00, 0.00, true)
       .checkChartColumn(2, "O", "2010", 40.00, 0.00, true)
-      .clickMonth(201009)
+      .selectMonth(201009)
       .checkSelectedMonths(201009, 201010)
       .setPropagationDisabled()
       .checkSelectedMonths(201009)
@@ -427,17 +383,17 @@ public class SeriesAmountEditionTest extends LoggedInFunctionalTestCase {
       .load();
 
     categorization.setNewRecurring("FREE", "Internet");
-   
+
     budgetView.recurring.editPlannedAmount("Internet")
       .checkChartColumn(2, "A", "2010", 29.00, 29.00, true)
-      .checkChartRange(201006,201108)
+      .checkChartRange(201006, 201108)
       .scroll(1)
       .checkChartColumn(1, "A", "2010", 29.00, 29.00, true)
-      .checkChartRange(201007,201109)
+      .checkChartRange(201007, 201109)
       .scroll(20)
-      .checkChartRange(201008,201110)
+      .checkChartRange(201008, 201110)
       .scroll(-2)
-      .checkChartRange(201006,201108)
+      .checkChartRange(201006, 201108)
       .validate();
   }
 }

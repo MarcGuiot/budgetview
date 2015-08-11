@@ -27,7 +27,7 @@
               <scrollPane maximumSize="(400,300)" weightY="500" styleClass="innerDialogBlock">
                 <table ref="table"/>
               </scrollPane>
-              <label icon="downArrow(50,15,50,15,categorization.downArrow)"
+              <label icon="downArrow(50,15,50,15,dialog.largeArrow)"
                      fill="none" anchor="center" weightY="0.01" marginBottom="5"/>
             </column>
           </card>

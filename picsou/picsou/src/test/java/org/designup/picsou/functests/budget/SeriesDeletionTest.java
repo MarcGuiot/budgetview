@@ -305,7 +305,7 @@ public class SeriesDeletionTest extends LoggedInFunctionalTestCase {
       .check();
 
     budgetView.variable.editSeries("Health")
-      .checkStartDate("Feb 2008")
+      .checkStartDate("february 2008")
       .checkNoEndDate()
       .validate();
 
@@ -345,7 +345,7 @@ public class SeriesDeletionTest extends LoggedInFunctionalTestCase {
     categorization.selectTransaction("Forfait Kro");
     categorization.selectVariable().createSeries()
       .setName("Drinks")
-      .gotoSubSeriesTab()
+      .editSubSeries()
       .addSubSeries("Kro")
       .validate();
     categorization.setVariable("Forfait Kro", "Kro");
@@ -384,13 +384,13 @@ public class SeriesDeletionTest extends LoggedInFunctionalTestCase {
 
     categorization.setNewVariable("Forfait Kro", "Drinks");
 
-    access.setEndDate("Drinks", "May 2008");
+    access.setEndDate("Drinks", "may 2008");
 
     timeline.selectMonth(200806);
     budgetView.variable.checkSeriesNotPresent("Drinks");
     timeline.selectMonth(200805);
     budgetView.variable.editSeries("Drinks")
-      .checkEndDate("May 2008")
+      .checkEndDate("may 2008")
       .validate();
 
     uncategorized.checkNotShown();

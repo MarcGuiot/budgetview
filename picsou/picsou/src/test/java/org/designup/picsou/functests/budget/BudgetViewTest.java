@@ -608,17 +608,20 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
   public void testDescriptionsAreUsedAsTooltips() throws Exception {
     budgetView.variable.createSeries()
       .setName("Groceries")
+      .showDescription()
       .setDescription("Everything about food")
       .validate();
     budgetView.variable.checkSeriesTooltip("Groceries", "Everything about food");
 
     budgetView.variable.editSeries("Groceries")
+      .showDescription()
       .checkDescription("Everything about food")
       .setDescription("Lunch")
       .validate();
     budgetView.variable.checkSeriesTooltip("Groceries", "Lunch");
 
     budgetView.variable.editSeries("Groceries")
+      .showDescription()
       .setDescription("")
       .validate();
     budgetView.variable.checkSeriesTooltip("Groceries", "");

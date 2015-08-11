@@ -3,7 +3,6 @@ package org.designup.picsou.functests.checkers.analysis;
 import junit.framework.Assert;
 import junit.framework.AssertionFailedError;
 import org.designup.picsou.functests.checkers.ExpandableTableChecker;
-import org.designup.picsou.functests.checkers.SeriesAmountEditionDialogChecker;
 import org.designup.picsou.functests.checkers.SeriesEditionDialogChecker;
 import org.designup.picsou.functests.checkers.components.PopupButton;
 import org.designup.picsou.functests.checkers.components.PopupChecker;
@@ -129,7 +128,7 @@ public class TableAnalysisChecker extends ExpandableTableChecker<TableAnalysisCh
     return SeriesEditionDialogChecker.open(table.editCell(row, getLabelColumnIndex()).getButton().triggerClick());
   }
 
-  public SeriesAmountEditionDialogChecker editSeries(String rowLabel, String columnLabel) {
+  public SeriesEditionDialogChecker editSeries(String rowLabel, String columnLabel) {
     Table table = getTable();
     int row = getRow(rowLabel.toUpperCase(), table);
     if (row == -1) {
@@ -137,7 +136,7 @@ public class TableAnalysisChecker extends ExpandableTableChecker<TableAnalysisCh
     }
     int column = table.getHeader().findColumnIndex(columnLabel);
     table.selectRow(row);
-    return SeriesAmountEditionDialogChecker.open(table.editCell(row, column).getButton().triggerClick());
+    return SeriesEditionDialogChecker.open(table.editCell(row, column).getButton().triggerClick());
   }
 
   public SeriesTableChecker initContent() {

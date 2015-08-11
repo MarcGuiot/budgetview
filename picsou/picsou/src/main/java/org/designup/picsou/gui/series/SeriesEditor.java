@@ -3,7 +3,6 @@ package org.designup.picsou.gui.series;
 import org.designup.picsou.gui.card.NavigationService;
 import org.designup.picsou.model.Account;
 import org.designup.picsou.model.BudgetArea;
-import org.designup.picsou.model.Project;
 import org.designup.picsou.model.ProjectItem;
 import org.globsframework.model.*;
 import org.globsframework.utils.directory.Directory;
@@ -13,7 +12,6 @@ import java.util.Set;
 public class SeriesEditor {
 
   private SeriesEditionDialog seriesEditionDialog;
-  private SeriesAmountEditionDialog seriesAmountEditionDialog;
   private GlobRepository repository;
   private Integer lastSelectedSubSeriesId;
   private NavigationService navigationService;
@@ -21,7 +19,6 @@ public class SeriesEditor {
   public SeriesEditor(GlobRepository repository, Directory directory) {
     this.repository = repository;
     this.seriesEditionDialog = new SeriesEditionDialog(repository, directory);
-    this.seriesAmountEditionDialog = new SeriesAmountEditionDialog(repository, directory, seriesEditionDialog);
     this.navigationService = directory.get(NavigationService.class);
   }
 
@@ -57,7 +54,7 @@ public class SeriesEditor {
       return;
     }
 
-    seriesAmountEditionDialog.show(series, selectedMonthIds);
+    seriesEditionDialog.show(series, selectedMonthIds);
     lastSelectedSubSeriesId = null;
   }
 

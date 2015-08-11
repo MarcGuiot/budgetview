@@ -117,20 +117,21 @@ public class DateAndAmountPanel {
 
   private class EditMonthCallback implements GlobListFunctor {
 
-    public void run(GlobList list, GlobRepository repository) {
+    public void run(GlobList list, final GlobRepository repository) {
       MonthChooserDialog monthChooser = new MonthChooserDialog(dialog, localDirectory);
-      GlobList selectedTransactions = localSelectionService.getSelection(Transaction.TYPE);
+      final GlobList selectedTransactions = localSelectionService.getSelection(Transaction.TYPE);
       if (selectedTransactions.isEmpty()) {
         throw new UnexpectedApplicationState("Cannot call EditMonthCallback without a selection");
       }
       Integer currentMonthId = selectedTransactions.getFirst().get(Transaction.MONTH);
-      int selectedMonthId = monthChooser.show(currentMonthId,
-                                              MonthRangeBound.LOWER,
-                                              CurrentMonth.getLastMonth(repository));
-      if (selectedMonthId < 0) {
-        return;
-      }
-      updateMonth(repository, selectedTransactions, selectedMonthId);
+      monthChooser.show(currentMonthId,
+                        MonthRangeBound.LOWER,
+                        CurrentMonth.getLastMonth(repository),
+                        new MonthChooserDialog.Callback() {
+                          public void processSelection(int monthId) {
+                            updateMonth(repository, selectedTransactions, monthId);
+                          }
+                        });
     }
 
     private void updateMonth(GlobRepository repository, GlobList transactions, Integer currentMonth) {

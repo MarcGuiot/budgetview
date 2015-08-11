@@ -26,7 +26,7 @@ public class AnalysisSubSeriesViewTest extends LoggedInFunctionalTestCase {
 
     budgetView.variable.createSeries()
       .setName("Food")
-      .gotoSubSeriesTab()
+      .editSubSeries()
       .addSubSeries("Restaurant")
       .addSubSeries("Groceries")
       .addSubSeries("Fouquet's")
@@ -179,7 +179,7 @@ public class AnalysisSubSeriesViewTest extends LoggedInFunctionalTestCase {
       .checkValue("Food", 260.00, true);
 
     analysis.budget().seriesChart.rightClickAndEditSeries("Food", "Edit")
-      .gotoSubSeriesTab()
+      .editSubSeries()
       .deleteSubSeriesAndConfirm("Restaurant")
       .validate();
 
@@ -206,7 +206,7 @@ public class AnalysisSubSeriesViewTest extends LoggedInFunctionalTestCase {
     analysis.table().checkExpanded("Food", true);
     analysis.table().toggleExpansion("Food");
     budgetView.variable.editSeries("Food")
-      .gotoSubSeriesTab()
+      .editSubSeries()
       .addSubSeries("FastFood")
       .validate();
 
@@ -240,7 +240,7 @@ public class AnalysisSubSeriesViewTest extends LoggedInFunctionalTestCase {
 
     analysis.budget().seriesChart
       .rightClickAndEditSeries("Food", "Edit")
-      .gotoSubSeriesTab()
+      .editSubSeries()
       .deleteSubSeriesAndConfirm("FastFood")
       .deleteSubSeriesAndConfirm("Groceries")
       .deleteSubSeries("Fouquet's")
@@ -378,7 +378,7 @@ public class AnalysisSubSeriesViewTest extends LoggedInFunctionalTestCase {
 
     budgetView.variable.createSeries()
       .setName("MySeries")
-      .gotoSubSeriesTab()
+      .editSubSeries()
       .addSubSeries("Sub1")
       .addSubSeries("Sub2")
       .validate();

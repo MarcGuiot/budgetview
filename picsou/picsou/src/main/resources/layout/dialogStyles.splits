@@ -11,6 +11,7 @@
 
     <style selector=".innerDialogBlock" opaque="true" border="line(dialog.block.border)" background="dialog.block"/>
     <style selector=".innerDialogBlockPanel" opaque="true" background="dialog.block"/>
+    <style selector=".blockScrollBorder" border="line(dialog.block.border)"/>
 
     <style selector=".dialog label" foreground="dialog.text" opaque="false"/>
     <style selector=".dialog textArea" foreground="dialog.text"/>
@@ -25,6 +26,14 @@
         class="org.designup.picsou.gui.components.ui.FlatScrollbarUI"
         color="scrollBar.idle" rolloverColor="scrollBar.rollover" background="scrollBar.bg"/>
     <style selector="scrollPane" scrollbarUI="scrollPaneUI" background="#FFFFFF"/>
+
+    <style selector=".separator" opaque="false" border="matte(1,0,0,0,dialog.separator)"/>
+    <style selector="label.separatorTitle" font="-,plain,10" foreground="dialog.separator.title"/>
+
+    <style selector="button.backButton" border="empty(10,0,0,0)"
+           ui="hyperlinkButton" foreground="hyperlink" font="-,plain,12"
+           icon="leftArrow(10,14,8,8, #222222)"
+           rolloverIcon="leftArrow(10,14,8,8,hyperlink)"/>
 
   </styles>
 

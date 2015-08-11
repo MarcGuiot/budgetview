@@ -8,6 +8,7 @@ import org.designup.picsou.model.SubSeries;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.SelectionService;
+import org.globsframework.gui.splits.utils.GuiUtils;
 import org.globsframework.gui.utils.AbstractDocumentListener;
 import org.globsframework.gui.views.GlobListView;
 import static org.globsframework.model.FieldValue.value;
@@ -75,6 +76,10 @@ public class SubSeriesEditionPanel {
   private void processNameUpdate() {
     addAction.setEnabled(Strings.isNotEmpty(nameField.getText()));
     errorMessage.setVisible(false);
+  }
+
+  public void select() {
+    GuiUtils.selectAndRequestFocus(nameField);
   }
 
   private class AddAction extends AbstractAction {

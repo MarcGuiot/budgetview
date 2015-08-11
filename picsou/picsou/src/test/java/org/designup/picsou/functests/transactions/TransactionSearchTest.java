@@ -240,7 +240,7 @@ public class TransactionSearchTest extends LoggedInFunctionalTestCase {
 
     budgetView.variable.createSeries()
       .setName("Alimentation")
-      .gotoSubSeriesTab()
+      .editSubSeries()
       .addSubSeries("Francais")
       .addSubSeries("Americain")
       .addSubSeries("Italien")
@@ -248,7 +248,7 @@ public class TransactionSearchTest extends LoggedInFunctionalTestCase {
 
     budgetView.variable.createSeries()
       .setName("Gastronomie")
-      .gotoSubSeriesTab()
+      .editSubSeries()
       .addSubSeries("Francaise")
       .addSubSeries("Americaine")
       .addSubSeries("Italienne")
@@ -278,7 +278,7 @@ public class TransactionSearchTest extends LoggedInFunctionalTestCase {
       .check();
 
     budgetView.variable.editSeries("Alimentation")
-      .gotoSubSeriesTab()
+      .editSubSeries()
       .renameSubSeries("Italien", "Napolitain")
       .validate();
     transactions.initContent()
@@ -287,7 +287,7 @@ public class TransactionSearchTest extends LoggedInFunctionalTestCase {
 
     searchField.setText("Francais");
     SeriesEditionDialogChecker seriesDialog = budgetView.variable.editSeries("Alimentation")
-      .gotoSubSeriesTab();
+      .editSubSeries();
     seriesDialog.deleteSubSeriesWithConfirmation("Francais")
       .selectDeletionOption("Move them to envelope 'Alimentation'")
       .validate();

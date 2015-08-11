@@ -5,12 +5,12 @@ import org.designup.picsou.gui.View;
 import org.designup.picsou.gui.accounts.utils.AccountCreation;
 import org.designup.picsou.gui.accounts.utils.AccountMatchers;
 import org.designup.picsou.gui.components.AmountEditor;
-import org.designup.picsou.gui.components.dialogs.MessageType;
-import org.designup.picsou.gui.components.utils.CustomFocusTraversalPolicy;
 import org.designup.picsou.gui.components.MonthRangeBound;
 import org.designup.picsou.gui.components.dialogs.MessageDialog;
+import org.designup.picsou.gui.components.dialogs.MessageType;
 import org.designup.picsou.gui.components.dialogs.MonthChooserDialog;
 import org.designup.picsou.gui.components.tips.DetailsTip;
+import org.designup.picsou.gui.components.utils.CustomFocusTraversalPolicy;
 import org.designup.picsou.gui.description.stringifiers.MonthFieldListStringifier;
 import org.designup.picsou.gui.description.stringifiers.MonthRangeFormatter;
 import org.designup.picsou.gui.help.actions.HelpAction;
@@ -215,16 +215,17 @@ public class TransactionCreationPanel extends View implements GlobSelectionListe
   }
 
   private class EditMonthCallback implements GlobListFunctor {
-    public void run(GlobList list, GlobRepository repository) {
+    public void run(GlobList list, final GlobRepository repository) {
       MonthChooserDialog monthChooser = new MonthChooserDialog(directory.get(JFrame.class), directory);
       Integer currentMonthId = repository.get(PROTOTYPE_TRANSACTION_KEY).get(Transaction.MONTH);
-      int selectedMonthId = monthChooser.show(currentMonthId,
-                                              MonthRangeBound.LOWER,
-                                              CurrentMonth.getLastMonth(repository));
-      if (selectedMonthId < 0) {
-        return;
-      }
-      updateMonth(repository, selectedMonthId);
+      monthChooser.show(currentMonthId,
+                        MonthRangeBound.LOWER,
+                        CurrentMonth.getLastMonth(repository),
+                        new MonthChooserDialog.Callback() {
+                          public void processSelection(int monthId) {
+                            updateMonth(repository, monthId);
+                          }
+                        });
     }
   }
 

@@ -1481,7 +1481,7 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
 
     categorization
       .selectRecurring()
-      .createSeries().setName("Free").gotoSubSeriesTab().addSubSeries("box").selectSubSeries("box").validate();
+      .createSeries().setName("Free").editSubSeries().addSubSeries("box").selectSubSeries("box").validate();
 
     categorization.selectVariable().checkNoSeriesSelected();
   }

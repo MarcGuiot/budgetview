@@ -2,6 +2,7 @@
 <splits xmlns="http://www.globsframework.org/xml/splits.xsd">
 
   <styleImport file="/layout/commonStyles.splits"/>
+  <styleImport file="/layout/dialogStyles.splits"/>
 
   <column name="subSeriesEditionPanel" opaque="false" margin="10">
     <htmlEditorPane text="$subseries.description" weightY="0.1" marginBottom="5"/>
@@ -14,11 +15,10 @@
              anchor="northeast" border="empty(2,0,2,0)" horizontalAlignment="left"/>
 
       <label gridPos="(0,2)" text="$subseries.list" styleClass="formLabel" anchor="northeast" marginTop="2"/>
-      <column gridPos="(1,2,2,1)" styleClass="blockScrollBorder">
+      <column gridPos="(1,2)" styleClass="blockScrollBorder">
         <scrollPane>
           <list ref="list"/>
         </scrollPane>
-
         <row styleClass="footer">
           <button action="delete" name="deleteSubSeries" styleClass="delete"/>
           <button action="rename" name="renameSubSeries" styleClass="rename"/>

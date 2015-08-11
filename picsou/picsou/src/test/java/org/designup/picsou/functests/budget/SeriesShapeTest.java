@@ -236,10 +236,10 @@ public class SeriesShapeTest extends LoggedInFunctionalTestCase {
       .check();
 
     budgetView.variable.editSeries("Courses")
-      .checkForceSingleOperationSelected(false)
-      .checkForceSingleOperationDayEnabled(false)
-      .forceSingleOperationForecast()
-      .checkForceSingleOperationDayEnabled(true)
+      .checkAutomaticForecastSelected()
+      .checkSingleOperationForecastDayShown(false)
+      .setSingleOperationForecast()
+      .checkSingleOperationForecastDayShown(true)
       .checkForceSingleOperationDayList(Utils.range(1, 31))
       .checkForceSingleOperationDay(15)
       .setForceSingleOperationDay(20)
@@ -257,11 +257,11 @@ public class SeriesShapeTest extends LoggedInFunctionalTestCase {
       .check();
 
     budgetView.variable.editSeries("Courses")
-      .checkForceSingleOperationSelected(true)
-      .checkForceSingleOperationDayEnabled(true)
+      .checkSingleOperationForecastSelected()
+      .checkSingleOperationForecastDayShown(true)
       .checkForceSingleOperationDay(20)
-      .unselectedForceSingleOperationForecast()
-      .checkForceSingleOperationDayEnabled(false)
+      .setAutomaticForecast()
+      .checkSingleOperationForecastDayShown(false)
       .validate();
 
     transactions
@@ -282,10 +282,10 @@ public class SeriesShapeTest extends LoggedInFunctionalTestCase {
       .check();
 
     budgetView.variable.editSeries("Courses")
-      .checkForceSingleOperationSelected(false)
-      .checkForceSingleOperationDayEnabled(false)
-      .forceSingleOperationForecast()
-      .checkForceSingleOperationDayEnabled(true)
+      .checkAutomaticForecastSelected()
+      .checkSingleOperationForecastDayShown(false)
+      .setSingleOperationForecast()
+      .checkSingleOperationForecastDayShown(true)
       .checkForceSingleOperationDay(20)
       .setForceSingleOperationDay(31)
       .validate();
@@ -328,7 +328,7 @@ public class SeriesShapeTest extends LoggedInFunctionalTestCase {
     budgetView
       .income
       .editSeries("SALAIRE")
-      .forceSingleOperationForecast()
+      .setSingleOperationForecast()
       .setForceSingleOperationDay(9)
       .validate();
 
@@ -344,7 +344,7 @@ public class SeriesShapeTest extends LoggedInFunctionalTestCase {
     budgetView
       .income
       .editSeries("SALAIRE")
-      .unselectedForceSingleOperationForecast()
+      .setAutomaticForecast()
       .validate();
 
     transactions
@@ -367,7 +367,7 @@ public class SeriesShapeTest extends LoggedInFunctionalTestCase {
       .createSeries();
     courses
       .setName("Courses")
-      .forceSingleOperationForecast()
+      .setSingleOperationForecast()
       .validate();
     timeline.selectAll();
     transactions.initAmountContent()

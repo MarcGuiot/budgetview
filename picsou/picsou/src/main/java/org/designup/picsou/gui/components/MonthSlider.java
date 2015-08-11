@@ -166,14 +166,16 @@ public class MonthSlider extends JPanel implements Disposable, ChangeSetListener
   private class LabelAction extends AbstractAction {
     public void actionPerformed(ActionEvent e) {
       MonthChooserDialog monthChooser = new MonthChooserDialog(GuiUtils.getEnclosingWindow(MonthSlider.this), directory);
-      Glob glob = repository.get(key);
+      final Glob glob = repository.get(key);
       Integer currentMonthId = adapter.getCurrentMonth(glob, repository);
-      int selectedMonthId = monthChooser.show(currentMonthId,
-                                              MonthRangeBound.NONE,
-                                              CurrentMonth.getLastMonth(repository));
-      if (selectedMonthId > 0) {
-        adapter.setMonth(glob, selectedMonthId, repository);
-      }
+      monthChooser.show(currentMonthId,
+                        MonthRangeBound.NONE,
+                        CurrentMonth.getLastMonth(repository),
+                        new MonthChooserDialog.Callback() {
+          public void processSelection(int monthId) {
+            adapter.setMonth(glob, monthId, repository);
+          }
+        });
     }
   }
 

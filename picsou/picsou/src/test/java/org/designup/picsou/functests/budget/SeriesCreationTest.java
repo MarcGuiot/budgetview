@@ -95,7 +95,7 @@ public class SeriesCreationTest extends LoggedInFunctionalTestCase {
       .setName("Machine a laver")
       .checkEditableTargetAccount("Main accounts")
       .checkSelectedProfile("Irregular")
-      .checkMonthsSelected(200806)
+      .checkSelectedMonths(200806)
       .checkChart(new Object[][]{
         {"2008", "June", 0.00, 0.00, true}
       })
@@ -112,7 +112,7 @@ public class SeriesCreationTest extends LoggedInFunctionalTestCase {
     categorization.selectExtras().createSeries()
       .setName("Machine a laver")
       .checkSelectedProfile("Irregular")
-      .checkMonthsSelected(200806, 200807)
+      .checkSelectedMonths(200806, 200807)
       .checkChart(new Object[][]{
         {"2008", "July", 0.00, 0.00, true},
         {"2008", "June", 0.00, 0.00, true},

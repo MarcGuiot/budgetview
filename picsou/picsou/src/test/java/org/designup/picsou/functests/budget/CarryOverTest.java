@@ -441,7 +441,7 @@ public class CarryOverTest extends LoggedInFunctionalTestCase {
     mainAccounts.checkEndOfMonthPosition("Account n. 0001234", 200.00);
 
     budgetView.variable.editSeries("Courses")
-      .checkEndDate("Sep 2008")
+      .checkEndDate("september 2008")
       .validate();
     budgetView.variable.checkCarryOverDisabled("Courses");
 

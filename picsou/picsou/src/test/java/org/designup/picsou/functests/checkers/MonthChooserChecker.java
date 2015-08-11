@@ -10,6 +10,7 @@ import org.uispec4j.interception.WindowHandler;
 import org.uispec4j.interception.WindowInterceptor;
 
 import static org.uispec4j.assertion.UISpecAssert.assertFalse;
+import static org.uispec4j.assertion.UISpecAssert.assertThat;
 import static org.uispec4j.assertion.UISpecAssert.assertTrue;
 
 public class MonthChooserChecker extends GuiChecker {
@@ -89,7 +90,7 @@ public class MonthChooserChecker extends GuiChecker {
 
   public MonthChooserChecker selectMonthInCurrent(int month) {
     ToggleButton button = getButtonInCurrentYear(month);
-    UISpecAssert.assertThat("Month " + month + " cannot be selected", button.isEnabled());
+    assertThat("Month " + month + " cannot be selected", button.isEnabled());
     button.click();
     assertFalse(dialog.isVisible());
     return this;
@@ -127,7 +128,7 @@ public class MonthChooserChecker extends GuiChecker {
   }
 
   public MonthChooserChecker checkEnabledInCurrentYear(int month) {
-    UISpecAssert.assertThat("For month " + month, getButtonInCurrentYear(month).isEnabled());
+    assertThat("For month " + month, getButtonInCurrentYear(month).isEnabled());
     return this;
   }
 
@@ -184,7 +185,19 @@ public class MonthChooserChecker extends GuiChecker {
     centerOn(monthId);
     int month = Month.toMonth(monthId);
     ToggleButton button = getButtonInCurrentYear(month);
-    UISpecAssert.assertThat("Month " + month + " cannot be selected", button.isEnabled());
+    assertThat("Month " + month + " cannot be selected", button.isEnabled());
     return button.triggerClick();
+  }
+
+  public void checkNoneShown() {
+    assertThat(dialog.getButton("selectNone").isVisible());
+  }
+
+  public void checkNoneHidden() {
+    assertFalse(dialog.getButton("selectNone").isVisible());
+  }
+
+  public void selectNone() {
+    dialog.getButton("selectNone").click();
   }
 }

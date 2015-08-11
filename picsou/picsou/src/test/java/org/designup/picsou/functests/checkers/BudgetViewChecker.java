@@ -104,8 +104,8 @@ public class BudgetViewChecker extends ViewChecker {
       return this;
     }
 
-      public BudgetAreaChecker checkTotalAmounts(final double actual, final double planned) {
-        return checkTotalAmounts(convert(actual), convert(planned));
+    public BudgetAreaChecker checkTotalAmounts(final double actual, final double planned) {
+      return checkTotalAmounts(convert(actual), convert(planned));
     }
 
     public BudgetAreaChecker checkTotalObserved(double actual) {
@@ -145,8 +145,8 @@ public class BudgetViewChecker extends ViewChecker {
 
     public BudgetAreaChecker checkTotalDescription(double remaining, double overrun, double newAmount) {
       GaugeChecker gauge = new GaugeChecker(getPanel(), "totalGauge");
-      gauge.checkDescriptionContains(Integer.toString((int)remaining));
-      gauge.checkDescriptionContains(Integer.toString((int)overrun));
+      gauge.checkDescriptionContains(Integer.toString((int) remaining));
+      gauge.checkDescriptionContains(Integer.toString((int) overrun));
       assertThat(getPanel().getTextBox("totalPlannedAmount").tooltipContains(Double.toString(newAmount)));
       return this;
     }
@@ -215,7 +215,7 @@ public class BudgetViewChecker extends ViewChecker {
 
     protected SeriesPanel getSeriesPanel(String seriesName) {
       Button seriesButton = getPanel().getPanel("seriesRepeat").getButton(seriesName);
-      JPanel panel = (JPanel)seriesButton.getContainer().getAwtContainer();
+      JPanel panel = (JPanel) seriesButton.getContainer().getAwtContainer();
       int index = getIndex(panel, seriesButton.getAwtComponent());
       return new SeriesPanel(panel, index, budgetArea);
     }
@@ -266,7 +266,7 @@ public class BudgetViewChecker extends ViewChecker {
 
       List<String> actualNames = new ArrayList<String>();
       for (Component component : repeatPanel.getSwingComponents(JButton.class, "seriesName")) {
-        String text = ((JButton)component).getText();
+        String text = ((JButton) component).getText();
         actualNames.add(text);
       }
       return actualNames;
@@ -330,12 +330,7 @@ public class BudgetViewChecker extends ViewChecker {
       getSeriesPanel(seriesName).getSeriesButton().click(Lang.get("seriesGroup.goto.project"));
     }
 
-    public SeriesAmountEditionDialogChecker editPlannedAmount(String seriesName) {
-      Button button = getSeriesPanel(seriesName).getPlannedAmount();
-      return SeriesAmountEditionDialogChecker.open(button.triggerClick());
-    }
-
-    public SeriesEditionDialogChecker editPlannedAmountWithFullEditor(String seriesName) {
+    public SeriesEditionDialogChecker editPlannedAmount(String seriesName) {
       Button button = getSeriesPanel(seriesName).getPlannedAmount();
       return SeriesEditionDialogChecker.open(button.triggerClick());
     }
@@ -633,13 +628,13 @@ public class BudgetViewChecker extends ViewChecker {
 
     public void checkGroupItems(String... seriesNames) {
       Panel panel = getPanel().getPanel("seriesRepeat");
-      JPanel jPanel = (JPanel)panel.getAwtComponent();
+      JPanel jPanel = (JPanel) panel.getAwtComponent();
       PanelUI ui = jPanel.getUI();
       if (!(ui instanceof SeriesPanelUI)) {
         Assert.fail("Unexpected panel UI: " + ui);
       }
 
-      SeriesPanelUI seriesPanelUI = (SeriesPanelUI)ui;
+      SeriesPanelUI seriesPanelUI = (SeriesPanelUI) ui;
       TestUtils.assertSetEquals(seriesPanelUI.getGroupItemLabels(jPanel), seriesNames);
     }
 
@@ -713,23 +708,23 @@ public class BudgetViewChecker extends ViewChecker {
     }
 
     private PopupButton getSeriesButton() {
-      return new PopupButton(new Button((JButton)getComponent(SERIES_OFFSET)));
+      return new PopupButton(new Button((JButton) getComponent(SERIES_OFFSET)));
     }
 
     private Button getToggleButton() {
-      return new Button((JButton)getComponent(GROUP_TOGGLE_OFFSET));
+      return new Button((JButton) getComponent(GROUP_TOGGLE_OFFSET));
     }
 
     public GaugeChecker getGauge() {
-      return new GaugeChecker((Gauge)getComponent(GAUGE_OFFSET));
+      return new GaugeChecker((Gauge) getComponent(GAUGE_OFFSET));
     }
 
     public Button getActualAmount() {
-      return new Button((JButton)getComponent(OBSERVED_LABEL_OFFSET));
+      return new Button((JButton) getComponent(OBSERVED_LABEL_OFFSET));
     }
 
     public Button getPlannedAmount() {
-      return new Button((JButton)getComponent(PLANNED_LABEL_OFFSET));
+      return new Button((JButton) getComponent(PLANNED_LABEL_OFFSET));
     }
 
     private Component getComponent(int offset) {
@@ -745,7 +740,7 @@ public class BudgetViewChecker extends ViewChecker {
     }
 
     public DeltaGaugeChecker getDeltaGauge() {
-      return new DeltaGaugeChecker((DeltaGauge)getComponent(DELTA_GAUGE_OFFSET));
+      return new DeltaGaugeChecker((DeltaGauge) getComponent(DELTA_GAUGE_OFFSET));
     }
 
     public void checkAmounts(String actual, String planned) {

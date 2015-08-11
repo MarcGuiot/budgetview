@@ -1,6 +1,6 @@
 package org.designup.picsou.functests.budget;
 
-import org.designup.picsou.functests.checkers.SeriesAmountEditionDialogChecker;
+import org.designup.picsou.functests.checkers.SeriesEditionDialogChecker;
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
 
@@ -256,14 +256,13 @@ public class GaugeTooltipsTest extends LoggedInFunctionalTestCase {
   }
 
   private void setIncomeAmount(final String seriesName, final double amount) {
-    SeriesAmountEditionDialogChecker seriesAmountEditionChecker = budgetView.income.editPlannedAmount(seriesName);
-    seriesAmountEditionChecker
+    budgetView.income.editPlannedAmount(seriesName)
       .setAmount(Math.abs(amount))
       .validate();
   }
 
   private void setVariableAmount(final String seriesName, final double amount) {
-    SeriesAmountEditionDialogChecker seriesAmountEditionChecker = budgetView.variable.editPlannedAmount(seriesName);
+    SeriesEditionDialogChecker seriesAmountEditionChecker = budgetView.variable.editPlannedAmount(seriesName);
     if (amount < 0) {
       seriesAmountEditionChecker.selectPositiveAmounts();
     }
@@ -273,8 +272,7 @@ public class GaugeTooltipsTest extends LoggedInFunctionalTestCase {
   }
 
   private void setTransferAmount(final String seriesName, final double amount) {
-    SeriesAmountEditionDialogChecker seriesAmountEditionChecker = budgetView.transfer.editPlannedAmount(seriesName);
-    seriesAmountEditionChecker
+    budgetView.transfer.editPlannedAmount(seriesName)
       .setAmount(Math.abs(amount))
       .validate();
   }

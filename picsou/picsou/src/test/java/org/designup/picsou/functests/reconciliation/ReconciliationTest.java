@@ -36,7 +36,7 @@ public class ReconciliationTest extends LoggedInFunctionalTestCase {
       .check();
     budgetView.variable.createSeries()
       .setName("Groceries")
-      .gotoSubSeriesTab()
+      .editSubSeries()
       .addSubSeries("Misc")
       .validate();
     categorization.setVariable("[R] AUCHAN", "Groceries", "Misc");

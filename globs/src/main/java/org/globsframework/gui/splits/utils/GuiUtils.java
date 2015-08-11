@@ -6,6 +6,7 @@ import org.globsframework.utils.exceptions.ResourceAccessFailed;
 import sun.security.action.GetPropertyAction;
 
 import javax.swing.*;
+import javax.swing.text.JTextComponent;
 import javax.swing.text.html.HTMLEditorKit;
 import javax.swing.text.html.StyleSheet;
 import java.awt.*;
@@ -124,7 +125,7 @@ public class GuiUtils {
     clipboard.setContents(selection, selection);
   }
 
-  public static void selectAndRequestFocus(JTextField editor) {
+  public static void selectAndRequestFocus(JTextComponent editor) {
     editor.requestFocusInWindow();
     editor.selectAll();
   }

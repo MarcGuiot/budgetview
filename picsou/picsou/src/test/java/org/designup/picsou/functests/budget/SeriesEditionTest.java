@@ -38,9 +38,9 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
         {"2008", "August", 0.00, 29.00},
       })
       .checkMonthSelected(200807)
-      .checkAmountLabel("Planned amount for july 2008")
+      .checkAmountLabel("for july 2008")
       .selectAllMonths()
-      .checkAmountLabel("Planned amount from july 2008")
+      .checkAmountLabel("from july 2008")
       .validate();
 
     budgetView.recurring.checkContent("| Free | 29.00 | 29.00 |");
@@ -91,7 +91,7 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
         {"2008", "July", 29.00, 29.00},
         {"2008", "August", 29.00, 29.00, true},
       })
-      .checkMonthsSelected(200808, 200806)
+      .checkSelectedMonths(200808, 200806)
       .validate();
 
     timeline.checkSelection("2008/06", "2008/08");
@@ -106,7 +106,7 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
 
     budgetView.variable.createSeries()
       .setName("Groceries")
-      .checkMonthsSelected(200808, 200809, 200810, 200811, 200812, 200901, 200902)
+      .checkSelectedMonths(200808, 200809, 200810, 200811, 200812, 200901, 200902)
       .checkPropagationEnabled()
       .setAmount(200)
       .validate();
@@ -126,7 +126,7 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
 
     budgetView.extras.createSeries()
       .setName("Plumber")
-      .checkMonthsSelected(200810, 200811)
+      .checkSelectedMonths(200810, 200811)
       .setAmount(200)
       .validate();
 
@@ -311,8 +311,8 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
     budgetView.variable.createSeries()
       .setStartDate(200809)
       .setEndDate(200810)
-      .checkStartDate("Sep 2008")
-      .checkEndDate("Oct 2008")
+      .checkStartDate("september 2008")
+      .checkEndDate("october 2008")
       .clearStartDate()
       .clearEndDate()
       .checkNoStartDate()
@@ -381,7 +381,7 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
       .checkNoStartDate()
       .checkNoEndDate()
       .setRepeatSingleMonth()
-      .checkSingleMonthDate("June 2008")
+      .checkSingleMonth("june 2008")
       .validate();
 
     timeline.selectAll();
@@ -403,16 +403,16 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
       .setStartDate(200806)
       .setEndDate(200808)
       .setRepeatSingleMonth()
-      .checkSingleMonthDate("June 2008")
+      .checkSingleMonth("june 2008")
       .checkMonthSelectorsVisible(false)
       .setSingleMonthDate(200808)
-      .checkSingleMonthDate("Aug 2008")
+      .checkSingleMonth("august 2008")
       .setRepeatEveryMonth()
-      .checkStartDate("Aug 2008")
-      .checkEndDate("Aug 2008")
+      .checkStartDate("august 2008")
+      .checkEndDate("august 2008")
       .setRepeatSingleMonth()
       .setSingleMonthDate(200807)
-      .checkSingleMonthDate("Jul 2008")
+      .checkSingleMonth("july 2008")
       .validate();
   }
 
@@ -426,7 +426,7 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
     budgetView.variable.createSeries()
       .setName("manualThenSingleMonth")
       .setRepeatSingleMonth()
-      .checkSingleMonthDate("June 2008")
+      .checkSingleMonth("june 2008")
       .checkChart(new Object[][]{
         {"2008", "June", 0.00, 0.00, true}
       })
@@ -435,7 +435,7 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
     budgetView.variable.createSeries()
       .setName("singleMonthThenManual")
       .setRepeatSingleMonth()
-      .checkSingleMonthDate("June 2008")
+      .checkSingleMonth("june 2008")
       .checkChart(new Object[][]{
         {"2008", "June", 0.00, 0.00, true}
       })
@@ -1086,7 +1086,7 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
       .checkSelectedProfile("Irregular")
       .checkNoStartDate()
       .checkNoEndDate()
-      .checkMonthsSelected(200807)
+      .checkSelectedMonths(200807)
       .validate();
   }
 
@@ -1211,7 +1211,7 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
       .validate();
   }
 
-  public void testAlignPlannedAndObservedAmounts() throws Exception {
+  public void testAlignPlannedAndActualAmounts() throws Exception {
     OfxBuilder.init(this)
       .addTransaction("2008/07/29", "2008/08/01", -29.00, "Free Telecom")
       .load();
@@ -1255,7 +1255,7 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
     budgetView.recurring.checkSeries("Internet", 0.00, -29.00);
   }
 
-  public void testAutomaticAdjustPlannedAndObservedForFirstMonthWithObserved() throws Exception {
+  public void testAutomaticAdjustPlannedAndActualForFirstMonthWithActual() throws Exception {
     operations.openPreferences().setFutureMonthsCount(2).validate();
     OfxBuilder.init(this)
       .addTransaction("2008/05/15", -10.00, "Tel")
@@ -1335,7 +1335,7 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
       .load();
 
     categorization.setNewRecurring("Free Telecom", "Internet");
-    categorization.editSeries("Internet").gotoSubSeriesTab().addSubSeries("Free").addSubSeries("sfr").validate();
+    categorization.editSeries("Internet").editSubSeries().addSubSeries("Free").addSubSeries("sfr").validate();
     categorization.editSeries("Internet")
       .checkBudgetAreaContent()
       .checkBudgetArea("Recurring")
@@ -1389,11 +1389,11 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
     categorization.selectTableRow(0);
     categorization.selectVariable().createSeries()
       .setName("Groceries")
-      .gotoSubSeriesTab()
+      .editSubSeries()
       .validate();
 
     categorization.editSeries("Groceries")
-      .checkMainTabIsSelected()
+      .checkMainPanelShown()
       .cancel();
   }
 

@@ -81,14 +81,23 @@ public class SeriesEditionDialogChecker extends SeriesAmountEditionChecker<Serie
     return this;
   }
 
+  public SeriesEditionDialogChecker showDescription() {
+    dialog.getButton("showDescription").click();
+    return this;
+  }
+
   public SeriesEditionDialogChecker setDescription(String text) {
-    dialog.getTabGroup().selectTab("Description");
     dialog.getInputTextBox("descriptionField").setText(text);
     return this;
   }
 
   public SeriesEditionDialogChecker checkDescription(String text) {
     assertThat(dialog.getInputTextBox("descriptionField").textEquals(text));
+    return this;
+  }
+
+  public SeriesEditionDialogChecker back() {
+    dialog.getButton(Lang.get("seriesEdition.backToMain")).click();
     return this;
   }
 
@@ -113,6 +122,26 @@ public class SeriesEditionDialogChecker extends SeriesAmountEditionChecker<Serie
     return this;
   }
 
+  public SeriesEditionDialogChecker checkChartColumn(int index, String label, String section, double reference, double actual) {
+    getChart().checkDiffColumn(index, label, section, reference, actual);
+    return this;
+  }
+
+  public SeriesEditionDialogChecker checkChartColumn(int index, String label, String section, double reference, double actual, boolean selected) {
+    getChart().checkDiffColumn(index, label, section, reference, actual, selected);
+    return this;
+  }
+
+  public SeriesEditionDialogChecker checkChartRange(int firstMonth, int lastMonth) {
+    getChart().checkRange(firstMonth, lastMonth);
+    return this;
+  }
+
+  public SeriesEditionDialogChecker scroll(int shift) {
+    getChart().scroll(shift);
+    return this;
+  }
+
   public SeriesEditionDialogChecker checkMonthSelectorsVisible(boolean visible) {
     checkComponentVisible(dialog, JPanel.class, "monthSelectionPanel", visible);
     return this;
@@ -123,7 +152,7 @@ public class SeriesEditionDialogChecker extends SeriesAmountEditionChecker<Serie
     return this;
   }
 
-  public SeriesEditionDialogChecker checkMonthsSelected(Integer... monthIds) {
+  public SeriesEditionDialogChecker checkSelectedMonths(Integer... monthIds) {
     getChart().checkSelectedIds(monthIds);
     return this;
   }
@@ -247,6 +276,10 @@ public class SeriesEditionDialogChecker extends SeriesAmountEditionChecker<Serie
     checkClosed();
   }
 
+  public Trigger triggerValidate() {
+    return dialog.getButton(Lang.get("ok")).triggerClick();
+  }
+
   public SeriesEditionDialogChecker validateAndCheckNameError(String message) {
     dialog.getButton(Lang.get("ok")).click();
     checkTipVisible(dialog, getNameBox(), message);
@@ -316,13 +349,12 @@ public class SeriesEditionDialogChecker extends SeriesAmountEditionChecker<Serie
   }
 
   public SeriesEditionDialogChecker checkNoStartDate() {
-    assertTrue(dialog.getTextBox("seriesStartDate").isVisible());
-    assertFalse(dialog.getButton("deleteSeriesStartDate").isVisible());
+    assertThat(dialog.getButton("seriesStartDateChooser").textEquals(Lang.get("seriesEdition.begin.none")));
     return this;
   }
 
   public SeriesEditionDialogChecker checkStartDate(String date) {
-    checkDate("seriesStartDate", date);
+    checkDate("seriesStartDateChooser", date);
     return this;
   }
 
@@ -332,13 +364,12 @@ public class SeriesEditionDialogChecker extends SeriesAmountEditionChecker<Serie
   }
 
   public SeriesEditionDialogChecker checkNoEndDate() {
-    assertTrue(dialog.getTextBox("seriesEndDate").isVisible());
-    assertFalse(dialog.getButton("deleteSeriesEndDate").isVisible());
+    assertThat(dialog.getButton("seriesEndDateChooser").textEquals(Lang.get("seriesEdition.end.none")));
     return this;
   }
 
   public SeriesEditionDialogChecker checkEndDate(String monthId) {
-    checkDate("seriesEndDate", monthId);
+    checkDate("seriesEndDateChooser", monthId);
     return this;
   }
 
@@ -347,17 +378,22 @@ public class SeriesEditionDialogChecker extends SeriesAmountEditionChecker<Serie
     return this;
   }
 
-  public SeriesEditionDialogChecker checkSingleMonthDate(String date) {
-    checkDate("singleMonthDate", date);
-    checkComponentVisible(dialog, JTextField.class, "seriesStartDate", false);
-    checkComponentVisible(dialog, JTextField.class, "seriesEndDate", false);
+  public SeriesEditionDialogChecker checkSingleMonth(String date) {
+    checkDate("singleMonthChooser", date);
+    checkComponentVisible(dialog, JButton.class, "seriesStartDateChooser", false);
+    checkComponentVisible(dialog, JButton.class, "seriesEndDateChooser", false);
     return this;
   }
 
-  private void setDate(String labelName, int monthId) {
-    MonthChooserChecker month = getMonthChooser(labelName);
+  private void setDate(String componentName, int monthId) {
+    MonthChooserChecker month = getMonthChooser(componentName);
     month.centerOn(monthId)
       .selectMonthInCurrent(Month.toMonth(monthId));
+  }
+
+  private void clearDate(String componentName) {
+    MonthChooserChecker month = getMonthChooser(componentName);
+    month.selectNone();
   }
 
   public MonthChooserChecker editStartDate() {
@@ -369,12 +405,12 @@ public class SeriesEditionDialogChecker extends SeriesAmountEditionChecker<Serie
   }
 
   public SeriesEditionDialogChecker clearStartDate() {
-    dialog.getButton("deleteSeriesStartDate").click();
+    clearDate("seriesStartDateChooser");
     return this;
   }
 
   public SeriesEditionDialogChecker clearEndDate() {
-    dialog.getButton("deleteSeriesEndDate").click();
+    clearDate("seriesEndDateChooser");
     return this;
   }
 
@@ -383,7 +419,7 @@ public class SeriesEditionDialogChecker extends SeriesAmountEditionChecker<Serie
   }
 
   private void checkDate(String labelName, String text) {
-    assertThat(dialog.getTextBox(labelName).textEquals(text));
+    assertThat(dialog.getButton(labelName).textEquals(text));
   }
 
   public SeriesEditionDialogChecker checkAllMonthsDisabled() {
@@ -494,6 +530,16 @@ public class SeriesEditionDialogChecker extends SeriesAmountEditionChecker<Serie
     return this;
   }
 
+  public SeriesEditionDialogChecker checkRepeatsIrregularly() {
+    assertThat(getProfileCombo().selectionEquals(ProfileType.IRREGULAR.getLabel()));
+    return this;
+  }
+
+  public SeriesEditionDialogChecker checkRepeatsWithCustomPattern() {
+    assertThat(getProfileCombo().selectionEquals(ProfileType.CUSTOM.getLabel()));
+    return this;
+  }
+
   public SeriesEditionDialogChecker checkAmountLabel(final String text) {
     assertThat(dialog.getPanel("seriesAmountEditionPanel").getTextBox("dateLabel").textEquals(text));
     return this;
@@ -562,76 +608,70 @@ public class SeriesEditionDialogChecker extends SeriesAmountEditionChecker<Serie
     return this;
   }
 
-  public SeriesEditionDialogChecker gotoSubSeriesTab() {
-    dialog.getTabGroup().selectTab("Sub-series");
+  public SeriesEditionDialogChecker editSubSeries() {
+    dialog.getButton("showSubSeries").click();
     return this;
   }
 
   public SeriesEditionDialogChecker checkAddSubSeriesEnabled(boolean enabled) {
-    assertEquals(enabled, getSelectedTab().getButton("Add").isEnabled());
+    assertEquals(enabled, dialog.getButton("Add").isEnabled());
     return this;
   }
 
   public SeriesEditionDialogChecker checkAddSubSeriesTextIsEmpty() {
-    assertThat(getSelectedTab().getInputTextBox("subSeriesNameField").textIsEmpty());
+    assertThat(dialog.getInputTextBox("subSeriesNameField").textIsEmpty());
     return this;
   }
 
   public SeriesEditionDialogChecker checkSubSeriesMessage(String message) {
-    TextBox messageBox = getSelectedTab().getTextBox("subSeriesErrorMessage");
+    TextBox messageBox = dialog.getTextBox("subSeriesErrorMessage");
     assertThat(messageBox.textEquals(message));
     assertThat(messageBox.isVisible());
     return this;
   }
 
   public SeriesEditionDialogChecker checkNoSubSeriesMessage() {
-    TextBox messageBox = getSelectedTab().getTextBox("subSeriesErrorMessage");
+    TextBox messageBox = dialog.getTextBox("subSeriesErrorMessage");
     assertFalse(messageBox.isVisible());
     return this;
   }
 
   public SeriesEditionDialogChecker enterSubSeriesName(String name) {
-    getSelectedTab().getInputTextBox("subSeriesNameField").setText(name, false);
+    dialog.getInputTextBox("subSeriesNameField").setText(name, false);
     return this;
   }
 
   public SeriesEditionDialogChecker selectSubSeries(String name) {
-    getSelectedTab().getListBox().select(name);
+    dialog.getListBox().select(name);
     return this;
   }
 
   public SeriesEditionDialogChecker addSubSeries(String name) {
-    Panel tab = getSelectedTab();
-    tab.getInputTextBox("subSeriesNameField").setText(name, false);
-    tab.getButton("Add").click();
-    assertFalse(tab.getTextBox("subSeriesErrorMessage").isVisible());
-    assertThat(tab.getListBox().contains(name));
+    dialog.getInputTextBox("subSeriesNameField").setText(name, false);
+    dialog.getButton("Add").click();
+    assertFalse(dialog.getTextBox("subSeriesErrorMessage").isVisible());
+    assertThat(dialog.getListBox().contains(name));
     return this;
   }
 
   public SeriesEditionDialogChecker addSubSeries() {
-    getSelectedTab().getButton("Add").click();
+    dialog.getButton("Add").click();
     return this;
   }
 
   public SeriesEditionDialogChecker checkSubSeriesList(String... names) {
-    assertThat(getSelectedTab().getListBox().contentEquals(names));
+    assertThat(dialog.getListBox().contentEquals(names));
     return this;
   }
 
   public SeriesEditionDialogChecker checkSubSeriesListIsEmpty() {
-    assertThat(getSelectedTab().getListBox().isEmpty());
+    assertThat(dialog.getListBox().isEmpty());
     return this;
   }
 
-  private Panel getSelectedTab() {
-    return dialog.getTabGroup().getSelectedTab();
-  }
-
   public SeriesEditionDialogChecker renameSubSeries(String previousName, final String newName) {
-    Panel tab = getSelectedTab();
-    tab.getListBox().select(previousName);
-    WindowInterceptor.init(tab.getButton("renameSubSeries"))
+    dialog.getListBox().select(previousName);
+    WindowInterceptor.init(dialog.getButton("renameSubSeries"))
       .process(new WindowHandler() {
         public Trigger process(Window window) throws Exception {
           window.getInputTextBox().setText(newName);
@@ -645,9 +685,8 @@ public class SeriesEditionDialogChecker extends SeriesAmountEditionChecker<Serie
   public SeriesEditionDialogChecker checkRenameSubSeriesMessage(String subSeriesName,
                                                                 final String newName,
                                                                 final String errorMessage) {
-    Panel tab = getSelectedTab();
-    tab.getListBox().select(subSeriesName);
-    WindowInterceptor.init(tab.getButton("renameSubSeries"))
+    dialog.getListBox().select(subSeriesName);
+    WindowInterceptor.init(dialog.getButton("renameSubSeries"))
       .process(new WindowHandler() {
         public Trigger process(Window window) throws Exception {
           window.getInputTextBox().setText(newName, false);
@@ -664,23 +703,20 @@ public class SeriesEditionDialogChecker extends SeriesAmountEditionChecker<Serie
   }
 
   public SeriesEditionDialogChecker deleteSubSeries(String... names) {
-    Panel tab = getSelectedTab();
-    tab.getListBox().select(names);
-    tab.getButton("deleteSubSeries").click();
+    dialog.getListBox().select(names);
+    dialog.getButton("deleteSubSeries").click();
     return this;
   }
 
   public SeriesEditionDialogChecker deleteSubSeriesAndConfirm(String... names) {
-    Panel tab = getSelectedTab();
-    tab.getListBox().select(names);
-    DeleteSubSeriesDialogChecker.open(tab.getButton("deleteSubSeries").triggerClick()).validate();
+    dialog.getListBox().select(names);
+    DeleteSubSeriesDialogChecker.open(dialog.getButton("deleteSubSeries").triggerClick()).validate();
     return this;
   }
 
   public DeleteSubSeriesDialogChecker deleteSubSeriesWithConfirmation(String... names) {
-    Panel tab = getSelectedTab();
-    tab.getListBox().select(names);
-    return DeleteSubSeriesDialogChecker.open(tab.getButton("deleteSubSeries").triggerClick());
+    dialog.getListBox().select(names);
+    return DeleteSubSeriesDialogChecker.open(dialog.getButton("deleteSubSeries").triggerClick());
   }
 
   public SeriesEditionDialogChecker checkBudgetArea(String budgetAreaName) {
@@ -703,28 +739,33 @@ public class SeriesEditionDialogChecker extends SeriesAmountEditionChecker<Serie
     return this;
   }
 
-  public SeriesEditionDialogChecker checkMainTabIsSelected() {
-    assertThat(dialog.getTabGroup().selectedTabEquals("Terms"));
+  public SeriesEditionDialogChecker checkMainPanelShown() {
+    assertThat(dialog.containsSwingComponent(JPanel.class, "chart"));
     return this;
   }
 
-  public SeriesEditionDialogChecker forceSingleOperationForecast() {
-    getForceSingleOperationCheckBox().select();
+  public SeriesEditionDialogChecker setAutomaticForecast() {
+    getForceSingleOperationCombo().select(Lang.get("seriesEdition.forecast.mode.auto"));
     return this;
   }
 
-  public SeriesEditionDialogChecker unselectedForceSingleOperationForecast() {
-    getForceSingleOperationCheckBox().unselect();
+  public SeriesEditionDialogChecker setSingleOperationForecast() {
+    getForceSingleOperationCombo().select(Lang.get("seriesEdition.forecast.mode.single"));
     return this;
   }
 
-  public SeriesEditionDialogChecker checkForceSingleOperationSelected(boolean selected) {
-    assertEquals(selected, getForceSingleOperationCheckBox().isSelected());
+  public SeriesEditionDialogChecker checkAutomaticForecastSelected() {
+    assertThat(getForceSingleOperationCombo().selectionEquals(Lang.get("seriesEdition.forecast.mode.auto")));
     return this;
   }
 
-  public SeriesEditionDialogChecker checkForceSingleOperationDayEnabled(boolean enabled) {
-    assertEquals(enabled, getForceSingleOperationDayCombo().isEnabled());
+  public SeriesEditionDialogChecker checkSingleOperationForecastSelected() {
+    assertThat(getForceSingleOperationCombo().selectionEquals(Lang.get("seriesEdition.forecast.mode.single")));
+    return this;
+  }
+
+  public SeriesEditionDialogChecker checkSingleOperationForecastDayShown(boolean enabled) {
+    assertEquals(enabled, getForceSingleOperationDayCombo().isVisible());
     return this;
   }
 
@@ -738,9 +779,8 @@ public class SeriesEditionDialogChecker extends SeriesAmountEditionChecker<Serie
     return this;
   }
 
-  private CheckBox getForceSingleOperationCheckBox() {
-    dialog.getTabGroup().selectTab("Forecast");
-    return dialog.getCheckBox("forceSingleOperationCheckbox");
+  private ComboBox getForceSingleOperationCombo() {
+    return dialog.getComboBox("forecastModeCombo");
   }
 
   public SeriesEditionDialogChecker checkForceSingleOperationDayList(Integer[] values) {
@@ -753,8 +793,7 @@ public class SeriesEditionDialogChecker extends SeriesAmountEditionChecker<Serie
   }
 
   private ComboBox getForceSingleOperationDayCombo() {
-    dialog.getTabGroup().selectTab("Forecast");
-    return dialog.getComboBox("forceSingleOperationDayCombo");
+    return dialog.getComboBox("forecastDayCombo");
   }
 
   private HistoChartChecker getChart() {

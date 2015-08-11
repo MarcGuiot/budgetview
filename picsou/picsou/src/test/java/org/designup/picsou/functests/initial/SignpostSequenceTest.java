@@ -1,7 +1,7 @@
 package org.designup.picsou.functests.initial;
 
+import org.designup.picsou.functests.checkers.SeriesEditionDialogChecker;
 import org.designup.picsou.functests.specificbanks.SpecificBankTestCase;
-import org.designup.picsou.functests.checkers.SeriesAmountEditionDialogChecker;
 import org.designup.picsou.functests.checkers.SignpostDialogChecker;
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
@@ -110,7 +110,7 @@ public class SignpostSequenceTest extends LoggedInFunctionalTestCase {
     budgetView.variable.checkPlannedUnsetButNotHighlighted("Health");
     budgetView.variable.checkPlannedUnsetButNotHighlighted("Fuel");
     budgetView.variable.checkPlannedUnsetAndHighlighted("Groceries");
-    SeriesAmountEditionDialogChecker amountDialog = budgetView.variable.editPlannedAmount("Groceries");
+    SeriesEditionDialogChecker amountDialog = budgetView.variable.editPlannedAmount("Groceries");
     checkNoSignpostVisible();
     amountDialog.cancel();
 
@@ -196,7 +196,7 @@ public class SignpostSequenceTest extends LoggedInFunctionalTestCase {
     budgetView.variable.checkPlannedUnsetAndHighlighted("Groceries");
     budgetView.variable.editPlannedAmount("Groceries")
       .setPropagationDisabled()
-      .clickMonth(201005)
+      .selectMonth(201005)
       .setAmount(10.00)
       .validate();
     budgetView.variable.checkPlannedNotHighlighted("Groceries");
@@ -297,7 +297,7 @@ public class SignpostSequenceTest extends LoggedInFunctionalTestCase {
     budgetView.variable.checkAmountSignpostDisplayed(
       "Groceries", "Click on the planned amounts to set your own values");
 
-    SeriesAmountEditionDialogChecker amountDialog = budgetView.variable.editPlannedAmount("Groceries");
+    SeriesEditionDialogChecker amountDialog = budgetView.variable.editPlannedAmount("Groceries");
     checkNoSignpostVisible();
     amountDialog.cancel();
 
@@ -435,7 +435,7 @@ public class SignpostSequenceTest extends LoggedInFunctionalTestCase {
     views.selectBudget();
     budgetView.recurring.editPlannedAmount("Groceries")
       .setPropagationDisabled()
-      .clickMonth(201005)
+      .selectMonth(201005)
       .setAmount(10.00)
       .validate();
     budgetView.variable.checkPlannedNotHighlighted("Groceries");
@@ -578,7 +578,7 @@ public class SignpostSequenceTest extends LoggedInFunctionalTestCase {
     budgetView.variable.checkPlannedUnsetButNotHighlighted("Health");
     budgetView.variable.checkPlannedUnsetButNotHighlighted("Fuel");
     budgetView.variable.checkPlannedUnsetAndHighlighted("Groceries");
-    SeriesAmountEditionDialogChecker amountDialog = budgetView.variable.editPlannedAmount("Groceries");
+    SeriesEditionDialogChecker amountDialog = budgetView.variable.editPlannedAmount("Groceries");
     checkNoSignpostVisible();
     amountDialog.cancel();
 
@@ -588,8 +588,7 @@ public class SignpostSequenceTest extends LoggedInFunctionalTestCase {
 
     views.selectBudget();
     SignpostDialogChecker
-      .open(
-        budgetView.variable.editPlannedAmount("Groceries").setAmount(10.00).triggerValidate())
+      .open(budgetView.variable.editPlannedAmount("Groceries").setAmount(10.00).triggerValidate())
       .close();
 
     views.checkHomeSelected();
@@ -646,7 +645,7 @@ public class SignpostSequenceTest extends LoggedInFunctionalTestCase {
     budgetView.variable.checkAmountSignpostDisplayed(
       "Groceries", "Click on the planned amounts to set your own values");
 
-    SeriesAmountEditionDialogChecker amountDialog = budgetView.variable.editPlannedAmount("Groceries");
+    SeriesEditionDialogChecker amountDialog = budgetView.variable.editPlannedAmount("Groceries");
     checkNoSignpostVisible();
     amountDialog.cancel();
 

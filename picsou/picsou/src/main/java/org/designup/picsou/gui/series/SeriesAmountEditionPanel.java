@@ -1,11 +1,9 @@
 package org.designup.picsou.gui.series;
 
+import org.designup.picsou.gui.analysis.SeriesAmountChartPanel;
 import org.designup.picsou.gui.components.AmountEditor;
 import org.designup.picsou.gui.description.stringifiers.MonthListStringifier;
-import org.designup.picsou.gui.description.stringifiers.SeriesPeriodicityAndScopeStringifier;
-import org.designup.picsou.gui.analysis.SeriesAmountChartPanel;
 import org.designup.picsou.gui.series.edition.AlignSeriesBudgetAmountsAction;
-import org.designup.picsou.gui.series.edition.SeriesBudgetSliderAdapter;
 import org.designup.picsou.gui.series.utils.SeriesAmountLabelStringifier;
 import org.designup.picsou.model.*;
 import org.designup.picsou.utils.Lang;
@@ -13,22 +11,17 @@ import org.globsframework.gui.GlobSelection;
 import org.globsframework.gui.GlobSelectionListener;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.SelectionService;
-import org.globsframework.gui.splits.SplitsLoader;
-import org.globsframework.gui.splits.SplitsNode;
 import org.globsframework.gui.splits.layout.CardHandler;
 import org.globsframework.gui.splits.utils.GuiUtils;
 import org.globsframework.gui.utils.GlobSelectionBuilder;
-import org.globsframework.gui.views.GlobButtonView;
 import org.globsframework.model.*;
 import org.globsframework.model.utils.DefaultChangeSetListener;
-import org.globsframework.model.utils.GlobListFunctor;
 import org.globsframework.model.utils.GlobMatchers;
-import org.globsframework.utils.collections.Range;
 import org.globsframework.utils.Utils;
+import org.globsframework.utils.collections.Range;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
-import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.util.Collection;
 import java.util.Set;
@@ -53,28 +46,15 @@ public class SeriesAmountEditionPanel {
   private boolean selectionInProgress;
   private SeriesAmountChartPanel chart;
   private boolean autoSelectFutureMonths;
-  private SeriesEditorAccess seriesEditorAccess;
   private SeriesAmountLabelStringifier selectionStringifier = new SeriesAmountLabelStringifier();
   private CardHandler cards;
   private JEditorPane disabledMessage;
   private boolean showingActiveMonths = false;
 
-  public interface SeriesEditorAccess {
-    void openSeriesEditor(Key series, Set<Integer> selectedMonthIds);
-  }
-
-  public SeriesAmountEditionPanel(GlobRepository repository,
-                                  Directory directory) {
-    this(repository, directory, null);
-  }
-
-  public SeriesAmountEditionPanel(GlobRepository repository,
-                                  Directory directory,
-                                  SeriesEditorAccess seriesEditorAccess) {
+  public SeriesAmountEditionPanel(GlobRepository repository, Directory directory) {
 
     this.repository = repository;
     this.directory = directory;
-    this.seriesEditorAccess = seriesEditorAccess;
 
     this.selectionService = directory.get(SelectionService.class);
     this.selectionService.addListener(
@@ -166,30 +146,8 @@ public class SeriesAmountEditionPanel {
     builder.add("alignValue", alignAction);
     builder.add("actualAmountLabel", alignAction.getActualAmountLabel());
 
-    builder.addSlider("slider",
-                      SeriesBudget.PLANNED_AMOUNT,
-                      new SeriesBudgetSliderAdapter(amountEditor, repository));
-
-    final JButton editSeriesButton;
-    if (seriesEditorAccess != null) {
-      editSeriesButton = GlobButtonView.init(Series.TYPE, repository, directory,
-                                             new SeriesPeriodicityAndScopeStringifier(),
-                                             new OpenSeriesEditorCallback())
-        .getComponent();
-    }
-    else {
-      editSeriesButton = new JButton();
-    }
-    builder.add("editSeries", editSeriesButton);
-
     disabledMessage = GuiUtils.createReadOnlyHtmlComponent();
     builder.add("disabledMessage", disabledMessage);
-
-    builder.addLoader(new SplitsLoader() {
-      public void load(Component component, SplitsNode node) {
-        editSeriesButton.setVisible(seriesEditorAccess != null);
-      }
-    });
 
     this.panel = builder.load();
   }
@@ -439,12 +397,6 @@ public class SeriesAmountEditionPanel {
     }
     finally {
       repository.completeChangeSet();
-    }
-  }
-
-  public class OpenSeriesEditorCallback implements GlobListFunctor {
-    public void run(GlobList list, GlobRepository repository) {
-      seriesEditorAccess.openSeriesEditor(currentSeries, selectedMonthIds);
     }
   }
 

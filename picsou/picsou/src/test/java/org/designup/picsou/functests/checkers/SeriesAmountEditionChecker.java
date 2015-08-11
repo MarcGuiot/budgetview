@@ -71,11 +71,6 @@ public class SeriesAmountEditionChecker<T extends SeriesAmountEditionChecker> ex
     return (T)this;
   }
 
-  public void setAmountAndValidate(String value) {
-    getAmountTextBox().setText(value);
-    assertFalse(dialog.isVisible());
-  }
-
   public T selectPositiveAmounts() {
     AmountEditorChecker.init(dialog, "amountEditor").selectPlus();
     return (T)this;

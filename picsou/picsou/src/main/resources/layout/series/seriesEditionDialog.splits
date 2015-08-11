@@ -6,151 +6,133 @@
   <styles>
     <style selector="textField" fill="horizontal" anchor="left"/>
     <style selector="label.month" foreground="#444444" font="-,plain,10"/>
+    <style selector="label.sectionTitle" font="-,bold,14" marginTop="10" marginBottom="6" iconTextGap="5"
+           fill="horizontal" anchor="left" opaque="false" weightY="0.1"/>
+    <style selector="button.backButton" fill="none" anchor="left"/>
   </styles>
 
   <column styleClass="dialog">
     <label ref="title" styleClass="title"/>
     <panel styleClass="innerDialog">
-      <column styleClass="innerDialogContent">
+      <column styleClass="innerDialogContent" preferredSize="(680,490)">
 
-        <column weightX="7" preferredSize="(680,490)">
+        <cards ref="cards">
 
-          <horizontalBoxes weightY="0.1" marginBottom="4">
-            <label text="$seriesEdition.name" styleClass="formLabel"/>
+          <card name="main">
 
-            <textField ref="nameField" preferredSize="(300,20)"/>
+            <column>
 
-            <label text="$seriesEdition.budgetArea" styleClass="formLabel" autoHideSource="budgetAreaChooser"
-                   border="empty(0,10,0,4)"/>
-            <comboBox ref="budgetAreaChooser" visible="false"/>
+              <horizontalBoxes name="seriesDefinition" weightY="0.1" border="empty(0,0,15,0)">
+                <label text="$seriesEdition.name" styleClass="formLabel"/>
+                <textField ref="nameField" preferredSize="(300,20)"/>
+                <label text="$seriesEdition.budgetArea" styleClass="formLabel" autoHideSource="budgetAreaChooser"
+                       border="empty(0,10,0,4)"/>
+                <comboBox ref="budgetAreaChooser" visible="false"/>
+                <label text="$seriesEdition.targetAccount" styleClass="formLabel" autoHideSource="targetAccountCombo"
+                       border="empty(0,10,0,4)"/>
+                <comboBox ref="targetAccountCombo"/>
+                <label ref="targetAccountLabel" visible="false"/>
+              </horizontalBoxes>
 
-            <label text="$seriesEdition.targetAccount" styleClass="formLabel" autoHideSource="targetAccountCombo"
-                   border="empty(0,10,0,4)"/>
-            <comboBox ref="targetAccountCombo"/>
-            <label ref="targetAccountLabel" visible="false"/>
-          </horizontalBoxes>
+              <column name="fromTo" autoHideSource="fromAccount" styleClass="separator">
+                <label text="$seriesEdition.accountSelection" styleClass="sectionTitle"/>
+                <row marginLeft="10" marginBottom="6">
+                  <grid marginRight="20">
 
-          <column autoHideSource="fromAccount" border="empty(10,0,15,0)">
-            <label text="$seriesEdition.accountSelection" styleClass="separatorTitle"/>
-            <row styleClass="separator">
-              <grid marginRight="20">
+                    <label gridPos="(0,0)" text="$seriesEdition.fromAccount" styleClass="formLabel"/>
+                    <comboBox gridPos="(1,0)" ref="fromAccount" marginTop="4"/>
 
-                <label gridPos="(0,0)" text="$seriesEdition.fromAccount" styleClass="formLabel"/>
-                <comboBox gridPos="(1,0)" ref="fromAccount" marginTop="4"/>
+                    <label gridPos="(0,1)" text="$seriesEdition.toAccount" styleClass="formLabel"/>
+                    <comboBox gridPos="(1,1)" ref="toAccount" marginTop="4"/>
 
-                <label gridPos="(0,1)" text="$seriesEdition.toAccount" styleClass="formLabel"/>
-                <comboBox gridPos="(1,1)" ref="toAccount" marginTop="4"/>
+                    <label gridPos="(1,2)" ref="savingsMessage" fill="horizontal" marginTop="4"
+                           styleClass="errorMessage"/>
+                  </grid>
 
-                <label gridPos="(1,2)" ref="savingsMessage" fill="horizontal" marginTop="4" styleClass="errorMessage"/>
+                  <button action="createAccount" anchor="right"/>
+                </row>
+              </column>
 
-              </grid>
+              <column name="recurrence" styleClass="separator" weightY="0.1" marginBottom="6">
+                <label text="$seriesEdition.sectionTitle.recurrence" styleClass="sectionTitle"/>
+                <row>
+                  <label text="$seriesEdition.profile" styleClass="formLabel"
+                         marginTop="5" marginBottom="5" marginLeft="10" marginRight="3"/>
+                  <comboBox ref="profileCombo"/>
+                  <cards ref="monthSelection">
+                    <card name="monthRangeSelection">
+                      <row>
+                        <label text="$seriesEdition.begin" styleClass="formLabel"
+                               fill="horizontal" marginTop="2" marginRight="5"/>
+                        <button action="seriesStartDateChooser" styleClass="hyperlink"
+                                weightX="0.1" marginRight="5" fill="none" tooltipText="$seriesEdition.begin.edit.tooltip"/>
 
-              <button action="createAccount" anchor="right"/>
-            </row>
-          </column>
+                        <label ref="seriesEndDateLabel" styleClass="formLabel"
+                               fill="horizontal" marginTop="2" marginRight="5"/>
+                        <button action="seriesEndDateChooser" styleClass="hyperlink"
+                                weightX="0.1" fill="none" tooltipText="$seriesEdition.end.edit.tooltip"/>
 
-          <tabs marginTop="10" ref="tabs">
-            <tab title="$seriesEdition.tabs.terms">
-              <row margin="5">
-                <column marginTop="5" weightX="0" preferredSize="(200,400)">
+                        <filler fill="horizontal"/>
+                      </row>
+                    </card>
 
-                  <column marginRight="10">
+                    <card name="singleMonthSelection">
+                      <row>
+                        <label text="$seriesEdition.singleMonth" styleClass="formLabel"
+                               fill="horizontal" marginTop="2" marginRight="3"/>
+                        <textField ref="singleMonthDate" fill="horizontal" columns="20"
+                                   marginRight="5"/>
+                        <button action="singleMonthChooser" icon="button_calendar.png" styleClass="icon"
+                                pressedIcon="button_calendar_pressed.png"
+                                tooltipText="$seriesEdition.begin.edit.tooltip"/>
+                        <filler fill="horizontal" weightX="0.1"/>
+                      </row>
+                    </card>
+                  </cards>
 
-                    <label text="$seriesEdition.profile" styleClass="formLabelTop" marginTop="5" marginBottom="5"/>
-                    <comboBox ref="profileCombo"/>
-                    <panel ref="monthSelectionPanel" opaque="false">
-                      <column>
-                        <repeat ref="monthRepeat" styleClass="innerBlock" border="empty(5,0,2,0)"
-                                layout="horizontalGrid" gridWrapLimit="3" weightY="0.1">
-                          <label ref="monthLabel" styleClass="month" labelFor="monthSelector"
-                                 fill="none" anchor="south" marginBottom="0"/>
-                          <checkBox ref="monthSelector"
-                                    fill="none" anchor="north" border="empty(0,0,3,0)"/>
-                        </repeat>
-                      </column>
-                    </panel>
+                  <label text="$seriesEdition.dayChooser" styleClass="formLabelTop" autoHideSource="dayChooser"/>
+                  <comboBox ref="dayChooser" autoHideIfDisabled="true"/>
+                  <filler fill="horizontal"/>
+                </row>
 
-                    <cards ref="monthSelection">
-                      <card name="monthRangeSelection">
-                        <column>
-                          <label text="$seriesEdition.begin" styleClass="formLabelTop"
-                                 fill="horizontal" marginTop="10"/>
-                          <row>
-                            <textField ref="seriesStartDate" fill="horizontal" columns="20"
-                                       marginRight="5" cursor="hand"/>
-                            <button action="deleteSeriesStartDate" icon="button_delete.png" styleClass="icon"
-                                    pressedIcon="button_delete_pressed.png" autoHideIfDisabled="true"
-                                    fill="none" tooltipText="$seriesEdition.begin.delete.tooltip"
-                                    cursor="hand"/>
-                            <button action="seriesStartDateChooser" icon="button_calendar.png" styleClass="icon"
-                                    pressedIcon="button_calendar_pressed.png"
-                                    rolloverIcon="button_calendar_rollover.png"
-                                    marginLeft="5" fill="none" tooltipText="$seriesEdition.begin.edit.tooltip"
-                                    cursor="hand"/>
-                            <filler fill="horizontal" weightX="0.1"/>
-                          </row>
+                <row ref="monthSelectionPanel" weightY="1">
+                  <filler fill="horizontal"/>
+                  <repeat ref="monthRepeat" styleClass="innerBlock" border="empty(5,0,2,0)"
+                          layout="row" weightY="0.1">
+                    <row>
+                      <label ref="monthLabel" styleClass="month" labelFor="monthSelector"
+                             fill="none" anchor="center" marginBottom="0" marginRight="2"/>
+                      <checkBox ref="monthSelector" marginRight="10"
+                                fill="none" anchor="center" border="empty(0,0,3,0)"/>
+                    </row>
+                  </repeat>
+                  <filler fill="horizontal"/>
+                </row>
+              </column>
 
-                          <label text="$seriesEdition.end" styleClass="formLabelTop" labelFor="seriesEndDate"
-                                 fill="horizontal" marginTop="10"/>
-                          <row>
-                            <textField ref="seriesEndDate" fill="horizontal" columns="20"
-                                       marginRight="5" cursor="hand"/>
-                            <button action="deleteSeriesEndDate" icon="button_delete.png" styleClass="icon"
-                                    pressedIcon="button_delete_pressed.png" autoHideIfDisabled="true"
-                                    fill="none" tooltipText="$seriesEdition.end.delete.tooltip"
-                                    cursor="hand"/>
-                            <button action="seriesEndDateChooser" icon="button_calendar.png" styleClass="icon"
-                                    pressedIcon="button_calendar_pressed.png"
-                                    rolloverIcon="button_calendar_rollover.png"
-                                    marginLeft="5" fill="none" tooltipText="$seriesEdition.end.edit.tooltip"
-                                    cursor="hand"/>
-                            <filler fill="horizontal" weightX="0.1"/>
-                          </row>
-                          <filler fill="vertical"/>
-                        </column>
-                      </card>
+              <column name="amount" styleClass="separator" weightY="100">
+                <label text="$seriesEdition.sectionTitle.forecast" styleClass="sectionTitle"/>
+                <panel ref="seriesAmountEditionPanel"/>
+              </column>
 
-                      <card name="singleMonthSelection">
-                        <column>
-                          <label text="$seriesEdition.singleMonth" styleClass="formLabelTop"
-                                 fill="horizontal" marginTop="2"/>
-                          <row>
-                            <textField ref="singleMonthDate" fill="horizontal" columns="20"
-                                       marginRight="5"/>
-                            <button action="singleMonthChooser" icon="button_calendar.png" styleClass="icon"
-                                    pressedIcon="button_calendar_pressed.png"
-                                    marginLeft="5" fill="none" tooltipText="$seriesEdition.begin.edit.tooltip"/>
-                            <filler fill="horizontal" weightX="0.1"/>
-                          </row>
-                          <filler fill="vertical"/>
-                        </column>
-                      </card>
-                    </cards>
+              <column name="operations" styleClass="separator" weightY="0.1" marginBottom="6">
+                <label text="$seriesEdition.sectionTitle.operations" styleClass="sectionTitle"/>
+                <panel ref="forecastPanel" marginLeft="10"/>
+              </column>
 
-                    <label text="$seriesEdition.dayChooser" styleClass="formLabelTop" autoHideSource="dayChooser"/>
-                    <comboBox ref="dayChooser" autoHideIfDisabled="true"/>
-
-                    <filler fill="vertical"/>
-                  </column>
-                </column>
-
-                <column weightX="1" marginLeft="5">
-                  <column name="innerBlock" styleClass="dialogBlock" weightY="100">
-                    <panel ref="seriesAmountEditionPanel"/>
-                  </column>
-                </column>
+              <row name="other" styleClass="separator" weightY="0.1" marginTop="5">
+                <label text="$seriesEdition.sectionTitle.other" styleClass="sectionTitle"/>
+                <filler fill="horizontal"/>
+                <button action="showSubSeries" styleClass="hyperlink"/>
+                <button action="showDescription" styleClass="hyperlink"/>
+                <button action="delete" styleClass="hyperlink"/>
               </row>
-            </tab>
 
-            <tab title="$seriesEdition.tabs.subseries">
-              <panel ref="subSeriesEditionPanel" border="empty(10)"/>
-            </tab>
+            </column>
+          </card>
 
-            <tab title="$seriesEdition.tabs.forecast">
-              <panel ref="forecastPanel" border="empty(10)"/>
-            </tab>
-
-            <tab title="$seriesEdition.tabs.description">
+          <card name="description">
+            <column>
               <row border="empty(10)">
                 <label text="$seriesEdition.description" styleClass="formLabel" anchor="top"/>
                 <scrollPane minimumSize="(40,60)"
@@ -160,11 +142,19 @@
                   <textArea ref="descriptionField" lineWrap="true"/>
                 </scrollPane>
               </row>
-            </tab>
+              <button action="backToMain" styleClass="backButton"/>
+            </column>
+          </card>
 
-          </tabs>
+          <card name="subseries">
+            <column>
+              <panel ref="subSeriesEditionPanel" border="empty(10)"/>
+              <button action="backToMain" styleClass="backButton"/>
+            </column>
+          </card>
 
-        </column>
+        </cards>
+
       </column>
     </panel>
   </column>

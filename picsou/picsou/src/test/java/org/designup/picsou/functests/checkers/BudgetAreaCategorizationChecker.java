@@ -189,14 +189,17 @@ public class BudgetAreaCategorizationChecker extends GuiChecker {
   }
 
   public BudgetAreaCategorizationChecker selectNewSeries(String seriesName, String description) {
-    createSeries().setName(seriesName).setDescription(description).validate();
+    createSeries().setName(seriesName)
+      .showDescription()
+      .setDescription(description)
+      .validate();
     return selectSeries(seriesName);
   }
 
   public BudgetAreaCategorizationChecker selectNewSeriesWithSubSeries(String series, String subSeries) {
     createSeries()
       .setName(series)
-      .gotoSubSeriesTab()
+      .editSubSeries()
       .addSubSeries(subSeries)
       .validate();
     return this;

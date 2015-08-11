@@ -1,14 +1,14 @@
 package org.designup.picsou.gui.components.dialogs;
 
-import org.designup.picsou.gui.time.TimeService;
 import org.designup.picsou.gui.components.MonthRangeBound;
+import org.designup.picsou.gui.time.TimeService;
 import org.designup.picsou.model.Month;
 import org.designup.picsou.utils.Lang;
+import org.globsframework.gui.splits.PanelBuilder;
 import org.globsframework.gui.splits.SplitsBuilder;
 import org.globsframework.gui.splits.color.ColorChangeListener;
 import org.globsframework.gui.splits.color.ColorLocator;
 import org.globsframework.gui.splits.color.ColorService;
-import org.globsframework.gui.splits.PanelBuilder;
 import org.globsframework.gui.splits.repeat.RepeatComponentFactory;
 import org.globsframework.gui.splits.utils.Disposable;
 import org.globsframework.utils.directory.Directory;
@@ -21,13 +21,17 @@ import java.util.List;
 
 public class MonthChooserDialog implements ColorChangeListener, Disposable {
 
+  private static final int NONE = 0;
+  private static final int CANCEL = -1;
+
+  private JLabel title = new JLabel();
   private JLabel nextYearLabel = new JLabel();
   private JLabel previousYearLabel = new JLabel();
   private JLabel currentYearLabel = new JLabel();
   List<MonthsComponentFactory> monthsComponentFactories = new ArrayList<MonthsComponentFactory>();
   private PicsouDialog dialog;
   private int selectedYear;
-  private int selectedMonth = -1;
+  private int selectedMonth = CANCEL;
   private int currentYear;
   private Directory directory;
   private MonthRangeBound bound = MonthRangeBound.NONE;
@@ -40,10 +44,30 @@ public class MonthChooserDialog implements ColorChangeListener, Disposable {
   private Color defaultForegroundColor;
   private Set<Integer> forceDisabled = new HashSet<Integer>();
   private SplitsBuilder builder;
+  private JButton selectNone;
+
+  private Callback callback;
+
+  public abstract static class Callback {
+    public abstract void processSelection(int monthId);
+
+    public void processNoneSelected() {
+
+    }
+
+    public void processCancel() {
+
+    }
+  }
 
   public MonthChooserDialog(Window parent, final Directory directory) {
+    this(Lang.get("monthChooser.defaultTitle"), parent, directory);
+  }
+
+  public MonthChooserDialog(String title, Window parent, final Directory directory) {
     this.directory = directory;
     this.directory.get(ColorService.class).addListener(this);
+    this.title.setText(title);
     JPanel panel = createPanel();
     this.dialog = PicsouDialog.createWithButton(parent, panel,
                                                 new CancelAction(), directory);
@@ -52,6 +76,7 @@ public class MonthChooserDialog implements ColorChangeListener, Disposable {
   private JPanel createPanel() {
     builder = new SplitsBuilder(directory);
     builder.setSource(MonthChooserDialog.class, "/layout/utils/monthChooserDialog.splits");
+    builder.add("title", title);
     builder.add("previousYearLabel", previousYearLabel);
     builder.add("currentYearLabel", currentYearLabel);
     builder.add("nextYearLabel", nextYearLabel);
@@ -90,12 +115,16 @@ public class MonthChooserDialog implements ColorChangeListener, Disposable {
       }
     });
 
+    selectNone = new JButton(new SelectNoneAction());
+    builder.add("selectNone", selectNone);
+
+    setNoneOptionShown(false);
     builder.addDisposable(this);
     return builder.load();
   }
 
-  public int show(int selectedMonthId, int lowerLimit, int upperLimit, Collection<Integer> forceDisabled) {
-    this.newMonth = -1;
+  public void show(int selectedMonthId, int lowerLimit, int upperLimit, Collection<Integer> forceDisabled, Callback callback) {
+    this.newMonth = CANCEL;
     bound = MonthRangeBound.BOTH;
     this.selectedMonth = Month.toMonth(selectedMonthId);
     this.selectedYear = Month.toYear(selectedMonthId);
@@ -103,25 +132,38 @@ public class MonthChooserDialog implements ColorChangeListener, Disposable {
     initBoundLimit(MonthRangeBound.LOWER, upperLimit);
     currentYear = selectedYear;
     this.forceDisabled.addAll(forceDisabled);
-    return show();
+    show(callback);
   }
 
-  public int show(int selectedMonthId, MonthRangeBound bound, int limitMonthId) {
-    this.newMonth = -1;
+  public void show(int selectedMonthId, MonthRangeBound bound, int limitMonthId, Callback callback) {
+    this.newMonth = CANCEL;
     this.bound = bound;
     this.selectedMonth = Month.toMonth(selectedMonthId);
     this.selectedYear = Month.toYear(selectedMonthId);
     initBoundLimit(bound, limitMonthId);
-    return show();
+    show(callback);
   }
 
-  private int show() {
+  private void show(Callback callback) {
+    this.callback = callback;
     update();
     dialog.pack();
     dialog.showCentered();
     builder.dispose();
     dialog = null;
-    return newMonth;
+  }
+
+  private void triggerCallbackAndClose() {
+    if (newMonth == CANCEL) {
+      callback.processCancel();
+    }
+    else if (newMonth == NONE) {
+      callback.processNoneSelected();
+    }
+    else {
+      callback.processSelection(newMonth);
+    }
+    dialog.setVisible(false);
   }
 
   private void initBoundLimit(MonthRangeBound bound, int limitMonthId) {
@@ -151,16 +193,10 @@ public class MonthChooserDialog implements ColorChangeListener, Disposable {
     }
   }
 
-  private void set(int monthId) {
-    newMonth = monthId;
-    dialog.setVisible(false);
-  }
-
   private void addMonthsPanel(String name, SplitsBuilder builder, MonthChooserDialog selection, int index) {
     MonthsComponentFactory monthsComponentFactory =
       new MonthsComponentFactory(selection, index);
-    builder.addRepeat(name, Arrays.asList(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12),
-                      monthsComponentFactory);
+    builder.addRepeat(name, Arrays.asList(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12), monthsComponentFactory);
     monthsComponentFactories.add(monthsComponentFactory);
   }
 
@@ -172,6 +208,11 @@ public class MonthChooserDialog implements ColorChangeListener, Disposable {
 
   public void dispose() {
     this.directory.get(ColorService.class).removeListener(this);
+  }
+
+  public void setNoneOptionShown(boolean shown) {
+    selectNone.setEnabled(shown);
+    selectNone.setVisible(shown);
   }
 
   private class MonthsComponentFactory implements RepeatComponentFactory<Integer> {
@@ -188,7 +229,8 @@ public class MonthChooserDialog implements ColorChangeListener, Disposable {
     public void registerComponents(PanelBuilder cellBuilder, final Integer item) {
       AbstractAction action = new AbstractAction(Month.getShortMonthLabel(item)) {
         public void actionPerformed(ActionEvent e) {
-          selection.set(Month.toMonthId(currentYear, item));
+          selection.newMonth = Month.toMonthId(currentYear, item);
+          selection.triggerCallbackAndClose();
         }
       };
       buttons[item - 1] = new JToggleButton(action);
@@ -204,9 +246,9 @@ public class MonthChooserDialog implements ColorChangeListener, Disposable {
     public void updateButton() {
       int todayId = directory.get(TimeService.class).getCurrentMonthId();
       for (int i = 0; i < buttons.length; i++) {
-        buttons[i].setSelected(currentYear == selectedYear && selectedMonth == i + 1);
+        buttons[i].setSelected(currentYear == selectedYear && MonthChooserDialog.this.selectedMonth == i + 1);
         int currentMonthId = Month.toMonthId(currentYear, i + 1);
-        if (currentYear != selectedYear || selectedMonth != i + 1) {
+        if (currentYear != selectedYear || MonthChooserDialog.this.selectedMonth != i + 1) {
           switch (bound) {
             case LOWER:
               buttons[i].setEnabled(currentMonthId <= Month.toMonthId(yearLowerLimit, monthLowerLimit));
@@ -232,14 +274,26 @@ public class MonthChooserDialog implements ColorChangeListener, Disposable {
     }
   }
 
+  private class SelectNoneAction extends AbstractAction {
+    private SelectNoneAction() {
+      super(Lang.get("monthChooser.none"));
+    }
+
+    public void actionPerformed(ActionEvent e) {
+      newMonth = NONE;
+      triggerCallbackAndClose();
+    }
+  }
+
+
   private class CancelAction extends AbstractAction {
     private CancelAction() {
       super(Lang.get("cancel"));
     }
 
     public void actionPerformed(ActionEvent e) {
-      selectedMonth = -1;
-      dialog.setVisible(false);
+      newMonth = CANCEL;
+      triggerCallbackAndClose();
     }
   }
 }

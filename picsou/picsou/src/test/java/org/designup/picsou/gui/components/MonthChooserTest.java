@@ -27,8 +27,9 @@ public class MonthChooserTest extends GuiTestCase {
   }
 
   public void testStandard() throws Exception {
-    MonthChooserChecker month = createChooser();
-    month.checkVisibleYears(2007, 2008, 2009)
+    MonthChooserChecker chooser = createChooser(false);
+    chooser.checkNoneHidden();
+    chooser.checkVisibleYears(2007, 2008, 2009)
       .checkSelectedInCurrentMonth(5)
       .nextYear()
       .checkVisibleYears(2008, 2009, 2010)
@@ -42,8 +43,17 @@ public class MonthChooserTest extends GuiTestCase {
       .selectMonthInPrevious(12);
   }
 
+  public void testNone() throws Exception {
+    MonthChooserChecker chooser = createChooser(true);
+    chooser.checkNoneShown();
+    chooser.checkVisibleYears(2007, 2008, 2009)
+      .checkSelectedInCurrentMonth(5)
+      .selectNone();
+    assertEquals(-100, selectedMonth);
+  }
+
   public void testMovePage() throws Exception {
-    MonthChooserChecker month = createChooser();
+    MonthChooserChecker month = createChooser(false);
     month.checkVisibleYears(2007, 2008, 2009)
       .checkSelectedInCurrentMonth(5)
       .nextPage()
@@ -66,11 +76,15 @@ public class MonthChooserTest extends GuiTestCase {
     assertEquals(expectedMonthId, selectedMonth);
   }
 
-  public void testEnable() throws Exception {
+  public void testEnableDisable() throws Exception {
     final MonthChooserDialog monthChooser = new MonthChooserDialog(new JFrame(), directory);
     MonthChooserChecker month = MonthChooserChecker.open(new Trigger() {
       public void run() throws Exception {
-        selectedMonth = monthChooser.show(200805, MonthRangeBound.LOWER, 200705);
+        monthChooser.show(200805, MonthRangeBound.LOWER, 200705, new MonthChooserDialog.Callback() {
+          public void processSelection(int monthId) {
+            selectedMonth = monthId;
+          }
+        });
       }
     });
     month.checkVisibleYears(2005, 2006, 2007)
@@ -82,11 +96,15 @@ public class MonthChooserTest extends GuiTestCase {
       .checkDisabledInCurrentYear(6);
   }
 
-  public void testEnableMultipleMonth() throws Exception {
+  public void testEnableMultipleMonths() throws Exception {
     final MonthChooserDialog monthChooser = new MonthChooserDialog(new JFrame(), directory);
     MonthChooserChecker month = MonthChooserChecker.open(new Trigger() {
       public void run() throws Exception {
-        selectedMonth = monthChooser.show(200805, 200705, 200809, Arrays.asList(200707, 200804, 200805));
+        monthChooser.show(200805, 200705, 200809, Arrays.asList(200707, 200804, 200805), new MonthChooserDialog.Callback() {
+          public void processSelection(int monthId) {
+            selectedMonth = monthId;
+          }
+        });
       }
     });
     month.checkVisibleYears(2007, 2008, 2009)
@@ -106,30 +124,49 @@ public class MonthChooserTest extends GuiTestCase {
     final MonthChooserDialog monthChooser = new MonthChooserDialog(new JFrame(), directory);
     MonthChooserChecker month = MonthChooserChecker.open(new Trigger() {
       public void run() throws Exception {
-        selectedMonth = monthChooser.show(200800, MonthRangeBound.NONE, 200801);
+        monthChooser.show(200800, MonthRangeBound.NONE, 200801, new MonthChooserDialog.Callback() {
+          public void processSelection(int monthId) {
+            selectedMonth = monthId;
+          }
+        });
       }
     });
     month.checkNoneSelected();
   }
 
   public void testGotoCenter() throws Exception {
-    MonthChooserChecker month = createChooser();
+    MonthChooserChecker month = createChooser(false);
     month.nextPage().nextPage().nextPage()
       .gotoCenter()
       .checkVisibleYears(2007, 2008, 2009);
   }
 
   public void testCancel() throws Exception {
-    MonthChooserChecker month = createChooser();
+    MonthChooserChecker month = createChooser(false);
     month.cancel();
-    checkMonthIs(-1);
+    checkMonthIs(-5);
   }
 
-  private MonthChooserChecker createChooser() {
-    final MonthChooserDialog monthChooser = new MonthChooserDialog(new JFrame(), directory);
+  private MonthChooserChecker createChooser(boolean showNone) {
+    final MonthChooserDialog monthChooser = new MonthChooserDialog("Choose month", new JFrame(), directory);
+    if (showNone) {
+      monthChooser.setNoneOptionShown(true);
+    }
     return MonthChooserChecker.open(new Trigger() {
       public void run() throws Exception {
-        selectedMonth = monthChooser.show(200805, MonthRangeBound.NONE, 200805);
+        monthChooser.show(200805, MonthRangeBound.NONE, 200805, new MonthChooserDialog.Callback() {
+          public void processSelection(int monthId) {
+            selectedMonth = monthId;
+          }
+
+          public void processNoneSelected() {
+            selectedMonth = -100;
+          }
+
+          public void processCancel() {
+            selectedMonth = -5;
+          }
+        });
         synchronized (this) {
           ok = true;
           notify();

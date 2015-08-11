@@ -232,7 +232,10 @@ public class TransactionViewTest extends LoggedInFunctionalTestCase {
 
     views.selectCategorization();
     categorization.setNewVariable("SOMETHING ELSE", "Clothes", -1.);
-    categorization.editSeries("Clothes").setDescription("Stuff to dress with").validate();
+    categorization.editSeries("Clothes")
+      .showDescription()
+      .setDescription("Stuff to dress with")
+      .validate();
 
     views.back();
     views.checkDataSelected();

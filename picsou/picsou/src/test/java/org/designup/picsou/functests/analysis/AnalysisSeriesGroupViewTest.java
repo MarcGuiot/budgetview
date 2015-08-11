@@ -25,7 +25,7 @@ public class AnalysisSeriesGroupViewTest extends LoggedInFunctionalTestCase {
 
     budgetView.variable.createSeries()
       .setName("Groceries")
-      .gotoSubSeriesTab()
+      .editSubSeries()
       .addSubSeries("Local")
       .addSubSeries("Other")
       .validate();

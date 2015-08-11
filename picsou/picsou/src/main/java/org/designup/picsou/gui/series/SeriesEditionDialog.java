@@ -2,17 +2,17 @@ package org.designup.picsou.gui.series;
 
 import org.designup.picsou.gui.accounts.actions.CreateAccountAction;
 import org.designup.picsou.gui.accounts.utils.AccountMatchers;
+import org.designup.picsou.gui.actions.SelectCardAction;
 import org.designup.picsou.gui.components.MonthRangeBound;
 import org.designup.picsou.gui.components.ReadOnlyGlobTextFieldView;
-import org.designup.picsou.gui.components.dialogs.MonthChooserDialog;
 import org.designup.picsou.gui.components.dialogs.PicsouDialog;
 import org.designup.picsou.gui.components.tips.ErrorTip;
 import org.designup.picsou.gui.description.stringifiers.MonthYearStringifier;
 import org.designup.picsou.gui.series.edition.MonthCheckBoxUpdater;
+import org.designup.picsou.gui.series.edition.SelectStartEndDateAction;
 import org.designup.picsou.gui.series.edition.SeriesForecastPanel;
 import org.designup.picsou.gui.series.subseries.SubSeriesEditionPanel;
 import org.designup.picsou.gui.series.utils.SeriesDeletionHandler;
-import org.designup.picsou.gui.time.TimeService;
 import org.designup.picsou.model.*;
 import org.designup.picsou.model.util.AmountMap;
 import org.designup.picsou.triggers.AutomaticSeriesBudgetTrigger;
@@ -23,15 +23,14 @@ import org.globsframework.gui.GlobSelectionListener;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.SelectionService;
 import org.globsframework.gui.editors.GlobLinkComboEditor;
+import org.globsframework.gui.editors.GlobMultiLineTextEditor;
 import org.globsframework.gui.editors.GlobTextEditor;
 import org.globsframework.gui.splits.PanelBuilder;
 import org.globsframework.gui.splits.layout.CardHandler;
-import org.globsframework.gui.splits.layout.TabHandler;
 import org.globsframework.gui.splits.repeat.RepeatComponentFactory;
 import org.globsframework.gui.splits.utils.GuiUtils;
 import org.globsframework.gui.views.GlobLabelView;
 import org.globsframework.metamodel.GlobType;
-import org.globsframework.metamodel.fields.IntegerField;
 import org.globsframework.model.*;
 import org.globsframework.model.repository.LocalGlobRepository;
 import org.globsframework.model.repository.LocalGlobRepositoryBuilder;
@@ -45,8 +44,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import java.util.*;
 
 import static org.globsframework.model.FieldValue.value;
@@ -67,11 +64,10 @@ public class SeriesEditionDialog {
 
   private JLabel titleLabel;
   private SeriesEditionDialog.ValidateAction okAction = new ValidateAction();
-  private AbstractAction deleteStartDateAction;
-  private OpenMonthChooserAction startDateChooserAction;
-  private AbstractAction deleteEndDateAction;
-  private OpenMonthChooserAction endDateChooserAction;
-  private OpenMonthChooserAction singleMonthChooserAction;
+  private SelectStartEndDateAction startDateAction;
+  private JLabel endDateLabel = new JLabel();
+  private SelectStartEndDateAction endDateAction;
+  private SelectStartEndDateAction singleMonthChooserAction;
   private GlobTextEditor nameEditor;
   private JPanel monthSelectionPanel;
   private Key createdSeries;
@@ -89,9 +85,7 @@ public class SeriesEditionDialog {
   private SeriesForecastPanel forecastPanel;
   private GlobMatcher accountFilter;
   private GlobLinkComboEditor budgetAreaCombo;
-  private TabHandler tabs;
-  private ReadOnlyGlobTextFieldView startTextFieldView;
-  private ReadOnlyGlobTextFieldView endDateTextFieldView;
+  private CardHandler cards;
 
   private static Set<Integer> CHANGEABLE_BUDGET_AREAS =
     new HashSet<Integer>(Arrays.asList(BudgetArea.VARIABLE.getId(), BudgetArea.RECURRING.getId(), BudgetArea.EXTRAS.getId()));
@@ -156,13 +150,14 @@ public class SeriesEditionDialog {
                                                       "/layout/series/seriesEditionDialog.splits",
                                                       localRepository, localDirectory);
 
-    tabs = builder.addTabHandler("tabs");
+    cards = builder.addCardHandler("cards");
     titleLabel = builder.add("title", new JLabel("SeriesEditionDialog")).getComponent();
 
     nameEditor = builder.addEditor("nameField", Series.NAME).setNotifyOnKeyPressed(true);
     nameEditor.getComponent().addActionListener(okAction);
 
-    builder.addMultiLineEditor("descriptionField", Series.DESCRIPTION).setNotifyOnKeyPressed(true);
+    final GlobMultiLineTextEditor descriptionField = builder.addMultiLineEditor("descriptionField", Series.DESCRIPTION);
+    descriptionField.setNotifyOnKeyPressed(true);
 
     accountFilter = createAccountFilter();
 
@@ -282,13 +277,23 @@ public class SeriesEditionDialog {
     forecastPanel = new SeriesForecastPanel(localRepository, localDirectory);
     builder.add("forecastPanel", forecastPanel.getPanel());
 
+    builder.add("backToMain", new SelectCardAction(Lang.get("seriesEdition.backToMain"), cards, "main"));
+    builder.add("showDescription", new SelectCardAction(Lang.get("seriesEdition.showDescription"), cards, "description") {
+      protected void postSelect() {
+        descriptionField.getComponent().requestFocus();
+      }
+    });
+    builder.add("showSubSeries", new SelectCardAction(Lang.get("seriesEdition.showSubSeries"), cards, "subseries") {
+      protected void postSelect() {
+        subSeriesEditionPanel.select();
+      }
+    });
+    builder.add("delete", new DeleteAction());
+
     localRepository.addChangeListener(new OkButtonUpdater());
 
     JPanel panel = builder.load();
-    JButton deleteButton = new JButton(new DeleteAction());
-    deleteButton.setOpaque(false);
-    deleteButton.setName("deleteSingleSeries");
-    dialog.addPanelWithButtons(panel, okAction, new CancelAction(), deleteButton);
+    dialog.addPanelWithButtons(panel, okAction, new CancelAction());
   }
 
   public static GlobMatcher createAccountFilter() {
@@ -349,18 +354,8 @@ public class SeriesEditionDialog {
 
   private void registerDateRangeComponents(GlobsPanelBuilder builder) {
 
-    startTextFieldView = ReadOnlyGlobTextFieldView.init(Series.TYPE, localRepository, localDirectory,
-                                                        new MonthYearStringifier(Series.FIRST_MONTH));
-    builder.add("seriesStartDate", startTextFieldView);
-
-    deleteStartDateAction = new AbstractAction() {
-      public void actionPerformed(ActionEvent e) {
-        localRepository.update(currentSeries.getKey(), Series.FIRST_MONTH, null);
-      }
-    };
-    builder.add("deleteSeriesStartDate", deleteStartDateAction);
-
-    startDateChooserAction = new OpenMonthChooserAction(Series.FIRST_MONTH, MonthRangeBound.LOWER) {
+    startDateAction = new SelectStartEndDateAction(Series.FIRST_MONTH, MonthRangeBound.LOWER,
+                                                   dialog, localRepository, localDirectory) {
       protected Integer getMonthLimit() {
         GlobList transactions =
           localRepository.findByIndex(Transaction.SERIES_INDEX, Transaction.SERIES, currentSeries.get(Series.ID))
@@ -376,28 +371,20 @@ public class SeriesEditionDialog {
         }
         return firstMonth.get(Transaction.BUDGET_MONTH);
       }
-    };
-    builder.add("seriesStartDateChooser", startDateChooserAction);
-    this.startTextFieldView.getComponent().addMouseListener(new MouseAdapter() {
-      public void mouseClicked(MouseEvent e) {
-        if (currentSeries != null) {
-          startDateChooserAction.actionPerformed(null);
+
+      protected void processValue(Integer monthId) {
+        if (monthId == null) {
+          putValue(Action.NAME, Lang.get("seriesEdition.begin.none"));
+          return;
         }
-      }
-    });
-
-    endDateTextFieldView = ReadOnlyGlobTextFieldView.init(Series.TYPE, localRepository, localDirectory,
-                                                          new MonthYearStringifier(Series.LAST_MONTH));
-    builder.add("seriesEndDate", endDateTextFieldView);
-
-    deleteEndDateAction = new AbstractAction() {
-      public void actionPerformed(ActionEvent e) {
-        localRepository.update(currentSeries.getKey(), Series.LAST_MONTH, null);
+        putValue(Action.NAME, Month.getFullMonthLabelWith4DigitYear(monthId, false).toLowerCase());
       }
     };
-    builder.add("deleteSeriesEndDate", deleteEndDateAction);
+    builder.add("seriesStartDateChooser", startDateAction);
 
-    endDateChooserAction = new OpenMonthChooserAction(Series.LAST_MONTH, MonthRangeBound.UPPER) {
+    builder.add("seriesEndDateLabel", endDateLabel);
+    endDateAction = new SelectStartEndDateAction(Series.LAST_MONTH, MonthRangeBound.UPPER,
+                                                 dialog, localRepository, localDirectory) {
       protected Integer getMonthLimit() {
         GlobList transactions =
           localRepository.findByIndex(Transaction.SERIES_INDEX, Transaction.SERIES, currentSeries.get(Series.ID))
@@ -412,15 +399,18 @@ public class SeriesEditionDialog {
         }
         return lastMonth.get(Transaction.BUDGET_MONTH);
       }
-    };
-    builder.add("seriesEndDateChooser", endDateChooserAction);
-    this.endDateTextFieldView.getComponent().addMouseListener(new MouseAdapter() {
-      public void mouseClicked(MouseEvent e) {
-        if (currentSeries != null) {
-          endDateChooserAction.actionPerformed(null);
+
+      protected void processValue(Integer monthId) {
+        if (monthId == null) {
+          putValue(Action.NAME, Lang.get("seriesEdition.end.none"));
+          endDateLabel.setText(Lang.get("seriesEdition.end.label.none"));
+          return;
         }
+        putValue(Action.NAME, Month.getFullMonthLabelWith4DigitYear(monthId, false).toLowerCase());
+        endDateLabel.setText(Lang.get("seriesEdition.end.label.selected"));
       }
-    });
+    };
+    builder.add("seriesEndDateChooser", endDateAction);
   }
 
   private void registerSingleMonthComponents(GlobsPanelBuilder builder) {
@@ -428,20 +418,27 @@ public class SeriesEditionDialog {
                 ReadOnlyGlobTextFieldView.init(Series.TYPE, localRepository, localDirectory,
                                                new MonthYearStringifier(Series.FIRST_MONTH)));
 
-    singleMonthChooserAction = new OpenMonthChooserAction(Series.FIRST_MONTH, MonthRangeBound.NONE) {
+    singleMonthChooserAction = new SelectStartEndDateAction(Series.FIRST_MONTH, MonthRangeBound.NONE,
+                                                            dialog, localRepository, localDirectory) {
       protected Integer getMonthLimit() {
         return null;
+      }
+
+      protected void processValue(Integer monthId) {
+        if (monthId == null) {
+          putValue(Action.NAME, Lang.get("seriesEdition.singleMonth.none"));
+          return;
+        }
+        putValue(Action.NAME, Month.getFullMonthLabelWith4DigitYear(monthId, false).toLowerCase());
       }
     };
     builder.add("singleMonthChooser", singleMonthChooserAction);
   }
 
   private void updateDateSelectors() {
-    startDateChooserAction.setEnabled(currentSeries != null);
-    deleteStartDateAction.setEnabled(currentSeries != null && currentSeries.get(Series.FIRST_MONTH) != null);
-    endDateChooserAction.setEnabled(currentSeries != null);
-    deleteEndDateAction.setEnabled(currentSeries != null && currentSeries.get(Series.LAST_MONTH) != null);
-    singleMonthChooserAction.setEnabled(currentSeries != null);
+    startDateAction.setCurrentSeries(currentSeries);
+    endDateAction.setCurrentSeries(currentSeries);
+    singleMonthChooserAction.setCurrentSeries(currentSeries);
   }
 
   private void resetSeries() {
@@ -653,7 +650,7 @@ public class SeriesEditionDialog {
     selectionService.select(currentSeries);
     updateMonthSelectionCard();
 
-    tabs.select(0);
+    cards.show("main");
 
     titleLabel.setText(Lang.get("seriesEdition.title." + (creation ? "creation" : "edition")));
 
@@ -690,8 +687,6 @@ public class SeriesEditionDialog {
     this.currentSeries = currentSeries;
     this.subSeriesEditionPanel.setCurrentSeries(currentSeries);
     this.forecastPanel.setCurrentSeries(currentSeries);
-    endDateTextFieldView.getComponent().setEnabled(this.currentSeries != null);
-    startTextFieldView.getComponent().setEnabled(this.currentSeries != null);
     if (currentSeries != null) {
       isAutomatic = currentSeries.get(Series.IS_AUTOMATIC);
     }
@@ -767,37 +762,6 @@ public class SeriesEditionDialog {
                                                                 localRepository, repository,
                                                                 directory, localDirectory, selectionService);
       handler.delete(currentSeries, true, false);
-    }
-  }
-
-  private abstract class OpenMonthChooserAction extends AbstractAction {
-    private IntegerField dateField;
-    private MonthRangeBound bound;
-
-    private OpenMonthChooserAction(IntegerField dateField, MonthRangeBound bound) {
-      this.dateField = dateField;
-      this.bound = bound;
-    }
-
-    protected abstract Integer getMonthLimit();
-
-    public void actionPerformed(ActionEvent e) {
-      MonthRangeBound bound = this.bound;
-      MonthChooserDialog chooser = new MonthChooserDialog(dialog, localDirectory);
-      Integer monthId = currentSeries.get(dateField);
-      Integer limit = getMonthLimit();
-      if (monthId == null) {
-        monthId = limit == null ? localDirectory.get(TimeService.class).getCurrentMonthId() : limit;
-      }
-      if (limit == null) {
-        limit = 0;
-        bound = MonthRangeBound.NONE;
-      }
-      int result = chooser.show(monthId, bound, limit);
-      if (result == -1) {
-        return;
-      }
-      localRepository.update(currentSeries.getKey(), dateField, result);
     }
   }
 

@@ -2,28 +2,37 @@ package org.designup.picsou.gui.series.edition;
 
 import org.designup.picsou.gui.series.SeriesEditionDialog;
 import org.designup.picsou.model.Series;
+import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobsPanelBuilder;
-import org.globsframework.gui.editors.GlobCheckBoxView;
 import org.globsframework.gui.editors.GlobLinkComboEditor;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.*;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Set;
 
 public class SeriesForecastPanel {
   private static final int DEFAULT_DAY = 15;
   private GlobRepository repository;
   private Directory directory;
+  private List<ForecastMode> modes;
   private JPanel panel;
-  private GlobCheckBoxView forceCheckbox;
-  private GlobLinkComboEditor dayCombo;
+  private GlobLinkComboEditor forecastDayCombo;
   private Key currentSeriesKey;
+  private JComboBox forecastModeCombo;
 
   public SeriesForecastPanel(GlobRepository repository, Directory directory) {
     this.repository = repository;
     this.directory = directory;
+    this.modes = Arrays.asList(
+      new ForecastMode(false, Lang.get("seriesEdition.forecast.mode.auto")),
+      new ForecastMode(true, Lang.get("seriesEdition.forecast.mode.single")));
+
     createPanel();
   }
 
@@ -32,10 +41,17 @@ public class SeriesForecastPanel {
                                                       "/layout/series/seriesForecastPanel.splits",
                                                       repository, directory);
 
-    forceCheckbox = builder.addCheckBox("forceSingleOperationCheckbox", Series.FORCE_SINGLE_OPERATION);
-    dayCombo =
+    forecastModeCombo = new JComboBox(modes.toArray());
+    forecastModeCombo.addActionListener(new ActionListener() {
+      public void actionPerformed(ActionEvent event) {
+        ForecastMode mode = (ForecastMode)forecastModeCombo.getSelectedItem();
+        mode.apply();
+      }
+    });
+    builder.add("forecastModeCombo", forecastModeCombo);
+    forecastDayCombo =
       builder
-        .addComboEditor("forceSingleOperationDayCombo", Series.FORCE_SINGLE_OPERATION_DAY)
+        .addComboEditor("forecastDayCombo", Series.FORCE_SINGLE_OPERATION_DAY)
         .setShowEmptyOption(false);
 
     repository.addChangeListener(new ChangeSetListener() {
@@ -59,10 +75,13 @@ public class SeriesForecastPanel {
 
   private void update() {
     Glob series = repository.find(currentSeriesKey);
-    dayCombo.setEnabled(series != null && series.isTrue(Series.FORCE_SINGLE_OPERATION));
+    boolean showDayCombo = series != null && series.isTrue(Series.FORCE_SINGLE_OPERATION);
+    forecastDayCombo.setEnabled(showDayCombo);
+    forecastDayCombo.setVisible(showDayCombo);
     if (series != null && series.get(Series.FORCE_SINGLE_OPERATION_DAY) == null) {
       repository.update(currentSeriesKey, Series.FORCE_SINGLE_OPERATION_DAY, DEFAULT_DAY);
     }
+    updateMode(series);
   }
 
   public JPanel getPanel() {
@@ -76,8 +95,34 @@ public class SeriesForecastPanel {
       return;
     }
     currentSeriesKey = currentSeries.getKey();
-    forceCheckbox.forceSelection(currentSeriesKey);
-    dayCombo.forceSelection(currentSeriesKey);
+    updateMode(currentSeries);
+    forecastDayCombo.forceSelection(currentSeriesKey);
     update();
+  }
+
+  public void updateMode(Glob series) {
+    boolean forceSingleDay = series != null && series.isTrue(Series.FORCE_SINGLE_OPERATION);
+    forecastModeCombo.setSelectedIndex(forceSingleDay ? 1 : 0);
+  }
+
+  private class ForecastMode {
+    private boolean forceSingleDay;
+    private String label;
+
+    public ForecastMode(boolean forceSingleDay, String label) {
+      this.forceSingleDay = forceSingleDay;
+      this.label = label;
+    }
+
+    public String toString() {
+      return label;
+    }
+
+    protected void apply() {
+      if (currentSeriesKey == null) {
+        return;
+      }
+      repository.update(currentSeriesKey, Series.FORCE_SINGLE_OPERATION, forceSingleDay);
+    }
   }
 }

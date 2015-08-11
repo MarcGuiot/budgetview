@@ -40,7 +40,7 @@ public class AutoCategorizationTest extends LoggedInFunctionalTestCase {
     categorization.selectVariable()
       .createSeries()
       .setName("Restau")
-      .gotoSubSeriesTab()
+      .editSubSeries()
       .addSubSeries("Jap")
       .addSubSeries("Grec")
       .selectSubSeries("Jap")
@@ -71,7 +71,7 @@ public class AutoCategorizationTest extends LoggedInFunctionalTestCase {
     budgetView.variable
       .createSeries()
       .setName("Restau")
-      .gotoSubSeriesTab()
+      .editSubSeries()
       .addSubSeries("Jap")
       .addSubSeries("Grec")
       .selectSubSeries("Jap")

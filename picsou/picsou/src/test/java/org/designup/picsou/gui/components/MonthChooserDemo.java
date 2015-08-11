@@ -26,7 +26,19 @@ public class MonthChooserDemo {
     }
 
     PicsouDialog.FORCE_NONMODAL = true;
-    MonthChooserDialog chooser = new MonthChooserDialog(frame, directory);
-    chooser.show(200806, 200701, 200909, Arrays.asList(200904, 200704));
+    MonthChooserDialog chooser = new MonthChooserDialog("Choose month", frame, directory);
+    chooser.show(200806, 200701, 200909, Arrays.asList(200904, 200704), new MonthChooserDialog.Callback() {
+      public void processSelection(int monthId) {
+        System.out.println("MonthChooserDemo.processSelection: " + monthId);
+      }
+
+      public void processNoneSelected() {
+        System.out.println("MonthChooserDemo.processNoneSelected");
+      }
+
+      public void processCancel() {
+        System.out.println("MonthChooserDemo.processCancel");
+      }
+    });
   }
 }
