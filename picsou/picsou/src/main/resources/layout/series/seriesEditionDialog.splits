@@ -80,12 +80,10 @@
                       <row>
                         <label text="$seriesEdition.singleMonth" styleClass="formLabel"
                                fill="horizontal" marginTop="2" marginRight="3"/>
-                        <textField ref="singleMonthDate" fill="horizontal" columns="20"
-                                   marginRight="5"/>
-                        <button action="singleMonthChooser" icon="button_calendar.png" styleClass="icon"
-                                pressedIcon="button_calendar_pressed.png"
+                        <button action="singleMonthChooser" styleClass="hyperlink"
+                                weightX="0.1" fill="none"
                                 tooltipText="$seriesEdition.begin.edit.tooltip"/>
-                        <filler fill="horizontal" weightX="0.1"/>
+                        <filler fill="horizontal"/>
                       </row>
                     </card>
                   </cards>

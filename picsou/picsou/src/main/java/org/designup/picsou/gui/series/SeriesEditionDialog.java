@@ -4,10 +4,8 @@ import org.designup.picsou.gui.accounts.actions.CreateAccountAction;
 import org.designup.picsou.gui.accounts.utils.AccountMatchers;
 import org.designup.picsou.gui.actions.SelectCardAction;
 import org.designup.picsou.gui.components.MonthRangeBound;
-import org.designup.picsou.gui.components.ReadOnlyGlobTextFieldView;
 import org.designup.picsou.gui.components.dialogs.PicsouDialog;
 import org.designup.picsou.gui.components.tips.ErrorTip;
-import org.designup.picsou.gui.description.stringifiers.MonthYearStringifier;
 import org.designup.picsou.gui.series.edition.MonthCheckBoxUpdater;
 import org.designup.picsou.gui.series.edition.SelectStartEndDateAction;
 import org.designup.picsou.gui.series.edition.SeriesForecastPanel;
@@ -414,9 +412,6 @@ public class SeriesEditionDialog {
   }
 
   private void registerSingleMonthComponents(GlobsPanelBuilder builder) {
-    builder.add("singleMonthDate",
-                ReadOnlyGlobTextFieldView.init(Series.TYPE, localRepository, localDirectory,
-                                               new MonthYearStringifier(Series.FIRST_MONTH)));
 
     singleMonthChooserAction = new SelectStartEndDateAction(Series.FIRST_MONTH, MonthRangeBound.NONE,
                                                             dialog, localRepository, localDirectory) {
