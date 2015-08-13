@@ -1,6 +1,7 @@
 <splits xmlns="http://www.globsframework.org/xml/splits.xsd">
 
   <styles>
+    <style selector="#chart" background="#E4E4E4"/>
   </styles>
 
   <horizontalSplit>

@@ -21,13 +21,14 @@
         topColor="monthChooser.top"
         bottomColor="monthChooser.bottom"
         borderColor="monthChooser.border"/>
-    <style selector="toggleButton.monthSelector" ui="monthToggle" opaque="false" foreground="monthChooser.text"/>
+    <style selector="toggleButton.monthSelector" ui="monthToggle" opaque="false"
+           foreground="monthChooser.text" cursor="hand"/>
 
     <ui name="hyperlinkSelector" class="org.globsframework.gui.splits.components.HyperlinkButtonUI"
         autoHideEnabled="false"/>
-    <style selector="noneSelector" foreground="hyperlink" cursor="hand"
+    <style selector=".noneSelector" foreground="hyperlink" cursor="hand" font="-,plain,13"
            disabledIcon="button_delete.png" icon="button_delete.png"
-           fill="none" anchor="center" border="empty(20,0,10,0)" marginTop="10"/>
+           fill="none" anchor="center" border="empty(15,0,5,0)"/>
   </styles>
 
   <column styleClass="dialog">
