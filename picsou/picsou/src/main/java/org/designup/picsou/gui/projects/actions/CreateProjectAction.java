@@ -2,14 +2,20 @@ package org.designup.picsou.gui.projects.actions;
 
 import org.designup.picsou.gui.accounts.utils.AccountCreation;
 import org.designup.picsou.gui.series.SeriesEditor;
+import org.designup.picsou.model.AddOns;
 import org.designup.picsou.utils.Lang;
+import org.globsframework.gui.splits.utils.Disposable;
+import org.globsframework.metamodel.GlobType;
+import org.globsframework.model.ChangeSet;
+import org.globsframework.model.ChangeSetListener;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
+import java.util.Set;
 
-public class CreateProjectAction extends AbstractAction {
+public class CreateProjectAction extends AbstractAction implements ChangeSetListener, Disposable {
   private GlobRepository repository;
   private Directory directory;
 
@@ -18,6 +24,31 @@ public class CreateProjectAction extends AbstractAction {
     super(Lang.get("projectView.create"));
     this.repository = repository;
     this.directory = directory;
+  }
+
+  public void setAutoHide() {
+    repository.addChangeListener(this);
+    update();
+  }
+
+  public void globsChanged(ChangeSet changeSet, GlobRepository repository) {
+    if (changeSet.containsChanges(AddOns.TYPE)) {
+      update();
+    }
+  }
+
+  public void globsReset(GlobRepository repository, Set<GlobType> changedTypes) {
+    if (changedTypes.contains(AddOns.TYPE)) {
+      update();
+    }
+  }
+
+  private void update() {
+    setEnabled(AddOns.isEnabled(AddOns.PROJECTS, repository));
+  }
+
+  public void dispose() {
+    repository.removeChangeListener(this);
   }
 
   public void actionPerformed(ActionEvent actionEvent) {

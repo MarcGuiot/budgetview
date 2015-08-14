@@ -7,6 +7,14 @@ public class ExtrasBudgetAreaCategorizationChecker extends BudgetAreaCategorizat
     super(categorizationChecker, BudgetArea.EXTRAS);
   }
 
+  public void checkProjectCreationHidden() {
+    categorizationChecker.checkProjectCreationHidden();
+  }
+
+  public void checkProjectCreationShown() {
+    categorizationChecker.checkProjectCreationShown();
+  }
+
   public void createProject() {
     categorizationChecker.createProject();
   }

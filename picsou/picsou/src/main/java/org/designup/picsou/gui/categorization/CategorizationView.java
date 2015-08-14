@@ -150,7 +150,9 @@ public class CategorizationView extends View {
       return createAccountAction;
     }
     if (BudgetArea.EXTRAS.equals(budgetArea)) {
-      return new CreateProjectAction(repository, directory);
+      CreateProjectAction createProject = new CreateProjectAction(repository, directory);
+      createProject.setAutoHide();
+      return createProject;
     }
     return new DisabledAction();
   }

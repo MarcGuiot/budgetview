@@ -14,13 +14,24 @@ public class AddOnsTest extends LoggedInFunctionalTestCase {
 
   public void testAccessingProjectsWhenTheAddOnIsDisabled() throws Exception {
 
-    addOns.activateProjects();
+    addOns.disableAll();
 
     OfxBuilder.init(this)
       .addBankAccount("001111", 1000.00, "2015/01/30")
       .addTransaction("2015/01/01", 1000.00, "Income")
       .addTransaction("2015/01/15", -150.00, "Resa")
       .load();
+
+    budgetView.extras.checkProjectCreationHidden();
+    categorization
+      .selectTransaction("RESA")
+      .selectExtras()
+      .checkProjectCreationHidden();
+
+    addOns.activateProjects();
+
+    budgetView.extras.checkProjectCreationShown();
+    categorization.getExtras().checkProjectCreationShown();
 
     projects.createFirst();
     currentProject.setNameAndValidate("MyProject");

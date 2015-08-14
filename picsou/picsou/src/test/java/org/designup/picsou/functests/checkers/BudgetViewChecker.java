@@ -663,6 +663,14 @@ public class BudgetViewChecker extends ViewChecker {
       super(panelName, BudgetArea.EXTRAS);
     }
 
+    public void checkProjectCreationHidden() {
+      getActionPopup().checkItemNotPresent(Lang.get("projectView.create"));
+    }
+
+    public void checkProjectCreationShown() {
+      getActionPopup().checkContains(Lang.get("projectView.create"));
+    }
+
     public void createProject() {
       getActionPopup().click(Lang.get("projectView.create"));
     }

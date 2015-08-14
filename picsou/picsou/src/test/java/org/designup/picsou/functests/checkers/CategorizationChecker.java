@@ -305,8 +305,8 @@ public class CategorizationChecker extends FilteredViewChecker<CategorizationChe
     return checkSelectedAndReturn(BudgetArea.VARIABLE);
   }
 
-  public BudgetAreaCategorizationChecker getExtras() {
-    return checkSelectedAndReturn(BudgetArea.EXTRAS);
+  public ExtrasBudgetAreaCategorizationChecker getExtras() {
+    return (ExtrasBudgetAreaCategorizationChecker)checkSelectedAndReturn(BudgetArea.EXTRAS);
   }
 
   public BudgetAreaCategorizationChecker getSavings() {
@@ -320,6 +320,9 @@ public class CategorizationChecker extends FilteredViewChecker<CategorizationChe
 
   private BudgetAreaCategorizationChecker checkSelectedAndReturn(BudgetArea budgetArea) {
     assertTrue(getPanel().getToggleButton(budgetArea.getName()).isSelected());
+    if (BudgetArea.EXTRAS.equals(budgetArea)) {
+      return new ExtrasBudgetAreaCategorizationChecker(this);
+    }
     return new BudgetAreaCategorizationChecker(this, budgetArea);
   }
 
@@ -362,6 +365,14 @@ public class CategorizationChecker extends FilteredViewChecker<CategorizationChe
 
   private Button getEditSeriesButton() {
     return getPanel().getButton("editSeries");
+  }
+
+  public void checkProjectCreationHidden() {
+    checkComponentVisible(getPanel(), JButton.class, Lang.get("projectView.create"), false);
+  }
+
+  public void checkProjectCreationShown() {
+    checkComponentVisible(getPanel(), JButton.class, Lang.get("projectView.create"), true);
   }
 
   public void createProject() {

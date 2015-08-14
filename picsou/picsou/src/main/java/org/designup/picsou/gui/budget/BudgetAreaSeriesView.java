@@ -31,6 +31,7 @@ import org.globsframework.gui.splits.repeat.Repeat;
 import org.globsframework.gui.splits.repeat.RepeatComponentFactory;
 import org.globsframework.gui.splits.utils.Disposable;
 import org.globsframework.gui.splits.utils.GlobListener;
+import org.globsframework.gui.utils.PopupMenuFactory;
 import org.globsframework.gui.views.GlobButtonView;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.fields.DoubleField;
@@ -187,14 +188,7 @@ public class BudgetAreaSeriesView extends View implements Filterable {
     seriesRepeat =
       builder.addRepeat("seriesRepeat", new GlobList(), new SeriesRepeatComponentFactory(builder));
 
-    JPopupMenu menu = new JPopupMenu();
-    menu.add(seriesButtons.createSeriesAction());
-    if (budgetArea == BudgetArea.EXTRAS) {
-      menu.add(new CreateProjectAction(repository, directory));
-    }
-    menu.addSeparator();
-    menu.add(createMonthFilteringButton());
-    builder.add("budgetAreaTitle", new JPopupButton(budgetArea.getLabel(), menu));
+    builder.add("budgetAreaTitle", new JPopupButton(budgetArea.getLabel(), new ActionsPopupFactory()));
 
     parentBuilder.add(name, builder);
   }
@@ -464,6 +458,19 @@ public class BudgetAreaSeriesView extends View implements Filterable {
         }
       }
       return stringifier.toString(periodStatList, repository);
+    }
+  }
+
+  private class ActionsPopupFactory implements PopupMenuFactory {
+    public JPopupMenu createPopup() {
+      JPopupMenu menu = new JPopupMenu();
+      menu.add(seriesButtons.createSeriesAction());
+      if (budgetArea == BudgetArea.EXTRAS && AddOns.isEnabled(AddOns.PROJECTS, repository)) {
+        menu.add(new CreateProjectAction(repository, directory));
+      }
+      menu.addSeparator();
+      menu.add(createMonthFilteringButton());
+      return menu;
     }
   }
 }
