@@ -66,6 +66,16 @@ public class SeriesAmountEditionChecker<T extends SeriesAmountEditionChecker> ex
     return (T)this;
   }
 
+  public T checkAmountEditionHighlighted() {
+    assertThat(dialog.getPanel("amountPanel").backgroundNear("ffffbb"));
+    return (T)this;
+  }
+
+  public T checkAmountEditionNotHighlighted() {
+    assertThat(dialog.getPanel("amountPanel").backgroundNear("F0F0F0"));
+    return (T)this;
+  }
+
   public T setAmount(String value) {
     getAmountTextBox().setText(value, false);
     return (T)this;

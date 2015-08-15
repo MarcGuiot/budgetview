@@ -5,6 +5,16 @@ import org.designup.picsou.functests.specificbanks.SpecificBankTestCase;
 import org.designup.picsou.functests.checkers.SignpostDialogChecker;
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
+import org.designup.picsou.model.Series;
+import org.globsframework.metamodel.GlobType;
+import org.globsframework.model.ChangeSet;
+import org.globsframework.model.ChangeSetListener;
+import org.globsframework.model.GlobRepository;
+import org.globsframework.model.format.GlobPrinter;
+import org.globsframework.xml.XmlChangeSetWriter;
+
+import java.io.PrintWriter;
+import java.util.Set;
 
 public class SignpostSequenceTest extends LoggedInFunctionalTestCase {
 
@@ -119,16 +129,20 @@ public class SignpostSequenceTest extends LoggedInFunctionalTestCase {
     budgetView.variable.checkPlannedUnsetAndHighlighted("Groceries");
     budgetView.variable.editPlannedAmount("Groceries")
       .checkSelectedMonths(201003, 201004, 201005)
+      .checkAmountEditionHighlighted()
       .setAmount(10.00)
       .validate();
     budgetView.variable.checkPlannedNotHighlighted("Groceries");
+    budgetView.variable.editPlannedAmount("Groceries")
+      .checkAmountEditionNotHighlighted()
+      .checkAmount(10.00)
+      .cancel();
 
     signpostView.checkSignpostViewShown();
 
     budgetView.variable.checkPlannedUnsetButNotHighlighted("Health");
     budgetView.variable.checkPlannedUnsetButNotHighlighted("Fuel");
     budgetView.variable.checkPlannedUnsetAndHighlighted("Clothing");
-    views.selectBudget();
     SignpostDialogChecker
       .open(budgetView.variable.editPlannedAmount("Clothing").setAmount(10.00).triggerValidate())
       .close();
@@ -229,18 +243,23 @@ public class SignpostSequenceTest extends LoggedInFunctionalTestCase {
 
     categorization.setIncome("income", "Income 1");
     categorization.setVariable("auchan", "Groceries");
-    categorization.setNewVariable("vroum", "Car");
-    categorization.editSeries("Car")
-      .setEndDate(201004)
-      .validate();
+
+    categorization.selectTransactions("vroum");
+    SignpostDialogChecker
+      .open(categorization.selectVariable().createSeries().setName("Car").triggerValidate())
+      .close();
+    categorization.editSeries("Car").setEndDate(201004).validate();
 
     timeline.selectMonth(201005);
 
+    signpostView.checkSignpostViewShown();
+
     SignpostDialogChecker
-      .open(
-        budgetView.variable.editPlannedAmount("Groceries")
-          .setAmount(10.00)
-          .triggerValidate())
+      .open(budgetView.variable.editPlannedAmount("Groceries")
+              .checkAmountEditionHighlighted()
+              .setPropagationEnabled()
+              .setAmount(50.00)
+              .triggerValidate())
       .close();
     budgetView.variable.checkPlannedNotHighlighted("Groceries");
 

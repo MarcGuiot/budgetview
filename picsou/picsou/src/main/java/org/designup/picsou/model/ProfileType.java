@@ -22,6 +22,10 @@ public enum ProfileType implements GlobConstantContainer {
   ONCE_A_YEAR("ONCE_A_YEAR", 7, 12, 6),
   SINGLE_MONTH("SINGLE_MONTH", 8, -1, 7);
 
+//   Weekly / bi-weekly: On laisse l'observed dans SeriesBudget.
+//   On ne fait porter par WeeklyBudget que le montant pour
+//   la semaine et le jour. Question : peut-on desactiver un WeeklyBudget ? ==> si oui il faut le representer qqpart
+
   public static GlobType TYPE;
 
   @Key

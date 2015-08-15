@@ -641,7 +641,7 @@ public class SeriesEditionDialog {
     this.currentMonthIds = new TreeSet<Integer>(monthIds);
     this.lastSelectedSubSeriesId = null;
     amountEditionPanel.selectMonths(monthIds);
-    amountEditionPanel.setCurrentSeries(currentSeries.getKey());
+    amountEditionPanel.setCurrentSeries(currentSeries.getKey(), creation);
     selectionService.select(currentSeries);
     updateMonthSelectionCard();
 

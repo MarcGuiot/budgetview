@@ -29,6 +29,7 @@ public class SeriesCreationTest extends LoggedInFunctionalTestCase {
         {"2008", "May", 0.00, 0.00},
         {"2008", "June", 0.00, 0.00, true}
       })
+      .checkAmountEditionNotHighlighted()
       .validate();
 
     categorization.selectTransaction("WORLDCO");
@@ -56,6 +57,7 @@ public class SeriesCreationTest extends LoggedInFunctionalTestCase {
     categorization.selectRecurring().createSeries()
       .setName("Culture")
       .checkEditableTargetAccount("Main accounts")
+      .checkAmountEditionNotHighlighted()
       .validate();
 
     categorization.selectRecurring()
@@ -66,7 +68,7 @@ public class SeriesCreationTest extends LoggedInFunctionalTestCase {
     transactions.checkSeries(0, "Culture");
   }
 
-  public void testNewEnvelopeSeries() throws Exception {
+  public void testNewVariableSeries() throws Exception {
     OfxBuilder
       .init(this)
       .addTransaction("2008/06/30", -60, "Forfait Kro")
@@ -99,6 +101,7 @@ public class SeriesCreationTest extends LoggedInFunctionalTestCase {
       .checkChart(new Object[][]{
         {"2008", "June", 0.00, 0.00, true}
       })
+      .checkAmountEditionNotHighlighted()
       .cancel();
 
     OfxBuilder

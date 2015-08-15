@@ -46,16 +46,6 @@ public class SynchroErrorDialogChecker {
     return this;
   }
 
-  public SynchroErrorDialogChecker checkCopy() throws Exception {
-    LoggedInFunctionalTestCase.callFailIfClipBoardDisable();
-    dialog.getButton("copy").click();
-
-    String details = dialog.getTextBox("details").getText();
-    Assert.assertEquals(details, Clipboard.getContentAsText());
-
-    return this;
-  }
-
   public SynchroErrorDialogChecker switchToDetails() {
     dialog.getButton("link").click();
     return this;

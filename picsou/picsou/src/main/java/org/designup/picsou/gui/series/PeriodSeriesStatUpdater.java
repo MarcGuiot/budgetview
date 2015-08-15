@@ -116,7 +116,7 @@ public class PeriodSeriesStatUpdater implements GlobSelectionListener, ChangeSet
                                selectedAccountId != null ? isSeriesForAccount(selectedAccountId) : isSummaryForSeries()),
                            seriesStatFunctor
       );
-      initToUpdateField();
+      initToSetField();
       initGroups();
       initEvolutionFields();
     }
@@ -291,22 +291,22 @@ public class PeriodSeriesStatUpdater implements GlobSelectionListener, ChangeSet
     }
   }
 
-  private void initToUpdateField() {
+  private void initToSetField() {
     boolean signpostCompleted = SignpostStatus.isInitialGuidanceCompleted(repository);
     for (Glob periodStat : repository.getAll(PeriodSeriesStat.TYPE)) {
-      boolean value = PeriodSeriesStat.isForSeries(periodStat)
+      boolean toSet = PeriodSeriesStat.isForSeries(periodStat)
                       && !signpostCompleted
-                      && isToUpdate(periodStat.get(PeriodSeriesStat.TARGET));
-      repository.update(periodStat.getKey(), PeriodSeriesStat.TO_SET, value);
+                      && isToSet(periodStat.get(PeriodSeriesStat.TARGET));
+      repository.update(periodStat.getKey(), PeriodSeriesStat.TO_SET, toSet);
     }
   }
 
-  private boolean isToUpdate(Integer seriesId) {
+  private boolean isToSet(Integer seriesId) {
     if (Series.UNCATEGORIZED_SERIES_ID.equals(seriesId)) {
       return false;
     }
 
-    boolean hasObservedAmount = false;
+    boolean hasActualAmount = false;
     boolean hasPlannedAmountToSet = false;
     GlobList activeStats =
       repository.findByIndex(SeriesStat.SERIES_INDEX, seriesId);
@@ -315,9 +315,9 @@ public class PeriodSeriesStatUpdater implements GlobSelectionListener, ChangeSet
     }
 
     for (Glob stat : activeStats) {
-      hasObservedAmount |= Amounts.isNotZero(getActual(stat));
+      hasActualAmount |= Amounts.isNotZero(getActual(stat));
       hasPlannedAmountToSet |= Amounts.isUnset(getPlanned(stat));
-      if (hasObservedAmount && hasPlannedAmountToSet) {
+      if (hasActualAmount && hasPlannedAmountToSet) {
         return true;
       }
     }

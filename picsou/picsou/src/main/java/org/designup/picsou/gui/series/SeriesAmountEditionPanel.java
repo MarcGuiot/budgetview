@@ -11,6 +11,7 @@ import org.globsframework.gui.GlobSelection;
 import org.globsframework.gui.GlobSelectionListener;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.SelectionService;
+import org.globsframework.gui.splits.SplitsNode;
 import org.globsframework.gui.splits.layout.CardHandler;
 import org.globsframework.gui.splits.utils.GuiUtils;
 import org.globsframework.gui.utils.GlobSelectionBuilder;
@@ -43,13 +44,16 @@ public class SeriesAmountEditionPanel {
   private Integer currentMonth;
   private Set<Integer> selectedMonthIds;
   private Directory directory;
-  private boolean selectionInProgress;
-  private SeriesAmountChartPanel chart;
   private boolean autoSelectFutureMonths;
+  private boolean selectionInProgress;
+  private boolean showingActiveMonths = false;
+
   private SeriesAmountLabelStringifier selectionStringifier = new SeriesAmountLabelStringifier();
+  private SeriesAmountChartPanel chart;
   private CardHandler cards;
   private JEditorPane disabledMessage;
-  private boolean showingActiveMonths = false;
+  private SplitsNode<JPanel> amountPanel;
+  private boolean creation;
 
   public SeriesAmountEditionPanel(GlobRepository repository, Directory directory) {
 
@@ -66,7 +70,7 @@ public class SeriesAmountEditionPanel {
               clear();
             }
             else {
-              setCurrentSeries(first.getKey());
+              setCurrentSeries(first.getKey(), creation);
             }
             updateBudgetFromMonth();
           }
@@ -149,6 +153,8 @@ public class SeriesAmountEditionPanel {
     disabledMessage = GuiUtils.createReadOnlyHtmlComponent();
     builder.add("disabledMessage", disabledMessage);
 
+    this.amountPanel = builder.add("amountPanel", new JPanel());
+
     this.panel = builder.load();
   }
 
@@ -164,7 +170,8 @@ public class SeriesAmountEditionPanel {
     getFocusComponent().requestFocus();
   }
 
-  public void setCurrentSeries(Key seriesKey) {
+  public void setCurrentSeries(Key seriesKey, boolean creation) {
+    this.creation = creation;
     propagationCheckBox.setEnabled(seriesKey != null);
     chart.getChart().setEnabled(seriesKey != null);
     amountEditor.setEnabled(seriesKey != null);
@@ -187,11 +194,13 @@ public class SeriesAmountEditionPanel {
       selectMonths(repository.getAll(Month.TYPE).getValueSet(Month.ID));
     }
 
+    amountPanel.applyStyle(noValueDefined && !creation ? "amountPanelHighlighted" : "amountPanelNormal");
+
     updateCard(true);
   }
 
   public void clear() {
-    setCurrentSeries(null);
+    setCurrentSeries(null, false);
     selectionService.clear(SeriesBudget.TYPE);
     chart.init(null, null);
   }

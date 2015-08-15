@@ -4,6 +4,10 @@
 
   <styles>
     <style selector=".small" font="-,plain,11"/>
+
+    <style selector="#amountPanel" opaque="true"/>
+    <style selector="x" id="amountPanelHighlighted" border="line(highlightedPanel.border)" background="highlightedPanel.bg"/>
+    <style selector="x" id="amountPanelNormal" border="" background="dialog.content.bg"/>
   </styles>
 
   <column>
@@ -12,7 +16,7 @@
 
       <card name="standard">
         <row>
-          <column>
+          <column weightX="100">
             <component ref="chart" preferredSize="(300,100)" weightY="10"
                        background="dialog.content.bg"/>
             <row marginBottom="10">
@@ -21,17 +25,19 @@
             </row>
           </column>
 
-          <label icon="rightArrow(10,50,10,50,dialog.largeArrow)" margin="10"/>
+          <label icon="rightArrow(10,50,10,50,dialog.largeArrow)" margin="10" weightX="1"/>
 
-          <column border="empty(10,10,5,10)">
+          <column border="empty(10,10,5,5)" weightX="1">
             <filler fill="vertical"/>
-            <label text="$seriesAmountEdition.period.label"/>
-            <label ref="dateLabel" marginTop="5" marginBottom="0"/>
-            <row styleClass="iconButtonGroup" marginBottom="15">
-              <component ref="amountEditor"/>
-              <button action="alignValue" styleClass="align_value"/>
-              <label ref="actualAmountLabel" styleClass="alignActualAmount"/>
-            </row>
+            <column ref="amountPanel">
+              <label text="$seriesAmountEdition.period.label" margin="5" marginBottom="0"/>
+              <label ref="dateLabel" marginTop="5" marginBottom="0" marginLeft="5" marginRight="5"/>
+              <row styleClass="iconButtonGroup" marginBottom="5" marginLeft="5" marginRight="5">
+                <component ref="amountEditor"/>
+                <button action="alignValue" styleClass="align_value"/>
+                <label ref="actualAmountLabel" styleClass="alignActualAmount"/>
+              </row>
+            </column>
             <filler fill="vertical"/>
           </column>
 

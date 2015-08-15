@@ -37,6 +37,7 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
         {"2008", "July", 29.00, 29.00, true},
         {"2008", "August", 0.00, 29.00},
       })
+      .checkAmountEditionNotHighlighted()
       .checkMonthSelected(200807)
       .checkAmountLabel("for july 2008")
       .selectAllMonths()

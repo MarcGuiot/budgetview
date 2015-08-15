@@ -36,6 +36,7 @@ import org.designup.picsou.gui.series.SeriesEditor;
 import org.designup.picsou.gui.signpost.WelcomeView;
 import org.designup.picsou.gui.signpost.SignpostService;
 import org.designup.picsou.gui.signpost.SignpostView;
+import org.designup.picsou.gui.signpost.components.OnboardingCompletionUpdater;
 import org.designup.picsou.gui.signpost.guides.ImportSignpost;
 import org.designup.picsou.gui.startup.components.DemoMessageView;
 import org.designup.picsou.gui.startup.components.LogoutService;
@@ -155,6 +156,7 @@ public class MainPanel {
     PeriodSeriesStatUpdater.init(replicationGlobRepository, directory);
     PeriodBudgetAreaStatUpdater.init(replicationGlobRepository);
     PeriodAccountStatUpdater.init(replicationGlobRepository, directory);
+    OnboardingCompletionUpdater.init(replicationGlobRepository);
     DashboardStatUpdater.init(repository, directory);
 
     directory.add(new HighlightingService());

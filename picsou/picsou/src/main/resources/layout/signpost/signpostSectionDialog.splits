@@ -8,8 +8,6 @@
     <label ref="title" styleClass="title"/>
     <panel styleClass="innerDialog">
       <column styleClass="innerDialogContent">
-
-
         <column styleClass="blockScrollBorder" weightY="100.0">
           <scrollPane forceVerticalScroll="true" verticalUnitIncrement="10">
             <column>

@@ -91,7 +91,7 @@
 
     <style selector="scrollPane" opaque="true" viewportBackground="content.bg"/>
 
-    <style selector="button.iconOnly" weightX="0"  border=""
+    <style selector="button.iconOnly" weightX="0" border=""
            text="" opaque="false" borderPainted="false" cursor="hand"/>
 
     <style selector="button.editIcon" weightX="0" cursor="hand"
@@ -137,7 +137,7 @@
            font="-,plain,11"
            fill="horizontal" anchor="center"/>
 
-      <style selector="textArea.errorMessage"
+    <style selector="textArea.errorMessage"
            opaque="false" editable="false" lineWrap="true" wrapStyleWord="true"
            foreground="#FF0000" font="-,bold,12"
            fill="horizontal" anchor="center"/>
@@ -151,7 +151,8 @@
     <!-- Hyperlinks -->
 
     <ui name="hyperlinkButton" class="org.globsframework.gui.splits.components.HyperlinkButtonUI"/>
-    <style selector="button.hyperlink" ui="hyperlinkButton" fill="none" anchor="right" foreground="hyperlink" cursor="hand"/>
+    <style selector="button.hyperlink" ui="hyperlinkButton" fill="none" anchor="right" foreground="hyperlink"
+           cursor="hand"/>
     <style selector="button.help" ui="hyperlinkButton" fill="none" anchor="right"/>
 
     <ui name="hyperlinkButtonWithoutUnderline" class="org.globsframework.gui.splits.components.HyperlinkButtonUI"
@@ -175,7 +176,7 @@
 
     <ui name="showHideButtonUI" class="org.globsframework.gui.splits.components.HyperlinkButtonUI"
         underline="false" rolloverColor="hyperlink"/>
-    <style selector="button.showHide"  ui="showHideButtonUI"
+    <style selector="button.showHide" ui="showHideButtonUI"
            showIcon="rightArrow(10,14,8,8,dialog.text)" hideIcon="downArrow(10,14,8,8,dialog.text)"
            fill="none" anchor="left" foreground="dialog.text" font="-,plain,11"/>
 
@@ -210,7 +211,7 @@
     <style selector=".innerBlock label.largeAmount" foreground="block.inner.amount" font="-,bold,13" anchor="top"/>
     <style selector=".innerBlock .hyperlink" foreground="block.inner.hyperlink" font="-,plain,10"/>
 
-    <style selector=".innerBlock"  foreground="block.inner.item"/>
+    <style selector=".innerBlock" foreground="block.inner.item"/>
     <style selector="label.alignActualAmount" foreground="block.inner.item" font="-,plain,12" marginLeft="5"/>
 
     <style selector=".secondaryInnerBlock" opaque="true" background="block.inner.secondary.bg"/>
@@ -241,11 +242,8 @@
            border="matte(1,0,0,0,block.prefooter.top)"/>
 
     <!-- Highlighted panel -->
-    <ui name="highlightedPanel" class="org.globsframework.gui.splits.components.StyledPanelUI"
-        topColor="highlightedPanel.top" bottomColor="highlightedPanel.bottom"
-        borderColor="highlightedPanel.border"
-        borderWidth="1" cornerRadius="6"/>
-    <style selector=".highlightedPanel"  ui="highlightedPanel"/>
+    <style selector=".highlightedPanel" opaque="true" border="line(highlightedPanel.border)"
+           background="highlightedPanel.bg"/>
 
     <!-- Custom rounded buttons -->
     <ui name="customButtonSmallUI" class="org.designup.picsou.gui.components.ui.CustomButtonUI"
@@ -337,14 +335,16 @@
            inactiveLabelColor="gauge.detail.label.inactive"
            highlightedBackgroundColor="gauge.detail.bg.highlighted"
            highlightedLabelColor="gauge.detail.label.highlighted"
-      />
+            />
 
     <!-- Split panes -->
 
     <style selector="horizontalSplit" showGripper="false" dividerSize="12" opaque="false"/>
     <style selector="verticalSplit" showGripper="false" dividerSize="8" opaque="false"/>
-    <style selector="horizontalSplit.mainDivider" showGripper="true" foreground="splitpane.main.handle" background="content.bg" handleColor="splitpane.main.handle.grip"/>
-    <style selector="verticalSplit.mainDivider" showGripper="true" foreground="splitpane.main.handle" background="content.bg" handleColor="splitpane.main.handle.grip"/>
+    <style selector="horizontalSplit.mainDivider" showGripper="true" foreground="splitpane.main.handle"
+           background="content.bg" handleColor="splitpane.main.handle.grip"/>
+    <style selector="verticalSplit.mainDivider" showGripper="true" foreground="splitpane.main.handle"
+           background="content.bg" handleColor="splitpane.main.handle.grip"/>
     <style selector="horizontalSplit.blockDivider" showGripper="true" foreground="splitpane.block.handle"/>
     <style selector="verticalSplit.blockDivider" showGripper="true" foreground="splitpane.block.handle"/>
 

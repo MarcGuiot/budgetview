@@ -13,7 +13,7 @@
            fill="none" anchor="center"/>
   </styles>
 
-  <row ref="panel" background="highlightedPanel.top" border="matte(1,0,1,0,highlightedPanel.border)" opaque="true">
+  <row ref="panel" background="highlightedPanel.bg" border="matte(1,0,1,0,highlightedPanel.border)" opaque="true">
     <label text="$filter.label" styleClass="filterText"/>
     <label ref="filterLabel"/>
     <filler fill="horizontal"/>

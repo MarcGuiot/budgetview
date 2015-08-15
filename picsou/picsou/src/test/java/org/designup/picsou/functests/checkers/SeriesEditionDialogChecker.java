@@ -71,16 +71,6 @@ public class SeriesEditionDialogChecker extends SeriesAmountEditionChecker<Serie
     assertFalse(dialog.isVisible());
   }
 
-  public SeriesEditionDialogChecker toggleAutoReport() {
-    dialog.getCheckBox("autoReport").select();
-    return this;
-  }
-
-  public SeriesEditionDialogChecker unToggleAutoReport() {
-    dialog.getCheckBox("autoReport").unselect();
-    return this;
-  }
-
   public SeriesEditionDialogChecker showDescription() {
     dialog.getButton("showDescription").click();
     return this;
@@ -259,16 +249,16 @@ public class SeriesEditionDialogChecker extends SeriesAmountEditionChecker<Serie
   }
 
   private String getPeriodMonthStatuses() {
-    StringBuffer buffer = new StringBuffer();
-    buffer.append("Selection: ");
+    StringBuilder builder = new StringBuilder();
+    builder.append("Selection: ");
     for (int month = 1; month < 13; month++) {
       String label = getMonthLabel(month);
       CheckBox checkBox = getPeriodMonthCheckBox(label);
       if (checkBox.isSelected().isTrue()) {
-        buffer.append(label).append(" ");
+        builder.append(label).append(" ");
       }
     }
-    return buffer.toString();
+    return builder.toString();
   }
 
   public void validate() {
@@ -422,13 +412,6 @@ public class SeriesEditionDialogChecker extends SeriesAmountEditionChecker<Serie
     assertThat(dialog.getButton(labelName).textEquals(text));
   }
 
-  public SeriesEditionDialogChecker checkAllMonthsDisabled() {
-    for (UIComponent checkBox : dialog.getUIComponents(CheckBox.class)) {
-      assertFalse(checkBox.isEnabled());
-    }
-    return this;
-  }
-
   public SeriesEditionDialogChecker checkVisible() {
     assertTrue(dialog.isVisible());
     return this;
@@ -487,11 +470,6 @@ public class SeriesEditionDialogChecker extends SeriesAmountEditionChecker<Serie
 
   public SeriesEditionDialogChecker setRepeatEveryTwoMonths() {
     getProfileCombo().select(ProfileType.TWO_MONTHS.getLabel());
-    return this;
-  }
-
-  public SeriesEditionDialogChecker setRepeatEveryThreeMonths() {
-    getProfileCombo().select(ProfileType.THREE_MONTHS.getLabel());
     return this;
   }
 
