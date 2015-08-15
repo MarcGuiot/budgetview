@@ -100,10 +100,8 @@
         </page>
 
         <page file="support/faq/categorisation.html" title="Catégorisation des opérations">
-          <page file="support/faq/categorisation/virements_internes.html"
-                title="Comment classer les opérations de virement internes ?"/>
-          <page file="support/faq/categorisation/virements_epargne.html"
-                title="Comment classer les opérations de virement vers les comptes d'épargne ?"/>
+          <page file="support/faq/categorisation/virements.html"
+                title="Comment classer les opérations de virement ?"/>
           <page file="support/faq/categorisation/ventiler_operation.html"
                 title="Comment ventiler une opération parmi plusieurs enveloppes ?"/>
         </page>
