@@ -5,7 +5,7 @@ import java.awt.event.ActionEvent;
 
 public class ThrowExceptionAction extends AbstractAction {
   public ThrowExceptionAction() {
-    super("[Throw exception]");
+    super("Throw exception");
   }
 
   public void actionPerformed(ActionEvent e) {

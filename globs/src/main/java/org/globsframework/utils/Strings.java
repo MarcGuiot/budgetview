@@ -77,7 +77,7 @@ public class Strings {
   public static String toString(Map map) {
     List<String> lines = new ArrayList<String>();
     for (Object o : map.entrySet()) {
-      Map.Entry entry = (Map.Entry)o;
+      Map.Entry entry = (Map.Entry) o;
       lines.add("'" + toString(entry.getKey()) + "' = '" + toString(entry.getValue()) + "'");
     }
     Collections.sort(lines);
@@ -225,5 +225,9 @@ public class Strings {
       }
     }
     return builder.toString();
+  }
+
+  public static String removeSpaces(String text) {
+    return text.replaceAll("[ \t\n]", "");
   }
 }

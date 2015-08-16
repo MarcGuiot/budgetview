@@ -72,18 +72,4 @@ public enum SignpostSectionType implements GlobConstantContainer {
   public boolean isCompleted(SignpostSectionType currentType) {
     return currentType == COMPLETED || currentType.id > id;
   }
-
-  public static boolean isCurrentTypeAfter(SignpostSectionType type, GlobRepository repository) {
-    Glob status = repository.find(SignpostStatus.KEY);
-    if (status == null) {
-      return false;
-    }
-    SignpostSectionType current = getType(status.get(SignpostStatus.CURRENT_SECTION));
-    return (current.id >= type.id);
-  }
-
-  public static boolean isAllCompleted(GlobRepository repository) {
-    Glob status = repository.find(SignpostStatus.KEY);
-    return (status != null && Utils.equal(status.get(SignpostStatus.CURRENT_SECTION), COMPLETED.id));
-  }
 }

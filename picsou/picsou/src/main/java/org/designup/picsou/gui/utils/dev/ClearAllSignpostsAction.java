@@ -10,7 +10,7 @@ public class ClearAllSignpostsAction extends AbstractAction {
   private GlobRepository repository;
 
   public ClearAllSignpostsAction(GlobRepository repository) {
-    super("[Hide signposts]");
+    super("Hide signposts");
     this.repository = repository;
   }
 

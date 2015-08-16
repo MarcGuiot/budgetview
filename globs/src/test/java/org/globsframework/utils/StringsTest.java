@@ -101,6 +101,9 @@ public class StringsTest extends TestCase {
 
   public void testRemoveNewLine() throws Exception {
     assertEquals("some new line", Strings.removeNewLine("some \n\nnew \n\rline\r"));
+  }
 
+  public void testRemoveSpaces() throws Exception {
+    assertEquals("abcd123", Strings.removeSpaces("  a\tb c\nd 12  \n3 "));
   }
 }

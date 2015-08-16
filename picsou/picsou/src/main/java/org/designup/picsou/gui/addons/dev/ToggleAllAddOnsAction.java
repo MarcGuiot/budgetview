@@ -9,8 +9,8 @@ import javax.swing.*;
 import java.awt.event.ActionEvent;
 
 public class ToggleAllAddOnsAction extends AbstractAction {
-  public static final String ENABLE_ALL = "[enable all add-ons]";
-  public static final String DISABLE_ALL = "[disable all add-ons]";
+  public static final String ENABLE_ALL = "Enable all add-ons";
+  public static final String DISABLE_ALL = "Disable all add-ons";
   private boolean value;
   private GlobRepository repository;
 

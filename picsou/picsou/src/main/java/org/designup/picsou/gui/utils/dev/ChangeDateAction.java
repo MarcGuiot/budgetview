@@ -19,7 +19,7 @@ public class ChangeDateAction extends AbstractAction {
   private GlobRepository repository;
 
   public ChangeDateAction(GlobRepository repository) {
-    super("[Change current date]");
+    super("Change current date");
     this.repository = repository;
   }
 

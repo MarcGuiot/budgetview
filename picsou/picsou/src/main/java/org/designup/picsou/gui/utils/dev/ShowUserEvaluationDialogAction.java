@@ -13,7 +13,7 @@ public class ShowUserEvaluationDialogAction extends AbstractAction {
   private Directory directory;
 
   public ShowUserEvaluationDialogAction(GlobRepository repository, Directory directory) {
-    super("[Show user evaluation dialog]");
+    super("Show user evaluation dialog");
     this.repository = repository;
     this.directory = directory;
   }

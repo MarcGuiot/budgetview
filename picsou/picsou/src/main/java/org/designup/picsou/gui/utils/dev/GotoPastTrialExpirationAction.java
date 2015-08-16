@@ -14,7 +14,7 @@ import static org.globsframework.model.FieldValue.value;
 
 public class GotoPastTrialExpirationAction extends AbstractAction {
 
-  public static final String LABEL = "[Goto past trial expiration]";
+  public static final String LABEL = "Goto past trial expiration";
   private GlobRepository repository;
 
   public GotoPastTrialExpirationAction(GlobRepository repository) {

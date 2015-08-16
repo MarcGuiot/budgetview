@@ -106,7 +106,7 @@ public abstract class SignpostSectionPanel {
   }
 
   private boolean isAllCompleted(GlobRepository repository) {
-    return SignpostStatus.isInitialGuidanceCompleted(repository);
+    return SignpostStatus.isOnboardingCompleted(repository);
   }
 
   protected abstract boolean isCompleted(GlobRepository repository);

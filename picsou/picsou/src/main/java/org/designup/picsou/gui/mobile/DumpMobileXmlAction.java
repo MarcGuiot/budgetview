@@ -13,7 +13,7 @@ public class DumpMobileXmlAction extends AbstractAction {
   private GlobRepository repository;
 
   public DumpMobileXmlAction(GlobRepository repository) {
-    super("[Dump mobile XML]");
+    super("Dump mobile XML");
     this.repository = repository;
   }
 

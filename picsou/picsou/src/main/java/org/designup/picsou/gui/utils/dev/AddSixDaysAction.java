@@ -13,7 +13,7 @@ import static org.globsframework.model.FieldValue.value;
 
 public class AddSixDaysAction extends AbstractAction {
 
-  public static final String LABEL = "[Add 6 days]";
+  public static final String LABEL = "Add 6 days";
   private GlobRepository repository;
 
   public AddSixDaysAction(GlobRepository repository) {

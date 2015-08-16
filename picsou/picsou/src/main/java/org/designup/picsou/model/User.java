@@ -8,6 +8,7 @@ import org.globsframework.metamodel.annotations.Target;
 import org.globsframework.metamodel.fields.*;
 import org.globsframework.metamodel.utils.GlobTypeLoader;
 import org.globsframework.model.Glob;
+import org.globsframework.model.GlobRepository;
 
 public class User {
 
@@ -45,5 +46,10 @@ public class User {
 
   public static boolean isDemoUser(Glob user) {
     return user.isTrue(User.IS_DEMO_USER);
+  }
+
+  public static boolean isRegistered(GlobRepository repository) {
+    Glob user = repository.get(KEY);
+    return user != null && user.isTrue(IS_REGISTERED_USER);
   }
 }

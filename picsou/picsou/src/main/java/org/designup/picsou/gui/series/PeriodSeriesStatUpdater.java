@@ -292,7 +292,7 @@ public class PeriodSeriesStatUpdater implements GlobSelectionListener, ChangeSet
   }
 
   private void initToSetField() {
-    boolean signpostCompleted = SignpostStatus.isInitialGuidanceCompleted(repository);
+    boolean signpostCompleted = SignpostStatus.isOnboardingCompleted(repository);
     for (Glob periodStat : repository.getAll(PeriodSeriesStat.TYPE)) {
       boolean toSet = PeriodSeriesStat.isForSeries(periodStat)
                       && !signpostCompleted

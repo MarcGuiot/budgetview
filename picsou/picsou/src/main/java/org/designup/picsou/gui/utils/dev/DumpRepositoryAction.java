@@ -11,13 +11,14 @@ import javax.swing.*;
 import java.awt.event.ActionEvent;
 
 import static org.globsframework.model.utils.GlobMatchers.fieldEquals;
+import static org.globsframework.model.utils.GlobMatchers.isNull;
 
 public class DumpRepositoryAction extends AbstractAction {
 
   private GlobRepository repository;
 
   public DumpRepositoryAction(GlobRepository repository) {
-    super("[Dump repository]");
+    super("Dump repository");
     this.repository = repository;
   }
 
@@ -26,6 +27,9 @@ public class DumpRepositoryAction extends AbstractAction {
   }
 
   public void doPrint(GlobType... types) {
+
+    GlobPrinter.print(repository.getAll(Transaction.TYPE, isNull(Transaction.IMPORT)));
+
     GlobPrinter.init(repository)
       .showOnly(types)
 //      .setTextFilters("Voyage", "142")

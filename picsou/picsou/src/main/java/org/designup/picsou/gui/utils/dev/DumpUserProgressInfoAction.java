@@ -7,15 +7,13 @@ import org.globsframework.utils.directory.Directory;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 
-public class DumpUserProgressMessageAction extends AbstractAction {
+public class DumpUserProgressInfoAction extends AbstractAction {
 
   private GlobRepository repository;
-  private Directory directory;
 
-  public DumpUserProgressMessageAction(GlobRepository repository, Directory directory) {
-    super("[Dump user progress message]");
+  public DumpUserProgressInfoAction(GlobRepository repository) {
+    super("Dump user progress message");
     this.repository = repository;
-    this.directory = directory;
   }
 
   public void actionPerformed(ActionEvent actionEvent) {

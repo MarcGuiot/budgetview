@@ -15,7 +15,7 @@ import static org.globsframework.model.FieldValue.value;
 
 public class Goto10OfNextMonthAction extends AbstractAction {
 
-  public static final String LABEL = "[Goto 10 of next month]";
+  public static final String LABEL = "Goto 10 of next month";
   private GlobRepository repository;
 
   public Goto10OfNextMonthAction(GlobRepository repository) {

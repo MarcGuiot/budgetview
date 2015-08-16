@@ -6,7 +6,6 @@ import org.designup.picsou.gui.signpost.sections.BudgetSectionPanel;
 import org.designup.picsou.gui.signpost.sections.CategorizationSectionPanel;
 import org.designup.picsou.gui.signpost.sections.ImportSectionPanel;
 import org.designup.picsou.gui.signpost.sections.SignpostSectionPanel;
-import org.designup.picsou.model.SignpostSectionType;
 import org.designup.picsou.model.SignpostStatus;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.splits.PanelBuilder;
@@ -84,7 +83,7 @@ public class SignpostView extends View {
   }
 
   private void updateCard() {
-    if (SignpostSectionType.isAllCompleted(repository)) {
+    if (SignpostStatus.isOnboardingCompleted(repository)) {
       cardHandler.show("dashboard");
     }
     else if (SignpostStatus.isCompleted(SignpostStatus.WELCOME_SHOWN, repository)) {

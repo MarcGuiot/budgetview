@@ -15,6 +15,7 @@ import org.globsframework.model.FieldSetter;
 import org.globsframework.model.FieldValues;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobRepository;
+import org.globsframework.model.utils.GlobMatcher;
 import org.globsframework.utils.serialization.SerializedByteArrayOutput;
 import org.globsframework.utils.serialization.SerializedInput;
 import org.globsframework.utils.serialization.SerializedInputOutputFactory;
@@ -48,6 +49,14 @@ public class SeriesGroup {
 
   public static boolean isForProject(Glob group, GlobRepository repository) {
     return group != null && repository.contains(Project.TYPE, fieldEquals(Project.SERIES_GROUP, group.get(SeriesGroup.ID)));
+  }
+
+  public static GlobMatcher userCreatedGroups() {
+    return new GlobMatcher() {
+      public boolean matches(Glob group, GlobRepository repository) {
+        return !isForProject(group, repository);
+      }
+    };
   }
 
   public static void deleteAll(Glob group, GlobRepository repository) {

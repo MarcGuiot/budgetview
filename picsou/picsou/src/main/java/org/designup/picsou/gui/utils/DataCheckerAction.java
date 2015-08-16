@@ -12,7 +12,7 @@ public class DataCheckerAction extends AbstractAction {
   private Directory directory;
 
   public DataCheckerAction(GlobRepository repository, Directory directory) {
-    super("[Check data (see logs)]");
+    super("Check data (see logs)");
     this.repository = repository;
     this.directory = directory;
   }

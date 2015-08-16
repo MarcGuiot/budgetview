@@ -12,7 +12,7 @@ public class SimulateLicenseRegistrationAction extends AbstractAction {
   private GlobRepository repository;
 
   public SimulateLicenseRegistrationAction(GlobRepository repository) {
-    super("[simulate license registration]");
+    super("Simulate license registration");
     this.repository = repository;
   }
 

@@ -12,7 +12,7 @@ public class ThrowInRepoExceptionAction extends AbstractAction {
   private GlobRepository repository;
 
   public ThrowInRepoExceptionAction(GlobRepository repository) {
-    super("[Throw exception in repository]");
+    super("Throw exception in repository");
     this.repository = repository;
   }
 

@@ -1,6 +1,5 @@
 package org.designup.picsou.gui.card;
 
-import org.designup.picsou.gui.addons.AddOn;
 import org.designup.picsou.gui.categorization.CategorizationSelector;
 import org.designup.picsou.gui.categorization.components.CategorizationFilteringMode;
 import org.designup.picsou.gui.components.dialogs.MessageDialog;
@@ -11,7 +10,6 @@ import org.designup.picsou.gui.transactions.TransactionView;
 import org.designup.picsou.gui.utils.MainPanelContainer;
 import org.designup.picsou.model.*;
 import org.designup.picsou.model.util.ClosedMonthRange;
-import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobSelection;
 import org.globsframework.gui.GlobSelectionListener;
 import org.globsframework.gui.SelectionService;
@@ -71,7 +69,7 @@ public class NavigationService implements GlobSelectionListener {
   }
 
   private boolean isInitCompleted(GlobList userData) {
-    return SignpostStatus.isInitialGuidanceCompleted(userData.find(SignpostStatus.KEY));
+    return SignpostStatus.isOnboardingCompleted(userData.find(SignpostStatus.KEY));
   }
 
   public void gotoBudget() {

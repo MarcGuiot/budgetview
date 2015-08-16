@@ -17,7 +17,7 @@ public class AddAccountErrorAction extends AbstractAction {
   private GlobRepository repository;
 
   public AddAccountErrorAction(GlobRepository repository) {
-    super("[add position error]");
+    super("Add position error");
     this.repository = repository;
   }
 

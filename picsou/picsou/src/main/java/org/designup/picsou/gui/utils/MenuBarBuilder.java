@@ -190,7 +190,7 @@ public class MenuBarBuilder {
     devMenu.addSeparator();
     devMenu.add(new ClearAllSignpostsAction(repository));
     devMenu.add(new ShowUserEvaluationDialogAction(repository, directory));
-    devMenu.add(new DumpUserProgressMessageAction(repository, directory));
+    devMenu.add(new DumpUserProgressInfoAction(repository));
     devMenu.addSeparator();
     devMenu.add(new SimulateLicenseRegistrationAction(repository));
     devMenu.add(new ShowLicenseExpirationAction(repository, directory));

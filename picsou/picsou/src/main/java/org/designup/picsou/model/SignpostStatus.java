@@ -134,12 +134,11 @@ public class SignpostStatus {
     repository.completeChangeSet();
   }
 
-  public static boolean isInitialGuidanceCompleted(GlobRepository repository) {
-    Glob status = repository.find(KEY);
-    return isInitialGuidanceCompleted(status);
+  public static boolean isOnboardingCompleted(GlobRepository repository) {
+    return isOnboardingCompleted(repository.find(KEY));
   }
 
-  public static boolean isInitialGuidanceCompleted(Glob status) {
+  public static boolean isOnboardingCompleted(Glob status) {
     return (status != null) && Utils.equal(status.get(CURRENT_SECTION), SignpostSectionType.COMPLETED.getId());
   }
 
@@ -171,6 +170,15 @@ public class SignpostStatus {
     finally {
       repository.completeChangeSet();
     }
+  }
+
+  public static boolean isSectionCompleted(SignpostSectionType type, GlobRepository repository) {
+    Glob status = repository.find(KEY);
+    if (status == null) {
+      return false;
+    }
+    SignpostSectionType current = SignpostSectionType.getType(status.get(CURRENT_SECTION));
+    return (current.id >= type.id);
   }
 
   public static class Serializer implements PicsouGlobSerializer {

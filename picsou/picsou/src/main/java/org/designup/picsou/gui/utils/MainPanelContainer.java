@@ -52,7 +52,7 @@ public class MainPanelContainer extends JPanel implements GlobSelectionListener 
     if (layout != null) {
       Glob currentCard = selectionService.getSelection(Card.TYPE).getFirst();
       if (currentCard != null) {
-        layout.setCard(Card.get(currentCard), SignpostStatus.isInitialGuidanceCompleted(repository));
+        layout.setCard(Card.get(currentCard), SignpostStatus.isOnboardingCompleted(repository));
         invalidate();
       }
     }

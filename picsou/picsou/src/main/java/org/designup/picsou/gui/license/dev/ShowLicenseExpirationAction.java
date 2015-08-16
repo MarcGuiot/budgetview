@@ -12,7 +12,7 @@ public class ShowLicenseExpirationAction extends AbstractAction {
   private Directory directory;
 
   public ShowLicenseExpirationAction(GlobRepository repository, Directory directory) {
-    super("[show expiration]");
+    super("Show expiration dialog");
     this.repository = repository;
     this.directory = directory;
   }
