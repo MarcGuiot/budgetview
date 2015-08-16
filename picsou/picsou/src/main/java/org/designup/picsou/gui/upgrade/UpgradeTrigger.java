@@ -183,7 +183,7 @@ public class UpgradeTrigger implements ChangeSetListener {
   }
 
   private void updageAccountGraphs(GlobRepository repository) {
-    for (Glob account : repository.getAll(Account.TYPE, AccountMatchers.userCreatedAccounts())) {
+    for (Glob account : repository.getAll(Account.TYPE, AccountMatchers.userCreatedSavingsAccounts())) {
       repository.update(account.getKey(), Account.SHOW_CHART, false);
     }
   }

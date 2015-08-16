@@ -15,10 +15,12 @@ import static org.globsframework.model.utils.GlobMatchers.isNull;
 
 public class DumpRepositoryAction extends AbstractAction {
 
+  public static final String LABEL = "Dump repository";
+
   private GlobRepository repository;
 
   public DumpRepositoryAction(GlobRepository repository) {
-    super("Dump repository");
+    super(LABEL);
     this.repository = repository;
   }
 

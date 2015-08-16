@@ -6,9 +6,9 @@ import org.designup.picsou.functests.checkers.mobile.EditMobileAccountChecker;
 import org.designup.picsou.functests.checkers.printing.PrintDialogChecker;
 import org.designup.picsou.gui.PicsouApplication;
 import org.designup.picsou.gui.addons.dev.ToggleAllAddOnsAction;
-import org.designup.picsou.gui.utils.dev.AddSixDaysAction;
-import org.designup.picsou.gui.utils.dev.Goto10OfNextMonthAction;
-import org.designup.picsou.gui.utils.dev.GotoPastTrialExpirationAction;
+import org.designup.picsou.gui.utils.DataCheckerAction;
+import org.designup.picsou.gui.utils.DumpDataAction;
+import org.designup.picsou.gui.utils.dev.*;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.utils.Dates;
 import org.globsframework.utils.Ref;
@@ -99,8 +99,8 @@ public class OperationChecker {
   }
 
   public void importQifFileWithDeferred(String fileName, String bank, Double position,
-                                           final int deferredDayPeriod, final int deferredDayPrelevement, final int deferredMonthShift,
-                                           String targetAccount) {
+                                        final int deferredDayPeriod, final int deferredDayPrelevement, final int deferredMonthShift,
+                                        String targetAccount) {
     ImportDialogChecker importDialog = openImportDialog()
       .setFilePath(fileName)
       .acceptFile();
@@ -558,7 +558,7 @@ public class OperationChecker {
   }
 
   public void checkDataIsOk() {
-    MessageDialogChecker.open(getDevMenu().getSubMenu("[Check data (see logs)]").triggerClick())
+    MessageDialogChecker.open(getDevMenu().getSubMenu(DataCheckerAction.LABEL).triggerClick())
       .checkSuccessMessageContains("No error was found").close();
   }
 
@@ -571,19 +571,19 @@ public class OperationChecker {
   }
 
   public void hideSignposts() {
-    getDevMenu().getSubMenu("[Hide signposts]").click();
+    getDevMenu().getSubMenu(HideSignpostsAction.LABEL).click();
   }
 
   public void dumpRepository() {
-    getDevMenu().getSubMenu("[Dump repository]").click();
+    getDevMenu().getSubMenu(DumpRepositoryAction.LABEL).click();
   }
 
   public void dumpData() {
-    getDevMenu().getSubMenu("[Dump data]").click();
+    getDevMenu().getSubMenu(DumpDataAction.LABEL).click();
   }
 
   private MenuItem getThrowExceptionMenu() {
-    return getDevMenu().getSubMenu("[Throw exception]");
+    return getDevMenu().getSubMenu(ThrowExceptionAction.LABEL);
   }
 
   private MenuItem getThrowExceptionInRepositoryMenu() {
@@ -678,8 +678,8 @@ public class OperationChecker {
     return MessageAndDetailsDialogChecker.init(getHelpMenu().getSubMenu(Lang.get("sendLogs.action")).triggerClick());
   }
 
-  public void changeDate(){
-    getDevMenu().getSubMenu("[Change current date]").click();
+  public void changeDate() {
+    getDevMenu().getSubMenu(ChangeDateAction.LABEL).click();
   }
 
   public void checkMobileAccessEnabled() {
@@ -690,7 +690,7 @@ public class OperationChecker {
     assertFalse(getMobileCreationMenu().isEnabled());
   }
 
-  public CreateMobileAccountChecker openCreateMobileUser(){
+  public CreateMobileAccountChecker openCreateMobileUser() {
     return CreateMobileAccountChecker.open(getMobileCreationMenu().triggerClick());
   }
 

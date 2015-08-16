@@ -4,8 +4,10 @@ import javax.swing.*;
 import java.awt.event.ActionEvent;
 
 public class ThrowExceptionAction extends AbstractAction {
+  public static final String LABEL = "Throw exception";
+
   public ThrowExceptionAction() {
-    super("Throw exception");
+    super(LABEL);
   }
 
   public void actionPerformed(ActionEvent e) {

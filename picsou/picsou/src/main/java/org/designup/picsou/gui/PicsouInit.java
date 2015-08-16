@@ -127,6 +127,7 @@ public class PicsouInit {
     repository.addTrigger(new UpdateActiveBudgetTrigger());
     repository.addTrigger(new ConfigUpgradeTrigger(directory));
     repository.addTrigger(new SeriesRenameTrigger());
+    repository.addTrigger(new AccountGraphTrigger());
     repository.addTrigger(new AccountDeletionTrigger());
     repository.addTrigger(new RealAccountTrigger());
     repository.addTrigger(new AccountSequenceTrigger());

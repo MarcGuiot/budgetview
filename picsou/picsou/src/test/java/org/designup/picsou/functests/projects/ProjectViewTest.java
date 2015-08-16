@@ -111,13 +111,12 @@ public class ProjectViewTest extends LoggedInFunctionalTestCase {
     projects.checkGraphShown("Account n. 000345");
     projects.checkGraphShown("Account n. 000456");
 
-    mainAccounts.checkChartHidden("Account n. 000123");
-    mainAccounts.checkChartHidden("Account n. 000234");
+    mainAccounts.checkChartShown("Account n. 000123");
+    mainAccounts.checkChartShown("Account n. 000234");
     savingsAccounts.checkChartHidden("Account n. 000345");
     savingsAccounts.checkChartHidden("Account n. 000456");
 
     views.selectBudget();
-    mainAccounts.showChart("Account n. 000123");
     mainAccounts.checkChartShown("Account n. 000123");
     projects.checkGraphShown("Account n. 000123");
 

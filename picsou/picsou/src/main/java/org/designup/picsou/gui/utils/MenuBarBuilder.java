@@ -188,7 +188,7 @@ public class MenuBarBuilder {
     devMenu.add(new AddSixDaysAction(repository));
     devMenu.add(new ChangeDateAction(repository));
     devMenu.addSeparator();
-    devMenu.add(new ClearAllSignpostsAction(repository));
+    devMenu.add(new HideSignpostsAction(repository));
     devMenu.add(new ShowUserEvaluationDialogAction(repository, directory));
     devMenu.add(new DumpUserProgressInfoAction(repository));
     devMenu.addSeparator();

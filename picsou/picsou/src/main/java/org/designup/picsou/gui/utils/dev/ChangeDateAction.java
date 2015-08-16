@@ -16,10 +16,11 @@ import static org.globsframework.model.FieldValue.value;
 
 public class ChangeDateAction extends AbstractAction {
 
+  public static final String LABEL = "Change current date";
   private GlobRepository repository;
 
   public ChangeDateAction(GlobRepository repository) {
-    super("Change current date");
+    super(LABEL);
     this.repository = repository;
   }
 

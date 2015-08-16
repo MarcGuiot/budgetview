@@ -8,11 +8,14 @@ import javax.swing.*;
 import java.awt.event.ActionEvent;
 
 public class DataCheckerAction extends AbstractAction {
+
+  public static final String LABEL = "Check data (see logs)";
+
   private GlobRepository repository;
   private Directory directory;
 
   public DataCheckerAction(GlobRepository repository, Directory directory) {
-    super("Check data (see logs)");
+    super(LABEL);
     this.repository = repository;
     this.directory = directory;
   }

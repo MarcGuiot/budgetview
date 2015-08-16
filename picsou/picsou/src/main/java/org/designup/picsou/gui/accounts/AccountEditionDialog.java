@@ -179,15 +179,8 @@ public class AccountEditionDialog extends AbstractAccountPanel<LocalGlobReposito
       try {
         localRepository.getCurrentChanges().safeVisit(Account.TYPE, new DefaultChangeSetVisitor() {
           public void visitCreation(Key key, FieldValues values) throws Exception {
-            localRepository.update(key,
-                                   value(Account.POSITION_DATE, TimeService.getToday()),
-                                   value(Account.SHOW_CHART, false));
-          }
-
-          public void visitUpdate(Key key, FieldValuesWithPrevious values) throws Exception {
-            if (values.contains(Account.ACCOUNT_TYPE)) {
-              localRepository.update(key, value(Account.SHOW_CHART, !Account.isSavings(values)));
-            }
+            localRepository.update(key, value(Account.POSITION_DATE, TimeService.getToday()),
+                                   value(Account.SHOW_CHART, Account.isMain(localRepository.get(key))));
           }
         });
         localRepository.commitChanges(true);

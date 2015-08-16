@@ -6,11 +6,12 @@ import org.globsframework.model.GlobRepository;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 
-public class ClearAllSignpostsAction extends AbstractAction {
+public class HideSignpostsAction extends AbstractAction {
+  public static final String LABEL = "Hide signposts";
   private GlobRepository repository;
 
-  public ClearAllSignpostsAction(GlobRepository repository) {
-    super("Hide signposts");
+  public HideSignpostsAction(GlobRepository repository) {
+    super(LABEL);
     this.repository = repository;
   }
 

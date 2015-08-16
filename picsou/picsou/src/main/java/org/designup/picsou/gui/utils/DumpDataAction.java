@@ -10,10 +10,11 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class DumpDataAction extends AbstractAction {
+  public static final String LABEL = "Dump data";
   private final GlobRepository repository;
 
   public DumpDataAction(GlobRepository repository) {
-    super("Dump data");
+    super(LABEL);
     this.repository = repository;
   }
 
