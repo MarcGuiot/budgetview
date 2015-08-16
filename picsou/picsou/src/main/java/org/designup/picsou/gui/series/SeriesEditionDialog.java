@@ -220,6 +220,7 @@ public class SeriesEditionDialog {
     registerSingleMonthComponents(builder);
 
     amountEditionPanel = new SeriesAmountEditionPanel(localRepository, localDirectory);
+    amountEditionPanel.setOkAction(okAction);
     JPanel seriesBudgetPanel = amountEditionPanel.getPanel();
     builder.add("seriesAmountEditionPanel", seriesBudgetPanel);
 
