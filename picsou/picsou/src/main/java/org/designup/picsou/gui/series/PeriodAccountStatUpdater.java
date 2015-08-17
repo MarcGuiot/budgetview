@@ -87,7 +87,7 @@ public class PeriodAccountStatUpdater implements ChangeSetListener, GlobSelectio
       for (Glob transaction : repository.findByIndex(Transaction.POSITION_MONTH_INDEX, monthId)) {
         if (accountId.equals(transaction.get(Transaction.ACCOUNT))) {
           transactionsFound = true;
-          if (transaction.get(Transaction.ACCOUNT_POSITION) < 0) {
+          if (transaction.get(Transaction.ACCOUNT_POSITION, 0.00) < 0) {
             isOk = false;
           }
           if (!Transaction.isCategorized(transaction)) {
