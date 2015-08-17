@@ -672,7 +672,9 @@ public class GlobTableView extends AbstractGlobComponentHolder<GlobTableView> im
   public GlobList getCurrentSelection() {
     GlobList selection = new GlobList();
     for (int index : table.getSelectedRows()) {
-      selection.add(tableModel.getValueAt(index, 0));
+      if (index < tableModel.getRowCount()) {
+        selection.add(tableModel.getValueAt(index, 0));
+      }
     }
     return selection;
   }
