@@ -19,7 +19,8 @@
           <column weightX="100">
             <component ref="chart" preferredSize="(300,100)" weightY="10"
                        background="dialog.content.bg"/>
-            <row marginBottom="10">
+            <row marginBottom="10" marginLeft="40">
+              <component ref="chartLegend" opaque="true" background="dialog.content.bg"/>
               <filler fill="horizontal"/>
               <checkBox ref="propagate" text="$seriesAmountEdition.propagate"/>
             </row>

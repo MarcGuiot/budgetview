@@ -10,11 +10,8 @@
 
   <row name="histoDiffLegendPanel">
     <label ref="lineLabelIcon" foreground="histo.legend.line"/>
-
     <label ref="lineLabelText" styleClass="legendLabel"/>
-
     <label ref="fillLabelIcon" foreground="histo.legend.fill" marginLeft="10"/>
-
     <label ref="fillLabelText" styleClass="legendLabel"/>
   </row>
 

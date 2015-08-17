@@ -2,6 +2,7 @@ package org.designup.picsou.gui.series;
 
 import org.designup.picsou.gui.analysis.SeriesAmountChartPanel;
 import org.designup.picsou.gui.components.AmountEditor;
+import org.designup.picsou.gui.components.charts.histo.diff.HistoDiffLegendPanel;
 import org.designup.picsou.gui.description.stringifiers.MonthListStringifier;
 import org.designup.picsou.gui.series.edition.AlignSeriesBudgetAmountsAction;
 import org.designup.picsou.gui.series.utils.SeriesAmountLabelStringifier;
@@ -134,6 +135,10 @@ public class SeriesAmountEditionPanel {
 
     chart = new SeriesAmountChartPanel(repository, directory);
     builder.add("chart", chart.getChart());
+
+    HistoDiffLegendPanel legendPanel = new HistoDiffLegendPanel(repository, directory);
+    legendPanel.show(Lang.get("seriesEdition.chartLegend.actual"), Lang.get("seriesEdition.chartLegend.planned"));
+    builder.add("chartLegend", legendPanel.getPanel());
 
     amountEditor = new AmountEditor(SeriesBudget.PLANNED_AMOUNT, repository, directory, true, 0.0);
     builder.add("amountEditor", amountEditor.getPanel());

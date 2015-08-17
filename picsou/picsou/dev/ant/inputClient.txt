@@ -9,7 +9,6 @@ C org.designup.picsou.gui.plaf.PicsouButtonUI
 C org.designup.picsou.gui.plaf.PicsouWindowsLabelUI
 C org.designup.picsou.gui.plaf.PicsouRootPaneUI
 C org.designup.picsou.gui.plaf.PicsouOptionPaneUI
-C org.designup.picsou.gui.plaf.PicsouMacFileChooserUI
 C org.designup.picsou.gui.plaf.PicsouWindowsFileChooserUI
 C org.designup.picsou.gui.components.RoundButtonUI
 C org.designup.picsou.gui.components.ui.FlatScrollbarUI
