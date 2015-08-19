@@ -147,7 +147,8 @@ public class SignpostSequenceTest extends LoggedInFunctionalTestCase {
       .open(budgetView.variable.editPlannedAmount("Clothing").setAmount(10.00).triggerValidate())
       .close();
 
-    views.checkHomeSelected();
+    views.checkBudgetSelected();
+    views.selectHome();
     signpostView.checkDashboardViewShown();
     accounts.checkShown();
 
@@ -327,7 +328,8 @@ public class SignpostSequenceTest extends LoggedInFunctionalTestCase {
         budgetView.variable.editPlannedAmount("Groceries").setAmount(10.00).triggerValidate())
       .close();
 
-    views.checkHomeSelected();
+    views.checkBudgetSelected();
+    views.selectHome();
     signpostView.checkDashboardViewShown();
 
     views.selectBudget();
@@ -431,7 +433,8 @@ public class SignpostSequenceTest extends LoggedInFunctionalTestCase {
               .triggerValidate())
       .close();
 
-    views.checkHomeSelected();
+    views.checkBudgetSelected();
+    views.selectHome();
     signpostView.checkDashboardViewShown();
     checkNoSignpostVisible();
 
@@ -610,7 +613,8 @@ public class SignpostSequenceTest extends LoggedInFunctionalTestCase {
       .open(budgetView.variable.editPlannedAmount("Groceries").setAmount(10.00).triggerValidate())
       .close();
 
-    views.checkHomeSelected();
+    views.checkBudgetSelected();
+    views.selectHome();
     signpostView.checkDashboardViewShown();
   }
 
@@ -675,7 +679,8 @@ public class SignpostSequenceTest extends LoggedInFunctionalTestCase {
         budgetView.variable.editPlannedAmount("Groceries").setAmount(10.00).triggerValidate())
       .close();
 
-    views.checkHomeSelected();
+    views.checkBudgetSelected();
+    views.selectHome();
     signpostView.checkDashboardViewShown();
 
     views.selectBudget();

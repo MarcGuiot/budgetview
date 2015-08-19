@@ -124,7 +124,7 @@ public class SignpostSectionDialog {
 
     public void actionPerformed(ActionEvent e) {
       if (isLastSection) {
-        directory.get(NavigationService.class).gotoHome();
+        directory.get(NavigationService.class).gotoBudget();
       }
       super.actionPerformed(e);
     }
