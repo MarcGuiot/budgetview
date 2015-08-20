@@ -22,6 +22,9 @@
            pressedIcon="accounts/hide_account_graph.png"
            rolloverIcon="accounts/toggle_account_graph_rollover.png"/>
 
+    <!-- Force size to initialize labels properly -->
+    <style selector="#accountPositionsChart" background="sidebar.bg" size="(180,80)"/>
+
     <style selector="#accountWeather" ui="basicButtonUI" cursor="hand" border="" weightX="0" weightY="0" fill="none"/>
   </styles>
 
@@ -40,7 +43,7 @@
           <button ref="editAccount" styleClass="dropdown"/>
           <toggleButton ref="toggleGraph"/>
           <button ref="accountWeather"/>
-          <component ref="accountPositionsChart" background="sidebar.bg"/>
+          <component ref="accountPositionsChart"/>
           <button ref="accountPosition" styleClass="hyperlinkWithoutUnderline"/>
           <label ref="accountUpdateDate"/>
         </panel>
