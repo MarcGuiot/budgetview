@@ -15,7 +15,7 @@
       <column styleClass="innerDialogContent">
 
         <htmlEditorPane text="$restore.snapshot.intro" weightY="0.1"/>
-        <scrollPane forceVerticalScroll="true" marginTop="20" weightY="100" styleClass="innerDialogBlock">
+        <scrollPane forceVerticalScroll="true" marginTop="20" weightY="100">
           <repeat ref="versionRepeat" layout="verticalGrid" margin="10">
             <row>
               <button name="date" action="dateRef" styleClass="hyperlinkWithoutUnderline"

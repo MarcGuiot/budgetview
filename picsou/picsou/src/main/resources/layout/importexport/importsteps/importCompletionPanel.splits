@@ -24,8 +24,7 @@
 
     <column styleClass="innerDialog">
       <column styleClass="innerDialogContent">
-
-        <scrollPane marginTop="20" forceVerticalScroll="true" styleClass="innerDialogBlock">
+        <scrollPane marginTop="20" forceVerticalScroll="true">
           <column margin="20">
 
             <row>

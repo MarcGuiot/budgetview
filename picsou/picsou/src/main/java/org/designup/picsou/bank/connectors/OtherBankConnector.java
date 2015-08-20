@@ -90,7 +90,7 @@ public class OtherBankConnector extends AbstractBankConnector {
       public void actionPerformed(ActionEvent e) {
         notifyDownloadInProgress();
         if (errorModeSelected(ErrorMode.IDENTIFICATION_FAILED)) {
-          notifyIdentificationFailed();
+          notifyIdentificationFailed(null);
           return;
         }
         GlobList displayedAccounts = table.getGlobs();

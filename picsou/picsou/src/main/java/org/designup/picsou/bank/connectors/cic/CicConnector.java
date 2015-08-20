@@ -133,7 +133,7 @@ public class CicConnector extends WebBankConnector {
             idForm.getPasswordInputById("e_mdp").setText(userAndPasswordPanel.getPassword());
             WebPage loggedInPage = idForm.submit();
             if (!isLoggedIn(loggedInPage)) {
-              notifyIdentificationFailed();
+              notifyIdentificationFailed(browser);
               loadHomePage();
               return;
             }

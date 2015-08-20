@@ -64,9 +64,9 @@ public class OtherBankSynchroChecker extends SynchroChecker {
     return this;
   }
 
-  public MessageDialogChecker checkIdentificationFailedError() {
+  public SynchroErrorDialogChecker checkIdentificationFailedError() {
     window.getComboBox().select("Identification failed");
-    return MessageDialogChecker.open(window.getButton("update").triggerClick());
+    return SynchroErrorDialogChecker.init(window.getButton("update").triggerClick());
   }
 
   public SynchroErrorDialogChecker checkConnectionException() {

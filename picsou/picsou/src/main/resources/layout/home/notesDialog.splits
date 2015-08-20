@@ -10,8 +10,7 @@
     <panel styleClass="innerDialog">
       <column styleClass="innerDialogContent">
 
-        <scrollPane verticalUnitIncrement="10" forceVerticalScroll="true" styleClass="innerDialogBlock"
-                    marginBottom="0">
+        <scrollPane verticalUnitIncrement="10" forceVerticalScroll="true" marginBottom="0">
           <textArea ref="notesEditor" lineWrap="true" wrapStyleWord="true" margin="5" fill="both"/>
         </scrollPane>
 

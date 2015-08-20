@@ -7,21 +7,31 @@
     <style selector="button.next"
            ui="hyperlinkButtonWithoutUnderline"
            icon="rightArrow(10,12,9,9,hyperlink)"
+           rolloverIcon="rightArrow(10,12,9,9,hyperlink.rollover)"
            foreground="hyperlink"
            horizontalTextPosition="left" iconTextGap="5"
            fill="none" anchor="right"
-           marginTop="10"/>
+           marginTop="20"/>
     <style selector="scrollPane" forceVerticalScroll="true"/>
     <style selector="scrollPane column" margin="10"/>
   </styles>
 
   <column styleClass="dialog" preferredSize="(500,500)">
-    <label text="$synchroError.title" name="title" styleClass="title"/>
+    <label ref="title" styleClass="title"/>
     <panel styleClass="innerDialog">
       <column styleClass="innerDialogContent">
 
         <cards ref="cards">
-          <card name="intro">
+          <card name="login">
+            <scrollPane>
+              <column>
+                <htmlEditorPane text="$synchro.login.failed.message" name="message" weightY="0"/>
+                <button action="link" styleClass="next"/>
+                <filler fill="vertical"/>
+              </column>
+            </scrollPane>
+          </card>
+          <card name="other">
             <scrollPane>
               <column>
                 <label icon="synchro_error.png" margin="10" anchor="center" fill="none"/>

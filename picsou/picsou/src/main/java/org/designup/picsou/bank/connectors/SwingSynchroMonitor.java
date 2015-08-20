@@ -36,10 +36,10 @@ public class SwingSynchroMonitor implements SynchroMonitor {
 
   }
 
-  public void identificationFailed() {
+  public void identificationFailed(final String page) {
     SwingUtilities.invokeLater(new Runnable() {
       public void run() {
-        synchroMonitor.identificationFailed();
+        synchroMonitor.identificationFailed(page);
       }
     });
   }

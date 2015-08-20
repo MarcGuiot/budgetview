@@ -9,7 +9,7 @@
     <panel styleClass="innerDialog">
       <column styleClass="innerDialogContent">
         <column styleClass="blockScrollBorder" weightY="100.0">
-          <scrollPane forceVerticalScroll="true" verticalUnitIncrement="10">
+          <scrollPane forceVerticalScroll="true" verticalUnitIncrement="10" styleClass="withinBlockScroll">
             <column>
               <row weightY="5">
                 <column weightX="1">

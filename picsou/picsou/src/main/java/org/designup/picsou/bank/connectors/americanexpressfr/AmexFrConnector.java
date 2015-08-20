@@ -120,7 +120,7 @@ public class AmexFrConnector extends WebBankConnector {
                 userAndPasswordPanel.requestFocus();
                 userAndPasswordPanel.setFieldsEnabled(true);
                 userAndPasswordPanel.setEnabled(true);
-                notifyIdentificationFailed();
+                notifyIdentificationFailed(browser);
                 loadHomePage();
                 return null;
               }

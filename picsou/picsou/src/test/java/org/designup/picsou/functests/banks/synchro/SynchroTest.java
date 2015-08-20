@@ -306,7 +306,7 @@ public class SynchroTest extends LoggedInFunctionalTestCase {
       .createAccount("000123", "principal", "100.", path);
     synchro.checkIdentificationFailedError()
       .checkTitle("Login failed")
-      .checkErrorMessageContains("The identifier and password you provided have been rejected")
+      .checkMessageContains("The identifier and password you provided have been rejected")
       .close();
     synchro.checkPanelShown();
     synchro.checkConnectionException()

@@ -24,7 +24,7 @@
         <cards ref="mainCardOperations">
           <card name="cardOperations">
             <column>
-              <scrollPane maximumSize="(400,300)" weightY="500" styleClass="innerDialogBlock">
+              <scrollPane maximumSize="(400,300)" weightY="500">
                 <table ref="table"/>
               </scrollPane>
               <label icon="downArrow(50,15,50,15,dialog.largeArrow)"

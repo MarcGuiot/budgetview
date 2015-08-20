@@ -16,7 +16,7 @@
 
       <label gridPos="(0,2)" text="$subseries.list" styleClass="formLabel" anchor="northeast" marginTop="2"/>
       <column gridPos="(1,2)" styleClass="blockScrollBorder">
-        <scrollPane>
+        <scrollPane styleClass="withinBlockScroll">
           <list ref="list"/>
         </scrollPane>
         <row styleClass="footer">

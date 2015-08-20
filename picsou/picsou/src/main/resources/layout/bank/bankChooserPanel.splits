@@ -12,7 +12,7 @@
               marginTop="2" marginBottom="2"/>
     </row>
     <column styleClass="blockScrollBorder">
-      <scrollPane>
+      <scrollPane border="">
         <list ref="bankList"/>
       </scrollPane>
       <row styleClass="footer" weightY="0.01">

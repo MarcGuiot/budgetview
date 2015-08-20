@@ -215,7 +215,7 @@ public class LaBanquePostaleConnector extends WebBankConnector implements HttpCo
               WebPage accountsPage = loginPage.executeJavascript("window.document.forms[\"formAccesCompte\"].submit();");
               if (!accountsPage.getUrl().contains("voscomptesenligne.labanquepostale.fr/voscomptes/") ||
                   !accountsPage.containsTagWithId("table", "comptes")) {
-                notifyIdentificationFailed();
+                notifyIdentificationFailed(browser);
                 reset();
                 return null;
               }

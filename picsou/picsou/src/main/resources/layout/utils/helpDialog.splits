@@ -19,7 +19,7 @@
       <column styleClass="innerDialogContent">
 
         <column styleClass="blockScrollBorder">
-          <scrollPane weightY="100">
+          <scrollPane weightY="100" styleClass="withinBlockScroll">
             <htmlEditorPane ref="editor" useImageLocator="true" opaque="false" foreground="block.text"/>
           </scrollPane>
 

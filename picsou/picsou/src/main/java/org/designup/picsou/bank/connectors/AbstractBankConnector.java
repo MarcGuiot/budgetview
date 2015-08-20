@@ -2,6 +2,8 @@ package org.designup.picsou.bank.connectors;
 
 import com.budgetview.shared.utils.Amounts;
 import org.designup.picsou.bank.BankConnector;
+import org.designup.picsou.bank.connectors.utils.WebTraces;
+import org.designup.picsou.bank.connectors.webcomponents.WebBrowser;
 import org.designup.picsou.bank.connectors.webcomponents.WebTableCell;
 import org.designup.picsou.bank.connectors.webcomponents.utils.WebParsingError;
 import org.designup.picsou.model.*;
@@ -222,8 +224,8 @@ public abstract class AbstractBankConnector implements BankConnector {
     monitor.identificationInProgress();
   }
 
-  protected void notifyIdentificationFailed() {
-    monitor.identificationFailed();
+  protected void notifyIdentificationFailed(WebBrowser browser) {
+    monitor.identificationFailed(getLoginPage(browser));
   }
 
   protected void notifyDownloadInProgress() {
@@ -249,5 +251,13 @@ public abstract class AbstractBankConnector implements BankConnector {
   protected Date getYesterdaysDate() {
     DateTime today = new DateTime();
     return today.minusDays(1).toDate();
+  }
+
+  private String getLoginPage(WebBrowser browser) {
+    if (browser == null) {
+      return "";
+    }
+    return WebTraces.anonymize(browser.getCurrentPage().asXml());
+
   }
 }

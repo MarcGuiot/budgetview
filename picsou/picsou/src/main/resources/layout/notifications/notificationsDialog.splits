@@ -19,7 +19,7 @@
     <panel styleClass="innerDialog">
       <column styleClass="innerDialogContent">
 
-        <scrollPane forceVerticalScroll="true" styleClass="innerDialogBlock">
+        <scrollPane forceVerticalScroll="true">
           <column margin="10">
             <repeat ref="messages">
               <column name="notificationPanel" border="matte(0,0,1,0,block.inner.separator)">

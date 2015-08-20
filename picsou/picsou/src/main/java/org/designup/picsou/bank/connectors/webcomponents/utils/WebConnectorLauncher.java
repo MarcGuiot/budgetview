@@ -101,7 +101,7 @@ public class WebConnectorLauncher {
       System.out.println("Identification in progress...");
     }
 
-    public void identificationFailed() {
+    public void identificationFailed(String page) {
       System.out.println("Identification failed...");
     }
 

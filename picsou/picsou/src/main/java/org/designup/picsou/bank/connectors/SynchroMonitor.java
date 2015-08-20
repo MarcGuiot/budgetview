@@ -10,7 +10,7 @@ public interface SynchroMonitor {
 
   void identificationInProgress();
 
-  void identificationFailed();
+  void identificationFailed(String page);
 
   void downloadInProgress();
 
@@ -33,7 +33,7 @@ public interface SynchroMonitor {
     public void identificationInProgress() {
     }
 
-    public void identificationFailed() {
+    public void identificationFailed(String page) {
     }
 
     public void waitingForUser() {

@@ -3,7 +3,7 @@ package org.designup.picsou.gui.importer.steps;
 import org.designup.picsou.bank.BankConnector;
 import org.designup.picsou.bank.BankSynchroService;
 import org.designup.picsou.bank.connectors.SynchroMonitor;
-import org.designup.picsou.gui.PicsouApplication;
+import org.designup.picsou.bank.connectors.utils.WebTraces;
 import org.designup.picsou.gui.components.ProgressPanel;
 import org.designup.picsou.gui.components.dialogs.MessageDialog;
 import org.designup.picsou.gui.components.dialogs.MessageType;
@@ -20,8 +20,6 @@ import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
-import java.io.PrintWriter;
-import java.io.StringWriter;
 import java.util.Collections;
 import java.util.Stack;
 
@@ -109,7 +107,7 @@ public class ImportSynchroPanel extends AbstractImportStepPanel {
     if (closed) {
       return;
     }
-    if (currentConnector != null){
+    if (currentConnector != null) {
       currentConnector.release();
       currentConnector = null;
     }
@@ -127,7 +125,7 @@ public class ImportSynchroPanel extends AbstractImportStepPanel {
   }
 
   public void dispose() {
-    if (builder != null){
+    if (builder != null) {
       builder.dispose();
       builder = null;
     }
@@ -150,13 +148,15 @@ public class ImportSynchroPanel extends AbstractImportStepPanel {
       progressLabel.setText(Lang.get("import.synchro.progress.identificationInProgress"));
     }
 
-    public void identificationFailed() {
+    public void identificationFailed(String page) {
       if (closed) {
         return;
       }
       progressPanel.stop();
       progressLabel.setText("");
-      MessageDialog.show("synchro.login.failed.title", MessageType.ERROR, dialog, localDirectory, "synchro.login.failed.message");
+      SynchroErrorDialog.show(WebTraces.dump(page, currentConnector),
+                              SynchroErrorDialog.Mode.LOGIN,
+                              dialog, localDirectory);
     }
 
     public void downloadInProgress() {
@@ -194,22 +194,9 @@ public class ImportSynchroPanel extends AbstractImportStepPanel {
       if (closed) {
         return;
       }
-      StringWriter builder = new StringWriter();
-      if (currentConnector != null) {
-        builder.append("bank: ").append(currentConnector.getLabel()).append("\n");
-        builder.append("version: ").append(Long.toString(PicsouApplication.JAR_VERSION)).append("\n");
-        builder.append("location: ").append(currentConnector.getCurrentLocation()).append("\n");
-      }
-      else {
-        builder.append("no current connector\n");
-      }
-      builder.append("exception:\n");
-      exception.printStackTrace(new PrintWriter(builder));
-      String details = builder.toString();
-
-      SynchroErrorDialog messageDialog =
-        new SynchroErrorDialog(details, dialog, localDirectory);
-      messageDialog.show();
+      SynchroErrorDialog.show(WebTraces.dump(exception, currentConnector),
+                              SynchroErrorDialog.Mode.OTHER,
+                              dialog, localDirectory);
     }
 
     public void info(String message) {

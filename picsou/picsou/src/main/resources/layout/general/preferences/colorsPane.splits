@@ -1,6 +1,8 @@
 <splits xmlns="http://www.globsframework.org/xml/splits.xsd">
 
   <styleImport file="/layout/commonStyles.splits"/>
+  <styleImport file="/layout/dialogStyles.splits"/>
+
   <styles>
     <ui name="themeSelector" class="org.globsframework.gui.splits.components.StyledToggleButtonUI"
         topColor="preferences.themeSelector.top"

@@ -183,6 +183,7 @@ public class MenuBarBuilder {
     devMenu.add(new ThrowExceptionAction());
     devMenu.add(new ThrowInRepoExceptionAction(repository));
     devMenu.add(new AddAccountErrorAction(repository));
+    devMenu.add(new ShowSynchroErrorAction(directory));
     devMenu.addSeparator();
     devMenu.add(new Goto10OfNextMonthAction(repository));
     devMenu.add(new AddSixDaysAction(repository));
