@@ -1,7 +1,7 @@
 package org.designup.picsou.gui.components;
 
 import org.designup.picsou.gui.feedback.UserEvaluationDialog;
-import org.designup.picsou.gui.feedback.UserProgressInfoSender;
+import org.designup.picsou.gui.feedback.UsageDataSender;
 import org.designup.picsou.gui.utils.Gui;
 import org.globsframework.gui.splits.utils.GuiUtils;
 import org.globsframework.model.GlobRepository;
@@ -34,7 +34,7 @@ public class PicsouFrame extends JFrame {
         }
         closing = true;
         UserEvaluationDialog.showIfNeeded(repository, directory);
-        UserProgressInfoSender.send(repository, directory);
+        UsageDataSender.send(repository, directory);
       }
     });
 
