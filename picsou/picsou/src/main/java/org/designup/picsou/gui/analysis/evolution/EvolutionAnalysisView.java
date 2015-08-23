@@ -41,6 +41,8 @@ import java.util.*;
 public class EvolutionAnalysisView extends AnalysisViewPanel {
 
   private static final int MONTHS_FORWARD = 6;
+  private static int MONTHS_BACK = 36;
+
   private final SeriesWrapperComparator comparator;
   private final GlobMatcher seriesMatcher;
   private Integer referenceMonthId;
@@ -51,7 +53,6 @@ public class EvolutionAnalysisView extends AnalysisViewPanel {
   private HistoChartConfig histoChartConfig;
   private HistoChartBuilder histoChartBuilder;
 
-  private static int MONTHS_BACK = 36;
   private SelectionService selectionService;
 
   public EvolutionAnalysisView(String name, GlobRepository repository,
