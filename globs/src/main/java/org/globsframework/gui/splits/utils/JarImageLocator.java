@@ -21,7 +21,8 @@ public class JarImageLocator implements ImageLocator {
   synchronized public ImageIcon get(String fileName) throws IconNotFound {
     ImageIcon imageIcon = loadedImages.get(fileName);
     if (imageIcon == null) {
-      String path = imagesPath + "/" + fileName;
+      String separator = fileName.startsWith("/") ? "" : "/";
+      String path = imagesPath + separator + fileName;
       URL iconUrl = referenceClass.getResource(path);
       if (iconUrl != null) {
         imageIcon = new ImageIcon(iconUrl);
