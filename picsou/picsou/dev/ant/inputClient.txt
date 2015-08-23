@@ -14,6 +14,7 @@ C org.designup.picsou.gui.components.RoundButtonUI
 C org.designup.picsou.gui.components.ui.FlatScrollbarUI
 C org.designup.picsou.gui.accounts.utils.AccountBlockLayout
 C org.designup.picsou.gui.budget.components.BudgetAreaSeriesLayout
+C org.designup.picsou.gui.budget.utils.BudgetAreaHeaderLayout
 C org.designup.picsou.gui.utils.HeaderPanelLayout
 C org.designup.picsou.gui.addons.utils.AddOnPanelLayout
 C org.designup.picsou.gui.analysis.utils.AnalysisSelectorLayout
