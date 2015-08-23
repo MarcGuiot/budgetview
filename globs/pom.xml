@@ -10,11 +10,6 @@
 
   <repositories>
     <repository>
-      <id>org.wicketstuff</id>
-      <name>Wicket Stuff Repository</name>
-      <url>http://wicketstuff.org/maven/repository</url>
-    </repository>
-    <repository>
       <id>jide </id>
       <url>http://download.java.net/maven/2/</url>
     </repository>
@@ -25,6 +20,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
+        <version>2.0.2</version>
         <configuration>
           <source>1.5</source>
           <target>1.5</target>
@@ -45,10 +41,12 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-resources-plugin</artifactId>
+        <version>2.3</version>
       </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-surefire-plugin</artifactId>
+        <version>2.10</version>
         <configuration>
           <systemProperties>
             <property>
@@ -80,7 +78,6 @@
                   <fileset dir="target/classes">
                     <include name="**/*.class"/>
                     <exclude name="**/gui/**"/>
-                    <exclude name="**/wicket/**"/>
                     <exclude name="**/sqlstreams/**"/>
                     <exclude name="**/serialization/**"/>
                     <exclude name="**/remote/**"/>
