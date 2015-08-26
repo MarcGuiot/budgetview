@@ -253,7 +253,7 @@ public class WebContainer<T extends HtmlElement> extends WebComponent<T> {
   }
 
   public WebTable findTableById(String id) throws WebParsingError {
-    HtmlTable table = getElementById(id, HtmlTable.class);
+    HtmlTable table = findElementById(id, HtmlTable.class);
     if (table == null) {
       return null;
     }
