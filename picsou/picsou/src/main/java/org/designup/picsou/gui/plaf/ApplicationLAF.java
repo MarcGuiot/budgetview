@@ -27,6 +27,7 @@ public class ApplicationLAF {
   private static final String LINK_BUTTON_UI = org() + "globsframework.gui.splits.components.HyperlinkButtonUI";
   private static final String CUSTOM_BUTTON_UI = org() + "designup.picsou.gui.components.ui.CustomButtonUI";
   private static final String FLAT_BUTTON_UI = org() + "designup.picsou.gui.components.ui.FlatButtonUI";
+  private static final String FLAT_ICON_BUTTON_UI = org() + "designup.picsou.gui.components.ui.FlatIconButtonUI";
   private static final String STYLED_TOGGLE_BUTTON_UI = org() + "globsframework.gui.splits.components.StyledToggleButtonUI";
   private static final String STYLED_PANEL_UI = org() + "globsframework.gui.splits.components.StyledPanelUI";
   private static final String SHADOWED_LABEL_UI = org() + "globsframework.gui.splits.components.ShadowedLabelUI";
@@ -68,6 +69,7 @@ public class ApplicationLAF {
     uiService.registerClass(LINK_BUTTON_UI, HyperlinkButtonUI.class);
     uiService.registerClass(CUSTOM_BUTTON_UI, CustomButtonUI.class);
     uiService.registerClass(FLAT_BUTTON_UI, FlatButtonUI.class);
+    uiService.registerClass(FLAT_ICON_BUTTON_UI, FlatIconButtonUI.class);
     uiService.registerClass(STYLED_TOGGLE_BUTTON_UI, StyledToggleButtonUI.class);
     uiService.registerClass(STYLED_PANEL_UI, StyledPanelUI.class);
     uiService.registerClass(SHADOWED_LABEL_UI, ShadowedLabelUI.class);
