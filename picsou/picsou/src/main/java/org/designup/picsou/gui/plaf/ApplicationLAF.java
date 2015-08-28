@@ -10,6 +10,7 @@ import org.designup.picsou.gui.components.tabs.VerticalTabToggleUI;
 import org.designup.picsou.gui.components.ui.*;
 import org.designup.picsou.gui.projects.utils.ProjectItemViewLayout;
 import org.designup.picsou.gui.series.ui.SeriesPanelUI;
+import org.designup.picsou.gui.signpost.utils.SignpostSectionLayout;
 import org.designup.picsou.gui.utils.HeaderPanelLayout;
 import org.globsframework.gui.splits.components.HyperlinkButtonUI;
 import org.globsframework.gui.splits.components.ShadowedLabelUI;
@@ -48,6 +49,7 @@ public class ApplicationLAF {
   private static final String PROJECT_ITEM_VIEW_LAYOUT = org() + "designup.picsou.gui.projects.utils.ProjectItemViewLayout";
   private static final String BUDGET_AREA_SERIES_LAYOUT = org() + "designup.picsou.gui.budget.components.BudgetAreaSeriesLayout";
   private static final String BUDGET_AREA_HEADER_LAYOUT = org() + "designup.picsou.gui.budget.utils.BudgetAreaHeaderLayout";
+  private static final String SIGNPOST_SECTION_LAYOUT = org() + "designup.picsou.gui.signpost.utils.SignpostSectionLayout";
   private static final String HEADER_PANEL_LAYOUT = org() + "designup.picsou.gui.utils.HeaderPanelLayout";
   private static final String ADD_ON_PANEL_LAYOUT = org() + "designup.picsou.gui.addons.utils.AddOnPanelLayout";
   private static final String ANALYSIS_SELECTOR_LAYOUT = org() + "designup.picsou.gui.analysis.utils.AnalysisSelectorLayout";
@@ -93,6 +95,7 @@ public class ApplicationLAF {
     layoutService.registerClass(ACCOUNT_BLOCK_LAYOUT, AccountBlockLayout.class);
     layoutService.registerClass(BUDGET_AREA_SERIES_LAYOUT, BudgetAreaSeriesLayout.class);
     layoutService.registerClass(BUDGET_AREA_HEADER_LAYOUT, BudgetAreaHeaderLayout.class);
+    layoutService.registerClass(SIGNPOST_SECTION_LAYOUT, SignpostSectionLayout.class);
     layoutService.registerClass(PROJECT_ITEM_VIEW_LAYOUT, ProjectItemViewLayout.class);
     layoutService.registerClass(HEADER_PANEL_LAYOUT, HeaderPanelLayout.class);
     layoutService.registerClass(ADD_ON_PANEL_LAYOUT, AddOnPanelLayout.class);

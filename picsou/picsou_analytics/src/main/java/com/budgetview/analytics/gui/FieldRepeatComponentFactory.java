@@ -1,12 +1,13 @@
 package com.budgetview.analytics.gui;
 
 import com.budgetview.analytics.AnalyticsApp;
-import org.designup.picsou.gui.components.charts.histo.HistoChart;
 import com.budgetview.shared.gui.histochart.HistoChartConfig;
+import org.designup.picsou.gui.components.charts.histo.HistoChart;
 import org.designup.picsou.gui.components.charts.histo.HistoChartColors;
 import org.designup.picsou.gui.components.charts.histo.line.HistoBarPainter;
 import org.designup.picsou.gui.components.charts.histo.line.HistoLineColors;
 import org.designup.picsou.gui.components.charts.histo.line.HistoLineDataset;
+import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobSelection;
 import org.globsframework.gui.GlobSelectionListener;
 import org.globsframework.gui.SelectionService;
@@ -54,8 +55,18 @@ public class FieldRepeatComponentFactory implements RepeatComponentFactory<Field
   }
 
   public void registerComponents(PanelBuilder cellBuilder, Field field) {
-    cellBuilder.add("chartTitle", new JLabel(field.getName()));
+    cellBuilder.add("chartTitle", new JLabel(getDescription(field)));
     cellBuilder.add("chart", createPerfChart(field));
+  }
+
+  public String getDescription(Field field) {
+    String key = field.getGlobType().getName() + "." + field.getName();
+    String result = Lang.find(key);
+    if (result == null) {
+      System.out.println(key);
+      return field.getName();
+    }
+    return result;
   }
 
   private HistoChart createPerfChart(final Field field) {
@@ -105,10 +116,10 @@ public class FieldRepeatComponentFactory implements RepeatComponentFactory<Field
       return 0.00;
     }
     if (field instanceof DoubleField) {
-      return (Double)value;
+      return (Double) value;
     }
     else if (field instanceof IntegerField) {
-      return ((Integer)value).doubleValue();
+      return ((Integer) value).doubleValue();
     }
     throw new InvalidParameter("Unexpected field type: " + field.getFullName());
   }

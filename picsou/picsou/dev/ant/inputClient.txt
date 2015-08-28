@@ -19,6 +19,7 @@ C org.designup.picsou.gui.utils.HeaderPanelLayout
 C org.designup.picsou.gui.addons.utils.AddOnPanelLayout
 C org.designup.picsou.gui.analysis.utils.AnalysisSelectorLayout
 C org.designup.picsou.gui.projects.utils.ProjectItemViewLayout
+C org.designup.picsou.gui.signpost.utils.SignpostSectionLayout
 C org.apache.commons.logging.impl.LogFactoryImpl
 C org.apache.commons.logging.impl.SimpleLog
 C org.apache.commons.httpclient.auth.CredentialsNotAvailableException
