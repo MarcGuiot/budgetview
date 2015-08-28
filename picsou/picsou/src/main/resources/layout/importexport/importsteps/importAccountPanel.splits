@@ -32,14 +32,11 @@
       </column>
     </column>
 
-    <row>
+    <row styleClass="dialogButtons">
       <filler fill="horizontal"/>
-      <row>
-        <filler fill="horizontal"/>
-        <button name="ignore" action="ignore" margin="10" marginRight="0" fill="horizontal"/>
-        <button name="import" action="import" margin="10" fill="horizontal"/>
-        <button name="close" action="close" margin="10" marginRight="0" fill="horizontal"/>
-      </row>
+      <button name="ignore" action="ignore"/>
+      <button name="import" action="import"/>
+      <button name="close" action="close"/>
     </row>
   </column>
 </splits>

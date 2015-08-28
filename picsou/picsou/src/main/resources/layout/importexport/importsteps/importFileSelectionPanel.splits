@@ -45,7 +45,10 @@
       </column>
     </panel>
 
-    <button name="close" action="close" margin="10" marginRight="0" fill="none" anchor="right"/>
+    <row styleClass="dialogButtons">
+      <filler fill="horizontal"/>
+      <button name="close" action="close"/>
+    </row>
 
   </column>
 

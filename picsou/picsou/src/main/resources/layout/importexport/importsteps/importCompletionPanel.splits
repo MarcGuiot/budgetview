@@ -65,10 +65,10 @@
       </column>
     </column>
 
-    <row>
+    <row styleClass="dialogButtons">
       <filler fill="horizontal"/>
-      <button action="ok" margin="10" fill="horizontal"/>
-      <button action="close" margin="10" marginRight="0" fill="horizontal"/>
+      <button action="close"/>
+      <button action="ok"/>
     </row>
   </column>
 

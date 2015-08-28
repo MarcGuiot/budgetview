@@ -61,10 +61,10 @@
       </column>
     </column>
 
-    <row>
+    <row styleClass="dialogButtons">
       <filler fill="horizontal"/>
-      <button action="finish" margin="10" fill="horizontal"/>
-      <button action="skipFile" margin="10" marginRight="0" fill="horizontal"/>
+      <button action="skipFile"/>
+      <button action="finish" />
     </row>
 
   </column>

@@ -10,6 +10,7 @@
     <style selector="button.synchronize" marginTop="10" fill="none" anchor="center"/>
     <style selector="button.rightButton" fill="none" anchor="right" weightX="0.1"/>
     <style selector="label.nextArrow" border="empty(0,5,0,0)" icon="rightArrow(18,18,12,12,#999999)"/>
+    <style selector="button.backButton" marginLeft="10" marginTop="5" fill="none" anchor="left"/>
   </styles>
 
   <column>

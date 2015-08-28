@@ -14,7 +14,7 @@
            ui="hyperlinkButtonWithoutUnderline" weightX="0.1" foreground="hyperlink"/>
   </styles>
 
-  <column styleClass="dialog" preferredSize="(600, 300)">
+  <column styleClass="dialog" preferredSize="(600, 500)">
     <label text="$notifications.title" name="title" styleClass="title"/>
     <panel styleClass="innerDialog">
       <column styleClass="innerDialogContent">

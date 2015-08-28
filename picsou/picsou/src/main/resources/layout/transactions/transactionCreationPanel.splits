@@ -5,7 +5,7 @@
     <style selector="label.formLabel" foreground="transactionCreation.label" marginRight="5"/>
     <style selector="checkBox.formElement" foreground="transactionCreation.label" />
     <style selector="radioButton" foreground="transactionCreation.label" opaque="false" font="-,plain,10"/>
-    <style selector=".monthEditor" foreground="transactionCreation.monthButton"/>
+    <style selector=".hyperlink" foreground="transactionCreation.monthButton"/>
   </styles>
 
   <column styleClass="transactionCreation">
@@ -19,7 +19,7 @@
     <row marginLeft="10" marginRight="10" defaultMarginTop="5">
       <label text="$transactionCreation.day" styleClass="formLabel"/>
       <textField ref="day" columns="3" marginRight="5" weightX="0.01" fill="none"/>
-      <button ref="month" styleClass="monthEditor" weightX="0.01"/>
+      <button ref="month" styleClass="hyperlink" weightX="0.01"/>
       <label text="$transactionCreation.label" styleClass="formLabel"/>
       <textField ref="label" weightX="10"/>
     </row>

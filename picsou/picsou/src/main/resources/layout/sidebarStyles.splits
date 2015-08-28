@@ -16,7 +16,7 @@
         underline="false" rolloverColor="sidebar.dropdown.rollover"/>
     <style selector=".dropdown" ui="dropdownButtonUI"
            foreground="sidebar.dropdown"
-           anchor="left" weightX="100"
+           anchor="left" fill="none" weightX="1"
            font="LatoRegular,plain,14" cursor="hand"
            icon="downArrow(10,18,8,8,sidebar.dropdown.arrow)"
            rolloverIcon="downArrow(10,18,8,8,sidebar.dropdown.arrow.rollover)"

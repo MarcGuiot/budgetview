@@ -49,9 +49,9 @@
       </column>
     </column>
 
-    <row weightY="1">
+    <row weightY="1" styleClass="dialogButtons">
       <filler fill="horizontal"/>
-      <button action="close" margin="10" fill="none"/>
+      <button action="close"/>
     </row>
 
   </column>

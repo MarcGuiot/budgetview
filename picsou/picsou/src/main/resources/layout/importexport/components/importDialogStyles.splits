@@ -2,6 +2,10 @@
   <styles>
     <style selector="label.sectionTitle" font="-,bold,14" marginBottom="10" iconTextGap="5"
            fill="horizontal" anchor="left" opaque="false" weightY="0.1"/>
+
     <style selector="scrollPane" marginBottom="10"/>
+
+    <style selector="row.dialogButtons button" margin="10" fill="horizontal"/>
+
   </styles>
 </splits>
