@@ -4,16 +4,13 @@
   <styleImport file="/layout/dialogStyles.splits"/>
 
   <styles>
-    <style selector="label#title"
-           foreground="help.title" font="-,bold,24" icon="help_logo.png"
-           fill="horizontal" horizontalAlignment="center" weightY="0" marginBottom="5"/>
     <style selector="htmlEditorPane.bottomMessage"
            opaque="false" foreground="block.text" marginTop="10" marginBottom="10"/>
   </styles>
 
   <column styleClass="dialog" preferredSize="(600,600)">
 
-    <label ref="title"/>
+    <label ref="title" styleClass="title"/>
 
     <panel styleClass="innerDialog">
       <column styleClass="innerDialogContent">
@@ -34,7 +31,7 @@
         </column>
 
         <htmlEditorPane text="$helpDialog.message.bottom" name="bottomMessage"
-                        hyperlinkListener="hyperlinkHandler" marginTop="5" marginBottom="5"/>
+                        hyperlinkListener="hyperlinkHandler" marginTop="10"/>
 
       </column>
     </panel>

@@ -4,7 +4,7 @@
 
     <style selector=".dialog" opaque="true" background="dialog.bg"/>
 
-    <style selector=".innerDialog" marginBottom="10"
+    <style selector=".innerDialog" marginBottom="10" weightY="100"
            opaque="true" background="dialog.content.bg" border="matte(1,0,1,0,dialog.content.border)"/>
 
     <style selector=".innerDialogContent" opaque="false" margin="15"/>
@@ -19,9 +19,9 @@
     <style selector=".dialog htmlEditorPane" foreground="dialog.text" opaque="false"/>
     <style selector=".dialog checkBox" foreground="dialog.text" opaque="false"/>
 
-    <style selector=".dialog .title"
+    <style selector=".dialog label.title"
            font="LatoRegular,plain,26" foreground="dialog.title"
-           fill="none" anchor="center" marginTop="15" marginBottom="15"/>
+           fill="none" anchor="center" marginTop="15" marginBottom="15" weightY="0.1"/>
 
     <ui name="scrollPaneUI"
         class="org.designup.picsou.gui.components.ui.FlatScrollbarUI"
