@@ -29,7 +29,7 @@ public class SiteWeaver {
 
     server.setHandler(new PageHandler(new File(args[0]), getFileAccess(args)));
     server.start();
-    System.out.println("Listening on " + "htpp://localhost:" + connector.getPort() + "  --  " + "http://" + getHostAddress() + ":" + connector.getPort() + "\n");
+    System.out.println("Listening on " + "http://localhost:" + connector.getPort() + "  --  " + "http://" + getHostAddress() + ":" + connector.getPort() + "\n");
     if (args.length > 1) {
       System.out.println("Available commands:\n" +
                          "  /!dump\n" +
