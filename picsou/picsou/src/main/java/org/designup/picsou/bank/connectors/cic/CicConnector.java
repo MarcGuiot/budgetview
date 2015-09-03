@@ -161,7 +161,8 @@ public class CicConnector extends WebBankConnector {
   }
 
   private boolean isLoggedIn(WebPage loggedInPage) {
-    return loggedInPage.containsAnchorWithHRef("/cic/fr/identification/deconnexion/deconnexion.cgi");
+    return loggedInPage.containsAnchorWithHRef("/cic/fr/identification/deconnexion/deconnexion.cgi") ||
+           loggedInPage.containsAnchorWithHRef("/est/fr/identification/deconnexion/deconnexion.cgi");
   }
 
   public void downloadFile() throws Exception {
