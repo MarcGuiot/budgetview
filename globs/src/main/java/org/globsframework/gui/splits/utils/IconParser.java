@@ -55,6 +55,14 @@ public class IconParser {
                                                        "[ ]*([A-z\\.#0-9]+)[ ]*" +
                                                        "\\)");
 
+  private static Pattern PLUS_FORMAT = Pattern.compile("plus\\(" +
+                                                       "[ ]*([0-9]+)[ ]*," +
+                                                       "[ ]*([0-9]+)[ ]*," +
+                                                       "[ ]*([0-9]+)[ ]*," +
+                                                       "[ ]*([0-9]+)[ ]*," +
+                                                       "[ ]*([A-z\\.#0-9]+)[ ]*" +
+                                                       "\\)");
+
   public static Icon parse(String text, ColorService colorService, ImageLocator imageLocator, SplitsContext context) {
     if (Strings.isNullOrEmpty(text)) {
       return null;
@@ -88,6 +96,11 @@ public class IconParser {
     OvalIcon oval = parseOval(text, colorService, context);
     if (oval != null) {
       return oval;
+    }
+
+    PlusIcon plus = parsePlus(text, colorService, context);
+    if (plus != null) {
+      return plus;
     }
 
     return imageLocator.get(text);
@@ -254,44 +267,77 @@ public class IconParser {
 
   private static OvalIcon parseOval(String text, ColorService colorService, SplitsContext context) {
     Matcher matcher = OVAL_FORMAT.matcher(text.trim());
-    if (matcher.matches()) {
-      int iconWidth = Integer.parseInt(matcher.group(1));
-      int iconHeight = Integer.parseInt(matcher.group(2));
-
-      final OvalIcon icon = new OvalIcon(iconWidth, iconHeight);
-
-      String background = matcher.group(3);
-      if (Colors.isHexaString(background)) {
-        Color color = Colors.toColor(background);
-        icon.setBackgroundColor(color);
-      }
-      else {
-        ColorUpdater updater = new ColorUpdater(background) {
-          public void updateColor(Color color) {
-            icon.setBackgroundColor(color);
-          }
-        };
-        updater.install(colorService);
-        context.addDisposable(updater);
-      }
-
-      String border = matcher.group(4);
-      if (Colors.isHexaString(border)) {
-        Color color = Colors.toColor(border);
-        icon.setBorderColor(color);
-      }
-      else {
-        ColorUpdater updater = new ColorUpdater(border) {
-          public void updateColor(Color color) {
-            icon.setBorderColor(color);
-          }
-        };
-        updater.install(colorService);
-        context.addDisposable(updater);
-      }
-
-      return icon;
+    if (!matcher.matches()) {
+      return null;
     }
-    return null;
+
+    int iconWidth = Integer.parseInt(matcher.group(1));
+    int iconHeight = Integer.parseInt(matcher.group(2));
+
+    final OvalIcon icon = new OvalIcon(iconWidth, iconHeight);
+
+    String background = matcher.group(3);
+    if (Colors.isHexaString(background)) {
+      Color color = Colors.toColor(background);
+      icon.setBackgroundColor(color);
+    }
+    else {
+      ColorUpdater updater = new ColorUpdater(background) {
+        public void updateColor(Color color) {
+          icon.setBackgroundColor(color);
+        }
+      };
+      updater.install(colorService);
+      context.addDisposable(updater);
+    }
+
+    String border = matcher.group(4);
+    if (Colors.isHexaString(border)) {
+      Color color = Colors.toColor(border);
+      icon.setBorderColor(color);
+    }
+    else {
+      ColorUpdater updater = new ColorUpdater(border) {
+        public void updateColor(Color color) {
+          icon.setBorderColor(color);
+        }
+      };
+      updater.install(colorService);
+      context.addDisposable(updater);
+    }
+
+    return icon;
   }
+
+  private static PlusIcon parsePlus(String text, ColorService colorService, SplitsContext context) {
+    Matcher matcher = PLUS_FORMAT.matcher(text.trim());
+    if (!matcher.matches()) {
+      return null;
+    }
+
+    int iconWidth = Integer.parseInt(matcher.group(1));
+    int iconHeight = Integer.parseInt(matcher.group(2));
+    int horizontalWidth = Integer.parseInt(matcher.group(3));
+    int verticalWidth = Integer.parseInt(matcher.group(4));
+
+    final PlusIcon icon = new PlusIcon(iconWidth, iconHeight, horizontalWidth, verticalWidth);
+
+    String background = matcher.group(5);
+    if (Colors.isHexaString(background)) {
+      Color color = Colors.toColor(background);
+      icon.setColor(color);
+    }
+    else {
+      ColorUpdater updater = new ColorUpdater(background) {
+        public void updateColor(Color color) {
+          icon.setColor(color);
+        }
+      };
+      updater.install(colorService);
+      context.addDisposable(updater);
+    }
+
+    return icon;
+  }
+
 }

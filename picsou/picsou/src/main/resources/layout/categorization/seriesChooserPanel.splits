@@ -16,12 +16,19 @@
            icon="button_hide.png" rolloverIcon="button_hide_rollover.png"
            border="" margin="5" marginLeft="0" weightX="0" fill="none" anchor="center"/>
 
+    <style selector="#createSeries" ui="hyperlinkButtonWithoutUnderline" foreground="categorization.footerButton"/>
+
     <style selector="footer button" ui="hyperlinkButtonWithoutUnderline" foreground="categorization.footerButton"
            marginTop="5"/>
 
     <style selector="htmlEditorPane.hints" weightY="0.1" border="empty(0,10,10,10)" font="-,plain,12"/>
 
-    <style selector="#groupLabel" foreground="toggle.selector.group"/>
+    <style selector="button.add" font="-,plain,12" border=""
+           ui="hyperlinkButtonWithoutUnderline"
+           foreground="toggle.selector.series.add"
+           icon="plus(9,9,2,2,toggle.selector.series.add)"
+           rolloverIcon="plus(9,9,2,2,hyperlink.rollover)"
+           fill="none" anchor="left" marginTop="5" marginLeft="10"/>
 
   </styles>
 
@@ -38,6 +45,8 @@
         <row border="empty(10,0,0,0)">
           <column>
             <panel ref="rootSeriesPanel" weightY="0.1"/>
+            <button action="createSeries" name="createSeriesInline"
+                    text="$categorization.series.add.short" styleClass="add"/>
             <filler fill="vertical"/>
           </column>
           <column>
