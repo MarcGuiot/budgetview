@@ -139,6 +139,11 @@ public class CicConnector extends WebBankConnector {
             }
 
             WebPage downloadPage = browser.load(DOWNLOAD_PAGE_ADDRESS);
+            if (!downloadPage.containsTagWithId("form", "P:F")) {
+              browser.setJavascriptEnabled(true);
+              downloadPage = browser.load(DOWNLOAD_PAGE_ADDRESS);
+            }
+
             WebForm downloadForm = downloadPage.getFormById("P:F");
             WebTable accountTable = downloadForm.getTableById("account-table");
             WebTableColumn column = accountTable.getColumn(1);
