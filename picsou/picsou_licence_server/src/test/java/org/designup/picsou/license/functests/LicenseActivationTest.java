@@ -103,6 +103,7 @@ public class LicenseActivationTest extends ConnectedTestCase {
     login.logExistingUser("user", "passw@rd");
 
     Glob license = db.getLicense(email, License.ACCESS_COUNT, 3L);
+    assertEquals(PicsouApplication.JAR_VERSION, license.get(License.JAR_VERSION));
     assertEquals(3L, license.get(License.ACCESS_COUNT).longValue());
     checkValidLicense();
   }
@@ -260,6 +261,12 @@ public class LicenseActivationTest extends ConnectedTestCase {
 
   public void testStartRegistrationAndStopServer() throws Exception {
     login.logNewUser("user", "passw@rd");
+
+    SqlConnection connection = db.getConnection();
+    Glob glob = connection.getQueryBuilder(RepoInfo.TYPE)
+      .selectAll()
+      .getQuery().executeUnique();
+    assertEquals(PicsouApplication.JAR_VERSION, glob.get(RepoInfo.JAR_VERSION));
 
     LicenseActivationChecker license =
       LicenseActivationChecker.open(window)

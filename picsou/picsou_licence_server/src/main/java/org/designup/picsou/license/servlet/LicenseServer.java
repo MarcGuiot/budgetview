@@ -61,16 +61,6 @@ public class LicenseServer {
     jetty = new Server();
   }
 
-  public void getParams() throws IOException {
-    BufferedReader input = new BufferedReader(new InputStreamReader(System.in));
-    System.out.print("database :");
-    databaseUrl = input.readLine();
-    System.out.print("user :");
-    databaseUser = input.readLine();
-    System.out.print("password :");
-    databasePassword = input.readLine();
-  }
-
   public void usePort(Integer sslPort, Integer port) {
     this.sslPort = sslPort;
     this.port = port;
@@ -85,12 +75,27 @@ public class LicenseServer {
         server.onlyMobile();
       }
     }
+    server.readParam(args);
     if (!server.onlyMobile){
       server.usePort(443, null);
     }
-    server.getParams();
     server.init();
     server.start();
+  }
+
+  private void readParam(String[] args) {
+    for (int i = 0; i < args.length; i++) {
+      String arg = args[i];
+      if (arg.equals("-url")) {
+        databaseUrl = args[i + 1];
+      }
+      else if (arg.equals("-user")){
+        databaseUser = args[i + 1];
+      }
+      else if (arg.equals("-pass")){
+        databasePassword = args[i + 1];
+      }
+    }
   }
 
   private void onlyMobile() {
