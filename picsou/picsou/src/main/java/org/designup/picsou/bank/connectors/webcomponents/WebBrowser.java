@@ -41,6 +41,9 @@ public class WebBrowser {
 
   public void setJavascriptEnabled(boolean enabled) {
     this.javascriptEnabled = enabled;
+    if (webClient != null) {
+      webClient.getOptions().setJavaScriptEnabled(javascriptEnabled);
+    }
   }
 
   public void setCssEnabled(boolean cssEnabled) {

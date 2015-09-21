@@ -3,7 +3,7 @@
   <styleImport file="/layout/commonStyles.splits"/>
   <styleImport file="/layout/dialogStyles.splits"/>
 
-  <column styleClass="dialog" preferredSize="(450,140)">
+  <column styleClass="dialog" preferredSize="(420,200)">
 
     <label ref="title" styleClass="title"/>
 
@@ -14,8 +14,8 @@
           <textField gridPos="(1,0)" ref="nameField"/>
           <label ref="nameFlag" gridPos="(2,0)" styleClass="mandatoryFieldFlag"/>
 
-          <label gridPos="(0,1)" text="$bank.edition.url" styleClass="formLabel"/>
-          <textField gridPos="(1,1)" ref="urlField"/>
+          <label gridPos="(0,1)" text="$bank.edition.url" styleClass="formLabel" marginTop="10"/>
+          <textField gridPos="(1,1)" ref="urlField" marginTop="10"/>
         </grid>
 
         <filler fill="vertical"/>

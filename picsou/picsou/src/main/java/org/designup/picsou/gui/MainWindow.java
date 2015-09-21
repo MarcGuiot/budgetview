@@ -118,13 +118,17 @@ public class MainWindow implements WindowManager {
       }
       registered = configService.update(info.getRepoId(), info.getCount(), info.getMail(),
                                         info.getSignature(), info.getActivationCode(), serverAccess, dataInMemory);
-      long downloadVersion = info.getDownloadVersion();
-      if (downloadVersion != -1) {
-        if (downloadVersion < PicsouApplication.JAR_VERSION && downloadVersion > 57L) {
-          badJarVersion = true;
-          registered = false;
-        }
-      }
+
+// -- Mécanique pour éviter qu'un utilisateur pirate le système en restant toujours offline et en faisant des
+// -- mises à jour manuelles - désactivé pour éviter les faux positifs
+//      long downloadVersion = info.getDownloadVersion();
+//      if (downloadVersion != -1) {
+//        if (downloadVersion < PicsouApplication.JAR_VERSION && downloadVersion > 57L) {
+//          badJarVersion = true;
+//          registered = false;
+//        }
+//      }
+
       if (info.getJarVersion() > PicsouApplication.JAR_VERSION) {
         showDownloadJar(directory, configService);
         throw new RuntimeException("End bad jar version");

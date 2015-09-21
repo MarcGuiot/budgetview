@@ -14,7 +14,11 @@ EN:
   cp ./dev/dmg/budgetview_template-en.dmg ~/Desktop/budgetview_template.dmg
   open ~/Desktop/budgetview_template.dmg
 
-4. Executer : 
+4. Mettre à jouvr les versions dans Info.plist :
+
+  vi /Volumes/BudgetView/BudgetView.app/Contents/Info.plist
+
+5. Executer : 
 
 FR:
   codesign -f -s "BudgetView" -i "com.budgetview.codesign" ./BudgetView-fr/BudgetView.app
@@ -31,25 +35,25 @@ EN:
   rm -r /Volumes/BudgetView/BudgetView.app
   cp -r ./BudgetView-en/BudgetView.app /Volumes/BudgetView/
   
-5. Dans le Desktop, double-cliquer sur budgetview_template.dmg et vérifier la disposition de la fenêtre.
+6. Dans le Desktop, double-cliquer sur budgetview_template.dmg et vérifier la disposition de la fenêtre.
 
-6. Fermer le dmg budgetview ouvert.
+7. Fermer le dmg budgetview ouvert.
 
-7. Dans le Desktop, ouvrir budgetview_template.dmg avec Disk Utility, et lancer "Convert" avec comme nom de fichier le nom cible (par exemple BudgetView-2.0-fr.dmg)
+8. Dans le Desktop, ouvrir budgetview_template.dmg avec Disk Utility, et lancer "Convert" avec comme nom de fichier le nom cible (par exemple BudgetView-2.0-fr.dmg)
   
-8. Executer : 
+9. Executer : 
 
   rm ~/Desktop/budgetview_template.dmg
 
 
-9. Dans le Desktop, double-cliquer le nouveau dmg pour l'ouvrir
+10. Dans le Desktop, double-cliquer le nouveau dmg pour l'ouvrir
 
-10. Drag&Drop de BudgetView dans /Applications
+11. Drag&Drop de BudgetView dans /Applications
 
-11. Lancer BudgetView dans /Applications, et vérifier :
+12. Lancer BudgetView dans /Applications, et vérifier :
    * la version dans la fenêtre About.
    * toutes les fenêtres s'affichent
 
-12. Uploader en FTP sur le site.
+13. Uploader en FTP sur le site.
 
-13. Mettre à jour les liens sur le site.
+14. Mettre à jour les liens sur le site.

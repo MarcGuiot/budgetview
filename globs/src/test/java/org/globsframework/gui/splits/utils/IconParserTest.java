@@ -35,14 +35,14 @@ public class IconParserTest extends TestCase {
   }
 
   public void testCircledArrowWithFixedColor() throws Exception {
-    CircledArrowIcon icon = (CircledArrowIcon)parse("circledArrow(#FF0000)");
+    CircledArrowIcon icon = (CircledArrowIcon) parse("circledArrow(#FF0000)");
     assertEquals(Color.RED, icon.getColor());
   }
 
   public void testCircledArrowWithNamedColor() throws Exception {
     colorService.set("my.color", Color.BLUE);
 
-    CircledArrowIcon icon = (CircledArrowIcon)parse("circledArrow(my.color)");
+    CircledArrowIcon icon = (CircledArrowIcon) parse("circledArrow(my.color)");
     assertEquals(Color.BLUE, icon.getColor());
 
     colorService.set("my.color", Color.GREEN);
@@ -56,13 +56,13 @@ public class IconParserTest extends TestCase {
   }
 
   public void testEmptyIcon() throws Exception {
-    EmptyIcon icon = (EmptyIcon)parse("empty(12,15)");
+    EmptyIcon icon = (EmptyIcon) parse("empty(12,15)");
     assertEquals(12, icon.getIconWidth());
     assertEquals(15, icon.getIconHeight());
   }
 
   public void testRect() throws Exception {
-    RectIcon icon = (RectIcon)parse("rect(10,20,#FF0000,#00FF00)");
+    RectIcon icon = (RectIcon) parse("rect(10,20,#FF0000,#00FF00)");
     assertEquals(10, icon.getIconWidth());
     assertEquals(20, icon.getIconHeight());
     assertEquals(Color.RED, icon.getBackgroundColor());
@@ -70,7 +70,7 @@ public class IconParserTest extends TestCase {
   }
 
   public void testRoundedRect() throws Exception {
-    RoundedRectIcon icon = (RoundedRectIcon)parse("roundedRect(10,20,1,2,#FF0000,#00FF00)");
+    RoundedRectIcon icon = (RoundedRectIcon) parse("roundedRect(10,20,1,2,#FF0000,#00FF00)");
     assertEquals(10, icon.getIconWidth());
     assertEquals(20, icon.getIconHeight());
     assertEquals(1, icon.getArcX());
@@ -83,7 +83,7 @@ public class IconParserTest extends TestCase {
     colorService.set("rect.bg", Color.BLUE);
     colorService.set("rect.border", Color.WHITE);
 
-    RoundedRectIcon icon = (RoundedRectIcon)parse("roundedRect(15,25,5,10,rect.bg,rect.border)");
+    RoundedRectIcon icon = (RoundedRectIcon) parse("roundedRect(15,25,5,10,rect.bg,rect.border)");
     assertEquals(15, icon.getIconWidth());
     assertEquals(25, icon.getIconHeight());
     assertEquals(5, icon.getArcX());
@@ -98,7 +98,7 @@ public class IconParserTest extends TestCase {
   }
 
   public void testOval() throws Exception {
-    OvalIcon icon = (OvalIcon)parse("oval(10,20,#FF0000,#00FF00)");
+    OvalIcon icon = (OvalIcon) parse("oval(10,20,#FF0000,#00FF00)");
     assertEquals(10, icon.getIconWidth());
     assertEquals(20, icon.getIconHeight());
     assertEquals(Color.RED, icon.getBackgroundColor());
@@ -109,7 +109,7 @@ public class IconParserTest extends TestCase {
     colorService.set("rect.bg", Color.BLUE);
     colorService.set("rect.border", Color.WHITE);
 
-    OvalIcon icon = (OvalIcon)parse("oval(15,25,rect.bg,rect.border)");
+    OvalIcon icon = (OvalIcon) parse("oval(15,25,rect.bg,rect.border)");
     assertEquals(15, icon.getIconWidth());
     assertEquals(25, icon.getIconHeight());
     assertEquals(Color.BLUE, icon.getBackgroundColor());
@@ -120,10 +120,34 @@ public class IconParserTest extends TestCase {
     assertEquals(Color.PINK, icon.getBackgroundColor());
     assertEquals(Color.GREEN, icon.getBorderColor());
   }
-  
+
+  public void testPlus() throws Exception {
+    PlusIcon icon = (PlusIcon) parse("plus(10,20,1,2,#FF0000)");
+    assertEquals(10, icon.getIconWidth());
+    assertEquals(20, icon.getIconHeight());
+    assertEquals(1, icon.getHorizontalWidth());
+    assertEquals(2, icon.getVerticalWidth());
+    assertEquals(Color.RED, icon.getColor());
+  }
+
+  public void testPlusWithNamedColors() throws Exception {
+    colorService.set("rect.bg", Color.BLUE);
+
+    PlusIcon icon = (PlusIcon) parse("plus(15,25,5,10,rect.bg)");
+    assertEquals(15, icon.getIconWidth());
+    assertEquals(25, icon.getIconHeight());
+    assertEquals(5, icon.getHorizontalWidth());
+    assertEquals(10, icon.getVerticalWidth());
+    assertEquals(Color.BLUE, icon.getColor());
+
+    colorService.set("rect.bg", Color.PINK);
+    assertEquals(Color.PINK, icon.getColor());
+  }
+
+
   private ArrowIcon parseArrow(String text) {
     Icon icon = parse(text);
-    return (ArrowIcon)icon;
+    return (ArrowIcon) icon;
   }
 
   private Icon parse(String text) {
