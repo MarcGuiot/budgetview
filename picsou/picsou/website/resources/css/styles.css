@@ -51,7 +51,6 @@ a.highlighted {
   padding: 10px;
   border: solid 1px #DDD;
   background: #FFFFDD;
-
 }
 
 .warning-block p {
@@ -86,7 +85,27 @@ div.navbar-header img {
 }
 
 div.navbar-default {
-  background-color: #f0f0f0;
+  background-color: #ffffff;
+  border-color: #f0f0f0;
+}
+
+.navbar-default .navbar-nav li a {
+  font-weight: normal;
+  color: #999999;
+}
+
+.navbar-default .navbar-nav li.active a {
+  background-color: #ffffff;
+  font-weight: bold;
+  font-style: underline;
+}
+
+.navbar-default .navbar-nav>.active>a, .navbar-default .navbar-nav>.active>a:hover, .navbar-default .navbar-nav>.active>a:focus {
+  background-color: #ffffff;
+}
+
+.navbar-default .navbar-nav > li > a:hover, .navbar-default .navbar-nav > li > a:focus {
+  color: #428bca;
 }
 
 /* ========= Elements ========= */
@@ -119,7 +138,7 @@ div.container h3 {
   padding-left: 10xp;
   padding-right: 10xp;
   margin-top: 10px;
-  margin-bottom: 10px;
+  margin-bottom: 0px;
   margin-left: 0;
   margin-right: 0;
 }
@@ -230,9 +249,9 @@ div.container h3 {
 }
 
 #home #testimonials-block {
-  border: 1px solid #EEEEEE;
+  border: 1px solid #E0E0E0;
   background: #f0f0f0;
-  margin-top: 20px;
+  margin-top: 0px;
   margin-bottom: 15px;
 }
 
@@ -242,15 +261,27 @@ div.container h3 {
   margin-left: auto;
   margin-right: auto;
   margin-bottom: 20px;
-  text-align: center;
+  text-align: left;
 }
 
 #home #testimonials p {
   color: #222;
   font-size: 11pt;
   font-style: italic;
-  text-align: center;
+  text-align: left;
   margin-bottom: 5px;
+}
+
+#home #testimonials .testimonial {
+  padding-bottom: 0px;
+  border-bottom: solid 1px #d5d5d5;
+  margin-bottom: 10px;
+}
+
+#home #testimonials .first-testimonial {
+  padding-top: 10px;
+  border-top: solid 1px #d5d5d5;
+  margin-top: 30px;
 }
 
 #home #more-testimonials {
@@ -261,6 +292,10 @@ div.container h3 {
 #home #more-testimonials p {
   margin-top: 5px;
   margin-bottom: 10px;
+}
+
+#home #more-testimonials-toggle {
+  text-align: center;
 }
 
 #home div#presentation p,
@@ -292,7 +327,7 @@ div.container h3 {
 }
 a.showLink, a.hideLink {
   text-decoration: none;
-  color: #36f;
+  color: #428bca;
   padding-left: 8px;
   background: transparent url("/files/images/front/down.gif") no-repeat left;
 }
@@ -300,7 +335,7 @@ a.hideLink {
   background: transparent url("/files/images/front/up.gif") no-repeat left;
 }
 a.showLink:hover, a.hideLink:hover {
-  border-bottom: 1px dotted #36f;
+  border-bottom: 1px dotted #428bca;
 }
 
 /* ========== DOWNLOAD PAGE ========== */

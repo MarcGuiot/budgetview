@@ -4,6 +4,7 @@
   <page file="index.html" title="BudgetView" shortTitle="Home" template="templates/masterTemplate.html">
     <key name="innerTemplate" value="templates/homePageTemplate.html"/>
     <key name="title.hide" value="true"/>
+    <key name="title.override" value="Budget planner | BudgetView"/>
 
     <page file="download.html" title="Download BudgetView!" shortTitle="Download">
       <key name="innerTemplate" value="templates/standardPageTemplate.html"/>
@@ -26,7 +27,7 @@
       </page>
     </page>
 
-    <page file="support.html" title="Help &amp; Support" shortTitle="Support">
+    <page file="support.html" title="Help &amp; Support">
       <key name="innerTemplate" value="templates/supportPageTemplate.html"/>
 
       <page file="support/guides.html" title="First steps ">
@@ -49,6 +50,8 @@
                 title="Why does BudgetView connect to the internet?"/>
           <page file="support/faq/general/use_on_several_computers.html"
                 title="Can I use BudgetView on several computers?"/>
+          <page file="support/faq/general/installation_java_macosx_yosemite_el_capitan.html"
+                title="How to make BudgetView work on MacOS X Yosemite and El Capitan?"/>
           <page file="support/faq/general/money_replacement.html"
                 title="Can I use BudgetView as a replacement for Microsoft Money?"/>
           <page file="support/faq/general/transferring_data_between_computers.html"
