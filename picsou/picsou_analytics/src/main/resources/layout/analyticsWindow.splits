@@ -45,11 +45,20 @@
       </tab>
 
       <tab title="Users">
-        <column margin="15">
+        <verticalSplit>
+          <column>
           <scrollPane>
             <table ref="users"/>
           </scrollPane>
-        </column>
+            <row>
+              <filler fill="horizontal"/>
+              <label ref="selectionCount"/>
+            </row>
+          </column>
+          <scrollPane>
+            <table ref="userEntries"/>
+          </scrollPane>
+        </verticalSplit>
       </tab>
 
       <tab title="Onboarding">

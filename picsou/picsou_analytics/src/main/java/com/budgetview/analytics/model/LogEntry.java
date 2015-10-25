@@ -22,6 +22,7 @@ public class LogEntry {
   public static StringField REPO_ID;
   public static StringField EMAIL;
   public static StringField IP;
+  public static IntegerField JAR_VERSION;
 
   @Target(User.class)
   public static LinkField USER;

@@ -28,7 +28,7 @@ public class ActiveUsersCountFunctor implements GlobFunctor {
       Glob weekStat =
         repository.findOrCreate(org.globsframework.model.Key.create(WeekStats.TYPE, week));
 
-      int total = increment(weekStat, WeekStats.TOTAL_ACTIVE_USERS, true);
+      int total = increment(weekStat, WeekStats.TOTAL_ACTIVE_USERS, user.isTrue(User.ACTIVATED));
       int paid = increment(weekStat, WeekStats.TOTAL_PAID_ACTIVE_USERS, week > purchaseWeek);
 
       repository.update(weekStat,

@@ -14,6 +14,7 @@ public class Experiments {
   }
 
   public void register() {
+    add(201536, "4.02: Onboarding improvements");
     add(201519, "4.01: Minor fixes (incl. La Banque Postale)");
     add(201519, "Facebook ad");
     add(201516, "4.0: Freemium + UI revamping + 19€90");

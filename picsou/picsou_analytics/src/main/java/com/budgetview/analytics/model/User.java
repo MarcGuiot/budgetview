@@ -22,6 +22,8 @@ public class User {
   public static DateField FIRST_DATE;
   public static DateField LAST_DATE;
 
+  public static IntegerField JAR_VERSION;
+
   public static BooleanField PREVIOUS_USER;
 
   public static IntegerField PING_COUNT;
