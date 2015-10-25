@@ -20,6 +20,9 @@ public class AccountBlockLayout extends CustomLayout {
   private static final int CHART_HEIGHT = 80;
   private static final int CHART_PADDING = 4;
   private static final int CHART_LEFT_PADDING = 4;
+  private static final int POSITION_LEFT_MARGIN = 12;
+
+  private static final int WEATHER_ICON_WODTH = 52;
 
   public int getPreferredWidth() {
     return Integer.MAX_VALUE;
@@ -77,38 +80,39 @@ public class AccountBlockLayout extends CustomLayout {
     int secondRowHeight = accountUpdateDate.getPreferredSize().height;
     int textRowsHeight = firstRowHeight + VERTICAL_MARGIN + secondRowHeight;
 
-    int selectAccountTop = top + textRowsHeight / 2 - selectAccount.getPreferredSize().height / 2;
-    int selectAccountLeft = left + HORIZONTAL_MARGIN;
-    int selectAccountRight = selectAccountLeft + selectAccount.getPreferredSize().width;
-    layout(selectAccount, selectAccountLeft, selectAccountTop);
-
-    int toggleGraphTop = top + textRowsHeight / 2 - toggleGraph.getPreferredSize().height / 2;
-    int toggleGraphLeft = selectAccountRight + HORIZONTAL_MARGIN;
-    int toggleGraphRight = toggleGraphLeft + toggleGraph.getPreferredSize().width;
-    layout(toggleGraph, toggleGraphLeft, toggleGraphTop);
-
-    int accountWeatherTop = top + textRowsHeight / 2 - accountWeather.getPreferredSize().height / 2;
-    int accountWeatherLeft = right - accountWeather.getPreferredSize().width;
-    layout(accountWeather, accountWeatherLeft, accountWeatherTop);
-
-    int maxCenterWidth = accountWeatherLeft - toggleGraphRight;
-    int editAccountLeft =
-      Math.max(toggleGraphRight + maxCenterWidth / 2 - editAccount.getPreferredSize().width / 2, toggleGraphRight);
-    int editAccountTop = top + firstRowHeight / 2 - editAccount.getPreferredSize().height / 2;
-    int editAccountWidth = editAccount.getPreferredSize().width > maxCenterWidth ? maxCenterWidth : editAccount.getPreferredSize().width;
-    layout(editAccount, editAccountLeft, editAccountTop, editAccountWidth, editAccount.getPreferredSize().height);
-
     int accountInfoWidth = accountPosition.getPreferredSize().width + HORIZONTAL_MARGIN + accountUpdateDate.getPreferredSize().width;
 
     int positionTop = top + firstRowHeight + secondRowHeight - accountPosition.getPreferredSize().height;
-    int positionLeft = toggleGraphRight + maxCenterWidth / 2 - accountInfoWidth / 2;
+    int positionLeft = left + POSITION_LEFT_MARGIN;
+    int positionRight = positionLeft + accountPosition.getPreferredSize().width;
     layout(accountPosition, positionLeft, positionTop);
 
     int accountUpdateDateTop = top + firstRowHeight + secondRowHeight - accountUpdateDate.getPreferredSize().height;
-    int accountUpdateDateLeft = toggleGraphRight + maxCenterWidth / 2 + accountInfoWidth / 2 - accountUpdateDate.getPreferredSize().width;
+    int accountUpdateDateLeft = positionRight + HORIZONTAL_MARGIN;
     layout(accountUpdateDate,
            accountUpdateDateLeft, accountUpdateDateTop,
            accountUpdateDate.getPreferredSize().width, secondRowHeight);
+
+    int accountWeatherTop = top + textRowsHeight / 2 - accountWeather.getPreferredSize().height / 2;
+    int accountWeatherWidth = Math.max(WEATHER_ICON_WODTH, accountWeather.getPreferredSize().width);
+    int accountWeatherLeft = right - accountWeatherWidth;
+    layout(accountWeather, accountWeatherLeft, accountWeatherTop);
+
+    int toggleGraphTop = top + textRowsHeight / 2 - toggleGraph.getPreferredSize().height / 2;
+    int toggleGraphRight = accountWeatherLeft - HORIZONTAL_MARGIN;
+    int toggleGraphLeft = toggleGraphRight - toggleGraph.getPreferredSize().height;
+    layout(toggleGraph, toggleGraphLeft, toggleGraphTop);
+
+    int selectAccountTop = top + textRowsHeight / 2 - selectAccount.getPreferredSize().height / 2;
+    int selectAccountRight = toggleGraphLeft - HORIZONTAL_MARGIN;
+    int selectAccountLeft = selectAccountRight - selectAccount.getPreferredSize().width;
+    layout(selectAccount, selectAccountLeft, selectAccountTop);
+
+    int maxEditWidth = selectAccountLeft - 2 * HORIZONTAL_MARGIN - left;
+    int editAccountLeft = left + HORIZONTAL_MARGIN;
+    int editAccountTop = top + firstRowHeight / 2 - editAccount.getPreferredSize().height / 2;
+    int editAccountWidth = editAccount.getPreferredSize().width > maxEditWidth ? maxEditWidth : editAccount.getPreferredSize().width;
+    layout(editAccount, editAccountLeft, editAccountTop, editAccountWidth, editAccount.getPreferredSize().height);
 
     if (positionsChart.isVisible()) {
       int chartTop = accountUpdateDateTop + secondRowHeight + VERTICAL_MARGIN;

@@ -53,7 +53,7 @@ public class HistoLineColors implements Disposable {
 
   public void setLineStyle(Graphics2D g2, boolean positive, boolean future) {
     if (future) {
-      g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_ATOP, 0.35f));
+      g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_ATOP, 0.8f));
     }
     else {
       g2.setComposite(AlphaComposite.Src);
@@ -76,11 +76,8 @@ public class HistoLineColors implements Disposable {
     if (rollover) {
       return future ? 0.4f : 0.8f;
     }
-    if (selected) {
-      return future ? 0.3f : 0.7f;
-    }
     if (future) {
-      return 0.3f;
+      return 0.4f;
     }
     if (current) {
       return 0.9f;

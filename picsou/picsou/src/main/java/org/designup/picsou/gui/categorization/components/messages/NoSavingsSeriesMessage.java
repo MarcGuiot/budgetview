@@ -37,9 +37,9 @@ public class NoSavingsSeriesMessage extends NoSeriesMessage {
   }
 
   protected void processHyperlinkClick(String href) {
-    if ("createSavingsAccount".equals(href)) {
+    if ("createAccount".equals(href)) {
       AccountEditionDialog dialog = new AccountEditionDialog(repository, directory, true);
-      dialog.showWithNewAccount(AccountType.SAVINGS, false, AccountUpdateMode.MANUAL);
+      dialog.showWithNewAccount(AccountType.MAIN, false, AccountUpdateMode.MANUAL);
     }
   }
 

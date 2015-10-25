@@ -5,11 +5,7 @@ import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
 import org.designup.picsou.functests.utils.QifBuilder;
 import org.designup.picsou.model.BankEntity;
-import org.designup.picsou.model.Series;
 import org.designup.picsou.model.TransactionType;
-import org.globsframework.model.format.GlobPrinter;
-
-import static org.designup.picsou.gui.series.utils.SeriesMatchers.seriesForGlobalBudget;
 
 public class SavingsTest extends LoggedInFunctionalTestCase {
 
@@ -213,6 +209,32 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
       .checkGaugeTooltip("Travaux", "Il vous reste <b>400.00</b> à virer");
 
     uncategorized.checkNotShown();
+  }
+
+  public void testSavingsOperationsCanBeAssignedToAnyBudgetArea() throws Exception {
+
+    budgetView.income.createSeries().setName("Income").setAmount(2000.00).validate();
+    budgetView.income.createSeries().setName("Bonus").setAmount(500.00).validate();
+
+    budgetView.variable.createSeries().setName("Groceries").setAmount(400.00).validate();
+    budgetView.variable.createSeries().setName("Leisures").setAmount(200.00).validate();
+
+    OfxBuilder.init(this)
+      .addTransaction("2008/08/10", -100.00, "Auchan")
+      .load();
+
+    OfxBuilder.init(this)
+      .addBankAccount("000222", 1300.00, "2008/08/30")
+      .addTransaction("2008/08/10", 100.00, "Salary")
+      .addTransaction("2008/08/12", 100.00, "Fnac")
+      .addTransaction("2008/08/15", 100.00, "Transfer")
+      .load();
+    mainAccounts.setAsSavings("Account n. 000222", "Epargne LCL");
+
+    categorization.showUncategorizedTransactionsForSelectedMonths()
+      .selectTransaction("SALARY")
+      .selectIncome()
+      .checkSeriesListEquals("Income", "Bonus");
   }
 
   public void testCreateSavingsSeriesAndAssociateLaterToAccount() throws Exception {
@@ -660,40 +682,6 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
       .add("11/09/2008", "Planned: CAF", 100.00, "CAF", 1100.00, 1100.00, "Account n. 111")
       .add("10/08/2008", "CAF", 100.00, "CAF", 1000.00, 1000.00, "Account n. 111")
       .check();
-  }
-
-
-  public void testDisableBudgetAreaIfSavingTransaction() throws Exception {
-    OfxBuilder.init(this)
-      .addTransaction("2008/08/10", -100.00, "Prelevement")
-      .load();
-    OfxBuilder.init(this)
-      .addBankAccount(BankEntity.GENERIC_BANK_ENTITY_ID, 111, "111", 1000.00, "2008/08/10")  //compte d'épargne
-      .addTransaction("2008/08/10", 100.00, "Virement")
-      .load();
-    operations.openPreferences().setFutureMonthsCount(2).validate();
-
-    mainAccounts.edit("Account n. 111")
-      .setAsSavings()
-      .validate();
-    categorization.showSelectedMonthsOnly();
-    timeline.selectMonth("2008/08");
-
-    categorization.selectTransaction("Virement");
-    categorization.checkAllButTransferBudgetAreaAreDisabled();
-
-    categorization.selectTransaction("Prelevement");
-    categorization.checkAllBudgetAreasAreEnabled();
-
-    categorization.setNewTransfer("Virement", "Virt Epargne", "Account n. 00001123", "Account n. 111");
-    categorization.setNewVariable("Prelevement", "economie du mois");
-
-    categorization.selectTransactions("Prelevement", "Virement")
-      .checkAllButTransferBudgetAreaAreDisabled()
-      .checkMultipleSeriesSelection()
-      .setUncategorized()
-      .selectTransaction("Prelevement")
-      .checkTransfersPreSelected();
   }
 
   public void testSimpleCase() throws Exception {

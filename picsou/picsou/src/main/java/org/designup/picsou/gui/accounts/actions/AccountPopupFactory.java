@@ -79,10 +79,6 @@ public class AccountPopupFactory implements PopupMenuFactory, Disposable {
   public JPopupMenu createPopup() {
     JPopupMenu menu = new JPopupMenu();
 
-    if (showSelectionToggle) {
-      menu.add(selectionAction);
-      menu.addSeparator();
-    }
     menu.add(new AbstractAction(Lang.get("accountView.edit")) {
       public void actionPerformed(ActionEvent e) {
         AccountEditionDialog dialog = new AccountEditionDialog(repository, directory, false);
@@ -95,13 +91,17 @@ public class AccountPopupFactory implements PopupMenuFactory, Disposable {
       }
     });
     menu.addSeparator();
-    menu.add(gotoWebsiteAction);
-    menu.addSeparator();
+    if (showSelectionToggle) {
+      menu.add(selectionAction);
+      menu.addSeparator();
+    }
     menu.add(moveUpAction);
     menu.add(moveDownAction);
     if (showGraphToggle) {
       menu.add(toggleShowGraph);
     }
+    menu.addSeparator();
+    menu.add(gotoWebsiteAction);
     menu.addSeparator();
     menu.add(new DeleteAccountAction(account, repository, directory));
     return menu;

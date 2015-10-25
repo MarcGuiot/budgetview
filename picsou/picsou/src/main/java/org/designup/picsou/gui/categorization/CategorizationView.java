@@ -2,10 +2,16 @@ package org.designup.picsou.gui.categorization;
 
 import org.designup.picsou.gui.View;
 import org.designup.picsou.gui.accounts.actions.CreateAccountAction;
-import org.designup.picsou.gui.categorization.components.*;
+import org.designup.picsou.gui.categorization.components.CategorizationTableView;
+import org.designup.picsou.gui.categorization.components.DescriptionPanelHandler;
+import org.designup.picsou.gui.categorization.components.SeriesChooserComponentFactory;
+import org.designup.picsou.gui.categorization.components.SeriesRepeatPanel;
 import org.designup.picsou.gui.categorization.components.messages.DynamicMessage;
 import org.designup.picsou.gui.categorization.components.messages.NoSeriesMessageFactory;
-import org.designup.picsou.gui.categorization.special.*;
+import org.designup.picsou.gui.categorization.special.DeferredCardCategorizationPanel;
+import org.designup.picsou.gui.categorization.special.HtmlCategorizationPanel;
+import org.designup.picsou.gui.categorization.special.ShowHidePanelController;
+import org.designup.picsou.gui.categorization.special.SpecialCategorizationPanel;
 import org.designup.picsou.gui.categorization.utils.FilteredRepeats;
 import org.designup.picsou.gui.categorization.utils.SeriesCreationHandler;
 import org.designup.picsou.gui.description.SeriesAndGroupsComparator;
@@ -28,7 +34,6 @@ import org.globsframework.gui.splits.utils.GuiUtils;
 import org.globsframework.gui.views.GlobLabelView;
 import org.globsframework.model.*;
 import org.globsframework.model.format.GlobListStringifier;
-import org.globsframework.model.format.GlobPrinter;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -74,8 +79,8 @@ public class CategorizationView extends View {
 
     CategorizationTableView categorizationTableView = selectionView.getTableView();
     org.designup.picsou.gui.categorization.components.CategorizationSelector selector = new org.designup.picsou.gui.categorization.components.CategorizationSelector(categorizationTableView.getToReconcileMatcher(),
-                                                                 categorizationTableView.getColors(),
-                                                                 repository, directory);
+                                                                                                                                                                     categorizationTableView.getColors(),
+                                                                                                                                                                     repository, directory);
     selector.registerComponents(builder);
 
     addSeriesChooser("incomeSeriesChooser", BudgetArea.INCOME, builder);
@@ -118,9 +123,6 @@ public class CategorizationView extends View {
 
     DynamicMessage noSeriesMessage = NoSeriesMessageFactory.create(budgetArea, repository, directory);
     builder.add("noSeriesMessage", noSeriesMessage.getComponent());
-
-    DynamicMessage categorizationMessage = CategorizationMessageFactory.create(budgetArea, repository, directory);
-    builder.add("categorizationMessage", categorizationMessage.getComponent());
 
     DescriptionPanelHandler descriptionHandler = new DescriptionPanelHandler(repository);
     builder.add("descriptionPanel", descriptionHandler.getPanel());

@@ -223,18 +223,6 @@ public class CategorizationSelector implements GlobSelectionListener, ChangeSetL
       seriesCard.show("multipleAreas");
     }
 
-    GlobList accounts = getSelectedTransactionAccounts();
-    for (Glob account : accounts) {
-      if (AccountType.SAVINGS.getId().equals(account.get(Account.ACCOUNT_TYPE))) {
-        enableValidBudgetAreas(false);
-        if (areas.size() == 1) {
-          select(BudgetArea.TRANSFER, true);
-        }
-        return;
-      }
-    }
-    enableValidBudgetAreas(true);
-
     if (areas.size() != 1) {
       return;
     }
@@ -257,18 +245,6 @@ public class CategorizationSelector implements GlobSelectionListener, ChangeSetL
       }
       select(BudgetArea.UNCATEGORIZED, true);
     }
-  }
-
-  private void enableValidBudgetAreas(boolean enableAll) {
-    for (Map.Entry<BudgetArea, JToggleButton> entry : toggles.entrySet()) {
-      entry.getValue().setEnabled(enableAll
-                                  || entry.getKey() == BudgetArea.TRANSFER
-                                  || entry.getKey() == BudgetArea.UNCATEGORIZED);
-    }
-  }
-
-  private GlobList getSelectedTransactionAccounts() {
-    return GlobUtils.getUniqueTargets(selectedTransactions, Transaction.ACCOUNT, repository);
   }
 
   private SortedSet<Integer> getSelectedTransactionAreas() {

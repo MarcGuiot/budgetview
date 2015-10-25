@@ -145,7 +145,6 @@ public class TransferCategorizationTest extends LoggedInFunctionalTestCase {
     categorization.selectTransaction("SAVINGS 1.1");
 
     categorization.checkTransfersPreSelected()
-      .checkAllButTransferBudgetAreaAreDisabled()
       .getSavings()
       .checkMessage("This operation is part of a savings account. Edit this account.")
       .clickMessageToEditAccount("Edit this account.")

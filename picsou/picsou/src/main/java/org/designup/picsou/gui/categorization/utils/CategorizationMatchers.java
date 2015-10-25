@@ -11,26 +11,27 @@ import org.globsframework.utils.Utils;
 import java.util.Set;
 
 public class CategorizationMatchers {
+
+  public static CategorizationFilter seriesCategorizationFilter(final BudgetArea budgetArea) {
+    return new DefaultCategorizationFilter(budgetArea);
+  }
+
   public static CategorizationFilter deferredCardCategorizationFilter() {
-    DefaultCategorizationFilter filter = new DefaultCategorizationFilter(BudgetArea.OTHER.getId());
+    DefaultCategorizationFilter filter = new DefaultCategorizationFilter(BudgetArea.OTHER);
     filter.excludeCardAccounts = true;
     return filter;
   }
 
-  public static CategorizationFilter seriesCategorizationFilter(final Integer budgetAreaId) {
-    return new DefaultCategorizationFilter(budgetAreaId);
-  }
-
-  public static class DefaultCategorizationFilter implements CategorizationFilter {
+  private static class DefaultCategorizationFilter implements CategorizationFilter {
     private GlobList transactions = new GlobList();
     private MonthMatcher monthFilter;
     private boolean excludeCardAccounts = false;
 
-    public DefaultCategorizationFilter(final Integer budgetAreaId) {
-      monthFilter = SeriesMatchers.seriesActiveInPeriod(budgetAreaId, false, true, true);
+    public DefaultCategorizationFilter(final BudgetArea budgetArea) {
+      monthFilter = SeriesMatchers.seriesActiveInPeriod(budgetArea, false, true, true);
     }
 
-    public void filterDates(GlobList transactions) {
+    public void filterForTransactions(GlobList transactions) {
       Set<Integer> monthIds = transactions.getValueSet(Transaction.BUDGET_MONTH);
       this.monthFilter.filterMonths(monthIds);
       this.transactions = transactions;

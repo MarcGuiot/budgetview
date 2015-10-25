@@ -63,7 +63,7 @@
     <!-- Selection button -->
 
     <style selector="toggleButton.sidebarSelectionButton"
-           weightX="0" cursor="hand"
+           weightX="0" cursor="hand" font="LatoRegular,plain,16"
            icon="oval(18,18,sidebar.bg, sidebar.selection.unselected.border)"
            selectedIcon="oval(18,18,sidebar.selection.selected.bg, sidebar.selection.selected.border)"
            rolloverIcon="oval(18,18,sidebar.selection.rollover.bg, sidebar.selection.rollover.border)"
