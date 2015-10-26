@@ -20,6 +20,8 @@ public class RepoInfo {
 
   public static LongField COUNT;
 
+  public static LongField JAR_VERSION;
+
   @Target(License.class)
   public static LinkField LICENSE_ID;
 

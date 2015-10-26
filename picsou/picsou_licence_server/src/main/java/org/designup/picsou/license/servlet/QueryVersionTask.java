@@ -50,7 +50,7 @@ public class QueryVersionTask extends TimerTask {
       versionService.start();
       while (stream.next()) {
         versionService.setVersion(mailRef.get().getString(), groupRef.get().getInteger(),
-                                  jarVersionRef.get().getLong(), configVersionRef.get().getLong());
+                                  jarVersionRef.get().getValue(), configVersionRef.get().getValue());
       }
       versionService.complete();
       stream.close();

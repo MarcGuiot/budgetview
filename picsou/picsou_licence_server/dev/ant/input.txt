@@ -4,7 +4,6 @@ C org.designup.picsou.license.DuplicateLine
 C org.designup.picsou.license.DbCreateTable
 C org.designup.picsou.license.servlet.LicenseServer
 C org.designup.picsou.license.generator.LicenseGenerator
-C org.mortbay.jetty.RetryRequest
 C javax.servlet.SingleThreadModel
 C org.apache.log4j.RollingFileAppender
 C org.apache.log4j.ConsoleAppender
@@ -14,3 +13,4 @@ R javax/servlet/http/LocalStrings.properties
 R i18n/
 P com/mysql true
 P org/gjt true
+P org.mortbay true

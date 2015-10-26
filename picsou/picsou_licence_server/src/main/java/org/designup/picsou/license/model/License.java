@@ -47,6 +47,8 @@ public class License {
 
   public static LongField TIME_STAMP;
 
+  public static LongField JAR_VERSION;
+
 
   static {
     GlobTypeLoader.init(License.class);

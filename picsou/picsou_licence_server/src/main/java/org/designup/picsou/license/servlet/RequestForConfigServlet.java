@@ -3,7 +3,6 @@ package org.designup.picsou.license.servlet;
 import com.budgetview.shared.utils.ComCst;
 import org.apache.log4j.Logger;
 import org.designup.picsou.gui.config.ConfigService;
-import org.designup.picsou.license.generator.LicenseGenerator;
 import org.designup.picsou.license.mail.Mailer;
 import org.designup.picsou.license.model.License;
 import org.designup.picsou.license.model.RepoInfo;
@@ -37,7 +36,7 @@ public class RequestForConfigServlet extends HttpServlet {
   private CreateAnonymousRequest createAnonymousRequest;
   private UpdateNewActivationCodeRequest updateNewActivationCodeRequest;
   private LicenseRequest licenseRequest;
-  private UpdateAnonymousAccesCount updateAnonymousAccesCount;
+  private UpdateAnonymousAccessCount updateAnonymousAccessCount;
   private UpdateLastAccessRequest updateLastAccessRequest;
   private RepoIdAnonymousRequest repoIdAnonymousRequest;
 
@@ -55,7 +54,7 @@ public class RequestForConfigServlet extends HttpServlet {
     licenseRequest = new LicenseRequest(db);
     updateNewActivationCodeRequest = new UpdateNewActivationCodeRequest(db);
     updateLastAccessRequest = new UpdateLastAccessRequest(db);
-    updateAnonymousAccesCount = new UpdateAnonymousAccesCount(db);
+    updateAnonymousAccessCount = new UpdateAnonymousAccessCount(db);
     repoIdAnonymousRequest = new RepoIdAnonymousRequest(db);
     logInfo("RequestForConfigServlet.init");
   }
@@ -76,8 +75,16 @@ public class RequestForConfigServlet extends HttpServlet {
     String count = req.getHeader(ConfigService.HEADER_COUNT);
     String lang = req.getHeader(ComCst.HEADER_LANG);
     String signature = req.getHeader(ConfigService.HEADER_SIGNATURE);
-    String applicationVersion = req.getHeader(ConfigService.HEADER_CONFIG_VERSION);
+    String configVersion = req.getHeader(ConfigService.HEADER_CONFIG_VERSION);
     String jarVersion = req.getHeader(ConfigService.HEADER_JAR_VERSION);
+    VersionService.JarInfo info = null;
+    try {
+      info = new VersionService.JarInfo(Long.parseLong(jarVersion),
+                                        Long.parseLong(configVersion));
+    }
+    catch (Exception e) {
+      logger.info("No version info.");
+    }
     Integer group = 0;
     if (mail != null && activationCode != null) {
       if (count == null || id == null || lang == null) {
@@ -86,31 +93,31 @@ public class RequestForConfigServlet extends HttpServlet {
         resp.setHeader(ConfigService.HEADER_MAIL_UNKNOWN, "true");
       }
       else {
-        group = computeLicenseWithRetry(resp, mail, activationCode, Long.parseLong(count), id, lang, ip);
+        group = computeLicenseWithRetry(resp, mail, activationCode, Long.parseLong(count), id, lang, ip, info);
       }
     }
     else {
-      computeAnonymous(id, resp, ip);
+      computeAnonymous(id, resp, ip, info);
     }
     ValueLongAccessor jarVersionAccessor = new ValueLongAccessor();
-    ValueLongAccessor configVersion = new ValueLongAccessor();
-    versionService.getVersion(mail, group, jarVersionAccessor, configVersion);
+    ValueLongAccessor configVersionAccessor = new ValueLongAccessor();
+    versionService.getVersion(mail, group, jarVersionAccessor, configVersionAccessor);
     long newJarVersion = jarVersionAccessor.getValue();
     resp.setHeader(ConfigService.HEADER_NEW_JAR_VERSION, Long.toString(newJarVersion));
-    resp.setHeader(ConfigService.HEADER_NEW_CONFIG_VERSION, Long.toString(configVersion.getValue()));
+    resp.setHeader(ConfigService.HEADER_NEW_CONFIG_VERSION, Long.toString(configVersionAccessor.getValue()));
     resp.setStatus(HttpServletResponse.SC_OK);
   }
 
-  private void computeAnonymous(String id, HttpServletResponse resp, String ip) {
+  private void computeAnonymous(String id, HttpServletResponse resp, String ip, VersionService.JarInfo info) {
     try {
-      computeAnonymous(id, ip);
+      computeAnonymous(id, ip, info);
     }
     catch (Exception e) {
       logger.error("RequestForConfigServlet : ", e);
       closeDb();
       initDb();
       try {
-        computeAnonymous(id, ip);
+        computeAnonymous(id, ip, info);
       }
       catch (Exception e1) {
         logger.error("RequestForConfigServlet : Retry fail", e);
@@ -127,7 +134,7 @@ public class RequestForConfigServlet extends HttpServlet {
   private void closeDb() {
     try {
       licenseRequest.close();
-      updateAnonymousAccesCount.close();
+      updateAnonymousAccessCount.close();
       updateLastAccessRequest.close();
       updateNewActivationCodeRequest.close();
       repoIdAnonymousRequest.close();
@@ -168,6 +175,7 @@ public class RequestForConfigServlet extends HttpServlet {
   }
 
   static class CreateAnonymousRequest {
+    private final ValueLongAccessor jarVersion;
     private SqlRequest createAnonymousRequest;
     private ValueStringAccessor repoId;
     private ValueDateAccessor date;
@@ -175,40 +183,57 @@ public class RequestForConfigServlet extends HttpServlet {
     CreateAnonymousRequest(SqlConnection db) {
       repoId = new ValueStringAccessor();
       date = new ValueDateAccessor();
+      jarVersion  = new ValueLongAccessor();
       createAnonymousRequest = db.getCreateBuilder(RepoInfo.TYPE)
         .set(RepoInfo.REPO_ID, repoId)
         .set(RepoInfo.LAST_ACCESS_DATE, date)
         .set(RepoInfo.COUNT, 1L)
+        .set(RepoInfo.JAR_VERSION, jarVersion)
         .getRequest();
     }
 
-    public void execute(String repoId, Date date) {
+    public void execute(String repoId, Date date, VersionService.JarInfo version) {
       this.repoId.setValue(repoId);
       this.date.setValue(date);
+      if (version != null){
+        this.jarVersion.setValue(version.getJarVersion());
+      }
+      else {
+        this.jarVersion.setValue(0l);
+      }
       createAnonymousRequest.run();
     }
   }
 
-  static class UpdateAnonymousAccesCount {
+  static class UpdateAnonymousAccessCount {
+    private final ValueLongAccessor jarVersion;
     private ValueStringAccessor repoId;
     private ValueDateAccessor date;
     private ValueLongAccessor count;
     private SqlRequest request;
 
-    UpdateAnonymousAccesCount(SqlConnection db) {
+    UpdateAnonymousAccessCount(SqlConnection db) {
       repoId = new ValueStringAccessor();
       date = new ValueDateAccessor();
       count = new ValueLongAccessor();
+      jarVersion = new ValueLongAccessor();
       request = db.getUpdateBuilder(RepoInfo.TYPE, Constraints.equal(RepoInfo.REPO_ID, repoId))
         .update(RepoInfo.LAST_ACCESS_DATE, date)
         .update(RepoInfo.COUNT, count)
+        .update(RepoInfo.JAR_VERSION, jarVersion)
         .getRequest();
     }
 
-    public void execute(String repoId, Date date, long count) {
+    public void execute(String repoId, Date date, long count, VersionService.JarInfo info) {
       this.repoId.setValue(repoId);
       this.date.setValue(date);
       this.count.setValue(count);
+      if (info != null){
+        this.jarVersion.setValue(info.getJarVersion());
+      }
+      else {
+        this.jarVersion.setValue(0l);
+      }
       request.run();
     }
 
@@ -217,12 +242,12 @@ public class RequestForConfigServlet extends HttpServlet {
     }
   }
 
-  private void computeAnonymous(String id, String ip) {
+  private void computeAnonymous(String id, String ip, VersionService.JarInfo info) {
     GlobList globList = repoIdAnonymousRequest.execute(id);
     db.commit();
     if (globList.size() == 0) {
-      logInfo("new_anonymous ip = " + ip + " id =" + id);
-      createAnonymousRequest.execute(id, new Date());
+      logInfo("new_anonymous ip = " + ip + " id =" + id + " on jar version = " + info);
+      createAnonymousRequest.execute(id, new Date(), info);
       db.commit();
     }
     else if (globList.size() > 1) {
@@ -231,25 +256,25 @@ public class RequestForConfigServlet extends HttpServlet {
     if (globList.size() >= 1) {
       Long accessCount = globList.get(0).get(RepoInfo.COUNT) + 1;
       logInfo("known_anonymous ip = " + ip + " id =" + id + " access_count = " + accessCount);
-      updateAnonymousAccesCount.execute(id, new Date(), accessCount);
+      updateAnonymousAccessCount.execute(id, new Date(), accessCount, info);
       db.commit();
     }
   }
 
   private Integer computeLicenseWithRetry(HttpServletResponse resp, String mail, String activationCode,
-                                          Long count, String repoId, String lang, String ip) {
+                                          Long count, String repoId, String lang, String ip, VersionService.JarInfo info) {
     logInfo("compute_license ip = " + ip + " mail = " + mail + " count = " + count +
-            " id = " + repoId + " code = " + activationCode);
+            " id = " + repoId + " code = " + activationCode + " jar version = " + info);
     Integer group = null;
     try {
-      group = computeLicense(resp, mail, activationCode, count, lang, ip, repoId);
+      group = computeLicense(resp, mail, activationCode, count, lang, ip, repoId, info);
     }
     catch (Exception e) {
       logger.error("RequestForConfigServlet:computeLicense", e);
       try {
         closeDb();
         initDb();
-        group = computeLicense(resp, mail, activationCode, count, lang, ip, repoId);
+        group = computeLicense(resp, mail, activationCode, count, lang, ip, repoId, info);
       }
       catch (Exception ex) {
         logger.error("RequestForConfigServlet:computeLicense retry", e);
@@ -265,7 +290,7 @@ public class RequestForConfigServlet extends HttpServlet {
 
   private Integer computeLicense(HttpServletResponse resp, String mail,
                                  String activationCode, Long count, String lang,
-                                 String ip, String repoId) {
+                                 String ip, String repoId, VersionService.JarInfo info) {
     GlobList globList = licenseRequest.execute(mail);
     db.commit();
     if (globList.isEmpty()) {
@@ -294,7 +319,7 @@ public class RequestForConfigServlet extends HttpServlet {
           }
           else {
             if (Utils.equal(activationCode, license.get(License.LAST_ACTIVATION_CODE))) {
-              updateLastAccessRequest.execute(license.get(License.ID), count, new Date());
+              updateLastAccessRequest.execute(license.get(License.ID), count, new Date(), info);
               db.commit();
               logInfo("ok_for mail = " + mail + " count = " + count);
               return license.get(License.GROUP_ID);
@@ -374,29 +399,38 @@ public class RequestForConfigServlet extends HttpServlet {
   static class UpdateLastAccessRequest {
 
     private ValueIntegerAccessor id;
-
     private SqlRequest request;
     private ValueLongAccessor count;
+
     private ValueDateAccessor date;
     private ValueLongAccessor timestamp;
+    private final ValueLongAccessor jarVersion;
 
     UpdateLastAccessRequest(SqlConnection db) {
       id = new ValueIntegerAccessor();
       count = new ValueLongAccessor();
       this.date = new ValueDateAccessor();
       timestamp = new ValueLongAccessor();
+      jarVersion = new ValueLongAccessor();
       request = db.getUpdateBuilder(License.TYPE, Constraints.equal(License.ID, id))
         .update(License.ACCESS_COUNT, count)
         .update(License.LAST_ACCESS_DATE, this.date)
         .update(License.TIME_STAMP, timestamp)
+        .update(License.JAR_VERSION, jarVersion)
         .getRequest();
     }
 
-    public void execute(int id, long count, Date date) {
+    public void execute(int id, long count, Date date, VersionService.JarInfo jarInfo) {
       this.id.setValue(id);
       this.count.setValue(count);
       this.date.setValue(date);
       timestamp.setValue(System.currentTimeMillis());
+      if (jarInfo != null){
+        jarVersion.setValue(jarInfo.getJarVersion());
+      }
+      else {
+        jarVersion.setValue(0l);
+      }
       request.run();
     }
 

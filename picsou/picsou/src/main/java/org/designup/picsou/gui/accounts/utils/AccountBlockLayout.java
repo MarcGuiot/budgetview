@@ -80,8 +80,6 @@ public class AccountBlockLayout extends CustomLayout {
     int secondRowHeight = accountUpdateDate.getPreferredSize().height;
     int textRowsHeight = firstRowHeight + VERTICAL_MARGIN + secondRowHeight;
 
-    int accountInfoWidth = accountPosition.getPreferredSize().width + HORIZONTAL_MARGIN + accountUpdateDate.getPreferredSize().width;
-
     int positionTop = top + firstRowHeight + secondRowHeight - accountPosition.getPreferredSize().height;
     int positionLeft = left + POSITION_LEFT_MARGIN;
     int positionRight = positionLeft + accountPosition.getPreferredSize().width;
