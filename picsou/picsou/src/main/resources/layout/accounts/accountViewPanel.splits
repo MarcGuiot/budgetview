@@ -29,7 +29,7 @@
   </styles>
 
   <column>
-    <row styleClass="sidebarSectionTitleRow">
+    <row styleClass="sidebarSectionTitleRow" ref="header">
       <label ref="accountListTitle" styleClass="sidebarSectionTitle" marginLeft="5"/>
       <filler fill="horizontal"/>
       <label ref="referencePosition" styleClass="sidebarSectionTitle" font="ArimoRegular,plain,14" tooltipText="$accountView.reference.tooltip" anchor="south"/>
