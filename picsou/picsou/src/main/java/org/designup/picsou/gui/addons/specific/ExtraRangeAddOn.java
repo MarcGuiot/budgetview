@@ -13,7 +13,7 @@ import org.globsframework.utils.directory.Directory;
 
 public class ExtraRangeAddOn extends AddOn {
   public ExtraRangeAddOn() {
-    super(AddOns.EXTRA_RANGE, "addons/projects.png");
+    super(AddOns.EXTRA_RANGE, "addons/extrarange.png");
   }
 
   protected void processPostActivation(GlobRepository repository, Directory directory) {

@@ -99,7 +99,7 @@ public class AddOnPanelLayout extends CustomLayout {
     int imageRealWidth = image.getPreferredSize().width;
     int imageLeft = labelRight + HORIZONTAL_MARGIN + imageMaxWidth / 2 - imageRealWidth / 2;
     int imageHeight = image.getPreferredSize().height;
-    int imageTop = top;
+    int imageTop = top + height / 2 - imageHeight / 2;
     int imageRight = labelRight + HORIZONTAL_MARGIN + imageMaxWidth;
     image.setBounds(imageLeft, imageTop, imageRealWidth, imageHeight);
 
