@@ -16,13 +16,13 @@ public class AccountBlockLayout extends CustomLayout {
   private Component toggleGraph;
 
   private static final int HORIZONTAL_MARGIN = 5;
-  private static final int VERTICAL_MARGIN = 2;
+  private static final int VERTICAL_MARGIN = 3;
   private static final int CHART_HEIGHT = 80;
   private static final int CHART_PADDING = 4;
   private static final int CHART_LEFT_PADDING = 4;
-  private static final int POSITION_LEFT_MARGIN = 12;
+  private static final int POSITION_LEFT_MARGIN = 14;
 
-  private static final int WEATHER_ICON_WODTH = 52;
+  private static final int WEATHER_ICON_WODTH = 65;
 
   public int getPreferredWidth() {
     return Integer.MAX_VALUE;
@@ -34,12 +34,12 @@ public class AccountBlockLayout extends CustomLayout {
 
   protected int getMinHeight() {
     int chartHeight = positionsChart.isVisible() ? VERTICAL_MARGIN + CHART_HEIGHT : 0;
-    return getFirstRowHeight() + 2 * VERTICAL_MARGIN + accountUpdateDate.getPreferredSize().height + chartHeight;
+    return getFirstRowHeight() + 3 * VERTICAL_MARGIN + accountUpdateDate.getPreferredSize().height + chartHeight;
   }
 
   protected int getMinWidth() {
     return editAccount.getPreferredSize().width +
-           accountWeather.getPreferredSize().width +
+           Math.max(WEATHER_ICON_WODTH, accountWeather.getPreferredSize().width) +
            accountPosition.getPreferredSize().width +
            selectAccount.getPreferredSize().width +
            toggleGraph.getPreferredSize().width +
@@ -80,12 +80,12 @@ public class AccountBlockLayout extends CustomLayout {
     int secondRowHeight = accountUpdateDate.getPreferredSize().height;
     int textRowsHeight = firstRowHeight + VERTICAL_MARGIN + secondRowHeight;
 
-    int positionTop = top + firstRowHeight + secondRowHeight - accountPosition.getPreferredSize().height;
+    int positionTop = top + firstRowHeight + VERTICAL_MARGIN + secondRowHeight - accountPosition.getPreferredSize().height;
     int positionLeft = left + POSITION_LEFT_MARGIN;
     int positionRight = positionLeft + accountPosition.getPreferredSize().width;
     layout(accountPosition, positionLeft, positionTop);
 
-    int accountUpdateDateTop = top + firstRowHeight + secondRowHeight - accountUpdateDate.getPreferredSize().height;
+    int accountUpdateDateTop = top + firstRowHeight + VERTICAL_MARGIN + secondRowHeight - accountUpdateDate.getPreferredSize().height;
     int accountUpdateDateLeft = positionRight + HORIZONTAL_MARGIN;
     layout(accountUpdateDate,
            accountUpdateDateLeft, accountUpdateDateTop,
@@ -94,7 +94,8 @@ public class AccountBlockLayout extends CustomLayout {
     int accountWeatherTop = top + textRowsHeight / 2 - accountWeather.getPreferredSize().height / 2;
     int accountWeatherWidth = Math.max(WEATHER_ICON_WODTH, accountWeather.getPreferredSize().width);
     int accountWeatherLeft = right - accountWeatherWidth;
-    layout(accountWeather, accountWeatherLeft, accountWeatherTop);
+    int accountWeatherImageLeft = right - accountWeatherWidth / 2 - accountWeather.getPreferredSize().width / 2;
+    layout(accountWeather, accountWeatherImageLeft, accountWeatherTop);
 
     int toggleGraphTop = top + textRowsHeight / 2 - toggleGraph.getPreferredSize().height / 2;
     int toggleGraphRight = accountWeatherLeft - HORIZONTAL_MARGIN;

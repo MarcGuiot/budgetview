@@ -75,9 +75,6 @@ public class HistoChartBuilder implements Disposable {
   }
 
   public void setRange(HistoChartRange newRange) {
-    if (this.range != null) {
-      this.range.dispose();
-    }
     this.range = newRange;
   }
 

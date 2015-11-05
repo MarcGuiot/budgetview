@@ -21,7 +21,6 @@ public class AutoRangeUpdater {
     panel.addComponentListener(new ComponentAdapter() {
       public void componentResized(ComponentEvent componentEvent) {
         Config config = getConfig(panel.getWidth());
-        currentRange.dispose();
         currentRange = new ScrollableHistoChartRange(config.monthsBack, config.monthsForward, false, repository);
         for (HistoChartAdjustableRange adjustableRange : ranges) {
           adjustableRange.setRange(currentRange);

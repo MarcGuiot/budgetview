@@ -39,12 +39,12 @@ public class NoSavingsSeriesMessage extends NoSeriesMessage {
   protected void processHyperlinkClick(String href) {
     if ("createAccount".equals(href)) {
       AccountEditionDialog dialog = new AccountEditionDialog(repository, directory, true);
-      dialog.showWithNewAccount(AccountType.MAIN, false, AccountUpdateMode.MANUAL);
+      dialog.showWithNewAccount(AccountType.MAIN, true, AccountUpdateMode.MANUAL);
     }
   }
 
   private void updateMessage() {
-    if (!repository.contains(Account.TYPE, AccountMatchers.userCreatedSavingsAccounts())) {
+    if (!repository.contains(Account.TYPE, AccountMatchers.userCreatedAccounts())) {
       setText(Lang.get("categorization.noseries.transfer.noaccount"));
     }
     else {

@@ -37,6 +37,7 @@ public class ScrollableHistoChartRange extends AbstractHistoChartRange {
   }
 
   public void dispose() {
+    Thread.dumpStack();
     if (repository != null && monthListener != null) {
       repository.removeChangeListener(monthListener);
     }

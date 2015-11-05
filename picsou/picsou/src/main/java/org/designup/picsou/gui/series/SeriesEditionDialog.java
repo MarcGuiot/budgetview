@@ -180,9 +180,8 @@ public class SeriesEditionDialog {
       .setFilter(accountFilter);
     builder.add("toAccount", toAccountsCombo);
 
-    CreateAccountAction action = new CreateAccountAction(AccountType.SAVINGS, localRepository, directory, dialog);
+    CreateAccountAction action = new CreateAccountAction(AccountType.MAIN, localRepository, directory, dialog);
     builder.add("createAccount", action);
-    action.setAccountTypeEditable(false);
 
     savingsMessage = new JLabel(Lang.get("seriesEdition.savingsMessagesError"));
     builder.add("savingsMessage", savingsMessage);
