@@ -2,10 +2,7 @@ package com.budgetview.analytics.model;
 
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.annotations.Key;
-import org.globsframework.metamodel.fields.BooleanField;
-import org.globsframework.metamodel.fields.DateField;
-import org.globsframework.metamodel.fields.IntegerField;
-import org.globsframework.metamodel.fields.StringField;
+import org.globsframework.metamodel.fields.*;
 import org.globsframework.metamodel.utils.GlobTypeLoader;
 
 public class User {
@@ -27,6 +24,8 @@ public class User {
   public static BooleanField PREVIOUS_USER;
 
   public static IntegerField PING_COUNT;
+
+  public static DoubleField WEEKLY_USAGE;
 
   public static BooleanField ACTIVATED;
   public static BooleanField RETAINED;

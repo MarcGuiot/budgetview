@@ -16,11 +16,12 @@ import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.Key;
-import org.globsframework.model.format.GlobListStringifiers;
 import org.globsframework.model.utils.GlobMatchers;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
+import javax.swing.event.TableModelEvent;
+import javax.swing.event.TableModelListener;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
@@ -157,12 +158,13 @@ public class AnalyticsWindow {
   }
 
   private void addUserElements(GlobsPanelBuilder builder) {
-    builder.addTable("users", User.TYPE, descending(User.FIRST_DATE))
+    final GlobTableView usersTable = builder.addTable("users", User.TYPE, descending(User.FIRST_DATE))
       .addColumn(User.ID)
       .addColumn(User.EMAIL)
       .addColumn(User.FIRST_DATE)
       .addColumn(User.LAST_DATE)
       .addColumn(User.PING_COUNT)
+      .addColumn(User.WEEKLY_USAGE)
       .addColumn(User.ACTIVATED)
       .addColumn(User.RETAINED)
       .addColumn(User.DAYS_BEFORE_PURCHASE)
@@ -170,8 +172,16 @@ public class AnalyticsWindow {
       .addColumn(User.LOST)
       .addColumn(User.JAR_VERSION);
 
-    builder.addLabel("selectionCount", User.TYPE, GlobListStringifiers.count())
-      .setAutoHideIfEmpty(true);
+    builder.add("usersFilterCombo", UserTableFilter.createCombo(usersTable));
+
+    final JLabel count = new JLabel();
+    usersTable.getComponent().getModel().addTableModelListener(new TableModelListener() {
+      public void tableChanged(TableModelEvent tableModelEvent) {
+        updateUserTableCount(count, usersTable);
+      }
+    });
+    builder.add("count", count);
+    updateUserTableCount(count, usersTable);
 
     final GlobTableView logEntriesTable = builder.addTable("userEntries", LogEntry.TYPE, descending(LogEntry.DATE))
       .addColumn(LogEntry.DATE)
@@ -184,6 +194,10 @@ public class AnalyticsWindow {
         logEntriesTable.setFilter(GlobMatchers.fieldIn(LogEntry.USER, userIds));
       }
     }, User.TYPE);
+  }
+
+  public void updateUserTableCount(JLabel count, GlobTableView usersTable) {
+    count.setText(Integer.toString(usersTable.getComponent().getRowCount()) + " elements");
   }
 
   private void addOnboardingElements(GlobsPanelBuilder builder) {

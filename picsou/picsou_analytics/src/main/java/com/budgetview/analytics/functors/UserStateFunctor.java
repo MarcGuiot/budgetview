@@ -34,6 +34,7 @@ public class UserStateFunctor implements GlobFunctor {
 
     int usagePeriodLength = Days.daysBetween(user.get(User.FIRST_DATE), user.get(User.LAST_DATE));
     int pings = user.get(User.PING_COUNT, 0);
+    double weeklyUsage = usagePeriodLength == 0 ? 0 : (double)pings / ((double)usagePeriodLength / 7);
     boolean activated = pings > 2 && usagePeriodLength > 2;
     boolean retained = pings > 5 && usagePeriodLength > 60;
     boolean purchased = isPreviousUser || user.get(User.PURCHASE_DATE) != null;
@@ -45,7 +46,9 @@ public class UserStateFunctor implements GlobFunctor {
                       value(User.ACTIVATED, activated),
                       value(User.RETAINED, retained),
                       value(User.PURCHASED, purchased),
-                      value(User.LOST, lost));
+                      value(User.LOST, lost),
+                      value(User.WEEKLY_USAGE, weeklyUsage)
+                      );
 
 
   }

@@ -69,20 +69,6 @@ public class AnalyticsTest extends TestCase {
                         value(User.PREVIOUS_USER, false));
   }
 
-  public void testOldUserProgressParsing() throws Exception {
-    analytics.createLog()
-      .logOldUseInfo("1 Jan 2012", 1, true, false, true, false, true, false, true)
-      .load();
-
-    analytics.checkUseInfo(parseDate("20120101"),
-                           value(OnboardingInfoEntry.INITIAL_STEPS_COMPLETED, true),
-                           value(OnboardingInfoEntry.IMPORT_STARTED, false),
-                           value(OnboardingInfoEntry.CATEGORIZATION_SELECTION_DONE, true),
-                           value(OnboardingInfoEntry.FIRST_CATEGORIZATION_DONE, true),
-                           value(OnboardingInfoEntry.CATEGORIZATION_SKIPPED, false),
-                           value(OnboardingInfoEntry.GOTO_BUDGET_SHOWN, true));
-  }
-
   public void testUserProgressParsing() throws Exception {
     analytics.createLog()
       .logUseInfo("1 Jan 2012", 1, true, false, true, false, true, false, true)
