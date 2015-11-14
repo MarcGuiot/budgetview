@@ -1,6 +1,7 @@
 package org.designup.picsou.gui.accounts;
 
 import org.designup.picsou.gui.model.BudgetStat;
+import org.designup.picsou.gui.signpost.SignpostService;
 import org.designup.picsou.model.Account;
 import org.designup.picsou.model.AccountType;
 import org.globsframework.metamodel.GlobType;
@@ -15,6 +16,8 @@ import java.util.Set;
 import static org.globsframework.model.utils.GlobMatchers.*;
 
 public class MainAccountViewPanel extends AccountViewPanel {
+
+  public static final String HEADER_ID = "accountViewPanel.main.header";
 
   public MainAccountViewPanel(final GlobRepository repository, final Directory directory) {
     super(repository, directory, createMatcher(), AccountType.MAIN, Account.MAIN_SUMMARY_ACCOUNT_ID);
@@ -32,6 +35,10 @@ public class MainAccountViewPanel extends AccountViewPanel {
         }
       }
     });
+  }
+
+  public void registerSignpost() {
+    directory.get(SignpostService.class).registerComponent(HEADER_ID, header);
   }
 
   private static GlobMatcher createMatcher() {

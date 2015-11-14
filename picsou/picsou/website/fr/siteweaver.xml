@@ -30,7 +30,7 @@
       <key name="innerTemplate" value="templates/standardPageTemplate.html"/>
     </page>
 
-    <page file="support.html" title="Aide &amp; Support" shortTitle="Support">
+    <page file="support.html" title="Aide &amp; Support" shortTitle="Aide &amp; Support">
       <key name="innerTemplate" value="templates/supportPageTemplate.html"/>
 
       <page file="support/guides.html" title="Guides de démarrage">
@@ -51,8 +51,8 @@
                 title="Comment entrer mon code d'activation?"/>
           <page file="support/faq/general/installation_java.html"
                 title="Mon système me demande d'installer Java. Y a-t-il un risque à le faire ?"/>
-          <page file="support/faq/general/installation_java_macosx_yosemite.html"
-                title="BudgetView ne se lance pas sous Mac OS X Yosemite. Comment faire ?"/>
+          <page file="support/faq/general/installation_java_macosx_yosemite_el_capitan.html"
+                title="BudgetView ne se lance pas sous Mac OS X Yosemite / El Capitan. Comment faire ?"/>
           <page file="support/faq/general/mises_a_jour.html"
                 title="Comment se font les mises à jour de BudgetView ?"/>
           <page file="support/faq/general/pourquoi_connexion.html"

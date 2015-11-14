@@ -22,7 +22,7 @@ public class BudgetAreaStatFilter implements GlobMatcher {
 
   public BudgetAreaStatFilter(BudgetArea budgetArea) {
     this.budgetArea = budgetArea;
-    this.seriesDateFilter = SeriesMatchers.seriesActiveInPeriod(budgetArea.getId(), true, false, false);
+    this.seriesDateFilter = SeriesMatchers.seriesActiveInPeriod(budgetArea, true, false, false);
   }
 
   public void toggleMonthFilteringEnabled() {

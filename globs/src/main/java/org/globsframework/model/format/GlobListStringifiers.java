@@ -178,4 +178,12 @@ public class GlobListStringifiers {
       }
     };
   }
+
+  public static GlobListStringifier count() {
+    return new GlobListStringifier() {
+      public String toString(GlobList list, GlobRepository repository) {
+        return Integer.toString(list.size());
+      }
+    };
+  }
 }

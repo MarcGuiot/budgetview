@@ -21,8 +21,6 @@
     <style selector="footer button" ui="hyperlinkButtonWithoutUnderline" foreground="categorization.footerButton"
            marginTop="5"/>
 
-    <style selector="htmlEditorPane.hints" weightY="0.1" border="empty(0,10,10,10)" font="-,plain,12"/>
-
     <style selector="button.add" font="-,plain,12" border=""
            ui="hyperlinkButtonWithoutUnderline"
            foreground="toggle.selector.series.add"
@@ -61,7 +59,6 @@
         </row>
       </scrollPane>
 
-      <htmlEditorPane ref="categorizationMessage" styleClass="hints"/>
       <row styleClass="footer" ref="groupCreateEditSeries">
         <button action="createSeries" tooltipText="$series.create.tooltip"/>
         <button action="additionalAction"/>

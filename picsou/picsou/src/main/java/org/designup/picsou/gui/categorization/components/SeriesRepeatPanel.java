@@ -9,7 +9,6 @@ import org.designup.picsou.model.SeriesGroup;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.splits.utils.Disposable;
 import org.globsframework.model.*;
-import org.globsframework.model.format.GlobPrinter;
 import org.globsframework.model.utils.DefaultChangeSetListener;
 import org.globsframework.utils.Functor;
 import org.globsframework.utils.Utils;
@@ -43,8 +42,8 @@ public class SeriesRepeatPanel implements Disposable {
     builder = new GlobsPanelBuilder(getClass(), "/layout/categorization/seriesRepeatPanel.splits",
                                     this.repository, directory);
 
-    CategorizationFilter innerFilter = CategorizationMatchers.seriesCategorizationFilter(budgetArea.getId());
-    innerFilter.filterDates(transactions);
+    CategorizationFilter innerFilter = CategorizationMatchers.seriesCategorizationFilter(budgetArea);
+    innerFilter.filterForTransactions(transactions);
     GroupMatcher groupMatcher = new GroupMatcher(group, innerFilter);
 
     handler = seriesRepeat.addRepeat(budgetArea, builder, groupMatcher);
@@ -96,8 +95,8 @@ public class SeriesRepeatPanel implements Disposable {
       this.innerFilter = innerFilter;
     }
 
-    public void filterDates(GlobList transactions) {
-      innerFilter.filterDates(transactions);
+    public void filterForTransactions(GlobList transactions) {
+      innerFilter.filterForTransactions(transactions);
     }
 
     public boolean matches(Glob series, GlobRepository repository) {

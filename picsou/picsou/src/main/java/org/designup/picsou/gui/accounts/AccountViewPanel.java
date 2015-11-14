@@ -5,6 +5,7 @@ import org.designup.picsou.gui.accounts.actions.AccountPopupFactory;
 import org.designup.picsou.gui.accounts.chart.MainDailyPositionsChartView;
 import org.designup.picsou.gui.accounts.components.AccountWeatherButton;
 import org.designup.picsou.gui.accounts.position.AccountPositionLabels;
+import org.designup.picsou.gui.addons.AddOnListener;
 import org.designup.picsou.gui.analysis.histobuilders.range.ScrollableHistoChartRange;
 import org.designup.picsou.gui.card.NavigationService;
 import org.designup.picsou.gui.components.PopupGlobFunctor;
@@ -13,10 +14,7 @@ import org.designup.picsou.gui.description.Formatting;
 import org.designup.picsou.gui.description.stringifiers.AccountComparator;
 import org.designup.picsou.gui.model.SavingsBudgetStat;
 import org.designup.picsou.gui.transactions.utils.TransactionMatchers;
-import org.designup.picsou.model.Account;
-import org.designup.picsou.model.AccountType;
-import org.designup.picsou.model.Month;
-import org.designup.picsou.model.UserPreferences;
+import org.designup.picsou.model.*;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobSelection;
 import org.globsframework.gui.GlobSelectionListener;
@@ -53,7 +51,7 @@ public abstract class AccountViewPanel {
   private GlobMatcher filterMatcherWithDates;
   private Integer summaryId;
   private JPanel panel;
-  private JPanel header;
+  protected JPanel header;
   private GlobRepeat accountRepeat;
 
   public AccountViewPanel(final GlobRepository repository, final Directory directory,
@@ -145,8 +143,8 @@ public abstract class AccountViewPanel {
         .forceSelection(account.getKey())
         .getComponent());
 
-      MainDailyPositionsChartView chartView =
-        new MainDailyPositionsChartView(new ScrollableHistoChartRange(0, 1, true, repository),
+      final MainDailyPositionsChartView chartView =
+        new MainDailyPositionsChartView(createRange(false),
                                         new HistoChartConfig(true, false, true, false, false, true, false, true, false, true),
                                         "accountPositionsChart", repository, directory, "daily.budgetSummary") {
           protected void processClick(HistoSelection selection, Set<Key> objectKeys, NavigationService navigationService) {
@@ -158,6 +156,11 @@ public abstract class AccountViewPanel {
       chartView.setShowFullMonthLabels(true);
       chartView.registerComponents(cellBuilder);
       cellBuilder.addDisposable(chartView);
+      cellBuilder.addDisposable(AddOnListener.install(repository, AddOns.EXTRA_RANGE, new AddOnListener() {
+        public void processAddOn(boolean enabled) {
+          chartView.setRange(createRange(enabled));
+        }
+      }));
 
       GlobBooleanVisibilityUpdater chartUpdater =
         GlobBooleanVisibilityUpdater.init(account.getKey(), Account.SHOW_CHART, chartView.getChart(), repository);
@@ -202,6 +205,10 @@ public abstract class AccountViewPanel {
       cellBuilder.add(name, labelView.getComponent());
       cellBuilder.addDisposable(labelView);
     }
+  }
+
+  public ScrollableHistoChartRange createRange(boolean extraRangeEnabled) {
+    return new ScrollableHistoChartRange(0, extraRangeEnabled ? 3 :  1, true, repository);
   }
 
   public static GlobButtonView createShowAccountButton(final GlobRepository repository,

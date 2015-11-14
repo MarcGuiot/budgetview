@@ -28,6 +28,8 @@ public class AddOns {
   public static IntegerField ID;
 
   @NoObfuscation
+  public static BooleanField EXTRA_RANGE;
+  @NoObfuscation
   public static BooleanField PROJECTS;
   @NoObfuscation
   public static BooleanField GROUPS;
@@ -68,27 +70,10 @@ public class AddOns {
     }
   }
 
-  public interface Listener {
-    void processAddOn(boolean enabled);
-  }
-
-  public static void addListener(final GlobRepository repository, final BooleanField field, final Listener listener) {
-    KeyChangeListener keyListener = new KeyChangeListener(AddOns.KEY) {
-      public void update() {
-        Glob addOns = repository.find(AddOns.KEY);
-        if (addOns != null) {
-          listener.processAddOn(addOns.isTrue(field));
-        }
-      }
-    };
-    repository.addChangeListener(keyListener);
-    keyListener.update();
-  }
-
   public static class Serializer implements PicsouGlobSerializer {
 
     public int getWriteVersion() {
-      return 2;
+      return 3;
     }
 
     public boolean shouldBeSaved(GlobRepository repository, FieldValues fieldValues) {
@@ -98,6 +83,7 @@ public class AddOns {
     public byte[] serializeData(FieldValues values) {
       SerializedByteArrayOutput serializedByteArrayOutput = new SerializedByteArrayOutput();
       SerializedOutput outputStream = serializedByteArrayOutput.getOutput();
+      outputStream.writeBoolean(values.get(EXTRA_RANGE));
       outputStream.writeBoolean(values.get(PROJECTS));
       outputStream.writeBoolean(values.get(GROUPS));
       outputStream.writeBoolean(values.get(ANALYSIS));
@@ -106,7 +92,10 @@ public class AddOns {
     }
 
     public void deserializeData(int version, FieldSetter fieldSetter, byte[] data, Integer id) {
-      if (version == 2) {
+      if (version == 3) {
+        deserializeDataV3(fieldSetter, data);
+      }
+      else if (version == 2) {
         deserializeDataV2(fieldSetter, data);
       }
       else if (version == 1) {
@@ -114,9 +103,20 @@ public class AddOns {
       }
     }
 
+    private void deserializeDataV3(FieldSetter fieldSetter, byte[] data) {
+      SerializedInput input = SerializedInputOutputFactory.init(data);
+      fieldSetter.set(EXTRA_RANGE, input.readBoolean());
+      fieldSetter.set(PROJECTS, input.readBoolean());
+      fieldSetter.set(GROUPS, input.readBoolean());
+      fieldSetter.set(ANALYSIS, input.readBoolean());
+      fieldSetter.set(MOBILE, input.readBoolean());
+    }
+
     private void deserializeDataV2(FieldSetter fieldSetter, byte[] data) {
       SerializedInput input = SerializedInputOutputFactory.init(data);
-      fieldSetter.set(PROJECTS, input.readBoolean());
+      Boolean projects = input.readBoolean();
+      fieldSetter.set(EXTRA_RANGE, projects);
+      fieldSetter.set(PROJECTS, projects);
       fieldSetter.set(GROUPS, input.readBoolean());
       fieldSetter.set(ANALYSIS, input.readBoolean());
       fieldSetter.set(MOBILE, input.readBoolean());
@@ -124,9 +124,12 @@ public class AddOns {
 
     private void deserializeDataV1(FieldSetter fieldSetter, byte[] data) {
       SerializedInput input = SerializedInputOutputFactory.init(data);
-      fieldSetter.set(PROJECTS, input.readBoolean());
+      Boolean projects = input.readBoolean();
+      fieldSetter.set(EXTRA_RANGE, projects);
+      fieldSetter.set(PROJECTS, projects);
       fieldSetter.set(GROUPS, input.readBoolean());
       fieldSetter.set(ANALYSIS, input.readBoolean());
+      fieldSetter.set(MOBILE, projects);
     }
   }
 }

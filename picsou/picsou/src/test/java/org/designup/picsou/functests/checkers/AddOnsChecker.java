@@ -33,6 +33,14 @@ public class AddOnsChecker extends ViewChecker {
     AddOns.setAllEnabled(getRepository(), false);
   }
 
+  public void activateExtraRange() {
+    setEnabled(AddOns.EXTRA_RANGE, true);
+  }
+
+  public void disableExtraRange() {
+    setEnabled(AddOns.EXTRA_RANGE, false);
+  }
+
   public void activateProjects() {
     setEnabled(AddOns.PROJECTS, true);
   }

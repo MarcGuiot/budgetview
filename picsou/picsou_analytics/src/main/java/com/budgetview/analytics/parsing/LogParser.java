@@ -24,6 +24,7 @@ public class LogParser {
   private static Pattern IP_FORMAT = Pattern.compile("ip = ([0-9\\.]+)");
   private static Pattern REPO_ID_FORMAT = Pattern.compile("id =[ ]*([A-z0-9/+=]+)");
   private static Pattern MAIL_FORMAT = Pattern.compile("mail =[ ]*([A-z0-9-_@\\.]+)");
+  private static Pattern JAR_VERSION_FORMAT = Pattern.compile("jar version =[ ]*([0-9]+)");
 
   private static Pattern USER_PROGRESS_FORMAT =
     Pattern.compile("INFO ([0-9]+ [A-z]+ [0-9]+) [0-9:,]+ - use info =[ ]*(.*)[ ]*");
@@ -86,6 +87,7 @@ public class LogParser {
           processPurchase(purchaseMatcher.group(1), purchaseMatcher.group(2), repository);
           continue;
         }
+
         Matcher progressMatcher = USER_PROGRESS_FORMAT.matcher(trimmed);
         if (progressMatcher.matches()) {
           processProgress(parseDate(progressMatcher.group(1)),
@@ -135,7 +137,8 @@ public class LogParser {
                       value(LogEntry.ENTRY_TYPE, parseEntryType(entryType).getId()),
                       value(LogEntry.REPO_ID, parseArg(args, REPO_ID_FORMAT)),
                       value(LogEntry.IP, parseArg(args, IP_FORMAT)),
-                      value(LogEntry.EMAIL, parseArg(args, MAIL_FORMAT)));
+                      value(LogEntry.EMAIL, parseArg(args, MAIL_FORMAT)),
+                      value(LogEntry.JAR_VERSION, toInt(parseArg(args, JAR_VERSION_FORMAT))));
   }
 
   private void processPurchase(String date, String email, GlobRepository repository) {
@@ -149,6 +152,16 @@ public class LogParser {
     repository.create(UserEvaluationEntry.TYPE,
                       value(UserEvaluationEntry.DATE, parseDate(date)),
                       value(UserEvaluationEntry.SATISFIED, "yes".equalsIgnoreCase(result.trim())));
+  }
+
+  private void processProgress(Date date, String content,
+                               GlobRepository repository) {
+
+    FieldValuesBuilder values = new FieldValuesBuilder();
+    values.set(OnboardingInfoEntry.DATE, date);
+    OnboardingParser.parseValues(content.trim(), values);
+
+    repository.create(OnboardingInfoEntry.TYPE, values.get().toArray());
   }
 
   private Date parseDate(String date) {
@@ -175,6 +188,13 @@ public class LogParser {
     return null;
   }
 
+  private Integer toInt(String text) {
+    if (text == null || text.isEmpty()) {
+      return null;
+    }
+    return Integer.parseInt(text);
+  }
+
   private LogEntryType parseEntryType(String command) {
     if (command.equalsIgnoreCase("known_anonymous")) {
       return LogEntryType.KNOWN_USER;
@@ -189,15 +209,5 @@ public class LogParser {
       return LogEntryType.DIFFERENT_CODE;
     }
     throw new InvalidParameter("Unknown command type: " + command);
-  }
-
-  private void processProgress(Date date, String content,
-                               GlobRepository repository) {
-
-    FieldValuesBuilder values = new FieldValuesBuilder();
-    values.set(OnboardingInfoEntry.DATE, date);
-    OnboardingParser.parseValues(content.trim(), values);
-
-    repository.create(OnboardingInfoEntry.TYPE, values.get().toArray());
   }
 }

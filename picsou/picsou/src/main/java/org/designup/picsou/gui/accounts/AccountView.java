@@ -20,8 +20,9 @@ public class AccountView extends View {
     TitleView titleView = new TitleView(repository, directory);
     titleView.registerComponents(builder);
 
-    AccountViewPanel accountViewPanel = new MainAccountViewPanel(repository, directory);
+    MainAccountViewPanel accountViewPanel = new MainAccountViewPanel(repository, directory);
     builder.add("mainAccounts", accountViewPanel.getPanel());
+    accountViewPanel.registerSignpost();
 
     AccountViewPanel savingsViewPanel = new SavingsAccountViewPanel(repository, directory);
     builder.add("savingsAccounts", savingsViewPanel.getPanel());

@@ -385,18 +385,18 @@ public class UpgradeTrigger implements ChangeSetListener {
   }
 
   private void updateSavingsSeries(GlobRepository repository, Glob series) {
-    Boolean sens = null;
+    Boolean positive = null;
     GlobList budgets = repository.findByIndex(SeriesBudget.SERIES_INDEX, SeriesBudget.SERIES, series.get(Series.ID)).getGlobs();
     for (Glob budget : budgets) {
       if (budget.get(SeriesBudget.PLANNED_AMOUNT) == null) {
         continue;
       }
       if (budget.get(SeriesBudget.PLANNED_AMOUNT) > 0) {
-        sens = true;
+        positive = true;
         break;
       }
       if (budget.get(SeriesBudget.PLANNED_AMOUNT) < 0) {
-        sens = false;
+        positive = false;
         break;
       }
     }
@@ -406,7 +406,7 @@ public class UpgradeTrigger implements ChangeSetListener {
     if (series.get(Series.TO_ACCOUNT) == null) {
       repository.update(series.getKey(), Series.TO_ACCOUNT, Account.EXTERNAL_ACCOUNT_ID);
     }
-    if (sens == null) {
+    if (positive == null) {
       if (series.isTrue(Series.IS_MIRROR)) {
         repository.update(series.getKey(), Series.TARGET_ACCOUNT, series.get(Series.TO_ACCOUNT));
       }
@@ -414,7 +414,7 @@ public class UpgradeTrigger implements ChangeSetListener {
         repository.update(series.getKey(), Series.TARGET_ACCOUNT, series.get(Series.FROM_ACCOUNT));
       }
     }
-    else if (sens) {
+    else if (positive) {
       repository.update(series.getKey(), Series.TARGET_ACCOUNT, series.get(Series.TO_ACCOUNT));
     }
     else {
@@ -621,12 +621,12 @@ public class UpgradeTrigger implements ChangeSetListener {
         continue;
       }
       Glob targetAccount = repository.findLinkTarget(series, Series.TARGET_ACCOUNT);
-      boolean positif = series.get(Series.TO_ACCOUNT).equals(series.get(Series.TARGET_ACCOUNT));
+      boolean positive = series.get(Series.TO_ACCOUNT).equals(series.get(Series.TARGET_ACCOUNT));
       for (Key key : entry.getValue()) {
         Glob transaction = repository.find(key);
         if (transaction != null) {
           if (isSame(targetAccount, transaction, repository)) {
-            if (transaction.get(Transaction.AMOUNT) > 0 == positif) {
+            if (transaction.get(Transaction.AMOUNT) > 0 == positive) {
               repository.update(transaction.getKey(), Transaction.SERIES, series.get(Series.ID));
             }
             else {

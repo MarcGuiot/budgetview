@@ -56,8 +56,14 @@ public class UserEntriesFunctor implements GlobFunctor {
       case LICENCE_CHECK:
         Integer pingCount = user.get(User.PING_COUNT);
         int newPingCount = pingCount != null ? pingCount + 1 : 1;
-        repository.update(user.getKey(), User.PING_COUNT, newPingCount);
+        repository.update(user, User.PING_COUNT, newPingCount);
       default:
+    }
+
+    Integer userJarVersion = user.get(User.JAR_VERSION);
+    Integer entryJarVersion = entry.get(LogEntry.JAR_VERSION);
+    if (entryJarVersion != null && (userJarVersion == null || entryJarVersion > userJarVersion)) {
+      repository.update(user, User.JAR_VERSION, entryJarVersion);
     }
   }
 

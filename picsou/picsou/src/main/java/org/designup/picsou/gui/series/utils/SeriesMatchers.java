@@ -18,10 +18,10 @@ import static org.globsframework.model.utils.GlobMatchers.not;
 
 public class SeriesMatchers {
 
-  public static MonthMatcher seriesActiveInPeriod(final Integer budgetAreaId, boolean showOnlyForActiveMonths, boolean showOnlyIfAvailableOnAllMonths, boolean showOnPreviousAndNextMonth) {
+  public static MonthMatcher seriesActiveInPeriod(final BudgetArea budgetArea, boolean showOnlyForActiveMonths, boolean showOnlyIfAvailableOnAllMonths, boolean showOnPreviousAndNextMonth) {
     return new SeriesFirstEndDateFilter(showOnlyForActiveMonths, showOnlyIfAvailableOnAllMonths, showOnPreviousAndNextMonth) {
       protected boolean isEligible(Glob series, GlobRepository repository) {
-        return budgetAreaId.equals(series.get(Series.BUDGET_AREA));
+        return budgetArea.getId().equals(series.get(Series.BUDGET_AREA));
       }
     };
   }
@@ -64,7 +64,7 @@ public class SeriesMatchers {
     };
   }
 
-  public static abstract class SeriesFirstEndDateFilter implements MonthMatcher {
+  private static abstract class SeriesFirstEndDateFilter implements MonthMatcher {
     private boolean showOnlyForActiveMonths;
     private boolean showOnlyIfAvailableOnAllMonths;
     private boolean showOnPreviousAndNextMonth;

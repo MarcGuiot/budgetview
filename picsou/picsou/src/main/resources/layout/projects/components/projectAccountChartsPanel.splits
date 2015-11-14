@@ -37,10 +37,10 @@
     <repeat ref="accountCharts">
       <verticalBoxes name="accountPanel">
         <row marginTop="10" marginBottom="4">
-          <toggleButton ref="toggleGraph" weightX="0.1"/>
           <button ref="accountChartButton" styleClass="dropdown"/>
           <filler fill="horizontal" weightX="100"/>
-          <label ref="accountPositionLabel" styleClass="secondarySectionSubtitle"/>
+          <label ref="accountPositionLabel" styleClass="secondarySectionSubtitle" marginBottom="2"/>
+          <toggleButton ref="toggleGraph" weightX="0.1" margin="0" marginLeft="10"/>
         </row>
         <component ref="accountHistoChart" background="sidebar.bg"/>
       </verticalBoxes>

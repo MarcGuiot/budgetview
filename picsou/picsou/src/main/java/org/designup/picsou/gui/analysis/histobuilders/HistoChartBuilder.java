@@ -74,8 +74,11 @@ public class HistoChartBuilder implements Disposable {
     initColors(directory);
   }
 
-  public void setRange(HistoChartRange range) {
-    this.range = range;
+  public void setRange(HistoChartRange newRange) {
+    if (this.range != null) {
+      this.range.dispose();
+    }
+    this.range = newRange;
   }
 
   public void addListener(HistoChartListener listener) {

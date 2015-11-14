@@ -12,6 +12,28 @@ public class AddOnsTest extends LoggedInFunctionalTestCase {
     operations.openPreferences().setFutureMonthsCount(2).validate();
   }
 
+  public void testExtraRange() throws Exception {
+
+    operations.openPreferences().setFutureMonthsCount(6).validate();
+    addOns.disableAll();
+
+    OfxBuilder.init(this)
+      .addBankAccount("001111", 1000.00, "2015/01/30")
+      .addTransaction("2015/01/01", 1000.00, "Income")
+      .addTransaction("2015/01/15", -150.00, "Resa")
+      .addTransaction("2014/12/01", 1000.00, "Income")
+      .addTransaction("2014/12/15", -150.00, "Resa")
+      .load();
+
+    mainAccounts.getChart("Account n. 001111").checkRange(201501, 201502);
+
+    addOns.activateExtraRange();
+    mainAccounts.getChart("Account n. 001111").checkRange(201501, 201504);
+
+    addOns.disableExtraRange();
+    mainAccounts.getChart("Account n. 001111").checkRange(201501, 201502);
+  }
+
   public void testAccessingProjectsWhenTheAddOnIsDisabled() throws Exception {
 
     addOns.disableAll();

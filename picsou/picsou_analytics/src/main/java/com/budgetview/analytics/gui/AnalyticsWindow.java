@@ -1,9 +1,6 @@
 package com.budgetview.analytics.gui;
 
-import com.budgetview.analytics.model.Experiment;
-import com.budgetview.analytics.model.OnboardingStats;
-import com.budgetview.analytics.model.User;
-import com.budgetview.analytics.model.WeekStats;
+import com.budgetview.analytics.model.*;
 import com.budgetview.analytics.utils.Weeks;
 import org.designup.picsou.gui.utils.Gui;
 import org.globsframework.gui.GlobSelection;
@@ -19,12 +16,14 @@ import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.Key;
+import org.globsframework.model.format.GlobListStringifiers;
 import org.globsframework.model.utils.GlobMatchers;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
 
 import static org.globsframework.gui.views.utils.LabelCustomizers.ALIGN_CENTER;
 import static org.globsframework.model.utils.GlobComparators.ascending;
@@ -168,7 +167,23 @@ public class AnalyticsWindow {
       .addColumn(User.RETAINED)
       .addColumn(User.DAYS_BEFORE_PURCHASE)
       .addColumn(User.PURCHASE_DATE)
-      .addColumn(User.LOST);
+      .addColumn(User.LOST)
+      .addColumn(User.JAR_VERSION);
+
+    builder.addLabel("selectionCount", User.TYPE, GlobListStringifiers.count())
+      .setAutoHideIfEmpty(true);
+
+    final GlobTableView logEntriesTable = builder.addTable("userEntries", LogEntry.TYPE, descending(LogEntry.DATE))
+      .addColumn(LogEntry.DATE)
+      .addColumn(LogEntry.ENTRY_TYPE);
+
+    logEntriesTable.setFilter(GlobMatchers.NONE);
+    selectionService.addListener(new GlobSelectionListener() {
+      public void selectionUpdated(GlobSelection selection) {
+        Set<Integer> userIds = selection.getAll(User.TYPE).getValueSet(User.ID);
+        logEntriesTable.setFilter(GlobMatchers.fieldIn(LogEntry.USER, userIds));
+      }
+    }, User.TYPE);
   }
 
   private void addOnboardingElements(GlobsPanelBuilder builder) {
