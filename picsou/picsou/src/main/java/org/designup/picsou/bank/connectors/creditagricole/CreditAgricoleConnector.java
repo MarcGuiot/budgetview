@@ -1,9 +1,6 @@
 package org.designup.picsou.bank.connectors.creditagricole;
 
-import com.gargoylesoftware.htmlunit.HttpWebConnection;
-import com.gargoylesoftware.htmlunit.WebClient;
-import com.gargoylesoftware.htmlunit.WebRequest;
-import com.gargoylesoftware.htmlunit.WebResponse;
+import com.gargoylesoftware.htmlunit.*;
 import com.gargoylesoftware.htmlunit.html.HtmlInput;
 import org.designup.picsou.bank.BankConnector;
 import org.designup.picsou.bank.BankConnectorFactory;
@@ -26,6 +23,7 @@ import org.globsframework.utils.directory.Directory;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.io.IOException;
+import java.net.URL;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.Callable;
@@ -40,7 +38,7 @@ public class CreditAgricoleConnector extends WebBankConnector implements HttpCon
 
 
   public static void main(String[] args) throws IOException {
-    WebConnectorLauncher.show(61, new CreditAgricoleFactory(61));
+    WebConnectorLauncher.show(67, new CreditAgricoleFactory(67));
   }
 
   public CreditAgricoleConnector(int bankId, String url, GotoAutentifcation autentification,
@@ -50,10 +48,27 @@ public class CreditAgricoleConnector extends WebBankConnector implements HttpCon
     urlGrid = url;
   }
 
+  boolean isFiltered(String path){
+    if (path.endsWith("bloc_home_test/js/programmation.js")){
+      return true;
+    }
+    return false;
+  }
+
   public HttpWebConnection getHttpConnection(WebClient client) {
     return new HttpWebConnection(client) {
       public WebResponse getResponse(WebRequest request) throws IOException {
-        return super.getResponse(request);
+        URL url = request.getUrl();
+        String path = url.getPath();
+        WebResponse response = null;
+        if (isFiltered(path)) {
+          response = new StringWebResponse("", url);
+        }
+        else {
+          response = super.getResponse(request);
+        }
+
+        return response;
       }
     };
   }
