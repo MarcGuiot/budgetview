@@ -150,16 +150,16 @@ public class SavingsCategorizationTest extends LoggedInFunctionalTestCase {
     categorization
       .selectTransactions("TRANSFER IN MAIN1", "TRANSFER IN SAVINGS2")
       .selectIncome()
-      .checkCreateSeriesNotAvailable("Transactions from main and savings accounts must be assigned to " +
-                                     "different envelopes.");
+      .checkCreateSeriesMessage("Transactions from main and savings accounts must be assigned to " +
+                                "different envelopes.");
 
     // 2. Savings + Savings combination denied
 
     categorization
       .selectTransactions("TRANSFER IN SAVINGS2", "EXPENSE IN SAVINGS3")
       .selectIncome()
-      .checkCreateSeriesNotAvailable("Transactions from different savings accounts must be assigned to " +
-                                     "different envelopes.");
+      .checkCreateSeriesMessage("Transactions from different savings accounts must be assigned to " +
+                                "different envelopes.");
 
     // 3. Can create only for a single account
 

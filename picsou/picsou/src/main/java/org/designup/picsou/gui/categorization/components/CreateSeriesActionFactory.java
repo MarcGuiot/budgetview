@@ -9,10 +9,12 @@ import org.designup.picsou.model.*;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.SelectionService;
 import org.globsframework.model.*;
+import org.globsframework.utils.Utils;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
+import java.util.Set;
 
 import static org.globsframework.model.FieldValue.value;
 
@@ -50,17 +52,19 @@ public class CreateSeriesActionFactory {
       GlobList currentTransactions = categorizationSelector.getCurrentTransactions();
 
       if (budgetArea != BudgetArea.TRANSFER && containsMainAndSavings(currentTransactions)) {
-        MessageDialog.show("categorization.createSeries.mainAndSavings.title",
-                           MessageType.INFO,
-                           directory,
-                           "categorization.createSeries.mainAndSavings.message");
+        showError("categorization.createSeries.mainAndSavings.message");
         return;
       }
       if (budgetArea != BudgetArea.TRANSFER && containsDifferentSavings(currentTransactions)) {
-        MessageDialog.show("categorization.createSeries.mainAndSavings.title",
-                           MessageType.INFO,
-                           directory,
-                           "categorization.createSeries.differentSavings.message");
+        showError("categorization.createSeries.differentSavings.message");
+        return;
+      }
+      if (budgetArea == BudgetArea.TRANSFER && currentTransactions.getValueSet(Transaction.ACCOUNT).size() > 2) {
+        showError("categorization.createSeries.maxTwoAccountsForTransfer.message");
+        return;
+      }
+      if (budgetArea == BudgetArea.TRANSFER && containsInvalidSignsForTransfer(currentTransactions)) {
+        showError("categorization.createSeries.incoherentSigns.message");
         return;
       }
 
@@ -85,6 +89,13 @@ public class CreateSeriesActionFactory {
           repository.completeChangeSet();
         }
       }
+    }
+
+    public void showError(String messageKey) {
+      MessageDialog.show("categorization.createSeries.error.title",
+                         MessageType.INFO,
+                         directory,
+                         messageKey);
     }
 
     private boolean containsMainAndSavings(GlobList currentTransactions) {
@@ -112,6 +123,43 @@ public class CreateSeriesActionFactory {
         }
       }
       return false;
+    }
+
+    private boolean containsInvalidSignsForTransfer(GlobList currentTransactions) {
+      Integer[] accountIds = currentTransactions.getValueSetArray(Transaction.ACCOUNT);
+      if (accountIds.length != 2) {
+        return false;
+      }
+      Integer account1 = accountIds[0];
+      Integer account2 = accountIds[1];
+      int account1Pos = 0;
+      int account1Neg = 0;
+      int account2Pos = 0;
+      int account2Neg = 0;
+      for (Glob transaction : currentTransactions) {
+        boolean positive = transaction.get(Transaction.AMOUNT) > 0;
+        if (Utils.equal(account1, transaction.get(Transaction.ACCOUNT))) {
+          if (positive) {
+            account1Pos++;
+          }
+          else {
+            account1Neg++;
+          }
+        }
+        if (Utils.equal(account2, transaction.get(Transaction.ACCOUNT))) {
+          if (positive) {
+            account2Pos++;
+          }
+          else {
+            account2Neg++;
+          }
+        }
+      }
+
+      return (account1Pos > 0 && account1Neg > 0) ||
+             (account2Pos > 0 && account2Neg > 0) ||
+             (account1Pos > 0 && account2Pos > 0) ||
+             (account1Neg > 0 && account2Neg > 0);
     }
 
     private boolean categorize(Glob series, final Glob transaction) {

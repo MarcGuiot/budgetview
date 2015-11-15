@@ -166,7 +166,7 @@ public class BudgetAreaCategorizationChecker extends GuiChecker {
     return this;
   }
 
-  public BudgetAreaCategorizationChecker checkCreateSeriesNotAvailable(String message) {
+  public BudgetAreaCategorizationChecker checkCreateSeriesMessage(String message) {
     MessageDialogChecker.open(categorizationChecker.getPanel()
                                 .getPanel(budgetArea.getName() + "SeriesChooser")
                                 .getButton("createSeries")
