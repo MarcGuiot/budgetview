@@ -40,23 +40,26 @@
 
       <htmlEditorPane ref="noSeriesMessage" border="empty(10)" hyperlinkListener="hyperlinkHandler"/>
       <scrollPane verticalUnitIncrement="15" weightY="100">
-        <row border="empty(10,0,0,0)">
-          <column>
-            <panel ref="rootSeriesPanel" weightY="0.1"/>
-            <button action="createSeries" name="createSeriesInline"
-                    text="$categorization.series.add.short" styleClass="add"/>
-            <filler fill="vertical"/>
-          </column>
-          <column>
-            <repeat ref="groupRepeat" layout="column">
-              <column name="groupPanel" border="matte(1,1,1,1,#FFFFFF)" autoHideSource="groupLabel">
-                <label ref="groupLabel"/>
-                <panel ref="seriesPanel"/>
-              </column>
-            </repeat>
-            <filler fill="vertical"/>
-          </column>
-        </row>
+        <column>
+          <htmlEditorPane ref="categorizationMessage"/>
+          <row border="empty(10,0,0,0)">
+            <column>
+              <panel ref="rootSeriesPanel" weightY="0.1"/>
+              <button action="createSeries" name="createSeriesInline"
+                      text="$categorization.series.add.short" styleClass="add"/>
+              <filler fill="vertical"/>
+            </column>
+            <column>
+              <repeat ref="groupRepeat" layout="column">
+                <column name="groupPanel" border="matte(1,1,1,1,#FFFFFF)" autoHideSource="groupLabel">
+                  <label ref="groupLabel"/>
+                  <panel ref="seriesPanel"/>
+                </column>
+              </repeat>
+              <filler fill="vertical"/>
+            </column>
+          </row>
+        </column>
       </scrollPane>
 
       <row styleClass="footer" ref="groupCreateEditSeries">

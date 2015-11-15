@@ -18,8 +18,9 @@ public class UserTableFilter {
     ACTIVE_WITH_MAIL("Active with email", and(isTrue(User.ACTIVATED),
                                               not(isTrue(User.LOST)),
                                               isNotNull(User.EMAIL))),
-    RETAINED_AND_LOST("Retained and lost", and(isTrue(User.RETAINED),
-                                               isTrue(User.LOST)));
+    RETAINED_AND_LOST("Retained and lost with email", and(isTrue(User.RETAINED),
+                                                          isTrue(User.LOST),
+                                                          isNotNull(User.EMAIL)));
 
     private final String label;
     private final GlobMatcher matcher;

@@ -211,7 +211,7 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
     uncategorized.checkNotShown();
   }
 
-  public void testSavingsOperationsCanBeAssignedToAnyBudgetArea() throws Exception {
+  public void testSavingsOperationsCanBeAssignedToAnyBudgetAreaButForAccountSpecificEnvelopesOnly() throws Exception {
 
     budgetView.income.createSeries().setName("Income").setAmount(2000.00).validate();
     budgetView.income.createSeries().setName("Bonus").setAmount(500.00).validate();
@@ -234,7 +234,13 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
     categorization.showUncategorizedTransactionsForSelectedMonths()
       .selectTransaction("SALARY")
       .selectIncome()
-      .checkSeriesListEquals("Income", "Bonus");
+      .checkContainsNoSeries()
+      .createSeries()
+      .setName("Other salary")
+      .validate();
+
+    categorization.selectIncome()
+      .checkSeriesListEquals("Other salary");
   }
 
   public void testCreateSavingsSeriesAndAssociateLaterToAccount() throws Exception {
@@ -1742,10 +1748,10 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
       .addTransaction("2008/06/06", 100.00, "Virement de Epargne")
       .load();
 
-    categorization.selectTransaction("Virement vers Epargne")
-      .selectTransfers()
-      .createSavingsAccount().setName("suisse account")
-      .selectBank("CIC").validate();
+    accounts.createNewAccount()
+      .setName("Swiss account")
+      .selectBank("CIC")
+      .validate();
 
     OfxBuilder.init(this)
       .addBankAccount(BankEntity.GENERIC_BANK_ENTITY_ID, 111, "111222", 3000.00, "2008/08/10")
@@ -1770,7 +1776,7 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
       .editSeries("To account n. 111222").alignPlannedAndActual().setPropagationEnabled().validate();
     categorization.selectTransaction("Virement de courant")
       .selectTransfers()
-      .checkDoesNotContainSeries("suisse account")
+      .checkDoesNotContainSeries("Swiss account")
       .selectSeries("To account n. 111222")
       .editSeries("To account n. 111222").alignPlannedAndActual().setPropagationEnabled().validate();
     categorization.selectTransaction("Virement vers courant")

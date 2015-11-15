@@ -210,6 +210,11 @@ public class Account {
            AccountType.MAIN.getId().equals(account.get(Account.ACCOUNT_TYPE));
   }
 
+  public static boolean isSavings(Integer accountId, GlobRepository repository) {
+    Glob account = repository.find(org.globsframework.model.Key.create(Account.TYPE, accountId));
+    return isSavings(account);
+  }
+
   public static boolean isSavings(FieldValues account) {
     return account != null && AccountType.SAVINGS.getId().equals(account.get(ACCOUNT_TYPE));
   }

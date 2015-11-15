@@ -72,7 +72,7 @@ public class SeriesEditionDialog {
   private SeriesAmountEditionPanel amountEditionPanel;
   private GlobList selectedTransactions = new EmptyGlobList();
   private GlobLinkComboEditor fromAccountsCombo;
-  private GlobLinkComboEditor toAccountsCombo;
+  private GlobLinkComboEditor toAccountCombo;
   private GlobLinkComboEditor targetAccountCombo;
   private JLabel targetAccountLabel;
   private Boolean isAutomatic = false;
@@ -175,10 +175,10 @@ public class SeriesEditionDialog {
       .setFilter(accountFilter);
     builder.add("fromAccount", fromAccountsCombo);
 
-    toAccountsCombo = GlobLinkComboEditor.init(Series.TO_ACCOUNT, localRepository, localDirectory)
+    toAccountCombo = GlobLinkComboEditor.init(Series.TO_ACCOUNT, localRepository, localDirectory)
       .setShowEmptyOption(false)
       .setFilter(accountFilter);
-    builder.add("toAccount", toAccountsCombo);
+    builder.add("toAccount", toAccountCombo);
 
     CreateAccountAction action = new CreateAccountAction(AccountType.MAIN, localRepository, directory, dialog);
     builder.add("createAccount", action);
@@ -229,7 +229,7 @@ public class SeriesEditionDialog {
         if (currentSeries != null) {
           boolean isSavingsSeries = currentSeries.get(Series.BUDGET_AREA).equals(BudgetArea.TRANSFER.getId());
           fromAccountsCombo.setVisible(isSavingsSeries);
-          toAccountsCombo.setVisible(isSavingsSeries);
+          toAccountCombo.setVisible(isSavingsSeries);
           dayChooser.setSelectedItem(currentSeries.get(Series.DAY));
           Glob fromAccount = repository.findLinkTarget(currentSeries, Series.FROM_ACCOUNT);
           Glob toAccount = repository.findLinkTarget(currentSeries, Series.TO_ACCOUNT);
@@ -330,16 +330,24 @@ public class SeriesEditionDialog {
       targetAccountLabel.setVisible(false);
     }
     else {
-      Set<Integer> accountIds = Series.getRealTransactions(currentSeries.get(Series.ID), localRepository).getValueSet(Transaction.ACCOUNT);
+      Set<Integer> accountIds = Series.getRealTransactions(currentSeries.get(Series.ID), selectedTransactions, repository).getValueSet(Transaction.ACCOUNT);
       Account.filterOutDeferred(accountIds, localRepository);
       if (accountIds.size() > 1) {
         targetAccountCombo.setVisible(false);
         targetAccountLabel.setVisible(true);
       }
-      else if (accountIds.size() == 1) {
-        targetAccountCombo.setFilter(AccountMatchers.userOrSummaryMainAccounts(accountIds.iterator().next()));
-        targetAccountCombo.setVisible(true);
-        targetAccountLabel.setVisible(false);
+      else if ((accountIds.size() == 1)) {
+        Integer accountId = getTargetAccountForCreation(accountIds);
+        if (Account.isSavings(accountId, localRepository)) {
+          targetAccountCombo.setFilter(GlobMatchers.fieldEquals(Account.ID, accountId));
+          targetAccountCombo.setVisible(false);
+          targetAccountLabel.setVisible(true);
+        }
+        else {
+          targetAccountCombo.setFilter(AccountMatchers.userOrSummaryMainAccounts(accountIds.iterator().next()));
+          targetAccountCombo.setVisible(true);
+          targetAccountLabel.setVisible(false);
+        }
       }
       else {
         targetAccountCombo.setFilter(AccountMatchers.userOrSummaryMainAccounts());
@@ -446,7 +454,7 @@ public class SeriesEditionDialog {
     try {
       localRepository.startChangeSet();
       localRepository.rollback();
-      initBudgetAreaSeries(BudgetArea.get(series.get(Series.BUDGET_AREA)), new Ref<Integer>(), new Ref<Integer>());
+      initBudgetAreaSeries(BudgetArea.get(series.get(Series.BUDGET_AREA)), new Ref<Integer>(), new Ref<Integer>(), Collections.<Integer>emptySet());
     }
     finally {
       localRepository.completeChangeSet();
@@ -457,6 +465,7 @@ public class SeriesEditionDialog {
   public Key showNewSeries(GlobList transactions, GlobList selectedMonths, BudgetArea budgetArea, FieldValue... forcedValues) {
     resetSeries();
     selectedTransactions = transactions;
+    Set<Integer> accounts = transactions.getValueSet(Transaction.ACCOUNT);
     Glob newSeries;
     try {
       localRepository.startChangeSet();
@@ -465,7 +474,7 @@ public class SeriesEditionDialog {
       this.budgetArea = budgetArea;
       Ref<Integer> fromAccount = new Ref<Integer>();
       Ref<Integer> toAccount = new Ref<Integer>();
-      initBudgetAreaSeries(budgetArea, fromAccount, toAccount);
+      initBudgetAreaSeries(budgetArea, fromAccount, toAccount, accounts);
 
       String label;
       if (!transactions.isEmpty() && budgetArea == BudgetArea.RECURRING
@@ -479,7 +488,7 @@ public class SeriesEditionDialog {
 
       SortedSet<Integer> days = transactions.getSortedSet(Transaction.DAY);
       Integer day = days.isEmpty() ? 1 : days.last();
-      newSeries = createSeries(label, day, fromAccount.get(), toAccount.get(), forcedValues);
+      newSeries = createSeries(label, day, fromAccount.get(), toAccount.get(), accounts, forcedValues);
     }
     finally {
       localRepository.completeChangeSet();
@@ -524,7 +533,7 @@ public class SeriesEditionDialog {
     }
   }
 
-  private Glob createSeries(String label, Integer day, Integer fromAccountId, Integer toAccountId, FieldValue... forcedValues) {
+  private Glob createSeries(String label, Integer day, Integer fromAccountId, Integer toAccountId, Set<Integer> accounts, FieldValue... forcedValues) {
     FieldValuesBuilder values =
       FieldValuesBuilder.init(value(Series.BUDGET_AREA, budgetArea.getId()),
                               value(Series.INITIAL_AMOUNT, null),
@@ -553,7 +562,7 @@ public class SeriesEditionDialog {
       }
     }
     else if (budgetArea != BudgetArea.TRANSFER) {
-      values.set(value(Series.TARGET_ACCOUNT, Account.MAIN_SUMMARY_ACCOUNT_ID));
+      values.set(value(Series.TARGET_ACCOUNT, getTargetAccountForCreation(accounts)));
     }
     if (toAccountId != null) {
       values.set(value(Series.TO_ACCOUNT, toAccountId));
@@ -568,7 +577,16 @@ public class SeriesEditionDialog {
     return localRepository.create(Series.TYPE, values.toArray());
   }
 
-  private void initBudgetAreaSeries(BudgetArea budgetArea, Ref<Integer> fromAccount, Ref<Integer> toAccount) {
+  private Integer getTargetAccountForCreation(Set<Integer> accounts) {
+    for (Integer accountId : accounts) {
+      if (Account.isSavings(accountId, localRepository)) {
+        return accountId;
+      }
+    }
+    return Account.MAIN_SUMMARY_ACCOUNT_ID;
+  }
+
+  private void initBudgetAreaSeries(BudgetArea budgetArea, Ref<Integer> fromAccount, Ref<Integer> toAccount, Set<Integer> accounts) {
     this.budgetArea = budgetArea;
 
     loadSeries(localRepository, repository);
@@ -589,18 +607,18 @@ public class SeriesEditionDialog {
       }
     }
     if (positiveAccounts.size() == 1) {
-      toAccountsCombo
+      toAccountCombo
         .setFilter(fieldEquals(Account.ID, positiveAccounts.iterator().next()));
       toAccount.set(positiveAccounts.iterator().next());
     }
     else {
       if (negativeAccounts.size() == 1) {
-        toAccountsCombo.setFilter(
+        toAccountCombo.setFilter(
           and(accountFilter,
               not(fieldEquals(Account.ID, negativeAccounts.iterator().next()))));
       }
       else {
-        toAccountsCombo.setFilter(accountFilter);
+        toAccountCombo.setFilter(accountFilter);
       }
     }
     if (negativeAccounts.size() == 1) {

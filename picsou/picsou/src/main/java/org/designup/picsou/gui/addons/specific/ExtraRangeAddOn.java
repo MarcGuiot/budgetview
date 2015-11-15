@@ -17,7 +17,7 @@ public class ExtraRangeAddOn extends AddOn {
   }
 
   protected void processPostActivation(GlobRepository repository, Directory directory) {
-    directory.get(SignpostService.class).show(CardView.getSignpostId(Card.PROJECTS),
+    directory.get(SignpostService.class).show(CardView.getSignpostId(Card.BUDGET),
                                               Lang.get("addons.extrarange.signpost"),
                                               TipPosition.BOTTOM_RIGHT,
                                               TipAnchor.SOUTH);

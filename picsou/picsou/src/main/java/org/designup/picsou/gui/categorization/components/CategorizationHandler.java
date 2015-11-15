@@ -29,7 +29,7 @@ import java.util.*;
 
 import static org.globsframework.model.FieldValue.value;
 
-public class CategorizationSelector implements GlobSelectionListener, ChangeSetListener {
+public class CategorizationHandler implements GlobSelectionListener, ChangeSetListener {
 
   private BudgetArea[] budgetAreas =
     {BudgetArea.UNCATEGORIZED,
@@ -55,9 +55,9 @@ public class CategorizationSelector implements GlobSelectionListener, ChangeSetL
   private ReconciliationNavigationPanel reconciliationNavigation;
   private SplitsNode<JLabel> downArrow;
 
-  public CategorizationSelector(GlobMatcher toReconcileMatcher,
-                                TransactionRendererColors colors,
-                                GlobRepository repository, Directory directory) {
+  public CategorizationHandler(GlobMatcher toReconcileMatcher,
+                               TransactionRendererColors colors,
+                               GlobRepository repository, Directory directory) {
     this.toReconcileMatcher = toReconcileMatcher;
     this.colors = colors;
     this.repository = repository;

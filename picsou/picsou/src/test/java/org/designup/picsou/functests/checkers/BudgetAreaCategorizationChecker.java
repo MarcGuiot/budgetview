@@ -65,7 +65,7 @@ public class BudgetAreaCategorizationChecker extends GuiChecker {
     List<String> names = new ArrayList<String>();
     UIComponent[] radios = container.getUIComponents(RadioButton.class);
     for (UIComponent radio : radios) {
-      RadioButton radioButton = (RadioButton)radio;
+      RadioButton radioButton = (RadioButton) radio;
       if (radioButton.isSelected().isTrue()) {
         names.add(radio.getLabel());
       }
@@ -117,7 +117,7 @@ public class BudgetAreaCategorizationChecker extends GuiChecker {
         UIComponent[] selectors = panel.getUIComponents(RadioButton.class);
         for (UIComponent selector : selectors) {
           if (selector.getAwtComponent().isVisible()) {
-            assertFalse(selector.getLabel() + " selected", ((RadioButton)selector).isSelected());
+            assertFalse(selector.getLabel() + " selected", ((RadioButton) selector).isSelected());
           }
         }
       }
@@ -132,7 +132,7 @@ public class BudgetAreaCategorizationChecker extends GuiChecker {
         if (uiComponents.length > 1) {
           List<String> names = new ArrayList<String>();
           for (UIComponent uiComponent : uiComponents) {
-            RadioButton toggle = (RadioButton)uiComponent;
+            RadioButton toggle = (RadioButton) uiComponent;
             names.add(toggle.getLabel());
           }
           fail("Unexpect toggles found: " + names);
@@ -165,6 +165,16 @@ public class BudgetAreaCategorizationChecker extends GuiChecker {
       .validate();
     return this;
   }
+
+  public BudgetAreaCategorizationChecker checkCreateSeriesNotAvailable(String message) {
+    MessageDialogChecker.open(categorizationChecker.getPanel()
+                                .getPanel(budgetArea.getName() + "SeriesChooser")
+                                .getButton("createSeries")
+                                .triggerClick())
+      .checkInfoMessageContains(message);
+    return this;
+  }
+
 
   public BudgetAreaCategorizationChecker selectNewSeries(String seriesName) {
     createSeries().setName(seriesName)
@@ -346,7 +356,7 @@ public class BudgetAreaCategorizationChecker extends GuiChecker {
     Panel groupPanel = getGroupPanel(group);
     List<String> actualSeries = new ArrayList<String>();
     for (Component component : groupPanel.getSwingComponents(JRadioButton.class)) {
-      JRadioButton radio = (JRadioButton)component;
+      JRadioButton radio = (JRadioButton) component;
       actualSeries.add(radio.getText());
     }
     return actualSeries;
@@ -365,7 +375,7 @@ public class BudgetAreaCategorizationChecker extends GuiChecker {
   private Panel getGroupPanel(String groupName) {
     List<JLabel> matchingLabels = new ArrayList<JLabel>();
     for (Component component : panel.getSwingComponents(JLabel.class, "groupLabel")) {
-      JLabel label = (JLabel)component;
+      JLabel label = (JLabel) component;
       if (component.isVisible() && Utils.equals(groupName, label.getText())) {
         matchingLabels.add(label);
       }
@@ -390,7 +400,7 @@ public class BudgetAreaCategorizationChecker extends GuiChecker {
 
   public BudgetAreaCategorizationChecker checkGroupNotShown(String group) {
     for (Component component : panel.getSwingComponents(JLabel.class, "groupLabel")) {
-      JLabel label = (JLabel)component;
+      JLabel label = (JLabel) component;
       if (component.isVisible() && Utils.equals(group, label.getText())) {
         Assert.fail("Group '" + group + "' unexpectedly visible in: " + getVisibleGroupNames());
       }
@@ -408,7 +418,7 @@ public class BudgetAreaCategorizationChecker extends GuiChecker {
     List<String> visibleGroups = new ArrayList<String>();
     for (Component component : panel.getSwingComponents(JLabel.class, "groupLabel")) {
       if (component.isVisible()) {
-        JLabel label = (JLabel)component;
+        JLabel label = (JLabel) component;
         visibleGroups.add(label.getText());
       }
     }

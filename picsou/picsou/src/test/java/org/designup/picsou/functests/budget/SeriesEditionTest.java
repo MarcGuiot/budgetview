@@ -1174,7 +1174,7 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
       .setName("Virt ING")
       .setAccountNumber("1234")
       .selectBank("ING Direct")
-      .checkIsSavings()
+      .setAsSavings()
       .validate();
 
     seriesEdition

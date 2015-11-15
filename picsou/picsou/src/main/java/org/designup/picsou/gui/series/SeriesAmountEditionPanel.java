@@ -304,8 +304,7 @@ public class SeriesAmountEditionPanel {
     Glob series = repository.get(currentSeries);
     BudgetArea budgetArea = BudgetArea.get(series.get(Series.BUDGET_AREA));
     double multiplier = Account.getMultiplierForInOrOutputOfTheAccount(series);
-    boolean isUsuallyPositive = budgetArea.isIncome() ||
-                                (budgetArea == BudgetArea.TRANSFER && multiplier > 0);
+    boolean isUsuallyPositive = budgetArea.isIncome() || (budgetArea == BudgetArea.TRANSFER && multiplier > 0);
     amountEditor.update(isUsuallyPositive, budgetArea == BudgetArea.TRANSFER);
   }
 

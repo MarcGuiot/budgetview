@@ -289,6 +289,10 @@ public class Series {
       .getGlobs().filter(GlobMatchers.isFalse(Transaction.PLANNED), repository);
   }
 
+  public static GlobList getRealTransactions(Integer seriesId, GlobList transactionList, GlobRepository repository) {
+    return transactionList.filter(GlobMatchers.isFalse(Transaction.PLANNED), repository);
+  }
+
   public static void delete(Glob series, GlobRepository repository) {
     if (series != null && series.exists()) {
       repository.startChangeSet();
