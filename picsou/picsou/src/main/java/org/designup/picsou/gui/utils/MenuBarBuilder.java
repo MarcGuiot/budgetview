@@ -180,6 +180,7 @@ public class MenuBarBuilder {
     devMenu.add(new DumpRepositoryAction(replicationGlobRepository));
     devMenu.add(new DumpDataAction(repository));
     devMenu.add(new DataCheckerAction(repository, directory));
+    devMenu.add(new DumpUndoStackAction(repository, directory));
     devMenu.add(new ThrowExceptionAction());
     devMenu.add(new ThrowInRepoExceptionAction(repository));
     devMenu.add(new AddAccountErrorAction(repository));

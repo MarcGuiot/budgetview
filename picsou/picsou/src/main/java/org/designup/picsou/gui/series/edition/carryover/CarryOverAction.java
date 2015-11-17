@@ -1,11 +1,14 @@
 package org.designup.picsou.gui.series.edition.carryover;
 
+import com.budgetview.shared.utils.Amounts;
 import org.designup.picsou.gui.components.dialogs.ConfirmationDialog;
 import org.designup.picsou.gui.components.dialogs.MessageDialog;
 import org.designup.picsou.gui.components.dialogs.MessageType;
 import org.designup.picsou.gui.description.Formatting;
-import org.designup.picsou.model.*;
-import com.budgetview.shared.utils.Amounts;
+import org.designup.picsou.model.Month;
+import org.designup.picsou.model.ProjectItem;
+import org.designup.picsou.model.Series;
+import org.designup.picsou.model.SeriesBudget;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobSelection;
 import org.globsframework.gui.GlobSelectionListener;
@@ -143,6 +146,16 @@ public class CarryOverAction
 
   public void actionPerformed(ActionEvent actionEvent) {
 
+    repository.startChangeSet();
+    try {
+      doApply();
+    }
+    finally {
+      repository.completeChangeSet();
+    }
+  }
+
+  public void doApply() {
     Glob series = repository.find(seriesKey);
     Glob seriesBudget = SeriesBudget.find(seriesId, currentMonth, repository);
     double actual = seriesBudget.get(SeriesBudget.ACTUAL_AMOUNT, 0.00);
@@ -174,29 +187,23 @@ public class CarryOverAction
       result = computer.forceSingleMonth(nextMonthActual, nextMonthPlanned);
     }
 
-    repository.startChangeSet();
-    try {
-      int lastMonth = currentMonth;
-      int index = 0;
-      for (CarryOver carryOver : result) {
-        lastMonth = carryOver.getMonth();
-        Glob budget = SeriesBudget.findOrCreate(seriesId, lastMonth, repository);
-        double newPlanned = carryOver.getNewPlanned();
-        repository.update(budget.getKey(),
-                          value(SeriesBudget.ACTIVE,
-                                budget.isTrue(SeriesBudget.ACTIVE) || Amounts.isNotZero(newPlanned)),
-                          value(SeriesBudget.PLANNED_AMOUNT, newPlanned));
-        if ((index++ > 1) && (option != CarryOverOption.SEVERAL_MONTHS)) {
-          break;
-        }
-      }
-      repository.update(seriesKey, value(Series.IS_AUTOMATIC, false));
-      if (currentMonth.equals(series.get(Series.LAST_MONTH))) {
-        repository.update(seriesKey, Series.LAST_MONTH, lastMonth);
+    int lastMonth = currentMonth;
+    int index = 0;
+    for (CarryOver carryOver : result) {
+      lastMonth = carryOver.getMonth();
+      Glob budget = SeriesBudget.findOrCreate(seriesId, lastMonth, repository);
+      double newPlanned = carryOver.getNewPlanned();
+      repository.update(budget.getKey(),
+                        value(SeriesBudget.ACTIVE,
+                              budget.isTrue(SeriesBudget.ACTIVE) || Amounts.isNotZero(newPlanned)),
+                        value(SeriesBudget.PLANNED_AMOUNT, newPlanned));
+      if ((index++ > 1) && (option != CarryOverOption.SEVERAL_MONTHS)) {
+        break;
       }
     }
-    finally {
-      repository.completeChangeSet();
+    repository.update(seriesKey, value(Series.IS_AUTOMATIC, false));
+    if (currentMonth.equals(series.get(Series.LAST_MONTH))) {
+      repository.update(seriesKey, Series.LAST_MONTH, lastMonth);
     }
   }
 

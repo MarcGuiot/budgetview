@@ -5,6 +5,7 @@ import org.globsframework.model.ChangeSet;
 import org.globsframework.model.ChangeSetListener;
 import org.globsframework.model.GlobRepository;
 
+import java.io.PrintStream;
 import java.util.*;
 
 public class UndoRedoService {
@@ -104,6 +105,13 @@ public class UndoRedoService {
   public void cleanUndo() {
     changesToUndo.clear();
     notifyListeners();
+  }
+
+  public void dump(PrintStream out) {
+    for (Change change : changesToUndo) {
+      out.append(change.toString());
+      out.append("\n\n--------------------------------");
+    }
   }
 
   private class Change {

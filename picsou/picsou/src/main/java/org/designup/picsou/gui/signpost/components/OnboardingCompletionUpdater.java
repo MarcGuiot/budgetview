@@ -31,7 +31,7 @@ public class OnboardingCompletionUpdater {
   }
 
   private static void update(GlobRepository repository) {
-    if (!repository.contains(SignpostStatus.TYPE)) {
+    if (!repository.contains(SignpostStatus.TYPE) || SignpostStatus.isCompleted(SignpostStatus.SERIES_AMOUNT_DONE, repository)) {
       return;
     }
 

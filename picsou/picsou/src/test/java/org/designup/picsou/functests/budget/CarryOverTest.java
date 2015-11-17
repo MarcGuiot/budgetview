@@ -41,6 +41,54 @@ public class CarryOverTest extends LoggedInFunctionalTestCase {
     budgetView.variable.checkCarryOverDisabled("Courses");
   }
 
+  public void testUndo() throws Exception {
+    operations.openPreferences()
+      .setFutureMonthsCount(2)
+      .validate();
+
+    OfxBuilder.init(this)
+      .addBankAccount("0001234", 200.00, "2008/08/20")
+      .addTransaction("2008/06/01", 1000.00, "WorldCo")
+      .addTransaction("2008/06/03", -75.00, "Auchan")
+      .addTransaction("2008/07/01", 1000.00, "WorldCo")
+      .addTransaction("2008/07/03", -75.00, "Auchan")
+      .addTransaction("2008/08/01", 1000.00, "WorldCo")
+      .addTransaction("2008/08/03", -75.00, "Auchan")
+      .load();
+
+    categorization
+      .setNewIncome("WorldCo", "Salary", 1000.00)
+      .setNewVariable("Auchan", "Courses", -100.00);
+
+    budgetView.variable.checkContent("| Courses | 75.00 | 100.00 |");
+    mainAccounts.getChart("Account n. 0001234")
+      .checkValue(200808, 1, 275.00)
+      .checkValue(200808, 3, 200.00)
+      .checkValue(200808, 4, 175.00)
+      .checkValue(200809, 4, 1075.00)
+      .checkValue(200810, 4, 1975.00);
+
+    timeline.selectMonths("2008/08");
+    budgetView.variable.carryExpensesRemainderOver("Courses");
+
+    budgetView.variable.checkContent("| Courses | 75.00 | 75.00 |");
+    mainAccounts.getChart("Account n. 0001234")
+      .checkValue(200808, 1, 275.00)
+      .checkValue(200808, 3, 200.00)
+      .checkValue(200809, 4, 1075.00)
+      .checkValue(200810, 4, 1975.00);
+
+    operations.undo();
+
+    budgetView.variable.checkContent("| Courses | 75.00 | 100.00 |");
+    mainAccounts.getChart("Account n. 0001234")
+      .checkValue(200808, 1, 275.00)
+      .checkValue(200808, 3, 200.00)
+      .checkValue(200808, 4, 175.00)
+      .checkValue(200809, 4, 1075.00)
+      .checkValue(200810, 4, 1975.00);
+  }
+
   public void testExpensesRemainder() throws Exception {
     operations.openPreferences()
       .setFutureMonthsCount(2)
@@ -588,7 +636,7 @@ public class CarryOverTest extends LoggedInFunctionalTestCase {
 
     timeline.selectMonth("2008/09");
     budgetView.transfer.checkSeries("To account ING", "0.00", "600.00");
-    
+
     timeline.selectMonths("2008/08", "2008/09", "2008/10");
     transactions
       .showPlannedTransactions()
