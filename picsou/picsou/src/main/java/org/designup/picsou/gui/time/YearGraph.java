@@ -109,13 +109,13 @@ public class YearGraph extends DefaultCompositeSelectable {
     if (monthDim < yearWidth || intersection.getWidth() < yearWidth) {
       if (intersection.getWidth() > shortYearWidth + 1) {
         TimeGraph.drawStringIn(graphics2D, startX, yearCellHeight - 5, shortYearText,
-                               colors.yearText, colors.textShadow);
+                               colors.yearText);
       }
     }
     else {
       TimeGraph.drawStringIn(graphics2D, startX + (int)((intersection.getWidth() - yearWidth) / 2),
                              yearCellHeight - 5, yearText,
-                             colors.yearText, colors.textShadow);
+                             colors.yearText);
     }
     return monthDim;
   }

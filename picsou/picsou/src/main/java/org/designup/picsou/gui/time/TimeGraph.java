@@ -130,9 +130,7 @@ public class TimeGraph {
     return totalHeight;
   }
 
-  public static void drawStringIn(Graphics2D graphics2D, int x, int y, String text, Color textColor, Color shadowColor) {
-    graphics2D.setPaint(shadowColor);
-    graphics2D.drawString(text, x - 1, y - 1);
+  public static void drawStringIn(Graphics2D graphics2D, int x, int y, String text, Color textColor) {
     graphics2D.setPaint(textColor);
     graphics2D.drawString(text, x, y);
   }

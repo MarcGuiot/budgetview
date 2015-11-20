@@ -20,8 +20,9 @@ public class MonthGraph extends AbstractSelectable implements Comparable<MonthGr
   private MonthFontMetricInfo.MonthSizes monthSize;
   private PositionProvider positionProvider;
 
-  private static final int MIN_WIDTH = 50;
-  public static final int BALANCE_HEIGHT = 4;
+  private static final int MIN_WIDTH = 30;
+  private static final int MARGIN = 5;
+  public static final int BALANCE_HEIGHT = 2;
 
   public MonthGraph(Glob month, TimeViewColors colors, ChainedSelectableElement element,
                     TimeService timeService, PositionProvider positionProvider) {
@@ -36,8 +37,8 @@ public class MonthGraph extends AbstractSelectable implements Comparable<MonthGr
     monthSize = monthFontMetricInfo.getMonthInfo(Month.toMonth(month.get(Month.ID)));
   }
 
-  public int getNearestRank(int widht) {
-    return monthSize.getNearest(widht);
+  public int getNearestRank(int width) {
+    return monthSize.getNearest(width);
   }
 
   public void draw(Graphics2D graphics2D, TransformationAdapter transformationAdapter, int height, int width,
@@ -56,20 +57,8 @@ public class MonthGraph extends AbstractSelectable implements Comparable<MonthGr
     }
 
     if (selected) {
-      graphics2D.setPaint(new GradientPaint(0, 0, colors.selectedMonthTop, 0, height, colors.selectedMonthBottom));
-    }
-    else if (month.get(Month.ID) <= timeService.getCurrentMonthId()) {
-      graphics2D.setPaint(new GradientPaint(0, 0, colors.monthTop, 0, height, colors.monthBottom));
-    }
-    else if (month.get(Month.ID) > timeService.getCurrentMonthId()) {
-      graphics2D.setPaint(new GradientPaint(0, 0, colors.futureBackgroundTop, 0, height, colors.futureBackgroundBottom));
-    }
-    graphics2D.fillRect(0, 0, width, height);
-
-    int month = Month.toMonth(this.month.get(Month.ID));
-    if (month == 1) {
-      graphics2D.setPaint(colors.yearSeparator);
-      graphics2D.drawLine(0, 0, 0, height - 1);
+      graphics2D.setPaint(colors.selectedMonthBg);
+      graphics2D.fillRoundRect(MARGIN, 0, width - 2 * MARGIN, height, 8, 8);
     }
 
     MonthFontMetricInfo.Size nearest = monthSize.getSize(monthRank);
@@ -78,17 +67,16 @@ public class MonthGraph extends AbstractSelectable implements Comparable<MonthGr
                            (width - nearest.getWidth() + 2) / 2,
                            height - 6 - 2 * BALANCE_HEIGHT,
                            nearest.getName(),
-                           colors.getMonthTextColor(this.month.get(Month.ID), timeService.getCurrentMonthId()),
-                           colors.textShadow);
+                           colors.getMonthTextColor(selected));
 
     try {
       transformationAdapter.save();
-      transformationAdapter.translate(0, height - BALANCE_HEIGHT - 6);
+      transformationAdapter.translate(0, height - BALANCE_HEIGHT - 4);
       Double minPosition = positionProvider.getMinPosition(this.month.get(Month.ID));
       if (minPosition != null) {
         Color color = colors.getAmountColor(minPosition);
         graphics2D.setPaint(color);
-        int barWidth = width / 4;
+        int barWidth = (int)(0.3 * width);
         graphics2D.fillRect((width - barWidth) / 2, 0, barWidth, BALANCE_HEIGHT);
       }
     }
@@ -102,7 +90,7 @@ public class MonthGraph extends AbstractSelectable implements Comparable<MonthGr
   }
 
   public int getMinWidth() {
-    return Math.max(monthSize.getMinWidth() + 4, MIN_WIDTH);
+    return Math.max(monthSize.getMinWidth() + 4, MIN_WIDTH) + 2 * MARGIN;
   }
 
   public boolean equals(Object o) {
