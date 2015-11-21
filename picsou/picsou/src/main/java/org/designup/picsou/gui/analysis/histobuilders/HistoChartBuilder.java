@@ -48,7 +48,6 @@ public class HistoChartBuilder implements Disposable {
   private HistoLineColors incomeAndExpensesLineColors;
   private HistoLineColors uncategorizedColors;
   private HistoLineColors accountColors;
-  private HistoDailyColors accountDailyColors;
   private HistoDiffColors seriesColors;
 
   private HistoChartRange range;
@@ -137,18 +136,6 @@ public class HistoChartBuilder implements Disposable {
       "histo.account.fill.negative",
       directory
     ));
-
-    accountDailyColors = disposables.add(new HistoDailyColors(
-      accountColors,
-      "histo.account.daily.current",
-      "histo.account.daily.current.annotation",
-      "histo.account.inner.label.positive",
-      "histo.account.inner.label.negative",
-      "histo.account.inner.label.line",
-      "histo.account.inner.rollover.day",
-      "histo.account.inner.selected.day",
-      directory
-    ));
   }
 
   public HistoChart getChart() {
@@ -171,7 +158,7 @@ public class HistoChartBuilder implements Disposable {
     histoChart.clear();
   }
 
-  public void showAccountDailyHisto(final int selectedMonthId, boolean showFullMonthLabels, Set<Integer> accountIds, final DaySelection daySelection, String daily) {
+  public void showAccountDailyHisto(final int selectedMonthId, boolean showFullMonthLabels, Set<Integer> accountIds, final DaySelection daySelection, String daily, HistoDailyColors accountDailyColors) {
 
     List<Integer> monthIdsToShow = getMonthIdsToShow(selectedMonthId);
     final HistoDailyDatasetBuilder builder = createDailyDataset(monthIdsToShow.size(), daily, showFullMonthLabels);
@@ -192,12 +179,7 @@ public class HistoChartBuilder implements Disposable {
     showDailyHisto(selectedMonthId, false, TransactionMatchers.transactionsForAccount(accountId), daySelection, daily, position, colors);
   }
 
-  public void showDailyHisto(int selectedMonthId, boolean showFullMonthLabels, GlobMatcher accountMatcher, DaySelection daySelection, String daily, final DoubleField position) {
-    showDailyHisto(selectedMonthId, showFullMonthLabels, accountMatcher, daySelection, daily, position, accountDailyColors);
-  }
-
-  private void showDailyHisto(int selectedMonthId, boolean showFullMonthLabels, GlobMatcher accountMatcher, DaySelection daySelection, String daily, DoubleField position, HistoDailyColors colors) {
-
+  public void showDailyHisto(int selectedMonthId, boolean showFullMonthLabels, GlobMatcher accountMatcher, DaySelection daySelection, String daily, final DoubleField position, HistoDailyColors accountDailyColors) {
     List<Integer> monthIdsToShow = getMonthIdsToShow(selectedMonthId);
     final HistoDailyDatasetBuilder builder = createDailyDataset(monthIdsToShow.size(), daily, showFullMonthLabels);
 
@@ -214,7 +196,7 @@ public class HistoChartBuilder implements Disposable {
       }
     });
 
-    builder.apply(colors, "daily");
+    builder.apply(accountDailyColors, "daily");
   }
 
   public void showMainBalanceHisto(int selectedMonthId, boolean resetPosition) {

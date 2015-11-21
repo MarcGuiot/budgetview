@@ -1,10 +1,11 @@
-package org.designup.picsou.gui.summary;
+package org.designup.picsou.gui.projects;
 
 import org.designup.picsou.gui.View;
 import org.designup.picsou.gui.components.charts.histo.utils.AutoRangeUpdater;
-import org.designup.picsou.gui.projects.ProjectChartView;
 import org.designup.picsou.gui.analysis.histobuilders.range.HistoChartRange;
 import org.designup.picsou.gui.analysis.histobuilders.range.ScrollableHistoChartRange;
+import org.designup.picsou.gui.projects.ProjectChartView;
+import org.designup.picsou.gui.projects.components.ProjectAccountChartsPanel;
 import org.designup.picsou.model.AccountType;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.model.GlobRepository;

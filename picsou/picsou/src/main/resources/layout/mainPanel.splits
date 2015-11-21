@@ -61,9 +61,9 @@
 
   </styles>
 
-  <column ref="mainPanel" background="header.bg" opaque="true">
+  <column ref="mainPanel" opaque="false">
 
-    <column name="actionsBar" opaque="false">
+    <column name="actionsBar" background="menu.bg" opaque="true">
       <row marginLeft="10" marginRight="5" marginTop="28">
         <button name="backView" action="backView" styleClass="backforward" tooltipText="$back"/>
         <button name="forwardView" action="forwardView" styleClass="backforward" tooltipText="$forward"/>
@@ -75,7 +75,8 @@
       <filler fill="vertical"/>
     </column>
 
-    <panel name="timeviewHeader" layout="org.designup.picsou.gui.utils.HeaderPanelLayout" opaque="false">
+    <panel name="timeviewHeader" background="header.bg" layout="org.designup.picsou.gui.utils.HeaderPanelLayout" opaque="true"
+            border="matte(0,0,1,0,header.border)">
       <label ref="periodTitle" opaque="false" font="LatoLight,plain,22" foreground="header.title"/>
       <button ref="prevPeriod" ui="arrowLeft" styleClass="periodButton"
               tooltipText="$timeView.tooltip.previous"/>
@@ -86,8 +87,7 @@
               tooltipText="$timeView.tooltip.next"/>
       <button ref="lastPeriod" ui="doubleArrowRight" styleClass="doublePeriodButton"
               tooltipText="$timeView.tooltip.last"/>
-      <button ref="importFile" icon="header_import.png" styleClass="iconOnly"
-              tooltipText="$import.tooltip"/>
+      <button ref="importFile" icon="download(24,26,header.title)" styleClass="iconOnly" tooltipText="$import.tooltip"/>
     </panel>
 
     <panel ref="accountView"/>

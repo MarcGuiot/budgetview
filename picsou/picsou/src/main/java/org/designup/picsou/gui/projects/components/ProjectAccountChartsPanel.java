@@ -1,4 +1,4 @@
-package org.designup.picsou.gui.summary;
+package org.designup.picsou.gui.projects.components;
 
 import org.designup.picsou.gui.accounts.AccountViewPanel;
 import org.designup.picsou.gui.accounts.actions.AccountPopupFactory;

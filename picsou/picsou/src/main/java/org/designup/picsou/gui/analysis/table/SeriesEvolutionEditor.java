@@ -5,7 +5,7 @@ import org.designup.picsou.gui.components.table.AbstractRolloverEditor;
 import org.designup.picsou.gui.series.view.SeriesWrapper;
 import org.designup.picsou.gui.series.view.SeriesWrapperType;
 import org.designup.picsou.model.Series;
-import org.globsframework.gui.splits.components.EmptyIcon;
+import org.globsframework.gui.splits.icons.EmptyIcon;
 import org.globsframework.gui.splits.components.HyperlinkButton;
 import org.globsframework.gui.splits.painters.PaintablePanel;
 import org.globsframework.gui.views.GlobTableView;

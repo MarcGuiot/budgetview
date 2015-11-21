@@ -1,11 +1,11 @@
 package org.designup.picsou.gui.accounts.chart;
 
 import com.budgetview.shared.gui.histochart.HistoChartConfig;
+import org.designup.picsou.gui.analysis.histobuilders.HistoChartBuilder;
+import org.designup.picsou.gui.analysis.histobuilders.range.HistoChartRange;
 import org.designup.picsou.gui.card.NavigationService;
 import org.designup.picsou.gui.components.charts.histo.HistoSelection;
 import org.designup.picsou.gui.components.tips.DetailsTip;
-import org.designup.picsou.gui.analysis.histobuilders.HistoChartBuilder;
-import org.designup.picsou.gui.analysis.histobuilders.range.HistoChartRange;
 import org.designup.picsou.gui.transactions.utils.TransactionMatchers;
 import org.designup.picsou.gui.utils.DaySelection;
 import org.designup.picsou.model.Account;
@@ -25,6 +25,8 @@ import java.util.Set;
 
 public class SelectedAccountPositionsChartView extends PositionsChartView {
 
+  private ContentAccountChartColors accountChartColors;
+
   public SelectedAccountPositionsChartView(String componentName, HistoChartRange range,
                                            final GlobRepository repository, final Directory directory) {
     super(range,
@@ -35,6 +37,7 @@ public class SelectedAccountPositionsChartView extends PositionsChartView {
         update();
       }
     }, Account.TYPE, Transaction.TYPE);
+    accountChartColors = new ContentAccountChartColors(directory);
   }
 
   protected void processClick(HistoSelection selection, Set<Key> objectKeys, NavigationService navigationService) {
@@ -73,10 +76,10 @@ public class SelectedAccountPositionsChartView extends PositionsChartView {
     if (accountIds == null || accountIds.isEmpty()) {
       histoChartBuilder.showDailyHisto(currentMonthId, true,
                                        TransactionMatchers.transactionsForMainAccounts(repository),
-                                       daySelection, "daily", Transaction.SUMMARY_POSITION);
+                                       daySelection, "daily", Transaction.SUMMARY_POSITION, accountChartColors.getAccountDailyColors());
     }
     else {
-      histoChartBuilder.showAccountDailyHisto(currentMonthId, true, accountIds, daySelection, "daily");
+      histoChartBuilder.showAccountDailyHisto(currentMonthId, true, accountIds, daySelection, "daily", accountChartColors.getAccountDailyColors());
     }
   }
 }

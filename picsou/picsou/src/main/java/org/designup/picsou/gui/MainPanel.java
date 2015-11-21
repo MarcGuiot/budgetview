@@ -41,7 +41,7 @@ import org.designup.picsou.gui.signpost.guides.ImportSignpost;
 import org.designup.picsou.gui.startup.components.DemoMessageView;
 import org.designup.picsou.gui.startup.components.LogoutService;
 import org.designup.picsou.gui.startup.components.OpenRequestManager;
-import org.designup.picsou.gui.summary.ProjectSelector;
+import org.designup.picsou.gui.projects.ProjectSelector;
 import org.designup.picsou.gui.summary.version.NewVersionView;
 import org.designup.picsou.gui.time.TimeView;
 import org.designup.picsou.gui.title.PeriodView;

@@ -2,7 +2,7 @@ package org.designup.picsou.gui.components.expansion;
 
 import org.designup.picsou.gui.utils.Gui;
 import org.globsframework.gui.splits.color.Colors;
-import org.globsframework.gui.splits.components.ArrowIcon;
+import org.globsframework.gui.splits.icons.ArrowIcon;
 import org.globsframework.gui.splits.utils.TransparentIcon;
 import org.globsframework.gui.views.CellPainter;
 import org.globsframework.model.Glob;

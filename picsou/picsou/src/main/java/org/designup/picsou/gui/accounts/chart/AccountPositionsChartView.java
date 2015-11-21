@@ -2,10 +2,7 @@ package org.designup.picsou.gui.accounts.chart;
 
 import com.budgetview.shared.gui.histochart.HistoChartConfig;
 import org.designup.picsou.gui.card.NavigationService;
-import org.designup.picsou.gui.components.charts.histo.HistoChartColors;
 import org.designup.picsou.gui.components.charts.histo.HistoSelection;
-import org.designup.picsou.gui.components.charts.histo.daily.HistoDailyColors;
-import org.designup.picsou.gui.components.charts.histo.line.HistoLineColors;
 import org.designup.picsou.gui.analysis.histobuilders.HistoChartBuilder;
 import org.designup.picsou.gui.analysis.histobuilders.range.HistoChartRange;
 import org.designup.picsou.gui.utils.DaySelection;
@@ -30,7 +27,7 @@ public class AccountPositionsChartView extends PositionsChartView {
   public static final HistoChartConfig STRIPPED_CONFIG = new HistoChartConfig(false, false, false, false, false, false, false, true, true, true);
 
   private final Integer accountId;
-  private HistoDailyColors dailyColors;
+  private final SidebarAccountChartColors accountChartColors;
   private DisposableGroup disposables = new DisposableGroup();
 
   public static AccountPositionsChartView stripped(Integer accountId, String componentName, HistoChartRange range,
@@ -47,30 +44,7 @@ public class AccountPositionsChartView extends PositionsChartView {
                                     final GlobRepository repository, final Directory directory, HistoChartConfig config) {
     super(range, config, componentName, repository, directory);
     this.accountId = accountId;
-
-    HistoLineColors accountColors = disposables.add(new HistoLineColors(
-      "sidebar.histo.account.line.positive",
-      "sidebar.histo.account.line.negative",
-      "sidebar.histo.account.fill.positive",
-      "sidebar.histo.account.fill.negative",
-      directory
-    ));
-
-    dailyColors = disposables.add(new HistoDailyColors(
-      accountColors,
-      "sidebar.histo.account.daily.current",
-      "sidebar.histo.account.daily.current.annotation",
-      "sidebar.histo.account.inner.label.positive",
-      "sidebar.histo.account.inner.label.negative",
-      "sidebar.histo.account.inner.label.line",
-      "sidebar.histo.account.inner.rollover.day",
-      "sidebar.histo.account.inner.selected.day",
-      directory
-    ));
-  }
-
-  protected HistoChartColors createChartColors(Directory directory) {
-    return new HistoChartColors("sidebar.histo", directory);
+    this.accountChartColors = disposables.add(new SidebarAccountChartColors(directory));
   }
 
   protected void processClick(HistoSelection selection, Set<Key> objectKeys, NavigationService navigationService) {
@@ -102,7 +76,7 @@ public class AccountPositionsChartView extends PositionsChartView {
     histoChartBuilder.showDailyHisto(currentMonthId, accountId,
                                      DaySelection.EMPTY, "daily",
                                      Transaction.ACCOUNT_POSITION,
-                                     dailyColors);
+                                     accountChartColors.getDailyColors());
   }
 
   public void dispose() {

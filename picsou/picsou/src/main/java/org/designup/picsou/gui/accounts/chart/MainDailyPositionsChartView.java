@@ -2,7 +2,6 @@ package org.designup.picsou.gui.accounts.chart;
 
 import com.budgetview.shared.gui.histochart.HistoChartConfig;
 import org.designup.picsou.gui.analysis.histobuilders.HistoChartBuilder;
-import org.designup.picsou.gui.analysis.histobuilders.range.HistoChartAdjustableRange;
 import org.designup.picsou.gui.analysis.histobuilders.range.HistoChartRange;
 import org.designup.picsou.gui.card.NavigationService;
 import org.designup.picsou.gui.components.charts.histo.HistoChart;
@@ -14,6 +13,7 @@ import org.designup.picsou.gui.utils.DaySelection;
 import org.designup.picsou.model.*;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.SelectionService;
+import org.globsframework.gui.splits.utils.DisposableGroup;
 import org.globsframework.gui.utils.GlobSelectionBuilder;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
@@ -31,12 +31,15 @@ public class MainDailyPositionsChartView extends PositionsChartView {
 
   private boolean showFullMonthLabels = false;
   private String tooltipKey;
+  private final SidebarAccountChartColors accountChartColors;
   private GlobMatcher accountMatcher = GlobMatchers.NONE;
+  private DisposableGroup disposables = new DisposableGroup();
 
   public MainDailyPositionsChartView(HistoChartRange range, HistoChartConfig config, String componentName,
                                      final GlobRepository repository, final Directory directory, String tooltipKey) {
     super(range, config, componentName, repository, directory);
     this.tooltipKey = tooltipKey;
+    this.accountChartColors = disposables.add(new SidebarAccountChartColors(directory));
   }
 
   public void installHighlighting() {
@@ -63,7 +66,7 @@ public class MainDailyPositionsChartView extends PositionsChartView {
       return;
     }
     Set<Integer> accountIdSet = repository.getAll(Account.TYPE, accountMatcher).getValueSet(Account.ID);
-    histoChartBuilder.showAccountDailyHisto(currentMonthId, showFullMonthLabels, accountIdSet, DaySelection.EMPTY, tooltipKey);
+    histoChartBuilder.showAccountDailyHisto(currentMonthId, showFullMonthLabels, accountIdSet, DaySelection.EMPTY, tooltipKey, accountChartColors.getDailyColors());
   }
 
   protected void processDoubleClick(NavigationService navigationService) {
@@ -140,5 +143,10 @@ public class MainDailyPositionsChartView extends PositionsChartView {
                                  fieldEquals(Transaction.POSITION_DAY, day),
                                  fieldIn(Transaction.ACCOUNT, accountIdSet))
     );
+  }
+
+  public void dispose() {
+    super.dispose();
+    disposables.dispose();
   }
 }
