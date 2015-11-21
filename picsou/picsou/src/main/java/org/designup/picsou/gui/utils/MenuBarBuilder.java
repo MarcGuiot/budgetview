@@ -26,10 +26,7 @@ import org.designup.picsou.gui.preferences.PreferencesAction;
 import org.designup.picsou.gui.preferences.dev.DevOptionsAction;
 import org.designup.picsou.gui.printing.actions.PrintBudgetAction;
 import org.designup.picsou.gui.startup.components.LogoutService;
-import org.designup.picsou.gui.time.actions.SelectCurrentMonthAction;
-import org.designup.picsou.gui.time.actions.SelectCurrentYearAction;
-import org.designup.picsou.gui.time.actions.SelectLast12MonthsAction;
-import org.designup.picsou.gui.time.actions.SelectSinceLastJanuaryAction;
+import org.designup.picsou.gui.time.actions.*;
 import org.designup.picsou.gui.transactions.creation.ShowCreateTransactionAction;
 import org.designup.picsou.gui.transactions.reconciliation.annotations.ShowReconciliationAction;
 import org.designup.picsou.gui.undo.RedoAction;
@@ -208,6 +205,7 @@ public class MenuBarBuilder {
   private JMenu createViewMenu() {
     JMenu showMenu = new JMenu(Lang.get("menuBar.view"));
     showMenu.add(new SelectCurrentMonthAction(repository, directory));
+    showMenu.add(new SelectMonthAction(repository, directory));
     showMenu.add(new SelectCurrentYearAction(repository, directory));
     showMenu.add(new SelectLast12MonthsAction(repository, directory));
     showMenu.add(new SelectSinceLastJanuaryAction(repository, directory));

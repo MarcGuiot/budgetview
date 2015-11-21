@@ -49,6 +49,25 @@ public class IconParserTest extends TestCase {
     assertEquals(Color.GREEN, icon.getColor());
   }
 
+  public void testArrowButton() throws Exception {
+    ArrowButtonIcon icon = (ArrowButtonIcon) parse("arrowButton(10,20,#FF0000)");
+    assertEquals(10, icon.getIconWidth());
+    assertEquals(20, icon.getIconHeight());
+    assertEquals(Color.RED, icon.getColor());
+  }
+
+  public void testArrowButtonWithNamedColors() throws Exception {
+    colorService.set("dl.bg", Color.BLUE);
+
+    ArrowButtonIcon icon = (ArrowButtonIcon) parse("arrowButton(15,25,dl.bg)");
+    assertEquals(15, icon.getIconWidth());
+    assertEquals(25, icon.getIconHeight());
+    assertEquals(Color.BLUE, icon.getColor());
+
+    colorService.set("dl.bg", Color.PINK);
+    assertEquals(Color.PINK, icon.getColor());
+  }
+
   public void testStandardImage() throws Exception {
     Icon icon = parse(DummyImageLocator.ICON1_NAME);
     assertEquals(DummyImageLocator.ICON1, icon);

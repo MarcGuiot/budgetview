@@ -28,6 +28,12 @@ public class IconParser {
                                                         "[ ]*([0-9]+)[ ]*" +
                                                         "\\)");
 
+  private static Pattern ARROW_BUTTON_FORMAT = Pattern.compile("arrowButton\\(" +
+                                                               "[ ]*([0-9]+)[ ]*," +
+                                                               "[ ]*([0-9]+)[ ]*," +
+                                                               "[ ]*([A-z\\.#0-9]+)[ ]*" +
+                                                               "\\)");
+
   private static Pattern CIRCLED_ARROW_FORMAT = Pattern.compile("circledArrow\\(" +
                                                                 "[ ]*([A-z\\.#0-9]+)[ ]*" +
                                                                 "\\)");
@@ -87,6 +93,11 @@ public class IconParser {
     CircledArrowIcon circledArrow = parseCircledArrow(text, colorService, context);
     if (circledArrow != null) {
       return circledArrow;
+    }
+
+    ArrowButtonIcon arrowButton = parseArrowButton(text, colorService, context);
+    if (arrowButton != null) {
+      return arrowButton;
     }
 
     RectIcon rect = parseRect(text, colorService, context);
@@ -154,6 +165,20 @@ public class IconParser {
 
     CircledArrowIcon icon = new CircledArrowIcon();
     setSingleColor(icon, arrowMatcher.group(1), context, colorService);
+    return icon;
+  }
+
+  private static ArrowButtonIcon parseArrowButton(String text, ColorService colorService, SplitsContext context) {
+    Matcher matcher = ARROW_BUTTON_FORMAT.matcher(text.trim());
+    if (!matcher.matches()) {
+      return null;
+    }
+
+    int iconWidth = Integer.parseInt(matcher.group(1));
+    int iconHeight = Integer.parseInt(matcher.group(2));
+
+    ArrowButtonIcon icon = new ArrowButtonIcon(iconWidth, iconHeight);
+    setSingleColor(icon, matcher.group(3), context, colorService);
     return icon;
   }
 

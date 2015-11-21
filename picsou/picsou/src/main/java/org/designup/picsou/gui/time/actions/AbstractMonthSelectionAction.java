@@ -14,8 +14,8 @@ import java.awt.event.ActionEvent;
 
 public abstract class AbstractMonthSelectionAction extends AbstractAction {
 
-  private GlobRepository repository;
-  private Directory directory;
+  protected GlobRepository repository;
+  protected Directory directory;
 
   public AbstractMonthSelectionAction(String label, GlobRepository repository, Directory directory) {
     super(label);
@@ -25,7 +25,9 @@ public abstract class AbstractMonthSelectionAction extends AbstractAction {
 
   public void actionPerformed(ActionEvent actionEvent) {
     Iterable<Integer> monthIds = getSelection(directory.get(TimeService.class).getCurrentMonthId());
-    directory.get(SelectionService.class).select(getMonths(monthIds), Month.TYPE);
+    if (monthIds != null) {
+      directory.get(SelectionService.class).select(getMonths(monthIds), Month.TYPE);
+    }
   }
 
   protected GlobList getMonths(Iterable<Integer> monthIds) {

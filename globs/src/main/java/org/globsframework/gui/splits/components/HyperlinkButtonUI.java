@@ -121,7 +121,7 @@ public class HyperlinkButtonUI extends BasicButtonUI {
 
     Icon icon = getIcon(button);
     if (icon != null) {
-      icon.paintIcon(button, g, positions.iconX, button.getHeight() / 2 - icon.getIconHeight() / 2);
+      icon.paintIcon(button, g, positions.iconX, button.getHeight() / 2 - icon.getIconHeight() / 2 + 1);
     }
 
     int textX = positions.labelX;

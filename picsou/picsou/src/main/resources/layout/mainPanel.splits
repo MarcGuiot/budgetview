@@ -77,7 +77,11 @@
 
     <panel name="timeviewHeader" background="header.bg" layout="org.designup.picsou.gui.utils.HeaderPanelLayout" opaque="true"
             border="matte(0,0,1,0,header.border)">
-      <label ref="periodTitle" opaque="false" font="LatoLight,plain,22" foreground="header.title"/>
+      <button ref="periodTitle" opaque="false" font="LatoLight,plain,22"
+              styleClass="hyperlinkWithoutUnderline" foreground="header.title"
+              icon="arrowButton(18,18,header.title.icon)"
+              rolloverIcon="arrowButton(18,18,hyperlink.rollover)"
+              horizontalAlignment="left"/>
       <button ref="prevPeriod" ui="arrowLeft" styleClass="periodButton"
               tooltipText="$timeView.tooltip.previous"/>
       <button ref="firstPeriod" ui="doubleArrowLeft" styleClass="doublePeriodButton"

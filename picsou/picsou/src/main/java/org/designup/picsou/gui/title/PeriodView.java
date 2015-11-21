@@ -1,8 +1,12 @@
 package org.designup.picsou.gui.title;
 
 import org.designup.picsou.gui.View;
+import org.designup.picsou.gui.components.JPopupButton;
 import org.designup.picsou.gui.description.stringifiers.AbstractMonthRangeFormatter;
 import org.designup.picsou.gui.description.stringifiers.MonthListStringifier;
+import org.designup.picsou.gui.notes.ShowNotesAction;
+import org.designup.picsou.gui.time.actions.*;
+import org.designup.picsou.gui.transactions.reconciliation.annotations.ShowReconciliationAction;
 import org.designup.picsou.model.Month;
 import org.designup.picsou.model.Transaction;
 import org.designup.picsou.utils.Lang;
@@ -10,6 +14,7 @@ import org.globsframework.gui.GlobSelection;
 import org.globsframework.gui.GlobSelectionListener;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.SelectionService;
+import org.globsframework.gui.utils.PopupMenuFactory;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.utils.directory.Directory;
 
@@ -19,7 +24,7 @@ import java.util.Set;
 
 public class PeriodView extends View implements GlobSelectionListener {
 
-  private JLabel periodTitle = new JLabel();
+  private JButton periodTitle;
   private Set<Integer> months = Collections.emptySet();
 
   public PeriodView(GlobRepository repository, Directory directory) {
@@ -28,8 +33,31 @@ public class PeriodView extends View implements GlobSelectionListener {
   }
 
   public void registerComponents(GlobsPanelBuilder builder) {
-    builder.add("periodTitle", periodTitle);
+    builder.add("periodTitle", getButton());
     updateLabel();
+  }
+
+  public JButton getButton() {
+    if (periodTitle == null) {
+      periodTitle = new JPopupButton("", createMenu());
+    }
+    return periodTitle;
+  }
+
+  private PopupMenuFactory createMenu() {
+    return new PopupMenuFactory() {
+      public JPopupMenu createPopup() {
+        JPopupMenu menu = new JPopupMenu();
+        menu.add(new SelectCurrentMonthAction(repository, directory));
+        menu.addSeparator();
+        menu.add(new SelectMonthAction(repository, directory));
+        menu.addSeparator();
+        menu.add(new SelectCurrentYearAction(repository, directory));
+        menu.add(new SelectLast12MonthsAction(repository, directory));
+        menu.add(new SelectSinceLastJanuaryAction(repository, directory));
+        return menu;
+      }
+    };
   }
 
   public void selectionUpdated(GlobSelection selection) {
@@ -50,24 +78,23 @@ public class PeriodView extends View implements GlobSelectionListener {
     }
     periodTitle.setText(MonthListStringifier.toString(months, new AbstractMonthRangeFormatter() {
       public String year(int year) {
-        return "<html><b>" + Integer.toString(year) + "</b></html>";
+        return Integer.toString(year);
       }
 
       public String yearRange(int firstYear, int lastYear) {
-        return "<html><b>" + Integer.toString(firstYear) + "</b> - <b>" + Integer.toString(lastYear) + "</b></html>";
+        return Integer.toString(firstYear) + " - " + Integer.toString(lastYear);
       }
 
       public String monthRangeInYear(int firstMonthId, int lastMonthId, int year) {
         if (firstMonthId == lastMonthId) {
-          return "<html><b>" + Month.getFullMonthLabel(firstMonthId, false) + "</b> " + Integer.toString(year) + "</html>";
+          return Month.getFullMonthLabel(firstMonthId, false) + " " + Integer.toString(year);
         }
-        return "<html><b>" + Month.getFullMonthLabel(firstMonthId, false) + "</b> - " +
-               "<b>" + Month.getFullMonthLabel(lastMonthId, false) + "</b> " + Integer.toString(year) +
-               "</html>";
+        return Month.getFullMonthLabel(firstMonthId, false) + " - " +
+               Month.getFullMonthLabel(lastMonthId, false) + " " + Integer.toString(year);
       }
 
       public String monthRangeAcrossYears(int firstMonthId, int lastMonthId) {
-        return "<html>" + getFullLabel(firstMonthId) + " - " + getFullLabel(lastMonthId) + "</html>";
+        return getFullLabel(firstMonthId) + " - " + getFullLabel(lastMonthId);
       }
     }));
   }

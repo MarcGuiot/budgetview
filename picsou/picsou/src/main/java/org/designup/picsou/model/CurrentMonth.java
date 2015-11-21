@@ -90,6 +90,10 @@ public class CurrentMonth {
     return currentMonth != null && currentMonth.get(LAST_TRANSACTION_MONTH) == monthId;
   }
 
+  public static Integer getFirstMonth(GlobRepository repository) {
+    return repository.getAll(Month.TYPE).getSortedSet(Month.ID).first();
+  }
+
   public static Integer getLastMonth(GlobRepository repository) {
     return repository.getAll(Month.TYPE).getSortedSet(Month.ID).last();
   }
