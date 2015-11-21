@@ -1,20 +1,16 @@
-package org.globsframework.gui.splits.components;
+package org.globsframework.gui.splits.icons;
 
-import javax.swing.*;
-import javax.swing.plaf.basic.BasicToggleButtonUI;
 import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.GeneralPath;
 
 import static java.awt.geom.AffineTransform.getTranslateInstance;
 
-public class CircledArrowIcon implements Icon {
+public class CircledArrowIcon extends SingleColorIcon {
 
   private static final int SIDE_LENGTH = 14;
   private static final float ARROW_RATIO = 0.6f;
   private static final int DIAMETER = SIDE_LENGTH - 3;
-
-  private Color color = Color.BLUE;
 
   private GeneralPath shape;
 
@@ -22,8 +18,8 @@ public class CircledArrowIcon implements Icon {
     shape = createTriangleShape();
 
     Rectangle initialRectangle = shape.getBounds();
-    float widthRatio = ARROW_RATIO * DIAMETER / (float)initialRectangle.width;
-    float heightRatio = ARROW_RATIO * DIAMETER / (float)initialRectangle.height;
+    float widthRatio = ARROW_RATIO * DIAMETER / (float) initialRectangle.width;
+    float heightRatio = ARROW_RATIO * DIAMETER / (float) initialRectangle.height;
     AffineTransform scaling = AffineTransform.getScaleInstance(widthRatio, heightRatio);
     shape.transform(scaling);
 
@@ -40,20 +36,12 @@ public class CircledArrowIcon implements Icon {
     return SIDE_LENGTH;
   }
 
-  public void setColor(Color color) {
-    this.color = color;
-  }
-
-  public Color getColor() {
-    return color;
-  }
-
   public void paintIcon(Component component, Graphics g, int i, int i1) {
 
-    Graphics2D g2d = (Graphics2D)g;
+    Graphics2D g2d = (Graphics2D) g;
     g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
-    g2d.setColor(color);
+    g2d.setColor(getColor());
     g2d.drawOval(2, 2, DIAMETER, DIAMETER);
 
     g2d.fill(shape);

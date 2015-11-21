@@ -5,7 +5,7 @@ import org.globsframework.gui.splits.SplitsContext;
 import org.globsframework.gui.splits.color.ColorService;
 import org.globsframework.gui.splits.color.ColorUpdater;
 import org.globsframework.gui.splits.color.Colors;
-import org.globsframework.gui.splits.components.*;
+import org.globsframework.gui.splits.icons.*;
 import org.globsframework.utils.Strings;
 
 import javax.swing.*;
@@ -63,6 +63,12 @@ public class IconParser {
                                                        "[ ]*([A-z\\.#0-9]+)[ ]*" +
                                                        "\\)");
 
+  private static Pattern DOWNLOAD_FORMAT = Pattern.compile("download\\(" +
+                                                           "[ ]*([0-9]+)[ ]*," +
+                                                           "[ ]*([0-9]+)[ ]*," +
+                                                           "[ ]*([A-z\\.#0-9]+)[ ]*" +
+                                                           "\\)");
+
   public static Icon parse(String text, ColorService colorService, ImageLocator imageLocator, SplitsContext context) {
     if (Strings.isNullOrEmpty(text)) {
       return null;
@@ -103,6 +109,11 @@ public class IconParser {
       return plus;
     }
 
+    DownloadIcon download = parseDownload(text, colorService, context);
+    if (download != null) {
+      return download;
+    }
+
     return imageLocator.get(text);
   }
 
@@ -118,22 +129,7 @@ public class IconParser {
       final ArrowIcon icon = new ArrowIcon(iconWidth, iconHeight,
                                            arrowWidth, arrowHeight,
                                            ArrowIcon.Orientation.get(orientation));
-
-      String colorValue = arrowMatcher.group(6);
-      if (Colors.isHexaString(colorValue)) {
-        Color color = Colors.toColor(colorValue);
-        icon.setColor(color);
-      }
-      else {
-        ColorUpdater updater = new ColorUpdater(colorValue) {
-          public void updateColor(Color color) {
-            icon.setColor(color);
-          }
-        };
-        updater.install(colorService);
-        context.addDisposable(updater);
-      }
-
+      setSingleColor(icon, arrowMatcher.group(6), context, colorService);
       return icon;
     }
     return null;
@@ -141,38 +137,24 @@ public class IconParser {
 
   private static EmptyIcon parseEmpty(String text) {
     Matcher emptyMatcher = EMPTY_FORMAT.matcher(text.trim());
-    if (emptyMatcher.matches()) {
-      int iconWidth = Integer.parseInt(emptyMatcher.group(1));
-      int iconHeight = Integer.parseInt(emptyMatcher.group(2));
-
-      return new EmptyIcon(iconWidth, iconHeight);
+    if (!emptyMatcher.matches()) {
+      return null;
     }
-    return null;
+
+    int iconWidth = Integer.parseInt(emptyMatcher.group(1));
+    int iconHeight = Integer.parseInt(emptyMatcher.group(2));
+    return new EmptyIcon(iconWidth, iconHeight);
   }
 
   private static CircledArrowIcon parseCircledArrow(String text, ColorService colorService, SplitsContext context) {
     Matcher arrowMatcher = CIRCLED_ARROW_FORMAT.matcher(text.trim());
-    if (arrowMatcher.matches()) {
-      final CircledArrowIcon icon = new CircledArrowIcon();
-
-      String colorValue = arrowMatcher.group(1);
-      if (Colors.isHexaString(colorValue)) {
-        Color color = Colors.toColor(colorValue);
-        icon.setColor(color);
-      }
-      else {
-        ColorUpdater updater = new ColorUpdater(colorValue) {
-          public void updateColor(Color color) {
-            icon.setColor(color);
-          }
-        };
-        updater.install(colorService);
-        context.addDisposable(updater);
-      }
-
-      return icon;
+    if (!arrowMatcher.matches()) {
+      return null;
     }
-    return null;
+
+    CircledArrowIcon icon = new CircledArrowIcon();
+    setSingleColor(icon, arrowMatcher.group(1), context, colorService);
+    return icon;
   }
 
   private static RectIcon parseRect(String text, ColorService colorService, SplitsContext context) {
@@ -184,37 +166,11 @@ public class IconParser {
     int iconWidth = Integer.parseInt(matcher.group(1));
     int iconHeight = Integer.parseInt(matcher.group(2));
 
-    final RectIcon icon = new RectIcon(iconWidth, iconHeight);
-
-    String background = matcher.group(3);
-    if (Colors.isHexaString(background)) {
-      Color color = Colors.toColor(background);
-      icon.setBackgroundColor(color);
-    }
-    else {
-      ColorUpdater updater = new ColorUpdater(background) {
-        public void updateColor(Color color) {
-          icon.setBackgroundColor(color);
-        }
-      };
-      updater.install(colorService);
-      context.addDisposable(updater);
-    }
-
-    String border = matcher.group(4);
-    if (Colors.isHexaString(border)) {
-      Color color = Colors.toColor(border);
-      icon.setBorderColor(color);
-    }
-    else {
-      ColorUpdater updater = new ColorUpdater(border) {
-        public void updateColor(Color color) {
-          icon.setBorderColor(color);
-        }
-      };
-      updater.install(colorService);
-      context.addDisposable(updater);
-    }
+    RectIcon icon = new RectIcon(iconWidth, iconHeight);
+    setBackgroundAndBorderColor(icon,
+                                matcher.group(3),
+                                matcher.group(4),
+                                colorService, context);
 
     return icon;
   }
@@ -230,37 +186,11 @@ public class IconParser {
     int arcX = Integer.parseInt(matcher.group(3));
     int arcY = Integer.parseInt(matcher.group(4));
 
-    final RoundedRectIcon icon = new RoundedRectIcon(iconWidth, iconHeight, arcX, arcY);
-
-    String background = matcher.group(5);
-    if (Colors.isHexaString(background)) {
-      Color color = Colors.toColor(background);
-      icon.setBackgroundColor(color);
-    }
-    else {
-      ColorUpdater updater = new ColorUpdater(background) {
-        public void updateColor(Color color) {
-          icon.setBackgroundColor(color);
-        }
-      };
-      updater.install(colorService);
-      context.addDisposable(updater);
-    }
-
-    String border = matcher.group(6);
-    if (Colors.isHexaString(border)) {
-      Color color = Colors.toColor(border);
-      icon.setBorderColor(color);
-    }
-    else {
-      ColorUpdater updater = new ColorUpdater(border) {
-        public void updateColor(Color color) {
-          icon.setBorderColor(color);
-        }
-      };
-      updater.install(colorService);
-      context.addDisposable(updater);
-    }
+    RoundedRectIcon icon = new RoundedRectIcon(iconWidth, iconHeight, arcX, arcY);
+    setBackgroundAndBorderColor(icon,
+                                matcher.group(5),
+                                matcher.group(6),
+                                colorService, context);
 
     return icon;
   }
@@ -275,36 +205,10 @@ public class IconParser {
     int iconHeight = Integer.parseInt(matcher.group(2));
 
     final OvalIcon icon = new OvalIcon(iconWidth, iconHeight);
-
-    String background = matcher.group(3);
-    if (Colors.isHexaString(background)) {
-      Color color = Colors.toColor(background);
-      icon.setBackgroundColor(color);
-    }
-    else {
-      ColorUpdater updater = new ColorUpdater(background) {
-        public void updateColor(Color color) {
-          icon.setBackgroundColor(color);
-        }
-      };
-      updater.install(colorService);
-      context.addDisposable(updater);
-    }
-
-    String border = matcher.group(4);
-    if (Colors.isHexaString(border)) {
-      Color color = Colors.toColor(border);
-      icon.setBorderColor(color);
-    }
-    else {
-      ColorUpdater updater = new ColorUpdater(border) {
-        public void updateColor(Color color) {
-          icon.setBorderColor(color);
-        }
-      };
-      updater.install(colorService);
-      context.addDisposable(updater);
-    }
+    setBackgroundAndBorderColor(icon,
+                                matcher.group(3),
+                                matcher.group(4),
+                                colorService, context);
 
     return icon;
   }
@@ -321,14 +225,33 @@ public class IconParser {
     int verticalWidth = Integer.parseInt(matcher.group(4));
 
     final PlusIcon icon = new PlusIcon(iconWidth, iconHeight, horizontalWidth, verticalWidth);
+    setSingleColor(icon, matcher.group(5), context, colorService);
 
-    String background = matcher.group(5);
-    if (Colors.isHexaString(background)) {
-      Color color = Colors.toColor(background);
+    return icon;
+  }
+
+  private static DownloadIcon parseDownload(String text, ColorService colorService, SplitsContext context) {
+    Matcher matcher = DOWNLOAD_FORMAT.matcher(text.trim());
+    if (!matcher.matches()) {
+      return null;
+    }
+
+    int iconWidth = Integer.parseInt(matcher.group(1));
+    int iconHeight = Integer.parseInt(matcher.group(2));
+
+    final DownloadIcon icon = new DownloadIcon(iconWidth, iconHeight);
+    setSingleColor(icon, matcher.group(3), context, colorService);
+
+    return icon;
+  }
+
+  private static void setSingleColor(final SingleColorIcon icon, final String colorText, SplitsContext context, ColorService colorService) {
+    if (Colors.isHexaString(colorText)) {
+      Color color = Colors.toColor(colorText);
       icon.setColor(color);
     }
     else {
-      ColorUpdater updater = new ColorUpdater(background) {
+      ColorUpdater updater = new ColorUpdater(colorText) {
         public void updateColor(Color color) {
           icon.setColor(color);
         }
@@ -336,8 +259,37 @@ public class IconParser {
       updater.install(colorService);
       context.addDisposable(updater);
     }
-
-    return icon;
   }
+
+  private static void setBackgroundAndBorderColor(final BorderColorIcon icon, final String background, final String border, ColorService colorService, SplitsContext context) {
+    if (Colors.isHexaString(background)) {
+      Color color = Colors.toColor(background);
+      icon.setBackgroundColor(color);
+    }
+    else {
+      ColorUpdater updater = new ColorUpdater(background) {
+        public void updateColor(Color color) {
+          icon.setBackgroundColor(color);
+        }
+      };
+      updater.install(colorService);
+      context.addDisposable(updater);
+    }
+
+    if (Colors.isHexaString(border)) {
+      Color color = Colors.toColor(border);
+      icon.setBorderColor(color);
+    }
+    else {
+      ColorUpdater updater = new ColorUpdater(border) {
+        public void updateColor(Color color) {
+          icon.setBorderColor(color);
+        }
+      };
+      updater.install(colorService);
+      context.addDisposable(updater);
+    }
+  }
+
 
 }

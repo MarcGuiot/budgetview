@@ -1,5 +1,6 @@
-package org.globsframework.gui.splits.components;
+package org.globsframework.gui.splits.icons;
 
+import org.globsframework.gui.splits.icons.ArrowIcon;
 import org.globsframework.gui.splits.layout.GridBagBuilder;
 import org.globsframework.gui.splits.utils.GuiUtils;
 

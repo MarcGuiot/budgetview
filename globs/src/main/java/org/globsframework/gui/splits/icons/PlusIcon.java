@@ -1,15 +1,13 @@
-package org.globsframework.gui.splits.components;
+package org.globsframework.gui.splits.icons;
 
-import javax.swing.*;
 import java.awt.*;
 
-public class PlusIcon implements Icon {
+public class PlusIcon extends SingleColorIcon {
 
   private int iconWidth;
   private int iconHeight;
   private int horizontalWidth;
   private int verticalWidth;
-  private Color color = Color.GRAY;
 
   public PlusIcon(int iconWidth, int iconHeight, int horizontalWidth, int verticalWidth) {
     this.iconWidth = iconWidth;
@@ -19,9 +17,9 @@ public class PlusIcon implements Icon {
   }
 
   public void paintIcon(Component component, Graphics graphics, int x, int y) {
-    Graphics2D g2d = (Graphics2D)graphics;
+    Graphics2D g2d = (Graphics2D) graphics;
     g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-    g2d.setColor(color);
+    g2d.setColor(getColor());
     g2d.fillRect(x, y + iconHeight / 2 - horizontalWidth / 2, iconWidth - 1, horizontalWidth);
     g2d.fillRect(x + iconWidth / 2 - verticalWidth / 2, y, verticalWidth, iconHeight - 1);
   }
@@ -41,13 +39,4 @@ public class PlusIcon implements Icon {
   public int getVerticalWidth() {
     return verticalWidth;
   }
-
-  public Color getColor() {
-    return color;
-  }
-
-  public void setColor(Color color) {
-    this.color = color;
-  }
-
 }

@@ -1,16 +1,14 @@
-package org.globsframework.gui.splits.components;
+package org.globsframework.gui.splits.icons;
 
 import javax.swing.*;
 import java.awt.*;
 
-public class RoundedRectIcon implements Icon {
+public class RoundedRectIcon extends BorderColorIcon {
 
   private int width;
   private int height;
   private int arcX;
   private int arcY;
-  private Color backgroundColor = Color.GRAY;
-  private Color borderColor = Color.BLACK;
 
   public RoundedRectIcon(int width, int height, int arcX, int arcY) {
     this.width = width;
@@ -22,9 +20,9 @@ public class RoundedRectIcon implements Icon {
   public void paintIcon(Component component, Graphics graphics, int i, int i2) {
     Graphics2D g2d = (Graphics2D)graphics;
     g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-    g2d.setColor(backgroundColor);
+    g2d.setColor(getBackgroundColor());
     g2d.fillRoundRect(0, 0, width - 1, height - 1, arcX, arcY);
-    g2d.setColor(borderColor);
+    g2d.setColor(getBorderColor());
     g2d.drawRoundRect(0, 0, width - 1, height - 1, arcX, arcY);
   }
 
@@ -42,21 +40,5 @@ public class RoundedRectIcon implements Icon {
 
   public int getArcY() {
     return arcY;
-  }
-
-  public Color getBackgroundColor() {
-    return backgroundColor;
-  }
-
-  public void setBackgroundColor(Color backgroundColor) {
-    this.backgroundColor = backgroundColor;
-  }
-
-  public Color getBorderColor() {
-    return borderColor;
-  }
-
-  public void setBorderColor(Color borderColor) {
-    this.borderColor = borderColor;
   }
 }

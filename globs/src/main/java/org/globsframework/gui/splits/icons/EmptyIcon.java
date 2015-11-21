@@ -1,4 +1,4 @@
-package org.globsframework.gui.splits.components;
+package org.globsframework.gui.splits.icons;
 
 import javax.swing.*;
 import java.awt.*;

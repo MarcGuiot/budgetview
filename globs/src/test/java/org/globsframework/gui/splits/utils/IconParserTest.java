@@ -4,7 +4,7 @@ import junit.framework.Assert;
 import junit.framework.TestCase;
 import org.globsframework.gui.splits.color.ColorService;
 import org.globsframework.gui.splits.color.Colors;
-import org.globsframework.gui.splits.components.*;
+import org.globsframework.gui.splits.icons.*;
 import org.globsframework.gui.splits.impl.DefaultSplitsContext;
 import org.globsframework.utils.directory.DefaultDirectory;
 
@@ -144,6 +144,24 @@ public class IconParserTest extends TestCase {
     assertEquals(Color.PINK, icon.getColor());
   }
 
+  public void testDownload() throws Exception {
+    DownloadIcon icon = (DownloadIcon) parse("download(10,20,#FF0000)");
+    assertEquals(10, icon.getIconWidth());
+    assertEquals(20, icon.getIconHeight());
+    assertEquals(Color.RED, icon.getColor());
+  }
+
+  public void testDownloadWithNamedColors() throws Exception {
+    colorService.set("dl.bg", Color.BLUE);
+
+    DownloadIcon icon = (DownloadIcon) parse("download(15,25,dl.bg)");
+    assertEquals(15, icon.getIconWidth());
+    assertEquals(25, icon.getIconHeight());
+    assertEquals(Color.BLUE, icon.getColor());
+
+    colorService.set("dl.bg", Color.PINK);
+    assertEquals(Color.PINK, icon.getColor());
+  }
 
   private ArrowIcon parseArrow(String text) {
     Icon icon = parse(text);

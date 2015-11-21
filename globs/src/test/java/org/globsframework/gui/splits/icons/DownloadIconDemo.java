@@ -1,13 +1,12 @@
-package org.globsframework.gui.splits.components;
+package org.globsframework.gui.splits.icons;
 
-import org.globsframework.gui.splits.icons.RoundedRectIcon;
 import org.globsframework.gui.splits.layout.GridBagBuilder;
 import org.globsframework.gui.splits.utils.GuiUtils;
 
 import javax.swing.*;
 import java.awt.*;
 
-public class RoundedRectIconDemo {
+public class DownloadIconDemo {
   public static void main(String[] args) {
 
     JPanel panel =
@@ -20,9 +19,8 @@ public class RoundedRectIconDemo {
   }
 
   private static JLabel createIcon() {
-    RoundedRectIcon icon = new RoundedRectIcon(60, 40, 6, 6);
-    icon.setBackgroundColor(Color.WHITE);
-    icon.setBorderColor(Color.BLUE);
+    DownloadIcon icon = new DownloadIcon(40, 40);
+    icon.setColor(Color.RED);
     return new JLabel(icon);
   }
 }
