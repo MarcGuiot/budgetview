@@ -35,7 +35,6 @@ public class ColorServiceEditor implements ColorCreationListener {
   private JTextField filter;
 
   private PrintStream outputStream = System.out;
-  private JList jList;
 
   public ColorServiceEditor(ColorService service) {
     colorService = service;
@@ -79,11 +78,11 @@ public class ColorServiceEditor implements ColorCreationListener {
   }
 
   private JList createList() {
-    jList = new JList(createDefaultListModel());
+    JList jList = new JList(createDefaultListModel());
     jList.setName("colorList");
     jList.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
       public void valueChanged(ListSelectionEvent event) {
-        currentKey = (String) jList.getSelectedValue();
+        currentKey = (String) keyList.getSelectedValue();
         updateComponents();
       }
     });
@@ -118,7 +117,7 @@ public class ColorServiceEditor implements ColorCreationListener {
       }
     }
     if (model.size() == 1) {
-      jList.setSelectedIndex(0);
+      keyList.setSelectedIndex(0);
     }
   }
 
@@ -139,7 +138,7 @@ public class ColorServiceEditor implements ColorCreationListener {
 
       private void filter() {
         String filter = field.getText();
-        filterModel((DefaultListModel) jList.getModel(), filter);
+        filterModel((DefaultListModel) keyList.getModel(), filter);
       }
     });
     installKeyListener(field);
@@ -149,11 +148,11 @@ public class ColorServiceEditor implements ColorCreationListener {
   private void installKeyListener(JTextField field) {
     field.addKeyListener(new KeyAdapter() {
       public void keyPressed(KeyEvent e) {
-        int size = jList.getModel().getSize();
+        int size = keyList.getModel().getSize();
         if (size == 0) {
           return;
         }
-        int currentIndex = jList.getSelectedIndex();
+        int currentIndex = keyList.getSelectedIndex();
         int newIndex = -1;
         switch (e.getKeyCode()) {
           case KeyEvent.VK_DOWN:
@@ -170,7 +169,7 @@ public class ColorServiceEditor implements ColorCreationListener {
             break;
           default: // ignore the event
         }
-        jList.setSelectedIndex(newIndex);
+        keyList.setSelectedIndex(newIndex);
       }
     });
   }
@@ -190,9 +189,9 @@ public class ColorServiceEditor implements ColorCreationListener {
 
         ColorSet colorSet = (ColorSet) comboBox.getSelectedItem();
         colorService.setCurrentSet(colorSet);
-        String[] keyNames = getKeyNames();
-        keyList.setModel(new DefaultComboBoxModel(keyNames));
 
+        String[] keyNames = getKeyNames();
+        keyList.setModel(createDefaultListModel());
         int index = (previousKey != null) ? Arrays.binarySearch(keyNames, previousKey) : -1;
         if (index >= 0) {
           keyList.setSelectedIndex(index);

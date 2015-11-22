@@ -3,8 +3,8 @@ package org.designup.picsou.gui.time;
 import org.designup.picsou.gui.time.selectable.ChainedSelectableElement;
 import org.designup.picsou.gui.time.selectable.Selectable;
 import org.designup.picsou.gui.time.selectable.TransformationAdapter;
-import org.designup.picsou.gui.time.utils.TimeViewColors;
 import org.designup.picsou.gui.time.utils.MonthFontMetricInfo;
+import org.designup.picsou.gui.time.utils.TimeViewColors;
 import org.designup.picsou.model.Month;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
@@ -59,16 +59,16 @@ public class TimeGraph {
                                  currentYear, monthForYear, colors,
                                  new MonthChainedSelectableElement(yearCount),
                                  new YearChainedSelectableElement(yearCount), timeService, positionProvider));
-    initFontMetrics(yearFontMetrics, monthFontMetrics);
+    initFontMetrics(monthFontMetrics);
   }
 
-  public void initFontMetrics(final FontMetrics yearFontMetrics, FontMetrics monthFontMetrics) {
+  public void initFontMetrics(FontMetrics monthFontMetrics) {
     if (monthFontMetricInfo != null || months.isEmpty()) {
       return;
     }
     monthFontMetricInfo = new MonthFontMetricInfo(monthFontMetrics);
     for (YearGraph year : yearGraphs) {
-      year.init(monthFontMetricInfo, yearFontMetrics);
+      year.init(monthFontMetricInfo);
     }
     totalHeight = yearGraphs.get(0).getHeight();
   }
@@ -204,14 +204,14 @@ public class TimeGraph {
   }
 
   public Selectable getFirstSelectable() {
-    if (months.isEmpty()){
+    if (months.isEmpty()) {
       return null;
     }
     return yearGraphs.get(0).getFirstMonth();
   }
 
   public Selectable getLastSelectable() {
-    if (yearGraphs.isEmpty()){
+    if (yearGraphs.isEmpty()) {
       return null;
     }
     return yearGraphs.get(yearGraphs.size() - 1).getLastMonth();

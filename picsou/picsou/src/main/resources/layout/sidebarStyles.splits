@@ -35,7 +35,8 @@
 
     <!-- Sections -->
 
-    <style selector=".sidebarSectionTitleRow" opaque="true" background="sidebar.sectionTitle.bg"/>
+    <style selector=".sidebarSectionTitleRow" opaque="true" background="sidebar.sectionTitle.bg"
+           border="matte(0,0,1,0,sidebar.sectionTitle.border)"/>
     <style selector=".sidebarSectionTitle" font="LatoRegular,plain,14"
            fill="none" anchor="center" weightX="0" marginTop="2" marginBottom="2"
            foreground="sidebar.sectionTitle"/>

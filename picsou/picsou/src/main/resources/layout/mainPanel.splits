@@ -75,9 +75,10 @@
       <filler fill="vertical"/>
     </column>
 
-    <panel name="timeviewHeader" background="header.bg" layout="org.designup.picsou.gui.utils.HeaderPanelLayout" opaque="true"
-            border="matte(0,0,1,0,header.border)">
-      <button ref="periodTitle" opaque="false" font="LatoLight,plain,22"
+    <panel name="timeviewHeader" layout="org.designup.picsou.gui.utils.HeaderPanelLayout"
+           background="header.bg" opaque="true"
+           border="matte(0,0,1,0,header.border)">
+      <button ref="periodTitle" opaque="false" font="LatoRegular,plain,20"
               styleClass="hyperlinkWithoutUnderline" foreground="header.title"
               icon="arrowButton(18,18,header.title.icon)"
               rolloverIcon="arrowButton(18,18,hyperlink.rollover)"
@@ -91,7 +92,10 @@
               tooltipText="$timeView.tooltip.next"/>
       <button ref="lastPeriod" ui="doubleArrowRight" styleClass="doublePeriodButton"
               tooltipText="$timeView.tooltip.last"/>
-      <button ref="importFile" icon="download(24,26,header.title)" styleClass="iconOnly" tooltipText="$import.tooltip"/>
+      <button ref="importFile"
+              icon="download(24,26,header.title)"
+              rolloverIcon="download(24,26,hyperlink.rollover)"
+              styleClass="iconOnly" tooltipText="$import.tooltip"/>
     </panel>
 
     <panel ref="accountView"/>

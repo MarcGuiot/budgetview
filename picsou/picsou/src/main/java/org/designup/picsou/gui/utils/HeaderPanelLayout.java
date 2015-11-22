@@ -7,7 +7,7 @@ import java.awt.*;
 
 public class HeaderPanelLayout extends CustomLayout {
 
-  private static final int PADDING_TOP = 5;
+  private static final int PADDING_TOP = 15;
   private static final int PADDING_BOTTOM = 10;
   private static final int PADDING_LEFT = 10;
   private static final int PADDING_RIGHT = 15;

@@ -69,14 +69,16 @@
            layout="org.designup.picsou.gui.budget.utils.BudgetAreaHeaderLayout">
         <button ref="budgetAreaTitle" tooltipText="$budgetView.actions.tooltip" font="LatoRegular,plain,18"
                 ui="hyperlinkButtonWithoutUnderline" foreground="block.footer.button"
-                iconTextGap="2"
-                icon="downArrow(10,10,8,8,block.footer.arrow.default)"
-                rolloverIcon="downArrow(10,10,8,8,block.footer.arrow.rollover)"/>
+                iconTextGap="3"
+                icon="arrowButton(14,14,block.footer.arrow.default)"
+                rolloverIcon="arrowButton(14,14,block.footer.arrow.rollover)"/>
         <component ref="totalGauge" styleClass="totalGauge" preferredSize="(60,20)"/>
         <label ref="totalActualAmount" styleClass="totalAmount" tooltipText="$budgetview.tooltip.total.observed"/>
         <label text="/" name="totalSlash" styleClass="totalAmount"/>
         <label ref="totalPlannedAmount" styleClass="totalAmount" foreground="" tooltipText="$budgetview.tooltip.total.planned"/>
       </row>
+
+      <label styleClass="horizontalSeparator" foreground="budgetArea.total.border"/>
 
       <column styleClass="blockScrollBorder" weightY="10" marginLeft="10" marginRight="10" >
         <scrollPane verticalUnitIncrement="10" forceVerticalScroll="true">

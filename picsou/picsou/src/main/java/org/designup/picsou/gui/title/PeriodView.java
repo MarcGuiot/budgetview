@@ -48,9 +48,9 @@ public class PeriodView extends View implements GlobSelectionListener {
     return new PopupMenuFactory() {
       public JPopupMenu createPopup() {
         JPopupMenu menu = new JPopupMenu();
-        menu.add(new SelectCurrentMonthAction(repository, directory));
-        menu.addSeparator();
         menu.add(new SelectMonthAction(repository, directory));
+        menu.addSeparator();
+        menu.add(new SelectCurrentMonthAction(repository, directory));
         menu.addSeparator();
         menu.add(new SelectCurrentYearAction(repository, directory));
         menu.add(new SelectLast12MonthsAction(repository, directory));
@@ -105,6 +105,6 @@ public class PeriodView extends View implements GlobSelectionListener {
     }
     int month = Month.toMonth(monthId);
     int year = Month.toYear(monthId);
-    return "<b>" + Month.getFullMonthLabel(Month.toMonth(month), false) + "</b> " + year;
+    return Month.getFullMonthLabel(Month.toMonth(month), false) + " " + year;
   }
 }
