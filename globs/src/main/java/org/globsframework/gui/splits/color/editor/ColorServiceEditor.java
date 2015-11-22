@@ -1,22 +1,23 @@
-package org.globsframework.gui.splits.color;
+package org.globsframework.gui.splits.color.editor;
 
 import org.globsframework.gui.splits.ImageLocator;
 import org.globsframework.gui.splits.SplitsBuilder;
+import org.globsframework.gui.splits.color.*;
 import org.globsframework.gui.splits.color.utils.ColorRectIcon;
+import org.globsframework.gui.splits.utils.OnLoadListener;
 import org.globsframework.utils.directory.DefaultDirectory;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
+import javax.swing.event.*;
 import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.PlainDocument;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.io.PrintStream;
 import java.util.Arrays;
 import java.util.Collections;
@@ -26,13 +27,15 @@ import java.util.Vector;
 public class ColorServiceEditor implements ColorCreationListener {
   private ColorService colorService;
   private SplitsBuilder builder;
-
   private JColorChooser colorChooser;
+
   private JTextField textField;
   private String currentKey;
   private JList keyList;
+  private JTextField filter;
 
   private PrintStream outputStream = System.out;
+  private JList jList;
 
   public ColorServiceEditor(ColorService service) {
     colorService = service;
@@ -43,7 +46,8 @@ public class ColorServiceEditor implements ColorCreationListener {
     colorChooser = createColorChooser();
     textField = createTextField();
     keyList = createList();
-    builder.add(keyList, textField, colorChooser, createComboBox(), createButton());
+    filter = createFilter();
+    builder.add(keyList, filter, textField, colorChooser, createComboBox(), createButton());
     colorService.addListener(new ColorChangeListener() {
       public void colorsChanged(ColorLocator colorLocator) {
         updateComponents();
@@ -51,6 +55,11 @@ public class ColorServiceEditor implements ColorCreationListener {
     });
     keyList.setSelectedIndex(0);
     builder.setSource(getClass(), "/splits/coloreditor.splits");
+    builder.addOnLoadListener(new OnLoadListener() {
+      public void processLoad() {
+        filter.requestFocus();
+      }
+    });
     colorService.addCreationListener(this);
   }
 
@@ -70,18 +79,100 @@ public class ColorServiceEditor implements ColorCreationListener {
   }
 
   private JList createList() {
-    final JList jList = new JList(getKeyNames());
+    jList = new JList(createDefaultListModel());
     jList.setName("colorList");
     jList.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
       public void valueChanged(ListSelectionEvent event) {
-        currentKey = (String)jList.getSelectedValue();
+        currentKey = (String) jList.getSelectedValue();
         updateComponents();
       }
-
     });
-
     jList.setCellRenderer(new CellRenderer());
     return jList;
+  }
+
+  private ListModel createDefaultListModel() {
+    DefaultListModel model = new DefaultListModel();
+    for (String s : getKeyNames()) {
+      model.addElement(s);
+    }
+    return model;
+  }
+
+  public void filterModel(DefaultListModel model, String filter) {
+    for (String s : getKeyNames()) {
+      if (!s.toLowerCase().contains(filter.toLowerCase())) {
+        if (model.contains(s)) {
+          model.removeElement(s);
+        }
+      }
+      else {
+        if (!model.contains(s)) {
+          int index = Arrays.binarySearch(model.toArray(), s);
+          if (index < 0) {
+            model.addElement(s);
+          }
+          else
+            model.insertElementAt(s, index);
+        }
+      }
+    }
+    if (model.size() == 1) {
+      jList.setSelectedIndex(0);
+    }
+  }
+
+  private JTextField createFilter() {
+    final JTextField field = new JTextField(15);
+    field.setName("filter");
+    field.getDocument().addDocumentListener(new DocumentListener() {
+      public void insertUpdate(DocumentEvent e) {
+        filter();
+      }
+
+      public void removeUpdate(DocumentEvent e) {
+        filter();
+      }
+
+      public void changedUpdate(DocumentEvent e) {
+      }
+
+      private void filter() {
+        String filter = field.getText();
+        filterModel((DefaultListModel) jList.getModel(), filter);
+      }
+    });
+    installKeyListener(field);
+    return field;
+  }
+
+  private void installKeyListener(JTextField field) {
+    field.addKeyListener(new KeyAdapter() {
+      public void keyPressed(KeyEvent e) {
+        int size = jList.getModel().getSize();
+        if (size == 0) {
+          return;
+        }
+        int currentIndex = jList.getSelectedIndex();
+        int newIndex = -1;
+        switch (e.getKeyCode()) {
+          case KeyEvent.VK_DOWN:
+            newIndex = currentIndex < 0 ? 0 : Math.min(currentIndex + 1, size - 1);
+            break;
+          case KeyEvent.VK_UP:
+            newIndex = currentIndex < 0 ? 0 : Math.max(currentIndex - 1, 0);
+            break;
+          case KeyEvent.VK_PAGE_DOWN:
+            newIndex = size - 1;
+            break;
+          case KeyEvent.VK_PAGE_UP:
+            newIndex = 0;
+            break;
+          default: // ignore the event
+        }
+        jList.setSelectedIndex(newIndex);
+      }
+    });
   }
 
   private String[] getKeyNames() {
@@ -95,9 +186,9 @@ public class ColorServiceEditor implements ColorCreationListener {
     comboBox.setSelectedItem(colorService.getCurrentColorSet());
     comboBox.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent e) {
-        String previousKey = (String)keyList.getSelectedValue();
+        String previousKey = (String) keyList.getSelectedValue();
 
-        ColorSet colorSet = (ColorSet)comboBox.getSelectedItem();
+        ColorSet colorSet = (ColorSet) comboBox.getSelectedItem();
         colorService.setCurrentSet(colorSet);
         String[] keyNames = getKeyNames();
         keyList.setModel(new DefaultComboBoxModel(keyNames));
@@ -113,7 +204,7 @@ public class ColorServiceEditor implements ColorCreationListener {
     });
     comboBox.setRenderer(new DefaultListCellRenderer() {
       public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
-        ColorSet set = (ColorSet)value;
+        ColorSet set = (ColorSet) value;
         this.setText(set.getName());
         return this;
       }
@@ -201,7 +292,7 @@ public class ColorServiceEditor implements ColorCreationListener {
 
     public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
       icon.setColor(colorService.get(value));
-      label.setText((String)value);
+      label.setText((String) value);
       label.setForeground(colorService.isSet(value) ? Color.BLACK : Color.RED);
       label.setBackground(isSelected ? Color.LIGHT_GRAY : Color.WHITE);
       return label;

@@ -49,7 +49,7 @@ public class ColorService implements ColorLocator {
     currentSet = colorSets.get(0);
   }
 
-  List<ColorSet> getColorSets() {
+  public List<ColorSet> getColorSets() {
     return colorSets;
   }
 
@@ -71,7 +71,7 @@ public class ColorService implements ColorLocator {
     notifyListeners();
   }
 
-  ColorSet getCurrentColorSet() {
+  public ColorSet getCurrentColorSet() {
     return currentSet;
   }
 

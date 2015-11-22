@@ -5,9 +5,12 @@
       <comboBox ref="colorSets" fill="none" anchor="west"/>
     </row>
     <horizontalSplit>
-      <scrollPane margin="20" weightX="4">
-        <list ref="colorList"/>
-      </scrollPane>
+      <column weightX="4" margin="20">
+        <scrollPane weightY="100">
+          <list ref="colorList"/>
+        </scrollPane>
+        <textField ref="filter" marginTop="5"/>
+      </column>
       <column margin="20" weightX="6">
         <row>
           <label text="Value:" anchor="northeast"/>

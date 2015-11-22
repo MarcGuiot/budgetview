@@ -1,7 +1,7 @@
 package org.globsframework.gui.splits;
 
 import org.globsframework.gui.splits.color.ColorService;
-import org.globsframework.gui.splits.color.ColorServiceEditor;
+import org.globsframework.gui.splits.color.editor.ColorServiceEditor;
 import org.globsframework.gui.splits.utils.GuiUtils;
 import org.globsframework.utils.directory.Directory;
 

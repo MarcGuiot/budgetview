@@ -1,5 +1,6 @@
 package org.globsframework.gui.splits.color;
 
+import org.globsframework.gui.splits.color.editor.ColorServiceEditor;
 import org.uispec4j.*;
 import org.uispec4j.assertion.Assertion;
 import org.uispec4j.assertion.UISpecAssert;

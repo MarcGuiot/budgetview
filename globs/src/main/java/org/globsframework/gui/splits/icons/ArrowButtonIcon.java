@@ -6,7 +6,8 @@ import java.awt.geom.GeneralPath;
 
 public class ArrowButtonIcon extends SingleColorIcon {
 
-  private static final float ARROW_RATIO = 0.6f;
+  private static final float ARROW_RATIO = 0.5f;
+  public static final float STROKE = 1.0f;
 
   private int width;
   private int height;
@@ -38,7 +39,7 @@ public class ArrowButtonIcon extends SingleColorIcon {
     g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
     g2d.setColor(getColor());
-    g2d.setStroke(new BasicStroke(1.5f));
+    g2d.setStroke(new BasicStroke(STROKE));
     g2d.drawRoundRect(x, y, width - 2, height - 2, 6, 6);
 
     Rectangle resizedRect = triangle.getBounds();
