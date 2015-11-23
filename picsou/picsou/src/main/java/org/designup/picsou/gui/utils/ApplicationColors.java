@@ -47,6 +47,7 @@ public enum ApplicationColors {
     "/colors/color_blue.properties",
     "/colors/color_black.properties",
     "/colors/color_turquoise.properties",
+    "/colors/color_orange.properties",
     "/colors/color_pink.properties",
     "/colors/color_green.properties"
   };
