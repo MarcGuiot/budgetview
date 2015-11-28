@@ -1,5 +1,6 @@
 package org.uispec4j.utils;
 
+import junit.framework.Assert;
 import junit.framework.AssertionFailedError;
 import junit.framework.TestCase;
 import org.uispec4j.UISpec4J;
@@ -60,6 +61,13 @@ public abstract class UnitTestCase extends TestCase {
     }
   }
 
+
+  protected void checkException(String text, Throwable e) {
+    if (!e.getMessage().contains(text)) {
+      Assert.fail("Text '" + text + "' not found in exception message:\n" + e.getMessage());
+    }
+  }
+
   protected void checkInterceptionError(Functor functor, String expectedMessage) throws Exception {
     try {
       functor.run();
@@ -76,7 +84,7 @@ public abstract class UnitTestCase extends TestCase {
       throw new AssertionFailureNotDetectedError();
     }
     catch (Throwable e) {
-      assertEquals(expectedMessage, e.getMessage());
+      checkException(expectedMessage, e);
     }
   }
 

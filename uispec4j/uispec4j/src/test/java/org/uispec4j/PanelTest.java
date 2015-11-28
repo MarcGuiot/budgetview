@@ -62,7 +62,7 @@ public class PanelTest extends UIComponentTestCase {
       panel.sizeEquals(450, 350).check();
     }
     catch (AssertionFailedError e) {
-      assertEquals("expected:(450,350) but was:(400,400)", e.getMessage());
+      checkException("expected:(450,350) but was:(400,300)", e);
     }
   }
 
@@ -130,7 +130,7 @@ public class PanelTest extends UIComponentTestCase {
       fail();
     }
     catch (ItemNotFoundException e) {
-      assertEquals("No component found", e.getMessage());
+      checkException("No component found", e);
     }
 
     JSpinner jSpinner = new JSpinner(model);

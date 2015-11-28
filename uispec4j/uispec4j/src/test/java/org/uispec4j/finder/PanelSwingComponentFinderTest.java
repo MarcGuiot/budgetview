@@ -44,9 +44,7 @@ public class PanelSwingComponentFinderTest extends PanelComponentFinderTestCase 
       });
     }
     catch (ComponentAmbiguityException e) {
-      assertEquals(Messages.computeAmbiguityMessage(new Component[]{button1, button2},
-                                                    null, null),
-                   e.getMessage());
+      checkException(Messages.computeAmbiguityMessage(new Component[]{button1, button2}, null, null), e);
     }
   }
 

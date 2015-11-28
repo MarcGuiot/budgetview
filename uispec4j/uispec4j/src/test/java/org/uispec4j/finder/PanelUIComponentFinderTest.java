@@ -32,8 +32,7 @@ public class PanelUIComponentFinderTest extends PanelComponentFinderTestCase {
       fail();
     }
     catch (ComponentAmbiguityException e) {
-      assertEquals(Messages.computeAmbiguityMessage(new String[]{"button1", "button2"}, Button.TYPE_NAME, null),
-                   e.getMessage());
+      checkException(Messages.computeAmbiguityMessage(new String[]{"button1", "button2"}, Button.TYPE_NAME, null), e);
     }
   }
 
@@ -68,9 +67,7 @@ public class PanelUIComponentFinderTest extends PanelComponentFinderTestCase {
       panel.findUIComponent(CUSTOM_MATCHER);
     }
     catch (ComponentAmbiguityException e) {
-      assertEquals(Messages.computeAmbiguityMessage(new Component[]{button, textField},
-                                                    null, null),
-                   e.getMessage());
+      checkException(Messages.computeAmbiguityMessage(new Component[]{button, textField}, null, null), e);
     }
   }
 

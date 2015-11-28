@@ -1,5 +1,6 @@
 package org.uispec4j;
 
+import junit.framework.Assert;
 import org.uispec4j.utils.UIComponentFactory;
 import org.uispec4j.utils.UnitTestCase;
 

@@ -39,7 +39,7 @@ public class ComponentMatchersTest extends PanelComponentFinderTestCase {
       fail();
     }
     catch (ItemNotFoundException e) {
-      assertEquals("No component found", e.getMessage());
+      checkException("No component found", e);
     }
 
     try {
@@ -47,7 +47,7 @@ public class ComponentMatchersTest extends PanelComponentFinderTestCase {
       fail();
     }
     catch (ItemNotFoundException e) {
-      assertEquals("No component found", e.getMessage());
+      checkException("No component found", e);
     }
 
     TestUtils.assertSwingComponentsEquals(new Component[]{button1, textField},
@@ -63,7 +63,7 @@ public class ComponentMatchersTest extends PanelComponentFinderTestCase {
       fail();
     }
     catch (ComponentAmbiguityException e) {
-      assertEquals(Messages.computeAmbiguityMessage(new Component[]{button1, button2}, null, null), e.getMessage());
+      checkException(Messages.computeAmbiguityMessage(new Component[]{button1, button2}, null, null), e);
     }
 
     assertNull(panel.findSwingComponent(ComponentMatchers.displayedNameSubstring("inner")));
@@ -81,7 +81,7 @@ public class ComponentMatchersTest extends PanelComponentFinderTestCase {
       fail();
     }
     catch (ComponentAmbiguityException e) {
-      assertEquals(Messages.computeAmbiguityMessage(new Component[]{button1, button2}, null, null), e.getMessage());
+      checkException(Messages.computeAmbiguityMessage(new Component[]{button1, button2}, null, null), e);
     }
 
     try {
@@ -89,7 +89,7 @@ public class ComponentMatchersTest extends PanelComponentFinderTestCase {
       fail();
     }
     catch (ItemNotFoundException e) {
-      assertEquals("No component found", e.getMessage());
+      checkException("No component found", e);
     }
 
     TestUtils.assertSwingComponentsEquals(new Component[]{button1, button2, textField},
@@ -116,7 +116,7 @@ public class ComponentMatchersTest extends PanelComponentFinderTestCase {
       fail();
     }
     catch (ItemNotFoundException e) {
-      assertEquals("No component found", e.getMessage());
+      checkException("No component found", e);
     }
 
     TestUtils.assertSwingComponentsEquals(new Component[]{button1, button2, textField},

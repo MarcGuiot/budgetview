@@ -30,7 +30,7 @@ public class TreeSelectionTest extends TreeTestCase {
   }
 
   public void testSelectRoot() throws Exception {
-    assertNull(jTree.getSelectionRows());
+    assertEquals(0, jTree.getSelectionCount());
     tree.selectRoot();
     ArrayUtils.assertEquals(new int[]{0}, jTree.getSelectionRows());
     selectionListener.assertEquals("<log>  " +
@@ -39,7 +39,7 @@ public class TreeSelectionTest extends TreeTestCase {
   }
 
   public void testSelectExistingPath() throws Exception {
-    assertNull(jTree.getSelectionRows());
+    assertEquals(0, jTree.getSelectionCount());
     tree.select("child1");
     checkSelection(new DefaultMutableTreeNode[]{child1Node},
                    "<log>  " +
@@ -90,7 +90,7 @@ public class TreeSelectionTest extends TreeTestCase {
   }
 
   public void testMultiSelectionOfPaths() throws Exception {
-    assertNull(jTree.getSelectionRows());
+    assertEquals(0, jTree.getSelectionCount());
     assertTrue(tree.contentEquals("root\n" +
                                   "  child1\n" +
                                   "    child1_1\n" +
@@ -128,7 +128,7 @@ public class TreeSelectionTest extends TreeTestCase {
   }
 
   public void testSelectingMultipleNodes() throws Exception {
-    assertNull(jTree.getSelectionRows());
+    assertEquals(0, jTree.getSelectionCount());
     assertTrue(tree.contentEquals("root\n" +
                                   "  child1\n" +
                                   "    child1_1\n" +
@@ -165,7 +165,7 @@ public class TreeSelectionTest extends TreeTestCase {
   }
 
   public void testSelectNonexistingPath() throws Exception {
-    assertNull(jTree.getSelectionRows());
+    assertEquals(0, jTree.getSelectionCount());
     String path = "child1/unexistingElement";
     try {
       tree.select(path);
@@ -174,7 +174,7 @@ public class TreeSelectionTest extends TreeTestCase {
     catch (AssertionFailedError e) {
       assertEquals(Tree.badTreePath("child1/unexistingElement"), e.getMessage());
     }
-    assertNull(jTree.getSelectionRows());
+    assertEquals(0, jTree.getSelectionCount());
   }
 
   public void testSelectChildIndexUnderParent() throws Exception {

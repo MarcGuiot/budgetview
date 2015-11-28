@@ -118,8 +118,7 @@ public class PanelComponentSearchTest extends PanelComponentFinderTestCase {
       fail();
     }
     catch (Exception e) {
-      assertEquals(Messages.computeAmbiguityMessage(new String[]{"world", "hello"}, TextBox.TYPE_NAME, null),
-                   e.getMessage());
+      checkException(Messages.computeAmbiguityMessage(new String[]{"world", "hello"}, TextBox.TYPE_NAME, null), e);
     }
 
     TestUtils.assertUIComponentRefersTo(textField, labelAccessor.getComponent("world"));
@@ -142,8 +141,7 @@ public class PanelComponentSearchTest extends PanelComponentFinderTestCase {
       fail();
     }
     catch (Exception e) {
-      assertEquals(Messages.computeAmbiguityMessage(new String[]{"Hello Regis", "Hello Marc"}, TextBox.TYPE_NAME, "hello"),
-                   e.getMessage());
+      checkException(Messages.computeAmbiguityMessage(new String[]{"Hello Regis", "Hello Marc"}, TextBox.TYPE_NAME, "hello"), e);
     }
     TestUtils.assertUIComponentRefersTo(innerLabel, labelAccessor.getComponent("Hello marc"));
     TestUtils.assertUIComponentRefersTo(label, labelAccessor.getComponent("Hello regis"));
@@ -438,8 +436,7 @@ public class PanelComponentSearchTest extends PanelComponentFinderTestCase {
       fail();
     }
     catch (ItemNotFoundException e) {
-      assertEquals(Messages.computeNotFoundMessage(uiComponentType, null, null),
-                   e.getMessage());
+      checkException(Messages.computeNotFoundMessage(uiComponentType, null, null), e);
     }
 
     String componentName = "unknown";
@@ -448,8 +445,7 @@ public class PanelComponentSearchTest extends PanelComponentFinderTestCase {
       fail();
     }
     catch (ItemNotFoundException e) {
-      assertEquals(Messages.computeNotFoundMessage(uiComponentType, componentName, null),
-                   e.getMessage());
+      checkException(Messages.computeNotFoundMessage(uiComponentType, componentName, null), e);
     }
 
     try {
@@ -461,8 +457,7 @@ public class PanelComponentSearchTest extends PanelComponentFinderTestCase {
       fail();
     }
     catch (ItemNotFoundException e) {
-      assertEquals(Messages.computeNotFoundMessage(null, null, null),
-                   e.getMessage());
+      checkException(Messages.computeNotFoundMessage(null, null, null), e);
     }
   }
 
@@ -475,8 +470,7 @@ public class PanelComponentSearchTest extends PanelComponentFinderTestCase {
       fail();
     }
     catch (ItemNotFoundException e) {
-      assertEquals(Messages.computeNotFoundMessage(uiComponentType, componentName, null),
-                   e.getMessage());
+      checkException(Messages.computeNotFoundMessage(uiComponentType, componentName, null), e);
     }
   }
 
@@ -486,8 +480,7 @@ public class PanelComponentSearchTest extends PanelComponentFinderTestCase {
       fail();
     }
     catch (ComponentAmbiguityException e) {
-      assertEquals(Messages.computeAmbiguityMessage(candidates, uiComponentType, componentName),
-                   e.getMessage());
+      checkException(Messages.computeAmbiguityMessage(candidates, uiComponentType, componentName), e);
     }
   }
 
@@ -509,8 +502,7 @@ public class PanelComponentSearchTest extends PanelComponentFinderTestCase {
         String displayedName = ComponentUtils.getDisplayedName(component);
         names[i] = (displayedName == null || displayedName.length() == 0) ? component.getName() : displayedName;
       }
-      assertEquals(Messages.computeAmbiguityMessage(names, uiComponentType, null),
-                   e.getMessage());
+      checkException(Messages.computeAmbiguityMessage(names, uiComponentType, null), e);
     }
   }
 
