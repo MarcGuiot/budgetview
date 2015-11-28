@@ -1,6 +1,8 @@
 package org.uispec4j.interception.toolkit;
 
 import org.uispec4j.UISpec4J;
+import sun.awt.LightweightFrame;
+import sun.awt.datatransfer.DataTransferer;
 
 import javax.swing.*;
 import java.awt.*;
@@ -67,6 +69,10 @@ public class UISpecToolkit extends ToolkitDelegate {
     return new UISpecFramePeer(target);
   }
 
+  public FramePeer createLightweightFrame(LightweightFrame lightweightFrame) throws HeadlessException {
+    return  new UISpecFramePeer(lightweightFrame);
+  }
+
   public DialogPeer createDialog(Dialog target) throws HeadlessException {
     if (!(target instanceof JDialog)) {
       throw new InterceptionInternalError("Dialogs of type '"
@@ -107,6 +113,14 @@ public class UISpecToolkit extends ToolkitDelegate {
 
   public RobotPeer createRobot(Robot robot, GraphicsDevice device) throws AWTException, HeadlessException {
     return Empty.NULL_ROBOT;
+  }
+
+  public DataTransferer getDataTransferer() {
+    return null;
+  }
+
+  public KeyboardFocusManagerPeer getKeyboardFocusManagerPeer() throws HeadlessException {
+    return null;
   }
 
   public KeyboardFocusManagerPeer createKeyboardFocusManagerPeer(KeyboardFocusManager manager) throws HeadlessException {

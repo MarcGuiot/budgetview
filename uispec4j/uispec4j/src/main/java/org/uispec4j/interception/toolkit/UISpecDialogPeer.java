@@ -17,6 +17,16 @@ public class UISpecDialogPeer extends Empty.DialogPeer {
   }
 
   public void show() {
+    processShow();
+  }
+
+  public void setVisible(boolean shown) {
+    if (shown) {
+      processShow();
+    }
+  }
+
+  public void processShow() {
     try {
       UISpecDisplay.instance().assertAcceptsWindow(new Window(dialog));
     }

@@ -4,14 +4,33 @@ import java.awt.*;
 
 public class UISpecFramePeer extends Empty.FramePeer {
   private Frame frame;
+  private boolean inProgress = false;
 
   public UISpecFramePeer(Frame frame) {
     this.frame = frame;
   }
 
   public void show() {
-    UISpecDisplay.instance().showFrame(frame);
-    UISpecDisplay.instance().rethrowIfNeeded();
+    processShow();
+  }
+
+  public void setVisible(boolean shown) {
+    if (shown) {
+      processShow();
+    }
+  }
+
+  public void processShow() {
+    if (!inProgress) {
+      inProgress = true;
+      try {
+        UISpecDisplay.instance().showFrame(frame);
+        UISpecDisplay.instance().rethrowIfNeeded();
+      }
+      finally {
+        inProgress = false;
+      }
+    }
   }
 
   public Toolkit getToolkit() {
