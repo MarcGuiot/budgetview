@@ -18,7 +18,7 @@
     <style selector="separator" marginTop="20" marginBottom="20" weightY="0.01"/>
   </styles>
 
-  <column styleClass="dialog" preferredSize="(600,690)">
+  <column styleClass="dialog" preferredSize="(600,710)">
 
     <label text="$import.completion.title" name="title" styleClass="title"/>
 

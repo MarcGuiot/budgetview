@@ -8,7 +8,7 @@
     <style selector="htmlEditorPane.multiLineLabel" font="-,plain,12"/>
   </styles>
 
-  <column styleClass="dialog" preferredSize="(600,690)">
+  <column styleClass="dialog" preferredSize="(600,710)">
 
     <label text="$import.fileSelection.title" name="title" styleClass="title"/>
 
