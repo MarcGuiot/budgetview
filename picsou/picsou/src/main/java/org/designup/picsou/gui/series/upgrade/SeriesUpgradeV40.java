@@ -36,7 +36,7 @@ public class SeriesUpgradeV40 {
   private SeriesUpgradeV40(GlobRepository repository, PostProcessor postProcessor) {
     this.repository = repository;
     this.postProcessor = postProcessor;
-    GlobList accounts = repository.getAll(Account.TYPE, AccountMatchers.userCreatedMainAccounts()).sort(new AccountComparator());
+    GlobList accounts = repository.getAll(Account.TYPE, AccountMatchers.userCreatedMainAccounts()).sortSelf(new AccountComparator());
     this.defaultMainAccount = accounts.isEmpty() ? null : accounts.getFirst();
     this.singleMainAccount = accounts.size() == 1;
   }

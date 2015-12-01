@@ -2,19 +2,19 @@ open "budgetview.jar"
      -"budgetview.jar!demo/demo-fr.snapshot"
      -"budgetview.jar!demo/demo-en.snapshot"
      -"budgetview.jar!apple/laf/*.class"
-     -"budgetview.jar!apple/awt/CGraphics*.class"
-     -"budgetview.jar!apple/awt/CComponent.class"
-     -"budgetview.jar!apple/awt/ComponentModel.class"
-     -"budgetview.jar!apple/awt/CPeerSurfaceData.class"
-     -"budgetview.jar!apple/awt/CPrinterJob*.class"
-     -"budgetview.jar!apple/awt/CRenderer*.class"
-     -"budgetview.jar!apple/awt/CTextPipe*.class"
-     -"budgetview.jar!apple/awt/CToolkit*.class"
-     -"budgetview.jar!apple/awt/PeerImpl*.class"
+     -"budgetview.jar!apple/awt/C*.class"
+     -"budgetview.jar!apple/awt/C*.class"
+     -"budgetview.jar!apple/awt/FontConfiguration.class"
      -"budgetview.jar!apple/awt/IntegerNIORaster.class"
-     -"budgetview.jar!com/apple/laf/AquaFileChooserUI*.class"
-     -"budgetview.jar!com/apple/laf/AquaLookAndFeel*.class"
+     -"budgetview.jar!apple/awt/IntegerNIORaster.class"
      -"budgetview.jar!apple/awt/OSX*.class"
+     -"budgetview.jar!com/apple/eawt/Application.class"
+     -"budgetview.jar!com/apple/laf/*.class"
+     -"budgetview.jar!sun/awt/*.class"
+     -"budgetview.jar!javax/swing/JTable*.class"
+     -"budgetview.jar!com/steadystate/css/parser/*.class"
+     -"budgetview.jar!org/w3c/css/sac/*.class"
+     -"budgetview.jar!java/awt/GraphicsEnvironment.class"
      -"budgetview.jar!net/roydesign/mac/*.class"
      -"budgetview.jar!net/roydesign/event/*.class";
 
@@ -30,6 +30,7 @@ exclude   picsou.^ExceptionHandler and
           javax.xml*.^* and
           javax.xml*.^* *(*) and
           javax.xml*.^* * and
+          javax.swing*.^* * and
           org.w3c*.^* and
           org.w3c*.^* *(*) and
           org.w3c*.^* * and
@@ -63,25 +64,12 @@ exclude   picsou.^ExceptionHandler and
           org.globsframework.gui.components.ShowHideButton set*(*);
 
 /*
-
-net.sourceforge.htmlunit.* and
-          net.sourceforge.htmlunit.* *(*) and
-          com.gargoylesoftware.htmlunit.* and
-          com.gargoylesoftware.htmlunit.* *(*)
-
-
-obfuscate  changeLogFileOut="ChangeLogOutput.txt"
-           aggressiveMethodRenaming=false
-           obfuscateFlow=none
-           encryptStringLiterals=none
-           lineNumbers=keep
-;
-*/
 obfuscate  changeLogFileOut="ChangeLogOutput.txt"
            aggressiveMethodRenaming=true
            obfuscateFlow=aggressive
            encryptStringLiterals=aggressive
            lineNumbers=scramble 
 ;
+*/
 
 saveAll archiveCompression=all "obfuscated";

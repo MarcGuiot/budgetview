@@ -34,7 +34,7 @@ public class AutoCategorizationFunctor implements GlobFunctor {
     }
     GlobList index = referenceRepository.findByIndex(Transaction.LABEL_FOR_CATEGORISATION_INDEX,
                                                      transaction.get(Transaction.LABEL_FOR_CATEGORISATION))
-      .sort(TransactionComparator.ASCENDING);
+      .sortSelf(TransactionComparator.ASCENDING);
     if (index.size() == 0) {
       return;
     }

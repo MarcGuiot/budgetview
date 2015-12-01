@@ -59,7 +59,7 @@ public class DailyAccountPositionComputer {
 
         GlobList transactions = repository.findByIndex(Transaction.POSITION_MONTH_INDEX, monthId)
           .filterSelf(accountMatcher, repository)
-          .sort(TransactionComparator.ASCENDING_ACCOUNT);
+          .sortSelf(TransactionComparator.ASCENDING_ACCOUNT);
 
         Double[] minValuesForAccount = new Double[maxDayForMonth];
         Double lastValue = lastValueForAccounts.get(accountId);
@@ -100,7 +100,7 @@ public class DailyAccountPositionComputer {
     for (int monthId : monthIdsToShow) {
       GlobList transactions = repository.findByIndex(Transaction.POSITION_MONTH_INDEX, monthId)
         .filterSelf(accountMatcher, repository)
-        .sort(TransactionComparator.ASCENDING_ACCOUNT);
+        .sortSelf(TransactionComparator.ASCENDING_ACCOUNT);
 
       int maxDay = Month.getLastDayNumber(monthId);
       if (!transactions.isEmpty()) {

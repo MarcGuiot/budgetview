@@ -10,7 +10,7 @@
 
   <repositories>
     <repository>
-      <id>jide </id>
+      <id>Maven2</id>
       <url>http://download.java.net/maven/2/</url>
     </repository>
   </repositories>

@@ -100,7 +100,7 @@ public class AccountPositionEditionPanel {
                                                 TransactionMatchers.realTransactions(account.get(Account.ID),
                                                                                      currentMonth.get(CurrentMonth.CURRENT_MONTH),
                                                                                      currentMonth.get(CurrentMonth.CURRENT_DAY)))
-      .sort(TransactionComparator.ASCENDING_ACCOUNT).getLast();
+      .sortSelf(TransactionComparator.ASCENDING_ACCOUNT).getLast();
     if (transaction != null) {
       selectionService.select(transaction);
     }

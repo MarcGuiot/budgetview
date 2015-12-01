@@ -51,7 +51,7 @@ public class SeriesDeletionTest extends LoggedInFunctionalTestCase {
       seriesDialog
         .checkVisible()
         .checkNoStartDate()
-        .checkEndDate(month)
+        .checkEndDate(month.toLowerCase())
         .validate();
     }
   };
@@ -384,7 +384,7 @@ public class SeriesDeletionTest extends LoggedInFunctionalTestCase {
 
     categorization.setNewVariable("Forfait Kro", "Drinks");
 
-    access.setEndDate("Drinks", "may 2008");
+    access.setEndDate("Drinks", "May 2008");
 
     timeline.selectMonth(200806);
     budgetView.variable.checkSeriesNotPresent("Drinks");

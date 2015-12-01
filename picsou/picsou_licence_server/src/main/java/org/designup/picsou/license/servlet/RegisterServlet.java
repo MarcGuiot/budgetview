@@ -82,7 +82,7 @@ public class RegisterServlet extends HttpServlet {
       .selectAll()
       .getQuery();
     GlobList globList = query.executeAsGlobs()
-      .sort(COMPARATOR);
+      .sortSelf(COMPARATOR);
     db.commit();
     if (globList.isEmpty()) {
       resp.setHeader(ConfigService.HEADER_MAIL_UNKNOWN, "true");

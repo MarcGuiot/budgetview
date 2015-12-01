@@ -175,7 +175,7 @@ public class BudgetValuesUpdater {
           new TransactionMatchers.AccountDateMatcher(Utils.set(selectedMonths)));
     GlobList accounts =
       sourceRepository.getAll(Account.TYPE, matcher)
-        .sort(new AccountComparator());
+        .sortSelf(new AccountComparator());
     int index = 0;
     for (Glob account : accounts) {
       final Integer accountId = account.get(Account.ID);
@@ -258,7 +258,7 @@ public class BudgetValuesUpdater {
       .getAll(Transaction.TYPE,
               and(fieldIn(Transaction.BUDGET_MONTH, selectedMonths),
                   isNotTrue(Transaction.PLANNED)))
-      .sort(TransactionComparator.DESCENDING_BANK_SPLIT_AFTER);
+      .sortSelf(TransactionComparator.DESCENDING_BANK_SPLIT_AFTER);
     int sequenceNumber = 0;
     for (Glob transaction : transactions) {
       targetRepository.create(TransactionValues.TYPE,

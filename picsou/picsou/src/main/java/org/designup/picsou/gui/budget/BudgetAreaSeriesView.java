@@ -124,7 +124,7 @@ public class BudgetAreaSeriesView extends View implements Filterable {
       updater.releaseSignpost();
     }
     List<Key> newStat = repository.getAll(PeriodSeriesStat.TYPE, statFilter)
-      .sort(comparator)
+      .sortSelf(comparator)
       .toKeyList();
     seriesRepeat.startUpdate();
     GlobUtils.diff(currentSeriesStat, newStat, new GlobUtils.DiffFunctor<Key>() {
@@ -209,8 +209,8 @@ public class BudgetAreaSeriesView extends View implements Filterable {
   private void updateMonthFilteringButton() {
     String key =
       statFilter.isMonthFilteringEnabled()
-      ? "budgetView.actions.disableMonthFiltering"
-      : "budgetView.actions.enableMonthFiltering";
+        ? "budgetView.actions.disableMonthFiltering"
+        : "budgetView.actions.enableMonthFiltering";
     monthFilteringButton.setText(Lang.get(key));
   }
 

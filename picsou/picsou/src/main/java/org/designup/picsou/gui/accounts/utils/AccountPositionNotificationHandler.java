@@ -31,7 +31,7 @@ public class AccountPositionNotificationHandler implements NotificationHandler {
     GlobList errors =
       repository
         .getAll(AccountPositionError.TYPE, isFalse(AccountPositionError.CLEARED))
-        .sort(new GlobFieldsComparator(AccountPositionError.UPDATE_DATE, false,
+        .sortSelf(new GlobFieldsComparator(AccountPositionError.UPDATE_DATE, false,
                                        AccountPositionError.ACCOUNT, true));
     for (Glob error : errors) {
       Integer fullDate = error.get(AccountPositionError.LAST_PREVIOUS_IMPORT_DATE);

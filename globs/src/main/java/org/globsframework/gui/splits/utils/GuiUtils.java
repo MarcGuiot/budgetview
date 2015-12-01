@@ -37,7 +37,7 @@ public class GuiUtils {
   private static final String WINDOWS_PLATFORM_ID = "Windows";
 
   static {
-    String os = (String)AccessController.doPrivileged(new GetPropertyAction("os.name"));
+    String os = AccessController.doPrivileged(new GetPropertyAction("os.name"));
     IS_MACOSX = os.contains(MAC_PLATFORM_ID);
     IS_LINUX = os.contains(LINUX_PLATFORM_ID);
     IS_WINDOWS = os.contains(WINDOWS_PLATFORM_ID);
@@ -46,7 +46,7 @@ public class GuiUtils {
     IS_WIN8 = IS_WINDOWS && os.toLowerCase().contains("8");
     IS_XP = IS_WINDOWS && os.toLowerCase().contains("xp");
 
-    String vm = (String)AccessController.doPrivileged(new GetPropertyAction("java.vm.name"));
+    String vm = AccessController.doPrivileged(new GetPropertyAction("java.vm.name"));
     IS_OPEN_JDK = vm.contains("OpenJDK");
   }
 

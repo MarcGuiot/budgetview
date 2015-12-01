@@ -7,6 +7,10 @@ import org.globsframework.model.*;
 import org.globsframework.model.utils.GlobMatchers;
 import org.globsframework.utils.collections.MultiMap;
 import org.globsframework.utils.Strings;
+
+import static org.globsframework.model.utils.GlobMatchers.and;
+import static org.globsframework.model.utils.GlobMatchers.fieldEquals;
+import static org.globsframework.model.utils.GlobMatchers.isNotNull;
 import static org.globsframework.utils.Utils.equal;
 
 import java.util.HashMap;
@@ -28,7 +32,7 @@ public class TransactionFilter {
                                             ReadOnlyGlobRepository referenceRepository,
                                             GlobList transactionToFilter,
                                             Integer accountId) {
-    GlobList importedTransactions = transactionToFilter.sort(TransactionComparator.ASCENDING_BANK_SPLIT_AFTER);
+    GlobList importedTransactions = transactionToFilter.sortSelf(TransactionComparator.ASCENDING_BANK_SPLIT_AFTER);
     if (importedTransactions.isEmpty()) {
       return GlobList.EMPTY;
     }
@@ -44,9 +48,9 @@ public class TransactionFilter {
     GlobList newTransactions = new GlobList(importedTransactions.size());
     for (Integer transactionAccountId : accountsByTransaction.keySet()) {
       GlobList actualTransactions = referenceRepository
-        .getAll(Transaction.TYPE, GlobMatchers.and(GlobMatchers.fieldEquals(Transaction.ORIGINAL_ACCOUNT, transactionAccountId),
-                                                   GlobMatchers.isNotNull(Transaction.IMPORT)))
-        .sort(TransactionComparator.ASCENDING_BANK_SPLIT_AFTER);
+        .getAll(Transaction.TYPE, and(fieldEquals(Transaction.ORIGINAL_ACCOUNT, transactionAccountId),
+                                      isNotNull(Transaction.IMPORT)))
+        .sortSelf(TransactionComparator.ASCENDING_BANK_SPLIT_AFTER);
       if (actualTransactions.isEmpty()) {
         return importedTransactions;
       }

@@ -54,7 +54,7 @@ public enum CategorizationFilteringMode {
 
       case LAST_IMPORTED_FILE:
         GlobList imports = repository.getAll(TransactionImport.TYPE)
-          .sort(new GlobFieldsComparator(TransactionImport.IMPORT_DATE, true, TransactionImport.ID, true));
+          .sortSelf(new GlobFieldsComparator(TransactionImport.IMPORT_DATE, true, TransactionImport.ID, true));
         if (imports.isEmpty()) {
           return GlobMatchers.NONE;
         }

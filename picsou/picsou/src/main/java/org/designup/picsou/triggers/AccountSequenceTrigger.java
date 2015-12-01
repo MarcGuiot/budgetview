@@ -40,7 +40,7 @@ public class AccountSequenceTrigger implements ChangeSetListener {
 
   public static void resetSequence(GlobRepository repository) {
     int sequence = 0;
-    for (Glob account : repository.getAll(Account.TYPE).sort(new AutomaticAccountComparator())) {
+    for (Glob account : repository.getAll(Account.TYPE).sortSelf(new AutomaticAccountComparator())) {
       repository.update(account.getKey(), Account.SEQUENCE, sequence++);
     }
   }

@@ -91,7 +91,7 @@ public class FieldRepeatComponentFactory implements RepeatComponentFactory<Field
     GlobList selection = selectionService.getSelection(type);
 
     HistoLineDataset dataset = new HistoLineDataset("histo.tooltip");
-    for (Glob glob : getGlob().sort(new GlobFieldComparator(typeId))) {
+    for (Glob glob : getGlob().sortSelf(new GlobFieldComparator(typeId))) {
       Integer weekId = glob.get(typeId);
       dataset.add(weekId,
                   getValue(glob, field),

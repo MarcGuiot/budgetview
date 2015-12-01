@@ -63,7 +63,7 @@ public class PeriodSeriesStatComparatorTest extends TestCase {
     GlobList statList = new GlobList(statArray);
     boolean first = true;
     StringBuilder builder = new StringBuilder();
-    for (Glob stat : statList.sort(comparator)) {
+    for (Glob stat : statList.sortSelf(comparator)) {
       if (!first) {
         builder.append("/");
       }

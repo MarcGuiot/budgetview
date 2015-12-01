@@ -47,7 +47,7 @@ public class ProjectUtils {
     list.addAll(repository.getAll(SeriesStat.TYPE,
                                   GlobMatchers.and(fieldEquals(SeriesStat.TARGET_TYPE, SeriesType.SERIES.getId()),
                                                    fieldIn(SeriesStat.TARGET, seriesIds)))
-                  .sort(new GlobFieldsComparator(SeriesStat.TARGET_TYPE, true,
+                  .sortSelf(new GlobFieldsComparator(SeriesStat.TARGET_TYPE, true,
                                                  SeriesStat.TARGET, true,
                                                  SeriesStat.MONTH, true)));
 

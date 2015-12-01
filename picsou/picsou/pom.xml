@@ -168,11 +168,11 @@
       <artifactId>swingx</artifactId>
       <version>0.9.7</version>
     </dependency>
-    <dependency>
-      <groupId>com.apple</groupId>
-      <artifactId>laf</artifactId>
-      <version>1.0</version>
-    </dependency>
+    <!--<dependency>-->
+      <!--<groupId>com.apple</groupId>-->
+      <!--<artifactId>laf</artifactId>-->
+      <!--<version>1.0</version>-->
+    <!--</dependency>-->
     <dependency>
       <groupId>net.roydesign.mac</groupId>
       <artifactId>MRJAdapter</artifactId>

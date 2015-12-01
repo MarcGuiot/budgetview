@@ -19,9 +19,7 @@ public class PicsouMacLookAndFeel extends AquaLookAndFeel {
 
   protected void initClassDefaults(UIDefaults defaults) {
     super.initClassDefaults(defaults);
-    if (System.getProperty("mrj.version") != null) {
-      System.setProperty("apple.laf.useScreenMenuBar", "true");
-    }
+    System.setProperty("apple.laf.useScreenMenuBar", "true");
     UIManager.put("Label.disabledForegroundColor", Color.GRAY.brighter());
 
     try {

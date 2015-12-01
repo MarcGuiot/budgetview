@@ -47,7 +47,9 @@ public class Project {
   @Target(Picture.class)
   public static LinkField PICTURE;
 
-  /** @deprecated */
+  /**
+   * @deprecated
+   */
   @Target(Series.class)
   public static LinkField SERIES;
 
@@ -88,8 +90,8 @@ public class Project {
 
   public static void sortItems(Glob project, GlobRepository repository) {
     GlobList items = repository.findLinkedTo(project, ProjectItem.PROJECT)
-      .sort(new GlobFieldsComparator(ProjectItem.FIRST_MONTH, true,
-                                     ProjectItem.ID, true));
+      .sortSelf(new GlobFieldsComparator(ProjectItem.FIRST_MONTH, true,
+                                         ProjectItem.ID, true));
     int sequenceNumber = 0;
     for (Glob item : items) {
       repository.update(item.getKey(), ProjectItem.SEQUENCE_NUMBER, sequenceNumber++);

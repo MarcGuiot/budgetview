@@ -313,20 +313,23 @@ public class GlobList extends ArrayList<Glob> {
       return this;
     }
     if (field.length == 1) {
-      return sort(new GlobFieldComparator(field[0]));
+      sort(new GlobFieldComparator(field[0]));
+      return this;
     }
-    return sort(new GlobFieldsComparator(field));
+    sort(new GlobFieldsComparator(field));
+    return this;
   }
 
   public GlobList reverseSort(Field field) {
     if (field == null) {
-      return this;
+      return null;
     }
-    return sort(new ReverseGlobFieldComparator(field));
+    sort(new ReverseGlobFieldComparator(field));
+    return this;
   }
 
-  public GlobList sort(Comparator<Glob> comparator) {
-    Collections.sort(this, comparator);
+  public GlobList sortSelf(Comparator<? super Glob> comparator) {
+    super.sort(comparator);
     return this;
   }
 

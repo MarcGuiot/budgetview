@@ -518,7 +518,7 @@ public class LicenseActivationTest extends ConnectedTestCase {
 
     list = connection.getQueryBuilder(License.TYPE, Constraints.equal(License.MAIL, MAIL))
       .selectAll()
-      .getQuery().executeAsGlobs().sort(RegisterServlet.COMPARATOR);
+      .getQuery().executeAsGlobs().sortSelf(RegisterServlet.COMPARATOR);
     assertEquals(3, list.size());
     Glob l11 = list.get(0);
     Glob l12 = list.get(1);
@@ -532,7 +532,7 @@ public class LicenseActivationTest extends ConnectedTestCase {
 
     list = connection.getQueryBuilder(License.TYPE, Constraints.equal(License.MAIL, OTHERMAIL_FREE_FR))
       .selectAll()
-      .getQuery().executeAsGlobs().sort(RegisterServlet.COMPARATOR);
+      .getQuery().executeAsGlobs().sortSelf(RegisterServlet.COMPARATOR);
     assertEquals(3, list.size());
 
     l11 = list.get(0);
