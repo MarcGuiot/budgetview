@@ -1,5 +1,5 @@
 =============================
-Zelix KlassMaster version 5.1 
+Zelix KlassMaster version 7.0 
 =============================
 
 
@@ -17,3 +17,6 @@ Basic installation instructions are contained in the file install.html.
 The full Zelix KlassMaster HTML documentation can be 
    * viewed online at http://www.zelix.com/klassmaster/docs/index.html.
    * downloaded at http://www.zelix.com/klassmaster/download1.html.
+
+In particular, see the Getting Started documentation at
+http://www.zelix.com/klassmaster/docs/gettingStarted.html .
