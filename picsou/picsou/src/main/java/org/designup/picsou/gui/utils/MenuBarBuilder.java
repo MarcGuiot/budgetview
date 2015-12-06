@@ -15,8 +15,8 @@ import org.designup.picsou.gui.help.HelpService;
 import org.designup.picsou.gui.help.actions.GotoSupportAction;
 import org.designup.picsou.gui.help.actions.GotoWebsiteAction;
 import org.designup.picsou.gui.help.actions.SendLogsAction;
-import org.designup.picsou.gui.license.dev.ShowLicenseExpirationAction;
 import org.designup.picsou.gui.license.activation.RegisterLicenseAction;
+import org.designup.picsou.gui.license.dev.ShowLicenseExpirationAction;
 import org.designup.picsou.gui.license.dev.SimulateLicenseRegistrationAction;
 import org.designup.picsou.gui.mobile.DumpMobileXmlAction;
 import org.designup.picsou.gui.mobile.EditMobileAccountAction;
@@ -68,6 +68,7 @@ public class MenuBarBuilder {
   private Action viewHelpAction;
   private ExitAction exitAction;
   private LogoutAction logoutAction;
+  private AboutAction aboutAction;
 
   public MenuBarBuilder(GlobRepository repository, ReplicationGlobRepository replicationGlobRepository, WindowManager windowManager, LogoutService logoutService, Action viewHelpAction, Directory directory, DeleteUserAction deleteUserAction) {
     this.repository = repository;
@@ -89,6 +90,7 @@ public class MenuBarBuilder {
     this.printBudgetAction = new PrintBudgetAction(replicationGlobRepository, directory);
     this.editMobileAccountAction = new EditMobileAccountAction(repository, directory);
     this.threadsAction = new SendStackTracesAction(repository, directory);
+    this.aboutAction = new AboutAction(directory);
     this.exitAction = new ExitAction(windowManager, repository, directory);
     this.logoutAction = new LogoutAction(logoutService);
   }
@@ -118,12 +120,11 @@ public class MenuBarBuilder {
     menu.add(backupAction);
     menu.add(restoreActionFileAction);
     menu.add(restoreSnapshotMenuAction);
-    // A Restaurer - ne fonctionne plus sur Mac
-    // MRJAdapter.setPreferencesEnabled(true);
-    // MRJAdapter.addPreferencesListener(preferencesAction);
 
-    menu.addSeparator();
-    menu.add(preferencesAction);
+    if (!Gui.useMacOSMenu()) {
+      menu.addSeparator();
+      menu.add(preferencesAction);
+    }
 
     menu.addSeparator();
     menu.add(registerAction);
@@ -143,6 +144,7 @@ public class MenuBarBuilder {
       menu.addSeparator();
       menu.add(exitAction);
     }
+
     return menu;
   }
 
@@ -236,7 +238,7 @@ public class MenuBarBuilder {
 
     if (!Gui.useMacOSMenu()) {
       menu.addSeparator();
-      menu.add(new AboutAction(directory));
+      menu.add(aboutAction);
     }
 
     return menu;
@@ -252,5 +254,13 @@ public class MenuBarBuilder {
 
   public PrintBudgetAction getPrintBudgetAction() {
     return printBudgetAction;
+  }
+
+  public AboutAction getAboutAction() {
+    return aboutAction;
+  }
+
+  public PreferencesAction getPreferencesAction() {
+    return preferencesAction;
   }
 }

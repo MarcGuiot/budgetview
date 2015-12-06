@@ -1,6 +1,8 @@
 package org.designup.picsou.gui;
 
-import net.roydesign.mac.MRJAdapter;
+import com.apple.eawt.AboutHandler;
+import com.apple.eawt.AppEvent;
+import com.apple.eawt.Application;
 import org.designup.picsou.client.ServerAccess;
 import org.designup.picsou.client.ServerAccessDecorator;
 import org.designup.picsou.client.exceptions.BadPassword;
@@ -12,7 +14,6 @@ import org.designup.picsou.client.http.EncrypterToTransportServerAccess;
 import org.designup.picsou.client.http.HttpsClientTransport;
 import org.designup.picsou.client.http.PasswordBasedEncryptor;
 import org.designup.picsou.client.local.LocalClientTransport;
-import org.designup.picsou.gui.about.AboutAction;
 import org.designup.picsou.gui.components.PicsouFrame;
 import org.designup.picsou.gui.components.dialogs.MessageAndDetailsDialog;
 import org.designup.picsou.gui.components.dialogs.MessageDialog;
@@ -25,6 +26,7 @@ import org.designup.picsou.gui.startup.SlaValidationDialog;
 import org.designup.picsou.gui.time.TimeService;
 import org.designup.picsou.gui.undo.UndoRedoService;
 import org.designup.picsou.gui.utils.FrameSize;
+import org.designup.picsou.gui.utils.MacOSXHooks;
 import org.designup.picsou.model.CurrentMonth;
 import org.designup.picsou.model.User;
 import org.designup.picsou.model.UserPreferences;
@@ -39,7 +41,6 @@ import org.globsframework.utils.directory.Directory;
 import org.globsframework.utils.exceptions.InvalidState;
 import org.globsframework.utils.exceptions.UnexpectedApplicationState;
 
-import javax.crypto.BadPaddingException;
 import javax.swing.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
@@ -137,8 +138,6 @@ public class MainWindow implements WindowManager {
     else {
       configService.update(null, 0, null, null, null, serverAccess, dataInMemory);
     }
-
-    MRJAdapter.addAboutListener(new AboutAction(directory));
   }
 
   private static void showDownloadJar(Directory directory, final ConfigService configService) throws InvocationTargetException, InterruptedException {

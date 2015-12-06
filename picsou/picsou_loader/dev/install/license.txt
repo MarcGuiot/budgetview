@@ -5,7 +5,6 @@ apache
 asm : http://asm.ow2.org/license.html
 apple
   laf : ?
-  MRJAdapter : The Artistic License 
 jgoodies look : BSD license.
 balloontip : lgpl
 swingx : lgpl

@@ -93,14 +93,6 @@ public class Gui {
     }
   }
 
-  public static Font getDefaultFont() {
-    if (font == null) {
-      JLabel label = new JLabel();
-      font = label.getFont();
-    }
-    return font;
-  }
-
   public static Color getDefaultTableSelectionBackground() {
     return selectionBackground;
   }
@@ -187,13 +179,6 @@ public class Gui {
     result = false;
     Utils.endRemove();
     return result;
-  }
-
-  public static JButton createSyncButton(JButton button) {
-    JButton sync = new JButton();
-    sync.setModel(button.getModel());
-    sync.setName(button.getName() + "_sync");
-    return sync;
   }
 
   public static boolean isVisibleInWindow(JComponent component) {

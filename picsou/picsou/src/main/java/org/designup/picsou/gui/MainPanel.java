@@ -1,6 +1,5 @@
 package org.designup.picsou.gui;
 
-import net.roydesign.mac.MRJAdapter;
 import org.designup.picsou.gui.accounts.AccountView;
 import org.designup.picsou.gui.actions.DeleteUserAction;
 import org.designup.picsou.gui.actions.ExitAction;
@@ -28,26 +27,26 @@ import org.designup.picsou.gui.model.PeriodAccountStat;
 import org.designup.picsou.gui.model.PeriodBudgetAreaStat;
 import org.designup.picsou.gui.model.PeriodSeriesStat;
 import org.designup.picsou.gui.notifications.NotificationsFlagView;
+import org.designup.picsou.gui.projects.ProjectSelector;
 import org.designup.picsou.gui.projects.ProjectView;
 import org.designup.picsou.gui.series.PeriodAccountStatUpdater;
 import org.designup.picsou.gui.series.PeriodBudgetAreaStatUpdater;
 import org.designup.picsou.gui.series.PeriodSeriesStatUpdater;
 import org.designup.picsou.gui.series.SeriesEditor;
-import org.designup.picsou.gui.signpost.WelcomeView;
 import org.designup.picsou.gui.signpost.SignpostService;
 import org.designup.picsou.gui.signpost.SignpostView;
+import org.designup.picsou.gui.signpost.WelcomeView;
 import org.designup.picsou.gui.signpost.components.OnboardingCompletionUpdater;
 import org.designup.picsou.gui.signpost.guides.ImportSignpost;
 import org.designup.picsou.gui.startup.components.DemoMessageView;
 import org.designup.picsou.gui.startup.components.LogoutService;
 import org.designup.picsou.gui.startup.components.OpenRequestManager;
-import org.designup.picsou.gui.projects.ProjectSelector;
 import org.designup.picsou.gui.summary.version.NewVersionView;
 import org.designup.picsou.gui.time.TimeView;
 import org.designup.picsou.gui.title.PeriodView;
 import org.designup.picsou.gui.transactions.TransactionView;
 import org.designup.picsou.gui.undo.UndoRedoService;
-import org.designup.picsou.gui.utils.Gui;
+import org.designup.picsou.gui.utils.MacOSXHooks;
 import org.designup.picsou.gui.utils.MainPanelContainer;
 import org.designup.picsou.gui.utils.MenuBarBuilder;
 import org.designup.picsou.model.Month;
@@ -148,6 +147,8 @@ public class MainPanel {
                                  directory,
                                  new DeleteUserAction(this, repository, directory));
 
+    MacOSXHooks.install(menuBar.getAboutAction(), menuBar.getPreferencesAction(), menuBar.getExitAction(), directory);
+
     JButton importFile = new JButton(menuBar.getImportFileAction());
     builder.add("importFile", importFile);
     final ImportSignpost importSignpost = new ImportSignpost(repository, directory);
@@ -189,14 +190,6 @@ public class MainPanel {
       new NotificationsFlagView(repository, directory)
     );
 
-    if (Gui.useMacOSMenu()) {
-      if (exitActionWhitoutUserEvaluation != null) {
-        MRJAdapter.removeQuitApplicationListener(exitActionWhitoutUserEvaluation);
-        exitActionWhitoutUserEvaluation = null;
-      }
-      MRJAdapter.addQuitApplicationListener(menuBar.getExitAction());
-    }
-
     builder.load();
   }
 
@@ -215,7 +208,7 @@ public class MainPanel {
     }
     builder.addLoader(new SplitsLoader() {
       public void load(Component component, SplitsNode node) {
-        panel = (JPanel)component;
+        panel = (JPanel) component;
       }
     });
   }
@@ -275,13 +268,6 @@ public class MainPanel {
   }
 
   private void prepareForLogout() {
-    if (Gui.useMacOSMenu()) {
-      MRJAdapter.removeQuitApplicationListener(menuBar.getExitAction());
-      if (exitActionWhitoutUserEvaluation == null) {
-        exitActionWhitoutUserEvaluation = new ExitAction(windowManager, repository, directory, false);
-        MRJAdapter.addQuitApplicationListener(exitActionWhitoutUserEvaluation);
-      }
-    }
     directory.get(OpenRequestManager.class).popCallback();
   }
 

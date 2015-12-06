@@ -1,11 +1,9 @@
 package org.designup.picsou.gui;
 
-import net.roydesign.mac.MRJAdapter;
 import org.designup.picsou.client.ServerAccess;
 import org.designup.picsou.client.exceptions.UserAlreadyExists;
 import org.designup.picsou.client.http.EncrypterToTransportServerAccess;
 import org.designup.picsou.client.local.LocalClientTransport;
-import org.designup.picsou.gui.about.AboutAction;
 import org.designup.picsou.gui.components.PicsouFrame;
 import org.designup.picsou.gui.components.layoutconfig.LayoutConfigService;
 import org.designup.picsou.gui.plaf.PicsouMacLookAndFeel;
@@ -48,7 +46,6 @@ public class MainWindowLauncher {
     PicsouApplication.changeDate();
 
     Directory directory = PicsouApplication.createDirectory();
-    MRJAdapter.addAboutListener(new AboutAction(directory));
 
     ServerDirectory serverDirectory = createServerDirectory(snapshot);
     directory.add(ServerDirectory.class, serverDirectory);

@@ -21,10 +21,6 @@ public class DownloadIcon extends SingleColorIcon {
     Graphics2D g2 = (Graphics2D) graphics;
     g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
-//
-//    g2.setColor(Color.GREEN);
-//    g2.fillRect(0, 0, width, height);
-
     g2.setPaint(getColor());
     g2.setColor(getColor());
     g2.setStroke(new BasicStroke(2));

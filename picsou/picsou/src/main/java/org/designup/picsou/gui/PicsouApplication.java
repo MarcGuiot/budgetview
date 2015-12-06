@@ -1,7 +1,6 @@
 package org.designup.picsou.gui;
 
 import net.roydesign.event.ApplicationEvent;
-import net.roydesign.mac.MRJAdapter;
 import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
@@ -32,6 +31,7 @@ import org.designup.picsou.gui.time.TimeService;
 import org.designup.picsou.gui.upgrade.UpgradeService;
 import org.designup.picsou.gui.utils.ApplicationColors;
 import org.designup.picsou.gui.utils.Gui;
+import org.designup.picsou.gui.utils.MacOSXHooks;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.SelectionService;
 import org.globsframework.gui.splits.ImageLocator;
@@ -149,11 +149,12 @@ public class PicsouApplication {
     initEncryption();
     mrjDocumentListener = new AbstractAction() {
       public void actionPerformed(ActionEvent e) {
-        ApplicationEvent event = (ApplicationEvent)e;
+        ApplicationEvent event = (ApplicationEvent) e;
         openRequestManager.openFiles(Collections.singletonList(event.getFile()));
       }
     };
-    MRJAdapter.addOpenDocumentListener(mrjDocumentListener);
+    MacOSXHooks.addOpenDocumentListener(mrjDocumentListener);
+
     Locale.setDefault(Locale.ENGLISH);
     if (args.length > 1) {
       args = parseLanguage(args);
@@ -198,7 +199,7 @@ public class PicsouApplication {
   private static void showError(Exception e) {
     StringWriter out = new StringWriter();
     e.printStackTrace(new PrintWriter(out));
-    JDialog dialog = new JDialog((Frame)null, true);
+    JDialog dialog = new JDialog((Frame) null, true);
     dialog.setSize(900, 700);
     dialog.getContentPane()
       .add(new JTextArea(out.toString()));
@@ -264,7 +265,7 @@ public class PicsouApplication {
 
   public void shutdown() {
     try {
-      MRJAdapter.removeOpenDocumentListener(mrjDocumentListener);
+      MacOSXHooks.removeOpenDocumentListener(mrjDocumentListener);
       singleInstanceListener.shutdown();
       if (directory != null) {
         directory.get(ColorService.class).removeAllListeners();

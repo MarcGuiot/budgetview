@@ -16,6 +16,7 @@ public class ExitAction extends AbstractAction {
   private WindowManager windowManager;
   private GlobRepository repository;
   private Directory directory;
+  private boolean enabled = true;
   private boolean showUserEvaluation = true;
   private boolean exitRequested = false;
 

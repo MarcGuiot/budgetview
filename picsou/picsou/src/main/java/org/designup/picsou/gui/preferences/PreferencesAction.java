@@ -1,6 +1,5 @@
 package org.designup.picsou.gui.preferences;
 
-import org.designup.picsou.gui.preferences.PreferencesDialog;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.utils.directory.Directory;

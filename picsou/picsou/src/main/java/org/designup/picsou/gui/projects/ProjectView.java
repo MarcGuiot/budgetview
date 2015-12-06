@@ -46,7 +46,7 @@ public class ProjectView extends View implements GlobSelectionListener, ChangeSe
 
     cards = builder.addCardHandler("cards");
 
-    parentBuilder.add("projectView", builder.load());
+    parentBuilder.add("projectView", builder.<JPanel>load());
 
     repository.addChangeListener(this);
     selectionService.addListener(this, Project.TYPE);
