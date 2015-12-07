@@ -1,6 +1,5 @@
 package org.designup.picsou.gui.mobile;
 
-import org.apache.wicket.markup.html.pages.PageExpiredErrorPage;
 import org.designup.picsou.gui.browsing.BrowsingAction;
 import org.designup.picsou.gui.components.ProgressPanel;
 import org.designup.picsou.gui.components.dialogs.PicsouDialog;

@@ -87,7 +87,12 @@ public class DependExtractor {
       currentClass = classToParse.removeFirst();
       ClassReader reader = findClassReader(currentClass);
       if (reader != null) {
-        reader.accept(extractor, withDebug ? 0 : ClassReader.SKIP_DEBUG);
+        try {
+          reader.accept(extractor, withDebug ? 0 : ClassReader.SKIP_DEBUG);
+        }
+        catch (Exception e) {
+          throw new IOException("Error for: " + currentClass, e);
+        }
       }
     }
   }
@@ -97,7 +102,12 @@ public class DependExtractor {
     if (code == null) {
       return null;
     }
-    return new ClassReader(code);
+    try {
+      return new ClassReader(code);
+    }
+    catch (Exception e) {
+      throw new IOException("Error for: " + className, e);
+    }
   }
 
   void add(String className) {

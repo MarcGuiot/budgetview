@@ -206,21 +206,22 @@ public class MainWindow implements WindowManager {
     if (thread == null) {
       return;
     }
-    try {
-      LicenseCheckerThread local = licenseCheckerThread;
-      local.shutdown();
-      local.interrupt();
-      local.join(2000);
-      if (local.isAlive()) {
-        StackTraceElement[] stackTraceElements = local.getStackTrace();
-        for (StackTraceElement element : stackTraceElements) {
-          System.out.println(element.toString());
+    if (licenseCheckerThread != null) {
+      try {
+        LicenseCheckerThread local = licenseCheckerThread;
+        local.interrupt();
+        local.join(2000);
+        if (local.isAlive()) {
+          StackTraceElement[] stackTraceElements = local.getStackTrace();
+          for (StackTraceElement element : stackTraceElements) {
+            System.out.println(element.toString());
+          }
+          Thread.dumpStack();
         }
-        Thread.dumpStack();
       }
-    }
-    catch (InterruptedException e) {
-      e.printStackTrace();
+      catch (InterruptedException e) {
+        e.printStackTrace();
+      }
     }
     thread.run();
     Runtime.getRuntime().removeShutdownHook(thread);

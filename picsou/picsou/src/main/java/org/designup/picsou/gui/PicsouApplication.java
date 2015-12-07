@@ -1,6 +1,5 @@
 package org.designup.picsou.gui;
 
-import net.roydesign.event.ApplicationEvent;
 import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
@@ -25,6 +24,7 @@ import org.designup.picsou.gui.printing.PrinterService;
 import org.designup.picsou.gui.printing.utils.DefaultPrinterService;
 import org.designup.picsou.gui.startup.AppPaths;
 import org.designup.picsou.gui.startup.components.AppLogger;
+import org.designup.picsou.gui.startup.components.OpenFilesHandler;
 import org.designup.picsou.gui.startup.components.OpenRequestManager;
 import org.designup.picsou.gui.startup.components.SingleApplicationInstanceListener;
 import org.designup.picsou.gui.time.TimeService;
@@ -53,7 +53,6 @@ import picsou.AwtExceptionHandler;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
 import java.io.*;
 import java.util.*;
 import java.util.List;
@@ -89,7 +88,7 @@ public class PicsouApplication {
 
   private OpenRequestManager openRequestManager = new OpenRequestManager();
   private SingleApplicationInstanceListener singleInstanceListener;
-  private AbstractAction mrjDocumentListener;
+  private OpenFilesHandler mrjDocumentListener;
 
   private DefaultDirectory directory = new DefaultDirectory();
 
@@ -147,10 +146,9 @@ public class PicsouApplication {
 
   public void run(String... args) throws Exception {
     initEncryption();
-    mrjDocumentListener = new AbstractAction() {
-      public void actionPerformed(ActionEvent e) {
-        ApplicationEvent event = (ApplicationEvent) e;
-        openRequestManager.openFiles(Collections.singletonList(event.getFile()));
+    mrjDocumentListener = new OpenFilesHandler() {
+      public void run(List<File> files) {
+        openRequestManager.openFiles(files);
       }
     };
     MacOSXHooks.addOpenDocumentListener(mrjDocumentListener);
