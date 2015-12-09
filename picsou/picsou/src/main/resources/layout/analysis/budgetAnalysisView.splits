@@ -21,7 +21,7 @@
   <column name="budgetAnalysisView" styleClass="main">
 
     <row weightY="0.01" marginTop="10" marginBottom="20">
-      <htmlEditorPane ref="breadcrumb" font="LatoLight,plain,16"/>
+      <htmlEditorPane ref="breadcrumb" font="OpenSansLight,plain,16"/>
       <filler fill="horizontal"/>
     </row>
 
@@ -46,7 +46,7 @@
         </row>
       </grid>
       <column weightX="50">
-        <label ref="histoChartLabel" styleClass="chartLabel" font="LatoLight,plain,14" marginTop="40"/>
+        <label ref="histoChartLabel" styleClass="chartLabel" font="OpenSansLight,plain,14" marginTop="40"/>
         <panel ref="histoChartLegend" weightY="0.01" marginTop="10" marginBottom="2" fill="none"
                anchor="south"/>
         <panel gridPos="(4,1,1,2)" ref="histoChart" weightX="10" styleClass="chart"

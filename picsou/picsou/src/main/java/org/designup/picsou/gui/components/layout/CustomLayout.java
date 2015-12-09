@@ -1,5 +1,6 @@
 package org.designup.picsou.gui.components.layout;
 
+import javax.swing.*;
 import java.awt.*;
 
 public abstract class CustomLayout implements LayoutManager {
@@ -73,6 +74,12 @@ public abstract class CustomLayout implements LayoutManager {
 
   public void layout(Component component, int left, int top) {
     component.setBounds(left, top, component.getPreferredSize().width, component.getPreferredSize().height);
+  }
+
+  public void layoutIcon(AbstractButton component, int left, int top) {
+    component.setPreferredSize(new Dimension(component.getIcon().getIconWidth(), component.getIcon().getIconHeight()));
+    component.setSize(new Dimension(component.getIcon().getIconWidth(), component.getIcon().getIconHeight()));
+    component.setBounds(left, top, component.getIcon().getIconWidth(), component.getIcon().getIconHeight());
   }
 
   public void layout(Component component, int left, int top, int width, int height) {

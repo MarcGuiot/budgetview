@@ -4,15 +4,15 @@
   <styleImport file="/layout/signpost/signpostStyles.splits"/>
   <styles>
 
-    <style selector="label.number" font="LatoBold,plain,40" fill="none" anchor="center"/>
+    <style selector="label.number" font="OpenSansBold,plain,40" fill="none" anchor="center"/>
 
-    <style selector=".actionsPanel label" font="LatoRegular,plain,14" fill="none" anchor="center"/>
+    <style selector=".actionsPanel label" font="OpenSansRegular,plain,14" fill="none" anchor="center"/>
     <ui name="flatButtonUI" class="org.designup.picsou.gui.components.ui.FlatButtonUI"
         bgColor="welcomeView.button"
         disabledBgColor="welcomeView.button.disabled"
         rolloverBgColor="welcomeView.button.rollover"/>
     <style selector=".actionsPanel button" ui="flatButtonUI"
-           font="LatoRegular,plain,20" marginTop="15"
+           font="OpenSansRegular,plain,20" marginTop="15"
            foreground="welcomeView.button.text" weightX="0.01" fill="none" anchor="center"/>
 
   </styles>

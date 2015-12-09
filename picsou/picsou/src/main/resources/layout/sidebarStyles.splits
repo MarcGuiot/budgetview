@@ -6,7 +6,7 @@
 
     <!-- Components -->
 
-    <style selector=".sidebar .sidebarTitle" font="LatoLight,plain,30" weightX="0"
+    <style selector=".sidebar .sidebarTitle" font="OpenSansLight,plain,30" weightX="0"
            marginLeft="10" marginTop="10" marginBottom="20"
            foreground="sidebar.title" fill="horizontal" anchor="west"/>
 
@@ -17,7 +17,7 @@
     <style selector=".dropdown" ui="dropdownButtonUI"
            foreground="sidebar.dropdown"
            anchor="left" fill="none" weightX="1"
-           font="LatoRegular,plain,14" cursor="hand"
+           font="OpenSansRegular,plain,14" cursor="hand"
            icon="downArrow(10,18,8,8,sidebar.dropdown.arrow)"
            rolloverIcon="downArrow(10,18,8,8,sidebar.dropdown.arrow.rollover)"
            pressedIcon="downArrow(10,18,8,8,sidebar.dropdown.arrow.pressed)"
@@ -37,7 +37,7 @@
 
     <style selector=".sidebarSectionTitleRow" opaque="true" background="sidebar.sectionTitle.bg"
            border="matte(0,0,1,0,sidebar.sectionTitle.border)"/>
-    <style selector=".sidebarSectionTitle" font="LatoRegular,plain,14"
+    <style selector=".sidebarSectionTitle" font="OpenSansRegular,plain,14"
            fill="none" anchor="center" weightX="0" marginTop="2" marginBottom="2"
            foreground="sidebar.sectionTitle"/>
 
@@ -64,7 +64,7 @@
     <!-- Selection button -->
 
     <style selector="toggleButton.sidebarSelectionButton"
-           weightX="0" cursor="hand" font="LatoRegular,plain,16"
+           weightX="0" cursor="hand" font="OpenSansRegular,plain,16"
            icon="oval(18,18,sidebar.bg, sidebar.selection.unselected.border)"
            selectedIcon="oval(18,18,sidebar.selection.selected.bg, sidebar.selection.selected.border)"
            rolloverIcon="oval(18,18,sidebar.selection.rollover.bg, sidebar.selection.rollover.border)"

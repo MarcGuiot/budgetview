@@ -20,7 +20,7 @@
     <style selector=".dialog checkBox" foreground="dialog.text" opaque="false"/>
 
     <style selector=".dialog label.title"
-           font="LatoRegular,plain,26" foreground="dialog.title"
+           font="OpenSansRegular,plain,26" foreground="dialog.title"
            fill="none" anchor="center" marginTop="15" marginBottom="15" weightY="0.1"/>
 
     <ui name="scrollPaneUI"

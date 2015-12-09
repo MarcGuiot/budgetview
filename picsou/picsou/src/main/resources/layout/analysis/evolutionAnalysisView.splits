@@ -19,7 +19,7 @@
     <style selector="#budgetArea"/>
 
     <style selector="label.chartLabel" fill="horizontal" horizontalAlignment="center" anchor="center" weightY="0"
-           font="LatoLight,plain,14" foreground="seriesAnalysis.chart.label" opaque="false"/>
+           font="OpenSansLight,plain,14" foreground="seriesAnalysis.chart.label" opaque="false"/>
 
   </styles>
 

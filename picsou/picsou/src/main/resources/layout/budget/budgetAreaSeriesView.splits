@@ -67,7 +67,7 @@
 
       <row name="total" weightY="0" marginLeft="10" marginRight="10"
            layout="org.designup.picsou.gui.budget.utils.BudgetAreaHeaderLayout">
-        <button ref="budgetAreaTitle" tooltipText="$budgetView.actions.tooltip" font="LatoRegular,plain,18"
+        <button ref="budgetAreaTitle" tooltipText="$budgetView.actions.tooltip" font="OpenSansRegular,plain,18"
                 ui="hyperlinkButtonWithoutUnderline" foreground="block.footer.button"
                 iconTextGap="3"
                 icon="arrowButton(14,14,block.footer.arrow.default)"

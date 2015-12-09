@@ -3,6 +3,7 @@ package org.designup.picsou.gui.accounts.utils;
 import org.designup.picsou.gui.components.layout.CustomLayout;
 import org.globsframework.utils.exceptions.UnexpectedApplicationState;
 
+import javax.swing.*;
 import java.awt.*;
 
 public class AccountBlockLayout extends CustomLayout {
@@ -10,10 +11,10 @@ public class AccountBlockLayout extends CustomLayout {
   private Component editAccount;
   private Component accountPosition;
   private Component accountUpdateDate;
-  private Component selectAccount;
-  private Component accountWeather;
+  private AbstractButton selectAccount;
+  private AbstractButton accountWeather;
   private Component positionsChart;
-  private Component toggleGraph;
+  private AbstractButton toggleGraph;
 
   private static final int HORIZONTAL_MARGIN = 5;
   private static final int VERTICAL_MARGIN = 3;
@@ -21,8 +22,6 @@ public class AccountBlockLayout extends CustomLayout {
   private static final int CHART_PADDING = 4;
   private static final int CHART_LEFT_PADDING = 4;
   private static final int POSITION_LEFT_MARGIN = 14;
-
-  private static final int WEATHER_ICON_WODTH = 65;
 
   public int getPreferredWidth() {
     return Integer.MAX_VALUE;
@@ -39,10 +38,10 @@ public class AccountBlockLayout extends CustomLayout {
 
   protected int getMinWidth() {
     return editAccount.getPreferredSize().width +
-           Math.max(WEATHER_ICON_WODTH, accountWeather.getPreferredSize().width) +
+           accountWeather.getIcon().getIconWidth() +
            accountPosition.getPreferredSize().width +
-           selectAccount.getPreferredSize().width +
-           toggleGraph.getPreferredSize().width +
+           selectAccount.getIcon().getIconWidth() +
+           toggleGraph.getIcon().getIconWidth() +
            5 * HORIZONTAL_MARGIN;
   }
 
@@ -58,16 +57,16 @@ public class AccountBlockLayout extends CustomLayout {
         accountUpdateDate = component;
       }
       else if (component.getName().equals("selectAccount")) {
-        selectAccount = component;
+        selectAccount = (AbstractButton)component;
       }
       else if (component.getName().equals("accountWeather")) {
-        accountWeather = component;
+        accountWeather = (AbstractButton)component;
       }
       else if (component.getName().equals("accountPositionsChart")) {
         positionsChart = component;
       }
       else if (component.getName().equals("toggleGraph")) {
-        toggleGraph = component;
+        toggleGraph = (AbstractButton)component;
       }
       else {
         throw new UnexpectedApplicationState("Unexpected component found in layout: " + component);
@@ -91,21 +90,21 @@ public class AccountBlockLayout extends CustomLayout {
            accountUpdateDateLeft, accountUpdateDateTop,
            accountUpdateDate.getPreferredSize().width, secondRowHeight);
 
-    int accountWeatherTop = top + textRowsHeight / 2 - accountWeather.getPreferredSize().height / 2;
-    int accountWeatherWidth = Math.max(WEATHER_ICON_WODTH, accountWeather.getPreferredSize().width);
+    int accountWeatherTop = top + textRowsHeight / 2 - accountWeather.getIcon().getIconHeight() / 2;
+    int accountWeatherWidth = accountWeather.getIcon().getIconWidth();
     int accountWeatherLeft = right - accountWeatherWidth;
-    int accountWeatherImageLeft = right - accountWeatherWidth / 2 - accountWeather.getPreferredSize().width / 2;
-    layout(accountWeather, accountWeatherImageLeft, accountWeatherTop);
+    int accountWeatherImageLeft = right - accountWeatherWidth / 2 - accountWeatherWidth / 2;
+    layoutIcon(accountWeather, accountWeatherImageLeft, accountWeatherTop);
 
-    int toggleGraphTop = top + textRowsHeight / 2 - toggleGraph.getPreferredSize().height / 2;
+    int toggleGraphTop = top + textRowsHeight / 2 - toggleGraph.getIcon().getIconHeight() / 2;
     int toggleGraphRight = accountWeatherLeft - HORIZONTAL_MARGIN;
-    int toggleGraphLeft = toggleGraphRight - toggleGraph.getPreferredSize().height;
-    layout(toggleGraph, toggleGraphLeft, toggleGraphTop);
+    int toggleGraphLeft = toggleGraphRight - toggleGraph.getIcon().getIconWidth();
+    layoutIcon(toggleGraph, toggleGraphLeft, toggleGraphTop);
 
-    int selectAccountTop = top + textRowsHeight / 2 - selectAccount.getPreferredSize().height / 2;
+    int selectAccountTop = top + textRowsHeight / 2 - selectAccount.getIcon().getIconHeight() / 2;
     int selectAccountRight = toggleGraphLeft - HORIZONTAL_MARGIN;
-    int selectAccountLeft = selectAccountRight - selectAccount.getPreferredSize().width;
-    layout(selectAccount, selectAccountLeft, selectAccountTop);
+    int selectAccountLeft = selectAccountRight - selectAccount.getIcon().getIconWidth();
+    layoutIcon(selectAccount, selectAccountLeft, selectAccountTop);
 
     int maxEditWidth = selectAccountLeft - 2 * HORIZONTAL_MARGIN - left;
     int editAccountLeft = left + HORIZONTAL_MARGIN;

@@ -32,13 +32,13 @@ public class DownloadIcon extends SingleColorIcon {
     g2.fillRect(10, 90, 80, 10);
     g2.fillRect(90, 80, 10, 20);
 
-    GeneralPath triangle = createTriangle();
+    GeneralPath triangle = createArrow();
     Java2DUtils.resize(triangle, 100, 40);
     triangle.transform(getTranslateInstance(x, y + 40));
     g2.fill(triangle);
   }
 
-  private GeneralPath createTriangle() {
+  private GeneralPath createArrow() {
     GeneralPath shape = new GeneralPath();
     shape.moveTo(0, 0);
     shape.lineTo(10, 0);

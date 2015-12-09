@@ -2,10 +2,10 @@
   <styles>
     <style selector=".content" font="-,plain,14" foreground="signpostView.content" anchor="center"/>
 
-    <style selector="label.contentTitle" font="LatoRegular,plain,36" foreground="signpostView.title"
+    <style selector="label.contentTitle" font="OpenSansRegular,plain,36" foreground="signpostView.title"
            fill="none" anchor="center" marginBottom="30"/>
 
-    <style selector="label.intro" font="LatoRegular,plain,16"
+    <style selector="label.intro" font="OpenSansRegular,plain,16"
            fill="none" anchor="center" marginTop="10" marginBottom="20"/>
 
     <style selector=".signpostSection" marginTop="5" marginBottom="5"/>

@@ -78,7 +78,7 @@
     <panel name="timeviewHeader" layout="org.designup.picsou.gui.utils.HeaderPanelLayout"
            background="header.bg" opaque="true"
            border="matte(0,0,1,0,header.border)">
-      <button ref="periodTitle" opaque="false" font="LatoRegular,plain,20"
+      <button ref="periodTitle" opaque="false" font="OpenSansRegular,plain,20"
               styleClass="hyperlinkWithoutUnderline" foreground="header.title"
               icon="arrowButton(18,18,header.title.icon)"
               rolloverIcon="arrowButton(18,18,hyperlink.rollover)"

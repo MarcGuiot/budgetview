@@ -3,12 +3,12 @@
   <styleImport file="/layout/commonStyles.splits"/>
   <styleImport file="/layout/components/verticalTabStyles.splits"/>
   <styles>
-    <style selector="label#label" font="LatoRegular,plain,16" foreground="addons.label"/>
+    <style selector="label#label" font="OpenSansBold,plain,16" foreground="addons.label"/>
 
     <style selector="label#image"/>
 
     <style selector="label.activated" icon="status_completed.png"
-           marginBottom="4" font="LatoLight,plain,12" foreground="addons.activated"
+           marginBottom="4" font="OpenSansLight,plain,12" foreground="addons.activated"
            fill="none" anchor="center" iconTextGap="10"/>
 
     <style selector="#buy" fill="none" anchor="center"/>
@@ -31,15 +31,14 @@
               <card name="disabled">
                 <column>
                   <filler fill="vertical" weightY="10"/>
-                    <!--<button action="buy" fill="none" anchor="center"/>-->
-                  <button action="gotoDemoAccount" styleClass="hyperlink" font="LatoLight,plain,12" fill="none"
+                  <button action="gotoDemoAccount" styleClass="hyperlink" font="OpenSansLight,plain,12" fill="none"
                           anchor="center"/>
                   <filler fill="vertical" weightY="30"/>
                 </column>
               </card>
             </cards>
             <label ref="image"/>
-            <htmlEditorPane ref="description" font="LatoLight,plain,13" foreground="addons.description"/>
+            <htmlEditorPane ref="description" font="OpenSansRegular,plain,13" foreground="addons.description"/>
             <label name="separator" styleClass="horizontalSeparator"/>
           </column>
         </repeat>

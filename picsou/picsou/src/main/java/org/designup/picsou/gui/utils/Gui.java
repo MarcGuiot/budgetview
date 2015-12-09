@@ -37,14 +37,11 @@ public class Gui {
 
   static {
 
-    Fonts.loadBase("ArimoRegular", "/fonts/Arimo-Regular.ttf", Gui.class);
-    Fonts.loadBase("ArimoBold", "/fonts/Arimo-Bold.ttf", Gui.class);
-
-    Fonts.loadBase("LatoHairline", "/fonts/Lato-Hairline.ttf", Gui.class);
-    Fonts.loadBase("LatoLight", "/fonts/Lato-Light.ttf", Gui.class);
-    Fonts.loadBase("LatoRegular", "/fonts/Lato-Regular.ttf", Gui.class);
-    Fonts.loadBase("LatoBold", "/fonts/Lato-Bold.ttf", Gui.class);
-    Fonts.setDefault("LatoRegular,plain,12");
+    Fonts.loadBase("OpenSansLight", "/fonts/OpenSans-Light.ttf", Gui.class);
+    Fonts.loadBase("OpenSansRegular", "/fonts/OpenSans-Regular.ttf", Gui.class);
+    Fonts.loadBase("OpenSansSemiBold", "/fonts/OpenSans-Semibold.ttf", Gui.class);
+    Fonts.loadBase("OpenSansBold", "/fonts/OpenSans-Bold.ttf", Gui.class);
+    Fonts.setDefault("OpenSansRegular,plain,12");
 
     Font labelFont = new JLabel().getFont();
 

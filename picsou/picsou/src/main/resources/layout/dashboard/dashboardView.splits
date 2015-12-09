@@ -3,17 +3,17 @@
   <styleImport file="/layout/commonStyles.splits"/>
   <styles>
     <style selector="button.widget"
-           opaque="false" ui="basicButtonUI" borderPainted="false" cursor="hand" font="LatoLight,plain,40"
+           opaque="false" ui="basicButtonUI" borderPainted="false" cursor="hand" font="OpenSansLight,plain,40"
            border="empty"
            fill="none" anchor="center" weightY="0.1"/>
-    <style selector="htmlEditorPane.label" font="LatoLight,plain,13" foreground="dashboard.text"
+    <style selector="htmlEditorPane.label" font="OpenSansLight,plain,13" foreground="dashboard.text"
            weightY="1" fill="horizontal" anchor="center"/>
 
     <style id="textOK" selector="x" foreground="dashboard.text.ok"/>
     <style id="textNOK" selector="x" foreground="dashboard.text.nok"/>
 
     <style selector=".separatorRow" border="matte(1,0,1,0,dashboard.separator)" opaque="true" background="dashboard.bg" marginBottom="10" marginLeft="30" marginRight="30"/>
-    <style selector=".separatorRow .widget" font="LatoLight,plain,32"/>
+    <style selector=".separatorRow .widget" font="OpenSansLight,plain,32"/>
 
   </styles>
 

@@ -5,10 +5,10 @@
   <styles>
 
     <style selector="#accountPosition"
-           font="ArimoRegular,plain,12"
+           font="OpenSansRegular,plain,12"
            foreground="sidebar.label.secondary"/>
     <style selector="#accountUpdateDate"
-           font="ArimoRegular,plain,10"
+           font="OpenSansRegular,plain,10"
            foreground="sidebar.label.secondary"/>
 
     <style selector="#editAccount" font="-,plain,14"/>
@@ -18,24 +18,25 @@
 
     <style selector="#accountPanel" opaque="true" background="sidebar.bg"/>
 
-    <style selector="#toggleGraph" border=""
-           text="" opaque="false" borderPainted="false" cursor="hand"
+    <style selector="#toggleGraph" border="" borderPainted="false" opaque="false"
+           text="" cursor="hand"
            icon="accounts/show_account_graph.png"
            pressedIcon="accounts/hide_account_graph.png"
            rolloverIcon="accounts/toggle_account_graph_rollover.png"/>
 
+    <style selector="#accountWeather" cursor="hand" border="" borderPainted="false"/>
+
     <!-- Force size to initialize labels properly -->
     <style selector="#accountPositionsChart" background="sidebar.bg" size="(180,80)"/>
 
-    <style selector="#accountWeather" ui="basicButtonUI" cursor="hand" border="" weightX="0" weightY="0" fill="none"/>
   </styles>
 
   <column>
     <row styleClass="sidebarSectionTitleRow" ref="header">
       <label ref="accountListTitle" styleClass="sidebarSectionTitle" marginLeft="5"/>
       <filler fill="horizontal"/>
-      <label ref="referencePosition" styleClass="sidebarSectionTitle" font="ArimoRegular,plain,14" tooltipText="$accountView.reference.tooltip" anchor="south"/>
-      <label ref="referencePositionDate" styleClass="sidebarSectionTitle" font="ArimoRegular,plain,11" autoHideSource="referencePosition" marginLeft="5" marginRight="5" anchor="south"/>
+      <label ref="referencePosition" styleClass="sidebarSectionTitle" font="OpenSansRegular,plain,14" tooltipText="$accountView.reference.tooltip" anchor="south"/>
+      <label ref="referencePositionDate" styleClass="sidebarSectionTitle" font="OpenSansRegular,plain,11" autoHideSource="referencePosition" marginLeft="5" marginRight="5" anchor="south"/>
     </row>
     <repeat ref="accountRepeat" marginBottom="15" opaque="true" background="sidebar.bg">
       <panel ref="accountPanel" marginTop="2" opaque="false">
