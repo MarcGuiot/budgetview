@@ -121,10 +121,6 @@ public class TimeViewPanelTest extends TestCase {
     repository.reset(months, Month.TYPE);
     TimeViewPanel timeViewPanel = new TimeViewPanel(repository, directory);
     jFrame.add(timeViewPanel);
-    timeViewPanel.register(new TimeViewPanel.VisibilityListener() {
-      public void change(Selectable first, Selectable last) {
-      }
-    });
     return jFrame;
   }
 

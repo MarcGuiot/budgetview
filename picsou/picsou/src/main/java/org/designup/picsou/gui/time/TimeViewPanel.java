@@ -29,9 +29,9 @@ import java.util.*;
 import java.util.List;
 
 public class TimeViewPanel extends JPanel implements MouseListener, MouseMotionListener,
-                                                     MouseWheelListener,
-                                                     SelectableContainer,
-                                                     ChangeSetListener, GlobSelectionListener, PositionProvider {
+  MouseWheelListener,
+  SelectableContainer,
+  ChangeSetListener, GlobSelectionListener, PositionProvider {
 
   private TimeGraph timeGraph;
   private Set<Selectable> currentlySelected = new TreeSet<Selectable>(new Comparator<Selectable>() {
@@ -42,7 +42,7 @@ public class TimeViewPanel extends JPanel implements MouseListener, MouseMotionL
       if (o2 instanceof YearGraph) {
         return -1;
       }
-      return ((MonthGraph)o1).compareTo(((MonthGraph)o2));
+      return ((MonthGraph) o1).compareTo(((MonthGraph) o2));
     }
   });
   private MouseState currentState = new ReleasedMouseState(this);
@@ -63,7 +63,6 @@ public class TimeViewPanel extends JPanel implements MouseListener, MouseMotionL
   private int paintCount = 0;
   private int currentPaintCount = 0;
   private TimeService timeService;
-  private VisibilityListener visibilityListener;
   private TimeViewMouseHandler mouseOverHandler;
   private Selectable lastMouseOverSelectable = null;
 
@@ -72,7 +71,7 @@ public class TimeViewPanel extends JPanel implements MouseListener, MouseMotionL
     this.repository = repository;
     timeService = directory.get(TimeService.class);
     Font monthFont = getFont();
-    Font yearFont = monthFont.deriveFont((float)monthFont.getSize() - 2);
+    Font yearFont = monthFont.deriveFont((float) monthFont.getSize() - 2);
     colors = new TimeViewColors(directory, yearFont, monthFont);
     GlobList currentMonth;
     currentMonth = repository.getAll(Month.TYPE).sort(Month.ID);
@@ -134,7 +133,7 @@ public class TimeViewPanel extends JPanel implements MouseListener, MouseMotionL
     }
     previousWidth = getWidth();
 
-    Graphics2D g2d = (Graphics2D)g.create();
+    Graphics2D g2d = (Graphics2D) g.create();
     g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
     try {
       if (pendingOperation != null) {
@@ -155,11 +154,6 @@ public class TimeViewPanel extends JPanel implements MouseListener, MouseMotionL
       paintCount++;
       this.notify();
     }
-    visibilityListener.change(timeGraph.getFirstSelectable(), timeGraph.getLastSelectable());
-  }
-
-  public void register(VisibilityListener visibilityListener) {
-    this.visibilityListener = visibilityListener;
   }
 
   public Double getMinPosition(int monthId) {
@@ -213,10 +207,6 @@ public class TimeViewPanel extends JPanel implements MouseListener, MouseMotionL
       scrollRight(shift);
     }
     repaint();
-  }
-
-  public interface VisibilityListener {
-    void change(Selectable first, Selectable last);
   }
 
   public void mouseClicked(MouseEvent e) {
@@ -275,10 +265,10 @@ public class TimeViewPanel extends JPanel implements MouseListener, MouseMotionL
 
   private void sendMouseOverEvent() {
     if (lastMouseOverSelectable instanceof MonthGraph) {
-      mouseOverHandler.enterMonth(((MonthGraph)lastMouseOverSelectable).getMonth().get(Month.ID));
+      mouseOverHandler.enterMonth(((MonthGraph) lastMouseOverSelectable).getMonth().get(Month.ID));
     }
     else if (lastMouseOverSelectable instanceof YearGraph) {
-      mouseOverHandler.enterYear(((YearGraph)lastMouseOverSelectable).getYear());
+      mouseOverHandler.enterYear(((YearGraph) lastMouseOverSelectable).getYear());
     }
   }
 

@@ -16,20 +16,18 @@ import java.util.Collection;
 public class MonthGraph extends AbstractSelectable implements Comparable<MonthGraph> {
   private Glob month;
   private TimeViewColors colors;
-  private TimeService timeService;
   private MonthFontMetricInfo.MonthSizes monthSize;
   private PositionProvider positionProvider;
 
-  private static final int MIN_WIDTH = 30;
-  private static final int MARGIN = 5;
+  private static final int MIN_WIDTH = 40;
+  private static final int MARGIN = 3;
   public static final int BALANCE_HEIGHT = 2;
 
   public MonthGraph(Glob month, TimeViewColors colors, ChainedSelectableElement element,
-                    TimeService timeService, PositionProvider positionProvider) {
+                    PositionProvider positionProvider) {
     super(element);
     this.month = month;
     this.colors = colors;
-    this.timeService = timeService;
     this.positionProvider = positionProvider;
   }
 
@@ -76,7 +74,7 @@ public class MonthGraph extends AbstractSelectable implements Comparable<MonthGr
       if (minPosition != null) {
         Color color = colors.getAmountColor(minPosition);
         graphics2D.setPaint(color);
-        int barWidth = (int)(0.3 * width);
+        int barWidth = (int) (0.3 * width);
         graphics2D.fillRect((width - barWidth) / 2, 0, barWidth, BALANCE_HEIGHT);
       }
     }
@@ -101,7 +99,7 @@ public class MonthGraph extends AbstractSelectable implements Comparable<MonthGr
       return false;
     }
 
-    MonthGraph that = (MonthGraph)o;
+    MonthGraph that = (MonthGraph) o;
 
     return month.get(Month.ID).equals(that.month.get(Month.ID));
   }

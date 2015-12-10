@@ -72,6 +72,14 @@ public abstract class CustomLayout implements LayoutManager {
     return component.getPreferredSize().height;
   }
 
+  protected static int iconHeight(AbstractButton component) {
+    return component.getIcon().getIconHeight();
+  }
+
+  protected static int iconWidth(AbstractButton component) {
+    return component.getIcon().getIconWidth();
+  }
+
   public void layout(Component component, int left, int top) {
     component.setBounds(left, top, component.getPreferredSize().width, component.getPreferredSize().height);
   }

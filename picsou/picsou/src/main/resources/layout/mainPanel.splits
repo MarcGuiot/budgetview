@@ -13,20 +13,6 @@
 
     <style selector="#time button" minimumSize="(15,20)" preferredSize="(15,20)" fill="none"/>
 
-    <!-- Timeview buttons -->
-    <ui name="arrowLeft" class="org.designup.picsou.gui.components.ui.ArrowButtonUI"
-        rotation="180" doubleArrow="false"
-        rolloverColor="timeview.period.arrow.rollover" pressedColor="timeview.period.arrow.pressed"/>
-    <ui name="doubleArrowLeft" class="org.designup.picsou.gui.components.ui.ArrowButtonUI"
-        rotation="180" doubleArrow="true"
-        rolloverColor="timeview.period.arrow.rollover" pressedColor="timeview.period.arrow.pressed"/>
-    <ui name="arrowRight" class="org.designup.picsou.gui.components.ui.ArrowButtonUI"
-        rotation="0" doubleArrow="false"
-        rolloverColor="timeview.period.arrow.rollover" pressedColor="timeview.period.arrow.pressed"/>
-    <ui name="doubleArrowRight" class="org.designup.picsou.gui.components.ui.ArrowButtonUI"
-        rotation="0" doubleArrow="true"
-        rolloverColor="timeview.period.arrow.rollover" pressedColor="timeview.period.arrow.pressed"/>
-
     <style selector="button.periodButton" foreground="timeview.period.arrow"
            minimumSize="(20,14)" preferredSize="(20,14)"/>
     <style selector="button.doublePeriodButton" foreground="timeview.period.arrow"
@@ -83,15 +69,7 @@
               icon="arrowButton(18,18,header.title.icon)"
               rolloverIcon="arrowButton(18,18,hyperlink.rollover)"
               horizontalAlignment="left"/>
-      <button ref="prevPeriod" ui="arrowLeft" styleClass="periodButton"
-              tooltipText="$timeView.tooltip.previous"/>
-      <button ref="firstPeriod" ui="doubleArrowLeft" styleClass="doublePeriodButton"
-              tooltipText="$timeView.tooltip.first"/>
       <component ref="timeView" border="empty"/>
-      <button ref="nextPeriod" ui="arrowRight" styleClass="periodButton"
-              tooltipText="$timeView.tooltip.next"/>
-      <button ref="lastPeriod" ui="doubleArrowRight" styleClass="doublePeriodButton"
-              tooltipText="$timeView.tooltip.last"/>
       <button ref="importFile"
               icon="download(24,26,header.title)"
               rolloverIcon="download(24,26,hyperlink.rollover)"

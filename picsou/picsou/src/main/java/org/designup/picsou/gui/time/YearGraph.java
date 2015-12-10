@@ -28,8 +28,9 @@ public class YearGraph extends DefaultCompositeSelectable {
     this.monthGraphs = new MonthGraph[months.size()];
     int i = 0;
     for (Glob month : months) {
-      this.monthGraphs[i] = new MonthGraph(month, colors, new DefaultChainedSelectableElement(i),
-                                           timeService, positionProvider);
+      this.monthGraphs[i] = new MonthGraph(month, colors,
+                                           new DefaultChainedSelectableElement(i),
+                                           positionProvider);
       i++;
     }
     add(this.monthGraphs);
