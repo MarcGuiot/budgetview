@@ -26,6 +26,9 @@ exclude   picsou.^ExceptionHandler and
           apple.awt*.^* and
           apple.awt*.^* *(*) and
           apple.awt*.^* * and
+          com.apple.eawt*.^* and
+          com.apple.eawt*.^* *(*) and
+          com.apple.eawt*.^* * and
           sun.java2d.opengl*.^* and
           javax.xml*.^* and
           javax.xml*.^* *(*) and
@@ -63,13 +66,11 @@ exclude   picsou.^ExceptionHandler and
           org.designup.picsou.gui.projects.components.* set*(*) and
           org.globsframework.gui.components.ShowHideButton set*(*);
 
-/*
 obfuscate  changeLogFileOut="ChangeLogOutput.txt"
            aggressiveMethodRenaming=true
            obfuscateFlow=aggressive
            encryptStringLiterals=aggressive
            lineNumbers=scramble 
 ;
-*/
 
 saveAll archiveCompression=all "obfuscated";

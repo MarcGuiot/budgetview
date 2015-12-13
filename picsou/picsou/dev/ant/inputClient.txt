@@ -35,9 +35,16 @@ C org.designup.picsou.gui.components.ui.FlatButtonUI
 C org.designup.picsou.gui.components.ui.FlatIconButtonUI
 C org.designup.picsou.gui.components.RoundButtonUI
 C org.designup.picsou.gui.plaf.SplitPaneLinePainter
+C com.jidesoft.dialog.JideOptionPane
 C com.jidesoft.plaf.aqua.AquaJideUtils
 C org.apache.commons.logging.impl.Jdk14Logger
 C org.jdesktop.swingx.plaf.LookAndFeelAddons
+C com.apple.eawt.Application
+C com.apple.eawt.QuitHandler
+C com.apple.eawt.AboutHandler
+C com.apple.eawt.OpenFilesHandler
+C com.apple.eawt.PreferencesHandler
+C com.apple.eawt.FullScreenUtilities
 P com/jgoodies/looks true
 R org/jdesktop/swingx/plaf/basic/resources/
 R org/jdesktop/swingx/plaf/linux/resources/
@@ -47,13 +54,8 @@ R net/java/balloontip/images/
 P net/sourceforge/htmlunit true
 P com/gargoylesoftware/htmlunit true
 P org/cyberneko/html true
-#P org/apache/xerces true
 P org/apache/xalan true
-#P org/apache/xml true
 P org/apache/xpath true
-#P org/apache/bcel true
-#P org/apache/regexp true
-#P java_cup/runtime true
 
 R com/gargoylesoftware/htmlunit/javascript/configuration/
 

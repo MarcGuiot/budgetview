@@ -73,10 +73,16 @@ public abstract class CustomLayout implements LayoutManager {
   }
 
   protected static int iconHeight(AbstractButton component) {
+    if (component == null || component.getIcon() == null) {
+      return 0;
+    }
     return component.getIcon().getIconHeight();
   }
 
   protected static int iconWidth(AbstractButton component) {
+    if (component == null || component.getIcon() == null) {
+      return 0;
+    }
     return component.getIcon().getIconWidth();
   }
 
@@ -85,6 +91,9 @@ public abstract class CustomLayout implements LayoutManager {
   }
 
   public void layoutIcon(AbstractButton component, int left, int top) {
+    if (component == null || component.getIcon() == null) {
+      return;
+    }
     component.setPreferredSize(new Dimension(component.getIcon().getIconWidth(), component.getIcon().getIconHeight()));
     component.setSize(new Dimension(component.getIcon().getIconWidth(), component.getIcon().getIconHeight()));
     component.setBounds(left, top, component.getIcon().getIconWidth(), component.getIcon().getIconHeight());

@@ -38,10 +38,10 @@ public class AccountBlockLayout extends CustomLayout {
 
   protected int getMinWidth() {
     return editAccount.getPreferredSize().width +
-           accountWeather.getIcon().getIconWidth() +
+           iconWidth(accountWeather) +
            accountPosition.getPreferredSize().width +
-           selectAccount.getIcon().getIconWidth() +
-           toggleGraph.getIcon().getIconWidth() +
+           iconWidth(selectAccount) +
+           iconWidth(toggleGraph) +
            5 * HORIZONTAL_MARGIN;
   }
 
@@ -90,20 +90,20 @@ public class AccountBlockLayout extends CustomLayout {
            accountUpdateDateLeft, accountUpdateDateTop,
            accountUpdateDate.getPreferredSize().width, secondRowHeight);
 
-    int accountWeatherTop = top + textRowsHeight / 2 - accountWeather.getIcon().getIconHeight() / 2;
-    int accountWeatherWidth = accountWeather.getIcon().getIconWidth();
+    int accountWeatherTop = top + textRowsHeight / 2 - iconHeight(accountWeather) / 2;
+    int accountWeatherWidth = iconWidth(accountWeather);
     int accountWeatherLeft = right - accountWeatherWidth;
     int accountWeatherImageLeft = right - accountWeatherWidth / 2 - accountWeatherWidth / 2;
     layoutIcon(accountWeather, accountWeatherImageLeft, accountWeatherTop);
 
-    int toggleGraphTop = top + textRowsHeight / 2 - toggleGraph.getIcon().getIconHeight() / 2;
+    int toggleGraphTop = top + textRowsHeight / 2 - iconHeight(toggleGraph) / 2;
     int toggleGraphRight = accountWeatherLeft - HORIZONTAL_MARGIN;
-    int toggleGraphLeft = toggleGraphRight - toggleGraph.getIcon().getIconWidth();
+    int toggleGraphLeft = toggleGraphRight - iconWidth(toggleGraph);
     layoutIcon(toggleGraph, toggleGraphLeft, toggleGraphTop);
 
-    int selectAccountTop = top + textRowsHeight / 2 - selectAccount.getIcon().getIconHeight() / 2;
+    int selectAccountTop = top + textRowsHeight / 2 - iconHeight(selectAccount) / 2;
     int selectAccountRight = toggleGraphLeft - HORIZONTAL_MARGIN;
-    int selectAccountLeft = selectAccountRight - selectAccount.getIcon().getIconWidth();
+    int selectAccountLeft = selectAccountRight - iconWidth(selectAccount);
     layoutIcon(selectAccount, selectAccountLeft, selectAccountTop);
 
     int maxEditWidth = selectAccountLeft - 2 * HORIZONTAL_MARGIN - left;

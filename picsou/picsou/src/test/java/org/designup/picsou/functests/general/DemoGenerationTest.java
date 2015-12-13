@@ -6,14 +6,14 @@ import org.designup.picsou.functests.utils.OfxBuilder;
 import org.designup.picsou.gui.MainWindow;
 import org.designup.picsou.model.Month;
 import org.designup.picsou.utils.Lang;
+import org.uispec4j.UISpec4J;
+import org.uispec4j.assertion.UISpecAssert;
 
 import java.io.File;
 import java.util.Date;
 import java.util.Locale;
 
 public class DemoGenerationTest extends LoggedInFunctionalTestCase {
-
-  private static final String LANG = "en";
 
   private static final String PREVAYLER_DIR = "tmp/demo/";
   private static final String OFX_PATH = "tmp/demo.ofx";
@@ -30,24 +30,42 @@ public class DemoGenerationTest extends LoggedInFunctionalTestCase {
 
   public static void main(String[] args) throws Exception {
 
-    DEFAULT_LOCALE = getLocale();
+    System.setProperty("uispec4j.test.library", "junit");
+
+    runWithLocale(Locale.FRANCE);
+    runWithLocale(Locale.ENGLISH);
+
+    System.exit(0);
+  }
+
+  public static void runWithLocale(Locale locale) throws Exception {
+
+    DEFAULT_LOCALE = locale;
     Lang.setLocale(DEFAULT_LOCALE);
 
-    System.setProperty("uispec4j.test.library", "junit");
+    UISpec4J.setWindowInterceptionTimeLimit(60000);
 
     DemoGenerationTest test = createTest();
     test.test();
+    test.backupForRelease();
     test.tearDown();
 
     DemoGenerationTest test2 = createTest();
     test2.testCreateNextMonthFile();
     test2.tearDown();
+  }
 
-    System.exit(0);
+  private static DemoGenerationTest createTest() throws Exception {
+    DemoGenerationTest test = new DemoGenerationTest();
+//    test.setLocalPrevaylerPath(PREVAYLER_DIR);
+//    test.setInMemory(true);
+//    test.setDeleteLocalPrevayler(true);
+    test.setUp();
+    return test;
   }
 
   protected void setUp() throws Exception {
-    Locale.setDefault(getLocale());
+    Locale.setDefault(getDefaultLocale());
     System.out.println("Locale for demo: " + Locale.getDefault());
 
     thirdMonth = Month.getMonthId(new Date());
@@ -68,22 +86,13 @@ public class DemoGenerationTest extends LoggedInFunctionalTestCase {
     addOns.activateAll();
   }
 
+  protected void tearDown() throws Exception {
+    operations.exit();
+    super.tearDown();
+  }
+
   protected Locale getDefaultLocale() {
     return DEFAULT_LOCALE;
-  }
-
-  private static Locale getLocale() {
-    String lang = System.getProperty("LANG", LANG); // sert dans le picsou/pom.xml
-    return lang.toLowerCase().contains("fr") ? Locale.FRANCE : Locale.ENGLISH;
-  }
-
-  private static DemoGenerationTest createTest() throws Exception {
-    DemoGenerationTest test = new DemoGenerationTest();
-    test.setLocalPrevaylerPath(PREVAYLER_DIR);
-    test.setInMemory(false);
-    test.setDeleteLocalPrevayler(true);
-    test.setUp();
-    return test;
   }
 
   public void test() throws Exception {
@@ -391,32 +400,24 @@ public class DemoGenerationTest extends LoggedInFunctionalTestCase {
 
     views.selectCategorization();
 
-    //======== CLEANUP ===========
-
-//    budgetView.savings.editSeries(fromAccount("provisions")).deleteCurrentSeries();
-//    budgetView.savings.editSeries(toAccount("provisions")).deleteCurrentSeries();
-//    budgetView.savings.editSeries(fromAccount("savings")).deleteCurrentSeries();
-//    budgetView.savings.editSeries(toAccount("savings")).deleteCurrentSeries();
-
     operations.hideSignposts();
 
     //======== BACKUP ===========
-
-    // ne pas supprimer ce code il permet de generer les snaphots de demo qui sont integre a la version
-    // cf pom.xml
-
-    String outputFile = System.getProperty("outfile");
-    if (outputFile != null) {
-      File out = new File(outputFile);
-      out.delete();
-      operations.backup(out.getAbsoluteFile().getAbsolutePath());
-      System.out.println("Snapshot generated in " + out.getAbsoluteFile().getAbsolutePath());
-    }
 
     String backupPath = new File(SNAPSHOT_PATH).getAbsolutePath();
     new File(SNAPSHOT_PATH).delete();
     operations.backup(backupPath);
     System.out.println("Backup file saved in: " + backupPath);
+  }
+
+  public void backupForRelease() {
+    String outputDir = System.getProperty("demogeneration.output.dir");
+    if (outputDir != null) {
+      File outputFile = new File(outputDir, "demo-" + Lang.getLocale().getLanguage() + ".snapshot");
+      outputFile.delete();
+      operations.backup(outputFile.getAbsoluteFile().getAbsolutePath());
+      System.out.println("Snapshot generated in " + outputFile.getAbsoluteFile().getAbsolutePath());
+    }
   }
 
   public void testCreateNextMonthFile() throws Exception {

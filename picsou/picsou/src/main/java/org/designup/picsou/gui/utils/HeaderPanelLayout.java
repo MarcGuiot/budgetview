@@ -10,7 +10,7 @@ public class HeaderPanelLayout extends CustomLayout {
 
   private static final int PADDING_TOP = 15;
   private static final int PADDING_BOTTOM = 10;
-  private static final int PADDING_LEFT = 10;
+  private static final int PADDING_LEFT = 20;
   private static final int PADDING_RIGHT = 15;
 
   private Component periodTitle;
