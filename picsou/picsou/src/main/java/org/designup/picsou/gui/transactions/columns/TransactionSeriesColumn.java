@@ -84,6 +84,7 @@ public class TransactionSeriesColumn extends HyperlinkTableColumn {
     else if (!Series.UNCATEGORIZED_SERIES_ID.equals(transaction.get(Transaction.SERIES))) {
       button.setEnabled(true);
       setSeriesText(button, transaction);
+      updateColor(button);
     }
     else {
       button.setEnabled(true);

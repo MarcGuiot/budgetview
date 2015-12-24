@@ -1,5 +1,6 @@
 package org.designup.picsou.gui.transactions;
 
+import com.jidesoft.swing.JideSplitPane;
 import org.designup.picsou.gui.View;
 import org.designup.picsou.gui.accounts.chart.SelectedAccountPositionsChartView;
 import org.designup.picsou.gui.accounts.utils.AccountFilter;
@@ -157,8 +158,6 @@ public class TransactionView extends View implements Filterable {
 
     GlobLabelView legend = builder.addLabel("accountChartLegend", Account.TYPE, new LegendStringifier(directory));
     selectionService.addListener(legend, Month.TYPE);
-
-    builder.add("transactionChartSplit", SplitPaneConfig.create(directory, LayoutConfig.ACCOUNTS_TRANSACTION_CHART));
 
     parentBuilder.add("transactionView", builder);
   }

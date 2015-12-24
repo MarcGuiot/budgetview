@@ -23,8 +23,7 @@ public class PicsouMacLookAndFeel extends AquaLookAndFeel {
     UIManager.put("Label.disabledForegroundColor", Color.GRAY.brighter());
 
     try {
-      ApplicationLAF.initUI(defaults, org.jdesktop.swingx.plaf.basic.BasicDatePickerUI.class,
-                            JXDatePicker.uiClassID);
+      ApplicationLAF.initUI(defaults, org.jdesktop.swingx.plaf.basic.BasicDatePickerUI.class, JXDatePicker.uiClassID);
       ApplicationLAF.initUI(defaults, BasicMonthViewUI.class, JXMonthView.uiClassID);
       ApplicationLAF.initUI(defaults, BasicHyperlinkUI.class, JXHyperlink.uiClassID);
     }

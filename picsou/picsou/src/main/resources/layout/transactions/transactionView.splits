@@ -8,36 +8,32 @@
       <panel ref="customFilterMessage"/>
     </row>
 
-    <verticalSplit styleClass="blockDivider" opaque="false" ref="transactionChartSplit">
-      <column>
-        <row>
-          <checkBox ref="showPlanned"/>
-          <filler fill="horizontal"/>
-          <component ref="transactionSearch"/>
-          <button ref="actionsMenu" styleClass="actionsButton" marginLeft="20"/>
-        </row>
-        <scrollPane borderPos="center" viewportBackground="transactionTable.bg"
-                    border="line(transactionTable.border)" opaque="true"
-                    marginTop="5" marginBottom="0">
-          <table ref="transactionsTable" background="transactionTable.bg" rowHeight="20"
-                 autoResizeMode="JTable.AUTO_RESIZE_OFF"/>
-        </scrollPane>
+    <row weightY="0.1">
+      <checkBox ref="showPlanned"/>
+      <filler fill="horizontal"/>
+      <component ref="transactionSearch"/>
+      <button ref="actionsMenu" styleClass="actionsButton" marginLeft="20"/>
+    </row>
 
-        <row autoHideSource="sum">
-          <filler fill="horizontal"/>
-          <label text="$amount" styleClass="formLabelTop"
-                 border="empty(0,0,0,5)" tooltipText="$amount.tooltip"/>
-          <label ref="sum" font="-,bold,12"/>
-        </row>
-      </column>
+    <scrollPane borderPos="center" viewportBackground="transactionTable.bg"
+                border="line(transactionTable.border)" opaque="true"
+                marginTop="10" marginBottom="3" weightY="50">
+      <table ref="transactionsTable" background="transactionTable.bg" rowHeight="20"
+             autoResizeMode="JTable.AUTO_RESIZE_OFF"/>
+    </scrollPane>
 
-      <column opaque="true"
-              background="block.inner.secondary.bg" border="line(block.inner.border)" autoHideSource="accountChart">
-        <label ref="accountChartLegend" anchor="center" fill="none" font="-,plain,11"/>
-        <panel ref="accountChart" border="empty(5)" background="block.inner.secondary.bg"/>
-      </column>
+    <row autoHideSource="sum" weightY="0.1">
+      <filler fill="horizontal"/>
+      <label text="$amount" styleClass="formLabelTop"
+             border="empty(0,0,0,5)" tooltipText="$amount.tooltip"/>
+      <label ref="sum" font="-,bold,12"/>
+    </row>
 
-    </verticalSplit>
+    <column opaque="true" weightY="25" preferredSize="(100,120)"
+            background="block.inner.secondary.bg" border="line(block.inner.border)" autoHideSource="accountChart">
+      <label ref="accountChartLegend" anchor="center" fill="none" font="-,plain,11"/>
+      <panel ref="accountChart" border="empty(5)" background="block.inner.secondary.bg"/>
+    </column>
 
   </column>
 

@@ -6,7 +6,7 @@
            opaque="false" ui="basicButtonUI" borderPainted="false" cursor="hand" font="OpenSansLight,plain,40"
            border="empty"
            fill="none" anchor="center" weightY="0.1"/>
-    <style selector="htmlEditorPane.label" font="OpenSansLight,plain,13" foreground="dashboard.text"
+    <style selector="htmlEditorPane.label" font="OpenSansLight,plain,14" foreground="dashboard.text"
            weightY="1" fill="horizontal" anchor="center"/>
 
     <style id="textOK" selector="x" foreground="dashboard.text.ok"/>
