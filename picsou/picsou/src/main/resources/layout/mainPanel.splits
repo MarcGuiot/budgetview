@@ -66,6 +66,7 @@
            border="matte(0,0,1,0,header.border)">
       <button ref="periodTitle" opaque="false" font="OpenSansRegular,plain,20"
               styleClass="hyperlinkWithoutUnderline" foreground="header.title"
+              iconTextGap="5"
               icon="arrowButton(18,18,header.title.icon)"
               rolloverIcon="arrowButton(18,18,hyperlink.rollover)"
               horizontalAlignment="left"/>
