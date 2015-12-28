@@ -70,10 +70,6 @@ public class Lang {
     return formatter;
   }
 
-  public static String getHelpFile(String fileName) {
-    return getFile("help", fileName);
-  }
-
   public static String findHelpFile(String fileName) {
     return findFile("help", fileName);
   }

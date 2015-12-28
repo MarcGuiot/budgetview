@@ -441,14 +441,6 @@ public class OperationChecker {
       .cancel();
   }
 
-  public HelpChecker openHelp() {
-    return HelpChecker.open(getHelpMenu().getSubMenu("Index").triggerClick());
-  }
-
-  public HelpChecker openHelp(String title) {
-    return HelpChecker.open(getHelpMenu().getSubMenu(title).triggerClick());
-  }
-
   public AboutChecker openAbout() {
     return AboutChecker.open(getHelpMenu().getSubMenu("About").triggerClick());
   }

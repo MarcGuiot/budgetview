@@ -3,10 +3,10 @@ package org.designup.picsou.gui.importer.components;
 import org.designup.picsou.bank.BankSynchroService;
 import org.designup.picsou.gui.bank.BankChooserPanel;
 import org.designup.picsou.gui.card.NavigationService;
-import org.designup.picsou.gui.help.HelpDialog;
 import org.designup.picsou.gui.help.HelpService;
 import org.designup.picsou.gui.help.HyperlinkHandler;
 import org.designup.picsou.gui.importer.ImportController;
+import org.designup.picsou.gui.utils.Gui;
 import org.designup.picsou.model.Bank;
 import org.designup.picsou.model.Synchro;
 import org.designup.picsou.utils.Lang;
@@ -115,7 +115,7 @@ public class BankDownloadPanel implements GlobSelectionListener {
     builder.add("gotoManualDownload", gotoManualDownload);
 
     manualDownloadMessage = GuiUtils.createReadOnlyHtmlComponent();
-    HelpDialog.initHtmlEditor(manualDownloadMessage);
+    Gui.initHtmlEditor(manualDownloadMessage);
     builder.add("manualDownloadMessage", manualDownloadMessage);
 
     bankChooser = new BankChooserPanel(repository, directory, gotoManualDownload, null, parent);
@@ -128,7 +128,7 @@ public class BankDownloadPanel implements GlobSelectionListener {
     });
     builder.add("backToSynchro", backToSynchroButton);
 
-    final HyperlinkHandler hyperlinkHandler = new HyperlinkHandler(directory, parent);
+    final HyperlinkHandler hyperlinkHandler = new HyperlinkHandler(directory);
     hyperlinkHandler.registerLinkAction("manualInput", new GotoTransactionCreationFunctor());
     builder.add("hyperlinkHandler", hyperlinkHandler);
 

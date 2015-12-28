@@ -14,30 +14,11 @@ import java.util.Date;
 public class HelpTest extends LoggedInFunctionalTestCase {
 
   public void testHelpMenu() throws Exception {
-    operations.openHelp().checkTitle("Index").close();
-
     operations.checkGotoSupport(Lang.get("site.support.url"));
   }
 
-  public void testHelpForCards() throws Exception {
-    views.selectHome();
-    operations.openHelp("Dashboard View").checkTitle("Dashboard View").close();
-
-    views.selectCategorization();
-    operations.openHelp("Categorization View").checkTitle("Categorization View").close();
-
-    views.selectBudget();
-    operations.openHelp("Budget View").checkTitle("Budget View").close();
-
-    views.selectData();
-    operations.openHelp("Operations View").checkTitle("Operations View").close();
-  }
-
   public void testDefaultLinks() throws Exception {
-    operations.openHelp()
-      .checkBottomTextLink("support site", "http://www.mybudgetview.com/support")
-      .checkSendContactLink("contact us")
-      .close();
+    operations.checkGotoSupport("http://www.mybudgetview.com/support");
   }
 
   public void testSendLogs() throws Exception {

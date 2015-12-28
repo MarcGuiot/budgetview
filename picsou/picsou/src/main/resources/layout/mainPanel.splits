@@ -55,7 +55,7 @@
         <button name="forwardView" action="forwardView" styleClass="backforward" tooltipText="$forward"/>
       </row>
       <repeat ref="viewToggles" layout="column" marginTop="40" marginRight="5">
-        <toggleButton ref="toggle" styleClass="masterViewSelector" marginBottom="2"/>
+        <toggleButton ref="toggle" styleClass="masterViewSelector" marginBottom="5"/>
       </repeat>
       <button ref="notificationsFlag" marginTop="30" marginLeft="5" marginRight="5"/>
       <filler fill="vertical"/>

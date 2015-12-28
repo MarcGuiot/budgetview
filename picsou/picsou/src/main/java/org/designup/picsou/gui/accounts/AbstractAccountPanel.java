@@ -69,7 +69,7 @@ public class AbstractAccountPanel<T extends GlobRepository> {
   protected void createComponents(GlobsPanelBuilder builder, Window dialog, final DoubleField positionField) {
 
     builder.add("accountTypeHelp", new HelpAction(Lang.get("account.panel.type.help"), "accountTypes",
-                                                  Lang.get("help"), localDirectory, dialog));
+                                                  Lang.get("help"), localDirectory));
 
     bankSelectionAction = new BankSelectionAction(dialog);
     bankSelectionButton = new JButton(bankSelectionAction);

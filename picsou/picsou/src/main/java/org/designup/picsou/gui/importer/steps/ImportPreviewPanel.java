@@ -144,7 +144,7 @@ public class ImportPreviewPanel extends AbstractImportStepPanel implements Messa
 
     registerAccountCreationListener(sessionRepository, sessionDirectory);
 
-    final HyperlinkHandler hyperlinkHandler = new HyperlinkHandler(sessionDirectory, dialog);
+    final HyperlinkHandler hyperlinkHandler = new HyperlinkHandler(sessionDirectory);
 
     hyperlinkHandler.registerLinkAction("openErrorDetails", new Runnable() {
       public void run() {

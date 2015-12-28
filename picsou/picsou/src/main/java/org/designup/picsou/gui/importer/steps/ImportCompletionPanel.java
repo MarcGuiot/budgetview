@@ -55,7 +55,7 @@ public class ImportCompletionPanel extends AbstractImportStepPanel {
       }
     });
 
-    final HyperlinkHandler hyperlinkHandler = new HyperlinkHandler(localDirectory, dialog);
+    final HyperlinkHandler hyperlinkHandler = new HyperlinkHandler(localDirectory);
     builder.add("hyperlinkHandler", hyperlinkHandler);
 
     panel = builder.load();

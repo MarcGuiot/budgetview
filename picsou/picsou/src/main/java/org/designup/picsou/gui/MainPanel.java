@@ -143,7 +143,6 @@ public class MainPanel {
 
     menuBar = new MenuBarBuilder(repository, replicationGlobRepository,
                                  windowManager, logoutService,
-                                 cardView.getHelpAction(),
                                  directory,
                                  new DeleteUserAction(this, repository, directory));
 
@@ -224,7 +223,6 @@ public class MainPanel {
     categorizationSelector.reset();
     directory.get(NavigationService.class).reset();
     directory.get(UndoRedoService.class).reset();
-    directory.get(HelpService.class).reset();
     directory.get(SelectionService.class).clearAll();
     signpostView.reset();
     projectView.reset();

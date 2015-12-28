@@ -46,23 +46,23 @@
     <!-- Form elements -->
 
     <style selector="label.formLabel"
-           font="-,plain,12" foreground="import.form.label"
+           font="-,plain,13" foreground="import.form.label"
            anchor="east" marginRight="10" weightX="0"/>
 
     <style selector="label.formLabelRight"
-           font="-,plain,12" foreground="import.form.label"
+           font="-,plain,13" foreground="import.form.label"
            anchor="west" marginLeft="10" weightX="0"/>
 
     <style selector="label.formLabelTop"
-           font="-,plain,12" foreground="import.form.label"
+           font="-,plain,13" foreground="import.form.label"
            anchor="west"/>
 
     <style selector="label.formLabelMandatorySign" text="*"
-           font="-,plain,12" foreground="import.form.mandatory"
+           font="-,plain,13" foreground="import.form.mandatory"
            anchor="west" marginLeft="5" weightX="0"/>
 
     <style selector="label.formLabelMandatoryLegend"
-           font="-,plain,11" foreground="import.form.mandatory"
+           font="-,plain,13" foreground="import.form.mandatory"
            fill="none" anchor="east" horizontalAlignment="right"
            marginRight="5" weightX="0"/>
 

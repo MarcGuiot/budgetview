@@ -74,6 +74,8 @@
         </page>
 
         <page file="support/faq/comptes.html" title="Gestion des comptes">
+          <page file="support/faq/comptes/types_comptes.html"
+                title="Quels types de comptes peut-on gérer ?"/>
           <page file="support/faq/comptes/utiliser_plusieurs_comptes.html"
                 title="Est-il possible d'utiliser plusieurs comptes ?"/>
           <page file="support/faq/comptes/solde_a_zero.html"
@@ -104,6 +106,8 @@
                 title="Comment classer les opérations de virement ?"/>
           <page file="support/faq/categorisation/ventiler_operation.html"
                 title="Comment ventiler une opération parmi plusieurs enveloppes ?"/>
+          <page file="support/faq/categorisation/decaler_operation.html"
+                title="Comment décaler une opération au mois précédent ou suivant ?"/>
         </page>
 
         <page file="support/faq/operations.html" title="Gestion des opérations">
