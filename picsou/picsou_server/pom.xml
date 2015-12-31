@@ -85,7 +85,7 @@
       <version>1.0</version>
     </dependency>
     <dependency>
-      <groupId>servletapi</groupId>
+      <groupId>javax.servlet</groupId>
       <artifactId>servlet-api</artifactId>
       <version>2.4</version>
     </dependency>
@@ -109,15 +109,41 @@
       <type>test-jar</type>
       <scope>test</scope>
     </dependency>
+    <dependency>
+      <groupId>org.globsframework</groupId>
+      <artifactId>globs</artifactId>
+      <version>1.0</version>
+    </dependency>
+    <dependency>
+      <groupId>org.globsframework</groupId>
+      <artifactId>picsou</artifactId>
+      <version>1.0</version>
+    </dependency>
+    <dependency>
+      <groupId>org.globsframework</groupId>
+      <artifactId>picsou</artifactId>
+      <version>1.0</version>
+    </dependency>
+    <dependency>
+      <groupId>org.globsframework</groupId>
+      <artifactId>picsou</artifactId>
+      <version>1.0</version>
+    </dependency>
+    <dependency>
+      <groupId>org.globsframework</groupId>
+      <artifactId>picsou</artifactId>
+      <version>1.0</version>
+    </dependency>
+    <dependency>
+      <groupId>javax.servlet</groupId>
+      <artifactId>servlet-api</artifactId>
+      <version>2.4</version>
+    </dependency>
+    <dependency>
+      <groupId>javax.servlet</groupId>
+      <artifactId>servlet-api</artifactId>
+      <version>2.4</version>
+    </dependency>
   </dependencies>
-
-  <scm>
-    <connection>scm:</connection>
-    <developerConnection>
-      scm:
-    </developerConnection>
-    <tag/>
-    <url/>
-  </scm>
 
 </project>
