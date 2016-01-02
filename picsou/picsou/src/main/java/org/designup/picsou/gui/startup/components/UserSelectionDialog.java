@@ -46,7 +46,7 @@ public class UserSelectionDialog {
         }
       }
     });
-    dialog = PicsouDialog.create(directory.get(JFrame.class), true, directory);
+    dialog = PicsouDialog.create(this, directory.get(JFrame.class), true, directory);
 
     JPanel panel = builder.load();
     dialog.addPanelWithButtons(panel, new OkAction(), new CancelAction());

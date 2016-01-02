@@ -1,7 +1,10 @@
 package org.designup.picsou.gui.signpost.sections;
 
+import org.designup.picsou.gui.help.actions.GotoHelpAction;
+import org.designup.picsou.gui.utils.Gui;
 import org.designup.picsou.model.SignpostSectionType;
 import org.designup.picsou.model.SignpostStatus;
+import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.splits.ImageLocator;
 import org.globsframework.gui.splits.PanelBuilder;
 import org.globsframework.gui.splits.SplitsNode;
@@ -28,6 +31,8 @@ public abstract class SignpostSectionPanel {
   private SplitsNode<JButton> button;
 
   private boolean inProgress = false;
+  private JButton helpButton;
+  private JEditorPane helpText;
 
   protected SignpostSectionPanel(SignpostSection section,
                                  GlobRepository repository,
@@ -37,19 +42,25 @@ public abstract class SignpostSectionPanel {
     this.directory = directory;
   }
 
-  public void registerComponents(PanelBuilder cellBuilder) {
-    sectionPanel = cellBuilder.add("sectionPanel", new JPanel());
+  public void registerComponents(PanelBuilder builder) {
+    sectionPanel = builder.add("sectionPanel", new JPanel());
 
     AbstractAction action = getAction(directory);
-    title = cellBuilder.add("sectionTitle", new JButton(action));
+    title = builder.add("sectionTitle", new JButton(action));
 
-    description = cellBuilder.add("sectionDescription",
+    description = builder.add("sectionDescription",
                                   GuiUtils.createReadOnlyHtmlComponent(section.getDescription()));
 
     JButton jButton = new JButton(action);
     ImageLocator imageLocator = directory.get(ImageLocator.class);
     jButton.setIcon(imageLocator.get(section.getIconPath()));
-    this.button = cellBuilder.add("sectionButton", jButton);
+    this.button = builder.add("sectionButton", jButton);
+
+    helpButton = new JButton(new GotoHelpAction(section.getHelpKey(), directory));
+    builder.add("helpButton", helpButton);
+
+    helpText = Gui.createHtmlDisplay(Lang.get("signpostView.help", section.getHelpRef()));
+    builder.add("helpText", helpText);
   }
 
   public void init() {
@@ -80,18 +91,18 @@ public abstract class SignpostSectionPanel {
     }
     SignpostSectionType currentType = SignpostSectionType.getType(signpostStatus.get(SignpostStatus.CURRENT_SECTION));
     if (section.getType().isCompleted(currentType)) {
-      updateComponents("completed");
+      updateComponents("completed", false);
       inProgress = false;
       return;
     }
     if (section.getType() != currentType) {
-      updateComponents("unavailable");
+      updateComponents("unavailable", false);
       inProgress = false;
       return;
     }
 
     inProgress = true;
-    updateComponents("inprogress");
+    updateComponents("inprogress", true);
   }
 
   private void checkForCompletion(GlobRepository repository) {
@@ -111,11 +122,13 @@ public abstract class SignpostSectionPanel {
 
   protected abstract boolean isCompleted(GlobRepository repository);
 
-  private void updateComponents(String style) {
+  private void updateComponents(String style, boolean active) {
     sectionPanel.applyStyle(style + "Panel");
     title.applyStyle(style + "Label");
     description.applyStyle(style + "Description");
     button.applyStyle(style + "Button");
+    helpButton.setVisible(active);
+    helpText.setVisible(active);
     GuiUtils.revalidate(sectionPanel.getComponent());
     GuiUtils.revalidate(description.getComponent());
     GuiUtils.revalidate(title.getComponent());

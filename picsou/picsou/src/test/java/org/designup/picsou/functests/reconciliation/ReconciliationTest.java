@@ -249,7 +249,7 @@ public class ReconciliationTest extends LoggedInFunctionalTestCase {
   }
 
   public void testManualOperationAreNotTakenInAccountWithImport() throws Exception {
-    accounts.createMainAccount("Main", 1000.00);
+    accounts.createMainAccount("Main", "4321", 1000.00);
 
     transactionCreation
       .show()
@@ -257,6 +257,7 @@ public class ReconciliationTest extends LoggedInFunctionalTestCase {
       .createToBeReconciled(10, "AUCHAN 1", -50.00);
 
     OfxBuilder.init(this)
+      .addBankAccount("4321", 1000.00, "2012/05/10")
       .addTransaction("2012/05/10", -100.00, "CHEQUE 12345")
       .addTransaction("2012/05/10", -50.00, "AUCHAN 1")
       .loadInAccount("Main");
@@ -278,7 +279,7 @@ public class ReconciliationTest extends LoggedInFunctionalTestCase {
 
   public void testKeepingAManualTransaction() throws Exception {
 
-    accounts.createMainAccount("Main", 1000.00);
+    accounts.createMainAccount("Main", "4321", 1000.00);
 
     transactionCreation
       .show()
@@ -289,12 +290,13 @@ public class ReconciliationTest extends LoggedInFunctionalTestCase {
       .add("10/05/2012", "", "[R] CHEQUE N° 12345", -100.00)
       .check();
 
-    mainAccounts.checkPosition("Main", 1000.);
+    mainAccounts.checkPosition("Main", 1000.00);
     mainAccounts.checkReferencePosition(1000.00, "2012/05/01");
 
     notifications.checkHidden();
 
     OfxBuilder.init(this)
+      .addBankAccount("4321", 0.00, "2012/05/11")
       .addTransaction("2012/05/10", -100.00, "CHEQUE 0012345")
       .addTransaction("2012/05/11", -50.00, "AUCHAN 1")
       .loadInAccount("Main");
@@ -344,6 +346,7 @@ public class ReconciliationTest extends LoggedInFunctionalTestCase {
 
     // à l'import suivant la transaction n'est plus marquée toReconcile
     OfxBuilder.init(this)
+      .addBankAccount("4321", -200.00, "2012/05/15")
       .addTransaction("2012/05/10", -100.00, "CHEQUE 0012345")
       .addTransaction("2012/05/15", -100.00, "FNAC")
       .loadInAccount("Main");
@@ -357,7 +360,7 @@ public class ReconciliationTest extends LoggedInFunctionalTestCase {
   }
 
   public void testNavigation() throws Exception {
-    accounts.createMainAccount("Main", 1000.00);
+    accounts.createMainAccount("Main", "4321", 1000.00);
 
     categorization.checkReconciliationSwitchLinksHidden();
 
@@ -371,6 +374,7 @@ public class ReconciliationTest extends LoggedInFunctionalTestCase {
       .check();
 
     OfxBuilder.init(this)
+      .addBankAccount("4321", 1000.00, "2012/05/10")
       .addTransaction("2012/05/10", -100.00, "ToReconcile-Imported")
       .loadInAccount("Main");
     categorization.initContent()
@@ -415,7 +419,7 @@ public class ReconciliationTest extends LoggedInFunctionalTestCase {
   }
 
   public void testReconciliationWithASplitTransaction() throws Exception {
-    accounts.createMainAccount("Main", 1000.00);
+    accounts.createMainAccount("Main", "4321", 1000.00);
 
     transactionCreation
       .show()
@@ -423,6 +427,7 @@ public class ReconciliationTest extends LoggedInFunctionalTestCase {
       .createToBeReconciled(10, "split 2", -40.00);
 
     OfxBuilder.init(this)
+      .addBankAccount("4321", 1000.00, "2012/05/10")
       .addTransaction("2012/05/10", -100.00, "one splitted op")
       .loadInAccount("Main");
     views.selectCategorization();
@@ -442,7 +447,7 @@ public class ReconciliationTest extends LoggedInFunctionalTestCase {
 
   public void testAtImportManualOperationAreShift() throws Exception {
     operations.openPreferences().setFutureMonthsCount(2).validate();
-    accounts.createMainAccount("Main", 1000.00);
+    accounts.createMainAccount("Main", "4321", 1000.00);
 
     transactionCreation
       .show()
@@ -450,6 +455,7 @@ public class ReconciliationTest extends LoggedInFunctionalTestCase {
       .createToBeReconciled(12, "op 2", -40.00);
 
     OfxBuilder.init(this)
+      .addBankAccount("4321", 1000.00, "2012/05/14")
       .addTransaction("2012/05/14", -10.00, "import op 1")
       .loadInAccount("Main");
 
@@ -462,6 +468,7 @@ public class ReconciliationTest extends LoggedInFunctionalTestCase {
     setCurrentDate("2012/05/22");
     operations.changeDate();
     OfxBuilder.init(this)
+      .addBankAccount("4321", 990.00, "2012/05/21")
       .addTransaction("2012/05/21", -10.00, "import op 3")
       .loadInAccount("Main");
 
@@ -475,6 +482,7 @@ public class ReconciliationTest extends LoggedInFunctionalTestCase {
     setCurrentDate("2012/06/03");
     operations.changeDate();
     OfxBuilder.init(this)
+      .addBankAccount("4321", 980.00, "2012/06/02")
       .addTransaction("2012/06/02", -10.00, "import op 4")
       .loadInAccount("Main");
 
@@ -487,13 +495,15 @@ public class ReconciliationTest extends LoggedInFunctionalTestCase {
 
   public void testReconciliationWithSavingsAccounts() throws Exception {
     operations.openPreferences().setFutureMonthsCount(2).validate();
+
+    accounts.createSavingsAccount("Epargne LCL", "1234", 1000.00);
+
     OfxBuilder.init(this)
+      .addBankAccount("00001123", 0.00, "2012/05/10")
       .addTransaction("2012/03/10", -100.00, "Virement")
       .addTransaction("2012/04/10", -100.00, "Virement")
       .addTransaction("2012/05/10", -100.00, "Virement")
       .load();
-
-    accounts.createSavingsAccount("Epargne LCL", 1000.);
 
     categorization
       .selectTransactions("Virement")
@@ -527,7 +537,7 @@ public class ReconciliationTest extends LoggedInFunctionalTestCase {
 
   public void testManualOnly() throws Exception {
     operations.openPreferences().setFutureMonthsCount(2).validate();
-    accounts.createMainAccount("Main", 1000.00);
+    accounts.createMainAccount("Main", "4321", 1000.00);
 
     transactionCreation
       .show()

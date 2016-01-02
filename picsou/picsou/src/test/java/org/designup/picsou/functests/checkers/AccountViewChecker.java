@@ -24,6 +24,10 @@ public class AccountViewChecker extends ViewChecker {
   }
 
   public AccountViewChecker createSavingsAccount(String name, Double position) {
+    return createSavingsAccount(name, "1234", position);
+  }
+
+  public AccountViewChecker createSavingsAccount(String name, String number, Double position) {
     AccountEditionChecker accountEdition = createNewAccount()
       .setName(name)
       .setAccountNumber("1234")
@@ -38,10 +42,10 @@ public class AccountViewChecker extends ViewChecker {
     return this;
   }
 
-  public AccountViewChecker createMainAccount(String name, double balance) {
+  public AccountViewChecker createMainAccount(String name, String number, double balance) {
     createNewAccount()
       .setName(name)
-      .setAccountNumber("4321")
+      .setAccountNumber(number)
       .selectBank("CIC")
       .setAsMain()
       .checkIsMain()

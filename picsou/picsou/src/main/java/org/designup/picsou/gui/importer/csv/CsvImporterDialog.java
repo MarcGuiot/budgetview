@@ -79,7 +79,7 @@ public class CsvImporterDialog {
     messageField = GuiUtils.createReadOnlyHtmlComponent("blah");
     builder.add("message", messageField);
 
-    this.dialog = PicsouDialog.create(parent, directory);
+    this.dialog = PicsouDialog.create(this, parent, directory);
     this.okAction = new OkAction();
     dialog.registerDisposable(new Disposable() {
       public void dispose() {
@@ -379,6 +379,7 @@ public class CsvImporterDialog {
 
     public void actionPerformed(ActionEvent e) {
       validate();
+      System.out.println("OkAction.actionPerformed");
       dialog.setVisible(false);
     }
   }

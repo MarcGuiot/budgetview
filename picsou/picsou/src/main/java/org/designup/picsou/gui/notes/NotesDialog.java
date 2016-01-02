@@ -34,7 +34,7 @@ public class NotesDialog  {
       .setNotifyOnKeyPressed(true)
       .forceSelection(Notes.KEY);
 
-    dialog = PicsouDialog.create(directory.get(JFrame.class), false, directory);
+    dialog = PicsouDialog.create(this, directory.get(JFrame.class), false, directory);
     dialog.setPanelAndButton(builder.<JPanel>load(), new CloseDialogAction(dialog));
     dialog.pack();
   }

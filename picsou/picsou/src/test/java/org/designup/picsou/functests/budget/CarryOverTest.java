@@ -42,6 +42,7 @@ public class CarryOverTest extends LoggedInFunctionalTestCase {
   }
 
   public void testUndo() throws Exception {
+    addOns.activateAll();
     operations.openPreferences()
       .setFutureMonthsCount(2)
       .validate();

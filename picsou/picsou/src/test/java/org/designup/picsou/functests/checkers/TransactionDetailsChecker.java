@@ -145,16 +145,8 @@ public class TransactionDetailsChecker extends ViewChecker {
     checkComponentVisible(getPanel(), JTextField.class, "noteField", false);
   }
 
-  public void checkMessage(String message) {
-    assertThat(getPanel().getTextBox("noSelectionMessage").textContains(message));
-  }
-
-  public void checkNoDataImportedMessage() {
-    assertThat(getPanel().getPanel("noData").getTextBox().textContains("No data imported"));
-  }
-
-  public void checkNoDataShownMessage() {
-    assertThat(getPanel().getPanel("noData").getTextBox("noDataShownMessage").textContains("No data shown"));
+  public void checkNothingShown() {
+    checkComponentVisible(getPanel(), JPanel.class, "nothingShownPanel", true);
   }
 
   public void shift() {

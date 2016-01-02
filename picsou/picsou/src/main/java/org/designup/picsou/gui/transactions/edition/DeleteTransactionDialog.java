@@ -34,7 +34,7 @@ public class DeleteTransactionDialog {
   }
 
   private void createDialog(JFrame owner) {
-    dialog = PicsouDialog.create(owner, true, directory);
+    dialog = PicsouDialog.create(this, owner, true, directory);
     OkAction okAction = new OkAction();
 
     builder = new GlobsPanelBuilder(getClass(), "/layout/transactions/deleteTransactionDialog.splits",

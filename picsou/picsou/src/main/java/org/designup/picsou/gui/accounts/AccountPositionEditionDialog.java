@@ -51,13 +51,13 @@ public class AccountPositionEditionDialog {
     editionPanel.setInitialMessageVisible(accountInitialization);
 
     if (accountInitialization) {
-      dialog = PicsouDialog.createWithButton(parent, builder.<JPanel>load(), validateAction, directory);
+      dialog = PicsouDialog.createWithButton(this, parent, builder.<JPanel>load(), validateAction, directory);
       dialog.disableEscShortcut();
       editionPanel.setText(AmountFormat.DECIMAL_FORMAT.format(value));
       dialog.setPreferredSize(new Dimension(400, 350));
     }
     else {
-      dialog = PicsouDialog.create(parent, directory);
+      dialog = PicsouDialog.create(this, parent, directory);
       dialog.addPanelWithButtons(builder.<JPanel>load(), validateAction, new CancelAction(dialog));
       dialog.setPreferredSize(new Dimension(400, 300));
     }

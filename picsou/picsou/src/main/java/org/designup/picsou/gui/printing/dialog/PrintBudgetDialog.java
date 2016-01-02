@@ -48,7 +48,7 @@ public class PrintBudgetDialog {
   }
 
   private void initDialog() {
-    dialog = PicsouDialog.create(directory.get(JFrame.class), true, directory);
+    dialog = PicsouDialog.create(this, directory.get(JFrame.class), true, directory);
 
     builder = new GlobsPanelBuilder(getClass(), "/layout/printing/printBudgetDialog.splits",
                                                       repository, directory);

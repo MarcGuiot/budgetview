@@ -6,7 +6,6 @@ import org.designup.picsou.gui.components.DatePicker;
 import org.designup.picsou.gui.components.dialogs.CancelAction;
 import org.designup.picsou.gui.components.dialogs.PicsouDialog;
 import org.designup.picsou.gui.model.CurrentAccountInfo;
-import org.designup.picsou.gui.model.SeriesStat;
 import org.designup.picsou.gui.time.TimeService;
 import org.designup.picsou.model.*;
 import org.designup.picsou.utils.Lang;
@@ -44,7 +43,7 @@ public class AccountEditionDialog extends AbstractAccountPanel<LocalGlobReposito
     super(createLocalRepository(parentRepository), directory);
     this.parentRepository = parentRepository;
 
-    dialog = PicsouDialog.create(owner, localDirectory);
+    dialog = PicsouDialog.create(this, owner, localDirectory);
 
     final GlobsPanelBuilder builder = new GlobsPanelBuilder(getClass(), "/layout/accounts/accountEditionDialog.splits",
                                                             localRepository, localDirectory);

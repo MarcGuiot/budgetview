@@ -46,7 +46,7 @@ public class CardTypeChooserDialog {
 
     builder.addRepeat("cardTypeRepeat", accounts, new RepeatFactory(localRepository));
 
-    dialog = PicsouDialog.createWithButtons(parent, directory,
+    dialog = PicsouDialog.createWithButtons(this, parent, directory,
                                             builder.<JPanel>load(),
                                             new ValidateAction(localRepository),
                                             new CancelAction());

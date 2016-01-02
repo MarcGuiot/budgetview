@@ -78,18 +78,18 @@ public class PreferencesTest extends LoggedInFunctionalTestCase {
     PreferencesChecker preferences = operations.openPreferences();
     preferences.checkColorThemeSelected(ColorTheme.STANDARD);
     screen.checkBackgroundColorIsStandard();
-    preferences.selectColorTheme(ColorTheme.BLUE);
-    screen.checkBackgroundColorIsBlue();
+    preferences.selectColorTheme(ColorTheme.BLACK);
+    screen.checkBackgroundColorIsBlack();
     preferences.validate();
 
-    screen.checkBackgroundColorIsBlue();
+    screen.checkBackgroundColorIsBlack();
 
     PreferencesChecker preferences2 = operations.openPreferences();
-    preferences2.checkColorThemeSelected(ColorTheme.BLUE);
+    preferences2.checkColorThemeSelected(ColorTheme.BLACK);
     preferences2.selectColorTheme(ColorTheme.STANDARD);
     screen.checkBackgroundColorIsStandard();
     preferences2.cancel();
 
-    screen.checkBackgroundColorIsBlue();
+    screen.checkBackgroundColorIsBlack();
   }
 }

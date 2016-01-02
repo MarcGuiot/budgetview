@@ -13,6 +13,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+import static org.globsframework.model.FieldValue.*;
+
 public class BankPluginService {
   private Map<Integer, BankPlugin> specific = new HashMap<Integer, BankPlugin>();
   private BankPlugin defaultPlugin = new AbstractBankPlugin() {
@@ -30,8 +32,7 @@ public class BankPluginService {
           Date importDate = importedAccount.get(RealAccount.POSITION_DATE);
           // ce doit etre la derniere date.
           if (importDate != null && (currentDate == null || importDate.after(currentDate))) {
-            localRepository.update(account.getKey(),
-                                   FieldValue.value(Account.LAST_IMPORT_POSITION, Amounts.extractAmount(amount)));
+            localRepository.update(account.getKey(), value(Account.LAST_IMPORT_POSITION, Amounts.extractAmount(amount)));
           }
         }
       }

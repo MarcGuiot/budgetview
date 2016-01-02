@@ -52,7 +52,7 @@ public class AboutDialog {
 
     builder.add("licensesArea", createLicensesArea());
 
-    dialog = PicsouDialog.create(directory.get(JFrame.class), directory);
+    dialog = PicsouDialog.create(this, directory.get(JFrame.class), directory);
     dialog.addPanelWithButton(builder.<JPanel>load(), new CloseDialogAction(dialog));
     dialog.pack();
   }

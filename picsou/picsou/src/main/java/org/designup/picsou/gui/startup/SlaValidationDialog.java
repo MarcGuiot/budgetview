@@ -39,7 +39,7 @@ public class SlaValidationDialog {
 
     builder.add("editor", Gui.createHtmlEditor(Lang.getDocFile("sla.html")));
 
-    dialog = PicsouDialog.create(owner, true, directory);
+    dialog = PicsouDialog.create(this, owner, true, directory);
 
     dialog.addPanelWithButtons(builder.<JPanel>load(), new OkAction(), new CancelAction());
     dialog.pack();

@@ -49,7 +49,7 @@ public class AddOns {
 
   public static boolean isEnabled(BooleanField field, GlobRepository repository) {
     Glob addons = repository.find(KEY);
-    return addons == null ? false : addons.isTrue(field);
+    return addons != null && addons.isTrue(field);
   }
 
   public static void setEnabled(BooleanField field, GlobRepository repository, boolean enabled) {

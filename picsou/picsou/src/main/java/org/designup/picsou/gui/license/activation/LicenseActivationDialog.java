@@ -55,7 +55,7 @@ public class LicenseActivationDialog {
         .copy(User.TYPE)
         .get();
 
-    dialog = PicsouDialog.create(parent, directory);
+    dialog = PicsouDialog.create(this, parent, directory);
 
     Glob user = localRepository.get(User.KEY);
     builder = new GlobsPanelBuilder(getClass(), "/layout/license/activation/licenseActivationDialog.splits",

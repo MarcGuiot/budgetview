@@ -13,12 +13,12 @@
            marginLeft="15" marginRight="8"
            fill="none" anchor="center" weightX="0.1"/>
     <style selector="label.countMessage"
-           font="-,plain,12"
+           font="-,plain,13"
            fill="none" anchor="left" weightX="100"/>
     <style selector="separator" marginTop="20" marginBottom="20" weightY="0.01"/>
   </styles>
 
-  <column styleClass="dialog" preferredSize="(600,710)">
+  <column styleClass="dialog" preferredSize="(600,710)" name="importCompletionPanel">
 
     <label text="$import.completion.title" name="title" styleClass="title"/>
 
@@ -65,7 +65,7 @@
       </column>
     </column>
 
-    <row styleClass="dialogButtons">
+    <row styleClass="dialogButtons" name="buttons">
       <filler fill="horizontal"/>
       <button action="close"/>
       <button action="ok"/>

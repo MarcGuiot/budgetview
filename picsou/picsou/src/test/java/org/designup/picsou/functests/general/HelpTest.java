@@ -25,8 +25,9 @@ public class HelpTest extends LoggedInFunctionalTestCase {
 
     String text = new Date().toString();
 
-    Log.init(new PrintStream(AppLogger.getLogFile()));
-    Log.write("Date: " + text);
+    PrintStream stream = new PrintStream(AppLogger.getLogFile());
+    stream.append("Date: " + text);
+    stream.close();
     
     operations.openSendLogs()
       .checkTitle("Send logs")
@@ -34,7 +35,5 @@ public class HelpTest extends LoggedInFunctionalTestCase {
       .checkDetailsContain(text)
       .checkCopy()
       .close();
-    
-    Log.init(System.out);
   }
 }

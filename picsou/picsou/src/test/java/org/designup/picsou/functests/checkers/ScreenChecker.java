@@ -40,15 +40,15 @@ public class ScreenChecker {
   }
 
   public void checkBackgroundColorIsStandard() {
-    checkBackgroundTopColor("454545");
+    checkBackgroundTopColor("FFFFFF");
   }
 
-  public void checkBackgroundColorIsBlue() {
-    checkBackgroundTopColor("3380AD");
+  public void checkBackgroundColorIsBlack() {
+    checkBackgroundTopColor("707070");
   }
 
   private void checkBackgroundTopColor(String color) {
-    JPanel panel = (JPanel)mainWindow.getPanel("mainPanel").getAwtComponent();
+    JPanel panel = (JPanel)mainWindow.getPanel("mainPanel").getPanel("timeviewHeader").getAwtComponent();
     ColorUtils.assertEquals(Colors.toColor(color), panel.getBackground());
   }
 }

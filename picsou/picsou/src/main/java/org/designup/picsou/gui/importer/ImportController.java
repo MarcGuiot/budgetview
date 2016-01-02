@@ -222,12 +222,12 @@ public class ImportController implements RealAccountImporter {
     nextImport();
   }
 
-  public void completeImport(Glob importedAccount, Glob currentAccount, String dateFormat) {
+  public void completeImport(Glob realAccount, Glob currentAccount, String dateFormat) {
     Set<Key> newSeries = importSession.getNewSeries();
     if (!newSeries.isEmpty()) {
       importSession.importSeries(importDialog.askForSeriesImport(newSeries));
     }
-    Key importKey = importSession.importTransactions(importedAccount, currentAccount, dateFormat);
+    Key importKey = importSession.importTransactions(realAccount, currentAccount, dateFormat);
     if (importKey != null) {
       importKeys.add(importKey.get(TransactionImport.ID));
     }

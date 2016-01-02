@@ -13,7 +13,7 @@ public class MultiAccountSeriesTest extends LoggedInFunctionalTestCase {
   }
 
   public void testForecastWithoutExistingTransactions() throws Exception {
-    accounts.createMainAccount("Main1", 1000.00);
+    accounts.createMainAccount("Main1", "4321", 1000.00);
     accounts.createSavingsAccount("Savings1", 10000.00); // Ignored in envelope
 
     budgetView.variable.createSeries()
@@ -37,7 +37,7 @@ public class MultiAccountSeriesTest extends LoggedInFunctionalTestCase {
       .check();
 
     // 2. When adding a second account, the envelope distributes 50% on each
-    accounts.createMainAccount("Main2", 2000.00);
+    accounts.createMainAccount("Main2", "4321", 2000.00);
     transactions.initAmountContent()
       .add("11/01/2015", "Planned: Leisures", -150.00, "Leisures", 1550.00, 2100.00, "Main2")
       .add("11/01/2015", "Planned: Leisures", -150.00, "Leisures", 550.00, 2250.00, "Main1")
@@ -480,8 +480,8 @@ public class MultiAccountSeriesTest extends LoggedInFunctionalTestCase {
   }
 
   public void testSwitchingFromMultiToMonoAccountAndBackWithoutAssignedTransactions() throws Exception {
-    accounts.createMainAccount("Main1", 1000.00);
-    accounts.createMainAccount("Main2", 2000.00);
+    accounts.createMainAccount("Main1", "4321", 1000.00);
+    accounts.createMainAccount("Main2", "4321", 2000.00);
     accounts.createSavingsAccount("Savings1", 10000.00); // Ignored in envelope
 
     // 1. Begin as multi-account - the envelope is split evenly among accounts
@@ -569,12 +569,12 @@ public class MultiAccountSeriesTest extends LoggedInFunctionalTestCase {
     transactions.showPlannedTransactions();
     transactions.checkEmpty();
 
-    accounts.createMainAccount("Main1", 1000.00);
+    accounts.createMainAccount("Main1", "4321", 1000.00);
     transactions.initAmountContent()
       .add("11/12/2014", "Planned: Leisures", -300.00, "Leisures", 400.00, 400.00, "Main1")
       .check();
 
-    accounts.createMainAccount("Main2", 2000.00);
+    accounts.createMainAccount("Main2", "4321", 2000.00);
     transactions.initAmountContent()
       .add("11/12/2014", "Planned: Leisures", -150.00, "Leisures", 1700.00, 2400.00, "Main2")
       .add("11/12/2014", "Planned: Leisures", -150.00, "Leisures", 700.00, 2550.00, "Main1")

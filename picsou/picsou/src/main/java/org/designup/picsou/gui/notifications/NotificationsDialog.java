@@ -40,7 +40,7 @@ public class NotificationsDialog {
   }
 
   public void show() {
-    PicsouDialog dialog = PicsouDialog.create(directory.get(JFrame.class), directory);
+    PicsouDialog dialog = PicsouDialog.create(this, directory.get(JFrame.class), directory);
     SplitsBuilder builder = SplitsBuilder.init(directory);
     builder.setSource(getClass(), "/layout/notifications/notificationsDialog.splits");
 

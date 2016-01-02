@@ -34,7 +34,7 @@ public class PreferencesDialog {
                                     "/layout/general/preferences/preferencesDialog.splits",
                                     repository, directory);
 
-    dialog = PicsouDialog.create(parent, directory);
+    dialog = PicsouDialog.create(this, parent, directory);
 
     PreferencesPane colorsPane = new ColorsPane(parentRepository, repository, directory);
     builder.add("colorsPane", colorsPane.getPanel());

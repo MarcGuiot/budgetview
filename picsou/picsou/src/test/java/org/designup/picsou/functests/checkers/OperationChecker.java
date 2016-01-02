@@ -173,20 +173,27 @@ public class OperationChecker {
       .completeImport();
   }
 
-  public void importQifFile(String file, String bank, Double amount) {
+  public void importQifFile(String file, String bank, Double position) {
     openImportDialog()
       .setFilePath(file)
       .acceptFile()
-      .createNewAccount(bank, "Main account", "", amount)
+      .createNewAccount(bank, "Main account", "", position)
       .setMainAccount()
       .completeImport();
   }
 
   public void importFile(String file, String targetAccount) {
-    openImportDialog().selectFiles(file)
+    openImportDialog().setFilePath(file)
       .acceptFile()
       .selectAccount(targetAccount)
       .completeImport();
+  }
+
+  public void importFile(String file, String targetAccount, Double position) {
+    openImportDialog().setFilePath(file)
+      .acceptFile()
+      .selectAccount(targetAccount)
+      .completeImport(position);
   }
 
   public void importQifFiles(String bank, String file) {

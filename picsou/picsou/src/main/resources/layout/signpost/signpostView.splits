@@ -13,6 +13,18 @@
         disabledBgColor="signpostView.button.disabled"
         rolloverBgColor="signpostView.button.rollover"/>
     <style selector="#sectionButton" ui="flatIconButtonUI"/>
+
+    <ui name="helpButtonUI" class="org.designup.picsou.gui.components.ui.FlatIconButtonUI"
+        padding="7"
+        bgColor="signpostView.section.help.button"
+        disabledBgColor="signpostView.button.disabled"
+        rolloverBgColor="signpostView.button.rollover"/>
+    <style selector="#helpButton" icon="question_mark.png" ui="helpButtonUI" marginTop="2"/>
+
+    <style selector="#helpText"
+           weightX="10" fill="horizontal" marginLeft="10"
+           foreground="signpostView.section.help.text"/>
+
   </styles>
 
   <row opaque="true" background="content.bg">
@@ -29,13 +41,20 @@
 
       <column marginTop="20" marginBottom="20" marginLeft="10">
         <repeat ref="signpostRepeat" layout="row">
-          <panel ref="sectionPanel" preferredSize="(290,250)"
-                 layout="org.designup.picsou.gui.signpost.utils.SignpostSectionLayout">
-            <button ref="sectionTitle"/>
-            <htmlEditorPane ref="sectionDescription"/>
-            <button ref="sectionButton" preferredSize="(70,45)"/>
-          </panel>
+          <column>
+            <panel ref="sectionPanel" preferredSize="(290,250)"
+                   layout="org.designup.picsou.gui.signpost.utils.SignpostSectionLayout">
+              <button ref="sectionTitle"/>
+              <htmlEditorPane ref="sectionDescription"/>
+              <button ref="sectionButton" preferredSize="(70,45)"/>
+            </panel>
+            <row preferredSize="(290,34)" marginTop="5">
+              <button ref="helpButton" weightX="0.1" marginLeft="30"/>
+              <htmlEditorPane ref="helpText" hyperlinkListener="hyperlinkHandler"/>
+            </row>
+          </column>
         </repeat>
+
       </column>
 
       <label styleClass="horizontalSeparator"/>

@@ -1134,7 +1134,7 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
   }
 
   public void testChangeAccountDirectionDoesNotChangeBudgetSign() throws Exception {
-    accounts.createMainAccount("Main", 99);
+    accounts.createMainAccount("Main", "4321", 99);
     accounts.createSavingsAccount("Virt Epargne", 1000.);
 
     views.selectBudget();

@@ -50,7 +50,7 @@ public class ImportDialogChecker extends GuiChecker {
   }
 
   public ImportDialogChecker setFilePath(String text) {
-    getFileField().setText(text);
+    getFileField().setText(text, false);
     return this;
   }
 
@@ -77,6 +77,7 @@ public class ImportDialogChecker extends GuiChecker {
   }
 
   public ImportDialogChecker acceptFile() {
+    assertThat(dialog.getTextBox("title").textEquals(Lang.get("import.fileSelection.title")));
     getImportButton().click();
     return this;
   }
@@ -145,13 +146,13 @@ public class ImportDialogChecker extends GuiChecker {
   }
 
   public void completeImport(double amount) {
-    doImportWithBalance().setAmount(amount).validate();
+    doImportWithPosition().setAmount(amount).validate();
     ImportDialogChecker.complete(-1, -1, -1, dialog);
     UISpecAssert.assertFalse(dialog.isVisible());
   }
 
   public void completeImportStartFromZero(double amount) {
-    AccountPositionEditionChecker positionEditionChecker = doImportWithBalance();
+    AccountPositionEditionChecker positionEditionChecker = doImportWithPosition();
     positionEditionChecker.checkInitialAmountSelected(AmountFormat.DECIMAL_FORMAT.format(amount));
     positionEditionChecker.validate();
     ImportDialogChecker.complete(-1, -1, -1, dialog);
@@ -184,18 +185,19 @@ public class ImportDialogChecker extends GuiChecker {
   public static void validateAndComplete(final int importedTransactionCount,
                                          final int ignoredTransactionCount,
                                          final int autocategorizedTransactionCount,
-                                         final Panel dialog, final String key) {
-    dialog.getButton(Lang.get(key)).click();
-    complete(importedTransactionCount, ignoredTransactionCount, autocategorizedTransactionCount, dialog);
-    UISpecAssert.assertFalse(dialog.isVisible());
+                                         final Panel dialogToClose, final String key) {
+
+    dialogToClose.getButton(Lang.get(key)).click();
+    complete(importedTransactionCount, ignoredTransactionCount, autocategorizedTransactionCount, dialogToClose);
+    UISpecAssert.assertFalse(dialogToClose.isVisible());
   }
 
-  public static void complete(int importedTransactionCount, int ignoredTransactionCount, int autocategorizedTransactionCount, Panel dialog) {
+  public static void complete(int importedTransactionCount, int ignoredTransactionCount, int autocategorizedTransactionCount, Panel dialogToClose) {
     CompletionChecker handler = new CompletionChecker(importedTransactionCount, ignoredTransactionCount, autocategorizedTransactionCount);
-    handler.checkAndClose(dialog);
+    handler.checkAndClose(dialogToClose);
   }
 
-  public AccountPositionEditionChecker doImportWithBalance() {
+  public AccountPositionEditionChecker doImportWithPosition() {
     return new AccountPositionEditionChecker(dialog, "import.fileSelection.ok");
   }
 
@@ -264,7 +266,7 @@ public class ImportDialogChecker extends GuiChecker {
   }
 
   public ImportDialogChecker checkNoErrorMessage() {
-    TextBox message = (TextBox)dialog.findUIComponent(ComponentMatchers.innerNameIdentity("importMessage"));
+    TextBox message = (TextBox) dialog.findUIComponent(ComponentMatchers.innerNameIdentity("importMessage"));
     if (message != null) {
       assertTrue(message.textIsEmpty());
     }
@@ -306,11 +308,13 @@ public class ImportDialogChecker extends GuiChecker {
   }
 
   public ImportDialogChecker selectAccount(final String accountName) {
+    assertThat(dialog.getTextBox("title").textEquals(Lang.get("import.preview.title")));
     getAccountCombo().select(accountName);
     return this;
   }
 
   public ImportDialogChecker selectNewAccount() {
+    assertThat(dialog.getTextBox("title").textEquals(Lang.get("import.preview.title")));
     getAccountCombo().select("a new account");
     return this;
   }
@@ -408,7 +412,7 @@ public class ImportDialogChecker extends GuiChecker {
   public ImportDialogChecker setMainAccountForAll() {
     UIComponent[] uiComponents = getAccountTypeSelectionPanel().getUIComponents(ComboBox.class);
     for (UIComponent component : uiComponents) {
-      ((ComboBox)component).select("main");
+      ((ComboBox) component).select("main");
     }
     return this;
   }
@@ -495,7 +499,7 @@ public class ImportDialogChecker extends GuiChecker {
 
   public boolean isNew() {
     UIComponent component = dialog.findUIComponent(ComponentMatchers.innerNameIdentity("accountCombo"));
-    return ((JComboBox)component.getAwtComponent()).getSelectedItem() == null;
+    return ((JComboBox) component.getAwtComponent()).getSelectedItem() == null;
   }
 
   public void waitForPreview() {
@@ -642,7 +646,7 @@ public class ImportDialogChecker extends GuiChecker {
 
   public ImportDialogChecker checkManualDownloadLink(String bankLabel, String url) {
     TextBox label = dialog.getPanel("manualAccountsPanel").getTextBox(bankLabel);
-    Button button = new Button((JButton)getSibling(label, 2, "gotoWebsite"));
+    Button button = new Button((JButton) getSibling(label, 2, "gotoWebsite"));
     BrowsingChecker.checkDisplay(button, url);
     return this;
   }
@@ -651,7 +655,7 @@ public class ImportDialogChecker extends GuiChecker {
     Set<String> actualNames = new HashSet<String>();
     assertThat(panel.isVisible());
     for (UIComponent component : panel.getUIComponents(TextBox.class, "accountLabel")) {
-      TextBox textBox = (TextBox)component;
+      TextBox textBox = (TextBox) component;
       actualNames.add(textBox.getText());
     }
     TestUtils.assertSetEquals(actualNames, expectedAccountNames);
@@ -667,47 +671,38 @@ public class ImportDialogChecker extends GuiChecker {
     private final int importedTransactionCount;
     private final int ignoredTransactionCount;
     private final int autocategorizedTransactionCount;
-    private String buttonMessage = null;
+    private final String buttonMessage;
 
     public CompletionChecker(int importedTransactionCount, int ignoredTransactionCount, int autocategorizedTransactionCount) {
-      this.importedTransactionCount = importedTransactionCount;
-      this.ignoredTransactionCount = ignoredTransactionCount;
-      this.autocategorizedTransactionCount = autocategorizedTransactionCount;
+      this(importedTransactionCount, ignoredTransactionCount, autocategorizedTransactionCount, null);
     }
 
     public CompletionChecker(int importedTransactionCount, int ignoredTransactionCount, int autocategorizedTransactionCount, String buttonMessage) {
-      this(importedTransactionCount, ignoredTransactionCount, autocategorizedTransactionCount);
+      this.importedTransactionCount = importedTransactionCount;
+      this.ignoredTransactionCount = ignoredTransactionCount;
+      this.autocategorizedTransactionCount = autocategorizedTransactionCount;
       this.buttonMessage = buttonMessage;
     }
 
-    public Trigger checkAndGetTrigger(Panel dialog) {
-      assertThat(dialog.getTextBox("title").textEquals(Lang.get("import.completion.title")));
+    private String toSummaryString(String imported, String ignored, String autocategorized) {
+      return "imported:" + imported + "  - ignored:" + ignored + "  - autocategorized:" + autocategorized;
+    }
+
+    public void checkAndClose(Panel dialogToClose) {
+      assertThat(dialogToClose.getTextBox("title").textEquals(Lang.get("import.completion.title")));
       if (importedTransactionCount != -1) {
         Assert.assertEquals(toSummaryString(Integer.toString(importedTransactionCount),
                                             Integer.toString(ignoredTransactionCount),
                                             Integer.toString(autocategorizedTransactionCount)),
-                            toSummaryString(dialog.getTextBox("importedCount").getText(),
-                                            dialog.getTextBox("ignoredCount").getText(),
-                                            dialog.getTextBox("categorizedCount").getText()));
+                            toSummaryString(dialogToClose.getTextBox("importedCount").getText(),
+                                            dialogToClose.getTextBox("ignoredCount").getText(),
+                                            dialogToClose.getTextBox("categorizedCount").getText()));
       }
       if (buttonMessage == null) {
-        return dialog.getButton(Lang.get("import.completion.button")).triggerClick();
+        dialogToClose.getButton(Lang.get("import.completion.button")).click();
       }
       else {
-        return dialog.getButton(buttonMessage).triggerClick();
-      }
-    }
-
-    private String toSummaryString(String imported, String ignored, String autocategorized) {
-      return "imported:" + imported +  "  - ignored:" + ignored + "  - autocategorized:" + autocategorized;
-    }
-
-    public void checkAndClose(Panel dialog) {
-      try {
-        checkAndGetTrigger(dialog).run();
-      }
-      catch (Exception e) {
-        throw new RuntimeException(e);
+        dialogToClose.getButton(buttonMessage).click();
       }
     }
   }

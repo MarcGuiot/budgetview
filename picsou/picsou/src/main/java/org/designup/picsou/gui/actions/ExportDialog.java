@@ -72,7 +72,7 @@ public class ExportDialog {
       }
     });
 
-    dialog = PicsouDialog.create(directory.get(JFrame.class), directory);
+    dialog = PicsouDialog.create(this, directory.get(JFrame.class), directory);
     dialog.registerDisposable(new Disposable() {
       public void dispose() {
         builder.dispose();

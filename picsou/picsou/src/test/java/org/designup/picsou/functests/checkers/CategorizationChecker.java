@@ -105,6 +105,16 @@ public class CategorizationChecker extends FilteredViewChecker<CategorizationChe
       }
     }
     checkComponentVisible(getPanel(), JPanel.class, "noSelectionPanel", true);
+    assertThat(getPanel().getTextBox("noSelectionMessage").textContains("No operation selected"));
+
+  }
+
+  public void checkNoDataImportedMessage() {
+    assertThat(getPanel().getPanel("noDataImportedPanel").getTextBox().textContains("No data imported"));
+  }
+
+  public void checkNoDataShownMessage() {
+    assertThat(getPanel().getPanel("noDataShownPanel").getTextBox("noDataShownMessage").textContains("No data shown"));
   }
 
   public void checkBudgetAreaIsSelected(BudgetArea budgetArea) {

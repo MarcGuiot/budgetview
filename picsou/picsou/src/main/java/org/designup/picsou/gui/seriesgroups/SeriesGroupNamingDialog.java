@@ -46,7 +46,7 @@ public abstract class SeriesGroupNamingDialog {
 
     groupKey = getGroupKey(localRepository);
 
-    dialog = PicsouDialog.create(directory.get(JFrame.class), directory);
+    dialog = PicsouDialog.create(this, directory.get(JFrame.class), directory);
 
     GlobsPanelBuilder builder = new GlobsPanelBuilder(getClass(), "/layout/seriesgroups/seriesGroupNamingDialog.splits",
                                                       localRepository, directory);

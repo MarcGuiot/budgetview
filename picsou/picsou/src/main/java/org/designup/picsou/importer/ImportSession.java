@@ -266,9 +266,9 @@ public class ImportSession {
 
       GlobList allNewTransactions = convertImportedTransaction(selectedDateFormat, currentlySelectedAccount.get(Account.ID));
 
-      boolean value = shouldImportSeries();
-      if (value) {
-        referenceRepository.update(importKey, TransactionImport.IS_WITH_SERIES, value);
+      boolean shouldImportSeries = shouldImportSeries();
+      if (shouldImportSeries) {
+        referenceRepository.update(importKey, TransactionImport.IS_WITH_SERIES, shouldImportSeries);
       }
       setCurrentImport(allNewTransactions, localRepository);
       localRepository.deleteAll(ImportedTransaction.TYPE);

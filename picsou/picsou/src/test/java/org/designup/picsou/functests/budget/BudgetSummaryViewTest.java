@@ -9,6 +9,7 @@ public class BudgetSummaryViewTest extends LoggedInFunctionalTestCase {
   protected void setUp() throws Exception {
     setCurrentMonth("2008/07");
     super.setUp();
+    addOns.disableAll();
   }
 
   public void testUncategorized() throws Exception {
@@ -43,8 +44,6 @@ public class BudgetSummaryViewTest extends LoggedInFunctionalTestCase {
 
     operations.openPreferences().setFutureMonthsCount(2).validate();
 
-    views.selectBudget();
-
     OfxBuilder
       .init(this)
       .addBankAccount(-1, 10674, "0001212", 1500.00, "2008/07/10")
@@ -55,6 +54,8 @@ public class BudgetSummaryViewTest extends LoggedInFunctionalTestCase {
 
     timeline.checkSelection("2008/07");
     timeline.selectAll();
+
+    views.selectBudget();
     uncategorized
       .checkAmount(1000.00 + 200.00 + 50.00)
       .gotoUncategorized();

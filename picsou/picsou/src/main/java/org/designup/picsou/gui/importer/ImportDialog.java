@@ -68,7 +68,7 @@ public class ImportDialog implements RealAccountImporter {
     localDirectory = new DefaultDirectory(directory);
     localDirectory.add(new SelectionService());
 
-    dialog = PicsouDialog.create(owner, directory);
+    dialog = PicsouDialog.create(this, owner, directory);
     dialog.setOpenRequestIsManaged(true);
 
     controller = new ImportController(this, repository, localRepository, directory, isSynchro);
@@ -259,9 +259,10 @@ public class ImportDialog implements RealAccountImporter {
     for (Map.Entry<Integer, DoubleRef> accountAndTotal : accounts.entrySet()) {
       Glob account = localRepository.get(Key.create(Account.TYPE, accountAndTotal.getKey()));
       if (account.get(Account.LAST_IMPORT_POSITION) == null && !AccountCardType.DEFERRED.getId().equals(account.get(Account.CARD_TYPE))) {
-        AccountPositionEditionDialog dialog =
-          new AccountPositionEditionDialog(account, accountAndTotal.getValue().value, localRepository, localDirectory, this.dialog);
-        dialog.show();
+        double value = accountAndTotal.getValue().value;
+        AccountPositionEditionDialog positionDialog =
+          new AccountPositionEditionDialog(account, value, localRepository, localDirectory, this.dialog);
+        positionDialog.show();
       }
     }
   }

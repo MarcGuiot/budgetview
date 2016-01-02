@@ -750,6 +750,7 @@ public class AnalysisTableViewTest extends LoggedInFunctionalTestCase {
   public void testMirrorSavingsSeriesAreNotShown() throws Exception {
 
     OfxBuilder.init(this)
+      .addBankAccount("00001123", 0, "2008/07/12")
       .addTransaction("2008/07/12", -95.00, "Virement")
       .load();
 

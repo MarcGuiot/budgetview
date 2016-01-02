@@ -34,8 +34,6 @@
            minimumSize="(18,20)" preferredSize="(18,20)" maximumSize="(18,20)"
            fill="none" cursor="hand" icon="edit.png" rolloverIcon="edit_rollover.png"/>
 
-    <style selector="label.leftArrow" icon="leftArrow(14,40,8,30,categorization.selection.arrow)" margin="5" marginLeft="0"
-           weightX="0.01"/>
   </styles>
 
   <column name="transactionDetails">
@@ -49,25 +47,8 @@
         </column>
       </card>
 
-      <card name="noDataShown">
-        <column marginBottom="10">
-          <row>
-            <label styleClass="leftArrow"/>
-            <htmlEditorPane name="noDataShownMessage" text="$transaction.details.noDataShown" hyperlinkListener="hyperlinkHandler"/>
-          </row>
-          <filler fill="vertical"/>
-        </column>
-      </card>
-
-      <card name="noSelection">
-        <column marginBottom="10">
-          <row>
-            <label styleClass="leftArrow"/>
-            <htmlEditorPane name="noSelectionMessage" text="$transaction.details.noSelection"
-                            hyperlinkListener="hyperlinkHandler"/>
-          </row>
-          <filler fill="vertical"/>
-        </column>
+      <card name="nothingShown">
+        <panel name="nothingShownPanel"/>
       </card>
 
       <card name="selection">

@@ -168,18 +168,22 @@ public class ProjectTransferTest extends LoggedInFunctionalTestCase {
     accounts.createNewAccount()
       .setName("Main Account 1")
       .selectBank("CIC")
+      .setAccountNumber("001111")
+      .setPosition(1000.00)
       .setAsMain()
       .validate();
 
     accounts.createNewAccount()
       .setName("Main Account 2")
       .selectBank("CIC")
+      .setAccountNumber("002222")
       .setAsMain()
       .validate();
 
     accounts.createNewAccount()
       .setName("Savings Account 1")
       .selectBank("CIC")
+      .setAccountNumber("00333")
       .setAsSavings()
       .validate();
 
@@ -187,17 +191,17 @@ public class ProjectTransferTest extends LoggedInFunctionalTestCase {
       .addBankAccount("001111", 1000.00, "2010/12/01")
       .addTransaction("2010/12/01", 1000.00, "Income")
       .addTransaction("2010/12/01", 100.00, "Transfer 1")
-      .loadInAccount("Main Account 1");
+      .load();
 
     OfxBuilder.init(this)
       .addBankAccount("002222", 10000.00, "2010/12/01")
       .addTransaction("2010/12/01", 1000.00, "Blah")
-      .loadInAccount("Main Account 2");
+      .load();
 
     OfxBuilder.init(this)
       .addBankAccount("00333", 10000.00, "2010/12/01")
       .addTransaction("2010/12/01", 1000.00, "Blah")
-      .loadInAccount("Savings Account 1");
+      .load();
 
     projects.createFirst();
     currentProject
@@ -601,11 +605,13 @@ public class ProjectTransferTest extends LoggedInFunctionalTestCase {
     budgetView.transfer.checkSeries("Transfer", "0.00", "10.00");
   }
 
-  private void createMainAccount(String mainAccountName) {
+  private void createMainAccount(String mainAccountName) throws Exception {
     accounts.createNewAccount()
+      .setAsMain()
       .setName(mainAccountName)
       .selectBank("CIC")
-      .setAsMain()
+      .setAccountNumber("001111")
+      .setPosition(1000.00)
       .validate();
 
     OfxBuilder.init(this)
@@ -620,6 +626,8 @@ public class ProjectTransferTest extends LoggedInFunctionalTestCase {
     accounts.createNewAccount()
       .setName(savingsAccountName)
       .selectBank("CIC")
+      .setAccountNumber("002222")
+      .setPosition(1000.00)
       .setAsSavings()
       .validate();
 

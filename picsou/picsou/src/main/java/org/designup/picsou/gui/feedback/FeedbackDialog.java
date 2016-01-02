@@ -14,7 +14,6 @@ import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.splits.utils.Disposable;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.utils.Files;
-import org.globsframework.utils.Log;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
@@ -35,7 +34,7 @@ public class FeedbackDialog {
   public FeedbackDialog(Window parent, GlobRepository repository, final Directory directory) {
     this.directory = directory;
 
-    dialog = PicsouDialog.create(parent, directory);
+    dialog = PicsouDialog.create(this, parent, directory);
 
     final GlobsPanelBuilder builder = new GlobsPanelBuilder(getClass(), "/layout/feedback/feedbackDialog.splits",
                                                             repository, directory);

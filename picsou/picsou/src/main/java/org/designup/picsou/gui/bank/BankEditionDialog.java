@@ -60,7 +60,7 @@ public class BankEditionDialog {
   }
 
   private void createDialog(Window owner) {
-    dialog = PicsouDialog.create(owner, true, localDirectory);
+    dialog = PicsouDialog.create(this, owner, true, localDirectory);
     OkAction okAction = new OkAction();
 
     builder = new GlobsPanelBuilder(getClass(), "/layout/bank/bankEditionDialog.splits",

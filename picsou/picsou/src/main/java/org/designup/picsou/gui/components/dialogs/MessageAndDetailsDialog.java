@@ -31,7 +31,7 @@ public class MessageAndDetailsDialog {
       }
     }));
 
-    dialog = PicsouDialog.create(owner, true, directory);
+    dialog = PicsouDialog.create(this, owner, true, directory);
     dialog.addPanelWithButton(builder.<JPanel>load(), new CloseDialogAction(dialog));
     dialog.pack();
   }

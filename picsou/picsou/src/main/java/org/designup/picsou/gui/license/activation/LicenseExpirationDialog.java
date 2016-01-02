@@ -83,7 +83,7 @@ public class LicenseExpirationDialog {
     });
     sendAction.setEnabled(Strings.isNotEmpty(localGlobRepository.get(User.KEY).get(User.EMAIL)));
     emailField.getComponent().addActionListener(sendAction);
-    dialog = PicsouDialog.createWithButton(parent, builder.<JPanel>load(), new ValidateAction(), directory);
+    dialog = PicsouDialog.createWithButton(this, parent, builder.<JPanel>load(), new ValidateAction(), directory);
     dialog.pack();
   }
 

@@ -38,6 +38,8 @@ import java.awt.event.ActionEvent;
 import java.util.List;
 import java.util.Set;
 
+import static org.globsframework.model.FieldValue.*;
+
 public class ImportPreviewPanel extends AbstractImportStepPanel implements MessageHandler {
   private GlobRepository repository;
   private LocalGlobRepository localRepository;
@@ -341,13 +343,19 @@ public class ImportPreviewPanel extends AbstractImportStepPanel implements Messa
         }
 
         sessionRepository.update(realAccount.getKey(),
-                                 FieldValue.value(RealAccount.ACCOUNT, currentlySelectedAccount.get(Account.ID)));
+                                 value(RealAccount.ACCOUNT, currentlySelectedAccount.get(Account.ID)));
+        if (currentlySelectedAccount.get(Account.LAST_IMPORT_POSITION) == null
+            && Strings.isNotEmpty(realAccount.get(RealAccount.POSITION))) {
+          sessionRepository.update(currentlySelectedAccount.getKey(),
+                                   Account.LAST_IMPORT_POSITION,
+                                   Double.parseDouble(realAccount.get(RealAccount.POSITION)));
+        }
         deleteAccountIfDuplicate(realAccount);
         Integer bankId = realAccount.get(RealAccount.BANK);
         sessionRepository.update(currentlySelectedAccount.getKey(),
-                                 FieldValue.value(Account.UPDATE_MODE, AccountUpdateMode.AUTOMATIC.getId()));
+                                 value(Account.UPDATE_MODE, AccountUpdateMode.AUTOMATIC.getId()));
         if (bankId != null && currentlySelectedAccount.get(Account.BANK) == null){
-          sessionRepository.update(currentlySelectedAccount.getKey(), FieldValue.value(Account.BANK, bankId));
+          sessionRepository.update(currentlySelectedAccount.getKey(), value(Account.BANK, bankId));
         }
         newAccount = null;
         controller.completeImport(realAccount, currentlySelectedAccount, dateFormatSelectionPanel.getSelectedFormat());

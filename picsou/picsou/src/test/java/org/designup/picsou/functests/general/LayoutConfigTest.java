@@ -30,11 +30,6 @@ public class LayoutConfigTest extends LoggedInFunctionalTestCase {
     resize(mainWindow, 900, 700);
     assertThat(mainWindow.sizeEquals(900, 700));
 
-    views.selectData();
-    transactions.showGraph();
-    checkSplitPane("transactionChartSplit", 0.75);
-    setSplitPane("transactionChartSplit", 0.65);
-
     views.selectBudget();
     checkSplitPane("horizontalSplit", 0.5);
     setSplitPane("horizontalSplit", 0.25);
@@ -47,9 +42,6 @@ public class LayoutConfigTest extends LoggedInFunctionalTestCase {
     restartApplication();
 
     assertThat(mainWindow.sizeEquals(900, 700));
-
-    views.selectData();
-    checkSplitPane("transactionChartSplit", 0.65);
 
     views.selectBudget();
     checkSplitPane("horizontalSplit", 0.25);

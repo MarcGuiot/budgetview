@@ -36,7 +36,7 @@ public class CreateMobileAccountDialog extends AbstractMobileAccountDialog {
   }
 
   private void createDialog() {
-    dialog = PicsouDialog.create(localDirectory.get(JFrame.class), localDirectory);
+    dialog = PicsouDialog.create(this, localDirectory.get(JFrame.class), localDirectory);
     progressBar = new ProgressPanel();
 
     GlobsPanelBuilder builder = new GlobsPanelBuilder(getClass(), "/layout/mobile/createMobileAccountDialog.splits",

@@ -288,6 +288,7 @@ public class AccountEditionTest extends LoggedInFunctionalTestCase {
 
     OfxBuilder
       .init(this)
+      .addBankAccount(OfxBuilder.DEFAULT_ACCOUNT_ID, 0, "2008/08/15")
       .addTransaction("2008/04/30", -100, "Free")
       .addTransaction("2008/05/25", -100, "France Telecom")
       .addTransaction("2008/06/15", -100, "Auchan")
@@ -372,6 +373,7 @@ public class AccountEditionTest extends LoggedInFunctionalTestCase {
     accountEditionChecker.validate();
 
     OfxBuilder.init(this)
+      .addBankAccount(OfxBuilder.DEFAULT_ACCOUNT_ID, 0, "2008/06/01")
       .addTransaction("2008/06/01", 1000.00, "prelevement")
       .loadInNewAccount();
 
@@ -395,6 +397,7 @@ public class AccountEditionTest extends LoggedInFunctionalTestCase {
 
   public void testUpdateDeferredCardAmount() throws Exception {
     OfxBuilder.init(this)
+      .addBankAccount(OfxBuilder.DEFAULT_ACCOUNT_ID, 0, "2008/06/01")
       .addTransaction("2008/06/01", 1000.00, "Salaire/oct")
       .load();
 
@@ -437,6 +440,7 @@ public class AccountEditionTest extends LoggedInFunctionalTestCase {
 
   public void testImportWithFirstTransactionBeforeAndAfterOpenCloseAccount() throws Exception {
     OfxBuilder.init(this)
+      .addBankAccount(OfxBuilder.DEFAULT_ACCOUNT_ID, 0, "2008/06/01")
       .addTransaction("2008/06/01", 1000.00, "Salaire/oct")
       .load();
 
@@ -450,6 +454,7 @@ public class AccountEditionTest extends LoggedInFunctionalTestCase {
       .check();
 
     OfxBuilder.init(this)
+      .addBankAccount(OfxBuilder.DEFAULT_ACCOUNT_ID, 1000.00, "2008/06/01")
       .addTransaction("2008/05/01", 1000.00, "Salaire/oct")
       .addTransaction("2008/08/01", 1000.00, "Salaire/oct")
       .load();
@@ -466,6 +471,7 @@ public class AccountEditionTest extends LoggedInFunctionalTestCase {
 
   public void testImportWithFirstTransactionRealyBeforeAndAfterOpenCloseAccount() throws Exception {
     OfxBuilder.init(this)
+      .addBankAccount(OfxBuilder.DEFAULT_ACCOUNT_ID, 0, "2008/06/01")
       .addTransaction("2008/06/01", 1000.00, "Salaire/oct")
       .load();
 
@@ -479,6 +485,7 @@ public class AccountEditionTest extends LoggedInFunctionalTestCase {
       .check();
 
     OfxBuilder.init(this)
+      .addBankAccount(OfxBuilder.DEFAULT_ACCOUNT_ID, 1000.00, "2008/08/01")
       .addTransaction("2008/04/01", 1000.00, "Salaire/oct")
       .addTransaction("2008/08/01", 1000.00, "Salaire/oct")
       .load();
@@ -495,6 +502,7 @@ public class AccountEditionTest extends LoggedInFunctionalTestCase {
 
   public void testImportCardWithMonthBeforeFirstMonth() throws Exception {
     OfxBuilder.init(this)
+      .addBankAccount(OfxBuilder.DEFAULT_ACCOUNT_ID, 0, "2008/06/01")
       .addTransaction("2008/06/01", 1000.00, "Salaire/oct")
       .load();
 
