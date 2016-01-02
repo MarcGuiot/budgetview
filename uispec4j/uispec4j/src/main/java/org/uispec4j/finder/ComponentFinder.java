@@ -46,7 +46,7 @@ public class ComponentFinder {
       Collections.sort(names);
       String message =
         Messages.computeNotFoundMessage(componentType, name, names);
-      throw new ItemNotFoundException(message + " : " + panel.getDescription());
+      throw new ItemNotFoundException(message + ":\n" + panel.getDescription());
     }
   }
 
@@ -70,7 +70,7 @@ public class ComponentFinder {
     Component[] foundComponents = getComponents(matchers, swingClasses);
     if (foundComponents.length > 1) {
       throw new ComponentAmbiguityException(Messages.computeAmbiguityMessage(foundComponents, type, name)
-                                            + " : " + panel.getDescription());
+                                            + ":\n" + panel.getDescription());
     }
     return (foundComponents.length == 0) ? null : foundComponents[0];
   }

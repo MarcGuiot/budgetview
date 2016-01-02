@@ -6,7 +6,6 @@ import org.uispec4j.assertion.testlibrairies.AssertAdapter;
 import org.uispec4j.finder.FinderUtils;
 import org.uispec4j.finder.StringMatcher;
 import org.uispec4j.utils.ArrayUtils;
-import org.uispec4j.xml.XmlWriter;
 
 import javax.swing.*;
 import java.awt.*;
@@ -48,7 +47,7 @@ public class ComboBox extends AbstractSwingUIComponent {
     this.cellValueConverter = cellValueConverter;
   }
 
-  protected void getSubDescription(Container container, XmlWriter.Tag tag) {
+  protected void printDescriptionForChildren(Container container, String indent, StringBuilder builder) {
     // ignore the combo inner button
   }
 

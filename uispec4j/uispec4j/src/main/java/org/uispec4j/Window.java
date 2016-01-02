@@ -3,7 +3,6 @@ package org.uispec4j;
 import org.uispec4j.assertion.Assertion;
 import org.uispec4j.assertion.UISpecAssert;
 import org.uispec4j.assertion.testlibrairies.AssertAdapter;
-import org.uispec4j.xml.XmlWriter;
 
 import javax.swing.*;
 import java.awt.*;
@@ -50,8 +49,9 @@ public class Window extends Panel {
     return "window";
   }
 
-  protected void addAttributes(Component component, XmlWriter.Tag tag) {
-    tag.addAttribute("title", adapter.getTitle());
+  protected void addAttributes(Component component, StringBuilder builder) {
+    addAttribute("title", adapter.getTitle(), builder);
+    super.addAttributes(component, builder);
   }
 
   public Assertion containsMenuBar() {
@@ -101,10 +101,10 @@ public class Window extends Panel {
     UISpecAssert.assertTrue(titleContains(expected));
   }
 
-  protected void getSubDescription(Container container, XmlWriter.Tag tag) {
+  protected void printDescriptionForChildren(Container container, String indent, StringBuilder builder) {
     Container internalAwtContainer = adapter.getInternalAwtContainer();
     Panel contentPane = new Panel(internalAwtContainer);
-    contentPane.getSubDescription(internalAwtContainer, tag);
+    contentPane.printDescriptionForChildren(internalAwtContainer, indent, builder);
   }
 
   public Container getInternalAwtContainer() {

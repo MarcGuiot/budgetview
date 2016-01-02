@@ -5,6 +5,7 @@ import org.uispec4j.assertion.testlibrairies.AssertAdapter;
 import org.uispec4j.utils.TriggerRunner;
 
 import javax.swing.*;
+import java.awt.*;
 
 /**
  * Base class for button-like components (toggle buttons, check boxes, etc.)
@@ -14,6 +15,11 @@ public abstract class AbstractButton extends AbstractSwingUIComponent implements
 
   protected AbstractButton(javax.swing.AbstractButton abstractButton) {
     this.abstractButton = abstractButton;
+  }
+
+  protected void addAttributes(Component component, StringBuilder builder) {
+    addAttribute("text", abstractButton.getText(), builder);
+    super.addAttributes(component, builder);
   }
 
   public void click() {

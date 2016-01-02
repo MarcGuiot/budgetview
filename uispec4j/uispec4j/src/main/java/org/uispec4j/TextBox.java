@@ -5,6 +5,7 @@ import org.uispec4j.assertion.testlibrairies.AssertAdapter;
 
 import javax.swing.*;
 import javax.swing.text.JTextComponent;
+import java.awt.*;
 
 /**
  * Wrapper for JTextComponent/JLabel components.
@@ -33,6 +34,11 @@ public class TextBox extends AbstractSwingUIComponent {
 
   public JComponent getAwtComponent() {
     return handler.getAwtComponent();
+  }
+
+  protected void addAttributes(Component component, StringBuilder builder) {
+    addAttribute("text", handler.getText(), builder);
+    super.addAttributes(component, builder);
   }
 
   /**
