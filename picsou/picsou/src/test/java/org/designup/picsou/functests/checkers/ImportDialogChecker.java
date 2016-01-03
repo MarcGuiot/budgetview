@@ -11,6 +11,7 @@ import org.uispec4j.assertion.Assertion;
 import org.uispec4j.assertion.UISpecAssert;
 import org.uispec4j.finder.ComponentMatchers;
 import org.uispec4j.interception.FileChooserHandler;
+import org.uispec4j.interception.WindowHandler;
 import org.uispec4j.interception.WindowInterceptor;
 
 import javax.swing.*;
@@ -138,6 +139,14 @@ public class ImportDialogChecker extends GuiChecker {
   public void completeImport() {
     assertTrue(dialog.getTextBox("importMessage").textIsEmpty());
     validateAndComplete(-1, -1, -1, dialog, "import.preview.ok");
+  }
+
+  public void completeImportAndSkipSeries() {
+    assertTrue(dialog.getTextBox("importMessage").textIsEmpty());
+    Trigger trigger = dialog.getButton(Lang.get("import.preview.ok")).triggerClick();
+    ImportSeriesChecker.init(trigger, dialog)
+      .cancelImportSeries();
+    UISpecAssert.assertFalse(dialog.isVisible());
   }
 
   public void completeImportWithNext() {
@@ -308,13 +317,13 @@ public class ImportDialogChecker extends GuiChecker {
   }
 
   public ImportDialogChecker selectAccount(final String accountName) {
-    assertThat(dialog.getTextBox("title").textEquals(Lang.get("import.preview.title")));
+    checkPreviewPanelShown();
     getAccountCombo().select(accountName);
     return this;
   }
 
   public ImportDialogChecker selectNewAccount() {
-    assertThat(dialog.getTextBox("title").textEquals(Lang.get("import.preview.title")));
+    checkPreviewPanelShown();
     getAccountCombo().select("a new account");
     return this;
   }
@@ -418,6 +427,7 @@ public class ImportDialogChecker extends GuiChecker {
   }
 
   public ImportDialogChecker setMainAccount() {
+    checkPreviewPanelShown();
     getAccountEditionChecker()
       .checkAccountTypeEditable()
       .setAsMain();
@@ -425,8 +435,13 @@ public class ImportDialogChecker extends GuiChecker {
   }
 
   public ImportDialogChecker setSavingsAccount() {
+    checkPreviewPanelShown();
     getAccountEditionChecker().setAsSavings();
     return this;
+  }
+
+  public void checkPreviewPanelShown() {
+    assertThat(dialog.getTextBox("title").textEquals(Lang.get("import.preview.title")));
   }
 
   private Panel getAccountTypeSelectionPanel() {

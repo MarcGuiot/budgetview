@@ -165,12 +165,20 @@ public class OperationChecker {
     importDialog.completeImport();
   }
 
-  public void importQifFile(String file, String bank) {
+  public void importQifFile(String file) {
     openImportDialog()
       .setFilePath(file)
       .acceptFile()
       .selectAccount("Main account")
       .completeImport();
+  }
+
+  public void importQifFileAndSkipSeries(String file) {
+    openImportDialog()
+      .setFilePath(file)
+      .acceptFile()
+      .selectAccount("Main account")
+      .completeImportAndSkipSeries();
   }
 
   public void importQifFile(String file, String bank, Double position) {
@@ -180,6 +188,15 @@ public class OperationChecker {
       .createNewAccount(bank, "Main account", "", position)
       .setMainAccount()
       .completeImport();
+  }
+
+  public void importQifFileAndSkipSeries(String file, String bank, Double position) {
+    openImportDialog()
+      .setFilePath(file)
+      .acceptFile()
+      .createNewAccount(bank, "Main account", "", position)
+      .setMainAccount()
+      .completeImportAndSkipSeries();
   }
 
   public void importFile(String file, String targetAccount) {

@@ -4,19 +4,28 @@ import junit.framework.Assert;
 import org.designup.picsou.model.BudgetArea;
 import org.designup.picsou.utils.Lang;
 import org.uispec4j.Panel;
+import org.uispec4j.Trigger;
 import org.uispec4j.Window;
+import org.uispec4j.assertion.UISpecAssert;
+import org.uispec4j.interception.WindowInterceptor;
 
 import javax.swing.*;
 
 import static org.uispec4j.assertion.UISpecAssert.assertFalse;
+import static org.uispec4j.assertion.UISpecAssert.assertThat;
 
 public class ImportSeriesChecker {
   private Window dialog;
   private Panel parent;
 
+  public static ImportSeriesChecker init(Trigger trigger, Window importDialog) {
+    return new ImportSeriesChecker(WindowInterceptor.getModalDialog(trigger), importDialog);
+  }
+
   public ImportSeriesChecker(Window dialog, Panel parent) {
     this.dialog = dialog;
     this.parent = parent;
+    assertThat(dialog.getTextBox("title").textEquals(Lang.get("import.series.title")));
   }
 
   public ImportSeriesChecker checkContains(String... seriesName) {

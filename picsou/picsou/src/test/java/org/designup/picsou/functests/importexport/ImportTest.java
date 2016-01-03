@@ -490,7 +490,7 @@ public class ImportTest extends LoggedInFunctionalTestCase {
       .addTransaction("2006/01/12", -5, "Menu K")
       .addTransaction("2006/01/12", -6, "Menu K")
       .save();
-    operations.importQifFile(file2, SOCIETE_GENERALE);
+    operations.importQifFile(file2);
 
     transactions.getTable().getHeader().click(1);
     transactions

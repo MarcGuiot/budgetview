@@ -14,36 +14,36 @@ public class LCLTest extends SpecificBankTestCase {
   }
 
   public void testMoneyQifDateFr() throws Exception {
-    operations.importQifFile(getFile("lcl_money_date_fr.qif"), "LCL", 0.);
+    operations.importQifFileAndSkipSeries(getFile("lcl_money_date_fr.qif"), "LCL", 0.);
     checkContent();
   }
 
   public void testMoneyQifDateUs() throws Exception {
-    operations.importQifFile(getFile("lcl_money_date_us.qif"), "LCL", 0.);
+    operations.importQifFileAndSkipSeries(getFile("lcl_money_date_us.qif"), "LCL", 0.);
     checkContent();
   }
 
   public void testQuickenQifDateFr() throws Exception {
-    operations.importQifFile(getFile("lcl_quicken_date_fr.qif"), "LCL", 0.);
+    operations.importQifFileAndSkipSeries(getFile("lcl_quicken_date_fr.qif"), "LCL", 0.);
     checkContent();
   }
 
   public void testQuickenQifDateUs() throws Exception {
-    operations.importQifFile(getFile("lcl_quicken_date_us.qif"), "LCL", 0.);
+    operations.importQifFileAndSkipSeries(getFile("lcl_quicken_date_us.qif"), "LCL", 0.);
     checkContent();
   }
 
   public void testTousComptesFaitsQifDateFr() throws Exception {
-    operations.importQifFile(getFile("lcl_tout_compte_fait_date_fr.qif"), "LCL", 0.);
+    operations.importQifFileAndSkipSeries(getFile("lcl_tout_compte_fait_date_fr.qif"), "LCL", 0.);
     checkContent();
   }
 
   public void testImportAll() throws Exception {
-    operations.importQifFile(getFile("lcl_tout_compte_fait_date_fr.qif"), "LCL", 0.);
-    operations.importQifFile(getFile("lcl_quicken_date_us.qif"), "LCL");
-    operations.importQifFile(getFile("lcl_quicken_date_fr.qif"), "LCL");
-    operations.importQifFile(getFile("lcl_money_date_us.qif"), "LCL");
-    operations.importQifFile(getFile("lcl_money_date_fr.qif"), "LCL");
+    operations.importQifFileAndSkipSeries(getFile("lcl_tout_compte_fait_date_fr.qif"), "LCL", 0.);
+    operations.importQifFileAndSkipSeries(getFile("lcl_quicken_date_us.qif"));
+    operations.importQifFileAndSkipSeries(getFile("lcl_quicken_date_fr.qif"));
+    operations.importQifFileAndSkipSeries(getFile("lcl_money_date_us.qif"));
+    operations.importQifFileAndSkipSeries(getFile("lcl_money_date_fr.qif"));
     checkContent();
   }
 
