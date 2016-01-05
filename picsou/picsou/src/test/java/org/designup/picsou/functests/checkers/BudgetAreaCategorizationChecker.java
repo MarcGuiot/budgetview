@@ -236,6 +236,22 @@ public class BudgetAreaCategorizationChecker extends GuiChecker {
     return this;
   }
 
+  public BudgetAreaCategorizationChecker checkSeriesContainsSubSeriesList(String series, String... subSeries) {
+    TestUtils.assertEquals(getSubSeriesNames(series), subSeries);
+    return this;
+  }
+
+  private List<String> getSubSeriesNames(String series) {
+    RadioButton seriesRadio = panel.getRadioButton(series);
+    Panel seriesPanel = seriesRadio.getContainer("seriesBlock").getPanel("subSeriesRepeat");
+    List<String> result = new ArrayList<String>();
+    UIComponent[] radioButtons = seriesPanel.getUIComponents(RadioButton.class);
+    for (UIComponent radioButton : radioButtons) {
+      result.add(radioButton.getLabel());
+    }
+    return result;
+  }
+
   public BudgetAreaCategorizationChecker checkSeriesDoesNotContainSubSeries(String seriesName,
                                                                             String... subSeriesNames) {
     RadioButton seriesRadio = panel.getRadioButton(seriesName);

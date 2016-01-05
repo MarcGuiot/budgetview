@@ -17,6 +17,7 @@ import org.globsframework.model.format.GlobListStringifier;
 import org.globsframework.model.format.GlobStringifier;
 import org.globsframework.model.utils.DefaultChangeSetListener;
 import org.globsframework.model.utils.GlobFieldComparator;
+import org.globsframework.model.utils.GlobFieldsComparator;
 import org.globsframework.model.utils.GlobMatchers;
 import org.globsframework.utils.directory.Directory;
 
@@ -132,7 +133,7 @@ public class SeriesChooserComponentFactory implements RepeatComponentFactory<Glo
 
     GlobsPanelBuilder.addRepeat("subSeriesRepeat", SubSeries.TYPE,
                                 GlobMatchers.fieldEquals(SubSeries.SERIES, series.get(Series.ID)),
-                                new GlobFieldComparator(SubSeries.ID), repository, cellBuilder,
+                                new GlobFieldsComparator(SubSeries.NAME, SubSeries.ID), repository, cellBuilder,
                                 new SubSeriesComponentFactory(seriesName, "subSeriesSelector", budgetArea, updateTargetAccount ? series : null));
 
     updateToggleSelection(selector, selectionService.getSelection(Transaction.TYPE), seriesKey);
