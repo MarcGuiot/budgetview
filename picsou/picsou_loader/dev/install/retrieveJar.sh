@@ -12,19 +12,19 @@ then
   cd ../../
 fi
 
-if [ -d ../picsou/obfuscated ]; # je n'ai pas trouve comment faire un not (!) 
+if [ -d ../picsou/target/obfuscated ]; # je n'ai pas trouve comment faire un not (!)
 then
   echo -n ""
 else
-  echo directory ../picsou/obfuscated is missing from `pwd`
+  echo directory ../picsou/target/obfuscated is missing from `pwd`
   exit -1
 fi
 
 JAR_VERSION=$1
 
-curl -o ../picsou/obfuscated/budgetview.jar http://www.mybudgetview.fr/files/app/budgetview${JAR_VERSION}.jar
+curl -o ../picsou/target/obfuscated/budgetview.jar http://www.mybudgetview.fr/files/app/budgetview${JAR_VERSION}.jar
 
-curl -o ../picsou/obfuscated/ http://www.mybudgetview.fr/files/app/ChangeLogOutput-${JAR_VERSION}.txt.bz2 ../picsou/
+curl -o ../picsou/target/obfuscated/ http://www.mybudgetview.fr/files/app/ChangeLogOutput-${JAR_VERSION}.txt.bz2 ../picsou/
 
 rm ../picsou/ChangeLogOutput.txt
 bunzip2 ../picsou/ChangeLogOutput-${JAR_VERSION}.txt.bz2

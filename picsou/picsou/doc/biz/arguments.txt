@@ -1,7 +1,0 @@
-Argumentaire pour l'outil :
-
-- Outil simple - pas de jargon compta, c'est accessible a tout le monde
-
-- On supprime la partie rebarbative de la gestion de comptes : saisie/pointage des operations + categorisation
-
-- 

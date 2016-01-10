@@ -1,6 +1,6 @@
 #/bin/sh
 
-SOFT_VERSION=`java -jar ../picsou/obfuscated/budgetview.jar -v -soft | grep "Software version:" |
+SOFT_VERSION=`java -jar ../picsou/target/obfuscated/budgetview.jar -v -soft | grep "Software version:" |
               sed -e 's/Software version://g' | sed -e 's/  *//g'`
 
 mv BudgetView-en.dmg BudgetView-${SOFT_VERSION}-en.dmg

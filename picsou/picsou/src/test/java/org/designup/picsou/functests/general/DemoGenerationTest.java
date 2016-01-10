@@ -57,9 +57,9 @@ public class DemoGenerationTest extends LoggedInFunctionalTestCase {
 
   private static DemoGenerationTest createTest() throws Exception {
     DemoGenerationTest test = new DemoGenerationTest();
-//    test.setLocalPrevaylerPath(PREVAYLER_DIR);
-//    test.setInMemory(true);
-//    test.setDeleteLocalPrevayler(true);
+    test.setLocalPrevaylerPath(PREVAYLER_DIR);
+    test.setInMemory(true);
+    test.setDeleteLocalPrevayler(true);
     test.setUp();
     return test;
   }

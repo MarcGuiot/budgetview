@@ -6,16 +6,16 @@
 #  cd ../../
 #fi;
 
-if ! [ -a ../picsou/obfuscated/budgetview.jar ];
+if ! [ -a ../picsou/target/obfuscated/budgetview.jar ];
 then
-  echo ../picsou/obfuscated/budgetview.jar do not exist from `pwd`
+  echo ../picsou/target/obfuscated/budgetview.jar do not exist from `pwd`
   exit 1
 fi;
 
-VERSION=`java -jar ../picsou/obfuscated/budgetview.jar -v -jar | grep "Jar version"`
+VERSION=`java -jar ../picsou/target/obfuscated/budgetview.jar -v -jar | grep "Jar version"`
 JAR_VERSION=`echo $VERSION | sed -e 's/Jar version://g' | sed -e 's/  *//g'`
 
-SOFT_VERSION=`java -jar ../picsou/obfuscated/budgetview.jar -v -soft | grep "Software version:" |
+SOFT_VERSION=`java -jar ../picsou/target/obfuscated/budgetview.jar -v -soft | grep "Software version:" |
               sed -e 's/Software version://g' | sed -e 's/  *//g'`
 
 echo jar version : $JAR_VERSION
@@ -23,7 +23,7 @@ echo soft version : $SOFT_VERSION
 
 if [ "${JAR_VERSION}" == "" ];
 then
-  echo can not extract version from ../picsou/obfuscated/budgetview.jar
+  echo can not extract version from ../picsou/target/obfuscated/budgetview.jar
   exit 2
 fi
 
@@ -96,7 +96,7 @@ then
    scp BudgetView-${SOFT_VERSION}-fr.dmg fr_mybudgetview@91.121.123.100:files/app
 fi
 
-scp ../picsou/obfuscated/budgetview${JAR_VERSION}.jar ../picsou/ChangeLogOutput-${JAR_VERSION}.txt.bz2 build@91.121.123.100:versions/
+scp ../picsou/target/obfuscated/budgetview${JAR_VERSION}.jar ../picsou/ChangeLogOutput-${JAR_VERSION}.txt.bz2 build@91.121.123.100:versions/
 
 if [ -a ../picsou_licence_server/budgetviewLicenceServer.jar ];
 then
