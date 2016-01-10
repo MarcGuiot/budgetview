@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<globs>
+  <bankFormat id='103'>
+    <bank name="Banque Desjardins" country="ca" url="http://www.desjardinsbank.com/fr/index.html" id="102102"/>
+    <bank name="TD" country="ca" url="https://www.td.com" id="102103"/>
+    <bank name="Banque de Montreal" country="ca" url="http://www.bmo.com" id="102104"/>
+    <bank name="CIBC" country="ca" url="https://www.cibc.com" id="102105"/>
+    <bank name="Scotiabank" country="ca" url="http://www.scotiabank.com" id="102106"/>
+  </bankFormat>
+</globs>

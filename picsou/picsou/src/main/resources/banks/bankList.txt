@@ -20,3 +20,4 @@ be/fortis.xml
 be/dexia.xml
 be/belgian_banks.xml
 ch/swiss_banks.xml
+ca/canadian_banks.xml

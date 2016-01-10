@@ -1,10 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <globs>
   <bankFormat id='102'>
-
     <bank name="ING Belgique" country="be" url="https://www.ing.be/fr" id="102100"/>
     <bank name="KBC Banque" country="be" url="https://www.kbc.be" id="102101"/>
-    <bank name="Banque Desjardins" country="be" url="http://www.desjardinsbank.com/fr/index.html" id="102102"/>
-
   </bankFormat>
 </globs>
