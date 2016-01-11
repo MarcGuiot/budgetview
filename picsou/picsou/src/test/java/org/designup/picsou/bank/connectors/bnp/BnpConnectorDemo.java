@@ -101,6 +101,13 @@ public class BnpConnectorDemo {
                   engine.executeScript("$('#main-iframe').contents().find('a:contains(Suivant)').click();");
                   return next;
                 }
+              })
+              .setNext(new LastAction(){
+                public Action action(Document document, WebEngine engine) {
+                  System.out.println("Done ident");
+                  engine.executeScript("clearInterval(intervalTimer);");
+                  return null;
+                }
               });
               window.setMember("app", new JavaBridge(document, engine, action));
               engine.executeScript("intervalTimer = setInterval(" +
@@ -128,6 +135,13 @@ public class BnpConnectorDemo {
               }).setNext(new ProtectedAction("submitIdent") {
                 public void run(WebEngine engine) {
                   engine.executeScript("$('#submitIdent').click();");
+                }
+              })
+              .setNext(new LastAction(){
+                public Action action(Document document, WebEngine engine) {
+                  System.out.println("Done content.");
+                  engine.executeScript("clearInterval(intervalTimer);");
+                  return null;
                 }
               });
 
@@ -322,4 +336,21 @@ public class BnpConnectorDemo {
     }
   }
 
+  private static class LastAction implements Action {
+    public boolean preCheck(Document document) {
+      return true;
+    }
+
+    public Action action(Document document, WebEngine engine) {
+      return null;
+    }
+
+    public Action setNext(Action action) {
+      throw new RuntimeException("Last action.");
+    }
+
+    public String toString() {
+      return "last action";
+    }
+  }
 }
