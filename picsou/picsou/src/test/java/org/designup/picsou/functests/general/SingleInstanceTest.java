@@ -239,7 +239,7 @@ public class SingleInstanceTest extends StartUpFunctionalTestCase {
     AccountPositionEditionChecker accountPosition = importer.selectFiles(file)
       .acceptFile()
       .defineAccount(LoggedInFunctionalTestCase.SOCIETE_GENERALE, "Main account", "11111")
-      .doImportWithBalance();
+      .doImportWithPosition();
 
     NewApplicationThread newApplication = new NewApplicationThread(file);
     newApplication.start();

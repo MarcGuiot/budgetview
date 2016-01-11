@@ -51,6 +51,8 @@ public final class Empty {
   public static final DummyCanvasPeer NULL_CANVAS_PEER = new DummyCanvasPeer();
   public static final MouseInfoPeer NULL_MOUSE_INFO = new DummyMouseInfoPeer();
 
+  public static final DataTransferer NULL_DATA_TRANSFERER = new DummyDataTransferer();
+
   static {
     NULL_FONT_METRICS = new DummyFontMetrics(NULL_FONT);
   }
@@ -1147,6 +1149,52 @@ public final class Empty {
 
     public boolean isWindowUnderMouse(Window w) {
       return false;
+    }
+  }
+
+  private static class DummyDataTransferer extends DataTransferer {
+    public String getDefaultUnicodeEncoding() {
+      return null;
+    }
+
+    public boolean isLocaleDependentTextFormat(long l) {
+      return false;
+    }
+
+    public boolean isFileFormat(long l) {
+      return false;
+    }
+
+    public boolean isImageFormat(long l) {
+      return false;
+    }
+
+    protected Long getFormatForNativeAsLong(String s) {
+      return null;
+    }
+
+    protected String getNativeForFormat(long l) {
+      return null;
+    }
+
+    protected ByteArrayOutputStream convertFileListToBytes(ArrayList<String> arrayList) throws IOException {
+      return null;
+    }
+
+    protected String[] dragQueryFile(byte[] bytes) {
+      return new String[0];
+    }
+
+    protected Image platformImageBytesToImage(byte[] bytes, long l) throws IOException {
+      return null;
+    }
+
+    protected byte[] imageToPlatformBytes(Image image, long l) throws IOException {
+      return new byte[0];
+    }
+
+    public ToolkitThreadBlockedHandler getToolkitThreadBlockedHandler() {
+      return null;
     }
   }
 }

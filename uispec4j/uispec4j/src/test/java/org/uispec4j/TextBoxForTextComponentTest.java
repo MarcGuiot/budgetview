@@ -12,8 +12,6 @@ import javax.swing.*;
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
 import javax.swing.text.JTextComponent;
-import java.awt.event.FocusListener;
-import java.awt.event.FocusEvent;
 
 public class TextBoxForTextComponentTest extends TextBoxComponentTestCase {
   private JTextComponent jTextComponent;

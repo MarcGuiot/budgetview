@@ -232,12 +232,12 @@
                       </classpath>
                       <sysproperty key="with.debug" value="true"/>
                       <arg
-                          line="dump.jar ${project.build.directory}/../dev/ant/inputDump.txt ${project.build.directory}/../dev/ant/ignoreClient.txt"/>
+                          line="target/dump.jar ${project.build.directory}/../dev/ant/inputDump.txt ${project.build.directory}/../dev/ant/ignoreClient.txt"/>
                     </java>
                     <manifest file="target/classes/MANIFEST.MF">
                       <attribute name="Main-Class" value="org.designup.picsou.server.persistence.direct.Dump"/>
                     </manifest>
-                    <jar update="true" jarfile="dump.jar" manifest="target/classes/MANIFEST.MF"/>
+                    <jar update="true" jarfile="target/dump.jar" manifest="target/classes/MANIFEST.MF"/>
                     <java fork="yes"
                           classname="org.designup.shrinker.JarShrinker" failonerror="true">
                       <classpath>
@@ -255,7 +255,7 @@
                     <jar destfile="config.jar">
                       <fileset dir="src/main/resources" includes="banks/**"/>
                     </jar>
-                    <delete dir="obfuscated"/>
+                    <delete dir="target/obfuscated"/>
                     <java fork="yes" jar="dev/Zelix/ZKM.jar">
                       <jvmarg line="-Xmx1g"/>
                       <arg line="-de dev/Zelix/defaultExclude.txt dev/ant/zelix.txt"/>

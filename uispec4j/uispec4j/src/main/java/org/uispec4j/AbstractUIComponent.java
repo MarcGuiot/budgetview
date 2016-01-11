@@ -5,86 +5,90 @@ import org.uispec4j.assertion.testlibrairies.AssertAdapter;
 import org.uispec4j.utils.ColorUtils;
 import org.uispec4j.utils.KeyUtils;
 import org.uispec4j.utils.UIComponentFactory;
-import org.uispec4j.xml.XmlWriter;
+import org.uispec4j.utils.Utils;
 
 import javax.swing.*;
-import javax.swing.text.JTextComponent;
 import java.awt.*;
-import java.io.StringWriter;
 
 /**
  * Base class for UIComponent implementations.
  */
 public abstract class AbstractUIComponent implements UIComponent {
 
+  public String toString() {
+    return getDescription();
+  }
+
   public final String getDescription() {
-    StringWriter writer = new StringWriter();
-    XmlWriter.Tag tag = XmlWriter.startTag(writer, getDescriptionTypeName());
-    Component component = getAwtComponent();
-    addAttributes(component, tag);
-    if (component instanceof Container) {
-      getSubDescription((Container)component, tag);
-    }
-    tag.end();
-    return writer.toString();
+    StringBuilder builder = new StringBuilder();
+    printDescription(getAwtComponent(), "", builder, false);
+    return builder.toString();
   }
 
-  protected void getSubDescription(Container container, XmlWriter.Tag tag) {
-    Component[] components = container.getComponents();
-    for (Component component : components) {
-      getDescription(component, tag, true);
+  protected void printDescription(Component component, String indent, StringBuilder builder, boolean showVisibleOnly) {
+    if (showVisibleOnly && !component.isVisible()) {
+      return;
+    }
+
+    builder
+      .append(indent)
+      .append(component.getClass().getSimpleName());
+    addAttributes(component, builder);
+    builder.append('\n');
+
+    if (!(component instanceof Container)) {
+      return;
+    }
+
+    if (component instanceof JScrollPane) {
+      printDescriptionForChildren(((JScrollPane) component).getViewport(), indent, builder);
+      return;
+    }
+
+    AbstractUIComponent uiComponent =
+      (AbstractUIComponent) UIComponentFactory.createUIComponent(component);
+    if (uiComponent != null) {
+      uiComponent.printDescriptionForChildren((Container) component, indent, builder);
+    }
+    else {
+      printDescriptionForChildren((Container) component, indent, builder);
     }
   }
 
-  protected void getDescription(Component component, XmlWriter.Tag tag, boolean showVisibleOnly) {
-    if (!JComponent.class.isInstance(component)) {
-      return;
-    }
-    JComponent jComponent = (JComponent)component;
-    if (showVisibleOnly && !jComponent.isVisible()) {
-      return;
-    }
-    if (jComponent instanceof JScrollPane) {
-      getSubDescription(((JScrollPane)jComponent).getViewport(), tag);
-      return;
-    }
-    AbstractUIComponent guiComponent =
-      (AbstractUIComponent)UIComponentFactory.createUIComponent(jComponent);
-    if ((guiComponent == null) || isPanelWithNoName(guiComponent)) {
-      getSubDescription(jComponent, tag);
-      return;
-    }
-    XmlWriter.Tag childTag = tag.start(guiComponent.getDescriptionTypeName());
-    guiComponent.addAttributes(jComponent, childTag);
-    guiComponent.getSubDescription(jComponent, childTag);
-    childTag.end();
-  }
-
-  protected void addAttributes(Component component, XmlWriter.Tag tag) {
-    if ((component.getName() != null) && (component.getName().length() != 0)) {
-      tag.addAttribute("name", computeComponentName(component));
-    }
-    String label = getLabel();
-    if ((label != null) && (label.length() > 0)) {
-      tag.addAttribute("label", label);
-    }
-    if (component instanceof JTextComponent) {
-      String text = ((JTextComponent)component).getText();
-      if (text != null && !"".equals(text)) {
-        tag.addAttribute("text", cutTextIfLong(text));
+  protected void printDescriptionForChildren(Container container, String indent, StringBuilder builder) {
+    String newIndent = indent + "  ";
+    for (Component child : container.getComponents()) {
+      AbstractUIComponent uiComponent =
+        (AbstractUIComponent) UIComponentFactory.createUIComponent(child);
+      if (uiComponent != null) {
+        uiComponent.printDescription(child, newIndent, builder, true);
       }
-    }
-    if (component instanceof JLabel) {
-      String text = ((JLabel)component).getText();
-      if (text != null && !"".equals(text)) {
-        tag.addAttribute("text", cutTextIfLong(text));
+      else {
+        printDescription(child, newIndent, builder, true);
       }
     }
   }
 
-  private String cutTextIfLong(String text) {
-    if (text.length() > 30) {
-      return text.substring(0, 13) + "..." + text.substring(text.length() - 13);
+  protected void addAttributes(Component component, StringBuilder builder) {
+    addAttribute("name", component.getName(), builder);
+  }
+
+  protected void addAttribute(String name, String value, StringBuilder builder) {
+    if ((value == null) || value.isEmpty()) {
+      return;
+    }
+    builder.append(' ').append(name).append(":'").append(cleanUpText(value)).append("'");
+  }
+
+  private String cleanUpText(String text) {
+    text = text.trim()
+      .replaceAll("[\n\t]", " ")
+      .replaceAll(" [ ]+", " ");
+    if (text.startsWith("<html>")) {
+      text = "[HTML] " + Utils.cleanupHtml(text).trim();
+    }
+    if (text.length() > 50) {
+      return text.substring(0, 23) + "..." + text.substring(text.length() - 23);
     }
     return text;
   }

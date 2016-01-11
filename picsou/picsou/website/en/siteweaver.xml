@@ -59,12 +59,14 @@
         </page>
 
         <page file="support/faq/accounts.html" title="Accounts">
+          <page file="support/faq/accounts/account_types.html"
+                title="What kinds of accounts can I manage with BudgetView?"/>
           <page file="support/faq/accounts/using_several_accounts.html"
                 title="Is it possible to use several accounts?"/>
           <page file="support/faq/accounts/account_balance_zero.html"
                 title="Why is my account balance zero?"/>
           <page file="support/faq/accounts/deferred_debit_cards.html"
-                title="How should I treat deferred debit cards?"/>
+                title="How should I manage deferred debit cards?"/>
           <page file="support/faq/accounts/multi_currencies.html"
                 title="Is it possible to manage accounts with different currencies?"/>
           <page file="support/faq/accounts/delete_transaction.html"
@@ -89,6 +91,8 @@
                 title="How do I manage transfers from/to savings accounts?"/>
           <page file="support/faq/categorization/splitting_transactions.html"
                 title="How to I split a transaction among several envelopes?"/>
+          <page file="support/faq/categorization/shifting_transactions.html"
+                title="How can I shift a transaction to the previous or next month?"/>
         </page>
 
         <page file="support/faq/mobile.html" title="Using BudgetView on a smartphone or tablet">
@@ -129,7 +133,6 @@
 
   <copy>
     <file path="files/images_en"/>
-    <file path="files/app"/>
   </copy>
 
   <ignore targetPath="files/app"/>

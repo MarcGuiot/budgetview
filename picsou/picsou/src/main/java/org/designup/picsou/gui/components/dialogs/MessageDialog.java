@@ -61,7 +61,7 @@ public class MessageDialog {
 
     builder.add("icon", new JLabel(getIcon(type)));
 
-    dialog = PicsouDialog.create(owner, directory);
+    dialog = PicsouDialog.create(this, owner, directory);
     dialog.addPanelWithButton(builder.<JPanel>load(), new CloseDialogAction(buttonKey, dialog));
     dialog.pack();
   }

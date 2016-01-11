@@ -100,7 +100,7 @@ public class SplitTransactionDialog {
     builder = new GlobsPanelBuilder(getClass(), "/layout/transactions/splitTransactionDialog.splits",
                                     localRepository, localDirectory);
 
-    builder.add("hyperlinkHandler", new HyperlinkHandler(directory, dialog));
+    builder.add("hyperlinkHandler", new HyperlinkHandler(directory));
     addAmountPanel(builder);
     addTable(builder);
 
@@ -108,7 +108,7 @@ public class SplitTransactionDialog {
     builder.add("add", addAction);
 
     okAction = new OkAction();
-    dialog = PicsouDialog.createWithButtons(directory.get(JFrame.class),
+    dialog = PicsouDialog.createWithButtons(this, directory.get(JFrame.class),
                                             directory, builder.<JPanel>load(),
                                             okAction, new CancelAction()
     );

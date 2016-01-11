@@ -165,7 +165,7 @@ public class OperationChecker {
     importDialog.completeImport();
   }
 
-  public void importQifFile(String file, String bank) {
+  public void importQifFile(String file) {
     openImportDialog()
       .setFilePath(file)
       .acceptFile()
@@ -173,20 +173,44 @@ public class OperationChecker {
       .completeImport();
   }
 
-  public void importQifFile(String file, String bank, Double amount) {
+  public void importQifFileAndSkipSeries(String file) {
     openImportDialog()
       .setFilePath(file)
       .acceptFile()
-      .createNewAccount(bank, "Main account", "", amount)
+      .selectAccount("Main account")
+      .completeImportAndSkipSeries();
+  }
+
+  public void importQifFile(String file, String bank, Double position) {
+    openImportDialog()
+      .setFilePath(file)
+      .acceptFile()
+      .createNewAccount(bank, "Main account", "", position)
       .setMainAccount()
       .completeImport();
   }
 
+  public void importQifFileAndSkipSeries(String file, String bank, Double position) {
+    openImportDialog()
+      .setFilePath(file)
+      .acceptFile()
+      .createNewAccount(bank, "Main account", "", position)
+      .setMainAccount()
+      .completeImportAndSkipSeries();
+  }
+
   public void importFile(String file, String targetAccount) {
-    openImportDialog().selectFiles(file)
+    openImportDialog().setFilePath(file)
       .acceptFile()
       .selectAccount(targetAccount)
       .completeImport();
+  }
+
+  public void importFile(String file, String targetAccount, Double position) {
+    openImportDialog().setFilePath(file)
+      .acceptFile()
+      .selectAccount(targetAccount)
+      .completeImport(position);
   }
 
   public void importQifFiles(String bank, String file) {
@@ -439,14 +463,6 @@ public class OperationChecker {
     FeedbackDialogChecker.init(getHelpMenu().getSubMenu(Lang.get("feedback")).triggerClick())
       .checkComponents()
       .cancel();
-  }
-
-  public HelpChecker openHelp() {
-    return HelpChecker.open(getHelpMenu().getSubMenu("Index").triggerClick());
-  }
-
-  public HelpChecker openHelp(String title) {
-    return HelpChecker.open(getHelpMenu().getSubMenu(title).triggerClick());
   }
 
   public AboutChecker openAbout() {

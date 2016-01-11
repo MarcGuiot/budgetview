@@ -2,7 +2,6 @@ package org.designup.picsou.functests.checkers;
 
 import junit.framework.Assert;
 import org.designup.picsou.functests.checkers.components.AmountEditorChecker;
-import org.designup.picsou.functests.checkers.license.LicenseActivationChecker;
 import org.designup.picsou.utils.Lang;
 import org.uispec4j.*;
 
@@ -36,12 +35,12 @@ public class TransactionCreationChecker extends ViewChecker {
     return this;
   }
 
-  public TransactionCreationChecker shouldUpdatePosition(){
+  public TransactionCreationChecker shouldUpdatePosition() {
     getPanel().getCheckBox("updateAccountPosition").select();
     return this;
   }
 
-  public TransactionCreationChecker shouldNotUpdatePosition(){
+  public TransactionCreationChecker shouldNotUpdatePosition() {
     getPanel().getCheckBox("updateAccountPosition").unselect();
     return this;
   }
@@ -104,7 +103,7 @@ public class TransactionCreationChecker extends ViewChecker {
     checkShowing();
     TextBox textBox = getPanel().getInputTextBox("label");
     textBox.setText(label, false);
-    if (!textBox.getText().equals(label)){
+    if (!textBox.getText().equals(label)) {
       textBox.typeKey(Key.DELETE);
     }
     textBox.focusLost();
@@ -119,7 +118,7 @@ public class TransactionCreationChecker extends ViewChecker {
 
   public TransactionCreationChecker checkLabelAutocompletion(String label, String completion) throws Exception {
     TextBox textBox = getPanel().getInputTextBox("label");
-    JTextField textField = (JTextField)textBox.getAwtComponent();
+    JTextField textField = (JTextField) textBox.getAwtComponent();
     textField.setText(label);
 
     Assert.assertEquals(completion, textField.getText());
@@ -147,24 +146,24 @@ public class TransactionCreationChecker extends ViewChecker {
     return this;
   }
 
-  public TransactionCreationChecker setNotToBeReconciled(){
+  public TransactionCreationChecker setNotToBeReconciled() {
     getPanel().getCheckBox("shouldBeReconciled").unselect();
     assertFalse(getPanel().getCheckBox("shouldBeReconciled").isSelected());
     return this;
   }
 
-  public TransactionCreationChecker checkIsNotReconcile(){
+  public TransactionCreationChecker checkIsNotReconcile() {
     assertFalse(getPanel().getCheckBox("shouldBeReconciled").isSelected());
     return this;
   }
 
-  public TransactionCreationChecker setToBeReconciled(){
+  public TransactionCreationChecker setToBeReconciled() {
     getPanel().getCheckBox("shouldBeReconciled").select();
     assertTrue(getPanel().getCheckBox("shouldBeReconciled").isSelected());
     return this;
   }
 
-  public TransactionCreationChecker checkIsToReconcile(){
+  public TransactionCreationChecker checkIsToReconcile() {
     assertTrue(getPanel().getCheckBox("shouldBeReconciled").isSelected());
     return this;
   }
@@ -180,7 +179,7 @@ public class TransactionCreationChecker extends ViewChecker {
 
   private TransactionCreationChecker create(boolean toReconcile) {
     checkShowing();
-    if (toReconcile){
+    if (toReconcile) {
       setToBeReconciled();
     }
     else {
@@ -290,12 +289,6 @@ public class TransactionCreationChecker extends ViewChecker {
     return this;
   }
 
-  public void checkTrialExpiredMessage() {
-    LicenseActivationChecker.open(getShowHideButton().triggerClick())
-      .checkCodeIsEmpty()
-      .close();
-  }
-
   public void checkPanelSignpostShown(String text) {
     checkSignpostVisible(getPanel(), getAccountCombo(), text);
   }
@@ -308,8 +301,8 @@ public class TransactionCreationChecker extends ViewChecker {
     checkNoTipVisible(getPanel());
   }
 
-  public HelpChecker openHelp() {
-    return HelpChecker.open(getPanel().getButton("help").triggerClick());
+  public void checkHelp() {
+    BrowsingChecker.checkDisplayedUrlContains(getPanel().getButton("help").triggerClick(), "/support/faq/import/entering-transactions-manually");
   }
 
   private Panel getPanel() {

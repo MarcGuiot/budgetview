@@ -7,6 +7,8 @@ import javax.swing.plaf.basic.BasicButtonUI;
 import java.awt.*;
 import java.awt.geom.RoundRectangle2D;
 import java.awt.image.BufferedImage;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 
 public class FlatIconButtonUI extends BasicButtonUI {
 
@@ -26,6 +28,28 @@ public class FlatIconButtonUI extends BasicButtonUI {
     button.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
   }
 
+  protected void installListeners(final AbstractButton button) {
+    super.installListeners(button);
+    button.addPropertyChangeListener(AbstractButton.ICON_CHANGED_PROPERTY, new PropertyChangeListener() {
+      public void propertyChange(PropertyChangeEvent propertyChangeEvent) {
+        updateSize(button);
+      }
+    });
+    updateSize(button);
+  }
+
+  private void updateSize(AbstractButton button) {
+    Icon icon = button.getIcon();
+    if (icon != null) {
+      Dimension size = new Dimension(icon.getIconWidth() + 2 * padding,
+                                     icon.getIconHeight() + 2 * padding);
+      button.setSize(size);
+      button.setPreferredSize(size);
+      button.setMaximumSize(size);
+      button.setMinimumSize(size);
+    }
+  }
+
   public void paint(Graphics g, JComponent c) {
     JButton button = (JButton) c;
     button.setOpaque(false);
@@ -43,8 +67,8 @@ public class FlatIconButtonUI extends BasicButtonUI {
     int x = 0;
     int y = 0;
 
-    int rectWidth = width - 1 - (padding * 2);
-    int rectHeight = height - 1 - (padding * 2);
+    int rectWidth = width - 1;
+    int rectHeight = height - 1;
 
     Shape clipShape = new RoundRectangle2D.Float(x, y, rectWidth + 1, rectHeight + 1, CORNER_RADIUS, CORNER_RADIUS);
     BufferedImage clipImage = createClipImage(g2d, clipShape, rectWidth + 1, rectHeight + 1);

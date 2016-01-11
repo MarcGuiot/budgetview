@@ -18,9 +18,9 @@
            foreground="sidebar.dropdown"
            anchor="left" fill="none" weightX="1"
            font="OpenSansRegular,plain,14" cursor="hand"
-           icon="downArrow(10,18,8,8,sidebar.dropdown.arrow)"
-           rolloverIcon="downArrow(10,18,8,8,sidebar.dropdown.arrow.rollover)"
-           pressedIcon="downArrow(10,18,8,8,sidebar.dropdown.arrow.pressed)"
+           icon="arrowButton(14,14,sidebar.dropdown.arrow)"
+           rolloverIcon="arrowButton(14,14,sidebar.dropdown.arrow.rollover)"
+           pressedIcon="arrowButton(14,14,sidebar.dropdown.arrow.pressed)"
            horizontalAlignment="left"
            horizontalTextPosition="right"
            iconTextGap="2"/>

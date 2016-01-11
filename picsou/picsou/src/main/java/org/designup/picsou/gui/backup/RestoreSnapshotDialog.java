@@ -25,7 +25,7 @@ public class RestoreSnapshotDialog {
   }
 
   public void show(final GlobRepository repository) {
-    final PicsouDialog dialog = PicsouDialog.create(directory.get(JFrame.class), directory);
+    final PicsouDialog dialog = PicsouDialog.create(this, directory.get(JFrame.class), directory);
 
     final GlobsPanelBuilder builder = new GlobsPanelBuilder(getClass(), "/layout/backuprestore/restoreSnapshotDialog.splits", repository, directory);
 

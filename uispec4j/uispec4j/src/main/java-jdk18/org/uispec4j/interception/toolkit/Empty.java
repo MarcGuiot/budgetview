@@ -1,11 +1,17 @@
 package org.uispec4j.interception.toolkit;
 
 import sun.awt.CausedFocusEvent;
+import sun.awt.datatransfer.DataTransferer;
+import sun.awt.datatransfer.ToolkitThreadBlockedHandler;
+import sun.awt.image.ImageRepresentation;
 import sun.awt.image.SunVolatileImage;
 import sun.java2d.pipe.Region;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.datatransfer.DataFlavor;
+import java.awt.datatransfer.Transferable;
+import java.awt.datatransfer.UnsupportedFlavorException;
 import java.awt.event.PaintEvent;
 import java.awt.font.FontRenderContext;
 import java.awt.font.GlyphVector;
@@ -17,13 +23,12 @@ import java.awt.im.spi.InputMethodDescriptor;
 import java.awt.image.*;
 import java.awt.image.renderable.RenderableImage;
 import java.awt.peer.*;
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.net.URI;
+import java.net.URL;
 import java.text.AttributedCharacterIterator;
-import java.util.HashMap;
-import java.util.Locale;
-import java.util.Map;
+import java.text.Normalizer;
+import java.util.*;
 
 /**
  * Contains a set of empty peer class designed to keep the UISpec peer implementation clean.
@@ -65,6 +70,8 @@ public final class Empty {
   public static final InputMethodDescriptor NULL_INPUT_METHOD_DESCRIPTOR = new DummyInputMethodDescriptor();
   public static final InputMethod NULL_INPUT_METHOD = new DummyInputMethod();
   public static final MouseInfoPeer NULL_MOUSE_INFO = new DummyMouseInfoPeer();
+
+  public static final DataTransferer NULL_DATA_TRANSFERER = new DummyDataTransferer();
 
   static {
     NULL_FONT_METRICS = new DummyFontMetrics(NULL_FONT);
@@ -1277,4 +1284,111 @@ public final class Empty {
       return false;
     }
   }
+
+  private static class DummyDataTransferer extends DataTransferer {
+
+    private static final String[] predefinedClipboardNames = new String[]{"", "STRING", "FILE_NAME", "TIFF", "RICH_TEXT", "HTML", "PICT", "PDF", "URL"};
+    private static final Map<String, Long> predefinedClipboardNameMap;
+    private static final Map<Long, String> predefinedClipboardFormatMap;
+    public static final int CF_UNSUPPORTED = 0;
+    public static final int CF_STRING = 1;
+    public static final int CF_FILE = 2;
+    public static final int CF_TIFF = 3;
+    public static final int CF_RICH_TEXT = 4;
+    public static final int CF_HTML = 5;
+    public static final int CF_PICT = 6;
+    public static final int CF_PDF = 7;
+    public static final int CF_URL = 8;
+    public static final Long L_CF_TIFF;
+    private static final Long[] imageFormats;
+
+    public String getDefaultUnicodeEncoding() {
+      return null;
+    }
+
+    public boolean isLocaleDependentTextFormat(long l) {
+      return false;
+    }
+
+    public boolean isFileFormat(long l) {
+      return false;
+    }
+
+    public boolean isImageFormat(long l) {
+      return false;
+    }
+
+    protected ByteArrayOutputStream convertFileListToBytes(ArrayList<String> arrayList) throws IOException {
+      return null;
+    }
+
+    protected Image platformImageBytesToImage(byte[] bytes, long l) throws IOException {
+      return null;
+    }
+
+    protected Object translateBytesOrStream(InputStream var1, byte[] var2, DataFlavor var3, long var4, Transferable var6) throws IOException {
+      return null;
+    }
+
+    protected synchronized Long getFormatForNativeAsLong(String var1) {
+      Long var2 = (Long)predefinedClipboardNameMap.get(var1);
+      if(var2 == null) {
+        var2 = new Long(1);
+        predefinedClipboardNameMap.put(var1, var2);
+        predefinedClipboardFormatMap.put(var2, var1);
+      }
+
+      return var2;
+    }
+
+    protected String getNativeForFormat(long var1) {
+      String var3 = null;
+      if(var1 >= 0L && var1 < (long)predefinedClipboardNames.length) {
+        var3 = predefinedClipboardNames[(int)var1];
+      } else {
+        Long var4 = new Long(var1);
+        var3 = (String)predefinedClipboardFormatMap.get(var4);
+        if(var3 == null) {
+          var3 = null;
+          if(var3 != null) {
+            predefinedClipboardNameMap.put(var3, var4);
+            predefinedClipboardFormatMap.put(var4, var3);
+          }
+        }
+      }
+
+      if(var3 == null) {
+        var3 = predefinedClipboardNames[0];
+      }
+
+      return var3;
+    }
+
+    public ToolkitThreadBlockedHandler getToolkitThreadBlockedHandler() {
+      return null;
+    }
+
+    protected byte[] imageToPlatformBytes(Image var1, long var2) {
+      return new byte[0];
+    }
+
+
+    protected String[] dragQueryFile(byte[] var1) {
+      return new String[0];
+    }
+
+    static {
+      HashMap var0 = new HashMap(predefinedClipboardNames.length, 1.0F);
+      HashMap var1 = new HashMap(predefinedClipboardNames.length, 1.0F);
+
+      for(int var2 = 1; var2 < predefinedClipboardNames.length; ++var2) {
+        var0.put(predefinedClipboardNames[var2], new Long((long)var2));
+        var1.put(new Long((long)var2), predefinedClipboardNames[var2]);
+      }
+
+      predefinedClipboardNameMap = Collections.synchronizedMap(var0);
+      predefinedClipboardFormatMap = Collections.synchronizedMap(var1);
+      L_CF_TIFF = (Long)predefinedClipboardNameMap.get(predefinedClipboardNames[3]);
+      imageFormats = new Long[]{L_CF_TIFF};
+    }  }
 }

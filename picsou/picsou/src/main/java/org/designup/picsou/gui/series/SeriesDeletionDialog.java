@@ -77,7 +77,7 @@ public class SeriesDeletionDialog {
     // Uncategorize
     builder.add("uncategorize", new UncategorizeAction());
 
-    dialog = PicsouDialog.createWithButton(parent, true, builder.<JPanel>load(),
+    dialog = PicsouDialog.createWithButton(this, parent, true, builder.<JPanel>load(),
                                            new AbstractAction(Lang.get("cancel")) {
                                              public void actionPerformed(ActionEvent e) {
                                                cancel();

@@ -29,6 +29,7 @@ public class SplitPaneConfig implements LayoutConfigListener {
     this.fields = fields;
     directory.get(LayoutConfigService.class).addListener(this);
     splitPane.setProportionalLayout(true);
+    splitPane.setContinuousLayout(true);
     splitPane.addPropertyChangeListener("proportions", new PropertyChangeListener() {
       public void propertyChange(PropertyChangeEvent evt) {
         if (initCompleted) {

@@ -59,7 +59,7 @@ public class QifBuilder {
 
   public void load() throws IOException {
     save();
-    operations.importQifFile(fileName, "Société Générale");
+    operations.importQifFile(fileName);
   }
 
   public void load(int importedTransactionCount, int ignoredTransactionCount, int autocategorizedTransactionCount) throws Exception {

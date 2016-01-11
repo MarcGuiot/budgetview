@@ -11,7 +11,6 @@ import org.designup.picsou.gui.backup.RestoreSnapshotMenuAction;
 import org.designup.picsou.gui.components.PicsouFrame;
 import org.designup.picsou.gui.components.dialogs.SendImportedFileAction;
 import org.designup.picsou.gui.feedback.actions.SendFeedbackAction;
-import org.designup.picsou.gui.help.HelpService;
 import org.designup.picsou.gui.help.actions.GotoSupportAction;
 import org.designup.picsou.gui.help.actions.GotoWebsiteAction;
 import org.designup.picsou.gui.help.actions.SendLogsAction;
@@ -41,8 +40,6 @@ import org.globsframework.utils.Utils;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
-import java.awt.*;
-import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 
 public class MenuBarBuilder {
@@ -65,17 +62,19 @@ public class MenuBarBuilder {
   private Action threadsAction;
   private EditMobileAccountAction editMobileAccountAction;
   private PrintBudgetAction printBudgetAction;
-  private Action viewHelpAction;
   private ExitAction exitAction;
   private LogoutAction logoutAction;
   private AboutAction aboutAction;
 
-  public MenuBarBuilder(GlobRepository repository, ReplicationGlobRepository replicationGlobRepository, WindowManager windowManager, LogoutService logoutService, Action viewHelpAction, Directory directory, DeleteUserAction deleteUserAction) {
+  public MenuBarBuilder(GlobRepository repository,
+                        ReplicationGlobRepository replicationGlobRepository,
+                        WindowManager windowManager,
+                        LogoutService logoutService,
+                        Directory directory, DeleteUserAction deleteUserAction) {
     this.repository = repository;
     this.replicationGlobRepository = replicationGlobRepository;
     this.directory = directory;
 
-    this.viewHelpAction = viewHelpAction;
     this.importFileAction = ImportFileAction.initForMenu(Lang.get("import"), repository, directory);
     this.exportFileAction = new ExportFileAction(repository, directory);
     this.openFeedbackAction = new SendFeedbackAction(Lang.get("feedback"), repository, directory);
@@ -106,7 +105,7 @@ public class MenuBarBuilder {
     menuBar.add(createDevMenu());
     Utils.endRemove();
 
-    menuBar.add(createHelpMenu(frame));
+    menuBar.add(createHelpMenu());
 
     frame.setJMenuBar(menuBar);
   }
@@ -218,18 +217,12 @@ public class MenuBarBuilder {
     return showMenu;
   }
 
-  private JMenu createHelpMenu(final Window frame) {
+  private JMenu createHelpMenu() {
     JMenu menu = new JMenu(Lang.get("menuBar.help"));
-    menu.add(new AbstractAction(Lang.get("help.index")) {
-      public void actionPerformed(ActionEvent e) {
-        directory.get(HelpService.class).show("index", frame);
-      }
-    });
-    menu.add(viewHelpAction);
+    menu.add(new GotoSupportAction(directory));
 
     menu.addSeparator();
     menu.add(new GotoWebsiteAction(directory));
-    menu.add(new GotoSupportAction(directory));
 
     menu.addSeparator();
     menu.add(openFeedbackAction);
@@ -250,10 +243,6 @@ public class MenuBarBuilder {
 
   public ImportFileAction getImportFileAction() {
     return importFileAction;
-  }
-
-  public PrintBudgetAction getPrintBudgetAction() {
-    return printBudgetAction;
   }
 
   public AboutAction getAboutAction() {

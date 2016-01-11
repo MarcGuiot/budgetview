@@ -4,7 +4,7 @@
   <styles>
     <style selector="#budgetAreaSeriesView .amount" font="-,plain,11" anchor="right"/>
 
-    <style selector="label.totalAmount" foreground="block.total" font="-,plain,12"/>
+    <style selector="label.totalAmount" foreground="block.total" font="OpenSansRegular,plain,12"/>
 
     <style selector="repeat header label" font="-,plain,11"
            foreground="block.inner.columnTitle" horizontalTextPosition="right"
@@ -17,9 +17,10 @@
     <style id="none" selector="x" icon=""/>
 
     <style selector="button#seriesName" ui="hyperlinkButtonWithoutUnderline"
-           iconTextGap="4" icon="empty(10,18)"
-           rolloverIcon="downArrow(10,18,8,8,block.inner.edit.rollover)"
-           pressedIcon="downArrow(10,18,8,8,block.inner.edit.pressed)"/>
+           iconTextGap="4"
+           icon="arrowButton(14,14,block.inner.edit.button)"
+           rolloverIcon="arrowButton(14,14,block.inner.edit.rollover)"
+           pressedIcon="arrowButton(14,14,block.inner.edit.pressed)"/>
 
     <style id="seriesEnabled" selector="x" foreground="block.item.link"/>
     <style id="seriesDisabled" selector="x" foreground="block.item.link.inactive"/>

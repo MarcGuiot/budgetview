@@ -1166,7 +1166,7 @@ public class SeriesEditionTest extends LoggedInFunctionalTestCase {
 
   public void testCreatingAnAccountFromTheSeriesDialog() throws Exception {
 
-    accounts.createMainAccount("Main", 0.0);
+    accounts.createMainAccount("Main", "4321", 0.0);
 
     SeriesEditionDialogChecker seriesEdition = budgetView.transfer.createSeries().setName("ING");
 

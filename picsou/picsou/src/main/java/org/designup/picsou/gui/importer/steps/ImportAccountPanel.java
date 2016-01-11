@@ -11,7 +11,6 @@ import org.designup.picsou.model.RealAccount;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.SelectionService;
-import org.globsframework.model.FieldValue;
 import org.globsframework.model.Glob;
 import org.globsframework.model.repository.LocalGlobRepository;
 import org.globsframework.model.repository.LocalGlobRepositoryBuilder;
@@ -53,7 +52,8 @@ public class ImportAccountPanel extends AbstractImportStepPanel {
       public void actionPerformed(ActionEvent e) {
         if (accountPanel.check()) {
           localGlobRepository.update(importedAccount.getKey(),
-                                     FieldValue.value(RealAccount.ACCOUNT, accountPanel.getAccount().get(Account.ID)));
+                                     RealAccount.ACCOUNT,
+                                     accountPanel.getAccount().get(Account.ID));
 
           localGlobRepository.commitChanges(false);
           controller.next();

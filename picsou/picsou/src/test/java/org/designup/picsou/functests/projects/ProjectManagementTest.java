@@ -152,7 +152,7 @@ public class ProjectManagementTest extends LoggedInFunctionalTestCase {
 
     operations.hideSignposts();
 
-    accounts.createMainAccount("Main account", 1000.00);
+    accounts.createMainAccount("Main account", "4321", 1000.00);
 
     projects.createFirst();
     currentProject
@@ -179,7 +179,7 @@ public class ProjectManagementTest extends LoggedInFunctionalTestCase {
   public void testCancellingANewlyCreatedProjectDeletesIt() throws Exception {
     operations.hideSignposts();
 
-    accounts.createMainAccount("Main account", 1000.00);
+    accounts.createMainAccount("Main account", "4321", 1000.00);
 
     projects.createFirst();
     currentProject.cancelEdition();
@@ -211,7 +211,7 @@ public class ProjectManagementTest extends LoggedInFunctionalTestCase {
   public void testProjectWithItemsNotDeletedWhenCancellingEmptyName() throws Exception {
     operations.hideSignposts();
 
-    accounts.createMainAccount("Main account", 1000.00);
+    accounts.createMainAccount("Main account", "4321", 1000.00);
 
     projects.createFirst();
     currentProject
@@ -244,7 +244,7 @@ public class ProjectManagementTest extends LoggedInFunctionalTestCase {
   public void testCancellingANewlyCreatedItemDeletesIt() throws Exception {
     operations.hideSignposts();
 
-    accounts.createMainAccount("Main account", 1000.00);
+    accounts.createMainAccount("Main account", "4321", 1000.00);
 
     projects.createFirst();
     currentProject

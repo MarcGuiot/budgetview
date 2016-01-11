@@ -584,7 +584,7 @@ public class OfxImportTest extends LoggedInFunctionalTestCase {
   }
 
   public void testIfAnAccountAlreadyExistWeAskToAssociateToIt() throws Exception {
-    accounts.createMainAccount("First account", 100);
+    accounts.createMainAccount("First account", "4321", 100);
 
     String ofxFile = OfxBuilder.init(this)
       .addBankAccount(BankEntity.GENERIC_BANK_ENTITY_ID, 111, "111", 1000.00, "2008/08/10")
@@ -615,7 +615,7 @@ public class OfxImportTest extends LoggedInFunctionalTestCase {
   }
 
   public void testCreateTwoAccountsInOfxAndCheckOnlyOneIsAvailable() throws Exception {
-    accounts.createMainAccount("First account", 100);
+    accounts.createMainAccount("First account", "4321", 100);
     String ofxFile = OfxBuilder.init(this)
       .addBankAccount(BankEntity.GENERIC_BANK_ENTITY_ID, 111, "111", 1000.00, "2008/08/10")
       .addTransaction("2008/08/10", -50.00, "Virement 111")
@@ -666,8 +666,8 @@ public class OfxImportTest extends LoggedInFunctionalTestCase {
 
     // Cas de l'import de fichiers LCL où les comptes courant et carte ont le même numéro de compte
 
-    accounts.createMainAccount("Account A", 100.00);
-    accounts.createMainAccount("Account B", 100.00);
+    accounts.createMainAccount("Account A", "4321", 100.00);
+    accounts.createMainAccount("Account B", "4321", 100.00);
 
     OfxBuilder
       .init(this)

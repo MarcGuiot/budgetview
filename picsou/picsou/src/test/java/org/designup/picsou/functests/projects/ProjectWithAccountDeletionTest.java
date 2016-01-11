@@ -92,7 +92,7 @@ public class ProjectWithAccountDeletionTest extends LoggedInFunctionalTestCase {
       .checkShowsPlannedTransactions()
       .checkEmpty();
 
-    accounts.createMainAccount("Main3", 1000.00);
+    accounts.createMainAccount("Main3", "4321", 1000.00);
     transactions.initAmountContent()
       .add("11/12/2010", "Planned: Item 1", -500.00, "Item 1", 500.00, 500.00, "Main3")
       .check();
@@ -102,13 +102,17 @@ public class ProjectWithAccountDeletionTest extends LoggedInFunctionalTestCase {
     operations.hideSignposts();
     accounts.createNewAccount()
       .setName("Main account")
+      .setAccountNumber("001111")
       .selectBank("CIC")
+      .setPosition(1000.00)
       .setAsMain()
       .validate();
 
     accounts.createNewAccount()
       .setName("Savings account")
+      .setAccountNumber("002222")
       .selectBank("CIC")
+      .setPosition(1000.00)
       .setAsSavings()
       .validate();
 

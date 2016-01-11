@@ -46,23 +46,23 @@
     <!-- Form elements -->
 
     <style selector="label.formLabel"
-           font="-,plain,12" foreground="import.form.label"
+           font="-,plain,13" foreground="import.form.label"
            anchor="east" marginRight="10" weightX="0"/>
 
     <style selector="label.formLabelRight"
-           font="-,plain,12" foreground="import.form.label"
+           font="-,plain,13" foreground="import.form.label"
            anchor="west" marginLeft="10" weightX="0"/>
 
     <style selector="label.formLabelTop"
-           font="-,plain,12" foreground="import.form.label"
+           font="-,plain,13" foreground="import.form.label"
            anchor="west"/>
 
     <style selector="label.formLabelMandatorySign" text="*"
-           font="-,plain,12" foreground="import.form.mandatory"
+           font="-,plain,13" foreground="import.form.mandatory"
            anchor="west" marginLeft="5" weightX="0"/>
 
     <style selector="label.formLabelMandatoryLegend"
-           font="-,plain,11" foreground="import.form.mandatory"
+           font="-,plain,13" foreground="import.form.mandatory"
            fill="none" anchor="east" horizontalAlignment="right"
            marginRight="5" weightX="0"/>
 
@@ -121,8 +121,10 @@
 
     <style selector="button.actionsButton" tooltipText="$budgetView.actions.tooltip"
            ui="hyperlinkButton" weightX="0"
-           icon="arrow_down.png" rolloverIcon="arrow_down_roll.png"
-           styleClass="hyperlink" foreground="#0000FF"/>
+           iconTextGap="3"
+           icon="arrowButton(14,14,hyperlink)"
+           rolloverIcon="arrowButton(14,14,hyperlink.rollover)"
+           styleClass="hyperlink" foreground="hyperlink"/>
 
     <ui name="horizontalSeparatorUI" class="org.designup.picsou.gui.components.ui.LineLabelUI"/>
     <style selector="label.horizontalSeparator" ui="horizontalSeparatorUI"
@@ -150,12 +152,15 @@
 
     <!-- Hyperlinks -->
 
-    <ui name="hyperlinkButton" class="org.globsframework.gui.splits.components.HyperlinkButtonUI"/>
+    <ui name="hyperlinkButton"
+        class="org.globsframework.gui.splits.components.HyperlinkButtonUI"
+        rolloverColor="hyperlink.rollover"/>
     <style selector="button.hyperlink" ui="hyperlinkButton" fill="none" anchor="right" foreground="hyperlink"
            cursor="hand"/>
     <style selector="button.help" ui="hyperlinkButton" fill="none" anchor="right"/>
 
-    <ui name="hyperlinkButtonWithoutUnderline" class="org.globsframework.gui.splits.components.HyperlinkButtonUI"
+    <ui name="hyperlinkButtonWithoutUnderline"
+        class="org.globsframework.gui.splits.components.HyperlinkButtonUI"
         rolloverColor="hyperlink.rollover" underline="false"/>
     <style selector="button.hyperlinkWithoutUnderline" ui="hyperlinkButtonWithoutUnderline"
            fill="none" anchor="right" foreground="hyperlink"/>

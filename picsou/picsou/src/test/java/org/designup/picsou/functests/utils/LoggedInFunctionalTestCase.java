@@ -85,6 +85,7 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
     System.setProperty(PicsouApplication.DELETE_LOCAL_PREVAYLER_PROPERTY, Boolean.toString(deleteLocalPrevayler));
     System.setProperty(PicsouApplication.IS_DATA_IN_MEMORY, Boolean.toString(isInMemory));
     System.setProperty(PicsouApplication.LOG_TO_SOUT, "true");
+    System.setProperty(PicsouApplication.USER_FEEDBACK_DISABLED, Boolean.toString(true));
     System.setProperty(SingleApplicationInstanceListener.SINGLE_INSTANCE_DISABLED, "true");
     System.setProperty(ConfigService.COM_APP_LICENSE_URL, "");
     System.setProperty(ConfigService.COM_APP_FTP_URL, "");

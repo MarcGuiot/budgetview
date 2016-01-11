@@ -55,13 +55,13 @@ public class LicenseActivationDialog {
         .copy(User.TYPE)
         .get();
 
-    dialog = PicsouDialog.create(parent, directory);
+    dialog = PicsouDialog.create(this, parent, directory);
 
     Glob user = localRepository.get(User.KEY);
     builder = new GlobsPanelBuilder(getClass(), "/layout/license/activation/licenseActivationDialog.splits",
                                     localRepository, this.localDirectory);
 
-    builder.add("hyperlinkHandler", new HyperlinkHandler(directory, dialog) {
+    builder.add("hyperlinkHandler", new HyperlinkHandler(directory) {
       protected void processCustomLink(String href) {
         if ("newCode".equals(href)) {
           final String mail = localRepository.get(User.KEY).get(User.EMAIL);

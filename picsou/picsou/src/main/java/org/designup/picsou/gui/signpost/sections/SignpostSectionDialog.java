@@ -40,7 +40,7 @@ public class SignpostSectionDialog {
 
   private PicsouDialog createDialog(SignpostSection completedSection) {
 
-    dialog = PicsouDialog.create(directory.get(JFrame.class), true, directory);
+    dialog = PicsouDialog.create(this, directory.get(JFrame.class), true, directory);
 
     builder = new GlobsPanelBuilder(getClass(), "/layout/signpost/signpostSectionDialog.splits",
                                                       repository, directory);

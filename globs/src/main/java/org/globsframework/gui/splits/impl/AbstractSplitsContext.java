@@ -105,11 +105,15 @@ public abstract class AbstractSplitsContext implements SplitsContext {
   }
 
   public HyperlinkListener getHyperlinkListener(String name) {
-    HyperlinkListener listener = hyperlinkListenersByName.get(name);
+    HyperlinkListener listener = findHyperlinkListener(name);
     if (listener == null) {
       throw new SplitsException("No hyperlinkListener registered for name '" + name + "'" + dump());
     }
     return listener;
+  }
+
+  protected HyperlinkListener findHyperlinkListener(String name) {
+    return hyperlinkListenersByName.get(name);
   }
 
   public String dump() {
@@ -278,9 +282,4 @@ public abstract class AbstractSplitsContext implements SplitsContext {
       };
     }
   }
-
-//  protected void finalize() throws Throwable {
-//    super.finalize();
-//    cleanUp();
-//  }
 }

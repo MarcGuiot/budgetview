@@ -64,7 +64,7 @@ public class CarryOverDialog implements Disposable {
 
     JPanel panel = builder.load();
 
-    dialog = PicsouDialog.create(directory.get(JFrame.class), directory);
+    dialog = PicsouDialog.create(this, directory.get(JFrame.class), directory);
     dialog.addPanelWithButtons(panel, new OkAction(), new CancelAndDisposeAction(dialog));
   }
 

@@ -31,6 +31,10 @@ public class UserEvaluationDialog {
   private JProgressBar sendingState = new JProgressBar();
 
   public static void showIfNeeded(GlobRepository repository, Directory directory) {
+    if ("true".equalsIgnoreCase(System.getProperty(PicsouApplication.USER_FEEDBACK_DISABLED))) {
+      return;
+    }
+
     Glob userPrefs = repository.find(UserPreferences.KEY);
     if (userPrefs == null){
       return;
@@ -56,7 +60,7 @@ public class UserEvaluationDialog {
   private UserEvaluationDialog(GlobRepository repository, final Directory directory) {
     this.directory = directory;
 
-    dialog = PicsouDialog.create(directory.get(JFrame.class), directory);
+    dialog = PicsouDialog.create(this, directory.get(JFrame.class), directory);
 
     final GlobsPanelBuilder builder = new GlobsPanelBuilder(getClass(), "/layout/feedback/userEvaluationDialog.splits",
                                                       repository, directory);

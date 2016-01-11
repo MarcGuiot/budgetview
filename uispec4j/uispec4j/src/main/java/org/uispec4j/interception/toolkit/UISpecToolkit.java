@@ -117,7 +117,7 @@ public class UISpecToolkit extends ToolkitDelegate {
   }
 
   public DataTransferer getDataTransferer() {
-    return null;
+    return Empty.NULL_DATA_TRANSFERER;
   }
 
   public KeyboardFocusManagerPeer getKeyboardFocusManagerPeer() throws HeadlessException {

@@ -73,4 +73,4 @@ obfuscate  changeLogFileOut="ChangeLogOutput.txt"
            lineNumbers=scramble 
 ;
 
-saveAll archiveCompression=all "obfuscated";
+saveAll archiveCompression=all "target/obfuscated";

@@ -14,7 +14,8 @@
 
     <style selector=".descriptionPanel button"
            icon="button_hide.png" rolloverIcon="button_hide_rollover.png"
-           border="" margin="5" marginLeft="0" weightX="0" fill="none" anchor="center"/>
+           border="" borderPainted="false" cursor="hand"
+           margin="5" marginLeft="0" weightX="0" fill="none" anchor="center"/>
 
     <style selector="#createSeries" ui="hyperlinkButtonWithoutUnderline" foreground="categorization.footerButton"/>
 

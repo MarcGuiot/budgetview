@@ -55,7 +55,7 @@
         <button name="forwardView" action="forwardView" styleClass="backforward" tooltipText="$forward"/>
       </row>
       <repeat ref="viewToggles" layout="column" marginTop="40" marginRight="5">
-        <toggleButton ref="toggle" styleClass="masterViewSelector" marginBottom="2"/>
+        <toggleButton ref="toggle" styleClass="masterViewSelector" marginBottom="5"/>
       </repeat>
       <button ref="notificationsFlag" marginTop="30" marginLeft="5" marginRight="5"/>
       <filler fill="vertical"/>
@@ -66,6 +66,7 @@
            border="matte(0,0,1,0,header.border)">
       <button ref="periodTitle" opaque="false" font="OpenSansRegular,plain,20"
               styleClass="hyperlinkWithoutUnderline" foreground="header.title"
+              iconTextGap="5"
               icon="arrowButton(18,18,header.title.icon)"
               rolloverIcon="arrowButton(18,18,hyperlink.rollover)"
               horizontalAlignment="left"/>

@@ -51,7 +51,7 @@ public class EditTransactionDialog {
   }
 
   private void createDialog(JFrame owner) {
-    dialog = PicsouDialog.create(owner, true, localDirectory);
+    dialog = PicsouDialog.create(this, owner, true, localDirectory);
     OkAction okAction = new OkAction();
 
     final GlobsPanelBuilder builder =

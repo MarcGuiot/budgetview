@@ -14,18 +14,6 @@ public class NavigationIcons {
     return locator.get("cards/" + getName(card) + ".png");
   }
 
-  public static ImageIcon getRollover(ImageLocator locator, Card card) {
-    return locator.get("cards/" + getName(card) + "_rollover.png");
-  }
-
-  public static ImageIcon getLarge(ImageLocator locator, Card card) {
-    return locator.get("home/" + getName(card) + ".png");
-  }
-
-  public static ImageIcon getLargeWithRollover(ImageLocator locator, Card card) {
-    return locator.get("home/" + getName(card) + "_rollover.png");
-  }
-
   public static String getName(Card card) {
     return card.getName().toLowerCase();
   }

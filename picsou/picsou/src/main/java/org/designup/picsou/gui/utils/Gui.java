@@ -162,6 +162,11 @@ public class Gui {
     return editor;
   }
 
+  public static void initHtmlEditor(JEditorPane editor) {
+    GuiUtils.initHtmlComponent(editor);
+    GuiUtils.loadCssResource("/css/jeditorpane.css", editor, Gui.class);
+  }
+
   public static void setWaitCursor(JFrame frame) {
     frame.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
   }

@@ -14,7 +14,6 @@
     <module>picsou_shared</module>
     <module>picsou_server</module>
     <module>picsou_analytics</module>
-    <module>morphograph</module>
   </modules>
 
 </project>

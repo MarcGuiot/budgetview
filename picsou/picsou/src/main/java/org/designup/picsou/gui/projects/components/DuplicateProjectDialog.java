@@ -81,7 +81,7 @@ public class DuplicateProjectDialog {
 
     JPanel panel = builder.load();
 
-    dialog = PicsouDialog.create(owner, true, directory);
+    dialog = PicsouDialog.create(this, owner, true, directory);
     dialog.addPanelWithButtons(panel, new ValidateAction(), new CancelAction(dialog));
   }
 

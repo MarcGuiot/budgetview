@@ -164,6 +164,33 @@ public class SubSeriesEditionTest extends LoggedInFunctionalTestCase {
       .validate();
   }
 
+  public void testSubSeriesAreOrderedInAlphabeticalOrder() throws Exception {
+    budgetView.variable.createSeries()
+      .setName("series1")
+      .editSubSeries()
+      .addSubSeries("subSeries2") // Create subSeries2 first to make sure sorting is not based on IDs
+      .addSubSeries("subSeries1")
+      .checkSubSeriesList("subSeries1", "subSeries2")
+      .validate();
+
+    OfxBuilder
+      .init(this)
+      .addTransaction("2008/06/30", -129.90, "Auchan")
+      .load();
+
+    categorization.selectTransaction("AUCHAN")
+      .selectVariable()
+      .checkSeriesContainsSubSeriesList("series1", "subSeries1", "subSeries2");
+
+    budgetView.variable.editSeries("series1")
+      .editSubSeries()
+      .renameSubSeries("subSeries1", "First SubSeries")
+      .checkSubSeriesList("First SubSeries", "subSeries2")
+      .renameSubSeries("subSeries2", "Second SubSeries")
+      .checkSubSeriesList("First SubSeries", "Second SubSeries")
+      .validate();
+  }
+
   public void testSubSeriesAreNotUsedForPlannedTransactions() throws Exception {
     OfxBuilder
       .init(this)

@@ -53,11 +53,11 @@ public abstract class ConfirmationDialog {
     builder = SplitsBuilder.init(directory)
       .setSource(getClass(), mode.sourceFile);
 
-    dialog = PicsouDialog.create(owner, directory);
+    dialog = PicsouDialog.create(this, owner, directory);
 
     builder.add("title", new JLabel(Lang.get(titleKey)));
     editorPane = new JEditorPane("text/html", content);
-    builder.add("hyperlinkHandler", new HyperlinkHandler(directory, dialog) {
+    builder.add("hyperlinkHandler", new HyperlinkHandler(directory) {
       protected void processCustomLink(String href) {
         ConfirmationDialog.this.processCustomLink(href);
       }

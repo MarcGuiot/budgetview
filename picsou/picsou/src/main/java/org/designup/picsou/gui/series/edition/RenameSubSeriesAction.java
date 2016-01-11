@@ -3,8 +3,6 @@ package org.designup.picsou.gui.series.edition;
 import org.designup.picsou.gui.components.dialogs.PicsouDialog;
 import org.designup.picsou.model.SubSeries;
 import org.designup.picsou.utils.Lang;
-import org.globsframework.gui.GlobSelectionListener;
-import org.globsframework.gui.SelectionService;
 import org.globsframework.gui.actions.RenameGlobAction;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.fields.StringField;
@@ -26,7 +24,7 @@ public class RenameSubSeriesAction extends RenameGlobAction {
   }
 
   public JDialog getDialog(ActionEvent e) {
-    return PicsouDialog.create(owner, directory);
+    return PicsouDialog.create(this, owner, directory);
   }
 
   protected String getText() {

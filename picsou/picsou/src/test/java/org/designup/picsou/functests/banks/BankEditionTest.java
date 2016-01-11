@@ -290,7 +290,7 @@ public class BankEditionTest extends LoggedInFunctionalTestCase {
       .checkFileContent(new Object[][]{
         {"2008/08/30", "MacDo", "-50.00"},
       })
-      .completeImport();
+      .completeImport(1000.00);
 
     mainAccounts.checkAccountWebsite("NewAccount", "NewBank", "http://www.newbank.net");
 

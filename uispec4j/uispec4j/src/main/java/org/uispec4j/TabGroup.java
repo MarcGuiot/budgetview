@@ -5,7 +5,6 @@ import org.uispec4j.assertion.UISpecAssert;
 import org.uispec4j.assertion.testlibrairies.AssertAdapter;
 import org.uispec4j.finder.StringMatcher;
 import org.uispec4j.utils.ColorUtils;
-import org.uispec4j.xml.XmlWriter;
 
 import javax.swing.*;
 import java.awt.*;
@@ -89,16 +88,16 @@ public class TabGroup extends AbstractUIComponent {
     };
   }
 
-  protected void getSubDescription(Container container, XmlWriter.Tag tag) {
+  protected void printDescriptionForChildren(Container container, String indent, StringBuilder builder) {
     if (container == jTabbedPane) {
       Component selectedComponent = jTabbedPane.getSelectedComponent();
       if (selectedComponent != null) {
-        getDescription(selectedComponent, tag, false);
+        printDescription(selectedComponent, indent, builder, false);
         return;
       }
     }
     else {
-      super.getSubDescription(container, tag);
+      super.printDescriptionForChildren(container, indent, builder);
     }
   }
 

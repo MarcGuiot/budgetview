@@ -93,7 +93,7 @@ public class TransactionSplittingTest extends LoggedInFunctionalTestCase {
     categorization.selectTableRow(1);
     categorization.checkTableBackground(
       "C3D5F7",
-      "2071A3",
+      "2189BF",
       "DCE6FA",
       "F5F5F6"
     );

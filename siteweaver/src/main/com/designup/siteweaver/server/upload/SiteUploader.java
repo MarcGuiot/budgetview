@@ -34,7 +34,7 @@ public class SiteUploader {
         String targetPath = site.getTargetPath(page);
         long localTimestamp = site.getLastModified(page);
         FileHandle handle = remoteHandles.get(targetPath);
-        if (handle == null || localTimestamp > handle.timestamp) {
+        if (handle == null || handle.isNewer(localTimestamp)) {
           StringOutput output = new StringOutput();
           SiteGenerator.run(site, page, output);
           access.uploadText(targetPath, output.getText());
@@ -52,7 +52,7 @@ public class SiteUploader {
 
         long localTimestamp = inputFile.lastModified();
         FileHandle handle = remoteHandles.get(targetPath);
-        if (handle == null || localTimestamp > handle.timestamp) {
+        if (handle == null || handle.isNewer(localTimestamp)) {
           access.uploadFile(targetPath, inputFile);
         }
         if (handle != null) {

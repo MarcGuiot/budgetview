@@ -11,4 +11,5 @@ public class BnpConnectorTest extends TestCase {
     assertEquals("012345 000001234 89", BnpConnector.extractNumber("<td valign=\"top\">" +
                                                                    "number<br/>012345&nbsp;000001234&nbsp;89</td>"));
   }
+
 }

@@ -108,23 +108,8 @@ public class TransactionDetailsView extends View {
   }
 
   private void updateCard() {
-    if (!repository.contains(Transaction.TYPE)) {
-      cards.show("noDataImported");
-      return;
-    }
-
     GlobList transactions = selectionService.getSelection(Transaction.TYPE);
-    if (transactions.isEmpty()) {
-      if (tableView.getDisplayedGlobs().isEmpty()) {
-        cards.show("noDataShown");
-      }
-      else {
-        cards.show("noSelection");
-      }
-    }
-    else {
-      cards.show("selection");
-    }
+    cards.show(transactions.isEmpty() ? "nothingShown" : "selection");
   }
 
   private GlobLabelView addLabel(GlobListStringifier stringifier, boolean autoHide) {

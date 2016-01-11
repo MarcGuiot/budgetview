@@ -114,14 +114,14 @@ public class HyperlinkButton extends JButton {
   }
 
   public static void main(String[] args) {
-    HyperlinkButton component1 = new HyperlinkButton(new AbstractAction("toto") {
+    HyperlinkButton button = new HyperlinkButton(new AbstractAction("toto") {
       public void actionPerformed(ActionEvent e) {
         System.out.println("HyperlinkButton.actionPerformed");
       }
     });
-    component1.setText("hello");
+    button.setText("hello");
 
-    JPanel panel = GridBagBuilder.init().add(component1, 0, 0, 1, 1, 1, 1, Fill.NONE, Anchor.CENTER).getPanel();
+    JPanel panel = GridBagBuilder.init().add(button, 0, 0, 1, 1, 1, 1, Fill.NONE, Anchor.CENTER).getPanel();
     panel.setOpaque(true);
     panel.setBackground(Color.CYAN);
     GuiUtils.showCentered(panel);

@@ -109,7 +109,6 @@ public class ImportTest extends LoggedInFunctionalTestCase {
 
     operations.openImportDialog()
       .browseAndSelect(path)
-      .acceptFile()
       .setMainAccount()
       .completeImport();
 
@@ -150,7 +149,7 @@ public class ImportTest extends LoggedInFunctionalTestCase {
         {"2006/01/10", "Menu K", "-1.10"}
       })
       .defineAccount(SOCIETE_GENERALE, "My SG account", "0123546");
-    importDialog.doImportWithBalance()
+    importDialog.doImportWithPosition()
       .setAmount(0.00)
       .validate();
     importDialog.completeLastStep();
@@ -169,8 +168,11 @@ public class ImportTest extends LoggedInFunctionalTestCase {
       .setName("Main")
       .setAccountNumber("012345")
       .selectBank("CIC")
+      .setPosition(1000.00)
       .validate();
+
     OfxBuilder.init(this)
+      .addBankAccount("012345", 1000.00, "2006/01/01")
       .addTransaction("2006/01/01", 10, "monop")
       .loadInAccount("Main");
 
@@ -209,7 +211,7 @@ public class ImportTest extends LoggedInFunctionalTestCase {
       .defineAccount(SOCIETE_GENERALE, "Main", "12345");
 
     importDialog
-      .doImportWithBalance()
+      .doImportWithPosition()
       .checkAccountLabel("Account: Main")
       .checkCancelNotAvailable()
       .checkEscNotAvailable()
@@ -390,8 +392,8 @@ public class ImportTest extends LoggedInFunctionalTestCase {
       .initContent()
       .add("21/06/2008", TransactionType.VIREMENT, "V'lib", "", 1.00)
       .add("14/06/2008", TransactionType.VIREMENT, "V'lib", "", 1.00)
-      .add("10/06/2008", TransactionType.CREDIT_CARD, "Metro", "", 71.00)
       .add("10/06/2008", TransactionType.VIREMENT, "McDo", "", 10.00)
+      .add("10/06/2008", TransactionType.CREDIT_CARD, "Metro", "", 71.00)
       .add("10/06/2008", TransactionType.VIREMENT, "V'lib", "", 1.00)
       .check();
   }
@@ -465,7 +467,6 @@ public class ImportTest extends LoggedInFunctionalTestCase {
     operations.openImportDialog()
       .checkDirectory(System.getProperty("user.home"))
       .browseAndSelect(path1)
-      .acceptFile()
       .setMainAccount()
       .completeImport();
 
@@ -489,7 +490,7 @@ public class ImportTest extends LoggedInFunctionalTestCase {
       .addTransaction("2006/01/12", -5, "Menu K")
       .addTransaction("2006/01/12", -6, "Menu K")
       .save();
-    operations.importQifFile(file2, SOCIETE_GENERALE);
+    operations.importQifFile(file2);
 
     transactions.getTable().getHeader().click(1);
     transactions
@@ -542,7 +543,7 @@ public class ImportTest extends LoggedInFunctionalTestCase {
       .addTransaction("2006/01/09", -1, "Menu K")
       .save();
 
-    operations.importFile(file2, "other");
+    operations.importFile(file2, "other", 1000.00);
 
     views.selectData();
     timeline.checkSelection("2006/01");
@@ -585,8 +586,7 @@ public class ImportTest extends LoggedInFunctionalTestCase {
       .selectBank("BNP Paribas")
       .checkManualDownloadAvailable()
       .selectManualDownload()
-      .checkManualDownloadHelp("BNP Paribas", "http://www.bnpparibas.net",
-                               "Rendez-vous sur le site internet de BNP Paribas");
+      .checkManualDownloadHelp("BNP Paribas", "http://www.bnpparibas.net", "Selected bank: BNP Paribas ");
 
     importDialog.close();
   }

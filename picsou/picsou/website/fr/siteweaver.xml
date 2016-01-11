@@ -34,11 +34,11 @@
       <key name="innerTemplate" value="templates/supportPageTemplate.html"/>
 
       <page file="support/guides.html" title="Guides de démarrage">
-        <page file="support/guides/import.html" title="1. Importez vos relevés d'opérations"/>
-        <page file="support/guides/categorisation.html" title="2. Catégorisez vos opérations"/>
-        <page file="support/guides/budget.html" title="3. Finalisez votre budget"/>
-        <page file="support/guides/projets.html" title="4. Préparez vos projets"/>
-        <page file="support/guides/analyse.html" title="5. Analysez votre budget"/>
+        <page file="support/guides/import.html" title="Importer vos relevés d'opérations"/>
+        <page file="support/guides/categorisation.html" title="Catégoriser vos opérations"/>
+        <page file="support/guides/budget.html" title="Finaliser votre budget"/>
+        <page file="support/guides/projets.html" title="Préparer vos projets"/>
+        <page file="support/guides/trucs_astuces.html" title="Trucs &amp; Astuces"/>
       </page>
 
       <page file="support/derniers_changements.html" title="Derniers changements"/>
@@ -74,6 +74,8 @@
         </page>
 
         <page file="support/faq/comptes.html" title="Gestion des comptes">
+          <page file="support/faq/comptes/types_comptes.html"
+                title="Quels types de comptes peut-on gérer ?"/>
           <page file="support/faq/comptes/utiliser_plusieurs_comptes.html"
                 title="Est-il possible d'utiliser plusieurs comptes ?"/>
           <page file="support/faq/comptes/solde_a_zero.html"
@@ -104,6 +106,8 @@
                 title="Comment classer les opérations de virement ?"/>
           <page file="support/faq/categorisation/ventiler_operation.html"
                 title="Comment ventiler une opération parmi plusieurs enveloppes ?"/>
+          <page file="support/faq/categorisation/decaler_operation.html"
+                title="Comment décaler une opération au mois précédent ou suivant ?"/>
         </page>
 
         <page file="support/faq/operations.html" title="Gestion des opérations">

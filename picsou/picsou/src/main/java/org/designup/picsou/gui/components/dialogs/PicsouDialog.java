@@ -42,39 +42,39 @@ public class PicsouDialog extends JDialog {
   private List<Action> onCloseActions;
   private JButton okButton;
 
-  public static PicsouDialog create(Window owner, Directory directory) {
-    return create(owner, true, directory);
+  public static PicsouDialog create(Object creator, Window owner, Directory directory) {
+    return create(creator, owner, true, directory);
   }
 
-  public static PicsouDialog create(Window owner, boolean modal, Directory directory) {
+  public static PicsouDialog create(Object creator, Window owner, boolean modal, Directory directory) {
     Component parent = GuiUtils.getEnclosingComponent(owner, new GuiUtils.ComponentMatcher() {
       public boolean matches(Component component) {
         return JFrame.class.isInstance(component) || JDialog.class.isInstance(component);
       }
     });
     if (parent instanceof JFrame) {
-      return new PicsouDialog((JFrame)parent, modal, directory);
+      return new PicsouDialog(creator, (JFrame) parent, modal, directory);
     }
     else if (parent instanceof JDialog) {
-      return new PicsouDialog((JDialog)parent, modal, directory);
+      return new PicsouDialog(creator, (JDialog) parent, modal, directory);
     }
     else {
-      return new PicsouDialog((JFrame)null, modal, directory);
+      return new PicsouDialog(creator, (JFrame) null, modal, directory);
     }
   }
 
-  public static PicsouDialog createWithButton(Window owner, JPanel panel, Action action, Directory directory) {
-    return createWithButton(owner, true, panel, action, directory);
+  public static PicsouDialog createWithButton(Object creator, Window owner, JPanel panel, Action action, Directory directory) {
+    return createWithButton(creator, owner, true, panel, action, directory);
   }
 
-  public static PicsouDialog createWithButton(Window owner, boolean modal, JPanel panel, Action closeAction, Directory directory) {
-    PicsouDialog dialog = create(owner, modal, directory);
+  public static PicsouDialog createWithButton(Object creator, Window owner, boolean modal, JPanel panel, Action closeAction, Directory directory) {
+    PicsouDialog dialog = create(creator, owner, modal, directory);
     dialog.setPanelAndButton(panel, closeAction);
     return dialog;
   }
 
-  public static PicsouDialog createWithButtons(Window owner, Directory directory, JPanel panel, Action ok, Action cancel) {
-    PicsouDialog dialog = create(owner, directory);
+  public static PicsouDialog createWithButtons(Object creator, Window owner, Directory directory, JPanel panel, Action ok, Action cancel) {
+    PicsouDialog dialog = create(creator, owner, directory);
     dialog.addPanelWithButtons(panel, ok, cancel);
     return dialog;
   }
@@ -90,11 +90,11 @@ public class PicsouDialog extends JDialog {
   }
 
   public void addPanelWithButton(JPanel panel, Action ok) {
-    addPanelWithButtons(panel, ok, null, (JButton)null);
+    addPanelWithButtons(panel, ok, null, (JButton) null);
   }
 
   public void addPanelWithButtons(JPanel panel, Action ok, Action cancel) {
-    addPanelWithButtons(panel, ok, cancel, (JButton)null);
+    addPanelWithButtons(panel, ok, cancel, (JButton) null);
   }
 
   public void addPanelWithButtons(JPanel panel, Action ok, Action cancel, Action additionalAction) {
@@ -214,19 +214,20 @@ public class PicsouDialog extends JDialog {
     }
   }
 
-  private PicsouDialog(JFrame parent, boolean modal, Directory directory) {
+  private PicsouDialog(Object creator, JFrame parent, boolean modal, Directory directory) {
     super(parent, !FORCE_NONMODAL && modal);
-    init(directory);
+    init(creator, directory);
   }
 
-  private PicsouDialog(JDialog parent, boolean modal, Directory directory) {
+  private PicsouDialog(Object creator, JDialog parent, boolean modal, Directory directory) {
     super(parent, !FORCE_NONMODAL && modal);
-    init(directory);
+    init(creator, directory);
   }
 
-  private void init(Directory directory) {
+  private void init(Object creator, Directory directory) {
     this.directory = directory;
     setTitle(Lang.get("application"));
+    setName(creator != null ? creator.getClass().getSimpleName() : "");
     colorService = directory.get(ColorService.class);
     setBackground(colorService.get("dialog.bg"));
 
@@ -320,5 +321,4 @@ public class PicsouDialog extends JDialog {
   public String toString() {
     return "PicsouDialog " + dialogId;
   }
-
 }

@@ -116,7 +116,7 @@ public class RestartTest extends RestartTestCase {
 
   public void testBudgetView() throws Exception {
 
-    accounts.createMainAccount("Manual", 0);
+    accounts.createMainAccount("Manual", "4321", 0);
     views.selectBudget();
     budgetView.variable.createSeries()
       .setName("Courant")
@@ -703,12 +703,12 @@ public class RestartTest extends RestartTestCase {
     screen.checkBackgroundColorIsStandard();
 
     PreferencesChecker preferences = operations.openPreferences();
-    preferences.selectColorTheme(ColorTheme.BLUE);
+    preferences.selectColorTheme(ColorTheme.BLACK);
     preferences.validate();
-    screen.checkBackgroundColorIsBlue();
+    screen.checkBackgroundColorIsBlack();
 
     restartApplication();
-    screen.checkBackgroundColorIsBlue();
+    screen.checkBackgroundColorIsBlack();
 
     PreferencesChecker preferences2 = operations.openPreferences();
     preferences2.checkColorThemeSelected(ColorTheme.BLUE);

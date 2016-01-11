@@ -6,6 +6,8 @@ import org.globsframework.gui.splits.styles.StyleContext;
 import org.globsframework.utils.Functor;
 import org.globsframework.utils.directory.Directory;
 
+import javax.swing.event.HyperlinkListener;
+
 public class RepeatContext extends AbstractSplitsContext {
   private SplitsContext innerContext;
 
@@ -27,5 +29,13 @@ public class RepeatContext extends AbstractSplitsContext {
 
   public StyleContext getStyles() {
     return innerContext.getStyles();
+  }
+
+  public HyperlinkListener getHyperlinkListener(String name) {
+    HyperlinkListener listener = super.findHyperlinkListener(name);
+    if (listener == null) {
+      return innerContext.getHyperlinkListener(name);
+    }
+    return listener;
   }
 }

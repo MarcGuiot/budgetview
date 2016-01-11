@@ -14,38 +14,20 @@ import java.util.Date;
 public class HelpTest extends LoggedInFunctionalTestCase {
 
   public void testHelpMenu() throws Exception {
-    operations.openHelp().checkTitle("Index").close();
-
     operations.checkGotoSupport(Lang.get("site.support.url"));
   }
 
-  public void testHelpForCards() throws Exception {
-    views.selectHome();
-    operations.openHelp("Dashboard View").checkTitle("Dashboard View").close();
-
-    views.selectCategorization();
-    operations.openHelp("Categorization View").checkTitle("Categorization View").close();
-
-    views.selectBudget();
-    operations.openHelp("Budget View").checkTitle("Budget View").close();
-
-    views.selectData();
-    operations.openHelp("Operations View").checkTitle("Operations View").close();
-  }
-
   public void testDefaultLinks() throws Exception {
-    operations.openHelp()
-      .checkBottomTextLink("support site", "http://www.mybudgetview.com/support")
-      .checkSendContactLink("contact us")
-      .close();
+    operations.checkGotoSupport("http://www.mybudgetview.com/support");
   }
 
   public void testSendLogs() throws Exception {
 
     String text = new Date().toString();
 
-    Log.init(new PrintStream(AppLogger.getLogFile()));
-    Log.write("Date: " + text);
+    PrintStream stream = new PrintStream(AppLogger.getLogFile());
+    stream.append("Date: " + text);
+    stream.close();
     
     operations.openSendLogs()
       .checkTitle("Send logs")
@@ -53,7 +35,5 @@ public class HelpTest extends LoggedInFunctionalTestCase {
       .checkDetailsContain(text)
       .checkCopy()
       .close();
-    
-    Log.init(System.out);
   }
 }

@@ -2,7 +2,7 @@
 
   <styleImport file="/layout/commonStyles.splits"/>
   <styleImport file="/layout/components/verticalTabStyles.splits"/>
-  
+
   <styles>
     <style selector="label.categorizationStep" font="-,bold,12" foreground="#333333"
            fill="horizontal" horizontalAlignment="left"
@@ -21,6 +21,11 @@
 
     <style selector="x" id="downArrowShown" icon="downArrow(50,20,40,10,categorization.downArrow)"/>
     <style selector="x" id="downArrowHidden" icon="empty(50,20)"/>
+
+    <style selector="label.leftArrow"
+           icon="leftArrow(14,40,8,30,categorization.selection.arrow)" margin="5" marginLeft="0"
+           fill="none" anchor="north" marginTop="5"
+           weightX="0.01"/>
   </styles>
 
   <column name="categorizationView">
@@ -35,8 +40,29 @@
 
     <cards ref="categorizationCard" weightY="100">
 
+      <card name="noDataImported">
+        <column name="noDataImportedPanel" marginBottom="10">
+          <htmlEditorPane text="$transaction.details.noDataImported" hyperlinkListener="hyperlinkHandler"/>
+          <filler fill="vertical"/>
+        </column>
+      </card>
+
+      <card name="noDataShown">
+        <column name="noDataShownPanel" marginBottom="10">
+          <htmlEditorPane name="noDataShownMessage" text="$transaction.details.noDataShown"
+                          hyperlinkListener="hyperlinkHandler"/>
+        </column>
+      </card>
+
       <card name="noSelection">
-        <panel name="noSelectionPanel" opaque="false"/>
+        <column name="noSelectionPanel" opaque="false">
+          <row>
+            <label styleClass="leftArrow"/>
+            <htmlEditorPane name="noSelectionMessage" text="$transaction.details.noSelection"
+                            hyperlinkListener="hyperlinkHandler"/>
+          </row>
+          <filler fill="vertical"/>
+        </column>
       </card>
 
       <card name="reconciliation">

@@ -7,13 +7,13 @@ mv budgetview.exe budgetview.fr.exe
 mv budgetview.exe budgetview.en.exe
 cd ../..
 rm -f ../picsou/budgetview.jar
-VERSION=`java -jar ../picsou/obfuscated/budgetview.jar -v -jar | grep "Jar version"`
+VERSION=`java -jar ../picsou/target/obfuscated/budgetview.jar -v -jar | grep "Jar version"`
 JAR_VERSION=`echo $VERSION | sed -e 's/Jar version://g' | sed -e 's/  *//g'`
-SOFT_VERSION=`java -jar ../picsou/obfuscated/budgetview.jar -v -soft | grep "Software version:" |
+SOFT_VERSION=`java -jar ../picsou/target/obfuscated/budgetview.jar -v -soft | grep "Software version:" |
               sed -e 's/Software version://g' | sed -e 's/  *//g'`
 
-rm -f ../picsou/obfuscated/budgetview${JAR_VERSION}.jar
-cp ../picsou/obfuscated/budgetview.jar ../picsou/obfuscated/budgetview${JAR_VERSION}.jar
+rm -f ../picsou/target/obfuscated/budgetview${JAR_VERSION}.jar
+cp ../picsou/target/obfuscated/budgetview.jar ../picsou/target/obfuscated/budgetview${JAR_VERSION}.jar
 bzip2 -c ../picsou/ChangeLogOutput.txt > ../picsou/ChangeLogOutput-${JAR_VERSION}.txt.bz2
 
 mv dev/install/budgetview_InMemory.exe dev/install/BudgetViewInMemory${SOFT_VERSION}_b${JAR_VERSION}.exe

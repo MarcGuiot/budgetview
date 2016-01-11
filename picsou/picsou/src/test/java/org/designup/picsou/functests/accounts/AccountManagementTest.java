@@ -270,7 +270,7 @@ public class AccountManagementTest extends LoggedInFunctionalTestCase {
   }
 
   public void testSavingsChartsAreHiddenByDefault() throws Exception {
-    accounts.createMainAccount("Account 1", 1000.00);
+    accounts.createMainAccount("Account 1", "4321", 1000.00);
     mainAccounts.checkChartShown("Account 1");
     mainAccounts.toggleChart("Account 1");
     mainAccounts.checkChartHidden("Account 1");

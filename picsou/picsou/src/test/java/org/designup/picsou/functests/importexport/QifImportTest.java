@@ -53,7 +53,7 @@ public class QifImportTest extends LoggedInFunctionalTestCase {
                     "N\n" +
                     "MAuchan\n" +
                     "^");
-    operations.importQifFile(file, SOCIETE_GENERALE);
+    operations.importQifFile(file);
 
     views.selectData();
     transactions.initAmountContent()
@@ -106,7 +106,7 @@ public class QifImportTest extends LoggedInFunctionalTestCase {
                     "MFAC.FRANCE 4561409787231717 19/04/06 STATION BP CARTE 06348905 PAIEMENT CB 1904 PARIS\n" +
                     "^");
     operations.importQifFile(file, SOCIETE_GENERALE, 0.);
-    operations.importQifFile(file, SOCIETE_GENERALE);
+    operations.importQifFile(file);
 
     timeline.selectMonth("2006/04");
     views.selectData();
@@ -197,7 +197,7 @@ public class QifImportTest extends LoggedInFunctionalTestCase {
       .addTransaction("2006/01/10", -1.1, "Tx 1")
       .addTransaction("2006/01/11", -2.23, "Tx 2")
       .load(0.);
-    accounts.createMainAccount("other Account", 0);
+    accounts.createMainAccount("other Account", "4321", 0);
 
     String newFile = QifBuilder
       .init(this)

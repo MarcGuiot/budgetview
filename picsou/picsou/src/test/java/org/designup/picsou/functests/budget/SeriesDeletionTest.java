@@ -397,11 +397,12 @@ public class SeriesDeletionTest extends LoggedInFunctionalTestCase {
   }
 
   public void testTransferIsProposedForAllMainAccounts() throws Exception {
-    accounts.createMainAccount("Main1", 10);
+    accounts.createMainAccount("Main1", "4321", 10);
     OfxBuilder.init(this)
+      .addBankAccount("4321", 10.00, "2010/12/01")
       .addTransaction("2010/12/01", 100.00, "Auchan")
       .loadInAccount("Main1");
-    accounts.createMainAccount("Main2", 10);
+    accounts.createMainAccount("Main2", "4321", 10);
 
     budgetView.variable.createSeries("SeriesA for Main1", "Main1");
     categorization.setVariable("Auchan", "SeriesA for Main1");

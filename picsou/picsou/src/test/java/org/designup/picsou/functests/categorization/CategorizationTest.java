@@ -293,7 +293,7 @@ public class CategorizationTest extends LoggedInFunctionalTestCase {
 
   public void testNoSelection() throws Exception {
     views.selectCategorization();
-    categorization.checkNoSelectionPanelDisplayed();
+    categorization.checkNoDataImportedMessage();
 
     OfxBuilder
       .init(this)

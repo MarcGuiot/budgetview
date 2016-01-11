@@ -1,7 +1,6 @@
 package org.designup.picsou.gui.preferences.dev;
 
 import org.designup.picsou.gui.components.dialogs.PicsouDialog;
-import org.designup.picsou.gui.series.SeriesEditionDialog;
 import org.designup.picsou.model.UserPreferences;
 import org.designup.picsou.utils.Lang;
 import org.globsframework.gui.GlobsPanelBuilder;
@@ -29,7 +28,7 @@ public class DevOptionsDialog {
                            UserPreferences.MONTH_FOR_PLANNED,
                            new int[]{1, 2, 3});
 
-    dialog = PicsouDialog.create(parent, directory);
+    dialog = PicsouDialog.create(this, parent, directory);
     dialog.addPanelWithButton((JPanel)builder.load(), new OkAction());
   }
 

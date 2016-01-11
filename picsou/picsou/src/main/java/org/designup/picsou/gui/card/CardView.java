@@ -37,13 +37,11 @@ public class CardView extends View implements GlobSelectionListener {
   private Card lastSelectedCard = NavigationService.INITIAL_CARD;
   private JToggleButton[] toggles = new JToggleButton[Card.values().length];
 private static final Card[] CARDS = {Card.HOME, Card.BUDGET, Card.DATA, Card.CATEGORIZATION, Card.PROJECTS, Card.ANALYSIS, Card.ADDONS};
-  private CardView.ViewHelpAction viewHelpAction;
   private PersistentSignpost categorizationCompletionSignpost;
 
   public CardView(GlobRepository repository, Directory directory, PersistentSignpost completionSignpost) {
     super(repository, directory);
     this.selectionService.addListener(this, Card.TYPE);
-    this.viewHelpAction = new ViewHelpAction();
     this.categorizationCompletionSignpost = completionSignpost;
   }
 
@@ -58,7 +56,6 @@ private static final Card[] CARDS = {Card.HOME, Card.BUDGET, Card.DATA, Card.CAT
       final JToggleButton toggle = new JToggleButton(new ToggleAction(card));
       toggle.setIcon(NavigationIcons.get(images, card));
       toggle.setRolloverEnabled(true);
-      toggle.setRolloverIcon(NavigationIcons.getRollover(images, card));
       toggle.setToolTipText(getTooltip(card));
       String name = card.getName() + "CardToggle";
       Gui.configureIconButton(toggle, name, NavigationIcons.DIMENSION);
@@ -149,7 +146,6 @@ private static final Card[] CARDS = {Card.HOME, Card.BUDGET, Card.DATA, Card.CAT
 
   private void showCard(Card card) {
     toggles[card.getId()].doClick(0);
-    viewHelpAction.setCurrentCard(card);
   }
 
   public void selectionUpdated(GlobSelection selection) {
@@ -162,10 +158,6 @@ private static final Card[] CARDS = {Card.HOME, Card.BUDGET, Card.DATA, Card.CAT
     if (selection.isRelevantForType(Month.TYPE)) {
       showCard(lastSelectedCard);
     }
-  }
-
-  public Action getHelpAction() {
-    return viewHelpAction;
   }
 
   private class ToggleAction extends AbstractAction {
@@ -184,22 +176,6 @@ private static final Card[] CARDS = {Card.HOME, Card.BUDGET, Card.DATA, Card.CAT
       lastSelectedCard = card;
       cards.show(card.getName());
       selectionService.select(repository.get(card.getKey()));
-    }
-  }
-
-  private class ViewHelpAction extends AbstractAction {
-
-    private ViewHelpAction() {
-      super(Lang.get("help"));
-    }
-
-    public void setCurrentCard(Card card) {
-      putValue(Action.NAME, Lang.get("cards.help", card.getLabel()));
-    }
-
-    public void actionPerformed(ActionEvent e) {
-      String helpRef = "card_" + lastSelectedCard.getName();
-      directory.get(HelpService.class).show(helpRef, directory.get(JFrame.class));
     }
   }
 }

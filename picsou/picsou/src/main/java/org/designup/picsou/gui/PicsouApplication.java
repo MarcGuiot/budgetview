@@ -83,6 +83,7 @@ public class PicsouApplication {
   public static final String MOBILE_SERVER_URL = "http://register.mybudgetview.fr:8080";
   public static final String FTP_SERVER_URL = "ftp://ftpjar.mybudgetview.fr";
   public static final String DISABLE_BACKUP = APPNAME + ".disable.import";
+  public static final String USER_FEEDBACK_DISABLED = APPNAME + ".userFeedback.disabled";
 
   public static boolean EXIT_ON_DATA_ERROR = true;
 

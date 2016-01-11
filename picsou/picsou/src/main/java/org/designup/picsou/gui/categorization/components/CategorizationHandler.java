@@ -9,9 +9,9 @@ import org.globsframework.gui.GlobSelection;
 import org.globsframework.gui.GlobSelectionListener;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.SelectionService;
+import org.globsframework.gui.splits.PanelBuilder;
 import org.globsframework.gui.splits.SplitsNode;
 import org.globsframework.gui.splits.layout.CardHandler;
-import org.globsframework.gui.splits.PanelBuilder;
 import org.globsframework.gui.splits.repeat.RepeatComponentFactory;
 import org.globsframework.gui.splits.utils.Disposable;
 import org.globsframework.metamodel.GlobType;
@@ -24,17 +24,17 @@ import org.globsframework.utils.Strings;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
+import javax.swing.event.TableModelEvent;
+import javax.swing.event.TableModelListener;
 import java.awt.event.ActionEvent;
 import java.util.*;
-
-import static org.globsframework.model.FieldValue.value;
 
 public class CategorizationHandler implements GlobSelectionListener, ChangeSetListener {
 
   private BudgetArea[] budgetAreas =
     {BudgetArea.UNCATEGORIZED,
-     BudgetArea.INCOME, BudgetArea.RECURRING, BudgetArea.VARIABLE,
-     BudgetArea.TRANSFER, BudgetArea.EXTRAS, BudgetArea.OTHER};
+      BudgetArea.INCOME, BudgetArea.RECURRING, BudgetArea.VARIABLE,
+      BudgetArea.TRANSFER, BudgetArea.EXTRAS, BudgetArea.OTHER};
 
   private GlobRepository repository;
   private Directory directory;
@@ -54,12 +54,18 @@ public class CategorizationHandler implements GlobSelectionListener, ChangeSetLi
   private ReconciliationPanel reconciliationPanel;
   private ReconciliationNavigationPanel reconciliationNavigation;
   private SplitsNode<JLabel> downArrow;
+  private CategorizationTableView categorizationTableView;
 
-  public CategorizationHandler(GlobMatcher toReconcileMatcher,
-                               TransactionRendererColors colors,
-                               GlobRepository repository, Directory directory) {
-    this.toReconcileMatcher = toReconcileMatcher;
-    this.colors = colors;
+  public CategorizationHandler(CategorizationTableView categorizationTableView, GlobRepository repository, Directory directory) {
+    this.categorizationTableView = categorizationTableView;
+    categorizationTableView.addTableListener(new TableModelListener() {
+      public void tableChanged(TableModelEvent e) {
+        updateSelection();
+      }
+    });
+
+    this.toReconcileMatcher = categorizationTableView.getToReconcileMatcher();
+    this.colors = categorizationTableView.getColors();
     this.repository = repository;
     this.directory = directory;
     this.budgetAreaStringifier = directory.get(DescriptionService.class).getStringifier(BudgetArea.TYPE);
@@ -106,7 +112,15 @@ public class CategorizationHandler implements GlobSelectionListener, ChangeSetLi
   }
 
   private void showNoSelection() {
-    categorizationCard.showNoSelection();
+    if (!repository.contains(Transaction.TYPE)) {
+      categorizationCard.showNoDataImported();
+    }
+    else if (categorizationTableView.getDisplayedGlobs().isEmpty()) {
+      categorizationCard.showNoDataShown();
+    }
+    else {
+      categorizationCard.showNoSelection();
+    }
   }
 
   private void select(BudgetArea budgetArea, boolean activateToggle) {
@@ -177,8 +191,8 @@ public class CategorizationHandler implements GlobSelectionListener, ChangeSetLi
   public void selectionUpdated(GlobSelection selection) {
     this.selectedTransactions = selection.getAll(Transaction.TYPE);
     title.setText(Lang.get(selectedTransactions.size() == 1 ?
-                           "categorization.budgetAreaSelection.title.singular" :
-                           "categorization.budgetAreaSelection.title.plural"));
+                             "categorization.budgetAreaSelection.title.singular" :
+                             "categorization.budgetAreaSelection.title.plural"));
     updateSelection();
   }
 
@@ -208,8 +222,15 @@ public class CategorizationHandler implements GlobSelectionListener, ChangeSetLi
       return;
     }
 
+    Glob first = selectedTransactions.getFirst();
+    if (!first.exists()) {
+      selectedTransactions.clear();
+      select(BudgetArea.UNCATEGORIZED, true);
+      showNoSelection();
+      return;
+    }
+
     if (selectedTransactions.size() == 1) {
-      Glob first = selectedTransactions.getFirst();
       reconciliationPanel.update(first);
       if (toReconcileMatcher.matches(first, repository) && Transaction.isCategorized(first)) {
         categorizationCard.showReconciliation();
@@ -280,6 +301,18 @@ public class CategorizationHandler implements GlobSelectionListener, ChangeSetLi
       card.show("reconciliation");
       downArrow.applyStyle("downArrowShown");
       reconciliationNavigation.reconciliationShown();
+    }
+
+    public void showNoDataShown() {
+      card.show("noDataShown");
+      downArrow.applyStyle("downArrowHidden");
+      reconciliationNavigation.noSelectionShown();
+    }
+
+    public void showNoDataImported() {
+      card.show("noDataImported");
+      downArrow.applyStyle("downArrowHidden");
+      reconciliationNavigation.noSelectionShown();
     }
 
     public void showNoSelection() {

@@ -81,9 +81,7 @@ public class TransactionCreationTest extends LoggedInFunctionalTestCase {
       .add("15/08/2008", TransactionType.MANUAL, "TRANSACTION 1", "", -12.50)
       .check();
 
-    transactionCreation.openHelp()
-      .checkTitle("Manual input")
-      .close();
+    transactionCreation.checkHelp();
   }
 
   public void testCreationPanelIsAvailableOnlyWhenThereIsAtLeastOneAccount() throws Exception {

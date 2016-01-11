@@ -52,21 +52,21 @@
                 <label text="$seriesEdition.sectionTitle.recurrence" styleClass="sectionTitle"/>
                 <row>
                   <label text="$seriesEdition.profile" styleClass="formLabel"
-                         marginTop="5" marginBottom="5" marginLeft="10" marginRight="3"/>
-                  <comboBox ref="profileCombo"/>
+                         marginTop="5" marginBottom="5" marginLeft="10" marginRight="1"/>
+                  <comboBox ref="profileCombo" marginRight="2"/>
                   <cards ref="monthSelection">
                     <card name="monthRangeSelection">
                       <row>
                         <label text="$seriesEdition.begin" styleClass="formLabel"
-                               fill="horizontal" marginTop="2" marginRight="5"/>
+                               marginTop="2" marginRight="5"/>
                         <button action="seriesStartDateChooser" styleClass="hyperlink"
-                                weightX="0.1" marginRight="5" fill="none"
+                                weightX="0.1" marginRight="5"
                                 tooltipText="$seriesEdition.begin.edit.tooltip"/>
 
                         <label ref="seriesEndDateLabel" styleClass="formLabel"
                                fill="horizontal" marginTop="2" marginRight="5"/>
                         <button action="seriesEndDateChooser" styleClass="hyperlink"
-                                weightX="0.1" fill="none" tooltipText="$seriesEdition.end.edit.tooltip"/>
+                                weightX="0.1" tooltipText="$seriesEdition.end.edit.tooltip"/>
 
                         <filler fill="horizontal"/>
                       </row>

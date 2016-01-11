@@ -57,9 +57,7 @@ public class CategorizationView extends View {
     builder.add("skipCategorizationPanel", skipPanel.getPanel());
 
     CategorizationTableView categorizationTableView = categorizationSelector.getTableView();
-    CategorizationHandler selector = new CategorizationHandler(categorizationTableView.getToReconcileMatcher(),
-                                                               categorizationTableView.getColors(),
-                                                               repository, directory);
+    CategorizationHandler selector = new CategorizationHandler(categorizationTableView, repository, directory);
     selector.registerComponents(builder);
 
     addSeriesChooser("incomeSeriesChooser", BudgetArea.INCOME, builder);

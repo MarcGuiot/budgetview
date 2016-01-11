@@ -1,6 +1,5 @@
 package org.designup.picsou.gui.preferences.panes;
 
-import org.designup.picsou.gui.components.dialogs.CancelAction;
 import org.designup.picsou.gui.components.dialogs.PicsouDialog;
 import org.designup.picsou.gui.preferences.PreferencesDialog;
 import org.designup.picsou.utils.Lang;
@@ -24,7 +23,7 @@ public class OverwriteConfirmationDialog {
                                                       "/layout/general/preferences/overwriteConfirmationDialog.splits",
                                                       repository, directory);
 
-    dialog = PicsouDialog.create(owner, true, directory);
+    dialog = PicsouDialog.create(this, owner, true, directory);
 
     ButtonGroup group = new ButtonGroup();
     JRadioButton useRadio = new JRadioButton(Lang.get("data.path.transferMode.use"));

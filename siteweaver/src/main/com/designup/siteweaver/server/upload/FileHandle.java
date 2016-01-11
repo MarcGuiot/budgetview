@@ -12,4 +12,8 @@ public class FileHandle {
   public String toString() {
     return path + ":" + timestamp;
   }
+
+  public boolean isNewer(long localTimestamp) {
+    return true || localTimestamp > this.timestamp;
+  }
 }

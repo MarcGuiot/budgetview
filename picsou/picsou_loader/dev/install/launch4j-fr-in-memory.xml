@@ -2,7 +2,7 @@
 <launch4jConfig>
   <dontWrapJar>false</dontWrapJar>
   <headerType>gui</headerType>
-  <jar>../../../picsou/obfuscated/budgetview.jar</jar>
+  <jar>../../../picsou/target/obfuscated/budgetview.jar</jar>
   <outfile>budgetview_InMemory.exe</outfile>
   <errTitle></errTitle>
   <cmdLine>-l fr</cmdLine>

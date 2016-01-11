@@ -220,7 +220,7 @@ public class AccountEditionChecker extends GuiChecker {
   }
 
   public AccountEditionChecker checkTypesHelp(String title) {
-    HelpChecker.open(dialog.getButton("accountTypeHelp").triggerClick()).checkTitle(title).close();
+    BrowsingChecker.checkDisplayedUrlContains(dialog.getButton("accountTypeHelp").triggerClick(), "account-types");
     return this;
   }
 

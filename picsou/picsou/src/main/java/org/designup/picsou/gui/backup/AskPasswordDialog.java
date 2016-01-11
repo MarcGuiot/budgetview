@@ -34,7 +34,7 @@ public class AskPasswordDialog {
     final JPasswordField passwordField =
       builder.add("password", new JPasswordField())        
         .getComponent();
-    final PicsouDialog dialog = PicsouDialog.create(directory.get(JFrame.class), directory);
+    final PicsouDialog dialog = PicsouDialog.create(this, directory.get(JFrame.class), directory);
 
     final AbstractAction validate = new AbstractAction(Lang.get("ok")) {
       public void actionPerformed(ActionEvent e) {

@@ -3,6 +3,8 @@ package org.designup.picsou.gui.components.table;
 import org.globsframework.gui.splits.color.ColorChangeListener;
 import org.globsframework.gui.splits.color.ColorLocator;
 import org.globsframework.gui.splits.color.ColorService;
+import org.globsframework.gui.splits.color.Colors;
+import org.globsframework.gui.splits.components.HyperlinkButton;
 import org.globsframework.gui.views.GlobTableView;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobRepository;
@@ -31,6 +33,10 @@ public abstract class HyperlinkTableColumn extends ButtonTableColumn implements 
   }
 
   protected void updateComponent(JButton button, JPanel panel, Glob glob, boolean edit) {
+    updateColor(button);
+  }
+
+  protected void updateColor(JButton button) {
     button.setForeground(isSelected ? selectedLinkColor : normalLinkColor);
   }
 

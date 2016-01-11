@@ -1,32 +1,23 @@
 package org.designup.picsou.gui.help;
 
-import org.designup.picsou.gui.feedback.FeedbackDialog;
-import org.designup.picsou.gui.feedback.FeedbackService;
-import org.globsframework.utils.directory.Directory;
-import org.designup.picsou.gui.card.NavigationService;
-import org.designup.picsou.gui.model.Card;
 import org.designup.picsou.gui.browsing.BrowsingService;
+import org.designup.picsou.gui.card.NavigationService;
+import org.designup.picsou.gui.feedback.FeedbackService;
+import org.designup.picsou.gui.model.Card;
+import org.globsframework.utils.directory.Directory;
 
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
-import javax.swing.*;
-import java.awt.*;
-import java.util.Map;
 import java.util.HashMap;
+import java.util.Map;
 
 public class HyperlinkHandler implements HyperlinkListener {
   private HelpService helpService;
   private Directory directory;
-  private Window owner;
   private Map<String, Runnable> actions = new HashMap<String, Runnable>();
 
   public HyperlinkHandler(Directory directory) {
-    this(directory, directory.get(JFrame.class));
-  }
-
-  public HyperlinkHandler(Directory directory, Window owner) {
     this.directory = directory;
-    this.owner = owner;
     this.helpService = directory.get(HelpService.class);
   }
 
@@ -45,7 +36,7 @@ public class HyperlinkHandler implements HyperlinkListener {
 
   private void processLink(String href) {
     if (href.startsWith("help:")) {
-      helpService.show(href.substring(5), owner);
+      helpService.show(href.substring(5));
     }
     else if (href.startsWith("card:")) {
       NavigationService navigationService = directory.get(NavigationService.class);

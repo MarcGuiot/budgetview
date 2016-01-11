@@ -35,7 +35,7 @@ public class MessageFileDialog {
       fileArea.setText(file.getAbsolutePath());
     }
 
-    final PicsouDialog dialog = PicsouDialog.create(directory.get(JFrame.class), directory);
+    final PicsouDialog dialog = PicsouDialog.create(this, directory.get(JFrame.class), directory);
     AbstractAction action = new AbstractAction(Lang.get("ok")) {
       public void actionPerformed(ActionEvent e) {
         dialog.setVisible(false);

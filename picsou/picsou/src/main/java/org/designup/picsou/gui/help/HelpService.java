@@ -1,13 +1,11 @@
 package org.designup.picsou.gui.help;
 
-import org.designup.picsou.utils.Lang;
+import org.designup.picsou.gui.browsing.BrowsingService;
 import org.designup.picsou.model.Bank;
-import org.globsframework.model.GlobRepository;
+import org.designup.picsou.utils.Lang;
 import org.globsframework.model.Glob;
-import org.globsframework.model.format.DescriptionService;
+import org.globsframework.model.GlobRepository;
 import org.globsframework.utils.directory.Directory;
-import org.globsframework.utils.Strings;
-import org.globsframework.utils.Functor;
 
 import java.awt.*;
 import java.util.HashMap;
@@ -15,18 +13,14 @@ import java.util.Map;
 
 public class HelpService {
 
-  private HelpDialog dialog;
-  private GlobRepository repository;
-  private Directory directory;
+  private final BrowsingService browsingService;
   private HelpSource source;
-  private Window lastOwner;
 
   private static final String BANK_SITES = "bankSites";
   private Map<String, String> bankTitles = new HashMap<String, String>();
 
   public HelpService(GlobRepository repository, Directory directory) {
-    this.repository = repository;
-    this.directory = directory;
+    this.browsingService = directory.get(BrowsingService.class);
     this.source = new I18NHelpSource();
   }
 
@@ -34,24 +28,8 @@ public class HelpService {
     this.source = source;
   }
 
-  public void show(String helpRef, Window owner) {
-    show(helpRef, owner, Functor.NULL);
-  }
-
-  public void show(String helpRef, Window owner, Functor onCloseCallback) {
-    if ((dialog != null) && dialog.isVisible()) {
-      if (owner != lastOwner) {
-        dialog.close();
-        dialog.dispose();
-        dialog = null;
-        lastOwner = null;
-      }
-    }
-    if ((dialog == null) || (lastOwner != owner)) {
-      dialog = new HelpDialog(source, repository, directory, owner);
-      lastOwner = owner;
-    }
-    dialog.show(helpRef, onCloseCallback);
+  public void show(String helpRef) {
+    browsingService.launchBrowser(Lang.get("help.url." + helpRef));
   }
 
   public String getBankHelp(Glob bank) {
@@ -63,10 +41,6 @@ public class HelpService {
     return BANK_SITES + "." + bank.get(Bank.NAME).replaceAll("[\\s]+", "_").toLowerCase();
   }
 
-  public void reset(){
-    dialog = null;
-  }
-
   private class I18NHelpSource implements HelpSource {
     public String getTitle(String ref) {
       String bankRef = bankTitles.get(ref);
@@ -74,10 +48,6 @@ public class HelpService {
         return bankRef;
       }
       return Lang.get("help." + ref);
-    }
-
-    public String getContent(String ref) {
-      return Lang.getHelpFile(getFilePath(ref));
     }
 
     public String findContent(String ref) {

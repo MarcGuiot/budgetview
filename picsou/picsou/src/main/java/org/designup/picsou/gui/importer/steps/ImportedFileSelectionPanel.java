@@ -76,7 +76,7 @@ public class ImportedFileSelectionPanel extends AbstractImportStepPanel implemen
     bankDownload = new BankDownloadPanel(dialog, controller, localRepository, localDirectory);
     builder.add("bankDownload", bankDownload.getPanel());
 
-    final HyperlinkHandler hyperlinkHandler = new HyperlinkHandler(localDirectory, dialog);
+    final HyperlinkHandler hyperlinkHandler = new HyperlinkHandler(localDirectory);
 
     hyperlinkHandler.registerLinkAction("openErrorDetails", new Runnable() {
       public void run() {

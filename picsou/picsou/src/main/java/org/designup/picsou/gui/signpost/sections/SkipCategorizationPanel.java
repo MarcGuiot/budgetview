@@ -1,5 +1,6 @@
 package org.designup.picsou.gui.signpost.sections;
 
+import org.designup.picsou.gui.card.NavigationService;
 import org.designup.picsou.gui.help.HyperlinkHandler;
 import org.designup.picsou.model.SignpostStatus;
 import org.globsframework.gui.GlobsPanelBuilder;
@@ -55,5 +56,6 @@ public class SkipCategorizationPanel {
   private void activate() {
     SignpostStatus.setCompleted(SignpostStatus.GOTO_BUDGET_SHOWN, repository);
     SignpostStatus.setCompleted(SignpostStatus.CATEGORIZATION_SKIPPED, repository);
+    directory.get(NavigationService.class).gotoHome();
   }
 }

@@ -12,6 +12,7 @@ public class UserEvaluationTest extends ConnectedTestCase {
   public void setUp() throws Exception {
     System.setProperty(PicsouApplication.IS_DATA_IN_MEMORY, "false");
     super.setUp();
+    System.setProperty(PicsouApplication.USER_FEEDBACK_DISABLED, Boolean.toString(false));
     application = new ApplicationChecker();
     application.start();
     System.setProperty(PicsouApplication.DELETE_LOCAL_PREVAYLER_PROPERTY, "false");

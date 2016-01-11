@@ -27,7 +27,7 @@ public class BankEntityEditionDialog {
   }
 
   public void show(Window parent, GlobList accounts) {
-    dialog = PicsouDialog.create(parent, directory);
+    dialog = PicsouDialog.create(this, parent, directory);
     LocalGlobRepository localRepository = LocalGlobRepositoryBuilder.init(repository)
       .copy(Account.TYPE, Bank.TYPE, BankEntity.TYPE)
       .get();

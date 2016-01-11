@@ -57,11 +57,12 @@ public class TransactionDetailsTest extends LoggedInFunctionalTestCase {
 
     timeline.selectAll();
     categorization.checkNoSelectedTableRows();
-    transactionDetails.checkMessage("No operation selected");
+    categorization.checkNoSelectionPanelDisplayed();
+    transactionDetails.checkNothingShown();
   }
 
   public void testDisplayWithNoData() throws Exception {
-    transactionDetails.checkNoDataImportedMessage();
+    transactionDetails.checkNothingShown();
 
     OfxBuilder.init(this)
       .addTransaction("2008/08/15", -10.00, "Burger King")
@@ -71,7 +72,7 @@ public class TransactionDetailsTest extends LoggedInFunctionalTestCase {
     timeline.selectMonth("2008/07");
     categorization.showSelectedMonthsOnly();
     categorization.checkNoSelectedTableRows();
-    transactionDetails.checkNoDataShownMessage();
+    transactionDetails.checkNothingShown();
   }
 
   public void testDisplayAccount() throws Exception {

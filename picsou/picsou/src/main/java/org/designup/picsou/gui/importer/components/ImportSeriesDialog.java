@@ -43,7 +43,7 @@ public class ImportSeriesDialog {
   }
 
   public boolean show(Set<Key> importedSeriesKeys) {
-    dialog = PicsouDialog.create(parent, directory);
+    dialog = PicsouDialog.create(this, parent, directory);
     localRepository = LocalGlobRepositoryBuilder.init(repository)
       .copy(ImportedSeries.TYPE, Series.TYPE, SubSeries.TYPE, BudgetArea.TYPE)
       .get();
