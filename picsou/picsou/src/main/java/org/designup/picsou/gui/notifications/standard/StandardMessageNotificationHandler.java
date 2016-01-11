@@ -33,7 +33,7 @@ public class StandardMessageNotificationHandler implements NotificationHandler {
       repository
         .getAll(StandardMessage.TYPE, isFalse(StandardMessage.CLEARED))
         .sortSelf(new GlobFieldsComparator(StandardMessage.DATE, false,
-                                       StandardMessage.MESSAGE, true));
+                                           StandardMessage.MESSAGE, true));
     for (Glob message : messages) {
       notifications.add(new StandardMessageNotification(message, repository));
     }

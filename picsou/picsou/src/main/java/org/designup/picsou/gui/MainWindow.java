@@ -1,8 +1,5 @@
 package org.designup.picsou.gui;
 
-import com.apple.eawt.AboutHandler;
-import com.apple.eawt.AppEvent;
-import com.apple.eawt.Application;
 import org.designup.picsou.client.ServerAccess;
 import org.designup.picsou.client.ServerAccessDecorator;
 import org.designup.picsou.client.exceptions.BadPassword;
@@ -26,7 +23,6 @@ import org.designup.picsou.gui.startup.SlaValidationDialog;
 import org.designup.picsou.gui.time.TimeService;
 import org.designup.picsou.gui.undo.UndoRedoService;
 import org.designup.picsou.gui.utils.FrameSize;
-import org.designup.picsou.gui.utils.MacOSXHooks;
 import org.designup.picsou.model.CurrentMonth;
 import org.designup.picsou.model.User;
 import org.designup.picsou.model.UserPreferences;

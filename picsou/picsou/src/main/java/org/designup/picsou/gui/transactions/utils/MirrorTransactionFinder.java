@@ -23,7 +23,7 @@ public class MirrorTransactionFinder {
         continue;
       }
       comparator.setCurrent(source);
-      candidates.sort(comparator);
+      candidates.sortSelf(comparator);
       Glob bestCandidate = candidates.getFirst();
       if (getDateDistance(source, bestCandidate) < 5) {
         result.add(bestCandidate);

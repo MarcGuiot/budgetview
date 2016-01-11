@@ -48,8 +48,8 @@ public class ProjectUtils {
                                   GlobMatchers.and(fieldEquals(SeriesStat.TARGET_TYPE, SeriesType.SERIES.getId()),
                                                    fieldIn(SeriesStat.TARGET, seriesIds)))
                   .sortSelf(new GlobFieldsComparator(SeriesStat.TARGET_TYPE, true,
-                                                 SeriesStat.TARGET, true,
-                                                 SeriesStat.MONTH, true)));
+                                                     SeriesStat.TARGET, true,
+                                                     SeriesStat.MONTH, true)));
 
     GlobPrinter.print(list);
   }

@@ -74,8 +74,8 @@ public class BudgetGaugePages {
       filter.setSelectedMonthIds(selectedMonths);
       GlobList list = new GlobList(map.get(budgetArea.getId()));
       list.filterSelf(filter, repository);
-      list.sort(new PeriodSeriesStatComparator(repository,
-                                               new ReverseGlobFieldComparator(PeriodSeriesStat.ABS_SUM_AMOUNT)));
+      list.sortSelf(new PeriodSeriesStatComparator(repository,
+                                                   new ReverseGlobFieldComparator(PeriodSeriesStat.ABS_SUM_AMOUNT)));
       for (Glob periodStat : list) {
         addBlockToCurrentPage(new SeriesGaugeBlock(periodStat, budgetGaugeContext, currentSectionIndex++, repository));
       }
