@@ -1,10 +1,5 @@
 package org.designup.picsou.gui.experiment;
 
-import com.apple.eawt.AppEvent;
-import com.apple.eawt.Application;
-import com.apple.eawt.QuitHandler;
-import com.apple.eawt.QuitResponse;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;

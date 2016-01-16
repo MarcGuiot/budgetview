@@ -20,10 +20,13 @@ import org.globsframework.gui.views.GlobLabelView;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.Key;
+import org.globsframework.model.utils.GlobComparators;
 import org.globsframework.model.utils.GlobFieldsComparator;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
+import java.awt.*;
+import java.util.Comparator;
 
 public class ProjectListView extends View {
 
@@ -56,7 +59,7 @@ public class ProjectListView extends View {
     togglePastProjectsAction.setParentName("projectListView");
     builder.add("togglePastProjects", togglePastProjectsAction);
 
-    parentBuilder.add("projectListView", builder.<JPanel>load());
+    parentBuilder.add("projectListView", builder.<Component>load());
   }
 
   public void reset() {

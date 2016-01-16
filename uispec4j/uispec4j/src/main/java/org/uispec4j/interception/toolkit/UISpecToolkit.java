@@ -2,6 +2,7 @@ package org.uispec4j.interception.toolkit;
 
 import org.uispec4j.UISpec4J;
 import sun.awt.LightweightFrame;
+import sun.awt.X11.XKeyboardFocusManagerPeer;
 import sun.awt.datatransfer.DataTransferer;
 
 import javax.swing.*;
@@ -69,8 +70,8 @@ public class UISpecToolkit extends ToolkitDelegate {
     return new UISpecFramePeer(target);
   }
 
-  public FramePeer createLightweightFrame(LightweightFrame lightweightFrame) throws HeadlessException {
-    return  new UISpecFramePeer(lightweightFrame);
+  public FramePeer createLightweightFrame(LightweightFrame frame) throws HeadlessException {
+    return new UISpecFramePeer(frame);
   }
 
   public DialogPeer createDialog(Dialog target) throws HeadlessException {
@@ -120,7 +121,7 @@ public class UISpecToolkit extends ToolkitDelegate {
   }
 
   public KeyboardFocusManagerPeer getKeyboardFocusManagerPeer() throws HeadlessException {
-    return null;
+    return XKeyboardFocusManagerPeer.getInstance();
   }
 
   public KeyboardFocusManagerPeer createKeyboardFocusManagerPeer(KeyboardFocusManager manager) throws HeadlessException {

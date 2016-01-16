@@ -361,7 +361,7 @@ public class ProjectUpgradeV40 {
       for (Glob project : repository.getAll(Project.TYPE)) {
         GlobList items = repository.getAll(ProjectItem.TYPE, linkedTo(project, ProjectItem.PROJECT));
         if (items.containsValue(ProjectItem.SEQUENCE_NUMBER, null)) {
-          items.sort(new GlobFieldsComparator(ProjectItem.FIRST_MONTH, true, ProjectItem.LABEL, true));
+          items.sortSelf(new GlobFieldsComparator(ProjectItem.FIRST_MONTH, true, ProjectItem.LABEL, true));
           int index = 0;
           for (Glob item : items) {
             repository.update(item.getKey(), ProjectItem.SEQUENCE_NUMBER, index++);
