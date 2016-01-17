@@ -98,7 +98,7 @@ public class BnpConnectorDemo {
                   }
                 }).setNext(new IdAction("main-iframe") {
                 public Action action(Document document, WebEngine engine) {
-                  engine.executeScript("$('#main-iframe').contents().find('a:contains(Suivant)').click();");
+                  engine.executeScript("$('#main-iframe').contents().find('a:contains(Suivant)')[0].click();");
                   return next;
                 }
               })
