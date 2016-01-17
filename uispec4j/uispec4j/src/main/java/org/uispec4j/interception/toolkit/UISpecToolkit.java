@@ -1,8 +1,8 @@
 package org.uispec4j.interception.toolkit;
 
 import org.uispec4j.UISpec4J;
+import sun.awt.KeyboardFocusManagerPeerImpl;
 import sun.awt.LightweightFrame;
-import sun.awt.X11.XKeyboardFocusManagerPeer;
 import sun.awt.datatransfer.DataTransferer;
 
 import javax.swing.*;
@@ -121,7 +121,27 @@ public class UISpecToolkit extends ToolkitDelegate {
   }
 
   public KeyboardFocusManagerPeer getKeyboardFocusManagerPeer() throws HeadlessException {
-    return XKeyboardFocusManagerPeer.getInstance();
+    return new KeyboardFocusManagerPeerImpl() {
+
+      private Component comp;
+      private Window win;
+
+      public void setCurrentFocusedWindow(Window win) {
+        this.win = win;
+      }
+
+      public Window getCurrentFocusedWindow() {
+        return win;
+      }
+
+      public void setCurrentFocusOwner(Component comp) {
+        this.comp = comp;
+      }
+
+      public Component getCurrentFocusOwner() {
+        return comp;
+      }
+    };
   }
 
   public KeyboardFocusManagerPeer createKeyboardFocusManagerPeer(KeyboardFocusManager manager) throws HeadlessException {
