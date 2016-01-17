@@ -120,7 +120,7 @@
     <style selector="radioButton" opaque="false"/>
 
     <style selector="button.actionsButton" tooltipText="$budgetView.actions.tooltip"
-           ui="hyperlinkButton" weightX="0"
+           ui="hyperlinkButtonWithoutUnderline" weightX="0"
            iconTextGap="3"
            icon="arrowButton(14,14,hyperlink)"
            rolloverIcon="arrowButton(14,14,hyperlink.rollover)"
