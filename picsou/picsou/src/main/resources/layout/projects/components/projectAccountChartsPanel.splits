@@ -36,13 +36,13 @@
     </row>
     <repeat ref="accountCharts">
       <verticalBoxes name="accountPanel">
-        <row marginTop="10" marginBottom="4">
-          <button ref="accountChartButton" styleClass="dropdown"/>
+        <row marginTop="5" marginBottom="4" weightY="0.1">
+          <button ref="accountChartButton" styleClass="dropdown" anchor="center"/>
           <filler fill="horizontal" weightX="100"/>
-          <label ref="accountPositionLabel" styleClass="secondarySectionSubtitle" marginBottom="2"/>
-          <toggleButton ref="toggleGraph" weightX="0.1" margin="0" marginLeft="10"/>
+          <label ref="accountPositionLabel" styleClass="secondarySectionSubtitle" marginBottom="2" anchor="center"/>
+          <toggleButton ref="toggleGraph" weightX="0.1" margin="0" marginLeft="10" anchor="center"/>
         </row>
-        <component ref="accountHistoChart" background="sidebar.bg"/>
+        <component ref="accountHistoChart" background="sidebar.bg" weightY="10" marginBottom="15"/>
       </verticalBoxes>
     </repeat>
   </column>
