@@ -86,7 +86,7 @@
                 title="Est-il possible de gérer des comptes qui utilisent différentes devises ?"/>
         </page>
 
-        <page file="support/faq/import.html" title="Import des relevés bancaires">
+        <page file="support/faq/import.html" title="Import / saisie des relevés bancaires">
           <page file="support/faq/import/banques_francaises_connexion_directe.html"
                 title="A quelles banques Françaises BudgetView se connecte-t-il directement ?"/>
           <page file="support/faq/import/banque_non_listee.html"
