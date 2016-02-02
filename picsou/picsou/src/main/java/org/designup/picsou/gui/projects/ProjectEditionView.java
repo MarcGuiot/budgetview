@@ -122,6 +122,9 @@ public class ProjectEditionView extends View implements GlobSelectionListener {
         JPopupMenu menu = new JPopupMenu();
         menu.add(modifyAction);
         menu.add(new DuplicateProjectAction(repository, directory));
+        menu.addSeparator();
+        menu.add(new SortProjectItemsAction(repository, directory));
+        menu.addSeparator();
         menu.add(new DeleteProjectAction(repository, directory));
         return menu;
       }
@@ -131,7 +134,6 @@ public class ProjectEditionView extends View implements GlobSelectionListener {
     builder.add("scroller", scrollPane);
 
     activationToggle = builder.addToggleEditor("activeToggle", Project.ACTIVE);
-    builder.add("modify", modifyAction);
 
     projectEditor = new ProjectEditor(factory, repository, directory);
     builder.add("projectEditor", projectEditor.getPanel());
@@ -183,11 +185,6 @@ public class ProjectEditionView extends View implements GlobSelectionListener {
     builder.add("addTransferItem", new JButton(new AddItemAction("projectEdition.addItem.transfer", ProjectItemType.TRANSFER)));
 
     builder.add("backToList", new BackToListAction());
-
-    JPopupMenu displayActionsPopup = new JPopupMenu();
-    displayActionsPopup.add(new SortProjectItemsAction(repository, directory));
-    JPopupButton displayActionsButton = new JPopupButton(Lang.get("projectEdition.itemsActions"), displayActionsPopup);
-    builder.add("displayActions", displayActionsButton);
 
     parentBuilder.add("projectEditionView", builder);
 

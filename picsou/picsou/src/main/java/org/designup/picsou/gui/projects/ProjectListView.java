@@ -20,13 +20,11 @@ import org.globsframework.gui.views.GlobLabelView;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.Key;
-import org.globsframework.model.utils.GlobComparators;
 import org.globsframework.model.utils.GlobFieldsComparator;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.Comparator;
 
 public class ProjectListView extends View {
 

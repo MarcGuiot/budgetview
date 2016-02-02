@@ -259,7 +259,7 @@
         pressedTextColor="customButton.small.text.pressed"
         disabledTextColor="customButton.small.text.disabled"/>
     <style selector="button.smallButton" ui="customButtonSmallUI"
-           font="-,plain,11" foreground="customButton.small.text" weightX="0.01" fill="none" anchor="center"/>
+           font="-,plain,12" foreground="customButton.small.text" weightX="0.01" fill="none" anchor="center"/>
 
 
     <!-- Icon buttons -->

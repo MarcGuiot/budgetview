@@ -15,7 +15,7 @@
         rolloverTextColor="projectView.onoff.text.rollover"/>
 
     <style selector="#monthSlider"
-           font="-,plain,11" fixedWidth="false"
+           font="-,plain,13" fixedWidth="false"
            marginLeft="10" marginRight="10"
            foreground="projectView.view.month.text"
            iconColor="projectView.view.month.arrow"
@@ -52,8 +52,7 @@
         <row marginTop="8" marginBottom="10">
           <component ref="projectEditor"/>
           <filler fill="horizontal" weightX="0.1"/>
-          <toggleButton ref="activeToggle" anchor="north" marginTop="8" marginLeft="5" marginRight="5"/>
-          <button action="modify" styleClass="editIcon" autoHideSource="activeToggle" anchor="north" marginTop="5"/>
+          <toggleButton ref="activeToggle" anchor="north" marginLeft="5" marginRight="5"/>
         </row>
         <row>
           <component ref="monthSlider" marginBottom="10"/>
@@ -89,7 +88,6 @@
     <row>
       <button action="backToList" name="backToList" styleClass="navigation"/>
       <filler fill="horizontal"/>
-      <button ref="displayActions" styleClass="actionsButton" foreground="block.item.link"/>
     </row>
 
   </column>

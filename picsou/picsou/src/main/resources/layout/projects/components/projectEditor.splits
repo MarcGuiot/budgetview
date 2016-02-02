@@ -6,7 +6,7 @@
            ui="hyperlinkButtonWithoutUnderline"
            foreground="projectView.nameButton"
            fill="none" anchor="left" weightX="100"
-           font="-,bold,16" cursor="hand"
+           font="-,bold,18" cursor="hand"
            icon="downArrow(14,18,12,12,block.inner.arrow.idle)"
            rolloverIcon="downArrow(14,18,12,12,block.inner.arrow.rollover)"
            pressedIcon="downArrow(14,18,12,12,block.inner.arrow.pressed)"
@@ -23,6 +23,7 @@
     <card name="readonly">
       <column>
         <button ref="projectNameButton" anchor="left"/>
+        <filler fill="vertical"/>
       </column>
     </card>
     <card name="edit">
@@ -36,7 +37,7 @@
           <button action="cancel" styleClass="smallButton" marginLeft="10"/>
           <button action="validate" styleClass="smallButton" marginLeft="10"/>
         </row>
-
+        <filler fill="vertical"/>
       </column>
     </card>
   </cards>

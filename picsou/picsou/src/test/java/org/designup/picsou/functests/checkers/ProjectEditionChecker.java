@@ -61,7 +61,7 @@ public class ProjectEditionChecker extends ViewChecker {
   }
 
   public ProjectEditionChecker edit() {
-    getPanel().getPanel("projectPanel").getButton("modify").click();
+    getPopup().click(Lang.get("rename"));
     return this;
   }
 
@@ -137,13 +137,11 @@ public class ProjectEditionChecker extends ViewChecker {
 
   public ProjectEditionChecker checkProjectButtonsHidden() {
     assertFalse(getPanel().getToggleButton("activeToggle").isVisible());
-    assertFalse(getPanel().getButton("modify").isVisible());
     return this;
   }
 
   public ProjectEditionChecker checkProjectButtonsShown() {
     assertTrue(getPanel().getToggleButton("activeToggle").isVisible());
-    assertTrue(getPanel().getButton("modify").isVisible());
     return this;
   }
 
@@ -385,7 +383,7 @@ public class ProjectEditionChecker extends ViewChecker {
   }
 
   public void sortItems() {
-    PopupButton.init(getPanel(), "displayActions").click(Lang.get("projectEdition.sortItems"));
+    getPopup().click(Lang.get("projectEdition.sortItems"));
   }
 
   public ProjectDuplicationDialogChecker openDuplicate() {
