@@ -26,6 +26,13 @@ public class DashboardTest extends LoggedInFunctionalTestCase {
       .addTransaction("2014/08/09", -200.00, "FNAC")
       .load();
 
+    dashboard.checkContent(
+      "| 0     | Days since your last import                                       |\n" +
+      "| 3     | Transactions to categorize                                        |\n" +
+      "| sunny | No overdraw forecast for your accounts until the end of September |\n" +
+      "| +250  | Available on your main accounts until the end of September        |\n" +
+      "| +250  | Total amount for your main accounts on 2014/08/09                 |\n");
+
     OfxBuilder.init(this)
       .addBankAccount(-1, 10674, "000234", 1000.0, "2014/08/12")
       .addTransaction("2014/07/28", -50.00, "Free")
@@ -167,6 +174,28 @@ public class DashboardTest extends LoggedInFunctionalTestCase {
       "| +6250 | Total amount for all your accounts on 2014/08/01                 |");
     dashboard.clearCurrentFilter();
     mainAccounts.checkNoAccountsSelected();
+  }
+
+  public void testUsingADeferredCardAccount() throws Exception {
+    OfxBuilder.init(this)
+      .addBankAccount(-1, 10674, "000123", 250.0, "2014/08/09")
+      .addTransaction("2014/07/28", 3000.00, "WorldCo")
+      .addTransaction("2014/08/05", -100.00, "Auchan")
+      .addTransaction("2014/08/09", -200.00, "FNAC")
+      .addTransaction("2014/08/02", -60.00, "Esso")
+      .load();
+
+    mainAccounts.edit("Account n. 000123")
+      .setAsDeferredCard()
+      .checkDeferredWarning()
+      .validate();
+
+    dashboard.checkContent(
+      "| 0     | Days since your last import                                       |\n" +
+      "| 4     | Transactions to categorize                                        |\n" +
+      "| sunny | No overdraw forecast for your accounts until the end of September |\n" +
+      "| 0     | Available on your main accounts until the end of September        |\n" +
+      "| +250  | Total amount for your main accounts on 2014/08/09                 |\n");
   }
 
   public void testNothingShownBeforeFirstAccountIsCreated() throws Exception {
