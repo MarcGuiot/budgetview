@@ -2,6 +2,7 @@ package org.designup.picsou.functests.budget;
 
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
+import org.designup.picsou.model.SignpostStatus;
 
 public class CarryOverTest extends LoggedInFunctionalTestCase {
 
@@ -61,6 +62,8 @@ public class CarryOverTest extends LoggedInFunctionalTestCase {
       .setNewIncome("WorldCo", "Salary", 1000.00)
       .setNewVariable("Auchan", "Courses", -100.00);
 
+    timeline.selectMonth("2008/08");
+
     budgetView.variable.checkContent("| Courses | 75.00 | 100.00 |");
     mainAccounts.getChart("Account n. 0001234")
       .checkValue(200808, 1, 275.00)
@@ -69,7 +72,6 @@ public class CarryOverTest extends LoggedInFunctionalTestCase {
       .checkValue(200809, 4, 1075.00)
       .checkValue(200810, 4, 1975.00);
 
-    timeline.selectMonths("2008/08");
     budgetView.variable.carryExpensesRemainderOver("Courses");
 
     budgetView.variable.checkContent("| Courses | 75.00 | 75.00 |");

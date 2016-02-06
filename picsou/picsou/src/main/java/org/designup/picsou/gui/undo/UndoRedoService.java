@@ -110,7 +110,7 @@ public class UndoRedoService {
   public void dump(PrintStream out) {
     for (Change change : changesToUndo) {
       out.append(change.toString());
-      out.append("\n\n--------------------------------");
+      out.append("\n--------------------------------\n");
     }
   }
 
