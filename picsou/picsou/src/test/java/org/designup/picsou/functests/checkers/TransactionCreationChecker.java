@@ -4,8 +4,14 @@ import junit.framework.Assert;
 import org.designup.picsou.functests.checkers.components.AmountEditorChecker;
 import org.designup.picsou.utils.Lang;
 import org.uispec4j.*;
+import org.uispec4j.Button;
+import org.uispec4j.Panel;
+import org.uispec4j.Window;
 
 import javax.swing.*;
+
+import java.awt.*;
+import java.awt.event.KeyEvent;
 
 import static org.uispec4j.assertion.UISpecAssert.*;
 
@@ -118,8 +124,16 @@ public class TransactionCreationChecker extends ViewChecker {
 
   public TransactionCreationChecker checkLabelAutocompletion(String label, String completion) throws Exception {
     TextBox textBox = getPanel().getInputTextBox("label");
+
     JTextField textField = (JTextField) textBox.getAwtComponent();
+
+    char keyCode = Character.toUpperCase(label.charAt(0));
+    textField.dispatchEvent(new KeyEvent(textField, KeyEvent.KEY_PRESSED, System.currentTimeMillis(), KeyEvent.SHIFT_DOWN_MASK, keyCode, keyCode));
+
     textField.setText(label);
+
+    keyCode = Character.toUpperCase(label.charAt(label.length() - 1));
+    textField.dispatchEvent(new KeyEvent(textField, KeyEvent.KEY_RELEASED, System.currentTimeMillis(), KeyEvent.SHIFT_DOWN_MASK, keyCode, keyCode));
 
     Assert.assertEquals(completion, textField.getText());
     return this;
