@@ -98,7 +98,12 @@ public class SortedGlobList implements Iterable<Glob> {
 
   public void updateSorting() {
     if (!list.isEmpty()) {
-      Collections.sort(list, comparator);
+      try {
+        Collections.sort(list, comparator);
+      }
+      catch (Exception e) {
+        throw new RuntimeException("Sort failed for " + list + " with comparator " + comparator, e);
+      }
     }
   }
 

@@ -711,7 +711,7 @@ public class RestartTest extends RestartTestCase {
     screen.checkBackgroundColorIsBlack();
 
     PreferencesChecker preferences2 = operations.openPreferences();
-    preferences2.checkColorThemeSelected(ColorTheme.BLUE);
+    preferences2.checkColorThemeSelected(ColorTheme.BLACK);
     preferences2.selectColorTheme(ColorTheme.STANDARD);
     preferences2.validate();
 

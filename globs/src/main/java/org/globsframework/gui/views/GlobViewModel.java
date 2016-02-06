@@ -5,7 +5,6 @@ import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.*;
 import org.globsframework.model.utils.*;
 import org.globsframework.utils.Log;
-import org.globsframework.utils.exceptions.ItemAlreadyExists;
 
 import java.util.Comparator;
 import java.util.HashSet;
@@ -169,7 +168,7 @@ public class GlobViewModel implements ChangeSetListener, Disposable {
       }
     }
     catch (Exception e) {
-      throw new RuntimeException(e);
+      throw new RuntimeException("Error updating model for " + type, e);
     }
   }
 

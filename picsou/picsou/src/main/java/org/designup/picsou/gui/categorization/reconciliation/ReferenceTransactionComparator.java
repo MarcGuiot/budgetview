@@ -3,8 +3,7 @@ package org.designup.picsou.gui.categorization.reconciliation;
 import org.designup.picsou.model.Month;
 import org.designup.picsou.model.Transaction;
 import org.globsframework.model.Glob;
-import org.globsframework.model.GlobList;
-import org.globsframework.model.format.GlobPrinter;
+import org.globsframework.streams.accessors.IntegerAccessor;
 import org.globsframework.utils.Utils;
 
 import java.util.Comparator;
@@ -65,16 +64,21 @@ public class ReferenceTransactionComparator implements Comparator<Glob> {
       return 1;
     }
 
-    return Utils.compare(transactionLabel1, transactionLabel2);
+    int labelComparison = Utils.compare(transactionLabel1, transactionLabel2);
+    if (labelComparison != 0) {
+      return labelComparison;
+    }
+
+    return Integer.compare(transaction1.get(Transaction.ID), transaction2.get(Transaction.ID));
   }
 
   private double getAmountDistance(Glob transaction) {
     return Math.abs(amount - transaction.get(Transaction.AMOUNT));
   }
 
-  public static int getDateDistance(Glob transaction1, Integer month, Integer day) {
+  public static int getDateDistance(Glob transaction, Integer month, Integer day) {
     return Month.distance(month, day,
-                          transaction1.get(Transaction.POSITION_MONTH),
-                          transaction1.get(Transaction.POSITION_DAY));
+                          transaction.get(Transaction.POSITION_MONTH),
+                          transaction.get(Transaction.POSITION_DAY));
   }
 }

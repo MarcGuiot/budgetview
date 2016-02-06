@@ -474,7 +474,9 @@ public class Panel extends AbstractUIComponent {
     return new Assertion() {
       public void check() {
         Component[] swingComponents = getSwingComponents(swingComponentClass, name);
-        AssertAdapter.assertTrue(swingComponents.length > 0);
+        if (swingComponents.length == 0) {
+          AssertAdapter.fail("Component '" + name + "' of type " + swingComponentClass.getSimpleName() + " not found in:\n" + getDescription());
+        }
       }
     };
   }
