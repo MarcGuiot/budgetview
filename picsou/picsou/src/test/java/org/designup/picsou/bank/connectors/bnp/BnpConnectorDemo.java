@@ -19,8 +19,12 @@ import org.w3c.dom.Element;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 public class BnpConnectorDemo {
+
+  private JavaBridge javaBridge;
 
   private void initAndShowGUI() {
     JFrame frame = new JFrame("JavaFX");
@@ -96,20 +100,22 @@ public class BnpConnectorDemo {
                   public void run(WebEngine engine) {
                     engine.executeScript("$('#main-iframe').contents().find('#input-pays-residence1 option:contains(ofx)').prop('selected', true);");
                   }
-                }).setNext(new IdAction("main-iframe") {
-                public Action action(Document document, WebEngine engine) {
-                  engine.executeScript("$('#main-iframe').contents().find('a:contains(Suivant)')[0].click();");
-                  return next;
+                }).setNext(new ProtectedAction("main-iframe") {
+                public void run(WebEngine engine) {
+                  System.out.println("BnpConnectorDemo.action search suivant");
+                  engine.executeScript("$('#main-iframe').contents().find('a:contains(\"Suivant\")')[0].click();");
                 }
               })
-              .setNext(new LastAction(){
+                .setNext(new DownloadAction("main-iframe"))
+              .setNext(new LastAction() {
                 public Action action(Document document, WebEngine engine) {
-                  System.out.println("Done ident");
                   engine.executeScript("clearInterval(intervalTimer);");
+                  System.out.println("Done content link to import : " + javaBridge.link);
                   return null;
                 }
               });
-              window.setMember("app", new JavaBridge(document, engine, action));
+              javaBridge = new JavaBridge(document, engine, action);
+              window.setMember("app", javaBridge);
               engine.executeScript("intervalTimer = setInterval(" +
                                    "function() {\n" +
                                    "  app.nextState();\n" +
@@ -139,13 +145,13 @@ public class BnpConnectorDemo {
               })
               .setNext(new LastAction(){
                 public Action action(Document document, WebEngine engine) {
-                  System.out.println("Done content.");
                   engine.executeScript("clearInterval(intervalTimer);");
                   return null;
                 }
               });
 
-              window.setMember("app", new JavaBridge(document, engine, action));
+              JavaBridge javaBridge = new JavaBridge(document, engine, action);
+              window.setMember("app", javaBridge);
 
               engine.executeScript("intervalTimer = setInterval(" +
                                    "function() {\n" +
@@ -174,6 +180,7 @@ public class BnpConnectorDemo {
   }
 
   public static class JavaBridge {
+    java.util.List link = new ArrayList();
     private Document document;
     private WebEngine engine;
     Action action;
@@ -183,6 +190,10 @@ public class BnpConnectorDemo {
       this.document = document;
       this.engine = engine;
       this.action = action;
+    }
+
+    public void add(Object value){
+      link.add(value);
     }
 
     public void nextState() {
@@ -351,6 +362,21 @@ public class BnpConnectorDemo {
 
     public String toString() {
       return "last action";
+    }
+  }
+
+  private class DownloadAction extends ProtectedAction {
+    public DownloadAction(String id) {
+      super(id);
+    }
+
+    public void run(WebEngine engine) {
+      System.out.println("BnpConnectorDemo.action download");
+      engine.executeScript("var section1 = $('#main-iframe').contents().find('section:contains(\"Télécharger mes opérations\")').eq(0); " +
+                           "section1.find('tbody tr').each(function(i, tr) { " +
+                           " var val = $(tr).find('a').attr('href');" +
+                           " app.add(val); } )"
+      );
     }
   }
 }
