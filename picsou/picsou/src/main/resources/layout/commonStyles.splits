@@ -120,7 +120,7 @@
     <style selector="radioButton" opaque="false"/>
 
     <style selector="button.actionsButton" tooltipText="$budgetView.actions.tooltip"
-           ui="hyperlinkButton" weightX="0"
+           ui="hyperlinkButtonWithoutUnderline" weightX="0"
            iconTextGap="3"
            icon="arrowButton(14,14,hyperlink)"
            rolloverIcon="arrowButton(14,14,hyperlink.rollover)"
@@ -259,7 +259,7 @@
         pressedTextColor="customButton.small.text.pressed"
         disabledTextColor="customButton.small.text.disabled"/>
     <style selector="button.smallButton" ui="customButtonSmallUI"
-           font="-,plain,11" foreground="customButton.small.text" weightX="0.01" fill="none" anchor="center"/>
+           font="-,plain,12" foreground="customButton.small.text" weightX="0.01" fill="none" anchor="center"/>
 
 
     <!-- Icon buttons -->

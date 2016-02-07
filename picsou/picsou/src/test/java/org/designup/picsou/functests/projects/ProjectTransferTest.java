@@ -2,10 +2,7 @@ package org.designup.picsou.functests.projects;
 
 import org.designup.picsou.functests.utils.LoggedInFunctionalTestCase;
 import org.designup.picsou.functests.utils.OfxBuilder;
-import org.designup.picsou.gui.model.SeriesStat;
 import org.designup.picsou.model.*;
-import org.globsframework.model.format.GlobPrinter;
-import org.globsframework.utils.Log;
 
 public class ProjectTransferTest extends LoggedInFunctionalTestCase {
   protected void setUp() throws Exception {
@@ -106,8 +103,8 @@ public class ProjectTransferTest extends LoggedInFunctionalTestCase {
 
   public void testNavigatingFromSeriesAndRenaming() throws Exception {
 
-    createMainAccount("Main account");
-    createSavingsAccount("Savings account");
+    createMainAccount("Main account", "001111");
+    createSavingsAccount("Savings account", "002222");
 
     OfxBuilder.init(this)
       .addBankAccount("001111", 1000.00, "2010/12/01")
@@ -191,17 +188,17 @@ public class ProjectTransferTest extends LoggedInFunctionalTestCase {
       .addBankAccount("001111", 1000.00, "2010/12/01")
       .addTransaction("2010/12/01", 1000.00, "Income")
       .addTransaction("2010/12/01", 100.00, "Transfer 1")
-      .load();
+      .loadInAccount("Main Account 1");
 
     OfxBuilder.init(this)
       .addBankAccount("002222", 10000.00, "2010/12/01")
       .addTransaction("2010/12/01", 1000.00, "Blah")
-      .load();
+      .loadInAccount("Main account 2");
 
     OfxBuilder.init(this)
       .addBankAccount("00333", 10000.00, "2010/12/01")
       .addTransaction("2010/12/01", 1000.00, "Blah")
-      .load();
+      .loadInAccount("Savings Account 1");
 
     projects.createFirst();
     currentProject
@@ -231,8 +228,8 @@ public class ProjectTransferTest extends LoggedInFunctionalTestCase {
 
   public void testDeletingTheSelectedSavingsAccount() throws Exception {
 
-    createMainAccount("Main account 1");
-    createSavingsAccount("Savings account 1");
+    createMainAccount("Main account 1", "001111");
+    createSavingsAccount("Savings account 1", "002222");
 
     projects.createFirst();
     currentProject
@@ -253,8 +250,8 @@ public class ProjectTransferTest extends LoggedInFunctionalTestCase {
 
   public void testChangingTheSavingsAccountToMainDeletesTheProjectItem() throws Exception {
 
-    createMainAccount("Main account 1");
-    createSavingsAccount("Savings account 1");
+    createMainAccount("Main account 1", "001111");
+    createSavingsAccount("Savings account 1", "002222");
 
     projects.createFirst();
     currentProject
@@ -274,8 +271,8 @@ public class ProjectTransferTest extends LoggedInFunctionalTestCase {
 
   public void testSwitchingTheFromAndToAccountsInvertsTheSavingsSeriesSign() throws Exception {
 
-    createMainAccount("Main account 1");
-    createSavingsAccount("Savings account 1");
+    createMainAccount("Main account 1", "001111");
+    createSavingsAccount("Savings account 1", "002222");
 
     projects.createFirst();
     currentProject
@@ -342,9 +339,9 @@ public class ProjectTransferTest extends LoggedInFunctionalTestCase {
 
   public void testChangingProjectItemAccountsWithExistingTransactions() throws Exception {
 
-    createMainAccount("Main account 1");
-    createSavingsAccount("Savings account 1");
-    createSavingsAccount("Savings account 2");
+    createMainAccount("Main account 1", "001111");
+    createSavingsAccount("Savings account 1", "002222");
+    createSavingsAccount("Savings account 2", "002222");
 
     projects.createFirst();
     currentProject
@@ -404,9 +401,9 @@ public class ProjectTransferTest extends LoggedInFunctionalTestCase {
   }
 
   public void testNavigatingToTransactions() throws Exception {
-    createMainAccount("Main account 1");
-    createSavingsAccount("Savings account 1");
-    createSavingsAccount("Savings account 2");
+    createMainAccount("Main account 1", "001111");
+    createSavingsAccount("Savings account 1", "002222");
+    createSavingsAccount("Savings account 2", "002222");
 
     OfxBuilder.init(this)
       .addBankAccount("001111", 1000.00, "2010/12/15")
@@ -447,8 +444,8 @@ public class ProjectTransferTest extends LoggedInFunctionalTestCase {
 
   public void testUsingMonthAmounts() throws Exception {
 
-    createMainAccount("Main account 1");
-    createSavingsAccount("Savings account 1");
+    createMainAccount("Main account 1", "001111");
+    createSavingsAccount("Savings account 1", "002222");
 
     projects.createFirst();
     currentProject
@@ -549,8 +546,8 @@ public class ProjectTransferTest extends LoggedInFunctionalTestCase {
   }
 
   public void testDuplicatingAProjectWithMonthTransfers() throws Exception {
-    createMainAccount("Main account 1");
-    createSavingsAccount("Savings account 1");
+    createMainAccount("Main account 1", "001111");
+    createSavingsAccount("Savings account 1", "002222");
 
     projects.createFirst();
     currentProject
@@ -605,12 +602,12 @@ public class ProjectTransferTest extends LoggedInFunctionalTestCase {
     budgetView.transfer.checkSeries("Transfer", "0.00", "10.00");
   }
 
-  private void createMainAccount(String mainAccountName) throws Exception {
+  private void createMainAccount(String mainAccountName, String accountNumber) throws Exception {
     accounts.createNewAccount()
       .setAsMain()
       .setName(mainAccountName)
       .selectBank("CIC")
-      .setAccountNumber("001111")
+      .setAccountNumber(accountNumber)
       .setPosition(1000.00)
       .validate();
 
@@ -622,11 +619,11 @@ public class ProjectTransferTest extends LoggedInFunctionalTestCase {
       .loadInAccount(mainAccountName);
   }
 
-  private void createSavingsAccount(String savingsAccountName) {
+  private void createSavingsAccount(String savingsAccountName, String accountNumber) {
     accounts.createNewAccount()
       .setName(savingsAccountName)
       .selectBank("CIC")
-      .setAccountNumber("002222")
+      .setAccountNumber(accountNumber)
       .setPosition(1000.00)
       .setAsSavings()
       .validate();

@@ -40,7 +40,8 @@ public class ProjectItemViewLayout implements LayoutManager {
     private static final int VERTICAL_MARGIN = 5;
     private static final int IMAGE_LEFT_MARGIN = 20;
     private static final int IMAGE_RIGHT_MARGIN = 10;
-    private static final int SPACE = 5;
+    private static final int HORIZONTAL_SPACE = 5;
+    private static final int HORIZONTAL_SPACE_LARGE = 15;
 
     private static final String MAX_AMOUNT_STRING = "-0.000.00";
 
@@ -202,17 +203,17 @@ public class ProjectItemViewLayout implements LayoutManager {
       itemButtonTop = firstRowBottom - itemButtonSize.height;
       modifyButtonLeft = right - modifyButtonSize.width;
       modifyButtonTop = firstRowBottom - modifyButtonSize.height;
-      activeToggleLeft = modifyButtonLeft - SPACE - activeToggleSize.width;
+      activeToggleLeft = modifyButtonLeft - HORIZONTAL_SPACE - activeToggleSize.width;
       activeToggleTop = firstRowBottom - activeToggleSize.height;
-      plannedAmountLeft = activeToggleLeft - SPACE - plannedAmountSize.width;
+      plannedAmountLeft = activeToggleLeft - HORIZONTAL_SPACE_LARGE - plannedAmountSize.width;
       plannedAmountTop = firstRowBottom - plannedAmountSize.height;
-      slashLabelLeft = plannedAmountLeft - SPACE - slashLabelSize.width;
+      slashLabelLeft = plannedAmountLeft - HORIZONTAL_SPACE - slashLabelSize.width;
       slashLabelTop = firstRowBottom - slashLabelSize.height;
-      actualAmountLeft = slashLabelLeft - SPACE - actualAmountRealWidth;
+      actualAmountLeft = slashLabelLeft - HORIZONTAL_SPACE - actualAmountRealWidth;
       actualAmountTop = firstRowBottom - actualAmountSize.height;
-      gaugeLeft = slashLabelLeft - SPACE - actualAmountSize.width - SPACE - gaugeSize.width;
+      gaugeLeft = slashLabelLeft - HORIZONTAL_SPACE - actualAmountSize.width - HORIZONTAL_SPACE - gaugeSize.width;
       gaugeTop = firstRowBottom - gaugeSize.height;
-      monthSliderLeft = gaugeLeft - SPACE - monthSliderSize.width;
+      monthSliderLeft = gaugeLeft - HORIZONTAL_SPACE_LARGE - monthSliderSize.width;
       monthSliderTop = firstRowBottom - monthSliderSize.height;
       imageLabelLeft = left + IMAGE_LEFT_MARGIN;
       imageLabelTop = firstRowBottom + imageVerticalMargin;
@@ -220,13 +221,13 @@ public class ProjectItemViewLayout implements LayoutManager {
       categorizationWarningTop = categorizationWarningBottom - categorizationWarningSize.height;
       categorizationWarningLeft = imageLabelLeft + imageLabelSize.width + imageRightMargin;
       categorizationWarningActionTop = categorizationWarningBottom - categorizationWarningActionSize.height;
-      categorizationWarningActionLeft = categorizationWarningLeft + categorizationWarningSize.width + SPACE;
+      categorizationWarningActionLeft = categorizationWarningLeft + categorizationWarningSize.width + HORIZONTAL_SPACE;
       linkLeft = imageLabelLeft + imageLabelSize.width + imageRightMargin;
       linkTop = categorizationWarningTop + categorizationWarningSize.height + linkVerticalMargin;
-      linkWidth = right - SPACE;
+      linkWidth = right - HORIZONTAL_SPACE;
       descriptionLeft = linkLeft;
       descriptionTop = linkTop + linkSize.height + linkVerticalMargin;
-      itemButtonWidth = Math.min(itemButtonSize.width, monthSliderLeft - SPACE - left);
+      itemButtonWidth = Math.min(itemButtonSize.width, monthSliderLeft - HORIZONTAL_SPACE - left);
     }
 
     public int getHeight() {

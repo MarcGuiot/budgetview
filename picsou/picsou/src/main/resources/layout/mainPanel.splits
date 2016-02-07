@@ -45,6 +45,18 @@
            foreground="notifications.flag.text" fill="none" anchor="center"
            autoHideIfDisabled="true" marginLeft="10"/>
 
+    <ui name="headerTitleUI"
+        class="org.globsframework.gui.splits.components.HyperlinkButtonUI"
+        rolloverColor="header.title.rollover" underline="false"/>
+    <style selector="button.headerTitle" ui="headerTitleUI"
+           opaque="false" font="OpenSansRegular,plain,20"
+           foreground="header.title"
+           iconTextGap="5"
+           icon="arrowButton(18,18,header.title.icon)"
+           rolloverIcon="arrowButton(18,18,header.title.rollover)"
+           horizontalAlignment="left"
+           fill="none" anchor="right" />
+
   </styles>
 
   <column ref="mainPanel" opaque="false">
@@ -64,16 +76,12 @@
     <panel name="timeviewHeader" layout="org.designup.picsou.gui.utils.HeaderPanelLayout"
            background="header.bg" opaque="true"
            border="matte(0,0,1,0,header.border)">
-      <button ref="periodTitle" opaque="false" font="OpenSansRegular,plain,20"
-              styleClass="hyperlinkWithoutUnderline" foreground="header.title"
-              iconTextGap="5"
-              icon="arrowButton(18,18,header.title.icon)"
-              rolloverIcon="arrowButton(18,18,hyperlink.rollover)"
-              horizontalAlignment="left"/>
+      <button ref="periodTitle" styleClass="headerTitle"
+/>
       <component ref="timeView" border="empty"/>
       <button ref="importFile"
               icon="download(24,26,header.title)"
-              rolloverIcon="download(24,26,hyperlink.rollover)"
+              rolloverIcon="download(24,26,header.title.rollover)"
               styleClass="iconOnly" tooltipText="$import.tooltip"/>
     </panel>
 

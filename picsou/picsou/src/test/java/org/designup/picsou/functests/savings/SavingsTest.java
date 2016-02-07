@@ -1407,13 +1407,7 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
 
     categorization.selectAllTransactions()
       .selectTransfers()
-      .createSeries()
-      .setName("Virt Epargne")
-      .checkToContentEquals("Account n. 111222", "Account n. 00001123", "External account")
-      .setToAccount("Account n. 111222")
-      .checkFromContentEquals("Account n. 111222", "Account n. 00001123", "External account")
-      .setFromAccount("External account")
-      .validate();
+      .checkCreateSeriesMessage("Signs incompatible with valid transfer");
 
     categorization.selectTransaction("Virement vers Epargne")
       .checkTransfersPreSelected()
@@ -1484,39 +1478,36 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
       .checkSavingsSeriesIsSelected("Virt Epargne");
   }
 
-  public void testCanNotChooseTheSameAccount() throws Exception {
+  public void testCannotChooseTheSameAccount() throws Exception {
     OfxBuilder.init(this)
-      .addBankAccount(BankEntity.GENERIC_BANK_ENTITY_ID, 111, "111222", 3000.00, "2008/08/10")
-      .addTransaction("2008/06/06", -100.00, "Virement Epargne")
+      .addBankAccount(BankEntity.GENERIC_BANK_ENTITY_ID, 111, "1111", 1000.00, "2008/08/10")
+      .addTransaction("2008/06/06", -100.00, "Virement 1")
       .load();
-
-    OfxBuilder.init(this)
-      .addTransaction("2008/06/06", -100.00, "Virement vers Epargne")
-      .load();
-
-    mainAccounts.edit("Account n. 111222")
+    mainAccounts.edit("Account n. 1111")
       .setAsSavings()
       .validate();
 
-    mainAccounts.edit("Account n. 00001123")
+    OfxBuilder.init(this)
+      .addBankAccount(BankEntity.GENERIC_BANK_ENTITY_ID, 111, "2222", 2000.00, "2008/08/10")
+      .addTransaction("2008/06/06", -100.00, "Virement 2")
+      .load();
+    mainAccounts.edit("Account n. 2222")
       .setAsSavings()
       .validate();
 
-    SeriesEditionDialogChecker editionDialogChecker = categorization.selectAllTransactions()
-      .selectTransfers()
-      .createSeries();
+    SeriesEditionDialogChecker editionDialogChecker = budgetView.transfer.createSeries();
     editionDialogChecker
       .setName("Virt Epargne")
-      .setToAccount("Account n. 00001123")
-      .setFromAccount("Account n. 00001123")
+      .setFromAccount("Account n. 1111")
+      .setToAccount("Account n. 1111")
       .checkSavingsMessageVisibility(true)
       .checkOkEnabled(false);
     editionDialogChecker
-      .setFromAccount("Account n. 111222")
+      .setFromAccount("Account n. 2222")
       .checkSavingsMessageVisibility(false)
       .checkOkEnabled(true);
     editionDialogChecker
-      .setToAccount("Account n. 111222")
+      .setToAccount("Account n. 2222")
       .checkSavingsMessageVisibility(true)
       .checkOkEnabled(false)
       .cancel();
@@ -1593,8 +1584,11 @@ public class SavingsTest extends LoggedInFunctionalTestCase {
       .selectTransfers()
       .selectSeries("Financement");
 
-    views.selectBudget();
-    budgetView.transfer.alignAndPropagate("Financement");
+    budgetView.transfer.editSeries("Financement")
+      .setPropagationEnabled()
+      .setAmount(100.00)
+      .validate();
+
     timeline.selectAll();
     transactions
       .showPlannedTransactions()

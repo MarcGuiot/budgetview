@@ -78,9 +78,14 @@ public class ImportDialogChecker extends GuiChecker {
   }
 
   public ImportDialogChecker acceptFile() {
-    assertThat(dialog.getTextBox("title").textEquals(Lang.get("import.fileSelection.title")));
+    String titleKey = "import.fileSelection.title";
+    checkTitle(titleKey);
     getImportButton().click();
     return this;
+  }
+
+  public void checkTitle(String titleKey) {
+    assertThat(dialog.getTextBox(ComponentMatchers.innerNameIdentity("title")).textEquals(Lang.get(titleKey)));
   }
 
   public ImportDialogChecker checkFileContent(Object[][] expected) {
@@ -123,7 +128,7 @@ public class ImportDialogChecker extends GuiChecker {
   }
 
   public ImportDialogChecker checkLastStep() {
-    assertThat(dialog.getTextBox("title").textEquals(Lang.get("import.completion.title")));
+    checkTitle("import.completion.title");
     return this;
   }
 
@@ -441,7 +446,7 @@ public class ImportDialogChecker extends GuiChecker {
   }
 
   public void checkPreviewPanelShown() {
-    assertThat(dialog.getTextBox("title").textEquals(Lang.get("import.preview.title")));
+    checkTitle("import.preview.title");
   }
 
   private Panel getAccountTypeSelectionPanel() {

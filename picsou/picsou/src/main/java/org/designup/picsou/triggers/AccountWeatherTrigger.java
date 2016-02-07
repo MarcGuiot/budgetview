@@ -43,15 +43,21 @@ public class AccountWeatherTrigger implements ChangeSetListener {
       Integer accountId = account.get(Account.ID);
       double periodMin = Double.MAX_VALUE;
       WeatherType weather = WeatherType.SUNNY;
-      for (Glob accountStat : repository.getAll(AccountStat.TYPE,
-                                                       and(fieldEquals(AccountStat.ACCOUNT, accountId),
-                                                           fieldIn(AccountStat.MONTH, months)))) {
-        Double monthMin = accountStat.get(AccountStat.FUTURE_MIN_POSITION, 0.00);
-        if (Double.isNaN(monthMin)) {
-          monthMin = accountStat.get(AccountStat.END_POSITION, 0.00);
+      GlobList stats = repository.getAll(AccountStat.TYPE,
+                                         and(fieldEquals(AccountStat.ACCOUNT, accountId),
+                                             fieldIn(AccountStat.MONTH, months)));
+      if (!stats.isEmpty()) {
+        for (Glob accountStat : stats) {
+          Double monthMin = accountStat.get(AccountStat.FUTURE_MIN_POSITION, 0.00);
+          if (Double.isNaN(monthMin)) {
+            monthMin = accountStat.get(AccountStat.END_POSITION, 0.00);
+          }
+          weather = getWeatherType(monthMin, threshold, weather);
+          periodMin = Math.min(periodMin, monthMin);
         }
-        weather = getWeatherType(monthMin, threshold, weather);
-        periodMin = Math.min(periodMin, monthMin);
+      }
+      else {
+        periodMin = 0;
       }
       repository.create(AccountWeather.TYPE,
                         value(AccountWeather.ACCOUNT, accountId),

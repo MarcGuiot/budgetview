@@ -48,6 +48,11 @@ public abstract class ToolkitDelegate extends SunToolkit implements ComponentFac
     getUnderlyingToolkit().sync();
   }
 
+
+  public boolean areExtraMouseButtonsEnabled() throws HeadlessException {
+    return false;
+  }
+
   public boolean isDynamicLayoutActive() throws HeadlessException {
     return getUnderlyingToolkit().isDynamicLayoutActive();
   }

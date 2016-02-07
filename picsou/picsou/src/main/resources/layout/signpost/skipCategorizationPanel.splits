@@ -2,15 +2,15 @@
 
   <styleImport file="/layout/commonStyles.splits"/>
   <styles>
-    <ui name="newVersionPanelUI" class="org.globsframework.gui.splits.components.StyledPanelUI"
+    <ui name="skipPanelUI" class="org.globsframework.gui.splits.components.StyledPanelUI"
         topColor="categorization.skipPanel.top" bottomColor="categorization.skipPanel.bottom"
         borderColor="categorization.skipPanel.border" borderWidth="1" cornerRadius="10"/>
-    <style selector=".highlightedPanel" ui="newVersionPanelUI" marginTop="10" opaque="true"/>
+    <style selector=".skipPanel" ui="skipPanelUI" marginTop="10" marginBottom="5" opaque="false"/>
 
   </styles>
 
-  <panel opaque="false">
-    <panel styleClass="highlightedPanel">
+  <panel opaque="true" background="sidebar.bg">
+    <panel styleClass="skipPanel">
       <htmlEditorPane name="skipCategorizationMessage" text="$signpost.skipCategorization" margin="10"
                       foreground="categorization.skipPanel.text" hyperlinkListener="hyperlinkHandler"/>
     </panel>

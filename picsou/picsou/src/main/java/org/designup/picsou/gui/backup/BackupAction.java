@@ -5,7 +5,6 @@ import org.designup.picsou.gui.components.dialogs.ConfirmationDialog;
 import org.designup.picsou.gui.components.dialogs.MessageDialog;
 import org.designup.picsou.gui.components.dialogs.MessageFileDialog;
 import org.designup.picsou.gui.components.dialogs.MessageType;
-import org.designup.picsou.gui.license.LicenseService;
 import org.designup.picsou.gui.time.TimeService;
 import org.designup.picsou.gui.utils.Gui;
 import org.designup.picsou.utils.Lang;

@@ -31,6 +31,23 @@ public class ReplicationGlobRepository extends DefaultGlobRepository implements 
     repository.addChangeListener(forwardChangeSetListener);
   }
 
+  public void startChangeSet() {
+    super.startChangeSet();
+    originalRepository.startChangeSet();
+  }
+
+  public void completeChangeSet() {
+    originalRepository.completeChangeSet();
+    super.completeChangeSet();
+  }
+
+  public void completeChangeSetWithoutTriggers() {
+    originalRepository.completeChangeSetWithoutTriggers();
+    super.completeChangeSetWithoutTriggers();
+  }
+
+
+
   protected void finalize() throws Throwable {
     super.finalize();
     originalRepository.removeChangeListener(forwardChangeSetListener);
