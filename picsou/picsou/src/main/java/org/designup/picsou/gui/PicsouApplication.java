@@ -60,8 +60,8 @@ import java.util.regex.Pattern;
 
 public class PicsouApplication {
 
-  public static final String APPLICATION_VERSION = "4.03b";
-  public static Long JAR_VERSION = 148L;
+  public static final String APPLICATION_VERSION = "4.03";
+  public static Long JAR_VERSION = 149L;
   public static final Long BANK_CONFIG_VERSION = 7L;
 
   public static final String APPNAME = "budgetview";

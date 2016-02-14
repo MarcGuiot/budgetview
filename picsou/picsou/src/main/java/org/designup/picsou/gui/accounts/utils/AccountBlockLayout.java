@@ -22,6 +22,7 @@ public class AccountBlockLayout extends CustomLayout {
   private static final int CHART_PADDING = 4;
   private static final int CHART_LEFT_PADDING = 4;
   private static final int POSITION_LEFT_MARGIN = 14;
+  private static final int FIX_FOR_TRUNCATED_LABEL = 5;
 
   public int getPreferredWidth() {
     return Integer.MAX_VALUE;
@@ -42,7 +43,7 @@ public class AccountBlockLayout extends CustomLayout {
            accountPosition.getPreferredSize().width +
            iconWidth(selectAccount) +
            iconWidth(toggleGraph) +
-           5 * HORIZONTAL_MARGIN;
+           FIX_FOR_TRUNCATED_LABEL * HORIZONTAL_MARGIN;
   }
 
   protected void init(Container parent) {
@@ -109,7 +110,8 @@ public class AccountBlockLayout extends CustomLayout {
     int maxEditWidth = selectAccountLeft - 2 * HORIZONTAL_MARGIN - left;
     int editAccountLeft = left + HORIZONTAL_MARGIN;
     int editAccountTop = top + firstRowHeight / 2 - editAccount.getPreferredSize().height / 2;
-    int editAccountWidth = editAccount.getPreferredSize().width > maxEditWidth ? maxEditWidth : editAccount.getPreferredSize().width;
+    int preferredEditWidth = editAccount.getPreferredSize().width + FIX_FOR_TRUNCATED_LABEL;
+    int editAccountWidth = preferredEditWidth > maxEditWidth ? maxEditWidth : editAccount.getPreferredSize().width;
     layout(editAccount, editAccountLeft, editAccountTop, editAccountWidth, editAccount.getPreferredSize().height);
 
     if (positionsChart.isVisible()) {

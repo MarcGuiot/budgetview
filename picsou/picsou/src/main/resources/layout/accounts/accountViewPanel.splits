@@ -36,7 +36,7 @@
       <label ref="accountListTitle" styleClass="sidebarSectionTitle" marginLeft="5"/>
       <filler fill="horizontal"/>
       <label ref="referencePosition" styleClass="sidebarSectionTitle" font="OpenSansRegular,plain,14" tooltipText="$accountView.reference.tooltip" anchor="south"/>
-      <label ref="referencePositionDate" styleClass="sidebarSectionTitle" font="OpenSansRegular,plain,11" autoHideSource="referencePosition" marginLeft="5" marginRight="5" anchor="south"/>
+      <label ref="referencePositionDate" styleClass="sidebarSectionTitle" font="OpenSansRegular,plain,11" autoHideSource="referencePosition" marginLeft="5" marginRight="5" marginBottom="2" anchor="south"/>
     </row>
     <repeat ref="accountRepeat" marginBottom="15" opaque="true" background="sidebar.bg">
       <panel ref="accountPanel" marginTop="2" opaque="false">

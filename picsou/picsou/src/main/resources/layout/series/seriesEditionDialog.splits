@@ -14,7 +14,7 @@
   <column styleClass="dialog">
     <label ref="title" styleClass="title"/>
     <panel styleClass="innerDialog">
-      <column styleClass="innerDialogContent" preferredSize="(630,520)">
+      <column styleClass="innerDialogContent" preferredSize="(660,520)">
 
         <cards ref="cards">
 
