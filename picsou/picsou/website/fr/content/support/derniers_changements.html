@@ -2,6 +2,100 @@
 
     <!------------------------------>
 
+    <h2>version 4.03 <span class="date">14 février 2016</span></h2>
+
+    <h3>Nouvelle mécanique d'installation</h3>
+
+    <img src="/files/images_fr/support/versions/v4_03/budgetview_installer_icon.png" align="right" hspace="30"/>
+    <p>Le premier changement visible concerne l'installation de BudgetView, que nous avons reprise de fond en comble :</p>
+    <ul>
+        <li>Sur Windows et Mac OS X il n'est maintenant plus nécessaire que vous installiez Java vous-mêmes sur votre
+            ordinateur. Cela rend l'installation bien plus simple, fonctionne sans manipulations étranges sur Mac
+            (Yosemite et El Capitan), et vous évite les mises à jour fréquentes de Java.</li>
+        <li>Sur Linux, vous disposez maintenant de nombreuses options : une version "script Shell" qui gère
+            l'installation automatique ainsi que des packages RPM (Red Hat, Debora, Suse...) et DEB (Debian, Ubuntu...).
+            Nous avons même fait marcher BudgetView sans problème sur un Raspberry Pi&nbsp;!</li>
+    </ul>
+    <p>La conséquence de ce changement est que la mise à jour automatique ne fonctionnera pas pour cette version :
+        vous devez installer vous même le logiciel sur votre ordinateur.</p>
+
+    <h3>Nouvelle présentation</h3>
+
+    <p>Le second changement visible de cette version concerne l'interface&nbsp:</p>
+
+    <div class="centered-image">
+        <img src="/files/images_fr/support/versions/v4_03/new_look.png"
+             alt="BudgetView : nouvelle présentation pour la version 4.03"/>
+    </div>
+
+    <p>Nous avons revu la présentation de l'application pour&nbsp;:</p>
+    <ul>
+        <li>Mieux guider les nouveaux utilisateurs</li>
+        <li>Avoir un affichage plus propre sur les écrans Retina</li>
+        <li>Faciliter la sélection des mois (via un menu accessible en cliquant sur le mois en haut à gauche de l'écran)</li>
+    </ul>
+
+    <p>Si vous disposez des <a href="/extensions">extensions</a>, vous pouvez maintenant voir l'évolution du solde
+        de vos comptes sur 4 mois au lieu de 2 dans les vues Tableau de Bord, Budget et Relevés.</p>
+
+    <h3>Evolution de la gestion des comptes d'épargne</h3>
+
+    <p>Il est désormais possible de catégoriser des opérations de comptes d'épargne dans des enveloppes qui se trouvent
+        en dehors du poste budgétaire "Virements". Application immédiate : vous pouvez maintenant créer une enveloppe
+        "Intérêts de compte d'épargne" dans le poste "Revenus" pour y classer vos opérations d'intérêts.</p>
+
+    <p>Il nous reste encore du travail pour rendre la gestion des virements internes robuste et facile à comprendre.
+        Cela fera partie de nos travaux pour les prochaines versions.</p>
+
+
+    <h3>Amélioration de l'aide en ligne</h3>
+
+    <p>Nous avons supprimé l'aide intégrée au logiciel et enrichi l'<a href="/support">aide en ligne</a> de manière à avoir un ensemble plus complet et cohérent.</p>
+
+    <h3>Correctifs</h3>
+
+    <p>Et comme toujours, cette version apporte son lot de corrections&nbsp;:</p>
+    <ul>
+        <li>La vue Tableau de Bord affichait dans certains cas une longue suite de 00000.</li>
+        <li>Certaines connexions automatiques à La Banque Postale échouaient lorsqu'il n'y avait aucun compte d'épargne
+            enregistré, et le bouton "Valider" sur la fenêtre de connexion était parfois masqué.</li>
+        <li>La connexion directe au CIC échouait pour certains comptes seulement.</li>
+        <li>L'action Annuler ne fonctionnait pas correctement après avoir utilisé la fonction "Décaler le solde au mois suivant".</li>
+        <li>Les sous-enveloppes n'étaient pas correctement triées dans la vue Catégorisation.</li>
+    </ul>
+
+    <p>Nous continuons à travailler sur un correctif pour la connexion automatique au site BNP Paribas, mais celui-ci n'est pas encore terminé.
+        Il fera l'objet d'une prochaine version.</p>
+
+    <h3>Installation</h3>
+
+    <p>Vous êtes utilisateur de BudgetView 3 ? Un point important doit être noté avant d'installer la version
+        4&nbsp;:</p>
+
+    <div class="warning-block">
+        <p>La version 4 de BudgetView introduit des changements importants dans la façon dont votre budget
+            est représenté au sein du logiciel. Nous avons intensivement testé l'ensemble, que ce soit à travers une
+            batterie de plus de 1500 tests automatiques ou bien à travers nos propres tests manuels, mais par précaution
+            nous
+            vous recommandons de <a href="/support/faq/general/sauvegarde" class="highlighted">faire une sauvegarde de
+                vos données</a> avant d'installer la nouvelle version.</p>
+    </div>
+
+    <p><b>Pour télécharger cette version</b>, rendez-vous sur notre page Téléchargement dès maintenant&nbsp;:
+    </p>
+
+    <p class="centered">
+        <a href="/telechargement">
+            <button type="button" class="btn btn-primary">Télécharger</button>
+        </a>
+    </p>
+
+    <p>Et comme d'habitude, n'hésitez pas à nous écrire à l'adresse
+        <a href="mailto:support@mybudgetview.fr" class="highlighted">support@mybudgetview.fr</a>
+        pour nous faire part de vos commentaires sur cette nouvelle version.</p>
+
+    <!------------------------------>
+
     <h2>version 4.02 <span class="date">31 août 2015</span></h2>
 
     <p>Pour cette version nous avons avant tout cherché à faciliter l'accès aux nouveaux venus.
@@ -35,33 +129,6 @@
     <p>Et comme d'habitude nous avons aussi corrigé quelques bugs que vous nous avez signalés. Notez que si vous
         rencontrez des problèmes de connexion à votre banque vous pouvez maintenant nous faire parvenir facilement les
         informations correspondantes.</p>
-
-    <h3>Installation</h3>
-
-    <p>Vous êtes utilisateur de BudgetView 3 ? Un point important doit être noté avant d'installer la version
-        4&nbsp;:</p>
-
-    <div class="warning-block">
-        <p>La version 4 de BudgetView introduit des changements importants dans la façon dont votre budget
-            est représenté au sein du logiciel. Nous avons intensivement testé l'ensemble, que ce soit à travers une
-            batterie de plus de 1500 tests automatiques ou bien à travers nos propres tests manuels, mais par précaution
-            nous
-            vous recommandons de <a href="/support/faq/general/sauvegarde" class="highlighted">faire une sauvegarde de
-                vos données</a> avant d'installer la nouvelle version.</p>
-    </div>
-
-    <p><b>Pour télécharger cette version</b>, rendez-vous sur notre page Téléchargement dès maintenant&nbsp;:
-    </p>
-
-    <p class="centered">
-        <a href="/telechargement">
-            <button type="button" class="btn btn-primary">Télécharger</button>
-        </a>
-    </p>
-
-    <p>Et comme d'habitude, n'hésitez pas à nous écrire à l'adresse
-        <a href="mailto:support@mybudgetview.fr" class="highlighted">support@mybudgetview.fr</a>
-        pour nous faire part de vos commentaires sur cette nouvelle version.</p>
 
     <!------------------------------>
 
@@ -618,7 +685,7 @@
     <ul>
         <li>Vous pouvez dorénavant importer vos fichiers CSV, par exemple produits à partir
             d'un tableur comme Excel ou Numbers. Pour plus d'informations, consultez le
-            <a href="/support/faq/import-csv">guide d'import CSV</a>.
+            <a href="/support/faq/import/import-csv">guide d'import CSV</a>.
         </li>
         <li>Deux nouvelles options sont disponibles dans le menu des préférences&nbsp;:</li>
         <ul>

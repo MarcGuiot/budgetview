@@ -20,11 +20,6 @@ button.btn {
   font-size: 20px;
 }
 
-button .subtext {
-  font-size: 12px;
-  font-weight: normal;
-}
-
 .centered {
  text-align: center;
 }
@@ -354,36 +349,44 @@ a.showLink:hover, a.hideLink:hover {
 
 #download-notices h3 {
   font-size: 20px;
+  margin-top: 0px;
 }
 
-#download-platforms {
-  background-color: #FFF;
-  background: #FFF;
-  border: solid 1px #E0E0E0;
-  border-radius: 6px;
-  margin-top: 20px;
-  margin-bottom: 20px;
-  border: solid 1px #CCC;
+#download .instructions {
+  width: 70%;
+  margin-left: auto;
+  margin-right: auto;
 }
 
-#download-platforms .platform {
+#download .instructions .image {
   text-align: center;
 }
 
-#download-platforms td#choose-platform  {
-  width: 200px;
-  vertical-align: middle;
+#download-platforms .platform {
+  width: 60%;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  padding: 15px;
+  text-align: center;
 }
 
-#download-platforms td#choose-platform #select {
-  vertical-align: middle;
-  font-size: 18pt;
-  line-height: 1.1em;
-  color: #666;
+#download-platforms .platform h3 {
+  font-size: 20px;
+  margin-top: 5px;
 }
 
-#download-platforms button {
-  width: 100%;
+#download-platforms .platform button {
+  margin-bottom: 5px;
+}
+
+#download-platforms .platform .install {
+  padding-top: 15px;
+}
+
+#download-platforms h3 {
+  text-align: center;
 }
 
 #download-block {
@@ -413,14 +416,6 @@ a.showLink:hover, a.hideLink:hover {
 
 #download td.right {
   padding-left: 0;
-}
-
-#download-details {
-  width:80%;
-  margin-left:auto;
-  margin-right:auto;
-  text-align:center;
-  color: #777;
 }
 
 .platform-download #download {
