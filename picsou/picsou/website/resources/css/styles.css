@@ -372,6 +372,11 @@ a.showLink:hover, a.hideLink:hover {
   text-align: center;
 }
 
+#download-platforms .platform h3 {
+  font-size: 20px;
+  margin-top: 5px;
+}
+
 #download-platforms .platform button {
   margin-bottom: 5px;
 }

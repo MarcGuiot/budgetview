@@ -606,7 +606,7 @@
       </postUninstallScript>
     </linuxRPM>
   </mediaSets>
-  <buildIds buildAll="false">
+  <buildIds buildAll="true">
     <mediaSet refId="213" />
     <mediaSet refId="214" />
   </buildIds>
