@@ -12,6 +12,12 @@
           $("#download-install-instructions").show();
           $('#download-platforms hr').hide();
         }
+        else if (OS_Name.indexOf("iPhone") != -1 || OS_Name.indexOf("iPad") != -1 || OS_Name.indexOf("iPod") != -1) {
+          $('#ios').show();
+          $("#download-install-instructions").hide();
+          $('#download-platforms hr').hide();
+          $("#backup-warning").hide();
+        }
         else if (OS_Name.indexOf("Mac") != -1) {
           $('#mac').show();
           $("#download-install-instructions").show();
@@ -24,12 +30,6 @@
         }
         else if (OS_Name.indexOf("Android") != -1) {
           $('#android').show();
-          $("#download-install-instructions").hide();
-          $('#download-platforms hr').hide();
-          $("#backup-warning").hide();
-        }
-        else if (OS_Name.indexOf("iPhone") != -1 || OS_Name.indexOf("iPad") != -1 || OS_Name.indexOf("iPod") != -1) {
-          $('#ios').show();
           $("#download-install-instructions").hide();
           $('#download-platforms hr').hide();
           $("#backup-warning").hide();
@@ -89,7 +89,7 @@
 
         <div id="linux" class="row platform">
             <div class="col-md-3">
-                <img src="files/images/download/linux.png" alt="Windows">
+                <img src="files/images/download/linux.png" alt="Linux">
             </div>
             <div class="col-md-9">
                 <h3>Pour installer BudgetView<br/>sur votre Ubuntu / Debian&nbsp;:</h3>
