@@ -8,10 +8,6 @@
 
     <page file="telechargement.html" title="Téléchargez BudgetView !" shortTitle="Téléchargement">
       <key name="innerTemplate" value="templates/standardPageTemplate.html"/>
-
-      <page file="telechargement/windows.html" title="Installez BudgetView sur votre PC Windows !"/>
-      <page file="telechargement/macosx.html" title="Installez BudgetView sur votre Mac !"/>
-      <page file="telechargement/linux.html" title="Installez BudgetView sur votre PC Linux !"/>
     </page>
 
     <page file="achat.html" title="Achetez BudgetView !" shortTitle="Achat">
