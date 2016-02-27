@@ -28,6 +28,7 @@ import org.globsframework.utils.exceptions.OperationCancelled;
 import javax.swing.*;
 import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.io.IOException;
 import java.util.*;
 
 import static org.globsframework.model.FieldValue.value;
@@ -145,7 +146,7 @@ public class ImportController implements RealAccountImporter {
       }
     }
 
-    TypedInputStream stream;
+    TypedInputStream stream = null;
     String path = null;
     Glob realAccount = null;
     Integer synchroId = null;
@@ -195,6 +196,16 @@ public class ImportController implements RealAccountImporter {
       Log.write(message, e);
       importDialog.showMessage(message, e.getMessage());
       return false;
+    }
+    finally {
+      if (stream != null) {
+        try {
+          stream.close();
+        }
+        catch (IOException e) {
+          e.printStackTrace();
+        }
+      }
     }
   }
 

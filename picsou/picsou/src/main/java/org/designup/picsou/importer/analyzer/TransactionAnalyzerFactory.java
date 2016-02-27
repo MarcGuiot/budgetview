@@ -100,8 +100,8 @@ public class TransactionAnalyzerFactory {
         catch (UnsupportedEncodingException e) {
           throw new ResourceAccessFailed(e);
         }
-//        XmlGlobParser.parseNoDuplicate(model, repository, reader, "globs");
         XmlGlobParser.parse(model, repository, reader, "globs");
+        reader.close();
       }
 
       repository.safeApply(BankEntity.TYPE, GlobMatchers.ALL, new GlobFunctor() {

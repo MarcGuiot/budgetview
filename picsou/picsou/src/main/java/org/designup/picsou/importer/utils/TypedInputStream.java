@@ -117,6 +117,10 @@ public class TypedInputStream {
     return isWindows;
   }
 
+  public void close() throws IOException {
+    stream.close();
+  }
+
   private class RemoveCRInputStream extends InputStream {
     boolean previousIsCR;
 
