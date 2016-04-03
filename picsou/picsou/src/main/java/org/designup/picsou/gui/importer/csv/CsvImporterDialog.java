@@ -180,8 +180,10 @@ public class CsvImporterDialog {
       GlobBuilder globBuilder = GlobBuilder.init(type);
       int i = 1;
       for (String element : elements) {
-        StringField field = (StringField)type.getField(i);
-        globBuilder.set(field, element);
+        if (i < type.getFieldCount()) {
+          StringField field = (StringField) type.getField(i);
+          globBuilder.set(field, element);
+        }
         i++;
       }
       globs.add(globBuilder.get());
@@ -379,7 +381,6 @@ public class CsvImporterDialog {
 
     public void actionPerformed(ActionEvent e) {
       validate();
-      System.out.println("OkAction.actionPerformed");
       dialog.setVisible(false);
     }
   }

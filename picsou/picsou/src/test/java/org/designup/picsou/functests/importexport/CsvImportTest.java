@@ -263,6 +263,20 @@ public class CsvImportTest extends SpecificBankTestCase {
     doImport(fileName);
   }
 
+  public void testImportWithExtraColumnInBodyLines() throws Exception {
+    String fileName = saveFile(
+      "Date d'operation,Date de valeur,Debit,Credit,Libelle,Solde\n" +
+      "01/05/2008,01/05/2008,-24.80,,PRLV FINAREF VIE 15515580008302 0501120006,625.35,\n" +
+      "01/05/2008,01/05/2008,-64.45,,CHEQUE 0650079,436.06,\n" +
+      "01/06/2008,01/06/2008,-7.57,,PAIEMENT CB 0501 PARIS0003859/ NATURALIA CARTE 41257115,120.46,\n" +
+      "01/10/2008,01/10/2008,-51.55,,PRLV FREE TELECOM FREE HAUTDEBIT 319609820,916.28,\n" +
+      "01/10/2008,01/10/2008,-31.25,,PAIEMENT CB 0901 CHATENAY MALA CASINO GENEDIS CARTE 41257115,704.57,\n" +
+      "01/11/2008,01/10/2008,-327.02,,CIC-ASSURANCES JK4537737 1201099 JK4537737,313.7,\n" +
+      "01/13/2008,01/13/2008,-0.16,,FRAIS PAIE CB OP 7 00 USD,975.74,\n" +
+      "03/03/2008,03/05/2008,,30.00,REM CHQ REF10674R04,143.68,");
+    doImport(fileName);
+  }
+
   public void testImportWithCR() throws Exception {
     String fileName = saveFile(
       "Date d'operation,Date de valeur,Debit,Credit,Libelle,Solde\r\n" +
