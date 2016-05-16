@@ -17,7 +17,7 @@
     <style selector=".dropdown" ui="dropdownButtonUI"
            foreground="sidebar.dropdown"
            anchor="left" fill="none" weightX="1"
-           font="OpenSansRegular,plain,14" cursor="hand"
+           font="OpenSansRegular,bold,14" cursor="hand"
            icon="arrowButton(14,14,sidebar.dropdown.arrow)"
            rolloverIcon="arrowButton(14,14,sidebar.dropdown.arrow.rollover)"
            pressedIcon="arrowButton(14,14,sidebar.dropdown.arrow.pressed)"

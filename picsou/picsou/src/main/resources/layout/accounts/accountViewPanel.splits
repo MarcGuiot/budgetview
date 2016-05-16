@@ -11,8 +11,6 @@
            font="OpenSansRegular,plain,10"
            foreground="sidebar.label.secondary"/>
 
-    <style selector="#editAccount" font="-,plain,14"/>
-
     <style selector=".left label.totalAmount"
            fill="horizontal" horizontalAlignment="left" marginLeft="10"/>
 

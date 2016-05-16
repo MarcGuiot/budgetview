@@ -146,10 +146,6 @@ public class CategorizationChecker extends FilteredViewChecker<CategorizationChe
     return new OtherCategorizationChecker(getPanel(BudgetArea.OTHER), this);
   }
 
-  public AccountEditionChecker createAccount() {
-    return AccountEditionChecker.open(getPanel().getButton("New account").triggerClick());
-  }
-
   public void copyBankFormatToClipboard() {
     JTable jTable = getTable().getAwtComponent();
     KeyUtils.pressKey(jTable, org.uispec4j.Key.plaformSpecificCtrl(org.uispec4j.Key.B));
@@ -162,30 +158,6 @@ public class CategorizationChecker extends FilteredViewChecker<CategorizationChe
   public void checkUserDate(TransactionDetailsChecker details, String yyyyMMdd, String label) {
     selectTransaction(label);
     details.checkBudgetDate(yyyyMMdd);
-  }
-
-  public CategorizationChecker checkAllButTransferBudgetAreaAreDisabled() {
-    for (BudgetArea area : BudgetArea.values()) {
-      if (area == BudgetArea.ALL) {
-        continue;
-      }
-      if (area == BudgetArea.TRANSFER || area == BudgetArea.UNCATEGORIZED) {
-        assertTrue(getPanel().getToggleButton(area.getName()).isEnabled());
-      }
-      else {
-        assertFalse(getPanel().getToggleButton(area.getName()).isEnabled());
-      }
-    }
-    return this;
-  }
-
-  public void checkAllBudgetAreasAreEnabled() {
-    for (BudgetArea area : BudgetArea.values()) {
-      if (area == BudgetArea.ALL) {
-        continue;
-      }
-      assertTrue(getPanel().getToggleButton(area.getName()).isEnabled());
-    }
   }
 
   public CategorizationChecker checkMultipleSeriesSelection() {

@@ -30,10 +30,16 @@
       <key name="innerTemplate" value="templates/supportPageTemplate.html"/>
 
       <page file="support/guides.html" title="Guides de démarrage">
+        <page file="support/guides/principes.html" title="Les grands principes de BudgetView"/>
         <page file="support/guides/import.html" title="Importer vos relevés d'opérations"/>
         <page file="support/guides/categorisation.html" title="Catégoriser vos opérations"/>
         <page file="support/guides/budget.html" title="Finaliser votre budget"/>
-        <page file="support/guides/projets.html" title="Préparer vos projets"/>
+        <page file="support/guides/eviter_decouvert.html" title="Eviter de passer dans le rouge"/>
+        <page file="support/guides/detecter_anomalies.html" title="Détecter des anomalies dans vos relevés"/>
+        <page file="support/guides/trouver_economies.html" title="Trouver des sources d'économies"/>
+        <page file="support/guides/anticiper_depenses.html" title="Anticiper une dépense importante"/>
+        <page file="support/guides/combien_depenser.html" title="Déterminer combien vous pouvez dépenser"/>
+        <page file="support/guides/preparer_projets.html" title="Préparer vos projets"/>
         <page file="support/guides/trucs_astuces.html" title="Trucs &amp; Astuces"/>
       </page>
 
@@ -49,23 +55,26 @@
                 title="Comment se font les mises à jour de BudgetView ?"/>
           <page file="support/faq/general/pourquoi_connexion.html"
                 title="Pourquoi BudgetView se connecte-t-il à Internet ?"/>
-          <page file="support/faq/general/sauvegarde.html"
-                title="Comment puis-je créer des sauvegardes de mes données ?"/>
           <page file="support/faq/general/utilisation_deux_ordinateurs.html"
                 title="Puis-je utiliser BudgetView sur deux ordinateurs ?"/>
           <page file="support/faq/general/remplacant_money.html"
                 title="Est-il possible d'utiliser BudgetView comme remplaçant de Money ?">
             <key name="title.override" value="Remplaçant de Money"/>
           </page>
-          <page file="support/faq/general/migrer_donnees_entre_ordinateurs.html"
-                title="Comment migrer mes données d'un ordinateur à un autre ?"/>
-          <page file="support/faq/general/emplacement_repertoire_donnees.html"
+        </page>
+
+        <page file="support/faq/donnees.html" title="Gérer vos données">
+          <page file="support/faq/donnees/sauvegarde.html"
+                title="Comment puis-je créer des sauvegardes de mes données ?"/>
+          <page file="support/faq/donnees/emplacement_repertoire_donnees.html"
                 title="Où sont stockées les données et les traces de BudgetView sur ma machine ?"/>
-          <page file="support/faq/general/deplacement_repertoire_donnees.html"
+          <page file="support/faq/donnees/migrer_donnees_entre_ordinateurs.html"
+                title="Comment migrer mes données d'un ordinateur à un autre ?"/>
+          <page file="support/faq/donnees/deplacement_repertoire_donnees.html"
                 title="Peut-on déplacer le répertoire de données, par exemple pour utiliser un service de stockage en ligne tel que Dropbox ou Google Drive ?"/>
         </page>
 
-        <page file="support/faq/comptes.html" title="Gestion des comptes">
+        <page file="support/faq/comptes.html" title="Gérer vos comptes">
           <page file="support/faq/comptes/types_comptes.html"
                 title="Quels types de comptes peut-on gérer ?"/>
           <page file="support/faq/comptes/utiliser_plusieurs_comptes.html"
@@ -78,7 +87,7 @@
                 title="Est-il possible de gérer des comptes qui utilisent différentes devises ?"/>
         </page>
 
-        <page file="support/faq/import.html" title="Import / saisie des relevés bancaires">
+        <page file="support/faq/import.html" title="Importer / saisir vos relevés bancaires">
           <page file="support/faq/import/banques_francaises_connexion_directe.html"
                 title="A quelles banques Françaises BudgetView se connecte-t-il directement ?"/>
           <page file="support/faq/import/banque_non_listee.html"
@@ -93,7 +102,7 @@
                 title="Comment pointer les opérations ?"/>
         </page>
 
-        <page file="support/faq/categorisation.html" title="Catégorisation des opérations">
+        <page file="support/faq/categorisation.html" title="Catégoriser vos opérations">
           <page file="support/faq/categorisation/virements.html"
                 title="Comment classer les opérations de virement ?"/>
           <page file="support/faq/categorisation/ventiler_operation.html"
@@ -102,7 +111,7 @@
                 title="Comment décaler une opération au mois précédent ou suivant ?"/>
         </page>
 
-        <page file="support/faq/operations.html" title="Gestion des opérations">
+        <page file="support/faq/operations.html" title="Gérer vos opérations">
           <page file="support/faq/operations/operations_recurrentes.html"
                 title="Comment gère-t-on les opérations récurrentes ?"/>
           <page file="support/faq/operations/supprimer_operation.html"
@@ -110,7 +119,7 @@
         </page>
 
 
-        <page file="support/faq/mobile.html" title="Utilisation sur smartphone et tablette">
+        <page file="support/faq/mobile.html" title="Utiliser BudgetView sur smartphone et tablette">
           <page file="support/faq/mobile/utilisation_android.html"
                 title="Comment utiliser l'application Android ?"/>
           <page file="support/faq/mobile/version_iphone_ipad.html"
