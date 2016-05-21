@@ -18,11 +18,11 @@ open "budgetview.jar"
      -"budgetview.jar!net/roydesign/mac/*.class"
      -"budgetview.jar!net/roydesign/event/*.class";
 
-exclude   picsou.^ExceptionHandler and
-          picsou.^Main and
-          picsou.Main main(*) and
-          picsou.^MainInMemory and
-          picsou.MainInMemory main(*) and
+exclude   budgetview.^Main and
+          budgetview.Main main(*) and
+          budgetview.^MainInMemory and
+          budgetview.MainInMemory main(*) and
+          com.budgetview.gui.utils.AwtExceptionHandler and
           apple.awt*.^* and
           apple.awt*.^* *(*) and
           apple.awt*.^* * and
@@ -58,12 +58,12 @@ exclude   picsou.^ExceptionHandler and
           *.*UI set*(*) and
           *.*UI get*(*) and
           com.jidesoft.swing.* set*(*) and
-          org.designup.picsou.gui.components.* set*(*) and
-          org.designup.picsou.gui.components.* get*(*) and
-          org.designup.picsou.gui.components.charts.* set*(*) and
-          org.designup.picsou.gui.components.charts.* get*(*) and
-          org.designup.picsou.gui.projects.components.* get*(*) and
-          org.designup.picsou.gui.projects.components.* set*(*) and
+          com.budgetview.gui.components.* set*(*) and
+          com.budgetview.gui.components.* get*(*) and
+          com.budgetview.gui.components.charts.* set*(*) and
+          com.budgetview.gui.components.charts.* get*(*) and
+          com.budgetview.gui.projects.components.* get*(*) and
+          com.budgetview.gui.projects.components.* set*(*) and
           org.globsframework.gui.components.ShowHideButton set*(*);
 
 obfuscate  changeLogFileOut="ChangeLogOutput.txt"

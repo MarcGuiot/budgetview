@@ -4,8 +4,8 @@ P com/sun
 P sun
 P javax
 D rt.jar
-C org.designup.picsou.client.local.LocalClientTransport
-M org.designup.picsou.gui.MainWindow initLocal
+C com.budgetview.client.local.LocalClientTransport
+M com.budgetview.gui.MainWindow initLocal
 P banks/.svn
 P i18n/.svn
 P help/.svn

@@ -68,7 +68,7 @@ public class Main {
       url = new URL("file", "", jarFile.getAbsolutePath());
       ClassLoader parent = getClass().getClassLoader();
       URLClassLoader loader = new URLClassLoader(new URL[]{url}, parent);
-      Class<?> applicationClass = loader.loadClass("picsou.Main");
+      Class<?> applicationClass = loader.loadClass("budgetview.Main");
       Method method = applicationClass.getMethod("main", String[].class);
       method.invoke(null, new Object[]{args});
     }

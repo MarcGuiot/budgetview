@@ -7,7 +7,7 @@
     <style selector="label.number" font="OpenSansBold,plain,40" fill="none" anchor="center"/>
 
     <style selector=".actionsPanel label" font="OpenSansRegular,plain,14" fill="none" anchor="center"/>
-    <ui name="flatButtonUI" class="org.designup.picsou.gui.components.ui.FlatButtonUI"
+    <ui name="flatButtonUI" class="com.budgetview.gui.components.ui.FlatButtonUI"
         bgColor="welcomeView.button"
         disabledBgColor="welcomeView.button.disabled"
         rolloverBgColor="welcomeView.button.rollover"/>

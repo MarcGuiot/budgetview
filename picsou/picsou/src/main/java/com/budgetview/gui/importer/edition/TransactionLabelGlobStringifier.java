@@ -1,0 +1,38 @@
+package com.budgetview.gui.importer.edition;
+
+import org.globsframework.model.format.utils.AbstractGlobStringifier;
+import org.globsframework.model.Glob;
+import org.globsframework.model.GlobRepository;
+import com.budgetview.model.ImportedTransaction;
+
+public class TransactionLabelGlobStringifier extends AbstractGlobStringifier {
+
+  public String toString(Glob glob, GlobRepository repository) {
+    if (glob == null){
+      return null;
+    }
+    if (glob.isTrue(ImportedTransaction.IS_OFX)) {
+      StringBuilder builder = new StringBuilder();
+      complete(builder, glob.get(ImportedTransaction.OFX_NAME));
+      complete(builder, glob.get(ImportedTransaction.OFX_CHECK_NUM));
+      complete(builder, glob.get(ImportedTransaction.OFX_MEMO));
+      return builder.toString();
+    }
+    else {
+      StringBuilder builder = new StringBuilder();
+      complete(builder, glob.get(ImportedTransaction.QIF_M));
+      complete(builder, glob.get(ImportedTransaction.QIF_P));
+      return builder.toString();
+    }
+  }
+
+  void complete(StringBuilder builder, String s) {
+    if (s == null) {
+      return;
+    }
+    if (builder.length() != 0) {
+      builder.append(":");
+    }
+    builder.append(s);
+  }
+}

@@ -1,9 +1,9 @@
-C org.designup.picsou.license.AddUser
-C org.designup.picsou.license.mail.SendMail
-C org.designup.picsou.license.DuplicateLine
-C org.designup.picsou.license.DbCreateTable
-C org.designup.picsou.license.servlet.LicenseServer
-C org.designup.picsou.license.generator.LicenseGenerator
+C com.budgetview.license.AddUser
+C com.budgetview.license.mail.SendMail
+C com.budgetview.license.DuplicateLine
+C com.budgetview.license.DbCreateTable
+C com.budgetview.license.servlet.LicenseServer
+C com.budgetview.license.generator.LicenseGenerator
 C javax.servlet.SingleThreadModel
 C org.apache.log4j.RollingFileAppender
 C org.apache.log4j.ConsoleAppender

@@ -1,4 +1,4 @@
-package org.designup.picsou;
+package com.budgetview;
 
 
 import javafx.application.Application;

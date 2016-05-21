@@ -14,7 +14,7 @@
   <manifest></manifest>
   <icon>../../dev/images/budgetview.ico</icon>
   <classPath>
-    <mainClass>picsou.MainInMemory</mainClass>
+    <mainClass>budgetview.MainInMemory</mainClass>
   </classPath>
   <jre>
     <path></path>

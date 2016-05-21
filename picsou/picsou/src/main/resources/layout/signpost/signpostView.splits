@@ -8,13 +8,13 @@
         underline="false" autoHideEnabled="false" useNormalColorWhenDisabled="true"/>
     <style selector="#sectionTitle" ui="sectionTitleButtonUI"/>
 
-    <ui name="flatIconButtonUI" class="org.designup.picsou.gui.components.ui.FlatIconButtonUI"
+    <ui name="flatIconButtonUI" class="com.budgetview.gui.components.ui.FlatIconButtonUI"
         bgColor="signpostView.button"
         disabledBgColor="signpostView.button.disabled"
         rolloverBgColor="signpostView.button.rollover"/>
     <style selector="#sectionButton" ui="flatIconButtonUI"/>
 
-    <ui name="helpButtonUI" class="org.designup.picsou.gui.components.ui.FlatIconButtonUI"
+    <ui name="helpButtonUI" class="com.budgetview.gui.components.ui.FlatIconButtonUI"
         padding="7"
         bgColor="signpostView.section.help.button"
         disabledBgColor="signpostView.button.disabled"
@@ -43,7 +43,7 @@
         <repeat ref="signpostRepeat" layout="row">
           <column>
             <panel ref="sectionPanel" preferredSize="(290,250)"
-                   layout="org.designup.picsou.gui.signpost.utils.SignpostSectionLayout">
+                   layout="com.budgetview.gui.signpost.utils.SignpostSectionLayout">
               <button ref="sectionTitle"/>
               <htmlEditorPane ref="sectionDescription"/>
               <button ref="sectionButton" preferredSize="(70,45)"/>

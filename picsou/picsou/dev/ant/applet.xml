@@ -27,7 +27,7 @@
     <copy todir="generated/applet" overwrite="true">
       <fileset file="generated/${picsou.jar}"/>
     </copy>
-    <signjar alias="Picsou" keystore="dev/picsou.keys"
+    <signjar alias="Picsou" keystore="dev/budgetview.keys"
              storepass="ninja600">
       <fileset dir="generated/applet" includes="**/*.jar"/>
     </signjar>
@@ -43,7 +43,7 @@
         <include name="index.html"/>
       </fileset>
       <fileset dir="dev">
-        <include name="picsou.jnlp"/>
+        <include name="budgetview.jnlp"/>
       </fileset>
       <fileset dir="generated/applet">
         <include name="${picsou.jar}"/>
@@ -61,7 +61,7 @@
         <include name="index.html"/>
       </fileset>
       <fileset dir="dev">
-        <include name="picsou.jnlp"/>
+        <include name="budgetview.jnlp"/>
       </fileset>
     </ftp>
   </target>

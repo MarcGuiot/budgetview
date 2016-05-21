@@ -5,7 +5,7 @@
     <style selector="toggleButton"
            weightX="0" fill="none" anchor="center"
            minimumSize="(26,14)" preferredSize="(26,14)"/>
-    <ui name="plusMinusToggle" class="org.designup.picsou.gui.components.ui.PlusMinusToggleUI"
+    <ui name="plusMinusToggle" class="com.budgetview.gui.components.ui.PlusMinusToggleUI"
         selectedBgColor="amountEditor.plusMinus.selected.bg"
         selectedBorderColor="amountEditor.plusMinus.selected.border"
         selectedTextColor="amountEditor.plusMinus.selected.text"

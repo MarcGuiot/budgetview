@@ -38,7 +38,7 @@
     </row>
     <repeat ref="accountRepeat" marginBottom="15" opaque="true" background="sidebar.bg">
       <panel ref="accountPanel" marginTop="2" opaque="false">
-        <panel marginTop="4" layout="org.designup.picsou.gui.accounts.utils.AccountBlockLayout"
+        <panel marginTop="4" layout="com.budgetview.gui.accounts.utils.AccountBlockLayout"
                cursor="hand" opaque="false" styleClass="sidebarSeparator">
           <toggleButton ref="selectAccount" styleClass="sidebarSelectionButton"/>
           <button ref="editAccount" styleClass="dropdown"/>

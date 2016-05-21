@@ -1,7 +1,7 @@
 <project name="Picsou Server" default="GenerateJar" basedir="../..">
 
   <property name="version" value="0.2"/>
-  <property name="picsou.jar" value="picsou-${version}.jar"/>
+  <property name="budgetview.jar" value="picsou-${version}.jar"/>
   <property name="reflibdir" value=".."/>
   <property name="globsdir" value="../../globs"/>
   <property name="splitsdir" value="../../splits"/>
@@ -62,7 +62,7 @@
       <arg line="generated/picsou_server.jar dev/ant/inputServer.txt dev/ant/ignoreServer.txt"/>
     </java>
     <manifest file="../picsou_server/classes/MANIFEST.MF">
-      <attribute name="Main-Class" value="org.designup.picsou.PicsouServer"/>
+      <attribute name="Main-Class" value="com.budgetview.PicsouServer"/>
     </manifest>
     <jar update="true" jarfile="generated/picsou_server.jar"
          manifest="../picsou_server/classes/MANIFEST.MF"/>

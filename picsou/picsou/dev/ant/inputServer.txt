@@ -1,4 +1,4 @@
-C org.designup.picsou.PicsouServer
+C com.budgetview.PicsouServer
 C org.mortbay.jetty.RetryRequest
 C javax.servlet.SingleThreadModel
 R javax/servlet/LocalStrings.properties

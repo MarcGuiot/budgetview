@@ -1,7 +1,7 @@
 package com.budgetview.analytics;
 
 import com.budgetview.analytics.gui.AnalyticsWindow;
-import org.designup.picsou.utils.Lang;
+import com.budgetview.utils.Lang;
 import org.globsframework.gui.SelectionService;
 import org.globsframework.gui.splits.color.ColorService;
 import org.globsframework.model.GlobRepository;

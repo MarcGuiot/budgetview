@@ -1,0 +1,40 @@
+package com.budgetview.importer;
+
+import com.budgetview.importer.utils.TypedInputStream;
+import com.budgetview.gui.components.dialogs.PicsouDialog;
+import com.budgetview.importer.csv.CsvImporter;
+import com.budgetview.importer.ofx.OfxImporter;
+import com.budgetview.importer.qif.QifImporter;
+import org.globsframework.model.GlobRepository;
+import org.globsframework.utils.directory.Directory;
+import org.globsframework.utils.exceptions.InvalidFormat;
+import org.globsframework.utils.exceptions.ItemNotFound;
+import org.globsframework.utils.exceptions.OperationCancelled;
+import org.globsframework.utils.exceptions.TruncatedFile;
+
+import java.io.IOException;
+
+public class ImportService {
+
+  public void run(TypedInputStream fileStream, GlobRepository initialRepository,
+                  GlobRepository targetRepository, Directory directory, PicsouDialog current)
+    throws IOException, ItemNotFound, InvalidFormat, OperationCancelled, TruncatedFile {
+
+    AccountFileImporter importer = getImporter(fileStream, directory);
+    importer.loadTransactions(fileStream.getBestProbableReader(), initialRepository, targetRepository, current);
+  }
+
+  private AccountFileImporter getImporter(TypedInputStream fileStream, Directory directory) throws ItemNotFound {
+    BankFileType type = fileStream.getType();
+    if (type == BankFileType.OFX) {
+      return new OfxImporter();
+    }
+    else if (type == BankFileType.QIF) {
+      return new QifImporter();
+    }
+    else if (type == BankFileType.CSV) {
+      return new CsvImporter(fileStream, directory);
+    }
+    throw new ItemNotFound("Unknown file extension for " + type);
+  }
+}

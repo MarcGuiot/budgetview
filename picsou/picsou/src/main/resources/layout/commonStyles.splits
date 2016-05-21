@@ -5,7 +5,7 @@
     <!-- Scrollbars -->
 
     <ui name="scrollPaneUI"
-        class="org.designup.picsou.gui.components.ui.FlatScrollbarUI"
+        class="com.budgetview.gui.components.ui.FlatScrollbarUI"
         color="scrollBar.idle" rolloverColor="scrollBar.rollover" background="scrollBar.bg"/>
     <style selector="scrollPane" scrollbarUI="scrollPaneUI" background="#FFFFFF"/>
 
@@ -126,7 +126,7 @@
            rolloverIcon="arrowButton(14,14,hyperlink.rollover)"
            styleClass="hyperlink" foreground="hyperlink"/>
 
-    <ui name="horizontalSeparatorUI" class="org.designup.picsou.gui.components.ui.LineLabelUI"/>
+    <ui name="horizontalSeparatorUI" class="com.budgetview.gui.components.ui.LineLabelUI"/>
     <style selector="label.horizontalSeparator" ui="horizontalSeparatorUI"
            foreground="splitpane.main.handle" background="content.bg"
            fill="horizontal" border="empty(10,0,10,0)"/>
@@ -251,7 +251,7 @@
            background="highlightedPanel.bg"/>
 
     <!-- Custom rounded buttons -->
-    <ui name="customButtonSmallUI" class="org.designup.picsou.gui.components.ui.CustomButtonUI"
+    <ui name="customButtonSmallUI" class="com.budgetview.gui.components.ui.CustomButtonUI"
         borderColor="customButton.small.border"
         topColor="customButton.small.bg.top"
         bottomColor="customButton.small.bg.bottom"
@@ -266,7 +266,7 @@
 
     <style selector=".iconButtonGroup" opaque="false" marginTop="5" weightY="0"/>
 
-    <ui name="standardIconButton" class="org.designup.picsou.gui.plaf.ButtonPanelItemUI"
+    <ui name="standardIconButton" class="com.budgetview.gui.plaf.ButtonPanelItemUI"
         border="iconbutton.border"
         borderTop="iconbutton.border.top"
         borderBottom="iconbutton.border.bottom"
@@ -277,7 +277,7 @@
     <style selector=".iconButtonGroup button" ui='standardIconButton' fill='none' weightX='0'/>
     <style selector=".iconButtonGroup toggleButton" ui='standardIconButton' fill='none' weightX='0'/>
 
-    <ui name="dialogIconButton" class="org.designup.picsou.gui.plaf.ButtonPanelItemUI"
+    <ui name="dialogIconButton" class="com.budgetview.gui.plaf.ButtonPanelItemUI"
         border="dialog.iconbutton.border"
         borderTop="dialog.iconbutton.border.top"
         borderBottom="dialog.iconbutton.border.bottom"

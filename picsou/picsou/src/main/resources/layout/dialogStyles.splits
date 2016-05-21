@@ -24,7 +24,7 @@
            fill="none" anchor="center" marginTop="15" marginBottom="15" weightY="0.1"/>
 
     <ui name="scrollPaneUI"
-        class="org.designup.picsou.gui.components.ui.FlatScrollbarUI"
+        class="com.budgetview.gui.components.ui.FlatScrollbarUI"
         color="scrollBar.idle" rolloverColor="scrollBar.rollover" background="scrollBar.bg"/>
     <style selector="scrollPane" scrollbarUI="scrollPaneUI" border="line(dialog.block.border)" background="dialog.block"/>
 

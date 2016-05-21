@@ -5,7 +5,7 @@
     <style selector="label.totalAmount" font="-,plain,11" foreground="projectView.item.view.label" marginRight="5"
            anchor="center" fill="none"/>
 
-    <ui name="onOffToggle" class="org.designup.picsou.gui.components.ui.OnOffToggleUI"
+    <ui name="onOffToggle" class="com.budgetview.gui.components.ui.OnOffToggleUI"
         selectedBgColor="projectView.onoff.selected.bg"
         selectedBorderColor="projectView.onoff.selected.border"
         selectedTextColor="projectView.onoff.selected.text"

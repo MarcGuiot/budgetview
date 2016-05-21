@@ -1,7 +1,7 @@
 <splits xmlns="http://www.globsframework.org/xml/splits.xsd">
 
 <styles>
-  <ui name="verticalTabSelectorUI" class="org.designup.picsou.gui.components.tabs.VerticalTabToggleUI"
+  <ui name="verticalTabSelectorUI" class="com.budgetview.gui.components.tabs.VerticalTabToggleUI"
       selectedTextColor="verticalTab.selector.text.selected"
       rolloverTextColor="verticalTab.selector.text.rollover"
       disabledTextColor="verticalTab.selector.text.disabled"
@@ -13,7 +13,7 @@
          fill="horizontal" anchor="right" weightY="0"
          horizontalTextPosition="left"/>
 
-  <ui name="verticalTabSelectionPanelUI" class="org.designup.picsou.gui.components.tabs.VerticalTabPanelUI"
+  <ui name="verticalTabSelectionPanelUI" class="com.budgetview.gui.components.tabs.VerticalTabPanelUI"
       innerBorderColor="verticalTab.content.border" outerBorderColor="verticalTab.selectionPanel.border"
       contentBgColor="verticalTab.content.bg"/>
   <style selector=".verticalTabSelectionPanel" ui="verticalTabSelectionPanelUI"

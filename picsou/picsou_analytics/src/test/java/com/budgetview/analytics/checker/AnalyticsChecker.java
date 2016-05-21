@@ -6,7 +6,7 @@ import com.budgetview.analytics.model.OnboardingInfoEntry;
 import com.budgetview.analytics.model.WeekStats;
 import junit.framework.Assert;
 import junit.framework.TestCase;
-import org.designup.picsou.functests.importexport.QifImportTest;
+import com.budgetview.functests.importexport.QifImportTest;
 import org.globsframework.metamodel.Field;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.FieldValue;

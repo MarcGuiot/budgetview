@@ -1,9 +1,8 @@
 package com.jgoodies.looks.plastic;
 
-import org.designup.picsou.gui.components.ui.FlatScrollbarUI;
-import org.designup.picsou.gui.components.ui.RoundButtonUI;
-import org.designup.picsou.gui.plaf.ApplicationLAF;
-import org.designup.picsou.gui.plaf.*;
+import com.budgetview.gui.components.ui.FlatScrollbarUI;
+import com.budgetview.gui.components.ui.RoundButtonUI;
+import com.budgetview.gui.plaf.*;
 import org.jdesktop.swingx.JXDatePicker;
 import org.jdesktop.swingx.JXMonthView;
 import org.jdesktop.swingx.JXHyperlink;
