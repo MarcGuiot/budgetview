@@ -3,7 +3,7 @@ package com.budgetview.gui.importer.steps;
 import com.budgetview.gui.card.NavigationService;
 import com.budgetview.gui.components.dialogs.PicsouDialog;
 import com.budgetview.gui.importer.MessageHandler;
-import com.budgetview.importer.utils.TypedInputStream;
+import com.budgetview.io.importer.utils.TypedInputStream;
 import com.budgetview.gui.help.HyperlinkHandler;
 import com.budgetview.gui.importer.ImportController;
 import com.budgetview.gui.importer.ImportDialog;

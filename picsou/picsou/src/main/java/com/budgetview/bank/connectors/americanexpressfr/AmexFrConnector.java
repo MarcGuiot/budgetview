@@ -6,7 +6,7 @@ import com.budgetview.bank.connectors.WebBankConnector;
 import com.budgetview.bank.connectors.webcomponents.*;
 import com.budgetview.bank.connectors.webcomponents.filters.WebFilters;
 import com.budgetview.bank.connectors.webcomponents.utils.*;
-import com.budgetview.exporter.ofx.OfxExporter;
+import com.budgetview.io.exporter.ofx.OfxExporter;
 import com.budgetview.model.*;
 import com.gargoylesoftware.htmlunit.HttpWebConnection;
 import com.gargoylesoftware.htmlunit.WebClient;

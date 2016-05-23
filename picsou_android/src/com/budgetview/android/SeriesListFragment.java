@@ -72,7 +72,7 @@ public class SeriesListFragment extends Fragment {
                     fieldEquals(SeriesValues.MONTH, monthId),
                     fieldEquals(SeriesValues.BUDGET_AREA, budgetAreaId)
                   ))
-          .sort(new SeriesValuesComparator());
+          .sortSelf(new SeriesValuesComparator());
     }
 
     public int getCount() {

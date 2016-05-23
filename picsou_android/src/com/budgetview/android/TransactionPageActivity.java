@@ -39,7 +39,7 @@ public class TransactionPageActivity extends FragmentActivity {
     GlobList transactionValuesList =
       ((App)getApplication()).getRepository()
         .getAll(TransactionValues.TYPE, transactionSet.getMatcher())
-        .sort(GlobComparators.descending(TransactionValues.SEQUENCE_NUMBER));
+        .sortSelf(GlobComparators.descending(TransactionValues.SEQUENCE_NUMBER));
     Integer[] transactionIds = transactionValuesList.getValues(TransactionValues.ID);
 
     Adapter pagerAdapter = new Adapter(transactionIds, getSupportFragmentManager());

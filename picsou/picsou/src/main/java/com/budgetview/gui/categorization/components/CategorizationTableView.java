@@ -26,7 +26,7 @@ import com.budgetview.gui.transactions.utils.TransactionLabelCustomizer;
 import com.budgetview.gui.transactions.utils.TransactionMatchers;
 import com.budgetview.gui.utils.Gui;
 import com.budgetview.gui.utils.TableView;
-import com.budgetview.importer.utils.BankFormatExporter;
+import com.budgetview.io.importer.utils.BankFormatExporter;
 import com.budgetview.model.Transaction;
 import com.budgetview.model.UserPreferences;
 import com.budgetview.utils.Lang;

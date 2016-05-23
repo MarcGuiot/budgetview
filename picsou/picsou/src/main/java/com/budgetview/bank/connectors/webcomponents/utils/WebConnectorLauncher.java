@@ -11,7 +11,7 @@ import com.budgetview.gui.startup.components.OpenRequestManager;
 import com.budgetview.gui.utils.ApplicationColors;
 import com.budgetview.bank.connectors.SynchroMonitor;
 import com.budgetview.gui.model.PicsouGuiModel;
-import com.budgetview.importer.analyzer.TransactionAnalyzerFactory;
+import com.budgetview.io.importer.analyzer.TransactionAnalyzerFactory;
 import com.budgetview.model.Synchro;
 import com.budgetview.utils.Lang;
 import org.globsframework.gui.SelectionService;

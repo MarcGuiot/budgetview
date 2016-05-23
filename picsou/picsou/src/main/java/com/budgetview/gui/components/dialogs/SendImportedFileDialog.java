@@ -1,8 +1,8 @@
 package com.budgetview.gui.components.dialogs;
 
-import com.budgetview.importer.utils.TypedInputStream;
+import com.budgetview.io.importer.utils.TypedInputStream;
 import com.budgetview.gui.description.Formatting;
-import com.budgetview.importer.Obfuscator;
+import com.budgetview.io.importer.Obfuscator;
 import com.budgetview.model.TransactionImport;
 import com.budgetview.utils.Lang;
 import org.globsframework.gui.GlobSelection;

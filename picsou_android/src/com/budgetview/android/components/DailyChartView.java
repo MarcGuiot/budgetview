@@ -67,6 +67,7 @@ public class DailyChartView extends View {
 
     if (metrics == null) {
       metrics = new HistoChartMetrics(panelWidth, panelHeight,
+                                      0,0,0,0,
                                       styles.getTypefaceMetrics(),
                                       dataset.size(),
                                       dataset.getMaxNegativeValue(), dataset.getMaxPositiveValue(),

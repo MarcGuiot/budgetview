@@ -1,8 +1,8 @@
 package com.budgetview.gui.upgrade;
 
-import com.budgetview.importer.analyzer.TransactionAnalyzer;
+import com.budgetview.io.importer.analyzer.TransactionAnalyzer;
 import com.budgetview.model.*;
-import com.budgetview.importer.analyzer.TransactionAnalyzerFactory;
+import com.budgetview.io.importer.analyzer.TransactionAnalyzerFactory;
 import org.globsframework.model.*;
 import org.globsframework.model.utils.GlobMatchers;
 import org.globsframework.utils.directory.Directory;

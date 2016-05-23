@@ -1,6 +1,6 @@
 package com.budgetview.utils.generator;
 
-import com.budgetview.exporter.ofx.OfxExporter;
+import com.budgetview.io.exporter.ofx.OfxExporter;
 import com.budgetview.model.*;
 
 import static com.budgetview.utils.generator.DayGenerator.*;

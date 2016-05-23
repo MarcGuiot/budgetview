@@ -1,6 +1,6 @@
 package com.budgetview.bank.connectors.ofx;
 
-import com.budgetview.importer.ofx.OfxConnection;
+import com.budgetview.io.importer.ofx.OfxConnection;
 import com.budgetview.model.RealAccount;
 import com.budgetview.bank.connectors.AbstractBankConnector;
 import com.budgetview.gui.importer.components.OfxSecurityInfoButton;

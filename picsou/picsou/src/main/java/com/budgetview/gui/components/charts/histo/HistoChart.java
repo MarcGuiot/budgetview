@@ -137,7 +137,8 @@ public class HistoChart extends JPanel implements Disposable {
     HistoDataset dataset = painter.getDataset();
 
     if (metrics == null) {
-      metrics = new HistoChartMetrics(panelWidth, panelHeight, insets,
+      metrics = new HistoChartMetrics(panelWidth, panelHeight,
+                                      insets.top, insets.right, insets.bottom, insets.left,
                                       getTextMetrics(g, getFont()),
                                       dataset.size(),
                                       dataset.getMaxNegativeValue(), dataset.getMaxPositiveValue(),

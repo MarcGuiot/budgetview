@@ -30,7 +30,7 @@ import com.budgetview.client.ServerAccess;
 import com.budgetview.client.http.MD5PasswordBasedEncryptor;
 import com.budgetview.gui.PicsouApplication;
 import com.budgetview.gui.utils.KeyService;
-import com.budgetview.importer.analyzer.TransactionAnalyzerFactory;
+import com.budgetview.io.importer.analyzer.TransactionAnalyzerFactory;
 import com.budgetview.model.AppVersionInformation;
 import com.budgetview.model.User;
 import com.budgetview.utils.Lang;

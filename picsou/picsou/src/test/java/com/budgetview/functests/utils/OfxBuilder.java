@@ -1,7 +1,7 @@
 package com.budgetview.functests.utils;
 
 import junit.framework.TestCase;
-import com.budgetview.exporter.ofx.OfxExporter;
+import com.budgetview.io.exporter.ofx.OfxExporter;
 import com.budgetview.functests.checkers.ImportDialogChecker;
 import com.budgetview.functests.checkers.OperationChecker;
 import com.budgetview.model.*;

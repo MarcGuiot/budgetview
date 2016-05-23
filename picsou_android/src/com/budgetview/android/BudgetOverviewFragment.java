@@ -72,7 +72,7 @@ public class BudgetOverviewFragment extends Fragment {
       GlobList budgetAreaValuesList =
         repository
           .getAll(BudgetAreaValues.TYPE, fieldEquals(BudgetAreaValues.MONTH, monthId))
-          .sort(new GlobFieldComparator(BudgetAreaValues.BUDGET_AREA));
+          .sortSelf(new GlobFieldComparator(BudgetAreaValues.BUDGET_AREA));
       for (Glob budgetAreaValues : budgetAreaValuesList) {
         blocks.add(new BudgetAreaBlock(budgetAreaValues));
       }

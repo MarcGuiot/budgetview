@@ -1,6 +1,6 @@
 package com.budgetview.model;
 
-import com.budgetview.importer.csv.CsvType;
+import com.budgetview.io.importer.csv.CsvType;
 import com.budgetview.server.serialization.SerializationManager;
 import org.globsframework.metamodel.GlobModel;
 import org.globsframework.metamodel.utils.GlobModelBuilder;

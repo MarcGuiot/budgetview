@@ -6,7 +6,7 @@ import com.budgetview.functests.utils.LoggedInFunctionalTestCase;
 import com.budgetview.functests.utils.OfxBuilder;
 import com.budgetview.functests.checkers.OfxSynchoChecker;
 import com.budgetview.functests.utils.QifBuilder;
-import com.budgetview.importer.ofx.OfxConnection;
+import com.budgetview.io.importer.ofx.OfxConnection;
 import com.budgetview.model.TransactionType;
 import org.globsframework.model.Glob;
 import org.globsframework.utils.Files;

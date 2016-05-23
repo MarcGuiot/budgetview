@@ -49,7 +49,10 @@ public class HistoChartMetrics {
 
   public HistoChartMetrics(int panelWidth,
                            int panelHeight,
-                           Insets insets,
+                           int marginTop,
+                           int marginRight,
+                           int marginBottom,
+                           int marginLeft,
                            TextMetrics textMetrics,
                            int columnCount,
                            double maxNegativeValue,
@@ -57,10 +60,10 @@ public class HistoChartMetrics {
                            HistoChartConfig config,
                            boolean containsSections,
                            boolean snapToScale) {
-    this.left = insets.left;
-    this.top = insets.top;
-    this.usablePanelWidth = panelWidth - insets.left - insets.right;
-    this.usablePanelHeight = panelHeight - insets.top - insets.bottom;
+    this.left = marginLeft;
+    this.top = marginTop;
+    this.usablePanelWidth = panelWidth - marginLeft - marginRight;
+    this.usablePanelHeight = panelHeight - marginTop - marginBottom;
     this.textMetrics = textMetrics;
     this.columnCount = columnCount;
     this.config = config;

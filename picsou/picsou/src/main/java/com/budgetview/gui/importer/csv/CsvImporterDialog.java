@@ -1,10 +1,10 @@
 package com.budgetview.gui.importer.csv;
 
 import com.budgetview.gui.components.dialogs.PicsouDialog;
-import com.budgetview.importer.csv.CsvReader;
-import com.budgetview.importer.csv.CsvType;
-import com.budgetview.importer.csv.utils.InvalidCsvFileFormat;
-import com.budgetview.importer.utils.TypedInputStream;
+import com.budgetview.io.importer.csv.CsvReader;
+import com.budgetview.io.importer.csv.CsvType;
+import com.budgetview.io.importer.csv.utils.InvalidCsvFileFormat;
+import com.budgetview.io.importer.utils.TypedInputStream;
 import com.budgetview.model.CsvMapping;
 import com.budgetview.model.ImportedSeries;
 import com.budgetview.model.ImportedTransaction;

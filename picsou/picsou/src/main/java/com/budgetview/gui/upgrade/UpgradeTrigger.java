@@ -16,7 +16,7 @@ import com.budgetview.triggers.AddOnTrigger;
 import com.budgetview.triggers.PositionTrigger;
 import com.budgetview.triggers.savings.UpdateMirrorSeriesChangeSetVisitor;
 import com.budgetview.utils.TransactionComparator;
-import com.budgetview.importer.analyzer.TransactionAnalyzerFactory;
+import com.budgetview.io.importer.analyzer.TransactionAnalyzerFactory;
 import org.globsframework.metamodel.Field;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.fields.LinkField;

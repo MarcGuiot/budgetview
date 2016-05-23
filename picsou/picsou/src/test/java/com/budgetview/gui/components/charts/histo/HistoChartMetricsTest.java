@@ -141,7 +141,7 @@ public class HistoChartMetricsTest extends ChartTestCase {
                                           boolean drawSections,
                                           boolean drawInnerLabels,
                                           boolean snapToScale) {
-    return new HistoChartMetrics(panelWidth, panelHeight, new Insets(0,0,0,0),
+    return new HistoChartMetrics(panelWidth, panelHeight, 0,0,0,0,
                                  new TextMetrics() {
                                    public int stringWidth(String text) {
                                      return text.length() * 5;

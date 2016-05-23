@@ -2,7 +2,7 @@ package com.budgetview.gui.importer.edition;
 
 import com.budgetview.gui.components.tips.ErrorTip;
 import com.budgetview.gui.components.tips.TipPosition;
-import com.budgetview.importer.utils.DateFormatAnalyzer;
+import com.budgetview.io.importer.utils.DateFormatAnalyzer;
 import com.budgetview.utils.Lang;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.splits.SplitsLoader;

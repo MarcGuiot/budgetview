@@ -1,6 +1,6 @@
 package com.budgetview.gui.importer.csv;
 
-import com.budgetview.importer.csv.CsvReader;
+import com.budgetview.io.importer.csv.CsvReader;
 import junit.framework.TestCase;
 import org.globsframework.utils.TestUtils;
 

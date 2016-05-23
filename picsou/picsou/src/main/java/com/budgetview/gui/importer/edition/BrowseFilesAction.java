@@ -1,7 +1,7 @@
 package com.budgetview.gui.importer.edition;
 
 import com.budgetview.gui.components.dialogs.PicsouDialog;
-import com.budgetview.importer.BankFileType;
+import com.budgetview.io.importer.BankFileType;
 import com.budgetview.model.UserPreferences;
 import com.budgetview.utils.Lang;
 import org.globsframework.model.Glob;
