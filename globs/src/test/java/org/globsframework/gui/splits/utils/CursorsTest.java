@@ -1,7 +1,6 @@
 package org.globsframework.gui.splits.utils;
 
 import junit.framework.TestCase;
-import org.apache.commons.collections.list.CursorableLinkedList;
 
 import java.awt.*;
 

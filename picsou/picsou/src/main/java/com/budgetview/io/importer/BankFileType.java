@@ -3,7 +3,8 @@ package com.budgetview.io.importer;
 public enum BankFileType {
   OFX,
   QIF,
-  CSV;
+  CSV,
+  JSON;
 
   public static BankFileType getTypeFromName(String fileName) {
     String lowerCase = fileName.toLowerCase();

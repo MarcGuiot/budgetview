@@ -102,7 +102,7 @@ public class OfxDownloadPage extends AbstractBankConnector {
       try {
         String s = OfxConnection.getInstance().loadOperation(account, OfxConnection.previousDate(120), codeField.getText(), new String(passwordField.getPassword()),
                                                              urlField.getText(), orgField.getText(), fidField.getText(), uuid, v2);
-        repository.update(account.getKey(), RealAccount.FILE_CONTENT, s);
+        localRepository.update(account.getKey(), RealAccount.FILE_CONTENT, s);
       }
       catch (IOException e) {
         notifyErrorFound(e);

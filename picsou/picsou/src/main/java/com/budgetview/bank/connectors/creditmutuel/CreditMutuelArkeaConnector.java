@@ -48,7 +48,7 @@ public class CreditMutuelArkeaConnector extends WebBankConnector implements Http
   private CreditMutuelArkeaConnector(boolean syncExistingAccount, Directory directory, GlobRepository repository,
                                      final Glob synchro) {
     super(BANK_ID, syncExistingAccount, repository, directory, synchro);
-    this.setBrowserVersion(BrowserVersion.FIREFOX_24);
+    this.setBrowserVersion(BrowserVersion.FIREFOX_45);
   }
 
   public HttpWebConnection getHttpConnection(WebClient client) {
@@ -137,7 +137,6 @@ public class CreditMutuelArkeaConnector extends WebBankConnector implements Http
     for (WebAnchor webAnchor : anchor) {
       Download download = webAnchor.clickAndDownload();
       String fileContent = download.readAsOfx();
-      System.out.println("CreditMutuelArkeaConnector$ValiderActionListener.actionPerformed  : " + fileContent);
     }
   }
 
@@ -211,8 +210,6 @@ public class CreditMutuelArkeaConnector extends WebBankConnector implements Http
         rechercher.click();
         browser.waitForBackgroundJavaScript(1000);
         currentPage = browser.updateCurrentPage();
-
-        System.out.println("CreditMutuelArkeaConnector$ValiderActionListener.actionPerformed RECHERCHER " + browser.getCurrentPage().asXml());
 
         WebComponent.HtmlNavigate first;
         WebPanel subPanel2;

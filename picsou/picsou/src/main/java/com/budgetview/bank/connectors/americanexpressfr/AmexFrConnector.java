@@ -193,7 +193,7 @@ public class AmexFrConnector extends WebBankConnector {
 
     StringWriter writer = new StringWriter();
     OfxExporter.write(tempRepository, writer, false);
-    repository.update(realAccount.getKey(), RealAccount.FILE_CONTENT, writer.toString());
+    localRepository.update(realAccount.getKey(), RealAccount.FILE_CONTENT, writer.toString());
     return browser.getCurrentPage();
   }
 

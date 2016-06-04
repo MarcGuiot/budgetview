@@ -1,16 +1,17 @@
 package com.budgetview.io.budgea;
 
+import org.apache.http.client.fluent.Form;
 import org.apache.http.client.fluent.Request;
 import org.apache.http.client.fluent.Response;
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.IOException;
 
-public class BudgeaConnexion {
+public class BudgeaDemo {
   public static void main(String[] args) throws Exception {
 
     JSONObject auth = json(Request.Post("https://budgetview.biapi.pro/2.0/auth/init"));
-
     String bearer = auth.getString("auth_token");
 
 //    System.out.println("\n\n---------------- banks:\n");
@@ -37,21 +38,44 @@ public class BudgeaConnexion {
                              .addHeader("Authorization", "Bearer " + bearer));
     System.out.println(bank.toString(2));
 
-    System.out.println("\n\n---------------- connections:\n");
-    JSONObject connections = json(Request.Get("https://budgetview.biapi.pro/2.0/users/me/connections?expand=accounts")
-                                    .addHeader("Authorization", "Bearer " + bearer));
-    System.out.println(connections);
-
     System.out.println("\n\n---------------- create connection:\n");
     Response request = Request.Post("https://budgetview.biapi.pro/2.0/users/me/connections")
       .addHeader("Authorization", "Bearer " + bearer)
-      .addHeader("user_id", Integer.toString(userId))
-      .addHeader("id_bank", "40")
-      .addHeader("website", "par")
-      .addHeader("login", "123456789")
-      .addHeader("password", "1234")
+      .bodyForm(Form.form()
+                  .add("user_id", Integer.toString(userId))
+                  .add("id_bank", "40")
+                  .add("website", "par")
+                  .add("login", "123456789")
+                  .add("password", "1234")
+                  .build())
       .execute();
     System.out.println(request.returnResponse());
+
+//    System.out.println("\n\n---------------- connections:\n");
+//    JSONObject connections = json(Request.Get("https://budgetview.biapi.pro/2.0/users/" + userId + "/connections")
+//      .addHeader("Authorization", "Bearer " + bearer));
+//    System.out.println(connections.toString(2));
+
+    System.out.println("\n\n---------------- categories:\n");
+    JSONObject categories = json(Request.Get("https://budgetview.biapi.pro/2.0/users/" + userId + "/categories/full")
+                                 .addHeader("Authorization", "Bearer " + bearer));
+    System.out.println(categories.toString(2));
+
+    System.out.println("\n\n---------------- accounts:\n");
+    JSONObject accounts = json(Request.Get("https://budgetview.biapi.pro/2.0/users/" + userId + "/accounts")
+                                    .addHeader("Authorization", "Bearer " + bearer));
+    System.out.println(accounts.toString(2));
+
+    JSONArray accountArray = accounts.getJSONArray("accounts");
+    for (Object o : accountArray) {
+      JSONObject account = (JSONObject)o;
+      System.out.println("\n\n---------------- transactions for " + account.get("name") + " " + account.get("number") + ":\n");
+
+      JSONObject transactions = json(Request.Get("https://budgetview.biapi.pro/2.0/users/" + userId + "/accounts/" + account.get("id") + "/transactions")
+                                   .addHeader("Authorization", "Bearer " + bearer));
+      System.out.println(transactions.toString(2));
+    }
+
 
 //    Content content = request.returnContent();
 //    System.out.println(content.asString());

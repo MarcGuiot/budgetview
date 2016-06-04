@@ -1,6 +1,7 @@
 package com.budgetview.io.importer.qif;
 
 import com.budgetview.io.importer.utils.ImportedTransactionIdGenerator;
+import com.budgetview.model.ImportType;
 import com.budgetview.model.ImportedSeries;
 import com.budgetview.model.ImportedTransaction;
 import com.budgetview.model.RealAccount;
@@ -143,7 +144,7 @@ public class QifParser {
         values.set(ImportedTransaction.QIF_P, pValue);
       }
       values.set(ImportedTransaction.BANK_TRANSACTION_TYPE, nValue != null ? nValue.trim() : null);
-      values.set(ImportedTransaction.IS_OFX, false);
+      values.set(ImportedTransaction.IMPORT_TYPE, ImportType.QIF.getId());
       values.set(ImportedTransaction.ACCOUNT, accountId);
       values.set(ImportedTransaction.SERIES, seriesId);
     }

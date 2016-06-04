@@ -114,8 +114,7 @@ public class OfxImporter implements AccountFileImporter {
           repository.create(ImportedTransaction.TYPE,
                             value(ImportedTransaction.ACCOUNT, accountId),
                             value(ImportedTransaction.ID, lastTransactionId),
-                            value(ImportedTransaction.IS_OFX, true)
-          );
+                            value(ImportedTransaction.IMPORT_TYPE, ImportType.OFX.getId()));
         createdTransactions.add(transaction);
         transactionsForAccount.add(transaction);
         currentTransactionKey = transaction.getKey();

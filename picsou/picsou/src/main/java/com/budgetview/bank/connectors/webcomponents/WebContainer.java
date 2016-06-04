@@ -374,7 +374,7 @@ public class WebContainer<T extends HtmlElement> extends WebComponent<T> {
   }
 
   public String getBackgroundImagePath() {
-    ComputedCSSStyleDeclaration style = ((HTMLElement)node.getScriptObject()).getCurrentStyle();
+    ComputedCSSStyleDeclaration style = ((HTMLElement)node.getScriptableObject()).getCurrentStyle();
     String background = style.getBackgroundImage();
     if (Strings.isNullOrEmpty(background)) {
       return null;

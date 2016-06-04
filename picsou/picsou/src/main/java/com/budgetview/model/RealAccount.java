@@ -8,6 +8,7 @@ import org.globsframework.metamodel.annotations.DefaultInteger;
 import org.globsframework.metamodel.annotations.Key;
 import org.globsframework.metamodel.annotations.Target;
 import org.globsframework.metamodel.fields.*;
+import org.globsframework.metamodel.index.NotUniqueIndex;
 import org.globsframework.metamodel.utils.GlobTypeLoader;
 import org.globsframework.model.*;
 import org.globsframework.model.repository.GlobIdGenerator;
@@ -79,8 +80,13 @@ public class RealAccount {
 
   public static StringField FILE_CONTENT;
 
+  public static StringField BUDGEA_ID;
+
+  public static NotUniqueIndex BUDGEA_ID_INDEX;
+
   static {
-    GlobTypeLoader.init(RealAccount.class, "realAccount");
+    GlobTypeLoader loader = GlobTypeLoader.init(RealAccount.class, "realAccount");
+    loader.defineNonUniqueIndex(BUDGEA_ID_INDEX, BUDGEA_ID);
   }
 
   public static Glob findOrCreate(String name, String number, Integer bankId, GlobRepository repository) {
@@ -162,7 +168,7 @@ public class RealAccount {
   public static class Serializer implements PicsouGlobSerializer {
 
     public int getWriteVersion() {
-      return 2;
+      return 3;
     }
 
     public boolean shouldBeSaved(GlobRepository repository, FieldValues fieldValues) {
@@ -191,17 +197,45 @@ public class RealAccount {
       output.writeInteger(fieldValues.get(CARD_TYPE));
       output.writeInteger(fieldValues.get(TRANSACTION_ID));
       output.writeBoolean(fieldValues.get(FROM_SYNCHRO));
+      output.writeUtf8String(fieldValues.get(BUDGEA_ID));
 
       return serializedByteArrayOutput.toByteArray();
     }
 
     public void deserializeData(int version, FieldSetter fieldSetter, byte[] data, Integer id) {
-      if (version == 1) {
-        deserializeDataV1(fieldSetter, data);
+      if (version == 3) {
+        deserializeDataV3(fieldSetter, data);
       }
       else if (version == 2) {
         deserializeDataV2(fieldSetter, data);
       }
+      else if (version == 1) {
+        deserializeDataV1(fieldSetter, data);
+      }
+    }
+
+    private void deserializeDataV3(FieldSetter fieldSetter, byte[] data) {
+      SerializedInput input = SerializedInputOutputFactory.init(data);
+      fieldSetter.set(SYNCHRO, input.readInteger());
+      fieldSetter.set(BANK, input.readInteger());
+      fieldSetter.set(BANK_ID, input.readUtf8String());
+      fieldSetter.set(BANK_ENTITY, input.readInteger());
+      fieldSetter.set(BANK_ENTITY_LABEL, input.readUtf8String());
+      fieldSetter.set(ACC_TYPE, input.readUtf8String());
+      fieldSetter.set(URL, input.readUtf8String());
+      fieldSetter.set(ORG, input.readUtf8String());
+      fieldSetter.set(FID, input.readUtf8String());
+      fieldSetter.set(NUMBER, input.readUtf8String());
+      fieldSetter.set(POSITION, input.readUtf8String());
+      fieldSetter.set(POSITION_DATE, input.readDate());
+      fieldSetter.set(NAME, input.readUtf8String());
+      fieldSetter.set(ACCOUNT_TYPE, input.readInteger());
+      fieldSetter.set(SAVINGS, input.readBoolean());
+      fieldSetter.set(ACCOUNT, input.readInteger());
+      fieldSetter.set(CARD_TYPE, input.readInteger());
+      fieldSetter.set(TRANSACTION_ID, input.readInteger());
+      fieldSetter.set(FROM_SYNCHRO, input.readBoolean());
+      fieldSetter.set(BUDGEA_ID, input.readUtf8String());
     }
 
     private void deserializeDataV2(FieldSetter fieldSetter, byte[] data) {

@@ -1,5 +1,6 @@
 package com.budgetview.io.importer.analyzer;
 
+import com.budgetview.model.ImportType;
 import com.budgetview.model.PreTransactionTypeMatcher;
 import com.budgetview.model.Transaction;
 import com.budgetview.model.TransactionType;
@@ -36,7 +37,7 @@ public class QifTransactionFinalizer extends AbstractTransactionTypeFinalizer {
   }
 
   public boolean processTransaction(Glob transaction, GlobRepository repository) {
-    if (transaction.isTrue(Transaction.IS_OFX)) {
+    if (Transaction.getImportType(transaction) != ImportType.QIF) {
       return false;
     }
 

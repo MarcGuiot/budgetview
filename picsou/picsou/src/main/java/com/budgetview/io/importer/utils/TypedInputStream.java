@@ -42,6 +42,10 @@ public class TypedInputStream {
         type = BankFileType.OFX;
         break;
       }
+      if (loLine.startsWith("{")) {
+        type = BankFileType.JSON;
+        break;
+      }
     }
   }
 

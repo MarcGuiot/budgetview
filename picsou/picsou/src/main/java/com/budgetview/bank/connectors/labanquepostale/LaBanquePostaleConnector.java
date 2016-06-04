@@ -261,7 +261,7 @@ public class LaBanquePostaleConnector extends WebBankConnector implements HttpCo
       form = currentPage.getFormById("formulaire");
       Download download = form.submitByIdAndDownload("idNum0");
       String fileContent = download.readAsOfx();
-      repository.update(entry.account.getKey(), RealAccount.FILE_CONTENT, fileContent);
+      localRepository.update(entry.account.getKey(), RealAccount.FILE_CONTENT, fileContent);
       currentPage = new WebPage(browser, (HtmlPage)browser.getClient().getCurrentWindow().getParentWindow().getEnclosedPage());
       WebPanel window = currentPage.getPanelById("modalWindow");
       newPage = window.getAnchorWithRef("#").click();
@@ -308,7 +308,7 @@ public class LaBanquePostaleConnector extends WebBankConnector implements HttpCo
       WebAnchor anchor = row.getCell(0).getSingleAnchor();
       Glob account = createOrUpdateRealAccount(name, number, position, null, bankId);
       if (account != null) {
-        repository.update(account.getKey(), RealAccount.SAVINGS, savings);
+        localRepository.update(account.getKey(), RealAccount.SAVINGS, savings);
         entries.add(new AccountEntry(account, anchor));
       }
     }

@@ -1,32 +1,41 @@
 package com.budgetview.gui.importer.edition;
 
+import com.budgetview.model.ImportType;
+import org.globsframework.model.format.GlobPrinter;
 import org.globsframework.model.format.utils.AbstractGlobStringifier;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobRepository;
 import com.budgetview.model.ImportedTransaction;
+import org.globsframework.utils.exceptions.InvalidState;
 
 public class TransactionLabelGlobStringifier extends AbstractGlobStringifier {
 
-  public String toString(Glob glob, GlobRepository repository) {
-    if (glob == null){
+  public String toString(Glob transaction, GlobRepository repository) {
+    if (transaction == null) {
       return null;
     }
-    if (glob.isTrue(ImportedTransaction.IS_OFX)) {
+    ImportType importType = ImportedTransaction.getImportType(transaction);
+    if (importType == null || importType == ImportType.OFX) {
       StringBuilder builder = new StringBuilder();
-      complete(builder, glob.get(ImportedTransaction.OFX_NAME));
-      complete(builder, glob.get(ImportedTransaction.OFX_CHECK_NUM));
-      complete(builder, glob.get(ImportedTransaction.OFX_MEMO));
+      complete(builder, transaction.get(ImportedTransaction.OFX_NAME));
+      complete(builder, transaction.get(ImportedTransaction.OFX_CHECK_NUM));
+      complete(builder, transaction.get(ImportedTransaction.OFX_MEMO));
       return builder.toString();
     }
-    else {
+    else if (importType == ImportType.QIF || importType == ImportType.CSV) {
       StringBuilder builder = new StringBuilder();
-      complete(builder, glob.get(ImportedTransaction.QIF_M));
-      complete(builder, glob.get(ImportedTransaction.QIF_P));
+      complete(builder, transaction.get(ImportedTransaction.QIF_M));
+      complete(builder, transaction.get(ImportedTransaction.QIF_P));
       return builder.toString();
     }
+    else if (importType == ImportType.JSON) {
+      return transaction.get(ImportedTransaction.OFX_NAME);
+    }
+
+    throw new InvalidState("Unexpected import type for " + transaction);
   }
 
-  void complete(StringBuilder builder, String s) {
+  private void complete(StringBuilder builder, String s) {
     if (s == null) {
       return;
     }

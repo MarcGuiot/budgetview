@@ -43,5 +43,4 @@ public class PicsouGuiModel {
     allTypes.removeAll(typeNotToRemove);
     return allTypes.toArray(new GlobType[allTypes.size()]);
   }
-
 }

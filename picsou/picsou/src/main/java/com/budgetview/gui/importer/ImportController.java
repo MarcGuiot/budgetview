@@ -11,6 +11,7 @@ import com.budgetview.utils.Lang;
 import com.budgetview.gui.time.TimeService;
 import com.budgetview.io.importer.ImportSession;
 import org.globsframework.model.*;
+import org.globsframework.model.format.GlobPrinter;
 import org.globsframework.model.repository.LocalGlobRepository;
 import org.globsframework.model.utils.GlobFieldMatcher;
 import org.globsframework.model.utils.GlobFunctor;
@@ -27,8 +28,6 @@ import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
-
-import static org.globsframework.model.FieldValue.value;
 
 public class ImportController implements RealAccountImporter {
 

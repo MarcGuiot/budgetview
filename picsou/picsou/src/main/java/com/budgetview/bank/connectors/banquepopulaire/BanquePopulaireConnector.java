@@ -110,7 +110,7 @@ public class BanquePopulaireConnector extends WebBankConnector implements HttpCo
     for (WebTable table : tables) {
       for (WebTableRow row : table.getRowsWithoutHeaderAndFooters()) {
         if (row.getCell(0).asText().equals(account.get(RealAccount.NUMBER))) {
-          repository.update(account.getKey(), RealAccount.FILE_CONTENT, s);
+          localRepository.update(account.getKey(), RealAccount.FILE_CONTENT, s);
           return;
         }
       }

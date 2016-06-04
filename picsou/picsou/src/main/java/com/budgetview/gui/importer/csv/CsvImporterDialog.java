@@ -5,10 +5,7 @@ import com.budgetview.io.importer.csv.CsvReader;
 import com.budgetview.io.importer.csv.CsvType;
 import com.budgetview.io.importer.csv.utils.InvalidCsvFileFormat;
 import com.budgetview.io.importer.utils.TypedInputStream;
-import com.budgetview.model.CsvMapping;
-import com.budgetview.model.ImportedSeries;
-import com.budgetview.model.ImportedTransaction;
-import com.budgetview.model.RealAccount;
+import com.budgetview.model.*;
 import com.budgetview.gui.components.dialogs.CancelAction;
 import com.budgetview.utils.Lang;
 import org.globsframework.gui.GlobsPanelBuilder;
@@ -390,7 +387,8 @@ public class CsvImporterDialog {
     for (Glob glob : globs) {
       String envelope = "";
       String subEnvelope = "";
-      Glob targetGlob = localRepository.create(ImportedTransaction.TYPE);
+      Glob targetGlob = localRepository.create(ImportedTransaction.TYPE,
+                                               value(ImportedTransaction.IMPORT_TYPE, ImportType.CSV.getId()));
       for (FieldAssociation association : associations) {
         if (association.mapper == null || association.mapper.field == CsvType.NOT_IMPORTED) {
           continue;

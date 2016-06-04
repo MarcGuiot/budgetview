@@ -1,5 +1,6 @@
 package com.budgetview.io.importer;
 
+import com.budgetview.io.importer.json.JsonImporter;
 import com.budgetview.io.importer.utils.TypedInputStream;
 import com.budgetview.gui.components.dialogs.PicsouDialog;
 import com.budgetview.io.importer.csv.CsvImporter;
@@ -34,6 +35,9 @@ public class ImportService {
     }
     else if (type == BankFileType.CSV) {
       return new CsvImporter(fileStream, directory);
+    }
+    else if (type == BankFileType.JSON) {
+      return new JsonImporter();
     }
     throw new ItemNotFound("Unknown file extension for " + type);
   }

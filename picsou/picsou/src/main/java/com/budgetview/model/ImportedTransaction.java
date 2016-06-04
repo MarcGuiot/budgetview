@@ -5,6 +5,8 @@ import org.globsframework.metamodel.annotations.Key;
 import org.globsframework.metamodel.annotations.Target;
 import org.globsframework.metamodel.fields.*;
 import org.globsframework.metamodel.utils.GlobTypeLoader;
+import org.globsframework.model.Glob;
+import org.globsframework.utils.Utils;
 
 public class ImportedTransaction {
   public static GlobType TYPE;
@@ -30,26 +32,37 @@ public class ImportedTransaction {
 
   public static StringField QIF_P;
 
-  public static StringField CVS_LINE;
-
-  public static StringField BANK_TRANSACTION_TYPE;  // N for qif, TRNTYPE for ofx. 
+  public static StringField BANK_TRANSACTION_TYPE;  // N for qif, TRNTYPE for ofx.
 
   public static BooleanField IS_CARD;
 
-  public static BooleanField IS_OFX;
+  @Target(ImportType.class)
+  public static IntegerField IMPORT_TYPE;
 
   @Target(RealAccount.class)
   public static LinkField ACCOUNT;
 
-  public static BooleanField SPLIT;
-
   @Target(ImportedSeries.class)
   public static LinkField SERIES;
+
+  public static BooleanField SPLIT;
 
   @Target(ImportedTransaction.class)
   public static LinkField SPLIT_SOURCE;
 
   static {
     GlobTypeLoader.init(ImportedTransaction.class);
+  }
+
+  public static boolean isOfx(Glob importedTransaction) {
+    return Utils.equal(ImportType.OFX.getId(), importedTransaction.get(IMPORT_TYPE));
+  }
+
+  public static boolean isQif(Glob importedTransaction) {
+    return Utils.equal(ImportType.QIF.getId(), importedTransaction.get(IMPORT_TYPE));
+  }
+
+  public static ImportType getImportType(Glob transaction) {
+    return ImportType.get(transaction.get(IMPORT_TYPE));
   }
 }

@@ -1,5 +1,6 @@
 package com.budgetview.bank;
 
+import com.budgetview.bank.connectors.budgea.BudgeaConnector;
 import com.budgetview.bank.connectors.cic.CicConnector;
 import com.budgetview.bank.connectors.creditagricole.CreditAgricoleConnector;
 import com.budgetview.bank.connectors.OtherBankConnector;
@@ -23,14 +24,12 @@ import java.util.List;
 import java.util.Map;
 
 public class BankSynchroService {
-  private Map<Integer, BankConnectorFactory> banks = new HashMap<Integer, BankConnectorFactory>();
+  private Map<Integer, BankConnectorFactory> factories = new HashMap<Integer, BankConnectorFactory>();
   static public boolean SHOW_SYNCHRO = true;
-  //System.getProperty("budgetview.synchro", "true").equalsIgnoreCase("true");
 
   public BankSynchroService() {
     if (SHOW_SYNCHRO){
       register(SgConnector.BANK_ID, new SgConnector.Factory());
-//    register(CreditMutuelArkeaConnector.BANK_ID, new CreditMutuelArkeaConnector.Factory());
       register(CicConnector.BANK_ID, new CicConnector.Factory());
       register(LaBanquePostaleConnector.BANK_ID, new LaBanquePostaleConnector.Factory());
       register(BnpConnector.BANK_ID, new BnpConnector.Factory());
@@ -39,12 +38,13 @@ public class BankSynchroService {
       register(CaisseDEpargneConnector.BANK_ID, new CaisseDEpargneConnector.Factory());
     }
     Utils.beginRemove();
+    register(BudgeaConnector.BANK_ID, new BudgeaConnector.Factory());
     register(OtherBankConnector.BANK_ID, new OtherBankConnector.Factory());
     Utils.endRemove();
   }
 
   public void register(Integer bankId, BankConnectorFactory connectorDisplay) {
-    banks.put(bankId, connectorDisplay);
+    factories.put(bankId, connectorDisplay);
   }
 
   public List<BankConnector> getConnectors(GlobList allSynchro, Window parent, GlobRepository repository, Directory directory) {
@@ -71,7 +71,7 @@ public class BankSynchroService {
                                          repository.get(entry.getKey())));
     }
     for (Map.Entry<Key, Integer> entry : bankToRealAccount.entrySet()) {
-      BankConnectorFactory factory = banks.get(entry.getValue());
+      BankConnectorFactory factory = factories.get(entry.getValue());
       if (factory != null) {
         connectors.add(factory.create(repository, directory, true, repository.get(entry.getKey())));
       }
@@ -80,7 +80,7 @@ public class BankSynchroService {
   }
 
   public BankConnector getConnector(Integer bankId, Window parent, GlobRepository repository, Directory directory) {
-    BankConnectorFactory factory = banks.get(bankId);
+    BankConnectorFactory factory = factories.get(bankId);
     if (factory != null) {
       return factory.create(repository, directory, false, repository.create(Synchro.TYPE,
                                                                             FieldValue.value(Synchro.BANK, bankId)));

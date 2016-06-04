@@ -141,6 +141,7 @@ public class ImportDialog implements RealAccountImporter {
   }
 
   public void importAccounts(GlobList realAccounts) {
+    System.out.println("ImportDialog.importAccounts");
     controller.importAccounts(realAccounts);
   }
 

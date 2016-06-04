@@ -87,6 +87,10 @@ public class BnpWebConnection extends HttpWebConnection {
         public boolean isEmpty() {
           return false;
         }
+
+        public long length() {
+          return 0;
+        }
       };
     }
     else {

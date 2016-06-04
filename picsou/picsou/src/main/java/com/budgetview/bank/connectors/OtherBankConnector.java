@@ -49,7 +49,7 @@ public class OtherBankConnector extends AbstractBankConnector {
 
   protected JPanel createPanel() {
     final SelectionService selectionService = directory.get(SelectionService.class);
-    GlobsPanelBuilder builder = new GlobsPanelBuilder(getClass(), "/layout/bank/connection/otherConnectorPanel.splits", repository, directory);
+    GlobsPanelBuilder builder = new GlobsPanelBuilder(getClass(), "/layout/bank/connection/otherConnectorPanel.splits", localRepository, directory);
     code = new JTextField();
     builder.add("code", code);
     code.setText(getSyncCode());
@@ -63,8 +63,8 @@ public class OtherBankConnector extends AbstractBankConnector {
     builder.add("add", addRealAccount);
     addRealAccount.addActionListener(new AbstractAction() {
       public void actionPerformed(ActionEvent e) {
-        Glob glob = repository.create(RealAccount.TYPE, FieldValue.value(RealAccount.BANK, BANK_ID),
-                                      FieldValue.value(RealAccount.FROM_SYNCHRO, true));
+        Glob glob = localRepository.create(RealAccount.TYPE, FieldValue.value(RealAccount.BANK, BANK_ID),
+                                           FieldValue.value(RealAccount.FROM_SYNCHRO, true));
         selectionService.select(glob);
       }
     });
@@ -72,7 +72,7 @@ public class OtherBankConnector extends AbstractBankConnector {
     builder.add("remove", removeRealAccount);
     removeRealAccount.addActionListener(new AbstractAction() {
       public void actionPerformed(ActionEvent e) {
-        repository.delete(selectionService.getSelection(RealAccount.TYPE));
+        localRepository.delete(selectionService.getSelection(RealAccount.TYPE));
       }
     });
 
@@ -103,14 +103,14 @@ public class OtherBankConnector extends AbstractBankConnector {
       }
     });
 
-    repository.getAll(RealAccount.TYPE, GlobMatchers.fieldEquals(RealAccount.BANK,
-                                                                 OtherBankConnector.BANK_ID))
+    localRepository.getAll(RealAccount.TYPE, GlobMatchers.fieldEquals(RealAccount.BANK,
+                                                                      OtherBankConnector.BANK_ID))
       .safeApply(new GlobFunctor() {
         public void run(Glob glob, GlobRepository repository) throws Exception {
           repository.update(glob.getKey(), RealAccount.FILE_NAME, null);
           repository.update(glob.getKey(), RealAccount.FILE_CONTENT, null);
         }
-      }, repository);
+      }, localRepository);
     return builder.load();
   }
 
@@ -127,11 +127,11 @@ public class OtherBankConnector extends AbstractBankConnector {
       throw new RuntimeException("boom");
     }
     for (Map.Entry<Key, String> entry : files.entrySet()) {
-      repository.update(entry.getKey(), FieldValue.value(RealAccount.FILE_CONTENT, Strings.isNotEmpty(entry.getValue()) ?
+      localRepository.update(entry.getKey(), FieldValue.value(RealAccount.FILE_CONTENT, Strings.isNotEmpty(entry.getValue()) ?
                                                                                    Files.loadFileToString(entry.getValue()): null));
     }
     for (Glob account : accounts) {
-      repository.update(account.getKey(), RealAccount.POSITION_DATE, TimeService.getToday());
+      localRepository.update(account.getKey(), RealAccount.POSITION_DATE, TimeService.getToday());
     }
   }
 

@@ -39,7 +39,7 @@ public class CaisseDEpargneConnector extends WebBankConnector implements HttpCon
 
   public CaisseDEpargneConnector(boolean syncExistingAccount, GlobRepository repository, Directory directory, Glob synchro) {
     super(BANK_ID, syncExistingAccount, repository, directory, synchro);
-    setBrowserVersion(BrowserVersion.FIREFOX_24);
+    setBrowserVersion(BrowserVersion.FIREFOX_45);
   }
 
   public static void main(String[] args) throws IOException {
@@ -187,7 +187,7 @@ public class CaisseDEpargneConnector extends WebBankConnector implements HttpCon
       }
     }
     String s = download.readAsOfx();
-    repository.update(account.getKey(), RealAccount.FILE_CONTENT, s);
+    localRepository.update(account.getKey(), RealAccount.FILE_CONTENT, s);
 
     browser.retry(currentPage, new WebBrowser.Function1Arg<WebAnchor, WebPage>() {
       public WebAnchor call(WebPage webPage) throws Exception {
@@ -307,7 +307,6 @@ public class CaisseDEpargneConnector extends WebBankConnector implements HttpCon
         if (s.startsWith("https://logs2.xiti.com")) {
           return new StringWebResponse("", request.getUrl());
         }
-//        System.out.println("Request : " + s);
         WebResponse response = super.getResponse(request);
         return response;
       }

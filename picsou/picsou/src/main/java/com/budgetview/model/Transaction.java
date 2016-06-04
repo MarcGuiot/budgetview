@@ -79,7 +79,8 @@ public class Transaction {
 
   public static StringField BANK_TRANSACTION_TYPE;  //QIF : N et ofx : TRNTYPE
 
-  public static BooleanField IS_OFX;
+  @Target(ImportType.class)
+  public static IntegerField IMPORT_TYPE;
 
   public static StringField LABEL_FOR_CATEGORISATION;
 
@@ -124,7 +125,9 @@ public class Transaction {
   @DefaultBoolean(false)
   public static BooleanField MIRROR;
 
-  /** @deprecated **/
+  /**
+   * @deprecated
+   **/
   @DefaultBoolean(false)
   public static BooleanField CREATED_BY_SERIES;
 
@@ -303,10 +306,14 @@ public class Transaction {
       .findByIndex(POSITION_MONTH, monthId).getGlobs();
   }
 
+  public static ImportType getImportType(Glob transaction) {
+    return ImportType.get(transaction.get(IMPORT_TYPE));
+  }
+
   public static class Serializer implements PicsouGlobSerializer {
 
     public int getWriteVersion() {
-      return 11;
+      return 12;
     }
 
     public boolean shouldBeSaved(GlobRepository repository, FieldValues fieldValues) {
@@ -349,7 +356,7 @@ public class Transaction {
       output.writeUtf8String(fieldValues.get(Transaction.OFX_NAME));
       output.writeUtf8String(fieldValues.get(Transaction.QIF_M));
       output.writeUtf8String(fieldValues.get(Transaction.QIF_P));
-      output.writeBoolean(fieldValues.get(Transaction.IS_OFX));
+      output.writeInteger(fieldValues.get(Transaction.IMPORT_TYPE));
       output.writeInteger(fieldValues.get(Transaction.IMPORT));
       output.writeBoolean(fieldValues.get(Transaction.RECONCILIATION_ANNOTATION_SET));
       output.writeBoolean(fieldValues.get(Transaction.TO_RECONCILE));
@@ -357,7 +364,10 @@ public class Transaction {
     }
 
     public void deserializeData(int version, FieldSetter fieldSetter, byte[] data, Integer id) {
-      if (version == 11) {
+      if (version == 12) {
+        deserializeDataV12(fieldSetter, data);
+      }
+      else if (version == 11) {
         deserializeDataV11(fieldSetter, data);
       }
       else if (version == 10) {
@@ -390,6 +400,47 @@ public class Transaction {
       else if (version == 1) {
         deserializeDataV1(fieldSetter, data);
       }
+    }
+
+    private void deserializeDataV12(FieldSetter fieldSetter, byte[] data) {
+      SerializedInput input = SerializedInputOutputFactory.init(data);
+      fieldSetter.set(Transaction.ORIGINAL_LABEL, input.readUtf8String());
+      fieldSetter.set(Transaction.LABEL, input.readUtf8String());
+      fieldSetter.set(Transaction.LABEL_FOR_CATEGORISATION, input.readUtf8String());
+      fieldSetter.set(Transaction.BANK_TRANSACTION_TYPE, input.readUtf8String());
+      fieldSetter.set(Transaction.NOTE, input.readUtf8String());
+      fieldSetter.set(Transaction.MONTH, input.readInteger());
+      fieldSetter.set(Transaction.DAY, input.readInteger());
+      fieldSetter.set(Transaction.BUDGET_MONTH, input.readInteger());
+      fieldSetter.set(Transaction.BUDGET_DAY, input.readInteger());
+      fieldSetter.set(Transaction.BANK_MONTH, input.readInteger());
+      fieldSetter.set(Transaction.BANK_DAY, input.readInteger());
+      fieldSetter.set(Transaction.POSITION_MONTH, input.readInteger());
+      fieldSetter.set(Transaction.POSITION_DAY, input.readInteger());
+      fieldSetter.set(Transaction.AMOUNT, input.readDouble());
+      fieldSetter.set(Transaction.SUMMARY_POSITION, input.readDouble());
+      fieldSetter.set(Transaction.ACCOUNT_POSITION, input.readDouble());
+      fieldSetter.set(Transaction.ACCOUNT, input.readInteger());
+      fieldSetter.set(Transaction.ORIGINAL_ACCOUNT, input.readInteger());
+      fieldSetter.set(Transaction.TRANSACTION_TYPE, input.readInteger());
+      fieldSetter.set(Transaction.SPLIT, input.readBoolean());
+      fieldSetter.set(Transaction.SPLIT_SOURCE, input.readInteger());
+      fieldSetter.set(Transaction.DAY_BEFORE_SHIFT, input.readInteger());
+      fieldSetter.set(Transaction.SERIES, input.readInteger());
+      fieldSetter.set(Transaction.SUB_SERIES, input.readInteger());
+      fieldSetter.set(Transaction.PLANNED, input.readBoolean());
+      fieldSetter.set(Transaction.MIRROR, input.readBoolean());
+      fieldSetter.set(Transaction.CREATED_BY_SERIES, input.readBoolean());
+      fieldSetter.set(Transaction.NOT_IMPORTED_TRANSACTION, input.readInteger());
+      fieldSetter.set(Transaction.OFX_CHECK_NUM, input.readUtf8String());
+      fieldSetter.set(Transaction.OFX_MEMO, input.readUtf8String());
+      fieldSetter.set(Transaction.OFX_NAME, input.readUtf8String());
+      fieldSetter.set(Transaction.QIF_M, input.readUtf8String());
+      fieldSetter.set(Transaction.QIF_P, input.readUtf8String());
+      fieldSetter.set(Transaction.IMPORT_TYPE, input.readInteger());
+      fieldSetter.set(Transaction.IMPORT, input.readInteger());
+      fieldSetter.set(Transaction.RECONCILIATION_ANNOTATION_SET, input.readBoolean());
+      fieldSetter.set(Transaction.TO_RECONCILE, input.readBoolean());
     }
 
     private void deserializeDataV11(FieldSetter fieldSetter, byte[] data) {
@@ -427,7 +478,8 @@ public class Transaction {
       fieldSetter.set(Transaction.OFX_NAME, input.readUtf8String());
       fieldSetter.set(Transaction.QIF_M, input.readUtf8String());
       fieldSetter.set(Transaction.QIF_P, input.readUtf8String());
-      fieldSetter.set(Transaction.IS_OFX, input.readBoolean());
+      fieldSetter.set(Transaction.IMPORT_TYPE,
+                      Boolean.TRUE.equals(input.readBoolean()) ? ImportType.OFX.getId() : ImportType.QIF.getId());
       fieldSetter.set(Transaction.IMPORT, input.readInteger());
       fieldSetter.set(Transaction.RECONCILIATION_ANNOTATION_SET, input.readBoolean());
       fieldSetter.set(Transaction.TO_RECONCILE, input.readBoolean());
@@ -469,7 +521,8 @@ public class Transaction {
       fieldSetter.set(Transaction.OFX_NAME, input.readUtf8String());
       fieldSetter.set(Transaction.QIF_M, input.readUtf8String());
       fieldSetter.set(Transaction.QIF_P, input.readUtf8String());
-      fieldSetter.set(Transaction.IS_OFX, input.readBoolean());
+      fieldSetter.set(Transaction.IMPORT_TYPE,
+                      Boolean.TRUE.equals(input.readBoolean()) ? ImportType.OFX.getId() : ImportType.QIF.getId());
       fieldSetter.set(Transaction.IMPORT, input.readInteger());
       fieldSetter.set(Transaction.RECONCILIATION_ANNOTATION_SET, input.readBoolean());
       fieldSetter.set(Transaction.TO_RECONCILE, input.readBoolean());
@@ -511,7 +564,8 @@ public class Transaction {
       fieldSetter.set(Transaction.OFX_NAME, input.readUtf8String());
       fieldSetter.set(Transaction.QIF_M, input.readUtf8String());
       fieldSetter.set(Transaction.QIF_P, input.readUtf8String());
-      fieldSetter.set(Transaction.IS_OFX, input.readBoolean());
+      fieldSetter.set(Transaction.IMPORT_TYPE,
+                      Boolean.TRUE.equals(input.readBoolean()) ? ImportType.OFX.getId() : ImportType.QIF.getId());
       fieldSetter.set(Transaction.IMPORT, input.readInteger());
       fieldSetter.set(Transaction.RECONCILIATION_ANNOTATION_SET, input.readBoolean());
     }
@@ -556,7 +610,8 @@ public class Transaction {
       fieldSetter.set(Transaction.OFX_NAME, input.readUtf8String());
       fieldSetter.set(Transaction.QIF_M, input.readUtf8String());
       fieldSetter.set(Transaction.QIF_P, input.readUtf8String());
-      fieldSetter.set(Transaction.IS_OFX, input.readBoolean());
+      fieldSetter.set(Transaction.IMPORT_TYPE,
+                      Boolean.TRUE.equals(input.readBoolean()) ? ImportType.OFX.getId() : ImportType.QIF.getId());
       fieldSetter.set(Transaction.IMPORT, input.readInteger());
       fieldSetter.set(Transaction.RECONCILIATION_ANNOTATION_SET, false);
     }
@@ -601,7 +656,8 @@ public class Transaction {
       fieldSetter.set(Transaction.OFX_NAME, input.readUtf8String());
       fieldSetter.set(Transaction.QIF_M, input.readUtf8String());
       fieldSetter.set(Transaction.QIF_P, input.readUtf8String());
-      fieldSetter.set(Transaction.IS_OFX, input.readBoolean());
+      fieldSetter.set(Transaction.IMPORT_TYPE,
+                      Boolean.TRUE.equals(input.readBoolean()) ? ImportType.OFX.getId() : ImportType.QIF.getId());
       fieldSetter.set(Transaction.IMPORT, input.readInteger());
       fieldSetter.set(Transaction.RECONCILIATION_ANNOTATION_SET, false);
     }
@@ -646,7 +702,8 @@ public class Transaction {
       fieldSetter.set(Transaction.OFX_NAME, input.readUtf8String());
       fieldSetter.set(Transaction.QIF_M, input.readUtf8String());
       fieldSetter.set(Transaction.QIF_P, input.readUtf8String());
-      fieldSetter.set(Transaction.IS_OFX, input.readBoolean());
+      fieldSetter.set(Transaction.IMPORT_TYPE,
+                      Boolean.TRUE.equals(input.readBoolean()) ? ImportType.OFX.getId() : ImportType.QIF.getId());
       fieldSetter.set(Transaction.IMPORT, input.readInteger());
       fieldSetter.set(Transaction.RECONCILIATION_ANNOTATION_SET, false);
     }
@@ -690,7 +747,8 @@ public class Transaction {
       fieldSetter.set(Transaction.OFX_NAME, input.readUtf8String());
       fieldSetter.set(Transaction.QIF_M, input.readUtf8String());
       fieldSetter.set(Transaction.QIF_P, input.readUtf8String());
-      fieldSetter.set(Transaction.IS_OFX, input.readBoolean());
+      fieldSetter.set(Transaction.IMPORT_TYPE,
+                      Boolean.TRUE.equals(input.readBoolean()) ? ImportType.OFX.getId() : ImportType.QIF.getId());
       fieldSetter.set(Transaction.IMPORT, input.readInteger());
       fieldSetter.set(Transaction.RECONCILIATION_ANNOTATION_SET, false);
     }

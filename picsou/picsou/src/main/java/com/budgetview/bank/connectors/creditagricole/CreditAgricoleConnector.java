@@ -175,7 +175,7 @@ public class CreditAgricoleConnector extends WebBankConnector implements HttpCon
     Download download = open.clickAndDownload();
     String fileContent = download.readAsOfx();
     for (Glob realAccount : accounts) {
-      repository.update(realAccount.getKey(), RealAccount.FILE_CONTENT, fileContent);
+      localRepository.update(realAccount.getKey(), RealAccount.FILE_CONTENT, fileContent);
     }
   }
 

@@ -38,7 +38,7 @@ public abstract class AbstractBankConnector implements BankConnector {
   private List<Disposable> disposables = new ArrayList<Disposable>();
   protected Directory directory;
   protected Integer bankId;
-  protected LocalGlobRepository repository;
+  protected LocalGlobRepository localRepository;
   protected GlobList accounts = new GlobList();
   private SynchroMonitor monitor = SynchroMonitor.SILENT;
   private JPanel panel;
@@ -49,7 +49,7 @@ public abstract class AbstractBankConnector implements BankConnector {
     this.directory = directory;
     this.bankId = bankId;
     this.synchro = synchro;
-    this.repository = LocalGlobRepositoryBuilder.init(parentRepository)
+    this.localRepository = LocalGlobRepositoryBuilder.init(parentRepository)
       .copy(Account.TYPE, RealAccount.TYPE, Synchro.TYPE)
       .get();
   }
@@ -93,22 +93,22 @@ public abstract class AbstractBankConnector implements BankConnector {
 
   protected abstract JPanel createPanel();
 
-  protected Glob createOrUpdateRealAccount(String name, String number, String position, Date date, final Integer bankId) {
+  public Glob createOrUpdateRealAccount(String name, String number, String position, Date date, final Integer bankId) {
     if (Strings.isNullOrEmpty(name) && Strings.isNullOrEmpty(number)) {
       return null;
     }
 
-    Glob account = findOrCreateRealAccount(name, number, bankId);
+    Glob account = findOrCreateRealAccount(name, number, bankId, localRepository);
 
-    repository.update(account.getKey(),
-                      value(RealAccount.POSITION_DATE, date),
-                      value(RealAccount.POSITION, Strings.toString(position).trim()),
-                      value(RealAccount.FROM_SYNCHRO, true));
+    localRepository.update(account.getKey(),
+                           value(RealAccount.POSITION_DATE, date),
+                           value(RealAccount.POSITION, Strings.toString(position).trim()),
+                           value(RealAccount.FROM_SYNCHRO, true));
     accounts.add(account);
     return account;
   }
 
-  public Glob findOrCreateRealAccount(String name, String number, Integer bankId) {
+  private static Glob findOrCreateRealAccount(String name, String number, Integer bankId, LocalGlobRepository repository) {
     return RealAccount.findOrCreate(Strings.toString(name).trim(), Strings.toString(number).trim(),
                                     bankId, repository);
   }
@@ -119,25 +119,25 @@ public abstract class AbstractBankConnector implements BankConnector {
       return;
     }
 
-    Glob account = repository.getAll(RealAccount.TYPE,
-                                     and(fieldEquals(RealAccount.NUMBER, number),
+    Glob account = localRepository.getAll(RealAccount.TYPE,
+                                          and(fieldEquals(RealAccount.NUMBER, number),
                                          fieldEquals(RealAccount.ACC_TYPE, type),
                                          fieldEquals(RealAccount.URL, url),
                                          fieldEquals(RealAccount.ORG, org),
                                          fieldEquals(RealAccount.FID, fid)))
       .getFirst();
     if (account == null) {
-      account = repository.create(RealAccount.TYPE,
-                                  value(RealAccount.ACC_TYPE, Strings.toString(type).trim()),
-                                  value(RealAccount.NUMBER, Strings.toString(number).trim()),
-                                  value(RealAccount.URL, url),
-                                  value(RealAccount.ORG, org),
-                                  value(RealAccount.BANK, bankId),
-                                  value(RealAccount.FID, fid),
-                                  value(RealAccount.FROM_SYNCHRO, true));
+      account = localRepository.create(RealAccount.TYPE,
+                                       value(RealAccount.ACC_TYPE, Strings.toString(type).trim()),
+                                       value(RealAccount.NUMBER, Strings.toString(number).trim()),
+                                       value(RealAccount.URL, url),
+                                       value(RealAccount.ORG, org),
+                                       value(RealAccount.BANK, bankId),
+                                       value(RealAccount.FID, fid),
+                                       value(RealAccount.FROM_SYNCHRO, true));
     }
     else {
-      repository.update(account.getKey(), RealAccount.FROM_SYNCHRO, Boolean.TRUE);
+      localRepository.update(account.getKey(), RealAccount.FROM_SYNCHRO, Boolean.TRUE);
     }
 
     accounts.add(account);
@@ -157,29 +157,29 @@ public abstract class AbstractBankConnector implements BankConnector {
 
   public void doImport() {
     for (Glob account : accounts) {
-      repository.update(account.getKey(), RealAccount.FILE_CONTENT, null);
+      localRepository.update(account.getKey(), RealAccount.FILE_CONTENT, null);
     }
     try {
       downloadFile();
 
-      GlobList otherSynchros = repository.getAll(Synchro.TYPE, GlobMatchers.fieldEquals(Synchro.BANK, bankId));
+      GlobList otherSynchros = localRepository.getAll(Synchro.TYPE, GlobMatchers.fieldEquals(Synchro.BANK, bankId));
       if (otherSynchros.size() > 2) {
         for (Glob otherSynchro : otherSynchros) {
           if (!otherSynchro.getKey().equals(synchro.getKey())) {
             if (hasAKnownAccount(otherSynchro)) {
-              GlobList linkedTo = repository.findLinkedTo(otherSynchro, RealAccount.SYNCHRO);
+              GlobList linkedTo = localRepository.findLinkedTo(otherSynchro, RealAccount.SYNCHRO);
               for (Glob glob : linkedTo) {
-                repository.update(glob.getKey(), RealAccount.SYNCHRO, null);
+                localRepository.update(glob.getKey(), RealAccount.SYNCHRO, null);
               }
-              repository.delete(otherSynchros);
+              localRepository.delete(otherSynchros);
             }
           }
         }
       }
 
-      repository.update(synchro.getKey(), Synchro.CODE, getCode());
+      localRepository.update(synchro.getKey(), Synchro.CODE, getCode());
       for (Glob account : accounts) {
-        repository.update(account.getKey(), RealAccount.SYNCHRO, synchro.get(Synchro.ID));
+        localRepository.update(account.getKey(), RealAccount.SYNCHRO, synchro.get(Synchro.ID));
       }
     }
     catch (final Exception e) {
@@ -190,7 +190,7 @@ public abstract class AbstractBankConnector implements BankConnector {
   }
 
   public boolean hasAKnownAccount(final Glob sync) {
-    GlobList accountsForPreviousSynchro = repository.findLinkedTo(sync, RealAccount.SYNCHRO);
+    GlobList accountsForPreviousSynchro = localRepository.findLinkedTo(sync, RealAccount.SYNCHRO);
     Set<Key> accountsForPreviousSynchroKeySet = accountsForPreviousSynchro.getKeySet();
     // changement de code
     for (Glob account : accounts) {
@@ -203,7 +203,7 @@ public abstract class AbstractBankConnector implements BankConnector {
   }
 
   protected void importCompleted() {
-    repository.commitChanges(true);
+    localRepository.commitChanges(true);
     monitor.importCompleted(accounts);
   }
 

@@ -189,7 +189,7 @@ public class CicConnector extends WebBankConnector {
     for (WebTableCell cell : accountTable.getColumn(1)) {
       for (Glob realAccount : accounts) {
         if (cell.asText().trim().contains(realAccount.get(RealAccount.NAME))) {
-          repository.update(realAccount.getKey(), RealAccount.FILE_CONTENT, fileContent);
+          localRepository.update(realAccount.getKey(), RealAccount.FILE_CONTENT, fileContent);
         }
       }
     }

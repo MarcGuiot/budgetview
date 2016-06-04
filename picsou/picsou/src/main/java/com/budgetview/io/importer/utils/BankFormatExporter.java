@@ -21,29 +21,41 @@ public class BankFormatExporter {
     Set<Glob> accounts = new HashSet<Glob>();
 
     for (Glob transaction : transactions) {
-      boolean isOfx = transaction.get(Transaction.IS_OFX, false);
-      if (isOfx) {
-        accounts.add(repository.findLinkTarget(transaction, Transaction.ACCOUNT));
-        root.createChildTag("ofxEntry")
-          .addAttribute("bankId", transaction.get(Transaction.ACCOUNT))
-          .addAttribute("originalLabel", transaction.get(Transaction.ORIGINAL_LABEL))
-          .addAttribute("date", Transaction.fullDate(transaction))
-          .addAttribute("name", transaction.get(Transaction.OFX_NAME))
-          .addAttribute("memo", transaction.get(Transaction.OFX_MEMO))
-          .addAttribute("checkNum", transaction.get(Transaction.OFX_CHECK_NUM))
-          .addAttribute("bankType", transaction.get(Transaction.BANK_TRANSACTION_TYPE))
-          .end();
-      }
-      else {
-        accounts.add(repository.findLinkTarget(transaction, Transaction.ACCOUNT));
-        root.createChildTag("qifEntry")
-          .addAttribute("bankId", transaction.get(Transaction.ACCOUNT))
-          .addAttribute("originalLabel", transaction.get(Transaction.ORIGINAL_LABEL))
-          .addAttribute("date", Transaction.fullDate(transaction))
-          .addAttribute("m", transaction.get(Transaction.QIF_M))
-          .addAttribute("p", transaction.get(Transaction.QIF_P))
-          .addAttribute("bankType", transaction.get(Transaction.BANK_TRANSACTION_TYPE))
-          .end();
+      switch (Transaction.getImportType(transaction)) {
+        case OFX:
+          accounts.add(repository.findLinkTarget(transaction, Transaction.ACCOUNT));
+          root.createChildTag("ofxEntry")
+            .addAttribute("bankId", transaction.get(Transaction.ACCOUNT))
+            .addAttribute("originalLabel", transaction.get(Transaction.ORIGINAL_LABEL))
+            .addAttribute("date", Transaction.fullDate(transaction))
+            .addAttribute("name", transaction.get(Transaction.OFX_NAME))
+            .addAttribute("memo", transaction.get(Transaction.OFX_MEMO))
+            .addAttribute("checkNum", transaction.get(Transaction.OFX_CHECK_NUM))
+            .addAttribute("bankType", transaction.get(Transaction.BANK_TRANSACTION_TYPE))
+            .end();
+          break;
+
+        case QIF:
+          accounts.add(repository.findLinkTarget(transaction, Transaction.ACCOUNT));
+          root.createChildTag("qifEntry")
+            .addAttribute("bankId", transaction.get(Transaction.ACCOUNT))
+            .addAttribute("originalLabel", transaction.get(Transaction.ORIGINAL_LABEL))
+            .addAttribute("date", Transaction.fullDate(transaction))
+            .addAttribute("m", transaction.get(Transaction.QIF_M))
+            .addAttribute("p", transaction.get(Transaction.QIF_P))
+            .addAttribute("bankType", transaction.get(Transaction.BANK_TRANSACTION_TYPE))
+            .end();
+          break;
+
+        case JSON:
+          root.createChildTag("jsonEntry")
+            .addAttribute("bankId", transaction.get(Transaction.ACCOUNT))
+            .addAttribute("originalLabel", transaction.get(Transaction.ORIGINAL_LABEL))
+            .addAttribute("date", Transaction.fullDate(transaction))
+            .addAttribute("name", transaction.get(Transaction.OFX_NAME))
+            .addAttribute("bankType", transaction.get(Transaction.BANK_TRANSACTION_TYPE))
+            .end();
+          break;
       }
     }
 

@@ -8,7 +8,6 @@ import com.budgetview.io.importer.analyzer.TransactionAnalyzerFactory;
 import com.budgetview.io.importer.utils.DateFormatAnalyzer;
 import com.budgetview.io.importer.utils.TypedInputStream;
 import com.budgetview.model.*;
-import org.apache.commons.collections.iterators.ReverseListIterator;
 import org.apache.commons.io.output.ByteArrayOutputStream;
 import com.budgetview.gui.accounts.utils.MonthDay;
 import com.budgetview.gui.model.CurrentAccountInfo;
@@ -18,6 +17,7 @@ import org.globsframework.metamodel.fields.StringField;
 import org.globsframework.model.*;
 import org.globsframework.model.delta.DefaultChangeSet;
 import org.globsframework.model.delta.MutableChangeSet;
+import org.globsframework.model.format.GlobPrinter;
 import org.globsframework.model.repository.LocalGlobRepository;
 import org.globsframework.model.repository.LocalGlobRepositoryBuilder;
 import org.globsframework.model.utils.ChangeSetAggregator;
@@ -95,8 +95,8 @@ public class ImportSession {
     localRepository.reset(GlobList.EMPTY, Transaction.TYPE, ImportedTransaction.TYPE, MonthDay.TYPE, CurrentMonth.TYPE,
                           DeferredCardDate.TYPE, AccountCardType.TYPE, AccountType.TYPE, BudgetArea.TYPE, CsvMapping.TYPE);
     GlobType[] types = {Bank.TYPE, BankEntity.TYPE, Account.TYPE, MonthDay.TYPE, DeferredCardDate.TYPE,
-                        AccountCardType.TYPE, CurrentMonth.TYPE, Month.TYPE, CurrentAccountInfo.TYPE,
-                        RealAccount.TYPE, Series.TYPE, SubSeries.TYPE, TransactionImport.TYPE, CsvMapping.TYPE};
+      AccountCardType.TYPE, CurrentMonth.TYPE, Month.TYPE, CurrentAccountInfo.TYPE,
+      RealAccount.TYPE, Series.TYPE, SubSeries.TYPE, TransactionImport.TYPE, CsvMapping.TYPE};
     localRepository.reset(referenceRepository.getAll(types), types);
 
     LocalGlobRepository importRepository;
@@ -129,7 +129,7 @@ public class ImportSession {
 
     List<Glob> newList = new ArrayList<Glob>();
     for (Iterator it = accountIds.iterator(); it.hasNext(); ) {
-      Glob acc = (Glob)it.next();
+      Glob acc = (Glob) it.next();
       if (!importRepository.contains(ImportedTransaction.TYPE,
                                      GlobMatchers.fieldEquals(ImportedTransaction.ACCOUNT, acc.get(RealAccount.ID)))) {
         newList.add(acc);
@@ -140,20 +140,18 @@ public class ImportSession {
 
     accountCount = accountIds.size();
     if (synchronizedAccount != null) {
-      if (accountIds.size() == 1 && typedInputStream.getType() != BankFileType.OFX) {
-        if (accountIds.size() == 1) {
-          Glob account = accountIds.remove(0);
+      if (accountIds.size() == 1 && typedInputStream.getType() != BankFileType.OFX && typedInputStream.getType() != BankFileType.JSON) {
+        Glob account = accountIds.remove(0);
 
-          //cas de l'ofx avec un seul compte (donc comme le qif sauf que la position est peut-etre
-          // bien renseignée.
-          if (Strings.isNotEmpty(account.get(RealAccount.POSITION))) {
-            if (Strings.isNullOrEmpty(synchronizedAccount.get(RealAccount.POSITION))) {
-              localRepository.update(synchronizedAccount.getKey(),
-                                     RealAccount.POSITION, account.get(RealAccount.POSITION));
-            }
+        //cas de l'ofx avec un seul compte (donc comme le qif sauf que la position est peut-etre
+        // bien renseignée.
+        if (Strings.isNotEmpty(account.get(RealAccount.POSITION))) {
+          if (Strings.isNullOrEmpty(synchronizedAccount.get(RealAccount.POSITION))) {
+            localRepository.update(synchronizedAccount.getKey(),
+                                   RealAccount.POSITION, account.get(RealAccount.POSITION));
           }
-          importRepository.delete(account);
         }
+        importRepository.delete(account);
         accountIds.add(synchronizedAccount);
         importRepository.getAll(ImportedTransaction.TYPE)
           .safeApply(new GlobFunctor() {
@@ -163,6 +161,7 @@ public class ImportSession {
           }, importRepository);
       }
     }
+
     for (Glob realAccount : accountIds) {
       importRepository.update(realAccount.getKey(), RealAccount.SYNCHRO, synchroId);
     }
@@ -206,7 +205,7 @@ public class ImportSession {
     }
     else {
       if (Strings.isNullOrEmpty(realAccount.get(RealAccount.POSITION)) &&
-        Strings.isNotEmpty(currentImportedAccount.get(RealAccount.POSITION))) {
+          Strings.isNotEmpty(currentImportedAccount.get(RealAccount.POSITION))) {
         localRepository.update(realAccount.getKey(), RealAccount.POSITION,
                                currentImportedAccount.get(RealAccount.POSITION));
       }
@@ -305,7 +304,7 @@ public class ImportSession {
           transactionFilter.loadTransactions(referenceRepository, localRepository,
                                              new GlobList(accountIdAndTransactions.getValue()),
                                              currentlySelectedAccount != null ?
-                                             currentlySelectedAccount.get(Account.ID) : null);
+                                               currentlySelectedAccount.get(Account.ID) : null);
         }
         removeImportedSeries();
       }
@@ -344,7 +343,8 @@ public class ImportSession {
       Date firstDate = parseDate(dateFormat, firstTransaction, ImportedTransaction.BANK_DATE);
       Date lastDate = parseDate(dateFormat, lastTransaction, ImportedTransaction.BANK_DATE);
       if (lastDate.before(firstDate)) {
-        iterator = new ReverseListIterator(importedTransactions);
+        Collections.reverse(importedTransactions);
+        iterator = importedTransactions.iterator();
       }
     }
 
@@ -384,7 +384,7 @@ public class ImportSession {
         value(Transaction.QIF_P, TransactionAnalyzerFactory.removeBlankAndToUpercase(importedTransaction.get(ImportedTransaction.QIF_P))),
         value(Transaction.SERIES, getSeriesId(importedTransaction)),
         value(Transaction.SUB_SERIES, getSubSeriesId(importedTransaction)),
-        value(Transaction.IS_OFX, importedTransaction.get(ImportedTransaction.IS_OFX))
+        value(Transaction.IMPORT_TYPE, importedTransaction.get(ImportedTransaction.IMPORT_TYPE))
       );
       linkImportedTransactionToTransaction.put(importedTransaction.get(ImportedTransaction.ID),
                                                transaction.get(Transaction.ID));
@@ -398,10 +398,10 @@ public class ImportSession {
     if (shouldImportThisSeries(importedTransaction)) {
       Glob series = localRepository.findLinkTarget(importedTransaction, ImportedTransaction.SERIES);
       Integer subSeries = series.get(ImportedSeries.SUB_SERIES);
-      return subSeries != null ? subSeries : ((Integer)Transaction.SUB_SERIES.getDefaultValue());
+      return subSeries != null ? subSeries : ((Integer) Transaction.SUB_SERIES.getDefaultValue());
     }
     else {
-      return ((Integer)Transaction.SUB_SERIES.getDefaultValue());
+      return ((Integer) Transaction.SUB_SERIES.getDefaultValue());
     }
   }
 
@@ -409,10 +409,10 @@ public class ImportSession {
     if (shouldImportThisSeries(importedTransaction)) {
       Glob series = localRepository.findLinkTarget(importedTransaction, ImportedTransaction.SERIES);
       Integer seriesId = series.get(ImportedSeries.SERIES);
-      return seriesId != null ? seriesId : ((Integer)Transaction.SERIES.getDefaultValue());
+      return seriesId != null ? seriesId : ((Integer) Transaction.SERIES.getDefaultValue());
     }
     else {
-      return ((Integer)Transaction.SERIES.getDefaultValue());
+      return ((Integer) Transaction.SERIES.getDefaultValue());
     }
   }
 

@@ -9,7 +9,7 @@ import com.budgetview.gui.browsing.BrowsingAction;
 import com.budgetview.shared.utils.Amounts;
 import com.gargoylesoftware.htmlunit.*;
 import com.gargoylesoftware.htmlunit.html.*;
-import com.gargoylesoftware.htmlunit.javascript.host.Event;
+import com.gargoylesoftware.htmlunit.javascript.host.event.Event;
 import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
@@ -346,7 +346,7 @@ public class SgConnector extends WebBankConnector implements HttpConnectionProvi
           notifyDownloadForAccount(getAccountName(realAccount));
           String content = downloadFor(realAccount);
           if (Strings.isNotEmpty(content)) {
-            repository.update(realAccount.getKey(), RealAccount.FILE_CONTENT, content);
+            localRepository.update(realAccount.getKey(), RealAccount.FILE_CONTENT, content);
           }
         }
       }
@@ -357,7 +357,7 @@ public class SgConnector extends WebBankConnector implements HttpConnectionProvi
         accountList = compte.getEntryNames();
       }
     }
-    getClient().closeAllWindows();
+    getClient().close();
   }
 
   private Glob find(String option, GlobList accounts) {

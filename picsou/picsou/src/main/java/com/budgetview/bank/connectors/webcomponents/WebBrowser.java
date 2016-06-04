@@ -24,7 +24,7 @@ public class WebBrowser {
   private HttpConnectionProvider httpConnectionProvider;
   private boolean javascriptEnabled = true;
   private boolean cssEnabled  =false;
-  private BrowserVersion browserVersion = BrowserVersion.FIREFOX_24;
+  private BrowserVersion browserVersion = BrowserVersion.FIREFOX_45;
 
   public WebBrowser(AlertHandler errorAlertHandler) {
     this.errorAlertHandler = errorAlertHandler;
@@ -129,7 +129,7 @@ public class WebBrowser {
   }
 
   public void stop() {
-    webClient.closeAllWindows();
+    webClient.close();
   }
 
   public String downloadToString(String url, String extension) throws WebCommandFailed {

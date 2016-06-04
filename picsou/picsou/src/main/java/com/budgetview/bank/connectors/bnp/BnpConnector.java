@@ -344,9 +344,9 @@ public class BnpConnector extends WebBankConnector implements HttpConnectionProv
         if (!fileContent.startsWith("<html>")){
           for (Glob realAccount : accounts) {
             if (realAccount.get(RealAccount.NAME).trim().contains(entry.name)) {
-              repository.update(realAccount.getKey(),
-                                value(RealAccount.NUMBER, entry.number),
-                                value(RealAccount.FILE_CONTENT, fileContent));
+              localRepository.update(realAccount.getKey(),
+                                     value(RealAccount.NUMBER, entry.number),
+                                     value(RealAccount.FILE_CONTENT, fileContent));
               break;
             }
           }
