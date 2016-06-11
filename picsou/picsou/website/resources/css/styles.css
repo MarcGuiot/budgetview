@@ -54,6 +54,14 @@ a.highlighted {
   background: #FFFFDD;
 }
 
+
+.warning-block h2 {
+  margin-top: 4px;
+  text-align:center;
+  font-size: 13px;
+  font-weight: bold;
+}
+
 .warning-block p {
   margin: 0;
 }
