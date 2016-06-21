@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <string name="app_name">BudgetView</string>
+
+  <string name="month_jan">Janvier</string>
+  <string name="month_feb">Fevrier</string>
+  <string name="month_mar">Mars</string>
+  <string name="month_apr">Avril</string>
+  <string name="month_may">Mai</string>
+  <string name="month_june">Juin</string>
+  <string name="month_july">Juillet</string>
+  <string name="month_aug">Août</string>
+  <string name="month_sep">Septembre</string>
+  <string name="month_oct">Octobre</string>
+  <string name="month_nov">Novembre</string>
+  <string name="month_dec">Décembre</string>
+
+  <string name="short_month_jan">Jan</string>
+  <string name="short_month_feb">Fev</string>
+  <string name="short_month_mar">Mar</string>
+  <string name="short_month_apr">Avr</string>
+  <string name="short_month_may">Mai</string>
+  <string name="short_month_june">Juin</string>
+  <string name="short_month_july">Juil</string>
+  <string name="short_month_aug">Août</string>
+  <string name="short_month_sep">Sep</string>
+  <string name="short_month_oct">Oct</string>
+  <string name="short_month_nov">Nov</string>
+  <string name="short_month_dec">Déc</string>
+
+  <string name="on_date">le</string>
+  <string name="on_date_planned">prévu le</string>
+
+  <string name="budget_section">Budget</string>
+  <string name="main_accounts_section">Comptes courants</string>
+  <string name="savings_accounts_section">Comptes d\'épargne</string>
+
+  <string name="login_message">Activez le partage dans le menu
+    "Préférences / Accès Mobile" du BudgetView installé sur votre ordinateur,
+    puis saisissez vos identifiants ci-dessous.</string>
+  <string name="email">Adresse e-mail</string>
+  <string name="password">Mot de passe</string>
+  <string name="login">Connecter</string>
+
+  <string name="homeConnect">Connexion</string>
+  <string name="homeDemo">Démo</string>
+
+  <string name="loginWithNoId">Vous devez saisir une adresse email et un mot de passe</string>
+  <string name="syncWithNoConnection">Vous devez avoir un accès internet pour vous connecter</string>
+  <string name="syncWithInvalidId">Ce nom d\'utilisateur est inconnu ou ce mot de passe est incorrect</string>
+
+  <string name="homeLoginMessage">Vous utilisez déjà BudgetView ?</string>
+  <string name="homeDemoMessage">Vous découvrez BudgetView ?</string>
+
+  <string name="demoFooter">Découvrez BudgetView !</string>
+  <string name="demoLinkMessage">Accedez à notre site :</string>
+  <string name="demoLink">http://www.mybudgetview.fr</string>
+  <string name="demoTitle">Découvrez BudgetView!</string>
+  <string name="demoPlatforms">Mac/Windows/Linux</string>
+  <string name="demoEmailMessage">
+    Pour recevoir un lien de téléchargement de BudgetView pour votre ordinateur, saisissez
+    votre adresse email ci-dessous et cliquez sur Envoyer :
+  </string>
+  <string name="demoEmailButton">Envoyer</string>
+  <string name="demoEmailEmpty">Vous devez saisir votre adresse email</string>
+  <string name="demoEmailSent">Un email vous a été envoyé</string>
+  <string name="demoEmailSendingFailure">L\'email n\'a pas pu vous être envoyé</string>
+  <string name="demoEmailConnectionUnavailable">Vous devez avoir une connexion Internet pour cela</string>
+  <string name="demoScreenshotDescription">BudgetView</string>
+
+  <string name="transactionAccount">Compte</string>
+  <string name="transactionSeries">Enveloppe</string>
+
+  <string name="amountBlockActual">Réel</string>
+  <string name="amountBlockPlanned">Prévu</string>
+
+  <string name="seriesListSectionLabel">Enveloppes</string>
+  <string name="seriesListEmptyMessage">Il n\'y a pas d\'enveloppes ce mois-ci</string>
+
+  <string name="transactionListAccountSectionLabel">Solde</string>
+  <string name="transactionListSectionLabel">Opérations</string>
+  <string name="transactionListEmptyMessage">Il n\'y a pas d\'opérations ce mois-ci</string>
+
+  <string name="logoutButton">Deconnexion</string>
+  <string name="logoutTitle">Deconnexion</string>
+  <string name="logoutMessage">Voulez-vous vous déconnecter ?</string>
+  <string name="logoutYes">Oui</string>
+  <string name="logoutNo">Non</string>
+
+  <string name="sendEmailMessage">Contactez-nous !</string>
+  <string name="sendEmailSupportAddress">support@mybudgetview.fr</string>
+  <string name="sendEmailDefaultSubject">Mon commentaire sur BudgetView</string>
+  <string name="sendEmailError">Impossible d\'envoyer le message</string>
+
+  <string name="downloadError">Erreur de téléchargement</string>
+  <string name="downloadFailedUpdateMobile">Vous devez mettre à jour cette application</string>
+  <string name="downloadFailedUpdateDesktop">Vous devez mettre à jour l\'application BudgetView installée sur votre ordinateur</string>
+
+</resources>
+

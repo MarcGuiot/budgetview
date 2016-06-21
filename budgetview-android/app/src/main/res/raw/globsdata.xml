@@ -1,0 +1,757 @@
+<globs>
+  <BVVersion id="0" majorVersion="1" minorVersion="0"/>
+  <accountEntity id="100" label="Main account" isUserAccount="true" positionMonth="201304" positionDay="5" position="3027.6" accountType="-1" sequenceNumber="1"/>
+  <accountEntity id="101" label="Cash" isUserAccount="true" positionMonth="201304" positionDay="1" position="20.0" accountType="-1" sequenceNumber="0"/>
+  <accountEntity id="-1" isUserAccount="false" positionMonth="201304" positionDay="5" position="3047.6" accountType="-1" sequenceNumber="-1"/>
+  <accountEntity id="-2" isUserAccount="false" positionMonth="201303" positionDay="3" position="2400.0" accountType="-2" sequenceNumber="-1"/>
+  <accountEntity id="102" label="Savings" isUserAccount="true" positionMonth="201303" positionDay="3" position="1400.0" accountType="-2" sequenceNumber="3"/>
+  <accountEntity id="103" label="Provisions" isUserAccount="true" positionMonth="201302" positionDay="1" position="1000.0" accountType="-2" sequenceNumber="2"/>
+  <transactionValues id="114" series="112" account="100" label="HYPER FOODS" amount="-121.2" bankMonth="201304" bankDay="5" sequenceNumber="14"/>
+  <transactionValues id="150" series="114" account="100" label="SCHOTTENSTEIN CONCERT STADIUM N151435" amount="-35.3" bankMonth="201303" bankDay="10" sequenceNumber="50"/>
+  <transactionValues id="107" series="124" account="101" label="GREENGROCER" amount="-20.0" bankMonth="201304" bankDay="9" sequenceNumber="7"/>
+  <transactionValues id="125" series="1" account="100" label="MAGIC PLUMBERS 24/7" amount="-680.5" bankMonth="201303" bankDay="28" sequenceNumber="25"/>
+  <transactionValues id="154" series="113" account="101" label="WITHDRAWAL" amount="20.0" bankMonth="201303" bankDay="8" sequenceNumber="54"/>
+  <transactionValues id="103" series="1" account="100" label="S.Y. SCHOOL DISTR. R.L DEC. 5111" amount="-157.0" bankMonth="201304" bankDay="17" sequenceNumber="3"/>
+  <transactionValues id="164" series="110" account="100" label="OPTIBOX INTERNET 2523Z233" amount="-29.9" bankMonth="201303" bankDay="2" sequenceNumber="64"/>
+  <transactionValues id="134" series="1" account="100" label="HEALTHPLUS REIMBURSEMENT" amount="12.5" bankMonth="201303" bankDay="22" sequenceNumber="34"/>
+  <transactionValues id="142" series="1" account="100" label="HEALTHPLUS REIMBURSEMENT" amount="35.0" bankMonth="201303" bankDay="15" sequenceNumber="42"/>
+  <transactionValues id="138" series="112" account="100" label="ORGANIC PLUS GROCERY" amount="-35.5" bankMonth="201303" bankDay="19" sequenceNumber="38"/>
+  <transactionValues id="110" series="113" account="100" label="ATM WITHDRAWAL N.9011" amount="-20.0" bankMonth="201304" bankDay="9" sequenceNumber="10"/>
+  <transactionValues id="130" series="115" account="100" label="THE AGILE FOOT SHOESTORE" amount="-69.9" bankMonth="201303" bankDay="26" sequenceNumber="30"/>
+  <transactionValues id="122" series="124" account="101" label="GREENGROCER" amount="-40.0" bankMonth="201303" bankDay="28" sequenceNumber="22"/>
+  <transactionValues id="159" series="112" account="100" label="HYPER FOODS" amount="-230.3" bankMonth="201303" bankDay="7" sequenceNumber="59"/>
+  <transactionValues id="146" series="113" account="100" label="ATM WITHDRAWAL N.5234" amount="-30.0" bankMonth="201303" bankDay="12" sequenceNumber="46"/>
+  <transactionValues id="118" series="106" account="100" label="SF RAIL TRANSPORT. 10/08/201A" amount="-70.3" bankMonth="201304" bankDay="2" sequenceNumber="18"/>
+  <transactionValues id="108" series="113" account="101" label="WITHDRAWAL" amount="20.0" bankMonth="201304" bankDay="9" sequenceNumber="8"/>
+  <transactionValues id="126" series="101" account="100" label="BIGCORP SALARY 2013/03/28" amount="1312.8" bankMonth="201303" bankDay="28" sequenceNumber="26"/>
+  <transactionValues id="151" series="1" account="100" label="FOUR SEASONS PHARMA. GROUP" amount="-16.8" bankMonth="201303" bankDay="9" sequenceNumber="51"/>
+  <transactionValues id="113" series="124" account="101" label="BAKERY" amount="-5.0" bankMonth="201304" bankDay="6" sequenceNumber="13"/>
+  <transactionValues id="104" series="104" account="100" label="CAR INSUR. CONTRACT 5G7878HJ 23 2343TA AA3 A45 43ZQERZ EZR" amount="-83.1" bankMonth="201304" bankDay="14" sequenceNumber="4"/>
+  <transactionValues id="155" series="1" account="100" label="DOCTOR PHU" amount="-35.0" bankMonth="201303" bankDay="8" sequenceNumber="55"/>
+  <transactionValues id="143" series="112" account="100" label="HYPER FOODS" amount="-130.0" bankMonth="201303" bankDay="15" sequenceNumber="43"/>
+  <transactionValues id="135" series="113" account="100" label="ATM WITHDRAWAL N.5642" amount="-20.0" bankMonth="201303" bankDay="22" sequenceNumber="35"/>
+  <transactionValues id="163" series="123" account="100" label="REG. TRANSFERS SAVINGS AA" amount="-200.0" bankMonth="201303" bankDay="3" sequenceNumber="63"/>
+  <transactionValues id="139" series="1" account="100" label="HOUSE RENOV." amount="500.0" bankMonth="201303" bankDay="17" sequenceNumber="39"/>
+  <transactionValues id="167" series="101" account="100" label="BIGCORP SALARY 2013/02/29" amount="1312.8" bankMonth="201303" bankDay="1" sequenceNumber="67"/>
+  <transactionValues id="131" series="114" account="100" label="NEWSPAPERS MAGS 2000" amount="-12.5" bankMonth="201303" bankDay="24" sequenceNumber="31"/>
+  <transactionValues id="109" series="1" account="100" label="DAILY MAGAZINES" amount="-6.5" bankMonth="201304" bankDay="9" sequenceNumber="9"/>
+  <transactionValues id="121" series="113" account="100" label="ATM WITHDRAWAL N.0301" amount="-20.0" bankMonth="201303" bankDay="30" sequenceNumber="21"/>
+  <transactionValues id="100" series="122" account="102" label="REG. TRANSFERS SAVINGS AA" amount="200.0" bankMonth="201304" bankDay="20" sequenceNumber="0"/>
+  <transactionValues id="158" series="109" account="100" label="RED TELECOMS MOBILE" amount="-45.3" bankMonth="201303" bankDay="8" sequenceNumber="58"/>
+  <transactionValues id="117" series="110" account="100" label="OPTIBOX INTERNET 2523Z233" amount="-29.9" bankMonth="201304" bankDay="2" sequenceNumber="17"/>
+  <transactionValues id="147" series="115" account="100" label="FEET&apos;N&apos;FASHION" amount="-55.65" bankMonth="201303" bankDay="11" sequenceNumber="47"/>
+  <transactionValues id="156" series="114" account="100" label="NEWSPAPERS MAGS 2000" amount="-5.3" bankMonth="201303" bankDay="8" sequenceNumber="56"/>
+  <transactionValues id="101" series="123" account="100" label="REG. TRANSFERS SAVINGS AA" amount="-200.0" bankMonth="201304" bankDay="20" sequenceNumber="1"/>
+  <transactionValues id="152" series="102" account="100" label="HOME MORTGAGE N.3325566" amount="-1010.0" bankMonth="201303" bankDay="9" sequenceNumber="52"/>
+  <transactionValues id="105" series="108" account="100" label="TV SAT" amount="-25.5" bankMonth="201304" bankDay="12" sequenceNumber="5"/>
+  <transactionValues id="127" series="100" account="100" label="WORLDCO SALARY" amount="1760.5" bankMonth="201303" bankDay="28" sequenceNumber="27"/>
+  <transactionValues id="116" series="114" account="100" label="CITY CINEMAS VILLAGE" amount="-18.3" bankMonth="201304" bankDay="2" sequenceNumber="16"/>
+  <transactionValues id="162" series="122" account="102" label="REG. TRANSFERS SAVINGS AA" amount="200.0" bankMonth="201303" bankDay="3" sequenceNumber="62"/>
+  <transactionValues id="166" series="112" account="100" label="HYPER FOODS" amount="-100.6" bankMonth="201303" bankDay="2" sequenceNumber="66"/>
+  <transactionValues id="140" series="107" account="100" label="S.Y. SCHOOL DISTR. R.L NOV. 5111" amount="-157.0" bankMonth="201303" bankDay="17" sequenceNumber="40"/>
+  <transactionValues id="136" series="103" account="100" label="AUTO LOAN N.6784562 F657" amount="-195.75" bankMonth="201303" bankDay="20" sequenceNumber="36"/>
+  <transactionValues id="144" series="111" account="100" label="FED. ELECTRICITY N261FGR33444" amount="-65.89" bankMonth="201303" bankDay="15" sequenceNumber="44"/>
+  <transactionValues id="132" series="112" account="100" label="HYPER FOODS" amount="-200.3" bankMonth="201303" bankDay="23" sequenceNumber="32"/>
+  <transactionValues id="112" series="115" account="100" label="PARIS MODE CENTRE" amount="-75.0" bankMonth="201304" bankDay="7" sequenceNumber="12"/>
+  <transactionValues id="120" series="113" account="100" label="ATM WITHDRAWAL N.1867" amount="-20.0" bankMonth="201304" bankDay="1" sequenceNumber="20"/>
+  <transactionValues id="148" series="112" account="100" label="ORGANIC PLUS GROCERY" amount="-41.15" bankMonth="201303" bankDay="11" sequenceNumber="48"/>
+  <transactionValues id="124" series="124" account="101" label="BAKERY" amount="-20.0" bankMonth="201303" bankDay="28" sequenceNumber="24"/>
+  <transactionValues id="102" series="1" account="100" label="HEALTHPLUS REIMBURSEMENT" amount="25.8" bankMonth="201304" bankDay="19" sequenceNumber="2"/>
+  <transactionValues id="137" series="116" account="100" label="ZINGMAN HOME REPAIRS" amount="-11.5" bankMonth="201303" bankDay="19" sequenceNumber="37"/>
+  <transactionValues id="161" series="105" account="100" label="FEDERAL TAX. I.R. 23225252323" amount="-130.7" bankMonth="201303" bankDay="5" sequenceNumber="61"/>
+  <transactionValues id="157" series="113" account="100" label="ATM WITHDRAWAL N.4463" amount="-20.0" bankMonth="201303" bankDay="8" sequenceNumber="57"/>
+  <transactionValues id="115" series="105" account="100" label="FEDERAL TAX. I.R. 23225252323" amount="-130.7" bankMonth="201304" bankDay="5" sequenceNumber="15"/>
+  <transactionValues id="106" series="109" account="100" label="RED TELECOMS MOBILE" amount="-66.1" bankMonth="201304" bankDay="10" sequenceNumber="6"/>
+  <transactionValues id="128" series="113" account="101" label="WITHDRAWAL" amount="20.0" bankMonth="201303" bankDay="27" sequenceNumber="28"/>
+  <transactionValues id="165" series="106" account="100" label="SF RAIL TRANSPORT. 10/08/201A" amount="-70.3" bankMonth="201303" bankDay="2" sequenceNumber="65"/>
+  <transactionValues id="153" series="104" account="100" label="CAR INSUR. CONTRACT 5G7878HJ 23 2343TA AA3 A45 43ZQERZ EZR" amount="-83.1" bankMonth="201303" bankDay="9" sequenceNumber="53"/>
+  <transactionValues id="141" series="114" account="100" label="NEWSPAPERS MAGS 2000" amount="-3.7" bankMonth="201303" bankDay="16" sequenceNumber="41"/>
+  <transactionValues id="111" series="102" account="100" label="HOME MORTGAGE N.3325566" amount="-1010.0" bankMonth="201304" bankDay="9" sequenceNumber="11"/>
+  <transactionValues id="145" series="113" account="101" label="WITHDRAWAL" amount="40.0" bankMonth="201303" bankDay="12" sequenceNumber="45"/>
+  <transactionValues id="133" series="113" account="101" label="WITHDRAWAL" amount="20.0" bankMonth="201303" bankDay="22" sequenceNumber="33"/>
+  <transactionValues id="129" series="115" account="100" label="PARIS MODE CENTRE" amount="-50.0" bankMonth="201303" bankDay="27" sequenceNumber="29"/>
+  <transactionValues id="160" series="1" account="100" label="HEALTHPLUS REIMBURSEMENT" amount="7.8" bankMonth="201303" bankDay="5" sequenceNumber="60"/>
+  <transactionValues id="119" series="113" account="101" label="WITHDRAWAL" amount="20.0" bankMonth="201304" bankDay="1" sequenceNumber="19"/>
+  <transactionValues id="149" series="108" account="100" label="TV SAT" amount="-25.5" bankMonth="201303" bankDay="11" sequenceNumber="49"/>
+  <transactionValues id="123" series="124" account="101" label="BUTCHER&apos;S" amount="-40.0" bankMonth="201303" bankDay="28" sequenceNumber="23"/>
+  <budgetAreaEntity id="2" label="Variable" invertAmounts="true"/>
+  <budgetAreaEntity id="4" label="Extras" invertAmounts="true"/>
+  <budgetAreaEntity id="5" label="Savings" invertAmounts="true"/>
+  <budgetAreaEntity id="6" label="To categorize" invertAmounts="false"/>
+  <budgetAreaEntity id="1" label="Fixed" invertAmounts="true"/>
+  <budgetAreaEntity id="0" label="Income" invertAmounts="false"/>
+  <seriesEntity id="125" budgetArea="4" name="Gifts"/>
+  <seriesEntity id="123" budgetArea="5" name="Regular savings"/>
+  <seriesEntity id="101" budgetArea="0" name="Eric&apos;s salary"/>
+  <seriesEntity id="103" budgetArea="1" name="Auto loan"/>
+  <seriesEntity id="113" budgetArea="2" name="Cash"/>
+  <seriesEntity id="115" budgetArea="2" name="Clothing"/>
+  <seriesEntity id="111" budgetArea="1" name="Electricity"/>
+  <seriesEntity id="108" budgetArea="1" name="TV Sat"/>
+  <seriesEntity id="106" budgetArea="1" name="Navigo"/>
+  <seriesEntity id="135" budgetArea="5" name="Trip payment"/>
+  <seriesEntity id="102" budgetArea="1" name="Mortgage"/>
+  <seriesEntity id="126" budgetArea="4" name="Kitchen renovation"/>
+  <seriesEntity id="1" budgetArea="6" name="To categorize"/>
+  <seriesEntity id="122" budgetArea="5" name="Regular savings"/>
+  <seriesEntity id="124" budgetArea="2" name="Daily"/>
+  <seriesEntity id="104" budgetArea="1" name="Auto insurance"/>
+  <seriesEntity id="-1" budgetArea="7" name="account event"/>
+  <seriesEntity id="114" budgetArea="2" name="Leisures"/>
+  <seriesEntity id="112" budgetArea="2" name="Groceries"/>
+  <seriesEntity id="110" budgetArea="1" name="Internet"/>
+  <seriesEntity id="116" budgetArea="2" name="Misc."/>
+  <seriesEntity id="109" budgetArea="1" name="Cell phone"/>
+  <seriesEntity id="107" budgetArea="1" name="School"/>
+  <seriesEntity id="105" budgetArea="1" name="Income tax"/>
+  <seriesEntity id="100" budgetArea="0" name="Mary&apos;s salary"/>
+  <seriesEntity id="134" budgetArea="5" name="Trip payment"/>
+  <budgetAreaValues budgetArea="1" month="201304" initiallyPlanned="-1747.55" actual="-1415.6" remainder="-352.75" overrun="-20.8"/>
+  <budgetAreaValues budgetArea="4" month="201304" initiallyPlanned="0.0" actual="0.0" remainder="0.0" overrun="0.0"/>
+  <budgetAreaValues budgetArea="1" month="201303" initiallyPlanned="-1813.44" actual="-1813.44" remainder="0.0" overrun="0.0"/>
+  <budgetAreaValues budgetArea="4" month="201305" initiallyPlanned="0.0" actual="0.0" remainder="0.0" overrun="0.0"/>
+  <budgetAreaValues budgetArea="1" month="201305" initiallyPlanned="-1834.24" actual="0.0" remainder="-1834.24" overrun="0.0"/>
+  <budgetAreaValues budgetArea="5" month="201304" initiallyPlanned="-200.0" actual="-200.0" remainder="0.0" overrun="0.0"/>
+  <budgetAreaValues budgetArea="5" month="201303" initiallyPlanned="-200.0" actual="-200.0" remainder="0.0" overrun="0.0"/>
+  <budgetAreaValues budgetArea="0" month="201304" initiallyPlanned="4386.1" actual="0.0" remainder="4386.1" overrun="0.0"/>
+  <budgetAreaValues budgetArea="4" month="201303" initiallyPlanned="-600.0" actual="0.0" remainder="-600.0" overrun="0.0"/>
+  <budgetAreaValues budgetArea="0" month="201305" initiallyPlanned="4386.1" actual="0.0" remainder="4386.1" overrun="0.0"/>
+  <budgetAreaValues budgetArea="5" month="201305" initiallyPlanned="-200.0" actual="0.0" remainder="-200.0" overrun="0.0"/>
+  <budgetAreaValues budgetArea="0" month="201303" initiallyPlanned="4386.1" actual="4386.1" remainder="0.0" overrun="0.0"/>
+  <budgetAreaValues budgetArea="6" month="201303" initiallyPlanned="0.0" actual="1287.6" remainder="0.0" overrun="1287.6"/>
+  <budgetAreaValues budgetArea="6" month="201305" initiallyPlanned="0.0" actual="0.0" remainder="0.0" overrun="0.0"/>
+  <budgetAreaValues budgetArea="6" month="201304" initiallyPlanned="0.0" actual="189.3" remainder="0.0" overrun="189.3"/>
+  <budgetAreaValues budgetArea="2" month="201303" initiallyPlanned="-1090.0" actual="-1071.7" remainder="-155.35" overrun="-137.05"/>
+  <budgetAreaValues budgetArea="2" month="201305" initiallyPlanned="-1090.0" actual="0.0" remainder="-1090.0" overrun="0.0"/>
+  <budgetAreaValues budgetArea="2" month="201304" initiallyPlanned="-1090.0" actual="-239.5" remainder="-850.5" overrun="0.0"/>
+  <seriesValues seriesEntity="112" month="201304" budgetArea="2" amount="-121.2" plannedAmount="-800.0" remainingAmount="-678.8" overrunAmount="0.0"/>
+  <seriesValues seriesEntity="107" month="201305" budgetArea="1" plannedAmount="-157.0" remainingAmount="-157.0" overrunAmount="0.0"/>
+  <seriesValues seriesEntity="101" month="201303" budgetArea="0" amount="2625.6" plannedAmount="2625.6" remainingAmount="0.0" overrunAmount="0.0"/>
+  <seriesValues seriesEntity="-1" month="201304" budgetArea="7" remainingAmount="0.0" overrunAmount="0.0"/>
+  <seriesValues seriesEntity="115" month="201303" budgetArea="2" amount="-175.55" plannedAmount="-100.0" remainingAmount="0.0" overrunAmount="-75.55"/>
+  <seriesValues seriesEntity="113" month="201303" budgetArea="2" amount="10.0" plannedAmount="0.0" remainingAmount="0.0" overrunAmount="10.0"/>
+  <seriesValues seriesEntity="122" month="201303" budgetArea="5" amount="200.0" plannedAmount="200.0" remainingAmount="0.0" overrunAmount="0.0"/>
+  <seriesValues seriesEntity="100" month="201304" budgetArea="0" plannedAmount="1760.5" remainingAmount="1760.5" overrunAmount="0.0"/>
+  <seriesValues seriesEntity="125" month="201303" budgetArea="4" plannedAmount="0.0" remainingAmount="0.0" overrunAmount="0.0"/>
+  <seriesValues seriesEntity="106" month="201305" budgetArea="1" plannedAmount="-70.3" remainingAmount="-70.3" overrunAmount="0.0"/>
+  <seriesValues seriesEntity="114" month="201303" budgetArea="2" amount="-56.8" plannedAmount="-150.0" remainingAmount="-93.2" overrunAmount="0.0"/>
+  <seriesValues seriesEntity="105" month="201305" budgetArea="1" plannedAmount="-130.7" remainingAmount="-130.7" overrunAmount="0.0"/>
+  <seriesValues seriesEntity="110" month="201304" budgetArea="1" amount="-29.9" plannedAmount="-29.9" remainingAmount="0.0" overrunAmount="0.0"/>
+  <seriesValues seriesEntity="124" month="201303" budgetArea="2" amount="-100.0" plannedAmount="-30.0" remainingAmount="0.0" overrunAmount="-70.0"/>
+  <seriesValues seriesEntity="135" month="201303" budgetArea="5" plannedAmount="0.0" remainingAmount="0.0" overrunAmount="0.0"/>
+  <seriesValues seriesEntity="116" month="201305" budgetArea="2" plannedAmount="-10.0" remainingAmount="-10.0" overrunAmount="0.0"/>
+  <seriesValues seriesEntity="134" month="201305" budgetArea="5" plannedAmount="0.0" remainingAmount="0.0" overrunAmount="0.0"/>
+  <seriesValues seriesEntity="102" month="201303" budgetArea="1" amount="-1010.0" plannedAmount="-1010.0" remainingAmount="0.0" overrunAmount="0.0"/>
+  <seriesValues seriesEntity="108" month="201303" budgetArea="1" amount="-25.5" plannedAmount="-25.5" remainingAmount="0.0" overrunAmount="0.0"/>
+  <seriesValues seriesEntity="123" month="201305" budgetArea="5" plannedAmount="-200.0" remainingAmount="-200.0" overrunAmount="0.0"/>
+  <seriesValues seriesEntity="112" month="201305" budgetArea="2" plannedAmount="-800.0" remainingAmount="-800.0" overrunAmount="0.0"/>
+  <seriesValues seriesEntity="126" month="201303" budgetArea="4" plannedAmount="-600.0" remainingAmount="-600.0" overrunAmount="0.0"/>
+  <seriesValues seriesEntity="101" month="201304" budgetArea="0" plannedAmount="2625.6" remainingAmount="2625.6" overrunAmount="0.0"/>
+  <seriesValues seriesEntity="115" month="201304" budgetArea="2" amount="-75.0" plannedAmount="-100.0" remainingAmount="-25.0" overrunAmount="0.0"/>
+  <seriesValues seriesEntity="113" month="201304" budgetArea="2" amount="0.0" plannedAmount="0.0" remainingAmount="0.0" overrunAmount="0.0"/>
+  <seriesValues seriesEntity="103" month="201305" budgetArea="1" plannedAmount="-195.75" remainingAmount="-195.75" overrunAmount="0.0"/>
+  <seriesValues seriesEntity="-1" month="201303" budgetArea="7" remainingAmount="0.0" overrunAmount="0.0"/>
+  <seriesValues seriesEntity="100" month="201305" budgetArea="0" plannedAmount="1760.5" remainingAmount="1760.5" overrunAmount="0.0"/>
+  <seriesValues seriesEntity="125" month="201304" budgetArea="4" plannedAmount="0.0" remainingAmount="0.0" overrunAmount="0.0"/>
+  <seriesValues seriesEntity="106" month="201304" budgetArea="1" amount="-70.3" plannedAmount="-70.3" remainingAmount="0.0" overrunAmount="0.0"/>
+  <seriesValues seriesEntity="109" month="201305" budgetArea="1" plannedAmount="-66.1" remainingAmount="-66.1" overrunAmount="0.0"/>
+  <seriesValues seriesEntity="1" month="201305" budgetArea="6" amount="0.0" plannedAmount="0.0" remainingAmount="0.0" overrunAmount="0.0"/>
+  <seriesValues seriesEntity="110" month="201305" budgetArea="1" plannedAmount="-29.9" remainingAmount="-29.9" overrunAmount="0.0"/>
+  <seriesValues seriesEntity="135" month="201304" budgetArea="5" plannedAmount="0.0" remainingAmount="0.0" overrunAmount="0.0"/>
+  <seriesValues seriesEntity="104" month="201303" budgetArea="1" amount="-83.1" plannedAmount="-83.1" remainingAmount="0.0" overrunAmount="0.0"/>
+  <seriesValues seriesEntity="116" month="201304" budgetArea="2" plannedAmount="-10.0" remainingAmount="-10.0" overrunAmount="0.0"/>
+  <seriesValues seriesEntity="111" month="201303" budgetArea="1" amount="-65.89" plannedAmount="-65.89" remainingAmount="0.0" overrunAmount="0.0"/>
+  <seriesValues seriesEntity="134" month="201304" budgetArea="5" plannedAmount="0.0" remainingAmount="0.0" overrunAmount="0.0"/>
+  <seriesValues seriesEntity="122" month="201305" budgetArea="5" plannedAmount="200.0" remainingAmount="200.0" overrunAmount="0.0"/>
+  <seriesValues seriesEntity="107" month="201303" budgetArea="1" amount="-157.0" plannedAmount="-157.0" remainingAmount="0.0" overrunAmount="0.0"/>
+  <seriesValues seriesEntity="106" month="201303" budgetArea="1" amount="-70.3" plannedAmount="-70.3" remainingAmount="0.0" overrunAmount="0.0"/>
+  <seriesValues seriesEntity="102" month="201304" budgetArea="1" amount="-1010.0" plannedAmount="-1010.0" remainingAmount="0.0" overrunAmount="0.0"/>
+  <seriesValues seriesEntity="113" month="201305" budgetArea="2" plannedAmount="0.0" remainingAmount="0.0" overrunAmount="0.0"/>
+  <seriesValues seriesEntity="103" month="201304" budgetArea="1" plannedAmount="-195.75" remainingAmount="-195.75" overrunAmount="0.0"/>
+  <seriesValues seriesEntity="115" month="201305" budgetArea="2" plannedAmount="-100.0" remainingAmount="-100.0" overrunAmount="0.0"/>
+  <seriesValues seriesEntity="104" month="201304" budgetArea="1" amount="-83.1" plannedAmount="-83.1" remainingAmount="0.0" overrunAmount="0.0"/>
+  <seriesValues seriesEntity="125" month="201305" budgetArea="4" plannedAmount="0.0" remainingAmount="0.0" overrunAmount="0.0"/>
+  <seriesValues seriesEntity="124" month="201305" budgetArea="2" plannedAmount="-30.0" remainingAmount="-30.0" overrunAmount="0.0"/>
+  <seriesValues seriesEntity="109" month="201304" budgetArea="1" amount="-66.1" plannedAmount="-45.3" remainingAmount="0.0" overrunAmount="-20.8"/>
+  <seriesValues seriesEntity="135" month="201305" budgetArea="5" plannedAmount="0.0" remainingAmount="0.0" overrunAmount="0.0"/>
+  <seriesValues seriesEntity="105" month="201303" budgetArea="1" amount="-130.7" plannedAmount="-130.7" remainingAmount="0.0" overrunAmount="0.0"/>
+  <seriesValues seriesEntity="108" month="201305" budgetArea="1" plannedAmount="-25.5" remainingAmount="-25.5" overrunAmount="0.0"/>
+  <seriesValues seriesEntity="123" month="201303" budgetArea="5" amount="-200.0" plannedAmount="-200.0" remainingAmount="0.0" overrunAmount="0.0"/>
+  <seriesValues seriesEntity="114" month="201305" budgetArea="2" plannedAmount="-150.0" remainingAmount="-150.0" overrunAmount="0.0"/>
+  <seriesValues seriesEntity="116" month="201303" budgetArea="2" amount="-11.5" plannedAmount="-10.0" remainingAmount="0.0" overrunAmount="-1.5"/>
+  <seriesValues seriesEntity="1" month="201304" budgetArea="6" amount="189.3" plannedAmount="0.0" remainingAmount="0.0" overrunAmount="189.3"/>
+  <seriesValues seriesEntity="107" month="201304" budgetArea="1" plannedAmount="-157.0" remainingAmount="-157.0" overrunAmount="0.0"/>
+  <seriesValues seriesEntity="122" month="201304" budgetArea="5" amount="200.0" plannedAmount="200.0" remainingAmount="0.0" overrunAmount="0.0"/>
+  <seriesValues seriesEntity="112" month="201303" budgetArea="2" amount="-737.85" plannedAmount="-800.0" remainingAmount="-62.15" overrunAmount="0.0"/>
+  <seriesValues seriesEntity="134" month="201303" budgetArea="5" plannedAmount="0.0" remainingAmount="0.0" overrunAmount="0.0"/>
+  <seriesValues seriesEntity="102" month="201305" budgetArea="1" plannedAmount="-1010.0" remainingAmount="-1010.0" overrunAmount="0.0"/>
+  <seriesValues seriesEntity="100" month="201303" budgetArea="0" amount="1760.5" plannedAmount="1760.5" remainingAmount="0.0" overrunAmount="0.0"/>
+  <seriesValues seriesEntity="110" month="201303" budgetArea="1" amount="-29.9" plannedAmount="-29.9" remainingAmount="0.0" overrunAmount="0.0"/>
+  <seriesValues seriesEntity="103" month="201303" budgetArea="1" amount="-195.75" plannedAmount="-195.75" remainingAmount="0.0" overrunAmount="0.0"/>
+  <seriesValues seriesEntity="-1" month="201305" budgetArea="7" remainingAmount="0.0" overrunAmount="0.0"/>
+  <seriesValues seriesEntity="109" month="201303" budgetArea="1" amount="-45.3" plannedAmount="-45.3" remainingAmount="0.0" overrunAmount="0.0"/>
+  <seriesValues seriesEntity="124" month="201304" budgetArea="2" amount="-25.0" plannedAmount="-30.0" remainingAmount="-5.0" overrunAmount="0.0"/>
+  <seriesValues seriesEntity="104" month="201305" budgetArea="1" plannedAmount="-83.1" remainingAmount="-83.1" overrunAmount="0.0"/>
+  <seriesValues seriesEntity="108" month="201304" budgetArea="1" amount="-25.5" plannedAmount="-25.5" remainingAmount="0.0" overrunAmount="0.0"/>
+  <seriesValues seriesEntity="111" month="201305" budgetArea="1" plannedAmount="-65.89" remainingAmount="-65.89" overrunAmount="0.0"/>
+  <seriesValues seriesEntity="123" month="201304" budgetArea="5" amount="-200.0" plannedAmount="-200.0" remainingAmount="0.0" overrunAmount="0.0"/>
+  <seriesValues seriesEntity="105" month="201304" budgetArea="1" amount="-130.7" plannedAmount="-130.7" remainingAmount="0.0" overrunAmount="0.0"/>
+  <seriesValues seriesEntity="101" month="201305" budgetArea="0" plannedAmount="2625.6" remainingAmount="2625.6" overrunAmount="0.0"/>
+  <seriesValues seriesEntity="1" month="201303" budgetArea="6" amount="1287.6" plannedAmount="0.0" remainingAmount="0.0" overrunAmount="1287.6"/>
+  <seriesValues seriesEntity="114" month="201304" budgetArea="2" amount="-18.3" plannedAmount="-150.0" remainingAmount="-131.7" overrunAmount="0.0"/>
+  <accountPosition account="101" month="201303" day="1" position="0.0"/>
+  <accountPosition account="101" month="201303" day="2" position="0.0"/>
+  <accountPosition account="101" month="201303" day="3" position="0.0"/>
+  <accountPosition account="101" month="201303" day="4" position="0.0"/>
+  <accountPosition account="101" month="201303" day="5" position="0.0"/>
+  <accountPosition account="101" month="201303" day="6" position="0.0"/>
+  <accountPosition account="101" month="201303" day="7" position="0.0"/>
+  <accountPosition account="101" month="201303" day="8" position="20.0"/>
+  <accountPosition account="101" month="201303" day="9" position="20.0"/>
+  <accountPosition account="101" month="201303" day="10" position="20.0"/>
+  <accountPosition account="103" month="201303" day="2" position="1000.0"/>
+  <accountPosition account="103" month="201303" day="1" position="1000.0"/>
+  <accountPosition account="103" month="201303" day="4" position="1000.0"/>
+  <accountPosition account="103" month="201303" day="3" position="1000.0"/>
+  <accountPosition account="103" month="201303" day="6" position="1000.0"/>
+  <accountPosition account="103" month="201303" day="5" position="1000.0"/>
+  <accountPosition account="103" month="201303" day="8" position="1000.0"/>
+  <accountPosition account="103" month="201303" day="7" position="1000.0"/>
+  <accountPosition account="103" month="201303" day="16" position="1000.0"/>
+  <accountPosition account="102" month="201303" day="21" position="1400.0"/>
+  <accountPosition account="103" month="201303" day="15" position="1000.0"/>
+  <accountPosition account="102" month="201303" day="20" position="1400.0"/>
+  <accountPosition account="103" month="201303" day="14" position="1000.0"/>
+  <accountPosition account="102" month="201303" day="19" position="1400.0"/>
+  <accountPosition account="103" month="201303" day="13" position="1000.0"/>
+  <accountPosition account="102" month="201303" day="18" position="1400.0"/>
+  <accountPosition account="103" month="201303" day="12" position="1000.0"/>
+  <accountPosition account="102" month="201303" day="25" position="1400.0"/>
+  <accountPosition account="103" month="201303" day="11" position="1000.0"/>
+  <accountPosition account="102" month="201303" day="24" position="1400.0"/>
+  <accountPosition account="103" month="201303" day="10" position="1000.0"/>
+  <accountPosition account="102" month="201303" day="23" position="1400.0"/>
+  <accountPosition account="103" month="201303" day="9" position="1000.0"/>
+  <accountPosition account="102" month="201303" day="22" position="1400.0"/>
+  <accountPosition account="103" month="201303" day="24" position="1000.0"/>
+  <accountPosition account="102" month="201303" day="13" position="1400.0"/>
+  <accountPosition account="103" month="201303" day="23" position="1000.0"/>
+  <accountPosition account="102" month="201303" day="12" position="1400.0"/>
+  <accountPosition account="103" month="201303" day="22" position="1000.0"/>
+  <accountPosition account="102" month="201303" day="11" position="1400.0"/>
+  <accountPosition account="103" month="201303" day="21" position="1000.0"/>
+  <accountPosition account="102" month="201303" day="10" position="1400.0"/>
+  <accountPosition account="103" month="201303" day="20" position="1000.0"/>
+  <accountPosition account="102" month="201303" day="17" position="1400.0"/>
+  <accountPosition account="103" month="201303" day="19" position="1000.0"/>
+  <accountPosition account="102" month="201303" day="16" position="1400.0"/>
+  <accountPosition account="103" month="201303" day="18" position="1000.0"/>
+  <accountPosition account="102" month="201303" day="15" position="1400.0"/>
+  <accountPosition account="103" month="201303" day="17" position="1000.0"/>
+  <accountPosition account="102" month="201303" day="14" position="1400.0"/>
+  <accountPosition account="103" month="201303" day="31" position="1000.0"/>
+  <accountPosition account="102" month="201304" day="5" position="1400.0"/>
+  <accountPosition account="103" month="201304" day="1" position="1000.0"/>
+  <accountPosition account="102" month="201304" day="6" position="1400.0"/>
+  <accountPosition account="103" month="201303" day="29" position="1000.0"/>
+  <accountPosition account="102" month="201304" day="3" position="1400.0"/>
+  <accountPosition account="103" month="201303" day="30" position="1000.0"/>
+  <accountPosition account="102" month="201304" day="4" position="1400.0"/>
+  <accountPosition account="103" month="201303" day="27" position="1000.0"/>
+  <accountPosition account="102" month="201304" day="9" position="1400.0"/>
+  <accountPosition account="103" month="201303" day="28" position="1000.0"/>
+  <accountPosition account="102" month="201304" day="10" position="1400.0"/>
+  <accountPosition account="103" month="201303" day="25" position="1000.0"/>
+  <accountPosition account="102" month="201304" day="7" position="1400.0"/>
+  <accountPosition account="103" month="201303" day="26" position="1000.0"/>
+  <accountPosition account="102" month="201304" day="8" position="1400.0"/>
+  <accountPosition account="103" month="201304" day="8" position="1000.0"/>
+  <accountPosition account="102" month="201303" day="28" position="1400.0"/>
+  <accountPosition account="103" month="201304" day="9" position="1000.0"/>
+  <accountPosition account="102" month="201303" day="29" position="1400.0"/>
+  <accountPosition account="103" month="201304" day="6" position="1000.0"/>
+  <accountPosition account="102" month="201303" day="26" position="1400.0"/>
+  <accountPosition account="103" month="201304" day="7" position="1000.0"/>
+  <accountPosition account="102" month="201303" day="27" position="1400.0"/>
+  <accountPosition account="103" month="201304" day="4" position="1000.0"/>
+  <accountPosition account="102" month="201304" day="1" position="1400.0"/>
+  <accountPosition account="103" month="201304" day="5" position="1000.0"/>
+  <accountPosition account="102" month="201304" day="2" position="1400.0"/>
+  <accountPosition account="103" month="201304" day="2" position="1000.0"/>
+  <accountPosition account="102" month="201303" day="30" position="1400.0"/>
+  <accountPosition account="103" month="201304" day="3" position="1000.0"/>
+  <accountPosition account="102" month="201303" day="31" position="1400.0"/>
+  <accountPosition account="103" month="201304" day="15" position="1000.0"/>
+  <accountPosition account="102" month="201304" day="20" position="1600.0"/>
+  <accountPosition account="103" month="201304" day="14" position="1000.0"/>
+  <accountPosition account="102" month="201304" day="19" position="1400.0"/>
+  <accountPosition account="103" month="201304" day="17" position="1000.0"/>
+  <accountPosition account="102" month="201304" day="22" position="1600.0"/>
+  <accountPosition account="103" month="201304" day="16" position="1000.0"/>
+  <accountPosition account="102" month="201304" day="21" position="1600.0"/>
+  <accountPosition account="103" month="201304" day="11" position="1000.0"/>
+  <accountPosition account="102" month="201304" day="24" position="1600.0"/>
+  <accountPosition account="103" month="201304" day="10" position="1000.0"/>
+  <accountPosition account="102" month="201304" day="23" position="1600.0"/>
+  <accountPosition account="103" month="201304" day="13" position="1000.0"/>
+  <accountPosition account="102" month="201304" day="26" position="1600.0"/>
+  <accountPosition account="103" month="201304" day="12" position="1000.0"/>
+  <accountPosition account="102" month="201304" day="25" position="1600.0"/>
+  <accountPosition account="103" month="201304" day="23" position="1000.0"/>
+  <accountPosition account="102" month="201304" day="12" position="1400.0"/>
+  <accountPosition account="103" month="201304" day="22" position="1000.0"/>
+  <accountPosition account="102" month="201304" day="11" position="1400.0"/>
+  <accountPosition account="103" month="201304" day="25" position="1000.0"/>
+  <accountPosition account="102" month="201304" day="14" position="1400.0"/>
+  <accountPosition account="103" month="201304" day="24" position="1000.0"/>
+  <accountPosition account="102" month="201304" day="13" position="1400.0"/>
+  <accountPosition account="103" month="201304" day="19" position="1000.0"/>
+  <accountPosition account="102" month="201304" day="16" position="1400.0"/>
+  <accountPosition account="103" month="201304" day="18" position="1000.0"/>
+  <accountPosition account="102" month="201304" day="15" position="1400.0"/>
+  <accountPosition account="103" month="201304" day="21" position="1000.0"/>
+  <accountPosition account="102" month="201304" day="18" position="1400.0"/>
+  <accountPosition account="103" month="201304" day="20" position="1000.0"/>
+  <accountPosition account="102" month="201304" day="17" position="1400.0"/>
+  <accountPosition account="103" month="201304" day="30" position="1000.0"/>
+  <accountPosition account="102" month="201305" day="4" position="1600.0"/>
+  <accountPosition account="102" month="201305" day="5" position="1600.0"/>
+  <accountPosition account="103" month="201305" day="1" position="1000.0"/>
+  <accountPosition account="102" month="201305" day="6" position="1600.0"/>
+  <accountPosition account="103" month="201305" day="2" position="1000.0"/>
+  <accountPosition account="102" month="201305" day="7" position="1600.0"/>
+  <accountPosition account="103" month="201304" day="26" position="1000.0"/>
+  <accountPosition account="102" month="201305" day="8" position="1800.0"/>
+  <accountPosition account="103" month="201304" day="27" position="1000.0"/>
+  <accountPosition account="102" month="201305" day="9" position="1800.0"/>
+  <accountPosition account="103" month="201304" day="28" position="1000.0"/>
+  <accountPosition account="102" month="201305" day="10" position="1800.0"/>
+  <accountPosition account="103" month="201304" day="29" position="1000.0"/>
+  <accountPosition account="102" month="201305" day="11" position="1800.0"/>
+  <accountPosition account="103" month="201305" day="7" position="1000.0"/>
+  <accountPosition account="102" month="201304" day="27" position="1600.0"/>
+  <accountPosition account="103" month="201305" day="8" position="1000.0"/>
+  <accountPosition account="102" month="201304" day="28" position="1600.0"/>
+  <accountPosition account="103" month="201305" day="9" position="1000.0"/>
+  <accountPosition account="102" month="201304" day="29" position="1600.0"/>
+  <accountPosition account="103" month="201305" day="10" position="1000.0"/>
+  <accountPosition account="102" month="201304" day="30" position="1600.0"/>
+  <accountPosition account="103" month="201305" day="3" position="1000.0"/>
+  <accountPosition account="103" month="201305" day="4" position="1000.0"/>
+  <accountPosition account="102" month="201305" day="1" position="1600.0"/>
+  <accountPosition account="103" month="201305" day="5" position="1000.0"/>
+  <accountPosition account="102" month="201305" day="2" position="1600.0"/>
+  <accountPosition account="103" month="201305" day="6" position="1000.0"/>
+  <accountPosition account="102" month="201305" day="3" position="1600.0"/>
+  <accountPosition account="103" month="201305" day="14" position="1000.0"/>
+  <accountPosition account="103" month="201305" day="13" position="1000.0"/>
+  <accountPosition account="103" month="201305" day="12" position="1000.0"/>
+  <accountPosition account="103" month="201305" day="11" position="1000.0"/>
+  <accountPosition account="103" month="201305" day="18" position="1000.0"/>
+  <accountPosition account="103" month="201305" day="17" position="1000.0"/>
+  <accountPosition account="103" month="201305" day="16" position="1000.0"/>
+  <accountPosition account="103" month="201305" day="15" position="1000.0"/>
+  <accountPosition account="103" month="201305" day="22" position="1000.0"/>
+  <accountPosition account="103" month="201305" day="21" position="1000.0"/>
+  <accountPosition account="103" month="201305" day="20" position="1000.0"/>
+  <accountPosition account="103" month="201305" day="19" position="1000.0"/>
+  <accountPosition account="103" month="201305" day="26" position="1000.0"/>
+  <accountPosition account="103" month="201305" day="25" position="1000.0"/>
+  <accountPosition account="103" month="201305" day="24" position="1000.0"/>
+  <accountPosition account="103" month="201305" day="23" position="1000.0"/>
+  <accountPosition account="103" month="201305" day="29" position="1000.0"/>
+  <accountPosition account="103" month="201305" day="30" position="1000.0"/>
+  <accountPosition account="103" month="201305" day="27" position="1000.0"/>
+  <accountPosition account="103" month="201305" day="28" position="1000.0"/>
+  <accountPosition account="103" month="201305" day="31" position="1000.0"/>
+  <accountPosition account="102" month="201303" day="6" position="1400.0"/>
+  <accountPosition account="102" month="201303" day="7" position="1400.0"/>
+  <accountPosition account="102" month="201303" day="8" position="1400.0"/>
+  <accountPosition account="102" month="201303" day="9" position="1400.0"/>
+  <accountPosition account="102" month="201303" day="2" position="1200.0"/>
+  <accountPosition account="102" month="201303" day="3" position="1400.0"/>
+  <accountPosition account="102" month="201303" day="4" position="1400.0"/>
+  <accountPosition account="102" month="201303" day="5" position="1400.0"/>
+  <accountPosition account="102" month="201303" day="1" position="1200.0"/>
+  <accountPosition account="-2" month="201305" day="20" position="2800.0"/>
+  <accountPosition account="-2" month="201305" day="21" position="2800.0"/>
+  <accountPosition account="-2" month="201305" day="22" position="2800.0"/>
+  <accountPosition account="-2" month="201305" day="23" position="2800.0"/>
+  <accountPosition account="-2" month="201305" day="24" position="2800.0"/>
+  <accountPosition account="-2" month="201305" day="25" position="2800.0"/>
+  <accountPosition account="-2" month="201305" day="26" position="2800.0"/>
+  <accountPosition account="-2" month="201305" day="27" position="2800.0"/>
+  <accountPosition account="-2" month="201305" day="28" position="2800.0"/>
+  <accountPosition account="-2" month="201305" day="29" position="2800.0"/>
+  <accountPosition account="-2" month="201305" day="30" position="2800.0"/>
+  <accountPosition account="-2" month="201305" day="31" position="2800.0"/>
+  <accountPosition account="-2" month="201304" day="21" position="2600.0"/>
+  <accountPosition account="-2" month="201304" day="22" position="2600.0"/>
+  <accountPosition account="-2" month="201304" day="19" position="2400.0"/>
+  <accountPosition account="-2" month="201304" day="20" position="2600.0"/>
+  <accountPosition account="-2" month="201304" day="25" position="2600.0"/>
+  <accountPosition account="-2" month="201304" day="26" position="2600.0"/>
+  <accountPosition account="-2" month="201304" day="23" position="2600.0"/>
+  <accountPosition account="-2" month="201304" day="24" position="2600.0"/>
+  <accountPosition account="-2" month="201304" day="29" position="2600.0"/>
+  <accountPosition account="-2" month="201304" day="30" position="2600.0"/>
+  <accountPosition account="-2" month="201304" day="27" position="2600.0"/>
+  <accountPosition account="-2" month="201304" day="28" position="2600.0"/>
+  <accountPosition account="-2" month="201305" day="2" position="2600.0"/>
+  <accountPosition account="-2" month="201305" day="3" position="2600.0"/>
+  <accountPosition account="-2" month="201305" day="1" position="2600.0"/>
+  <accountPosition account="-2" month="201305" day="7" position="2600.0"/>
+  <accountPosition account="-2" month="201305" day="6" position="2600.0"/>
+  <accountPosition account="-2" month="201305" day="5" position="2600.0"/>
+  <accountPosition account="-2" month="201305" day="4" position="2600.0"/>
+  <accountPosition account="-2" month="201305" day="11" position="2800.0"/>
+  <accountPosition account="-2" month="201305" day="10" position="2800.0"/>
+  <accountPosition account="-2" month="201305" day="9" position="2800.0"/>
+  <accountPosition account="-2" month="201305" day="8" position="2800.0"/>
+  <accountPosition account="-2" month="201305" day="15" position="2800.0"/>
+  <accountPosition account="-2" month="201305" day="14" position="2800.0"/>
+  <accountPosition account="-2" month="201305" day="13" position="2800.0"/>
+  <accountPosition account="-2" month="201305" day="12" position="2800.0"/>
+  <accountPosition account="-2" month="201305" day="19" position="2800.0"/>
+  <accountPosition account="-2" month="201305" day="18" position="2800.0"/>
+  <accountPosition account="-2" month="201305" day="17" position="2800.0"/>
+  <accountPosition account="-2" month="201305" day="16" position="2800.0"/>
+  <accountPosition account="-2" month="201303" day="31" position="2400.0"/>
+  <accountPosition account="-1" month="201303" day="18" position="1688.15"/>
+  <accountPosition account="-2" month="201303" day="30" position="2400.0"/>
+  <accountPosition account="-1" month="201303" day="17" position="1188.15"/>
+  <accountPosition account="-2" month="201304" day="2" position="2400.0"/>
+  <accountPosition account="-1" month="201303" day="20" position="1445.4"/>
+  <accountPosition account="-2" month="201304" day="1" position="2400.0"/>
+  <accountPosition account="-1" month="201303" day="19" position="1641.15"/>
+  <accountPosition account="-2" month="201303" day="27" position="2400.0"/>
+  <accountPosition account="-1" month="201303" day="22" position="1425.4"/>
+  <accountPosition account="-2" month="201303" day="26" position="2400.0"/>
+  <accountPosition account="-1" month="201303" day="21" position="1445.4"/>
+  <accountPosition account="-2" month="201303" day="29" position="2400.0"/>
+  <accountPosition account="-1" month="201303" day="24" position="1245.1"/>
+  <accountPosition account="-2" month="201303" day="28" position="2400.0"/>
+  <accountPosition account="-1" month="201303" day="23" position="1257.6"/>
+  <accountPosition account="-2" month="201303" day="23" position="2400.0"/>
+  <accountPosition account="-1" month="201303" day="26" position="1175.2"/>
+  <accountPosition account="-2" month="201303" day="22" position="2400.0"/>
+  <accountPosition account="-1" month="201303" day="25" position="1245.1"/>
+  <accountPosition account="-2" month="201303" day="25" position="2400.0"/>
+  <accountPosition account="-1" month="201303" day="28" position="2905.7"/>
+  <accountPosition account="-2" month="201303" day="24" position="2400.0"/>
+  <accountPosition account="-1" month="201303" day="27" position="1125.2"/>
+  <accountPosition account="-2" month="201303" day="19" position="2400.0"/>
+  <accountPosition account="-1" month="201303" day="30" position="3418.0"/>
+  <accountPosition account="-2" month="201303" day="18" position="2400.0"/>
+  <accountPosition account="-1" month="201303" day="29" position="3438.0"/>
+  <accountPosition account="-2" month="201303" day="21" position="2400.0"/>
+  <accountPosition account="-1" month="201304" day="1" position="3398.0"/>
+  <accountPosition account="-2" month="201303" day="20" position="2400.0"/>
+  <accountPosition account="-1" month="201303" day="31" position="3418.0"/>
+  <accountPosition account="-2" month="201304" day="15" position="2400.0"/>
+  <accountPosition account="-1" month="201304" day="2" position="3299.5"/>
+  <accountPosition account="-2" month="201304" day="16" position="2400.0"/>
+  <accountPosition account="-1" month="201304" day="3" position="3299.5"/>
+  <accountPosition account="-2" month="201304" day="17" position="2400.0"/>
+  <accountPosition account="-1" month="201304" day="4" position="3299.5"/>
+  <accountPosition account="-2" month="201304" day="18" position="2400.0"/>
+  <accountPosition account="-1" month="201304" day="5" position="3047.6"/>
+  <accountPosition account="-2" month="201304" day="11" position="2400.0"/>
+  <accountPosition account="-1" month="201304" day="6" position="3042.6"/>
+  <accountPosition account="-2" month="201304" day="12" position="2400.0"/>
+  <accountPosition account="-1" month="201304" day="7" position="2967.6"/>
+  <accountPosition account="-2" month="201304" day="13" position="2400.0"/>
+  <accountPosition account="-1" month="201304" day="8" position="2967.6"/>
+  <accountPosition account="-2" month="201304" day="14" position="2400.0"/>
+  <accountPosition account="-1" month="201304" day="9" position="1931.1"/>
+  <accountPosition account="-2" month="201304" day="7" position="2400.0"/>
+  <accountPosition account="-1" month="201304" day="10" position="1865.0"/>
+  <accountPosition account="-2" month="201304" day="8" position="2400.0"/>
+  <accountPosition account="-1" month="201304" day="11" position="1865.0"/>
+  <accountPosition account="-2" month="201304" day="9" position="2400.0"/>
+  <accountPosition account="-1" month="201304" day="12" position="1839.5"/>
+  <accountPosition account="-2" month="201304" day="10" position="2400.0"/>
+  <accountPosition account="-1" month="201304" day="13" position="1839.5"/>
+  <accountPosition account="-2" month="201304" day="3" position="2400.0"/>
+  <accountPosition account="-1" month="201304" day="14" position="1756.4"/>
+  <accountPosition account="-2" month="201304" day="4" position="2400.0"/>
+  <accountPosition account="-1" month="201304" day="15" position="1756.4"/>
+  <accountPosition account="-2" month="201304" day="5" position="2400.0"/>
+  <accountPosition account="-1" month="201304" day="16" position="1756.4"/>
+  <accountPosition account="-2" month="201304" day="6" position="2400.0"/>
+  <accountPosition account="-1" month="201304" day="17" position="1599.4"/>
+  <accountPosition account="-2" month="201303" day="1" position="2200.0"/>
+  <accountPosition account="-2" month="201303" day="16" position="2400.0"/>
+  <accountPosition account="-1" month="201303" day="3" position="3206.04"/>
+  <accountPosition account="-2" month="201303" day="17" position="2400.0"/>
+  <accountPosition account="-1" month="201303" day="4" position="3206.04"/>
+  <accountPosition account="-2" month="201303" day="14" position="2400.0"/>
+  <accountPosition account="-1" month="201303" day="1" position="3606.84"/>
+  <accountPosition account="-2" month="201303" day="15" position="2400.0"/>
+  <accountPosition account="-1" month="201303" day="2" position="3406.04"/>
+  <accountPosition account="-2" month="201303" day="12" position="2400.0"/>
+  <accountPosition account="-1" month="201303" day="7" position="2852.84"/>
+  <accountPosition account="-2" month="201303" day="13" position="2400.0"/>
+  <accountPosition account="-1" month="201303" day="8" position="2747.24"/>
+  <accountPosition account="-2" month="201303" day="10" position="2400.0"/>
+  <accountPosition account="-1" month="201303" day="5" position="3075.34"/>
+  <accountPosition account="-2" month="201303" day="11" position="2400.0"/>
+  <accountPosition account="-1" month="201303" day="6" position="3083.14"/>
+  <accountPosition account="-2" month="201303" day="8" position="2400.0"/>
+  <accountPosition account="-1" month="201303" day="11" position="1499.74"/>
+  <accountPosition account="-2" month="201303" day="9" position="2400.0"/>
+  <accountPosition account="-1" month="201303" day="12" position="1469.74"/>
+  <accountPosition account="-2" month="201303" day="6" position="2400.0"/>
+  <accountPosition account="-1" month="201303" day="9" position="1657.34"/>
+  <accountPosition account="-2" month="201303" day="7" position="2400.0"/>
+  <accountPosition account="-1" month="201303" day="10" position="1622.04"/>
+  <accountPosition account="-2" month="201303" day="4" position="2400.0"/>
+  <accountPosition account="-1" month="201303" day="15" position="1313.85"/>
+  <accountPosition account="-2" month="201303" day="5" position="2400.0"/>
+  <accountPosition account="-1" month="201303" day="16" position="1345.15"/>
+  <accountPosition account="-2" month="201303" day="2" position="2200.0"/>
+  <accountPosition account="-1" month="201303" day="13" position="1509.74"/>
+  <accountPosition account="-2" month="201303" day="3" position="2400.0"/>
+  <accountPosition account="-1" month="201303" day="14" position="1509.74"/>
+  <accountPosition account="-1" month="201305" day="24" position="2934.81"/>
+  <accountPosition account="-1" month="201305" day="23" position="2934.81"/>
+  <accountPosition account="-1" month="201305" day="26" position="2915.81"/>
+  <accountPosition account="-1" month="201305" day="25" position="2915.81"/>
+  <accountPosition account="-1" month="201305" day="20" position="3150.81"/>
+  <accountPosition account="-1" month="201305" day="19" position="3150.81"/>
+  <accountPosition account="-1" month="201305" day="22" position="2934.81"/>
+  <accountPosition account="-1" month="201305" day="21" position="3150.81"/>
+  <accountPosition account="-1" month="201305" day="31" position="5869.91"/>
+  <accountPosition account="-1" month="201305" day="28" position="5893.91"/>
+  <accountPosition account="-1" month="201305" day="27" position="4676.31"/>
+  <accountPosition account="-1" month="201305" day="30" position="5869.91"/>
+  <accountPosition account="-1" month="201305" day="29" position="5869.91"/>
+  <accountPosition account="-1" month="201304" day="25" position="1587.95"/>
+  <accountPosition account="-1" month="201304" day="24" position="1587.95"/>
+  <accountPosition account="-1" month="201304" day="23" position="1587.95"/>
+  <accountPosition account="-1" month="201304" day="22" position="1587.95"/>
+  <accountPosition account="-1" month="201304" day="21" position="1803.95"/>
+  <accountPosition account="-1" month="201304" day="20" position="1425.2"/>
+  <accountPosition account="-1" month="201304" day="19" position="1625.2"/>
+  <accountPosition account="-1" month="201304" day="18" position="1599.4"/>
+  <accountPosition account="-1" month="201305" day="2" position="5715.85"/>
+  <accountPosition account="-1" month="201305" day="1" position="4608.05"/>
+  <accountPosition account="-1" month="201304" day="30" position="4608.05"/>
+  <accountPosition account="-1" month="201304" day="29" position="4608.05"/>
+  <accountPosition account="-1" month="201304" day="28" position="4632.05"/>
+  <accountPosition account="-1" month="201304" day="27" position="3348.45"/>
+  <accountPosition account="-1" month="201304" day="26" position="1587.95"/>
+  <accountPosition account="-1" month="201305" day="9" position="3961.95"/>
+  <accountPosition account="-1" month="201305" day="10" position="3961.95"/>
+  <accountPosition account="-1" month="201305" day="7" position="5585.15"/>
+  <accountPosition account="-1" month="201305" day="8" position="3961.95"/>
+  <accountPosition account="-1" month="201305" day="5" position="5585.15"/>
+  <accountPosition account="-1" month="201305" day="6" position="5585.15"/>
+  <accountPosition account="-1" month="201305" day="3" position="5715.85"/>
+  <accountPosition account="-1" month="201305" day="4" position="5585.15"/>
+  <accountPosition account="-1" month="201305" day="17" position="3372.56"/>
+  <accountPosition account="-1" month="201305" day="18" position="3372.56"/>
+  <accountPosition account="-1" month="201305" day="15" position="3372.56"/>
+  <accountPosition account="-1" month="201305" day="16" position="3372.56"/>
+  <accountPosition account="-1" month="201305" day="13" position="3905.45"/>
+  <accountPosition account="-1" month="201305" day="14" position="3905.45"/>
+  <accountPosition account="-1" month="201305" day="11" position="3961.95"/>
+  <accountPosition account="-1" month="201305" day="12" position="3905.45"/>
+  <accountPosition account="100" month="201305" day="23" position="1410.2"/>
+  <accountPosition account="102" month="201305" day="29" position="1800.0"/>
+  <accountPosition account="100" month="201305" day="22" position="1410.2"/>
+  <accountPosition account="102" month="201305" day="28" position="1800.0"/>
+  <accountPosition account="100" month="201305" day="25" position="1410.2"/>
+  <accountPosition account="102" month="201305" day="31" position="1800.0"/>
+  <accountPosition account="100" month="201305" day="24" position="1410.2"/>
+  <accountPosition account="102" month="201305" day="30" position="1800.0"/>
+  <accountPosition account="100" month="201305" day="27" position="1410.2"/>
+  <accountPosition account="100" month="201305" day="26" position="1410.2"/>
+  <accountPosition account="100" month="201305" day="29" position="1410.2"/>
+  <accountPosition account="100" month="201305" day="28" position="1410.2"/>
+  <accountPosition account="100" month="201305" day="15" position="1410.2"/>
+  <accountPosition account="100" month="201305" day="14" position="1410.2"/>
+  <accountPosition account="100" month="201305" day="17" position="1410.2"/>
+  <accountPosition account="100" month="201305" day="16" position="1410.2"/>
+  <accountPosition account="100" month="201305" day="19" position="1410.2"/>
+  <accountPosition account="100" month="201305" day="18" position="1410.2"/>
+  <accountPosition account="100" month="201305" day="21" position="1410.2"/>
+  <accountPosition account="100" month="201305" day="20" position="1410.2"/>
+  <accountPosition account="102" month="201305" day="12" position="1800.0"/>
+  <accountPosition account="102" month="201305" day="13" position="1800.0"/>
+  <accountPosition account="102" month="201305" day="14" position="1800.0"/>
+  <accountPosition account="102" month="201305" day="15" position="1800.0"/>
+  <accountPosition account="102" month="201305" day="16" position="1800.0"/>
+  <accountPosition account="102" month="201305" day="17" position="1800.0"/>
+  <accountPosition account="102" month="201305" day="18" position="1800.0"/>
+  <accountPosition account="102" month="201305" day="19" position="1800.0"/>
+  <accountPosition account="100" month="201305" day="30" position="1410.2"/>
+  <accountPosition account="102" month="201305" day="20" position="1800.0"/>
+  <accountPosition account="100" month="201305" day="31" position="1410.2"/>
+  <accountPosition account="102" month="201305" day="21" position="1800.0"/>
+  <accountPosition account="102" month="201305" day="22" position="1800.0"/>
+  <accountPosition account="102" month="201305" day="23" position="1800.0"/>
+  <accountPosition account="102" month="201305" day="24" position="1800.0"/>
+  <accountPosition account="102" month="201305" day="25" position="1800.0"/>
+  <accountPosition account="102" month="201305" day="26" position="1800.0"/>
+  <accountPosition account="102" month="201305" day="27" position="1800.0"/>
+  <accountPosition account="100" month="201304" day="19" position="1610.2"/>
+  <accountPosition account="101" month="201304" day="22" position="15.0"/>
+  <accountPosition account="100" month="201304" day="20" position="1410.2"/>
+  <accountPosition account="101" month="201304" day="23" position="15.0"/>
+  <accountPosition account="100" month="201304" day="17" position="1584.4"/>
+  <accountPosition account="101" month="201304" day="20" position="15.0"/>
+  <accountPosition account="100" month="201304" day="18" position="1584.4"/>
+  <accountPosition account="101" month="201304" day="21" position="15.0"/>
+  <accountPosition account="100" month="201304" day="15" position="1741.4"/>
+  <accountPosition account="101" month="201304" day="26" position="15.0"/>
+  <accountPosition account="100" month="201304" day="16" position="1741.4"/>
+  <accountPosition account="101" month="201304" day="27" position="15.0"/>
+  <accountPosition account="100" month="201304" day="13" position="1824.5"/>
+  <accountPosition account="101" month="201304" day="24" position="15.0"/>
+  <accountPosition account="100" month="201304" day="14" position="1741.4"/>
+  <accountPosition account="101" month="201304" day="25" position="15.0"/>
+  <accountPosition account="100" month="201304" day="27" position="1410.2"/>
+  <accountPosition account="101" month="201304" day="14" position="15.0"/>
+  <accountPosition account="100" month="201304" day="28" position="1410.2"/>
+  <accountPosition account="101" month="201304" day="15" position="15.0"/>
+  <accountPosition account="100" month="201304" day="25" position="1410.2"/>
+  <accountPosition account="101" month="201304" day="12" position="15.0"/>
+  <accountPosition account="100" month="201304" day="26" position="1410.2"/>
+  <accountPosition account="101" month="201304" day="13" position="15.0"/>
+  <accountPosition account="100" month="201304" day="23" position="1410.2"/>
+  <accountPosition account="101" month="201304" day="18" position="15.0"/>
+  <accountPosition account="100" month="201304" day="24" position="1410.2"/>
+  <accountPosition account="101" month="201304" day="19" position="15.0"/>
+  <accountPosition account="100" month="201304" day="21" position="1410.2"/>
+  <accountPosition account="101" month="201304" day="16" position="15.0"/>
+  <accountPosition account="100" month="201304" day="22" position="1410.2"/>
+  <accountPosition account="101" month="201304" day="17" position="15.0"/>
+  <accountPosition account="100" month="201305" day="5" position="1410.2"/>
+  <accountPosition account="101" month="201305" day="8" position="15.0"/>
+  <accountPosition account="100" month="201305" day="4" position="1410.2"/>
+  <accountPosition account="101" month="201305" day="7" position="15.0"/>
+  <accountPosition account="100" month="201305" day="3" position="1410.2"/>
+  <accountPosition account="101" month="201305" day="6" position="15.0"/>
+  <accountPosition account="100" month="201305" day="2" position="1410.2"/>
+  <accountPosition account="101" month="201305" day="5" position="15.0"/>
+  <accountPosition account="100" month="201305" day="1" position="1410.2"/>
+  <accountPosition account="101" month="201305" day="12" position="15.0"/>
+  <accountPosition account="101" month="201305" day="11" position="15.0"/>
+  <accountPosition account="100" month="201304" day="30" position="1410.2"/>
+  <accountPosition account="101" month="201305" day="10" position="15.0"/>
+  <accountPosition account="100" month="201304" day="29" position="1410.2"/>
+  <accountPosition account="101" month="201305" day="9" position="15.0"/>
+  <accountPosition account="100" month="201305" day="13" position="1410.2"/>
+  <accountPosition account="100" month="201305" day="12" position="1410.2"/>
+  <accountPosition account="101" month="201304" day="30" position="15.0"/>
+  <accountPosition account="100" month="201305" day="11" position="1410.2"/>
+  <accountPosition account="101" month="201304" day="29" position="15.0"/>
+  <accountPosition account="100" month="201305" day="10" position="1410.2"/>
+  <accountPosition account="101" month="201304" day="28" position="15.0"/>
+  <accountPosition account="100" month="201305" day="9" position="1410.2"/>
+  <accountPosition account="101" month="201305" day="4" position="15.0"/>
+  <accountPosition account="100" month="201305" day="8" position="1410.2"/>
+  <accountPosition account="101" month="201305" day="3" position="15.0"/>
+  <accountPosition account="100" month="201305" day="7" position="1410.2"/>
+  <accountPosition account="101" month="201305" day="2" position="15.0"/>
+  <accountPosition account="100" month="201305" day="6" position="1410.2"/>
+  <accountPosition account="101" month="201305" day="1" position="15.0"/>
+  <accountPosition account="100" month="201303" day="16" position="1285.15"/>
+  <accountPosition account="101" month="201303" day="19" position="60.0"/>
+  <accountPosition account="100" month="201303" day="17" position="1128.15"/>
+  <accountPosition account="101" month="201303" day="20" position="60.0"/>
+  <accountPosition account="100" month="201303" day="18" position="1628.15"/>
+  <accountPosition account="101" month="201303" day="21" position="60.0"/>
+  <accountPosition account="100" month="201303" day="19" position="1581.15"/>
+  <accountPosition account="101" month="201303" day="22" position="80.0"/>
+  <accountPosition account="100" month="201303" day="12" position="1449.74"/>
+  <accountPosition account="101" month="201303" day="23" position="80.0"/>
+  <accountPosition account="100" month="201303" day="13" position="1449.74"/>
+  <accountPosition account="101" month="201303" day="24" position="80.0"/>
+  <accountPosition account="100" month="201303" day="14" position="1449.74"/>
+  <accountPosition account="101" month="201303" day="25" position="80.0"/>
+  <accountPosition account="100" month="201303" day="15" position="1253.85"/>
+  <accountPosition account="101" month="201303" day="26" position="80.0"/>
+  <accountPosition account="100" month="201303" day="24" position="1165.1"/>
+  <accountPosition account="101" month="201303" day="11" position="20.0"/>
+  <accountPosition account="100" month="201303" day="25" position="1165.1"/>
+  <accountPosition account="101" month="201303" day="12" position="60.0"/>
+  <accountPosition account="100" month="201303" day="26" position="1095.2"/>
+  <accountPosition account="101" month="201303" day="13" position="60.0"/>
+  <accountPosition account="100" month="201303" day="27" position="1045.2"/>
+  <accountPosition account="101" month="201303" day="14" position="60.0"/>
+  <accountPosition account="100" month="201303" day="20" position="1385.4"/>
+  <accountPosition account="101" month="201303" day="15" position="60.0"/>
+  <accountPosition account="100" month="201303" day="21" position="1385.4"/>
+  <accountPosition account="101" month="201303" day="16" position="60.0"/>
+  <accountPosition account="100" month="201303" day="22" position="1365.4"/>
+  <accountPosition account="101" month="201303" day="17" position="60.0"/>
+  <accountPosition account="100" month="201303" day="23" position="1177.6"/>
+  <accountPosition account="101" month="201303" day="18" position="60.0"/>
+  <accountPosition account="100" month="201304" day="2" position="3279.5"/>
+  <accountPosition account="101" month="201304" day="5" position="20.0"/>
+  <accountPosition account="100" month="201304" day="1" position="3398.0"/>
+  <accountPosition account="101" month="201304" day="4" position="20.0"/>
+  <accountPosition account="100" month="201304" day="4" position="3279.5"/>
+  <accountPosition account="101" month="201304" day="7" position="15.0"/>
+  <accountPosition account="100" month="201304" day="3" position="3279.5"/>
+  <accountPosition account="101" month="201304" day="6" position="15.0"/>
+  <accountPosition account="100" month="201303" day="29" position="3438.0"/>
+  <accountPosition account="101" month="201304" day="9" position="15.0"/>
+  <accountPosition account="100" month="201303" day="28" position="2805.7"/>
+  <accountPosition account="101" month="201304" day="8" position="15.0"/>
+  <accountPosition account="100" month="201303" day="31" position="3418.0"/>
+  <accountPosition account="101" month="201304" day="11" position="15.0"/>
+  <accountPosition account="100" month="201303" day="30" position="3418.0"/>
+  <accountPosition account="101" month="201304" day="10" position="15.0"/>
+  <accountPosition account="100" month="201304" day="10" position="1850.0"/>
+  <accountPosition account="101" month="201303" day="28" position="0.0"/>
+  <accountPosition account="100" month="201304" day="9" position="1916.1"/>
+  <accountPosition account="101" month="201303" day="27" position="100.0"/>
+  <accountPosition account="100" month="201304" day="12" position="1824.5"/>
+  <accountPosition account="101" month="201303" day="30" position="0.0"/>
+  <accountPosition account="100" month="201304" day="11" position="1850.0"/>
+  <accountPosition account="101" month="201303" day="29" position="0.0"/>
+  <accountPosition account="100" month="201304" day="6" position="3027.6"/>
+  <accountPosition account="101" month="201304" day="1" position="20.0"/>
+  <accountPosition account="100" month="201304" day="5" position="3027.6"/>
+  <accountPosition account="101" month="201303" day="31" position="0.0"/>
+  <accountPosition account="100" month="201304" day="8" position="2952.6"/>
+  <accountPosition account="101" month="201304" day="3" position="20.0"/>
+  <accountPosition account="100" month="201304" day="7" position="2952.6"/>
+  <accountPosition account="101" month="201304" day="2" position="20.0"/>
+  <accountPosition account="100" month="201303" day="3" position="3206.04"/>
+  <accountPosition account="100" month="201303" day="2" position="3406.04"/>
+  <accountPosition account="100" month="201303" day="1" position="3606.84"/>
+  <accountPosition account="100" month="201303" day="7" position="2852.84"/>
+  <accountPosition account="100" month="201303" day="6" position="3083.14"/>
+  <accountPosition account="100" month="201303" day="5" position="3075.34"/>
+  <accountPosition account="100" month="201303" day="4" position="3206.04"/>
+  <accountPosition account="100" month="201303" day="11" position="1479.74"/>
+  <accountPosition account="100" month="201303" day="10" position="1602.04"/>
+  <accountPosition account="100" month="201303" day="9" position="1637.34"/>
+  <accountPosition account="100" month="201303" day="8" position="2747.24"/>
+  <accountPosition account="101" month="201305" day="25" position="15.0"/>
+  <accountPosition account="101" month="201305" day="26" position="15.0"/>
+  <accountPosition account="101" month="201305" day="27" position="15.0"/>
+  <accountPosition account="101" month="201305" day="28" position="15.0"/>
+  <accountPosition account="101" month="201305" day="21" position="15.0"/>
+  <accountPosition account="101" month="201305" day="22" position="15.0"/>
+  <accountPosition account="101" month="201305" day="23" position="15.0"/>
+  <accountPosition account="101" month="201305" day="24" position="15.0"/>
+  <accountPosition account="101" month="201305" day="17" position="15.0"/>
+  <accountPosition account="101" month="201305" day="18" position="15.0"/>
+  <accountPosition account="101" month="201305" day="19" position="15.0"/>
+  <accountPosition account="101" month="201305" day="20" position="15.0"/>
+  <accountPosition account="101" month="201305" day="13" position="15.0"/>
+  <accountPosition account="101" month="201305" day="14" position="15.0"/>
+  <accountPosition account="101" month="201305" day="15" position="15.0"/>
+  <accountPosition account="101" month="201305" day="16" position="15.0"/>
+  <accountPosition account="101" month="201305" day="30" position="15.0"/>
+  <accountPosition account="101" month="201305" day="29" position="15.0"/>
+  <accountPosition account="101" month="201305" day="31" position="15.0"/>
+  <monthEntity id="201303"/>
+  <monthEntity id="201304"/>
+  <monthEntity id="201305"/>
+</globs>

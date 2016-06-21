@@ -1,0 +1,4 @@
+# Project specific ProGuard rules for debug only
+
+-dontobfuscate
+-optimizations !gain/simplification/arithmetic,!field/*,!class/merging/*,!gain/allocation/variable

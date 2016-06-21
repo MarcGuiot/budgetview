@@ -1,7 +1,8 @@
-package org.globsframework.model.utils;
+package org.globsframework.gui.utils;
 
 import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
+import org.globsframework.model.utils.GlobListFunctor;
 
 import javax.swing.*;
 

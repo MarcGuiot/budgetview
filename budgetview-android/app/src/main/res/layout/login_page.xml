@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="fill_parent"
+              android:layout_height="fill_parent"
+              android:orientation="vertical"
+              android:background="@color/background">
+
+  <com.budgetview.android.components.Header
+    android:id="@+id/header"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:layout_alignParentTop="true"
+    />
+
+  <View style="@style/LightSpacer"/>
+
+  <TextView
+    style="@style/TextMessage"
+    android:text="@string/login_message"
+    android:textSize="13dp"
+    />
+
+  <ImageView style="@style/DownArrow"/>
+
+  <LinearLayout
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="5dp"
+    android:orientation="vertical"
+    android:layout_gravity="center"
+    >
+
+    <TextView
+      style="@style/FormLabel"
+      android:text="@string/email"/>
+
+    <EditText
+      android:id="@+id/login_email"
+      android:layout_width="fill_parent"
+      android:layout_height="wrap_content"
+      android:inputType="textEmailAddress"/>
+
+    <TextView
+      style="@style/FormLabel"
+      android:text="@string/password"/>
+
+    <EditText
+      android:id="@+id/login_password"
+      android:width="180dp"
+      android:layout_width="fill_parent"
+      android:layout_height="wrap_content"
+      android:inputType="textPassword"/>
+
+    <ImageView style="@style/DownArrow"/>
+
+    <Button
+      android:id="@+id/login"
+      style="@style/LargeButton"
+      android:layout_marginTop="5dp"
+      android:text="@string/login"
+      android:onClick="onLogin"/>
+
+    <ProgressBar
+      android:id="@+id/login_progress_bar"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="10dp"
+      android:visibility="visible"
+      android:layout_gravity="center"
+      />
+
+  </LinearLayout>
+
+  <View style="@style/Spacer"/>
+
+</LinearLayout>

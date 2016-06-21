@@ -3,6 +3,7 @@ package com.budgetview.io.budgea;
 import org.apache.http.client.fluent.Form;
 import org.apache.http.client.fluent.Request;
 import org.apache.http.client.fluent.Response;
+import org.globsframework.model.Glob;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -33,10 +34,10 @@ public class BudgeaDemo {
 //                                   .addHeader("Authorization", "Bearer " + bearer));
 //    System.out.println(categories);
 
-    System.out.println("\n\n---------------- bank:\n");
-    JSONObject bank = json(Request.Get("https://budgetview.biapi.pro/2.0/banks/40")
-                             .addHeader("Authorization", "Bearer " + bearer));
-    System.out.println(bank.toString(2));
+//    System.out.println("\n\n---------------- bank:\n");
+//    JSONObject bank = json(Request.Get("https://budgetview.biapi.pro/2.0/banks/40")
+//                             .addHeader("Authorization", "Bearer " + bearer));
+//    System.out.println(bank.toString(2));
 
     System.out.println("\n\n---------------- create connection:\n");
     Response request = Request.Post("https://budgetview.biapi.pro/2.0/users/me/connections")
@@ -59,22 +60,23 @@ public class BudgeaDemo {
     System.out.println("\n\n---------------- categories:\n");
     JSONObject categories = json(Request.Get("https://budgetview.biapi.pro/2.0/users/" + userId + "/categories/full")
                                  .addHeader("Authorization", "Bearer " + bearer));
-    System.out.println(categories.toString(2));
+//    System.out.println(categories.toString(2));
+    dumpCategories(categories);
 
-    System.out.println("\n\n---------------- accounts:\n");
-    JSONObject accounts = json(Request.Get("https://budgetview.biapi.pro/2.0/users/" + userId + "/accounts")
-                                    .addHeader("Authorization", "Bearer " + bearer));
-    System.out.println(accounts.toString(2));
-
-    JSONArray accountArray = accounts.getJSONArray("accounts");
-    for (Object o : accountArray) {
-      JSONObject account = (JSONObject)o;
-      System.out.println("\n\n---------------- transactions for " + account.get("name") + " " + account.get("number") + ":\n");
-
-      JSONObject transactions = json(Request.Get("https://budgetview.biapi.pro/2.0/users/" + userId + "/accounts/" + account.get("id") + "/transactions")
-                                   .addHeader("Authorization", "Bearer " + bearer));
-      System.out.println(transactions.toString(2));
-    }
+//    System.out.println("\n\n---------------- accounts:\n");
+//    JSONObject accounts = json(Request.Get("https://budgetview.biapi.pro/2.0/users/" + userId + "/accounts")
+//                                    .addHeader("Authorization", "Bearer " + bearer));
+//    System.out.println(accounts.toString(2));
+//
+//    JSONArray accountArray = accounts.getJSONArray("accounts");
+//    for (Object o : accountArray) {
+//      JSONObject account = (JSONObject)o;
+//      System.out.println("\n\n---------------- transactions for " + account.get("name") + " " + account.get("number") + ":\n");
+//
+//      JSONObject transactions = json(Request.Get("https://budgetview.biapi.pro/2.0/users/" + userId + "/accounts/" + account.get("id") + "/transactions")
+//                                   .addHeader("Authorization", "Bearer " + bearer));
+//      System.out.println(transactions.toString(2));
+//    }
 
 
 //    Content content = request.returnContent();
@@ -82,6 +84,19 @@ public class BudgeaDemo {
 //    JSONObject connections = json(content);
 //
 //    System.out.println(connections);
+  }
+
+  private static void dumpCategories(JSONObject categories) {
+    for (Object item : categories.getJSONArray("categories")) {
+      JSONObject jsonItem = (JSONObject) item;
+      System.out.println(jsonItem.get("name"));
+
+      for (Object child : jsonItem.getJSONArray("children")) {
+        JSONObject jsonChild = (JSONObject) child;
+        System.out.println("  "  +jsonChild.get("name"));
+      }
+    }
+
   }
 
   public static JSONObject json(Request request) throws IOException {

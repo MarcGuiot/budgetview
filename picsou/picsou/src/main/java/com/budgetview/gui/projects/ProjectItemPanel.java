@@ -33,7 +33,7 @@ import org.globsframework.model.GlobRepository;
 import org.globsframework.model.Key;
 import org.globsframework.model.repository.LocalGlobRepository;
 import org.globsframework.model.repository.LocalGlobRepositoryBuilder;
-import org.globsframework.model.utils.GlobListActionAdapter;
+import org.globsframework.gui.utils.GlobListActionAdapter;
 import org.globsframework.model.utils.GlobListFunctor;
 import org.globsframework.model.utils.TypeChangeSetListener;
 import org.globsframework.utils.Functor;

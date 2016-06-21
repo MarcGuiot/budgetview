@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:id="@+id/seriesBlock"
+              style="@style/ListItemRow">
+  <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                style="@style/ListItem">
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                  android:layout_width="fill_parent"
+                  android:layout_height="wrap_content"
+                  android:orientation="horizontal"
+                  android:layout_marginBottom="2dp"
+      >
+
+      <TextView android:id="@+id/seriesLabel"
+                style="@style/ListItemLabel"
+                android:text="label"
+        />
+
+      <View style="@style/Spacer"/>
+
+      <ImageView style="@style/RightArrow"/>
+
+    </LinearLayout>
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                  android:layout_width="fill_parent"
+                  android:layout_height="wrap_content"
+                  android:orientation="horizontal"
+                  android:layout_marginBottom="2dp"
+      >
+
+      <com.budgetview.android.components.GaugeView
+        android:id="@+id/seriesGauge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="left"
+        />
+
+      <View style="@style/Spacer"/>
+
+      <TextView android:id="@+id/seriesActual"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textStyle="normal"
+                android:textSize="12dp"
+                android:textColor="#555555"
+                android:text="100.00"
+        />
+
+      <TextView android:id="@+id/seriesSeparator"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textStyle="bold"
+                android:textSize="12dp"
+                android:textColor="#555555"
+                android:layout_marginLeft="10dip"
+                android:layout_marginRight="10dip"
+                android:layout_weight="1"
+                android:text="/"
+        />
+
+      <TextView android:id="@+id/seriesPlanned"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textStyle="normal"
+                android:textSize="12dp"
+                android:textColor="#555555"
+                android:text="200.00"
+        />
+    </LinearLayout>
+
+    <View style="@style/ListItemBorder"/>
+
+  </LinearLayout>
+</LinearLayout>

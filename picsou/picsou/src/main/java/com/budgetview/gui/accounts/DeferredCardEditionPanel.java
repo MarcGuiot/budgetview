@@ -8,6 +8,9 @@ import org.globsframework.gui.SelectionService;
 import org.globsframework.gui.editors.GlobComboEditor;
 import org.globsframework.gui.editors.GlobLinkComboEditor;
 import org.globsframework.gui.splits.utils.Disposable;
+import org.globsframework.metamodel.GlobType;
+import org.globsframework.model.Glob;
+import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.utils.GlobMatcher;
 import org.globsframework.model.utils.GlobMatchers;
@@ -35,6 +38,15 @@ public class DeferredCardEditionPanel implements Disposable {
     this.directory = directory;
   }
 
+  public static GlobMatcher notInSelection(final GlobType type, final SelectionService selectionService){
+    return new GlobMatcher() {
+      public boolean matches(Glob item, GlobRepository repository) {
+        GlobList currentSelection = selectionService.getSelection(type);
+        return !currentSelection.getKeySet().contains(item.getKey());
+      }
+    };
+  }
+
   public JPanel getPanel() {
     if (panel == null) {
       panel = createPanel();
@@ -53,7 +65,7 @@ public class DeferredCardEditionPanel implements Disposable {
         .addComboEditor("deferredMonthShift", Account.DEFERRED_MONTH_SHIFT, new int[]{0, 1, 2, 3})
         .setRenderer(new MonthShiftRenderer());
     accountFilter = GlobMatchers.and(AccountMatchers.userCreatedMainAccounts(),
-                                     GlobMatchers.notInSelection(Account.TYPE, directory.get(SelectionService.class)));
+                                     notInSelection(Account.TYPE, directory.get(SelectionService.class)));
     deferredTargetAccount = builder.addComboEditor("deferredTargetAccount", Account.DEFERRED_TARGET_ACCOUNT)
       .setFilter(accountFilter);
     return builder.load();

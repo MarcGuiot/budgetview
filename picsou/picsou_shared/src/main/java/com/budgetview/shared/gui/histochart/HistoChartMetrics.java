@@ -4,7 +4,6 @@ import com.budgetview.shared.gui.TextMetrics;
 import org.globsframework.utils.Utils;
 import org.globsframework.utils.exceptions.InvalidParameter;
 
-import java.awt.*;
 import java.util.ArrayList;
 import java.util.Collections;
 
