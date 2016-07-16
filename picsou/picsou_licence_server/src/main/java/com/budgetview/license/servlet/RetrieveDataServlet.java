@@ -1,6 +1,6 @@
 package com.budgetview.license.servlet;
 
-import com.budgetview.shared.utils.ComCst;
+import com.budgetview.shared.utils.MobileConstants;
 import org.apache.log4j.Logger;
 import com.budgetview.license.Lang;
 import org.globsframework.utils.Files;
@@ -24,13 +24,13 @@ public class RetrieveDataServlet extends HttpServlet {
 
   protected void action(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) throws IOException {
     OutputStream outputStream = httpServletResponse.getOutputStream();
-    String parameter = httpServletRequest.getParameter(ComCst.HEADER_LANG);
+    String parameter = httpServletRequest.getParameter(MobileConstants.HEADER_LANG);
     String lang = URLDecoder.decode(parameter != null ? parameter : "fr", "UTF-8");
-    String mail = URLDecoder.decode(httpServletRequest.getParameter(ComCst.MAIL), "UTF-8");
-    String sha1Mail = URLDecoder.decode(httpServletRequest.getParameter(ComCst.CRYPTED_INFO), "UTF-8");
+    String mail = URLDecoder.decode(httpServletRequest.getParameter(MobileConstants.MAIL), "UTF-8");
+    String sha1Mail = URLDecoder.decode(httpServletRequest.getParameter(MobileConstants.CRYPTED_INFO), "UTF-8");
     if (Strings.isNullOrEmpty(mail) || Strings.isNullOrEmpty(sha1Mail)) {
       logger.info("missing mail or key " + mail + " " + sha1Mail);
-      httpServletResponse.setHeader(ComCst.STATUS, "missing mail or key");
+      httpServletResponse.setHeader(MobileConstants.STATUS, "missing mail or key");
       httpServletResponse.setStatus(HttpServletResponse.SC_NOT_ACCEPTABLE);
       return;
     }
@@ -40,13 +40,13 @@ public class RetrieveDataServlet extends HttpServlet {
     String fileName = ReceiveDataServlet.generateDirName(mail);
     File rootDir = new File(root, fileName);
     if (!rootDir.exists()) {
-      httpServletResponse.setHeader(ComCst.STATUS, Lang.get("mobile.no.account", lang));
+      httpServletResponse.setHeader(MobileConstants.STATUS, Lang.get("mobile.no.account", lang));
       httpServletResponse.setStatus(HttpServletResponse.SC_FORBIDDEN);
     }
     else {
       if (!ReceiveDataServlet.checkSha1Code(sha1Mail, rootDir)){
         logger.info("bad sha1 code => bad password");
-        httpServletResponse.setHeader(ComCst.STATUS, Lang.get("mobile.password.invalid", lang));
+        httpServletResponse.setHeader(MobileConstants.STATUS, Lang.get("mobile.password.invalid", lang));
         httpServletResponse.setStatus(HttpServletResponse.SC_FORBIDDEN);
         return;
       }
@@ -57,23 +57,23 @@ public class RetrieveDataServlet extends HttpServlet {
         String s = stream.readUTF();
         if (!s.equals(sha1Mail)) {
           logger.info("bad sha1 code in data => bad password");
-          httpServletResponse.setHeader(ComCst.STATUS, Lang.get("mobile.password.invalid", lang));
+          httpServletResponse.setHeader(MobileConstants.STATUS, Lang.get("mobile.password.invalid", lang));
           httpServletResponse.setStatus(HttpServletResponse.SC_FORBIDDEN);
           return;
         }
-        httpServletResponse.setHeader(ComCst.STATUS, "Ok");
+        httpServletResponse.setHeader(MobileConstants.STATUS, "Ok");
         int majorVersion = stream.readInt();
         int minorVersion = stream.readInt();
-        httpServletResponse.setHeader(ComCst.MAJOR_VERSION_NAME, Integer.toString(majorVersion));
-        httpServletResponse.setHeader(ComCst.MINOR_VERSION_NAME, Integer.toString(minorVersion));
-        httpServletResponse.setHeader(ComCst.MINOR_VERSION_NAME, Integer.toString(minorVersion));
+        httpServletResponse.setHeader(MobileConstants.MAJOR_VERSION_NAME, Integer.toString(majorVersion));
+        httpServletResponse.setHeader(MobileConstants.MINOR_VERSION_NAME, Integer.toString(minorVersion));
+        httpServletResponse.setHeader(MobileConstants.MINOR_VERSION_NAME, Integer.toString(minorVersion));
         Files.copyStream(fileInputStream, outputStream);
         fileInputStream.close();
         httpServletResponse.setStatus(HttpServletResponse.SC_OK);
       }
       else {
         logger.info("no data");
-        httpServletResponse.setHeader(ComCst.STATUS, Lang.get("mobile.no.data", lang));
+        httpServletResponse.setHeader(MobileConstants.STATUS, Lang.get("mobile.no.data", lang));
         httpServletResponse.setStatus(HttpServletResponse.SC_FORBIDDEN);
       }
     }

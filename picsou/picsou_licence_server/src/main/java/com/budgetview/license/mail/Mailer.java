@@ -14,14 +14,19 @@ import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.atomic.AtomicLong;
 
 public class Mailer {
-  static Logger logger = Logger.getLogger("mailer");
-  static AtomicLong count = new AtomicLong(0);
+
   private static final int WAIT_BEFORE_RETRY = 1000;
-  private int port = 587;
+
+  private static Logger logger = Logger.getLogger("mailer");
+
+  private static AtomicLong count = new AtomicLong(0);
+
   private String host = "ns0.ovh.net";
-  private BlockingQueue<MailToSent> pendingsMail = new LinkedBlockingQueue<MailToSent>();
+  private int port = 587;
+
+  private BlockingQueue<MailToSend> pendingMails = new LinkedBlockingQueue<MailToSend>();
   private Map<String, Long> currentIdForMail = new ConcurrentHashMap<String, Long>();
-  private Thread thread = new ReSendMailThread(pendingsMail);
+  private Thread thread = new ReSendMailThread(pendingMails);
 
   public Mailer() {
     thread.start();
@@ -35,77 +40,39 @@ public class Mailer {
   public boolean sendRequestLicence(String lang, String activationCode, final String mail) {
     final String subject1 = Lang.get("resend" + ".license.subject", lang);
     final String content1 = Lang.get("resend" + ".license.message", lang, activationCode, mail);
-    MailToSent mailToSent = new SendEmail(Mailbox.SUPPORT, subject1, content1, Mailbox.SUPPORT.getEmail(), mail);
-    if (mailToSent.sent()) {
-      return true;
-    }
-    add(mailToSent);
-    return false;
+    return doSend(Mailbox.SUPPORT, subject1, content1, Mailbox.SUPPORT.getEmail(), mail);
   }
 
   public boolean reSendExistingLicenseOnError(String lang, String activationCode, final String mail) {
-    MailToSent mailToSent = new SendEmail(Mailbox.SUPPORT, Lang.get("resend.error" + ".license.subject", lang),
-                                          Lang.get("resend.error" + ".license.message", lang, activationCode, mail),
-                                          Mailbox.SUPPORT.getEmail(), mail);
-    if (mailToSent.sent()) {
-      return true;
-    }
-    add(mailToSent);
-    return false;
+    return doSend(Mailbox.SUPPORT, Lang.get("resend.error" + ".license.subject", lang),
+                  Lang.get("resend.error" + ".license.message", lang, activationCode, mail),
+                  Mailbox.SUPPORT.getEmail(), mail);
   }
 
   public boolean sendNewLicense(String mail, String code, String lang) {
-    SendEmail newLicenseMailToSent =
-      new SendEmail(Mailbox.SUPPORT, Lang.get("new.license.subject", lang), Lang.get("new.license.message", lang, code, mail),
-                    Mailbox.SUPPORT.getEmail(), mail);
-    if (newLicenseMailToSent.sent()) {
-      return true;
-    }
-    add(newLicenseMailToSent);
-    return false;
+    return doSend(Mailbox.SUPPORT, Lang.get("new.license.subject", lang), Lang.get("new.license.message", lang, code, mail),
+                  Mailbox.SUPPORT.getEmail(), mail);
   }
 
   public boolean sendToUs(Mailbox mailbox, String fromMail, String title, String content) {
-    SendEmail supportEmailToSend =
-      new SendEmail(mailbox, title, "From " + fromMail + ": " + content,
-                    fromMail, mailbox.getEmail());
-    if (supportEmailToSend.sent()) {
-      return true;
-    }
-    add(supportEmailToSend);
-    return false;
+    return doSend(mailbox, title, "From " + fromMail + ": " + content,
+                  fromMail, mailbox.getEmail());
   }
 
   public boolean sendNewMobileAccount(String mail, String lang, String url) {
-    SendEmail sent = new SendEmail(Mailbox.SUPPORT, Lang.get("mobile.new.subject", lang), Lang.get("mobile.new.message", lang, url, mail),
-                                   Mailbox.SUPPORT.getEmail(), mail);
-    if (sent.sent()) {
-      return true;
-    }
-    add(sent);
-    return false;
+    return doSend(Mailbox.SUPPORT, Lang.get("mobile.new.subject", lang), Lang.get("mobile.new.message", lang, url, mail),
+                  Mailbox.SUPPORT.getEmail(), mail);
   }
 
   public boolean sendFromMobileToUseBV(String mailTo, String lang) {
-    SendEmail sent = new SendEmail(Mailbox.SUPPORT, Lang.get("mobile.mail.subject", lang), Lang.get("mobile.mail.message", lang),
-                                   Mailbox.SUPPORT.getEmail(), mailTo);
-    if (sent.sent()) {
-      return true;
-    }
-    add(sent);
-    return false;
+    return doSend(Mailbox.SUPPORT, Lang.get("mobile.mail.subject", lang), Lang.get("mobile.mail.message", lang),
+                  Mailbox.SUPPORT.getEmail(), mailTo);
   }
 
   public boolean sendAndroidVersion(String mail, String lang) {
-    SendEmail sent = new SendEmail(Mailbox.SUPPORT, Lang.get("mobile.mail.download.subject", lang), Lang.get("mobile.mail.download.message", lang),
-                                   Mailbox.SUPPORT.getEmail(), mail);
-    if (sent.sent()) {
-      return true;
-    }
-    add(sent);
-    return false;
+    return doSend(Mailbox.SUPPORT, Lang.get("mobile.mail.download.subject", lang), Lang.get("mobile.mail.download.message", lang),
+                  Mailbox.SUPPORT.getEmail(), mail);
   }
-
 
   public void sendMail(Mailbox mailbox, String sendTo, String replyTo, String subject, String content,
                        final String charset, final String subtype) throws MessagingException {
@@ -141,16 +108,16 @@ public class Mailer {
     logger.info("mail sent : " + sendTo + "  " + subject);
   }
 
-  private void add(MailToSent sent) {
+  private void sendLater(MailToSend email) {
     long current = count.incrementAndGet();
-    sent.set(current);
-    logger.info("Mail to send : " + sent);
+    email.setCount(current);
+    logger.info("Mail to send : " + email);
     try {
-      currentIdForMail.put(sent.getSendTo(), sent.current);
-      this.pendingsMail.put(sent);
+      currentIdForMail.put(email.getSendTo(), email.current);
+      this.pendingMails.put(email);
     }
     catch (InterruptedException e) {
-      logger.info("Mailer add", e);
+      logger.info("Error storing email: " + email, e);
     }
   }
 
@@ -164,60 +131,64 @@ public class Mailer {
     }
   }
 
-  static abstract class MailToSent {
-    protected long retryCount;
-    protected long current;
-    protected String sendTo;
+  private static abstract class MailToSend {
+    long retryCount;
+    long current;
+    String sendTo;
 
-    public MailToSent(String sendTo) {
+    MailToSend(String sendTo) {
       this.sendTo = sendTo;
     }
 
-    public String getSendTo() {
+    String getSendTo() {
       return sendTo;
     }
 
-    abstract boolean sent();
+    abstract boolean send();
 
     void inc() {
       retryCount++;
     }
 
-    void set(long current) {
+    void setCount(long current) {
       this.current = current;
+    }
+
+    public String toString() {
+      return sendTo;
     }
   }
 
   private class ReSendMailThread extends Thread {
-    private BlockingQueue<MailToSent> mail;
+    private BlockingQueue<MailToSend> mail;
 
-    public ReSendMailThread(BlockingQueue<MailToSent> mail) {
+    ReSendMailThread(BlockingQueue<MailToSend> mail) {
       this.mail = mail;
       setDaemon(true);
     }
 
     public void run() {
       try {
-        List<MailToSent> mailsToResend = new ArrayList<MailToSent>();
+        List<MailToSend> mailsToResend = new ArrayList<MailToSend>();
         while (!isInterrupted()) {
           mailsToResend.add(mail.take());  // will block
           mail.drainTo(mailsToResend);     // copy all mail to send
-          for (MailToSent mailToSent : mailsToResend) {
-            Long lastId = currentIdForMail.get(mailToSent.getSendTo()); // on recupere le dernier Id du mail qu'on veux envoyer
-            if (lastId != null && mailToSent.current >= lastId) {    // si le mail qu'on veux envoyer est plus vieux qu'un autre on ne l'envoie pas.
-              if (!mailToSent.sent()) {
-                if (mailToSent.retryCount > 10) {
-                  logger.error("Message " + mailToSent + " will never been sent.");
+          for (MailToSend mailToSend : mailsToResend) {
+            Long lastId = currentIdForMail.get(mailToSend.getSendTo()); // on recupere le dernier Id du mail qu'on veux envoyer
+            if (lastId != null && mailToSend.current >= lastId) {    // si le mail qu'on veux envoyer est plus vieux qu'un autre on ne l'envoie pas.
+              if (!mailToSend.send()) {
+                if (mailToSend.retryCount > 10) {
+                  logger.error("Message " + mailToSend + " will never been sent.");
                 }
                 else {
-                  mail.put(mailToSent);
+                  mail.put(mailToSend);
                 }
               }
               else {
                 // on verifie que c'est bien l'ID du mail en cours et non d'un autre qui viendrait d'etre ajouté.
-                Long currentRemove = currentIdForMail.remove(mailToSent.getSendTo());
-                if (currentRemove != null && currentRemove > mailToSent.current) {
-                  currentIdForMail.put(mailToSent.getSendTo(), currentRemove);
+                Long currentRemove = currentIdForMail.remove(mailToSend.getSendTo());
+                if (currentRemove != null && currentRemove > mailToSend.current) {
+                  currentIdForMail.put(mailToSend.getSendTo(), currentRemove);
                 }
               }
             }
@@ -232,13 +203,23 @@ public class Mailer {
     }
   }
 
-  private class SendEmail extends MailToSent {
+  private boolean doSend(Mailbox mailbox, String title, final String realContent, final String replyTo, final String sendTo) {
+    MailToSend mail = new SendEmail(mailbox, title, realContent, replyTo, sendTo);
+    if (mail.send()) {
+      return true;
+    }
+    sendLater(mail);
+    return false;
+
+  }
+
+  private class SendEmail extends MailToSend {
     private String replyTo;
     private Mailbox mailbox;
     private String title;
     private String content;
 
-    public SendEmail(Mailbox mailbox, String title, final String realContent, final String replyTo, final String sendTo) {
+    SendEmail(Mailbox mailbox, String title, final String realContent, final String replyTo, final String sendTo) {
       super(sendTo);
       this.mailbox = mailbox;
       this.title = title;
@@ -246,7 +227,7 @@ public class Mailer {
       this.replyTo = replyTo;
     }
 
-    public boolean sent() {
+    public boolean send() {
       try {
         inc();
         sendMail(mailbox, sendTo, replyTo, title, content, "UTF-8", "html");

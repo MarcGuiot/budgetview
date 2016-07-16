@@ -5,6 +5,7 @@ import com.budgetview.gui.PicsouApplication;
 import com.budgetview.gui.browsing.BrowsingService;
 import com.budgetview.gui.config.ConfigService;
 import com.budgetview.gui.startup.components.SingleApplicationInstanceListener;
+import com.budgetview.http.HttpBudgetViewConstants;
 import com.budgetview.license.checkers.DbChecker;
 import com.budgetview.license.checkers.FtpServerChecker;
 import com.budgetview.license.checkers.MailServerChecker;

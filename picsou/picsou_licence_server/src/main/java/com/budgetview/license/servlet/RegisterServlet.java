@@ -1,11 +1,11 @@
 package com.budgetview.license.servlet;
 
-import com.budgetview.gui.config.ConfigService;
+import com.budgetview.http.HttpBudgetViewConstants;
 import com.budgetview.license.generator.LicenseGenerator;
 import com.budgetview.license.mail.Mailer;
 import com.budgetview.license.model.License;
 import com.budgetview.license.model.RepoInfo;
-import com.budgetview.shared.utils.ComCst;
+import com.budgetview.shared.utils.MobileConstants;
 import org.apache.log4j.Logger;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
@@ -45,10 +45,10 @@ public class RegisterServlet extends HttpServlet {
   protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
     req.setCharacterEncoding("UTF-8");
     resp.setCharacterEncoding("UTF-8");
-    String mail = req.getHeader(ConfigService.HEADER_MAIL).trim();
-    String activationCode = req.getHeader(ConfigService.HEADER_CODE).trim();
-    String repoId = req.getHeader(ConfigService.HEADER_REPO_ID).trim();
-    String lang = req.getHeader(ComCst.HEADER_LANG).trim();
+    String mail = req.getHeader(HttpBudgetViewConstants.HEADER_MAIL).trim();
+    String activationCode = req.getHeader(HttpBudgetViewConstants.HEADER_CODE).trim();
+    String repoId = req.getHeader(HttpBudgetViewConstants.HEADER_REPO_ID).trim();
+    String lang = req.getHeader(MobileConstants.HEADER_LANG).trim();
     logger.info("mail : '" + mail + "' code d'activation :'" + activationCode + "' repoId : '" +
                 repoId + "' lang : " + lang);
     SqlConnection db = sqlService.getDb();
@@ -85,7 +85,7 @@ public class RegisterServlet extends HttpServlet {
       .sortSelf(COMPARATOR);
     db.commit();
     if (globList.isEmpty()) {
-      resp.setHeader(ConfigService.HEADER_MAIL_UNKNOWN, "true");
+      resp.setHeader(HttpBudgetViewConstants.HEADER_MAIL_UNKNOWN, "true");
       logger.info("unknown user " + mail);
     }
     else {
@@ -116,7 +116,7 @@ public class RegisterServlet extends HttpServlet {
             .getRequest()
             .run();
           db.commit();
-          resp.setHeader(ConfigService.HEADER_SIGNATURE, Encoder.byteToString(signature));
+          resp.setHeader(HttpBudgetViewConstants.HEADER_SIGNATURE, Encoder.byteToString(signature));
           resp.setStatus(HttpServletResponse.SC_OK);
           for (Glob glob : globList) {
             if (glob != license) {
@@ -143,7 +143,7 @@ public class RegisterServlet extends HttpServlet {
             .getRequest()
             .run();
           db.commit();
-          resp.setHeader(ConfigService.HEADER_ACTIVATION_CODE_NOT_VALIDE_MAIL_SENT, "true");
+          resp.setHeader(HttpBudgetViewConstants.HEADER_ACTIVATION_CODE_NOT_VALIDE_MAIL_SENT, "true");
           if (!mailer.reSendExistingLicenseOnError(lang, newCode, mail)) {
             logger.error("Fail to send mail retrying.");
           }
@@ -152,7 +152,7 @@ public class RegisterServlet extends HttpServlet {
         }
       }
       logger.info("No mail sent (activation failed)");
-      resp.setHeader(ConfigService.HEADER_ACTIVATION_CODE_NOT_VALIDE_MAIL_SENT, "false");
+      resp.setHeader(HttpBudgetViewConstants.HEADER_ACTIVATION_CODE_NOT_VALIDE_MAIL_SENT, "false");
     }
     resp.setStatus(HttpServletResponse.SC_OK);
   }

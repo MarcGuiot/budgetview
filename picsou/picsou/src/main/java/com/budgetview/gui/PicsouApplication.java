@@ -2,7 +2,7 @@ package com.budgetview.gui;
 
 import com.budgetview.bank.BankPluginService;
 import com.budgetview.bank.BankSynchroService;
-import com.budgetview.client.http.MD5PasswordBasedEncryptor;
+import com.budgetview.http.MD5PasswordBasedEncryptor;
 import com.budgetview.client.http.RedirectPasswordBasedEncryptor;
 import com.budgetview.gui.accounts.utils.AccountPositionNotificationHandler;
 import com.budgetview.gui.components.dialogs.MessageDialog;
@@ -79,9 +79,6 @@ public class PicsouApplication {
   public static final String TODAY = ".today";
   public static String FORCE_DATE = APPNAME + TODAY;
 
-  public static final String LICENSE_SERVER_URL = "https://•register.mybudgetview.fr:443";
-  public static final String MOBILE_SERVER_URL = "http://register.mybudgetview.fr:8080";
-  public static final String FTP_SERVER_URL = "ftp://ftpjar.mybudgetview.fr";
   public static final String DISABLE_BACKUP = APPNAME + ".disable.import";
   public static final String USER_FEEDBACK_DISABLED = APPNAME + ".userFeedback.disabled";
 

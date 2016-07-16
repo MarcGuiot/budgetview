@@ -1,9 +1,9 @@
 package com.budgetview.license.servlet;
 
-import com.budgetview.gui.config.ConfigService;
+import com.budgetview.http.HttpBudgetViewConstants;
 import com.budgetview.license.model.License;
 import com.budgetview.license.model.MailError;
-import com.budgetview.shared.utils.ComCst;
+import com.budgetview.shared.utils.MobileConstants;
 import com.budgetview.license.generator.LicenseGenerator;
 import com.budgetview.license.mail.Mailer;
 import org.globsframework.model.GlobList;
@@ -35,13 +35,13 @@ public class AskForCodeServlet extends HttpServlet {
   protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
     req.setCharacterEncoding("UTF-8");
     resp.setCharacterEncoding("UTF-8");
-    String mailTo = req.getHeader(ConfigService.HEADER_MAIL);
+    String mailTo = req.getHeader(HttpBudgetViewConstants.HEADER_MAIL);
     if (Strings.isNullOrEmpty(mailTo)) {
       logger.info("Bad ask for code from " + (mailTo == null ? "<no mail>" : mailTo));
-      resp.setHeader(ConfigService.HEADER_STATUS, ConfigService.HEADER_MAIL_UNKNOWN);
+      resp.setHeader(HttpBudgetViewConstants.HEADER_STATUS, HttpBudgetViewConstants.HEADER_MAIL_UNKNOWN);
       return;
     }
-    String lang = req.getHeader(ComCst.HEADER_LANG);
+    String lang = req.getHeader(MobileConstants.HEADER_LANG);
     mailTo = mailTo.trim();
     logger.info("code requested for '" + mailTo + "' in " + lang);
     try {
@@ -50,7 +50,7 @@ public class AskForCodeServlet extends HttpServlet {
         String activationCode = LicenseGenerator.generateActivationCode();
         registeredMail = request(mailTo);
         if (registeredMail.isEmpty()) {
-          resp.setHeader(ConfigService.HEADER_STATUS, ConfigService.HEADER_MAIL_UNKNOWN);
+          resp.setHeader(HttpBudgetViewConstants.HEADER_STATUS, HttpBudgetViewConstants.HEADER_MAIL_UNKNOWN);
           logger.info("unknown user " + mailTo);
           return;
         }
@@ -73,10 +73,10 @@ public class AskForCodeServlet extends HttpServlet {
           }
           if (mailer.sendRequestLicence(lang, activationCode, registeredMail.get(0).get(License.MAIL))) {
             logger.info("Send new activation code " + activationCode + " to " + mailTo);
-            resp.setHeader(ConfigService.HEADER_STATUS, ConfigService.HEADER_MAIL_SENT);
+            resp.setHeader(HttpBudgetViewConstants.HEADER_STATUS, HttpBudgetViewConstants.HEADER_MAIL_SENT);
           }
           else {
-            resp.setHeader(ConfigService.HEADER_STATUS, ConfigService.HEADER_MAIL_SENT_FAILED);
+            resp.setHeader(HttpBudgetViewConstants.HEADER_STATUS, HttpBudgetViewConstants.HEADER_MAIL_SENT_FAILED);
           }
         }
 //        if (registeredMail.size() > 1) {
@@ -127,11 +127,11 @@ public class AskForCodeServlet extends HttpServlet {
   }
 
   private void replyBadAdress(HttpServletResponse resp) {
-    resp.setHeader(ConfigService.HEADER_STATUS, ConfigService.HEADER_MAIL_UNKNOWN);
+    resp.setHeader(HttpBudgetViewConstants.HEADER_STATUS, HttpBudgetViewConstants.HEADER_MAIL_UNKNOWN);
   }
 
   private void replyFailed(HttpServletResponse resp) {
-    resp.setHeader(ConfigService.HEADER_STATUS, "fail");
+    resp.setHeader(HttpBudgetViewConstants.HEADER_STATUS, "fail");
   }
 
   private boolean checkIsAMailAdress(String to) {

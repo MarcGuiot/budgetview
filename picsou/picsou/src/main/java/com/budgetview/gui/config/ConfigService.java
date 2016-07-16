@@ -2,10 +2,11 @@ package com.budgetview.gui.config;
 
 import com.budgetview.bank.BankPluginService;
 import com.budgetview.gui.startup.AppPaths;
+import com.budgetview.http.HttpBudgetViewConstants;
 import com.budgetview.model.LicenseActivationState;
 import com.budgetview.model.UserPreferences;
 import com.budgetview.shared.model.MobileModel;
-import com.budgetview.shared.utils.ComCst;
+import com.budgetview.shared.utils.MobileConstants;
 import com.budgetview.shared.utils.Crypt;
 import com.budgetview.utils.Inline;
 import org.apache.commons.codec.binary.Base64;
@@ -27,8 +28,7 @@ import org.apache.http.impl.conn.BasicClientConnectionManager;
 import org.apache.http.params.CoreConnectionPNames;
 import org.apache.http.params.CoreProtocolPNames;
 import com.budgetview.client.ServerAccess;
-import com.budgetview.client.http.MD5PasswordBasedEncryptor;
-import com.budgetview.gui.PicsouApplication;
+import com.budgetview.http.MD5PasswordBasedEncryptor;
 import com.budgetview.gui.utils.KeyService;
 import com.budgetview.io.importer.analyzer.TransactionAnalyzerFactory;
 import com.budgetview.model.AppVersionInformation;
@@ -46,7 +46,6 @@ import javax.servlet.http.HttpServletResponse;
 import javax.swing.*;
 import java.io.*;
 import java.lang.reflect.Constructor;
-import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.nio.charset.UnsupportedCharsetException;
 import java.security.cert.X509Certificate;
@@ -57,44 +56,10 @@ import java.util.zip.ZipEntry;
 
 public class ConfigService {
 
-  public static final String COM_APP_LICENSE_URL = PicsouApplication.APPNAME + ".license.url";
-  public static final String COM_APP_MOBILE_URL = PicsouApplication.APPNAME + ".mobile.url";
-  public static final String COM_APP_FTP_URL = PicsouApplication.APPNAME + ".license.ftp.url";
-  public static final String HEADER_TO_MAIL = "toMail";
-  public static final String HEADER_MAIL = "mail";
-  public static final String HEADER_MAIL_TITLE = "title";
-  public static final String HEADER_MAIL_CONTENT = "content";
-  public static final String HEADER_SIGNATURE = "signature";
-  public static final String HEADER_IS_VALIDE = "isValide";
-  public static final String HEADER_CODE = "code";
-  public static final String HEADER_COUNT = "count";
-  public static final String HEADER_MAIL_SENT = "mailSent";
-  public static final String HEADER_MAIL_SENT_FAILED = "mailSentFailed";
-  public static final String HEADER_STATUS = "status";
-  public static final String HEADER_MAIL_UNKNOWN = "mailUnknown";
-  public static final String HEADER_ACTIVATION_CODE_NOT_VALIDE_MAIL_NOT_SENT = "activationCodeNotValideMailNotSent";
-  public static final String HEADER_ACTIVATION_CODE_NOT_VALIDE_MAIL_SENT = "activationCodeNotValideMailSent";
-  public static final String HEADER_APPLICATION_VERSION = "applicationVersion";
-  public static final String HEADER_CONFIG_VERSION = "configVersion";
-  public static final String HEADER_NEW_CONFIG_VERSION = "newConfigVersion";
-  public static final String HEADER_JAR_VERSION = "jarVersion";
-  public static final String HEADER_NEW_JAR_VERSION = "newJarVersion";
-  public static final String HEADER_REPO_ID = "repoId";
-  public static final String HEADER_USE_INFO = "use";
-  public static final String HEADER_PENDING = "pending";
-  public static final String REQUEST_FOR_REGISTER = "/register";
-  public static final String REQUEST_FOR_CONFIG = "/requestForConfig";
-  public static final String REQUEST_FOR_MAIL = "/mailTo";
-  public static final String REQUEST_SEND_MAIL = "/sendMailToUs";
-  public static final String REQUEST_CLIENT_TO_SERVER_DATA = "/sendMobileData";
-  public static final String CODING = "coding";
-  public static final String SOME_PASSWORD = "HdsB 8(Rfm";
-  public static final String SEND_USE_INFO = "/sendUseInfo";
-  public static final String HEADER_BAD_ADRESS = "badAdress";
-  public static final String MOBILE_SALT = "d48(cWqH";
-
-  public static final String SUPPORT_EMAIL = "support";
-  public static final String ADMIN_EMAIL = "admin";
+  private static final String APPNAME = "budgetview";
+  public static final String COM_APP_LICENSE_URL = APPNAME + ".license.url";
+  public static final String COM_APP_MOBILE_URL = APPNAME + ".mobile.url";
+  public static final String COM_APP_FTP_URL = APPNAME + ".license.ftp.url";
 
   static final byte[] expectedPublicKey = {48, -126, 1, 34, 48, 13, 6, 9, 42, -122, 72, -122, -9, 13, 1, 1, 1, 5, 0, 3, -126, 1,
     15, 0, 48, -126, 1, 10, 2, -126, 1, 1, 0, -83, 16, 42, 127, -66, -24, 109, 66, 114,
@@ -113,9 +78,9 @@ public class ConfigService {
     124, 59, 15, -50, 71, -16, -17, -26, -124, 53, -120, 46, -53, 36, 103, -86, -92, -57,
     -31, -77, -106, -30, -88, -18, -48, -117, 39, 107, 2, 3, 1, 0, 1};
 
-  private String LICENSE_SERVER_URL = PicsouApplication.LICENSE_SERVER_URL;
-  private String MOBILE_SERVER_URL = PicsouApplication.MOBILE_SERVER_URL;
-  private String FTP_SERVER_URL = PicsouApplication.FTP_SERVER_URL;
+  private String LICENSE_SERVER_URL = HttpBudgetViewConstants.LICENSE_SERVER_URL;
+  private String MOBILE_SERVER_URL = HttpBudgetViewConstants.MOBILE_SERVER_URL;
+  private String FTP_SERVER_URL = HttpBudgetViewConstants.FTP_SERVER_URL;
   private long localJarVersion = -1;
   private long localConfigVersion = -1;
   private String applicationVersion;
@@ -127,7 +92,6 @@ public class ConfigService {
   private JarReceive jarReceive;
   private File currentConfigFile;
   private byte[] repoId;
-  public static int RETRY_PERIOD = 10000;
   private Directory directory = null;
   private GlobRepository repository = null;
   private ServerAccess serverAccess;
@@ -135,11 +99,11 @@ public class ConfigService {
   public ConfigService(String applicationVersion, Long jarVersion, Long localConfigVersion, File currentConfigFile) {
     this.currentConfigFile = currentConfigFile;
     Utils.beginRemove();
-    RETRY_PERIOD = 500;
+    HttpBudgetViewConstants.RETRY_PERIOD = 500;
 
-    LICENSE_SERVER_URL = System.getProperty(COM_APP_LICENSE_URL, PicsouApplication.LICENSE_SERVER_URL);
-    MOBILE_SERVER_URL = System.getProperty(COM_APP_MOBILE_URL, PicsouApplication.MOBILE_SERVER_URL);
-    FTP_SERVER_URL = System.getProperty(COM_APP_FTP_URL, PicsouApplication.FTP_SERVER_URL);
+    LICENSE_SERVER_URL = System.getProperty(COM_APP_LICENSE_URL, HttpBudgetViewConstants.LICENSE_SERVER_URL);
+    MOBILE_SERVER_URL = System.getProperty(COM_APP_MOBILE_URL, HttpBudgetViewConstants.MOBILE_SERVER_URL);
+    FTP_SERVER_URL = System.getProperty(COM_APP_FTP_URL, HttpBudgetViewConstants.FTP_SERVER_URL);
 
     Utils.endRemove();
     this.applicationVersion = applicationVersion;
@@ -155,12 +119,12 @@ public class ConfigService {
   synchronized public String askForNewCodeByMail(String mail) {
     HttpPost postMethod = null;
     try {
-      String url = LICENSE_SERVER_URL + REQUEST_FOR_MAIL;
+      String url = LICENSE_SERVER_URL + HttpBudgetViewConstants.REQUEST_FOR_MAIL;
       HttpResponse response;
       try {
         postMethod = createPostMethod(url);
-        postMethod.setHeader(HEADER_MAIL, mail);
-        postMethod.setHeader(ComCst.HEADER_LANG, Lang.get("lang"));
+        postMethod.setHeader(HttpBudgetViewConstants.HEADER_MAIL, mail);
+        postMethod.setHeader(MobileConstants.HEADER_LANG, Lang.get("lang"));
         HttpClient httpClient = getNewHttpClient();
         response = httpClient.execute(postMethod);
       }
@@ -169,23 +133,23 @@ public class ConfigService {
           postMethod.releaseConnection();
         }
         postMethod = createPostMethod(url);
-        postMethod.setHeader(HEADER_MAIL, mail);
-        postMethod.setHeader(ComCst.HEADER_LANG, Lang.get("lang"));
+        postMethod.setHeader(HttpBudgetViewConstants.HEADER_MAIL, mail);
+        postMethod.setHeader(MobileConstants.HEADER_LANG, Lang.get("lang"));
         HttpClient httpClient = getNewHttpClient();
         response = httpClient.execute(postMethod);
       }
       updateConnectionStatusOk();
       int statusCode = response.getStatusLine().getStatusCode();
       if (statusCode == 200) {
-        Header status = response.getFirstHeader(HEADER_STATUS);
+        Header status = response.getFirstHeader(HttpBudgetViewConstants.HEADER_STATUS);
         if (status != null) {
-          if (status.getValue().equalsIgnoreCase(HEADER_MAIL_SENT)) {
+          if (status.getValue().equalsIgnoreCase(HttpBudgetViewConstants.HEADER_MAIL_SENT)) {
             return Lang.get("license.mail.sent");
           }
-          if (status.getValue().equalsIgnoreCase(HEADER_MAIL_SENT_FAILED)) {
+          if (status.getValue().equalsIgnoreCase(HttpBudgetViewConstants.HEADER_MAIL_SENT_FAILED)) {
             return Lang.get("license.mail.sent.failed");
           }
-          if (status.getValue().equalsIgnoreCase(HEADER_MAIL_UNKNOWN)) {
+          if (status.getValue().equalsIgnoreCase(HttpBudgetViewConstants.HEADER_MAIL_UNKNOWN)) {
             return Lang.get("license.mail.unknown");
           }
           return Lang.get("license.mail.error");
@@ -252,7 +216,7 @@ public class ConfigService {
     HttpPost postMethod = null;
     try {
       this.repoId = repoId;
-      String url = LICENSE_SERVER_URL + REQUEST_FOR_CONFIG;
+      String url = LICENSE_SERVER_URL + HttpBudgetViewConstants.REQUEST_FOR_CONFIG;
       HttpResponse response;
       try {
         postMethod = createNewConfigPostMethod(repoId, mail, signature, launchCount, activationCode, url);
@@ -269,7 +233,7 @@ public class ConfigService {
       }
       int statusCode = response.getStatusLine().getStatusCode();
       if (statusCode == 200) {
-        Header configVersionHeader = response.getFirstHeader(HEADER_NEW_CONFIG_VERSION);
+        Header configVersionHeader = response.getFirstHeader(HttpBudgetViewConstants.HEADER_NEW_CONFIG_VERSION);
         if (configVersionHeader != null) {
           long newConfigVersion = Long.parseLong(configVersionHeader.getValue());
           if (localConfigVersion < newConfigVersion) {
@@ -280,7 +244,7 @@ public class ConfigService {
             dowloadConfigThread.start();
           }
         }
-        Header jarVersionHeader = response.getFirstHeader(HEADER_NEW_JAR_VERSION);
+        Header jarVersionHeader = response.getFirstHeader(HttpBudgetViewConstants.HEADER_NEW_JAR_VERSION);
         if (jarVersionHeader != null) {
           long newJarVersion = Long.parseLong(jarVersionHeader.getValue());
           if (localJarVersion < newJarVersion) {
@@ -291,7 +255,7 @@ public class ConfigService {
             dowloadJarThread.start();
           }
         }
-        Header validityHeader = response.getFirstHeader(HEADER_IS_VALIDE);
+        Header validityHeader = response.getFirstHeader(HttpBudgetViewConstants.HEADER_IS_VALIDE);
         if (validityHeader == null) {
           userState = userState.fireKillUser(false);
         }
@@ -322,22 +286,22 @@ public class ConfigService {
 
   private HttpPost createNewConfigPostMethod(byte[] repoId, String mail, String signature, long launchCount, String activationCode, String url) {
     HttpPost postMethod = createPostMethod(url);
-    postMethod.setHeader(HEADER_CONFIG_VERSION, Long.toString(localConfigVersion));
-    postMethod.setHeader(HEADER_JAR_VERSION, Long.toString(localJarVersion));
-    postMethod.setHeader(HEADER_APPLICATION_VERSION, applicationVersion);
-    postMethod.setHeader(HEADER_REPO_ID, Encoder.byteToString(repoId));
-    postMethod.setHeader(ComCst.HEADER_LANG, Lang.get("lang"));
+    postMethod.setHeader(HttpBudgetViewConstants.HEADER_CONFIG_VERSION, Long.toString(localConfigVersion));
+    postMethod.setHeader(HttpBudgetViewConstants.HEADER_JAR_VERSION, Long.toString(localJarVersion));
+    postMethod.setHeader(HttpBudgetViewConstants.HEADER_APPLICATION_VERSION, applicationVersion);
+    postMethod.setHeader(HttpBudgetViewConstants.HEADER_REPO_ID, Encoder.byteToString(repoId));
+    postMethod.setHeader(MobileConstants.HEADER_LANG, Lang.get("lang"));
     if (signature != null && signature.length() > 1 && mail != null && activationCode != null) {
-      postMethod.setHeader(HEADER_MAIL, mail);
-      postMethod.setHeader(HEADER_SIGNATURE, signature);
-      postMethod.setHeader(HEADER_CODE, activationCode);
-      postMethod.setHeader(HEADER_COUNT, Long.toString(launchCount));
+      postMethod.setHeader(HttpBudgetViewConstants.HEADER_MAIL, mail);
+      postMethod.setHeader(HttpBudgetViewConstants.HEADER_SIGNATURE, signature);
+      postMethod.setHeader(HttpBudgetViewConstants.HEADER_CODE, activationCode);
+      postMethod.setHeader(HttpBudgetViewConstants.HEADER_COUNT, Long.toString(launchCount));
     }
     return postMethod;
   }
 
   private boolean checkMailSent(HttpResponse response) {
-    Header header = response.getFirstHeader(HEADER_MAIL_SENT);
+    Header header = response.getFirstHeader(HttpBudgetViewConstants.HEADER_MAIL_SENT);
     return header != null && header.getValue().equals("true");
   }
 
@@ -345,31 +309,31 @@ public class ConfigService {
   public synchronized boolean sendMobileData(String mail, String password, byte[] bytes, Ref<String> message, boolean pending) {
     HttpClient client = getNewHttpClient();
     HttpPost postMethod;
-    postMethod = createPostMethod(MOBILE_SERVER_URL + REQUEST_CLIENT_TO_SERVER_DATA);
+    postMethod = createPostMethod(MOBILE_SERVER_URL + HttpBudgetViewConstants.REQUEST_CLIENT_TO_SERVER_DATA);
     try {
       MD5PasswordBasedEncryptor encryptor =
-        new MD5PasswordBasedEncryptor(ConfigService.MOBILE_SALT.getBytes(), password.toCharArray(), 5);
+        new MD5PasswordBasedEncryptor(HttpBudgetViewConstants.MOBILE_SALT.getBytes(), password.toCharArray(), 5);
 
       byte[] data = encryptor.encrypt(bytes);
       byte[] encryptedMail = encryptor.encrypt(mail.getBytes("UTF-8"));
       String sha1Mail = Crypt.encodeSHA1AndHex(encryptedMail);
-      postMethod.setHeader(ComCst.HEADER_LANG, Lang.get("lang"));
-      postMethod.setHeader(HEADER_MAIL, URLEncoder.encode(mail, "UTF-8"));
-      postMethod.setHeader(ComCst.CRYPTED_INFO, URLEncoder.encode(sha1Mail, "UTF-8"));
-      postMethod.setHeader(ComCst.MAJOR_VERSION_NAME, Integer.toString(MobileModel.MAJOR_VERSION));
-      postMethod.setHeader(ComCst.MINOR_VERSION_NAME, Integer.toString(MobileModel.MINOR_VERSION));
+      postMethod.setHeader(MobileConstants.HEADER_LANG, Lang.get("lang"));
+      postMethod.setHeader(HttpBudgetViewConstants.HEADER_MAIL, URLEncoder.encode(mail, "UTF-8"));
+      postMethod.setHeader(MobileConstants.CRYPTED_INFO, URLEncoder.encode(sha1Mail, "UTF-8"));
+      postMethod.setHeader(MobileConstants.MAJOR_VERSION_NAME, Integer.toString(MobileModel.MAJOR_VERSION));
+      postMethod.setHeader(MobileConstants.MINOR_VERSION_NAME, Integer.toString(MobileModel.MINOR_VERSION));
       if (pending) {
-        postMethod.setHeader(HEADER_PENDING, "true");
+        postMethod.setHeader(HttpBudgetViewConstants.HEADER_PENDING, "true");
       }
       else {
-        postMethod.setHeader(HEADER_PENDING, "false");
+        postMethod.setHeader(HttpBudgetViewConstants.HEADER_PENDING, "false");
       }
       postMethod.setEntity(new ByteArrayEntity(data));
       HttpResponse response = client.execute(postMethod);
       updateConnectionStatusOk();
       int statusCode = response.getStatusLine().getStatusCode();
       if (statusCode == HttpServletResponse.SC_FORBIDDEN) {
-        Header configVersionHeader = response.getFirstHeader(ComCst.STATUS);
+        Header configVersionHeader = response.getFirstHeader(MobileConstants.STATUS);
         message.set(configVersionHeader.getValue());
         return false;
       }
@@ -395,7 +359,7 @@ public class ConfigService {
     HttpPost postMethod = null;
     HttpResponse response;
     try {
-      String url = LICENSE_SERVER_URL + REQUEST_FOR_REGISTER;
+      String url = LICENSE_SERVER_URL + HttpBudgetViewConstants.REQUEST_FOR_REGISTER;
       try {
         postMethod = createRegisterPostMethod(mail, code, url);
         HttpClient httpClient = getNewHttpClient();
@@ -447,10 +411,10 @@ public class ConfigService {
 
   private HttpPost createRegisterPostMethod(String mail, String code, String url) {
     final HttpPost postMethod = createPostMethod(url);
-    postMethod.setHeader(HEADER_MAIL, mail);
-    postMethod.setHeader(HEADER_CODE, code);
-    postMethod.setHeader(HEADER_REPO_ID, Encoder.byteToString(repoId));
-    postMethod.setHeader(ComCst.HEADER_LANG, Lang.get("lang"));
+    postMethod.setHeader(HttpBudgetViewConstants.HEADER_MAIL, mail);
+    postMethod.setHeader(HttpBudgetViewConstants.HEADER_CODE, code);
+    postMethod.setHeader(HttpBudgetViewConstants.HEADER_REPO_ID, Encoder.byteToString(repoId));
+    postMethod.setHeader(MobileConstants.HEADER_LANG, Lang.get("lang"));
     return postMethod;
   }
 
@@ -465,18 +429,18 @@ public class ConfigService {
   private void computeResponse(GlobRepository repository, HttpResponse response) {
     repository.startChangeSet();
     try {
-      Header header = response.getFirstHeader(HEADER_MAIL_UNKNOWN);
+      Header header = response.getFirstHeader(HttpBudgetViewConstants.HEADER_MAIL_UNKNOWN);
       if (header != null && "true".equalsIgnoreCase(header.getValue())) {
         repository.update(User.KEY, User.LICENSE_ACTIVATION_STATE, LicenseActivationState.ACTIVATION_FAILED_MAIL_UNKNOWN.getId());
       }
       else {
-        Header signature = response.getFirstHeader(HEADER_SIGNATURE);
+        Header signature = response.getFirstHeader(HttpBudgetViewConstants.HEADER_SIGNATURE);
         if (signature != null) {
           String value = signature.getValue();
           repository.update(User.KEY, User.SIGNATURE, Encoder.stringToByte(value));
         }
         else {
-          Header isMailSentHeader = response.getFirstHeader(HEADER_ACTIVATION_CODE_NOT_VALIDE_MAIL_SENT);
+          Header isMailSentHeader = response.getFirstHeader(HttpBudgetViewConstants.HEADER_ACTIVATION_CODE_NOT_VALIDE_MAIL_SENT);
           if (isMailSentHeader != null && "true".equalsIgnoreCase(isMailSentHeader.getValue())) {
             repository.update(User.KEY, User.LICENSE_ACTIVATION_STATE, LicenseActivationState.ACTIVATION_FAILED_MAIL_SENT.getId());
           }
@@ -492,10 +456,10 @@ public class ConfigService {
   }
 
   public void sendUsageData(String msg) throws IOException {
-    String url = LICENSE_SERVER_URL + SEND_USE_INFO;
+    String url = LICENSE_SERVER_URL + HttpBudgetViewConstants.SEND_USE_INFO;
 
     HttpPost postMethod = createPostMethod(url);
-    postMethod.setHeader(HEADER_USE_INFO, msg);
+    postMethod.setHeader(HttpBudgetViewConstants.HEADER_USE_INFO, msg);
     HttpClient httpClient = getNewHttpClient();
     httpClient.execute(postMethod);
   }
@@ -503,7 +467,8 @@ public class ConfigService {
   public boolean createMobileAccount(String mail, String password, Ref<String> message) {
     HttpPost postMethod = null;
     try {
-      postMethod = createPostMessage(mail, password, MOBILE_SERVER_URL + ComCst.SEND_MAIL_TO_CONFIRM_MOBILE);
+      String url = MOBILE_SERVER_URL + MobileConstants.SEND_MAIL_TO_CONFIRM_MOBILE;
+      postMethod = createPostMessage(mail, password, url);
       HttpClient httpClient = getNewHttpClient();
       HttpResponse response = httpClient.execute(postMethod);
       updateConnectionStatusOk();
@@ -511,7 +476,7 @@ public class ConfigService {
         message.set(Lang.get("mobile.user.connection.failed"));
         return false;
       }
-      Header isValid = response.getFirstHeader(ConfigService.HEADER_IS_VALIDE);
+      Header isValid = response.getFirstHeader(HttpBudgetViewConstants.HEADER_IS_VALIDE);
       if (isValid != null && isValid.getValue().equalsIgnoreCase("true")) {
         message.set(Lang.get("mobile.user.create.mail.sent"));
         return true;
@@ -535,27 +500,27 @@ public class ConfigService {
   private HttpPost createPostMessage(String mail, String password, final String url) throws UnsupportedEncodingException {
 
     MD5PasswordBasedEncryptor encryptor =
-      new MD5PasswordBasedEncryptor(ConfigService.MOBILE_SALT.getBytes(), ConfigService.SOME_PASSWORD.toCharArray(), 5);
+      new MD5PasswordBasedEncryptor(HttpBudgetViewConstants.MOBILE_SALT.getBytes(), HttpBudgetViewConstants.SOME_PASSWORD.toCharArray(), 5);
 
     byte[] localKey = Base64.encodeBase64(encryptor.encrypt(mail.getBytes("UTF-8")));
 
     MD5PasswordBasedEncryptor userEncryptor =
-      new MD5PasswordBasedEncryptor(ConfigService.MOBILE_SALT.getBytes(), password.toCharArray(), 5);
+      new MD5PasswordBasedEncryptor(HttpBudgetViewConstants.MOBILE_SALT.getBytes(), password.toCharArray(), 5);
     byte[] encryptedMail = userEncryptor.encrypt(mail.getBytes("UTF-8"));
     String sha1Mail = Crypt.encodeSHA1AndHex(encryptedMail);
 
     HttpPost postMethod = createPostMethod(url);
-    postMethod.setHeader(ComCst.HEADER_LANG, Lang.get("lang"));
-    postMethod.setHeader(HEADER_MAIL, URLEncoder.encode(mail, "UTF-8"));
-    postMethod.setHeader(CODING, URLEncoder.encode(new String(localKey), "UTF-8"));
-    postMethod.setHeader(ComCst.CRYPTED_INFO, URLEncoder.encode(sha1Mail, "UTF-8"));
+    postMethod.setHeader(MobileConstants.HEADER_LANG, Lang.get("lang"));
+    postMethod.setHeader(HttpBudgetViewConstants.HEADER_MAIL, URLEncoder.encode(mail, "UTF-8"));
+    postMethod.setHeader(HttpBudgetViewConstants.CODING, URLEncoder.encode(new String(localKey), "UTF-8"));
+    postMethod.setHeader(MobileConstants.CRYPTED_INFO, URLEncoder.encode(sha1Mail, "UTF-8"));
     return postMethod;
   }
 
   public boolean deleteMobileAccount(String mail, String password, Ref<String> message) {
     HttpPost postMethod = null;
     try {
-      postMethod = createPostMessage(mail, password, MOBILE_SERVER_URL + ComCst.DELETE_MOBILE_ACCOUNT);
+      postMethod = createPostMessage(mail, password, MOBILE_SERVER_URL + MobileConstants.DELETE_MOBILE_ACCOUNT);
       HttpClient httpClient = getNewHttpClient();
       HttpResponse response = httpClient.execute(postMethod);
       updateConnectionStatusOk();
@@ -679,7 +644,7 @@ public class ConfigService {
             }
             if (!connectionEstablished) {
               try {
-                Thread.sleep(RETRY_PERIOD);
+                Thread.sleep(HttpBudgetViewConstants.RETRY_PERIOD);
               }
               catch (InterruptedException e) {
               }
@@ -763,7 +728,7 @@ public class ConfigService {
 
   static public String generatePicsouJarName(long newVersion) {
     String name = Long.toString(newVersion);
-    return PicsouApplication.APPNAME + name + ".jar";
+    return APPNAME + name + ".jar";
   }
 
   static public String generateConfigJarName(long newVersion) {
@@ -883,24 +848,6 @@ public class ConfigService {
     }
   }
 
-  public static String encodeContent(String content) {
-    try {
-      return URLEncoder.encode(content, "utf-8");
-    }
-    catch (UnsupportedEncodingException e) {
-      throw new RuntimeException(e);
-    }
-  }
-
-  public static String decodeContent(String content) {
-    try {
-      return URLDecoder.decode(content, "utf-8");
-    }
-    catch (UnsupportedEncodingException e) {
-      throw new RuntimeException(e);
-    }
-  }
-
   private class SendMailThread extends Thread {
     private final String fromMail;
     private final String toMail;
@@ -917,7 +864,7 @@ public class ConfigService {
     }
 
     public void run() {
-      String url = LICENSE_SERVER_URL + REQUEST_SEND_MAIL;
+      String url = LICENSE_SERVER_URL + HttpBudgetViewConstants.REQUEST_SEND_MAIL;
       HttpPost postMethod = createPost(url);
       HttpResponse response;
       try {
@@ -969,10 +916,10 @@ public class ConfigService {
 
     private HttpPost createPost(String url) {
       HttpPost postMethod = createPostMethod(url);
-      postMethod.setHeader(ComCst.HEADER_LANG, Lang.get("lang"));
-      postMethod.setHeader(HEADER_MAIL, fromMail);
-      postMethod.setHeader(HEADER_TO_MAIL, toMail);
-      postMethod.setHeader(HEADER_MAIL_TITLE, title);
+      postMethod.setHeader(MobileConstants.HEADER_LANG, Lang.get("lang"));
+      postMethod.setHeader(HttpBudgetViewConstants.HEADER_MAIL, fromMail);
+      postMethod.setHeader(HttpBudgetViewConstants.HEADER_TO_MAIL, toMail);
+      postMethod.setHeader(HttpBudgetViewConstants.HEADER_MAIL_TITLE, title);
       try {
         postMethod.setEntity(new StringEntity(content, "UTF-8"));
       }

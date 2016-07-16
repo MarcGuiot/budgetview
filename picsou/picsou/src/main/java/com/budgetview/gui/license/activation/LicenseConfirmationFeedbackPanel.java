@@ -3,6 +3,7 @@ package com.budgetview.gui.license.activation;
 import com.budgetview.gui.components.dialogs.PicsouDialog;
 import com.budgetview.gui.config.ConfigService;
 import com.budgetview.gui.components.utils.CustomFocusTraversalPolicy;
+import com.budgetview.http.HttpBudgetViewConstants;
 import com.budgetview.utils.Lang;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.splits.PanelBuilder;
@@ -90,7 +91,7 @@ public class LicenseConfirmationFeedbackPanel implements Disposable {
       }
     }
     builder.append("</html>");
-    directory.get(ConfigService.class).sendMail(ConfigService.SUPPORT_EMAIL,
+    directory.get(ConfigService.class).sendMail(HttpBudgetViewConstants.SUPPORT_EMAIL,
                                                 email,
                                                 Lang.get("license.activation.feedback.email.title", email),
                                                 builder.toString(),

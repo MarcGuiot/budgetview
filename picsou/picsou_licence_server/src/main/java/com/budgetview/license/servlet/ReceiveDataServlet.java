@@ -1,8 +1,8 @@
 package com.budgetview.license.servlet;
 
-import com.budgetview.gui.config.ConfigService;
+import com.budgetview.http.HttpBudgetViewConstants;
 import com.budgetview.license.Lang;
-import com.budgetview.shared.utils.ComCst;
+import com.budgetview.shared.utils.MobileConstants;
 import com.budgetview.shared.utils.Crypt;
 import org.apache.log4j.Logger;
 import org.globsframework.utils.Files;
@@ -20,24 +20,24 @@ public class ReceiveDataServlet extends AbstractHttpServlet {
   static Logger logger = Logger.getLogger("ReceiveDataServlet");
   private String root;
 
-  public ReceiveDataServlet(String root, Directory mailer) {
+  public ReceiveDataServlet(String root) {
     this.root = root;
   }
 
   protected void action(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) throws IOException {
     InputStream inputStream = httpServletRequest.getInputStream();
     OutputStream outputStream = httpServletResponse.getOutputStream();
-    String lang = httpServletRequest.getHeader(ComCst.HEADER_LANG);
-    String mail = URLDecoder.decode(httpServletRequest.getHeader(ConfigService.HEADER_MAIL), "UTF-8");
-    String majorVersion = httpServletRequest.getHeader(ComCst.MAJOR_VERSION_NAME);
-    String minorVersion = httpServletRequest.getHeader(ComCst.MINOR_VERSION_NAME);
-    String sha1Mail = URLDecoder.decode(httpServletRequest.getHeader(ComCst.CRYPTED_INFO), "UTF-8");
+    String lang = httpServletRequest.getHeader(MobileConstants.HEADER_LANG);
+    String mail = URLDecoder.decode(httpServletRequest.getHeader(HttpBudgetViewConstants.HEADER_MAIL), "UTF-8");
+    String majorVersion = httpServletRequest.getHeader(MobileConstants.MAJOR_VERSION_NAME);
+    String minorVersion = httpServletRequest.getHeader(MobileConstants.MINOR_VERSION_NAME);
+    String sha1Mail = URLDecoder.decode(httpServletRequest.getHeader(MobileConstants.CRYPTED_INFO), "UTF-8");
 
     if (Strings.isNullOrEmpty(mail) || Strings.isNullOrEmpty(majorVersion) || Strings.isNullOrEmpty(minorVersion)
         || Strings.isNullOrEmpty(sha1Mail)) {
       logger.error("missing info mail : '" + mail + "' major version : '" + majorVersion + "' minor version '" + minorVersion + "' sha1Mail : '"
                    + sha1Mail + "'");
-      httpServletResponse.setHeader(ComCst.STATUS, "Missing info");
+      httpServletResponse.setHeader(MobileConstants.STATUS, "Missing info");
       return;
     }
     logger.info("receive data from " + mail + " sha1 " + sha1Mail);
@@ -46,11 +46,11 @@ public class ReceiveDataServlet extends AbstractHttpServlet {
     if (!dir.exists()) {
       logger.warn("No directory '" + dirName + "' for " + mail);
       outputStream.write("error".getBytes());
-      httpServletResponse.setHeader(ComCst.STATUS, Lang.get("mobile.data.missing.account", lang));
+      httpServletResponse.setHeader(MobileConstants.STATUS, Lang.get("mobile.data.missing.account", lang));
       httpServletResponse.setStatus(HttpServletResponse.SC_FORBIDDEN);
     }
     else {
-      String header = httpServletRequest.getHeader(ConfigService.HEADER_PENDING);
+      String header = httpServletRequest.getHeader(HttpBudgetViewConstants.HEADER_PENDING);
       boolean pending = false;
       if (!new File(dir, CODE_FILE_NAME).exists() || (header != null && header.equalsIgnoreCase("true"))) {
         CreateMobileUserServlet.writePendingCode(sha1Mail, dir);
@@ -58,14 +58,14 @@ public class ReceiveDataServlet extends AbstractHttpServlet {
       }
       if (!pending && !checkSha1Code(sha1Mail, dir)) {
         logger.error("Not a valid password.");
-        httpServletResponse.setHeader(ComCst.STATUS, Lang.get("mobile.data.invalid.password", lang));
+        httpServletResponse.setHeader(MobileConstants.STATUS, Lang.get("mobile.data.invalid.password", lang));
         httpServletResponse.setStatus(HttpServletResponse.SC_FORBIDDEN);
       }
       else {
         File file = new File(dir, (pending ? CreateMobileUserServlet.PENDING : "") + DATA_FILE_NAME);
         if (file.exists() && !file.delete()) {
           logger.error("Can not delete file " + file.getAbsolutePath());
-          httpServletResponse.setHeader(ComCst.STATUS, Lang.get("mobile.data.internal", lang));
+          httpServletResponse.setHeader(MobileConstants.STATUS, Lang.get("mobile.data.internal", lang));
           httpServletResponse.setStatus(HttpServletResponse.SC_FORBIDDEN);
         }
         else {
@@ -75,7 +75,7 @@ public class ReceiveDataServlet extends AbstractHttpServlet {
           stream.writeInt(Integer.parseInt(majorVersion));
           stream.writeInt(Integer.parseInt(minorVersion));
           Files.copyStream(inputStream, fileOutputStream);
-          httpServletResponse.setHeader(ComCst.STATUS, "OK");
+          httpServletResponse.setHeader(MobileConstants.STATUS, "OK");
           httpServletResponse.setStatus(HttpServletResponse.SC_OK);
           inputStream.close();
         }

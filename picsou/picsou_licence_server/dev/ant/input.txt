@@ -13,4 +13,4 @@ R javax/servlet/http/LocalStrings.properties
 R i18n/
 P com/mysql true
 P org/gjt true
-P org.mortbay true
+P org.eclipse true

@@ -1,10 +1,10 @@
 package com.budgetview.license.servlet;
 
-import com.budgetview.client.http.MD5PasswordBasedEncryptor;
-import com.budgetview.gui.config.ConfigService;
+import com.budgetview.http.HttpBudgetViewConstants;
+import com.budgetview.http.MD5PasswordBasedEncryptor;
 import com.budgetview.license.mail.Mailbox;
 import com.budgetview.license.mail.Mailer;
-import com.budgetview.shared.utils.ComCst;
+import com.budgetview.shared.utils.MobileConstants;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.log4j.Logger;
 import org.globsframework.utils.Files;
@@ -24,7 +24,7 @@ public class CreateMobileUserServlet extends HttpServlet {
   private String root;
   private Mailer mailer;
   public static MD5PasswordBasedEncryptor encryptor =
-    new MD5PasswordBasedEncryptor(ConfigService.MOBILE_SALT.getBytes(), ConfigService.SOME_PASSWORD.toCharArray(), 5);
+    new MD5PasswordBasedEncryptor(HttpBudgetViewConstants.MOBILE_SALT.getBytes(), HttpBudgetViewConstants.SOME_PASSWORD.toCharArray(), 5);
 
   public CreateMobileUserServlet(String root, Directory directory) {
     this.root = root;
@@ -43,18 +43,18 @@ public class CreateMobileUserServlet extends HttpServlet {
   }
 
   protected void action(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) throws IOException {
-    String lang = httpServletRequest.getParameter(ComCst.HEADER_LANG);
-    String mail = URLDecoder.decode(httpServletRequest.getParameter(ConfigService.HEADER_MAIL), "UTF-8");
-    String coding = URLDecoder.decode(httpServletRequest.getParameter(ConfigService.CODING), "UTF-8");
+    String lang = httpServletRequest.getParameter(MobileConstants.HEADER_LANG);
+    String mail = URLDecoder.decode(httpServletRequest.getParameter(HttpBudgetViewConstants.HEADER_MAIL), "UTF-8");
+    String coding = URLDecoder.decode(httpServletRequest.getParameter(HttpBudgetViewConstants.CODING), "UTF-8");
     byte[] decryptedMail = encryptor.decrypt(Base64.decodeBase64(coding));
 
-    String sha1Mail = URLDecoder.decode(httpServletRequest.getParameter(ComCst.CRYPTED_INFO), "UTF-8");
+    String sha1Mail = URLDecoder.decode(httpServletRequest.getParameter(MobileConstants.CRYPTED_INFO), "UTF-8");
 
     String baseUrl = "fr".equals(lang) ? "http://www.mybudgetview.fr" : "http://www.mybudgetview.com";
 
     if (!Arrays.equals(decryptedMail, mail.getBytes("UTF-8"))) {
       httpServletResponse.sendRedirect(baseUrl + "/mobile/invalidCreateUserRequest");
-      logger.info("Bap password " + mail);
+      logger.info("Invalid password " + mail);
     }
     else {
       String dirName = ReceiveDataServlet.generateDirName(mail);
@@ -66,7 +66,7 @@ public class CreateMobileUserServlet extends HttpServlet {
           httpServletResponse.sendRedirect(baseUrl + "/mobile/account-ok");
         }
         else {
-          String content = "Can not create dir " + dir.getAbsolutePath();
+          String content = "Cannot create dir " + dir.getAbsolutePath();
           logger.error(content + " : " + mail);
           mailer.sendToUs(Mailbox.ADMIN, mail, "Error fs", content);
           httpServletResponse.sendRedirect(baseUrl + "/mobile/internal-error");

@@ -1,9 +1,9 @@
 package com.budgetview.license.servlet;
 
-import com.budgetview.gui.config.ConfigService;
+import com.budgetview.http.HttpBudgetViewConstants;
 import com.budgetview.license.mail.Mailbox;
 import com.budgetview.license.mail.Mailer;
-import com.budgetview.shared.utils.ComCst;
+import com.budgetview.shared.utils.MobileConstants;
 import org.apache.log4j.Logger;
 import org.globsframework.utils.Files;
 import org.globsframework.utils.Strings;
@@ -27,20 +27,20 @@ public class SendMailServlet extends HttpServlet {
     try {
       req.setCharacterEncoding("UTF-8");
       resp.setCharacterEncoding("UTF-8");
-      String mailTo = req.getHeader(ConfigService.HEADER_TO_MAIL);
+      String mailTo = req.getHeader(HttpBudgetViewConstants.HEADER_TO_MAIL);
       if (Strings.isNullOrEmpty(mailTo)) {
         logger.info("sendMail: missing mail address " + (mailTo == null ? "<no email>" : mailTo));
         resp.setStatus(HttpServletResponse.SC_NOT_FOUND);
         return;
       }
 
-      String mailFrom = req.getHeader(ConfigService.HEADER_MAIL);
-      String title = req.getHeader(ConfigService.HEADER_MAIL_TITLE);
-      String lang = req.getHeader(ComCst.HEADER_LANG);
-      String header = req.getHeader(ConfigService.HEADER_MAIL_CONTENT);
+      String mailFrom = req.getHeader(HttpBudgetViewConstants.HEADER_MAIL);
+      String title = req.getHeader(HttpBudgetViewConstants.HEADER_MAIL_TITLE);
+      String lang = req.getHeader(MobileConstants.HEADER_LANG);
+      String header = req.getHeader(HttpBudgetViewConstants.HEADER_MAIL_CONTENT);
       String content;
       if (header != null) {
-        content = ConfigService.decodeContent(header);
+        content = HttpBudgetViewConstants.decodeContent(header);
       }
       else {
         content = Files.loadStreamToString(req.getInputStream(), "UTF-8");
@@ -55,10 +55,10 @@ public class SendMailServlet extends HttpServlet {
       mailTo = mailTo.trim();
       content = content.trim();
       mailFrom = mailFrom.trim();
-      if (mailTo.equals(ConfigService.SUPPORT_EMAIL)) {
+      if (mailTo.equals(HttpBudgetViewConstants.SUPPORT_EMAIL)) {
         mailer.sendToUs(Mailbox.SUPPORT, mailFrom, title, content);
       }
-      else if (mailTo.equals(ConfigService.ADMIN_EMAIL)) {
+      else if (mailTo.equals(HttpBudgetViewConstants.ADMIN_EMAIL)) {
         mailer.sendToUs(Mailbox.ADMIN, mailFrom, title, content);
       }
       resp.setStatus(HttpServletResponse.SC_OK);

@@ -1,7 +1,7 @@
 package com.budgetview.gui.backup;
 
 import com.budgetview.client.http.EncrypterToTransportServerAccess;
-import com.budgetview.client.http.MD5PasswordBasedEncryptor;
+import com.budgetview.http.MD5PasswordBasedEncryptor;
 import com.budgetview.client.http.PasswordBasedEncryptor;
 import com.budgetview.gui.PicsouApplication;
 import com.budgetview.gui.PicsouInit;

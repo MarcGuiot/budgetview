@@ -8,6 +8,7 @@ import com.budgetview.client.local.LocalClientTransport;
 import com.budgetview.functests.utils.FunctionalTestCase;
 import com.budgetview.functests.utils.LoggedInFunctionalTestCase;
 import com.budgetview.gui.config.ConfigService;
+import com.budgetview.http.MD5PasswordBasedEncryptor;
 import com.budgetview.model.Account;
 import com.budgetview.model.Category;
 import com.budgetview.model.PicsouModel;

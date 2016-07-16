@@ -1,12 +1,14 @@
 package com.budgetview.io.importer.http;
 
 import javax.servlet.ServletOutputStream;
+import javax.servlet.WriteListener;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintWriter;
+import java.util.Collection;
 import java.util.Locale;
 
 class DummyHttpServletResponse implements HttpServletResponse {
@@ -69,6 +71,22 @@ class DummyHttpServletResponse implements HttpServletResponse {
   public void setStatus(int i, String string) {
   }
 
+  public int getStatus() {
+    return 0;
+  }
+
+  public String getHeader(String s) {
+    return null;
+  }
+
+  public Collection<String> getHeaders(String s) {
+    return null;
+  }
+
+  public Collection<String> getHeaderNames() {
+    return null;
+  }
+
   public String getCharacterEncoding() {
     return null;
   }
@@ -79,6 +97,14 @@ class DummyHttpServletResponse implements HttpServletResponse {
 
   public ServletOutputStream getOutputStream() throws IOException {
     return new ServletOutputStream() {
+      public boolean isReady() {
+        return false;
+      }
+
+      public void setWriteListener(WriteListener writeListener) {
+
+      }
+
       public void write(int b) throws IOException {
         out.write(b);
       }
@@ -93,6 +119,10 @@ class DummyHttpServletResponse implements HttpServletResponse {
   }
 
   public void setContentLength(int i) {
+  }
+
+  public void setContentLengthLong(long l) {
+
   }
 
   public void setContentType(String string) {

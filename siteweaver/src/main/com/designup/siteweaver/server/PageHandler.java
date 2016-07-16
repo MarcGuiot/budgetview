@@ -7,11 +7,11 @@ import com.designup.siteweaver.server.upload.SiteUploader;
 import com.designup.siteweaver.server.utils.FileAccessHtmlLogger;
 import com.designup.siteweaver.server.utils.LocalOutput;
 import com.designup.siteweaver.xml.SiteParser;
-import org.mortbay.jetty.HttpConnection;
-import org.mortbay.jetty.Request;
-import org.mortbay.jetty.Server;
-import org.mortbay.jetty.handler.AbstractHandler;
-import org.mortbay.jetty.handler.ResourceHandler;
+import org.eclipse.jetty.server.HttpConnection;
+import org.eclipse.jetty.server.Request;
+import org.eclipse.jetty.server.Server;
+import org.eclipse.jetty.server.handler.AbstractHandler;
+import org.eclipse.jetty.server.handler.ResourceHandler;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -67,9 +67,9 @@ public class PageHandler extends AbstractHandler {
     });
   }
 
-  public void handle(String target, HttpServletRequest request, HttpServletResponse response, int dispatch) throws IOException, ServletException {
 
-    Request baseRequest = (request instanceof Request) ? (Request)request : HttpConnection.getCurrentConnection().getRequest();
+  public void handle(String target, Request request, HttpServletRequest httpServletRequest, HttpServletResponse response) throws IOException, ServletException {
+    Request baseRequest = (request instanceof Request) ? (Request)request : HttpConnection.getCurrentConnection().getHttpChannel().getRequest();
 
     if (configFile.lastModified() > lastConfigFileUpdate) {
       try {
@@ -121,7 +121,7 @@ public class PageHandler extends AbstractHandler {
     }
 
     for (ResourceHandler handler : resourceHandlerList) {
-      handler.handle(target, request, response, dispatch);
+      handler.handle(target, request, httpServletRequest, response);
       if (baseRequest.isHandled()) {
         return;
       }

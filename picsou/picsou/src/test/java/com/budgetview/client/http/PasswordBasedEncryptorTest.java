@@ -1,5 +1,6 @@
 package com.budgetview.client.http;
 
+import com.budgetview.http.MD5PasswordBasedEncryptor;
 import junit.framework.TestCase;
 
 public class PasswordBasedEncryptorTest extends TestCase {

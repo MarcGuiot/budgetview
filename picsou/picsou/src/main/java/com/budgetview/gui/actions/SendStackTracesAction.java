@@ -1,6 +1,7 @@
 package com.budgetview.gui.actions;
 
 import com.budgetview.gui.config.ConfigService;
+import com.budgetview.http.HttpBudgetViewConstants;
 import com.budgetview.model.User;
 import com.budgetview.utils.Lang;
 import org.globsframework.model.Glob;
@@ -58,7 +59,7 @@ public class SendStackTracesAction extends AbstractAction {
       }
       String content = buffer.toString();
       Log.write(content);
-      directory.get(ConfigService.class).sendMail(ConfigService.SUPPORT_EMAIL,
+      directory.get(ConfigService.class).sendMail(HttpBudgetViewConstants.SUPPORT_EMAIL,
                                                   mail,
                                                   "Thread dump",
                                                   content,

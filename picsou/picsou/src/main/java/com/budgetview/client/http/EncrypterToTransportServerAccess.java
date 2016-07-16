@@ -1,5 +1,6 @@
 package com.budgetview.client.http;
 
+import com.budgetview.http.MD5PasswordBasedEncryptor;
 import com.budgetview.shared.utils.PicsouGlobSerializer;
 import com.budgetview.client.ClientTransport;
 import com.budgetview.client.SerializableDeltaGlobSerializer;

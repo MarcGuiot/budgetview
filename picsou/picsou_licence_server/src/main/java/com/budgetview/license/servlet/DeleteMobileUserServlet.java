@@ -1,9 +1,9 @@
 package com.budgetview.license.servlet;
 
-import com.budgetview.gui.config.ConfigService;
+import com.budgetview.http.HttpBudgetViewConstants;
 import com.budgetview.license.mail.Mailbox;
 import com.budgetview.license.mail.Mailer;
-import com.budgetview.shared.utils.ComCst;
+import com.budgetview.shared.utils.MobileConstants;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.log4j.Logger;
 import org.globsframework.utils.Files;
@@ -26,10 +26,10 @@ public class DeleteMobileUserServlet extends AbstractHttpServlet {
   }
 
   protected void action(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) throws Exception {
-    String lang = httpServletRequest.getHeader(ComCst.HEADER_LANG);
-    String mail = URLDecoder.decode(httpServletRequest.getHeader(ConfigService.HEADER_MAIL), "UTF-8");
-    String codedMail = httpServletRequest.getHeader(ConfigService.CODING);
-    String sha1Mail = httpServletRequest.getHeader(ComCst.CRYPTED_INFO);
+    String lang = httpServletRequest.getHeader(MobileConstants.HEADER_LANG);
+    String mail = URLDecoder.decode(httpServletRequest.getHeader(HttpBudgetViewConstants.HEADER_MAIL), "UTF-8");
+    String codedMail = httpServletRequest.getHeader(HttpBudgetViewConstants.CODING);
+    String sha1Mail = httpServletRequest.getHeader(MobileConstants.CRYPTED_INFO);
     logger.info("receive delete for " + mail + " " + sha1Mail);
 
     byte[] decryptedMail = CreateMobileUserServlet.encryptor.decrypt(Base64.decodeBase64(URLDecoder.decode(codedMail, "UTF-8").getBytes()));
@@ -48,7 +48,7 @@ public class DeleteMobileUserServlet extends AbstractHttpServlet {
       else {
         if (!Files.deleteWithSubtree(dir)){
           logger.info("Directory found " + dir.getAbsolutePath() + " : " + mail + " but unable to delete it");
-          mailer.sendToUs(Mailbox.ADMIN, mail, "can not delete directory",
+          mailer.sendToUs(Mailbox.ADMIN, mail, "Cannot delete directory",
                           "delete the directory '" + dir.getAbsolutePath() + "'");
         } else {
           logger.info("Directory found " + dir.getAbsolutePath() + " : " + mail + " and deleted.");

@@ -2,13 +2,13 @@ package com.budgetview.license.functests;
 
 import com.budgetview.functests.checkers.MessageDialogChecker;
 import com.budgetview.functests.utils.OfxBuilder;
+import com.budgetview.gui.config.ConfigService;
 import com.budgetview.gui.startup.AppPaths;
 import com.budgetview.license.checkers.FtpServerChecker;
 import com.budgetview.functests.checkers.ApplicationChecker;
 import com.budgetview.functests.checkers.NewVersionChecker;
 import com.budgetview.functests.checkers.license.LicenseActivationChecker;
 import com.budgetview.gui.PicsouApplication;
-import com.budgetview.gui.config.ConfigService;
 import com.budgetview.gui.time.TimeService;
 import com.budgetview.license.ConnectedTestCase;
 import com.budgetview.license.model.SoftwareInfo;

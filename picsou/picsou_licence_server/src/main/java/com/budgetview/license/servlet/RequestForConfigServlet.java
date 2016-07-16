@@ -1,8 +1,8 @@
 package com.budgetview.license.servlet;
 
-import com.budgetview.shared.utils.ComCst;
+import com.budgetview.http.HttpBudgetViewConstants;
+import com.budgetview.shared.utils.MobileConstants;
 import org.apache.log4j.Logger;
-import com.budgetview.gui.config.ConfigService;
 import com.budgetview.license.mail.Mailer;
 import com.budgetview.license.model.License;
 import com.budgetview.license.model.RepoInfo;
@@ -69,14 +69,14 @@ public class RequestForConfigServlet extends HttpServlet {
     req.setCharacterEncoding("UTF-8");
     resp.setCharacterEncoding("UTF-8");
     String ip = req.getRemoteAddr();
-    String id = req.getHeader(ConfigService.HEADER_REPO_ID).trim();
-    String mail = req.getHeader(ConfigService.HEADER_MAIL);
-    String activationCode = req.getHeader(ConfigService.HEADER_CODE);
-    String count = req.getHeader(ConfigService.HEADER_COUNT);
-    String lang = req.getHeader(ComCst.HEADER_LANG);
-    String signature = req.getHeader(ConfigService.HEADER_SIGNATURE);
-    String configVersion = req.getHeader(ConfigService.HEADER_CONFIG_VERSION);
-    String jarVersion = req.getHeader(ConfigService.HEADER_JAR_VERSION);
+    String id = req.getHeader(HttpBudgetViewConstants.HEADER_REPO_ID).trim();
+    String mail = req.getHeader(HttpBudgetViewConstants.HEADER_MAIL);
+    String activationCode = req.getHeader(HttpBudgetViewConstants.HEADER_CODE);
+    String count = req.getHeader(HttpBudgetViewConstants.HEADER_COUNT);
+    String lang = req.getHeader(MobileConstants.HEADER_LANG);
+    String signature = req.getHeader(HttpBudgetViewConstants.HEADER_SIGNATURE);
+    String configVersion = req.getHeader(HttpBudgetViewConstants.HEADER_CONFIG_VERSION);
+    String jarVersion = req.getHeader(HttpBudgetViewConstants.HEADER_JAR_VERSION);
     VersionService.JarInfo info = null;
     try {
       info = new VersionService.JarInfo(Long.parseLong(jarVersion),
@@ -89,8 +89,8 @@ public class RequestForConfigServlet extends HttpServlet {
     if (mail != null && activationCode != null) {
       if (count == null || id == null || lang == null) {
         logInfo("For " + mail + " ip = " + ip + ", one element is missing count : " + count + ", id :" + id + ", lang : " + lang);
-        resp.setHeader(ConfigService.HEADER_IS_VALIDE, "false");
-        resp.setHeader(ConfigService.HEADER_MAIL_UNKNOWN, "true");
+        resp.setHeader(HttpBudgetViewConstants.HEADER_IS_VALIDE, "false");
+        resp.setHeader(HttpBudgetViewConstants.HEADER_MAIL_UNKNOWN, "true");
       }
       else {
         group = computeLicenseWithRetry(resp, mail, activationCode, Long.parseLong(count), id, lang, ip, info);
@@ -103,8 +103,8 @@ public class RequestForConfigServlet extends HttpServlet {
     ValueLongAccessor configVersionAccessor = new ValueLongAccessor();
     versionService.getVersion(mail, group, jarVersionAccessor, configVersionAccessor);
     long newJarVersion = jarVersionAccessor.getValue();
-    resp.setHeader(ConfigService.HEADER_NEW_JAR_VERSION, Long.toString(newJarVersion));
-    resp.setHeader(ConfigService.HEADER_NEW_CONFIG_VERSION, Long.toString(configVersionAccessor.getValue()));
+    resp.setHeader(HttpBudgetViewConstants.HEADER_NEW_JAR_VERSION, Long.toString(newJarVersion));
+    resp.setHeader(HttpBudgetViewConstants.HEADER_NEW_CONFIG_VERSION, Long.toString(configVersionAccessor.getValue()));
     resp.setStatus(HttpServletResponse.SC_OK);
   }
 
@@ -128,7 +128,7 @@ public class RequestForConfigServlet extends HttpServlet {
         db.commit();
       }
     }
-    resp.setHeader(ConfigService.HEADER_IS_VALIDE, "false");
+    resp.setHeader(HttpBudgetViewConstants.HEADER_IS_VALIDE, "false");
   }
 
   private void closeDb() {
@@ -279,7 +279,7 @@ public class RequestForConfigServlet extends HttpServlet {
       catch (Exception ex) {
         logger.error("RequestForConfigServlet:computeLicense retry", e);
       }
-      resp.setHeader(ConfigService.HEADER_IS_VALIDE, "true");
+      resp.setHeader(HttpBudgetViewConstants.HEADER_IS_VALIDE, "true");
     }
     return group;
   }
@@ -294,21 +294,21 @@ public class RequestForConfigServlet extends HttpServlet {
     GlobList globList = licenseRequest.execute(mail);
     db.commit();
     if (globList.isEmpty()) {
-      resp.setHeader(ConfigService.HEADER_IS_VALIDE, "false");
-      resp.setHeader(ConfigService.HEADER_MAIL_UNKNOWN, "true");
+      resp.setHeader(HttpBudgetViewConstants.HEADER_IS_VALIDE, "false");
+      resp.setHeader(HttpBudgetViewConstants.HEADER_MAIL_UNKNOWN, "true");
       logInfo("unknown_mail mail = " + mail);
     }
     else {
-      resp.setHeader(ConfigService.HEADER_IS_VALIDE, "true");
+      resp.setHeader(HttpBudgetViewConstants.HEADER_IS_VALIDE, "true");
       for (Glob license : globList) {
         if (license.get(License.REPO_ID) != null && license.get(License.REPO_ID).equals(repoId)) {
           if (count < license.get(License.ACCESS_COUNT)) {
-//            resp.setHeader(ConfigService.HEADER_IS_VALIDE, "false");
+//            resp.setHeader(HttpBudgetViewConstants.HEADER_IS_VALIDE, "false");
             if (Utils.equal(activationCode, license.get(License.LAST_ACTIVATION_CODE))) {
 //              String code = LicenseGenerator.generateActivationCode();
 //              updateNewActivationCodeRequest.execute(mail, code);
 //              db.commit();
-//              resp.setHeader(ConfigService.HEADER_MAIL_SENT, "true");
+//              resp.setHeader(HttpBudgetViewConstants.HEADER_MAIL_SENT, "true");
 //              mailer.reSendExistingLicenseOnError(lang, code, mail);
               logInfo("Run_count_decrease_send_new_license_to mail = " + mail);
             }
@@ -325,8 +325,8 @@ public class RequestForConfigServlet extends HttpServlet {
               return license.get(License.GROUP_ID);
             }
             else {
-//              resp.setHeader(ConfigService.HEADER_IS_VALIDE, "false");
-//              resp.setHeader(ConfigService.HEADER_ACTIVATION_CODE_NOT_VALIDE_MAIL_NOT_SENT, "true");
+//              resp.setHeader(HttpBudgetViewConstants.HEADER_IS_VALIDE, "false");
+//              resp.setHeader(HttpBudgetViewConstants.HEADER_ACTIVATION_CODE_NOT_VALIDE_MAIL_NOT_SENT, "true");
               logInfo("Different_code_for mail = " + mail);
               return null;
             }

@@ -49,9 +49,6 @@ public class DailyChartPainter {
                 if (value == null) {
                     continue;
                 }
-
-                Log.d("dailyChartPainter", "value= " + monthIndex + " / " + dayIndex + " ==> " + value);
-
                 int x = left + (width * (dayIndex + 1)) / values.length;
                 int y = metrics.y(value);
                 if (previousY == null) {

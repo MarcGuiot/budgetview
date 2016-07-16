@@ -1,7 +1,7 @@
 package com.budgetview.functests.checkers.mobile;
 
 import com.budgetview.shared.model.MobileModel;
-import com.budgetview.shared.utils.ComCst;
+import com.budgetview.shared.utils.MobileConstants;
 import com.budgetview.shared.utils.Crypt;
 import junit.framework.Assert;
 import org.apache.http.HttpResponse;
@@ -62,9 +62,9 @@ public class MobileAppChecker {
 
   private HttpResponse getHttpResponse(String email, Crypt crypt) throws URISyntaxException, NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeySpecException, InvalidKeyException, InvalidAlgorithmParameterException, IllegalBlockSizeException, BadPaddingException, IOException {
     HttpClient httpClient = new DefaultHttpClient();
-    URIBuilder builder = new URIBuilder("http://localhost:" + httpPort + ComCst.GET_MOBILE_DATA);
+    URIBuilder builder = new URIBuilder("http://localhost:" + httpPort + MobileConstants.GET_MOBILE_DATA);
     builder.addParameter("mail", URLEncoder.encode(email, "UTF-8"));
-    builder.addParameter(ComCst.CRYPTED_INFO,
+    builder.addParameter(MobileConstants.CRYPTED_INFO,
                          URLEncoder.encode(Crypt.encodeSHA1AndHex(crypt.encodeData(email.getBytes("UTF-8"))), "UTF-8"));
     HttpGet method = new HttpGet(builder.build());
     return httpClient.execute(method);
@@ -72,7 +72,7 @@ public class MobileAppChecker {
 
   public void sendEmail(String emailAddress) throws Exception {
     HttpClient httpClient = new DefaultHttpClient();
-    URIBuilder builder = new URIBuilder("http://localhost:" + httpPort + ComCst.SEND_MAIL_REMINDER_FROM_MOBILE);
+    URIBuilder builder = new URIBuilder("http://localhost:" + httpPort + MobileConstants.SEND_MAIL_REMINDER_FROM_MOBILE);
     builder.addParameter("mail", URLEncoder.encode(emailAddress, "UTF-8"));
     HttpPost method = new HttpPost(builder.build());
     HttpResponse response = httpClient.execute(method);

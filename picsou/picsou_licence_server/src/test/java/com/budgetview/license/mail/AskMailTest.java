@@ -1,16 +1,16 @@
 package com.budgetview.license.mail;
 
+import com.budgetview.http.HttpBudgetViewConstants;
 import com.budgetview.license.checkers.Email;
 import com.budgetview.license.model.License;
 import com.budgetview.license.model.MailError;
-import com.budgetview.shared.utils.ComCst;
+import com.budgetview.shared.utils.MobileConstants;
 import org.apache.http.Header;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.params.CoreProtocolPNames;
-import com.budgetview.gui.config.ConfigService;
 import com.budgetview.license.ConnectedTestCase;
 import org.globsframework.sqlstreams.SqlConnection;
 import org.globsframework.sqlstreams.constraints.Constraints;
@@ -43,8 +43,8 @@ public class AskMailTest extends ConnectedTestCase {
   private void checkMail(String lang, final String expected, String... nextExpected) throws IOException, InterruptedException {
     addUser("monPremierClient@pirate.du");
     HttpResponse response = sendRequest(lang);
-    Header header = response.getFirstHeader(ConfigService.HEADER_STATUS);
-    assertEquals(ConfigService.HEADER_MAIL_SENT, header.getValue());
+    Header header = response.getFirstHeader(HttpBudgetViewConstants.HEADER_STATUS);
+    assertEquals(HttpBudgetViewConstants.HEADER_MAIL_SENT, header.getValue());
     Email email = mailServer.checkReceivedMail("monPremierClient@pirate.du");
     for (String content : Utils.join(expected, nextExpected)) {
       email.checkContains(content);
@@ -55,8 +55,8 @@ public class AskMailTest extends ConnectedTestCase {
     HttpPost postMethod = new HttpPost("http://localhost:" + httpPort + "/mailTo");
     postMethod.getParams().setParameter(CoreProtocolPNames.HTTP_CONTENT_CHARSET, "UTF-8");
     postMethod.getParams().setParameter(CoreProtocolPNames.HTTP_ELEMENT_CHARSET, "UTF-8");
-    postMethod.setHeader(ConfigService.HEADER_MAIL, "monPremierClient@pirate.du");
-    postMethod.setHeader(ComCst.HEADER_LANG, lang);
+    postMethod.setHeader(HttpBudgetViewConstants.HEADER_MAIL, "monPremierClient@pirate.du");
+    postMethod.setHeader(MobileConstants.HEADER_LANG, lang);
     return client.execute(postMethod);
   }
 
@@ -65,11 +65,11 @@ public class AskMailTest extends ConnectedTestCase {
     String badMail = "monPremierClient@pirate";
     postMethod.getParams().setParameter(CoreProtocolPNames.HTTP_CONTENT_CHARSET, "UTF-8");
     postMethod.getParams().setParameter(CoreProtocolPNames.HTTP_ELEMENT_CHARSET, "UTF-8");
-    postMethod.setHeader(ConfigService.HEADER_MAIL, badMail);
-    postMethod.setHeader(ComCst.HEADER_LANG, "en");
+    postMethod.setHeader(HttpBudgetViewConstants.HEADER_MAIL, badMail);
+    postMethod.setHeader(MobileConstants.HEADER_LANG, "en");
     HttpResponse response = client.execute(postMethod);
-    Header header = response.getFirstHeader(ConfigService.HEADER_STATUS);
-    assertEquals(ConfigService.HEADER_MAIL_UNKNOWN, header.getValue());
+    Header header = response.getFirstHeader(HttpBudgetViewConstants.HEADER_STATUS);
+    assertEquals(HttpBudgetViewConstants.HEADER_MAIL_UNKNOWN, header.getValue());
     SqlConnection connection = db.getConnection();
     connection.getQueryBuilder(MailError.TYPE, Constraints.equal(MailError.MAIL, badMail))
       .getQuery().executeUnique();

@@ -1,6 +1,6 @@
 package com.budgetview.license.servlet;
 
-import com.budgetview.shared.utils.ComCst;
+import com.budgetview.shared.utils.MobileConstants;
 import org.apache.log4j.Logger;
 import com.budgetview.license.mail.Mailer;
 import org.globsframework.utils.Strings;
@@ -25,14 +25,14 @@ public class SendMailFromMobileServlet extends HttpServlet {
     try {
       req.setCharacterEncoding("UTF-8");
       resp.setCharacterEncoding("UTF-8");
-      String mailTo = req.getParameter(ComCst.MAIL);
+      String mailTo = req.getParameter(MobileConstants.MAIL);
       logger.info("request for reminder " + mailTo);
       if (Strings.isNullOrEmpty(mailTo)) {
         logger.info("sendMail: missing mail address " + (mailTo == null ? "<no email>" : mailTo));
         resp.setStatus(HttpServletResponse.SC_NOT_FOUND);
         return;
       }
-      String lang = req.getParameter(ComCst.HEADER_LANG);
+      String lang = req.getParameter(MobileConstants.HEADER_LANG);
       if (Strings.isNullOrEmpty(lang)){
         lang = "fr";
       }

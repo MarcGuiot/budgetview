@@ -4,9 +4,9 @@ import com.designup.siteweaver.server.PageHandler;
 import com.designup.siteweaver.server.upload.FileAccess;
 import com.designup.siteweaver.server.upload.FtpFileAccess;
 import com.designup.siteweaver.server.upload.NoOpFileAccess;
-import org.mortbay.jetty.Connector;
-import org.mortbay.jetty.Server;
-import org.mortbay.jetty.nio.SelectChannelConnector;
+import org.eclipse.jetty.server.Connector;
+import org.eclipse.jetty.server.Server;
+import org.eclipse.jetty.server.ServerConnector;
 
 import java.io.File;
 import java.io.IOException;
@@ -21,10 +21,10 @@ public class SiteWeaver {
     checkUsage(args);
 
     Server server = new Server();
-    Connector connector = new SelectChannelConnector();
+    ServerConnector connector = new ServerConnector(server);
     connector.setHost("localhost");
     connector.setPort(8080);
-    connector.setMaxIdleTime(1000 * 60 * 60);
+    connector.setSoLingerTime(1000 * 60 * 60);
     server.addConnector(connector);
 
     server.setHandler(new PageHandler(new File(args[0]), getFileAccess(args)));

@@ -3,9 +3,9 @@ package com.budgetview.license.functests;
 import com.budgetview.functests.checkers.FeedbackDialogChecker;
 import com.budgetview.functests.checkers.OperationChecker;
 import com.budgetview.gui.PicsouApplication;
-import com.budgetview.gui.config.ConfigService;
 import com.budgetview.functests.checkers.ApplicationChecker;
 import com.budgetview.gui.startup.components.AppLogger;
+import com.budgetview.http.HttpBudgetViewConstants;
 import com.budgetview.license.ConnectedTestCase;
 import com.budgetview.utils.Lang;
 import org.globsframework.utils.Files;
@@ -18,8 +18,8 @@ public class FeedbackTest extends ConnectedTestCase {
   private int previousRetry;
 
   protected void setUp() throws Exception {
-    previousRetry = ConfigService.RETRY_PERIOD;
-    ConfigService.RETRY_PERIOD = 500;
+    previousRetry = HttpBudgetViewConstants.RETRY_PERIOD;
+    HttpBudgetViewConstants.RETRY_PERIOD = 500;
     super.setUp();
     application = new ApplicationChecker();
   }
@@ -28,7 +28,7 @@ public class FeedbackTest extends ConnectedTestCase {
     super.tearDown();
     application.dispose();
     application = null;
-    ConfigService.RETRY_PERIOD = previousRetry;
+    HttpBudgetViewConstants.RETRY_PERIOD = previousRetry;
   }
 
   private FeedbackDialogChecker openFeedback() {

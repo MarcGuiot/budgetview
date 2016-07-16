@@ -13,80 +13,41 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
+        <version>2.3.2</version>
         <configuration>
           <source>1.5</source>
           <target>1.5</target>
         </configuration>
       </plugin>
     </plugins>
-    <!--<filters>-->
-    <!--<filter>src/main/filters/filter.properties</filter>-->
-    <!--</filters>-->
-    <!--<resources>-->
-    <!--<resource>-->
-    <!--<directory>src/main/java</directory>-->
-    <!--<excludes>-->
-    <!--<exclude>**/*.java</exclude>-->
-    <!--</excludes>-->
-    <!--</resource>-->
-    <!--<resource>-->
-    <!--<directory>src/main/resources</directory>-->
-    <!--<filtering>true</filtering>-->
-    <!--</resource>-->
-    <!--</resources>-->
   </build>
 
-
-  <dependencyManagement>
-    <dependencies>
-      <dependency>
-        <groupId>junit</groupId>
-        <artifactId>junit</artifactId>
-        <version>3.8.1</version>
-        <type>jar</type>
-        <scope>test</scope>
-      </dependency>
-      <dependency>
-        <groupId>org.globsframework</groupId>
-        <artifactId>globs</artifactId>
-        <version>1.0</version>
-        <type>jar</type>
-      </dependency>
-      <dependency>
-        <groupId>asm</groupId>
-        <artifactId>asm</artifactId>
-        <version>3.1</version>
-        <type>jar</type>
-      </dependency>
-      <dependency>
-        <groupId>asm</groupId>
-        <artifactId>asm-util</artifactId>
-        <version>3.1</version>
-        <!--<optional>true</optional>-->
-        <type>jar</type>
-        <scope>test</scope>
-      </dependency>
-    </dependencies>
-  </dependencyManagement>
-
-
   <dependencies>
-
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
+      <version>3.8.1</version>
+      <type>jar</type>
+      <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>org.globsframework</groupId>
       <artifactId>globs</artifactId>
+      <version>1.0</version>
+      <type>jar</type>
     </dependency>
     <dependency>
       <groupId>asm</groupId>
       <artifactId>asm</artifactId>
+      <version>3.3.1</version>
+      <type>jar</type>
     </dependency>
     <dependency>
       <groupId>asm</groupId>
       <artifactId>asm-util</artifactId>
+      <version>3.3.1</version>
+      <type>jar</type>
+      <scope>test</scope>
     </dependency>
   </dependencies>
 

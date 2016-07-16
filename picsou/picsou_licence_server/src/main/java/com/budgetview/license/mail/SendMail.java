@@ -20,7 +20,7 @@ public class SendMail {
     }
     String destination = arguments.get(0);
     if (!(destination.contains("regis") || destination.contains("marc"))) {
-      throw new RuntimeException("invalid adress " + destination);
+      throw new RuntimeException("Invalid address: " + destination);
     }
     BufferedReader stream = new BufferedReader(new InputStreamReader(System.in));
     String next;
@@ -34,20 +34,12 @@ public class SendMail {
     }
   }
 
-  static public void sendMail(String subject, String destination, String content) throws MessagingException {
-    String mailHost = "ns0.ovh.net";
-    int mailPort = 587;
+  public static void sendMail(String subject, String destination, String content) throws MessagingException {
     Mailer mailer = new Mailer();
-    mailer.setPort(mailHost, mailPort);
-
-
-//    String[] addrs = Strings.split(s, ',');
-//    for (String addr : addrs) {
     mailer.sendMail(Mailbox.ADMIN, destination, "nobody", subject, content, "UTF-8", "text");
-//    }
   }
 
-  static private String getSubject(List<String> arguments) {
+  private static String getSubject(List<String> arguments) {
     String subject = "none";
     for (Iterator<String> iterator = arguments.iterator(); iterator.hasNext(); ) {
       String argument = iterator.next();

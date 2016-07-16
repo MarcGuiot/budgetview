@@ -1,5 +1,6 @@
 package com.budgetview.license.functests;
 
+import com.budgetview.gui.config.ConfigService;
 import com.budgetview.license.model.License;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
@@ -8,13 +9,12 @@ import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.params.CoreProtocolPNames;
 import org.apache.http.params.HttpParams;
-import com.budgetview.gui.config.ConfigService;
 import com.budgetview.license.ConnectedTestCase;
 import com.budgetview.license.servlet.LicenseServer;
 import com.budgetview.license.servlet.NewUserServlet;
+import org.eclipse.jetty.servlet.ServletHolder;
 import org.globsframework.model.GlobList;
 import org.globsframework.sqlstreams.constraints.Constraints;
-import org.mortbay.jetty.servlet.ServletHolder;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -41,7 +41,7 @@ public class PaypalTest extends ConnectedTestCase {
     SERVER_URL = System.getProperty(ConfigService.COM_APP_LICENSE_URL);
     System.setProperty(NewUserServlet.PAYPAL_CONFIRM_URL_PROPERTY, SERVER_URL + "/Confirm");
     licenseServer.init();
-    licenseServer.add(new ServletHolder(payPalConfirm), "/Confirm");
+    licenseServer.add(payPalConfirm, "/Confirm");
     startServersWithoutLicence();
   }
 

@@ -3,13 +3,15 @@ package com.budgetview;
 import com.budgetview.io.importer.http.*;
 import com.budgetview.server.ServerDirectory;
 import com.budgetview.server.session.SessionService;
+import org.eclipse.jetty.server.HttpConfiguration;
+import org.eclipse.jetty.server.SecureRequestCustomizer;
+import org.eclipse.jetty.server.Server;
+import org.eclipse.jetty.server.ServerConnector;
+import org.eclipse.jetty.servlet.ServletContextHandler;
+import org.eclipse.jetty.servlet.ServletHolder;
+import org.eclipse.jetty.util.ssl.SslContextFactory;
 import org.globsframework.utils.Files;
 import org.globsframework.utils.directory.Directory;
-import org.mortbay.jetty.Server;
-import org.mortbay.jetty.bio.SocketConnector;
-import org.mortbay.jetty.security.SslSocketConnector;
-import org.mortbay.jetty.servlet.Context;
-import org.mortbay.jetty.servlet.ServletHolder;
 
 import java.io.File;
 import java.util.Locale;
@@ -22,7 +24,7 @@ public class PicsouServer {
   public static final String KEYSTORE = "picsou.server.keystore";
   public static final String DELETE_SERVER_PROPERTY = "picsou.server.prevayler.delete";
   public static final String SERVER_PREVAYLER_PATH_PROPERTY = "picsou.server.prevayler.path";
-  private Server jetty;
+  private Server server;
   private ServerDirectory serverDirectory;
   private static final int ONE_HOUR_IN_MS = 60 * 60 * 1000;
   private Timer timer;
@@ -34,30 +36,34 @@ public class PicsouServer {
 
   public void start() throws Exception {
     Locale.setDefault(Locale.ENGLISH);
-    jetty = new Server();
+    server = new Server();
     String useSsl = System.getProperty(USE_SSHL);
     if (useSsl == null || useSsl.equalsIgnoreCase("true")) {
-      SslSocketConnector connector = new SslSocketConnector();
-      String keyStore = System.getProperty(KEYSTORE);
-      if (keyStore == null) {
-        keyStore = "picsou_server/resources/.keystore";
-      }
-      connector.setKeystore(keyStore);
+      ServerConnector sslConnector = new ServerConnector(server);
       String host = System.getProperty(HOST_PROPERTY);
       if (host == null) {
         host = "localhost";
       }
-      System.out.println("host = " + host);
-      connector.setHost(host);
-      connector.setPassword("ninja600");
-      connector.setPort(8443);
-      jetty.addConnector(connector);
+      sslConnector.setHost(host);
+      sslConnector.setPort(8443);
+      HttpConfiguration https = new HttpConfiguration();
+      https.addCustomizer(new SecureRequestCustomizer());
+      SslContextFactory sslContextFactory = new SslContextFactory();
+      String keyStore = System.getProperty(KEYSTORE);
+      if (keyStore == null) {
+        keyStore = "picsou_server/resources/.keystore";
+      }
+      sslContextFactory.setKeyStorePath(keyStore);
+      sslContextFactory.setKeyStorePassword("ninja600");
+      sslContextFactory.setKeyManagerPassword("ninja600");
+      server.addConnector(sslConnector);
+
     }
     else {
-      SocketConnector connector = new SocketConnector();
+      ServerConnector connector = new ServerConnector(server);
       connector.setHost("localhost");
       connector.setPort(8443);
-      jetty.addConnector(connector);
+      server.addConnector(connector);
     }
 
     String prevaylerPath = getServerPrevaylerPath();
@@ -67,7 +73,7 @@ public class PicsouServer {
 
     initGarbageSession();
 
-    Context context = new Context(jetty, "/", Context.SESSIONS);
+    ServletContextHandler context = new ServletContextHandler(server, "/", ServletContextHandler.SESSIONS);
     context.setResourceBase("classes");
     serverDirectory = new ServerDirectory(prevaylerPath, false);
     Directory directory = serverDirectory.getServiceDirectory();
@@ -79,7 +85,7 @@ public class PicsouServer {
     context.addServlet(new ServletHolder(new DisconnectServlet(directory)), "/disconnect");
     context.addServlet(new ServletHolder(new ConnectServlet(directory)), "/connect");
 
-    jetty.start();
+    server.start();
   }
 
   private void initGarbageSession() {
@@ -119,7 +125,7 @@ public class PicsouServer {
     try {
       timerTask.cancel();
       timer.cancel();
-      jetty.stop();
+      server.stop();
       serverDirectory.close();
     }
     catch (Exception e) {

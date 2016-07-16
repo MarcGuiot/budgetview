@@ -1,6 +1,6 @@
 package com.designup.siteweaver.model;
 
-import org.mortbay.util.URIUtil;
+import org.eclipse.jetty.util.URIUtil;
 
 import java.io.File;
 import java.io.IOException;

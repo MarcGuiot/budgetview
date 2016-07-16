@@ -31,6 +31,10 @@ import org.globsframework.model.GlobRepository;
 import org.globsframework.utils.Files;
 import org.globsframework.xml.XmlGlobParser;
 
+import javax.net.ssl.HostnameVerifier;
+import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLSession;
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -39,7 +43,8 @@ import java.net.URLEncoder;
 public class HttpsDataSync implements DataSync {
   public static final String URL_BV =
     "https://register.mybudgetview.fr:1443";
-  //  "https://192.168.1.17:1443";
+//    "https://192.168.1.17:1443";
+//  "http://192.168.1.17:8080";
   private static final String LOCAL_TEMP_FILE_NAME = "temp.xml";
 
   private Activity activity;
@@ -124,35 +129,42 @@ public class HttpsDataSync implements DataSync {
 
     private DownloadResult downloadUrl() {
       InputStream inputStream = null;
-      HttpResponse response = null;
-      HttpGet get = null;
       try {
-        DefaultHttpClient client = createHttpClient();
-
         Crypt crypt = new Crypt(HttpsDataSync.this.password.toCharArray());
 
-        Uri.Builder uri = Uri.parse(URL_BV + ComCst.GET_MOBILE_DATA).buildUpon();
-        uri.appendQueryParameter(ComCst.MAIL, URLEncoder.encode(email, "UTF-8"));
-
+        StringBuilder params = new StringBuilder();
+        params.append(ComCst.MAIL).append("=").append(URLEncoder.encode(email, "UTF-8"));
         String data = Crypt.encodeSHA1AndHex(crypt.encodeData(email.getBytes("UTF-8")));
-        uri.appendQueryParameter(ComCst.CRYPTED_INFO, URLEncoder.encode(data, "UTF-8"));
+        params.append("&").append(ComCst.CRYPTED_INFO).append("=").append(URLEncoder.encode(data, "UTF-8"));
+        URL url = new URL(URL_BV + ComCst.GET_MOBILE_DATA + "?" + params);
 
-        get = new HttpGet(uri.toString());
-        response = client.execute(get, new BasicHttpContext());
+        Log.d("HttpsDataSync", "url:" + url.toString());
 
-        if (response.getStatusLine().getStatusCode() != 200) {
+        HttpURLConnection connection = (HttpURLConnection)url.openConnection();
+        if (url.getProtocol().equals("https")) {
+          HttpsURLConnection https = (HttpsURLConnection)connection;
+        }
+        connection.setRequestMethod("GET");
+        connection.setRequestProperty("USER-AGENT", "Mozilla/5.0");
+        connection.setRequestProperty("ACCEPT-LANGUAGE", "en-US,en;0.5");
+
+        int responseCode = connection.getResponseCode();
+        if (responseCode != 200) {
+          Log.d("HttpsDataSync", "responseCode:" + responseCode);
           return DownloadResult.error(R.string.downloadError);
         }
-        Header statusHeader = response.getFirstHeader(ComCst.STATUS);
-        Header majorVersionHeader = response.getFirstHeader(ComCst.MAJOR_VERSION_NAME);
-        Header minorVersionHeader = response.getFirstHeader(ComCst.MINOR_VERSION_NAME);
+
+        String statusHeader = connection.getHeaderField(ComCst.STATUS);
+        String majorVersionHeader = connection.getHeaderField(ComCst.MAJOR_VERSION_NAME);
+        String minorVersionHeader = connection.getHeaderField(ComCst.MINOR_VERSION_NAME);
         if (majorVersionHeader == null || minorVersionHeader == null || statusHeader == null) {
+          Log.d("HttpsDataSync", "missing header:" + statusHeader + " / " + majorVersionHeader + " / " + minorVersionHeader);
           return DownloadResult.error(R.string.downloadError);
         }
-        if (!statusHeader.getValue().equalsIgnoreCase("ok")) {
-          return DownloadResult.error(statusHeader.getValue());
+        if (!statusHeader.equalsIgnoreCase("ok")) {
+          return DownloadResult.error(statusHeader);
         }
-        int contentMajorVersion = Integer.parseInt(majorVersionHeader.getValue());
+        int contentMajorVersion = Integer.parseInt(majorVersionHeader);
         if (contentMajorVersion > MobileModel.MAJOR_VERSION) {
           return DownloadResult.error(R.string.downloadFailedUpdateMobile);
         }
@@ -160,7 +172,7 @@ public class HttpsDataSync implements DataSync {
           return DownloadResult.error(R.string.downloadFailedUpdateDesktop);
         }
 
-        inputStream = response.getEntity().getContent();
+        inputStream = connection.getInputStream();
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
         Files.copyStream(inputStream, stream);
 
@@ -176,7 +188,7 @@ public class HttpsDataSync implements DataSync {
         return DownloadResult.success();
       }
       catch (Throwable e) {
-        Log.d("HttpsDataSync", "downloadUrl", e);
+        Log.d("HttpsDataSync", "downloadUrl error", e);
         return DownloadResult.error(e.getMessage());
       }
       finally {

@@ -1,8 +1,10 @@
 package com.budgetview.license;
 
 import com.budgetview.license.servlet.LicenseServer;
-import org.mortbay.jetty.servlet.ServletHolder;
+import com.budgetview.license.servlet.WebServer;
+import org.eclipse.jetty.servlet.ServletHolder;
 
+import javax.servlet.http.HttpServlet;
 import java.io.IOException;
 
 public class LicenseServerChecker {
@@ -10,17 +12,19 @@ public class LicenseServerChecker {
   private boolean started;
 
   public LicenseServerChecker(String databaseUrl, int port) throws IOException {
+
+    System.setProperty(WebServer.HTTP_PORT_PROPERTY, Integer.toString(port));
+
     server = new LicenseServer();
-    server.usePort(null, port);
     server.setMailPort("localhost", 2500);
     server.setDatabaseUrl(databaseUrl);
   }
 
-  public void add(ServletHolder holder, String name) {
+  public void add(HttpServlet holder, String name) {
     server.addServlet(holder, name);
   }
 
-  public void init() {
+  public void init() throws Exception {
     server.init();
   }
 

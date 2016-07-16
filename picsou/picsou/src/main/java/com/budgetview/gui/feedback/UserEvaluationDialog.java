@@ -4,6 +4,7 @@ import com.budgetview.gui.PicsouApplication;
 import com.budgetview.gui.components.dialogs.CancelAction;
 import com.budgetview.gui.components.dialogs.PicsouDialog;
 import com.budgetview.gui.config.ConfigService;
+import com.budgetview.http.HttpBudgetViewConstants;
 import com.budgetview.model.User;
 import com.budgetview.model.UserPreferences;
 import com.budgetview.utils.Lang;
@@ -143,7 +144,7 @@ public class UserEvaluationDialog {
     public void actionPerformed(ActionEvent e) {
       sendingState.setVisible(true);
       sendingState.setIndeterminate(true);
-      directory.get(ConfigService.class).sendMail(ConfigService.ADMIN_EMAIL,
+      directory.get(ConfigService.class).sendMail(HttpBudgetViewConstants.ADMIN_EMAIL,
                                                   emailField.getText(),
                                                   getHeaderText(),
                                                   getMessageText(),
