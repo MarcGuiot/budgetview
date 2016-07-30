@@ -1,4 +1,4 @@
-package com.budgetview.client.http;
+package com.budgetview.client.serialization;
 
 import org.globsframework.utils.exceptions.GlobsException;
 

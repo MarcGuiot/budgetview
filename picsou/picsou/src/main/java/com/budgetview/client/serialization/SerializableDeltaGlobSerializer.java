@@ -1,4 +1,4 @@
-package com.budgetview.client;
+package com.budgetview.client.serialization;
 
 import com.budgetview.server.model.ServerDelta;
 import com.budgetview.server.model.ServerState;

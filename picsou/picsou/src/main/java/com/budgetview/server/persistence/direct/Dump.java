@@ -93,7 +93,7 @@ public class Dump {
     }
   }
 
-  static public void deserializeSnapshot(SerializedInput serializedInput) {
+  public static void deserializeSnapshot(SerializedInput serializedInput) {
     int globTypeCount = serializedInput.readNotNullInt();
     while (globTypeCount > 0) {
       String globTypeName = serializedInput.readJavaString();

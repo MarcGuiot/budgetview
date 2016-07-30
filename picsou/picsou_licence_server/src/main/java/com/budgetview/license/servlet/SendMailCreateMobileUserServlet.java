@@ -39,7 +39,7 @@ public class SendMailCreateMobileUserServlet extends AbstractHttpServlet {
       httpServletResponse.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
       return;
     }
-    String dirName = ReceiveDataServlet.generateDirName(mail);
+    String dirName = PostDataServlet.generateDirName(mail);
     File dir = new File(root, dirName);
     if (dir.exists()) {
       String content = "Directory already exist " + dir.getAbsolutePath();

@@ -71,7 +71,7 @@ public class VersionService {
     }
   }
 
-  static public class JarInfo {
+  public static class JarInfo {
     private long jarVersion;
     private long configVersion;
 

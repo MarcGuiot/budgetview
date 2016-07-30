@@ -1,4 +1,4 @@
-package com.budgetview.gui.config;
+package com.budgetview.gui.config.download;
 
 import org.apache.commons.net.ftp.FTPClient;
 import org.globsframework.utils.Log;
@@ -10,7 +10,7 @@ public class DownloadThread extends Thread {
   private File pathToConfig;
   private String ftpUrl;
   private long version;
-  private Completed completed;
+  private CompletionCallback completionCallback;
   private String fileName;
   private int lastJarSize = 12 * 1024 * 1024;
   private volatile SizeOutputStream stream;
@@ -27,14 +27,14 @@ public class DownloadThread extends Thread {
     return -1;
   }
 
-  public interface Completed {
+  public interface CompletionCallback {
     void complete(File name, long version);
   }
 
-  public DownloadThread(String ftpUrl, String rootDirectory, String fileName, long version, Completed completed) {
+  public DownloadThread(String ftpUrl, String rootDirectory, String fileName, long version, CompletionCallback completionCallback) {
     this.ftpUrl = ftpUrl;
     this.version = version;
-    this.completed = completed;
+    this.completionCallback = completionCallback;
     setDaemon(true);
     pathToConfig = new File(rootDirectory);
     pathToConfig.mkdirs();
@@ -68,7 +68,7 @@ public class DownloadThread extends Thread {
           File targetFile = new File(pathToConfig, fileName);
           if (tempFile.renameTo(targetFile)) {
             tempFile = null;
-            completed.complete(targetFile, version);
+            completionCallback.complete(targetFile, version);
           }
           else {
             Log.write("Fail to rename from " + tempFile.getName() + " to " + targetFile.getName());

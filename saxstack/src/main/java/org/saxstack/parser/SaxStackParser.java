@@ -83,7 +83,7 @@ public class SaxStackParser extends DefaultHandler {
     node.complete();
   }
 
-  static public class SAXExceptionHolder extends SAXException {
+  public static class SAXExceptionHolder extends SAXException {
     private ExceptionHolder exceptionHolder;
 
     public SAXExceptionHolder(ExceptionHolder e) {

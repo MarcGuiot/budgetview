@@ -3,7 +3,7 @@ package com.budgetview.server.persistence.direct;
 import org.globsframework.utils.collections.MultiMap;
 import org.prevayler.implementation.PrevaylerDirectory;
 import com.budgetview.server.model.ServerDelta;
-import com.budgetview.client.SerializableDeltaGlobSerializer;
+import com.budgetview.client.serialization.SerializableDeltaGlobSerializer;
 import org.globsframework.utils.Log;
 import org.globsframework.utils.exceptions.IOFailure;
 import org.globsframework.utils.serialization.SerializedOutput;

@@ -17,7 +17,8 @@ public class WebServer {
 
   public static final String HTTP_PORT_PROPERTY = "bv.http.port"; // License: null - Mobile: 8080
   public static final String HTTPS_PORT_PROPERTY = "bv.https.port"; // License: 443 - Mobile: 1443
-  public static final String KEYSTORE = "bv.https.keystore"; // full bv.jks path
+  public static final String KEYSTORE_PATH = "bv.https.keystore"; // full bv.jks path
+  public static final String KEYSTORE_PWD = "bv.https.keystore.pwd"; // full bv.jks path
 
   private final Integer httpsPort;
   private final Integer httpPort;
@@ -41,10 +42,10 @@ public class WebServer {
     httpConfig.setOutputBufferSize(32768);
 
     String sslKeystorePassword = readPassword();
-    String keystorePath = System.getProperty(KEYSTORE);
+    String keystorePath = System.getProperty(KEYSTORE_PATH);
     File keystoreFile = new File(keystorePath);
     if (!keystoreFile.exists()) {
-      throw new InvalidParameter("Could not load keystore file: " + keystorePath + " - must be set with " + KEYSTORE + " property");
+      throw new InvalidParameter("Could not load keystore file: " + keystorePath + " - must be set with " + KEYSTORE_PATH + " property");
     }
 
     SslContextFactory sslContextFactory = new SslContextFactory();
@@ -53,7 +54,6 @@ public class WebServer {
     sslContextFactory.setKeyManagerPassword(sslKeystorePassword);
     sslContextFactory.setTrustStorePath(keystorePath);
     sslContextFactory.setTrustStorePassword(sslKeystorePassword);
-//      sslContextFactory.setIncludeCipherSuites(MobileConstants.CYPHER_SUITES);
 
 //    SslSocketConnector sslConnector = new SslSocketConnector();
 //    sslConnector.setHeaderBufferSize(1024 * 1024);
@@ -110,6 +110,11 @@ public class WebServer {
   }
 
   private static String readPassword() {
+    String password = System.getProperty(KEYSTORE_PWD, null);
+    if (Strings.isNotEmpty(password)) {
+      return password;
+    }
+
     Console console = System.console();
     if (console == null) {
       System.out.println("Couldn't get Console instance");

@@ -38,10 +38,10 @@ public class DeleteMobileUserServlet extends AbstractHttpServlet {
       httpServletResponse.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
       return;
     }
-    String dirName = ReceiveDataServlet.generateDirName(mail);
+    String dirName = PostDataServlet.generateDirName(mail);
     File dir = new File(root, dirName);
     if (dir.exists()) {
-      if (!ReceiveDataServlet.checkSha1Code(sha1Mail, dir)){
+      if (!PostDataServlet.checkSha1Code(sha1Mail, dir)){
         logger.info("bad sha1 code");
         httpServletResponse.setStatus(HttpServletResponse.SC_FORBIDDEN);
       }

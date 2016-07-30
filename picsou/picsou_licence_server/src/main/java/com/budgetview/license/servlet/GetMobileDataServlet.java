@@ -14,11 +14,11 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.net.URLDecoder;
 
-public class RetrieveDataServlet extends HttpServlet {
+public class GetMobileDataServlet extends HttpServlet {
   static Logger logger = Logger.getLogger("RetrieveDataServlet");
   private String root;
 
-  public RetrieveDataServlet(String root, Directory directory) {
+  public GetMobileDataServlet(String root, Directory directory) {
     this.root = root;
   }
 
@@ -37,14 +37,14 @@ public class RetrieveDataServlet extends HttpServlet {
     mail = URLDecoder.decode(mail, "UTF-8");
     sha1Mail = URLDecoder.decode(sha1Mail, "UTF-8");
     logger.info("For " + mail + " sha1 " + sha1Mail);
-    String fileName = ReceiveDataServlet.generateDirName(mail);
+    String fileName = PostDataServlet.generateDirName(mail);
     File rootDir = new File(root, fileName);
     if (!rootDir.exists()) {
       httpServletResponse.setHeader(MobileConstants.STATUS, Lang.get("mobile.no.account", lang));
       httpServletResponse.setStatus(HttpServletResponse.SC_FORBIDDEN);
     }
     else {
-      if (!ReceiveDataServlet.checkSha1Code(sha1Mail, rootDir)){
+      if (!PostDataServlet.checkSha1Code(sha1Mail, rootDir)){
         logger.info("bad sha1 code => bad password");
         httpServletResponse.setHeader(MobileConstants.STATUS, Lang.get("mobile.password.invalid", lang));
         httpServletResponse.setStatus(HttpServletResponse.SC_FORBIDDEN);

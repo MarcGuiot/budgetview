@@ -6,7 +6,7 @@ import java.io.FileFilter;
 
 public class PrevalenceTest {
 
-	static public void delete(String dir) {
+	public static void delete(String dir) {
 	    delete(new File(dir));
 	}
 

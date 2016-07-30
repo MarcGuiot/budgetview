@@ -1,6 +1,5 @@
 package com.budgetview.license.servlet;
 
-import com.budgetview.http.HttpBudgetViewConstants;
 import com.budgetview.license.mail.Mailer;
 import com.budgetview.shared.utils.MobileConstants;
 import org.apache.log4j.Logger;
@@ -45,8 +44,8 @@ public class MobileServer {
 
     String pathForMobileData = getDataDirectoryPath();
     webServer = new WebServer("register.mybudgetview.fr", 8080, 1443);
-    webServer.add(new ReceiveDataServlet(pathForMobileData), HttpBudgetViewConstants.REQUEST_CLIENT_TO_SERVER_DATA);
-    webServer.add(new RetrieveDataServlet(pathForMobileData, directory), MobileConstants.GET_MOBILE_DATA);
+    webServer.add(new PostDataServlet(pathForMobileData), MobileConstants.POST_MOBILE_DATA);
+    webServer.add(new GetMobileDataServlet(pathForMobileData, directory), MobileConstants.GET_MOBILE_DATA);
     webServer.add(new SendMailCreateMobileUserServlet(pathForMobileData, directory, webServer.getHttpPort()), MobileConstants.SEND_MAIL_TO_CONFIRM_MOBILE);
     webServer.add(new DeleteMobileUserServlet(pathForMobileData, directory), MobileConstants.DELETE_MOBILE_ACCOUNT);
     webServer.add(new CreateMobileUserServlet(pathForMobileData, directory), MobileConstants.CREATE_MOBILE_USER);

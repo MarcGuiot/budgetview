@@ -30,7 +30,7 @@ public class NodeTypeFilter implements Filter {
     nodeType.pop();
   }
 
-  static public class FilteredXmlTag extends XmlTag {
+  public static class FilteredXmlTag extends XmlTag {
     private XmlTag tag;
     private NodeType nodeType;
     private XmlTag parentTag;

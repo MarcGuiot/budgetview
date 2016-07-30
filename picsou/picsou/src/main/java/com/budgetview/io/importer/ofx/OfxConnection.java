@@ -115,7 +115,7 @@ public class OfxConnection {
     }
   }
 
-  static public String sendBuffer(URL url, ByteArrayOutputStream outBuffer) {
+  public static String sendBuffer(URL url, ByteArrayOutputStream outBuffer) {
       return sendWithHttpClient(url, outBuffer);
   }
 

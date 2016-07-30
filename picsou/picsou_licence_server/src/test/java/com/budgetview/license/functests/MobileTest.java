@@ -22,15 +22,12 @@ import java.io.IOException;
 public class MobileTest extends ConnectedTestCase {
   private ApplicationChecker application;
   private MobileAppChecker mobileApp;
-  private static final File DIRECTORY = new File("/tmp/data/");
 
   public void setUp() throws Exception {
     super.setUp();
     startServers();
     application = new ApplicationChecker();
     application.start();
-    Files.deleteSubtreeOnly(DIRECTORY);
-    DIRECTORY.mkdir();
     mobileApp = new MobileAppChecker(httpPort);
   }
 
@@ -51,7 +48,7 @@ public class MobileTest extends ConnectedTestCase {
     application.enableAllAddOns();
 
     String mail = "testCreateDelete@mybudgetview.fr";
-    SharingConnection connection = requestNewMobileAccount(mail);
+    MobileConnection connection = requestNewMobileAccount(mail);
     followUrl(connection.url, 302, "http://www.mybudgetview.com/mobile/account-ok", mail);
 
     application.openMobileAccountDialog()
@@ -102,8 +99,8 @@ public class MobileTest extends ConnectedTestCase {
 
     String emailAddress = "testGetData@mybudgetview.fr";
 
-    SharingConnection sharingConnection = requestNewMobileAccount(emailAddress);
-    String url = sharingConnection.url;
+    MobileConnection mobileConnection = requestNewMobileAccount(emailAddress);
+    String url = mobileConnection.url;
     followUrl(url, 302, "http://www.mybudgetview.com/mobile/account-ok", emailAddress);
 
     String path = OfxBuilder
@@ -118,7 +115,7 @@ public class MobileTest extends ConnectedTestCase {
       .checkSuccessMessageContains("Data sent to server")
       .close();
 
-    mobileApp.checkLogin(emailAddress, sharingConnection.password);
+    mobileApp.checkLogin(emailAddress, mobileConnection.password);
 
     // change password
     String url2 = requestAccountWithNewPassword(emailAddress).url;
@@ -148,7 +145,7 @@ public class MobileTest extends ConnectedTestCase {
 
   public void testError() throws Exception {
     application.enableAllAddOns();
-    Files.deleteWithSubtree(DIRECTORY);
+    Files.deleteWithSubtree(MOBILE_DATA_DIR);
     String mail = "testError@mybudgetview.fr";
     String url = requestNewMobileAccount(mail).url;
     followUrl(url, 302, "http://www.mybudgetview.com/mobile/internal-error");
@@ -175,21 +172,21 @@ public class MobileTest extends ConnectedTestCase {
       .save();
     application.getOperations().importOfxFile(path);
 
-    SharingConnection sharingConnection = requestNewMobileAccount(emailAddress);
+    MobileConnection mobileConnection = requestNewMobileAccount(emailAddress);
     TestUtils.retry(new Runnable() {
       public void run() {
-        String[] list = DIRECTORY.list();
+        String[] list = MOBILE_DATA_DIR.list();
         assertTrue(list != null && list.length == 1);
-        list = new File(DIRECTORY, list[0]).list();
+        list = new File(MOBILE_DATA_DIR, list[0]).list();
         assertTrue(list != null && list.length == 2);
         assertTrue(list[0].startsWith("pending"));
         assertTrue(list[1].startsWith("pending"));
       }
     });
-    String url = sharingConnection.url;
+    String url = mobileConnection.url;
     followUrl(url, 302, "http://www.mybudgetview.com/mobile/account-ok", emailAddress);
 
-    mobileApp.checkLogin(emailAddress, sharingConnection.password);
+    mobileApp.checkLogin(emailAddress, mobileConnection.password);
   }
 
   private void followUrl(String url, final int expectedReturnCode, final String expectedRedirect) throws IOException, InterruptedException {
@@ -197,7 +194,7 @@ public class MobileTest extends ConnectedTestCase {
     HttpGet method = new HttpGet(url);
     HttpClientParams.setRedirecting(method.getParams(), false);
     HttpResponse response = httpClient.execute(method);
-    if (expectedReturnCode == 302){
+    if (expectedReturnCode == 302) {
       int code = response.getStatusLine().getStatusCode();
       assertTrue("got " + code + " but " + expectedReturnCode + " was expected.", code == 302 || code == 200);
     }
@@ -212,15 +209,15 @@ public class MobileTest extends ConnectedTestCase {
     email.checkContains("To install the Android app");
   }
 
-  private SharingConnection requestAccountWithNewPassword(String userMail) throws InterruptedException {
+  private MobileConnection requestAccountWithNewPassword(String userMail) throws InterruptedException {
     return requestMobileAccount(userMail, "newpassword");
   }
 
-  private SharingConnection requestNewMobileAccount(String userMail) throws InterruptedException {
+  private MobileConnection requestNewMobileAccount(String userMail) throws InterruptedException {
     return requestMobileAccount(userMail, null);
   }
 
-  private SharingConnection requestMobileAccount(String userMail, String requestedPassword) throws InterruptedException {
+  private MobileConnection requestMobileAccount(String userMail, String requestedPassword) throws InterruptedException {
     CreateMobileAccountChecker dialog = application.openMobileAccountDialog();
     if (Strings.isNotEmpty(requestedPassword)) {
       dialog.setNewPassword(requestedPassword);
@@ -237,14 +234,14 @@ public class MobileTest extends ConnectedTestCase {
     String url = content.substring(httpStartIndex + "href=\"".length(), httpEndIndex);
     url = url.replace("http://www.mybudgetview.fr", "http://localhost");
     Thread.sleep(500); // on attend que les donnée pending soit envoyé au serveur
-    return new SharingConnection(url, activatedPassword);
+    return new MobileConnection(url, activatedPassword);
   }
 
-  private class SharingConnection {
+  private class MobileConnection {
     final String url;
     final String password;
 
-    private SharingConnection(String url, String password) {
+    private MobileConnection(String url, String password) {
       this.url = url;
       this.password = password;
     }

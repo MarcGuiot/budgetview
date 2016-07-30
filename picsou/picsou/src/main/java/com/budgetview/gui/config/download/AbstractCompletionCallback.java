@@ -1,4 +1,4 @@
-package com.budgetview.gui.config;
+package com.budgetview.gui.config.download;
 
 import org.globsframework.model.GlobRepository;
 import org.globsframework.utils.directory.Directory;
@@ -6,7 +6,7 @@ import org.globsframework.utils.directory.Directory;
 import javax.swing.*;
 import java.io.File;
 
-public abstract class AbstractJarReceived implements DownloadThread.Completed {
+public abstract class AbstractCompletionCallback implements DownloadThread.CompletionCallback {
   protected Directory directory;
   protected GlobRepository repository;
   protected File jarFile;

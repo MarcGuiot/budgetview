@@ -1,6 +1,6 @@
 package com.budgetview.http;
 
-import com.budgetview.client.http.PasswordBasedEncryptor;
+import com.budgetview.client.serialization.PasswordBasedEncryptor;
 import org.globsframework.utils.Log;
 import org.globsframework.utils.exceptions.GlobsException;
 import org.globsframework.utils.exceptions.UnexpectedApplicationState;

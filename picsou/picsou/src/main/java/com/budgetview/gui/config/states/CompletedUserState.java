@@ -1,9 +1,10 @@
-package com.budgetview.gui.config;
+package com.budgetview.gui.config.states;
 
+import com.budgetview.gui.config.UserState;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.utils.directory.Directory;
 
-class CompletedUserState implements UserState {
+public class CompletedUserState implements UserState {
   private String mail;
 
   public CompletedUserState(String mail) {

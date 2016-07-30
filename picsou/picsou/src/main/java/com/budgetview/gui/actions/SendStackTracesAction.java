@@ -1,5 +1,6 @@
 package com.budgetview.gui.actions;
 
+import com.budgetview.client.mail.MailService;
 import com.budgetview.gui.config.ConfigService;
 import com.budgetview.http.HttpBudgetViewConstants;
 import com.budgetview.model.User;
@@ -59,11 +60,11 @@ public class SendStackTracesAction extends AbstractAction {
       }
       String content = buffer.toString();
       Log.write(content);
-      directory.get(ConfigService.class).sendMail(HttpBudgetViewConstants.SUPPORT_EMAIL,
+      directory.get(MailService.class).sendMail(HttpBudgetViewConstants.SUPPORT_EMAIL,
                                                   mail,
                                                   "Thread dump",
                                                   content,
-                                                  new ConfigService.Listener() {
+                                                  new MailService.Listener() {
                                                     public void sent(String mail, String title, String content) {
                                                       Log.write("Mail sent from " + mail + " - title : " + title + "\n" + content);
                                                     }
@@ -71,7 +72,8 @@ public class SendStackTracesAction extends AbstractAction {
                                                     public void sendFailed(String mail, String title, String content) {
                                                       Log.write("Failed to send mail from " + mail + " - title : " + title + "\n" + content);
                                                     }
-                                                  });
+                                                  },
+                                                repository);
     }
     catch (InterruptedException e) {
       Log.write("interrupted thread in send");

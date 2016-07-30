@@ -39,7 +39,7 @@ public class LicenseGenerator {
   }
 
 
-  static public String generateActivationCode() {
+  public static String generateActivationCode() {
     SecureRandom random = new SecureRandom();
     int value = 0;
     while (value < 1000) {

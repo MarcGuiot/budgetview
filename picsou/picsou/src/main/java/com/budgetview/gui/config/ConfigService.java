@@ -1,54 +1,40 @@
 package com.budgetview.gui.config;
 
 import com.budgetview.bank.BankPluginService;
-import com.budgetview.gui.startup.AppPaths;
-import com.budgetview.http.HttpBudgetViewConstants;
-import com.budgetview.model.LicenseActivationState;
-import com.budgetview.model.UserPreferences;
-import com.budgetview.shared.model.MobileModel;
-import com.budgetview.shared.utils.MobileConstants;
-import com.budgetview.shared.utils.Crypt;
-import com.budgetview.utils.Inline;
-import org.apache.commons.codec.binary.Base64;
-import org.apache.http.Header;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.conn.ClientConnectionManager;
-import org.apache.http.conn.scheme.PlainSocketFactory;
-import org.apache.http.conn.scheme.Scheme;
-import org.apache.http.conn.scheme.SchemeRegistry;
-import org.apache.http.conn.ssl.AbstractVerifier;
-import org.apache.http.conn.ssl.SSLSocketFactory;
-import org.apache.http.conn.ssl.TrustStrategy;
-import org.apache.http.entity.ByteArrayEntity;
-import org.apache.http.entity.StringEntity;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.impl.conn.BasicClientConnectionManager;
-import org.apache.http.params.CoreConnectionPNames;
-import org.apache.http.params.CoreProtocolPNames;
+import com.budgetview.client.ClientParams;
+import com.budgetview.client.ConnectionStatus;
 import com.budgetview.client.ServerAccess;
-import com.budgetview.http.MD5PasswordBasedEncryptor;
+import com.budgetview.client.http.Http;
+import com.budgetview.gui.config.download.ConfigReceivedCallback;
+import com.budgetview.gui.config.download.DownloadThread;
+import com.budgetview.gui.config.states.AnonymousUser;
+import com.budgetview.gui.config.states.CompletedUserState;
+import com.budgetview.gui.config.states.LocallyInvalidUser;
+import com.budgetview.gui.config.states.LocallyValidUser;
+import com.budgetview.gui.startup.AppPaths;
 import com.budgetview.gui.utils.KeyService;
+import com.budgetview.http.HttpBudgetViewConstants;
 import com.budgetview.io.importer.analyzer.TransactionAnalyzerFactory;
 import com.budgetview.model.AppVersionInformation;
+import com.budgetview.model.LicenseActivationState;
 import com.budgetview.model.User;
+import com.budgetview.shared.utils.MobileConstants;
+import com.budgetview.utils.Inline;
 import com.budgetview.utils.Lang;
+import org.apache.http.Header;
+import org.apache.http.HttpResponse;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.utils.Log;
-import org.globsframework.utils.Ref;
 import org.globsframework.utils.Utils;
 import org.globsframework.utils.directory.Directory;
 import org.globsframework.utils.serialization.Encoder;
 
-import javax.net.ssl.SSLException;
-import javax.servlet.http.HttpServletResponse;
 import javax.swing.*;
-import java.io.*;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 import java.lang.reflect.Constructor;
-import java.net.URLEncoder;
-import java.nio.charset.UnsupportedCharsetException;
-import java.security.cert.X509Certificate;
 import java.util.Enumeration;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
@@ -56,40 +42,14 @@ import java.util.zip.ZipEntry;
 
 public class ConfigService {
 
-  private static final String APPNAME = "budgetview";
-  public static final String COM_APP_LICENSE_URL = APPNAME + ".license.url";
-  public static final String COM_APP_MOBILE_URL = APPNAME + ".mobile.url";
-  public static final String COM_APP_FTP_URL = APPNAME + ".license.ftp.url";
-
-  static final byte[] expectedPublicKey = {48, -126, 1, 34, 48, 13, 6, 9, 42, -122, 72, -122, -9, 13, 1, 1, 1, 5, 0, 3, -126, 1,
-    15, 0, 48, -126, 1, 10, 2, -126, 1, 1, 0, -83, 16, 42, 127, -66, -24, 109, 66, 114,
-    8, -45, 44, 99, 77, -86, 60, 41, -113, -113, -123, 57, 54, 28, 40, -29, 73, 4, -103,
-    66, -108, 26, 29, -38, -101, 23, -66, 31, -125, 52, -59, 51, -80, 121, 22, -8, -18,
-    -57, -48, 63, 15, 30, -15, -19, -113, 90, 7, -75, -31, 1, 77, 95, 118, -79, -102, -34,
-    -87, -46, -118, -23, 38, -30, -97, 26, -125, 79, -115, -9, 110, -110, -20, 14, -93,
-    49, -111, 78, -73, -9, -29, -22, -41, -91, -47, -37, 81, 23, -88, 9, -32, -116, 17,
-    32, -121, -114, 14, -99, -117, 120, 86, -27, -122, -35, 103, -104, -97, 108, 34, 55,
-    -34, 96, -56, -64, -5, -5, 90, -120, 8, -84, 25, -105, 62, -83, 36, 115, 114, 97, 22,
-    -120, -29, 3, -79, 85, 49, 81, -70, -54, 13, -35, -28, 117, 75, 14, -19, -84, -98, 33,
-    125, -54, -93, -15, -1, -15, 87, -114, 104, -27, -6, 22, 11, 63, 39, -46, 106, -42, 70,
-    -107, -40, 103, -120, 89, 2, 126, -9, 6, -21, 57, -34, -116, -36, 115, -105, 113, -35,
-    59, -64, -121, 96, -67, -122, 87, 17, 30, 119, 70, -104, -50, 125, -12, 66, -100, 101,
-    -82, -62, 24, -95, -91, 58, 55, -88, 34, -41, -100, -13, -101, -74, 52, 115, -97, -3,
-    124, 59, 15, -50, 71, -16, -17, -26, -124, 53, -120, 46, -53, 36, 103, -86, -92, -57,
-    -31, -77, -106, -30, -88, -18, -48, -117, 39, 107, 2, 3, 1, 0, 1};
-
-  private String LICENSE_SERVER_URL = HttpBudgetViewConstants.LICENSE_SERVER_URL;
-  private String MOBILE_SERVER_URL = HttpBudgetViewConstants.MOBILE_SERVER_URL;
-  private String FTP_SERVER_URL = HttpBudgetViewConstants.FTP_SERVER_URL;
   private long localJarVersion = -1;
   private long localConfigVersion = -1;
   private String applicationVersion;
   private UserState userState = null;
-  private boolean mailSend = false;
   private DownloadThread dowloadJarThread;
   private DownloadThread dowloadConfigThread;
-  private ConfigReceive configReceive;
-  private JarReceive jarReceive;
+  private ConfigReceivedCallback configReceive;
+  private JarReceivedCallback jarReceive;
   private File currentConfigFile;
   private byte[] repoId;
   private Directory directory = null;
@@ -98,16 +58,8 @@ public class ConfigService {
 
   public ConfigService(String applicationVersion, Long jarVersion, Long localConfigVersion, File currentConfigFile) {
     this.currentConfigFile = currentConfigFile;
-    Utils.beginRemove();
-    HttpBudgetViewConstants.RETRY_PERIOD = 500;
-
-    LICENSE_SERVER_URL = System.getProperty(COM_APP_LICENSE_URL, HttpBudgetViewConstants.LICENSE_SERVER_URL);
-    MOBILE_SERVER_URL = System.getProperty(COM_APP_MOBILE_URL, HttpBudgetViewConstants.MOBILE_SERVER_URL);
-    FTP_SERVER_URL = System.getProperty(COM_APP_FTP_URL, HttpBudgetViewConstants.FTP_SERVER_URL);
-
-    Utils.endRemove();
     this.applicationVersion = applicationVersion;
-    localJarVersion = jarVersion;
+    this.localJarVersion = jarVersion;
     this.localConfigVersion = localConfigVersion;
   }
 
@@ -117,28 +69,12 @@ public class ConfigService {
 
   // return a translated message
   synchronized public String askForNewCodeByMail(String mail) {
-    HttpPost postMethod = null;
+    Http.Post postRequest = Http.utf8Post(ClientParams.getLicenseServerUrl(HttpBudgetViewConstants.REQUEST_FOR_MAIL))
+      .setHeader(HttpBudgetViewConstants.HEADER_MAIL, mail)
+      .setHeader(MobileConstants.HEADER_LANG, Lang.get("lang"));
     try {
-      String url = LICENSE_SERVER_URL + HttpBudgetViewConstants.REQUEST_FOR_MAIL;
-      HttpResponse response;
-      try {
-        postMethod = createPostMethod(url);
-        postMethod.setHeader(HttpBudgetViewConstants.HEADER_MAIL, mail);
-        postMethod.setHeader(MobileConstants.HEADER_LANG, Lang.get("lang"));
-        HttpClient httpClient = getNewHttpClient();
-        response = httpClient.execute(postMethod);
-      }
-      catch (Exception e) {
-        if (postMethod != null) {
-          postMethod.releaseConnection();
-        }
-        postMethod = createPostMethod(url);
-        postMethod.setHeader(HttpBudgetViewConstants.HEADER_MAIL, mail);
-        postMethod.setHeader(MobileConstants.HEADER_LANG, Lang.get("lang"));
-        HttpClient httpClient = getNewHttpClient();
-        response = httpClient.execute(postMethod);
-      }
-      updateConnectionStatusOk();
+      HttpResponse response = postRequest.executeWithRetry();
+      ConnectionStatus.setOk(repository);
       int statusCode = response.getStatusLine().getStatusCode();
       if (statusCode == 200) {
         Header status = response.getFirstHeader(HttpBudgetViewConstants.HEADER_STATUS);
@@ -161,85 +97,35 @@ public class ConfigService {
       }
     }
     catch (IOException e) {
-      updateConnectionStatus(e);
+      ConnectionStatus.checkException(repository, e);
       return Lang.get("license.mail.send.error");
     }
     catch (Exception e) {
-      updateConnectionStatus(e);
+      ConnectionStatus.checkException(repository, e);
       return Lang.get("license.mail.send.error");
     }
     finally {
-      if (postMethod != null) {
-        postMethod.releaseConnection();
-      }
-    }
-  }
-
-  static private HttpPost createPostMethod(String url) {
-    HttpPost postMethod = new HttpPost(url);
-    postMethod.getParams().setParameter(CoreProtocolPNames.HTTP_CONTENT_CHARSET, "UTF-8");
-    postMethod.getParams().setParameter(CoreProtocolPNames.HTTP_ELEMENT_CHARSET, "UTF-8");
-    return postMethod;
-  }
-
-  private HttpClient getNewHttpClient() {
-    try {
-      SchemeRegistry schemeRegistry = new SchemeRegistry();
-      schemeRegistry.register(new Scheme("https", 443,
-                                         new SSLSocketFactory(new TrustStrategy() {
-                                           public boolean isTrusted(X509Certificate[] chain, String authType) {
-//                                             byte[] encoded = chain[0].getPublicKey().getEncoded();
-//                                             if (!Arrays.equals(encoded, expectedPublicKey)){
-//                                               return false;
-//                                             }
-                                             return true;
-                                           }
-                                         },
-                                                              new AbstractVerifier() {
-                                                                public void verify(String host, String[] cns, String[] subjectAlts) throws SSLException {
-                                                                }
-                                                              }
-                                         )));
-      schemeRegistry.register(new Scheme("http", 5000, new PlainSocketFactory()));
-      ClientConnectionManager connectionManager = new BasicClientConnectionManager(schemeRegistry);
-      HttpClient httpClient = new DefaultHttpClient(connectionManager);
-      httpClient.getParams().setParameter(CoreConnectionPNames.SO_TIMEOUT, 10000);
-      return httpClient;
-    }
-    catch (Exception e) {
-      throw new RuntimeException(e);
+      postRequest.dispose();
     }
   }
 
   synchronized private boolean sendRequestForNewConfig(byte[] repoId, String mail, String signature,
                                                        long launchCount, String activationCode) throws IOException {
-    HttpPost postMethod = null;
+    this.repoId = repoId;
+    Http.Post postRequest =
+      createNewConfigRequest(repoId, mail, signature, launchCount, activationCode,
+                             ClientParams.getLicenseServerUrl(HttpBudgetViewConstants.REQUEST_FOR_CONFIG));
     try {
-      this.repoId = repoId;
-      String url = LICENSE_SERVER_URL + HttpBudgetViewConstants.REQUEST_FOR_CONFIG;
-      HttpResponse response;
-      try {
-        postMethod = createNewConfigPostMethod(repoId, mail, signature, launchCount, activationCode, url);
-        HttpClient httpClient = getNewHttpClient();
-        response = httpClient.execute(postMethod);
-      }
-      catch (Exception e) {
-        if (postMethod != null) {
-          postMethod.releaseConnection();
-        }
-        postMethod = createNewConfigPostMethod(repoId, mail, signature, launchCount, activationCode, url);
-        HttpClient httpClient = getNewHttpClient();
-        response = httpClient.execute(postMethod);
-      }
+      HttpResponse response = postRequest.executeWithRetry();
       int statusCode = response.getStatusLine().getStatusCode();
       if (statusCode == 200) {
         Header configVersionHeader = response.getFirstHeader(HttpBudgetViewConstants.HEADER_NEW_CONFIG_VERSION);
         if (configVersionHeader != null) {
           long newConfigVersion = Long.parseLong(configVersionHeader.getValue());
           if (localConfigVersion < newConfigVersion) {
-            configReceive = new ConfigReceive(directory, repository);
+            configReceive = new ConfigReceivedCallback(this, directory, repository);
             dowloadConfigThread =
-              new DownloadThread(FTP_SERVER_URL, AppPaths.getBankConfigPath(),
+              new DownloadThread(ClientParams.getFtpServerUrl(), AppPaths.getBankConfigPath(),
                                  generateConfigJarName(newConfigVersion), newConfigVersion, configReceive);
             dowloadConfigThread.start();
           }
@@ -248,9 +134,9 @@ public class ConfigService {
         if (jarVersionHeader != null) {
           long newJarVersion = Long.parseLong(jarVersionHeader.getValue());
           if (localJarVersion < newJarVersion) {
-            jarReceive = new JarReceive(directory, repository, serverAccess);
+            jarReceive = new JarReceivedCallback(directory, repository, serverAccess);
             dowloadJarThread =
-              new DownloadThread(FTP_SERVER_URL, AppPaths.getJarPath(),
+              new DownloadThread(ClientParams.getFtpServerUrl(), AppPaths.getJarPath(),
                                  generatePicsouJarName(newJarVersion), newJarVersion, jarReceive);
             dowloadJarThread.start();
           }
@@ -278,26 +164,27 @@ public class ConfigService {
       return false;
     }
     finally {
-      if (postMethod != null) {
-        postMethod.releaseConnection();
-      }
+      postRequest.dispose();
     }
   }
 
-  private HttpPost createNewConfigPostMethod(byte[] repoId, String mail, String signature, long launchCount, String activationCode, String url) {
-    HttpPost postMethod = createPostMethod(url);
-    postMethod.setHeader(HttpBudgetViewConstants.HEADER_CONFIG_VERSION, Long.toString(localConfigVersion));
-    postMethod.setHeader(HttpBudgetViewConstants.HEADER_JAR_VERSION, Long.toString(localJarVersion));
-    postMethod.setHeader(HttpBudgetViewConstants.HEADER_APPLICATION_VERSION, applicationVersion);
-    postMethod.setHeader(HttpBudgetViewConstants.HEADER_REPO_ID, Encoder.byteToString(repoId));
-    postMethod.setHeader(MobileConstants.HEADER_LANG, Lang.get("lang"));
+  private Http.Post createNewConfigRequest(byte[] repoId, String mail, String signature, long launchCount, String activationCode, String url) {
+    Http.Post postRequest = Http.utf8Post(url);
+    postRequest
+      .setHeader(HttpBudgetViewConstants.HEADER_CONFIG_VERSION, Long.toString(localConfigVersion))
+      .setHeader(HttpBudgetViewConstants.HEADER_JAR_VERSION, Long.toString(localJarVersion))
+      .setHeader(HttpBudgetViewConstants.HEADER_APPLICATION_VERSION, applicationVersion)
+      .setHeader(HttpBudgetViewConstants.HEADER_REPO_ID, Encoder.byteToString(repoId))
+      .setHeader(MobileConstants.HEADER_LANG, Lang.get("lang"));
+
     if (signature != null && signature.length() > 1 && mail != null && activationCode != null) {
-      postMethod.setHeader(HttpBudgetViewConstants.HEADER_MAIL, mail);
-      postMethod.setHeader(HttpBudgetViewConstants.HEADER_SIGNATURE, signature);
-      postMethod.setHeader(HttpBudgetViewConstants.HEADER_CODE, activationCode);
-      postMethod.setHeader(HttpBudgetViewConstants.HEADER_COUNT, Long.toString(launchCount));
+      postRequest
+        .setHeader(HttpBudgetViewConstants.HEADER_MAIL, mail)
+        .setHeader(HttpBudgetViewConstants.HEADER_SIGNATURE, signature)
+        .setHeader(HttpBudgetViewConstants.HEADER_CODE, activationCode)
+        .setHeader(HttpBudgetViewConstants.HEADER_COUNT, Long.toString(launchCount));
     }
-    return postMethod;
+    return postRequest;
   }
 
   private boolean checkMailSent(HttpResponse response) {
@@ -305,74 +192,16 @@ public class ConfigService {
     return header != null && header.getValue().equals("true");
   }
 
-
-  public synchronized boolean sendMobileData(String mail, String password, byte[] bytes, Ref<String> message, boolean pending) {
-    HttpClient client = getNewHttpClient();
-    HttpPost postMethod;
-    postMethod = createPostMethod(MOBILE_SERVER_URL + HttpBudgetViewConstants.REQUEST_CLIENT_TO_SERVER_DATA);
-    try {
-      MD5PasswordBasedEncryptor encryptor =
-        new MD5PasswordBasedEncryptor(HttpBudgetViewConstants.MOBILE_SALT.getBytes(), password.toCharArray(), 5);
-
-      byte[] data = encryptor.encrypt(bytes);
-      byte[] encryptedMail = encryptor.encrypt(mail.getBytes("UTF-8"));
-      String sha1Mail = Crypt.encodeSHA1AndHex(encryptedMail);
-      postMethod.setHeader(MobileConstants.HEADER_LANG, Lang.get("lang"));
-      postMethod.setHeader(HttpBudgetViewConstants.HEADER_MAIL, URLEncoder.encode(mail, "UTF-8"));
-      postMethod.setHeader(MobileConstants.CRYPTED_INFO, URLEncoder.encode(sha1Mail, "UTF-8"));
-      postMethod.setHeader(MobileConstants.MAJOR_VERSION_NAME, Integer.toString(MobileModel.MAJOR_VERSION));
-      postMethod.setHeader(MobileConstants.MINOR_VERSION_NAME, Integer.toString(MobileModel.MINOR_VERSION));
-      if (pending) {
-        postMethod.setHeader(HttpBudgetViewConstants.HEADER_PENDING, "true");
-      }
-      else {
-        postMethod.setHeader(HttpBudgetViewConstants.HEADER_PENDING, "false");
-      }
-      postMethod.setEntity(new ByteArrayEntity(data));
-      HttpResponse response = client.execute(postMethod);
-      updateConnectionStatusOk();
-      int statusCode = response.getStatusLine().getStatusCode();
-      if (statusCode == HttpServletResponse.SC_FORBIDDEN) {
-        Header configVersionHeader = response.getFirstHeader(MobileConstants.STATUS);
-        message.set(configVersionHeader.getValue());
-        return false;
-      }
-      return true;
-    }
-    catch (Exception e) {
-      Log.write("while sending data", e);
-      message.set(e.getMessage());
-      updateConnectionStatus(e);
-      return false;
-    }
-    finally {
-      postMethod.releaseConnection();
-    }
-  }
-
-  synchronized public void sendRegister(String mail, String code, final GlobRepository repository) {
+  synchronized public void sendRegistration(String mail, String code, final GlobRepository repository) {
     Utils.beginRemove();
-    if (LICENSE_SERVER_URL == null || LICENSE_SERVER_URL.length() == 0) {
+    if (!ClientParams.isLicenseServerUrlSet()) {
       return;
     }
     Utils.endRemove();
-    HttpPost postMethod = null;
-    HttpResponse response;
+    String url = ClientParams.getLicenseServerUrl(HttpBudgetViewConstants.REQUEST_FOR_REGISTER);
+    Http.Post postRequest = createRegisterRequest(mail, code, url);
     try {
-      String url = LICENSE_SERVER_URL + HttpBudgetViewConstants.REQUEST_FOR_REGISTER;
-      try {
-        postMethod = createRegisterPostMethod(mail, code, url);
-        HttpClient httpClient = getNewHttpClient();
-        response = httpClient.execute(postMethod);
-      }
-      catch (IOException e) {
-        if (postMethod != null) {
-          postMethod.releaseConnection();
-        }
-        postMethod = createRegisterPostMethod(mail, code, url);
-        HttpClient httpClient = getNewHttpClient();
-        response = httpClient.execute(postMethod);
-      }
+      HttpResponse response = postRequest.executeWithRetry();
       int statusCode = response.getStatusLine().getStatusCode();
       if (statusCode == 200) {
         SwingUtilities.invokeLater(new ComputeRegisterResponse(repository, response));
@@ -382,7 +211,7 @@ public class ConfigService {
       }
     }
     catch (final Exception e) {
-      updateConnectionStatus(e);
+      ConnectionStatus.checkException(repository, e);
       updateRepository(repository, LicenseActivationState.ACTIVATION_FAILED_CAN_NOT_CONNECT);
       // pas de stack (juste les message) risque de faciliter le piratage
       Thread thread = new Thread() {
@@ -403,19 +232,16 @@ public class ConfigService {
       thread.start();
     }
     finally {
-      if (postMethod != null) {
-        postMethod.releaseConnection();
-      }
+      postRequest.dispose();
     }
   }
 
-  private HttpPost createRegisterPostMethod(String mail, String code, String url) {
-    final HttpPost postMethod = createPostMethod(url);
-    postMethod.setHeader(HttpBudgetViewConstants.HEADER_MAIL, mail);
-    postMethod.setHeader(HttpBudgetViewConstants.HEADER_CODE, code);
-    postMethod.setHeader(HttpBudgetViewConstants.HEADER_REPO_ID, Encoder.byteToString(repoId));
-    postMethod.setHeader(MobileConstants.HEADER_LANG, Lang.get("lang"));
-    return postMethod;
+  private Http.Post createRegisterRequest(String mail, String code, String url) {
+    return Http.utf8Post(url)
+      .setHeader(HttpBudgetViewConstants.HEADER_MAIL, mail)
+      .setHeader(HttpBudgetViewConstants.HEADER_CODE, code)
+      .setHeader(HttpBudgetViewConstants.HEADER_REPO_ID, Encoder.byteToString(repoId))
+      .setHeader(MobileConstants.HEADER_LANG, Lang.get("lang"));
   }
 
   private void updateRepository(final GlobRepository repository, final LicenseActivationState cause) {
@@ -456,97 +282,11 @@ public class ConfigService {
   }
 
   public void sendUsageData(String msg) throws IOException {
-    String url = LICENSE_SERVER_URL + HttpBudgetViewConstants.SEND_USE_INFO;
-
-    HttpPost postMethod = createPostMethod(url);
-    postMethod.setHeader(HttpBudgetViewConstants.HEADER_USE_INFO, msg);
-    HttpClient httpClient = getNewHttpClient();
-    httpClient.execute(postMethod);
+    Http.utf8Post(ClientParams.getLicenseServerUrl(HttpBudgetViewConstants.SEND_USE_INFO))
+      .setHeader(HttpBudgetViewConstants.HEADER_USE_INFO, msg)
+      .execute();
   }
 
-  public boolean createMobileAccount(String mail, String password, Ref<String> message) {
-    HttpPost postMethod = null;
-    try {
-      String url = MOBILE_SERVER_URL + MobileConstants.SEND_MAIL_TO_CONFIRM_MOBILE;
-      postMethod = createPostMessage(mail, password, url);
-      HttpClient httpClient = getNewHttpClient();
-      HttpResponse response = httpClient.execute(postMethod);
-      updateConnectionStatusOk();
-      if (response.getStatusLine().getStatusCode() != 200) {
-        message.set(Lang.get("mobile.user.connection.failed"));
-        return false;
-      }
-      Header isValid = response.getFirstHeader(HttpBudgetViewConstants.HEADER_IS_VALIDE);
-      if (isValid != null && isValid.getValue().equalsIgnoreCase("true")) {
-        message.set(Lang.get("mobile.user.create.mail.sent"));
-        return true;
-      }
-      message.set(Lang.get("mobile.user.create.already.exist"));
-      return false;
-    }
-    catch (Exception e) {
-      Log.write("error", e);
-      updateConnectionStatus(e);
-    }
-    finally {
-      if (postMethod != null) {
-        postMethod.releaseConnection();
-      }
-    }
-    message.set(Lang.get("mobile.user.connection.failed"));
-    return false;
-  }
-
-  private HttpPost createPostMessage(String mail, String password, final String url) throws UnsupportedEncodingException {
-
-    MD5PasswordBasedEncryptor encryptor =
-      new MD5PasswordBasedEncryptor(HttpBudgetViewConstants.MOBILE_SALT.getBytes(), HttpBudgetViewConstants.SOME_PASSWORD.toCharArray(), 5);
-
-    byte[] localKey = Base64.encodeBase64(encryptor.encrypt(mail.getBytes("UTF-8")));
-
-    MD5PasswordBasedEncryptor userEncryptor =
-      new MD5PasswordBasedEncryptor(HttpBudgetViewConstants.MOBILE_SALT.getBytes(), password.toCharArray(), 5);
-    byte[] encryptedMail = userEncryptor.encrypt(mail.getBytes("UTF-8"));
-    String sha1Mail = Crypt.encodeSHA1AndHex(encryptedMail);
-
-    HttpPost postMethod = createPostMethod(url);
-    postMethod.setHeader(MobileConstants.HEADER_LANG, Lang.get("lang"));
-    postMethod.setHeader(HttpBudgetViewConstants.HEADER_MAIL, URLEncoder.encode(mail, "UTF-8"));
-    postMethod.setHeader(HttpBudgetViewConstants.CODING, URLEncoder.encode(new String(localKey), "UTF-8"));
-    postMethod.setHeader(MobileConstants.CRYPTED_INFO, URLEncoder.encode(sha1Mail, "UTF-8"));
-    return postMethod;
-  }
-
-  public boolean deleteMobileAccount(String mail, String password, Ref<String> message) {
-    HttpPost postMethod = null;
-    try {
-      postMethod = createPostMessage(mail, password, MOBILE_SERVER_URL + MobileConstants.DELETE_MOBILE_ACCOUNT);
-      HttpClient httpClient = getNewHttpClient();
-      HttpResponse response = httpClient.execute(postMethod);
-      updateConnectionStatusOk();
-      int statusCode = response.getStatusLine().getStatusCode();
-      if (statusCode == HttpServletResponse.SC_FORBIDDEN) {
-        message.set(Lang.get("mobile.user.delete.invalid.password"));
-        return false;
-      }
-      if (statusCode != 200) {
-        message.set(Lang.get("mobile.user.connection.failed"));
-        return false;
-      }
-      return true;
-    }
-    catch (Exception e) {
-      Log.write("error", e);
-      updateConnectionStatus(e);
-    }
-    finally {
-      if (postMethod != null) {
-        postMethod.releaseConnection();
-      }
-    }
-    message.set(Lang.get("mobile.user.connection.failed"));
-    return false;
-  }
 
   public int downloadStep() {
     waitEndOfConfigRequest(3000);
@@ -555,46 +295,6 @@ public class ConfigService {
     }
     return -1;
   }
-
-  public interface Listener {
-    void sent(String mail, String title, String content);
-
-    void sendFailed(String mail, String title, String content);
-  }
-
-  synchronized public void sendMail(final String toMail, final String fromMail,
-                                    final String title, final String content, final Listener listener) {
-    Thread thread = new SendMailThread(fromMail, toMail, title, content, listener);
-    thread.setDaemon(true);
-    thread.start();
-  }
-
-  private void updateConnectionStatus(Exception e) {
-    if (e instanceof IOException) {
-      updateConnectedStatus(false);
-    }
-  }
-
-  private boolean checkIsUserLogged() {
-    return repository.find(UserPreferences.KEY) != null;
-  }
-
-  private void updateConnectionStatusOk() {
-    updateConnectedStatus(true);
-  }
-
-  private void updateConnectedStatus(final boolean isConnected) {
-    if (repository.find(User.KEY) != null && !repository.get(User.KEY).get(User.CONNECTED)) {
-      SwingUtilities.invokeLater(new Runnable() {
-        public void run() {
-          if (checkIsUserLogged()) {
-            repository.update(User.KEY, User.CONNECTED, isConnected);
-          }
-        }
-      });
-    }
-  }
-
 
   synchronized public boolean update(final byte[] repoId, final long launchCount, byte[] mailInBytes,
                                      byte[] signatureInByte, final String activationCode,
@@ -622,7 +322,7 @@ public class ConfigService {
       isValideUser = false;
     }
     final String signature = signatureInByte == null ? null : Encoder.byteToString(signatureInByte);
-    if (LICENSE_SERVER_URL != null && LICENSE_SERVER_URL.length() != 0) {
+    if (ClientParams.isLicenseServerUrlSet()) {
       // le thread est inliné pour eviter de copier (donc de rendre visible) les variables (repoId, ...)
       // dans des donnée membres
       Thread request = new Thread() {
@@ -631,7 +331,7 @@ public class ConfigService {
         }
 
         public void run() {
-          if (LICENSE_SERVER_URL == null) {
+          if (!ClientParams.isLicenseServerUrlSet()) {
             return;
           }
           boolean connectionEstablished = false;
@@ -692,7 +392,7 @@ public class ConfigService {
 
   public Boolean isVerifiedServerValidity() {
     Utils.beginRemove();
-    if (LICENSE_SERVER_URL == null || LICENSE_SERVER_URL.length() == 0) {
+    if (!ClientParams.isLicenseServerUrlSet()) {
       userState = new CompletedUserState("local");
       return true;
     }
@@ -722,30 +422,14 @@ public class ConfigService {
     return isVerifiedServerValidity();
   }
 
-  public boolean isMailSend() {
-    return mailSend;
-  }
-
-  static public String generatePicsouJarName(long newVersion) {
+  public static String generatePicsouJarName(long newVersion) {
     String name = Long.toString(newVersion);
-    return APPNAME + name + ".jar";
+    return ClientParams.APPNAME + name + ".jar";
   }
 
-  static public String generateConfigJarName(long newVersion) {
+  public static String generateConfigJarName(long newVersion) {
     String name = Long.toString(newVersion);
     return "config" + name + ".jar";
-  }
-
-  private class ConfigReceive extends AbstractJarReceived {
-
-    // directory/repository can be null
-    public ConfigReceive(Directory directory, GlobRepository repository) {
-      set(directory, repository);
-    }
-
-    protected void loadJar(File jarFile, long version) {
-      loadConfigFile(jarFile, version, repository, directory);
-    }
   }
 
   static class SpecificBankLoader extends ClassLoader {
@@ -772,7 +456,7 @@ public class ConfigService {
     }
   }
 
-  private boolean loadConfigFile(File jarFile, long version, final GlobRepository repository, final Directory directory) {
+  public boolean loadConfigFile(File jarFile, long version, final GlobRepository repository, final Directory directory) {
     try {
       final SpecificBankLoader bankLoader = new SpecificBankLoader();
       final JarFile jar = new JarFile(jarFile);
@@ -816,25 +500,7 @@ public class ConfigService {
     }
   }
 
-  private static class JarReceive extends AbstractJarReceived {
-    private ServerAccess serverAccess;
-
-    public JarReceive(Directory directory, GlobRepository repository, ServerAccess serverAccess) {
-      this.serverAccess = serverAccess;
-      set(directory, repository);
-    }
-
-    synchronized public void complete(File jarFile, long version) {
-      serverAccess.downloadedVersion(version);
-      super.complete(jarFile, version);
-    }
-
-    protected void loadJar(File jarFile, long version) {
-      repository.update(AppVersionInformation.KEY, AppVersionInformation.LATEST_AVALAIBLE_JAR_VERSION, version);
-    }
-  }
-
-  static class UserStateFactory {
+  private static class UserStateFactory {
     static UserState localValidSignature(String mail) {
       return new LocallyValidUser(mail);
     }
@@ -848,93 +514,11 @@ public class ConfigService {
     }
   }
 
-  private class SendMailThread extends Thread {
-    private final String fromMail;
-    private final String toMail;
-    private final String title;
-    private final String content;
-    private final Listener listener;
-
-    public SendMailThread(String fromMail, String toMail, String title, String content, Listener listener) {
-      this.fromMail = fromMail;
-      this.toMail = toMail;
-      this.title = title;
-      this.content = content;
-      this.listener = listener;
-    }
-
-    public void run() {
-      String url = LICENSE_SERVER_URL + HttpBudgetViewConstants.REQUEST_SEND_MAIL;
-      HttpPost postMethod = createPost(url);
-      HttpResponse response;
-      try {
-        try {
-          HttpClient httpClient = getNewHttpClient();
-          response = httpClient.execute(postMethod);
-        }
-        catch (IOException e) {
-          Log.write("connection error (retrying): ", e);
-          postMethod.releaseConnection();
-          HttpClient httpClient = getNewHttpClient();
-          postMethod = createPost(url);
-          response = httpClient.execute(postMethod);
-        }
-        updateConnectionStatusOk();
-        Log.write("Send mail ok");
-      }
-      catch (final Exception e) {
-        Log.write("in send mail", e);
-        updateConnectionStatus(e);
-        SwingUtilities.invokeLater(new Runnable() {
-          public void run() {
-            Log.write("mail not sent", e);
-            listener.sendFailed(fromMail, title, content);
-          }
-        });
-        return;
-      }
-      finally {
-        postMethod.releaseConnection();
-      }
-      final int statusCode = response.getStatusLine().getStatusCode();
-      if (statusCode == 200) {
-        SwingUtilities.invokeLater(new Runnable() {
-          public void run() {
-            listener.sent(fromMail, title, content);
-          }
-        });
-      }
-      else {
-        SwingUtilities.invokeLater(new Runnable() {
-          public void run() {
-            Log.write("Mail not sent with error code " + statusCode);
-            listener.sendFailed(fromMail, title, content);
-          }
-        });
-      }
-    }
-
-    private HttpPost createPost(String url) {
-      HttpPost postMethod = createPostMethod(url);
-      postMethod.setHeader(MobileConstants.HEADER_LANG, Lang.get("lang"));
-      postMethod.setHeader(HttpBudgetViewConstants.HEADER_MAIL, fromMail);
-      postMethod.setHeader(HttpBudgetViewConstants.HEADER_TO_MAIL, toMail);
-      postMethod.setHeader(HttpBudgetViewConstants.HEADER_MAIL_TITLE, title);
-      try {
-        postMethod.setEntity(new StringEntity(content, "UTF-8"));
-      }
-      catch (UnsupportedCharsetException e) {
-        throw new RuntimeException(e);
-      }
-      return postMethod;
-    }
-  }
-
   private class ComputeRegisterResponse implements Runnable {
     private final GlobRepository repository;
     private HttpResponse response;
 
-    public ComputeRegisterResponse(GlobRepository repository, HttpResponse response) {
+    ComputeRegisterResponse(GlobRepository repository, HttpResponse response) {
       this.repository = repository;
       this.response = response;
     }

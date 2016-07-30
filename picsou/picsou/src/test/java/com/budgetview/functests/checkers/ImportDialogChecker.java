@@ -43,7 +43,7 @@ public class ImportDialogChecker extends GuiChecker {
   private ImportDialogChecker() {
   }
 
-  static public ImportDialogChecker create(Window dialog) {
+  public static ImportDialogChecker create(Window dialog) {
     ImportDialogChecker importDialog = new ImportDialogChecker();
     importDialog.dialog = dialog;
     return importDialog;

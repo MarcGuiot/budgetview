@@ -108,7 +108,7 @@ public class DeferredOperationTrigger extends DefaultChangeSetListener {
     });
   }
 
-  static public void shiftTransaction(Key key, FieldValues values, Integer accountId, GlobRepository repository) {
+  public static void shiftTransaction(Key key, FieldValues values, Integer accountId, GlobRepository repository) {
     Integer monthId = values.get(Transaction.BANK_MONTH);
     Integer day = values.get(Transaction.BANK_DAY);
     if (monthId == null) {

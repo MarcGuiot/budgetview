@@ -1,4 +1,4 @@
-package com.budgetview.client;
+package com.budgetview.client.serialization;
 
 import com.budgetview.server.model.SerializableGlobType;
 import org.globsframework.utils.collections.MapOfMaps;
@@ -8,7 +8,7 @@ import org.globsframework.utils.serialization.SerializedOutput;
 import java.util.Map;
 
 public class SerializableGlobSerializer {
-  static public void serialize(SerializedOutput output,
+  public static void serialize(SerializedOutput output,
                                MapOfMaps<String, Integer, SerializableGlobType> dataByGlobTypeAndId) {
     int globTypeCount = dataByGlobTypeAndId.keys().size();
     output.write(globTypeCount);
@@ -29,7 +29,7 @@ public class SerializableGlobSerializer {
     }
   }
 
-  static public void deserialize(SerializedInput serializedInput,
+  public static void deserialize(SerializedInput serializedInput,
                                  MapOfMaps<String, Integer, SerializableGlobType> data) {
     int globTypeCount = serializedInput.readNotNullInt();
     while (globTypeCount > 0) {

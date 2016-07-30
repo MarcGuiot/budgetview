@@ -11,7 +11,7 @@ import junit.textui.TestRunner;
 */
 public class MainTest {
 
-	static public void main(String[] args) throws Exception {
+	public static void main(String[] args) throws Exception {
 //		TestRunner.run(AllTestSuite.suite());
 	}
 

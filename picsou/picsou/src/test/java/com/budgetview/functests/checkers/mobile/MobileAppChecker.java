@@ -24,6 +24,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringReader;
 import java.net.URISyntaxException;
+import java.net.URL;
 import java.net.URLEncoder;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
@@ -39,15 +40,16 @@ public class MobileAppChecker {
 
   public void checkLogin(String email, String password) throws Exception {
 
-    Crypt encryptedPassword = new Crypt(password.toCharArray());
+    Crypt encryptedPassword = new Crypt(password.toCharArray(), MobileConstants.SALT);
     HttpResponse response = getHttpResponse(email, encryptedPassword);
     Assert.assertEquals(200, response.getStatusLine().getStatusCode());
 
-    DefaultGlobRepository repository = new DefaultGlobRepository(new DefaultGlobIdGenerator());
     InputStream content = response.getEntity().getContent();
     ByteArrayOutputStream stream = new ByteArrayOutputStream();
     Files.copyStream(content, stream);
     String fileAsText = encryptedPassword.decodeAndUnzipData(stream.toByteArray());
+
+    DefaultGlobRepository repository = new DefaultGlobRepository(new DefaultGlobIdGenerator());
     XmlGlobParser.parse(MobileModel.get(), repository, new StringReader(fileAsText), "globs");
     GlobList all = repository.getAll();
     Assert.assertFalse(all.isEmpty());
@@ -55,18 +57,19 @@ public class MobileAppChecker {
   }
 
   public void checkLoginFails(String mail, String newPassword) throws Exception {
-    Crypt encryptedPassword = new Crypt(newPassword.toCharArray());
+    Crypt encryptedPassword = new Crypt(newPassword.toCharArray(), MobileConstants.SALT);
     HttpResponse response = getHttpResponse(mail, encryptedPassword);
     Assert.assertEquals(403, response.getStatusLine().getStatusCode());
   }
 
   private HttpResponse getHttpResponse(String email, Crypt crypt) throws URISyntaxException, NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeySpecException, InvalidKeyException, InvalidAlgorithmParameterException, IllegalBlockSizeException, BadPaddingException, IOException {
+    StringBuilder params = new StringBuilder();
+    params.append(MobileConstants.MAIL).append("=").append(URLEncoder.encode(email, "UTF-8"));
+    String data = Crypt.encodeSHA1AndHex(crypt.encodeData(email.getBytes("UTF-8")));
+    params.append("&").append(MobileConstants.CRYPTED_INFO).append("=").append(URLEncoder.encode(data, "UTF-8"));
+
+    HttpGet method = new HttpGet("http://localhost:" + httpPort + MobileConstants.GET_MOBILE_DATA + "?" + params);
     HttpClient httpClient = new DefaultHttpClient();
-    URIBuilder builder = new URIBuilder("http://localhost:" + httpPort + MobileConstants.GET_MOBILE_DATA);
-    builder.addParameter("mail", URLEncoder.encode(email, "UTF-8"));
-    builder.addParameter(MobileConstants.CRYPTED_INFO,
-                         URLEncoder.encode(Crypt.encodeSHA1AndHex(crypt.encodeData(email.getBytes("UTF-8"))), "UTF-8"));
-    HttpGet method = new HttpGet(builder.build());
     return httpClient.execute(method);
   }
 

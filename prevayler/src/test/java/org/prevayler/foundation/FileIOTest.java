@@ -36,11 +36,11 @@ public abstract class FileIOTest extends TestCase {
 		delete(new File(_testDirectory + File.separator + fileName));
 	}
 
-	static public void delete(String fileName) {
+	public static void delete(String fileName) {
 		delete(new File(fileName));
 	}
 
-	static public void delete(File file) {
+	public static void delete(File file) {
 		if (file.isDirectory()) deleteDirectoryContents(file);
 		assertTrue("File does not exist: " + file, file.exists());
 		if (!file.delete()) {

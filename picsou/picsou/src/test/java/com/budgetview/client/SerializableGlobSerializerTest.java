@@ -1,5 +1,6 @@
 package com.budgetview.client;
 
+import com.budgetview.client.serialization.SerializableGlobSerializer;
 import com.budgetview.server.model.SerializableGlobType;
 import junit.framework.TestCase;
 import org.globsframework.utils.collections.MapOfMaps;

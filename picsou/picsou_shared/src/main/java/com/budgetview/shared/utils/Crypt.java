@@ -7,7 +7,6 @@ import javax.crypto.spec.PBEKeySpec;
 import javax.crypto.spec.PBEParameterSpec;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.MessageDigest;
@@ -19,9 +18,9 @@ public class Crypt {
   private PBEParameterSpec spec;
   private SecretKey secretKey;
 
-  public Crypt(final char[] password) throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidKeySpecException, InvalidAlgorithmParameterException, InvalidKeyException {
+  public Crypt(final char[] password, String salt) throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidKeySpecException, InvalidAlgorithmParameterException, InvalidKeyException {
     SecretKeyFactory factory = SecretKeyFactory.getInstance("PBEWithMD5AndDES");
-    spec = new PBEParameterSpec("d48(cWqH".getBytes(), 5);
+    spec = new PBEParameterSpec(salt.getBytes(), 5);
     PBEKeySpec keySpec = new PBEKeySpec(password);
     secretKey = factory.generateSecret(keySpec);
   }
@@ -40,7 +39,7 @@ public class Crypt {
     return cipher.doFinal(bytes);
   }
 
-  static public String encodeSHA1AndHex(byte[] bytes){
+  public static String encodeSHA1AndHex(byte[] bytes){
     try {
       MessageDigest digest = MessageDigest.getInstance( "SHA-1" );
       digest.update(bytes, 0, bytes.length);

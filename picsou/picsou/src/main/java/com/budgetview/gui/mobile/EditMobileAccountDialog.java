@@ -5,7 +5,6 @@ import com.budgetview.gui.components.dialogs.PicsouDialog;
 import com.budgetview.gui.components.tips.ErrorTip;
 import com.budgetview.gui.components.tips.TipPosition;
 import com.budgetview.gui.components.utils.CustomFocusTraversalPolicy;
-import com.budgetview.gui.config.ConfigService;
 import com.budgetview.gui.mobile.utils.AbstractMobileAccountDialog;
 import com.budgetview.gui.mobile.utils.ConfirmMobileAccountPanel;
 import com.budgetview.gui.mobile.utils.PasswordEditionPanel;
@@ -14,7 +13,6 @@ import com.budgetview.model.UserPreferences;
 import com.budgetview.utils.Lang;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.splits.layout.CardHandler;
-import org.globsframework.model.FieldValue;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.utils.Ref;
@@ -26,6 +24,8 @@ import java.awt.event.ActionEvent;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
+
+import static org.globsframework.model.FieldValue.value;
 
 public class EditMobileAccountDialog extends AbstractMobileAccountDialog {
 
@@ -102,17 +102,18 @@ public class EditMobileAccountDialog extends AbstractMobileAccountDialog {
         .submit(new Callable<String>() {
           public String call() throws Exception {
             Ref<String> messageRef = new Ref<String>();
-            boolean isOk = localDirectory.get(ConfigService.class)
+            boolean isOk = localDirectory.get(MobileService.class)
               .deleteMobileAccount(UserPreferences.get(localRepository).get(UserPreferences.MAIL_FOR_MOBILE),
                                    UserPreferences.get(localRepository).get(UserPreferences.PASSWORD_FOR_MOBILE),
-                                   messageRef);
+                                   messageRef,
+                                   localRepository);
 
             progressBar.stop();
             if (dialog.isVisible()) {
               if (isOk) {
                 localRepository.update(UserPreferences.get(localRepository).getKey(),
-                                       FieldValue.value(UserPreferences.MAIL_FOR_MOBILE, null),
-                                       FieldValue.value(UserPreferences.PASSWORD_FOR_MOBILE, null));
+                                       value(UserPreferences.MAIL_FOR_MOBILE, null),
+                                       value(UserPreferences.PASSWORD_FOR_MOBILE, null));
                 localRepository.commitChanges(false);
                 cards.show("confirmDeletion");
               }

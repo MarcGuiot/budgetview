@@ -5,6 +5,7 @@ import org.globsframework.gui.splits.utils.GuiUtils;
 
 import javax.swing.*;
 import java.awt.*;
+import java.io.File;
 
 public class ArrowButtonIconDemo {
 

@@ -47,7 +47,7 @@ public class Amounts {
     return isNearZero(value) ? 0 : value;
   }
 
-  static public double extractAmount(String amount) {
+  public static double extractAmount(String amount) {
     amount = amount.trim();
     amount = amount.replaceAll("[^0-9-+,.]", "");
     amount = amount.replaceAll("--+", "-");

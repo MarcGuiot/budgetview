@@ -1,8 +1,7 @@
 package com.budgetview.functests.utils;
 
+import com.budgetview.client.ClientParams;
 import com.budgetview.functests.checkers.*;
-import com.budgetview.gui.startup.LoginPanel;
-import com.budgetview.model.SignpostStatus;
 import com.budgetview.functests.checkers.components.TimeViewChecker;
 import com.budgetview.functests.checkers.license.LicenseActivationChecker;
 import com.budgetview.functests.checkers.license.LicenseChecker;
@@ -10,10 +9,11 @@ import com.budgetview.functests.checkers.printing.PrinterChecker;
 import com.budgetview.gui.PicsouApplication;
 import com.budgetview.gui.browsing.BrowsingService;
 import com.budgetview.gui.components.PicsouFrame;
-import com.budgetview.gui.config.ConfigService;
+import com.budgetview.gui.startup.LoginPanel;
 import com.budgetview.gui.startup.components.SingleApplicationInstanceListener;
 import com.budgetview.gui.time.TimeService;
 import com.budgetview.gui.time.TimeViewPanel;
+import com.budgetview.model.SignpostStatus;
 import com.budgetview.model.initial.DefaultSeriesFactory;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.utils.Dates;
@@ -87,8 +87,8 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
     System.setProperty(PicsouApplication.LOG_TO_SOUT, "true");
     System.setProperty(PicsouApplication.USER_FEEDBACK_DISABLED, Boolean.toString(true));
     System.setProperty(SingleApplicationInstanceListener.SINGLE_INSTANCE_DISABLED, "true");
-    System.setProperty(ConfigService.COM_APP_LICENSE_URL, "");
-    System.setProperty(ConfigService.COM_APP_FTP_URL, "");
+    System.setProperty(ClientParams.COM_APP_LICENSE_URL, "");
+    System.setProperty(ClientParams.COM_APP_FTP_URL, "");
     DefaultSeriesFactory.AUTO_CREATE_DEFAULT_SERIES = createDefaultSeries;
 
     application = new ApplicationChecker();

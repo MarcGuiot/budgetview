@@ -1,7 +1,7 @@
 package com.budgetview.gui.license.activation;
 
+import com.budgetview.client.mail.MailService;
 import com.budgetview.gui.components.dialogs.PicsouDialog;
-import com.budgetview.gui.config.ConfigService;
 import com.budgetview.gui.components.utils.CustomFocusTraversalPolicy;
 import com.budgetview.http.HttpBudgetViewConstants;
 import com.budgetview.utils.Lang;
@@ -91,11 +91,11 @@ public class LicenseConfirmationFeedbackPanel implements Disposable {
       }
     }
     builder.append("</html>");
-    directory.get(ConfigService.class).sendMail(HttpBudgetViewConstants.SUPPORT_EMAIL,
-                                                email,
-                                                Lang.get("license.activation.feedback.email.title", email),
-                                                builder.toString(),
-                                                new ConfigService.Listener() {
+    directory.get(MailService.class).sendMail(HttpBudgetViewConstants.SUPPORT_EMAIL,
+                                              email,
+                                              Lang.get("license.activation.feedback.email.title", email),
+                                              builder.toString(),
+                                              new MailService.Listener() {
                                                   public void sent(String mail, String title, String content) {
                                                     Log.write("Comment email sent from " + mail + " - title : " + title + "\n" + content);
                                                     close();
@@ -105,7 +105,8 @@ public class LicenseConfirmationFeedbackPanel implements Disposable {
                                                     Log.write("Failed to send comment mail from " + mail + " - title : " + title + "\n" + content);
                                                     close();
                                                   }
-                                                });
+                                                },
+                                              repository);
   }
 
   private void close() {

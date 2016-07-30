@@ -9,6 +9,8 @@ import com.budgetview.license.checkers.DbChecker;
 import com.budgetview.license.checkers.Email;
 import com.budgetview.license.model.License;
 import com.budgetview.license.model.RepoInfo;
+import com.budgetview.license.servlet.MobileServer;
+import com.budgetview.license.servlet.WebServer;
 import junit.framework.Assert;
 import junit.framework.AssertionFailedError;
 import com.budgetview.functests.checkers.ApplicationChecker;
@@ -42,7 +44,6 @@ public class LicenseActivationTest extends ConnectedTestCase {
 
   protected void setUp() throws Exception {
     LoggedInFunctionalTestCase.resetWindow();
-    System.setProperty("budgetview.log.sout", "true");
     super.setUp();
     System.setProperty(PicsouApplication.IS_DATA_IN_MEMORY, "false");
     TimeService.setCurrentDate(Dates.parseMonth("2008/07"));

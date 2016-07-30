@@ -275,7 +275,7 @@ public class Account {
            account1.isTrue(Account.IS_IMPORTED_ACCOUNT) != account2.isTrue(Account.IS_IMPORTED_ACCOUNT);
   }
 
-  static public String getName(String number, boolean isCard) {
+  public static String getName(String number, boolean isCard) {
     if (isCard) {
       return Lang.get("account.defaultName.card", PicsouUtils.splitCardNumber(number));
     }

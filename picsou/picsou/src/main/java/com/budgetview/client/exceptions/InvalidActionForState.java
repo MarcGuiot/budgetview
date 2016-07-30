@@ -1,7 +1,7 @@
 package com.budgetview.client.exceptions;
 
 public class InvalidActionForState extends RemoteException {
-  static public final int ID = 7;
+  public static final int ID = 7;
 
   static {
     checkId(ID);

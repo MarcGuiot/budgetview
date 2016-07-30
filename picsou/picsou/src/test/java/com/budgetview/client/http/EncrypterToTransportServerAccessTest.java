@@ -5,6 +5,8 @@ import com.budgetview.client.exceptions.BadPassword;
 import com.budgetview.client.exceptions.UserAlreadyExists;
 import com.budgetview.client.exceptions.UserNotRegistered;
 import com.budgetview.client.local.LocalClientTransport;
+import com.budgetview.client.serialization.PasswordBasedEncryptor;
+import com.budgetview.client.serialization.RedirectPasswordBasedEncryptor;
 import com.budgetview.functests.utils.FunctionalTestCase;
 import com.budgetview.functests.utils.LoggedInFunctionalTestCase;
 import com.budgetview.gui.config.ConfigService;

@@ -45,7 +45,7 @@ public class ReplacementInputStream extends InputStream {
     return read;
   }
 
-  static public class EOFCharAccessor implements CharAccessor {
+  public static class EOFCharAccessor implements CharAccessor {
 
     public int read() throws IOException {
       return -1;

@@ -1,12 +1,14 @@
-package com.budgetview.gui.config;
+package com.budgetview.gui.config.states;
 
+import com.budgetview.gui.config.UserState;
+import com.budgetview.gui.config.states.CompletedUserState;
 import com.budgetview.model.LicenseActivationState;
 import com.budgetview.model.User;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.utils.directory.Directory;
 import org.globsframework.utils.exceptions.InvalidState;
 
-class KilledUser implements UserState {
+public class KilledUser implements UserState {
   private String mail;
   private boolean mailSent;
 

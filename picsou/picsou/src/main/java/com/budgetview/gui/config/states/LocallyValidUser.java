@@ -1,13 +1,14 @@
-package com.budgetview.gui.config;
+package com.budgetview.gui.config.states;
 
+import com.budgetview.gui.config.UserState;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.utils.directory.Directory;
 import org.globsframework.utils.exceptions.InvalidState;
 
-class LocallyInvalidUser implements UserState {
+public class LocallyValidUser implements UserState {
   private String mail;
 
-  public LocallyInvalidUser(String mail) {
+  public LocallyValidUser(String mail) {
     this.mail = mail;
   }
 
@@ -16,11 +17,11 @@ class LocallyInvalidUser implements UserState {
   }
 
   public UserState fireKillUser(boolean mailSent) {
-    return new AnonymousUser(true);
+    return new KilledUser(mail, mailSent);
   }
 
   public UserState fireValidUser() {
-    return new AnonymousUser(true);
+    return new ValidUser(mail);
   }
 
   public UserState updateUserValidity(Directory directory, GlobRepository repository) {

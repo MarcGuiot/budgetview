@@ -126,7 +126,7 @@ public class RealAccount {
            !Utils.equal(realAccount1.get(ID), realAccount2.get(ID));
   }
 
-  static public boolean areEquivalent(Glob realAccount1, Glob realAccount2) {
+  public static boolean areEquivalent(Glob realAccount1, Glob realAccount2) {
     return (Strings.isNotEmpty(realAccount1.get(NAME)) || Strings.isNotEmpty(realAccount1.get(NUMBER))) &&
            Utils.equalIgnoreCase(realAccount1.get(NAME), realAccount2.get(NAME)) &&
            Utils.equalIgnoreCase(realAccount1.get(NUMBER), realAccount2.get(NUMBER)) &&
@@ -134,7 +134,7 @@ public class RealAccount {
            !Utils.equal(realAccount1.get(ID), realAccount2.get(ID));
   }
 
-  static public boolean areNearEquivalent(Glob realAccount1, Glob realAccount2) {
+  public static boolean areNearEquivalent(Glob realAccount1, Glob realAccount2) {
     return Utils.equalIgnoreCase(realAccount1.get(NAME), realAccount2.get(NAME)) &&
            Utils.equalIgnoreCase(realAccount1.get(NUMBER), realAccount2.get(NUMBER)) &&
            !Utils.equal(realAccount1.get(ID), realAccount2.get(ID));

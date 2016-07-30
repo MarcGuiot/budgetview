@@ -3,7 +3,7 @@ package com.budgetview.gui.config;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.utils.directory.Directory;
 
-interface UserState {
+public interface UserState {
 
   Boolean isVerifiedServerValidity();
 

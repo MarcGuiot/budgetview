@@ -1,0 +1,108 @@
+
+Mode opératoire pour la création du certificat HTTPS utilisé en local pour les tests du serveur de licence
+
+Ref: http://www.eclipse.org/jetty/documentation/9.4.x/configuring-ssl.html
+
+=====================
+
+keytool -keystore keystore -alias bv -genkey -keyalg RSA -sigalg SHA256withRSA
+
+	Enter keystore password:  bvpwd1
+	Re-enter new password: 
+	What is your first and last name?
+	  [Unknown]:  budgetview
+	What is the name of your organizational unit?
+	  [Unknown]:  budgetview
+	What is the name of your organization?
+	  [Unknown]:  budgetview
+	What is the name of your City or Locality?
+	  [Unknown]:  paris
+	What is the name of your State or Province?
+	  [Unknown]:  
+	What is the two-letter country code for this unit?
+	  [Unknown]:  fr
+	Is CN=budgetview, OU=budgetview, O=budgetview, L=paris, ST=Unknown, C=fr correct?
+	  [no]:  yes
+
+	Enter key password for <bv>
+		(RETURN if same as keystore password):  
+
+=====================
+
+openssl genrsa -aes128 -out jetty.key
+
+	Generating RSA private key, 512 bit long modulus
+	.............++++++++++++
+	.++++++++++++
+	e is 65537 (0x10001)
+	Enter pass phrase for jetty.key: bvpwd1
+	Verifying - Enter pass phrase for jetty.key: bvpwd1
+
+=====================
+
+openssl req -new -x509 -newkey rsa:2048 -sha256 -key jetty.key -out jetty.crt
+
+	Enter pass phrase for jetty.key: bvpwd1
+	You are about to be asked to enter information that will be incorporated
+	into your certificate request.
+	What you are about to enter is what is called a Distinguished Name or a DN.
+	There are quite a few fields but you can leave some blank
+	For some fields there will be a default value,
+	If you enter '.', the field will be left blank.
+	-----
+	Country Name (2 letter code) [AU]:fr
+	State or Province Name (full name) [Some-State]:
+	Locality Name (eg, city) []:paris
+	Organization Name (eg, company) [Internet Widgits Pty Ltd]:budgetview
+	Organizational Unit Name (eg, section) []:budgetview
+	Common Name (e.g. server FQDN or YOUR name) []:mybudgetview.fr
+	Email Address []:admin@mybudgetview.fr
+
+=====================
+
+keytool -keystore keystore -import -alias jetty -file jetty.crt -trustcacerts
+
+	Enter keystore password:  
+	Owner: EMAILADDRESS=admin@mybudgetview.fr, CN=mybudgetview.fr, OU=budgetview, O=budgetview, L=paris, ST=Some-State, C=fr
+	Issuer: EMAILADDRESS=admin@mybudgetview.fr, CN=mybudgetview.fr, OU=budgetview, O=budgetview, L=paris, ST=Some-State, C=fr
+	Serial number: f164e663d91b4e2d
+	Valid from: Sun Jul 24 18:50:54 CEST 2016 until: Tue Aug 23 18:50:54 CEST 2016
+	Certificate fingerprints:
+		 MD5:  55:CE:E5:DC:4E:38:9E:71:33:97:9F:FA:43:8D:7A:B7
+		 SHA1: 0A:B2:E2:60:10:2E:9C:97:DE:01:72:57:4D:89:80:1B:CA:95:B7:60
+		 SHA256: 1C:07:2E:84:5E:08:4D:E5:FA:08:BA:C0:35:89:73:74:8E:20:65:C8:32:C1:4E:9B:E0:C6:85:4C:44:8A:00:01
+		 Signature algorithm name: SHA256withRSA
+		 Version: 3
+
+	Extensions: 
+
+	#1: ObjectId: 2.5.29.35 Criticality=false
+	AuthorityKeyIdentifier [
+	KeyIdentifier [
+	0000: 19 1D F3 19 4A 25 93 93   C1 F4 74 0A E7 4A 0D 49  ....J%....t..J.I
+	0010: 3F 13 7B FF                                        ?...
+	]
+	[EMAILADDRESS=admin@mybudgetview.fr, CN=mybudgetview.fr, OU=budgetview, O=budgetview, L=paris, ST=Some-State, C=fr]
+	SerialNumber: [    f164e663 d91b4e2d]
+	]
+
+	#2: ObjectId: 2.5.29.19 Criticality=false
+	BasicConstraints:[
+	  CA:true
+	  PathLen:2147483647
+	]
+
+	#3: ObjectId: 2.5.29.14 Criticality=false
+	SubjectKeyIdentifier [
+	KeyIdentifier [
+	0000: 19 1D F3 19 4A 25 93 93   C1 F4 74 0A E7 4A 0D 49  ....J%....t..J.I
+	0010: 3F 13 7B FF                                        ?...
+	]
+	]
+
+	Trust this certificate? [no]:  yes
+	Certificate was added to keystore
+
+=====================
+
+

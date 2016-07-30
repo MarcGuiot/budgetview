@@ -13,7 +13,6 @@ public class HttpBudgetViewConstants {
   public static final String REQUEST_FOR_CONFIG = "/requestForConfig";
   public static final String REQUEST_FOR_MAIL = "/mailTo";
   public static final String REQUEST_SEND_MAIL = "/sendMailToUs";
-  public static final String REQUEST_CLIENT_TO_SERVER_DATA = "/sendMobileData";
   public static final String CODING = "coding";
   public static final String HEADER_TO_MAIL = "toMail";
   public static final String HEADER_MAIL_TITLE = "title";
@@ -37,7 +36,6 @@ public class HttpBudgetViewConstants {
   public static final String HEADER_USE_INFO = "use";
   public static final String HEADER_PENDING = "pending";
   public static final String SEND_USE_INFO = "/sendUseInfo";
-  public static final String MOBILE_SALT = "d48(cWqH";
   public static final String HEADER_BAD_ADRESS = "badAdress";
   public static final String SOME_PASSWORD = "HdsB 8(Rfm";
   public static final String SUPPORT_EMAIL = "support";

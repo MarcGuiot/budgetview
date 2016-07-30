@@ -28,7 +28,7 @@ public class LicenseActivationChecker extends GuiChecker {
     return new LicenseActivationChecker(WindowInterceptor.getModalDialog(trigger));
   }
 
-  static public void enterLicense(Window window, final String email, final String code) {
+  public static void enterLicense(Window window, final String email, final String code) {
     Integer.parseInt(code);
     enterLicense(window, new WindowHandler() {
       public Trigger process(Window window) throws Exception {
@@ -43,7 +43,7 @@ public class LicenseActivationChecker extends GuiChecker {
     });
   }
 
-  static public void enterBadLicense(Window window, final String email, final String code, final String message) {
+  public static void enterBadLicense(Window window, final String email, final String code, final String message) {
     enterLicense(window, new WindowHandler() {
       public Trigger process(Window window) throws Exception {
         window.getInputTextBox("ref-mail").setText(email);

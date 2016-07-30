@@ -1,11 +1,11 @@
 package com.budgetview.server.persistence.direct;
 
-import com.budgetview.client.SerializableGlobSerializer;
+import com.budgetview.client.serialization.SerializableGlobSerializer;
 import com.budgetview.gui.PicsouApplication;
 import com.budgetview.server.model.SerializableGlobType;
 import com.budgetview.server.model.ServerDelta;
 import com.budgetview.server.persistence.prevayler.AccountDataManager;
-import com.budgetview.client.SerializableDeltaGlobSerializer;
+import com.budgetview.client.serialization.SerializableDeltaGlobSerializer;
 import com.budgetview.utils.Lang;
 import org.globsframework.utils.*;
 import org.globsframework.utils.collections.MapOfMaps;

@@ -1,11 +1,11 @@
 package com.budgetview.gui.mobile.utils;
 
-import com.budgetview.gui.components.dialogs.PicsouDialog;
-import com.budgetview.gui.mobile.SendMobileDataAction;
-import com.budgetview.model.UserPreferences;
 import com.budgetview.gui.components.ProgressPanel;
 import com.budgetview.gui.components.dialogs.CloseDialogAction;
-import com.budgetview.gui.config.ConfigService;
+import com.budgetview.gui.components.dialogs.PicsouDialog;
+import com.budgetview.gui.mobile.MobileService;
+import com.budgetview.gui.mobile.SendMobileDataAction;
+import com.budgetview.model.UserPreferences;
 import com.budgetview.utils.Lang;
 import org.globsframework.gui.SelectionService;
 import org.globsframework.model.GlobRepository;
@@ -70,8 +70,8 @@ public abstract class AbstractMobileAccountDialog {
             Ref<String> messageRef = new Ref<String>();
             String mail = UserPreferences.get(localRepository).get(UserPreferences.MAIL_FOR_MOBILE);
             String password = UserPreferences.get(localRepository).get(UserPreferences.PASSWORD_FOR_MOBILE);
-            boolean isOk = localDirectory.get(ConfigService.class)
-              .createMobileAccount(mail, password, messageRef);
+            boolean isOk = localDirectory.get(MobileService.class)
+              .createMobileAccount(mail, password, messageRef, localRepository);
             SwingUtilities.invokeAndWait(new ShowCompletionStatus(isOk, messageRef));
             return null;
           }
@@ -97,7 +97,7 @@ public abstract class AbstractMobileAccountDialog {
               .submit(new Callable<Object>() {
                 public Object call() throws Exception {
                   Ref<String> msg = new Ref<String>();
-                  SendMobileDataAction.sendToMobile(parentRepository, localDirectory.get(ConfigService.class), msg, true);
+                  SendMobileDataAction.sendToMobile(parentRepository, localDirectory, msg, true);
                   return msg.get();
                 }
               });

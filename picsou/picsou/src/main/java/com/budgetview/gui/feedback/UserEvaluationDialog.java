@@ -1,9 +1,9 @@
 package com.budgetview.gui.feedback;
 
+import com.budgetview.client.mail.MailService;
 import com.budgetview.gui.PicsouApplication;
 import com.budgetview.gui.components.dialogs.CancelAction;
 import com.budgetview.gui.components.dialogs.PicsouDialog;
-import com.budgetview.gui.config.ConfigService;
 import com.budgetview.http.HttpBudgetViewConstants;
 import com.budgetview.model.User;
 import com.budgetview.model.UserPreferences;
@@ -22,12 +22,13 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
 public class UserEvaluationDialog {
+  private GlobRepository repository;
+  private Directory directory;
   private PicsouDialog dialog;
   private JTextArea commentEditor;
   private JTextField emailField;
   private JToggleButton yesToggle;
   private JToggleButton noToggle = new JToggleButton();
-  private Directory directory;
   private JButton sendButton;
   private JProgressBar sendingState = new JProgressBar();
 
@@ -59,6 +60,7 @@ public class UserEvaluationDialog {
   }
 
   private UserEvaluationDialog(GlobRepository repository, final Directory directory) {
+    this.repository = repository;
     this.directory = directory;
 
     dialog = PicsouDialog.create(this, directory.get(JFrame.class), directory);
@@ -144,11 +146,11 @@ public class UserEvaluationDialog {
     public void actionPerformed(ActionEvent e) {
       sendingState.setVisible(true);
       sendingState.setIndeterminate(true);
-      directory.get(ConfigService.class).sendMail(HttpBudgetViewConstants.ADMIN_EMAIL,
-                                                  emailField.getText(),
-                                                  getHeaderText(),
-                                                  getMessageText(),
-                                                  new ConfigService.Listener() {
+      directory.get(MailService.class).sendMail(HttpBudgetViewConstants.ADMIN_EMAIL,
+                                                emailField.getText(),
+                                                getHeaderText(),
+                                                getMessageText(),
+                                                new MailService.Listener() {
                                                     public void sent(String mail, String title, String content) {
                                                       messageSent();
                                                       Log.write("Mail sent from " + mail + " - title : " + title + "\n" + content);
@@ -158,7 +160,8 @@ public class UserEvaluationDialog {
                                                       messageSent();
                                                       Log.write("Failed to send mail from " + mail + " - title : " + title + "\n" + content);
                                                     }
-                                                  });
+                                                  },
+                                                repository);
       schedule = new WaitClosedThread(dialog);
       schedule.setDaemon(true);
       schedule.start();

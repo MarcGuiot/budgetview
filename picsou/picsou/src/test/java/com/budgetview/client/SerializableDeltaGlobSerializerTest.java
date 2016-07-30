@@ -1,5 +1,6 @@
 package com.budgetview.client;
 
+import com.budgetview.client.serialization.SerializableDeltaGlobSerializer;
 import junit.framework.TestCase;
 import com.budgetview.server.model.ServerDelta;
 import com.budgetview.server.model.ServerState;

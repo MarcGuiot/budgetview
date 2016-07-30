@@ -91,8 +91,8 @@ public class LicenseServer {
     webServer.add(new SendUseInfoServlet(), HttpBudgetViewConstants.SEND_USE_INFO);
 
     String pathForMobileData = MobileServer.getDataDirectoryPath();
-    webServer.add(new ReceiveDataServlet(pathForMobileData), HttpBudgetViewConstants.REQUEST_CLIENT_TO_SERVER_DATA);
-    webServer.add(new RetrieveDataServlet(pathForMobileData, directory), MobileConstants.GET_MOBILE_DATA);
+    webServer.add(new PostDataServlet(pathForMobileData), MobileConstants.POST_MOBILE_DATA);
+    webServer.add(new GetMobileDataServlet(pathForMobileData, directory), MobileConstants.GET_MOBILE_DATA);
     webServer.add(new SendMailCreateMobileUserServlet(pathForMobileData, directory, webServer.getHttpPort()), MobileConstants.SEND_MAIL_TO_CONFIRM_MOBILE);
     webServer.add(new DeleteMobileUserServlet(pathForMobileData, directory), MobileConstants.DELETE_MOBILE_ACCOUNT);
     webServer.add(new CreateMobileUserServlet(pathForMobileData, directory), MobileConstants.CREATE_MOBILE_USER);

@@ -19,7 +19,7 @@ public abstract class SpecificBankTestCase extends LoggedInFunctionalTestCase {
     return getFile(fileNameToImport, this);
   }
 
-  static public String getFile(String fileNameToImport, TestCase test) throws IOException {
+  public static String getFile(String fileNameToImport, TestCase test) throws IOException {
     String fileExtension = ".ofx";
     if (fileNameToImport.endsWith(".qif")) {
       fileExtension = ".qif";

@@ -25,11 +25,11 @@ public class SaxStackWriter implements SaxStackBuilder {
     XmlUtils.build(filter, rootBuilder, new RootXmlTag(writer));
   }
 
-  static public void write(Writer writer, XmlRootBuilder xmlBuilder, Filter filter) throws IOException {
+  public static void write(Writer writer, XmlRootBuilder xmlBuilder, Filter filter) throws IOException {
     new SaxStackWriter(writer).write(xmlBuilder, filter);
   }
 
-  static public void write(Writer writer, XmlRootBuilder rootBuilder) throws IOException {
+  public static void write(Writer writer, XmlRootBuilder rootBuilder) throws IOException {
     new SaxStackWriter(writer).write(rootBuilder, new FilterNone());
   }
 

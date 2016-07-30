@@ -1,5 +1,6 @@
-package com.budgetview.gui.config;
+package com.budgetview.gui.config.states;
 
+import com.budgetview.gui.config.UserState;
 import com.budgetview.model.User;
 import static org.globsframework.model.FieldValue.value;
 import org.globsframework.model.GlobRepository;

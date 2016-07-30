@@ -76,7 +76,7 @@ public abstract class WebComponent<T extends HtmlElement> {
     return node;
   }
 
-  static public class HtmlNavigate {
+  public static class HtmlNavigate {
     private WebBrowser browser;
     private HtmlElement node;
     private final boolean optional;
@@ -219,7 +219,7 @@ public abstract class WebComponent<T extends HtmlElement> {
   }
 
 
-  static public class HtmlNavigates {
+  public static class HtmlNavigates {
     private WebBrowser browser;
     private List<HtmlElement> nodes;
     private final boolean optional;

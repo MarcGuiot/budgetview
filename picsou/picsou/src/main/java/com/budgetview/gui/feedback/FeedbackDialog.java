@@ -1,12 +1,12 @@
 package com.budgetview.gui.feedback;
 
+import com.budgetview.client.mail.MailService;
 import com.budgetview.gui.PicsouApplication;
 import com.budgetview.gui.components.dialogs.CancelAction;
 import com.budgetview.gui.components.dialogs.MessageDialog;
 import com.budgetview.gui.components.dialogs.MessageType;
 import com.budgetview.gui.components.dialogs.PicsouDialog;
 import com.budgetview.gui.components.server.DisconnectionTip;
-import com.budgetview.gui.config.ConfigService;
 import com.budgetview.gui.startup.components.AppLogger;
 import com.budgetview.http.HttpBudgetViewConstants;
 import com.budgetview.model.User;
@@ -24,6 +24,7 @@ import java.io.File;
 
 public class FeedbackDialog {
   private PicsouDialog dialog;
+  private GlobRepository repository;
   private Directory directory;
 
   private JTextArea contentEditor;
@@ -33,6 +34,7 @@ public class FeedbackDialog {
   private DisconnectionTip disconnectionTip;
 
   public FeedbackDialog(Window parent, GlobRepository repository, final Directory directory) {
+    this.repository = repository;
     this.directory = directory;
 
     dialog = PicsouDialog.create(this, parent, directory);
@@ -96,11 +98,11 @@ public class FeedbackDialog {
 
     public void actionPerformed(ActionEvent e) {
       String email = userMail.getText();
-      directory.get(ConfigService.class).sendMail(HttpBudgetViewConstants.SUPPORT_EMAIL,
-                                                  email,
-                                                  getSubject(email),
-                                                  getMessageText(),
-                                                  new ConfigService.Listener() {
+      directory.get(MailService.class).sendMail(HttpBudgetViewConstants.SUPPORT_EMAIL,
+                                                email,
+                                                getSubject(email),
+                                                getMessageText(),
+                                                new MailService.Listener() {
                                                     public void sent(String mail, String title, String content) {
                                                       showConfirmation();
                                                     }
@@ -108,7 +110,8 @@ public class FeedbackDialog {
                                                     public void sendFailed(String mail, String title, String content) {
                                                       showFailure();
                                                     }
-                                                  });
+                                                  },
+                                                repository);
     }
 
     private void showConfirmation() {

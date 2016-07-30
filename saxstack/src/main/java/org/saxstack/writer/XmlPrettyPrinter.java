@@ -23,11 +23,11 @@ public class XmlPrettyPrinter implements SaxStackBuilder {
     XmlUtils.build(filter, rootBuilder, new PrettyPrintRootXmlTag(writer, attributeCountOnLine));
   }
 
-  static public void write(Writer writer, XmlRootBuilder rootBuilder, Filter filter, int attributeCount) throws IOException {
+  public static void write(Writer writer, XmlRootBuilder rootBuilder, Filter filter, int attributeCount) throws IOException {
     new XmlPrettyPrinter(writer, attributeCount).write(rootBuilder, filter);
   }
 
-  static public void write(Writer writer, XmlRootBuilder rootBuilder, int attributeCount) throws IOException {
+  public static void write(Writer writer, XmlRootBuilder rootBuilder, int attributeCount) throws IOException {
     new XmlPrettyPrinter(writer, attributeCount).write(rootBuilder);
   }
 

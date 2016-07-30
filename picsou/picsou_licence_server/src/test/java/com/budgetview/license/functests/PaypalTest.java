@@ -1,5 +1,6 @@
 package com.budgetview.license.functests;
 
+import com.budgetview.client.ClientParams;
 import com.budgetview.gui.config.ConfigService;
 import com.budgetview.license.model.License;
 import org.apache.http.HttpResponse;
@@ -38,7 +39,7 @@ public class PaypalTest extends ConnectedTestCase {
   protected void setUp() throws Exception {
     super.setUp();
 
-    SERVER_URL = System.getProperty(ConfigService.COM_APP_LICENSE_URL);
+    SERVER_URL = System.getProperty(ClientParams.COM_APP_LICENSE_URL);
     System.setProperty(NewUserServlet.PAYPAL_CONFIRM_URL_PROPERTY, SERVER_URL + "/Confirm");
     licenseServer.init();
     licenseServer.add(payPalConfirm, "/Confirm");

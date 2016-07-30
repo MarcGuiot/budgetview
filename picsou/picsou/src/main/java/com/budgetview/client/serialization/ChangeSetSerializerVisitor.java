@@ -1,4 +1,4 @@
-package com.budgetview.client.http;
+package com.budgetview.client.serialization;
 
 import com.budgetview.server.model.ServerDelta;
 import com.budgetview.shared.utils.PicsouGlobSerializer;
@@ -10,7 +10,7 @@ import org.globsframework.metamodel.fields.IntegerField;
 import org.globsframework.model.*;
 import org.globsframework.utils.collections.MultiMap;
 
-class ChangeSetSerializerVisitor implements ChangeSetVisitor {
+public class ChangeSetSerializerVisitor implements ChangeSetVisitor {
   private PasswordBasedEncryptor passwordBasedEncryptor;
   private GlobRepository repository;
   private MultiMap<String, ServerDelta> deltaGlobMap;

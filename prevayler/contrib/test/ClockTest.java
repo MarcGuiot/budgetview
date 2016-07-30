@@ -18,7 +18,7 @@ public class ClockTest {
 
 	static private ClockMock clockMock = new ClockMock(0);
 
-	static public void run() throws Exception {
+	public static void run() throws Exception {
 
 		newPrevalenceBase();
 

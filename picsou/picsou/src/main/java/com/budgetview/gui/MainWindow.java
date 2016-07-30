@@ -8,7 +8,7 @@ import com.budgetview.client.exceptions.UserAlreadyExists;
 import com.budgetview.client.http.ConnectionRetryServerAccess;
 import com.budgetview.client.http.EncrypterToTransportServerAccess;
 import com.budgetview.client.http.HttpsClientTransport;
-import com.budgetview.client.http.PasswordBasedEncryptor;
+import com.budgetview.client.serialization.PasswordBasedEncryptor;
 import com.budgetview.client.local.LocalClientTransport;
 import com.budgetview.gui.components.PicsouFrame;
 import com.budgetview.gui.components.dialogs.MessageAndDetailsDialog;

@@ -1,10 +1,9 @@
 package com.budgetview.gui.mobile;
 
-import com.budgetview.gui.components.dialogs.MessageType;
-import com.budgetview.mobile.BudgetValuesUpdater;
 import com.budgetview.gui.components.dialogs.MessageDialog;
-import com.budgetview.gui.config.ConfigService;
+import com.budgetview.gui.components.dialogs.MessageType;
 import com.budgetview.gui.mobile.utils.AbstractMobileAction;
+import com.budgetview.mobile.BudgetValuesUpdater;
 import com.budgetview.model.User;
 import com.budgetview.model.UserPreferences;
 import com.budgetview.utils.Lang;
@@ -29,11 +28,12 @@ import java.util.Set;
 import java.util.zip.GZIPOutputStream;
 
 public class SendMobileDataAction extends AbstractMobileAction {
-  private ConfigService configService;
+
+  private Directory directory;
 
   public SendMobileDataAction(GlobRepository repository, Directory directory) {
     super(Lang.get("mobile.menu.send.data"), repository, directory);
-    this.configService = directory.get(ConfigService.class);
+    this.directory = directory;
     repository.addChangeListener(new ChangeSetListener() {
       public void globsChanged(ChangeSet changeSet, GlobRepository repository) {
         if (changeSet.containsChanges(UserPreferences.KEY)){
@@ -62,7 +62,7 @@ public class SendMobileDataAction extends AbstractMobileAction {
 
   public void actionPerformed(ActionEvent actionEvent) {
     Ref<String> msg = new Ref<String>();
-    if (sendToMobile(repository, configService, msg, false)) {
+    if (sendToMobile(repository, directory, msg, false)) {
       MessageDialog.show("mobile.data.send.title", MessageType.SUCCESS, directory, "mobile.data.send.content.ok");
     }
     else {
@@ -70,13 +70,13 @@ public class SendMobileDataAction extends AbstractMobileAction {
     }
   }
 
-  public static boolean sendToMobile(final GlobRepository sourceRepository, final ConfigService configService,
+  public static boolean sendToMobile(final GlobRepository repository, final Directory directory,
                                      Ref<String> msg, boolean pending) {
-    Glob user = sourceRepository.findOrCreate(User.KEY);
+    Glob user = repository.findOrCreate(User.KEY);
     if (user == null || !user.get(User.CONNECTED)) {
       return false;
     }
-    Glob userPreferences = sourceRepository.find(UserPreferences.KEY);
+    Glob userPreferences = repository.find(UserPreferences.KEY);
     if (userPreferences == null) {
       return false;
     }
@@ -86,7 +86,7 @@ public class SendMobileDataAction extends AbstractMobileAction {
       return false;
     }
     GlobRepository tempRepository = new DefaultGlobRepository(new DefaultGlobIdGenerator());
-    BudgetValuesUpdater.process(sourceRepository, tempRepository);
+    BudgetValuesUpdater.process(repository, tempRepository);
 
     Writer writer = null;
     try {
@@ -95,10 +95,10 @@ public class SendMobileDataAction extends AbstractMobileAction {
       XmlGlobWriter.write(tempRepository.getAll(), tempRepository, writer);
       writer.close();
       writer = null;
-      Glob userPreference = sourceRepository.get(UserPreferences.KEY);
+      Glob userPreference = repository.get(UserPreferences.KEY);
       String mail = userPreference.get(UserPreferences.MAIL_FOR_MOBILE);
       String password = userPreference.get(UserPreferences.PASSWORD_FOR_MOBILE);
-      return configService.sendMobileData(mail, password, out.toByteArray(), msg, pending);
+      return directory.get(MobileService.class).sendMobileData(mail, password, out.toByteArray(), msg, pending, repository);
     }
     catch (IOException e) {
       throw new RuntimeException(e);

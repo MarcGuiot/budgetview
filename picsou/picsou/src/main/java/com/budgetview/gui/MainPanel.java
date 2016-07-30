@@ -1,22 +1,31 @@
 package com.budgetview.gui;
 
 import com.budgetview.gui.accounts.AccountView;
+import com.budgetview.gui.actions.DeleteUserAction;
 import com.budgetview.gui.actions.ExitAction;
 import com.budgetview.gui.actions.ImportFileAction;
 import com.budgetview.gui.addons.AddOnsSelector;
 import com.budgetview.gui.addons.AddOnsView;
 import com.budgetview.gui.analysis.AnalysisSelector;
+import com.budgetview.gui.analysis.AnalysisView;
+import com.budgetview.gui.budget.BudgetView;
+import com.budgetview.gui.card.CardView;
 import com.budgetview.gui.card.NavigationService;
 import com.budgetview.gui.categorization.CategorizationSelector;
+import com.budgetview.gui.categorization.CategorizationView;
 import com.budgetview.gui.components.PicsouFrame;
 import com.budgetview.gui.components.highlighting.HighlightingService;
 import com.budgetview.gui.components.layoutconfig.LayoutConfigService;
-import com.budgetview.gui.config.ConfigService;
 import com.budgetview.gui.dashboard.DashboardStatUpdater;
 import com.budgetview.gui.dashboard.DashboardView;
+import com.budgetview.gui.feedback.FeedbackService;
+import com.budgetview.gui.help.HelpService;
 import com.budgetview.gui.license.activation.LicenseInfoView;
+import com.budgetview.gui.mobile.MobileService;
 import com.budgetview.gui.mobile.SendMobileDataAction;
+import com.budgetview.gui.model.PeriodAccountStat;
 import com.budgetview.gui.model.PeriodBudgetAreaStat;
+import com.budgetview.gui.model.PeriodSeriesStat;
 import com.budgetview.gui.notifications.NotificationsFlagView;
 import com.budgetview.gui.projects.ProjectSelector;
 import com.budgetview.gui.projects.ProjectView;
@@ -24,34 +33,25 @@ import com.budgetview.gui.series.PeriodAccountStatUpdater;
 import com.budgetview.gui.series.PeriodBudgetAreaStatUpdater;
 import com.budgetview.gui.series.PeriodSeriesStatUpdater;
 import com.budgetview.gui.series.SeriesEditor;
-import com.budgetview.gui.signpost.guides.ImportSignpost;
-import com.budgetview.gui.startup.components.DemoMessageView;
-import com.budgetview.gui.startup.components.OpenRequestManager;
-import com.budgetview.gui.time.TimeView;
-import com.budgetview.gui.title.PeriodView;
-import com.budgetview.gui.undo.UndoRedoService;
-import com.budgetview.gui.utils.MainPanelContainer;
-import com.budgetview.gui.utils.MenuBarBuilder;
-import com.budgetview.model.SignpostStatus;
-import com.budgetview.model.Transaction;
-import com.budgetview.gui.actions.DeleteUserAction;
-import com.budgetview.gui.analysis.AnalysisView;
-import com.budgetview.gui.budget.BudgetView;
-import com.budgetview.gui.card.CardView;
-import com.budgetview.gui.categorization.CategorizationView;
-import com.budgetview.gui.feedback.FeedbackService;
-import com.budgetview.gui.help.HelpService;
-import com.budgetview.gui.model.PeriodAccountStat;
-import com.budgetview.gui.model.PeriodSeriesStat;
 import com.budgetview.gui.signpost.SignpostService;
 import com.budgetview.gui.signpost.SignpostView;
 import com.budgetview.gui.signpost.WelcomeView;
 import com.budgetview.gui.signpost.components.OnboardingCompletionUpdater;
+import com.budgetview.gui.signpost.guides.ImportSignpost;
+import com.budgetview.gui.startup.components.DemoMessageView;
 import com.budgetview.gui.startup.components.LogoutService;
+import com.budgetview.gui.startup.components.OpenRequestManager;
 import com.budgetview.gui.summary.version.NewVersionView;
+import com.budgetview.gui.time.TimeView;
+import com.budgetview.gui.title.PeriodView;
 import com.budgetview.gui.transactions.TransactionView;
+import com.budgetview.gui.undo.UndoRedoService;
 import com.budgetview.gui.utils.MacOSXHooks;
+import com.budgetview.gui.utils.MainPanelContainer;
+import com.budgetview.gui.utils.MenuBarBuilder;
 import com.budgetview.model.Month;
+import com.budgetview.model.SignpostStatus;
+import com.budgetview.model.Transaction;
 import com.budgetview.utils.Lang;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.SelectionService;
@@ -270,7 +270,7 @@ public class MainPanel {
   }
 
   public void updateMobile() {
-    SendMobileDataAction.sendToMobile(repository, directory.get(ConfigService.class), new Ref<String>(), false);
+    SendMobileDataAction.sendToMobile(repository, directory, new Ref<String>(), false);
   }
 
   private class MainPanelLogoutService implements LogoutService {

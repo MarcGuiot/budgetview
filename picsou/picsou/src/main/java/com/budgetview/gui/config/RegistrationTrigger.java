@@ -50,7 +50,7 @@ public class RegistrationTrigger extends AbstractChangeSetListener {
     }
 
     public void run() {
-      directory.get(ConfigService.class).sendRegister(mail, code, repository);
+      directory.get(ConfigService.class).sendRegistration(mail, code, repository);
     }
   }
 }

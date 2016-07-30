@@ -8,7 +8,7 @@ public class StopWatch {
 
 	private final long t0 = System.currentTimeMillis();
 
-	static public StopWatch start() {
+	public static StopWatch start() {
 		return new StopWatch();
 	}
 

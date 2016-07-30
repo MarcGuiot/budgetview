@@ -25,7 +25,7 @@ import java.util.Map;
 
 public class BankSynchroService {
   private Map<Integer, BankConnectorFactory> factories = new HashMap<Integer, BankConnectorFactory>();
-  static public boolean SHOW_SYNCHRO = true;
+  public static boolean SHOW_SYNCHRO = true;
 
   public BankSynchroService() {
     if (SHOW_SYNCHRO){

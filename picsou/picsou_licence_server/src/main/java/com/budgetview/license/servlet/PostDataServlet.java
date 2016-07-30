@@ -14,13 +14,13 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.net.URLDecoder;
 
-public class ReceiveDataServlet extends AbstractHttpServlet {
+public class PostDataServlet extends AbstractHttpServlet {
   public static final String CODE_FILE_NAME = "code.ser";
   public static final String DATA_FILE_NAME = "data.ser";
   static Logger logger = Logger.getLogger("ReceiveDataServlet");
   private String root;
 
-  public ReceiveDataServlet(String root) {
+  public PostDataServlet(String root) {
     this.root = root;
   }
 

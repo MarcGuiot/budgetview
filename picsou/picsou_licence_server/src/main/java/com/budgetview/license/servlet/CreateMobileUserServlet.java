@@ -24,7 +24,7 @@ public class CreateMobileUserServlet extends HttpServlet {
   private String root;
   private Mailer mailer;
   public static MD5PasswordBasedEncryptor encryptor =
-    new MD5PasswordBasedEncryptor(HttpBudgetViewConstants.MOBILE_SALT.getBytes(), HttpBudgetViewConstants.SOME_PASSWORD.toCharArray(), 5);
+    new MD5PasswordBasedEncryptor(MobileConstants.SALT.getBytes(), HttpBudgetViewConstants.SOME_PASSWORD.toCharArray(), 5);
 
   public CreateMobileUserServlet(String root, Directory directory) {
     this.root = root;
@@ -57,7 +57,7 @@ public class CreateMobileUserServlet extends HttpServlet {
       logger.info("Invalid password " + mail);
     }
     else {
-      String dirName = ReceiveDataServlet.generateDirName(mail);
+      String dirName = PostDataServlet.generateDirName(mail);
       File dir = new File(root, dirName);
       if (!dir.exists()) {
         if (dir.mkdir()) {
@@ -74,16 +74,16 @@ public class CreateMobileUserServlet extends HttpServlet {
       }
       else {
         boolean hasPending = false;
-        File pendingCode = new File(dir, PENDING + ReceiveDataServlet.CODE_FILE_NAME);
-        File pendingData = new File(dir, PENDING + ReceiveDataServlet.DATA_FILE_NAME);
+        File pendingCode = new File(dir, PENDING + PostDataServlet.CODE_FILE_NAME);
+        File pendingData = new File(dir, PENDING + PostDataServlet.DATA_FILE_NAME);
         if (pendingCode.exists() && pendingData.exists()) {
-          Files.copyFile(pendingCode, new File(dir, ReceiveDataServlet.CODE_FILE_NAME));
-          Files.copyFile(pendingData, new File(dir, ReceiveDataServlet.DATA_FILE_NAME));
+          Files.copyFile(pendingCode, new File(dir, PostDataServlet.CODE_FILE_NAME));
+          Files.copyFile(pendingData, new File(dir, PostDataServlet.DATA_FILE_NAME));
           hasPending = true;
         }
         pendingCode.delete();
         pendingData.delete();
-        if (!ReceiveDataServlet.checkSha1Code(sha1Mail, dir)) {
+        if (!PostDataServlet.checkSha1Code(sha1Mail, dir)) {
           Files.deleteSubtreeOnly(dir);
           writeCode(sha1Mail, dir);
           logger.warn("Duplicate create : " + mail + " " + sha1Mail + " delete previous data.");
@@ -105,13 +105,13 @@ public class CreateMobileUserServlet extends HttpServlet {
   }
 
   public static void writeCode(String sha1Mail, File dir) throws IOException {
-    Writer writer = new BufferedWriter(new FileWriter(new File(dir, ReceiveDataServlet.CODE_FILE_NAME)));
+    Writer writer = new BufferedWriter(new FileWriter(new File(dir, PostDataServlet.CODE_FILE_NAME)));
     writer.append(sha1Mail);
     writer.close();
   }
 
   public static void writePendingCode(String sha1Mail, File dir) throws IOException {
-    FileWriter writer = new FileWriter(new File(dir, PENDING + ReceiveDataServlet.CODE_FILE_NAME));
+    FileWriter writer = new FileWriter(new File(dir, PENDING + PostDataServlet.CODE_FILE_NAME));
     writer.append(sha1Mail);
     writer.close();
   }

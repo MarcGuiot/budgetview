@@ -28,15 +28,15 @@ public class ImportFileAction extends AbstractAction {
   private boolean isSynchro;
   private GlobRepository repository;
 
-  static public ImportFileAction initForMenu(String text, final GlobRepository repository, final Directory directory) {
+  public static ImportFileAction initForMenu(String text, final GlobRepository repository, final Directory directory) {
     return new ImportFileAction(text, repository, directory, (Glob) null, true, false);
   }
 
-  static public void registerToOpenRequestManager(String text, final GlobRepository repository, final Directory directory) {
+  public static void registerToOpenRequestManager(String text, final GlobRepository repository, final Directory directory) {
     new ImportFileAction(text, repository, directory, false, false);
   }
 
-  static public ImportFileAction init(String text, final GlobRepository repository, final Directory directory, Glob defaulAccount) {
+  public static ImportFileAction init(String text, final GlobRepository repository, final Directory directory, Glob defaulAccount) {
     return new ImportFileAction(text, repository, directory, defaulAccount, true, false);
   }
 

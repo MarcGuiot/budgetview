@@ -7,7 +7,7 @@ import java.io.OutputStream;
 public class SerializedInputOutputFactory {
   private static boolean checked = false;
 
-  static public SerializedOutput init(OutputStream outputStream) {
+  public static SerializedOutput init(OutputStream outputStream) {
     DefaultSerializationOutput serializationOutput = new DefaultSerializationOutput(outputStream);
     if (checked) {
       return new SerializedOutputChecker(serializationOutput);
@@ -15,7 +15,7 @@ public class SerializedInputOutputFactory {
     return serializationOutput;
   }
 
-  static public SerializedInput init(InputStream inputStream) {
+  public static SerializedInput init(InputStream inputStream) {
     DefaultSerializationInput serializationInput = new DefaultSerializationInput(inputStream);
     if (checked) {
       return new SerializationInputChecker(serializationInput);

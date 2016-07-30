@@ -1,4 +1,4 @@
-package com.budgetview.client.http;
+package com.budgetview.client.serialization;
 
 public class RedirectPasswordBasedEncryptor implements PasswordBasedEncryptor {
   PasswordBasedEncryptor passwordBasedEncryptor;

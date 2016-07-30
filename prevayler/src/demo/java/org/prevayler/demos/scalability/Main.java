@@ -12,7 +12,7 @@ public class Main {
 	static private final Properties properties = new Properties();
 
 
-	static public void main(String[] args) {
+	public static void main(String[] args) {
 
 		out("\n=============================================================");
 		out(  "             Prevayler vs JDBC Scalability Tests             ");

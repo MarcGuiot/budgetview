@@ -1,10 +1,13 @@
 package com.budgetview.client.http;
 
+import com.budgetview.client.serialization.ChangeSetSerializerVisitor;
+import com.budgetview.client.serialization.PasswordBasedEncryptor;
+import com.budgetview.client.serialization.RedirectPasswordBasedEncryptor;
 import com.budgetview.http.MD5PasswordBasedEncryptor;
 import com.budgetview.shared.utils.PicsouGlobSerializer;
 import com.budgetview.client.ClientTransport;
-import com.budgetview.client.SerializableDeltaGlobSerializer;
-import com.budgetview.client.SerializableGlobSerializer;
+import com.budgetview.client.serialization.SerializableDeltaGlobSerializer;
+import com.budgetview.client.serialization.SerializableGlobSerializer;
 import com.budgetview.client.ServerAccess;
 import com.budgetview.client.exceptions.BadConnection;
 import com.budgetview.client.exceptions.BadPassword;
@@ -38,7 +41,7 @@ public class EncrypterToTransportServerAccess implements ServerAccess {
   private Long sessionId;
   private byte[] privateId;
   private boolean notConnected = true;
-  static public final byte[] salt = {0x54, 0x12, 0x43, 0x65, 0x77, 0x2, 0x79, 0x72};
+  public static final byte[] salt = {0x54, 0x12, 0x43, 0x65, 0x77, 0x2, 0x79, 0x72};
   private GlobModel globModel;
   public static int count = 20;
   private static final byte[] SOME_TEXT_TO_CHECK = "some text to check".getBytes();

@@ -1,5 +1,6 @@
 package com.budgetview.license;
 
+import com.budgetview.client.ClientParams;
 import com.budgetview.functests.utils.LoggedInFunctionalTestCase;
 import com.budgetview.gui.PicsouApplication;
 import com.budgetview.gui.browsing.BrowsingService;
@@ -9,6 +10,8 @@ import com.budgetview.http.HttpBudgetViewConstants;
 import com.budgetview.license.checkers.DbChecker;
 import com.budgetview.license.checkers.FtpServerChecker;
 import com.budgetview.license.checkers.MailServerChecker;
+import com.budgetview.license.servlet.MobileServer;
+import com.budgetview.license.servlet.WebServer;
 import org.globsframework.utils.Files;
 import org.uispec4j.UISpec4J;
 import org.uispec4j.UISpecTestCase;
@@ -23,20 +26,34 @@ public abstract class ConnectedTestCase extends UISpecTestCase {
   protected int httpPort = 5000;
 
   protected static final String PATH_TO_DATA = "tmp/localprevayler";
+  protected static final File MOBILE_DATA_DIR = new File("/var/tmp/bv_mobile/");
   protected LicenseServerChecker licenseServer;
 
   protected void setUp() throws Exception {
     super.setUp();
     LoggedInFunctionalTestCase.resetWindow();
     BrowsingService.setDummyBrowser(true);
+
     Locale.setDefault(Locale.ENGLISH);
+
+    System.setProperty(WebServer.KEYSTORE_PATH, "./picsou/picsou_licence_server/ssl/keystore");
+    System.setProperty(WebServer.KEYSTORE_PWD, "bvpwd1");
+    System.setProperty(WebServer.HTTPS_PORT_PROPERTY, "1443");
+    System.setProperty(MobileServer.MOBILE_PATH_PROPERTY, MOBILE_DATA_DIR.getAbsolutePath());
+    System.setProperty("budgetview.log.sout", "true");
+
     System.setProperty(SingleApplicationInstanceListener.SINGLE_INSTANCE_DISABLED, "true");
-    System.setProperty(ConfigService.COM_APP_LICENSE_URL, "http://localhost:" + httpPort);
-    System.setProperty(ConfigService.COM_APP_MOBILE_URL, "http://localhost:" + httpPort);
-    System.setProperty(ConfigService.COM_APP_FTP_URL, "ftp://localhost:12000");
+    System.setProperty(ClientParams.COM_APP_LICENSE_URL, "http://localhost:" + httpPort);
+    System.setProperty(ClientParams.COM_APP_MOBILE_URL, "http://localhost:" + httpPort);
+    System.setProperty(ClientParams.COM_APP_FTP_URL, "ftp://localhost:12000");
+
     System.setProperty(PicsouApplication.LOCAL_PREVAYLER_PATH_PROPERTY, PATH_TO_DATA);
     System.setProperty(PicsouApplication.DELETE_LOCAL_PREVAYLER_PROPERTY, "true");
+
     Files.deleteSubtreeOnly(new File(PATH_TO_DATA));
+
+    Files.deleteSubtreeOnly(MOBILE_DATA_DIR);
+    MOBILE_DATA_DIR.mkdir();
 
     mailServer = new MailServerChecker();
 
@@ -57,7 +74,7 @@ public abstract class ConnectedTestCase extends UISpecTestCase {
     db = null;
     ftpServer = null;
     licenseServer = null;
-    System.setProperty(ConfigService.COM_APP_LICENSE_URL, "");
+    System.setProperty(ClientParams.COM_APP_LICENSE_URL, "");
   }
 
   protected void startServers() throws Exception {

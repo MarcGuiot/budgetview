@@ -7,6 +7,7 @@ public class MobileConstants {
 
   public static final String CREATE_MOBILE_USER = "/createMobileUser";
   public static final String GET_MOBILE_DATA = "/getMobileData";
+  public static final String POST_MOBILE_DATA = "/sendMobileData";
   public static final String SEND_MAIL_TO_CONFIRM_MOBILE = "/sendMailToCreateMobileUser";
   public static final String SEND_MAIL_REMINDER_FROM_MOBILE = "/sendMailFromMobile";
   public static final String DELETE_MOBILE_ACCOUNT = "/deleteMobileAccount";
@@ -34,4 +35,6 @@ public class MobileConstants {
     "TLS_RSA_WITH_AES_128_CBC_SHA",
     "TLS_RSA_WITH_AES_256_CBC_SHA",
   };
+
+  public static final String SALT = "d48(cWqH";
 }
