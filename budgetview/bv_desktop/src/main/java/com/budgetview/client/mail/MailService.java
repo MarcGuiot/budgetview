@@ -1,10 +1,9 @@
 package com.budgetview.client.mail;
 
-import com.budgetview.shared.http.ClientParams;
 import com.budgetview.client.ConnectionStatus;
 import com.budgetview.client.http.Http;
-import com.budgetview.shared.http.HttpBudgetViewConstants;
-import com.budgetview.shared.utils.MobileConstants;
+import com.budgetview.shared.license.LicenseConstants;
+import com.budgetview.shared.mobile.MobileConstants;
 import com.budgetview.utils.Lang;
 import org.apache.http.HttpResponse;
 import org.globsframework.model.GlobRepository;
@@ -46,7 +45,7 @@ public class MailService {
     }
 
     public void run() {
-      String url = ClientParams.getLicenseServerUrl(HttpBudgetViewConstants.REQUEST_SEND_MAIL);
+      String url = LicenseConstants.getLicenseServerUrl(LicenseConstants.REQUEST_SEND_MAIL);
       Http.Post post = createPost(url);
       HttpResponse response;
       try {
@@ -97,9 +96,9 @@ public class MailService {
     private Http.Post createPost(String url) {
       return Http.post(url)
         .setHeader(MobileConstants.HEADER_LANG, Lang.get("lang"))
-        .setHeader(HttpBudgetViewConstants.HEADER_MAIL, fromMail)
-        .setHeader(HttpBudgetViewConstants.HEADER_TO_MAIL, toMail)
-        .setHeader(HttpBudgetViewConstants.HEADER_MAIL_TITLE, title)
+        .setHeader(LicenseConstants.HEADER_MAIL, fromMail)
+        .setHeader(LicenseConstants.HEADER_TO_MAIL, toMail)
+        .setHeader(LicenseConstants.HEADER_MAIL_TITLE, title)
         .setUtf8(content);
     }
   }

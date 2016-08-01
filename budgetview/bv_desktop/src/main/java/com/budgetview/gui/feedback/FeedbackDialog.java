@@ -8,7 +8,7 @@ import com.budgetview.gui.components.dialogs.MessageType;
 import com.budgetview.gui.components.dialogs.PicsouDialog;
 import com.budgetview.gui.components.server.DisconnectionTip;
 import com.budgetview.gui.startup.components.AppLogger;
-import com.budgetview.shared.http.HttpBudgetViewConstants;
+import com.budgetview.shared.license.LicenseConstants;
 import com.budgetview.model.User;
 import com.budgetview.utils.Lang;
 import org.globsframework.gui.GlobsPanelBuilder;
@@ -98,7 +98,7 @@ public class FeedbackDialog {
 
     public void actionPerformed(ActionEvent e) {
       String email = userMail.getText();
-      directory.get(MailService.class).sendMail(HttpBudgetViewConstants.SUPPORT_EMAIL,
+      directory.get(MailService.class).sendMail(LicenseConstants.SUPPORT_EMAIL,
                                                 email,
                                                 getSubject(email),
                                                 getMessageText(),

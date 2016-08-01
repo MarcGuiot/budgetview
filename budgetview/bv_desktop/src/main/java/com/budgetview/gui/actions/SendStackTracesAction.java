@@ -1,7 +1,7 @@
 package com.budgetview.gui.actions;
 
 import com.budgetview.client.mail.MailService;
-import com.budgetview.shared.http.HttpBudgetViewConstants;
+import com.budgetview.shared.license.LicenseConstants;
 import com.budgetview.model.User;
 import com.budgetview.utils.Lang;
 import org.globsframework.model.Glob;
@@ -59,11 +59,11 @@ public class SendStackTracesAction extends AbstractAction {
       }
       String content = buffer.toString();
       Log.write(content);
-      directory.get(MailService.class).sendMail(HttpBudgetViewConstants.SUPPORT_EMAIL,
-                                                  mail,
-                                                  "Thread dump",
-                                                  content,
-                                                  new MailService.Listener() {
+      directory.get(MailService.class).sendMail(LicenseConstants.SUPPORT_EMAIL,
+                                                mail,
+                                                "Thread dump",
+                                                content,
+                                                new MailService.Listener() {
                                                     public void sent(String mail, String title, String content) {
                                                       Log.write("Mail sent from " + mail + " - title : " + title + "\n" + content);
                                                     }

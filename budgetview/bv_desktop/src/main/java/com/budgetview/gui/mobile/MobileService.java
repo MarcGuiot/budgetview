@@ -1,13 +1,12 @@
 package com.budgetview.gui.mobile;
 
-import com.budgetview.shared.http.ClientParams;
 import com.budgetview.client.ConnectionStatus;
 import com.budgetview.client.http.Http;
-import com.budgetview.shared.http.HttpBudgetViewConstants;
+import com.budgetview.shared.license.LicenseConstants;
 import com.budgetview.shared.encryption.MD5PasswordBasedEncryptor;
 import com.budgetview.shared.model.MobileModel;
-import com.budgetview.shared.utils.Crypt;
-import com.budgetview.shared.utils.MobileConstants;
+import com.budgetview.shared.encryption.Crypt;
+import com.budgetview.shared.mobile.MobileConstants;
 import com.budgetview.utils.Lang;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.http.Header;
@@ -26,14 +25,14 @@ public class MobileService {
   public boolean createMobileAccount(String mail, String password, Ref<String> message, GlobRepository repository) {
     Http.Post postRequest = null;
     try {
-      postRequest = createPostMessage(mail, password, ClientParams.getMobileServerUrl(MobileConstants.SEND_MAIL_TO_CONFIRM_MOBILE));
+      postRequest = createPostMessage(mail, password, MobileConstants.getMobileServerUrl(MobileConstants.SEND_MAIL_TO_CONFIRM_MOBILE));
       HttpResponse response = postRequest.execute();
       ConnectionStatus.setOk(repository);
       if (response.getStatusLine().getStatusCode() != 200) {
         message.set(Lang.get("mobile.user.connection.failed"));
         return false;
       }
-      Header isValid = response.getFirstHeader(HttpBudgetViewConstants.HEADER_IS_VALIDE);
+      Header isValid = response.getFirstHeader(LicenseConstants.HEADER_IS_VALIDE);
       if (isValid != null && isValid.getValue().equalsIgnoreCase("true")) {
         message.set(Lang.get("mobile.user.create.mail.sent"));
         return true;
@@ -57,7 +56,7 @@ public class MobileService {
   private Http.Post createPostMessage(String mail, String password, final String url) throws UnsupportedEncodingException {
 
     MD5PasswordBasedEncryptor encryptor =
-      new MD5PasswordBasedEncryptor(MobileConstants.SALT.getBytes(), HttpBudgetViewConstants.SOME_PASSWORD.toCharArray(), 5);
+      new MD5PasswordBasedEncryptor(MobileConstants.SALT.getBytes(), LicenseConstants.SOME_PASSWORD.toCharArray(), 5);
 
     byte[] localKey = Base64.encodeBase64(encryptor.encrypt(mail.getBytes("UTF-8")));
 
@@ -68,15 +67,15 @@ public class MobileService {
 
     return Http.utf8Post(url)
       .setHeader(MobileConstants.HEADER_LANG, Lang.get("lang"))
-      .setHeader(HttpBudgetViewConstants.HEADER_MAIL, URLEncoder.encode(mail, "UTF-8"))
-      .setHeader(HttpBudgetViewConstants.CODING, URLEncoder.encode(new String(localKey), "UTF-8"))
+      .setHeader(LicenseConstants.HEADER_MAIL, URLEncoder.encode(mail, "UTF-8"))
+      .setHeader(LicenseConstants.CODING, URLEncoder.encode(new String(localKey), "UTF-8"))
       .setHeader(MobileConstants.CRYPTED_INFO, URLEncoder.encode(sha1Mail, "UTF-8"));
   }
 
   public boolean deleteMobileAccount(String mail, String password, Ref<String> message, GlobRepository repository) {
     Http.Post postRequest = null;
     try {
-      postRequest = createPostMessage(mail, password, ClientParams.getMobileServerUrl(MobileConstants.DELETE_MOBILE_ACCOUNT));
+      postRequest = createPostMessage(mail, password, MobileConstants.getMobileServerUrl(MobileConstants.DELETE_MOBILE_ACCOUNT));
       HttpResponse response = postRequest.execute();
       ConnectionStatus.setOk(repository);
       int statusCode = response.getStatusLine().getStatusCode();
@@ -104,7 +103,7 @@ public class MobileService {
   }
 
   public synchronized boolean sendMobileData(String mail, String password, byte[] bytes, Ref<String> message, boolean pending, GlobRepository repository) {
-    Http.Post postRequest = Http.utf8Post(ClientParams.getMobileServerUrl(MobileConstants.POST_MOBILE_DATA));
+    Http.Post postRequest = Http.utf8Post(MobileConstants.getMobileServerUrl(MobileConstants.POST_MOBILE_DATA));
     try {
       MD5PasswordBasedEncryptor encryptor =
         new MD5PasswordBasedEncryptor(MobileConstants.SALT.getBytes(), password.toCharArray(), 5);
@@ -114,15 +113,15 @@ public class MobileService {
       String sha1Mail = Crypt.encodeSHA1AndHex(encryptedMail);
       postRequest
         .setHeader(MobileConstants.HEADER_LANG, Lang.get("lang"))
-        .setHeader(HttpBudgetViewConstants.HEADER_MAIL, URLEncoder.encode(mail, "UTF-8"))
+        .setHeader(LicenseConstants.HEADER_MAIL, URLEncoder.encode(mail, "UTF-8"))
         .setHeader(MobileConstants.CRYPTED_INFO, URLEncoder.encode(sha1Mail, "UTF-8"))
         .setHeader(MobileConstants.MAJOR_VERSION_NAME, Integer.toString(MobileModel.MAJOR_VERSION))
         .setHeader(MobileConstants.MINOR_VERSION_NAME, Integer.toString(MobileModel.MINOR_VERSION));
       if (pending) {
-        postRequest.setHeader(HttpBudgetViewConstants.HEADER_PENDING, "true");
+        postRequest.setHeader(LicenseConstants.HEADER_PENDING, "true");
       }
       else {
-        postRequest.setHeader(HttpBudgetViewConstants.HEADER_PENDING, "false");
+        postRequest.setHeader(LicenseConstants.HEADER_PENDING, "false");
       }
       postRequest.setEntity(new ByteArrayEntity(data));
       HttpResponse response = postRequest.execute();

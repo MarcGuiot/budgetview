@@ -1,8 +1,8 @@
 package com.budgetview.functests.checkers.mobile;
 
 import com.budgetview.shared.model.MobileModel;
-import com.budgetview.shared.utils.Crypt;
-import com.budgetview.shared.utils.MobileConstants;
+import com.budgetview.shared.encryption.Crypt;
+import com.budgetview.shared.mobile.MobileConstants;
 import junit.framework.Assert;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;

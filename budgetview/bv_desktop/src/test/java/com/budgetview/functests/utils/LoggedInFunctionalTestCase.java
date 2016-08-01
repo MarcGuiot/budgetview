@@ -14,7 +14,7 @@ import com.budgetview.gui.time.TimeService;
 import com.budgetview.gui.time.TimeViewPanel;
 import com.budgetview.model.SignpostStatus;
 import com.budgetview.model.initial.DefaultSeriesFactory;
-import com.budgetview.shared.http.ClientParams;
+import com.budgetview.shared.license.LicenseConstants;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.utils.Dates;
 import org.uispec4j.UISpecAdapter;
@@ -87,8 +87,8 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
     System.setProperty(PicsouApplication.LOG_TO_SOUT, "true");
     System.setProperty(PicsouApplication.USER_FEEDBACK_DISABLED, Boolean.toString(true));
     System.setProperty(SingleApplicationInstanceListener.SINGLE_INSTANCE_DISABLED, "true");
-    System.setProperty(ClientParams.COM_APP_LICENSE_URL, "");
-    System.setProperty(ClientParams.COM_APP_FTP_URL, "");
+    System.setProperty(LicenseConstants.COM_APP_LICENSE_URL, "");
+    System.setProperty(LicenseConstants.COM_APP_FTP_URL, "");
     DefaultSeriesFactory.AUTO_CREATE_DEFAULT_SERIES = createDefaultSeries;
 
     application = new ApplicationChecker();

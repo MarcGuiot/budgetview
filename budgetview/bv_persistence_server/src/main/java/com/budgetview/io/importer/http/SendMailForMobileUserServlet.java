@@ -1,7 +1,7 @@
 package com.budgetview.io.importer.http;
 
 
-import com.budgetview.shared.http.HttpBudgetViewConstants;
+import com.budgetview.shared.license.LicenseConstants;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -19,8 +19,8 @@ public class SendMailForMobileUserServlet extends ExceptionToStatusHttpServlet {
   protected void action(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) throws IOException {
     InputStream inputStream = httpServletRequest.getInputStream();
     OutputStream outputStream = httpServletResponse.getOutputStream();
-    String mail = httpServletRequest.getHeader(HttpBudgetViewConstants.HEADER_MAIL);
-    String coding = httpServletRequest.getHeader(HttpBudgetViewConstants.HEADER_MAIL);
+    String mail = httpServletRequest.getHeader(LicenseConstants.HEADER_MAIL);
+    String coding = httpServletRequest.getHeader(LicenseConstants.HEADER_MAIL);
 
   }
 }

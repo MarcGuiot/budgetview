@@ -4,7 +4,7 @@ import com.budgetview.client.mail.MailService;
 import com.budgetview.gui.PicsouApplication;
 import com.budgetview.gui.components.dialogs.CancelAction;
 import com.budgetview.gui.components.dialogs.PicsouDialog;
-import com.budgetview.shared.http.HttpBudgetViewConstants;
+import com.budgetview.shared.license.LicenseConstants;
 import com.budgetview.model.User;
 import com.budgetview.model.UserPreferences;
 import com.budgetview.utils.Lang;
@@ -146,7 +146,7 @@ public class UserEvaluationDialog {
     public void actionPerformed(ActionEvent e) {
       sendingState.setVisible(true);
       sendingState.setIndeterminate(true);
-      directory.get(MailService.class).sendMail(HttpBudgetViewConstants.ADMIN_EMAIL,
+      directory.get(MailService.class).sendMail(LicenseConstants.ADMIN_EMAIL,
                                                 emailField.getText(),
                                                 getHeaderText(),
                                                 getMessageText(),

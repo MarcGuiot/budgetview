@@ -1,7 +1,6 @@
 package com.budgetview.gui.config;
 
 import com.budgetview.bank.BankPluginService;
-import com.budgetview.shared.http.ClientParams;
 import com.budgetview.client.ConnectionStatus;
 import com.budgetview.client.ServerAccess;
 import com.budgetview.client.http.Http;
@@ -13,12 +12,12 @@ import com.budgetview.gui.config.states.LocallyInvalidUser;
 import com.budgetview.gui.config.states.LocallyValidUser;
 import com.budgetview.gui.startup.AppPaths;
 import com.budgetview.gui.utils.KeyService;
-import com.budgetview.shared.http.HttpBudgetViewConstants;
+import com.budgetview.shared.license.LicenseConstants;
 import com.budgetview.io.importer.analyzer.TransactionAnalyzerFactory;
 import com.budgetview.model.AppVersionInformation;
 import com.budgetview.model.LicenseActivationState;
 import com.budgetview.model.User;
-import com.budgetview.shared.utils.MobileConstants;
+import com.budgetview.shared.mobile.MobileConstants;
 import com.budgetview.utils.Inline;
 import com.budgetview.utils.Lang;
 import org.apache.http.Header;
@@ -69,23 +68,23 @@ public class ConfigService {
 
   // return a translated message
   synchronized public String askForNewCodeByMail(String mail) {
-    Http.Post postRequest = Http.utf8Post(ClientParams.getLicenseServerUrl(HttpBudgetViewConstants.REQUEST_FOR_MAIL))
-      .setHeader(HttpBudgetViewConstants.HEADER_MAIL, mail)
+    Http.Post postRequest = Http.utf8Post(LicenseConstants.getLicenseServerUrl(LicenseConstants.REQUEST_FOR_MAIL))
+      .setHeader(LicenseConstants.HEADER_MAIL, mail)
       .setHeader(MobileConstants.HEADER_LANG, Lang.get("lang"));
     try {
       HttpResponse response = postRequest.executeWithRetry();
       ConnectionStatus.setOk(repository);
       int statusCode = response.getStatusLine().getStatusCode();
       if (statusCode == 200) {
-        Header status = response.getFirstHeader(HttpBudgetViewConstants.HEADER_STATUS);
+        Header status = response.getFirstHeader(LicenseConstants.HEADER_STATUS);
         if (status != null) {
-          if (status.getValue().equalsIgnoreCase(HttpBudgetViewConstants.HEADER_MAIL_SENT)) {
+          if (status.getValue().equalsIgnoreCase(LicenseConstants.HEADER_MAIL_SENT)) {
             return Lang.get("license.mail.sent");
           }
-          if (status.getValue().equalsIgnoreCase(HttpBudgetViewConstants.HEADER_MAIL_SENT_FAILED)) {
+          if (status.getValue().equalsIgnoreCase(LicenseConstants.HEADER_MAIL_SENT_FAILED)) {
             return Lang.get("license.mail.sent.failed");
           }
-          if (status.getValue().equalsIgnoreCase(HttpBudgetViewConstants.HEADER_MAIL_UNKNOWN)) {
+          if (status.getValue().equalsIgnoreCase(LicenseConstants.HEADER_MAIL_UNKNOWN)) {
             return Lang.get("license.mail.unknown");
           }
           return Lang.get("license.mail.error");
@@ -114,34 +113,34 @@ public class ConfigService {
     this.repoId = repoId;
     Http.Post postRequest =
       createNewConfigRequest(repoId, mail, signature, launchCount, activationCode,
-                             ClientParams.getLicenseServerUrl(HttpBudgetViewConstants.REQUEST_FOR_CONFIG));
+                             LicenseConstants.getLicenseServerUrl(LicenseConstants.REQUEST_FOR_CONFIG));
     try {
       HttpResponse response = postRequest.executeWithRetry();
       int statusCode = response.getStatusLine().getStatusCode();
       if (statusCode == 200) {
-        Header configVersionHeader = response.getFirstHeader(HttpBudgetViewConstants.HEADER_NEW_CONFIG_VERSION);
+        Header configVersionHeader = response.getFirstHeader(LicenseConstants.HEADER_NEW_CONFIG_VERSION);
         if (configVersionHeader != null) {
           long newConfigVersion = Long.parseLong(configVersionHeader.getValue());
           if (localConfigVersion < newConfigVersion) {
             configReceive = new ConfigReceivedCallback(this, directory, repository);
             dowloadConfigThread =
-              new DownloadThread(ClientParams.getFtpServerUrl(), AppPaths.getBankConfigPath(),
+              new DownloadThread(LicenseConstants.getFtpServerUrl(), AppPaths.getBankConfigPath(),
                                  generateConfigJarName(newConfigVersion), newConfigVersion, configReceive);
             dowloadConfigThread.start();
           }
         }
-        Header jarVersionHeader = response.getFirstHeader(HttpBudgetViewConstants.HEADER_NEW_JAR_VERSION);
+        Header jarVersionHeader = response.getFirstHeader(LicenseConstants.HEADER_NEW_JAR_VERSION);
         if (jarVersionHeader != null) {
           long newJarVersion = Long.parseLong(jarVersionHeader.getValue());
           if (localJarVersion < newJarVersion) {
             jarReceive = new JarReceivedCallback(directory, repository, serverAccess);
             dowloadJarThread =
-              new DownloadThread(ClientParams.getFtpServerUrl(), AppPaths.getJarPath(),
+              new DownloadThread(LicenseConstants.getFtpServerUrl(), AppPaths.getJarPath(),
                                  generatePicsouJarName(newJarVersion), newJarVersion, jarReceive);
             dowloadJarThread.start();
           }
         }
-        Header validityHeader = response.getFirstHeader(HttpBudgetViewConstants.HEADER_IS_VALIDE);
+        Header validityHeader = response.getFirstHeader(LicenseConstants.HEADER_IS_VALIDE);
         if (validityHeader == null) {
           userState = userState.fireKillUser(false);
         }
@@ -171,34 +170,34 @@ public class ConfigService {
   private Http.Post createNewConfigRequest(byte[] repoId, String mail, String signature, long launchCount, String activationCode, String url) {
     Http.Post postRequest = Http.utf8Post(url);
     postRequest
-      .setHeader(HttpBudgetViewConstants.HEADER_CONFIG_VERSION, Long.toString(localConfigVersion))
-      .setHeader(HttpBudgetViewConstants.HEADER_JAR_VERSION, Long.toString(localJarVersion))
-      .setHeader(HttpBudgetViewConstants.HEADER_APPLICATION_VERSION, applicationVersion)
-      .setHeader(HttpBudgetViewConstants.HEADER_REPO_ID, Encoder.byteToString(repoId))
+      .setHeader(LicenseConstants.HEADER_CONFIG_VERSION, Long.toString(localConfigVersion))
+      .setHeader(LicenseConstants.HEADER_JAR_VERSION, Long.toString(localJarVersion))
+      .setHeader(LicenseConstants.HEADER_APPLICATION_VERSION, applicationVersion)
+      .setHeader(LicenseConstants.HEADER_REPO_ID, Encoder.byteToString(repoId))
       .setHeader(MobileConstants.HEADER_LANG, Lang.get("lang"));
 
     if (signature != null && signature.length() > 1 && mail != null && activationCode != null) {
       postRequest
-        .setHeader(HttpBudgetViewConstants.HEADER_MAIL, mail)
-        .setHeader(HttpBudgetViewConstants.HEADER_SIGNATURE, signature)
-        .setHeader(HttpBudgetViewConstants.HEADER_CODE, activationCode)
-        .setHeader(HttpBudgetViewConstants.HEADER_COUNT, Long.toString(launchCount));
+        .setHeader(LicenseConstants.HEADER_MAIL, mail)
+        .setHeader(LicenseConstants.HEADER_SIGNATURE, signature)
+        .setHeader(LicenseConstants.HEADER_CODE, activationCode)
+        .setHeader(LicenseConstants.HEADER_COUNT, Long.toString(launchCount));
     }
     return postRequest;
   }
 
   private boolean checkMailSent(HttpResponse response) {
-    Header header = response.getFirstHeader(HttpBudgetViewConstants.HEADER_MAIL_SENT);
+    Header header = response.getFirstHeader(LicenseConstants.HEADER_MAIL_SENT);
     return header != null && header.getValue().equals("true");
   }
 
   synchronized public void sendRegistration(String mail, String code, final GlobRepository repository) {
     Utils.beginRemove();
-    if (!ClientParams.isLicenseServerUrlSet()) {
+    if (!LicenseConstants.isLicenseServerUrlSet()) {
       return;
     }
     Utils.endRemove();
-    String url = ClientParams.getLicenseServerUrl(HttpBudgetViewConstants.REQUEST_FOR_REGISTER);
+    String url = LicenseConstants.getLicenseServerUrl(LicenseConstants.REQUEST_FOR_REGISTER);
     Http.Post postRequest = createRegisterRequest(mail, code, url);
     try {
       HttpResponse response = postRequest.executeWithRetry();
@@ -238,9 +237,9 @@ public class ConfigService {
 
   private Http.Post createRegisterRequest(String mail, String code, String url) {
     return Http.utf8Post(url)
-      .setHeader(HttpBudgetViewConstants.HEADER_MAIL, mail)
-      .setHeader(HttpBudgetViewConstants.HEADER_CODE, code)
-      .setHeader(HttpBudgetViewConstants.HEADER_REPO_ID, Encoder.byteToString(repoId))
+      .setHeader(LicenseConstants.HEADER_MAIL, mail)
+      .setHeader(LicenseConstants.HEADER_CODE, code)
+      .setHeader(LicenseConstants.HEADER_REPO_ID, Encoder.byteToString(repoId))
       .setHeader(MobileConstants.HEADER_LANG, Lang.get("lang"));
   }
 
@@ -255,18 +254,18 @@ public class ConfigService {
   private void computeResponse(GlobRepository repository, HttpResponse response) {
     repository.startChangeSet();
     try {
-      Header header = response.getFirstHeader(HttpBudgetViewConstants.HEADER_MAIL_UNKNOWN);
+      Header header = response.getFirstHeader(LicenseConstants.HEADER_MAIL_UNKNOWN);
       if (header != null && "true".equalsIgnoreCase(header.getValue())) {
         repository.update(User.KEY, User.LICENSE_ACTIVATION_STATE, LicenseActivationState.ACTIVATION_FAILED_MAIL_UNKNOWN.getId());
       }
       else {
-        Header signature = response.getFirstHeader(HttpBudgetViewConstants.HEADER_SIGNATURE);
+        Header signature = response.getFirstHeader(LicenseConstants.HEADER_SIGNATURE);
         if (signature != null) {
           String value = signature.getValue();
           repository.update(User.KEY, User.SIGNATURE, Encoder.stringToByte(value));
         }
         else {
-          Header isMailSentHeader = response.getFirstHeader(HttpBudgetViewConstants.HEADER_ACTIVATION_CODE_NOT_VALIDE_MAIL_SENT);
+          Header isMailSentHeader = response.getFirstHeader(LicenseConstants.HEADER_ACTIVATION_CODE_NOT_VALIDE_MAIL_SENT);
           if (isMailSentHeader != null && "true".equalsIgnoreCase(isMailSentHeader.getValue())) {
             repository.update(User.KEY, User.LICENSE_ACTIVATION_STATE, LicenseActivationState.ACTIVATION_FAILED_MAIL_SENT.getId());
           }
@@ -282,8 +281,8 @@ public class ConfigService {
   }
 
   public void sendUsageData(String msg) throws IOException {
-    Http.utf8Post(ClientParams.getLicenseServerUrl(HttpBudgetViewConstants.SEND_USE_INFO))
-      .setHeader(HttpBudgetViewConstants.HEADER_USE_INFO, msg)
+    Http.utf8Post(LicenseConstants.getLicenseServerUrl(LicenseConstants.SEND_USE_INFO))
+      .setHeader(LicenseConstants.HEADER_USE_INFO, msg)
       .execute();
   }
 
@@ -322,7 +321,7 @@ public class ConfigService {
       isValideUser = false;
     }
     final String signature = signatureInByte == null ? null : Encoder.byteToString(signatureInByte);
-    if (ClientParams.isLicenseServerUrlSet()) {
+    if (LicenseConstants.isLicenseServerUrlSet()) {
       // le thread est inliné pour eviter de copier (donc de rendre visible) les variables (repoId, ...)
       // dans des donnée membres
       Thread request = new Thread() {
@@ -331,7 +330,7 @@ public class ConfigService {
         }
 
         public void run() {
-          if (!ClientParams.isLicenseServerUrlSet()) {
+          if (!LicenseConstants.isLicenseServerUrlSet()) {
             return;
           }
           boolean connectionEstablished = false;
@@ -344,7 +343,7 @@ public class ConfigService {
             }
             if (!connectionEstablished) {
               try {
-                Thread.sleep(HttpBudgetViewConstants.RETRY_PERIOD);
+                Thread.sleep(LicenseConstants.RETRY_PERIOD);
               }
               catch (InterruptedException e) {
               }
@@ -392,7 +391,7 @@ public class ConfigService {
 
   public Boolean isVerifiedServerValidity() {
     Utils.beginRemove();
-    if (!ClientParams.isLicenseServerUrlSet()) {
+    if (!LicenseConstants.isLicenseServerUrlSet()) {
       userState = new CompletedUserState("local");
       return true;
     }
@@ -424,7 +423,7 @@ public class ConfigService {
 
   public static String generatePicsouJarName(long newVersion) {
     String name = Long.toString(newVersion);
-    return ClientParams.APPNAME + name + ".jar";
+    return LicenseConstants.APPNAME + name + ".jar";
   }
 
   public static String generateConfigJarName(long newVersion) {
