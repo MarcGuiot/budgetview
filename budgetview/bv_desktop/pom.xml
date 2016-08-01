@@ -1,0 +1,302 @@
+<project>
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>com.budgetview</groupId>
+  <packaging>jar</packaging>
+  <artifactId>bv_desktop</artifactId>
+  <name>bv_desktop</name>
+  <version>1.0</version>
+
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+  </properties>
+  
+  <repositories>
+    <repository>
+      <id>jide</id>
+      <url>http://download.java.net/maven/2/</url>
+    </repository>
+  </repositories>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>2.3.2</version>
+        <configuration>
+          <source>1.8</source>
+          <target>1.8</target>
+          <encoding>UTF-8</encoding>
+          <debug>true</debug>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-resources-plugin</artifactId>
+        <version>2.3</version>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-jar-plugin</artifactId>
+        <version>2.6</version>
+        <executions>
+          <execution>
+            <goals>
+              <goal>test-jar</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <version>2.19.1</version>
+        <configuration>
+          <argLine>-Xmx256m</argLine>
+          <systemProperties>
+            <property>
+              <name>file.encoding</name>
+              <value>UTF-8</value>
+            </property>
+            <property>
+              <name>uispec4j.test.library</name>
+              <value>junit</value>
+            </property>
+          </systemProperties>
+          <includes>
+            <include>**/*Test.java</include>
+            <include>**/*Tests.java</include>
+          </includes>
+          <excludes>
+            <exclude>**/*TestCase.java</exclude>
+          </excludes>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+
+  <dependencies>
+
+    <dependency>
+      <groupId>com.budgetview</groupId>
+      <artifactId>bv_shared</artifactId>
+      <version>1.0</version>
+    </dependency>
+    <dependency>
+      <groupId>org.designup</groupId>
+      <artifactId>shrinker</artifactId>
+      <version>1.0</version>
+      <scope>runtime</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.globsframework</groupId>
+      <artifactId>prevayler</artifactId>
+      <version>1.0</version>
+    </dependency>
+    <dependency>
+      <groupId>asm</groupId>
+      <artifactId>asm</artifactId>
+      <version>3.3.1</version>
+      <type>jar</type>
+    </dependency>
+    <dependency>
+      <groupId>com.jgoodies</groupId>
+      <artifactId>looks</artifactId>
+      <version>2.2.0</version>
+    </dependency>
+    <dependency>
+      <groupId>org.swinglabs</groupId>
+      <artifactId>swingx</artifactId>
+      <version>0.9.7</version>
+    </dependency>
+    <dependency>
+      <groupId>com.apple.laf</groupId>
+      <artifactId>ui</artifactId>
+      <version>1.0</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.httpcomponents</groupId>
+      <artifactId>httpclient</artifactId>
+      <version>4.5.2</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.httpcomponents</groupId>
+      <artifactId>fluent-hc</artifactId>
+      <version>4.5.2</version>
+    </dependency>
+    <dependency>
+      <groupId>org.json</groupId>
+      <artifactId>json</artifactId>
+      <version>20160212</version>
+    </dependency>
+    <dependency>
+      <groupId>commons-net</groupId>
+      <artifactId>commons-net</artifactId>
+      <version>1.4.1</version>
+    </dependency>
+    <dependency>
+      <groupId>org.uispec4j</groupId>
+      <artifactId>uispec4j</artifactId>
+      <version>2.3-SNAPSHOT</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>4.12</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <artifactId>htmlunit</artifactId>
+      <groupId>net.sourceforge.htmlunit</groupId>
+      <version>2.22</version>
+    </dependency>
+    <dependency>
+      <groupId>org</groupId>
+      <artifactId>saxstack</artifactId>
+      <version>2.0</version>
+    </dependency>
+    <dependency>
+      <groupId>org.globsframework</groupId>
+      <artifactId>globs</artifactId>
+      <version>1.0</version>
+    </dependency>
+    <dependency>
+      <groupId>hsqldb</groupId>
+      <artifactId>hsqldb</artifactId>
+      <version>1.8.0.7</version>
+    </dependency>
+    <dependency>
+      <groupId>net.java.balloontip</groupId>
+      <artifactId>balloontip</artifactId>
+      <version>1.2.4.1</version>
+    </dependency>
+    <dependency>
+      <groupId>javax.servlet</groupId>
+      <artifactId>servlet-api</artifactId>
+      <version>2.5</version>
+    </dependency>
+    <dependency>
+      <groupId>org.eclipse.jetty</groupId>
+      <artifactId>jetty-util</artifactId>
+      <version>9.3.10.v20160621</version>
+    </dependency>
+
+    <!--Test classes dependencies-->
+
+    <dependency>
+      <groupId>org.globsframework</groupId>
+      <artifactId>globs</artifactId>
+      <version>1.0</version>
+      <type>test-jar</type>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.eclipse.jetty</groupId>
+      <artifactId>jetty-maven-plugin</artifactId>
+      <version>9.3.10.v20160621</version>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
+
+  <profiles>
+    <profile>
+      <id>gen-demo</id>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-antrun-plugin</artifactId>
+            <version>1.3</version>
+            <executions>
+              <execution>
+                <id>install</id>
+                <phase>install</phase>
+                <configuration>
+                  <tasks>
+                    <mkdir dir="src/main/resources/demo"/>
+                    <java fork="true" classname="com.budgetview.functests.general.DemoGenerationTest" failonerror="true">
+                      <jvmarg line="-Ddemogeneration.output.dir=src/main/resources/demo -Xmx512m"/>
+                      <classpath>
+                        <path refid="maven.test.classpath"/>
+                      </classpath>
+                    </java>
+
+                    <copy file="src/main/resources/demo/demo-fr.snapshot"
+                          tofile="target/classes/demo/demo-fr.snapshot"/>
+                    <copy file="src/main/resources/demo/demo-en.snapshot"
+                          tofile="target/classes/demo/demo-en.snapshot"/>
+                  </tasks>
+                </configuration>
+                <goals>
+                  <goal>run</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+    <profile>
+      <id>gen-version</id>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-antrun-plugin</artifactId>
+            <version>1.3</version>
+            <executions>
+              <execution>
+                <id>install</id>
+                <phase>install</phase>
+                <configuration>
+                  <tasks>
+                    <java fork="yes"
+                          classname="org.designup.shrinker.JarShrinker" failonerror="true">
+                      <classpath>
+                        <path refid="maven.runtime.classpath"/>
+                      </classpath>
+                      <sysproperty key="with.debug" value="true"/>
+                      <arg
+                          line="target/dump.jar ${project.build.directory}/../dev/ant/inputDump.txt ${project.build.directory}/../dev/ant/ignoreClient.txt"/>
+                    </java>
+                    <manifest file="target/classes/MANIFEST.MF">
+                      <attribute name="Main-Class" value="com.budgetview.server.persistence.direct.Dump"/>
+                    </manifest>
+                    <jar update="true" jarfile="target/dump.jar" manifest="target/classes/MANIFEST.MF"/>
+                    <java fork="yes"
+                          classname="org.designup.shrinker.JarShrinker" failonerror="true">
+                      <classpath>
+                        <path refid="maven.runtime.classpath"/>
+                      </classpath>
+                      <sysproperty key="with.debug" value="true"/>
+                      <sysproperty key="std.out.trace" value="false"/>
+                      <arg
+                          line="budgetview.jar ${project.build.directory}/../dev/ant/inputClient.txt ${project.build.directory}/../dev/ant/ignoreClient.txt"/>
+                    </java>
+                    <manifest file="target/classes/MANIFEST.MF">
+                      <attribute name="Main-Class" value="budgetview.Main"/>
+                    </manifest>
+                    <jar update="true" jarfile="budgetview.jar" manifest="target/classes/MANIFEST.MF"/>
+                    <jar destfile="config.jar">
+                      <fileset dir="src/main/resources" includes="banks/**"/>
+                    </jar>
+                    <delete dir="target/obfuscated"/>
+                    <java fork="yes" jar="dev/Zelix/ZKM.jar">
+                      <jvmarg line="-Xmx1g"/>
+                      <arg line="-de dev/Zelix/defaultExclude.txt dev/ant/zelix.txt"/>
+                    </java>
+                  </tasks>
+                </configuration>
+                <goals>
+                  <goal>run</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
+
+</project>

@@ -34,7 +34,7 @@ public class ClassPathClassRetriever implements DependExtractor.ClassRetreiver {
   }
 
   private StreamableNode getStreamableNode(String className) {
-    String[] names = (DependExtractor.undotte(className) + ".class").split("/");
+    String[] names = (DependExtractor.undot(className) + ".class").split("/");
     DirectoryNode node = entryNode;
     for (int i = 0; i < names.length - 1; i++) {
       Node child = node.findChild(names[i]);
@@ -58,7 +58,7 @@ public class ClassPathClassRetriever implements DependExtractor.ClassRetreiver {
   }
 
   public void addPathContent(String path, Boolean isRecursive, Added added) {
-    String[] names = (DependExtractor.undotte(path)).split("/");
+    String[] names = (DependExtractor.undot(path)).split("/");
     DirectoryNode node = entryNode;
     for (String name : names) {
       Node child = node.findChild(name);

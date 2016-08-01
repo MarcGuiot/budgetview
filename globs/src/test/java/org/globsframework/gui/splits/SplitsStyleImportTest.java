@@ -3,7 +3,6 @@ package org.globsframework.gui.splits;
 import org.globsframework.gui.splits.exceptions.SplitsException;
 import org.globsframework.utils.Files;
 import org.globsframework.utils.TestUtils;
-import org.globsframework.utils.exceptions.ItemNotFound;
 import org.globsframework.utils.exceptions.ResourceAccessFailed;
 
 import javax.swing.*;

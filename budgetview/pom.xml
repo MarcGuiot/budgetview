@@ -1,0 +1,18 @@
+<project>
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>org.globsframework</groupId>
+  <packaging>pom</packaging>
+  <artifactId>budgetview</artifactId>
+  <name>budgetview</name>
+  <version>1.0</version>
+  <url>http://www.mybudgetview.com</url>
+
+  <modules>
+    <module>bv_shared</module>
+    <module>bv_desktop</module>
+    <module>bv_license_server</module>
+    <module>bv_persistence_server</module>
+    <module>bv_analytics</module>
+  </modules>
+
+</project>

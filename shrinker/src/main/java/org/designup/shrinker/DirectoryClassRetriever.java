@@ -23,7 +23,7 @@ public class DirectoryClassRetriever implements DependExtractor.ClassRetreiver {
   }
 
   public InputStream getCode(String className) {
-    String s = root + "/" + DependExtractor.undotte(className) + ".class";
+    String s = root + "/" + DependExtractor.undot(className) + ".class";
     FileInputStream fileOutputStream;
     try {
       fileOutputStream = new FileInputStream(s);

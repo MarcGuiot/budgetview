@@ -1,10 +1,10 @@
 <project>
   <modelVersion>4.0.0</modelVersion>
-  <groupId>org.globsframework</groupId>
-  <packaging>jar</packaging>
+  <groupId>org.designup</groupId>
   <artifactId>shrinker</artifactId>
-  <name>jar shrinker</name>
+  <name>shrinker</name>
   <version>1.0</version>
+  <packaging>jar</packaging>
   <url>http://www.design-up.com</url>
 
 
@@ -46,8 +46,7 @@
       <groupId>asm</groupId>
       <artifactId>asm-util</artifactId>
       <version>3.3.1</version>
-      <type>jar</type>
-      <scope>test</scope>
+      <type>test</type>
     </dependency>
   </dependencies>
 
@@ -59,21 +58,5 @@
     <tag/>
     <url/>
   </scm>
-
-  <!--<ciManagement>-->
-  <!--<system>continuum</system>-->
-  <!--<notifiers>-->
-  <!--<notifier>-->
-  <!--<type>mail</type>-->
-  <!--<sendOnError>true</sendOnError>-->
-  <!--<sendOnFailure>true</sendOnFailure>-->
-  <!--<sendOnSuccess>false</sendOnSuccess>-->
-  <!--<sendOnWarning>false</sendOnWarning>-->
-  <!--<configuration>-->
-  <!--<address>severine.tardif@bi-sam.com</address>-->
-  <!--</configuration>-->
-  <!--</notifier>-->
-  <!--</notifiers>-->
-  <!--</ciManagement>-->
 
 </project>

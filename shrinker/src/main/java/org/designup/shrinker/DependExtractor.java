@@ -2,7 +2,10 @@ package org.designup.shrinker;
 
 import org.globsframework.utils.collections.MultiMap;
 import org.globsframework.utils.collections.Pair;
-import org.objectweb.asm.*;
+import org.objectweb.asm.ClassReader;
+import org.objectweb.asm.MethodVisitor;
+import org.objectweb.asm.Opcodes;
+import org.objectweb.asm.Type;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -41,7 +44,7 @@ public class DependExtractor {
   }
 
   public void addStartPoint(String className) {
-    String undotedClassName = undotte(className);
+    String undotedClassName = undot(className);
     classToParse.add(undotedClassName);
     neededClassToJar.add(undotedClassName);
   }
@@ -51,14 +54,14 @@ public class DependExtractor {
   }
 
   public void addMethodToIgnore(String methodeClassName, String methodName) {
-    methodToIgnore.put(undotte(methodeClassName), methodName);
+    methodToIgnore.put(undot(methodeClassName), methodName);
   }
 
   public void addClassToIgnore(String name) {
-    classToIgnore.add(undotte(name));
+    classToIgnore.add(undot(name));
   }
 
-  public static String undotte(String name) {
+  public static String undot(String name) {
     return name.replace('.', '/');
   }
 
@@ -106,12 +109,12 @@ public class DependExtractor {
       return new ClassReader(code);
     }
     catch (Exception e) {
-      throw new IOException("Error for: " + className, e);
+      throw new IOException("Error reading class: " + className, e);
     }
   }
 
   void add(String className) {
-    className = undotte(className);
+    className = undot(className);
     if (className.startsWith("[L")) {   //ignore array of enum??
       return;
     }
