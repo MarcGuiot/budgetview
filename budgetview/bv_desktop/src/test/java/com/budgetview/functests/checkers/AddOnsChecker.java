@@ -1,6 +1,6 @@
 package com.budgetview.functests.checkers;
 
-import com.budgetview.gui.components.PicsouFrame;
+import com.budgetview.desktop.components.PicsouFrame;
 import com.budgetview.model.AddOns;
 import org.globsframework.metamodel.fields.BooleanField;
 import org.globsframework.model.GlobRepository;

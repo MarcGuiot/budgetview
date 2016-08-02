@@ -1,6 +1,6 @@
 package com.budgetview.triggers.projects;
 
-import com.budgetview.gui.model.ProjectItemStat;
+import com.budgetview.desktop.model.ProjectItemStat;
 import com.budgetview.model.Project;
 import com.budgetview.model.ProjectItem;
 import com.budgetview.model.ProjectItemAmount;

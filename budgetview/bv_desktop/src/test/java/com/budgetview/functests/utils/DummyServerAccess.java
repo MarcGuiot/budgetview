@@ -2,7 +2,7 @@ package com.budgetview.functests.utils;
 
 import com.budgetview.client.ServerAccess;
 import com.budgetview.client.exceptions.UserAlreadyExists;
-import com.budgetview.server.model.SerializableGlobType;
+import com.budgetview.session.serialization.SerializableGlobType;
 import org.globsframework.model.ChangeSet;
 import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;

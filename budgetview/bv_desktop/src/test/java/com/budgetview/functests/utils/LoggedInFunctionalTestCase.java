@@ -5,13 +5,13 @@ import com.budgetview.functests.checkers.components.TimeViewChecker;
 import com.budgetview.functests.checkers.license.LicenseActivationChecker;
 import com.budgetview.functests.checkers.license.LicenseChecker;
 import com.budgetview.functests.checkers.printing.PrinterChecker;
-import com.budgetview.gui.PicsouApplication;
-import com.budgetview.gui.browsing.BrowsingService;
-import com.budgetview.gui.components.PicsouFrame;
-import com.budgetview.gui.startup.LoginPanel;
-import com.budgetview.gui.startup.components.SingleApplicationInstanceListener;
-import com.budgetview.gui.time.TimeService;
-import com.budgetview.gui.time.TimeViewPanel;
+import com.budgetview.desktop.Application;
+import com.budgetview.desktop.browsing.BrowsingService;
+import com.budgetview.desktop.components.PicsouFrame;
+import com.budgetview.desktop.startup.LoginPanel;
+import com.budgetview.desktop.startup.components.SingleApplicationInstanceListener;
+import com.budgetview.desktop.time.TimeService;
+import com.budgetview.desktop.time.TimeViewPanel;
 import com.budgetview.model.SignpostStatus;
 import com.budgetview.model.initial.DefaultSeriesFactory;
 import com.budgetview.shared.license.LicenseConstants;
@@ -80,12 +80,12 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
     super.setUp();
     TimeService.setCurrentDate(currentDate);
     BrowsingService.setDummyBrowser(true);
-    System.setProperty(PicsouApplication.LOCAL_PREVAYLER_PATH_PROPERTY, localPrevaylerPath);
-    System.setProperty(PicsouApplication.DEFAULT_ADDRESS_PROPERTY, "");
-    System.setProperty(PicsouApplication.DELETE_LOCAL_PREVAYLER_PROPERTY, Boolean.toString(deleteLocalPrevayler));
-    System.setProperty(PicsouApplication.IS_DATA_IN_MEMORY, Boolean.toString(isInMemory));
-    System.setProperty(PicsouApplication.LOG_TO_SOUT, "true");
-    System.setProperty(PicsouApplication.USER_FEEDBACK_DISABLED, Boolean.toString(true));
+    System.setProperty(Application.LOCAL_PREVAYLER_PATH_PROPERTY, localPrevaylerPath);
+    System.setProperty(Application.DEFAULT_ADDRESS_PROPERTY, "");
+    System.setProperty(Application.DELETE_LOCAL_PREVAYLER_PROPERTY, Boolean.toString(deleteLocalPrevayler));
+    System.setProperty(Application.IS_DATA_IN_MEMORY, Boolean.toString(isInMemory));
+    System.setProperty(Application.LOG_TO_SOUT, "true");
+    System.setProperty(Application.USER_FEEDBACK_DISABLED, Boolean.toString(true));
     System.setProperty(SingleApplicationInstanceListener.SINGLE_INSTANCE_DISABLED, "true");
     System.setProperty(LicenseConstants.COM_APP_LICENSE_URL, "");
     System.setProperty(LicenseConstants.COM_APP_FTP_URL, "");
@@ -268,16 +268,16 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
 
   public void setInMemory(boolean inMemory) {
     isInMemory = inMemory;
-    System.setProperty(PicsouApplication.IS_DATA_IN_MEMORY, Boolean.toString(isInMemory));
+    System.setProperty(Application.IS_DATA_IN_MEMORY, Boolean.toString(isInMemory));
   }
 
   public void setDeleteLocalPrevayler(boolean deleteLocalPrevayler) {
-    System.setProperty(PicsouApplication.DELETE_LOCAL_PREVAYLER_PROPERTY, Boolean.toString(deleteLocalPrevayler));
+    System.setProperty(Application.DELETE_LOCAL_PREVAYLER_PROPERTY, Boolean.toString(deleteLocalPrevayler));
     this.deleteLocalPrevayler = deleteLocalPrevayler;
   }
 
   public void setLocalPrevaylerPath(String localPrevaylerPath) {
-    System.setProperty(PicsouApplication.LOCAL_PREVAYLER_PATH_PROPERTY, localPrevaylerPath);
+    System.setProperty(Application.LOCAL_PREVAYLER_PATH_PROPERTY, localPrevaylerPath);
     this.localPrevaylerPath = localPrevaylerPath;
   }
 

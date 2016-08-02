@@ -4,7 +4,7 @@ import com.budgetview.functests.checkers.SavingsSetup;
 import com.budgetview.functests.checkers.printing.BudgetReportChecker;
 import com.budgetview.functests.utils.LoggedInFunctionalTestCase;
 import com.budgetview.functests.utils.OfxBuilder;
-import com.budgetview.gui.description.Formatting;
+import com.budgetview.desktop.description.Formatting;
 import org.junit.Test;
 
 public class PrintTest extends LoggedInFunctionalTestCase {

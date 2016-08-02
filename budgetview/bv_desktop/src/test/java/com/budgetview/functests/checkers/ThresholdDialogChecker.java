@@ -1,6 +1,6 @@
 package com.budgetview.functests.checkers;
 
-import com.budgetview.gui.description.Formatting;
+import com.budgetview.desktop.description.Formatting;
 import org.uispec4j.Button;
 import org.uispec4j.TextBox;
 import org.uispec4j.Trigger;

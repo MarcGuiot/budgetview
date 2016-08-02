@@ -6,7 +6,7 @@ import com.budgetview.bank.connectors.webcomponents.WebTableCell;
 import com.budgetview.model.Bank;
 import com.budgetview.model.RealAccount;
 import com.budgetview.shared.utils.Amounts;
-import com.budgetview.gui.time.TimeService;
+import com.budgetview.desktop.time.TimeService;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.SelectionService;
 import org.globsframework.gui.views.GlobTableView;

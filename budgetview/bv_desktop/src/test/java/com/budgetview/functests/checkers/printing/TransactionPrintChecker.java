@@ -1,11 +1,11 @@
 package com.budgetview.functests.checkers.printing;
 
-import com.budgetview.gui.printing.PrintableReport;
-import com.budgetview.gui.printing.transactions.TransactionBlock;
-import com.budgetview.gui.printing.transactions.TransactionHeaderBlock;
-import com.budgetview.gui.printing.transactions.TransactionsReport;
-import com.budgetview.gui.printing.utils.BlockColumnPage;
-import com.budgetview.gui.printing.utils.PageBlock;
+import com.budgetview.desktop.printing.PrintableReport;
+import com.budgetview.desktop.printing.transactions.TransactionBlock;
+import com.budgetview.desktop.printing.transactions.TransactionHeaderBlock;
+import com.budgetview.desktop.printing.transactions.TransactionsReport;
+import com.budgetview.desktop.printing.utils.BlockColumnPage;
+import com.budgetview.desktop.printing.utils.PageBlock;
 import junit.framework.Assert;
 import org.globsframework.utils.TablePrinter;
 

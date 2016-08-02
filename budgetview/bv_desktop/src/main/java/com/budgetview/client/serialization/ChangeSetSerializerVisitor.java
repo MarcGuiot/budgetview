@@ -1,10 +1,10 @@
 package com.budgetview.client.serialization;
 
-import com.budgetview.server.model.ServerDelta;
+import com.budgetview.session.serialization.SerializedDelta;
 import com.budgetview.shared.encryption.PasswordBasedEncryptor;
 import com.budgetview.shared.utils.PicsouGlobSerializer;
-import com.budgetview.server.model.ServerState;
-import com.budgetview.server.serialization.SerializationManager;
+import com.budgetview.session.serialization.SerializedDeltaState;
+import com.budgetview.session.serialization.SerializationManager;
 import org.globsframework.metamodel.Field;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.fields.IntegerField;
@@ -14,38 +14,38 @@ import org.globsframework.utils.collections.MultiMap;
 public class ChangeSetSerializerVisitor implements ChangeSetVisitor {
   private PasswordBasedEncryptor passwordBasedEncryptor;
   private GlobRepository repository;
-  private MultiMap<String, ServerDelta> deltaGlobMap;
+  private MultiMap<String, SerializedDelta> deltaGlobMap;
 
   public ChangeSetSerializerVisitor(PasswordBasedEncryptor passwordBasedEncryptor, GlobRepository repository) {
     this.passwordBasedEncryptor = passwordBasedEncryptor;
     this.repository = repository;
-    deltaGlobMap = new MultiMap<String, ServerDelta>();
+    deltaGlobMap = new MultiMap<String, SerializedDelta>();
   }
 
-  public MultiMap<String, ServerDelta> getSerializableGlob() {
+  public MultiMap<String, SerializedDelta> getSerializableGlob() {
     return deltaGlobMap;
   }
 
   public void visitCreation(Key key, FieldValues values) throws Exception {
     PicsouGlobSerializer serializer = key.getGlobType().getProperty(SerializationManager.SERIALIZATION_PROPERTY, null);
     if (serializer != null) {
-      writeData(key, ServerState.CREATED, serializer);
+      writeData(key, SerializedDeltaState.CREATED, serializer);
     }
   }
 
   public void visitUpdate(Key key, FieldValuesWithPrevious values) throws Exception {
     PicsouGlobSerializer serializer = key.getGlobType().getProperty(SerializationManager.SERIALIZATION_PROPERTY, null);
     if (serializer != null) {
-      writeData(key, ServerState.UPDATED, serializer);
+      writeData(key, SerializedDeltaState.UPDATED, serializer);
     }
   }
 
-  private void writeData(Key key, ServerState state, PicsouGlobSerializer serializer) {
+  private void writeData(Key key, SerializedDeltaState state, PicsouGlobSerializer serializer) {
     Glob values = repository.get(key);
     if (serializer.shouldBeSaved(repository, values)) {
       GlobType globType = key.getGlobType();
       Field keyField = globType.getKeyFields()[0];
-      ServerDelta delta = new ServerDelta((Integer)key.getValue(keyField));
+      SerializedDelta delta = new SerializedDelta((Integer)key.getValue(keyField));
       delta.setState(state);
       deltaGlobMap.put(globType.getName(), delta);
       delta.setVersion(serializer.getWriteVersion());
@@ -61,8 +61,8 @@ public class ChangeSetSerializerVisitor implements ChangeSetVisitor {
       return;
     }
     IntegerField keyField = (IntegerField)globType.getKeyFields()[0];
-    ServerDelta value = new ServerDelta(key.get(keyField));
-    value.setState(ServerState.DELETED);
+    SerializedDelta value = new SerializedDelta(key.get(keyField));
+    value.setState(SerializedDeltaState.DELETED);
     deltaGlobMap.put(globType.getName(), value);
   }
 }

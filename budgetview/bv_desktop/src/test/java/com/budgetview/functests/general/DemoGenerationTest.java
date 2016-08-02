@@ -3,7 +3,7 @@ package com.budgetview.functests.general;
 import com.budgetview.functests.checkers.LoginChecker;
 import com.budgetview.functests.utils.LoggedInFunctionalTestCase;
 import com.budgetview.functests.utils.OfxBuilder;
-import com.budgetview.gui.MainWindow;
+import com.budgetview.desktop.MainWindow;
 import com.budgetview.model.Month;
 import com.budgetview.utils.Lang;
 import org.junit.Test;

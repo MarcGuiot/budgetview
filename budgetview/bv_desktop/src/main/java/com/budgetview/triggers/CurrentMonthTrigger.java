@@ -1,7 +1,7 @@
 package com.budgetview.triggers;
 
 import com.budgetview.model.Transaction;
-import com.budgetview.gui.time.TimeService;
+import com.budgetview.desktop.time.TimeService;
 import com.budgetview.model.CurrentMonth;
 import com.budgetview.model.Month;
 import org.globsframework.model.*;

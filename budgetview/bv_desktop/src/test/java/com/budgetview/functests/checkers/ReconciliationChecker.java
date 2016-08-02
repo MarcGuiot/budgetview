@@ -1,6 +1,6 @@
 package com.budgetview.functests.checkers;
 
-import com.budgetview.gui.description.Formatting;
+import com.budgetview.desktop.description.Formatting;
 import com.budgetview.model.Transaction;
 import org.globsframework.model.Glob;
 import org.uispec4j.Panel;

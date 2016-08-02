@@ -1,6 +1,6 @@
 package com.budgetview.functests.checkers;
 
-import com.budgetview.gui.components.expansion.TableExpansionColumn;
+import com.budgetview.desktop.components.expansion.TableExpansionColumn;
 import junit.framework.Assert;
 import org.globsframework.utils.Strings;
 import org.uispec4j.*;

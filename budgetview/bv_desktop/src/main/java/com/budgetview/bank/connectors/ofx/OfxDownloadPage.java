@@ -3,7 +3,7 @@ package com.budgetview.bank.connectors.ofx;
 import com.budgetview.io.importer.ofx.OfxConnection;
 import com.budgetview.model.RealAccount;
 import com.budgetview.bank.connectors.AbstractBankConnector;
-import com.budgetview.gui.importer.components.OfxSecurityInfoButton;
+import com.budgetview.desktop.importer.components.OfxSecurityInfoButton;
 import com.budgetview.utils.Lang;
 import org.globsframework.gui.splits.SplitsBuilder;
 import org.globsframework.gui.splits.utils.Disposable;

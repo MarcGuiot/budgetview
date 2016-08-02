@@ -2,7 +2,7 @@ package com.budgetview.functests.budget;
 
 import com.budgetview.functests.utils.LoggedInFunctionalTestCase;
 import com.budgetview.functests.utils.OfxBuilder;
-import com.budgetview.gui.time.TimeService;
+import com.budgetview.desktop.time.TimeService;
 import com.budgetview.model.TransactionType;
 import org.globsframework.utils.Dates;
 import org.junit.Test;

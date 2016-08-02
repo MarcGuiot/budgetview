@@ -1,6 +1,6 @@
 <project>
   <modelVersion>4.0.0</modelVersion>
-  <groupId>org.globsframework</groupId>
+  <groupId>com.budgetview</groupId>
   <packaging>pom</packaging>
   <artifactId>budgetview</artifactId>
   <name>budgetview</name>
@@ -10,7 +10,7 @@
   <modules>
     <module>bv_shared</module>
     <module>bv_desktop</module>
-    <module>bv_license_server</module>
+    <module>bv_server</module>
     <module>bv_persistence_server</module>
     <module>bv_analytics</module>
   </modules>

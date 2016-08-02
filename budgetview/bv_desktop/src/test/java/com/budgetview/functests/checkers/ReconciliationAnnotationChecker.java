@@ -2,7 +2,7 @@ package com.budgetview.functests.checkers;
 
 import com.budgetview.functests.checkers.converters.DateCellConverter;
 import com.budgetview.functests.checkers.converters.ReconciliationAnnotationCellConverter;
-import com.budgetview.gui.transactions.reconciliation.annotations.ReconciliationAnnotationColumn;
+import com.budgetview.desktop.transactions.reconciliation.annotations.ReconciliationAnnotationColumn;
 import com.budgetview.model.Transaction;
 import junit.framework.Assert;
 import org.globsframework.model.Glob;

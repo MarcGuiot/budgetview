@@ -9,15 +9,15 @@ import com.budgetview.shared.encryption.PasswordBasedEncryptor;
 import com.budgetview.shared.encryption.RedirectPasswordBasedEncryptor;
 import com.budgetview.functests.utils.FunctionalTestCase;
 import com.budgetview.functests.utils.LoggedInFunctionalTestCase;
-import com.budgetview.gui.config.ConfigService;
+import com.budgetview.desktop.config.ConfigService;
 import com.budgetview.shared.encryption.MD5PasswordBasedEncryptor;
 import com.budgetview.model.Account;
 import com.budgetview.model.Category;
 import com.budgetview.model.PicsouModel;
 import com.budgetview.model.Transaction;
-import com.budgetview.server.ServerDirectory;
-import com.budgetview.server.model.User;
-import com.budgetview.server.session.Persistence;
+import com.budgetview.session.SessionDirectory;
+import com.budgetview.session.model.User;
+import com.budgetview.session.states.Persistence;
 import org.globsframework.metamodel.fields.IntegerField;
 import org.globsframework.model.*;
 import static org.globsframework.model.FieldValue.value;
@@ -37,7 +37,7 @@ import java.io.File;
 
 public class EncrypterToTransportServerAccessTest extends FunctionalTestCase {
   protected Directory directory;
-  private ServerDirectory serverDirectory;
+  private SessionDirectory sessionDirectory;
   private boolean inMemory = false;
   protected String url;
 
@@ -53,15 +53,15 @@ public class EncrypterToTransportServerAccessTest extends FunctionalTestCase {
   protected void tearDown() throws Exception {
     super.tearDown();
     Files.deleteWithSubtree(new File(getUrl()));
-    serverDirectory = null;
+    sessionDirectory = null;
     directory = null;
     url = null;
   }
 
   public String initServerEnvironment(boolean inMemory) throws Exception {
     String prevaylerPath = createPrevaylerRepository();
-    serverDirectory = new ServerDirectory(prevaylerPath, inMemory);
-    directory = serverDirectory.getServiceDirectory();
+    sessionDirectory = new SessionDirectory(prevaylerPath, inMemory);
+    directory = sessionDirectory.getServiceDirectory();
     return prevaylerPath;
   }
 

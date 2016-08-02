@@ -5,7 +5,7 @@ import com.budgetview.functests.checkers.ImportDialogChecker;
 import com.budgetview.functests.utils.LoggedInFunctionalTestCase;
 import com.budgetview.functests.utils.OfxBuilder;
 import com.budgetview.functests.utils.QifBuilder;
-import com.budgetview.gui.time.TimeService;
+import com.budgetview.desktop.time.TimeService;
 import com.budgetview.model.TransactionType;
 import com.budgetview.utils.Lang;
 import org.globsframework.utils.Files;

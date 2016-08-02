@@ -12,9 +12,9 @@ import com.budgetview.client.ServerAccess;
 import com.budgetview.client.exceptions.BadConnection;
 import com.budgetview.client.exceptions.BadPassword;
 import com.budgetview.client.exceptions.UserAlreadyExists;
-import com.budgetview.server.model.SerializableGlobType;
-import com.budgetview.server.model.ServerDelta;
-import com.budgetview.server.serialization.SerializationManager;
+import com.budgetview.session.serialization.SerializableGlobType;
+import com.budgetview.session.serialization.SerializedDelta;
+import com.budgetview.session.serialization.SerializationManager;
 import org.globsframework.metamodel.GlobModel;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.fields.IntegerField;
@@ -327,7 +327,7 @@ public class EncrypterToTransportServerAccess implements ServerAccess {
     changeSet.safeVisit(serializerVisitor);
     SerializedByteArrayOutput outputStream = new SerializedByteArrayOutput();
     outputStream.getOutput().writeBytes(privateId);
-    MultiMap<String, ServerDelta> stringDeltaGlobMultiMap = serializerVisitor.getSerializableGlob();
+    MultiMap<String, SerializedDelta> stringDeltaGlobMultiMap = serializerVisitor.getSerializableGlob();
     SerializableDeltaGlobSerializer.serialize(outputStream.getOutput(), stringDeltaGlobMultiMap);
     if (stringDeltaGlobMultiMap.size() != 0) {
       updateUserData(outputStream.toByteArray());

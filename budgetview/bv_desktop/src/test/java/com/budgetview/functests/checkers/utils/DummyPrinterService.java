@@ -1,7 +1,7 @@
 package com.budgetview.functests.checkers.utils;
 
-import com.budgetview.gui.printing.PrintableReport;
-import com.budgetview.gui.printing.PrinterService;
+import com.budgetview.desktop.printing.PrintableReport;
+import com.budgetview.desktop.printing.PrinterService;
 import junit.framework.Assert;
 import junit.framework.AssertionFailedError;
 import org.globsframework.utils.exceptions.OperationFailed;

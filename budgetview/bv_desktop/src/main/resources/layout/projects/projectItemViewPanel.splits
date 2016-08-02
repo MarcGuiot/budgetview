@@ -35,7 +35,7 @@
     <style id="activeItemAmount" selector="x" foreground="block.amount.planned.link"/>
     <style id="inactiveItemAmount" selector="x" foreground="projectView.item.view.itemButton.disabled"/>
 
-    <ui name="onOffToggle" class="com.budgetview.gui.components.ui.OnOffToggleUI"
+    <ui name="onOffToggle" class="com.budgetview.desktop.components.ui.OnOffToggleUI"
         selectedBgColor="projectView.onoff.selected.bg"
         selectedBorderColor="projectView.onoff.selected.border"
         selectedTextColor="projectView.onoff.selected.text"
@@ -59,7 +59,7 @@
   </styles>
 
   <column name="projectItemViewPanel"
-          layout="com.budgetview.gui.projects.utils.ProjectItemViewLayout"
+          layout="com.budgetview.desktop.projects.utils.ProjectItemViewLayout"
           opaque="true" background="projectView.item.bg.view">
     <button ref="itemButton"/>
     <component ref="monthSlider"/>

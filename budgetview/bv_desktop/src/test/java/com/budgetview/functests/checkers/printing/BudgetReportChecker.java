@@ -3,11 +3,11 @@ package com.budgetview.functests.checkers.printing;
 import com.budgetview.functests.checkers.printing.pages.BudgetGaugePageChecker;
 import com.budgetview.functests.checkers.printing.pages.BudgetOverviewPageChecker;
 import com.budgetview.functests.checkers.printing.pages.SeriesTablePageChecker;
-import com.budgetview.gui.printing.PrintableReport;
-import com.budgetview.gui.printing.budget.BudgetReport;
-import com.budgetview.gui.printing.budget.overview.BudgetOverviewPage;
-import com.budgetview.gui.printing.budget.tables.SeriesTablePage;
-import com.budgetview.gui.printing.utils.BlockMultiColumnsPage;
+import com.budgetview.desktop.printing.PrintableReport;
+import com.budgetview.desktop.printing.budget.BudgetReport;
+import com.budgetview.desktop.printing.budget.overview.BudgetOverviewPage;
+import com.budgetview.desktop.printing.budget.tables.SeriesTablePage;
+import com.budgetview.desktop.printing.utils.BlockMultiColumnsPage;
 import junit.framework.Assert;
 
 import java.awt.print.PageFormat;

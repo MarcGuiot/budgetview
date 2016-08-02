@@ -1,7 +1,7 @@
 package com.budgetview.functests.checkers;
 
 import com.budgetview.functests.checkers.components.PopupChecker;
-import com.budgetview.gui.components.charts.histo.HistoChart;
+import com.budgetview.desktop.components.charts.histo.HistoChart;
 import com.budgetview.shared.gui.histochart.HistoDataset;
 import junit.framework.Assert;
 import junit.framework.AssertionFailedError;

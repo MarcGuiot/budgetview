@@ -1,13 +1,13 @@
 package com.budgetview.io.importer.ofx;
 
-import com.budgetview.gui.components.dialogs.PicsouDialog;
-import com.budgetview.gui.importer.utils.InvalidFileFormat;
+import com.budgetview.desktop.components.dialogs.PicsouDialog;
+import com.budgetview.desktop.importer.utils.InvalidFileFormat;
 import com.budgetview.io.importer.AccountFileImporter;
 import com.budgetview.io.importer.utils.DateFormatAnalyzer;
 import com.budgetview.io.importer.utils.ImportedTransactionIdGenerator;
 import com.budgetview.model.*;
 import com.budgetview.shared.utils.Amounts;
-import com.budgetview.gui.time.TimeService;
+import com.budgetview.desktop.time.TimeService;
 import org.globsframework.model.*;
 import org.globsframework.model.repository.GlobIdGenerator;
 import org.globsframework.model.utils.GlobMatcher;

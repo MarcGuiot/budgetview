@@ -4,7 +4,7 @@ import com.budgetview.client.exceptions.BadPassword;
 import com.budgetview.client.exceptions.IdentificationFailed;
 import com.budgetview.client.exceptions.UserAlreadyExists;
 import com.budgetview.shared.encryption.PasswordBasedEncryptor;
-import com.budgetview.server.model.SerializableGlobType;
+import com.budgetview.session.serialization.SerializableGlobType;
 import com.budgetview.client.exceptions.UserNotRegistered;
 import org.globsframework.metamodel.fields.IntegerField;
 import org.globsframework.model.ChangeSet;

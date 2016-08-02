@@ -18,7 +18,7 @@
     <scrollPane weightX="10" border="" forceVerticalScroll="true">
       <column>
         <repeat ref="addOnSelectors" layout="column">
-          <column layout="com.budgetview.gui.addons.utils.AddOnPanelLayout" border="">
+          <column layout="com.budgetview.desktop.addons.utils.AddOnPanelLayout" border="">
             <label ref="label"/>
             <cards ref="cards">
               <card name="enabled">

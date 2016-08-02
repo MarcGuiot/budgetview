@@ -1,7 +1,7 @@
 package com.budgetview.client;
 
 import com.budgetview.client.serialization.SerializableGlobSerializer;
-import com.budgetview.server.model.SerializableGlobType;
+import com.budgetview.session.serialization.SerializableGlobType;
 import junit.framework.TestCase;
 import org.globsframework.utils.collections.MapOfMaps;
 import org.globsframework.utils.serialization.SerializedByteArrayOutput;

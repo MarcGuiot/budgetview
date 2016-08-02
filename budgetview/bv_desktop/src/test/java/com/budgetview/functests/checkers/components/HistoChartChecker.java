@@ -1,11 +1,11 @@
 package com.budgetview.functests.checkers.components;
 
 import com.budgetview.functests.checkers.AbstractHistoChecker;
-import com.budgetview.gui.components.charts.histo.HistoChart;
-import com.budgetview.gui.components.charts.histo.daily.HistoDailyDataset;
-import com.budgetview.gui.components.charts.histo.diff.HistoDiffDataset;
-import com.budgetview.gui.components.charts.histo.line.HistoLineDataset;
-import com.budgetview.gui.description.Formatting;
+import com.budgetview.desktop.components.charts.histo.HistoChart;
+import com.budgetview.desktop.components.charts.histo.daily.HistoDailyDataset;
+import com.budgetview.desktop.components.charts.histo.diff.HistoDiffDataset;
+import com.budgetview.desktop.components.charts.histo.line.HistoLineDataset;
+import com.budgetview.desktop.description.Formatting;
 import com.budgetview.shared.gui.histochart.HistoDataset;
 import junit.framework.Assert;
 import org.globsframework.utils.Strings;

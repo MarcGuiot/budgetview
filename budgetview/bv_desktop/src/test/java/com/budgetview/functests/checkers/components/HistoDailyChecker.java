@@ -1,9 +1,9 @@
 package com.budgetview.functests.checkers.components;
 
 import com.budgetview.functests.checkers.AbstractHistoChecker;
-import com.budgetview.gui.components.charts.histo.HistoChart;
-import com.budgetview.gui.components.charts.histo.HistoSelectionManager;
-import com.budgetview.gui.components.charts.histo.daily.HistoDailyDataset;
+import com.budgetview.desktop.components.charts.histo.HistoChart;
+import com.budgetview.desktop.components.charts.histo.HistoSelectionManager;
+import com.budgetview.desktop.components.charts.histo.daily.HistoDailyDataset;
 import com.budgetview.model.Day;
 import com.budgetview.shared.utils.Amounts;
 import junit.framework.Assert;

@@ -2,7 +2,7 @@ package com.budgetview.functests.general;
 
 import com.budgetview.functests.utils.LoggedInFunctionalTestCase;
 import com.budgetview.functests.utils.OfxBuilder;
-import com.budgetview.gui.startup.AppPaths;
+import com.budgetview.desktop.startup.AppPaths;
 import org.globsframework.utils.Files;
 import org.globsframework.utils.TestUtils;
 import org.junit.Test;

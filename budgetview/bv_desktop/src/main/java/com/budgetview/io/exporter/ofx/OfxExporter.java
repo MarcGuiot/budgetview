@@ -1,6 +1,6 @@
 package com.budgetview.io.exporter.ofx;
 
-import com.budgetview.gui.transactions.utils.TransactionMatchers;
+import com.budgetview.desktop.transactions.utils.TransactionMatchers;
 import com.budgetview.model.*;
 import com.budgetview.io.exporter.Exporter;
 import com.budgetview.io.importer.ofx.OfxImporter;

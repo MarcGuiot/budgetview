@@ -1,6 +1,6 @@
 package com.budgetview.triggers;
 
-import com.budgetview.gui.time.TimeService;
+import com.budgetview.desktop.time.TimeService;
 import com.budgetview.model.*;
 import com.budgetview.utils.PicsouTestCase;
 

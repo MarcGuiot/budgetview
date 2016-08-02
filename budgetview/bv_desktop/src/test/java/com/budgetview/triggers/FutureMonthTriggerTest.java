@@ -2,7 +2,7 @@ package com.budgetview.triggers;
 
 import com.budgetview.model.UserPreferences;
 import com.budgetview.utils.PicsouTestCase;
-import com.budgetview.gui.time.TimeService;
+import com.budgetview.desktop.time.TimeService;
 import com.budgetview.model.CurrentMonth;
 import com.budgetview.model.Month;
 

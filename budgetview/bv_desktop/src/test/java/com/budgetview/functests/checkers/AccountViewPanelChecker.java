@@ -2,10 +2,10 @@ package com.budgetview.functests.checkers;
 
 import com.budgetview.functests.checkers.components.HistoDailyChecker;
 import com.budgetview.functests.checkers.components.PopupButton;
-import com.budgetview.gui.accounts.components.AccountWeatherButton;
-import com.budgetview.gui.components.charts.histo.HistoChart;
-import com.budgetview.gui.components.charts.histo.HistoSelectionManager;
-import com.budgetview.gui.description.Formatting;
+import com.budgetview.desktop.accounts.components.AccountWeatherButton;
+import com.budgetview.desktop.components.charts.histo.HistoChart;
+import com.budgetview.desktop.components.charts.histo.HistoSelectionManager;
+import com.budgetview.desktop.description.Formatting;
 import com.budgetview.model.Day;
 import com.budgetview.utils.Lang;
 import junit.framework.Assert;

@@ -2,7 +2,7 @@ package com.budgetview.functests.transactions;
 
 import com.budgetview.functests.utils.LoggedInFunctionalTestCase;
 import com.budgetview.functests.utils.OfxBuilder;
-import com.budgetview.gui.transactions.TransactionView;
+import com.budgetview.desktop.transactions.TransactionView;
 import com.budgetview.model.TransactionType;
 import junit.framework.Assert;
 import org.junit.Test;

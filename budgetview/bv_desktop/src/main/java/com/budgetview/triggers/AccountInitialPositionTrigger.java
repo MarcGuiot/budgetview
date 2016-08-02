@@ -1,6 +1,6 @@
 package com.budgetview.triggers;
 
-import com.budgetview.gui.transactions.utils.TransactionMatchers;
+import com.budgetview.desktop.transactions.utils.TransactionMatchers;
 import com.budgetview.model.*;
 import org.globsframework.model.*;
 import org.globsframework.model.utils.BreakException;

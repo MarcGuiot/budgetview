@@ -1,7 +1,7 @@
 package com.budgetview.triggers;
 
-import com.budgetview.gui.accounts.utils.AccountMatchers;
-import com.budgetview.gui.model.SeriesShape;
+import com.budgetview.desktop.accounts.utils.AccountMatchers;
+import com.budgetview.desktop.model.SeriesShape;
 import com.budgetview.model.*;
 import com.budgetview.shared.utils.Amounts;
 import com.budgetview.model.util.AmountMap;

@@ -37,7 +37,7 @@
           <versionLine x="20" y="40" text="version ${compiler:sys.version}" fontSize="8" fontColor="0,0,0" bold="false" />
         </text>
       </splashScreen>
-      <java mainClass="budgetview.Main" vmParameters="-Xmx512m" arguments="-l en" allowVMPassthroughParameters="true" preferredVM="" bundleRuntime="true">
+      <java mainClass="com.budgetview.desktop.DesktopApp" vmParameters="-Xmx512m" arguments="-l en" allowVMPassthroughParameters="true" preferredVM="" bundleRuntime="true">
         <classPath>
           <archive location="budgetview_bundle.jar" failOnError="false" />
         </classPath>

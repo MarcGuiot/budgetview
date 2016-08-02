@@ -1,6 +1,6 @@
 package com.budgetview.io.importer.csv;
 
-import com.budgetview.gui.importer.csv.CsvSeparator;
+import com.budgetview.desktop.importer.csv.CsvSeparator;
 import com.budgetview.io.importer.csv.utils.InvalidCsvFileFormat;
 import org.globsframework.utils.Strings;
 

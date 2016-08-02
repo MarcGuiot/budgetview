@@ -4,9 +4,9 @@ import com.budgetview.functests.checkers.*;
 import com.budgetview.functests.utils.LoggedInFunctionalTestCase;
 import com.budgetview.functests.utils.OfxBuilder;
 import com.budgetview.functests.utils.StartUpFunctionalTestCase;
-import com.budgetview.gui.PicsouApplication;
-import com.budgetview.gui.startup.components.SingleApplicationInstanceListener;
-import com.budgetview.gui.time.TimeViewPanel;
+import com.budgetview.desktop.Application;
+import com.budgetview.desktop.startup.components.SingleApplicationInstanceListener;
+import com.budgetview.desktop.time.TimeViewPanel;
 import com.budgetview.model.TransactionType;
 import org.globsframework.utils.Files;
 import org.globsframework.utils.TestUtils;
@@ -69,7 +69,7 @@ public class SingleInstanceTest extends StartUpFunctionalTestCase {
     String step2File = OfxBuilder.init(this)
       .addTransaction("2000/01/04", 1.2, "menu K")
       .save();
-    PicsouApplication.main(step2File);
+    Application.main(step2File);
 
     importer
       .setMainAccount()
@@ -99,10 +99,10 @@ public class SingleInstanceTest extends StartUpFunctionalTestCase {
   @Test
   public void testOpenRequestsWhenTheApplicationIsRunning() throws Exception {
 
-    final PicsouApplication picsouApplication = new PicsouApplication();
+    final Application application = new Application();
     final Window slaWindow = WindowInterceptor.getModalDialog(new Trigger() {
       public void run() throws Exception {
-        picsouApplication.run();
+        application.run();
       }
     });
 
@@ -118,7 +118,7 @@ public class SingleInstanceTest extends StartUpFunctionalTestCase {
       .save();
     WaitEndTriggerDecorator trigger = new WaitEndTriggerDecorator(new Trigger() {
       public void run() throws Exception {
-        PicsouApplication.main(initialFile);
+        Application.main(initialFile);
       }
     });
 
@@ -128,12 +128,12 @@ public class SingleInstanceTest extends StartUpFunctionalTestCase {
     String step1File = OfxBuilder.init(this)
       .addTransaction("2000/01/01", 1.2, "mac do")
       .save();
-    PicsouApplication.main(step1File);
+    Application.main(step1File);
 
     String step2File = OfxBuilder.init(this)
       .addTransaction("2000/01/02", 1.2, "quick")
       .save();
-    PicsouApplication.main(step2File);
+    Application.main(step2File);
     importer
       .setMainAccount()
       .doImport();
@@ -146,15 +146,15 @@ public class SingleInstanceTest extends StartUpFunctionalTestCase {
       .add("01/01/2000", TransactionType.VIREMENT, "mac do", "", 1.20)
       .check();
     triggerSlaOk.getMainWindow().dispose();
-    picsouApplication.shutdown();
+    application.shutdown();
   }
 
   @Test
   public void testOpenRequestAndCloseAndOpenRequest() throws Exception {
-    final PicsouApplication picsouApplication = new PicsouApplication();
+    final Application application = new Application();
     final Window slaWindow = WindowInterceptor.getModalDialog(new Trigger() {
       public void run() throws Exception {
-        picsouApplication.run();
+        application.run();
       }
     });
 
@@ -172,7 +172,7 @@ public class SingleInstanceTest extends StartUpFunctionalTestCase {
       .save();
     WaitEndTriggerDecorator trigger1 = new WaitEndTriggerDecorator(new Trigger() {
       public void run() throws Exception {
-        PicsouApplication.main(initialFile);
+        Application.main(initialFile);
       }
     });
     Window importDialog = WindowInterceptor.getModalDialog(trigger1);
@@ -184,7 +184,7 @@ public class SingleInstanceTest extends StartUpFunctionalTestCase {
 
     WaitEndTriggerDecorator trigger2 = new WaitEndTriggerDecorator(new Trigger() {
       public void run() throws Exception {
-        PicsouApplication.main(initialFile);
+        Application.main(initialFile);
       }
     });
     importDialog = WindowInterceptor.getModalDialog(trigger2);
@@ -199,7 +199,7 @@ public class SingleInstanceTest extends StartUpFunctionalTestCase {
       .add("03/01/2000", TransactionType.VIREMENT, "menu K", "", 1.20)
       .check();
     mainWindow.dispose();
-    picsouApplication.shutdown();
+    application.shutdown();
   }
 
   @Test
@@ -213,10 +213,10 @@ public class SingleInstanceTest extends StartUpFunctionalTestCase {
 
   @Test
   public void testImportQifWhileBalanceDialogIsOpen() throws Exception {
-    final PicsouApplication picsouApplication = new PicsouApplication();
+    final Application application = new Application();
     final Window slaWindow = WindowInterceptor.getModalDialog(new Trigger() {
       public void run() throws Exception {
-        picsouApplication.run();
+        application.run();
       }
     });
 
@@ -259,16 +259,16 @@ public class SingleInstanceTest extends StartUpFunctionalTestCase {
 
     new ImportDialogChecker(newImportDialog)
       .skipAndComplete();
-    picsouApplication.shutdown();
+    application.shutdown();
     newApplication.clear();
   }
 
   @Test
   public void testImportWithSeriesEditionDialogOpen() throws Exception {
-    final PicsouApplication picsouApplication = new PicsouApplication();
+    final Application application = new Application();
     final Window slaWindow = WindowInterceptor.getModalDialog(new Trigger() {
       public void run() throws Exception {
-        picsouApplication.run();
+        application.run();
       }
     });
 
@@ -316,7 +316,7 @@ public class SingleInstanceTest extends StartUpFunctionalTestCase {
 
     new ImportDialogChecker(sameImportFileDialog)
       .skipAndComplete();
-    picsouApplication.shutdown();
+    application.shutdown();
   }
 
   private String createQifFile(String discriminant, String content) {
@@ -328,7 +328,7 @@ public class SingleInstanceTest extends StartUpFunctionalTestCase {
   private static class ApplicationThread extends Thread {
     boolean errorReceived = false;
     private String[] files;
-    private PicsouApplication picsouApplication;
+    private Application application;
 
     private ApplicationThread(String... files) {
       setDaemon(true);
@@ -337,8 +337,8 @@ public class SingleInstanceTest extends StartUpFunctionalTestCase {
 
     public void run() {
       try {
-        picsouApplication = new PicsouApplication();
-        picsouApplication.run(files);
+        application = new Application();
+        application.run(files);
       }
       catch (Throwable e) {
         errorReceived = true;
@@ -346,8 +346,8 @@ public class SingleInstanceTest extends StartUpFunctionalTestCase {
     }
 
     void shutdown() throws Exception {
-      picsouApplication.shutdown();
-      picsouApplication = null;
+      application.shutdown();
+      application = null;
     }
   }
 
@@ -370,7 +370,7 @@ public class SingleInstanceTest extends StartUpFunctionalTestCase {
     public void run() {
       trigger = new WaitEndTriggerDecorator(new Trigger() {
         public void run() throws Exception {
-          PicsouApplication.main(file);
+          Application.main(file);
         }
       });
       Window importDialog = WindowInterceptor.getModalDialog(trigger);

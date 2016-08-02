@@ -1,6 +1,6 @@
 package com.budgetview.triggers;
 
-import com.budgetview.gui.model.SavingsBudgetStat;
+import com.budgetview.desktop.model.SavingsBudgetStat;
 import com.budgetview.model.*;
 import com.budgetview.utils.TransactionComparator;
 import org.globsframework.metamodel.GlobType;

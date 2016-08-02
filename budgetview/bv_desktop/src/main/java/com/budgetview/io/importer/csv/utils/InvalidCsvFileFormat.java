@@ -1,6 +1,6 @@
 package com.budgetview.io.importer.csv.utils;
 
-import com.budgetview.gui.importer.utils.InvalidFileFormat;
+import com.budgetview.desktop.importer.utils.InvalidFileFormat;
 import com.budgetview.utils.Lang;
 
 public class InvalidCsvFileFormat extends InvalidFileFormat {

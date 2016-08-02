@@ -1,7 +1,7 @@
 package com.budgetview.triggers;
 
-import com.budgetview.gui.description.Formatting;
-import com.budgetview.gui.description.PicsouDescriptionService;
+import com.budgetview.desktop.description.Formatting;
+import com.budgetview.desktop.description.PicsouDescriptionService;
 import com.budgetview.model.NumericDateType;
 import com.budgetview.model.TextDateType;
 import com.budgetview.model.UserPreferences;

@@ -1,7 +1,7 @@
 package com.budgetview.functests.checkers;
 
 import com.budgetview.functests.checkers.components.GaugeChecker;
-import com.budgetview.gui.components.charts.Gauge;
+import com.budgetview.desktop.components.charts.Gauge;
 import org.uispec4j.Panel;
 import org.uispec4j.Window;
 

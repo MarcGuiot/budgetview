@@ -2,7 +2,7 @@ package com.budgetview.functests.general;
 
 import com.budgetview.functests.checkers.AboutChecker;
 import com.budgetview.functests.utils.LoggedInFunctionalTestCase;
-import com.budgetview.gui.startup.AppPaths;
+import com.budgetview.desktop.startup.AppPaths;
 import org.junit.Test;
 
 public class AboutTest extends LoggedInFunctionalTestCase {

@@ -1,6 +1,6 @@
 package com.budgetview.io.importer.json;
 
-import com.budgetview.gui.components.dialogs.PicsouDialog;
+import com.budgetview.desktop.components.dialogs.PicsouDialog;
 import com.budgetview.io.importer.AccountFileImporter;
 import com.budgetview.io.importer.utils.ImportedTransactionIdGenerator;
 import com.budgetview.model.ImportType;

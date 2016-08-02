@@ -1,6 +1,6 @@
 package com.budgetview.io.importer;
 
-import com.budgetview.gui.components.dialogs.PicsouDialog;
+import com.budgetview.desktop.components.dialogs.PicsouDialog;
 import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.utils.exceptions.InvalidFormat;

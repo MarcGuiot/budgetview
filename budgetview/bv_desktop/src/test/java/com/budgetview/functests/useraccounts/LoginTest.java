@@ -6,8 +6,8 @@ import com.budgetview.functests.checkers.license.LicenseActivationChecker;
 import com.budgetview.functests.checkers.license.LicenseChecker;
 import com.budgetview.functests.utils.OfxBuilder;
 import com.budgetview.functests.utils.StartUpFunctionalTestCase;
-import com.budgetview.gui.PicsouApplication;
-import com.budgetview.gui.startup.components.SingleApplicationInstanceListener;
+import com.budgetview.desktop.Application;
+import com.budgetview.desktop.startup.components.SingleApplicationInstanceListener;
 import com.budgetview.model.TransactionType;
 import com.budgetview.model.initial.DefaultSeriesFactory;
 import org.junit.Test;
@@ -29,10 +29,10 @@ public class LoginTest extends StartUpFunctionalTestCase {
   protected void setUp() throws Exception {
     super.setUp();
 
-    System.setProperty(PicsouApplication.DEFAULT_ADDRESS_PROPERTY, "");
-    System.setProperty(PicsouApplication.DELETE_LOCAL_PREVAYLER_PROPERTY, "");
-    System.setProperty(PicsouApplication.IS_DATA_IN_MEMORY, "");
-    System.setProperty(PicsouApplication.LOG_TO_SOUT, "true");
+    System.setProperty(Application.DEFAULT_ADDRESS_PROPERTY, "");
+    System.setProperty(Application.DELETE_LOCAL_PREVAYLER_PROPERTY, "");
+    System.setProperty(Application.IS_DATA_IN_MEMORY, "");
+    System.setProperty(Application.LOG_TO_SOUT, "true");
     System.setProperty(SingleApplicationInstanceListener.SINGLE_INSTANCE_DISABLED, "true");
 
     application = new ApplicationChecker();

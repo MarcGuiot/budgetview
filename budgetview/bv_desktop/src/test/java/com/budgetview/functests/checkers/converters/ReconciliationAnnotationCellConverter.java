@@ -1,6 +1,6 @@
 package com.budgetview.functests.checkers.converters;
 
-import com.budgetview.gui.transactions.reconciliation.annotations.ReconciliationAnnotationColumn;
+import com.budgetview.desktop.transactions.reconciliation.annotations.ReconciliationAnnotationColumn;
 import org.globsframework.gui.views.utils.CellPainterPanel;
 import org.uispec4j.TableCellValueConverter;
 

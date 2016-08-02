@@ -1,6 +1,6 @@
 package com.budgetview.client.serialization;
 
-import com.budgetview.server.model.SerializableGlobType;
+import com.budgetview.session.serialization.SerializableGlobType;
 import org.globsframework.utils.collections.MapOfMaps;
 import org.globsframework.utils.serialization.SerializedInput;
 import org.globsframework.utils.serialization.SerializedOutput;

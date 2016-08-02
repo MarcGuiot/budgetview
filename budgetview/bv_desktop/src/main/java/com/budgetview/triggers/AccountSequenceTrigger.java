@@ -1,6 +1,6 @@
 package com.budgetview.triggers;
 
-import com.budgetview.gui.accounts.utils.AutomaticAccountComparator;
+import com.budgetview.desktop.accounts.utils.AutomaticAccountComparator;
 import com.budgetview.model.Account;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.*;

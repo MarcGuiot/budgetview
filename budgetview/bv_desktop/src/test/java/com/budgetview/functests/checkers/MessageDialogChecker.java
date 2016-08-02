@@ -1,6 +1,6 @@
 package com.budgetview.functests.checkers;
 
-import com.budgetview.gui.components.dialogs.MessageDialog;
+import com.budgetview.desktop.components.dialogs.MessageDialog;
 import org.uispec4j.Trigger;
 import org.uispec4j.Window;
 import org.uispec4j.interception.WindowInterceptor;

@@ -1,11 +1,11 @@
 package com.jgoodies.looks.plastic;
 
 import com.jgoodies.looks.LookUtils;
-import com.budgetview.gui.components.ui.FlatScrollbarUI;
-import com.budgetview.gui.components.ui.RoundButtonUI;
-import com.budgetview.gui.plaf.ApplicationLAF;
-import com.budgetview.gui.plaf.PicsouButtonUI;
-import com.budgetview.gui.plaf.PicsouWindowsLabelUI;
+import com.budgetview.desktop.components.ui.FlatScrollbarUI;
+import com.budgetview.desktop.components.ui.RoundButtonUI;
+import com.budgetview.desktop.plaf.ApplicationLAF;
+import com.budgetview.desktop.plaf.PicsouButtonUI;
+import com.budgetview.desktop.plaf.PicsouWindowsLabelUI;
 import org.jdesktop.swingx.JXDatePicker;
 import org.jdesktop.swingx.JXMonthView;
 import org.jdesktop.swingx.JXHyperlink;

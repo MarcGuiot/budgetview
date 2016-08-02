@@ -1,7 +1,7 @@
 package com.budgetview.functests.checkers.license;
 
 import com.budgetview.functests.checkers.GuiChecker;
-import com.budgetview.gui.components.ProgressPanel;
+import com.budgetview.desktop.components.ProgressPanel;
 import com.budgetview.utils.Lang;
 import org.uispec4j.*;
 import org.uispec4j.assertion.UISpecAssert;

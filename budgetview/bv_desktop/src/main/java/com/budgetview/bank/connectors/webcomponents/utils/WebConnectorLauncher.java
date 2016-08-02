@@ -3,14 +3,14 @@ package com.budgetview.bank.connectors.webcomponents.utils;
 import com.budgetview.bank.BankConnector;
 import com.budgetview.bank.BankConnectorFactory;
 import com.budgetview.bank.BankPluginService;
-import com.budgetview.gui.PicsouApplication;
-import com.budgetview.gui.browsing.BrowsingService;
-import com.budgetview.gui.browsing.DummyBrowsingService;
-import com.budgetview.gui.description.PicsouDescriptionService;
-import com.budgetview.gui.startup.components.OpenRequestManager;
-import com.budgetview.gui.utils.ApplicationColors;
+import com.budgetview.desktop.Application;
+import com.budgetview.desktop.browsing.BrowsingService;
+import com.budgetview.desktop.browsing.DummyBrowsingService;
+import com.budgetview.desktop.description.PicsouDescriptionService;
+import com.budgetview.desktop.startup.components.OpenRequestManager;
+import com.budgetview.desktop.utils.ApplicationColors;
 import com.budgetview.bank.connectors.SynchroMonitor;
-import com.budgetview.gui.model.PicsouGuiModel;
+import com.budgetview.desktop.model.PicsouGuiModel;
 import com.budgetview.io.importer.analyzer.TransactionAnalyzerFactory;
 import com.budgetview.model.Synchro;
 import com.budgetview.utils.Lang;
@@ -83,7 +83,7 @@ public class WebConnectorLauncher {
     directory.add(new BankPluginService());
     directory.add(new TransactionAnalyzerFactory(PicsouGuiModel.get()));
     directory.get(TransactionAnalyzerFactory.class)
-      .load(WebConnectorLauncher.class.getClassLoader(), PicsouApplication.BANK_CONFIG_VERSION, repository, directory);
+      .load(WebConnectorLauncher.class.getClassLoader(), Application.BANK_CONFIG_VERSION, repository, directory);
 
     return directory;
   }

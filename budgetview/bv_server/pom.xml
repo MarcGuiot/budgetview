@@ -2,8 +2,8 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.budgetview</groupId>
   <packaging>jar</packaging>
-  <artifactId>bv_license_server</artifactId>
-  <name>bv_license_server</name>
+  <artifactId>bv_server</artifactId>
+  <name>bv_server</name>
   <version>1.0</version>
 
   <repositories>
@@ -141,6 +141,19 @@
       <scope>test</scope>
     </dependency>
     <dependency>
+      <groupId>mysql</groupId>
+      <artifactId>mysql-connector-java</artifactId>
+      <version>5.1.6</version>
+    </dependency>
+    <dependency>
+      <groupId>org.globsframework</groupId>
+      <artifactId>picsou</artifactId>
+      <version>1.0</version>
+    </dependency>
+
+    <!-- For tests only-->
+
+    <dependency>
       <groupId>org.globsframework</groupId>
       <artifactId>globs</artifactId>
       <version>1.0</version>
@@ -160,16 +173,7 @@
       <version>2.3-SNAPSHOT</version>
       <scope>test</scope>
     </dependency>
-    <dependency>
-      <groupId>mysql</groupId>
-      <artifactId>mysql-connector-java</artifactId>
-      <version>5.1.6</version>
-    </dependency>
-    <dependency>
-      <groupId>org.globsframework</groupId>
-      <artifactId>picsou</artifactId>
-      <version>1.0</version>
-    </dependency>
+
   </dependencies>
 
   <scm>

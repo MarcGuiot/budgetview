@@ -4,7 +4,7 @@ import com.budgetview.functests.checkers.components.TipChecker;
 import com.budgetview.functests.checkers.utils.ComponentIsVisibleAssertion;
 import com.budgetview.functests.checkers.utils.MessageIsHiddenAssertion;
 import com.budgetview.functests.utils.BalloonTipTesting;
-import com.budgetview.gui.description.Formatting;
+import com.budgetview.desktop.description.Formatting;
 import com.budgetview.model.Month;
 import org.globsframework.utils.Dates;
 import org.uispec4j.*;

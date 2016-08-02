@@ -1,6 +1,6 @@
 package com.budgetview.model;
 
-import com.budgetview.gui.accounts.utils.MonthDay;
+import com.budgetview.desktop.accounts.utils.MonthDay;
 import com.budgetview.shared.utils.PicsouGlobSerializer;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.index.MultiFieldUniqueIndex;

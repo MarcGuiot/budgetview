@@ -1,7 +1,7 @@
 package com.budgetview.triggers;
 
-import com.budgetview.gui.model.SeriesStat;
-import com.budgetview.gui.model.SeriesType;
+import com.budgetview.desktop.model.SeriesStat;
+import com.budgetview.desktop.model.SeriesType;
 import com.budgetview.model.Series;
 import com.budgetview.model.SeriesGroup;
 import org.globsframework.metamodel.GlobType;
@@ -11,8 +11,8 @@ import org.globsframework.model.utils.DefaultChangeSetVisitor;
 import java.util.HashSet;
 import java.util.Set;
 
-import static com.budgetview.gui.model.SeriesStat.isSummaryForGroup;
-import static com.budgetview.gui.model.SeriesStat.isSummaryForSeries;
+import static com.budgetview.desktop.model.SeriesStat.isSummaryForGroup;
+import static com.budgetview.desktop.model.SeriesStat.isSummaryForSeries;
 import static org.globsframework.model.utils.GlobMatchers.*;
 
 public class SeriesStatForGroupsTrigger implements ChangeSetListener {

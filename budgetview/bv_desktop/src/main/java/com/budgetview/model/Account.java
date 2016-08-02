@@ -1,9 +1,9 @@
 package com.budgetview.model;
 
-import com.budgetview.gui.accounts.utils.AccountMatchers;
+import com.budgetview.desktop.accounts.utils.AccountMatchers;
 import com.budgetview.shared.utils.PicsouGlobSerializer;
 import com.budgetview.utils.PicsouUtils;
-import com.budgetview.gui.accounts.utils.MonthDay;
+import com.budgetview.desktop.accounts.utils.MonthDay;
 import com.budgetview.utils.Lang;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.annotations.*;

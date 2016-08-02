@@ -1,6 +1,6 @@
 package com.budgetview.functests.checkers;
 
-import com.budgetview.gui.PicsouApplication;
+import com.budgetview.desktop.Application;
 import org.uispec4j.Panel;
 import org.uispec4j.Trigger;
 import org.uispec4j.Window;
@@ -20,7 +20,7 @@ public class AboutChecker extends GuiChecker {
   }
 
   public void checkVersion() {
-    UISpecAssert.assertThat(dialog.getTextBox("versionLabel").textContains(PicsouApplication.APPLICATION_VERSION));
+    UISpecAssert.assertThat(dialog.getTextBox("versionLabel").textContains(Application.APPLICATION_VERSION));
   }
 
   public void checkConfigurationContains(String text) {

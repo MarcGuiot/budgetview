@@ -1,8 +1,8 @@
 package com.jgoodies.looks.plastic;
 
-import com.budgetview.gui.components.ui.FlatScrollbarUI;
-import com.budgetview.gui.components.ui.RoundButtonUI;
-import com.budgetview.gui.plaf.*;
+import com.budgetview.desktop.components.ui.FlatScrollbarUI;
+import com.budgetview.desktop.components.ui.RoundButtonUI;
+import com.budgetview.desktop.plaf.*;
 import org.jdesktop.swingx.JXDatePicker;
 import org.jdesktop.swingx.JXMonthView;
 import org.jdesktop.swingx.JXHyperlink;

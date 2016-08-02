@@ -1,7 +1,7 @@
 package com.budgetview.triggers;
 
-import com.budgetview.gui.model.SeriesStat;
-import com.budgetview.gui.model.SeriesType;
+import com.budgetview.desktop.model.SeriesStat;
+import com.budgetview.desktop.model.SeriesType;
 import com.budgetview.model.Account;
 import com.budgetview.model.CurrentMonth;
 import com.budgetview.model.Series;

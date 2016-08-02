@@ -2,7 +2,7 @@ package com.budgetview.functests.checkers.printing.pages;
 
 import com.budgetview.functests.checkers.components.HistoChartChecker;
 import com.budgetview.functests.checkers.components.StackChecker;
-import com.budgetview.gui.printing.budget.overview.BudgetOverviewPage;
+import com.budgetview.desktop.printing.budget.overview.BudgetOverviewPage;
 import junit.framework.Assert;
 import org.uispec4j.Panel;
 

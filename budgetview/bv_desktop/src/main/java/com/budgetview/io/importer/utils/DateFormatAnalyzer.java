@@ -1,6 +1,6 @@
 package com.budgetview.io.importer.utils;
 
-import com.budgetview.gui.importer.utils.InvalidFileFormat;
+import com.budgetview.desktop.importer.utils.InvalidFileFormat;
 import org.globsframework.utils.exceptions.InvalidData;
 
 import java.util.*;

@@ -1,7 +1,7 @@
 package com.budgetview.bank.connectors.utils;
 
 import com.budgetview.bank.BankConnector;
-import com.budgetview.gui.PicsouApplication;
+import com.budgetview.desktop.Application;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -25,7 +25,7 @@ public class WebTraces {
     StringWriter builder = new StringWriter();
     if (connector != null) {
       builder.append("bank: ").append(connector.getLabel()).append("\n");
-      builder.append("version: ").append(Long.toString(PicsouApplication.JAR_VERSION)).append("\n");
+      builder.append("version: ").append(Long.toString(Application.JAR_VERSION)).append("\n");
       builder.append("location: ").append(connector.getCurrentLocation()).append("\n");
     }
     else {

@@ -5,7 +5,7 @@ import com.budgetview.bank.BankConnectorFactory;
 import com.budgetview.bank.connectors.WebBankConnector;
 import com.budgetview.bank.connectors.webcomponents.*;
 import com.budgetview.bank.connectors.webcomponents.utils.WebCommandFailed;
-import com.budgetview.gui.browsing.BrowsingAction;
+import com.budgetview.desktop.browsing.BrowsingAction;
 import com.budgetview.shared.utils.Amounts;
 import com.gargoylesoftware.htmlunit.*;
 import com.gargoylesoftware.htmlunit.html.*;

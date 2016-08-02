@@ -1,6 +1,6 @@
 package com.budgetview.functests.checkers.printing.pages;
 
-import com.budgetview.gui.printing.budget.tables.SeriesTable;
+import com.budgetview.desktop.printing.budget.tables.SeriesTable;
 import junit.framework.Assert;
 import org.globsframework.utils.TablePrinter;
 import org.globsframework.utils.TestUtils;

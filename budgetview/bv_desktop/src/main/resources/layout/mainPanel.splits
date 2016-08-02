@@ -19,12 +19,12 @@
            minimumSize="(20,10)" preferredSize="(20,10)"/>
 
     <!-- Back/forward buttons -->
-    <ui name="backArrow" class="com.budgetview.gui.components.ui.ArrowButtonUI"
+    <ui name="backArrow" class="com.budgetview.desktop.components.ui.ArrowButtonUI"
         rotation="180" doubleArrow="false"
         rolloverColor="views.backforward.rollover" pressedColor="views.backforward.pressed"
         disabledColor="views.backforward.disabled"
         size="(16,12)"/>
-    <ui name="forwardArrow" class="com.budgetview.gui.components.ui.ArrowButtonUI"
+    <ui name="forwardArrow" class="com.budgetview.desktop.components.ui.ArrowButtonUI"
         rotation="0" doubleArrow="false"
         rolloverColor="views.backforward.rollover" pressedColor="views.backforward.pressed"
         disabledColor="views.backforward.disabled"
@@ -36,7 +36,7 @@
     <style selector="button#forwardView" ui="forwardArrow" marginRight="5"/>
 
     <!-- Notifications flag -->
-    <ui name="notificationsFlagUI" class="com.budgetview.gui.components.ui.NotificationFlagUI"
+    <ui name="notificationsFlagUI" class="com.budgetview.desktop.components.ui.NotificationFlagUI"
         balloonColor="notifications.flag.balloon"
         balloonShadowColor="notifications.flag.shadow"
         balloonRolloverColor="notifications.flag.rollover"
@@ -73,7 +73,7 @@
       <filler fill="vertical"/>
     </column>
 
-    <panel name="timeviewHeader" layout="com.budgetview.gui.utils.HeaderPanelLayout"
+    <panel name="timeviewHeader" layout="com.budgetview.desktop.utils.HeaderPanelLayout"
            background="header.bg" opaque="true"
            border="matte(0,0,1,0,header.border)">
       <button ref="periodTitle" styleClass="headerTitle"

@@ -1,7 +1,7 @@
 package com.budgetview.model;
 
 import com.budgetview.shared.utils.PicsouGlobSerializer;
-import com.budgetview.gui.time.TimeService;
+import com.budgetview.desktop.time.TimeService;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.annotations.DefaultInteger;
 import org.globsframework.metamodel.annotations.Key;

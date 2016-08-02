@@ -1,9 +1,9 @@
 package com.budgetview.triggers;
 
+import com.budgetview.desktop.Application;
 import com.budgetview.model.LicenseActivationState;
 import com.budgetview.client.ServerAccess;
-import com.budgetview.gui.PicsouApplication;
-import com.budgetview.gui.utils.KeyService;
+import com.budgetview.desktop.utils.KeyService;
 import com.budgetview.model.User;
 import org.globsframework.model.*;
 
@@ -43,7 +43,7 @@ public class LicenseRegistrationTrigger extends AbstractChangeSetListener {
             if (mail != null && signature != null && activationCode != null) {
               byte[] mailAsByte = mail.getBytes();
               if (KeyService.checkSignature(mailAsByte, signature)) {
-                serverAccess.localRegister(mailAsByte, signature, activationCode, PicsouApplication.JAR_VERSION);
+                serverAccess.localRegister(mailAsByte, signature, activationCode, Application.JAR_VERSION);
                 repository.update(User.KEY,
                                   value(User.LICENSE_ACTIVATION_STATE, LicenseActivationState.ACTIVATION_OK.getId()),
                                   value(User.IS_REGISTERED_USER, true));

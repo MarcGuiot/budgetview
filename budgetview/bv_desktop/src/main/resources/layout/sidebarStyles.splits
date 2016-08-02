@@ -29,7 +29,7 @@
     <!-- Scrollbars -->
 
     <ui name="scrollPaneUI"
-        class="com.budgetview.gui.components.ui.FlatScrollbarUI"
+        class="com.budgetview.desktop.components.ui.FlatScrollbarUI"
         color="sidebar.scrollBar.idle" rolloverColor="sidebar.scrollBar.rollover" background="sidebar.bg"/>
     <style selector="scrollPane" scrollbarUI="scrollPaneUI" background="#FFFFFF"/>
 

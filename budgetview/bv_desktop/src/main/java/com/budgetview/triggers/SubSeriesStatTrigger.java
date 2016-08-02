@@ -2,7 +2,7 @@ package com.budgetview.triggers;
 
 import com.budgetview.model.SubSeries;
 import com.budgetview.model.Transaction;
-import com.budgetview.gui.model.SubSeriesStat;
+import com.budgetview.desktop.model.SubSeriesStat;
 import com.budgetview.shared.utils.Amounts;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.*;

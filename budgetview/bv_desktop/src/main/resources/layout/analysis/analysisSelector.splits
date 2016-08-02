@@ -16,7 +16,7 @@
     </row>
 
     <repeat ref="repeat" layout="column" marginLeft="10" marginRight="10" weightY="0.1">
-      <row ref="selectionPanel" layout="com.budgetview.gui.analysis.utils.AnalysisSelectorLayout" fill="horizontal">
+      <row ref="selectionPanel" layout="com.budgetview.desktop.analysis.utils.AnalysisSelectorLayout" fill="horizontal">
         <button ref="arrow" styleClass="sidebarSelectionButton"/>
         <button ref="selector" styleClass="hyperlinkWithoutUnderline" foreground="sidebar.label"/>
       </row>

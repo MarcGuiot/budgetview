@@ -1,7 +1,7 @@
 package com.budgetview.functests.checkers;
 
-import com.budgetview.gui.description.Formatting;
-import com.budgetview.gui.transactions.split.SplitTransactionDialog;
+import com.budgetview.desktop.description.Formatting;
+import com.budgetview.desktop.transactions.split.SplitTransactionDialog;
 import org.uispec4j.Button;
 import org.uispec4j.Table;
 import org.uispec4j.TableCellValueConverter;

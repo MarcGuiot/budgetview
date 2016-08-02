@@ -1,12 +1,12 @@
 package com.budgetview.triggers;
 
-import com.budgetview.gui.categorization.utils.Uncategorized;
-import com.budgetview.gui.model.SeriesStat;
+import com.budgetview.desktop.categorization.utils.Uncategorized;
+import com.budgetview.desktop.model.SeriesStat;
 import com.budgetview.model.*;
 import com.budgetview.shared.utils.Amounts;
 import com.budgetview.utils.TransactionComparator;
-import com.budgetview.gui.model.AccountStat;
-import com.budgetview.gui.model.BudgetStat;
+import com.budgetview.desktop.model.AccountStat;
+import com.budgetview.desktop.model.BudgetStat;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.*;
 import org.globsframework.model.utils.GlobMatchers;

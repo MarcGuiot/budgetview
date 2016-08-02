@@ -1,6 +1,6 @@
 package com.budgetview.model;
 
-import com.budgetview.gui.model.ProjectItemStat;
+import com.budgetview.desktop.model.ProjectItemStat;
 import com.budgetview.model.util.ClosedMonthRange;
 import com.budgetview.shared.utils.PicsouGlobSerializer;
 import org.globsframework.metamodel.GlobType;

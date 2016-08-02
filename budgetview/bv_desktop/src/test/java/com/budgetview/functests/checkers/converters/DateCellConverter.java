@@ -1,6 +1,6 @@
 package com.budgetview.functests.checkers.converters;
 
-import com.budgetview.gui.description.stringifiers.TransactionDateStringifier;
+import com.budgetview.desktop.description.stringifiers.TransactionDateStringifier;
 import com.budgetview.model.Month;
 import com.budgetview.model.Transaction;
 import org.globsframework.model.Glob;

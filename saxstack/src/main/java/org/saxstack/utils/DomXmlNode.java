@@ -23,9 +23,6 @@ public class DomXmlNode implements XmlNode {
     }
   }
 
-  public DomXmlNode() {
-  }
-
   public XmlNode getSubNode(String childName, Attributes xmlAttrs) throws ExceptionHolder {
     DomXmlNode expectedXmlNode = new DomXmlNode(childName, xmlAttrs);
     children.add(expectedXmlNode);

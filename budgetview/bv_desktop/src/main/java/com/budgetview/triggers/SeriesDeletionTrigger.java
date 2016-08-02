@@ -2,7 +2,7 @@ package com.budgetview.triggers;
 
 import com.budgetview.model.SubSeries;
 import com.budgetview.model.Transaction;
-import com.budgetview.gui.model.SeriesStat;
+import com.budgetview.desktop.model.SeriesStat;
 import com.budgetview.model.Series;
 import com.budgetview.model.SeriesBudget;
 import org.globsframework.model.*;
@@ -10,7 +10,7 @@ import org.globsframework.model.utils.DefaultChangeSetListener;
 import org.globsframework.model.utils.DefaultChangeSetVisitor;
 import org.globsframework.model.utils.GlobFunctor;
 
-import static com.budgetview.gui.model.SeriesStat.linkedToSeries;
+import static com.budgetview.desktop.model.SeriesStat.linkedToSeries;
 import static org.globsframework.model.FieldValue.value;
 import static org.globsframework.model.utils.GlobMatchers.fieldEquals;
 import static org.globsframework.model.utils.GlobMatchers.linkedTo;

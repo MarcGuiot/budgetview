@@ -5,7 +5,7 @@ import com.budgetview.functests.checkers.components.PopupButton;
 import com.budgetview.functests.checkers.converters.BankDateCellConverter;
 import com.budgetview.functests.checkers.converters.DateCellConverter;
 import com.budgetview.functests.checkers.converters.SeriesCellConverter;
-import com.budgetview.gui.transactions.TransactionView;
+import com.budgetview.desktop.transactions.TransactionView;
 import com.budgetview.model.Transaction;
 import com.budgetview.model.TransactionType;
 import com.budgetview.utils.Lang;

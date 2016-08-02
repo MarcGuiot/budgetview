@@ -2,7 +2,7 @@ package com.budgetview.functests.utils;
 
 import com.budgetview.functests.checkers.ImportDialogChecker;
 import com.budgetview.functests.checkers.OperationChecker;
-import com.budgetview.gui.description.Formatting;
+import com.budgetview.desktop.description.Formatting;
 import junit.framework.TestCase;
 import org.globsframework.utils.Strings;
 import org.globsframework.utils.TestUtils;

@@ -6,7 +6,7 @@ import com.budgetview.functests.checkers.LoginChecker;
 import com.budgetview.functests.checkers.PreferencesChecker;
 import com.budgetview.functests.utils.OfxBuilder;
 import com.budgetview.functests.utils.RestartTestCase;
-import com.budgetview.gui.time.TimeService;
+import com.budgetview.desktop.time.TimeService;
 import com.budgetview.model.ColorTheme;
 import com.budgetview.model.TransactionType;
 import org.globsframework.utils.Dates;

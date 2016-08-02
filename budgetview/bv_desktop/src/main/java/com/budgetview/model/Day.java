@@ -1,6 +1,6 @@
 package com.budgetview.model;
 
-import com.budgetview.gui.description.Formatting;
+import com.budgetview.desktop.description.Formatting;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.annotations.Key;
 import org.globsframework.metamodel.annotations.Target;

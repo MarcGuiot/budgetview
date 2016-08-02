@@ -1,10 +1,10 @@
 package com.budgetview.triggers;
 
-import com.budgetview.gui.accounts.utils.AccountMatchers;
-import com.budgetview.gui.model.AccountWeather;
-import com.budgetview.gui.model.WeatherType;
+import com.budgetview.desktop.accounts.utils.AccountMatchers;
+import com.budgetview.desktop.model.AccountWeather;
+import com.budgetview.desktop.model.WeatherType;
 import com.budgetview.model.UserPreferences;
-import com.budgetview.gui.model.AccountStat;
+import com.budgetview.desktop.model.AccountStat;
 import com.budgetview.model.Account;
 import com.budgetview.model.CurrentMonth;
 import com.budgetview.model.Month;

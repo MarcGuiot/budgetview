@@ -1,9 +1,9 @@
 package com.budgetview.functests.checkers.components;
 
-import com.budgetview.gui.components.charts.histo.HistoSelectionManager;
-import com.budgetview.gui.components.charts.histo.button.HistoButtonBlock;
-import com.budgetview.gui.components.charts.histo.button.HistoButtonDataset;
-import com.budgetview.gui.components.charts.histo.button.HistoButtonElement;
+import com.budgetview.desktop.components.charts.histo.HistoSelectionManager;
+import com.budgetview.desktop.components.charts.histo.button.HistoButtonBlock;
+import com.budgetview.desktop.components.charts.histo.button.HistoButtonDataset;
+import com.budgetview.desktop.components.charts.histo.button.HistoButtonElement;
 import junit.framework.Assert;
 import org.globsframework.utils.TestUtils;
 import org.globsframework.utils.Utils;

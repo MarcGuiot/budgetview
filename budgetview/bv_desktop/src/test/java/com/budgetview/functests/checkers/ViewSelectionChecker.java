@@ -1,6 +1,6 @@
 package com.budgetview.functests.checkers;
 
-import com.budgetview.gui.model.Card;
+import com.budgetview.desktop.model.Card;
 import junit.framework.Assert;
 import org.uispec4j.Panel;
 import org.uispec4j.ToggleButton;

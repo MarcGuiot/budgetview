@@ -1,7 +1,7 @@
 package com.budgetview.functests.general;
 
 import com.budgetview.functests.utils.LoggedInFunctionalTestCase;
-import com.budgetview.gui.PicsouApplication;
+import com.budgetview.desktop.Application;
 import org.junit.Test;
 
 public class DataCheckerTest extends LoggedInFunctionalTestCase {
@@ -17,8 +17,8 @@ public class DataCheckerTest extends LoggedInFunctionalTestCase {
   @Test
   public void testExit() throws Exception {
 
-    assertTrue(PicsouApplication.EXIT_ON_DATA_ERROR);
-    PicsouApplication.EXIT_ON_DATA_ERROR = false;
+    assertTrue(Application.EXIT_ON_DATA_ERROR);
+    Application.EXIT_ON_DATA_ERROR = false;
 
     operations.throwExceptionInRepository()
       .checkMessageContains("Something just went wrong with BudgetView")
@@ -27,6 +27,6 @@ public class DataCheckerTest extends LoggedInFunctionalTestCase {
       .close();
 
     Thread.sleep(50);
-    PicsouApplication.EXIT_ON_DATA_ERROR = true;
+    Application.EXIT_ON_DATA_ERROR = true;
   }
 }

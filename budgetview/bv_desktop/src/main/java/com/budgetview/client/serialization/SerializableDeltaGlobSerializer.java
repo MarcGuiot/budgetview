@@ -1,7 +1,7 @@
 package com.budgetview.client.serialization;
 
-import com.budgetview.server.model.ServerDelta;
-import com.budgetview.server.model.ServerState;
+import com.budgetview.session.serialization.SerializedDelta;
+import com.budgetview.session.serialization.SerializedDeltaState;
 import org.globsframework.utils.collections.MultiMap;
 import org.globsframework.utils.serialization.SerializedInput;
 import org.globsframework.utils.serialization.SerializedOutput;
@@ -19,16 +19,16 @@ public class SerializableDeltaGlobSerializer {
   //    SerializableGlobType.VERSION (for create and update)
   //    SerializableGlobType.DATA (for create and update)
 
-  public static void serialize(SerializedOutput output, MultiMap<String, ServerDelta> deltaGlobMap) {
+  public static void serialize(SerializedOutput output, MultiMap<String, SerializedDelta> deltaGlobMap) {
     int globTypeCount = deltaGlobMap.keySet().size();
     output.write(globTypeCount);
-    for (Map.Entry<String, List<ServerDelta>> stringListEntry : deltaGlobMap.entries()) {
+    for (Map.Entry<String, List<SerializedDelta>> stringListEntry : deltaGlobMap.entries()) {
       output.writeJavaString(stringListEntry.getKey());
       output.write(stringListEntry.getValue().size());
-      for (ServerDelta deltaGlob : stringListEntry.getValue()) {
+      for (SerializedDelta deltaGlob : stringListEntry.getValue()) {
         output.write(deltaGlob.getState().getId());
         output.write(deltaGlob.getId());
-        if (deltaGlob.getState() == ServerState.CREATED || deltaGlob.getState() == ServerState.UPDATED) {
+        if (deltaGlob.getState() == SerializedDeltaState.CREATED || deltaGlob.getState() == SerializedDeltaState.UPDATED) {
           output.write(deltaGlob.getVersion());
           output.writeBytes(deltaGlob.getData());
         }
@@ -36,18 +36,18 @@ public class SerializableDeltaGlobSerializer {
     }
   }
 
-  public static MultiMap<String, ServerDelta> deserialize(SerializedInput serializedInput) {
-    MultiMap<String, ServerDelta> multiMap = new MultiMap<String, ServerDelta>();
+  public static MultiMap<String, SerializedDelta> deserialize(SerializedInput serializedInput) {
+    MultiMap<String, SerializedDelta> multiMap = new MultiMap<String, SerializedDelta>();
     int globTypeCount = serializedInput.readNotNullInt();
     while (globTypeCount > 0) {
       String globTypeName = serializedInput.readJavaString();
       int deltaGlobCount = serializedInput.readNotNullInt();
       while (deltaGlobCount > 0) {
         int state = serializedInput.readNotNullInt();
-        ServerState deltaState = ServerState.get(state);
-        ServerDelta delta = new ServerDelta(serializedInput.readNotNullInt());
+        SerializedDeltaState deltaState = SerializedDeltaState.get(state);
+        SerializedDelta delta = new SerializedDelta(serializedInput.readNotNullInt());
         delta.setState(deltaState);
-        if (deltaState == ServerState.CREATED || deltaState == ServerState.UPDATED) {
+        if (deltaState == SerializedDeltaState.CREATED || deltaState == SerializedDeltaState.UPDATED) {
           delta.setVersion(serializedInput.readNotNullInt());
           delta.setData(serializedInput.readBytes());
         }

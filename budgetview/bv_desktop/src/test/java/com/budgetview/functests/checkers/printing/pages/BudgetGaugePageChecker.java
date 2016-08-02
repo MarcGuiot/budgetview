@@ -1,10 +1,10 @@
 package com.budgetview.functests.checkers.printing.pages;
 
-import com.budgetview.gui.printing.budget.gauges.BudgetAreaGaugeBlock;
-import com.budgetview.gui.printing.budget.gauges.SeriesGaugeBlock;
-import com.budgetview.gui.printing.utils.BlockMultiColumnsPage;
-import com.budgetview.gui.printing.utils.EmptyBlock;
-import com.budgetview.gui.printing.utils.PageBlock;
+import com.budgetview.desktop.printing.budget.gauges.BudgetAreaGaugeBlock;
+import com.budgetview.desktop.printing.budget.gauges.SeriesGaugeBlock;
+import com.budgetview.desktop.printing.utils.BlockMultiColumnsPage;
+import com.budgetview.desktop.printing.utils.EmptyBlock;
+import com.budgetview.desktop.printing.utils.PageBlock;
 import junit.framework.Assert;
 import org.globsframework.utils.Utils;
 

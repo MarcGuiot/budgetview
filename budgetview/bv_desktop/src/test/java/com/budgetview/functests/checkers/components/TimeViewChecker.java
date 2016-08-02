@@ -1,8 +1,8 @@
 package com.budgetview.functests.checkers.components;
 
 import com.budgetview.functests.checkers.GuiChecker;
-import com.budgetview.gui.time.TimeViewPanel;
-import com.budgetview.gui.time.selectable.Selectable;
+import com.budgetview.desktop.time.TimeViewPanel;
+import com.budgetview.desktop.time.selectable.Selectable;
 import com.budgetview.model.Month;
 import com.budgetview.shared.utils.AmountFormat;
 import junit.framework.Assert;

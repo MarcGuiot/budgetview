@@ -69,6 +69,11 @@
       <version>1.0</version>
     </dependency>
     <dependency>
+      <groupId>com.budgetview</groupId>
+      <artifactId>bv_shared</artifactId>
+      <version>1.0</version>
+    </dependency>
+    <dependency>
         <groupId>org.apache.httpcomponents</groupId>
         <artifactId>httpclient</artifactId>
         <version>4.5.2</version>
@@ -114,8 +119,9 @@
       <scope>test</scope>
     </dependency>
     <dependency>
-      <groupId>org.budgetview</groupId>
+      <groupId>com.budgetview</groupId>
       <artifactId>bv_desktop</artifactId>
+      <version>1.0</version>
       <type>test-jar</type>
       <scope>test</scope>
     </dependency>

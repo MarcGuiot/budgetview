@@ -6,7 +6,7 @@ import com.budgetview.functests.checkers.components.PopupButton;
 import com.budgetview.functests.checkers.components.PopupChecker;
 import com.budgetview.functests.checkers.components.TableChecker;
 import com.budgetview.functests.utils.LoggedInFunctionalTestCase;
-import com.budgetview.gui.analysis.table.SeriesEvolutionTableView;
+import com.budgetview.desktop.analysis.table.SeriesEvolutionTableView;
 import com.budgetview.utils.Lang;
 import junit.framework.Assert;
 import junit.framework.AssertionFailedError;

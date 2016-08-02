@@ -1,6 +1,6 @@
 package com.budgetview.model;
 
-import com.budgetview.gui.utils.FrameSize;
+import com.budgetview.desktop.utils.FrameSize;
 import com.budgetview.shared.utils.PicsouGlobSerializer;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.annotations.DefaultDouble;

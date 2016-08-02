@@ -19,9 +19,9 @@ open "budgetview.jar"
      -"budgetview.jar!net/roydesign/event/*.class";
 
 exclude   budgetview.^Main and
-          budgetview.Main main(*) and
+          com.budgetview.desktop.DesktopApp main(*) and
           budgetview.^MainInMemory and
-          budgetview.MainInMemory main(*) and
+          com.budgetview.desktop.InMemoryDesktopApp main(*) and
           com.budgetview.gui.utils.AwtExceptionHandler and
           apple.awt*.^* and
           apple.awt*.^* *(*) and

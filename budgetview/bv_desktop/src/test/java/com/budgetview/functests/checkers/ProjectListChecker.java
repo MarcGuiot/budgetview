@@ -1,7 +1,7 @@
 package com.budgetview.functests.checkers;
 
 import com.budgetview.functests.checkers.components.PopupChecker;
-import com.budgetview.gui.projects.components.ProjectButton;
+import com.budgetview.desktop.projects.components.ProjectButton;
 import junit.framework.Assert;
 import org.globsframework.utils.TablePrinter;
 import org.uispec4j.*;

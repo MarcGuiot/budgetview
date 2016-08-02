@@ -1,13 +1,13 @@
 package com.budgetview.functests.checkers;
 
+import com.budgetview.desktop.utils.dev.*;
 import com.budgetview.functests.checkers.mobile.CreateMobileAccountChecker;
 import com.budgetview.functests.checkers.mobile.EditMobileAccountChecker;
 import com.budgetview.functests.checkers.printing.PrintDialogChecker;
-import com.budgetview.gui.PicsouApplication;
-import com.budgetview.gui.addons.dev.ToggleAllAddOnsAction;
-import com.budgetview.gui.utils.DataCheckerAction;
-import com.budgetview.gui.utils.DumpDataAction;
-import com.budgetview.gui.utils.dev.*;
+import com.budgetview.desktop.Application;
+import com.budgetview.desktop.addons.dev.ToggleAllAddOnsAction;
+import com.budgetview.desktop.utils.DataCheckerAction;
+import com.budgetview.desktop.utils.DumpDataAction;
 import com.budgetview.utils.Lang;
 import junit.framework.TestCase;
 import org.globsframework.utils.Dates;
@@ -502,12 +502,12 @@ public class OperationChecker {
     args.add(classPath);
     args.add("-Dsplits.editor.enabled=false");
     args.add("-Dsplits.debug.enabled=false");
-    args.add("-D" + PicsouApplication.IS_DATA_IN_MEMORY + "=true");
-    args.add("-D" + PicsouApplication.APPNAME + ".log.sout=true");
+    args.add("-D" + Application.IS_DATA_IN_MEMORY + "=true");
+    args.add("-D" + Application.APPNAME + ".log.sout=true");
     if (currentDate != null) {
-      args.add("-D" + PicsouApplication.APPNAME + PicsouApplication.TODAY + "=" + Dates.toString(currentDate));
+      args.add("-D" + Application.APPNAME + Application.TODAY + "=" + Dates.toString(currentDate));
     }
-    args.add("com.budgetview.gui.MainWindowLauncher");
+    args.add("com.budgetview.gui.DevDesktopApp");
     if (user != null) {
       args.add("-u");
       args.add(user);

@@ -4,7 +4,7 @@ import com.budgetview.functests.checkers.components.HistoButtonChartChecker;
 import com.budgetview.functests.checkers.components.HistoDailyChecker;
 import com.budgetview.functests.checkers.components.PopupButton;
 import com.budgetview.functests.checkers.components.PopupChecker;
-import com.budgetview.gui.components.charts.histo.HistoChart;
+import com.budgetview.desktop.components.charts.histo.HistoChart;
 import com.budgetview.utils.Lang;
 import junit.framework.Assert;
 import org.globsframework.gui.splits.utils.HtmlUtils;

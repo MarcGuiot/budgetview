@@ -1,6 +1,6 @@
 package com.budgetview.functests.checkers;
 
-import com.budgetview.gui.description.Formatting;
+import com.budgetview.desktop.description.Formatting;
 import junit.framework.Assert;
 import org.uispec4j.Panel;
 

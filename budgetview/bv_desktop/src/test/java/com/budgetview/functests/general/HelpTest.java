@@ -1,7 +1,7 @@
 package com.budgetview.functests.general;
 
 import com.budgetview.functests.utils.LoggedInFunctionalTestCase;
-import com.budgetview.gui.startup.components.AppLogger;
+import com.budgetview.desktop.startup.components.AppLogger;
 import com.budgetview.utils.Lang;
 import org.junit.Test;
 

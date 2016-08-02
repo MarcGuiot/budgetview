@@ -1,6 +1,6 @@
 package com.budgetview.functests.checkers.components;
 
-import com.budgetview.gui.components.charts.Gauge;
+import com.budgetview.desktop.components.charts.Gauge;
 import com.budgetview.shared.utils.Amounts;
 import junit.framework.Assert;
 import org.globsframework.utils.Strings;

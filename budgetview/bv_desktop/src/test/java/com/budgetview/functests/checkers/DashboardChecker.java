@@ -1,6 +1,6 @@
 package com.budgetview.functests.checkers;
 
-import com.budgetview.gui.dashboard.widgets.WeatherWidget;
+import com.budgetview.desktop.dashboard.widgets.WeatherWidget;
 import junit.framework.Assert;
 import org.globsframework.gui.splits.utils.HtmlUtils;
 import org.globsframework.utils.TablePrinter;

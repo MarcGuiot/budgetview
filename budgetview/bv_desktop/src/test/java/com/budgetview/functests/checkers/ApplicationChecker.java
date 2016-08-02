@@ -4,8 +4,8 @@ import com.budgetview.functests.checkers.mobile.CreateMobileAccountChecker;
 import com.budgetview.functests.checkers.mobile.EditMobileAccountChecker;
 import com.budgetview.functests.checkers.printing.PrinterChecker;
 import com.budgetview.functests.checkers.utils.DummyPrinterService;
-import com.budgetview.gui.PicsouApplication;
-import com.budgetview.gui.printing.PrinterService;
+import com.budgetview.desktop.Application;
+import com.budgetview.desktop.printing.PrinterService;
 import junit.framework.Assert;
 import org.globsframework.utils.directory.Directory;
 import org.uispec4j.Trigger;
@@ -15,7 +15,7 @@ import org.uispec4j.interception.WindowInterceptor;
 import static org.uispec4j.assertion.UISpecAssert.assertFalse;
 
 public class ApplicationChecker extends GuiChecker {
-  private PicsouApplication application;
+  private Application application;
   private static Window window;
   private static DummyPrinterService printService = new DummyPrinterService();
 
@@ -77,7 +77,7 @@ public class ApplicationChecker extends GuiChecker {
     return window;
   }
 
-  public PicsouApplication getApplication() {
+  public Application getApplication() {
     return application;
   }
 
@@ -187,7 +187,7 @@ public class ApplicationChecker extends GuiChecker {
     printService.clear();
   }
 
-  private class DummyPicsouApplication extends PicsouApplication {
+  private class DummyPicsouApplication extends Application {
     protected void preinitDirectory(Directory directory) {
       directory.add(PrinterService.class, printService);
     }
