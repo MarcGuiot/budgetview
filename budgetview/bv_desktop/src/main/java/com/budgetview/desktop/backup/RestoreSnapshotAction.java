@@ -1,6 +1,6 @@
 package com.budgetview.desktop.backup;
 
-import com.budgetview.client.ServerAccess;
+import com.budgetview.client.DataAccess;
 import com.budgetview.desktop.components.dialogs.ConfirmationDialog;
 import com.budgetview.desktop.components.dialogs.MessageDialog;
 import com.budgetview.desktop.components.dialogs.MessageType;
@@ -17,11 +17,11 @@ import java.awt.event.ActionEvent;
 import java.util.Date;
 
 public class RestoreSnapshotAction extends AbstractRestoreAction {
-  private ServerAccess.SnapshotInfo snapshotInfo;
+  private DataAccess.SnapshotInfo snapshotInfo;
   private PicsouDialog dialog;
   private String date;
 
-  public RestoreSnapshotAction(Directory directory, GlobRepository repository, ServerAccess.SnapshotInfo snapshotInfo,
+  public RestoreSnapshotAction(Directory directory, GlobRepository repository, DataAccess.SnapshotInfo snapshotInfo,
                                PicsouDialog dialog) {
     super(Lang.get("restore.snapshot.button", getDate(snapshotInfo)), repository, directory);
     date = getDate(snapshotInfo);
@@ -29,7 +29,7 @@ public class RestoreSnapshotAction extends AbstractRestoreAction {
     this.dialog = dialog;
   }
 
-  private static String getDate(ServerAccess.SnapshotInfo snapshotInfo) {
+  private static String getDate(DataAccess.SnapshotInfo snapshotInfo) {
     return PicsouDescriptionService.LOCAL_TIME_STAMP.format(new Date(snapshotInfo.timestamp));
   }
 

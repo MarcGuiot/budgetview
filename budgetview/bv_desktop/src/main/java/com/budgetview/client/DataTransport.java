@@ -3,7 +3,7 @@ package com.budgetview.client;
 import com.budgetview.client.exceptions.*;
 import org.globsframework.utils.serialization.SerializedInput;
 
-public interface ClientTransport {
+public interface DataTransport {
 
   SerializedInput connect(long version) throws BadConnection;
 

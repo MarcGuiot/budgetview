@@ -1,15 +1,15 @@
 package com.budgetview.client.http;
 
-import com.budgetview.client.ServerAccess;
+import com.budgetview.client.DataAccess;
 import com.budgetview.client.exceptions.BadPassword;
 import com.budgetview.client.exceptions.UserAlreadyExists;
 import com.budgetview.client.exceptions.UserNotRegistered;
-import com.budgetview.client.local.LocalClientTransport;
+import com.budgetview.client.local.LocalSessionDataTransport;
 import com.budgetview.shared.encryption.PasswordBasedEncryptor;
 import com.budgetview.shared.encryption.RedirectPasswordBasedEncryptor;
 import com.budgetview.functests.utils.FunctionalTestCase;
 import com.budgetview.functests.utils.LoggedInFunctionalTestCase;
-import com.budgetview.desktop.config.ConfigService;
+import com.budgetview.desktop.userconfig.UserConfigService;
 import com.budgetview.shared.encryption.MD5PasswordBasedEncryptor;
 import com.budgetview.model.Account;
 import com.budgetview.model.Category;
@@ -35,7 +35,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.io.File;
 
-public class EncrypterToTransportServerAccessTest extends FunctionalTestCase {
+public class EncryptToTransportServerAccessTest extends FunctionalTestCase {
   protected Directory directory;
   private SessionDirectory sessionDirectory;
   private boolean inMemory = false;
@@ -45,7 +45,7 @@ public class EncrypterToTransportServerAccessTest extends FunctionalTestCase {
   protected void setUp() throws Exception {
     super.setUp();
     url = initServerEnvironment(inMemory);
-    directory.add(new ConfigService("1", 1L, 1L, null));
+    directory.add(new UserConfigService("1", 1L, 1L, null));
     directory.add(PasswordBasedEncryptor.class, new RedirectPasswordBasedEncryptor());
     LoggedInFunctionalTestCase.resetWindow();
   }
@@ -65,7 +65,7 @@ public class EncrypterToTransportServerAccessTest extends FunctionalTestCase {
     return prevaylerPath;
   }
 
-  private GlobRepository init(final EncrypterToTransportServerAccess createClientCategorizer) {
+  private GlobRepository init(final EncryptToTransportDataAccess createClientCategorizer) {
     GlobRepository repository = GlobRepositoryBuilder.createEmpty();
     repository.addChangeListener(new DefaultChangeSetListener() {
       public void globsChanged(ChangeSet changeSet, GlobRepository repository) {
@@ -83,7 +83,7 @@ public class EncrypterToTransportServerAccessTest extends FunctionalTestCase {
   }
 
   public void testAddAndModifyTransaction() throws Exception {
-    EncrypterToTransportServerAccess serverAccess = createServerAccess();
+    EncryptToTransportDataAccess serverAccess = createServerAccess();
 
     Glob user = createUser("name", "password", serverAccess);
     assertEquals("name", user.get(User.NAME));
@@ -103,7 +103,7 @@ public class EncrypterToTransportServerAccessTest extends FunctionalTestCase {
   }
 
   public void testCreateAndModifyAccount() throws Exception {
-    EncrypterToTransportServerAccess serverAccess = createServerAccess();
+    EncryptToTransportDataAccess serverAccess = createServerAccess();
     Glob glob = createUser("name", "password", serverAccess);
     serverAccess.getUserData(new DefaultChangeSet(), new DummyIdUpdater());
     assertEquals("name", glob.get(User.NAME));
@@ -149,7 +149,7 @@ public class EncrypterToTransportServerAccessTest extends FunctionalTestCase {
 
   public void testConnectFailsWithBadPassword() throws Exception {
     createUser("name", "password", createServerAccess());
-    final EncrypterToTransportServerAccess categorizer = createServerAccess();
+    final EncryptToTransportDataAccess categorizer = createServerAccess();
     categorizer.connect(-1);
     TestUtils.assertFails(new Functor() {
       public void run() throws Exception {
@@ -159,7 +159,7 @@ public class EncrypterToTransportServerAccessTest extends FunctionalTestCase {
   }
 
   public void testConnectFailsIfNotRecognized() throws Exception {
-    final EncrypterToTransportServerAccess categorizer = createServerAccess();
+    final EncryptToTransportDataAccess categorizer = createServerAccess();
     categorizer.connect(-1);
     TestUtils.assertFails(new Functor() {
       public void run() throws Exception {
@@ -169,7 +169,7 @@ public class EncrypterToTransportServerAccessTest extends FunctionalTestCase {
   }
 
   public void testAllOnUnknownUser() throws Exception {
-    final EncrypterToTransportServerAccess categorizer = createServerAccess();
+    final EncryptToTransportDataAccess categorizer = createServerAccess();
     TestUtils.assertFails(new Functor() {
       public void run() throws Exception {
         categorizer.getUserData(new DefaultChangeSet(), new DummyIdUpdater());
@@ -184,7 +184,7 @@ public class EncrypterToTransportServerAccessTest extends FunctionalTestCase {
   }
 
   public void testWithCategory() throws Exception {
-    EncrypterToTransportServerAccess serverAccess = createServerAccess();
+    EncryptToTransportDataAccess serverAccess = createServerAccess();
     Glob glob = createUser("name", "password", serverAccess);
     serverAccess.getUserData(new DefaultChangeSet(), new DummyIdUpdater());
 
@@ -210,26 +210,26 @@ public class EncrypterToTransportServerAccessTest extends FunctionalTestCase {
 
   private Glob getHiddenUser(Glob glob) {
     PasswordBasedEncryptor passwordBasedEncryptor =
-      new MD5PasswordBasedEncryptor(EncrypterToTransportServerAccess.salt, "password".toCharArray(), 20);
+      new MD5PasswordBasedEncryptor(EncryptToTransportDataAccess.salt, "password".toCharArray(), 20);
     byte[] cryptedLinkInfo = passwordBasedEncryptor.encrypt(glob.get(User.LINK_INFO));
     Persistence persistence = directory.get(Persistence.class);
     return persistence.getHiddenUser(cryptedLinkInfo);
   }
 
 
-  private Glob createUser(String name, String password, EncrypterToTransportServerAccess serverAccess) {
+  private Glob createUser(String name, String password, EncryptToTransportDataAccess serverAccess) {
     serverAccess.connect(-1);
     serverAccess.createUser(name, password.toCharArray(), false);
     Persistence persistence = directory.get(Persistence.class);
     return persistence.getUser(name);
   }
 
-  private EncrypterToTransportServerAccess createServerAccess() {
-    LocalClientTransport dummyClentTransport = new LocalClientTransport(directory);
-    return new EncrypterToTransportServerAccess(dummyClentTransport, directory);
+  private EncryptToTransportDataAccess createServerAccess() {
+    LocalSessionDataTransport dummyClentTransport = new LocalSessionDataTransport(directory);
+    return new EncryptToTransportDataAccess(dummyClentTransport, directory);
   }
 
-  private static class DummyIdUpdater implements ServerAccess.IdUpdater {
+  private static class DummyIdUpdater implements DataAccess.IdUpdater {
     public Map<IntegerField, Integer> ids = new HashMap<IntegerField, Integer>();
 
     public void update(IntegerField field, Integer lastAllocatedId) {

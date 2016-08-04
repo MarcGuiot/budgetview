@@ -5,10 +5,10 @@ import com.budgetview.shared.encryption.PasswordBasedEncryptor;
 import com.budgetview.shared.encryption.RedirectPasswordBasedEncryptor;
 import com.budgetview.shared.encryption.MD5PasswordBasedEncryptor;
 import com.budgetview.shared.utils.PicsouGlobSerializer;
-import com.budgetview.client.ClientTransport;
+import com.budgetview.client.DataTransport;
 import com.budgetview.client.serialization.SerializableDeltaGlobSerializer;
 import com.budgetview.client.serialization.SerializableGlobSerializer;
-import com.budgetview.client.ServerAccess;
+import com.budgetview.client.DataAccess;
 import com.budgetview.client.exceptions.BadConnection;
 import com.budgetview.client.exceptions.BadPassword;
 import com.budgetview.client.exceptions.UserAlreadyExists;
@@ -34,8 +34,8 @@ import org.globsframework.utils.serialization.SerializedOutput;
 import java.security.SecureRandom;
 import java.util.*;
 
-public class EncrypterToTransportServerAccess implements ServerAccess {
-  private ClientTransport clientTransport;
+public class EncryptToTransportDataAccess implements DataAccess {
+  private DataTransport dataTransport;
   private Directory directory;
   private String name;
   private Long sessionId;
@@ -47,14 +47,14 @@ public class EncrypterToTransportServerAccess implements ServerAccess {
   private static final byte[] SOME_TEXT_TO_CHECK = "some text to check".getBytes();
   private byte[] linkInfo;
 
-  public EncrypterToTransportServerAccess(ClientTransport transport, Directory directory) {
-    this.clientTransport = transport;
+  public EncryptToTransportDataAccess(DataTransport transport, Directory directory) {
+    this.dataTransport = transport;
     this.directory = directory;
     globModel = directory.get(GlobModel.class);
   }
 
   public LocalInfo connect(long version) {
-    SerializedInput response = clientTransport.connect(version);
+    SerializedInput response = dataTransport.connect(version);
     try {
       if (response.readBoolean()) {
         byte[] repoId = response.readBytes();
@@ -96,7 +96,7 @@ public class EncrypterToTransportServerAccess implements ServerAccess {
       output.writeBytes(linkInfo);
       output.writeBytes(passwordBasedEncryptor.encrypt(linkInfo));
 
-      response = clientTransport.createUser(sessionId, request.toByteArray());
+      response = dataTransport.createUser(sessionId, request.toByteArray());
       notConnected = false;
       return response.readBoolean();
     }
@@ -132,7 +132,7 @@ public class EncrypterToTransportServerAccess implements ServerAccess {
     SerializedByteArrayOutput confirmation = new SerializedByteArrayOutput();
     confirmation.getOutput().writeBytes(privateId);
     confirmation.getOutput().writeBytes(passwordBasedEncryptor.encrypt(linkInfo));
-    clientTransport.deleteUser(sessionId, confirmation.toByteArray()).close();
+    dataTransport.deleteUser(sessionId, confirmation.toByteArray()).close();
   }
 
   private byte[] requestLinkInfo(String name, char[] password, PasswordBasedEncryptor passwordBasedEncryptor) {
@@ -141,7 +141,7 @@ public class EncrypterToTransportServerAccess implements ServerAccess {
     output.writeUtf8String(name);
     output.writeBytes(cryptPassword(password, passwordBasedEncryptor));
 
-    SerializedInput response = clientTransport.identifyUser(sessionId, request.toByteArray());
+    SerializedInput response = dataTransport.identifyUser(sessionId, request.toByteArray());
     byte[] bytes = response.readBytes();
     response.close();
     return bytes;
@@ -160,7 +160,7 @@ public class EncrypterToTransportServerAccess implements ServerAccess {
     output.writeUtf8String(this.name);
     output.writeBytes(cryptPassword(password, passwordBasedEncryptor));
 
-    SerializedInput response = clientTransport.identifyUser(sessionId, request.toByteArray());
+    SerializedInput response = dataTransport.identifyUser(sessionId, request.toByteArray());
 
     SerializedByteArrayOutput confirmation = new SerializedByteArrayOutput();
     confirmation.getOutput().writeBytes(privateId);
@@ -168,7 +168,7 @@ public class EncrypterToTransportServerAccess implements ServerAccess {
     confirmation.getOutput().writeBytes(passwordBasedEncryptor.encrypt(linkInfo));
     Boolean isRegistered = response.readBoolean();
     response.close();
-    clientTransport.confirmUser(sessionId, confirmation.toByteArray());
+    dataTransport.confirmUser(sessionId, confirmation.toByteArray());
     notConnected = false;
     return isRegistered;
   }
@@ -211,7 +211,7 @@ public class EncrypterToTransportServerAccess implements ServerAccess {
 
     SerializableGlobSerializer.serialize(output, serverData);
 
-    SerializedInput input = clientTransport.rename(sessionId, confirmation.toByteArray());
+    SerializedInput input = dataTransport.rename(sessionId, confirmation.toByteArray());
     Boolean done = input.readBoolean();
     input.close();
     if (!done) {
@@ -227,7 +227,7 @@ public class EncrypterToTransportServerAccess implements ServerAccess {
   public List<SnapshotInfo> getSnapshotInfos() {
     SerializedByteArrayOutput outputStream = new SerializedByteArrayOutput();
     outputStream.getOutput().writeBytes(privateId);
-    SerializedInput input = clientTransport.getSnapshotInfos(sessionId, outputStream.toByteArray());
+    SerializedInput input = dataTransport.getSnapshotInfos(sessionId, outputStream.toByteArray());
     int count = input.readNotNullInt();
     List<SnapshotInfo> snapshotInfos = new ArrayList<SnapshotInfo>(count);
     for (int i = 0; i < count; i++) {
@@ -247,7 +247,7 @@ public class EncrypterToTransportServerAccess implements ServerAccess {
     SerializedOutput output = outputStream.getOutput();
     output.writeBytes(privateId);
     output.writeUtf8String(info.file);
-    SerializedInput input = clientTransport.getSnapshotData(sessionId, outputStream.toByteArray());
+    SerializedInput input = dataTransport.getSnapshotData(sessionId, outputStream.toByteArray());
     MapOfMaps<String, Integer, SerializableGlobType> data = new MapOfMaps<String, Integer, SerializableGlobType>();
     SerializableGlobSerializer.deserialize(input, data);
     input.close();
@@ -255,20 +255,20 @@ public class EncrypterToTransportServerAccess implements ServerAccess {
   }
 
   public void localRegister(byte[] mail, byte[] signature, String activationCode, long jarVersion) {
-    clientTransport.localRegister(sessionId, privateId, mail, signature, activationCode);
-    clientTransport.localDownload(sessionId, privateId, jarVersion);
+    dataTransport.localRegister(sessionId, privateId, mail, signature, activationCode);
+    dataTransport.localDownload(sessionId, privateId, jarVersion);
   }
 
   public void downloadedVersion(long version) {
-    clientTransport.localDownload(sessionId, privateId, version);
+    dataTransport.localDownload(sessionId, privateId, version);
   }
 
   public void setLang(String lang) {
-    clientTransport.setLang(sessionId, privateId, lang);
+    dataTransport.setLang(sessionId, privateId, lang);
   }
 
   public List<UserInfo> getLocalUsers() {
-    SerializedInput input = clientTransport.getLocalUsers();
+    SerializedInput input = dataTransport.getLocalUsers();
     if (input == null) {
       return Collections.emptyList();
     }
@@ -284,7 +284,7 @@ public class EncrypterToTransportServerAccess implements ServerAccess {
   }
 
   public void removeLocalUser(String user) {
-    clientTransport.removeLocalUser(user);
+    dataTransport.removeLocalUser(user);
   }
 
   public boolean canRead(MapOfMaps<String, Integer, SerializableGlobType> data) {
@@ -337,7 +337,7 @@ public class EncrypterToTransportServerAccess implements ServerAccess {
   public boolean hasChanged() {
     SerializedByteArrayOutput outputStream = new SerializedByteArrayOutput();
     outputStream.getOutput().writeBytes(privateId);
-    SerializedInput serializedInput = clientTransport.hasChanged(sessionId, outputStream.toByteArray());
+    SerializedInput serializedInput = dataTransport.hasChanged(sessionId, outputStream.toByteArray());
     return serializedInput.readBoolean();
   }
 
@@ -347,19 +347,19 @@ public class EncrypterToTransportServerAccess implements ServerAccess {
     }
     SerializedByteArrayOutput outputStream = new SerializedByteArrayOutput();
     outputStream.getOutput().writeBytes(privateId);
-    clientTransport.takeSnapshot(sessionId, outputStream.toByteArray());
+    dataTransport.takeSnapshot(sessionId, outputStream.toByteArray());
   }
 
   private void updateUserData(byte[] bytes) {
     checkConnected();
-    clientTransport.updateUserData(sessionId, bytes).close();
+    dataTransport.updateUserData(sessionId, bytes).close();
   }
 
   public MapOfMaps<String, Integer, SerializableGlobType> getServerData() {
     checkConnected();
     SerializedByteArrayOutput outputStream = new SerializedByteArrayOutput();
     outputStream.getOutput().writeBytes(privateId);
-    SerializedInput input = clientTransport.getUserData(sessionId, outputStream.toByteArray());
+    SerializedInput input = dataTransport.getUserData(sessionId, outputStream.toByteArray());
     MapOfMaps<String, Integer, SerializableGlobType> data = new MapOfMaps<String, Integer, SerializableGlobType>();
     SerializableGlobSerializer.deserialize(input, data);
     input.close();
@@ -373,14 +373,14 @@ public class EncrypterToTransportServerAccess implements ServerAccess {
     outputStream.getOutput().writeBytes(privateId);
     SerializableGlobSerializer.serialize(outputStream.getOutput(), data);
 
-    clientTransport.restore(sessionId, outputStream.toByteArray()).close();
+    dataTransport.restore(sessionId, outputStream.toByteArray()).close();
   }
 
   public GlobList getUserData(MutableChangeSet changeSet, IdUpdater idUpdater) {
     checkConnected();
     SerializedByteArrayOutput outputStream = new SerializedByteArrayOutput();
     outputStream.getOutput().writeBytes(privateId);
-    SerializedInput input = clientTransport.getUserData(sessionId, outputStream.toByteArray());
+    SerializedInput input = dataTransport.getUserData(sessionId, outputStream.toByteArray());
     MapOfMaps<String, Integer, SerializableGlobType> data = new MapOfMaps<String, Integer, SerializableGlobType>();
     SerializableGlobSerializer.deserialize(input, data);
     input.close();
@@ -448,7 +448,7 @@ public class EncrypterToTransportServerAccess implements ServerAccess {
     }
     SerializedByteArrayOutput request = new SerializedByteArrayOutput();
     request.getOutput().writeBytes(privateId);
-    clientTransport.disconnect(sessionId, request.toByteArray());
+    dataTransport.disconnect(sessionId, request.toByteArray());
     notConnected = true;
   }
 

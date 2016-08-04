@@ -1,21 +1,21 @@
 package com.budgetview.desktop;
 
-import com.budgetview.client.ServerAccess;
-import com.budgetview.client.ServerAccessDecorator;
+import com.budgetview.client.DataAccess;
+import com.budgetview.client.DataAccessDecorator;
 import com.budgetview.client.exceptions.BadPassword;
 import com.budgetview.client.exceptions.RemoteException;
 import com.budgetview.client.exceptions.UserAlreadyExists;
 import com.budgetview.client.exceptions.UserNotRegistered;
-import com.budgetview.client.http.ConnectionRetryServerAccess;
-import com.budgetview.client.http.EncrypterToTransportServerAccess;
-import com.budgetview.client.http.HttpsClientTransport;
-import com.budgetview.client.local.LocalClientTransport;
+import com.budgetview.client.http.AutoRetryDataAccess;
+import com.budgetview.client.http.EncryptToTransportDataAccess;
+import com.budgetview.client.http.HttpsDataTransport;
+import com.budgetview.client.local.LocalSessionDataTransport;
 import com.budgetview.desktop.components.PicsouFrame;
 import com.budgetview.desktop.components.dialogs.MessageAndDetailsDialog;
 import com.budgetview.desktop.components.dialogs.MessageDialog;
 import com.budgetview.desktop.components.dialogs.MessageType;
 import com.budgetview.desktop.components.layoutconfig.LayoutConfigService;
-import com.budgetview.desktop.config.ConfigService;
+import com.budgetview.desktop.userconfig.UserConfigService;
 import com.budgetview.desktop.license.activation.LicenseCheckerThread;
 import com.budgetview.desktop.startup.LoginPanel;
 import com.budgetview.desktop.startup.SlaValidationDialog;
@@ -62,7 +62,7 @@ public class MainWindow implements WindowManager {
   private Directory directory;
   private LoginPanel loginPanel;
   private SessionDirectory sessionDirectory;
-  private ServerAccessDecorator serverAccess = new ServerAccessDecorator(null);
+  private DataAccessDecorator serverAccess = new DataAccessDecorator(null);
   private PicsouInit picsouInit;
   private MainPanel mainPanel;
   private boolean registered = false;
@@ -72,7 +72,7 @@ public class MainWindow implements WindowManager {
   // sinon le thread de login fait un invokeLater mais comme le main est concurrent avec le thread de dispatch
   // on a des concurrent modification
   private boolean initDone = false;
-  private List<ServerAccess.UserInfo> localUsers;
+  private List<DataAccess.UserInfo> localUsers;
   private LicenseCheckerThread licenseCheckerThread;
   private boolean badJarVersion = false;
 
@@ -93,8 +93,8 @@ public class MainWindow implements WindowManager {
     this.frame = new PicsouFrame(Lang.get("application"), directory);
     this.frame.setSize(FrameSize.init(frame).targetFrameSize);
 
-    ConfigService configService = directory.get(ConfigService.class);
-    ServerAccess.LocalInfo info;
+    UserConfigService userConfigService = directory.get(UserConfigService.class);
+    DataAccess.LocalInfo info;
     try {
       info = initServerAccess(serverAddress, prevaylerPath, dataInMemory);
     }
@@ -113,8 +113,8 @@ public class MainWindow implements WindowManager {
       if (Strings.isNotEmpty(info.getLang())) {
         Lang.setLang(info.getLang());
       }
-      registered = configService.update(info.getRepoId(), info.getCount(), info.getMail(),
-                                        info.getSignature(), info.getActivationCode(), serverAccess, dataInMemory);
+      registered = userConfigService.retrieveUserStatus(info.getRepoId(), info.getCount(), info.getMail(),
+                                                        info.getSignature(), info.getActivationCode(), serverAccess, dataInMemory);
 
 // -- Mécanique pour éviter qu'un utilisateur pirate le système en restant toujours offline et en faisant des
 // -- mises à jour manuelles - désactivé pour éviter les faux positifs
@@ -127,29 +127,29 @@ public class MainWindow implements WindowManager {
 //      }
 
       if (info.getJarVersion() > Application.JAR_VERSION) {
-        showDownloadJar(directory, configService);
+        showDownloadJar(directory, userConfigService);
         throw new RuntimeException("End bad jar version");
       }
     }
     else {
-      configService.update(null, 0, null, null, null, serverAccess, dataInMemory);
+      userConfigService.retrieveUserStatus(null, 0, null, null, null, serverAccess, dataInMemory);
     }
   }
 
-  private static void showDownloadJar(Directory directory, final ConfigService configService) throws InvocationTargetException, InterruptedException {
-    if (configService.downloadStep() < 0) {
+  private static void showDownloadJar(Directory directory, final UserConfigService userConfigService) throws InvocationTargetException, InterruptedException {
+    if (userConfigService.downloadStep() < 0) {
       Log.write("bad version, no download");
       MessageDialog.show("jar.version.title", MessageType.ERROR, null, directory,
                          "jar.version.message");
     }
     else {
       final MessageDialog messageDialog = MessageDialog.create("jar.version.title", MessageType.INFO, null, directory,
-                                                               "jar.version.step", "" + configService.downloadStep());
+                                                               "jar.version.step", "" + userConfigService.downloadStep());
       Executors.newSingleThreadExecutor()
         .submit(new Runnable() {
           public void run() {
             try {
-              int current = configService.downloadStep();
+              int current = userConfigService.downloadStep();
               while (current >= 0) {
                 if (current == 100) {
                   changeMessage(Lang.get("jar.version.step.complete"));
@@ -159,18 +159,18 @@ public class MainWindow implements WindowManager {
                   messageDialog.changeMessage(Lang.get("jar.version.step", "" + current));
                 }
                 Thread.sleep(200);
-                int newValue = configService.downloadStep();
+                int newValue = userConfigService.downloadStep();
                 int count = 0;
                 while (newValue != 100 && newValue == current && count < 10) {
                   Thread.sleep(500);
                   count++;
-                  newValue = configService.downloadStep();
+                  newValue = userConfigService.downloadStep();
                 }
                 if (newValue != 100 && newValue == current) {
                   messageDialog.changeMessage(Lang.get("jar.version.message"));
                   return;
                 }
-                current = configService.downloadStep();
+                current = userConfigService.downloadStep();
               }
             }
             catch (InterruptedException e) {
@@ -283,7 +283,7 @@ public class MainWindow implements WindowManager {
 
     boolean autoLogin = false;
     String user = null;
-    for (ServerAccess.UserInfo userInfo : localUsers) {
+    for (DataAccess.UserInfo userInfo : localUsers) {
       if (userInfo.autologin) {
         autoLogin = true;
         user = userInfo.name;
@@ -361,13 +361,13 @@ public class MainWindow implements WindowManager {
     directory.get(UndoRedoService.class).reset();
   }
 
-  private ServerAccess.LocalInfo initServerAccess(String remoteAdress, String prevaylerPath, boolean dataInMemory) {
+  private DataAccess.LocalInfo initServerAccess(String remoteAdress, String prevaylerPath, boolean dataInMemory) {
     if (remoteAdress.startsWith("http")) {
       this.serverAccess.takeSnapshot();
       this.serverAccess.disconnect();
-      ServerAccess serverAccess = new ConnectionRetryServerAccess(
-        new EncrypterToTransportServerAccess(new HttpsClientTransport(remoteAdress), directory));
-      this.serverAccess.setServerAccess(serverAccess);
+      DataAccess dataAccess = new AutoRetryDataAccess(
+        new EncryptToTransportDataAccess(new HttpsDataTransport(remoteAdress), directory));
+      this.serverAccess.setDataAccess(dataAccess);
     }
     else {
       this.serverAccess.takeSnapshot();
@@ -377,12 +377,12 @@ public class MainWindow implements WindowManager {
       }
       sessionDirectory = new SessionDirectory(prevaylerPath, dataInMemory);
       thread.sessionDirectory = sessionDirectory;
-      ServerAccess serverAccess =
-        new EncrypterToTransportServerAccess(new LocalClientTransport(sessionDirectory.getServiceDirectory()),
-                                             directory);
-      this.serverAccess.setServerAccess(serverAccess);
+      DataAccess dataAccess =
+        new EncryptToTransportDataAccess(new LocalSessionDataTransport(sessionDirectory.getServiceDirectory()),
+                                         directory);
+      this.serverAccess.setDataAccess(dataAccess);
     }
-    ServerAccess.LocalInfo info = serverAccess.connect(Application.JAR_VERSION);
+    DataAccess.LocalInfo info = serverAccess.connect(Application.JAR_VERSION);
     localUsers = serverAccess.getLocalUsers();
     return info;
   }
@@ -404,10 +404,10 @@ public class MainWindow implements WindowManager {
     }
     sessionDirectory = new SessionDirectory(stream);
     thread.sessionDirectory = sessionDirectory;
-    ServerAccess serverAccess = new EncrypterToTransportServerAccess(new LocalClientTransport(sessionDirectory.getServiceDirectory()),
-                                                                     directory);
+    DataAccess dataAccess = new EncryptToTransportDataAccess(new LocalSessionDataTransport(sessionDirectory.getServiceDirectory()),
+                                                             directory);
 
-    this.serverAccess.setServerAccess(serverAccess);
+    this.serverAccess.setDataAccess(dataAccess);
     localUsers = Collections.emptyList();
     this.serverAccess.connect(Application.JAR_VERSION);
   }
@@ -587,19 +587,19 @@ public class MainWindow implements WindowManager {
   }
 
   private static class ShutDownThread extends Thread {
-    private ServerAccess serverAccess;
+    private DataAccess dataAccess;
     private SessionDirectory sessionDirectory = null;
 
-    public ShutDownThread(ServerAccess serverAccess) {
-      this.serverAccess = serverAccess;
+    public ShutDownThread(DataAccess dataAccess) {
+      this.dataAccess = dataAccess;
     }
 
     synchronized public void run() {
       try {
-        if (serverAccess != null) {
-          serverAccess.takeSnapshot();
-          serverAccess.disconnect();
-          serverAccess = null;
+        if (dataAccess != null) {
+          dataAccess.takeSnapshot();
+          dataAccess.disconnect();
+          dataAccess = null;
         }
         if (sessionDirectory != null) {
           sessionDirectory.close();

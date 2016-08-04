@@ -2,7 +2,7 @@ package com.budgetview.desktop.license.activation;
 
 import com.budgetview.desktop.components.ProgressPanel;
 import com.budgetview.desktop.components.dialogs.PicsouDialog;
-import com.budgetview.desktop.config.ConfigService;
+import com.budgetview.desktop.userconfig.UserConfigService;
 import com.budgetview.model.User;
 import com.budgetview.utils.Lang;
 import org.globsframework.gui.GlobsPanelBuilder;
@@ -49,7 +49,7 @@ public class LicenseExpirationDialog {
         if (Strings.isNotEmpty(mail) && sendRequestThread == null) {
           sendRequestThread = new Thread() {
             public void run() {
-              final String response = directory.get(ConfigService.class).askForNewCodeByMail(mail);
+              final String response = directory.get(UserConfigService.class).sendNewCodeRequest(mail);
               SwingUtilities.invokeLater(new Runnable() {
                 public void run() {
                   requestDone(response);

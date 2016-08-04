@@ -32,7 +32,7 @@ public class MobileService {
         message.set(Lang.get("mobile.user.connection.failed"));
         return false;
       }
-      Header isValid = response.getFirstHeader(LicenseConstants.HEADER_IS_VALIDE);
+      Header isValid = response.getFirstHeader(LicenseConstants.HEADER_IS_VALID);
       if (isValid != null && isValid.getValue().equalsIgnoreCase("true")) {
         message.set(Lang.get("mobile.user.create.mail.sent"));
         return true;

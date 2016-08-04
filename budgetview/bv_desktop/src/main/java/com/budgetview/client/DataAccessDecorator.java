@@ -11,102 +11,102 @@ import org.globsframework.utils.collections.MapOfMaps;
 
 import java.util.List;
 
-public class ServerAccessDecorator implements ServerAccess {
-  private ServerAccess serverAccess;
+public class DataAccessDecorator implements DataAccess {
+  private DataAccess dataAccess;
 
-  public ServerAccessDecorator(ServerAccess serverAccess) {
-    this.serverAccess = serverAccess;
+  public DataAccessDecorator(DataAccess dataAccess) {
+    this.dataAccess = dataAccess;
   }
 
-  public void setServerAccess(ServerAccess serverAccess) {
-    this.serverAccess = serverAccess;
+  public void setDataAccess(DataAccess dataAccess) {
+    this.dataAccess = dataAccess;
   }
 
   public boolean createUser(String name, char[] password, boolean autoLogin) throws UserAlreadyExists, IdentificationFailed {
-    return serverAccess.createUser(name, password, autoLogin);
+    return dataAccess.createUser(name, password, autoLogin);
   }
 
   public void deleteUser(String name, char[] password) {
-    serverAccess.deleteUser(name, password);
+    dataAccess.deleteUser(name, password);
   }
 
   public boolean rename(String name, char[] passwd, char[] previousPasswd) throws UserAlreadyExists {
-    return serverAccess.rename(name, passwd, previousPasswd);
+    return dataAccess.rename(name, passwd, previousPasswd);
   }
 
   public List<SnapshotInfo> getSnapshotInfos() {
-    return serverAccess.getSnapshotInfos();
+    return dataAccess.getSnapshotInfos();
   }
 
   public MapOfMaps<String, Integer, SerializableGlobType> getSnapshotData(SnapshotInfo info, IdUpdater idUpdater) {
-    return serverAccess.getSnapshotData(info, null);
+    return dataAccess.getSnapshotData(info, null);
   }
 
   public boolean initConnection(String name, char[] password, boolean privateComputer) throws IdentificationFailed {
-    return serverAccess.initConnection(name, password, privateComputer);
+    return dataAccess.initConnection(name, password, privateComputer);
   }
 
   public void localRegister(byte[] mail, byte[] signature, String activationCode, long jarVersion) {
-    serverAccess.localRegister(mail, signature, activationCode, jarVersion);
+    dataAccess.localRegister(mail, signature, activationCode, jarVersion);
   }
 
   public void downloadedVersion(long version) {
-    serverAccess.downloadedVersion(version);
+    dataAccess.downloadedVersion(version);
   }
 
   public void setLang(String lang) {
-    serverAccess.setLang(lang);
+    dataAccess.setLang(lang);
   }
 
   public void applyChanges(ChangeSet changeSet, GlobRepository globRepository) {
-    serverAccess.applyChanges(changeSet, globRepository);
+    dataAccess.applyChanges(changeSet, globRepository);
   }
 
   public boolean hasChanged() {
-    if (serverAccess != null) {
-      return serverAccess.hasChanged();
+    if (dataAccess != null) {
+      return dataAccess.hasChanged();
     }
     return false;
   }
 
   public void takeSnapshot() {
-    if (serverAccess != null) {
-      serverAccess.takeSnapshot();
+    if (dataAccess != null) {
+      dataAccess.takeSnapshot();
     }
   }
 
   public boolean canRead(MapOfMaps<String, Integer, SerializableGlobType> data) {
-    return serverAccess.canRead(data);
+    return dataAccess.canRead(data);
   }
 
   public LocalInfo connect(long version) {
-    return serverAccess.connect(version);
+    return dataAccess.connect(version);
   }
 
   public MapOfMaps<String, Integer, SerializableGlobType> getServerData() {
-    return serverAccess.getServerData();
+    return dataAccess.getServerData();
   }
 
   public void replaceData(MapOfMaps<String, Integer, SerializableGlobType> data) {
-    serverAccess.replaceData(data);
+    dataAccess.replaceData(data);
   }
 
   public List<UserInfo> getLocalUsers() {
-    return serverAccess.getLocalUsers();
+    return dataAccess.getLocalUsers();
   }
 
   public void removeLocalUser(String user) {
-    serverAccess.removeLocalUser(user);
+    dataAccess.removeLocalUser(user);
   }
 
   public GlobList getUserData(MutableChangeSet changeSet, IdUpdater idUpdater) {
-    return serverAccess.getUserData(changeSet, idUpdater);
+    return dataAccess.getUserData(changeSet, idUpdater);
   }
 
   public void disconnect() {
-    if (serverAccess != null) {
-      serverAccess.disconnect();
-      serverAccess = null;
+    if (dataAccess != null) {
+      dataAccess.disconnect();
+      dataAccess = null;
     }
   }
 }

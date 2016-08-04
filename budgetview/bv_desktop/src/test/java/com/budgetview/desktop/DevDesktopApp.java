@@ -1,16 +1,12 @@
 package com.budgetview.desktop;
 
 import com.budgetview.client.exceptions.UserAlreadyExists;
-import com.budgetview.client.http.EncrypterToTransportServerAccess;
-import com.budgetview.desktop.Application;
-import com.budgetview.desktop.MainPanel;
-import com.budgetview.desktop.PicsouInit;
-import com.budgetview.desktop.WindowManager;
+import com.budgetview.client.http.EncryptToTransportDataAccess;
 import com.budgetview.desktop.components.PicsouFrame;
 import com.budgetview.desktop.components.layoutconfig.LayoutConfigService;
 import com.budgetview.desktop.startup.AppPaths;
-import com.budgetview.client.ServerAccess;
-import com.budgetview.client.local.LocalClientTransport;
+import com.budgetview.client.DataAccess;
+import com.budgetview.client.local.LocalSessionDataTransport;
 import com.budgetview.desktop.plaf.PicsouMacLookAndFeel;
 import com.budgetview.desktop.utils.Gui;
 import com.budgetview.session.SessionDirectory;
@@ -53,16 +49,16 @@ public class DevDesktopApp {
 
     SessionDirectory sessionDirectory = createServerDirectory(snapshot);
     directory.add(SessionDirectory.class, sessionDirectory);
-    ServerAccess serverAccess =
-      new EncrypterToTransportServerAccess(new LocalClientTransport(sessionDirectory.getServiceDirectory()),
-                                           directory);
-    serverAccess.connect(Application.JAR_VERSION);
+    DataAccess dataAccess =
+      new EncryptToTransportDataAccess(new LocalSessionDataTransport(sessionDirectory.getServiceDirectory()),
+                                       directory);
+    dataAccess.connect(Application.JAR_VERSION);
 
-    boolean registered = isRegistered(user, password, serverAccess);
+    boolean registered = isRegistered(user, password, dataAccess);
 
     final PicsouFrame frame = new PicsouFrame(Lang.get("application"), directory);
     directory.add(JFrame.class, frame);
-    PicsouInit init = PicsouInit.init(serverAccess, directory, registered, false);
+    PicsouInit init = PicsouInit.init(dataAccess, directory, registered, false);
     init.loadUserData(user, false, false).load();
 
     Directory initDirectory = init.getDirectory();
@@ -114,13 +110,13 @@ public class DevDesktopApp {
     return sessionDirectory;
   }
 
-  private static boolean isRegistered(String user, String password, ServerAccess serverAccess) {
+  private static boolean isRegistered(String user, String password, DataAccess dataAccess) {
     boolean registered = false;
     try {
-      registered = serverAccess.createUser(user, password.toCharArray(), false);
+      registered = dataAccess.createUser(user, password.toCharArray(), false);
     }
     catch (UserAlreadyExists e) {
-      registered = serverAccess.initConnection(user, password.toCharArray(), false);
+      registered = dataAccess.initConnection(user, password.toCharArray(), false);
     }
     return registered;
   }

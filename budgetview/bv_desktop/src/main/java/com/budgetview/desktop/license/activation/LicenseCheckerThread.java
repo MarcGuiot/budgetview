@@ -1,6 +1,6 @@
 package com.budgetview.desktop.license.activation;
 
-import com.budgetview.desktop.config.ConfigService;
+import com.budgetview.desktop.userconfig.UserConfigService;
 import com.budgetview.model.User;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.utils.directory.Directory;
@@ -24,7 +24,7 @@ public class LicenseCheckerThread extends Thread {
   }
 
   public void run() {
-    if (!ConfigService.waitEndOfConfigRequest(directory, -1)){
+    if (!UserConfigService.waitEndOfConfigRequest(directory, -1)){
       return ;
     }
     try {
@@ -33,7 +33,7 @@ public class LicenseCheckerThread extends Thread {
           if (repository != null && directory != null) {
             repository.startChangeSet();
             try {
-              ConfigService.check(directory, repository);
+              UserConfigService.check(directory, repository);
               repository.update(User.KEY, User.CONNECTED, true);
             }
             finally {

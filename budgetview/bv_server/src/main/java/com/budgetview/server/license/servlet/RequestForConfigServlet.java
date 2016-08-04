@@ -89,7 +89,7 @@ public class RequestForConfigServlet extends HttpServlet {
     if (mail != null && activationCode != null) {
       if (count == null || id == null || lang == null) {
         logInfo("For " + mail + " ip = " + ip + ", one element is missing count : " + count + ", id :" + id + ", lang : " + lang);
-        resp.setHeader(LicenseConstants.HEADER_IS_VALIDE, "false");
+        resp.setHeader(LicenseConstants.HEADER_IS_VALID, "false");
         resp.setHeader(LicenseConstants.HEADER_MAIL_UNKNOWN, "true");
       }
       else {
@@ -128,7 +128,7 @@ public class RequestForConfigServlet extends HttpServlet {
         db.commit();
       }
     }
-    resp.setHeader(LicenseConstants.HEADER_IS_VALIDE, "false");
+    resp.setHeader(LicenseConstants.HEADER_IS_VALID, "false");
   }
 
   private void closeDb() {
@@ -279,7 +279,7 @@ public class RequestForConfigServlet extends HttpServlet {
       catch (Exception ex) {
         logger.error("RequestForConfigServlet:computeLicense retry", e);
       }
-      resp.setHeader(LicenseConstants.HEADER_IS_VALIDE, "true");
+      resp.setHeader(LicenseConstants.HEADER_IS_VALID, "true");
     }
     return group;
   }
@@ -294,12 +294,12 @@ public class RequestForConfigServlet extends HttpServlet {
     GlobList globList = licenseRequest.execute(mail);
     db.commit();
     if (globList.isEmpty()) {
-      resp.setHeader(LicenseConstants.HEADER_IS_VALIDE, "false");
+      resp.setHeader(LicenseConstants.HEADER_IS_VALID, "false");
       resp.setHeader(LicenseConstants.HEADER_MAIL_UNKNOWN, "true");
       logInfo("unknown_mail mail = " + mail);
     }
     else {
-      resp.setHeader(LicenseConstants.HEADER_IS_VALIDE, "true");
+      resp.setHeader(LicenseConstants.HEADER_IS_VALID, "true");
       for (Glob license : globList) {
         if (license.get(License.REPO_ID) != null && license.get(License.REPO_ID).equals(repoId)) {
           if (count < license.get(License.ACCESS_COUNT)) {

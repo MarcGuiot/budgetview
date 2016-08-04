@@ -1,6 +1,5 @@
-package com.budgetview.desktop.config.states;
+package com.budgetview.desktop.userconfig.states;
 
-import com.budgetview.desktop.config.UserState;
 import com.budgetview.model.LicenseActivationState;
 import com.budgetview.model.User;
 import org.globsframework.model.GlobRepository;
@@ -28,7 +27,7 @@ public class KilledUser implements UserState {
     throw new InvalidState(getClass().toString());
   }
 
-  public UserState updateUserValidity(Directory directory, GlobRepository repository) {
+  public UserState updateUserValidity(GlobRepository repository, Directory directory) {
     repository.startChangeSet();
     try {
       repository.update(User.KEY, User.IS_REGISTERED_USER, false);

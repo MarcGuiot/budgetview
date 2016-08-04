@@ -1,7 +1,7 @@
 package com.budgetview.desktop.backup;
 
-import com.budgetview.client.ServerAccess;
-import com.budgetview.client.http.EncrypterToTransportServerAccess;
+import com.budgetview.client.DataAccess;
+import com.budgetview.client.http.EncryptToTransportDataAccess;
 import com.budgetview.desktop.Application;
 import com.budgetview.desktop.PicsouInit;
 import com.budgetview.desktop.card.NavigationService;
@@ -38,7 +38,7 @@ import java.util.List;
 import static org.globsframework.model.FieldValue.value;
 
 public class BackupService {
-  private ServerAccess serverAccess;
+  private DataAccess dataAccess;
   private Directory directory;
   private GlobRepository repository;
   private DefaultGlobIdGenerator idGenerator;
@@ -50,11 +50,11 @@ public class BackupService {
     DECRYPT_FAILED
   }
 
-  public BackupService(ServerAccess serverAccess,
+  public BackupService(DataAccess dataAccess,
                        Directory directory, GlobRepository repository,
                        DefaultGlobIdGenerator idGenerator,
                        UpgradeTrigger upgradeTrigger) {
-    this.serverAccess = serverAccess;
+    this.dataAccess = dataAccess;
     this.directory = directory;
     this.repository = repository;
     this.idGenerator = idGenerator;
@@ -62,7 +62,7 @@ public class BackupService {
   }
 
   public void generate(File file) throws IOException {
-    MapOfMaps<String, Integer, SerializableGlobType> serverData = serverAccess.getServerData();
+    MapOfMaps<String, Integer, SerializableGlobType> serverData = dataAccess.getServerData();
     Files.createParentDirs(file);
     Glob user = repository.find(User.KEY);
     char[] password = null;
@@ -87,19 +87,19 @@ public class BackupService {
     PasswordBasedEncryptor readPasswordBasedEncryptor;
     PasswordBasedEncryptor writeBasedEncryptor = directory.get(PasswordBasedEncryptor.class);
     if (autoLogPassword != null) {
-      readPasswordBasedEncryptor = new MD5PasswordBasedEncryptor(EncrypterToTransportServerAccess.salt,
-                                                                 autoLogPassword, EncrypterToTransportServerAccess.count);
+      readPasswordBasedEncryptor = new MD5PasswordBasedEncryptor(EncryptToTransportDataAccess.salt,
+                                                                 autoLogPassword, EncryptToTransportDataAccess.count);
     }
     else if (password == null) {
       readPasswordBasedEncryptor = writeBasedEncryptor;
     }
     else {
-      readPasswordBasedEncryptor = new MD5PasswordBasedEncryptor(EncrypterToTransportServerAccess.salt,
-                                                                 password, EncrypterToTransportServerAccess.count);
+      readPasswordBasedEncryptor = new MD5PasswordBasedEncryptor(EncryptToTransportDataAccess.salt,
+                                                                 password, EncryptToTransportDataAccess.count);
     }
     GlobModel globModel = directory.get(GlobModel.class);
     try {
-      EncrypterToTransportServerAccess.decrypt(new ServerAccess.IdUpdater() {
+      EncryptToTransportDataAccess.decrypt(new DataAccess.IdUpdater() {
         public void update(IntegerField field, Integer lastAllocatedId) {
         }
       }, serverData, readPasswordBasedEncryptor, globModel);
@@ -117,10 +117,10 @@ public class BackupService {
       }
     }
 
-    serverAccess.replaceData(serverData);
+    dataAccess.replaceData(serverData);
 
     MutableChangeSet changeSet = new DefaultChangeSet();
-    GlobList userData = serverAccess.getUserData(changeSet, new BackupIdUpdater());
+    GlobList userData = dataAccess.getUserData(changeSet, new BackupIdUpdater());
     userData.addAll(PicsouInit.additionalGlobToAdd(repository));
 
     try {
@@ -162,18 +162,18 @@ public class BackupService {
   }
 
   public boolean rename(String newName, char[] passwd, final char[] previousPasswd) {
-    return serverAccess.rename(newName, passwd, previousPasswd);
+    return dataAccess.rename(newName, passwd, previousPasswd);
   }
 
-  public List<ServerAccess.SnapshotInfo> getSnapshotInfos() {
-    return serverAccess.getSnapshotInfos();
+  public List<DataAccess.SnapshotInfo> getSnapshotInfos() {
+    return dataAccess.getSnapshotInfos();
   }
 
-  public MapOfMaps<String, Integer, SerializableGlobType> restore(ServerAccess.SnapshotInfo snapshotInfo) {
-    return serverAccess.getSnapshotData(snapshotInfo, new BackupIdUpdater());
+  public MapOfMaps<String, Integer, SerializableGlobType> restore(DataAccess.SnapshotInfo snapshotInfo) {
+    return dataAccess.getSnapshotData(snapshotInfo, new BackupIdUpdater());
   }
 
-  private class BackupIdUpdater implements ServerAccess.IdUpdater {
+  private class BackupIdUpdater implements DataAccess.IdUpdater {
     public void update(IntegerField field, Integer lastAllocatedId) {
       idGenerator.update(field, lastAllocatedId);
     }

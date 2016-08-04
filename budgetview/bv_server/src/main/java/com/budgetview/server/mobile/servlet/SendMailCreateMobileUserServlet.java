@@ -60,7 +60,7 @@ public class SendMailCreateMobileUserServlet extends AbstractHttpServlet {
 
     String asciiUrl = builder.build().toASCIIString();
     mailer.sendNewMobileAccount(mail, lang, asciiUrl);
-    httpServletResponse.setHeader(LicenseConstants.HEADER_IS_VALIDE, "true");
+    httpServletResponse.setHeader(LicenseConstants.HEADER_IS_VALID, "true");
     httpServletResponse.setStatus(HttpServletResponse.SC_OK);
   }
 }

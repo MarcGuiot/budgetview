@@ -2,7 +2,7 @@ package com.budgetview.triggers;
 
 import com.budgetview.desktop.Application;
 import com.budgetview.model.LicenseActivationState;
-import com.budgetview.client.ServerAccess;
+import com.budgetview.client.DataAccess;
 import com.budgetview.desktop.utils.KeyService;
 import com.budgetview.model.User;
 import org.globsframework.model.*;
@@ -10,10 +10,10 @@ import org.globsframework.model.*;
 import static org.globsframework.model.FieldValue.value;
 
 public class LicenseRegistrationTrigger extends AbstractChangeSetListener {
-  private ServerAccess serverAccess;
+  private DataAccess dataAccess;
 
-  public LicenseRegistrationTrigger(ServerAccess serverAccess) {
-    this.serverAccess = serverAccess;
+  public LicenseRegistrationTrigger(DataAccess dataAccess) {
+    this.dataAccess = dataAccess;
   }
 
   public void globsChanged(ChangeSet changeSet, final GlobRepository repository) {
@@ -43,7 +43,7 @@ public class LicenseRegistrationTrigger extends AbstractChangeSetListener {
             if (mail != null && signature != null && activationCode != null) {
               byte[] mailAsByte = mail.getBytes();
               if (KeyService.checkSignature(mailAsByte, signature)) {
-                serverAccess.localRegister(mailAsByte, signature, activationCode, Application.JAR_VERSION);
+                dataAccess.localRegister(mailAsByte, signature, activationCode, Application.JAR_VERSION);
                 repository.update(User.KEY,
                                   value(User.LICENSE_ACTIVATION_STATE, LicenseActivationState.ACTIVATION_OK.getId()),
                                   value(User.IS_REGISTERED_USER, true));
@@ -66,7 +66,7 @@ public class LicenseRegistrationTrigger extends AbstractChangeSetListener {
 
         public void visitUpdate(Key key, FieldValuesWithPrevious values) throws Exception {
           if (values.contains(User.IS_REGISTERED_USER) && !values.isTrue(User.IS_REGISTERED_USER)) {
-            serverAccess.localRegister(null, null, null, -1);
+            dataAccess.localRegister(null, null, null, -1);
           }
         }
 

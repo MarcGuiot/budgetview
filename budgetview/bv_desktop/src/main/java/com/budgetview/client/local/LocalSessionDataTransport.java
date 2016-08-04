@@ -2,17 +2,17 @@ package com.budgetview.client.local;
 
 import com.budgetview.client.exceptions.BadConnection;
 import com.budgetview.session.SessionService;
-import com.budgetview.client.ClientTransport;
+import com.budgetview.client.DataTransport;
 import org.globsframework.utils.directory.Directory;
 import org.globsframework.utils.serialization.SerializedByteArrayOutput;
 import org.globsframework.utils.serialization.SerializedInput;
 import org.globsframework.utils.serialization.SerializedInputOutputFactory;
 import org.globsframework.utils.serialization.SerializedOutput;
 
-public class LocalClientTransport implements ClientTransport {
+public class LocalSessionDataTransport implements DataTransport {
   private SessionService sessionService;
 
-  public LocalClientTransport(Directory serverDirectory) {
+  public LocalSessionDataTransport(Directory serverDirectory) {
     sessionService = serverDirectory.get(SessionService.class);
   }
 

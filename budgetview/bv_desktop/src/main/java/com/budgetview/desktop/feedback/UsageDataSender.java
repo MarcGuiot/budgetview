@@ -2,7 +2,7 @@ package com.budgetview.desktop.feedback;
 
 import com.budgetview.desktop.Application;
 import com.budgetview.desktop.accounts.utils.AccountMatchers;
-import com.budgetview.desktop.config.ConfigService;
+import com.budgetview.desktop.userconfig.UserConfigService;
 import com.budgetview.desktop.model.ProjectStat;
 import com.budgetview.desktop.projects.utils.CurrentProjectsMatcher;
 import com.budgetview.model.*;
@@ -30,7 +30,7 @@ public class UsageDataSender {
       return;
     }
     try {
-      directory.get(ConfigService.class).sendUsageData(getMessage(repository, exitCount));
+      directory.get(UserConfigService.class).sendUsageData(getMessage(repository, exitCount));
     }
     catch (Exception exception) {
       // Ignore

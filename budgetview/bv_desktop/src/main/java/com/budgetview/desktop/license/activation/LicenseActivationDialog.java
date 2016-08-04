@@ -3,7 +3,7 @@ package com.budgetview.desktop.license.activation;
 import com.budgetview.desktop.components.ProgressPanel;
 import com.budgetview.desktop.components.dialogs.PicsouDialog;
 import com.budgetview.desktop.components.utils.CustomFocusTraversalPolicy;
-import com.budgetview.desktop.config.ConfigService;
+import com.budgetview.desktop.userconfig.UserConfigService;
 import com.budgetview.desktop.help.HyperlinkHandler;
 import com.budgetview.desktop.undo.UndoRedoService;
 import com.budgetview.model.LicenseActivationState;
@@ -67,7 +67,7 @@ public class LicenseActivationDialog {
             directory.get(ExecutorService.class)
               .submit(new Runnable() {
                 public void run() {
-                  final String response = directory.get(ConfigService.class).askForNewCodeByMail(mail);
+                  final String response = directory.get(UserConfigService.class).sendNewCodeRequest(mail);
                   SwingUtilities.invokeLater(new Runnable() {
                     public void run() {
                       connectionMessage.setText(response);

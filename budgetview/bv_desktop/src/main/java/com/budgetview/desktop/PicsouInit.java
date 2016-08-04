@@ -1,12 +1,12 @@
 package com.budgetview.desktop;
 
 import com.budgetview.bank.SpecificBankLoader;
-import com.budgetview.client.ServerAccess;
+import com.budgetview.client.DataAccess;
 import com.budgetview.desktop.accounts.utils.MonthDay;
 import com.budgetview.desktop.backup.BackupService;
 import com.budgetview.desktop.browsing.BrowsingService;
-import com.budgetview.desktop.config.ConfigService;
-import com.budgetview.desktop.config.RegistrationTrigger;
+import com.budgetview.desktop.userconfig.UserConfigService;
+import com.budgetview.desktop.userconfig.triggers.LicenseActivationTrigger;
 import com.budgetview.desktop.model.PicsouGuiModel;
 import com.budgetview.desktop.preferences.components.ColorThemeUpdater;
 import com.budgetview.desktop.series.view.SeriesWrapperUpdateTrigger;
@@ -49,19 +49,19 @@ import static org.globsframework.model.FieldValue.value;
 public class PicsouInit {
 
   private GlobRepository repository;
-  private ServerAccess serverAccess;
+  private DataAccess dataAccess;
   private Directory directory;
   private DefaultGlobIdGenerator idGenerator;
   private UpgradeTrigger upgradeTrigger;
   private ServerChangeSetListener changeSetListenerToDb;
   private ShowDialogAndExitExceptionHandler exceptionHandler;
 
-  public static PicsouInit init(ServerAccess serverAccess, Directory directory, boolean registeredUser, boolean badJarVersion) {
-    return new PicsouInit(serverAccess, directory, registeredUser, badJarVersion);
+  public static PicsouInit init(DataAccess dataAccess, Directory directory, boolean registeredUser, boolean badJarVersion) {
+    return new PicsouInit(dataAccess, directory, registeredUser, badJarVersion);
   }
 
-  private PicsouInit(ServerAccess serverAccess, final Directory directory, boolean registeredUser, boolean badJarVersion) {
-    this.serverAccess = serverAccess;
+  private PicsouInit(DataAccess dataAccess, final Directory directory, boolean registeredUser, boolean badJarVersion) {
+    this.dataAccess = dataAccess;
     this.directory = directory;
 
     this.idGenerator = new DefaultGlobIdGenerator();
@@ -81,11 +81,11 @@ public class PicsouInit {
 
     AwtExceptionHandler.setRepository(repository, directory);
 
-    changeSetListenerToDb = new ServerChangeSetListener(serverAccess);
+    changeSetListenerToDb = new ServerChangeSetListener(dataAccess);
     this.repository.addChangeListener(changeSetListenerToDb);
 
     upgradeTrigger = new UpgradeTrigger(directory);
-    initTriggers(serverAccess, directory, this.repository);
+    initTriggers(dataAccess, directory, this.repository);
     repository.addTrigger(new SeriesWrapperUpdateTrigger());
 
     initDirectory(this.repository);
@@ -96,7 +96,7 @@ public class PicsouInit {
   }
 
   private void initBank(Directory directory) {
-    if (!directory.get(ConfigService.class).loadConfigFileFromLastestJar(directory, this.repository)) {
+    if (!directory.get(UserConfigService.class).loadConfigFileFromLastestJar(directory, this.repository)) {
       directory.get(TransactionAnalyzerFactory.class)
         .load(this.getClass().getClassLoader(), Application.BANK_CONFIG_VERSION, repository, directory);
     }
@@ -105,7 +105,7 @@ public class PicsouInit {
     bankLoader.load(repository, directory);
   }
 
-  public static void initTriggers(ServerAccess serverAccess, Directory directory, final GlobRepository repository) {
+  public static void initTriggers(DataAccess dataAccess, Directory directory, final GlobRepository repository) {
     repository.addTrigger(new CurrentMonthTrigger());
     repository.addTrigger(new MonthTrigger());
     repository.addTrigger(new AccountInitialPositionTrigger());
@@ -133,8 +133,8 @@ public class PicsouInit {
     repository.addTrigger(new AccountSequenceTrigger());
     repository.addTrigger(new SeriesDeletionTrigger());
     repository.addTrigger(new SubSeriesDeletionTrigger());
-    repository.addTrigger(new RegistrationTrigger(directory));
-    repository.addTrigger(new LicenseRegistrationTrigger(serverAccess));
+    repository.addTrigger(new LicenseActivationTrigger(directory));
+    repository.addTrigger(new LicenseRegistrationTrigger(dataAccess));
     repository.addTrigger(new AddOnTrigger());
     repository.addTrigger(new DayTrigger());
     repository.addTrigger(new DeferredAccountTrigger());
@@ -191,7 +191,7 @@ public class PicsouInit {
       typesToReplace = PicsouGuiModel.getUserSpecificTypes();
       idGenerator.reset(Arrays.asList(typesToReplace));
 
-      userData = serverAccess.getUserData(changeSet, new ServerAccess.IdUpdater() {
+      userData = dataAccess.getUserData(changeSet, new DataAccess.IdUpdater() {
         public void update(IntegerField field, Integer lastAllocatedId) {
           idGenerator.update(field, lastAllocatedId);
         }
@@ -232,7 +232,7 @@ public class PicsouInit {
                 .get();
             repository.addChangeListener(changeSetListenerToDb);
             // reload data to lauch the check on saved data
-            userData = serverAccess.getUserData(changeSet, new ServerAccess.IdUpdater() {
+            userData = dataAccess.getUserData(changeSet, new DataAccess.IdUpdater() {
               public void update(IntegerField field, Integer lastAllocatedId) {
                 idGenerator.update(field, lastAllocatedId);
               }
@@ -242,7 +242,7 @@ public class PicsouInit {
             DataCheckingService dataChecker = new DataCheckingService(repository, directory);
             dataChecker.check(e);
 
-            userData = serverAccess.getUserData(changeSet, new ServerAccess.IdUpdater() {
+            userData = dataAccess.getUserData(changeSet, new DataAccess.IdUpdater() {
               public void update(IntegerField field, Integer lastAllocatedId) {
                 idGenerator.update(field, lastAllocatedId);
               }
@@ -254,7 +254,7 @@ public class PicsouInit {
 
         UserPreferences.initMobilePassword(repository, false);
 
-        serverAccess.applyChanges(changeSet, repository);
+        dataAccess.applyChanges(changeSet, repository);
       }
       catch (Exception e) {
         Log.write("In load ", e);
@@ -294,7 +294,7 @@ public class PicsouInit {
     directory.add(BrowsingService.class, BrowsingService.createService());
     directory.add(TransactionAnalyzerFactory.class, new TransactionAnalyzerFactory(PicsouGuiModel.get()));
     directory.add(ImportService.class, new ImportService());
-    directory.add(new BackupService(serverAccess, directory, repository, idGenerator, upgradeTrigger));
+    directory.add(new BackupService(dataAccess, directory, repository, idGenerator, upgradeTrigger));
   }
 
   public static void createTransientDataForNewUser(GlobRepository repository) {
@@ -348,14 +348,14 @@ public class PicsouInit {
   }
 
   private static class ServerChangeSetListener extends DefaultChangeSetListener {
-    private ServerAccess serverAccess;
+    private DataAccess dataAccess;
 
-    public ServerChangeSetListener(ServerAccess serverAccess) {
-      this.serverAccess = serverAccess;
+    public ServerChangeSetListener(DataAccess dataAccess) {
+      this.dataAccess = dataAccess;
     }
 
     public void globsChanged(ChangeSet changeSet, GlobRepository repository) {
-      serverAccess.applyChanges(changeSet, repository);
+      dataAccess.applyChanges(changeSet, repository);
     }
   }
 

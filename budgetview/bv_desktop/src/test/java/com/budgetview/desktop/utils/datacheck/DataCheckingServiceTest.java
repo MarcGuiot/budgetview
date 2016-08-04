@@ -1,10 +1,8 @@
 package com.budgetview.desktop.utils.datacheck;
 
-import com.budgetview.desktop.utils.datacheck.DataCheckReport;
-import com.budgetview.desktop.utils.datacheck.DataCheckingService;
 import com.budgetview.model.*;
 import junit.framework.TestCase;
-import com.budgetview.client.ServerAccess;
+import com.budgetview.client.DataAccess;
 import com.budgetview.desktop.PicsouInit;
 import com.budgetview.desktop.description.PicsouDescriptionService;
 import com.budgetview.desktop.time.TimeService;
@@ -160,7 +158,7 @@ public class DataCheckingServiceTest extends TestCase {
   }
 
   private void doCheck(final String... expectedError) {
-    PicsouInit.initTriggers(ServerAccess.NULL, directory, repository);
+    PicsouInit.initTriggers(DataAccess.NULL, directory, repository);
     DataCheckingService checkerAction = new DataCheckingService(repository, directory);
     DataCheckReport builder = new DataCheckReport();
     assertTrue(checkerAction.doCheck(builder));

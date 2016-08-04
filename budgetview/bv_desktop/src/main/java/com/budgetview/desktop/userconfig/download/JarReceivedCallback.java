@@ -1,7 +1,6 @@
-package com.budgetview.desktop.config;
+package com.budgetview.desktop.userconfig.download;
 
-import com.budgetview.client.ServerAccess;
-import com.budgetview.desktop.config.download.AbstractCompletionCallback;
+import com.budgetview.client.DataAccess;
 import com.budgetview.model.AppVersionInformation;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.utils.directory.Directory;
@@ -10,15 +9,15 @@ import java.io.File;
 
 public class JarReceivedCallback extends AbstractCompletionCallback {
 
-  private ServerAccess serverAccess;
+  private DataAccess dataAccess;
 
-  public JarReceivedCallback(Directory directory, GlobRepository repository, ServerAccess serverAccess) {
-    this.serverAccess = serverAccess;
+  public JarReceivedCallback(Directory directory, GlobRepository repository, DataAccess dataAccess) {
+    this.dataAccess = dataAccess;
     set(directory, repository);
   }
 
   synchronized public void complete(File jarFile, long version) {
-    serverAccess.downloadedVersion(version);
+    dataAccess.downloadedVersion(version);
     super.complete(jarFile, version);
   }
 

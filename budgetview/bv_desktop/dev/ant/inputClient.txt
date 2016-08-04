@@ -3,7 +3,7 @@ C com.budgetview.desktop.InMemoryDesktopApp
 C com.budgetview.gui.MainWindow
 C com.budgetview.gui.DevDesktop
 C com.budgetview.gui.PicsouApplet
-C com.budgetview.client.local.LocalClientTransport
+C com.budgetview.client.local.LocalSessionDataTransport
 C com.budgetview.gui.plaf.WavePanelUI
 C com.budgetview.gui.plaf.PicsouButtonUI
 C com.budgetview.gui.plaf.PicsouWindowsLabelUI

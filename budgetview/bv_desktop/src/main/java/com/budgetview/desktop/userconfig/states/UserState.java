@@ -1,4 +1,4 @@
-package com.budgetview.desktop.config;
+package com.budgetview.desktop.userconfig.states;
 
 import org.globsframework.model.GlobRepository;
 import org.globsframework.utils.directory.Directory;
@@ -11,5 +11,5 @@ public interface UserState {
 
   UserState fireValidUser();
 
-  UserState updateUserValidity(Directory directory, GlobRepository repository);
+  UserState updateUserValidity(GlobRepository repository, Directory directory);
 }

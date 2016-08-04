@@ -1,4 +1,4 @@
-package com.budgetview.desktop.config.download;
+package com.budgetview.desktop.userconfig.download;
 
 import org.globsframework.model.GlobRepository;
 import org.globsframework.utils.directory.Directory;

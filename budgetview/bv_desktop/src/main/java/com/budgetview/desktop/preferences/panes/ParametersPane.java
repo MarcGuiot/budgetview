@@ -1,6 +1,6 @@
 package com.budgetview.desktop.preferences.panes;
 
-import com.budgetview.desktop.config.ConfigService;
+import com.budgetview.desktop.userconfig.UserConfigService;
 import com.budgetview.desktop.preferences.PreferencesDialog;
 import com.budgetview.desktop.preferences.PreferencesPane;
 import com.budgetview.desktop.preferences.PreferencesResult;
@@ -72,10 +72,10 @@ public class ParametersPane implements PreferencesPane {
       public void actionPerformed(ActionEvent e) {
         String lang = langCombo.getSelectedItem().toString();
         if (lang.equalsIgnoreCase(langEn)) {
-          directory.get(ConfigService.class).setLang("en");
+          directory.get(UserConfigService.class).setLang("en");
         }
         else {
-          directory.get(ConfigService.class).setLang("fr");
+          directory.get(UserConfigService.class).setLang("fr");
         }
       }
     });

@@ -1,4 +1,4 @@
-package com.budgetview.desktop.config.download;
+package com.budgetview.desktop.userconfig.download;
 
 import com.budgetview.desktop.Application;
 import org.apache.commons.net.ftp.FTPClient;

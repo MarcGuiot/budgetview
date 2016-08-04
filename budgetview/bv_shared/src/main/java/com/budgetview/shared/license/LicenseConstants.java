@@ -25,7 +25,7 @@ public class LicenseConstants {
   public static final String HEADER_MAIL_TITLE = "title";
   public static final String HEADER_MAIL_CONTENT = "content";
   public static final String HEADER_SIGNATURE = "signature";
-  public static final String HEADER_IS_VALIDE = "isValide";
+  public static final String HEADER_IS_VALID = "isValide";
   public static final String HEADER_CODE = "code";
   public static final String HEADER_COUNT = "count";
   public static final String HEADER_MAIL_SENT = "mailSent";

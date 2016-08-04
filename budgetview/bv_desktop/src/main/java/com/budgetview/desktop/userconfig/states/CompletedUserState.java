@@ -1,6 +1,5 @@
-package com.budgetview.desktop.config.states;
+package com.budgetview.desktop.userconfig.states;
 
-import com.budgetview.desktop.config.UserState;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.utils.directory.Directory;
 
@@ -23,7 +22,7 @@ public class CompletedUserState implements UserState {
     return this;
   }
 
-  public UserState updateUserValidity(Directory directory, GlobRepository repository) {
+  public UserState updateUserValidity(GlobRepository repository, Directory directory) {
     return this;
   }
 

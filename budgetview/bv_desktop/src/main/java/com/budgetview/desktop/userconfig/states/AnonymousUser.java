@@ -1,6 +1,5 @@
-package com.budgetview.desktop.config.states;
+package com.budgetview.desktop.userconfig.states;
 
-import com.budgetview.desktop.config.UserState;
 import com.budgetview.model.User;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.utils.directory.Directory;
@@ -33,7 +32,7 @@ public class AnonymousUser implements UserState {
     return this;
   }
 
-  public UserState updateUserValidity(Directory directory, GlobRepository repository) {
+  public UserState updateUserValidity(GlobRepository repository, Directory directory) {
     repository.startChangeSet();
     try {
       repository.update(User.KEY, value(User.IS_REGISTERED_USER, false));

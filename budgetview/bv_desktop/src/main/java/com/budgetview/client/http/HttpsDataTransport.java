@@ -6,7 +6,7 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.ByteArrayEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
-import com.budgetview.client.ClientTransport;
+import com.budgetview.client.DataTransport;
 import org.globsframework.utils.Log;
 import org.globsframework.utils.exceptions.InvalidState;
 import org.globsframework.utils.serialization.SerializedByteArrayOutput;
@@ -18,12 +18,12 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectInputStream;
 
-public class HttpsClientTransport implements ClientTransport {
+public class HttpsDataTransport implements DataTransport {
   public static final String SESSION_ID = "sessionId";
   private String serverUrl;
   private HttpClient httpClient;
 
-  public HttpsClientTransport(String serverUrl) {
+  public HttpsDataTransport(String serverUrl) {
     this.serverUrl = serverUrl;
     this.httpClient = new DefaultHttpClient();
   }

@@ -15,7 +15,7 @@ import org.globsframework.utils.collections.MapOfMaps;
 
 import java.util.List;
 
-public interface ServerAccess {
+public interface DataAccess {
 
   boolean createUser(String name, char[] password, boolean autoLog)
     throws UserAlreadyExists, IdentificationFailed, PasswordBasedEncryptor.EncryptFail;
@@ -96,7 +96,7 @@ public interface ServerAccess {
 
   void disconnect();
 
-  static final ServerAccess NULL = new ServerAccess() {
+  static final DataAccess NULL = new DataAccess() {
     public boolean createUser(String name, char[] password, boolean autoLogin) throws UserAlreadyExists, IdentificationFailed, PasswordBasedEncryptor.EncryptFail {
       return true;
     }

@@ -1,6 +1,6 @@
 package com.budgetview.desktop.startup;
 
-import com.budgetview.client.ServerAccess;
+import com.budgetview.client.DataAccess;
 import com.budgetview.desktop.MainWindow;
 import com.budgetview.desktop.components.ProgressPanel;
 import com.budgetview.desktop.components.utils.CustomFocusTraversalPolicy;
@@ -142,10 +142,10 @@ public class LoginPanel {
     logUser(AUTOLOG_USER, AUTOLOG_USER.toCharArray(), createUser, true);
   }
 
-  public JPanel preparePanelForShow(java.util.List<ServerAccess.UserInfo> users) {
+  public JPanel preparePanelForShow(java.util.List<DataAccess.UserInfo> users) {
     setComponentsEnabled(true);
     autoLoginUser = null;
-    for (ServerAccess.UserInfo user : users) {
+    for (DataAccess.UserInfo user : users) {
       if (user.autologin) {
         if (autoLoginUser != null) {
           Log.write("Multiple autologgin user " + autoLoginUser + " " + user.name);
@@ -281,14 +281,14 @@ public class LoginPanel {
       super(Lang.get("login.selectUser"));
     }
 
-    public void update(List<ServerAccess.UserInfo> users) {
+    public void update(List<DataAccess.UserInfo> users) {
       this.names = getNames(users);
       setEnabled(!names.isEmpty());
     }
 
-    private List<String> getNames(List<ServerAccess.UserInfo> users) {
+    private List<String> getNames(List<DataAccess.UserInfo> users) {
       List<String> result = new ArrayList<String>();
-      for (ServerAccess.UserInfo user : users) {
+      for (DataAccess.UserInfo user : users) {
         if (!user.autologin) {
           result.add(user.name);
         }

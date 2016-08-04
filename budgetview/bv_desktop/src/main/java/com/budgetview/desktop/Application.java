@@ -7,7 +7,7 @@ import com.budgetview.desktop.accounts.utils.AccountPositionNotificationHandler;
 import com.budgetview.desktop.addons.AddOnService;
 import com.budgetview.desktop.components.dialogs.MessageDialog;
 import com.budgetview.desktop.components.dialogs.MessageType;
-import com.budgetview.desktop.config.ConfigService;
+import com.budgetview.desktop.userconfig.UserConfigService;
 import com.budgetview.desktop.description.PicsouDescriptionService;
 import com.budgetview.desktop.mobile.MobileService;
 import com.budgetview.desktop.model.PicsouGuiModel;
@@ -330,7 +330,7 @@ public class Application {
   protected void preinitDirectory(Directory directory) {
   }
 
-  private static ConfigService createConfigService() {
+  private static UserConfigService createConfigService() {
     Long localConfigVersion;
     String configPath = AppPaths.getBankConfigPath();
     File lastJar = findLastJar(configPath);
@@ -340,7 +340,7 @@ public class Application {
     else {
       localConfigVersion = BANK_CONFIG_VERSION;
     }
-    return new ConfigService(APPLICATION_VERSION, JAR_VERSION, localConfigVersion, lastJar);
+    return new UserConfigService(APPLICATION_VERSION, JAR_VERSION, localConfigVersion, lastJar);
   }
 
   private static File findLastJar(String path) {

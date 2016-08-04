@@ -1,7 +1,7 @@
 package com.budgetview.client.http;
 
-import com.budgetview.client.ServerAccess;
-import com.budgetview.client.ServerAccessDecorator;
+import com.budgetview.client.DataAccess;
+import com.budgetview.client.DataAccessDecorator;
 import com.budgetview.client.exceptions.IdentificationFailed;
 import com.budgetview.client.exceptions.UserAlreadyExists;
 import org.globsframework.model.ChangeSet;
@@ -10,14 +10,14 @@ import org.globsframework.model.GlobRepository;
 import org.globsframework.model.delta.MutableChangeSet;
 import org.globsframework.utils.exceptions.GlobsException;
 
-public class ConnectionRetryServerAccess extends ServerAccessDecorator {
+public class AutoRetryDataAccess extends DataAccessDecorator {
   private String name;
   private char[] password;
   private boolean anonymous;
   private boolean privateComputer;
 
-  public ConnectionRetryServerAccess(ServerAccess serverAccess) {
-    super(serverAccess);
+  public AutoRetryDataAccess(DataAccess dataAccess) {
+    super(dataAccess);
   }
 
   public boolean createUser(String name, char[] password, boolean autoLogin) throws UserAlreadyExists, IdentificationFailed {

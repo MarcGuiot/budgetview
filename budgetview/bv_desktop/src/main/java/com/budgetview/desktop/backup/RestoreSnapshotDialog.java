@@ -1,6 +1,6 @@
 package com.budgetview.desktop.backup;
 
-import com.budgetview.client.ServerAccess;
+import com.budgetview.client.DataAccess;
 import com.budgetview.desktop.components.dialogs.PicsouDialog;
 import com.budgetview.utils.Lang;
 import org.globsframework.gui.GlobsPanelBuilder;
@@ -29,8 +29,8 @@ public class RestoreSnapshotDialog {
 
     final GlobsPanelBuilder builder = new GlobsPanelBuilder(getClass(), "/layout/backuprestore/restoreSnapshotDialog.splits", repository, directory);
 
-    builder.addRepeat("versionRepeat", getSnapshots(), new RepeatComponentFactory<ServerAccess.SnapshotInfo>() {
-      public void registerComponents(PanelBuilder cellBuilder, ServerAccess.SnapshotInfo item) {
+    builder.addRepeat("versionRepeat", getSnapshots(), new RepeatComponentFactory<DataAccess.SnapshotInfo>() {
+      public void registerComponents(PanelBuilder cellBuilder, DataAccess.SnapshotInfo item) {
         cellBuilder.add("dateRef", new RestoreSnapshotAction(directory, repository, item, dialog));
       }
     });
@@ -50,8 +50,8 @@ public class RestoreSnapshotDialog {
     dialog.showCentered();
   }
 
-  private List<ServerAccess.SnapshotInfo> getSnapshots() {
-    List<ServerAccess.SnapshotInfo> snapshotInfoList = backupService.getSnapshotInfos();
+  private List<DataAccess.SnapshotInfo> getSnapshots() {
+    List<DataAccess.SnapshotInfo> snapshotInfoList = backupService.getSnapshotInfos();
     Collections.sort(snapshotInfoList);
     return snapshotInfoList;
   }

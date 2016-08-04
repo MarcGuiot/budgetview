@@ -4,7 +4,7 @@ P com/sun
 P sun
 P javax
 D rt.jar
-C com.budgetview.client.local.LocalClientTransport
+C com.budgetview.client.local.LocalSessionDataTransport
 M com.budgetview.gui.MainWindow initLocal
 P banks/.svn
 P i18n/.svn
