@@ -2,10 +2,7 @@ package org.globsframework.metamodel.utils;
 
 import junit.framework.TestCase;
 import org.globsframework.metamodel.*;
-import org.globsframework.metamodel.annotations.DefaultBoolean;
-import org.globsframework.metamodel.annotations.Key;
-import org.globsframework.metamodel.annotations.Required;
-import org.globsframework.metamodel.annotations.Target;
+import org.globsframework.metamodel.annotations.*;
 import org.globsframework.metamodel.fields.*;
 import org.globsframework.metamodel.index.UniqueIndex;
 import org.globsframework.model.Glob;
@@ -445,6 +442,17 @@ public class GlobTypeLoaderTest extends TestCase {
     assertEquals(1, DummyObjectWithDefaultValues.LINK.getDefaultValue());
     TestUtils.assertDatesEqual(new Date(), (Date)DummyObjectWithDefaultValues.DATE.getDefaultValue(), 360000);
     TestUtils.assertDatesEqual(new Date(), (Date)DummyObjectWithDefaultValues.TIMESTAMP.getDefaultValue(), 360000);
+  }
+
+  public void testAnObjectWithNamedFields() throws Exception {
+    assertEquals("named_integer", DummyObjectWithNamedFields.INTEGER.getName());
+    assertEquals("named_long", DummyObjectWithNamedFields.LONG.getName());
+    assertEquals("named_double", DummyObjectWithNamedFields.DOUBLE.getName());
+    assertEquals("named_boolean", DummyObjectWithNamedFields.BOOLEAN.getName());
+    assertEquals("named_date", DummyObjectWithNamedFields.DATE.getName());
+    assertEquals("named_timestamp", DummyObjectWithNamedFields.TIMESTAMP.getName());
+    assertEquals("named_link", DummyObjectWithNamedFields.LINK.getName());
+    assertEquals("named_string", DummyObjectWithNamedFields.STRING.getName()); 
   }
 
   private static class AnObjectWithADefaultValueTypeError {

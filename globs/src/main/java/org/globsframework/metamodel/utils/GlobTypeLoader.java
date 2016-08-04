@@ -4,6 +4,8 @@ import org.globsframework.metamodel.Field;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.Link;
 import org.globsframework.metamodel.annotations.Key;
+import org.globsframework.metamodel.annotations.MaxSize;
+import org.globsframework.metamodel.annotations.Name;
 import org.globsframework.metamodel.annotations.Required;
 import org.globsframework.metamodel.fields.LinkField;
 import org.globsframework.metamodel.index.*;
@@ -128,10 +130,11 @@ public class GlobTypeLoader {
     for (java.lang.reflect.Field classField : targetClass.getFields()) {
       if (isGlobField(classField)) {
         boolean isKeyField = classField.isAnnotationPresent(Key.class);
-        Field field = fieldFactory.createField(getFieldName(classField),
+        Map<Class<? extends Annotation>, Annotation> annotations = fieldAnnotations.get(classField.getName());
+        Field field = fieldFactory.createField(getFieldName(classField, annotations),
                                                classField.getType(),
                                                isKeyField,
-                                               fieldAnnotations.get(classField.getName()));
+                                               annotations);
         setClassField(classField, field, targetClass);
       }
     }
@@ -143,9 +146,11 @@ public class GlobTypeLoader {
           !LinkField.class.isAssignableFrom(classField.getType())) {
 
         boolean required = classField.isAnnotationPresent(Required.class);
-        DefaultLink link = new DefaultLink(type, getFieldName(classField),
+        Map<Class<? extends Annotation>, Annotation> annotations =
+          fieldAnnotations.get(classField.getName());
+        DefaultLink link = new DefaultLink(type, getFieldName(classField, annotations),
                                            required,
-                                           fieldAnnotations.get(classField.getName()));
+                                           annotations);
         GlobTypeLoader.setClassField(classField, link, targetClass);
       }
     }
@@ -251,9 +256,13 @@ public class GlobTypeLoader {
     }
   }
 
-  private String getFieldName(java.lang.reflect.Field field) {
+  private String getFieldName(java.lang.reflect.Field field, Map<Class<? extends Annotation>, Annotation> annotations) {
     if (field.getName().length() == 1) {
       return field.getName();
+    }
+    if (field.isAnnotationPresent(Name.class)) {
+      Name annotationSize = (Name)annotations.get(Name.class);
+      return annotationSize.value();
     }
     return Strings.toNiceLowerCase(field.getName());
   }
