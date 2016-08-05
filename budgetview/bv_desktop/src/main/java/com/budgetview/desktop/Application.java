@@ -5,6 +5,7 @@ import com.budgetview.bank.BankSynchroService;
 import com.budgetview.client.mail.MailService;
 import com.budgetview.desktop.accounts.utils.AccountPositionNotificationHandler;
 import com.budgetview.desktop.addons.AddOnService;
+import com.budgetview.desktop.cloud.CloudService;
 import com.budgetview.desktop.components.dialogs.MessageDialog;
 import com.budgetview.desktop.components.dialogs.MessageType;
 import com.budgetview.desktop.userconfig.UserConfigService;
@@ -316,6 +317,7 @@ public class Application {
     wrapper.add(createConfigService());
     wrapper.add(new MobileService());
     wrapper.add(new MailService());
+    wrapper.add(new CloudService());
     wrapper.add(new BankPluginService());
     wrapper.add(new BankSynchroService());
     wrapper.add(PrinterService.class, new DefaultPrinterService());
