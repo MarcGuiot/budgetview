@@ -72,7 +72,6 @@ public class CloudService {
       form.add(name, value.get(BudgeaConnectionValue.VALUE));
     }
 
-    System.out.println("CloudService.createConnection: ");
     List<NameValuePair> pairs = form.build();
     for (NameValuePair pair : pairs) {
       System.out.println("  " + pair.getName() + ": " + pair.getValue());
@@ -83,6 +82,8 @@ public class CloudService {
 
     JSONObject result = json(request);
     System.out.println("CloudService.createConnection: " + result.toString(2));
+
+
 
   }
 
