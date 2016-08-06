@@ -1,7 +1,7 @@
 package com.budgetview.server.license.mail;
 
 import org.apache.log4j.Logger;
-import com.budgetview.server.license.utils.Lang;
+import com.budgetview.server.utils.Lang;
 
 import javax.mail.*;
 import javax.mail.internet.AddressException;

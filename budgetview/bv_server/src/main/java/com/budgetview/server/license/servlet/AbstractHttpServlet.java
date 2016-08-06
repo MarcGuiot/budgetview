@@ -6,7 +6,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-public abstract class AbstractHttpServlet extends HttpServlet{
+public abstract class AbstractHttpServlet extends HttpServlet {
 
   protected abstract void action(HttpServletRequest req, HttpServletResponse resp) throws IOException, Exception;
 

@@ -10,7 +10,6 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.params.CoreProtocolPNames;
 import org.apache.http.params.HttpParams;
 import com.budgetview.server.license.ConnectedTestCase;
-import com.budgetview.server.license.LicenseServer;
 import com.budgetview.server.license.servlet.NewUserServlet;
 import org.globsframework.model.GlobList;
 import org.globsframework.sqlstreams.constraints.Constraints;
@@ -69,7 +68,7 @@ public class PaypalTest extends ConnectedTestCase {
 
   private void doBuy(final String transactionId, boolean checkDb) throws IOException, InterruptedException, URISyntaxException {
     HttpClient client = new DefaultHttpClient();
-    URIBuilder builder = new URIBuilder(SERVER_URL + LicenseServer.NEW_USER);
+    URIBuilder builder = new URIBuilder(SERVER_URL + LicenseConstants.NEW_USER);
 
     builder.setParameter(NewUserServlet.PAYER_EMAIL, "toto" + transactionId + "@bv.fr");
     builder.setParameter(NewUserServlet.RECEIVER_EMAIL, "paypal@mybudgetview.fr");
@@ -104,7 +103,7 @@ public class PaypalTest extends ConnectedTestCase {
   public void testNoValidated() throws Exception {
     HttpClient client = new DefaultHttpClient();
 //    postMethod.getParams().setContentCharset("UTF-8");
-    URIBuilder builder = new URIBuilder(SERVER_URL + LicenseServer.NEW_USER);
+    URIBuilder builder = new URIBuilder(SERVER_URL + LicenseConstants.NEW_USER);
     builder.setParameter(NewUserServlet.PAYER_EMAIL, "toto@bv.fr");
     builder.setParameter(NewUserServlet.RECEIVER_EMAIL, "paypal@mybudgetview.fr");
     builder.setParameter(NewUserServlet.PAYMENT_STATUS_ID, "completed");
@@ -124,7 +123,7 @@ public class PaypalTest extends ConnectedTestCase {
 
   public void testMultipleBuy() throws Exception {
     doBuy("12345", true);
-    URIBuilder builder = new URIBuilder(SERVER_URL + LicenseServer.NEW_USER);
+    URIBuilder builder = new URIBuilder(SERVER_URL + LicenseConstants.NEW_USER);
     HttpClient client = new DefaultHttpClient();
 //    postMethod.getParams().setContentCharset("UTF-8");
     builder.setParameter(NewUserServlet.PAYER_EMAIL, "toto12345@bv.fr");

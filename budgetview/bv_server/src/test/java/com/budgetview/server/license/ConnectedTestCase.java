@@ -1,14 +1,14 @@
 package com.budgetview.server.license;
 
+import com.budgetview.desktop.Application;
+import com.budgetview.desktop.browsing.BrowsingService;
+import com.budgetview.desktop.startup.components.SingleApplicationInstanceListener;
 import com.budgetview.functests.utils.LoggedInFunctionalTestCase;
-import com.budgetview.gui.PicsouApplication;
-import com.budgetview.gui.browsing.BrowsingService;
-import com.budgetview.gui.startup.components.SingleApplicationInstanceListener;
 import com.budgetview.server.license.checkers.DbChecker;
 import com.budgetview.server.license.checkers.FtpServerChecker;
 import com.budgetview.server.license.checkers.MailServerChecker;
 import com.budgetview.server.mobile.MobileServer;
-import com.budgetview.server.license.servlet.WebServer;
+import com.budgetview.server.web.WebServer;
 import com.budgetview.shared.license.LicenseConstants;
 import com.budgetview.shared.mobile.MobileConstants;
 import org.globsframework.utils.Files;
@@ -33,9 +33,7 @@ public abstract class ConnectedTestCase extends UISpecTestCase {
     LoggedInFunctionalTestCase.resetWindow();
     BrowsingService.setDummyBrowser(true);
 
-    Locale.setDefault(Locale.ENGLISH);
-
-    System.setProperty(WebServer.KEYSTORE_PATH, "./budgetview/bv_license_server/ssl/keystore");
+    System.setProperty(WebServer.KEYSTORE_PATH, "budgetview/bv_server/ssl/keystore");
     System.setProperty(WebServer.KEYSTORE_PWD, "bvpwd1");
     System.setProperty(WebServer.HTTPS_PORT_PROPERTY, "1443");
     System.setProperty(MobileServer.MOBILE_PATH_PROPERTY, MOBILE_DATA_DIR.getAbsolutePath());
@@ -46,18 +44,23 @@ public abstract class ConnectedTestCase extends UISpecTestCase {
     System.setProperty(MobileConstants.COM_APP_MOBILE_URL, "http://localhost:" + httpPort);
     System.setProperty(LicenseConstants.COM_APP_FTP_URL, "ftp://localhost:12000");
 
-    System.setProperty(PicsouApplication.LOCAL_PREVAYLER_PATH_PROPERTY, PATH_TO_DATA);
-    System.setProperty(PicsouApplication.DELETE_LOCAL_PREVAYLER_PROPERTY, "true");
+    System.setProperty(WebServer.HTTP_PORT_PROPERTY, Integer.toString(httpPort));
+    System.setProperty(LicenseServer.DATABASE_URL, DbChecker.DATABASE_URL);
+    System.setProperty(LicenseServer.DATABASE_USER,  DbChecker.DATABASE_USER);
+    System.setProperty(LicenseServer.DATABASE_PASSWORD, DbChecker.DATABASE_PASSWORD);
 
+    System.setProperty(Application.LOCAL_PREVAYLER_PATH_PROPERTY, PATH_TO_DATA);
+    System.setProperty(Application.DELETE_LOCAL_PREVAYLER_PROPERTY, "true");
+
+    Locale.setDefault(Locale.ENGLISH);
     Files.deleteSubtreeOnly(new File(PATH_TO_DATA));
-
     Files.deleteSubtreeOnly(MOBILE_DATA_DIR);
     MOBILE_DATA_DIR.mkdir();
 
     mailServer = new MailServerChecker();
 
     db =  new DbChecker();
-    licenseServer = new LicenseServerChecker(db.getUrl(), httpPort);
+    licenseServer = new LicenseServerChecker();
 
 //    Protocol http = new Protocol("http", new DefaultProtocolSocketFactory(), httpPort);
 //    Protocol.registerProtocol("http", http);

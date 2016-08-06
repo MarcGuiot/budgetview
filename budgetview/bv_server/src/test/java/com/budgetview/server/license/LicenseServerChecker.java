@@ -1,7 +1,5 @@
 package com.budgetview.server.license;
 
-import com.budgetview.server.license.servlet.WebServer;
-
 import javax.servlet.http.HttpServlet;
 import java.io.IOException;
 
@@ -9,13 +7,9 @@ public class LicenseServerChecker {
   private LicenseServer server;
   private boolean started;
 
-  public LicenseServerChecker(String databaseUrl, int port) throws IOException {
-
-    System.setProperty(WebServer.HTTP_PORT_PROPERTY, Integer.toString(port));
-
+  public LicenseServerChecker() throws IOException {
     server = new LicenseServer();
     server.setMailPort("localhost", 2500);
-    server.setDatabaseUrl(databaseUrl);
   }
 
   public void add(HttpServlet holder, String name) {

@@ -1,9 +1,9 @@
 package com.budgetview.server.license.functests;
 
+import com.budgetview.desktop.Application;
+import com.budgetview.desktop.time.TimeService;
 import com.budgetview.functests.checkers.license.LicenseActivationChecker;
 import com.budgetview.functests.checkers.ApplicationChecker;
-import com.budgetview.gui.PicsouApplication;
-import com.budgetview.gui.time.TimeService;
 import com.budgetview.server.license.ConnectedTestCase;
 import com.budgetview.shared.license.LicenseConstants;
 import org.globsframework.utils.Dates;
@@ -15,7 +15,7 @@ public class RegistrationTest extends ConnectedTestCase {
 
   protected void setUp() throws Exception {
     super.setUp();
-    System.setProperty(PicsouApplication.IS_DATA_IN_MEMORY, "false");
+    System.setProperty(Application.IS_DATA_IN_MEMORY, "false");
     TimeService.setCurrentDate(Dates.parseMonth("2008/07"));
     previousRetry = LicenseConstants.RETRY_PERIOD;
     LicenseConstants.RETRY_PERIOD = 500;

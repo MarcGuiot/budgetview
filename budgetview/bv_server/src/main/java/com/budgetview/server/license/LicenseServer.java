@@ -1,5 +1,6 @@
 package com.budgetview.server.license;
 
+import com.budgetview.server.config.ConfigService;
 import com.budgetview.server.license.mail.Mailer;
 import com.budgetview.server.license.model.License;
 import com.budgetview.server.license.model.MailError;
@@ -8,6 +9,8 @@ import com.budgetview.server.license.model.SoftwareInfo;
 import com.budgetview.server.license.servlet.*;
 import com.budgetview.server.mobile.MobileServer;
 import com.budgetview.server.mobile.servlet.*;
+import com.budgetview.server.utils.Log4J;
+import com.budgetview.server.web.WebServer;
 import com.budgetview.shared.license.LicenseConstants;
 import com.budgetview.shared.mobile.MobileConstants;
 import org.apache.log4j.Logger;
@@ -24,17 +27,12 @@ public class LicenseServer {
 
   static Logger logger = Logger.getLogger("LicenseServer");
 
-  public static final String NEW_USER = "/newUser";
-
-  public static final String DATABASE_URL = "bv.server.database.url";
-  public static final String DATABASE_USER = "bv.server.database.user";
-  public static final String DATABASE_PASSWD = "bv.server.database.passwd";
-
+  public static final String DATABASE_URL = "budgetview.database.url";
+  public static final String DATABASE_USER = "budgetview.database.user";
+  public static final String DATABASE_PASSWORD = "budgetview.database.password";
   private static final String JDBC_HSQLDB = "jdbc:hsqldb:.";
+
   private WebServer webServer;
-  private String databaseUrl = JDBC_HSQLDB;
-  private String databaseUser = "sa";
-  private String databasePassword = "";
   private Timer timer;
   private Directory directory;
   private Mailer mailer;
@@ -43,8 +41,7 @@ public class LicenseServer {
     Log4J.init();
 
     LicenseServer server = new LicenseServer();
-    server.readDbParams(args);
-    server.init();
+    server.init(args);
     server.start();
   }
 
@@ -53,47 +50,28 @@ public class LicenseServer {
     mailer = new Mailer();
   }
 
-  private void readDbParams(String[] args) {
-    for (int i = 0; i < args.length; i++) {
-      String arg = args[i];
-      if (arg.equals("-url")) {
-        databaseUrl = args[i + 1];
-      }
-      else if (arg.equals("-user")) {
-        databaseUser = args[i + 1];
-      }
-      else if (arg.equals("-pass")) {
-        databasePassword = args[i + 1];
-      }
-    }
-  }
-
   public void setMailPort(String mailHost, int mailPort) {
     mailer.setPort(mailHost, mailPort);
   }
 
-  public void setDatabaseUrl(String databaseUrl) {
-    this.databaseUrl = databaseUrl;
-  }
-
-  public void init() throws Exception {
-    directory = createDirectory();
-    initDb();
+  public void init(String... args) throws Exception {
+    directory = createDirectory(args);
+    initDb(directory);
 
     QueryVersionTask queryVersionTask = new QueryVersionTask(directory.get(SqlService.class), directory.get(VersionService.class));
     queryVersionTask.run();
     timer = new Timer(true);
     timer.schedule(queryVersionTask, 5000, 5000);
 
-    webServer = new WebServer("register.mybudgetview.fr", null, 443);
+    webServer = new WebServer(directory, "register.mybudgetview.fr", null, 443);
     webServer.add(new AskForCodeServlet(directory), LicenseConstants.REQUEST_FOR_MAIL);
     webServer.add(new RequestForConfigServlet(directory), LicenseConstants.REQUEST_FOR_CONFIG);
     webServer.add(new RegisterServlet(directory), LicenseConstants.REQUEST_FOR_REGISTER);
-    webServer.add(new NewUserServlet(directory), NEW_USER);
+    webServer.add(new NewUserServlet(directory), LicenseConstants.NEW_USER);
     webServer.add(new SendMailServlet(directory), LicenseConstants.REQUEST_SEND_MAIL);
     webServer.add(new SendUseInfoServlet(), LicenseConstants.SEND_USE_INFO);
 
-    String pathForMobileData = MobileServer.getDataDirectoryPath();
+    String pathForMobileData = MobileServer.getDataDirectoryPath(directory);
     webServer.add(new PostDataServlet(pathForMobileData), MobileConstants.POST_MOBILE_DATA);
     webServer.add(new GetMobileDataServlet(pathForMobileData, directory), MobileConstants.GET_MOBILE_DATA);
     webServer.add(new SendMailCreateMobileUserServlet(pathForMobileData, directory, webServer.getHttpPort()), MobileConstants.SEND_MAIL_TO_CONFIRM_MOBILE);
@@ -106,20 +84,21 @@ public class LicenseServer {
     webServer.add(servlet, name);
   }
 
-  private void initDb() {
-    String database = System.getProperty(DATABASE_URL);
-    if (database != null) {
-      databaseUrl = database;
-    }
-    if (databaseUrl.equals(JDBC_HSQLDB)) {
-      directory.get(SqlService.class).getDb().createTable(License.TYPE, SoftwareInfo.TYPE, RepoInfo.TYPE, MailError.TYPE);
+  private void initDb(Directory directory) {
+    String database = directory.get(ConfigService.class).get(DATABASE_URL);
+    if (database.equals(JDBC_HSQLDB)) {
+      this.directory.get(SqlService.class).getDb().createTable(License.TYPE, SoftwareInfo.TYPE, RepoInfo.TYPE, MailError.TYPE);
     }
   }
 
-  private Directory createDirectory() {
+  private Directory createDirectory(String[] args) throws Exception {
+
+    ConfigService config = new ConfigService(args);
+
     Directory directory = new DefaultDirectory();
+    directory.add(config);
     directory.add(mailer);
-    directory.add(SqlService.class, new JdbcSqlService(databaseUrl, databaseUser, databasePassword));
+    directory.add(SqlService.class, new JdbcSqlService(config.get(DATABASE_URL), config.get(DATABASE_USER), config.get(DATABASE_PASSWORD)));
     directory.add(new VersionService());
     return directory;
   }

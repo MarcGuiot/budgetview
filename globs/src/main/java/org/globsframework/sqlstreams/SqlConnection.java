@@ -34,7 +34,5 @@ public interface SqlConnection {
 
   void emptyTable(GlobType... globType);
 
-  void showDb();
-
   void populate(GlobList all);
 }

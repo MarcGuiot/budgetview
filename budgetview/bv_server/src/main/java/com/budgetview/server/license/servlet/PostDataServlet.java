@@ -1,6 +1,6 @@
 package com.budgetview.server.license.servlet;
 
-import com.budgetview.server.license.utils.Lang;
+import com.budgetview.server.utils.Lang;
 import com.budgetview.server.mobile.servlet.CreateMobileUserServlet;
 import com.budgetview.shared.license.LicenseConstants;
 import com.budgetview.shared.encryption.Crypt;

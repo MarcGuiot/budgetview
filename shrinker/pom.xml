@@ -39,13 +39,13 @@
     <dependency>
       <groupId>asm</groupId>
       <artifactId>asm</artifactId>
-      <version>3.3.1</version>
+      <version>3.1</version>
       <type>jar</type>
     </dependency>
     <dependency>
       <groupId>asm</groupId>
       <artifactId>asm-util</artifactId>
-      <version>3.3.1</version>
+      <version>3.1</version>
       <type>test</type>
     </dependency>
   </dependencies>

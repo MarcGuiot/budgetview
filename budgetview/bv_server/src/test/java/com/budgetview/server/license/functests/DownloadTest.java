@@ -1,15 +1,15 @@
 package com.budgetview.server.license.functests;
 
+import com.budgetview.desktop.Application;
+import com.budgetview.desktop.startup.AppPaths;
+import com.budgetview.desktop.time.TimeService;
+import com.budgetview.desktop.userconfig.UserConfigService;
 import com.budgetview.functests.checkers.MessageDialogChecker;
 import com.budgetview.functests.utils.OfxBuilder;
-import com.budgetview.gui.config.ConfigService;
-import com.budgetview.gui.startup.AppPaths;
 import com.budgetview.server.license.checkers.FtpServerChecker;
 import com.budgetview.functests.checkers.ApplicationChecker;
 import com.budgetview.functests.checkers.NewVersionChecker;
 import com.budgetview.functests.checkers.license.LicenseActivationChecker;
-import com.budgetview.gui.PicsouApplication;
-import com.budgetview.gui.time.TimeService;
 import com.budgetview.server.license.ConnectedTestCase;
 import com.budgetview.server.license.model.SoftwareInfo;
 import com.budgetview.model.TransactionType;
@@ -35,25 +35,25 @@ public class DownloadTest extends ConnectedTestCase {
   protected void setUp() throws Exception {
     System.setProperty("budgetview.log.sout", "true");
     super.setUp();
-    System.setProperty(PicsouApplication.DELETE_LOCAL_PREVAYLER_PROPERTY, "false");
-    System.setProperty(PicsouApplication.IS_DATA_IN_MEMORY, "false");
+    System.setProperty(Application.DELETE_LOCAL_PREVAYLER_PROPERTY, "false");
+    System.setProperty(Application.IS_DATA_IN_MEMORY, "false");
     TimeService.setCurrentDate(Dates.parseMonth("2008/07"));
     application = new ApplicationChecker();
-    currentVersion = PicsouApplication.JAR_VERSION;
+    currentVersion = Application.JAR_VERSION;
   }
 
   protected void tearDown() throws Exception {
     super.tearDown();
-    System.setProperty(PicsouApplication.DELETE_LOCAL_PREVAYLER_PROPERTY, "true");
+    System.setProperty(Application.DELETE_LOCAL_PREVAYLER_PROPERTY, "true");
     application.dispose();
     application = null;
-    PicsouApplication.JAR_VERSION = currentVersion;
+    Application.JAR_VERSION = currentVersion;
   }
 
   public void testDataVersionInTheFuture() throws Exception {
-    PicsouApplication.JAR_VERSION = currentVersion + 1;
+    Application.JAR_VERSION = currentVersion + 1;
 
-    updateDb(PicsouApplication.JAR_VERSION, PicsouApplication.BANK_CONFIG_VERSION);
+    updateDb(Application.JAR_VERSION, Application.BANK_CONFIG_VERSION);
     startServers();
     String ofxFile = OfxBuilder.init(this)
       .addBankAccount(30066, -2, "1111", 123.3, "10/09/2008")
@@ -65,9 +65,9 @@ public class DownloadTest extends ConnectedTestCase {
     application.getOperations().exit();
     application.dispose();
 
-    PicsouApplication.JAR_VERSION = currentVersion;
+    Application.JAR_VERSION = currentVersion;
 
-    final String jarName = ConfigService.generatePicsouJarName(PicsouApplication.JAR_VERSION + 1);
+    final String jarName = UserConfigService.generatePicsouJarName(Application.JAR_VERSION + 1);
     FtpServerChecker.Retr retr = ftpServer.setFtpReply(jarName, new String(new byte[12 * 1024 * 1024]), null, null);
     application.startModal();
 
@@ -81,19 +81,19 @@ public class DownloadTest extends ConnectedTestCase {
   public void testJarIsSentToSpecificUser() throws Exception {
     String email = "alfred@free.fr";
     db.registerMail(email, "1234");
-    updateDb(PicsouApplication.JAR_VERSION + 1L, PicsouApplication.BANK_CONFIG_VERSION + 1L);
-    updateDb(email, PicsouApplication.JAR_VERSION + 2L, PicsouApplication.BANK_CONFIG_VERSION + 1L);
+    updateDb(Application.JAR_VERSION + 1L, Application.BANK_CONFIG_VERSION + 1L);
+    updateDb(email, Application.JAR_VERSION + 2L, Application.BANK_CONFIG_VERSION + 1L);
 
     startServers();
 
-    final String jarName = ConfigService.generatePicsouJarName(PicsouApplication.JAR_VERSION + 1L);
-    final String configJarName = ConfigService.generateConfigJarName(PicsouApplication.BANK_CONFIG_VERSION + 1L);
+    final String jarName = UserConfigService.generatePicsouJarName(Application.JAR_VERSION + 1L);
+    final String configJarName = UserConfigService.generateConfigJarName(Application.BANK_CONFIG_VERSION + 1L);
     byte[] content = generateConfigContent();
     FtpServerChecker.Retr retr = ftpServer.setFtpReply(jarName, "jar content", configJarName, content);
     application.start();
     retr.assertOk();
 
-    System.setProperty(PicsouApplication.DELETE_LOCAL_PREVAYLER_PROPERTY, "false");
+    System.setProperty(Application.DELETE_LOCAL_PREVAYLER_PROPERTY, "false");
 
     Window window = application.getWindow();
     LicenseActivationChecker.enterLicense(window, email, "1234");
@@ -101,7 +101,7 @@ public class DownloadTest extends ConnectedTestCase {
     application.getOperations().exit();
     window.dispose();
 
-    final String jarName2 = ConfigService.generatePicsouJarName(PicsouApplication.JAR_VERSION + 2L);
+    final String jarName2 = UserConfigService.generatePicsouJarName(Application.JAR_VERSION + 2L);
 
     FtpServerChecker.Retr retr2 = ftpServer.setFtpReply(jarName2, "jar content", null, null);
     application.startWithoutSLA();
@@ -109,10 +109,10 @@ public class DownloadTest extends ConnectedTestCase {
   }
 
   public void testJarIsSentAndConfigUpdated() throws Exception {
-    updateDb(PicsouApplication.JAR_VERSION + 1L, PicsouApplication.BANK_CONFIG_VERSION + 1L);
+    updateDb(Application.JAR_VERSION + 1L, Application.BANK_CONFIG_VERSION + 1L);
     startServers();
-    final String jarName = ConfigService.generatePicsouJarName(PicsouApplication.JAR_VERSION + 1L);
-    final String configJarName = ConfigService.generateConfigJarName(PicsouApplication.BANK_CONFIG_VERSION + 1L);
+    final String jarName = UserConfigService.generatePicsouJarName(Application.JAR_VERSION + 1L);
+    final String configJarName = UserConfigService.generateConfigJarName(Application.BANK_CONFIG_VERSION + 1L);
     byte[] content = generateConfigContent();
     FtpServerChecker.Retr retr = ftpServer.setFtpReply(jarName, "jar content", configJarName, content);
     application.start();
@@ -169,7 +169,7 @@ public class DownloadTest extends ConnectedTestCase {
   }
 
   public void testNewBankInConfig() throws Exception {
-    updateDb(PicsouApplication.JAR_VERSION + 1L, PicsouApplication.BANK_CONFIG_VERSION + 1L);
+    updateDb(Application.JAR_VERSION + 1L, Application.BANK_CONFIG_VERSION + 1L);
     licenseServer.init();
     application.start();
 
@@ -180,8 +180,8 @@ public class DownloadTest extends ConnectedTestCase {
 
     application.getOperations().importOfxFile(fileName, "Other");
 
-    final String jarName = ConfigService.generatePicsouJarName(PicsouApplication.JAR_VERSION + 1L);
-    final String configJarName = ConfigService.generateConfigJarName(PicsouApplication.BANK_CONFIG_VERSION + 1L);
+    final String jarName = UserConfigService.generatePicsouJarName(Application.JAR_VERSION + 1L);
+    final String configJarName = UserConfigService.generateConfigJarName(Application.BANK_CONFIG_VERSION + 1L);
 
     FtpServerChecker.Retr retr = ftpServer.setFtpReply(jarName, "jar content", configJarName, generateConfigContent());
     startServersWithoutLicence();

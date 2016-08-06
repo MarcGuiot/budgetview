@@ -1,10 +1,10 @@
 package com.budgetview.server.license.functests;
 
+import com.budgetview.desktop.Application;
+import com.budgetview.desktop.startup.components.AppLogger;
 import com.budgetview.functests.checkers.FeedbackDialogChecker;
 import com.budgetview.functests.checkers.OperationChecker;
-import com.budgetview.gui.PicsouApplication;
 import com.budgetview.functests.checkers.ApplicationChecker;
-import com.budgetview.gui.startup.components.AppLogger;
 import com.budgetview.server.license.ConnectedTestCase;
 import com.budgetview.shared.license.LicenseConstants;
 import com.budgetview.utils.Lang;
@@ -59,7 +59,7 @@ public class FeedbackTest extends ConnectedTestCase {
       .checkContains("some content",
                      "footer",
                      "me@gg.fr",
-                     PicsouApplication.APPLICATION_VERSION,
+                     Application.APPLICATION_VERSION,
                      "lang:en");
 
     Lang.setLocale(Lang.ROOT);
@@ -78,7 +78,7 @@ public class FeedbackTest extends ConnectedTestCase {
     mailServer.checkReceivedMail("support@mybudgetview.fr")
       .checkContains("some content",
                      "me@gg.fr",
-                     PicsouApplication.APPLICATION_VERSION,
+                     Application.APPLICATION_VERSION,
                      "Something in the logs");
   }
 
@@ -98,7 +98,7 @@ public class FeedbackTest extends ConnectedTestCase {
     mailServer.checkReceivedMail("support@mybudgetview.fr")
       .checkContains("some content",
                      "me@gg.fr",
-                     PicsouApplication.APPLICATION_VERSION,
+                     Application.APPLICATION_VERSION,
                      "[no log file found]");
   }
 

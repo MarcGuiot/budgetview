@@ -1,16 +1,16 @@
-package com.budgetview.server.license.servlet;
+package com.budgetview.server.web;
 
+import com.budgetview.server.config.ConfigService;
 import org.eclipse.jetty.http.HttpVersion;
 import org.eclipse.jetty.server.*;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
 import org.eclipse.jetty.util.ssl.SslContextFactory;
 import org.eclipse.jetty.util.thread.QueuedThreadPool;
-import org.globsframework.utils.Strings;
+import org.globsframework.utils.directory.Directory;
 import org.globsframework.utils.exceptions.InvalidParameter;
 
 import javax.servlet.http.HttpServlet;
-import java.io.Console;
 import java.io.File;
 
 public class WebServer {
@@ -25,13 +25,17 @@ public class WebServer {
   private final Server jetty;
   private final ServletContextHandler context;
 
-  public WebServer(String defaultHost, Integer defaultHttpPort, Integer defaultHttpsPort) {
+  private ConfigService config;
+
+  public WebServer(Directory directory, String defaultHost, Integer defaultHttpPort, Integer defaultHttpsPort) {
+
+    config = directory.get(ConfigService.class);
 
     QueuedThreadPool threadPool = new QueuedThreadPool();
     threadPool.setMaxThreads(50);
     jetty = new Server(threadPool);
 
-    httpsPort = getPort(HTTPS_PORT_PROPERTY, defaultHttpsPort);
+    httpsPort = config.getInt(HTTPS_PORT_PROPERTY, defaultHttpsPort);
     if (httpsPort == null) {
       throw new InvalidParameter("HTTPS port must be set with " + HTTPS_PORT_PROPERTY);
     }
@@ -41,7 +45,7 @@ public class WebServer {
     httpConfig.setSecurePort(httpsPort);
     httpConfig.setOutputBufferSize(32768);
 
-    String sslKeystorePassword = readPassword();
+    String sslKeystorePassword = config.get(KEYSTORE_PWD);
     String keystorePath = System.getProperty(KEYSTORE_PATH);
     File keystoreFile = new File(keystorePath);
     if (!keystoreFile.exists()) {
@@ -72,7 +76,7 @@ public class WebServer {
     https.setIdleTimeout(500000);
     jetty.addConnector(https);
 
-    httpPort = getPort(HTTP_PORT_PROPERTY, defaultHttpPort);
+    httpPort = config.getInt(HTTP_PORT_PROPERTY, defaultHttpPort);
     if (httpPort != null) {
       ServerConnector http = new ServerConnector(jetty, new HttpConnectionFactory(httpConfig));
       http.setPort(httpPort);
@@ -101,31 +105,4 @@ public class WebServer {
     return httpPort;
   }
 
-  private static Integer getPort(String property, Integer defaultValue) {
-    String port = System.getProperty(property, "");
-    if (Strings.isNullOrEmpty(port)) {
-      return defaultValue;
-    }
-    return Integer.parseInt(port);
-  }
-
-  private static String readPassword() {
-    String password = System.getProperty(KEYSTORE_PWD, null);
-    if (Strings.isNotEmpty(password)) {
-      return password;
-    }
-
-    Console console = System.console();
-    if (console == null) {
-      System.out.println("Couldn't get Console instance");
-      System.exit(0);
-    }
-
-    char passwordArray[] = console.readPassword("Enter SSL keystore password: ");
-    return new String(passwordArray);
-  }
-
-  public Integer getHttpsPort() {
-    return httpsPort;
-  }
 }

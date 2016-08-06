@@ -17,6 +17,7 @@ public class LicenseConstants {
 
   public static final String HEADER_MAIL = "mail";
   public static final String REQUEST_FOR_REGISTER = "/register";
+  public static final String NEW_USER = "/newUser";
   public static final String REQUEST_FOR_CONFIG = "/requestForConfig";
   public static final String REQUEST_FOR_MAIL = "/mailTo";
   public static final String REQUEST_SEND_MAIL = "/sendMailToUs";

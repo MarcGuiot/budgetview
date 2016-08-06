@@ -1,4 +1,4 @@
-package com.budgetview.server.license.servlet;
+package com.budgetview.server.utils;
 
 import org.apache.log4j.PropertyConfigurator;
 

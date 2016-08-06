@@ -7,7 +7,6 @@ import org.globsframework.sqlstreams.drivers.jdbc.JdbcConnection;
 import org.globsframework.sqlstreams.drivers.jdbc.impl.SqlFieldCreationVisitor;
 import org.globsframework.sqlstreams.utils.StringPrettyWriter;
 import org.hsqldb.jdbc.jdbcBlob;
-import org.hsqldb.util.DatabaseManagerSwing;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -34,19 +33,4 @@ public class HsqlConnection extends JdbcConnection {
     };
   }
 
-  public void showDb() {
-    Thread thread = new Thread() {
-
-      public void run() {
-        try {
-          DatabaseManagerSwing.main(new String[0]);
-        }
-        catch (Exception e) {
-          e.printStackTrace();
-        }
-      }
-    };
-    thread.setDaemon(true);
-    thread.start();
-  }
 }

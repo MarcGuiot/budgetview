@@ -1,6 +1,6 @@
 package com.budgetview.server.mobile.servlet;
 
-import com.budgetview.server.license.utils.Lang;
+import com.budgetview.server.utils.Lang;
 import com.budgetview.server.license.servlet.PostDataServlet;
 import com.budgetview.shared.mobile.MobileConstants;
 import org.apache.log4j.Logger;

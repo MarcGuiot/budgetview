@@ -154,9 +154,6 @@ public abstract class JdbcConnection implements SqlConnection {
     }
   }
 
-  public void showDb() {
-  }
-
   public void populate(GlobList all) {
     for (Glob glob : all) {
       CreateBuilder createBuilder = getCreateBuilder(glob.getType());

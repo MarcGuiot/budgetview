@@ -19,7 +19,9 @@ import java.util.Date;
 
 public class DbChecker {
 
-  private static final String DATABASE_URL = "jdbc:hsqldb:.";
+  public static final String DATABASE_URL = "jdbc:hsqldb:.";
+  public static final String DATABASE_USER = "sa";
+  public static final String DATABASE_PASSWORD = "";
 
   private JdbcSqlService sqlService;
 
@@ -32,7 +34,7 @@ public class DbChecker {
 
   public SqlConnection getConnection() {
     if (sqlService == null) {
-      sqlService = new JdbcSqlService(DATABASE_URL, "sa", "");
+      sqlService = new JdbcSqlService(DATABASE_URL, DATABASE_USER, DATABASE_PASSWORD);
     }
     return sqlService.getDb();
   }
@@ -93,9 +95,4 @@ public class DbChecker {
     assertEquals(count, license.get(License.ACCESS_COUNT).longValue());
     assertTrue(license.get(License.SIGNATURE).length > 1);
   }
-
-  public String getUrl() {
-    return DATABASE_URL;
-  }
-
 }

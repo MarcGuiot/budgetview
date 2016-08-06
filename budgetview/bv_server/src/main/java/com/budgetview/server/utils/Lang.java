@@ -1,4 +1,4 @@
-package com.budgetview.server.license.utils;
+package com.budgetview.server.utils;
 
 import java.text.MessageFormat;
 import java.util.Locale;

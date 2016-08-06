@@ -1,7 +1,7 @@
 package com.budgetview.server.license.functests;
 
+import com.budgetview.desktop.Application;
 import com.budgetview.functests.checkers.ApplicationChecker;
-import com.budgetview.gui.PicsouApplication;
 import com.budgetview.server.license.ConnectedTestCase;
 import com.budgetview.utils.Lang;
 import org.globsframework.utils.logging.Debug;
@@ -10,18 +10,18 @@ public class UserEvaluationTest extends ConnectedTestCase {
   private ApplicationChecker application;
 
   public void setUp() throws Exception {
-    System.setProperty(PicsouApplication.IS_DATA_IN_MEMORY, "false");
+    System.setProperty(Application.IS_DATA_IN_MEMORY, "false");
     super.setUp();
-    System.setProperty(PicsouApplication.USER_FEEDBACK_DISABLED, Boolean.toString(false));
+    System.setProperty(Application.USER_FEEDBACK_DISABLED, Boolean.toString(false));
     application = new ApplicationChecker();
     application.start();
-    System.setProperty(PicsouApplication.DELETE_LOCAL_PREVAYLER_PROPERTY, "false");
+    System.setProperty(Application.DELETE_LOCAL_PREVAYLER_PROPERTY, "false");
   }
 
   public void tearDown() throws Exception {
     super.tearDown();
     application.dispose();
-    System.setProperty(PicsouApplication.DELETE_LOCAL_PREVAYLER_PROPERTY, "true");
+    System.setProperty(Application.DELETE_LOCAL_PREVAYLER_PROPERTY, "true");
     application = null;
   }
 
@@ -41,7 +41,7 @@ public class UserEvaluationTest extends ConnectedTestCase {
 
     mailServer.checkReceivedMail("admin@mybudgetview.fr")
       .checkSubjectContains("User evaluation: ")
-      .checkSubjectContains(PicsouApplication.APPLICATION_VERSION)
+      .checkSubjectContains(Application.APPLICATION_VERSION)
       .checkSubjectContains(Lang.getLang())
       .checkContains("Blah", "toto@example.com");
 
@@ -106,7 +106,7 @@ public class UserEvaluationTest extends ConnectedTestCase {
 
     mailServer.checkReceivedMail("admin@mybudgetview.fr")
       .checkSubjectContains("User evaluation: ")
-      .checkSubjectContains(PicsouApplication.APPLICATION_VERSION)
+      .checkSubjectContains(Application.APPLICATION_VERSION)
       .checkSubjectContains(Lang.getLang())
       .checkContains("Blah", "toto@example.com");
 

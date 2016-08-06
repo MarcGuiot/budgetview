@@ -10,12 +10,12 @@ import org.json.JSONObject;
 import java.io.IOException;
 
 public class JsonGlobParser {
-  public static Glob create(JSONObject json, GlobType type, Integer id, GlobRepository repository, FieldValue... additionalValues) throws IOException {
+  public static Glob jsonToGlob(JSONObject json, GlobType type, Integer id, GlobRepository repository, FieldValue... additionalValues) throws IOException {
     FieldValues fieldValues = getFieldValues(json, type, id, additionalValues);
     return repository.create(type, fieldValues.toArray());
   }
 
-  public static Glob create(JSONObject json, GlobType type, GlobRepository repository, FieldValue... additionalValues) throws IOException {
+  public static Glob jsonToGlob(JSONObject json, GlobType type, GlobRepository repository, FieldValue... additionalValues) throws IOException {
     FieldValues fieldValues = getFieldValues(json, type, null, additionalValues);
     return repository.create(type, fieldValues.toArray());
   }

@@ -14,7 +14,7 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.util.Date;
 
-import static com.budgetview.io.budgea.BudgeaDemo.json;
+import static com.budgetview.utils.Json.json;
 import static org.globsframework.model.FieldValue.value;
 
 public class BudgeaConnection {
