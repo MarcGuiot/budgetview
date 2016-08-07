@@ -5,7 +5,6 @@ import com.budgetview.server.cloud.servlet.ConnectionServlet;
 import com.budgetview.server.cloud.servlet.PingServlet;
 import com.budgetview.server.config.ConfigService;
 import com.budgetview.server.license.mail.Mailer;
-import com.budgetview.server.license.servlet.VersionService;
 import com.budgetview.server.utils.Log4J;
 import com.budgetview.server.web.WebServer;
 import org.apache.log4j.Logger;
@@ -26,7 +25,7 @@ public class CloudServer {
     server.start();
   }
 
-  private CloudServer(String... args) throws Exception {
+  public CloudServer(String... args) throws Exception {
     config = new ConfigService(args);
     Log4J.init(config);
   }
@@ -42,8 +41,7 @@ public class CloudServer {
   private Directory createDirectory() throws Exception {
     Directory directory = new DefaultDirectory();
     directory.add(config);
-    directory.add(new Mailer());
-    directory.add(new VersionService());
+    directory.add(new UserDataService());
     return directory;
   }
 
@@ -53,7 +51,6 @@ public class CloudServer {
   }
 
   public void stop() throws Exception {
-    directory.get(Mailer.class).stop();
     webServer.stop();
     logger.info("server stopped");
   }

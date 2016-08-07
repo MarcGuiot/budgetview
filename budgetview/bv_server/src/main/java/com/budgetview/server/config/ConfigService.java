@@ -1,10 +1,10 @@
 package com.budgetview.server.config;
 
-import org.globsframework.utils.Strings;
 import org.globsframework.utils.exceptions.InvalidParameter;
 import org.globsframework.utils.exceptions.OperationDenied;
 
 import java.io.Console;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Properties;
@@ -23,6 +23,10 @@ public class ConfigService {
   }
 
   private void loadProperties(String propertiesFile) throws IOException {
+    File file = new File(propertiesFile);
+    if (!file.exists()) {
+      throw new IOException("Properties file not found: " + file.getAbsolutePath());
+    }
     try {
       properties.load(new FileInputStream(propertiesFile));
     }

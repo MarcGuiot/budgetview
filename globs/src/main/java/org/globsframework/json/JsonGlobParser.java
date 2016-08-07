@@ -8,19 +8,38 @@ import org.globsframework.utils.exceptions.InvalidParameter;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 public class JsonGlobParser {
-  public static Glob jsonToGlob(JSONObject json, GlobType type, Integer id, GlobRepository repository, FieldValue... additionalValues) throws IOException {
+
+  private GlobRepository repository;
+  private Map<Field, String> fieldNames = new HashMap<Field, String>();
+
+  public JsonGlobParser(GlobRepository repository) {
+    this.repository = repository;
+  }
+
+  public JsonGlobParser setName(Field field, String name) {
+    fieldNames.put(field, name);
+    return this;
+  }
+
+  public Glob toGlob(JSONObject json, GlobType type, Integer id, FieldValue... additionalValues) throws IOException {
     FieldValues fieldValues = getFieldValues(json, type, id, additionalValues);
     return repository.create(type, fieldValues.toArray());
   }
 
-  public static Glob jsonToGlob(JSONObject json, GlobType type, GlobRepository repository, FieldValue... additionalValues) throws IOException {
+  public Glob toGlob(JSONObject json, GlobType type, GlobRepository repository, FieldValue... additionalValues) throws IOException {
     FieldValues fieldValues = getFieldValues(json, type, null, additionalValues);
     return repository.create(type, fieldValues.toArray());
   }
 
-  private static MutableFieldValues getFieldValues(final JSONObject json, GlobType type, Integer id, FieldValue... additionalValues) throws IOException {
+  public FieldValues toFieldValues(JSONObject json, GlobType type) throws IOException {
+    return getFieldValues(json, type, null);
+  }
+
+  private MutableFieldValues getFieldValues(final JSONObject json, GlobType type, Integer id, FieldValue... additionalValues) throws IOException {
     final FieldValuesBuilder builder = FieldValuesBuilder.init(additionalValues);
     for (Field field : type.getFields()) {
       if (field.isKeyField()) {
@@ -29,7 +48,7 @@ public class JsonGlobParser {
           continue;
         }
       }
-      final String name = field.getName();
+      final String name = getFieldName(field);
       if (!json.has(name)) {
         continue;
       }
@@ -77,5 +96,13 @@ public class JsonGlobParser {
       }
     }
     return builder.get();
+  }
+
+  private String getFieldName(Field field) {
+    String name = fieldNames.get(field);
+    if (name != null) {
+      return name;
+    }
+    return field.getName();
   }
 }

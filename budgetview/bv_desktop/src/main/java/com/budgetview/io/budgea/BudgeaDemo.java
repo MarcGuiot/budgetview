@@ -1,12 +1,11 @@
 package com.budgetview.io.budgea;
 
-import com.budgetview.utils.Json;
 import org.apache.http.client.fluent.Form;
 import org.apache.http.client.fluent.Request;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import static com.budgetview.utils.Json.json;
+import static com.budgetview.shared.json.Json.json;
 
 public class BudgeaDemo {
   public static void main(String[] args) throws Exception {

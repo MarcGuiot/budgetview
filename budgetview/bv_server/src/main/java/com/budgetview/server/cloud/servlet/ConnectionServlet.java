@@ -32,7 +32,7 @@ public class ConnectionServlet extends HttpServlet {
 
     Log4J.dump(request, logger);
 
-    String code = request.getParameter("code");
+    String code = request.getParameter("budgea_token");
     if (Strings.isNullOrEmpty(code)) {
       response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
       return;
