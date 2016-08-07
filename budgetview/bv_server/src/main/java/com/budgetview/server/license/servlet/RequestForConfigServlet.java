@@ -69,7 +69,7 @@ public class RequestForConfigServlet extends HttpServlet {
     req.setCharacterEncoding("UTF-8");
     resp.setCharacterEncoding("UTF-8");
     String ip = req.getRemoteAddr();
-    String id = req.getHeader(LicenseConstants.HEADER_REPO_ID).trim();
+    String repoId = req.getHeader(LicenseConstants.HEADER_REPO_ID).trim();
     String mail = req.getHeader(LicenseConstants.HEADER_MAIL);
     String activationCode = req.getHeader(LicenseConstants.HEADER_CODE);
     String count = req.getHeader(LicenseConstants.HEADER_COUNT);
@@ -87,17 +87,17 @@ public class RequestForConfigServlet extends HttpServlet {
     }
     Integer group = 0;
     if (mail != null && activationCode != null) {
-      if (count == null || id == null || lang == null) {
-        logInfo("For " + mail + " ip = " + ip + ", one element is missing count : " + count + ", id :" + id + ", lang : " + lang);
+      if (count == null || repoId == null || lang == null) {
+        logInfo("For " + mail + " ip = " + ip + ", one element is missing count : " + count + ", id :" + repoId + ", lang : " + lang);
         resp.setHeader(LicenseConstants.HEADER_IS_VALID, "false");
         resp.setHeader(LicenseConstants.HEADER_MAIL_UNKNOWN, "true");
       }
       else {
-        group = computeLicenseWithRetry(resp, mail, activationCode, Long.parseLong(count), id, lang, ip, info);
+        group = computeLicenseWithRetry(resp, mail, activationCode, Long.parseLong(count), repoId, lang, ip, info);
       }
     }
     else {
-      computeAnonymous(id, resp, ip, info);
+      computeAnonymous(repoId, resp, ip, info);
     }
     ValueLongAccessor jarVersionAccessor = new ValueLongAccessor();
     ValueLongAccessor configVersionAccessor = new ValueLongAccessor();

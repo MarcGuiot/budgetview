@@ -1,9 +1,11 @@
 package com.budgetview.desktop.cloud;
 
 import com.budgetview.budgea.model.*;
+import org.apache.http.Consts;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.fluent.Form;
 import org.apache.http.client.fluent.Request;
+import org.apache.http.client.fluent.Response;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
@@ -72,19 +74,28 @@ public class CloudService {
       form.add(name, value.get(BudgeaConnectionValue.VALUE));
     }
 
-    List<NameValuePair> pairs = form.build();
-    for (NameValuePair pair : pairs) {
-      System.out.println("  " + pair.getName() + ": " + pair.getValue());
-    }
     Request request = Request.Post("https://budgetview.biapi.pro/2.0/users/me/connections")
       .addHeader("Authorization", "Bearer " + getBearer())
-      .bodyForm(pairs);
+      .bodyForm(form.build(), Consts.UTF_8);
 
     JSONObject result = json(request);
     System.out.println("CloudService.createConnection: " + result.toString(2));
 
+    registerConnectionToken();
+  }
 
+  private void registerConnectionToken() throws IOException {
+    Request request = Request.Post(cloudUrl("/connections"))
+      .bodyForm(Form.form()
+                  .add("code", getBearer())
+                  .build(), Consts.UTF_8);
 
+    Response response = request.execute();
+
+  }
+
+  private String cloudUrl(String s) {
+    return "http://127.0.0.1:8080" + s;
   }
 
   private String getBearer() throws IOException {

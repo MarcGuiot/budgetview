@@ -3,7 +3,7 @@ package com.budgetview.server.mobile;
 import com.budgetview.server.config.ConfigService;
 import com.budgetview.server.license.mail.Mailer;
 import com.budgetview.server.utils.Log4J;
-import com.budgetview.server.license.servlet.PostDataServlet;
+import com.budgetview.server.mobile.servlet.PostDataServlet;
 import com.budgetview.server.license.servlet.VersionService;
 import com.budgetview.server.web.WebServer;
 import com.budgetview.server.mobile.servlet.*;
@@ -14,21 +14,18 @@ import org.globsframework.utils.directory.DefaultDirectory;
 import org.globsframework.utils.directory.Directory;
 import org.globsframework.utils.exceptions.InvalidParameter;
 
-import java.io.IOException;
-
 public class MobileServer {
 
   public static final String MOBILE_PATH_PROPERTY = "budgetview.mobile.path";
   private static Logger logger = Logger.getLogger("MobileServer");
 
+  private ConfigService config;
   private Directory directory;
   private WebServer webServer;
 
   public static void main(String[] args) throws Exception {
-    Log4J.init();
-
-    MobileServer server = new MobileServer();
-    server.init(args);
+    MobileServer server = new MobileServer(args);
+    server.init();
     server.start();
   }
 
@@ -40,12 +37,14 @@ public class MobileServer {
     return path;
   }
 
-  private MobileServer() throws IOException {
+  private MobileServer(String[] args) throws Exception {
+    config = new ConfigService(args);
+    Log4J.init(config);
     logger.info("init server");
   }
 
-  public void init(String[] args) throws Exception {
-    directory = createDirectory(args);
+  public void init() throws Exception {
+    directory = createDirectory();
 
     String pathForMobileData = getDataDirectoryPath(directory);
     webServer = new WebServer(directory, "register.mybudgetview.fr", 8080, 1443);
@@ -57,9 +56,9 @@ public class MobileServer {
     webServer.add(new SendMailFromMobileServlet(directory), MobileConstants.SEND_MAIL_REMINDER_FROM_MOBILE);
   }
 
-  private Directory createDirectory(String[] args) throws Exception {
+  private Directory createDirectory() throws Exception {
     Directory directory = new DefaultDirectory();
-    directory.add(new ConfigService(args));
+    directory.add(config);
     directory.add(new Mailer());
     directory.add(new VersionService());
     return directory;

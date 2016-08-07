@@ -1,5 +1,6 @@
-package com.budgetview.server.license.servlet;
+package com.budgetview.server.mobile.servlet;
 
+import com.budgetview.server.license.servlet.AbstractHttpServlet;
 import com.budgetview.server.utils.Lang;
 import com.budgetview.server.mobile.servlet.CreateMobileUserServlet;
 import com.budgetview.shared.license.LicenseConstants;

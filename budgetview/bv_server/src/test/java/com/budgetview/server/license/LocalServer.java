@@ -14,8 +14,8 @@ public class LocalServer {
     System.setProperty(WebServer.HTTPS_PORT_PROPERTY, "8443");
     System.setProperty(LicenseServer.DATABASE_URL, "jdbc:hsqldb:.");
 
-    LicenseServer server = new LicenseServer();
-    server.init(args);
+    LicenseServer server = new LicenseServer(args);
+    server.init();
 
     AddUser.main("-d", "jdbc:hsqldb:.", "-u", "sa", "-p", "", "user@localhost");
     System.out.println("LocalServer.main user : user@localhost");

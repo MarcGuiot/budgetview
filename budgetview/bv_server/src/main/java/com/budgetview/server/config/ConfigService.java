@@ -35,6 +35,14 @@ public class ConfigService {
     return doGet(property, false, null);
   }
 
+  public Integer getInt(String property) {
+    String result = doGet(property, false, null);
+    if (result == null) {
+      throw new InvalidParameter("Parameter " + property + " not set");
+    }
+    return Integer.parseInt(result);
+  }
+
   public Integer getInt(String property, Integer defaultValue) {
     String result = doGet(property, true, null);
     if (result == null) {

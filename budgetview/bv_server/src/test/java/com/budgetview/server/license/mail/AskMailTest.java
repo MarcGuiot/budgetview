@@ -76,13 +76,6 @@ public class AskMailTest extends ConnectedTestCase {
     connection.commitAndClose();
   }
 
-  private void checkInBase(String mailTo) {
-    SqlConnection connection = db.getConnection();
-    connection.getQueryBuilder(License.TYPE, Constraints.equal(License.MAIL, mailTo))
-      .getQuery().executeUnique();
-    connection.commitAndClose();
-  }
-
   private void addUser(String mail) {
     SqlConnection connection = db.getConnection();
     try {

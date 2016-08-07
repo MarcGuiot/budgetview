@@ -20,7 +20,6 @@ import org.globsframework.utils.directory.DefaultDirectory;
 import org.globsframework.utils.directory.Directory;
 
 import javax.servlet.http.HttpServlet;
-import java.io.IOException;
 import java.util.Timer;
 
 public class LicenseServer {
@@ -35,17 +34,18 @@ public class LicenseServer {
   private WebServer webServer;
   private Timer timer;
   private Directory directory;
+  private ConfigService config;
   private Mailer mailer;
 
   public static void main(String[] args) throws Exception {
-    Log4J.init();
-
-    LicenseServer server = new LicenseServer();
-    server.init(args);
+    LicenseServer server = new LicenseServer(args);
+    server.init();
     server.start();
   }
 
-  public LicenseServer() throws IOException {
+  public LicenseServer(String... args) throws Exception {
+    config = new ConfigService(args);
+    Log4J.init(config);
     logger.info("init server");
     mailer = new Mailer();
   }
@@ -54,8 +54,8 @@ public class LicenseServer {
     mailer.setPort(mailHost, mailPort);
   }
 
-  public void init(String... args) throws Exception {
-    directory = createDirectory(args);
+  public void init() throws Exception {
+    directory = createDirectory();
     initDb(directory);
 
     QueryVersionTask queryVersionTask = new QueryVersionTask(directory.get(SqlService.class), directory.get(VersionService.class));
@@ -91,10 +91,7 @@ public class LicenseServer {
     }
   }
 
-  private Directory createDirectory(String[] args) throws Exception {
-
-    ConfigService config = new ConfigService(args);
-
+  private Directory createDirectory() throws Exception {
     Directory directory = new DefaultDirectory();
     directory.add(config);
     directory.add(mailer);

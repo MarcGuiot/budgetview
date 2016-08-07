@@ -2,7 +2,6 @@ package com.budgetview.server.mobile.servlet;
 
 import com.budgetview.server.license.mail.Mailer;
 import com.budgetview.server.license.servlet.AbstractHttpServlet;
-import com.budgetview.server.license.servlet.PostDataServlet;
 import com.budgetview.shared.license.LicenseConstants;
 import com.budgetview.shared.mobile.MobileConstants;
 import org.apache.commons.codec.binary.Base64;

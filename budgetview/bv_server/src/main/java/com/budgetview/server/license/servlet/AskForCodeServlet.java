@@ -46,16 +46,15 @@ public class AskForCodeServlet extends HttpServlet {
     logger.info("code requested for '" + mailTo + "' in " + lang);
     try {
       if (checkIsAMailAdress(mailTo)) {
-        GlobList registeredMail;
         String activationCode = LicenseGenerator.generateActivationCode();
-        registeredMail = request(mailTo);
-        if (registeredMail.isEmpty()) {
+        GlobList registeredMails = request(mailTo);
+        if (registeredMails.isEmpty()) {
           resp.setHeader(LicenseConstants.HEADER_STATUS, LicenseConstants.HEADER_MAIL_UNKNOWN);
           logger.info("unknown user " + mailTo);
           return;
         }
-        if (registeredMail.size() >= 1) {
-          String currentCode = registeredMail.get(0).get(License.ACTIVATION_CODE);
+        if (registeredMails.size() >= 1) {
+          String currentCode = registeredMails.get(0).get(License.ACTIVATION_CODE);
           if (Strings.isNotEmpty(currentCode)) {
             logger.info("request for code on an not activated code, resend same code");
             activationCode = currentCode;
@@ -71,7 +70,7 @@ public class AskForCodeServlet extends HttpServlet {
               db.commitAndClose();
             }
           }
-          if (mailer.sendRequestLicence(lang, activationCode, registeredMail.get(0).get(License.MAIL))) {
+          if (mailer.sendRequestLicence(lang, activationCode, registeredMails.get(0).get(License.MAIL))) {
             logger.info("Send new activation code " + activationCode + " to " + mailTo);
             resp.setHeader(LicenseConstants.HEADER_STATUS, LicenseConstants.HEADER_MAIL_SENT);
           }

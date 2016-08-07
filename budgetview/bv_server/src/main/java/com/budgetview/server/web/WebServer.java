@@ -15,11 +15,13 @@ import java.io.File;
 
 public class WebServer {
 
+  public static final String HOST_PROPERTY = "bv.host";
   public static final String HTTP_PORT_PROPERTY = "bv.http.port"; // License: null - Mobile: 8080
   public static final String HTTPS_PORT_PROPERTY = "bv.https.port"; // License: 443 - Mobile: 1443
   public static final String KEYSTORE_PATH = "bv.https.keystore"; // full bv.jks path
   public static final String KEYSTORE_PWD = "bv.https.keystore.pwd"; // full bv.jks path
 
+  private final String host;
   private final Integer httpsPort;
   private final Integer httpPort;
   private final Server jetty;
@@ -30,6 +32,8 @@ public class WebServer {
   public WebServer(Directory directory, String defaultHost, Integer defaultHttpPort, Integer defaultHttpsPort) {
 
     config = directory.get(ConfigService.class);
+
+    host = config.get(HOST_PROPERTY);
 
     QueuedThreadPool threadPool = new QueuedThreadPool();
     threadPool.setMaxThreads(50);
@@ -46,7 +50,7 @@ public class WebServer {
     httpConfig.setOutputBufferSize(32768);
 
     String sslKeystorePassword = config.get(KEYSTORE_PWD);
-    String keystorePath = System.getProperty(KEYSTORE_PATH);
+    String keystorePath = config.get(KEYSTORE_PATH);
     File keystoreFile = new File(keystorePath);
     if (!keystoreFile.exists()) {
       throw new InvalidParameter("Could not load keystore file: " + keystoreFile.getAbsolutePath() + " - must be set with " + KEYSTORE_PATH + " property");
@@ -72,6 +76,7 @@ public class WebServer {
     ServerConnector https = new ServerConnector(jetty,
                                                 new SslConnectionFactory(sslContextFactory, HttpVersion.HTTP_1_1.asString()),
                                                 new HttpConnectionFactory(httpsConfig));
+    https.setHost(host);
     https.setPort(httpsPort);
     https.setIdleTimeout(500000);
     jetty.addConnector(https);

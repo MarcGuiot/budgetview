@@ -23,7 +23,7 @@ public class BudgeaDemoAction extends AbstractAction {
   private final CloudService cloudService;
 
   public BudgeaDemoAction(GlobRepository repository, Directory directory) {
-    super("Run cloud demo");
+    super("Run Budgea demo");
     this.repository = repository;
     this.cloudService = directory.get(CloudService.class);
   }

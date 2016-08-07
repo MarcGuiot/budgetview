@@ -136,7 +136,11 @@ public class UserConfigService {
     }
     Utils.endRemove();
     String url = LicenseConstants.getLicenseServerUrl(LicenseConstants.REQUEST_FOR_REGISTER);
-    Http.Post postRequest = createRegisterRequest(mail, code, url);
+    Http.Post postRequest = Http.utf8Post(url)
+      .setHeader(LicenseConstants.HEADER_MAIL, mail)
+      .setHeader(LicenseConstants.HEADER_CODE, code)
+      .setHeader(LicenseConstants.HEADER_REPO_ID, Encoder.byteToString(repoId))
+      .setHeader(MobileConstants.HEADER_LANG, Lang.get("lang"));
     try {
       HttpResponse response = postRequest.executeWithRetry();
       int statusCode = response.getStatusLine().getStatusCode();
@@ -299,14 +303,6 @@ public class UserConfigService {
   private boolean checkMailSent(HttpResponse response) {
     Header header = response.getFirstHeader(LicenseConstants.HEADER_MAIL_SENT);
     return header != null && header.getValue().equals("true");
-  }
-
-  private Http.Post createRegisterRequest(String mail, String code, String url) {
-    return Http.utf8Post(url)
-      .setHeader(LicenseConstants.HEADER_MAIL, mail)
-      .setHeader(LicenseConstants.HEADER_CODE, code)
-      .setHeader(LicenseConstants.HEADER_REPO_ID, Encoder.byteToString(repoId))
-      .setHeader(MobileConstants.HEADER_LANG, Lang.get("lang"));
   }
 
   private void updateRepository(final GlobRepository repository, final LicenseActivationState cause) {

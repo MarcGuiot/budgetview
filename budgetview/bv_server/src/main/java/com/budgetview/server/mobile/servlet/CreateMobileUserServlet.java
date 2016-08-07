@@ -2,7 +2,6 @@ package com.budgetview.server.mobile.servlet;
 
 import com.budgetview.server.license.mail.Mailbox;
 import com.budgetview.server.license.mail.Mailer;
-import com.budgetview.server.license.servlet.PostDataServlet;
 import com.budgetview.shared.encryption.MD5PasswordBasedEncryptor;
 import com.budgetview.shared.license.LicenseConstants;
 import com.budgetview.shared.mobile.MobileConstants;
