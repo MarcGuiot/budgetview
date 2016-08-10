@@ -20,8 +20,8 @@ public class Constraints {
     Field[] list = keyAccessor.getGlobType().getKeyFields();
     Constraint constraint = null;
     for (final Field field : list) {
-      constraint = Constraints.and(constraint, Constraints.equalsObject(field,
-                                                                        new KeyElementAccessor(keyAccessor, field)));
+      constraint = Constraints.and(constraint,
+                                   equalsObject(field, new KeyElementAccessor(keyAccessor, field)));
     }
     return constraint;
   }
@@ -49,7 +49,7 @@ public class Constraints {
     return new EqualConstraint(new FieldOperand(field), new AccessorOperand(field, accessor));
   }
 
-  public static Constraint fieldEqual(Field field1, Field field2) {
+  public static Constraint fieldsEqual(Field field1, Field field2) {
     return new EqualConstraint(new FieldOperand(field1), new FieldOperand(field2));
   }
 
@@ -129,7 +129,7 @@ public class Constraints {
     return new StrictlyBiggerThanConstraint(new FieldOperand(field), new AccessorOperand(field, accessor));
   }
 
-  public static Constraint Lesser(Field field, Object value) {
+  public static Constraint lesser(Field field, Object value) {
     return new StrictlyLesserThanConstraint(new FieldOperand(field), new ValueOperand(field, value));
   }
 
@@ -169,8 +169,8 @@ public class Constraints {
     return new OrConstraint(arg1, arg2);
   }
 
-  public static Constraint in(Field field, List infos) {
-    return new InConstraint(field, infos);
+  public static Constraint in(Field field, List values) {
+    return new InConstraint(field, values);
   }
 
   public static Constraint notEqual(StringField field, String value) {

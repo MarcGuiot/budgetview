@@ -15,10 +15,10 @@ import org.apache.http.params.HttpParams;
 import org.apache.log4j.Logger;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
+import org.globsframework.sqlstreams.GlobsDatabase;
 import org.globsframework.sqlstreams.SelectQuery;
 import org.globsframework.sqlstreams.SqlConnection;
 import org.globsframework.sqlstreams.SqlRequest;
-import org.globsframework.sqlstreams.SqlService;
 import org.globsframework.sqlstreams.constraints.Constraints;
 import org.globsframework.utils.directory.Directory;
 
@@ -42,7 +42,7 @@ public class NewUserServlet extends HttpServlet {
   //  private static String PAYPAL_CONFIRM_URL = "http://www.sandbox.paypal.com/fr/cgi-bin/webscr";
   private static String PAYPAL_CONFIRM_URL = "http://www.paypal.com/fr/cgi-bin/webscr";
   private static final String CUSTOM = "item_number";
-  private SqlService sqlService;
+  private GlobsDatabase db;
   private Mailer mailer;
   public static final String PAYER_EMAIL = "payer_email";
   public static final String TRANSACTION_ID = "txn_id";
@@ -57,7 +57,7 @@ public class NewUserServlet extends HttpServlet {
     if (url != null) {
       PAYPAL_CONFIRM_URL = url;
     }
-    sqlService = directory.get(SqlService.class);
+    db = directory.get(GlobsDatabase.class);
     mailer = directory.get(Mailer.class);
     client = new DefaultHttpClient(new PoolingClientConnectionManager());
 //    client.getParams().setCookiePolicy(CookiePolicy.BROWSER_COMPATIBILITY);
@@ -118,11 +118,11 @@ public class NewUserServlet extends HttpServlet {
       }
       logger.info(paramaters.toString());
       if (!receiverEmail.equalsIgnoreCase("paypal@mybudgetview.fr")) {
-        logger.error("NewUser : Bad mail : " + receiverEmail);
+        logger.error("Invalid email : " + receiverEmail);
         return;
       }
       if (!paymentStatus.equalsIgnoreCase("Completed")) {
-        logger.info("NewUser : status " + paymentStatus);
+        logger.info("Status " + paymentStatus);
         return;
       }
 
@@ -137,42 +137,42 @@ public class NewUserServlet extends HttpServlet {
         byte[] buffer = new byte[500];
         int readed = responseBodyAsStream.read(buffer);
         if (readed == -1) {
-          logger.error("NewUser : Paypal empty response");
+          logger.error("Paypal returned empty response");
           return;
         }
         String content = new String(buffer, 0, readed);
         if (content.equalsIgnoreCase("VERIFIED")) {
-          logger.info("NewUser : mail : '" + mail + " VERIFIED");
-          SqlConnection db = sqlService.getDb();
+          logger.info("Email : '" + mail + "' VERIFIED");
+          SqlConnection connection = db.connect();
           try {
-            register(resp, mail, transactionId, sqlService.getDb(), lang);
+            register(resp, mail, transactionId, connection, lang);
           }
           catch (Exception e) {
             logger.error("NewUser : RegisterServlet:doPost", e);
-            SqlConnection db2 = sqlService.getDb();
+            SqlConnection retryConnection = db.connect();
             try {
-              register(resp, mail, transactionId, db2, lang);
+              register(resp, mail, transactionId, retryConnection, lang);
             }
             catch (Exception e1) {
               resp.setStatus(HttpServletResponse.SC_OK);
-              if (db2 != null) {
-                db2.commitAndClose();
+              if (retryConnection != null) {
+                retryConnection.commitAndClose();
               }
             }
           }
           finally {
-            if (db != null) {
-              db.commitAndClose();
+            if (connection != null) {
+              connection.commitAndClose();
             }
           }
         }
         else {
-          logger.error("NewUser : Paypal refuse confirmation " + content);
+          logger.error("NewUser : Paypal refused confirmation " + content);
           resp.sendError(HttpServletResponse.SC_PRECONDITION_FAILED);
         }
       }
       else {
-        logger.error("NewUser : Paypal refuse connection " + response.getStatusLine());
+        logger.error("Paypal refuse connection " + response.getStatusLine());
         resp.sendError(HttpServletResponse.SC_PRECONDITION_FAILED);
       }
     }
@@ -186,18 +186,18 @@ public class NewUserServlet extends HttpServlet {
     }
   }
 
-  private void register(HttpServletResponse resp, String email, String transactionId, SqlConnection db, String lang)
+  private void register(HttpServletResponse resp, String email, String transactionId, SqlConnection connection, String lang)
     throws NoSuchProviderException, NoSuchAlgorithmException, InvalidKeySpecException, InvalidKeyException, SignatureException {
-    SelectQuery query = db.getQueryBuilder(License.TYPE,
-                                           Constraints.equal(License.MAIL, email))
+    SelectQuery query = connection.startSelect(License.TYPE,
+                                               Constraints.equal(License.MAIL, email))
       .selectAll()
       .getQuery();
-    GlobList globList = query.executeAsGlobs();
-    db.commit();
+    GlobList globList = query.getList();
+    connection.commit();
     if (globList.isEmpty()) {
       String code = LicenseGenerator.generateActivationCode();
       byte[] signature = LicenseGenerator.generateSignature(email);
-      SqlRequest sqlRequest = db.getCreateBuilder(License.TYPE)
+      SqlRequest sqlRequest = connection.startCreate(License.TYPE)
         .set(License.ACCESS_COUNT, 1L)
         .set(License.SIGNATURE, signature)
         .set(License.ACTIVATION_CODE, code)
@@ -209,7 +209,7 @@ public class NewUserServlet extends HttpServlet {
       }
       sqlRequest.close();
 
-      db.commit();
+      connection.commit();
       logger.info("NewUser : ok  for " + email + " code is " + code + " in " + lang);
       mailer.sendNewLicense(email, code, lang);
       mailer.sendToUs(Mailbox.ADMIN, email, "New User", " Licence code : " + code + "\nLang: " + lang);
@@ -220,9 +220,8 @@ public class NewUserServlet extends HttpServlet {
       String code = glob.get(License.ACTIVATION_CODE);
       if (code == null) {
         code = LicenseGenerator.generateActivationCode();
-        db.getUpdateBuilder(License.TYPE, Constraints.equal(License.MAIL, email))
-          .update(License.ACTIVATION_CODE, code)
-          .getRequest()
+        connection.startUpdate(License.TYPE, Constraints.equal(License.MAIL, email))
+          .set(License.ACTIVATION_CODE, code)
           .run();
       }
       String previousTrId = glob.get(License.TRANSACTION_ID);

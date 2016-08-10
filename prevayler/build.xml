@@ -513,7 +513,7 @@
     </target>
 
     <target name="run.demo.scalability" depends="compile.core, -demo.init"
-            description="Runs manipulation and query scalability demos against Prevayler and any JDBC database" >
+            description="Runs manipulation and query scalability demos against Prevayler and any JDBC globsDB" >
         <java dir="${cachedir.demo}" fork="true" classname="org.prevayler.demos.scalability.Main" >
             <jvmarg line="${scalability.jvmarg}" />
             <classpath refid="build.run.classpath" />

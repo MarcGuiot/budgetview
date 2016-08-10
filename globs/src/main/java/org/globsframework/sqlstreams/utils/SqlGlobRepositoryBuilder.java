@@ -1,10 +1,13 @@
-package org.globsframework.sqlstreams;
+package org.globsframework.sqlstreams.utils;
 
 import org.globsframework.metamodel.Field;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.repository.DefaultGlobRepository;
 import org.globsframework.model.repository.GlobIdGenerator;
+import org.globsframework.sqlstreams.GlobsDatabase;
+import org.globsframework.sqlstreams.SelectBuilder;
+import org.globsframework.sqlstreams.SqlConnection;
 import org.globsframework.sqlstreams.constraints.Constraint;
 import org.globsframework.utils.Log;
 import org.globsframework.utils.collections.T3uples;
@@ -14,12 +17,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SqlGlobRepositoryBuilder {
-  private SqlService sqlService;
+  private GlobsDatabase globsDB;
   private List<T3uples<Constraint, GlobType, Field[]>> requestToRetrieve =
     new ArrayList<T3uples<Constraint, GlobType, Field[]>>();
 
-  private SqlGlobRepositoryBuilder(SqlService sqlService) {
-    this.sqlService = sqlService;
+  private SqlGlobRepositoryBuilder(GlobsDatabase globsDB) {
+    this.globsDB = globsDB;
   }
 
   public void add(Constraint constraint, Field... fields) {
@@ -39,8 +42,8 @@ public class SqlGlobRepositoryBuilder {
     requestToRetrieve.add(t3uples);
   }
 
-  static SqlGlobRepositoryBuilder init(SqlService sqlService) {
-    return new SqlGlobRepositoryBuilder(sqlService);
+  static SqlGlobRepositoryBuilder init(GlobsDatabase globsDB) {
+    return new SqlGlobRepositoryBuilder(globsDB);
   }
 
   public GlobRepository getGlobRepository() {
@@ -56,13 +59,13 @@ public class SqlGlobRepositoryBuilder {
   }
 
   private void init(DefaultGlobRepository repository) {
-    SqlConnection sqlConnection = sqlService.getDb();
+    SqlConnection sqlConnection = globsDB.connect();
     for (T3uples<Constraint, GlobType, Field[]> t3uples : requestToRetrieve) {
-      SelectBuilder builder = sqlConnection.getQueryBuilder(t3uples.getSecond(), t3uples.getFirst());
+      SelectBuilder builder = sqlConnection.startSelect(t3uples.getSecond(), t3uples.getFirst());
       for (Field field : t3uples.getThird()) {
         builder.select(field);
       }
-      repository.add(builder.getQuery().executeAsGlobs());
+      repository.add(builder.getQuery().getList());
     }
   }
 }

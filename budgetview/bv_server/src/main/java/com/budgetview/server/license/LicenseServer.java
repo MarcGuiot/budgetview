@@ -9,13 +9,14 @@ import com.budgetview.server.license.model.SoftwareInfo;
 import com.budgetview.server.license.servlet.*;
 import com.budgetview.server.mobile.MobileServer;
 import com.budgetview.server.mobile.servlet.*;
+import com.budgetview.server.utils.DbInit;
 import com.budgetview.server.utils.Log4J;
 import com.budgetview.server.web.WebServer;
 import com.budgetview.shared.license.LicenseConstants;
 import com.budgetview.shared.mobile.MobileConstants;
 import org.apache.log4j.Logger;
-import org.globsframework.sqlstreams.SqlService;
-import org.globsframework.sqlstreams.drivers.jdbc.JdbcSqlService;
+import org.globsframework.sqlstreams.GlobsDatabase;
+import org.globsframework.sqlstreams.drivers.jdbc.JdbcGlobsDatabase;
 import org.globsframework.utils.directory.DefaultDirectory;
 import org.globsframework.utils.directory.Directory;
 
@@ -26,11 +27,6 @@ public class LicenseServer {
 
   static Logger logger = Logger.getLogger("LicenseServer");
 
-  public static final String DATABASE_URL = "budgetview.database.url";
-  public static final String DATABASE_USER = "budgetview.database.user";
-  public static final String DATABASE_PASSWORD = "budgetview.database.password";
-  private static final String JDBC_HSQLDB = "jdbc:hsqldb:.";
-
   private WebServer webServer;
   private Timer timer;
   private Directory directory;
@@ -38,6 +34,7 @@ public class LicenseServer {
   private Mailer mailer;
 
   public static void main(String[] args) throws Exception {
+    ConfigService.checkCommandLine(args);
     LicenseServer server = new LicenseServer(args);
     server.init();
     server.start();
@@ -58,7 +55,7 @@ public class LicenseServer {
     directory = createDirectory();
     initDb(directory);
 
-    QueryVersionTask queryVersionTask = new QueryVersionTask(directory.get(SqlService.class), directory.get(VersionService.class));
+    QueryVersionTask queryVersionTask = new QueryVersionTask(directory.get(GlobsDatabase.class), directory.get(VersionService.class));
     queryVersionTask.run();
     timer = new Timer(true);
     timer.schedule(queryVersionTask, 5000, 5000);
@@ -85,9 +82,9 @@ public class LicenseServer {
   }
 
   private void initDb(Directory directory) {
-    String database = directory.get(ConfigService.class).get(DATABASE_URL);
-    if (database.equals(JDBC_HSQLDB)) {
-      this.directory.get(SqlService.class).getDb().createTable(License.TYPE, SoftwareInfo.TYPE, RepoInfo.TYPE, MailError.TYPE);
+    String database = directory.get(ConfigService.class).get(DbInit.DATABASE_URL);
+    if (database.equals(DbInit.JDBC_HSQLDB)) {
+      this.directory.get(GlobsDatabase.class).connect().createTable(License.TYPE, SoftwareInfo.TYPE, RepoInfo.TYPE, MailError.TYPE);
     }
   }
 
@@ -95,7 +92,7 @@ public class LicenseServer {
     Directory directory = new DefaultDirectory();
     directory.add(config);
     directory.add(mailer);
-    directory.add(SqlService.class, new JdbcSqlService(config.get(DATABASE_URL), config.get(DATABASE_USER), config.get(DATABASE_PASSWORD)));
+    directory.add(GlobsDatabase.class, new JdbcGlobsDatabase(config.get(DbInit.DATABASE_URL), config.get(DbInit.DATABASE_USER), config.get(DbInit.DATABASE_PASSWORD)));
     directory.add(new VersionService());
     return directory;
   }

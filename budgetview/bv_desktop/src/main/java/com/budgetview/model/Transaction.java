@@ -84,12 +84,6 @@ public class Transaction {
 
   public static StringField LABEL_FOR_CATEGORISATION;
 
-  /**
-   * @deprecated
-   */
-  @Target(Category.class)
-  public static LinkField CATEGORY;
-
   @Target(TransactionType.class)
   @Required
   public static LinkField TRANSACTION_TYPE;
@@ -688,7 +682,7 @@ public class Transaction {
       fieldSetter.set(Transaction.ACCOUNT, accountId);
       fieldSetter.set(Transaction.ORIGINAL_ACCOUNT, accountId);
       fieldSetter.set(Transaction.TRANSACTION_TYPE, input.readInteger());
-      fieldSetter.set(Transaction.CATEGORY, input.readInteger());
+      input.readInteger(); // Transaction.CATEGORY
       fieldSetter.set(Transaction.SPLIT, input.readBoolean());
       fieldSetter.set(Transaction.SPLIT_SOURCE, input.readInteger());
       fieldSetter.set(Transaction.DAY_BEFORE_SHIFT, input.readInteger());
@@ -734,7 +728,7 @@ public class Transaction {
       fieldSetter.set(Transaction.ACCOUNT, accountId);
       fieldSetter.set(Transaction.ORIGINAL_ACCOUNT, accountId);
       fieldSetter.set(Transaction.TRANSACTION_TYPE, input.readInteger());
-      fieldSetter.set(Transaction.CATEGORY, input.readInteger());
+      input.readInteger(); // Transaction.CATEGORY
       fieldSetter.set(Transaction.SPLIT, input.readBoolean());
       fieldSetter.set(Transaction.SPLIT_SOURCE, input.readInteger());
       fieldSetter.set(Transaction.SERIES, input.readInteger());
@@ -779,7 +773,7 @@ public class Transaction {
       fieldSetter.set(Transaction.ACCOUNT, accountId);
       fieldSetter.set(Transaction.ORIGINAL_ACCOUNT, accountId);
       fieldSetter.set(Transaction.TRANSACTION_TYPE, input.readInteger());
-      fieldSetter.set(Transaction.CATEGORY, input.readInteger());
+      input.readInteger(); // Transaction.CATEGORY
       fieldSetter.set(Transaction.SPLIT, input.readBoolean());
       fieldSetter.set(Transaction.SPLIT_SOURCE, input.readInteger());
       fieldSetter.set(Transaction.SERIES, input.readInteger());
@@ -816,7 +810,7 @@ public class Transaction {
       fieldSetter.set(Transaction.ACCOUNT, accountId);
       fieldSetter.set(Transaction.ORIGINAL_ACCOUNT, accountId);
       fieldSetter.set(Transaction.TRANSACTION_TYPE, input.readInteger());
-      fieldSetter.set(Transaction.CATEGORY, input.readInteger());
+      input.readInteger(); // Transaction.CATEGORY
       fieldSetter.set(Transaction.SPLIT, input.readBoolean());
       fieldSetter.set(Transaction.SPLIT_SOURCE, input.readInteger());
       fieldSetter.set(Transaction.SERIES, input.readInteger());
@@ -864,7 +858,7 @@ public class Transaction {
       else {
         fieldSetter.set(Transaction.TRANSACTION_TYPE, transactionType);
       }
-      fieldSetter.set(Transaction.CATEGORY, input.readInteger());
+      input.readInteger(); // Transaction.CATEGORY
       fieldSetter.set(Transaction.SPLIT, input.readBoolean());
       fieldSetter.set(Transaction.SPLIT_SOURCE, input.readInteger());
       fieldSetter.set(Transaction.SERIES, input.readInteger());
@@ -911,7 +905,7 @@ public class Transaction {
       else {
         fieldSetter.set(Transaction.TRANSACTION_TYPE, transactionType);
       }
-      fieldSetter.set(Transaction.CATEGORY, input.readInteger());
+      input.readInteger(); // Transaction.CATEGORY
       fieldSetter.set(Transaction.SPLIT, input.readBoolean());
       fieldSetter.set(Transaction.SPLIT_SOURCE, input.readInteger());
       fieldSetter.set(Transaction.SERIES, input.readInteger());

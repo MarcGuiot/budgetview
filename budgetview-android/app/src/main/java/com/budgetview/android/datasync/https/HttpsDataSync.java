@@ -43,7 +43,7 @@ import java.net.URLEncoder;
 public class HttpsDataSync implements DataSync {
   public static final String URL_BV =
     "https://register.mybudgetview.fr:1443";
-//    "https://192.168.1.17:1443";
+  //    "https://192.168.1.17:1443";
 //  "http://192.168.1.17:8080";
   private static final String LOCAL_TEMP_FILE_NAME = "temp.xml";
 
@@ -140,9 +140,9 @@ public class HttpsDataSync implements DataSync {
 
         Log.d("HttpsDataSync", "url:" + url.toString());
 
-        HttpURLConnection connection = (HttpURLConnection)url.openConnection();
+        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
         if (url.getProtocol().equals("https")) {
-          HttpsURLConnection https = (HttpsURLConnection)connection;
+          HttpsURLConnection https = (HttpsURLConnection) connection;
         }
         connection.setRequestMethod("GET");
         connection.setRequestProperty("USER-AGENT", "Mozilla/5.0");

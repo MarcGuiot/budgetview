@@ -9,23 +9,25 @@ import org.globsframework.remote.impl.DefaultCreateRequest;
 import org.globsframework.remote.impl.DefaultDeleteRequest;
 import org.globsframework.remote.impl.DefaultUpdateRequest;
 import org.globsframework.sqlstreams.constraints.Constraints;
-import org.globsframework.sqlstreams.drivers.jdbc.DbServicesTestCase;
+import org.globsframework.sqlstreams.drivers.jdbc.GlobsDatabaseTestCase;
 import org.globsframework.streams.xml.XmlGlobStreamReader;
 import org.globsframework.utils.serialization.SerializedInputOutputFactory;
 
 import java.util.Set;
 
-public class RemoteExecutorTest extends DbServicesTestCase {
+public class RemoteExecutorTest extends GlobsDatabaseTestCase {
 
   public void testUpdate() throws Exception {
     populate(sqlConnection,
              XmlGlobStreamReader.parse(directory,
                                        "<dummyObject id='1' name='hello' value='1.1' present='true'/>" +
                                        "<dummyObject id='3' name='word' value='3.3' present='false'/>"));
-    GlobRepository globRepository = GlobRepositoryBuilder.init().add(sqlConnection.getQueryBuilder(DummyObject.TYPE)
-      .selectAll().getQuery().executeAsGlobs()).get();
+    GlobRepository repository =
+      GlobRepositoryBuilder.init()
+        .add(sqlConnection.selectAll(DummyObject.TYPE))
+        .get();
 
-    globRepository.addChangeListener(new ChangeSetListener() {
+    repository.addChangeListener(new ChangeSetListener() {
       public void globsChanged(ChangeSet changeSet, GlobRepository globRepository) {
         SerializedRemoteAccess access = new SerializedRemoteAccess();
         byte[] bytes = access.apply(changeSet);
@@ -49,17 +51,17 @@ public class RemoteExecutorTest extends DbServicesTestCase {
       }
     });
 
-    globRepository.startChangeSet();
+    repository.startChangeSet();
 
-    globRepository.create(DummyObject.TYPE,
-                          value(DummyObject.ID, 2),
-                          value(DummyObject.NAME, "a name"),
-                          value(DummyObject.PRESENT, Boolean.TRUE));
-    globRepository.delete(newKey(DummyObject.TYPE, 3));
-    globRepository.update(newKey(DummyObject.TYPE, 1), DummyObject.VALUE, 2.2);
-    globRepository.completeChangeSet();
+    repository.create(DummyObject.TYPE,
+                      value(DummyObject.ID, 2),
+                      value(DummyObject.NAME, "a name"),
+                      value(DummyObject.PRESENT, Boolean.TRUE));
+    repository.delete(newKey(DummyObject.TYPE, 3));
+    repository.update(newKey(DummyObject.TYPE, 1), DummyObject.VALUE, 2.2);
+    repository.completeChangeSet();
     checkDb(newKey(DummyObject.TYPE, 1), DummyObject.VALUE, 2.2, sqlConnection);
     checkDb(newKey(DummyObject.TYPE, 2), DummyObject.NAME, "a name", sqlConnection);
-    assertTrue(sqlConnection.getQueryBuilder(DummyObject.TYPE, Constraints.equal(DummyObject.ID, 3)).getQuery().executeAsGlobs().isEmpty());
+    assertTrue(sqlConnection.selectAll(DummyObject.TYPE, Constraints.equal(DummyObject.ID, 3)).isEmpty());
   }
 }

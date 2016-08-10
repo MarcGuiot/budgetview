@@ -2,6 +2,7 @@ package org.globsframework.sqlstreams.drivers.jdbc;
 
 import org.globsframework.metamodel.Field;
 import org.globsframework.sqlstreams.accessors.SqlAccessor;
+import org.globsframework.sqlstreams.drivers.jdbc.select.SqlSelectQuery;
 import org.globsframework.sqlstreams.exceptions.SqlException;
 import org.globsframework.streams.GlobStream;
 import org.globsframework.streams.accessors.Accessor;

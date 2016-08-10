@@ -1,10 +1,9 @@
 package com.budgetview.server.cloud;
 
-import com.budgetview.server.cloud.servlet.BudgeaServlet;
+import com.budgetview.server.cloud.servlet.BudgeaWebHookServlet;
 import com.budgetview.server.cloud.servlet.ConnectionServlet;
 import com.budgetview.server.cloud.servlet.PingServlet;
 import com.budgetview.server.config.ConfigService;
-import com.budgetview.server.license.mail.Mailer;
 import com.budgetview.server.utils.Log4J;
 import com.budgetview.server.web.WebServer;
 import org.apache.log4j.Logger;
@@ -20,6 +19,7 @@ public class CloudServer {
   private ConfigService config;
 
   public static void main(String[] args) throws Exception {
+    ConfigService.checkCommandLine(args);
     CloudServer server = new CloudServer(args);
     server.init();
     server.start();
@@ -34,14 +34,16 @@ public class CloudServer {
     directory = createDirectory();
     webServer = new WebServer(directory, "register.mybudgetview.fr", 8088, 1444);
     webServer.add(new ConnectionServlet(directory), "/connections");
-    webServer.add(new BudgeaServlet(directory), "/budgea");
-    webServer.add(new PingServlet(directory), "/ping");
+    webServer.add(new BudgeaWebHookServlet(directory), "/budgea");
+
+    if (config.isTrue("budgetview.ping.available")) {
+      webServer.add(new PingServlet(directory), "/ping");
+    }
   }
 
   private Directory createDirectory() throws Exception {
     Directory directory = new DefaultDirectory();
     directory.add(config);
-    directory.add(new UserDataService());
     return directory;
   }
 

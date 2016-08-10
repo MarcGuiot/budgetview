@@ -87,10 +87,7 @@ public class PaypalTest extends ConnectedTestCase {
     assertEquals(200, status);
     payPalConfirm.checkMail(RAPHAËL);
     if (checkDb) {
-      GlobList glob = db.getConnection().getQueryBuilder(License.TYPE, Constraints.equal(License.MAIL, "toto" + transactionId + "@bv.fr"))
-        .selectAll()
-        .getQuery().executeAsGlobs();
-      assertFalse(glob.isEmpty());
+      GlobList glob = db.getConnection().selectAll(License.TYPE, Constraints.equal(License.MAIL, "toto" + transactionId + "@bv.fr"));
       assertEquals(3, glob.size());
       String code = glob.get(0).get(License.ACTIVATION_CODE);
       assertEquals(glob.get(0).get(License.TRANSACTION_ID), transactionId);
@@ -114,11 +111,9 @@ public class PaypalTest extends ConnectedTestCase {
     HttpResponse response = client.execute(postMethod);
     int status = response.getStatusLine().getStatusCode();
     assertEquals(412, status);
-    GlobList glob =
-      db.getConnection().getQueryBuilder(License.TYPE, Constraints.equal(License.MAIL, "toto@bv.fr"))
-        .selectAll()
-        .getQuery().executeAsGlobs();
-    assertTrue(glob.isEmpty());
+    GlobList globsList =
+      db.getConnection().selectAll(License.TYPE, Constraints.equal(License.MAIL, "toto@bv.fr"));
+    assertTrue(globsList.isEmpty());
   }
 
   public void testMultipleBuy() throws Exception {
@@ -135,9 +130,7 @@ public class PaypalTest extends ConnectedTestCase {
     int status = response.getStatusLine().getStatusCode();
     assertEquals(200, status);
     GlobList globs =
-      db.getConnection().getQueryBuilder(License.TYPE, Constraints.equal(License.MAIL, "toto12345@bv.fr"))
-        .selectAll()
-        .getQuery().executeAsGlobs();
+      db.getConnection().selectAll(License.TYPE, Constraints.equal(License.MAIL, "toto12345@bv.fr"));
     assertEquals(3, globs.size());
     String code = globs.get(0).get(License.ACTIVATION_CODE);
     mailServer.checkReceivedMail("admin@mybudgetview.fr");

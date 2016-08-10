@@ -11,7 +11,7 @@ public class DefaultUpdateRequest implements RemoteExecutor.UpdateRequest {
   protected UpdateBuilder builder;
 
   public DefaultUpdateRequest(SqlConnection sqlConnection, GlobType globType, Constraint constraint) {
-    builder = sqlConnection.getUpdateBuilder(globType, constraint);
+    builder = sqlConnection.startUpdate(globType, constraint);
   }
 
   public void update(Field field, Object value) {
@@ -19,6 +19,6 @@ public class DefaultUpdateRequest implements RemoteExecutor.UpdateRequest {
   }
 
   public void update() {
-    builder.getRequest().run();
+    builder.run();
   }
 }

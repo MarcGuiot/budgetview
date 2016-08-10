@@ -8,8 +8,8 @@ import com.budgetview.shared.license.LicenseConstants;
 import com.budgetview.shared.mobile.MobileConstants;
 import org.apache.log4j.Logger;
 import org.globsframework.model.GlobList;
+import org.globsframework.sqlstreams.GlobsDatabase;
 import org.globsframework.sqlstreams.SqlConnection;
-import org.globsframework.sqlstreams.SqlService;
 import org.globsframework.sqlstreams.constraints.Constraints;
 import org.globsframework.utils.Strings;
 import org.globsframework.utils.directory.Directory;
@@ -25,11 +25,11 @@ import java.util.regex.Pattern;
 public class AskForCodeServlet extends HttpServlet {
   static Logger logger = Logger.getLogger("askForCode");
   private Mailer mailer;
-  private SqlService sqlService;
+  private GlobsDatabase globsDB;
 
   public AskForCodeServlet(Directory directory) {
     mailer = directory.get(Mailer.class);
-    sqlService = directory.get(SqlService.class);
+    globsDB = directory.get(GlobsDatabase.class);
   }
 
   protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -60,11 +60,11 @@ public class AskForCodeServlet extends HttpServlet {
             activationCode = currentCode;
           }
           else {
-            SqlConnection db = sqlService.getDb();
+            SqlConnection db = globsDB.connect();
             try {
-              db.getUpdateBuilder(License.TYPE, Constraints.equal(License.MAIL, mailTo))
-                .update(License.ACTIVATION_CODE, activationCode)
-                .getRequest().run();
+              db.startUpdate(License.TYPE, Constraints.equal(License.MAIL, mailTo))
+                .set(License.ACTIVATION_CODE, activationCode)
+                .run();
             }
             finally {
               db.commitAndClose();
@@ -83,11 +83,11 @@ public class AskForCodeServlet extends HttpServlet {
 //        }
       }
       else {
-        SqlConnection db = sqlService.getDb();
+        SqlConnection db = globsDB.connect();
         try {
-          db.getCreateBuilder(MailError.TYPE)
+          db.startCreate(MailError.TYPE)
             .set(MailError.MAIL, mailTo)
-            .getRequest().run();
+            .run();
         }
         finally {
           db.commitAndClose();
@@ -113,12 +113,11 @@ public class AskForCodeServlet extends HttpServlet {
   }
 
   private GlobList requestDb(String mailTo) {
-    SqlConnection db = sqlService.getDb();
+    SqlConnection db = globsDB.connect();
     try {
-      return db.getQueryBuilder(License.TYPE,
-                                Constraints.equal(License.MAIL, mailTo))
+      return db.startSelect(License.TYPE, Constraints.equal(License.MAIL, mailTo))
         .select(License.MAIL)
-        .getQuery().executeAsGlobs();
+        .getList();
     }
     finally {
       db.commitAndClose();

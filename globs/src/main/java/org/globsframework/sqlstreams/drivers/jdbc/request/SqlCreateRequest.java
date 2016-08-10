@@ -1,11 +1,13 @@
-package org.globsframework.sqlstreams.drivers.jdbc;
+package org.globsframework.sqlstreams.drivers.jdbc.request;
 
 import org.globsframework.metamodel.Field;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.fields.*;
+import org.globsframework.sqlstreams.GlobsDatabase;
 import org.globsframework.sqlstreams.SqlRequest;
-import org.globsframework.sqlstreams.SqlService;
 import org.globsframework.sqlstreams.accessors.GeneratedKeyAccessor;
+import org.globsframework.sqlstreams.drivers.jdbc.impl.BlobUpdater;
+import org.globsframework.sqlstreams.drivers.jdbc.JdbcConnection;
 import org.globsframework.sqlstreams.drivers.jdbc.impl.SqlValueFieldVisitor;
 import org.globsframework.sqlstreams.utils.PrettyWriter;
 import org.globsframework.sqlstreams.utils.StringPrettyWriter;
@@ -26,16 +28,16 @@ public class SqlCreateRequest implements SqlRequest {
   private SqlValueFieldVisitor sqlValueVisitor;
   private GeneratedKeyAccessor generatedKeyAccessor;
   private GlobType globType;
-  private SqlService sqlService;
+  private GlobsDatabase globsDB;
   private JdbcConnection jdbcConnection;
 
   public SqlCreateRequest(List<Pair<Field, Accessor>> fields, GeneratedKeyAccessor generatedKeyAccessor,
                           Connection connection,
-                          GlobType globType, SqlService sqlService, BlobUpdater blobUpdater, JdbcConnection jdbcConnection) {
+                          GlobType globType, GlobsDatabase globsDB, BlobUpdater blobUpdater, JdbcConnection jdbcConnection) {
     this.generatedKeyAccessor = generatedKeyAccessor;
     this.fields = fields;
     this.globType = globType;
-    this.sqlService = sqlService;
+    this.globsDB = globsDB;
     this.jdbcConnection = jdbcConnection;
     String sql = prepareRequest(fields, this.globType, new Value() {
       public String get(Pair<Field, Accessor> pair) {
@@ -58,11 +60,11 @@ public class SqlCreateRequest implements SqlRequest {
   private String prepareRequest(List<Pair<Field, Accessor>> fields, GlobType globType, Value value) {
     PrettyWriter writer = new StringPrettyWriter();
     writer.append("INSERT INTO ")
-      .append(sqlService.getTableName(globType))
+      .append(globsDB.getTableName(globType))
       .append(" (");
     int columnCount = 0;
     for (Pair<Field, Accessor> pair : fields) {
-      String columnName = sqlService.getColumnName(pair.getFirst());
+      String columnName = globsDB.getColumnName(pair.getFirst());
       writer.appendIf(", ", columnCount > 0);
       columnCount++;
       writer.append(columnName);

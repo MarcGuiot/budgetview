@@ -8,6 +8,7 @@ import com.budgetview.server.license.checkers.DbChecker;
 import com.budgetview.server.license.checkers.FtpServerChecker;
 import com.budgetview.server.license.checkers.MailServerChecker;
 import com.budgetview.server.mobile.MobileServer;
+import com.budgetview.server.utils.DbInit;
 import com.budgetview.server.web.WebServer;
 import com.budgetview.shared.license.LicenseConstants;
 import com.budgetview.shared.mobile.MobileConstants;
@@ -33,9 +34,6 @@ public abstract class ConnectedTestCase extends UISpecTestCase {
     LoggedInFunctionalTestCase.resetWindow();
     BrowsingService.setDummyBrowser(true);
 
-    System.setProperty(WebServer.KEYSTORE_PATH, "budgetview/bv_server/ssl/keystore");
-    System.setProperty(WebServer.KEYSTORE_PWD, "bvpwd1");
-    System.setProperty(WebServer.HTTPS_PORT_PROPERTY, "1443");
     System.setProperty(MobileServer.MOBILE_PATH_PROPERTY, MOBILE_DATA_DIR.getAbsolutePath());
     System.setProperty("budgetview.log.sout", "true");
 
@@ -45,9 +43,9 @@ public abstract class ConnectedTestCase extends UISpecTestCase {
     System.setProperty(LicenseConstants.COM_APP_FTP_URL, "ftp://localhost:12000");
 
     System.setProperty(WebServer.HTTP_PORT_PROPERTY, Integer.toString(httpPort));
-    System.setProperty(LicenseServer.DATABASE_URL, DbChecker.DATABASE_URL);
-    System.setProperty(LicenseServer.DATABASE_USER,  DbChecker.DATABASE_USER);
-    System.setProperty(LicenseServer.DATABASE_PASSWORD, DbChecker.DATABASE_PASSWORD);
+    System.setProperty(DbInit.DATABASE_URL, DbChecker.DATABASE_URL);
+    System.setProperty(DbInit.DATABASE_USER, DbChecker.DATABASE_USER);
+    System.setProperty(DbInit.DATABASE_PASSWORD, DbChecker.DATABASE_PASSWORD);
 
     System.setProperty(Application.LOCAL_PREVAYLER_PATH_PROPERTY, PATH_TO_DATA);
     System.setProperty(Application.DELETE_LOCAL_PREVAYLER_PROPERTY, "true");

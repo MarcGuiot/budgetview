@@ -2,16 +2,14 @@ package org.globsframework.sqlstreams;
 
 import org.globsframework.metamodel.Field;
 import org.globsframework.metamodel.fields.*;
+import org.globsframework.model.Glob;
+import org.globsframework.model.GlobList;
 import org.globsframework.streams.accessors.*;
 import org.globsframework.utils.Ref;
 
 // attention sur le distinct : les valeurs de la clef sont automatiquement ajoutees  ==> faire un distinct a part
 
 public interface SelectBuilder {
-
-  SelectQuery getQuery();
-
-  SelectQuery getNotAutoCloseQuery();
 
   SelectBuilder select(Field field);
 
@@ -48,4 +46,12 @@ public interface SelectBuilder {
   BlobAccessor retrieve(BlobField field);
 
   Accessor retrieveUnTyped(Field field);
+
+  SelectQuery getQuery();
+
+  SelectQuery getNotAutoCloseQuery();
+
+  GlobList getList();
+
+  Glob getUnique();
 }

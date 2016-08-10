@@ -11,13 +11,10 @@ public class CloudUser {
   public static GlobType TYPE;
 
   @Key
-  @NoObfuscation
   public static IntegerField ID;
 
-  @NoObfuscation
   public static StringField EMAIL;
 
-  @NoObfuscation
   public static StringField BUDGEA_ACCESS_TOKEN;
 
   static {

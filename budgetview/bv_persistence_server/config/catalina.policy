@@ -138,7 +138,7 @@ grant {
 //
 // For instance, assume that the standard "examples" application
 // included a JDBC driver that needed to establish a network connection to the
-// corresponding database and used the scrape taglib to get the weather from
+// corresponding globsDB and used the scrape taglib to get the weather from
 // the NOAA web server.  You might create a "grant" entries like this:
 //
 // The permissions granted to the context root directory apply to JSP pages.

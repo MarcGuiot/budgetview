@@ -6,19 +6,18 @@ import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
 import org.globsframework.sqlstreams.*;
 import org.globsframework.sqlstreams.constraints.Constraint;
+import org.globsframework.sqlstreams.drivers.jdbc.builder.SqlCreateBuilder;
+import org.globsframework.sqlstreams.drivers.jdbc.builder.SqlQueryBuilder;
+import org.globsframework.sqlstreams.drivers.jdbc.builder.SqlUpdateBuilder;
+import org.globsframework.sqlstreams.drivers.jdbc.impl.BlobUpdater;
 import org.globsframework.sqlstreams.drivers.jdbc.impl.SqlFieldCreationVisitor;
-import org.globsframework.sqlstreams.drivers.jdbc.request.SqlCreateBuilder;
-import org.globsframework.sqlstreams.drivers.jdbc.request.SqlDeleteBuilder;
-import org.globsframework.sqlstreams.drivers.jdbc.request.SqlQueryBuilder;
-import org.globsframework.sqlstreams.drivers.jdbc.request.SqlUpdateBuilder;
+import org.globsframework.sqlstreams.drivers.jdbc.request.SqlDeleteRequest;
 import org.globsframework.sqlstreams.exceptions.ConstraintViolation;
 import org.globsframework.sqlstreams.exceptions.RollbackFailed;
 import org.globsframework.sqlstreams.exceptions.SqlException;
 import org.globsframework.sqlstreams.metadata.DbChecker;
 import org.globsframework.sqlstreams.utils.StringPrettyWriter;
-import org.globsframework.utils.exceptions.GlobsException;
-import org.globsframework.utils.exceptions.OperationDenied;
-import org.globsframework.utils.exceptions.UnexpectedApplicationState;
+import org.globsframework.utils.exceptions.*;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -26,35 +25,51 @@ import java.sql.SQLException;
 
 public abstract class JdbcConnection implements SqlConnection {
   private Connection connection;
-  protected SqlService sqlService;
+  protected GlobsDatabase globsDB;
   private BlobUpdater blobUpdater;
   private DbChecker checker;
 
-  public JdbcConnection(Connection connection, SqlService sqlService, BlobUpdater blobUpdater) {
+  public JdbcConnection(Connection connection, GlobsDatabase globsDB, BlobUpdater blobUpdater) {
     this.connection = connection;
-    this.sqlService = sqlService;
+    this.globsDB = globsDB;
     this.blobUpdater = blobUpdater;
-    checker = new DbChecker(sqlService, this);
+    checker = new DbChecker(globsDB, this);
   }
 
-  public SelectBuilder getQueryBuilder(GlobType globType) {
+  public SelectBuilder startSelect(GlobType globType) {
     checkConnectionIsNotClosed();
-    return new SqlQueryBuilder(connection, globType, null, sqlService, blobUpdater);
+    return new SqlQueryBuilder(connection, globType, null, globsDB, blobUpdater);
   }
 
-  public SelectBuilder getQueryBuilder(GlobType globType, Constraint constraint) {
-    checkConnectionIsNotClosed();
-    return new SqlQueryBuilder(connection, globType, constraint, sqlService, blobUpdater);
+  public GlobList selectAll(GlobType globType) {
+    return startSelect(globType).selectAll().getList();
   }
 
-  public UpdateBuilder getUpdateBuilder(GlobType globType, Constraint constraint) {
+  public Glob selectUnique(GlobType globType) throws ItemNotFound, TooManyItems {
+    return startSelect(globType).selectAll().getUnique();
+  }
+
+  public SelectBuilder startSelect(GlobType globType, Constraint constraint) {
     checkConnectionIsNotClosed();
-    return new SqlUpdateBuilder(connection, globType, sqlService, constraint, blobUpdater);
+    return new SqlQueryBuilder(connection, globType, constraint, globsDB, blobUpdater);
+  }
+
+  public GlobList selectAll(GlobType globType, Constraint constraint) {
+    return startSelect(globType, constraint).selectAll().getQuery().getList();
+  }
+
+  public Glob selectUnique(GlobType globType, Constraint constraint) throws ItemNotFound, TooManyItems {
+    return startSelect(globType, constraint).getUnique();
+  }
+
+  public UpdateBuilder startUpdate(GlobType globType, Constraint constraint) {
+    checkConnectionIsNotClosed();
+    return new SqlUpdateBuilder(connection, globType, globsDB, constraint, blobUpdater);
   }
 
   private void checkConnectionIsNotClosed() {
     if (connection == null) {
-      throw new UnexpectedApplicationState("connection was closed");
+      throw new UnexpectedApplicationState("Connection was closed");
     }
   }
 
@@ -88,8 +103,8 @@ public abstract class JdbcConnection implements SqlConnection {
     });
   }
 
-  public CreateBuilder getCreateBuilder(GlobType globType) {
-    return new SqlCreateBuilder(connection, globType, sqlService, blobUpdater, this);
+  public CreateBuilder startCreate(GlobType globType) {
+    return new SqlCreateBuilder(connection, globType, globsDB, blobUpdater, this);
   }
 
   public void createTable(GlobType... globTypes) {
@@ -104,7 +119,7 @@ public abstract class JdbcConnection implements SqlConnection {
     }
     StringPrettyWriter writer = new StringPrettyWriter();
     writer.append("CREATE TABLE ")
-      .append(sqlService.getTableName(globType))
+      .append(globsDB.getTableName(globType))
       .append(" ( ");
     SqlFieldCreationVisitor creationVisitor = getFieldVisitorCreator(writer);
     int count = 1;
@@ -117,7 +132,7 @@ public abstract class JdbcConnection implements SqlConnection {
     if (keyFields.length != 0) {
       writer.append(", PRIMARY KEY (");
       for (Field field : keyFields) {
-        writer.append(sqlService.getColumnName(field))
+        writer.append(globsDB.getColumnName(field))
           .appendIf(", ", last != field);
       }
       writer.append(") ");
@@ -129,7 +144,7 @@ public abstract class JdbcConnection implements SqlConnection {
       statement.close();
     }
     catch (SQLException e) {
-      throw new UnexpectedApplicationState("Invalid creation request: " + writer.toString(), e);
+      throw new OperationFailed("Ceation request failed: " + writer.toString(), e);
     }
   }
 
@@ -142,7 +157,7 @@ public abstract class JdbcConnection implements SqlConnection {
   private void emptyTable(GlobType globType) {
     StringPrettyWriter writer = new StringPrettyWriter();
     writer.append("DELETE FROM ")
-      .append(sqlService.getTableName(globType))
+      .append(globsDB.getTableName(globType))
       .append(";");
     try {
       PreparedStatement statament = connection.prepareStatement(writer.toString());
@@ -150,31 +165,35 @@ public abstract class JdbcConnection implements SqlConnection {
       statament.close();
     }
     catch (SQLException e) {
-      throw new UnexpectedApplicationState("Unable to empty table : " + writer.toString(), e);
+      throw new UnexpectedApplicationState("Unable to empty table: " + writer.toString(), e);
     }
   }
 
-  public void populate(GlobList all) {
+  public void createAll(GlobList all) {
     for (Glob glob : all) {
-      CreateBuilder createBuilder = getCreateBuilder(glob.getType());
+      CreateBuilder createBuilder = startCreate(glob.getType());
       for (Field field : glob.getType().getFields()) {
         createBuilder.setObject(field, glob.getValue(field));
       }
-      createBuilder.getRequest().run();
+      createBuilder.run();
     }
   }
 
   abstract protected SqlFieldCreationVisitor getFieldVisitorCreator(StringPrettyWriter prettyWriter);
 
-  public SqlRequest getDeleteRequest(GlobType globType) {
-    return new SqlDeleteBuilder(globType, null, connection, sqlService, blobUpdater);
+  public SqlRequest startDelete(GlobType globType) {
+    return new SqlDeleteRequest(globType, null, connection, globsDB, blobUpdater);
   }
 
-  public SqlRequest getDeleteRequest(GlobType globType, Constraint constraint) {
-    return new SqlDeleteBuilder(globType, constraint, connection, sqlService, blobUpdater);
+  public void deleteAll(GlobType globType) {
+    startDelete(globType).run();
   }
 
-  public Connection getConnection() {
+  public SqlRequest startDelete(GlobType globType, Constraint constraint) {
+    return new SqlDeleteRequest(globType, constraint, connection, globsDB, blobUpdater);
+  }
+
+  public Connection getInnerConnection() {
     return connection;
   }
 

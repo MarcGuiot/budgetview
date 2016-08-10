@@ -12,42 +12,44 @@ public interface UpdateBuilder {
 
   UpdateBuilder updateUntyped(Field field, Accessor accessor);
 
-  UpdateBuilder update(IntegerField field, IntegerAccessor accessor);
+  UpdateBuilder set(IntegerField field, IntegerAccessor accessor);
 
-  UpdateBuilder update(IntegerField field, Integer value);
+  UpdateBuilder set(IntegerField field, Integer value);
 
-  UpdateBuilder update(LongField field, LongAccessor accessor);
+  UpdateBuilder set(LongField field, LongAccessor accessor);
 
-  UpdateBuilder update(LongField field, Long value);
+  UpdateBuilder set(LongField field, Long value);
 
-  UpdateBuilder update(DoubleField field, DoubleAccessor accessor);
+  UpdateBuilder set(DoubleField field, DoubleAccessor accessor);
 
-  UpdateBuilder update(DoubleField field, Double value);
+  UpdateBuilder set(DoubleField field, Double value);
 
-  UpdateBuilder update(DateField field, DateAccessor accessor);
+  UpdateBuilder set(DateField field, DateAccessor accessor);
 
-  UpdateBuilder update(DateField field, Date value);
+  UpdateBuilder set(DateField field, Date value);
 
-  UpdateBuilder update(TimeStampField field, Date value);
+  UpdateBuilder set(TimeStampField field, Date value);
 
-  UpdateBuilder update(TimeStampField field, DateAccessor value);
+  UpdateBuilder set(TimeStampField field, DateAccessor value);
 
-  UpdateBuilder update(StringField field, StringAccessor accessor);
+  UpdateBuilder set(StringField field, StringAccessor accessor);
 
-  UpdateBuilder update(StringField field, String value);
+  UpdateBuilder set(StringField field, String value);
 
-  UpdateBuilder update(BooleanField field, BooleanAccessor accessor);
+  UpdateBuilder set(BooleanField field, BooleanAccessor accessor);
 
-  UpdateBuilder update(BooleanField field, Boolean value);
+  UpdateBuilder set(BooleanField field, Boolean value);
 
-  UpdateBuilder update(BlobField field, byte[] value);
+  UpdateBuilder set(BlobField field, byte[] value);
 
-  UpdateBuilder update(BlobField field, BlobAccessor accessor);
+  UpdateBuilder set(BlobField field, BlobAccessor accessor);
 
-  UpdateBuilder update(LinkField field, IntegerAccessor accessor);
+  UpdateBuilder set(LinkField field, IntegerAccessor accessor);
 
-  UpdateBuilder update(LinkField field, Integer value);
+  UpdateBuilder set(LinkField field, Integer value);
 
   SqlRequest getRequest();
+
+  void run();
 
 }

@@ -17,7 +17,7 @@ public class MultiCreateBuilder implements CreateBuilder {
   public MultiCreateBuilder(SqlConnection sqlConnection, Collection<GlobType> globTypes) {
     createBuilders = new HashMap<GlobType, CreateBuilder>(globTypes.size());
     for (GlobType globType : globTypes) {
-      createBuilders.put(globType, sqlConnection.getCreateBuilder(globType));
+      createBuilders.put(globType, sqlConnection.startCreate(globType));
     }
   }
 
@@ -93,6 +93,10 @@ public class MultiCreateBuilder implements CreateBuilder {
 
   public SqlRequest getRequest() {
     return new MultiSqlRequest(createBuilders);
+  }
+
+  public void run() throws SqlException {
+    getRequest().run();
   }
 
   static private class MultiSqlRequest implements SqlRequest {

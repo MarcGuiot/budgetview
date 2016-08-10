@@ -1,13 +1,16 @@
-package org.globsframework.sqlstreams.drivers.jdbc;
+package org.globsframework.sqlstreams.drivers.jdbc.select;
 
 import org.globsframework.metamodel.Field;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
 import org.globsframework.sqlstreams.SelectQuery;
-import org.globsframework.sqlstreams.SqlService;
+import org.globsframework.sqlstreams.GlobsDatabase;
 import org.globsframework.sqlstreams.accessors.SqlAccessor;
 import org.globsframework.sqlstreams.constraints.Constraint;
+import org.globsframework.sqlstreams.drivers.jdbc.AccessorGlobBuilder;
+import org.globsframework.sqlstreams.drivers.jdbc.SqlGlobStream;
+import org.globsframework.sqlstreams.drivers.jdbc.impl.BlobUpdater;
 import org.globsframework.sqlstreams.drivers.jdbc.impl.ValueConstraintVisitor;
 import org.globsframework.sqlstreams.drivers.jdbc.impl.WhereClauseConstraintVisitor;
 import org.globsframework.sqlstreams.utils.StringPrettyWriter;
@@ -27,18 +30,18 @@ public class SqlSelectQuery implements SelectQuery {
   private BlobUpdater blobUpdater;
   private boolean autoClose;
   private Map<Field, SqlAccessor> fieldToAccessorHolder;
-  private SqlService sqlService;
+  private GlobsDatabase globsDB;
   private PreparedStatement preparedStatement;
   private String sql;
 
   public SqlSelectQuery(Connection connection, Constraint constraint,
-                        Map<Field, SqlAccessor> fieldToAccessorHolder, SqlService sqlService,
+                        Map<Field, SqlAccessor> fieldToAccessorHolder, GlobsDatabase globsDB,
                         BlobUpdater blobUpdater, boolean autoClose) {
     this.constraint = constraint;
     this.blobUpdater = blobUpdater;
     this.autoClose = autoClose;
     this.fieldToAccessorHolder = new HashMap<Field, SqlAccessor>(fieldToAccessorHolder);
-    this.sqlService = sqlService;
+    this.globsDB = globsDB;
     sql = prepareSqlRequest();
     try {
       preparedStatement = connection.prepareStatement(sql);
@@ -58,22 +61,22 @@ public class SqlSelectQuery implements SelectQuery {
       fieldAndAccessor.getValue().setIndex(++index);
       GlobType globType = fieldAndAccessor.getKey().getGlobType();
       globTypes.add(globType);
-      String tableName = sqlService.getTableName(globType);
+      String tableName = globsDB.getTableName(globType);
       prettyWriter.append(tableName)
         .append(".")
-        .append(sqlService.getColumnName(fieldAndAccessor.getKey()))
+        .append(globsDB.getColumnName(fieldAndAccessor.getKey()))
         .appendIf(", ", iterator.hasNext());
     }
     StringPrettyWriter where = null;
     if (constraint != null) {
       where = new StringPrettyWriter();
       where.append(" WHERE ");
-      constraint.visit(new WhereClauseConstraintVisitor(where, sqlService, globTypes));
+      constraint.visit(new WhereClauseConstraintVisitor(where, globsDB, globTypes));
     }
     prettyWriter.append(" from ");
     for (Iterator it = globTypes.iterator(); it.hasNext();) {
       GlobType globType = (GlobType)it.next();
-      prettyWriter.append(sqlService.getTableName(globType))
+      prettyWriter.append(globsDB.getTableName(globType))
         .appendIf(", ", it.hasNext());
     }
     if (where != null) {
@@ -82,7 +85,7 @@ public class SqlSelectQuery implements SelectQuery {
     return prettyWriter.toString();
   }
 
-  public GlobStream execute() {
+  public GlobStream getStream() {
     if (preparedStatement == null) {
       throw new UnexpectedApplicationState("Query closed " + sql);
     }
@@ -97,8 +100,8 @@ public class SqlSelectQuery implements SelectQuery {
     }
   }
 
-  public GlobList executeAsGlobs() {
-    GlobStream globStream = execute();
+  public GlobList getList() {
+    GlobStream globStream = getStream();
     AccessorGlobBuilder accessorGlobBuilder = AccessorGlobBuilder.init(globStream);
     GlobList result = new GlobList();
     while (globStream.next()) {
@@ -107,8 +110,8 @@ public class SqlSelectQuery implements SelectQuery {
     return result;
   }
 
-  public Glob executeUnique() throws ItemNotFound, TooManyItems {
-    GlobList globs = executeAsGlobs();
+  public Glob getUnique() throws ItemNotFound, TooManyItems {
+    GlobList globs = getList();
     if (globs.size() == 1) {
       return globs.get(0);
     }

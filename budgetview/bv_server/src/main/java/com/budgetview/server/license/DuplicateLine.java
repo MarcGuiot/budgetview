@@ -1,11 +1,11 @@
 package com.budgetview.server.license;
 
 import com.budgetview.server.license.model.License;
-import org.globsframework.sqlstreams.SqlService;
+import org.globsframework.sqlstreams.GlobsDatabase;
 import org.globsframework.sqlstreams.SqlConnection;
 import org.globsframework.sqlstreams.SqlRequest;
 import org.globsframework.sqlstreams.constraints.Constraints;
-import org.globsframework.sqlstreams.drivers.jdbc.JdbcSqlService;
+import org.globsframework.sqlstreams.drivers.jdbc.JdbcGlobsDatabase;
 import org.globsframework.model.GlobList;
 import org.globsframework.model.Glob;
 import org.globsframework.utils.collections.MultiMap;
@@ -21,20 +21,19 @@ public class DuplicateLine {
 
   public static void main(String[] args) throws IOException {
     BufferedReader input = new BufferedReader(new InputStreamReader(System.in));
-    System.out.print("database :");
+    System.out.print("globsDB :");
     String databaseUrl = input.readLine();
     System.out.print("user :");
     String user = input.readLine();
     System.out.print("password :");
     String passwd = input.readLine();
-    SqlService sqlService = new JdbcSqlService(databaseUrl, user, passwd);
+    GlobsDatabase globsDB = new JdbcGlobsDatabase(databaseUrl, user, passwd);
 
-    SqlConnection db = sqlService.getDb();
+    SqlConnection connection = globsDB.connect();
     String bvUser = null;
     if (args.length !=0) {
       bvUser = args[0];
-      GlobList licences = db.getQueryBuilder(License.TYPE, Constraints.equal(License.MAIL, bvUser))
-        .selectAll().getQuery().executeAsGlobs();
+      GlobList licences = connection.selectAll(License.TYPE, Constraints.equal(License.MAIL, bvUser));
       if (licences.size() == 0){
         System.out.println("DuplicateLine.main " + bvUser + " not found.");
       }
@@ -47,7 +46,7 @@ public class DuplicateLine {
           }
         }
         String currentCode = glob.get(License.ACTIVATION_CODE);
-        SqlRequest sqlRequest = db.getCreateBuilder(License.TYPE)
+        SqlRequest sqlRequest = connection.startCreate(License.TYPE)
           .set(License.ACCESS_COUNT, 1L)
           .set(License.SIGNATURE, glob.get(License.SIGNATURE))
           .set(License.ACTIVATION_CODE, currentCode == null ? glob.get(License.LAST_ACTIVATION_CODE) : currentCode)
@@ -56,18 +55,17 @@ public class DuplicateLine {
           .getRequest();
         sqlRequest.run();
         sqlRequest.close();
-        db.commitAndClose();
+        connection.commitAndClose();
         System.out.println("DuplicateLine.main " + bvUser + " found and duplicate.");
       }
     }
     else {
-      complete(db);
+      complete(connection);
     }
   }
 
   public static void complete(SqlConnection connection) {
-    GlobList licences = connection.getQueryBuilder(License.TYPE)
-      .selectAll().getQuery().executeAsGlobs();
+    GlobList licences = connection.selectAll(License.TYPE);
     MultiMap<String, Glob> map = new MultiMap<String, Glob>();
     for (Glob licence : licences) {
       map.put(licence.get(License.MAIL), licence);
@@ -77,7 +75,7 @@ public class DuplicateLine {
       if (!licencesByUser.isEmpty()) {
         Glob glob = licencesByUser.get(0);
         String currentCode = glob.get(License.ACTIVATION_CODE);
-        SqlRequest sqlRequest = connection.getCreateBuilder(License.TYPE)
+        SqlRequest sqlRequest = connection.startCreate(License.TYPE)
           .set(License.ACCESS_COUNT, 1L)
           .set(License.SIGNATURE, glob.get(License.SIGNATURE))
           .set(License.ACTIVATION_CODE, currentCode == null ? glob.get(License.LAST_ACTIVATION_CODE) : currentCode)

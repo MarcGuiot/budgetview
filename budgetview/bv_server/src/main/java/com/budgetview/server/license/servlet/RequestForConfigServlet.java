@@ -8,10 +8,10 @@ import com.budgetview.shared.mobile.MobileConstants;
 import org.apache.log4j.Logger;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
+import org.globsframework.sqlstreams.GlobsDatabase;
 import org.globsframework.sqlstreams.SelectQuery;
 import org.globsframework.sqlstreams.SqlConnection;
 import org.globsframework.sqlstreams.SqlRequest;
-import org.globsframework.sqlstreams.SqlService;
 import org.globsframework.sqlstreams.constraints.Constraints;
 import org.globsframework.streams.accessors.utils.ValueDateAccessor;
 import org.globsframework.streams.accessors.utils.ValueIntegerAccessor;
@@ -29,10 +29,10 @@ import java.util.Date;
 
 public class RequestForConfigServlet extends HttpServlet {
   static Logger logger = Logger.getLogger("requestForConfig");
-  private SqlService sqlService;
+  private GlobsDatabase db;
   private Mailer mailer;
   private VersionService versionService;
-  private SqlConnection db;
+  private SqlConnection connection;
   private CreateAnonymousRequest createAnonymousRequest;
   private UpdateNewActivationCodeRequest updateNewActivationCodeRequest;
   private LicenseRequest licenseRequest;
@@ -41,7 +41,7 @@ public class RequestForConfigServlet extends HttpServlet {
   private RepoIdAnonymousRequest repoIdAnonymousRequest;
 
   public RequestForConfigServlet(Directory directory) {
-    sqlService = directory.get(SqlService.class);
+    db = directory.get(GlobsDatabase.class);
     mailer = directory.get(Mailer.class);
     versionService = directory.get(VersionService.class);
     logInfo("RequestForConfigServlet started");
@@ -49,13 +49,13 @@ public class RequestForConfigServlet extends HttpServlet {
   }
 
   private void initDb() {
-    db = sqlService.getDb();
-    createAnonymousRequest = new CreateAnonymousRequest(db);
-    licenseRequest = new LicenseRequest(db);
-    updateNewActivationCodeRequest = new UpdateNewActivationCodeRequest(db);
-    updateLastAccessRequest = new UpdateLastAccessRequest(db);
-    updateAnonymousAccessCount = new UpdateAnonymousAccessCount(db);
-    repoIdAnonymousRequest = new RepoIdAnonymousRequest(db);
+    connection = db.connect();
+    createAnonymousRequest = new CreateAnonymousRequest(connection);
+    licenseRequest = new LicenseRequest(connection);
+    updateNewActivationCodeRequest = new UpdateNewActivationCodeRequest(connection);
+    updateLastAccessRequest = new UpdateLastAccessRequest(connection);
+    updateAnonymousAccessCount = new UpdateAnonymousAccessCount(connection);
+    repoIdAnonymousRequest = new RepoIdAnonymousRequest(connection);
     logInfo("RequestForConfigServlet.init");
   }
 
@@ -124,8 +124,8 @@ public class RequestForConfigServlet extends HttpServlet {
       }
     }
     finally {
-      if (db != null) {
-        db.commit();
+      if (connection != null) {
+        connection.commit();
       }
     }
     resp.setHeader(LicenseConstants.HEADER_IS_VALID, "false");
@@ -138,11 +138,11 @@ public class RequestForConfigServlet extends HttpServlet {
       updateLastAccessRequest.close();
       updateNewActivationCodeRequest.close();
       repoIdAnonymousRequest.close();
-      db.commitAndClose();
+      connection.commitAndClose();
     }
     catch (Exception e1) {
       try {
-        db.commitAndClose();
+        connection.commitAndClose();
       }
       catch (Exception e2) {
       }
@@ -155,14 +155,14 @@ public class RequestForConfigServlet extends HttpServlet {
 
     RepoIdAnonymousRequest(SqlConnection db) {
       repoIdAccessor = new ValueStringAccessor();
-      repoIdQuery = db.getQueryBuilder(RepoInfo.TYPE, Constraints.equal(RepoInfo.REPO_ID, repoIdAccessor))
+      repoIdQuery = db.startSelect(RepoInfo.TYPE, Constraints.equal(RepoInfo.REPO_ID, repoIdAccessor))
         .selectAll()
         .getNotAutoCloseQuery();
     }
 
     public GlobList execute(String repoId) {
       repoIdAccessor.setValue(repoId);
-      return repoIdQuery.executeAsGlobs();
+      return repoIdQuery.getList();
     }
 
     public void close() {
@@ -184,7 +184,7 @@ public class RequestForConfigServlet extends HttpServlet {
       repoId = new ValueStringAccessor();
       date = new ValueDateAccessor();
       jarVersion  = new ValueLongAccessor();
-      createAnonymousRequest = db.getCreateBuilder(RepoInfo.TYPE)
+      createAnonymousRequest = db.startCreate(RepoInfo.TYPE)
         .set(RepoInfo.REPO_ID, repoId)
         .set(RepoInfo.LAST_ACCESS_DATE, date)
         .set(RepoInfo.COUNT, 1L)
@@ -217,10 +217,10 @@ public class RequestForConfigServlet extends HttpServlet {
       date = new ValueDateAccessor();
       count = new ValueLongAccessor();
       jarVersion = new ValueLongAccessor();
-      request = db.getUpdateBuilder(RepoInfo.TYPE, Constraints.equal(RepoInfo.REPO_ID, repoId))
-        .update(RepoInfo.LAST_ACCESS_DATE, date)
-        .update(RepoInfo.COUNT, count)
-        .update(RepoInfo.JAR_VERSION, jarVersion)
+      request = db.startUpdate(RepoInfo.TYPE, Constraints.equal(RepoInfo.REPO_ID, repoId))
+        .set(RepoInfo.LAST_ACCESS_DATE, date)
+        .set(RepoInfo.COUNT, count)
+        .set(RepoInfo.JAR_VERSION, jarVersion)
         .getRequest();
     }
 
@@ -244,11 +244,11 @@ public class RequestForConfigServlet extends HttpServlet {
 
   private void computeAnonymous(String id, String ip, VersionService.JarInfo info) {
     GlobList globList = repoIdAnonymousRequest.execute(id);
-    db.commit();
+    connection.commit();
     if (globList.size() == 0) {
       logInfo("new_anonymous ip = " + ip + " id =" + id + " on jar version = " + info);
       createAnonymousRequest.execute(id, new Date(), info);
-      db.commit();
+      connection.commit();
     }
     else if (globList.size() > 1) {
       logger.error("compute_anonymous ip = " + ip + " id = " + id + " many repo with the same id");
@@ -257,7 +257,7 @@ public class RequestForConfigServlet extends HttpServlet {
       Long accessCount = globList.get(0).get(RepoInfo.COUNT) + 1;
       logInfo("known_anonymous ip = " + ip + " id =" + id + " access_count = " + accessCount);
       updateAnonymousAccessCount.execute(id, new Date(), accessCount, info);
-      db.commit();
+      connection.commit();
     }
   }
 
@@ -292,7 +292,7 @@ public class RequestForConfigServlet extends HttpServlet {
                                  String activationCode, Long count, String lang,
                                  String ip, String repoId, VersionService.JarInfo info) {
     GlobList globList = licenseRequest.execute(mail);
-    db.commit();
+    connection.commit();
     if (globList.isEmpty()) {
       resp.setHeader(LicenseConstants.HEADER_IS_VALID, "false");
       resp.setHeader(LicenseConstants.HEADER_MAIL_UNKNOWN, "true");
@@ -320,7 +320,7 @@ public class RequestForConfigServlet extends HttpServlet {
           else {
             if (Utils.equal(activationCode, license.get(License.LAST_ACTIVATION_CODE))) {
               updateLastAccessRequest.execute(license.get(License.ID), count, new Date(), info);
-              db.commit();
+              connection.commit();
               logInfo("ok_for mail = " + mail + " count = " + count);
               return license.get(License.GROUP_ID);
             }
@@ -344,7 +344,7 @@ public class RequestForConfigServlet extends HttpServlet {
 
     LicenseRequest(SqlConnection db) {
       mail = new ValueStringAccessor();
-      query = db.getQueryBuilder(License.TYPE, Constraints.equal(License.MAIL, mail))
+      query = db.startSelect(License.TYPE, Constraints.equal(License.MAIL, mail))
         .select(License.ACCESS_COUNT)
         .select(License.ACTIVATION_CODE)
         .select(License.REPO_ID)
@@ -356,7 +356,7 @@ public class RequestForConfigServlet extends HttpServlet {
 
     public GlobList execute(String mail) {
       this.mail.setValue(mail);
-      return query.executeAsGlobs();
+      return query.getList();
     }
 
     public void close() {
@@ -376,8 +376,8 @@ public class RequestForConfigServlet extends HttpServlet {
     UpdateNewActivationCodeRequest(SqlConnection db) {
       mail = new ValueStringAccessor();
       activationCode = new ValueStringAccessor();
-      request = db.getUpdateBuilder(License.TYPE, Constraints.equal(License.MAIL, mail))
-        .update(License.ACTIVATION_CODE, activationCode)
+      request = db.startUpdate(License.TYPE, Constraints.equal(License.MAIL, mail))
+        .set(License.ACTIVATION_CODE, activationCode)
         .getRequest();
     }
 
@@ -412,11 +412,11 @@ public class RequestForConfigServlet extends HttpServlet {
       this.date = new ValueDateAccessor();
       timestamp = new ValueLongAccessor();
       jarVersion = new ValueLongAccessor();
-      request = db.getUpdateBuilder(License.TYPE, Constraints.equal(License.ID, id))
-        .update(License.ACCESS_COUNT, count)
-        .update(License.LAST_ACCESS_DATE, this.date)
-        .update(License.TIME_STAMP, timestamp)
-        .update(License.JAR_VERSION, jarVersion)
+      request = db.startUpdate(License.TYPE, Constraints.equal(License.ID, id))
+        .set(License.ACCESS_COUNT, count)
+        .set(License.LAST_ACCESS_DATE, this.date)
+        .set(License.TIME_STAMP, timestamp)
+        .set(License.JAR_VERSION, jarVersion)
         .getRequest();
     }
 

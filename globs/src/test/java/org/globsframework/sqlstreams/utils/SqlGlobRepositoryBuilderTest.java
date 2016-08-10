@@ -1,14 +1,14 @@
-package org.globsframework.sqlstreams;
+package org.globsframework.sqlstreams.utils;
 
 import org.globsframework.metamodel.DummyObject;
 import org.globsframework.metamodel.DummyObject2;
 import org.globsframework.model.GlobChecker;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.sqlstreams.constraints.Constraints;
-import org.globsframework.sqlstreams.drivers.jdbc.DbServicesTestCase;
+import org.globsframework.sqlstreams.drivers.jdbc.GlobsDatabaseTestCase;
 import org.globsframework.streams.xml.XmlGlobStreamReader;
 
-public class SqlGlobRepositoryBuilderTest extends DbServicesTestCase {
+public class SqlGlobRepositoryBuilderTest extends GlobsDatabaseTestCase {
 
   public void testNominal() throws Exception {
     populate(sqlConnection, XmlGlobStreamReader.parse(directory,

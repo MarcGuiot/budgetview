@@ -9,55 +9,60 @@ import org.globsframework.sqlstreams.constraints.Constraints;
 
 public abstract class SqlExceptionTest extends TestCase {
 
-  public abstract SqlConnection getDb();
+  public abstract SqlConnection getDbConnection();
 
   protected void setUp() throws Exception {
-    SqlConnection sqlConnection = getDb();
+    SqlConnection sqlConnection = getDbConnection();
     sqlConnection.createTable(DummyObject.TYPE);
-    sqlConnection.getDeleteRequest(DummyObject.TYPE).run();
+    sqlConnection.deleteAll(DummyObject.TYPE);
     sqlConnection.commitAndClose();
   }
 
   public void testRollback() throws Exception {
-    SqlConnection db1 = getDb();
-    db1.getCreateBuilder(DummyObject.TYPE).set(DummyObject.ID, 1).set(DummyObject.NAME, "toto").getRequest().run();
+    SqlConnection db1 = getDbConnection();
+    db1.startCreate(DummyObject.TYPE).set(DummyObject.ID, 1).set(DummyObject.NAME, "toto").getRequest().run();
     db1.commit();
-    SelectQuery query1 = db1.getQueryBuilder(DummyObject.TYPE, Constraints.equal(DummyObject.ID, 1))
+    SelectQuery query1 = db1.startSelect(DummyObject.TYPE, Constraints.equal(DummyObject.ID, 1))
       .select(DummyObject.NAME).getQuery();
-    assertEquals("toto", query1.executeUnique().get(DummyObject.NAME));
-    db1.getUpdateBuilder(DummyObject.TYPE, Constraints.equal(DummyObject.ID, 1))
-      .update(DummyObject.NAME, "titi").getRequest().run();
-    assertEquals("titi", query1.executeUnique().get(DummyObject.NAME));
+    assertEquals("toto", query1.getUnique().get(DummyObject.NAME));
+    db1.startUpdate(DummyObject.TYPE, Constraints.equal(DummyObject.ID, 1))
+      .set(DummyObject.NAME, "titi")
+      .getRequest().run();
+    assertEquals("titi", query1.getUnique().get(DummyObject.NAME));
     db1.rollbackAndClose();
-    SqlConnection db2 = getDb();
-    assertEquals("toto", db2.getQueryBuilder(DummyObject.TYPE, Constraints.equal(DummyObject.ID, 1))
-      .select(DummyObject.NAME).getQuery().executeUnique().get(DummyObject.NAME));
+    SqlConnection db2 = getDbConnection();
+    assertEquals("toto", db2.startSelect(DummyObject.TYPE, Constraints.equal(DummyObject.ID, 1))
+      .select(DummyObject.NAME).getQuery().getUnique().get(DummyObject.NAME));
   }
 
   public void testConcurrentModification() throws Exception {
-    SqlConnection db1 = getDb();
-    SqlConnection db2 = getDb();
-    db1.getCreateBuilder(DummyObject.TYPE).set(DummyObject.ID, 1).set(DummyObject.NAME, "toto").getRequest().run();
+    SqlConnection db1 = getDbConnection();
+    SqlConnection db2 = getDbConnection();
+    db1.startCreate(DummyObject.TYPE)
+      .set(DummyObject.ID, 1)
+      .set(DummyObject.NAME, "toto")
+      .run();
     db1.commit();
-    Glob glob1 = db1.getQueryBuilder(DummyObject.TYPE, Constraints.equal(DummyObject.ID, 1))
-      .select(DummyObject.NAME).getQuery().executeUnique();
+    Glob glob1 = db1.startSelect(DummyObject.TYPE, Constraints.equal(DummyObject.ID, 1))
+      .select(DummyObject.NAME)
+      .getUnique();
     assertEquals("toto", glob1.get(DummyObject.NAME));
-    db1.getUpdateBuilder(DummyObject.TYPE, Constraints.equal(DummyObject.ID, 1))
-      .update(DummyObject.NAME, "titi").getRequest().run();
+    db1.startUpdate(DummyObject.TYPE, Constraints.equal(DummyObject.ID, 1))
+      .set(DummyObject.NAME, "titi").getRequest().run();
 
-    SelectQuery query2 = db2.getQueryBuilder(DummyObject.TYPE, Constraints.equal(DummyObject.ID, 1))
+    SelectQuery query2 = db2.startSelect(DummyObject.TYPE, Constraints.equal(DummyObject.ID, 1))
       .select(DummyObject.NAME).getQuery();
-    Glob glob2 = query2.executeUnique();
+    Glob glob2 = query2.getUnique();
     assertEquals("titi", glob2.get(DummyObject.NAME));
-    db2.getUpdateBuilder(DummyObject.TYPE, Constraints.equal(DummyObject.ID, 1))
-      .update(DummyObject.NAME, "tata").getRequest().run();
+    db2.startUpdate(DummyObject.TYPE, Constraints.equal(DummyObject.ID, 1))
+      .set(DummyObject.NAME, "tata").getRequest().run();
 //    db1.rollbackAndClose();
-    glob2 = query2.executeUnique();
+    glob2 = query2.getUnique();
     assertEquals("tata", glob2.get(DummyObject.NAME));
     db2.commit();
     db1.rollbackAndClose();
-    Glob newGlob = getDb().getQueryBuilder(DummyObject.TYPE, Constraints.equal(DummyObject.ID, 1))
-      .select(DummyObject.NAME).getQuery().executeUnique();
+    Glob newGlob = getDbConnection().startSelect(DummyObject.TYPE, Constraints.equal(DummyObject.ID, 1))
+      .select(DummyObject.NAME).getQuery().getUnique();
     assertEquals("toto", newGlob.get(DummyObject.NAME));
   }
 }

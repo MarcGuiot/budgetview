@@ -6,8 +6,8 @@ import com.budgetview.server.license.model.RepoInfo;
 import com.budgetview.server.license.model.SoftwareInfo;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.sqlstreams.SqlConnection;
-import org.globsframework.sqlstreams.SqlService;
-import org.globsframework.sqlstreams.drivers.jdbc.JdbcSqlService;
+import org.globsframework.sqlstreams.GlobsDatabase;
+import org.globsframework.sqlstreams.drivers.jdbc.JdbcGlobsDatabase;
 
 import java.sql.SQLException;
 import java.io.BufferedReader;
@@ -20,15 +20,15 @@ public class DbCreateTable {
 
   public static void main(String[] args) throws InterruptedException, SQLException, IOException {
     BufferedReader input = new BufferedReader(new InputStreamReader(System.in));
-    System.out.print("database :");
+    System.out.print("globsDB :");
     String databaseUrl = input.readLine();
     System.out.print("user :");
     String user = input.readLine();
     System.out.print("password :");
     String passwd = input.readLine();
-    SqlService sqlService = new JdbcSqlService(databaseUrl, user, passwd);
+    GlobsDatabase globsDB = new JdbcGlobsDatabase(databaseUrl, user, passwd);
 
-    SqlConnection connection = sqlService.getDb();
+    SqlConnection connection = globsDB.connect();
     for (GlobType type : TYPE) {
         connection.createTable(type);
     }

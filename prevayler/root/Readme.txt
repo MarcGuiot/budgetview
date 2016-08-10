@@ -25,7 +25,7 @@ Performance Scalability
 
 These are typical results for the Prevayler query scalability test running against DBMSs using JDBC, even when the DBMSs use local databases fully cached in RAM.
 
-You can compile and run the test for yourself. Its source code is available for inspection in the "src" directory starting at: org.prevayler.demos.scalability.Main. It runs transaction-processing and query scalability tests against Prevayler and any JDBC database. Just follow the instructions displayed on the console.
+You can compile and run the test for yourself. Its source code is available for inspection in the "src" directory starting at: org.prevayler.demos.scalability.Main. It runs transaction-processing and query scalability tests against Prevayler and any JDBC globsDB. Just follow the instructions displayed on the console.
 
 
 Required Java Platform
@@ -57,7 +57,7 @@ The Prevayler demo applications are available in the "src" directory. They have 
 
 Learning Prevayler 1-2-3
 ============================
-The prevalence concepts are ridiculously simple. Unlike using a database, though, writing an application using a prevalence layer actually requires you to know OO.
+The prevalence concepts are ridiculously simple. Unlike using a globsDB, though, writing an application using a prevalence layer actually requires you to know OO.
 
 1- Read the "Object Prevalence Skeptical FAQ" in the "docs" directory.
 2- Run the demos above and understand their source code. Use the javadoc in the "docs/api/beginners" directory as a reference.

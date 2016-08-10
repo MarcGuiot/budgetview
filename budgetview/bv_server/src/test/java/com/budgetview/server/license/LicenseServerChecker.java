@@ -10,7 +10,7 @@ public class LicenseServerChecker {
   private boolean started;
 
   public LicenseServerChecker() throws Exception {
-    server = new LicenseServer();
+    server = new LicenseServer("budgetview/bv_server/dev/config/bv_cloud_test.properties");
     server.setMailPort("localhost", 2500);
   }
 

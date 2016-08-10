@@ -24,6 +24,7 @@ public class MobileServer {
   private WebServer webServer;
 
   public static void main(String[] args) throws Exception {
+    ConfigService.checkCommandLine(args);
     MobileServer server = new MobileServer(args);
     server.init();
     server.start();

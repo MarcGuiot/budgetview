@@ -134,8 +134,10 @@ public class EncryptToTransportServerAccessTest extends FunctionalTestCase {
 
   private Glob getATransaction() {
     return GlobBuilder.init(Transaction.TYPE)
-      .set(Transaction.ID, 1).set(Transaction.LABEL, "some info").set(Transaction.AMOUNT, 100.0)
-      .set(Transaction.CATEGORY, 3).get();
+      .set(Transaction.ID, 1)
+      .set(Transaction.LABEL, "some info")
+      .set(Transaction.AMOUNT, 100.0)
+      .get();
   }
 
   public void testCannotCreateTheSameUserTwice() throws Exception {

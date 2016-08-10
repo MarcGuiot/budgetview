@@ -4,8 +4,8 @@ import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.fields.IntegerField;
 import org.globsframework.metamodel.fields.StringField;
 import org.globsframework.sqlstreams.CreateBuilder;
+import org.globsframework.sqlstreams.GlobsDatabase;
 import org.globsframework.sqlstreams.SqlConnection;
-import org.globsframework.sqlstreams.SqlService;
 import org.globsframework.sqlstreams.constraints.Constraint;
 import org.globsframework.sqlstreams.constraints.Constraints;
 import org.globsframework.sqlstreams.exceptions.RollbackFailed;
@@ -17,38 +17,38 @@ public class DbGlobIdGenerator {
   private GlobType globType;
   private StringField tableNameField;
   private IntegerField idField;
-  private SqlService sqlService;
+  private GlobsDatabase db;
 
   public DbGlobIdGenerator(GlobType globType, StringField tableNameField,
-                           IntegerField idField, SqlService sqlService) {
+                           IntegerField idField, GlobsDatabase db) {
     this.globType = globType;
     this.tableNameField = tableNameField;
     this.idField = idField;
-    this.sqlService = sqlService;
+    this.db = db;
   }
 
   synchronized public int getNextId(String tableName, int idCount) {
-    SqlConnection sqlConnection = sqlService.getDb();
+    SqlConnection sqlConnection = db.connect();
     while (true) {
       try {
         Ref<IntegerAccessor> idRef = new Ref<IntegerAccessor>();
         Constraint constraint = Constraints.and(getAdditionalConstraint(),
                                                 Constraints.equal(tableNameField, tableName));
-        GlobStream globStream = sqlConnection.getQueryBuilder(globType, constraint)
-          .select(idField, idRef).getQuery().execute();
+        GlobStream globStream = sqlConnection.startSelect(globType, constraint)
+          .select(idField, idRef).getQuery().getStream();
         int id;
         if (globStream.next()) {
           id = idRef.get().getValue() + idCount;
-          sqlConnection.getUpdateBuilder(globType, Constraints.equal(tableNameField, tableName))
-            .update(idField, id).getRequest().run();
+          sqlConnection.startUpdate(globType, Constraints.equal(tableNameField, tableName))
+            .set(idField, id).getRequest().run();
         }
         else {
           id = idCount;
-          CreateBuilder builder = sqlConnection.getCreateBuilder(globType)
+          CreateBuilder builder = sqlConnection.startCreate(globType)
             .setObject(idField, idCount)
             .setObject(tableNameField, tableName);
           addAdditionalInfo(builder);
-          builder.getRequest().run();
+          builder.run();
         }
         sqlConnection.commitAndClose();
         return id - idCount;

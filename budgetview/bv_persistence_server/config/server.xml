@@ -3,7 +3,7 @@
     <!-- Used by Manager webapp -->
     <Resource name="UserDatabase" auth="Container"
               type="org.apache.catalina.UserDatabase"
-      description="User database that can be updated and saved">
+      description="User globsDB that can be updated and saved">
     </Resource>
     <ResourceParams name="UserDatabase">
       <parameter> 

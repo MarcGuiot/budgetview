@@ -5,9 +5,9 @@ import com.budgetview.server.license.model.MailError;
 import com.budgetview.server.license.model.RepoInfo;
 import com.budgetview.server.license.model.SoftwareInfo;
 import org.globsframework.metamodel.GlobType;
+import org.globsframework.sqlstreams.GlobsDatabase;
 import org.globsframework.sqlstreams.SqlConnection;
-import org.globsframework.sqlstreams.SqlService;
-import org.globsframework.sqlstreams.drivers.jdbc.JdbcSqlService;
+import org.globsframework.sqlstreams.drivers.jdbc.JdbcGlobsDatabase;
 import org.hsqldb.Server;
 
 import java.sql.ResultSet;
@@ -22,23 +22,23 @@ public class DbServer {
     server.setDatabasePath(1, "/home/guiot/.picsouDb/");
     server.setDatabaseName(1, "budgetview");
     server.start();
-    SqlService sqlService = new JdbcSqlService("jdbc:hsqldb:hsql://localhost/picsou", "sa", "");
-    SqlConnection db = sqlService.getDb();
-    ResultSet set = db.getConnection().prepareStatement("SELECT * FROM INFORMATION_SCHEMA.SYSTEM_TABLES WHERE 1=1 AND " +
-                                                        "  TABLE_TYPE IN ('TABLE','GLOBAL TEMPORARY','VIEW')")
+    GlobsDatabase globsDB = new JdbcGlobsDatabase("jdbc:hsqldb:hsql://localhost/picsou", "sa", "");
+    SqlConnection connection = globsDB.connect();
+    ResultSet set = connection.getInnerConnection().prepareStatement("SELECT * FROM INFORMATION_SCHEMA.SYSTEM_TABLES WHERE 1=1 AND " +
+                                                                     "  TABLE_TYPE IN ('TABLE','GLOBAL TEMPORARY','VIEW')")
       .executeQuery();
     Set<String> existingTables = new HashSet<String>();
     while (set.next()) {
       existingTables.add(set.getString("TABLE_NAME"));
     }
-    db.commitAndClose();
-    createIfNeeded(sqlService, existingTables, License.TYPE, MailError.TYPE, RepoInfo.TYPE, SoftwareInfo.TYPE);
+    connection.commitAndClose();
+    createIfNeeded(globsDB, existingTables, License.TYPE, MailError.TYPE, RepoInfo.TYPE, SoftwareInfo.TYPE);
   }
 
-  private static void createIfNeeded(SqlService sqlService, Set<String> tables, GlobType... globType) {
-    SqlConnection db = sqlService.getDb();
+  private static void createIfNeeded(GlobsDatabase globsDB, Set<String> tables, GlobType... globType) {
+    SqlConnection db = globsDB.connect();
     for (GlobType type : globType) {
-      if (!tables.contains(sqlService.getTableName(type))) {
+      if (!tables.contains(globsDB.getTableName(type))) {
         db.createTable(type);
       }
     }

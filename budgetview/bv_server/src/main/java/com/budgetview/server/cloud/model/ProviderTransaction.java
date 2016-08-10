@@ -10,37 +10,37 @@ import org.globsframework.metamodel.fields.LinkField;
 import org.globsframework.metamodel.fields.StringField;
 import org.globsframework.metamodel.utils.GlobTypeLoader;
 
-public class CloudTransaction {
+public class ProviderTransaction {
   public static GlobType TYPE;
 
   @Key
-  @NoObfuscation
   public static IntegerField ID;
 
-  @Target(CloudSeries.class)
-  @NoObfuscation
-  public static LinkField SERIES;
+  @Target(Provider.class)
+  public static LinkField PROVIDER;
 
-  @Target(CloudAccount.class)
-  @NoObfuscation
+  public static IntegerField PROVIDER_ID;
+
+  public static IntegerField CATEGORY;
+
+  @Target(ProviderAccount.class)
   public static LinkField ACCOUNT;
 
-  @NoObfuscation
   public static StringField LABEL;
 
-  @NoObfuscation
+  public static StringField ORIGINAL_LABEL;
+
   public static DoubleField AMOUNT;
 
-  @Target(CloudMonth.class)
-  @NoObfuscation
-  public static LinkField BANK_MONTH;
-  @NoObfuscation
+  public static IntegerField OPERATION_MONTH;
+  public static IntegerField OPERATION_DAY;
+
+  public static IntegerField BANK_MONTH;
   public static IntegerField BANK_DAY;
 
-  @NoObfuscation
   public static IntegerField SEQUENCE_NUMBER;
 
   static {
-    GlobTypeLoader.init(CloudTransaction.class, "transactionValues");
+    GlobTypeLoader.init(ProviderTransaction.class, "transactionValues");
   }
 }

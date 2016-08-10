@@ -21,7 +21,7 @@ public class DefaultCreateRequest implements RemoteExecutor.CreateRequest {
   protected LongAccessor keyGeneratedAccessor;
 
   public DefaultCreateRequest(SqlConnection sqlConnection, GlobType globType, FieldValues keyValues, boolean keyGeneratorAccessorWanted) {
-    CreateBuilder createBuilder = sqlConnection.getCreateBuilder(globType);
+    CreateBuilder createBuilder = sqlConnection.startCreate(globType);
     for (Field field : globType.getFields()) {
       ValueAccessor accessor = new ValueAccessor();
       accessorByField.put(field, accessor);

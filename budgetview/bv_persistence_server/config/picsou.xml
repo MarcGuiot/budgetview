@@ -19,7 +19,7 @@
     <!--</parameter>-->
     <!--<parameter>-->
       <!--<name>url</name>-->
-      <!--<value>jdbc:hsqldb:mem:database</value>-->
+      <!--<value>jdbc:hsqldb:mem:globsDB</value>-->
     <!--</parameter>-->
     <!--<parameter>-->
       <!--<name>maxActive</name>-->

@@ -21,7 +21,7 @@ Transaction Filtering.
 Performance Scalability
 ===========================
 Tests run in the Sun labs, Prevayler was more than 10000 times faster than Oracle through JDBC.
-You can run the test for yourself: org.prevayler.demos.scalability.Main - Runs manipulation and query scalability tests against Prevayler and any JDBC database. Just follow the instructions.
+You can run the test for yourself: org.prevayler.demos.scalability.Main - Runs manipulation and query scalability tests against Prevayler and any JDBC globsDB. Just follow the instructions.
 
 
 Known Bugs

@@ -1,10 +1,10 @@
 package org.globsframework.sqlstreams.drivers.jdbc.request;
 
 import org.globsframework.metamodel.GlobType;
+import org.globsframework.sqlstreams.GlobsDatabase;
 import org.globsframework.sqlstreams.SqlRequest;
-import org.globsframework.sqlstreams.SqlService;
 import org.globsframework.sqlstreams.constraints.Constraint;
-import org.globsframework.sqlstreams.drivers.jdbc.BlobUpdater;
+import org.globsframework.sqlstreams.drivers.jdbc.impl.BlobUpdater;
 import org.globsframework.sqlstreams.drivers.jdbc.impl.ValueConstraintVisitor;
 import org.globsframework.sqlstreams.drivers.jdbc.impl.WhereClauseConstraintVisitor;
 import org.globsframework.sqlstreams.utils.StringPrettyWriter;
@@ -16,14 +16,14 @@ import java.sql.SQLException;
 import java.util.HashSet;
 import java.util.Iterator;
 
-public class SqlDeleteBuilder implements SqlRequest {
+public class SqlDeleteRequest implements SqlRequest {
   private Constraint constraint;
   private BlobUpdater blobUpdater;
   private String sqlStatement;
   private PreparedStatement preparedStatement;
 
-  public SqlDeleteBuilder(GlobType globType, Constraint constraint, Connection connection,
-                          SqlService sqlService, BlobUpdater blobUpdater) {
+  public SqlDeleteRequest(GlobType globType, Constraint constraint, Connection connection,
+                          GlobsDatabase globsDB, BlobUpdater blobUpdater) {
     this.constraint = constraint;
     this.blobUpdater = blobUpdater;
     StringPrettyWriter prettyWriter = new StringPrettyWriter();
@@ -34,14 +34,14 @@ public class SqlDeleteBuilder implements SqlRequest {
     StringPrettyWriter whereWriter = null;
     if (constraint != null) {
       whereWriter = new StringPrettyWriter();
-      constraint.visit(new WhereClauseConstraintVisitor(whereWriter, sqlService, tables));
+      constraint.visit(new WhereClauseConstraintVisitor(whereWriter, globsDB, tables));
       if (tables.size() != 1) {
         throw new UnexpectedApplicationState("Only one from clause allowed : jointures are not possible : " +
                                              whereWriter.toString());
       }
     }
     for (Iterator<GlobType> it = tables.iterator(); it.hasNext();) {
-      prettyWriter.append(sqlService.getTableName(it.next()))
+      prettyWriter.append(globsDB.getTableName(it.next()))
         .appendIf(", ", it.hasNext());
     }
     if (whereWriter != null) {

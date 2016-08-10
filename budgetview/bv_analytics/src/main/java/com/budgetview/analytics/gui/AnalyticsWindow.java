@@ -2,7 +2,7 @@ package com.budgetview.analytics.gui;
 
 import com.budgetview.analytics.model.*;
 import com.budgetview.analytics.utils.Weeks;
-import com.budgetview.gui.utils.Gui;
+import com.budgetview.desktop.utils.Gui;
 import org.globsframework.gui.GlobSelection;
 import org.globsframework.gui.GlobSelectionListener;
 import org.globsframework.gui.GlobsPanelBuilder;

@@ -1,8 +1,8 @@
 package org.globsframework.sqlstreams.drivers.hsqldb;
 
 import org.globsframework.metamodel.fields.BlobField;
-import org.globsframework.sqlstreams.SqlService;
-import org.globsframework.sqlstreams.drivers.jdbc.BlobUpdater;
+import org.globsframework.sqlstreams.GlobsDatabase;
+import org.globsframework.sqlstreams.drivers.jdbc.impl.BlobUpdater;
 import org.globsframework.sqlstreams.drivers.jdbc.JdbcConnection;
 import org.globsframework.sqlstreams.drivers.jdbc.impl.SqlFieldCreationVisitor;
 import org.globsframework.sqlstreams.utils.StringPrettyWriter;
@@ -13,8 +13,8 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 public class HsqlConnection extends JdbcConnection {
-  public HsqlConnection(Connection connection, SqlService sqlService) {
-    super(connection, sqlService, new BlobUpdater() {
+  public HsqlConnection(Connection connection, GlobsDatabase globsDB) {
+    super(connection, globsDB, new BlobUpdater() {
       public void setBlob(PreparedStatement preparedStatement, int index, byte[] bytes) throws SQLException {
         preparedStatement.setBlob(index, new jdbcBlob(bytes));
       }
@@ -22,7 +22,7 @@ public class HsqlConnection extends JdbcConnection {
   }
 
   protected SqlFieldCreationVisitor getFieldVisitorCreator(StringPrettyWriter prettyWriter) {
-    return new SqlFieldCreationVisitor(sqlService, prettyWriter) {
+    return new SqlFieldCreationVisitor(globsDB, prettyWriter) {
       public String getAutoIncrementKeyWord() {
         return "IDENTITY";
       }

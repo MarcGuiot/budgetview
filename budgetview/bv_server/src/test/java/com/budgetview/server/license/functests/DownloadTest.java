@@ -151,20 +151,20 @@ public class DownloadTest extends ConnectedTestCase {
 
   private void updateDb(final long jarVersion, final long configVersion) {
     SqlConnection connection = db.getConnection();
-    connection.getCreateBuilder(SoftwareInfo.TYPE)
+    connection.startCreate(SoftwareInfo.TYPE)
       .set(SoftwareInfo.LATEST_JAR_VERSION, jarVersion)
       .set(SoftwareInfo.LATEST_CONFIG_VERSION, configVersion)
-      .getRequest().run();
+      .run();
     connection.commitAndClose();
   }
 
   private void updateDb(String mail, long version, final long configVersion) {
     SqlConnection connection = db.getConnection();
-    connection.getCreateBuilder(SoftwareInfo.TYPE)
+    connection.startCreate(SoftwareInfo.TYPE)
       .set(SoftwareInfo.MAIL, mail)
       .set(SoftwareInfo.LATEST_JAR_VERSION, version)
       .set(SoftwareInfo.LATEST_CONFIG_VERSION, configVersion)
-      .getRequest().run();
+      .run();
     connection.commitAndClose();
   }
 

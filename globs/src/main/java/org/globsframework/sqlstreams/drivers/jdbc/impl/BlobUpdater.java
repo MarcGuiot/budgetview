@@ -1,4 +1,4 @@
-package org.globsframework.sqlstreams.drivers.jdbc;
+package org.globsframework.sqlstreams.drivers.jdbc.impl;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;

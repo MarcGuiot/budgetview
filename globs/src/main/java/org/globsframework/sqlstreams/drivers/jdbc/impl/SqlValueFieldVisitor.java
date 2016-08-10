@@ -1,7 +1,6 @@
 package org.globsframework.sqlstreams.drivers.jdbc.impl;
 
 import org.globsframework.metamodel.fields.*;
-import org.globsframework.sqlstreams.drivers.jdbc.BlobUpdater;
 
 import java.sql.PreparedStatement;
 import java.sql.Timestamp;

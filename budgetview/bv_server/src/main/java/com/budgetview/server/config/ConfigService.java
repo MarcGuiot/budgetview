@@ -55,6 +55,11 @@ public class ConfigService {
     return Integer.parseInt(result);
   }
 
+  public boolean isTrue(String property) {
+    String result = doGet(property, true, null);
+    return Boolean.parseBoolean(result);
+  }
+
   public String doGet(String property, boolean useDefault, String defaultValue) {
     String result = System.getProperty(property);
     if (result != null) {
@@ -81,5 +86,11 @@ public class ConfigService {
     }
 
     return console.readLine(property + ": ").trim();
+  }
+
+  public static void checkCommandLine(String[] args) {
+    if (args.length == 0) {
+      System.out.println("[ConfigService] Expecting command line argument: path of the configuration file");
+    }
   }
 }

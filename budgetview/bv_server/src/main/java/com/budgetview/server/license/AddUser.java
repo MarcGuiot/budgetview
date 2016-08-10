@@ -3,8 +3,8 @@ package com.budgetview.server.license;
 import com.budgetview.server.license.model.License;
 import com.budgetview.server.license.generator.LicenseGenerator;
 import org.globsframework.sqlstreams.SqlConnection;
-import org.globsframework.sqlstreams.SqlService;
-import org.globsframework.sqlstreams.drivers.jdbc.JdbcSqlService;
+import org.globsframework.sqlstreams.GlobsDatabase;
+import org.globsframework.sqlstreams.drivers.jdbc.JdbcGlobsDatabase;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -40,7 +40,7 @@ public class AddUser {
     }
     BufferedReader input = new BufferedReader(new InputStreamReader(System.in));
     if (databaseUrl == null) {
-      System.out.print("database :");
+      System.out.print("globsDB :");
       databaseUrl = input.readLine();
     }
     if (user == null) {
@@ -51,19 +51,17 @@ public class AddUser {
       System.out.print("password :");
       passwd = input.readLine();
     }
-    SqlService sqlService = new JdbcSqlService(databaseUrl, user, passwd);
-    SqlConnection db = sqlService.getDb();
+    GlobsDatabase globsDB = new JdbcGlobsDatabase(databaseUrl, user, passwd);
+    SqlConnection db = globsDB.connect();
     for (String arg : arguments) {
       String code = LicenseGenerator.generateActivationCode();
-      db.getCreateBuilder(License.TYPE)
+      db.startCreate(License.TYPE)
         .set(License.MAIL, arg)
         .set(License.ACTIVATION_CODE, code)
-        .getRequest()
         .run();
-      db.getCreateBuilder(License.TYPE)
+      db.startCreate(License.TYPE)
         .set(License.MAIL, arg)
         .set(License.ACTIVATION_CODE, code)
-        .getRequest()
         .run();
       System.out.println("code d'activation : " + code);
     }

@@ -64,7 +64,6 @@ public class UpgradeTrigger implements ChangeSetListener {
 
     if (currentJarVersion < 16) {
       removeOccasionalBudgetArea(repository);
-      migrateCategoriesToSubSeries(repository);
     }
 
     if (currentJarVersion < 19) {
@@ -556,42 +555,6 @@ public class UpgradeTrigger implements ChangeSetListener {
     if (repository.contains(occasionalSeriesKey)) {
       repository.delete(occasionalSeriesKey);
     }
-  }
-
-  private void migrateCategoriesToSubSeries(GlobRepository repository) {
-    for (Glob series : repository.getAll(Series.TYPE)) {
-
-      Integer seriesId = series.get(Series.ID);
-      GlobList seriesToCategoriesList =
-        repository.getAll(SeriesToCategory.TYPE, GlobMatchers.linkedTo(series, SeriesToCategory.SERIES));
-      if (seriesToCategoriesList.size() > 1) {
-
-        for (Glob seriesToCategory : seriesToCategoriesList) {
-          Integer categoryId = seriesToCategory.get(SeriesToCategory.CATEGORY);
-          String categoryName = Category.getName(categoryId, repository);
-          if (!Utils.equalIgnoreCase(categoryName, series.get(Series.NAME))) {
-            Glob subSeries =
-              repository.create(SubSeries.TYPE,
-                                value(SubSeries.SERIES, seriesId),
-                                value(SubSeries.NAME, categoryName));
-
-            GlobList transactions =
-              repository.getAll(Transaction.TYPE,
-                                and(
-                                  fieldEquals(Transaction.SERIES, seriesId),
-                                  fieldEquals(Transaction.CATEGORY, categoryId)
-                                )
-              );
-            for (Glob transaction : transactions) {
-              repository.setTarget(transaction.getKey(), Transaction.SUB_SERIES, subSeries.getKey());
-            }
-          }
-        }
-      }
-    }
-
-    repository.deleteAll(SeriesToCategory.TYPE);
-    repository.deleteAll(Category.TYPE);
   }
 
   private static class RemovePlannedPrefixFunctor implements GlobFunctor {

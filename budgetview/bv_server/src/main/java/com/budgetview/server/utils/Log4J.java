@@ -1,6 +1,7 @@
 package com.budgetview.server.utils;
 
 import com.budgetview.server.config.ConfigService;
+import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.StatusLine;
@@ -34,7 +35,7 @@ public class Log4J {
     }
   }
 
-  public static void dump(HttpServletRequest request, Logger logger) {
+  public static void dump(HttpServletRequest request, Logger logger) throws IOException {
 
     StringBuilder builder = new StringBuilder();
     builder.append("  Method: " + request.getMethod() + "\n");
@@ -50,6 +51,7 @@ public class Log4J {
       String paramName = (String) params.nextElement();
       builder.append("    " + paramName + ": " + request.getParameter(paramName) + "\n");
     }
+    builder.append("Content:\n").append(IOUtils.toString(request.getInputStream(), "UTF-8"));
 
     logger.info("Request: \n" + builder.toString());
   }

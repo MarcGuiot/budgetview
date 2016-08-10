@@ -3,9 +3,9 @@ package org.globsframework.sqlstreams;
 import org.globsframework.metamodel.Field;
 import org.globsframework.metamodel.GlobType;
 
-public interface SqlService {
+public interface GlobsDatabase {
 
-  SqlConnection getDb();
+  SqlConnection connect();
 
   String getTableName(GlobType globType);
 

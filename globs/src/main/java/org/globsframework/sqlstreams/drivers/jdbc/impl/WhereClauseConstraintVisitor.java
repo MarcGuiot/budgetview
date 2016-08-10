@@ -2,7 +2,7 @@ package org.globsframework.sqlstreams.drivers.jdbc.impl;
 
 import org.globsframework.metamodel.Field;
 import org.globsframework.metamodel.GlobType;
-import org.globsframework.sqlstreams.SqlService;
+import org.globsframework.sqlstreams.GlobsDatabase;
 import org.globsframework.sqlstreams.constraints.ConstraintVisitor;
 import org.globsframework.sqlstreams.constraints.OperandVisitor;
 import org.globsframework.sqlstreams.constraints.impl.*;
@@ -12,13 +12,13 @@ import java.util.Set;
 
 public class WhereClauseConstraintVisitor implements ConstraintVisitor, OperandVisitor {
   private StringPrettyWriter prettyWriter;
-  private SqlService sqlService;
+  private GlobsDatabase globsDB;
   private Set<GlobType> globTypes;
 
-  public WhereClauseConstraintVisitor(StringPrettyWriter prettyWriter, SqlService sqlService,
+  public WhereClauseConstraintVisitor(StringPrettyWriter prettyWriter, GlobsDatabase globsDB,
                                       Set<GlobType> GlobeTypeSetToUpdate) {
     this.prettyWriter = prettyWriter;
-    this.sqlService = sqlService;
+    this.globsDB = globsDB;
     this.globTypes = GlobeTypeSetToUpdate;
   }
 
@@ -74,9 +74,9 @@ public class WhereClauseConstraintVisitor implements ConstraintVisitor, OperandV
 
   public void visitFieldOperand(Field field) {
     globTypes.add(field.getGlobType());
-    prettyWriter.append(sqlService.getTableName(field.getGlobType()))
+    prettyWriter.append(globsDB.getTableName(field.getGlobType()))
       .append(".")
-      .append(sqlService.getColumnName(field));
+      .append(globsDB.getColumnName(field));
   }
 
   private void visitBinary(BinaryOperandConstraint constraint, String operator) {

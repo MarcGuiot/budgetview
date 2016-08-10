@@ -17,6 +17,6 @@ public class DefaultDeleteRequest implements RemoteExecutor.DeleteRequest {
   }
 
   public void delete() {
-    sqlConnection.getDeleteRequest(globType, constraint).run();
+    sqlConnection.startDelete(globType, constraint).run();
   }
 }

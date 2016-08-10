@@ -15,17 +15,16 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
-public abstract class DbServicesTestCase extends ServicesTestCase {
-  protected JdbcSqlService sqlService;
+public abstract class GlobsDatabaseTestCase extends ServicesTestCase {
+  protected JdbcGlobsDatabase sqlService;
   protected SqlConnection sqlConnection;
   protected DefaultGlobModel globModel;
 
   protected void setUp() throws Exception {
     super.setUp();
     globModel = new DefaultGlobModel(DummyObject.TYPE, DummyObject2.TYPE);
-    sqlConnection = initDb();
-    sqlConnection.createTable(DummyObject.TYPE);
-    sqlConnection.createTable(DummyObject2.TYPE);
+    sqlConnection = initDbConnection();
+    sqlConnection.createTable(DummyObject.TYPE, DummyObject2.TYPE);
     emptyTable();
   }
 
@@ -36,19 +35,17 @@ public abstract class DbServicesTestCase extends ServicesTestCase {
   }
 
   private void emptyTable() {
-    sqlConnection.emptyTable(DummyObject.TYPE);
-    sqlConnection.emptyTable(DummyObject2.TYPE);
+    sqlConnection.emptyTable(DummyObject.TYPE, DummyObject2.TYPE);
     sqlConnection.commit();
   }
 
-  private SqlConnection initDb() {
+  private SqlConnection initDbConnection() {
 
     directory.add(GlobModel.class, globModel);
 
-    sqlService = new JdbcSqlService("jdbc:hsqldb:.", "sa", "");
-//    sqlService = new JdbcDriverBasedSqlService("jdbc:mysql://Plone/test", "sa", "");
-    directory.add(SqlService.class, sqlService);
-    return sqlService.getDb();
+    sqlService = new JdbcGlobsDatabase("jdbc:hsqldb:.", "sa", "");
+    directory.add(GlobsDatabase.class, sqlService);
+    return sqlService.connect();
   }
 
   protected void checkDb(Key key, Field field, Object value, SqlConnection sqlConnection) {
@@ -62,9 +59,9 @@ public abstract class DbServicesTestCase extends ServicesTestCase {
     for (Field keyField : globType.getKeyFields()) {
       constraint = Constraints.and(constraint, Constraints.equalsObject(keyField, key.getValue(keyField)));
     }
-    SelectBuilder queryBuilder = sqlConnection.getQueryBuilder(key.getGlobType(), constraint);
+    SelectBuilder queryBuilder = sqlConnection.startSelect(key.getGlobType(), constraint);
     Accessor accessor = queryBuilder.retrieveUnTyped(field);
-    GlobStream globStream = queryBuilder.getQuery().execute();
+    GlobStream globStream = queryBuilder.getQuery().getStream();
     assertTrue(globStream.next());
     return accessor.getObjectValue();
   }

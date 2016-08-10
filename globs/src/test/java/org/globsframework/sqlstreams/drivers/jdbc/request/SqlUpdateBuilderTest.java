@@ -8,7 +8,7 @@ import org.globsframework.sqlstreams.SqlRequest;
 import org.globsframework.sqlstreams.UpdateBuilder;
 import org.globsframework.sqlstreams.constraints.Constraints;
 import org.globsframework.sqlstreams.constraints.impl.KeyConstraint;
-import org.globsframework.sqlstreams.drivers.jdbc.DbServicesTestCase;
+import org.globsframework.sqlstreams.drivers.jdbc.GlobsDatabaseTestCase;
 import org.globsframework.streams.GlobStream;
 import org.globsframework.streams.accessors.utils.ValueDateAccessor;
 import org.globsframework.streams.accessors.utils.ValueDoubleAccessor;
@@ -18,7 +18,7 @@ import org.globsframework.utils.Dates;
 
 import java.util.Date;
 
-public class SqlUpdateBuilderTest extends DbServicesTestCase {
+public class SqlUpdateBuilderTest extends GlobsDatabaseTestCase {
 
   public void testUpdate() throws Exception {
     GlobStream streamToWrite =
@@ -28,13 +28,13 @@ public class SqlUpdateBuilderTest extends DbServicesTestCase {
     populate(sqlConnection, streamToWrite);
 
     ValueIntegerAccessor keyValue = new ValueIntegerAccessor();
-    UpdateBuilder updateBuilder = sqlConnection.getUpdateBuilder(DummyObject.TYPE, Constraints.equal(DummyObject.ID, keyValue));
+    UpdateBuilder updateBuilder = sqlConnection.startUpdate(DummyObject.TYPE, Constraints.equal(DummyObject.ID, keyValue));
 
     Date date = Dates.parse("2000/01/01");
-    updateBuilder.update(DummyObject.DATE, date);
+    updateBuilder.set(DummyObject.DATE, date);
 
     Date timestamp = Dates.parseTimestamp("03/10/2002 12:34:20");
-    updateBuilder.update(DummyObject.TIMESTAMP, new ValueDateAccessor(timestamp));
+    updateBuilder.set(DummyObject.TIMESTAMP, new ValueDateAccessor(timestamp));
 
     ValueDoubleAccessor valueAccessor = new ValueDoubleAccessor(2.2);
     updateBuilder.updateUntyped(DummyObject.VALUE, valueAccessor);
@@ -69,8 +69,8 @@ public class SqlUpdateBuilderTest extends DbServicesTestCase {
     Key key1 = KeyBuilder.init(DummyObject.ID, 2).get();
     KeyConstraint keyAccessor = new KeyConstraint(DummyObject.TYPE);
     keyAccessor.setValue(key1);
-    sqlConnection.getUpdateBuilder(DummyObject.TYPE, Constraints.keyEquals(keyAccessor))
-      .update(DummyObject.NAME, "world")
+    sqlConnection.startUpdate(DummyObject.TYPE, Constraints.keyEquals(keyAccessor))
+      .set(DummyObject.NAME, "world")
       .getRequest()
       .run();
     checkDb(key1, DummyObject.NAME, "world", sqlConnection);

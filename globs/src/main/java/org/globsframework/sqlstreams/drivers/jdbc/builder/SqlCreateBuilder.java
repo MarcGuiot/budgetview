@@ -1,15 +1,16 @@
-package org.globsframework.sqlstreams.drivers.jdbc.request;
+package org.globsframework.sqlstreams.drivers.jdbc.builder;
 
 import org.globsframework.metamodel.Field;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.fields.*;
 import org.globsframework.sqlstreams.CreateBuilder;
+import org.globsframework.sqlstreams.GlobsDatabase;
 import org.globsframework.sqlstreams.SqlRequest;
-import org.globsframework.sqlstreams.SqlService;
 import org.globsframework.sqlstreams.accessors.LongGeneratedKeyAccessor;
-import org.globsframework.sqlstreams.drivers.jdbc.BlobUpdater;
+import org.globsframework.sqlstreams.drivers.jdbc.impl.BlobUpdater;
 import org.globsframework.sqlstreams.drivers.jdbc.JdbcConnection;
-import org.globsframework.sqlstreams.drivers.jdbc.SqlCreateRequest;
+import org.globsframework.sqlstreams.drivers.jdbc.request.SqlCreateRequest;
+import org.globsframework.sqlstreams.exceptions.SqlException;
 import org.globsframework.streams.accessors.*;
 import org.globsframework.streams.accessors.utils.*;
 import org.globsframework.utils.collections.Pair;
@@ -22,17 +23,17 @@ import java.util.List;
 public class SqlCreateBuilder implements CreateBuilder {
   private Connection connection;
   private GlobType globType;
-  private SqlService sqlService;
+  private GlobsDatabase globsDB;
   private BlobUpdater blobUpdater;
   private JdbcConnection jdbcConnection;
   private List<Pair<Field, Accessor>> fields = new ArrayList<Pair<Field, Accessor>>();
   protected LongGeneratedKeyAccessor longGeneratedKeyAccessor;
 
-  public SqlCreateBuilder(Connection connection, GlobType globType, SqlService sqlService,
+  public SqlCreateBuilder(Connection connection, GlobType globType, GlobsDatabase globsDB,
                           BlobUpdater blobUpdater, JdbcConnection jdbcConnection) {
     this.connection = connection;
     this.globType = globType;
-    this.sqlService = sqlService;
+    this.globsDB = globsDB;
     this.blobUpdater = blobUpdater;
     this.jdbcConnection = jdbcConnection;
   }
@@ -139,6 +140,10 @@ public class SqlCreateBuilder implements CreateBuilder {
   }
 
   public SqlRequest getRequest() {
-    return new SqlCreateRequest(fields, longGeneratedKeyAccessor, connection, globType, sqlService, blobUpdater, jdbcConnection);
+    return new SqlCreateRequest(fields, longGeneratedKeyAccessor, connection, globType, globsDB, blobUpdater, jdbcConnection);
+  }
+
+  public void run() throws SqlException {
+    getRequest().run();
   }
 }

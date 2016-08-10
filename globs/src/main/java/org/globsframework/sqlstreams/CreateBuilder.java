@@ -36,4 +36,6 @@ public interface CreateBuilder {
   CreateBuilder setObject(Field field, Object value);
 
   SqlRequest getRequest();
+
+  void run();
 }

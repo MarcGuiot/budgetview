@@ -20,7 +20,6 @@ public class PingServlet extends HttpServlet {
   static Logger logger = Logger.getLogger("/ping");
 
   public PingServlet(Directory directory) {
-
   }
 
   protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

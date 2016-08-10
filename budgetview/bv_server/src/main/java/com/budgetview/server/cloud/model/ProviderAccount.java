@@ -2,28 +2,35 @@ package com.budgetview.server.cloud.model;
 
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.annotations.Key;
-import org.globsframework.metamodel.annotations.NoObfuscation;
 import org.globsframework.metamodel.annotations.Target;
+import org.globsframework.metamodel.fields.DoubleField;
 import org.globsframework.metamodel.fields.IntegerField;
 import org.globsframework.metamodel.fields.LinkField;
 import org.globsframework.metamodel.fields.StringField;
 import org.globsframework.metamodel.utils.GlobTypeLoader;
 
-public class CloudSeries {
+public class ProviderAccount {
   public static GlobType TYPE;
 
   @Key
-  @NoObfuscation
   public static IntegerField ID;
 
-  @Target(CloudBudgetArea.class)
-  @NoObfuscation
-  public static LinkField BUDGET_AREA;
+  @Target(Provider.class)
+  public static LinkField PROVIDER;
 
-  @NoObfuscation
-  public static StringField NAME;
+  public static IntegerField PROVIDER_ID;
+
+  public static StringField LABEL;
+
+  public static IntegerField POSITION_MONTH;
+
+  public static IntegerField POSITION_DAY;
+
+  public static DoubleField POSITION;
+
+  public static StringField ACCOUNT_TYPE;
 
   static {
-    GlobTypeLoader.init(CloudSeries.class, "seriesEntity");
+    GlobTypeLoader.init(ProviderAccount.class, "accountEntity");
   }
 }

@@ -7,11 +7,11 @@ import org.globsframework.utils.exceptions.ItemNotFound;
 import org.globsframework.utils.exceptions.TooManyItems;
 
 public interface SelectQuery {
-  GlobStream execute();
+  GlobStream getStream();
 
-  GlobList executeAsGlobs();
+  GlobList getList();
 
-  Glob executeUnique() throws ItemNotFound, TooManyItems;
+  Glob getUnique() throws ItemNotFound, TooManyItems;
 
   void close();
 }

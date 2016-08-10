@@ -1,18 +1,22 @@
-package org.globsframework.sqlstreams.drivers.jdbc.request;
+package org.globsframework.sqlstreams.drivers.jdbc.builder;
 
 import org.globsframework.metamodel.Field;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.fields.*;
+import org.globsframework.model.Glob;
+import org.globsframework.model.GlobList;
+import org.globsframework.sqlstreams.GlobsDatabase;
 import org.globsframework.sqlstreams.SelectBuilder;
 import org.globsframework.sqlstreams.SelectQuery;
-import org.globsframework.sqlstreams.SqlService;
 import org.globsframework.sqlstreams.accessors.*;
 import org.globsframework.sqlstreams.constraints.Constraint;
-import org.globsframework.sqlstreams.drivers.jdbc.BlobUpdater;
-import org.globsframework.sqlstreams.drivers.jdbc.SqlSelectQuery;
+import org.globsframework.sqlstreams.drivers.jdbc.impl.BlobUpdater;
+import org.globsframework.sqlstreams.drivers.jdbc.select.SqlSelectQuery;
 import org.globsframework.sqlstreams.drivers.jdbc.impl.FieldToSqlAccessorVisitor;
 import org.globsframework.streams.accessors.*;
 import org.globsframework.utils.Ref;
+import org.globsframework.utils.exceptions.ItemNotFound;
+import org.globsframework.utils.exceptions.TooManyItems;
 
 import java.sql.Connection;
 import java.util.HashMap;
@@ -22,23 +26,23 @@ public class SqlQueryBuilder implements SelectBuilder {
   private Connection connection;
   private GlobType globType;
   private Constraint constraint;
-  private SqlService sqlService;
+  private GlobsDatabase globsDB;
   private BlobUpdater blobUpdater;
   private boolean autoClose = true;
   private Map<Field, SqlAccessor> fieldToAccessorHolder = new HashMap<Field, SqlAccessor>();
 
-  public SqlQueryBuilder(Connection connection, GlobType globType, Constraint constraint, SqlService sqlService, BlobUpdater blobUpdater) {
+  public SqlQueryBuilder(Connection connection, GlobType globType, Constraint constraint, GlobsDatabase globsDB, BlobUpdater blobUpdater) {
     this.connection = connection;
     this.globType = globType;
     this.constraint = constraint;
-    this.sqlService = sqlService;
+    this.globsDB = globsDB;
     this.blobUpdater = blobUpdater;
   }
 
   public SelectQuery getQuery() {
     try {
       completeWithKeys();
-      return new SqlSelectQuery(connection, constraint, fieldToAccessorHolder, sqlService, blobUpdater, autoClose);
+      return new SqlSelectQuery(connection, constraint, fieldToAccessorHolder, globsDB, blobUpdater, autoClose);
     }
     finally {
       fieldToAccessorHolder.clear();
@@ -48,6 +52,14 @@ public class SqlQueryBuilder implements SelectBuilder {
   public SelectQuery getNotAutoCloseQuery() {
     autoClose = false;
     return getQuery();
+  }
+
+  public GlobList getList() {
+    return getQuery().getList();
+  }
+
+  public Glob getUnique() throws ItemNotFound, TooManyItems {
+    return getQuery().getUnique();
   }
 
   private void completeWithKeys() {

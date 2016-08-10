@@ -1,12 +1,12 @@
 package com.budgetview.analytics.gui;
 
 import com.budgetview.analytics.AnalyticsApp;
+import com.budgetview.desktop.components.charts.histo.HistoChart;
+import com.budgetview.desktop.components.charts.histo.HistoChartColors;
+import com.budgetview.desktop.components.charts.histo.line.HistoBarPainter;
+import com.budgetview.desktop.components.charts.histo.line.HistoLineColors;
+import com.budgetview.desktop.components.charts.histo.line.HistoLineDataset;
 import com.budgetview.shared.gui.histochart.HistoChartConfig;
-import com.budgetview.gui.components.charts.histo.HistoChart;
-import com.budgetview.gui.components.charts.histo.HistoChartColors;
-import com.budgetview.gui.components.charts.histo.line.HistoBarPainter;
-import com.budgetview.gui.components.charts.histo.line.HistoLineColors;
-import com.budgetview.gui.components.charts.histo.line.HistoLineDataset;
 import com.budgetview.utils.Lang;
 import org.globsframework.gui.GlobSelection;
 import org.globsframework.gui.GlobSelectionListener;

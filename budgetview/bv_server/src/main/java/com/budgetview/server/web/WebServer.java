@@ -104,6 +104,7 @@ public class WebServer {
   public void stop() throws Exception {
     jetty.stop();
     jetty.join();
+    jetty.destroy();
   }
 
   public Integer getHttpPort() {

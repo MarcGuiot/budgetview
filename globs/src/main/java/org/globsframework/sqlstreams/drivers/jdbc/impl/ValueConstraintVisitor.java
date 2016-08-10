@@ -4,7 +4,6 @@ import org.globsframework.metamodel.Field;
 import org.globsframework.sqlstreams.constraints.ConstraintVisitor;
 import org.globsframework.sqlstreams.constraints.OperandVisitor;
 import org.globsframework.sqlstreams.constraints.impl.*;
-import org.globsframework.sqlstreams.drivers.jdbc.BlobUpdater;
 import org.globsframework.utils.exceptions.UnexpectedApplicationState;
 
 import java.sql.PreparedStatement;

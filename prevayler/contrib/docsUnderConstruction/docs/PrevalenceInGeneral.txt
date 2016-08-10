@@ -20,8 +20,8 @@ These are the features provided by a Prevalence Layer.
 
 Performance Scalability
 ===========================
- - Query Performance Scalability - Prevalence Layers allow simple object queries to run 3 to 4 orders of magnitude faster than using a database through JDBC, even with the database locally cached in RAM. Complex queries will run even faster.
- - Transaction Performance Scalability - Transaction processing performance using a Prevalence Layer is essentially the same as using a database.
+ - Query Performance Scalability - Prevalence Layers allow simple object queries to run 3 to 4 orders of magnitude faster than using a globsDB through JDBC, even with the globsDB locally cached in RAM. Complex queries will run even faster.
+ - Transaction Performance Scalability - Transaction processing performance using a Prevalence Layer is essentially the same as using a globsDB.
 
 
 Architecture

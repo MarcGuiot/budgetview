@@ -71,17 +71,16 @@ public class AskMailTest extends ConnectedTestCase {
     Header header = response.getFirstHeader(LicenseConstants.HEADER_STATUS);
     assertEquals(LicenseConstants.HEADER_MAIL_UNKNOWN, header.getValue());
     SqlConnection connection = db.getConnection();
-    connection.getQueryBuilder(MailError.TYPE, Constraints.equal(MailError.MAIL, badMail))
-      .getQuery().executeUnique();
+    connection.selectUnique(MailError.TYPE, Constraints.equal(MailError.MAIL, badMail));
     connection.commitAndClose();
   }
 
   private void addUser(String mail) {
     SqlConnection connection = db.getConnection();
     try {
-      connection.getCreateBuilder(License.TYPE)
+      connection.startCreate(License.TYPE)
         .set(License.MAIL, mail)
-        .getRequest().run();
+        .run();
     }
     finally {
       connection.commitAndClose();

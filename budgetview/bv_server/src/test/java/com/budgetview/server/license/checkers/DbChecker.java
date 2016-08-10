@@ -11,7 +11,7 @@ import org.globsframework.model.GlobList;
 import org.globsframework.sqlstreams.SqlConnection;
 import org.globsframework.sqlstreams.constraints.Constraint;
 import org.globsframework.sqlstreams.constraints.Constraints;
-import org.globsframework.sqlstreams.drivers.jdbc.JdbcSqlService;
+import org.globsframework.sqlstreams.drivers.jdbc.JdbcGlobsDatabase;
 import org.globsframework.utils.Dates;
 import static junit.framework.Assert.*;
 
@@ -23,7 +23,7 @@ public class DbChecker {
   public static final String DATABASE_USER = "sa";
   public static final String DATABASE_PASSWORD = "";
 
-  private JdbcSqlService sqlService;
+  private JdbcGlobsDatabase globsDatabase;
 
   public DbChecker() {
     SqlConnection connection = getConnection();
@@ -33,49 +33,45 @@ public class DbChecker {
   }
 
   public SqlConnection getConnection() {
-    if (sqlService == null) {
-      sqlService = new JdbcSqlService(DATABASE_URL, DATABASE_USER, DATABASE_PASSWORD);
+    if (globsDatabase == null) {
+      globsDatabase = new JdbcGlobsDatabase(DATABASE_URL, DATABASE_USER, DATABASE_PASSWORD);
     }
-    return sqlService.getDb();
+    return globsDatabase.connect();
   }
 
   public void start() {
   }
 
   public void dispose() {
-    sqlService = null;
+    globsDatabase = null;
   }
 
   public void   registerMail(String email, String code) {
     SqlConnection connection = getConnection();
-    connection.getCreateBuilder(License.TYPE)
+    connection.startCreate(License.TYPE)
       .set(License.MAIL, email)
       .set(License.ACTIVATION_CODE, code)
-      .getRequest()
       .run();
     connection.commit();
   }
 
-  private Glob getGlob(Field field, Object expected,
-                       Constraint constraint) throws InterruptedException {
+  private Glob getGlob(Field field, Object expected, Constraint constraint) throws InterruptedException {
     long end = System.currentTimeMillis() + 3000;
-    GlobList glob = new EmptyGlobList();
+    GlobList globsList = new EmptyGlobList();
     SqlConnection connection = getConnection();
     while (end > System.currentTimeMillis()) {
-      glob = connection.getQueryBuilder(field.getGlobType(), constraint)
-        .selectAll()
-        .getQuery().executeAsGlobs();
+      globsList = connection.selectAll(field.getGlobType(), constraint);
       connection.commit();
-      if (glob.size() == 1) {
-        Object actual = glob.get(0).getValue(field);
+      if (globsList.size() == 1) {
+        Object actual = globsList.get(0).getValue(field);
         if (actual != null && (expected == null || actual.equals(expected))) {
           break;
         }
       }
       Thread.sleep(50);
     }
-    assertEquals(1, glob.size());
-    return glob.get(0);
+    assertEquals(1, globsList.size());
+    return globsList.get(0);
   }
 
   public Glob getLicense(String email, Field field, Object expected) throws InterruptedException {
