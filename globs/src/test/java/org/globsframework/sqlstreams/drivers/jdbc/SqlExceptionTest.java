@@ -13,7 +13,7 @@ public abstract class SqlExceptionTest extends TestCase {
 
   protected void setUp() throws Exception {
     SqlConnection sqlConnection = getDbConnection();
-    sqlConnection.createTable(DummyObject.TYPE);
+    sqlConnection.createTables(DummyObject.TYPE);
     sqlConnection.deleteAll(DummyObject.TYPE);
     sqlConnection.commitAndClose();
   }

@@ -1,6 +1,7 @@
 package com.budgetview.desktop.cloud;
 
 import com.budgetview.budgea.model.*;
+import com.budgetview.model.User;
 import com.budgetview.shared.cloud.BudgeaAPI;
 import com.budgetview.shared.cloud.CloudAPI;
 import org.globsframework.json.JsonGlobParser;
@@ -19,7 +20,7 @@ import static org.globsframework.model.FieldValue.value;
 public class CloudService {
 
   private final BudgeaAPI budgeaAPI = new BudgeaAPI();
-  private final CloudAPI cloudAPI = new CloudAPI("http://127.0.0.1:8080");
+  private final CloudAPI cloudAPI = new CloudAPI();
 
   public void updateBankList(GlobRepository repository) throws IOException {
 
@@ -69,9 +70,7 @@ public class CloudService {
     }
 
     JSONObject result = budgeaAPI.addConnection(connectionKey.get(BudgeaConnection.BANK), params);
-    System.out.println("CloudService.createConnection: " + result.toString(2));
-
-    cloudAPI.addConnection(budgeaAPI.getToken(), budgeaAPI.getUserId());
-
+    Glob user = repository.get(User.KEY);
+    cloudAPI.addConnection(user.get(User.EMAIL), budgeaAPI.getToken(), budgeaAPI.getUserId());
   }
 }

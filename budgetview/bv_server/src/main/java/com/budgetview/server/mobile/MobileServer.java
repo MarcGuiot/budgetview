@@ -48,7 +48,9 @@ public class MobileServer {
     directory = createDirectory();
 
     String pathForMobileData = getDataDirectoryPath(directory);
-    webServer = new WebServer(directory, "register.mybudgetview.fr", 8080, 1443);
+
+    // Current: HTTP:8080 / HTTPS:1443
+    webServer = new WebServer(config);
     webServer.add(new PostDataServlet(pathForMobileData), MobileConstants.POST_MOBILE_DATA);
     webServer.add(new GetMobileDataServlet(pathForMobileData, directory), MobileConstants.GET_MOBILE_DATA);
     webServer.add(new SendMailCreateMobileUserServlet(pathForMobileData, directory, webServer.getHttpPort()), MobileConstants.SEND_MAIL_TO_CONFIRM_MOBILE);

@@ -91,7 +91,7 @@ public class UserConfigService {
     }
 
     final String signature = signatureInByte == null ? null : Encoder.byteToString(signatureInByte);
-    if (!LicenseConstants.isLicenseServerUrlSet()) {
+    if (!LicenseConstants.isServerUrlSet()) {
       return isValidUser;
     }
 
@@ -101,7 +101,7 @@ public class UserConfigService {
       }
 
       public void run() {
-        if (!LicenseConstants.isLicenseServerUrlSet()) {
+        if (!LicenseConstants.isServerUrlSet()) {
           return;
         }
         boolean connectionEstablished = false;
@@ -131,11 +131,11 @@ public class UserConfigService {
 
   synchronized public void sendLicenseActivationRequest(String mail, String code, final GlobRepository repository) {
     Utils.beginRemove();
-    if (!LicenseConstants.isLicenseServerUrlSet()) {
+    if (!LicenseConstants.isServerUrlSet()) {
       return;
     }
     Utils.endRemove();
-    String url = LicenseConstants.getLicenseServerUrl(LicenseConstants.REQUEST_FOR_REGISTER);
+    String url = LicenseConstants.getServerUrl(LicenseConstants.REQUEST_FOR_REGISTER);
     Http.Post postRequest = Http.utf8Post(url)
       .setHeader(LicenseConstants.HEADER_MAIL, mail)
       .setHeader(LicenseConstants.HEADER_CODE, code)
@@ -182,7 +182,7 @@ public class UserConfigService {
     this.repoId = repoId;
     Http.Post postRequest =
       createNewConfigRequest(repoId, mail, signature, launchCount, activationCode,
-                             LicenseConstants.getLicenseServerUrl(LicenseConstants.REQUEST_FOR_CONFIG));
+                             LicenseConstants.getServerUrl(LicenseConstants.REQUEST_FOR_CONFIG));
     try {
       HttpResponse response = postRequest.executeWithRetry();
       int statusCode = response.getStatusLine().getStatusCode();
@@ -241,7 +241,7 @@ public class UserConfigService {
 
   // return a translated message
   synchronized public String sendNewCodeRequest(String mail) {
-    Http.Post postRequest = Http.utf8Post(LicenseConstants.getLicenseServerUrl(LicenseConstants.REQUEST_FOR_MAIL))
+    Http.Post postRequest = Http.utf8Post(LicenseConstants.getServerUrl(LicenseConstants.REQUEST_FOR_MAIL))
       .setHeader(LicenseConstants.HEADER_MAIL, mail)
       .setHeader(MobileConstants.HEADER_LANG, Lang.get("lang"));
     try {
@@ -343,7 +343,7 @@ public class UserConfigService {
   }
 
   public void sendUsageData(String msg) throws IOException {
-    Http.utf8Post(LicenseConstants.getLicenseServerUrl(LicenseConstants.SEND_USE_INFO))
+    Http.utf8Post(LicenseConstants.getServerUrl(LicenseConstants.SEND_USE_INFO))
       .setHeader(LicenseConstants.HEADER_USE_INFO, msg)
       .execute();
   }
@@ -389,7 +389,7 @@ public class UserConfigService {
 
   public Boolean isVerifiedServerValidity() {
     Utils.beginRemove();
-    if (!LicenseConstants.isLicenseServerUrlSet()) {
+    if (!LicenseConstants.isServerUrlSet()) {
       userState = new CompletedUserState("local");
       return true;
     }

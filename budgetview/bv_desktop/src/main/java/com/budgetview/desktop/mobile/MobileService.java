@@ -25,7 +25,7 @@ public class MobileService {
   public boolean createMobileAccount(String mail, String password, Ref<String> message, GlobRepository repository) {
     Http.Post postRequest = null;
     try {
-      postRequest = createPostMessage(mail, password, MobileConstants.getMobileServerUrl(MobileConstants.SEND_MAIL_TO_CONFIRM_MOBILE));
+      postRequest = createPostMessage(mail, password, MobileConstants.getServerUrl(MobileConstants.SEND_MAIL_TO_CONFIRM_MOBILE));
       HttpResponse response = postRequest.execute();
       ConnectionStatus.setOk(repository);
       if (response.getStatusLine().getStatusCode() != 200) {
@@ -75,7 +75,7 @@ public class MobileService {
   public boolean deleteMobileAccount(String mail, String password, Ref<String> message, GlobRepository repository) {
     Http.Post postRequest = null;
     try {
-      postRequest = createPostMessage(mail, password, MobileConstants.getMobileServerUrl(MobileConstants.DELETE_MOBILE_ACCOUNT));
+      postRequest = createPostMessage(mail, password, MobileConstants.getServerUrl(MobileConstants.DELETE_MOBILE_ACCOUNT));
       HttpResponse response = postRequest.execute();
       ConnectionStatus.setOk(repository);
       int statusCode = response.getStatusLine().getStatusCode();
@@ -103,7 +103,7 @@ public class MobileService {
   }
 
   public synchronized boolean sendMobileData(String mail, String password, byte[] bytes, Ref<String> message, boolean pending, GlobRepository repository) {
-    Http.Post postRequest = Http.utf8Post(MobileConstants.getMobileServerUrl(MobileConstants.POST_MOBILE_DATA));
+    Http.Post postRequest = Http.utf8Post(MobileConstants.getServerUrl(MobileConstants.POST_MOBILE_DATA));
     try {
       MD5PasswordBasedEncryptor encryptor =
         new MD5PasswordBasedEncryptor(MobileConstants.SALT.getBytes(), password.toCharArray(), 5);

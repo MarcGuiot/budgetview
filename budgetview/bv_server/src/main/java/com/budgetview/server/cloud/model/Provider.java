@@ -39,4 +39,8 @@ public enum Provider implements GlobConstantContainer {
                             value(ID, id),
                             value(NAME, name));
   }
+
+  public int getId() {
+    return id;
+  }
 }

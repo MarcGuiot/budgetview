@@ -2,6 +2,7 @@ package com.budgetview.bank.connectors.budgea;
 
 import com.budgetview.io.importer.json.JsonUtils;
 import com.budgetview.model.RealAccount;
+import com.budgetview.shared.cloud.BudgeaConstants;
 import org.apache.http.client.fluent.Form;
 import org.apache.http.client.fluent.Request;
 import org.apache.http.client.fluent.Response;
@@ -33,7 +34,7 @@ public class BudgeaConnection {
   public GlobList loadRealAccounts(Integer bankId, AccountFactory accountFactory) throws IOException {
     String bearer = getBearer();
 
-    Response request = Request.Post("https://budgetview.biapi.pro/2.0/users/me/connections")
+    Response request = Request.Post(BudgeaConstants.getServerUrl("/users/me/connections"))
       .addHeader("Authorization", "Bearer " + bearer)
       .bodyForm(Form.form()
                   .add("user_id", Integer.toString(userId))
@@ -45,7 +46,7 @@ public class BudgeaConnection {
       .execute();
     request.returnResponse().getStatusLine().getStatusCode();
 
-    JSONObject accounts = json(Request.Get("https://budgetview.biapi.pro/2.0/users/" + userId + "/accounts")
+    JSONObject accounts = json(Request.Get(BudgeaConstants.getServerUrl("/users/" + userId + "/accounts"))
                                  .addHeader("Authorization", "Bearer " + bearer));
 
     GlobList realAccounts = new GlobList();
@@ -76,7 +77,7 @@ public class BudgeaConnection {
     }
 
     String transactions =
-      Request.Get("https://budgetview.biapi.pro/2.0/users/" + userId + "/accounts/" + budgeaId + "/transactions")
+      Request.Get(BudgeaConstants.getServerUrl("/users/" + userId + "/accounts/" + budgeaId + "/transactions"))
         .addHeader("Authorization", "Bearer " + bearer)
         .execute().returnContent().asString();
 
@@ -86,10 +87,10 @@ public class BudgeaConnection {
 
   private String getBearer() throws IOException {
     if (bearer == null) {
-      JSONObject auth = json(Request.Post("https://budgetview.biapi.pro/2.0/auth/init"));
+      JSONObject auth = json(Request.Post(BudgeaConstants.getServerUrl("/auth/init")));
       bearer = auth.getString("auth_token");
 
-      JSONObject user = json(Request.Get("https://budgetview.biapi.pro/2.0/users/me")
+      JSONObject user = json(Request.Get(BudgeaConstants.getServerUrl("/users/me"))
                                .addHeader("Authorization", "Bearer " + bearer));
       userId = user.getInt("id");
     }

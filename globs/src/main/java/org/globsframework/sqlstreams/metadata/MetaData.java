@@ -9,13 +9,13 @@ import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class DbChecker {
+public class MetaData {
+  private GlobsDatabase db;
   private DatabaseMetaData metaData;
-  private GlobsDatabase globsDB;
 
-  public DbChecker(GlobsDatabase globsDB, SqlConnection connection) {
-    this.globsDB = globsDB;
-    metaData = getMetaData(connection);
+  public MetaData(GlobsDatabase db, SqlConnection connection) {
+    this.db = db;
+    this.metaData = getMetaData(connection);
   }
 
   private static DatabaseMetaData getMetaData(SqlConnection connection) {
@@ -31,7 +31,7 @@ public class DbChecker {
     try {
       String[] names = {"TABLE"};
       ResultSet tableNames = metaData.getTables(null, null, "%", names);
-      String tableName = globsDB.getTableName(globType);
+      String tableName = db.getTableName(globType);
       while (tableNames.next()) {
         if (tableName.equals(tableNames.getString("TABLE_NAME"))) {
           return true;

@@ -8,15 +8,15 @@ public class MobileModel {
   public static final int MINOR_VERSION = 0;
 
   private static GlobModel MODEL =
-  GlobModelBuilder.init(AccountEntity.TYPE,
-                        AccountPosition.TYPE,
-                        MonthEntity.TYPE,
-                        BudgetAreaEntity.TYPE,
-                        BudgetAreaValues.TYPE,
-                        SeriesEntity.TYPE,
-                        SeriesValues.TYPE,
-                        TransactionValues.TYPE,
-                        BudgetViewVersion.TYPE)
+    GlobModelBuilder.init(AccountEntity.TYPE,
+                          AccountPosition.TYPE,
+                          MonthEntity.TYPE,
+                          BudgetAreaEntity.TYPE,
+                          BudgetAreaValues.TYPE,
+                          SeriesEntity.TYPE,
+                          SeriesValues.TYPE,
+                          TransactionValues.TYPE,
+                          BudgetViewVersion.TYPE)
       .get();
 
   public static GlobModel get() {

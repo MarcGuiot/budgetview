@@ -10,7 +10,7 @@ import org.globsframework.streams.accessors.utils.ValueStringAccessor;
 public class SqlCreateBuilderTest extends GlobsDatabaseTestCase {
 
   public void testSimpleCreate() throws Exception {
-    sqlConnection.createTable(DummyObject.TYPE);
+    sqlConnection.createTables(DummyObject.TYPE);
     sqlConnection.startCreate(DummyObject.TYPE)
       .set(DummyObject.ID, new ValueIntegerAccessor(1))
       .set(DummyObject.NAME, new ValueStringAccessor("hello"))

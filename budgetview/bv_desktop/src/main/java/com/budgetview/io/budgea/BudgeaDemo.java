@@ -1,5 +1,6 @@
 package com.budgetview.io.budgea;
 
+import com.budgetview.shared.cloud.BudgeaConstants;
 import org.apache.http.client.fluent.Form;
 import org.apache.http.client.fluent.Request;
 import org.json.JSONArray;
@@ -10,22 +11,22 @@ import static com.budgetview.shared.json.Json.json;
 public class BudgeaDemo {
   public static void main(String[] args) throws Exception {
 
-    JSONObject auth = json(Request.Post("https://budgetview.biapi.pro/2.0/auth/init"));
+    JSONObject auth = json(Request.Post(BudgeaConstants.getServerUrl("/auth/init")));
     String bearer = auth.getString("auth_token");
 
 
 //    System.out.println("\n\n---------------- categories:\n");
-//    JSONObject categories = json(Request.Get("https://budgetview.biapi.pro/2.0/users/me/categories")
+//    JSONObject categories = json(Request.Get(BudgeaConstants.getServerUrl("/users/me/categories"))
 //                                   .addHeader("Authorization", "Bearer " + bearer));
 //    System.out.println(categories);
 
 //    System.out.println("\n\n---------------- bank:\n");
-//    JSONObject bank = json(Request.Get("https://budgetview.biapi.pro/2.0/banks/40")
+//    JSONObject bank = json(Request.Get(BudgeaConstants.getServerUrl("/banks/40"))
 //                             .addHeader("Authorization", "Bearer " + bearer));
 //    System.out.println(bank.toString(2));
 
     System.out.println("\n\n---------------- create connection:\n");
-    Request request = Request.Post("https://budgetview.biapi.pro/2.0/users/me/connections")
+    Request request = Request.Post(BudgeaConstants.getServerUrl("/users/me/connections"))
       .addHeader("Authorization", "Bearer " + bearer)
       .bodyForm(Form.form()
                   .add("id_bank", "40")
@@ -37,24 +38,24 @@ public class BudgeaDemo {
     System.out.println(connection.toString(2));
 
 //    System.out.println("\n\n---------------- connections:\n");
-//    JSONObject connections = json(Request.Get("https://budgetview.biapi.pro/2.0/users/" + userId + "/connections")
+//    JSONObject connections = json(Request.Get(BudgeaConstants.getServerUrl("/users/" + userId + "/connections"))
 //      .addHeader("Authorization", "Bearer " + bearer));
 //    System.out.println(connections.toString(2));
 
     System.out.println("\n\n---------------- users/me:\n");
-    JSONObject user = json(Request.Get("https://budgetview.biapi.pro/2.0/users/me")
+    JSONObject user = json(Request.Get(BudgeaConstants.getServerUrl("/users/me"))
                              .addHeader("Authorization", "Bearer " + bearer));
     System.out.println(user.toString(2));
     int userId = user.getInt("id");
 
 //    System.out.println("\n\n---------------- categories:\n");
-//    JSONObject categories = json(Request.Get("https://budgetview.biapi.pro/2.0/users/" + userId + "/categories/full")
+//    JSONObject categories = json(Request.Get(BudgeaConstants.getServerUrl("/users/" + userId + "/categories/full"))
 //                                 .addHeader("Authorization", "Bearer " + bearer));
 //    System.out.println(categories.toString(2));
 //    dumpCategories(categories);
 
     System.out.println("\n\n---------------- accounts:\n");
-    JSONObject accounts = json(Request.Get("https://budgetview.biapi.pro/2.0/users/" + userId + "/accounts")
+    JSONObject accounts = json(Request.Get(BudgeaConstants.getServerUrl("/users/" + userId + "/accounts"))
                                     .addHeader("Authorization", "Bearer " + bearer));
     System.out.println(accounts.toString(2));
 
@@ -63,7 +64,7 @@ public class BudgeaDemo {
       JSONObject account = (JSONObject)o;
       System.out.println("\n\n---------------- transactions for " + account.get("name") + " " + account.get("number") + ":\n");
 
-      JSONObject transactions = json(Request.Get("https://budgetview.biapi.pro/2.0/users/" + userId + "/accounts/" + account.get("id") + "/transactions")
+      JSONObject transactions = json(Request.Get(BudgeaConstants.getServerUrl("/users/" + userId + "/accounts/" + account.get("id") + "/transactions"))
                                    .addHeader("Authorization", "Bearer " + bearer));
       System.out.println(transactions.toString(2));
     }

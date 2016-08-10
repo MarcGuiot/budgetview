@@ -24,7 +24,7 @@ public abstract class GlobsDatabaseTestCase extends ServicesTestCase {
     super.setUp();
     globModel = new DefaultGlobModel(DummyObject.TYPE, DummyObject2.TYPE);
     sqlConnection = initDbConnection();
-    sqlConnection.createTable(DummyObject.TYPE, DummyObject2.TYPE);
+    sqlConnection.createTables(DummyObject.TYPE, DummyObject2.TYPE);
     emptyTable();
   }
 

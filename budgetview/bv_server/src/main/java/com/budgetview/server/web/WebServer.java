@@ -27,11 +27,7 @@ public class WebServer {
   private final Server jetty;
   private final ServletContextHandler context;
 
-  private ConfigService config;
-
-  public WebServer(Directory directory, String defaultHost, Integer defaultHttpPort, Integer defaultHttpsPort) {
-
-    config = directory.get(ConfigService.class);
+  public WebServer(ConfigService config) {
 
     host = config.get(HOST_PROPERTY);
 
@@ -39,7 +35,7 @@ public class WebServer {
     threadPool.setMaxThreads(50);
     jetty = new Server(threadPool);
 
-    httpsPort = config.getInt(HTTPS_PORT_PROPERTY, defaultHttpsPort);
+    httpsPort = config.getInt(HTTPS_PORT_PROPERTY);
     if (httpsPort == null) {
       throw new InvalidParameter("HTTPS port must be set with " + HTTPS_PORT_PROPERTY);
     }
@@ -81,7 +77,7 @@ public class WebServer {
     https.setIdleTimeout(500000);
     jetty.addConnector(https);
 
-    httpPort = config.getInt(HTTP_PORT_PROPERTY, defaultHttpPort);
+    httpPort = config.getInt(HTTP_PORT_PROPERTY);
     if (httpPort != null) {
       ServerConnector http = new ServerConnector(jetty, new HttpConnectionFactory(httpConfig));
       http.setPort(httpPort);

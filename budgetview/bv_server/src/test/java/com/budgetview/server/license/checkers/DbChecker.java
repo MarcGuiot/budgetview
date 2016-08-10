@@ -5,17 +5,19 @@ import com.budgetview.server.license.model.MailError;
 import com.budgetview.server.license.model.RepoInfo;
 import com.budgetview.server.license.model.SoftwareInfo;
 import org.globsframework.metamodel.Field;
-import org.globsframework.model.utils.EmptyGlobList;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
+import org.globsframework.model.utils.EmptyGlobList;
 import org.globsframework.sqlstreams.SqlConnection;
 import org.globsframework.sqlstreams.constraints.Constraint;
 import org.globsframework.sqlstreams.constraints.Constraints;
 import org.globsframework.sqlstreams.drivers.jdbc.JdbcGlobsDatabase;
 import org.globsframework.utils.Dates;
-import static junit.framework.Assert.*;
 
 import java.util.Date;
+
+import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertTrue;
 
 public class DbChecker {
 
@@ -27,7 +29,7 @@ public class DbChecker {
 
   public DbChecker() {
     SqlConnection connection = getConnection();
-    connection.createTable(License.TYPE, RepoInfo.TYPE, MailError.TYPE, SoftwareInfo.TYPE);
+    connection.createTables(License.TYPE, RepoInfo.TYPE, MailError.TYPE, SoftwareInfo.TYPE);
     connection.emptyTable(License.TYPE, RepoInfo.TYPE, MailError.TYPE, SoftwareInfo.TYPE);
     connection.commitAndClose();
   }
@@ -46,7 +48,7 @@ public class DbChecker {
     globsDatabase = null;
   }
 
-  public void   registerMail(String email, String code) {
+  public void registerMail(String email, String code) {
     SqlConnection connection = getConnection();
     connection.startCreate(License.TYPE)
       .set(License.MAIL, email)

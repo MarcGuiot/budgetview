@@ -39,7 +39,7 @@ public class DbServer {
     SqlConnection db = globsDB.connect();
     for (GlobType type : globType) {
       if (!tables.contains(globsDB.getTableName(type))) {
-        db.createTable(type);
+        db.createTables(type);
       }
     }
     db.commitAndClose();

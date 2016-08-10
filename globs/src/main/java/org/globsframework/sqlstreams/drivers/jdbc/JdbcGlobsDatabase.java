@@ -81,7 +81,7 @@ public class JdbcGlobsDatabase extends AbstractGlobsDatabase {
     return dbFactory.create();
   }
 
-  synchronized public Connection getConnection() {
+  synchronized private Connection getConnection() {
     try {
       return driver.connect(url, dbInfo);
     }

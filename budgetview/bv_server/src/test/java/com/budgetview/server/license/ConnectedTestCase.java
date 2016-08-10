@@ -38,9 +38,9 @@ public abstract class ConnectedTestCase extends UISpecTestCase {
     System.setProperty("budgetview.log.sout", "true");
 
     System.setProperty(SingleApplicationInstanceListener.SINGLE_INSTANCE_DISABLED, "true");
-    System.setProperty(LicenseConstants.COM_APP_LICENSE_URL, "http://localhost:" + httpPort);
-    System.setProperty(MobileConstants.COM_APP_MOBILE_URL, "http://localhost:" + httpPort);
-    System.setProperty(LicenseConstants.COM_APP_FTP_URL, "ftp://localhost:12000");
+    System.setProperty(LicenseConstants.LICENSE_URL_PROPERTY, "http://localhost:" + httpPort);
+    System.setProperty(MobileConstants.SERVER_URL_PROPERTY, "http://localhost:" + httpPort);
+    System.setProperty(LicenseConstants.FTP_URL_PROPERTY, "ftp://localhost:12000");
 
     System.setProperty(WebServer.HTTP_PORT_PROPERTY, Integer.toString(httpPort));
     System.setProperty(DbInit.DATABASE_URL, DbChecker.DATABASE_URL);
@@ -74,7 +74,7 @@ public abstract class ConnectedTestCase extends UISpecTestCase {
     db = null;
     ftpServer = null;
     licenseServer = null;
-    System.setProperty(LicenseConstants.COM_APP_LICENSE_URL, "");
+    System.setProperty(LicenseConstants.LICENSE_URL_PROPERTY, "");
   }
 
   protected void startServers() throws Exception {

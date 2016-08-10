@@ -9,12 +9,17 @@ import org.globsframework.metamodel.fields.IntegerField;
 import org.globsframework.metamodel.fields.LinkField;
 import org.globsframework.metamodel.fields.StringField;
 import org.globsframework.metamodel.utils.GlobTypeLoader;
+import org.globsframework.sqlstreams.annotations.AutoIncrement;
 
 public class ProviderTransaction {
   public static GlobType TYPE;
 
   @Key
+  @AutoIncrement
   public static IntegerField ID;
+
+  @Target(CloudUser.class)
+  public static LinkField USER;
 
   @Target(Provider.class)
   public static LinkField PROVIDER;
@@ -41,6 +46,6 @@ public class ProviderTransaction {
   public static IntegerField SEQUENCE_NUMBER;
 
   static {
-    GlobTypeLoader.init(ProviderTransaction.class, "transactionValues");
+    GlobTypeLoader.init(ProviderTransaction.class);
   }
 }

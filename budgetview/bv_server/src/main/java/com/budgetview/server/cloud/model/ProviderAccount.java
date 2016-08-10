@@ -8,12 +8,17 @@ import org.globsframework.metamodel.fields.IntegerField;
 import org.globsframework.metamodel.fields.LinkField;
 import org.globsframework.metamodel.fields.StringField;
 import org.globsframework.metamodel.utils.GlobTypeLoader;
+import org.globsframework.sqlstreams.annotations.AutoIncrement;
 
 public class ProviderAccount {
   public static GlobType TYPE;
 
   @Key
+  @AutoIncrement
   public static IntegerField ID;
+
+  @Target(CloudUser.class)
+  public static LinkField USER;
 
   @Target(Provider.class)
   public static LinkField PROVIDER;
@@ -31,6 +36,6 @@ public class ProviderAccount {
   public static StringField ACCOUNT_TYPE;
 
   static {
-    GlobTypeLoader.init(ProviderAccount.class, "accountEntity");
+    GlobTypeLoader.init(ProviderAccount.class);
   }
 }

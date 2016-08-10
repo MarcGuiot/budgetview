@@ -8,12 +8,12 @@ import java.net.URLDecoder;
 import java.net.URLEncoder;
 
 public class LicenseConstants {
-  public static final String LICENSE_SERVER_URL = "https://•register.mybudgetview.fr:443";
+  public static final String LICENSE_SERVER_URL = "https://register.mybudgetview.fr:443";
   public static final String FTP_SERVER_URL = "ftp://ftpjar.mybudgetview.fr";
 
   public static final String APPNAME = "budgetview";
-  public static final String COM_APP_FTP_URL = APPNAME + ".license.ftp.url";
-  public static final String COM_APP_LICENSE_URL = APPNAME + ".license.url";
+  public static final String FTP_URL_PROPERTY = APPNAME + ".license.ftp.url";
+  public static final String LICENSE_URL_PROPERTY = APPNAME + ".license.url";
 
   public static final String HEADER_MAIL = "mail";
   public static final String REQUEST_FOR_REGISTER = "/register";
@@ -75,14 +75,14 @@ public class LicenseConstants {
     }
   }
 
-  public static boolean isLicenseServerUrlSet() {
-    return Strings.isNotEmpty(System.getProperty(COM_APP_LICENSE_URL));
+  public static boolean isServerUrlSet() {
+    return Strings.isNotEmpty(System.getProperty(LICENSE_URL_PROPERTY));
   }
 
-  public static String getLicenseServerUrl(String path) {
+  public static String getServerUrl(String path) {
     String url = LICENSE_SERVER_URL;
     Utils.beginRemove();
-    url = System.getProperty(COM_APP_LICENSE_URL, LICENSE_SERVER_URL) + path;
+    url = System.getProperty(LICENSE_URL_PROPERTY, LICENSE_SERVER_URL) + path;
     Utils.endRemove();
     return url;
   }
@@ -90,7 +90,7 @@ public class LicenseConstants {
   public static String getFtpServerUrl() {
     String url = FTP_SERVER_URL;
     Utils.beginRemove();
-    url = System.getProperty(COM_APP_FTP_URL, FTP_SERVER_URL);
+    url = System.getProperty(FTP_URL_PROPERTY, FTP_SERVER_URL);
     Utils.endRemove();
     return url;
   }

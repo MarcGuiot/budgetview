@@ -1,12 +1,16 @@
 package com.budgetview.server.cloud;
 
+import com.budgetview.server.cloud.model.CloudModel;
 import com.budgetview.server.cloud.servlet.BudgeaWebHookServlet;
 import com.budgetview.server.cloud.servlet.ConnectionServlet;
 import com.budgetview.server.cloud.servlet.PingServlet;
 import com.budgetview.server.config.ConfigService;
+import com.budgetview.server.utils.DbInit;
 import com.budgetview.server.utils.Log4J;
 import com.budgetview.server.web.WebServer;
 import org.apache.log4j.Logger;
+import org.globsframework.sqlstreams.GlobsDatabase;
+import org.globsframework.sqlstreams.drivers.jdbc.JdbcGlobsDatabase;
 import org.globsframework.utils.directory.DefaultDirectory;
 import org.globsframework.utils.directory.Directory;
 
@@ -32,7 +36,7 @@ public class CloudServer {
 
   public void init() throws Exception {
     directory = createDirectory();
-    webServer = new WebServer(directory, "register.mybudgetview.fr", 8088, 1444);
+    webServer = new WebServer(config);
     webServer.add(new ConnectionServlet(directory), "/connections");
     webServer.add(new BudgeaWebHookServlet(directory), "/budgea");
 
@@ -44,6 +48,7 @@ public class CloudServer {
   private Directory createDirectory() throws Exception {
     Directory directory = new DefaultDirectory();
     directory.add(config);
+    DbInit.create(config, directory);
     return directory;
   }
 

@@ -30,7 +30,7 @@ public class DbCreateTable {
 
     SqlConnection connection = globsDB.connect();
     for (GlobType type : TYPE) {
-        connection.createTable(type);
+        connection.createTables(type);
     }
     connection.commitAndClose();
   }

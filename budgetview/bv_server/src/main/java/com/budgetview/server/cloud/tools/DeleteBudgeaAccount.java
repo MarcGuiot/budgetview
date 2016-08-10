@@ -6,17 +6,7 @@ import org.apache.http.client.fluent.Form;
 import org.apache.http.client.fluent.Request;
 import org.apache.http.client.fluent.Response;
 
-public class ForceBudgeaUpdate {
-
-//  {
-//    "last_update": "2016-08-07 17:55:12",
-//    "expire": null,
-//    "active": true,
-//    "id_user": 476,
-//    "id_bank": 40,
-//    "id": 272,
-//    "error": null
-//  }
+public class DeleteBudgeaAccount {
 
   public static void main(String[] args) {
     try {
@@ -26,10 +16,11 @@ public class ForceBudgeaUpdate {
 
       Request request = Request.Put(BudgeaConstants.getServerUrl("/users/" + idUser + "/connections"))
         .addHeader("Authorization", "Bearer " + token)
-      .bodyForm(Form.form()
-                  .add("client_id", "60443827")
-                  .add("client_secret", "E9W5QStthEi7mh7+ARAZV2wIRS0eY4o7")
-                  .build());
+        .bodyForm(Form.form()
+                    .add("client_id", Budgea.CLIENT_ID)
+                    .add("client_secret", Budgea.CLIENT_SECRET)
+                    .build());
+
 
       Response response = request.execute();
       System.out.println("Response: " + response.returnContent().asString());
@@ -37,6 +28,5 @@ public class ForceBudgeaUpdate {
     catch (Exception ex) {
       ex.printStackTrace();
     }
-
   }
 }

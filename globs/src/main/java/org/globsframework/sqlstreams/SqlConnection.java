@@ -13,6 +13,10 @@ import java.sql.Connection;
 
 public interface SqlConnection {
 
+  void createTables(GlobType... globType);
+
+  void emptyTable(GlobType... globType);
+
   SelectBuilder startSelect(GlobType globType);
 
   GlobList selectAll(GlobType globType);
@@ -26,6 +30,10 @@ public interface SqlConnection {
   Glob selectUnique(GlobType globType, Constraint constraint) throws ItemNotFound, TooManyItems;
 
   CreateBuilder startCreate(GlobType globType);
+
+  void createAll(GlobList all);
+
+  void create(Glob glob);
 
   UpdateBuilder startUpdate(GlobType globType, Constraint constraint);
 
@@ -42,10 +50,4 @@ public interface SqlConnection {
   void rollbackAndClose();
 
   Connection getInnerConnection();
-
-  void createTable(GlobType... globType);
-
-  void emptyTable(GlobType... globType);
-
-  void createAll(GlobList all);
 }

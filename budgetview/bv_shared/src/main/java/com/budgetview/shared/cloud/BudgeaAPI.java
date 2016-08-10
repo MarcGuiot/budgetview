@@ -15,7 +15,7 @@ public class BudgeaAPI {
   private int userId = -1;
 
   public JSONObject getBanks() throws IOException {
-    return json(Request.Get("https://budgetview.biapi.pro/2.0/banks?expand=fields")
+    return json(Request.Get(BudgeaConstants.getServerUrl("/banks?expand=fields"))
            .addHeader("Authorization", "Bearer " + getBearer()));
   }
 
@@ -27,7 +27,7 @@ public class BudgeaAPI {
       form.add(entry.getKey(), entry.getValue());
     }
 
-    Request request = Request.Post("https://budgetview.biapi.pro/2.0/users/me/connections")
+    Request request = Request.Post(BudgeaConstants.getServerUrl("/users/me/connections"))
       .addHeader("Authorization", "Bearer " + getBearer())
       .bodyForm(form.build(), Consts.UTF_8);
 
@@ -44,10 +44,10 @@ public class BudgeaAPI {
 
   private String getBearer() throws IOException {
     if (bearer == null) {
-      JSONObject auth = json(Request.Post("https://budgetview.biapi.pro/2.0/auth/init"));
+      JSONObject auth = json(Request.Post(BudgeaConstants.getServerUrl("/auth/init")));
       bearer = auth.getString("auth_token");
 
-      JSONObject user = json(Request.Get("https://budgetview.biapi.pro/2.0/users/me")
+      JSONObject user = json(Request.Get(BudgeaConstants.getServerUrl("/users/me"))
                                .addHeader("Authorization", "Bearer " + bearer));
       userId = user.getInt("id");
     }

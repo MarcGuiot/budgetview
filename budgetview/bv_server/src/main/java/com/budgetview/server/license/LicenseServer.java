@@ -60,7 +60,8 @@ public class LicenseServer {
     timer = new Timer(true);
     timer.schedule(queryVersionTask, 5000, 5000);
 
-    webServer = new WebServer(directory, "register.mybudgetview.fr", null, 443);
+    // Current: HTTP=null / HTTPS=443
+    webServer = new WebServer(config);
     webServer.add(new AskForCodeServlet(directory), LicenseConstants.REQUEST_FOR_MAIL);
     webServer.add(new RequestForConfigServlet(directory), LicenseConstants.REQUEST_FOR_CONFIG);
     webServer.add(new RegisterServlet(directory), LicenseConstants.REQUEST_FOR_REGISTER);
@@ -84,7 +85,7 @@ public class LicenseServer {
   private void initDb(Directory directory) {
     String database = directory.get(ConfigService.class).get(DbInit.DATABASE_URL);
     if (database.equals(DbInit.JDBC_HSQLDB)) {
-      this.directory.get(GlobsDatabase.class).connect().createTable(License.TYPE, SoftwareInfo.TYPE, RepoInfo.TYPE, MailError.TYPE);
+      this.directory.get(GlobsDatabase.class).connect().createTables(License.TYPE, SoftwareInfo.TYPE, RepoInfo.TYPE, MailError.TYPE);
     }
   }
 

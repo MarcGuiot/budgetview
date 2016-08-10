@@ -9,7 +9,7 @@ public class CreateDb {
   public static void main(String[] args) throws Exception {
     ConfigService.checkCommandLine(args);
     ConfigService configService = new ConfigService(args);
-    GlobsDatabase globsDB = DbInit.create(configService);
-    globsDB.connect().createTable(CloudModel.getAllTypes());
+    GlobsDatabase db = DbInit.create(configService);
+    db.connect().createTables(CloudModel.getAllTypes());
   }
 }

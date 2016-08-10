@@ -21,7 +21,7 @@ public class MysqlConnection extends JdbcConnection {
   }
 
   protected SqlFieldCreationVisitor getFieldVisitorCreator(StringPrettyWriter prettyWriter) {
-    return new SqlFieldCreationVisitor(globsDB, prettyWriter) {
+    return new SqlFieldCreationVisitor(db, prettyWriter) {
 
       public void visitString(StringField field) throws Exception {
         add("VARCHAR(" + field.getMaxSize() + ")", field);

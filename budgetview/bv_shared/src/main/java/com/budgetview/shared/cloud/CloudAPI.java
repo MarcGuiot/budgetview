@@ -8,28 +8,24 @@ import org.apache.http.client.fluent.Response;
 import java.io.IOException;
 
 public class CloudAPI {
-  private String rootUrl;
 
-  public CloudAPI(String rootUrl) {
-    this.rootUrl = rootUrl;
-  }
-
-  public void addConnection(String budgeaToken, Integer budgeaUserId) throws IOException {
+  public void addConnection(String email, String budgeaToken, Integer budgeaUserId) throws IOException {
     Request request = Request.Post(cloudUrl("/connections"))
       .bodyForm(Form.form()
-                  .add("budgea_token", budgeaToken)
-                  .add("budgea_user_id", Integer.toString(budgeaUserId))
+                  .add(CloudConstants.EMAIL, email)
+                  .add(CloudConstants.BUDGEA_TOKEN, budgeaToken)
+                  .add(CloudConstants.BUDGEA_USER_ID, Integer.toString(budgeaUserId))
                   .build(), Consts.UTF_8);
 
     Response response = request.execute();
     int statusCode = response.returnResponse().getStatusLine().getStatusCode();
     if (statusCode != 200) {
-      throw new IOException("Call to /connections returned " + statusCode + " instead of 200");
+      throw new IOException("POST to /connections returned " + statusCode + " instead of 200");
     }
   }
 
-  private String cloudUrl(String s) {
-    return rootUrl + s;
+  private String cloudUrl(String path) {
+    return CloudConstants.getServerUrl(path);
   }
 }
 

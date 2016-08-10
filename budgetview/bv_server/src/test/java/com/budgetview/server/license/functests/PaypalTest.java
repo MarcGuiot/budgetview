@@ -36,7 +36,7 @@ public class PaypalTest extends ConnectedTestCase {
   protected void setUp() throws Exception {
     super.setUp();
 
-    SERVER_URL = System.getProperty(LicenseConstants.COM_APP_LICENSE_URL);
+    SERVER_URL = System.getProperty(LicenseConstants.LICENSE_URL_PROPERTY);
     System.setProperty(NewUserServlet.PAYPAL_CONFIRM_URL_PROPERTY, SERVER_URL + "/Confirm");
     licenseServer.init();
     licenseServer.add(payPalConfirm, "/Confirm");
