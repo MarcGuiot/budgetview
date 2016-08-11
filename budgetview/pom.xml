@@ -11,7 +11,6 @@
     <module>bv_shared</module>
     <module>bv_desktop</module>
     <module>bv_server</module>
-    <module>bv_persistence_server</module>
     <module>bv_analytics</module>
   </modules>
 
