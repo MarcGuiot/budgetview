@@ -15,6 +15,7 @@ import org.globsframework.model.utils.GlobBuilder;
 import org.globsframework.sqlstreams.GlobsDatabase;
 import org.globsframework.sqlstreams.SelectQuery;
 import org.globsframework.sqlstreams.SqlConnection;
+import org.globsframework.sqlstreams.constraints.Where;
 import org.globsframework.streams.GlobStream;
 import org.globsframework.streams.accessors.IntegerAccessor;
 import org.globsframework.utils.Files;
@@ -38,8 +39,8 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static org.globsframework.sqlstreams.constraints.Constraints.and;
-import static org.globsframework.sqlstreams.constraints.Constraints.equal;
+import static org.globsframework.sqlstreams.constraints.Where.and;
+import static org.globsframework.sqlstreams.constraints.Where.equal;
 
 public class BudgeaWebHookServlet extends HttpServlet {
 
@@ -104,9 +105,9 @@ public class BudgeaWebHookServlet extends HttpServlet {
   private Integer getCloudUserId(int userId, String token) {
     SqlConnection connection = db.connect();
     try {
-      Glob user = connection.selectUnique(CloudUser.TYPE, and(equal(CloudUser.PROVIDER, Provider.BUDGEA.getId()),
-                                                              equal(CloudUser.PROVIDER_ID, userId),
-                                                              equal(CloudUser.PROVIDER_ACCESS_TOKEN, token)));
+      Glob user = connection.selectUnique(CloudUser.TYPE, and(Where.fieldEquals(CloudUser.PROVIDER, Provider.BUDGEA.getId()),
+                                                              Where.fieldEquals(CloudUser.PROVIDER_ID, userId),
+                                                              Where.fieldEquals(CloudUser.PROVIDER_ACCESS_TOKEN, token)));
       return user.get(CloudUser.ID);
     }
     catch (ItemNotFound itemNotFound) {
@@ -133,8 +134,8 @@ public class BudgeaWebHookServlet extends HttpServlet {
       Ref<IntegerAccessor> providerId = new Ref<IntegerAccessor>();
       Ref<IntegerAccessor> cloudId = new Ref<IntegerAccessor>();
       SelectQuery query = sqlConnection.startSelect(providerIdField.getGlobType(),
-                                                    and(equal(userField, userId),
-                                                        equal(providerField, Provider.BUDGEA.getId())))
+                                                    and(Where.fieldEquals(userField, userId),
+                                                        Where.fieldEquals(providerField, Provider.BUDGEA.getId())))
         .select(idField, cloudId)
         .select(providerIdField, providerId)
         .getQuery();

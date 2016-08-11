@@ -4,7 +4,7 @@ import org.globsframework.metamodel.DummyObject;
 import org.globsframework.metamodel.DummyObject2;
 import org.globsframework.model.GlobChecker;
 import org.globsframework.model.GlobRepository;
-import org.globsframework.sqlstreams.constraints.Constraints;
+import org.globsframework.sqlstreams.constraints.Where;
 import org.globsframework.sqlstreams.drivers.jdbc.GlobsDatabaseTestCase;
 import org.globsframework.streams.xml.XmlGlobStreamReader;
 
@@ -20,10 +20,10 @@ public class SqlGlobRepositoryBuilderTest extends GlobsDatabaseTestCase {
 
 
     SqlGlobRepositoryBuilder repositoryBuilder = SqlGlobRepositoryBuilder.init(sqlService);
-    repositoryBuilder.add(Constraints.equal(DummyObject.NAME, "name"),
+    repositoryBuilder.add(Where.fieldEquals(DummyObject.NAME, "name"),
                           DummyObject.VALUE, DummyObject.DATE);
-    repositoryBuilder.add(Constraints.and(Constraints.equal(DummyObject2.LABEL, "label"),
-                                          Constraints.strictlyGreater(DummyObject2.ID, 3)),
+    repositoryBuilder.add(Where.and(Where.fieldEquals(DummyObject2.LABEL, "label"),
+                                    Where.fieldStrictlyGreaterThan(DummyObject2.ID, 3)),
                           DummyObject2.ID, DummyObject2.LABEL);
     GlobRepository repository = repositoryBuilder.getGlobRepository();
 

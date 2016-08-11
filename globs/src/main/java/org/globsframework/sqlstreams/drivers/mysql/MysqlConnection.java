@@ -24,7 +24,7 @@ public class MysqlConnection extends JdbcConnection {
     return new SqlFieldCreationVisitor(db, prettyWriter) {
 
       public void visitString(StringField field) throws Exception {
-        add("VARCHAR(" + field.getMaxSize() + ")", field);
+        add(field, "VARCHAR(" + field.getMaxSize() + ")");
       }
 
       public String getAutoIncrementKeyWord() {

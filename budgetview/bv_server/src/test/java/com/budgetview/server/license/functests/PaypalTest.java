@@ -12,7 +12,7 @@ import org.apache.http.params.HttpParams;
 import com.budgetview.server.license.ConnectedTestCase;
 import com.budgetview.server.license.servlet.NewUserServlet;
 import org.globsframework.model.GlobList;
-import org.globsframework.sqlstreams.constraints.Constraints;
+import org.globsframework.sqlstreams.constraints.Where;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -87,7 +87,7 @@ public class PaypalTest extends ConnectedTestCase {
     assertEquals(200, status);
     payPalConfirm.checkMail(RAPHAËL);
     if (checkDb) {
-      GlobList glob = db.getConnection().selectAll(License.TYPE, Constraints.equal(License.MAIL, "toto" + transactionId + "@bv.fr"));
+      GlobList glob = db.getConnection().selectAll(License.TYPE, Where.fieldEquals(License.MAIL, "toto" + transactionId + "@bv.fr"));
       assertEquals(3, glob.size());
       String code = glob.get(0).get(License.ACTIVATION_CODE);
       assertEquals(glob.get(0).get(License.TRANSACTION_ID), transactionId);
@@ -112,7 +112,7 @@ public class PaypalTest extends ConnectedTestCase {
     int status = response.getStatusLine().getStatusCode();
     assertEquals(412, status);
     GlobList globsList =
-      db.getConnection().selectAll(License.TYPE, Constraints.equal(License.MAIL, "toto@bv.fr"));
+      db.getConnection().selectAll(License.TYPE, Where.fieldEquals(License.MAIL, "toto@bv.fr"));
     assertTrue(globsList.isEmpty());
   }
 
@@ -130,7 +130,7 @@ public class PaypalTest extends ConnectedTestCase {
     int status = response.getStatusLine().getStatusCode();
     assertEquals(200, status);
     GlobList globs =
-      db.getConnection().selectAll(License.TYPE, Constraints.equal(License.MAIL, "toto12345@bv.fr"));
+      db.getConnection().selectAll(License.TYPE, Where.fieldEquals(License.MAIL, "toto12345@bv.fr"));
     assertEquals(3, globs.size());
     String code = globs.get(0).get(License.ACTIVATION_CODE);
     mailServer.checkReceivedMail("admin@mybudgetview.fr");

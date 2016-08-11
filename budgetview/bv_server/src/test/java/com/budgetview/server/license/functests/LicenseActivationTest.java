@@ -22,13 +22,13 @@ import junit.framework.AssertionFailedError;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
 import org.globsframework.sqlstreams.SqlConnection;
-import org.globsframework.sqlstreams.constraints.Constraints;
+import org.globsframework.sqlstreams.constraints.Where;
 import org.globsframework.utils.Dates;
 import org.uispec4j.Trigger;
 import org.uispec4j.Window;
 import org.uispec4j.interception.WindowInterceptor;
 
-import static org.globsframework.sqlstreams.constraints.Constraints.equal;
+import static org.globsframework.sqlstreams.constraints.Where.equal;
 
 public class LicenseActivationTest extends ConnectedTestCase {
   public static final String ACTIVATION_CODE = "Activation code : <b>";
@@ -138,7 +138,7 @@ public class LicenseActivationTest extends ConnectedTestCase {
     LoginChecker login = new LoginChecker(window);
     login.logNewUser("user", "passw@rd");
 
-    db.checkRepoIdIsUpdated(1L, Constraints.notEqual(RepoInfo.REPO_ID, repoId));
+    db.checkRepoIdIsUpdated(1L, Where.notEqual(RepoInfo.REPO_ID, repoId));
     license.checkInfoMessageHidden();
 
     LicenseActivationChecker.enterBadLicense(window, MAIL, "1234", "Activation failed. An email was sent at " + MAIL + " with further information.");
@@ -414,7 +414,7 @@ public class LicenseActivationTest extends ConnectedTestCase {
     String newEmail = mailServer.checkReceivedMail(MAIL).getContent();
     exit();
     SqlConnection connection = db.getConnection();
-    Glob glob = connection.selectUnique(License.TYPE, equal(License.MAIL, MAIL));
+    Glob glob = connection.selectUnique(License.TYPE, Where.fieldEquals(License.MAIL, MAIL));
     String activationCode = glob.get(License.ACTIVATION_CODE);
     if (activationCode.length() < 4) {
       Assert.fail("Invalid activation code found in DB: " + activationCode);
@@ -509,7 +509,7 @@ public class LicenseActivationTest extends ConnectedTestCase {
 
     assertEquals(6, connection.selectAll(License.TYPE).size());
 
-    GlobList list = connection.selectAll(License.TYPE, equal(License.MAIL, MAIL)).sortSelf(RegisterServlet.COMPARATOR);
+    GlobList list = connection.selectAll(License.TYPE, Where.fieldEquals(License.MAIL, MAIL)).sortSelf(RegisterServlet.COMPARATOR);
     assertEquals(3, list.size());
     Glob l11 = list.get(0);
     Glob l12 = list.get(1);
@@ -522,7 +522,7 @@ public class LicenseActivationTest extends ConnectedTestCase {
     assertNotNull(l13.get(License.REPO_ID));
 
     list = connection
-      .selectAll(License.TYPE, equal(License.MAIL, OTHERMAIL_FREE_FR))
+      .selectAll(License.TYPE, Where.fieldEquals(License.MAIL, OTHERMAIL_FREE_FR))
       .sortSelf(RegisterServlet.COMPARATOR);
     assertEquals(3, list.size());
 

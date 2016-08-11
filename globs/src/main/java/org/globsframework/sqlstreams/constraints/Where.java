@@ -12,21 +12,21 @@ import org.globsframework.utils.exceptions.UnexpectedApplicationState;
 
 import java.util.List;
 
-public class Constraints {
-  private Constraints() {
+public class Where {
+  private Where() {
   }
 
   public static Constraint keyEquals(final KeyConstraint keyAccessor) {
     Field[] list = keyAccessor.getGlobType().getKeyFields();
     Constraint constraint = null;
     for (final Field field : list) {
-      constraint = Constraints.and(constraint,
-                                   equalsObject(field, new KeyElementAccessor(keyAccessor, field)));
+      constraint = Where.and(constraint,
+                             fieldEqualsValue(field, new KeyElementAccessor(keyAccessor, field)));
     }
     return constraint;
   }
 
-  public static Constraint fieldsEqual(FieldValues values) {
+  public static Constraint fieldsAreEqual(FieldValues values) {
     try {
       ConstraintsFunctor functor = new ConstraintsFunctor(values);
       values.apply(functor);
@@ -37,111 +37,119 @@ public class Constraints {
     }
   }
 
+  public static Constraint fieldsAreEqual(Field field1, Field field2) {
+    return new EqualConstraint(new FieldOperand(field1), new FieldOperand(field2));
+  }
+
   /**
    * We use different name to help the IDE giving us the good completion
    */
 
-  public static Constraint equalsObject(Field field, Object value) {
+  public static Constraint fieldEqualsValue(Field field, Object value) {
     return new EqualConstraint(new FieldOperand(field), new ValueOperand(field, value));
   }
 
-  public static Constraint equalsObject(Field field, Accessor accessor) {
+  public static Constraint fieldEqualsValue(Field field, Accessor accessor) {
     return new EqualConstraint(new FieldOperand(field), new AccessorOperand(field, accessor));
   }
 
-  public static Constraint fieldsEqual(Field field1, Field field2) {
-    return new EqualConstraint(new FieldOperand(field1), new FieldOperand(field2));
-  }
-
-  public static Constraint equal(IntegerField field, Integer value) {
+  public static Constraint fieldEquals(IntegerField field, Integer value) {
     return new EqualConstraint(new FieldOperand(field), new ValueOperand(field, value));
   }
 
-  public static Constraint equal(LongField field, Long value) {
+  public static Constraint fieldEquals(LongField field, Long value) {
     return new EqualConstraint(new FieldOperand(field), new ValueOperand(field, value));
   }
 
-  public static Constraint equal(DoubleField field, DoubleAccessor accessor) {
+  public static Constraint fieldEquals(DoubleField field, DoubleAccessor accessor) {
     return new EqualConstraint(new FieldOperand(field), new AccessorOperand(field, accessor));
   }
 
-  public static Constraint equal(StringField field, StringAccessor accessor) {
+  public static Constraint fieldEquals(StringField field, StringAccessor accessor) {
     return new EqualConstraint(new FieldOperand(field), new AccessorOperand(field, accessor));
   }
 
-  public static Constraint equal(StringField field, String value) {
+  public static Constraint fieldEquals(StringField field, String value) {
     return new EqualConstraint(new FieldOperand(field), new ValueOperand(field, value));
   }
 
-  public static Constraint equal(IntegerField field, IntegerAccessor accessor) {
+  public static Constraint fieldEquals(IntegerField field, IntegerAccessor accessor) {
     return new EqualConstraint(new FieldOperand(field), new AccessorOperand(field, accessor));
   }
 
-  public static Constraint equal(LongField field, LongAccessor accessor) {
+  public static Constraint fieldEquals(LongField field, LongAccessor accessor) {
     return new EqualConstraint(new FieldOperand(field), new AccessorOperand(field, accessor));
   }
 
-  public static Constraint greater(Field field, Object value) {
+  public static Constraint fieldGreaterThan(Field field, Object value) {
     return new BiggerThanConstraint(new FieldOperand(field), new ValueOperand(field, value));
   }
 
-  public static Constraint greater(Field field1, Field field2) {
+  public static Constraint fieldGreaterThan(Field field1, Field field2) {
     return new BiggerThanConstraint(new FieldOperand(field1), new FieldOperand(field2));
   }
 
-  public static Constraint greater(IntegerField field, Integer value) {
+  public static Constraint fieldGreaterThan(IntegerField field, Integer value) {
     return new BiggerThanConstraint(new FieldOperand(field), new ValueOperand(field, value));
   }
 
-  public static Constraint greater(Field field, Accessor accessor) {
+  public static Constraint fieldGreaterThan(DoubleField field, Double value) {
+    return new BiggerThanConstraint(new FieldOperand(field), new ValueOperand(field, value));
+  }
+
+  public static Constraint fieldGreaterThan(Field field, Accessor accessor) {
     return new BiggerThanConstraint(new FieldOperand(field), new AccessorOperand(field, accessor));
   }
 
-  public static Constraint lessUncheck(Field field, Object value) {
+  public static Constraint fieldLessThanValue(Field field, Object value) {
     return new LessThanConstraint(new FieldOperand(field), new ValueOperand(field, value));
   }
 
-  public static Constraint less(Field field1, Field field2) {
+  public static Constraint fieldLessThan(Field field1, Field field2) {
     return new LessThanConstraint(new FieldOperand(field1), new FieldOperand(field2));
   }
 
-  public static Constraint less(IntegerField field, Integer value) {
+  public static Constraint fieldLessThan(IntegerField field, Integer value) {
     return new LessThanConstraint(new FieldOperand(field), new ValueOperand(field, value));
   }
 
-  public static Constraint less(Field field, Accessor accessor) {
+  public static Constraint fieldLessThan(DoubleField field, Double value) {
+    return new LessThanConstraint(new FieldOperand(field), new ValueOperand(field, value));
+  }
+
+  public static Constraint fieldLessThan(Field field, Accessor accessor) {
     return new LessThanConstraint(new FieldOperand(field), new AccessorOperand(field, accessor));
   }
 
-  public static Constraint strictlyGreater(Field field, Object value) {
+  public static Constraint fieldStrictlyGreaterThan(Field field, Object value) {
     return new StrictlyBiggerThanConstraint(new FieldOperand(field), new ValueOperand(field, value));
   }
 
-  public static Constraint strictlyGreater(Field field1, Field field2) {
+  public static Constraint fieldStrictlyGreaterThan(Field field1, Field field2) {
     return new StrictlyBiggerThanConstraint(new FieldOperand(field1), new FieldOperand(field2));
   }
 
-  public static Constraint strictlyGreater(IntegerField field, Integer value) {
+  public static Constraint fieldStrictlyGreaterThan(IntegerField field, Integer value) {
     return new StrictlyBiggerThanConstraint(new FieldOperand(field), new ValueOperand(field, value));
   }
 
-  public static Constraint strictlyBigger(Field field, Accessor accessor) {
+  public static Constraint fieldStrictlyGreaterThanValue(Field field, Accessor accessor) {
     return new StrictlyBiggerThanConstraint(new FieldOperand(field), new AccessorOperand(field, accessor));
   }
 
-  public static Constraint lesser(Field field, Object value) {
+  public static Constraint fieldStriclyLessThanValue(Field field, Object value) {
     return new StrictlyLesserThanConstraint(new FieldOperand(field), new ValueOperand(field, value));
   }
 
-  public static Constraint strictlyLess(Field field1, Field field2) {
+  public static Constraint fieldStrictlyLessThan(Field field1, Field field2) {
     return new StrictlyLesserThanConstraint(new FieldOperand(field1), new FieldOperand(field2));
   }
 
-  public static Constraint strictlyLess(IntegerField field, Integer value) {
+  public static Constraint fieldStrictlyLessThan(IntegerField field, Integer value) {
     return new StrictlyLesserThanConstraint(new FieldOperand(field), new ValueOperand(field, value));
   }
 
-  public static Constraint strictlyLess(Field field, Accessor accessor) {
+  public static Constraint fieldStrictlyLessThan(Field field, Accessor accessor) {
     return new StrictlyLesserThanConstraint(new FieldOperand(field), new AccessorOperand(field, accessor));
   }
 
@@ -186,7 +194,7 @@ public class Constraints {
     }
 
     public void process(final Field field, Object value) throws Exception {
-      constraint = Constraints.and(constraint, Constraints.equalsObject(field, new Accessor() {
+      constraint = Where.and(constraint, Where.fieldEqualsValue(field, new Accessor() {
         public Object getObjectValue() {
           return key.getValue(field);
         }

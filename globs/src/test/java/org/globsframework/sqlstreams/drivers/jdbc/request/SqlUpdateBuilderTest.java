@@ -6,7 +6,7 @@ import org.globsframework.model.KeyBuilder;
 import static org.globsframework.model.KeyBuilder.newKey;
 import org.globsframework.sqlstreams.SqlRequest;
 import org.globsframework.sqlstreams.UpdateBuilder;
-import org.globsframework.sqlstreams.constraints.Constraints;
+import org.globsframework.sqlstreams.constraints.Where;
 import org.globsframework.sqlstreams.constraints.impl.KeyConstraint;
 import org.globsframework.sqlstreams.drivers.jdbc.GlobsDatabaseTestCase;
 import org.globsframework.streams.GlobStream;
@@ -28,7 +28,7 @@ public class SqlUpdateBuilderTest extends GlobsDatabaseTestCase {
     populate(sqlConnection, streamToWrite);
 
     ValueIntegerAccessor keyValue = new ValueIntegerAccessor();
-    UpdateBuilder updateBuilder = sqlConnection.startUpdate(DummyObject.TYPE, Constraints.equal(DummyObject.ID, keyValue));
+    UpdateBuilder updateBuilder = sqlConnection.startUpdate(DummyObject.TYPE, Where.fieldEquals(DummyObject.ID, keyValue));
 
     Date date = Dates.parse("2000/01/01");
     updateBuilder.set(DummyObject.DATE, date);
@@ -69,7 +69,7 @@ public class SqlUpdateBuilderTest extends GlobsDatabaseTestCase {
     Key key1 = KeyBuilder.init(DummyObject.ID, 2).get();
     KeyConstraint keyAccessor = new KeyConstraint(DummyObject.TYPE);
     keyAccessor.setValue(key1);
-    sqlConnection.startUpdate(DummyObject.TYPE, Constraints.keyEquals(keyAccessor))
+    sqlConnection.startUpdate(DummyObject.TYPE, Where.keyEquals(keyAccessor))
       .set(DummyObject.NAME, "world")
       .getRequest()
       .run();

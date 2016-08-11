@@ -6,7 +6,7 @@ import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
 import org.globsframework.sqlstreams.*;
 import org.globsframework.sqlstreams.constraints.Constraint;
-import org.globsframework.sqlstreams.constraints.Constraints;
+import org.globsframework.sqlstreams.constraints.Where;
 import org.globsframework.sqlstreams.drivers.jdbc.builder.SqlCreateBuilder;
 import org.globsframework.sqlstreams.drivers.jdbc.builder.SqlQueryBuilder;
 import org.globsframework.sqlstreams.drivers.jdbc.builder.SqlUpdateBuilder;
@@ -79,7 +79,7 @@ public abstract class JdbcConnection implements SqlConnection {
     if (id == null) {
       throw new InvalidParameter("Key field must be set for: " + glob);
     }
-    UpdateBuilder updateBuilder = startUpdate(type, Constraints.equalsObject(keyField, id));
+    UpdateBuilder updateBuilder = startUpdate(type, Where.fieldEqualsValue(keyField, id));
     for (Field field : glob.getType().getFields()) {
       if (!field.isKeyField()) {
         updateBuilder.setValue(field, glob.getValue(field));

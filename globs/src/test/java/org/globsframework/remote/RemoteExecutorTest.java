@@ -8,7 +8,7 @@ import static org.globsframework.model.KeyBuilder.newKey;
 import org.globsframework.remote.impl.DefaultCreateRequest;
 import org.globsframework.remote.impl.DefaultDeleteRequest;
 import org.globsframework.remote.impl.DefaultUpdateRequest;
-import org.globsframework.sqlstreams.constraints.Constraints;
+import org.globsframework.sqlstreams.constraints.Where;
 import org.globsframework.sqlstreams.drivers.jdbc.GlobsDatabaseTestCase;
 import org.globsframework.streams.xml.XmlGlobStreamReader;
 import org.globsframework.utils.serialization.SerializedInputOutputFactory;
@@ -33,7 +33,7 @@ public class RemoteExecutorTest extends GlobsDatabaseTestCase {
         byte[] bytes = access.apply(changeSet);
         RemoteExecutor executor = new RemoteExecutor(globModel, new RemoteExecutor.RequestBuilder() {
           public RemoteExecutor.UpdateRequest getUpdate(GlobType globType, FieldValues fieldValues) {
-            return new DefaultUpdateRequest(sqlConnection, globType, Constraints.fieldsEqual(fieldValues));
+            return new DefaultUpdateRequest(sqlConnection, globType, Where.fieldsAreEqual(fieldValues));
           }
 
           public RemoteExecutor.CreateRequest getCreate(GlobType globType, FieldValues fieldValues) {
@@ -41,7 +41,7 @@ public class RemoteExecutorTest extends GlobsDatabaseTestCase {
           }
 
           public RemoteExecutor.DeleteRequest getDelete(GlobType globType, FieldValues valuesConstraint) {
-            return new DefaultDeleteRequest(sqlConnection, globType, Constraints.fieldsEqual(valuesConstraint));
+            return new DefaultDeleteRequest(sqlConnection, globType, Where.fieldsAreEqual(valuesConstraint));
           }
         });
         executor.execute(SerializedInputOutputFactory.init(bytes));
@@ -62,6 +62,6 @@ public class RemoteExecutorTest extends GlobsDatabaseTestCase {
     repository.completeChangeSet();
     checkDb(newKey(DummyObject.TYPE, 1), DummyObject.VALUE, 2.2, sqlConnection);
     checkDb(newKey(DummyObject.TYPE, 2), DummyObject.NAME, "a name", sqlConnection);
-    assertTrue(sqlConnection.selectAll(DummyObject.TYPE, Constraints.equal(DummyObject.ID, 3)).isEmpty());
+    assertTrue(sqlConnection.selectAll(DummyObject.TYPE, Where.fieldEquals(DummyObject.ID, 3)).isEmpty());
   }
 }

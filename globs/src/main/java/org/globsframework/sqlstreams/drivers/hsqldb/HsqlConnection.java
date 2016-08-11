@@ -29,11 +29,11 @@ public class HsqlConnection extends JdbcConnection {
       }
 
       public void visitString(StringField field) throws Exception {
-        add("VARCHAR(" + field.getMaxSize() + ")", field);
+        add(field, "VARCHAR(" + field.getMaxSize() + ")");
       }
 
       public void visitBlob(BlobField field) throws Exception {
-        add("LONGVARBINARY", field);
+        add(field, "LONGVARBINARY");
       }
     };
   }

@@ -34,12 +34,12 @@ public class GlobComboEditorTest extends GuiComponentTestCase {
   }
 
   private ComboBox initEditor() {
-    JComboBox combo = GlobComboEditor.init(DummyObject.COUNT, new int[]{1, 3, 5, 7}, repository, directory).getComponent();
+    JComboBox combo = GlobComboEditor.init(DummyObject.COUNTER, new int[]{1, 3, 5, 7}, repository, directory).getComponent();
     return new ComboBox(combo);
   }
 
   private ComboBox initEditorForKey1() {
-    JComboBox combo = GlobComboEditor.init(DummyObject.COUNT, new int[]{1, 3, 5, 7}, repository, directory).forceKey(key1).getComponent();
+    JComboBox combo = GlobComboEditor.init(DummyObject.COUNTER, new int[]{1, 3, 5, 7}, repository, directory).forceKey(key1).getComponent();
     return new ComboBox(combo);
   }
 
@@ -53,7 +53,7 @@ public class GlobComboEditorTest extends GuiComponentTestCase {
     assertTrue(combo.isEnabled());
     assertTrue(combo.selectionEquals("3"));
 
-    repository.update(key1, DummyObject.COUNT, 5);
+    repository.update(key1, DummyObject.COUNTER, 5);
     assertTrue(combo.isEnabled());
     assertTrue(combo.selectionEquals("5"));
 
@@ -66,14 +66,14 @@ public class GlobComboEditorTest extends GuiComponentTestCase {
     assertTrue(combo.selectionEquals(""));
     combo.select("7");
 
-    assertEquals(7, glob1.get(DummyObject.COUNT).intValue());
-    assertEquals(7, glob2.get(DummyObject.COUNT).intValue());
+    assertEquals(7, glob1.get(DummyObject.COUNTER).intValue());
+    assertEquals(7, glob2.get(DummyObject.COUNTER).intValue());
 
     repository.delete(key2);
     assertTrue(combo.isEnabled());
     assertTrue(combo.selectionEquals("7"));
     combo.select("3");
-    assertEquals(3, glob1.get(DummyObject.COUNT).intValue());
+    assertEquals(3, glob1.get(DummyObject.COUNTER).intValue());
 
     repository.delete(key1);
     assertFalse(combo.isEnabled());
@@ -83,7 +83,7 @@ public class GlobComboEditorTest extends GuiComponentTestCase {
   public void testStringifier() throws Exception {
 
     JComboBox jComboBox =
-      GlobComboEditor.init(DummyObject.COUNT, new int[]{1, 3, 5, 7}, repository, directory)
+      GlobComboEditor.init(DummyObject.COUNTER, new int[]{1, 3, 5, 7}, repository, directory)
         .setRenderer(new DefaultListCellRenderer() {
           public Component getListCellRendererComponent(JList combo, Object object, int i, boolean b, boolean b1) {
             Integer intValue = (Integer)object;
@@ -99,11 +99,11 @@ public class GlobComboEditorTest extends GuiComponentTestCase {
     selectionService.select(glob1);
     assertTrue(combo.selectionEquals("[3]"));
 
-    repository.update(key1, DummyObject.COUNT, 5);
+    repository.update(key1, DummyObject.COUNTER, 5);
     assertTrue(combo.selectionEquals("[5]"));
 
     combo.select("[7]");
-    assertEquals(7, glob1.get(DummyObject.COUNT).intValue());
+    assertEquals(7, glob1.get(DummyObject.COUNTER).intValue());
   }
 
   public void testForcedUsage() throws Exception {
@@ -113,12 +113,12 @@ public class GlobComboEditorTest extends GuiComponentTestCase {
     assertThat(combo.selectionEquals("3"));
 
     combo.select("5");
-    repoChecker.checkFields(glob1, value(DummyObject.COUNT, 5));
+    repoChecker.checkFields(glob1, value(DummyObject.COUNTER, 5));
 
     combo.select("7");
-    repoChecker.checkFields(glob1, value(DummyObject.COUNT, 7));
+    repoChecker.checkFields(glob1, value(DummyObject.COUNTER, 7));
 
-    repository.update(key1, value(DummyObject.COUNT, 1));
+    repository.update(key1, value(DummyObject.COUNTER, 1));
     assertThat(combo.selectionEquals("1"));
   }
 
@@ -128,7 +128,7 @@ public class GlobComboEditorTest extends GuiComponentTestCase {
     assertFalse(combo.isEnabled());
     assertTrue(combo.selectionEquals(null));
 
-    repository.create(key1, value(DummyObject.COUNT, 1));
+    repository.create(key1, value(DummyObject.COUNTER, 1));
     assertThat(combo.selectionEquals("1"));
   }
 
@@ -140,12 +140,12 @@ public class GlobComboEditorTest extends GuiComponentTestCase {
     assertFalse(combo.isEnabled());
     assertTrue(combo.selectionEquals(null));
 
-    repository.create(key1, value(DummyObject.COUNT, 7));
+    repository.create(key1, value(DummyObject.COUNTER, 7));
     assertThat(combo.selectionEquals("7"));
   }
 
   public void testSetName() throws Exception {
-    JComboBox combo = GlobComboEditor.init(DummyObject.COUNT, new int[]{1, 3, 5, 7}, repository, directory).forceKey(key1).setName("componentName")
+    JComboBox combo = GlobComboEditor.init(DummyObject.COUNTER, new int[]{1, 3, 5, 7}, repository, directory).forceKey(key1).setName("componentName")
       .getComponent();
     assertEquals("componentName", combo.getName());
   }

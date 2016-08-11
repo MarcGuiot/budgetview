@@ -10,7 +10,7 @@ import org.globsframework.model.GlobList;
 import org.globsframework.model.utils.EmptyGlobList;
 import org.globsframework.sqlstreams.SqlConnection;
 import org.globsframework.sqlstreams.constraints.Constraint;
-import org.globsframework.sqlstreams.constraints.Constraints;
+import org.globsframework.sqlstreams.constraints.Where;
 import org.globsframework.sqlstreams.drivers.jdbc.JdbcGlobsDatabase;
 import org.globsframework.utils.Dates;
 
@@ -77,7 +77,7 @@ public class DbChecker {
   }
 
   public Glob getLicense(String email, Field field, Object expected) throws InterruptedException {
-    return getGlob(field, expected, Constraints.equal(License.MAIL, email));
+    return getGlob(field, expected, Where.fieldEquals(License.MAIL, email));
   }
 
   public String checkRepoIdIsUpdated(long repoCount, Constraint constraint) throws InterruptedException {

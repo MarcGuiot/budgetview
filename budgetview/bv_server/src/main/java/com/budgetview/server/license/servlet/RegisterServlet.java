@@ -12,7 +12,7 @@ import org.globsframework.model.GlobList;
 import org.globsframework.model.utils.GlobFieldsComparator;
 import org.globsframework.sqlstreams.GlobsDatabase;
 import org.globsframework.sqlstreams.SqlConnection;
-import org.globsframework.sqlstreams.constraints.Constraints;
+import org.globsframework.sqlstreams.constraints.Where;
 import org.globsframework.utils.Utils;
 import org.globsframework.utils.directory.Directory;
 import org.globsframework.utils.serialization.Encoder;
@@ -77,7 +77,7 @@ public class RegisterServlet extends HttpServlet {
                         SqlConnection db)
     throws NoSuchProviderException, NoSuchAlgorithmException, InvalidKeySpecException, InvalidKeyException, SignatureException {
     GlobList globList =
-      db.selectAll(License.TYPE, Constraints.equal(License.MAIL, mail))
+      db.selectAll(License.TYPE, Where.fieldEquals(License.MAIL, mail))
         .sortSelf(COMPARATOR);
     db.commit();
     if (globList.isEmpty()) {
@@ -92,7 +92,7 @@ public class RegisterServlet extends HttpServlet {
             logger.info("Invalidating previous " + license.get(License.ID) + " ropId : " + license.get(License.REPO_ID));
           }
           byte[] signature = LicenseGenerator.generateSignature(mail);
-          db.startUpdate(License.TYPE, Constraints.equal(License.ID, license.get(License.ID)))
+          db.startUpdate(License.TYPE, Where.fieldEquals(License.ID, license.get(License.ID)))
             .set(License.ACCESS_COUNT, 1L)
             .set(License.SIGNATURE, signature)
             .set(License.ACTIVATION_CODE, (String) null)
@@ -106,7 +106,7 @@ public class RegisterServlet extends HttpServlet {
             .set(License.DATE_KILLED_4, license.get(License.DATE_KILLED_3))
             .set(License.KILLED_COUNT, license.get(License.KILLED_COUNT) + 1)
             .run();
-          db.startUpdate(RepoInfo.TYPE, Constraints.equal(RepoInfo.REPO_ID, repoId))
+          db.startUpdate(RepoInfo.TYPE, Where.fieldEquals(RepoInfo.REPO_ID, repoId))
             .set(RepoInfo.LICENSE_ID, license.get(License.ID))
             .run();
           db.commit();
@@ -116,7 +116,7 @@ public class RegisterServlet extends HttpServlet {
             if (glob != license) {
               // on ne doit avoir qu'un seul enregistrement valide par repo.
               if (Utils.equal(glob.get(License.REPO_ID), repoId)) {
-                db.startUpdate(License.TYPE, Constraints.equal(License.ID, glob.get(License.ID)))
+                db.startUpdate(License.TYPE, Where.fieldEquals(License.ID, glob.get(License.ID)))
                   .set(License.REPO_ID, ((String) null))
                   .run();
                 db.commit();
@@ -131,7 +131,7 @@ public class RegisterServlet extends HttpServlet {
         if (Utils.equal(activationCode, license.get(License.LAST_ACTIVATION_CODE))) {
           String newCode = LicenseGenerator.generateActivationCode();
           logger.info("Mail sent with new code " + newCode);
-          db.startUpdate(License.TYPE, Constraints.equal(License.MAIL, mail))
+          db.startUpdate(License.TYPE, Where.fieldEquals(License.MAIL, mail))
             .set(License.ACTIVATION_CODE, newCode)
             .run();
           db.commit();

@@ -12,7 +12,7 @@ import org.globsframework.sqlstreams.GlobsDatabase;
 import org.globsframework.sqlstreams.SelectQuery;
 import org.globsframework.sqlstreams.SqlConnection;
 import org.globsframework.sqlstreams.SqlRequest;
-import org.globsframework.sqlstreams.constraints.Constraints;
+import org.globsframework.sqlstreams.constraints.Where;
 import org.globsframework.streams.accessors.utils.ValueDateAccessor;
 import org.globsframework.streams.accessors.utils.ValueIntegerAccessor;
 import org.globsframework.streams.accessors.utils.ValueLongAccessor;
@@ -155,7 +155,7 @@ public class RequestForConfigServlet extends HttpServlet {
 
     RepoIdAnonymousRequest(SqlConnection db) {
       repoIdAccessor = new ValueStringAccessor();
-      repoIdQuery = db.startSelect(RepoInfo.TYPE, Constraints.equal(RepoInfo.REPO_ID, repoIdAccessor))
+      repoIdQuery = db.startSelect(RepoInfo.TYPE, Where.fieldEquals(RepoInfo.REPO_ID, repoIdAccessor))
         .selectAll()
         .getNotAutoCloseQuery();
     }
@@ -217,7 +217,7 @@ public class RequestForConfigServlet extends HttpServlet {
       date = new ValueDateAccessor();
       count = new ValueLongAccessor();
       jarVersion = new ValueLongAccessor();
-      request = db.startUpdate(RepoInfo.TYPE, Constraints.equal(RepoInfo.REPO_ID, repoId))
+      request = db.startUpdate(RepoInfo.TYPE, Where.fieldEquals(RepoInfo.REPO_ID, repoId))
         .set(RepoInfo.LAST_ACCESS_DATE, date)
         .set(RepoInfo.COUNT, count)
         .set(RepoInfo.JAR_VERSION, jarVersion)
@@ -344,7 +344,7 @@ public class RequestForConfigServlet extends HttpServlet {
 
     LicenseRequest(SqlConnection db) {
       mail = new ValueStringAccessor();
-      query = db.startSelect(License.TYPE, Constraints.equal(License.MAIL, mail))
+      query = db.startSelect(License.TYPE, Where.fieldEquals(License.MAIL, mail))
         .select(License.ACCESS_COUNT)
         .select(License.ACTIVATION_CODE)
         .select(License.REPO_ID)
@@ -376,7 +376,7 @@ public class RequestForConfigServlet extends HttpServlet {
     UpdateNewActivationCodeRequest(SqlConnection db) {
       mail = new ValueStringAccessor();
       activationCode = new ValueStringAccessor();
-      request = db.startUpdate(License.TYPE, Constraints.equal(License.MAIL, mail))
+      request = db.startUpdate(License.TYPE, Where.fieldEquals(License.MAIL, mail))
         .set(License.ACTIVATION_CODE, activationCode)
         .getRequest();
     }
@@ -412,7 +412,7 @@ public class RequestForConfigServlet extends HttpServlet {
       this.date = new ValueDateAccessor();
       timestamp = new ValueLongAccessor();
       jarVersion = new ValueLongAccessor();
-      request = db.startUpdate(License.TYPE, Constraints.equal(License.ID, id))
+      request = db.startUpdate(License.TYPE, Where.fieldEquals(License.ID, id))
         .set(License.ACCESS_COUNT, count)
         .set(License.LAST_ACCESS_DATE, this.date)
         .set(License.TIME_STAMP, timestamp)

@@ -10,7 +10,7 @@ import org.apache.log4j.Logger;
 import org.globsframework.model.GlobList;
 import org.globsframework.sqlstreams.GlobsDatabase;
 import org.globsframework.sqlstreams.SqlConnection;
-import org.globsframework.sqlstreams.constraints.Constraints;
+import org.globsframework.sqlstreams.constraints.Where;
 import org.globsframework.utils.Strings;
 import org.globsframework.utils.directory.Directory;
 
@@ -62,7 +62,7 @@ public class AskForCodeServlet extends HttpServlet {
           else {
             SqlConnection db = globsDB.connect();
             try {
-              db.startUpdate(License.TYPE, Constraints.equal(License.MAIL, mailTo))
+              db.startUpdate(License.TYPE, Where.fieldEquals(License.MAIL, mailTo))
                 .set(License.ACTIVATION_CODE, activationCode)
                 .run();
             }
@@ -115,7 +115,7 @@ public class AskForCodeServlet extends HttpServlet {
   private GlobList requestDb(String mailTo) {
     SqlConnection db = globsDB.connect();
     try {
-      return db.startSelect(License.TYPE, Constraints.equal(License.MAIL, mailTo))
+      return db.startSelect(License.TYPE, Where.fieldEquals(License.MAIL, mailTo))
         .select(License.MAIL)
         .getList();
     }

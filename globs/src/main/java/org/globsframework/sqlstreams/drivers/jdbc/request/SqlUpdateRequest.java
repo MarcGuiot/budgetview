@@ -6,7 +6,7 @@ import org.globsframework.model.Key;
 import org.globsframework.sqlstreams.GlobsDatabase;
 import org.globsframework.sqlstreams.SqlRequest;
 import org.globsframework.sqlstreams.constraints.Constraint;
-import org.globsframework.sqlstreams.constraints.Constraints;
+import org.globsframework.sqlstreams.constraints.Where;
 import org.globsframework.sqlstreams.drivers.jdbc.impl.BlobUpdater;
 import org.globsframework.sqlstreams.drivers.jdbc.impl.SqlValueFieldVisitor;
 import org.globsframework.sqlstreams.drivers.jdbc.impl.ValueConstraintVisitor;
@@ -76,9 +76,9 @@ public class SqlUpdateRequest implements SqlRequest {
     Field[] list = globType.getKeyFields();
     Constraint constraint = null;
     for (Field field : list) {
-      constraint = Constraints.and(constraint, Constraints.equalsObject(field, key.getValue(field)));
+      constraint = Where.and(constraint, Where.fieldEqualsValue(field, key.getValue(field)));
     }
-    this.constraint = Constraints.and(this.constraint, constraint);
+    this.constraint = Where.and(this.constraint, constraint);
     run();
   }
 

@@ -19,7 +19,7 @@ import org.globsframework.sqlstreams.GlobsDatabase;
 import org.globsframework.sqlstreams.SelectQuery;
 import org.globsframework.sqlstreams.SqlConnection;
 import org.globsframework.sqlstreams.SqlRequest;
-import org.globsframework.sqlstreams.constraints.Constraints;
+import org.globsframework.sqlstreams.constraints.Where;
 import org.globsframework.utils.directory.Directory;
 
 import javax.servlet.ServletException;
@@ -189,7 +189,7 @@ public class NewUserServlet extends HttpServlet {
   private void register(HttpServletResponse resp, String email, String transactionId, SqlConnection connection, String lang)
     throws NoSuchProviderException, NoSuchAlgorithmException, InvalidKeySpecException, InvalidKeyException, SignatureException {
     SelectQuery query = connection.startSelect(License.TYPE,
-                                               Constraints.equal(License.MAIL, email))
+                                               Where.fieldEquals(License.MAIL, email))
       .selectAll()
       .getQuery();
     GlobList globList = query.getList();
@@ -220,7 +220,7 @@ public class NewUserServlet extends HttpServlet {
       String code = glob.get(License.ACTIVATION_CODE);
       if (code == null) {
         code = LicenseGenerator.generateActivationCode();
-        connection.startUpdate(License.TYPE, Constraints.equal(License.MAIL, email))
+        connection.startUpdate(License.TYPE, Where.fieldEquals(License.MAIL, email))
           .set(License.ACTIVATION_CODE, code)
           .run();
       }

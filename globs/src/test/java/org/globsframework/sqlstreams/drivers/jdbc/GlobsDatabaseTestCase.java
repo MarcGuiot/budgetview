@@ -5,7 +5,7 @@ import org.globsframework.metamodel.utils.DefaultGlobModel;
 import org.globsframework.model.Key;
 import org.globsframework.sqlstreams.*;
 import org.globsframework.sqlstreams.constraints.Constraint;
-import org.globsframework.sqlstreams.constraints.Constraints;
+import org.globsframework.sqlstreams.constraints.Where;
 import org.globsframework.sqlstreams.utils.MultiCreateBuilder;
 import org.globsframework.streams.GlobStream;
 import org.globsframework.streams.accessors.Accessor;
@@ -57,7 +57,7 @@ public abstract class GlobsDatabaseTestCase extends ServicesTestCase {
     Constraint constraint = null;
 
     for (Field keyField : globType.getKeyFields()) {
-      constraint = Constraints.and(constraint, Constraints.equalsObject(keyField, key.getValue(keyField)));
+      constraint = Where.and(constraint, Where.fieldEqualsValue(keyField, key.getValue(keyField)));
     }
     SelectBuilder queryBuilder = sqlConnection.startSelect(key.getGlobType(), constraint);
     Accessor accessor = queryBuilder.retrieveUnTyped(field);

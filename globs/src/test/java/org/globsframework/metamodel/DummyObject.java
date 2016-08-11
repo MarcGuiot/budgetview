@@ -21,7 +21,7 @@ public class DummyObject {
   public static StringField NAME;
 
   public static DoubleField VALUE;
-  public static IntegerField COUNT;
+  public static IntegerField COUNTER;
   public static BooleanField PRESENT;
   public static DateField DATE;
   public static TimeStampField TIMESTAMP;
@@ -33,14 +33,10 @@ public class DummyObject {
   @Target(DummyObject2.class)
   public static LinkField LINK2;
 
-
-//  public static UniqueIndex NAME_INDEX;
   public static NotUniqueIndex DATE_INDEX;
-
 
   static {
     GlobTypeLoader loader = GlobTypeLoader.init(DummyObject.class);
-//    loader.defineUniqueIndex(NAME_INDEX, NAME);
     loader.defineNonUniqueIndex(DATE_INDEX, DATE);
   }
 }

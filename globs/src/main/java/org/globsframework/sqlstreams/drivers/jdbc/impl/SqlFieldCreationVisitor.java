@@ -22,42 +22,42 @@ public abstract class SqlFieldCreationVisitor implements FieldVisitor {
   }
 
   public void visitInteger(IntegerField field) throws Exception {
-    add("INTEGER", field);
+    add(field, "INTEGER");
   }
 
   public void visitLong(LongField field) throws Exception {
-    add("BIGINT", field);
+    add(field, "BIGINT");
   }
 
   public void visitDouble(DoubleField field) throws Exception {
-    add("DOUBLE", field);
+    add(field, "DOUBLE");
   }
 
   public void visitString(StringField field) throws Exception {
-    add("VARCHAR", field);
+    add(field, "VARCHAR");
   }
 
   public void visitDate(DateField field) throws Exception {
-    add("DATE", field);
+    add(field, "DATE");
   }
 
   public void visitBoolean(BooleanField field) throws Exception {
-    add("BOOLEAN", field);
+    add(field, "BOOLEAN");
   }
 
   public void visitTimeStamp(TimeStampField field) throws Exception {
-    add("TIMESTAMP", field);
+    add(field, "TIMESTAMP");
   }
 
   public void visitBlob(BlobField field) throws Exception {
-    add("BLOB", field);
+    add(field, "BLOB");
   }
 
   public void visitLink(LinkField field) throws Exception {
     visitInteger(field);
   }
 
-  protected void add(String param, Field field) {
+  protected void add(Field field, String param) {
     boolean isAutoIncrementField = field.hasAnnotation(AutoIncrement.class);
     String columnName = globsDB.getColumnName(field);
     if (columnName != null) {

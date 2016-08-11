@@ -13,7 +13,7 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.params.CoreProtocolPNames;
 import com.budgetview.server.license.ConnectedTestCase;
 import org.globsframework.sqlstreams.SqlConnection;
-import org.globsframework.sqlstreams.constraints.Constraints;
+import org.globsframework.sqlstreams.constraints.Where;
 import org.globsframework.utils.Utils;
 
 import java.io.IOException;
@@ -71,7 +71,7 @@ public class AskMailTest extends ConnectedTestCase {
     Header header = response.getFirstHeader(LicenseConstants.HEADER_STATUS);
     assertEquals(LicenseConstants.HEADER_MAIL_UNKNOWN, header.getValue());
     SqlConnection connection = db.getConnection();
-    connection.selectUnique(MailError.TYPE, Constraints.equal(MailError.MAIL, badMail));
+    connection.selectUnique(MailError.TYPE, Where.fieldEquals(MailError.MAIL, badMail));
     connection.commitAndClose();
   }
 

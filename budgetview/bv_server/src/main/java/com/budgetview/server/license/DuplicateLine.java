@@ -4,7 +4,7 @@ import com.budgetview.server.license.model.License;
 import org.globsframework.sqlstreams.GlobsDatabase;
 import org.globsframework.sqlstreams.SqlConnection;
 import org.globsframework.sqlstreams.SqlRequest;
-import org.globsframework.sqlstreams.constraints.Constraints;
+import org.globsframework.sqlstreams.constraints.Where;
 import org.globsframework.sqlstreams.drivers.jdbc.JdbcGlobsDatabase;
 import org.globsframework.model.GlobList;
 import org.globsframework.model.Glob;
@@ -33,7 +33,7 @@ public class DuplicateLine {
     String bvUser = null;
     if (args.length !=0) {
       bvUser = args[0];
-      GlobList licences = connection.selectAll(License.TYPE, Constraints.equal(License.MAIL, bvUser));
+      GlobList licences = connection.selectAll(License.TYPE, Where.fieldEquals(License.MAIL, bvUser));
       if (licences.size() == 0){
         System.out.println("DuplicateLine.main " + bvUser + " not found.");
       }

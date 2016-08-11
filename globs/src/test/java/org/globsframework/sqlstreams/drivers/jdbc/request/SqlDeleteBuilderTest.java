@@ -4,7 +4,7 @@ import org.globsframework.metamodel.DummyObject;
 import org.globsframework.metamodel.DummyObject2;
 import org.globsframework.model.GlobList;
 import org.globsframework.sqlstreams.constraints.Constraint;
-import org.globsframework.sqlstreams.constraints.Constraints;
+import org.globsframework.sqlstreams.constraints.Where;
 import org.globsframework.sqlstreams.drivers.jdbc.GlobsDatabaseTestCase;
 import org.globsframework.streams.GlobStream;
 import org.globsframework.streams.xml.XmlGlobStreamReader;
@@ -26,7 +26,7 @@ public class SqlDeleteBuilderTest extends GlobsDatabaseTestCase {
                                                       "<dummyObject id='2' name='world' value='1.1' present='true'/>"));
     populate(sqlConnection, XmlGlobStreamReader.parse(directory,
                                                       "<dummyObject2 id='1' label='hello'/>"));
-    Constraint constraint = Constraints.equal(DummyObject.NAME, "hello");
+    Constraint constraint = Where.fieldEquals(DummyObject.NAME, "hello");
     sqlConnection.startDelete(DummyObject.TYPE, constraint).run();
     GlobList globs = sqlConnection.startSelect(DummyObject.TYPE).getQuery().getList();
     assertEquals(1, globs.size());

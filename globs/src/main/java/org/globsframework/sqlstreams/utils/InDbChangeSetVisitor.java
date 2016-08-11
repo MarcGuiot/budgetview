@@ -8,7 +8,7 @@ import org.globsframework.model.Key;
 import org.globsframework.sqlstreams.CreateBuilder;
 import org.globsframework.sqlstreams.SqlConnection;
 import org.globsframework.sqlstreams.UpdateBuilder;
-import org.globsframework.sqlstreams.constraints.Constraints;
+import org.globsframework.sqlstreams.constraints.Where;
 
 public class InDbChangeSetVisitor implements ChangeSetVisitor {
   private SqlConnection sqlConnection;
@@ -39,13 +39,13 @@ public class InDbChangeSetVisitor implements ChangeSetVisitor {
 
   public void visitUpdate(Key key, FieldValuesWithPrevious values) throws Exception {
     updateBuilder = sqlConnection.startUpdate(key.getGlobType(),
-                                              Constraints.fieldsEqual(key));
+                                              Where.fieldsAreEqual(key));
     key.apply(functorForUpdate);
     values.apply(functorForUpdate);
     updateBuilder.getRequest().run();
   }
 
   public void visitDeletion(Key key, FieldValues values) throws Exception {
-    sqlConnection.startDelete(key.getGlobType(), Constraints.fieldsEqual(key)).run();
+    sqlConnection.startDelete(key.getGlobType(), Where.fieldsAreEqual(key)).run();
   }
 }

@@ -7,7 +7,7 @@ import org.globsframework.sqlstreams.CreateBuilder;
 import org.globsframework.sqlstreams.GlobsDatabase;
 import org.globsframework.sqlstreams.SqlConnection;
 import org.globsframework.sqlstreams.constraints.Constraint;
-import org.globsframework.sqlstreams.constraints.Constraints;
+import org.globsframework.sqlstreams.constraints.Where;
 import org.globsframework.sqlstreams.exceptions.RollbackFailed;
 import org.globsframework.streams.GlobStream;
 import org.globsframework.streams.accessors.IntegerAccessor;
@@ -32,14 +32,14 @@ public class DbGlobIdGenerator {
     while (true) {
       try {
         Ref<IntegerAccessor> idRef = new Ref<IntegerAccessor>();
-        Constraint constraint = Constraints.and(getAdditionalConstraint(),
-                                                Constraints.equal(tableNameField, tableName));
+        Constraint constraint = Where.and(getAdditionalConstraint(),
+                                          Where.fieldEquals(tableNameField, tableName));
         GlobStream globStream = sqlConnection.startSelect(globType, constraint)
           .select(idField, idRef).getQuery().getStream();
         int id;
         if (globStream.next()) {
           id = idRef.get().getValue() + idCount;
-          sqlConnection.startUpdate(globType, Constraints.equal(tableNameField, tableName))
+          sqlConnection.startUpdate(globType, Where.fieldEquals(tableNameField, tableName))
             .set(idField, id).getRequest().run();
         }
         else {
