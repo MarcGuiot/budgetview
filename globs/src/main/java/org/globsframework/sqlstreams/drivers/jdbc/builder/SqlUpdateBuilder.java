@@ -35,7 +35,7 @@ public class SqlUpdateBuilder implements UpdateBuilder {
     this.constraint = constraint;
   }
 
-  public UpdateBuilder updateUntyped(Field field, final Object value) {
+  public UpdateBuilder setValue(Field field, final Object value) {
     field.safeVisit(new FieldVisitor() {
       public void visitInteger(IntegerField field) throws Exception {
         set(field, (Integer)value);
@@ -76,7 +76,7 @@ public class SqlUpdateBuilder implements UpdateBuilder {
     return this;
   }
 
-  public UpdateBuilder updateUntyped(Field field, Accessor accessor) {
+  public UpdateBuilder setValue(Field field, Accessor accessor) {
     values.put(field, accessor);
     return this;
   }

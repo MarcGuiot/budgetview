@@ -8,9 +8,9 @@ import java.util.Date;
 
 public interface UpdateBuilder {
 
-  UpdateBuilder updateUntyped(Field field, Object value);
+  UpdateBuilder setValue(Field field, Object value);
 
-  UpdateBuilder updateUntyped(Field field, Accessor accessor);
+  UpdateBuilder setValue(Field field, Accessor accessor);
 
   UpdateBuilder set(IntegerField field, IntegerAccessor accessor);
 

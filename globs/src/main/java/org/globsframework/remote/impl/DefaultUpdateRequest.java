@@ -15,7 +15,7 @@ public class DefaultUpdateRequest implements RemoteExecutor.UpdateRequest {
   }
 
   public void update(Field field, Object value) {
-    builder.updateUntyped(field, value);
+    builder.setValue(field, value);
   }
 
   public void update() {

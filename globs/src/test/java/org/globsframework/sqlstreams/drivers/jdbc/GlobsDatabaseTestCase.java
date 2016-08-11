@@ -74,7 +74,7 @@ public abstract class GlobsDatabaseTestCase extends ServicesTestCase {
     CreateBuilder createBuilder = new MultiCreateBuilder(connection, types);
     Collection<Field> fields = stream.getFields();
     for (Field field : fields) {
-      createBuilder.setObject(field, stream.getAccessor(field));
+      createBuilder.setValue(field, stream.getAccessor(field));
     }
     SqlRequest request = createBuilder.getRequest();
     while (stream.next()) {

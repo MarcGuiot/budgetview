@@ -31,9 +31,9 @@ public interface CreateBuilder {
 
   CreateBuilder set(BlobField field, BlobAccessor accessor);
 
-  CreateBuilder setObject(Field field, Accessor accessor);
+  CreateBuilder setValue(Field field, Accessor accessor);
 
-  CreateBuilder setObject(Field field, Object value);
+  CreateBuilder setValue(Field field, Object value);
 
   SqlRequest getRequest();
 

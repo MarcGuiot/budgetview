@@ -81,13 +81,13 @@ public class MultiCreateBuilder implements CreateBuilder {
     return this;
   }
 
-  public CreateBuilder setObject(Field field, Accessor accessor) {
-    createBuilders.get(field.getGlobType()).setObject(field, accessor);
+  public CreateBuilder setValue(Field field, Accessor accessor) {
+    createBuilders.get(field.getGlobType()).setValue(field, accessor);
     return this;
   }
 
-  public CreateBuilder setObject(Field field, Object value) {
-    createBuilders.get(field.getGlobType()).setObject(field, value);
+  public CreateBuilder setValue(Field field, Object value) {
+    createBuilders.get(field.getGlobType()).setValue(field, value);
     return this;
   }
 

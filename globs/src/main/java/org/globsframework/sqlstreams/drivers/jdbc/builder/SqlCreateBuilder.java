@@ -38,43 +38,43 @@ public class SqlCreateBuilder implements CreateBuilder {
     this.jdbcConnection = jdbcConnection;
   }
 
-  public CreateBuilder setObject(Field field, Accessor accessor) {
+  public CreateBuilder setValue(Field field, Accessor accessor) {
     fields.add(new Pair<Field, Accessor>(field, accessor));
     return this;
   }
 
-  public CreateBuilder setObject(Field field, final Object value) {
+  public CreateBuilder setValue(Field field, final Object value) {
     field.safeVisit(new FieldVisitor() {
       public void visitInteger(IntegerField field) throws Exception {
-        setObject(field, new ValueIntegerAccessor((Integer)value));
+        setValue(field, new ValueIntegerAccessor((Integer)value));
       }
 
       public void visitLong(LongField field) throws Exception {
-        setObject(field, new ValueLongAccessor((Long)value));
+        setValue(field, new ValueLongAccessor((Long)value));
       }
 
       public void visitDouble(DoubleField field) throws Exception {
-        setObject(field, new ValueDoubleAccessor((Double)value));
+        setValue(field, new ValueDoubleAccessor((Double)value));
       }
 
       public void visitString(StringField field) throws Exception {
-        setObject(field, new ValueStringAccessor((String)value));
+        setValue(field, new ValueStringAccessor((String)value));
       }
 
       public void visitDate(DateField field) throws Exception {
-        setObject(field, new ValueDateAccessor((Date)value));
+        setValue(field, new ValueDateAccessor((Date)value));
       }
 
       public void visitBoolean(BooleanField field) throws Exception {
-        setObject(field, new ValueBooleanAccessor((Boolean)value));
+        setValue(field, new ValueBooleanAccessor((Boolean)value));
       }
 
       public void visitTimeStamp(TimeStampField field) throws Exception {
-        setObject(field, new ValueDateAccessor((Date)value));
+        setValue(field, new ValueDateAccessor((Date)value));
       }
 
       public void visitBlob(BlobField field) throws Exception {
-        setObject(field, new ValueBlobAccessor((byte[])value));
+        setValue(field, new ValueBlobAccessor((byte[])value));
       }
 
       public void visitLink(LinkField field) throws Exception {
@@ -85,51 +85,51 @@ public class SqlCreateBuilder implements CreateBuilder {
   }
 
   public CreateBuilder set(IntegerField field, IntegerAccessor accessor) {
-    return setObject(field, accessor);
+    return setValue(field, accessor);
   }
 
   public CreateBuilder set(LongField field, LongAccessor accessor) {
-    return setObject(field, accessor);
+    return setValue(field, accessor);
   }
 
   public CreateBuilder set(StringField field, StringAccessor accessor) {
-    return setObject(field, accessor);
+    return setValue(field, accessor);
   }
 
   public CreateBuilder set(TimeStampField field, DateAccessor accessor) {
-    return setObject(field, accessor);
+    return setValue(field, accessor);
   }
 
   public CreateBuilder set(TimeStampField field, Date date) {
-    return setObject(field, new ValueDateAccessor(date));
+    return setValue(field, new ValueDateAccessor(date));
   }
 
   public CreateBuilder set(BlobField field, BlobAccessor accessor) {
-    return setObject(field, accessor);
+    return setValue(field, accessor);
   }
 
   public CreateBuilder set(DateField field, DateAccessor accessor) {
-    return setObject(field, accessor);
+    return setValue(field, accessor);
   }
 
   public CreateBuilder set(BlobField field, byte[] values) {
-    return setObject(field, new ValueBlobAccessor(values));
+    return setValue(field, new ValueBlobAccessor(values));
   }
 
   public CreateBuilder set(StringField field, String value) {
-    return setObject(field, new ValueStringAccessor(value));
+    return setValue(field, new ValueStringAccessor(value));
   }
 
   public CreateBuilder set(LongField field, Long value) {
-    return setObject(field, new ValueLongAccessor(value));
+    return setValue(field, new ValueLongAccessor(value));
   }
 
   public CreateBuilder set(IntegerField field, Integer value) {
-    return setObject(field, new ValueIntegerAccessor(value));
+    return setValue(field, new ValueIntegerAccessor(value));
   }
 
   public CreateBuilder set(DateField field, Date date) {
-    return setObject(field, new ValueDateAccessor(date));
+    return setValue(field, new ValueDateAccessor(date));
   }
 
   public LongAccessor getKeyGeneratedAccessor() {

@@ -31,11 +31,11 @@ public interface SqlConnection {
 
   CreateBuilder startCreate(GlobType globType);
 
-  void createAll(GlobList all);
-
   void create(Glob glob);
 
   UpdateBuilder startUpdate(GlobType globType, Constraint constraint);
+
+  void update(Glob glob);
 
   SqlRequest startDelete(GlobType globType);
 

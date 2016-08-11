@@ -6,6 +6,7 @@ import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
 import org.globsframework.sqlstreams.*;
 import org.globsframework.sqlstreams.constraints.Constraint;
+import org.globsframework.sqlstreams.constraints.Constraints;
 import org.globsframework.sqlstreams.drivers.jdbc.builder.SqlCreateBuilder;
 import org.globsframework.sqlstreams.drivers.jdbc.builder.SqlQueryBuilder;
 import org.globsframework.sqlstreams.drivers.jdbc.builder.SqlUpdateBuilder;
@@ -65,6 +66,26 @@ public abstract class JdbcConnection implements SqlConnection {
   public UpdateBuilder startUpdate(GlobType globType, Constraint constraint) {
     checkConnectionIsNotClosed();
     return new SqlUpdateBuilder(connection, globType, db, constraint, blobUpdater);
+  }
+
+  public void update(Glob glob) {
+    GlobType type = glob.getType();
+    Field[] keyFields = type.getKeyFields();
+    if (keyFields.length != 1) {
+      throw new InvalidParameter("Type '" + type.getName() + "' has " + keyFields.length + " keys - only 1-key types supported for update");
+    }
+    Field keyField = keyFields[0];
+    Object id = glob.getValue(keyField);
+    if (id == null) {
+      throw new InvalidParameter("Key field must be set for: " + glob);
+    }
+    UpdateBuilder updateBuilder = startUpdate(type, Constraints.equalsObject(keyField, id));
+    for (Field field : glob.getType().getFields()) {
+      if (!field.isKeyField()) {
+        updateBuilder.setValue(field, glob.getValue(field));
+      }
+    }
+    updateBuilder.run();
   }
 
   private void checkConnectionIsNotClosed() {
@@ -169,16 +190,10 @@ public abstract class JdbcConnection implements SqlConnection {
     }
   }
 
-  public void createAll(GlobList all) {
-    for (Glob glob : all) {
-      create(glob);
-    }
-  }
-
   public void create(Glob glob) {
     CreateBuilder createBuilder = startCreate(glob.getType());
     for (Field field : glob.getType().getFields()) {
-      createBuilder.setObject(field, glob.getValue(field));
+      createBuilder.setValue(field, glob.getValue(field));
     }
     createBuilder.run();
   }

@@ -45,8 +45,8 @@ public class DbGlobIdGenerator {
         else {
           id = idCount;
           CreateBuilder builder = sqlConnection.startCreate(globType)
-            .setObject(idField, idCount)
-            .setObject(tableNameField, tableName);
+            .setValue(idField, idCount)
+            .setValue(tableNameField, tableName);
           addAdditionalInfo(builder);
           builder.run();
         }

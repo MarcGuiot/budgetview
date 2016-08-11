@@ -25,7 +25,7 @@ public class DefaultCreateRequest implements RemoteExecutor.CreateRequest {
     for (Field field : globType.getFields()) {
       ValueAccessor accessor = new ValueAccessor();
       accessorByField.put(field, accessor);
-      createBuilder.setObject(field, accessor);
+      createBuilder.setValue(field, accessor);
     }
     keyValues.safeApply(new FieldValues.Functor() {
       public void process(Field field, Object value) throws Exception {

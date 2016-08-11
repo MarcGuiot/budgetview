@@ -37,8 +37,8 @@ public class SqlUpdateBuilderTest extends GlobsDatabaseTestCase {
     updateBuilder.set(DummyObject.TIMESTAMP, new ValueDateAccessor(timestamp));
 
     ValueDoubleAccessor valueAccessor = new ValueDoubleAccessor(2.2);
-    updateBuilder.updateUntyped(DummyObject.VALUE, valueAccessor);
-    updateBuilder.updateUntyped(DummyObject.PASSWORD, "some blog".getBytes());
+    updateBuilder.setValue(DummyObject.VALUE, valueAccessor);
+    updateBuilder.setValue(DummyObject.PASSWORD, "some blog".getBytes());
 
     SqlRequest updateRequest = updateBuilder.getRequest();
     Key key1 = newKey(DummyObject.TYPE, 1);
