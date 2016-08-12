@@ -4,10 +4,7 @@ import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.annotations.Key;
 import org.globsframework.metamodel.annotations.NoObfuscation;
 import org.globsframework.metamodel.annotations.Target;
-import org.globsframework.metamodel.fields.DoubleField;
-import org.globsframework.metamodel.fields.IntegerField;
-import org.globsframework.metamodel.fields.LinkField;
-import org.globsframework.metamodel.fields.StringField;
+import org.globsframework.metamodel.fields.*;
 import org.globsframework.metamodel.utils.GlobTypeLoader;
 import org.globsframework.sqlstreams.annotations.AutoIncrement;
 
@@ -26,7 +23,9 @@ public class ProviderTransaction {
 
   public static IntegerField PROVIDER_ID;
 
-  public static IntegerField CATEGORY;
+  public static IntegerField CATEGORY_ID;
+
+  public static StringField CATEGORY_NAME;
 
   @Target(ProviderAccount.class)
   public static LinkField ACCOUNT;
@@ -43,7 +42,7 @@ public class ProviderTransaction {
   public static IntegerField BANK_MONTH;
   public static IntegerField BANK_DAY;
 
-  public static IntegerField SEQUENCE_NUMBER;
+  public static BooleanField DELETED;
 
   static {
     GlobTypeLoader.init(ProviderTransaction.class);

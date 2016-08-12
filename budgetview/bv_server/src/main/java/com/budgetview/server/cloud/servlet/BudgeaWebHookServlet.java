@@ -159,7 +159,7 @@ public class BudgeaWebHookServlet extends HttpServlet {
       Ref<IntegerAccessor> cloudId = new Ref<IntegerAccessor>();
       SqlSelect query = sqlConnection.startSelect(providerIdField.getGlobType(),
                                                   Where.and(fieldEquals(userField, userId),
-                                                              fieldEquals(providerField, Provider.BUDGEA.getId())))
+                                                            fieldEquals(providerField, Provider.BUDGEA.getId())))
         .select(idField, cloudId)
         .select(providerIdField, providerId)
         .getQuery();
@@ -215,33 +215,35 @@ public class BudgeaWebHookServlet extends HttpServlet {
       }
     }
 
-    private void saveTransaction(Integer userId, Integer accountId, JSONObject transaction) throws GlobsSQLException  {
+    private void saveTransaction(Integer userId, Integer accountId, JSONObject transaction) throws GlobsSQLException, ParseException {
 
       int providerTransactionId = transaction.getInt("id");
+      Date operationDate = Budgea.parseDate(transaction.getString("rdate"));
+      Date bankDate = Budgea.parseDate(transaction.getString("date"));
+      JSONObject category = transaction.getJSONObject("category");
 
-//      providerTransaction
-//        .set(ProviderTransaction.USER, userId)
-//        .set(ProviderTransaction.ACCOUNT, )
-//        .set(ProviderTransaction., )
-//        .set(ProviderTransaction., )
-//        .set(ProviderTransaction., )
-//        .set(ProviderTransaction., )
-//        .set(ProviderTransaction., )
-//        .set(ProviderTransaction., )
-//        .set(ProviderTransaction., )
-//        .set(ProviderTransaction., )
-//        .set(ProviderTransaction., )
-//        .set(ProviderTransaction., );
-//
-//      if (accountIds.containsKey(providerTransactionId)) {
-//        providerTransaction.set(ProviderTransaction.ID, accountIds.get(providerTransactionId));
-//        providerTransactionUpdateRequest.execute();
-//      }
-//      else {
-//        providerTransaction.clear(ProviderTransaction.ID);
-//        providerTransactionCreateRequest.execute();
-//      }
+      providerTransaction
+        .set(ProviderTransaction.USER, userId)
+        .set(ProviderTransaction.ACCOUNT, accountId)
+        .set(ProviderTransaction.AMOUNT, transaction.getDouble("value"))
+        .set(ProviderTransaction.BANK_MONTH, DateConverter.getMonthId(bankDate))
+        .set(ProviderTransaction.BANK_DAY, DateConverter.getDay(bankDate))
+        .set(ProviderTransaction.OPERATION_MONTH, DateConverter.getMonthId(operationDate))
+        .set(ProviderTransaction.OPERATION_DAY, DateConverter.getDay(operationDate))
+        .set(ProviderTransaction.LABEL, transaction.getString("wording"))
+        .set(ProviderTransaction.ORIGINAL_LABEL, transaction.getString("original_wording"))
+        .set(ProviderTransaction.CATEGORY_ID, category.getInt("id"))
+        .set(ProviderTransaction.CATEGORY_NAME, category.getString("name"))
+        .set(ProviderTransaction.DELETED, !transaction.isNull("deleted") && transaction.getBoolean("deleted"));
 
+      if (accountIds.containsKey(providerTransactionId)) {
+        providerTransaction.set(ProviderTransaction.ID, accountIds.get(providerTransactionId));
+        providerTransactionUpdateRequest.execute();
+      }
+      else {
+        providerTransaction.clear(ProviderTransaction.ID);
+        providerTransactionCreateRequest.execute();
+      }
     }
 
     private void commitAndClose() {
