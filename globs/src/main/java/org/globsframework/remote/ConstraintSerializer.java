@@ -83,13 +83,13 @@ public class ConstraintSerializer {
       constraint.getRightOperand().visitOperand(this);
     }
 
-    public void visitStricklyBiggerThan(StrictlyBiggerThanConstraint constraint) {
+    public void visitStrictlyGreaterThan(StrictlyBiggerThanConstraint constraint) {
       output.writeByte(ConstraintId.StrictlyBiggerThanConstraint.getId());
       constraint.getLeftOperand().visitOperand(this);
       constraint.getRightOperand().visitOperand(this);
     }
 
-    public void visitStricklyLesserThan(StrictlyLesserThanConstraint constraint) {
+    public void visitStrictlyLessThan(StrictlyLesserThanConstraint constraint) {
       output.writeByte(ConstraintId.StrictlyLesserThanConstraint.getId());
       constraint.getLeftOperand().visitOperand(this);
       constraint.getRightOperand().visitOperand(this);

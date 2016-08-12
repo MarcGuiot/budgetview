@@ -1,8 +1,7 @@
 package org.globsframework.streams.accessors;
 
-import org.globsframework.model.Glob;
+import org.globsframework.metamodel.Field;
 
-public interface GlobAccessor extends Accessor {
-
-  Glob getGlob();
+public interface GlobAccessor {
+  Object getValue(Field field);
 }

@@ -78,7 +78,7 @@ public class SqlCreateRequest implements SqlRequest {
     return writer.toString();
   }
 
-  public void run() {
+  public void execute() {
     try {
       int index = 0;
       for (Pair<Field, Accessor> pair : fields) {

@@ -47,6 +47,6 @@ public class DefaultCreateRequest implements RemoteExecutor.CreateRequest {
   }
 
   public void create() {
-    query.run();
+    query.execute();
   }
 }

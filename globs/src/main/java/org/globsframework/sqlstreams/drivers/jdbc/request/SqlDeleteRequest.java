@@ -59,7 +59,7 @@ public class SqlDeleteRequest implements SqlRequest {
 
   }
 
-  public void run() {
+  public void execute() {
     if (constraint != null) {
       constraint.visit(new ValueConstraintVisitor(preparedStatement, blobUpdater));
     }

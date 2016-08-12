@@ -8,6 +8,8 @@ import java.util.Date;
 
 public interface UpdateBuilder {
 
+  UpdateBuilder setAll(GlobAccessor accessor);
+
   UpdateBuilder setValue(Field field, Object value);
 
   UpdateBuilder setValue(Field field, Accessor accessor);

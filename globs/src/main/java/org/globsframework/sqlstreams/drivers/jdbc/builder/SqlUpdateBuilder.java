@@ -12,6 +12,7 @@ import org.globsframework.sqlstreams.drivers.jdbc.request.SqlUpdateRequest;
 import org.globsframework.sqlstreams.exceptions.SqlException;
 import org.globsframework.streams.accessors.*;
 import org.globsframework.streams.accessors.utils.*;
+import org.globsframework.utils.exceptions.InvalidState;
 
 import java.sql.Connection;
 import java.util.Date;
@@ -19,20 +20,27 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class SqlUpdateBuilder implements UpdateBuilder {
-  private Map<Field, Accessor> values = new HashMap<Field, Accessor>();
+  private Map<Field, Accessor> accessors = new HashMap<Field, Accessor>();
   private Connection connection;
   private GlobType globType;
-  private GlobsDatabase globsDB;
+  private GlobsDatabase db;
   private Constraint constraint;
   private BlobUpdater blobUpdater;
 
-  public SqlUpdateBuilder(Connection connection, GlobType globType, GlobsDatabase globsDB,
+  public SqlUpdateBuilder(Connection connection, GlobType globType, GlobsDatabase db,
                           Constraint constraint, BlobUpdater blobUpdater) {
     this.blobUpdater = blobUpdater;
     this.connection = connection;
     this.globType = globType;
-    this.globsDB = globsDB;
+    this.db = db;
     this.constraint = constraint;
+  }
+
+  public UpdateBuilder setAll(GlobAccessor accessor) {
+    for (Field field : globType.getFields()) {
+      accessors.put(field, new GlobFieldAccessor(field, accessor));
+    }
+    return this;
   }
 
   public UpdateBuilder setValue(Field field, final Object value) {
@@ -77,12 +85,12 @@ public class SqlUpdateBuilder implements UpdateBuilder {
   }
 
   public UpdateBuilder setValue(Field field, Accessor accessor) {
-    values.put(field, accessor);
+    accessors.put(field, accessor);
     return this;
   }
 
   public UpdateBuilder set(IntegerField field, IntegerAccessor accessor) {
-    values.put(field, accessor);
+    accessors.put(field, accessor);
     return this;
   }
 
@@ -91,7 +99,7 @@ public class SqlUpdateBuilder implements UpdateBuilder {
   }
 
   public UpdateBuilder set(LongField field, LongAccessor accessor) {
-    values.put(field, accessor);
+    accessors.put(field, accessor);
     return this;
   }
 
@@ -100,7 +108,7 @@ public class SqlUpdateBuilder implements UpdateBuilder {
   }
 
   public UpdateBuilder set(DoubleField field, DoubleAccessor accessor) {
-    values.put(field, accessor);
+    accessors.put(field, accessor);
     return this;
   }
 
@@ -109,7 +117,7 @@ public class SqlUpdateBuilder implements UpdateBuilder {
   }
 
   public UpdateBuilder set(DateField field, DateAccessor accessor) {
-    values.put(field, accessor);
+    accessors.put(field, accessor);
     return this;
   }
 
@@ -122,12 +130,12 @@ public class SqlUpdateBuilder implements UpdateBuilder {
   }
 
   public UpdateBuilder set(TimeStampField field, DateAccessor accessor) {
-    values.put(field, accessor);
+    accessors.put(field, accessor);
     return this;
   }
 
   public UpdateBuilder set(StringField field, StringAccessor accessor) {
-    values.put(field, accessor);
+    accessors.put(field, accessor);
     return this;
   }
 
@@ -136,7 +144,7 @@ public class SqlUpdateBuilder implements UpdateBuilder {
   }
 
   public UpdateBuilder set(BooleanField field, BooleanAccessor accessor) {
-    values.put(field, accessor);
+    accessors.put(field, accessor);
     return this;
   }
 
@@ -149,12 +157,12 @@ public class SqlUpdateBuilder implements UpdateBuilder {
   }
 
   public UpdateBuilder set(BlobField field, BlobAccessor accessor) {
-    values.put(field, accessor);
+    accessors.put(field, accessor);
     return this;
   }
 
   public UpdateBuilder set(LinkField field, IntegerAccessor accessor) {
-    values.put(field, accessor);
+    accessors.put(field, accessor);
     return this;
   }
 
@@ -162,16 +170,16 @@ public class SqlUpdateBuilder implements UpdateBuilder {
     return set(field, new ValueIntegerAccessor(value));
   }
 
-  public SqlRequest getRequest() {
+  public SqlRequest getRequest() throws InvalidState {
     try {
-      return new SqlUpdateRequest(globType, constraint, values, connection, globsDB, blobUpdater);
+      return new SqlUpdateRequest(globType, constraint, accessors, connection, db, blobUpdater);
     }
     finally {
-      values.clear();
+      accessors.clear();
     }
   }
 
   public void run() throws SqlException {
-    getRequest().run();
+    getRequest().execute();
   }
 }

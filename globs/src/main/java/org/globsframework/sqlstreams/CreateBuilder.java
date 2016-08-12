@@ -1,12 +1,16 @@
 package org.globsframework.sqlstreams;
 
 import org.globsframework.metamodel.Field;
+import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.fields.*;
 import org.globsframework.streams.accessors.*;
 
 import java.util.Date;
 
 public interface CreateBuilder {
+
+  CreateBuilder setAll(GlobAccessor accessor);
+
   CreateBuilder set(IntegerField field, Integer value);
 
   CreateBuilder set(BlobField field, byte[] value);

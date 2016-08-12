@@ -28,8 +28,6 @@ import org.uispec4j.Trigger;
 import org.uispec4j.Window;
 import org.uispec4j.interception.WindowInterceptor;
 
-import static org.globsframework.sqlstreams.constraints.Where.equal;
-
 public class LicenseActivationTest extends ConnectedTestCase {
   public static final String ACTIVATION_CODE = "Activation code : <b>";
   private Application Application;

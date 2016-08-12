@@ -44,7 +44,6 @@ public class Where {
   /**
    * We use different name to help the IDE giving us the good completion
    */
-
   public static Constraint fieldEqualsValue(Field field, Object value) {
     return new EqualConstraint(new FieldOperand(field), new ValueOperand(field, value));
   }

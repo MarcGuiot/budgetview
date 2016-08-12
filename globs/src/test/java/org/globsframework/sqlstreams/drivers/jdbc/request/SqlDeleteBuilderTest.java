@@ -27,7 +27,7 @@ public class SqlDeleteBuilderTest extends GlobsDatabaseTestCase {
     populate(sqlConnection, XmlGlobStreamReader.parse(directory,
                                                       "<dummyObject2 id='1' label='hello'/>"));
     Constraint constraint = Where.fieldEquals(DummyObject.NAME, "hello");
-    sqlConnection.startDelete(DummyObject.TYPE, constraint).run();
+    sqlConnection.startDelete(DummyObject.TYPE, constraint).execute();
     GlobList globs = sqlConnection.startSelect(DummyObject.TYPE).getQuery().getList();
     assertEquals(1, globs.size());
     assertEquals(2, globs.get(0).get(DummyObject.ID).intValue());

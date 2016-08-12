@@ -16,7 +16,7 @@ public class SqlCreateBuilderTest extends GlobsDatabaseTestCase {
       .set(DummyObject.NAME, new ValueStringAccessor("hello"))
       .set(DummyObject.PASSWORD, new ValueBlobAccessor("world".getBytes()))
       .getRequest()
-      .run();
+      .execute();
     checkDb(newKey(DummyObject.TYPE, 1), DummyObject.NAME, "hello", sqlConnection);
     assertEquals("world",
                  new String((byte[])getNextValue(newKey(DummyObject.TYPE, 1), sqlConnection, DummyObject.PASSWORD)));

@@ -15,9 +15,9 @@ public interface ConstraintVisitor {
 
   void visitBiggerThan(BiggerThanConstraint constraint);
 
-  void visitStricklyBiggerThan(StrictlyBiggerThanConstraint constraint);
+  void visitStrictlyGreaterThan(StrictlyBiggerThanConstraint constraint);
 
-  void visitStricklyLesserThan(StrictlyLesserThanConstraint constraint);
+  void visitStrictlyLessThan(StrictlyLesserThanConstraint constraint);
 
   void visitIn(InConstraint constraint);
 }

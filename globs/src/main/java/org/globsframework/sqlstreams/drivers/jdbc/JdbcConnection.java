@@ -63,6 +63,10 @@ public abstract class JdbcConnection implements SqlConnection {
     return startSelect(globType, constraint).getUnique();
   }
 
+  public UpdateBuilder startUpdate(GlobType globType) {
+    return startUpdate(globType, null);
+  }
+
   public UpdateBuilder startUpdate(GlobType globType, Constraint constraint) {
     checkConnectionIsNotClosed();
     return new SqlUpdateBuilder(connection, globType, db, constraint, blobUpdater);
@@ -205,7 +209,7 @@ public abstract class JdbcConnection implements SqlConnection {
   }
 
   public void deleteAll(GlobType globType) {
-    startDelete(globType).run();
+    startDelete(globType).execute();
   }
 
   public SqlRequest startDelete(GlobType globType, Constraint constraint) {

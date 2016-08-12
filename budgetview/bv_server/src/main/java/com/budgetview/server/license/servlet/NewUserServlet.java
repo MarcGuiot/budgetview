@@ -205,7 +205,7 @@ public class NewUserServlet extends HttpServlet {
         .set(License.TRANSACTION_ID, transactionId)
         .getRequest();
       for (int i = 0; i < LICENCE_COUNT; i++) {
-        sqlRequest.run();
+        sqlRequest.execute();
       }
       sqlRequest.close();
 

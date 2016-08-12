@@ -132,11 +132,11 @@ public class SqlCreateBuilder implements CreateBuilder {
     return setValue(field, new ValueDateAccessor(date));
   }
 
-  public LongAccessor getKeyGeneratedAccessor() {
-    if (longGeneratedKeyAccessor == null) {
-      longGeneratedKeyAccessor = new LongGeneratedKeyAccessor();
+  public CreateBuilder setAll(GlobAccessor accessor) {
+    for (Field field : globType.getFields()) {
+      fields.add(new Pair<Field, Accessor>(field, new GlobFieldAccessor(field, accessor)));
     }
-    return longGeneratedKeyAccessor;
+    return this;
   }
 
   public SqlRequest getRequest() {
@@ -144,6 +144,6 @@ public class SqlCreateBuilder implements CreateBuilder {
   }
 
   public void run() throws SqlException {
-    getRequest().run();
+    getRequest().execute();
   }
 }

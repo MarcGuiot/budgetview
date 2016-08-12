@@ -8,6 +8,7 @@ import org.globsframework.sqlstreams.SqlConnection;
 import org.globsframework.sqlstreams.SqlRequest;
 import org.globsframework.sqlstreams.exceptions.SqlException;
 import org.globsframework.streams.accessors.*;
+import org.globsframework.utils.exceptions.NotSupported;
 
 import java.util.*;
 
@@ -19,6 +20,10 @@ public class MultiCreateBuilder implements CreateBuilder {
     for (GlobType globType : globTypes) {
       createBuilders.put(globType, sqlConnection.startCreate(globType));
     }
+  }
+
+  public CreateBuilder setAll(GlobAccessor accessor) {
+    throw new NotSupported("Operation allowed only for one glob type");
   }
 
   public CreateBuilder set(IntegerField field, Integer value) {
@@ -96,7 +101,7 @@ public class MultiCreateBuilder implements CreateBuilder {
   }
 
   public void run() throws SqlException {
-    getRequest().run();
+    getRequest().execute();
   }
 
   static private class MultiSqlRequest implements SqlRequest {
@@ -109,9 +114,9 @@ public class MultiCreateBuilder implements CreateBuilder {
       }
     }
 
-    public void run() throws SqlException {
+    public void execute() throws SqlException {
       for (SqlRequest sqlRequest : sqlRequests) {
-        sqlRequest.run();
+        sqlRequest.execute();
       }
     }
 

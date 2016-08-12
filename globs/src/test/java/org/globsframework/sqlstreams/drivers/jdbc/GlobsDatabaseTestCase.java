@@ -78,7 +78,7 @@ public abstract class GlobsDatabaseTestCase extends ServicesTestCase {
     }
     SqlRequest request = createBuilder.getRequest();
     while (stream.next()) {
-      request.run();
+      request.execute();
     }
     connection.commit();
   }

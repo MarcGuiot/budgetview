@@ -53,7 +53,7 @@ public class DuplicateLine {
           .set(License.MAIL, glob.get(License.MAIL))
           .set(License.TRANSACTION_ID, glob.get(License.TRANSACTION_ID))
           .getRequest();
-        sqlRequest.run();
+        sqlRequest.execute();
         sqlRequest.close();
         connection.commitAndClose();
         System.out.println("DuplicateLine.main " + bvUser + " found and duplicate.");
@@ -83,7 +83,7 @@ public class DuplicateLine {
           .set(License.TRANSACTION_ID, glob.get(License.TRANSACTION_ID))
           .getRequest();
         for (int i = licencesByUser.size(); i < NewUserServlet.LICENCE_COUNT; i++){
-          sqlRequest.run();
+          sqlRequest.execute();
         }
         sqlRequest.close();
       }

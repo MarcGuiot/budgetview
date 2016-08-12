@@ -201,7 +201,7 @@ public class RequestForConfigServlet extends HttpServlet {
       else {
         this.jarVersion.setValue(0l);
       }
-      createAnonymousRequest.run();
+      createAnonymousRequest.execute();
     }
   }
 
@@ -234,7 +234,7 @@ public class RequestForConfigServlet extends HttpServlet {
       else {
         this.jarVersion.setValue(0l);
       }
-      request.run();
+      request.execute();
     }
 
     public void close() {
@@ -384,7 +384,7 @@ public class RequestForConfigServlet extends HttpServlet {
     public void execute(String mail, String activationCode) {
       this.mail.setValue(mail);
       this.activationCode.setValue(activationCode);
-      request.run();
+      request.execute();
     }
 
     public void close() {
@@ -431,7 +431,7 @@ public class RequestForConfigServlet extends HttpServlet {
       else {
         jarVersion.setValue(0l);
       }
-      request.run();
+      request.execute();
     }
 
     public void close() {

@@ -11,12 +11,13 @@ import org.globsframework.metamodel.fields.IntegerField;
 import org.globsframework.metamodel.fields.LinkField;
 import org.globsframework.model.Glob;
 import org.globsframework.model.format.GlobPrinter;
-import org.globsframework.model.utils.GlobBuilder;
 import org.globsframework.sqlstreams.GlobsDatabase;
 import org.globsframework.sqlstreams.SelectQuery;
 import org.globsframework.sqlstreams.SqlConnection;
+import org.globsframework.sqlstreams.SqlRequest;
 import org.globsframework.sqlstreams.constraints.Where;
 import org.globsframework.streams.GlobStream;
+import org.globsframework.streams.accessors.GlobAccessorBuilder;
 import org.globsframework.streams.accessors.IntegerAccessor;
 import org.globsframework.utils.Files;
 import org.globsframework.utils.Ref;
@@ -39,8 +40,7 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static org.globsframework.sqlstreams.constraints.Where.and;
-import static org.globsframework.sqlstreams.constraints.Where.equal;
+import static org.globsframework.sqlstreams.constraints.Where.fieldEquals;
 
 public class BudgeaWebHookServlet extends HttpServlet {
 
@@ -105,9 +105,9 @@ public class BudgeaWebHookServlet extends HttpServlet {
   private Integer getCloudUserId(int userId, String token) {
     SqlConnection connection = db.connect();
     try {
-      Glob user = connection.selectUnique(CloudUser.TYPE, and(Where.fieldEquals(CloudUser.PROVIDER, Provider.BUDGEA.getId()),
-                                                              Where.fieldEquals(CloudUser.PROVIDER_ID, userId),
-                                                              Where.fieldEquals(CloudUser.PROVIDER_ACCESS_TOKEN, token)));
+      Glob user = connection.selectUnique(CloudUser.TYPE, Where.and(fieldEquals(CloudUser.PROVIDER, Provider.BUDGEA.getId()),
+                                                                    fieldEquals(CloudUser.PROVIDER_ID, userId),
+                                                                    fieldEquals(CloudUser.PROVIDER_ACCESS_TOKEN, token)));
       return user.get(CloudUser.ID);
     }
     catch (ItemNotFound itemNotFound) {
@@ -123,10 +123,23 @@ public class BudgeaWebHookServlet extends HttpServlet {
     private SqlConnection sqlConnection;
     private Map<Integer, Integer> accountIds;
     private Map<Integer, Integer> transactionIds;
+    private GlobAccessorBuilder providerAccount;
+    private SqlRequest providerAccountCreateRequest;
+    private SqlRequest providerAccountUpdateRequest;
 
     public DbUpdater(Integer userId) {
+
       sqlConnection = db.connect();
+
+      providerAccount = new GlobAccessorBuilder(ProviderAccount.TYPE);
+      providerAccountCreateRequest = sqlConnection.startCreate(ProviderAccount.TYPE)
+        .setAll(providerAccount.getAccessor())
+        .getRequest();
+      providerAccountUpdateRequest = sqlConnection.startUpdate(ProviderAccount.TYPE)
+        .setAll(providerAccount.getAccessor())
+        .getRequest();
       accountIds = loadProviderIds(userId, ProviderAccount.ID, ProviderAccount.PROVIDER_ID, ProviderAccount.USER, ProviderAccount.PROVIDER);
+
       transactionIds = loadProviderIds(userId, ProviderTransaction.ID, ProviderTransaction.PROVIDER_ID, ProviderTransaction.USER, ProviderTransaction.PROVIDER);
     }
 
@@ -134,8 +147,8 @@ public class BudgeaWebHookServlet extends HttpServlet {
       Ref<IntegerAccessor> providerId = new Ref<IntegerAccessor>();
       Ref<IntegerAccessor> cloudId = new Ref<IntegerAccessor>();
       SelectQuery query = sqlConnection.startSelect(providerIdField.getGlobType(),
-                                                    and(Where.fieldEquals(userField, userId),
-                                                        Where.fieldEquals(providerField, Provider.BUDGEA.getId())))
+                                                    Where.and(fieldEquals(userField, userId),
+                                                              fieldEquals(providerField, Provider.BUDGEA.getId())))
         .select(idField, cloudId)
         .select(providerIdField, providerId)
         .getQuery();
@@ -158,33 +171,43 @@ public class BudgeaWebHookServlet extends HttpServlet {
       Date lastUpdate = Budgea.parseTimestamp(account.getString("last_update"));
       int accountId = account.getInt("id");
 
-      GlobBuilder providerAccount =
-        GlobBuilder.init(ProviderAccount.TYPE)
-          .set(ProviderAccount.USER, userId)
-          .set(ProviderAccount.PROVIDER, Provider.BUDGEA.getId())
-          .set(ProviderAccount.PROVIDER_ID, accountId)
-          .set(ProviderAccount.PROVIDER_BANK_ID, bank.getInt("id"))
-          .set(ProviderAccount.PROVIDER_BANK_NAME, bank.getString("name"))
-          .set(ProviderAccount.ACCOUNT_TYPE, account.getString("type"))
-          .set(ProviderAccount.NAME, account.getString("name"))
-          .set(ProviderAccount.NUMBER, account.getString("number"))
-          .set(ProviderAccount.DELETED, !account.isNull("deleted") && account.getBoolean("deleted"))
-          .set(ProviderAccount.POSITION, account.getDouble("balance"))
-          .set(ProviderAccount.POSITION_MONTH, DateConverter.getMonthId(lastUpdate))
-          .set(ProviderAccount.POSITION_DAY, DateConverter.getDay(lastUpdate));
+      providerAccount
+        .set(ProviderAccount.USER, userId)
+        .set(ProviderAccount.PROVIDER, Provider.BUDGEA.getId())
+        .set(ProviderAccount.PROVIDER_ID, accountId)
+        .set(ProviderAccount.PROVIDER_BANK_ID, bank.getInt("id"))
+        .set(ProviderAccount.PROVIDER_BANK_NAME, bank.getString("name"))
+        .set(ProviderAccount.ACCOUNT_TYPE, account.getString("type"))
+        .set(ProviderAccount.NAME, account.getString("name"))
+        .set(ProviderAccount.NUMBER, account.getString("number"))
+        .set(ProviderAccount.DELETED, !account.isNull("deleted") && account.getBoolean("deleted"))
+        .set(ProviderAccount.POSITION, account.getDouble("balance"))
+        .set(ProviderAccount.POSITION_MONTH, DateConverter.getMonthId(lastUpdate))
+        .set(ProviderAccount.POSITION_DAY, DateConverter.getDay(lastUpdate));
 
       if (accountIds.containsKey(accountId)) {
         providerAccount.set(ProviderAccount.ID, accountIds.get(accountId));
-        sqlConnection.update(providerAccount.get());
+        providerAccountUpdateRequest.execute();
       }
       else {
-        sqlConnection.create(providerAccount.get());
+        providerAccount.clear(ProviderAccount.ID);
+        providerAccountCreateRequest.execute();
       }
+
+      for (Object t : account.getJSONArray("transactions")) {
+        JSONObject transaction = (JSONObject) t;
+        saveTransaction(userId, transaction);
+      }
+    }
+
+    private void saveTransaction(Integer userId, JSONObject transaction) {
+
     }
 
     private void commitAndClose() {
 
       GlobPrinter.print(sqlConnection.selectAll(ProviderAccount.TYPE));
+      GlobPrinter.print(sqlConnection.selectAll(ProviderTransaction.TYPE));
 
       sqlConnection.commitAndClose();
     }

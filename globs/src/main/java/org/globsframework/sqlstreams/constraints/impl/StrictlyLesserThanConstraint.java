@@ -9,6 +9,6 @@ public class StrictlyLesserThanConstraint extends BinaryOperandConstraint {
   }
 
   public void visit(ConstraintVisitor constraintVisitor) {
-    constraintVisitor.visitStricklyLesserThan(this);
+    constraintVisitor.visitStrictlyLessThan(this);
   }
 }

@@ -40,7 +40,7 @@ public class DbGlobIdGenerator {
         if (globStream.next()) {
           id = idRef.get().getValue() + idCount;
           sqlConnection.startUpdate(globType, Where.fieldEquals(tableNameField, tableName))
-            .set(idField, id).getRequest().run();
+            .set(idField, id).getRequest().execute();
         }
         else {
           id = idCount;

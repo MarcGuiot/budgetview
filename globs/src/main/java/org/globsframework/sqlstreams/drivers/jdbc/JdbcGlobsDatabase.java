@@ -1,9 +1,12 @@
 package org.globsframework.sqlstreams.drivers.jdbc;
 
+import org.globsframework.metamodel.Field;
+import org.globsframework.metamodel.GlobType;
 import org.globsframework.sqlstreams.SqlConnection;
 import org.globsframework.sqlstreams.drivers.hsqldb.HsqlConnection;
 import org.globsframework.sqlstreams.drivers.mysql.MysqlConnection;
 import org.globsframework.sqlstreams.utils.AbstractGlobsDatabase;
+import org.globsframework.utils.Strings;
 import org.globsframework.utils.exceptions.ItemNotFound;
 import org.globsframework.utils.exceptions.UnexpectedApplicationState;
 
@@ -31,13 +34,27 @@ public class JdbcGlobsDatabase extends AbstractGlobsDatabase {
 
   interface DbFactory {
     SqlConnection create();
+
+    String toSqlName(String name);
+  }
+
+  private static final String[] RESERVED_KEYWORDS = {
+    "COUNT", "WHERE"
+  };
+
+  public String getTableName(GlobType globType) {
+    return dbFactory.toSqlName(globType.getName());
+  }
+
+  public String getColumnName(Field field) {
+    return dbFactory.toSqlName(field.getName());
   }
 
   private void loadDriver() {
     try {
       if (url.contains("hsqldb")) {
         if (!loadedDrivers.containsKey("hsqldb")) {
-          driver = (Driver)Class.forName("org.hsqldb.jdbcDriver").newInstance();
+          driver = (Driver) Class.forName("org.hsqldb.jdbcDriver").newInstance();
         }
         dbFactory = new DbFactory() {
           public SqlConnection create() {
@@ -50,11 +67,21 @@ public class JdbcGlobsDatabase extends AbstractGlobsDatabase {
             }
             return new HsqlConnection(connection, JdbcGlobsDatabase.this);
           }
+
+          public String toSqlName(String name) {
+            String upper = Strings.toNiceUpperCase(name);
+            for (String keyword : RESERVED_KEYWORDS) {
+              if (upper.equals(keyword)) {
+                return upper + "_FIELD";
+              }
+            }
+            return upper;
+          }
         };
       }
       else if (url.contains("mysql")) {
         if (!loadedDrivers.containsKey("mysql")) {
-          driver = (Driver)Class.forName("com.mysql.jdbc.Driver").newInstance();
+          driver = (Driver) Class.forName("com.mysql.jdbc.Driver").newInstance();
         }
         // dbInfo.put("autoReconnect", Boolean.TRUE);
         dbFactory = new DbFactory() {
@@ -68,6 +95,16 @@ public class JdbcGlobsDatabase extends AbstractGlobsDatabase {
             }
 
             return new MysqlConnection(connection, JdbcGlobsDatabase.this);
+          }
+
+          public String toSqlName(String name) {
+            String upper = Strings.toNiceUpperCase(name);
+            for (String keyword : RESERVED_KEYWORDS) {
+              if (upper.equals(keyword)) {
+                return "_" + upper + "_";
+              }
+            }
+            return upper;
           }
         };
       }

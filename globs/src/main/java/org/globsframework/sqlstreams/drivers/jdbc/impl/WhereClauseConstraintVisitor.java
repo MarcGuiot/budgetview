@@ -12,14 +12,14 @@ import java.util.Set;
 
 public class WhereClauseConstraintVisitor implements ConstraintVisitor, OperandVisitor {
   private StringPrettyWriter prettyWriter;
-  private GlobsDatabase globsDB;
+  private GlobsDatabase db;
   private Set<GlobType> globTypes;
 
-  public WhereClauseConstraintVisitor(StringPrettyWriter prettyWriter, GlobsDatabase globsDB,
-                                      Set<GlobType> GlobeTypeSetToUpdate) {
+  public WhereClauseConstraintVisitor(StringPrettyWriter prettyWriter, GlobsDatabase db,
+                                      Set<GlobType> globTypeSetToUpdate) {
     this.prettyWriter = prettyWriter;
-    this.globsDB = globsDB;
-    this.globTypes = GlobeTypeSetToUpdate;
+    this.db = db;
+    this.globTypes = globTypeSetToUpdate;
   }
 
   public void visitEqual(EqualConstraint constraint) {
@@ -46,11 +46,11 @@ public class WhereClauseConstraintVisitor implements ConstraintVisitor, OperandV
     visitBinary(constraint, " >= ");
   }
 
-  public void visitStricklyBiggerThan(StrictlyBiggerThanConstraint constraint) {
+  public void visitStrictlyGreaterThan(StrictlyBiggerThanConstraint constraint) {
     visitBinary(constraint, " > ");
   }
 
-  public void visitStricklyLesserThan(StrictlyLesserThanConstraint constraint) {
+  public void visitStrictlyLessThan(StrictlyLesserThanConstraint constraint) {
     visitBinary(constraint, " < ");
   }
 
@@ -74,9 +74,9 @@ public class WhereClauseConstraintVisitor implements ConstraintVisitor, OperandV
 
   public void visitFieldOperand(Field field) {
     globTypes.add(field.getGlobType());
-    prettyWriter.append(globsDB.getTableName(field.getGlobType()))
+    prettyWriter.append(db.getTableName(field.getGlobType()))
       .append(".")
-      .append(globsDB.getColumnName(field));
+      .append(db.getColumnName(field));
   }
 
   private void visitBinary(BinaryOperandConstraint constraint, String operator) {

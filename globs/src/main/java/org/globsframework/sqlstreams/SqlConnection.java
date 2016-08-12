@@ -33,6 +33,8 @@ public interface SqlConnection {
 
   void create(Glob glob);
 
+  UpdateBuilder startUpdate(GlobType globType);
+
   UpdateBuilder startUpdate(GlobType globType, Constraint constraint);
 
   void update(Glob glob);

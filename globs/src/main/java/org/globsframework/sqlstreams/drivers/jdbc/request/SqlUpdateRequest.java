@@ -24,32 +24,43 @@ public class SqlUpdateRequest implements SqlRequest {
   private GlobType globType;
   private Constraint constraint;
   private BlobUpdater blobUpdater;
-  private Map<Field, Accessor> values;
-  private GlobsDatabase globsDB;
+  private Map<Field, Accessor> accessors;
+  private GlobsDatabase db;
   private PreparedStatement preparedStatement;
   private SqlValueFieldVisitor sqlValueFieldVisitor;
   private String sqlRequest;
 
-  public SqlUpdateRequest(GlobType globType, Constraint constraint, Map<Field, Accessor> values,
-                          Connection connection, GlobsDatabase globsDB, BlobUpdater blobUpdater) {
+  public SqlUpdateRequest(GlobType globType, Constraint constraint, Map<Field, Accessor> accessors,
+                          Connection connection, GlobsDatabase db, BlobUpdater blobUpdater) {
     this.globType = globType;
     this.constraint = constraint;
+    createWhereConstraintsIfNeeded(globType, accessors);
     this.blobUpdater = blobUpdater;
-    this.values = new HashMap<Field, Accessor>(values);
-    this.globsDB = globsDB;
-    sqlRequest = createRequest();
+    this.accessors = new HashMap<Field, Accessor>(accessors);
+    this.db = db;
+    this.sqlRequest = createRequest();
     try {
-      preparedStatement = connection.prepareStatement(sqlRequest);
+      this.preparedStatement = connection.prepareStatement(sqlRequest);
     }
     catch (SQLException e) {
       throw new UnexpectedApplicationState("For request : " + sqlRequest, e);
     }
-    sqlValueFieldVisitor = new SqlValueFieldVisitor(preparedStatement, blobUpdater);
+    this.sqlValueFieldVisitor = new SqlValueFieldVisitor(preparedStatement, blobUpdater);
   }
 
-  public void run() {
+  public void createWhereConstraintsIfNeeded(GlobType globType, Map<Field, Accessor> accessors) {
+    if (constraint == null) {
+      Field[] keyFields = globType.getKeyFields();
+      constraint = Where.fieldEqualsValue(keyFields[0], accessors.get(keyFields[0]));
+      for (int i = 1; i < keyFields.length; i++) {
+        constraint = Where.and(constraint, Where.fieldEqualsValue(keyFields[i], accessors.get(keyFields[i])));
+      }
+    }
+  }
+
+  public void execute() {
     int index = 0;
-    for (Map.Entry<Field, Accessor> entry : values.entrySet()) {
+    for (Map.Entry<Field, Accessor> entry : accessors.entrySet()) {
       sqlValueFieldVisitor.setValue(entry.getValue().getObjectValue(), ++index);
       entry.getKey().safeVisit(sqlValueFieldVisitor);
     }
@@ -74,32 +85,37 @@ public class SqlUpdateRequest implements SqlRequest {
   public void execute(Key key) {
     GlobType globType = key.getGlobType();
     Field[] list = globType.getKeyFields();
-    Constraint constraint = null;
+    Constraint newConstraint = null;
     for (Field field : list) {
-      constraint = Where.and(constraint, Where.fieldEqualsValue(field, key.getValue(field)));
+      newConstraint = Where.and(newConstraint, Where.fieldEqualsValue(field, key.getValue(field)));
     }
-    this.constraint = Where.and(this.constraint, constraint);
-    run();
+    if (constraint == null) {
+      constraint = newConstraint;
+    }
+    else {
+      constraint = Where.and(constraint, newConstraint);
+    }
+    execute();
   }
 
   private String createRequest() {
     StringPrettyWriter prettyWriter = new StringPrettyWriter();
     prettyWriter.append("UPDATE ")
-      .append(globsDB.getTableName(globType))
+      .append(db.getTableName(globType))
       .append(" SET ");
-    for (Iterator it = values.keySet().iterator(); it.hasNext();) {
-      Field field = (Field)it.next();
+    for (Iterator it = accessors.keySet().iterator(); it.hasNext(); ) {
+      Field field = (Field) it.next();
       prettyWriter
-        .append(globsDB.getColumnName(field))
+        .append(db.getColumnName(field))
         .append(" = ?").
         appendIf(" , ", it.hasNext());
     }
     prettyWriter.append(" WHERE ");
     Set<GlobType> globTypes = new HashSet<GlobType>();
     globTypes.add(globType);
-    constraint.visit(new WhereClauseConstraintVisitor(prettyWriter, globsDB, globTypes));
+    constraint.visit(new WhereClauseConstraintVisitor(prettyWriter, db, globTypes));
     if (globTypes.size() > 1) {
-      throw new UnexpectedApplicationState("Only the updated table is valide in query " + prettyWriter.toString());
+      throw new UnexpectedApplicationState("More than one globType referenced in query '" + prettyWriter.toString() + "' ==> " + globTypes);
     }
 
     return prettyWriter.toString();

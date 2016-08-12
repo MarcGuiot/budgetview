@@ -44,18 +44,18 @@ public class SqlUpdateBuilderTest extends GlobsDatabaseTestCase {
     Key key1 = newKey(DummyObject.TYPE, 1);
 
     keyValue.setValue(1);
-    updateRequest.run();
+    updateRequest.execute();
     checkDb(key1, DummyObject.DATE, date, sqlConnection);
     checkDb(key1, DummyObject.VALUE, 2.2, sqlConnection);
     assertEquals(new String((byte[])getNextValue(key1, sqlConnection, DummyObject.PASSWORD)), "some blog");
 
     valueAccessor.setValue(3.3);
-    updateRequest.run();
+    updateRequest.execute();
     checkDb(key1, DummyObject.VALUE, 3.3, sqlConnection);
 
     keyValue.setValue(2);
     Key key2 = newKey(DummyObject.TYPE, 2);
-    updateRequest.run();
+    updateRequest.execute();
     checkDb(key2, DummyObject.VALUE, 3.3, sqlConnection);
   }
 
@@ -72,7 +72,7 @@ public class SqlUpdateBuilderTest extends GlobsDatabaseTestCase {
     sqlConnection.startUpdate(DummyObject.TYPE, Where.keyEquals(keyAccessor))
       .set(DummyObject.NAME, "world")
       .getRequest()
-      .run();
+      .execute();
     checkDb(key1, DummyObject.NAME, "world", sqlConnection);
   }
 }

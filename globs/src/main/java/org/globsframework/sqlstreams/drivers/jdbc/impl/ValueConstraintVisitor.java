@@ -55,11 +55,11 @@ public class ValueConstraintVisitor extends SqlValueFieldVisitor implements Cons
     visitBinary(constraint);
   }
 
-  public void visitStricklyBiggerThan(StrictlyBiggerThanConstraint constraint) {
+  public void visitStrictlyGreaterThan(StrictlyBiggerThanConstraint constraint) {
     visitBinary(constraint);
   }
 
-  public void visitStricklyLesserThan(StrictlyLesserThanConstraint constraint) {
+  public void visitStrictlyLessThan(StrictlyLesserThanConstraint constraint) {
     visitBinary(constraint);
   }
 
