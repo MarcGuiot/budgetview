@@ -20,7 +20,7 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.*;
 
-public class SqlUpdateRequest implements SqlRequest {
+public class JdbcUpdateRequest implements SqlRequest {
   private GlobType globType;
   private Constraint constraint;
   private BlobUpdater blobUpdater;
@@ -30,8 +30,8 @@ public class SqlUpdateRequest implements SqlRequest {
   private SqlValueFieldVisitor sqlValueFieldVisitor;
   private String sqlRequest;
 
-  public SqlUpdateRequest(GlobType globType, Constraint constraint, Map<Field, Accessor> accessors,
-                          Connection connection, GlobsDatabase db, BlobUpdater blobUpdater) {
+  public JdbcUpdateRequest(GlobType globType, Constraint constraint, Map<Field, Accessor> accessors,
+                           Connection connection, GlobsDatabase db, BlobUpdater blobUpdater) {
     this.globType = globType;
     this.constraint = constraint;
     createWhereConstraintsIfNeeded(globType, accessors);

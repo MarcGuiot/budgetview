@@ -4,7 +4,7 @@ import org.globsframework.metamodel.Field;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.FieldValues;
 import org.globsframework.remote.RemoteExecutor;
-import org.globsframework.sqlstreams.CreateBuilder;
+import org.globsframework.sqlstreams.SqlCreateBuilder;
 import org.globsframework.sqlstreams.SqlConnection;
 import org.globsframework.sqlstreams.SqlRequest;
 import org.globsframework.streams.accessors.Accessor;
@@ -21,7 +21,7 @@ public class DefaultCreateRequest implements RemoteExecutor.CreateRequest {
   protected LongAccessor keyGeneratedAccessor;
 
   public DefaultCreateRequest(SqlConnection sqlConnection, GlobType globType, FieldValues keyValues, boolean keyGeneratorAccessorWanted) {
-    CreateBuilder createBuilder = sqlConnection.startCreate(globType);
+    SqlCreateBuilder createBuilder = sqlConnection.startCreate(globType);
     for (Field field : globType.getFields()) {
       ValueAccessor accessor = new ValueAccessor();
       accessorByField.put(field, accessor);

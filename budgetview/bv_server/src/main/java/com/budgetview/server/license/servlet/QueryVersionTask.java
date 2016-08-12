@@ -3,7 +3,7 @@ package com.budgetview.server.license.servlet;
 import com.budgetview.server.license.model.SoftwareInfo;
 import org.apache.log4j.Logger;
 import org.globsframework.sqlstreams.GlobsDatabase;
-import org.globsframework.sqlstreams.SelectQuery;
+import org.globsframework.sqlstreams.SqlSelect;
 import org.globsframework.sqlstreams.SqlConnection;
 import org.globsframework.streams.GlobStream;
 import org.globsframework.streams.accessors.IntegerAccessor;
@@ -17,7 +17,7 @@ public class QueryVersionTask extends TimerTask {
   static Logger logger = Logger.getLogger("QueryVersionTask");
   private GlobsDatabase db;
   private VersionService versionService;
-  private SelectQuery query;
+  private SqlSelect query;
   private Ref<LongAccessor> jarVersionRef;
   private Ref<LongAccessor> configVersionRef;
   private Ref<StringAccessor> mailRef;

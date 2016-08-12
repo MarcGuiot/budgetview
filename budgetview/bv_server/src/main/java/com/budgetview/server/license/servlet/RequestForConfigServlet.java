@@ -9,7 +9,7 @@ import org.apache.log4j.Logger;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
 import org.globsframework.sqlstreams.GlobsDatabase;
-import org.globsframework.sqlstreams.SelectQuery;
+import org.globsframework.sqlstreams.SqlSelect;
 import org.globsframework.sqlstreams.SqlConnection;
 import org.globsframework.sqlstreams.SqlRequest;
 import org.globsframework.sqlstreams.constraints.Where;
@@ -150,7 +150,7 @@ public class RequestForConfigServlet extends HttpServlet {
   }
 
   static class RepoIdAnonymousRequest {
-    private SelectQuery repoIdQuery;
+    private SqlSelect repoIdQuery;
     private ValueStringAccessor repoIdAccessor;
 
     RepoIdAnonymousRequest(SqlConnection db) {
@@ -340,7 +340,7 @@ public class RequestForConfigServlet extends HttpServlet {
 
   static class LicenseRequest {
     private ValueStringAccessor mail;
-    private SelectQuery query;
+    private SqlSelect query;
 
     LicenseRequest(SqlConnection db) {
       mail = new ValueStringAccessor();

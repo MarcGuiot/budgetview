@@ -9,13 +9,12 @@ import com.budgetview.server.utils.DateConverter;
 import org.apache.log4j.Logger;
 import org.globsframework.metamodel.fields.IntegerField;
 import org.globsframework.metamodel.fields.LinkField;
+import org.globsframework.model.FieldValues;
 import org.globsframework.model.Glob;
 import org.globsframework.model.format.GlobPrinter;
-import org.globsframework.sqlstreams.GlobsDatabase;
-import org.globsframework.sqlstreams.SelectQuery;
-import org.globsframework.sqlstreams.SqlConnection;
-import org.globsframework.sqlstreams.SqlRequest;
+import org.globsframework.sqlstreams.*;
 import org.globsframework.sqlstreams.constraints.Where;
+import org.globsframework.sqlstreams.exceptions.GlobsSQLException;
 import org.globsframework.streams.GlobStream;
 import org.globsframework.streams.accessors.GlobAccessorBuilder;
 import org.globsframework.streams.accessors.IntegerAccessor;
@@ -121,11 +120,16 @@ public class BudgeaWebHookServlet extends HttpServlet {
 
   private class DbUpdater {
     private SqlConnection sqlConnection;
+
     private Map<Integer, Integer> accountIds;
-    private Map<Integer, Integer> transactionIds;
     private GlobAccessorBuilder providerAccount;
-    private SqlRequest providerAccountCreateRequest;
+    private SqlCreateRequest providerAccountCreateRequest;
     private SqlRequest providerAccountUpdateRequest;
+
+    private Map<Integer, Integer> transactionIds;
+    private GlobAccessorBuilder providerTransaction;
+    private SqlRequest providerTransactionCreateRequest;
+    private SqlRequest providerTransactionUpdateRequest;
 
     public DbUpdater(Integer userId) {
 
@@ -140,14 +144,21 @@ public class BudgeaWebHookServlet extends HttpServlet {
         .getRequest();
       accountIds = loadProviderIds(userId, ProviderAccount.ID, ProviderAccount.PROVIDER_ID, ProviderAccount.USER, ProviderAccount.PROVIDER);
 
+      providerTransaction = new GlobAccessorBuilder(ProviderTransaction.TYPE);
+      providerTransactionCreateRequest = sqlConnection.startCreate(ProviderTransaction.TYPE)
+        .setAll(providerTransaction.getAccessor())
+        .getRequest();
+      providerTransactionUpdateRequest = sqlConnection.startUpdate(ProviderTransaction.TYPE)
+        .setAll(providerTransaction.getAccessor())
+        .getRequest();
       transactionIds = loadProviderIds(userId, ProviderTransaction.ID, ProviderTransaction.PROVIDER_ID, ProviderTransaction.USER, ProviderTransaction.PROVIDER);
     }
 
     public Map<Integer, Integer> loadProviderIds(Integer userId, IntegerField idField, IntegerField providerIdField, LinkField userField, LinkField providerField) {
       Ref<IntegerAccessor> providerId = new Ref<IntegerAccessor>();
       Ref<IntegerAccessor> cloudId = new Ref<IntegerAccessor>();
-      SelectQuery query = sqlConnection.startSelect(providerIdField.getGlobType(),
-                                                    Where.and(fieldEquals(userField, userId),
+      SqlSelect query = sqlConnection.startSelect(providerIdField.getGlobType(),
+                                                  Where.and(fieldEquals(userField, userId),
                                                               fieldEquals(providerField, Provider.BUDGEA.getId())))
         .select(idField, cloudId)
         .select(providerIdField, providerId)
@@ -166,15 +177,15 @@ public class BudgeaWebHookServlet extends HttpServlet {
       return providerIds;
     }
 
-    private void saveAccount(Integer userId, JSONObject bank, JSONObject account) throws ParseException {
+    private void saveAccount(Integer userId, JSONObject bank, JSONObject account) throws GlobsSQLException, ParseException {
 
       Date lastUpdate = Budgea.parseTimestamp(account.getString("last_update"));
-      int accountId = account.getInt("id");
+      int providerAccountId = account.getInt("id");
 
       providerAccount
         .set(ProviderAccount.USER, userId)
         .set(ProviderAccount.PROVIDER, Provider.BUDGEA.getId())
-        .set(ProviderAccount.PROVIDER_ID, accountId)
+        .set(ProviderAccount.PROVIDER_ID, providerAccountId)
         .set(ProviderAccount.PROVIDER_BANK_ID, bank.getInt("id"))
         .set(ProviderAccount.PROVIDER_BANK_NAME, bank.getString("name"))
         .set(ProviderAccount.ACCOUNT_TYPE, account.getString("type"))
@@ -185,22 +196,51 @@ public class BudgeaWebHookServlet extends HttpServlet {
         .set(ProviderAccount.POSITION_MONTH, DateConverter.getMonthId(lastUpdate))
         .set(ProviderAccount.POSITION_DAY, DateConverter.getDay(lastUpdate));
 
-      if (accountIds.containsKey(accountId)) {
-        providerAccount.set(ProviderAccount.ID, accountIds.get(accountId));
+      Integer accountId = null;
+      if (accountIds.containsKey(providerAccountId)) {
+        accountId = accountIds.get(providerAccountId);
+        providerAccount.set(ProviderAccount.ID, accountId);
         providerAccountUpdateRequest.execute();
       }
       else {
         providerAccount.clear(ProviderAccount.ID);
         providerAccountCreateRequest.execute();
+        FieldValues keys = providerAccountCreateRequest.getLastGeneratedIds();
+        accountId = keys.get(ProviderAccount.ID);
       }
 
       for (Object t : account.getJSONArray("transactions")) {
         JSONObject transaction = (JSONObject) t;
-        saveTransaction(userId, transaction);
+        saveTransaction(userId, accountId, transaction);
       }
     }
 
-    private void saveTransaction(Integer userId, JSONObject transaction) {
+    private void saveTransaction(Integer userId, Integer accountId, JSONObject transaction) throws GlobsSQLException  {
+
+      int providerTransactionId = transaction.getInt("id");
+
+//      providerTransaction
+//        .set(ProviderTransaction.USER, userId)
+//        .set(ProviderTransaction.ACCOUNT, )
+//        .set(ProviderTransaction., )
+//        .set(ProviderTransaction., )
+//        .set(ProviderTransaction., )
+//        .set(ProviderTransaction., )
+//        .set(ProviderTransaction., )
+//        .set(ProviderTransaction., )
+//        .set(ProviderTransaction., )
+//        .set(ProviderTransaction., )
+//        .set(ProviderTransaction., )
+//        .set(ProviderTransaction., );
+//
+//      if (accountIds.containsKey(providerTransactionId)) {
+//        providerTransaction.set(ProviderTransaction.ID, accountIds.get(providerTransactionId));
+//        providerTransactionUpdateRequest.execute();
+//      }
+//      else {
+//        providerTransaction.clear(ProviderTransaction.ID);
+//        providerTransactionCreateRequest.execute();
+//      }
 
     }
 

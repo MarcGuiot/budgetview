@@ -3,7 +3,7 @@ package org.globsframework.sqlstreams.drivers.jdbc;
 import junit.framework.TestCase;
 import org.globsframework.metamodel.DummyObject;
 import org.globsframework.model.Glob;
-import org.globsframework.sqlstreams.SelectQuery;
+import org.globsframework.sqlstreams.SqlSelect;
 import org.globsframework.sqlstreams.SqlConnection;
 import org.globsframework.sqlstreams.constraints.Where;
 
@@ -14,7 +14,7 @@ public abstract class SqlExceptionTest extends TestCase {
   protected void setUp() throws Exception {
     SqlConnection sqlConnection = getDbConnection();
     sqlConnection.createTables(DummyObject.TYPE);
-    sqlConnection.deleteAll(DummyObject.TYPE);
+    sqlConnection.startDelete(DummyObject.TYPE).execute();
     sqlConnection.commitAndClose();
   }
 
@@ -22,7 +22,7 @@ public abstract class SqlExceptionTest extends TestCase {
     SqlConnection db1 = getDbConnection();
     db1.startCreate(DummyObject.TYPE).set(DummyObject.ID, 1).set(DummyObject.NAME, "toto").getRequest().execute();
     db1.commit();
-    SelectQuery query1 = db1.startSelect(DummyObject.TYPE, Where.fieldEquals(DummyObject.ID, 1))
+    SqlSelect query1 = db1.startSelect(DummyObject.TYPE, Where.fieldEquals(DummyObject.ID, 1))
       .select(DummyObject.NAME).getQuery();
     assertEquals("toto", query1.getUnique().get(DummyObject.NAME));
     db1.startUpdate(DummyObject.TYPE, Where.fieldEquals(DummyObject.ID, 1))
@@ -50,7 +50,7 @@ public abstract class SqlExceptionTest extends TestCase {
     db1.startUpdate(DummyObject.TYPE, Where.fieldEquals(DummyObject.ID, 1))
       .set(DummyObject.NAME, "titi").getRequest().execute();
 
-    SelectQuery query2 = db2.startSelect(DummyObject.TYPE, Where.fieldEquals(DummyObject.ID, 1))
+    SqlSelect query2 = db2.startSelect(DummyObject.TYPE, Where.fieldEquals(DummyObject.ID, 1))
       .select(DummyObject.NAME).getQuery();
     Glob glob2 = query2.getUnique();
     assertEquals("titi", glob2.get(DummyObject.NAME));

@@ -16,7 +16,7 @@ import org.apache.log4j.Logger;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
 import org.globsframework.sqlstreams.GlobsDatabase;
-import org.globsframework.sqlstreams.SelectQuery;
+import org.globsframework.sqlstreams.SqlSelect;
 import org.globsframework.sqlstreams.SqlConnection;
 import org.globsframework.sqlstreams.SqlRequest;
 import org.globsframework.sqlstreams.constraints.Where;
@@ -188,8 +188,8 @@ public class NewUserServlet extends HttpServlet {
 
   private void register(HttpServletResponse resp, String email, String transactionId, SqlConnection connection, String lang)
     throws NoSuchProviderException, NoSuchAlgorithmException, InvalidKeySpecException, InvalidKeyException, SignatureException {
-    SelectQuery query = connection.startSelect(License.TYPE,
-                                               Where.fieldEquals(License.MAIL, email))
+    SqlSelect query = connection.startSelect(License.TYPE,
+                                             Where.fieldEquals(License.MAIL, email))
       .selectAll()
       .getQuery();
     GlobList globList = query.getList();

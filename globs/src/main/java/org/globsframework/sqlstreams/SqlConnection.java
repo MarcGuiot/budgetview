@@ -17,31 +17,25 @@ public interface SqlConnection {
 
   void emptyTable(GlobType... globType);
 
-  SelectBuilder startSelect(GlobType globType);
+  SqlSelectBuilder startSelect(GlobType globType);
 
   GlobList selectAll(GlobType globType);
 
   Glob selectUnique(GlobType globType) throws ItemNotFound, TooManyItems;
 
-  SelectBuilder startSelect(GlobType globType, Constraint constraint);
+  SqlSelectBuilder startSelect(GlobType globType, Constraint constraint);
 
   GlobList selectAll(GlobType globType, Constraint constraint);
 
   Glob selectUnique(GlobType globType, Constraint constraint) throws ItemNotFound, TooManyItems;
 
-  CreateBuilder startCreate(GlobType globType);
+  SqlCreateBuilder startCreate(GlobType globType);
 
-  void create(Glob glob);
+  SqlUpdateBuilder startUpdate(GlobType globType);
 
-  UpdateBuilder startUpdate(GlobType globType);
-
-  UpdateBuilder startUpdate(GlobType globType, Constraint constraint);
-
-  void update(Glob glob);
+  SqlUpdateBuilder startUpdate(GlobType globType, Constraint constraint);
 
   SqlRequest startDelete(GlobType globType);
-
-  void deleteAll(GlobType globType);
 
   SqlRequest startDelete(GlobType globType, Constraint constraint);
 

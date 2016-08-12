@@ -16,14 +16,14 @@ import java.sql.SQLException;
 import java.util.HashSet;
 import java.util.Iterator;
 
-public class SqlDeleteRequest implements SqlRequest {
+public class JdbcDeleteRequest implements SqlRequest {
   private Constraint constraint;
   private BlobUpdater blobUpdater;
   private String sqlStatement;
   private PreparedStatement preparedStatement;
 
-  public SqlDeleteRequest(GlobType globType, Constraint constraint, Connection connection,
-                          GlobsDatabase globsDB, BlobUpdater blobUpdater) {
+  public JdbcDeleteRequest(GlobType globType, Constraint constraint, Connection connection,
+                           GlobsDatabase globsDB, BlobUpdater blobUpdater) {
     this.constraint = constraint;
     this.blobUpdater = blobUpdater;
     StringPrettyWriter prettyWriter = new StringPrettyWriter();

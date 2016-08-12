@@ -4,19 +4,19 @@ import org.globsframework.utils.exceptions.GlobsException;
 
 import java.sql.SQLException;
 
-public class SqlException extends GlobsException {
+public class GlobsSQLException extends GlobsException {
   private SQLException e;
 
-  public SqlException(SQLException e) {
+  public GlobsSQLException(SQLException e) {
     super(e);
     this.e = e;
   }
 
-  public SqlException(String message) {
+  public GlobsSQLException(String message) {
     super(message);
   }
 
-  public SqlException(String message, SQLException cause) {
+  public GlobsSQLException(String message, SQLException cause) {
     super(message, cause);
     e = cause;
   }

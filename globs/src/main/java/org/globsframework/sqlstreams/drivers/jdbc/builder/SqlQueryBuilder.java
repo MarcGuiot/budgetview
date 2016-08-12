@@ -6,8 +6,8 @@ import org.globsframework.metamodel.fields.*;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
 import org.globsframework.sqlstreams.GlobsDatabase;
-import org.globsframework.sqlstreams.SelectBuilder;
-import org.globsframework.sqlstreams.SelectQuery;
+import org.globsframework.sqlstreams.SqlSelectBuilder;
+import org.globsframework.sqlstreams.SqlSelect;
 import org.globsframework.sqlstreams.accessors.*;
 import org.globsframework.sqlstreams.constraints.Constraint;
 import org.globsframework.sqlstreams.drivers.jdbc.impl.BlobUpdater;
@@ -22,7 +22,7 @@ import java.sql.Connection;
 import java.util.HashMap;
 import java.util.Map;
 
-public class SqlQueryBuilder implements SelectBuilder {
+public class SqlQueryBuilder implements SqlSelectBuilder {
   private Connection connection;
   private GlobType globType;
   private Constraint constraint;
@@ -39,7 +39,7 @@ public class SqlQueryBuilder implements SelectBuilder {
     this.blobUpdater = blobUpdater;
   }
 
-  public SelectQuery getQuery() {
+  public SqlSelect getQuery() {
     try {
       completeWithKeys();
       return new SqlSelectQuery(connection, constraint, fieldToAccessorHolder, globsDB, blobUpdater, autoClose);
@@ -49,7 +49,7 @@ public class SqlQueryBuilder implements SelectBuilder {
     }
   }
 
-  public SelectQuery getNotAutoCloseQuery() {
+  public SqlSelect getNotAutoCloseQuery() {
     autoClose = false;
     return getQuery();
   }
@@ -70,49 +70,49 @@ public class SqlQueryBuilder implements SelectBuilder {
     }
   }
 
-  public SelectBuilder select(Field field) {
+  public SqlSelectBuilder select(Field field) {
     FieldToSqlAccessorVisitor visitor = new FieldToSqlAccessorVisitor();
     field.safeVisit(visitor);
     fieldToAccessorHolder.put(field, visitor.getAccessor());
     return this;
   }
 
-  public SelectBuilder selectAll() {
+  public SqlSelectBuilder selectAll() {
     for (Field field : globType.getFields()) {
       select(field);
     }
     return this;
   }
 
-  public SelectBuilder select(DateField field, Ref<DateAccessor> ref) {
+  public SqlSelectBuilder select(DateField field, Ref<DateAccessor> ref) {
     return createAccessor(field, ref, new DateSqlAccessor());
   }
 
-  public SelectBuilder select(IntegerField field, Ref<IntegerAccessor> ref) {
+  public SqlSelectBuilder select(IntegerField field, Ref<IntegerAccessor> ref) {
     return createAccessor(field, ref, new IntegerSqlAccessor());
   }
 
-  public SelectBuilder select(LongField field, Ref<LongAccessor> accessor) {
+  public SqlSelectBuilder select(LongField field, Ref<LongAccessor> accessor) {
     return createAccessor(field, accessor, new LongSqlAccessor());
   }
 
-  public SelectBuilder select(BooleanField field, Ref<BooleanAccessor> ref) {
+  public SqlSelectBuilder select(BooleanField field, Ref<BooleanAccessor> ref) {
     return createAccessor(field, ref, new BooleanSqlAccessor());
   }
 
-  public SelectBuilder select(StringField field, Ref<StringAccessor> ref) {
+  public SqlSelectBuilder select(StringField field, Ref<StringAccessor> ref) {
     return createAccessor(field, ref, new StringSqlAccessor());
   }
 
-  public SelectBuilder select(DoubleField field, Ref<DoubleAccessor> ref) {
+  public SqlSelectBuilder select(DoubleField field, Ref<DoubleAccessor> ref) {
     return createAccessor(field, ref, new DoubleSqlAccessor());
   }
 
-  public SelectBuilder select(TimeStampField field, Ref<TimestampAccessor> ref) {
+  public SqlSelectBuilder select(TimeStampField field, Ref<TimestampAccessor> ref) {
     return createAccessor(field, ref, new TimestampSqlAccessor());
   }
 
-  public SelectBuilder select(BlobField field, Ref<BlobAccessor> accessor) {
+  public SqlSelectBuilder select(BlobField field, Ref<BlobAccessor> accessor) {
     return createAccessor(field, accessor, new BlobSqlAccessor());
   }
 
@@ -170,7 +170,7 @@ public class SqlQueryBuilder implements SelectBuilder {
     return visitor.get();
   }
 
-  private <T extends Accessor, D extends T> SelectBuilder createAccessor(Field field, Ref<T> ref, D accessor) {
+  private <T extends Accessor, D extends T> SqlSelectBuilder createAccessor(Field field, Ref<T> ref, D accessor) {
     ref.set(accessor);
     fieldToAccessorHolder.put(field, (SqlAccessor)accessor);
     return this;

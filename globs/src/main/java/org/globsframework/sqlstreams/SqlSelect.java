@@ -6,7 +6,7 @@ import org.globsframework.streams.GlobStream;
 import org.globsframework.utils.exceptions.ItemNotFound;
 import org.globsframework.utils.exceptions.TooManyItems;
 
-public interface SelectQuery {
+public interface SqlSelect {
   GlobStream getStream();
 
   GlobList getList();

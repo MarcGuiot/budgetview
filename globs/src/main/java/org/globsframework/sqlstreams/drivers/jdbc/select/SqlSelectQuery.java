@@ -4,7 +4,7 @@ import org.globsframework.metamodel.Field;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
-import org.globsframework.sqlstreams.SelectQuery;
+import org.globsframework.sqlstreams.SqlSelect;
 import org.globsframework.sqlstreams.GlobsDatabase;
 import org.globsframework.sqlstreams.accessors.SqlAccessor;
 import org.globsframework.sqlstreams.constraints.Constraint;
@@ -24,7 +24,7 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.*;
 
-public class SqlSelectQuery implements SelectQuery {
+public class SqlSelectQuery implements SqlSelect {
   private Set<GlobType> globTypes = new HashSet<GlobType>();
   private Constraint constraint;
   private BlobUpdater blobUpdater;

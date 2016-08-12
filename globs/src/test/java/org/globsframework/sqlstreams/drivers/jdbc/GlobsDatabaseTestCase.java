@@ -59,7 +59,7 @@ public abstract class GlobsDatabaseTestCase extends ServicesTestCase {
     for (Field keyField : globType.getKeyFields()) {
       constraint = Where.and(constraint, Where.fieldEqualsValue(keyField, key.getValue(keyField)));
     }
-    SelectBuilder queryBuilder = sqlConnection.startSelect(key.getGlobType(), constraint);
+    SqlSelectBuilder queryBuilder = sqlConnection.startSelect(key.getGlobType(), constraint);
     Accessor accessor = queryBuilder.retrieveUnTyped(field);
     GlobStream globStream = queryBuilder.getQuery().getStream();
     assertTrue(globStream.next());
@@ -71,7 +71,7 @@ public abstract class GlobsDatabaseTestCase extends ServicesTestCase {
     for (Field field : stream.getFields()) {
       types.add(field.getGlobType());
     }
-    CreateBuilder createBuilder = new MultiCreateBuilder(connection, types);
+    MultiCreateBuilder createBuilder = new MultiCreateBuilder(connection, types);
     Collection<Field> fields = stream.getFields();
     for (Field field : fields) {
       createBuilder.setValue(field, stream.getAccessor(field));

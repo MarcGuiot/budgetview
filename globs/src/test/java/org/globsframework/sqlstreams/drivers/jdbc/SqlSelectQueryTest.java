@@ -4,11 +4,11 @@ import org.globsframework.metamodel.DummyObject;
 import org.globsframework.metamodel.DummyObject2;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
-import org.globsframework.sqlstreams.SelectQuery;
+import org.globsframework.sqlstreams.SqlSelect;
 import org.globsframework.sqlstreams.SqlConnection;
 import org.globsframework.sqlstreams.constraints.Constraint;
 import org.globsframework.sqlstreams.constraints.Where;
-import org.globsframework.sqlstreams.exceptions.SqlException;
+import org.globsframework.sqlstreams.exceptions.GlobsSQLException;
 import org.globsframework.streams.GlobStream;
 import org.globsframework.streams.accessors.IntegerAccessor;
 import org.globsframework.streams.accessors.StringAccessor;
@@ -32,7 +32,7 @@ public class SqlSelectQueryTest extends GlobsDatabaseTestCase {
 
     Ref<IntegerAccessor> idAccessor = new Ref<IntegerAccessor>();
     Ref<StringAccessor> nameAccessor = new Ref<StringAccessor>();
-    SelectQuery query =
+    SqlSelect query =
       sqlConnection.startSelect(DummyObject.TYPE, Where.fieldEquals(DummyObject.ID, 1))
         .select(DummyObject.ID, idAccessor)
         .select(DummyObject.NAME, nameAccessor)
@@ -51,7 +51,7 @@ public class SqlSelectQueryTest extends GlobsDatabaseTestCase {
   public void testMultipleExecute() throws Exception {
     SqlConnection sqlConnection = init();
     ValueIntegerAccessor value = new ValueIntegerAccessor(1);
-    SelectQuery query =
+    SqlSelect query =
       sqlConnection.startSelect(DummyObject.TYPE, Where.fieldEquals(DummyObject.ID, value))
         .select(DummyObject.NAME)
         .getQuery();
@@ -138,8 +138,8 @@ public class SqlSelectQueryTest extends GlobsDatabaseTestCase {
                                        "<dummyObject2 id='2' label='world'/>"));
 
     Ref<IntegerAccessor> ref = new Ref<IntegerAccessor>();
-    SelectQuery query = sqlConnection.startSelect(DummyObject.TYPE,
-                                                  Where.fieldsAreEqual(DummyObject.NAME, DummyObject2.LABEL))
+    SqlSelect query = sqlConnection.startSelect(DummyObject.TYPE,
+                                                Where.fieldsAreEqual(DummyObject.NAME, DummyObject2.LABEL))
       .select(DummyObject.ID, ref).getQuery();
     final GlobStream firstGlobStream = query.getStream();
     final IntegerAccessor firstAccessor = ref.get();
@@ -150,7 +150,7 @@ public class SqlSelectQueryTest extends GlobsDatabaseTestCase {
         firstGlobStream.next();
         firstAccessor.getValue();
       }
-    }, SqlException.class);
+    }, GlobsSQLException.class);
   }
 
   public void testInConstraint() throws Exception {

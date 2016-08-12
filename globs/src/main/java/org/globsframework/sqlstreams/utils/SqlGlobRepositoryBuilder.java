@@ -6,7 +6,7 @@ import org.globsframework.model.GlobRepository;
 import org.globsframework.model.repository.DefaultGlobRepository;
 import org.globsframework.model.repository.GlobIdGenerator;
 import org.globsframework.sqlstreams.GlobsDatabase;
-import org.globsframework.sqlstreams.SelectBuilder;
+import org.globsframework.sqlstreams.SqlSelectBuilder;
 import org.globsframework.sqlstreams.SqlConnection;
 import org.globsframework.sqlstreams.constraints.Constraint;
 import org.globsframework.utils.Log;
@@ -61,7 +61,7 @@ public class SqlGlobRepositoryBuilder {
   private void init(DefaultGlobRepository repository) {
     SqlConnection sqlConnection = globsDB.connect();
     for (T3uples<Constraint, GlobType, Field[]> t3uples : requestToRetrieve) {
-      SelectBuilder builder = sqlConnection.startSelect(t3uples.getSecond(), t3uples.getFirst());
+      SqlSelectBuilder builder = sqlConnection.startSelect(t3uples.getSecond(), t3uples.getFirst());
       for (Field field : t3uples.getThird()) {
         builder.select(field);
       }

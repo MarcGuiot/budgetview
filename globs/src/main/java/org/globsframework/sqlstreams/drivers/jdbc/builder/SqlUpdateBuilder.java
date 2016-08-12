@@ -5,11 +5,10 @@ import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.fields.*;
 import org.globsframework.sqlstreams.GlobsDatabase;
 import org.globsframework.sqlstreams.SqlRequest;
-import org.globsframework.sqlstreams.UpdateBuilder;
 import org.globsframework.sqlstreams.constraints.Constraint;
 import org.globsframework.sqlstreams.drivers.jdbc.impl.BlobUpdater;
-import org.globsframework.sqlstreams.drivers.jdbc.request.SqlUpdateRequest;
-import org.globsframework.sqlstreams.exceptions.SqlException;
+import org.globsframework.sqlstreams.drivers.jdbc.request.JdbcUpdateRequest;
+import org.globsframework.sqlstreams.exceptions.GlobsSQLException;
 import org.globsframework.streams.accessors.*;
 import org.globsframework.streams.accessors.utils.*;
 import org.globsframework.utils.exceptions.InvalidState;
@@ -19,7 +18,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-public class SqlUpdateBuilder implements UpdateBuilder {
+public class SqlUpdateBuilder implements org.globsframework.sqlstreams.SqlUpdateBuilder {
   private Map<Field, Accessor> accessors = new HashMap<Field, Accessor>();
   private Connection connection;
   private GlobType globType;
@@ -36,14 +35,14 @@ public class SqlUpdateBuilder implements UpdateBuilder {
     this.constraint = constraint;
   }
 
-  public UpdateBuilder setAll(GlobAccessor accessor) {
+  public org.globsframework.sqlstreams.SqlUpdateBuilder setAll(GlobAccessor accessor) {
     for (Field field : globType.getFields()) {
       accessors.put(field, new GlobFieldAccessor(field, accessor));
     }
     return this;
   }
 
-  public UpdateBuilder setValue(Field field, final Object value) {
+  public org.globsframework.sqlstreams.SqlUpdateBuilder setValue(Field field, final Object value) {
     field.safeVisit(new FieldVisitor() {
       public void visitInteger(IntegerField field) throws Exception {
         set(field, (Integer)value);
@@ -84,102 +83,102 @@ public class SqlUpdateBuilder implements UpdateBuilder {
     return this;
   }
 
-  public UpdateBuilder setValue(Field field, Accessor accessor) {
+  public org.globsframework.sqlstreams.SqlUpdateBuilder setValue(Field field, Accessor accessor) {
     accessors.put(field, accessor);
     return this;
   }
 
-  public UpdateBuilder set(IntegerField field, IntegerAccessor accessor) {
+  public org.globsframework.sqlstreams.SqlUpdateBuilder set(IntegerField field, IntegerAccessor accessor) {
     accessors.put(field, accessor);
     return this;
   }
 
-  public UpdateBuilder set(IntegerField field, Integer value) {
+  public org.globsframework.sqlstreams.SqlUpdateBuilder set(IntegerField field, Integer value) {
     return set(field, new ValueIntegerAccessor(value));
   }
 
-  public UpdateBuilder set(LongField field, LongAccessor accessor) {
+  public org.globsframework.sqlstreams.SqlUpdateBuilder set(LongField field, LongAccessor accessor) {
     accessors.put(field, accessor);
     return this;
   }
 
-  public UpdateBuilder set(LongField field, Long value) {
+  public org.globsframework.sqlstreams.SqlUpdateBuilder set(LongField field, Long value) {
     return set(field, new ValueLongAccessor(value));
   }
 
-  public UpdateBuilder set(DoubleField field, DoubleAccessor accessor) {
+  public org.globsframework.sqlstreams.SqlUpdateBuilder set(DoubleField field, DoubleAccessor accessor) {
     accessors.put(field, accessor);
     return this;
   }
 
-  public UpdateBuilder set(DoubleField field, Double value) {
+  public org.globsframework.sqlstreams.SqlUpdateBuilder set(DoubleField field, Double value) {
     return set(field, new ValueDoubleAccessor(value));
   }
 
-  public UpdateBuilder set(DateField field, DateAccessor accessor) {
+  public org.globsframework.sqlstreams.SqlUpdateBuilder set(DateField field, DateAccessor accessor) {
     accessors.put(field, accessor);
     return this;
   }
 
-  public UpdateBuilder set(DateField field, Date value) {
+  public org.globsframework.sqlstreams.SqlUpdateBuilder set(DateField field, Date value) {
     return set(field, new ValueDateAccessor(value));
   }
 
-  public UpdateBuilder set(TimeStampField field, Date value) {
+  public org.globsframework.sqlstreams.SqlUpdateBuilder set(TimeStampField field, Date value) {
     return set(field, new ValueDateAccessor(value));
   }
 
-  public UpdateBuilder set(TimeStampField field, DateAccessor accessor) {
+  public org.globsframework.sqlstreams.SqlUpdateBuilder set(TimeStampField field, DateAccessor accessor) {
     accessors.put(field, accessor);
     return this;
   }
 
-  public UpdateBuilder set(StringField field, StringAccessor accessor) {
+  public org.globsframework.sqlstreams.SqlUpdateBuilder set(StringField field, StringAccessor accessor) {
     accessors.put(field, accessor);
     return this;
   }
 
-  public UpdateBuilder set(StringField field, String value) {
+  public org.globsframework.sqlstreams.SqlUpdateBuilder set(StringField field, String value) {
     return set(field, new ValueStringAccessor(value));
   }
 
-  public UpdateBuilder set(BooleanField field, BooleanAccessor accessor) {
+  public org.globsframework.sqlstreams.SqlUpdateBuilder set(BooleanField field, BooleanAccessor accessor) {
     accessors.put(field, accessor);
     return this;
   }
 
-  public UpdateBuilder set(BooleanField field, Boolean value) {
+  public org.globsframework.sqlstreams.SqlUpdateBuilder set(BooleanField field, Boolean value) {
     return set(field, new ValueBooleanAccessor(value));
   }
 
-  public UpdateBuilder set(BlobField field, byte[] value) {
+  public org.globsframework.sqlstreams.SqlUpdateBuilder set(BlobField field, byte[] value) {
     return set(field, new ValueBlobAccessor(value));
   }
 
-  public UpdateBuilder set(BlobField field, BlobAccessor accessor) {
+  public org.globsframework.sqlstreams.SqlUpdateBuilder set(BlobField field, BlobAccessor accessor) {
     accessors.put(field, accessor);
     return this;
   }
 
-  public UpdateBuilder set(LinkField field, IntegerAccessor accessor) {
+  public org.globsframework.sqlstreams.SqlUpdateBuilder set(LinkField field, IntegerAccessor accessor) {
     accessors.put(field, accessor);
     return this;
   }
 
-  public UpdateBuilder set(LinkField field, Integer value) {
+  public org.globsframework.sqlstreams.SqlUpdateBuilder set(LinkField field, Integer value) {
     return set(field, new ValueIntegerAccessor(value));
   }
 
   public SqlRequest getRequest() throws InvalidState {
     try {
-      return new SqlUpdateRequest(globType, constraint, accessors, connection, db, blobUpdater);
+      return new JdbcUpdateRequest(globType, constraint, accessors, connection, db, blobUpdater);
     }
     finally {
       accessors.clear();
     }
   }
 
-  public void run() throws SqlException {
+  public void run() throws GlobsSQLException {
     getRequest().execute();
   }
 }

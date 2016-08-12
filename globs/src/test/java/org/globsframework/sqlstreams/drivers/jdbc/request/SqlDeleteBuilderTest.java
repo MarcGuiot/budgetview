@@ -16,7 +16,7 @@ public class SqlDeleteBuilderTest extends GlobsDatabaseTestCase {
       XmlGlobStreamReader.parse(directory,
                                 "<dummyObject id='1' name='hello' value='1.1' present='true'/>");
     populate(sqlConnection, streamToWrite);
-    sqlConnection.deleteAll(DummyObject.TYPE);
+    sqlConnection.startDelete(DummyObject.TYPE).execute();
     assertEquals(0, sqlConnection.startSelect(DummyObject.TYPE).getQuery().getList().size());
   }
 

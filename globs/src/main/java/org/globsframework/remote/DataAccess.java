@@ -1,24 +1,24 @@
 package org.globsframework.remote;
 
 import org.globsframework.metamodel.GlobType;
-import org.globsframework.sqlstreams.CreateBuilder;
-import org.globsframework.sqlstreams.SelectBuilder;
+import org.globsframework.sqlstreams.SqlCreateBuilder;
+import org.globsframework.sqlstreams.SqlSelectBuilder;
 import org.globsframework.sqlstreams.SqlRequest;
-import org.globsframework.sqlstreams.UpdateBuilder;
+import org.globsframework.sqlstreams.SqlUpdateBuilder;
 import org.globsframework.sqlstreams.constraints.Constraint;
 
 public interface DataAccess {
-  SelectBuilder getQueryBuilder(GlobType globType);
+  SqlSelectBuilder getQueryBuilder(GlobType globType);
 
-  SelectBuilder getQueryBuilder(GlobType globType, Constraint constraint);
+  SqlSelectBuilder getQueryBuilder(GlobType globType, Constraint constraint);
 
-  UpdateBuilder getUpdateBuilder(GlobType globType, Constraint constraint);
+  SqlUpdateBuilder getUpdateBuilder(GlobType globType, Constraint constraint);
 
   SqlRequest getDeleteRequest(GlobType globType);
 
   SqlRequest getDeleteRequest(GlobType globType, Constraint constraint);
 
-  CreateBuilder getCreateRequest(GlobType globType);
+  SqlCreateBuilder getCreateRequest(GlobType globType);
 
 
 }
