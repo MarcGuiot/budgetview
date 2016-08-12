@@ -3,6 +3,7 @@ package org.globsframework.streams.accessors;
 import org.globsframework.metamodel.Field;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.fields.*;
+import org.globsframework.streams.accessors.utils.AbstractGlobAccessor;
 import org.globsframework.utils.exceptions.InvalidParameter;
 import org.globsframework.utils.exceptions.ItemNotFound;
 
@@ -21,12 +22,16 @@ public class GlobAccessorBuilder {
 
   public GlobAccessor getAccessor() {
     if (accessor == null) {
-      accessor = new GlobAccessor() {
-        public Object getValue(Field field) {
+      accessor = new AbstractGlobAccessor(type) {
+        protected Object doGet(Field field) {
           if (!type.equals(field.getGlobType())) {
             throw new InvalidParameter("Field " + field.getName() + " of type + " + field.getGlobType().getName() + " not available in accessor for type " + type.getName());
           }
           return values[field.getIndex()];
+        }
+
+        public boolean contains(Field field) {
+          return type.equals(field.getGlobType());
         }
       };
     }

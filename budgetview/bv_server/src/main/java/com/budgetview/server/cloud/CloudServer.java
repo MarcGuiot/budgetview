@@ -1,9 +1,7 @@
 package com.budgetview.server.cloud;
 
 import com.budgetview.server.cloud.model.CloudModel;
-import com.budgetview.server.cloud.servlet.BudgeaWebHookServlet;
-import com.budgetview.server.cloud.servlet.ConnectionServlet;
-import com.budgetview.server.cloud.servlet.PingServlet;
+import com.budgetview.server.cloud.servlet.*;
 import com.budgetview.server.config.ConfigService;
 import com.budgetview.server.utils.DbInit;
 import com.budgetview.server.utils.Log4J;
@@ -39,6 +37,7 @@ public class CloudServer {
     webServer = new WebServer(config);
     webServer.add(new ConnectionServlet(directory), "/connections");
     webServer.add(new BudgeaWebHookServlet(directory), "/budgea");
+    webServer.add(new StatementServlet(directory), "/statement");
 
     if (config.isTrue("budgetview.ping.available")) {
       webServer.add(new PingServlet(directory), "/ping");
@@ -49,6 +48,7 @@ public class CloudServer {
     Directory directory = new DefaultDirectory();
     directory.add(config);
     DbInit.create(config, directory);
+    directory.add(new AuthenticationService(directory));
     return directory;
   }
 

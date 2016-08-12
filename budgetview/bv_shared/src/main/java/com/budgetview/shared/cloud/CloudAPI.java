@@ -1,27 +1,40 @@
 package com.budgetview.shared.cloud;
 
-import org.apache.http.Consts;
-import org.apache.http.client.fluent.Form;
+import org.apache.http.HttpResponse;
 import org.apache.http.client.fluent.Request;
 import org.apache.http.client.fluent.Response;
+import org.globsframework.utils.Files;
 
 import java.io.IOException;
 
 public class CloudAPI {
 
   public void addConnection(String email, String budgeaToken, Integer budgeaUserId) throws IOException {
-    Request request = Request.Post(cloudUrl("/connections"))
-      .bodyForm(Form.form()
-                  .add(CloudConstants.EMAIL, email)
-                  .add(CloudConstants.BUDGEA_TOKEN, budgeaToken)
-                  .add(CloudConstants.BUDGEA_USER_ID, Integer.toString(budgeaUserId))
-                  .build(), Consts.UTF_8);
+    String url = cloudUrl("/connections");
+    Request request = Request.Post(url)
+      .addHeader(CloudConstants.EMAIL, email)
+      .addHeader(CloudConstants.BUDGEA_TOKEN, budgeaToken)
+      .addHeader(CloudConstants.BUDGEA_USER_ID, Integer.toString(budgeaUserId));
+    execute(request, url);
+  }
 
+  public String getStatement(String email) throws IOException {
+    String url = cloudUrl("/statement");
+    Request request = Request.Get(url)
+      .addHeader(CloudConstants.EMAIL, email);
+
+    HttpResponse response = execute(request, url);
+    return Files.loadStreamToString(response.getEntity().getContent(), "UTF-8");
+  }
+
+  public HttpResponse execute(Request request, String url) throws IOException {
     Response response = request.execute();
-    int statusCode = response.returnResponse().getStatusLine().getStatusCode();
+    HttpResponse httpResponse = response.returnResponse();
+    int statusCode = httpResponse.getStatusLine().getStatusCode();
     if (statusCode != 200) {
-      throw new IOException("POST to /connections returned " + statusCode + " instead of 200");
+      throw new IOException("Call to " + url + " returned " + statusCode + " instead of 200");
     }
+    return httpResponse;
   }
 
   private String cloudUrl(String path) {

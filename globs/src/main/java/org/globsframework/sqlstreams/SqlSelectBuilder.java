@@ -45,7 +45,9 @@ public interface SqlSelectBuilder {
 
   BlobAccessor retrieve(BlobField field);
 
-  Accessor retrieveUnTyped(Field field);
+  Accessor retrieveValue(Field field);
+
+  GlobAccessor retrieveAll();
 
   SqlSelect getQuery();
 

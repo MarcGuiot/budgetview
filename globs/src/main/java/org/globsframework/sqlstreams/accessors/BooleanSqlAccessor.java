@@ -13,14 +13,14 @@ public class BooleanSqlAccessor extends SqlAccessor implements BooleanAccessor {
   }
 
   public boolean getValue() {
-    SqlGlobStream moStream = getSqlMoStream();
+    SqlGlobStream moStream = getSqlStream();
     if (moStream.getCurrentRowId() == rowId) {
       return cachedValue;
     }
     else {
       cachedValue = moStream.getBoolean(getIndex());
       rowId = moStream.getCurrentRowId();
-      isNull = getSqlMoStream().isNull();
+      isNull = getSqlStream().isNull();
       return cachedValue;
     }
 

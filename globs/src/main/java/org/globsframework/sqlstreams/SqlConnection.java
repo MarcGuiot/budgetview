@@ -23,21 +23,21 @@ public interface SqlConnection {
 
   Glob selectUnique(GlobType globType) throws ItemNotFound, TooManyItems;
 
-  SqlSelectBuilder startSelect(GlobType globType, Constraint constraint);
+  SqlSelectBuilder startSelect(GlobType globType, Constraint where);
 
-  GlobList selectAll(GlobType globType, Constraint constraint);
+  GlobList selectAll(GlobType globType, Constraint where);
 
-  Glob selectUnique(GlobType globType, Constraint constraint) throws ItemNotFound, TooManyItems;
+  Glob selectUnique(GlobType globType, Constraint where) throws ItemNotFound, TooManyItems;
 
   SqlCreateBuilder startCreate(GlobType globType);
 
   SqlUpdateBuilder startUpdate(GlobType globType);
 
-  SqlUpdateBuilder startUpdate(GlobType globType, Constraint constraint);
+  SqlUpdateBuilder startUpdate(GlobType globType, Constraint where);
 
   SqlRequest startDelete(GlobType globType);
 
-  SqlRequest startDelete(GlobType globType, Constraint constraint);
+  SqlRequest startDelete(GlobType globType, Constraint where);
 
   void commit() throws RollbackFailed, DbConstraintViolation;
 

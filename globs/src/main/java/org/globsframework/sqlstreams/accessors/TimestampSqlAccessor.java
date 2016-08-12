@@ -7,11 +7,11 @@ import java.util.Date;
 public class TimestampSqlAccessor extends SqlAccessor implements TimestampAccessor {
 
   public long getTimestamp() {
-    return getSqlMoStream().getTimeStamp(getIndex()).getTime();
+    return getSqlStream().getTimeStamp(getIndex()).getTime();
   }
 
   public Date getDate() {
-    return getSqlMoStream().getTimeStamp(getIndex());
+    return getSqlStream().getTimeStamp(getIndex());
   }
 
   public Object getObjectValue() {

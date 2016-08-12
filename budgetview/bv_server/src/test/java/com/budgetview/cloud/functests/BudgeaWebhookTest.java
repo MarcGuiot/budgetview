@@ -630,5 +630,7 @@ public class BudgeaWebhookTest extends CloudTestCase {
                   "  }" +
                   "}";
     budgea.callWebhook("azerty/12345", json);
+
+    cloud.checkBankStatement("regis@mybudgetview.fr", "aaa");
   }
 }

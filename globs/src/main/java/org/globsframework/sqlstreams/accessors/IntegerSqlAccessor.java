@@ -5,7 +5,7 @@ import org.globsframework.streams.accessors.IntegerAccessor;
 public class IntegerSqlAccessor extends SqlAccessor implements IntegerAccessor {
 
   public Integer getInteger() {
-    return getSqlMoStream().getInteger(getIndex());
+    return getSqlStream().getInteger(getIndex());
   }
 
   public int getValue() {

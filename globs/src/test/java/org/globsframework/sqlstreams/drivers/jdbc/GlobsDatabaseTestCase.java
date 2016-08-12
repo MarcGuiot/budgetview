@@ -60,7 +60,7 @@ public abstract class GlobsDatabaseTestCase extends ServicesTestCase {
       constraint = Where.and(constraint, Where.fieldEqualsValue(keyField, key.getValue(keyField)));
     }
     SqlSelectBuilder queryBuilder = sqlConnection.startSelect(key.getGlobType(), constraint);
-    Accessor accessor = queryBuilder.retrieveUnTyped(field);
+    Accessor accessor = queryBuilder.retrieveValue(field);
     GlobStream globStream = queryBuilder.getQuery().getStream();
     assertTrue(globStream.next());
     return accessor.getObjectValue();

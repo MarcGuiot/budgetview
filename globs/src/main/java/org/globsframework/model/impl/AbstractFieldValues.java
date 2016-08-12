@@ -5,6 +5,7 @@ import org.globsframework.metamodel.fields.*;
 import org.globsframework.model.FieldValues;
 import org.globsframework.utils.exceptions.ItemNotFound;
 
+import java.io.Serializable;
 import java.util.Date;
 
 public abstract class AbstractFieldValues implements FieldValues {

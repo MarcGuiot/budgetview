@@ -3,17 +3,20 @@ package org.globsframework.sqlstreams.drivers.jdbc.builder;
 import org.globsframework.metamodel.Field;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.fields.*;
+import org.globsframework.model.FieldValue;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
+import org.globsframework.model.impl.AbstractFieldValues;
 import org.globsframework.sqlstreams.GlobsDatabase;
-import org.globsframework.sqlstreams.SqlSelectBuilder;
 import org.globsframework.sqlstreams.SqlSelect;
+import org.globsframework.sqlstreams.SqlSelectBuilder;
 import org.globsframework.sqlstreams.accessors.*;
 import org.globsframework.sqlstreams.constraints.Constraint;
 import org.globsframework.sqlstreams.drivers.jdbc.impl.BlobUpdater;
-import org.globsframework.sqlstreams.drivers.jdbc.select.SqlSelectQuery;
 import org.globsframework.sqlstreams.drivers.jdbc.impl.FieldToSqlAccessorVisitor;
+import org.globsframework.sqlstreams.drivers.jdbc.select.SqlSelectQuery;
 import org.globsframework.streams.accessors.*;
+import org.globsframework.streams.accessors.utils.AbstractGlobAccessor;
 import org.globsframework.utils.Ref;
 import org.globsframework.utils.exceptions.ItemNotFound;
 import org.globsframework.utils.exceptions.TooManyItems;
@@ -29,7 +32,7 @@ public class SqlQueryBuilder implements SqlSelectBuilder {
   private GlobsDatabase globsDB;
   private BlobUpdater blobUpdater;
   private boolean autoClose = true;
-  private Map<Field, SqlAccessor> fieldToAccessorHolder = new HashMap<Field, SqlAccessor>();
+  private Map<Field, SqlAccessor> fieldToAccessor = new HashMap<Field, SqlAccessor>();
 
   public SqlQueryBuilder(Connection connection, GlobType globType, Constraint constraint, GlobsDatabase globsDB, BlobUpdater blobUpdater) {
     this.connection = connection;
@@ -42,10 +45,10 @@ public class SqlQueryBuilder implements SqlSelectBuilder {
   public SqlSelect getQuery() {
     try {
       completeWithKeys();
-      return new SqlSelectQuery(connection, constraint, fieldToAccessorHolder, globsDB, blobUpdater, autoClose);
+      return new SqlSelectQuery(connection, constraint, fieldToAccessor, globsDB, blobUpdater, autoClose);
     }
     finally {
-      fieldToAccessorHolder.clear();
+      fieldToAccessor.clear();
     }
   }
 
@@ -64,7 +67,7 @@ public class SqlQueryBuilder implements SqlSelectBuilder {
 
   private void completeWithKeys() {
     for (Field field : globType.getKeyFields()) {
-      if (!fieldToAccessorHolder.containsKey(field)) {
+      if (!fieldToAccessor.containsKey(field)) {
         select(field);
       }
     }
@@ -73,7 +76,7 @@ public class SqlQueryBuilder implements SqlSelectBuilder {
   public SqlSelectBuilder select(Field field) {
     FieldToSqlAccessorVisitor visitor = new FieldToSqlAccessorVisitor();
     field.safeVisit(visitor);
-    fieldToAccessorHolder.put(field, visitor.getAccessor());
+    fieldToAccessor.put(field, visitor.getAccessor());
     return this;
   }
 
@@ -118,61 +121,92 @@ public class SqlQueryBuilder implements SqlSelectBuilder {
 
   public DateAccessor retrieve(DateField field) {
     DateSqlAccessor accessor = new DateSqlAccessor();
-    fieldToAccessorHolder.put(field, accessor);
+    fieldToAccessor.put(field, accessor);
     return accessor;
   }
 
   public TimestampSqlAccessor retrieve(TimeStampField field) {
     TimestampSqlAccessor accessor = new TimestampSqlAccessor();
-    fieldToAccessorHolder.put(field, accessor);
+    fieldToAccessor.put(field, accessor);
     return accessor;
   }
 
   public BooleanAccessor retrieve(BooleanField field) {
     BooleanSqlAccessor accessor = new BooleanSqlAccessor();
-    fieldToAccessorHolder.put(field, accessor);
+    fieldToAccessor.put(field, accessor);
     return accessor;
   }
 
   public IntegerAccessor retrieve(IntegerField field) {
     IntegerSqlAccessor accessor = new IntegerSqlAccessor();
-    fieldToAccessorHolder.put(field, accessor);
+    fieldToAccessor.put(field, accessor);
     return accessor;
   }
 
   public LongAccessor retrieve(LongField field) {
     LongSqlAccessor accessor = new LongSqlAccessor();
-    fieldToAccessorHolder.put(field, accessor);
+    fieldToAccessor.put(field, accessor);
     return accessor;
   }
 
   public StringAccessor retrieve(StringField field) {
     StringSqlAccessor accessor = new StringSqlAccessor();
-    fieldToAccessorHolder.put(field, accessor);
+    fieldToAccessor.put(field, accessor);
     return accessor;
   }
 
   public DoubleAccessor retrieve(DoubleField field) {
     DoubleSqlAccessor accessor = new DoubleSqlAccessor();
-    fieldToAccessorHolder.put(field, accessor);
+    fieldToAccessor.put(field, accessor);
     return accessor;
   }
 
   public BlobSqlAccessor retrieve(BlobField field) {
     BlobSqlAccessor accessor = new BlobSqlAccessor();
-    fieldToAccessorHolder.put(field, accessor);
+    fieldToAccessor.put(field, accessor);
     return accessor;
   }
 
-  public Accessor retrieveUnTyped(Field field) {
+  public Accessor retrieveValue(Field field) {
     AccessorToFieldVisitor visitor = new AccessorToFieldVisitor();
     field.safeVisit(visitor);
     return visitor.get();
   }
 
+  public CompleteGlobAccessor retrieveAll() {
+    CompleteGlobAccessor globAccessor = new CompleteGlobAccessor();
+    for (Field field : globType.getFields()) {
+      Accessor accessor = retrieveValue(field);
+      globAccessor.set(field, accessor);
+    }
+    return globAccessor;
+  }
+
+  private class CompleteGlobAccessor extends AbstractGlobAccessor implements GlobAccessor {
+
+    private Accessor[] accessors;
+
+    public CompleteGlobAccessor() {
+      super(globType);
+      accessors = new Accessor[globType.getFieldCount()];
+    }
+
+    private void set(Field field, Accessor accessor) {
+      accessors[field.getIndex()] = accessor;
+    }
+
+    protected Object doGet(Field field) {
+      if (!field.getGlobType().equals(globType)) {
+        throw new ItemNotFound("Field '" + field.getName() + "' is declared for type '" +
+                               field.getGlobType().getName() + "' and not for '" + globType.getName() + "'");
+      }
+      return accessors[field.getIndex()].getObjectValue();
+    }
+  }
+
   private <T extends Accessor, D extends T> SqlSelectBuilder createAccessor(Field field, Ref<T> ref, D accessor) {
     ref.set(accessor);
-    fieldToAccessorHolder.put(field, (SqlAccessor)accessor);
+    fieldToAccessor.put(field, (SqlAccessor) accessor);
     return this;
   }
 

@@ -4,10 +4,9 @@ import org.globsframework.metamodel.Field;
 import org.globsframework.metamodel.fields.*;
 import org.globsframework.utils.exceptions.ItemNotFound;
 
-import java.io.Serializable;
 import java.util.Date;
 
-public interface FieldValues extends Serializable {
+public interface FieldValues {
 
   Object getValue(Field field) throws ItemNotFound;
 
@@ -79,6 +78,7 @@ public interface FieldValues extends Serializable {
     public Date get(DateField field) throws ItemNotFound {
       throw new ItemNotFound(field.getName());
     }
+
     public Date get(DateField field, Date valueIfNull) throws ItemNotFound {
       throw new ItemNotFound(field.getName());
     }

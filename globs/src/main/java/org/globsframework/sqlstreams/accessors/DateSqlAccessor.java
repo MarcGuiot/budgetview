@@ -7,7 +7,7 @@ import java.util.Date;
 public class DateSqlAccessor extends SqlAccessor implements DateAccessor {
 
   public Date getDate() {
-    return getSqlMoStream().getDate(getIndex());
+    return getSqlStream().getDate(getIndex());
   }
 
   public Object getObjectValue() {

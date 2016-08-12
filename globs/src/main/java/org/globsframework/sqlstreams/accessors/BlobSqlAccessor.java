@@ -8,6 +8,6 @@ public class BlobSqlAccessor extends SqlAccessor implements BlobAccessor {
   }
 
   public byte[] getValue() {
-    return getSqlMoStream().getBytes(getIndex());
+    return getSqlStream().getBytes(getIndex());
   }
 }

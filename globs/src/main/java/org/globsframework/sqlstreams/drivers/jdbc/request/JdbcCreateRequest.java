@@ -106,18 +106,6 @@ public class JdbcCreateRequest implements SqlCreateRequest {
     }
   }
 
-  private void print(String title, ResultSet resultSet) throws SQLException {
-    if (resultSet == null) {
-      System.out.println("JdbcCreateRequest.print(" + title + "): null");
-      return;
-    }
-    int count = 0;
-    while (resultSet.next()) {
-      ++count;
-      System.out.println("JdbcCreateRequest.print(" + title + "): [" + count + "] " + resultSet.getInt(count));
-    }
-  }
-
   public FieldValues getLastGeneratedIds() {
     return lastGeneratedIds;
   }

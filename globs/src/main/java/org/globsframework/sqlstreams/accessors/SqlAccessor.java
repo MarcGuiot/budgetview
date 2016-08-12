@@ -19,7 +19,7 @@ public abstract class SqlAccessor implements Accessor {
     return index;
   }
 
-  public SqlGlobStream getSqlMoStream() {
+  public SqlGlobStream getSqlStream() {
     return sqlMoStream;
   }
 

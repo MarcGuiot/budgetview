@@ -56,14 +56,13 @@ public class BudgeaWebHookServlet extends HttpServlet {
     response.setCharacterEncoding("UTF-8");
 
     String authorization = request.getHeader("Authorization");
-    Matcher progressMatcher = pattern.matcher(authorization.trim());
-    if (!progressMatcher.matches()) {
+    Matcher tokenMatcher = pattern.matcher(authorization.trim());
+    if (!tokenMatcher.matches()) {
       response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
       return;
     }
 
-    String token = progressMatcher.group(1);
-    logger.info(token);
+    String token = tokenMatcher.group(1);
 
     InputStream inputStream = request.getInputStream();
     String json = Files.loadStreamToString(inputStream, "UTF-8");
@@ -101,19 +100,19 @@ public class BudgeaWebHookServlet extends HttpServlet {
     response.setStatus(HttpServletResponse.SC_OK);
   }
 
-  private Integer getCloudUserId(int userId, String token) {
+  private Integer getCloudUserId(int budgeaUserId, String token) {
     SqlConnection connection = db.connect();
     try {
       Glob user = connection.selectUnique(CloudUser.TYPE, Where.and(fieldEquals(CloudUser.PROVIDER, Provider.BUDGEA.getId()),
-                                                                    fieldEquals(CloudUser.PROVIDER_ID, userId),
+                                                                    fieldEquals(CloudUser.PROVIDER_ID, budgeaUserId),
                                                                     fieldEquals(CloudUser.PROVIDER_ACCESS_TOKEN, token)));
       return user.get(CloudUser.ID);
     }
     catch (ItemNotFound itemNotFound) {
-      logger.error("User '" + userId + "' with token '" + Strings.cut(token, 15) + "' not recognized");
+      logger.error("User '" + budgeaUserId + "' with token '" + Strings.cut(token, 15) + "' not recognized");
     }
     catch (TooManyItems tooManyItems) {
-      logger.error("Several entries found for user '" + userId + "' with token '" + Strings.cut(token, 15) + "'");
+      logger.error("Several entries found for user '" + budgeaUserId + "' with token '" + Strings.cut(token, 15) + "'");
     }
     return null;
   }
