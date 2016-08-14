@@ -15,6 +15,7 @@ import java.util.*;
 
 import static org.globsframework.model.utils.GlobMatchers.*;
 
+/** @deprecated */
 public class BankAccountGroup {
   private final Glob bank;
   private final GlobList accounts = new GlobList();

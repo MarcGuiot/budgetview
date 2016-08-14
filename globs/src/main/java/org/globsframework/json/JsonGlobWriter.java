@@ -1,5 +1,6 @@
 package org.globsframework.json;
 
+import org.globsframework.metamodel.fields.DoubleField;
 import org.globsframework.metamodel.fields.IntegerField;
 import org.globsframework.metamodel.fields.LinkField;
 import org.globsframework.metamodel.fields.StringField;
@@ -25,6 +26,11 @@ public class JsonGlobWriter extends JSONWriter {
   }
 
   public void field(LinkField field, String key) {
+    key(key);
+    value(fieldValues.get(field));
+  }
+
+  public void field(DoubleField field, String key) {
     key(key);
     value(fieldValues.get(field));
   }

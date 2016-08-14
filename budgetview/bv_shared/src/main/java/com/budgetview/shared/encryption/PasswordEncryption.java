@@ -14,11 +14,11 @@ import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
 import java.util.zip.GZIPInputStream;
 
-public class Crypt {
+public class PasswordEncryption {
   private PBEParameterSpec spec;
   private SecretKey secretKey;
 
-  public Crypt(final char[] password, String salt) throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidKeySpecException, InvalidAlgorithmParameterException, InvalidKeyException {
+  public PasswordEncryption(final char[] password, String salt) throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidKeySpecException, InvalidAlgorithmParameterException, InvalidKeyException {
     SecretKeyFactory factory = SecretKeyFactory.getInstance("PBEWithMD5AndDES");
     spec = new PBEParameterSpec(salt.getBytes(), 5);
     PBEKeySpec keySpec = new PBEKeySpec(password);
@@ -39,9 +39,9 @@ public class Crypt {
     return cipher.doFinal(bytes);
   }
 
-  public static String encodeSHA1AndHex(byte[] bytes){
+  public static String encodeSHA1AndHex(byte[] bytes) {
     try {
-      MessageDigest digest = MessageDigest.getInstance( "SHA-1" );
+      MessageDigest digest = MessageDigest.getInstance("SHA-1");
       digest.update(bytes, 0, bytes.length);
       byte[] result = digest.digest();
       return encodeHex(result);
@@ -55,7 +55,7 @@ public class Crypt {
 
   private static final char[] DIGITS_LOWER = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f'};
 
-  protected static String encodeHex(byte[] data) {
+  private static String encodeHex(byte[] data) {
     int l = data.length;
     char[] out = new char[l << 1];
     // two characters form the hex value.

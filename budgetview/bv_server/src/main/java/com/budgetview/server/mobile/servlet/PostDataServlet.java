@@ -2,9 +2,8 @@ package com.budgetview.server.mobile.servlet;
 
 import com.budgetview.server.license.servlet.AbstractHttpServlet;
 import com.budgetview.server.utils.Lang;
-import com.budgetview.server.mobile.servlet.CreateMobileUserServlet;
 import com.budgetview.shared.license.LicenseConstants;
-import com.budgetview.shared.encryption.Crypt;
+import com.budgetview.shared.encryption.PasswordEncryption;
 import com.budgetview.shared.mobile.MobileConstants;
 import org.apache.log4j.Logger;
 import org.globsframework.utils.Files;
@@ -92,7 +91,7 @@ public class PostDataServlet extends AbstractHttpServlet {
   // to prevent naming clash an digest (sha1) is add after
   public static String generateDirName(String mail) {
     try {
-      String digest = Crypt.encodeSHA1AndHex(mail.getBytes("UTF-8"));
+      String digest = PasswordEncryption.encodeSHA1AndHex(mail.getBytes("UTF-8"));
       StringBuilder builder = new StringBuilder(mail.length());
       for (int i = 0; i < mail.length(); i++) {
         char ch = mail.charAt(i);

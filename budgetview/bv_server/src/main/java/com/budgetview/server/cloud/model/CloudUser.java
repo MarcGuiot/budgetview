@@ -27,6 +27,6 @@ public class CloudUser {
   public static StringField PROVIDER_ACCESS_TOKEN;
 
   static {
-    GlobTypeLoader.init(CloudUser.class);
+    GlobTypeLoader.init(CloudUser.class, "cloudUser");
   }
 }

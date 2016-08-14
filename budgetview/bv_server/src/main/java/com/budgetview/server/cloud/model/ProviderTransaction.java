@@ -45,6 +45,6 @@ public class ProviderTransaction {
   public static BooleanField DELETED;
 
   static {
-    GlobTypeLoader.init(ProviderTransaction.class);
+    GlobTypeLoader.init(ProviderTransaction.class, "providerTransaction");
   }
 }

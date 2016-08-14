@@ -1,7 +1,7 @@
 package com.budgetview.functests.checkers.mobile;
 
 import com.budgetview.shared.model.MobileModel;
-import com.budgetview.shared.encryption.Crypt;
+import com.budgetview.shared.encryption.PasswordEncryption;
 import com.budgetview.shared.mobile.MobileConstants;
 import junit.framework.Assert;
 import org.apache.http.HttpResponse;
@@ -39,7 +39,7 @@ public class MobileAppChecker {
 
   public void checkLogin(String email, String password) throws Exception {
 
-    Crypt encryptedPassword = new Crypt(password.toCharArray(), MobileConstants.SALT);
+    PasswordEncryption encryptedPassword = new PasswordEncryption(password.toCharArray(), MobileConstants.SALT);
     HttpResponse response = getHttpResponse(email, encryptedPassword);
     Assert.assertEquals(200, response.getStatusLine().getStatusCode());
 
@@ -56,15 +56,15 @@ public class MobileAppChecker {
   }
 
   public void checkLoginFails(String mail, String newPassword) throws Exception {
-    Crypt encryptedPassword = new Crypt(newPassword.toCharArray(), MobileConstants.SALT);
+    PasswordEncryption encryptedPassword = new PasswordEncryption(newPassword.toCharArray(), MobileConstants.SALT);
     HttpResponse response = getHttpResponse(mail, encryptedPassword);
     Assert.assertEquals(403, response.getStatusLine().getStatusCode());
   }
 
-  private HttpResponse getHttpResponse(String email, Crypt crypt) throws URISyntaxException, NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeySpecException, InvalidKeyException, InvalidAlgorithmParameterException, IllegalBlockSizeException, BadPaddingException, IOException {
+  private HttpResponse getHttpResponse(String email, PasswordEncryption encryptor) throws URISyntaxException, NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeySpecException, InvalidKeyException, InvalidAlgorithmParameterException, IllegalBlockSizeException, BadPaddingException, IOException {
     StringBuilder params = new StringBuilder();
     params.append(MobileConstants.MAIL).append("=").append(URLEncoder.encode(email, "UTF-8"));
-    String data = Crypt.encodeSHA1AndHex(crypt.encodeData(email.getBytes("UTF-8")));
+    String data = PasswordEncryption.encodeSHA1AndHex(encryptor.encodeData(email.getBytes("UTF-8")));
     params.append("&").append(MobileConstants.CRYPTED_INFO).append("=").append(URLEncoder.encode(data, "UTF-8"));
 
     HttpGet method = new HttpGet("http://localhost:" + httpPort + MobileConstants.GET_MOBILE_DATA + "?" + params);

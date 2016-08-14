@@ -2,7 +2,7 @@ package com.budgetview.desktop.mobile;
 
 import com.budgetview.client.ConnectionStatus;
 import com.budgetview.client.http.Http;
-import com.budgetview.shared.encryption.Crypt;
+import com.budgetview.shared.encryption.PasswordEncryption;
 import com.budgetview.shared.encryption.MD5PasswordBasedEncryptor;
 import com.budgetview.shared.license.LicenseConstants;
 import com.budgetview.shared.mobile.MobileConstants;
@@ -63,7 +63,7 @@ public class MobileService {
     MD5PasswordBasedEncryptor userEncryptor =
       new MD5PasswordBasedEncryptor(MobileConstants.SALT.getBytes(), password.toCharArray(), 5);
     byte[] encryptedMail = userEncryptor.encrypt(mail.getBytes("UTF-8"));
-    String sha1Mail = Crypt.encodeSHA1AndHex(encryptedMail);
+    String sha1Mail = PasswordEncryption.encodeSHA1AndHex(encryptedMail);
 
     return Http.utf8Post(url)
       .setHeader(MobileConstants.HEADER_LANG, Lang.get("lang"))
@@ -110,7 +110,7 @@ public class MobileService {
 
       byte[] data = encryptor.encrypt(bytes);
       byte[] encryptedMail = encryptor.encrypt(mail.getBytes("UTF-8"));
-      String sha1Mail = Crypt.encodeSHA1AndHex(encryptedMail);
+      String sha1Mail = PasswordEncryption.encodeSHA1AndHex(encryptedMail);
       postRequest
         .setHeader(MobileConstants.HEADER_LANG, Lang.get("lang"))
         .setHeader(LicenseConstants.HEADER_MAIL, URLEncoder.encode(mail, "UTF-8"))

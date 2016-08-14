@@ -62,8 +62,7 @@ public class CloudService {
   public void createConnection(Key connectionKey, GlobRepository repository) throws IOException {
 
     Map<String, String> params = new HashMap<String, String>();
-    GlobList values = repository.findLinkedTo(connectionKey, BudgeaConnectionValue.CONNECTION);
-    for (Glob value : values) {
+    for (Glob value : repository.findLinkedTo(connectionKey, BudgeaConnectionValue.CONNECTION)) {
       Glob field = repository.findLinkTarget(value, BudgeaConnectionValue.FIELD);
       String name = field.get(BudgeaBankField.NAME);
       params.put(name, value.get(BudgeaConnectionValue.VALUE));
@@ -72,5 +71,9 @@ public class CloudService {
     JSONObject result = budgeaAPI.addConnection(connectionKey.get(BudgeaConnection.BANK), params);
     Glob user = repository.get(User.KEY);
     cloudAPI.addConnection(user.get(User.EMAIL), budgeaAPI.getToken(), budgeaAPI.getUserId());
+  }
+
+  public void downloadStatement() {
+
   }
 }

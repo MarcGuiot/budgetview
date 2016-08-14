@@ -23,7 +23,7 @@ public class CloudVersion {
   public static IntegerField MINOR_VERSION;
 
   static {
-    GlobTypeLoader.init(CloudVersion.class, "BVVersion");
+    GlobTypeLoader.init(CloudVersion.class, "cloudVersion");
     key = KeyBuilder.newKey(TYPE, 0);
   }
 

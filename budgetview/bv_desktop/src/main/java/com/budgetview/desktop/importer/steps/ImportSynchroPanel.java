@@ -23,6 +23,7 @@ import java.awt.event.ActionEvent;
 import java.util.Collections;
 import java.util.Stack;
 
+/** @deprecated */
 public class ImportSynchroPanel extends AbstractImportStepPanel {
 
   private final GlobRepository repository;
@@ -86,19 +87,16 @@ public class ImportSynchroPanel extends AbstractImportStepPanel {
 
   public void update(Integer bankId, RealAccountImporter importer) {
     closed = false;
-    System.out.println("ImportSynchroPanel.update");
     BankConnector connector = bankSynchroService.getConnector(bankId, dialog, repository, localDirectory);
     doUpdate(Collections.singletonList(connector), importer);
   }
 
   public void update(GlobList synchro, RealAccountImporter importer) {
     closed = false;
-    System.out.println("ImportSynchroPanel.update");
     doUpdate(bankSynchroService.getConnectors(synchro, dialog, repository, localDirectory), importer);
   }
 
   private void doUpdate(java.util.List<BankConnector> connectors, RealAccountImporter importer) {
-    System.out.println("ImportSynchroPanel.doUpdate");
     createPanelIfNeeded();
     this.importer = importer;
     this.importedRealAccounts.clear();
@@ -107,7 +105,6 @@ public class ImportSynchroPanel extends AbstractImportStepPanel {
   }
 
   private void installNextConnector() {
-    System.out.println("ImportSynchroPanel.installNextConnector");
     if (closed) {
       return;
     }

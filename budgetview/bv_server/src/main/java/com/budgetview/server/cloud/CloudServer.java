@@ -1,14 +1,11 @@
 package com.budgetview.server.cloud;
 
-import com.budgetview.server.cloud.model.CloudModel;
 import com.budgetview.server.cloud.servlet.*;
 import com.budgetview.server.config.ConfigService;
 import com.budgetview.server.utils.DbInit;
 import com.budgetview.server.utils.Log4J;
 import com.budgetview.server.web.WebServer;
 import org.apache.log4j.Logger;
-import org.globsframework.sqlstreams.GlobsDatabase;
-import org.globsframework.sqlstreams.drivers.jdbc.JdbcGlobsDatabase;
 import org.globsframework.utils.directory.DefaultDirectory;
 import org.globsframework.utils.directory.Directory;
 

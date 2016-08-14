@@ -29,6 +29,7 @@ import java.awt.event.ActionEvent;
 import java.util.List;
 import java.util.Set;
 
+/** @deprecated */
 public class BankDownloadPanel implements GlobSelectionListener {
   private Window parent;
   private ImportController controller;
