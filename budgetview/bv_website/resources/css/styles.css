@@ -1,0 +1,1128 @@
+body {
+  padding-top: 60px;
+  padding-bottom: 25px;
+  padding-left:0;
+  padding-right:0;
+  background-color: white;
+  font-family: Arial, sans-serif;
+  color: #333;
+  background: #FFF;
+  text-align: justify;
+  margin: 7px;
+  margin-left: 0;
+  margin-right: 0;
+}
+
+button.btn {
+  color: #fff;
+  background-color: #F37A32;
+  border-color: #eea236;
+  font-size: 20px;
+}
+
+.centered {
+ text-align: center;
+}
+
+div.centered-image {
+ text-align: center;
+ margin-top: 15px;
+ margin-bottom: 15px;
+}
+
+.container {
+  max-width: 900px;
+}
+
+.narrow {
+  width: 90%;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+a.highlighted {
+  border-bottom: 1px dashed #428BCA;
+}
+
+.warning-block {
+  margin-top: 10px;
+  margin-left:30px;
+  margin-right:30px;
+  margin-bottom: 10px;
+  padding: 10px;
+  border: solid 1px #DDD;
+  background: #FFFFDD;
+}
+
+
+.warning-block h2 {
+  margin-top: 4px;
+  text-align:center;
+  font-size: 13px;
+  font-weight: bold;
+}
+
+.warning-block p {
+  margin: 0;
+}
+
+.warning-block a.highlighted {
+  font-weight: bold;
+}
+
+.warning-block hr {
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+img.intro-icon {
+  float:left;
+  margin: 0 8px 2px 0;
+}
+
+/* ========= Header & NavBar ========= */
+
+.navbar .container .navbar-header .navbar-brand {
+  padding-top: 16px;
+  padding-bottom: 5px;
+}
+
+.navbar .container .navbar-header .navbar-brand img {
+  margin-top: -8px;
+  margin-right: 2px;
+}
+
+div.navbar-header img {
+  margin-top: -5px;
+  vertical-align:text-middle;
+  margin-bottom: -5px;
+}
+
+div.navbar-default {
+  background-color: #ffffff;
+  border-color: #f0f0f0;
+}
+
+.navbar-default .navbar-nav li a {
+  font-weight: normal;
+  color: #999999;
+}
+
+.navbar-default .navbar-nav li.active a {
+  background-color: #ffffff;
+  font-weight: bold;
+  font-style: underline;
+}
+
+.navbar-default .navbar-nav>.active>a, .navbar-default .navbar-nav>.active>a:hover, .navbar-default .navbar-nav>.active>a:focus {
+  background-color: #ffffff;
+}
+
+.navbar-default .navbar-nav > li > a:hover, .navbar-default .navbar-nav > li > a:focus {
+  color: #428bca;
+}
+
+/* ========= Elements ========= */
+
+div.container h1 {
+  color: #000000;
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+div.container h3 {
+  color: #000;
+  text-align: left;
+}
+
+/* ========= FRONT PAGE ========= */
+
+#home #main {
+  padding-top: 0;
+}
+
+#home #banner {
+  background: url("/files/images/front/home_banner.jpg");
+  -webkit-background-size: cover; /* For WebKit*/
+  -moz-background-size: cover;    /* Mozilla*/
+  -o-background-size: cover;      /* Opera*/
+  background-size: cover;         /* Generic*/
+  padding-top: 10px;
+  padding-bottom: 10px;
+  padding-left: 10xp;
+  padding-right: 10xp;
+  margin-top: 10px;
+  margin-bottom: 0px;
+  margin-left: 0;
+  margin-right: 0;
+}
+
+#home #text {
+  margin-top: 165px;
+  margin-left: -20px;
+  margin-right: -10px;
+  text-align: center;
+  padding: 0;
+}
+
+#home #text h1 {
+  font-family: helvetica, arial, sans-serif;
+  color: #FFF;
+  font-size: 30pt;
+  letter-spacing: -1px;
+  line-height: 1.2em;
+  margin: 0px 0px 5px;
+  padding: 0px;
+  text-align: center;
+}
+
+#home #text h2 {
+  margin-top: 5px;
+  color: #FFF;
+  font-size: 12pt;
+  font-weight: normal;
+  line-height: 1.2em;
+}
+
+#home #text .download {
+  margin-top: 15px;
+}
+
+#home #text .details {
+  margin-top: 8px;
+}
+
+#home #text .details a {
+  font-weight: bold;
+  color: #FFF;
+}
+
+#home #text .details p {
+  margin: 0;
+  color: #DDD;
+  font-size: 11pt;
+}
+
+#home h2 {
+  text-align: center;
+}
+
+#home h3.legend {
+  margin-top: 5px;
+  color: #EF7B19;
+}
+
+#home .large-screenshot {
+  margin-left: -45px
+}
+
+#home hr {
+  border-color: #EEE;
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+#home #zoom h2.zoom-title {
+  text-align: center;
+  color: #333;
+  font-size: 18pt;
+}
+
+#home #zoom table td {
+  padding-top:0px;
+}
+
+#home #zoom table h2 {
+  margin-top:0px;
+  margin-bottom:0px;
+}
+
+#home table.image-and-text {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+#home table.image-and-text td {
+  vertical-align: middle;
+  text-align: justify;
+}
+
+#home table.image-and-text td.align-right p,
+#home table.image-and-text td.align-right h2 {
+  margin-right: 10px;
+}
+
+#home table.image-and-text td h2 {
+  margin-top: 0;
+  margin-bottom: 5px;
+}
+
+#home table.image-and-text td.center {
+  width: 10px;
+  padding: 0;
+}
+
+#home #testimonials-block {
+  border: 1px solid #E0E0E0;
+  background: #f0f0f0;
+  margin-top: 0px;
+  margin-bottom: 15px;
+}
+
+#home #testimonials {
+  width: 90%;
+  margin-top: 10px;
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: 20px;
+  text-align: left;
+}
+
+#home #testimonials p {
+  color: #222;
+  font-size: 11pt;
+  font-style: italic;
+  text-align: left;
+  margin-bottom: 5px;
+}
+
+#home #testimonials .testimonial {
+  padding-bottom: 0px;
+  border-bottom: solid 1px #d5d5d5;
+  margin-bottom: 10px;
+}
+
+#home #testimonials .first-testimonial {
+  padding-top: 10px;
+  border-top: solid 1px #d5d5d5;
+  margin-top: 30px;
+}
+
+#home #more-testimonials {
+  margin-top: 5px;
+  border: none;
+}
+
+#home #more-testimonials p {
+  margin-top: 5px;
+  margin-bottom: 10px;
+}
+
+#home #more-testimonials-toggle {
+  text-align: center;
+}
+
+#home div#presentation p,
+#home div#presentation li {
+  font-family: "Lucida Grande", "Lucida Sans Unicode", Helvetica, Arial, Verdana, sans-serif;
+  font-size: 1.1em;
+  line-height: 1.44em;
+}
+
+#home #mobile {
+  width: 90%;
+  margin-top: 20px;
+}
+
+#home #security {
+  width: 80%;
+  margin-top: 20px;
+}
+
+#home #addons-ref {
+  text-align: center;
+  font-size: 22px;
+}
+
+/*=== SHOW/HIDE ===*/
+
+.more {
+  display: none;
+}
+a.showLink, a.hideLink {
+  text-decoration: none;
+  color: #428bca;
+  padding-left: 8px;
+  background: transparent url("/files/images/front/down.gif") no-repeat left;
+}
+a.hideLink {
+  background: transparent url("/files/images/front/up.gif") no-repeat left;
+}
+a.showLink:hover, a.hideLink:hover {
+  border-bottom: 1px dotted #428bca;
+}
+
+/* ========== DOWNLOAD PAGE ========== */
+
+#download-notices {
+  width: 90%;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+#download-notices h3 {
+  font-size: 20px;
+  margin-top: 0px;
+}
+
+#download .instructions {
+  width: 70%;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+#download .instructions .image {
+  text-align: center;
+}
+
+#download-platforms .platform {
+  width: 60%;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  padding: 15px;
+  text-align: center;
+}
+
+#download-platforms .platform h3 {
+  font-size: 20px;
+  margin-top: 5px;
+}
+
+#download-platforms .platform button {
+  margin-bottom: 5px;
+}
+
+#download-platforms .platform .install {
+  padding-top: 15px;
+}
+
+#download-platforms h3 {
+  text-align: center;
+}
+
+#download-block {
+  margin-top: 20px;
+  margin-bottom: 20px;
+  margin-left: 40px;
+  margin-right: 40px;
+}
+
+#download-block table {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+#download-block td {
+  text-align: center;
+}
+
+#download td {
+  text-align:center;
+}
+
+#download td.left {
+  vertical-align: middle;
+  padding-right: 10px;
+}
+
+#download td.right {
+  padding-left: 0;
+}
+
+.platform-download #download {
+  width: 70%;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.full-screenshot {
+  text-align: center;
+  margin-top: 15px;
+  margin-bottom: 15px;
+}
+
+#trademarks {
+  margin-top: 20px;
+  text-align: center;
+  font-size: 9pt;
+}
+
+#trademarks p, #trademarks b {
+  color: #888;
+}
+
+.screenshot {
+  text-align: center;
+}
+
+#install-windows .screenshot {
+  margin: 15px;
+}
+
+/* ========== SUPPORT / FAQ PAGE ========== */
+
+#faq {
+  text-align: left;
+}
+
+#faq h3 {
+  margin-top: 20px;
+  margin-bottom: 0;
+  padding-left: 10px;
+  font-style: italic;
+  font-size: 10pt;
+  color: #333;
+}
+
+#faq p {
+  margin-top: 2px;
+  padding-left: 10px;
+}
+
+/* ========== CALENDAR TABLE ========== */
+
+table.calendar {
+  padding: 0;
+  margin-top: 15px;
+  margin-bottom: 15px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+table.calendar td {
+  border: solid 1px #ccc;
+  padding-left: 5px;
+  padding-right: 5px;
+  text-align: right;
+  background: #FFF;
+}
+
+table.calendar tr.months td {
+  background: #444;
+  color: #FFF;
+  border: solid 1px #444;
+  text-align: center;
+}
+
+table.calendar td.name {
+  text-align: left;
+}
+
+/* ========== FIELD/VALUE TABLE ========== */
+
+table.field-value {
+  padding: 0;
+  margin-top: 15px;
+  margin-bottom: 15px;
+  margin-left: auto;
+  margin-right: auto;
+  border: solid 1px #ccc;
+}
+
+table.field-value td {
+  padding: 5px;
+  vertical-align: top;
+  text-align: right;
+  background: #fbfbfb;
+}
+
+table.field-value td.field {
+  padding-top: 10px;
+  background: #444;
+  color: #FFF;
+  text-align: left;
+  padding-left: 10px;
+  padding-right: 10px;
+}
+
+table.field-value td.value {
+  padding-left: 10px;
+  text-align: left;
+}
+
+/* ========== BUY PAGE ========== */
+
+#buy #intro {
+  margin-top: 10px;
+  margin-bottom: 0px;
+  margin-left: auto;
+  margin-right: auto;
+  background-color: #FFF;
+}
+
+#buy #intro td {
+  text-align: center;
+  vertical-align: center;
+}
+
+#buy #intro #text {
+  margin-top: 80px;
+}
+
+#buy #intro #text p {
+  margin-top: 10px;
+  font-size: 18pt;
+  line-height: 1.1em;
+}
+
+#buy #intro form {
+  margin-top: 30px;
+}
+
+/* ========== BUY OK/NOK PAGE ========== */
+
+#buy-ok {
+  padding-left: 0;
+}
+
+.buy-confirmation td#text {
+  text-align: center;
+  vertical-align: middle;
+}
+
+.buy-confirmation #text p {
+  font-size: 11pt;
+  line-height: 1.2em;
+  margin: 10px;
+}
+
+.buy-confirmation #text p.title {
+  font-size: 18pt;
+  line-height: 1.1em;
+}
+
+.buy-confirmation #text p.email {
+  font-size: 14pt;
+  font-weight: bold;
+  line-height: 1.1em;
+  margin: 15px;
+}
+
+/* ========== ABOUT PAGE ========== */
+
+#about {
+  padding-bottom: 25px;
+}
+
+#about #about-info {
+  margin-top: 20px;
+}
+
+#about #about-info td {
+  line-height: 1.4em;
+  padding: 5px;
+  padding-bottom: 25px;
+}
+
+#about #about-info tr.last td {
+  padding-bottom: 5px;
+}
+
+#about #about-info td.left {
+  font-size: 18pt;
+  padding: 5px;
+  padding-right: 10px;
+  border-right: solid 1px #DDD;
+  text-align: right;
+  vertical-align: middle;
+  width: 150px;
+}
+
+#about #about-info td.right{
+  font-size: 11pt;
+  padding-left: 10px;
+}
+
+#about #about-contact p {
+  font-size: 11pt;
+}
+
+/* ========== PRESS ========== */
+
+#press #images, #press #logos {
+  text-align: center;
+}
+
+#press #images img, #press #logos img {
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+#press #images img {
+  width:60%;
+}
+
+
+/* ========== CLOSE BLOCK ========== */
+
+#close {
+  margin-top: 30px;
+  margin-bottom: 15px;
+  text-align: center;
+}
+
+#close p {
+  color: #222;
+  font-size: 18pt;
+}
+
+#close img {
+  margin-top: 10px;
+}
+
+#close #close-trial {
+  margin-top: 5px;
+  color: #AAA;
+  font-size: 9pt;
+}
+
+/*=== HELP PAGE ===*/
+
+#help table {
+  margin-top: 25px;
+}
+
+#help table td {
+  text-align: center;
+}
+
+#help table a {
+  font-size: 12pt;
+}
+
+#help #contact img {
+  margin: 20px;
+}
+
+#help #contact p {
+  color: #222;
+}
+
+#help #contact .address {
+  font-size: 14pt;
+  font-weight: bold;
+  color: #222;
+}
+
+#help table#help-contact {
+  margin-bottom: 40px;
+}
+
+#help table#help-contact td {
+  vertical-align: top;
+}
+
+#help table#help-contact td.right {
+  border-left: solid 1px #ccc;
+}
+
+
+/*=== PRESENTATION PAGE ===*/
+
+#home #content #presentation h2 {
+  font-size: 13pt;
+  margin-bottom: 0;
+}
+
+#home #intro {
+  margin-top: 15px;
+}
+
+#home table#intro p.intro {
+  font-size: 12pt;
+  color: #888;
+  line-height: 1.3em;
+}
+
+#home table#intro p.intro {
+  font-size: 12pt;
+  color: #888;
+  line-height: 1.3em;
+}
+
+#home table#intro td.right {
+  padding-left: 5px;
+}
+
+#home table#intro h3 {
+  margin-top: 15px;
+  margin-bottom: 5px;
+}
+
+#home table#intro p.description {
+  margin-top: 0;
+  color: #888;
+}
+
+#home table#import {
+  width: 90%;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 10px;
+  margin-bottom: 30px;
+}
+
+#home div.separator {
+  margin: 20px;
+  border: solid 1px #EEEEEE;
+  background: #F6F6F6;
+  padding: 5px;
+}
+
+#home div.separator p {
+  font-size: 12pt;
+  font-weight: bold;
+  text-align: center;
+}
+
+#home #security {
+  width: 70%;
+  margin-top: 15px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+#home #security td.left {
+  padding: 0;
+  vertical-align: bottom;
+}
+
+#home #security td.left img {
+  margin: 0;
+}
+
+#home #security h2 {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+/*=== FEATURE LIST===*/
+
+.version-title {
+  padding-top: 15px;
+}
+
+.version-title h2 {
+  font-size: 24px;
+  font-weight: bold;
+  text-align: center;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  margin:0;
+  background-color: #EF7B19;
+  color: #FFF;
+}
+
+.feature-list {
+  width: 90%;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.feature-list h3 {
+  font-size: 16pt;
+  font-weight: bold;
+  color: #333;
+}
+
+.feature-list table li {
+  margin-bottom: 0.2em;
+}
+
+
+/*=== "SUPPORT" PAGE ===*/
+
+.support .content {
+  padding-right;
+  border-right: solid 1px #DDD;
+}
+
+.support h2 {
+  text-align: center;
+  font-size: 16pt;
+}
+
+.support h3 {
+  font-size: 12pt;
+}
+
+.support #support-sidebar {
+  padding-top: 20px;
+}
+
+.faq .content p, .faq .content li, .faq .content td {
+  font-size: 11pt;
+  line-height: 1.45em;
+  margin-bottom: 10px;
+}
+
+.guide p, .guide li, .guide td {
+  font-size: 10pt;
+  line-height: 1.35em;
+  margin-bottom: 10px;
+}
+
+.support .image {
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+.support .image img {
+  text-align: center:
+}
+
+.support .video {
+  margin-top:10px;
+  margin-bottom:10px;
+}
+
+
+.support .guides .btn {
+  font-size: 14px;
+  width: 100%;
+}
+
+div#guides {
+  margin-top: 20px;
+}
+
+div#guides p {
+  margin-top: 10px;
+  font-size: 11pt;
+}
+
+table#faq-menu td li {
+  margin-bottom: 0px;
+}
+
+#support li.level1 {
+  margin-top: 10px;
+}
+
+#support li.level1 a {
+  color: #333333;
+  font-size: 16px;
+  font-weight: bold;
+  margin-top: 20px;
+}
+
+.support div.summary {
+  text-align:center;
+}
+
+div#support-breadcrumb {
+  margin-top: 30px;
+  text-align: center;
+  text-shadow: white 0 2px 0;
+  color: #AAAAAA;
+}
+
+div#support-breadcrumb A:link {
+  text-decoration: none;
+  color: #AAAAAA;
+}
+
+div#support-breadcrumb A:visited {
+  text-decoration: none;
+  color: #999999;
+}
+
+div#support-breadcrumb A:hover {
+  text-decoration: underline;
+  color: #0000FF;
+}
+
+div#block-block-5 {
+  margin-top: 0;
+}
+
+div#support content {
+  border-left: solid 1px #CCC;
+}
+
+.support-sidebar-level1 {
+  padding-left: 30px;
+}
+
+.support-sidebar-level2 {
+  padding-left: 15px;
+}
+
+.support-sidebar-level2 li {
+  text-align: left;
+}
+
+div#support-footer {
+  text-align: center;
+  margin-top: 10px;
+}
+
+div#support-footer p {
+  font-size: 14pt;
+}
+
+/* ========= FAQ PAGES ========== */
+
+.faq h1 {
+  font-size: 20pt;
+  margin-top: 10px;
+  margin-bottom: 40px;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  border-top: solid 1px #DDD;
+  border-bottom: solid 1px #DDD;
+}
+
+div#faq-footer {
+  text-align: left;
+  text-shadow: white 0 2px 0;
+  color: #AAAAAA;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  padding-top: 5px;
+}
+
+div#faq-footer A:link {
+  text-decoration: none;
+  color: #666666;
+}
+
+div#faq-footer A:visited {
+  text-decoration: none;
+  color: #666666;
+}
+
+div#faq-footer A:hover {
+  text-decoration: underline;
+  color: #0000FF;
+}
+
+/* ========= CHANGE LOG ========== */
+
+.log h2 {
+  text-align:center;
+  border-top: solid 1px #DDD;
+  border-bottom: solid 1px #DDD;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  background: #F4F4F4;
+  margin-top:30px;
+}
+
+.log h3 {
+  font-size: 14pt;
+  font-style: bold;
+  color: #222;
+}
+
+.log span.date {
+  margin-left: 10px;
+  font-size: 10pt;
+  font-weight: normal;
+  color: #888;
+}
+
+
+/* ========= GUIDE ========== */
+
+#why table#project-definition-examples {
+  width: 90%;
+  margin-left: auto;
+  margin-right: auto;
+  border: solid 1px #BBB;
+  margin-bottom: 10px;
+  background-color: #F9F9F9;
+}
+
+#why table#project-definition-examples td {
+  padding: 5px 10px 5px 10px;
+}
+
+#why table#project-definition-examples td.left p {
+  text-align: right;
+  font-size: 11pt;
+  font-style:italic;
+}
+
+#why table#project-definition-examples td.right {
+  padding-left: 20px;
+  background-image: url('/files/images/why/right_arrow.png');
+  background-repeat: no-repeat;
+  background-position: left;
+}
+
+#why table#project-definition-examples td.right p {
+  text-align: center;
+  font-size: 12pt;
+  font-weight: bold;
+}
+
+/* ========== EXTENSIONS ========== */
+
+#extensions #banner {
+  margin-top: 30px;
+}
+
+#extensions #banner h1 {
+  margin-top: 60px;
+}
+
+#extensions #mobile {
+  width: 90%;
+  margin-left:auto;
+  margin-right:auto;
+}
+
+#extensions #mobile h2 {
+margin-top: 40px;
+}
+
+#extensions h2 {
+  text-align: center;
+}
+
+#extensions h2.large {
+  border-top: 1px solid #DDD;
+  border-bottom: 1px solid #DDD;
+  margin-bottom: 40px;
+  padding: 5px;
+}
+
+#extensions #notes h2 {
+  text-align: left;
+  margin-top: 10px;
+  margin-bottom: 0px;
+  font-size: 14pt;
+}
+
+#extensions #notes h2 img {
+  vertical-align: middle;
+}
+
+/* ========== FOOTER ========== */
+
+#footer {
+  margin-top: 20px;
+  margin-bottom: 15px;
+  text-align: center;
+  font-size: 9pt;
+  color: #999;
+}
+
+#footer A:link {
+  color: #666;
+  text-decoration: none;
+  border-bottom: 1px dashed #BBB;
+}
+
+#footer A:visited {
+  color: #888;
+  border-bottom: 1px dashed #BBB;
+}
+
+#footer A:hover {
+  color: #00F;
+  border-bottom: 1px dashed #00F;
+}

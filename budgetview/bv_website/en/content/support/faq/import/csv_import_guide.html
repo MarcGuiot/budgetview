@@ -1,0 +1,46 @@
+<p><img src="/files/images/support/faq.png" class="intro-icon"/>
+    BudgetView can import CSV (Comma-Separated Values) files provided that they respect a few conditions:</p>
+<ul>
+    <li>The separator can be a comma (,), a tabulation (\\t), a colon (:) or a semicolon (;).</li>
+    <li>There must be a first row containing the titles of each column.</li>
+    <li>For each operation, there must be at least a bank date, a label and an amount.</li>
+    <li>The amount can be specified as two columns: debit and credit.</li>
+    <li>The date format can be one of YYYY/MM/DD, MM/DD/YYYY or DD/MM/YYYY.</li>
+</ul>
+
+<p>For instance:</p>
+
+<pre>
+Bank date;Label;Amount
+2012/05/15;SuperMall;-10.00
+2012/05/18;Gas station;-50.00
+</pre>
+
+<p>or with separate credit/debit columns:</p>
+
+<pre>
+Bank date;Label;Credit;Debit
+2012/05/15;SuperMall;;-10.00
+2012/05/18;Gas station;;-50.00
+2012/05/27;WorldCo salary;1000.00;
+</pre>
+
+<p>The following optional columns can be included:</p>
+<ul>
+    <li>The date at which the operation was made.</li>
+    <li>The operation's envelope or category</li>
+    <li>The operation's sub-envelope or sub-category, if there is already an envelope/category column</li>
+    <li>Notes or comments</li>
+</ul>
+
+<p>For instance:</p>
+
+<pre>
+Operation date;Bank date;Label;Amount;Note;Envelope;Sub-enveloppe
+2012/05/13;2012/05/15;SuperMall;-10.00;Home;Groceries;Home
+2012/05/18;2012/05/18;Gas station;-50.00;Car;Fuel
+</pre>
+
+
+<p>Please note that if your header line declares a certain number of columns and the operations below use more,
+    the additional information for each operation will be ignored. </p>

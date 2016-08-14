@@ -1,0 +1,241 @@
+<div id="download">
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
+    <script type="text/javascript">
+
+     $(document).ready(function(){
+        $('.platform').hide();
+
+        var OS_Name = navigator.appVersion;
+        if (OS_Name.indexOf("Win") != -1) {
+          $("#windows").show();
+          $("#download-install-instructions").show();
+          $('#download-platforms hr').hide();
+        }
+        else if (OS_Name.indexOf("iPhone") != -1 || OS_Name.indexOf("iPad") != -1 || OS_Name.indexOf("iPod") != -1) {
+          $('#ios').show();
+          $("#download-install-instructions").hide();
+          $('#download-platforms hr').hide();
+          $("#backup-warning").hide();
+        }
+        else if (OS_Name.indexOf("Mac") != -1) {
+          $('#mac').show();
+          $("#download-install-instructions").show();
+          $('#download-platforms hr').hide();
+        }
+        else if (OS_Name.indexOf("Linux") != -1) {
+          $('#linux').show();
+          $("#download-install-instructions").show();
+          $('#download-platforms hr').hide();
+        }
+        else if (OS_Name.indexOf("Android") != -1) {
+          $('#android').show();
+          $("#download-install-instructions").hide();
+          $('#download-platforms hr').hide();
+          $("#backup-warning").hide();
+        }
+        else {
+          $('.platform').show();
+          $("#download-install-instructions").show();
+          $("#backup-warning").show();
+        }
+        });
+    </script>
+
+    <div id="download-platforms">
+
+        <div id="backup-warning" class="warning-block">
+            <p><b>Déjà utilisateur de BudgetView ?</b> Pensez à <a href="/support/faq/donnees/sauvegarde">faire une sauvegarde de
+                vos données</a> avant d'installer cette nouvelle version et de profiter des <a href="/support/derniers-changements">toutes dernières évolutions</a> du logiciel.</p>
+        </div>
+
+        <div id="mac" class="row platform">
+            <div class="col-md-3">
+                <img src="files/images/download/macosx.png" alt="MacOS X">
+            </div>
+            <div class="col-md-9">
+                <h3>Pour installer BudgetView<br/>sur votre Mac&nbsp;:</h3>
+                <a href="/files/app/BudgetView-4.03-fr.dmg" class="clicky_log_download"
+                   onclick="clicky.goal('12644', '0.00');">
+                    <button type="button" class="btn btn-primary">Télécharger</button>
+                    <br>
+                </a>
+                <p><a href="/files/app/BudgetView-4.03-fr.dmg" class="clicky_log_download highlighted"
+                       onclick="clicky.goal('12644', '0.00');">
+                        BudgetView-4.03-fr.dmg</a></p>
+            </div>
+        </div>
+
+        <hr/>
+
+        <div id="windows" class="platform">
+            <div class="row">
+                <div class="col-md-3">
+                    <img src="files/images/download/windows.png" alt="Windows">
+                </div>
+                <div class="col-md-9">
+                    <h3>Pour installer BudgetView<br/>sur votre PC Windows&nbsp;:</h3>
+                    <a href="/files/app/BudgetView-4.03-fr-Setup.exe" class="clicky_log_download"
+                       onclick="clicky.goal('12644', '0.00');">
+                        <button type="button" class="btn btn-primary">Télécharger</button>
+                    </a>
+                    <br/>
+                    <p><a href="/files/app/BudgetView-4.03-fr-Setup.exe" class="highlighted clicky_log_download"
+                          onclick="clicky.goal('12644', '0.00');">
+                        BudgetView-4.03-fr-Setup.exe</a></p>
+                </div>
+            </div>
+            <div class="warning-block" style="text-align:justify;">
+                <h3>Message de sécurité Windows 10</h3>
+                <p>Lors de l'installation, Windows affiche un message d'avertissement indiquant que le logiciel n'est pas connu.</p>
+                <p>En effet, depuis Windows 10 Microsoft exige que les applications soient signées avec des certificats
+                    de sécurité payants proposés par certaines sociétés spécialisées.<p>
+                <p>Nous avons entamé les démarches pour obtenir ces certificats et publierons une nouvelle version du logiciel dès que ces démarches seront finalisées.</p>
+                <p>D'ici là, dans la fenêtre du fameux message "dangereux" vous trouverez un texte "plus de détails".
+                    En cliquant sur ce texte vous ferez apparaître un bouton "Installer quand même" qui vous permettra de continuer l'installation.</p>
+            </div>
+        </div>
+
+        <hr/>
+
+        <div id="linux" class="row platform">
+            <div class="col-md-3">
+                <img src="files/images/download/linux.png" alt="Linux">
+            </div>
+            <div class="col-md-9">
+                <h3>Pour installer BudgetView<br/>sur votre Ubuntu / Debian&nbsp;:</h3>
+                <a href="/files/app/BudgetView-4.03-fr.deb" class="clicky_log_download"
+                   onclick="clicky.goal('12644', '0.00');">
+                    <button type="button" class="btn btn-primary">Télécharger .deb</button>
+                </a>
+                <p><a href="/files/app/BudgetView-4.03-fr.deb" class="clicky_log_download highlighted"
+                       onclick="clicky.goal('12644', '0.00');">BudgetView-4.03-fr.deb</a></p>
+
+                <h3 style="margin-top:20px;">Pour installer BudgetView<br/>sur votre Red Hat / Debora / Suse&nbsp;:</h3>
+                <a href="/files/app/BudgetView-4.03-fr.rpm" class="clicky_log_download"
+                   onclick="clicky.goal('12644', '0.00');">
+                    <button type="button" class="btn btn-primary">Télécharger .rpm</button>
+                </a>
+                <p><a href="/files/app/BudgetView-4.03-fr.rpm" class="clicky_log_download highlighted"
+                      onclick="clicky.goal('12644', '0.00');">BudgetView-4.03-fr.rpm</a></p>
+
+                <h3 style="margin-top:20px;">Pour installer BudgetView<br/>sur toutes les distributions&nbsp;:</h3>
+                <a href="/files/app/BudgetView-4.03-fr.tar.gz" class="clicky_log_download"
+                   onclick="clicky.goal('12644', '0.00');">
+                    <button type="button" class="btn btn-primary">Télécharger .sh</button>
+                </a>
+                <p>
+                    <a href="/files/app/BudgetView-4.03-fr.tar.gz" class="clicky_log_download highlighted"
+                       onclick="clicky.goal('12644', '0.00');">BudgetView-4.03-fr.tar.gz</a>
+                </p>
+            </div>
+        </div>
+
+        <hr/>
+
+        <div id="android" class="row platform">
+            <div class="col-md-3">
+                <img src="files/images/download/android.png" alt="Android">
+            </div>
+            <div class="col-md-9">
+                <p>Vous avez acheté vos <a href="/extensions">extensions BudgetView</a>&nbsp;?
+                    Téléchargez votre application Android sur Google Play&nbsp;:</p>
+                <p>
+                    <a href="https://play.google.com/store/apps/details?id=com.budgetview.android&hl=fr">
+                        <img src="/files/images/mobile/googleplay.png"
+                             alt="Retrouvez l'application BudgetView pour Android sur Google Play"
+                             width="129" height="45"/>
+                    </a>
+                </p>
+            </div>
+        </div>
+
+        <hr/>
+
+        <div id="ios" class="row platform">
+            <h3>Cette application ne fonctionne pas encore sur iOS !</h3>
+            <p>Une application iPhone/iPad/iPod est bien bien dans nos plans, mais elle n'est pas encore disponible.</p>
+            <p>Revenez dans quelques temps, ou mieux encore&nbsp;: <a href="mailto:support@mybudgetview.fr">contactez-nous</a>
+                pour nous dire ce que vous voudriez faire avec cette application mobile. Dans quel contexte
+                l'utiliseriez-vous ? Pour quoi faire ?</p>
+            </p>
+        </div>
+
+    </div>
+
+    <hr/>
+
+    <div id="download-notices">
+
+        <div class="row">
+            <div class="col-md-4">
+                <h3>Application gratuite</h3>
+                <p>La version de base est largement suffisante pour gérer votre budget.
+                    Des <a href="/extensions">extensions</a> payantes sont disponibles pour aller plus loin
+                    dans la maîtrise de vos projets.</p>
+            </div>
+            <div class="col-md-4">
+                <h3>Sûr et confidentiel</h3>
+                <p>Vos données personnelles ne sont pas envoyées sur Internet.
+                    Vous les gardez sur votre ordinateur, et pouvez les crypter avec un mot de passe
+                    que vous êtes seul à connaître.</p>
+            </div>
+            <div class="col-md-4">
+                <h3>Pas de piège caché</h3>
+                <p>Nous ne vous imposons aucune publicité.
+                    Nous ne vous espionnons pas.
+                    Nous ne vendons pas vos informations personnelles à des annonceurs.</p>
+            </div>
+        </div>
+    </div>
+
+    <hr/>
+
+    <div id="download-install-instructions" class="row instructions">
+
+        <h3>Installation</h3>
+        <div class="row">
+            <div class="col-md-3 image">
+                <img src="/files/images/download/budgetview_installer_icon.png"/>
+            </div>
+            <div class="col-md-9">
+                <p>Une fois le téléchargement terminé, double-cliquez sur le programme d’installation dans votre
+                    répertoire Téléchargements.</p>
+            </div>
+        </div>
+    </div>
+
+    <div id="download-setup" class="row instructions">
+        <h3>Mise en route</h3>
+        <div class="row">
+            <div class="col-md-3 image">
+                <img src="/files/images/download/clock.png"/>
+            </div>
+            <div class="col-md-9">
+                <p>Pour utiliser BudgetView, des séances de 5 à 30 minutes, deux à cinq fois par mois,
+                    seront suffisantes pour mettre à jour et suivre votre budget.</p>
+                <p>Pour cette première utilisation, comptez toutefois entre 30 minutes et deux heures -
+                    vous allez devoir récupérer vos relevés d'opérations bancaires et faire un peu de tri pour
+                    définir
+                    correctement votre budget.</p>
+            </div>
+        </div>
+    </div>
+
+    <hr/>
+
+    <div id="trademarks" class="row">
+        <div class="col-md-4">
+            <p><b>Mac</b> &reg; est une marque déposée par Apple Computer, Inc.</p>
+        </div>
+        <div class="col-md-4">
+            <p><b>Windows</b> &reg; est une marque déposée par Microsoft Corp.</p>
+        </div>
+        <div class="col-md-4">
+            <p><b>Linux</b> &reg; est une marque déposée par Linus Torvald.</p>
+        </div>
+    </div>
+
+    <hr/>
+
+</div>
