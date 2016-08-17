@@ -1,4 +1,4 @@
-package com.budgetview.server.cloud.model;
+package com.budgetview.shared.model;
 
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.annotations.Key;
@@ -12,7 +12,9 @@ import org.globsframework.model.utils.GlobConstantContainer;
 import static org.globsframework.model.FieldValue.value;
 
 public enum Provider implements GlobConstantContainer {
-  BUDGEA("BUDGEA", 1);
+  FILE_IMPORT("FILE_IMPORT", 0),
+  MANUAL_INPUT("MANUAL_INPUT", 1),
+  BUDGEA("BUDGEA", 2);
 
   public static GlobType TYPE;
 

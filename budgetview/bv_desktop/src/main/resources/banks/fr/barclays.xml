@@ -2,7 +2,8 @@
 <globs>
   <bankFormat id='14'>
 
-    <bank name="Barclays" country="fr" url="http://www.barclays.fr/" id="14" invalidPosition="true">
+    <bank name="Barclays" country="fr" url="http://www.barclays.fr/" id="14" invalidPosition="true"
+          provider="2" providerId="17">
       <bankEntity id="24599"/>
     </bank>
 

@@ -47,18 +47,16 @@ public class ImportController implements RealAccountImporter {
   private Set<Integer> importKeys = new HashSet<Integer>();
   private List<AccountWithFile> realAccountWithImport = new ArrayList<AccountWithFile>();
   private GlobList realAccountWithoutImport = new GlobList();
-  private boolean isSynchro = true;
   private int countPush;
 
   public ImportController(ImportDialog importDialog,
                           GlobRepository repository, LocalGlobRepository localRepository,
-                          Directory directory, boolean isSynchro) {
+                          Directory directory) {
     this.importDialog = importDialog;
     this.repository = repository;
     this.localRepository = localRepository;
     this.directory = directory;
     this.importSession = new ImportSession(localRepository, directory);
-    this.isSynchro = isSynchro;
 
     initOpenRequestManager(directory);
   }
@@ -87,17 +85,15 @@ public class ImportController implements RealAccountImporter {
   }
 
   private void next(boolean first) {
-    if (!isSynchro) {
-      if (!realAccountWithoutImport.isEmpty()) {
-        importDialog.showNoImport(realAccountWithoutImport.remove(0), first);
-        return;
-      }
+    if (!realAccountWithoutImport.isEmpty()) {
+      importDialog.showNoImport(realAccountWithoutImport.remove(0), first);
+      return;
     }
     for (Glob realAccount : realAccountWithoutImport) {
       Glob target = localRepository.findLinkTarget(realAccount, RealAccount.ACCOUNT);
       if (target != null) {
         String amount = realAccount.get(RealAccount.POSITION);
-        if (Strings.isNotEmpty(amount)){
+        if (Strings.isNotEmpty(amount)) {
           localRepository.update(target.getKey(), FieldValue.value(Account.LAST_IMPORT_POSITION, Amounts.extractAmount(amount)));
         }
       }
@@ -169,9 +165,10 @@ public class ImportController implements RealAccountImporter {
         return true;
       }
       String message;
-      if (path == null){
+      if (path == null) {
         message = Lang.get("import.downloaded.empty");
-      }else {
+      }
+      else {
         message = Lang.get("import.file.empty", path);
       }
       importDialog.showMessage(message);
@@ -241,7 +238,7 @@ public class ImportController implements RealAccountImporter {
   }
 
   public void complete() {
-    while (countPush > 0){
+    while (countPush > 0) {
       openRequestManager.popCallback();
       countPush--;
     }
@@ -316,15 +313,6 @@ public class ImportController implements RealAccountImporter {
     return fileField;
   }
 
-  public void showSynchro(Integer bankId) {
-    importDialog.showSynchro(bankId);
-  }
-
-  public void showSynchro(GlobList synchro) {
-    isSynchro = true;
-    importDialog.showSynchro(synchro);
-  }
-
   public void importAccounts(GlobList realAccounts) {
     for (Glob realAccount : realAccounts) {
       String content = realAccount.get(RealAccount.FILE_CONTENT);
@@ -353,6 +341,18 @@ public class ImportController implements RealAccountImporter {
     }
     realAccountWithImport.add(new AccountWithFile(realAccount, fileContent,
                                                   realAccount.get(RealAccount.SYNCHRO)));
+  }
+
+  public void showCloudBankSelection() {
+    importDialog.showCloudBankSelection();
+  }
+
+  public void showCloudBankConnection(Key bank) {
+    importDialog.showCloudBankConnection(bank);
+  }
+
+  public void showCloudError() {
+    importDialog.showCloudError();
   }
 
   private static class HasOperationFunctor implements GlobFunctor {

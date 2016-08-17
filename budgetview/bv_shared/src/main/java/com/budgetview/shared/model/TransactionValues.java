@@ -10,6 +10,7 @@ import org.globsframework.metamodel.fields.LinkField;
 import org.globsframework.metamodel.fields.StringField;
 import org.globsframework.metamodel.utils.GlobTypeLoader;
 
+/** @deprecated */
 public class TransactionValues {
   public static GlobType TYPE;
 

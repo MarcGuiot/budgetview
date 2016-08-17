@@ -34,7 +34,7 @@ public class CloudServer {
     webServer = new WebServer(config);
     webServer.add(new ConnectionServlet(directory), "/connections");
     webServer.add(new BudgeaWebHookServlet(directory), "/budgea");
-    webServer.add(new StatementServlet(directory), "/statement");
+    webServer.add(new StatementServlet(directory), "/statement/*");
 
     if (config.isTrue("budgetview.ping.available")) {
       webServer.add(new PingServlet(directory), "/ping");

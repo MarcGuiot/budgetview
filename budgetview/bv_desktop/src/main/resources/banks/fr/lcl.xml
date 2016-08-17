@@ -2,7 +2,8 @@
 <globs>
   <bankFormat id='8'>
 
-    <bank name="LCL" url="https://particuliers.secure.lcl.fr" country="fr" id='8' icon="banks/lcl.png">
+    <bank name="LCL" url="https://particuliers.secure.lcl.fr" country="fr" id='8' icon="banks/lcl.png"
+          provider="2" providerId="8">
       <bankEntity id="30002"/>
     </bank>
 

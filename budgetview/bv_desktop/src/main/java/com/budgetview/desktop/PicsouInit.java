@@ -1,18 +1,17 @@
 package com.budgetview.desktop;
 
-import com.budgetview.bank.SpecificBankLoader;
 import com.budgetview.client.DataAccess;
 import com.budgetview.desktop.accounts.utils.MonthDay;
 import com.budgetview.desktop.backup.BackupService;
 import com.budgetview.desktop.browsing.BrowsingService;
-import com.budgetview.desktop.userconfig.UserConfigService;
-import com.budgetview.desktop.userconfig.triggers.LicenseActivationTrigger;
 import com.budgetview.desktop.model.PicsouGuiModel;
 import com.budgetview.desktop.preferences.components.ColorThemeUpdater;
 import com.budgetview.desktop.series.view.SeriesWrapperUpdateTrigger;
 import com.budgetview.desktop.time.TimeService;
 import com.budgetview.desktop.upgrade.ConfigUpgradeTrigger;
 import com.budgetview.desktop.upgrade.UpgradeTrigger;
+import com.budgetview.desktop.userconfig.UserConfigService;
+import com.budgetview.desktop.userconfig.triggers.LicenseActivationTrigger;
 import com.budgetview.desktop.utils.AwtExceptionHandler;
 import com.budgetview.desktop.utils.FrameSize;
 import com.budgetview.desktop.utils.ShowDialogAndExitExceptionHandler;
@@ -100,9 +99,6 @@ public class PicsouInit {
       directory.get(TransactionAnalyzerFactory.class)
         .load(this.getClass().getClassLoader(), Application.BANK_CONFIG_VERSION, repository, directory);
     }
-
-    SpecificBankLoader bankLoader = new SpecificBankLoader();
-    bankLoader.load(repository, directory);
   }
 
   public static void initTriggers(DataAccess dataAccess, Directory directory, final GlobRepository repository) {

@@ -17,6 +17,12 @@ public class DisposableGroup implements Disposable {
     return disposable;
   }
 
+  public <T extends Disposable>  void addAll(T... all) {
+    for (T disposable : all) {
+      disposables.add(disposable);
+    }
+  }
+
   public void dispose() {
     for (Disposable disposable : disposables) {
       disposable.dispose();

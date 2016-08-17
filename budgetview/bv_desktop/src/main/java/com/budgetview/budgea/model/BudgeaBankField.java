@@ -6,6 +6,8 @@ import org.globsframework.metamodel.fields.IntegerField;
 import org.globsframework.metamodel.fields.LinkField;
 import org.globsframework.metamodel.fields.StringField;
 import org.globsframework.metamodel.utils.GlobTypeLoader;
+import org.globsframework.model.Glob;
+import org.globsframework.model.format.GlobPrinter;
 
 public class BudgeaBankField {
 
@@ -30,10 +32,14 @@ public class BudgeaBankField {
   public static StringField LABEL;
 
   @NoObfuscation
-  @Name("type")
-  public static StringField FIELD_TYPE;
+  @Target(BudgeaBankFieldType.class) @Name("type")
+  public static LinkField FIELD_TYPE;
 
   static {
     GlobTypeLoader.init(BudgeaBankField.class, "budgeaBankField");
+  }
+
+  public static BudgeaBankFieldType getFieldType(Glob field) {
+    return BudgeaBankFieldType.get(field.get(FIELD_TYPE));
   }
 }

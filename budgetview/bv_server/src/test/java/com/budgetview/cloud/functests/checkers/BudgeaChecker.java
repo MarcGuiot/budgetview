@@ -15,10 +15,12 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.io.PrintWriter;
 
 public class BudgeaChecker {
 
   private WebServer webServer;
+  private String persistentToken = "";
 
   public void startServer() throws Exception {
     webServer = new WebServer(new ConfigService("budgetview/bv_server/dev/config/budgea_test.properties"));
@@ -28,6 +30,10 @@ public class BudgeaChecker {
 
   public void stopServer() throws Exception {
     webServer.stop();
+  }
+
+  public void setPersistentToken(String persistentToken) {
+    this.persistentToken = persistentToken;
   }
 
   public void callWebhook(String budgeaToken, String json) throws IOException {
@@ -45,6 +51,12 @@ public class BudgeaChecker {
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
       logger.info("OK");
+      PrintWriter writer = new PrintWriter(response.getOutputStream());
+      writer.append("{\n" +
+                    "   \"access_token\":\"" + persistentToken + "\",\n" +
+                    "   \"token_type\":\"Bearer\"\n" +
+                    "}");
+      writer.close();
       response.setStatus(HttpServletResponse.SC_OK);
     }
   }

@@ -19,12 +19,16 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import static org.globsframework.sqlstreams.constraints.Where.fieldEquals;
 
 public class StatementServlet extends HttpServlet {
 
   private static Logger logger = Logger.getLogger("/statement");
+
+  private Pattern pattern = Pattern.compile("/([0-9]+)/([0-9]+)");
 
   private final GlobsDatabase database;
   private final AuthenticationService authentication;
@@ -37,6 +41,17 @@ public class StatementServlet extends HttpServlet {
   protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
     request.setCharacterEncoding("UTF-8");
     response.setCharacterEncoding("UTF-8");
+
+    String pathInfo = request.getPathInfo();
+    Matcher matcher = pattern.matcher(pathInfo);
+    if (!matcher.matches()) {
+      logger.error("Missing or invalid parameters /{provider}/{providerId} ==> " + pathInfo);
+      response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+      return;
+    }
+
+    int provider = Integer.parseInt(matcher.group(1));
+    int providerBankId = Integer.parseInt(matcher.group(2));
 
     String email = request.getHeader(CloudConstants.EMAIL);
     Integer userId = authentication.findUser(email);
@@ -54,7 +69,10 @@ public class StatementServlet extends HttpServlet {
     SqlConnection connection = database.connect();
 
     SqlSelectBuilder selectAccounts =
-      connection.startSelect(ProviderAccount.TYPE, Where.fieldEquals(ProviderAccount.USER, userId));
+      connection.startSelect(ProviderAccount.TYPE,
+                             Where.and(fieldEquals(ProviderAccount.USER, userId),
+                                       fieldEquals(ProviderAccount.PROVIDER, provider),
+                                       fieldEquals(ProviderAccount.PROVIDER_BANK_ID, providerBankId)));
     GlobAccessor account = selectAccounts.retrieveAll();
     SqlSelect accountQuery = selectAccounts.getQuery();
     GlobStream accountStream = accountQuery.getStream();

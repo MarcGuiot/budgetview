@@ -3,7 +3,8 @@
 
   <bankFormat id='2'>
 
-    <bank name="CIC" country="fr" url="http://www.cic.fr" id='2' synchroEnabled="true" icon="banks/cic.png">
+    <bank name="CIC" country="fr" url="http://www.cic.fr" id='2' synchroEnabled="true" icon="banks/cic.png"
+          provider="2" providerId="10">
       <bankEntity id="30066"/>
       <bankEntity id="10037"/>
       <bankEntity id="10057"/>

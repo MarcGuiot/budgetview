@@ -21,10 +21,8 @@ import javax.swing.*;
 import java.awt.event.ActionEvent;
 
 public class ImportAccountPanel extends AbstractImportStepPanel {
-  private JPanel panel;
   private LocalGlobRepository localGlobRepository;
   private AccountEditionPanel accountPanel;
-  private GlobsPanelBuilder builder;
   private Glob importedAccount;
 
   public ImportAccountPanel(PicsouDialog dialog,
@@ -38,12 +36,9 @@ public class ImportAccountPanel extends AbstractImportStepPanel {
         .get();
   }
 
-  public void createPanelIfNeeded() {
-    if (builder != null) {
-      return;
-    }
-
-    builder = new GlobsPanelBuilder(getClass(), "/layout/importexport/importsteps/importAccountPanel.splits", localGlobRepository, localDirectory);
+  public GlobsPanelBuilder createPanelBuilder() {
+    GlobsPanelBuilder builder =
+      new GlobsPanelBuilder(getClass(), "/layout/importexport/importsteps/importAccountPanel.splits", localGlobRepository, localDirectory);
 
     accountPanel = new AccountEditionPanel(dialog, localGlobRepository, localDirectory);
     builder.add("accountPanel", accountPanel.getPanel());
@@ -67,23 +62,17 @@ public class ImportAccountPanel extends AbstractImportStepPanel {
       }
     });
     builder.add("close", new AbstractAction(textForCloseButton) {
-
       public void actionPerformed(ActionEvent e) {
         localGlobRepository.rollback();
         controller.complete();
         controller.closeDialog();
       }
     });
-    panel = builder.load();
-  }
-
-  public JPanel getPanel() {
-    createPanelIfNeeded();
-    return panel;
+    return builder;
   }
 
   public void requestFocus() {
-    createPanelIfNeeded();
+    getPanel(); // force creation
     accountPanel.requestFocus();
   }
 
@@ -97,10 +86,10 @@ public class ImportAccountPanel extends AbstractImportStepPanel {
   }
 
   public void dispose() {
-    if (builder != null) {
-      builder.dispose();
+    super.dispose();
+    if (accountPanel != null) {
       accountPanel.dispose();
-      builder = null;
+      accountPanel = null;
     }
   }
 }

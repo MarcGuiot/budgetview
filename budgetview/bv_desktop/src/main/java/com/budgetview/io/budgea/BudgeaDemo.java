@@ -1,9 +1,7 @@
 package com.budgetview.io.budgea;
 
 import com.budgetview.shared.cloud.BudgeaConstants;
-import org.apache.http.client.fluent.Form;
 import org.apache.http.client.fluent.Request;
-import org.json.JSONArray;
 import org.json.JSONObject;
 
 import static com.budgetview.shared.json.Json.json;
@@ -20,33 +18,34 @@ public class BudgeaDemo {
 //                                   .addHeader("Authorization", "Bearer " + bearer));
 //    System.out.println(categories);
 
-//    System.out.println("\n\n---------------- bank:\n");
-//    JSONObject bank = json(Request.Get(BudgeaConstants.getServerUrl("/banks/40"))
-//                             .addHeader("Authorization", "Bearer " + bearer));
-//    System.out.println(bank.toString(2));
+    System.out.println("\n\n---------------- bank:\n");
+    JSONObject banks = json(Request.Get(BudgeaConstants.getServerUrl("/banks"))
+                             .addHeader("Authorization", "Bearer " + bearer));
+    System.out.println(banks.toString(2));
+    dumpBanks(banks);
 
-    System.out.println("\n\n---------------- create connection:\n");
-    Request request = Request.Post(BudgeaConstants.getServerUrl("/users/me/connections"))
-      .addHeader("Authorization", "Bearer " + bearer)
-      .bodyForm(Form.form()
-                  .add("id_bank", "40")
-                  .add("website", "par")
-                  .add("login", "123456789")
-                  .add("password", "1234")
-                  .build());
-    JSONObject connection = json(request);
-    System.out.println(connection.toString(2));
+//    System.out.println("\n\n---------------- create connection:\n");
+//    Request request = Request.Post(BudgeaConstants.getServerUrl("/users/me/connections"))
+//      .addHeader("Authorization", "Bearer " + bearer)
+//      .bodyForm(Form.form()
+//                  .add("id_bank", "40")
+//                  .add("website", "par")
+//                  .add("login", "123456789")
+//                  .add("password", "1234")
+//                  .build());
+//    JSONObject connection = json(request);
+//    System.out.println(connection.toString(2));
 
 //    System.out.println("\n\n---------------- connections:\n");
 //    JSONObject connections = json(Request.Get(BudgeaConstants.getServerUrl("/users/" + userId + "/connections"))
 //      .addHeader("Authorization", "Bearer " + bearer));
 //    System.out.println(connections.toString(2));
 
-    System.out.println("\n\n---------------- users/me:\n");
-    JSONObject user = json(Request.Get(BudgeaConstants.getServerUrl("/users/me"))
-                             .addHeader("Authorization", "Bearer " + bearer));
-    System.out.println(user.toString(2));
-    int userId = user.getInt("id");
+//    System.out.println("\n\n---------------- users/me:\n");
+//    JSONObject user = json(Request.Get(BudgeaConstants.getServerUrl("/users/me"))
+//                             .addHeader("Authorization", "Bearer " + bearer));
+//    System.out.println(user.toString(2));
+//    int userId = user.getInt("id");
 
 //    System.out.println("\n\n---------------- categories:\n");
 //    JSONObject categories = json(Request.Get(BudgeaConstants.getServerUrl("/users/" + userId + "/categories/full"))
@@ -54,20 +53,20 @@ public class BudgeaDemo {
 //    System.out.println(categories.toString(2));
 //    dumpCategories(categories);
 
-    System.out.println("\n\n---------------- accounts:\n");
-    JSONObject accounts = json(Request.Get(BudgeaConstants.getServerUrl("/users/" + userId + "/accounts"))
-                                    .addHeader("Authorization", "Bearer " + bearer));
-    System.out.println(accounts.toString(2));
-
-    JSONArray accountArray = accounts.getJSONArray("accounts");
-    for (Object o : accountArray) {
-      JSONObject account = (JSONObject)o;
-      System.out.println("\n\n---------------- transactions for " + account.get("name") + " " + account.get("number") + ":\n");
-
-      JSONObject transactions = json(Request.Get(BudgeaConstants.getServerUrl("/users/" + userId + "/accounts/" + account.get("id") + "/transactions"))
-                                   .addHeader("Authorization", "Bearer " + bearer));
-      System.out.println(transactions.toString(2));
-    }
+//    System.out.println("\n\n---------------- accounts:\n");
+//    JSONObject accounts = json(Request.Get(BudgeaConstants.getServerUrl("/users/" + userId + "/accounts"))
+//                                    .addHeader("Authorization", "Bearer " + bearer));
+//    System.out.println(accounts.toString(2));
+//
+//    JSONArray accountArray = accounts.getJSONArray("accounts");
+//    for (Object o : accountArray) {
+//      JSONObject account = (JSONObject)o;
+//      System.out.println("\n\n---------------- transactions for " + account.get("name") + " " + account.get("number") + ":\n");
+//
+//      JSONObject transactions = json(Request.Get(BudgeaConstants.getServerUrl("/users/" + userId + "/accounts/" + account.get("id") + "/transactions"))
+//                                   .addHeader("Authorization", "Bearer " + bearer));
+//      System.out.println(transactions.toString(2));
+//    }
 
 
 //    Content content = request.returnContent();
@@ -88,6 +87,15 @@ public class BudgeaDemo {
       }
     }
 
+  }
+
+  private static void dumpBanks(JSONObject banks) {
+    System.out.println("banks:");
+    for (Object item : banks.getJSONArray("banks")) {
+      JSONObject bank = (JSONObject) item;
+      System.out.println("  " + bank.get("name") + " (" + bank.optString("code") + ")==> " + bank.get("id"));
+
+    }
   }
 
 }

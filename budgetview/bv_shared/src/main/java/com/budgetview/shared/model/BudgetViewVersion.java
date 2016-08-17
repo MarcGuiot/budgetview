@@ -7,6 +7,7 @@ import org.globsframework.metamodel.fields.IntegerField;
 import org.globsframework.metamodel.utils.GlobTypeLoader;
 import org.globsframework.model.KeyBuilder;
 
+/** @deprecated */
 public class BudgetViewVersion {
   public static GlobType TYPE;
 

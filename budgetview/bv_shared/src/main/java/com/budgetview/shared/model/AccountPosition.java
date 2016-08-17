@@ -9,6 +9,7 @@ import org.globsframework.metamodel.fields.IntegerField;
 import org.globsframework.metamodel.fields.LinkField;
 import org.globsframework.metamodel.utils.GlobTypeLoader;
 
+/** @deprecated */
 public class AccountPosition {
   public static GlobType TYPE;
 

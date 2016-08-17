@@ -7,6 +7,7 @@ import org.globsframework.metamodel.annotations.Target;
 import org.globsframework.metamodel.fields.*;
 import org.globsframework.metamodel.utils.GlobTypeLoader;
 
+/** @deprecated */
 public class AccountEntity {
   public static GlobType TYPE;
 

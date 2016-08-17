@@ -5,13 +5,19 @@ import com.budgetview.desktop.components.dialogs.MessageType;
 import com.budgetview.desktop.components.dialogs.PicsouDialog;
 import com.budgetview.desktop.importer.ImportController;
 import com.budgetview.desktop.importer.ImportStepPanel;
+import org.globsframework.gui.GlobsPanelBuilder;
+import org.globsframework.gui.splits.utils.Disposable;
 import org.globsframework.utils.directory.Directory;
 
-public abstract class AbstractImportStepPanel implements ImportStepPanel {
+import javax.swing.*;
+
+public abstract class AbstractImportStepPanel implements ImportStepPanel, Disposable {
   protected final PicsouDialog dialog;
   protected final String textForCloseButton;
   protected final ImportController controller;
   protected final Directory localDirectory;
+  private GlobsPanelBuilder builder;
+  private JPanel panel;
 
   public AbstractImportStepPanel(PicsouDialog dialog, String textForCloseButton, ImportController controller, Directory localDirectory) {
     this.dialog = dialog;
@@ -28,5 +34,26 @@ public abstract class AbstractImportStepPanel implements ImportStepPanel {
     MessageDialog.show("import.error.title", MessageType.ERROR, dialog, localDirectory, "import.error.messageWithDetails", message, details);
   }
 
-  protected abstract void createPanelIfNeeded();
+  public void createPanelIfNeeded() {
+    getPanel();
+  }
+
+  public JPanel getPanel() {
+    if (panel == null) {
+      if (builder == null) {
+        builder = createPanelBuilder();
+      }
+      panel = builder.load();
+    }
+    return panel;
+  }
+
+  protected abstract GlobsPanelBuilder createPanelBuilder();
+
+  public void dispose() {
+    if (builder != null) {
+      builder.dispose();
+      builder = null;
+    }
+  }
 }

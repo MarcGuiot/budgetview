@@ -2,9 +2,10 @@
 <globs>
     <bankFormat id='7'>
         <bank name="Crédit Mutuel" country="fr" url="https://www.creditmutuel.fr" id='7' invalidPosition="true"
-              icon="banks/credit_mutuel.png">
-            <bankEntity id="16306"/>
+              icon="banks/credit_mutuel.png"
+              provider="2" providerId="1">
             <bankEntity id="10278"/>
+            <bankEntity id="16306"/>
             <bankEntity id="18829"/>
             <bankEntity id="15889"/>
             <bankEntity id="15969"/>
@@ -15,25 +16,24 @@
     </bankFormat>
 
     <bankFormat id='15'>
-        <bank id='200' name="Crédit Mutuel Sud-Ouest (Arkéa)" country="fr" url="https://www.cmso.com/banque/assurance/credit-mutuel/web/j_6/accueil"
-              downloadUrl="https://www.cmso.com/banque/assurance/credit-mutuel/web/j_6/accueil" synchroEnabled="false">
+        <bank id='200' name="Crédit Mutuel Sud-Ouest" country="fr" url="https://www.cmso.com/banque/assurance/credit-mutuel/web/j_6/accueil"
+              provider="2" providerId="19">
             <bankEntity id="15589"/>
         </bank>
 
-        <bank id='201' name="Crédit Mutuel Anjou" country="fr" url="https://www.creditmutuel.fr/cma/fr/banques/accueil.html"
-              downloadUrl="https://www.creditmutuel.fr/cma/fr/banques/accueil.html" synchroEnabled="false">
+        <bank id='203' name="Crédit Mutuel Bretagne" country="fr" url="https://www.cmb.fr"
+              provider="2" providerId="14">
+            <bankEntity id="17149"/>
+        </bank>
+
+        <bank id='201' name="Crédit Mutuel Anjou" country="fr" url="https://www.creditmutuel.fr/cma/fr/banques/accueil.html">
             <bankEntity id="15829"/>
         </bank>
 
         <bank id='202' name="Crédit Mutuel Antilles-Guyane" country="fr" url="https://www.creditmutuel.fr/cmag/fr/"
-              downloadUrl="https://www.creditmutuel.fr/cmag/fr/" synchroEnabled="false">
+              downloadUrl="https://www.creditmutuel.fr/cmag/fr/">
             <bankEntity id="16159"/>
             <bankEntity id="15358"/> <!--Crédit Mutuel Guadeloupe Outre-Mer -->
-        </bank>
-
-        <bank id='203' name="Crédit Mutuel Bretagne" country="fr" url="https://www.cmb.fr"
-              downloadUrl="https://www.cmb.fr" synchroEnabled="false">
-            <bankEntity id="17149"/>
         </bank>
 
         <bank id='204' name="Crédit Mutuel Normandie" country="fr" url="https://www.creditmutuel.fr/cmnormandie/fr/banques/accueil.html"

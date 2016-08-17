@@ -2,7 +2,9 @@
 <globs>
   <bankFormat id='6'>
 
-    <bank name="Caisse d'épargne" country="fr" url="https://www.caisse-epargne.fr" id='6' synchroEnabled="true" icon="banks/caisse_epargne.png">
+    <bank name="Caisse d'épargne" country="fr" url="https://www.caisse-epargne.fr" id='6' synchroEnabled="true" icon="banks/caisse_epargne.png"
+          provider="2" providerId="12">
+      <bankEntity id="16188"/>
       <bankEntity id="18645"/>
       <bankEntity id="13335"/>
       <bankEntity id="12225"/>

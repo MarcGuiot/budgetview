@@ -15,7 +15,7 @@
     <panel styleClass="innerDialog">
       <column styleClass="innerDialogContent">
 
-        <panel ref="bankDownload" weightY="500"/>
+        <panel ref="cloudIntro" weightY="500"/>
 
         <column styleClass="separator" weightY="10" marginTop="10">
           <label icon="import_files.png" text="$import.fileSelection.file.title" styleClass="sectionTitle"

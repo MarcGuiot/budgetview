@@ -14,6 +14,7 @@ import com.budgetview.triggers.SeriesBudgetTrigger;
 import org.globsframework.gui.SelectionService;
 import org.globsframework.gui.splits.layout.SingleComponentLayout;
 import org.globsframework.gui.splits.utils.Disposable;
+import org.globsframework.gui.splits.utils.DisposableGroup;
 import org.globsframework.gui.splits.utils.GuiUtils;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.Glob;
@@ -38,7 +39,7 @@ import java.util.Set;
 
 import static org.globsframework.model.utils.GlobMatchers.fieldIn;
 
-public class ImportDialog implements RealAccountImporter {
+public class ImportDialog implements RealAccountImporter, Disposable {
   private GlobRepository parentRepository;
   private Directory parentDirectory;
   private LocalGlobRepository localRepository;
@@ -50,15 +51,19 @@ public class ImportDialog implements RealAccountImporter {
   private PicsouDialog dialog;
 
   private ImportedFileSelectionPanel fileSelectionPanel;
-  private ImportSynchroPanel importSynchroPanel;
+  private ImportCloudBankSelectionPanel cloudBankSelectionPanel;
+  private ImportCloudBankConnectionPanel cloudBankConnectionPanel;
+  private ImportCloudErrorPanel cloudErrorPanel;
   private ImportPreviewPanel previewPanel;
   private ImportCompletionPanel completionPanel;
   private ImportAccountPanel importAccountsPanel;
   private ImportStepPanel currentPanel;
 
+  private DisposableGroup disposables = new DisposableGroup();
+
   public ImportDialog(String textForCloseButton, List<File> files, Glob defaultAccount,
                       final Window owner, final GlobRepository repository, Directory directory,
-                      boolean usePreferredPath, boolean isSynchro) {
+                      boolean usePreferredPath) {
 
     this.parentRepository = repository;
     this.parentDirectory = directory;
@@ -71,14 +76,19 @@ public class ImportDialog implements RealAccountImporter {
     dialog = PicsouDialog.create(this, owner, directory);
     dialog.setOpenRequestIsManaged(true);
 
-    controller = new ImportController(this, repository, localRepository, directory, isSynchro);
+    controller = new ImportController(this, repository, localRepository, directory);
+
     fileSelectionPanel = new ImportedFileSelectionPanel(dialog, textForCloseButton, controller, usePreferredPath, localRepository, localDirectory);
     importAccountsPanel = new ImportAccountPanel(dialog, textForCloseButton, controller, localRepository, localDirectory);
-    importSynchroPanel = new ImportSynchroPanel(dialog, controller, localRepository, localDirectory);
+    cloudBankSelectionPanel = new ImportCloudBankSelectionPanel(dialog, textForCloseButton, controller, localRepository, localDirectory);
+    cloudBankConnectionPanel = new ImportCloudBankConnectionPanel(dialog, textForCloseButton, controller, localRepository, localDirectory);
+    cloudErrorPanel = new ImportCloudErrorPanel(dialog, textForCloseButton, controller, localRepository, localDirectory);
     previewPanel = new ImportPreviewPanel(dialog, textForCloseButton, controller, defaultAccount, repository, localRepository, localDirectory);
     completionPanel = new ImportCompletionPanel(dialog, textForCloseButton, controller, localRepository, localDirectory);
 
-    currentPanel = isSynchro ? importSynchroPanel : fileSelectionPanel;
+    disposables.addAll(fileSelectionPanel, importAccountsPanel, cloudBankSelectionPanel, cloudBankConnectionPanel, cloudErrorPanel, previewPanel, completionPanel);
+
+    currentPanel = fileSelectionPanel;
     initMainPanel(currentPanel);
 
     preselectFiles(files);
@@ -89,11 +99,8 @@ public class ImportDialog implements RealAccountImporter {
       Glob bank = Account.getBank(defaultAccount, localRepository);
       localDirectory.get(SelectionService.class).select(bank);
     }
-    dialog.registerDisposable(new Disposable() {
-      public void dispose() {
-        ImportDialog.this.dispose();
-      }
-    });
+
+    dialog.registerDisposable(this);
   }
 
   private void initMainPanel(ImportStepPanel stepPanel) {
@@ -123,7 +130,7 @@ public class ImportDialog implements RealAccountImporter {
       Account.TYPE, AccountUpdateMode.TYPE, BudgetArea.TYPE,
       Transaction.TYPE, Month.TYPE, UserPreferences.TYPE, CurrentMonth.TYPE, RealAccount.TYPE,
       Series.TYPE, SubSeries.TYPE, ImportedSeries.TYPE, TransactionImport.TYPE, CsvMapping.TYPE,
-      Synchro.TYPE};
+      Synchro.TYPE, User.TYPE};
 
     if (localRepository == null) {
       this.localRepository = LocalGlobRepositoryBuilder.init(repository)
@@ -155,16 +162,6 @@ public class ImportDialog implements RealAccountImporter {
       previewPanel.setFileName(absolutePath);
     }
     previewPanel.updateForNextImport(dateFormats, importedAccount, accountNumber, accountCount);
-  }
-
-  public void showSynchro(Integer bankId) {
-    importSynchroPanel.update(bankId, this);
-    setCurrentPanel(importSynchroPanel);
-  }
-
-  public void showSynchro(GlobList synchro) {
-    importSynchroPanel.update(synchro, this);
-    setCurrentPanel(importSynchroPanel);
   }
 
   public void showPreview() {
@@ -215,19 +212,10 @@ public class ImportDialog implements RealAccountImporter {
     dialog.setVisible(false);
   }
 
-  private void dispose() {
-    importSynchroPanel.dispose();
-    importAccountsPanel.dispose();
-    fileSelectionPanel.dispose();
-    previewPanel.dispose();
-    completionPanel.dispose();
+  public void dispose() {
+    disposables.dispose();
     controller.complete();
-    importAccountsPanel = null;
-    fileSelectionPanel = null;
-    previewPanel = null;
-    completionPanel = null;
     controller = null;
-    importSynchroPanel = null;
   }
 
   public void showLastImportedMonthAndClose(Set<Integer> months) {
@@ -238,6 +226,19 @@ public class ImportDialog implements RealAccountImporter {
       selectionService.select(monthsToSelect.getLast());
     }
     closeDialog();
+  }
+
+  public void showCloudBankSelection() {
+    setCurrentPanel(cloudBankSelectionPanel);
+  }
+
+  public void showCloudBankConnection(Key bank) {
+    cloudBankConnectionPanel.setCurrentBank(bank);
+    setCurrentPanel(cloudBankConnectionPanel);
+  }
+
+  public void showCloudError() {
+    setCurrentPanel(cloudErrorPanel);
   }
 
   static class DoubleRef {

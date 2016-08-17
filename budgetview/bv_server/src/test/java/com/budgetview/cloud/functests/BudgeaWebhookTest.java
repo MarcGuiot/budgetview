@@ -6,6 +6,8 @@ public class BudgeaWebhookTest extends CloudTestCase {
 
   public void test() throws Exception {
 
+    budgea.setPersistentToken("abcd/98765");
+
     cloud.register("regis@mybudgetview.fr", 472, "azerty/12345");
 
     String json = "{" +
@@ -629,8 +631,8 @@ public class BudgeaWebhookTest extends CloudTestCase {
                   "    'id':472" +
                   "  }" +
                   "}";
-    budgea.callWebhook("azerty/12345", json);
+    budgea.callWebhook("abcd/98765", json);
 
-    cloud.checkBankStatement("regis@mybudgetview.fr", "aaa");
+    cloud.checkBankStatement("regis@mybudgetview.fr", 40, "aaa");
   }
 }

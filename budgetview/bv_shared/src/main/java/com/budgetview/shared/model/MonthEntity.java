@@ -6,6 +6,7 @@ import org.globsframework.metamodel.annotations.NoObfuscation;
 import org.globsframework.metamodel.fields.IntegerField;
 import org.globsframework.metamodel.utils.GlobTypeLoader;
 
+/** @deprecated */
 public class MonthEntity {
   public static GlobType TYPE;
 

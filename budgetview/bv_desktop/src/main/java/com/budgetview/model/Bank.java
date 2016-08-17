@@ -1,5 +1,6 @@
 package com.budgetview.model;
 
+import com.budgetview.shared.model.Provider;
 import com.budgetview.shared.utils.PicsouGlobSerializer;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.annotations.*;
@@ -31,6 +32,12 @@ public class Bank {
 
   @DefaultString("") @NoObfuscation
   public static StringField COUNTRY;
+
+  @Target(Provider.class) @NoObfuscation
+  public static LinkField PROVIDER;
+
+  @NoObfuscation
+  public static IntegerField PROVIDER_ID;
 
   @DefaultString("") @NoObfuscation
   public static StringField URL;

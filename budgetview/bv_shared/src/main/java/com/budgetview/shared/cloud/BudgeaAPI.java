@@ -1,11 +1,16 @@
 package com.budgetview.shared.cloud;
 
 import org.apache.http.Consts;
+import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
 import org.apache.http.client.fluent.Form;
 import org.apache.http.client.fluent.Request;
+import org.apache.http.client.fluent.Response;
+import org.apache.http.util.EntityUtils;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Map;
 
 import static com.budgetview.shared.json.Json.json;
@@ -16,10 +21,15 @@ public class BudgeaAPI {
 
   public JSONObject getBanks() throws IOException {
     return json(Request.Get(BudgeaConstants.getServerUrl("/banks?expand=fields"))
-           .addHeader("Authorization", "Bearer " + getBearer()));
+                  .addHeader("Authorization", "Bearer " + getBearer()));
   }
 
-  public JSONObject addConnection(Integer budgeaBankId, Map<String, String> params) throws IOException {
+  public JSONObject getBankFields(int budgeaBankId) throws IOException {
+    return json(Request.Get(BudgeaConstants.getServerUrl("/banks/" + budgeaBankId + "/fields"))
+                  .addHeader("Authorization", "Bearer " + getBearer()));
+  }
+
+  public JSONObject registerConnection(Integer budgeaBankId, Map<String, String> params) throws IOException {
     Form form = Form.form()
       .add("id_bank", Integer.toString(budgeaBankId));
 
@@ -27,11 +37,21 @@ public class BudgeaAPI {
       form.add(entry.getKey(), entry.getValue());
     }
 
-    Request request = Request.Post(BudgeaConstants.getServerUrl("/users/me/connections"))
+    List<NameValuePair> pairs = form.build();
+    System.out.println("BudgeaAPI.registerConnection: " + pairs + " for token " + getToken());
+    String url = BudgeaConstants.getServerUrl("/users/me/connections");
+    Request request = Request.Post(url)
       .addHeader("Authorization", "Bearer " + getBearer())
-      .bodyForm(form.build(), Consts.UTF_8);
+      .bodyForm(pairs, Consts.UTF_8);
 
-    return json(request);
+    HttpResponse httpResponse = request.execute().returnResponse();
+    if (httpResponse.getStatusLine().getStatusCode() != 200) {
+      throw new IOException(url + " returned " + httpResponse.getStatusLine().getStatusCode() + " instead of 200");
+    }
+
+    this.bearer = null;
+
+    return json(httpResponse);
   }
 
   public String getToken() throws IOException {

@@ -1,20 +1,23 @@
 package com.budgetview.io.importer.analyzer;
 
 import com.budgetview.bank.BankPluginService;
+import com.budgetview.model.BankEntity;
 import com.budgetview.model.PreTransactionTypeMatcher;
 import com.budgetview.model.TransactionType;
-import com.budgetview.model.BankEntity;
 import org.globsframework.metamodel.GlobModel;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
+import org.globsframework.model.format.GlobPrinter;
 import org.globsframework.model.utils.GlobFunctor;
 import org.globsframework.model.utils.GlobMatchers;
-import org.globsframework.model.format.GlobPrinter;
 import org.globsframework.utils.Files;
 import org.globsframework.utils.directory.Directory;
+import org.globsframework.utils.exceptions.InvalidFormat;
 import org.globsframework.utils.exceptions.ResourceAccessFailed;
 import org.globsframework.xml.XmlGlobParser;
+import org.saxstack.parser.ExceptionHolder;
+import org.xml.sax.SAXParseException;
 
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -25,7 +28,7 @@ public class TransactionAnalyzerFactory {
 
   private GlobModel model;
   private DefaultTransactionAnalyzer analyzer;
-//  private Long version = 0L;
+  //  private Long version = 0L;
   public static Pattern BLANK = Pattern.compile("[\\s]+");
   private static final String BANK_LIST_FILE_NAME = "banks/bankList.txt";
 
@@ -42,6 +45,7 @@ public class TransactionAnalyzerFactory {
 
   public interface Loader {
     InputStream load(String file);
+
     void loadBank(BankPluginService bankPluginService);
   }
 
@@ -57,14 +61,10 @@ public class TransactionAnalyzerFactory {
   }
 
   synchronized public void load(Loader loader, Long version, final GlobRepository repository, Directory directory) {
-//    if (this.version < version) {
-//      this.version = version;
-      this.analyzer = new DefaultTransactionAnalyzer();
-      loadMatchers(loader, repository);
-      analyzer.add(new LabelForCategorizationUpdater());
-      analyzer.add(new TransactionDateUpdater());
-      loader.loadBank(directory.get(BankPluginService.class));
-//    }
+    this.analyzer = new DefaultTransactionAnalyzer();
+    loadMatchers(loader, repository);
+    analyzer.add(new LabelForCategorizationUpdater());
+    analyzer.add(new TransactionDateUpdater());
   }
 
   synchronized public TransactionAnalyzer getAnalyzer() {
@@ -99,7 +99,12 @@ public class TransactionAnalyzerFactory {
         catch (UnsupportedEncodingException e) {
           throw new ResourceAccessFailed(e);
         }
-        XmlGlobParser.parse(model, repository, reader, "globs");
+        try {
+          XmlGlobParser.parse(model, repository, reader, "globs");
+        }
+        catch (ExceptionHolder e) {
+          throw new InvalidFormat("Failed to parse bank file: " + path, e);
+        }
         reader.close();
       }
 

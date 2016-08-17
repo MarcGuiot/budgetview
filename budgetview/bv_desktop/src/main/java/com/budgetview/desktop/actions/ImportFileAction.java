@@ -9,7 +9,6 @@ import com.budgetview.model.SignpostStatus;
 import com.budgetview.model.User;
 import com.budgetview.utils.Lang;
 import org.globsframework.model.Glob;
-import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.utils.directory.Directory;
 
@@ -22,31 +21,28 @@ import java.util.List;
 public class ImportFileAction extends AbstractAction {
 
   private Directory directory;
-  private GlobList importedAccounts;
   private Glob defaulAccount;
   private boolean usePreference;
-  private boolean isSynchro;
   private GlobRepository repository;
 
   public static ImportFileAction initForMenu(String text, final GlobRepository repository, final Directory directory) {
-    return new ImportFileAction(text, repository, directory, (Glob) null, true, false);
+    return new ImportFileAction(text, repository, directory, (Glob) null, true);
   }
 
   public static void registerToOpenRequestManager(String text, final GlobRepository repository, final Directory directory) {
-    new ImportFileAction(text, repository, directory, false, false);
+    new ImportFileAction(text, repository, directory, false);
   }
 
   public static ImportFileAction init(String text, final GlobRepository repository, final Directory directory, Glob defaulAccount) {
-    return new ImportFileAction(text, repository, directory, defaulAccount, true, false);
+    return new ImportFileAction(text, repository, directory, defaulAccount, true);
   }
 
   private ImportFileAction(String text, final GlobRepository repository, final Directory directory,
-                           boolean usePreference, final boolean isSynchro) {
+                           boolean usePreference) {
     super(text);
     this.repository = repository;
     this.directory = directory;
     this.usePreference = usePreference;
-    this.isSynchro = isSynchro;
     OpenRequestManager openRequestManager = directory.get(OpenRequestManager.class);
     openRequestManager.pushCallback(new OpenRequestManager.Callback() {
       public boolean accept() {
@@ -55,25 +51,24 @@ public class ImportFileAction extends AbstractAction {
 
       public void openFiles(List<File> files) {
         SwingUtilities.invokeLater(new OpenRunnable(files, directory, repository, defaulAccount,
-                                                    ImportFileAction.this.usePreference, null, isSynchro));
+                                                    ImportFileAction.this.usePreference));
         defaulAccount = null;
       }
     });
   }
 
   private ImportFileAction(String text, final GlobRepository repository, final Directory directory, Glob defaulAccount,
-                           boolean usePreference, boolean isSynchro) {
+                           boolean usePreference) {
     super(text);
     this.repository = repository;
     this.directory = directory;
     this.defaulAccount = defaulAccount;
     this.usePreference = usePreference;
-    this.isSynchro = isSynchro;
   }
 
   public void actionPerformed(ActionEvent event) {
     OpenRunnable runnable = new OpenRunnable(Collections.<File>emptyList(), directory, repository,
-                                             defaulAccount, usePreference, importedAccounts, isSynchro);
+                                             defaulAccount, usePreference);
     runnable.run();
     defaulAccount = null;
   }
@@ -85,19 +80,16 @@ public class ImportFileAction extends AbstractAction {
 
     public OpenRunnable(List<File> files,
                         Directory directory, GlobRepository repository,
-                        Glob defaultAccount, boolean usePreferedPath, GlobList importedAccounts, boolean isSynchro) {
+                        Glob defaultAccount, boolean usePreferedPath) {
       this.directory = directory;
       this.repository = repository;
       if (!User.isDemoUser(repository.get(User.KEY))) {
         importDialog = new ImportDialog(Lang.get("import.fileSelection.close"), files, defaultAccount,
                                         directory.get(JFrame.class),
                                         repository, directory,
-                                        usePreferedPath, isSynchro);
+                                        usePreferedPath);
         if (!files.isEmpty()) {
           importDialog.acceptFiles();
-        }
-        if (importedAccounts != null && !importedAccounts.isEmpty()) {
-          importDialog.showSynchro(importedAccounts);
         }
       }
     }

@@ -1,15 +1,14 @@
 package com.budgetview.desktop.cloud.actions;
 
-import com.budgetview.budgea.model.BudgeaBankField;
-import com.budgetview.budgea.model.BudgeaBankFieldValue;
 import com.budgetview.budgea.model.BudgeaConnection;
 import com.budgetview.budgea.model.BudgeaConnectionValue;
 import com.budgetview.desktop.cloud.CloudService;
+import com.budgetview.model.User;
 import org.globsframework.model.Glob;
+import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.Key;
 import org.globsframework.model.format.GlobPrinter;
-import org.globsframework.model.utils.GlobMatchers;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
@@ -30,11 +29,19 @@ public class BudgeaDemoAction extends AbstractAction {
 
 
   public void actionPerformed(ActionEvent e) {
-    try {
-      cloudService.updateBankList(repository);
-      GlobPrinter.print(repository.getAll(BudgeaBankField.TYPE, GlobMatchers.fieldEquals(BudgeaBankField.BANK, 40)));
-      GlobPrinter.print(repository.getAll(BudgeaBankFieldValue.TYPE, GlobMatchers.fieldIn(BudgeaBankFieldValue.FIELD, 170, 171, 172)));
 
+    repository.deleteAll(BudgeaConnection.TYPE, BudgeaConnectionValue.TYPE);
+    repository.update(User.KEY, User.EMAIL, "admin@mybudgetview.fr");
+
+    try {
+//      cloudService.updateBankList(repository, new PrinterCallback());
+//      GlobPrinter.print(repository.getAll(BudgeaBankField.TYPE, GlobMatchers.fieldEquals(BudgeaBankField.BANK, 40)));
+//      GlobPrinter.print(repository.getAll(BudgeaBankFieldValue.TYPE, GlobMatchers.fieldIn(BudgeaBankFieldValue.FIELD, 170, 171, 172)));
+//
+//      cloudService.updateBankFields(Key.create(Bank.TYPE, 2), repository, new PrinterCallback());
+//      GlobPrinter.print(repository, BudgeaBankField.TYPE);
+//      GlobPrinter.print(repository, BudgeaBankFieldValue.TYPE);
+//
       Glob connection = repository.create(Key.create(BudgeaConnection.TYPE, 40));
       repository.create(BudgeaConnectionValue.TYPE,
                         value(BudgeaConnectionValue.CONNECTION, 40),
@@ -48,10 +55,33 @@ public class BudgeaDemoAction extends AbstractAction {
                         value(BudgeaConnectionValue.CONNECTION, 40),
                         value(BudgeaConnectionValue.FIELD, 172), // password
                         value(BudgeaConnectionValue.VALUE, "1234"));
-      cloudService.createConnection(connection.getKey(), repository);
+      cloudService.createConnection(connection, repository, new PrinterCallback());
+
+      cloudService.downloadStatement(connection, repository, new PrinterDownloadCallback());
     }
     catch (Exception ex) {
       ex.printStackTrace();
+    }
+  }
+
+  private static class PrinterCallback implements CloudService.Callback {
+    public void processCompletion() {
+      System.out.println("PrinterCallback.processCompletion");
+    }
+
+    public void processError() {
+      System.out.println("PrinterCallback.processError");
+    }
+  }
+
+  private static class PrinterDownloadCallback implements CloudService.DownloadCallback {
+    public void processCompletion(GlobList importedRealAccounts) {
+      System.out.println("PrinterCallback.processCompletion:");
+      GlobPrinter.print(importedRealAccounts);
+    }
+
+    public void processError() {
+      System.out.println("PrinterCallback.processError");
     }
   }
 }

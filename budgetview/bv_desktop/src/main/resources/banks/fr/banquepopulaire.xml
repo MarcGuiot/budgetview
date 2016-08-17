@@ -2,8 +2,10 @@
 <globs>
   <bankFormat id='12'>
 
-    <bank name="Banque Populaire" country="fr" url="http://www.banquepopulaire.fr" id='12'>
+    <bank name="Banque Populaire" country="fr" url="http://www.banquepopulaire.fr" id='12'
+          provider="2" providerId="15">
       <bankEntity id="10807"/>
+      <bankEntity id="10107"/>
     </bank>
 
     <transactionMatcher ofxName="FACTURETTE CB.*"

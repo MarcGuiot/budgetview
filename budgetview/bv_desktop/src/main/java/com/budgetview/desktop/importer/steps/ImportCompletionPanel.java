@@ -16,8 +16,6 @@ import java.util.Set;
 public class ImportCompletionPanel extends AbstractImportStepPanel {
   private LocalGlobRepository localRepository;
 
-  private GlobsPanelBuilder builder;
-  private JPanel panel;
   private Block importedBlock = new Block("imported");
   private Block ignoredBlock = new Block("ignored");
   private Block categorizedBlock = new Block("categorized");
@@ -33,12 +31,8 @@ public class ImportCompletionPanel extends AbstractImportStepPanel {
     this.localRepository = localRepository;
   }
 
-  public void createPanelIfNeeded() {
-    if (builder != null) {
-      return;
-    }
-
-    builder = new GlobsPanelBuilder(getClass(), "/layout/importexport/importsteps/importCompletionPanel.splits", localRepository, localDirectory);
+  public GlobsPanelBuilder createPanelBuilder() {
+    GlobsPanelBuilder builder = new GlobsPanelBuilder(getClass(), "/layout/importexport/importsteps/importCompletionPanel.splits", localRepository, localDirectory);
 
     importedBlock.register(builder);
     ignoredBlock.register(builder);
@@ -58,21 +52,10 @@ public class ImportCompletionPanel extends AbstractImportStepPanel {
     final HyperlinkHandler hyperlinkHandler = new HyperlinkHandler(localDirectory);
     builder.add("hyperlinkHandler", hyperlinkHandler);
 
-    panel = builder.load();
-  }
-
-  public JPanel getPanel() {
-    createPanelIfNeeded();
-    return panel;
+    return builder;
   }
 
   public void requestFocus() {
-  }
-
-  public void dispose() {
-    if (builder != null) {
-      builder.dispose();
-    }
   }
 
   public void update(Set<Integer> months, int importedTransactionCount, int ignoredTransactionCount, int autocategorizedTransactionCount) {

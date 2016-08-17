@@ -2,25 +2,25 @@ package com.budgetview.server.cloud.servlet;
 
 import com.budgetview.server.cloud.Budgea;
 import com.budgetview.server.cloud.model.CloudUser;
-import com.budgetview.server.cloud.model.Provider;
 import com.budgetview.shared.cloud.BudgeaConstants;
 import com.budgetview.shared.cloud.CloudConstants;
+import com.budgetview.shared.model.Provider;
 import org.apache.http.client.fluent.Form;
 import org.apache.http.client.fluent.Request;
-import org.apache.http.client.fluent.Response;
 import org.apache.log4j.Logger;
 import org.globsframework.sqlstreams.GlobsDatabase;
 import org.globsframework.sqlstreams.SqlConnection;
 import org.globsframework.sqlstreams.exceptions.GlobsSQLException;
 import org.globsframework.utils.Strings;
 import org.globsframework.utils.directory.Directory;
-import org.globsframework.utils.exceptions.OperationFailed;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+
+import static com.budgetview.shared.json.Json.json;
 
 public class ConnectionServlet extends HttpServlet {
 
@@ -40,13 +40,25 @@ public class ConnectionServlet extends HttpServlet {
     String token = request.getHeader(CloudConstants.BUDGEA_TOKEN);
     String userId = request.getHeader(CloudConstants.BUDGEA_USER_ID);
 
-    if (Strings.isNullOrEmpty(email) || Strings.isNullOrEmpty(token) || Strings.isNullOrEmpty(userId)) {
+    if (Strings.isNullOrEmpty(email)) {
+      logger.error("No email provided");
+      response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+      return;
+    }
+    if (Strings.isNullOrEmpty(token)) {
+      logger.error("No token provided");
+      response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+      return;
+    }
+    if (Strings.isNullOrEmpty(userId)) {
+      logger.error("No userId provided");
       response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
       return;
     }
 
+    String newToken;
     try {
-      registerBudgeaToken(token);
+      newToken = registerBudgeaToken(token);
     }
     catch (Exception e) {
       logger.error("Budgea registration failed", e);
@@ -55,7 +67,7 @@ public class ConnectionServlet extends HttpServlet {
     }
 
     try {
-      saveCloudUser(email, userId, token);
+      saveCloudUser(email, userId, newToken);
     }
     catch (GlobsSQLException e) {
       logger.error("Could not store user '" + email + "' in dabase", e);
@@ -66,7 +78,7 @@ public class ConnectionServlet extends HttpServlet {
     response.setStatus(HttpServletResponse.SC_OK);
   }
 
-  private void registerBudgeaToken(String code) throws IOException {
+  private String registerBudgeaToken(String code) throws IOException {
     String serverUrl = BudgeaConstants.getServerUrl("/auth/token/access");
     Request request = Request.Post(serverUrl)
       .bodyForm(Form.form()
@@ -75,11 +87,7 @@ public class ConnectionServlet extends HttpServlet {
                   .add("client_secret", Budgea.CLIENT_SECRET)
                   .build());
 
-    Response response = request.execute();
-    int statusCode = response.returnResponse().getStatusLine().getStatusCode();
-    if (statusCode != HttpServletResponse.SC_OK) {
-      throw new OperationFailed("Budgea returned " + statusCode + " instead of " + HttpServletResponse.SC_OK);
-    }
+    return json(request.execute()).getString("access_token");
   }
 
   private void saveCloudUser(String email, String userId, String token) throws GlobsSQLException {
@@ -91,5 +99,6 @@ public class ConnectionServlet extends HttpServlet {
       .set(CloudUser.PROVIDER_ACCESS_TOKEN, token)
       .run();
     connection.commitAndClose();
+    logger.info("Saved " + email + " with userId " + userId + " and token " + token);
   }
 }

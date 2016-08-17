@@ -2,10 +2,10 @@ package com.budgetview.server.cloud.servlet;
 
 import com.budgetview.server.cloud.Budgea;
 import com.budgetview.server.cloud.model.CloudUser;
-import com.budgetview.server.cloud.model.Provider;
 import com.budgetview.server.cloud.model.ProviderAccount;
 import com.budgetview.server.cloud.model.ProviderTransaction;
 import com.budgetview.server.utils.DateConverter;
+import com.budgetview.shared.model.Provider;
 import org.apache.log4j.Logger;
 import org.globsframework.metamodel.fields.IntegerField;
 import org.globsframework.metamodel.fields.LinkField;
@@ -56,8 +56,14 @@ public class BudgeaWebHookServlet extends HttpServlet {
     response.setCharacterEncoding("UTF-8");
 
     String authorization = request.getHeader("Authorization");
+    if (Strings.isNullOrEmpty(authorization)) {
+      logger.error("No credentials provided - request rejected");
+      response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+      return;
+    }
     Matcher tokenMatcher = pattern.matcher(authorization.trim());
     if (!tokenMatcher.matches()) {
+      logger.error("Invalid credentials provided '" + authorization + "' - request rejected");
       response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
       return;
     }

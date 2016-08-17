@@ -2,7 +2,8 @@
 <globs>
   <bankFormat id='11'>
 
-    <bank name="HSBC" country="fr" url="https://www.hsbc.fr/1/2/hsbc-france/particuliers/login" id="11">
+    <bank name="HSBC France" country="fr" url="https://www.hsbc.fr/1/2/hsbc-france/particuliers/login" id="11"
+          provider="2" providerId="2">
       <bankEntity id="30056"/>
       <bankEntity id="30368"/>
     </bank>

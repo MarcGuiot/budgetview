@@ -3,7 +3,7 @@
   <bankFormat id='3'>
 
     <bank name="La Banque Postale" country="fr" url="https://www.labanquepostale.fr" id='3' icon="banks/labanquepostale.png"
-          synchroEnabled="true">
+          provider="2" providerId="5">
       <bankEntity id="20041"/>
     </bank>
 

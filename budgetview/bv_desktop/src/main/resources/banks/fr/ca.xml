@@ -2,12 +2,9 @@
 <globs>
     <bankFormat id='1'>
 
-        <bank name="Crédit Agricole" country="fr" url="http://www.credit-agricole.fr/particuliers/" id='1'>
-            <!--<bankEntity id="16506"/>-->
-            <!--<bankEntity id="15449" : Crédit Agricole Bretagne/>-->
-            <bankEntity id="13006"/>
-            <!--Corporate and Investment : code 31489-->
-
+        <bank name="Crédit Agricole" country="fr" url="http://www.credit-agricole.fr/particuliers/" id='1'
+              provider="2" providerId="6">
+            <bankEntity id="30006"/>
         </bank>
 
         <bank id="51" country="fr" url="https://www.ca-alpesprovence.fr" name="Crédit Agricole Alpes Provence" shortName="Crédit Agricole"  synchroEnabled="true" icon="banks/credit_agricole.png">

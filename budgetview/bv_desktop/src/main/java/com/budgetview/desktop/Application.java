@@ -318,8 +318,6 @@ public class Application {
     wrapper.add(new MobileService());
     wrapper.add(new MailService());
     wrapper.add(new CloudService());
-    wrapper.add(new BankPluginService());
-    wrapper.add(new BankSynchroService());
     wrapper.add(PrinterService.class, new DefaultPrinterService());
     wrapper.add(new AddOnService());
 

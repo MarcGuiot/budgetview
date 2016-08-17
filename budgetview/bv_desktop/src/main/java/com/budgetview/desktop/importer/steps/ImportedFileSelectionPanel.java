@@ -6,7 +6,7 @@ import com.budgetview.desktop.help.HyperlinkHandler;
 import com.budgetview.desktop.importer.ImportController;
 import com.budgetview.desktop.importer.ImportDialog;
 import com.budgetview.desktop.importer.MessageHandler;
-import com.budgetview.desktop.importer.components.BankDownloadPanel;
+import com.budgetview.desktop.importer.components.CloudIntroPanel;
 import com.budgetview.desktop.importer.edition.BrowseFilesAction;
 import com.budgetview.io.importer.utils.TypedInputStream;
 import com.budgetview.utils.Lang;
@@ -27,15 +27,13 @@ public class ImportedFileSelectionPanel extends AbstractImportStepPanel implemen
 
   private LocalGlobRepository localRepository;
 
-  private JPanel panel;
   private JPanel filePanel = new JPanel();
-  private GlobsPanelBuilder builder;
   private final JTextField fileField;
 
   private boolean usePreferredPath;
   private JEditorPane importMessage = new JEditorPane();
   private String lastExceptionDetails;
-  private BankDownloadPanel bankDownload;
+  private CloudIntroPanel cloudIntroPanel;
   private ImportAction importAction;
 
   public ImportedFileSelectionPanel(PicsouDialog dialog,
@@ -50,12 +48,9 @@ public class ImportedFileSelectionPanel extends AbstractImportStepPanel implemen
     this.fileField = controller.getFileField();
   }
 
-  public void createPanelIfNeeded() {
-    if (builder != null) {
-      return;
-    }
+  public GlobsPanelBuilder createPanelBuilder() {
 
-    builder = new GlobsPanelBuilder(getClass(), "/layout/importexport/importsteps/importFileSelectionPanel.splits",
+    GlobsPanelBuilder builder = new GlobsPanelBuilder(getClass(), "/layout/importexport/importsteps/importFileSelectionPanel.splits",
                                     localRepository, localDirectory);
 
     initFileField();
@@ -73,8 +68,8 @@ public class ImportedFileSelectionPanel extends AbstractImportStepPanel implemen
       }
     });
 
-    bankDownload = new BankDownloadPanel(dialog, controller, localRepository, localDirectory);
-    builder.add("bankDownload", bankDownload.getPanel());
+    cloudIntroPanel = new CloudIntroPanel(dialog, controller, localRepository, localDirectory);
+    builder.add("cloudIntro", cloudIntroPanel.getPanel());
 
     final HyperlinkHandler hyperlinkHandler = new HyperlinkHandler(localDirectory);
 
@@ -88,7 +83,7 @@ public class ImportedFileSelectionPanel extends AbstractImportStepPanel implemen
 
     builder.add("manualEntry", new ShowManualEntryAction());
 
-    panel = builder.load();
+    return builder;
   }
 
   private void initFileField() {
@@ -118,17 +113,11 @@ public class ImportedFileSelectionPanel extends AbstractImportStepPanel implemen
     this.importMessage.setText(message);
   }
 
-  public JPanel getPanel() {
-    createPanelIfNeeded();
-    return panel;
-  }
-
   public void dispose() {
-    if (builder != null) {
-      builder.dispose();
-      builder = null;
-      bankDownload.dispose();
-      bankDownload = null;
+    super.dispose();
+    if (cloudIntroPanel != null) {
+      cloudIntroPanel.dispose();
+      cloudIntroPanel = null;
     }
   }
 
@@ -145,7 +134,7 @@ public class ImportedFileSelectionPanel extends AbstractImportStepPanel implemen
 
   public void requestFocus() {
     createPanelIfNeeded();
-    bankDownload.requestFocus();
+    cloudIntroPanel.requestFocus();
   }
 
   private class ImportAction extends AbstractAction {

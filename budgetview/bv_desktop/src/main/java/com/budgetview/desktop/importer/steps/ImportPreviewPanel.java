@@ -59,9 +59,7 @@ public class ImportPreviewPanel extends AbstractImportStepPanel implements Messa
 
   private JEditorPane message = new JEditorPane();
 
-  private GlobsPanelBuilder builder;
   private ImportedTransactionsTable importedTransactionTable;
-  private JPanel panel;
   private AccountEditionPanel accountEditionPanel;
   private LocalGlobRepository accountEditionRepository;
   private Glob realAccount;
@@ -84,12 +82,8 @@ public class ImportPreviewPanel extends AbstractImportStepPanel implements Messa
     this.localRepository = localRepository;
   }
 
-  public void createPanelIfNeeded() {
-    if (builder != null) {
-      return;
-    }
-
-    builder = new GlobsPanelBuilder(getClass(), "/layout/importexport/importsteps/importPreviewPanel.splits", localRepository, localDirectory);
+  public GlobsPanelBuilder createPanelBuilder() {
+    GlobsPanelBuilder builder = new GlobsPanelBuilder(getClass(), "/layout/importexport/importsteps/importPreviewPanel.splits", localRepository, localDirectory);
     cardHandler = builder.addCardHandler("mainCardOperations");
     noOperationLabel = new JEditorPane();
     builder.add("noOperationLabel", noOperationLabel);
@@ -162,8 +156,8 @@ public class ImportPreviewPanel extends AbstractImportStepPanel implements Messa
     finishAction = new FinishAction();
     builder.add("finish", finishAction);
     builder.add("close", new CancelAction(textForCloseButton));
-    this.panel = builder.load();
     accountEditionPanel.setBalanceEditorVisible(true);
+    return builder;
   }
 
   private void registerAccountCreationListener(final GlobRepository sessionRepository,
@@ -179,21 +173,18 @@ public class ImportPreviewPanel extends AbstractImportStepPanel implements Messa
     });
   }
 
-  public JPanel getPanel() {
-    createPanelIfNeeded();
-    return panel;
-  }
-
   public void requestFocus() {
   }
 
   public void dispose() {
-    if (builder != null) {
-      builder.dispose();
+    super.dispose();
+    if (importedTransactionTable != null) {
       importedTransactionTable.dispose();
+      importedTransactionTable = null;
       accountEditionPanel.dispose();
+      accountEditionPanel = null;
       dateFormatSelectionPanel.dispose();
-      builder = null;
+      dateFormatSelectionPanel = null;
     }
   }
 

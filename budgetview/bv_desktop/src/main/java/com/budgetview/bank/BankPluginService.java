@@ -15,6 +15,7 @@ import java.util.Map;
 
 import static org.globsframework.model.FieldValue.*;
 
+/** @deprecated  */
 public class BankPluginService {
   private Map<Integer, BankPlugin> specific = new HashMap<Integer, BankPlugin>();
   private BankPlugin defaultPlugin = new AbstractBankPlugin() {

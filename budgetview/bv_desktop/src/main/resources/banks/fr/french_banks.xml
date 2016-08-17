@@ -2,11 +2,13 @@
 <globs>
   <bankFormat id='99'>
 
-    <bank name="Boursorama" country="fr" url="http://www.boursorama.com/" id="1000">
+    <bank name="Boursorama" country="fr" url="http://www.boursorama.com/" id="1000"
+          provider="2" providerId="4">
       <bankEntity id="40618"/>
     </bank>
 
-    <bank name="Credit du Nord" country="fr" url="http://www.credit-du-nord.fr/" id="1002">
+    <bank name="Credit du Nord" country="fr" url="http://www.credit-du-nord.fr/" id="1002"
+          provider="2" providerId="25">
       <bankEntity id="30076"/>
     </bank>
 
@@ -14,11 +16,13 @@
       <bankEntity id="14690"/>
     </bank>
 
-    <bank name="Fortuneo" country="fr" url="http://www.fortuneo.fr" id="1004">
+    <bank name="Fortuneo" country="fr" url="http://www.fortuneo.fr" id="1004"
+          provider="2" providerId="13">
       <bankEntity id="14518"/>
     </bank>
 
-    <bank name="BRED - Banque Populaire" country="fr" url="http://www.bred.fr" id="1005">
+    <bank name="BRED - Banque Populaire" country="fr" url="http://www.bred.fr" id="1005"
+          provider="2" providerId="11">
       <bankEntity id="10107"/>
     </bank>
 
@@ -26,11 +30,13 @@
       <bankEntity id="18889"/>
     </bank>
 
-    <bank name="BforBank" country="fr" url="http://www.bforbank.com" id="1007">
+    <bank name="BforBank" country="fr" url="http://www.bforbank.com" id="1007"
+          provider="2" providerId="48">
       <bankEntity id="16218"/>
     </bank>
 
-    <bank name="Banque Accord" country="fr" url="http://www.banque-accord.fr" id="1008">
+    <bank name="Banque Accord" country="fr" url="http://www.banque-accord.fr" id="1008"
+          provider="2" providerId="34">
       <bankEntity id="12869"/>
     </bank>
 
@@ -42,9 +48,25 @@
       <bankEntity id="18370"/>
     </bank>
 
-    <bank name="SMC - Société Marseillaise de Crédit" country="fr" url="http://www.smc.fr" id="1011">
+    <bank name="SMC - Société Marseillaise de Crédit" country="fr" url="http://www.smc.fr" id="1011"
+          provider="2" providerId="28">
       <bankEntity id="30077"/>
     </bank>
+
+    <bank name="Banque BCP" country="fr" url="https://www.banquebcp.fr" id="1012"
+          provider="2" providerId="44">
+      <bankEntity id="12869"/>
+    </bank>
+
+    <bank name="Banque Chaix" country="fr" url="http://www.banque-chaix.fr" id="1013"
+          provider="2" providerId="329">
+    </bank>
+
+    <bank name="Banque Courtois" country="fr" url="https://www.banque-courtois.fr" id="1014"
+          provider="2" providerId="27">
+      <bankEntity id="10268"/>
+    </bank>
+
 
   </bankFormat>
 </globs>

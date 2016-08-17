@@ -1,15 +1,30 @@
 package com.budgetview.shared.cloud;
 
+import com.budgetview.shared.model.Provider;
 import org.apache.http.HttpResponse;
+import org.apache.http.client.fluent.Form;
 import org.apache.http.client.fluent.Request;
 import org.apache.http.client.fluent.Response;
 import org.globsframework.utils.Files;
+import org.globsframework.utils.Strings;
+import org.globsframework.utils.exceptions.InvalidParameter;
+import org.json.JSONObject;
 
 import java.io.IOException;
 
 public class CloudAPI {
 
   public void addConnection(String email, String budgeaToken, Integer budgeaUserId) throws IOException {
+    if (Strings.isNullOrEmpty(email)) {
+      throw new InvalidParameter("A proper email must be provided to create the connection");
+    }
+    if (Strings.isNullOrEmpty(budgeaToken)) {
+      throw new InvalidParameter("A non-empty token must be provided to create the connection");
+    }
+    if (budgeaUserId == null) {
+      throw new InvalidParameter("A budgea userId must be provided to create the connection");
+    }
+
     String url = cloudUrl("/connections");
     Request request = Request.Post(url)
       .addHeader(CloudConstants.EMAIL, email)
@@ -18,13 +33,13 @@ public class CloudAPI {
     execute(request, url);
   }
 
-  public String getStatement(String email) throws IOException {
-    String url = cloudUrl("/statement");
-    Request request = Request.Get(url)
+  public JSONObject getStatement(String email, Provider provider, Integer budgeaBankId) throws IOException {
+    String url = "/statement/" + provider.getId() + "/" + budgeaBankId;
+    Request request = Request.Get(cloudUrl(url))
       .addHeader(CloudConstants.EMAIL, email);
 
     HttpResponse response = execute(request, url);
-    return Files.loadStreamToString(response.getEntity().getContent(), "UTF-8");
+    return new JSONObject(Files.loadStreamToString(response.getEntity().getContent(), "UTF-8"));
   }
 
   public HttpResponse execute(Request request, String url) throws IOException {

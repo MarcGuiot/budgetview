@@ -9,6 +9,7 @@ import org.globsframework.metamodel.fields.LinkField;
 import org.globsframework.metamodel.fields.StringField;
 import org.globsframework.metamodel.utils.GlobTypeLoader;
 
+/** @deprecated */
 public class SeriesEntity {
   public static GlobType TYPE;
 

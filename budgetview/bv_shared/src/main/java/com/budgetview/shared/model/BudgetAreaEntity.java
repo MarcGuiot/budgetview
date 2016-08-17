@@ -11,6 +11,7 @@ import org.globsframework.metamodel.utils.GlobTypeLoader;
 import org.globsframework.model.Glob;
 import org.globsframework.utils.Utils;
 
+/** @deprecated */
 public class BudgetAreaEntity {
   public static GlobType TYPE;
 
