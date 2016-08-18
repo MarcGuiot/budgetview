@@ -1,11 +1,11 @@
-package com.budgetview.cloud.functests.checkers;
+package com.budgetview.server.cloud.functests.checkers;
 
 import com.budgetview.server.cloud.CloudServer;
 import com.budgetview.shared.cloud.BudgeaConstants;
 import com.budgetview.shared.cloud.CloudConstants;
 import junit.framework.TestCase;
 
-public class CloudTestCase extends TestCase {
+public class CloudServerTestCase extends TestCase {
 
   protected BudgeaChecker budgea;
   protected CloudChecker cloud;

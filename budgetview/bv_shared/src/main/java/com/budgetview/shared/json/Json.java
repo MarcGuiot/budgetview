@@ -17,7 +17,15 @@ public class Json {
   }
 
   public static JSONObject json(Response response) throws IOException {
-    String content = response.returnContent().asString();
+    return parse(response.returnContent().asString());
+  }
+
+  public static JSONObject json(HttpResponse response) throws IOException {
+    String content = Files.loadStreamToString(response.getEntity().getContent(), "UTF-8");
+    return parse(content);
+  }
+
+  public static JSONObject parse(String content) throws IOException {
     if (Strings.isNullOrEmpty(content)) {
       throw new IOException("Request returned no content");
     }
@@ -27,9 +35,5 @@ public class Json {
     catch (JSONException e) {
       throw new IOException("Invalid content: " + content, e);
     }
-  }
-
-  public static JSONObject json(HttpResponse response) throws IOException {
-    return new JSONObject(Files.loadStreamToString(response.getEntity().getContent(), "UTF-8"));
   }
 }

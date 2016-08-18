@@ -1,4 +1,4 @@
-package com.budgetview.cloud.functests.checkers;
+package com.budgetview.server.cloud.functests.checkers;
 
 import com.budgetview.shared.cloud.CloudAPI;
 import com.budgetview.shared.model.Provider;
