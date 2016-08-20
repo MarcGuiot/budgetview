@@ -1,6 +1,5 @@
 package com.budgetview.io.importer;
 
-import com.budgetview.bank.BankPluginService;
 import com.budgetview.desktop.components.dialogs.PicsouDialog;
 import com.budgetview.desktop.importer.utils.NoOperations;
 import com.budgetview.io.importer.analyzer.TransactionAnalyzer;
@@ -10,7 +9,6 @@ import com.budgetview.io.importer.utils.TypedInputStream;
 import com.budgetview.model.*;
 import org.apache.commons.io.output.ByteArrayOutputStream;
 import com.budgetview.desktop.accounts.utils.MonthDay;
-import com.budgetview.desktop.model.CurrentAccountInfo;
 import com.budgetview.desktop.time.TimeService;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.fields.StringField;
@@ -94,7 +92,7 @@ public class ImportSession {
     localRepository.reset(GlobList.EMPTY, Transaction.TYPE, ImportedTransaction.TYPE, MonthDay.TYPE, CurrentMonth.TYPE,
                           DeferredCardDate.TYPE, AccountCardType.TYPE, AccountType.TYPE, BudgetArea.TYPE, CsvMapping.TYPE);
     GlobType[] types = {Bank.TYPE, BankEntity.TYPE, Account.TYPE, MonthDay.TYPE, DeferredCardDate.TYPE,
-      AccountCardType.TYPE, CurrentMonth.TYPE, Month.TYPE, CurrentAccountInfo.TYPE,
+      AccountCardType.TYPE, CurrentMonth.TYPE, Month.TYPE,
       RealAccount.TYPE, Series.TYPE, SubSeries.TYPE, TransactionImport.TYPE, CsvMapping.TYPE};
     localRepository.reset(referenceRepository.getAll(types), types);
 
@@ -180,9 +178,6 @@ public class ImportSession {
     importChangeSet = new DefaultChangeSet();
     importChangeSetAggregator = new ChangeSetAggregator(localRepository, importChangeSet);
 
-    Glob info = localRepository.findOrCreate(Key.create(CurrentAccountInfo.TYPE, 0));
-    localRepository.update(info.getKey(), CurrentAccountInfo.BANK, null);
-
     localRepository.startChangeSet();
     Glob currentImportedAccount;
     try {
@@ -249,7 +244,6 @@ public class ImportSession {
   public Key importTransactions(Glob importedAccount, Glob currentlySelectedAccount, String selectedDateFormat) {
     try {
       localRepository.startChangeSet();
-      localRepository.delete(Key.create(CurrentAccountInfo.TYPE, 0));
       if (!load) {
         return null;
       }
@@ -257,13 +251,7 @@ public class ImportSession {
         load = false;
       }
 
-      BankPluginService bankPluginService = directory.get(BankPluginService.class);
-      GlobList transactions = localRepository.getAll(ImportedTransaction.TYPE);
-      bankPluginService.apply(currentlySelectedAccount, importedAccount, transactions, referenceRepository,
-                              localRepository, importChangeSet);
-
       GlobList allNewTransactions = convertImportedTransaction(selectedDateFormat, currentlySelectedAccount.get(Account.ID));
-
       boolean shouldImportSeries = shouldImportSeries();
       if (shouldImportSeries) {
         referenceRepository.update(importKey, TransactionImport.IS_WITH_SERIES, shouldImportSeries);

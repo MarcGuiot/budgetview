@@ -5,7 +5,6 @@ import com.budgetview.desktop.accounts.utils.MonthDay;
 import com.budgetview.desktop.components.DatePicker;
 import com.budgetview.desktop.components.dialogs.CancelAction;
 import com.budgetview.desktop.components.dialogs.PicsouDialog;
-import com.budgetview.desktop.model.CurrentAccountInfo;
 import com.budgetview.desktop.time.TimeService;
 import com.budgetview.model.*;
 import com.budgetview.utils.Lang;
@@ -32,7 +31,6 @@ public class AccountEditionDialog extends AbstractAccountPanel<LocalGlobReposito
   private GlobRepository parentRepository;
   private JLabel titleLabel;
   private GlobsPanelBuilder builder;
-  private Glob accountInfo;
   private TabHandler tabs;
 
   public AccountEditionDialog(final GlobRepository parentRepository, Directory directory, boolean createAccount) {
@@ -141,9 +139,9 @@ public class AccountEditionDialog extends AbstractAccountPanel<LocalGlobReposito
     Glob newAccount = localRepository.create(Account.TYPE,
                                              value(Account.ACCOUNT_TYPE, type.getId()),
                                              value(Account.UPDATE_MODE, updateMode.getId()),
-                                             value(Account.BANK, accountInfo != null ? accountInfo.get(CurrentAccountInfo.BANK) : null),
-                                             value(Account.POSITION_WITH_PENDING, accountInfo != null ? accountInfo.get(CurrentAccountInfo.POSITION) : null),
-                                             value(Account.POSITION_DATE, accountInfo != null ? accountInfo.get(CurrentAccountInfo.POSITION_DATE) : null));
+                                             value(Account.BANK, null),
+                                             value(Account.POSITION_WITH_PENDING, null),
+                                             value(Account.POSITION_DATE, null));
     doShow(newAccount, true);
   }
 
@@ -155,10 +153,6 @@ public class AccountEditionDialog extends AbstractAccountPanel<LocalGlobReposito
       GuiUtils.selectAndRequestFocus(nameField.getComponent());
     }
     dialog.showCentered();
-  }
-
-  public void setAccountInfo(Glob accountInfo) {
-    this.accountInfo = accountInfo;
   }
 
   protected void accountDefinitionErrorShown() {

@@ -36,11 +36,9 @@ public class ProviderTransaction {
 
   public static DoubleField AMOUNT;
 
-  public static IntegerField OPERATION_MONTH;
-  public static IntegerField OPERATION_DAY;
+  public static DateField OPERATION_DATE;
 
-  public static IntegerField BANK_MONTH;
-  public static IntegerField BANK_DAY;
+  public static DateField BANK_DATE;
 
   public static BooleanField DELETED;
 

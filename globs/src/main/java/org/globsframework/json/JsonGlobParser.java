@@ -92,7 +92,7 @@ public class JsonGlobParser {
             }
 
             public void visitDate(DateField field) throws Exception {
-              throw new InvalidParameter("Unexpected type Date for field: " + name);
+              builder.set(field, JsonGlobFormat.parseDate(json.getString(name)));
             }
 
             public void visitTimeStamp(TimeStampField field) throws Exception {

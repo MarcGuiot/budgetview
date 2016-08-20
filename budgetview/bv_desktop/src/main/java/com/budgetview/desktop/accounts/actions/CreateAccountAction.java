@@ -20,7 +20,6 @@ public class CreateAccountAction extends AbstractAction {
   private final Window owner;
   private boolean accountTypeEditable = true;
   private boolean gotoAccountView = false;
-  private Glob defaultAccountInfo;
 
   public CreateAccountAction(AccountType accountType, GlobRepository repository, Directory directory) {
     this(accountType, repository, directory, directory.get(JFrame.class));
@@ -53,7 +52,6 @@ public class CreateAccountAction extends AbstractAction {
     }
 
     AccountEditionDialog dialog = new AccountEditionDialog(owner, repository, directory, true);
-    dialog.setAccountInfo(defaultAccountInfo);
     dialog.showWithNewAccount(accountType, accountTypeEditable, AccountUpdateMode.AUTOMATIC);
   }
 

@@ -86,7 +86,7 @@ public class BudgeaConnector extends AbstractBankConnector {
     GlobList realAccounts = connection.loadRealAccounts(bankId, new BudgeaConnection.AccountFactory() {
       public Glob findOrCreateAccount(String name, String number, String position, Date date, String budgeaId) {
         Glob realAccount = BudgeaConnector.this.createOrUpdateRealAccount(name, number, position, date, BANK_ID);
-        localRepository.update(realAccount, value(RealAccount.BUDGEA_ID, budgeaId));
+        localRepository.update(realAccount, value(RealAccount.PROVIDER_ACCOUNT_ID, Integer.parseInt(budgeaId)));
         return realAccount;
       }
     });

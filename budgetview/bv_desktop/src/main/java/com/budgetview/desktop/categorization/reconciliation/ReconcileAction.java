@@ -15,6 +15,8 @@ import org.globsframework.utils.directory.Directory;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 
+import static org.globsframework.model.FieldValue.value;
+
 public class ReconcileAction extends AbstractAction implements GlobSelectionListener {
 
   private GlobRepository repository;
@@ -51,9 +53,9 @@ public class ReconcileAction extends AbstractAction implements GlobSelectionList
                                      toReconcile.get(Transaction.NOTE)));
       if (Transaction.isCategorized(toReconcile)) {
         repository.update(targetTransaction.getKey(),
-                          FieldValue.value(Transaction.SERIES, toReconcile.get(Transaction.SERIES)),
-                          FieldValue.value(Transaction.SUB_SERIES, toReconcile.get(Transaction.SUB_SERIES)),
-                          FieldValue.value(Transaction.LABEL, toReconcile.get(Transaction.LABEL)));
+                          value(Transaction.SERIES, toReconcile.get(Transaction.SERIES)),
+                          value(Transaction.SUB_SERIES, toReconcile.get(Transaction.SUB_SERIES)),
+                          value(Transaction.LABEL, toReconcile.get(Transaction.LABEL)));
       }
       repository.delete(toReconcile);
       toReconcile = null;

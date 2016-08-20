@@ -109,7 +109,9 @@ public class StatementServlet extends HttpServlet {
     writer.field(ProviderAccount.ACCOUNT_TYPE, "type");
     writer.field(ProviderAccount.PROVIDER, "provider");
     writer.field(ProviderAccount.PROVIDER_BANK_ID, "provider_bank_id");
+    writer.field(ProviderAccount.PROVIDER_ACCOUNT_ID, "provider_account_id");
     writer.field(ProviderAccount.PROVIDER_BANK_NAME, "provider_bank_name");
+    writer.field(ProviderAccount.POSITION, "position");
     writer.field(ProviderAccount.POSITION_MONTH, "position_month");
     writer.field(ProviderAccount.POSITION_DAY, "position_day");
     writer.field(ProviderAccount.NAME, "name");
@@ -125,12 +127,11 @@ public class StatementServlet extends HttpServlet {
     writer.field(ProviderTransaction.LABEL, "label");
     writer.field(ProviderTransaction.ORIGINAL_LABEL, "original_label");
     writer.field(ProviderTransaction.AMOUNT, "amount");
-    writer.field(ProviderTransaction.OPERATION_MONTH, "operation_month");
-    writer.field(ProviderTransaction.OPERATION_DAY, "operation_day");
-    writer.field(ProviderTransaction.BANK_MONTH, "bank_month");
-    writer.field(ProviderTransaction.BANK_DAY, "bank_day");
+    writer.field(ProviderTransaction.OPERATION_DATE, "operation_date");
+    writer.field(ProviderTransaction.BANK_DATE, "bank_date");
     writer.field(ProviderTransaction.CATEGORY_ID, "category_id");
     writer.field(ProviderTransaction.CATEGORY_NAME, "category_name");
+    writer.field(ProviderTransaction.DELETED, "deleted");
     writer.endObject();
   }
 }

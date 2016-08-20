@@ -147,7 +147,7 @@ public class BudgeaWebHookServlet extends HttpServlet {
       providerAccountUpdateRequest = sqlConnection.startUpdate(ProviderAccount.TYPE)
         .setAll(providerAccount.getAccessor())
         .getRequest();
-      accountIds = loadProviderIds(userId, ProviderAccount.ID, ProviderAccount.PROVIDER_ID, ProviderAccount.USER, ProviderAccount.PROVIDER);
+      accountIds = loadProviderIds(userId, ProviderAccount.ID, ProviderAccount.PROVIDER_ACCOUNT_ID, ProviderAccount.USER, ProviderAccount.PROVIDER);
 
       providerTransaction = new GlobAccessorBuilder(ProviderTransaction.TYPE);
       providerTransactionCreateRequest = sqlConnection.startCreate(ProviderTransaction.TYPE)
@@ -190,7 +190,7 @@ public class BudgeaWebHookServlet extends HttpServlet {
       providerAccount
         .set(ProviderAccount.USER, userId)
         .set(ProviderAccount.PROVIDER, Provider.BUDGEA.getId())
-        .set(ProviderAccount.PROVIDER_ID, providerAccountId)
+        .set(ProviderAccount.PROVIDER_ACCOUNT_ID, providerAccountId)
         .set(ProviderAccount.PROVIDER_BANK_ID, bank.getInt("id"))
         .set(ProviderAccount.PROVIDER_BANK_NAME, bank.getString("name"))
         .set(ProviderAccount.ACCOUNT_TYPE, account.getString("type"))
@@ -231,10 +231,8 @@ public class BudgeaWebHookServlet extends HttpServlet {
         .set(ProviderTransaction.USER, userId)
         .set(ProviderTransaction.ACCOUNT, accountId)
         .set(ProviderTransaction.AMOUNT, transaction.getDouble("value"))
-        .set(ProviderTransaction.BANK_MONTH, DateConverter.getMonthId(bankDate))
-        .set(ProviderTransaction.BANK_DAY, DateConverter.getDay(bankDate))
-        .set(ProviderTransaction.OPERATION_MONTH, DateConverter.getMonthId(operationDate))
-        .set(ProviderTransaction.OPERATION_DAY, DateConverter.getDay(operationDate))
+        .set(ProviderTransaction.BANK_DATE, bankDate)
+        .set(ProviderTransaction.OPERATION_DATE, operationDate)
         .set(ProviderTransaction.LABEL, transaction.getString("wording"))
         .set(ProviderTransaction.ORIGINAL_LABEL, transaction.getString("original_wording"))
         .set(ProviderTransaction.CATEGORY_ID, category.getInt("id"))
@@ -252,10 +250,6 @@ public class BudgeaWebHookServlet extends HttpServlet {
     }
 
     private void commitAndClose() {
-
-      GlobPrinter.print(sqlConnection.selectAll(ProviderAccount.TYPE));
-      GlobPrinter.print(sqlConnection.selectAll(ProviderTransaction.TYPE));
-
       sqlConnection.commitAndClose();
     }
   }

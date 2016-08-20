@@ -23,6 +23,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/** @deprecated  */
 public class BankSynchroService {
   private Map<Integer, BankConnectorFactory> factories = new HashMap<Integer, BankConnectorFactory>();
   public static boolean SHOW_SYNCHRO = true;

@@ -8,6 +8,7 @@ import org.globsframework.model.*;
 import org.globsframework.model.delta.MutableChangeSet;
 import org.globsframework.utils.directory.Directory;
 
+/** @deprecated  */
 public class DummyBankPlugin implements BankPlugin {
 
   public DummyBankPlugin(GlobRepository globRepository, Directory directory) {

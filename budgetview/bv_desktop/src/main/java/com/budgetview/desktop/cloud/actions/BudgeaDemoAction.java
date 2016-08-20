@@ -57,7 +57,7 @@ public class BudgeaDemoAction extends AbstractAction {
                         value(BudgeaConnectionValue.VALUE, "1234"));
       cloudService.createConnection(connection, repository, new PrinterCallback());
 
-      cloudService.downloadStatement(connection, repository, new PrinterDownloadCallback());
+//      cloudService.downloadStatement(connection, repository, new PrinterDownloadCallback());
     }
     catch (Exception ex) {
       ex.printStackTrace();
@@ -78,6 +78,10 @@ public class BudgeaDemoAction extends AbstractAction {
     public void processCompletion(GlobList importedRealAccounts) {
       System.out.println("PrinterCallback.processCompletion:");
       GlobPrinter.print(importedRealAccounts);
+    }
+
+    public void processTimeout() {
+      System.out.println("PrinterDownloadCallback.processTimeout");
     }
 
     public void processError() {

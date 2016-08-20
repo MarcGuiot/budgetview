@@ -15,7 +15,6 @@ import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.components.GlobRepeat;
 import org.globsframework.gui.splits.PanelBuilder;
 import org.globsframework.gui.splits.repeat.RepeatComponentFactory;
-import org.globsframework.gui.splits.utils.GuiUtils;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
@@ -110,45 +109,39 @@ public class ImportCloudBankConnectionPanel extends AbstractImportStepPanel {
 
   private void processConnection() {
     progressPanel.start();
-    GuiUtils.runLater(new Runnable() {
-      public void run() {
-        cloudService.createConnection(currentConnection, repository, new CloudService.Callback() {
-          public void processCompletion() {
-            startDownload();
-          }
+    cloudService.createConnection(currentConnection, repository, new CloudService.Callback() {
+      public void processCompletion() {
+        startDownload();
+      }
 
-          public void processError() {
-            controller.showCloudError();
-            progressPanel.stop();
-          }
-        });
+      public void processError() {
+        controller.showCloudError();
+        progressPanel.stop();
       }
     });
-
   }
 
   private void startDownload() {
-    GuiUtils.runLater(new Runnable() {
-      public void run() {
-        cloudService.downloadStatement(currentConnection, repository, new CloudService.DownloadCallback() {
-          public void processCompletion(GlobList importedRealAccounts) {
-            controller.importAccounts(importedRealAccounts);
-            progressPanel.stop();
-          }
+    cloudService.downloadStatement(currentConnection, repository, new CloudService.DownloadCallback() {
+      public void processCompletion(GlobList importedRealAccounts) {
+        controller.importAccounts(importedRealAccounts);
+        progressPanel.stop();
+      }
 
-          public void processError() {
-            controller.showCloudError();
-            progressPanel.stop();
-          }
-        });
+      public void processTimeout() {
+        controller.showCloudError();
+        progressPanel.stop();
+      }
 
+      public void processError() {
+        controller.showCloudError();
+        progressPanel.stop();
       }
     });
   }
 
 
   public void requestFocus() {
-
   }
 
   private class FieldValueComparator implements Comparator<Glob> {

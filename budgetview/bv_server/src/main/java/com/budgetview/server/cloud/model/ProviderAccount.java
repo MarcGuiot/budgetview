@@ -21,7 +21,7 @@ public class ProviderAccount {
   @Target(Provider.class)
   public static LinkField PROVIDER;
 
-  public static IntegerField PROVIDER_ID;
+  public static IntegerField PROVIDER_ACCOUNT_ID;
 
   public static IntegerField PROVIDER_BANK_ID;
 
@@ -31,11 +31,11 @@ public class ProviderAccount {
 
   public static StringField NUMBER;
 
+  public static DoubleField POSITION;
+
   public static IntegerField POSITION_MONTH;
 
   public static IntegerField POSITION_DAY;
-
-  public static DoubleField POSITION;
 
   public static StringField ACCOUNT_TYPE;
 

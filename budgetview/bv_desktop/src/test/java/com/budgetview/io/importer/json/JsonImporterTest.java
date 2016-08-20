@@ -14,87 +14,40 @@ import static org.globsframework.model.FieldValue.value;
 
 public class JsonImporterTest extends TestCase {
   public void test() throws Exception {
-    String json = "{" +
-                  "  \"total\": 59,\n" +
-                  "  \"transactions\": [\n" +
-                  "    {\n" +
-                  "      \"date\": \"2016-05-24\",\n" +
-                  "      \"date_scraped\": \"2016-05-24 23:32:47\",\n" +
-                  "      \"rdate\": \"2016-05-23\",\n" +
-                  "      \"last_update\": \"2016-05-24 23:32:47\",\n" +
-                  "      \"application_date\": \"2016-05-23\",\n" +
-                  "      \"original_currency\": null,\n" +
-                  "      \"country\": null,\n" +
-                  "      \"original_wording\": \"FACTURE CB GOOGLE *BUDGEA\",\n" +
-                  "      \"id_category\": 9998,\n" +
-                  "      \"type\": \"card\",\n" +
-                  "      \"stemmed_wording\": \"GOOGLE *BUDGEA\",\n" +
-                  "      \"webid\": null,\n" +
-                  "      \"commission\": null,\n" +
-                  "      \"id\": 3160,\n" +
-                  "      \"state\": \"parsed\",\n" +
-                  "      \"value\": -34.49,\n" +
-                  "      \"new\": true,\n" +
-                  "      \"original_value\": null,\n" +
-                  "      \"active\": true,\n" +
-                  "      \"simplified_wording\": \"GOOGLE *BUDGEA\",\n" +
-                  "      \"nopurge\": false,\n" +
-                  "      \"id_cluster\": null,\n" +
-                  "      \"deleted\": null,\n" +
-                  "      \"id_account\": 90,\n" +
-                  "      \"comment\": null,\n" +
-                  "      \"wording\": \"GOOGLE *BUDGEA\",\n" +
-                  "      \"formatted_value\": \"-34,49 \\u20ac\",\n" +
-                  "      \"coming\": false,\n" +
-                  "      \"documents_count\": 0\n" +
-                  "    },\n" +
-                  "    {\n" +
-                  "      \"date\": \"2016-05-22\",\n" +
-                  "      \"original_currency\": null,\n" +
-                  "      \"country\": null,\n" +
-                  "      \"original_wording\": \"VIREMENT SALAIRE\",\n" +
-                  "      \"id_category\": 9998,\n" +
-                  "      \"type\": \"transfer\",\n" +
-                  "      \"stemmed_wording\": \"SALAIRE\",\n" +
-                  "      \"webid\": null,\n" +
-                  "      \"rdate\": \"2016-05-22\",\n" +
-                  "      \"last_update\": \"2016-05-24 23:32:47\",\n" +
-                  "      \"commission\": null,\n" +
-                  "      \"id\": 3163,\n" +
-                  "      \"state\": \"parsed\",\n" +
-                  "      \"value\": 555.9,\n" +
-                  "      \"new\": true,\n" +
-                  "      \"original_value\": null,\n" +
-                  "      \"active\": true,\n" +
-                  "      \"date_scraped\": \"2016-05-24 23:32:47\",\n" +
-                  "      \"simplified_wording\": \"SALAIRE\",\n" +
-                  "      \"nopurge\": false,\n" +
-                  "      \"id_cluster\": null,\n" +
-                  "      \"deleted\": null,\n" +
-                  "      \"id_account\": 90,\n" +
-                  "      \"application_date\": \"2016-05-22\",\n" +
-                  "      \"comment\": null,\n" +
-                  "      \"wording\": \"SALAIRE\",\n" +
-                  "      \"formatted_value\": \"555,90 \\u20ac\",\n" +
-                  "      \"coming\": false,\n" +
-                  "      \"documents_count\": 0\n" +
-                  "    }\n" +
-                  "  ],\n" +
-                  "  \"last_date\": \"2016-05-24\",\n" +
-                  "  \"first_date\": \"2016-01-28\"\n" +
-                  "}";
+    String json = "{\n" +
+                  "    \"position_month\": 201608,\n" +
+                  "    \"number\": \"3002900000\",\n" +
+                  "    \"provider_bank_id\": 40,\n" +
+                  "    \"provider_account_id\": 614,\n" +
+                  "    \"provider\": 2,\n" +
+                  "    \"provider_bank_name\": \"Connecteur de test\",\n" +
+                  "    \"name\": \"Compte chèque\",\n" +
+                  "    \"position_day\": 10,\n" +
+                  "    \"id\": 1,\n" +
+                  "    \"position\": 9346.71,\n" +
+                  "    \"type\": \"checking\",\n" +
+                  "    \"transactions\": [{\n" +
+                  "      \"amount\": -96.02,\n" +
+                  "      \"bank_date\": \"2016-08-10\",\n" +
+                  "      \"category_name\": \"Indéfini\",\n" +
+                  "      \"category_id\": 9998,\n" +
+                  "      \"provider\": null,\n" +
+                  "      \"provider_id\": null,\n" +
+                  "      \"operation_date\": \"2016-08-09\",\n" +
+                  "      \"id\": 1,\n" +
+                  "      \"label\": \"GREEN ET GREEN PARIS\",\n" +
+                  "      \"original_label\": \"FACTURE CB GREEN ET GREEN PARIS\"\n" +
+                  "    }]\n" +
+                  "  }";
 
     GlobRepository targetRepository = GlobRepositoryBuilder.createEmpty();
-    targetRepository.create(RealAccount.TYPE, value(RealAccount.BUDGEA_ID, "90"));
+    targetRepository.create(RealAccount.TYPE, value(RealAccount.PROVIDER_ACCOUNT_ID, 90));
 
     JsonImporter importer = new JsonImporter();
     importer.loadTransactions(new StringReader(json), null, targetRepository, null);
 
     GlobChecker checker = new GlobChecker(PicsouModel.get());
     checker.assertEquals(targetRepository, ImportedTransaction.TYPE,
-                         "  <importedTransaction account=\"100\" amount=\"-34.49\" date=\"2016/05/24\" id=\"100\"\n" +
-                         "                       ofxName=\"GOOGLE *BUDGEA\"/>\n" +
-                         "  <importedTransaction account=\"100\" amount=\"555.9\" date=\"2016/05/22\" id=\"101\"\n" +
-                         "                       ofxName=\"SALAIRE\"/>\n");
+                         "");
   }
 }

@@ -1,5 +1,6 @@
 package com.budgetview.model;
 
+import com.budgetview.shared.model.Provider;
 import com.budgetview.shared.utils.Amounts;
 import com.budgetview.shared.utils.PicsouGlobSerializer;
 import org.globsframework.metamodel.GlobType;
@@ -8,7 +9,6 @@ import org.globsframework.metamodel.annotations.DefaultInteger;
 import org.globsframework.metamodel.annotations.Key;
 import org.globsframework.metamodel.annotations.Target;
 import org.globsframework.metamodel.fields.*;
-import org.globsframework.metamodel.index.NotUniqueIndex;
 import org.globsframework.metamodel.utils.GlobTypeLoader;
 import org.globsframework.model.*;
 import org.globsframework.model.repository.GlobIdGenerator;
@@ -20,7 +20,8 @@ import org.globsframework.utils.serialization.SerializedInputOutputFactory;
 import org.globsframework.utils.serialization.SerializedOutput;
 
 import static org.globsframework.model.FieldValue.value;
-import static org.globsframework.model.utils.GlobMatchers.*;
+import static org.globsframework.model.utils.GlobMatchers.and;
+import static org.globsframework.model.utils.GlobMatchers.fieldEquals;
 
 public class RealAccount {
 
@@ -80,13 +81,23 @@ public class RealAccount {
 
   public static StringField FILE_CONTENT;
 
-  public static StringField BUDGEA_ID;
+  @Target(Provider.class)
+  public static LinkField PROVIDER;
 
-  public static NotUniqueIndex BUDGEA_ID_INDEX;
+  public static IntegerField PROVIDER_ACCOUNT_ID;
 
   static {
-    GlobTypeLoader loader = GlobTypeLoader.init(RealAccount.class, "realAccount");
-    loader.defineNonUniqueIndex(BUDGEA_ID_INDEX, BUDGEA_ID);
+    GlobTypeLoader.init(RealAccount.class, "realAccount");
+  }
+
+  public static Glob findFromProvider(Integer providerId, Integer providerAccountId, GlobRepository repository) {
+    GlobList accounts = repository.getAll(RealAccount.TYPE,
+                                          and(fieldEquals(RealAccount.PROVIDER, providerId),
+                                              fieldEquals(RealAccount.PROVIDER_ACCOUNT_ID, providerAccountId)));
+    if (accounts.isEmpty()) {
+      return null;
+    }
+    return accounts.getFirst();
   }
 
   public static Glob findOrCreate(String name, String number, Integer bankId, GlobRepository repository) {
@@ -197,8 +208,8 @@ public class RealAccount {
       output.writeInteger(fieldValues.get(CARD_TYPE));
       output.writeInteger(fieldValues.get(TRANSACTION_ID));
       output.writeBoolean(fieldValues.get(FROM_SYNCHRO));
-      output.writeUtf8String(fieldValues.get(BUDGEA_ID));
-
+      output.writeInteger(fieldValues.get(PROVIDER));
+      output.writeInteger(fieldValues.get(PROVIDER_ACCOUNT_ID));
       return serializedByteArrayOutput.toByteArray();
     }
 
@@ -235,7 +246,8 @@ public class RealAccount {
       fieldSetter.set(CARD_TYPE, input.readInteger());
       fieldSetter.set(TRANSACTION_ID, input.readInteger());
       fieldSetter.set(FROM_SYNCHRO, input.readBoolean());
-      fieldSetter.set(BUDGEA_ID, input.readUtf8String());
+      fieldSetter.set(PROVIDER, input.readInteger());
+      fieldSetter.set(PROVIDER_ACCOUNT_ID, input.readInteger());
     }
 
     private void deserializeDataV2(FieldSetter fieldSetter, byte[] data) {
@@ -259,6 +271,8 @@ public class RealAccount {
       fieldSetter.set(CARD_TYPE, input.readInteger());
       fieldSetter.set(TRANSACTION_ID, input.readInteger());
       fieldSetter.set(FROM_SYNCHRO, input.readBoolean());
+      fieldSetter.set(PROVIDER, Provider.FILE_IMPORT.getId());
+      fieldSetter.set(PROVIDER_ACCOUNT_ID, null);
     }
 
     private void deserializeDataV1(FieldSetter fieldSetter, byte[] data) {
@@ -281,6 +295,8 @@ public class RealAccount {
       fieldSetter.set(CARD_TYPE, input.readInteger());
       fieldSetter.set(TRANSACTION_ID, input.readInteger());
       fieldSetter.set(FROM_SYNCHRO, input.readBoolean());
+      fieldSetter.set(PROVIDER, Provider.FILE_IMPORT.getId());
+      fieldSetter.set(PROVIDER_ACCOUNT_ID, null);
     }
   }
 

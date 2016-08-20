@@ -70,7 +70,7 @@ public class BudgeaConnection {
 
   public void loadTransactionFiles(Glob realAccount, GlobRepository repository) throws IOException {
 
-    String budgeaId = realAccount.get(RealAccount.BUDGEA_ID);
+    Integer budgeaId = realAccount.get(RealAccount.PROVIDER_ACCOUNT_ID);
     if (budgeaId == null) {
       System.out.println("BudgeaConnection.loadTransactionFiles - not a Budgea account");
       return;
