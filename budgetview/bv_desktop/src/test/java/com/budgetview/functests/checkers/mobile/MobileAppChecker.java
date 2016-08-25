@@ -1,6 +1,6 @@
 package com.budgetview.functests.checkers.mobile;
 
-import com.budgetview.shared.model.MobileModel;
+import com.budgetview.shared.mobile.model.MobileModel;
 import com.budgetview.shared.encryption.PasswordEncryption;
 import com.budgetview.shared.mobile.MobileConstants;
 import junit.framework.Assert;

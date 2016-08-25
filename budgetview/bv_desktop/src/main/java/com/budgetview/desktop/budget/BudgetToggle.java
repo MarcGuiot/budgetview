@@ -2,7 +2,7 @@ package com.budgetview.desktop.budget;
 
 import com.budgetview.desktop.View;
 import com.budgetview.model.Account;
-import com.budgetview.model.AccountType;
+import com.budgetview.shared.model.AccountType;
 import org.globsframework.gui.GlobSelection;
 import org.globsframework.gui.GlobSelectionListener;
 import org.globsframework.gui.GlobsPanelBuilder;

@@ -1,6 +1,6 @@
 package com.budgetview.server.cloud.tools;
 
-import com.budgetview.server.cloud.Budgea;
+import com.budgetview.server.cloud.budgea.Budgea;
 import com.budgetview.shared.cloud.BudgeaConstants;
 import org.apache.http.client.fluent.Form;
 import org.apache.http.client.fluent.Request;
@@ -10,7 +10,6 @@ public class DeleteBudgeaAccount {
 
   public static void main(String[] args) {
     try {
-
       int idUser = 476;
       String token = "AO6jqstUP2HQMt3vQVPFhV6F9/k0Fw8Q";
 

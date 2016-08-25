@@ -2,6 +2,7 @@ package com.budgetview.triggers;
 
 import com.budgetview.desktop.model.SavingsBudgetStat;
 import com.budgetview.model.*;
+import com.budgetview.shared.model.AccountType;
 import com.budgetview.utils.TransactionComparator;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.fields.DoubleField;

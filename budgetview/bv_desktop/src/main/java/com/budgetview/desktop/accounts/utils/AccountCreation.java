@@ -3,7 +3,7 @@ package com.budgetview.desktop.accounts.utils;
 import com.budgetview.desktop.accounts.AccountEditionDialog;
 import com.budgetview.desktop.components.dialogs.ConfirmationDialog;
 import com.budgetview.model.Account;
-import com.budgetview.model.AccountType;
+import com.budgetview.shared.model.AccountType;
 import com.budgetview.model.AccountUpdateMode;
 import com.budgetview.utils.Lang;
 import org.globsframework.model.GlobRepository;

@@ -1,5 +1,6 @@
 package com.budgetview.model;
 
+import com.budgetview.shared.model.AccountType;
 import com.budgetview.shared.model.Provider;
 import com.budgetview.shared.utils.Amounts;
 import com.budgetview.shared.utils.PicsouGlobSerializer;

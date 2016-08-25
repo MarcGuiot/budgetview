@@ -1,6 +1,7 @@
 package com.budgetview.model;
 
 import com.budgetview.desktop.accounts.utils.AccountMatchers;
+import com.budgetview.shared.model.AccountType;
 import com.budgetview.shared.utils.PicsouGlobSerializer;
 import com.budgetview.utils.PicsouUtils;
 import com.budgetview.desktop.accounts.utils.MonthDay;
@@ -350,6 +351,17 @@ public class Account {
         iterator.remove();
       }
     }
+  }
+
+  public static AccountType getType(Glob account) {
+    if (account == null) {
+      return null;
+    }
+    Integer accountType = account.get(ACCOUNT_TYPE);
+    if (accountType == null) {
+      return null;
+    }
+    return AccountType.get(accountType);
   }
 
   public static class Serializer implements PicsouGlobSerializer {

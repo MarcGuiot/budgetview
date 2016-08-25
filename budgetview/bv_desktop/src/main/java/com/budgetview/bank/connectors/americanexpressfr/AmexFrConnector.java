@@ -8,6 +8,7 @@ import com.budgetview.bank.connectors.webcomponents.filters.WebFilters;
 import com.budgetview.bank.connectors.webcomponents.utils.*;
 import com.budgetview.io.exporter.ofx.OfxExporter;
 import com.budgetview.model.*;
+import com.budgetview.shared.model.AccountType;
 import com.gargoylesoftware.htmlunit.HttpWebConnection;
 import com.gargoylesoftware.htmlunit.WebClient;
 import com.budgetview.bank.connectors.utils.FilteringConnection;

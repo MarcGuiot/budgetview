@@ -3,7 +3,7 @@ package com.budgetview.desktop.accounts;
 import com.budgetview.desktop.View;
 import com.budgetview.desktop.accounts.actions.CreateAccountAction;
 import com.budgetview.desktop.title.TitleView;
-import com.budgetview.model.AccountType;
+import com.budgetview.shared.model.AccountType;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.utils.directory.Directory;

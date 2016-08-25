@@ -3,7 +3,7 @@ package com.budgetview.desktop.accounts;
 import com.budgetview.desktop.model.BudgetStat;
 import com.budgetview.desktop.signpost.SignpostService;
 import com.budgetview.model.Account;
-import com.budgetview.model.AccountType;
+import com.budgetview.shared.model.AccountType;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.ChangeSet;
 import org.globsframework.model.ChangeSetListener;

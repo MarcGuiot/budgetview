@@ -1,6 +1,5 @@
 package com.budgetview.server.cloud.tools;
 
-import com.budgetview.server.cloud.Budgea;
 import com.budgetview.shared.cloud.BudgeaConstants;
 import org.apache.http.client.fluent.Form;
 import org.apache.http.client.fluent.Request;
@@ -26,10 +25,10 @@ public class ForceBudgeaUpdate {
 
       Request request = Request.Put(BudgeaConstants.getServerUrl("/users/" + idUser + "/connections"))
         .addHeader("Authorization", "Bearer " + token)
-      .bodyForm(Form.form()
-                  .add("client_id", "60443827")
-                  .add("client_secret", "E9W5QStthEi7mh7+ARAZV2wIRS0eY4o7")
-                  .build());
+        .bodyForm(Form.form()
+                    .add("client_id", "60443827")
+                    .add("client_secret", "E9W5QStthEi7mh7+ARAZV2wIRS0eY4o7")
+                    .build());
 
       Response response = request.execute();
       System.out.println("Response: " + response.returnContent().asString());

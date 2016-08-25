@@ -20,6 +20,7 @@ import com.budgetview.io.importer.ImportService;
 import com.budgetview.io.importer.analyzer.TransactionAnalyzerFactory;
 import com.budgetview.model.*;
 import com.budgetview.model.initial.DefaultSeriesFactory;
+import com.budgetview.shared.model.AccountType;
 import com.budgetview.triggers.*;
 import com.budgetview.triggers.projects.*;
 import com.budgetview.triggers.savings.SavingsUpdateSeriesMirrorTrigger;

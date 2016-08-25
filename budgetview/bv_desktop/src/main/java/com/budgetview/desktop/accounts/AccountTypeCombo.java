@@ -3,7 +3,7 @@ package com.budgetview.desktop.accounts;
 import com.budgetview.desktop.accounts.utils.AccountTypeSelector;
 import com.budgetview.model.Account;
 import com.budgetview.model.AccountCardType;
-import com.budgetview.model.AccountType;
+import com.budgetview.shared.model.AccountType;
 import org.globsframework.metamodel.fields.LinkField;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobRepository;

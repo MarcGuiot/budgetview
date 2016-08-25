@@ -1,4 +1,4 @@
-package com.budgetview.model;
+package com.budgetview.shared.model;
 
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.annotations.Key;
@@ -8,7 +8,6 @@ import org.globsframework.metamodel.fields.StringField;
 import org.globsframework.metamodel.utils.GlobTypeLoader;
 import static org.globsframework.model.FieldValue.value;
 
-import org.globsframework.model.Glob;
 import org.globsframework.model.impl.ReadOnlyGlob;
 import org.globsframework.model.utils.GlobConstantContainer;
 import org.globsframework.utils.Strings;
@@ -48,17 +47,6 @@ public enum AccountType implements GlobConstantContainer {
     return Strings.toNiceLowerCase(name);
   }
 
-  public static AccountType get(Glob account) {
-    if (account == null) {
-      return null;
-    }
-    Integer accountType = account.get(Account.ACCOUNT_TYPE);
-    if (accountType == null) {
-      return null;
-    }
-    return get(accountType);
-  }
-
   public static AccountType get(int id) {
     switch (id) {
       case 1:
@@ -67,6 +55,15 @@ public enum AccountType implements GlobConstantContainer {
         return SAVINGS;
     }
     throw new ItemNotFound(id + " not associated to any AccountType enum value");
+  }
+
+  public static AccountType get(String name) {
+    for (AccountType type : values()) {
+      if (type.name.equalsIgnoreCase(name)) {
+        return type;
+      }
+    }
+    throw new ItemNotFound(name + " not associated to any AccountType enum value");
   }
 
   public Integer getId() {

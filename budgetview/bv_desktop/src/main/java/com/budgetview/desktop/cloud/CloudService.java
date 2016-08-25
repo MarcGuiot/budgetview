@@ -6,6 +6,7 @@ import com.budgetview.model.Month;
 import com.budgetview.model.RealAccount;
 import com.budgetview.shared.cloud.BudgeaAPI;
 import com.budgetview.shared.cloud.CloudAPI;
+import com.budgetview.shared.model.AccountType;
 import com.budgetview.shared.model.Provider;
 import org.globsframework.gui.splits.utils.GuiUtils;
 import org.globsframework.json.JsonGlobParser;
@@ -18,7 +19,6 @@ import org.globsframework.utils.Log;
 import org.globsframework.utils.Strings;
 import org.globsframework.utils.Utils;
 import org.globsframework.utils.exceptions.InvalidParameter;
-import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.HashMap;
@@ -222,6 +222,7 @@ public class CloudService {
                               value(RealAccount.NUMBER, number),
                               value(RealAccount.POSITION, Double.toString(position)),
                               value(RealAccount.POSITION_DATE, Month.toDate(positionMonth, positionDay)),
+                              value(RealAccount.ACCOUNT_TYPE, AccountType.get(account.getString("type")).getId()),
                               value(RealAccount.FILE_NAME, "cloud.json"),
                               value(RealAccount.FILE_CONTENT, account.toString()));
             importedRealAccounts.add(realAccount);

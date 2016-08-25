@@ -8,7 +8,7 @@ import com.budgetview.desktop.components.tips.TipPosition;
 import com.budgetview.desktop.help.actions.HelpAction;
 import com.budgetview.model.Account;
 import com.budgetview.model.AccountCardType;
-import com.budgetview.model.AccountType;
+import com.budgetview.shared.model.AccountType;
 import com.budgetview.model.Bank;
 import com.budgetview.utils.Lang;
 import org.globsframework.gui.GlobSelection;

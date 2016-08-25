@@ -1,6 +1,7 @@
 package com.budgetview.triggers;
 
 import com.budgetview.model.*;
+import com.budgetview.shared.model.AccountType;
 import org.globsframework.model.utils.DefaultChangeSetListener;
 import org.globsframework.model.*;
 import org.globsframework.utils.collections.Pair;

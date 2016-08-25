@@ -6,7 +6,7 @@ import com.budgetview.shared.encryption.PasswordEncryption;
 import com.budgetview.shared.encryption.MD5PasswordBasedEncryptor;
 import com.budgetview.shared.license.LicenseConstants;
 import com.budgetview.shared.mobile.MobileConstants;
-import com.budgetview.shared.model.MobileModel;
+import com.budgetview.shared.mobile.model.MobileModel;
 import com.budgetview.utils.Lang;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.http.Header;

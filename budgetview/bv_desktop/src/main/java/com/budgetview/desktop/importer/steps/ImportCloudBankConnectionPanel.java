@@ -14,6 +14,7 @@ import com.budgetview.model.Bank;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.components.GlobRepeat;
 import org.globsframework.gui.splits.PanelBuilder;
+import org.globsframework.gui.splits.SplitsNode;
 import org.globsframework.gui.splits.repeat.RepeatComponentFactory;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
@@ -58,11 +59,15 @@ public class ImportCloudBankConnectionPanel extends AbstractImportStepPanel {
 
     fieldRepeat = builder.addRepeat("fields", BudgeaConnectionValue.TYPE, GlobMatchers.NONE, new FieldValueComparator(), new RepeatComponentFactory<Glob>() {
       public void registerComponents(PanelBuilder cellBuilder, Glob connectionValue) {
-        CloudConnectionFieldEditor editor = CloudConnectionFieldEditorFactory.create(connectionValue, repository, localDirectory);
-        cellBuilder.add("label", editor.getLabel());
-        cellBuilder.add("editor", editor.getEditor());
+        CloudConnectionFieldEditor fieldEditor = CloudConnectionFieldEditorFactory.create(connectionValue, repository, localDirectory);
+        SplitsNode<JLabel> label = cellBuilder.add("label", fieldEditor.getLabel());
+        SplitsNode<JComponent> editor = cellBuilder.add("editor", fieldEditor.getEditor());
 
-        cellBuilder.addDisposable(editor);
+        Integer id = connectionValue.get(BudgeaConnectionValue.ID);
+        label.getComponent().setName("label:" + id);
+        editor.getComponent().setName("editor:" + id);
+
+        cellBuilder.addDisposable(fieldEditor);
       }
     });
 

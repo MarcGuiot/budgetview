@@ -1,7 +1,7 @@
 package com.budgetview.desktop.accounts;
 
 import com.budgetview.model.Account;
-import com.budgetview.model.AccountType;
+import com.budgetview.shared.model.AccountType;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.utils.GlobMatcher;
 import org.globsframework.utils.directory.Directory;

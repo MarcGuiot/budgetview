@@ -1,7 +1,7 @@
 package com.budgetview.triggers;
 
 import com.budgetview.model.Account;
-import com.budgetview.model.AccountType;
+import com.budgetview.shared.model.AccountType;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;

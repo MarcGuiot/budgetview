@@ -1,36 +1,30 @@
-package com.budgetview.shared.model;
+package com.budgetview.shared.mobile.model;
 
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.annotations.Key;
 import org.globsframework.metamodel.annotations.NoObfuscation;
 import org.globsframework.metamodel.annotations.Target;
-import org.globsframework.metamodel.fields.DoubleField;
 import org.globsframework.metamodel.fields.IntegerField;
 import org.globsframework.metamodel.fields.LinkField;
+import org.globsframework.metamodel.fields.StringField;
 import org.globsframework.metamodel.utils.GlobTypeLoader;
 
 /** @deprecated */
-public class AccountPosition {
+public class SeriesEntity {
   public static GlobType TYPE;
 
   @Key
-  @Target(AccountEntity.class)
   @NoObfuscation
-  public static IntegerField ACCOUNT;
+  public static IntegerField ID;
 
-  @Key
-  @Target(MonthEntity.class)
+  @Target(BudgetAreaEntity.class)
   @NoObfuscation
-  public static LinkField MONTH;
-
-  @Key
-  @NoObfuscation
-  public static IntegerField DAY;
+  public static LinkField BUDGET_AREA;
 
   @NoObfuscation
-  public static DoubleField POSITION;
+  public static StringField NAME;
 
   static {
-    GlobTypeLoader.init(AccountPosition.class, "accountPosition");
+    GlobTypeLoader.init(SeriesEntity.class, "seriesEntity");
   }
 }

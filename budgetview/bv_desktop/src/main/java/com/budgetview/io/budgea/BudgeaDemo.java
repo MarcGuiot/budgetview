@@ -2,6 +2,7 @@ package com.budgetview.io.budgea;
 
 import com.budgetview.shared.cloud.BudgeaConstants;
 import org.apache.http.client.fluent.Request;
+import org.globsframework.utils.Strings;
 import org.json.JSONObject;
 
 import static com.budgetview.shared.json.Json.json;
@@ -9,20 +10,23 @@ import static com.budgetview.shared.json.Json.json;
 public class BudgeaDemo {
   public static void main(String[] args) throws Exception {
 
+    BudgeaConstants.setProd();
+
     JSONObject auth = json(Request.Post(BudgeaConstants.getServerUrl("/auth/init")));
-    String bearer = auth.getString("auth_token");
+    String token = auth.getString("auth_token");
+    System.out.println("Token: " + token);
 
+    System.out.println("\n\n---------------- categories:\n");
+    JSONObject categories = json(Request.Get(BudgeaConstants.getServerUrl("/categories"))
+                                   .addHeader("Authorization", "Bearer " + token));
+    System.out.println(categories.toString(2));
+    dumpCategories(categories);
 
-//    System.out.println("\n\n---------------- categories:\n");
-//    JSONObject categories = json(Request.Get(BudgeaConstants.getServerUrl("/users/me/categories"))
-//                                   .addHeader("Authorization", "Bearer " + bearer));
-//    System.out.println(categories);
-
-    System.out.println("\n\n---------------- bank:\n");
-    JSONObject banks = json(Request.Get(BudgeaConstants.getServerUrl("/banks"))
-                             .addHeader("Authorization", "Bearer " + bearer));
-    System.out.println(banks.toString(2));
-    dumpBanks(banks);
+//    System.out.println("\n\n---------------- bank:\n");
+//    JSONObject banks = json(Request.Get(BudgeaConstants.getServerUrl("/banks"))
+//                             .addHeader("Authorization", "Bearer " + bearer));
+//    System.out.println(banks.toString(2));
+//    dumpBanks(banks);
 
 //    System.out.println("\n\n---------------- create connection:\n");
 //    Request request = Request.Post(BudgeaConstants.getServerUrl("/users/me/connections"))
@@ -79,14 +83,17 @@ public class BudgeaDemo {
   private static void dumpCategories(JSONObject categories) {
     for (Object item : categories.getJSONArray("categories")) {
       JSONObject jsonItem = (JSONObject) item;
-      System.out.println(jsonItem.get("name"));
+      printCategory("", jsonItem);
 
       for (Object child : jsonItem.getJSONArray("children")) {
         JSONObject jsonChild = (JSONObject) child;
-        System.out.println("  "  +jsonChild.get("name"));
+        printCategory("    ", jsonChild);
       }
     }
+  }
 
+  private static void printCategory(String indent, JSONObject item) {
+    System.out.println("[" + Strings.rightAlign(Integer.toString(item.getInt("id")), 4) + "] " + indent + item.getString("name"));
   }
 
   private static void dumpBanks(JSONObject banks) {

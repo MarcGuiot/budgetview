@@ -2,6 +2,7 @@ package com.budgetview.triggers;
 
 import com.budgetview.desktop.transactions.utils.TransactionMatchers;
 import com.budgetview.model.*;
+import com.budgetview.shared.model.AccountType;
 import com.budgetview.shared.utils.Amounts;
 import com.budgetview.desktop.time.TimeService;
 import com.budgetview.utils.TransactionComparator;

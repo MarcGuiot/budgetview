@@ -1,4 +1,4 @@
-package com.budgetview.shared.model;
+package com.budgetview.shared.mobile.model;
 
 import org.globsframework.metamodel.GlobModel;
 import org.globsframework.metamodel.utils.GlobModelBuilder;

@@ -12,7 +12,7 @@ import com.budgetview.desktop.components.JPopupButton;
 import com.budgetview.desktop.components.charts.histo.HistoChart;
 import com.budgetview.desktop.description.stringifiers.AccountComparator;
 import com.budgetview.model.Account;
-import com.budgetview.model.AccountType;
+import com.budgetview.shared.model.AccountType;
 import com.budgetview.model.ProjectAccountGraph;
 import com.budgetview.model.UserPreferences;
 import com.budgetview.utils.Lang;

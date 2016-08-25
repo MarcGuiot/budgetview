@@ -25,11 +25,32 @@ public class UISpecAssert {
    * Checks that the given assertion succeeds (with a retry strategy).
    * The {@link Assertion#check()} method is called until the timeout
    * specified by {@link UISpec4J#setAssertionTimeLimit(long)} is reached.
+   * This method is equivalent to {@link #assertTrue(Assertion)}.
+   */
+  public static void assertThat(Assertion assertion, long assertionTimeLimit) {
+    assertThat(null, assertion, assertionTimeLimit);
+  }
+
+  /**
+   * Checks that the given assertion succeeds (with a retry strategy).
+   * The {@link Assertion#check()} method is called until the timeout
+   * specified by {@link UISpec4J#setAssertionTimeLimit(long)} is reached.
    * If it fails an AssertionFailedError is thrown with the given message.
    * This method is equivalent to {@link #assertTrue(String,Assertion)}.
    */
   public static void assertThat(String message, Assertion assertion) {
     checkAssertion(message, assertion, UISpec4J.getAssertionTimeLimit());
+  }
+
+  /**
+   * Checks that the given assertion succeeds (with a retry strategy).
+   * The {@link Assertion#check()} method is called until the timeout
+   * specified by {@link UISpec4J#setAssertionTimeLimit(long)} is reached.
+   * If it fails an AssertionFailedError is thrown with the given message.
+   * This method is equivalent to {@link #assertTrue(String,Assertion)}.
+   */
+  public static void assertThat(String message, Assertion assertion, long assertionTimeLimit) {
+    checkAssertion(message, assertion, assertionTimeLimit);
   }
 
   /**

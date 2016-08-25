@@ -3,7 +3,7 @@ package com.budgetview.desktop.budget;
 import com.budgetview.desktop.description.Formatting;
 import com.budgetview.model.Account;
 import com.budgetview.model.AccountPositionThreshold;
-import com.budgetview.model.AccountType;
+import com.budgetview.shared.model.AccountType;
 import com.budgetview.utils.Lang;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.utils.GlobMatchers;

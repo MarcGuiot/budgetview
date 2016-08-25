@@ -5,7 +5,7 @@ import com.budgetview.desktop.analysis.histobuilders.range.HistoChartRange;
 import com.budgetview.desktop.analysis.histobuilders.range.ScrollableHistoChartRange;
 import com.budgetview.desktop.components.charts.histo.utils.AutoRangeUpdater;
 import com.budgetview.desktop.projects.components.ProjectAccountChartsPanel;
-import com.budgetview.model.AccountType;
+import com.budgetview.shared.model.AccountType;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.utils.directory.Directory;

@@ -134,6 +134,36 @@ public class Strings {
     return text.substring(0, maxLength);
   }
 
+  public static String leftAlign(String text, int targetWidth) {
+    if (text == null) {
+      text = "";
+    }
+    if (text.length() >= targetWidth) {
+      return text;
+    }
+    char[] result = new char[targetWidth];
+    System.arraycopy(text.toCharArray(), 0, result, 0, text.length());
+    for (int i = text.length(); i < targetWidth; i++) {
+      result[i] = ' ';
+    }
+    return new String(result);
+  }
+
+  public static String rightAlign(String text, int targetWidth) {
+    if (text == null) {
+      text = "";
+    }
+    if (text.length() >= targetWidth) {
+      return text;
+    }
+    char[] result = new char[targetWidth];
+    for (int i = 0; i < targetWidth - text.length(); i++) {
+      result[i] = ' ';
+    }
+    System.arraycopy(text.toCharArray(), 0, result, targetWidth - text.length() , text.length());
+    return new String(result);
+  }
+
   public static String toSplittedHtml(String text, int maxLineLength) throws InvalidParameter {
     if (maxLineLength < 1) {
       throw new InvalidParameter("Line length parameter must be greater than 0");

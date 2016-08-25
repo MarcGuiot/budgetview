@@ -3,7 +3,7 @@ package com.budgetview.desktop.categorization.components.messages;
 import com.budgetview.desktop.accounts.AccountEditionDialog;
 import com.budgetview.desktop.accounts.utils.AccountMatchers;
 import com.budgetview.model.Account;
-import com.budgetview.model.AccountType;
+import com.budgetview.shared.model.AccountType;
 import com.budgetview.model.AccountUpdateMode;
 import com.budgetview.model.BudgetArea;
 import com.budgetview.utils.Lang;

@@ -7,6 +7,7 @@ import com.budgetview.io.importer.analyzer.TransactionAnalyzerFactory;
 import com.budgetview.io.importer.utils.DateFormatAnalyzer;
 import com.budgetview.io.importer.utils.TypedInputStream;
 import com.budgetview.model.*;
+import com.budgetview.shared.model.AccountType;
 import org.apache.commons.io.output.ByteArrayOutputStream;
 import com.budgetview.desktop.accounts.utils.MonthDay;
 import com.budgetview.desktop.time.TimeService;

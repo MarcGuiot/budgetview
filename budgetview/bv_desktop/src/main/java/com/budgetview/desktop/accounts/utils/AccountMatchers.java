@@ -2,7 +2,7 @@ package com.budgetview.desktop.accounts.utils;
 
 import com.budgetview.model.Account;
 import com.budgetview.model.AccountCardType;
-import com.budgetview.model.AccountType;
+import com.budgetview.shared.model.AccountType;
 import com.budgetview.model.Month;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobRepository;

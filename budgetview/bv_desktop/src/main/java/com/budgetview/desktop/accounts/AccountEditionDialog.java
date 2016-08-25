@@ -7,6 +7,7 @@ import com.budgetview.desktop.components.dialogs.CancelAction;
 import com.budgetview.desktop.components.dialogs.PicsouDialog;
 import com.budgetview.desktop.time.TimeService;
 import com.budgetview.model.*;
+import com.budgetview.shared.model.AccountType;
 import com.budgetview.utils.Lang;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.splits.layout.TabHandler;

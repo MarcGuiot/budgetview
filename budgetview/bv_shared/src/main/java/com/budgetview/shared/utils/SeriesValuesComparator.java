@@ -1,6 +1,6 @@
 package com.budgetview.shared.utils;
 
-import com.budgetview.shared.model.SeriesValues;
+import com.budgetview.shared.mobile.model.SeriesValues;
 import org.globsframework.model.Glob;
 
 import java.util.Comparator;

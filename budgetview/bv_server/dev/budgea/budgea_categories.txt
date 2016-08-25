@@ -1,0 +1,202 @@
+[9998] Indéfini
+[ 206]     Abonnements et cotisations
+[ 232]     Accessoires et petits matériels
+[ 202]     Achats de marchandises
+[ 203]     Achats matières
+[ 211]     Affiliation
+[ 168]     Agios
+[ 235]     Aménagement et agencement de locaux
+[ 199]     Amendes
+[ 170]     Assurances
+[ 156]     Autres frais de gestion
+[ 217]     Autres taxes
+[ 213]     Cadeau client
+[ 169]     Caisse
+[ 159]     Capital
+[ 163]     Caution reçue
+[ 222]     CESU
+[ 218]     CET
+[ 140]     Charges sociales
+[ 112]     Chèque
+[ 115]     Chèque
+[ 174]     Compte à terme
+[ 165]     Compte courant d'associés
+[ 146]     Contribution sociale de solidarité
+[ 161]     Cotisations sociales complémentaires du dirigeant
+[ 162]     Cotisations sociales obligatoires du dirigeant
+[ 175]     Crédit
+[ 234]     Crédit bail
+[ 221]     Crédit de TVA
+[ 187]     Dépôt cautions versées
+[ 205]     Documentation
+[ 157]     Dons / pourboires
+[ 183]     Droit d'entrée franchise
+[ 108]     E-commerce
+[ 228]     Eau
+[ 230]     Électricité
+[ 164]     Emprunt
+[ 197]     Entretien véhicule
+[ 193]     Essence
+[ 185]     Fond commercial
+[ 147]     Formation professionnelle continue
+[ 227]     Fourniture de bureau
+[ 152]     Frais administratifs
+[ 167]     Frais bancaires
+[ 153]     Frais de congrés
+[ 192]     Frais de transport
+[ 154]     Frais postaux
+[ 194]     Gas-Oil
+[ 229]     Gaz
+[ 155]     Honoraires
+[ 190]     Hôtels
+[ 188]     Immeuble, constructions
+[ 220]     IS
+[ 233]     Location de matériel
+[ 198]     Location véhicule
+[ 179]     Logiciel
+[ 225]     Loyers et charges locatives
+[ 184]     Matériel et outillage de travail
+[ 180]     Matériel Informatique
+[ 145]     Médecine du travail
+[ 182]     Mobilier
+[ 231]     Nettoyage, entretien et réparations
+[ 141]     Note de frais
+[ 195]     Péages / Parking
+[ 149]     PEE
+[ 148]     PERCO
+[ 210]     Prestataire de service
+[ 208]     Publicité
+[ 178]     Redevance de brevet
+[ 196]     Remboursement kilométrique
+[ 160]     Rémunération du dirigeant
+[ 143]     Restaurants
+[ 191]     Restaurants
+[   1]     Retrait
+[ 139]     Salaires nets
+[ 209]     Salon
+[ 177]     Site Internet
+[ 201]     Sous-traitance
+[ 142]     Stagiaires
+[ 212]     Supports marketing
+[ 223]     Taxe d'apprentissage
+[ 150]     Taxe sur les salaires
+[ 215]     Taxes foncières
+[ 216]     Taxes sur les véhicules
+[ 226]     Télécom
+[ 144]     Tickets restaurants
+[ 186]     Titres de participation
+[ 204]     Transports sur achats
+[ 219]     TVA
+[ 173]     Valeurs mobilières de placement
+[ 181]     Véhicule
+[  88]     Virement
+[ 171]     Virement inter banques
+[ 200] Achat et production
+[ 206]     Abonnements et cotisations
+[ 202]     Achats de marchandises
+[ 203]     Achats matières
+[ 205]     Documentation
+[ 201]     Sous-traitance
+[ 204]     Transports sur achats
+[ 166] Banque / Assurance
+[ 168]     Agios
+[ 170]     Assurances
+[ 169]     Caisse
+[ 167]     Frais bancaires
+[ 171]     Virement inter banques
+[ 158] Capital
+[ 159]     Capital
+[ 163]     Caution reçue
+[ 165]     Compte courant d'associés
+[ 161]     Cotisations sociales complémentaires du dirigeant
+[ 162]     Cotisations sociales obligatoires du dirigeant
+[ 164]     Emprunt
+[ 160]     Rémunération du dirigeant
+[ 189] Déplacements
+[ 199]     Amendes
+[ 197]     Entretien véhicule
+[ 193]     Essence
+[ 192]     Frais de transport
+[ 194]     Gas-Oil
+[ 190]     Hôtels
+[ 198]     Location véhicule
+[ 195]     Péages / Parking
+[ 196]     Remboursement kilométrique
+[ 191]     Restaurants
+[ 172] Finance
+[ 174]     Compte à terme
+[ 175]     Crédit
+[ 173]     Valeurs mobilières de placement
+[ 134] Gains divers
+[ 151] Gestion / Administratif
+[ 156]     Autres frais de gestion
+[ 157]     Dons / pourboires
+[ 152]     Frais administratifs
+[ 153]     Frais de congrés
+[ 154]     Frais postaux
+[ 155]     Honoraires
+[ 214] Impôts
+[ 217]     Autres taxes
+[ 222]     CESU
+[ 218]     CET
+[ 221]     Crédit de TVA
+[ 220]     IS
+[ 223]     Taxe d'apprentissage
+[ 215]     Taxes foncières
+[ 216]     Taxes sur les véhicules
+[ 219]     TVA
+[ 176] Investissement / R&D
+[ 187]     Dépôt cautions versées
+[ 183]     Droit d'entrée franchise
+[ 185]     Fond commercial
+[ 188]     Immeuble, constructions
+[ 179]     Logiciel
+[ 184]     Matériel et outillage de travail
+[ 180]     Matériel Informatique
+[ 182]     Mobilier
+[ 178]     Redevance de brevet
+[ 177]     Site Internet
+[ 186]     Titres de participation
+[ 181]     Véhicule
+[ 224] Locaux et fluides
+[ 232]     Accessoires et petits matériels
+[ 235]     Aménagement et agencement de locaux
+[ 234]     Crédit bail
+[ 228]     Eau
+[ 230]     Électricité
+[ 227]     Fourniture de bureau
+[ 229]     Gaz
+[ 233]     Location de matériel
+[ 225]     Loyers et charges locatives
+[ 231]     Nettoyage, entretien et réparations
+[ 226]     Télécom
+[ 207] Marketing
+[ 211]     Affiliation
+[ 213]     Cadeau client
+[ 210]     Prestataire de service
+[ 208]     Publicité
+[ 209]     Salon
+[ 212]     Supports marketing
+[ 138] Personnel
+[ 140]     Charges sociales
+[ 146]     Contribution sociale de solidarité
+[ 147]     Formation professionnelle continue
+[ 145]     Médecine du travail
+[ 141]     Note de frais
+[ 149]     PEE
+[ 148]     PERCO
+[ 143]     Restaurants
+[ 139]     Salaires nets
+[ 142]     Stagiaires
+[ 150]     Taxe sur les salaires
+[ 144]     Tickets restaurants
+[ 137] Prestataire de services
+[ 131] Produits financiers
+[ 127] Recettes
+[ 132] Revenus activités annexes
+[ 133] Subventions
+[ 128] Vente d'un investissement
+[ 130] Vente de licence
+[ 129] Vente de services
+[ 135] Ventes de biens
+[ 136] Ventes de marchandises

@@ -1,6 +1,7 @@
 package com.budgetview.server.cloud.servlet;
 
-import com.budgetview.server.cloud.Budgea;
+import com.budgetview.server.cloud.budgea.Budgea;
+import com.budgetview.server.cloud.budgea.BudgeaAccountTypeConverter;
 import com.budgetview.server.cloud.model.CloudUser;
 import com.budgetview.server.cloud.model.ProviderAccount;
 import com.budgetview.server.cloud.model.ProviderTransaction;
@@ -11,7 +12,6 @@ import org.globsframework.metamodel.fields.IntegerField;
 import org.globsframework.metamodel.fields.LinkField;
 import org.globsframework.model.FieldValues;
 import org.globsframework.model.Glob;
-import org.globsframework.model.format.GlobPrinter;
 import org.globsframework.sqlstreams.*;
 import org.globsframework.sqlstreams.constraints.Where;
 import org.globsframework.sqlstreams.exceptions.GlobsSQLException;
@@ -193,7 +193,7 @@ public class BudgeaWebHookServlet extends HttpServlet {
         .set(ProviderAccount.PROVIDER_ACCOUNT_ID, providerAccountId)
         .set(ProviderAccount.PROVIDER_BANK_ID, bank.getInt("id"))
         .set(ProviderAccount.PROVIDER_BANK_NAME, bank.getString("name"))
-        .set(ProviderAccount.ACCOUNT_TYPE, account.getString("type"))
+        .set(ProviderAccount.ACCOUNT_TYPE, BudgeaAccountTypeConverter.convertName(account.optString("type")))
         .set(ProviderAccount.NAME, account.getString("name"))
         .set(ProviderAccount.NUMBER, account.getString("number"))
         .set(ProviderAccount.DELETED, !account.isNull("deleted") && account.getBoolean("deleted"))

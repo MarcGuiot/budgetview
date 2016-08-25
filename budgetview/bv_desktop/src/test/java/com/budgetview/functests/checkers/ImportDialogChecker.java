@@ -686,6 +686,11 @@ public class ImportDialogChecker extends GuiChecker {
     return this;
   }
 
+  public CloudBankSelectionChecker selectCloud() {
+    dialog.getPanel("cloudIntro").getButton("openCloudSynchro").click();
+    return new CloudBankSelectionChecker(dialog);
+  }
+
   public static class CompletionChecker {
     private final int importedTransactionCount;
     private final int ignoredTransactionCount;

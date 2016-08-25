@@ -5,7 +5,7 @@
   <styleImport file="/layout/importexport/components/importDialogStyles.splits"/>
 
 
-  <column styleClass="dialog" preferredSize="(600,710)" name="importCompletionPanel">
+  <column styleClass="dialog" preferredSize="(600,710)" name="importCloudBankSelectionPanel">
 
     <label text="$import.completion.title" name="title" styleClass="title"/>
 

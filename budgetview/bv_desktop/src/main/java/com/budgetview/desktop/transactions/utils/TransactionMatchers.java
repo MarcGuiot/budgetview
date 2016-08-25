@@ -1,6 +1,7 @@
 package com.budgetview.desktop.transactions.utils;
 
 import com.budgetview.model.*;
+import com.budgetview.shared.model.AccountType;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;

@@ -80,6 +80,7 @@ public class WebServer {
     httpPort = config.getInt(HTTP_PORT_PROPERTY);
     if (httpPort != null) {
       ServerConnector http = new ServerConnector(jetty, new HttpConnectionFactory(httpConfig));
+      http.setHost(host);
       http.setPort(httpPort);
       http.setIdleTimeout(30000);
       jetty.addConnector(http);

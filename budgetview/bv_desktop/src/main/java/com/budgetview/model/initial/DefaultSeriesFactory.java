@@ -1,6 +1,7 @@
 package com.budgetview.model.initial;
 
 import com.budgetview.model.*;
+import com.budgetview.shared.model.DefaultSeries;
 import com.budgetview.utils.Lang;
 import org.globsframework.model.FieldValuesBuilder;
 import org.globsframework.model.Glob;
@@ -45,40 +46,39 @@ public class DefaultSeriesFactory {
 
   private void createUserSeries() {
 
-    createEntry(BudgetArea.INCOME, "income1", ProfileType.EVERY_MONTH);
-    createEntry(BudgetArea.INCOME, "income2", ProfileType.EVERY_MONTH);
+    createEntry(BudgetArea.INCOME, DefaultSeries.INCOME, ProfileType.EVERY_MONTH);
 
-    createEntry(BudgetArea.RECURRING, "rent", ProfileType.EVERY_MONTH);
+    createEntry(BudgetArea.RECURRING, DefaultSeries.RENT, ProfileType.EVERY_MONTH);
 
     SignpostStatus.setPeriodicitySeriesKey(
-      createEntry(BudgetArea.RECURRING, "electricity", ProfileType.EVERY_MONTH), repository
+      createEntry(BudgetArea.RECURRING, DefaultSeries.ELECTRICITY, ProfileType.EVERY_MONTH), repository
     );
-    createEntry(BudgetArea.RECURRING, "gas", ProfileType.EVERY_MONTH);
-    createEntry(BudgetArea.RECURRING, "water", ProfileType.EVERY_MONTH);
-    createEntry(BudgetArea.RECURRING, "carCredit", ProfileType.EVERY_MONTH);
-    createEntry(BudgetArea.RECURRING, "carInsurance", ProfileType.EVERY_MONTH);
-    createEntry(BudgetArea.RECURRING, "incomeTaxes", ProfileType.EVERY_MONTH);
-    createEntry(BudgetArea.RECURRING, "cellPhone1", ProfileType.EVERY_MONTH);
-    createEntry(BudgetArea.RECURRING, "cellPhone2", ProfileType.EVERY_MONTH);
-    createEntry(BudgetArea.RECURRING, "internet", ProfileType.EVERY_MONTH);
-    createEntry(BudgetArea.RECURRING, "fixedPhone", ProfileType.EVERY_MONTH);
+    createEntry(BudgetArea.RECURRING, DefaultSeries.GAS, ProfileType.EVERY_MONTH);
+    createEntry(BudgetArea.RECURRING, DefaultSeries.WATER, ProfileType.EVERY_MONTH);
+    createEntry(BudgetArea.RECURRING, DefaultSeries.CAR_CREDIT, ProfileType.EVERY_MONTH);
+    createEntry(BudgetArea.RECURRING, DefaultSeries.CAR_INSURANCE, ProfileType.EVERY_MONTH);
+    createEntry(BudgetArea.RECURRING, DefaultSeries.INCOME_TAXES, ProfileType.EVERY_MONTH);
+    createEntry(BudgetArea.RECURRING, DefaultSeries.CELL_PHONE, ProfileType.EVERY_MONTH);
+    createEntry(BudgetArea.RECURRING, DefaultSeries.INTERNET, ProfileType.EVERY_MONTH);
+    createEntry(BudgetArea.RECURRING, DefaultSeries.FIXED_PHONE, ProfileType.EVERY_MONTH);
 
     SignpostStatus.setAmountSeriesKey(
-      createEntry(BudgetArea.VARIABLE, "groceries", ProfileType.EVERY_MONTH), repository
+      createEntry(BudgetArea.VARIABLE, DefaultSeries.GROCERIES, ProfileType.EVERY_MONTH), repository
     );
-    createEntry(BudgetArea.VARIABLE, "health", ProfileType.EVERY_MONTH, "physician", "pharmacy", "reimbursements");
-    createEntry(BudgetArea.VARIABLE, "leisures", ProfileType.EVERY_MONTH);
-    createEntry(BudgetArea.VARIABLE, "clothing", ProfileType.EVERY_MONTH);
-    createEntry(BudgetArea.VARIABLE, "beauty", ProfileType.EVERY_MONTH);
-    createEntry(BudgetArea.VARIABLE, "fuel", ProfileType.EVERY_MONTH);
-    createEntry(BudgetArea.VARIABLE, "cash", ProfileType.EVERY_MONTH);
-    createEntry(BudgetArea.VARIABLE, "bankFees", ProfileType.EVERY_MONTH);
-    createEntry(BudgetArea.VARIABLE, "misc", ProfileType.EVERY_MONTH);
+    createEntry(BudgetArea.VARIABLE, DefaultSeries.HEALTH, ProfileType.EVERY_MONTH, DefaultSeries.PHYSICIAN, DefaultSeries.PHARMACY, DefaultSeries.REIMBURSEMENTS);
+    createEntry(BudgetArea.VARIABLE, DefaultSeries.LEISURES, ProfileType.EVERY_MONTH);
+    createEntry(BudgetArea.VARIABLE, DefaultSeries.CLOTHING, ProfileType.EVERY_MONTH);
+    createEntry(BudgetArea.VARIABLE, DefaultSeries.BEAUTY, ProfileType.EVERY_MONTH);
+    createEntry(BudgetArea.VARIABLE, DefaultSeries.FUEL, ProfileType.EVERY_MONTH);
+    createEntry(BudgetArea.VARIABLE, DefaultSeries.CASH, ProfileType.EVERY_MONTH);
+    createEntry(BudgetArea.VARIABLE, DefaultSeries.BANK_FEES, ProfileType.EVERY_MONTH);
+    createEntry(BudgetArea.VARIABLE, DefaultSeries.RESTAURANT, ProfileType.EVERY_MONTH);
+    createEntry(BudgetArea.VARIABLE, DefaultSeries.MISC, ProfileType.EVERY_MONTH);
   }
 
-  private Key createEntry(BudgetArea budgetArea, String nameKey,
+  private Key createEntry(BudgetArea budgetArea, DefaultSeries nameKey,
                           ProfileType profileType,
-                          String... subSeries) {
+                          DefaultSeries... subSeriesList) {
 
     FieldValuesBuilder builder = FieldValuesBuilder.init()
       .set(Series.NAME, getName(budgetArea, nameKey))
@@ -90,8 +90,8 @@ public class DefaultSeriesFactory {
 
     Glob series = repository.create(Series.TYPE, builder.toArray());
 
-    for (String subSeriesKey : subSeries) {
-      String subSeriesName = getName(budgetArea, nameKey, subSeriesKey);
+    for (DefaultSeries subSeries : subSeriesList) {
+      String subSeriesName = getName(budgetArea, nameKey, subSeries);
       repository.create(SubSeries.TYPE,
                         value(SubSeries.NAME, subSeriesName),
                         value(SubSeries.SERIES, series.get(Series.ID)));
@@ -100,12 +100,12 @@ public class DefaultSeriesFactory {
     return series.getKey();
   }
 
-  private String getName(BudgetArea budgetArea, String nameKey, String subSeriesKey) {
-    return Lang.get("defaultSeries." + budgetArea.getName() + "." + nameKey + "." + subSeriesKey);
+  private String getName(BudgetArea budgetArea, DefaultSeries nameKey, DefaultSeries subSeriesKey) {
+    return Lang.get("defaultSeries." + budgetArea.getName() + "." + nameKey.getName() + "." + subSeriesKey.getName());
   }
 
-  private String getName(BudgetArea budgetArea, String nameKey) {
-    return Lang.get("defaultSeries." + budgetArea.getName() + "." + nameKey);
+  private String getName(BudgetArea budgetArea, DefaultSeries nameKey) {
+    return Lang.get("defaultSeries." + budgetArea.getName() + "." + nameKey.getName());
   }
 
 }

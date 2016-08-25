@@ -8,6 +8,7 @@ import org.apache.http.client.fluent.Request;
 import org.apache.http.client.fluent.Response;
 import org.apache.http.entity.ContentType;
 import org.apache.log4j.Logger;
+import org.globsframework.utils.Strings;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -24,11 +25,9 @@ public class BudgeaStubServer {
   private int userId = 123;
   private String temporaryToken = "-- TEMPORARY -- TOKEN --";
   private String persistentToken = "-- PERSISTENT -- TOKEN --";
+  private String nextStatement;
 
   public static void main(String... args) throws Exception {
-    System.setProperty(WebServer.HOST_PROPERTY, "127.0.0.1");
-    System.setProperty(WebServer.HTTP_PORT_PROPERTY, "8086");
-    System.setProperty(WebServer.HTTPS_PORT_PROPERTY, "1444");
     BudgeaStubServer stub = new BudgeaStubServer(args);
     stub.start();
   }
@@ -41,15 +40,21 @@ public class BudgeaStubServer {
     webServer.add(new BanksFieldsServlet(), "/banks/*");
     webServer.add(new UsersMeServlet(), "/users/me");
     webServer.add(new UsersMeConnectionsServlet(), "/users/me/connections");
+    webServer.add(new PingServlet(), "/ping");
+
     Log4J.init(config);
   }
 
   public void start() throws Exception {
+    logger.info("starting server");
     webServer.start();
+    logger.info("server started");
   }
 
   public void stop() throws Exception {
+    logger.info("stopping server");
     webServer.stop();
+    logger.info("server stopped");
   }
 
   public void setPersistentToken(String persistentToken) {
@@ -67,6 +72,10 @@ public class BudgeaStubServer {
     if (statusCode != 200) {
       throw new IOException("Unexpected return value: " + statusCode);
     }
+  }
+
+  public void setNextStatement(String nextStatement) {
+    this.nextStatement = nextStatement;
   }
 
   private class AuthInitServlet extends HttpServlet {
@@ -99,17 +108,20 @@ public class BudgeaStubServer {
       writer.close();
       response.setStatus(HttpServletResponse.SC_OK);
 
-      Thread thread = new Thread(new Runnable() {
-        public void run() {
-          try {
-            Thread.sleep(200);
-            callWebhook(persistentToken, BudgeaSamples.firstWebhookCall(userId));
+      if (Strings.isNotEmpty(nextStatement)) {
+        logger.info("Calling first wehook");
+        Thread thread = new Thread(new Runnable() {
+          public void run() {
+            try {
+              Thread.sleep(200);
+              callWebhook(persistentToken, nextStatement);
+            }
+            catch (Exception e) {
+            }
           }
-          catch (Exception e) {
-          }
-        }
-      });
-      thread.start();
+        });
+        thread.start();
+      }
     }
   }
 
@@ -215,4 +227,16 @@ public class BudgeaStubServer {
     }
   }
 
+  private class PingServlet extends HttpServlet {
+
+    private Logger logger = Logger.getLogger("/ping");
+
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+      logger.info("GET");
+      PrintWriter writer = resp.getWriter();
+      writer.write("Pong");
+      writer.close();
+      resp.setStatus(HttpServletResponse.SC_OK);
+    }
+  }
 }

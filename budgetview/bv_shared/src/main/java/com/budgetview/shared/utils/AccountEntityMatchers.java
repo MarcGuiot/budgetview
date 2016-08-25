@@ -1,6 +1,6 @@
 package com.budgetview.shared.utils;
 
-import com.budgetview.shared.model.AccountEntity;
+import com.budgetview.shared.mobile.model.AccountEntity;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.utils.GlobMatcher;

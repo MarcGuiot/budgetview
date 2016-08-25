@@ -3,7 +3,7 @@
   <styleImport file="/layout/commonStyles.splits"/>
 
   <column>
-    <button action="gotoSynchro"/>
+    <button action="openCloudSynchro"/>
   </column>
 
 </splits>

@@ -1,4 +1,4 @@
-package com.budgetview.shared.model;
+package com.budgetview.shared.mobile.model;
 
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.annotations.Key;
@@ -10,31 +10,27 @@ import org.globsframework.metamodel.fields.LinkField;
 import org.globsframework.metamodel.utils.GlobTypeLoader;
 
 /** @deprecated */
-public class SeriesValues {
+public class AccountPosition {
   public static GlobType TYPE;
 
-  @Key @Target(SeriesEntity.class)
+  @Key
+  @Target(AccountEntity.class)
   @NoObfuscation
-  public static LinkField SERIES_ENTITY;
+  public static IntegerField ACCOUNT;
+
+  @Key
+  @Target(MonthEntity.class)
+  @NoObfuscation
+  public static LinkField MONTH;
 
   @Key
   @NoObfuscation
-  public static IntegerField MONTH;
-
-  @Target(BudgetAreaEntity.class)
-  @NoObfuscation
-  public static LinkField BUDGET_AREA;
+  public static IntegerField DAY;
 
   @NoObfuscation
-  public static DoubleField AMOUNT;
-  @NoObfuscation
-  public static DoubleField PLANNED_AMOUNT;
-  @NoObfuscation
-  public static DoubleField REMAINING_AMOUNT;
-  @NoObfuscation
-  public static DoubleField OVERRUN_AMOUNT;
+  public static DoubleField POSITION;
 
   static {
-    GlobTypeLoader.init(SeriesValues.class, "seriesValues");
+    GlobTypeLoader.init(AccountPosition.class, "accountPosition");
   }
 }

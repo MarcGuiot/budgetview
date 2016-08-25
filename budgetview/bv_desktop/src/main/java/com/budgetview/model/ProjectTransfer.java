@@ -1,5 +1,6 @@
 package com.budgetview.model;
 
+import com.budgetview.shared.model.AccountType;
 import com.budgetview.shared.utils.PicsouGlobSerializer;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.annotations.*;
@@ -62,7 +63,7 @@ public class ProjectTransfer {
     if (accountId == null) {
       return null;
     }
-    return AccountType.get(repository.find(org.globsframework.model.Key.create(Account.TYPE, accountId)));
+    return Account.getType(repository.find(org.globsframework.model.Key.create(Account.TYPE, accountId)));
   }
 
   public static boolean isComplete(Glob transfer) {

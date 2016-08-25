@@ -6,6 +6,7 @@ import com.budgetview.io.importer.AccountFileImporter;
 import com.budgetview.io.importer.utils.DateFormatAnalyzer;
 import com.budgetview.io.importer.utils.ImportedTransactionIdGenerator;
 import com.budgetview.model.*;
+import com.budgetview.shared.model.AccountType;
 import com.budgetview.shared.utils.Amounts;
 import com.budgetview.desktop.time.TimeService;
 import org.globsframework.model.*;

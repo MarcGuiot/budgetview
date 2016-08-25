@@ -5,6 +5,7 @@ import com.budgetview.desktop.components.dialogs.MessageDialog;
 import com.budgetview.desktop.components.dialogs.MessageType;
 import com.budgetview.desktop.time.TimeService;
 import com.budgetview.model.*;
+import com.budgetview.shared.model.AccountType;
 import com.budgetview.triggers.MonthsToSeriesBudgetTrigger;
 import com.budgetview.utils.TransactionComparator;
 import org.globsframework.metamodel.Field;

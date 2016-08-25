@@ -33,7 +33,7 @@ public class CloudIntroPanel {
   private JPanel createPanel() {
     GlobsPanelBuilder builder = new GlobsPanelBuilder(getClass(), "/layout/importexport/components/cloudIntroPanel.splits", repository, directory);
 
-    builder.add("gotoSynchro", new AbstractAction("Goto synchro") {
+    builder.add("openCloudSynchro", new AbstractAction("Goto synchro") {
       public void actionPerformed(ActionEvent e) {
         controller.showCloudBankSelection();
       }

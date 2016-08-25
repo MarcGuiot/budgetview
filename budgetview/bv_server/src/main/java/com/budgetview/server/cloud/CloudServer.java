@@ -52,9 +52,11 @@ public class CloudServer {
   public void start() throws Exception {
     logger.info("starting server");
     webServer.start();
+    logger.info("server started");
   }
 
   public void stop() throws Exception {
+    logger.info("stopping server");
     webServer.stop();
     logger.info("server stopped");
   }

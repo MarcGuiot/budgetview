@@ -15,6 +15,7 @@ import com.budgetview.desktop.model.SavingsBudgetStat;
 import com.budgetview.desktop.transactions.utils.TransactionMatchers;
 import com.budgetview.model.*;
 import com.budgetview.shared.gui.histochart.HistoChartConfig;
+import com.budgetview.shared.model.AccountType;
 import com.budgetview.utils.Lang;
 import org.globsframework.gui.GlobSelection;
 import org.globsframework.gui.GlobSelectionListener;

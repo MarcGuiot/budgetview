@@ -6,7 +6,7 @@ import org.apache.http.NameValuePair;
 import org.apache.http.client.fluent.Form;
 import org.apache.http.client.fluent.Request;
 import org.apache.http.client.fluent.Response;
-import org.apache.http.util.EntityUtils;
+import org.globsframework.utils.Files;
 import org.json.JSONObject;
 
 import java.io.IOException;
@@ -49,9 +49,13 @@ public class BudgeaAPI {
       throw new IOException(url + " returned " + httpResponse.getStatusLine().getStatusCode() + " instead of 200");
     }
 
-    this.bearer = null;
+    JSONObject json = json(httpResponse);
+    return json;
+  }
 
-    return json(httpResponse);
+  public void ping() throws IOException {
+    Response response = Request.Get(BudgeaConstants.getServerUrl("/ping")).execute();
+    System.out.println("BudgeaAPI.ping: " + response.returnResponse().getStatusLine().getStatusCode());
   }
 
   public String getToken() throws IOException {
@@ -73,5 +77,4 @@ public class BudgeaAPI {
     }
     return bearer;
   }
-
 }

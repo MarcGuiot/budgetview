@@ -33,7 +33,7 @@ import com.budgetview.desktop.transactions.reconciliation.annotations.ShowReconc
 import com.budgetview.desktop.undo.RedoAction;
 import com.budgetview.desktop.undo.UndoAction;
 import com.budgetview.desktop.utils.dev.*;
-import com.budgetview.model.AccountType;
+import com.budgetview.shared.model.AccountType;
 import com.budgetview.utils.Lang;
 import org.globsframework.gui.splits.utils.GuiUtils;
 import org.globsframework.model.GlobRepository;

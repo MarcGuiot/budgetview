@@ -1,5 +1,6 @@
 package com.budgetview.server.cloud.model;
 
+import com.budgetview.shared.model.DefaultSeries;
 import com.budgetview.shared.model.Provider;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.annotations.Key;
@@ -39,6 +40,9 @@ public class ProviderTransaction {
   public static DateField OPERATION_DATE;
 
   public static DateField BANK_DATE;
+
+  @Target(DefaultSeries.class)
+  public static LinkField SERIES;
 
   public static BooleanField DELETED;
 

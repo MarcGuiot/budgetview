@@ -9,7 +9,7 @@
            fill="none" anchor="left" font="-,bold,12" marginBottom="5"/>
   </styles>
 
-  <column styleClass="dialog" preferredSize="(600,710)">
+  <column styleClass="dialog" preferredSize="(600,710)" name="importPreviewPanel">
 
     <label text="$import.preview.title" name="title" styleClass="title"/>
 

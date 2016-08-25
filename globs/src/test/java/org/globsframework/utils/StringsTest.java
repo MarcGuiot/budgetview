@@ -61,6 +61,26 @@ public class StringsTest extends TestCase {
     assertEquals("1234567...", Strings.cut("12345678901234567890", 10));
   }
 
+  public void testLeftAlign() throws Exception {
+    assertEquals("", Strings.leftAlign(null, 0));
+    assertEquals("   ", Strings.leftAlign(null, 3));
+    assertEquals("123456", Strings.leftAlign("123456", 4));
+    assertEquals("123456", Strings.leftAlign("123456", 6));
+    assertEquals("123456 ", Strings.leftAlign("123456", 7));
+    assertEquals("123456  ", Strings.leftAlign("123456", 8));
+    assertEquals("123456    ", Strings.leftAlign("123456", 10));
+  }
+
+  public void testRightAlign() throws Exception {
+    assertEquals("", Strings.rightAlign(null, 0));
+    assertEquals("   ", Strings.rightAlign(null, 3));
+    assertEquals("123456", Strings.rightAlign("123456", 4));
+    assertEquals("123456", Strings.rightAlign("123456", 6));
+    assertEquals(" 123456", Strings.rightAlign("123456", 7));
+    assertEquals("  123456", Strings.rightAlign("123456", 8));
+    assertEquals("    123456", Strings.rightAlign("123456", 10));
+  }
+
   public void testSplit() throws Exception {
 
     assertEquals(null, Strings.toSplittedHtml(null, 10));

@@ -1,6 +1,6 @@
 package com.budgetview.server.cloud.servlet;
 
-import com.budgetview.server.cloud.Budgea;
+import com.budgetview.server.cloud.budgea.Budgea;
 import com.budgetview.server.cloud.model.CloudUser;
 import com.budgetview.shared.cloud.BudgeaConstants;
 import com.budgetview.shared.cloud.CloudConstants;
@@ -13,6 +13,7 @@ import org.globsframework.sqlstreams.SqlConnection;
 import org.globsframework.sqlstreams.exceptions.GlobsSQLException;
 import org.globsframework.utils.Strings;
 import org.globsframework.utils.directory.Directory;
+import org.json.JSONObject;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;

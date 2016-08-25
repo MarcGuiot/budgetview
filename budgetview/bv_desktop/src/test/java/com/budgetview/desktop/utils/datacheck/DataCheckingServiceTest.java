@@ -1,6 +1,7 @@
 package com.budgetview.desktop.utils.datacheck;
 
 import com.budgetview.model.*;
+import com.budgetview.shared.model.AccountType;
 import junit.framework.TestCase;
 import com.budgetview.client.DataAccess;
 import com.budgetview.desktop.PicsouInit;

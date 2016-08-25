@@ -3,6 +3,7 @@ package com.budgetview.triggers;
 import com.budgetview.desktop.categorization.utils.Uncategorized;
 import com.budgetview.desktop.model.SeriesStat;
 import com.budgetview.model.*;
+import com.budgetview.shared.model.AccountType;
 import com.budgetview.shared.utils.Amounts;
 import com.budgetview.utils.TransactionComparator;
 import com.budgetview.desktop.model.AccountStat;
