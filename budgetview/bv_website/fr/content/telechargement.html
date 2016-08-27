@@ -5,10 +5,12 @@
 
      $(document).ready(function(){
         $('.platform').hide();
+        $('.platform-details').hide();
 
         var OS_Name = navigator.appVersion;
         if (OS_Name.indexOf("Win") != -1) {
           $("#windows").show();
+          $("#windows-details").show();
           $("#download-install-instructions").show();
           $('#download-platforms hr').hide();
         }
@@ -40,13 +42,16 @@
           $("#backup-warning").show();
         }
         });
+
     </script>
 
     <div id="download-platforms">
 
         <div id="backup-warning" class="warning-block">
-            <p><b>Déjà utilisateur de BudgetView ?</b> Pensez à <a href="/support/faq/donnees/sauvegarde">faire une sauvegarde de
-                vos données</a> avant d'installer cette nouvelle version et de profiter des <a href="/support/derniers-changements">toutes dernières évolutions</a> du logiciel.</p>
+            <p><b>Déjà utilisateur de BudgetView ?</b> Pensez à <a href="/support/faq/donnees/sauvegarde">faire une
+                sauvegarde de
+                vos données</a> avant d'installer cette nouvelle version et de profiter des <a
+                    href="/support/derniers-changements">toutes dernières évolutions</a> du logiciel.</p>
         </div>
 
         <div id="mac" class="row platform">
@@ -61,8 +66,8 @@
                     <br>
                 </a>
                 <p><a href="/files/app/BudgetView-4.03-fr.dmg" class="clicky_log_download highlighted"
-                       onclick="clicky.goal('12644', '0.00');">
-                        BudgetView-4.03-fr.dmg</a></p>
+                      onclick="clicky.goal('12644', '0.00');">
+                    BudgetView-4.03-fr.dmg</a></p>
             </div>
         </div>
 
@@ -85,14 +90,17 @@
                         BudgetView-4.03-fr-Setup.exe</a></p>
                 </div>
             </div>
-            <div class="warning-block" style="text-align:justify;">
-                <h3>Message de sécurité Windows 10</h3>
-                <p>Lors de l'installation, Windows affiche un message d'avertissement indiquant que le logiciel n'est pas connu.</p>
-                <p>En effet, depuis Windows 10 Microsoft exige que les applications soient signées avec des certificats
-                    de sécurité payants proposés par certaines sociétés spécialisées.<p>
-                <p>Nous avons entamé les démarches pour obtenir ces certificats et publierons une nouvelle version du logiciel dès que ces démarches seront finalisées.</p>
-                <p>D'ici là, dans la fenêtre du fameux message "dangereux" vous trouverez un texte "plus de détails".
-                    En cliquant sur ce texte vous ferez apparaître un bouton "Installer quand même" qui vous permettra de continuer l'installation.</p>
+        </div>
+
+        <div id="windows-details" class="platform-details">
+            <div class="row">
+                <div clas="cold-md-12">
+                    <h3>L'installation ne fonctionne pas sur votre machine ?</h3>
+                    <p>Le programme d'installation ci-dessus est optimisé pour la majorité des configurations
+                        Windows récentes. S'il ne fontionne pas pour votre ordinateur nous vous recommandons d'utiliser
+                        celui-ci&nbsp;: <a href="http://mybudgetview.fr/files/app/BudgetView-4.03-fr-nobundle-Setup.exe">BudgetView-4.03-fr-nobundle-Setup.exe</a>
+                    </p>
+                </div>
             </div>
         </div>
 
@@ -109,7 +117,7 @@
                     <button type="button" class="btn btn-primary">Télécharger .deb</button>
                 </a>
                 <p><a href="/files/app/BudgetView-4.03-fr.deb" class="clicky_log_download highlighted"
-                       onclick="clicky.goal('12644', '0.00');">BudgetView-4.03-fr.deb</a></p>
+                      onclick="clicky.goal('12644', '0.00');">BudgetView-4.03-fr.deb</a></p>
 
                 <h3 style="margin-top:20px;">Pour installer BudgetView<br/>sur votre Red Hat / Debora / Suse&nbsp;:</h3>
                 <a href="/files/app/BudgetView-4.03-fr.rpm" class="clicky_log_download"

@@ -402,6 +402,21 @@ a.showLink:hover, a.hideLink:hover {
   text-align: center;
 }
 
+#download-platforms .platform-details {
+  width: 90%;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 20px;
+  padding: 15px;
+  }
+
+#download-platforms .platform-details h3 {
+  font-size: 20px;
+  margin-top: 5px;
+  text-align: justify;
+}
+
+
 #download-block {
   margin-top: 20px;
   margin-bottom: 20px;
