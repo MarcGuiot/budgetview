@@ -6,7 +6,7 @@ import org.globsframework.utils.Utils;
 import com.budgetview.desktop.model.SeriesStat;
 import com.budgetview.model.CurrentMonth;
 import com.budgetview.model.Series;
-import com.budgetview.model.BudgetArea;
+import com.budgetview.shared.model.BudgetArea;
 import com.budgetview.shared.utils.Amounts;
 
 import java.util.Set;

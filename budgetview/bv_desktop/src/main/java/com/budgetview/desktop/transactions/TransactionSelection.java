@@ -4,6 +4,7 @@ import com.budgetview.desktop.components.filtering.FilterClearer;
 import com.budgetview.desktop.components.filtering.FilterManager;
 import com.budgetview.desktop.transactions.utils.TransactionMatchers;
 import com.budgetview.model.*;
+import com.budgetview.shared.model.BudgetArea;
 import com.budgetview.utils.Lang;
 import org.globsframework.gui.GlobSelection;
 import org.globsframework.gui.GlobSelectionListener;

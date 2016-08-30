@@ -1,6 +1,6 @@
 package com.budgetview.functests.checkers;
 
-import com.budgetview.model.BudgetArea;
+import com.budgetview.shared.model.BudgetArea;
 import org.uispec4j.Panel;
 import org.uispec4j.TextBox;
 

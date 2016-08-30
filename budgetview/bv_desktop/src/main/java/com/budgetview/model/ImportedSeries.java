@@ -1,5 +1,6 @@
 package com.budgetview.model;
 
+import com.budgetview.shared.model.BudgetArea;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.annotations.DefaultInteger;
 import org.globsframework.metamodel.utils.GlobTypeLoader;

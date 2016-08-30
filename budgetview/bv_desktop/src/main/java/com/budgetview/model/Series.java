@@ -1,6 +1,7 @@
 package com.budgetview.model;
 
 import com.budgetview.desktop.model.SeriesStat;
+import com.budgetview.shared.model.BudgetArea;
 import com.budgetview.shared.utils.PicsouGlobSerializer;
 import com.budgetview.utils.Lang;
 import org.globsframework.metamodel.GlobType;

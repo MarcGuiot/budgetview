@@ -1,7 +1,7 @@
 package com.budgetview.server.cloud.functests.checkers;
 
 import com.budgetview.server.cloud.stub.BudgeaStubServer;
-import com.budgetview.shared.cloud.BudgeaConstants;
+import com.budgetview.shared.cloud.budgea.BudgeaConstants;
 import com.budgetview.shared.cloud.CloudConstants;
 import junit.framework.Assert;
 import org.apache.http.client.fluent.Request;

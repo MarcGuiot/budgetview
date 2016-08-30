@@ -6,6 +6,7 @@ import com.budgetview.desktop.components.dialogs.MessageDialog;
 import com.budgetview.desktop.components.dialogs.MessageType;
 import com.budgetview.desktop.series.SeriesEditor;
 import com.budgetview.model.*;
+import com.budgetview.shared.model.BudgetArea;
 import com.budgetview.utils.Lang;
 import org.globsframework.gui.SelectionService;
 import org.globsframework.model.*;

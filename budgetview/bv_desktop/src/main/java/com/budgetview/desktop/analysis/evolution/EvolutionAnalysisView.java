@@ -7,13 +7,14 @@ import com.budgetview.desktop.analysis.utils.AnalysisViewPanel;
 import com.budgetview.desktop.budget.SeriesEditionButtons;
 import com.budgetview.desktop.budget.components.NameLabelPopupButton;
 import com.budgetview.desktop.components.charts.histo.HistoChartColors;
+import com.budgetview.desktop.description.Labels;
 import com.budgetview.desktop.series.utils.SeriesOrGroup;
 import com.budgetview.desktop.series.view.SeriesWrapper;
 import com.budgetview.desktop.series.view.SeriesWrapperComparator;
 import com.budgetview.desktop.series.view.SeriesWrapperMatchers;
 import com.budgetview.desktop.series.view.SeriesWrapperStringifier;
 import com.budgetview.desktop.utils.Gui;
-import com.budgetview.model.BudgetArea;
+import com.budgetview.shared.model.BudgetArea;
 import com.budgetview.model.CurrentMonth;
 import com.budgetview.model.Month;
 import com.budgetview.model.Series;
@@ -162,7 +163,7 @@ public class EvolutionAnalysisView extends AnalysisViewPanel {
       selectablePanel.setUnselectEnabled(false);
       cellBuilder.addDisposable(selectablePanel);
 
-      cellBuilder.add("budgetArea", new JLabel(budgetArea.getLabel()));
+      cellBuilder.add("budgetArea", new JLabel(Labels.get(budgetArea)));
     }
   }
 

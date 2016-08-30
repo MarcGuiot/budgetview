@@ -4,6 +4,7 @@ import com.budgetview.desktop.series.SeriesEditionDialog;
 import com.budgetview.desktop.series.utils.SeriesDeletionHandler;
 import com.budgetview.desktop.transactions.utils.TransactionMatchers;
 import com.budgetview.model.*;
+import com.budgetview.shared.model.BudgetArea;
 import com.budgetview.utils.Lang;
 import org.globsframework.gui.SelectionService;
 import org.globsframework.model.Glob;

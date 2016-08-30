@@ -7,6 +7,7 @@ import com.budgetview.desktop.transactions.utils.MirrorTransactionFinder;
 import com.budgetview.desktop.upgrade.BindTransactionsToSeries;
 import com.budgetview.desktop.upgrade.PostProcessor;
 import com.budgetview.model.*;
+import com.budgetview.shared.model.BudgetArea;
 import com.budgetview.shared.utils.Amounts;
 import com.budgetview.utils.Lang;
 import org.globsframework.model.*;

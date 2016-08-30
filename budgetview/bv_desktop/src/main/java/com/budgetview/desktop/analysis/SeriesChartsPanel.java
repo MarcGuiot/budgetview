@@ -12,12 +12,14 @@ import com.budgetview.desktop.components.charts.stack.StackChart;
 import com.budgetview.desktop.components.charts.stack.StackChartColors;
 import com.budgetview.desktop.components.charts.stack.StackChartDataset;
 import com.budgetview.desktop.components.charts.stack.utils.StackChartAdapter;
+import com.budgetview.desktop.description.Labels;
 import com.budgetview.desktop.model.*;
 import com.budgetview.desktop.series.utils.SeriesOrGroup;
 import com.budgetview.desktop.series.view.SeriesWrapper;
 import com.budgetview.desktop.series.view.SeriesWrapperType;
 import com.budgetview.model.*;
 import com.budgetview.shared.gui.histochart.HistoChartConfig;
+import com.budgetview.shared.model.BudgetArea;
 import com.budgetview.shared.utils.Amounts;
 import com.budgetview.utils.Lang;
 import org.globsframework.gui.GlobSelection;
@@ -349,7 +351,7 @@ public class SeriesChartsPanel implements GlobSelectionListener {
         }
       }
       StackChartDataset dataset = amount > 0 ? incomeDataset : expensesDataset;
-      dataset.add(budgetArea.getLabel(),
+      dataset.add(com.budgetview.desktop.description.Labels.get(budgetArea),
                   Math.abs(amount),
                   budgetArea.getKey(),
                   selectedBudgetAreas.contains(budgetArea));
@@ -424,7 +426,7 @@ public class SeriesChartsPanel implements GlobSelectionListener {
 
     installDatasets(rootSeriesChart, incomeDataset, expensesDataset);
     if (budgetAreas.size() == 1) {
-      updateSeriesLabel("budgetArea", budgetAreas.iterator().next().getLabel().toLowerCase());
+      updateSeriesLabel("budgetArea", Labels.get(budgetAreas.iterator().next()).toLowerCase());
     }
     else {
       updateSeriesLabel("budgetAreas", Integer.toString(budgetAreas.size()));

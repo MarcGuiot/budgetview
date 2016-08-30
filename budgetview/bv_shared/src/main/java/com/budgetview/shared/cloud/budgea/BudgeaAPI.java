@@ -1,4 +1,4 @@
-package com.budgetview.shared.cloud;
+package com.budgetview.shared.cloud.budgea;
 
 import org.apache.http.Consts;
 import org.apache.http.HttpResponse;
@@ -6,7 +6,6 @@ import org.apache.http.NameValuePair;
 import org.apache.http.client.fluent.Form;
 import org.apache.http.client.fluent.Request;
 import org.apache.http.client.fluent.Response;
-import org.globsframework.utils.Files;
 import org.json.JSONObject;
 
 import java.io.IOException;

@@ -9,7 +9,7 @@ import com.budgetview.desktop.printing.utils.BlockMultiColumnsPage;
 import com.budgetview.desktop.printing.utils.BudgetReportUtils;
 import com.budgetview.desktop.printing.utils.EmptyBlock;
 import com.budgetview.desktop.printing.utils.PageBlock;
-import com.budgetview.model.BudgetArea;
+import com.budgetview.shared.model.BudgetArea;
 import com.budgetview.utils.Lang;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;

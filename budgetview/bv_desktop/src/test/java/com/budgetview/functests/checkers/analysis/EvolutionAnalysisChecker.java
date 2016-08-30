@@ -1,11 +1,12 @@
 package com.budgetview.functests.checkers.analysis;
 
+import com.budgetview.desktop.description.Labels;
 import com.budgetview.functests.checkers.SeriesDeletionDialogChecker;
 import com.budgetview.functests.checkers.SeriesEditionDialogChecker;
 import com.budgetview.functests.checkers.ViewChecker;
 import com.budgetview.functests.checkers.components.HistoChartChecker;
 import com.budgetview.functests.checkers.components.PopupButton;
-import com.budgetview.model.BudgetArea;
+import com.budgetview.shared.model.BudgetArea;
 import com.budgetview.utils.Lang;
 import org.globsframework.utils.TestUtils;
 import org.uispec4j.Mouse;
@@ -49,7 +50,7 @@ public class EvolutionAnalysisChecker extends ViewChecker {
   }
 
   private EvolutionAnalysisChecker select(BudgetArea budgetArea) {
-    Mouse.click(getPanel().getPanel("budgetAreas").getTextBox(budgetArea.getLabel()).getContainer("selectionPanel"));
+    Mouse.click(getPanel().getPanel("budgetAreas").getTextBox(Labels.get(budgetArea)).getContainer("selectionPanel"));
     return this;
   }
 

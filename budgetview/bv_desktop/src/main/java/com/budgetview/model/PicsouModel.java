@@ -3,6 +3,7 @@ package com.budgetview.model;
 import com.budgetview.io.importer.csv.CsvType;
 import com.budgetview.session.serialization.SerializationManager;
 import com.budgetview.shared.model.AccountType;
+import com.budgetview.shared.model.BudgetArea;
 import org.globsframework.metamodel.GlobModel;
 import org.globsframework.metamodel.utils.GlobModelBuilder;
 

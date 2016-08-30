@@ -3,7 +3,7 @@ package com.budgetview.desktop.budget.summary;
 import com.budgetview.desktop.description.Formatting;
 import com.budgetview.desktop.model.BudgetStat;
 import com.budgetview.desktop.model.SavingsBudgetStat;
-import com.budgetview.model.BudgetArea;
+import com.budgetview.shared.model.BudgetArea;
 import com.budgetview.model.CurrentMonth;
 import com.budgetview.shared.utils.Amounts;
 import com.budgetview.utils.Lang;

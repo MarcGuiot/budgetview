@@ -18,7 +18,7 @@ import com.budgetview.desktop.description.Formatting;
 import com.budgetview.desktop.model.ProjectStat;
 import com.budgetview.desktop.projects.actions.CreateProjectAction;
 import com.budgetview.desktop.projects.components.ProjectPopupMenuFactory;
-import com.budgetview.model.BudgetArea;
+import com.budgetview.shared.model.BudgetArea;
 import com.budgetview.model.Month;
 import com.budgetview.model.Project;
 import com.budgetview.shared.gui.histochart.HistoChartConfig;

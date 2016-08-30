@@ -6,7 +6,7 @@ import com.budgetview.desktop.components.SingleMonthAdapter;
 import com.budgetview.desktop.components.tips.ErrorTip;
 import com.budgetview.desktop.description.AmountStringifier;
 import com.budgetview.desktop.description.stringifiers.MonthYearStringifier;
-import com.budgetview.model.BudgetArea;
+import com.budgetview.shared.model.BudgetArea;
 import com.budgetview.model.Month;
 import com.budgetview.model.ProjectItem;
 import com.budgetview.model.ProjectItemAmount;

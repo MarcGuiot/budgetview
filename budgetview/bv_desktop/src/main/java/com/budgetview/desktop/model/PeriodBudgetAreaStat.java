@@ -1,6 +1,6 @@
 package com.budgetview.desktop.model;
 
-import com.budgetview.model.BudgetArea;
+import com.budgetview.shared.model.BudgetArea;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.annotations.DefaultBoolean;
 import org.globsframework.metamodel.annotations.DefaultDouble;

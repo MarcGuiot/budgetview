@@ -1,6 +1,6 @@
 package com.budgetview.desktop.components;
 
-import com.budgetview.model.BudgetArea;
+import com.budgetview.shared.model.BudgetArea;
 import com.budgetview.desktop.components.charts.Gauge;
 import com.budgetview.desktop.components.charts.GlobGaugeView;
 import org.globsframework.gui.GuiTestCase;

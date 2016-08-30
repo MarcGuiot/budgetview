@@ -7,6 +7,7 @@ import com.budgetview.desktop.description.stringifiers.MonthListStringifier;
 import com.budgetview.desktop.series.edition.AlignSeriesBudgetAmountsAction;
 import com.budgetview.desktop.series.utils.SeriesAmountLabelStringifier;
 import com.budgetview.model.*;
+import com.budgetview.shared.model.BudgetArea;
 import com.budgetview.utils.Lang;
 import org.globsframework.gui.GlobSelection;
 import org.globsframework.gui.GlobSelectionListener;

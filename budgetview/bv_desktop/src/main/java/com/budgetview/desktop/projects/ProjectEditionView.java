@@ -19,6 +19,7 @@ import com.budgetview.desktop.projects.utils.ProjectItemComparator;
 import com.budgetview.desktop.projects.utils.ProjectPeriodSliderAdapter;
 import com.budgetview.desktop.time.TimeService;
 import com.budgetview.model.*;
+import com.budgetview.shared.model.BudgetArea;
 import com.budgetview.utils.Lang;
 import org.globsframework.gui.GlobSelection;
 import org.globsframework.gui.GlobSelectionListener;

@@ -1,6 +1,5 @@
-package com.budgetview.model;
+package com.budgetview.shared.model;
 
-import com.budgetview.utils.Lang;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.annotations.Key;
 import org.globsframework.metamodel.annotations.NamingField;
@@ -73,18 +72,6 @@ public enum BudgetArea implements GlobConstantContainer {
 
   public String getName() {
     return Strings.toNiceLowerCase(name);
-  }
-
-  public String getLabel() {
-    return Lang.get("budgetArea." + getName());
-  }
-
-  public String getDescription() {
-    return Lang.get("budgetArea.description." + getName());
-  }
-
-  public String getHtmlDescription() {
-    return "<html>" + Lang.get("budgetArea.description." + getName()) + "</html>";
   }
 
   public static BudgetArea get(int id) {

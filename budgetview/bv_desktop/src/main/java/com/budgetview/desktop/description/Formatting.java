@@ -1,6 +1,6 @@
 package com.budgetview.desktop.description;
 
-import com.budgetview.model.BudgetArea;
+import com.budgetview.shared.model.BudgetArea;
 import com.budgetview.model.Month;
 import com.budgetview.model.NumericDateType;
 import com.budgetview.model.TextDateType;

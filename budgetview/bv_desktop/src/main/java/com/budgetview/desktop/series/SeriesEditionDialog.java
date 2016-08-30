@@ -14,6 +14,7 @@ import com.budgetview.desktop.series.utils.SeriesDeletionHandler;
 import com.budgetview.model.*;
 import com.budgetview.model.util.AmountMap;
 import com.budgetview.shared.model.AccountType;
+import com.budgetview.shared.model.BudgetArea;
 import com.budgetview.triggers.AutomaticSeriesBudgetTrigger;
 import com.budgetview.triggers.SeriesBudgetTrigger;
 import com.budgetview.utils.Lang;

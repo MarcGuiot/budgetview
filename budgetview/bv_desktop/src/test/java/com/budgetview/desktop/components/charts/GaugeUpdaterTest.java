@@ -1,8 +1,7 @@
 package com.budgetview.desktop.components.charts;
 
-import com.budgetview.desktop.components.charts.GaugeUpdater;
 import junit.framework.TestCase;
-import com.budgetview.model.BudgetArea;
+import com.budgetview.shared.model.BudgetArea;
 
 public class GaugeUpdaterTest extends TestCase {
 

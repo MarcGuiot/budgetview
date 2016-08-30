@@ -42,6 +42,8 @@ public class StatementServlet extends HttpServlet {
     request.setCharacterEncoding("UTF-8");
     response.setCharacterEncoding("UTF-8");
 
+    logger.info("GET");
+
     String pathInfo = request.getPathInfo();
     Matcher matcher = pattern.matcher(pathInfo);
     if (!matcher.matches()) {
@@ -129,8 +131,8 @@ public class StatementServlet extends HttpServlet {
     writer.field(ProviderTransaction.AMOUNT, "amount");
     writer.field(ProviderTransaction.OPERATION_DATE, "operation_date");
     writer.field(ProviderTransaction.BANK_DATE, "bank_date");
-    writer.field(ProviderTransaction.CATEGORY_ID, "category_id");
-    writer.field(ProviderTransaction.CATEGORY_NAME, "category_name");
+    writer.field(ProviderTransaction.PROVDER_CATEGORY_ID, "provider_category_id");
+    writer.field(ProviderTransaction.PROVDER_CATEGORY_NAME, "provider_category_name");
     writer.field(ProviderTransaction.DELETED, "deleted");
     writer.endObject();
   }

@@ -1,8 +1,7 @@
 package com.budgetview.desktop.description;
 
-import com.budgetview.desktop.description.PeriodSeriesStatComparator;
 import com.budgetview.desktop.model.SeriesType;
-import com.budgetview.model.BudgetArea;
+import com.budgetview.shared.model.BudgetArea;
 import junit.framework.TestCase;
 import com.budgetview.desktop.model.PeriodSeriesStat;
 import com.budgetview.model.Series;

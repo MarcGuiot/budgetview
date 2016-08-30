@@ -4,7 +4,7 @@ import com.budgetview.desktop.model.SeriesStat;
 import com.budgetview.desktop.model.SeriesType;
 import com.budgetview.desktop.series.view.SeriesWrapper;
 import com.budgetview.model.Account;
-import com.budgetview.model.BudgetArea;
+import com.budgetview.shared.model.BudgetArea;
 import com.budgetview.model.Series;
 import com.budgetview.model.SeriesGroup;
 import org.globsframework.model.Glob;

@@ -7,7 +7,7 @@ import com.budgetview.desktop.components.filtering.Filterable;
 import com.budgetview.desktop.components.filtering.components.FilterMessagePanel;
 import com.budgetview.desktop.components.layoutconfig.SplitPaneConfig;
 import com.budgetview.desktop.series.UncategorizedSummaryView;
-import com.budgetview.model.BudgetArea;
+import com.budgetview.shared.model.BudgetArea;
 import com.budgetview.model.LayoutConfig;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.model.GlobRepository;

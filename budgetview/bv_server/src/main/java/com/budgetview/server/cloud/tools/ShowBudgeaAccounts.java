@@ -1,6 +1,6 @@
 package com.budgetview.server.cloud.tools;
 
-import com.budgetview.shared.cloud.BudgeaConstants;
+import com.budgetview.shared.cloud.budgea.BudgeaConstants;
 import org.apache.http.client.fluent.Request;
 import org.apache.http.client.fluent.Response;
 

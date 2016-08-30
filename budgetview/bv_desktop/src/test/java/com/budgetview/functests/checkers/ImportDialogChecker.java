@@ -145,6 +145,13 @@ public class ImportDialogChecker extends GuiChecker {
     validateAndComplete(-1, -1, -1, dialog, "import.preview.ok");
   }
 
+  public void completeImportAndImportSeries() {
+    Trigger trigger = dialog.getButton("ok").triggerClick();
+    ImportSeriesChecker.init(trigger, dialog)
+      .validateAndFinishImport();
+    UISpecAssert.assertFalse(dialog.isVisible());
+  }
+
   public void completeImportAndSkipSeries() {
     assertTrue(dialog.getTextBox("importMessage").textIsEmpty());
     Trigger trigger = dialog.getButton(Lang.get("import.preview.ok")).triggerClick();

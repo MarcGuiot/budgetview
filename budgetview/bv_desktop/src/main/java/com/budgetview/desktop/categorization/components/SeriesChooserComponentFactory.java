@@ -3,6 +3,7 @@ package com.budgetview.desktop.categorization.components;
 import com.budgetview.desktop.categorization.actions.EditSeriesAction;
 import com.budgetview.desktop.description.stringifiers.SeriesDescriptionStringifier;
 import com.budgetview.model.*;
+import com.budgetview.shared.model.BudgetArea;
 import org.globsframework.gui.GlobSelection;
 import org.globsframework.gui.GlobSelectionListener;
 import org.globsframework.gui.GlobsPanelBuilder;

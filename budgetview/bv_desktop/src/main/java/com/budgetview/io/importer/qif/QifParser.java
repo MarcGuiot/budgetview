@@ -15,6 +15,9 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.Reader;
 
+import static org.globsframework.model.FieldValue.value;
+import static org.globsframework.model.utils.GlobMatchers.fieldEquals;
+
 public class QifParser {
 
   public static GlobList read(Reader reader, ReadOnlyGlobRepository initialRepository, GlobRepository globRepository) {
@@ -240,9 +243,9 @@ public class QifParser {
 
   private void addEnveloppe(String line) {
     String seriesName = line.trim();
-    Glob series = globRepository.getAll(ImportedSeries.TYPE, GlobMatchers.fieldEquals(ImportedSeries.NAME, seriesName)).getFirst();
+    Glob series = globRepository.getAll(ImportedSeries.TYPE, fieldEquals(ImportedSeries.NAME, seriesName)).getFirst();
     if (series == null) {
-      series = globRepository.create(ImportedSeries.TYPE, FieldValue.value(ImportedSeries.NAME, seriesName));
+      series = globRepository.create(ImportedSeries.TYPE, value(ImportedSeries.NAME, seriesName));
     }
     seriesId = series.get(ImportedSeries.ID);
   }

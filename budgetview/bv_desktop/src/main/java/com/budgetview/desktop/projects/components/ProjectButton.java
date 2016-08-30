@@ -4,7 +4,7 @@ import com.budgetview.desktop.components.charts.Gauge;
 import com.budgetview.desktop.components.charts.SimpleGaugeView;
 import com.budgetview.desktop.description.Formatting;
 import com.budgetview.desktop.model.ProjectStat;
-import com.budgetview.model.BudgetArea;
+import com.budgetview.shared.model.BudgetArea;
 import com.budgetview.model.Month;
 import com.budgetview.model.Picture;
 import com.budgetview.model.Project;

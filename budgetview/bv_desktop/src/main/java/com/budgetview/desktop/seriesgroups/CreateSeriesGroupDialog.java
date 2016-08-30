@@ -1,6 +1,6 @@
 package com.budgetview.desktop.seriesgroups;
 
-import com.budgetview.model.BudgetArea;
+import com.budgetview.shared.model.BudgetArea;
 import com.budgetview.model.Series;
 import com.budgetview.model.SeriesGroup;
 import com.budgetview.utils.Lang;

@@ -1,6 +1,6 @@
 package com.budgetview.desktop.components.charts;
 
-import com.budgetview.model.BudgetArea;
+import com.budgetview.shared.model.BudgetArea;
 import com.budgetview.shared.gui.gauge.GaugeModel;
 
 public class BudgetAreaGaugeFactory {

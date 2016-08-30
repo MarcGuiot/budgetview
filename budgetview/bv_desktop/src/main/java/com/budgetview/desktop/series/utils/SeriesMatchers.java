@@ -2,6 +2,7 @@ package com.budgetview.desktop.series.utils;
 
 import com.budgetview.desktop.utils.MonthMatcher;
 import com.budgetview.model.*;
+import com.budgetview.shared.model.BudgetArea;
 import com.budgetview.shared.utils.Amounts;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobRepository;

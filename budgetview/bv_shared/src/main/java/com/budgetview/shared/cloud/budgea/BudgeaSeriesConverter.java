@@ -1,4 +1,4 @@
-package com.budgetview.server.cloud.budgea;
+package com.budgetview.shared.cloud.budgea;
 
 import com.budgetview.shared.model.DefaultSeries;
 
@@ -9,6 +9,10 @@ public class BudgeaSeriesConverter {
 
   private Map<Integer, DefaultSeries> categoriesToSeries = new HashMap<Integer, DefaultSeries>();
 
+  public BudgeaSeriesConverter() {
+    init();
+  }
+
   public DefaultSeries convert(Integer budgeaCategoryId) {
     if (budgeaCategoryId == null) {
       return null;
@@ -18,27 +22,27 @@ public class BudgeaSeriesConverter {
 
   private void init() {
     add(DefaultSeries.INCOME,
-        139 // Salaires nets
+        BudgeaCategory.SALAIRES_NETS
     );
     add(DefaultSeries.RENT,
-        225 // Loyers et charges locatives
+        BudgeaCategory.LOYERS
     );
 
     add(DefaultSeries.ELECTRICITY,
-        230 // Électricité
+        BudgeaCategory.ELECTRICITE
     );
 
     add(DefaultSeries.GAS,
-        229 // Gaz
+        BudgeaCategory.GAZ
     );
     add(DefaultSeries.WATER,
-        228  // Eau
+        BudgeaCategory.WATER
     );
     add(DefaultSeries.CAR_CREDIT);
     add(DefaultSeries.CAR_INSURANCE);
     add(DefaultSeries.INCOME_TAXES);
     add(DefaultSeries.CELL_PHONE,
-        226 // Télécom
+        BudgeaCategory.TELECOMS
     );
     add(DefaultSeries.INTERNET);
     add(DefaultSeries.FIXED_PHONE);
@@ -48,30 +52,30 @@ public class BudgeaSeriesConverter {
     add(DefaultSeries.PHARMACY);
     add(DefaultSeries.REIMBURSEMENTS);
     add(DefaultSeries.RESTAURANT,
-        143, // Restaurants
-        191  // Restaurants
+        BudgeaCategory.RESTAURANTS1,
+        BudgeaCategory.RESTAURANTS2
     );
     add(DefaultSeries.LEISURES);
     add(DefaultSeries.CLOTHING);
     add(DefaultSeries.BEAUTY);
     add(DefaultSeries.FUEL,
-        193, // Essence
-        194  // Gas-Oil
+        BudgeaCategory.FUEL1,
+        BudgeaCategory.FUEL2
     );
 
     add(DefaultSeries.CASH,
-        1  // Retrait
+        BudgeaCategory.CASH
     );
     add(DefaultSeries.BANK_FEES,
-        167, // Frais bancaires
-        168  // Agios
+        BudgeaCategory.FRAIS_BANCAIRES,
+        BudgeaCategory.AGOS
     );
     add(DefaultSeries.MISC);
   }
 
-  private void add(DefaultSeries series, int... budgeaCategoryIds) {
-    for (int id : budgeaCategoryIds) {
-      categoriesToSeries.put(id, series);
+  private void add(DefaultSeries series, BudgeaCategory... budgeaCategories) {
+    for (BudgeaCategory category : budgeaCategories) {
+      categoriesToSeries.put(category.getId(), series);
     }
   }
 }

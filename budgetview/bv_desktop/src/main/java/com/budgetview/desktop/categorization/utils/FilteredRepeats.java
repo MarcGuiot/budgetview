@@ -2,7 +2,7 @@ package com.budgetview.desktop.categorization.utils;
 
 import com.budgetview.desktop.categorization.components.SeriesChooserComponentFactory;
 import com.budgetview.desktop.description.stringifiers.SeriesNameComparator;
-import com.budgetview.model.BudgetArea;
+import com.budgetview.shared.model.BudgetArea;
 import com.budgetview.model.Series;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.components.GlobRepeat;

@@ -1,5 +1,6 @@
 package com.budgetview.mobile;
 
+import com.budgetview.desktop.description.Labels;
 import com.budgetview.model.*;
 import com.budgetview.shared.mobile.model.*;
 import com.budgetview.desktop.accounts.position.DailyAccountPositionComputer;
@@ -12,6 +13,7 @@ import com.budgetview.desktop.model.SeriesStat;
 import com.budgetview.desktop.transactions.utils.TransactionMatchers;
 import com.budgetview.desktop.utils.DaySelection;
 import com.budgetview.shared.model.AccountType;
+import com.budgetview.shared.model.BudgetArea;
 import com.budgetview.utils.TransactionComparator;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
@@ -98,7 +100,7 @@ public class BudgetValuesUpdater {
     for (BudgetArea budgetArea : BUDGET_AREAS) {
       targetRepository.create(BudgetAreaEntity.TYPE,
                               value(BudgetAreaEntity.ID, budgetArea.getId()),
-                              value(BudgetAreaEntity.LABEL, budgetArea.getLabel()),
+                              value(BudgetAreaEntity.LABEL, Labels.get(budgetArea)),
                               value(BudgetAreaEntity.INVERT_AMOUNTS, BudgetArea.shouldInvertAmounts(budgetArea)));
     }
   }

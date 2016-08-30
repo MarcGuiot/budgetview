@@ -5,6 +5,7 @@ import com.budgetview.desktop.description.stringifiers.*;
 import com.budgetview.desktop.projects.utils.ProjectStringifier;
 import com.budgetview.model.*;
 import com.budgetview.shared.model.AccountType;
+import com.budgetview.shared.model.BudgetArea;
 import com.budgetview.utils.Lang;
 import org.globsframework.metamodel.Field;
 import org.globsframework.metamodel.GlobType;

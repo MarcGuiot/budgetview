@@ -3,7 +3,7 @@ package com.budgetview.functests.categorization;
 import com.budgetview.functests.checkers.CategorizationChecker;
 import com.budgetview.functests.utils.LoggedInFunctionalTestCase;
 import com.budgetview.functests.utils.OfxBuilder;
-import com.budgetview.model.BudgetArea;
+import com.budgetview.shared.model.BudgetArea;
 import com.budgetview.model.TransactionType;
 import junit.framework.Assert;
 import org.junit.Test;

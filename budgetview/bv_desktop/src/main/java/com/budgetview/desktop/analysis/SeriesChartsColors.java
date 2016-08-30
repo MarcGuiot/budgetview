@@ -9,7 +9,7 @@ import com.budgetview.desktop.series.view.SeriesWrapper;
 import com.budgetview.desktop.series.view.SeriesWrapperType;
 import com.budgetview.desktop.utils.AmountColors;
 import com.budgetview.model.Account;
-import com.budgetview.model.BudgetArea;
+import com.budgetview.shared.model.BudgetArea;
 import org.globsframework.gui.splits.color.ColorChangeListener;
 import org.globsframework.gui.splits.color.ColorLocator;
 import org.globsframework.gui.splits.color.ColorService;

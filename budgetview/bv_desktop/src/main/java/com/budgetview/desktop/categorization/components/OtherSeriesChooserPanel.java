@@ -6,7 +6,8 @@ import com.budgetview.desktop.categorization.special.ShowHidePanelController;
 import com.budgetview.desktop.categorization.special.SpecialCategorizationPanel;
 import com.budgetview.desktop.categorization.utils.FilteredRepeats;
 import com.budgetview.desktop.categorization.utils.SeriesCreationHandler;
-import com.budgetview.model.BudgetArea;
+import com.budgetview.desktop.description.Labels;
+import com.budgetview.shared.model.BudgetArea;
 import com.budgetview.utils.Lang;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.components.ShowHideButton;
@@ -48,7 +49,7 @@ public class OtherSeriesChooserPanel {
                                                       "/layout/categorization/otherSeriesChooserPanel.splits",
                                                       repository, directory);
 
-    builder.add("description", GuiUtils.createReadOnlyHtmlComponent(BudgetArea.OTHER.getHtmlDescription()));
+    builder.add("description", GuiUtils.createReadOnlyHtmlComponent(Labels.getHtmlDescription(BudgetArea.OTHER)));
 
     java.util.List<SpecialCategorizationPanel> categorizationPanels = Arrays.asList(
       new DeferredCardCategorizationPanel(),

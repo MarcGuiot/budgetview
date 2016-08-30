@@ -7,7 +7,7 @@ import com.budgetview.desktop.help.HyperlinkHandler;
 import com.budgetview.desktop.signpost.guides.CategorizationAreaSignpost;
 import com.budgetview.desktop.signpost.sections.SkipCategorizationPanel;
 import com.budgetview.desktop.transactions.TransactionDetailsView;
-import com.budgetview.model.BudgetArea;
+import com.budgetview.shared.model.BudgetArea;
 import com.budgetview.model.Transaction;
 import com.budgetview.utils.Lang;
 import org.globsframework.gui.GlobSelection;

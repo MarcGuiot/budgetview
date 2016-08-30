@@ -1,7 +1,7 @@
 package com.budgetview.desktop.components.charts;
 
 import com.budgetview.desktop.description.Formatting;
-import com.budgetview.model.BudgetArea;
+import com.budgetview.shared.model.BudgetArea;
 import com.budgetview.model.Month;
 import com.budgetview.shared.utils.Amounts;
 import com.budgetview.utils.Lang;

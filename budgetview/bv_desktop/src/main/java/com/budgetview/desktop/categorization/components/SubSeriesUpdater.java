@@ -1,6 +1,6 @@
 package com.budgetview.desktop.categorization.components;
 
-import com.budgetview.model.BudgetArea;
+import com.budgetview.shared.model.BudgetArea;
 import com.budgetview.model.Series;
 import com.budgetview.model.SubSeries;
 import com.budgetview.model.Transaction;

@@ -1,8 +1,10 @@
 package com.budgetview.desktop.analysis.budget;
 
+import com.budgetview.desktop.description.Labels;
 import com.budgetview.desktop.series.view.SeriesWrapper;
 import com.budgetview.desktop.series.view.SeriesWrapperType;
 import com.budgetview.model.*;
+import com.budgetview.shared.model.BudgetArea;
 import com.budgetview.utils.Lang;
 import org.globsframework.gui.GlobSelection;
 import org.globsframework.gui.GlobSelectionListener;
@@ -182,12 +184,12 @@ public class BudgetAnalysisBreadcrumb implements GlobSelectionListener {
 
     private void addBudgetAreaName(Glob wrapperForBudgetArea) {
       BudgetArea budgetArea = SeriesWrapper.getBudgetArea(wrapperForBudgetArea);
-      addBold(budgetArea.getLabel());
+      addBold(Labels.get(budgetArea));
     }
 
     private void addBudgetAreaLink(Glob wrapperForBudgetArea) {
       BudgetArea budgetArea = SeriesWrapper.getBudgetArea(wrapperForBudgetArea);
-      addLink(wrapperForBudgetArea.get(SeriesWrapper.ID), budgetArea.getLabel());
+      addLink(wrapperForBudgetArea.get(SeriesWrapper.ID), Labels.get(budgetArea));
     }
 
     private void addBold(String text) {

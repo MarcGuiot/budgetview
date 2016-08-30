@@ -2,7 +2,7 @@ package com.budgetview.desktop.budget;
 
 import com.budgetview.desktop.description.Formatting;
 import com.budgetview.desktop.model.PeriodBudgetAreaStat;
-import com.budgetview.model.BudgetArea;
+import com.budgetview.shared.model.BudgetArea;
 import com.budgetview.shared.utils.Amounts;
 import com.budgetview.utils.Lang;
 import org.globsframework.gui.splits.color.ColorChangeListener;

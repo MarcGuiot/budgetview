@@ -13,12 +13,14 @@ import com.budgetview.desktop.components.charts.histo.diff.HistoDiffColors;
 import com.budgetview.desktop.components.charts.histo.diff.HistoDiffLegendPanel;
 import com.budgetview.desktop.components.charts.histo.line.HistoLineColors;
 import com.budgetview.desktop.components.charts.histo.utils.HistoChartListenerAdapter;
+import com.budgetview.desktop.description.Labels;
 import com.budgetview.desktop.model.*;
 import com.budgetview.desktop.series.utils.SeriesOrGroup;
 import com.budgetview.desktop.transactions.utils.TransactionMatchers;
 import com.budgetview.desktop.utils.DaySelection;
 import com.budgetview.model.*;
 import com.budgetview.shared.gui.histochart.HistoChartConfig;
+import com.budgetview.shared.model.BudgetArea;
 import org.globsframework.gui.SelectionService;
 import org.globsframework.gui.splits.utils.Disposable;
 import org.globsframework.gui.splits.utils.DisposableGroup;
@@ -251,7 +253,7 @@ public class HistoChartBuilder implements Disposable {
     String messageArg;
     if (budgetAreas.size() == 1) {
       messageKey = "budgetArea";
-      messageArg = budgetAreas.iterator().next().getLabel();
+      messageArg = Labels.get(budgetAreas.iterator().next());
     }
     else {
       messageKey = "budgetArea.multi";

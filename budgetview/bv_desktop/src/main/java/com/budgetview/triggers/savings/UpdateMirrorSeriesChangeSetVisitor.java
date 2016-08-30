@@ -1,6 +1,6 @@
 package com.budgetview.triggers.savings;
 
-import com.budgetview.model.BudgetArea;
+import com.budgetview.shared.model.BudgetArea;
 import com.budgetview.model.Series;
 import com.budgetview.model.Transaction;
 import org.globsframework.metamodel.Field;

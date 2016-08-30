@@ -2,6 +2,7 @@ package com.budgetview.triggers;
 
 import com.budgetview.desktop.time.TimeService;
 import com.budgetview.model.*;
+import com.budgetview.shared.model.BudgetArea;
 import com.budgetview.utils.PicsouTestCase;
 
 import static org.globsframework.model.FieldValue.value;

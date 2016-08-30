@@ -7,7 +7,7 @@ import com.budgetview.desktop.components.charts.DeltaGauge;
 import com.budgetview.desktop.components.charts.Gauge;
 import com.budgetview.desktop.description.Formatting;
 import com.budgetview.desktop.series.ui.SeriesPanelUI;
-import com.budgetview.model.BudgetArea;
+import com.budgetview.shared.model.BudgetArea;
 import com.budgetview.utils.Lang;
 import junit.framework.Assert;
 import org.globsframework.utils.TablePrinter;

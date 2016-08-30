@@ -1,6 +1,6 @@
 package com.budgetview.desktop.categorization.components.messages;
 
-import com.budgetview.model.BudgetArea;
+import com.budgetview.shared.model.BudgetArea;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.utils.directory.Directory;
 

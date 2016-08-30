@@ -11,6 +11,7 @@ import com.budgetview.desktop.transactions.actions.ShowSeriesTransactionsInAccou
 import com.budgetview.desktop.transactions.actions.ShowTransactionsInAccountViewAction;
 import com.budgetview.desktop.transactions.utils.TransactionMatchers;
 import com.budgetview.model.*;
+import com.budgetview.shared.model.BudgetArea;
 import org.globsframework.gui.SelectionService;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.Glob;

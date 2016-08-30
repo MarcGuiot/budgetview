@@ -1,6 +1,7 @@
 package com.budgetview.utils;
 
 import com.budgetview.model.*;
+import com.budgetview.shared.model.BudgetArea;
 import org.globsframework.metamodel.GlobModel;
 import org.globsframework.model.DummyChangeSetListener;
 import org.globsframework.model.GlobChecker;

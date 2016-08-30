@@ -4,10 +4,11 @@ import com.budgetview.desktop.categorization.CategorizationSelector;
 import com.budgetview.desktop.categorization.components.messages.DynamicMessage;
 import com.budgetview.desktop.categorization.components.messages.NoSeriesMessageFactory;
 import com.budgetview.desktop.categorization.utils.FilteredRepeats;
+import com.budgetview.desktop.description.Labels;
 import com.budgetview.desktop.description.SeriesAndGroupsComparator;
 import com.budgetview.desktop.help.HyperlinkHandler;
 import com.budgetview.desktop.projects.actions.CreateProjectAction;
-import com.budgetview.model.BudgetArea;
+import com.budgetview.shared.model.BudgetArea;
 import com.budgetview.model.SeriesGroup;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.actions.DisabledAction;
@@ -58,7 +59,7 @@ public class SeriesChooserPanel {
 
     builder.add("hyperlinkHandler", new HyperlinkHandler(directory));
 
-    builder.add("description", GuiUtils.createReadOnlyHtmlComponent(budgetArea.getHtmlDescription()));
+    builder.add("description", GuiUtils.createReadOnlyHtmlComponent(Labels.getHtmlDescription(budgetArea)));
 
     DynamicMessage noSeriesMessage = NoSeriesMessageFactory.create(budgetArea, repository, directory);
     builder.add("noSeriesMessage", noSeriesMessage.getComponent());

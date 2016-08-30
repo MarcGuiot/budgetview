@@ -7,8 +7,8 @@ public abstract class CloudDesktopTestCase extends LoggedInFunctionalTestCase {
 
   private static Logger logger = Logger.getLogger("CloudDesktopTestCase");
 
-  private BudgeaChecker budgea;
-  private CloudChecker cloud;
+  protected BudgeaChecker budgea;
+  protected CloudChecker cloud;
 
   public void setUp() throws Exception {
     super.setUp();

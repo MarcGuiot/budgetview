@@ -1,6 +1,6 @@
 package com.budgetview.desktop.categorization.utils;
 
-import com.budgetview.model.BudgetArea;
+import com.budgetview.shared.model.BudgetArea;
 import org.globsframework.model.FieldValue;
 
 public interface SeriesCreationHandler {

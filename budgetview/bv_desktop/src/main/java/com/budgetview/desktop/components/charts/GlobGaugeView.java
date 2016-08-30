@@ -1,6 +1,6 @@
 package com.budgetview.desktop.components.charts;
 
-import com.budgetview.model.BudgetArea;
+import com.budgetview.shared.model.BudgetArea;
 import org.globsframework.gui.splits.utils.Disposable;
 import org.globsframework.gui.utils.AbstractGlobComponentHolder;
 import org.globsframework.metamodel.GlobType;

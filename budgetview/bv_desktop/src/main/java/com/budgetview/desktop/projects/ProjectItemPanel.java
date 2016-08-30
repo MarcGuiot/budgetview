@@ -15,6 +15,7 @@ import com.budgetview.desktop.model.ProjectItemStat;
 import com.budgetview.desktop.projects.components.DefaultPictureIcon;
 import com.budgetview.desktop.projects.utils.ImageStatusUpdater;
 import com.budgetview.model.*;
+import com.budgetview.shared.model.BudgetArea;
 import com.budgetview.triggers.projects.ProjectItemToAmountLocalTrigger;
 import com.budgetview.utils.Lang;
 import org.globsframework.gui.GlobsPanelBuilder;

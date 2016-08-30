@@ -1,6 +1,7 @@
 package com.budgetview.triggers;
 
 import com.budgetview.model.*;
+import com.budgetview.shared.model.BudgetArea;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.*;
 import org.globsframework.model.utils.GlobFunctor;

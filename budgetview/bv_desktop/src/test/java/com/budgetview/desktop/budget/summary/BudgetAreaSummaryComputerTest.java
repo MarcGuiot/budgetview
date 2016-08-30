@@ -1,7 +1,6 @@
 package com.budgetview.desktop.budget.summary;
 
-import com.budgetview.desktop.budget.summary.BudgetAreaSummaryComputer;
-import com.budgetview.model.BudgetArea;
+import com.budgetview.shared.model.BudgetArea;
 import junit.framework.TestCase;
 import com.budgetview.desktop.printing.budget.gauges.BudgetAreaBlockHeaderUpdater;
 import com.budgetview.desktop.components.ComponentTextDisplay;

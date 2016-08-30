@@ -1,5 +1,6 @@
 package com.budgetview.server.cloud.stub;
 
+import com.budgetview.shared.cloud.budgea.BudgeaCategory;
 import org.json.JSONWriter;
 
 import java.io.IOException;
@@ -59,6 +60,10 @@ public class BudgeaStatement {
 
   public BudgeaStatement addTransaction(int id, String date, double amount, String label) {
     return addTransaction(id, date, date, amount, label, label, 9998, "Indéfini", null);
+  }
+
+  public BudgeaStatement addTransaction(int id, String date, double amount, String label, BudgeaCategory budgeaCategory) {
+    return addTransaction(id, date, date, amount, label, label, budgeaCategory.getId(), budgeaCategory.getName(), null);
   }
 
   public BudgeaStatement addTransaction(int id, String operationDate, String bankDate, double amount, String label, String originalLabel, int category, String categoryName, Boolean deleted) {

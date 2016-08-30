@@ -2,7 +2,7 @@ package com.budgetview.desktop.series.utils;
 
 import com.budgetview.desktop.components.dialogs.ConfirmationDialog;
 import com.budgetview.desktop.series.SeriesDeletionDialog;
-import com.budgetview.model.BudgetArea;
+import com.budgetview.shared.model.BudgetArea;
 import com.budgetview.model.Series;
 import com.budgetview.model.Transaction;
 import com.budgetview.utils.Lang;

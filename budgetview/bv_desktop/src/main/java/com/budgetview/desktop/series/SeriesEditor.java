@@ -2,7 +2,7 @@ package com.budgetview.desktop.series;
 
 import com.budgetview.desktop.card.NavigationService;
 import com.budgetview.model.Account;
-import com.budgetview.model.BudgetArea;
+import com.budgetview.shared.model.BudgetArea;
 import com.budgetview.model.ProjectItem;
 import org.globsframework.model.*;
 import org.globsframework.utils.directory.Directory;

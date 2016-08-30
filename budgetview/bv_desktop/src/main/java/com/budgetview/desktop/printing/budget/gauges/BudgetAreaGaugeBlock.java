@@ -2,9 +2,10 @@ package com.budgetview.desktop.printing.budget.gauges;
 
 import com.budgetview.desktop.components.TextDisplayHolder;
 import com.budgetview.desktop.components.charts.Gauge;
+import com.budgetview.desktop.description.Labels;
 import com.budgetview.desktop.printing.PrintStyle;
 import com.budgetview.desktop.printing.utils.PageBlock;
-import com.budgetview.model.BudgetArea;
+import com.budgetview.shared.model.BudgetArea;
 import com.budgetview.model.Month;
 import org.globsframework.gui.SelectionService;
 import org.globsframework.model.GlobRepository;
@@ -61,7 +62,7 @@ public class BudgetAreaGaugeBlock implements PageBlock {
   }
 
   public String getLabel() {
-    return budgetArea.getLabel();
+    return Labels.get(budgetArea);
   }
 
   public String getActualAmount() {

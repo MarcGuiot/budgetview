@@ -3,6 +3,7 @@ package com.budgetview.desktop.series;
 import com.budgetview.desktop.components.dialogs.PicsouDialog;
 import com.budgetview.desktop.description.stringifiers.SeriesNameComparator;
 import com.budgetview.model.*;
+import com.budgetview.shared.model.BudgetArea;
 import com.budgetview.utils.Lang;
 import org.globsframework.gui.GlobSelection;
 import org.globsframework.gui.GlobSelectionListener;

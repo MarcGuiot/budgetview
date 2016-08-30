@@ -1,6 +1,6 @@
 package com.budgetview.functests.checkers;
 
-import com.budgetview.model.BudgetArea;
+import com.budgetview.shared.model.BudgetArea;
 
 public class ExtrasBudgetAreaCategorizationChecker extends BudgetAreaCategorizationChecker {
   public ExtrasBudgetAreaCategorizationChecker(CategorizationChecker categorizationChecker) {

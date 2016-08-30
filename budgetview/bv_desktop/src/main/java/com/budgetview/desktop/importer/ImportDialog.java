@@ -9,6 +9,7 @@ import com.budgetview.desktop.importer.components.ImportSeriesDialog;
 import com.budgetview.desktop.importer.components.RealAccountImporter;
 import com.budgetview.desktop.importer.steps.*;
 import com.budgetview.model.*;
+import com.budgetview.shared.model.BudgetArea;
 import com.budgetview.triggers.AutomaticSeriesBudgetTrigger;
 import com.budgetview.triggers.SeriesBudgetTrigger;
 import org.globsframework.gui.SelectionService;

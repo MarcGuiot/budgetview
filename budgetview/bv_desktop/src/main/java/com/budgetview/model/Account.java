@@ -2,6 +2,7 @@ package com.budgetview.model;
 
 import com.budgetview.desktop.accounts.utils.AccountMatchers;
 import com.budgetview.shared.model.AccountType;
+import com.budgetview.shared.model.BudgetArea;
 import com.budgetview.shared.utils.PicsouGlobSerializer;
 import com.budgetview.utils.PicsouUtils;
 import com.budgetview.desktop.accounts.utils.MonthDay;

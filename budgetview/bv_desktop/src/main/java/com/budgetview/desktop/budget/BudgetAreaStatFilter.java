@@ -3,7 +3,7 @@ package com.budgetview.desktop.budget;
 import com.budgetview.desktop.model.PeriodSeriesStat;
 import com.budgetview.desktop.series.utils.SeriesMatchers;
 import com.budgetview.desktop.utils.MonthMatcher;
-import com.budgetview.model.BudgetArea;
+import com.budgetview.shared.model.BudgetArea;
 import com.budgetview.model.Series;
 import com.budgetview.model.SeriesBudget;
 import com.budgetview.model.SeriesGroup;

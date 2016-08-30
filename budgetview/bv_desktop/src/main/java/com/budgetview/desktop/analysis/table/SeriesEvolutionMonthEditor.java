@@ -7,6 +7,7 @@ import com.budgetview.desktop.series.SeriesEditor;
 import com.budgetview.desktop.series.view.SeriesWrapper;
 import com.budgetview.desktop.series.view.SeriesWrapperType;
 import com.budgetview.model.*;
+import com.budgetview.shared.model.BudgetArea;
 import com.budgetview.shared.utils.Amounts;
 import org.globsframework.gui.views.GlobTableView;
 import org.globsframework.metamodel.GlobType;

@@ -1,6 +1,6 @@
 package com.budgetview.desktop.printing.utils;
 
-import com.budgetview.model.BudgetArea;
+import com.budgetview.shared.model.BudgetArea;
 
 public class BudgetReportUtils {
   public static final BudgetArea[] BUDGET_AREAS =

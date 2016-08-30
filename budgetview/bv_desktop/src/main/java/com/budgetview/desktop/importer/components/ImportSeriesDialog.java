@@ -2,17 +2,20 @@ package com.budgetview.desktop.importer.components;
 
 import com.budgetview.desktop.components.BorderlessTextField;
 import com.budgetview.desktop.components.dialogs.PicsouDialog;
-import com.budgetview.model.BudgetArea;
 import com.budgetview.model.ImportedSeries;
 import com.budgetview.model.Series;
 import com.budgetview.model.SubSeries;
+import com.budgetview.shared.model.BudgetArea;
 import com.budgetview.utils.Lang;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.editors.GlobLinkComboEditor;
 import org.globsframework.gui.editors.GlobTextEditor;
 import org.globsframework.gui.splits.PanelBuilder;
 import org.globsframework.gui.splits.repeat.RepeatComponentFactory;
-import org.globsframework.model.*;
+import org.globsframework.model.Glob;
+import org.globsframework.model.GlobList;
+import org.globsframework.model.GlobRepository;
+import org.globsframework.model.Key;
 import org.globsframework.model.repository.LocalGlobRepository;
 import org.globsframework.model.repository.LocalGlobRepositoryBuilder;
 import org.globsframework.model.utils.GlobFieldComparator;
@@ -26,7 +29,8 @@ import java.awt.event.ActionEvent;
 import java.util.Iterator;
 import java.util.Set;
 
-import static org.globsframework.model.utils.GlobMatchers.fieldIn;
+import static org.globsframework.model.FieldValue.value;
+import static org.globsframework.model.utils.GlobMatchers.*;
 
 public class ImportSeriesDialog {
   private Window parent;
@@ -60,27 +64,27 @@ public class ImportSeriesDialog {
     builder.addRepeat("series", ImportedSeries.TYPE,
                       GlobMatchers.keyIn(importedSeriesKeys),
                       new GlobFieldComparator(ImportedSeries.NAME), new RepeatComponentFactory<Glob>() {
-      public void registerComponents(PanelBuilder cellBuilder, Glob item) {
+        public void registerComponents(PanelBuilder cellBuilder, Glob item) {
 
-        JTextField nameField = GlobTextEditor.init(ImportedSeries.NAME, localRepository, directory)
-          .forceSelection(item.getKey())
-          .setName("series_" + item.get(ImportedSeries.NAME))
-          .getComponent();
-        BorderlessTextField.install(nameField);
-        cellBuilder.add("name", nameField);
+          JTextField nameField = GlobTextEditor.init(ImportedSeries.NAME, localRepository, directory)
+            .forceSelection(item.getKey())
+            .setName("series_" + item.get(ImportedSeries.NAME))
+            .getComponent();
+          BorderlessTextField.install(nameField);
+          cellBuilder.add("name", nameField);
 
-        GlobLinkComboEditor comboView = GlobLinkComboEditor.init(ImportedSeries.BUDGET_AREA, localRepository, directory)
-          .setEmptyOptionLabel(Lang.get("import.series.uncategorized"))
-          .setFilter(fieldIn(BudgetArea.ID,
-                             BudgetArea.INCOME.getId(),
-                             BudgetArea.RECURRING.getId(),
-                             BudgetArea.VARIABLE.getId()))
-          .setComparator(new GlobFieldComparator(BudgetArea.ID))
-          .setName("choice_" + item.get(ImportedSeries.NAME))
-          .forceSelection(item.getKey());
-        cellBuilder.add("choice", comboView.getComponent());
-      }
-    });
+          GlobLinkComboEditor comboView = GlobLinkComboEditor.init(ImportedSeries.BUDGET_AREA, localRepository, directory)
+            .setEmptyOptionLabel(Lang.get("import.series.uncategorized"))
+            .setFilter(fieldIn(BudgetArea.ID,
+                               BudgetArea.INCOME.getId(),
+                               BudgetArea.RECURRING.getId(),
+                               BudgetArea.VARIABLE.getId()))
+            .setComparator(new GlobFieldComparator(BudgetArea.ID))
+            .setName("choice_" + item.get(ImportedSeries.NAME))
+            .forceSelection(item.getKey());
+          cellBuilder.add("choice", comboView.getComponent());
+        }
+      });
 
     dialog.addPanelWithButtons(builder.<JPanel>load(),
                                new ValidateAction(localRepository),
@@ -108,37 +112,36 @@ public class ImportSeriesDialog {
           Glob subSeries = null;
           Glob series =
             localRepository.getAll(Series.TYPE,
-                                   GlobMatchers.and(
-                                     GlobMatchers.fieldEquals(Series.BUDGET_AREA, budgetArea),
-                                     GlobMatchers.fieldEquals(Series.NAME, seriesName))).getFirst();
+                                   and(fieldEquals(Series.BUDGET_AREA, budgetArea),
+                                       fieldEquals(Series.NAME, seriesName))).getFirst();
           if (series != null) {
             if (subSeriesName != null) {
-              subSeries = localRepository.getAll(SubSeries.TYPE, GlobMatchers.and(
-                GlobMatchers.fieldEquals(SubSeries.SERIES, series.get(Series.ID)),
-                GlobMatchers.fieldEquals(SubSeries.NAME, subSeriesName)
-              )).getFirst();
+              subSeries =
+                localRepository.getAll(SubSeries.TYPE, and(fieldEquals(SubSeries.SERIES, series.get(Series.ID)),
+                                                           fieldEquals(SubSeries.NAME, subSeriesName)
+                )).getFirst();
               if (subSeries == null) {
                 subSeries = localRepository.create(SubSeries.TYPE,
-                                                   FieldValue.value(SubSeries.NAME, subSeriesName),
-                                                   FieldValue.value(SubSeries.SERIES, series.get(Series.ID)));
+                                                   value(SubSeries.NAME, subSeriesName),
+                                                   value(SubSeries.SERIES, series.get(Series.ID)));
               }
             }
           }
           else {
             series = localRepository.create(Series.TYPE,
-                                            FieldValue.value(Series.IS_AUTOMATIC,
-                                                             BudgetArea.RECURRING.getId().equals(importedSeries.get(ImportedSeries.BUDGET_AREA))),
-                                            FieldValue.value(Series.BUDGET_AREA, importedSeries.get(ImportedSeries.BUDGET_AREA)),
-                                            FieldValue.value(Series.NAME, seriesName));
+                                            value(Series.IS_AUTOMATIC,
+                                                  BudgetArea.RECURRING.getId().equals(importedSeries.get(ImportedSeries.BUDGET_AREA))),
+                                            value(Series.BUDGET_AREA, importedSeries.get(ImportedSeries.BUDGET_AREA)),
+                                            value(Series.NAME, seriesName));
             if (subSeriesName != null) {
               subSeries = localRepository.create(SubSeries.TYPE,
-                                                 FieldValue.value(SubSeries.NAME, subSeriesName),
-                                                 FieldValue.value(SubSeries.SERIES, series.get(Series.ID)));
+                                                 value(SubSeries.NAME, subSeriesName),
+                                                 value(SubSeries.SERIES, series.get(Series.ID)));
             }
           }
           localRepository.update(importedSeriesKey,
-                                 FieldValue.value(ImportedSeries.SERIES, series.get(Series.ID)),
-                                 FieldValue.value(ImportedSeries.SUB_SERIES, subSeries != null ? subSeries.get(SubSeries.ID) : null));
+                                 value(ImportedSeries.SERIES, series.get(Series.ID)),
+                                 value(ImportedSeries.SUB_SERIES, subSeries != null ? subSeries.get(SubSeries.ID) : null));
         }
       }
     }
@@ -155,7 +158,7 @@ public class ImportSeriesDialog {
       Integer budgetArea = null;
       boolean duplicate = false;
       if (splited.length == 1) {
-        GlobList series = localRepository.getAll(Series.TYPE, GlobMatchers.fieldEquals(Series.NAME, splited[0]));
+        GlobList series = localRepository.getAll(Series.TYPE, fieldEquals(Series.NAME, splited[0]));
         for (Glob sery : series) {
           if (seriesId != null) {
             duplicate = true;
@@ -166,7 +169,7 @@ public class ImportSeriesDialog {
         }
       }
       else if (splited.length == 2) {
-        GlobList series = localRepository.getAll(Series.TYPE, GlobMatchers.fieldEquals(Series.NAME, splited[0]));
+        GlobList series = localRepository.getAll(Series.TYPE, fieldEquals(Series.NAME, splited[0]));
         for (Glob sery : series) {
           GlobList subSeries = localRepository.findLinkedTo(sery, SubSeries.SERIES);
           for (Glob subSery : subSeries) {
@@ -183,9 +186,9 @@ public class ImportSeriesDialog {
       }
       if (!duplicate && budgetArea != null) {
         localRepository.update(glob.getKey(),
-                               FieldValue.value(ImportedSeries.SERIES, seriesId),
-                               FieldValue.value(ImportedSeries.SUB_SERIES, subSeriesId),
-                               FieldValue.value(ImportedSeries.BUDGET_AREA, budgetArea));
+                               value(ImportedSeries.SERIES, seriesId),
+                               value(ImportedSeries.SUB_SERIES, subSeriesId),
+                               value(ImportedSeries.BUDGET_AREA, budgetArea));
 
         it.remove();
       }

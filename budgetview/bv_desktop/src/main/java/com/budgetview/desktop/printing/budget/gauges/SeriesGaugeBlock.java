@@ -5,7 +5,7 @@ import com.budgetview.desktop.description.Formatting;
 import com.budgetview.desktop.model.PeriodSeriesStat;
 import com.budgetview.desktop.printing.PrintStyle;
 import com.budgetview.desktop.printing.utils.PageBlock;
-import com.budgetview.model.BudgetArea;
+import com.budgetview.shared.model.BudgetArea;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobRepository;
 

@@ -1,7 +1,7 @@
 package com.budgetview.desktop.description;
 
 import com.budgetview.desktop.description.stringifiers.ForcedPlusGlobListStringifier;
-import com.budgetview.model.BudgetArea;
+import com.budgetview.shared.model.BudgetArea;
 import org.globsframework.metamodel.fields.DoubleField;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobRepository;

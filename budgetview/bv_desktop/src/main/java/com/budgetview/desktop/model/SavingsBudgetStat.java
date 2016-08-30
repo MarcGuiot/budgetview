@@ -1,7 +1,7 @@
 package com.budgetview.desktop.model;
 
 import com.budgetview.model.Account;
-import com.budgetview.model.BudgetArea;
+import com.budgetview.shared.model.BudgetArea;
 import com.budgetview.model.Month;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.annotations.DefaultDouble;

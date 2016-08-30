@@ -3,7 +3,7 @@ package com.budgetview.desktop.categorization.components;
 import com.budgetview.desktop.categorization.utils.CategorizationFilter;
 import com.budgetview.desktop.categorization.utils.CategorizationMatchers;
 import com.budgetview.desktop.categorization.utils.FilteredRepeats;
-import com.budgetview.model.BudgetArea;
+import com.budgetview.shared.model.BudgetArea;
 import com.budgetview.model.Series;
 import com.budgetview.model.SeriesGroup;
 import org.globsframework.gui.GlobsPanelBuilder;

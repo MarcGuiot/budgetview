@@ -1,8 +1,10 @@
 package com.budgetview.desktop.series.view;
 
+import com.budgetview.desktop.description.Labels;
 import com.budgetview.desktop.model.SeriesStat;
 import com.budgetview.desktop.model.SeriesType;
 import com.budgetview.model.*;
+import com.budgetview.shared.model.BudgetArea;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.annotations.Key;
 import org.globsframework.metamodel.annotations.Target;
@@ -121,7 +123,7 @@ public class SeriesWrapper {
     }
     if (SeriesWrapper.isBudgetArea(wrapper)) {
       BudgetArea budgetArea = SeriesWrapper.getBudgetArea(wrapper);
-      return budgetArea.getDescription();
+      return Labels.getDescription(budgetArea);
     }
     return null;
   }
@@ -243,7 +245,7 @@ public class SeriesWrapper {
       case SUB_SERIES:
         return "subSeries(" + getSubSeries(wrapper, repository).get(SubSeries.NAME) + ")";
       case BUDGET_AREA:
-        return "budgetArea(" + getBudgetArea(wrapper).getLabel() + ")";
+        return "budgetArea(" + Labels.get(getBudgetArea(wrapper)) + ")";
       case SUMMARY:
         return "summary";
     }

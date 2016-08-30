@@ -114,21 +114,10 @@ public class ImportCloudBankConnectionPanel extends AbstractImportStepPanel {
 
   private void processConnection() {
     progressPanel.start();
-    cloudService.createConnection(currentConnection, repository, new CloudService.Callback() {
-      public void processCompletion() {
-        startDownload();
-      }
+    cloudService.createConnection(currentConnection, repository, new CloudService.DownloadCallback() {
 
-      public void processError() {
-        controller.showCloudError();
-        progressPanel.stop();
-      }
-    });
-  }
-
-  private void startDownload() {
-    cloudService.downloadStatement(currentConnection, repository, new CloudService.DownloadCallback() {
       public void processCompletion(GlobList importedRealAccounts) {
+        controller.importSeries();
         controller.importAccounts(importedRealAccounts);
         progressPanel.stop();
       }
@@ -144,7 +133,6 @@ public class ImportCloudBankConnectionPanel extends AbstractImportStepPanel {
       }
     });
   }
-
 
   public void requestFocus() {
   }

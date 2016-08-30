@@ -2,7 +2,7 @@ package com.budgetview.bank.connectors.budgea;
 
 import com.budgetview.io.importer.json.JsonUtils;
 import com.budgetview.model.RealAccount;
-import com.budgetview.shared.cloud.BudgeaConstants;
+import com.budgetview.shared.cloud.budgea.BudgeaConstants;
 import org.apache.http.client.fluent.Form;
 import org.apache.http.client.fluent.Request;
 import org.apache.http.client.fluent.Response;

@@ -7,7 +7,7 @@ import com.budgetview.desktop.categorization.utils.FilteredRepeats;
 import com.budgetview.desktop.categorization.utils.SeriesCreationHandler;
 import com.budgetview.desktop.help.HyperlinkHandler;
 import com.budgetview.desktop.series.utils.SeriesMatchers;
-import com.budgetview.model.BudgetArea;
+import com.budgetview.shared.model.BudgetArea;
 import com.budgetview.model.Series;
 import com.budgetview.utils.Lang;
 import org.globsframework.gui.GlobsPanelBuilder;

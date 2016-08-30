@@ -3,7 +3,7 @@ package com.budgetview.desktop.series;
 import com.budgetview.desktop.model.PeriodBudgetAreaStat;
 import com.budgetview.desktop.model.PeriodSeriesStat;
 import com.budgetview.desktop.model.SeriesType;
-import com.budgetview.model.BudgetArea;
+import com.budgetview.shared.model.BudgetArea;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.*;
 

@@ -108,20 +108,26 @@ public class BudgeaStubServer {
       writer.close();
       response.setStatus(HttpServletResponse.SC_OK);
 
-      if (Strings.isNotEmpty(nextStatement)) {
-        logger.info("Calling first wehook");
-        Thread thread = new Thread(new Runnable() {
-          public void run() {
-            try {
-              Thread.sleep(200);
-              callWebhook(persistentToken, nextStatement);
-            }
-            catch (Exception e) {
-            }
-          }
-        });
-        thread.start();
+      if (Strings.isNullOrEmpty(nextStatement)) {
+        logger.info("No statement to send - next download will be empty");
+        return;
       }
+
+      logger.info("Starting thread for wehook");
+      Thread thread = new Thread(new Runnable() {
+        public void run() {
+          try {
+            Thread.sleep(100);
+            callWebhook(persistentToken, nextStatement);
+          }
+          catch (IOException e) {
+            logger.error("Webhook call failed", e);
+          }
+          catch (InterruptedException e) {
+          }
+        }
+      });
+      thread.start();
     }
   }
 

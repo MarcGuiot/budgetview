@@ -355,6 +355,10 @@ public class ImportController implements RealAccountImporter {
     importDialog.showCloudError();
   }
 
+  public void importSeries() {
+    importSession.importSeries(true);
+  }
+
   private static class HasOperationFunctor implements GlobFunctor {
     private boolean isEmpty = true;
 

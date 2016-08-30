@@ -10,6 +10,7 @@ import com.budgetview.desktop.utils.FrameSize;
 import com.budgetview.io.importer.analyzer.TransactionAnalyzerFactory;
 import com.budgetview.model.*;
 import com.budgetview.model.upgrade.DeferredAccountUpgradeV40;
+import com.budgetview.shared.model.BudgetArea;
 import com.budgetview.shared.utils.Amounts;
 import com.budgetview.triggers.AccountInitialPositionTrigger;
 import com.budgetview.triggers.AccountSequenceTrigger;

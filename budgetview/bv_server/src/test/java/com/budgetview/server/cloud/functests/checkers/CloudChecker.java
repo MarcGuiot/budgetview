@@ -13,7 +13,6 @@ public class CloudChecker {
 
   public void setUp() throws Exception {
     System.setProperty(CloudConstants.CLOUD_URL_PROPERTY, CloudConstants.LOCAL_SERVER_URL);
-
   }
 
   public void startServer() throws Exception {

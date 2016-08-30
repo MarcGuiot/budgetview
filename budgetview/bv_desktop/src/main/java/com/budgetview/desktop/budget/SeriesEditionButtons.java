@@ -3,7 +3,7 @@ package com.budgetview.desktop.budget;
 import com.budgetview.desktop.budget.components.NameLabelPopupButton;
 import com.budgetview.desktop.series.SeriesEditor;
 import com.budgetview.desktop.series.utils.SeriesPopupFactory;
-import com.budgetview.model.BudgetArea;
+import com.budgetview.shared.model.BudgetArea;
 import com.budgetview.model.Month;
 import com.budgetview.utils.Lang;
 import org.globsframework.gui.SelectionService;

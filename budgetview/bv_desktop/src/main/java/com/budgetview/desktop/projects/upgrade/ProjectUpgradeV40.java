@@ -9,6 +9,7 @@ import com.budgetview.desktop.upgrade.BindTransactionsToSeries;
 import com.budgetview.desktop.upgrade.PostProcessor;
 import com.budgetview.model.*;
 import com.budgetview.model.util.ClosedMonthRange;
+import com.budgetview.shared.model.BudgetArea;
 import com.budgetview.shared.utils.Amounts;
 import com.budgetview.triggers.projects.ProjectItemToSeriesTrigger;
 import com.budgetview.triggers.projects.ProjectTransferToSeriesTrigger;

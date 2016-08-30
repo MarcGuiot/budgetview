@@ -1,7 +1,7 @@
 package com.budgetview.desktop.description.stringifiers;
 
 import com.budgetview.desktop.description.Formatting;
-import com.budgetview.model.BudgetArea;
+import com.budgetview.shared.model.BudgetArea;
 import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.format.GlobListStringifier;

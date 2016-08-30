@@ -235,8 +235,8 @@ public class BudgeaWebHookServlet extends HttpServlet {
         .set(ProviderTransaction.OPERATION_DATE, operationDate)
         .set(ProviderTransaction.LABEL, transaction.getString("wording"))
         .set(ProviderTransaction.ORIGINAL_LABEL, transaction.getString("original_wording"))
-        .set(ProviderTransaction.CATEGORY_ID, category.getInt("id"))
-        .set(ProviderTransaction.CATEGORY_NAME, category.getString("name"))
+        .set(ProviderTransaction.PROVDER_CATEGORY_ID, category.getInt("id"))
+        .set(ProviderTransaction.PROVDER_CATEGORY_NAME, category.getString("name"))
         .set(ProviderTransaction.DELETED, !transaction.isNull("deleted") && transaction.getBoolean("deleted"));
 
       if (accountIds.containsKey(providerTransactionId)) {

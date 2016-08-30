@@ -1,11 +1,12 @@
 package com.budgetview.desktop.printing.budget.tables;
 
 import com.budgetview.desktop.description.Formatting;
+import com.budgetview.desktop.description.Labels;
 import com.budgetview.desktop.description.SeriesAndGroupsComparator;
 import com.budgetview.desktop.model.SeriesStat;
 import com.budgetview.desktop.printing.utils.BudgetReportUtils;
 import com.budgetview.desktop.series.utils.SeriesOrGroup;
-import com.budgetview.model.BudgetArea;
+import com.budgetview.shared.model.BudgetArea;
 import com.budgetview.model.Month;
 import com.budgetview.model.util.ClosedMonthRange;
 import com.budgetview.shared.utils.Amounts;
@@ -68,7 +69,7 @@ public class SeriesTable {
   }
 
   public String getTitle() {
-    return budgetArea.getLabel();
+    return Labels.get(budgetArea);
   }
 
   public int getColumnCount() {

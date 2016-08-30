@@ -13,12 +13,14 @@ import com.budgetview.desktop.components.filtering.Filterable;
 import com.budgetview.desktop.components.highlighting.HighlightUpdater;
 import com.budgetview.desktop.components.tips.ShowDetailsTipAction;
 import com.budgetview.desktop.description.AmountStringifier;
+import com.budgetview.desktop.description.Labels;
 import com.budgetview.desktop.model.PeriodBudgetAreaStat;
 import com.budgetview.desktop.model.PeriodSeriesStat;
 import com.budgetview.desktop.projects.actions.CreateProjectAction;
 import com.budgetview.desktop.series.SeriesEditor;
 import com.budgetview.desktop.signpost.guides.SeriesAmountSignpost;
 import com.budgetview.model.*;
+import com.budgetview.shared.model.BudgetArea;
 import com.budgetview.utils.Lang;
 import org.globsframework.gui.GlobSelection;
 import org.globsframework.gui.GlobSelectionListener;
@@ -188,7 +190,7 @@ public class BudgetAreaSeriesView extends View implements Filterable {
     seriesRepeat =
       builder.addRepeat("seriesRepeat", new GlobList(), new SeriesRepeatComponentFactory(builder));
 
-    builder.add("budgetAreaTitle", new JPopupButton(budgetArea.getLabel(), new ActionsPopupFactory()));
+    builder.add("budgetAreaTitle", new JPopupButton(Labels.get(budgetArea), new ActionsPopupFactory()));
 
     parentBuilder.add(name, builder);
   }

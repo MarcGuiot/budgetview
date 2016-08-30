@@ -1,6 +1,7 @@
 package com.budgetview.functests.checkers;
 
-import com.budgetview.model.BudgetArea;
+import com.budgetview.desktop.description.Labels;
+import com.budgetview.shared.model.BudgetArea;
 import com.budgetview.utils.Lang;
 import junit.framework.Assert;
 import org.uispec4j.Panel;
@@ -55,7 +56,7 @@ public class ImportSeriesChecker {
 
   private ImportSeriesChecker set(BudgetArea budgetArea, String... series) {
     for (String s : series) {
-      dialog.getComboBox("choice_" + s).select(budgetArea.getLabel());
+      dialog.getComboBox("choice_" + s).select(Labels.get(budgetArea));
     }
     return this;
   }

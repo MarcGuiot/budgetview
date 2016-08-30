@@ -1,8 +1,6 @@
 package com.budgetview.desktop.components.charts;
 
-import com.budgetview.desktop.components.charts.DeltaGauge;
-import com.budgetview.desktop.components.charts.GlobDeltaGaugeView;
-import com.budgetview.model.BudgetArea;
+import com.budgetview.shared.model.BudgetArea;
 import org.globsframework.gui.GuiTestCase;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.annotations.Key;

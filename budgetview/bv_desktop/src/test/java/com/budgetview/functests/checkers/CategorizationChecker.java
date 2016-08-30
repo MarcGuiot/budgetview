@@ -4,7 +4,7 @@ import com.budgetview.functests.checkers.converters.DateCellConverter;
 import com.budgetview.functests.checkers.converters.ReconciliationAnnotationCellConverter;
 import com.budgetview.desktop.categorization.components.CategorizationFilteringMode;
 import com.budgetview.desktop.description.Formatting;
-import com.budgetview.model.BudgetArea;
+import com.budgetview.shared.model.BudgetArea;
 import com.budgetview.model.Transaction;
 import com.budgetview.utils.Lang;
 import junit.framework.Assert;

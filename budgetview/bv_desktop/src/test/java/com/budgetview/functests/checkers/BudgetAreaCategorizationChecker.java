@@ -1,6 +1,7 @@
 package com.budgetview.functests.checkers;
 
-import com.budgetview.model.BudgetArea;
+import com.budgetview.desktop.description.Labels;
+import com.budgetview.shared.model.BudgetArea;
 import junit.framework.Assert;
 import junit.framework.AssertionFailedError;
 import org.globsframework.utils.TestUtils;
@@ -306,7 +307,7 @@ public class BudgetAreaCategorizationChecker extends GuiChecker {
   }
 
   public BudgetAreaCategorizationChecker checkDescriptionDisplayed() {
-    assertThat(panel.getTextBox("description").textContains(budgetArea.getDescription()));
+    assertThat(panel.getTextBox("description").textContains(Labels.getDescription(budgetArea)));
     return this;
   }
 

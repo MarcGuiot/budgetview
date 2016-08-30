@@ -1,6 +1,6 @@
 package com.budgetview.io.budgea;
 
-import com.budgetview.shared.cloud.BudgeaConstants;
+import com.budgetview.shared.cloud.budgea.BudgeaConstants;
 import org.apache.http.client.fluent.Request;
 import org.globsframework.utils.Strings;
 import org.json.JSONObject;

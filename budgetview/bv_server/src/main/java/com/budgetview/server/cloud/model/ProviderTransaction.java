@@ -24,9 +24,9 @@ public class ProviderTransaction {
 
   public static IntegerField PROVIDER_ID;
 
-  public static IntegerField CATEGORY_ID;
+  public static IntegerField PROVDER_CATEGORY_ID;
 
-  public static StringField CATEGORY_NAME;
+  public static StringField PROVDER_CATEGORY_NAME;
 
   @Target(ProviderAccount.class)
   public static LinkField ACCOUNT;

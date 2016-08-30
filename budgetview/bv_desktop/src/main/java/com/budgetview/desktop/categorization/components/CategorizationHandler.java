@@ -2,8 +2,10 @@ package com.budgetview.desktop.categorization.components;
 
 import com.budgetview.desktop.categorization.reconciliation.ReconciliationNavigationPanel;
 import com.budgetview.desktop.categorization.reconciliation.ReconciliationPanel;
+import com.budgetview.desktop.description.Labels;
 import com.budgetview.desktop.transactions.columns.TransactionRendererColors;
 import com.budgetview.model.*;
+import com.budgetview.shared.model.BudgetArea;
 import com.budgetview.utils.Lang;
 import org.globsframework.gui.GlobSelection;
 import org.globsframework.gui.GlobSelectionListener;
@@ -174,7 +176,7 @@ public class CategorizationHandler implements GlobSelectionListener, ChangeSetLi
         }
       });
       toggle.setName(budgetArea.getName());
-      toggle.setToolTipText(Strings.toSplittedHtml(budgetArea.getDescription(), 50));
+      toggle.setToolTipText(Strings.toSplittedHtml(Labels.getDescription(budgetArea), 50));
       cellBuilder.add("budgetAreaToggle", toggle);
       buttonGroup.add(toggle);
       toggles.put(budgetArea, toggle);

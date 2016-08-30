@@ -5,7 +5,7 @@ import com.budgetview.desktop.accounts.utils.AccountMatchers;
 import com.budgetview.model.Account;
 import com.budgetview.shared.model.AccountType;
 import com.budgetview.model.AccountUpdateMode;
-import com.budgetview.model.BudgetArea;
+import com.budgetview.shared.model.BudgetArea;
 import com.budgetview.utils.Lang;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.ChangeSet;
