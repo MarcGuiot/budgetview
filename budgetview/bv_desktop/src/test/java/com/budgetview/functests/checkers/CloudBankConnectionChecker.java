@@ -44,7 +44,7 @@ public class CloudBankConnectionChecker extends ViewChecker {
     return "editor" + id;
   }
 
-  public ImportDialogChecker next() {
+  public ImportDialogPreviewChecker next() {
     mainWindow.getButton("next").click();
     System.out.print("CloudBankConnectionChecker.check");
     assertThat(new Assertion() {
@@ -56,6 +56,6 @@ public class CloudBankConnectionChecker extends ViewChecker {
         }
       }
     }, 10000);
-    return new ImportDialogChecker(mainWindow);
+    return new ImportDialogPreviewChecker(mainWindow);
   }
 }

@@ -29,11 +29,10 @@ public class InitialImportTest extends LoggedInFunctionalTestCase {
       .save();
     importPanel.openImport()
       .selectFiles(file)
-      .acceptFile()
+      .importFileAndPreview()
       .selectBank("Other")
       .setMainAccount()
-      .doImport()
-      .completeLastStep();
+      .importAccountAndComplete();
 
     timeline.checkSelection("2008/08");
 

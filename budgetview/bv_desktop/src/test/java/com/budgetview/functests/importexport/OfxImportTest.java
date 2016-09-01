@@ -2,6 +2,7 @@ package com.budgetview.functests.importexport;
 
 import com.budgetview.functests.checkers.CategorizationChecker;
 import com.budgetview.functests.checkers.ImportDialogChecker;
+import com.budgetview.functests.checkers.ImportDialogPreviewChecker;
 import com.budgetview.functests.utils.LoggedInFunctionalTestCase;
 import com.budgetview.functests.utils.OfxBuilder;
 import com.budgetview.model.BankEntity;
@@ -438,18 +439,18 @@ public class OfxImportTest extends LoggedInFunctionalTestCase {
       .addBankAccount(12345, 54321, "111", 1000.00, "2008/08/07")
       .addTransaction("2008/08/10", -50.00, "Virement")
       .save();
-    ImportDialogChecker importDialog = operations.openImportDialog()
+    ImportDialogPreviewChecker preview = operations.openImportDialog()
       .setFilePath(path)
-      .acceptFile();
+      .importFileAndPreview();
 //      .checkMessageSelectABank();
-    importDialog
+    preview
 //      .openEntityEditor()
       .selectBank("Other");
 //      .validate();
-    importDialog
+    preview
       .setMainAccount()
       .checkNoErrorMessage()
-      .completeImport();
+      .importAccountAndComplete();
 
     views.selectHome();
     mainAccounts.checkAccount("Account n. 111", 1000.00, "2008/08/10");
@@ -464,9 +465,9 @@ public class OfxImportTest extends LoggedInFunctionalTestCase {
 
     operations.openImportDialog()
       .setFilePath(secondAccountOnSameBank)
-      .acceptFile()
+      .importFileAndPreview()
       .setMainAccount()
-      .completeImport();
+      .importAccountAndComplete();
 
     views.selectData();
     transactions.initContent()
@@ -516,26 +517,27 @@ public class OfxImportTest extends LoggedInFunctionalTestCase {
       .save();
 
     views.selectHome();
-    ImportDialogChecker importDialog = importPanel.openImport()
+    ImportDialogPreviewChecker preview = importPanel.openImport()
       .selectFiles(file)
-      .acceptFile()
+      .importFileAndPreview();
+
+    preview
       .checkAstericsErrorOnBank()
       .selectBank("Other")
       .checkNoAccountTypeMessageDisplayed()
       .checkAstericsErrorOnType()
-      .doImport()
+      .importAccountAndOpenNext()
       .checkAccountTypeWarningDisplayed("Account n. 222")
       .setSavingsAccount()
       .checkNoErrorMessage()
-      .checkAstericsClearOnType();
+      .checkAstericsClearOnType()
+      .importAccountAndOpenNext();
 
-    importDialog
-      .doImport()
+    preview
       .selectBank("Other")
       .setMainAccount()
       .checkNoAccountTypeMessageDisplayed()
-      .doImport()
-      .completeLastStep();
+      .importAccountAndComplete();
 
     views.selectHome();
     savingsAccounts.edit("Account n. 111")
@@ -554,19 +556,20 @@ public class OfxImportTest extends LoggedInFunctionalTestCase {
       .addCardAccount("1234", 10, "2008/08/07")
       .addTransaction("2008/08/10", -50.00, "Virement")
       .save();
-    ImportDialogChecker importDialog = operations.openImportDialog();
-    importDialog
+
+    ImportDialogPreviewChecker preview = operations.openImportDialog()
       .setFilePath(file)
-      .acceptFile();
-    importDialog
+      .importFileAndPreview();
+
+    preview
       .setDeferredAccount(25, 28, 0)
       .selectBank("Other")
-      .doImport();
-    importDialog
+      .importAccountAndOpenNext();
+
+    preview
       .selectBank("Other")
       .setMainAccount()
-      .doNext()
-      .completeLastStep();
+      .importAccountAndComplete();
 
     views.selectHome();
     mainAccounts.edit("Card n. 1234")
@@ -580,15 +583,13 @@ public class OfxImportTest extends LoggedInFunctionalTestCase {
       .addCardAccount("1234", 10, "2008/08/07")
       .addTransaction("2008/08/10", -50.00, "Virement")
       .save();
-    ImportDialogChecker importDialog = operations.openImportDialog();
-    importDialog
+    ImportDialogPreviewChecker preview = operations.openImportDialog()
       .setFilePath(file)
-      .acceptFile();
-    importDialog
+      .importFileAndPreview();
+    preview
       .selectBank("Other")
       .setAsCreditCard()
-      .doImport()
-      .completeLastStep();
+      .importAccountAndComplete();
 
     views.selectHome();
     mainAccounts.edit("Card n. 1234")
@@ -615,9 +616,9 @@ public class OfxImportTest extends LoggedInFunctionalTestCase {
 
     operations.openImportDialog()
       .setFilePath(ofxFile)
-      .acceptFile()
+      .importFileAndPreview()
       .selectAccount("First account")
-      .completeImport();
+      .importAccountAndComplete();
 
     OfxBuilder.init(this)
       .addBankAccount(BankEntity.GENERIC_BANK_ENTITY_ID, 111, "111", 950.00, "2008/08/12")
@@ -647,17 +648,17 @@ public class OfxImportTest extends LoggedInFunctionalTestCase {
       .addTransaction("2008/08/06", -30.00, "Virement 222")
       .save();
 
-    ImportDialogChecker importDialog = operations.openImportDialog()
+    ImportDialogPreviewChecker preview = operations.openImportDialog()
       .setFilePath(ofxFile)
-      .acceptFile()
+      .importFileAndPreview();
+
+    preview
       .checkAvailableAccounts("First account")
       .selectAccount("First account")
-      .doImport()
+      .importAccountAndOpenNext()
       .selectBank("Other")
       .setMainAccount()
-      .doImport();
-    importDialog
-      .completeLastStep();
+      .importAccountAndComplete();
 
     mainAccounts.checkAccounts("Account n. 222", "First account");
   }
@@ -673,15 +674,16 @@ public class OfxImportTest extends LoggedInFunctionalTestCase {
       .addTransaction("2008/08/06", -30.00, "Virement 222")
       .save();
 
-    ImportDialogChecker importDialog = operations.openImportDialog()
+    ImportDialogPreviewChecker preview = operations.openImportDialog()
       .setFilePath(ofxFile)
-      .acceptFile();
-    importDialog
+      .importFileAndPreview();
+    preview
       .skipFile();
-    importDialog
+    preview
       .setMainAccount()
       .selectBank("Other")
-      .completeImport();
+      .importAccountAndComplete();
+
     mainAccounts.checkAccounts("Account n. 222");
   }
 
@@ -718,9 +720,9 @@ public class OfxImportTest extends LoggedInFunctionalTestCase {
       .save();
     operations.openImportDialog()
       .selectFiles(pathA)
-      .acceptFile()
+      .importFileAndPreview()
       .checkSelectedAccount("Account A")
-      .completeImport();
+      .importAccountAndComplete();
 
     String pathB = OfxBuilder
       .init(this)
@@ -729,9 +731,9 @@ public class OfxImportTest extends LoggedInFunctionalTestCase {
       .save();
     operations.openImportDialog()
       .selectFiles(pathB)
-      .acceptFile()
+      .importFileAndPreview()
       .checkSelectedAccount("Account B")
-      .completeImport();
+      .importAccountAndComplete();
 
     views.selectData();
     transactions.initAmountContent()
@@ -746,9 +748,7 @@ public class OfxImportTest extends LoggedInFunctionalTestCase {
       .add("02/01/2006", "OPERATION BBB 2", -2.20, "To categorize", 96.70, 196.70, "Account B")
       .add("01/01/2006", "OPERATION BBB 1", -1.10, "To categorize", 98.90, 198.90, "Account B")
       .check();
-
   }
-
 
   @Test
   public void testImportWithoutAccountAndDoubleMinus() throws Exception {
@@ -811,11 +811,11 @@ public class OfxImportTest extends LoggedInFunctionalTestCase {
     Files.dumpStringToFile(file, TEXT);
     ImportDialogChecker importDialogChecker = operations.openImportDialog();
     importDialogChecker.setFilePath(file.getAbsolutePath())
-      .acceptFile()
+      .importFileAndPreview()
       .setMainAccount()
       .selectBank("CIC")
       .setAccountName("main account")
-      .completeImport();
+      .importAccountAndComplete();
 
     transactions.initContent()
       .add("31/01/2006", TransactionType.CREDIT_CARD, "DROITS DE GARDE 1 SEM. 2006 3006", "", -21.53)

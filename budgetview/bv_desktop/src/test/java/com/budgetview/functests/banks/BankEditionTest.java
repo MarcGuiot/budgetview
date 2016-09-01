@@ -54,14 +54,14 @@ public class BankEditionTest extends LoggedInFunctionalTestCase {
 
     importDialog
       .setFilePath(ofxFilePath)
-      .acceptFile()
+      .importFileAndPreview()
       .setAccountName("TestAccount")
       .selectBank("TestBank")
       .setMainAccount()
-      .checkFileContent(new Object[][]{
+      .checkTransactions(new Object[][]{
         {"2008/06/16", "Burger King", "-27.50"}
       })
-      .completeImport();
+      .importAccountAndComplete();
 
     mainAccounts.checkAccount("TestAccount", 1000.00, "2008/06/16");
     mainAccounts.checkAccountWebsite("TestAccount", "TestBank", "http://www.testbank.net");
@@ -87,9 +87,9 @@ public class BankEditionTest extends LoggedInFunctionalTestCase {
 
     secondImportDialog
       .setFilePath(secondOfxFilePath)
-      .acceptFile()
+      .importFileAndPreview()
       .checkSelectedAccount("TestAccount")
-      .completeImport();
+      .importAccountAndComplete();
   }
 
   @Test
@@ -138,14 +138,14 @@ public class BankEditionTest extends LoggedInFunctionalTestCase {
 
     importDialog
       .setFilePath(ofxFilePath)
-      .acceptFile()
+      .importFileAndPreview()
       .setAccountName("TestAccount")
       .selectBank("NewBank")
       .setMainAccount()
-      .checkFileContent(new Object[][]{
+      .checkTransactions(new Object[][]{
         {"2008/06/16", "Burger King", "-27.50"}
       })
-      .completeImport();
+      .importAccountAndComplete();
 
     mainAccounts.checkAccountWebsite("TestAccount", "NewBank", "http://www.newbank.net");
 
@@ -180,8 +180,8 @@ public class BankEditionTest extends LoggedInFunctionalTestCase {
                      .addBankAccount(777777, 7777, "0001234", 1000.00, "2008/06/18")
                      .addTransaction("2008/06/18", -15.00, "Mc Do")
                      .save())
-      .acceptFile()
-      .completeImport();
+      .importFileAndPreview()
+      .importAccountAndComplete();
 
     mainAccounts.edit("TestAccount")
       .checkSelectedBank("CIC")
@@ -289,14 +289,15 @@ public class BankEditionTest extends LoggedInFunctionalTestCase {
 
     operations.openImportDialog()
       .setFilePath(qifPath)
-      .acceptFile()
+      .importFileAndPreview()
       .setAccountName("NewAccount")
       .addNewAccountBank("NewBank", "http://www.newbank.net")
       .setMainAccount()
-      .checkFileContent(new Object[][]{
+      .checkTransactions(new Object[][]{
         {"2008/08/30", "MacDo", "-50.00"},
       })
-      .completeImport(1000.00);
+      .setPosition(1000.00)
+      .importAccountAndComplete();
 
     mainAccounts.checkAccountWebsite("NewAccount", "NewBank", "http://www.newbank.net");
 
@@ -306,7 +307,7 @@ public class BankEditionTest extends LoggedInFunctionalTestCase {
   }
 
   @Test
-  public void testVBanksAreFilteredByCountry() throws Exception {
+  public void testBanksAreFilteredByCountry() throws Exception {
     ImportDialogChecker importDialog = operations.openImportDialog();
     importDialog.getBankDownload()
       .checkCountry("All")

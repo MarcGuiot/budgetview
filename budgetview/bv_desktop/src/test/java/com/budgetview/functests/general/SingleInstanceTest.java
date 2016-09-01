@@ -71,12 +71,11 @@ public class SingleInstanceTest extends StartUpFunctionalTestCase {
       .save();
     Application.main(step2File);
 
-    importer
+    importer.toPreview()
       .setMainAccount()
-      .doImport();
-    importer.doImport();
-    importer.doImport();
-    importer.completeImport();
+      .importAccountAndOpenNext()
+      .importAccountAndOpenNext()
+      .importAccountAndComplete();
 
     Window mainWindow = triggerSlaOk.getMainWindow();
     getTransactionView(mainWindow).initContent()
@@ -134,11 +133,11 @@ public class SingleInstanceTest extends StartUpFunctionalTestCase {
       .addTransaction("2000/01/02", 1.2, "quick")
       .save();
     Application.main(step2File);
-    importer
+
+    importer.toPreview()
       .setMainAccount()
-      .doImport();
-    importer.doImport();
-    importer.completeImport();
+      .importAccountAndOpenNext()
+      .importAccountAndComplete();
 
     getTransactionView(triggerSlaOk.getMainWindow()).initContent()
       .add("03/01/2000", TransactionType.VIREMENT, "menu K", "", 1.20)
@@ -177,7 +176,7 @@ public class SingleInstanceTest extends StartUpFunctionalTestCase {
     });
     Window importDialog = WindowInterceptor.getModalDialog(trigger1);
     trigger1.waitEnd();
-    ImportDialogChecker firstImporter = new ImportDialogChecker(importDialog);
+    ImportDialogPreviewChecker firstImporter = new ImportDialogPreviewChecker(importDialog);
 //    firstImporter.checkSelectedFiles(initialFile);
     firstImporter.skipAndComplete();
     assertFalse(importDialog.isVisible());
@@ -189,12 +188,13 @@ public class SingleInstanceTest extends StartUpFunctionalTestCase {
     });
     importDialog = WindowInterceptor.getModalDialog(trigger2);
     trigger2.waitEnd();
-    ImportDialogChecker importer = new ImportDialogChecker(importDialog);
+    ImportDialogPreviewChecker importer = new ImportDialogPreviewChecker(importDialog);
 //    importer.checkSelectedFiles(initialFile);
 //    importer.acceptFile();
     importer
       .setMainAccount()
-      .completeImport();
+      .importAccountAndComplete();
+
     getTransactionView(mainWindow).initContent()
       .add("03/01/2000", TransactionType.VIREMENT, "menu K", "", 1.20)
       .check();
@@ -242,22 +242,24 @@ public class SingleInstanceTest extends StartUpFunctionalTestCase {
     operations.hideSignposts();
 
     ImportDialogChecker importer = ImportDialogChecker.open(operations.getImportTrigger());
-    AccountPositionEditionChecker accountPosition = importer.selectFiles(file)
-      .acceptFile()
+
+    ImportDialogPreviewChecker preview = importer.selectFiles(file)
+      .importFileAndPreview();
+    AccountPositionEditionChecker accountPosition = preview
       .defineAccount(LoggedInFunctionalTestCase.SOCIETE_GENERALE, "Main account", "11111")
-      .doImportWithPosition();
+      .importAndEditPosiiton();
 
     NewApplicationThread newApplication = new NewApplicationThread(file);
     newApplication.start();
     Thread.sleep(1000);
     newApplication.checkNotOpen();
     accountPosition.setAmount(0.00).validate();
-    importer.completeLastStep();
+    preview.importAccountAndComplete();
 
     Window newImportDialog = newApplication.getImportDialog();
     assertNotNull(newImportDialog);
 
-    new ImportDialogChecker(newImportDialog)
+    new ImportDialogPreviewChecker(newImportDialog)
       .skipAndComplete();
     application.shutdown();
     newApplication.clear();
@@ -314,7 +316,7 @@ public class SingleInstanceTest extends StartUpFunctionalTestCase {
     Window sameImportFileDialog = sameFileApplication.getImportDialog();
     assertNotNull(sameImportFileDialog);
 
-    new ImportDialogChecker(sameImportFileDialog)
+    new ImportDialogPreviewChecker(sameImportFileDialog)
       .skipAndComplete();
     application.shutdown();
   }

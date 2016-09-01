@@ -46,11 +46,6 @@ public class BankDownloadChecker extends BankChooserPanelChecker<BankDownloadChe
     return this;
   }
 
-  public OtherBankSynchroChecker openSynchro(ImportDialogChecker checker) {
-    window.getButton("synchronize").click();
-    return new OtherBankSynchroChecker(checker, window);
-  }
-
   public OfxSynchoChecker openOfxSynchro(ImportDialogChecker checker) {
     this.window.getButton("synchronize").click();
     return new OfxSynchoChecker(checker, checker.getDialog());

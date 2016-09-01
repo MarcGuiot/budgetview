@@ -1,5 +1,6 @@
 package com.budgetview.functests.specificbanks;
 
+import com.budgetview.functests.checkers.ImportSeriesChecker;
 import com.budgetview.functests.utils.OfxBuilder;
 import com.budgetview.model.TransactionType;
 import org.junit.Test;
@@ -35,13 +36,14 @@ public class MoneyExportTest extends SpecificBankTestCase {
       .check();
 
     // ici on a un 'bug' => [Test] n'est pas reimporté donc pas update.
-    operations.openImportDialog()
+    ImportSeriesChecker seriesImport = operations.openImportDialog()
       .setFilePath(getFile("money_export_standard.qif"))
-      .acceptFile()
-      .importSeries()
+      .importFileAndPreview()
+      .importSeries();
+    seriesImport
       .checkContains("[Test]")
       .setRecurring("[Test]")
-      .checkNotContain("Alimentation")
+      .checkNotPresent("Alimentation")
       .validateAndFinishImport(0, 7, 0);
 
     categorization.selectTransaction("SPLIT COURSES QUELCONQUES");
@@ -80,7 +82,7 @@ public class MoneyExportTest extends SpecificBankTestCase {
   private void importStandard() throws IOException {
     operations.openImportDialog()
       .setFilePath(getFile("money_export_standard.qif"))
-      .acceptFile()
+      .importFileAndPreview()
       .createNewAccount("CIC", "Main account", "", 0.)
       .setMainAccount()
       .importSeries()
@@ -96,7 +98,7 @@ public class MoneyExportTest extends SpecificBankTestCase {
   public void testStrictQifFile() throws Exception {
     operations.openImportDialog()
       .setFilePath(getFile("money_export_strict.qif"))
-      .acceptFile()
+      .importFileAndPreview()
       .createNewAccount("CIC", "Main account", "")
       .setMainAccount()
       .importSeries()
@@ -120,9 +122,9 @@ public class MoneyExportTest extends SpecificBankTestCase {
 
     operations.openImportDialog()
       .setFilePath(getFile("money_export_standard_2.qif"))
-      .acceptFile()
+      .importFileAndPreview()
       .importSeries()
-      .checkNotContain("Alimentation")
+      .checkNotPresent("Alimentation")
       .checkContains("Loisirs-culture-sport:Sport")
       .setVariable("Loisirs-culture-sport:Sport")
       .validateAndFinishImport();

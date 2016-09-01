@@ -63,7 +63,7 @@ public class ImportPreviewPanel extends AbstractImportStepPanel implements Messa
   private AccountEditionPanel accountEditionPanel;
   private LocalGlobRepository accountEditionRepository;
   private Glob realAccount;
-  private ImportPreviewPanel.FinishAction finishAction;
+  private NextAction nextAction;
   private String lastExceptionDetails;
   private Glob newAccount;
   private CardHandler cardHandler;
@@ -153,8 +153,8 @@ public class ImportPreviewPanel extends AbstractImportStepPanel implements Messa
     builder.add("accountEditionPanel", accountEditionPanel.getPanel());
 
     builder.add("skipFile", new SkipFileAction());
-    finishAction = new FinishAction();
-    builder.add("finish", finishAction);
+    nextAction = new NextAction();
+    builder.add("next", nextAction);
     builder.add("close", new CancelAction(textForCloseButton));
     accountEditionPanel.setBalanceEditorVisible(true);
     return builder;
@@ -209,12 +209,12 @@ public class ImportPreviewPanel extends AbstractImportStepPanel implements Messa
 
     if (importedTransactions.isEmpty()) {
       cardHandler.show("noOperations");
-      finishAction.putValue(Action.NAME, Lang.get("import.preview.noOperation.ok"));
+      nextAction.putValue(Action.NAME, Lang.get("import.preview.noOperation.ok"));
       updateNoOperationMessage();
     }
     else {
       cardHandler.show("cardOperations");
-      finishAction.putValue(Action.NAME, Lang.get("import.preview.ok"));
+      nextAction.putValue(Action.NAME, Lang.get("import.preview.ok"));
     }
 
     if (dateFormats != null) {
@@ -296,7 +296,7 @@ public class ImportPreviewPanel extends AbstractImportStepPanel implements Messa
     this.setFileName("");
     this.accountCountInfo.setText("");
     this.message.setText(message);
-    finishAction.setEnabled(false);
+    nextAction.setEnabled(false);
   }
 
   public void showFileErrorMessage(String message, String details) {
@@ -305,8 +305,8 @@ public class ImportPreviewPanel extends AbstractImportStepPanel implements Messa
     this.lastExceptionDetails = details;
   }
 
-  private class FinishAction extends AbstractAction {
-    public FinishAction() {
+  private class NextAction extends AbstractAction {
+    public NextAction() {
       super(Lang.get("import.preview.ok"));
     }
 

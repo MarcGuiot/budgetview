@@ -60,11 +60,11 @@ public class BanquePopulaireTest extends SpecificBankTestCase {
       .check();
     operations.openImportDialog()
       .setFilePath(getFile("banque_pop_facturette.ofx"))
-      .acceptFile()
+      .importFileAndPreview()
       .addNewAccount()
       .setAccountName("Card n. 123123123")
       .setDeferredAccount(25, 28, 0)
-      .completeImport();
+      .importAccountAndComplete();
 
     timeline.selectAll();
     transactions.initAmountContent()

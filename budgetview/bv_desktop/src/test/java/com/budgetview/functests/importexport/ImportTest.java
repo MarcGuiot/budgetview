@@ -1,11 +1,12 @@
 package com.budgetview.functests.importexport;
 
+import com.budgetview.desktop.time.TimeService;
 import com.budgetview.functests.checkers.BankDownloadChecker;
 import com.budgetview.functests.checkers.ImportDialogChecker;
+import com.budgetview.functests.checkers.ImportDialogPreviewChecker;
 import com.budgetview.functests.utils.LoggedInFunctionalTestCase;
 import com.budgetview.functests.utils.OfxBuilder;
 import com.budgetview.functests.utils.QifBuilder;
-import com.budgetview.desktop.time.TimeService;
 import com.budgetview.model.TransactionType;
 import com.budgetview.utils.Lang;
 import org.globsframework.utils.Files;
@@ -37,15 +38,14 @@ public class ImportTest extends LoggedInFunctionalTestCase {
       .setFilePath("blah.ofx")
       .checkFileImportEnabled()
       .checkNoErrorMessage()
-      .acceptFile()
-      .checkErrorMessage("login.data.file.not.found");
+      .importFileWithError("login.data.file.not.found");
     importDialog
-      .browseAndSelect(path)
-      .checkFileContent(new Object[][]{
+      .browseAndPreview(path)
+      .checkTransactions(new Object[][]{
         {"2006/01/10", "Menu K", "-1.10"}
       })
       .setMainAccount()
-      .completeImport();
+      .importAccountAndComplete();
 
     transactions
       .initContent()
@@ -85,16 +85,16 @@ public class ImportTest extends LoggedInFunctionalTestCase {
 
     operations.openImportDialog()
       .setFilePath(path1 + ";" + path2)
-      .acceptFile()
-      .checkFileContent(new Object[][]{
+      .importFileAndPreview()
+      .checkTransactions(new Object[][]{
         {"2006/01/10", "Menu K", "-1.10"}
       })
       .setMainAccount()
-      .doImport()
-      .checkFileContent(new Object[][]{
+      .importAccountAndOpenNext()
+      .checkTransactions(new Object[][]{
         {"2006/02/20", "Menu K", "-2.20"}
       })
-      .completeImport();
+      .importAccountAndComplete();
 
     timeline.checkSelection("2006/02");
 
@@ -114,9 +114,9 @@ public class ImportTest extends LoggedInFunctionalTestCase {
       .save();
 
     operations.openImportDialog()
-      .browseAndSelect(path)
+      .browseAndPreview(path)
       .setMainAccount()
-      .completeImport();
+      .importAccountAndComplete();
 
     transactions
       .initContent()
@@ -150,17 +150,19 @@ public class ImportTest extends LoggedInFunctionalTestCase {
       .addTransaction("2006/01/10", -1.1, "Menu K")
       .save();
 
-    ImportDialogChecker importDialog = operations.openImportDialog()
-      .setFilePath(path1)
-      .acceptFile()
-      .checkFileContent(new Object[][]{
-        {"2006/01/10", "Menu K", "-1.10"}
-      })
-      .defineAccount(SOCIETE_GENERALE, "My SG account", "0123546");
-    importDialog.doImportWithPosition()
+    ImportDialogPreviewChecker preview =
+      operations.openImportDialog()
+        .setFilePath(path1)
+        .importFileAndPreview()
+        .checkTransactions(new Object[][]{
+          {"2006/01/10", "Menu K", "-1.10"}
+        })
+        .defineAccount(SOCIETE_GENERALE, "My SG account", "0123546");
+    preview
+      .importAndEditPosiiton()
       .setAmount(0.00)
       .validate();
-    importDialog.completeLastStep();
+    preview.toCompletion().validate();
 
     views.selectData();
     transactions
@@ -200,10 +202,10 @@ public class ImportTest extends LoggedInFunctionalTestCase {
 
     operations.openImportDialog()
       .setFilePath(firstQif)
-      .acceptFile()
+      .importFileAndPreview()
       .checkAvailableAccounts("Main", "Cash")
       .createNewAccount(SOCIETE_GENERALE, "SG", "12345", 100.0)
-      .completeImport();
+      .importAccountAndComplete();
 
     mainAccounts.checkAccounts("Main", "Cash", "SG");
   }
@@ -215,13 +217,13 @@ public class ImportTest extends LoggedInFunctionalTestCase {
       .addTransaction("2006/01/10", -1.1, "Menu K")
       .save();
 
-    ImportDialogChecker importDialog = operations.openImportDialog()
+    ImportDialogPreviewChecker preview = operations.openImportDialog()
       .setFilePath(path)
-      .acceptFile()
+      .importFileAndPreview()
       .defineAccount(SOCIETE_GENERALE, "Main", "12345");
 
-    importDialog
-      .doImportWithPosition()
+    preview
+      .importAndEditPosiiton()
       .checkAccountLabel("Account: Main")
       .checkCancelNotAvailable()
       .checkEscNotAvailable()
@@ -230,7 +232,7 @@ public class ImportTest extends LoggedInFunctionalTestCase {
       .setAmount(12.33)
       .validate();
 
-    importDialog.completeLastStep();
+    preview.toCompletion().validate();
 
     mainAccounts.checkAccount("Main", 12.33, "2006/01/10");
   }
@@ -243,9 +245,10 @@ public class ImportTest extends LoggedInFunctionalTestCase {
 
     operations.openImportDialog()
       .setFilePath(firstQif)
-      .acceptFile()
+      .importFileAndPreview()
       .defineAccount(SOCIETE_GENERALE, "Main account", "00011")
-      .completeImport(0.00);
+      .setPosition(0.00)
+      .importAccountAndComplete();
 
     String secondQif = QifBuilder
       .init(this)
@@ -254,10 +257,10 @@ public class ImportTest extends LoggedInFunctionalTestCase {
 
     operations.openImportDialog()
       .setFilePath(secondQif)
-      .acceptFile()
+      .importFileAndPreview()
       .checkAvailableAccounts("Main account")
       .createNewAccount(SOCIETE_GENERALE, "Second account", "00022", 12.30)
-      .completeImport();
+      .importAccountAndComplete();
 
     mainAccounts.checkAccounts("Main account", "Second account");
 
@@ -268,13 +271,13 @@ public class ImportTest extends LoggedInFunctionalTestCase {
 
     operations.openImportDialog()
       .setFilePath(secondSecondQif)
-      .acceptFile()
+      .importFileAndPreview()
       .checkSelectedAccount(null)
-      .doImport()
+      .importAccountAndOpenNext()
       .checkErrorAccount()
       .selectAccount("Second account")
       .checkNoErrorMessage()
-      .completeImport();
+      .importAccountAndComplete();
   }
 
   @Test
@@ -290,20 +293,21 @@ public class ImportTest extends LoggedInFunctionalTestCase {
 
     operations.openImportDialog()
       .setFilePath(path1 + ";" + path2)
-      .acceptFile()
+      .importFileAndPreview()
       .checkAccountMessage("Operations for single account:")
-      .checkFileContent(new Object[][]{
+      .checkTransactions(new Object[][]{
         {"2006/01/10", "First operation", "-1.10"}
       })
-      .doImport()
+      .importAccountAndOpenNext()
       .checkMessageCreateFirstAccount()
       .skipFile()
       .checkMessageCreateFirstAccount()
-      .checkFileContent(new Object[][]{
+      .checkTransactions(new Object[][]{
         {"2006/01/20", "Second operation", "-2.20"}
       })
       .defineAccount(SOCIETE_GENERALE, "main", "1111")
-      .completeImport(0.00);
+      .setPosition(0.00)
+      .importAccountAndComplete();
 
     views.selectData();
     transactions
@@ -320,10 +324,11 @@ public class ImportTest extends LoggedInFunctionalTestCase {
 
     operations.openImportDialog()
       .setFilePath(firstQif)
-      .acceptFile()
+      .importFileAndPreview()
       .checkAccountMessage("Operations for single account:")
       .defineAccount(SOCIETE_GENERALE, "Main account", "12345")
-      .completeImport(0.00);
+      .setPosition(0.00)
+      .importAccountAndComplete();
 
     String qifFile = QifBuilder
       .init(this)
@@ -332,10 +337,10 @@ public class ImportTest extends LoggedInFunctionalTestCase {
 
     operations.openImportDialog()
       .setFilePath(qifFile)
-      .acceptFile()
+      .importFileAndPreview()
       .checkAvailableAccounts("Main account")
       .selectAccount("Main account")
-      .completeImport();
+      .importAccountAndComplete();
 
     views.selectHome();
     mainAccounts.checkAccounts("Main account");
@@ -354,41 +359,42 @@ public class ImportTest extends LoggedInFunctionalTestCase {
       .addTransaction("2008/06/10", 71.0, "Metro")
       .save();
 
-    ImportDialogChecker importDialog = operations.openImportDialog()
+    ImportDialogPreviewChecker importDialog = operations.openImportDialog()
       .setFilePath(fileName)
-      .acceptFile();
+      .importFileAndPreview();
 
     importDialog.selectBank(SOCIETE_GENERALE)
       .setMainAccount()
-      .checkFileContent(new Object[][]{
+      .checkTransactions(new Object[][]{
         {"2008/06/10", "V'lib", "1.00"},
       })
-      .doImport();
+      .importAccountAndOpenNext();
 
     importDialog.selectBank(SOCIETE_GENERALE)
       .setMainAccount()
-      .checkFileContent(new Object[][]{
+      .checkTransactions(new Object[][]{
         {"2008/06/21", "V'lib", "1.00"},
       })
-      .doImport();
+      .importAccountAndOpenNext();
+
     importDialog
-      .checkFileContent(new Object[][]{
+      .checkTransactions(new Object[][]{
         {"2008/06/10", "McDo", "10.00"},
       })
       .selectBank(SOCIETE_GENERALE)
       .setMainAccount()
-      .doImport();
+      .importAccountAndOpenNext();
 
     importDialog
       .selectBank(SOCIETE_GENERALE)
-      .checkFileContent(new Object[][]{
+      .checkTransactions(new Object[][]{
         {"2008/06/10", "Metro", "71.00"},
       })
       .setMainAccount()
       .setDeferredAccount(25, 28, 0, "Account n. 12345678a");
 
     importDialog
-      .completeImport();
+      .importAccountAndComplete();
 
     String secondFileName = OfxBuilder.init(this)
       .addBankAccount(666, 2048, "77777777", 77.0, "2008/06/11")
@@ -397,9 +403,9 @@ public class ImportTest extends LoggedInFunctionalTestCase {
 
     operations.openImportDialog()
       .setFilePath(secondFileName)
-      .acceptFile()
+      .importFileAndPreview()
       .setMainAccount()
-      .completeImport();
+      .importAccountAndComplete();
 
     views.selectData();
     transactions
@@ -421,23 +427,24 @@ public class ImportTest extends LoggedInFunctionalTestCase {
 
     operations.openImportDialog()
       .selectFiles(path1)
-      .acceptFile()
-      .checkFileContent(new Object[][]{
+      .importFileAndPreview()
+      .checkTransactions(new Object[][]{
         {"02/01/01", "Menu K", "-1.10"}
       })
       .defineAccount(SOCIETE_GENERALE, "main acount", "0123546")
       .checkDates("Year/Month/Day", "Month/Day/Year", "Day/Month/Year")
-      .doImport()
+      .importAccountWithError()
       .checkDateFormatMessageShown("import.dateformat.undefined")
       .selectDateFormat("Day/Month/Year")
-      .checkFileContent(new Object[][]{
+      .checkTransactions(new Object[][]{
         {"2001/01/02", "Menu K", "-1.10"}
       })
       .selectDateFormat("Month/Day/Year")
-      .checkFileContent(new Object[][]{
+      .checkTransactions(new Object[][]{
         {"2001/02/01", "Menu K", "-1.10"}
       })
-      .completeImport(0.00);
+      .setPosition(0.00)
+      .importAccountAndComplete();
 
     views.selectData();
     transactions.initContent()
@@ -452,12 +459,10 @@ public class ImportTest extends LoggedInFunctionalTestCase {
                            "T123\n" +
                            "^sdfsf");
 
-    ImportDialogChecker importDialog = operations.openImportDialog()
+    operations.openImportDialog()
       .selectFiles(path)
-      .acceptFile()
-      .checkHtmlErrorMessage("import.file.empty", path);
-
-    importDialog.close();
+      .importFileWithHtmlError("import.file.empty", path)
+      .close();
   }
 
   @Test
@@ -470,8 +475,7 @@ public class ImportTest extends LoggedInFunctionalTestCase {
 
     operations.openImportDialog()
       .selectFiles(path)
-      .acceptFile()
-      .checkHtmlErrorMessage("import.file.error", path)
+      .importFileWithHtmlError("import.file.error", path)
       .close();
   }
 
@@ -484,9 +488,9 @@ public class ImportTest extends LoggedInFunctionalTestCase {
 
     operations.openImportDialog()
       .checkDirectory(System.getProperty("user.home"))
-      .browseAndSelect(path1)
+      .browseAndPreview(path1)
       .setMainAccount()
-      .completeImport();
+      .importAccountAndComplete();
 
     operations.openImportDialog()
       .checkDirectory(new File(path1).getAbsoluteFile().getParent())
@@ -576,44 +580,6 @@ public class ImportTest extends LoggedInFunctionalTestCase {
   }
 
   @Test
-  public void testImportDialogGivesAccessToBankGuides() throws Exception {
-
-    OfxBuilder
-      .init(this)
-      .addBankAccount(30004, 12345, "00000111", 0.0, "2009/12/22")
-      .addTransaction("2009/12/21", -15.00, "Menu K")
-      .save();
-
-    ImportDialogChecker importDialog = operations.openImportDialog();
-
-    BankDownloadChecker bankDownload = importDialog.getBankDownload();
-
-    bankDownload
-      .checkContainsBanks("BNP Paribas", "CIC", "Crédit Agricole", "ING Direct", "Société Générale")
-      .checkNoBankSelected()
-      .checkManualDownloadHidden()
-      .selectCountry("All")
-      .selectBank("CIC")
-      .checkManualDownloadAvailable()
-      .selectManualDownload()
-      .checkManualDownloadHelp("CIC", "http://www.cic.fr");
-
-    bankDownload
-      .goBackToBankSelection()
-      .selectCountry("All")
-      .setFilter("crédit")
-      .checkContainsBanks("Crédit Agricole", "Chesterfield Federal Credit Union", "Other")
-      .setFilter("BNP")
-      .checkBankListEquals("BNP Paribas", "BNP Paribas Fortis", "Other")
-      .selectBank("BNP Paribas")
-      .checkManualDownloadAvailable()
-      .selectManualDownload()
-      .checkManualDownloadHelp("BNP Paribas", "http://www.bnpparibas.net", "Selected bank: BNP Paribas ");
-
-    importDialog.close();
-  }
-
-  @Test
   public void testLastImportCoversAllImportedAccounts() throws Exception {
     OfxBuilder
       .init(this)
@@ -658,8 +624,9 @@ public class ImportTest extends LoggedInFunctionalTestCase {
 
     operations.openImportDialog()
       .setFilePath(sameFile)
-      .acceptFile()
-      .completeImport(0, 2, 0);
+      .importFileAndPreview()
+      .importAccountAndGetSummary()
+      .checkSummaryAndValidate(0, 2, 0);
 
     views.selectCategorization();
     categorization.showLastImportedFileOnly();
@@ -672,9 +639,10 @@ public class ImportTest extends LoggedInFunctionalTestCase {
 
     operations.openImportDialog()
       .setFilePath(sameFile + ";" + otherFile)
-      .acceptFile()
-      .doImport()
-      .completeImport(1, 2, 0);
+      .importFileAndPreview()
+      .importAccountAndOpenNext()
+      .importAccountAndGetSummary()
+      .checkSummaryAndValidate(1, 2, 0);
 
     transactions.initContent()
       .add("13/01/2006", TransactionType.PRELEVEMENT, "MENU K 2", "", -1.30)
@@ -696,14 +664,15 @@ public class ImportTest extends LoggedInFunctionalTestCase {
 
     operations.openImportDialog()
       .setFilePath(emptyFile)
-      .acceptFile()
+      .importFileWithError()
       .checkMessageEmptyFile()
       .setFilePath(notEmpty)
-      .acceptFile()
+      .importFileAndPreview()
       .checkAccountMessage("Operations for single account:")
       .checkAccountSelectionMessage("Import operations in:")
       .setMainAccount()
-      .completeImport(1, 0, 0);
+      .importAccountAndGetSummary()
+      .checkSummaryAndValidate(1, 0, 0);
 
     transactions.initContent()
       .add("12/01/2006", TransactionType.PRELEVEMENT, "MENU K 2", "", -1.30)
@@ -714,8 +683,7 @@ public class ImportTest extends LoggedInFunctionalTestCase {
   public void testImportDirectory() throws Exception {
     operations.openImportDialog()
       .setFilePath("/tmp")
-      .acceptFile()
-      .checkErrorMessage("import.file.is.directory", "/tmp")
+      .importFileWithError("import.file.is.directory", "/tmp")
       .close();
   }
 
@@ -732,11 +700,10 @@ public class ImportTest extends LoggedInFunctionalTestCase {
 
     operations.openImportDialog()
       .setFilePath(newFileName.getPath())
-      .acceptFile()
+      .importFileAndPreview()
       .checkNoErrorMessage()
       .setMainAccount()
-      .doImport()
-      .completeLastStep();
+      .importAccountAndComplete();
 
     transactions.initContent()
       .add("12/01/2006", TransactionType.PRELEVEMENT, "MENU K 2", "", -1.30)
@@ -753,14 +720,15 @@ public class ImportTest extends LoggedInFunctionalTestCase {
     file.renameTo(newFileName);
     operations.openImportDialog()
       .setFilePath(newFileName.getPath())
-      .acceptFile()
+      .importFileAndPreview()
       .checkAstericsErrorOnName()
       .checkAstericsErrorOnBank()
       .checkNoErrorMessage()
       .defineAccount("CIC", "main", "1111")
       .checkAstericsClearOnBank()
       .checkAstericsClearOnName()
-      .completeImport(0.00);
+      .setPosition(0.00)
+      .importAccountAndComplete();
 
     transactions.initContent()
       .add("12/01/2006", TransactionType.PRELEVEMENT, "MENU K 2", "", -1.30)
@@ -775,11 +743,10 @@ public class ImportTest extends LoggedInFunctionalTestCase {
       .save();
     operations.openImportDialog()
       .setFilePath(fileName + ";" + "/tmp")
-      .acceptFile()
+      .importFileAndPreview()
       .checkNoErrorMessage()
       .setMainAccount()
-      .doImport()
-      .completeLastStep();
+      .importAccountAndComplete();
 
     transactions.initContent()
       .add("12/01/2006", TransactionType.PRELEVEMENT, "MENU K 2", "", -1.30)
@@ -841,11 +808,11 @@ public class ImportTest extends LoggedInFunctionalTestCase {
     operations
       .openImportDialog()
       .selectFiles(path, "badFile.ofx")
-      .acceptFile()
+      .importFileAndPreview()
       .checkNoErrorMessage()
       .createNewAccount("CIC", "Main account", "", 0.)
       .setMainAccount()
-      .doImport()
+      .importAccountWithError()
       .checkHtmlErrorMessage("import.file.error", path)
       .skipAndComplete();
 
@@ -879,19 +846,20 @@ public class ImportTest extends LoggedInFunctionalTestCase {
       .save();
     operations.openImportDialog()
       .selectFiles(path1)
-      .acceptFile()
+      .importFileAndPreview()
       .checkAccountMessage("Account 1/3 - No operations")
       .checkAccountSelectionMessage("Update:")
       .setMainAccount()
-      .doNext()
+      .importAccountAndOpenNext()
+
       .setMainAccount()
       .checkAccountMessage("Account 2/3 - No operations")
       .checkAccountSelectionMessage("Update:")
-      .doNext()
+      .importAccountAndOpenNext()
       .setMainAccount()
       .checkAccountMessage("Account 3/3 - No operations")
       .checkAccountSelectionMessage("Update:")
-      .completeImportWithNext();
+      .importAccountAndComplete();
 
     mainAccounts.checkPosition("Account n. 111", 100.);
     mainAccounts.checkAccounts("Account n. 111", "Account n. 112", "Account n. 113");
@@ -904,9 +872,10 @@ public class ImportTest extends LoggedInFunctionalTestCase {
       .addBankAccount("113", 300, "2008/08/03")
       .addTransaction("2008/08/03", 100, "Anniversaire")
       .save();
-    operations.openImportDialog()
+    ImportDialogPreviewChecker preview = operations.openImportDialog()
       .selectFiles(path2)
-      .acceptFile()
+      .importFileAndPreview();
+    preview
       .checkSelectedAccount("Account n. 113")
       .checkAccountNotEditable()
       .checkExistingAccountDescription("Account n.113 Other Position: 100.00 on 2008/08/01")
@@ -914,10 +883,12 @@ public class ImportTest extends LoggedInFunctionalTestCase {
       .checkAstericsErrorOnName()
       .checkAccountPosition(300.00)
       .selectAccount("Account n. 113")
-      .doImport()
+      .importAccountAndOpenNext();
+    preview
       .setMainAccount()
-      .doNext()
-      .completeImportWithNext();
+      .importAccountAndOpenNext();
+    preview
+      .importAccountAndComplete();
 
     mainAccounts.checkAccount("Account n. 113", 200.00, "2008/08/03");
     mainAccounts.checkAccount("Account n. 112", 100.00, "2008/08/01");
@@ -1003,15 +974,17 @@ public class ImportTest extends LoggedInFunctionalTestCase {
       .addBankAccount("113", 100, "2008/08/01")
       .save();
 
-    ImportDialogChecker checker = operations.openImportDialog();
-    checker
+    ImportDialogPreviewChecker preview = operations.openImportDialog()
       .selectFiles(path)
-      .acceptFile()
+      .importFileAndPreview();
+
+    preview
       .checkAccountMessage("Account 1/3 - No operations")
       .checkAccountSelectionMessage("Update:")
       .selectAccount("Account n. 00001123")
-      .doNext();
-    checker
+      .importAccountAndOpenNext();
+
+    preview
       .checkAccountEditable()
       .checkAccountMessage("Account 2/3 - No operations")
       .checkAccountSelectionMessage("Update:")
@@ -1023,12 +996,13 @@ public class ImportTest extends LoggedInFunctionalTestCase {
       .checkAccountSelectionMessage("Update:")
       .checkAccountEditable()
       .setMainAccount()
-      .doNext();
-    checker
+      .importAccountAndOpenNext();
+
+    preview
       .checkAccountMessage("Account 3/3 - No operations")
       .checkAccountSelectionMessage("Update:")
       .setMainAccount()
-      .completeImportWithNext();
+      .importAccountAndComplete();
 
     mainAccounts.checkAccounts("Account n. 00001123", "Account n. 112", "Account n. 113");
   }

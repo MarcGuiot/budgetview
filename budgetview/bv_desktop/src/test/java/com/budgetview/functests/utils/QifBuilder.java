@@ -1,8 +1,8 @@
 package com.budgetview.functests.utils;
 
-import com.budgetview.functests.checkers.ImportDialogChecker;
-import com.budgetview.functests.checkers.OperationChecker;
 import com.budgetview.desktop.description.Formatting;
+import com.budgetview.functests.checkers.ImportDialogPreviewChecker;
+import com.budgetview.functests.checkers.OperationChecker;
 import junit.framework.TestCase;
 import org.globsframework.utils.Strings;
 import org.globsframework.utils.TestUtils;
@@ -64,28 +64,30 @@ public class QifBuilder {
 
   public void load(int importedTransactionCount, int ignoredTransactionCount, int autocategorizedTransactionCount) throws Exception {
     save();
-    ImportDialogChecker importDialog = operations.openImportDialog()
+    ImportDialogPreviewChecker preview = operations.openImportDialog()
       .setFilePath(fileName)
-      .acceptFile();
-    if (importDialog.accountIsEditable()) {
-      importDialog.setMainAccount();
+      .importFileAndPreview();
+    if (preview.accountIsEditable()) {
+      preview.setMainAccount();
     }
-    importDialog.completeImport(importedTransactionCount, ignoredTransactionCount, autocategorizedTransactionCount);
+    preview
+      .importAccountAndGetSummary()
+      .checkSummaryAndValidate(importedTransactionCount, ignoredTransactionCount, autocategorizedTransactionCount);
   }
 
   public void loadInAccount(String accountName) throws Exception {
     save();
-    ImportDialogChecker importDialog = operations.openImportDialog()
+    operations.openImportDialog()
       .setFilePath(fileName)
-      .acceptFile()
-      .selectAccount(accountName);
-    importDialog.completeImport();
+      .importFileAndPreview()
+      .selectAccount(accountName)
+      .importAccountAndComplete();
   }
 
   public void loadFirstStartingAtZero(double amount) throws IOException {
     save();
     operations.openImportDialog().setFilePath(fileName)
-      .acceptFile()
+      .importFileAndPreview()
       .selectNewAccount()
       .setAccountName("Main account")
       .setMainAccount()

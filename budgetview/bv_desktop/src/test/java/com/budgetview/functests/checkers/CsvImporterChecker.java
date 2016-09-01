@@ -172,10 +172,10 @@ public class CsvImporterChecker extends GuiChecker {
     return new ComboBox((JComboBox) component1);
   }
 
-  public ImportDialogChecker validate() {
+  public ImportDialogPreviewChecker validate() {
     window.getButton("ok").click();
     assertFalse(window.isVisible());
-    return parent;
+    return new ImportDialogPreviewChecker(parent.getDialog());
   }
 
   public void cancel() {

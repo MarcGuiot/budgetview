@@ -1,7 +1,7 @@
 package com.budgetview.functests.deferred;
 
 import com.budgetview.functests.checkers.DeferredCardCategorizationChecker;
-import com.budgetview.functests.checkers.ImportDialogChecker;
+import com.budgetview.functests.checkers.ImportDialogPreviewChecker;
 import com.budgetview.functests.utils.LoggedInFunctionalTestCase;
 import com.budgetview.functests.utils.OfxBuilder;
 import com.budgetview.functests.utils.QifBuilder;
@@ -9,6 +9,7 @@ import com.budgetview.model.TransactionType;
 import org.junit.Test;
 
 public class DeferredTest extends LoggedInFunctionalTestCase {
+
   protected void setUp() throws Exception {
     setCurrentDate("2009/12/09");
     super.setUp();
@@ -87,15 +88,15 @@ public class DeferredTest extends LoggedInFunctionalTestCase {
       .addTransaction("2009/09/14", -35, "Auchan")
       .save();
 
-    ImportDialogChecker importer = cardCategorization.importAccount()
+    ImportDialogPreviewChecker preview = cardCategorization.importAccount()
       .setFilePath(cardFile)
-      .acceptFile();
-    importer.addNewAccount()
+      .importFileAndPreview();
+    preview.addNewAccount()
       .setAccountName("Card account")
       .selectBank("CIC")
       .setDeferredAccount(25, 28, 0)
-      .setPosition(-1000);
-    importer.completeImport();
+      .setPosition(-1000)
+      .importAccountAndComplete();
 
     views.selectCategorization();
     cardCategorization

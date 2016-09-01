@@ -1,6 +1,7 @@
 package com.budgetview.functests.importexport;
 
 import com.budgetview.functests.checkers.ImportDialogChecker;
+import com.budgetview.functests.checkers.ImportDialogPreviewChecker;
 import com.budgetview.functests.specificbanks.SpecificBankTestCase;
 import com.budgetview.model.TransactionType;
 import com.budgetview.utils.CsvBuilder;
@@ -23,7 +24,7 @@ public class CsvImportTest extends SpecificBankTestCase {
 
     ImportDialogChecker importDialog = operations.openImportDialog().setFilePath(file);
 
-    importDialog.acceptCsvFile()
+    ImportDialogPreviewChecker preview = importDialog.acceptCsvFile()
       .checkContains("Col1", "Col2", "Col3")
       .checkAvailableTypes("Col1", "Do not import", "User date", "Bank date")
       .setAsBankDate("Col1")
@@ -33,8 +34,8 @@ public class CsvImportTest extends SpecificBankTestCase {
       .setAsAmount("Col3")
       .validate();
 
-    importDialog
-      .checkFileContent(new Object[][]{
+    preview
+      .checkTransactions(new Object[][]{
         {"08/01/01", "RATP", "-10.00"},
         {"08/01/02", "AUCHAN", "-100.00"}
       })
@@ -43,7 +44,7 @@ public class CsvImportTest extends SpecificBankTestCase {
       .setMainAccount()
       .selectBank("CIC")
       .setPosition(100)
-      .completeImport();
+      .importAccountAndComplete();
 
     transactions.initAmountContent()
       .add("02/01/2008", "AUCHAN", -100.00, "To categorize", 100.00, 100.00, "imported")
@@ -64,7 +65,7 @@ public class CsvImportTest extends SpecificBankTestCase {
 
     ImportDialogChecker importDialog = operations.openImportDialog().setFilePath(file);
 
-    importDialog.acceptCsvFile()
+    ImportDialogPreviewChecker preview = importDialog.acceptCsvFile()
       .checkFieldsError("You must select the fields for: Bank date, Label, Amount.")
       .setAsBankDate("Col1")
       .checkFieldsError("You must select the fields for: Label, Amount.")
@@ -84,8 +85,8 @@ public class CsvImportTest extends SpecificBankTestCase {
       .checkFieldsComplete("All mandatory fields are selected.")
       .validate();
 
-    importDialog
-      .checkFileContent(new Object[][]{
+    preview
+      .checkTransactions(new Object[][]{
         {"08/01/01", "RATP", "-200.00"},
         {"08/01/02", "AUCHAN", "-300.00"}
       })
@@ -94,7 +95,7 @@ public class CsvImportTest extends SpecificBankTestCase {
       .setMainAccount()
       .selectBank("CIC")
       .setPosition(100)
-      .completeImport();
+      .importAccountAndComplete();
 
     transactions.initAmountContent()
       .add("02/01/2008", "AUCHAN", -300.00, "To categorize", 100.00, 100.00, "imported")
@@ -113,7 +114,7 @@ public class CsvImportTest extends SpecificBankTestCase {
 
     ImportDialogChecker importDialog = operations.openImportDialog().setFilePath(file);
 
-    importDialog.acceptCsvFile()
+    ImportDialogPreviewChecker preview = importDialog.acceptCsvFile()
       .checkContains("Bank date", "Libellé", "Montant")
       .checkIsBankDate("Bank date")
       .checkIsLabel("Libellé")
@@ -121,8 +122,8 @@ public class CsvImportTest extends SpecificBankTestCase {
       .checkIsNote("Note")
       .validate();
 
-    importDialog
-      .checkFileContent(new Object[][]{
+    preview
+      .checkTransactions(new Object[][]{
         {"08/01/01", "RATP", "-10.00"},
         {"08/01/02", "AUCHAN", "-100.00"}
       })
@@ -131,7 +132,7 @@ public class CsvImportTest extends SpecificBankTestCase {
       .setMainAccount()
       .selectBank("CIC")
       .setPosition(100)
-      .completeImport();
+      .importAccountAndComplete();
 
     transactions.initContent()
       .add("02/01/2008", TransactionType.PRELEVEMENT, "AUCHAN", "Courses", -100.00)
@@ -167,7 +168,7 @@ public class CsvImportTest extends SpecificBankTestCase {
 
     operations.openImportDialog()
       .setFilePath(file)
-      .acceptFile()
+      .importFileWithError()
       .checkMessageEmptyFile()
       .close();
   }
@@ -178,7 +179,7 @@ public class CsvImportTest extends SpecificBankTestCase {
 
     operations.openImportDialog()
       .setFilePath(fileName)
-      .acceptFile()
+      .importFileWithError()
       .checkMessageEmptyFile()
       .close();
   }
@@ -195,7 +196,7 @@ public class CsvImportTest extends SpecificBankTestCase {
     ImportDialogChecker importDialog = operations.openImportDialog()
       .setFilePath(file);
 
-    importDialog.acceptCsvFile()
+    ImportDialogPreviewChecker preview = importDialog.acceptCsvFile()
       .checkContains("date", "libelle", "montant")
       .setAsBankDate("date")
       .setAsLabel("libelle")
@@ -203,8 +204,8 @@ public class CsvImportTest extends SpecificBankTestCase {
       .setAsEnvelope("enveloppe")
       .validate();
 
-    importDialog
-      .checkFileContent(new Object[][]{
+    preview
+      .checkTransactions(new Object[][]{
         {"08/01/01", "RATP", "-10.00"},
         {"08/01/02", "AUCHAN", "-100.00"}
       })
@@ -214,7 +215,7 @@ public class CsvImportTest extends SpecificBankTestCase {
       .selectBank("CIC")
       .setPosition(100);
 
-    importDialog.importSeries()
+    preview.importSeries()
       .checkContains("Transport", "Groceries")
       .setRecurring("Transport")
       .setRecurring("Groceries")
@@ -234,7 +235,7 @@ public class CsvImportTest extends SpecificBankTestCase {
         .getFile();
 
     importDialog = operations.openImportDialog().setFilePath(file2);
-    importDialog.acceptCsvFile()
+    ImportDialogPreviewChecker preview2 = importDialog.acceptCsvFile()
       .checkContains("Date", "Libellé", "montant")
       .checkIsBankDate("date")
       .checkIsLabel("Libellé")
@@ -242,13 +243,13 @@ public class CsvImportTest extends SpecificBankTestCase {
       .checkIsEnvelope("Enveloppe")
       .validate();
 
-    importDialog
-      .checkFileContent(new Object[][]{
+    preview2
+      .checkTransactions(new Object[][]{
         {"08/01/04", "ED", "-100.00"}
       })
       .selectDateFormat("Year/Month/Day")
       .selectAccount("imported")
-      .completeImport();
+      .importAccountAndComplete();
 
     transactions.initAmountContent()
       .add("04/01/2008", "ED", -100.00, "Groceries", 0.0, 0.0, "imported")
@@ -306,7 +307,7 @@ public class CsvImportTest extends SpecificBankTestCase {
     ImportDialogChecker importDialog = operations.openImportDialog()
       .setFilePath(fileName);
 
-    importDialog.acceptCsvFile()
+    ImportDialogPreviewChecker preview = importDialog.acceptCsvFile()
       .setAsUserDate("Date d'operation")
       .setAsBankDate("Date de valeur")
       .setAsDebit("Debit")
@@ -314,12 +315,12 @@ public class CsvImportTest extends SpecificBankTestCase {
       .setAsLabel("Libelle")
       .validate();
 
-    importDialog
+    preview
       .setAccountName("imported")
       .setMainAccount()
       .selectBank("CIC")
       .setPosition(100)
-      .completeImport();
+      .importAccountAndComplete();
 
     timeline.selectAll();
 
@@ -348,7 +349,7 @@ public class CsvImportTest extends SpecificBankTestCase {
     ImportDialogChecker importDialog = operations.openImportDialog()
       .setFilePath(fileName);
 
-    importDialog.acceptCsvFile()
+    ImportDialogPreviewChecker preview = importDialog.acceptCsvFile()
       .checkAvailableTypes("Date comptable", "Do not import", "User date", "Bank date")
       .setAsUserDate("Date comptable")
       .checkAvailableTypes("Date valeur", "Do not import", "User date", "Bank date")
@@ -360,12 +361,12 @@ public class CsvImportTest extends SpecificBankTestCase {
       .setAsNote("Détail du mouvement")
       .validate();
 
-    importDialog
+    preview
       .setAccountName("imported")
       .setMainAccount()
       .selectBank("Other")
       .setPosition(100)
-      .completeImport();
+      .importAccountAndComplete();
 
     timeline.selectAll();
 
@@ -387,7 +388,7 @@ public class CsvImportTest extends SpecificBankTestCase {
     ImportDialogChecker importDialog = operations.openImportDialog()
       .setFilePath(file);
 
-    importDialog.acceptCsvFile()
+    ImportDialogPreviewChecker preview = importDialog.acceptCsvFile()
       .checkContains("Date:Bank", "Label", "Amount", "Envelope")
       .setAsBankDate("Date:Bank")
       .checkIsLabel("Label")
@@ -395,8 +396,8 @@ public class CsvImportTest extends SpecificBankTestCase {
       .setAsEnvelope("Envelope,with:others")
       .validate();
 
-    importDialog
-      .checkFileContent(new Object[][]{
+    preview
+      .checkTransactions(new Object[][]{
         {"2008/01/02", "AUCHAN", "100.00"},
         {"2008/01/01", "RATP:Navigo,Jan08", "-10000.00"}
       })
@@ -405,7 +406,7 @@ public class CsvImportTest extends SpecificBankTestCase {
       .selectBank("CIC")
       .setPosition(100);
 
-    importDialog.importSeries()
+    preview.importSeries()
       .checkContains("Transport", "Groceries")
       .setRecurring("Transport")
       .setRecurring("Groceries")
@@ -418,8 +419,7 @@ public class CsvImportTest extends SpecificBankTestCase {
 
     operations.openImportDialog()
       .setFilePath(fileName)
-      .acceptFile()
-      .checkHtmlErrorMessage("import.csv.invalidFileFormat")
+      .importFileWithHtmlError("import.csv.invalidFileFormat")
       .close();
   }
 
@@ -487,7 +487,7 @@ public class CsvImportTest extends SpecificBankTestCase {
     ImportDialogChecker importDialog = operations.openImportDialog()
       .setFilePath(fileName);
 
-    importDialog.acceptCsvFile()
+    ImportDialogPreviewChecker preview = importDialog.acceptCsvFile()
       .checkContains("Date", "Libellé", "Montant", "Valeur")
       .checkAvailableTypes("Date", "Do not import", "User date", "Bank date")
       .checkAvailableTypes("Libellé", "Do not import", "Label", "Note", "Envelope name", "Sub-envelope name")
@@ -498,12 +498,12 @@ public class CsvImportTest extends SpecificBankTestCase {
       .setAsLabel("Libellé")
       .validate();
 
-    importDialog
+    preview
       .setAccountName("imported")
       .setMainAccount()
       .selectBank("Other")
       .setPosition(100)
-      .completeImport();
+      .importAccountAndComplete();
 
     timeline.selectAll();
 
@@ -561,7 +561,7 @@ public class CsvImportTest extends SpecificBankTestCase {
       .selectBank("Other")
       .setPosition(100)
       .selectDateFormat("Day/Month/Year")
-      .completeImport();
+      .importAccountAndComplete();
 
     transactions.initAmountContent()
       .add("02/08/2013", "ABONNEMENT CPTS INTERNET OFFERT", 1.35, "To categorize", 101.35, 101.35, "imported")
@@ -593,7 +593,7 @@ public class CsvImportTest extends SpecificBankTestCase {
       .selectBank("Other")
       .setPosition(100)
       .selectDateFormat("Day/Month/Year")
-      .completeImport();
+      .importAccountAndComplete();
 
     transactions.initAmountContent()
       .add("07/01/2013", "PAIEMENT MAESTRO COOP-2474 BULLE, L", 126.35, "To categorize", 159.65, 159.65, "imported")

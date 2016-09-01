@@ -477,7 +477,7 @@ public class SignpostSequenceTest extends LoggedInFunctionalTestCase {
 
     operations.openImportDialog()
       .setFilePath(SpecificBankTestCase.getFile("money_export_standard.qif", this))
-      .acceptFile()
+      .importFileAndPreview()
       .createNewAccount("CIC", "Main account", "", 0.)
       .setMainAccount()
       .importSeries()
@@ -504,7 +504,7 @@ public class SignpostSequenceTest extends LoggedInFunctionalTestCase {
 
     operations.openImportDialog()
       .setFilePath(SpecificBankTestCase.getFile("money_export_standard.qif", this))
-      .acceptFile()
+      .importFileAndPreview()
       .createNewAccount("CIC", "Main account", "", 0.)
       .setMainAccount()
       .importSeries()

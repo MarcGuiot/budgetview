@@ -1,6 +1,7 @@
 package com.budgetview.functests.utils;
 
 import com.budgetview.functests.checkers.ImportDialogChecker;
+import com.budgetview.functests.checkers.ImportDialogPreviewChecker;
 import com.budgetview.functests.checkers.OperationChecker;
 import com.budgetview.io.exporter.ofx.OfxExporter;
 import com.budgetview.model.*;
@@ -156,9 +157,9 @@ public class OfxBuilder {
     save();
     operations.openImportDialog()
       .setFilePath(fileName)
-      .acceptFile()
+      .importFileAndPreview()
       .selectAccount(name)
-      .completeImport();
+      .importAccountAndComplete();
   }
 
   public void load(String newAccount, String existingAccount) {
@@ -168,37 +169,35 @@ public class OfxBuilder {
 
   public void loadInNewAccount() {
     save();
-    ImportDialogChecker importDialog = operations.openImportDialog()
+    ImportDialogPreviewChecker preview = operations.openImportDialog()
       .setFilePath(fileName)
-      .acceptFile();
-    if (importDialog.accountIsEditable()) {
-      importDialog.setMainAccount();
+      .importFileAndPreview();
+    if (preview.accountIsEditable()) {
+      preview.setMainAccount();
     }
-    importDialog.completeImport();
+    preview.importAccountAndComplete();
   }
 
   public void load(int importedTransactionCount, int ignoredTransactionCount, int autocategorizedTransactionCount) {
     save();
-    ImportDialogChecker importDialog = operations.openImportDialog()
+    ImportDialogPreviewChecker preview = operations.openImportDialog()
       .setFilePath(fileName)
-      .acceptFile();
-    if (importDialog.accountIsEditable()) {
-      importDialog.setMainAccount();
+      .importFileAndPreview();
+    if (preview.accountIsEditable()) {
+      preview.setMainAccount();
     }
-    importDialog.completeImport(importedTransactionCount, ignoredTransactionCount, autocategorizedTransactionCount);
+    preview
+      .importAccountAndGetSummary()
+      .checkSummaryAndValidate(importedTransactionCount, ignoredTransactionCount, autocategorizedTransactionCount);
   }
 
   public void loadAndGotoCategorize(int importedTransactionCount, int ignoredTransactionCount, int autocategorizedTransactionCount) {
     save();
     operations.openImportDialog()
       .setFilePath(fileName)
-      .acceptFile()
-      .completeImportAndGotoCategorize(importedTransactionCount, ignoredTransactionCount, autocategorizedTransactionCount);
-  }
-
-  public void loadDeferredCard(String accountName) {
-    save();
-    importDefered(accountName, fileName, true, null);
+      .importFileAndPreview()
+      .importAccountAndGetSummary()
+      .checkSummaryAndValidate(importedTransactionCount, ignoredTransactionCount, autocategorizedTransactionCount);
   }
 
   public void loadDeferredCard(String accountName, String targetAccountName) {
@@ -210,10 +209,10 @@ public class OfxBuilder {
     save();
     operations.openImportDialog()
       .setFilePath(fileName)
-      .acceptFile()
+      .importFileAndPreview()
       .setDeferredAccount(25, 28, 0, targetAccountName)
       .selectBank(bank)
-      .completeImport();
+      .importAccountAndComplete();
   }
 
   private void importDefered(String accountName, final String fileName,

@@ -1,6 +1,5 @@
 package com.budgetview.functests.checkers;
 
-import com.budgetview.utils.Lang;
 import org.uispec4j.Table;
 import org.uispec4j.Window;
 

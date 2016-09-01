@@ -235,9 +235,9 @@ public class AccountManagementTest extends LoggedInFunctionalTestCase {
       .save();
     operations.openImportDialog()
       .selectFiles(path)
-      .acceptFile()
+      .importFileAndPreview()
       .checkSelectedAccount("Account n. 321")
-      .doImport();
+      .importAccountAndOpenNext();
   }
 
   @Test

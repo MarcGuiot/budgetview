@@ -526,7 +526,7 @@ public class LoginTest extends StartUpFunctionalTestCase {
           ImportDialogChecker importDialog = new ImportDialogChecker(window);
 
           importDialog.setFilePath(path)
-            .acceptFile();
+            .importFileAndPreview();
 
           window.getButton("Skip file").click();
           return window.getButton("OK").triggerClick();

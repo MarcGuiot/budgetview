@@ -1,13 +1,13 @@
 package com.budgetview.functests.checkers;
 
-import com.budgetview.desktop.utils.dev.*;
-import com.budgetview.functests.checkers.mobile.CreateMobileAccountChecker;
-import com.budgetview.functests.checkers.mobile.EditMobileAccountChecker;
-import com.budgetview.functests.checkers.printing.PrintDialogChecker;
 import com.budgetview.desktop.Application;
 import com.budgetview.desktop.addons.dev.ToggleAllAddOnsAction;
 import com.budgetview.desktop.utils.DataCheckerAction;
 import com.budgetview.desktop.utils.DumpDataAction;
+import com.budgetview.desktop.utils.dev.*;
+import com.budgetview.functests.checkers.mobile.CreateMobileAccountChecker;
+import com.budgetview.functests.checkers.mobile.EditMobileAccountChecker;
+import com.budgetview.functests.checkers.printing.PrintDialogChecker;
 import com.budgetview.utils.Lang;
 import junit.framework.TestCase;
 import org.globsframework.utils.Dates;
@@ -48,32 +48,34 @@ public class OperationChecker {
   }
 
   public void importOfxFile(String name) {
-    ImportDialogChecker importDialogChecker = openImportDialog()
+    ImportDialogPreviewChecker preview = openImportDialog()
       .setFilePath(name)
-      .acceptFile();
+      .importFileAndPreview();
 
     int count = 0;
-    while (!importDialogChecker.isLastStep() && count < 10) {
-      if (importDialogChecker.isNew()) {
-        importDialogChecker.setMainAccount();
+    while (!preview.isCompletion() && count < 10) {
+      if (preview.isNewAccount()) {
+        preview.setMainAccount();
       }
       count++;
-      if (!importDialogChecker.isLastStep()) {
-        importDialogChecker.checkNoErrorMessage();
-      }
-      importDialogChecker.doImport();
+      preview.checkNoErrorMessage();
+      preview.importAccountAndOpenNext();
     }
-
-    importDialogChecker.complete();
+    if (!preview.isCompletion()) {
+      preview.importAccountAndComplete();
+    }
+    else {
+      preview.toCompletion().validate();
+    }
   }
 
   public void importOfxFile(String name, double initialAmount) {
     openImportDialog()
       .selectFiles(name)
-      .acceptFile()
+      .importFileAndPreview()
       .setPosition(initialAmount)
       .setMainAccount()
-      .completeImport();
+      .importAccountAndComplete();
   }
 
   public void importOfxWithDeferred(String fileName, String cardAccountName, String targetAccount) {
@@ -82,16 +84,16 @@ public class OperationChecker {
   }
 
   public void importWithNewAccount(String fileName, String accountName) {
-    ImportDialogChecker importDialog = openImportDialog()
+    ImportDialogPreviewChecker preview = openImportDialog()
       .setFilePath(fileName)
-      .acceptFile();
+      .importFileAndPreview();
 
-    importDialog.addNewAccount()
+    preview.addNewAccount()
       .setAccountNumber(accountName)
       .setMainAccount()
       .setAccountName(accountName);
-    importDialog.doImport();
-    importDialog.completeLastStep();
+
+    preview.importAccountAndComplete();
   }
 
   public void importQifFileWithDeferred(String fileName, String bank, Double position, String targetAccount) {
@@ -101,51 +103,49 @@ public class OperationChecker {
   public void importQifFileWithDeferred(String fileName, String bank, Double position,
                                         final int deferredDayPeriod, final int deferredDayPrelevement, final int deferredMonthShift,
                                         String targetAccount) {
-    ImportDialogChecker importDialog = openImportDialog()
+    ImportDialogPreviewChecker preview = openImportDialog()
       .setFilePath(fileName)
-      .acceptFile();
+      .importFileAndPreview();
 
-    ImportDialogChecker accountEditionChecker = importDialog.addNewAccount();
+    ImportDialogPreviewChecker accountEdition = preview.addNewAccount();
     if (bank != null) {
-      accountEditionChecker
+      accountEdition
         .selectBank(bank);
     }
-    accountEditionChecker
+    accountEdition
       .setAccountNumber("1111")
       .setAccountName("card 1111")
       .setDeferredAccount(deferredDayPeriod, deferredDayPrelevement, deferredMonthShift, targetAccount);
 
     if (position != null) {
-      importDialog.setPosition(position);
+      preview.setPosition(position);
     }
-    importDialog.doImport();
-    importDialog.completeLastStep();
+    preview.importAccountAndComplete();
   }
 
   public void importFirstQifFileWithDeferred(String fileName, String accountName) {
-    ImportDialogChecker importDialog = openImportDialog()
+    ImportDialogPreviewChecker preview = openImportDialog()
       .setFilePath(fileName)
-      .acceptFile();
+      .importFileAndPreview();
 
-    importDialog.addNewAccount()
+    preview.addNewAccount()
       .setAccountNumber("1111")
       .setAccountName(accountName);
-    importDialog
+    preview
       .setDeferredAccount(25, 28, 0)
-      .doImport();
-    importDialog.completeLastStep();
+      .importAccountAndComplete();
   }
 
   public void importOfxFile(String name, String bank) {
-    ImportDialogChecker importDialogChecker = openImportDialog()
+    ImportDialogPreviewChecker preview = openImportDialog()
       .selectFiles(name)
-      .acceptFile();
-    while (!importDialogChecker.isLastStep()) {
-      importDialogChecker.selectBank(bank)
+      .importFileAndPreview();
+    while (!preview.isCompletion()) {
+      preview.selectBank(bank)
         .setMainAccount()
-        .doImport();
+        .importAccountAndOpenNext();
     }
-    importDialogChecker.complete();
+    preview.toCompletion().validate();
   }
 
   public void importOfxFile(String name, String bank, Double amount) {
@@ -157,26 +157,25 @@ public class OperationChecker {
   }
 
   public void importOfxOnAccount(String fileName, String existingAccount) {
-    ImportDialogChecker importDialog = openImportDialog()
+    ImportDialogPreviewChecker preview = openImportDialog()
       .setFilePath(fileName)
-      .acceptFile();
-    importDialog.selectAccount(existingAccount);
-
-    importDialog.completeImport();
+      .importFileAndPreview();
+    preview.selectAccount(existingAccount);
+    preview.importAccountAndComplete();
   }
 
   public void importQifFile(String file) {
     openImportDialog()
       .setFilePath(file)
-      .acceptFile()
+      .importFileAndPreview()
       .selectAccount("Main account")
-      .completeImport();
+      .importAccountAndComplete();
   }
 
   public void importQifFileAndSkipSeries(String file) {
     openImportDialog()
       .setFilePath(file)
-      .acceptFile()
+      .importFileAndPreview()
       .selectAccount("Main account")
       .completeImportAndSkipSeries();
   }
@@ -184,16 +183,16 @@ public class OperationChecker {
   public void importQifFile(String file, String bank, Double position) {
     openImportDialog()
       .setFilePath(file)
-      .acceptFile()
+      .importFileAndPreview()
       .createNewAccount(bank, "Main account", "", position)
       .setMainAccount()
-      .completeImport();
+      .importAccountAndComplete();
   }
 
   public void importQifFileAndSkipSeries(String file, String bank, Double position) {
     openImportDialog()
       .setFilePath(file)
-      .acceptFile()
+      .importFileAndPreview()
       .createNewAccount(bank, "Main account", "", position)
       .setMainAccount()
       .completeImportAndSkipSeries();
@@ -201,33 +200,34 @@ public class OperationChecker {
 
   public void importFile(String file, String targetAccount) {
     openImportDialog().setFilePath(file)
-      .acceptFile()
+      .importFileAndPreview()
       .selectAccount(targetAccount)
-      .completeImport();
+      .importAccountAndComplete();
   }
 
   public void importFile(String file, String targetAccount, Double position) {
     openImportDialog().setFilePath(file)
-      .acceptFile()
+      .importFileAndPreview()
       .selectAccount(targetAccount)
-      .completeImport(position);
+      .setPosition(position)
+      .importAccountAndComplete();
   }
 
   public void importQifFiles(String bank, String file) {
-    ImportDialogChecker importDialogChecker = openImportDialog()
+    ImportDialogPreviewChecker preview = openImportDialog()
       .setFilePath(file)
-      .acceptFile();
+      .importFileAndPreview();
 
-    while (!importDialogChecker.isLastStep()) {
-      importDialogChecker
+    while (!preview.isCompletion()) {
+      preview
         .setAccountName("Main account")
         .setPosition(0)
         .selectBank(bank)
         .setMainAccount()
-        .doImport();
+        .importAccountAndOpenNext();
     }
 
-    importDialogChecker.complete();
+    preview.toCompletion().validate();
   }
 
   private void importFile(final String[] fileNames, final String bank, final Double amount, final String targetAccount) {
@@ -242,21 +242,21 @@ public class OperationChecker {
 
     dialog.getButton("Import").click();
 
-    ImportDialogChecker importDialog = ImportDialogChecker.create(dialog);
+    ImportDialogPreviewChecker preview = new ImportDialogPreviewChecker(dialog);
 
     JButton createFirstAccount = dialog.findSwingComponent(JButton.class, "Create an account");
     if (createFirstAccount != null) {
-      importDialog
+      preview
         .defineAccount(bank, "Main account", DEFAULT_ACCOUNT_NUMBER);
     }
     else if (bank != null && asSelectBank(dialog)) { // OFX
-      importDialog.selectBank("Other");
+      preview.selectBank("Other");
     }
     if (targetAccount != null) {
       dialog.getComboBox("accountCombo").select(targetAccount);
     }
-    if (importDialog.hasAccountType()) {
-      importDialog.setMainAccountForAll();
+    if (preview.hasAccountType()) {
+      preview.setMainAccountForAll();
     }
 
     final Button step2Button = dialog.getButton(Lang.get("import.preview.ok"));
@@ -270,19 +270,18 @@ public class OperationChecker {
       accountPosition.validate();
     }
     int i = 0;
-    while (!importDialog.isLastStep() && i != 10) {
+    while (!preview.isCompletion() && i != 10) {
       step2Button.click();
-      if (importDialog.hasAccountType()) {
-        importDialog.setMainAccountForAll();
+      if (preview.hasAccountType()) {
+        preview.setMainAccountForAll();
       }
       if (bank != null && asSelectBank(dialog)) {
-        importDialog
+        preview
           .selectBank(bank);
       }
       i++;
     }
-    importDialog.checkLastStep();
-    importDialog.completeLastStep();
+    preview.toCompletion().validate();
   }
 
   private boolean asSelectBank(Window dialog) {

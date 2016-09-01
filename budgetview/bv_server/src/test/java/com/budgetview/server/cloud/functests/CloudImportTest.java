@@ -40,8 +40,7 @@ public class CloudImportTest extends CloudDesktopTestCase {
       .setText("Identifiant", "1234")
       .setPassword("Code (1234)", "")
       .next()
-      .doImport()
-      .close();
+      .importAccountAndComplete();
 
     mainAccounts.checkAccounts("Main account 1");
 //    mainAccounts.checkAccount("Main account 1", 1000.00, "2016/08/10");

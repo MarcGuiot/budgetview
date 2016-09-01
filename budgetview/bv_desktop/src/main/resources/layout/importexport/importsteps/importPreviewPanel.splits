@@ -64,7 +64,7 @@
     <row styleClass="dialogButtons">
       <filler fill="horizontal"/>
       <button action="skipFile"/>
-      <button action="finish" />
+      <button action="next" />
     </row>
 
   </column>

@@ -17,7 +17,7 @@ public class SynchroChecker extends GuiChecker {
 
   public ImportDialogChecker doImportAndWaitForCompletion() {
     doImport();
-    importDialogChecker.checkLastStep();
+    importDialogChecker.toPreview().toCompletion().checkLastStep();
     return importDialogChecker;
   }
 

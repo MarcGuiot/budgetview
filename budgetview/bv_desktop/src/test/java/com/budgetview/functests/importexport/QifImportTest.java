@@ -218,10 +218,10 @@ public class QifImportTest extends LoggedInFunctionalTestCase {
 
     operations.openImportDialog()
       .setFilePath(newFile)
-      .acceptFile()
+      .importFileAndPreview()
       .checkSelectedAccount("Main account")
-      .completeImport();
-    views.selectData();
+      .importAccountAndComplete();
+
     transactions.initContent()
       .add("12/01/2006", TransactionType.PRELEVEMENT, "TX 2", "", -2.23)
       .add("11/01/2006", TransactionType.PRELEVEMENT, "TX 2", "", -2.23)

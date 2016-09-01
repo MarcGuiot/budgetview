@@ -42,13 +42,5 @@ public abstract class LangTestCase extends LoggedInFunctionalTestCase {
     mainAccounts.checkAccountUpdateDate(accountName, summaryDate);
   }
 
-  protected void checkBankListContains(String otherBank) {
-    ImportDialogChecker importDialog = operations.openImportDialog();
-    importDialog
-      .getBankDownload()
-      .checkContainsBanks(otherBank);
-    importDialog.close();
-  }
-
   protected abstract String getAccountName();
 }

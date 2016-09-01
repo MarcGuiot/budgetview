@@ -64,16 +64,16 @@ public class ImportSeriesChecker {
   public void validateAndFinishImport() {
     dialog.getButton("import").click();
     assertFalse(dialog.isVisible());
-    ImportDialogChecker.complete(-1, -1, -1, parent);
+    ImportDialogCompletionChecker.complete(-1, -1, -1, parent);
   }
 
   public void validateAndFinishImport(int importedTransactionCount, int ignoredTransactionCount, int autocategorizedTransactionCount) {
     dialog.getButton("import").click();
     assertFalse(dialog.isVisible());
-    ImportDialogChecker.complete(importedTransactionCount, ignoredTransactionCount, autocategorizedTransactionCount, parent);
+    ImportDialogCompletionChecker.complete(importedTransactionCount, ignoredTransactionCount, autocategorizedTransactionCount, parent);
   }
 
-  public ImportSeriesChecker checkNotContain(String... series) {
+  public ImportSeriesChecker checkNotPresent(String... series) {
     for (String s : series) {
       Assert.assertNull(dialog.findSwingComponent(JComboBox.class, "choice_" + s));
     }
@@ -83,6 +83,6 @@ public class ImportSeriesChecker {
   public void cancelImportSeries() {
     dialog.getButton("do not import").click();
     assertFalse(dialog.isVisible());
-    ImportDialogChecker.complete(-1, -1, -1, parent);
+    ImportDialogCompletionChecker.complete(-1, -1, -1, parent);
   }
 }

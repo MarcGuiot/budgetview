@@ -125,11 +125,11 @@ public class AutoCategorizationTest extends LoggedInFunctionalTestCase {
     operations
       .openImportDialog()
       .setFilePath(path)
-      .acceptFile()
+      .importFileAndPreview()
       .setMainAccount()
-      .doImport()
+      .importAccountAndOpenNext()
       .setDeferredAccount(25, 28, 0, "Account n. 000123")
-      .completeImport();
+      .importAccountAndComplete();
 
     views.selectData();
     transactions.initContent()

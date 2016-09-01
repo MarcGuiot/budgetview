@@ -12,7 +12,7 @@ import org.globsframework.model.utils.GlobConstantContainer;
 import static org.globsframework.model.FieldValue.value;
 
 public enum DefaultSeries implements GlobConstantContainer {
-  INCOME("income1", 1, BudgetArea.INCOME),
+  INCOME("income", 1, BudgetArea.INCOME),
 
   RENT("rent", 2, BudgetArea.RECURRING),
   ELECTRICITY("electricity", 3, BudgetArea.RECURRING),
