@@ -129,7 +129,7 @@ public class JsonImporter implements AccountFileImporter {
     }
     else {
       importedSeriesList = targetRepository.getAll(ImportedSeries.TYPE, and(fieldEqualsIgnoreCase(ImportedSeries.NAME, providerSeriesName)));
-      budgetArea = BudgetArea.VARIABLE;
+      budgetArea = defaultSeries == null ? BudgetArea.VARIABLE : defaultSeries.getBudgetArea();
       if (importedSeriesList.isEmpty())
         System.out.println("   ==> no series found for provider name: " + providerSeriesName);
     }

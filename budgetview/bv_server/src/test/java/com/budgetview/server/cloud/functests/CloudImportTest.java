@@ -48,6 +48,9 @@ public class CloudImportTest extends CloudDesktopTestCase {
       .add("10/08/2016", TransactionType.PRELEVEMENT, "AUCHAN", "", -100.00)
       .add("08/08/2016", TransactionType.PRELEVEMENT, "CIC", "", -10.00, "Frais bancaires")
       .check();
+
+    budgetView.recurring.checkContent("| Electricité | 50.00 | 50.00 |");
+    budgetView.variable.checkContent("| Frais bancaires | 10.00 | 10.00 |");
   }
 
   @Test
