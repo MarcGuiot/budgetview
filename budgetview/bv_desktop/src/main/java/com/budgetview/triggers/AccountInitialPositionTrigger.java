@@ -24,15 +24,15 @@ public class AccountInitialPositionTrigger extends AbstractChangeSetListener {
           return;
         }
         Date openDate = values.get(Account.OPEN_DATE);
-        FirstMonthGlobFunctor callback = new FirstMonthGlobFunctor();
-        repository.apply(Month.TYPE, GlobMatchers.ALL, callback);
-        int id;
+        FirstMonthGlobFunctor period = new FirstMonthGlobFunctor();
+        repository.apply(Month.TYPE, GlobMatchers.ALL, period);
+        int month;
         int day = 1;
-        if (openDate == null || Month.getMonthId(openDate) < callback.firstMonth) {
-          id = callback.firstMonth;
+        if (openDate == null || Month.getMonthId(openDate) < period.firstMonth) {
+          month = period.firstMonth;
         }
         else {
-          id = Month.getMonthId(openDate);
+          month = Month.getMonthId(openDate);
           day = Month.getDay(openDate);
         }
 
@@ -40,13 +40,13 @@ public class AccountInitialPositionTrigger extends AbstractChangeSetListener {
         if (amount == null){
           amount = values.get(Account.LAST_IMPORT_POSITION, 0.);
         }
-        createOpenTransaction(id, day, amount, repository, key);
+        createOpenTransaction(month, day, amount, repository, key);
         Date closeDate = values.get(Account.CLOSED_DATE);
         if (closeDate != null) {
           int closeMonthId = Month.getMonthId(closeDate);
           day = Month.getDay(closeDate);
-          if (closeMonthId > callback.lastMonth) {
-            closeMonthId = callback.lastMonth;
+          if (closeMonthId > period.lastMonth) {
+            closeMonthId = period.lastMonth;
           }
           createCloseTransaction(repository, key, day, closeMonthId, values.get(Account.CLOSE_POSITION));
         }

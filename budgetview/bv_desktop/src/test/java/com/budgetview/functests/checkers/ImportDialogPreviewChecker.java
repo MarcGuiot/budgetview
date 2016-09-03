@@ -321,6 +321,12 @@ public class ImportDialogPreviewChecker extends GuiChecker {
     new ImportDialogCompletionChecker(dialog).validate();
   }
 
+  public void importAccountWithAllSeriesAndComplete() {
+    ImportSeriesChecker.init(dialog.getButton("next").triggerClick(), dialog)
+      .validateAndFinishImport();
+    checkClosed();
+  }
+
   public void clickNext() {
     dialog.getButton("next").click();
   }
@@ -375,11 +381,6 @@ public class ImportDialogPreviewChecker extends GuiChecker {
   public ImportDialogPreviewChecker checkDates(String... dates) {
     ComboBox dateFormatCombo = dialog.getComboBox("dateFormatCombo");
     assertTrue(dateFormatCombo.contentEquals(dates));
-    return this;
-  }
-
-  public ImportDialogPreviewChecker importThisAccount() {
-    dialog.getButton(Lang.get("load")).click();
     return this;
   }
 

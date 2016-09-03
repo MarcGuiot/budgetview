@@ -210,6 +210,8 @@ public class CloudService {
                             value(RealAccount.POSITION_DATE, Month.toDate(positionMonth, positionDay)),
                             value(RealAccount.ACCOUNT_TYPE, AccountType.get(account.getString("type")).getId()),
                             value(RealAccount.FILE_NAME, "cloud.json"),
+//                            value(RealAccount.BANK_ENTITY_LABEL, ),
+//                            value(RealAccount.BANK_ENTITY, bankEntityId),
                             value(RealAccount.FILE_CONTENT, account.toString()));
           importedRealAccounts.add(realAccount);
         }

@@ -156,11 +156,6 @@ public class ImportDialogChecker extends GuiChecker {
     return this;
   }
 
-  public ImportDialogChecker checkFilePath(String path) {
-    assertTrue(getFileField().textEquals(path));
-    return this;
-  }
-
   public ImportDialogPreviewChecker browseAndPreview(String path) {
     WindowInterceptor.init(dialog.getButton(Lang.get("browse")))
       .process(FileChooserHandler.init().select(new String[]{path}))
@@ -193,16 +188,6 @@ public class ImportDialogChecker extends GuiChecker {
     }, 10000);
   }
 
-  public ImportDialogChecker checkSecurityInfo(String content) {
-    getBankDownload().checkSecurityMessage(content);
-    return this;
-  }
-
-  public ImportDialogChecker selectBankForDownload(String bankName) {
-    getBankDownload().selectBank(bankName);
-    return this;
-  }
-
 
   public void importDeferred(String accountName, String fileName, boolean withMainAccount, String targetAccountName) {
     setFilePath(fileName)
@@ -213,10 +198,6 @@ public class ImportDialogChecker extends GuiChecker {
 
   public CsvImporterChecker acceptCsvFile() {
     return new CsvImporterChecker(this, WindowInterceptor.getModalDialog(getImportButton().triggerClick()));
-  }
-
-  public BankEditionDialogChecker addNewBank() {
-    return getBankDownload().addNewBank();
   }
 
   private TextBox getFileField() {
@@ -233,26 +214,8 @@ public class ImportDialogChecker extends GuiChecker {
     return importButton;
   }
 
-  public OtherBankSynchroChecker startSynchro() {
-    Button startSynchroButton = dialog.getButton("startSynchro");
-    assertThat(startSynchroButton.isVisible());
-    startSynchroButton.click();
-    return new OtherBankSynchroChecker(this, dialog);
-  }
-
-  public ImportDialogChecker checkSynchroAvailableForAccounts(String... expectedAccountNames) {
-    return checkAccountLabels(dialog.getPanel("synchroAccountsPanel"), expectedAccountNames);
-  }
-
   public ImportDialogChecker checkManualDownloadAvailableForAccounts(String... expectedAccountNames) {
     return checkAccountLabels(dialog.getPanel("manualAccountsPanel"), expectedAccountNames);
-  }
-
-  public ImportDialogChecker checkManualDownloadLink(String bankLabel, String url) {
-    TextBox label = dialog.getPanel("manualAccountsPanel").getTextBox(bankLabel);
-    Button button = new Button((JButton) getSibling(label, 2, "gotoWebsite"));
-    BrowsingChecker.checkDisplay(button, url);
-    return this;
   }
 
   private ImportDialogChecker checkAccountLabels(Panel panel, String[] expectedAccountNames) {
@@ -263,11 +226,6 @@ public class ImportDialogChecker extends GuiChecker {
       actualNames.add(textBox.getText());
     }
     TestUtils.assertSetEquals(actualNames, expectedAccountNames);
-    return this;
-  }
-
-  public ImportDialogChecker checkSynchroNotShown() {
-    checkComponentVisible(dialog, JPanel.class, "synchroAccountGroups", false);
     return this;
   }
 

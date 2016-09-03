@@ -37,7 +37,9 @@ public enum DefaultSeries implements GlobConstantContainer {
   CASH("cash", 22, BudgetArea.VARIABLE),
   BANK_FEES("bankFees", 23, BudgetArea.VARIABLE),
   RESTAURANT("restaurant", 24, BudgetArea.VARIABLE),
-  MISC("misc", 25, BudgetArea.VARIABLE);
+  MISC("misc", 25, BudgetArea.VARIABLE),
+
+  UNCATEGORIZED("uncategorized", -1, BudgetArea.UNCATEGORIZED);
 
   public static GlobType TYPE;
 

@@ -12,6 +12,7 @@ import org.globsframework.metamodel.annotations.Target;
 import org.globsframework.metamodel.fields.*;
 import org.globsframework.metamodel.utils.GlobTypeLoader;
 import org.globsframework.model.*;
+import org.globsframework.model.format.GlobPrinter;
 import org.globsframework.model.repository.GlobIdGenerator;
 import org.globsframework.utils.Strings;
 import org.globsframework.utils.Utils;

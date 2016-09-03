@@ -30,8 +30,8 @@ public class PositionTrigger implements ChangeSetListener {
     if (changeSet.containsChanges(Transaction.TYPE) ||
         changeSet.containsUpdates(Account.POSITION_WITH_PENDING) ||
         changeSet.containsChanges(Account.TYPE)) {
-      TransactionComparator comparator = TransactionComparator.ASCENDING_ACCOUNT;
-      transactions = Transaction.getAllSortedByPositionDate(repository, GlobMatchers.ALL, comparator);
+
+      transactions = Transaction.getAllSortedByPositionDate(repository, GlobMatchers.ALL, TransactionComparator.ASCENDING_ACCOUNT);
 
       Set<Integer> allDeferredAccountIds = getAllDeferredAccounts(repository);
 

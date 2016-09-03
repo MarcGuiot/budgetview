@@ -32,9 +32,11 @@ import static org.globsframework.model.utils.GlobMatchers.fieldEqualsIgnoreCase;
 
 public class JsonImporter implements AccountFileImporter {
 
+  private ImportedTransactionIdGenerator generator;
+
   public GlobList loadTransactions(Reader reader, GlobRepository initialRepository, GlobRepository targetRepository, PicsouDialog current) throws InvalidFormat, OperationCancelled, IOException {
 
-    ImportedTransactionIdGenerator generator = new ImportedTransactionIdGenerator(targetRepository.getIdGenerator());
+    generator = new ImportedTransactionIdGenerator(targetRepository.getIdGenerator());
     JSONObject jsonAccount = new JSONObject(Files.loadStreamToString(reader));
 
     //---------------
@@ -62,8 +64,13 @@ public class JsonImporter implements AccountFileImporter {
       }
     }
 
+
     System.out.println("JsonImporter.loadTransactions - created:");
     GlobPrinter.print(createdTransactions);
+
+    Glob lastImportedTransaction = createdTransactions.sort(ImportedTransaction.BANK_DATE).getLast();
+    System.out.println("JsonImporter.loadTransactions: last = " + createdTransactions);
+    targetRepository.update(realAccount, RealAccount.TRANSACTION_ID, lastImportedTransaction.get(ImportedTransaction.ID));
 
     return createdTransactions;
   }
@@ -101,6 +108,9 @@ public class JsonImporter implements AccountFileImporter {
   private Integer findOrCreateSeriesId(Integer providerSeriesId, String providerSeriesName, String bankDate, GlobRepository targetRepository) {
     BudgeaSeriesConverter converter = new BudgeaSeriesConverter();
     DefaultSeries defaultSeries = converter.convert(providerSeriesId);
+    if (DefaultSeries.UNCATEGORIZED.equals(defaultSeries)) {
+      return null;
+    }
     return findOrCreateSeriesId(defaultSeries, providerSeriesName, bankDate, targetRepository);
   }
 
@@ -108,16 +118,20 @@ public class JsonImporter implements AccountFileImporter {
     System.out.println("JsonImporter.findOrCreateSeriesId for " + providerSeriesName);
     GlobList importedSeriesList = new GlobList();
     if (defaultSeries != null) {
-      importedSeriesList = targetRepository.getAll(ImportedSeries.TYPE, and(fieldEqualsIgnoreCase(ImportedSeries.NAME, Labels.get(defaultSeries))));
+      String defaultSeriesLabel = Labels.get(defaultSeries);
+      importedSeriesList = targetRepository.getAll(ImportedSeries.TYPE, and(fieldEqualsIgnoreCase(ImportedSeries.NAME, defaultSeriesLabel)));
+      if (importedSeriesList.isEmpty())
+        System.out.println("   ==> no series found for defaultSeries: " + defaultSeriesLabel);
     }
     BudgetArea budgetArea;
     if (!importedSeriesList.isEmpty()) {
       budgetArea = defaultSeries.getBudgetArea();
     }
     else {
-      System.out.println("   ==> no series found for defaultSeries, try with provider name");
       importedSeriesList = targetRepository.getAll(ImportedSeries.TYPE, and(fieldEqualsIgnoreCase(ImportedSeries.NAME, providerSeriesName)));
       budgetArea = BudgetArea.VARIABLE;
+      if (importedSeriesList.isEmpty())
+        System.out.println("   ==> no series found for provider name: " + providerSeriesName);
     }
     if (importedSeriesList.isEmpty()) {
       System.out.println("   ==> create from scratch");

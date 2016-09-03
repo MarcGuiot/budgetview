@@ -21,6 +21,9 @@ public class BudgeaSeriesConverter {
   }
 
   private void init() {
+    add(DefaultSeries.UNCATEGORIZED,
+        BudgeaCategory.UNCATEGORIZED
+    );
     add(DefaultSeries.INCOME,
         BudgeaCategory.SALAIRES_NETS
     );

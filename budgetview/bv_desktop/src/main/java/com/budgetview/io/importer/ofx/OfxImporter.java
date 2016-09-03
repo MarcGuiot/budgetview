@@ -315,9 +315,9 @@ public class OfxImporter implements AccountFileImporter {
       }
 
       currentAccount = repository.create(RealAccount.TYPE,
-                                         value(RealAccount.NUMBER, Strings.toString(accountNumber)),
                                          value(RealAccount.ID, generator.getNextId(RealAccount.ID, 1)),
                                          value(RealAccount.NAME, accountName),
+                                         value(RealAccount.NUMBER, Strings.toString(accountNumber)),
                                          value(RealAccount.BANK, bankId),
                                          value(RealAccount.BANK_ENTITY_LABEL, bankEntityLabel),
                                          value(RealAccount.BANK_ENTITY, bankEntityId),

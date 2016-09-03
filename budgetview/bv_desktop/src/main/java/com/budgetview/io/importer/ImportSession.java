@@ -343,7 +343,7 @@ public class ImportSession {
     int nextId = localRepository.getIdGenerator().getNextId(Transaction.ID, importedTransactions.size() + 10);
 
     Map<Integer, Integer> linkImportedTransactionToTransaction = new HashMap<Integer, Integer>();
-    for (; iterator.hasNext(); ) {
+    while (iterator.hasNext()) {
       Glob importedTransaction = iterator.next();
       Date bankDate = parseDate(dateFormat, importedTransaction, ImportedTransaction.BANK_DATE);
       Date userDate = parseDate(dateFormat, importedTransaction, ImportedTransaction.DATE);

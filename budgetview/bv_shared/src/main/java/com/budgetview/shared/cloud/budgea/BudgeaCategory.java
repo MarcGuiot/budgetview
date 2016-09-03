@@ -13,7 +13,8 @@ public enum BudgeaCategory {
   FUEL2(194, "Fuel"),
   CASH(1, "Cash"),
   FRAIS_BANCAIRES(167, "Frais bancaires"),
-  AGOS(168, "Agios");
+  AGOS(168, "Agios"),
+  UNCATEGORIZED(9998, "Indéfini");
 
   private final int id;
   private final String name;

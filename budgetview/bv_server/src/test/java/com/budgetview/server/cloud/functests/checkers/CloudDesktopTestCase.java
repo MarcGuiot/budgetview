@@ -11,6 +11,7 @@ public abstract class CloudDesktopTestCase extends LoggedInFunctionalTestCase {
   protected CloudChecker cloud;
 
   public void setUp() throws Exception {
+    setCurrentDate("2016/08/20");
     super.setUp();
 
     budgea = new BudgeaChecker();
