@@ -1,6 +1,5 @@
 package com.budgetview.desktop.description.stringifiers;
 
-import com.budgetview.bank.connectors.OtherBankConnector;
 import com.budgetview.model.Bank;
 import com.budgetview.utils.Lang;
 import org.globsframework.model.Glob;
@@ -14,7 +13,7 @@ public class BankStringifier implements GlobStringifier {
     if (bank == null) {
       return "";
     }
-    if (bank.get(Bank.ID) == OtherBankConnector.BANK_ID){
+    if (bank.get(Bank.ID) == Bank.GENERIC_BANK_ID){
       return Lang.get("bank.other.name");
     }
     return bank.get(Bank.NAME);

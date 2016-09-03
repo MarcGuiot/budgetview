@@ -1,7 +1,5 @@
 package com.budgetview.desktop;
 
-import com.budgetview.bank.BankPluginService;
-import com.budgetview.bank.BankSynchroService;
 import com.budgetview.client.mail.MailService;
 import com.budgetview.desktop.accounts.utils.AccountPositionNotificationHandler;
 import com.budgetview.desktop.addons.AddOnService;

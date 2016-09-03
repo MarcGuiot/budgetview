@@ -13,20 +13,15 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-import static org.globsframework.model.FieldValue.*;
+import static org.globsframework.model.FieldValue.value;
 
-/** @deprecated  */
 public class BankPluginService {
   private Map<Integer, BankPlugin> specific = new HashMap<Integer, BankPlugin>();
   private BankPlugin defaultPlugin = new AbstractBankPlugin() {
 
     public boolean apply(Glob importedAccount, Glob account, GlobList transactions, ReadOnlyGlobRepository referenceRepository, GlobRepository localRepository, MutableChangeSet changeSet) {
       Glob bank = localRepository.find(Key.create(Bank.TYPE, account.get(Account.BANK)));
-      if (bank.get(Bank.INVALID_POSITION)) {
-// TODO: ??
-//      localRepository.update(account.getKey(), Account.);
-      }
-      else {
+      if (!bank.get(Bank.INVALID_POSITION)) {
         String amount = importedAccount.get(RealAccount.POSITION);
         if (Strings.isNotEmpty(amount)) {
           Date currentDate = account.get(Account.POSITION_DATE);
@@ -37,7 +32,6 @@ public class BankPluginService {
           }
         }
       }
-
       return super.apply(importedAccount, account, transactions, referenceRepository, localRepository, changeSet);
     }
 
