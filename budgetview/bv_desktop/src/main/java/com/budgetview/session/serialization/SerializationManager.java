@@ -1,7 +1,7 @@
 package com.budgetview.session.serialization;
 
 import com.budgetview.model.*;
-import com.budgetview.shared.utils.PicsouGlobSerializer;
+import com.budgetview.shared.utils.GlobSerializer;
 import org.globsframework.metamodel.GlobModel;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.properties.Property;
@@ -10,7 +10,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class SerializationManager {
-  public static Property<GlobType, PicsouGlobSerializer> SERIALIZATION_PROPERTY;
+  public static Property<GlobType, GlobSerializer> SERIALIZATION_PROPERTY;
   public static Set<GlobType> REMOVED_GLOB = new HashSet<GlobType>();
 
   public static void init(GlobModel globModel) {

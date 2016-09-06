@@ -1,6 +1,6 @@
 package com.budgetview.model;
 
-import com.budgetview.shared.utils.PicsouGlobSerializer;
+import com.budgetview.shared.utils.GlobSerializer;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.annotations.DefaultBoolean;
 import org.globsframework.metamodel.annotations.Key;
@@ -30,7 +30,7 @@ public class ProjectAccountGraph {
     GlobTypeLoader.init(ProjectAccountGraph.class, "projectAccountGraph");
   }
 
-  public static class Serializer implements PicsouGlobSerializer {
+  public static class Serializer implements GlobSerializer {
 
     public int getWriteVersion() {
       return 1;
@@ -47,7 +47,7 @@ public class ProjectAccountGraph {
       return serializedByteArrayOutput.toByteArray();
     }
 
-    public void deserializeData(int version, FieldSetter fieldSetter, byte[] data, Integer id) {
+    public void deserializeData(int version, byte[] data, Integer id, FieldSetter fieldSetter) {
       if (version == 1) {
         deserializeDataV1(fieldSetter, data);
       }

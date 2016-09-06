@@ -1,6 +1,6 @@
 package com.budgetview.model;
 
-import com.budgetview.shared.utils.PicsouGlobSerializer;
+import com.budgetview.shared.utils.GlobSerializer;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.annotations.DefaultDouble;
 import org.globsframework.metamodel.annotations.Key;
@@ -49,7 +49,7 @@ public class AccountPositionThreshold {
     return value;
   }
 
-  public static class Serializer implements PicsouGlobSerializer {
+  public static class Serializer implements GlobSerializer {
 
     public byte[] serializeData(FieldValues values) {
       SerializedByteArrayOutput serializedByteArrayOutput = new SerializedByteArrayOutput();
@@ -59,7 +59,7 @@ public class AccountPositionThreshold {
       return serializedByteArrayOutput.toByteArray();
     }
 
-    public void deserializeData(int version, FieldSetter fieldSetter, byte[] data, Integer id) {
+    public void deserializeData(int version, byte[] data, Integer id, FieldSetter fieldSetter) {
       if (version == 1) {
         deserializeDataV1(fieldSetter, data);
       }

@@ -12,7 +12,7 @@ import com.budgetview.model.CurrentMonth;
 import com.budgetview.model.SignpostStatus;
 import com.budgetview.model.User;
 import com.budgetview.persistence.direct.ReadOnlyAccountDataManager;
-import com.budgetview.session.serialization.SerializableGlobType;
+import com.budgetview.session.serialization.SerializedGlob;
 import com.budgetview.shared.encryption.MD5PasswordBasedEncryptor;
 import com.budgetview.shared.encryption.PasswordBasedEncryptor;
 import com.budgetview.triggers.AddOnTrigger;
@@ -62,7 +62,7 @@ public class BackupService {
   }
 
   public void generate(File file) throws IOException {
-    MapOfMaps<String, Integer, SerializableGlobType> serverData = dataAccess.getServerData();
+    MapOfMaps<String, Integer, SerializedGlob> serverData = dataAccess.getServerData();
     Files.createParentDirs(file);
     Glob user = repository.find(User.KEY);
     char[] password = null;
@@ -74,8 +74,8 @@ public class BackupService {
   }
 
   public Status restore(InputStream stream, char[] password) throws InvalidData {
-    MapOfMaps<String, Integer, SerializableGlobType> serverData =
-      new MapOfMaps<String, Integer, SerializableGlobType>();
+    MapOfMaps<String, Integer, SerializedGlob> serverData =
+      new MapOfMaps<String, Integer, SerializedGlob>();
     ReadOnlyAccountDataManager.SnapshotInfo snapshotInfo = ReadOnlyAccountDataManager.readSnapshot(serverData, stream);
     if (snapshotInfo.version > Application.JAR_VERSION) {
       return Status.BAD_VERSION;
@@ -83,7 +83,7 @@ public class BackupService {
     return restore(password, serverData, snapshotInfo.password);
   }
 
-  public Status restore(char[] password, MapOfMaps<String, Integer, SerializableGlobType> serverData, final char[] autoLogPassword) {
+  public Status restore(char[] password, MapOfMaps<String, Integer, SerializedGlob> serverData, final char[] autoLogPassword) {
     PasswordBasedEncryptor readPasswordBasedEncryptor;
     PasswordBasedEncryptor writeBasedEncryptor = directory.get(PasswordBasedEncryptor.class);
     if (autoLogPassword != null) {
@@ -110,10 +110,10 @@ public class BackupService {
     }
 
     if (readPasswordBasedEncryptor != writeBasedEncryptor) {
-      for (SerializableGlobType serializableGlobType : serverData.values()) {
-        serializableGlobType.setData(
+      for (SerializedGlob serializedGlob : serverData.values()) {
+        serializedGlob.setData(
           writeBasedEncryptor.encrypt(
-            readPasswordBasedEncryptor.decrypt(serializableGlobType.getData())));
+            readPasswordBasedEncryptor.decrypt(serializedGlob.getData())));
       }
     }
 
@@ -169,7 +169,7 @@ public class BackupService {
     return dataAccess.getSnapshotInfos();
   }
 
-  public MapOfMaps<String, Integer, SerializableGlobType> restore(DataAccess.SnapshotInfo snapshotInfo) {
+  public MapOfMaps<String, Integer, SerializedGlob> restore(DataAccess.SnapshotInfo snapshotInfo) {
     return dataAccess.getSnapshotData(snapshotInfo, new BackupIdUpdater());
   }
 

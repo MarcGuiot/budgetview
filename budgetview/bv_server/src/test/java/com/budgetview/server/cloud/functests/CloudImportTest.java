@@ -20,7 +20,7 @@ public class CloudImportTest extends CloudDesktopTestCase {
                               .addAccount(1, "Main account 1", "100200300", "checking", 1000.00, "2016-08-10 13:00:00")
                               .addTransaction(1, "2016-08-10 13:00:00", -100.00, "AUCHAN")
                               .addTransaction(2, "2016-08-12 17:00:00", -50.00, "EDF", BudgeaCategory.ELECTRICITE)
-                              .addTransaction(2, "2016-08-08 10:00:00", -10.00, "CIC", BudgeaCategory.FRAIS_BANCAIRES)
+                              .addTransaction(3, "2016-08-08 10:00:00", -10.00, "CIC", BudgeaCategory.FRAIS_BANCAIRES)
                               .endAccount()
                               .endConnection()
                               .get());
@@ -50,7 +50,7 @@ public class CloudImportTest extends CloudDesktopTestCase {
       .check();
 
     budgetView.recurring.checkContent("| Electricité | 50.00 | 50.00 |");
-    budgetView.variable.checkContent("| Frais bancaires | 10.00 | 10.00 |");
+    budgetView.variable.checkContent("| Frais bancaires | 10.00 | To define |");
   }
 
   @Test

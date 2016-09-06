@@ -1,7 +1,7 @@
 package com.budgetview.model;
 
 import com.budgetview.shared.model.Provider;
-import com.budgetview.shared.utils.PicsouGlobSerializer;
+import com.budgetview.shared.utils.GlobSerializer;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.annotations.*;
 import org.globsframework.metamodel.annotations.Key;
@@ -79,7 +79,7 @@ public class Bank {
     GENERIC_BANK_KEY = org.globsframework.model.Key.create(TYPE, GENERIC_BANK_ID);
   }
 
-  public static class Serializer implements PicsouGlobSerializer {
+  public static class Serializer implements GlobSerializer {
 
     public int getWriteVersion() {
       return 7;
@@ -107,7 +107,7 @@ public class Bank {
       return serializedByteArrayOutput.toByteArray();
     }
 
-    public void deserializeData(int version, FieldSetter fieldSetter, byte[] data, Integer id) {
+    public void deserializeData(int version, byte[] data, Integer id, FieldSetter fieldSetter) {
       if (version == 7) {
         deserializeDataV7(fieldSetter, data);
       }

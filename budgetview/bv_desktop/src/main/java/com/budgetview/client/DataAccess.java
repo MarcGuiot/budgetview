@@ -3,8 +3,8 @@ package com.budgetview.client;
 import com.budgetview.client.exceptions.BadPassword;
 import com.budgetview.client.exceptions.IdentificationFailed;
 import com.budgetview.client.exceptions.UserAlreadyExists;
+import com.budgetview.session.serialization.SerializedGlob;
 import com.budgetview.shared.encryption.PasswordBasedEncryptor;
-import com.budgetview.session.serialization.SerializableGlobType;
 import com.budgetview.client.exceptions.UserNotRegistered;
 import org.globsframework.metamodel.fields.IntegerField;
 import org.globsframework.model.ChangeSet;
@@ -37,9 +37,9 @@ public interface DataAccess {
 
   LocalInfo connect(long version);
 
-  MapOfMaps<String, Integer, SerializableGlobType> getServerData();
+  MapOfMaps<String, Integer, SerializedGlob> getServerData();
 
-  void replaceData(MapOfMaps<String, Integer, SerializableGlobType> data);
+  void replaceData(MapOfMaps<String, Integer, SerializedGlob> data);
 
   void deleteUser(String name, char[] password);
 
@@ -47,7 +47,7 @@ public interface DataAccess {
 
   List<SnapshotInfo> getSnapshotInfos();
 
-  MapOfMaps<String, Integer, SerializableGlobType> getSnapshotData(SnapshotInfo info, IdUpdater idUpdater);
+  MapOfMaps<String, Integer, SerializedGlob> getSnapshotData(SnapshotInfo info, IdUpdater idUpdater);
 
   class UserInfo{
     public final String name;
@@ -86,7 +86,7 @@ public interface DataAccess {
 
   void removeLocalUser(String user);
 
-  boolean canRead(MapOfMaps<String, Integer, SerializableGlobType> data);
+  boolean canRead(MapOfMaps<String, Integer, SerializedGlob> data);
 
   interface IdUpdater {
     void update(IntegerField field, Integer lastAllocatedId);
@@ -128,11 +128,11 @@ public interface DataAccess {
       return null;
     }
 
-    public MapOfMaps<String, Integer, SerializableGlobType> getServerData() {
+    public MapOfMaps<String, Integer, SerializedGlob> getServerData() {
       return null;
     }
 
-    public void replaceData(MapOfMaps<String, Integer, SerializableGlobType> data) {
+    public void replaceData(MapOfMaps<String, Integer, SerializedGlob> data) {
     }
 
     public void deleteUser(String name, char[] password) {
@@ -146,7 +146,7 @@ public interface DataAccess {
       return null;
     }
 
-    public MapOfMaps<String, Integer, SerializableGlobType> getSnapshotData(SnapshotInfo info, IdUpdater idUpdater) {
+    public MapOfMaps<String, Integer, SerializedGlob> getSnapshotData(SnapshotInfo info, IdUpdater idUpdater) {
       return null;
     }
 
@@ -157,7 +157,7 @@ public interface DataAccess {
     public void removeLocalUser(String user) {
     }
 
-    public boolean canRead(MapOfMaps<String, Integer, SerializableGlobType> data) {
+    public boolean canRead(MapOfMaps<String, Integer, SerializedGlob> data) {
       return false;
     }
 

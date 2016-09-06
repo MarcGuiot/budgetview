@@ -1,6 +1,6 @@
 package com.budgetview.model;
 
-import com.budgetview.shared.utils.PicsouGlobSerializer;
+import com.budgetview.shared.utils.GlobSerializer;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.annotations.Key;
 import org.globsframework.metamodel.fields.IntegerField;
@@ -33,7 +33,7 @@ public class UserVersionInformation {
     GlobTypeLoader.init(UserVersionInformation.class, "versionInformation");
     KEY = org.globsframework.model.Key.create(TYPE, SINGLETON_ID);
   }
-  public static class Serializer implements PicsouGlobSerializer {
+  public static class Serializer implements GlobSerializer {
 
     public byte[] serializeData(FieldValues values) {
       SerializedByteArrayOutput serializedByteArrayOutput = new SerializedByteArrayOutput();
@@ -45,7 +45,7 @@ public class UserVersionInformation {
       return serializedByteArrayOutput.toByteArray();
     }
 
-    public void deserializeData(int version, FieldSetter fieldSetter, byte[] data, Integer id) {
+    public void deserializeData(int version, byte[] data, Integer id, FieldSetter fieldSetter) {
       if (version == 1) {
         deserializeDataV1(fieldSetter, data);
       }

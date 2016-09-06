@@ -1,18 +1,18 @@
 package com.budgetview.client.http;
 
 import com.budgetview.client.serialization.ChangeSetSerializerVisitor;
+import com.budgetview.session.serialization.SerializedGlob;
 import com.budgetview.shared.encryption.PasswordBasedEncryptor;
 import com.budgetview.shared.encryption.RedirectPasswordBasedEncryptor;
 import com.budgetview.shared.encryption.MD5PasswordBasedEncryptor;
-import com.budgetview.shared.utils.PicsouGlobSerializer;
+import com.budgetview.shared.utils.GlobSerializer;
 import com.budgetview.client.DataTransport;
 import com.budgetview.client.serialization.SerializableDeltaGlobSerializer;
-import com.budgetview.client.serialization.SerializableGlobSerializer;
+import com.budgetview.client.serialization.GlobCollectionSerializer;
 import com.budgetview.client.DataAccess;
 import com.budgetview.client.exceptions.BadConnection;
 import com.budgetview.client.exceptions.BadPassword;
 import com.budgetview.client.exceptions.UserAlreadyExists;
-import com.budgetview.session.serialization.SerializableGlobType;
 import com.budgetview.session.serialization.SerializedDelta;
 import com.budgetview.session.serialization.SerializationManager;
 import org.globsframework.metamodel.GlobModel;
@@ -190,10 +190,10 @@ public class EncryptToTransportDataAccess implements DataAccess {
     SerializedOutput output = confirmation.getOutput();
     output.writeBytes(privateId);
 
-    MapOfMaps<String, Integer, SerializableGlobType> serverData = getServerData();
-    for (SerializableGlobType serializableGlobType : serverData.values()) {
-      serializableGlobType.setData(
-        newPasswordBasedEncryptor.encrypt(encryptor.decrypt(serializableGlobType.getData())));
+    MapOfMaps<String, Integer, SerializedGlob> serverData = getServerData();
+    for (SerializedGlob serializedGlob : serverData.values()) {
+      serializedGlob.setData(
+        newPasswordBasedEncryptor.encrypt(encryptor.decrypt(serializedGlob.getData())));
     }
     output.writeUtf8String(newName);
     output.writeUtf8String(this.name);
@@ -209,7 +209,7 @@ public class EncryptToTransportDataAccess implements DataAccess {
     output.writeBytes(linkInfo);
     output.writeBytes(newPasswordBasedEncryptor.encrypt(linkInfo));
 
-    SerializableGlobSerializer.serialize(output, serverData);
+    GlobCollectionSerializer.serialize(output, serverData);
 
     SerializedInput input = dataTransport.rename(sessionId, confirmation.toByteArray());
     Boolean done = input.readBoolean();
@@ -242,14 +242,14 @@ public class EncryptToTransportDataAccess implements DataAccess {
     return snapshotInfos;
   }
 
-  public MapOfMaps<String, Integer, SerializableGlobType> getSnapshotData(SnapshotInfo info, IdUpdater idUpdater) {
+  public MapOfMaps<String, Integer, SerializedGlob> getSnapshotData(SnapshotInfo info, IdUpdater idUpdater) {
     SerializedByteArrayOutput outputStream = new SerializedByteArrayOutput();
     SerializedOutput output = outputStream.getOutput();
     output.writeBytes(privateId);
     output.writeUtf8String(info.file);
     SerializedInput input = dataTransport.getSnapshotData(sessionId, outputStream.toByteArray());
-    MapOfMaps<String, Integer, SerializableGlobType> data = new MapOfMaps<String, Integer, SerializableGlobType>();
-    SerializableGlobSerializer.deserialize(input, data);
+    MapOfMaps<String, Integer, SerializedGlob> data = new MapOfMaps<String, Integer, SerializedGlob>();
+    GlobCollectionSerializer.deserialize(input, data);
     input.close();
     return data;
   }
@@ -287,7 +287,7 @@ public class EncryptToTransportDataAccess implements DataAccess {
     dataTransport.removeLocalUser(user);
   }
 
-  public boolean canRead(MapOfMaps<String, Integer, SerializableGlobType> data) {
+  public boolean canRead(MapOfMaps<String, Integer, SerializedGlob> data) {
     return false;
   }
 
@@ -355,23 +355,23 @@ public class EncryptToTransportDataAccess implements DataAccess {
     dataTransport.updateUserData(sessionId, bytes).close();
   }
 
-  public MapOfMaps<String, Integer, SerializableGlobType> getServerData() {
+  public MapOfMaps<String, Integer, SerializedGlob> getServerData() {
     checkConnected();
     SerializedByteArrayOutput outputStream = new SerializedByteArrayOutput();
     outputStream.getOutput().writeBytes(privateId);
     SerializedInput input = dataTransport.getUserData(sessionId, outputStream.toByteArray());
-    MapOfMaps<String, Integer, SerializableGlobType> data = new MapOfMaps<String, Integer, SerializableGlobType>();
-    SerializableGlobSerializer.deserialize(input, data);
+    MapOfMaps<String, Integer, SerializedGlob> data = new MapOfMaps<String, Integer, SerializedGlob>();
+    GlobCollectionSerializer.deserialize(input, data);
     input.close();
     return data;
   }
 
 
-  public void replaceData(MapOfMaps<String, Integer, SerializableGlobType> data) {
+  public void replaceData(MapOfMaps<String, Integer, SerializedGlob> data) {
     checkConnected();
     SerializedByteArrayOutput outputStream = new SerializedByteArrayOutput();
     outputStream.getOutput().writeBytes(privateId);
-    SerializableGlobSerializer.serialize(outputStream.getOutput(), data);
+    GlobCollectionSerializer.serialize(outputStream.getOutput(), data);
 
     dataTransport.restore(sessionId, outputStream.toByteArray()).close();
   }
@@ -381,19 +381,19 @@ public class EncryptToTransportDataAccess implements DataAccess {
     SerializedByteArrayOutput outputStream = new SerializedByteArrayOutput();
     outputStream.getOutput().writeBytes(privateId);
     SerializedInput input = dataTransport.getUserData(sessionId, outputStream.toByteArray());
-    MapOfMaps<String, Integer, SerializableGlobType> data = new MapOfMaps<String, Integer, SerializableGlobType>();
-    SerializableGlobSerializer.deserialize(input, data);
+    MapOfMaps<String, Integer, SerializedGlob> data = new MapOfMaps<String, Integer, SerializedGlob>();
+    GlobCollectionSerializer.deserialize(input, data);
     input.close();
     return decrypt(idUpdater, data, directory.get(PasswordBasedEncryptor.class), globModel);
   }
 
-  public static GlobList decrypt(IdUpdater idUpdater, MapOfMaps<String, Integer, SerializableGlobType> data,
+  public static GlobList decrypt(IdUpdater idUpdater, MapOfMaps<String, Integer, SerializedGlob> data,
                                  final PasswordBasedEncryptor passwordBasedEncryptor, final GlobModel globModel) {
     GlobList result = new GlobList(data.size());
 
     for (String globTypeName : data.keys()) {
       GlobType globType = getGlobType(globModel, globTypeName);
-      PicsouGlobSerializer globSerializer =
+      GlobSerializer globSerializer =
         globType.getProperty(SerializationManager.SERIALIZATION_PROPERTY, null);
       if (globSerializer == null) {
         if (!SerializationManager.REMOVED_GLOB.contains(globType)) {
@@ -404,15 +404,14 @@ public class EncryptToTransportDataAccess implements DataAccess {
       IntegerField field = (IntegerField) globType.getKeyFields()[0];
       Integer id;
       Integer maxId = 0;
-      for (Map.Entry<Integer, SerializableGlobType> globEntry : data.get(globTypeName).entrySet()) {
+      for (Map.Entry<Integer, SerializedGlob> globEntry : data.get(globTypeName).entrySet()) {
         id = globEntry.getKey();
         GlobBuilder globBuilder = GlobBuilder.init(globType).setValue(field, id);
-        SerializableGlobType globData = globEntry.getValue();
+        SerializedGlob globData = globEntry.getValue();
         try {
           globSerializer.deserializeData(globData.getVersion(),
-                                         globBuilder,
-                                         passwordBasedEncryptor.decrypt(globData.getData()),
-                                         id);
+                                         passwordBasedEncryptor.decrypt(globData.getData()), id, globBuilder
+          );
         }
         catch (Exception e) {
           throw new RuntimeException("Error loading type " + globType + " with version " + globData.getVersion(), e);

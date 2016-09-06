@@ -1,6 +1,6 @@
 package com.budgetview.model;
 
-import com.budgetview.shared.utils.PicsouGlobSerializer;
+import com.budgetview.shared.utils.GlobSerializer;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.annotations.*;
@@ -141,7 +141,7 @@ public class UserPreferences {
     return prefs != null && prefs.isTrue(field);
   }
 
-  public static class Serializer implements PicsouGlobSerializer {
+  public static class Serializer implements GlobSerializer {
 
     public int getWriteVersion() {
       return 21;
@@ -194,7 +194,7 @@ public class UserPreferences {
       return serializedByteArrayOutput.toByteArray();
     }
 
-    public void deserializeData(int version, FieldSetter fieldSetter, byte[] data, Integer id) {
+    public void deserializeData(int version, byte[] data, Integer id, FieldSetter fieldSetter) {
       if (version == 21) {
         deserializeDataV21(fieldSetter, data);
       }

@@ -39,6 +39,12 @@ public class PasswordEncryption {
     return cipher.doFinal(bytes);
   }
 
+  public byte[] decodeData(final byte[] bytes) throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeySpecException, InvalidKeyException, InvalidAlgorithmParameterException, IllegalBlockSizeException, BadPaddingException, IOException {
+    Cipher cipher = Cipher.getInstance("PBEWithMD5AndDES");
+    cipher.init(Cipher.DECRYPT_MODE, secretKey, spec);
+    return cipher.doFinal(bytes);
+  }
+
   public static String encodeSHA1AndHex(byte[] bytes) {
     try {
       MessageDigest digest = MessageDigest.getInstance("SHA-1");

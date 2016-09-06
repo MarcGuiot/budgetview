@@ -15,9 +15,9 @@ public class SerializableDeltaGlobSerializer {
   //  globTypeName
   //  count Glob
   //    deltaType : create/update/delete
-  //    SerializableGlobType.ID
-  //    SerializableGlobType.VERSION (for create and update)
-  //    SerializableGlobType.DATA (for create and update)
+  //    SerializedGlob.ID
+  //    SerializedGlob.VERSION (for create and update)
+  //    SerializedGlob.DATA (for create and update)
 
   public static void serialize(SerializedOutput output, MultiMap<String, SerializedDelta> deltaGlobMap) {
     int globTypeCount = deltaGlobMap.keySet().size();

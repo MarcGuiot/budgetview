@@ -6,7 +6,7 @@ import com.budgetview.desktop.components.dialogs.MessageDialog;
 import com.budgetview.desktop.components.dialogs.MessageType;
 import com.budgetview.desktop.components.dialogs.PicsouDialog;
 import com.budgetview.desktop.description.PicsouDescriptionService;
-import com.budgetview.session.serialization.SerializableGlobType;
+import com.budgetview.session.serialization.SerializedGlob;
 import com.budgetview.utils.Lang;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.utils.Dates;
@@ -48,7 +48,7 @@ public class RestoreSnapshotAction extends AbstractRestoreAction {
   class RestoreSnapshot implements AbstractRestoreAction.RestoreDetail {
 
     public BackupService.Status restore(char[] password) throws Exception {
-      MapOfMaps<String, Integer, SerializableGlobType> serializableGlobTypeMapOfMaps = backupService.restore(snapshotInfo);
+      MapOfMaps<String, Integer, SerializedGlob> serializableGlobTypeMapOfMaps = backupService.restore(snapshotInfo);
       return backupService.restore(password, serializableGlobTypeMapOfMaps,
                                    snapshotInfo.password == null ? null : snapshotInfo.password.toCharArray());
     }

@@ -2,7 +2,7 @@ package com.budgetview.client.serialization;
 
 import com.budgetview.session.serialization.SerializedDelta;
 import com.budgetview.shared.encryption.PasswordBasedEncryptor;
-import com.budgetview.shared.utils.PicsouGlobSerializer;
+import com.budgetview.shared.utils.GlobSerializer;
 import com.budgetview.session.serialization.SerializedDeltaState;
 import com.budgetview.session.serialization.SerializationManager;
 import org.globsframework.metamodel.Field;
@@ -19,7 +19,7 @@ public class ChangeSetSerializerVisitor implements ChangeSetVisitor {
   public ChangeSetSerializerVisitor(PasswordBasedEncryptor passwordBasedEncryptor, GlobRepository repository) {
     this.passwordBasedEncryptor = passwordBasedEncryptor;
     this.repository = repository;
-    deltaGlobMap = new MultiMap<String, SerializedDelta>();
+    this.deltaGlobMap = new MultiMap<String, SerializedDelta>();
   }
 
   public MultiMap<String, SerializedDelta> getSerializableGlob() {
@@ -27,20 +27,20 @@ public class ChangeSetSerializerVisitor implements ChangeSetVisitor {
   }
 
   public void visitCreation(Key key, FieldValues values) throws Exception {
-    PicsouGlobSerializer serializer = key.getGlobType().getProperty(SerializationManager.SERIALIZATION_PROPERTY, null);
+    GlobSerializer serializer = key.getGlobType().getProperty(SerializationManager.SERIALIZATION_PROPERTY, null);
     if (serializer != null) {
       writeData(key, SerializedDeltaState.CREATED, serializer);
     }
   }
 
   public void visitUpdate(Key key, FieldValuesWithPrevious values) throws Exception {
-    PicsouGlobSerializer serializer = key.getGlobType().getProperty(SerializationManager.SERIALIZATION_PROPERTY, null);
+    GlobSerializer serializer = key.getGlobType().getProperty(SerializationManager.SERIALIZATION_PROPERTY, null);
     if (serializer != null) {
       writeData(key, SerializedDeltaState.UPDATED, serializer);
     }
   }
 
-  private void writeData(Key key, SerializedDeltaState state, PicsouGlobSerializer serializer) {
+  private void writeData(Key key, SerializedDeltaState state, GlobSerializer serializer) {
     Glob values = repository.get(key);
     if (serializer.shouldBeSaved(repository, values)) {
       GlobType globType = key.getGlobType();
@@ -56,7 +56,7 @@ public class ChangeSetSerializerVisitor implements ChangeSetVisitor {
 
   public void visitDeletion(Key key, FieldValues values) throws Exception {
     GlobType globType = key.getGlobType();
-    PicsouGlobSerializer serializer = globType.getProperty(SerializationManager.SERIALIZATION_PROPERTY, null);
+    GlobSerializer serializer = globType.getProperty(SerializationManager.SERIALIZATION_PROPERTY, null);
     if (serializer == null) {
       return;
     }

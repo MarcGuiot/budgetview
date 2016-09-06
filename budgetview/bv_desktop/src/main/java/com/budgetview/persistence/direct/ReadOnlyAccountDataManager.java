@@ -1,7 +1,7 @@
 package com.budgetview.persistence.direct;
 
-import com.budgetview.client.serialization.SerializableGlobSerializer;
-import com.budgetview.session.serialization.SerializableGlobType;
+import com.budgetview.client.serialization.GlobCollectionSerializer;
+import com.budgetview.session.serialization.SerializedGlob;
 import com.budgetview.session.serialization.SerializedDelta;
 import com.budgetview.session.serialization.SerializedDeltaState;
 import org.globsframework.utils.collections.MapOfMaps;
@@ -29,7 +29,7 @@ public class ReadOnlyAccountDataManager {
     }
   }
 
-  public static SnapshotInfo readSnapshot(MapOfMaps<String, Integer, SerializableGlobType> globs, InputStream fileStream) {
+  public static SnapshotInfo readSnapshot(MapOfMaps<String, Integer, SerializedGlob> globs, InputStream fileStream) {
     InputStream inputStream = null;
     try {
       inputStream = new YANBuffereInputStream(fileStream);
@@ -64,49 +64,49 @@ public class ReadOnlyAccountDataManager {
   }
 
   private static void readVersion2(SerializedInput serializedInput,
-                                   MapOfMaps<String, Integer, SerializableGlobType> data) {
-    SerializableGlobSerializer.deserialize(serializedInput, data);
+                                   MapOfMaps<String, Integer, SerializedGlob> data) {
+    GlobCollectionSerializer.deserialize(serializedInput, data);
   }
 
   private static SnapshotInfo readVersion3(SerializedInput serializedInput,
-                                     MapOfMaps<String, Integer, SerializableGlobType> data) {
+                                     MapOfMaps<String, Integer, SerializedGlob> data) {
     String password = serializedInput.readJavaString();
     long version = serializedInput.readNotNullLong();
     if (data != null){
-      SerializableGlobSerializer.deserialize(serializedInput, data);
+      GlobCollectionSerializer.deserialize(serializedInput, data);
     }
     return new SnapshotInfo(version, password == null ? null : password.toCharArray(), -1);
   }
 
   private static SnapshotInfo readVersion4(SerializedInput serializedInput,
-                                           MapOfMaps<String, Integer, SerializableGlobType> data) {
+                                           MapOfMaps<String, Integer, SerializedGlob> data) {
     String password = serializedInput.readJavaString();
     long version = serializedInput.readNotNullLong();
     long timestamp = serializedInput.readNotNullLong();
     if (data != null){
-      SerializableGlobSerializer.deserialize(serializedInput, data);
+      GlobCollectionSerializer.deserialize(serializedInput, data);
     }
     return new SnapshotInfo(version, password == null ? null : password.toCharArray(), timestamp);
   }
 
    private static SnapshotInfo readVersion5(SerializedInput serializedInput,
-                                           MapOfMaps<String, Integer, SerializableGlobType> data) {
+                                           MapOfMaps<String, Integer, SerializedGlob> data) {
     String password = serializedInput.readUtf8String();
     long version = serializedInput.readNotNullLong();
     long timestamp = serializedInput.readNotNullLong();
     if (data != null){
-      SerializableGlobSerializer.deserialize(serializedInput, data);
+      GlobCollectionSerializer.deserialize(serializedInput, data);
     }
     return new SnapshotInfo(version, password == null ? null : password.toCharArray(), timestamp);
   }
 
 
-  public static void writeSnapshot(MapOfMaps<String, Integer, SerializableGlobType> data, File file,
-                                      char[] password, long version, long timestamp) throws IOException {
+  public static void writeSnapshot(MapOfMaps<String, Integer, SerializedGlob> data, File file,
+                                   char[] password, long version, long timestamp) throws IOException {
     writeSnapshot_V5(data, file, password, version, timestamp);
   }
 
-  public static void writeSnapshot_V5(MapOfMaps<String, Integer, SerializableGlobType> data, File file,
+  public static void writeSnapshot_V5(MapOfMaps<String, Integer, SerializedGlob> data, File file,
                                       char[] password, long version, long timestamp) throws IOException {
     OutputStream outputStream = new BufferedOutputStream(new FileOutputStream(file));
     SerializedOutput serializedOutput = SerializedInputOutputFactory.init(outputStream);
@@ -119,19 +119,23 @@ public class ReadOnlyAccountDataManager {
     }
     serializedOutput.write(version);
     serializedOutput.write(timestamp);
-    SerializableGlobSerializer.serialize(serializedOutput, data);
+    GlobCollectionSerializer.serialize(serializedOutput, data);
     outputStream.close();
   }
 
-  protected static void apply(MapOfMaps<String, Integer, SerializableGlobType> globs, MultiMap<String, SerializedDelta> map) {
+  protected static void apply(MapOfMaps<String, Integer, SerializedGlob> globs, MultiMap<String, SerializedDelta> map) {
     for (Map.Entry<String, List<SerializedDelta>> stringListEntry : map.entries()) {
-      Map<Integer, SerializableGlobType> globToMerge = globs.get(stringListEntry.getKey());
+      Map<Integer, SerializedGlob> globToMerge = globs.get(stringListEntry.getKey());
       for (SerializedDelta deltaGlob : stringListEntry.getValue()) {
         if (deltaGlob.getState() == SerializedDeltaState.DELETED) {
           globToMerge.remove(deltaGlob.getId());
         }
         else {
-          globToMerge.put(deltaGlob.getId(), new SerializableGlobType(stringListEntry.getKey(), deltaGlob));
+          globToMerge.put(deltaGlob.getId(),
+                          new SerializedGlob(stringListEntry.getKey(),
+                                             deltaGlob.getId(),
+                                             deltaGlob.getVersion(),
+                                             deltaGlob.getData()));
         }
       }
     }

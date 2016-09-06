@@ -3,7 +3,7 @@ package com.budgetview.model;
 import com.budgetview.desktop.accounts.utils.AccountMatchers;
 import com.budgetview.shared.model.AccountType;
 import com.budgetview.shared.model.BudgetArea;
-import com.budgetview.shared.utils.PicsouGlobSerializer;
+import com.budgetview.shared.utils.GlobSerializer;
 import com.budgetview.utils.PicsouUtils;
 import com.budgetview.desktop.accounts.utils.MonthDay;
 import com.budgetview.utils.Lang;
@@ -365,7 +365,7 @@ public class Account {
     return AccountType.get(accountType);
   }
 
-  public static class Serializer implements PicsouGlobSerializer {
+  public static class Serializer implements GlobSerializer {
 
     public int getWriteVersion() {
       return 12;
@@ -409,7 +409,7 @@ public class Account {
       return serializedByteArrayOutput.toByteArray();
     }
 
-    public void deserializeData(int version, FieldSetter fieldSetter, byte[] data, Integer id) {
+    public void deserializeData(int version, byte[] data, Integer id, FieldSetter fieldSetter) {
       if (version == 12) {
         deserializeDataV12(fieldSetter, data);
       }

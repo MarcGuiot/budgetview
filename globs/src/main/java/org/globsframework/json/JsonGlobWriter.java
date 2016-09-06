@@ -46,4 +46,9 @@ public class JsonGlobWriter extends JSONWriter {
     key(key);
     value(fieldValues.get(field));
   }
+
+  public void value(Integer value, String key) {
+    key(key);
+    value(value);
+  }
 }

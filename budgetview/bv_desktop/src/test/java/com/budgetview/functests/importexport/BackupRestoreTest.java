@@ -7,7 +7,7 @@ import com.budgetview.functests.checkers.utils.ConfirmationHandler;
 import com.budgetview.functests.utils.LoggedInFunctionalTestCase;
 import com.budgetview.functests.utils.OfxBuilder;
 import com.budgetview.model.TransactionType;
-import com.budgetview.session.serialization.SerializableGlobType;
+import com.budgetview.session.serialization.SerializedGlob;
 import com.budgetview.persistence.direct.ReadOnlyAccountDataManager;
 import junit.framework.Assert;
 import org.globsframework.utils.Files;
@@ -300,7 +300,7 @@ public class BackupRestoreTest extends LoggedInFunctionalTestCase {
   public void testRestoreNewerVersion() throws Exception {
     final String filePath = TestUtils.getFileName(this);
 
-    ReadOnlyAccountDataManager.writeSnapshot(new MapOfMaps<String, Integer, SerializableGlobType>(), new File(filePath), null, 99999, -1);
+    ReadOnlyAccountDataManager.writeSnapshot(new MapOfMaps<String, Integer, SerializedGlob>(), new File(filePath), null, 99999, -1);
 
     WindowInterceptor
       .init(operations.getRestoreTrigger())

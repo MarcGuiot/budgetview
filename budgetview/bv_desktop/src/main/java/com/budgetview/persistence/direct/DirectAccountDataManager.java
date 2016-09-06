@@ -1,9 +1,9 @@
 package com.budgetview.persistence.direct;
 
-import com.budgetview.client.serialization.SerializableGlobSerializer;
+import com.budgetview.client.serialization.GlobCollectionSerializer;
 import com.budgetview.desktop.Application;
 import com.budgetview.persistence.prevayler.AccountDataManager;
-import com.budgetview.session.serialization.SerializableGlobType;
+import com.budgetview.session.serialization.SerializedGlob;
 import com.budgetview.session.serialization.SerializedDelta;
 import com.budgetview.client.serialization.SerializableDeltaGlobSerializer;
 import com.budgetview.utils.Lang;
@@ -84,13 +84,13 @@ public class DirectAccountDataManager implements AccountDataManager {
   }
 
   synchronized public void getUserData(SerializedOutput output, Integer userId) {
-    MapOfMaps<String, Integer, SerializableGlobType> globs = new MapOfMaps<String, Integer, SerializableGlobType>();
+    MapOfMaps<String, Integer, SerializedGlob> globs = new MapOfMaps<String, Integer, SerializedGlob>();
     TransactionInfo transactionInfo = readData(userId, globs);
     outputStreamMap.put(userId, new DurableOutputStream(this, transactionInfo.transactionId, userId));
-    SerializableGlobSerializer.serialize(output, globs);
+    GlobCollectionSerializer.serialize(output, globs);
   }
 
-  private TransactionInfo readData(Integer userId, MapOfMaps<String, Integer, SerializableGlobType> globs) {
+  private TransactionInfo readData(Integer userId, MapOfMaps<String, Integer, SerializedGlob> globs) {
     String path = getPath(userId);
     File file1 = new File(path);
     if (!file1.exists()) {
@@ -127,7 +127,7 @@ public class DirectAccountDataManager implements AccountDataManager {
     return prevaylerPath + "/" + userId.toString();
   }
 
-  private TransactionInfo readFrom(MapOfMaps<String, Integer, SerializableGlobType> globs, long snapshotVersion,
+  private TransactionInfo readFrom(MapOfMaps<String, Integer, SerializedGlob> globs, long snapshotVersion,
                                    File nextTransactionFile, PrevaylerDirectory prevaylerDirectory) throws FileNotFoundException {
     long version = PrevaylerDirectory.journalVersion(nextTransactionFile);
     File file = nextTransactionFile;
@@ -194,7 +194,7 @@ public class DirectAccountDataManager implements AccountDataManager {
     return null;
   }
 
-  ReadOnlyAccountDataManager.SnapshotInfo readSnapshot(MapOfMaps<String, Integer, SerializableGlobType> globs, File file) {
+  ReadOnlyAccountDataManager.SnapshotInfo readSnapshot(MapOfMaps<String, Integer, SerializedGlob> globs, File file) {
     try {
       return ReadOnlyAccountDataManager.readSnapshot(globs, new FileInputStream(file));
     }
@@ -260,7 +260,7 @@ public class DirectAccountDataManager implements AccountDataManager {
     }
     close(userId);
     PrevaylerDirectory directory = new PrevaylerDirectory(getPath(userId));
-    MapOfMaps<String, Integer, SerializableGlobType> globs = new MapOfMaps<String, Integer, SerializableGlobType>();
+    MapOfMaps<String, Integer, SerializedGlob> globs = new MapOfMaps<String, Integer, SerializedGlob>();
     TransactionInfo transactionInfo = readData(userId, globs);
     if (!transactionInfo.isSnapshot) {
       try {
@@ -277,8 +277,8 @@ public class DirectAccountDataManager implements AccountDataManager {
 
   synchronized public boolean restore(SerializedInput input, Integer userId) {
     DurableOutputStream durableOutputStream = outputStreamMap.get(userId);
-    MapOfMaps<String, Integer, SerializableGlobType> data = new MapOfMaps<String, Integer, SerializableGlobType>();
-    SerializableGlobSerializer.deserialize(input, data);
+    MapOfMaps<String, Integer, SerializedGlob> data = new MapOfMaps<String, Integer, SerializedGlob>();
+    GlobCollectionSerializer.deserialize(input, data);
     try {
       writeSnapshot(durableOutputStream.getNextTransactionVersion(), data,
                     durableOutputStream.getPrevaylerDirectory(), System.currentTimeMillis());
@@ -290,13 +290,13 @@ public class DirectAccountDataManager implements AccountDataManager {
   }
 
   public boolean newData(Integer userId, SerializedInput input) {
-    MapOfMaps<String, Integer, SerializableGlobType> globs = new MapOfMaps<String, Integer, SerializableGlobType>();
+    MapOfMaps<String, Integer, SerializedGlob> globs = new MapOfMaps<String, Integer, SerializedGlob>();
     TransactionInfo transactionInfo = readData(userId, globs);
     DurableOutputStream durableOutputStream = new DurableOutputStream(this, transactionInfo.transactionId, userId);
     outputStreamMap.put(userId, durableOutputStream);
 
-    MapOfMaps<String, Integer, SerializableGlobType> data = new MapOfMaps<String, Integer, SerializableGlobType>();
-    SerializableGlobSerializer.deserialize(input, data);
+    MapOfMaps<String, Integer, SerializedGlob> data = new MapOfMaps<String, Integer, SerializedGlob>();
+    GlobCollectionSerializer.deserialize(input, data);
     try {
       writeSnapshot(durableOutputStream.getNextTransactionVersion(), data,
                     durableOutputStream.getPrevaylerDirectory(), System.currentTimeMillis());
@@ -334,13 +334,13 @@ public class DirectAccountDataManager implements AccountDataManager {
     final PrevaylerDirectory prevaylerDirectory = new PrevaylerDirectory(path);
     File file = prevaylerDirectory.getFile(fileName);
     if (file != null) {
-      MapOfMaps<String, Integer, SerializableGlobType> globs = new MapOfMaps<String, Integer, SerializableGlobType>();
+      MapOfMaps<String, Integer, SerializedGlob> globs = new MapOfMaps<String, Integer, SerializedGlob>();
       readSnapshot(globs, file);
-      SerializableGlobSerializer.serialize(output, globs);
+      GlobCollectionSerializer.serialize(output, globs);
     }
   }
 
-  synchronized private void writeSnapshot(long transactionId, MapOfMaps<String, Integer, SerializableGlobType> data,
+  synchronized private void writeSnapshot(long transactionId, MapOfMaps<String, Integer, SerializedGlob> data,
                                           PrevaylerDirectory directory, long timestamp) throws IOException {
     File tempFile = directory.createTempFile("snapshot" + transactionId + "temp", "generatingSnapshot");
 

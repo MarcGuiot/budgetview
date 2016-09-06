@@ -13,7 +13,6 @@ public class CloudServer {
 
   private static Logger logger = Logger.getLogger("CloudServer");
 
-  private Directory directory;
   private WebServer webServer;
   private ConfigService config;
 
@@ -30,7 +29,7 @@ public class CloudServer {
   }
 
   public void init() throws Exception {
-    directory = createDirectory();
+    Directory directory = createDirectory();
     webServer = new WebServer(config);
     webServer.add(new ConnectionServlet(directory), "/connections");
     webServer.add(new BudgeaWebHookServlet(directory), "/budgea");

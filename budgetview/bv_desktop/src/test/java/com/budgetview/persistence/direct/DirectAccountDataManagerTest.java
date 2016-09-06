@@ -1,7 +1,7 @@
 package com.budgetview.persistence.direct;
 
-import com.budgetview.client.serialization.SerializableGlobSerializer;
-import com.budgetview.session.serialization.SerializableGlobType;
+import com.budgetview.client.serialization.GlobCollectionSerializer;
+import com.budgetview.session.serialization.SerializedGlob;
 import junit.framework.TestCase;
 import com.budgetview.client.serialization.SerializableDeltaGlobSerializer;
 import com.budgetview.session.serialization.SerializedDelta;
@@ -45,9 +45,9 @@ public class DirectAccountDataManagerTest extends TestCase {
 
     SerializedByteArrayOutput actualOutput = new SerializedByteArrayOutput();
     directAccountDataManager.getUserData(actualOutput.getOutput(), userId);
-    SerializableGlobSerializer serializableGlobSerializer = new SerializableGlobSerializer();
-    MapOfMaps<String, Integer, SerializableGlobType> data = new MapOfMaps<String, Integer, SerializableGlobType>();
-    SerializableGlobSerializer.deserialize(actualOutput.getInput(), data);
+    GlobCollectionSerializer globCollectionSerializer = new GlobCollectionSerializer();
+    MapOfMaps<String, Integer, SerializedGlob> data = new MapOfMaps<String, Integer, SerializedGlob>();
+    GlobCollectionSerializer.deserialize(actualOutput.getInput(), data);
     assertEquals(1, data.get("A").size());
     assertEquals(1, data.get("A").get(1).getVersion());
   }
@@ -153,7 +153,7 @@ public class DirectAccountDataManagerTest extends TestCase {
 
   private void checkSnapshot(DirectAccountDataManager directAccountDataManager, File permanent) {
     assertNotNull(permanent);
-    MapOfMaps<String, Integer, SerializableGlobType> data = new MapOfMaps<String, Integer, SerializableGlobType>();
+    MapOfMaps<String, Integer, SerializedGlob> data = new MapOfMaps<String, Integer, SerializedGlob>();
     directAccountDataManager.readSnapshot(data, permanent);
     assertEquals(2, data.size());
     assertNotNull(data.get("A", 1));
@@ -193,9 +193,9 @@ public class DirectAccountDataManagerTest extends TestCase {
     directAccountDataManager.setCountFileNotToDelete(1);
     SerializedByteArrayOutput actualOutput = new SerializedByteArrayOutput();
     directAccountDataManager.getUserData(actualOutput.getOutput(), userId);
-    SerializableGlobSerializer serializableGlobSerializer = new SerializableGlobSerializer();
-    MapOfMaps<String, Integer, SerializableGlobType> data = new MapOfMaps<String, Integer, SerializableGlobType>();
-    SerializableGlobSerializer.deserialize(actualOutput.getInput(), data);
+    GlobCollectionSerializer globCollectionSerializer = new GlobCollectionSerializer();
+    MapOfMaps<String, Integer, SerializedGlob> data = new MapOfMaps<String, Integer, SerializedGlob>();
+    GlobCollectionSerializer.deserialize(actualOutput.getInput(), data);
     assertEquals(1, data.get("B").size());
     assertEquals(1, data.get("B").get(1).getVersion());
   }

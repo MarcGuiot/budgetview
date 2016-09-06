@@ -2,7 +2,7 @@ package com.budgetview.model;
 
 import com.budgetview.desktop.model.ProjectItemStat;
 import com.budgetview.model.util.ClosedMonthRange;
-import com.budgetview.shared.utils.PicsouGlobSerializer;
+import com.budgetview.shared.utils.GlobSerializer;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.annotations.*;
 import org.globsframework.metamodel.annotations.Key;
@@ -207,7 +207,7 @@ public class ProjectItem {
     return ProjectTransfer.isComplete(ProjectTransfer.getTransferFromItem(item, repository));
   }
 
-  public static class Serializer implements PicsouGlobSerializer {
+  public static class Serializer implements GlobSerializer {
     public int getWriteVersion() {
       return 5;
     }
@@ -237,7 +237,7 @@ public class ProjectItem {
       return serializedByteArrayOutput.toByteArray();
     }
 
-    public void deserializeData(int version, FieldSetter fieldSetter, byte[] data, Integer id) {
+    public void deserializeData(int version, byte[] data, Integer id, FieldSetter fieldSetter) {
       if (version == 5) {
         deserializeDataV5(fieldSetter, data);
       }

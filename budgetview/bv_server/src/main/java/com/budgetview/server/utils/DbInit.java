@@ -1,6 +1,6 @@
 package com.budgetview.server.utils;
 
-import com.budgetview.server.cloud.model.CloudModel;
+import com.budgetview.server.cloud.model.CloudDatabaseModel;
 import com.budgetview.server.config.ConfigService;
 import org.globsframework.sqlstreams.GlobsDatabase;
 import org.globsframework.sqlstreams.drivers.jdbc.JdbcGlobsDatabase;
@@ -22,7 +22,7 @@ public class DbInit {
     GlobsDatabase database = new JdbcGlobsDatabase(configService.get(DbInit.DATABASE_URL),
                                                    configService.get(DbInit.DATABASE_USER),
                                                    configService.get(DbInit.DATABASE_PASSWORD));
-    database.connect().createTables(CloudModel.getAllTypes());
+    database.connect().createTables(CloudDatabaseModel.getAllTypes());
     return database;
   }
 }

@@ -2,7 +2,7 @@ package com.budgetview.client;
 
 import com.budgetview.client.exceptions.IdentificationFailed;
 import com.budgetview.client.exceptions.UserAlreadyExists;
-import com.budgetview.session.serialization.SerializableGlobType;
+import com.budgetview.session.serialization.SerializedGlob;
 import org.globsframework.model.ChangeSet;
 import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
@@ -38,7 +38,7 @@ public class DataAccessDecorator implements DataAccess {
     return dataAccess.getSnapshotInfos();
   }
 
-  public MapOfMaps<String, Integer, SerializableGlobType> getSnapshotData(SnapshotInfo info, IdUpdater idUpdater) {
+  public MapOfMaps<String, Integer, SerializedGlob> getSnapshotData(SnapshotInfo info, IdUpdater idUpdater) {
     return dataAccess.getSnapshotData(info, null);
   }
 
@@ -75,7 +75,7 @@ public class DataAccessDecorator implements DataAccess {
     }
   }
 
-  public boolean canRead(MapOfMaps<String, Integer, SerializableGlobType> data) {
+  public boolean canRead(MapOfMaps<String, Integer, SerializedGlob> data) {
     return dataAccess.canRead(data);
   }
 
@@ -83,11 +83,11 @@ public class DataAccessDecorator implements DataAccess {
     return dataAccess.connect(version);
   }
 
-  public MapOfMaps<String, Integer, SerializableGlobType> getServerData() {
+  public MapOfMaps<String, Integer, SerializedGlob> getServerData() {
     return dataAccess.getServerData();
   }
 
-  public void replaceData(MapOfMaps<String, Integer, SerializableGlobType> data) {
+  public void replaceData(MapOfMaps<String, Integer, SerializedGlob> data) {
     dataAccess.replaceData(data);
   }
 

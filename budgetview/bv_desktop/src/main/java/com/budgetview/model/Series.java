@@ -2,7 +2,7 @@ package com.budgetview.model;
 
 import com.budgetview.desktop.model.SeriesStat;
 import com.budgetview.shared.model.BudgetArea;
-import com.budgetview.shared.utils.PicsouGlobSerializer;
+import com.budgetview.shared.utils.GlobSerializer;
 import com.budgetview.utils.Lang;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.annotations.*;
@@ -374,7 +374,7 @@ public class Series {
             !series.get(FROM_ACCOUNT).equals(series.get(TO_ACCOUNT)));
   }
 
-  public static class Serializer implements PicsouGlobSerializer {
+  public static class Serializer implements GlobSerializer {
 
     public int getWriteVersion() {
       return 15;
@@ -420,7 +420,7 @@ public class Series {
       return serializedByteArrayOutput.toByteArray();
     }
 
-    public void deserializeData(int version, FieldSetter fieldSetter, byte[] data, Integer id) {
+    public void deserializeData(int version, byte[] data, Integer id, FieldSetter fieldSetter) {
       if (version == 15) {
         deserializeDataV15(fieldSetter, data);
       }

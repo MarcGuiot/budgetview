@@ -1,19 +1,16 @@
 package com.budgetview.session.serialization;
 
-public class SerializableGlobType {
+public class SerializedGlob {
+  private String globTypeName;
+  private int id;
   private int version;
   private byte[] data;
-  private int id;
-  private String globTypeName;
 
-  public SerializableGlobType(String globTypeName, SerializedDelta delta) {
+  public SerializedGlob(String globTypeName, int id, int version, byte[] data) {
     this.globTypeName = globTypeName;
-    id = delta.getId();
-    data = delta.getData();
-    version = delta.getVersion();
-  }
-
-  public SerializableGlobType() {
+    this.id = id;
+    this.version = version;
+    this.data = data;
   }
 
   public void setVersion(int version) {
@@ -38,9 +35,5 @@ public class SerializableGlobType {
 
   public byte[] getData() {
     return data;
-  }
-
-  public void setGlobTypeName(String globTypeName) {
-    this.globTypeName = globTypeName;
   }
 }

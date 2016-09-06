@@ -1,8 +1,8 @@
 package com.budgetview.persistence.direct;
 
-import com.budgetview.client.serialization.SerializableGlobSerializer;
+import com.budgetview.client.serialization.GlobCollectionSerializer;
 import com.budgetview.persistence.prevayler.AccountDataManager;
-import com.budgetview.session.serialization.SerializableGlobType;
+import com.budgetview.session.serialization.SerializedGlob;
 import com.budgetview.client.serialization.SerializableDeltaGlobSerializer;
 import com.budgetview.session.serialization.SerializedDelta;
 import org.globsframework.utils.collections.MapOfMaps;
@@ -16,17 +16,17 @@ import java.util.List;
 import java.util.Collections;
 
 public class InMemoryAccountDataManager implements AccountDataManager {
-  private MapOfMaps<String, Integer, SerializableGlobType> globs;
+  private MapOfMaps<String, Integer, SerializedGlob> globs;
 
   public InMemoryAccountDataManager(InputStream inputStream) {
-    globs = new MapOfMaps<String, Integer, SerializableGlobType>();
+    globs = new MapOfMaps<String, Integer, SerializedGlob>();
     if (inputStream != null) {
       ReadOnlyAccountDataManager.readSnapshot(globs, inputStream);
     }
   }
 
   public void getUserData(SerializedOutput output, Integer userId) {
-    SerializableGlobSerializer.serialize(output, globs);
+    GlobCollectionSerializer.serialize(output, globs);
   }
 
   public void updateUserData(SerializedInput input, Integer userId) {
@@ -40,7 +40,7 @@ public class InMemoryAccountDataManager implements AccountDataManager {
   }
 
   public void delete(Integer userId) {
-    globs = new MapOfMaps<String, Integer, SerializableGlobType>();
+    globs = new MapOfMaps<String, Integer, SerializedGlob>();
   }
 
   public void close() {
@@ -53,14 +53,14 @@ public class InMemoryAccountDataManager implements AccountDataManager {
   }
 
   public boolean restore(SerializedInput input, Integer userId) {
-    globs = new MapOfMaps<String, Integer, SerializableGlobType>();
-    SerializableGlobSerializer.deserialize(input, globs);
+    globs = new MapOfMaps<String, Integer, SerializedGlob>();
+    GlobCollectionSerializer.deserialize(input, globs);
     return true;
   }
 
   public boolean newData(Integer userId, SerializedInput input) {
-    globs = new MapOfMaps<String, Integer, SerializableGlobType>();
-    SerializableGlobSerializer.deserialize(input, globs);
+    globs = new MapOfMaps<String, Integer, SerializedGlob>();
+    GlobCollectionSerializer.deserialize(input, globs);
     return true;
   }
 

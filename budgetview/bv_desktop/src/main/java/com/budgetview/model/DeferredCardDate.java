@@ -1,7 +1,7 @@
 package com.budgetview.model;
 
 import com.budgetview.desktop.accounts.utils.MonthDay;
-import com.budgetview.shared.utils.PicsouGlobSerializer;
+import com.budgetview.shared.utils.GlobSerializer;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.index.MultiFieldUniqueIndex;
 import org.globsframework.metamodel.annotations.*;
@@ -38,7 +38,7 @@ public class DeferredCardDate {
     loader.defineMultiFieldUniqueIndex(ACCOUNT_AND_DATE, ACCOUNT, MONTH);
   }
 
-  public static class Serializer implements PicsouGlobSerializer {
+  public static class Serializer implements GlobSerializer {
 
     public int getWriteVersion() {
       return 1;
@@ -58,7 +58,7 @@ public class DeferredCardDate {
       return serializedByteArrayOutput.toByteArray();
     }
 
-    public void deserializeData(int version, FieldSetter fieldSetter, byte[] data, Integer id) {
+    public void deserializeData(int version, byte[] data, Integer id, FieldSetter fieldSetter) {
       if (version == 1) {
         deserializeDataV1(fieldSetter, data);
       }

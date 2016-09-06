@@ -6,7 +6,9 @@ import org.globsframework.model.Glob;
 import org.globsframework.sqlstreams.GlobsDatabase;
 import org.globsframework.sqlstreams.SqlConnection;
 import org.globsframework.sqlstreams.constraints.Where;
+import org.globsframework.sqlstreams.exceptions.DbConstraintViolation;
 import org.globsframework.sqlstreams.exceptions.GlobsSQLException;
+import org.globsframework.sqlstreams.exceptions.RollbackFailed;
 import org.globsframework.utils.directory.Directory;
 import org.globsframework.utils.exceptions.ItemNotFound;
 import org.globsframework.utils.exceptions.TooManyItems;
@@ -36,7 +38,15 @@ public class AuthenticationService {
       logger.error("Several entries found for user: " + lowerCaseEmail);
     }
     finally {
-      connection.commitAndClose();
+      try {
+        connection.commitAndClose();
+      }
+      catch (RollbackFailed rollbackFailed) {
+        logger.error("Commit failed when looking for user: " + email, rollbackFailed);
+      }
+      catch (DbConstraintViolation constraintViolation) {
+        logger.error("Commit failed when looking for user: " + email, constraintViolation);
+      }
     }
     return userId;
   }

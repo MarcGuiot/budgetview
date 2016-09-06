@@ -3,7 +3,7 @@ package com.budgetview.model;
 import com.budgetview.shared.model.AccountType;
 import com.budgetview.shared.model.Provider;
 import com.budgetview.shared.utils.Amounts;
-import com.budgetview.shared.utils.PicsouGlobSerializer;
+import com.budgetview.shared.utils.GlobSerializer;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.annotations.DefaultBoolean;
 import org.globsframework.metamodel.annotations.DefaultInteger;
@@ -12,7 +12,6 @@ import org.globsframework.metamodel.annotations.Target;
 import org.globsframework.metamodel.fields.*;
 import org.globsframework.metamodel.utils.GlobTypeLoader;
 import org.globsframework.model.*;
-import org.globsframework.model.format.GlobPrinter;
 import org.globsframework.model.repository.GlobIdGenerator;
 import org.globsframework.utils.Strings;
 import org.globsframework.utils.Utils;
@@ -178,7 +177,7 @@ public class RealAccount {
     }
   }
 
-  public static class Serializer implements PicsouGlobSerializer {
+  public static class Serializer implements GlobSerializer {
 
     public int getWriteVersion() {
       return 3;
@@ -215,7 +214,7 @@ public class RealAccount {
       return serializedByteArrayOutput.toByteArray();
     }
 
-    public void deserializeData(int version, FieldSetter fieldSetter, byte[] data, Integer id) {
+    public void deserializeData(int version, byte[] data, Integer id, FieldSetter fieldSetter) {
       if (version == 3) {
         deserializeDataV3(fieldSetter, data);
       }
