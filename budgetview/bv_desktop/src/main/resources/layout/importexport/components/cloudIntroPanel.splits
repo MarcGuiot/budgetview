@@ -4,6 +4,8 @@
 
   <column>
     <button action="openCloudSynchro"/>
+
+    <button action="refreshCloud" autoHideIfDisabled="true"/>
   </column>
 
 </splits>

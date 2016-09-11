@@ -316,6 +316,12 @@ public class ImportDialogPreviewChecker extends GuiChecker {
     return new ImportDialogCompletionChecker(dialog);
   }
 
+  public ImportDialogCompletionChecker importAccountWithAllSeriesAndGetSummary() {
+    ImportSeriesChecker.init(dialog.getButton("next").triggerClick(), dialog)
+      .validate();
+    return new ImportDialogCompletionChecker(dialog);
+  }
+
   public void importAccountAndComplete() {
     clickNext();
     new ImportDialogCompletionChecker(dialog).validate();

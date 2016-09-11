@@ -70,6 +70,7 @@ public class ImportedFileSelectionPanel extends AbstractImportStepPanel implemen
 
     cloudIntroPanel = new CloudIntroPanel(dialog, controller, localRepository, localDirectory);
     builder.add("cloudIntro", cloudIntroPanel.getPanel());
+    builder.addDisposable(cloudIntroPanel);
 
     final HyperlinkHandler hyperlinkHandler = new HyperlinkHandler(localDirectory);
 

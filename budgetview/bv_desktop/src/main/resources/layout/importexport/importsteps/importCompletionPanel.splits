@@ -23,9 +23,9 @@
     <label text="$import.completion.title" name="title" styleClass="title"/>
 
     <column styleClass="innerDialog">
-      <column styleClass="innerDialogContent">
-        <scrollPane marginTop="20" forceVerticalScroll="true">
-          <column margin="20">
+      <column styleClass="innerDialogContent" name="content">
+        <scrollPane marginTop="20" forceVerticalScroll="true" name="scroll">
+          <column margin="20" name="labels">
 
             <row>
               <label icon="status_completed.png" weightX="0.1" marginRight="10"/>

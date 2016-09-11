@@ -213,6 +213,24 @@ public class PanelComponentSearchTest extends PanelComponentFinderTestCase {
     assertNotNull(mainPanel.getRadioButton("radio2.3"));
   }
 
+  public void testSearchWithinAScrollPane() throws Exception {
+
+    JButton button = new JButton();
+    button.setName("button1");
+
+    JPanel viewport = new JPanel();
+    viewport.add(button);
+
+    JScrollPane scrollPane = new JScrollPane();
+    scrollPane.getViewport().add(viewport);
+
+    JPanel main = new JPanel();
+    main.add(scrollPane);
+
+    Panel mainPanel = new Panel(main);
+    assertNotNull(mainPanel.getButton("button1"));
+  }
+
   public void testComponentNameAmbiguityException() throws Exception {
     jPanel.add(new JButton("myButton1"));
     jPanel.add(new JButton("myButton2"));

@@ -53,5 +53,6 @@ public class SerializationManager {
     AddOns.TYPE.updateProperty(SERIALIZATION_PROPERTY, new AddOns.Serializer());
     StandardMessage.TYPE.updateProperty(SERIALIZATION_PROPERTY, new StandardMessage.Serializer());
     ProjectAccountGraph.TYPE.updateProperty(SERIALIZATION_PROPERTY, new ProjectAccountGraph.Serializer());
+    CloudDesktopUser.TYPE.updateProperty(SERIALIZATION_PROPERTY, new CloudDesktopUser.Serializer());
   }
 }

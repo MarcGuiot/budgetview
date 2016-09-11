@@ -12,7 +12,6 @@ import org.globsframework.metamodel.annotations.Target;
 import org.globsframework.metamodel.fields.*;
 import org.globsframework.metamodel.utils.GlobTypeLoader;
 import org.globsframework.model.*;
-import org.globsframework.model.repository.GlobIdGenerator;
 import org.globsframework.utils.Strings;
 import org.globsframework.utils.Utils;
 import org.globsframework.utils.serialization.SerializedByteArrayOutput;
@@ -102,11 +101,6 @@ public class RealAccount {
   }
 
   public static Glob findOrCreate(String name, String number, Integer bankId, GlobRepository repository) {
-    return findOrCreate(name, number, bankId, repository, repository.getIdGenerator());
-  }
-
-  public static Glob findOrCreate(String name, String number, Integer bankId,
-                                  GlobRepository repository, GlobIdGenerator generator) {
     GlobList accounts = repository.getAll(RealAccount.TYPE,
                                           and(fieldEquals(RealAccount.NAME, name),
                                               fieldEquals(RealAccount.NUMBER, number),
@@ -115,8 +109,9 @@ public class RealAccount {
       return accounts.getFirst();
     }
 
+    System.out.println("RealAccount.findOrCreate - creating account: " + name + " / " + number);
     return repository.create(RealAccount.TYPE,
-                             value(RealAccount.ID, generator.getNextId(RealAccount.ID, 1)),
+                             value(RealAccount.ID, repository.getIdGenerator().getNextId(RealAccount.ID, 1)),
                              value(RealAccount.NAME, name),
                              value(RealAccount.NUMBER, number),
                              value(RealAccount.BANK, bankId));

@@ -19,7 +19,6 @@ public class BudgeaWebhookTest extends CloudServerTestCase {
       .endConnection()
       .get());
 
-    cloud.checkBankStatement("regis@mybudgetview.fr", 40, "aaa");
+    cloud.checkBankStatement("regis@mybudgetview.fr", 0, "aaa");
   }
-
 }

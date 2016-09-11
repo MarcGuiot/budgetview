@@ -2,13 +2,7 @@ package com.budgetview.server.cloud.functests.checkers;
 
 import com.budgetview.server.cloud.stub.BudgeaStubServer;
 import com.budgetview.shared.cloud.budgea.BudgeaConstants;
-import com.budgetview.shared.cloud.CloudConstants;
-import junit.framework.Assert;
-import org.apache.http.client.fluent.Request;
-import org.apache.http.client.fluent.Response;
-import org.apache.http.entity.ContentType;
 import org.apache.log4j.Logger;
-import org.json.JSONObject;
 
 import java.io.IOException;
 
@@ -35,19 +29,15 @@ public class BudgeaChecker {
     stub.setPersistentToken(persistentToken);
   }
 
-  public void callWebhook(String budgeaToken, String json) throws IOException {
-
-    logger.info("Sending\n" + new JSONObject(json).toString(2));
-
-    Request request = Request.Post(CloudConstants.getServerUrl("/budgea"))
-      .addHeader("Authorization", "Bearer " + budgeaToken)
-      .bodyString(json.replaceAll("'", "\""), ContentType.APPLICATION_JSON);
-
-    Response response = request.execute();
-    Assert.assertEquals(200, response.returnResponse().getStatusLine().getStatusCode());
+  public void setInitialStatement(String statement) {
+    stub.pushStatement(statement);
   }
 
-  public void setNextStatement(String statement) {
-    stub.setNextStatement(statement);
+  public void callWebhook(String budgeaToken, String json) throws IOException {
+    stub.callWebhook(budgeaToken, json);
+  }
+
+  public void callWebhook(String json) throws IOException {
+    stub.callWebhook(json);
   }
 }

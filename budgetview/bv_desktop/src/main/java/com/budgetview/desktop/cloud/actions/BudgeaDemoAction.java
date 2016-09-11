@@ -82,7 +82,7 @@ public class BudgeaDemoAction extends AbstractAction {
       System.out.println("PrinterDownloadCallback.processTimeout");
     }
 
-    public void processError() {
+    public void processError(Exception e) {
       System.out.println("PrinterCallback.processError");
     }
   }

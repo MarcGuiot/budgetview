@@ -61,6 +61,11 @@ public class ImportSeriesChecker {
     return this;
   }
 
+  public void validate() {
+    dialog.getButton("import").click();
+    assertFalse(dialog.isVisible());
+  }
+
   public void validateAndFinishImport() {
     dialog.getButton("import").click();
     assertFalse(dialog.isVisible());

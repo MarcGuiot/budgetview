@@ -127,7 +127,7 @@ public class ImportCloudBankConnectionPanel extends AbstractImportStepPanel {
         progressPanel.stop();
       }
 
-      public void processError() {
+      public void processError(Exception e) {
         controller.showCloudError();
         progressPanel.stop();
       }

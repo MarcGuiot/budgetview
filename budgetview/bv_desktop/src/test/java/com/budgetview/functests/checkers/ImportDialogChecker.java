@@ -14,7 +14,6 @@ import java.io.File;
 import java.util.HashSet;
 import java.util.Set;
 
-import static com.budgetview.functests.checkers.ImportDialogPreviewChecker.validateAndComplete;
 import static org.uispec4j.assertion.UISpecAssert.*;
 
 public class ImportDialogChecker extends GuiChecker {
@@ -232,6 +231,17 @@ public class ImportDialogChecker extends GuiChecker {
   public CloudBankSelectionChecker selectCloud() {
     dialog.getPanel("cloudIntro").getButton("openCloudSynchro").click();
     return new CloudBankSelectionChecker(dialog);
+  }
+
+  public ImportDialogChecker checkCloudRefreshNotVisible() {
+    checkComponentVisible(dialog.getPanel("cloudIntro"), JButton.class, "refreshCloud", false);
+    return this;
+  }
+
+  public ImportDialogPreviewChecker selectCloudRefresh() {
+    checkComponentVisible(dialog.getPanel("cloudIntro"), JButton.class, "refreshCloud", true);
+    dialog.getPanel("cloudIntro").getButton("refreshCloud").click();
+    return new ImportDialogPreviewChecker(dialog);
   }
 
   public ImportDialogPreviewChecker toPreview() {

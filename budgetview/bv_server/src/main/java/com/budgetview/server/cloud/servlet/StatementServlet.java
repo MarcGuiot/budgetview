@@ -16,9 +16,11 @@ import org.globsframework.sqlstreams.GlobsDatabase;
 import org.globsframework.sqlstreams.SqlConnection;
 import org.globsframework.sqlstreams.SqlSelect;
 import org.globsframework.sqlstreams.SqlSelectBuilder;
+import org.globsframework.sqlstreams.constraints.Constraint;
 import org.globsframework.sqlstreams.constraints.Where;
 import org.globsframework.streams.GlobStream;
 import org.globsframework.streams.accessors.GlobAccessor;
+import org.globsframework.utils.Strings;
 import org.globsframework.utils.directory.Directory;
 
 import javax.servlet.ServletException;
@@ -31,11 +33,12 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import static org.globsframework.sqlstreams.constraints.Where.fieldEquals;
+import static org.globsframework.sqlstreams.constraints.Where.fieldStrictlyGreaterThan;
 
 public class StatementServlet extends HttpServlet {
 
   private static Logger logger = Logger.getLogger("/statement");
-  private Pattern pattern = Pattern.compile("/([0-9]+)/([0-9]+)");
+  private Pattern pattern = Pattern.compile("/([0-9]+)");
 
   private final GlobsDatabase database;
   private final AuthenticationService authentication;
@@ -53,23 +56,6 @@ public class StatementServlet extends HttpServlet {
 
     logger.info("GET");
 
-    String pathInfo = request.getPathInfo();
-    Matcher matcher = pattern.matcher(pathInfo);
-    if (!matcher.matches()) {
-      logger.error("Missing or invalid parameters ==> " + pathInfo);
-      response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-      return;
-    }
-
-    int provider = Integer.parseInt(matcher.group(1));
-    if (provider != Provider.BUDGEA.getId()) {
-      logger.error("Unexpected provider: " + provider);
-      response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-      return;
-    }
-
-    int providerBankId = Integer.parseInt(matcher.group(2));
-
     String email = request.getHeader(CloudConstants.EMAIL);
     Integer userId = authentication.findUser(email);
     if (userId == null) {
@@ -78,24 +64,39 @@ public class StatementServlet extends HttpServlet {
       return;
     }
 
+    Integer lastUpdate = null;
+    String pathInfo = request.getPathInfo();
+    if (Strings.isNotEmpty(pathInfo)) {
+      Matcher matcher = pattern.matcher(pathInfo);
+      if (matcher.matches()) {
+        lastUpdate = Integer.parseInt(matcher.group(1));
+        logger.info("Retrieving updates > " + lastUpdate);
+      }
+    }
 
     SqlConnection connection = database.connect();
 
+    Constraint where =
+      lastUpdate == null ?
+        Where.fieldEquals(ProviderUpdate.USER, userId) :
+        Where.and(fieldEquals(ProviderUpdate.USER, userId),
+                  fieldStrictlyGreaterThan(ProviderUpdate.ID, lastUpdate));
+
     SqlSelectBuilder selectUpdates =
-      connection.startSelect(ProviderUpdate.TYPE, Where.fieldEquals(ProviderUpdate.USER, userId));
+      connection.startSelect(ProviderUpdate.TYPE, where)
+      .orderBy(ProviderUpdate.ID);
     GlobAccessor accessor = selectUpdates.retrieveAll();
     SqlSelect query = selectUpdates.getQuery();
     GlobStream stream = query.getStream();
 
-    JsonGlobWriter writer = new JsonGlobWriter(response.getWriter());
-    writer.object();
-    writer.key("accounts");
-    writer.array();
-
+    Integer maxId = 0;
+    GlobRepository repository = GlobRepositoryBuilder.createEmpty();
     while (stream.next()) {
-
-      GlobRepository repository = GlobRepositoryBuilder.createEmpty();
       try {
+        int updateId = accessor.get(ProviderUpdate.ID);
+        if (updateId > maxId) {
+          maxId = updateId;
+        }
         byte[] bytes = accessor.get(ProviderUpdate.DATA);
         serializer.readBlob(bytes, repository);
       }
@@ -104,20 +105,29 @@ public class StatementServlet extends HttpServlet {
         response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
         return;
       }
+    }
 
-      for (Glob account : repository.getAll(ProviderAccount.TYPE)) {
-        writer.object();
-        writeAccount(account, writer);
+    JsonGlobWriter writer = new JsonGlobWriter(response.getWriter());
+    writer.object();
 
-        writer.key("transactions");
-        writer.array();
-        for (Glob transaction : repository.findLinkedTo(account, ProviderTransaction.ACCOUNT)) {
-          writeTransaction(transaction, writer);
-        }
-        writer.endArray(); // transactions
+    writer.key("last_update");
+    writer.value(maxId);
 
-        writer.endObject(); // account
+    writer.key("accounts");
+    writer.array();
+
+    for (Glob account : repository.getAll(ProviderAccount.TYPE)) {
+      writer.object();
+      writeAccount(account, writer);
+
+      writer.key("transactions");
+      writer.array();
+      for (Glob transaction : repository.findLinkedTo(account, ProviderTransaction.ACCOUNT)) {
+        writeTransaction(transaction, writer);
       }
+      writer.endArray(); // transactions
+
+      writer.endObject(); // account
     }
 
     writer.endArray(); // accounts
@@ -125,7 +135,6 @@ public class StatementServlet extends HttpServlet {
 
     stream.close();
     query.close();
-
   }
 
   private void writeAccount(FieldValues account, JsonGlobWriter writer) {

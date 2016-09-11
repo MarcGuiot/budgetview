@@ -40,11 +40,7 @@ public class JsonImporter implements AccountFileImporter {
     JSONObject jsonAccount = new JSONObject(Files.loadStreamToString(reader));
 
     //---------------
-    System.out.println("JsonImporter.loadTransactions: looking for \n" + jsonAccount.toString(2));
-    System.out.println("JsonImporter.loadTransactions: INITIAL");
-    GlobPrinter.print(initialRepository, RealAccount.TYPE);
-    System.out.println("JsonImporter.loadTransactions: TARGET");
-    GlobPrinter.print(targetRepository, RealAccount.TYPE);
+    System.out.println("JsonImporter.loadTransactions: parsing \n" + jsonAccount.toString(2));
     //---------------
 
 

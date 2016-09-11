@@ -3,10 +3,8 @@ package org.globsframework.sqlstreams.drivers.jdbc.builder;
 import org.globsframework.metamodel.Field;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.fields.*;
-import org.globsframework.model.FieldValue;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
-import org.globsframework.model.impl.AbstractFieldValues;
 import org.globsframework.sqlstreams.GlobsDatabase;
 import org.globsframework.sqlstreams.SqlSelect;
 import org.globsframework.sqlstreams.SqlSelectBuilder;
@@ -32,6 +30,7 @@ public class SqlQueryBuilder implements SqlSelectBuilder {
   private GlobsDatabase globsDB;
   private BlobUpdater blobUpdater;
   private boolean autoClose = true;
+  private IntegerField orderByField;
   private Map<Field, SqlAccessor> fieldToAccessor = new HashMap<Field, SqlAccessor>();
 
   public SqlQueryBuilder(Connection connection, GlobType globType, Constraint constraint, GlobsDatabase globsDB, BlobUpdater blobUpdater) {
@@ -45,7 +44,7 @@ public class SqlQueryBuilder implements SqlSelectBuilder {
   public SqlSelect getQuery() {
     try {
       completeWithKeys();
-      return new SqlSelectQuery(connection, constraint, fieldToAccessor, globsDB, blobUpdater, autoClose);
+      return new SqlSelectQuery(connection, constraint, fieldToAccessor, globsDB, blobUpdater, orderByField, autoClose);
     }
     finally {
       fieldToAccessor.clear();
@@ -180,6 +179,11 @@ public class SqlQueryBuilder implements SqlSelectBuilder {
       globAccessor.set(field, accessor);
     }
     return globAccessor;
+  }
+
+  public SqlSelectBuilder orderBy(IntegerField field) {
+    this.orderByField = field;
+    return this;
   }
 
   private class CompleteGlobAccessor extends AbstractGlobAccessor implements GlobAccessor {

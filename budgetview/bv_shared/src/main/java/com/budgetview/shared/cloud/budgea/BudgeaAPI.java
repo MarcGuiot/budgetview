@@ -48,8 +48,7 @@ public class BudgeaAPI {
       throw new IOException(url + " returned " + httpResponse.getStatusLine().getStatusCode() + " instead of 200");
     }
 
-    JSONObject json = json(httpResponse);
-    return json;
+    return json(httpResponse);
   }
 
   public void ping() throws IOException {

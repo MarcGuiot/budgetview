@@ -1,6 +1,7 @@
 package com.budgetview.shared.cloud;
 
 import com.budgetview.shared.model.Provider;
+import org.apache.http.Consts;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.fluent.Form;
 import org.apache.http.client.fluent.Request;
@@ -33,8 +34,8 @@ public class CloudAPI {
     execute(request, url);
   }
 
-  public JSONObject getStatement(String email, Provider provider, Integer budgeaBankId) throws IOException {
-    String url = "/statement/" + provider.getId() + "/" + budgeaBankId;
+  public JSONObject getStatement(String email, Integer lastUpdate) throws IOException {
+    String url = lastUpdate == null ? "/statement" : "/statement/" + lastUpdate;
     Request request = Request.Get(cloudUrl(url))
       .addHeader(CloudConstants.EMAIL, email);
 

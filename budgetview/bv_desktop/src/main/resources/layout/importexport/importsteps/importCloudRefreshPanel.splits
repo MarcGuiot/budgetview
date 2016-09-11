@@ -5,7 +5,7 @@
   <styleImport file="/layout/importexport/components/importDialogStyles.splits"/>
 
 
-  <column styleClass="dialog" preferredSize="(600,710)" name="importCloudErrorPanel">
+  <column styleClass="dialog" preferredSize="(600,710)" name="importCloudConnectionPanel">
 
     <label text="$import.completion.title" name="title" styleClass="title"/>
 
@@ -15,7 +15,9 @@
         <scrollPane marginTop="20" forceVerticalScroll="true">
           <column margin="20">
 
-            <label text="Error"/>
+            <label text="In progress..."/>
+
+            <component ref="progressPanel" fill="none" margin="10" anchor="center" weightX="0.1"/>
 
             <filler fill="vertical"/>
 

@@ -2,6 +2,7 @@ package org.globsframework.sqlstreams.drivers.jdbc.select;
 
 import org.globsframework.metamodel.Field;
 import org.globsframework.metamodel.GlobType;
+import org.globsframework.metamodel.fields.IntegerField;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
 import org.globsframework.sqlstreams.SqlSelect;
@@ -28,6 +29,7 @@ public class SqlSelectQuery implements SqlSelect {
   private Set<GlobType> globTypes = new HashSet<GlobType>();
   private Constraint constraint;
   private BlobUpdater blobUpdater;
+  private IntegerField orderByField;
   private boolean autoClose;
   private Map<Field, SqlAccessor> fieldToAccessorHolder;
   private GlobsDatabase globsDB;
@@ -36,9 +38,10 @@ public class SqlSelectQuery implements SqlSelect {
 
   public SqlSelectQuery(Connection connection, Constraint constraint,
                         Map<Field, SqlAccessor> fieldToAccessorHolder, GlobsDatabase globsDB,
-                        BlobUpdater blobUpdater, boolean autoClose) {
+                        BlobUpdater blobUpdater, IntegerField orderByField, boolean autoClose) {
     this.constraint = constraint;
     this.blobUpdater = blobUpdater;
+    this.orderByField = orderByField;
     this.autoClose = autoClose;
     this.fieldToAccessorHolder = new HashMap<Field, SqlAccessor>(fieldToAccessorHolder);
     this.globsDB = globsDB;
@@ -81,6 +84,9 @@ public class SqlSelectQuery implements SqlSelect {
     }
     if (where != null) {
       prettyWriter.append(where.toString());
+    }
+    if (orderByField != null) {
+      prettyWriter.append(" ORDER BY " + globsDB.getColumnName(orderByField));
     }
     return prettyWriter.toString();
   }

@@ -10,6 +10,7 @@ import org.globsframework.metamodel.fields.IntegerField;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
+import org.globsframework.model.Key;
 import org.globsframework.model.utils.GlobBuilder;
 import org.globsframework.utils.directory.Directory;
 import org.globsframework.utils.exceptions.InvalidParameter;
@@ -61,7 +62,14 @@ public class CloudSerializer {
 
     for (int i = 0; i < count; i++) {
       String typeName = input.readUtf8String();
-      getReader(typeName).deserializeGlob(input, repository);
+      Glob glob = getReader(typeName).deserializeGlob(input);
+      Key key = glob.getKey();
+      if (repository.contains(key)) {
+        repository.update(key, glob.toArray());
+      }
+      else {
+        repository.create(glob.getType(), glob.toArray());
+      }
     }
   }
 
@@ -98,14 +106,13 @@ public class CloudSerializer {
       }
     }
 
-    public void deserializeGlob(SerializedInput input, GlobRepository repository) {
+    public Glob deserializeGlob(SerializedInput input) {
       int version = input.readInteger();
       int id = input.readInteger();
       GlobBuilder builder = GlobBuilder.init(type);
       serializer.deserializeData(version, input.readBytes(), id, builder);
       builder.set(idField, id);
-      Glob glob = builder.get();
-      repository.create(type, glob.toArray());
+      return builder.get();
     }
   }
 }

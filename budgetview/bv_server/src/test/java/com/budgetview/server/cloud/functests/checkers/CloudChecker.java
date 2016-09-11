@@ -3,7 +3,6 @@ package com.budgetview.server.cloud.functests.checkers;
 import com.budgetview.server.cloud.CloudServer;
 import com.budgetview.shared.cloud.CloudAPI;
 import com.budgetview.shared.cloud.CloudConstants;
-import com.budgetview.shared.model.Provider;
 import org.json.JSONObject;
 
 public class CloudChecker {
@@ -26,9 +25,9 @@ public class CloudChecker {
     api.addConnection(email, budgeaToken, budgeaUserId);
   }
 
-  public void checkBankStatement(String email, int budgeaBankId, String expected) throws Exception {
+  public void checkBankStatement(String email, int lastUpdate, String expected) throws Exception {
     CloudAPI api = new CloudAPI();
-    JSONObject object = api.getStatement(email, Provider.BUDGEA, budgeaBankId);
+    JSONObject object = api.getStatement(email, lastUpdate);
     System.out.println("CloudChecker.checkBankStatement: " + object.toString(2));
   }
 

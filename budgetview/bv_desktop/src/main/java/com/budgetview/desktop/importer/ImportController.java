@@ -202,6 +202,7 @@ public class ImportController implements RealAccountImporter {
   }
 
   public void commitAndClose(Set<Integer> months) {
+    System.out.println("ImportController.commitAndClose");
     openRequestManager.popCallback();
     countPush--;
     localRepository.commitChanges(true);
@@ -349,6 +350,10 @@ public class ImportController implements RealAccountImporter {
 
   public void showCloudBankConnection(Key bank) {
     importDialog.showCloudBankConnection(bank);
+  }
+
+  public void showCloudRefresh() {
+    importDialog.showCloudRefresh();
   }
 
   public void showCloudError() {

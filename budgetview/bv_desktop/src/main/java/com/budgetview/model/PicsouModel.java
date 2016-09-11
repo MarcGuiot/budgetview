@@ -59,7 +59,8 @@ public class PicsouModel {
                           StandardMessage.TYPE,
                           User.TYPE,
                           AddOns.TYPE,
-                          ProjectAccountGraph.TYPE
+                          ProjectAccountGraph.TYPE,
+                          CloudDesktopUser.TYPE
     )
       .get();
 

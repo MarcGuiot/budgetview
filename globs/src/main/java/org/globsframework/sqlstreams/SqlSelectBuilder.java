@@ -49,6 +49,8 @@ public interface SqlSelectBuilder {
 
   GlobAccessor retrieveAll();
 
+  SqlSelectBuilder orderBy(IntegerField ID);
+
   SqlSelect getQuery();
 
   SqlSelect getNotAutoCloseQuery();

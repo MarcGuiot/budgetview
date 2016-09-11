@@ -46,7 +46,6 @@ public class CloudBankConnectionChecker extends ViewChecker {
 
   public ImportDialogPreviewChecker next() {
     mainWindow.getButton("next").click();
-    System.out.print("CloudBankConnectionChecker.check");
     assertThat(new Assertion() {
       public void check() {
         if (!mainWindow.getPanel("importPreviewPanel").isVisible().isTrue()) {

@@ -29,9 +29,7 @@ import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
+import java.awt.event.*;
 import java.io.File;
 import java.util.HashMap;
 import java.util.List;
@@ -54,6 +52,7 @@ public class ImportDialog implements RealAccountImporter, Disposable {
   private ImportedFileSelectionPanel fileSelectionPanel;
   private ImportCloudBankSelectionPanel cloudBankSelectionPanel;
   private ImportCloudBankConnectionPanel cloudBankConnectionPanel;
+  private ImportCloudRefreshPanel cloudRefreshPanel;
   private ImportCloudErrorPanel cloudErrorPanel;
   private ImportPreviewPanel previewPanel;
   private ImportCompletionPanel completionPanel;
@@ -83,11 +82,12 @@ public class ImportDialog implements RealAccountImporter, Disposable {
     importAccountsPanel = new ImportAccountPanel(dialog, textForCloseButton, controller, localRepository, localDirectory);
     cloudBankSelectionPanel = new ImportCloudBankSelectionPanel(dialog, textForCloseButton, controller, localRepository, localDirectory);
     cloudBankConnectionPanel = new ImportCloudBankConnectionPanel(dialog, textForCloseButton, controller, localRepository, localDirectory);
+    cloudRefreshPanel = new ImportCloudRefreshPanel(dialog, textForCloseButton, controller, localRepository, localDirectory);
     cloudErrorPanel = new ImportCloudErrorPanel(dialog, textForCloseButton, controller, localRepository, localDirectory);
     previewPanel = new ImportPreviewPanel(dialog, textForCloseButton, controller, defaultAccount, repository, localRepository, localDirectory);
     completionPanel = new ImportCompletionPanel(dialog, textForCloseButton, controller, localRepository, localDirectory);
 
-    disposables.addAll(fileSelectionPanel, importAccountsPanel, cloudBankSelectionPanel, cloudBankConnectionPanel, cloudErrorPanel, previewPanel, completionPanel);
+    disposables.addAll(fileSelectionPanel, importAccountsPanel, cloudBankSelectionPanel, cloudBankConnectionPanel, cloudRefreshPanel, cloudErrorPanel, previewPanel, completionPanel);
 
     currentPanel = fileSelectionPanel;
     initMainPanel(currentPanel);
@@ -131,7 +131,7 @@ public class ImportDialog implements RealAccountImporter, Disposable {
       Account.TYPE, AccountUpdateMode.TYPE, BudgetArea.TYPE,
       Transaction.TYPE, Month.TYPE, UserPreferences.TYPE, CurrentMonth.TYPE, RealAccount.TYPE,
       Series.TYPE, SubSeries.TYPE, ImportedSeries.TYPE, TransactionImport.TYPE, CsvMapping.TYPE,
-      Synchro.TYPE, User.TYPE};
+      Synchro.TYPE, User.TYPE, CloudDesktopUser.TYPE};
 
     if (localRepository == null) {
       this.localRepository = LocalGlobRepositoryBuilder.init(repository)
@@ -149,7 +149,6 @@ public class ImportDialog implements RealAccountImporter, Disposable {
   }
 
   public void importAccounts(GlobList realAccounts) {
-    System.out.println("ImportDialog.importAccounts");
     controller.importAccounts(realAccounts);
   }
 
@@ -236,6 +235,11 @@ public class ImportDialog implements RealAccountImporter, Disposable {
   public void showCloudBankConnection(Key bank) {
     cloudBankConnectionPanel.setCurrentBank(bank);
     setCurrentPanel(cloudBankConnectionPanel);
+  }
+
+  public void showCloudRefresh() {
+    setCurrentPanel(cloudRefreshPanel);
+    cloudRefreshPanel.start();
   }
 
   public void showCloudError() {

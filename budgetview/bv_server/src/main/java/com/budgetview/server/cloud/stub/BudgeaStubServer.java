@@ -3,12 +3,8 @@ package com.budgetview.server.cloud.stub;
 import com.budgetview.server.config.ConfigService;
 import com.budgetview.server.utils.Log4J;
 import com.budgetview.server.web.WebServer;
-import com.budgetview.shared.cloud.CloudConstants;
-import org.apache.http.client.fluent.Request;
-import org.apache.http.client.fluent.Response;
-import org.apache.http.entity.ContentType;
+import com.budgetview.shared.cloud.budgea.BudgeaCategory;
 import org.apache.log4j.Logger;
-import org.globsframework.utils.Strings;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -16,19 +12,31 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Stack;
 
 public class BudgeaStubServer {
 
   private Logger logger = Logger.getLogger("BudgeaStubServer");
 
+  private BudgeaWebhook webhook = new BudgeaWebhook();
+
   private WebServer webServer;
   private int userId = 123;
   private String temporaryToken = "-- TEMPORARY -- TOKEN --";
-  private String persistentToken = "-- PERSISTENT -- TOKEN --";
-  private String nextStatement;
+  private String persistentToken = BudgeaWebhook.PERSISTEN_TOKEN;
+  private Stack<String> statements = new Stack<String>();
 
   public static void main(String... args) throws Exception {
     BudgeaStubServer stub = new BudgeaStubServer(args);
+    stub.pushStatement(BudgeaStatement.init()
+                         .addConnection(1, 123, 40, "Connecteur de Test Budgea", "2016-08-10 17:44:26")
+                         .addAccount(1, "Main account 1", "100200300", "checking", 1000.00, "2016-08-10 13:00:00")
+                         .addTransaction(1, "2016-08-10 13:00:00", -100.00, "AUCHAN")
+                         .addTransaction(2, "2016-08-12 17:00:00", -50.00, "EDF", BudgeaCategory.ELECTRICITE)
+                         .addTransaction(3, "2016-08-08 10:00:00", -10.00, "CIC", BudgeaCategory.FRAIS_BANCAIRES)
+                         .endAccount()
+                         .endConnection()
+                         .get());
     stub.start();
   }
 
@@ -61,26 +69,21 @@ public class BudgeaStubServer {
     this.persistentToken = persistentToken;
   }
 
-  public void callWebhook(String budgeaToken, String json) throws IOException {
-    logger.info("Calling webhook with token " + budgeaToken);
-    Request request = Request.Post(CloudConstants.getServerUrl("/budgea"))
-      .addHeader("Authorization", "Bearer " + budgeaToken)
-      .bodyString(json.replaceAll("'", "\""), ContentType.APPLICATION_JSON);
-
-    Response response = request.execute();
-    int statusCode = response.returnResponse().getStatusLine().getStatusCode();
-    if (statusCode != 200) {
-      throw new IOException("Unexpected return value: " + statusCode);
-    }
+  public void callWebhook(String json) throws IOException {
+    callWebhook(persistentToken, json);
   }
 
-  public void setNextStatement(String nextStatement) {
-    this.nextStatement = nextStatement;
+  public void callWebhook(String budgeaToken, String json) throws IOException {
+    webhook.callWebhook(budgeaToken, json);
+  }
+
+  public void pushStatement(String nextStatement) {
+    this.statements.push(nextStatement);
   }
 
   private class AuthInitServlet extends HttpServlet {
 
-    private Logger logger = Logger.getLogger("/auth/init");
+    private Logger logger = Logger.getLogger("BudgeaStubServer - /auth/init");
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
       logger.info("POST");
@@ -96,7 +99,7 @@ public class BudgeaStubServer {
 
   private class AuthTokenAccessServlet extends HttpServlet {
 
-    private Logger logger = Logger.getLogger("/auth/token/access");
+    private Logger logger = Logger.getLogger("BudgeaStubServer - /auth/token/access");
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
       logger.info("POST");
@@ -108,17 +111,20 @@ public class BudgeaStubServer {
       writer.close();
       response.setStatus(HttpServletResponse.SC_OK);
 
-      if (Strings.isNullOrEmpty(nextStatement)) {
+
+      if (statements.isEmpty()) {
         logger.info("No statement to send - next download will be empty");
         return;
       }
 
-      logger.info("Starting thread for wehook");
+      final String statement = statements.pop();
+
+      logger.info("Starting thread for webhook");
       Thread thread = new Thread(new Runnable() {
         public void run() {
           try {
             Thread.sleep(100);
-            callWebhook(persistentToken, nextStatement);
+            callWebhook(persistentToken, statement);
           }
           catch (IOException e) {
             logger.error("Webhook call failed", e);
@@ -133,7 +139,7 @@ public class BudgeaStubServer {
 
   public class BanksFieldsServlet extends HttpServlet {
 
-    private Logger logger = Logger.getLogger("/banks/{id}/fields");
+    private Logger logger = Logger.getLogger("BudgeaStubServer - /banks/{id}/fields");
 
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
       logger.info("GET");
@@ -178,7 +184,7 @@ public class BudgeaStubServer {
 
   private class UsersMeServlet extends HttpServlet {
 
-    private Logger logger = Logger.getLogger("/users/me");
+    private Logger logger = Logger.getLogger("BudgeaStubServer - /users/me");
 
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
       logger.info("GET");
@@ -195,7 +201,7 @@ public class BudgeaStubServer {
 
   private class UsersMeConnectionsServlet extends HttpServlet {
 
-    private Logger logger = Logger.getLogger("/users/me/connections");
+    private Logger logger = Logger.getLogger("BudgeaStubServer - /users/me/connections");
 
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
       logger.info("POST");
@@ -235,7 +241,7 @@ public class BudgeaStubServer {
 
   private class PingServlet extends HttpServlet {
 
-    private Logger logger = Logger.getLogger("/ping");
+    private Logger logger = Logger.getLogger("BudgeaStubServer - /ping");
 
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
       logger.info("GET");

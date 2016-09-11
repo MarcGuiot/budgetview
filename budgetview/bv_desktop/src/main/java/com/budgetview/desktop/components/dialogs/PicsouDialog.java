@@ -151,6 +151,7 @@ public class PicsouDialog extends JDialog {
     }
     colorUpdater = null;
     disposables.dispose();
+    setName(getName() + " [DISPOSED]");
     super.dispose();
   }
 

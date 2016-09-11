@@ -1,6 +1,7 @@
 package com.budgetview.desktop.cloud;
 
 import com.budgetview.budgea.model.*;
+import com.budgetview.model.CloudDesktopUser;
 import com.budgetview.model.Bank;
 import com.budgetview.model.Month;
 import com.budgetview.model.RealAccount;
@@ -22,7 +23,6 @@ import org.globsframework.utils.exceptions.InvalidParameter;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -49,7 +49,7 @@ public class CloudService {
 
     void processTimeout();
 
-    void processError();
+    void processError(Exception e);
   }
 
   public void updateBankList(GlobRepository repository, Callback callback) {
@@ -159,26 +159,32 @@ public class CloudService {
           budgeaAPI.registerConnection(connection.get(BudgeaConnection.BANK), params);
           cloudAPI.addConnection(___TEST_EMAIL___TO_BE_REPLACED____, budgeaAPI.getToken(), budgeaAPI.getUserId());
 
-          downloadStatement(connection, repository, callback);
+          repository.findOrCreate(CloudDesktopUser.KEY);
+          repository.update(CloudDesktopUser.KEY, CloudDesktopUser.ACTIVE, true);
+
+          downloadStatement(repository, callback);
         }
         catch (Exception e) {
           Log.write("Error creating connection", e);
-          callback.processError();
+          callback.processError(e);
         }
       }
     });
     thread.start();
   }
 
-  private void downloadStatement(Glob connection, GlobRepository repository, DownloadCallback callback) throws IOException {
+  public void downloadStatement(GlobRepository repository, DownloadCallback callback) {
+
+    System.out.println("\n\n --- CloudService.downloadStatement ---");
+
     for (int i = 0; i < 50; i++) {
       try {
-        JSONObject statement = cloudAPI.getStatement(___TEST_EMAIL___TO_BE_REPLACED____, Provider.BUDGEA, connection.get(BudgeaConnection.BANK));
+        Integer lastUpdate = repository.findOrCreate(CloudDesktopUser.KEY).get(CloudDesktopUser.LAST_UPDATE);
+        JSONObject statement = cloudAPI.getStatement(___TEST_EMAIL___TO_BE_REPLACED____, lastUpdate);
         JSONArray accounts = statement.getJSONArray("accounts");
         if (accounts.length() == 0) {
           continue;
         }
-
         GlobList importedRealAccounts = new GlobList();
         for (Object item : accounts) {
           JSONObject account = (JSONObject) item;
@@ -221,6 +227,10 @@ public class CloudService {
           System.out.println("DownloadStatement.run COMPLETING... - accounts");
           GlobPrinter.print(importedRealAccounts);
 
+          int newUpdate = statement.getInt("last_update");
+          System.out.println("CloudService.downloadStatement - newUpdate: " + newUpdate);
+          repository.update(CloudDesktopUser.KEY, CloudDesktopUser.LAST_UPDATE, newUpdate);
+
           GuiUtils.runInSwingThread(new Runnable() {
             public void run() {
               callback.processCompletion(importedRealAccounts);
@@ -233,6 +243,10 @@ public class CloudService {
       }
       catch (InterruptedException e) {
         // Ignored - will exit after repeat
+      }
+      catch (Exception e) {
+        Log.write("Error downloading statement", e);
+        callback.processError(e);
       }
     }
     GuiUtils.runInSwingThread(new Runnable() {
