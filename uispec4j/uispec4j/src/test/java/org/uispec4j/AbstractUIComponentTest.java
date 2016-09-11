@@ -10,8 +10,7 @@ import java.awt.*;
 public class AbstractUIComponentTest extends UnitTestCase {
 
   public void testGetComponentTypeName() throws Exception {
-    XmlAssert.assertEquivalent("<awtLabel name='myName'/>",
-                               new DummyAwtUIComponent("myName").getDescription());
+    assertEquals("Label name:'myName'", new DummyAwtUIComponent("myName").getDescription());
   }
 
   private static final class DummyAwtUIComponent extends AbstractUIComponent {

@@ -43,7 +43,7 @@ public class TextBoxForTextComponentTest extends TextBoxComponentTestCase {
   }
 
   public void testGetDescription() throws Exception {
-    XmlAssert.assertEquivalent("<textBox name='myText'/>", textBox.getDescription());
+    assertEquals("JTextArea name:'myText'", textBox.getDescription());
   }
 
   public void testFactory() throws Exception {

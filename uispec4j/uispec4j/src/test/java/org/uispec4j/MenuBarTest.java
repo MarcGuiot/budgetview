@@ -31,10 +31,9 @@ public class MenuBarTest extends UIComponentTestCase {
   }
 
   public void testGetDescription() throws Exception {
-    XmlAssert.assertEquivalent("<menuBar name='myMenuBar'>" +
-                               "  <menu name='fileMenu'/>" +
-                               "  <menu name='editMenu'/>" +
-                               "</menuBar>", menuBar.getDescription());
+    assertEquals("JMenuBar name:'myMenuBar'\n" +
+                 "  JMenu name:'fileMenu'\n" +
+                 "  JMenu name:'editMenu'", menuBar.getDescription());
   }
 
   public void testFactory() throws Exception {

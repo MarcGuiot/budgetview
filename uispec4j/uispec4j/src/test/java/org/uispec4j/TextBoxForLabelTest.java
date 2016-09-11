@@ -26,7 +26,7 @@ public class TextBoxForLabelTest extends TextBoxComponentTestCase {
   }
 
   public void testGetDescription() throws Exception {
-    XmlAssert.assertEquivalent("<textBox name='myLabel' text='some text'/>", textBox.getDescription());
+    assertEquals("JLabel text:'some text' name:'myLabel'", textBox.getDescription());
   }
 
   public void testFactory() throws Exception {

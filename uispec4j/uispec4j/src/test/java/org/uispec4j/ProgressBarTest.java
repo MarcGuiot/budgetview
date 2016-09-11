@@ -25,7 +25,7 @@ public class ProgressBarTest extends UIComponentTestCase {
   }
 
   public void testGetDescription() throws Exception {
-    XmlAssert.assertEquivalent("<progressBar name='myProgressBar'/>", progressBar.getDescription());
+    assertEquals("JProgressBar name:'myProgressBar'", progressBar.getDescription());
   }
 
   public void testFactory() throws Exception {

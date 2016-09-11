@@ -28,7 +28,7 @@ public class RadioButtonTest extends ButtonTestCase {
   }
 
   public void testGetDescription() throws Exception {
-    XmlAssert.assertEquivalent("<radioButton label='myRadioButton'/>", radioButton.getDescription());
+    assertEquals("JRadioButton text:'myRadioButton'", radioButton.getDescription());
   }
 
   public void testFactory() throws Exception {

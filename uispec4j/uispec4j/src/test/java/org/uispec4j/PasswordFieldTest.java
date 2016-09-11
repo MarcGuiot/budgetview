@@ -17,7 +17,7 @@ public class PasswordFieldTest extends UIComponentTestCase {
   }
 
   public void testGetDescription() throws Exception {
-    assertEquals("<passwordField/>", passwordField.getDescription());
+    assertEquals("JPasswordField", passwordField.getDescription());
   }
 
   public void testFactory() throws Exception {

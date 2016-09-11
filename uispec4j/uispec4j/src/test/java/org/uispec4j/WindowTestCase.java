@@ -52,11 +52,14 @@ public abstract class WindowTestCase extends UIComponentTestCase {
     textField.setName("myText");
     addComponent(window, textField);
 
-    XmlAssert.assertEquivalent("<window title='my title'>" +
-                               "  <textBox name='myText'/>" +
-                               "</window>",
+    assertEquals(getTypeName() + " title:'my title' name:'myFrame'\n" +
+                 "  JPanel\n" +
+                 "    JScrollPane\n" +
+                 "      JTextField name:'myText'",
                                window.getDescription());
   }
+
+  protected abstract String getTypeName();
 
   protected UIComponent createComponent() {
     return createWindowWithTitle("title");

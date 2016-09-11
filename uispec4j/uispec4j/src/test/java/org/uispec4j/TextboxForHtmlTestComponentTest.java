@@ -32,7 +32,7 @@ public class TextboxForHtmlTestComponentTest extends TextBoxComponentTestCase {
   }
 
   public void testGetDescription() throws Exception {
-    assertTrue(textBox.getDescription().startsWith("<textBox name='myText' text='&lt;html".replaceAll("'", "\"")));
+    assertEquals("JTextPane text:'[HTML] ' name:'myText'", textBox.getDescription());
   }
 
   public void testFactory() throws Exception {

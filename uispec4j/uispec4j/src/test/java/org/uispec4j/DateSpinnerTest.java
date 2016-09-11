@@ -18,6 +18,10 @@ public class DateSpinnerTest extends SpinnerTestCase {
     dateSpinner = (DateSpinner)spinner;
   }
 
+  protected String getTypeName() {
+    return "DateEditor";
+  }
+
   public String getText() {
     return ((JSpinner.DateEditor)dateSpinner.getAwtComponent().getEditor())
       .getFormat().format(model.getDate());

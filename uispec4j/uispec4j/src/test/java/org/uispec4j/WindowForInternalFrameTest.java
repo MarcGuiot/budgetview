@@ -12,6 +12,10 @@ public class WindowForInternalFrameTest extends WindowTestCase {
     checkIsModal(window, false);
   }
 
+  protected String getTypeName() {
+    return "JInternalFrame";
+  }
+
   protected boolean supportsMenuBars() {
     return true;
   }

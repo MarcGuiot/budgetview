@@ -19,6 +19,10 @@ public class WindowForFrameTest extends WindowTestCase {
     }
   }
 
+  protected String getTypeName() {
+    return "Frame";
+  }
+
   public void testWindowManagesMenuBars() throws Exception {
     Window window = new Window(new Frame());
     try {

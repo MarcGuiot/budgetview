@@ -22,7 +22,7 @@ public abstract class AbstractUIComponent implements UIComponent {
   public final String getDescription() {
     StringBuilder builder = new StringBuilder();
     printDescription(getAwtComponent(), "", builder, false);
-    return builder.toString();
+    return builder.toString().trim();
   }
 
   protected void printDescription(Component component, String indent, StringBuilder builder, boolean showVisibleOnly) {

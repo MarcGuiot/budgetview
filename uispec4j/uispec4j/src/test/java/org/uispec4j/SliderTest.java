@@ -16,7 +16,7 @@ public class SliderTest extends UIComponentTestCase {
   }
 
   public void testGetDescription() throws Exception {
-    XmlAssert.assertEquivalent("<slider name='my thermometer'/>", slider.getDescription());
+    assertEquals("JSlider name:'my thermometer'", slider.getDescription());
   }
 
   public void testFactory() throws Exception {

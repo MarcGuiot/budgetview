@@ -87,9 +87,10 @@ public class TabGroupTest extends UIComponentTestCase {
     panel.add(button);
     jTabbedPane.addTab("4", panel);
     tabGroup.selectTab("4");
-    XmlAssert.assertEquivalent("<tabGroup name='myTabbedPane'>" +
-                               "  <button label='btn'/>" +
-                               "</tabGroup>", tabGroup.getDescription());
+    assertEquals("JTabbedPane name:'myTabbedPane'\n" +
+                 "JPanel\n" +
+                 "  JButton text:'btn'",
+                 tabGroup.getDescription());
   }
 
   public void testFactory() throws Exception {
@@ -165,9 +166,8 @@ public class TabGroupTest extends UIComponentTestCase {
 
   private void checkTabDescription(String tabLabel) throws Exception {
     tabGroup.selectTab(tabLabel);
-    XmlAssert.assertEquivalent("<tabGroup name='myTabbedPane'>" +
-                               "  <textBox name='tab" + tabLabel + "'/>" +
-                               "</tabGroup>", tabGroup.getDescription());
+    assertEquals("JTabbedPane name:'myTabbedPane'\n" +
+                 "JLabel name:'tab" + tabLabel + "'", tabGroup.getDescription());
   }
 
   private void addTab(String index, String tabName) {

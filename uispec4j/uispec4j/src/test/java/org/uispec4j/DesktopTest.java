@@ -25,7 +25,7 @@ public class DesktopTest extends UIComponentTestCase {
   }
 
   public void testGetDescription() throws Exception {
-    XmlAssert.assertEquivalent("<desktop name='myDesktop'/>", desktop.getDescription());
+    assertEquals("JDesktopPane name:'myDesktop'", desktop.getDescription());
   }
 
   public void testFactory() throws Exception {

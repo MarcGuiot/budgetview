@@ -2,7 +2,6 @@ package org.uispec4j;
 
 import junit.framework.AssertionFailedError;
 import org.uispec4j.utils.AssertionFailureNotDetectedError;
-import org.uispec4j.xml.XmlAssert;
 
 import javax.swing.*;
 import java.awt.*;
@@ -50,10 +49,15 @@ public class WindowForAwtWindowTest extends WindowTestCase {
     textField.setName("myText");
     addComponent(window, textField);
 
-    XmlAssert.assertEquivalent("<window title=''>" +
-                               "  <textBox name='myText'/>" +
-                               "</window>",
-                               window.getDescription());
+    assertEquals("Window name:'myFrame'\n" +
+                 "  JPanel\n" +
+                 "    JScrollPane\n" +
+                 "      JTextField name:'myText'",
+                 window.getDescription());
+  }
+
+  protected String getTypeName() {
+    return "Window";
   }
 
   protected boolean supportsMenuBars() {
@@ -69,7 +73,7 @@ public class WindowForAwtWindowTest extends WindowTestCase {
   }
 
   protected void close(Window window) {
-    java.awt.Window awtWindow = (java.awt.Window)window.getAwtComponent();
+    java.awt.Window awtWindow = (java.awt.Window) window.getAwtComponent();
     awtWindow.setVisible(false);
   }
 

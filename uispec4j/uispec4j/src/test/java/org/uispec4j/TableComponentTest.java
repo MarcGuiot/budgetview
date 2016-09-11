@@ -27,7 +27,7 @@ public class TableComponentTest extends UIComponentTestCase {
   }
 
   public void testGetDescription() throws Exception {
-    XmlAssert.assertEquivalent("<table name='myTable'/>", table.getDescription());
+    assertEquals("JTable name:'myTable'", table.getDescription());
   }
 
   public void testFactory() throws Exception {

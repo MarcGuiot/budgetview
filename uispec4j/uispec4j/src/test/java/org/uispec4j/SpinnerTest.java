@@ -14,6 +14,10 @@ public class SpinnerTest extends SpinnerTestCase {
     return new Spinner(jSpinner);
   }
 
+  protected String getTypeName() {
+    return "ListEditor";
+  }
+
   public void testFactory() throws Exception {
     checkFactory(new JSpinner(), Spinner.class);
   }

@@ -11,6 +11,11 @@ public class MenuItemForJMenuTest extends MenuItemTestCase {
     checkFactory(new JMenu(), MenuItem.class);
   }
 
+  public void testGetDescription() throws Exception {
+    MenuItem item = getBuilder("menuTest").setName("myMenu").getMenuItem();
+    assertEquals("JMenu name:'myMenu'", item.getDescription());
+  }
+
   protected MenuItem createLoggingMenuItem(final EventLogger eventLogger) {
     final Action action = new AbstractAction("item") {
       public void actionPerformed(ActionEvent e) {

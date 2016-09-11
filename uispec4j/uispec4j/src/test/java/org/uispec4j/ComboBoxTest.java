@@ -27,7 +27,7 @@ public class ComboBoxTest extends UIComponentTestCase {
   }
 
   public void testGetDescription() throws Exception {
-    assertEquals("<comboBox name=\"marcel\"/>", comboBox.getDescription());
+    assertEquals("JComboBox name:'marcel'", comboBox.getDescription());
   }
 
   public void testFactory() throws Exception {

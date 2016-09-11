@@ -29,7 +29,7 @@ public class CheckBoxTest extends ButtonTestCase {
   }
 
   public void testGetDescription() throws Exception {
-    XmlAssert.assertEquivalent("<checkBox name='myCheckBox'/>", checkBox.getDescription());
+    assertEquals("JCheckBox name:'myCheckBox'", checkBox.getDescription());
   }
 
   public void testFactory() throws Exception {

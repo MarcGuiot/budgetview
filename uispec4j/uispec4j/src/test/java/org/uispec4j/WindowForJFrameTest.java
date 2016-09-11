@@ -18,6 +18,10 @@ public class WindowForJFrameTest extends WindowTestCase {
     }
   }
 
+  protected String getTypeName() {
+    return "JFrame";
+  }
+
   protected boolean supportsMenuBars() {
     return true;
   }

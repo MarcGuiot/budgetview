@@ -28,9 +28,9 @@ public class ToggleButtonTest extends ButtonTestCase {
   }
 
   public void testGetDescription() throws Exception {
-    XmlAssert.assertEquivalent("<toggleButton/>", toggle.getDescription());
+    assertEquals("JToggleButton", toggle.getDescription());
     jToggleButton.setText("toto");
-    XmlAssert.assertEquivalent("<toggleButton label='toto'/>", toggle.getDescription());
+    assertEquals("JToggleButton text:'toto'", toggle.getDescription());
   }
 
   public void testFactory() throws Exception {

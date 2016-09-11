@@ -29,11 +29,9 @@ public class PanelTest extends UIComponentTestCase {
     tabbedPane.addTab("2", new JButton("myButton"));
 
     Panel panel = new Panel(jPanel);
-    XmlAssert.assertEquivalent("<panel name='myPanel'>" +
-                               "  <tabGroup name='myTabbedPane'>" +
-                               "     <textBox name='myText'/>" +
-                               "  </tabGroup>" +
-                               "</panel>", panel.getDescription());
+    assertEquals("JPanel name:'myPanel'\n" +
+                 "  JTabbedPane name:'myTabbedPane'\n" +
+                 "  JTextField name:'myText'", panel.getDescription());
   }
 
   public void testFactory() throws Exception {

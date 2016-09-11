@@ -28,9 +28,9 @@ public class ButtonTest extends ButtonTestCase {
   }
 
   public void testGetDescription() throws Exception {
-    XmlAssert.assertEquivalent("<button/>", button.getDescription());
+    assertEquals("JButton", button.getDescription());
     jButton.setText("toto");
-    XmlAssert.assertEquivalent("<button label='toto'/>", button.getDescription());
+    assertEquals("JButton text:'toto'", button.getDescription());
   }
 
   public void testFactory() throws Exception {

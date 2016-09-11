@@ -15,6 +15,10 @@ public class WindowForDialogTest extends WindowTestCase {
     checkIsModal(window, true);
   }
 
+  protected String getTypeName() {
+    return "JDialog";
+  }
+
   protected boolean supportsMenuBars() {
     return true;
   }

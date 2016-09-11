@@ -17,11 +17,6 @@ public abstract class MenuItemTestCase extends UIComponentTestCase {
     assertEquals("menu", item.getDescriptionTypeName());
   }
 
-  public void testGetDescription() throws Exception {
-    MenuItem item = getBuilder("menuTest").setName("myMenu").getMenuItem();
-    XmlAssert.assertEquivalent("<menu name='myMenu'/>", item.getDescription());
-  }
-
   protected UIComponent createComponent() {
     return getBuilder("item").getMenuItem();
   }

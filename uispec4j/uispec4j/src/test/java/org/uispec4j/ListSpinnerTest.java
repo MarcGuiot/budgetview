@@ -10,6 +10,10 @@ public class ListSpinnerTest extends SpinnerTestCase {
     listSpinner = (ListSpinner)spinner;
   }
 
+  protected String getTypeName() {
+    return "ListEditor";
+  }
+
   public String getText() {
     return "1";
   }

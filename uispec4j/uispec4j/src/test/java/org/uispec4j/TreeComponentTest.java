@@ -14,7 +14,7 @@ public class TreeComponentTest extends UIComponentTestCase {
     JTree jTree = new JTree();
     jTree.setName("myTree");
     Tree tree = new Tree(jTree);
-    XmlAssert.assertEquivalent("<tree name='myTree'/>", tree.getDescription());
+    assertEquals("JTree name:'myTree'", tree.getDescription());
   }
 
   public void testFactory() throws Exception {

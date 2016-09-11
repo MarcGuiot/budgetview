@@ -12,6 +12,10 @@ public class NumberSpinnerTest extends SpinnerTestCase {
     numberSpinner = (NumberSpinner)spinner;
   }
 
+  protected String getTypeName() {
+    return "NumberEditor";
+  }
+
   public String getText() {
     return "10";
   }

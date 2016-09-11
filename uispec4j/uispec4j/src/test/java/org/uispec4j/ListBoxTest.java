@@ -35,7 +35,7 @@ public class ListBoxTest extends UIComponentTestCase {
   }
 
   public void testGetDescription() throws Exception {
-    XmlAssert.assertEquivalent("<listBox name='myList'/>", listBox.getDescription());
+    assertEquals("JList name:'myList'", listBox.getDescription());
   }
 
   public void testFactory() throws Exception {

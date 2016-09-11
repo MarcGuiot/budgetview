@@ -13,6 +13,11 @@ public class MenuItemForJPopupMenuTest extends MenuItemTestCase {
     checkFactory(new JPopupMenu(), MenuItem.class);
   }
 
+  public void testGetDescription() throws Exception {
+    MenuItem item = getBuilder("menuTest").setName("myMenu").getMenuItem();
+    assertEquals("JPopupMenu name:'myMenu'", item.getDescription());
+  }
+
   public void testClickFailsIfTheMenuItemIsNotEnabled() throws Exception {
     JPopupMenu menu = new JPopupMenu();
     menu.add("a");
