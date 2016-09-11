@@ -1,5 +1,6 @@
 package org.uispec4j.finder;
 
+import junit.framework.Assert;
 import org.uispec4j.Button;
 import org.uispec4j.*;
 import org.uispec4j.Panel;
@@ -8,7 +9,6 @@ import org.uispec4j.extension.JCountingButton;
 import org.uispec4j.utils.ComponentUtils;
 import org.uispec4j.utils.UIComponentAnalyzer;
 import org.uispec4j.utils.UIComponentFactory;
-import org.uispec4j.xml.XmlAssert;
 
 import javax.swing.*;
 import javax.swing.text.JTextComponent;
@@ -19,19 +19,19 @@ import java.util.Map;
 
 public class PanelComponentSearchTest extends PanelComponentFinderTestCase {
   private static final Class[] COMPONENT_CLASSES = new Class[]{
-      Button.class,
-      CheckBox.class,
-      ComboBox.class,
-      org.uispec4j.Desktop.class,
-      ListBox.class,
-      TabGroup.class,
-      TextBox.class,
-      PasswordField.class,
-      Panel.class,
-      Spinner.class,
-      Slider.class,
-      ProgressBar.class,
-      RadioButton.class};
+    Button.class,
+    CheckBox.class,
+    ComboBox.class,
+    org.uispec4j.Desktop.class,
+    ListBox.class,
+    TabGroup.class,
+    TextBox.class,
+    PasswordField.class,
+    Panel.class,
+    Spinner.class,
+    Slider.class,
+    ProgressBar.class,
+    RadioButton.class};
   private Map componentAccessors;
 
   protected void setUp() throws Exception {
@@ -257,8 +257,13 @@ public class PanelComponentSearchTest extends PanelComponentFinderTestCase {
       fail();
     }
     catch (ComponentAmbiguityException e) {
-      assertEquals(Messages.computeAmbiguityMessage(new String[]{"myText1", "myText2"}, TextBox.TYPE_NAME, null),
-                   e.getMessage());
+      checkMessage(Messages.computeAmbiguityMessage(new String[]{"myText1", "myText2"}, TextBox.TYPE_NAME, null), e);
+    }
+  }
+
+  private void checkMessage(String message, Exception e) {
+    if (!e.getMessage().startsWith(message)) {
+      Assert.fail("Invalid error message: " + e.getMessage() + "\n- expected:" + message);
     }
   }
 
@@ -309,11 +314,12 @@ public class PanelComponentSearchTest extends PanelComponentFinderTestCase {
     rootPanel.add(innerUnnamedPanel);
     JScrollPane scroll = new JScrollPane();
     innerUnnamedPanel.add(scroll);
-    XmlAssert.assertEquivalent("<panel name='rootPanel'/>",
-                               new Panel(rootPanel).getDescription());
+    assertEquals("JPanel name:'rootPanel'\n" +
+                 "  JPanel\n" +
+                 "    JScrollPane", new Panel(rootPanel).getDescription());
   }
 
-  public void testContainmentSkipsUnnamedContainers() throws Exception {
+  public void testContainmentShowsUnnamedContainers() throws Exception {
     JPanel rootPanel = new JPanel();
     rootPanel.setName("rootPanel");
     JPanel innerUnnamedPanel = new JPanel();
@@ -324,10 +330,12 @@ public class PanelComponentSearchTest extends PanelComponentFinderTestCase {
     JPanel viewportPanel = new JPanel();
     viewportPanel.add(button);
     scroll.getViewport().add(viewportPanel);
-    XmlAssert.assertEquivalent("<panel name='rootPanel'>" +
-                               "  <button label='ok'/>" +
-                               "</panel>",
-                               new Panel(rootPanel).getDescription());
+    assertEquals("JPanel name:'rootPanel'\n" +
+                 "  JPanel\n" +
+                 "    JScrollPane\n" +
+                 "      JPanel\n" +
+                 "        JButton text:'ok'",
+                 new Panel(rootPanel).getDescription());
   }
 
   public void testSelectedPanelIsTheOneVisibleInCardLayout() throws Exception {
@@ -353,11 +361,11 @@ public class PanelComponentSearchTest extends PanelComponentFinderTestCase {
     ListBox list1Checker = panelWithCardLayoutChecker.getListBox();
     assertNotNull(list1Checker);
     assertNotNull(panelWithCardLayoutChecker.getButton("myButton"));
-    XmlAssert.assertEquivalent("<panel name='panelWithCardLayout'>" +
-                               "  <listBox/>" +
-                               "  <button label='myButton'/>" +
-                               "</panel>",
-                               panelWithCardLayoutChecker.getDescription());
+    assertEquals("JPanel name:'panelWithCardLayout'\n" +
+                 "  JPanel\n" +
+                 "    JList\n" +
+                 "    JButton text:'myButton'",
+                 panelWithCardLayoutChecker.getDescription());
 
     cardLayout.show(cardPanel, "second");
     try {
@@ -367,10 +375,10 @@ public class PanelComponentSearchTest extends PanelComponentFinderTestCase {
     catch (ItemNotFoundException e) {
     }
     assertNotNull(panelWithCardLayoutChecker.getButton("myButton"));
-    XmlAssert.assertEquivalent("<panel name='panelWithCardLayout'>" +
-                               "  <button label='myButton'/>" +
-                               "</panel>",
-                               panelWithCardLayoutChecker.getDescription());
+    assertEquals("JPanel name:'panelWithCardLayout'\n" +
+                 "  JPanel\n" +
+                 "    JButton text:'myButton'",
+                 panelWithCardLayoutChecker.getDescription());
   }
 
   public void testAmbiguityMessageContents() throws Exception {
@@ -426,8 +434,8 @@ public class PanelComponentSearchTest extends PanelComponentFinderTestCase {
   }
 
   private void createTwoComponentsWithSameName(Class component, String componentName) throws Exception {
-    addComponentToPanelWithName(((JComponent)component.newInstance()), componentName);
-    addComponentToPanelWithName(((JComponent)component.newInstance()), componentName);
+    addComponentToPanelWithName(((JComponent) component.newInstance()), componentName);
+    addComponentToPanelWithName(((JComponent) component.newInstance()), componentName);
   }
 
   private void checkComponentNotFound(String uiComponentType) throws Exception {
@@ -464,7 +472,7 @@ public class PanelComponentSearchTest extends PanelComponentFinderTestCase {
   private void checkComponentTypeMismatch(String componentName,
                                           Class actualComponentType,
                                           String uiComponentType) throws Exception {
-    addComponentToPanelWithName((Component)actualComponentType.newInstance(), componentName);
+    addComponentToPanelWithName((Component) actualComponentType.newInstance(), componentName);
     try {
       getAccessor(uiComponentType).getComponent(componentName);
       fail();
@@ -528,7 +536,7 @@ public class PanelComponentSearchTest extends PanelComponentFinderTestCase {
     if (componentClass.equals(JTextComponent.class)) {
       return new JTextField();
     }
-    return (Component)componentClass.newInstance();
+    return (Component) componentClass.newInstance();
   }
 
   private void checkGetComponentWithClassAndName(Class uiComponentClass) throws Exception {
@@ -585,11 +593,11 @@ public class PanelComponentSearchTest extends PanelComponentFinderTestCase {
 
   private Component createComponentWithText(Class componentClass, String componentName) throws Exception {
     Constructor componentConstructor = componentClass.getConstructor(String.class);
-    return (Component)componentConstructor.newInstance(componentName);
+    return (Component) componentConstructor.newInstance(componentName);
   }
 
   private TypedComponentAccessor getAccessor(String typeName) {
-    return (TypedComponentAccessor)componentAccessors.get(typeName);
+    return (TypedComponentAccessor) componentAccessors.get(typeName);
   }
 
   private static Map createAccessors(final Panel panel) {

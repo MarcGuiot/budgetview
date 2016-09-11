@@ -48,7 +48,10 @@ public class PanelUIComponentFinderTest extends PanelComponentFinderTestCase {
       fail();
     }
     catch (ComponentAmbiguityException e) {
-      assertEquals(Messages.computeAmbiguityMessage(new String[]{"button1", "button2"}, Button.TYPE_NAME, "button"),
+      assertEquals("Several components of type 'button' match the pattern 'button' in this panel: [button1,button2]:\n" +
+                   "JPanel name:'myPanel'\n" +
+                   "  JButton text:'button1' name:'button1'\n" +
+                   "  JButton text:'button2' name:'button2'",
                    e.getMessage());
     }
   }

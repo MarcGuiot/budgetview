@@ -48,7 +48,7 @@ public abstract class InterceptionTestCase extends UnitTestCase {
       assertEquals(errorMessage, e.getMessage());
     }
     catch (InterceptionError e) {
-      if (!e.getMessage().equals(errorMessage)) {
+      if (!e.getMessage().startsWith(errorMessage)) {
         throw new InterceptionError("Unexpected error (expected '" + errorMessage + "'", e);
       }
     }
