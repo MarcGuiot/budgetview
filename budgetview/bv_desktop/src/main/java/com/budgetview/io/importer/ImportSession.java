@@ -76,7 +76,7 @@ public class ImportSession {
     return changes.getCreated(ImportedSeries.TYPE);
   }
 
-  public void importSeries(boolean importSeries) {
+  public void setImportSeries(boolean importSeries) {
     this.importSeries = importSeries;
   }
 

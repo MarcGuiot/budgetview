@@ -244,6 +244,12 @@ public class ImportDialogChecker extends GuiChecker {
     return new ImportDialogPreviewChecker(dialog);
   }
 
+  public ImportDialogCompletionChecker selectCloudRefreshAndGetSummary() {
+    checkComponentVisible(dialog.getPanel("cloudIntro"), JButton.class, "refreshCloud", true);
+    dialog.getPanel("cloudIntro").getButton("refreshCloud").click();
+    return new ImportDialogCompletionChecker(dialog);
+  }
+
   public ImportDialogPreviewChecker toPreview() {
     return new ImportDialogPreviewChecker(dialog);
   }

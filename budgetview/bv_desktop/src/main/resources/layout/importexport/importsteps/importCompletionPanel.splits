@@ -67,7 +67,7 @@
 
     <row styleClass="dialogButtons" name="buttons">
       <filler fill="horizontal"/>
-      <button action="close"/>
+      <button action="cancel"/>
       <button action="ok"/>
     </row>
   </column>

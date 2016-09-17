@@ -119,6 +119,7 @@ public class ImportDialog implements RealAccountImporter, Disposable {
 
   private void setCurrentPanel(ImportStepPanel stepPanel) {
     this.currentPanel = stepPanel;
+    System.out.println("ImportDialog.setCurrentPanel: " + stepPanel.getClass().getSimpleName());
     this.mainPanel.removeAll();
     this.mainPanel.add(stepPanel.getPanel());
     this.dialog.pack();

@@ -47,6 +47,7 @@ public class ImportSeriesDialog {
   }
 
   public boolean show(Set<Key> importedSeriesKeys) {
+    System.out.println("ImportSeriesDialog.show");
     dialog = PicsouDialog.create(this, parent, directory);
     localRepository = LocalGlobRepositoryBuilder.init(repository)
       .copy(ImportedSeries.TYPE, Series.TYPE, SubSeries.TYPE, BudgetArea.TYPE)
@@ -204,6 +205,7 @@ public class ImportSeriesDialog {
     }
 
     public void actionPerformed(ActionEvent e) {
+      System.out.println("ImportSeriesDialog.ValidateAction.actionPerformed");
       importSeries = true;
       dialog.setVisible(false);
     }
@@ -215,6 +217,7 @@ public class ImportSeriesDialog {
     }
 
     public void actionPerformed(ActionEvent e) {
+      System.out.println("ImportSeriesDialog.DoNotImportAction.actionPerformed");
       importSeries = false;
       dialog.setVisible(false);
     }

@@ -5,9 +5,9 @@
   <styleImport file="/layout/importexport/components/importDialogStyles.splits"/>
 
 
-  <column styleClass="dialog" preferredSize="(600,710)" name="importCloudConnectionPanel">
+  <column styleClass="dialog" preferredSize="(600,710)" name="importCloudRefreshPanel">
 
-    <label text="$import.completion.title" name="title" styleClass="title"/>
+    <label text="$import.cloud.refresh.title" name="title" styleClass="title"/>
 
     <column styleClass="innerDialog">
       <column styleClass="innerDialogContent">

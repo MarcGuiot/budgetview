@@ -22,7 +22,8 @@ public abstract class CloudDesktopTestCase extends LoggedInFunctionalTestCase {
   }
 
   protected void tearDown() throws Exception {
-    logger.info("TearDown\n");
+    System.out.println("\n\n ---------------- tearDown ----------------");
+    logger.info("TearDown");
 
     budgea.stopServer();
     budgea = null;

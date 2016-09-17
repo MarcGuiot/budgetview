@@ -9,15 +9,11 @@ import org.uispec4j.finder.ComponentMatchers;
 import static org.uispec4j.assertion.UISpecAssert.assertFalse;
 import static org.uispec4j.assertion.UISpecAssert.assertThat;
 
-public class ImportDialogCompletionChecker extends GuiChecker {
-  private Window dialog;
+public class ImportDialogCompletionChecker extends DialogChecker {
 
   public ImportDialogCompletionChecker(Window dialog) {
-    this.dialog = dialog;
-  }
-
-  public void checkTitle(String titleKey) {
-    assertThat(dialog.getTextBox(ComponentMatchers.innerNameIdentity("title")).textEquals(Lang.get(titleKey)));
+    super(dialog);
+    checkTitle("import.completion.title");
   }
 
   public static void complete(int importedTransactionCount, int ignoredTransactionCount, int autocategorizedTransactionCount, Panel dialogToClose) {
@@ -31,6 +27,11 @@ public class ImportDialogCompletionChecker extends GuiChecker {
 
   private static void doClose(Panel dialog) {
     dialog.getButton(Lang.get("import.completion.button")).click();
+    assertFalse(dialog.isVisible());
+  }
+
+  public void cancel() {
+    dialog.getButton("cancel").click();
     assertFalse(dialog.isVisible());
   }
 
@@ -50,7 +51,7 @@ public class ImportDialogCompletionChecker extends GuiChecker {
     }
 
     public void checkAndClose(Panel dialogToClose) {
-      assertThat(dialogToClose.getTextBox("title").textEquals(Lang.get("import.completion.title")));
+      DialogChecker.checkTitle(dialogToClose, "import.completion.title");
       if (importedTransactionCount != -1) {
         Panel content = dialogToClose.getPanel("labels");
         Assert.assertEquals(toSummaryString(Integer.toString(importedTransactionCount),

@@ -4,7 +4,9 @@ import com.budgetview.functests.checkers.utils.ComponentIsVisibleAssertion;
 import com.budgetview.functests.utils.BalloonTipTesting;
 import com.budgetview.shared.utils.AmountFormat;
 import com.budgetview.utils.Lang;
+import org.junit.Assert;
 import org.uispec4j.*;
+import org.uispec4j.assertion.Assertion;
 import org.uispec4j.assertion.UISpecAssert;
 import org.uispec4j.finder.ComponentMatchers;
 import org.uispec4j.interception.WindowInterceptor;
@@ -13,12 +15,11 @@ import javax.swing.*;
 
 import static org.uispec4j.assertion.UISpecAssert.*;
 
-public class ImportDialogPreviewChecker extends GuiChecker {
-  private Window dialog;
+public class ImportDialogPreviewChecker extends DialogChecker {
   private AccountEditionChecker accountEditionChecker;
 
   public ImportDialogPreviewChecker(Window dialog) {
-    this.dialog = dialog;
+    super(dialog);
     checkPreviewPanelShown();
   }
 
@@ -197,10 +198,6 @@ public class ImportDialogPreviewChecker extends GuiChecker {
 
   public void checkPreviewPanelShown() {
     checkTitle("import.preview.title");
-  }
-
-  public void checkTitle(String titleKey) {
-    assertThat(dialog.getTextBox(ComponentMatchers.innerNameIdentity("title")).textEquals(Lang.get(titleKey)));
   }
 
   private Panel getAccountTypeSelectionPanel() {

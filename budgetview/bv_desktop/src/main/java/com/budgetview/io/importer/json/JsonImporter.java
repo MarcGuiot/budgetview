@@ -43,9 +43,8 @@ public class JsonImporter implements AccountFileImporter {
     System.out.println("JsonImporter.loadTransactions: parsing \n" + jsonAccount.toString(2));
     //---------------
 
-
     Glob realAccount = getRealAccount(jsonAccount, initialRepository);
-    System.out.println("JsonImporter.loadTransactions ==> " + realAccount);
+    System.out.println("JsonImporter.loadTransactions: account is " + realAccount);
     if (realAccount == null) {
       throw new OperationCancelled("Cannot find real account, should have been created in first phase. Content:\n" + jsonAccount.toString(2));
     }
@@ -111,13 +110,10 @@ public class JsonImporter implements AccountFileImporter {
   }
 
   private Integer findOrCreateSeriesId(DefaultSeries defaultSeries, String providerSeriesName, String bankDate, GlobRepository targetRepository) {
-    System.out.println("JsonImporter.findOrCreateSeriesId for " + providerSeriesName);
     GlobList importedSeriesList = new GlobList();
     if (defaultSeries != null) {
       String defaultSeriesLabel = Labels.get(defaultSeries);
       importedSeriesList = targetRepository.getAll(ImportedSeries.TYPE, and(fieldEqualsIgnoreCase(ImportedSeries.NAME, defaultSeriesLabel)));
-      if (importedSeriesList.isEmpty())
-        System.out.println("   ==> no series found for defaultSeries: " + defaultSeriesLabel);
     }
     BudgetArea budgetArea;
     if (!importedSeriesList.isEmpty()) {
@@ -126,15 +122,16 @@ public class JsonImporter implements AccountFileImporter {
     else {
       importedSeriesList = targetRepository.getAll(ImportedSeries.TYPE, and(fieldEqualsIgnoreCase(ImportedSeries.NAME, providerSeriesName)));
       budgetArea = defaultSeries == null ? BudgetArea.VARIABLE : defaultSeries.getBudgetArea();
-      if (importedSeriesList.isEmpty())
-        System.out.println("   ==> no series found for provider name: " + providerSeriesName);
     }
     if (importedSeriesList.isEmpty()) {
-      System.out.println("   ==> create from scratch");
+      System.out.println("JsonImporter.findOrCreateSeriesId: creating " + providerSeriesName);
       importedSeriesList = new GlobList(
         targetRepository.create(ImportedSeries.TYPE,
                                 value(ImportedSeries.NAME, providerSeriesName),
                                 value(ImportedSeries.BUDGET_AREA, budgetArea.getId())));
+    }
+    else {
+      System.out.println("JsonImporter.findOrCreateSeriesId: using existing " + providerSeriesName);
     }
     return importedSeriesList.getFirst().get(ImportedSeries.ID);
   }

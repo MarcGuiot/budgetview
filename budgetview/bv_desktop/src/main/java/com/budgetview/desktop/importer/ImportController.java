@@ -229,7 +229,7 @@ public class ImportController implements RealAccountImporter {
   public void completeImport(Glob realAccount, Glob currentAccount, String dateFormat) {
     Set<Key> newSeries = importSession.getNewSeries();
     if (!newSeries.isEmpty()) {
-      importSession.importSeries(importDialog.askForSeriesImport(newSeries));
+      importSession.setImportSeries(importDialog.askForSeriesImport(newSeries));
     }
     Key importKey = importSession.importTransactions(realAccount, currentAccount, dateFormat);
     if (importKey != null) {
@@ -361,7 +361,7 @@ public class ImportController implements RealAccountImporter {
   }
 
   public void importSeries() {
-    importSession.importSeries(true);
+    importSession.setImportSeries(true);
   }
 
   private static class HasOperationFunctor implements GlobFunctor {

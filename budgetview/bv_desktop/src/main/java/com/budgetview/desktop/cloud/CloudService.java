@@ -1,12 +1,12 @@
 package com.budgetview.desktop.cloud;
 
 import com.budgetview.budgea.model.*;
-import com.budgetview.model.CloudDesktopUser;
 import com.budgetview.model.Bank;
+import com.budgetview.model.CloudDesktopUser;
 import com.budgetview.model.Month;
 import com.budgetview.model.RealAccount;
-import com.budgetview.shared.cloud.budgea.BudgeaAPI;
 import com.budgetview.shared.cloud.CloudAPI;
+import com.budgetview.shared.cloud.budgea.BudgeaAPI;
 import com.budgetview.shared.model.AccountType;
 import com.budgetview.shared.model.Provider;
 import org.globsframework.gui.splits.utils.GuiUtils;
@@ -23,6 +23,7 @@ import org.globsframework.utils.exceptions.InvalidParameter;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -162,7 +163,7 @@ public class CloudService {
           repository.findOrCreate(CloudDesktopUser.KEY);
           repository.update(CloudDesktopUser.KEY, CloudDesktopUser.ACTIVE, true);
 
-          downloadStatement(repository, callback);
+          downloadInitialStatement(repository, callback);
         }
         catch (Exception e) {
           Log.write("Error creating connection", e);
@@ -173,64 +174,14 @@ public class CloudService {
     thread.start();
   }
 
-  public void downloadStatement(GlobRepository repository, DownloadCallback callback) {
+  public void downloadInitialStatement(GlobRepository repository, DownloadCallback callback) {
 
-    System.out.println("\n\n --- CloudService.downloadStatement ---");
+    System.out.println("\n\n --------- CloudService.downloadInitialStatement ---------");
 
     for (int i = 0; i < 50; i++) {
       try {
-        Integer lastUpdate = repository.findOrCreate(CloudDesktopUser.KEY).get(CloudDesktopUser.LAST_UPDATE);
-        JSONObject statement = cloudAPI.getStatement(___TEST_EMAIL___TO_BE_REPLACED____, lastUpdate);
-        JSONArray accounts = statement.getJSONArray("accounts");
-        if (accounts.length() == 0) {
-          continue;
-        }
-        GlobList importedRealAccounts = new GlobList();
-        for (Object item : accounts) {
-          JSONObject account = (JSONObject) item;
-          String name = Strings.toString(account.getString("name")).trim();
-          String number = Strings.toString(account.getString("number")).trim();
-          int budgeaAccountId = account.getInt("provider_account_id");
-          int budgeaBankId = account.getInt("provider_bank_id");
-          Glob bank = BudgeaBank.findBudgetViewBank(budgeaBankId, repository);
-          if (bank == null) {
-            String bankName = account.getString("provider_bank_name");
-            bank = createMissingBank(budgeaBankId, bankName, repository);
-          }
-
-          Glob realAccount = RealAccount.findFromProvider(Provider.BUDGEA.getId(), budgeaAccountId, repository);
-          if (realAccount == null) {
-            realAccount = RealAccount.findOrCreate(name, number, bank.get(Bank.ID), repository);
-            repository.update(realAccount,
-                              value(RealAccount.PROVIDER, Provider.BUDGEA.getId()),
-                              value(RealAccount.PROVIDER_ACCOUNT_ID, budgeaAccountId));
-          }
-
-          double position = account.getDouble("position");
-          int positionMonth = account.getInt("position_month");
-          int positionDay = account.getInt("position_day");
-          repository.update(realAccount,
-                            value(RealAccount.NAME, name),
-                            value(RealAccount.NUMBER, number),
-                            value(RealAccount.POSITION, Double.toString(position)),
-                            value(RealAccount.POSITION_DATE, Month.toDate(positionMonth, positionDay)),
-                            value(RealAccount.ACCOUNT_TYPE, AccountType.get(account.getString("type")).getId()),
-                            value(RealAccount.FILE_NAME, "cloud.json"),
-//                            value(RealAccount.BANK_ENTITY_LABEL, ),
-//                            value(RealAccount.BANK_ENTITY, bankEntityId),
-                            value(RealAccount.FILE_CONTENT, account.toString()));
-          importedRealAccounts.add(realAccount);
-        }
-
+        GlobList importedRealAccounts = doDownloadStatement(repository);
         if (!importedRealAccounts.isEmpty()) {
-
-          System.out.println("DownloadStatement.run COMPLETING... - accounts");
-          GlobPrinter.print(importedRealAccounts);
-
-          int newUpdate = statement.getInt("last_update");
-          System.out.println("CloudService.downloadStatement - newUpdate: " + newUpdate);
-          repository.update(CloudDesktopUser.KEY, CloudDesktopUser.LAST_UPDATE, newUpdate);
-
           GuiUtils.runInSwingThread(new Runnable() {
             public void run() {
               callback.processCompletion(importedRealAccounts);
@@ -254,6 +205,87 @@ public class CloudService {
         callback.processTimeout();
       }
     });
+  }
+
+  public void downloadStatement(GlobRepository repository, DownloadCallback callback) {
+    Thread thread = new Thread(new Runnable() {
+      public void run() {
+        try {
+          System.out.println("\n\n --------- CloudService.downloadStatement ---------");
+
+          final GlobList importedRealAccounts = doDownloadStatement(repository);
+          GuiUtils.runInSwingThread(new Runnable() {
+            public void run() {
+              callback.processCompletion(importedRealAccounts);
+            }
+          });
+        }
+        catch (Exception e) {
+          Log.write("Error downloading statement", e);
+          GuiUtils.runInSwingThread(new Runnable() {
+            public void run() {
+              callback.processError(e);
+            }
+          });
+        }
+      }
+    });
+    thread.start();
+  }
+
+  public GlobList doDownloadStatement(GlobRepository repository) throws IOException {
+    Integer lastUpdate = repository.findOrCreate(CloudDesktopUser.KEY).get(CloudDesktopUser.LAST_UPDATE);
+    JSONObject statement = cloudAPI.getStatement(___TEST_EMAIL___TO_BE_REPLACED____, lastUpdate);
+    JSONArray accounts = statement.getJSONArray("accounts");
+    if (accounts.length() == 0) {
+      return GlobList.EMPTY;
+    }
+    GlobList importedRealAccounts = new GlobList();
+    for (Object item : accounts) {
+      JSONObject account = (JSONObject) item;
+      String name = Strings.toString(account.getString("name")).trim();
+      String number = Strings.toString(account.getString("number")).trim();
+      int budgeaAccountId = account.getInt("provider_account_id");
+      int budgeaBankId = account.getInt("provider_bank_id");
+      Glob bank = BudgeaBank.findBudgetViewBank(budgeaBankId, repository);
+      if (bank == null) {
+        String bankName = account.getString("provider_bank_name");
+        bank = createMissingBank(budgeaBankId, bankName, repository);
+      }
+
+      Glob realAccount = RealAccount.findFromProvider(Provider.BUDGEA.getId(), budgeaAccountId, repository);
+      if (realAccount == null) {
+        realAccount = RealAccount.findOrCreate(name, number, bank.get(Bank.ID), repository);
+        repository.update(realAccount,
+                          value(RealAccount.PROVIDER, Provider.BUDGEA.getId()),
+                          value(RealAccount.PROVIDER_ACCOUNT_ID, budgeaAccountId));
+      }
+
+      double position = account.getDouble("position");
+      int positionMonth = account.getInt("position_month");
+      int positionDay = account.getInt("position_day");
+      repository.update(realAccount,
+                        value(RealAccount.NAME, name),
+                        value(RealAccount.NUMBER, number),
+                        value(RealAccount.POSITION, Double.toString(position)),
+                        value(RealAccount.POSITION_DATE, Month.toDate(positionMonth, positionDay)),
+                        value(RealAccount.ACCOUNT_TYPE, AccountType.get(account.getString("type")).getId()),
+                        value(RealAccount.FILE_NAME, "cloud.json"),
+//                            value(RealAccount.BANK_ENTITY_LABEL, ),
+//                            value(RealAccount.BANK_ENTITY, bankEntityId),
+                        value(RealAccount.FILE_CONTENT, account.toString()));
+      importedRealAccounts.add(realAccount);
+    }
+
+    if (!importedRealAccounts.isEmpty()) {
+      System.out.println("DownloadStatement.run COMPLETING... - accounts");
+      GlobPrinter.print(importedRealAccounts);
+
+      int newUpdate = statement.getInt("last_update");
+      System.out.println("CloudService.downloadStatement - newUpdate: " + newUpdate);
+      repository.update(CloudDesktopUser.KEY, CloudDesktopUser.LAST_UPDATE, newUpdate);
+    }
+    return importedRealAccounts;
   }
 
   private Glob createMissingBank(int budgeaBankId, String bankName, GlobRepository repository) {
