@@ -81,9 +81,17 @@ public class DefaultGlobModel implements GlobModel {
     };
   }
 
-  private void add(GlobType... types) {
+  public DefaultGlobModel add(GlobModel model) {
+    for (GlobType type : model.getAll()) {
+      typesByName.put(type.getName(), type);
+    }
+    return this;
+  }
+
+  public DefaultGlobModel add(GlobType... types) {
     for (GlobType type : types) {
       typesByName.put(type.getName(), type);
     }
+    return this;
   }
 }

@@ -4,6 +4,8 @@ import com.budgetview.functests.checkers.utils.ComponentIsVisibleAssertion;
 import com.budgetview.functests.utils.BalloonTipTesting;
 import com.budgetview.shared.utils.AmountFormat;
 import com.budgetview.utils.Lang;
+import junit.framework.AssertionFailedError;
+import org.globsframework.utils.Dates;
 import org.junit.Assert;
 import org.uispec4j.*;
 import org.uispec4j.assertion.Assertion;
@@ -321,7 +323,14 @@ public class ImportDialogPreviewChecker extends DialogChecker {
 
   public void importAccountAndComplete() {
     clickNext();
-    new ImportDialogCompletionChecker(dialog).validate();
+    try {
+      new ImportDialogCompletionChecker(dialog).validate();
+    }
+    catch (Exception e) {
+      Assert.fail("Could not validate import. " +
+                  "A possible explanation is that the series import dialog was unexpectedly shown (dialog disposed) " +
+                  "or there is another account to preview. Dialog content:\n" + dialog.getDescription());
+    }
   }
 
   public void importAccountWithAllSeriesAndComplete() {

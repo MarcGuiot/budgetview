@@ -4,6 +4,7 @@ import com.budgetview.io.importer.csv.CsvType;
 import com.budgetview.session.serialization.SerializationManager;
 import com.budgetview.shared.model.AccountType;
 import com.budgetview.shared.model.BudgetArea;
+import com.budgetview.shared.model.Provider;
 import org.globsframework.metamodel.GlobModel;
 import org.globsframework.metamodel.utils.GlobModelBuilder;
 
@@ -30,6 +31,7 @@ public class PicsouModel {
                           SeriesToCategory.TYPE,
                           SeriesBudget.TYPE,
                           BudgetArea.TYPE,
+                          Provider.TYPE,
                           ProfileType.TYPE,
                           AppVersionInformation.TYPE,
                           UserVersionInformation.TYPE,

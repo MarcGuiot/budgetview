@@ -3,17 +3,10 @@ package com.budgetview.server.cloud.functests;
 import com.budgetview.model.TransactionType;
 import com.budgetview.server.cloud.functests.checkers.CloudDesktopTestCase;
 import com.budgetview.server.cloud.stub.BudgeaStatement;
-import com.budgetview.shared.cloud.budgea.BudgeaAPI;
 import com.budgetview.shared.cloud.budgea.BudgeaCategory;
 import org.junit.Test;
 
 public class CloudImportTest extends CloudDesktopTestCase {
-
-  public void setUp() throws Exception {
-    super.setUp();
-    BudgeaAPI api = new BudgeaAPI();
-    api.getToken();
-  }
 
   @Test
   public void testCreateStandardConnection() throws Exception {
@@ -167,20 +160,5 @@ public class CloudImportTest extends CloudDesktopTestCase {
 
     budgetView.recurring.checkContent("| Electricité | 50.00 | 50.00 |");
     budgetView.variable.checkContent("| Frais bancaires | 10.00 | To define |");
-  }
-
-  @Test
-  public void testLocalSeriesOverrideThoseSetByTheProvider() throws Exception {
-    fail();
-  }
-
-  @Test
-  public void testReusesExistingSeries() throws Exception {
-    fail("Cf JsonImporter@");
-  }
-
-  @Test
-  public void testReusesCategoriesFromPreviousImports() throws Exception {
-    fail("Cf JsonImporter");
   }
 }

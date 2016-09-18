@@ -6,6 +6,7 @@ import com.budgetview.server.utils.DbInit;
 import com.budgetview.server.utils.Log4J;
 import com.budgetview.server.web.WebServer;
 import org.apache.log4j.Logger;
+import org.globsframework.sqlstreams.GlobsDatabase;
 import org.globsframework.utils.directory.DefaultDirectory;
 import org.globsframework.utils.directory.Directory;
 
@@ -15,6 +16,7 @@ public class CloudServer {
 
   private WebServer webServer;
   private ConfigService config;
+  private GlobsDatabase database;
 
   public static void main(String[] args) throws Exception {
     ConfigService.checkCommandLine(args);
@@ -43,7 +45,7 @@ public class CloudServer {
   private Directory createDirectory() throws Exception {
     Directory directory = new DefaultDirectory();
     directory.add(config);
-    DbInit.create(config, directory);
+    database = DbInit.create(config, directory);
     directory.add(new AuthenticationService(directory));
     return directory;
   }
@@ -52,6 +54,11 @@ public class CloudServer {
     logger.info("starting server");
     webServer.start();
     logger.info("server started");
+  }
+
+  public void resetDatabase() {
+    logger.info("cleaning up database");
+    DbInit.cleanAllTables(database);
   }
 
   public void stop() throws Exception {

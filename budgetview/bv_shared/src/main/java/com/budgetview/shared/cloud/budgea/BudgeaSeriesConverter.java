@@ -71,7 +71,7 @@ public class BudgeaSeriesConverter {
     );
     add(DefaultSeries.BANK_FEES,
         BudgeaCategory.FRAIS_BANCAIRES,
-        BudgeaCategory.AGOS
+        BudgeaCategory.AGIOS
     );
     add(DefaultSeries.MISC);
   }

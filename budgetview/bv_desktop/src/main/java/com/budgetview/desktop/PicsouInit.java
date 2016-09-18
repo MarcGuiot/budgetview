@@ -4,7 +4,7 @@ import com.budgetview.client.DataAccess;
 import com.budgetview.desktop.accounts.utils.MonthDay;
 import com.budgetview.desktop.backup.BackupService;
 import com.budgetview.desktop.browsing.BrowsingService;
-import com.budgetview.desktop.model.PicsouGuiModel;
+import com.budgetview.desktop.model.DesktopModel;
 import com.budgetview.desktop.preferences.components.ColorThemeUpdater;
 import com.budgetview.desktop.series.view.SeriesWrapperUpdateTrigger;
 import com.budgetview.desktop.time.TimeService;
@@ -21,6 +21,7 @@ import com.budgetview.io.importer.analyzer.TransactionAnalyzerFactory;
 import com.budgetview.model.*;
 import com.budgetview.model.initial.DefaultSeriesFactory;
 import com.budgetview.shared.model.AccountType;
+import com.budgetview.shared.model.Provider;
 import com.budgetview.triggers.*;
 import com.budgetview.triggers.projects.*;
 import com.budgetview.triggers.savings.SavingsUpdateSeriesMirrorTrigger;
@@ -167,7 +168,7 @@ public class PicsouInit {
 
   public void partialReset() {
     GlobList additionalGlobToInsert = additionalGlobToAdd(PicsouInit.this.repository);
-    repository.reset(GlobList.EMPTY, PicsouGuiModel.getUserSpecificTypes());
+    repository.reset(GlobList.EMPTY, DesktopModel.getUserSpecificTypes());
     Set<GlobType> types = additionalGlobToInsert.getTypes();
     repository.reset(additionalGlobToInsert, types.toArray(new GlobType[types.size()]));
   }
@@ -185,7 +186,7 @@ public class PicsouInit {
       this.useDemoAccount = useDemoAccount;
       this.autoLogin = autoLogin;
       changeSet = new DefaultChangeSet();
-      typesToReplace = PicsouGuiModel.getUserSpecificTypes();
+      typesToReplace = DesktopModel.getUserSpecificTypes();
       idGenerator.reset(Arrays.asList(typesToReplace));
 
       userData = dataAccess.getUserData(changeSet, new DataAccess.IdUpdater() {
@@ -289,7 +290,7 @@ public class PicsouInit {
   private void initDirectory(GlobRepository repository) {
     directory.add(ExecutorService.class, Executors.newCachedThreadPool());
     directory.add(BrowsingService.class, BrowsingService.createService());
-    directory.add(TransactionAnalyzerFactory.class, new TransactionAnalyzerFactory(PicsouGuiModel.get()));
+    directory.add(TransactionAnalyzerFactory.class, new TransactionAnalyzerFactory(DesktopModel.get()));
     directory.add(ImportService.class, new ImportService());
     directory.add(new BackupService(dataAccess, directory, repository, idGenerator, upgradeTrigger));
   }

@@ -1,5 +1,6 @@
 package com.budgetview.desktop.model;
 
+import com.budgetview.budgea.model.BudgeaModel;
 import com.budgetview.desktop.accounts.utils.MonthDay;
 import com.budgetview.desktop.series.view.SeriesWrapper;
 import com.budgetview.desktop.series.view.SeriesWrapperType;
@@ -13,22 +14,23 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Set;
 
-public class PicsouGuiModel {
-  private static GlobModel MODEL = new DefaultGlobModel(
-    PicsouModel.get(),
-    SeriesType.TYPE,
-    SeriesShape.TYPE,
-    BudgetStat.TYPE,
-    Card.TYPE,
-    PeriodSeriesStat.TYPE,
-    SavingsBudgetStat.TYPE,
-    SeriesStat.TYPE,
-    SubSeriesStat.TYPE,
-    SeriesWrapper.TYPE,
-    SeriesWrapperType.TYPE,
-    MonthDay.TYPE,
-    ColorTheme.TYPE
-  );
+public class DesktopModel {
+  private static GlobModel MODEL =
+    new DefaultGlobModel(PicsouModel.get())
+      .add(BudgeaModel.get())
+      .add(SeriesType.TYPE,
+           SeriesShape.TYPE,
+           BudgetStat.TYPE,
+           Card.TYPE,
+           PeriodSeriesStat.TYPE,
+           SavingsBudgetStat.TYPE,
+           SeriesStat.TYPE,
+           SubSeriesStat.TYPE,
+           SeriesWrapper.TYPE,
+           SeriesWrapperType.TYPE,
+           MonthDay.TYPE,
+           ColorTheme.TYPE
+      );
 
   public static GlobModel get() {
     return MODEL;

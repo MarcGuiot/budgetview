@@ -1,12 +1,16 @@
 package com.budgetview.desktop.series.utils;
 
 import com.budgetview.desktop.utils.MonthMatcher;
-import com.budgetview.model.*;
+import com.budgetview.model.Account;
+import com.budgetview.model.Month;
+import com.budgetview.model.Series;
+import com.budgetview.model.SeriesBudget;
 import com.budgetview.shared.model.BudgetArea;
 import com.budgetview.shared.utils.Amounts;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.utils.GlobMatcher;
+import org.globsframework.model.utils.GlobMatchers;
 import org.globsframework.utils.Utils;
 
 import java.util.Collections;
@@ -16,6 +20,25 @@ import java.util.Set;
 import static org.globsframework.model.utils.GlobMatchers.*;
 
 public class SeriesMatchers {
+
+  public static GlobMatcher activeInMonth(int monthId) {
+    return new GlobMatcher() {
+      public boolean matches(Glob series, GlobRepository repository) {
+        if (series == null) {
+          return false;
+        }
+        Integer first = series.get(Series.FIRST_MONTH);
+        if (first != null && monthId < first) {
+          return false;
+        }
+        Integer last = series.get(Series.LAST_MONTH);
+        if (last != null && monthId > last) {
+          return false;
+        }
+        return true;
+      }
+    };
+  }
 
   public static MonthMatcher seriesActiveInPeriod(final BudgetArea budgetArea, boolean showOnlyForActiveMonths, boolean showOnlyIfAvailableOnAllMonths, boolean showOnPreviousAndNextMonth) {
     return new SeriesFirstEndDateFilter(showOnlyForActiveMonths, showOnlyIfAvailableOnAllMonths, showOnPreviousAndNextMonth) {
@@ -30,10 +53,17 @@ public class SeriesMatchers {
                not(fieldEquals(Series.ID, Series.ACCOUNT_SERIES_ID)));
   }
 
-  public static GlobMatcher seriesForAccount(final Integer selectedAccountId) {
+  public static GlobMatcher seriesForAccount(final Glob account) {
+    return seriesForAccount(account != null ? account.get(Account.ID) : null);
+  }
+
+  public static GlobMatcher seriesForAccount(final Integer accountId) {
+    if (accountId == null) {
+      return GlobMatchers.ALL;
+    }
     return new GlobMatcher() {
       public boolean matches(Glob series, GlobRepository repository) {
-        return Series.isSeriesForAccount(series, selectedAccountId, repository);
+        return Series.isSeriesForAccount(series, accountId, repository);
       }
     };
   }

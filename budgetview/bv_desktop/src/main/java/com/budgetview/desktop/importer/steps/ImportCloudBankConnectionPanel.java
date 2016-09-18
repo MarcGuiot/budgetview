@@ -117,7 +117,7 @@ public class ImportCloudBankConnectionPanel extends AbstractImportStepPanel {
     cloudService.createConnection(currentConnection, repository, new CloudService.DownloadCallback() {
 
       public void processCompletion(GlobList importedRealAccounts) {
-        controller.importSeries();
+        controller.setReplaceSeries(false);
         controller.importAccounts(importedRealAccounts);
         progressPanel.stop();
       }

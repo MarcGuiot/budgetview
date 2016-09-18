@@ -24,8 +24,8 @@ public enum Provider implements GlobConstantContainer {
   @NamingField
   public static StringField NAME;
 
-  private String name;
-  private int id;
+  private final int id;
+  private final String name;
 
   Provider(String name, int id) {
     this.name = name;
@@ -37,7 +37,7 @@ public enum Provider implements GlobConstantContainer {
   }
 
   public ReadOnlyGlob getGlob() {
-    return new ReadOnlyGlob(Provider.TYPE,
+    return new ReadOnlyGlob(TYPE,
                             value(ID, id),
                             value(NAME, name));
   }

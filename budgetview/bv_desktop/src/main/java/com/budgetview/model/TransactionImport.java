@@ -27,6 +27,9 @@ public class TransactionImport {
   @DefaultBoolean(false)
   public static BooleanField IS_WITH_SERIES;
 
+  @DefaultBoolean(false)
+  public static BooleanField REPLACE_SERIES;
+
   public static BlobField FILE_CONTENT;
 
   static {
@@ -42,11 +45,12 @@ public class TransactionImport {
       stream.writeDate(values.get(TransactionImport.IMPORT_DATE));
       stream.writeBytes(values.get(TransactionImport.FILE_CONTENT));
       stream.writeBoolean(values.get(TransactionImport.IS_WITH_SERIES));
+      stream.writeBoolean(values.get(TransactionImport.REPLACE_SERIES));
       return serializedByteArrayOutput.toByteArray();
     }
 
     public int getWriteVersion() {
-      return 4;
+      return 5;
     }
 
     public boolean shouldBeSaved(GlobRepository repository, FieldValues fieldValues) {
@@ -54,7 +58,10 @@ public class TransactionImport {
     }
 
     public void deserializeData(int version, byte[] data, Integer id, FieldSetter fieldSetter) {
-      if (version == 4) {
+      if (version == 5) {
+        deserializeDataV5(fieldSetter, data);
+      }
+      else if (version == 4) {
         deserializeDataV4(fieldSetter, data);
       }
       else if (version == 3) {
@@ -68,12 +75,22 @@ public class TransactionImport {
       }
     }
 
+    private void deserializeDataV5(FieldSetter fieldSetter, byte[] data) {
+      SerializedInput input = SerializedInputOutputFactory.init(data);
+      fieldSetter.set(TransactionImport.SOURCE, input.readUtf8String());
+      fieldSetter.set(TransactionImport.IMPORT_DATE, input.readDate());
+      fieldSetter.set(TransactionImport.FILE_CONTENT, input.readBytes());
+      fieldSetter.set(TransactionImport.IS_WITH_SERIES, input.readBoolean());
+      fieldSetter.set(TransactionImport.REPLACE_SERIES, input.readBoolean());
+    }
+
     private void deserializeDataV4(FieldSetter fieldSetter, byte[] data) {
       SerializedInput input = SerializedInputOutputFactory.init(data);
       fieldSetter.set(TransactionImport.SOURCE, input.readUtf8String());
       fieldSetter.set(TransactionImport.IMPORT_DATE, input.readDate());
       fieldSetter.set(TransactionImport.FILE_CONTENT, input.readBytes());
       fieldSetter.set(TransactionImport.IS_WITH_SERIES, input.readBoolean());
+      fieldSetter.set(TransactionImport.REPLACE_SERIES, false);
     }
 
     private void deserializeDataV3(FieldSetter fieldSetter, byte[] data) {
@@ -81,18 +98,21 @@ public class TransactionImport {
       fieldSetter.set(TransactionImport.SOURCE, input.readUtf8String());
       fieldSetter.set(TransactionImport.IMPORT_DATE, input.readDate());
       fieldSetter.set(TransactionImport.FILE_CONTENT, input.readBytes());
+      fieldSetter.set(TransactionImport.REPLACE_SERIES, false);
     }
 
     private void deserializeDataV2(FieldSetter fieldSetter, byte[] data) {
       SerializedInput input = SerializedInputOutputFactory.init(data);
       fieldSetter.set(TransactionImport.SOURCE, input.readUtf8String());
       fieldSetter.set(TransactionImport.IMPORT_DATE, input.readDate());
+      fieldSetter.set(TransactionImport.REPLACE_SERIES, false);
     }
 
     private void deserializeDataV1(FieldSetter fieldSetter, byte[] data) {
       SerializedInput input = SerializedInputOutputFactory.init(data);
       fieldSetter.set(TransactionImport.SOURCE, input.readJavaString());
       fieldSetter.set(TransactionImport.IMPORT_DATE, input.readDate());
+      fieldSetter.set(TransactionImport.REPLACE_SERIES, false);
     }
   }
 }

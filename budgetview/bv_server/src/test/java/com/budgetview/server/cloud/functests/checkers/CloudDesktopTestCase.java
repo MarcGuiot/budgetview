@@ -3,6 +3,10 @@ package com.budgetview.server.cloud.functests.checkers;
 import com.budgetview.functests.utils.LoggedInFunctionalTestCase;
 import org.apache.log4j.Logger;
 
+import java.io.IOException;
+import java.net.DatagramSocket;
+import java.net.ServerSocket;
+
 public abstract class CloudDesktopTestCase extends LoggedInFunctionalTestCase {
 
   private static Logger logger = Logger.getLogger("CloudDesktopTestCase");
@@ -31,5 +35,7 @@ public abstract class CloudDesktopTestCase extends LoggedInFunctionalTestCase {
     budgea = null;
 
     super.tearDown();
+
+    WebServerTestUtils.waitForPorts(8080, 8085);
   }
 }

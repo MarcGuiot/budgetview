@@ -2,7 +2,9 @@ package com.budgetview.server.utils;
 
 import com.budgetview.server.cloud.model.CloudDatabaseModel;
 import com.budgetview.server.config.ConfigService;
+import org.globsframework.metamodel.GlobType;
 import org.globsframework.sqlstreams.GlobsDatabase;
+import org.globsframework.sqlstreams.SqlConnection;
 import org.globsframework.sqlstreams.drivers.jdbc.JdbcGlobsDatabase;
 import org.globsframework.utils.directory.Directory;
 
@@ -24,5 +26,11 @@ public class DbInit {
                                                    configService.get(DbInit.DATABASE_PASSWORD));
     database.connect().createTables(CloudDatabaseModel.getAllTypes());
     return database;
+  }
+
+  public static void cleanAllTables(GlobsDatabase database) {
+    SqlConnection connection = database.connect();
+    connection.emptyTable(CloudDatabaseModel.getAllTypes());
+    connection.commitAndClose();
   }
 }

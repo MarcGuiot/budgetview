@@ -5,7 +5,7 @@ import com.budgetview.client.http.EncryptToTransportDataAccess;
 import com.budgetview.desktop.Application;
 import com.budgetview.desktop.PicsouInit;
 import com.budgetview.desktop.card.NavigationService;
-import com.budgetview.desktop.model.PicsouGuiModel;
+import com.budgetview.desktop.model.DesktopModel;
 import com.budgetview.desktop.time.TimeService;
 import com.budgetview.desktop.upgrade.UpgradeTrigger;
 import com.budgetview.model.CurrentMonth;
@@ -125,7 +125,7 @@ public class BackupService {
 
     try {
       repository.startChangeSet();
-      repository.reset(GlobList.EMPTY, PicsouGuiModel.getUserSpecificTypes());
+      repository.reset(GlobList.EMPTY, DesktopModel.getUserSpecificTypes());
     }
     catch (Exception e) {
       Log.write("Error while clearing data (ignored)", e);
@@ -139,7 +139,7 @@ public class BackupService {
     try {
       repository.startChangeSet();
       repository.addTriggerAtFirst(upgradeTrigger);
-      repository.reset(userData, PicsouGuiModel.getUserSpecificTypes());
+      repository.reset(userData, DesktopModel.getUserSpecificTypes());
       AddOnTrigger.alignWithUser(repository);
     }
     finally {

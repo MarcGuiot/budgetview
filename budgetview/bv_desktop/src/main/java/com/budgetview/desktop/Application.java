@@ -9,7 +9,7 @@ import com.budgetview.desktop.components.dialogs.MessageType;
 import com.budgetview.desktop.userconfig.UserConfigService;
 import com.budgetview.desktop.description.PicsouDescriptionService;
 import com.budgetview.desktop.mobile.MobileService;
-import com.budgetview.desktop.model.PicsouGuiModel;
+import com.budgetview.desktop.model.DesktopModel;
 import com.budgetview.desktop.notifications.NotificationService;
 import com.budgetview.desktop.notifications.standard.StandardMessageNotificationHandler;
 import com.budgetview.desktop.plaf.ApplicationLAF;
@@ -306,7 +306,7 @@ public class Application {
     wrapper.add(new TimeService());
     wrapper.add(new UpgradeService(directory));
     wrapper.add(DescriptionService.class, new PicsouDescriptionService());
-    wrapper.add(GlobModel.class, PicsouGuiModel.get());
+    wrapper.add(GlobModel.class, DesktopModel.get());
     wrapper.add(SelectionService.class, new SelectionService());
     wrapper.add(ImageLocator.class, Gui.IMAGE_LOCATOR);
     wrapper.add(TextLocator.class, Lang.TEXT_LOCATOR);

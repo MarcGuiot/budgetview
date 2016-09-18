@@ -44,7 +44,7 @@ public class GlobRepositoryBuilder {
     return this;
   }
 
-  public GlobRepositoryBuilder add(GlobConstantContainer[] constants) {
+  public GlobRepositoryBuilder add(GlobConstantContainer... constants) {
     for (GlobConstantContainer container : constants) {
       globList.add(container.getGlob());
     }

@@ -226,12 +226,12 @@ public class ImportController implements RealAccountImporter {
     nextImport();
   }
 
-  public void completeImport(Glob realAccount, Glob currentAccount, String dateFormat) {
+  public void completeImport(Glob realAccount, Glob targetAccount, String dateFormat) {
     Set<Key> newSeries = importSession.getNewSeries();
     if (!newSeries.isEmpty()) {
-      importSession.setImportSeries(importDialog.askForSeriesImport(newSeries));
+      importSession.setImportSeries(importDialog.askForSeriesImport(newSeries, targetAccount));
     }
-    Key importKey = importSession.importTransactions(realAccount, currentAccount, dateFormat);
+    Key importKey = importSession.importTransactions(realAccount, targetAccount, dateFormat);
     if (importKey != null) {
       importKeys.add(importKey.get(TransactionImport.ID));
     }
@@ -360,8 +360,8 @@ public class ImportController implements RealAccountImporter {
     importDialog.showCloudError();
   }
 
-  public void importSeries() {
-    importSession.setImportSeries(true);
+  public void setReplaceSeries(boolean replace) {
+    importSession.setReplaceSeries(replace);
   }
 
   private static class HasOperationFunctor implements GlobFunctor {

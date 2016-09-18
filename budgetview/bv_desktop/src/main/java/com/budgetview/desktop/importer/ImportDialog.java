@@ -5,8 +5,9 @@ import com.budgetview.desktop.accounts.utils.MonthDay;
 import com.budgetview.desktop.components.PicsouFrame;
 import com.budgetview.desktop.components.dialogs.MessageAndDetailsDialog;
 import com.budgetview.desktop.components.dialogs.PicsouDialog;
-import com.budgetview.desktop.importer.components.ImportSeriesDialog;
+import com.budgetview.desktop.importer.series.ImportSeriesDialog;
 import com.budgetview.desktop.importer.components.RealAccountImporter;
+import com.budgetview.desktop.importer.series.SeriesImporter;
 import com.budgetview.desktop.importer.steps.*;
 import com.budgetview.model.*;
 import com.budgetview.shared.model.BudgetArea;
@@ -294,7 +295,13 @@ public class ImportDialog implements RealAccountImporter, Disposable {
     importAccountsPanel.setImportedAccountToImport(glob);
   }
 
-  public boolean askForSeriesImport(Set<Key> newSeries) {
+  public boolean askForSeriesImport(Set<Key> newSeries, Glob targetAccount) {
+
+    SeriesImporter.updateToKnownSeries(newSeries, targetAccount, controller.getSessionRepository());
+    if (newSeries.isEmpty()) {
+      return true;
+    }
+
     ImportSeriesDialog dialog = new ImportSeriesDialog(ImportDialog.this.dialog,
                                                        controller.getSessionRepository(), localDirectory);
     return dialog.show(newSeries);

@@ -49,7 +49,7 @@ public class ImportCloudRefreshPanel extends AbstractImportStepPanel {
     progressPanel.start();
     cloudService.downloadStatement(repository, new CloudService.DownloadCallback() {
       public void processCompletion(GlobList importedRealAccounts) {
-        controller.importSeries();
+        controller.setReplaceSeries(false);
         controller.importAccounts(importedRealAccounts);
         progressPanel.stop();
       }

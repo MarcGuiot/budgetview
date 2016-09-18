@@ -1,7 +1,9 @@
 package com.budgetview.io.importer;
 
+import com.budgetview.desktop.accounts.utils.MonthDay;
 import com.budgetview.desktop.components.dialogs.PicsouDialog;
 import com.budgetview.desktop.importer.utils.NoOperations;
+import com.budgetview.desktop.time.TimeService;
 import com.budgetview.io.importer.analyzer.TransactionAnalyzer;
 import com.budgetview.io.importer.analyzer.TransactionAnalyzerFactory;
 import com.budgetview.io.importer.utils.DateFormatAnalyzer;
@@ -10,21 +12,21 @@ import com.budgetview.model.*;
 import com.budgetview.shared.model.AccountType;
 import com.budgetview.shared.model.BudgetArea;
 import org.apache.commons.io.output.ByteArrayOutputStream;
-import com.budgetview.desktop.accounts.utils.MonthDay;
-import com.budgetview.desktop.time.TimeService;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.fields.StringField;
 import org.globsframework.model.*;
 import org.globsframework.model.delta.DefaultChangeSet;
 import org.globsframework.model.delta.MutableChangeSet;
-import org.globsframework.model.format.GlobPrinter;
 import org.globsframework.model.repository.LocalGlobRepository;
 import org.globsframework.model.repository.LocalGlobRepositoryBuilder;
 import org.globsframework.model.utils.ChangeSetAggregator;
 import org.globsframework.model.utils.DefaultChangeSetVisitor;
 import org.globsframework.model.utils.GlobFunctor;
 import org.globsframework.model.utils.GlobMatchers;
-import org.globsframework.utils.*;
+import org.globsframework.utils.Files;
+import org.globsframework.utils.Ref;
+import org.globsframework.utils.Strings;
+import org.globsframework.utils.Utils;
 import org.globsframework.utils.collections.MultiMap;
 import org.globsframework.utils.directory.Directory;
 import org.globsframework.utils.exceptions.InvalidData;
@@ -57,6 +59,7 @@ public class ImportSession {
   private ChangeSet changes;
   private Glob realAccount;
   private Boolean importSeries;
+  private boolean replaceSeries = true;
   private Key importKey;
 
   public ImportSession(GlobRepository referenceRepository, Directory directory) {
@@ -78,6 +81,10 @@ public class ImportSession {
 
   public void setImportSeries(boolean importSeries) {
     this.importSeries = importSeries;
+  }
+
+  public void setReplaceSeries(boolean replaceSeries) {
+    this.replaceSeries = false;
   }
 
   public GlobRepository getTempRepository() {
@@ -372,8 +379,8 @@ public class ImportSession {
         value(Transaction.OFX_NAME, TransactionAnalyzerFactory.removeBlankAndToUpercase(importedTransaction.get(ImportedTransaction.OFX_NAME))),
         value(Transaction.QIF_M, TransactionAnalyzerFactory.removeBlankAndToUpercase(importedTransaction.get(ImportedTransaction.QIF_M))),
         value(Transaction.QIF_P, TransactionAnalyzerFactory.removeBlankAndToUpercase(importedTransaction.get(ImportedTransaction.QIF_P))),
-        value(Transaction.SERIES, getSeriesId(importedTransaction)),
-        value(Transaction.SUB_SERIES, getSubSeriesId(importedTransaction)),
+        value(Transaction.SERIES, getSeriesId(importedTransaction, accountId)),
+        value(Transaction.SUB_SERIES, getSubSeriesId(importedTransaction, accountId)),
         value(Transaction.IMPORT_TYPE, importedTransaction.get(ImportedTransaction.IMPORT_TYPE))
       );
       linkImportedTransactionToTransaction.put(importedTransaction.get(ImportedTransaction.ID),
@@ -384,8 +391,8 @@ public class ImportSession {
     return createdTransactions;
   }
 
-  private Integer getSubSeriesId(Glob importedTransaction) {
-    if (shouldImportThisSeries(importedTransaction)) {
+  private Integer getSubSeriesId(Glob importedTransaction, Integer accountId) {
+    if (shouldImportThisSeries(importedTransaction, accountId)) {
       Glob series = localRepository.findLinkTarget(importedTransaction, ImportedTransaction.SERIES);
       Integer subSeries = series.get(ImportedSeries.SUB_SERIES);
       return subSeries != null ? subSeries : ((Integer) Transaction.SUB_SERIES.getDefaultValue());
@@ -395,10 +402,10 @@ public class ImportSession {
     }
   }
 
-  private Integer getSeriesId(Glob importedTransaction) {
-    if (shouldImportThisSeries(importedTransaction)) {
-      Glob series = localRepository.findLinkTarget(importedTransaction, ImportedTransaction.SERIES);
-      Integer seriesId = series.get(ImportedSeries.SERIES);
+  private Integer getSeriesId(Glob importedTransaction, Integer accountId) {
+    if (shouldImportThisSeries(importedTransaction, accountId)) {
+      Glob imported = localRepository.findLinkTarget(importedTransaction, ImportedTransaction.SERIES);
+      Integer seriesId = imported.get(ImportedSeries.SERIES);
       return seriesId != null ? seriesId : ((Integer) Transaction.SERIES.getDefaultValue());
     }
     else {
@@ -406,13 +413,13 @@ public class ImportSession {
     }
   }
 
-  private boolean shouldImportThisSeries(Glob importedTransaction) {
-    Glob series = localRepository.findLinkTarget(importedTransaction, ImportedTransaction.SERIES);
-    return shouldImportSeries() && series != null && series.get(ImportedSeries.BUDGET_AREA) != null;
+  private boolean shouldImportThisSeries(Glob importedTransaction, Integer accountId) {
+    Glob importedSeries = localRepository.findLinkTarget(importedTransaction, ImportedTransaction.SERIES);
+    return shouldImportSeries() && importedSeries != null && importedSeries.get(ImportedSeries.BUDGET_AREA) != null;
   }
 
   private boolean shouldImportSeries() {
-    return importSeries != null && importSeries;
+    return Boolean.TRUE.equals(importSeries);
   }
 
   private Date parseDate(DateFormat dateFormat, Glob glob, StringField dateField) {
@@ -449,6 +456,7 @@ public class ImportSession {
                               value(TransactionImport.IMPORT_DATE, TimeService.getToday()),
                               value(TransactionImport.SOURCE, file.getName()),
                               value(TransactionImport.IS_WITH_SERIES, shouldImportSeries()),
+                              value(TransactionImport.REPLACE_SERIES, replaceSeries),
                               value(TransactionImport.FILE_CONTENT, bytes));
 
     return transactionImport.getKey();

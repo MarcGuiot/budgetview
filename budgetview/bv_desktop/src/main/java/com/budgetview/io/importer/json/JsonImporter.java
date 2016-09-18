@@ -2,12 +2,10 @@ package com.budgetview.io.importer.json;
 
 import com.budgetview.desktop.components.dialogs.PicsouDialog;
 import com.budgetview.desktop.description.Labels;
+import com.budgetview.desktop.series.utils.SeriesMatchers;
 import com.budgetview.io.importer.AccountFileImporter;
 import com.budgetview.io.importer.utils.ImportedTransactionIdGenerator;
-import com.budgetview.model.ImportType;
-import com.budgetview.model.ImportedSeries;
-import com.budgetview.model.ImportedTransaction;
-import com.budgetview.model.RealAccount;
+import com.budgetview.model.*;
 import com.budgetview.shared.cloud.budgea.BudgeaSeriesConverter;
 import com.budgetview.shared.model.BudgetArea;
 import com.budgetview.shared.model.DefaultSeries;
@@ -110,24 +108,45 @@ public class JsonImporter implements AccountFileImporter {
   }
 
   private Integer findOrCreateSeriesId(DefaultSeries defaultSeries, String providerSeriesName, String bankDate, GlobRepository targetRepository) {
+
     GlobList importedSeriesList = new GlobList();
+    String defaultSeriesLabel = Labels.get(defaultSeries);
     if (defaultSeries != null) {
-      String defaultSeriesLabel = Labels.get(defaultSeries);
-      importedSeriesList = targetRepository.getAll(ImportedSeries.TYPE, and(fieldEqualsIgnoreCase(ImportedSeries.NAME, defaultSeriesLabel)));
+      importedSeriesList = targetRepository.getAll(ImportedSeries.TYPE, fieldEqualsIgnoreCase(ImportedSeries.NAME, defaultSeriesLabel));
     }
+    Glob series = null;
+    if (importedSeriesList.isEmpty()) {
+      GlobList seriesList =
+        targetRepository.getAll(Series.TYPE,
+                                and(fieldEqualsIgnoreCase(Series.NAME, defaultSeriesLabel),
+                                    SeriesMatchers.activeInMonth(Month.getMonthId(Dates.parse(bankDate)))));
+      if (!seriesList.isEmpty()) {
+        series = seriesList.getFirst();
+      }
+    }
+
+    String name;
     BudgetArea budgetArea;
-    if (!importedSeriesList.isEmpty()) {
+    if (series != null) {
+      name = series.get(Series.NAME);
+      budgetArea = Series.getBudgetArea(series);
+    }
+    else if (!importedSeriesList.isEmpty()) {
+      name = defaultSeries.getName();
       budgetArea = defaultSeries.getBudgetArea();
     }
     else {
       importedSeriesList = targetRepository.getAll(ImportedSeries.TYPE, and(fieldEqualsIgnoreCase(ImportedSeries.NAME, providerSeriesName)));
+      name = providerSeriesName;
       budgetArea = defaultSeries == null ? BudgetArea.VARIABLE : defaultSeries.getBudgetArea();
     }
+
     if (importedSeriesList.isEmpty()) {
       System.out.println("JsonImporter.findOrCreateSeriesId: creating " + providerSeriesName);
       importedSeriesList = new GlobList(
         targetRepository.create(ImportedSeries.TYPE,
-                                value(ImportedSeries.NAME, providerSeriesName),
+                                value(ImportedSeries.NAME, name),
+                                value(ImportedSeries.SERIES, series != null ? series.get(Series.ID) : null),
                                 value(ImportedSeries.BUDGET_AREA, budgetArea.getId())));
     }
     else {

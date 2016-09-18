@@ -32,6 +32,7 @@ public class CloudChecker {
   }
 
   public void stopServer() throws Exception {
+    cloudServer.resetDatabase();
     cloudServer.stop();
   }
 }

@@ -55,7 +55,7 @@ public enum BudgeaBankFieldType implements GlobConstantContainer {
   }
 
   public ReadOnlyGlob getGlob() {
-    return new ReadOnlyGlob(Provider.TYPE,
+    return new ReadOnlyGlob(TYPE,
                             value(ID, id),
                             value(NAME, name));
   }
