@@ -84,7 +84,7 @@ public class StatementServlet extends HttpServlet {
 
     SqlSelectBuilder selectUpdates =
       connection.startSelect(ProviderUpdate.TYPE, where)
-      .orderBy(ProviderUpdate.ID);
+      .orderBy(ProviderUpdate.DATE);
     GlobAccessor accessor = selectUpdates.retrieveAll();
     SqlSelect query = selectUpdates.getQuery();
     GlobStream stream = query.getStream();

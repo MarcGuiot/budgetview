@@ -30,7 +30,7 @@ public class SqlQueryBuilder implements SqlSelectBuilder {
   private GlobsDatabase globsDB;
   private BlobUpdater blobUpdater;
   private boolean autoClose = true;
-  private IntegerField orderByField;
+  private Field orderByField;
   private Map<Field, SqlAccessor> fieldToAccessor = new HashMap<Field, SqlAccessor>();
 
   public SqlQueryBuilder(Connection connection, GlobType globType, Constraint constraint, GlobsDatabase globsDB, BlobUpdater blobUpdater) {
@@ -182,6 +182,16 @@ public class SqlQueryBuilder implements SqlSelectBuilder {
   }
 
   public SqlSelectBuilder orderBy(IntegerField field) {
+    this.orderByField = field;
+    return this;
+  }
+
+  public SqlSelectBuilder orderBy(DateField field) {
+    this.orderByField = field;
+    return this;
+  }
+
+  public SqlSelectBuilder orderBy(TimeStampField field) {
     this.orderByField = field;
     return this;
   }

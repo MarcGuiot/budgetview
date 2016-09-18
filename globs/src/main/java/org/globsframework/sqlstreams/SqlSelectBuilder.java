@@ -49,7 +49,11 @@ public interface SqlSelectBuilder {
 
   GlobAccessor retrieveAll();
 
-  SqlSelectBuilder orderBy(IntegerField ID);
+  SqlSelectBuilder orderBy(IntegerField field);
+
+  SqlSelectBuilder orderBy(DateField field);
+
+  SqlSelectBuilder orderBy(TimeStampField field);
 
   SqlSelect getQuery();
 

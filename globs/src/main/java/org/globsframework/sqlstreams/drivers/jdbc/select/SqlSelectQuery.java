@@ -2,11 +2,10 @@ package org.globsframework.sqlstreams.drivers.jdbc.select;
 
 import org.globsframework.metamodel.Field;
 import org.globsframework.metamodel.GlobType;
-import org.globsframework.metamodel.fields.IntegerField;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
-import org.globsframework.sqlstreams.SqlSelect;
 import org.globsframework.sqlstreams.GlobsDatabase;
+import org.globsframework.sqlstreams.SqlSelect;
 import org.globsframework.sqlstreams.accessors.SqlAccessor;
 import org.globsframework.sqlstreams.constraints.Constraint;
 import org.globsframework.sqlstreams.drivers.jdbc.AccessorGlobBuilder;
@@ -29,7 +28,7 @@ public class SqlSelectQuery implements SqlSelect {
   private Set<GlobType> globTypes = new HashSet<GlobType>();
   private Constraint constraint;
   private BlobUpdater blobUpdater;
-  private IntegerField orderByField;
+  private Field orderByField;
   private boolean autoClose;
   private Map<Field, SqlAccessor> fieldToAccessorHolder;
   private GlobsDatabase globsDB;
@@ -38,7 +37,7 @@ public class SqlSelectQuery implements SqlSelect {
 
   public SqlSelectQuery(Connection connection, Constraint constraint,
                         Map<Field, SqlAccessor> fieldToAccessorHolder, GlobsDatabase globsDB,
-                        BlobUpdater blobUpdater, IntegerField orderByField, boolean autoClose) {
+                        BlobUpdater blobUpdater, Field orderByField, boolean autoClose) {
     this.constraint = constraint;
     this.blobUpdater = blobUpdater;
     this.orderByField = orderByField;
@@ -59,7 +58,7 @@ public class SqlSelectQuery implements SqlSelect {
     StringPrettyWriter prettyWriter = new StringPrettyWriter();
     prettyWriter.append("select ");
     for (Iterator<Map.Entry<Field, SqlAccessor>> iterator = fieldToAccessorHolder.entrySet().iterator();
-         iterator.hasNext();) {
+         iterator.hasNext(); ) {
       Map.Entry<Field, SqlAccessor> fieldAndAccessor = iterator.next();
       fieldAndAccessor.getValue().setIndex(++index);
       GlobType globType = fieldAndAccessor.getKey().getGlobType();
@@ -77,8 +76,8 @@ public class SqlSelectQuery implements SqlSelect {
       constraint.visit(new WhereClauseConstraintVisitor(where, globsDB, globTypes));
     }
     prettyWriter.append(" from ");
-    for (Iterator it = globTypes.iterator(); it.hasNext();) {
-      GlobType globType = (GlobType)it.next();
+    for (Iterator it = globTypes.iterator(); it.hasNext(); ) {
+      GlobType globType = (GlobType) it.next();
       prettyWriter.append(globsDB.getTableName(globType))
         .appendIf(", ", it.hasNext());
     }
