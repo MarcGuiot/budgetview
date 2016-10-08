@@ -41,7 +41,12 @@ public class CloudIntroPanel implements Disposable {
 
     builder.add("openCloudSynchro", new AbstractAction("Goto synchro") {
       public void actionPerformed(ActionEvent e) {
-        controller.showCloudBankSelection();
+        if (CloudDesktopUser.isTrue(CloudDesktopUser.REGISTERED, repository)) {
+          controller.showCloudBankSelection();
+        }
+        else {
+          controller.showCloudSignup();
+        }
       }
     });
 
@@ -51,7 +56,7 @@ public class CloudIntroPanel implements Disposable {
       }
     };
     builder.add("refreshCloud", refreshAction);
-    BooleanFieldListener listener = BooleanFieldListener.install(CloudDesktopUser.KEY, CloudDesktopUser.ACTIVE, repository, new BooleanListener() {
+    BooleanFieldListener listener = BooleanFieldListener.install(CloudDesktopUser.KEY, CloudDesktopUser.SYNCHRO_ENABLED, repository, new BooleanListener() {
       public void apply(boolean active) {
         refreshAction.setEnabled(active);
       }

@@ -44,11 +44,7 @@ public class LicenseServer {
     config = new ConfigService(args);
     Log4J.init(config);
     logger.info("init server");
-    mailer = new Mailer();
-  }
-
-  public void setMailPort(String mailHost, int mailPort) {
-    mailer.setPort(mailHost, mailPort);
+    mailer = new Mailer(config);
   }
 
   public void init() throws Exception {

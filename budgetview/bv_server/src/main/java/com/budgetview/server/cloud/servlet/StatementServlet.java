@@ -4,6 +4,7 @@ import com.budgetview.server.cloud.model.ProviderAccount;
 import com.budgetview.server.cloud.model.ProviderTransaction;
 import com.budgetview.server.cloud.model.ProviderUpdate;
 import com.budgetview.server.cloud.persistence.CloudSerializer;
+import com.budgetview.server.cloud.services.AuthenticationService;
 import com.budgetview.shared.cloud.CloudConstants;
 import com.budgetview.shared.model.Provider;
 import org.apache.log4j.Logger;

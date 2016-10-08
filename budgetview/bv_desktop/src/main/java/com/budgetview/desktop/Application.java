@@ -1,6 +1,6 @@
 package com.budgetview.desktop;
 
-import com.budgetview.client.mail.MailService;
+import com.budgetview.client.mail.ServerMailingService;
 import com.budgetview.desktop.accounts.utils.AccountPositionNotificationHandler;
 import com.budgetview.desktop.addons.AddOnService;
 import com.budgetview.desktop.cloud.CloudService;
@@ -314,7 +314,7 @@ public class Application {
     wrapper.add(PasswordBasedEncryptor.class, new RedirectPasswordBasedEncryptor());
     wrapper.add(createConfigService());
     wrapper.add(new MobileService());
-    wrapper.add(new MailService());
+    wrapper.add(new ServerMailingService());
     wrapper.add(new CloudService());
     wrapper.add(PrinterService.class, new DefaultPrinterService());
     wrapper.add(new AddOnService());

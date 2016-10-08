@@ -344,6 +344,14 @@ public class ImportController implements RealAccountImporter {
                                                   realAccount.get(RealAccount.SYNCHRO)));
   }
 
+  public void showCloudSignup() {
+    importDialog.showCloudSignup();
+  }
+
+  public void showCloudValidation(String email) {
+    importDialog.showCloudValidation(email);
+  }
+
   public void showCloudBankSelection() {
     importDialog.showCloudBankSelection();
   }

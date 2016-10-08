@@ -1,7 +1,7 @@
 package com.budgetview.client.mail;
 
 import com.budgetview.client.ConnectionStatus;
-import com.budgetview.client.http.Http;
+import com.budgetview.shared.http.Http;
 import com.budgetview.shared.license.LicenseConstants;
 import com.budgetview.shared.mobile.MobileConstants;
 import com.budgetview.utils.Lang;
@@ -12,7 +12,7 @@ import org.globsframework.utils.Log;
 import javax.swing.*;
 import java.io.IOException;
 
-public class MailService {
+public class ServerMailingService {
   synchronized public void sendMail(final String toMail, final String fromMail,
                                     final String title, final String content,
                                     final Listener listener, final GlobRepository repository) {
@@ -62,11 +62,11 @@ public class MailService {
         Log.write("Send mail ok");
       }
       catch (final Exception e) {
-        Log.write("in send mail", e);
+        Log.write("Send mail raised exception", e);
         ConnectionStatus.checkException(repository, e);
         SwingUtilities.invokeLater(new Runnable() {
           public void run() {
-            Log.write("mail not sent", e);
+            Log.write("Mail not sent", e);
             listener.sendFailed(fromMail, title, content);
           }
         });
@@ -86,7 +86,7 @@ public class MailService {
       else {
         SwingUtilities.invokeLater(new Runnable() {
           public void run() {
-            Log.write("Mail not sent with error code " + statusCode);
+            Log.write("Mail not sent with error code " + statusCode + " for " + url + " with content: " + content);
             listener.sendFailed(fromMail, title, content);
           }
         });
@@ -96,10 +96,10 @@ public class MailService {
     private Http.Post createPost(String url) {
       return Http.post(url)
         .setHeader(MobileConstants.HEADER_LANG, Lang.get("lang"))
-        .setHeader(LicenseConstants.HEADER_MAIL, fromMail)
-        .setHeader(LicenseConstants.HEADER_TO_MAIL, toMail)
+        .setHeader(LicenseConstants.HEADER_MAIL_FROM, fromMail)
+        .setHeader(LicenseConstants.HEADER_MAIL_TO, toMail)
         .setHeader(LicenseConstants.HEADER_MAIL_TITLE, title)
-        .setUtf8(content);
+        .setUtf8Content(content);
     }
   }
 

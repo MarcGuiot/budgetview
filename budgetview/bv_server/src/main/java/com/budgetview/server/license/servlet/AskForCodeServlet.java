@@ -35,7 +35,7 @@ public class AskForCodeServlet extends HttpServlet {
   protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
     req.setCharacterEncoding("UTF-8");
     resp.setCharacterEncoding("UTF-8");
-    String mailTo = req.getHeader(LicenseConstants.HEADER_MAIL);
+    String mailTo = req.getHeader(LicenseConstants.HEADER_MAIL_FROM);
     if (Strings.isNullOrEmpty(mailTo)) {
       logger.info("Bad ask for code from " + (mailTo == null ? "<no mail>" : mailTo));
       resp.setHeader(LicenseConstants.HEADER_STATUS, LicenseConstants.HEADER_MAIL_UNKNOWN);

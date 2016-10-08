@@ -16,6 +16,8 @@ public interface SqlCreateBuilder {
 
   SqlCreateBuilder set(StringField field, String value);
 
+  SqlCreateBuilder set(BooleanField field, Boolean value);
+
   SqlCreateBuilder set(LongField field, Long value);
 
   SqlCreateBuilder set(IntegerField field, IntegerAccessor accessor);

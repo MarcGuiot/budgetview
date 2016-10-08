@@ -11,15 +11,7 @@ public class CloudBankConnectionChecker extends ViewChecker {
 
   public CloudBankConnectionChecker(Window mainWindow) {
     super(mainWindow);
-    assertThat(new Assertion() {
-      public void check() {
-        System.out.println("CloudBankConnectionChecker.check");
-        System.out.flush();
-        if (!mainWindow.getPanel("importCloudConnectionPanel").isVisible().isTrue()) {
-          UISpecAssert.fail();
-        }
-      }
-    }, 5000);
+    checkPanelShown("importCloudBankConnectionPanel");
   }
 
   public CloudBankConnectionChecker setChoice(String label, String item) {

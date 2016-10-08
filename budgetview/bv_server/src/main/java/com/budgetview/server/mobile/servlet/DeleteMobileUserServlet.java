@@ -28,7 +28,7 @@ public class DeleteMobileUserServlet extends AbstractHttpServlet {
 
   protected void action(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) throws Exception {
     String lang = httpServletRequest.getHeader(MobileConstants.HEADER_LANG);
-    String mail = URLDecoder.decode(httpServletRequest.getHeader(LicenseConstants.HEADER_MAIL), "UTF-8");
+    String mail = URLDecoder.decode(httpServletRequest.getHeader(LicenseConstants.HEADER_MAIL_FROM), "UTF-8");
     String codedMail = httpServletRequest.getHeader(LicenseConstants.CODING);
     String sha1Mail = httpServletRequest.getHeader(MobileConstants.CRYPTED_INFO);
     logger.info("receive delete for " + mail + " " + sha1Mail);

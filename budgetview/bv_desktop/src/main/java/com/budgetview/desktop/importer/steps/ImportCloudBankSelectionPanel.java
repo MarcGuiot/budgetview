@@ -89,7 +89,7 @@ public class ImportCloudBankSelectionPanel extends AbstractImportStepPanel imple
             progressPanel.stop();
           }
 
-          public void processError() {
+          public void processError(Exception e) {
             controller.showCloudError();
             progressPanel.stop();
           }

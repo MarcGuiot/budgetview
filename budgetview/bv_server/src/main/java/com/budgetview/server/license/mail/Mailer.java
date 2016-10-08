@@ -1,5 +1,6 @@
 package com.budgetview.server.license.mail;
 
+import com.budgetview.server.config.ConfigService;
 import org.apache.log4j.Logger;
 import com.budgetview.server.utils.Lang;
 
@@ -28,30 +29,28 @@ public class Mailer {
   private Map<String, Long> currentIdForMail = new ConcurrentHashMap<String, Long>();
   private Thread thread = new ReSendMailThread(pendingMails);
 
-  public Mailer() {
+  public Mailer(ConfigService config) {
+    this.host = config.get("bv.email.host");
+    this.port = config.getInt("bv.email.port");
+    logger.info("Mailer started for: " + host + ":" + port);
     thread.start();
   }
 
-  public void setPort(String host, int port) {
-    this.host = host;
-    this.port = port;
-  }
-
-  public boolean sendRequestLicence(String lang, String activationCode, final String mail) {
+  public boolean sendRequestLicence(String lang, String activationCode, final String sendTo) {
     final String subject1 = Lang.get("resend" + ".license.subject", lang);
-    final String content1 = Lang.get("resend" + ".license.message", lang, activationCode, mail);
-    return doSend(Mailbox.SUPPORT, subject1, content1, Mailbox.SUPPORT.getEmail(), mail);
+    final String content1 = Lang.get("resend" + ".license.message", lang, activationCode, sendTo);
+    return doSend(Mailbox.SUPPORT, subject1, content1, Mailbox.SUPPORT.getEmail(), sendTo);
   }
 
-  public boolean reSendExistingLicenseOnError(String lang, String activationCode, final String mail) {
+  public boolean reSendExistingLicenseOnError(String lang, String activationCode, final String sendTo) {
     return doSend(Mailbox.SUPPORT, Lang.get("resend.error" + ".license.subject", lang),
-                  Lang.get("resend.error" + ".license.message", lang, activationCode, mail),
-                  Mailbox.SUPPORT.getEmail(), mail);
+                  Lang.get("resend.error" + ".license.message", lang, activationCode, sendTo),
+                  Mailbox.SUPPORT.getEmail(), sendTo);
   }
 
-  public boolean sendNewLicense(String mail, String code, String lang) {
-    return doSend(Mailbox.SUPPORT, Lang.get("new.license.subject", lang), Lang.get("new.license.message", lang, code, mail),
-                  Mailbox.SUPPORT.getEmail(), mail);
+  public boolean sendNewLicense(String sendTo, String code, String lang) {
+    return doSend(Mailbox.SUPPORT, Lang.get("new.license.subject", lang), Lang.get("new.license.message", lang, code, sendTo),
+                  Mailbox.SUPPORT.getEmail(), sendTo);
   }
 
   public boolean sendToUs(Mailbox mailbox, String fromMail, String title, String content) {
@@ -59,19 +58,24 @@ public class Mailer {
                   fromMail, mailbox.getEmail());
   }
 
-  public boolean sendNewMobileAccount(String mail, String lang, String url) {
-    return doSend(Mailbox.SUPPORT, Lang.get("mobile.new.subject", lang), Lang.get("mobile.new.message", lang, url, mail),
-                  Mailbox.SUPPORT.getEmail(), mail);
+  public boolean sendNewMobileAccount(String sendTo, String lang, String url) {
+    return doSend(Mailbox.SUPPORT, Lang.get("mobile.new.subject", lang), Lang.get("mobile.new.message", lang, url, sendTo),
+                  Mailbox.SUPPORT.getEmail(), sendTo);
   }
 
-  public boolean sendFromMobileToUseBV(String mailTo, String lang) {
+  public boolean sendFromMobileToUseBV(String sendTo, String lang) {
     return doSend(Mailbox.SUPPORT, Lang.get("mobile.mail.subject", lang), Lang.get("mobile.mail.message", lang),
-                  Mailbox.SUPPORT.getEmail(), mailTo);
+                  Mailbox.SUPPORT.getEmail(), sendTo);
   }
 
-  public boolean sendAndroidVersion(String mail, String lang) {
+  public boolean sendAndroidVersion(String sendTo, String lang) {
     return doSend(Mailbox.SUPPORT, Lang.get("mobile.mail.download.subject", lang), Lang.get("mobile.mail.download.message", lang),
-                  Mailbox.SUPPORT.getEmail(), mail);
+                  Mailbox.SUPPORT.getEmail(), sendTo);
+  }
+
+  public boolean sendCloudEmailAddressVerification(String sendTo, String lang, String url) throws MessagingException {
+    return doSend(Mailbox.SUPPORT, Lang.get("cloud.verification.subject", lang), Lang.get("cloud.verification.message", lang, url),
+                  Mailbox.SUPPORT.getEmail(), sendTo);
   }
 
   public void sendMail(Mailbox mailbox, String sendTo, String replyTo, String subject, String content,
@@ -105,7 +109,7 @@ public class Mailer {
       tr.sendMessage(message, message.getAllRecipients());
     }
     tr.close();
-    logger.info("mail sent : " + sendTo + "  " + subject);
+    logger.info("Mail sent to " + sendTo + ":  " + subject);
   }
 
   private void sendLater(MailToSend email) {

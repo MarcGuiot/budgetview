@@ -2,11 +2,17 @@ package com.budgetview.server.license.checkers;
 
 import com.dumbster.smtp.SimpleSmtpServer;
 import com.dumbster.smtp.SmtpMessage;
-import junit.framework.Assert;
+import org.apache.log4j.Logger;
+import org.junit.Assert;
 
 import java.util.Iterator;
 
 public class MailServerChecker {
+
+  private Logger logger = Logger.getLogger("MailServerChecker");
+
+  public static final int PORT = 2500;
+
   protected SimpleSmtpServer mailServer;
   protected Thread mailThread;
   private boolean started;
@@ -15,9 +21,10 @@ public class MailServerChecker {
   }
 
   public void start() {
-    mailServer = new SimpleSmtpServer(2500);
+    mailServer = new SimpleSmtpServer(PORT);
     mailThread = new Thread() {
       public void run() {
+        logger.info("Starting mail server on port 2500");
         mailServer.run();
       }
     };
@@ -51,7 +58,7 @@ public class MailServerChecker {
       while (!receivedEmail.hasNext()) {
         mailServer.wait(800);
         if (System.currentTimeMillis() > end) {
-          Assert.fail("no mail received");
+          Assert.fail("No mail received");
         }
         receivedEmail = mailServer.getReceivedEmail();
       }
@@ -62,7 +69,7 @@ public class MailServerChecker {
         return new Email(message);
       }
       else {
-        Assert.fail("no mail received");
+        Assert.fail("No mail received");
       }
     }
     return null;
@@ -84,6 +91,7 @@ public class MailServerChecker {
       mailThread.join();
     }
     mailThread = null;
+    logger.info("Stopped mail server");
   }
 
   public void dispose() throws InterruptedException {

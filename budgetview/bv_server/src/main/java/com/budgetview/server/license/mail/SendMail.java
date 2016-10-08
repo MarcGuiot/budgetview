@@ -1,5 +1,7 @@
 package com.budgetview.server.license.mail;
 
+import com.budgetview.server.config.ConfigService;
+
 import javax.mail.MessagingException;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -34,8 +36,14 @@ public class SendMail {
     }
   }
 
-  public static void sendMail(String subject, String destination, String content) throws MessagingException {
-    Mailer mailer = new Mailer();
+  public static void sendMail(String subject, String destination, String content) throws MessagingException, IOException {
+
+    ConfigService config = ConfigService.build()
+      .set("bv.email.host", "ns0.ovh.net")
+      .set("bv.email.port", 587)
+      .get();
+
+    Mailer mailer = new Mailer(config);
     mailer.sendMail(Mailbox.ADMIN, destination, "nobody", subject, content, "UTF-8", "text");
   }
 

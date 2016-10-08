@@ -70,7 +70,7 @@ public class RequestForConfigServlet extends HttpServlet {
     resp.setCharacterEncoding("UTF-8");
     String ip = req.getRemoteAddr();
     String repoId = req.getHeader(LicenseConstants.HEADER_REPO_ID).trim();
-    String mail = req.getHeader(LicenseConstants.HEADER_MAIL);
+    String mail = req.getHeader(LicenseConstants.HEADER_MAIL_FROM);
     String activationCode = req.getHeader(LicenseConstants.HEADER_CODE);
     String count = req.getHeader(LicenseConstants.HEADER_COUNT);
     String lang = req.getHeader(MobileConstants.HEADER_LANG);

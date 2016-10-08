@@ -5,9 +5,9 @@
   <styleImport file="/layout/importexport/components/importDialogStyles.splits"/>
 
 
-  <column styleClass="dialog" preferredSize="(600,710)" name="importCloudBankConnectionPanel">
+  <column styleClass="dialog" preferredSize="(600,710)" name="importCloudSignupPanel">
 
-    <label text="$import.cloud.connection.title" name="title" styleClass="title"/>
+    <label text="$import.cloud.signup.title" name="title" styleClass="title"/>
 
     <column styleClass="innerDialog">
       <column styleClass="innerDialogContent">
@@ -15,14 +15,11 @@
         <scrollPane marginTop="20" forceVerticalScroll="true">
           <column margin="20">
 
-            <repeat ref="fields" layout="verticalGrid">
-              <label ref="label"/>
-              <component ref="editor"/>
-            </repeat>
+            <textField ref="email"/>
+
+            <label ref="error" styleClass="errorMessage"/>
 
             <filler fill="vertical"/>
-
-            <component ref="progressPanel" fill="none" margin="10" anchor="center" weightX="0.1"/>
 
           </column>
         </scrollPane>

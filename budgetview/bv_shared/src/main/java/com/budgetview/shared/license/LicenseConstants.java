@@ -12,17 +12,17 @@ public class LicenseConstants {
   public static final String FTP_SERVER_URL = "ftp://ftpjar.mybudgetview.fr";
 
   public static final String APPNAME = "budgetview";
-  public static final String FTP_URL_PROPERTY = APPNAME + ".license.ftp.url";
-  public static final String LICENSE_URL_PROPERTY = APPNAME + ".license.url";
+  public static final String FTP_URL_PROPERTY = "bv.license.ftp.url";
+  public static final String LICENSE_URL_PROPERTY = "bv.license.url";
 
-  public static final String HEADER_MAIL = "mail";
+  public static final String HEADER_MAIL_FROM = "mail";
   public static final String REQUEST_FOR_REGISTER = "/register";
   public static final String NEW_USER = "/newUser";
   public static final String REQUEST_FOR_CONFIG = "/requestForConfig";
   public static final String REQUEST_FOR_MAIL = "/mailTo";
   public static final String REQUEST_SEND_MAIL = "/sendMailToUs";
   public static final String CODING = "coding";
-  public static final String HEADER_TO_MAIL = "toMail";
+  public static final String HEADER_MAIL_TO = "toMail";
   public static final String HEADER_MAIL_TITLE = "title";
   public static final String HEADER_MAIL_CONTENT = "content";
   public static final String HEADER_SIGNATURE = "signature";

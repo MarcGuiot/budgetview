@@ -3,7 +3,7 @@ package com.budgetview.desktop.userconfig;
 import com.budgetview.bank.BankPluginService;
 import com.budgetview.client.ConnectionStatus;
 import com.budgetview.client.DataAccess;
-import com.budgetview.client.http.Http;
+import com.budgetview.shared.http.Http;
 import com.budgetview.desktop.userconfig.download.ConfigReceivedCallback;
 import com.budgetview.desktop.userconfig.download.DownloadThread;
 import com.budgetview.desktop.userconfig.download.JarReceivedCallback;
@@ -62,6 +62,10 @@ public class UserConfigService {
 
   synchronized public boolean loadConfigFileFromLastestJar(Directory directory, GlobRepository repository) {
     return loadConfig(directory, repository);
+  }
+
+  private byte[] getRepoId() {
+    return repoId;
   }
 
   synchronized public boolean retrieveUserStatus(final byte[] repoId, final long launchCount, byte[] mailInBytes,
@@ -137,7 +141,7 @@ public class UserConfigService {
     Utils.endRemove();
     String url = LicenseConstants.getServerUrl(LicenseConstants.REQUEST_FOR_REGISTER);
     Http.Post postRequest = Http.utf8Post(url)
-      .setHeader(LicenseConstants.HEADER_MAIL, mail)
+      .setHeader(LicenseConstants.HEADER_MAIL_FROM, mail)
       .setHeader(LicenseConstants.HEADER_CODE, code)
       .setHeader(LicenseConstants.HEADER_REPO_ID, Encoder.byteToString(repoId))
       .setHeader(MobileConstants.HEADER_LANG, Lang.get("lang"));
@@ -242,7 +246,7 @@ public class UserConfigService {
   // return a translated message
   synchronized public String sendNewCodeRequest(String mail) {
     Http.Post postRequest = Http.utf8Post(LicenseConstants.getServerUrl(LicenseConstants.REQUEST_FOR_MAIL))
-      .setHeader(LicenseConstants.HEADER_MAIL, mail)
+      .setHeader(LicenseConstants.HEADER_MAIL_FROM, mail)
       .setHeader(MobileConstants.HEADER_LANG, Lang.get("lang"));
     try {
       HttpResponse response = postRequest.executeWithRetry();
@@ -292,7 +296,7 @@ public class UserConfigService {
 
     if (signature != null && signature.length() > 1 && mail != null && activationCode != null) {
       postRequest
-        .setHeader(LicenseConstants.HEADER_MAIL, mail)
+        .setHeader(LicenseConstants.HEADER_MAIL_FROM, mail)
         .setHeader(LicenseConstants.HEADER_SIGNATURE, signature)
         .setHeader(LicenseConstants.HEADER_CODE, activationCode)
         .setHeader(LicenseConstants.HEADER_COUNT, Long.toString(launchCount));

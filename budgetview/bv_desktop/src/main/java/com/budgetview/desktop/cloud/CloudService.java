@@ -41,8 +41,16 @@ public class CloudService {
   public interface Callback {
     void processCompletion();
 
-    void processError();
+    void processError(Exception e);
 
+  }
+
+  public interface ValidationCallback {
+    void processCompletion();
+
+    void processInvalidCode();
+
+    void processError(Exception e);
   }
 
   public interface DownloadCallback {
@@ -52,6 +60,48 @@ public class CloudService {
 
     void processError(Exception e);
   }
+
+  public void signup(String email, GlobRepository repository, Callback callback) {
+    Thread thread = new Thread(new Runnable() {
+      public void run() {
+        try {
+          cloudAPI.signup(email);
+          callback.processCompletion();
+        }
+        catch (Exception e) {
+          Log.write("Error during signup", e);
+          callback.processError(e);
+        }
+      }
+    });
+    thread.start();
+  }
+
+  public void validate(String email, String code, GlobRepository repository, ValidationCallback callback) {
+    Thread thread = new Thread(new Runnable() {
+      public void run() {
+        try {
+          JSONObject result = cloudAPI.validate(email, code);
+          String status = result.getString("status");
+          if ("ok".equalsIgnoreCase(status)) {
+            callback.processCompletion();
+          }
+          else if ("invalid".equalsIgnoreCase(status)) {
+            callback.processInvalidCode();
+          }
+          else {
+            callback.processError(null);
+          }
+        }
+        catch (Exception e) {
+          Log.write("Error validating email", e);
+          callback.processError(e);
+        }
+      }
+    });
+    thread.start();
+  }
+
 
   public void updateBankList(GlobRepository repository, Callback callback) {
 
@@ -90,7 +140,7 @@ public class CloudService {
     }
     catch (Exception e) {
       Log.write("Error retrieving bank list", e);
-      callback.processError();
+      callback.processError(e);
     }
     finally {
       repository.completeChangeSet();
@@ -139,7 +189,7 @@ public class CloudService {
     }
     catch (Exception e) {
       Log.write("Error retrieving bank fields", e);
-      callback.processError();
+      callback.processError(e);
     }
     finally {
       repository.completeChangeSet();
@@ -161,7 +211,7 @@ public class CloudService {
           cloudAPI.addConnection(___TEST_EMAIL___TO_BE_REPLACED____, budgeaAPI.getToken(), budgeaAPI.getUserId());
 
           repository.findOrCreate(CloudDesktopUser.KEY);
-          repository.update(CloudDesktopUser.KEY, CloudDesktopUser.ACTIVE, true);
+          repository.update(CloudDesktopUser.KEY, CloudDesktopUser.SYNCHRO_ENABLED, true);
 
           downloadInitialStatement(repository, callback);
         }

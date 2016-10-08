@@ -55,7 +55,7 @@ public class AskMailTest extends ConnectedTestCase {
     HttpPost postMethod = new HttpPost("http://localhost:" + httpPort + "/mailTo");
     postMethod.getParams().setParameter(CoreProtocolPNames.HTTP_CONTENT_CHARSET, "UTF-8");
     postMethod.getParams().setParameter(CoreProtocolPNames.HTTP_ELEMENT_CHARSET, "UTF-8");
-    postMethod.setHeader(LicenseConstants.HEADER_MAIL, "monPremierClient@pirate.du");
+    postMethod.setHeader(LicenseConstants.HEADER_MAIL_FROM, "monPremierClient@pirate.du");
     postMethod.setHeader(MobileConstants.HEADER_LANG, lang);
     return client.execute(postMethod);
   }
@@ -65,7 +65,7 @@ public class AskMailTest extends ConnectedTestCase {
     String badMail = "monPremierClient@pirate";
     postMethod.getParams().setParameter(CoreProtocolPNames.HTTP_CONTENT_CHARSET, "UTF-8");
     postMethod.getParams().setParameter(CoreProtocolPNames.HTTP_ELEMENT_CHARSET, "UTF-8");
-    postMethod.setHeader(LicenseConstants.HEADER_MAIL, badMail);
+    postMethod.setHeader(LicenseConstants.HEADER_MAIL_FROM, badMail);
     postMethod.setHeader(MobileConstants.HEADER_LANG, "en");
     HttpResponse response = client.execute(postMethod);
     Header header = response.getFirstHeader(LicenseConstants.HEADER_STATUS);

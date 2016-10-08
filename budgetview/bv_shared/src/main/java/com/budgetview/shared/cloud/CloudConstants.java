@@ -4,6 +4,9 @@ import org.globsframework.utils.Utils;
 
 public class CloudConstants {
   public static final String EMAIL = "email";
+  public static final String LANG = "lang";
+  public static final String CODE = "code";
+
   public static final String BUDGEA_TOKEN = "budgea_token";
   public static final String BUDGEA_USER_ID = "budgea_user_id";
 

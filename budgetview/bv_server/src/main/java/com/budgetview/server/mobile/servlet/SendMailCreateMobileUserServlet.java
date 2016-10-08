@@ -30,7 +30,7 @@ public class SendMailCreateMobileUserServlet extends AbstractHttpServlet {
 
   protected void action(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) throws Exception {
     String lang = httpServletRequest.getHeader(MobileConstants.HEADER_LANG);
-    String mail = URLDecoder.decode(httpServletRequest.getHeader(LicenseConstants.HEADER_MAIL), "UTF-8");
+    String mail = URLDecoder.decode(httpServletRequest.getHeader(LicenseConstants.HEADER_MAIL_FROM), "UTF-8");
     String codedMail = httpServletRequest.getHeader(LicenseConstants.CODING);
     String sha1Mail = httpServletRequest.getHeader(MobileConstants.CRYPTED_INFO);
 
@@ -52,7 +52,7 @@ public class SendMailCreateMobileUserServlet extends AbstractHttpServlet {
       logger.info(content + (mkdir? " created " : " not created"));
     }
     URIBuilder builder = new URIBuilder("http://www.mybudgetview.fr:" + port + MobileConstants.CREATE_MOBILE_USER);
-    builder.addParameter(LicenseConstants.HEADER_MAIL, URLEncoder.encode(mail, "UTF-8"));
+    builder.addParameter(LicenseConstants.HEADER_MAIL_FROM, URLEncoder.encode(mail, "UTF-8"));
     builder.addParameter(MobileConstants.HEADER_LANG, lang);
     builder.addParameter(LicenseConstants.CODING, codedMail);
     builder.addParameter(MobileConstants.CRYPTED_INFO, sha1Mail);

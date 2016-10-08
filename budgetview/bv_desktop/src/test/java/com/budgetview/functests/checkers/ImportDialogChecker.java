@@ -228,7 +228,12 @@ public class ImportDialogChecker extends GuiChecker {
     return this;
   }
 
-  public CloudBankSelectionChecker selectCloud() {
+  public CloudSignupChecker selectCloudForNewUser() {
+    dialog.getPanel("cloudIntro").getButton("openCloudSynchro").click();
+    return new CloudSignupChecker(dialog);
+  }
+
+  public CloudBankSelectionChecker selectCloudForExistingUser() {
     dialog.getPanel("cloudIntro").getButton("openCloudSynchro").click();
     return new CloudBankSelectionChecker(dialog);
   }

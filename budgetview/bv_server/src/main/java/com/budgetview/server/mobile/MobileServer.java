@@ -62,7 +62,7 @@ public class MobileServer {
   private Directory createDirectory() throws Exception {
     Directory directory = new DefaultDirectory();
     directory.add(config);
-    directory.add(new Mailer());
+    directory.add(new Mailer(config));
     directory.add(new VersionService());
     return directory;
   }

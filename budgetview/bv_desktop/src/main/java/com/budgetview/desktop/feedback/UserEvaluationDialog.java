@@ -1,6 +1,6 @@
 package com.budgetview.desktop.feedback;
 
-import com.budgetview.client.mail.MailService;
+import com.budgetview.client.mail.ServerMailingService;
 import com.budgetview.desktop.Application;
 import com.budgetview.desktop.components.dialogs.CancelAction;
 import com.budgetview.desktop.components.dialogs.PicsouDialog;
@@ -146,11 +146,11 @@ public class UserEvaluationDialog {
     public void actionPerformed(ActionEvent e) {
       sendingState.setVisible(true);
       sendingState.setIndeterminate(true);
-      directory.get(MailService.class).sendMail(LicenseConstants.ADMIN_EMAIL,
-                                                emailField.getText(),
-                                                getHeaderText(),
-                                                getMessageText(),
-                                                new MailService.Listener() {
+      directory.get(ServerMailingService.class).sendMail(LicenseConstants.ADMIN_EMAIL,
+                                                         emailField.getText(),
+                                                         getHeaderText(),
+                                                         getMessageText(),
+                                                         new ServerMailingService.Listener() {
                                                     public void sent(String mail, String title, String content) {
                                                       messageSent();
                                                       Log.write("Mail sent from " + mail + " - title : " + title + "\n" + content);
@@ -161,7 +161,7 @@ public class UserEvaluationDialog {
                                                       Log.write("Failed to send mail from " + mail + " - title : " + title + "\n" + content);
                                                     }
                                                   },
-                                                repository);
+                                                         repository);
       schedule = new WaitClosedThread(dialog);
       schedule.setDaemon(true);
       schedule.start();

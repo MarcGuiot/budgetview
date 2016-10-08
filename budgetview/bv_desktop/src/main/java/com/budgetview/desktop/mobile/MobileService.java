@@ -1,7 +1,7 @@
 package com.budgetview.desktop.mobile;
 
 import com.budgetview.client.ConnectionStatus;
-import com.budgetview.client.http.Http;
+import com.budgetview.shared.http.Http;
 import com.budgetview.shared.encryption.PasswordEncryption;
 import com.budgetview.shared.encryption.MD5PasswordBasedEncryptor;
 import com.budgetview.shared.license.LicenseConstants;
@@ -67,7 +67,7 @@ public class MobileService {
 
     return Http.utf8Post(url)
       .setHeader(MobileConstants.HEADER_LANG, Lang.get("lang"))
-      .setHeader(LicenseConstants.HEADER_MAIL, URLEncoder.encode(mail, "UTF-8"))
+      .setHeader(LicenseConstants.HEADER_MAIL_FROM, URLEncoder.encode(mail, "UTF-8"))
       .setHeader(LicenseConstants.CODING, URLEncoder.encode(new String(localKey), "UTF-8"))
       .setHeader(MobileConstants.CRYPTED_INFO, URLEncoder.encode(sha1Mail, "UTF-8"));
   }
@@ -113,7 +113,7 @@ public class MobileService {
       String sha1Mail = PasswordEncryption.encodeSHA1AndHex(encryptedMail);
       postRequest
         .setHeader(MobileConstants.HEADER_LANG, Lang.get("lang"))
-        .setHeader(LicenseConstants.HEADER_MAIL, URLEncoder.encode(mail, "UTF-8"))
+        .setHeader(LicenseConstants.HEADER_MAIL_FROM, URLEncoder.encode(mail, "UTF-8"))
         .setHeader(MobileConstants.CRYPTED_INFO, URLEncoder.encode(sha1Mail, "UTF-8"))
         .setHeader(MobileConstants.MAJOR_VERSION_NAME, Integer.toString(MobileModel.MAJOR_VERSION))
         .setHeader(MobileConstants.MINOR_VERSION_NAME, Integer.toString(MobileModel.MINOR_VERSION));

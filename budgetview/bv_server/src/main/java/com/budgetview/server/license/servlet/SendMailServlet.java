@@ -16,38 +16,39 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 public class SendMailServlet extends HttpServlet {
-  static Logger logger = Logger.getLogger("sendMail");
+  static Logger logger = Logger.getLogger("/sendMailToUs");
   private Mailer mailer;
 
   public SendMailServlet(Directory directory) {
     mailer = directory.get(Mailer.class);
   }
 
-  protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+  protected void doPost(HttpServletRequest request, HttpServletResponse resp) throws ServletException, IOException {
     try {
-      req.setCharacterEncoding("UTF-8");
+      request.setCharacterEncoding("UTF-8");
       resp.setCharacterEncoding("UTF-8");
-      String mailTo = req.getHeader(LicenseConstants.HEADER_TO_MAIL);
+
+      String mailTo = request.getHeader(LicenseConstants.HEADER_MAIL_TO);
       if (Strings.isNullOrEmpty(mailTo)) {
-        logger.info("sendMail: missing mail address " + (mailTo == null ? "<no email>" : mailTo));
+        logger.info("Missing mail address: " + (mailTo == null ? "<no email>" : mailTo));
         resp.setStatus(HttpServletResponse.SC_NOT_FOUND);
         return;
       }
 
-      String mailFrom = req.getHeader(LicenseConstants.HEADER_MAIL);
-      String title = req.getHeader(LicenseConstants.HEADER_MAIL_TITLE);
-      String lang = req.getHeader(MobileConstants.HEADER_LANG);
-      String header = req.getHeader(LicenseConstants.HEADER_MAIL_CONTENT);
+      String mailFrom = request.getHeader(LicenseConstants.HEADER_MAIL_FROM);
+      String title = request.getHeader(LicenseConstants.HEADER_MAIL_TITLE);
+      String lang = request.getHeader(MobileConstants.HEADER_LANG);
+      String header = request.getHeader(LicenseConstants.HEADER_MAIL_CONTENT);
       String content;
-      if (header != null) {
+      if (Strings.isNotEmpty(header)) {
         content = LicenseConstants.decodeContent(header);
       }
       else {
-        content = Files.loadStreamToString(req.getInputStream(), "UTF-8");
+        content = Files.loadStreamToString(request.getInputStream(), "UTF-8");
       }
       logger.info("mail from " + mailFrom + "\ntitle " + title + "\n mail : " + content + "\n");
       if (Strings.isNullOrEmpty(content)) {
-        logger.info("sendMail : empty content" + mailTo + " from : " + mailFrom + " title : " + title);
+        logger.info("Empty content - mail will not be sent");
         resp.setStatus(HttpServletResponse.SC_NOT_FOUND);
         return;
       }

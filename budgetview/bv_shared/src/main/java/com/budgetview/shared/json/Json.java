@@ -1,5 +1,6 @@
 package com.budgetview.shared.json;
 
+import com.budgetview.shared.http.Http;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.fluent.Request;
 import org.apache.http.client.fluent.Response;

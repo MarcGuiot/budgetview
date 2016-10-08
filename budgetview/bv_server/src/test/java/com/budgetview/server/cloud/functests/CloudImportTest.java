@@ -21,7 +21,9 @@ public class CloudImportTest extends CloudDesktopTestCase {
                                  .get());
 
     operations.openImportDialog()
-      .selectCloud()
+      .selectCloudForNewUser()
+      .register("toto@example.com")
+      .processEmail(getVerificationCode("toto@example.com"))
       .checkContainsBanks("BNP Paribas", "CIC", "Connecteur de Test Budgea", "Crédit Agricole", "LCL")
       .selectBank("Connecteur de Test Budgea")
       .next()
@@ -61,7 +63,9 @@ public class CloudImportTest extends CloudDesktopTestCase {
 
     operations.openImportDialog()
       .checkCloudRefreshNotVisible()
-      .selectCloud()
+      .selectCloudForNewUser()
+      .register("toto@example.com")
+      .processEmail(getVerificationCode("toto@example.com"))
       .selectBank("Connecteur de Test Budgea")
       .next()
       .setChoice("Type de compte", "Particuliers")
@@ -119,7 +123,9 @@ public class CloudImportTest extends CloudDesktopTestCase {
 
     operations.openImportDialog()
       .checkCloudRefreshNotVisible()
-      .selectCloud()
+      .selectCloudForNewUser()
+      .register("toto@example.com")
+      .processEmail(getVerificationCode("toto@example.com"))
       .selectBank("Connecteur de Test Budgea")
       .next()
       .setChoice("Type de compte", "Particuliers")

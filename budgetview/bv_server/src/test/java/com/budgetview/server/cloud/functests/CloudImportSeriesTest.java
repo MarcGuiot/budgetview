@@ -28,7 +28,7 @@ public class CloudImportSeriesTest extends CloudDesktopTestCase {
 
     operations.openImportDialog()
       .checkCloudRefreshNotVisible()
-      .selectCloud()
+      .selectCloudForExistingUser()
       .selectBank("Connecteur de Test Budgea")
       .next()
       .setChoice("Type de compte", "Particuliers")
@@ -129,7 +129,7 @@ public class CloudImportSeriesTest extends CloudDesktopTestCase {
 
     operations.openImportDialog()
       .checkCloudRefreshNotVisible()
-      .selectCloud()
+      .selectCloudForExistingUser()
       .selectBank("Connecteur de Test Budgea")
       .next()
       .setChoice("Type de compte", "Particuliers")
@@ -177,7 +177,7 @@ public class CloudImportSeriesTest extends CloudDesktopTestCase {
 
     operations.openImportDialog()
       .checkCloudRefreshNotVisible()
-      .selectCloud()
+      .selectCloudForExistingUser()
       .selectBank("Connecteur de Test Budgea")
       .next()
       .setChoice("Type de compte", "Particuliers")

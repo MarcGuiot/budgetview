@@ -28,7 +28,7 @@ public class PostDataServlet extends AbstractHttpServlet {
     InputStream inputStream = httpServletRequest.getInputStream();
     OutputStream outputStream = httpServletResponse.getOutputStream();
     String lang = httpServletRequest.getHeader(MobileConstants.HEADER_LANG);
-    String mail = URLDecoder.decode(httpServletRequest.getHeader(LicenseConstants.HEADER_MAIL), "UTF-8");
+    String mail = URLDecoder.decode(httpServletRequest.getHeader(LicenseConstants.HEADER_MAIL_FROM), "UTF-8");
     String majorVersion = httpServletRequest.getHeader(MobileConstants.MAJOR_VERSION_NAME);
     String minorVersion = httpServletRequest.getHeader(MobileConstants.MINOR_VERSION_NAME);
     String sha1Mail = URLDecoder.decode(httpServletRequest.getHeader(MobileConstants.CRYPTED_INFO), "UTF-8");

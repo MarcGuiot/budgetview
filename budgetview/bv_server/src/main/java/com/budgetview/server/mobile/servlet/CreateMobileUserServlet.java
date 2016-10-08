@@ -44,7 +44,7 @@ public class CreateMobileUserServlet extends HttpServlet {
 
   protected void action(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) throws IOException {
     String lang = httpServletRequest.getParameter(MobileConstants.HEADER_LANG);
-    String mail = URLDecoder.decode(httpServletRequest.getParameter(LicenseConstants.HEADER_MAIL), "UTF-8");
+    String mail = URLDecoder.decode(httpServletRequest.getParameter(LicenseConstants.HEADER_MAIL_FROM), "UTF-8");
     String coding = URLDecoder.decode(httpServletRequest.getParameter(LicenseConstants.CODING), "UTF-8");
     byte[] decryptedMail = encryptor.decrypt(Base64.decodeBase64(coding));
 

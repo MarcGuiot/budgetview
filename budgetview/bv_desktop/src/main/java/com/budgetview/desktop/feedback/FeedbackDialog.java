@@ -1,6 +1,6 @@
 package com.budgetview.desktop.feedback;
 
-import com.budgetview.client.mail.MailService;
+import com.budgetview.client.mail.ServerMailingService;
 import com.budgetview.desktop.Application;
 import com.budgetview.desktop.components.dialogs.CancelAction;
 import com.budgetview.desktop.components.dialogs.MessageDialog;
@@ -98,11 +98,11 @@ public class FeedbackDialog {
 
     public void actionPerformed(ActionEvent e) {
       String email = userMail.getText();
-      directory.get(MailService.class).sendMail(LicenseConstants.SUPPORT_EMAIL,
-                                                email,
-                                                getSubject(email),
-                                                getMessageText(),
-                                                new MailService.Listener() {
+      directory.get(ServerMailingService.class).sendMail(LicenseConstants.SUPPORT_EMAIL,
+                                                         email,
+                                                         getSubject(email),
+                                                         getMessageText(),
+                                                         new ServerMailingService.Listener() {
                                                     public void sent(String mail, String title, String content) {
                                                       showConfirmation();
                                                     }
@@ -111,7 +111,7 @@ public class FeedbackDialog {
                                                       showFailure();
                                                     }
                                                   },
-                                                repository);
+                                                         repository);
     }
 
     private void showConfirmation() {

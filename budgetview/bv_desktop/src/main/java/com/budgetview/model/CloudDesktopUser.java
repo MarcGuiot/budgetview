@@ -2,13 +2,13 @@ package com.budgetview.model;
 
 import com.budgetview.shared.utils.GlobSerializer;
 import org.globsframework.metamodel.GlobType;
-import org.globsframework.metamodel.annotations.DefaultInteger;
 import org.globsframework.metamodel.annotations.Key;
 import org.globsframework.metamodel.fields.BooleanField;
 import org.globsframework.metamodel.fields.IntegerField;
 import org.globsframework.metamodel.utils.GlobTypeLoader;
 import org.globsframework.model.FieldSetter;
 import org.globsframework.model.FieldValues;
+import org.globsframework.model.Glob;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.utils.serialization.SerializedByteArrayOutput;
 import org.globsframework.utils.serialization.SerializedInput;
@@ -24,9 +24,16 @@ public class CloudDesktopUser {
   @Key
   public static IntegerField ID;
 
-  public static BooleanField ACTIVE;
+  public static BooleanField REGISTERED;
+
+  public static BooleanField SYNCHRO_ENABLED;
 
   public static IntegerField LAST_UPDATE;
+
+  public static boolean isTrue(BooleanField field, GlobRepository repository) {
+    Glob user = repository.find(KEY);
+    return user != null && user.isTrue(field);
+  }
 
   static {
     GlobTypeLoader.init(CloudDesktopUser.class);
@@ -46,7 +53,8 @@ public class CloudDesktopUser {
     public byte[] serializeData(FieldValues values) {
       SerializedByteArrayOutput serializedByteArrayOutput = new SerializedByteArrayOutput();
       SerializedOutput outputStream = serializedByteArrayOutput.getOutput();
-      outputStream.writeBoolean(values.get(ACTIVE));
+      outputStream.writeBoolean(values.get(REGISTERED));
+      outputStream.writeBoolean(values.get(SYNCHRO_ENABLED));
       outputStream.writeInteger(values.get(LAST_UPDATE));
       return serializedByteArrayOutput.toByteArray();
     }
@@ -59,7 +67,8 @@ public class CloudDesktopUser {
 
     private void deserializeV1(FieldSetter fieldSetter, byte[] data) {
       SerializedInput input = SerializedInputOutputFactory.init(data);
-      fieldSetter.set(ACTIVE, input.readBoolean());
+      fieldSetter.set(REGISTERED, input.readBoolean());
+      fieldSetter.set(SYNCHRO_ENABLED, input.readBoolean());
       fieldSetter.set(LAST_UPDATE, input.readInteger());
     }
   }

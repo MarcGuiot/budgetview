@@ -1,6 +1,6 @@
 package com.budgetview.desktop.actions;
 
-import com.budgetview.client.mail.MailService;
+import com.budgetview.client.mail.ServerMailingService;
 import com.budgetview.model.User;
 import com.budgetview.shared.license.LicenseConstants;
 import com.budgetview.utils.Lang;
@@ -59,11 +59,11 @@ public class SendStackTracesAction extends AbstractAction {
       }
       String content = buffer.toString();
       Log.write(content);
-      directory.get(MailService.class).sendMail(LicenseConstants.SUPPORT_EMAIL,
-                                                mail,
-                                                "Thread dump",
-                                                content,
-                                                new MailService.Listener() {
+      directory.get(ServerMailingService.class).sendMail(LicenseConstants.SUPPORT_EMAIL,
+                                                         mail,
+                                                         "Thread dump",
+                                                         content,
+                                                         new ServerMailingService.Listener() {
                                                     public void sent(String mail, String title, String content) {
                                                       Log.write("Mail sent from " + mail + " - title : " + title + "\n" + content);
                                                     }
@@ -72,7 +72,7 @@ public class SendStackTracesAction extends AbstractAction {
                                                       Log.write("Failed to send mail from " + mail + " - title : " + title + "\n" + content);
                                                     }
                                                   },
-                                                repository);
+                                                         repository);
     }
     catch (InterruptedException e) {
       Log.write("interrupted thread in send");

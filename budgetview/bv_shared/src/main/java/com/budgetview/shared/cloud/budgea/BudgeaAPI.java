@@ -17,7 +17,7 @@ import static com.budgetview.shared.json.Json.json;
 public class BudgeaAPI {
   private String bearer;
   private int userId = -1;
-
+  
   public JSONObject getBanks() throws IOException {
     return json(Request.Get(BudgeaConstants.getServerUrl("/banks?expand=fields"))
                   .addHeader("Authorization", "Bearer " + getBearer()));

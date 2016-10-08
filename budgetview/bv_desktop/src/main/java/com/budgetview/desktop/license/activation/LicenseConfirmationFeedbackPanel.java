@@ -1,6 +1,6 @@
 package com.budgetview.desktop.license.activation;
 
-import com.budgetview.client.mail.MailService;
+import com.budgetview.client.mail.ServerMailingService;
 import com.budgetview.desktop.components.dialogs.PicsouDialog;
 import com.budgetview.desktop.components.utils.CustomFocusTraversalPolicy;
 import com.budgetview.shared.license.LicenseConstants;
@@ -93,11 +93,11 @@ public class LicenseConfirmationFeedbackPanel implements Disposable {
       }
     }
     builder.append("</html>");
-    directory.get(MailService.class).sendMail(LicenseConstants.SUPPORT_EMAIL,
-                                              email,
-                                              Lang.get("license.activation.feedback.email.title", email),
-                                              builder.toString(),
-                                              new MailService.Listener() {
+    directory.get(ServerMailingService.class).sendMail(LicenseConstants.SUPPORT_EMAIL,
+                                                       email,
+                                                       Lang.get("license.activation.feedback.email.title", email),
+                                                       builder.toString(),
+                                                       new ServerMailingService.Listener() {
                                                   public void sent(String mail, String title, String content) {
                                                     Log.write("Comment email sent from " + mail + " - title : " + title + "\n" + content);
                                                     close();
@@ -108,7 +108,7 @@ public class LicenseConfirmationFeedbackPanel implements Disposable {
                                                     close();
                                                   }
                                                 },
-                                              repository);
+                                                       repository);
   }
 
   private void close() {

@@ -117,6 +117,10 @@ public class SqlCreateBuilder implements org.globsframework.sqlstreams.SqlCreate
     return setValue(field, new ValueStringAccessor(value));
   }
 
+  public org.globsframework.sqlstreams.SqlCreateBuilder set(BooleanField field, Boolean value) {
+    return setValue(field, new ValueBooleanAccessor(value));
+  }
+
   public org.globsframework.sqlstreams.SqlCreateBuilder set(LongField field, Long value) {
     return setValue(field, new ValueLongAccessor(value));
   }

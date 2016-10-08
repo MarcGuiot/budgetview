@@ -1,4 +1,4 @@
-package com.budgetview.client.http;
+package com.budgetview.shared.http;
 
 import org.apache.http.Consts;
 import org.apache.http.HttpEntity;
@@ -24,9 +24,35 @@ import org.globsframework.gui.splits.utils.Disposable;
 import javax.net.ssl.SSLException;
 import java.io.IOException;
 import java.security.cert.X509Certificate;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class Http {
+
+  public static HttpResponse checkResponse(String url, HttpResponse httpResponse) throws IOException {
+    int statusCode = httpResponse.getStatusLine().getStatusCode();
+    switch (statusCode) {
+      case 200: return httpResponse;
+      case 404:
+        throw new IOException("Call to " + url + " returned error 404 (not found) - " +
+                              "check get vs post or https vs http, or make sure you are targeting the right server");
+      case 405:
+        throw new IOException("Call to " + url + " returned error 405 (method not allowed) - " +
+                              "check get vs post or https vs http, or make sure you are targeting the right server");
+      default:
+        throw new IOException("Call to " + url + " returned error status " + statusCode + " instead of 200");
+    }
+  }
+
+  public static Post utf8Post(String url) {
+    return post(url).setUtf8Content();
+  }
+
+  public static Post post(String url) {
+    return new Post(url);
+  }
 
   public static class Post implements Disposable {
 
@@ -41,7 +67,7 @@ public class Http {
       this.url = url;
     }
 
-    public Post setUtf8() {
+    public Post setUtf8Content() {
       List<NameValuePair> nvps = new ArrayList<NameValuePair>();
       nvps.add(new BasicNameValuePair("IDToken1", "username"));
       nvps.add(new BasicNameValuePair("IDToken2", "password"));
@@ -58,8 +84,10 @@ public class Http {
       return this;
     }
 
-    public Post setUtf8(String content) {
-      return setEntity(new StringEntity(content, "UTF-8"));
+    public Post setUtf8Content(String content) {
+      StringEntity entity = new StringEntity(content, "UTF-8");
+      entity.setContentType("text/html");
+      return setEntity(entity);
     }
 
     public Post setEntity(HttpEntity entity) {
@@ -105,14 +133,6 @@ public class Http {
         postMethod = null;
       }
     }
-  }
-
-  public static Post utf8Post(String url) {
-    return post(url).setUtf8();
-  }
-
-  public static Post post(String url) {
-    return new Post(url);
   }
 
   private static HttpClient getNewHttpClient() {

@@ -1,9 +1,7 @@
 package com.budgetview.shared.cloud;
 
-import com.budgetview.shared.model.Provider;
-import org.apache.http.Consts;
+import com.budgetview.shared.http.Http;
 import org.apache.http.HttpResponse;
-import org.apache.http.client.fluent.Form;
 import org.apache.http.client.fluent.Request;
 import org.apache.http.client.fluent.Response;
 import org.globsframework.utils.Files;
@@ -14,6 +12,22 @@ import org.json.JSONObject;
 import java.io.IOException;
 
 public class CloudAPI {
+
+  public void signup(String email) throws IOException {
+    String url = "/signup";
+    Request request = Request.Post(CloudConstants.getServerUrl(url))
+      .addHeader(CloudConstants.EMAIL, email);
+    execute(request, url);
+  }
+
+  public JSONObject validate(String email, String code) throws IOException {
+    String url = "/validate";
+    Request request = Request.Post(CloudConstants.getServerUrl(url))
+      .addHeader(CloudConstants.EMAIL, email)
+      .addHeader(CloudConstants.CODE, code);
+    HttpResponse response = execute(request, url);
+    return new JSONObject(Files.loadStreamToString(response.getEntity().getContent(), "UTF-8"));
+  }
 
   public void addConnection(String email, String budgeaToken, Integer budgeaUserId) throws IOException {
     if (Strings.isNullOrEmpty(email)) {
@@ -46,11 +60,7 @@ public class CloudAPI {
   public HttpResponse execute(Request request, String url) throws IOException {
     Response response = request.execute();
     HttpResponse httpResponse = response.returnResponse();
-    int statusCode = httpResponse.getStatusLine().getStatusCode();
-    if (statusCode != 200) {
-      throw new IOException("Call to " + url + " returned " + statusCode + " instead of 200");
-    }
-    return httpResponse;
+    return Http.checkResponse(url, httpResponse);
   }
 
   private String cloudUrl(String path) {

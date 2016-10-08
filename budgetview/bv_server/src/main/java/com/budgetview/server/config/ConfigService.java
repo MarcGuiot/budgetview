@@ -13,6 +13,38 @@ public class ConfigService {
 
   private Properties properties = new Properties();
 
+  public static class Builder {
+
+    private ConfigService configService;
+
+    public Builder() {
+      try {
+        configService =new ConfigService();
+      }
+      catch (IOException e) {
+        throw new RuntimeException(e);
+      }
+    }
+
+    public Builder set(String property, String value) {
+      configService.properties.setProperty(property, value);
+      return this;
+    }
+
+    public Builder set(String property, int value) {
+      configService.properties.setProperty(property, Integer.toString(value));
+      return this;
+    }
+
+    public ConfigService get() {
+      return configService;
+    }
+  }
+
+  public static Builder build() {
+    return new Builder();
+  }
+
   public ConfigService(String... args) throws IOException, InvalidParameter {
     if (args.length == 1) {
       loadProperties(args[0]);

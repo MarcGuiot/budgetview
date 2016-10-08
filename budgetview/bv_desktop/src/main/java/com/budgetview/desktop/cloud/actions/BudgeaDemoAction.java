@@ -67,7 +67,7 @@ public class BudgeaDemoAction extends AbstractAction {
       System.out.println("PrinterCallback.processCompletion");
     }
 
-    public void processError() {
+    public void processError(Exception e) {
       System.out.println("PrinterCallback.processError");
     }
   }

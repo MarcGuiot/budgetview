@@ -57,7 +57,7 @@ public abstract class JdbcConnection implements SqlConnection {
   }
 
   public Glob selectUnique(GlobType globType, Constraint constraint) throws ItemNotFound, TooManyItems {
-    return startSelect(globType, constraint).getUnique();
+    return startSelect(globType, constraint).selectAll().getUnique();
   }
 
   public SqlUpdateBuilder startUpdate(GlobType globType) {

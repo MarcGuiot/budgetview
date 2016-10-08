@@ -121,6 +121,13 @@ public class Strings {
     return builder.toString();
   }
 
+  public static String trim(String text) {
+    if (text == null) {
+      return null;
+    }
+    return text.trim();
+  }
+
   public static String cut(String text, int maxLength) {
     if (text == null) {
       return null;

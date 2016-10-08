@@ -1,7 +1,10 @@
 package com.budgetview.server.cloud;
 
+import com.budgetview.server.cloud.services.AuthenticationService;
+import com.budgetview.server.cloud.services.EmailValidationService;
 import com.budgetview.server.cloud.servlet.*;
 import com.budgetview.server.config.ConfigService;
+import com.budgetview.server.license.mail.Mailer;
 import com.budgetview.server.utils.DbInit;
 import com.budgetview.server.utils.Log4J;
 import com.budgetview.server.web.WebServer;
@@ -16,7 +19,7 @@ public class CloudServer {
 
   private WebServer webServer;
   private ConfigService config;
-  private GlobsDatabase database;
+  private Directory directory;
 
   public static void main(String[] args) throws Exception {
     ConfigService.checkCommandLine(args);
@@ -31,11 +34,13 @@ public class CloudServer {
   }
 
   public void init() throws Exception {
-    Directory directory = createDirectory();
+    directory = createDirectory();
     webServer = new WebServer(config);
     webServer.add(new ConnectionServlet(directory), "/connections");
     webServer.add(new BudgeaWebHookServlet(directory), "/budgea");
     webServer.add(new StatementServlet(directory), "/statement/*");
+    webServer.add(new SignupServlet(directory), "/signup");
+    webServer.add(new ValidateServlet(directory), "/validate");
 
     if (config.isTrue("budgetview.ping.available")) {
       webServer.add(new PingServlet(directory), "/ping");
@@ -45,8 +50,10 @@ public class CloudServer {
   private Directory createDirectory() throws Exception {
     Directory directory = new DefaultDirectory();
     directory.add(config);
-    database = DbInit.create(config, directory);
+    directory.add(GlobsDatabase.class, DbInit.create(config));
+    directory.add(new Mailer(config));
     directory.add(new AuthenticationService(directory));
+    directory.add(new EmailValidationService(directory));
     return directory;
   }
 
@@ -58,7 +65,7 @@ public class CloudServer {
 
   public void resetDatabase() {
     logger.info("cleaning up database");
-    DbInit.cleanAllTables(database);
+    DbInit.cleanAllTables(directory);
   }
 
   public void stop() throws Exception {
