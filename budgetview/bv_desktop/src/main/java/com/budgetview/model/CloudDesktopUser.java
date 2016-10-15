@@ -5,6 +5,7 @@ import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.annotations.Key;
 import org.globsframework.metamodel.fields.BooleanField;
 import org.globsframework.metamodel.fields.IntegerField;
+import org.globsframework.metamodel.fields.StringField;
 import org.globsframework.metamodel.utils.GlobTypeLoader;
 import org.globsframework.model.FieldSetter;
 import org.globsframework.model.FieldValues;
@@ -23,6 +24,10 @@ public class CloudDesktopUser {
 
   @Key
   public static IntegerField ID;
+
+  public static StringField EMAIL;
+
+  public static StringField TOKEN;
 
   public static BooleanField REGISTERED;
 

@@ -59,12 +59,12 @@ public class JdbcDeleteRequest implements SqlRequest {
 
   }
 
-  public void execute() {
+  public int execute() {
     if (constraint != null) {
       constraint.visit(new ValueConstraintVisitor(preparedStatement, blobUpdater));
     }
     try {
-      preparedStatement.executeUpdate();
+      return preparedStatement.executeUpdate();
     }
     catch (SQLException e) {
       throw new UnexpectedApplicationState("For delete request " + sqlStatement, e);

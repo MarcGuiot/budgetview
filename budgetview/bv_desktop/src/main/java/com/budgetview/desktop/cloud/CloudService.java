@@ -6,6 +6,7 @@ import com.budgetview.model.CloudDesktopUser;
 import com.budgetview.model.Month;
 import com.budgetview.model.RealAccount;
 import com.budgetview.shared.cloud.CloudAPI;
+import com.budgetview.shared.cloud.CloudConstants;
 import com.budgetview.shared.cloud.budgea.BudgeaAPI;
 import com.budgetview.shared.model.AccountType;
 import com.budgetview.shared.model.Provider;
@@ -32,8 +33,6 @@ import static org.globsframework.model.utils.GlobMatchers.fieldEquals;
 import static org.globsframework.model.utils.GlobMatchers.fieldIn;
 
 public class CloudService {
-
-  private static final String ___TEST_EMAIL___TO_BE_REPLACED____ = "admin@mybudgetview.fr";
 
   private final BudgeaAPI budgeaAPI = new BudgeaAPI();
   private final CloudAPI cloudAPI = new CloudAPI();
@@ -65,6 +64,11 @@ public class CloudService {
     Thread thread = new Thread(new Runnable() {
       public void run() {
         try {
+          repository.findOrCreate(CloudDesktopUser.KEY);
+          repository.update(CloudDesktopUser.KEY,
+                            value(CloudDesktopUser.EMAIL, email),
+                            value(CloudDesktopUser.TOKEN, null),
+                            value(CloudDesktopUser.REGISTERED, false));
           cloudAPI.signup(email);
           callback.processCompletion();
         }
@@ -82,8 +86,12 @@ public class CloudService {
       public void run() {
         try {
           JSONObject result = cloudAPI.validate(email, code);
-          String status = result.getString("status");
-          if ("ok".equalsIgnoreCase(status)) {
+          String status = result.getString(CloudConstants.STATUS);
+          if ("validated".equalsIgnoreCase(status)) {
+            String token = result.getString(CloudConstants.TOKEN);
+            repository.update(CloudDesktopUser.KEY,
+                              value(CloudDesktopUser.TOKEN, token),
+                              value(CloudDesktopUser.REGISTERED, true));
             callback.processCompletion();
           }
           else if ("invalid".equalsIgnoreCase(status)) {
@@ -208,9 +216,10 @@ public class CloudService {
           }
 
           budgeaAPI.registerConnection(connection.get(BudgeaConnection.BANK), params);
-          cloudAPI.addConnection(___TEST_EMAIL___TO_BE_REPLACED____, budgeaAPI.getToken(), budgeaAPI.getUserId());
+          Glob user = repository.get(CloudDesktopUser.KEY);
 
-          repository.findOrCreate(CloudDesktopUser.KEY);
+          cloudAPI.addConnection(user.get(CloudDesktopUser.EMAIL), user.get(CloudDesktopUser.TOKEN), budgeaAPI.getToken(), budgeaAPI.getUserId());
+
           repository.update(CloudDesktopUser.KEY, CloudDesktopUser.SYNCHRO_ENABLED, true);
 
           downloadInitialStatement(repository, callback);
@@ -284,8 +293,9 @@ public class CloudService {
   }
 
   public GlobList doDownloadStatement(GlobRepository repository) throws IOException {
-    Integer lastUpdate = repository.findOrCreate(CloudDesktopUser.KEY).get(CloudDesktopUser.LAST_UPDATE);
-    JSONObject statement = cloudAPI.getStatement(___TEST_EMAIL___TO_BE_REPLACED____, lastUpdate);
+    Glob user = repository.findOrCreate(CloudDesktopUser.KEY);
+    Integer lastUpdate = user.get(CloudDesktopUser.LAST_UPDATE);
+    JSONObject statement = cloudAPI.getStatement(user.get(CloudDesktopUser.EMAIL), user.get(CloudDesktopUser.TOKEN), lastUpdate);
     JSONArray accounts = statement.getJSONArray("accounts");
     if (accounts.length() == 0) {
       return GlobList.EMPTY;

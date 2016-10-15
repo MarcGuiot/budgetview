@@ -2,6 +2,7 @@ package com.budgetview.server.cloud.servlet;
 
 import com.budgetview.server.cloud.budgea.Budgea;
 import com.budgetview.server.cloud.model.CloudUser;
+import com.budgetview.server.cloud.services.AuthenticationService;
 import com.budgetview.shared.cloud.budgea.BudgeaConstants;
 import com.budgetview.shared.cloud.CloudConstants;
 import com.budgetview.shared.model.Provider;
@@ -10,6 +11,7 @@ import org.apache.http.client.fluent.Request;
 import org.apache.log4j.Logger;
 import org.globsframework.sqlstreams.GlobsDatabase;
 import org.globsframework.sqlstreams.SqlConnection;
+import org.globsframework.sqlstreams.constraints.Where;
 import org.globsframework.sqlstreams.exceptions.GlobsSQLException;
 import org.globsframework.utils.Strings;
 import org.globsframework.utils.directory.Directory;
@@ -27,8 +29,10 @@ public class ConnectionServlet extends HttpServlet {
   private static Logger logger = Logger.getLogger("/connections");
 
   private final GlobsDatabase database;
+  private final AuthenticationService authentication;
 
   public ConnectionServlet(Directory directory) {
+    this.authentication = directory.get(AuthenticationService.class);
     this.database = directory.get(GlobsDatabase.class);
   }
 
@@ -37,8 +41,9 @@ public class ConnectionServlet extends HttpServlet {
     response.setCharacterEncoding("UTF-8");
 
     String email = request.getHeader(CloudConstants.EMAIL);
-    String token = request.getHeader(CloudConstants.BUDGEA_TOKEN);
-    String userId = request.getHeader(CloudConstants.BUDGEA_USER_ID);
+    String token  = request.getHeader(CloudConstants.TOKEN);
+    String budgeaToken = request.getHeader(CloudConstants.BUDGEA_TOKEN);
+    String budgeaUserId = request.getHeader(CloudConstants.BUDGEA_USER_ID);
 
     if (Strings.isNullOrEmpty(email)) {
       logger.error("No email provided");
@@ -50,15 +55,27 @@ public class ConnectionServlet extends HttpServlet {
       response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
       return;
     }
-    if (Strings.isNullOrEmpty(userId)) {
+    if (Strings.isNullOrEmpty(budgeaToken)) {
+      logger.error("No token provided");
+      response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+      return;
+    }
+    if (Strings.isNullOrEmpty(budgeaUserId)) {
       logger.error("No userId provided");
       response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
       return;
     }
 
-    String newToken;
+    Integer userId = authentication.checkUserToken(email, token);
+    if (userId == null) {
+      logger.error("Could not identify user with email:" + email);
+      response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+      return;
+    }
+
+    String newBudgeaToken;
     try {
-      newToken = registerBudgeaToken(token);
+      newBudgeaToken = registerBudgeaToken(budgeaToken);
     }
     catch (Exception e) {
       logger.error("Budgea registration failed", e);
@@ -67,7 +84,7 @@ public class ConnectionServlet extends HttpServlet {
     }
 
     try {
-      saveCloudUser(email, userId, newToken);
+      saveCloudConnection(userId, budgeaUserId, newBudgeaToken);
     }
     catch (GlobsSQLException e) {
       logger.error("Could not store user '" + email + "' in dabase", e);
@@ -90,15 +107,14 @@ public class ConnectionServlet extends HttpServlet {
     return json(request.execute()).getString("access_token");
   }
 
-  private void saveCloudUser(String email, String userId, String token) throws GlobsSQLException {
+  private void saveCloudConnection(Integer userId, String providerUserId, String providerAccessToken) throws GlobsSQLException {
     SqlConnection connection = database.connect();
-    connection.startCreate(CloudUser.TYPE)
-      .set(CloudUser.EMAIL, email)
+    connection.startUpdate(CloudUser.TYPE, Where.fieldEquals(CloudUser.ID, userId))
       .set(CloudUser.PROVIDER, Provider.BUDGEA.getId())
-      .set(CloudUser.PROVIDER_ID, Integer.parseInt(userId))
-      .set(CloudUser.PROVIDER_ACCESS_TOKEN, token)
+      .set(CloudUser.PROVIDER_ID, Integer.parseInt(providerUserId))
+      .set(CloudUser.PROVIDER_ACCESS_TOKEN, providerAccessToken)
       .run();
     connection.commitAndClose();
-    logger.info("Saved " + email + " with userId " + userId + " and token " + token);
+    logger.info("Saved connection for userId " + providerUserId + " withtoken " + providerAccessToken);
   }
 }

@@ -58,10 +58,16 @@ public class StatementServlet extends HttpServlet {
     logger.info("GET");
 
     String email = request.getHeader(CloudConstants.EMAIL);
-    Integer userId = authentication.findUser(email);
+    String token = request.getHeader(CloudConstants.TOKEN);
+    if (Strings.isNullOrEmpty(email) || Strings.isNullOrEmpty(token)) {
+      response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+      return;
+    }
+
+    Integer userId = authentication.checkUserToken(email, token);
     if (userId == null) {
       logger.error("Could not identify user with email:" + email);
-      response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+      response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
       return;
     }
 
@@ -85,7 +91,7 @@ public class StatementServlet extends HttpServlet {
 
     SqlSelectBuilder selectUpdates =
       connection.startSelect(ProviderUpdate.TYPE, where)
-      .orderBy(ProviderUpdate.DATE);
+        .orderBy(ProviderUpdate.DATE);
     GlobAccessor accessor = selectUpdates.retrieveAll();
     SqlSelect query = selectUpdates.getQuery();
     GlobStream stream = query.getStream();

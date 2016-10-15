@@ -178,7 +178,7 @@ public class SqlUpdateBuilder implements org.globsframework.sqlstreams.SqlUpdate
     }
   }
 
-  public void run() throws GlobsSQLException {
-    getRequest().execute();
+  public int run() throws GlobsSQLException {
+    return getRequest().execute();
   }
 }

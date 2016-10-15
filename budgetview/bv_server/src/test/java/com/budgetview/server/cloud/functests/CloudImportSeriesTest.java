@@ -1,6 +1,6 @@
 package com.budgetview.server.cloud.functests;
 
-import com.budgetview.server.cloud.functests.checkers.CloudDesktopTestCase;
+import com.budgetview.server.cloud.functests.testcases.CloudDesktopTestCase;
 import com.budgetview.server.cloud.stub.BudgeaStatement;
 import com.budgetview.shared.cloud.budgea.BudgeaCategory;
 import org.junit.Test;
@@ -28,7 +28,9 @@ public class CloudImportSeriesTest extends CloudDesktopTestCase {
 
     operations.openImportDialog()
       .checkCloudRefreshNotVisible()
-      .selectCloudForExistingUser()
+      .selectCloudForNewUser()
+      .register("toto@example.com")
+      .processEmail(mailbox.getVerificationCode("toto@example.com"))
       .selectBank("Connecteur de Test Budgea")
       .next()
       .setChoice("Type de compte", "Particuliers")
@@ -129,7 +131,9 @@ public class CloudImportSeriesTest extends CloudDesktopTestCase {
 
     operations.openImportDialog()
       .checkCloudRefreshNotVisible()
-      .selectCloudForExistingUser()
+      .selectCloudForNewUser()
+      .register("toto@example.com")
+      .processEmail(mailbox.getVerificationCode("toto@example.com"))
       .selectBank("Connecteur de Test Budgea")
       .next()
       .setChoice("Type de compte", "Particuliers")
@@ -177,7 +181,9 @@ public class CloudImportSeriesTest extends CloudDesktopTestCase {
 
     operations.openImportDialog()
       .checkCloudRefreshNotVisible()
-      .selectCloudForExistingUser()
+      .selectCloudForNewUser()
+      .register("toto@example.com")
+      .processEmail(mailbox.getVerificationCode("toto@example.com"))
       .selectBank("Connecteur de Test Budgea")
       .next()
       .setChoice("Type de compte", "Particuliers")

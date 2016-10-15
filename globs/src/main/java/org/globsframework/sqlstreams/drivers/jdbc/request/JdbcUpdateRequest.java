@@ -58,7 +58,7 @@ public class JdbcUpdateRequest implements SqlRequest {
     }
   }
 
-  public void execute() {
+  public int execute() {
     int index = 0;
     for (Map.Entry<Field, Accessor> entry : accessors.entrySet()) {
       sqlValueFieldVisitor.setValue(entry.getValue().getObjectValue(), ++index);
@@ -66,7 +66,7 @@ public class JdbcUpdateRequest implements SqlRequest {
     }
     constraint.visit(new ValueConstraintVisitor(preparedStatement, index, blobUpdater));
     try {
-      preparedStatement.executeUpdate();
+      return preparedStatement.executeUpdate();
     }
     catch (SQLException e) {
       throw new UnexpectedApplicationState("For request : " + sqlRequest, e);

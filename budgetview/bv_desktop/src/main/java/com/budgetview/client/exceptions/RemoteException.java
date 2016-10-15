@@ -20,7 +20,7 @@ public abstract class RemoteException extends GlobsException {
 
   public abstract int getId();
 
-  public static interface Visitor {
+  public interface Visitor {
     void visitBadConnection(BadConnection ex);
 
     void visitBadPassword(BadPassword ex);

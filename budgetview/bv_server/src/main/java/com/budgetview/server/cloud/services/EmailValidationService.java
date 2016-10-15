@@ -6,7 +6,6 @@ import com.budgetview.server.config.ConfigService;
 import com.budgetview.server.license.mail.Mailer;
 import org.apache.log4j.Logger;
 import org.globsframework.model.Glob;
-import org.globsframework.model.format.GlobPrinter;
 import org.globsframework.sqlstreams.GlobsDatabase;
 import org.globsframework.sqlstreams.SqlConnection;
 import org.globsframework.sqlstreams.constraints.Where;
@@ -52,11 +51,11 @@ public class EmailValidationService {
     mailer.sendCloudEmailAddressVerification(email, lang, code);
   }
 
-  public boolean check(Integer userId, String code) {
+  public boolean check(Integer userId, String validationCode) {
     SqlConnection connection = database.connect();
     try {
       Glob user = connection.selectUnique(CloudUser.TYPE, Where.fieldEquals(CloudUser.ID, userId));
-      return Utils.equal(user.get(CloudUser.LAST_VALIDATION_CODE), code.trim());
+      return Utils.equal(user.get(CloudUser.LAST_VALIDATION_CODE), validationCode.trim());
     }
     catch (ItemNotFound itemNotFound) {
       logger.info("No user found with id " + userId);

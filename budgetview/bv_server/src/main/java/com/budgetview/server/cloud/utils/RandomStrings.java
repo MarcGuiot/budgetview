@@ -8,7 +8,7 @@ public class RandomStrings {
 
   static final String AB = "0123456789abcdefghijklmnopqrstuvwxyz";
 
-  public String next(int length) {
+  public synchronized String next(int length) {
     StringBuilder builder = new StringBuilder(length);
     for (int i = 0; i < length; i++) {
       builder.append(AB.charAt(random.nextInt(AB.length())));

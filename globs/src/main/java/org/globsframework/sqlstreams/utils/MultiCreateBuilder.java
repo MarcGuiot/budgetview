@@ -42,10 +42,12 @@ public class MultiCreateBuilder {
       }
     }
 
-    public void execute() throws GlobsSQLException {
+    public int execute() throws GlobsSQLException {
+      int result = 0;
       for (SqlRequest sqlRequest : sqlRequests) {
-        sqlRequest.execute();
+        result += sqlRequest.execute();
       }
+      return result;
     }
 
     public void close() {

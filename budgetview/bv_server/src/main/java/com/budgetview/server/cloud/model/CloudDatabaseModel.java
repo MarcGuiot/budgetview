@@ -7,11 +7,10 @@ import org.globsframework.metamodel.utils.GlobModelBuilder;
 import java.util.Collection;
 
 public class CloudDatabaseModel {
-  public static final int MAJOR_VERSION = 1;
-  public static final int MINOR_VERSION = 0;
 
   private static GlobModel MODEL =
     GlobModelBuilder.init(CloudUser.TYPE,
+                          CloudUserDevice.TYPE,
                           ProviderUpdate.TYPE)
       .get();
 

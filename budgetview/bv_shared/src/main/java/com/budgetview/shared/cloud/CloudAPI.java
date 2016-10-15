@@ -20,21 +20,24 @@ public class CloudAPI {
     execute(request, url);
   }
 
-  public JSONObject validate(String email, String code) throws IOException {
+  public JSONObject validate(String email, String validationCode) throws IOException {
     String url = "/validate";
     Request request = Request.Post(CloudConstants.getServerUrl(url))
       .addHeader(CloudConstants.EMAIL, email)
-      .addHeader(CloudConstants.CODE, code);
+      .addHeader(CloudConstants.VALIDATION_CODE, validationCode);
     HttpResponse response = execute(request, url);
     return new JSONObject(Files.loadStreamToString(response.getEntity().getContent(), "UTF-8"));
   }
 
-  public void addConnection(String email, String budgeaToken, Integer budgeaUserId) throws IOException {
+  public void addConnection(String email, String bvToken, String budgeaToken, Integer budgeaUserId) throws IOException {
     if (Strings.isNullOrEmpty(email)) {
       throw new InvalidParameter("A proper email must be provided to create the connection");
     }
+    if (Strings.isNullOrEmpty(bvToken)) {
+      throw new InvalidParameter("A proper token must be provided to create the connection");
+    }
     if (Strings.isNullOrEmpty(budgeaToken)) {
-      throw new InvalidParameter("A non-empty token must be provided to create the connection");
+      throw new InvalidParameter("A non-empty Budgea token must be provided to create the connection");
     }
     if (budgeaUserId == null) {
       throw new InvalidParameter("A budgea userId must be provided to create the connection");
@@ -43,15 +46,17 @@ public class CloudAPI {
     String url = cloudUrl("/connections");
     Request request = Request.Post(url)
       .addHeader(CloudConstants.EMAIL, email)
+      .addHeader(CloudConstants.TOKEN, bvToken)
       .addHeader(CloudConstants.BUDGEA_TOKEN, budgeaToken)
       .addHeader(CloudConstants.BUDGEA_USER_ID, Integer.toString(budgeaUserId));
     execute(request, url);
   }
 
-  public JSONObject getStatement(String email, Integer lastUpdate) throws IOException {
+  public JSONObject getStatement(String email, String token, Integer lastUpdate) throws IOException {
     String url = lastUpdate == null ? "/statement" : "/statement/" + lastUpdate;
     Request request = Request.Get(cloudUrl(url))
-      .addHeader(CloudConstants.EMAIL, email);
+      .addHeader(CloudConstants.EMAIL, email)
+      .addHeader(CloudConstants.TOKEN, token);
 
     HttpResponse response = execute(request, url);
     return new JSONObject(Files.loadStreamToString(response.getEntity().getContent(), "UTF-8"));

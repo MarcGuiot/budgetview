@@ -52,6 +52,6 @@ public interface SqlUpdateBuilder {
 
   SqlRequest getRequest();
 
-  void run();
+  int run();
 
 }

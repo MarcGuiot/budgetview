@@ -4,6 +4,9 @@ import com.budgetview.server.cloud.CloudServer;
 import com.budgetview.shared.cloud.CloudAPI;
 import com.budgetview.shared.cloud.CloudConstants;
 import org.json.JSONObject;
+import org.junit.Assert;
+
+import java.io.IOException;
 
 public class CloudChecker {
 
@@ -20,14 +23,26 @@ public class CloudChecker {
     cloudServer.start();
   }
 
-  public void register(String email, Integer budgeaUserId, String budgeaToken) throws Exception {
+  public void signup(String email) throws Exception {
     CloudAPI api = new CloudAPI();
-    api.addConnection(email, budgeaToken, budgeaUserId);
+    api.signup(email);
   }
 
-  public void checkBankStatement(String email, int lastUpdate, String expected) throws Exception {
+  public String validate(String email, String validationCode) throws Exception {
     CloudAPI api = new CloudAPI();
-    JSONObject object = api.getStatement(email, lastUpdate);
+    JSONObject result = api.validate(email, validationCode);
+    Assert.assertEquals("validated", result.get(CloudConstants.STATUS));
+    return result.getString(CloudConstants.TOKEN);
+  }
+
+  public void register(String email, String token, Integer budgeaUserId, String budgeaToken) throws Exception {
+    CloudAPI api = new CloudAPI();
+    api.addConnection(email, token, budgeaToken, budgeaUserId);
+  }
+
+  public void checkBankStatement(String email, String token, int lastUpdate, String expected) throws Exception {
+    CloudAPI api = new CloudAPI();
+    JSONObject object = api.getStatement(email, token, lastUpdate);
     System.out.println("CloudChecker.checkBankStatement: " + object.toString(2));
   }
 

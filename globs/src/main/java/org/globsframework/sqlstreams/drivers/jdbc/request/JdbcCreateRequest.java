@@ -19,7 +19,6 @@ import org.globsframework.utils.exceptions.UnexpectedApplicationState;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.Iterator;
@@ -90,7 +89,7 @@ public class JdbcCreateRequest implements SqlCreateRequest {
     return writer.toString();
   }
 
-  public void execute() throws GlobsSQLException {
+  public int execute() throws GlobsSQLException {
     try {
       int index = 0;
       for (Pair<Field, Accessor> pair : fields) {
@@ -98,8 +97,9 @@ public class JdbcCreateRequest implements SqlCreateRequest {
         sqlValueVisitor.setValue(value, ++index);
         pair.getFirst().safeVisit(sqlValueVisitor);
       }
-      preparedStatement.executeUpdate();
+      int result = preparedStatement.executeUpdate();
       lastGeneratedIds = GeneratedIds.convert(preparedStatement.getGeneratedKeys(), globType);
+      return result;
     }
     catch (SQLException e) {
       throw jdbcConnection.getTypedException(getDebugRequest(), e);
