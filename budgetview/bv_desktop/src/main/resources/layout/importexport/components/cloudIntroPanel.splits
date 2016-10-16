@@ -1,11 +1,32 @@
 <splits xmlns="http://www.globsframework.org/xml/splits.xsd">
 
   <styleImport file="/layout/commonStyles.splits"/>
+  <styleImport file="/layout/dialogStyles.splits"/>
+  <styleImport file="/layout/importexport/components/importDialogStyles.splits"/>
 
-  <column>
-    <button action="openCloudSynchro"/>
+  <column name="cloudIntroPanel">
 
-    <button action="refreshCloud" autoHideIfDisabled="true"/>
+    <column ref="initial">
+      <htmlEditorPane text="$import.fileSelection.bank.initial.message" styleClass="multiLineLabel"/>
+      <row>
+        <filler fill="horizontal"/>
+        <label text="$import.fileSelection.bank.initial.label" styleClass="formLabel"/>
+        <button action="openCloudSynchro" fill="none" anchor="right"/>
+      </row>
+    </column>
+
+    <column ref="refresh">
+      <htmlEditorPane text="$import.fileSelection.bank.refresh.message"/>
+      <button action="refreshCloud" fill="none" anchor="center"/>
+    </column>
+
+    <column ref="add" marginTop="20">
+      <htmlEditorPane text="$import.fileSelection.bank.add.message"/>
+      <button action="addCloudConnection" fill="none" anchor="center"/>
+    </column>
+
+    <filler fill="vertical"/>
+
   </column>
 
 </splits>

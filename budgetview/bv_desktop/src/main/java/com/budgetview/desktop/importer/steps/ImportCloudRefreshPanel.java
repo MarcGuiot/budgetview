@@ -66,6 +66,6 @@ public class ImportCloudRefreshPanel extends AbstractImportStepPanel {
     });
   }
 
-  public void requestFocus() {
+  public void prepareForDisplay() {
   }
 }

@@ -3,6 +3,7 @@ package com.budgetview.desktop.importer.components;
 import com.budgetview.desktop.components.dialogs.PicsouDialog;
 import com.budgetview.desktop.importer.ImportController;
 import com.budgetview.model.CloudDesktopUser;
+import com.budgetview.utils.Lang;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.splits.utils.Disposable;
 import org.globsframework.gui.splits.utils.DisposableGroup;
@@ -16,6 +17,9 @@ import java.awt.event.ActionEvent;
 
 public class CloudIntroPanel implements Disposable {
   private final PicsouDialog dialog;
+  private JPanel initialPanel = new JPanel();
+  private JPanel refreshPanel = new JPanel();
+  private JPanel addPanel = new JPanel();
   private ImportController controller;
   private final LocalGlobRepository repository;
   private final Directory directory;
@@ -39,29 +43,36 @@ public class CloudIntroPanel implements Disposable {
   private JPanel createPanel() {
     GlobsPanelBuilder builder = new GlobsPanelBuilder(getClass(), "/layout/importexport/components/cloudIntroPanel.splits", repository, directory);
 
-    builder.add("openCloudSynchro", new AbstractAction("Goto synchro") {
-      public void actionPerformed(ActionEvent e) {
-        if (CloudDesktopUser.isTrue(CloudDesktopUser.REGISTERED, repository)) {
-          controller.showCloudBankSelection();
-        }
-        else {
-          controller.showCloudSignup();
-        }
-      }
-    });
+    builder.add("initial", initialPanel);
+    builder.add("refresh", refreshPanel);
+    builder.add("add", addPanel);
 
-    final AbstractAction refreshAction = new AbstractAction("Refresh") {
-      public void actionPerformed(ActionEvent e) {
-        controller.showCloudRefresh();
-      }
-    };
-    builder.add("refreshCloud", refreshAction);
-    BooleanFieldListener listener = BooleanFieldListener.install(CloudDesktopUser.KEY, CloudDesktopUser.SYNCHRO_ENABLED, repository, new BooleanListener() {
-      public void apply(boolean active) {
-        refreshAction.setEnabled(active);
+    BooleanFieldListener listener = BooleanFieldListener.install(CloudDesktopUser.KEY, CloudDesktopUser.REGISTERED, repository, new BooleanListener() {
+      public void apply(boolean registered) {
+        initialPanel.setVisible(!registered);
+        refreshPanel.setVisible(registered);
+        addPanel.setVisible(registered);
       }
     });
     disposables.add(listener);
+
+    builder.add("openCloudSynchro", new AbstractAction(Lang.get("import.fileSelection.bank.initial.button")) {
+      public void actionPerformed(ActionEvent e) {
+        controller.showCloudSignup();
+      }
+    });
+
+    builder.add("refreshCloud", new AbstractAction(Lang.get("import.fileSelection.bank.refresh.button")) {
+      public void actionPerformed(ActionEvent e) {
+        controller.showCloudRefresh();
+      }
+    });
+
+    builder.add("addCloudConnection", new AbstractAction(Lang.get("import.fileSelection.bank.add.button")) {
+      public void actionPerformed(ActionEvent e) {
+        controller.showCloudBankSelection();
+      }
+    });
 
     return builder.load();
   }

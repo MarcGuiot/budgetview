@@ -12,15 +12,19 @@
     <column styleClass="innerDialog">
       <column styleClass="innerDialogContent">
 
-        <scrollPane marginTop="20" forceVerticalScroll="true">
-          <column margin="20">
+        <htmlEditorPane ref="message" styleClass="multiLineLabel"/>
 
-            <textField ref="code"/>
+        <row marginLeft="30" marginRight="30">
+          <label text="$import.cloud.validation.codeField" styleClass="formLabel"/>
+          <textField ref="code"/>
+        </row>
 
-            <filler fill="vertical"/>
+        <label ref="error" styleClass="errorMessage" marginTop="15"/>
 
-          </column>
-        </scrollPane>
+        <button ref="back" autoHideIfDisabled="true" marginTop="30" fill="none" anchor="center"/>
+
+        <filler fill="vertical"/>
+
       </column>
     </column>
 

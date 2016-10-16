@@ -134,7 +134,7 @@ public class ImportCloudBankConnectionPanel extends AbstractImportStepPanel {
     });
   }
 
-  public void requestFocus() {
+  public void prepareForDisplay() {
   }
 
   private class FieldValueComparator implements Comparator<Glob> {

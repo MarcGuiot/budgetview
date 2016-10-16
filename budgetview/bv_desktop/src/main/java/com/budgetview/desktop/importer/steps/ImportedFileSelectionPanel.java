@@ -133,7 +133,7 @@ public class ImportedFileSelectionPanel extends AbstractImportStepPanel implemen
     fileField.setText(builder.toString());
   }
 
-  public void requestFocus() {
+  public void prepareForDisplay() {
     createPanelIfNeeded();
     cloudIntroPanel.requestFocus();
   }

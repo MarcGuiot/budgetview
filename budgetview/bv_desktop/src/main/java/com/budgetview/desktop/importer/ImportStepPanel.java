@@ -5,5 +5,5 @@ import javax.swing.*;
 public interface ImportStepPanel extends MessageHandler {
   JPanel getPanel();
 
-  void requestFocus();
+  void prepareForDisplay();
 }

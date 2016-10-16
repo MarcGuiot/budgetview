@@ -35,9 +35,15 @@ public class Http {
     int statusCode = httpResponse.getStatusLine().getStatusCode();
     switch (statusCode) {
       case 200: return httpResponse;
+      case 400:
+        throw new IOException("Call to " + url + " returned error 400 (bad request) - " +
+                              "check parameters and headers");
+      case 401:
+        throw new IOException("Call to " + url + " returned error 401 (unauthorized) - " +
+                              "check authentication parameters");
       case 404:
         throw new IOException("Call to " + url + " returned error 404 (not found) - " +
-                              "check get vs post or https vs http, or make sure you are targeting the right server");
+                              "check the url and make sure the server is running");
       case 405:
         throw new IOException("Call to " + url + " returned error 405 (method not allowed) - " +
                               "check get vs post or https vs http, or make sure you are targeting the right server");

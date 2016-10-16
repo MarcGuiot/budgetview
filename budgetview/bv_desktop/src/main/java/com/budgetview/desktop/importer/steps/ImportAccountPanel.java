@@ -71,7 +71,7 @@ public class ImportAccountPanel extends AbstractImportStepPanel {
     return builder;
   }
 
-  public void requestFocus() {
+  public void prepareForDisplay() {
     getPanel(); // force creation
     accountPanel.requestFocus();
   }

@@ -98,7 +98,7 @@ public class ImportCloudBankSelectionPanel extends AbstractImportStepPanel imple
     });
   }
 
-  public void requestFocus() {
+  public void prepareForDisplay() {
     createPanelIfNeeded();
     bankChooserPanel.requestFocus();
   }

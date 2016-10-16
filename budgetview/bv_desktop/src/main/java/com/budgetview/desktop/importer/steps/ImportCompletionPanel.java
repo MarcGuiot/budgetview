@@ -55,7 +55,7 @@ public class ImportCompletionPanel extends AbstractImportStepPanel {
     return builder;
   }
 
-  public void requestFocus() {
+  public void prepareForDisplay() {
   }
 
   public void update(Set<Integer> months, int importedTransactionCount, int ignoredTransactionCount, int autocategorizedTransactionCount) {

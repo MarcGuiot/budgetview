@@ -51,7 +51,7 @@ public class ImportCloudErrorPanel extends AbstractImportStepPanel {
 
   }
 
-  public void requestFocus() {
+  public void prepareForDisplay() {
 
   }
 }

@@ -131,7 +131,9 @@ public class ImportDialog implements RealAccountImporter, Disposable {
     this.mainPanel.add(stepPanel.getPanel());
     this.dialog.pack();
     GuiUtils.center(dialog);
-    stepPanel.requestFocus();
+    this.dialog.revalidate();
+    this.dialog.repaint();
+    stepPanel.prepareForDisplay();
   }
 
   private void loadLocalRepository(GlobRepository repository) {
@@ -205,13 +207,13 @@ public class ImportDialog implements RealAccountImporter, Disposable {
           dialog.setVisible(false);
         }
       });
-      currentPanel.requestFocus();
+      currentPanel.prepareForDisplay();
       dialog.setModal(true);
       dialog.setVisible(true);
     }
     else {
       dialog.pack();
-      currentPanel.requestFocus();
+      currentPanel.prepareForDisplay();
       dialog.showCentered();
     }
   }

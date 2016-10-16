@@ -15,32 +15,35 @@
     <panel styleClass="innerDialog">
       <column styleClass="innerDialogContent">
 
-        <panel ref="cloudIntro" weightY="500"/>
 
-        <column styleClass="separator" weightY="10" marginTop="10">
-          <label icon="import_files.png" text="$import.fileSelection.file.title" styleClass="sectionTitle"
-                 marginTop="15"/>
+        <label icon="import_files.png" text="$import.fileSelection.file.title" styleClass="sectionTitle"
+               marginTop="15"/>
 
-          <htmlEditorPane text="$import.fileSelection.file.message" styleClass="multiLineLabel"/>
+        <htmlEditorPane text="$import.fileSelection.file.message" styleClass="multiLineLabel"/>
 
-          <row margin="5" defaultAnchor="center">
-            <button action="browseFiles" anchor="left"/>
-            <textField ref="fileField" marginRight="10" marginLeft="10" anchor="center" weightX="100"/>
-            <button name="import" action="import" fill="none" anchor="right"/>
-          </row>
+        <row margin="5" defaultAnchor="center">
+          <button action="browseFiles" anchor="left"/>
+          <textField ref="fileField" marginRight="10" marginLeft="10" anchor="center" weightX="100"/>
+          <button name="import" action="import" fill="none" anchor="right"/>
+        </row>
 
-          <panel opaque="false" marginTop="0" weightY="0.01">
-            <htmlEditorPane ref="importMessage" styleClass="errorMessage" hyperlinkListener="hyperlinkHandler"
-                            border="empty(0,0,10,0)"/>
-          </panel>
-        </column>
+        <panel opaque="false" marginTop="0" weightY="0.01">
+          <htmlEditorPane ref="importMessage" styleClass="errorMessage" hyperlinkListener="hyperlinkHandler"
+                          border="empty(0,0,10,0)"/>
+        </panel>
 
-        <row styleClass="separator" border="matte(1,0,0,0,dialog.separator)" weightY="10" marginTop="15">
+        <row styleClass="separator" border="matte(1,0,0,0,dialog.separator)" weightY="1" marginTop="15">
           <label icon="import_manual.png" text="$import.fileSelection.manualEntry.title" styleClass="sectionTitle"
                  marginTop="15"/>
           <filler fill="horizontal"/>
           <button action="manualEntry" marginTop="10" marginLeft="10"/>
         </row>
+
+        <column styleClass="separator" weightY="20" marginTop="10">
+          <label icon="import_bank.png" text="$import.fileSelection.bank.title" styleClass="sectionTitle"
+                 marginTop="15"/>
+          <panel ref="cloudIntro" weightY="500"/>
+        </column>
 
       </column>
     </panel>

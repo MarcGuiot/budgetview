@@ -12,17 +12,17 @@
     <column styleClass="innerDialog">
       <column styleClass="innerDialogContent">
 
-        <scrollPane marginTop="20" forceVerticalScroll="true">
-          <column margin="20">
+        <htmlEditorPane text="$import.cloud.signup.message" styleClass="multiLineLabel"/>
 
-            <textField ref="email"/>
+        <row marginLeft="30" marginRight="30">
+          <label text="$import.cloud.signup.emailField" styleClass="formLabel"/>
+          <textField ref="email"/>
+        </row>
 
-            <label ref="error" styleClass="errorMessage"/>
+        <label ref="error" styleClass="errorMessage"/>
 
-            <filler fill="vertical"/>
+        <filler fill="vertical"/>
 
-          </column>
-        </scrollPane>
       </column>
     </column>
 

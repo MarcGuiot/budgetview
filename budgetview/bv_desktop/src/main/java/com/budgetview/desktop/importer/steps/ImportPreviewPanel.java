@@ -173,7 +173,7 @@ public class ImportPreviewPanel extends AbstractImportStepPanel implements Messa
     });
   }
 
-  public void requestFocus() {
+  public void prepareForDisplay() {
   }
 
   public void dispose() {
