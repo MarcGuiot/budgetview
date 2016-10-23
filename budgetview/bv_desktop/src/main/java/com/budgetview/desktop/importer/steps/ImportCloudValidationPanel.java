@@ -46,7 +46,7 @@ public class ImportCloudValidationPanel extends AbstractImportStepPanel {
     builder.add("message", message);
 
     codeField = new JTextField();
-    builder.add("code", codeField);
+    builder.add("codeField", codeField);
     codeField.setAction(nextAction);
 
     errorLabel = new JLabel(" ");
@@ -130,10 +130,10 @@ public class ImportCloudValidationPanel extends AbstractImportStepPanel {
   }
 
   public void prepareForDisplay() {
-    codeField.requestFocus();
     codeField.setText("");
     errorLabel.setText("");
     setAllEnabled(true);
     backAction.setEnabled(false);
+    codeField.requestFocus();
   }
 }

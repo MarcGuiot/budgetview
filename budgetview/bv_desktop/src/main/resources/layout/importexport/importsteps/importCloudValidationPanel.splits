@@ -16,12 +16,14 @@
 
         <row marginLeft="30" marginRight="30">
           <label text="$import.cloud.validation.codeField" styleClass="formLabel"/>
-          <textField ref="code"/>
+          <textField ref="codeField"/>
         </row>
 
         <label ref="error" styleClass="errorMessage" marginTop="15"/>
 
         <button ref="back" autoHideIfDisabled="true" marginTop="30" fill="none" anchor="center"/>
+
+        <component ref="progressPanel" marginTop="20"/>
 
         <filler fill="vertical"/>
 

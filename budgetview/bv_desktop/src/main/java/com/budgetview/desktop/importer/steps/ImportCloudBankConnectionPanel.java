@@ -11,11 +11,13 @@ import com.budgetview.desktop.importer.ImportController;
 import com.budgetview.desktop.importer.components.CloudConnectionFieldEditor;
 import com.budgetview.desktop.importer.components.CloudConnectionFieldEditorFactory;
 import com.budgetview.model.Bank;
+import com.budgetview.utils.Lang;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.components.GlobRepeat;
 import org.globsframework.gui.splits.PanelBuilder;
 import org.globsframework.gui.splits.SplitsNode;
 import org.globsframework.gui.splits.repeat.RepeatComponentFactory;
+import org.globsframework.gui.splits.utils.GuiUtils;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
@@ -40,6 +42,7 @@ public class ImportCloudBankConnectionPanel extends AbstractImportStepPanel {
   private GlobRepeat fieldRepeat;
   private Action nextAction;
   private Glob currentConnection;
+  private JEditorPane message;
 
   public ImportCloudBankConnectionPanel(PicsouDialog dialog, String textForCloseButton, ImportController controller, GlobRepository repository, Directory localDirectory) {
     super(dialog, textForCloseButton, controller, localDirectory);
@@ -50,12 +53,15 @@ public class ImportCloudBankConnectionPanel extends AbstractImportStepPanel {
   protected GlobsPanelBuilder createPanelBuilder() {
     GlobsPanelBuilder builder = new GlobsPanelBuilder(getClass(), "/layout/importexport/importsteps/importCloudBankConnectionPanel.splits", repository, localDirectory);
 
-    nextAction = new AbstractAction() {
+    nextAction = new AbstractAction(Lang.get("import.cloud.bankConnection.next")) {
       public void actionPerformed(ActionEvent e) {
         processConnection();
       }
     };
     nextAction.setEnabled(false);
+
+    message = GuiUtils.createReadOnlyHtmlComponent();
+    builder.add("message", message);
 
     fieldRepeat = builder.addRepeat("fields", BudgeaConnectionValue.TYPE, GlobMatchers.NONE, new FieldValueComparator(), new RepeatComponentFactory<Glob>() {
       public void registerComponents(PanelBuilder cellBuilder, Glob connectionValue) {
@@ -89,6 +95,9 @@ public class ImportCloudBankConnectionPanel extends AbstractImportStepPanel {
     createPanelIfNeeded();
 
     Glob bank = repository.get(bankKey);
+
+    message.setText(Lang.get("import.cloud.bankConnection.message", bank.get(Bank.NAME)));
+
     Integer currentBudgeaBankId = bank.get(Bank.PROVIDER_ID);
     Glob budgeaBank = repository.findOrCreate(Key.create(BudgeaBank.TYPE, currentBudgeaBankId));
     GlobList fields = repository.findLinkedTo(budgeaBank, BudgeaBankField.BANK);

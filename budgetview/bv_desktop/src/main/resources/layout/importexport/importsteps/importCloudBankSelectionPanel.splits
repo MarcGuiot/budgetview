@@ -7,22 +7,17 @@
 
   <column styleClass="dialog" preferredSize="(600,710)" name="importCloudBankSelectionPanel">
 
-    <label text="$import.completion.title" name="title" styleClass="title"/>
+    <label text="$import.cloud.bankSelection.title" name="title" styleClass="title"/>
 
     <column styleClass="innerDialog">
       <column styleClass="innerDialogContent">
 
-        <scrollPane marginTop="20" forceVerticalScroll="true">
-          <column margin="20">
+        <label text="$import.cloud.bankSelection.message"/>
 
-            <panel ref="bankChooserPanel"/>
+        <panel ref="bankChooserPanel" styleClass="blockScrollBorder" marginTop="10" weightY="100"/>
 
-            <filler fill="vertical"/>
+        <component ref="progressPanel" fill="none" margin="10" anchor="center" weightY="0.1"/>
 
-            <component ref="progressPanel" fill="none" margin="10" anchor="center" weightX="0.1"/>
-
-          </column>
-        </scrollPane>
       </column>
     </column>
 

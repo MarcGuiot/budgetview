@@ -16,10 +16,12 @@
 
         <row marginLeft="30" marginRight="30">
           <label text="$import.cloud.signup.emailField" styleClass="formLabel"/>
-          <textField ref="email"/>
+          <textField ref="emailField"/>
         </row>
 
-        <label ref="error" styleClass="errorMessage"/>
+        <label ref="errorMessage" styleClass="errorMessage"/>
+
+        <component ref="progressPanel" marginTop="20"/>
 
         <filler fill="vertical"/>
 

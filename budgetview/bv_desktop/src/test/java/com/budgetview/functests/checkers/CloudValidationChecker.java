@@ -21,7 +21,7 @@ public class CloudValidationChecker extends ViewChecker {
 
 
   public CloudBankSelectionChecker processEmail(String code) {
-    mainWindow.getTextBox("code").setText(code);
+    mainWindow.getInputTextBox("codeField").setText(code, false);
     mainWindow.getButton("next").click();
     checkPanelShown("importCloudBankSelectionPanel");
     return new CloudBankSelectionChecker(mainWindow);

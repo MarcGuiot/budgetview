@@ -7,6 +7,7 @@ import com.budgetview.desktop.components.dialogs.PicsouDialog;
 import com.budgetview.desktop.importer.ImportController;
 import com.budgetview.model.Bank;
 import com.budgetview.shared.model.Provider;
+import com.budgetview.utils.Lang;
 import org.globsframework.gui.GlobSelection;
 import org.globsframework.gui.GlobSelectionListener;
 import org.globsframework.gui.GlobsPanelBuilder;
@@ -41,7 +42,7 @@ public class ImportCloudBankSelectionPanel extends AbstractImportStepPanel imple
   protected GlobsPanelBuilder createPanelBuilder() {
     GlobsPanelBuilder builder = new GlobsPanelBuilder(getClass(), "/layout/importexport/importsteps/importCloudBankSelectionPanel.splits", repository, localDirectory);
 
-    nextAction = new AbstractAction() {
+    nextAction = new AbstractAction(Lang.get("import.cloud.bankSelection.next")) {
       public void actionPerformed(ActionEvent e) {
         processSelection();
       }

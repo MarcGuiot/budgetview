@@ -6,8 +6,6 @@ import com.budgetview.desktop.components.dialogs.PicsouDialog;
 import com.budgetview.desktop.importer.ImportController;
 import com.budgetview.utils.Lang;
 import org.globsframework.gui.GlobsPanelBuilder;
-import org.globsframework.gui.splits.utils.GuiUtils;
-import org.globsframework.model.Glob;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.utils.Strings;
 import org.globsframework.utils.directory.Directory;
@@ -15,16 +13,12 @@ import org.globsframework.utils.directory.Directory;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 
-import static org.globsframework.model.FieldValue.value;
-import static org.globsframework.model.utils.GlobMatchers.linkedTo;
-
 public class ImportCloudSignupPanel extends AbstractImportStepPanel {
 
   private final GlobRepository repository;
   private final CloudService cloudService;
   private ProgressPanel progressPanel;
   private Action nextAction;
-  private Glob currentConnection;
   private JTextField emailField;
   private JLabel errorLabel;
 
@@ -44,11 +38,11 @@ public class ImportCloudSignupPanel extends AbstractImportStepPanel {
     };
 
     emailField = new JTextField();
-    builder.add("email", emailField);
+    builder.add("emailField", emailField);
     emailField.setAction(nextAction);
 
     errorLabel = new JLabel(" ");
-    builder.add("error", errorLabel);
+    builder.add("errorMessage", errorLabel);
     errorLabel.setVisible(false);
 
     builder.add("next", nextAction);

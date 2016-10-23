@@ -12,17 +12,14 @@
     <column styleClass="innerDialog">
       <column styleClass="innerDialogContent">
 
-        <scrollPane marginTop="20" forceVerticalScroll="true">
-          <column margin="20">
+        <filler fill="vertical"/>
 
-            <label text="In progress..."/>
+        <label text="$import.cloud.refresh.message" fill="none" anchor="center" marginBottom="20"/>
 
-            <component ref="progressPanel" fill="none" margin="10" anchor="center" weightX="0.1"/>
+        <component ref="progressPanel" fill="none" margin="10" anchor="center" weightX="0.1"/>
 
-            <filler fill="vertical"/>
+        <filler fill="vertical"/>
 
-          </column>
-        </scrollPane>
       </column>
     </column>
 

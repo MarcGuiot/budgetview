@@ -7,12 +7,14 @@
 
   <column styleClass="dialog" preferredSize="(600,710)" name="importCloudBankConnectionPanel">
 
-    <label text="$import.cloud.connection.title" name="title" styleClass="title"/>
+    <label text="$import.cloud.bankConnection.title" name="title" styleClass="title"/>
 
     <column styleClass="innerDialog">
       <column styleClass="innerDialogContent">
 
-        <scrollPane marginTop="20" forceVerticalScroll="true">
+        <htmlEditorPane ref="message" styleClass="multiLineLabel"/>
+
+        <scrollPane marginTop="20" forceVerticalScroll="true" weightY="100">
           <column margin="20">
 
             <repeat ref="fields" layout="verticalGrid">
@@ -20,12 +22,13 @@
               <component ref="editor"/>
             </repeat>
 
-            <filler fill="vertical"/>
-
-            <component ref="progressPanel" fill="none" margin="10" anchor="center" weightX="0.1"/>
-
           </column>
         </scrollPane>
+
+        <component ref="progressPanel" fill="none" margin="10" anchor="center" weightX="0.1"/>
+
+        <htmlEditorPane text="$import.cloud.bankConnection.security" styleClass="multiLineLabel"/>
+
       </column>
     </column>
 
