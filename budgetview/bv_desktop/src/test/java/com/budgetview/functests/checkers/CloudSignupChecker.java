@@ -10,13 +10,7 @@ public class CloudSignupChecker extends ViewChecker {
 
   public CloudSignupChecker(Window mainWindow) {
     super(mainWindow);
-    assertThat(new Assertion() {
-      public void check() {
-        if (!mainWindow.getPanel("importCloudSignupPanel").isVisible().isTrue()) {
-          UISpecAssert.fail();
-        }
-      }
-    }, 5000);
+    checkPanelShown("importCloudSignupPanel");
   }
 
   public CloudValidationChecker register(String email) {

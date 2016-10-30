@@ -10,13 +10,7 @@ public class CloudValidationChecker extends ViewChecker {
 
   public CloudValidationChecker(Window mainWindow) {
     super(mainWindow);
-    assertThat(new Assertion() {
-      public void check() {
-        if (!mainWindow.getPanel("importCloudValidationPanel").isVisible().isTrue()) {
-          UISpecAssert.fail();
-        }
-      }
-    }, 5000);
+    checkPanelShown("importCloudValidationPanel");
   }
 
 

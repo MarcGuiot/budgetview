@@ -293,8 +293,7 @@ public class ImportSession {
             bankId = bank.get(Bank.ID);
           }
           TransactionAnalyzer transactionAnalyzer = directory.get(TransactionAnalyzerFactory.class).getAnalyzer();
-          transactionAnalyzer.processTransactions(bankId, accountIdAndTransactions.getValue(),
-                                                  localRepository);
+          transactionAnalyzer.processTransactions(bankId, accountIdAndTransactions.getValue(), localRepository);
           localRepository.update(account.getKey(), Account.IS_IMPORTED_ACCOUNT, true);
 
           TransactionFilter transactionFilter = new TransactionFilter();
@@ -376,6 +375,7 @@ public class ImportSession {
               linkImportedTransactionToTransaction.get(importedTransaction.get(ImportedTransaction.SPLIT_SOURCE))),
         value(Transaction.OFX_CHECK_NUM, TransactionAnalyzerFactory.removeBlankAndToUpercase(importedTransaction.get(ImportedTransaction.OFX_CHECK_NUM))),
         value(Transaction.OFX_MEMO, TransactionAnalyzerFactory.removeBlankAndToUpercase(importedTransaction.get(ImportedTransaction.OFX_MEMO))),
+        value(Transaction.LABEL, TransactionAnalyzerFactory.removeBlankAndToUpercase(importedTransaction.get(ImportedTransaction.SIMPLE_LABEL))),
         value(Transaction.OFX_NAME, TransactionAnalyzerFactory.removeBlankAndToUpercase(importedTransaction.get(ImportedTransaction.OFX_NAME))),
         value(Transaction.QIF_M, TransactionAnalyzerFactory.removeBlankAndToUpercase(importedTransaction.get(ImportedTransaction.QIF_M))),
         value(Transaction.QIF_P, TransactionAnalyzerFactory.removeBlankAndToUpercase(importedTransaction.get(ImportedTransaction.QIF_P))),

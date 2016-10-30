@@ -1,8 +1,8 @@
 package com.budgetview.io.importer.analyzer;
 
 import com.budgetview.model.Bank;
-import com.budgetview.model.Transaction;
 import com.budgetview.model.BankFormat;
+import com.budgetview.model.Transaction;
 import com.budgetview.model.TransactionType;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobRepository;
@@ -66,12 +66,11 @@ public class DefaultTransactionAnalyzer implements TransactionAnalyzer {
           content = Strings.join(name, memo);
         }
 
-        if (!processed) {
+        if (!processed && Strings.isNullOrEmpty(transaction.get(Transaction.LABEL))) {
           repository.update(transaction.getKey(), Transaction.LABEL, content.trim());
         }
         if (!originalLabelProcessed) {
-          repository.update(transaction.getKey(), Transaction.ORIGINAL_LABEL,
-                            content.trim());
+          repository.update(transaction.getKey(), Transaction.ORIGINAL_LABEL, content.trim());
         }
       }
       String mValue = transaction.get(Transaction.QIF_M);

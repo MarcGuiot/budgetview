@@ -100,6 +100,15 @@ public class RealAccount {
     return accounts.getFirst();
   }
 
+  public static Glob findByAccountNumber(String number, Integer bankId, GlobRepository repository) {
+    GlobList accounts = repository.getAll(RealAccount.TYPE, and(fieldEquals(RealAccount.BANK, bankId),
+                                                                fieldEquals(RealAccount.NUMBER, number)));
+    if (accounts.isEmpty()) {
+      return null;
+    }
+    return accounts.getFirst();
+  }
+
   public static Glob findOrCreate(String name, String number, Integer bankId, GlobRepository repository) {
     GlobList accounts = repository.getAll(RealAccount.TYPE,
                                           and(fieldEquals(RealAccount.NAME, name),

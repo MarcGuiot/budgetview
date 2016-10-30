@@ -29,7 +29,7 @@ public class ImportedTransactionsTable {
                                                  dateRenderer.getComparator(), directory)
       .addColumn(Lang.get("import.bankDate"), ImportedTransaction.BANK_DATE,
                  chain(fontSize(9), dateRenderer))
-      .addColumn(Lang.get("label"), new TransactionLabelGlobStringifier(), LabelCustomizers.autoTooltip())
+      .addColumn(Lang.get("label"), new ImportedTransactionLabelStringifier(), LabelCustomizers.autoTooltip())
       .addColumn(Lang.get("amount"), ImportedTransaction.AMOUNT);
 
     headerPainter = TransactionTableHeaderPainter.install(tableView, directory);

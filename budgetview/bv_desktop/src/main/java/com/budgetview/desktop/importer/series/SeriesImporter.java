@@ -10,10 +10,8 @@ import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.Key;
-import org.globsframework.model.format.GlobPrinter;
 import org.globsframework.model.repository.LocalGlobRepository;
 import org.globsframework.utils.Strings;
-import org.globsframework.utils.exceptions.ItemNotFound;
 
 import java.util.Iterator;
 import java.util.Set;
@@ -74,9 +72,8 @@ public class SeriesImporter {
 
   public static void updateToKnownSeries(Set<Key> importedSeriesSet, Glob targetAccount, GlobRepository localRepository) {
 
-    System.out.println("SeriesImporter.updateToKnownSeries");
-    GlobPrinter.print(localRepository, ImportedSeries.TYPE);
-
+    System.out.println("SeriesImporter.updateToKnownSeries: " + importedSeriesSet.size() + " imported series");
+    
     for (Iterator<Key> iterator = importedSeriesSet.iterator(); iterator.hasNext(); ) {
       Glob importedSeries = localRepository.get(iterator.next());
 

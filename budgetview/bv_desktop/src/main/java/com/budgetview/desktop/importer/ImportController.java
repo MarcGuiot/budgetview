@@ -28,6 +28,8 @@ import java.io.File;
 import java.io.IOException;
 import java.util.*;
 
+import static org.globsframework.model.FieldValue.value;
+
 public class ImportController implements RealAccountImporter {
 
   private GlobRepository repository;
@@ -94,7 +96,7 @@ public class ImportController implements RealAccountImporter {
       if (target != null) {
         String amount = realAccount.get(RealAccount.POSITION);
         if (Strings.isNotEmpty(amount)) {
-          localRepository.update(target.getKey(), FieldValue.value(Account.LAST_IMPORT_POSITION, Amounts.extractAmount(amount)));
+          localRepository.update(target.getKey(), Account.LAST_IMPORT_POSITION, Amounts.extractAmount(amount));
         }
       }
     }

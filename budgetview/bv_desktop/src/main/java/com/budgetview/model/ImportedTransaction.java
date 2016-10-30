@@ -22,6 +22,8 @@ public class ImportedTransaction {
 
   public static StringField NOTE;
 
+  public static StringField SIMPLE_LABEL;
+
   public static StringField OFX_CHECK_NUM;
 
   public static StringField OFX_NAME;
@@ -52,14 +54,6 @@ public class ImportedTransaction {
 
   static {
     GlobTypeLoader.init(ImportedTransaction.class);
-  }
-
-  public static boolean isOfx(Glob importedTransaction) {
-    return Utils.equal(ImportType.OFX.getId(), importedTransaction.get(IMPORT_TYPE));
-  }
-
-  public static boolean isQif(Glob importedTransaction) {
-    return Utils.equal(ImportType.QIF.getId(), importedTransaction.get(IMPORT_TYPE));
   }
 
   public static ImportType getImportType(Glob transaction) {

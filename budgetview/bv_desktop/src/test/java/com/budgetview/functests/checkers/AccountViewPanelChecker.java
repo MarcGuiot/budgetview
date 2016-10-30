@@ -8,10 +8,10 @@ import com.budgetview.desktop.components.charts.histo.HistoSelectionManager;
 import com.budgetview.desktop.description.Formatting;
 import com.budgetview.model.Day;
 import com.budgetview.utils.Lang;
-import junit.framework.Assert;
 import org.globsframework.utils.Dates;
 import org.globsframework.utils.TablePrinter;
 import org.globsframework.utils.TestUtils;
+import org.junit.Assert;
 import org.uispec4j.Button;
 import org.uispec4j.Panel;
 import org.uispec4j.*;
@@ -110,11 +110,25 @@ public abstract class AccountViewPanelChecker<T extends AccountViewPanelChecker>
 
   public void checkAccount(String accountName, double balance, String updateDate) {
     Panel accountPanel = getAccountPanel(accountName);
-    assertThat(accountPanel.getButton("accountPosition").textEquals(toString(balance)));
+
+    final StringBuilder expected = new StringBuilder()
+      .append(accountName)
+      .append(" - ").append(toString(balance));
+
+    final StringBuilder actual = new StringBuilder()
+      .append(accountName)
+      .append(" - ").append(accountPanel.getButton("accountPosition").getLabel());
+
     if (updateDate != null) {
-      Date date = Dates.parse(updateDate);
-      UISpecAssert.assertTrue(accountPanel.getTextBox("accountUpdateDate").textEquals(Formatting.toString(date)));
+      expected.append(" on ").append(updateDate);
+      actual.append(" on ").append(accountPanel.getTextBox("accountUpdateDate").getText());
     }
+
+    UISpecAssert.assertThat(new Assertion() {
+      public void check() {
+        Assert.assertEquals(expected.toString(), actual.toString());
+      }
+    });
   }
 
   public void checkAccountUpdateDate(String accountName, String dateText) {

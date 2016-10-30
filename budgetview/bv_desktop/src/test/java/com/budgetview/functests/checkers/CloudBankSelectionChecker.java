@@ -10,7 +10,7 @@ public class CloudBankSelectionChecker extends ViewChecker {
 
   public CloudBankSelectionChecker(Window dialog) {
     super(dialog);
-    assertThat(mainWindow.getPanel("importCloudBankSelectionPanel").isVisible());
+    checkPanelShown("importCloudBankSelectionPanel");
   }
 
   public CloudBankSelectionChecker checkContainsBanks(String... bankNames) {

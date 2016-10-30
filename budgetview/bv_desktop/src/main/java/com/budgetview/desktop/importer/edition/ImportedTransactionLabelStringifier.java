@@ -7,7 +7,7 @@ import org.globsframework.model.GlobRepository;
 import org.globsframework.model.format.utils.AbstractGlobStringifier;
 import org.globsframework.utils.exceptions.InvalidState;
 
-public class TransactionLabelGlobStringifier extends AbstractGlobStringifier {
+public class ImportedTransactionLabelStringifier extends AbstractGlobStringifier {
 
   public String toString(Glob transaction, GlobRepository repository) {
     if (transaction == null) {
@@ -28,7 +28,7 @@ public class TransactionLabelGlobStringifier extends AbstractGlobStringifier {
       return builder.toString();
     }
     else if (importType == ImportType.JSON) {
-      return transaction.get(ImportedTransaction.OFX_NAME);
+      return transaction.get(ImportedTransaction.SIMPLE_LABEL);
     }
 
     throw new InvalidState("Unexpected import type for " + transaction);

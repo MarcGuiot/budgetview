@@ -78,8 +78,6 @@ public class JsonImporter implements AccountFileImporter {
       return null;
     }
 
-    String originalLabel = jsonTransaction.getString("original_label");
-
     String bankDate = convertDate(jsonTransaction.getString("bank_date"));
     Glob importedTransaction =
       targetRepository.create(ImportedTransaction.TYPE,
@@ -88,7 +86,8 @@ public class JsonImporter implements AccountFileImporter {
                               value(ImportedTransaction.DATE, convertDate(jsonTransaction.getString("operation_date"))),
                               value(ImportedTransaction.BANK_DATE, bankDate),
                               value(ImportedTransaction.AMOUNT, jsonTransaction.getDouble("amount")),
-                              value(ImportedTransaction.OFX_NAME, jsonTransaction.getString("label")),
+                              value(ImportedTransaction.SIMPLE_LABEL, jsonTransaction.getString("label")),
+                              value(ImportedTransaction.OFX_NAME, jsonTransaction.getString("original_label")),
                               value(ImportedTransaction.SERIES, findOrCreateSeriesId(jsonTransaction.optInt("provider_category_id"),
                                                                                      jsonTransaction.optString("provider_category_name"),
                                                                                      bankDate,

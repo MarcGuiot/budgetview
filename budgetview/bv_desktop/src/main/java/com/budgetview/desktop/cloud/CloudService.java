@@ -315,6 +315,14 @@ public class CloudService {
 
       Glob realAccount = RealAccount.findFromProvider(Provider.BUDGEA.getId(), budgeaAccountId, repository);
       if (realAccount == null) {
+        realAccount = RealAccount.findByAccountNumber(number, bank.get(Bank.ID), repository);
+        if (realAccount != null) {
+          repository.update(realAccount,
+                            value(RealAccount.PROVIDER, Provider.BUDGEA.getId()),
+                            value(RealAccount.PROVIDER_ACCOUNT_ID, budgeaAccountId));
+        }
+      }
+      if (realAccount == null) {
         realAccount = RealAccount.findOrCreate(name, number, bank.get(Bank.ID), repository);
         repository.update(realAccount,
                           value(RealAccount.PROVIDER, Provider.BUDGEA.getId()),
