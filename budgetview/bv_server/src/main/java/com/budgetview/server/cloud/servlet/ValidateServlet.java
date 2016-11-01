@@ -54,7 +54,7 @@ public class ValidateServlet extends HttpServlet {
 
       if (emailValidation.check(userId, code)) {
         writer.key(CloudConstants.STATUS).value("validated");
-        writer.key(CloudConstants.TOKEN).value(authentication.registerUserDevice(userId));
+        writer.key(CloudConstants.BV_TOKEN).value(authentication.registerUserDevice(userId));
       }
       else {
         writer.key(CloudConstants.STATUS).value("invalid");

@@ -41,7 +41,7 @@ public class ConnectionServlet extends HttpServlet {
     response.setCharacterEncoding("UTF-8");
 
     String email = request.getHeader(CloudConstants.EMAIL);
-    String token  = request.getHeader(CloudConstants.TOKEN);
+    String bvToken = request.getHeader(CloudConstants.BV_TOKEN);
     String budgeaToken = request.getHeader(CloudConstants.BUDGEA_TOKEN);
     String budgeaUserId = request.getHeader(CloudConstants.BUDGEA_USER_ID);
 
@@ -50,7 +50,7 @@ public class ConnectionServlet extends HttpServlet {
       response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
       return;
     }
-    if (Strings.isNullOrEmpty(token)) {
+    if (Strings.isNullOrEmpty(bvToken)) {
       logger.error("No token provided");
       response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
       return;
@@ -66,7 +66,7 @@ public class ConnectionServlet extends HttpServlet {
       return;
     }
 
-    Integer userId = authentication.checkUserToken(email, token);
+    Integer userId = authentication.checkUserToken(email, bvToken);
     if (userId == null) {
       logger.error("Could not identify user with email:" + email);
       response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
@@ -75,7 +75,7 @@ public class ConnectionServlet extends HttpServlet {
 
     String newBudgeaToken;
     try {
-      newBudgeaToken = registerBudgeaToken(budgeaToken);
+      newBudgeaToken = registerPermanentBudgeaToken(budgeaToken);
     }
     catch (Exception e) {
       logger.error("Budgea registration failed", e);
@@ -95,11 +95,11 @@ public class ConnectionServlet extends HttpServlet {
     response.setStatus(HttpServletResponse.SC_OK);
   }
 
-  private String registerBudgeaToken(String code) throws IOException {
+  private String registerPermanentBudgeaToken(String tempBudgeaToken) throws IOException {
     String serverUrl = BudgeaConstants.getServerUrl("/auth/token/access");
     Request request = Request.Post(serverUrl)
       .bodyForm(Form.form()
-                  .add("code", code)
+                  .add("code", tempBudgeaToken)
                   .add("client_id", Budgea.CLIENT_ID)
                   .add("client_secret", Budgea.CLIENT_SECRET)
                   .build());
@@ -115,6 +115,6 @@ public class ConnectionServlet extends HttpServlet {
       .set(CloudUser.PROVIDER_ACCESS_TOKEN, providerAccessToken)
       .run();
     connection.commitAndClose();
-    logger.info("Saved connection for userId " + providerUserId + " withtoken " + providerAccessToken);
+    logger.info("Saved connection for userId " + providerUserId + " with token " + providerAccessToken);
   }
 }

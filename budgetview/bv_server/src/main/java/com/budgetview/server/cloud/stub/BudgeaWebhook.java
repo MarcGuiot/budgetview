@@ -11,7 +11,7 @@ import java.io.IOException;
 
 public class BudgeaWebhook {
 
-  public static final String PERSISTEN_TOKEN = "-- PERSISTENT -- TOKEN --";
+  public static final String PERSISTEN_TOKEN = "~~~TOKEN~~~";
 
   private Logger logger = Logger.getLogger("BudgeaWebhook");
 

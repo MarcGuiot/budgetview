@@ -73,7 +73,7 @@ public class SeriesImporter {
   public static void updateToKnownSeries(Set<Key> importedSeriesSet, Glob targetAccount, GlobRepository localRepository) {
 
     System.out.println("SeriesImporter.updateToKnownSeries: " + importedSeriesSet.size() + " imported series");
-    
+
     for (Iterator<Key> iterator = importedSeriesSet.iterator(); iterator.hasNext(); ) {
       Glob importedSeries = localRepository.get(iterator.next());
 

@@ -10,7 +10,7 @@ public class CloudSignupTest extends CloudDesktopTestCase {
 
   @Test
   public void testNewUserSequence() throws Exception {
-    budgea.setInitialStatement(BudgeaStatement.init()
+    budgea.pushStatement(BudgeaStatement.init()
                                  .addConnection(1, 123, 40, "Connecteur de Test Budgea", "2016-08-10 17:44:26")
                                  .addAccount(1, "Main account 1", "100200300", "checking", 1000.00, "2016-08-10 13:00:00")
                                  .addTransaction(1, "2016-08-10 13:00:00", -100.00, "AUCHAN")

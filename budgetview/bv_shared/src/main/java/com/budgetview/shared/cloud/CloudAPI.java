@@ -1,6 +1,7 @@
 package com.budgetview.shared.cloud;
 
 import com.budgetview.shared.http.Http;
+import com.budgetview.shared.model.Provider;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.fluent.Request;
 import org.apache.http.client.fluent.Response;
@@ -29,7 +30,22 @@ public class CloudAPI {
     return new JSONObject(Files.loadStreamToString(response.getEntity().getContent(), "UTF-8"));
   }
 
-  public void addConnection(String email, String bvToken, String budgeaToken, Integer budgeaUserId) throws IOException {
+  public JSONObject getTemporaryBudgeaToken(String email, String bvToken) throws IOException {
+    if (Strings.isNullOrEmpty(email)) {
+      throw new InvalidParameter("A proper email must be provided to get a token");
+    }
+    if (Strings.isNullOrEmpty(bvToken)) {
+      throw new InvalidParameter("A proper token must be provided to get a token");
+    }
+    String url = "/budgea/token";
+    Request request = Request.Get(CloudConstants.getServerUrl(url))
+      .addHeader(CloudConstants.EMAIL, email)
+      .addHeader(CloudConstants.BV_TOKEN,  bvToken);
+    HttpResponse response = execute(request, url);
+    return new JSONObject(Files.loadStreamToString(response.getEntity().getContent(), "UTF-8"));
+  }
+
+  public void addBudgeaConnection(String email, String bvToken, String budgeaToken, Integer budgeaUserId) throws IOException {
     if (Strings.isNullOrEmpty(email)) {
       throw new InvalidParameter("A proper email must be provided to create the connection");
     }
@@ -46,17 +62,18 @@ public class CloudAPI {
     String url = cloudUrl("/connections");
     Request request = Request.Post(url)
       .addHeader(CloudConstants.EMAIL, email)
-      .addHeader(CloudConstants.TOKEN, bvToken)
+      .addHeader(CloudConstants.BV_TOKEN, bvToken)
+      .addHeader(CloudConstants.PROVIDER, Integer.toString(Provider.BUDGEA.getId()))
       .addHeader(CloudConstants.BUDGEA_TOKEN, budgeaToken)
       .addHeader(CloudConstants.BUDGEA_USER_ID, Integer.toString(budgeaUserId));
     execute(request, url);
   }
 
-  public JSONObject getStatement(String email, String token, Integer lastUpdate) throws IOException {
+  public JSONObject getStatement(String email, String bvToken, Integer lastUpdate) throws IOException {
     String url = lastUpdate == null ? "/statement" : "/statement/" + lastUpdate;
     Request request = Request.Get(cloudUrl(url))
       .addHeader(CloudConstants.EMAIL, email)
-      .addHeader(CloudConstants.TOKEN, token);
+      .addHeader(CloudConstants.BV_TOKEN, bvToken);
 
     HttpResponse response = execute(request, url);
     return new JSONObject(Files.loadStreamToString(response.getEntity().getContent(), "UTF-8"));

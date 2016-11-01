@@ -1,5 +1,6 @@
 package com.budgetview.server.cloud.functests.checkers;
 
+import com.budgetview.server.cloud.stub.BudgeaBankFieldSample;
 import com.budgetview.server.cloud.stub.BudgeaStubServer;
 import com.budgetview.shared.cloud.budgea.BudgeaConstants;
 import org.apache.log4j.Logger;
@@ -7,8 +8,6 @@ import org.apache.log4j.Logger;
 import java.io.IOException;
 
 public class BudgeaChecker {
-
-  private Logger logger = Logger.getLogger("BudgeaChecker");
 
   private BudgeaStubServer stub;
 
@@ -25,16 +24,12 @@ public class BudgeaChecker {
     stub.stop();
   }
 
-  public void setPersistentToken(String persistentToken) {
-    stub.setPersistentToken(persistentToken);
+  public void setBankFields(BudgeaBankFieldSample fields) {
+    stub.setBankFields(fields);
   }
 
-  public void setInitialStatement(String statement) {
+  public void pushStatement(String statement) {
     stub.pushStatement(statement);
-  }
-
-  public void callWebhook(String budgeaToken, String json) throws IOException {
-    stub.callWebhook(budgeaToken, json);
   }
 
   public void callWebhook(String json) throws IOException {

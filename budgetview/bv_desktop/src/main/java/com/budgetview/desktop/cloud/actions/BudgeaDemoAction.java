@@ -55,7 +55,7 @@ public class BudgeaDemoAction extends AbstractAction {
                         value(BudgeaConnectionValue.CONNECTION, 40),
                         value(BudgeaConnectionValue.FIELD, 172), // password
                         value(BudgeaConnectionValue.VALUE, "1234"));
-      cloudService.createConnection(connection, repository, new PrinterDownloadCallback());
+      cloudService.createBankConnection(connection, repository, new PrinterDownloadCallback());
     }
     catch (Exception ex) {
       ex.printStackTrace();

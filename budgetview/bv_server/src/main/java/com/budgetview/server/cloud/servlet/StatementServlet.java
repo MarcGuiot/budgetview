@@ -58,7 +58,7 @@ public class StatementServlet extends HttpServlet {
     logger.info("GET");
 
     String email = request.getHeader(CloudConstants.EMAIL);
-    String token = request.getHeader(CloudConstants.TOKEN);
+    String token = request.getHeader(CloudConstants.BV_TOKEN);
     if (Strings.isNullOrEmpty(email) || Strings.isNullOrEmpty(token)) {
       logger.info("Missing info " + email + " / " + token);
       response.setStatus(HttpServletResponse.SC_BAD_REQUEST);

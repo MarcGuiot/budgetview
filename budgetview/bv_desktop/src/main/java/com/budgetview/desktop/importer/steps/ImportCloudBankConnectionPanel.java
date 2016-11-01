@@ -123,7 +123,7 @@ public class ImportCloudBankConnectionPanel extends AbstractImportStepPanel {
 
   private void processConnection() {
     progressPanel.start();
-    cloudService.createConnection(currentConnection, repository, new CloudService.DownloadCallback() {
+    cloudService.createBankConnection(currentConnection, repository, new CloudService.DownloadCallback() {
 
       public void processCompletion(GlobList importedRealAccounts) {
         controller.setReplaceSeries(false);

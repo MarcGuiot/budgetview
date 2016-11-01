@@ -36,11 +36,12 @@ public class CloudServer {
   public void init() throws Exception {
     directory = createDirectory();
     webServer = new WebServer(config);
+    webServer.add(new SignupServlet(directory), "/signup");
+    webServer.add(new ValidateServlet(directory), "/validate");
+    webServer.add(new BudgeaTokenServlet(directory), "/budgea/token");
     webServer.add(new ConnectionServlet(directory), "/connections");
     webServer.add(new BudgeaWebHookServlet(directory), "/budgea");
     webServer.add(new StatementServlet(directory), "/statement/*");
-    webServer.add(new SignupServlet(directory), "/signup");
-    webServer.add(new ValidateServlet(directory), "/validate");
 
     if (config.isTrue("budgetview.ping.available")) {
       webServer.add(new PingServlet(directory), "/ping");

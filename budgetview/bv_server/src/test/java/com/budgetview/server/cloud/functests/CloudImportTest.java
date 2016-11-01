@@ -1,18 +1,18 @@
 package com.budgetview.server.cloud.functests;
 
 import com.budgetview.functests.utils.OfxBuilder;
-import com.budgetview.model.*;
+import com.budgetview.model.TransactionType;
 import com.budgetview.server.cloud.functests.testcases.CloudDesktopTestCase;
+import com.budgetview.server.cloud.stub.BudgeaBankFieldSample;
 import com.budgetview.server.cloud.stub.BudgeaStatement;
 import com.budgetview.shared.cloud.budgea.BudgeaCategory;
-import org.globsframework.model.format.GlobPrinter;
 import org.junit.Test;
 
 public class CloudImportTest extends CloudDesktopTestCase {
 
   @Test
   public void testCreateStandardConnection() throws Exception {
-    budgea.setInitialStatement(BudgeaStatement.init()
+    budgea.pushStatement(BudgeaStatement.init()
                                  .addConnection(1, 123, 40, "Connecteur de Test Budgea", "2016-08-10 17:44:26")
                                  .addAccount(1, "Main account 1", "100200300", "checking", 1000.00, "2016-08-12 13:00:00")
                                  .addTransaction(1, "2016-08-10 13:00:00", -100.00, "AUCHAN")
@@ -54,7 +54,7 @@ public class CloudImportTest extends CloudDesktopTestCase {
 
   @Test
   public void testRefreshDoesNotResendPreviousStatements() throws Exception {
-    budgea.setInitialStatement(BudgeaStatement.init()
+    budgea.pushStatement(BudgeaStatement.init()
                                  .addConnection(1, 123, 40, "Connecteur de Test Budgea", "2016-08-10 17:44:26")
                                  .addAccount(1, "Main account 1", "100200300", "checking", 1000.00, "2016-08-12 13:00:00")
                                  .addTransaction(1, "2016-08-10 13:00:00", -100.00, "AUCHAN")
@@ -114,7 +114,7 @@ public class CloudImportTest extends CloudDesktopTestCase {
 
   @Test
   public void testRequestSameUpdateAfterCancel() throws Exception {
-    budgea.setInitialStatement(BudgeaStatement.init()
+    budgea.pushStatement(BudgeaStatement.init()
                                  .addConnection(1, 123, 40, "Connecteur de Test Budgea", "2016-08-10 17:44:26")
                                  .addAccount(1, "Main account 1", "100200300", "checking", 1000.00, "2016-08-12 13:00:00")
                                  .addTransaction(1, "2016-08-10 13:00:00", -100.00, "AUCHAN")
@@ -179,7 +179,7 @@ public class CloudImportTest extends CloudDesktopTestCase {
       .addTransaction("2016/08/10", "2016/08/10", -100.00, "CB AUCHAN SA")
       .load();
 
-    budgea.setInitialStatement(BudgeaStatement.init()
+    budgea.pushStatement(BudgeaStatement.init()
                                  .addConnection(1, 123, 40, "Connecteur de Test Budgea", "2016-08-12 17:44:26")
                                  .addAccount(1, "Main account 1", "100200300", "checking", 950.00, "2016-08-12 13:00:00")
                                  .addTransaction(1, "2016-08-08 10:00:00", "2016-08-08 10:00:00", -10.00, "CIC", "PRLVT FRAIS CIC FILBANQUE", BudgeaCategory.FRAIS_BANCAIRES.getId(), "Frais bancaires", false)
@@ -216,5 +216,68 @@ public class CloudImportTest extends CloudDesktopTestCase {
     mainAccounts.checkAccount("Account n. 100200300", 950.00, "2016/08/12");
 
     budgetView.recurring.checkContent("| Electricité | 50.00 | 50.00 |");
+  }
+
+  @Test
+  public void testCanManageConnexionWithTwoBanks() throws Exception {
+    budgea.pushStatement(BudgeaStatement.init()
+                                 .addConnection(1, 123, 40, "Connecteur de Test Budgea", "2016-08-10 17:44:26")
+                                 .addAccount(1, "Main account 1", "100200300", "checking", 1000.00, "2016-08-12 13:00:00")
+                                 .addTransaction(1, "2016-08-10 13:00:00", -100.00, "AUCHAN")
+                                 .addTransaction(2, "2016-08-12 17:00:00", -50.00, "EDF", BudgeaCategory.ELECTRICITE)
+                                 .endAccount()
+                                 .endConnection()
+                                 .get());
+
+    operations.openImportDialog()
+      .selectCloudForNewUser()
+      .register("toto@example.com")
+      .processEmail(mailbox.getVerificationCode("toto@example.com"))
+      .selectBank("Connecteur de Test Budgea")
+      .next()
+      .setChoice("Type de compte", "Particuliers")
+      .setText("Identifiant", "1234")
+      .setPassword("Code (1234)", "")
+      .next()
+      .checkTransactions(new Object[][]{
+        {"2016/08/12", "EDF", "-50.00"},
+        {"2016/08/10", "AUCHAN", "-100.00"},
+      })
+      .importAccountWithAllSeriesAndComplete();
+
+    transactions.initAmountContent()
+      .add("12/08/2016", "EDF", -50.00, "Electricité", 1000.00, 1000.00, "Main account 1")
+      .add("10/08/2016", "AUCHAN", -100.00, "To categorize", 1050.00, 1050.00, "Main account 1")
+      .check();
+
+    budgea.setBankFields(BudgeaBankFieldSample.CIC);
+    budgea.pushStatement(BudgeaStatement.init()
+                                 .addConnection(2, 123, 2, "CIC", "2016-08-14 16:18:44")
+                                 .addAccount(2, "Joint account", "987654321", "checking", 500.00, "2016-08-14 17:00:00")
+                                 .addTransaction(1, "2016-08-14 10:00:00", -250.00, "FNAC", BudgeaCategory.UNCATEGORIZED)
+                                 .endAccount()
+                                 .endConnection()
+                                 .get());
+
+    operations.openImportDialog()
+      .addCloudConnection()
+      .selectBank("CIC")
+      .next()
+      .setText("Identifiant", "1234")
+      .setPassword("Mot de passe", "abcd")
+      .next()
+      .checkTransactions(new Object[][]{
+        {"2016/08/14", "FNAC", "-250.00"},
+      })
+      .checkSelectedAccount("a new account")
+      .importAccountAndGetSummary()
+      .checkSummaryAndValidate(1, 0, 0);
+
+    budgetView.recurring.checkContent("| Electricité | 50.00 | 50.00 |");
+
+    mainAccounts.checkContent("| Main account 1* | 1000.00 on 2016/08/12 | sunny |\n" +
+                              "| Joint account*  | 500.00 on 2016/08/14  | sunny |");
+
+
   }
 }

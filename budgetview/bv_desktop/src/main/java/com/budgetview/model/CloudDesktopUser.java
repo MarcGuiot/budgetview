@@ -27,7 +27,7 @@ public class CloudDesktopUser {
 
   public static StringField EMAIL;
 
-  public static StringField TOKEN;
+  public static StringField BV_TOKEN;
 
   public static BooleanField REGISTERED;
 
@@ -59,7 +59,7 @@ public class CloudDesktopUser {
       SerializedByteArrayOutput serializedByteArrayOutput = new SerializedByteArrayOutput();
       SerializedOutput outputStream = serializedByteArrayOutput.getOutput();
       outputStream.writeUtf8String(values.get(EMAIL));
-      outputStream.writeUtf8String(values.get(TOKEN));
+      outputStream.writeUtf8String(values.get(BV_TOKEN));
       outputStream.writeBoolean(values.get(REGISTERED));
       outputStream.writeBoolean(values.get(SYNCHRO_ENABLED));
       outputStream.writeInteger(values.get(LAST_UPDATE));
@@ -75,7 +75,7 @@ public class CloudDesktopUser {
     private void deserializeV1(FieldSetter fieldSetter, byte[] data) {
       SerializedInput input = SerializedInputOutputFactory.init(data);
       fieldSetter.set(EMAIL, input.readUtf8String());
-      fieldSetter.set(TOKEN, input.readUtf8String());
+      fieldSetter.set(BV_TOKEN, input.readUtf8String());
       fieldSetter.set(REGISTERED, input.readBoolean());
       fieldSetter.set(SYNCHRO_ENABLED, input.readBoolean());
       fieldSetter.set(LAST_UPDATE, input.readInteger());

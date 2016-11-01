@@ -67,7 +67,7 @@ public class CloudService {
           repository.findOrCreate(CloudDesktopUser.KEY);
           repository.update(CloudDesktopUser.KEY,
                             value(CloudDesktopUser.EMAIL, email),
-                            value(CloudDesktopUser.TOKEN, null),
+                            value(CloudDesktopUser.BV_TOKEN, null),
                             value(CloudDesktopUser.REGISTERED, false));
           cloudAPI.signup(email);
           callback.processCompletion();
@@ -88,9 +88,9 @@ public class CloudService {
           JSONObject result = cloudAPI.validate(email, code);
           String status = result.getString(CloudConstants.STATUS);
           if ("validated".equalsIgnoreCase(status)) {
-            String token = result.getString(CloudConstants.TOKEN);
+            String bvToken = result.getString(CloudConstants.BV_TOKEN);
             repository.update(CloudDesktopUser.KEY,
-                              value(CloudDesktopUser.TOKEN, token),
+                              value(CloudDesktopUser.BV_TOKEN, bvToken),
                               value(CloudDesktopUser.REGISTERED, true));
             callback.processCompletion();
           }
@@ -109,7 +109,6 @@ public class CloudService {
     });
     thread.start();
   }
-
 
   public void updateBankList(GlobRepository repository, Callback callback) {
 
@@ -157,6 +156,8 @@ public class CloudService {
 
   public void updateBankFields(Key bankKey, GlobRepository repository, Callback callback) {
     try {
+      requestBudgeaTemporaryToken(repository);
+
       repository.startChangeSet();
       Glob bank = repository.get(bankKey);
       if (!Utils.equal(Provider.BUDGEA.getId(), bank.get(Bank.PROVIDER))) {
@@ -167,12 +168,12 @@ public class CloudService {
       if (budgeaBankId == null) {
         throw new InvalidParameter("No provider set for bank: " + bank);
       }
+
       GlobList fields = repository.getAll(BudgeaBankField.TYPE, fieldEquals(BudgeaBankField.BANK, budgeaBankId));
       repository.delete(BudgeaBankFieldValue.TYPE, fieldIn(BudgeaBankFieldValue.FIELD, fields.getValueSet(BudgeaBankField.ID)));
       repository.delete(fields);
       repository.delete(BudgeaConnection.TYPE, fieldEquals(BudgeaConnection.BANK, budgeaBankId));
       repository.delete(BudgeaConnectionValue.TYPE, fieldEquals(BudgeaConnectionValue.CONNECTION, budgeaBankId));
-
       repository.findOrCreate(Key.create(BudgeaBank.TYPE, budgeaBankId),
                               value(BudgeaBank.BANK, bank.get(Bank.ID)));
 
@@ -204,7 +205,15 @@ public class CloudService {
     }
   }
 
-  public void createConnection(final Glob connection, final GlobRepository repository, final DownloadCallback callback) {
+  private void requestBudgeaTemporaryToken(GlobRepository repository) throws IOException {
+    Glob user = repository.get(CloudDesktopUser.KEY);
+    JSONObject result = cloudAPI.getTemporaryBudgeaToken(user.get(CloudDesktopUser.EMAIL), user.get(CloudDesktopUser.BV_TOKEN));
+    String token = result.getString(CloudConstants.BUDGEA_TOKEN);
+    boolean permanentTokenRegistered = result.getBoolean(CloudConstants.BUDGEA_TOKEN_REGISTERED);
+    budgeaAPI.setTempToken(token, permanentTokenRegistered);
+  }
+
+  public void createBankConnection(final Glob connection, final GlobRepository repository, final DownloadCallback callback) {
     Thread thread = new Thread(new Runnable() {
       public void run() {
         try {
@@ -215,10 +224,12 @@ public class CloudService {
             params.put(name, value.get(BudgeaConnectionValue.VALUE));
           }
 
-          budgeaAPI.registerConnection(connection.get(BudgeaConnection.BANK), params);
-          Glob user = repository.get(CloudDesktopUser.KEY);
+          if (!budgeaAPI.isPermanentTokenRegistered()) {
+            Glob user = repository.get(CloudDesktopUser.KEY);
+            cloudAPI.addBudgeaConnection(user.get(CloudDesktopUser.EMAIL), user.get(CloudDesktopUser.BV_TOKEN), budgeaAPI.getToken(), budgeaAPI.getUserId());
+          }
 
-          cloudAPI.addConnection(user.get(CloudDesktopUser.EMAIL), user.get(CloudDesktopUser.TOKEN), budgeaAPI.getToken(), budgeaAPI.getUserId());
+          budgeaAPI.addBankConnection(connection.get(BudgeaConnection.BANK), params);
 
           repository.update(CloudDesktopUser.KEY, CloudDesktopUser.SYNCHRO_ENABLED, true);
 
@@ -295,7 +306,7 @@ public class CloudService {
   public GlobList doDownloadStatement(GlobRepository repository) throws IOException {
     Glob user = repository.findOrCreate(CloudDesktopUser.KEY);
     Integer lastUpdate = user.get(CloudDesktopUser.LAST_UPDATE);
-    JSONObject statement = cloudAPI.getStatement(user.get(CloudDesktopUser.EMAIL), user.get(CloudDesktopUser.TOKEN), lastUpdate);
+    JSONObject statement = cloudAPI.getStatement(user.get(CloudDesktopUser.EMAIL), user.get(CloudDesktopUser.BV_TOKEN), lastUpdate);
     JSONArray accounts = statement.getJSONArray("accounts");
     if (accounts.length() == 0) {
       return GlobList.EMPTY;
