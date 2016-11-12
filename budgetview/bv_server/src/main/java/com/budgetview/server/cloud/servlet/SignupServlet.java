@@ -2,6 +2,7 @@ package com.budgetview.server.cloud.servlet;
 
 import com.budgetview.server.cloud.services.AuthenticationService;
 import com.budgetview.server.cloud.services.EmailValidationService;
+import com.budgetview.server.cloud.utils.CloudSubscriptionException;
 import com.budgetview.shared.cloud.CloudConstants;
 import org.apache.log4j.Logger;
 import org.globsframework.sqlstreams.exceptions.GlobsSQLException;
@@ -10,12 +11,11 @@ import org.globsframework.utils.directory.Directory;
 
 import javax.mail.MessagingException;
 import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-public class SignupServlet extends HttpServlet {
+public class SignupServlet extends HttpCloudServlet {
 
   private static Logger logger = Logger.getLogger("/signup");
 
@@ -35,25 +35,28 @@ public class SignupServlet extends HttpServlet {
     logger.info("Signup requested for " + email);
     if (Strings.isNullOrEmpty(email)) {
       logger.error("Missing email");
-      response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+      setInternalError(response);
       return;
     }
 
     String lang = request.getHeader(CloudConstants.LANG);
-
     try {
       processSignup(email, lang);
     }
+    catch (CloudSubscriptionException e) {
+      setSubscriptionError(response, e);
+      return;
+    }
     catch (Exception e) {
       logger.error("Could not process: " + email, e);
-      response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+      setInternalError(response);
       return;
     }
 
-    response.setStatus(HttpServletResponse.SC_OK);
+    setOk(response);
   }
 
-  private void processSignup(String email, String lang) throws GlobsSQLException, MessagingException {
+  private void processSignup(String email, String lang) throws GlobsSQLException, MessagingException, CloudSubscriptionException {
     Integer userId = authentication.findUser(email);
     if (userId == null) {
       userId = authentication.createUser(email);

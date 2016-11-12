@@ -5,6 +5,7 @@ import com.budgetview.server.cloud.model.ProviderTransaction;
 import com.budgetview.server.cloud.model.ProviderUpdate;
 import com.budgetview.server.cloud.persistence.CloudSerializer;
 import com.budgetview.server.cloud.services.AuthenticationService;
+import com.budgetview.server.cloud.utils.CloudSubscriptionException;
 import com.budgetview.shared.cloud.CloudConstants;
 import com.budgetview.shared.model.Provider;
 import org.apache.log4j.Logger;
@@ -25,7 +26,6 @@ import org.globsframework.utils.Strings;
 import org.globsframework.utils.directory.Directory;
 
 import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -36,7 +36,7 @@ import java.util.regex.Pattern;
 import static org.globsframework.sqlstreams.constraints.Where.fieldEquals;
 import static org.globsframework.sqlstreams.constraints.Where.fieldStrictlyGreaterThan;
 
-public class StatementServlet extends HttpServlet {
+public class StatementServlet extends HttpCloudServlet {
 
   private static Logger logger = Logger.getLogger("/statement");
   private Pattern pattern = Pattern.compile("/([0-9]+)");
@@ -61,14 +61,21 @@ public class StatementServlet extends HttpServlet {
     String token = request.getHeader(CloudConstants.BV_TOKEN);
     if (Strings.isNullOrEmpty(email) || Strings.isNullOrEmpty(token)) {
       logger.info("Missing info " + email + " / " + token);
-      response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+      setBadRequest(response);
       return;
     }
 
-    Integer userId = authentication.checkUserToken(email, token);
+    Integer userId = null;
+    try {
+      userId = authentication.checkUserToken(email, token);
+    }
+    catch (CloudSubscriptionException e) {
+      setSubscriptionError(response, e);
+      return;
+    }
     if (userId == null) {
       logger.error("Could not identify user with email:" + email);
-      response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+      setUnauthorized(response);
       return;
     }
 
@@ -118,8 +125,8 @@ public class StatementServlet extends HttpServlet {
     JsonGlobWriter writer = new JsonGlobWriter(response.getWriter());
     writer.object();
 
-    writer.key("last_update");
-    writer.value(maxId);
+    setOk(response, writer);
+    writer.key("last_update").value(maxId);
 
     writer.key("accounts");
     writer.array();

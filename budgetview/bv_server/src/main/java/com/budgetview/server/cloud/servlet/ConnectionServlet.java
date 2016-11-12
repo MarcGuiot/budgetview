@@ -3,6 +3,7 @@ package com.budgetview.server.cloud.servlet;
 import com.budgetview.server.cloud.budgea.Budgea;
 import com.budgetview.server.cloud.model.CloudUser;
 import com.budgetview.server.cloud.services.AuthenticationService;
+import com.budgetview.server.cloud.utils.CloudSubscriptionException;
 import com.budgetview.shared.cloud.budgea.BudgeaConstants;
 import com.budgetview.shared.cloud.CloudConstants;
 import com.budgetview.shared.model.Provider;
@@ -24,7 +25,7 @@ import java.io.IOException;
 
 import static com.budgetview.shared.json.Json.json;
 
-public class ConnectionServlet extends HttpServlet {
+public class ConnectionServlet extends HttpCloudServlet {
 
   private static Logger logger = Logger.getLogger("/connections");
 
@@ -47,29 +48,36 @@ public class ConnectionServlet extends HttpServlet {
 
     if (Strings.isNullOrEmpty(email)) {
       logger.error("No email provided");
-      response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+      setBadRequest(response);
       return;
     }
     if (Strings.isNullOrEmpty(bvToken)) {
       logger.error("No token provided");
-      response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+      setBadRequest(response);
       return;
     }
     if (Strings.isNullOrEmpty(budgeaToken)) {
       logger.error("No token provided");
-      response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+      setBadRequest(response);
       return;
     }
     if (Strings.isNullOrEmpty(budgeaUserId)) {
       logger.error("No userId provided");
-      response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+      setBadRequest(response);
       return;
     }
 
-    Integer userId = authentication.checkUserToken(email, bvToken);
+    Integer userId = null;
+    try {
+      userId = authentication.checkUserToken(email, bvToken);
+    }
+    catch (CloudSubscriptionException e) {
+      setSubscriptionError(response, e);
+      return;
+    }
     if (userId == null) {
       logger.error("Could not identify user with email:" + email);
-      response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+      setUnauthorized(response);
       return;
     }
 
@@ -79,7 +87,7 @@ public class ConnectionServlet extends HttpServlet {
     }
     catch (Exception e) {
       logger.error("Budgea registration failed", e);
-      response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+      setInternalError(response);
       return;
     }
 
@@ -88,7 +96,7 @@ public class ConnectionServlet extends HttpServlet {
     }
     catch (GlobsSQLException e) {
       logger.error("Could not store user '" + email + "' in dabase", e);
-      response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+      setInternalError(response);
       return;
     }
 

@@ -2,7 +2,10 @@ package com.budgetview.server.cloud.services;
 
 import com.budgetview.server.cloud.model.CloudUser;
 import com.budgetview.server.cloud.model.CloudUserDevice;
+import com.budgetview.server.cloud.utils.CloudSubscriptionException;
 import com.budgetview.server.cloud.utils.RandomStrings;
+import com.budgetview.shared.cloud.CloudSubscriptionStatus;
+import com.budgetview.shared.license.LicenseAPI;
 import org.apache.log4j.Logger;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
@@ -13,6 +16,7 @@ import org.globsframework.sqlstreams.constraints.Where;
 import org.globsframework.sqlstreams.exceptions.DbConstraintViolation;
 import org.globsframework.sqlstreams.exceptions.GlobsSQLException;
 import org.globsframework.sqlstreams.exceptions.RollbackFailed;
+import org.globsframework.utils.Dates;
 import org.globsframework.utils.directory.Directory;
 import org.globsframework.utils.exceptions.ItemNotFound;
 import org.globsframework.utils.exceptions.TooManyItems;
@@ -20,6 +24,7 @@ import org.globsframework.utils.exceptions.TooManyItems;
 import java.util.Date;
 
 import static org.globsframework.sqlstreams.constraints.Where.fieldEquals;
+import static org.globsframework.utils.Dates.now;
 
 public class AuthenticationService {
 
@@ -92,7 +97,7 @@ public class AuthenticationService {
       SqlCreateRequest request = connection.startCreate(CloudUserDevice.TYPE)
         .set(CloudUserDevice.USER_ID, userId)
         .set(CloudUserDevice.TOKEN, newToken)
-        .set(CloudUserDevice.LAST_UPDATE, new Date())
+        .set(CloudUserDevice.LAST_UPDATE, now())
         .getRequest();
       request.execute();
     }
@@ -111,18 +116,24 @@ public class AuthenticationService {
     return newToken;
   }
 
-  public Integer checkUserToken(String email, String token) {
+  public Integer checkUserToken(String email, String token) throws CloudSubscriptionException {
     SqlConnection connection = database.connect();
     try {
       Glob user = connection.selectUnique(CloudUser.TYPE, fieldEquals(CloudUser.EMAIL, email.toLowerCase()));
       if (user == null) {
         return null;
       }
-      Integer userId = user.get(CloudUser.ID);
 
+      Integer userId = user.get(CloudUser.ID);
       GlobList usersWithToken = connection.selectAll(CloudUser.TYPE, Where.and(fieldEquals(CloudUserDevice.USER_ID, userId),
                                                                                fieldEquals(CloudUserDevice.TOKEN, token)));
-      return usersWithToken.size() == 1 ? userId : null;
+      if (usersWithToken.size() != 1) {
+        return null;
+      }
+
+      doCheckSubscription(user, userId, email, connection);
+
+      return userId;
     }
     finally {
       try {
@@ -134,6 +145,54 @@ public class AuthenticationService {
       catch (DbConstraintViolation constraintViolation) {
         logger.error("Commit failed when looking for user: " + email, constraintViolation);
       }
+    }
+  }
+
+  public void checkSubscriptionIsValid(Integer userId) throws CloudSubscriptionException {
+    SqlConnection connection = database.connect();
+    try {
+      Glob user = connection.selectUnique(CloudUser.TYPE, fieldEquals(CloudUser.ID, userId));
+      if (user == null) {
+        throw new CloudSubscriptionException(CloudSubscriptionStatus.UNKNOWN);
+      }
+      doCheckSubscription(user, userId, user.get(CloudUser.EMAIL), connection);
+    }
+    finally {
+      try {
+        connection.commitAndClose();
+      }
+      catch (RollbackFailed rollbackFailed) {
+        logger.error("Commit failed when looking for user: " + userId, rollbackFailed);
+      }
+      catch (DbConstraintViolation constraintViolation) {
+        logger.error("Commit failed when looking for user: " + userId, constraintViolation);
+      }
+    }
+  }
+
+  private void doCheckSubscription(Glob user, Integer userId, String email, SqlConnection connection) throws CloudSubscriptionException {
+    Date endDate = user.get(CloudUser.SUBSCRIPTION_END_DATE);
+    if (endDate == null || now().after(endDate)) {
+      try {
+        endDate = LicenseAPI.getCloudSubscriptionEndDate(email);
+      }
+      catch (Exception e) {
+        logger.error("Failed to retrieve subscription end date", e);
+      }
+      if (endDate != null) {
+        connection.startUpdate(CloudUser.TYPE, Where.fieldEquals(CloudUser.ID, userId))
+          .set(CloudUser.SUBSCRIPTION_END_DATE, endDate)
+          .run();
+      }
+    }
+
+    logger.info("Subscription end date is " + Dates.toString(endDate) + " for " + email);
+
+    if (endDate == null) {
+      throw new CloudSubscriptionException(CloudSubscriptionStatus.UNKNOWN);
+    }
+    if (now().after(endDate)) {
+      throw new CloudSubscriptionException(CloudSubscriptionStatus.EXPIRED);
     }
   }
 
@@ -162,5 +221,4 @@ public class AuthenticationService {
       }
     }
   }
-
 }

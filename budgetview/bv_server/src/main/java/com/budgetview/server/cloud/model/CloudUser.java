@@ -31,6 +31,8 @@ public class CloudUser {
 
   public static DateField LAST_VALIDATION_DATE;
 
+  public static DateField SUBSCRIPTION_END_DATE;
+
   static {
     GlobTypeLoader.init(CloudUser.class, "cloudUser");
   }

@@ -1,4 +1,4 @@
-package com.budgetview.server.utils;
+package com.budgetview.server.cloud.utils;
 
 import com.budgetview.server.cloud.model.CloudDatabaseModel;
 import com.budgetview.server.config.ConfigService;
@@ -7,17 +7,18 @@ import org.globsframework.sqlstreams.SqlConnection;
 import org.globsframework.sqlstreams.drivers.jdbc.JdbcGlobsDatabase;
 import org.globsframework.utils.directory.Directory;
 
-public class DbInit {
+public class CloudDb {
   public static final String DATABASE_URL = "budgetview.database.url";
   public static final String DATABASE_USER = "budgetview.database.user";
   public static final String DATABASE_PASSWORD = "budgetview.database.password";
-  public static final String JDBC_HSQLDB = "jdbc:hsqldb:.";
 
   public static GlobsDatabase create(ConfigService configService) {
-    GlobsDatabase database = new JdbcGlobsDatabase(configService.get(DbInit.DATABASE_URL),
-                                                   configService.get(DbInit.DATABASE_USER),
-                                                   configService.get(DbInit.DATABASE_PASSWORD));
-    database.connect().createTables(CloudDatabaseModel.getAllTypes());
+    GlobsDatabase database = new JdbcGlobsDatabase(configService.get(DATABASE_URL),
+                                                   configService.get(DATABASE_USER),
+                                                   configService.get(DATABASE_PASSWORD));
+    SqlConnection connection = database.connect();
+    connection.createTables(CloudDatabaseModel.getAllTypes());
+    connection.commitAndClose();
     return database;
   }
 
@@ -29,5 +30,9 @@ public class DbInit {
     SqlConnection connection = database.connect();
     connection.emptyTable(CloudDatabaseModel.getAllTypes());
     connection.commitAndClose();
+  }
+
+  public static boolean isJDBC(String databaseUrl) {
+    return databaseUrl.startsWith("jdbc:");
   }
 }

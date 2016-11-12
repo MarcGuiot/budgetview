@@ -8,6 +8,7 @@ public class CloudConstants {
   public static final String VALIDATION_CODE = "validation_code";
   public static final String BV_TOKEN = "token";
   public static final String STATUS = "status";
+  public static final String SUBSCRIPTION_STATUS = "subscription_status";
 
   public static final String PROVIDER = "budgea_token";
   public static final String BUDGEA_TOKEN = "budgea_token";

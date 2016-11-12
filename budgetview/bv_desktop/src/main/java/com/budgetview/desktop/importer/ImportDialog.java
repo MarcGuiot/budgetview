@@ -10,6 +10,7 @@ import com.budgetview.desktop.importer.components.RealAccountImporter;
 import com.budgetview.desktop.importer.series.SeriesImporter;
 import com.budgetview.desktop.importer.steps.*;
 import com.budgetview.model.*;
+import com.budgetview.shared.cloud.CloudSubscriptionStatus;
 import com.budgetview.shared.model.BudgetArea;
 import com.budgetview.triggers.AutomaticSeriesBudgetTrigger;
 import com.budgetview.triggers.SeriesBudgetTrigger;
@@ -56,6 +57,7 @@ public class ImportDialog implements RealAccountImporter, Disposable {
   private ImportCloudBankSelectionPanel cloudBankSelectionPanel;
   private ImportCloudBankConnectionPanel cloudBankConnectionPanel;
   private ImportCloudRefreshPanel cloudRefreshPanel;
+  private ImportCloudSubscriptionErrorPanel cloudBankSubscriptionErrorPanel;
   private ImportCloudErrorPanel cloudErrorPanel;
   private ImportPreviewPanel previewPanel;
   private ImportCompletionPanel completionPanel;
@@ -88,6 +90,7 @@ public class ImportDialog implements RealAccountImporter, Disposable {
     cloudBankSelectionPanel = new ImportCloudBankSelectionPanel(dialog, textForCloseButton, controller, localRepository, localDirectory);
     cloudBankConnectionPanel = new ImportCloudBankConnectionPanel(dialog, textForCloseButton, controller, localRepository, localDirectory);
     cloudRefreshPanel = new ImportCloudRefreshPanel(dialog, textForCloseButton, controller, localRepository, localDirectory);
+    cloudBankSubscriptionErrorPanel = new ImportCloudSubscriptionErrorPanel(dialog, textForCloseButton, controller, localRepository, localDirectory);
     cloudErrorPanel = new ImportCloudErrorPanel(dialog, textForCloseButton, controller, localRepository, localDirectory);
     previewPanel = new ImportPreviewPanel(dialog, textForCloseButton, controller, defaultAccount, repository, localRepository, localDirectory);
     completionPanel = new ImportCompletionPanel(dialog, textForCloseButton, controller, localRepository, localDirectory);
@@ -263,6 +266,11 @@ public class ImportDialog implements RealAccountImporter, Disposable {
 
   public void showCloudError() {
     setCurrentPanel(cloudErrorPanel);
+  }
+
+  public void showCloudSubscriptionError(String email, CloudSubscriptionStatus status) {
+    cloudBankSubscriptionErrorPanel.update(email, status);
+    setCurrentPanel(cloudBankSubscriptionErrorPanel);
   }
 
   static class DoubleRef {

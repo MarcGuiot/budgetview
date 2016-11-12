@@ -4,6 +4,7 @@ import com.budgetview.server.license.generator.LicenseGenerator;
 import com.budgetview.server.license.mail.Mailbox;
 import com.budgetview.server.license.mail.Mailer;
 import com.budgetview.server.license.model.License;
+import com.budgetview.server.license.utils.PaypalConstants;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
@@ -38,29 +39,19 @@ import java.util.Map;
 public class NewUserServlet extends HttpServlet {
   static Logger logger = Logger.getLogger("NewUserServlet");
   public static final int LICENCE_COUNT = Integer.parseInt(System.getProperty("budgetview.licence.count", "3"));
-  public static final String PAYPAL_CONFIRM_URL_PROPERTY = "PAYPAL_CONFIRM_URL";
-  //  private static String PAYPAL_CONFIRM_URL = "http://www.sandbox.paypal.com/fr/cgi-bin/webscr";
-  private static String PAYPAL_CONFIRM_URL = "http://www.paypal.com/fr/cgi-bin/webscr";
-  private static final String CUSTOM = "item_number";
   private GlobsDatabase db;
   private Mailer mailer;
-  public static final String PAYER_EMAIL = "payer_email";
-  public static final String TRANSACTION_ID = "txn_id";
-  public static final String PAYMENT_STATUS_ID = "payment_status";
-  public static final String RECEIVER_EMAIL = "receiver_email";
-  private static final String MC_CURRENCY = "mc_currency";
   private HttpClient client;
 
 
   public NewUserServlet(Directory directory) {
-    String url = System.getProperty(PAYPAL_CONFIRM_URL_PROPERTY);
+    String url = System.getProperty(PaypalConstants.PAYPAL_CONFIRM_URL_PROPERTY);
     if (url != null) {
-      PAYPAL_CONFIRM_URL = url;
+      PaypalConstants.PAYPAL_CONFIRM_URL = url;
     }
     db = directory.get(GlobsDatabase.class);
     mailer = directory.get(Mailer.class);
     client = new DefaultHttpClient(new PoolingClientConnectionManager());
-//    client.getParams().setCookiePolicy(CookiePolicy.BROWSER_COMPATIBILITY);
   }
 
   protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -71,14 +62,14 @@ public class NewUserServlet extends HttpServlet {
       req.setCharacterEncoding("UTF-8");
       resp.setCharacterEncoding("UTF-8");
       logger.info("receive new User  : ");
-      mail = req.getParameter(PAYER_EMAIL);
+      mail = req.getParameter(PaypalConstants.PAYER_EMAIL);
       logger.info("NewUser : mail : '" + mail);
 
       String transactionId = "";
       String paymentStatus = "";
       String receiverEmail = "";
       String lang = null;
-      URIBuilder builder = new URIBuilder(PAYPAL_CONFIRM_URL);
+      URIBuilder builder = new URIBuilder(PaypalConstants.PAYPAL_CONFIRM_URL);
       builder.addParameter("cmd", "_notify-validate");
       Map<String, String[]> map = (Map<String, String[]>)req.getParameterMap();
       StringBuffer paramaters = new StringBuffer();
@@ -89,17 +80,17 @@ public class NewUserServlet extends HttpServlet {
           paramaters.append(key).append("='").append(req.getParameter(key))
             .append("'; ");
         }
-        if (key.equalsIgnoreCase(TRANSACTION_ID)) {
+        if (key.equalsIgnoreCase(PaypalConstants.TRANSACTION_ID)) {
           transactionId = req.getParameter(key);
         }
-        else if (key.equalsIgnoreCase(PAYMENT_STATUS_ID)) {
+        else if (key.equalsIgnoreCase(PaypalConstants.PAYMENT_STATUS_ID)) {
           paymentStatus = req.getParameter(key);
         }
-        else if (key.equalsIgnoreCase(RECEIVER_EMAIL)) {
+        else if (key.equalsIgnoreCase(PaypalConstants.RECEIVER_EMAIL)) {
           receiverEmail = req.getParameter(key);
         }
-        else if (key.equalsIgnoreCase(CUSTOM)){
-          String parameter = req.getParameter(CUSTOM);
+        else if (key.equalsIgnoreCase(PaypalConstants.CUSTOM)){
+          String parameter = req.getParameter(PaypalConstants.CUSTOM);
           if ("1".equalsIgnoreCase(parameter)){
             lang = "fr";
           }
@@ -107,8 +98,8 @@ public class NewUserServlet extends HttpServlet {
             lang = "en";
           }
         }
-        else if (key.equalsIgnoreCase(MC_CURRENCY) && lang == null) {
-          if (req.getParameter(MC_CURRENCY).equalsIgnoreCase("EUR")) {
+        else if (key.equalsIgnoreCase(PaypalConstants.MC_CURRENCY) && lang == null) {
+          if (req.getParameter(PaypalConstants.MC_CURRENCY).equalsIgnoreCase("EUR")) {
             lang = "fr";
           }
           else {

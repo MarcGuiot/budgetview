@@ -6,12 +6,14 @@ import com.budgetview.server.cloud.functests.testcases.CloudDesktopTestCase;
 import com.budgetview.server.cloud.stub.BudgeaBankFieldSample;
 import com.budgetview.server.cloud.stub.BudgeaStatement;
 import com.budgetview.shared.cloud.budgea.BudgeaCategory;
+import org.globsframework.utils.Dates;
 import org.junit.Test;
 
 public class CloudImportTest extends CloudDesktopTestCase {
 
   @Test
   public void testCreateStandardConnection() throws Exception {
+    cloudLicense.purchaseLicence("toto@example.com", Dates.tomorrow());
     budgea.pushStatement(BudgeaStatement.init()
                                  .addConnection(1, 123, 40, "Connecteur de Test Budgea", "2016-08-10 17:44:26")
                                  .addAccount(1, "Main account 1", "100200300", "checking", 1000.00, "2016-08-12 13:00:00")
@@ -54,6 +56,7 @@ public class CloudImportTest extends CloudDesktopTestCase {
 
   @Test
   public void testRefreshDoesNotResendPreviousStatements() throws Exception {
+    cloudLicense.purchaseLicence("toto@example.com", Dates.tomorrow());
     budgea.pushStatement(BudgeaStatement.init()
                                  .addConnection(1, 123, 40, "Connecteur de Test Budgea", "2016-08-10 17:44:26")
                                  .addAccount(1, "Main account 1", "100200300", "checking", 1000.00, "2016-08-12 13:00:00")
@@ -114,6 +117,7 @@ public class CloudImportTest extends CloudDesktopTestCase {
 
   @Test
   public void testRequestSameUpdateAfterCancel() throws Exception {
+    cloudLicense.purchaseLicence("toto@example.com", Dates.tomorrow());
     budgea.pushStatement(BudgeaStatement.init()
                                  .addConnection(1, 123, 40, "Connecteur de Test Budgea", "2016-08-10 17:44:26")
                                  .addAccount(1, "Main account 1", "100200300", "checking", 1000.00, "2016-08-12 13:00:00")
@@ -172,7 +176,7 @@ public class CloudImportTest extends CloudDesktopTestCase {
 
   @Test
   public void testIgnoresOperationsThatWereAlreadyImportedWithAFile() throws Exception {
-
+    cloudLicense.purchaseLicence("toto@example.com", Dates.tomorrow());
     OfxBuilder.init(this)
       .addBankAccount(-999, 1234, "100200300", 1000.00, "2016/08/10")
       .addTransaction("2016/08/08", "2016/08/08", -10.00, "PRLVT FRAIS CIC FILBANQUE")
@@ -220,6 +224,7 @@ public class CloudImportTest extends CloudDesktopTestCase {
 
   @Test
   public void testCanManageConnexionWithTwoBanks() throws Exception {
+    cloudLicense.purchaseLicence("toto@example.com", Dates.tomorrow());
     budgea.pushStatement(BudgeaStatement.init()
                                  .addConnection(1, 123, 40, "Connecteur de Test Budgea", "2016-08-10 17:44:26")
                                  .addAccount(1, "Main account 1", "100200300", "checking", 1000.00, "2016-08-12 13:00:00")

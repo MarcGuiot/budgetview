@@ -4,6 +4,7 @@ import com.budgetview.budgea.model.BudgeaConnection;
 import com.budgetview.budgea.model.BudgeaConnectionValue;
 import com.budgetview.desktop.cloud.CloudService;
 import com.budgetview.model.User;
+import com.budgetview.shared.cloud.CloudSubscriptionStatus;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
@@ -65,6 +66,10 @@ public class BudgeaDemoAction extends AbstractAction {
   private static class PrinterCallback implements CloudService.Callback {
     public void processCompletion() {
       System.out.println("PrinterCallback.processCompletion");
+    }
+
+    public void processSubscriptionError(CloudSubscriptionStatus status) {
+      System.out.println("PrinterCallback.processSubscriptionError(" + status + ")");
     }
 
     public void processError(Exception e) {

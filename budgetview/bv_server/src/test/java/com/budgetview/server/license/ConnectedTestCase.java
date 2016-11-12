@@ -8,7 +8,7 @@ import com.budgetview.server.license.checkers.DbChecker;
 import com.budgetview.server.license.checkers.FtpServerChecker;
 import com.budgetview.server.license.checkers.MailServerChecker;
 import com.budgetview.server.mobile.MobileServer;
-import com.budgetview.server.utils.DbInit;
+import com.budgetview.server.cloud.utils.CloudDb;
 import com.budgetview.server.web.WebServer;
 import com.budgetview.shared.license.LicenseConstants;
 import com.budgetview.shared.mobile.MobileConstants;
@@ -43,9 +43,9 @@ public abstract class ConnectedTestCase extends UISpecTestCase {
     System.setProperty(LicenseConstants.FTP_URL_PROPERTY, "ftp://localhost:12000");
 
     System.setProperty(WebServer.HTTP_PORT_PROPERTY, Integer.toString(httpPort));
-    System.setProperty(DbInit.DATABASE_URL, DbChecker.DATABASE_URL);
-    System.setProperty(DbInit.DATABASE_USER, DbChecker.DATABASE_USER);
-    System.setProperty(DbInit.DATABASE_PASSWORD, DbChecker.DATABASE_PASSWORD);
+    System.setProperty(CloudDb.DATABASE_URL, DbChecker.DATABASE_URL);
+    System.setProperty(CloudDb.DATABASE_USER, DbChecker.DATABASE_USER);
+    System.setProperty(CloudDb.DATABASE_PASSWORD, DbChecker.DATABASE_PASSWORD);
 
     System.setProperty(Application.LOCAL_PREVAYLER_PATH_PROPERTY, PATH_TO_DATA);
     System.setProperty(Application.DELETE_LOCAL_PREVAYLER_PROPERTY, "true");

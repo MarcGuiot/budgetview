@@ -1,5 +1,6 @@
 package com.budgetview.server.license;
 
+import com.budgetview.server.cloud.utils.CloudDb;
 import com.budgetview.server.config.ConfigService;
 import com.budgetview.server.license.mail.Mailer;
 import com.budgetview.server.license.model.License;
@@ -7,16 +8,15 @@ import com.budgetview.server.license.model.MailError;
 import com.budgetview.server.license.model.RepoInfo;
 import com.budgetview.server.license.model.SoftwareInfo;
 import com.budgetview.server.license.servlet.*;
+import com.budgetview.server.license.utils.LicenseDb;
 import com.budgetview.server.mobile.MobileServer;
 import com.budgetview.server.mobile.servlet.*;
-import com.budgetview.server.utils.DbInit;
 import com.budgetview.server.utils.Log4J;
 import com.budgetview.server.web.WebServer;
 import com.budgetview.shared.license.LicenseConstants;
 import com.budgetview.shared.mobile.MobileConstants;
 import org.apache.log4j.Logger;
 import org.globsframework.sqlstreams.GlobsDatabase;
-import org.globsframework.sqlstreams.drivers.jdbc.JdbcGlobsDatabase;
 import org.globsframework.utils.directory.DefaultDirectory;
 import org.globsframework.utils.directory.Directory;
 
@@ -65,6 +65,8 @@ public class LicenseServer {
     webServer.add(new SendMailServlet(directory), LicenseConstants.REQUEST_SEND_MAIL);
     webServer.add(new SendUseInfoServlet(), LicenseConstants.SEND_USE_INFO);
 
+    webServer.add(new CloudSubscriptionEndDateServlet(directory), LicenseConstants.CLOUD_SUBSCRIPTION_END_DATE);
+
     String pathForMobileData = MobileServer.getDataDirectoryPath(directory);
     webServer.add(new PostDataServlet(pathForMobileData), MobileConstants.POST_MOBILE_DATA);
     webServer.add(new GetMobileDataServlet(pathForMobileData, directory), MobileConstants.GET_MOBILE_DATA);
@@ -79,17 +81,21 @@ public class LicenseServer {
   }
 
   private void initDb(Directory directory) {
-    String database = directory.get(ConfigService.class).get(DbInit.DATABASE_URL);
-    if (database.equals(DbInit.JDBC_HSQLDB)) {
+    String databaseUrl = directory.get(ConfigService.class).get(CloudDb.DATABASE_URL);
+    if (CloudDb.isJDBC(databaseUrl)) {
       this.directory.get(GlobsDatabase.class).connect().createTables(License.TYPE, SoftwareInfo.TYPE, RepoInfo.TYPE, MailError.TYPE);
     }
+  }
+
+  public Directory getDirectory() {
+    return directory;
   }
 
   private Directory createDirectory() throws Exception {
     Directory directory = new DefaultDirectory();
     directory.add(config);
     directory.add(mailer);
-    directory.add(GlobsDatabase.class, new JdbcGlobsDatabase(config.get(DbInit.DATABASE_URL), config.get(DbInit.DATABASE_USER), config.get(DbInit.DATABASE_PASSWORD)));
+    directory.add(GlobsDatabase.class, LicenseDb.create(config));
     directory.add(new VersionService());
     return directory;
   }
@@ -97,6 +103,7 @@ public class LicenseServer {
   public void start() throws Exception {
     logger.info("starting server");
     webServer.start();
+    logger.info("server started");
   }
 
   public void stop() throws Exception {

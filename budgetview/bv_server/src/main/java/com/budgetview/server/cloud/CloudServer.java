@@ -5,9 +5,11 @@ import com.budgetview.server.cloud.services.EmailValidationService;
 import com.budgetview.server.cloud.servlet.*;
 import com.budgetview.server.config.ConfigService;
 import com.budgetview.server.license.mail.Mailer;
-import com.budgetview.server.utils.DbInit;
+import com.budgetview.server.cloud.utils.CloudDb;
 import com.budgetview.server.utils.Log4J;
 import com.budgetview.server.web.WebServer;
+import com.budgetview.shared.cloud.CloudConstants;
+import com.budgetview.shared.license.LicenseConstants;
 import org.apache.log4j.Logger;
 import org.globsframework.sqlstreams.GlobsDatabase;
 import org.globsframework.utils.directory.DefaultDirectory;
@@ -34,6 +36,9 @@ public class CloudServer {
   }
 
   public void init() throws Exception {
+
+    System.setProperty(LicenseConstants.LICENSE_URL_PROPERTY, config.get(LicenseConstants.LICENSE_URL_PROPERTY));
+
     directory = createDirectory();
     webServer = new WebServer(config);
     webServer.add(new SignupServlet(directory), "/signup");
@@ -51,7 +56,7 @@ public class CloudServer {
   private Directory createDirectory() throws Exception {
     Directory directory = new DefaultDirectory();
     directory.add(config);
-    directory.add(GlobsDatabase.class, DbInit.create(config));
+    directory.add(GlobsDatabase.class, CloudDb.create(config));
     directory.add(new Mailer(config));
     directory.add(new AuthenticationService(directory));
     directory.add(new EmailValidationService(directory));
@@ -66,7 +71,7 @@ public class CloudServer {
 
   public void resetDatabase() {
     logger.info("cleaning up database");
-    DbInit.cleanAllTables(directory);
+    CloudDb.cleanAllTables(directory);
   }
 
   public void stop() throws Exception {

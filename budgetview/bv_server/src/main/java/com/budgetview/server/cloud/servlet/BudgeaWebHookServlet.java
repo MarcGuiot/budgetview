@@ -39,7 +39,7 @@ import java.util.regex.Pattern;
 import static org.globsframework.model.FieldValue.value;
 import static org.globsframework.sqlstreams.constraints.Where.fieldEquals;
 
-public class BudgeaWebHookServlet extends HttpServlet {
+public class BudgeaWebHookServlet extends HttpCloudServlet {
 
   private static Logger logger = Logger.getLogger("/budgea");
   private static Pattern pattern = Pattern.compile("Bearer (.*)");
@@ -59,13 +59,13 @@ public class BudgeaWebHookServlet extends HttpServlet {
     String authorization = request.getHeader("Authorization");
     if (Strings.isNullOrEmpty(authorization)) {
       logger.error("No credentials provided - request rejected");
-      response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+      setUnauthorized(response);
       return;
     }
     Matcher tokenMatcher = pattern.matcher(authorization.trim());
     if (!tokenMatcher.matches()) {
       logger.error("Invalid credentials provided '" + authorization + "' - request rejected");
-      response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+      setUnauthorized(response);
       return;
     }
 

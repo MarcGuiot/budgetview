@@ -2,10 +2,7 @@ package com.budgetview.shared.cloud;
 
 import com.budgetview.shared.http.Http;
 import com.budgetview.shared.model.Provider;
-import org.apache.http.HttpResponse;
 import org.apache.http.client.fluent.Request;
-import org.apache.http.client.fluent.Response;
-import org.globsframework.utils.Files;
 import org.globsframework.utils.Strings;
 import org.globsframework.utils.exceptions.InvalidParameter;
 import org.json.JSONObject;
@@ -14,11 +11,11 @@ import java.io.IOException;
 
 public class CloudAPI {
 
-  public void signup(String email) throws IOException {
+  public JSONObject signup(String email) throws IOException {
     String url = "/signup";
     Request request = Request.Post(CloudConstants.getServerUrl(url))
       .addHeader(CloudConstants.EMAIL, email);
-    execute(request, url);
+    return Http.executeAndGetJson(url, request);
   }
 
   public JSONObject validate(String email, String validationCode) throws IOException {
@@ -26,8 +23,7 @@ public class CloudAPI {
     Request request = Request.Post(CloudConstants.getServerUrl(url))
       .addHeader(CloudConstants.EMAIL, email)
       .addHeader(CloudConstants.VALIDATION_CODE, validationCode);
-    HttpResponse response = execute(request, url);
-    return new JSONObject(Files.loadStreamToString(response.getEntity().getContent(), "UTF-8"));
+    return Http.executeAndGetJson(url, request);
   }
 
   public JSONObject getTemporaryBudgeaToken(String email, String bvToken) throws IOException {
@@ -41,8 +37,7 @@ public class CloudAPI {
     Request request = Request.Get(CloudConstants.getServerUrl(url))
       .addHeader(CloudConstants.EMAIL, email)
       .addHeader(CloudConstants.BV_TOKEN,  bvToken);
-    HttpResponse response = execute(request, url);
-    return new JSONObject(Files.loadStreamToString(response.getEntity().getContent(), "UTF-8"));
+    return Http.executeAndGetJson(url, request);
   }
 
   public void addBudgeaConnection(String email, String bvToken, String budgeaToken, Integer budgeaUserId) throws IOException {
@@ -66,7 +61,7 @@ public class CloudAPI {
       .addHeader(CloudConstants.PROVIDER, Integer.toString(Provider.BUDGEA.getId()))
       .addHeader(CloudConstants.BUDGEA_TOKEN, budgeaToken)
       .addHeader(CloudConstants.BUDGEA_USER_ID, Integer.toString(budgeaUserId));
-    execute(request, url);
+    Http.execute(request, url);
   }
 
   public JSONObject getStatement(String email, String bvToken, Integer lastUpdate) throws IOException {
@@ -75,14 +70,7 @@ public class CloudAPI {
       .addHeader(CloudConstants.EMAIL, email)
       .addHeader(CloudConstants.BV_TOKEN, bvToken);
 
-    HttpResponse response = execute(request, url);
-    return new JSONObject(Files.loadStreamToString(response.getEntity().getContent(), "UTF-8"));
-  }
-
-  public HttpResponse execute(Request request, String url) throws IOException {
-    Response response = request.execute();
-    HttpResponse httpResponse = response.returnResponse();
-    return Http.checkResponse(url, httpResponse);
+    return Http.executeAndGetJson(url, request);
   }
 
   private String cloudUrl(String path) {

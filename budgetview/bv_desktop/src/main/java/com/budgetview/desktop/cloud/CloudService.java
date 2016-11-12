@@ -7,6 +7,8 @@ import com.budgetview.model.Month;
 import com.budgetview.model.RealAccount;
 import com.budgetview.shared.cloud.CloudAPI;
 import com.budgetview.shared.cloud.CloudConstants;
+import com.budgetview.shared.cloud.CloudRequestStatus;
+import com.budgetview.shared.cloud.CloudSubscriptionStatus;
 import com.budgetview.shared.cloud.budgea.BudgeaAPI;
 import com.budgetview.shared.model.AccountType;
 import com.budgetview.shared.model.Provider;
@@ -40,14 +42,17 @@ public class CloudService {
   public interface Callback {
     void processCompletion();
 
-    void processError(Exception e);
+    void processSubscriptionError(CloudSubscriptionStatus status);
 
+    void processError(Exception e);
   }
 
   public interface ValidationCallback {
     void processCompletion();
 
     void processInvalidCode();
+
+    void processSubscriptionError(CloudSubscriptionStatus subscriptionStatus);
 
     void processError(Exception e);
   }
@@ -69,8 +74,15 @@ public class CloudService {
                             value(CloudDesktopUser.EMAIL, email),
                             value(CloudDesktopUser.BV_TOKEN, null),
                             value(CloudDesktopUser.REGISTERED, false));
-          cloudAPI.signup(email);
-          callback.processCompletion();
+          JSONObject result = cloudAPI.signup(email);
+          switch (CloudRequestStatus.get(result.getString(CloudConstants.STATUS))) {
+            case OK:
+              callback.processCompletion();
+              break;
+            case NO_SUBSCRIPTION:
+              callback.processSubscriptionError(getSubscriptionStatus(result));
+              break;
+          }
         }
         catch (Exception e) {
           Log.write("Error during signup", e);
@@ -81,24 +93,33 @@ public class CloudService {
     thread.start();
   }
 
+  private CloudSubscriptionStatus getSubscriptionStatus(JSONObject result) {
+    return CloudSubscriptionStatus.get(result.optString(CloudConstants.SUBSCRIPTION_STATUS));
+  }
+
   public void validate(String email, String code, GlobRepository repository, ValidationCallback callback) {
     Thread thread = new Thread(new Runnable() {
       public void run() {
         try {
           JSONObject result = cloudAPI.validate(email, code);
-          String status = result.getString(CloudConstants.STATUS);
-          if ("validated".equalsIgnoreCase(status)) {
-            String bvToken = result.getString(CloudConstants.BV_TOKEN);
+          String bvToken = result.optString(CloudConstants.BV_TOKEN);
+          if (bvToken != null) {
             repository.update(CloudDesktopUser.KEY,
                               value(CloudDesktopUser.BV_TOKEN, bvToken),
                               value(CloudDesktopUser.REGISTERED, true));
-            callback.processCompletion();
           }
-          else if ("invalid".equalsIgnoreCase(status)) {
-            callback.processInvalidCode();
-          }
-          else {
-            callback.processError(null);
+          switch (CloudRequestStatus.get(result.getString(CloudConstants.STATUS))) {
+            case OK:
+              callback.processCompletion();
+              break;
+            case UNKNOWN:
+              callback.processInvalidCode();
+              break;
+            case NO_SUBSCRIPTION:
+              callback.processSubscriptionError(getSubscriptionStatus(result));
+              break;
+            default:
+              callback.processError(null);
           }
         }
         catch (Exception e) {
@@ -156,7 +177,21 @@ public class CloudService {
 
   public void updateBankFields(Key bankKey, GlobRepository repository, Callback callback) {
     try {
-      requestBudgeaTemporaryToken(repository);
+      Glob user = repository.get(CloudDesktopUser.KEY);
+      JSONObject result = cloudAPI.getTemporaryBudgeaToken(user.get(CloudDesktopUser.EMAIL), user.get(CloudDesktopUser.BV_TOKEN));
+      switch (CloudRequestStatus.get(result.getString(CloudConstants.STATUS))) {
+        case OK:
+          String token = result.getString(CloudConstants.BUDGEA_TOKEN);
+          boolean permanentTokenRegistered = result.getBoolean(CloudConstants.BUDGEA_TOKEN_REGISTERED);
+          budgeaAPI.setTempToken(token, permanentTokenRegistered);
+          break;
+        case NO_SUBSCRIPTION:
+          callback.processSubscriptionError(getSubscriptionStatus(result));
+          return;
+        default:
+          callback.processError(null);
+          return;
+      }
 
       repository.startChangeSet();
       Glob bank = repository.get(bankKey);
@@ -203,14 +238,6 @@ public class CloudService {
     finally {
       repository.completeChangeSet();
     }
-  }
-
-  private void requestBudgeaTemporaryToken(GlobRepository repository) throws IOException {
-    Glob user = repository.get(CloudDesktopUser.KEY);
-    JSONObject result = cloudAPI.getTemporaryBudgeaToken(user.get(CloudDesktopUser.EMAIL), user.get(CloudDesktopUser.BV_TOKEN));
-    String token = result.getString(CloudConstants.BUDGEA_TOKEN);
-    boolean permanentTokenRegistered = result.getBoolean(CloudConstants.BUDGEA_TOKEN_REGISTERED);
-    budgeaAPI.setTempToken(token, permanentTokenRegistered);
   }
 
   public void createBankConnection(final Glob connection, final GlobRepository repository, final DownloadCallback callback) {

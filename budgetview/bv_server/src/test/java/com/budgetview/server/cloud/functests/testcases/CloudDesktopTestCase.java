@@ -1,10 +1,8 @@
 package com.budgetview.server.cloud.functests.testcases;
 
 import com.budgetview.functests.utils.LoggedInFunctionalTestCase;
-import com.budgetview.server.cloud.functests.checkers.BudgeaChecker;
-import com.budgetview.server.cloud.functests.checkers.CloudChecker;
-import com.budgetview.server.cloud.functests.checkers.CloudMailbox;
-import com.budgetview.server.cloud.functests.checkers.WebServerTestUtils;
+import com.budgetview.server.cloud.functests.checkers.*;
+import com.budgetview.shared.license.LicenseConstants;
 import org.apache.log4j.Logger;
 
 public abstract class CloudDesktopTestCase extends LoggedInFunctionalTestCase {
@@ -12,18 +10,23 @@ public abstract class CloudDesktopTestCase extends LoggedInFunctionalTestCase {
   private static Logger logger = Logger.getLogger("CloudDesktopTestCase");
 
   protected BudgeaChecker budgea;
+  protected CloudLicenseChecker cloudLicense;
   protected CloudChecker cloud;
   protected CloudMailbox mailbox;
 
   public void setUp() throws Exception {
     setCurrentDate("2016/08/20");
     super.setUp();
+    System.clearProperty(LicenseConstants.LICENSE_URL_PROPERTY);
 
     mailbox = new CloudMailbox();
     mailbox.start();
 
     budgea = new BudgeaChecker();
     budgea.startServer();
+
+    cloudLicense = new CloudLicenseChecker();
+    cloudLicense.startServer();
 
     cloud = new CloudChecker();
     cloud.startServer();
@@ -37,6 +40,8 @@ public abstract class CloudDesktopTestCase extends LoggedInFunctionalTestCase {
     budgea = null;
     cloud.stopServer();
     budgea = null;
+    cloudLicense.stopServer();
+    cloudLicense = null;
     mailbox.stop();
     mailbox = null;
 

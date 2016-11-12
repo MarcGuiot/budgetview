@@ -8,7 +8,7 @@ import java.net.URLDecoder;
 import java.net.URLEncoder;
 
 public class LicenseConstants {
-  public static final String LICENSE_SERVER_URL = "https://register.mybudgetview.fr:443";
+  public static final String PROD_SERVER_URL = "https://register.mybudgetview.fr:443";
   public static final String FTP_SERVER_URL = "ftp://ftpjar.mybudgetview.fr";
 
   public static final String APPNAME = "budgetview";
@@ -48,6 +48,9 @@ public class LicenseConstants {
   public static final String SOME_PASSWORD = "HdsB 8(Rfm";
   public static final String SUPPORT_EMAIL = "support";
   public static final String ADMIN_EMAIL = "admin";
+  public static final String CLOUD_SUBSCRIPTION_END_DATE = "/cloudSubscriptionEndDate";
+  public static final String CLOUD_EMAIL = "email";
+  public static final String CLOUD_END_DATE = "end_date";
 
   public static int RETRY_PERIOD = 10000;
 
@@ -80,9 +83,9 @@ public class LicenseConstants {
   }
 
   public static String getServerUrl(String path) {
-    String url = LICENSE_SERVER_URL;
+    String url = PROD_SERVER_URL;
     Utils.beginRemove();
-    url = System.getProperty(LICENSE_URL_PROPERTY, LICENSE_SERVER_URL) + path;
+    url = System.getProperty(LICENSE_URL_PROPERTY, PROD_SERVER_URL) + path;
     Utils.endRemove();
     return url;
   }

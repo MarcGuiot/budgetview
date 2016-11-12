@@ -16,6 +16,22 @@ public class Dates {
   private Dates() {
   }
 
+  public static Date now() {
+    return new Date();
+  }
+
+  public static Date yesterday() {
+    Calendar cal = Calendar.getInstance();
+    cal.add(Calendar.DATE, -1);
+    return cal.getTime();
+  }
+
+  public static Date tomorrow() {
+    Calendar cal = Calendar.getInstance();
+    cal.add(Calendar.DATE, +1);
+    return cal.getTime();
+  }
+
   public static Date parse(String yyyyMMdd) {
     synchronized (dateFormat) {
       try {

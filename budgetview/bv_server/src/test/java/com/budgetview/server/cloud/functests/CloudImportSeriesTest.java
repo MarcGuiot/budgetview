@@ -3,6 +3,7 @@ package com.budgetview.server.cloud.functests;
 import com.budgetview.server.cloud.functests.testcases.CloudDesktopTestCase;
 import com.budgetview.server.cloud.stub.BudgeaStatement;
 import com.budgetview.shared.cloud.budgea.BudgeaCategory;
+import org.globsframework.utils.Dates;
 import org.junit.Test;
 
 public class CloudImportSeriesTest extends CloudDesktopTestCase {
@@ -15,6 +16,8 @@ public class CloudImportSeriesTest extends CloudDesktopTestCase {
 
   @Test
   public void testUsesLocalSeriesFirstAndProviderSeriesSecond() throws Exception {
+
+    cloudLicense.purchaseLicence("toto@example.com", Dates.tomorrow());
 
     budgea.pushStatement(BudgeaStatement.init()
                                  .addConnection(1, 123, 40, "Connecteur de Test Budgea", "2016-08-10 17:44:26")
@@ -115,6 +118,8 @@ public class CloudImportSeriesTest extends CloudDesktopTestCase {
   @Test
   public void testUsesExistingSeriesOnlyWhenAvailableForSelectedAccount() throws Exception {
 
+    cloudLicense.purchaseLicence("toto@example.com", Dates.tomorrow());
+
     accounts.createMainAccount("Existing account", "123123123", 500.00);
     budgetView.recurring.editSeries("Electricity")
       .setTargetAccount("Existing account")
@@ -165,6 +170,7 @@ public class CloudImportSeriesTest extends CloudDesktopTestCase {
 
   @Test
   public void testUsesExistingSeriesOnlyWhenActiveForTransactionMonth() throws Exception {
+    cloudLicense.purchaseLicence("toto@example.com", Dates.tomorrow());
     accounts.createMainAccount("Existing account", "123123123", 500.00);
     budgetView.recurring.editSeries("Electricity")
       .setEndDate(201607)

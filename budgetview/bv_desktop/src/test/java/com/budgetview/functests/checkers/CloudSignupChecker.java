@@ -16,7 +16,6 @@ public class CloudSignupChecker extends ViewChecker {
   public CloudValidationChecker register(String email) {
     mainWindow.getTextBox("emailField").setText(email, false);
     mainWindow.getButton("next").click();
-    checkPanelShown("importCloudValidationPanel");
     return new CloudValidationChecker(mainWindow);
   }
 }

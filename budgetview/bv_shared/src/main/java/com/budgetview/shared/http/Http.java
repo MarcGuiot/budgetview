@@ -6,6 +6,8 @@ import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.fluent.Request;
+import org.apache.http.client.fluent.Response;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.conn.ClientConnectionManager;
 import org.apache.http.conn.scheme.PlainSocketFactory;
@@ -20,6 +22,8 @@ import org.apache.http.impl.conn.BasicClientConnectionManager;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.params.CoreConnectionPNames;
 import org.globsframework.gui.splits.utils.Disposable;
+import org.globsframework.utils.Files;
+import org.json.JSONObject;
 
 import javax.net.ssl.SSLException;
 import java.io.IOException;
@@ -30,6 +34,25 @@ import java.util.List;
 import java.util.Map;
 
 public class Http {
+
+  public static Post utf8Post(String url) {
+    return post(url).setUtf8Content();
+  }
+
+  public static Post post(String url) {
+    return new Post(url);
+  }
+
+  public static HttpResponse execute(Request request, String url) throws IOException {
+    Response response = request.execute();
+    HttpResponse httpResponse = response.returnResponse();
+    return checkResponse(url, httpResponse);
+  }
+
+  public static JSONObject executeAndGetJson(String url, Request request) throws IOException {
+    HttpResponse response = execute(request, url);
+    return new JSONObject(Files.loadStreamToString(response.getEntity().getContent(), "UTF-8"));
+  }
 
   public static HttpResponse checkResponse(String url, HttpResponse httpResponse) throws IOException {
     int statusCode = httpResponse.getStatusLine().getStatusCode();
@@ -50,14 +73,6 @@ public class Http {
       default:
         throw new IOException("Call to " + url + " returned error status " + statusCode + " instead of 200");
     }
-  }
-
-  public static Post utf8Post(String url) {
-    return post(url).setUtf8Content();
-  }
-
-  public static Post post(String url) {
-    return new Post(url);
   }
 
   public static class Post implements Disposable {

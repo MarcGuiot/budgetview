@@ -8,6 +8,7 @@ import com.budgetview.desktop.time.TimeService;
 import com.budgetview.io.importer.ImportSession;
 import com.budgetview.io.importer.utils.TypedInputStream;
 import com.budgetview.model.*;
+import com.budgetview.shared.cloud.CloudSubscriptionStatus;
 import com.budgetview.shared.utils.Amounts;
 import com.budgetview.utils.Lang;
 import org.globsframework.model.*;
@@ -368,6 +369,10 @@ public class ImportController implements RealAccountImporter {
 
   public void showCloudError() {
     importDialog.showCloudError();
+  }
+
+  public void showCloudSubscriptionError(String email, CloudSubscriptionStatus status) {
+    importDialog.showCloudSubscriptionError(email, status);
   }
 
   public void setReplaceSeries(boolean replace) {

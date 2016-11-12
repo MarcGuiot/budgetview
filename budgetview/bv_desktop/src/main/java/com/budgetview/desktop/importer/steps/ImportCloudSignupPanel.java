@@ -4,6 +4,7 @@ import com.budgetview.desktop.cloud.CloudService;
 import com.budgetview.desktop.components.ProgressPanel;
 import com.budgetview.desktop.components.dialogs.PicsouDialog;
 import com.budgetview.desktop.importer.ImportController;
+import com.budgetview.shared.cloud.CloudSubscriptionStatus;
 import com.budgetview.utils.Lang;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.model.GlobRepository;
@@ -73,6 +74,11 @@ public class ImportCloudSignupPanel extends AbstractImportStepPanel {
     cloudService.signup(email, repository, new CloudService.Callback() {
       public void processCompletion() {
         controller.showCloudValidation(email);
+        progressPanel.stop();
+      }
+
+      public void processSubscriptionError(CloudSubscriptionStatus status) {
+        controller.showCloudSubscriptionError(email, status);
         progressPanel.stop();
       }
 

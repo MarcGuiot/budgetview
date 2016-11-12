@@ -1,0 +1,34 @@
+<splits xmlns="http://www.globsframework.org/xml/splits.xsd">
+
+  <styleImport file="/layout/commonStyles.splits"/>
+  <styleImport file="/layout/dialogStyles.splits"/>
+  <styleImport file="/layout/importexport/components/importDialogStyles.splits"/>
+
+
+  <column styleClass="dialog" preferredSize="(600,710)" name="importCloudSubscriptionErrorPanel">
+
+    <label text="$import.completion.title" name="title" styleClass="title"/>
+
+    <column styleClass="innerDialog">
+      <column styleClass="innerDialogContent">
+
+        <scrollPane marginTop="20" forceVerticalScroll="true">
+          <column margin="20">
+
+            <label text="Subscription Error"/>
+
+            <filler fill="vertical"/>
+
+          </column>
+        </scrollPane>
+      </column>
+    </column>
+
+    <row styleClass="dialogButtons" name="buttons">
+      <filler fill="horizontal"/>
+      <button action="close"/>
+      <button action="next"/>
+    </row>
+  </column>
+
+</splits>

@@ -1,6 +1,7 @@
 package com.budgetview.server.license.functests;
 
 import com.budgetview.server.license.model.License;
+import com.budgetview.server.license.utils.PaypalConstants;
 import com.budgetview.shared.license.LicenseConstants;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
@@ -10,7 +11,6 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.params.CoreProtocolPNames;
 import org.apache.http.params.HttpParams;
 import com.budgetview.server.license.ConnectedTestCase;
-import com.budgetview.server.license.servlet.NewUserServlet;
 import org.globsframework.model.GlobList;
 import org.globsframework.sqlstreams.constraints.Where;
 
@@ -37,7 +37,7 @@ public class PaypalTest extends ConnectedTestCase {
     super.setUp();
 
     SERVER_URL = System.getProperty(LicenseConstants.LICENSE_URL_PROPERTY);
-    System.setProperty(NewUserServlet.PAYPAL_CONFIRM_URL_PROPERTY, SERVER_URL + "/Confirm");
+    System.setProperty(PaypalConstants.PAYPAL_CONFIRM_URL_PROPERTY, SERVER_URL + "/Confirm");
     licenseServer.init();
     licenseServer.add(payPalConfirm, "/Confirm");
     startServersWithoutLicence();
@@ -70,10 +70,10 @@ public class PaypalTest extends ConnectedTestCase {
     HttpClient client = new DefaultHttpClient();
     URIBuilder builder = new URIBuilder(SERVER_URL + LicenseConstants.NEW_USER);
 
-    builder.setParameter(NewUserServlet.PAYER_EMAIL, "toto" + transactionId + "@bv.fr");
-    builder.setParameter(NewUserServlet.RECEIVER_EMAIL, "paypal@mybudgetview.fr");
-    builder.setParameter(NewUserServlet.PAYMENT_STATUS_ID, "completed");
-    builder.setParameter(NewUserServlet.TRANSACTION_ID, transactionId);
+    builder.setParameter(PaypalConstants.PAYER_EMAIL, "toto" + transactionId + "@bv.fr");
+    builder.setParameter(PaypalConstants.RECEIVER_EMAIL, "paypal@mybudgetview.fr");
+    builder.setParameter(PaypalConstants.PAYMENT_STATUS_ID, "completed");
+    builder.setParameter(PaypalConstants.TRANSACTION_ID, transactionId);
     builder.setParameter(PARAMETER_WITH_ACCENT, RAPHAËL);
 
     HttpPost postMethod = new HttpPost(builder.build());
@@ -101,10 +101,10 @@ public class PaypalTest extends ConnectedTestCase {
     HttpClient client = new DefaultHttpClient();
 //    postMethod.getParams().setContentCharset("UTF-8");
     URIBuilder builder = new URIBuilder(SERVER_URL + LicenseConstants.NEW_USER);
-    builder.setParameter(NewUserServlet.PAYER_EMAIL, "toto@bv.fr");
-    builder.setParameter(NewUserServlet.RECEIVER_EMAIL, "paypal@mybudgetview.fr");
-    builder.setParameter(NewUserServlet.PAYMENT_STATUS_ID, "completed");
-    builder.setParameter(NewUserServlet.TRANSACTION_ID, "12345");
+    builder.setParameter(PaypalConstants.PAYER_EMAIL, "toto@bv.fr");
+    builder.setParameter(PaypalConstants.RECEIVER_EMAIL, "paypal@mybudgetview.fr");
+    builder.setParameter(PaypalConstants.PAYMENT_STATUS_ID, "completed");
+    builder.setParameter(PaypalConstants.TRANSACTION_ID, "12345");
     HttpPost postMethod = new HttpPost(builder.build());
     HttpParams params = postMethod.getParams();
     payPalConfirm.setRefused();
@@ -121,10 +121,10 @@ public class PaypalTest extends ConnectedTestCase {
     URIBuilder builder = new URIBuilder(SERVER_URL + LicenseConstants.NEW_USER);
     HttpClient client = new DefaultHttpClient();
 //    postMethod.getParams().setContentCharset("UTF-8");
-    builder.setParameter(NewUserServlet.PAYER_EMAIL, "toto12345@bv.fr");
-    builder.setParameter(NewUserServlet.RECEIVER_EMAIL, "paypal@mybudgetview.fr");
-    builder.setParameter(NewUserServlet.PAYMENT_STATUS_ID, "completed");
-    builder.setParameter(NewUserServlet.TRANSACTION_ID, "12346");
+    builder.setParameter(PaypalConstants.PAYER_EMAIL, "toto12345@bv.fr");
+    builder.setParameter(PaypalConstants.RECEIVER_EMAIL, "paypal@mybudgetview.fr");
+    builder.setParameter(PaypalConstants.PAYMENT_STATUS_ID, "completed");
+    builder.setParameter(PaypalConstants.TRANSACTION_ID, "12346");
     HttpPost postMethod = new HttpPost(builder.build());
     HttpResponse response = client.execute(postMethod);
     int status = response.getStatusLine().getStatusCode();

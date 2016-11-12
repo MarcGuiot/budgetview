@@ -6,6 +6,8 @@ import com.budgetview.desktop.components.ProgressPanel;
 import com.budgetview.desktop.components.dialogs.PicsouDialog;
 import com.budgetview.desktop.importer.ImportController;
 import com.budgetview.model.Bank;
+import com.budgetview.model.CloudDesktopUser;
+import com.budgetview.shared.cloud.CloudSubscriptionStatus;
 import com.budgetview.shared.model.Provider;
 import com.budgetview.utils.Lang;
 import org.globsframework.gui.GlobSelection;
@@ -87,6 +89,11 @@ public class ImportCloudBankSelectionPanel extends AbstractImportStepPanel imple
         cloudService.updateBankFields(bank.getKey(), repository, new CloudService.Callback() {
           public void processCompletion() {
             controller.showCloudBankConnection(bank.getKey());
+            progressPanel.stop();
+          }
+
+          public void processSubscriptionError(CloudSubscriptionStatus status) {
+            controller.showCloudSubscriptionError(repository.get(CloudDesktopUser.KEY).get(CloudDesktopUser.EMAIL), status);
             progressPanel.stop();
           }
 

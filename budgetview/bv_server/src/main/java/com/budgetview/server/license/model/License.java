@@ -49,6 +49,8 @@ public class License {
 
   public static LongField JAR_VERSION;
 
+  public static DateField CLOUD_LICENSE_EXPIRATION_DATE;
+
 
   static {
     GlobTypeLoader.init(License.class);

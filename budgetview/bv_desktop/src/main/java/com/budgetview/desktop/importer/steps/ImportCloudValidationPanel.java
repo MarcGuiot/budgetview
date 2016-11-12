@@ -4,6 +4,7 @@ import com.budgetview.desktop.cloud.CloudService;
 import com.budgetview.desktop.components.ProgressPanel;
 import com.budgetview.desktop.components.dialogs.PicsouDialog;
 import com.budgetview.desktop.importer.ImportController;
+import com.budgetview.shared.cloud.CloudSubscriptionStatus;
 import com.budgetview.utils.Lang;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.splits.utils.GuiUtils;
@@ -102,6 +103,13 @@ public class ImportCloudValidationPanel extends AbstractImportStepPanel {
       public void processCompletion() {
         System.out.println("ImportCloudValidationPanel.processCompletion");
         controller.showCloudBankSelection();
+        progressPanel.stop();
+        setAllEnabled(true);
+      }
+
+      public void processSubscriptionError(CloudSubscriptionStatus status) {
+        System.out.println("ImportCloudValidationPanel.processSubscriptionError");
+        controller.showCloudSubscriptionError(email, status);
         progressPanel.stop();
         setAllEnabled(true);
       }
