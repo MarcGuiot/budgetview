@@ -1,7 +1,12 @@
 package com.budgetview.functests.checkers;
 
+import com.budgetview.utils.Lang;
+import org.uispec4j.TextBox;
 import org.uispec4j.Window;
 
+import javax.swing.*;
+
+import static org.uispec4j.assertion.UISpecAssert.assertFalse;
 import static org.uispec4j.assertion.UISpecAssert.assertThat;
 
 public class CloudValidationChecker extends ViewChecker {
@@ -11,16 +16,39 @@ public class CloudValidationChecker extends ViewChecker {
     checkPanelShown("importCloudValidationPanel");
   }
 
-
   public CloudBankSelectionChecker processEmail(String code) {
-    mainWindow.getInputTextBox("codeField").setText(code, false);
-    mainWindow.getButton("next").click();
+    enterCode(code);
     return new CloudBankSelectionChecker(mainWindow);
   }
 
+  public CloudValidationChecker processEmailAndCheckError(String code) {
+    enterCode(code);
+    checkPanelShown("importCloudValidationPanel");
+    checkComponentVisible(mainWindow, JLabel.class, "error", true);
+    checkComponentVisible(mainWindow, JButton.class, "back", true);
+    assertFalse(mainWindow.getButton("next").isEnabled());
+    return this;
+  }
+
+  public CloudValidationChecker checkTempTokenExpiredError() {
+    TextBox errorLabel = mainWindow.getTextBox("error");
+    assertThat(errorLabel.textEquals(Lang.get("import.cloud.validation.tempcode.expired")));
+    assertThat(errorLabel.isVisible());
+    return this;
+  }
+
+  public CloudSignupChecker back() {
+    mainWindow.getButton("back").click();
+    return new CloudSignupChecker(mainWindow);
+  }
+
   public CloudSubscriptionErrorChecker processEmailAndCheckSubscriptionError(String code) {
+    enterCode(code);
+    return new CloudSubscriptionErrorChecker(mainWindow);
+  }
+
+  public void enterCode(String code) {
     mainWindow.getInputTextBox("codeField").setText(code, false);
     mainWindow.getButton("next").click();
-    return new CloudSubscriptionErrorChecker(mainWindow);
   }
 }

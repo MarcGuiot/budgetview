@@ -1,6 +1,10 @@
 package com.budgetview.functests.checkers;
 
+import com.budgetview.utils.Lang;
 import org.uispec4j.Window;
+
+import static org.uispec4j.assertion.UISpecAssert.assertFalse;
+import static org.uispec4j.assertion.UISpecAssert.assertThat;
 
 public class CloudSubscriptionErrorChecker extends ViewChecker {
 
@@ -9,7 +13,23 @@ public class CloudSubscriptionErrorChecker extends ViewChecker {
     checkPanelShown("importCloudSubscriptionErrorPanel");
   }
 
+  public CloudSubscriptionErrorChecker checkNoSubscriptionFound(String email) {
+    assertThat(mainWindow.getTextBox("messageField").htmlEquals(Lang.get("import.cloud.subscription.unknown", email)));
+    return this;
+  }
+
+  public CloudSubscriptionErrorChecker checkSubscriptionExpired(String email) {
+    assertThat(mainWindow.getTextBox("messageField").textEquals(Lang.get("import.cloud.subscription.expired", email)));
+    return this;
+  }
+
+  public CloudSubscriptionErrorChecker checkValidationTokenExpired(String email) {
+    assertThat(mainWindow.getTextBox("messageField").textEquals(Lang.get("import.cloud.subscription.expired", email)));
+    return this;
+  }
+
   public void close() {
-    
+    mainWindow.getButton("close").click();
+    assertFalse(mainWindow.isVisible());
   }
 }

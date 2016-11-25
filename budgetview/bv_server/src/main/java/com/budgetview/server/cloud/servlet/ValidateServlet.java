@@ -2,7 +2,8 @@ package com.budgetview.server.cloud.servlet;
 
 import com.budgetview.server.cloud.services.AuthenticationService;
 import com.budgetview.server.cloud.services.EmailValidationService;
-import com.budgetview.server.cloud.utils.CloudSubscriptionException;
+import com.budgetview.server.cloud.utils.SubscriptionCheckFailed;
+import com.budgetview.server.cloud.utils.CheckFailed;
 import com.budgetview.shared.cloud.CloudConstants;
 import com.budgetview.shared.cloud.CloudRequestStatus;
 import org.apache.log4j.Logger;
@@ -54,22 +55,27 @@ public class ValidateServlet extends HttpCloudServlet {
         return;
       }
 
-      if (emailValidation.check(userId, code)) {
+      try {
+        emailValidation.checkTempCode(userId, code);
         writer.key(CloudConstants.BV_TOKEN).value(authentication.registerUserDevice(userId));
       }
-      else {
-        writer.key(CloudConstants.STATUS).value(CloudRequestStatus.UNKNOWN);
+      catch (CheckFailed checkFailed) {
+        writer.key(CloudConstants.STATUS).value(checkFailed.getStatus());
+        writer.endObject();
+        setOk(response);
+        return;
       }
 
       try {
         authentication.checkSubscriptionIsValid(userId);
         setOk(response, writer);
       }
-      catch (CloudSubscriptionException e) {
+      catch (SubscriptionCheckFailed e) {
         setSubscriptionError(response, e, writer);
       }
 
       writer.endObject();
+      setOk(response);
     }
     catch (Exception e) {
       logger.error("Could not process: " + email, e);

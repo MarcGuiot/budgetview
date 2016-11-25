@@ -1,6 +1,6 @@
 package com.budgetview.server.cloud.servlet;
 
-import com.budgetview.server.cloud.utils.CloudSubscriptionException;
+import com.budgetview.server.cloud.utils.SubscriptionCheckFailed;
 import com.budgetview.shared.cloud.CloudConstants;
 import org.json.JSONWriter;
 
@@ -21,7 +21,7 @@ public abstract class HttpCloudServlet extends HttpServlet {
     response.setStatus(HttpServletResponse.SC_OK);
   }
 
-  protected void setSubscriptionError(HttpServletResponse response, CloudSubscriptionException e) throws IOException {
+  protected void setSubscriptionError(HttpServletResponse response, SubscriptionCheckFailed e) throws IOException {
     JSONWriter writer = new JSONWriter(response.getWriter());
     writer.object();
     writer.key(CloudConstants.STATUS).value("no_subscription");
@@ -30,7 +30,7 @@ public abstract class HttpCloudServlet extends HttpServlet {
     response.setStatus(HttpServletResponse.SC_OK);
   }
 
-  protected void setSubscriptionError(HttpServletResponse response, CloudSubscriptionException e, JSONWriter writer) throws IOException {
+  protected void setSubscriptionError(HttpServletResponse response, SubscriptionCheckFailed e, JSONWriter writer) throws IOException {
     writer.key(CloudConstants.STATUS).value("no_subscription");
     writer.key(CloudConstants.SUBSCRIPTION_STATUS).value(e.getStatus().getName());
     response.setStatus(HttpServletResponse.SC_OK);

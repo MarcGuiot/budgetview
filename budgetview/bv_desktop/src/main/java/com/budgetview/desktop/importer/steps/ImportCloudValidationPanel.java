@@ -8,11 +8,14 @@ import com.budgetview.shared.cloud.CloudSubscriptionStatus;
 import com.budgetview.utils.Lang;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.splits.utils.GuiUtils;
+import org.globsframework.gui.utils.AbstractDocumentListener;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.utils.Strings;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import java.awt.event.ActionEvent;
 
 public class ImportCloudValidationPanel extends AbstractImportStepPanel {
@@ -49,6 +52,11 @@ public class ImportCloudValidationPanel extends AbstractImportStepPanel {
     codeField = new JTextField();
     builder.add("codeField", codeField);
     codeField.setAction(nextAction);
+    codeField.getDocument().addDocumentListener(new AbstractDocumentListener() {
+      protected void documentChanged(DocumentEvent e) {
+        nextAction.setEnabled(Strings.isNotEmpty(codeField.getText()));
+      }
+    });
 
     errorLabel = new JLabel(" ");
     builder.add("error", errorLabel);
@@ -105,6 +113,7 @@ public class ImportCloudValidationPanel extends AbstractImportStepPanel {
         controller.showCloudBankSelection();
         progressPanel.stop();
         setAllEnabled(true);
+        backAction.setEnabled(false);
       }
 
       public void processSubscriptionError(CloudSubscriptionStatus status) {
@@ -112,6 +121,17 @@ public class ImportCloudValidationPanel extends AbstractImportStepPanel {
         controller.showCloudSubscriptionError(email, status);
         progressPanel.stop();
         setAllEnabled(true);
+        backAction.setEnabled(false);
+      }
+
+      public void processTempTokenExpired() {
+        System.out.println("ImportCloudValidationPanel.processTempTokenExpired");
+        errorLabel.setText(Lang.get("import.cloud.validation.tempcode.expired"));
+        setAllEnabled(true);
+        progressPanel.stop();
+        backAction.putValue(Action.NAME, Lang.get("import.cloud.validation.back"));
+        backAction.setEnabled(true);
+        nextAction.setEnabled(false);
       }
 
       public void processInvalidCode() {
@@ -119,15 +139,17 @@ public class ImportCloudValidationPanel extends AbstractImportStepPanel {
         errorLabel.setText(Lang.get("import.cloud.validation.invalid.code"));
         setAllEnabled(true);
         progressPanel.stop();
+        backAction.putValue(Action.NAME, Lang.get("import.cloud.validation.resend"));
         backAction.setEnabled(true);
-        codeField.requestFocus();
+        nextAction.setEnabled(false);
       }
 
       public void processError(Exception e) {
-        System.out.println("ImportCloudValidationPanel.processCompletion: error");
+        System.out.println("ImportCloudValidationPanel.processError");
         controller.showCloudError();
         progressPanel.stop();
         setAllEnabled(true);
+        backAction.setEnabled(false);
       }
     });
   }

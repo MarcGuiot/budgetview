@@ -29,7 +29,7 @@ public class CloudUser {
 
   public static StringField LAST_VALIDATION_CODE;
 
-  public static DateField LAST_VALIDATION_DATE;
+  public static TimeStampField LAST_VALIDATION_DATE;
 
   public static DateField SUBSCRIPTION_END_DATE;
 

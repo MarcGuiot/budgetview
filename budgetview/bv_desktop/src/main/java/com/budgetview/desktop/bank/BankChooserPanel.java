@@ -34,6 +34,7 @@ public class BankChooserPanel {
   private GlobsPanelBuilder builder;
   private final GlobMatcher baseMatcher;
   private JPopupButton countryButton;
+  private GlobListView bankListView;
 
   public BankChooserPanel(GlobRepository repository,
                           Directory directory,
@@ -45,8 +46,10 @@ public class BankChooserPanel {
                                     "/layout/bank/bankChooserPanel.splits",
                                     repository, directory);
 
-    GlobListView bankListView = builder.addList("bankList", Bank.TYPE)
+    bankListView = builder.addList("bankList", Bank.TYPE)
+      .setSingleSelectionMode()
       .addDoubleClickAction(validateAction);
+
     filter = GlobListViewFilter.init(bankListView).setIgnoreAccents(true);
     if (matcher == null) {
       filter.setDefaultValue(Key.create(Bank.TYPE, Bank.GENERIC_BANK_ID));

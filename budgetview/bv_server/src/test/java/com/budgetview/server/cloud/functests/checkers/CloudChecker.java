@@ -1,10 +1,8 @@
 package com.budgetview.server.cloud.functests.checkers;
 
 import com.budgetview.server.cloud.CloudServer;
-import com.budgetview.shared.cloud.CloudAPI;
+import com.budgetview.server.cloud.services.EmailValidationService;
 import com.budgetview.shared.cloud.CloudConstants;
-import org.json.JSONObject;
-import org.junit.Assert;
 
 import java.util.Date;
 
@@ -21,6 +19,10 @@ public class CloudChecker {
     cloudServer = new CloudServer("budgetview/bv_server/dev/config/bv_cloud_test.properties");
     cloudServer.init();
     cloudServer.start();
+  }
+
+  public void forceTokenExpirationDate(final Date date) {
+    EmailValidationService.forceTokenExpirationDate(date);
   }
 
   public void stopServer() throws Exception {

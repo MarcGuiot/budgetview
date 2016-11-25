@@ -15,7 +15,9 @@
         <scrollPane marginTop="20" forceVerticalScroll="true">
           <column margin="20">
 
-            <label text="Subscription Error"/>
+            <htmlEditorPane ref="messageField"/>
+
+            <button ref="actionButton" fill="none" anchor="center" marginTop="20"/>
 
             <filler fill="vertical"/>
 

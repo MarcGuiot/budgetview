@@ -71,7 +71,6 @@ public class ImportCloudBankSelectionPanel extends AbstractImportStepPanel imple
     return builder;
   }
 
-
   public void selectionUpdated(GlobSelection selection) {
     GlobList banks = selection.getAll(Bank.TYPE);
     nextAction.setEnabled(banks.size() == 1);
@@ -109,6 +108,7 @@ public class ImportCloudBankSelectionPanel extends AbstractImportStepPanel imple
   public void prepareForDisplay() {
     createPanelIfNeeded();
     bankChooserPanel.requestFocus();
+    nextAction.setEnabled(!selectionService.getSelection(Bank.TYPE).isEmpty());
   }
 
   public void dispose() {

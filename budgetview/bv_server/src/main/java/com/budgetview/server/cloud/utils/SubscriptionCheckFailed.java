@@ -2,11 +2,11 @@ package com.budgetview.server.cloud.utils;
 
 import com.budgetview.shared.cloud.CloudSubscriptionStatus;
 
-public class CloudSubscriptionException extends Throwable {
+public class SubscriptionCheckFailed extends Exception {
 
   private CloudSubscriptionStatus status;
 
-  public CloudSubscriptionException(CloudSubscriptionStatus status) {
+  public SubscriptionCheckFailed(CloudSubscriptionStatus status) {
     this.status = status;
   }
 
@@ -15,6 +15,6 @@ public class CloudSubscriptionException extends Throwable {
   }
 
   public String toString() {
-    return "cloudSubscriptionException:" + status.getName();
+    return "subscriptionCheckFailed:" + status.getName();
   }
 }

@@ -2,7 +2,7 @@ package com.budgetview.server.cloud.servlet;
 
 import com.budgetview.server.cloud.services.AuthenticationService;
 import com.budgetview.server.cloud.services.EmailValidationService;
-import com.budgetview.server.cloud.utils.CloudSubscriptionException;
+import com.budgetview.server.cloud.utils.SubscriptionCheckFailed;
 import com.budgetview.shared.cloud.CloudConstants;
 import org.apache.log4j.Logger;
 import org.globsframework.sqlstreams.exceptions.GlobsSQLException;
@@ -14,6 +14,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Date;
 
 public class SignupServlet extends HttpCloudServlet {
 
@@ -43,7 +44,7 @@ public class SignupServlet extends HttpCloudServlet {
     try {
       processSignup(email, lang);
     }
-    catch (CloudSubscriptionException e) {
+    catch (SubscriptionCheckFailed e) {
       setSubscriptionError(response, e);
       return;
     }
@@ -56,7 +57,7 @@ public class SignupServlet extends HttpCloudServlet {
     setOk(response);
   }
 
-  private void processSignup(String email, String lang) throws GlobsSQLException, MessagingException, CloudSubscriptionException {
+  private void processSignup(String email, String lang) throws GlobsSQLException, MessagingException, SubscriptionCheckFailed {
     Integer userId = authentication.findUser(email);
     if (userId == null) {
       userId = authentication.createUser(email);
@@ -64,6 +65,6 @@ public class SignupServlet extends HttpCloudServlet {
 
     authentication.invalidateUserEmail(userId);
 
-    emailValidation.send(userId, email, lang);
+    emailValidation.sendTempCode(userId, email, lang);
   }
 }

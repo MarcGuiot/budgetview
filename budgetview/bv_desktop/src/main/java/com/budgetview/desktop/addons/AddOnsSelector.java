@@ -26,7 +26,7 @@ public class AddOnsSelector extends View {
 
     builder.add("buy", new GotoWebsiteAction(Lang.get("addonsSelector.buy.button"), directory) {
       protected String getUrl() {
-        return Lang.get("site.buy.url");
+        return Lang.get("site.buy.addons.url");
       }
     });
 

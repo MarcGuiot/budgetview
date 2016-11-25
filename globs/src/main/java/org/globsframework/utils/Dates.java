@@ -32,6 +32,12 @@ public class Dates {
     return cal.getTime();
   }
 
+  public static Date hoursAgo(int count) {
+    Calendar cal = Calendar.getInstance();
+    cal.add(Calendar.HOUR, -count);
+    return cal.getTime();
+  }
+
   public static Date parse(String yyyyMMdd) {
     synchronized (dateFormat) {
       try {
@@ -109,6 +115,10 @@ public class Dates {
 
   public static long millisBetween(Calendar date1, Calendar date2) {
     return Math.abs(date1.getTimeInMillis() - date2.getTimeInMillis());
+  }
+
+  public static long minutesBetween(Date date1, Date date2) {
+    return millisBetween(date1, date2) / (1000 * 60);
   }
   
   public static Date extractDateDDMMYYYY(String str){

@@ -33,6 +33,16 @@ public class CloudBankSelectionChecker extends ViewChecker {
     return this;
   }
 
+  public CloudBankSelectionChecker checkNoBankSelected() {
+    assertThat(getBankList().selectionIsEmpty());
+    return this;
+  }
+
+  public CloudBankSelectionChecker checkNextDisabled() {
+    assertFalse(mainWindow.getButton("next").isEnabled());
+    return this;
+  }
+
   public CloudBankConnectionChecker next() {
     mainWindow.getButton("next").click();
     return new CloudBankConnectionChecker(mainWindow);

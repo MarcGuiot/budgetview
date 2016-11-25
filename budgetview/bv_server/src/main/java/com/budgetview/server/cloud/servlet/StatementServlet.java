@@ -5,7 +5,7 @@ import com.budgetview.server.cloud.model.ProviderTransaction;
 import com.budgetview.server.cloud.model.ProviderUpdate;
 import com.budgetview.server.cloud.persistence.CloudSerializer;
 import com.budgetview.server.cloud.services.AuthenticationService;
-import com.budgetview.server.cloud.utils.CloudSubscriptionException;
+import com.budgetview.server.cloud.utils.SubscriptionCheckFailed;
 import com.budgetview.shared.cloud.CloudConstants;
 import com.budgetview.shared.model.Provider;
 import org.apache.log4j.Logger;
@@ -69,7 +69,7 @@ public class StatementServlet extends HttpCloudServlet {
     try {
       userId = authentication.checkUserToken(email, token);
     }
-    catch (CloudSubscriptionException e) {
+    catch (SubscriptionCheckFailed e) {
       setSubscriptionError(response, e);
       return;
     }

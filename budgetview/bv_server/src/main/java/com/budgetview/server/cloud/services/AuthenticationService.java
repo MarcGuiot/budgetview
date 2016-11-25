@@ -2,7 +2,7 @@ package com.budgetview.server.cloud.services;
 
 import com.budgetview.server.cloud.model.CloudUser;
 import com.budgetview.server.cloud.model.CloudUserDevice;
-import com.budgetview.server.cloud.utils.CloudSubscriptionException;
+import com.budgetview.server.cloud.utils.SubscriptionCheckFailed;
 import com.budgetview.server.cloud.utils.RandomStrings;
 import com.budgetview.shared.cloud.CloudSubscriptionStatus;
 import com.budgetview.shared.license.LicenseAPI;
@@ -116,7 +116,7 @@ public class AuthenticationService {
     return newToken;
   }
 
-  public Integer checkUserToken(String email, String token) throws CloudSubscriptionException {
+  public Integer checkUserToken(String email, String token) throws SubscriptionCheckFailed {
     SqlConnection connection = database.connect();
     try {
       Glob user = connection.selectUnique(CloudUser.TYPE, fieldEquals(CloudUser.EMAIL, email.toLowerCase()));
@@ -148,12 +148,12 @@ public class AuthenticationService {
     }
   }
 
-  public void checkSubscriptionIsValid(Integer userId) throws CloudSubscriptionException {
+  public void checkSubscriptionIsValid(Integer userId) throws SubscriptionCheckFailed {
     SqlConnection connection = database.connect();
     try {
       Glob user = connection.selectUnique(CloudUser.TYPE, fieldEquals(CloudUser.ID, userId));
       if (user == null) {
-        throw new CloudSubscriptionException(CloudSubscriptionStatus.UNKNOWN);
+        throw new SubscriptionCheckFailed(CloudSubscriptionStatus.UNKNOWN);
       }
       doCheckSubscription(user, userId, user.get(CloudUser.EMAIL), connection);
     }
@@ -170,7 +170,7 @@ public class AuthenticationService {
     }
   }
 
-  private void doCheckSubscription(Glob user, Integer userId, String email, SqlConnection connection) throws CloudSubscriptionException {
+  private void doCheckSubscription(Glob user, Integer userId, String email, SqlConnection connection) throws SubscriptionCheckFailed {
     Date endDate = user.get(CloudUser.SUBSCRIPTION_END_DATE);
     if (endDate == null || now().after(endDate)) {
       try {
@@ -189,10 +189,10 @@ public class AuthenticationService {
     logger.info("Subscription end date is " + Dates.toString(endDate) + " for " + email);
 
     if (endDate == null) {
-      throw new CloudSubscriptionException(CloudSubscriptionStatus.UNKNOWN);
+      throw new SubscriptionCheckFailed(CloudSubscriptionStatus.UNKNOWN);
     }
     if (now().after(endDate)) {
-      throw new CloudSubscriptionException(CloudSubscriptionStatus.EXPIRED);
+      throw new SubscriptionCheckFailed(CloudSubscriptionStatus.EXPIRED);
     }
   }
 

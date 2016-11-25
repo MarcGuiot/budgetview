@@ -54,6 +54,8 @@ public class CloudService {
 
     void processSubscriptionError(CloudSubscriptionStatus subscriptionStatus);
 
+    void processTempTokenExpired();
+
     void processError(Exception e);
   }
 
@@ -112,8 +114,11 @@ public class CloudService {
             case OK:
               callback.processCompletion();
               break;
-            case UNKNOWN:
+            case UNKNOWN_CODE:
               callback.processInvalidCode();
+              break;
+            case TEMP_CODE_EXPIRED:
+              callback.processTempTokenExpired();
               break;
             case NO_SUBSCRIPTION:
               callback.processSubscriptionError(getSubscriptionStatus(result));
