@@ -15,7 +15,6 @@ import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
 import java.awt.event.ActionEvent;
 
 public class ImportCloudValidationPanel extends AbstractImportStepPanel {
@@ -51,7 +50,11 @@ public class ImportCloudValidationPanel extends AbstractImportStepPanel {
 
     codeField = new JTextField();
     builder.add("codeField", codeField);
-    codeField.setAction(nextAction);
+    codeField.setAction(new AbstractAction() {
+      public void actionPerformed(ActionEvent e) {
+        processNext();
+      }
+    });
     codeField.getDocument().addDocumentListener(new AbstractDocumentListener() {
       protected void documentChanged(DocumentEvent e) {
         nextAction.setEnabled(Strings.isNotEmpty(codeField.getText()));
@@ -155,6 +158,7 @@ public class ImportCloudValidationPanel extends AbstractImportStepPanel {
   }
 
   private void setAllEnabled(boolean enabled) {
+    System.out.println("ImportCloudValidationPanel.setAllEnabled: " + enabled);
     codeField.setEnabled(enabled);
     nextAction.setEnabled(enabled);
   }

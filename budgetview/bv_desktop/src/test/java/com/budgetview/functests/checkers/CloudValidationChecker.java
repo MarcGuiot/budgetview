@@ -30,11 +30,20 @@ public class CloudValidationChecker extends ViewChecker {
     return this;
   }
 
-  public CloudValidationChecker checkTempTokenExpiredError() {
-    TextBox errorLabel = mainWindow.getTextBox("error");
-    assertThat(errorLabel.textEquals(Lang.get("import.cloud.validation.tempcode.expired")));
-    assertThat(errorLabel.isVisible());
+  public CloudValidationChecker checkInvalidTokenError() {
+    checkErrorMessage(Lang.get("import.cloud.validation.invalid.code"));
     return this;
+  }
+
+  public CloudValidationChecker checkTempTokenExpiredError() {
+    checkErrorMessage(Lang.get("import.cloud.validation.tempcode.expired"));
+    return this;
+  }
+
+  public void checkErrorMessage(String text) {
+    TextBox errorLabel = mainWindow.getTextBox("error");
+    assertThat(errorLabel.textEquals(text));
+    assertThat(errorLabel.isVisible());
   }
 
   public CloudSignupChecker back() {
