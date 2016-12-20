@@ -7,10 +7,11 @@ Ports utilisés en prod - août 2016
   public static final String KEYSTORE_PATH = "bv.https.keystore"; // full bv.jks path
   public static final String KEYSTORE_PWD = "bv.https.keystore.pwd"; // full bv.jks path
 
-  En synthèse :
-  -  443 : license
-  - 8080 : license
-  - 1443 : mobile
+En synthèse :
 
+        | HTTP | HTTPS |
+License |    - |   443 |
+Mobile  | 8080 |  1443 |
+Cloud   |    - |  1445 |
 
 

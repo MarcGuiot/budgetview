@@ -77,7 +77,7 @@ public class WebServer {
     https.setIdleTimeout(500000);
     jetty.addConnector(https);
 
-    httpPort = config.getInt(HTTP_PORT_PROPERTY);
+    httpPort = config.getInt(HTTP_PORT_PROPERTY, null);
     if (httpPort != null) {
       ServerConnector http = new ServerConnector(jetty, new HttpConnectionFactory(httpConfig));
       http.setHost(host);

@@ -1,5 +1,6 @@
 package com.budgetview.server.config;
 
+import org.globsframework.utils.Strings;
 import org.globsframework.utils.exceptions.InvalidParameter;
 import org.globsframework.utils.exceptions.OperationDenied;
 
@@ -81,7 +82,7 @@ public class ConfigService {
 
   public Integer getInt(String property, Integer defaultValue) {
     String result = doGet(property, true, null);
-    if (result == null) {
+    if (Strings.isNullOrEmpty(result)) {
       return defaultValue;
     }
     return Integer.parseInt(result);
