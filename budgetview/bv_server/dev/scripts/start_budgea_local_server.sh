@@ -1,0 +1,1 @@
+java -cp bv_server-2.0.jar com.budgetview.server.cloud.stub.BudgeaStubServer budgea_stub_local.properties

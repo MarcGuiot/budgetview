@@ -61,12 +61,16 @@
                   <include>javax.mail</include>
                   <include>hsqldb</include>
                   <include>commons-codec</include>
+                  <include>commons-logging:commons-logging</include>
+                  <include>mysql:mysql-connector-java</include>
                   <include>org.apache.httpcomponents:httpclient</include>
                   <include>org.apache.httpcomponents:httpcore</include>
                   <include>org.apache.httpcomponents:httpmime</include>
+                  <include>org.apache.httpcomponents:fluent-hc</include>
                   <include>javax.mail:*</include>
                   <include>javax.mail.internet:*</include>
                   <include>java.util.concurrent:*</include>
+                  <include>org.json:json</include>
                 </includes>
                 <excludes>
                   <exclude>junit:junit</exclude>

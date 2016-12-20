@@ -13,7 +13,7 @@ public class BudgeaChecker {
 
   public BudgeaChecker() throws Exception {
     System.setProperty(BudgeaConstants.SERVER_URL_PROPERTY, BudgeaConstants.LOCAL_SERVER_URL);
-    stub = new BudgeaStubServer("budgetview/bv_server/dev/config/budgea_stub.properties");
+    stub = new BudgeaStubServer("budgetview/bv_server/dev/config/budgea_stub_local.properties");
   }
 
   public void startServer() throws Exception {

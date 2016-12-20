@@ -1,0 +1,1 @@
+java -cp ./bvserver-1.0.jar -Dbv.mobile.path=/home/picsou/mobile/data/ -Dbv.https.keystore=/home/picsou/ssl/bv.jks -Dlog4j.configuration=log4jmobile.properties -Djava.util.logging.config.file=logging.properties com.budgetview.license.servlet.MobileServer

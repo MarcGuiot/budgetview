@@ -1,8 +1,16 @@
 
 
-Ports utilisés en prod
+Ports utilisés en prod - août 2016
 
   public static final String HTTP_PORT_PROPERTY = "bv.http.port"; // License: null - Mobile: 8080
   public static final String HTTPS_PORT_PROPERTY = "bv.https.port"; // License: 443 - Mobile: 1443
   public static final String KEYSTORE_PATH = "bv.https.keystore"; // full bv.jks path
   public static final String KEYSTORE_PWD = "bv.https.keystore.pwd"; // full bv.jks path
+
+  En synthèse :
+  -  443 : license
+  - 8080 : license
+  - 1443 : mobile
+
+
+

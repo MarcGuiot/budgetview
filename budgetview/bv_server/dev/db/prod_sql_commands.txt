@@ -1,0 +1,12 @@
+
+####################
+       CLOUD
+####################
+
+Cleanup
+
+  drop table cloud_user; drop table provider_account; drop table provider_transaction;
+
+
+Creation
+

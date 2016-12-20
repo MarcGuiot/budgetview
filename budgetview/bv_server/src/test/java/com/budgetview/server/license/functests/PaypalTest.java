@@ -97,7 +97,7 @@ public class PaypalTest extends ConnectedTestCase {
     postMethod.releaseConnection();
   }
 
-  public void testNoValidated() throws Exception {
+  public void testNotValidated() throws Exception {
     HttpClient client = new DefaultHttpClient();
 //    postMethod.getParams().setContentCharset("UTF-8");
     URIBuilder builder = new URIBuilder(SERVER_URL + LicenseConstants.NEW_USER);
@@ -140,7 +140,7 @@ public class PaypalTest extends ConnectedTestCase {
 
   class PayPalConfirm extends HttpServlet {
     private static final String VERIFIED = "VERIFIED";
-    private static final String NOT_VENRIFIED = "NOT_VERIFIED";
+    private static final String NOT_VERIFIED = "NOT_VERIFIED";
     String mail;
     String STATUS = VERIFIED;
 
@@ -157,7 +157,7 @@ public class PaypalTest extends ConnectedTestCase {
     }
 
     public void setRefused() {
-      STATUS = NOT_VENRIFIED;
+      STATUS = NOT_VERIFIED;
     }
 
     public void checkMail(String name) {
