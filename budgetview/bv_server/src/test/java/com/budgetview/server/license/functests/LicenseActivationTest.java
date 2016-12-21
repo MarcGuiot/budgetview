@@ -9,7 +9,7 @@ import com.budgetview.functests.checkers.license.LicenseActivationChecker;
 import com.budgetview.functests.checkers.license.LicenseChecker;
 import com.budgetview.functests.utils.LoggedInFunctionalTestCase;
 import com.budgetview.server.license.ConnectedTestCase;
-import com.budgetview.server.license.DuplicateLine;
+import com.budgetview.server.license.tools.DuplicateLine;
 import com.budgetview.server.license.checkers.DbChecker;
 import com.budgetview.server.license.checkers.Email;
 import com.budgetview.server.license.mail.Mailbox;

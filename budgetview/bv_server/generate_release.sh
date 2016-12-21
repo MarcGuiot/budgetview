@@ -49,7 +49,7 @@ cp $GENERATED_JAR $RELEASE_PROD_DIR
 cp $BV_SERVER_ROOT/dev/config/bv_*_prod.properties $RELEASE_PROD_DIR
 cp $BV_SERVER_ROOT/dev/config/log4j_*_prod.properties $RELEASE_PROD_DIR
 cp $BV_SERVER_ROOT/dev/config/logging.properties $RELEASE_PROD_DIR
-cp $BV_SERVER_ROOT/dev/scripts/start_*_server_prod.sh $RELEASE_PROD_DIR
+cp $BV_SERVER_ROOT/dev/scripts/*_prod.sh $RELEASE_PROD_DIR
 chmod +x $RELEASE_PROD_DIR/*.sh
 
 echo "Done"

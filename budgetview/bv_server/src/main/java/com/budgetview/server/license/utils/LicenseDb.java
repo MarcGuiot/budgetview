@@ -1,7 +1,5 @@
 package com.budgetview.server.license.utils;
 
-import com.budgetview.server.cloud.model.CloudDatabaseModel;
-import com.budgetview.server.cloud.utils.CloudDb;
 import com.budgetview.server.config.ConfigService;
 import com.budgetview.server.license.model.LicenseDatabaseModel;
 import org.globsframework.sqlstreams.GlobsDatabase;
@@ -15,13 +13,17 @@ public class LicenseDb {
   public static final String DATABASE_PASSWORD = "budgetview.database.password";
 
   public static GlobsDatabase create(ConfigService configService) {
-    GlobsDatabase database = new JdbcGlobsDatabase(configService.get(DATABASE_URL),
-                                                   configService.get(DATABASE_USER),
-                                                   configService.get(DATABASE_PASSWORD));
+    GlobsDatabase database = get(configService);
     SqlConnection connection = database.connect();
     connection.createTables(LicenseDatabaseModel.getAllTypes());
     connection.commitAndClose();
     return database;
+  }
+
+  public static GlobsDatabase get(ConfigService configService) {
+    return new JdbcGlobsDatabase(configService.get(DATABASE_URL),
+                                 configService.get(DATABASE_USER),
+                                 configService.get(DATABASE_PASSWORD));
   }
 
   public static void cleanAllTables(Directory directory) {

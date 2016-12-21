@@ -1,5 +1,7 @@
 package com.budgetview.shared.cloud.budgea;
 
+import com.budgetview.shared.http.Http;
+import com.budgetview.shared.json.Json;
 import org.apache.http.Consts;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
@@ -20,13 +22,15 @@ public class BudgeaAPI {
   private boolean permanentTokenRegistered;
 
   public static String requestFirstTemporaryToken() throws IOException {
-    JSONObject auth = json(Request.Post(BudgeaConstants.getServerUrl("/auth/init")));
+    String url = "/auth/init";
+    JSONObject auth = json(Request.Post(BudgeaConstants.getServerUrl(url)), url);
     return auth.getString(BudgeaConstants.AUTH_TOKEN);
   }
 
   public static String requestTemporaryToken(String permanentToken) throws IOException {
-    JSONObject auth = json(Request.Post(BudgeaConstants.getServerUrl("/auth/token/code"))
-                             .addHeader(BudgeaConstants.AUTHORIZATION, "Bearer " + permanentToken));
+    String url = "/auth/token/code";
+    JSONObject auth = json(Request.Post(BudgeaConstants.getServerUrl(url))
+                             .addHeader(BudgeaConstants.AUTHORIZATION, "Bearer " + permanentToken), url);
     return auth.getString(BudgeaConstants.AUTH_TOKEN);
   }
 
@@ -35,16 +39,33 @@ public class BudgeaAPI {
     this.permanentTokenRegistered = permanentTokenRegistered;
   }
 
+  public JSONObject getUsers() throws IOException {
+    checkTempToken();
+    String url = "/users";
+    return json(Request.Get(BudgeaConstants.getServerUrl(url))
+                  .addHeader(BudgeaConstants.AUTHORIZATION, "Bearer " + tempToken), url);
+  }
+
+  public JSONObject getUserConnections(int userId) throws IOException {
+    checkTempToken();
+    String url = "/users/" + userId + "/connections";
+    return json(Request.Get(BudgeaConstants.getServerUrl(url))
+                  .addHeader(BudgeaConstants.AUTHORIZATION, "Bearer " + tempToken)
+                  .addHeader("user_id", "me"), url);
+  }
+
   public JSONObject getBanks() throws IOException {
     checkTempToken();
-    return json(Request.Get(BudgeaConstants.getServerUrl("/banks?expand=fields"))
-                  .addHeader(BudgeaConstants.AUTHORIZATION, "Bearer " + tempToken));
+    String url = "/banks?expand=fields";
+    return json(Request.Get(BudgeaConstants.getServerUrl(url))
+                  .addHeader(BudgeaConstants.AUTHORIZATION, "Bearer " + tempToken), url);
   }
 
   public JSONObject getBankFields(int budgeaBankId) throws IOException {
     checkTempToken();
-    return json(Request.Get(BudgeaConstants.getServerUrl("/banks/" + budgeaBankId + "/fields"))
-                  .addHeader(BudgeaConstants.AUTHORIZATION, "Bearer " + tempToken));
+    String url = "/banks/" + budgeaBankId + "/fields";
+    return json(Request.Get(BudgeaConstants.getServerUrl(url))
+                  .addHeader(BudgeaConstants.AUTHORIZATION, "Bearer " + tempToken), url);
   }
 
   public JSONObject addBankConnection(Integer budgeaBankId, Map<String, String> params) throws IOException {
@@ -69,13 +90,14 @@ public class BudgeaAPI {
       throw new IOException(url + " returned " + httpResponse.getStatusLine().getStatusCode() + " instead of 200");
     }
 
-    return json(httpResponse);
+    return Json.json(httpResponse);
   }
 
   public Integer getUserId() throws IOException {
     checkTempToken();
-    JSONObject user = json(Request.Get(BudgeaConstants.getServerUrl("/users/me"))
-                             .addHeader(BudgeaConstants.AUTHORIZATION, "Bearer " + tempToken));
+    String url = "/users/me";
+    JSONObject user = json(Request.Get(BudgeaConstants.getServerUrl(url))
+                             .addHeader(BudgeaConstants.AUTHORIZATION, "Bearer " + tempToken), url);
     return user.getInt("id");
   }
 
@@ -91,5 +113,9 @@ public class BudgeaAPI {
     if (Strings.isNullOrEmpty(tempToken)) {
       throw new IOException("No temp token provided");
     }
+  }
+
+  public static JSONObject json(Request request, String url) throws IOException {
+    return Http.executeAndGetJson(url, request);
   }
 }

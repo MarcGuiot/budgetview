@@ -2,6 +2,7 @@ package com.budgetview.server.cloud.functests.testcases;
 
 import com.budgetview.functests.utils.LoggedInFunctionalTestCase;
 import com.budgetview.server.cloud.functests.checkers.*;
+import com.budgetview.shared.cloud.CloudConstants;
 import com.budgetview.shared.license.LicenseConstants;
 import org.apache.log4j.Logger;
 
@@ -18,6 +19,7 @@ public abstract class CloudDesktopTestCase extends LoggedInFunctionalTestCase {
     setCurrentDate("2016/08/20");
     super.setUp();
     System.clearProperty(LicenseConstants.LICENSE_URL_PROPERTY);
+    System.setProperty(CloudConstants.CLOUD_URL_PROPERTY, CloudConstants.LOCAL_SERVER_URL);
 
     mailbox = new CloudMailbox();
     mailbox.start();

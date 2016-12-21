@@ -12,9 +12,8 @@ import org.json.JSONObject;
 import java.io.IOException;
 
 public class Json {
-  public static JSONObject json(Request request) throws IOException {
-    Response response = request.execute();
-    return json(response);
+  public static JSONObject json(Request request, String url) throws IOException {
+    return Http.executeAndGetJson(url, request);
   }
 
   public static JSONObject json(Response response) throws IOException {

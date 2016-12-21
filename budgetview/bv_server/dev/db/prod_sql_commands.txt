@@ -3,10 +3,13 @@
        CLOUD
 ####################
 
-Cleanup
-
-  drop table cloud_user; drop table provider_account; drop table provider_transaction;
+drop table cloud_user; drop table provider_account; drop table provider_transaction;
 
 
-Creation
+
+####################
+       LICENSE
+####################
+
+update LICENSE set CLOUD_LICENSE_EXPIRATION_DATE='2017-12-31' where MAIL='regis@regismedina.com';
 

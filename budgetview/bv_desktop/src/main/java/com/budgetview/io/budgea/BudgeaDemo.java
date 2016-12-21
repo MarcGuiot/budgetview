@@ -12,13 +12,13 @@ public class BudgeaDemo {
 
     BudgeaConstants.setProd();
 
-    JSONObject auth = json(Request.Post(BudgeaConstants.getServerUrl("/auth/init")));
+    JSONObject auth = json(Request.Post(BudgeaConstants.getServerUrl("/auth/init")), "/auth/init");
     String token = auth.getString("auth_token");
     System.out.println("Token: " + token);
 
     System.out.println("\n\n---------------- categories:\n");
     JSONObject categories = json(Request.Get(BudgeaConstants.getServerUrl("/categories"))
-                                   .addHeader("Authorization", "Bearer " + token));
+                                   .addHeader("Authorization", "Bearer " + token), "/categories");
     System.out.println(categories.toString(2));
     dumpCategories(categories);
 

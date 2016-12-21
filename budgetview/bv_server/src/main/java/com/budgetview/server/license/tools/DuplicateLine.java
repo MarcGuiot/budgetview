@@ -1,4 +1,4 @@
-package com.budgetview.server.license;
+package com.budgetview.server.license.tools;
 
 import com.budgetview.server.license.model.License;
 import org.globsframework.sqlstreams.GlobsDatabase;

@@ -15,7 +15,7 @@ public class LicenseAPI {
 
   public static Date getCloudSubscriptionEndDate(String email) throws IOException, ParseException {
     String url = LicenseConstants.getServerUrl(LicenseConstants.CLOUD_SUBSCRIPTION_END_DATE);
-    JSONObject result = json(Request.Get(url).addHeader(LicenseConstants.CLOUD_EMAIL, email));
+    JSONObject result = json(Request.Get(url).addHeader(LicenseConstants.CLOUD_EMAIL, email), url);
     String expirationDate = result.optString(LicenseConstants.CLOUD_END_DATE);
     return Strings.isNullOrEmpty(expirationDate) ? null : JsonGlobFormat.parseDate(expirationDate);
   }
