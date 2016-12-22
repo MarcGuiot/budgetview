@@ -1,0 +1,44 @@
+<splits xmlns="http://www.globsframework.org/xml/splits.xsd">
+
+  <styleImport file="/layout/commonStyles.splits"/>
+  <styleImport file="/layout/dialogStyles.splits"/>
+  <styleImport file="/layout/importexport/components/importDialogStyles.splits"/>
+
+
+  <column styleClass="dialog" preferredSize="(600,710)" name="importCloudSignupPanel">
+
+    <label text="$import.cloud.edition.title" name="title" styleClass="title"/>
+
+    <column styleClass="innerDialog">
+      <column styleClass="innerDialogContent">
+
+        <htmlEditorPane text="$import.cloud.edition.message" styleClass="multiLineLabel"/>
+
+        <scrollPane marginTop="20" forceVerticalScroll="true" weightY="100">
+          <column margin="20">
+
+            <repeat ref="connections" layout="verticalGrid">
+              <label ref="name"/>
+              <button ref="delete"/>
+            </repeat>
+
+          </column>
+        </scrollPane>
+
+        <label ref="errorMessage" styleClass="errorMessage"/>
+
+        <component ref="progressPanel" marginTop="20"/>
+
+        <filler fill="vertical"/>
+
+      </column>
+    </column>
+
+    <row styleClass="dialogButtons" name="buttons">
+      <filler fill="horizontal"/>
+      <button action="close"/>
+      <button action="back"/>
+    </row>
+  </column>
+
+</splits>

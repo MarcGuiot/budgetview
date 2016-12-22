@@ -56,21 +56,21 @@ public class CloudIntroPanel implements Disposable {
     });
     disposables.add(listener);
 
-    builder.add("openCloudSynchro", new AbstractAction(Lang.get("import.fileSelection.bank.initial.button")) {
+    builder.add("openCloudSynchro", new AbstractAction(Lang.get("import.fileSelection.cloud.initial.button")) {
       public void actionPerformed(ActionEvent e) {
         controller.showCloudSignup();
       }
     });
 
-    builder.add("refreshCloud", new AbstractAction(Lang.get("import.fileSelection.bank.refresh.button")) {
+    builder.add("refreshCloud", new AbstractAction(Lang.get("import.fileSelection.cloud.refresh.button")) {
       public void actionPerformed(ActionEvent e) {
         controller.showCloudRefresh();
       }
     });
 
-    builder.add("addCloudConnection", new AbstractAction(Lang.get("import.fileSelection.bank.add.button")) {
+    builder.add("addCloudConnection", new AbstractAction(Lang.get("import.fileSelection.cloud.edition.button")) {
       public void actionPerformed(ActionEvent e) {
-        controller.showCloudBankSelection();
+        controller.showCloudEdition();
       }
     });
 

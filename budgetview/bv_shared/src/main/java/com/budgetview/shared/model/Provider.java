@@ -8,6 +8,7 @@ import org.globsframework.metamodel.fields.StringField;
 import org.globsframework.metamodel.utils.GlobTypeLoader;
 import org.globsframework.model.impl.ReadOnlyGlob;
 import org.globsframework.model.utils.GlobConstantContainer;
+import org.globsframework.utils.exceptions.ItemNotFound;
 
 import static org.globsframework.model.FieldValue.value;
 
@@ -44,5 +45,14 @@ public enum Provider implements GlobConstantContainer {
 
   public int getId() {
     return id;
+  }
+
+  public static Provider get(int id) {
+    for (Provider provider : values()) {
+      if (provider.getId() == id) {
+        return provider;
+      }
+    }
+    throw new ItemNotFound("No provider found for id " + id);
   }
 }

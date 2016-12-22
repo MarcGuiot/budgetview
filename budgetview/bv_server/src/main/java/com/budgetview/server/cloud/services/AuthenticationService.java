@@ -116,7 +116,7 @@ public class AuthenticationService {
     return newToken;
   }
 
-  public Integer checkUserToken(String email, String token) throws SubscriptionCheckFailed {
+  public Glob checkUserToken(String email, String token) throws SubscriptionCheckFailed {
     SqlConnection connection = database.connect();
     try {
       Glob user = connection.selectUnique(CloudUser.TYPE, fieldEquals(CloudUser.EMAIL, email.toLowerCase()));
@@ -133,7 +133,7 @@ public class AuthenticationService {
 
       doCheckSubscription(user, userId, email, connection);
 
-      return userId;
+      return user;
     }
     finally {
       try {

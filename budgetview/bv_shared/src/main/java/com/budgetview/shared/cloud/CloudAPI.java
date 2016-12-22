@@ -64,6 +64,15 @@ public class CloudAPI {
     Http.execute(request, url);
   }
 
+  public JSONObject getConnections(String email, String bvToken) throws IOException {
+    String url = "/connections";
+    Request request = Request.Get(cloudUrl(url))
+      .addHeader(CloudConstants.EMAIL, email)
+      .addHeader(CloudConstants.BV_TOKEN, bvToken);
+
+    return Http.executeAndGetJson(url, request);
+  }
+
   public JSONObject getStatement(String email, String bvToken, Integer lastUpdate) throws IOException {
     String url = lastUpdate == null ? "/statement" : "/statement/" + lastUpdate;
     Request request = Request.Get(cloudUrl(url))

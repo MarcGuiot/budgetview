@@ -18,8 +18,8 @@ import static com.budgetview.shared.json.Json.json;
 
 public class BudgeaAPI {
 
-  private String tempToken;
-  private boolean permanentTokenRegistered;
+  private String token;
+  private boolean isPermanentToken;
 
   public static String requestFirstTemporaryToken() throws IOException {
     String url = "/auth/init";
@@ -34,38 +34,45 @@ public class BudgeaAPI {
     return auth.getString(BudgeaConstants.AUTH_TOKEN);
   }
 
-  public void setTempToken(String token, boolean permanentTokenRegistered) {
-    this.tempToken = token;
-    this.permanentTokenRegistered = permanentTokenRegistered;
+  public void setToken(String token, boolean permanentTokenRegistered) {
+    this.token = token;
+    this.isPermanentToken = permanentTokenRegistered;
   }
 
   public JSONObject getUsers() throws IOException {
     checkTempToken();
     String url = "/users";
     return json(Request.Get(BudgeaConstants.getServerUrl(url))
-                  .addHeader(BudgeaConstants.AUTHORIZATION, "Bearer " + tempToken), url);
+                  .addHeader(BudgeaConstants.AUTHORIZATION, "Bearer " + token), url);
   }
 
   public JSONObject getUserConnections(int userId) throws IOException {
     checkTempToken();
     String url = "/users/" + userId + "/connections";
     return json(Request.Get(BudgeaConstants.getServerUrl(url))
-                  .addHeader(BudgeaConstants.AUTHORIZATION, "Bearer " + tempToken)
+                  .addHeader(BudgeaConstants.AUTHORIZATION, "Bearer " + token)
                   .addHeader("user_id", "me"), url);
+  }
+
+  public void deleteUser(int userId) throws IOException {
+    checkTempToken();
+    String url = "/users/" + userId;
+    Http.execute(Request.Delete(BudgeaConstants.getServerUrl(url))
+                  .addHeader(BudgeaConstants.AUTHORIZATION, "Bearer " + token), url);
   }
 
   public JSONObject getBanks() throws IOException {
     checkTempToken();
     String url = "/banks?expand=fields";
     return json(Request.Get(BudgeaConstants.getServerUrl(url))
-                  .addHeader(BudgeaConstants.AUTHORIZATION, "Bearer " + tempToken), url);
+                  .addHeader(BudgeaConstants.AUTHORIZATION, "Bearer " + token), url);
   }
 
   public JSONObject getBankFields(int budgeaBankId) throws IOException {
     checkTempToken();
     String url = "/banks/" + budgeaBankId + "/fields";
     return json(Request.Get(BudgeaConstants.getServerUrl(url))
-                  .addHeader(BudgeaConstants.AUTHORIZATION, "Bearer " + tempToken), url);
+                  .addHeader(BudgeaConstants.AUTHORIZATION, "Bearer " + token), url);
   }
 
   public JSONObject addBankConnection(Integer budgeaBankId, Map<String, String> params) throws IOException {
@@ -79,10 +86,10 @@ public class BudgeaAPI {
     }
 
     List<NameValuePair> pairs = form.build();
-    System.out.println("BudgeaAPI.addBankConnection: " + pairs + " for token " + tempToken);
+    System.out.println("BudgeaAPI.addBankConnection: " + pairs + " for token " + token);
     String url = BudgeaConstants.getServerUrl("/users/me/connections");
     Request request = Request.Post(url)
-      .addHeader(BudgeaConstants.AUTHORIZATION, "Bearer " + tempToken)
+      .addHeader(BudgeaConstants.AUTHORIZATION, "Bearer " + token)
       .bodyForm(pairs, Consts.UTF_8);
 
     HttpResponse httpResponse = request.execute().returnResponse();
@@ -97,20 +104,20 @@ public class BudgeaAPI {
     checkTempToken();
     String url = "/users/me";
     JSONObject user = json(Request.Get(BudgeaConstants.getServerUrl(url))
-                             .addHeader(BudgeaConstants.AUTHORIZATION, "Bearer " + tempToken), url);
+                             .addHeader(BudgeaConstants.AUTHORIZATION, "Bearer " + token), url);
     return user.getInt("id");
   }
 
   public String getToken() throws IOException {
-    return tempToken;
+    return token;
   }
 
-  public boolean isPermanentTokenRegistered() {
-    return permanentTokenRegistered;
+  public boolean isPermanentToken() {
+    return isPermanentToken;
   }
 
   private void checkTempToken() throws IOException {
-    if (Strings.isNullOrEmpty(tempToken)) {
+    if (Strings.isNullOrEmpty(token)) {
       throw new IOException("No temp token provided");
     }
   }

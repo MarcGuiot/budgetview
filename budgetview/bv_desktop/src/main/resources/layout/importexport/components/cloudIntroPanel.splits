@@ -7,21 +7,21 @@
   <column name="cloudIntroPanel">
 
     <column ref="initial">
-      <htmlEditorPane text="$import.fileSelection.bank.initial.message" styleClass="multiLineLabel"/>
+      <htmlEditorPane text="$import.fileSelection.cloud.initial.message" styleClass="multiLineLabel"/>
       <row>
         <filler fill="horizontal"/>
-        <label text="$import.fileSelection.bank.initial.label" styleClass="formLabel"/>
+        <label text="$import.fileSelection.cloud.initial.label" styleClass="formLabel"/>
         <button action="openCloudSynchro" fill="none" anchor="right"/>
       </row>
     </column>
 
     <column ref="refresh">
-      <htmlEditorPane text="$import.fileSelection.bank.refresh.message"/>
+      <htmlEditorPane text="$import.fileSelection.cloud.refresh.message"/>
       <button action="refreshCloud" fill="none" anchor="center"/>
     </column>
 
     <column ref="add" marginTop="20">
-      <htmlEditorPane text="$import.fileSelection.bank.add.message"/>
+      <htmlEditorPane text="$import.fileSelection.cloud.edition.message"/>
       <button action="addCloudConnection" fill="none" anchor="center"/>
     </column>
 

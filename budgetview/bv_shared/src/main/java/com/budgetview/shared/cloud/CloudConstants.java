@@ -10,10 +10,13 @@ public class CloudConstants {
   public static final String STATUS = "status";
   public static final String SUBSCRIPTION_STATUS = "subscription_status";
 
-  public static final String PROVIDER = "budgea_token";
+  public static final String PROVIDER = "provider";
+  public static final String PROVIDER_ID = "provider_id";
   public static final String BUDGEA_TOKEN = "budgea_token";
   public static final String BUDGEA_USER_ID = "budgea_user_id";
   public static final String BUDGEA_TOKEN_REGISTERED = "budgea_token_registered";
+
+  public static final String NAME = "name";
 
   public static final String PROD_CLOUD_SERVER_URL = "https://register.mybudgetview.fr:1445";
 

@@ -1,10 +1,7 @@
 package com.budgetview.desktop.cloud;
 
 import com.budgetview.budgea.model.*;
-import com.budgetview.model.Bank;
-import com.budgetview.model.CloudDesktopUser;
-import com.budgetview.model.Month;
-import com.budgetview.model.RealAccount;
+import com.budgetview.model.*;
 import com.budgetview.shared.cloud.CloudAPI;
 import com.budgetview.shared.cloud.CloudConstants;
 import com.budgetview.shared.cloud.CloudRequestStatus;
@@ -188,7 +185,7 @@ public class CloudService {
         case OK:
           String token = result.getString(CloudConstants.BUDGEA_TOKEN);
           boolean permanentTokenRegistered = result.getBoolean(CloudConstants.BUDGEA_TOKEN_REGISTERED);
-          budgeaAPI.setTempToken(token, permanentTokenRegistered);
+          budgeaAPI.setToken(token, permanentTokenRegistered);
           break;
         case NO_SUBSCRIPTION:
           callback.processSubscriptionError(getSubscriptionStatus(result));
@@ -256,7 +253,7 @@ public class CloudService {
             params.put(name, value.get(BudgeaConnectionValue.VALUE));
           }
 
-          if (!budgeaAPI.isPermanentTokenRegistered()) {
+          if (!budgeaAPI.isPermanentToken()) {
             Glob user = repository.get(CloudDesktopUser.KEY);
             cloudAPI.addBudgeaConnection(user.get(CloudDesktopUser.EMAIL), user.get(CloudDesktopUser.BV_TOKEN), budgeaAPI.getToken(), budgeaAPI.getUserId());
           }
@@ -274,6 +271,35 @@ public class CloudService {
       }
     });
     thread.start();
+  }
+
+  public void updateBankConnections(final GlobRepository repository, final Callback callback) {
+    Thread thread = new Thread(new Runnable() {
+      public void run() {
+        try {
+          Glob user = repository.get(CloudDesktopUser.KEY);
+          JSONObject connections = cloudAPI.getConnections(user.get(CloudDesktopUser.EMAIL), user.get(CloudDesktopUser.BV_TOKEN));
+
+          repository.startChangeSet();
+          repository.deleteAll(CloudProviderConnection.TYPE);
+          for (Object c : connections.getJSONArray("connections")) {
+            JSONObject connection = (JSONObject)c;
+            repository.create(CloudProviderConnection.TYPE,
+                              value(CloudProviderConnection.PROVIDER, connection.getInt(CloudConstants.PROVIDER)),
+                              value(CloudProviderConnection.PROVIDER_ID, connection.getInt(CloudConstants.PROVIDER_ID)),
+                              value(CloudProviderConnection.NAME, connection.getString(CloudConstants.NAME)));
+          }
+          repository.completeChangeSet();
+          callback.processCompletion();
+        }
+        catch (Exception e) {
+          Log.write("Error retrieving connections", e);
+          callback.processError(e);
+        }
+      }
+    });
+    thread.start();
+
   }
 
   public void downloadInitialStatement(GlobRepository repository, DownloadCallback callback) {

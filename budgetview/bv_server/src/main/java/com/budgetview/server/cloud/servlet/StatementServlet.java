@@ -1,5 +1,6 @@
 package com.budgetview.server.cloud.servlet;
 
+import com.budgetview.server.cloud.model.CloudUser;
 import com.budgetview.server.cloud.model.ProviderAccount;
 import com.budgetview.server.cloud.model.ProviderTransaction;
 import com.budgetview.server.cloud.model.ProviderUpdate;
@@ -65,15 +66,15 @@ public class StatementServlet extends HttpCloudServlet {
       return;
     }
 
-    Integer userId = null;
+    Glob user = null;
     try {
-      userId = authentication.checkUserToken(email, token);
+      user = authentication.checkUserToken(email, token);
     }
     catch (SubscriptionCheckFailed e) {
       setSubscriptionError(response, e);
       return;
     }
-    if (userId == null) {
+    if (user == null) {
       logger.error("Could not identify user with email:" + email);
       setUnauthorized(response);
       return;
@@ -89,8 +90,8 @@ public class StatementServlet extends HttpCloudServlet {
       }
     }
 
+    Integer userId = user.get(CloudUser.ID);
     SqlConnection connection = database.connect();
-
     Constraint where =
       lastUpdate == null ?
         Where.fieldEquals(ProviderUpdate.USER, userId) :

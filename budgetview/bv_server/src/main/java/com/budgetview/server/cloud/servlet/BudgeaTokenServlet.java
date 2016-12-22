@@ -49,24 +49,21 @@ public class BudgeaTokenServlet extends HttpCloudServlet {
       return;
     }
 
-    Integer userId = null;
+    Glob user;
     try {
-      userId = authentication.checkUserToken(email, token);
+      user = authentication.checkUserToken(email, token);
     }
     catch (SubscriptionCheckFailed e) {
       setSubscriptionError(response, e);
       return;
     }
-    if (userId == null) {
+    if (user == null) {
       logger.error("Could not identify user with email:" + email);
       setUnauthorized(response);
       return;
     }
 
-    SqlConnection connection = database.connect();
-    Glob user = connection.selectUnique(CloudUser.TYPE, fieldEquals(CloudUser.ID, userId));
     String permanentBudgeaToken = user.get(CloudUser.PROVIDER_ACCESS_TOKEN);
-
     String temporaryToken;
     if (Strings.isNotEmpty(permanentBudgeaToken)) {
       temporaryToken = BudgeaAPI.requestTemporaryToken(permanentBudgeaToken);

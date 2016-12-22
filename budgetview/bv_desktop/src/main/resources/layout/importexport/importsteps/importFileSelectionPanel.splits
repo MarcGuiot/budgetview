@@ -40,7 +40,7 @@
         </row>
 
         <column styleClass="separator" weightY="20" marginTop="10">
-          <label icon="import_bank.png" text="$import.fileSelection.bank.title" styleClass="sectionTitle"
+          <label icon="import_bank.png" text="$import.fileSelection.cloud.title" styleClass="sectionTitle"
                  marginTop="15"/>
           <panel ref="cloudIntro" weightY="500"/>
         </column>
