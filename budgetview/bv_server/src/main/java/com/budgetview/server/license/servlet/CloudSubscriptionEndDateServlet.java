@@ -3,6 +3,7 @@ package com.budgetview.server.license.servlet;
 import com.budgetview.server.license.model.License;
 import com.budgetview.shared.license.LicenseConstants;
 import org.apache.log4j.Logger;
+import org.globsframework.json.JsonGlobFormat;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
 import org.globsframework.sqlstreams.GlobsDatabase;
@@ -43,7 +44,7 @@ public class CloudSubscriptionEndDateServlet extends HttpServlet {
 
     SqlConnection connection = db.connect();
     try {
-      GlobList licenses = connection.startSelect(License.TYPE, Where.fieldEquals(License.MAIL, email))
+      GlobList licenses = connection.startSelect(License.TYPE, Where.fieldEquals(License.MAIL, email.trim()))
         .selectAll()
         .getList();
 
@@ -55,12 +56,20 @@ public class CloudSubscriptionEndDateServlet extends HttpServlet {
         }
       }
 
+      String endDate = result == null ? null : JsonGlobFormat.toString(result);
+
       JSONWriter writer = new JSONWriter(response.getWriter());
       writer.object();
-      writer.key(LicenseConstants.CLOUD_END_DATE).value(result);
+      writer.key(LicenseConstants.CLOUD_END_DATE).value(endDate);
       writer.endObject();
 
+      logger.info("Returning " + endDate);
+
       response.setStatus(HttpServletResponse.SC_OK);
+    }
+    catch (Exception e) {
+      logger.error("Exception when retrieving end date for " + email, e);
+      response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
     }
     finally {
       connection.commitAndClose();

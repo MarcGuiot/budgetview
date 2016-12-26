@@ -22,10 +22,10 @@ import org.globsframework.utils.Strings;
 import org.globsframework.utils.directory.Directory;
 import org.globsframework.utils.exceptions.ItemNotFound;
 import org.globsframework.utils.exceptions.TooManyItems;
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -56,6 +56,8 @@ public class BudgeaWebHookServlet extends HttpCloudServlet {
     request.setCharacterEncoding("UTF-8");
     response.setCharacterEncoding("UTF-8");
 
+    logger.info("Budgea webhook called");
+
     String authorization = request.getHeader("Authorization");
     if (Strings.isNullOrEmpty(authorization)) {
       logger.error("No credentials provided - request rejected");
@@ -64,7 +66,7 @@ public class BudgeaWebHookServlet extends HttpCloudServlet {
     }
     Matcher tokenMatcher = pattern.matcher(authorization.trim());
     if (!tokenMatcher.matches()) {
-      logger.error("Invalid credentials provided '" + authorization + "' - request rejected");
+      logger.error("Invalid credentials provided in '" + authorization + "' - request rejected");
       setUnauthorized(response);
       return;
     }
@@ -77,7 +79,13 @@ public class BudgeaWebHookServlet extends HttpCloudServlet {
     Integer userId = null;
     try {
       JSONObject root = new JSONObject(json);
-      for (Object c : root.getJSONArray("connections")) {
+      JSONArray array = root.optJSONArray("connections");
+      if (array == null) {
+        logger.error("Missing array 'connections' in budgea call - content: " + root.toString(2));
+        response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+        return;
+      }
+      for (Object c : array) {
         JSONObject budgeaConnection = (JSONObject) c;
         int budgeaUserId = budgeaConnection.getInt("id_user");
         userId = getCloudUserId(budgeaUserId, token);
@@ -87,9 +95,15 @@ public class BudgeaWebHookServlet extends HttpCloudServlet {
         }
         JSONObject bank = budgeaConnection.getJSONObject("bank");
         DbUpdater updater = new DbUpdater(userId);
-        for (Object a : budgeaConnection.getJSONArray("accounts")) {
-          JSONObject account = (JSONObject) a;
-          updater.loadAccount(bank, account);
+        JSONArray accounts = budgeaConnection.optJSONArray("accounts");
+        if (accounts != null) {
+          for (Object a : accounts) {
+            JSONObject account = (JSONObject) a;
+            updater.loadAccount(bank, account);
+          }
+        }
+        else {
+          logger.info("No account for connection");
         }
         updater.save();
       }
@@ -105,6 +119,7 @@ public class BudgeaWebHookServlet extends HttpCloudServlet {
       return;
     }
 
+    logger.info("Webhook successfully saved");
     response.setStatus(HttpServletResponse.SC_OK);
   }
 

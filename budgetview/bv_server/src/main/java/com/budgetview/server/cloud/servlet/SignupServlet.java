@@ -60,7 +60,11 @@ public class SignupServlet extends HttpCloudServlet {
   private void processSignup(String email, String lang) throws GlobsSQLException, MessagingException, SubscriptionCheckFailed {
     Integer userId = authentication.findUser(email);
     if (userId == null) {
+      logger.info("User not found for '" + email + "' - creating it");
       userId = authentication.createUser(email);
+    }
+    else {
+      logger.info("User " + userId + " found for '" + email + "'");
     }
 
     authentication.invalidateUserEmail(userId);

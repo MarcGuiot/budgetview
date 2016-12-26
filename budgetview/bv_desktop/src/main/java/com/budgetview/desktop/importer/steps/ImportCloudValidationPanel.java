@@ -111,9 +111,17 @@ public class ImportCloudValidationPanel extends AbstractImportStepPanel {
     setAllEnabled(false);
     progressPanel.start();
     cloudService.validate(email, codeField.getText(), repository, new CloudService.ValidationCallback() {
-      public void processCompletion() {
-        System.out.println("ImportCloudValidationPanel.processCompletion");
+      public void processCompletionAndSelectBank() {
+        System.out.println("ImportCloudValidationPanel.processCompletionAndSelectBank");
         controller.showCloudBankSelection();
+        progressPanel.stop();
+        setAllEnabled(true);
+        backAction.setEnabled(false);
+      }
+
+      public void processCompletionAndDownload() {
+        System.out.println("ImportCloudValidationPanel.processCompletionAndDownload");
+        controller.showCloudDownload();
         progressPanel.stop();
         setAllEnabled(true);
         backAction.setEnabled(false);

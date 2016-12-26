@@ -45,7 +45,6 @@ public class BudgeaTokenServlet extends HttpCloudServlet {
     if (Strings.isNullOrEmpty(email) || Strings.isNullOrEmpty(token)) {
       logger.info("Missing info " + email + " / " + token);
       setBadRequest(response);
-      setBadRequest(response);
       return;
     }
 

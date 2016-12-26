@@ -12,29 +12,32 @@ import org.globsframework.utils.directory.Directory;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 
-public class ImportCloudRefreshPanel extends AbstractImportStepPanel {
+public class ImportCloudDownloadPanel extends AbstractImportStepPanel {
 
   private final GlobRepository repository;
   private final CloudService cloudService;
   private ProgressPanel progressPanel;
 
-  public ImportCloudRefreshPanel(PicsouDialog dialog, String textForCloseButton, ImportController controller, GlobRepository repository, Directory localDirectory) {
+  public ImportCloudDownloadPanel(PicsouDialog dialog, String textForCloseButton, ImportController controller, GlobRepository repository, Directory localDirectory) {
     super(dialog, textForCloseButton, controller, localDirectory);
     this.repository = repository;
     this.cloudService = localDirectory.get(CloudService.class);
   }
 
   protected GlobsPanelBuilder createPanelBuilder() {
-    GlobsPanelBuilder builder = new GlobsPanelBuilder(getClass(), "/layout/importexport/importsteps/importCloudRefreshPanel.splits", repository, localDirectory);
+    GlobsPanelBuilder builder = new GlobsPanelBuilder(getClass(), "/layout/importexport/importsteps/importCloudErrorPanel.splits", repository, localDirectory);
 
-    Action disabledNext = new AbstractAction() {
+    Action nextAction = new AbstractAction("import.cloud.validation.next") {
       public void actionPerformed(ActionEvent e) {
       }
     };
-    disabledNext.setEnabled(false);
-    builder.add("next", disabledNext);
+    nextAction.setEnabled(false);
+
+    builder.add("next", nextAction);
     builder.add("close", new AbstractAction(textForCloseButton) {
       public void actionPerformed(ActionEvent e) {
+        controller.complete();
+        controller.closeDialog();
       }
     });
 
@@ -44,6 +47,8 @@ public class ImportCloudRefreshPanel extends AbstractImportStepPanel {
     return builder;
   }
 
+  public void prepareForDisplay() {
+  }
 
   public void start() {
     progressPanel.start();
@@ -64,8 +69,5 @@ public class ImportCloudRefreshPanel extends AbstractImportStepPanel {
         progressPanel.stop();
       }
     });
-  }
-
-  public void prepareForDisplay() {
   }
 }

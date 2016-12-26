@@ -72,6 +72,10 @@ public class ConfigService {
     return doGet(property, false, null);
   }
 
+  public void init(String property) {
+    System.setProperty(property, get(property));
+  }
+
   public Integer getInt(String property) {
     String result = doGet(property, false, null);
     if (result == null) {
@@ -115,10 +119,14 @@ public class ConfigService {
 
     if (property.contains("pwd") || property.contains("password")) {
       char passwordArray[] = console.readPassword(property + ": ");
-      return new String(passwordArray).trim();
+      String password = new String(passwordArray).trim();
+      System.setProperty(property, password);
+      return password;
     }
 
-    return console.readLine(property + ": ").trim();
+    String text = console.readLine(property + ": ").trim();
+    System.setProperty(property, text);
+    return text;
   }
 
   public static void checkCommandLine(String[] args) {

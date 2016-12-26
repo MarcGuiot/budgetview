@@ -5,21 +5,22 @@
   <styleImport file="/layout/importexport/components/importDialogStyles.splits"/>
 
 
-  <column styleClass="dialog" preferredSize="(600,710)" name="importCloudRefreshPanel">
+  <column styleClass="dialog" preferredSize="(600,710)" name="importCloudDownloadPanel">
 
-    <label text="$import.cloud.refresh.title" name="title" styleClass="title"/>
+    <label text="$import.completion.title" name="title" styleClass="title"/>
 
     <column styleClass="innerDialog">
       <column styleClass="innerDialogContent">
 
-        <filler fill="vertical"/>
+        <scrollPane marginTop="20" forceVerticalScroll="true">
+          <column margin="20">
 
-        <label text="$import.cloud.refresh.message" fill="none" anchor="center" marginBottom="20"/>
+            <label text="Download in progress"/>
 
-        <component ref="progressPanel" fill="none" margin="10" anchor="center" weightX="0.1"/>
+            <filler fill="vertical"/>
 
-        <filler fill="vertical"/>
-
+          </column>
+        </scrollPane>
       </column>
     </column>
 

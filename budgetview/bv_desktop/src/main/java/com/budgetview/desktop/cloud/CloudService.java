@@ -45,7 +45,9 @@ public class CloudService {
   }
 
   public interface ValidationCallback {
-    void processCompletion();
+    void processCompletionAndSelectBank();
+
+    void processCompletionAndDownload();
 
     void processInvalidCode();
 
@@ -107,9 +109,15 @@ public class CloudService {
                               value(CloudDesktopUser.BV_TOKEN, bvToken),
                               value(CloudDesktopUser.REGISTERED, true));
           }
+          System.out.println("CloudService.run: /validate returned\n" + result.toString(2));
           switch (CloudRequestStatus.get(result.getString(CloudConstants.STATUS))) {
             case OK:
-              callback.processCompletion();
+              if (Boolean.TRUE.equals(result.optBoolean(CloudConstants.EXISTING_STATEMENTS))) {
+                callback.processCompletionAndDownload();
+              }
+              else {
+                callback.processCompletionAndSelectBank();
+              }
               break;
             case UNKNOWN_CODE:
               callback.processInvalidCode();
@@ -365,6 +373,9 @@ public class CloudService {
     Glob user = repository.findOrCreate(CloudDesktopUser.KEY);
     Integer lastUpdate = user.get(CloudDesktopUser.LAST_UPDATE);
     JSONObject statement = cloudAPI.getStatement(user.get(CloudDesktopUser.EMAIL), user.get(CloudDesktopUser.BV_TOKEN), lastUpdate);
+
+    System.out.println("CloudService.doDownloadStatement: lastUpdate=" + lastUpdate + " ==> returned " + statement.toString(2));
+
     JSONArray accounts = statement.getJSONArray("accounts");
     if (accounts.length() == 0) {
       return GlobList.EMPTY;

@@ -16,9 +16,14 @@ public class CloudValidationChecker extends ViewChecker {
     checkPanelShown("importCloudValidationPanel");
   }
 
-  public CloudBankSelectionChecker processEmail(String code) {
+  public CloudBankSelectionChecker processEmailAndNextToBankSelection(String code) {
     enterCode(code);
     return new CloudBankSelectionChecker(mainWindow);
+  }
+
+  public ImportDialogPreviewChecker processEmailAndNextToDownload(String code) {
+    enterCode(code);
+    return new ImportDialogPreviewChecker(mainWindow);
   }
 
   public CloudValidationChecker processEmailAndCheckError(String code) {

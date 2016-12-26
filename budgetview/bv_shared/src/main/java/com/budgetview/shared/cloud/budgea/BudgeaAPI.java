@@ -28,10 +28,14 @@ public class BudgeaAPI {
   }
 
   public static String requestTemporaryToken(String permanentToken) throws IOException {
-    String url = "/auth/token/code";
-    JSONObject auth = json(Request.Post(BudgeaConstants.getServerUrl(url))
+    String url = BudgeaConstants.getServerUrl("/auth/token/code");
+    JSONObject auth = json(Request.Get(url)
                              .addHeader(BudgeaConstants.AUTHORIZATION, "Bearer " + permanentToken), url);
-    return auth.getString(BudgeaConstants.AUTH_TOKEN);
+    String code = auth.optString(BudgeaConstants.CODE);
+    if (Strings.isNullOrEmpty(code)) {
+      throw new IOException("No parameter " + BudgeaConstants.CODE + " found in:\n" + auth.toString(2));
+    }
+    return code;
   }
 
   public void setToken(String token, boolean permanentTokenRegistered) {

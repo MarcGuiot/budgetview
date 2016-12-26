@@ -33,6 +33,7 @@ import org.globsframework.utils.exceptions.InvalidData;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.globsframework.model.FieldValue.value;
@@ -43,11 +44,16 @@ public class BackupService {
   private GlobRepository repository;
   private DefaultGlobIdGenerator idGenerator;
   private UpgradeTrigger upgradeTrigger;
+  private List<Trigger> postRestoreTriggers = new ArrayList<Trigger>();
 
   public enum Status {
     BAD_VERSION,
     OK,
     DECRYPT_FAILED
+  }
+
+  public interface Trigger {
+    void process(GlobRepository repository);
   }
 
   public BackupService(DataAccess dataAccess,
@@ -59,6 +65,10 @@ public class BackupService {
     this.repository = repository;
     this.idGenerator = idGenerator;
     this.upgradeTrigger = upgradeTrigger;
+  }
+
+  public void addPostRestoreTrigger(Trigger trigger) {
+    postRestoreTriggers.add(trigger);
   }
 
   public void generate(File file) throws IOException {
@@ -105,7 +115,7 @@ public class BackupService {
       }, serverData, readPasswordBasedEncryptor, globModel);
     }
     catch (Exception e) {
-      e.printStackTrace();
+      Log.write("Error during restore", e);
       return Status.DECRYPT_FAILED;
     }
 
@@ -150,7 +160,9 @@ public class BackupService {
     repository.startChangeSet();
     try {
       upgradeTrigger.postProcessing(repository);
-      SignpostStatus.setAllCompleted(repository);
+      for (Trigger trigger : postRestoreTriggers) {
+        trigger.process(repository);
+      }
     }
     finally {
       repository.completeChangeSet();

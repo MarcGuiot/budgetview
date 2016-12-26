@@ -9,6 +9,7 @@ import com.budgetview.server.cloud.utils.CloudDb;
 import com.budgetview.server.utils.Log4J;
 import com.budgetview.server.web.WebServer;
 import com.budgetview.shared.cloud.CloudConstants;
+import com.budgetview.shared.cloud.budgea.BudgeaConstants;
 import com.budgetview.shared.license.LicenseConstants;
 import org.apache.log4j.Logger;
 import org.globsframework.sqlstreams.GlobsDatabase;
@@ -37,7 +38,8 @@ public class CloudServer {
 
   public void init() throws Exception {
 
-    System.setProperty(LicenseConstants.LICENSE_URL_PROPERTY, config.get(LicenseConstants.LICENSE_URL_PROPERTY));
+    config.init(LicenseConstants.LICENSE_URL_PROPERTY);
+    config.init(BudgeaConstants.SERVER_URL_PROPERTY);
 
     directory = createDirectory();
     webServer = new WebServer(config);

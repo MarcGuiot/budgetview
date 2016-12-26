@@ -33,8 +33,8 @@ public class CloudAPI {
     if (Strings.isNullOrEmpty(bvToken)) {
       throw new InvalidParameter("A proper token must be provided to get a token");
     }
-    String url = "/budgea/token";
-    Request request = Request.Get(CloudConstants.getServerUrl(url))
+    String url = CloudConstants.getServerUrl("/budgea/token");
+    Request request = Request.Get(url)
       .addHeader(CloudConstants.EMAIL, email)
       .addHeader(CloudConstants.BV_TOKEN,  bvToken);
     return Http.executeAndGetJson(url, request);

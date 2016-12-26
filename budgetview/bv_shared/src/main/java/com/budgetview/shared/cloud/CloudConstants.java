@@ -15,6 +15,7 @@ public class CloudConstants {
   public static final String BUDGEA_TOKEN = "budgea_token";
   public static final String BUDGEA_USER_ID = "budgea_user_id";
   public static final String BUDGEA_TOKEN_REGISTERED = "budgea_token_registered";
+  public static final String EXISTING_STATEMENTS = "existing_statements";
 
   public static final String NAME = "name";
 

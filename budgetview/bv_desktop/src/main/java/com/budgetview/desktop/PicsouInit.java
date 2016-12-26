@@ -91,6 +91,13 @@ public class PicsouInit {
 
     initDirectory(this.repository);
 
+    directory.get(BackupService.class).addPostRestoreTrigger(new BackupService.Trigger() {
+      public void process(GlobRepository repository) {
+        SignpostStatus.setAllCompleted(repository);
+        CloudDesktopUser.unregister(repository);
+      }
+    });
+
     initBank(directory);
 
     ColorThemeUpdater.register(repository, directory);

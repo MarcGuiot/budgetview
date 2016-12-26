@@ -367,10 +367,6 @@ public class ImportController implements RealAccountImporter {
     importDialog.showCloudBankConnection(bank);
   }
 
-  public void showCloudRefresh() {
-    importDialog.showCloudRefresh();
-  }
-
   public void showCloudError() {
     importDialog.showCloudError();
   }
@@ -381,6 +377,10 @@ public class ImportController implements RealAccountImporter {
 
   public void setReplaceSeries(boolean replace) {
     importSession.setReplaceSeries(replace);
+  }
+
+  public void showCloudDownload() {
+    importDialog.showCloudDownload();
   }
 
   private static class HasOperationFunctor implements GlobFunctor {

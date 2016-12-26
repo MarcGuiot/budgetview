@@ -1,5 +1,6 @@
 package org.globsframework.sqlstreams.drivers.mysql;
 
+import org.globsframework.metamodel.fields.BlobField;
 import org.globsframework.metamodel.fields.StringField;
 import org.globsframework.sqlstreams.GlobsDatabase;
 import org.globsframework.sqlstreams.drivers.jdbc.impl.BlobUpdater;
@@ -25,6 +26,10 @@ public class MysqlConnection extends JdbcConnection {
 
       public void visitString(StringField field) throws Exception {
         add(field, "VARCHAR(" + field.getMaxSize() + ")");
+      }
+
+      public void visitBlob(BlobField field) throws Exception {
+        add(field, "LONGBLOB");
       }
 
       public String getAutoIncrementKeyWord() {

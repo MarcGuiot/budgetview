@@ -137,8 +137,8 @@ public class BudgeaStubServer {
 
     private Logger logger = Logger.getLogger("BudgeaStubServer - /auth/token/code");
 
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-      logger.info("POST");
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+      logger.info("GET");
       PrintWriter writer = response.getWriter();
       writer.append("{\n" +
                     "   \"auth_token\" : \"" + createTemporaryToken() + "\",\n" +
