@@ -56,8 +56,6 @@ public class BudgeaWebHookServlet extends HttpCloudServlet {
     request.setCharacterEncoding("UTF-8");
     response.setCharacterEncoding("UTF-8");
 
-    logger.info("Budgea webhook called");
-
     String authorization = request.getHeader("Authorization");
     if (Strings.isNullOrEmpty(authorization)) {
       logger.error("No credentials provided - request rejected");
@@ -79,6 +77,9 @@ public class BudgeaWebHookServlet extends HttpCloudServlet {
     Integer userId = null;
     try {
       JSONObject root = new JSONObject(json);
+
+      logger.info("Budgea webhook called with: " + root.toString(2));
+
       JSONArray array = root.optJSONArray("connections");
       if (array == null) {
         logger.error("Missing array 'connections' in budgea call - content: " + root.toString(2));
@@ -127,7 +128,7 @@ public class BudgeaWebHookServlet extends HttpCloudServlet {
     SqlConnection connection = db.connect();
     try {
       Glob user = connection.selectUnique(CloudUser.TYPE, Where.and(fieldEquals(CloudUser.PROVIDER, Provider.BUDGEA.getId()),
-                                                                    fieldEquals(CloudUser.PROVIDER_ID, budgeaUserId),
+                                                                    fieldEquals(CloudUser.PROVIDER_USER_ID, budgeaUserId),
                                                                     fieldEquals(CloudUser.PROVIDER_ACCESS_TOKEN, token)));
       return user.get(CloudUser.ID);
     }

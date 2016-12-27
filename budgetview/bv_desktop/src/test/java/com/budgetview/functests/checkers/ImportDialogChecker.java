@@ -126,7 +126,7 @@ public class ImportDialogChecker extends GuiChecker {
   }
 
   public void close() {
-    dialog.getButton(Lang.get("import.fileSelection.close")).click();
+    dialog.getButton(Lang.get("import.close")).click();
     checkClosed();
   }
 

@@ -25,10 +25,8 @@ public class ImportAccountPanel extends AbstractImportStepPanel {
   private AccountEditionPanel accountPanel;
   private Glob importedAccount;
 
-  public ImportAccountPanel(PicsouDialog dialog,
-                            String textForCloseButton,
-                            ImportController controller, LocalGlobRepository localGlobRepository, Directory directory) {
-    super(dialog, textForCloseButton, controller, new DefaultDirectory(directory));
+  public ImportAccountPanel(PicsouDialog dialog, ImportController controller, LocalGlobRepository localGlobRepository, Directory directory) {
+    super(dialog, controller, new DefaultDirectory(directory));
     this.localDirectory.add(new SelectionService());
     this.localGlobRepository =
       LocalGlobRepositoryBuilder.init(localGlobRepository)
@@ -61,7 +59,7 @@ public class ImportAccountPanel extends AbstractImportStepPanel {
         controller.next();
       }
     });
-    builder.add("close", new AbstractAction(textForCloseButton) {
+    builder.add("close", new AbstractAction(getCancelLabel()) {
       public void actionPerformed(ActionEvent e) {
         localGlobRepository.rollback();
         controller.complete();

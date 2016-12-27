@@ -29,8 +29,8 @@ public class ImportCloudValidationPanel extends AbstractImportStepPanel {
   private JEditorPane message;
   private Action backAction;
 
-  public ImportCloudValidationPanel(PicsouDialog dialog, String textForCloseButton, ImportController controller, GlobRepository repository, Directory localDirectory) {
-    super(dialog, textForCloseButton, controller, localDirectory);
+  public ImportCloudValidationPanel(PicsouDialog dialog, ImportController controller, GlobRepository repository, Directory localDirectory) {
+    super(dialog, controller, localDirectory);
     this.repository = repository;
     this.cloudService = localDirectory.get(CloudService.class);
   }
@@ -65,7 +65,7 @@ public class ImportCloudValidationPanel extends AbstractImportStepPanel {
     builder.add("error", errorLabel);
 
     builder.add("next", nextAction);
-    builder.add("close", new AbstractAction(textForCloseButton) {
+    builder.add("close", new AbstractAction(getCancelLabel()) {
       public void actionPerformed(ActionEvent e) {
         controller.complete();
         controller.closeDialog();
@@ -113,6 +113,7 @@ public class ImportCloudValidationPanel extends AbstractImportStepPanel {
     cloudService.validate(email, codeField.getText(), repository, new CloudService.ValidationCallback() {
       public void processCompletionAndSelectBank() {
         System.out.println("ImportCloudValidationPanel.processCompletionAndSelectBank");
+        controller.saveCloudCredentials();
         controller.showCloudBankSelection();
         progressPanel.stop();
         setAllEnabled(true);
@@ -121,6 +122,7 @@ public class ImportCloudValidationPanel extends AbstractImportStepPanel {
 
       public void processCompletionAndDownload() {
         System.out.println("ImportCloudValidationPanel.processCompletionAndDownload");
+        controller.saveCloudCredentials();
         controller.showCloudDownload();
         progressPanel.stop();
         setAllEnabled(true);
@@ -157,7 +159,7 @@ public class ImportCloudValidationPanel extends AbstractImportStepPanel {
 
       public void processError(Exception e) {
         System.out.println("ImportCloudValidationPanel.processError");
-        controller.showCloudError();
+        controller.showCloudError(e);
         progressPanel.stop();
         setAllEnabled(true);
         backAction.setEnabled(false);

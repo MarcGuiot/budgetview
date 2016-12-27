@@ -68,7 +68,7 @@ public class ImportTest extends LoggedInFunctionalTestCase {
   @Test
   public void testCloseButtonLabelBeforeImport() throws Exception {
     operations.openImportDialog()
-      .checkCloseButton(Lang.get("import.fileSelection.close"))
+      .checkCloseButton(Lang.get("import.close"))
       .close();
   }
 

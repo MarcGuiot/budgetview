@@ -34,8 +34,8 @@ public class ImportCloudBankSelectionPanel extends AbstractImportStepPanel imple
   private ProgressPanel progressPanel;
   private Action nextAction;
 
-  public ImportCloudBankSelectionPanel(PicsouDialog dialog, String textForCloseButton, ImportController controller, GlobRepository repository, Directory localDirectory) {
-    super(dialog, textForCloseButton, controller, localDirectory);
+  public ImportCloudBankSelectionPanel(PicsouDialog dialog, ImportController controller, GlobRepository repository, Directory localDirectory) {
+    super(dialog, controller, localDirectory);
     this.repository = repository;
     this.cloudService = localDirectory.get(CloudService.class);
     this.selectionService = localDirectory.get(SelectionService.class);
@@ -56,7 +56,7 @@ public class ImportCloudBankSelectionPanel extends AbstractImportStepPanel imple
     builder.add("bankChooserPanel", bankChooserPanel.getPanel());
 
     builder.add("next", nextAction);
-    builder.add("close", new AbstractAction(textForCloseButton) {
+    builder.add("close", new AbstractAction(getCancelLabel()) {
       public void actionPerformed(ActionEvent e) {
         controller.complete();
         controller.closeDialog();
@@ -97,7 +97,7 @@ public class ImportCloudBankSelectionPanel extends AbstractImportStepPanel imple
           }
 
           public void processError(Exception e) {
-            controller.showCloudError();
+            controller.showCloudError(e);
             progressPanel.stop();
           }
         });

@@ -120,6 +120,10 @@ public class ImportSession {
       public void visitCreation(Key key, FieldValues values) throws Exception {
         tmpAccountIds.add(key.get(RealAccount.ID));
       }
+
+      public void visitUpdate(Key key, FieldValuesWithPrevious values) throws Exception {
+        tmpAccountIds.add(key.get(RealAccount.ID));
+      }
     });
     changes.safeVisit(ImportedTransaction.TYPE, new DefaultChangeSetVisitor() {
       public void visitCreation(Key key, FieldValues values) throws Exception {

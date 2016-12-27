@@ -23,11 +23,10 @@ public class ImportCompletionPanel extends AbstractImportStepPanel {
   private Set<Integer> months;
 
   public ImportCompletionPanel(PicsouDialog dialog,
-                               String textForCloseButton,
                                ImportController controller,
                                LocalGlobRepository localRepository,
                                Directory directory) {
-    super(dialog, textForCloseButton, controller, directory);
+    super(dialog, controller, directory);
     this.localRepository = localRepository;
   }
 
@@ -42,7 +41,7 @@ public class ImportCompletionPanel extends AbstractImportStepPanel {
     builder.add("categorizationHelp", categorizationHelp);
 
     builder.add("ok", new CommitAction());
-    builder.add("cancel", new AbstractAction(textForCloseButton) {
+    builder.add("cancel", new AbstractAction(getCloseLabel()) {
       public void actionPerformed(ActionEvent e) {
         controller.complete();
         controller.closeDialog();

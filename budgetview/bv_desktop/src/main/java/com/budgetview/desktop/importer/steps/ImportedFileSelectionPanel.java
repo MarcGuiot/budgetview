@@ -37,12 +37,11 @@ public class ImportedFileSelectionPanel extends AbstractImportStepPanel implemen
   private ImportAction importAction;
 
   public ImportedFileSelectionPanel(PicsouDialog dialog,
-                                    String textForCloseButton,
                                     ImportController controller,
                                     boolean usePreferredPath,
                                     LocalGlobRepository localRepository,
                                     Directory directory) {
-    super(dialog, textForCloseButton, controller, directory);
+    super(dialog, controller, directory);
     this.usePreferredPath = usePreferredPath;
     this.localRepository = localRepository;
     this.fileField = controller.getFileField();
@@ -61,7 +60,7 @@ public class ImportedFileSelectionPanel extends AbstractImportStepPanel implemen
     builder.add("browseFiles", new BrowseFilesAction(importAction, fileField, localRepository, usePreferredPath, dialog));
     builder.add("import", importAction);
     updateImportAction();
-    builder.add("close", new AbstractAction(textForCloseButton) {
+    builder.add("close", new AbstractAction(getCloseLabel()) {
       public void actionPerformed(ActionEvent e) {
         controller.complete();
         controller.closeDialog();

@@ -103,15 +103,15 @@ public class CloudService {
       public void run() {
         try {
           JSONObject result = cloudAPI.validate(email, code);
-          String bvToken = result.optString(CloudConstants.BV_TOKEN);
-          if (bvToken != null) {
-            repository.update(CloudDesktopUser.KEY,
-                              value(CloudDesktopUser.BV_TOKEN, bvToken),
-                              value(CloudDesktopUser.REGISTERED, true));
-          }
-          System.out.println("CloudService.run: /validate returned\n" + result.toString(2));
+          System.out.println("CloudService.validate: /validate returned\n" + result.toString(2));
+
           switch (CloudRequestStatus.get(result.getString(CloudConstants.STATUS))) {
             case OK:
+              String bvToken = result.getString(CloudConstants.BV_TOKEN);
+              repository.update(CloudDesktopUser.KEY,
+                                value(CloudDesktopUser.BV_TOKEN, bvToken),
+                                value(CloudDesktopUser.REGISTERED, true));
+              System.out.println("CloudService.validate OK: bv_token set to " + bvToken);
               if (Boolean.TRUE.equals(result.optBoolean(CloudConstants.EXISTING_STATEMENTS))) {
                 callback.processCompletionAndDownload();
               }
@@ -191,8 +191,8 @@ public class CloudService {
       JSONObject result = cloudAPI.getTemporaryBudgeaToken(user.get(CloudDesktopUser.EMAIL), user.get(CloudDesktopUser.BV_TOKEN));
       switch (CloudRequestStatus.get(result.getString(CloudConstants.STATUS))) {
         case OK:
-          String token = result.getString(CloudConstants.BUDGEA_TOKEN);
-          boolean permanentTokenRegistered = result.getBoolean(CloudConstants.BUDGEA_TOKEN_REGISTERED);
+          String token = result.getString(CloudConstants.PROVIDER_TOKEN);
+          boolean permanentTokenRegistered = result.getBoolean(CloudConstants.PROVIDER_TOKEN_REGISTERED);
           budgeaAPI.setToken(token, permanentTokenRegistered);
           break;
         case NO_SUBSCRIPTION:
@@ -293,8 +293,8 @@ public class CloudService {
           for (Object c : connections.getJSONArray("connections")) {
             JSONObject connection = (JSONObject)c;
             repository.create(CloudProviderConnection.TYPE,
-                              value(CloudProviderConnection.PROVIDER, connection.getInt(CloudConstants.PROVIDER)),
-                              value(CloudProviderConnection.PROVIDER_ID, connection.getInt(CloudConstants.PROVIDER_ID)),
+                              value(CloudProviderConnection.PROVIDER, connection.getInt(CloudConstants.PROVIDER_ID)),
+                              value(CloudProviderConnection.PROVIDER_CONNECTION_ID, connection.getInt(CloudConstants.PROVIDER_CONNECTION_ID)),
                               value(CloudProviderConnection.NAME, connection.getString(CloudConstants.NAME)));
           }
           repository.completeChangeSet();
@@ -309,6 +309,28 @@ public class CloudService {
     thread.start();
 
   }
+
+  public void deleteBankConnection(Glob connection, final GlobRepository repository, final Callback callback) {
+    Thread thread = new Thread(new Runnable() {
+      public void run() {
+        try {
+          Glob user = repository.get(CloudDesktopUser.KEY);
+
+          cloudAPI.deleteConnection(user.get(CloudDesktopUser.EMAIL), user.get(CloudDesktopUser.BV_TOKEN),
+                                    connection.get(CloudProviderConnection.PROVIDER), connection.get(CloudProviderConnection.PROVIDER_CONNECTION_ID));
+
+          repository.delete(connection.getKey());
+          callback.processCompletion();
+        }
+        catch (Exception e) {
+          Log.write("Error retrieving connections", e);
+          callback.processError(e);
+        }
+      }
+    });
+    thread.start();
+  }
+
 
   public void downloadInitialStatement(GlobRepository repository, DownloadCallback callback) {
 
@@ -417,7 +439,7 @@ public class CloudService {
                         value(RealAccount.NUMBER, number),
                         value(RealAccount.POSITION, Double.toString(position)),
                         value(RealAccount.POSITION_DATE, Month.toDate(positionMonth, positionDay)),
-                        value(RealAccount.ACCOUNT_TYPE, AccountType.get(account.getString("type")).getId()),
+                        value(RealAccount.ACCOUNT_TYPE, getAccountType(account).getId()),
                         value(RealAccount.FILE_NAME, "cloud.json"),
 //                            value(RealAccount.BANK_ENTITY_LABEL, ),
 //                            value(RealAccount.BANK_ENTITY, bankEntityId),
@@ -434,6 +456,11 @@ public class CloudService {
       repository.update(CloudDesktopUser.KEY, CloudDesktopUser.LAST_UPDATE, newUpdate);
     }
     return importedRealAccounts;
+  }
+
+  public AccountType getAccountType(JSONObject account) {
+    String type = account.optString("type");
+    return Strings.isNullOrEmpty(type) ? AccountType.MAIN : AccountType.get(type);
   }
 
   private Glob createMissingBank(int budgeaBankId, String bankName, GlobRepository repository) {

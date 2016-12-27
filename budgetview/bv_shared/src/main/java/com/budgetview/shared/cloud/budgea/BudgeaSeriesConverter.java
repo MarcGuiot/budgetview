@@ -25,7 +25,8 @@ public class BudgeaSeriesConverter {
         BudgeaCategory.UNCATEGORIZED
     );
     add(DefaultSeries.INCOME,
-        BudgeaCategory.SALAIRES_NETS
+        BudgeaCategory.SALAIRES_NETS,
+        BudgeaCategory.RECETTES
     );
     add(DefaultSeries.RENT,
         BudgeaCategory.LOYERS

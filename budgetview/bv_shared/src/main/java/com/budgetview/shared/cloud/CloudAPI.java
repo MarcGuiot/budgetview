@@ -58,9 +58,9 @@ public class CloudAPI {
     Request request = Request.Post(url)
       .addHeader(CloudConstants.EMAIL, email)
       .addHeader(CloudConstants.BV_TOKEN, bvToken)
-      .addHeader(CloudConstants.PROVIDER, Integer.toString(Provider.BUDGEA.getId()))
-      .addHeader(CloudConstants.BUDGEA_TOKEN, budgeaToken)
-      .addHeader(CloudConstants.BUDGEA_USER_ID, Integer.toString(budgeaUserId));
+      .addHeader(CloudConstants.PROVIDER_ID, Integer.toString(Provider.BUDGEA.getId()))
+      .addHeader(CloudConstants.PROVIDER_TOKEN, budgeaToken)
+      .addHeader(CloudConstants.PROVIDER_USER_ID, Integer.toString(budgeaUserId));
     Http.execute(request, url);
   }
 
@@ -71,6 +71,16 @@ public class CloudAPI {
       .addHeader(CloudConstants.BV_TOKEN, bvToken);
 
     return Http.executeAndGetJson(url, request);
+  }
+
+  public void deleteConnection(String email, String bvToken, Integer providerId, Integer providerConnectionId) throws IOException {
+    String url = "/connections";
+    Request request = Request.Delete(cloudUrl(url))
+      .addHeader(CloudConstants.EMAIL, email)
+      .addHeader(CloudConstants.BV_TOKEN, bvToken)
+      .addHeader(CloudConstants.PROVIDER_ID, Integer.toString(providerId))
+      .addHeader(CloudConstants.PROVIDER_CONNECTION_ID, Integer.toString(providerConnectionId));
+    Http.execute(request, url);
   }
 
   public JSONObject getStatement(String email, String bvToken, Integer lastUpdate) throws IOException {

@@ -9,6 +9,7 @@ import com.budgetview.shared.license.LicenseAPI;
 import org.apache.log4j.Logger;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
+import org.globsframework.model.format.GlobPrinter;
 import org.globsframework.sqlstreams.GlobsDatabase;
 import org.globsframework.sqlstreams.SqlConnection;
 import org.globsframework.sqlstreams.SqlCreateRequest;
@@ -71,7 +72,6 @@ public class AuthenticationService {
     try {
       SqlCreateRequest request = connection.startCreate(CloudUser.TYPE)
         .set(CloudUser.EMAIL, lowerCaseEmail)
-        .set(CloudUser.EMAIL_VERIFIED, false)
         .getRequest();
       request.execute();
       return request.getLastGeneratedIds().get(CloudUser.ID);
@@ -125,9 +125,12 @@ public class AuthenticationService {
       }
 
       Integer userId = user.get(CloudUser.ID);
-      GlobList usersWithToken = connection.selectAll(CloudUser.TYPE, Where.and(fieldEquals(CloudUserDevice.USER_ID, userId),
-                                                                               fieldEquals(CloudUserDevice.TOKEN, token)));
+      GlobList usersWithToken = connection.selectAll(CloudUserDevice.TYPE,
+                                                     Where.and(fieldEquals(CloudUserDevice.USER_ID, userId),
+                                                               fieldEquals(CloudUserDevice.TOKEN, token)));
       if (usersWithToken.size() != 1) {
+        logger.info("No entry found for user " + userId + " with token " + token + " ==> actual result: \n" + GlobPrinter.init(usersWithToken).toString());
+        logger.info("Table content: \n" + GlobPrinter.init(connection.selectAll(CloudUserDevice.TYPE)).toString());
         return null;
       }
 

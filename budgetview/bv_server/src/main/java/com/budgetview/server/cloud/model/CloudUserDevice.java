@@ -1,10 +1,10 @@
 package com.budgetview.server.cloud.model;
 
-import com.budgetview.shared.model.Provider;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.annotations.Key;
-import org.globsframework.metamodel.annotations.Target;
-import org.globsframework.metamodel.fields.*;
+import org.globsframework.metamodel.fields.DateField;
+import org.globsframework.metamodel.fields.IntegerField;
+import org.globsframework.metamodel.fields.StringField;
 import org.globsframework.metamodel.utils.GlobTypeLoader;
 import org.globsframework.sqlstreams.annotations.AutoIncrement;
 

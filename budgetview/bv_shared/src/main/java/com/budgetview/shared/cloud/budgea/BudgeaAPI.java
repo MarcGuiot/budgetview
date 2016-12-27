@@ -129,4 +129,10 @@ public class BudgeaAPI {
   public static JSONObject json(Request request, String url) throws IOException {
     return Http.executeAndGetJson(url, request);
   }
+
+  public void deleteConnection(int budgeaConnectionId) throws IOException {
+    String url = "/users/me/connections/" + budgeaConnectionId;
+    Http.execute(Request.Delete(BudgeaConstants.getServerUrl(url))
+                   .addHeader(BudgeaConstants.AUTHORIZATION, "Bearer " + token), url);
+  }
 }

@@ -1,1 +1,1 @@
-java -cp bv_server-2.0.jar com.budgetview.server.cloud.tools.CreateCloudTables bv_cloud_prod.properties
+java -cp bv_server-2.1.jar com.budgetview.server.cloud.tools.CreateCloudTables bv_cloud_prod.properties

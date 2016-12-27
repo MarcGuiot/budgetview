@@ -10,7 +10,6 @@ import org.apache.log4j.Logger;
 import org.globsframework.json.JsonGlobWriter;
 import org.globsframework.model.Glob;
 import org.globsframework.sqlstreams.GlobsDatabase;
-import org.globsframework.sqlstreams.SqlConnection;
 import org.globsframework.utils.Strings;
 import org.globsframework.utils.directory.Directory;
 
@@ -74,8 +73,8 @@ public class BudgeaTokenServlet extends HttpCloudServlet {
     JsonGlobWriter writer = new JsonGlobWriter(response.getWriter());
     writer.object();
     writer.key(CloudConstants.STATUS).value(CloudRequestStatus.OK);
-    writer.key(CloudConstants.BUDGEA_TOKEN).value(temporaryToken);
-    writer.key(CloudConstants.BUDGEA_TOKEN_REGISTERED).value(Strings.isNotEmpty(permanentBudgeaToken));
+    writer.key(CloudConstants.PROVIDER_TOKEN).value(temporaryToken);
+    writer.key(CloudConstants.PROVIDER_TOKEN_REGISTERED).value(Strings.isNotEmpty(permanentBudgeaToken));
     writer.endObject();
   }
 }

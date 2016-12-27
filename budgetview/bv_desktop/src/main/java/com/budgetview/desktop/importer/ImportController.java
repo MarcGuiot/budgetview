@@ -367,8 +367,12 @@ public class ImportController implements RealAccountImporter {
     importDialog.showCloudBankConnection(bank);
   }
 
-  public void showCloudError() {
-    importDialog.showCloudError();
+  public void showCloudTimeout() {
+    importDialog.showCloudTimeout();
+  }
+
+  public void showCloudError(Exception e) {
+    importDialog.showCloudError(e);
   }
 
   public void showCloudSubscriptionError(String email, CloudSubscriptionStatus status) {
@@ -393,6 +397,10 @@ public class ImportController implements RealAccountImporter {
     boolean isEmpty() {
       return isEmpty;
     }
+  }
+
+  public void saveCloudCredentials() {
+    localRepository.commitChanges(false);
   }
 
   private class InImportOpenStep2Callback implements OpenRequestManager.Callback {

@@ -7,7 +7,6 @@ import com.budgetview.desktop.license.activation.LicenseActivationDialog;
 import com.budgetview.desktop.startup.components.OpenRequestManager;
 import com.budgetview.model.SignpostStatus;
 import com.budgetview.model.User;
-import com.budgetview.utils.Lang;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.utils.directory.Directory;
@@ -84,7 +83,7 @@ public class ImportFileAction extends AbstractAction {
       this.directory = directory;
       this.repository = repository;
       if (!User.isDemoUser(repository.get(User.KEY))) {
-        importDialog = new ImportDialog(Lang.get("import.fileSelection.close"), files, defaultAccount,
+        importDialog = new ImportDialog(files, defaultAccount,
                                         directory.get(JFrame.class),
                                         repository, directory,
                                         usePreferedPath);

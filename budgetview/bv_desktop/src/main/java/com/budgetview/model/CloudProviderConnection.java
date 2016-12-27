@@ -19,7 +19,7 @@ public class CloudProviderConnection {
   @Target(Provider.class)
   public static LinkField PROVIDER;
 
-  public static IntegerField PROVIDER_ID;
+  public static IntegerField PROVIDER_CONNECTION_ID;
 
   public static StringField NAME;
 

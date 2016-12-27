@@ -4,6 +4,7 @@ import com.budgetview.desktop.cloud.CloudService;
 import com.budgetview.desktop.components.ProgressPanel;
 import com.budgetview.desktop.components.dialogs.PicsouDialog;
 import com.budgetview.desktop.importer.ImportController;
+import com.budgetview.model.CloudDesktopUser;
 import com.budgetview.model.CloudProviderConnection;
 import com.budgetview.shared.cloud.CloudSubscriptionStatus;
 import com.budgetview.utils.Lang;
@@ -15,7 +16,6 @@ import org.globsframework.model.Glob;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.utils.GlobComparators;
 import org.globsframework.model.utils.GlobMatchers;
-import org.globsframework.utils.Strings;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
@@ -26,14 +26,13 @@ public class ImportCloudEditionPanel extends AbstractImportStepPanel {
   private final GlobRepository repository;
   private final CloudService cloudService;
   private ProgressPanel progressPanel;
+  private JLabel progressLabel;
   private GlobRepeat repeat;
   private AbstractAction addConnectionAction;
-  private Action backAction;
-  private JTextField emailField;
-  private JLabel errorLabel;
+  private AbstractAction downloadAction;
 
-  public ImportCloudEditionPanel(PicsouDialog dialog, String textForCloseButton, ImportController controller, GlobRepository repository, Directory localDirectory) {
-    super(dialog, textForCloseButton, controller, localDirectory);
+  public ImportCloudEditionPanel(PicsouDialog dialog, ImportController controller, GlobRepository repository, Directory localDirectory) {
+    super(dialog, controller, localDirectory);
     this.repository = repository;
     this.cloudService = localDirectory.get(CloudService.class);
   }
@@ -41,17 +40,10 @@ public class ImportCloudEditionPanel extends AbstractImportStepPanel {
   protected GlobsPanelBuilder createPanelBuilder() {
     GlobsPanelBuilder builder = new GlobsPanelBuilder(getClass(), "/layout/importexport/importsteps/importCloudEditionPanel.splits", repository, localDirectory);
 
-    backAction = new AbstractAction(Lang.get("import.cloud.edition.back")) {
-      public void actionPerformed(ActionEvent e) {
-        processNext();
-      }
-    };
-
-
     repeat = builder.addRepeat("connections", CloudProviderConnection.TYPE, GlobMatchers.NONE, GlobComparators.ascending(CloudProviderConnection.NAME), new RepeatComponentFactory<Glob>() {
       public void registerComponents(PanelBuilder cellBuilder, Glob connection) {
         cellBuilder.add("name", new JLabel(connection.get(CloudProviderConnection.NAME)));
-        cellBuilder.add("delete", new DeleteConnectionAction(connection.get(CloudProviderConnection.PROVIDER_ID)));
+        cellBuilder.add("delete", new DeleteConnectionAction(connection));
       }
     });
 
@@ -60,19 +52,25 @@ public class ImportCloudEditionPanel extends AbstractImportStepPanel {
         controller.showCloudBankSelection();
       }
     };
-    builder.add("back", backAction);
+    builder.add("addConnection", addConnectionAction);
 
-    errorLabel = new JLabel(" ");
-    builder.add("errorMessage", errorLabel);
-    errorLabel.setVisible(false);
+    downloadAction = new AbstractAction(Lang.get("import.cloud.edition.download.button")) {
+      public void actionPerformed(ActionEvent e) {
+        controller.showCloudDownload();
+      }
+    };
+    builder.add("download", downloadAction);
 
-    builder.add("next", backAction);
-    builder.add("close", new AbstractAction(textForCloseButton) {
+    builder.add("close", new AbstractAction(getCloseLabel()) {
       public void actionPerformed(ActionEvent e) {
         controller.complete();
         controller.closeDialog();
       }
     });
+
+    progressLabel = new JLabel(Lang.get("import.cloud.edition.progress.label"));
+    builder.add("progressLabel", progressLabel);
+    progressLabel.setVisible(false);
 
     progressPanel = new ProgressPanel();
     builder.add("progressPanel", progressPanel);
@@ -80,57 +78,69 @@ public class ImportCloudEditionPanel extends AbstractImportStepPanel {
     return builder;
   }
 
-  private void processNext() {
-
-    final String email = Strings.trim(emailField.getText());
-    if (!looksLikeAnEmail(email)) {
-      errorLabel.setText(Lang.get("import.cloud.signup.missing.email"));
-      errorLabel.setVisible(true);
-      return;
-    }
-
+  public void start() {
+    repeat.setFilter(GlobMatchers.NONE);
     setAllEnabled(false);
+    progressLabel.setVisible(true);
     progressPanel.start();
-    cloudService.signup(email, repository, new CloudService.Callback() {
+    cloudService.updateBankConnections(repository, new CloudService.Callback() {
       public void processCompletion() {
-        controller.showCloudValidation(email);
+        repeat.setFilter(GlobMatchers.ALL);
+        dialog.revalidate();
+        setAllEnabled(true);
         progressPanel.stop();
+        progressLabel.setVisible(false);
       }
 
       public void processSubscriptionError(CloudSubscriptionStatus status) {
-        controller.showCloudSubscriptionError(email, status);
+        controller.showCloudSubscriptionError(repository.get(CloudDesktopUser.KEY).get(CloudDesktopUser.EMAIL), status);
         progressPanel.stop();
+        progressLabel.setVisible(false);
       }
 
       public void processError(Exception e) {
-        controller.showCloudError();
+        controller.showCloudError(e);
         progressPanel.stop();
+        progressLabel.setVisible(false);
       }
     });
   }
 
   private void setAllEnabled(boolean enabled) {
-    repeat.setFilter(enabled ? GlobMatchers.ALL : GlobMatchers.NONE);
-    backAction.setEnabled(enabled);
-    emailField.setEnabled(enabled);
-  }
-
-  private boolean looksLikeAnEmail(String email) {
-    return (email.length() > 3) && email.contains("@");
+    addConnectionAction.setEnabled(enabled);
+    downloadAction.setEnabled(enabled);
   }
 
   public void prepareForDisplay() {
     setAllEnabled(true);
-    emailField.requestFocus();
   }
 
   private class DeleteConnectionAction extends AbstractAction {
-    public DeleteConnectionAction(Integer connectionId) {
+    private Glob connection;
+
+    public DeleteConnectionAction(Glob connection) {
       super(Lang.get("import.cloud.edition.delete"));
+      this.connection = connection;
     }
 
     public void actionPerformed(ActionEvent e) {
+      setEnabled(false);
+      progressPanel.start();
+      cloudService.deleteBankConnection(connection, repository, new CloudService.Callback() {
+        public void processCompletion() {
+          progressPanel.stop();
+        }
 
+        public void processSubscriptionError(CloudSubscriptionStatus status) {
+          controller.showCloudSubscriptionError(repository.get(CloudDesktopUser.KEY).get(CloudDesktopUser.EMAIL), status);
+          progressPanel.stop();
+        }
+
+        public void processError(Exception e) {
+          controller.showCloudError(e);
+          progressPanel.stop();
+        }
+      });
     }
   }
 }

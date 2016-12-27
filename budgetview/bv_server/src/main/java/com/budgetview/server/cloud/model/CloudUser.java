@@ -2,7 +2,6 @@ package com.budgetview.server.cloud.model;
 
 import com.budgetview.shared.model.Provider;
 import org.globsframework.metamodel.GlobType;
-import org.globsframework.metamodel.annotations.DefaultBoolean;
 import org.globsframework.metamodel.annotations.Key;
 import org.globsframework.metamodel.annotations.Target;
 import org.globsframework.metamodel.fields.*;
@@ -23,7 +22,7 @@ public class CloudUser {
   @Target(Provider.class)
   public static LinkField PROVIDER;
 
-  public static IntegerField PROVIDER_ID;
+  public static IntegerField PROVIDER_USER_ID;
 
   public static StringField PROVIDER_ACCESS_TOKEN;
 

@@ -18,18 +18,26 @@
           <column margin="20">
 
             <repeat ref="connections" layout="verticalGrid">
-              <label ref="name"/>
-              <button ref="delete"/>
+              <label ref="name" marginTop="10"/>
+              <filler fill="horizontal" marginTop="10"/>
+              <button action="delete" marginTop="10"/>
             </repeat>
+
+            <label ref="progressLabel" fill="none" anchor="center" marginBottom="15"/>
+            <component ref="progressPanel"/>
+
+            <filler fill="vertical"/>
 
           </column>
         </scrollPane>
 
-        <label ref="errorMessage" styleClass="errorMessage"/>
-
-        <component ref="progressPanel" marginTop="20"/>
-
-        <filler fill="vertical"/>
+        <row margin="20">
+          <filler fill="horizontal"/>
+          <button action="addConnection"/>
+          <filler fill="horizontal"/>
+          <button action="download"/>
+          <filler fill="horizontal"/>
+        </row>
 
       </column>
     </column>
@@ -37,7 +45,6 @@
     <row styleClass="dialogButtons" name="buttons">
       <filler fill="horizontal"/>
       <button action="close"/>
-      <button action="back"/>
     </row>
   </column>
 

@@ -65,7 +65,8 @@ public class ValidateServlet extends HttpCloudServlet {
 
       try {
         emailValidation.checkTempCode(userId, code);
-        writer.key(CloudConstants.BV_TOKEN).value(authentication.registerUserDevice(userId));
+        String newToken = authentication.registerUserDevice(userId);
+        writer.key(CloudConstants.BV_TOKEN).value(newToken);
       }
       catch (CheckFailed checkFailed) {
         writer.key(CloudConstants.STATUS).value(checkFailed.getStatus());
@@ -84,6 +85,9 @@ public class ValidateServlet extends HttpCloudServlet {
       }
 
       writer.endObject();
+
+      logger.info("User " + email + " registered");
+
       setOk(response);
     }
     catch (Exception e) {

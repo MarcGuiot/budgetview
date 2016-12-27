@@ -12,10 +12,12 @@ public class BudgeaAccountTypeConverter {
   public static AccountType convert(String budgeaAccountType) {
 
     if (budgeaAccountType == null) {
-      return null;
+      return AccountType.MAIN;
     }
 
-    if  (budgeaAccountType.equals("checking")) {
+    if  (budgeaAccountType.equals("checking") ||
+         budgeaAccountType.equals("joint") ||
+         budgeaAccountType.equals("card")) {
       return AccountType.MAIN;
     }
 
@@ -25,7 +27,7 @@ public class BudgeaAccountTypeConverter {
       return AccountType.SAVINGS;
     }
 
-    return null;
+    return AccountType.MAIN;
 
   }
 }

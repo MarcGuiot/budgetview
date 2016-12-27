@@ -2,9 +2,6 @@ package com.budgetview.functests.checkers;
 
 import org.uispec4j.ComboBox;
 import org.uispec4j.Window;
-import org.uispec4j.assertion.Assertion;
-
-import javax.swing.*;
 
 import static org.uispec4j.assertion.UISpecAssert.assertThat;
 

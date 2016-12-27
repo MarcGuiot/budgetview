@@ -23,8 +23,8 @@ public class ImportCloudSignupPanel extends AbstractImportStepPanel {
   private JTextField emailField;
   private JLabel errorLabel;
 
-  public ImportCloudSignupPanel(PicsouDialog dialog, String textForCloseButton, ImportController controller, GlobRepository repository, Directory localDirectory) {
-    super(dialog, textForCloseButton, controller, localDirectory);
+  public ImportCloudSignupPanel(PicsouDialog dialog, ImportController controller, GlobRepository repository, Directory localDirectory) {
+    super(dialog, controller, localDirectory);
     this.repository = repository;
     this.cloudService = localDirectory.get(CloudService.class);
   }
@@ -47,7 +47,7 @@ public class ImportCloudSignupPanel extends AbstractImportStepPanel {
     errorLabel.setVisible(false);
 
     builder.add("next", nextAction);
-    builder.add("close", new AbstractAction(textForCloseButton) {
+    builder.add("close", new AbstractAction(getCloseLabel()) {
       public void actionPerformed(ActionEvent e) {
         controller.complete();
         controller.closeDialog();
@@ -83,7 +83,7 @@ public class ImportCloudSignupPanel extends AbstractImportStepPanel {
       }
 
       public void processError(Exception e) {
-        controller.showCloudError();
+        controller.showCloudError(e);
         progressPanel.stop();
       }
     });

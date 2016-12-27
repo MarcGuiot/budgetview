@@ -1,6 +1,6 @@
 #!/bin/sh
 
-export JAR_VERSION=2.0
+export JAR_VERSION=2.1
 
 if [ $# != 1 ];
 then

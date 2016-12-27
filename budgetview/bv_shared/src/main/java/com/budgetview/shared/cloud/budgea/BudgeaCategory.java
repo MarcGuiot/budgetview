@@ -2,6 +2,7 @@ package com.budgetview.shared.cloud.budgea;
 
 public enum BudgeaCategory {
   SALAIRES_NETS(139, "Salaires nets"),
+  RECETTES(127, "Recettes"),
   LOYERS(225, "Loyers"),
   ELECTRICITE(230, "Electricité"),
   GAZ(229, "Gaz"),

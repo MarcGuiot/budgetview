@@ -55,6 +55,8 @@ public class EmailValidationService {
       connection.commitAndClose();
     }
 
+    logger.info("[REMOVE ME!!!] Temp code is " + code);
+
     mailer.sendCloudEmailAddressVerification(email, lang, code);
   }
 
@@ -76,6 +78,7 @@ public class EmailValidationService {
         throw new CheckFailed(CloudRequestStatus.TEMP_CODE_EXPIRED);
       }
       if (!Utils.equal(referenceCode, validationCode.trim())) {
+        logger.info("Invalid code " + validationCode.trim() + " - expected " + referenceCode);
         throw new CheckFailed(CloudRequestStatus.UNKNOWN_CODE);
       }
     }

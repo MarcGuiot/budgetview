@@ -9,6 +9,7 @@ import com.budgetview.model.*;
 import com.budgetview.shared.cloud.budgea.BudgeaSeriesConverter;
 import com.budgetview.shared.model.BudgetArea;
 import com.budgetview.shared.model.DefaultSeries;
+import com.budgetview.shared.utils.Amounts;
 import org.globsframework.json.JsonGlobFormat;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
@@ -57,13 +58,21 @@ public class JsonImporter implements AccountFileImporter {
       }
     }
 
-
     System.out.println("JsonImporter.loadTransactions - created:");
     GlobPrinter.print(createdTransactions);
 
     Glob lastImportedTransaction = createdTransactions.sort(ImportedTransaction.BANK_DATE).getLast();
-    System.out.println("JsonImporter.loadTransactions: last = " + createdTransactions);
-    targetRepository.update(realAccount, RealAccount.TRANSACTION_ID, lastImportedTransaction.get(ImportedTransaction.ID));
+    if (lastImportedTransaction != null) {
+      System.out.println("JsonImporter.loadTransactions: last = " + createdTransactions);
+      targetRepository.update(realAccount, RealAccount.TRANSACTION_ID, lastImportedTransaction.get(ImportedTransaction.ID));
+    }
+    else {
+      targetRepository.update(realAccount,
+                              value(RealAccount.TRANSACTION_ID, null),
+                              value(RealAccount.POSITION, Double.toString(jsonAccount.getDouble("position"))),
+                              value(RealAccount.POSITION_DATE, Month.toDate(jsonAccount.getInt("position_month"), jsonAccount.getInt("position_day"))),
+                              value(RealAccount.FILE_CONTENT, "{}"));
+    }
 
     return createdTransactions;
   }

@@ -2,8 +2,6 @@ package com.budgetview.server.cloud.servlet;
 
 import com.budgetview.server.cloud.budgea.Budgea;
 import com.budgetview.server.cloud.model.CloudUser;
-import com.budgetview.server.cloud.model.ProviderAccount;
-import com.budgetview.server.cloud.model.ProviderTransaction;
 import com.budgetview.server.cloud.services.AuthenticationService;
 import com.budgetview.server.cloud.utils.SubscriptionCheckFailed;
 import com.budgetview.shared.cloud.budgea.BudgeaAPI;
@@ -21,7 +19,6 @@ import org.globsframework.sqlstreams.constraints.Where;
 import org.globsframework.sqlstreams.exceptions.GlobsSQLException;
 import org.globsframework.utils.Strings;
 import org.globsframework.utils.directory.Directory;
-import org.json.JSONArray;
 import org.json.JSONObject;
 
 import javax.servlet.ServletException;
@@ -79,7 +76,9 @@ public class ConnectionServlet extends HttpCloudServlet {
 
     BudgeaAPI api = new BudgeaAPI();
     api.setToken(user.get(CloudUser.PROVIDER_ACCESS_TOKEN), true);
-    JSONObject connections = api.getUserConnections(user.get(CloudUser.PROVIDER_ID));
+    JSONObject connections = api.getUserConnections(user.get(CloudUser.PROVIDER_USER_ID));
+
+    logger.info("Budgea connections:" + connections.toString(2));
 
     Map<Integer, String> bankNames = getBankNames(api);
 
@@ -90,19 +89,18 @@ public class ConnectionServlet extends HttpCloudServlet {
     for (Object c : connections.getJSONArray("connections")) {
       JSONObject connection = (JSONObject)c;
       writer.object();
-      writer.key(CloudConstants.PROVIDER).value(Integer.toString(Provider.BUDGEA.getId()));
-      writer.key(CloudConstants.PROVIDER_ID).value(connection.getInt("id"));
+      writer.key(CloudConstants.PROVIDER_ID).value(Integer.toString(Provider.BUDGEA.getId()));
+      writer.key(CloudConstants.PROVIDER_CONNECTION_ID).value(connection.getInt("id"));
       writer.key(CloudConstants.NAME).value(getName(connection, bankNames));
       writer.endObject();
     }
     writer.endArray();
     writer.endObject();
-
-    setOk(response, writer);
+    setOk(response);
   }
 
   protected String getName(JSONObject connection, Map<Integer, String> bankNames) {
-    int bankId = connection.optInt("bank_id");
+    int bankId = connection.optInt("id_bank");
     String name = bankNames.get(bankId);
     if (Strings.isNullOrEmpty(name)) {
       name = "-?-";
@@ -129,8 +127,8 @@ public class ConnectionServlet extends HttpCloudServlet {
 
     String email = request.getHeader(CloudConstants.EMAIL);
     String bvToken = request.getHeader(CloudConstants.BV_TOKEN);
-    String budgeaToken = request.getHeader(CloudConstants.BUDGEA_TOKEN);
-    String budgeaUserId = request.getHeader(CloudConstants.BUDGEA_USER_ID);
+    String budgeaToken = request.getHeader(CloudConstants.PROVIDER_TOKEN);
+    String budgeaUserId = request.getHeader(CloudConstants.PROVIDER_USER_ID);
 
     if (Strings.isNullOrEmpty(email)) {
       logger.error("No email provided");
@@ -205,10 +203,68 @@ public class ConnectionServlet extends HttpCloudServlet {
     SqlConnection connection = database.connect();
     connection.startUpdate(CloudUser.TYPE, Where.fieldEquals(CloudUser.ID, userId))
       .set(CloudUser.PROVIDER, Provider.BUDGEA.getId())
-      .set(CloudUser.PROVIDER_ID, Integer.parseInt(providerUserId))
+      .set(CloudUser.PROVIDER_USER_ID, Integer.parseInt(providerUserId))
       .set(CloudUser.PROVIDER_ACCESS_TOKEN, providerAccessToken)
       .run();
     connection.commitAndClose();
     logger.info("Saved connection for userId " + providerUserId + " with token " + providerAccessToken);
+  }
+
+  protected void doDelete(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    request.setCharacterEncoding("UTF-8");
+    response.setCharacterEncoding("UTF-8");
+
+    String email = request.getHeader(CloudConstants.EMAIL);
+    String bvToken = request.getHeader(CloudConstants.BV_TOKEN);
+    String providerId = request.getHeader(CloudConstants.PROVIDER_ID);
+    String providerConnectionId = request.getHeader(CloudConstants.PROVIDER_CONNECTION_ID);
+
+    if (Strings.isNullOrEmpty(email)) {
+      logger.error("No email provided");
+      setBadRequest(response);
+      return;
+    }
+    if (Strings.isNullOrEmpty(bvToken)) {
+      logger.error("No token provided");
+      setBadRequest(response);
+      return;
+    }
+    if (Strings.isNullOrEmpty(providerId)) {
+      logger.error("No provider provided");
+      setBadRequest(response);
+      return;
+    }
+    if (Strings.isNullOrEmpty(providerConnectionId)) {
+      logger.error("No providerConnectionId provided");
+      setBadRequest(response);
+      return;
+    }
+
+    Glob user;
+    try {
+      user = authentication.checkUserToken(email, bvToken);
+    }
+    catch (SubscriptionCheckFailed e) {
+      setSubscriptionError(response, e);
+      return;
+    }
+    if (user == null) {
+      logger.error("Could not identify user with email:" + email);
+      setUnauthorized(response);
+      return;
+    }
+
+    BudgeaAPI api = new BudgeaAPI();
+    api.setToken(user.get(CloudUser.PROVIDER_ACCESS_TOKEN), true);
+
+    try {
+      api.deleteConnection(Integer.parseInt(providerConnectionId));
+      logger.info("Deleted connection " + providerConnectionId + " for user " + user.get(CloudUser.ID));
+      setOk(response);
+    }
+    catch (Exception e) {
+      logger.error("Could not delete connection " + providerConnectionId + " for user " + user.get(CloudUser.ID), e);
+      setInternalError(response);
+    }
   }
 }

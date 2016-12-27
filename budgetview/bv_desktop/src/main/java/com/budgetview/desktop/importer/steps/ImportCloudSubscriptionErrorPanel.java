@@ -23,8 +23,8 @@ public class ImportCloudSubscriptionErrorPanel extends AbstractImportStepPanel {
   private JEditorPane messageField;
   private JButton actionButton;
 
-  public ImportCloudSubscriptionErrorPanel(PicsouDialog dialog, String textForCloseButton, ImportController controller, GlobRepository repository, Directory localDirectory) {
-    super(dialog, textForCloseButton, controller, localDirectory);
+  public ImportCloudSubscriptionErrorPanel(PicsouDialog dialog, ImportController controller, GlobRepository repository, Directory localDirectory) {
+    super(dialog, controller, localDirectory);
     this.repository = repository;
     this.cloudService = localDirectory.get(CloudService.class);
   }
@@ -45,7 +45,7 @@ public class ImportCloudSubscriptionErrorPanel extends AbstractImportStepPanel {
     builder.add("actionButton", actionButton);
 
     builder.add("next", nextAction);
-    builder.add("close", new AbstractAction(textForCloseButton) {
+    builder.add("close", new AbstractAction(getCloseLabel()) {
       public void actionPerformed(ActionEvent e) {
         controller.complete();
         controller.closeDialog();

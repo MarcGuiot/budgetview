@@ -281,7 +281,33 @@ public class CloudImportTest extends CloudDesktopTestCase {
 
     mainAccounts.checkContent("| Main account 1* | 1000.00 on 2016/08/12 | sunny |\n" +
                               "| Joint account*  | 500.00 on 2016/08/14  | sunny |");
-
-
   }
-}
+
+  @Test
+  public void testDownloadAccountWithoutTransactions() throws Exception {
+    cloudLicense.purchaseLicence("toto@example.com", Dates.tomorrow());
+    budgea.pushStatement(BudgeaStatement.init()
+                           .addConnection(1, 123, 40, "Connecteur de Test Budgea", "2016-08-10 17:44:26")
+                           .addAccount(1, "Main account 1", "100200300", "checking", 1000.00, "2016-08-10 13:00:00")
+                           .endAccount()
+                           .endConnection()
+                           .get());
+
+    operations.openImportDialog()
+      .selectCloudForNewUser()
+      .register("toto@example.com")
+      .processEmailAndNextToBankSelection(mailbox.getVerificationCode("toto@example.com"))
+      .checkContainsBanks("BNP Paribas", "CIC", "Connecteur de Test Budgea", "Crédit Agricole", "LCL")
+      .selectBank("Connecteur de Test Budgea")
+      .next()
+      .setChoice("Type de compte", "Particuliers")
+      .setText("Identifiant", "1234")
+      .setPassword("Code (1234)", "")
+      .next()
+      .checkNoTransactions()
+      .importAccountAndGetSummary()
+      .checkSummaryAndValidate(0, 0, 0);
+
+    mainAccounts.checkAccount("Main account 1", 1000.00, "2016/08/01");
+    transactions.checkEmpty();
+  }}

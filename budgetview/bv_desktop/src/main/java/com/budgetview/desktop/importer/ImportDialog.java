@@ -67,7 +67,7 @@ public class ImportDialog implements RealAccountImporter, Disposable {
 
   private DisposableGroup disposables = new DisposableGroup();
 
-  public ImportDialog(String textForCloseButton, List<File> files, Glob defaultAccount,
+  public ImportDialog(List<File> files, Glob defaultAccount,
                       final Window owner, final GlobRepository repository, Directory directory,
                       boolean usePreferredPath) {
 
@@ -84,18 +84,18 @@ public class ImportDialog implements RealAccountImporter, Disposable {
 
     controller = new ImportController(this, repository, localRepository, directory);
 
-    fileSelectionPanel = new ImportedFileSelectionPanel(dialog, textForCloseButton, controller, usePreferredPath, localRepository, localDirectory);
-    importAccountsPanel = new ImportAccountPanel(dialog, textForCloseButton, controller, localRepository, localDirectory);
-    cloudSignupPanel = new ImportCloudSignupPanel(dialog, textForCloseButton, controller, localRepository, localDirectory);
-    cloudEditionPanel = new ImportCloudEditionPanel(dialog, textForCloseButton, controller, localRepository, localDirectory);
-    cloudDownloadPanel = new ImportCloudDownloadPanel(dialog, textForCloseButton, controller, localRepository, localDirectory);
-    cloudValidationPanel = new ImportCloudValidationPanel(dialog, textForCloseButton, controller, localRepository, localDirectory);
-    cloudBankSelectionPanel = new ImportCloudBankSelectionPanel(dialog, textForCloseButton, controller, localRepository, localDirectory);
-    cloudBankConnectionPanel = new ImportCloudBankConnectionPanel(dialog, textForCloseButton, controller, localRepository, localDirectory);
-    cloudBankSubscriptionErrorPanel = new ImportCloudSubscriptionErrorPanel(dialog, textForCloseButton, controller, localRepository, localDirectory);
-    cloudErrorPanel = new ImportCloudErrorPanel(dialog, textForCloseButton, controller, localRepository, localDirectory);
-    previewPanel = new ImportPreviewPanel(dialog, textForCloseButton, controller, defaultAccount, repository, localRepository, localDirectory);
-    completionPanel = new ImportCompletionPanel(dialog, textForCloseButton, controller, localRepository, localDirectory);
+    fileSelectionPanel = new ImportedFileSelectionPanel(dialog, controller, usePreferredPath, localRepository, localDirectory);
+    importAccountsPanel = new ImportAccountPanel(dialog, controller, localRepository, localDirectory);
+    cloudSignupPanel = new ImportCloudSignupPanel(dialog, controller, localRepository, localDirectory);
+    cloudEditionPanel = new ImportCloudEditionPanel(dialog, controller, localRepository, localDirectory);
+    cloudDownloadPanel = new ImportCloudDownloadPanel(dialog, controller, localRepository, localDirectory);
+    cloudValidationPanel = new ImportCloudValidationPanel(dialog, controller, localRepository, localDirectory);
+    cloudBankSelectionPanel = new ImportCloudBankSelectionPanel(dialog, controller, localRepository, localDirectory);
+    cloudBankConnectionPanel = new ImportCloudBankConnectionPanel(dialog, controller, localRepository, localDirectory);
+    cloudBankSubscriptionErrorPanel = new ImportCloudSubscriptionErrorPanel(dialog, controller, localRepository, localDirectory);
+    cloudErrorPanel = new ImportCloudErrorPanel(dialog, controller, localRepository, localDirectory);
+    previewPanel = new ImportPreviewPanel(dialog, controller, defaultAccount, repository, localRepository, localDirectory);
+    completionPanel = new ImportCompletionPanel(dialog, controller, localRepository, localDirectory);
 
     disposables.addAll(fileSelectionPanel, importAccountsPanel,
                        cloudSignupPanel, cloudEditionPanel, cloudBankSelectionPanel, cloudBankConnectionPanel, cloudDownloadPanel, cloudErrorPanel,
@@ -248,6 +248,7 @@ public class ImportDialog implements RealAccountImporter, Disposable {
 
   public void showCloudEdition() {
     setCurrentPanel(cloudEditionPanel);
+    cloudEditionPanel.start();
   }
 
   public void showCloudValidation(String email) {
@@ -264,7 +265,13 @@ public class ImportDialog implements RealAccountImporter, Disposable {
     setCurrentPanel(cloudBankConnectionPanel);
   }
 
-  public void showCloudError() {
+  public void showCloudError(Exception e) {
+    cloudErrorPanel.showException(e);
+    setCurrentPanel(cloudErrorPanel);
+  }
+
+  public void showCloudTimeout() {
+    cloudErrorPanel.showTimeout();
     setCurrentPanel(cloudErrorPanel);
   }
 

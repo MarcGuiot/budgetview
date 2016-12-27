@@ -70,13 +70,12 @@ public class ImportPreviewPanel extends AbstractImportStepPanel implements Messa
   private JEditorPane noOperationLabel;
 
   public ImportPreviewPanel(PicsouDialog dialog,
-                            String textForCloseButton,
                             ImportController controller,
                             Glob defaultAccount,
                             GlobRepository repository,
                             LocalGlobRepository localRepository,
                             Directory localDirectory) {
-    super(dialog, textForCloseButton, controller, localDirectory);
+    super(dialog, controller, localDirectory);
 
     this.repository = repository;
     this.localRepository = localRepository;
@@ -155,7 +154,7 @@ public class ImportPreviewPanel extends AbstractImportStepPanel implements Messa
     builder.add("skipFile", new SkipFileAction());
     nextAction = new NextAction();
     builder.add("next", nextAction);
-    builder.add("close", new CancelAction(textForCloseButton));
+    builder.add("close", new CancelAction(getCancelLabel()));
     accountEditionPanel.setBalanceEditorVisible(true);
     return builder;
   }
@@ -243,6 +242,7 @@ public class ImportPreviewPanel extends AbstractImportStepPanel implements Messa
         sessionDirectory.get(SelectionService.class).clear(Account.TYPE);
       }
     }
+    nextAction.setEnabled(true);
     // necessaire sous linux au moins
     accountComboBox.repaint();
   }

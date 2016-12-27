@@ -44,8 +44,8 @@ public class ImportCloudBankConnectionPanel extends AbstractImportStepPanel {
   private Glob currentConnection;
   private JEditorPane message;
 
-  public ImportCloudBankConnectionPanel(PicsouDialog dialog, String textForCloseButton, ImportController controller, GlobRepository repository, Directory localDirectory) {
-    super(dialog, textForCloseButton, controller, localDirectory);
+  public ImportCloudBankConnectionPanel(PicsouDialog dialog, ImportController controller, GlobRepository repository, Directory localDirectory) {
+    super(dialog, controller, localDirectory);
     this.repository = repository;
     this.cloudService = localDirectory.get(CloudService.class);
   }
@@ -78,7 +78,7 @@ public class ImportCloudBankConnectionPanel extends AbstractImportStepPanel {
     });
 
     builder.add("next", nextAction);
-    builder.add("close", new AbstractAction(textForCloseButton) {
+    builder.add("close", new AbstractAction(getCancelLabel()) {
       public void actionPerformed(ActionEvent e) {
         controller.complete();
         controller.closeDialog();
@@ -132,12 +132,12 @@ public class ImportCloudBankConnectionPanel extends AbstractImportStepPanel {
       }
 
       public void processTimeout() {
-        controller.showCloudError();
+        controller.showCloudError(null);
         progressPanel.stop();
       }
 
       public void processError(Exception e) {
-        controller.showCloudError();
+        controller.showCloudError(e);
         progressPanel.stop();
       }
     });

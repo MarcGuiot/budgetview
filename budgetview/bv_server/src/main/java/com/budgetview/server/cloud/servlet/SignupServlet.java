@@ -67,8 +67,6 @@ public class SignupServlet extends HttpCloudServlet {
       logger.info("User " + userId + " found for '" + email + "'");
     }
 
-    authentication.invalidateUserEmail(userId);
-
     emailValidation.sendTempCode(userId, email, lang);
   }
 }

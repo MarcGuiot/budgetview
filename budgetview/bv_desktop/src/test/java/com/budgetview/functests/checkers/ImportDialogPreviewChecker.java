@@ -106,6 +106,11 @@ public class ImportDialogPreviewChecker extends DialogChecker {
     return this;
   }
 
+  public ImportDialogPreviewChecker checkNoTransactions() {
+    checkComponentVisible(dialog, JEditorPane.class, "noOperationLabel", true);
+    return this;
+  }
+
   public ImportDialogPreviewChecker setDeferredAccount(int dayPeriod, int dayPrelevement, int monthShift) {
     getAccountEditionChecker().setAsDeferredCard();
     getAccountEditionChecker().checkDeferredWarning();
@@ -466,7 +471,7 @@ public class ImportDialogPreviewChecker extends DialogChecker {
   }
 
   public void close() {
-    dialog.getButton(Lang.get("import.fileSelection.close")).click();
+    dialog.getButton("close").click();
     checkClosed();
   }
 
