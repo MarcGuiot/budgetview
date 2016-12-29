@@ -50,19 +50,11 @@ public class BudgeaAPI {
                   .addHeader(BudgeaConstants.AUTHORIZATION, "Bearer " + token), url);
   }
 
-  public JSONObject getUserConnections(int userId) throws IOException {
-    checkTempToken();
-    String url = "/users/" + userId + "/connections";
-    return json(Request.Get(BudgeaConstants.getServerUrl(url))
-                  .addHeader(BudgeaConstants.AUTHORIZATION, "Bearer " + token)
-                  .addHeader("user_id", "me"), url);
-  }
-
   public void deleteUser(int userId) throws IOException {
     checkTempToken();
     String url = "/users/" + userId;
     Http.execute(Request.Delete(BudgeaConstants.getServerUrl(url))
-                  .addHeader(BudgeaConstants.AUTHORIZATION, "Bearer " + token), url);
+                   .addHeader(BudgeaConstants.AUTHORIZATION, "Bearer " + token), url);
   }
 
   public JSONObject getBanks() throws IOException {
@@ -77,6 +69,14 @@ public class BudgeaAPI {
     String url = "/banks/" + budgeaBankId + "/fields";
     return json(Request.Get(BudgeaConstants.getServerUrl(url))
                   .addHeader(BudgeaConstants.AUTHORIZATION, "Bearer " + token), url);
+  }
+
+  public JSONObject getUserConnections(int userId) throws IOException {
+    checkTempToken();
+    String url = "/users/" + userId + "/connections";
+    return json(Request.Get(BudgeaConstants.getServerUrl(url))
+                  .addHeader(BudgeaConstants.AUTHORIZATION, "Bearer " + token)
+                  .addHeader("user_id", "me"), url);
   }
 
   public JSONObject addBankConnection(Integer budgeaBankId, Map<String, String> params) throws IOException {
@@ -104,6 +104,12 @@ public class BudgeaAPI {
     return Json.json(httpResponse);
   }
 
+  public void deleteConnection(int budgeaConnectionId) throws IOException {
+    String url = "/users/me/connections/" + budgeaConnectionId;
+    Http.execute(Request.Delete(BudgeaConstants.getServerUrl(url))
+                   .addHeader(BudgeaConstants.AUTHORIZATION, "Bearer " + token), url);
+  }
+
   public Integer getUserId() throws IOException {
     checkTempToken();
     String url = "/users/me";
@@ -128,11 +134,5 @@ public class BudgeaAPI {
 
   public static JSONObject json(Request request, String url) throws IOException {
     return Http.executeAndGetJson(url, request);
-  }
-
-  public void deleteConnection(int budgeaConnectionId) throws IOException {
-    String url = "/users/me/connections/" + budgeaConnectionId;
-    Http.execute(Request.Delete(BudgeaConstants.getServerUrl(url))
-                   .addHeader(BudgeaConstants.AUTHORIZATION, "Bearer " + token), url);
   }
 }

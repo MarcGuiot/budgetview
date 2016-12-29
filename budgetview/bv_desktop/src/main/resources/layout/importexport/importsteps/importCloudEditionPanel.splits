@@ -5,7 +5,7 @@
   <styleImport file="/layout/importexport/components/importDialogStyles.splits"/>
 
 
-  <column styleClass="dialog" preferredSize="(600,710)" name="importCloudSignupPanel">
+  <column styleClass="dialog" preferredSize="(600,710)" name="importCloudEditionPanel">
 
     <label text="$import.cloud.edition.title" name="title" styleClass="title"/>
 

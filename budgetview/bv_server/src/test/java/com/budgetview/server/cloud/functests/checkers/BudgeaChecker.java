@@ -3,7 +3,6 @@ package com.budgetview.server.cloud.functests.checkers;
 import com.budgetview.server.cloud.stub.BudgeaBankFieldSample;
 import com.budgetview.server.cloud.stub.BudgeaStubServer;
 import com.budgetview.shared.cloud.budgea.BudgeaConstants;
-import org.apache.log4j.Logger;
 
 import java.io.IOException;
 
@@ -28,8 +27,12 @@ public class BudgeaChecker {
     stub.setBankFields(fields);
   }
 
-  public void pushStatement(String statement) {
-    stub.pushStatement(statement);
+  public void pushStatement(String json) {
+    stub.pushStatement(json);
+  }
+
+  public void pushConnections(String json) {
+    stub.pushConnections(json);
   }
 
   public void callWebhook(String json) throws IOException {

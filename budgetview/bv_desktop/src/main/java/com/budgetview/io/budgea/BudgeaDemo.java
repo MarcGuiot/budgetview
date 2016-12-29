@@ -16,17 +16,17 @@ public class BudgeaDemo {
     String token = auth.getString("auth_token");
     System.out.println("Token: " + token);
 
-    System.out.println("\n\n---------------- categories:\n");
-    JSONObject categories = json(Request.Get(BudgeaConstants.getServerUrl("/categories"))
-                                   .addHeader("Authorization", "Bearer " + token), "/categories");
-    System.out.println(categories.toString(2));
-    dumpCategories(categories);
-
-//    System.out.println("\n\n---------------- bank:\n");
-//    JSONObject banks = json(Request.Get(BudgeaConstants.getServerUrl("/banks"))
-//                             .addHeader("Authorization", "Bearer " + bearer));
-//    System.out.println(banks.toString(2));
-//    dumpBanks(banks);
+//    System.out.println("\n\n---------------- categories:\n");
+//    JSONObject categories = json(Request.Get(BudgeaConstants.getServerUrl("/categories"))
+//                                   .addHeader("Authorization", "Bearer " + token), "/categories");
+//    System.out.println(categories.toString(2));
+//    dumpCategories(categories);
+//
+    System.out.println("\n\n---------------- bank:\n");
+    JSONObject banks = json(Request.Get(BudgeaConstants.getServerUrl("/banks"))
+                             .addHeader("Authorization", "Bearer " + token), "/banks");
+    System.out.println(banks.toString(2));
+    dumpBanks(banks);
 
 //    System.out.println("\n\n---------------- create connection:\n");
 //    Request request = Request.Post(BudgeaConstants.getServerUrl("/users/me/connections"))
