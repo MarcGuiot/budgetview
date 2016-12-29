@@ -6,7 +6,7 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 
-public class ListBudgeaUsers {
+public class DeleteAllBudgeaUsers {
 
   public static void main(String[] args) throws Exception {
 
@@ -19,7 +19,7 @@ public class ListBudgeaUsers {
     JSONObject users = api.getUsers();
     System.out.println(users.toString(2));
 
-//    deleteAllUsers(api, users);
+    deleteAllUsers(api, users);
   }
 
   public static void deleteAllUsers(BudgeaAPI api, JSONObject users) throws IOException {

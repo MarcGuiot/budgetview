@@ -4,6 +4,7 @@ import com.budgetview.shared.http.Http;
 import com.budgetview.shared.model.Provider;
 import org.apache.http.client.fluent.Request;
 import org.globsframework.utils.Strings;
+import org.globsframework.utils.Utils;
 import org.globsframework.utils.exceptions.InvalidParameter;
 import org.json.JSONObject;
 
@@ -40,7 +41,24 @@ public class CloudAPI {
     return Http.executeAndGetJson(url, request);
   }
 
-  public void addBudgeaConnection(String email, String bvToken, String budgeaToken, Integer budgeaUserId) throws IOException {
+  public boolean isProviderAccessRegistered(String email, String bvToken) throws IOException {
+    if (Strings.isNullOrEmpty(email)) {
+      throw new InvalidParameter("A proper email must be provided to create the connection");
+    }
+    if (Strings.isNullOrEmpty(bvToken)) {
+      throw new InvalidParameter("A proper token must be provided to create the connection");
+    }
+
+    String url = cloudUrl("/provider/access");
+    Request request = Request.Get(url)
+      .addHeader(CloudConstants.EMAIL, email)
+      .addHeader(CloudConstants.BV_TOKEN,  bvToken)
+      .addHeader(CloudConstants.PROVIDER_ID, Integer.toString(Provider.BUDGEA.getId()));
+    JSONObject json = Http.executeAndGetJson(url, request);
+    return Utils.equal("ok", json.optString("status"));
+  }
+
+  public void addProviderAccess(String email, String bvToken, String budgeaToken, Integer budgeaUserId) throws IOException {
     if (Strings.isNullOrEmpty(email)) {
       throw new InvalidParameter("A proper email must be provided to create the connection");
     }
@@ -54,7 +72,7 @@ public class CloudAPI {
       throw new InvalidParameter("A budgea userId must be provided to create the connection");
     }
 
-    String url = cloudUrl("/connections");
+    String url = cloudUrl("/provider/access");
     Request request = Request.Post(url)
       .addHeader(CloudConstants.EMAIL, email)
       .addHeader(CloudConstants.BV_TOKEN, bvToken)
@@ -65,7 +83,7 @@ public class CloudAPI {
   }
 
   public JSONObject getConnections(String email, String bvToken) throws IOException {
-    String url = "/connections";
+    String url = "/banks/connections";
     Request request = Request.Get(cloudUrl(url))
       .addHeader(CloudConstants.EMAIL, email)
       .addHeader(CloudConstants.BV_TOKEN, bvToken);
@@ -74,7 +92,7 @@ public class CloudAPI {
   }
 
   public void deleteConnection(String email, String bvToken, Integer providerId, Integer providerConnectionId) throws IOException {
-    String url = "/connections";
+    String url = "/banks/connections";
     Request request = Request.Delete(cloudUrl(url))
       .addHeader(CloudConstants.EMAIL, email)
       .addHeader(CloudConstants.BV_TOKEN, bvToken)

@@ -4,6 +4,8 @@ import com.budgetview.desktop.cloud.CloudService;
 import com.budgetview.desktop.components.ProgressPanel;
 import com.budgetview.desktop.components.dialogs.PicsouDialog;
 import com.budgetview.desktop.importer.ImportController;
+import com.budgetview.model.CloudDesktopUser;
+import com.budgetview.shared.cloud.CloudSubscriptionStatus;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
@@ -51,12 +53,19 @@ public class ImportCloudDownloadPanel extends AbstractImportStepPanel {
   public void prepareForDisplay() {
   }
 
-  public void start() {
+  public void start(boolean firstDownload) {
+    System.out.println("ImportCloudDownloadPanel.start(" + firstDownload + ")");
     progressPanel.start();
-    cloudService.downloadStatement(repository, new CloudService.DownloadCallback() {
+    CloudService.DownloadCallback callback = new CloudService.DownloadCallback() {
       public void processCompletion(GlobList importedRealAccounts) {
+        System.out.println("ImportCloudDownloadPanel.processCompletion for " + importedRealAccounts);
         controller.setReplaceSeries(false);
         controller.importAccounts(importedRealAccounts);
+        progressPanel.stop();
+      }
+
+      public void processSubscriptionError(CloudSubscriptionStatus status) {
+        controller.showCloudSubscriptionError(repository.get(CloudDesktopUser.KEY).get(CloudDesktopUser.EMAIL), status);
         progressPanel.stop();
       }
 
@@ -69,6 +78,12 @@ public class ImportCloudDownloadPanel extends AbstractImportStepPanel {
         controller.showCloudError(e);
         progressPanel.stop();
       }
-    });
+    };
+    if (firstDownload) {
+      cloudService.downloadInitialStatement(repository, callback);
+    }
+    else {
+      cloudService.downloadStatement(repository, callback);
+    }
   }
 }

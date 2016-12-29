@@ -51,15 +51,17 @@ public class CloudService {
 
     void processInvalidCode();
 
-    void processSubscriptionError(CloudSubscriptionStatus subscriptionStatus);
-
     void processTempTokenExpired();
+
+    void processSubscriptionError(CloudSubscriptionStatus subscriptionStatus);
 
     void processError(Exception e);
   }
 
   public interface DownloadCallback {
     void processCompletion(GlobList importedRealAccounts);
+
+    void processSubscriptionError(CloudSubscriptionStatus subscriptionStatus);
 
     void processTimeout();
 
@@ -92,10 +94,6 @@ public class CloudService {
       }
     });
     thread.start();
-  }
-
-  private CloudSubscriptionStatus getSubscriptionStatus(JSONObject result) {
-    return CloudSubscriptionStatus.get(result.optString(CloudConstants.SUBSCRIPTION_STATUS));
   }
 
   public void validate(String email, String code, GlobRepository repository, ValidationCallback callback) {
@@ -188,6 +186,7 @@ public class CloudService {
   public void updateBankFields(Key bankKey, GlobRepository repository, Callback callback) {
     try {
       Glob user = repository.get(CloudDesktopUser.KEY);
+
       JSONObject result = cloudAPI.getTemporaryBudgeaToken(user.get(CloudDesktopUser.EMAIL), user.get(CloudDesktopUser.BV_TOKEN));
       switch (CloudRequestStatus.get(result.getString(CloudConstants.STATUS))) {
         case OK:
@@ -250,7 +249,7 @@ public class CloudService {
     }
   }
 
-  public void createBankConnection(final Glob connection, final GlobRepository repository, final DownloadCallback callback) {
+  public void createBankConnection(final Glob connection, final GlobRepository repository, final Callback callback) {
     Thread thread = new Thread(new Runnable() {
       public void run() {
         try {
@@ -261,16 +260,33 @@ public class CloudService {
             params.put(name, value.get(BudgeaConnectionValue.VALUE));
           }
 
-          if (!budgeaAPI.isPermanentToken()) {
-            Glob user = repository.get(CloudDesktopUser.KEY);
-            cloudAPI.addBudgeaConnection(user.get(CloudDesktopUser.EMAIL), user.get(CloudDesktopUser.BV_TOKEN), budgeaAPI.getToken(), budgeaAPI.getUserId());
+          Glob user = repository.get(CloudDesktopUser.KEY);
+          String email = user.get(CloudDesktopUser.EMAIL);
+          String bvToken = user.get(CloudDesktopUser.BV_TOKEN);
+          if (!cloudAPI.isProviderAccessRegistered(email, bvToken)) {
+            cloudAPI.addProviderAccess(email, bvToken, budgeaAPI.getToken(), budgeaAPI.getUserId());
+          }
+
+          JSONObject result = cloudAPI.getTemporaryBudgeaToken(email, bvToken);
+          switch (CloudRequestStatus.get(result.getString(CloudConstants.STATUS))) {
+            case OK:
+              String token = result.getString(CloudConstants.PROVIDER_TOKEN);
+              boolean permanentTokenRegistered = result.getBoolean(CloudConstants.PROVIDER_TOKEN_REGISTERED);
+              budgeaAPI.setToken(token, permanentTokenRegistered);
+              break;
+            case NO_SUBSCRIPTION:
+              callback.processSubscriptionError(getSubscriptionStatus(result));
+              return;
+            default:
+              callback.processError(null);
+              return;
           }
 
           budgeaAPI.addBankConnection(connection.get(BudgeaConnection.BANK), params);
 
           repository.update(CloudDesktopUser.KEY, CloudDesktopUser.SYNCHRO_ENABLED, true);
 
-          downloadInitialStatement(repository, callback);
+          callback.processCompletion();
         }
         catch (Exception e) {
           Log.write("Error creating connection", e);
@@ -307,7 +323,6 @@ public class CloudService {
       }
     });
     thread.start();
-
   }
 
   public void deleteBankConnection(Glob connection, final GlobRepository repository, final Callback callback) {
@@ -333,36 +348,41 @@ public class CloudService {
 
 
   public void downloadInitialStatement(GlobRepository repository, DownloadCallback callback) {
-
-    System.out.println("\n\n --------- CloudService.downloadInitialStatement ---------");
-
-    for (int i = 0; i < 50; i++) {
-      try {
-        GlobList importedRealAccounts = doDownloadStatement(repository);
-        if (!importedRealAccounts.isEmpty()) {
-          GuiUtils.runInSwingThread(new Runnable() {
-            public void run() {
-              callback.processCompletion(importedRealAccounts);
-            }
-          });
-          return;
-        }
-
-        Thread.sleep(2000);
-      }
-      catch (InterruptedException e) {
-        // Ignored - will exit after repeat
-      }
-      catch (Exception e) {
-        Log.write("Error downloading statement", e);
-        callback.processError(e);
-      }
-    }
-    GuiUtils.runInSwingThread(new Runnable() {
+    Thread thread = new Thread(new Runnable() {
       public void run() {
-        callback.processTimeout();
+
+        System.out.println("\n\n --------- CloudService.downloadInitialStatement ---------");
+
+        for (int i = 0; i < 50; i++) {
+          try {
+            GlobList importedRealAccounts = doDownloadStatement(repository);
+            if (!importedRealAccounts.isEmpty()) {
+              GuiUtils.runInSwingThread(new Runnable() {
+                public void run() {
+                  callback.processCompletion(importedRealAccounts);
+                }
+              });
+              return;
+            }
+
+            Thread.sleep(3000);
+          }
+          catch (InterruptedException e) {
+            // Ignored - will exit after repeat
+          }
+          catch (Exception e) {
+            Log.write("Error downloading statement", e);
+            callback.processError(e);
+          }
+        }
+        GuiUtils.runInSwingThread(new Runnable() {
+          public void run() {
+            callback.processTimeout();
+          }
+        });
       }
     });
+    thread.start();
   }
 
   public void downloadStatement(GlobRepository repository, DownloadCallback callback) {
@@ -375,6 +395,13 @@ public class CloudService {
           GuiUtils.runInSwingThread(new Runnable() {
             public void run() {
               callback.processCompletion(importedRealAccounts);
+            }
+          });
+        }
+        catch (SubscriptionError e) {
+          GuiUtils.runInSwingThread(new Runnable() {
+            public void run() {
+              callback.processSubscriptionError(e.status);
             }
           });
         }
@@ -391,14 +418,24 @@ public class CloudService {
     thread.start();
   }
 
-  public GlobList doDownloadStatement(GlobRepository repository) throws IOException {
+  public GlobList doDownloadStatement(GlobRepository repository) throws SubscriptionError, IOException {
     Glob user = repository.findOrCreate(CloudDesktopUser.KEY);
     Integer lastUpdate = user.get(CloudDesktopUser.LAST_UPDATE);
-    JSONObject statement = cloudAPI.getStatement(user.get(CloudDesktopUser.EMAIL), user.get(CloudDesktopUser.BV_TOKEN), lastUpdate);
+    JSONObject result = cloudAPI.getStatement(user.get(CloudDesktopUser.EMAIL), user.get(CloudDesktopUser.BV_TOKEN), lastUpdate);
 
-    System.out.println("CloudService.doDownloadStatement: lastUpdate=" + lastUpdate + " ==> returned " + statement.toString(2));
+    System.out.println("CloudService.doDownloadStatement: lastUpdate=" + lastUpdate + " ==> returned " + result.toString(2));
 
-    JSONArray accounts = statement.getJSONArray("accounts");
+    String status = result.getString(CloudConstants.STATUS);
+    switch (CloudRequestStatus.get(status)) {
+      case OK:
+        break;
+      case NO_SUBSCRIPTION:
+        throw new SubscriptionError(getSubscriptionStatus(result));
+      case TEMP_CODE_EXPIRED:
+        throw new IOException("Unexpected error status: " + status);
+    }
+
+    JSONArray accounts = result.getJSONArray("accounts");
     if (accounts.length() == 0) {
       return GlobList.EMPTY;
     }
@@ -451,7 +488,7 @@ public class CloudService {
       System.out.println("DownloadStatement.run COMPLETING... - accounts");
       GlobPrinter.print(importedRealAccounts);
 
-      int newUpdate = statement.getInt("last_update");
+      int newUpdate = result.getInt("last_update");
       System.out.println("CloudService.downloadStatement - newUpdate: " + newUpdate);
       repository.update(CloudDesktopUser.KEY, CloudDesktopUser.LAST_UPDATE, newUpdate);
     }
@@ -480,5 +517,17 @@ public class CloudService {
       }
     });
     return parser;
+  }
+
+  private CloudSubscriptionStatus getSubscriptionStatus(JSONObject result) {
+    return CloudSubscriptionStatus.get(result.optString(CloudConstants.SUBSCRIPTION_STATUS));
+  }
+
+  private class SubscriptionError extends Exception {
+    protected final CloudSubscriptionStatus status;
+
+    public SubscriptionError(CloudSubscriptionStatus status) {
+      this.status = status;
+    }
   }
 }

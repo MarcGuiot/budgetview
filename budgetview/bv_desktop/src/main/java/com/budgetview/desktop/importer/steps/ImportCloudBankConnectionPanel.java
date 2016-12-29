@@ -11,6 +11,8 @@ import com.budgetview.desktop.importer.ImportController;
 import com.budgetview.desktop.importer.components.CloudConnectionFieldEditor;
 import com.budgetview.desktop.importer.components.CloudConnectionFieldEditorFactory;
 import com.budgetview.model.Bank;
+import com.budgetview.model.CloudDesktopUser;
+import com.budgetview.shared.cloud.CloudSubscriptionStatus;
 import com.budgetview.utils.Lang;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.components.GlobRepeat;
@@ -123,16 +125,15 @@ public class ImportCloudBankConnectionPanel extends AbstractImportStepPanel {
 
   private void processConnection() {
     progressPanel.start();
-    cloudService.createBankConnection(currentConnection, repository, new CloudService.DownloadCallback() {
+    cloudService.createBankConnection(currentConnection, repository, new CloudService.Callback() {
 
-      public void processCompletion(GlobList importedRealAccounts) {
-        controller.setReplaceSeries(false);
-        controller.importAccounts(importedRealAccounts);
+      public void processCompletion() {
+        controller.showCloudDownload(true);
         progressPanel.stop();
       }
 
-      public void processTimeout() {
-        controller.showCloudError(null);
+      public void processSubscriptionError(CloudSubscriptionStatus status) {
+        controller.showCloudSubscriptionError(repository.get(CloudDesktopUser.KEY).get(CloudDesktopUser.EMAIL), status);
         progressPanel.stop();
       }
 

@@ -280,9 +280,9 @@ public class ImportDialog implements RealAccountImporter, Disposable {
     setCurrentPanel(cloudBankSubscriptionErrorPanel);
   }
 
-  public void showCloudDownload() {
+  public void showCloudDownload(boolean firstDownload) {
     setCurrentPanel(cloudDownloadPanel);
-    cloudDownloadPanel.start();
+    cloudDownloadPanel.start(firstDownload);
   }
 
   static class DoubleRef {

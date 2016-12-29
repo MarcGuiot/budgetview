@@ -22,7 +22,7 @@ import java.util.Date;
 
 public class CloudSubscriptionEndDateServlet extends HttpServlet {
 
-  private static Logger logger = Logger.getLogger("CloudSubscriptionEndDateServlet");
+  private static Logger logger = Logger.getLogger(LicenseConstants.CLOUD_SUBSCRIPTION_END_DATE);
   private final GlobsDatabase db;
 
   public CloudSubscriptionEndDateServlet(Directory directory) {

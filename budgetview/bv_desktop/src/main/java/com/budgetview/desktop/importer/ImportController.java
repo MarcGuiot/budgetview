@@ -383,8 +383,8 @@ public class ImportController implements RealAccountImporter {
     importSession.setReplaceSeries(replace);
   }
 
-  public void showCloudDownload() {
-    importDialog.showCloudDownload();
+  public void showCloudDownload(boolean firstDownload) {
+    importDialog.showCloudDownload(firstDownload);
   }
 
   private static class HasOperationFunctor implements GlobFunctor {

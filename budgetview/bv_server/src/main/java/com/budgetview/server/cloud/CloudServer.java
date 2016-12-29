@@ -8,7 +8,6 @@ import com.budgetview.server.license.mail.Mailer;
 import com.budgetview.server.cloud.utils.CloudDb;
 import com.budgetview.server.utils.Log4J;
 import com.budgetview.server.web.WebServer;
-import com.budgetview.shared.cloud.CloudConstants;
 import com.budgetview.shared.cloud.budgea.BudgeaConstants;
 import com.budgetview.shared.license.LicenseConstants;
 import org.apache.log4j.Logger;
@@ -46,7 +45,8 @@ public class CloudServer {
     webServer.add(new SignupServlet(directory), "/signup");
     webServer.add(new ValidateServlet(directory), "/validate");
     webServer.add(new BudgeaTokenServlet(directory), "/budgea/token");
-    webServer.add(new ConnectionServlet(directory), "/connections");
+    webServer.add(new ProviderAccessServlet(directory), "/provider/access");
+    webServer.add(new BankConnectionsServlet(directory), "/banks/connections");
     webServer.add(new BudgeaWebHookServlet(directory), "/budgea");
     webServer.add(new StatementServlet(directory), "/statement/*");
 

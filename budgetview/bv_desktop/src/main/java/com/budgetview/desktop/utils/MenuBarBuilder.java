@@ -8,7 +8,6 @@ import com.budgetview.desktop.addons.dev.ToggleAllAddOnsAction;
 import com.budgetview.desktop.backup.BackupAction;
 import com.budgetview.desktop.backup.RestoreFileAction;
 import com.budgetview.desktop.backup.RestoreSnapshotMenuAction;
-import com.budgetview.desktop.cloud.actions.BudgeaDemoAction;
 import com.budgetview.desktop.cloud.actions.CloudDemoAction;
 import com.budgetview.desktop.components.PicsouFrame;
 import com.budgetview.desktop.components.dialogs.SendImportedFileAction;
@@ -201,7 +200,6 @@ public class MenuBarBuilder {
     devMenu.add(ToggleAllAddOnsAction.disableAll(repository));
     devMenu.addSeparator();
     devMenu.add(new DumpMobileXmlAction(repository));
-    devMenu.add(new BudgeaDemoAction(repository, directory));
     devMenu.add(new CloudDemoAction(repository, directory));
     devMenu.addSeparator();
     devMenu.add(threadsAction);

@@ -64,7 +64,7 @@ public class CloudIntroPanel implements Disposable {
 
     builder.add("refreshCloud", new AbstractAction(Lang.get("import.fileSelection.cloud.refresh.button")) {
       public void actionPerformed(ActionEvent e) {
-        controller.showCloudDownload();
+        controller.showCloudDownload(false);
       }
     });
 

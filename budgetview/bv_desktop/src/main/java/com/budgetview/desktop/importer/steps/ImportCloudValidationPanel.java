@@ -112,7 +112,6 @@ public class ImportCloudValidationPanel extends AbstractImportStepPanel {
     progressPanel.start();
     cloudService.validate(email, codeField.getText(), repository, new CloudService.ValidationCallback() {
       public void processCompletionAndSelectBank() {
-        System.out.println("ImportCloudValidationPanel.processCompletionAndSelectBank");
         controller.saveCloudCredentials();
         controller.showCloudBankSelection();
         progressPanel.stop();
@@ -121,16 +120,14 @@ public class ImportCloudValidationPanel extends AbstractImportStepPanel {
       }
 
       public void processCompletionAndDownload() {
-        System.out.println("ImportCloudValidationPanel.processCompletionAndDownload");
         controller.saveCloudCredentials();
-        controller.showCloudDownload();
+        controller.showCloudDownload(false);
         progressPanel.stop();
         setAllEnabled(true);
         backAction.setEnabled(false);
       }
 
       public void processSubscriptionError(CloudSubscriptionStatus status) {
-        System.out.println("ImportCloudValidationPanel.processSubscriptionError");
         controller.showCloudSubscriptionError(email, status);
         progressPanel.stop();
         setAllEnabled(true);
@@ -138,7 +135,6 @@ public class ImportCloudValidationPanel extends AbstractImportStepPanel {
       }
 
       public void processTempTokenExpired() {
-        System.out.println("ImportCloudValidationPanel.processTempTokenExpired");
         errorLabel.setText(Lang.get("import.cloud.validation.tempcode.expired"));
         setAllEnabled(true);
         progressPanel.stop();
@@ -148,7 +144,6 @@ public class ImportCloudValidationPanel extends AbstractImportStepPanel {
       }
 
       public void processInvalidCode() {
-        System.out.println("ImportCloudValidationPanel.processInvalidCode: " + Lang.get("import.cloud.validation.invalid.code"));
         errorLabel.setText(Lang.get("import.cloud.validation.invalid.code"));
         setAllEnabled(true);
         progressPanel.stop();
@@ -158,7 +153,6 @@ public class ImportCloudValidationPanel extends AbstractImportStepPanel {
       }
 
       public void processError(Exception e) {
-        System.out.println("ImportCloudValidationPanel.processError");
         controller.showCloudError(e);
         progressPanel.stop();
         setAllEnabled(true);
@@ -168,7 +162,6 @@ public class ImportCloudValidationPanel extends AbstractImportStepPanel {
   }
 
   private void setAllEnabled(boolean enabled) {
-    System.out.println("ImportCloudValidationPanel.setAllEnabled: " + enabled);
     codeField.setEnabled(enabled);
     nextAction.setEnabled(enabled);
   }

@@ -14,7 +14,6 @@ import org.globsframework.gui.splits.PanelBuilder;
 import org.globsframework.gui.splits.repeat.RepeatComponentFactory;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobRepository;
-import org.globsframework.model.format.GlobPrinter;
 import org.globsframework.model.utils.GlobComparators;
 import org.globsframework.model.utils.GlobMatchers;
 import org.globsframework.utils.directory.Directory;
@@ -57,7 +56,7 @@ public class ImportCloudEditionPanel extends AbstractImportStepPanel {
 
     downloadAction = new AbstractAction(Lang.get("import.cloud.edition.download.button")) {
       public void actionPerformed(ActionEvent e) {
-        controller.showCloudDownload();
+        controller.showCloudDownload(false);
       }
     };
     builder.add("download", downloadAction);
