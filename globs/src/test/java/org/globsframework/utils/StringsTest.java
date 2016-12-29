@@ -40,6 +40,15 @@ public class StringsTest extends TestCase {
     assertEquals("HELLO_WORLD", Strings.toNiceUpperCase("helloWorld"));
   }
 
+  public void testToUppercaseLabel() throws Exception {
+    assertEquals("", Strings.toUpperCaseLabel(""));
+    assertEquals("NAME", Strings.toUpperCaseLabel("name"));
+    assertEquals("A_NAME_WITH_PARTS", Strings.toUpperCaseLabel("a Name With Parts"));
+    assertEquals("A_E_E_I_O_U", Strings.toUpperCaseLabel("à é è i ô ù"));
+    assertEquals("HELLO_WORLD", Strings.toUpperCaseLabel("hello World"));
+    assertEquals("A_LONG_STRING_CONTAINS_ALL_KINDS_OF_CHARS_ETC", Strings.toUpperCaseLabel(" A (long) String / contains _all_ (~=[*]) kinds of 'chars'  - ETC  !  "));
+  }
+
   public void testMapToString() throws Exception {
     Map map = new HashMap();
     map.put("toto", 1);

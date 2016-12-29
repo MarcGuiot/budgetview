@@ -24,7 +24,7 @@ public class CloudImportSeriesTest extends CloudDesktopTestCase {
                                  .addAccount(1, "Main account 1", "100200300", "checking", 1000.00, "2016-08-10 13:00:00")
                                  .addTransaction(1, "2016-08-10 13:00:00", -100.00, "Auchan")
                                  .addTransaction(2, "2016-08-12 17:00:00", -50.00, "EDF", BudgeaCategory.ELECTRICITE)
-                                 .addTransaction(3, "2016-08-13 20:00:00", -15.00, "McDo", BudgeaCategory.RESTAURANTS1)
+                                 .addTransaction(3, "2016-08-13 20:00:00", -15.00, "McDo", BudgeaCategory.RESTAURANT)
                                  .endAccount()
                                  .endConnection()
                                  .get());
@@ -53,29 +53,35 @@ public class CloudImportSeriesTest extends CloudDesktopTestCase {
       .add("10/08/2016", "AUCHAN", -100.00, "To categorize", 1065.00, 1065.00, "Main account 1")
       .check();
 
-    budgetView.recurring.checkContent("| Electricity   | 50.00 | 50.00 |\n" +
-                                      "| Car credit    | 0.00  | 0.00  |\n" +
-                                      "| Car insurance | 0.00  | 0.00  |\n" +
-                                      "| Cell phone    | 0.00  | 0.00  |\n" +
-                                      "| Fixed phone   | 0.00  | 0.00  |\n" +
-                                      "| Gas           | 0.00  | 0.00  |\n" +
-                                      "| Income taxes  | 0.00  | 0.00  |\n" +
-                                      "| Internet      | 0.00  | 0.00  |\n" +
-                                      "| Rent/Mortgage | 0.00  | 0.00  |\n" +
-                                      "| Water         | 0.00  | 0.00  |");
+    budgetView.recurring.checkContent("| Electricity      | 50.00 | 50.00 |\n" +
+                                      "| Car insurance    | 0.00  | 0.00  |\n" +
+                                      "| Car loan         | 0.00  | 0.00  |\n" +
+                                      "| Gas              | 0.00  | 0.00  |\n" +
+                                      "| Health insurance | 0.00  | 0.00  |\n" +
+                                      "| Housing taxes    | 0.00  | 0.00  |\n" +
+                                      "| Income taxes     | 0.00  | 0.00  |\n" +
+                                      "| Internet         | 0.00  | 0.00  |\n" +
+                                      "| Phone            | 0.00  | 0.00  |\n" +
+                                      "| Rent/Mortgage    | 0.00  | 0.00  |\n" +
+                                      "| Water            | 0.00  | 0.00  |");
 
     categorization.setVariable("Auchan", "Groceries");
 
     budgetView.variable.checkContent("| Groceries     | 100.00 | To define |\n" +
                                      "| Restaurant    | 15.00  | To define |\n" +
+                                     "| Animals       | 0.00   | To define |\n" +
                                      "| Bank fees     | 0.00   | To define |\n" +
                                      "| Beauty        | 0.00   | To define |\n" +
                                      "| Cash          | 0.00   | To define |\n" +
                                      "| Clothing      | 0.00   | To define |\n" +
                                      "| Fuel          | 0.00   | To define |\n" +
+                                     "| Gifts         | 0.00   | To define |\n" +
                                      "| Health        | 0.00   | To define |\n" +
                                      "| Leisures      | 0.00   | To define |\n" +
-                                     "| Miscellaneous | 0.00   | To define |");
+                                     "| Miscellaneous | 0.00   | To define |\n" +
+                                     "| Parking       | 0.00   | To define |\n" +
+                                     "| Toll          | 0.00   | To define |\n" +
+                                     "| Transport     | 0.00   | To define |");
 
     budgea.callWebhook(BudgeaStatement.init()
                          .addConnection(1, 123, 40, "Connecteur de Test Budgea", "2016-08-10 17:44:26")
@@ -102,13 +108,18 @@ public class CloudImportSeriesTest extends CloudDesktopTestCase {
                                      "| Karting       | 30.00  | To define |\n" +
                                      "| Restaurant    | 15.00  | To define |\n" +
                                      "| Bank fees     | 5.00   | To define |\n" +
+                                     "| Animals       | 0.00   | To define |\n" +
                                      "| Beauty        | 0.00   | To define |\n" +
                                      "| Cash          | 0.00   | To define |\n" +
                                      "| Clothing      | 0.00   | To define |\n" +
                                      "| Fuel          | 0.00   | To define |\n" +
+                                     "| Gifts         | 0.00   | To define |\n" +
                                      "| Health        | 0.00   | To define |\n" +
                                      "| Leisures      | 0.00   | To define |\n" +
-                                     "| Miscellaneous | 0.00   | To define |\n");
+                                     "| Miscellaneous | 0.00   | To define |\n" +
+                                     "| Parking       | 0.00   | To define |\n" +
+                                     "| Toll          | 0.00   | To define |\n" +
+                                     "| Transport     | 0.00   | To define |\n");
 
     operations.openImportDialog()
       .selectCloudRefreshAndGetSummary()
@@ -156,16 +167,18 @@ public class CloudImportSeriesTest extends CloudDesktopTestCase {
       .add("10/08/2016", "AUCHAN", -100.00, "To categorize", 1050.00, 1550.00, "Main account 1")
       .check();
 
-    budgetView.recurring.checkContent("| Car credit    | 0.00 | 0.00 |\n" +
-                                      "| Car insurance | 0.00 | 0.00 |\n" +
-                                      "| Cell phone    | 0.00 | 0.00 |\n" +
-                                      "| Electricity   | 0.00 | 0.00 |\n" +
-                                      "| Fixed phone   | 0.00 | 0.00 |\n" +
-                                      "| Gas           | 0.00 | 0.00 |\n" +
-                                      "| Income taxes  | 0.00 | 0.00 |\n" +
-                                      "| Internet      | 0.00 | 0.00 |\n" +
-                                      "| Rent/Mortgage | 0.00 | 0.00 |\n" +
-                                      "| Water         | 0.00 | 0.00 |");
+
+    budgetView.recurring.checkContent("| Car insurance    | 0.00 | 0.00 |\n" +
+                                      "| Car loan         | 0.00 | 0.00 |\n" +
+                                      "| Electricity      | 0.00 | 0.00 |\n" +
+                                      "| Gas              | 0.00 | 0.00 |\n" +
+                                      "| Health insurance | 0.00 | 0.00 |\n" +
+                                      "| Housing taxes    | 0.00 | 0.00 |\n" +
+                                      "| Income taxes     | 0.00 | 0.00 |\n" +
+                                      "| Internet         | 0.00 | 0.00 |\n" +
+                                      "| Phone            | 0.00 | 0.00 |\n" +
+                                      "| Rent/Mortgage    | 0.00 | 0.00 |\n" +
+                                      "| Water            | 0.00 | 0.00 |");
   }
 
   @Test
@@ -207,15 +220,16 @@ public class CloudImportSeriesTest extends CloudDesktopTestCase {
       .add("10/08/2016", "AUCHAN", -100.00, "To categorize", 1050.00, 1550.00, "Main account 1")
       .check();
 
-    budgetView.recurring.checkContent("| Electricité   | 50.00 | 50.00 |\n" +
-                                      "| Car credit    | 0.00  | 0.00  |\n" +
-                                      "| Car insurance | 0.00  | 0.00  |\n" +
-                                      "| Cell phone    | 0.00  | 0.00  |\n" +
-                                      "| Fixed phone   | 0.00  | 0.00  |\n" +
-                                      "| Gas           | 0.00  | 0.00  |\n" +
-                                      "| Income taxes  | 0.00  | 0.00  |\n" +
-                                      "| Internet      | 0.00  | 0.00  |\n" +
-                                      "| Rent/Mortgage | 0.00  | 0.00  |\n" +
-                                      "| Water         | 0.00  | 0.00  |");
+    budgetView.recurring.checkContent("| Electricité      | 50.00 | 50.00 |\n" +
+                                      "| Car insurance    | 0.00  | 0.00  |\n" +
+                                      "| Car loan         | 0.00  | 0.00  |\n" +
+                                      "| Gas              | 0.00  | 0.00  |\n" +
+                                      "| Health insurance | 0.00  | 0.00  |\n" +
+                                      "| Housing taxes    | 0.00  | 0.00  |\n" +
+                                      "| Income taxes     | 0.00  | 0.00  |\n" +
+                                      "| Internet         | 0.00  | 0.00  |\n" +
+                                      "| Phone            | 0.00  | 0.00  |\n" +
+                                      "| Rent/Mortgage    | 0.00  | 0.00  |\n" +
+                                      "| Water            | 0.00  | 0.00  |");
   }
 }

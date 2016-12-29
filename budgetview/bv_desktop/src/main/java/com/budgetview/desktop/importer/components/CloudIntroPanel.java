@@ -19,7 +19,7 @@ public class CloudIntroPanel implements Disposable {
   private final PicsouDialog dialog;
   private JPanel initialPanel = new JPanel();
   private JPanel refreshPanel = new JPanel();
-  private JPanel addPanel = new JPanel();
+  private JPanel editPanel = new JPanel();
   private ImportController controller;
   private final LocalGlobRepository repository;
   private final Directory directory;
@@ -45,13 +45,13 @@ public class CloudIntroPanel implements Disposable {
 
     builder.add("initial", initialPanel);
     builder.add("refresh", refreshPanel);
-    builder.add("add", addPanel);
+    builder.add("edit", editPanel);
 
     BooleanFieldListener listener = BooleanFieldListener.install(CloudDesktopUser.KEY, CloudDesktopUser.REGISTERED, repository, new BooleanListener() {
       public void apply(boolean registered) {
         initialPanel.setVisible(!registered);
         refreshPanel.setVisible(registered);
-        addPanel.setVisible(registered);
+        editPanel.setVisible(registered);
       }
     });
     disposables.add(listener);
@@ -68,7 +68,7 @@ public class CloudIntroPanel implements Disposable {
       }
     });
 
-    builder.add("addCloudConnection", new AbstractAction(Lang.get("import.fileSelection.cloud.edition.button")) {
+    builder.add("editCloudConnections", new AbstractAction(Lang.get("import.fileSelection.cloud.edition.button")) {
       public void actionPerformed(ActionEvent e) {
         controller.showCloudEdition();
       }

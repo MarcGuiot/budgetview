@@ -74,6 +74,16 @@ public class Strings {
     return builder.toString();
   }
 
+  public static String toUpperCaseLabel(String value) {
+    return unaccent(value.trim())
+      .replaceAll("\\W", " ")
+      .replaceAll("_", " ")
+      .replaceAll("[\\s]+", " ")
+      .trim()
+      .replaceAll(" ", "_")
+      .toUpperCase();
+  }
+
   public static String toString(Map map) {
     List<String> lines = new ArrayList<String>();
     for (Object o : map.entrySet()) {

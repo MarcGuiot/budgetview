@@ -21,7 +21,7 @@ public class BudgeaWebhook {
                         BudgeaStatement.init()
                           .addConnection(1, 123, 40, "Connecteur de Test Budgea", "2016-08-11 10:20:30")
                           .addAccount(1, "Main account 1", "100200300", "checking", 1000.00, "2016-08-11 10:20:40")
-                          .addTransaction(4, "2016-08-15 15:00:00", -150.00, "FNAC", BudgeaCategory.UNCATEGORIZED)
+                          .addTransaction(4, "2016-08-15 15:00:00", -150.00, "FNAC", BudgeaCategory.INDEFINI)
                           .endAccount()
                           .endConnection()
                           .get());

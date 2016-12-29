@@ -10,6 +10,9 @@ import org.globsframework.model.GlobRepository;
 import org.globsframework.model.Key;
 import org.globsframework.utils.directory.Directory;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import static org.globsframework.model.FieldValue.value;
 
 public class DefaultSeriesFactory {
@@ -47,59 +50,31 @@ public class DefaultSeriesFactory {
 
   private void createUserSeries() {
 
-    createEntry(DefaultSeries.INCOME, ProfileType.EVERY_MONTH);
+    Map<DefaultSeries, Key> seriesToKeys = new HashMap<DefaultSeries, Key>();
 
-    createEntry(DefaultSeries.RENT, ProfileType.EVERY_MONTH);
+    for (DefaultSeries defaultSeries : DefaultSeries.values()) {
+      DefaultSeries parent = defaultSeries.getParent();
+      if (parent == null) {
+        BudgetArea budgetArea = defaultSeries.getBudgetArea();
+        FieldValuesBuilder builder = FieldValuesBuilder.init()
+          .set(Series.NAME, Labels.get(defaultSeries))
+          .set(Series.IS_AUTOMATIC, budgetArea.isAutomatic())
+          .set(Series.BUDGET_AREA, budgetArea.getId())
+          .set(Series.TARGET_ACCOUNT, budgetArea == BudgetArea.TRANSFER ? null : Account.MAIN_SUMMARY_ACCOUNT_ID)
+          .set(Series.PROFILE_TYPE, ProfileType.EVERY_MONTH.getId())
+          .set(Series.IS_INITIAL, Boolean.TRUE);
 
-    SignpostStatus.setPeriodicitySeriesKey(
-      createEntry(DefaultSeries.ELECTRICITY, ProfileType.EVERY_MONTH), repository
-    );
-    createEntry(DefaultSeries.GAS, ProfileType.EVERY_MONTH);
-    createEntry(DefaultSeries.WATER, ProfileType.EVERY_MONTH);
-    createEntry(DefaultSeries.CAR_CREDIT, ProfileType.EVERY_MONTH);
-    createEntry(DefaultSeries.CAR_INSURANCE, ProfileType.EVERY_MONTH);
-    createEntry(DefaultSeries.INCOME_TAXES, ProfileType.EVERY_MONTH);
-    createEntry(DefaultSeries.CELL_PHONE, ProfileType.EVERY_MONTH);
-    createEntry(DefaultSeries.INTERNET, ProfileType.EVERY_MONTH);
-    createEntry(DefaultSeries.FIXED_PHONE, ProfileType.EVERY_MONTH);
-
-    SignpostStatus.setAmountSeriesKey(
-      createEntry(DefaultSeries.GROCERIES, ProfileType.EVERY_MONTH), repository
-    );
-    createEntry(DefaultSeries.HEALTH, ProfileType.EVERY_MONTH, DefaultSeries.PHYSICIAN, DefaultSeries.PHARMACY, DefaultSeries.REIMBURSEMENTS);
-    createEntry(DefaultSeries.LEISURES, ProfileType.EVERY_MONTH);
-    createEntry(DefaultSeries.CLOTHING, ProfileType.EVERY_MONTH);
-    createEntry(DefaultSeries.BEAUTY, ProfileType.EVERY_MONTH);
-    createEntry(DefaultSeries.FUEL, ProfileType.EVERY_MONTH);
-    createEntry(DefaultSeries.CASH, ProfileType.EVERY_MONTH);
-    createEntry(DefaultSeries.BANK_FEES, ProfileType.EVERY_MONTH);
-    createEntry(DefaultSeries.RESTAURANT, ProfileType.EVERY_MONTH);
-    createEntry(DefaultSeries.MISC, ProfileType.EVERY_MONTH);
-  }
-
-  private Key createEntry(DefaultSeries defaultSeries,
-                          ProfileType profileType,
-                          DefaultSeries... subSeriesList) {
-
-    BudgetArea budgetArea = defaultSeries.getBudgetArea();
-
-    FieldValuesBuilder builder = FieldValuesBuilder.init()
-      .set(Series.NAME, Labels.get(defaultSeries))
-      .set(Series.IS_AUTOMATIC, budgetArea.isAutomatic())
-      .set(Series.BUDGET_AREA, budgetArea.getId())
-      .set(Series.TARGET_ACCOUNT, budgetArea == BudgetArea.TRANSFER ? null : Account.MAIN_SUMMARY_ACCOUNT_ID)
-      .set(Series.PROFILE_TYPE, profileType.getId())
-      .set(Series.IS_INITIAL, Boolean.TRUE);
-
-    Glob series = repository.create(Series.TYPE, builder.toArray());
-
-    for (DefaultSeries subSeries : subSeriesList) {
-      String subSeriesName = Labels.get(defaultSeries, subSeries);
-      repository.create(SubSeries.TYPE,
-                        value(SubSeries.NAME, subSeriesName),
-                        value(SubSeries.SERIES, series.get(Series.ID)));
+        Glob series = repository.create(Series.TYPE, builder.toArray());
+        seriesToKeys.put(defaultSeries, series.getKey());
+      }
+      else {
+        repository.create(SubSeries.TYPE,
+                          value(SubSeries.NAME, Labels.get(defaultSeries)),
+                          value(SubSeries.SERIES, seriesToKeys.get(parent).get(Series.ID)));
+      }
     }
 
-    return series.getKey();
+    SignpostStatus.setPeriodicitySeriesKey(seriesToKeys.get(DefaultSeries.ELECTRICITY), repository);
+    SignpostStatus.setAmountSeriesKey(seriesToKeys.get(DefaultSeries.GROCERIES), repository);
   }
 }

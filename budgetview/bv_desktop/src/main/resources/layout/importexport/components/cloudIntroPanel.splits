@@ -20,9 +20,9 @@
       <button action="refreshCloud" fill="none" anchor="center"/>
     </column>
 
-    <column ref="add" marginTop="20">
+    <column ref="edit" marginTop="20">
       <htmlEditorPane text="$import.fileSelection.cloud.edition.message"/>
-      <button action="addCloudConnection" fill="none" anchor="center"/>
+      <button action="editCloudConnections" fill="none" anchor="center"/>
     </column>
 
     <filler fill="vertical"/>

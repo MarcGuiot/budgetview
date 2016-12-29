@@ -18,10 +18,18 @@ public class Labels {
   }
 
   public static String get(DefaultSeries defaultSeries) {
-    return defaultSeries != null ? Lang.get("defaultSeries." + defaultSeries.getName()) : null;
+    if (defaultSeries == null) {
+      return null;
+    }
+    return Lang.get(getKey(defaultSeries));
   }
 
-  public static String get(DefaultSeries nameKey, DefaultSeries subSeriesKey) {
-    return Lang.get("defaultSeries." + nameKey.getName() + "." + subSeriesKey.getName());
+  public static String getKey(DefaultSeries defaultSeries) {
+    if (defaultSeries.getParent() == null) {
+      return "defaultSeries." + defaultSeries.getName();
+    }
+    else {
+      return "defaultSeries." + defaultSeries.getParent().getName() + "." + defaultSeries.getName();
+    }
   }
 }

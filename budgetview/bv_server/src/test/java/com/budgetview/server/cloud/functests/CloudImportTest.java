@@ -186,7 +186,7 @@ public class CloudImportTest extends CloudDesktopTestCase {
                                  .addConnection(1, 123, 40, "Connecteur de Test Budgea", "2016-08-12 17:44:26")
                                  .addAccount(1, "Main account 1", "100200300", "checking", 950.00, "2016-08-12 13:00:00")
                                  .addTransaction(1, "2016-08-08 10:00:00", "2016-08-08 10:00:00", -10.00, "CIC", "PRLVT FRAIS CIC FILBANQUE", BudgeaCategory.FRAIS_BANCAIRES.getId(), "Frais bancaires", false)
-                                 .addTransaction(2, "2016-08-10 13:00:00", "2016-08-10 10:00:00", -100.00, "AUCHAN", "CB AUCHAN SA", BudgeaCategory.UNCATEGORIZED.getId(), "A classer", false)
+                                 .addTransaction(2, "2016-08-10 13:00:00", "2016-08-10 10:00:00", -100.00, "AUCHAN", "CB AUCHAN SA", BudgeaCategory.INDEFINI.getId(), "A classer", false)
                                  .addTransaction(3, "2016-08-12 17:00:00", "2016-08-12 10:00:00", -50.00, "EDF", "CB E.D.F", BudgeaCategory.ELECTRICITE.getId(), "Electricité", false)
                                  .endAccount()
                                  .endConnection()
@@ -258,13 +258,18 @@ public class CloudImportTest extends CloudDesktopTestCase {
     budgea.pushStatement(BudgeaStatement.init()
                                  .addConnection(2, 123, 2, "CIC", "2016-08-14 16:18:44")
                                  .addAccount(2, "Joint account", "987654321", "checking", 500.00, "2016-08-14 17:00:00")
-                                 .addTransaction(1, "2016-08-14 10:00:00", -250.00, "FNAC", BudgeaCategory.UNCATEGORIZED)
+                                 .addTransaction(1, "2016-08-14 10:00:00", -250.00, "FNAC", BudgeaCategory.INDEFINI)
                                  .endAccount()
                                  .endConnection()
                                  .get());
 
+    fail("tbd");
+//    préparer la prochaine réponse à un getConnections
+
     operations.openImportDialog()
-      .addCloudConnection()
+      .editCloudConnections()
+//      .checkConnections("")  ----> todo : vérifier la liste des comptes (pour ça coder le stub budgea)
+      .addConnection()
       .selectBank("CIC")
       .next()
       .setText("Identifiant", "1234")

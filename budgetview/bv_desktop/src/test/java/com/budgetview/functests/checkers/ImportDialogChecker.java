@@ -233,9 +233,9 @@ public class ImportDialogChecker extends GuiChecker {
     return new CloudSignupChecker(dialog);
   }
 
-  public CloudBankSelectionChecker addCloudConnection() {
-    dialog.getPanel("cloudIntro").getButton("addCloudConnection").click();
-    return new CloudBankSelectionChecker(dialog);
+  public CloudEditionChecker editCloudConnections() {
+    dialog.getPanel("cloudIntro").getButton("editCloudConnections").click();
+    return new CloudEditionChecker(dialog);
   }
 
   public ImportDialogChecker checkCloudRefreshNotVisible() {

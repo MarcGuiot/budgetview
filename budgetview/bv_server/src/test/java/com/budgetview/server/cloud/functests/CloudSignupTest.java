@@ -177,8 +177,8 @@ public class CloudSignupTest extends CloudDesktopTestCase {
     budgea.callWebhook(BudgeaStatement.init()
                          .addConnection(1, 123, 40, "Connecteur de Test Budgea", "2016-08-15 17:44:26")
                          .addAccount(1, "Main account 1", "100200300", "checking", 1000.00, "2016-08-15 13:00:00")
-                         .addTransaction(3, "2016-08-13 13:00:00", -25.00, "TOTAL", BudgeaCategory.FUEL1)
-                         .addTransaction(4, "2016-08-15 15:00:00", -50.00, "FOUQUETS", BudgeaCategory.RESTAURANTS1)
+                         .addTransaction(3, "2016-08-13 13:00:00", -25.00, "TOTAL", BudgeaCategory.ESSENCE)
+                         .addTransaction(4, "2016-08-15 15:00:00", -50.00, "FOUQUETS", BudgeaCategory.RESTAURANT)
                          .endAccount()
                          .endConnection()
                          .get());
@@ -244,8 +244,8 @@ public class CloudSignupTest extends CloudDesktopTestCase {
     budgea.callWebhook(BudgeaStatement.init()
                          .addConnection(1, 123, 40, "Connecteur de Test Budgea", "2016-08-15 17:44:26")
                          .addAccount(1, "Main account 1", "100200300", "checking", 1000.00, "2016-08-15 13:00:00")
-                         .addTransaction(3, "2016-08-13 13:00:00", -25.00, "TOTAL", BudgeaCategory.FUEL1)
-                         .addTransaction(4, "2016-08-15 15:00:00", -50.00, "FOUQUETS", BudgeaCategory.RESTAURANTS1)
+                         .addTransaction(3, "2016-08-13 13:00:00", -25.00, "TOTAL", BudgeaCategory.ESSENCE)
+                         .addTransaction(4, "2016-08-15 15:00:00", -50.00, "FOUQUETS", BudgeaCategory.RESTAURANT)
                          .endAccount()
                          .endConnection()
                          .get());

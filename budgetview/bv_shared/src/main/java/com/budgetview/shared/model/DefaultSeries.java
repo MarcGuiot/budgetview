@@ -13,6 +13,7 @@ import static org.globsframework.model.FieldValue.value;
 
 public enum DefaultSeries implements GlobConstantContainer {
   INCOME("income", 1, BudgetArea.INCOME),
+  INTEREST("interest", 29, BudgetArea.INCOME),
 
   RENT("rent", 2, BudgetArea.RECURRING),
   ELECTRICITY("electricity", 3, BudgetArea.RECURRING),
@@ -21,15 +22,16 @@ public enum DefaultSeries implements GlobConstantContainer {
   CAR_CREDIT("carCredit", 6, BudgetArea.RECURRING),
   CAR_INSURANCE("carInsurance", 7, BudgetArea.RECURRING),
   INCOME_TAXES("incomeTaxes", 8, BudgetArea.RECURRING),
-  CELL_PHONE("cellPhone", 9, BudgetArea.RECURRING),
+  HOUSING_TAXES("housingTaxes", 28, BudgetArea.RECURRING),
+  PHONE("phone", 9, BudgetArea.RECURRING),
   INTERNET("internet", 11, BudgetArea.RECURRING),
-  FIXED_PHONE("fixedPhone", 12, BudgetArea.RECURRING),
+  HEALTH_INSURANCE("healthInsurance", 28, BudgetArea.RECURRING),
 
   GROCERIES("groceries", 13, BudgetArea.VARIABLE),
   HEALTH("health", 14, BudgetArea.VARIABLE),
-  PHYSICIAN("physician", 15, BudgetArea.VARIABLE),
-  PHARMACY("pharmacy", 16, BudgetArea.VARIABLE),
-  REIMBURSEMENTS("reimbursements", 17, BudgetArea.VARIABLE),
+  PHYSICIAN("physician", 15, BudgetArea.VARIABLE, HEALTH),
+  PHARMACY("pharmacy", 16, BudgetArea.VARIABLE, HEALTH),
+  REIMBURSEMENTS("reimbursements", 17, BudgetArea.VARIABLE, HEALTH),
   LEISURES("leisures", 18, BudgetArea.VARIABLE),
   CLOTHING("clothing", 19, BudgetArea.VARIABLE),
   BEAUTY("beauty", 20, BudgetArea.VARIABLE),
@@ -38,6 +40,12 @@ public enum DefaultSeries implements GlobConstantContainer {
   BANK_FEES("bankFees", 23, BudgetArea.VARIABLE),
   RESTAURANT("restaurant", 24, BudgetArea.VARIABLE),
   MISC("misc", 25, BudgetArea.VARIABLE),
+
+  GIFTS("gifts", 26, BudgetArea.VARIABLE),
+  ANIMALS("animals", 27, BudgetArea.VARIABLE),
+  TOLL("toll", 30, BudgetArea.VARIABLE),
+  PARKING("parking", 31, BudgetArea.VARIABLE),
+  TRANSPORT("transport", 32, BudgetArea.VARIABLE),
 
   UNCATEGORIZED("uncategorized", -1, BudgetArea.UNCATEGORIZED);
 
@@ -49,14 +57,20 @@ public enum DefaultSeries implements GlobConstantContainer {
   @NamingField
   public static StringField NAME;
 
-  private String name;
-  private int id;
-  private BudgetArea budgetArea;
+  private final String name;
+  private final int id;
+  private final BudgetArea budgetArea;
+  private final DefaultSeries parent;
 
   DefaultSeries(String name, int id, BudgetArea budgetArea) {
+    this(name, id, budgetArea, null);
+  }
+
+  DefaultSeries(String name, int id, BudgetArea budgetArea, DefaultSeries parent) {
     this.name = name;
     this.id = id;
     this.budgetArea = budgetArea;
+    this.parent = parent;
   }
 
   static {
@@ -75,6 +89,10 @@ public enum DefaultSeries implements GlobConstantContainer {
 
   public int getId() {
     return id;
+  }
+
+  public DefaultSeries getParent() {
+    return parent;
   }
 
   public String toString() {
