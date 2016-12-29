@@ -2,6 +2,7 @@ package com.budgetview.server.cloud.servlet;
 
 import com.budgetview.server.cloud.utils.SubscriptionCheckFailed;
 import com.budgetview.shared.cloud.CloudConstants;
+import org.globsframework.utils.directory.Directory;
 import org.json.JSONWriter;
 
 import javax.servlet.http.HttpServlet;
@@ -9,6 +10,13 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 public abstract class HttpCloudServlet extends HttpServlet {
+
+  protected final Directory directory;
+
+  public HttpCloudServlet(Directory directory) {
+    this.directory = directory;
+  }
+
   protected void setOk(HttpServletResponse response) throws IOException {
     JSONWriter writer = new JSONWriter(response.getWriter());
     writer.object();

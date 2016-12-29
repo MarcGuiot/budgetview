@@ -1,5 +1,7 @@
 package com.budgetview.server.cloud.servlet;
 
+import com.budgetview.server.cloud.commands.Command;
+import com.budgetview.server.cloud.commands.HttpCommand;
 import com.budgetview.server.cloud.services.AuthenticationService;
 import com.budgetview.server.cloud.services.EmailValidationService;
 import com.budgetview.server.cloud.utils.SubscriptionCheckFailed;
@@ -24,49 +26,51 @@ public class SignupServlet extends HttpCloudServlet {
   private final EmailValidationService emailValidation;
 
   public SignupServlet(Directory directory) {
+    super(directory);
     this.authentication = directory.get(AuthenticationService.class);
     this.emailValidation = directory.get(EmailValidationService.class);
   }
 
-  protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-    request.setCharacterEncoding("UTF-8");
-    response.setCharacterEncoding("UTF-8");
+  protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
-    String email = request.getHeader(CloudConstants.EMAIL);
-    logger.info("Signup requested for " + email);
-    if (Strings.isNullOrEmpty(email)) {
-      logger.error("Missing email");
-      setInternalError(response);
-      return;
-    }
+    logger.info("POST");
 
-    String lang = request.getHeader(CloudConstants.LANG);
-    try {
-      processSignup(email, lang);
-    }
-    catch (SubscriptionCheckFailed e) {
-      setSubscriptionError(response, e);
-      return;
-    }
-    catch (Exception e) {
-      logger.error("Could not process: " + email, e);
-      setInternalError(response);
-      return;
-    }
+    Command command = new HttpCommand(directory, req, resp, logger) {
+      protected void doRun() throws IOException, InvalidHeader {
+        String email = getStringHeader(CloudConstants.EMAIL);
+        logger.info("Signup requested for " + email);
 
-    setOk(response);
-  }
+        String lang = request.getHeader(CloudConstants.LANG);
+        try {
+          processSignup(email, lang);
+        }
+        catch (SubscriptionCheckFailed e) {
+          setSubscriptionError(response, e);
+          return;
+        }
+        catch (Exception e) {
+          logger.error("Could not process: " + email, e);
+          setInternalError(response);
+          return;
+        }
 
-  private void processSignup(String email, String lang) throws GlobsSQLException, MessagingException, SubscriptionCheckFailed {
-    Integer userId = authentication.findUser(email);
-    if (userId == null) {
-      logger.info("User not found for '" + email + "' - creating it");
-      userId = authentication.createUser(email);
-    }
-    else {
-      logger.info("User " + userId + " found for '" + email + "'");
-    }
+        setOk(response);
+      }
 
-    emailValidation.sendTempCode(userId, email, lang);
+      private void processSignup(String email, String lang) throws GlobsSQLException, MessagingException, SubscriptionCheckFailed {
+        Integer userId = authentication.findUser(email);
+        if (userId == null) {
+          logger.info("User not found for '" + email + "' - creating it");
+          userId = authentication.createUser(email);
+        }
+        else {
+          logger.info("User " + userId + " found for '" + email + "'");
+        }
+
+        emailValidation.sendTempCode(userId, email, lang);
+      }
+    };
+    command.run();
+
   }
 }

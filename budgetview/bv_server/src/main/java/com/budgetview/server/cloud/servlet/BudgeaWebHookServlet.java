@@ -48,6 +48,7 @@ public class BudgeaWebHookServlet extends HttpCloudServlet {
   private CloudSerializer serializer;
 
   public BudgeaWebHookServlet(Directory directory) throws Exception {
+    super(directory);
     db = directory.get(GlobsDatabase.class);
     serializer = new CloudSerializer(directory);
   }

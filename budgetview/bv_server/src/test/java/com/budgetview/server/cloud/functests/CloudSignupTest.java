@@ -200,8 +200,8 @@ public class CloudSignupTest extends CloudDesktopTestCase {
       .importAccountWithAllSeriesAndComplete();
 
     transactions.initContent()
-      .add("15/08/2016", TransactionType.PRELEVEMENT, "FOUQUETS", "", -50.00, "Restaurants")
-      .add("13/08/2016", TransactionType.PRELEVEMENT, "TOTAL", "", -25.00, "Fuel")
+      .add("15/08/2016", TransactionType.PRELEVEMENT, "FOUQUETS", "", -50.00, "Restaurant")
+      .add("13/08/2016", TransactionType.PRELEVEMENT, "TOTAL", "", -25.00, "Essence")
       .add("12/08/2016", TransactionType.PRELEVEMENT, "EDF", "", -50.00, "Electricité")
       .add("10/08/2016", TransactionType.PRELEVEMENT, "AUCHAN", "", -100.00)
       .check();
@@ -265,8 +265,8 @@ public class CloudSignupTest extends CloudDesktopTestCase {
       .importAccountWithAllSeriesAndComplete();
 
     transactions.initContent()
-      .add("15/08/2016", TransactionType.PRELEVEMENT, "FOUQUETS", "", -50.00, "Restaurants")
-      .add("13/08/2016", TransactionType.PRELEVEMENT, "TOTAL", "", -25.00, "Fuel")
+      .add("15/08/2016", TransactionType.PRELEVEMENT, "FOUQUETS", "", -50.00, "Restaurant")
+      .add("13/08/2016", TransactionType.PRELEVEMENT, "TOTAL", "", -25.00, "Essence")
       .add("12/08/2016", TransactionType.PRELEVEMENT, "EDF", "", -50.00, "Electricité")
       .add("10/08/2016", TransactionType.PRELEVEMENT, "AUCHAN", "", -100.00)
       .check();

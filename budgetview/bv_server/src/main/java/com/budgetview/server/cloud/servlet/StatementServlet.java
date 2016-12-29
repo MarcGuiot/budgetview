@@ -1,13 +1,12 @@
 package com.budgetview.server.cloud.servlet;
 
+import com.budgetview.server.cloud.commands.AuthenticatedCommand;
+import com.budgetview.server.cloud.commands.Command;
 import com.budgetview.server.cloud.model.CloudUser;
 import com.budgetview.server.cloud.model.ProviderAccount;
 import com.budgetview.server.cloud.model.ProviderTransaction;
 import com.budgetview.server.cloud.model.ProviderUpdate;
 import com.budgetview.server.cloud.persistence.CloudSerializer;
-import com.budgetview.server.cloud.services.AuthenticationService;
-import com.budgetview.server.cloud.utils.SubscriptionCheckFailed;
-import com.budgetview.shared.cloud.CloudConstants;
 import com.budgetview.shared.model.Provider;
 import org.apache.log4j.Logger;
 import org.globsframework.json.JsonGlobWriter;
@@ -15,7 +14,6 @@ import org.globsframework.model.FieldValues;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.GlobRepositoryBuilder;
-import org.globsframework.sqlstreams.GlobsDatabase;
 import org.globsframework.sqlstreams.SqlConnection;
 import org.globsframework.sqlstreams.SqlSelect;
 import org.globsframework.sqlstreams.SqlSelectBuilder;
@@ -42,146 +40,126 @@ public class StatementServlet extends HttpCloudServlet {
   private static Logger logger = Logger.getLogger("/statement");
   private Pattern pattern = Pattern.compile("/([0-9]+)");
 
-  private final GlobsDatabase database;
-  private final AuthenticationService authentication;
   private final CloudSerializer serializer;
 
   public StatementServlet(Directory directory) throws Exception {
-    this.database = directory.get(GlobsDatabase.class);
-    this.authentication = directory.get(AuthenticationService.class);
+    super(directory);
     this.serializer = new CloudSerializer(directory);
   }
 
-  protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-    request.setCharacterEncoding("UTF-8");
-    response.setCharacterEncoding("UTF-8");
+  protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
     logger.info("GET");
 
-    String email = request.getHeader(CloudConstants.EMAIL);
-    String token = request.getHeader(CloudConstants.BV_TOKEN);
-    if (Strings.isNullOrEmpty(email) || Strings.isNullOrEmpty(token)) {
-      logger.info("Missing info " + email + " / " + token);
-      setBadRequest(response);
-      return;
-    }
+    Command command = new AuthenticatedCommand(directory, req, resp, logger) {
+      protected void doRun() throws IOException, InvalidHeader {
 
-    Glob user = null;
-    try {
-      user = authentication.checkUserToken(email, token);
-    }
-    catch (SubscriptionCheckFailed e) {
-      setSubscriptionError(response, e);
-      return;
-    }
-    if (user == null) {
-      logger.error("Could not identify user with email:" + email);
-      setUnauthorized(response);
-      return;
-    }
-
-    Integer lastUpdate = null;
-    String pathInfo = request.getPathInfo();
-    if (Strings.isNotEmpty(pathInfo)) {
-      Matcher matcher = pattern.matcher(pathInfo);
-      if (matcher.matches()) {
-        lastUpdate = Integer.parseInt(matcher.group(1));
-        logger.info("Retrieving updates > " + lastUpdate);
-      }
-    }
-
-    Integer userId = user.get(CloudUser.ID);
-    SqlConnection connection = database.connect();
-    Constraint where =
-      lastUpdate == null ?
-        Where.fieldEquals(ProviderUpdate.USER, userId) :
-        Where.and(fieldEquals(ProviderUpdate.USER, userId),
-                  fieldStrictlyGreaterThan(ProviderUpdate.ID, lastUpdate));
-
-    SqlSelectBuilder selectUpdates =
-      connection.startSelect(ProviderUpdate.TYPE, where)
-        .orderBy(ProviderUpdate.DATE);
-    GlobAccessor accessor = selectUpdates.retrieveAll();
-    SqlSelect query = selectUpdates.getQuery();
-    GlobStream stream = query.getStream();
-
-    Integer maxId = 0;
-    GlobRepository repository = GlobRepositoryBuilder.createEmpty();
-    while (stream.next()) {
-      try {
-        int updateId = accessor.get(ProviderUpdate.ID);
-        if (updateId > maxId) {
-          maxId = updateId;
+        Integer lastUpdate = null;
+        String pathInfo = request.getPathInfo();
+        if (Strings.isNotEmpty(pathInfo)) {
+          Matcher matcher = pattern.matcher(pathInfo);
+          if (matcher.matches()) {
+            lastUpdate = Integer.parseInt(matcher.group(1));
+            logger.info("Retrieving updates > " + lastUpdate);
+          }
         }
-        byte[] bytes = accessor.get(ProviderUpdate.DATA);
-        serializer.readBlob(bytes, repository);
+
+        Integer userId = user.get(CloudUser.ID);
+        SqlConnection connection = database.connect();
+        Constraint where =
+          lastUpdate == null ?
+            Where.fieldEquals(ProviderUpdate.USER, userId) :
+            Where.and(fieldEquals(ProviderUpdate.USER, userId),
+                      fieldStrictlyGreaterThan(ProviderUpdate.ID, lastUpdate));
+
+        SqlSelectBuilder selectUpdates =
+          connection.startSelect(ProviderUpdate.TYPE, where)
+            .orderBy(ProviderUpdate.DATE);
+        GlobAccessor accessor = selectUpdates.retrieveAll();
+        SqlSelect query = selectUpdates.getQuery();
+        GlobStream stream = query.getStream();
+
+        Integer maxId = 0;
+        GlobRepository repository = GlobRepositoryBuilder.createEmpty();
+        while (stream.next()) {
+          try {
+            int updateId = accessor.get(ProviderUpdate.ID);
+            if (updateId > maxId) {
+              maxId = updateId;
+            }
+            byte[] bytes = accessor.get(ProviderUpdate.DATA);
+            serializer.readBlob(bytes, repository);
+          }
+          catch (GeneralSecurityException e) {
+            logger.error("Could not identify user with email: " + user.get(CloudUser.EMAIL));
+            response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            return;
+          }
+        }
+
+        JsonGlobWriter writer = new JsonGlobWriter(response.getWriter());
+        writer.object();
+
+        setOk(response, writer);
+        writer.key("last_update").value(maxId);
+
+        writer.key("accounts");
+        writer.array();
+
+        for (Glob account : repository.getAll(ProviderAccount.TYPE)) {
+          writer.object();
+          writeAccount(account, writer);
+
+          writer.key("transactions");
+          writer.array();
+          for (Glob transaction : repository.findLinkedTo(account, ProviderTransaction.ACCOUNT)) {
+            writeTransaction(transaction, writer);
+          }
+          writer.endArray(); // transactions
+
+          writer.endObject(); // account
+        }
+
+        writer.endArray(); // accounts
+        writer.endObject();
+
+        stream.close();
+        query.close();
+        connection.commitAndClose();
       }
-      catch (GeneralSecurityException e) {
-        logger.error("Could not identify user with email: " + email);
-        response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-        return;
+
+      private void writeAccount(FieldValues account, JsonGlobWriter writer) {
+        writer.setCurrentValues(account);
+        writer.field(ProviderAccount.ID, "id");
+        writer.field(ProviderAccount.ACCOUNT_TYPE, "type");
+        writer.value(Provider.BUDGEA.getId(), "provider");
+        writer.field(ProviderAccount.PROVIDER_BANK_ID, "provider_bank_id");
+        writer.field(ProviderAccount.ID, "provider_account_id");
+        writer.field(ProviderAccount.PROVIDER_BANK_NAME, "provider_bank_name");
+        writer.field(ProviderAccount.POSITION, "position");
+        writer.field(ProviderAccount.POSITION_MONTH, "position_month");
+        writer.field(ProviderAccount.POSITION_DAY, "position_day");
+        writer.field(ProviderAccount.NAME, "name");
+        writer.field(ProviderAccount.NUMBER, "number");
       }
-    }
 
-    JsonGlobWriter writer = new JsonGlobWriter(response.getWriter());
-    writer.object();
-
-    setOk(response, writer);
-    writer.key("last_update").value(maxId);
-
-    writer.key("accounts");
-    writer.array();
-
-    for (Glob account : repository.getAll(ProviderAccount.TYPE)) {
-      writer.object();
-      writeAccount(account, writer);
-
-      writer.key("transactions");
-      writer.array();
-      for (Glob transaction : repository.findLinkedTo(account, ProviderTransaction.ACCOUNT)) {
-        writeTransaction(transaction, writer);
+      private void writeTransaction(FieldValues transaction, JsonGlobWriter writer) {
+        writer.object();
+        writer.setCurrentValues(transaction);
+        writer.field(ProviderTransaction.ID, "id");
+        writer.value(Provider.BUDGEA.getId(), "provider");
+        writer.field(ProviderTransaction.ID, "provider_id");
+        writer.field(ProviderTransaction.LABEL, "label");
+        writer.field(ProviderTransaction.ORIGINAL_LABEL, "original_label");
+        writer.field(ProviderTransaction.AMOUNT, "amount");
+        writer.field(ProviderTransaction.OPERATION_DATE, "operation_date");
+        writer.field(ProviderTransaction.BANK_DATE, "bank_date");
+        writer.field(ProviderTransaction.PROVIDER_CATEGORY_ID, "provider_category_id");
+        writer.field(ProviderTransaction.PROVIDER_CATEGORY_NAME, "provider_category_name");
+        writer.field(ProviderTransaction.DELETED, "deleted");
+        writer.endObject();
       }
-      writer.endArray(); // transactions
-
-      writer.endObject(); // account
-    }
-
-    writer.endArray(); // accounts
-    writer.endObject();
-
-    stream.close();
-    query.close();
-  }
-
-  private void writeAccount(FieldValues account, JsonGlobWriter writer) {
-    writer.setCurrentValues(account);
-    writer.field(ProviderAccount.ID, "id");
-    writer.field(ProviderAccount.ACCOUNT_TYPE, "type");
-    writer.value(Provider.BUDGEA.getId(), "provider");
-    writer.field(ProviderAccount.PROVIDER_BANK_ID, "provider_bank_id");
-    writer.field(ProviderAccount.ID, "provider_account_id");
-    writer.field(ProviderAccount.PROVIDER_BANK_NAME, "provider_bank_name");
-    writer.field(ProviderAccount.POSITION, "position");
-    writer.field(ProviderAccount.POSITION_MONTH, "position_month");
-    writer.field(ProviderAccount.POSITION_DAY, "position_day");
-    writer.field(ProviderAccount.NAME, "name");
-    writer.field(ProviderAccount.NUMBER, "number");
-  }
-
-  private void writeTransaction(FieldValues transaction, JsonGlobWriter writer) {
-    writer.object();
-    writer.setCurrentValues(transaction);
-    writer.field(ProviderTransaction.ID, "id");
-    writer.value(Provider.BUDGEA.getId(), "provider");
-    writer.field(ProviderTransaction.ID, "provider_id");
-    writer.field(ProviderTransaction.LABEL, "label");
-    writer.field(ProviderTransaction.ORIGINAL_LABEL, "original_label");
-    writer.field(ProviderTransaction.AMOUNT, "amount");
-    writer.field(ProviderTransaction.OPERATION_DATE, "operation_date");
-    writer.field(ProviderTransaction.BANK_DATE, "bank_date");
-    writer.field(ProviderTransaction.PROVIDER_CATEGORY_ID, "provider_category_id");
-    writer.field(ProviderTransaction.PROVIDER_CATEGORY_NAME, "provider_category_name");
-    writer.field(ProviderTransaction.DELETED, "deleted");
-    writer.endObject();
+    };
+    command.run();
   }
 }
