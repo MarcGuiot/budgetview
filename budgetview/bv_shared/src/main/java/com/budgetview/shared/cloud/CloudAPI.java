@@ -37,7 +37,7 @@ public class CloudAPI {
     String url = CloudConstants.getServerUrl("/budgea/token");
     Request request = Request.Get(url)
       .addHeader(CloudConstants.EMAIL, email)
-      .addHeader(CloudConstants.BV_TOKEN,  bvToken);
+      .addHeader(CloudConstants.BV_TOKEN, bvToken);
     return Http.executeAndGetJson(url, request);
   }
 
@@ -52,7 +52,7 @@ public class CloudAPI {
     String url = cloudUrl("/provider/access");
     Request request = Request.Get(url)
       .addHeader(CloudConstants.EMAIL, email)
-      .addHeader(CloudConstants.BV_TOKEN,  bvToken)
+      .addHeader(CloudConstants.BV_TOKEN, bvToken)
       .addHeader(CloudConstants.PROVIDER_ID, Integer.toString(Provider.BUDGEA.getId()));
     JSONObject json = Http.executeAndGetJson(url, request);
     return Utils.equal("ok", json.optString("status"));
@@ -82,12 +82,29 @@ public class CloudAPI {
     Http.execute(request, url);
   }
 
-  public JSONObject getConnections(String email, String bvToken) throws IOException {
+  public void addBankConnection(String email, String bvToken, int connectionId) throws IOException {
+    String url = "/banks/connections";
+    Request request = Request.Post(cloudUrl(url))
+      .addHeader(CloudConstants.EMAIL, email)
+      .addHeader(CloudConstants.BV_TOKEN, bvToken)
+      .addHeader(CloudConstants.PROVIDER_CONNECTION_ID, Integer.toString(connectionId));
+    Http.execute(request, url);
+  }
+
+  public JSONObject getBankConnections(String email, String bvToken) throws IOException {
     String url = "/banks/connections";
     Request request = Request.Get(cloudUrl(url))
       .addHeader(CloudConstants.EMAIL, email)
       .addHeader(CloudConstants.BV_TOKEN, bvToken);
+    return Http.executeAndGetJson(url, request);
+  }
 
+  public JSONObject checkBankConnection(String email, String bvToken, int connectionId) throws IOException {
+    String url = "/banks/connections";
+    Request request = Request.Get(cloudUrl(url))
+      .addHeader(CloudConstants.EMAIL, email)
+      .addHeader(CloudConstants.BV_TOKEN, bvToken)
+      .addHeader(CloudConstants.PROVIDER_CONNECTION_ID, Integer.toString(connectionId));
     return Http.executeAndGetJson(url, request);
   }
 
@@ -106,7 +123,6 @@ public class CloudAPI {
     Request request = Request.Get(cloudUrl(url))
       .addHeader(CloudConstants.EMAIL, email)
       .addHeader(CloudConstants.BV_TOKEN, bvToken);
-
     return Http.executeAndGetJson(url, request);
   }
 

@@ -7,6 +7,7 @@ import com.budgetview.server.cloud.model.ProviderAccount;
 import com.budgetview.server.cloud.model.ProviderTransaction;
 import com.budgetview.server.cloud.model.ProviderUpdate;
 import com.budgetview.server.cloud.persistence.CloudSerializer;
+import com.budgetview.server.cloud.services.WebhookNotificationService;
 import com.budgetview.server.utils.DateConverter;
 import com.budgetview.shared.model.Provider;
 import org.apache.log4j.Logger;
@@ -25,6 +26,7 @@ import org.globsframework.utils.exceptions.TooManyItems;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import javax.mail.MessagingException;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -33,6 +35,8 @@ import java.io.InputStream;
 import java.security.GeneralSecurityException;
 import java.text.ParseException;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -46,11 +50,13 @@ public class BudgeaWebHookServlet extends HttpCloudServlet {
 
   private GlobsDatabase db;
   private CloudSerializer serializer;
+  private WebhookNotificationService webhookNotifications;
 
   public BudgeaWebHookServlet(Directory directory) throws Exception {
     super(directory);
     db = directory.get(GlobsDatabase.class);
     serializer = new CloudSerializer(directory);
+    webhookNotifications = new WebhookNotificationService(directory);
   }
 
   protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -75,7 +81,8 @@ public class BudgeaWebHookServlet extends HttpCloudServlet {
     InputStream inputStream = request.getInputStream();
     String json = Files.loadStreamToString(inputStream, "UTF-8");
 
-    Integer userId = null;
+    Glob user = null;
+    Set<Integer> connectionIds = new HashSet<Integer>();
     try {
       JSONObject root = new JSONObject(json);
 
@@ -89,14 +96,15 @@ public class BudgeaWebHookServlet extends HttpCloudServlet {
       }
       for (Object c : array) {
         JSONObject budgeaConnection = (JSONObject) c;
+        connectionIds.add(budgeaConnection.getInt("id"));
         int budgeaUserId = budgeaConnection.getInt("id_user");
-        userId = getCloudUserId(budgeaUserId, token);
-        if (userId == null) {
+        user = getCloudUser(budgeaUserId, token);
+        if (user == null) {
           response.setStatus(HttpServletResponse.SC_FORBIDDEN);
           return;
         }
         JSONObject bank = budgeaConnection.getJSONObject("bank");
-        DbUpdater updater = new DbUpdater(userId);
+        DbUpdater updater = new DbUpdater(user.get(CloudUser.ID));
         JSONArray accounts = budgeaConnection.optJSONArray("accounts");
         if (accounts != null) {
           for (Object a : accounts) {
@@ -111,27 +119,30 @@ public class BudgeaWebHookServlet extends HttpCloudServlet {
       }
     }
     catch (ParseException e) {
-      logger.error("Error parsing / storing update for user '" + userId + "' with token '" + Strings.cut(token, 15) + "'", e);
+      logger.error("Error parsing / storing update for user '" + user + "' with token '" + Strings.cut(token, 15) + "'", e);
       response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
       return;
     }
     catch (GeneralSecurityException e) {
-      logger.error("Error cyphering update for user '" + userId + "' with token '" + Strings.cut(token, 15) + "'", e);
+      logger.error("Error cyphering update for user '" + user + "' with token '" + Strings.cut(token, 15) + "'", e);
       response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
       return;
     }
 
     logger.info("Webhook successfully saved");
+
+    webhookNotifications.send(user, connectionIds);
+
     response.setStatus(HttpServletResponse.SC_OK);
   }
 
-  private Integer getCloudUserId(int budgeaUserId, String token) {
+  private Glob getCloudUser(int budgeaUserId, String token) {
     SqlConnection connection = db.connect();
     try {
       Glob user = connection.selectUnique(CloudUser.TYPE, Where.and(fieldEquals(CloudUser.PROVIDER, Provider.BUDGEA.getId()),
                                                                     fieldEquals(CloudUser.PROVIDER_USER_ID, budgeaUserId),
                                                                     fieldEquals(CloudUser.PROVIDER_ACCESS_TOKEN, token)));
-      return user.get(CloudUser.ID);
+      return user;
     }
     catch (ItemNotFound itemNotFound) {
       logger.error("User '" + budgeaUserId + "' with token '" + Strings.cut(token, 15) + "' not recognized");
@@ -204,6 +215,5 @@ public class BudgeaWebHookServlet extends HttpCloudServlet {
         .run();
       sqlConnection.commitAndClose();
     }
-
   }
 }

@@ -125,10 +125,10 @@ public class ImportCloudBankConnectionPanel extends AbstractImportStepPanel {
 
   private void processConnection() {
     progressPanel.start();
-    cloudService.createBankConnection(currentConnection, repository, new CloudService.Callback() {
+    cloudService.addBankConnection(currentConnection, repository, new CloudService.BankConnectionCallback() {
 
-      public void processCompletion() {
-        controller.showCloudDownload(true);
+      public void processCompletion(int connectionId) {
+        controller.showCloudFirstDownload(connectionId);
         progressPanel.stop();
       }
 

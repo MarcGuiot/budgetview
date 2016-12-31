@@ -5,6 +5,11 @@ import java.awt.event.ActionEvent;
 
 public class DisabledAction extends AbstractAction {
 
+  public DisabledAction(String title) {
+    super(title);
+    setEnabled(false);
+  }
+
   public DisabledAction() {
     setEnabled(false);
   }

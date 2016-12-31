@@ -6,6 +6,7 @@ import org.uispec4j.Panel;
 import org.uispec4j.TextBox;
 import org.uispec4j.Window;
 import org.uispec4j.assertion.Assertion;
+import org.uispec4j.assertion.UISpecAssert;
 import org.uispec4j.finder.ComponentMatchers;
 
 import static org.uispec4j.assertion.UISpecAssert.assertThat;
@@ -32,4 +33,15 @@ public class DialogChecker extends GuiChecker {
       }
     });
   }
+
+  protected void checkPanelShown(String componentName) {
+    assertThat(new Assertion() {
+      public void check() {
+        if (!dialog.getPanel(componentName).isVisible().isTrue()) {
+          UISpecAssert.fail();
+        }
+      }
+    }, 10000);
+  }
+
 }

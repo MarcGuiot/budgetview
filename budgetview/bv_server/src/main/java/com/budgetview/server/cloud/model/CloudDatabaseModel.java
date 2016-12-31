@@ -11,7 +11,8 @@ public class CloudDatabaseModel {
   private static GlobModel MODEL =
     GlobModelBuilder.init(CloudUser.TYPE,
                           CloudUserDevice.TYPE,
-                          ProviderUpdate.TYPE)
+                          ProviderUpdate.TYPE,
+                          ProviderConnection.TYPE)
       .get();
 
   public static GlobType[] getAllTypes() {

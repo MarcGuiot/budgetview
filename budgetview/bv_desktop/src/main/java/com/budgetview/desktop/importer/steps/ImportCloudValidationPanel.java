@@ -121,7 +121,7 @@ public class ImportCloudValidationPanel extends AbstractImportStepPanel {
 
       public void processCompletionAndDownload() {
         controller.saveCloudCredentials();
-        controller.showCloudDownload(false);
+        controller.showCloudDownload();
         progressPanel.stop();
         setAllEnabled(true);
         backAction.setEnabled(false);

@@ -56,7 +56,7 @@ public class ImportCloudEditionPanel extends AbstractImportStepPanel {
 
     downloadAction = new AbstractAction(Lang.get("import.cloud.edition.download.button")) {
       public void actionPerformed(ActionEvent e) {
-        controller.showCloudDownload(false);
+        controller.showCloudDownload();
       }
     };
     builder.add("download", downloadAction);

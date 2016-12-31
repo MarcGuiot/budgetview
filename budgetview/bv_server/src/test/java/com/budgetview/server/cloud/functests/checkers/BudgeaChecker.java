@@ -35,6 +35,17 @@ public class BudgeaChecker {
     stub.pushConnections(json);
   }
 
+  public void pushNewConnection(int connectionId, int userId, int bankId) {
+    stub.pushConnections("{\n" +
+                         "   \"id\" : " + connectionId + ",\n" +
+                         "   \"id_user\" : " +  userId + ",\n" +
+                         "   \"id_bank\" : "+ bankId+",\n" +
+                         "   \"expire\" : null,\n" +
+                         "   \"last_update\" : \"2016-04-03 18:51:07\",\n" +
+                         "   \"error\" : null,\n" +
+                         "}\n");
+  }
+
   public void callWebhook(String json) throws IOException {
     stub.callWebhook(json);
   }

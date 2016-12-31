@@ -22,7 +22,7 @@ public class ImportDialogPreviewChecker extends DialogChecker {
 
   public ImportDialogPreviewChecker(Window dialog) {
     super(dialog);
-    checkPreviewPanelShown();
+    checkPanelShown("importPreviewPanel");
   }
 
   public ImportDialogPreviewChecker checkSelectedAccount(String accountNumber) {

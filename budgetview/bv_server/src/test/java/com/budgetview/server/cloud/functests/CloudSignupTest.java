@@ -14,6 +14,7 @@ public class CloudSignupTest extends CloudDesktopTestCase {
 
     cloudLicense.purchaseLicence("toto@example.com", Dates.tomorrow());
 
+    budgea.pushNewConnection(1, 123, 40);
     budgea.pushStatement(BudgeaStatement.init()
                            .addConnection(1, 123, 40, "Connecteur de Test Budgea", "2016-08-10 17:44:26")
                            .addAccount(1, "Main account 1", "100200300", "checking", 1000.00, "2016-08-10 13:00:00")
@@ -35,6 +36,7 @@ public class CloudSignupTest extends CloudDesktopTestCase {
       .setText("Identifiant", "1234")
       .setPassword("Code (1234)", "")
       .next()
+      .waitForNotificationAndDownload(mailbox.checkStatementReady("toto@example.com"))
       .checkTransactions(new Object[][]{
         {"2016/08/12", "EDF", "-50.00"},
         {"2016/08/10", "AUCHAN", "-100.00"},
@@ -62,6 +64,7 @@ public class CloudSignupTest extends CloudDesktopTestCase {
 
     cloudLicense.purchaseLicence("toto@example.com", Dates.tomorrow());
 
+    budgea.pushNewConnection(1, 123, 40);
     budgea.pushStatement(BudgeaStatement.init()
                            .addConnection(1, 123, 40, "Connecteur de Test Budgea", "2016-08-10 17:44:26")
                            .addAccount(1, "Main account 1", "100200300", "checking", 1000.00, "2016-08-10 13:00:00")
@@ -83,6 +86,7 @@ public class CloudSignupTest extends CloudDesktopTestCase {
       .setText("Identifiant", "1234")
       .setPassword("Code (1234)", "")
       .next()
+      .waitForNotificationAndDownload(mailbox.checkStatementReady("toto@example.com"))
       .checkTransactions(new Object[][]{
         {"2016/08/12", "EDF", "-50.00"},
         {"2016/08/10", "AUCHAN", "-100.00"},
@@ -101,6 +105,7 @@ public class CloudSignupTest extends CloudDesktopTestCase {
     cloudLicense.purchaseLicence("toto@example.com", Dates.tomorrow());
     cloud.forceTokenExpirationDate(Dates.hoursAgo(1));
 
+    budgea.pushNewConnection(1, 123, 40);
     budgea.pushStatement(BudgeaStatement.init()
                            .addConnection(1, 123, 40, "Connecteur de Test Budgea", "2016-08-10 17:44:26")
                            .addAccount(1, "Main account 1", "100200300", "checking", 1000.00, "2016-08-10 13:00:00")
@@ -125,6 +130,7 @@ public class CloudSignupTest extends CloudDesktopTestCase {
       .setText("Identifiant", "1234")
       .setPassword("Code (1234)", "")
       .next()
+      .waitForNotificationAndDownload(mailbox.checkStatementReady("toto@example.com"))
       .checkTransactions(new Object[][]{
         {"2016/08/12", "EDF", "-50.00"},
         {"2016/08/10", "AUCHAN", "-100.00"},
@@ -142,6 +148,7 @@ public class CloudSignupTest extends CloudDesktopTestCase {
 
     cloudLicense.purchaseLicence("toto@example.com", Dates.tomorrow());
 
+    budgea.pushNewConnection(1, 123, 40);
     budgea.pushStatement(BudgeaStatement.init()
                            .addConnection(1, 123, 40, "Connecteur de Test Budgea", "2016-08-10 17:44:26")
                            .addAccount(1, "Main account 1", "100200300", "checking", 1000.00, "2016-08-10 13:00:00")
@@ -163,6 +170,7 @@ public class CloudSignupTest extends CloudDesktopTestCase {
       .setText("Identifiant", "1234")
       .setPassword("Code (1234)", "")
       .next()
+      .waitForNotificationAndDownload(mailbox.checkStatementReady("toto@example.com"))
       .checkTransactions(new Object[][]{
         {"2016/08/12", "EDF", "-50.00"},
         {"2016/08/10", "AUCHAN", "-100.00"},
@@ -211,6 +219,7 @@ public class CloudSignupTest extends CloudDesktopTestCase {
   public void testSignupFromRestoredBackupWithExistingStatements() throws Exception {
     cloudLicense.purchaseLicence("toto@example.com", Dates.tomorrow());
 
+    budgea.pushNewConnection(1, 123, 40);
     budgea.pushStatement(BudgeaStatement.init()
                            .addConnection(1, 123, 40, "Connecteur de Test Budgea", "2016-08-10 17:44:26")
                            .addAccount(1, "Main account 1", "100200300", "checking", 1000.00, "2016-08-10 13:00:00")
@@ -230,6 +239,7 @@ public class CloudSignupTest extends CloudDesktopTestCase {
       .setText("Identifiant", "1234")
       .setPassword("Code (1234)", "")
       .next()
+      .waitForNotificationAndDownload(mailbox.checkStatementReady("toto@example.com"))
       .checkTransactions(new Object[][]{
         {"2016/08/12", "EDF", "-50.00"},
         {"2016/08/10", "AUCHAN", "-100.00"},

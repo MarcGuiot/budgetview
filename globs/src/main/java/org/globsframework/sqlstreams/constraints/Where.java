@@ -1,10 +1,7 @@
 package org.globsframework.sqlstreams.constraints;
 
 import org.globsframework.metamodel.Field;
-import org.globsframework.metamodel.fields.DoubleField;
-import org.globsframework.metamodel.fields.IntegerField;
-import org.globsframework.metamodel.fields.LongField;
-import org.globsframework.metamodel.fields.StringField;
+import org.globsframework.metamodel.fields.*;
 import org.globsframework.model.FieldValues;
 import org.globsframework.sqlstreams.constraints.impl.*;
 import org.globsframework.streams.accessors.*;
@@ -69,6 +66,14 @@ public class Where {
   }
 
   public static Constraint fieldEquals(StringField field, String value) {
+    return new EqualConstraint(new FieldOperand(field), new ValueOperand(field, value));
+  }
+
+  public static Constraint fieldEquals(BooleanField field, BooleanAccessor accessor) {
+    return new EqualConstraint(new FieldOperand(field), new AccessorOperand(field, accessor));
+  }
+
+  public static Constraint fieldEquals(BooleanField field, Boolean value) {
     return new EqualConstraint(new FieldOperand(field), new ValueOperand(field, value));
   }
 

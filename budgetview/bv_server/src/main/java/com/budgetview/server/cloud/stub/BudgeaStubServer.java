@@ -289,35 +289,10 @@ public class BudgeaStubServer {
         return;
       }
 
+      String json = connections.pop();
+
       PrintWriter writer = response.getWriter();
-      writer.write("{\n" +
-                   "   \"expire\" : null,\n" +
-                   "   \"last_update\" : \"2016-04-03 18:51:07\",\n" +
-                   "   \"id_user\" : 687,\n" +
-                   "   \"id\" : " + userId + ",\n" +
-                   "   \"id_bank\" : 40,\n" +
-                   "   \"error\" : null,\n" +
-                   "   \"accounts\" : [\n" +
-                   "      {\n" +
-                   "         \"display\" : true,\n" +
-                   "         \"currency\" : {\n" +
-                   "            \"prefix\" : false,\n" +
-                   "            \"id\" : \"EUR\",\n" +
-                   "            \"symbol\" : \"€\"\n" +
-                   "         },\n" +
-                   "         \"id_connection\" : 74,\n" +
-                   "         \"iban\" : \"FR7613662074083300290000016\",\n" +
-                   "         \"id\" : 211,\n" +
-                   "         \"type\" : \"checking\",\n" +
-                   "         \"balance\" : 4405.73,\n" +
-                   "         \"number\" : \"3002900000\",\n" +
-                   "         \"last_update\" : \"2015-04-23 18:51:06\",\n" +
-                   "         \"name\" : \"Compte chèque\",\n" +
-                   "         \"deleted\" : null,\n" +
-                   "         \"formatted_balance\" : \"4405.73 €\"\n" +
-                   "      },\n" +
-                   "   ],\n" +
-                   "}\n");
+      writer.write(json);
       writer.close();
       response.setStatus(HttpServletResponse.SC_OK);
 

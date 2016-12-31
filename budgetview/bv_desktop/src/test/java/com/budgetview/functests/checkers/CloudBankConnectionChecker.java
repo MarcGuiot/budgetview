@@ -34,9 +34,8 @@ public class CloudBankConnectionChecker extends ViewChecker {
     return "editor" + id;
   }
 
-  public ImportDialogPreviewChecker next() {
+  public CloudFirstDownloadChecker next() {
     mainWindow.getButton("next").click();
-    checkPanelShown("importPreviewPanel");
-    return new ImportDialogPreviewChecker(mainWindow);
+    return new CloudFirstDownloadChecker(mainWindow);
   }
 }

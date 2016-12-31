@@ -44,6 +44,22 @@ public class CloudService {
     void processError(Exception e);
   }
 
+  public interface BankConnectionCallback {
+    void processCompletion(int connectionId);
+
+    void processSubscriptionError(CloudSubscriptionStatus status);
+
+    void processError(Exception e);
+  }
+
+  public interface BankConnectionCheckCallback {
+    void processCompletion(boolean ready);
+
+    void processSubscriptionError(CloudSubscriptionStatus status);
+
+    void processError(Exception e);
+  }
+
   public interface ValidationCallback {
     void processCompletionAndSelectBank();
 
@@ -101,8 +117,6 @@ public class CloudService {
       public void run() {
         try {
           JSONObject result = cloudAPI.validate(email, code);
-          System.out.println("CloudService.validate: /validate returned\n" + result.toString(2));
-
           switch (CloudRequestStatus.get(result.getString(CloudConstants.STATUS))) {
             case OK:
               String bvToken = result.getString(CloudConstants.BV_TOKEN);
@@ -249,7 +263,7 @@ public class CloudService {
     }
   }
 
-  public void createBankConnection(final Glob connection, final GlobRepository repository, final Callback callback) {
+  public void addBankConnection(final Glob connection, final GlobRepository repository, final BankConnectionCallback callback) {
     Thread thread = new Thread(new Runnable() {
       public void run() {
         try {
@@ -282,14 +296,37 @@ public class CloudService {
               return;
           }
 
-          budgeaAPI.addBankConnection(connection.get(BudgeaConnection.BANK), params);
+          JSONObject connectionResult = budgeaAPI.addBankConnection(connection.get(BudgeaConnection.BANK), params);
+          System.out.println("CloudService.addBankConnection: budgeaAPI.addBankConnection returned\n" + connectionResult.toString(2));
+          int connectionId = connectionResult.getInt("id");
 
           repository.update(CloudDesktopUser.KEY, CloudDesktopUser.SYNCHRO_ENABLED, true);
 
-          callback.processCompletion();
+          cloudAPI.addBankConnection(email, bvToken, connectionId);
+
+          callback.processCompletion(connectionId);
         }
         catch (Exception e) {
           Log.write("Error creating connection", e);
+          callback.processError(e);
+        }
+      }
+    });
+    thread.start();
+  }
+
+  public void checkBankConnectionReady(int connectionId, GlobRepository repository, BankConnectionCheckCallback callback) {
+    Thread thread = new Thread(new Runnable() {
+      public void run() {
+        try {
+          Glob user = repository.get(CloudDesktopUser.KEY);
+          JSONObject connection = cloudAPI.checkBankConnection(user.get(CloudDesktopUser.EMAIL), user.get(CloudDesktopUser.BV_TOKEN), connectionId);
+          String status = connection.getString("status");
+          System.out.println("CloudService.checkBankConnectionReady: received status " + status);
+          callback.processCompletion("ok".equals(status));
+        }
+        catch (Exception e) {
+          Log.write("Error retrieving connections", e);
           callback.processError(e);
         }
       }
@@ -302,7 +339,7 @@ public class CloudService {
       public void run() {
         try {
           Glob user = repository.get(CloudDesktopUser.KEY);
-          JSONObject connections = cloudAPI.getConnections(user.get(CloudDesktopUser.EMAIL), user.get(CloudDesktopUser.BV_TOKEN));
+          JSONObject connections = cloudAPI.getBankConnections(user.get(CloudDesktopUser.EMAIL), user.get(CloudDesktopUser.BV_TOKEN));
 
           repository.startChangeSet();
           repository.deleteAll(CloudProviderConnection.TYPE);

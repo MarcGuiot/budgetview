@@ -2,6 +2,7 @@ package com.budgetview.server.cloud.model;
 
 import com.budgetview.shared.model.Provider;
 import org.globsframework.metamodel.GlobType;
+import org.globsframework.metamodel.annotations.DefaultBoolean;
 import org.globsframework.metamodel.annotations.Key;
 import org.globsframework.metamodel.annotations.Target;
 import org.globsframework.metamodel.fields.*;
@@ -14,6 +15,8 @@ public class CloudUser {
   @Key
   @AutoIncrement
   public static IntegerField ID;
+
+  public static StringField LANG;
 
   public static StringField EMAIL;
 

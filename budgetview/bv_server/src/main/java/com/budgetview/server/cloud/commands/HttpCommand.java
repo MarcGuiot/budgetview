@@ -1,8 +1,6 @@
 package com.budgetview.server.cloud.commands;
 
-import com.budgetview.server.cloud.model.CloudUser;
 import com.budgetview.shared.cloud.CloudConstants;
-import com.budgetview.shared.cloud.budgea.BudgeaAPI;
 import org.apache.log4j.Logger;
 import org.globsframework.utils.Strings;
 import org.globsframework.utils.directory.Directory;
@@ -67,6 +65,19 @@ public abstract class HttpCommand implements Command {
     response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
   }
 
+  protected Integer getOptionalIntHeader(String header) throws AuthenticatedCommand.InvalidHeader {
+    String value = getOptionalStringHeader(header);
+    if (value == null) {
+      return null;
+    }
+    try {
+      return Integer.parseInt(value.trim());
+    }
+    catch (NumberFormatException e) {
+      throw new NonIntHeader(header, value);
+    }
+  }
+
   protected int getIntHeader(String header) throws AuthenticatedCommand.InvalidHeader {
     String value = getStringHeader(header);
     try {
@@ -77,8 +88,12 @@ public abstract class HttpCommand implements Command {
     }
   }
 
+  protected String getOptionalStringHeader(String header) {
+    return request.getHeader(header);
+  }
+
   protected String getStringHeader(String header) throws AuthenticatedCommand.InvalidHeader {
-    String value = request.getHeader(header);
+    String value = getOptionalStringHeader(header);
     if (Strings.isNullOrEmpty(value)) {
       throw new MissingHeader(header);
     }

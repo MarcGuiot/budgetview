@@ -23,16 +23,16 @@ public class BudgeaStatement {
 
   }
 
-  public BudgeaStatement addConnection(int id, int userId, int idBank, String bankName, String lastUpdate) {
+  public BudgeaStatement addConnection(int id, int userId, int bankId, String bankName, String lastUpdate) {
     json.object();
     json.key("id").value(id);
     json.key("id_user").value(userId);
-    json.key("id_bank").value(idBank);
+    json.key("id_bank").value(bankId);
     json.key("last_update").value(lastUpdate);
 
     json.key("bank");
     json.object();
-    json.key("id").value(idBank);
+    json.key("id").value(bankId);
     json.key("name").value(bankName);
     json.endObject();
 

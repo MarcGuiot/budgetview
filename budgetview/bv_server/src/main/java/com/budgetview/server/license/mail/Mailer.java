@@ -78,6 +78,11 @@ public class Mailer {
                   Mailbox.SUPPORT.getEmail(), sendTo);
   }
 
+  public boolean sendCloudWebhookNotification(String sendTo, String lang) throws MessagingException {
+    return doSend(Mailbox.SUPPORT, Lang.get("cloud.webhook.notification.subject", lang), Lang.get("cloud.webhook.notification.message", lang),
+                  Mailbox.SUPPORT.getEmail(), sendTo);
+  }
+
   public void sendMail(Mailbox mailbox, String sendTo, String replyTo, String subject, String content,
                        final String charset, final String subtype) throws MessagingException {
     Properties mailProperties = new Properties();
