@@ -40,4 +40,9 @@ public class CloudFirstDownloadChecker extends ViewChecker {
     mainWindow.getButton("download").click();
     return this;
   }
+
+  public void close() {
+    mainWindow.getButton("close").click();
+    assertFalse(mainWindow.isVisible());
+  }
 }

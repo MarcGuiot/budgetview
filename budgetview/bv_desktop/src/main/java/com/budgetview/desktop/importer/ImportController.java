@@ -383,8 +383,12 @@ public class ImportController implements RealAccountImporter {
     importSession.setReplaceSeries(replace);
   }
 
-  public void showCloudFirstDownload(int connectionId) {
-    importDialog.showCloudFirstDownload(connectionId);
+  public void showCloudFirstDownload() {
+    importDialog.showCloudFirstDownload();
+  }
+
+  public void showCloudFirstDownload(Glob providerConnection) {
+    importDialog.showCloudFirstDownload(providerConnection);
   }
 
   public void showCloudDownload() {

@@ -299,6 +299,15 @@ public class GlobList extends ArrayList<Glob> {
     return false;
   }
 
+  public boolean containsValue(BooleanField field, Boolean value) {
+    for (Glob glob : this) {
+      if (Utils.equal(glob.get(field), value)) {
+        return true;
+      }
+    }
+    return false;
+  }
+
   public boolean containsValue(IntegerField field, Integer value) {
     for (Glob glob : this) {
       if (Utils.equal(glob.get(field), value)) {

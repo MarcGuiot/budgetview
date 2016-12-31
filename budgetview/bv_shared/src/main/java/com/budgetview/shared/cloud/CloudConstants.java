@@ -17,7 +17,8 @@ public class CloudConstants {
   public static final String PROVIDER_CONNECTION_ID = "provider_connection_id";
   public static final String EXISTING_STATEMENTS = "existing_statements";
 
-  public static final String NAME = "name";
+  public static final String BANK_NAME = "bank_name";
+  public static final String INITIALIZED = "initialized";
 
   public static final String PROD_CLOUD_SERVER_URL = "https://register.mybudgetview.fr:1445";
 

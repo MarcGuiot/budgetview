@@ -147,7 +147,7 @@ public class ImportDialog implements RealAccountImporter, Disposable {
       Account.TYPE, AccountUpdateMode.TYPE, BudgetArea.TYPE,
       Transaction.TYPE, Month.TYPE, UserPreferences.TYPE, CurrentMonth.TYPE, RealAccount.TYPE,
       Series.TYPE, SubSeries.TYPE, ImportedSeries.TYPE, TransactionImport.TYPE, CsvMapping.TYPE,
-      Synchro.TYPE, User.TYPE, CloudDesktopUser.TYPE};
+      Synchro.TYPE, User.TYPE, CloudDesktopUser.TYPE, CloudProviderConnection.TYPE};
 
     if (localRepository == null) {
       this.localRepository = LocalGlobRepositoryBuilder.init(repository)
@@ -282,9 +282,15 @@ public class ImportDialog implements RealAccountImporter, Disposable {
     setCurrentPanel(cloudBankSubscriptionErrorPanel);
   }
 
-  public void showCloudFirstDownload(int connectionId) {
-    cloudFirstDownloadPanel.setConnectionId(connectionId);
+  public void showCloudFirstDownload(Glob providerConnectionKey) {
+    cloudFirstDownloadPanel.setConnection(providerConnectionKey);
     setCurrentPanel(cloudFirstDownloadPanel);
+  }
+
+  public void showCloudFirstDownload() {
+    cloudFirstDownloadPanel.setAllConnections();
+    setCurrentPanel(cloudFirstDownloadPanel);
+    cloudFirstDownloadPanel.updateAll();
   }
 
   public void showCloudDownload() {

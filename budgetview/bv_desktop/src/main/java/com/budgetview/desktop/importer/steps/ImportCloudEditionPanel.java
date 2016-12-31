@@ -40,9 +40,9 @@ public class ImportCloudEditionPanel extends AbstractImportStepPanel {
   protected GlobsPanelBuilder createPanelBuilder() {
     GlobsPanelBuilder builder = new GlobsPanelBuilder(getClass(), "/layout/importexport/importsteps/importCloudEditionPanel.splits", repository, localDirectory);
 
-    repeat = builder.addRepeat("connections", CloudProviderConnection.TYPE, GlobMatchers.NONE, GlobComparators.ascending(CloudProviderConnection.NAME), new RepeatComponentFactory<Glob>() {
+    repeat = builder.addRepeat("connections", CloudProviderConnection.TYPE, GlobMatchers.NONE, GlobComparators.ascending(CloudProviderConnection.BANK_NAME), new RepeatComponentFactory<Glob>() {
       public void registerComponents(PanelBuilder cellBuilder, Glob connection) {
-        cellBuilder.add("name", new JLabel(connection.get(CloudProviderConnection.NAME)));
+        cellBuilder.add("name", new JLabel(connection.get(CloudProviderConnection.BANK_NAME)));
         cellBuilder.add("delete", new DeleteConnectionAction(connection));
       }
     });

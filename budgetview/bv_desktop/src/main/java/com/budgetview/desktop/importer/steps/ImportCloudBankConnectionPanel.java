@@ -22,8 +22,8 @@ import org.globsframework.gui.splits.repeat.RepeatComponentFactory;
 import org.globsframework.gui.splits.utils.GuiUtils;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
-import org.globsframework.model.GlobRepository;
 import org.globsframework.model.Key;
+import org.globsframework.model.repository.LocalGlobRepository;
 import org.globsframework.model.utils.GlobMatchers;
 import org.globsframework.utils.Utils;
 import org.globsframework.utils.directory.Directory;
@@ -38,7 +38,7 @@ import static org.globsframework.model.utils.GlobMatchers.linkedTo;
 
 public class ImportCloudBankConnectionPanel extends AbstractImportStepPanel {
 
-  private final GlobRepository repository;
+  private final LocalGlobRepository repository;
   private final CloudService cloudService;
   private ProgressPanel progressPanel;
   private GlobRepeat fieldRepeat;
@@ -46,7 +46,7 @@ public class ImportCloudBankConnectionPanel extends AbstractImportStepPanel {
   private Glob currentConnection;
   private JEditorPane message;
 
-  public ImportCloudBankConnectionPanel(PicsouDialog dialog, ImportController controller, GlobRepository repository, Directory localDirectory) {
+  public ImportCloudBankConnectionPanel(PicsouDialog dialog, ImportController controller, LocalGlobRepository repository, Directory localDirectory) {
     super(dialog, controller, localDirectory);
     this.repository = repository;
     this.cloudService = localDirectory.get(CloudService.class);
@@ -126,9 +126,9 @@ public class ImportCloudBankConnectionPanel extends AbstractImportStepPanel {
   private void processConnection() {
     progressPanel.start();
     cloudService.addBankConnection(currentConnection, repository, new CloudService.BankConnectionCallback() {
-
-      public void processCompletion(int connectionId) {
-        controller.showCloudFirstDownload(connectionId);
+      public void processCompletion(Glob providerConnection) {
+        repository.commitChanges(false);
+        controller.showCloudFirstDownload(providerConnection);
         progressPanel.stop();
       }
 

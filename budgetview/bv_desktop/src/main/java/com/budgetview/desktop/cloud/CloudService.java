@@ -15,7 +15,6 @@ import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.Key;
-import org.globsframework.model.format.GlobPrinter;
 import org.globsframework.utils.Log;
 import org.globsframework.utils.Strings;
 import org.globsframework.utils.Utils;
@@ -45,7 +44,7 @@ public class CloudService {
   }
 
   public interface BankConnectionCallback {
-    void processCompletion(int connectionId);
+    void processCompletion(Glob providerConnection);
 
     void processSubscriptionError(CloudSubscriptionStatus status);
 
@@ -123,7 +122,6 @@ public class CloudService {
               repository.update(CloudDesktopUser.KEY,
                                 value(CloudDesktopUser.BV_TOKEN, bvToken),
                                 value(CloudDesktopUser.REGISTERED, true));
-              System.out.println("CloudService.validate OK: bv_token set to " + bvToken);
               if (Boolean.TRUE.equals(result.optBoolean(CloudConstants.EXISTING_STATEMENTS))) {
                 callback.processCompletionAndDownload();
               }
@@ -263,12 +261,12 @@ public class CloudService {
     }
   }
 
-  public void addBankConnection(final Glob connection, final GlobRepository repository, final BankConnectionCallback callback) {
+  public void addBankConnection(final Glob bankConnection, final GlobRepository repository, final BankConnectionCallback callback) {
     Thread thread = new Thread(new Runnable() {
       public void run() {
         try {
           Map<String, String> params = new HashMap<String, String>();
-          for (Glob value : repository.findLinkedTo(connection.getKey(), BudgeaConnectionValue.CONNECTION)) {
+          for (Glob value : repository.findLinkedTo(bankConnection.getKey(), BudgeaConnectionValue.CONNECTION)) {
             Glob field = repository.findLinkTarget(value, BudgeaConnectionValue.FIELD);
             String name = field.get(BudgeaBankField.NAME);
             params.put(name, value.get(BudgeaConnectionValue.VALUE));
@@ -296,15 +294,24 @@ public class CloudService {
               return;
           }
 
-          JSONObject connectionResult = budgeaAPI.addBankConnection(connection.get(BudgeaConnection.BANK), params);
-          System.out.println("CloudService.addBankConnection: budgeaAPI.addBankConnection returned\n" + connectionResult.toString(2));
-          int connectionId = connectionResult.getInt("id");
+          JSONObject connectionResult = budgeaAPI.addBankConnection(bankConnection.get(BudgeaConnection.BANK), params);
+          int providerConnectionId = connectionResult.getInt("id");
 
           repository.update(CloudDesktopUser.KEY, CloudDesktopUser.SYNCHRO_ENABLED, true);
 
-          cloudAPI.addBankConnection(email, bvToken, connectionId);
+          Glob bank = BudgeaBank.findBudgetViewBank(connectionResult.getInt("id_bank"), repository);
+          String bankName = bank != null ? bank.get(Bank.NAME) : "Bank";
 
-          callback.processCompletion(connectionId);
+          Glob connection =
+            repository.create(CloudProviderConnection.TYPE,
+                              value(CloudProviderConnection.PROVIDER, Provider.BUDGEA.getId()),
+                              value(CloudProviderConnection.PROVIDER_CONNECTION_ID, providerConnectionId),
+                              value(CloudProviderConnection.BANK_NAME, bankName),
+                              value(CloudProviderConnection.INITIALIZED, false));
+
+          cloudAPI.addBankConnection(email, bvToken, providerConnectionId);
+
+          callback.processCompletion(connection);
         }
         catch (Exception e) {
           Log.write("Error creating connection", e);
@@ -315,15 +322,40 @@ public class CloudService {
     thread.start();
   }
 
-  public void checkBankConnectionReady(int connectionId, GlobRepository repository, BankConnectionCheckCallback callback) {
+  public void checkBankConnectionReady(Glob providerConnection, GlobRepository repository, BankConnectionCheckCallback callback) {
     Thread thread = new Thread(new Runnable() {
       public void run() {
         try {
           Glob user = repository.get(CloudDesktopUser.KEY);
-          JSONObject connection = cloudAPI.checkBankConnection(user.get(CloudDesktopUser.EMAIL), user.get(CloudDesktopUser.BV_TOKEN), connectionId);
-          String status = connection.getString("status");
-          System.out.println("CloudService.checkBankConnectionReady: received status " + status);
-          callback.processCompletion("ok".equals(status));
+          Integer providerConnectionId = providerConnection.get(CloudProviderConnection.PROVIDER_CONNECTION_ID);
+          JSONObject result =
+            cloudAPI.checkBankConnection(user.get(CloudDesktopUser.EMAIL), user.get(CloudDesktopUser.BV_TOKEN), providerConnectionId);
+
+          String status = result.getString(CloudConstants.STATUS);
+          switch (CloudRequestStatus.get(status)) {
+            case OK:
+              break;
+            case NO_SUBSCRIPTION:
+              callback.processSubscriptionError(getSubscriptionStatus(result));
+              return;
+            default:
+              callback.processError(null);
+              return;
+          }
+
+          boolean initialized;
+          JSONArray array = result.getJSONArray("connections");
+          if (array.length() == 0) {
+            initialized = false;
+          }
+          else {
+            JSONObject connection = (JSONObject) array.get(0);
+            initialized = Boolean.TRUE.equals(connection.optBoolean(CloudConstants.INITIALIZED));
+          }
+
+          repository.update(providerConnection, CloudProviderConnection.INITIALIZED, initialized);
+
+          callback.processCompletion(initialized);
         }
         catch (Exception e) {
           Log.write("Error retrieving connections", e);
@@ -344,11 +376,12 @@ public class CloudService {
           repository.startChangeSet();
           repository.deleteAll(CloudProviderConnection.TYPE);
           for (Object c : connections.getJSONArray("connections")) {
-            JSONObject connection = (JSONObject)c;
+            JSONObject connection = (JSONObject) c;
             repository.create(CloudProviderConnection.TYPE,
                               value(CloudProviderConnection.PROVIDER, connection.getInt(CloudConstants.PROVIDER_ID)),
                               value(CloudProviderConnection.PROVIDER_CONNECTION_ID, connection.getInt(CloudConstants.PROVIDER_CONNECTION_ID)),
-                              value(CloudProviderConnection.NAME, connection.getString(CloudConstants.NAME)));
+                              value(CloudProviderConnection.BANK_NAME, connection.getString(CloudConstants.BANK_NAME)),
+                              value(CloudProviderConnection.INITIALIZED, connection.getBoolean(CloudConstants.INITIALIZED)));
           }
           repository.completeChangeSet();
           callback.processCompletion();
@@ -426,8 +459,6 @@ public class CloudService {
     Thread thread = new Thread(new Runnable() {
       public void run() {
         try {
-          System.out.println("\n\n --------- CloudService.downloadStatement ---------");
-
           final GlobList importedRealAccounts = doDownloadStatement(repository);
           GuiUtils.runInSwingThread(new Runnable() {
             public void run() {
@@ -459,9 +490,6 @@ public class CloudService {
     Glob user = repository.findOrCreate(CloudDesktopUser.KEY);
     Integer lastUpdate = user.get(CloudDesktopUser.LAST_UPDATE);
     JSONObject result = cloudAPI.getStatement(user.get(CloudDesktopUser.EMAIL), user.get(CloudDesktopUser.BV_TOKEN), lastUpdate);
-
-    System.out.println("CloudService.doDownloadStatement: lastUpdate=" + lastUpdate + " ==> returned " + result.toString(2));
-
     String status = result.getString(CloudConstants.STATUS);
     switch (CloudRequestStatus.get(status)) {
       case OK:
@@ -522,11 +550,7 @@ public class CloudService {
     }
 
     if (!importedRealAccounts.isEmpty()) {
-      System.out.println("DownloadStatement.run COMPLETING... - accounts");
-      GlobPrinter.print(importedRealAccounts);
-
       int newUpdate = result.getInt("last_update");
-      System.out.println("CloudService.downloadStatement - newUpdate: " + newUpdate);
       repository.update(CloudDesktopUser.KEY, CloudDesktopUser.LAST_UPDATE, newUpdate);
     }
     return importedRealAccounts;

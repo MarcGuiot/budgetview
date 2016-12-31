@@ -1,22 +1,29 @@
 package com.budgetview.desktop.importer.components;
 
+import com.budgetview.desktop.cloud.CloudService;
+import com.budgetview.desktop.components.ProgressPanel;
 import com.budgetview.desktop.components.dialogs.PicsouDialog;
 import com.budgetview.desktop.importer.ImportController;
 import com.budgetview.model.CloudDesktopUser;
+import com.budgetview.model.CloudProviderConnection;
 import com.budgetview.utils.Lang;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.splits.utils.Disposable;
 import org.globsframework.gui.splits.utils.DisposableGroup;
 import org.globsframework.gui.utils.BooleanFieldListener;
 import org.globsframework.gui.utils.BooleanListener;
+import org.globsframework.model.GlobList;
 import org.globsframework.model.repository.LocalGlobRepository;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 
+import static org.globsframework.model.utils.GlobMatchers.fieldEquals;
+
 public class CloudIntroPanel implements Disposable {
   private final PicsouDialog dialog;
+  private final CloudService cloudService;
   private JPanel initialPanel = new JPanel();
   private JPanel refreshPanel = new JPanel();
   private JPanel editPanel = new JPanel();
@@ -25,12 +32,14 @@ public class CloudIntroPanel implements Disposable {
   private final Directory directory;
   private JPanel panel;
   private DisposableGroup disposables = new DisposableGroup();
+  private ProgressPanel progressPanel;
 
   public CloudIntroPanel(PicsouDialog dialog, ImportController controller, LocalGlobRepository localRepository, Directory localDirectory) {
     this.dialog = dialog;
     this.controller = controller;
     this.repository = localRepository;
     this.directory = localDirectory;
+    this.cloudService = localDirectory.get(CloudService.class);
   }
 
   public JPanel getPanel() {
@@ -56,6 +65,9 @@ public class CloudIntroPanel implements Disposable {
     });
     disposables.add(listener);
 
+    progressPanel = new ProgressPanel();
+    builder.add("progressPanel", progressPanel);
+
     builder.add("openCloudSynchro", new AbstractAction(Lang.get("import.fileSelection.cloud.initial.button")) {
       public void actionPerformed(ActionEvent e) {
         controller.showCloudSignup();
@@ -64,7 +76,13 @@ public class CloudIntroPanel implements Disposable {
 
     builder.add("refreshCloud", new AbstractAction(Lang.get("import.fileSelection.cloud.refresh.button")) {
       public void actionPerformed(ActionEvent e) {
-        controller.showCloudDownload();
+        GlobList connections = repository.getAll(CloudProviderConnection.TYPE, fieldEquals(CloudProviderConnection.INITIALIZED, false));
+        if (connections.isEmpty()) {
+          controller.showCloudDownload();
+        }
+        else {
+          controller.showCloudFirstDownload(connections.getFirst());
+        }
       }
     });
 

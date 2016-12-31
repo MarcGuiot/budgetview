@@ -54,5 +54,6 @@ public class SerializationManager {
     StandardMessage.TYPE.updateProperty(SERIALIZATION_PROPERTY, new StandardMessage.Serializer());
     ProjectAccountGraph.TYPE.updateProperty(SERIALIZATION_PROPERTY, new ProjectAccountGraph.Serializer());
     CloudDesktopUser.TYPE.updateProperty(SERIALIZATION_PROPERTY, new CloudDesktopUser.Serializer());
+    CloudProviderConnection.TYPE.updateProperty(SERIALIZATION_PROPERTY, new CloudProviderConnection.Serializer());
   }
 }

@@ -70,6 +70,10 @@ public class Http {
       case 405:
         throw new IOException("Call to " + url + " returned error 405 (method not allowed) - " +
                               "check get vs post or https vs http, or make sure you are targeting the right server");
+      case 500:
+        throw new IOException("Call to " + url + " returned error 500 (internal server error)");
+      case 503:
+        throw new IOException("Call to " + url + " returned error 503 (service unavailable)");
       default:
         throw new IOException("Call to " + url + " returned error status " + statusCode + " instead of 200");
     }

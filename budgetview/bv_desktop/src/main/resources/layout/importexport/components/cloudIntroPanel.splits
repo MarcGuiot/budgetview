@@ -25,6 +25,8 @@
       <button action="editCloudConnections" fill="none" anchor="center"/>
     </column>
 
+    <component ref="progressPanel" fill="none" margin="10" anchor="center" weightX="0.1"/>
+
     <filler fill="vertical"/>
 
   </column>

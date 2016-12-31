@@ -10,7 +10,6 @@ import org.apache.log4j.Logger;
 import org.globsframework.json.JsonGlobWriter;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
-import org.globsframework.model.format.GlobPrinter;
 import org.globsframework.sqlstreams.SqlConnection;
 import org.globsframework.sqlstreams.constraints.Where;
 import org.globsframework.utils.Strings;
@@ -34,7 +33,7 @@ public class BankConnectionsServlet extends HttpCloudServlet {
     super(directory);
   }
 
-  protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+  protected void doGet(HttpServletRequest req, final HttpServletResponse resp) throws ServletException, IOException {
 
     logger.info("GET");
 
@@ -53,9 +52,22 @@ public class BankConnectionsServlet extends HttpCloudServlet {
       }
 
       private void getAllConnections() throws IOException {
-        JSONObject bankConnections = budgeaAPI.getUserConnections(user.get(CloudUser.PROVIDER_USER_ID));
 
-        logger.info("Budgea connections:" + bankConnections.toString(2));
+        SqlConnection sqlConnection = database.connect();
+        GlobList connections =
+          sqlConnection.startSelect(ProviderConnection.TYPE,
+                                    Where.fieldEquals(ProviderConnection.USER, user.get(CloudUser.ID)))
+            .selectAll()
+            .getList();
+        sqlConnection.commitAndClose();
+        Map<Integer, Glob> connectionsById = new HashMap<Integer, Glob>();
+        for (Glob connection : connections) {
+          connectionsById.put(connection.get(ProviderConnection.PROVIDER_CONNECTION_ID), connection);
+        }
+
+        JSONObject budgeaConnections = budgeaAPI.getUserConnections(user.get(CloudUser.PROVIDER_USER_ID));
+
+        logger.info("Budgea connections:" + budgeaConnections.toString(2));
 
         Map<Integer, String> bankNames = getBankNames();
 
@@ -63,12 +75,17 @@ public class BankConnectionsServlet extends HttpCloudServlet {
         writer.object();
         writer.key("connections");
         writer.array();
-        for (Object c : bankConnections.getJSONArray("connections")) {
-          JSONObject bankConnection = (JSONObject) c;
+        for (Object c : budgeaConnections.getJSONArray("connections")) {
+          JSONObject budgeaConnection = (JSONObject) c;
+          int budgeaConnectionId = budgeaConnection.getInt("id");
+          Glob connection = connectionsById.get(budgeaConnectionId);
+          boolean initialized = connection != null ? connection.get(ProviderConnection.INITIALIZED) : false;
+
           writer.object();
           writer.key(CloudConstants.PROVIDER_ID).value(Integer.toString(Provider.BUDGEA.getId()));
-          writer.key(CloudConstants.PROVIDER_CONNECTION_ID).value(bankConnection.getInt("id"));
-          writer.key(CloudConstants.NAME).value(getName(bankConnection, bankNames));
+          writer.key(CloudConstants.PROVIDER_CONNECTION_ID).value(budgeaConnectionId);
+          writer.key(CloudConstants.BANK_NAME).value(getName(budgeaConnection, bankNames));
+          writer.key(CloudConstants.INITIALIZED).value(initialized);
           writer.endObject();
         }
         writer.endArray();
@@ -85,26 +102,27 @@ public class BankConnectionsServlet extends HttpCloudServlet {
                                               fieldEquals(ProviderConnection.PROVIDER_CONNECTION_ID, connectionId)))
             .selectAll()
             .getList();
-
-        logger.info("All connections:");
-        GlobPrinter.print(sqlConnection.startSelect(ProviderConnection.TYPE).selectAll().getList());
-
-        logger.info("Select for user/connection:");
-        GlobPrinter.print(connections);
+        sqlConnection.commitAndClose();
 
         JsonGlobWriter writer = new JsonGlobWriter(response.getWriter());
         writer.object();
-        writer.key("connection_id").value(connectionId);
         if (connections.isEmpty()) {
           writer.key("status").value("not_found");
+          setOk(response);
+          return;
         }
         else {
+          setOk(response, writer);
+          writer.key("connections");
+          writer.array();
           Glob connection = connections.getFirst();
-          writer.key("status").value(connection.isTrue(ProviderConnection.INITIALIZED) ? "ok" : "not_ready");
+          writer.object();
+          writer.key("id").value(connectionId);
+          writer.key(CloudConstants.INITIALIZED).value(connection.isTrue(ProviderConnection.INITIALIZED));
+          writer.endObject();
+          writer.endArray();
         }
         writer.endObject();
-        setOk(response);
-        sqlConnection.commitAndClose();
       }
 
       private Map<Integer, String> getBankNames() throws IOException {

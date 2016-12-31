@@ -129,8 +129,6 @@ public class AuthenticationService {
                                                      Where.and(fieldEquals(CloudUserDevice.USER_ID, userId),
                                                                fieldEquals(CloudUserDevice.TOKEN, token)));
       if (usersWithToken.size() != 1) {
-        logger.info("No entry found for user " + userId + " with token " + token + " ==> actual result: \n" + GlobPrinter.init(usersWithToken).toString());
-        logger.info("Table content: \n" + GlobPrinter.init(connection.selectAll(CloudUserDevice.TYPE)).toString());
         return null;
       }
 
@@ -188,8 +186,6 @@ public class AuthenticationService {
           .run();
       }
     }
-
-    logger.info("Subscription end date is " + Dates.toString(endDate) + " for " + email);
 
     if (endDate == null) {
       throw new SubscriptionCheckFailed(CloudSubscriptionStatus.UNKNOWN);

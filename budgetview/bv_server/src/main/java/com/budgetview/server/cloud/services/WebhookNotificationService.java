@@ -6,7 +6,6 @@ import com.budgetview.server.license.mail.Mailer;
 import org.apache.log4j.Logger;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
-import org.globsframework.model.format.GlobPrinter;
 import org.globsframework.sqlstreams.GlobsDatabase;
 import org.globsframework.sqlstreams.SqlConnection;
 import org.globsframework.sqlstreams.constraints.Where;
@@ -43,8 +42,6 @@ public class WebhookNotificationService {
             .getList();
 
         if (!items.isEmpty()) {
-          logger.info("Connections found:");
-          GlobPrinter.print(items);
           for (Glob item : items) {
             if (!item.isTrue(ProviderConnection.INITIALIZED)) {
               notificationNeeded = true;
@@ -56,15 +53,12 @@ public class WebhookNotificationService {
           }
         }
         else {
-          logger.info("No connection found. Full content:");
-          GlobPrinter.print(sqlConnection.startSelect(ProviderConnection.TYPE).selectAll().getList());
           notificationNeeded = true;
           sqlConnection.startCreate(ProviderConnection.TYPE)
             .set(ProviderConnection.USER, user.get(CloudUser.ID))
             .set(ProviderConnection.PROVIDER_CONNECTION_ID, connectionId)
             .set(ProviderConnection.INITIALIZED, true)
             .run();
-          logger.info("Added connection " + connectionId + " for user " + user.get(CloudUser.ID));
         }
       }
       sqlConnection.commitAndClose();

@@ -62,7 +62,8 @@ public class PicsouModel {
                           User.TYPE,
                           AddOns.TYPE,
                           ProjectAccountGraph.TYPE,
-                          CloudDesktopUser.TYPE
+                          CloudDesktopUser.TYPE,
+                          CloudProviderConnection.TYPE
     )
       .get();
 
