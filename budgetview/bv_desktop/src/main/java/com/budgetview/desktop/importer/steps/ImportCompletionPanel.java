@@ -41,7 +41,7 @@ public class ImportCompletionPanel extends AbstractImportStepPanel {
     builder.add("categorizationHelp", categorizationHelp);
 
     builder.add("ok", new CommitAction());
-    builder.add("cancel", new AbstractAction(getCloseLabel()) {
+    builder.add("cancel", new AbstractAction(getCancelLabel()) {
       public void actionPerformed(ActionEvent e) {
         controller.complete();
         controller.closeDialog();

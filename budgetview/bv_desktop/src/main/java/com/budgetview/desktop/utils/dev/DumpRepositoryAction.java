@@ -2,9 +2,7 @@ package com.budgetview.desktop.utils.dev;
 
 import com.budgetview.desktop.model.PeriodSeriesStat;
 import com.budgetview.desktop.model.SeriesStat;
-import com.budgetview.model.Account;
-import com.budgetview.model.RealAccount;
-import com.budgetview.model.Transaction;
+import com.budgetview.model.*;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.format.GlobPrinter;
@@ -26,7 +24,7 @@ public class DumpRepositoryAction extends AbstractAction {
   }
 
   public void actionPerformed(ActionEvent actionEvent) {
-    doPrint(Account.TYPE, RealAccount.TYPE);
+    doPrint(CloudDesktopUser.TYPE, CloudProviderConnection.TYPE);
   }
 
   public void doPrint(GlobType... types) {

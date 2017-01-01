@@ -17,9 +17,9 @@
 
             <htmlEditorPane text="$import.cloud.first.download.message"/>
 
-            <button action="download" marginTop="20"/>
+            <button action="download" marginTop="20" fill="none" anchor="center"/>
 
-            <label ref="noData" marginTop="20"/>
+            <label ref="noData" marginTop="20" fill="none" anchor="center"/>
 
             <component ref="progressPanel" marginTop="20"/>
 

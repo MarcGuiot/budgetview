@@ -35,7 +35,7 @@ public class ImportCloudFirstDownloadPanel extends AbstractImportStepPanel {
   protected GlobsPanelBuilder createPanelBuilder() {
     GlobsPanelBuilder builder = new GlobsPanelBuilder(getClass(), "/layout/importexport/importsteps/importCloudFirstDownloadPanel.splits", repository, localDirectory);
 
-    builder.add("close", new AbstractAction(Lang.get("import.cloud.first.download.button")) {
+    builder.add("download", new AbstractAction(Lang.get("import.cloud.first.download.button")) {
       public void actionPerformed(ActionEvent e) {
         startCheck();
       }
@@ -44,11 +44,6 @@ public class ImportCloudFirstDownloadPanel extends AbstractImportStepPanel {
     noDataLabel = new JLabel(Lang.get("import.cloud.first.download.nodata"));
     builder.add("noData", noDataLabel);
 
-    builder.add("download", new AbstractAction(getCancelLabel()) {
-      public void actionPerformed(ActionEvent e) {
-        startCheck();
-      }
-    });
 
     builder.add("next", new DisabledAction(getNextLabel()));
     builder.add("close", new AbstractAction(getCancelLabel()) {

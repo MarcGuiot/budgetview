@@ -22,10 +22,12 @@
               <component ref="editor"/>
             </repeat>
 
+            <component ref="progressPanel" fill="none" margin="10" anchor="center" weightX="0.1"/>
+
+            <filler fill="vertical"/>
+
           </column>
         </scrollPane>
-
-        <component ref="progressPanel" fill="none" margin="10" anchor="center" weightX="0.1"/>
 
         <htmlEditorPane text="$import.cloud.bankConnection.security" styleClass="multiLineLabel"/>
 

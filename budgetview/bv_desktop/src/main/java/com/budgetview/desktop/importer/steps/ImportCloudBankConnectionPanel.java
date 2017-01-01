@@ -17,8 +17,8 @@ import com.budgetview.utils.Lang;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.components.GlobRepeat;
 import org.globsframework.gui.splits.PanelBuilder;
-import org.globsframework.gui.splits.SplitsNode;
 import org.globsframework.gui.splits.repeat.RepeatComponentFactory;
+import org.globsframework.gui.splits.utils.Disposable;
 import org.globsframework.gui.splits.utils.GuiUtils;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
@@ -31,6 +31,7 @@ import org.globsframework.utils.exceptions.UnexpectedApplicationState;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
+import java.util.ArrayList;
 import java.util.Comparator;
 
 import static org.globsframework.model.FieldValue.value;
@@ -43,6 +44,7 @@ public class ImportCloudBankConnectionPanel extends AbstractImportStepPanel {
   private ProgressPanel progressPanel;
   private GlobRepeat fieldRepeat;
   private Action nextAction;
+  private java.util.List<JComponent> components = new ArrayList<JComponent>();
   private Glob currentConnection;
   private JEditorPane message;
 
@@ -68,14 +70,22 @@ public class ImportCloudBankConnectionPanel extends AbstractImportStepPanel {
     fieldRepeat = builder.addRepeat("fields", BudgeaConnectionValue.TYPE, GlobMatchers.NONE, new FieldValueComparator(), new RepeatComponentFactory<Glob>() {
       public void registerComponents(PanelBuilder cellBuilder, Glob connectionValue) {
         CloudConnectionFieldEditor fieldEditor = CloudConnectionFieldEditorFactory.create(connectionValue, repository, localDirectory);
-        SplitsNode<JLabel> label = cellBuilder.add("label", fieldEditor.getLabel());
-        SplitsNode<JComponent> editor = cellBuilder.add("editor", fieldEditor.getEditor());
+        JLabel label = cellBuilder.add("label", fieldEditor.getLabel()).getComponent();
+        JComponent editor = cellBuilder.add("editor", fieldEditor.getEditor()).getComponent();
 
         Integer id = connectionValue.get(BudgeaConnectionValue.ID);
-        label.getComponent().setName("label:" + id);
-        editor.getComponent().setName("editor:" + id);
+        label.setName("label:" + id);
+        editor.setName("editor:" + id);
+        components.add(label);
+        components.add(editor);
 
         cellBuilder.addDisposable(fieldEditor);
+        cellBuilder.addDisposable(new Disposable() {
+          public void dispose() {
+            components.remove(label);
+            components.remove(editor);
+          }
+        });
       }
     });
 
@@ -125,6 +135,7 @@ public class ImportCloudBankConnectionPanel extends AbstractImportStepPanel {
 
   private void processConnection() {
     progressPanel.start();
+    setAllEnabled(false);
     cloudService.addBankConnection(currentConnection, repository, new CloudService.BankConnectionCallback() {
       public void processCompletion(Glob providerConnection) {
         repository.commitChanges(false);
@@ -145,6 +156,14 @@ public class ImportCloudBankConnectionPanel extends AbstractImportStepPanel {
   }
 
   public void prepareForDisplay() {
+    setAllEnabled(true);
+  }
+
+  private void setAllEnabled(boolean enabled) {
+    nextAction.setEnabled(enabled);
+    for (JComponent component : components) {
+      component.setEnabled(enabled);
+    }
   }
 
   private class FieldValueComparator implements Comparator<Glob> {

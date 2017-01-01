@@ -37,7 +37,6 @@ public class BudgeaTokenServlet extends HttpCloudServlet {
         else {
           temporaryToken = BudgeaAPI.requestFirstTemporaryToken();
         }
-
         JsonGlobWriter writer = new JsonGlobWriter(response.getWriter());
         writer.object();
         writer.key(CloudConstants.STATUS).value(CloudRequestStatus.OK);
