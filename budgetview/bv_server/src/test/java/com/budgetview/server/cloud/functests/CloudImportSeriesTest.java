@@ -15,7 +15,7 @@ public class CloudImportSeriesTest extends CloudDesktopTestCase {
   }
 
   @Test
-  public void testUsesLocalSeriesFirstAndProviderSeriesSecond() throws Exception {
+  public void testUsesLocalSeriesFirstAndIgnoresTheOthers() throws Exception {
 
     cloudLicense.purchaseLicence("toto@example.com", Dates.tomorrow());
 
@@ -103,11 +103,10 @@ public class CloudImportSeriesTest extends CloudDesktopTestCase {
         {"2016/08/14", "Auchan", "-75.00"}
       })
       .checkSelectedAccount("Main account 1")
-      .importAccountWithAllSeriesAndGetSummary()
-      .checkSummaryAndValidate(3, 0, 3);
+      .importAccountAndGetSummary()
+      .checkSummaryAndValidate(3, 0, 2);
 
     budgetView.variable.checkContent("| Groceries     | 175.00 | To define |\n" +
-                                     "| Karting       | 30.00  | To define |\n" +
                                      "| Restaurant    | 15.00  | To define |\n" +
                                      "| Bank fees     | 5.00   | To define |\n" +
                                      "| Animals       | 0.00   | To define |\n" +
@@ -219,23 +218,22 @@ public class CloudImportSeriesTest extends CloudDesktopTestCase {
         {"2016/08/12", "EDF", "-50.00"},
         {"2016/08/10", "Auchan", "-100.00"},
       })
-      .importAccountWithAllSeriesAndComplete();
+      .importAccountAndComplete();
 
     transactions.initAmountContent()
-      .add("12/08/2016", "EDF", -50.00, "Electricité", 1000.00, 1500.00, "Main account 1")
+      .add("12/08/2016", "EDF", -50.00, "To categorize", 1000.00, 1500.00, "Main account 1")
       .add("10/08/2016", "AUCHAN", -100.00, "To categorize", 1050.00, 1550.00, "Main account 1")
       .check();
 
-    budgetView.recurring.checkContent("| Electricité      | 50.00 | 50.00 |\n" +
-                                      "| Car insurance    | 0.00  | 0.00  |\n" +
-                                      "| Car loan         | 0.00  | 0.00  |\n" +
-                                      "| Gas              | 0.00  | 0.00  |\n" +
-                                      "| Health insurance | 0.00  | 0.00  |\n" +
-                                      "| Housing taxes    | 0.00  | 0.00  |\n" +
-                                      "| Income taxes     | 0.00  | 0.00  |\n" +
-                                      "| Internet         | 0.00  | 0.00  |\n" +
-                                      "| Phone            | 0.00  | 0.00  |\n" +
-                                      "| Rent/Mortgage    | 0.00  | 0.00  |\n" +
-                                      "| Water            | 0.00  | 0.00  |");
+    budgetView.recurring.checkContent("| Car insurance    | 0.00 | 0.00 |\n" +
+                                      "| Car loan         | 0.00 | 0.00 |\n" +
+                                      "| Gas              | 0.00 | 0.00 |\n" +
+                                      "| Health insurance | 0.00 | 0.00 |\n" +
+                                      "| Housing taxes    | 0.00 | 0.00 |\n" +
+                                      "| Income taxes     | 0.00 | 0.00 |\n" +
+                                      "| Internet         | 0.00 | 0.00 |\n" +
+                                      "| Phone            | 0.00 | 0.00 |\n" +
+                                      "| Rent/Mortgage    | 0.00 | 0.00 |\n" +
+                                      "| Water            | 0.00 | 0.00 |");
   }
 }

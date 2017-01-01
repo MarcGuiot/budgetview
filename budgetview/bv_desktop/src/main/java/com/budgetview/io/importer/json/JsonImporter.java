@@ -144,9 +144,7 @@ public class JsonImporter implements AccountFileImporter {
       budgetArea = defaultSeries.getBudgetArea();
     }
     else {
-      importedSeriesList = targetRepository.getAll(ImportedSeries.TYPE, and(fieldEqualsIgnoreCase(ImportedSeries.NAME, providerSeriesName)));
-      name = providerSeriesName;
-      budgetArea = defaultSeries == null ? BudgetArea.VARIABLE : defaultSeries.getBudgetArea();
+      return null;
     }
 
     if (importedSeriesList.isEmpty()) {
