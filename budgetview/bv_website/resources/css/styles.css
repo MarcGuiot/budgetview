@@ -64,6 +64,7 @@ a.highlighted {
 
 .warning-block p {
   margin: 0;
+  margin-top: 5px;
 }
 
 .warning-block a.highlighted {

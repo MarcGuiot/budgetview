@@ -29,11 +29,9 @@ import static org.globsframework.model.utils.GlobMatchers.fieldEqualsIgnoreCase;
 
 public class JsonImporter implements AccountFileImporter {
 
-  private ImportedTransactionIdGenerator generator;
-
   public GlobList loadTransactions(Reader reader, GlobRepository initialRepository, GlobRepository targetRepository, PicsouDialog current) throws InvalidFormat, OperationCancelled, IOException {
 
-    generator = new ImportedTransactionIdGenerator(targetRepository.getIdGenerator());
+    ImportedTransactionIdGenerator generator = new ImportedTransactionIdGenerator(targetRepository.getIdGenerator());
     JSONObject jsonAccount = new JSONObject(Files.loadStreamToString(reader));
 
     //---------------
@@ -93,13 +91,12 @@ public class JsonImporter implements AccountFileImporter {
                               value(ImportedTransaction.SIMPLE_LABEL, jsonTransaction.getString("label")),
                               value(ImportedTransaction.OFX_NAME, jsonTransaction.getString("original_label")),
                               value(ImportedTransaction.SERIES, findOrCreateSeriesId(jsonTransaction.optInt("default_series_id"),
-                                                                                     jsonTransaction.optString("provider_category_name"),
                                                                                      bankDate,
                                                                                      targetRepository)),
                               value(ImportedTransaction.IMPORT_TYPE, ImportType.JSON.getId()));
   }
 
-  private Integer findOrCreateSeriesId(Integer defaultSeriesId, String providerSeriesName, String bankDate, GlobRepository targetRepository) {
+  private Integer findOrCreateSeriesId(Integer defaultSeriesId, String bankDate, GlobRepository targetRepository) {
     DefaultSeries defaultSeries = DefaultSeries.find(defaultSeriesId);
     if (DefaultSeries.UNCATEGORIZED.equals(defaultSeries)) {
       defaultSeries = null;

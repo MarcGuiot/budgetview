@@ -86,6 +86,8 @@ public class RealAccount {
 
   public static IntegerField PROVIDER_ACCOUNT_ID;
 
+  public static BooleanField DO_NOT_IMPORT;
+
   static {
     GlobTypeLoader.init(RealAccount.class, "realAccount");
   }
@@ -184,7 +186,7 @@ public class RealAccount {
   public static class Serializer implements GlobSerializer {
 
     public int getWriteVersion() {
-      return 3;
+      return 4;
     }
 
     public boolean shouldBeSaved(GlobRepository repository, FieldValues fieldValues) {
@@ -215,11 +217,15 @@ public class RealAccount {
       output.writeBoolean(fieldValues.get(FROM_SYNCHRO));
       output.writeInteger(fieldValues.get(PROVIDER));
       output.writeInteger(fieldValues.get(PROVIDER_ACCOUNT_ID));
+      output.writeBoolean(fieldValues.get(DO_NOT_IMPORT));
       return serializedByteArrayOutput.toByteArray();
     }
 
     public void deserializeData(int version, byte[] data, Integer id, FieldSetter fieldSetter) {
-      if (version == 3) {
+      if (version == 4) {
+        deserializeDataV4(fieldSetter, data);
+      }
+      else if (version == 3) {
         deserializeDataV3(fieldSetter, data);
       }
       else if (version == 2) {
@@ -228,6 +234,32 @@ public class RealAccount {
       else if (version == 1) {
         deserializeDataV1(fieldSetter, data);
       }
+    }
+
+    private void deserializeDataV4(FieldSetter fieldSetter, byte[] data) {
+      SerializedInput input = SerializedInputOutputFactory.init(data);
+      fieldSetter.set(SYNCHRO, input.readInteger());
+      fieldSetter.set(BANK, input.readInteger());
+      fieldSetter.set(BANK_ID, input.readUtf8String());
+      fieldSetter.set(BANK_ENTITY, input.readInteger());
+      fieldSetter.set(BANK_ENTITY_LABEL, input.readUtf8String());
+      fieldSetter.set(ACC_TYPE, input.readUtf8String());
+      fieldSetter.set(URL, input.readUtf8String());
+      fieldSetter.set(ORG, input.readUtf8String());
+      fieldSetter.set(FID, input.readUtf8String());
+      fieldSetter.set(NUMBER, input.readUtf8String());
+      fieldSetter.set(POSITION, input.readUtf8String());
+      fieldSetter.set(POSITION_DATE, input.readDate());
+      fieldSetter.set(NAME, input.readUtf8String());
+      fieldSetter.set(ACCOUNT_TYPE, input.readInteger());
+      fieldSetter.set(SAVINGS, input.readBoolean());
+      fieldSetter.set(ACCOUNT, input.readInteger());
+      fieldSetter.set(CARD_TYPE, input.readInteger());
+      fieldSetter.set(TRANSACTION_ID, input.readInteger());
+      fieldSetter.set(FROM_SYNCHRO, input.readBoolean());
+      fieldSetter.set(PROVIDER, input.readInteger());
+      fieldSetter.set(PROVIDER_ACCOUNT_ID, input.readInteger());
+      fieldSetter.set(DO_NOT_IMPORT, input.readBoolean());
     }
 
     private void deserializeDataV3(FieldSetter fieldSetter, byte[] data) {
