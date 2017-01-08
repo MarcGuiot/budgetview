@@ -15,6 +15,7 @@ import org.globsframework.sqlstreams.constraints.Where;
 import org.globsframework.utils.Strings;
 import org.globsframework.utils.directory.Directory;
 import org.json.JSONObject;
+import org.json.JSONWriter;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -38,20 +39,20 @@ public class BankConnectionsServlet extends HttpCloudServlet {
     logger.info("GET");
 
     Command command = new AuthenticatedCommand(directory, req, resp, logger) {
-      protected void doRun() throws IOException, InvalidHeader {
+      protected int doRun(JsonGlobWriter writer) throws IOException, InvalidHeader {
 
         Integer connectionId = getOptionalIntHeader(CloudConstants.PROVIDER_CONNECTION_ID);
 
         if (connectionId == null) {
-          getAllConnections();
+          getAllConnections(writer);
         }
         else {
-          getSingleConnection(connectionId);
+          getSingleConnection(connectionId, writer);
         }
-
+        return HttpServletResponse.SC_OK;
       }
 
-      private void getAllConnections() throws IOException {
+      private void getAllConnections(JSONWriter writer) throws IOException {
 
         SqlConnection sqlConnection = database.connect();
         GlobList connections =
@@ -71,8 +72,8 @@ public class BankConnectionsServlet extends HttpCloudServlet {
 
         Map<Integer, String> bankNames = getBankNames();
 
-        JsonGlobWriter writer = new JsonGlobWriter(response.getWriter());
         writer.object();
+        writer.key(CloudConstants.STATUS).value("ok");
         writer.key("connections");
         writer.array();
         for (Object c : budgeaConnections.getJSONArray("connections")) {
@@ -90,10 +91,9 @@ public class BankConnectionsServlet extends HttpCloudServlet {
         }
         writer.endArray();
         writer.endObject();
-        setOk(response);
       }
 
-      private void getSingleConnection(Integer connectionId) throws IOException {
+      private void getSingleConnection(Integer connectionId, JSONWriter writer) throws IOException {
 
         SqlConnection sqlConnection = database.connect();
         GlobList connections =
@@ -104,15 +104,13 @@ public class BankConnectionsServlet extends HttpCloudServlet {
             .getList();
         sqlConnection.commitAndClose();
 
-        JsonGlobWriter writer = new JsonGlobWriter(response.getWriter());
         writer.object();
         if (connections.isEmpty()) {
-          writer.key("status").value("not_found");
-          setOk(response);
+          writer.key(CloudConstants.STATUS).value("not_found");
           return;
         }
         else {
-          setOk(response, writer);
+          writer.key(CloudConstants.STATUS).value("ok");
           writer.key("connections");
           writer.array();
           Glob connection = connections.getFirst();
@@ -152,7 +150,7 @@ public class BankConnectionsServlet extends HttpCloudServlet {
     logger.info("POST");
 
     Command command = new AuthenticatedCommand(directory, req, resp, logger) {
-      protected void doRun() throws IOException, InvalidHeader {
+      protected int doRun(JsonGlobWriter writer) throws IOException, InvalidHeader {
 
         Integer userId = user.get(CloudUser.ID);
         int connectionId = getIntHeader(CloudConstants.PROVIDER_CONNECTION_ID);
@@ -174,7 +172,8 @@ public class BankConnectionsServlet extends HttpCloudServlet {
         }
         sqlConnection.commitAndClose();
 
-        setOk(response);
+        setOk(writer);
+        return HttpServletResponse.SC_OK;
       }
     };
     command.run();
@@ -185,7 +184,7 @@ public class BankConnectionsServlet extends HttpCloudServlet {
     logger.info("DELETE");
 
     Command command = new AuthenticatedCommand(directory, req, resp, logger) {
-      protected void doRun() throws IOException, InvalidHeader {
+      protected int doRun(JsonGlobWriter writer) throws IOException, InvalidHeader {
         int providerId = getIntHeader(CloudConstants.PROVIDER_ID);
         int providerConnectionId = getIntHeader(CloudConstants.PROVIDER_CONNECTION_ID);
 
@@ -200,11 +199,12 @@ public class BankConnectionsServlet extends HttpCloudServlet {
           sqlConnection.commitAndClose();
 
           logger.info("Deleted connection " + providerConnectionId + " for user " + user.get(CloudUser.ID));
-          setOk(response);
+          setOk(writer);
+          return HttpServletResponse.SC_OK;
         }
         catch (Exception e) {
           logger.error("Could not delete connection " + providerConnectionId + " for user " + user.get(CloudUser.ID), e);
-          setInternalError(response);
+          return HttpServletResponse.SC_INTERNAL_SERVER_ERROR;
         }
       }
     };

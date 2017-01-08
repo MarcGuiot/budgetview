@@ -36,17 +36,17 @@ public class ProviderAccessServlet extends HttpCloudServlet {
     logger.info("GET");
 
     Command command = new AuthenticatedCommand(directory, req, resp, logger) {
-      protected void doRun() throws IOException, InvalidHeader {
+      protected int doRun(JsonGlobWriter writer) throws IOException, InvalidHeader {
 
         int providerId = getIntHeader(CloudConstants.PROVIDER_ID);
 
         boolean sameProvider = Utils.equal(user.get(CloudUser.PROVIDER), providerId);
 
-        JsonGlobWriter writer = new JsonGlobWriter(response.getWriter());
         writer.object();
         writer.key("status").value(sameProvider ? "ok" : "not_recognized");
         writer.endObject();
-        setOk(response);
+
+        return HttpServletResponse.SC_OK;
       }
     };
     command.run();
@@ -57,7 +57,7 @@ public class ProviderAccessServlet extends HttpCloudServlet {
     logger.info("POST");
 
     Command command = new AuthenticatedCommand(directory, req, resp, logger) {
-      protected void doRun() throws IOException, InvalidHeader {
+      protected int doRun(JsonGlobWriter writer) throws IOException, InvalidHeader {
 
         int providerId = getIntHeader(CloudConstants.PROVIDER_ID);
         String budgeaToken = getStringHeader(CloudConstants.PROVIDER_TOKEN);
@@ -69,32 +69,28 @@ public class ProviderAccessServlet extends HttpCloudServlet {
         }
         catch (Exception e) {
           logger.error("Budgea registration failed - could not obtain permanent token", e);
-          setInternalError(response);
-          return;
+          return HttpServletResponse.SC_INTERNAL_SERVER_ERROR;
         }
 
         try {
           saveProviderAccess(user.get(CloudUser.ID), providerId, budgeaUserId, newBudgeaToken);
+          return HttpServletResponse.SC_OK;
         }
         catch (GlobsSQLException e) {
           logger.error("Could not store user '" + user.get(CloudUser.EMAIL) + "' in dabase", e);
-          setInternalError(response);
-          return;
+          return HttpServletResponse.SC_INTERNAL_SERVER_ERROR;
         }
-
-        response.setStatus(HttpServletResponse.SC_OK);
       }
 
       private String registerPermanentBudgeaToken(String tempBudgeaToken) throws IOException {
-        String serverUrl = BudgeaConstants.getServerUrl("/auth/token/access");
-        Request request = Request.Post(serverUrl)
+        String url = BudgeaConstants.getServerUrl("/auth/token/access");
+        Request request = Request.Post(url)
           .bodyForm(Form.form()
                       .add("code", tempBudgeaToken)
                       .add("client_id", Budgea.CLIENT_ID)
                       .add("client_secret", Budgea.CLIENT_SECRET)
                       .build());
-
-        return json(request.execute()).getString("access_token");
+        return json(request, url).getString("access_token");
       }
 
       private void saveProviderAccess(Integer userId, int providerId, int providerUserId, String providerAccessToken) throws GlobsSQLException {

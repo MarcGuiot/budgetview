@@ -23,8 +23,12 @@ public class BudgeaChecker {
     stub.stop();
   }
 
-  public void setBankFields(BudgeaBankFieldSample fields) {
+  public void setBankLoginFields(BudgeaBankFieldSample fields) {
     stub.setBankFields(fields);
+  }
+
+  public void setBankLoginFields(BudgeaBankFieldSample step1JSON, BudgeaBankFieldSample step2JSON) {
+    stub.setBankFields(step1JSON, step2JSON);
   }
 
   public void pushStatement(String json) {
@@ -49,4 +53,5 @@ public class BudgeaChecker {
   public void callWebhook(String json) throws IOException {
     stub.callWebhook(json);
   }
+
 }

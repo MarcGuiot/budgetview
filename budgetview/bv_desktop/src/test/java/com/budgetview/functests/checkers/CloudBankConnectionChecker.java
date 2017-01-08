@@ -29,9 +29,15 @@ public class CloudBankConnectionChecker extends ViewChecker {
   }
 
   public String getEditorName(String label) {
+    assertThat(mainWindow.containsLabel(label));
     String labelName = mainWindow.getTextBox(label).getName();
     String id = labelName.substring(labelName.indexOf(":"));
     return "editor" + id;
+  }
+
+  public CloudBankConnectionChecker enterAndGetStep2() {
+    mainWindow.getButton("next").click();
+    return new CloudBankConnectionChecker(mainWindow);
   }
 
   public CloudFirstDownloadChecker next() {

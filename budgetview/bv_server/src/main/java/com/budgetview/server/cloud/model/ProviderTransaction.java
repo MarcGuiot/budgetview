@@ -33,7 +33,7 @@ public class ProviderTransaction {
 
   public static DateField BANK_DATE;
 
-  public static IntegerField PROVIDER_CATEGORY_ID;
+  public static IntegerField DEFAULT_SERIES_ID;
 
   public static StringField PROVIDER_CATEGORY_NAME;
 
@@ -68,7 +68,7 @@ public class ProviderTransaction {
       output.writeDouble(fieldValues.get(AMOUNT));
       output.writeDate(fieldValues.get(OPERATION_DATE));
       output.writeDate(fieldValues.get(BANK_DATE));
-      output.writeInteger(fieldValues.get(PROVIDER_CATEGORY_ID));
+      output.writeInteger(fieldValues.get(DEFAULT_SERIES_ID));
       output.writeUtf8String(fieldValues.get(PROVIDER_CATEGORY_NAME));
       output.writeBoolean(fieldValues.get(DELETED));
       return serializedByteArrayOutput.toByteArray();
@@ -82,7 +82,7 @@ public class ProviderTransaction {
       fieldSetter.set(AMOUNT, input.readDouble());
       fieldSetter.set(OPERATION_DATE, input.readDate());
       fieldSetter.set(BANK_DATE, input.readDate());
-      fieldSetter.set(PROVIDER_CATEGORY_ID, input.readInteger());
+      fieldSetter.set(DEFAULT_SERIES_ID, input.readInteger());
       fieldSetter.set(PROVIDER_CATEGORY_NAME, input.readUtf8String());
       fieldSetter.set(DELETED, input.readBoolean());
     }

@@ -7,6 +7,7 @@ import com.budgetview.server.cloud.services.EmailValidationService;
 import com.budgetview.server.cloud.utils.SubscriptionCheckFailed;
 import com.budgetview.shared.cloud.CloudConstants;
 import org.apache.log4j.Logger;
+import org.globsframework.json.JsonGlobWriter;
 import org.globsframework.sqlstreams.exceptions.GlobsSQLException;
 import org.globsframework.utils.Strings;
 import org.globsframework.utils.directory.Directory;
@@ -16,7 +17,6 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.Date;
 
 public class SignupServlet extends HttpCloudServlet {
 
@@ -35,33 +35,44 @@ public class SignupServlet extends HttpCloudServlet {
 
     logger.info("POST");
 
-    Command command = new HttpCommand(directory, req, resp, logger) {
-      protected void doRun() throws IOException, InvalidHeader {
+    Command command = new HttpCommand(req, resp, logger) {
+      protected int doRun(JsonGlobWriter writer) throws IOException, InvalidHeader {
         String email = getStringHeader(CloudConstants.EMAIL);
         logger.info("Signup requested for " + email);
 
-        String lang = request.getHeader(CloudConstants.LANG);
+        String lang = getLangHeader(CloudConstants.LANG);
+
         try {
           processSignup(email, lang);
+          setOk(writer);
+          return HttpServletResponse.SC_OK;
         }
         catch (SubscriptionCheckFailed e) {
-          setSubscriptionError(response, e);
-          return;
+          setSubscriptionError(e, writer);
+          return HttpServletResponse.SC_OK;
         }
         catch (Exception e) {
           logger.error("Could not process: " + email, e);
-          setInternalError(response);
-          return;
+          return HttpServletResponse.SC_INTERNAL_SERVER_ERROR;
         }
+      }
 
-        setOk(response);
+      private String getLangHeader(String header) throws InvalidHeader {
+        String lang = getStringHeader(header).trim().toLowerCase();
+        if (Strings.isNullOrEmpty(lang)) {
+          throw new InvalidHeaderValue(header, lang);
+        }
+        if (!"fr".equals(lang) && !"en".equals(lang)) {
+          throw new InvalidHeaderValue(header, lang);
+        }
+        return lang;
       }
 
       private void processSignup(String email, String lang) throws GlobsSQLException, MessagingException, SubscriptionCheckFailed {
         Integer userId = authentication.findUser(email);
         if (userId == null) {
           logger.info("User not found for '" + email + "' - creating it");
-          userId = authentication.createUser(email);
+          userId = authentication.createUser(email, lang);
         }
         else {
           logger.info("User " + userId + " found for '" + email + "'");

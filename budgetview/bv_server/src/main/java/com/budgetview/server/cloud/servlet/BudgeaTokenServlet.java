@@ -28,7 +28,7 @@ public class BudgeaTokenServlet extends HttpCloudServlet {
     logger.info("GET");
 
     Command command = new AuthenticatedCommand(directory, req, resp, logger) {
-      protected void doRun() throws IOException {
+      protected int doRun(JsonGlobWriter writer) throws IOException {
         String permanentBudgeaToken = user.get(CloudUser.PROVIDER_ACCESS_TOKEN);
         String temporaryToken;
         if (Strings.isNotEmpty(permanentBudgeaToken)) {
@@ -37,12 +37,12 @@ public class BudgeaTokenServlet extends HttpCloudServlet {
         else {
           temporaryToken = BudgeaAPI.requestFirstTemporaryToken();
         }
-        JsonGlobWriter writer = new JsonGlobWriter(response.getWriter());
         writer.object();
         writer.key(CloudConstants.STATUS).value(CloudRequestStatus.OK);
         writer.key(CloudConstants.PROVIDER_TOKEN).value(temporaryToken);
         writer.key(CloudConstants.PROVIDER_TOKEN_REGISTERED).value(Strings.isNotEmpty(permanentBudgeaToken));
         writer.endObject();
+        return HttpServletResponse.SC_OK;
       }
     };
     command.run();

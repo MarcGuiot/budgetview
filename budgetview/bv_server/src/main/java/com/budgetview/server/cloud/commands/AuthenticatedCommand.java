@@ -25,26 +25,23 @@ public abstract class AuthenticatedCommand extends HttpCommand {
   protected Glob user;
 
   public AuthenticatedCommand(Directory directory, HttpServletRequest request, HttpServletResponse response, Logger logger) {
-    super(directory, request, response, logger);
+    super(request, response, logger);
     this.authentication = directory.get(AuthenticationService.class);
     this.database = directory.get(GlobsDatabase.class);
   }
 
   public void run() throws ServletException, IOException {
 
-    request.setCharacterEncoding("UTF-8");
-    response.setCharacterEncoding("UTF-8");
-
     String email = request.getHeader(CloudConstants.EMAIL);
     String bvToken = request.getHeader(CloudConstants.BV_TOKEN);
     if (Strings.isNullOrEmpty(email)) {
       logger.error("No email provided");
-      setBadRequest(response);
+      response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
       return;
     }
     if (Strings.isNullOrEmpty(bvToken)) {
       logger.error("No token provided");
-      setBadRequest(response);
+      response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
       return;
     }
 
@@ -52,40 +49,25 @@ public abstract class AuthenticatedCommand extends HttpCommand {
       user = authentication.checkUserToken(email, bvToken);
     }
     catch (SubscriptionCheckFailed e) {
-      setSubscriptionError(response, e);
+      response.setStatus(HttpServletResponse.SC_OK);
+      JSONWriter writer = new JSONWriter(response.getWriter());
+      writer.object();
+      writer.key(CloudConstants.STATUS).value("no_subscription");
+      writer.key(CloudConstants.SUBSCRIPTION_STATUS).value(e.getStatus().getName());
+      writer.endObject();
       return;
     }
+
     if (user == null) {
       logger.error("Could not identify user with email:" + email);
-      setUnauthorized(response);
+      response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
       return;
     }
 
     budgeaAPI = new BudgeaAPI();
     budgeaAPI.setToken(user.get(CloudUser.PROVIDER_ACCESS_TOKEN), true);
 
-    try {
-      doRun();
-    }
-    catch (InvalidHeader invalidHeader) {
-      logger.error(invalidHeader.getMessage());
-      setBadRequest(response);
-      return;
-    }
+    super.run();
   }
 
-  protected void setSubscriptionError(HttpServletResponse response, SubscriptionCheckFailed e) throws IOException {
-    JSONWriter writer = new JSONWriter(response.getWriter());
-    writer.object();
-    writer.key(CloudConstants.STATUS).value("no_subscription");
-    writer.key(CloudConstants.SUBSCRIPTION_STATUS).value(e.getStatus().getName());
-    writer.endObject();
-    response.setStatus(HttpServletResponse.SC_OK);
-  }
-
-  protected void setSubscriptionError(HttpServletResponse response, SubscriptionCheckFailed e, JSONWriter writer) throws IOException {
-    writer.key(CloudConstants.STATUS).value("no_subscription");
-    writer.key(CloudConstants.SUBSCRIPTION_STATUS).value(e.getStatus().getName());
-    response.setStatus(HttpServletResponse.SC_OK);
-  }
 }

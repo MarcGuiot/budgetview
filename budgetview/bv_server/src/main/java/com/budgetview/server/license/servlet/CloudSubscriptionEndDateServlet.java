@@ -56,16 +56,14 @@ public class CloudSubscriptionEndDateServlet extends HttpServlet {
         }
       }
 
-      String endDate = result == null ? null : JsonGlobFormat.toString(result);
+      response.setStatus(HttpServletResponse.SC_OK);
 
+      String endDate = result == null ? null : JsonGlobFormat.toString(result);
       JSONWriter writer = new JSONWriter(response.getWriter());
       writer.object();
       writer.key(LicenseConstants.CLOUD_END_DATE).value(endDate);
       writer.endObject();
-
       logger.info("Returning " + endDate);
-
-      response.setStatus(HttpServletResponse.SC_OK);
     }
     catch (Exception e) {
       logger.error("Exception when retrieving end date for " + email, e);

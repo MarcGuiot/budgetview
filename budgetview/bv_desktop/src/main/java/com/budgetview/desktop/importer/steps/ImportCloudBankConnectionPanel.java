@@ -47,6 +47,9 @@ public class ImportCloudBankConnectionPanel extends AbstractImportStepPanel {
   private java.util.List<JComponent> components = new ArrayList<JComponent>();
   private Glob currentConnection;
   private JEditorPane message;
+  private boolean step2;
+  private int providerConnectionId;
+  private Glob currentBank;
 
   public ImportCloudBankConnectionPanel(PicsouDialog dialog, ImportController controller, LocalGlobRepository repository, Directory localDirectory) {
     super(dialog, controller, localDirectory);
@@ -103,14 +106,26 @@ public class ImportCloudBankConnectionPanel extends AbstractImportStepPanel {
     return builder;
   }
 
-  public void setCurrentBank(Key bankKey) {
+  public void showStep1(Key bankKey) {
+    System.out.println("ImportCloudBankConnectionPanel.showStep1");
     createPanelIfNeeded();
+    step2 = false;
+    providerConnectionId = 0;
+    currentBank = repository.get(bankKey);
+    message.setText(Lang.get("import.cloud.bankConnection.message", currentBank.get(Bank.NAME)));
+    updateFieldEditors();
+  }
 
-    Glob bank = repository.get(bankKey);
+  private void showStep2(int connectionId) {
+    System.out.println("ImportCloudBankConnectionPanel.showStep2");
+    step2 = true;
+    providerConnectionId = connectionId;
+    message.setText(Lang.get("import.cloud.bankConnection.message.step2", currentBank.get(Bank.NAME)));
+    updateFieldEditors();
+  }
 
-    message.setText(Lang.get("import.cloud.bankConnection.message", bank.get(Bank.NAME)));
-
-    Integer currentBudgeaBankId = bank.get(Bank.PROVIDER_ID);
+  public void updateFieldEditors() {
+    Integer currentBudgeaBankId = currentBank.get(Bank.PROVIDER_ID);
     Glob budgeaBank = repository.findOrCreate(Key.create(BudgeaBank.TYPE, currentBudgeaBankId));
     GlobList fields = repository.findLinkedTo(budgeaBank, BudgeaBankField.BANK);
     if (fields.isEmpty()) {
@@ -129,17 +144,24 @@ public class ImportCloudBankConnectionPanel extends AbstractImportStepPanel {
     repository.completeChangeSet();
 
     fieldRepeat.setFilter(linkedTo(currentConnection, BudgeaConnectionValue.CONNECTION));
-
     nextAction.setEnabled(true);
   }
 
   private void processConnection() {
+    System.out.println("ImportCloudBankConnectionPanel.processConnection");
     progressPanel.start();
     setAllEnabled(false);
-    cloudService.addBankConnection(currentConnection, repository, new CloudService.BankConnectionCallback() {
+    CloudService.BankConnectionCallback callback = new CloudService.BankConnectionCallback() {
       public void processCompletion(Glob providerConnection) {
+        System.out.println("ImportCloudBankConnectionPanel.processCompletion");
         repository.commitChanges(false);
         controller.showCloudFirstDownload(providerConnection);
+        progressPanel.stop();
+      }
+
+      public void processSecondStepResponse(int connectionId) {
+        System.out.println("ImportCloudBankConnectionPanel.processSecondStepResponse");
+        showStep2(connectionId);
         progressPanel.stop();
       }
 
@@ -152,7 +174,13 @@ public class ImportCloudBankConnectionPanel extends AbstractImportStepPanel {
         controller.showCloudError(e);
         progressPanel.stop();
       }
-    });
+    };
+    if (!step2) {
+      cloudService.addBankConnection(currentBank, currentConnection, repository, callback);
+    }
+    else {
+      cloudService.addBankConnectionStep2(providerConnectionId, currentConnection, repository, callback);
+    }
   }
 
   public void prepareForDisplay() {

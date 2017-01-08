@@ -83,6 +83,8 @@ public class SeriesImporter {
                                value(ImportedSeries.SERIES, null),
                                value(ImportedSeries.SUB_SERIES, null),
                                value(ImportedSeries.BUDGET_AREA, null));
+        iterator.remove();
+        continue;
       }
 
       String name = importedSeries.get(ImportedSeries.NAME);

@@ -4,13 +4,13 @@ import org.globsframework.metamodel.fields.*;
 import org.globsframework.model.FieldValues;
 import org.json.JSONWriter;
 
-import java.io.PrintWriter;
+import java.io.Writer;
 
 public class JsonGlobWriter extends JSONWriter {
   private FieldValues fieldValues;
 
-  public JsonGlobWriter(PrintWriter printWriter) {
-    super(printWriter);
+  public JsonGlobWriter(Writer writer) {
+    super(writer);
   }
 
   public void setCurrentValues(FieldValues values) {

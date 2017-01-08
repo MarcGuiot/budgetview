@@ -6,6 +6,7 @@ import com.budgetview.server.web.WebServer;
 import com.budgetview.shared.cloud.budgea.BudgeaCategory;
 import com.budgetview.shared.cloud.budgea.BudgeaConstants;
 import org.apache.log4j.Logger;
+import org.globsframework.utils.Strings;
 import org.globsframework.utils.Utils;
 
 import javax.servlet.ServletException;
@@ -24,10 +25,11 @@ public class BudgeaStubServer {
 
   private WebServer webServer;
   private int userId = 123;
-  private int temporaryTokenId =  0;
+  private int temporaryTokenId = 0;
   private String lastTempToken;
   private String persistentToken = BudgeaWebhook.PERSISTEN_TOKEN;
-  private BudgeaBankFieldSample bankFields = BudgeaBankFieldSample.BUDGEA_TEST_CONNECTOR;
+  private BudgeaBankFieldSample bankFieldsStep1 = BudgeaBankFieldSample.BUDGEA_FIELDS_STEP_1;
+  private BudgeaBankFieldSample bankFieldsStep2 = null;
   private Stack<String> statements = new Stack<String>();
   private Stack<String> connections = new Stack<String>();
 
@@ -54,7 +56,7 @@ public class BudgeaStubServer {
     webServer.add(new BanksServlet(), "/banks");
     webServer.add(new BanksFieldsServlet(), "/banks/*");
     webServer.add(new UsersMeServlet(), "/users/me");
-    webServer.add(new UsersMeConnectionsServlet(), "/users/me/connections");
+    webServer.add(new UsersMeConnectionsServlet(), "/users/me/connections/*");
     webServer.add(new UserConnectionsServlet(), "/users/*");
     webServer.add(new PingServlet(), "/ping");
 
@@ -111,7 +113,12 @@ public class BudgeaStubServer {
   }
 
   public void setBankFields(BudgeaBankFieldSample bankFields) {
-    this.bankFields = bankFields;
+    this.bankFieldsStep1 = bankFields;
+  }
+
+  public void setBankFields(BudgeaBankFieldSample step1, BudgeaBankFieldSample step2) {
+    this.bankFieldsStep1 = step1;
+    this.bankFieldsStep2 = step2;
   }
 
   private String createTemporaryToken() {
@@ -147,10 +154,10 @@ public class BudgeaStubServer {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
       logger.info("GET");
       PrintWriter writer = response.getWriter();
-      writer.append("{\n" +
-                    "   \"code\" : \"" + createTemporaryToken() + "\",\n" +
-                    "   \"type\" : \"temporary\"\n" +
-                    "}");
+      writer.print("{\n" +
+                   "   \"code\" : \"" + createTemporaryToken() + "\",\n" +
+                   "   \"type\" : \"temporary\"\n" +
+                   "}");
       writer.close();
       response.setStatus(HttpServletResponse.SC_OK);
     }
@@ -164,10 +171,10 @@ public class BudgeaStubServer {
       logger.info("POST");
 
       PrintWriter writer = response.getWriter();
-      writer.append("{\n" +
-                    "   \"access_token\":\"" + persistentToken + "\",\n" +
-                    "   \"token_type\":\"Bearer\"\n" +
-                    "}");
+      writer.print("{\n" +
+                   "   \"access_token\":\"" + persistentToken + "\",\n" +
+                   "   \"token_type\":\"Bearer\"\n" +
+                   "}");
       writer.close();
       response.setStatus(HttpServletResponse.SC_OK);
     }
@@ -234,12 +241,11 @@ public class BudgeaStubServer {
                    "    \"slug\": \"CIC\",\n" +
                    "    \"beta\": false\n" +
                    "  }," +
-                    "]}");
+                   "]}");
       writer.close();
       response.setStatus(HttpServletResponse.SC_OK);
     }
   }
-
 
   public class BanksFieldsServlet extends HttpServlet {
 
@@ -254,7 +260,7 @@ public class BudgeaStubServer {
       }
 
       PrintWriter writer = response.getWriter();
-      writer.print(bankFields.getJSON());
+      writer.print(bankFieldsStep1.getJSON());
       writer.close();
       response.setStatus(HttpServletResponse.SC_OK);
     }
@@ -289,14 +295,26 @@ public class BudgeaStubServer {
         return;
       }
 
-      String json = connections.pop();
+      boolean step2 = Strings.isNotEmpty(request.getPathInfo());
+      if (step2) {
+        logger.info("Processing step2");
+      }
 
-      PrintWriter writer = response.getWriter();
-      writer.write(json);
-      writer.close();
-      response.setStatus(HttpServletResponse.SC_OK);
-
-      callWebhookWithCurrentStatements();
+      if (bankFieldsStep2 == null || step2) {
+        logger.info(step2 ? "Completing connection for step2" : "Completing connection for step1");
+        response.setStatus(HttpServletResponse.SC_OK);
+        PrintWriter writer = response.getWriter();
+        writer.write(connections.pop());
+        writer.close();
+        callWebhookWithCurrentStatements();
+      }
+      else {
+        logger.info("Two-step login : returning new fields with code " + HttpServletResponse.SC_ACCEPTED);
+        response.setStatus(HttpServletResponse.SC_ACCEPTED);
+        PrintWriter writer = response.getWriter();
+        writer.write(bankFieldsStep2.getJSON());
+        writer.close();
+      }
     }
   }
 

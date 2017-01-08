@@ -6,10 +6,8 @@ import com.budgetview.desktop.series.utils.SeriesMatchers;
 import com.budgetview.io.importer.AccountFileImporter;
 import com.budgetview.io.importer.utils.ImportedTransactionIdGenerator;
 import com.budgetview.model.*;
-import com.budgetview.shared.cloud.budgea.BudgeaSeriesConverter;
 import com.budgetview.shared.model.BudgetArea;
 import com.budgetview.shared.model.DefaultSeries;
-import com.budgetview.shared.utils.Amounts;
 import org.globsframework.json.JsonGlobFormat;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
@@ -43,7 +41,6 @@ public class JsonImporter implements AccountFileImporter {
     //---------------
 
     Glob realAccount = getRealAccount(jsonAccount, initialRepository);
-    System.out.println("JsonImporter.loadTransactions: account is " + realAccount);
     if (realAccount == null) {
       throw new OperationCancelled("Cannot find real account, should have been created in first phase. Content:\n" + jsonAccount.toString(2));
     }
@@ -58,12 +55,9 @@ public class JsonImporter implements AccountFileImporter {
       }
     }
 
-    System.out.println("JsonImporter.loadTransactions - created:");
-    GlobPrinter.print(createdTransactions);
 
     Glob lastImportedTransaction = createdTransactions.sort(ImportedTransaction.BANK_DATE).getLast();
     if (lastImportedTransaction != null) {
-      System.out.println("JsonImporter.loadTransactions: last = " + createdTransactions);
       targetRepository.update(realAccount, RealAccount.TRANSACTION_ID, lastImportedTransaction.get(ImportedTransaction.ID));
     }
     else {
@@ -88,7 +82,8 @@ public class JsonImporter implements AccountFileImporter {
     }
 
     String bankDate = convertDate(jsonTransaction.getString("bank_date"));
-    Glob importedTransaction =
+
+    return
       targetRepository.create(ImportedTransaction.TYPE,
                               value(ImportedTransaction.ID, generator.getNextId(ImportedTransaction.ID, 1)),
                               value(ImportedTransaction.ACCOUNT, realAccount.get(RealAccount.ID)),
@@ -97,28 +92,21 @@ public class JsonImporter implements AccountFileImporter {
                               value(ImportedTransaction.AMOUNT, jsonTransaction.getDouble("amount")),
                               value(ImportedTransaction.SIMPLE_LABEL, jsonTransaction.getString("label")),
                               value(ImportedTransaction.OFX_NAME, jsonTransaction.getString("original_label")),
-                              value(ImportedTransaction.SERIES, findOrCreateSeriesId(jsonTransaction.optInt("provider_category_id"),
+                              value(ImportedTransaction.SERIES, findOrCreateSeriesId(jsonTransaction.optInt("default_series_id"),
                                                                                      jsonTransaction.optString("provider_category_name"),
                                                                                      bankDate,
                                                                                      targetRepository)),
                               value(ImportedTransaction.IMPORT_TYPE, ImportType.JSON.getId()));
-
-    return importedTransaction;
   }
 
-  private Integer findOrCreateSeriesId(Integer providerSeriesId, String providerSeriesName, String bankDate, GlobRepository targetRepository) {
-    BudgeaSeriesConverter converter = new BudgeaSeriesConverter();
-    DefaultSeries defaultSeries = converter.convert(providerSeriesId);
+  private Integer findOrCreateSeriesId(Integer defaultSeriesId, String providerSeriesName, String bankDate, GlobRepository targetRepository) {
+    DefaultSeries defaultSeries = DefaultSeries.find(defaultSeriesId);
     if (DefaultSeries.UNCATEGORIZED.equals(defaultSeries)) {
-      return null;
+      defaultSeries = null;
     }
-    return findOrCreateSeriesId(defaultSeries, providerSeriesName, bankDate, targetRepository);
-  }
 
-  private Integer findOrCreateSeriesId(DefaultSeries defaultSeries, String providerSeriesName, String bankDate, GlobRepository targetRepository) {
-
-    GlobList importedSeriesList = new GlobList();
     String defaultSeriesLabel = Labels.get(defaultSeries);
+    GlobList importedSeriesList = new GlobList();
     if (defaultSeries != null) {
       importedSeriesList = targetRepository.getAll(ImportedSeries.TYPE, fieldEqualsIgnoreCase(ImportedSeries.NAME, defaultSeriesLabel));
     }
@@ -148,15 +136,12 @@ public class JsonImporter implements AccountFileImporter {
     }
 
     if (importedSeriesList.isEmpty()) {
-      System.out.println("JsonImporter.findOrCreateSeriesId: creating " + providerSeriesName);
-      importedSeriesList = new GlobList(
-        targetRepository.create(ImportedSeries.TYPE,
-                                value(ImportedSeries.NAME, name),
-                                value(ImportedSeries.SERIES, series != null ? series.get(Series.ID) : null),
-                                value(ImportedSeries.BUDGET_AREA, budgetArea.getId())));
-    }
-    else {
-      System.out.println("JsonImporter.findOrCreateSeriesId: using existing " + providerSeriesName);
+      Glob created = targetRepository.create(ImportedSeries.TYPE,
+                                             value(ImportedSeries.NAME, name),
+                                             value(ImportedSeries.SERIES, series != null ? series.get(Series.ID) : null),
+                                             value(ImportedSeries.BUDGET_AREA, budgetArea.getId()));
+      GlobPrinter.print(created);
+      importedSeriesList = new GlobList(created);
     }
     return importedSeriesList.getFirst().get(ImportedSeries.ID);
   }

@@ -38,7 +38,11 @@ public class Lang {
   }
   
   public static String getLang(){
-    return LOCALE.getLanguage();
+    String result = LOCALE.getLanguage();
+    if (Strings.isNullOrEmpty(result)) {
+      return EN.getLanguage();
+    }
+    return result;
   }
 
   public static String get(String key, Object... arguments) throws ItemNotFound {

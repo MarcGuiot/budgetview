@@ -16,6 +16,7 @@ public abstract class CloudDesktopTestCase extends LoggedInFunctionalTestCase {
   protected CloudMailbox mailbox;
 
   public void setUp() throws Exception {
+    createDefaultSeries = true;
     setCurrentDate("2016/08/20");
     super.setUp();
     System.clearProperty(LicenseConstants.LICENSE_URL_PROPERTY);
@@ -35,6 +36,8 @@ public abstract class CloudDesktopTestCase extends LoggedInFunctionalTestCase {
   }
 
   protected void tearDown() throws Exception {
+    System.err.flush();
+    System.out.flush();
     System.out.println("\n\n ---------------- tearDown ----------------");
     logger.info("TearDown");
 

@@ -36,7 +36,7 @@ public class TransactionAnalyzerFactory {
     this.model = model;
   }
 
-  public static String removeBlankAndToUpercase(final String value) {
+  public static String removeBlankAndToUppercase(final String value) {
     if (value == null) {
       return null;
     }

@@ -1,9 +1,6 @@
 package com.budgetview.shared.http;
 
-import org.apache.http.Consts;
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.NameValuePair;
+import org.apache.http.*;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.fluent.Request;
@@ -44,9 +41,14 @@ public class Http {
   }
 
   public static HttpResponse execute(Request request, String url) throws IOException {
-    Response response = request.execute();
-    HttpResponse httpResponse = response.returnResponse();
-    return checkResponse(url, httpResponse);
+    try {
+      Response response = request.execute();
+      HttpResponse httpResponse = response.returnResponse();
+      return checkResponse(url, httpResponse);
+    }
+    catch (NoHttpResponseException e) {
+      throw new IOException("No response for url " + url, e);
+    }
   }
 
   public static JSONObject executeAndGetJson(String url, Request request) throws IOException {
@@ -57,7 +59,8 @@ public class Http {
   public static HttpResponse checkResponse(String url, HttpResponse httpResponse) throws IOException {
     int statusCode = httpResponse.getStatusLine().getStatusCode();
     switch (statusCode) {
-      case 200: return httpResponse;
+      case 200:
+        return httpResponse;
       case 400:
         throw new IOException("Call to " + url + " returned error 400 (bad request) - " +
                               "check parameters and headers");

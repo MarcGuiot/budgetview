@@ -9,6 +9,8 @@ import com.budgetview.server.cloud.model.ProviderUpdate;
 import com.budgetview.server.cloud.persistence.CloudSerializer;
 import com.budgetview.server.cloud.services.WebhookNotificationService;
 import com.budgetview.server.utils.DateConverter;
+import com.budgetview.shared.cloud.budgea.BudgeaSeriesConverter;
+import com.budgetview.shared.model.DefaultSeries;
 import com.budgetview.shared.model.Provider;
 import org.apache.log4j.Logger;
 import org.globsframework.model.Glob;
@@ -26,7 +28,6 @@ import org.globsframework.utils.exceptions.TooManyItems;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import javax.mail.MessagingException;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -66,13 +67,13 @@ public class BudgeaWebHookServlet extends HttpCloudServlet {
     String authorization = request.getHeader("Authorization");
     if (Strings.isNullOrEmpty(authorization)) {
       logger.error("No credentials provided - request rejected");
-      setUnauthorized(response);
+      response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
       return;
     }
     Matcher tokenMatcher = pattern.matcher(authorization.trim());
     if (!tokenMatcher.matches()) {
       logger.error("Invalid credentials provided in '" + authorization + "' - request rejected");
-      setUnauthorized(response);
+      response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
       return;
     }
 
@@ -139,10 +140,9 @@ public class BudgeaWebHookServlet extends HttpCloudServlet {
   private Glob getCloudUser(int budgeaUserId, String token) {
     SqlConnection connection = db.connect();
     try {
-      Glob user = connection.selectUnique(CloudUser.TYPE, Where.and(fieldEquals(CloudUser.PROVIDER, Provider.BUDGEA.getId()),
-                                                                    fieldEquals(CloudUser.PROVIDER_USER_ID, budgeaUserId),
-                                                                    fieldEquals(CloudUser.PROVIDER_ACCESS_TOKEN, token)));
-      return user;
+      return connection.selectUnique(CloudUser.TYPE, Where.and(fieldEquals(CloudUser.PROVIDER, Provider.BUDGEA.getId()),
+                                                               fieldEquals(CloudUser.PROVIDER_USER_ID, budgeaUserId),
+                                                               fieldEquals(CloudUser.PROVIDER_ACCESS_TOKEN, token)));
     }
     catch (ItemNotFound itemNotFound) {
       logger.error("User '" + budgeaUserId + "' with token '" + Strings.cut(token, 15) + "' not recognized");
@@ -191,6 +191,7 @@ public class BudgeaWebHookServlet extends HttpCloudServlet {
       Date operationDate = Budgea.parseDate(transaction.getString("rdate"));
       Date bankDate = Budgea.parseDate(transaction.getString("date"));
       JSONObject category = transaction.getJSONObject("category");
+      DefaultSeries defaultSeries = findDefaultSeries(category.getInt("id"));
 
       repository.create(ProviderTransaction.TYPE,
                         value(ProviderTransaction.ID, providerTransactionId),
@@ -200,9 +201,18 @@ public class BudgeaWebHookServlet extends HttpCloudServlet {
                         value(ProviderTransaction.OPERATION_DATE, operationDate),
                         value(ProviderTransaction.LABEL, transaction.getString("wording")),
                         value(ProviderTransaction.ORIGINAL_LABEL, transaction.getString("original_wording")),
-                        value(ProviderTransaction.PROVIDER_CATEGORY_ID, category.getInt("id")),
+                        value(ProviderTransaction.DEFAULT_SERIES_ID, defaultSeries != null ? defaultSeries.getId() : null),
                         value(ProviderTransaction.PROVIDER_CATEGORY_NAME, category.getString("name")),
                         value(ProviderTransaction.DELETED, !transaction.isNull("deleted") && transaction.getBoolean("deleted")));
+    }
+
+    private DefaultSeries findDefaultSeries(Integer providerSeriesId) {
+      BudgeaSeriesConverter converter = new BudgeaSeriesConverter();
+      DefaultSeries defaultSeries = converter.convert(providerSeriesId);
+      if (DefaultSeries.UNCATEGORIZED.equals(defaultSeries)) {
+        return null;
+      }
+      return defaultSeries;
     }
 
     public void save() throws IOException, GeneralSecurityException {

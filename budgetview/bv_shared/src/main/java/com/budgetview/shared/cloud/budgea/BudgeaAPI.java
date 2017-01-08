@@ -5,6 +5,7 @@ import com.budgetview.shared.json.Json;
 import org.apache.http.Consts;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
+import org.apache.http.StatusLine;
 import org.apache.http.client.fluent.Form;
 import org.apache.http.client.fluent.Request;
 import org.globsframework.utils.Strings;
@@ -79,7 +80,17 @@ public class BudgeaAPI {
                   .addHeader("user_id", "me"), url);
   }
 
-  public JSONObject addBankConnection(Integer budgeaBankId, Map<String, String> params) throws IOException {
+  public static class LoginResult {
+    public final boolean singleStepLogin;
+    public final JSONObject json;
+
+    public LoginResult(boolean singleStepLogin, JSONObject json) {
+      this.singleStepLogin = singleStepLogin;
+      this.json = json;
+    }
+  }
+
+  public LoginResult addBankConnectionStep1(Integer budgeaBankId, Map<String, String> params) throws IOException {
     checkToken();
 
     Form form = Form.form()
@@ -90,18 +101,37 @@ public class BudgeaAPI {
     }
 
     List<NameValuePair> pairs = form.build();
-    System.out.println("BudgeaAPI.addBankConnection: " + pairs + " for token " + token);
     String url = BudgeaConstants.getServerUrl("/users/me/connections");
     Request request = Request.Post(url)
       .addHeader(BudgeaConstants.AUTHORIZATION, "Bearer " + token)
       .bodyForm(pairs, Consts.UTF_8);
 
-    HttpResponse httpResponse = request.execute().returnResponse();
-    if (httpResponse.getStatusLine().getStatusCode() != 200) {
-      throw new IOException(url + " returned " + httpResponse.getStatusLine().getStatusCode() + " instead of 200");
+    HttpResponse response = request.execute().returnResponse();
+    StatusLine statusLine = response.getStatusLine();
+    int statusCode = statusLine.getStatusCode();
+    System.out.println("BudgeaAPI.addBankConnectionStep1 (" + url + ")  returned " + statusLine + " ==> " + statusCode);
+    if (statusCode != 200 && statusCode != 202) {
+      throw new IOException(url + " returned " + statusCode + " instead of 200");
     }
 
-    return Json.json(httpResponse);
+    return new LoginResult(statusCode == 200, Json.json(response));
+  }
+
+  public JSONObject addBankConnectionStep2(Integer connectionId, Map<String, String> params) throws IOException {
+    checkToken();
+
+    Form form = Form.form();
+    for (Map.Entry<String, String> entry : params.entrySet()) {
+      form.add(entry.getKey(), entry.getValue());
+    }
+
+    List<NameValuePair> pairs = form.build();
+    System.out.println("BudgeaAPI.addBankConnectionStep2: " + pairs + " for token " + token);
+    String url = BudgeaConstants.getServerUrl("/users/me/connections/" + connectionId + "?expand=accounts");
+    Request request = Request.Post(url)
+      .addHeader(BudgeaConstants.AUTHORIZATION, "Bearer " + token)
+      .bodyForm(pairs, Consts.UTF_8);
+    return Http.executeAndGetJson(url, request);
   }
 
   public void deleteConnection(int budgeaConnectionId) throws IOException {
@@ -120,10 +150,6 @@ public class BudgeaAPI {
 
   public String getToken() throws IOException {
     return token;
-  }
-
-  public boolean isPermanentToken() {
-    return isPermanentToken;
   }
 
   private void checkToken() throws IOException {

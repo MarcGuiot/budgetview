@@ -12,10 +12,11 @@ import java.io.IOException;
 
 public class CloudAPI {
 
-  public JSONObject signup(String email) throws IOException {
+  public JSONObject signup(String email, String lang) throws IOException {
     String url = "/signup";
     Request request = Request.Post(CloudConstants.getServerUrl(url))
-      .addHeader(CloudConstants.EMAIL, email);
+      .addHeader(CloudConstants.EMAIL, email)
+      .addHeader(CloudConstants.LANG, lang);
     return Http.executeAndGetJson(url, request);
   }
 
@@ -55,6 +56,9 @@ public class CloudAPI {
       .addHeader(CloudConstants.BV_TOKEN, bvToken)
       .addHeader(CloudConstants.PROVIDER_ID, Integer.toString(Provider.BUDGEA.getId()));
     JSONObject json = Http.executeAndGetJson(url, request);
+
+    System.out.println("CloudAPI.isProviderAccessRegistered: " + json.toString(2));
+
     return Utils.equal("ok", json.optString("status"));
   }
 

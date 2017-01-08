@@ -349,7 +349,7 @@ public class ImportPreviewPanel extends AbstractImportStepPanel implements Messa
           sessionRepository.update(currentlySelectedAccount.getKey(), value(Account.BANK, bankId));
         }
         newAccount = null;
-        controller.completeImport(realAccount, currentlySelectedAccount, dateFormatSelectionPanel.getSelectedFormat());
+        controller.completeImport(currentlySelectedAccount, dateFormatSelectionPanel.getSelectedFormat());
       }
       finally {
         setEnabled(true);

@@ -41,10 +41,10 @@ public class CloudSignupTest extends CloudDesktopTestCase {
         {"2016/08/12", "EDF", "-50.00"},
         {"2016/08/10", "AUCHAN", "-100.00"},
       })
-      .importAccountWithAllSeriesAndComplete();
+      .importAccountAndComplete();
 
     transactions.initContent()
-      .add("12/08/2016", TransactionType.PRELEVEMENT, "EDF", "", -50.00, "Electricité")
+      .add("12/08/2016", TransactionType.PRELEVEMENT, "EDF", "", -50.00, "Electricity")
       .add("10/08/2016", TransactionType.PRELEVEMENT, "AUCHAN", "", -100.00)
       .check();
   }
@@ -91,10 +91,10 @@ public class CloudSignupTest extends CloudDesktopTestCase {
         {"2016/08/12", "EDF", "-50.00"},
         {"2016/08/10", "AUCHAN", "-100.00"},
       })
-      .importAccountWithAllSeriesAndComplete();
+      .importAccountAndComplete();
 
     transactions.initContent()
-      .add("12/08/2016", TransactionType.PRELEVEMENT, "EDF", "", -50.00, "Electricité")
+      .add("12/08/2016", TransactionType.PRELEVEMENT, "EDF", "", -50.00, "Electricity")
       .add("10/08/2016", TransactionType.PRELEVEMENT, "AUCHAN", "", -100.00)
       .check();
   }
@@ -135,10 +135,10 @@ public class CloudSignupTest extends CloudDesktopTestCase {
         {"2016/08/12", "EDF", "-50.00"},
         {"2016/08/10", "AUCHAN", "-100.00"},
       })
-      .importAccountWithAllSeriesAndComplete();
+      .importAccountAndComplete();
 
     transactions.initContent()
-      .add("12/08/2016", TransactionType.PRELEVEMENT, "EDF", "", -50.00, "Electricité")
+      .add("12/08/2016", TransactionType.PRELEVEMENT, "EDF", "", -50.00, "Electricity")
       .add("10/08/2016", TransactionType.PRELEVEMENT, "AUCHAN", "", -100.00)
       .check();
   }
@@ -175,10 +175,10 @@ public class CloudSignupTest extends CloudDesktopTestCase {
         {"2016/08/12", "EDF", "-50.00"},
         {"2016/08/10", "AUCHAN", "-100.00"},
       })
-      .importAccountWithAllSeriesAndComplete();
+      .importAccountAndComplete();
 
     transactions.initContent()
-      .add("12/08/2016", TransactionType.PRELEVEMENT, "EDF", "", -50.00, "Electricité")
+      .add("12/08/2016", TransactionType.PRELEVEMENT, "EDF", "", -50.00, "Electricity")
       .add("10/08/2016", TransactionType.PRELEVEMENT, "AUCHAN", "", -100.00)
       .check();
 
@@ -205,12 +205,12 @@ public class CloudSignupTest extends CloudDesktopTestCase {
         {"2016/08/12", "EDF", "-50.00"},
         {"2016/08/10", "AUCHAN", "-100.00"},
       })
-      .importAccountWithAllSeriesAndComplete();
+      .importAccountAndComplete();
 
     transactions.initContent()
       .add("15/08/2016", TransactionType.PRELEVEMENT, "FOUQUETS", "", -50.00, "Restaurant")
-      .add("13/08/2016", TransactionType.PRELEVEMENT, "TOTAL", "", -25.00, "Essence")
-      .add("12/08/2016", TransactionType.PRELEVEMENT, "EDF", "", -50.00, "Electricité")
+      .add("13/08/2016", TransactionType.PRELEVEMENT, "TOTAL", "", -25.00, "Fuel")
+      .add("12/08/2016", TransactionType.PRELEVEMENT, "EDF", "", -50.00, "Electricity")
       .add("10/08/2016", TransactionType.PRELEVEMENT, "AUCHAN", "", -100.00)
       .check();
   }
@@ -244,10 +244,10 @@ public class CloudSignupTest extends CloudDesktopTestCase {
         {"2016/08/12", "EDF", "-50.00"},
         {"2016/08/10", "AUCHAN", "-100.00"},
       })
-      .importAccountWithAllSeriesAndComplete();
+      .importAccountAndComplete();
 
     transactions.initContent()
-      .add("12/08/2016", TransactionType.PRELEVEMENT, "EDF", "", -50.00, "Electricité")
+      .add("12/08/2016", TransactionType.PRELEVEMENT, "EDF", "", -50.00, "Electricity")
       .add("10/08/2016", TransactionType.PRELEVEMENT, "AUCHAN", "", -100.00)
       .check();
 
@@ -272,12 +272,12 @@ public class CloudSignupTest extends CloudDesktopTestCase {
         {"2016/08/15", "FOUQUETS", "-50.00"},
         {"2016/08/13", "TOTAL", "-25.00"},
       })
-      .importAccountWithAllSeriesAndComplete();
+      .importAccountAndComplete();
 
     transactions.initContent()
       .add("15/08/2016", TransactionType.PRELEVEMENT, "FOUQUETS", "", -50.00, "Restaurant")
-      .add("13/08/2016", TransactionType.PRELEVEMENT, "TOTAL", "", -25.00, "Essence")
-      .add("12/08/2016", TransactionType.PRELEVEMENT, "EDF", "", -50.00, "Electricité")
+      .add("13/08/2016", TransactionType.PRELEVEMENT, "TOTAL", "", -25.00, "Fuel")
+      .add("12/08/2016", TransactionType.PRELEVEMENT, "EDF", "", -50.00, "Electricity")
       .add("10/08/2016", TransactionType.PRELEVEMENT, "AUCHAN", "", -100.00)
       .check();
   }

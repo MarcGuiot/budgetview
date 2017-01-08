@@ -21,14 +21,14 @@ public class CloudImportSeriesTest extends CloudDesktopTestCase {
 
     budgea.pushNewConnection(1, 123, 40);
     budgea.pushStatement(BudgeaStatement.init()
-                                 .addConnection(1, 123, 40, "Connecteur de Test Budgea", "2016-08-10 17:44:26")
-                                 .addAccount(1, "Main account 1", "100200300", "checking", 1000.00, "2016-08-10 13:00:00")
-                                 .addTransaction(1, "2016-08-10 13:00:00", -100.00, "Auchan")
-                                 .addTransaction(2, "2016-08-12 17:00:00", -50.00, "EDF", BudgeaCategory.ELECTRICITE)
-                                 .addTransaction(3, "2016-08-13 20:00:00", -15.00, "McDo", BudgeaCategory.RESTAURANT)
-                                 .endAccount()
-                                 .endConnection()
-                                 .get());
+                           .addConnection(1, 123, 40, "Connecteur de Test Budgea", "2016-08-10 17:44:26")
+                           .addAccount(1, "Main account 1", "100200300", "checking", 1000.00, "2016-08-10 13:00:00")
+                           .addTransaction(1, "2016-08-10 13:00:00", -100.00, "Auchan")
+                           .addTransaction(2, "2016-08-12 17:00:00", -50.00, "EDF", BudgeaCategory.ELECTRICITE)
+                           .addTransaction(3, "2016-08-13 20:00:00", -15.00, "McDo", BudgeaCategory.RESTAURANT)
+                           .endAccount()
+                           .endConnection()
+                           .get());
 
     operations.openImportDialog()
       .checkCloudRefreshNotVisible()
@@ -139,13 +139,13 @@ public class CloudImportSeriesTest extends CloudDesktopTestCase {
 
     budgea.pushNewConnection(1, 123, 40);
     budgea.pushStatement(BudgeaStatement.init()
-                                 .addConnection(1, 123, 40, "Connecteur de Test Budgea", "2016-08-10 17:44:26")
-                                 .addAccount(1, "Main account 1", "100200300", "checking", 1000.00, "2016-08-10 13:00:00")
-                                 .addTransaction(1, "2016-08-10 13:00:00", -100.00, "Auchan")
-                                 .addTransaction(2, "2016-08-12 17:00:00", -50.00, "EDF", BudgeaCategory.ELECTRICITE)
-                                 .endAccount()
-                                 .endConnection()
-                                 .get());
+                           .addConnection(1, 123, 40, "Connecteur de Test Budgea", "2016-08-10 17:44:26")
+                           .addAccount(1, "Main account 1", "100200300", "checking", 1000.00, "2016-08-10 13:00:00")
+                           .addTransaction(1, "2016-08-10 13:00:00", -100.00, "Auchan")
+                           .addTransaction(2, "2016-08-12 17:00:00", -50.00, "EDF", BudgeaCategory.ELECTRICITE)
+                           .endAccount()
+                           .endConnection()
+                           .get());
 
     operations.openImportDialog()
       .checkCloudRefreshNotVisible()
@@ -163,7 +163,7 @@ public class CloudImportSeriesTest extends CloudDesktopTestCase {
         {"2016/08/12", "EDF", "-50.00"},
         {"2016/08/10", "Auchan", "-100.00"},
       })
-      .importAccountWithAllSeriesAndComplete();
+      .importAccountAndComplete();
 
     transactions.initAmountContent()
       .add("12/08/2016", "EDF", -50.00, "To categorize", 1000.00, 1500.00, "Main account 1")
@@ -194,13 +194,13 @@ public class CloudImportSeriesTest extends CloudDesktopTestCase {
 
     budgea.pushNewConnection(1, 123, 40);
     budgea.pushStatement(BudgeaStatement.init()
-                                 .addConnection(1, 123, 40, "Connecteur de Test Budgea", "2016-08-10 17:44:26")
-                                 .addAccount(1, "Main account 1", "100200300", "checking", 1000.00, "2016-08-10 13:00:00")
-                                 .addTransaction(1, "2016-08-10 13:00:00", -100.00, "Auchan")
-                                 .addTransaction(2, "2016-08-12 17:00:00", -50.00, "EDF", BudgeaCategory.ELECTRICITE)
-                                 .endAccount()
-                                 .endConnection()
-                                 .get());
+                           .addConnection(1, 123, 40, "Connecteur de Test Budgea", "2016-08-10 17:44:26")
+                           .addAccount(1, "Main account 1", "100200300", "checking", 1000.00, "2016-08-10 13:00:00")
+                           .addTransaction(1, "2016-08-10 13:00:00", -100.00, "Auchan")
+                           .addTransaction(2, "2016-08-12 17:00:00", -50.00, "EDF", BudgeaCategory.ELECTRICITE)
+                           .endAccount()
+                           .endConnection()
+                           .get());
 
     operations.openImportDialog()
       .checkCloudRefreshNotVisible()

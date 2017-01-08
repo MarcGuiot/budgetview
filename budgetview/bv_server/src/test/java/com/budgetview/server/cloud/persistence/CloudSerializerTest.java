@@ -4,7 +4,7 @@ import com.budgetview.server.cloud.model.ProviderAccount;
 import com.budgetview.server.cloud.model.ProviderTransaction;
 import com.budgetview.server.config.ConfigService;
 import com.budgetview.shared.cloud.budgea.BudgeaCategory;
-import com.sun.mail.iap.ByteArray;
+import com.budgetview.shared.model.DefaultSeries;
 import junit.framework.TestCase;
 import org.globsframework.model.*;
 import org.globsframework.utils.Dates;
@@ -40,7 +40,7 @@ public class CloudSerializerTest extends TestCase {
       value(ProviderTransaction.AMOUNT, -50.00),
       value(ProviderTransaction.OPERATION_DATE, Dates.parse("2016/09/02")),
       value(ProviderTransaction.BANK_DATE, Dates.parse("2016/09/03")),
-      value(ProviderTransaction.PROVIDER_CATEGORY_ID, BudgeaCategory.ELECTRICITE.getId()),
+      value(ProviderTransaction.DEFAULT_SERIES_ID, DefaultSeries.ELECTRICITY.getId()),
       value(ProviderTransaction.PROVIDER_CATEGORY_NAME, BudgeaCategory.ELECTRICITE.getName()),
       value(ProviderTransaction.DELETED, false)};
 

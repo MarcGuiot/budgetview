@@ -2,14 +2,12 @@ package com.budgetview.server.cloud.functests;
 
 import com.budgetview.functests.checkers.CloudFirstDownloadChecker;
 import com.budgetview.functests.utils.OfxBuilder;
-import com.budgetview.model.CloudProviderConnection;
 import com.budgetview.model.TransactionType;
 import com.budgetview.server.cloud.functests.testcases.CloudDesktopTestCase;
 import com.budgetview.server.cloud.stub.BudgeaBankFieldSample;
 import com.budgetview.server.cloud.stub.BudgeaConnections;
 import com.budgetview.server.cloud.stub.BudgeaStatement;
 import com.budgetview.shared.cloud.budgea.BudgeaCategory;
-import org.globsframework.model.format.GlobPrinter;
 import org.globsframework.utils.Dates;
 import org.junit.Test;
 
@@ -47,18 +45,18 @@ public class CloudImportTest extends CloudDesktopTestCase {
         {"2016/08/10", "AUCHAN", "-100.00"},
         {"2016/08/08", "CIC", "-10.00"}
       })
-      .importAccountWithAllSeriesAndComplete();
+      .importAccountAndComplete();
 
     mainAccounts.checkAccount("Main account 1", 1000.00, "2016/08/12");
 
     transactions.initContent()
-      .add("12/08/2016", TransactionType.PRELEVEMENT, "EDF", "", -50.00, "Electricité")
+      .add("12/08/2016", TransactionType.PRELEVEMENT, "EDF", "", -50.00, "Electricity")
       .add("10/08/2016", TransactionType.PRELEVEMENT, "AUCHAN", "", -100.00)
-      .add("08/08/2016", TransactionType.PRELEVEMENT, "CIC", "", -10.00, "Frais bancaires")
+      .add("08/08/2016", TransactionType.PRELEVEMENT, "CIC", "", -10.00, "Bank fees")
       .check();
 
-    budgetView.recurring.checkContent("| Electricité | 50.00 | 50.00 |");
-    budgetView.variable.checkContent("| Frais bancaires | 10.00 | To define |");
+    budgetView.recurring.checkSeries("Electricity", "50.00", "50.00");
+    budgetView.variable.checkSeries("Bank fees", "10.00", "To define");
   }
 
   @Test
@@ -102,18 +100,18 @@ public class CloudImportTest extends CloudDesktopTestCase {
         {"2016/08/10", "AUCHAN", "-100.00"},
         {"2016/08/08", "CIC", "-10.00"}
       })
-      .importAccountWithAllSeriesAndComplete();
+      .importAccountAndComplete();
 
     mainAccounts.checkAccount("Main account 1", 1000.00, "2016/08/12");
 
     transactions.initContent()
-      .add("12/08/2016", TransactionType.PRELEVEMENT, "EDF", "", -50.00, "Electricité")
+      .add("12/08/2016", TransactionType.PRELEVEMENT, "EDF", "", -50.00, "Electricity")
       .add("10/08/2016", TransactionType.PRELEVEMENT, "AUCHAN", "", -100.00)
-      .add("08/08/2016", TransactionType.PRELEVEMENT, "CIC", "", -10.00, "Frais bancaires")
+      .add("08/08/2016", TransactionType.PRELEVEMENT, "CIC", "", -10.00, "Bank fees")
       .check();
 
-    budgetView.recurring.checkContent("| Electricité | 50.00 | 50.00 |");
-    budgetView.variable.checkContent("| Frais bancaires | 10.00 | To define |");
+    budgetView.recurring.checkSeries("Electricity", "50.00", "50.00");
+    budgetView.variable.checkSeries("Bank fees", "10.00", "To define");
   }
 
   @Test
@@ -159,18 +157,18 @@ public class CloudImportTest extends CloudDesktopTestCase {
         {"2016/08/10", "AUCHAN", "-100.00"},
         {"2016/08/08", "CIC", "-10.00"}
       })
-      .importAccountWithAllSeriesAndComplete();
+      .importAccountAndComplete();
 
     mainAccounts.checkAccount("Main account 1", 1000.00, "2016/08/12");
 
     transactions.initContent()
-      .add("12/08/2016", TransactionType.PRELEVEMENT, "EDF", "", -50.00, "Electricité")
+      .add("12/08/2016", TransactionType.PRELEVEMENT, "EDF", "", -50.00, "Electricity")
       .add("10/08/2016", TransactionType.PRELEVEMENT, "AUCHAN", "", -100.00)
-      .add("08/08/2016", TransactionType.PRELEVEMENT, "CIC", "", -10.00, "Frais bancaires")
+      .add("08/08/2016", TransactionType.PRELEVEMENT, "CIC", "", -10.00, "Bank fees")
       .check();
 
-    budgetView.recurring.checkContent("| Electricité | 50.00 | 50.00 |");
-    budgetView.variable.checkContent("| Frais bancaires | 10.00 | To define |");
+    budgetView.recurring.checkSeries("Electricity", "50.00", "50.00");
+    budgetView.variable.checkSeries("Bank fees", "10.00", "To define");
   }
 
   @Test
@@ -202,10 +200,10 @@ public class CloudImportTest extends CloudDesktopTestCase {
         {"2016/08/12", "EDF", "-50.00"},
         {"2016/08/10", "AUCHAN", "-100.00"},
       })
-      .importAccountWithAllSeriesAndComplete();
+      .importAccountAndComplete();
 
     transactions.initAmountContent()
-      .add("12/08/2016", "EDF", -50.00, "Electricité", 1000.00, 1000.00, "Main account 1")
+      .add("12/08/2016", "EDF", -50.00, "Electricity", 1000.00, 1000.00, "Main account 1")
       .add("10/08/2016", "AUCHAN", -100.00, "To categorize", 1050.00, 1050.00, "Main account 1")
       .check();
 
@@ -225,11 +223,11 @@ public class CloudImportTest extends CloudDesktopTestCase {
         {"2016/08/08", "CIC", "-10.00"}
       })
       .checkSelectedAccount("Main account 1")
-      .importAccountWithAllSeriesAndGetSummary()
+      .importAccountAndGetSummary()
       .checkSummaryAndValidate(1, 1, 1);
 
-    budgetView.recurring.checkContent("| Electricité | 50.00 | 50.00 |");
-    budgetView.variable.checkContent("| Frais bancaires | 10.00 | To define |");
+    budgetView.recurring.checkSeries("Electricity", "50.00", "50.00");
+    budgetView.variable.checkSeries("Bank fees", "10.00", "To define");
 
     operations.openImportDialog()
       .selectCloudRefreshAndGetSummary()
@@ -261,7 +259,7 @@ public class CloudImportTest extends CloudDesktopTestCase {
       .setPassword("Code (1234)", "")
       .next()
       .waitForNotificationAndDownload(mailbox.checkStatementReady("toto@example.com"))
-      .importAccountWithAllSeriesAndComplete();
+      .importAccountAndComplete();
 
     budgea.callWebhook(BudgeaStatement.init()
                          .addConnection(1, 123, 40, "Connecteur de Test Budgea", "2016-08-10 17:44:26")
@@ -279,7 +277,7 @@ public class CloudImportTest extends CloudDesktopTestCase {
         {"2016/08/08", "CIC", "-10.00"}
       })
       .checkSelectedAccount("Main account 1")
-      .importAccountWithAllSeriesAndGetSummary()
+      .importAccountAndGetSummary()
       .cancel();
 
     operations.openImportDialog()
@@ -289,11 +287,11 @@ public class CloudImportTest extends CloudDesktopTestCase {
         {"2016/08/08", "CIC", "-10.00"}
       })
       .checkSelectedAccount("Main account 1")
-      .importAccountWithAllSeriesAndGetSummary()
+      .importAccountAndGetSummary()
       .checkSummaryAndValidate(1, 1, 1);
 
-    budgetView.recurring.checkContent("| Electricité | 50.00 | 50.00 |");
-    budgetView.variable.checkContent("| Frais bancaires | 10.00 | To define |");
+    budgetView.recurring.checkSeries("Electricity", "50.00", "50.00");
+    budgetView.variable.checkSeries("Bank fees", "10.00", "To define");
   }
 
   @Test
@@ -333,17 +331,17 @@ public class CloudImportTest extends CloudDesktopTestCase {
         {"2016/08/10", "AUCHAN", "-100.00"},
         {"2016/08/08", "CIC", "-10.00"}
       })
-      .importAccountWithAllSeriesAndComplete();
+      .importAccountAndComplete();
 
     transactions.initContent()
-      .add("12/08/2016", TransactionType.PRELEVEMENT, "EDF", "", -50.00, "Electricité")
+      .add("12/08/2016", TransactionType.PRELEVEMENT, "EDF", "", -50.00, "Electricity")
       .add("10/08/2016", TransactionType.PRELEVEMENT, "CB AUCHAN SA", "", -100.00)
       .add("08/08/2016", TransactionType.PRELEVEMENT, "PRLVT FRAIS CIC FILBANQUE", "", -10.00)
       .check();
 
     mainAccounts.checkAccount("Account n. 100200300", 950.00, "2016/08/12");
 
-    budgetView.recurring.checkContent("| Electricité | 50.00 | 50.00 |");
+    budgetView.recurring.checkSeries("Electricity", "50.00", "50.00");
   }
 
   @Test
@@ -374,14 +372,14 @@ public class CloudImportTest extends CloudDesktopTestCase {
         {"2016/08/12", "EDF", "-50.00"},
         {"2016/08/10", "AUCHAN", "-100.00"},
       })
-      .importAccountWithAllSeriesAndComplete();
+      .importAccountAndComplete();
 
     transactions.initAmountContent()
-      .add("12/08/2016", "EDF", -50.00, "Electricité", 1000.00, 1000.00, "Main account 1")
+      .add("12/08/2016", "EDF", -50.00, "Electricity", 1000.00, 1000.00, "Main account 1")
       .add("10/08/2016", "AUCHAN", -100.00, "To categorize", 1050.00, 1050.00, "Main account 1")
       .check();
 
-    budgea.setBankFields(BudgeaBankFieldSample.CIC);
+    budgea.setBankLoginFields(BudgeaBankFieldSample.CIC);
     budgea.pushNewConnection(2, 123, 10);
     budgea.pushStatement(BudgeaStatement.init()
                            .addConnection(2, 123, 10, "CIC", "2016-08-14 16:18:44")
@@ -412,7 +410,7 @@ public class CloudImportTest extends CloudDesktopTestCase {
       .importAccountAndGetSummary()
       .checkSummaryAndValidate(1, 0, 0);
 
-    budgetView.recurring.checkContent("| Electricité | 50.00 | 50.00 |");
+    budgetView.recurring.checkSeries("Electricity", "50.00", "50.00");
 
     mainAccounts.checkContent("| Main account 1* | 1000.00 on 2016/08/12 | sunny |\n" +
                               "| Joint account*  | 500.00 on 2016/08/14  | sunny |");

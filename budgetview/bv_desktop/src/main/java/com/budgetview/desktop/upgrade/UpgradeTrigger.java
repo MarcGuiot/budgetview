@@ -490,11 +490,11 @@ public class UpgradeTrigger implements ChangeSetListener {
                          new GlobFunctor() {
                            public void run(Glob transaction, GlobRepository repository) throws Exception {
                              String originalLabel = transaction.get(Transaction.ORIGINAL_LABEL);
-                             String newLabel = TransactionAnalyzerFactory.removeBlankAndToUpercase(originalLabel);
+                             String newLabel = TransactionAnalyzerFactory.removeBlankAndToUppercase(originalLabel);
                              repository.update(transaction.getKey(), Transaction.ORIGINAL_LABEL, newLabel);
 
                              String label = transaction.get(Transaction.LABEL);
-                             String newVisibleLabel = TransactionAnalyzerFactory.removeBlankAndToUpercase(label);
+                             String newVisibleLabel = TransactionAnalyzerFactory.removeBlankAndToUppercase(label);
                              repository.update(transaction.getKey(), Transaction.LABEL, newVisibleLabel);
 
                            }

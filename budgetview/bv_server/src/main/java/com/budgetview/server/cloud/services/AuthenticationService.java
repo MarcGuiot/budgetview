@@ -66,12 +66,13 @@ public class AuthenticationService {
     return userId;
   }
 
-  public Integer createUser(String email) throws GlobsSQLException {
+  public Integer createUser(String email, String lang) throws GlobsSQLException {
     String lowerCaseEmail = email.toLowerCase();
     SqlConnection connection = database.connect();
     try {
       SqlCreateRequest request = connection.startCreate(CloudUser.TYPE)
         .set(CloudUser.EMAIL, lowerCaseEmail)
+        .set(CloudUser.LANG, lang)
         .getRequest();
       request.execute();
       return request.getLastGeneratedIds().get(CloudUser.ID);

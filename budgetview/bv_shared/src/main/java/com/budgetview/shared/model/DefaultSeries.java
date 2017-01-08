@@ -87,6 +87,15 @@ public enum DefaultSeries implements GlobConstantContainer {
                             value(NAME, name));
   }
 
+  public static DefaultSeries find(int id) {
+    for (DefaultSeries defaultSeries : values()) {
+      if (defaultSeries.id == id) {
+        return defaultSeries;
+      }
+    }
+    return null;
+  }
+
   public int getId() {
     return id;
   }

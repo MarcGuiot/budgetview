@@ -9,6 +9,7 @@ import com.budgetview.shared.cloud.CloudSubscriptionStatus;
 import com.budgetview.shared.cloud.budgea.BudgeaAPI;
 import com.budgetview.shared.model.AccountType;
 import com.budgetview.shared.model.Provider;
+import com.budgetview.utils.Lang;
 import org.globsframework.gui.splits.utils.GuiUtils;
 import org.globsframework.json.JsonGlobParser;
 import org.globsframework.model.Glob;
@@ -45,6 +46,8 @@ public class CloudService {
 
   public interface BankConnectionCallback {
     void processCompletion(Glob providerConnection);
+
+    void processSecondStepResponse(int connectionId);
 
     void processSubscriptionError(CloudSubscriptionStatus status);
 
@@ -92,7 +95,7 @@ public class CloudService {
                             value(CloudDesktopUser.EMAIL, email),
                             value(CloudDesktopUser.BV_TOKEN, null),
                             value(CloudDesktopUser.REGISTERED, false));
-          JSONObject result = cloudAPI.signup(email);
+          JSONObject result = cloudAPI.signup(email, Lang.getLang());
           switch (CloudRequestStatus.get(result.getString(CloudConstants.STATUS))) {
             case OK:
               callback.processCompletion();
@@ -224,31 +227,8 @@ public class CloudService {
       if (budgeaBankId == null) {
         throw new InvalidParameter("No provider set for bank: " + bank);
       }
-
-      GlobList fields = repository.getAll(BudgeaBankField.TYPE, fieldEquals(BudgeaBankField.BANK, budgeaBankId));
-      repository.delete(BudgeaBankFieldValue.TYPE, fieldIn(BudgeaBankFieldValue.FIELD, fields.getValueSet(BudgeaBankField.ID)));
-      repository.delete(fields);
-      repository.delete(BudgeaConnection.TYPE, fieldEquals(BudgeaConnection.BANK, budgeaBankId));
-      repository.delete(BudgeaConnectionValue.TYPE, fieldEquals(BudgeaConnectionValue.CONNECTION, budgeaBankId));
-      repository.findOrCreate(Key.create(BudgeaBank.TYPE, budgeaBankId),
-                              value(BudgeaBank.BANK, bank.get(Bank.ID)));
-
-      JsonGlobParser jsonParser = createBankParser(repository);
-
       JSONObject root = budgeaAPI.getBankFields(budgeaBankId);
-      for (Object f : root.getJSONArray("fields")) {
-        JSONObject field = (JSONObject) f;
-        Glob fieldGlob = jsonParser.toGlob(field, BudgeaBankField.TYPE, repository,
-                                           value(BudgeaBankField.BANK, budgeaBankId));
-
-        if (field.has("values")) {
-          for (Object v : field.getJSONArray("values")) {
-            JSONObject value = (JSONObject) v;
-            jsonParser.toGlob(value, BudgeaBankFieldValue.TYPE, repository,
-                              value(BudgeaBankFieldValue.FIELD, fieldGlob.get(BudgeaBankField.ID)));
-          }
-        }
-      }
+      resetBankFields(bank, root, repository);
 
       callback.processCompletion();
     }
@@ -261,7 +241,37 @@ public class CloudService {
     }
   }
 
-  public void addBankConnection(final Glob bankConnection, final GlobRepository repository, final BankConnectionCallback callback) {
+  public void resetBankFields(Glob bank, JSONObject root, GlobRepository repository) {
+
+    Integer budgeaBankId = bank.get(Bank.PROVIDER_ID);
+
+    GlobList fields = repository.getAll(BudgeaBankField.TYPE, fieldEquals(BudgeaBankField.BANK, budgeaBankId));
+    repository.delete(BudgeaBankFieldValue.TYPE, fieldIn(BudgeaBankFieldValue.FIELD, fields.getValueSet(BudgeaBankField.ID)));
+    repository.delete(fields);
+    repository.delete(BudgeaConnection.TYPE, fieldEquals(BudgeaConnection.BANK, budgeaBankId));
+    repository.delete(BudgeaConnectionValue.TYPE, fieldEquals(BudgeaConnectionValue.CONNECTION, budgeaBankId));
+    repository.findOrCreate(Key.create(BudgeaBank.TYPE, budgeaBankId),
+                            value(BudgeaBank.BANK, bank.get(Bank.ID)));
+
+    JsonGlobParser jsonParser = createBankParser(repository);
+
+    for (Object f : root.getJSONArray("fields")) {
+      JSONObject field = (JSONObject) f;
+      Glob fieldGlob = jsonParser.toGlob(field, BudgeaBankField.TYPE, repository,
+                                         value(BudgeaBankField.BANK, budgeaBankId));
+
+      if (field.has("values")) {
+        for (Object v : field.getJSONArray("values")) {
+          JSONObject value = (JSONObject) v;
+          jsonParser.toGlob(value, BudgeaBankFieldValue.TYPE, repository,
+                            value(BudgeaBankFieldValue.FIELD, fieldGlob.get(BudgeaBankField.ID)));
+        }
+      }
+    }
+  }
+
+  public void addBankConnection(final Glob bank, final Glob bankConnection, final GlobRepository repository, final BankConnectionCallback callback) {
+    System.out.println("CloudService.addBankConnection");
     Thread thread = new Thread(new Runnable() {
       public void run() {
         try {
@@ -275,9 +285,13 @@ public class CloudService {
           Glob user = repository.get(CloudDesktopUser.KEY);
           String email = user.get(CloudDesktopUser.EMAIL);
           String bvToken = user.get(CloudDesktopUser.BV_TOKEN);
+          System.out.println("CloudService.addBankConnection - check provider access");
           if (!cloudAPI.isProviderAccessRegistered(email, bvToken)) {
+            System.out.println("CloudService.addBankConnection - add provider access");
             cloudAPI.addProviderAccess(email, bvToken, budgeaAPI.getToken(), budgeaAPI.getUserId());
           }
+
+          System.out.println("CloudService.addBankConnection - getting temp token");
 
           JSONObject result = cloudAPI.getTemporaryBudgeaToken(email, bvToken);
           switch (CloudRequestStatus.get(result.getString(CloudConstants.STATUS))) {
@@ -294,24 +308,45 @@ public class CloudService {
               return;
           }
 
-          JSONObject connectionResult = budgeaAPI.addBankConnection(bankConnection.get(BudgeaConnection.BANK), params);
-          int providerConnectionId = connectionResult.getInt("id");
+          System.out.println("CloudService.addBankConnection - starting step1");
 
-          repository.update(CloudDesktopUser.KEY, CloudDesktopUser.SYNCHRO_ENABLED, true);
+          BudgeaAPI.LoginResult connectionResult = budgeaAPI.addBankConnectionStep1(bankConnection.get(BudgeaConnection.BANK), params);
+          if (connectionResult.singleStepLogin) {
+            System.out.println("CloudService.addBankConnection - login OK");
+            processLoginOk(connectionResult.json, repository, callback);
+          }
+          else {
+            System.out.println("CloudService.addBankConnection - needs a second step \n" + connectionResult.json.toString(2));
+            int connectionId = connectionResult.json.getInt("id");
+            resetBankFields(bank, connectionResult.json, repository);
+            callback.processSecondStepResponse(connectionId);
+          }
+        }
+        catch (Exception e) {
+          System.out.println("CloudService.run - exception");
+          Log.write("Error creating connection", e);
+          callback.processError(e);
+        }
+      }
+    });
+    thread.start();
+  }
 
-          Glob bank = BudgeaBank.findBudgetViewBank(connectionResult.getInt("id_bank"), repository);
-          String bankName = bank != null ? bank.get(Bank.NAME) : "Bank";
+  public void addBankConnectionStep2(final int connectionId, final Glob bankConnection, final GlobRepository repository, final BankConnectionCallback callback) {
+    System.out.println("CloudService.addBankConnectionStep2");
+    Thread thread = new Thread(new Runnable() {
+      public void run() {
+        try {
+          Map<String, String> params = new HashMap<String, String>();
+          for (Glob value : repository.findLinkedTo(bankConnection.getKey(), BudgeaConnectionValue.CONNECTION)) {
+            Glob field = repository.findLinkTarget(value, BudgeaConnectionValue.FIELD);
+            String name = field.get(BudgeaBankField.NAME);
+            params.put(name, value.get(BudgeaConnectionValue.VALUE));
+          }
 
-          Glob connection =
-            repository.create(CloudProviderConnection.TYPE,
-                              value(CloudProviderConnection.PROVIDER, Provider.BUDGEA.getId()),
-                              value(CloudProviderConnection.PROVIDER_CONNECTION_ID, providerConnectionId),
-                              value(CloudProviderConnection.BANK_NAME, bankName),
-                              value(CloudProviderConnection.INITIALIZED, false));
+          JSONObject connectionResult = budgeaAPI.addBankConnectionStep2(connectionId, params);
 
-          cloudAPI.addBankConnection(email, bvToken, providerConnectionId);
-
-          callback.processCompletion(connection);
+          processLoginOk(connectionResult, repository, callback);
         }
         catch (Exception e) {
           Log.write("Error creating connection", e);
@@ -320,6 +355,29 @@ public class CloudService {
       }
     });
     thread.start();
+  }
+
+  public void processLoginOk(JSONObject connectionResult, GlobRepository repository, BankConnectionCallback callback) throws IOException {
+    int providerConnectionId = connectionResult.getInt("id");
+
+    repository.update(CloudDesktopUser.KEY, CloudDesktopUser.SYNCHRO_ENABLED, true);
+
+    Glob bank = BudgeaBank.findBudgetViewBank(connectionResult.getInt("id_bank"), repository);
+    String bankName = bank != null ? bank.get(Bank.NAME) : "Bank";
+
+    Glob connection =
+      repository.create(CloudProviderConnection.TYPE,
+                        value(CloudProviderConnection.PROVIDER, Provider.BUDGEA.getId()),
+                        value(CloudProviderConnection.PROVIDER_CONNECTION_ID, providerConnectionId),
+                        value(CloudProviderConnection.BANK_NAME, bankName),
+                        value(CloudProviderConnection.INITIALIZED, false));
+
+    Glob user = repository.get(CloudDesktopUser.KEY);
+    String email = user.get(CloudDesktopUser.EMAIL);
+    String bvToken = user.get(CloudDesktopUser.BV_TOKEN);
+    cloudAPI.addBankConnection(email, bvToken, providerConnectionId);
+
+    callback.processCompletion(connection);
   }
 
   public void checkBankConnectionReady(Glob providerConnection, GlobRepository repository, BankConnectionCheckCallback callback) {

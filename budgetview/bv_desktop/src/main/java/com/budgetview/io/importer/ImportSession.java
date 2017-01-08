@@ -255,7 +255,7 @@ public class ImportSession {
     return dateFormatAnalyzer.parse(valueSet);
   }
 
-  public Key importTransactions(Glob importedAccount, Glob currentlySelectedAccount, String selectedDateFormat) {
+  public Key importTransactions(Glob currentlySelectedAccount, String selectedDateFormat) {
     try {
       localRepository.startChangeSet();
       if (!load) {
@@ -373,18 +373,18 @@ public class ImportSession {
         value(Transaction.ORIGINAL_ACCOUNT, accountId),
         value(Transaction.AMOUNT, importedTransaction.get(ImportedTransaction.AMOUNT)),
         value(Transaction.NOTE, importedTransaction.get(ImportedTransaction.NOTE)),
-        value(Transaction.BANK_TRANSACTION_TYPE, TransactionAnalyzerFactory.removeBlankAndToUpercase(importedTransaction.get(ImportedTransaction.BANK_TRANSACTION_TYPE))),
+        value(Transaction.BANK_TRANSACTION_TYPE, TransactionAnalyzerFactory.removeBlankAndToUppercase(importedTransaction.get(ImportedTransaction.BANK_TRANSACTION_TYPE))),
         value(Transaction.SPLIT, importedTransaction.get(ImportedTransaction.SPLIT)),
         value(Transaction.SPLIT_SOURCE,
               linkImportedTransactionToTransaction.get(importedTransaction.get(ImportedTransaction.SPLIT_SOURCE))),
-        value(Transaction.OFX_CHECK_NUM, TransactionAnalyzerFactory.removeBlankAndToUpercase(importedTransaction.get(ImportedTransaction.OFX_CHECK_NUM))),
-        value(Transaction.OFX_MEMO, TransactionAnalyzerFactory.removeBlankAndToUpercase(importedTransaction.get(ImportedTransaction.OFX_MEMO))),
-        value(Transaction.LABEL, TransactionAnalyzerFactory.removeBlankAndToUpercase(importedTransaction.get(ImportedTransaction.SIMPLE_LABEL))),
-        value(Transaction.OFX_NAME, TransactionAnalyzerFactory.removeBlankAndToUpercase(importedTransaction.get(ImportedTransaction.OFX_NAME))),
-        value(Transaction.QIF_M, TransactionAnalyzerFactory.removeBlankAndToUpercase(importedTransaction.get(ImportedTransaction.QIF_M))),
-        value(Transaction.QIF_P, TransactionAnalyzerFactory.removeBlankAndToUpercase(importedTransaction.get(ImportedTransaction.QIF_P))),
-        value(Transaction.SERIES, getSeriesId(importedTransaction, accountId)),
-        value(Transaction.SUB_SERIES, getSubSeriesId(importedTransaction, accountId)),
+        value(Transaction.OFX_CHECK_NUM, TransactionAnalyzerFactory.removeBlankAndToUppercase(importedTransaction.get(ImportedTransaction.OFX_CHECK_NUM))),
+        value(Transaction.OFX_MEMO, TransactionAnalyzerFactory.removeBlankAndToUppercase(importedTransaction.get(ImportedTransaction.OFX_MEMO))),
+        value(Transaction.LABEL, TransactionAnalyzerFactory.removeBlankAndToUppercase(importedTransaction.get(ImportedTransaction.SIMPLE_LABEL))),
+        value(Transaction.OFX_NAME, TransactionAnalyzerFactory.removeBlankAndToUppercase(importedTransaction.get(ImportedTransaction.OFX_NAME))),
+        value(Transaction.QIF_M, TransactionAnalyzerFactory.removeBlankAndToUppercase(importedTransaction.get(ImportedTransaction.QIF_M))),
+        value(Transaction.QIF_P, TransactionAnalyzerFactory.removeBlankAndToUppercase(importedTransaction.get(ImportedTransaction.QIF_P))),
+        value(Transaction.SERIES, getSeriesId(importedTransaction)),
+        value(Transaction.SUB_SERIES, getSubSeriesId(importedTransaction)),
         value(Transaction.IMPORT_TYPE, importedTransaction.get(ImportedTransaction.IMPORT_TYPE))
       );
       linkImportedTransactionToTransaction.put(importedTransaction.get(ImportedTransaction.ID),
@@ -395,8 +395,8 @@ public class ImportSession {
     return createdTransactions;
   }
 
-  private Integer getSubSeriesId(Glob importedTransaction, Integer accountId) {
-    if (shouldImportThisSeries(importedTransaction, accountId)) {
+  private Integer getSubSeriesId(Glob importedTransaction) {
+    if (shouldImportThisSeries(importedTransaction)) {
       Glob series = localRepository.findLinkTarget(importedTransaction, ImportedTransaction.SERIES);
       Integer subSeries = series.get(ImportedSeries.SUB_SERIES);
       return subSeries != null ? subSeries : ((Integer) Transaction.SUB_SERIES.getDefaultValue());
@@ -406,8 +406,8 @@ public class ImportSession {
     }
   }
 
-  private Integer getSeriesId(Glob importedTransaction, Integer accountId) {
-    if (shouldImportThisSeries(importedTransaction, accountId)) {
+  private Integer getSeriesId(Glob importedTransaction) {
+    if (shouldImportThisSeries(importedTransaction)) {
       Glob imported = localRepository.findLinkTarget(importedTransaction, ImportedTransaction.SERIES);
       Integer seriesId = imported.get(ImportedSeries.SERIES);
       return seriesId != null ? seriesId : ((Integer) Transaction.SERIES.getDefaultValue());
@@ -417,7 +417,7 @@ public class ImportSession {
     }
   }
 
-  private boolean shouldImportThisSeries(Glob importedTransaction, Integer accountId) {
+  private boolean shouldImportThisSeries(Glob importedTransaction) {
     Glob importedSeries = localRepository.findLinkTarget(importedTransaction, ImportedTransaction.SERIES);
     return shouldImportSeries() && importedSeries != null && importedSeries.get(ImportedSeries.BUDGET_AREA) != null;
   }

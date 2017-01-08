@@ -9,13 +9,13 @@ import com.budgetview.server.cloud.utils.CheckFailed;
 import com.budgetview.server.cloud.utils.SubscriptionCheckFailed;
 import com.budgetview.shared.cloud.CloudConstants;
 import org.apache.log4j.Logger;
+import org.globsframework.json.JsonGlobWriter;
 import org.globsframework.sqlstreams.GlobsDatabase;
 import org.globsframework.sqlstreams.SqlConnection;
 import org.globsframework.sqlstreams.SqlSelect;
 import org.globsframework.sqlstreams.constraints.Where;
 import org.globsframework.streams.GlobStream;
 import org.globsframework.utils.directory.Directory;
-import org.json.JSONWriter;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -41,8 +41,8 @@ public class ValidateServlet extends HttpCloudServlet {
 
     logger.info("POST");
 
-    Command command = new HttpCommand(directory, req, resp, logger) {
-      protected void doRun() throws IOException, InvalidHeader {
+    Command command = new HttpCommand(req, resp, logger) {
+      protected int doRun(JsonGlobWriter writer) throws IOException, InvalidHeader {
         String email = getStringHeader(CloudConstants.EMAIL);
         logger.info("Validation received for " + email);
 
@@ -52,12 +52,9 @@ public class ValidateServlet extends HttpCloudServlet {
 
           Integer userId = authentication.findUser(email);
           if (userId == null) {
-            setUnauthorized(response);
-            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            return;
+            return HttpServletResponse.SC_UNAUTHORIZED;
           }
 
-          JSONWriter writer = new JSONWriter(response.getWriter());
           writer.object();
           try {
             emailValidation.checkTempCode(userId, code);
@@ -67,13 +64,12 @@ public class ValidateServlet extends HttpCloudServlet {
           catch (CheckFailed checkFailed) {
             writer.key(CloudConstants.STATUS).value(checkFailed.getStatus());
             writer.endObject();
-            setOk(response);
-            return;
+            return HttpServletResponse.SC_OK;
           }
 
           try {
             authentication.checkSubscriptionIsValid(userId);
-            setOk(response, writer);
+            writer.key(CloudConstants.STATUS).value("ok");
             writer.key(CloudConstants.EXISTING_STATEMENTS).value(containsStatements(userId));
           }
           catch (SubscriptionCheckFailed e) {
@@ -84,11 +80,11 @@ public class ValidateServlet extends HttpCloudServlet {
 
           logger.info("User " + email + " registered");
 
-          setOk(response);
+          return HttpServletResponse.SC_OK;
         }
         catch (Exception e) {
           logger.error("Could not process: " + email, e);
-          setInternalError(response);
+          return HttpServletResponse.SC_INTERNAL_SERVER_ERROR;
         }
       }
 

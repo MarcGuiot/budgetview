@@ -7,6 +7,7 @@ import com.budgetview.server.cloud.model.ProviderAccount;
 import com.budgetview.server.cloud.model.ProviderTransaction;
 import com.budgetview.server.cloud.model.ProviderUpdate;
 import com.budgetview.server.cloud.persistence.CloudSerializer;
+import com.budgetview.shared.cloud.CloudConstants;
 import com.budgetview.shared.model.Provider;
 import org.apache.log4j.Logger;
 import org.globsframework.json.JsonGlobWriter;
@@ -52,7 +53,7 @@ public class StatementServlet extends HttpCloudServlet {
     logger.info("GET");
 
     Command command = new AuthenticatedCommand(directory, req, resp, logger) {
-      protected void doRun() throws IOException, InvalidHeader {
+      protected int doRun(JsonGlobWriter writer) throws IOException, InvalidHeader {
 
         Integer lastUpdate = null;
         String pathInfo = request.getPathInfo();
@@ -92,15 +93,12 @@ public class StatementServlet extends HttpCloudServlet {
           }
           catch (GeneralSecurityException e) {
             logger.error("Could not identify user with email: " + user.get(CloudUser.EMAIL));
-            response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-            return;
+            return HttpServletResponse.SC_INTERNAL_SERVER_ERROR;
           }
         }
 
-        JsonGlobWriter writer = new JsonGlobWriter(response.getWriter());
         writer.object();
-
-        setOk(response, writer);
+        writer.key(CloudConstants.STATUS).value("ok");
         writer.key("last_update").value(maxId);
 
         writer.key("accounts");
@@ -126,6 +124,8 @@ public class StatementServlet extends HttpCloudServlet {
         stream.close();
         query.close();
         connection.commitAndClose();
+
+        return HttpServletResponse.SC_OK;
       }
 
       private void writeAccount(FieldValues account, JsonGlobWriter writer) {
@@ -154,7 +154,7 @@ public class StatementServlet extends HttpCloudServlet {
         writer.field(ProviderTransaction.AMOUNT, "amount");
         writer.field(ProviderTransaction.OPERATION_DATE, "operation_date");
         writer.field(ProviderTransaction.BANK_DATE, "bank_date");
-        writer.field(ProviderTransaction.PROVIDER_CATEGORY_ID, "provider_category_id");
+        writer.field(ProviderTransaction.DEFAULT_SERIES_ID, "default_series_id");
         writer.field(ProviderTransaction.PROVIDER_CATEGORY_NAME, "provider_category_name");
         writer.field(ProviderTransaction.DELETED, "deleted");
         writer.endObject();
