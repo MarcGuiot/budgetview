@@ -1,6 +1,5 @@
 package com.budgetview.server.cloud.stub;
 
-import com.budgetview.shared.cloud.budgea.BudgeaCategory;
 import org.json.JSONWriter;
 
 import java.io.IOException;
@@ -21,8 +20,8 @@ public class BudgeaConnections {
     json.object();
     json.key("connections");
     json.array();
-
   }
+
   public BudgeaConnections add(int id, int userId, int idBank, boolean active, String lastUpdate) {
     json.object();
     json.key("id").value(id);

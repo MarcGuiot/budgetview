@@ -19,6 +19,7 @@ import org.globsframework.model.utils.GlobMatchers;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 
 public class ImportCloudEditionPanel extends AbstractImportStepPanel {
@@ -43,6 +44,7 @@ public class ImportCloudEditionPanel extends AbstractImportStepPanel {
     repeat = builder.addRepeat("connections", CloudProviderConnection.TYPE, GlobMatchers.NONE, GlobComparators.ascending(CloudProviderConnection.BANK_NAME), new RepeatComponentFactory<Glob>() {
       public void registerComponents(PanelBuilder cellBuilder, Glob connection) {
         cellBuilder.add("name", new JLabel(connection.get(CloudProviderConnection.BANK_NAME)));
+        cellBuilder.add("details", getDetailsLabel(connection));
         cellBuilder.add("delete", new DeleteConnectionAction(connection));
       }
     });
@@ -76,6 +78,17 @@ public class ImportCloudEditionPanel extends AbstractImportStepPanel {
     builder.add("progressPanel", progressPanel);
 
     return builder;
+  }
+
+  private JLabel getDetailsLabel(Glob connection) {
+    JLabel label = new JLabel();
+    if (connection.isTrue(CloudProviderConnection.INITIALIZED)) {
+      label.setVisible(false);
+    }
+    else {
+      label.setText(Lang.get("import.cloud.edition.notinitialized"));
+    }
+    return label;
   }
 
   public void start() {

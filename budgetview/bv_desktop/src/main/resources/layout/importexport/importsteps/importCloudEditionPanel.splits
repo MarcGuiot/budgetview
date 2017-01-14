@@ -3,7 +3,12 @@
   <styleImport file="/layout/commonStyles.splits"/>
   <styleImport file="/layout/dialogStyles.splits"/>
   <styleImport file="/layout/importexport/components/importDialogStyles.splits"/>
-
+  <styles>
+    <style selector=".connection" opaque="false" border="matte(0,0,1,0,dialog.separator)"/>
+    <style selector="label.name" font="-,bold,14" marginTop="10" marginBottom="10"/>
+    <style selector="label.details" font="-,italic,12" marginTop="10" marginBottom="10" marginLeft="10"/>
+    <style selector="button.delete" fill="none" marginTop="10" marginBottom="10" weightX="0.1"/>
+  </styles>
 
   <column styleClass="dialog" preferredSize="(600,710)" name="importCloudEditionPanel">
 
@@ -17,10 +22,13 @@
         <scrollPane marginTop="20" forceVerticalScroll="true" weightY="100">
           <column margin="20">
 
-            <repeat ref="connections" layout="verticalGrid">
-              <label ref="name" marginTop="10"/>
-              <filler fill="horizontal" marginTop="10"/>
-              <button action="delete" marginTop="10"/>
+            <repeat ref="connections" layout="column">
+              <row styleClass="connection">
+                <label ref="name" styleClass="name"/>
+                <label ref="details" styleClass="details"/>
+                <filler fill="horizontal"/>
+                <button action="delete" styleClass="delete"/>
+              </row>
             </repeat>
 
             <label ref="progressLabel" fill="none" anchor="center" marginBottom="15"/>

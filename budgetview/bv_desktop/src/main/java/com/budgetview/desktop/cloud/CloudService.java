@@ -443,6 +443,8 @@ public class CloudService {
           Glob user = repository.get(CloudDesktopUser.KEY);
           JSONObject connections = cloudAPI.getBankConnections(user.get(CloudDesktopUser.EMAIL), user.get(CloudDesktopUser.BV_TOKEN));
 
+          System.out.println("CloudService.run: " + connections.toString(2));
+
           repository.startChangeSet();
           repository.deleteAll(CloudProviderConnection.TYPE);
           for (Object c : connections.getJSONArray("connections")) {

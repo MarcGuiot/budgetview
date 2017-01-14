@@ -32,7 +32,7 @@
                           border="empty(0,0,10,0)"/>
         </panel>
 
-        <row styleClass="separator" border="matte(1,0,0,0,dialog.separator)" weightY="1" marginTop="15">
+        <row styleClass="separator" weightY="1" marginTop="15">
           <label icon="import_manual.png" text="$import.fileSelection.manualEntry.title" styleClass="sectionTitle"
                  marginTop="15"/>
           <filler fill="horizontal"/>
