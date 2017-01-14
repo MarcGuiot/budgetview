@@ -12,7 +12,8 @@
       <bankEntity id="30076"/>
     </bank>
 
-    <bank name="Monabanq." country="fr" url="http://www.monabanq.com" id="1003">
+    <bank name="Monabanq." country="fr" url="http://www.monabanq.com" id="1003"
+          provider="2" providerId="553">
       <bankEntity id="14690"/>
     </bank>
 
@@ -21,7 +22,7 @@
       <bankEntity id="14518"/>
     </bank>
 
-    <bank name="BRED - Banque Populaire" country="fr" url="http://www.bred.fr" id="1005"
+    <bank name="Bred" country="fr" url="http://www.bred.fr" id="1005"
           provider="2" providerId="11">
       <bankEntity id="10107"/>
     </bank>
@@ -56,6 +57,7 @@
     <bank name="Banque BCP" country="fr" url="https://www.banquebcp.fr" id="1012"
           provider="2" providerId="44">
       <bankEntity id="12869"/>
+      <bankEntity id="12579"/>
     </bank>
 
     <bank name="Banque Chaix" country="fr" url="http://www.banque-chaix.fr" id="1013"
@@ -67,6 +69,85 @@
       <bankEntity id="10268"/>
     </bank>
 
+    <bank name="ING Direct" country="fr" url="http://www.ingdirect.fr" id="1015"
+          provider="2" providerId="7">
+      <bankEntity id="14559"/>
+    </bank>
+
+    <bank name="Banque de la Réunion" country="fr" url="https://www.banquedelareunion.fr" id="1016"
+          provider="2" providerId="77">
+      <bankEntity id="12169"/>
+    </bank>
+
+    <bank name="Banque Fiducial" country="fr" url="http://www.banque-fiducial.fr" id="1017"
+          provider="2" providerId="91">
+      <bankEntity id="13179"/>
+    </bank>
+
+    <bank name="Banque Laydernier" country="fr" url="https://www.banque-laydernier.fr" id="1018"
+          provider="2" providerId="32">
+      <bankEntity id="10228"/>
+    </bank>
+
+    <bank name="Banque Rhône-Alpes" country="fr" url="https://www.banque-rhone-alpes.fr" id="1020"
+          provider="2" providerId="37">
+      <bankEntity id="10468"/>
+    </bank>
+
+    <bank name="Banque Tarneaud" country="fr" url="https://www.tarneaud.fr" id="1021"
+          provider="2" providerId="26">
+      <bankEntity id="10558"/>
+    </bank>
+
+    <bank name="Banque Transatlantique" country="fr" url="https://www.cic.fr/bt/en/" id="1022"
+          provider="2" providerId="20">
+      <bankEntity id="30568"/>
+    </bank>
+
+    <bank name="BNP Paribas Guyane" country="fr" url="http://antilles-guyane.bnpparibas.gf" id="1024"
+          provider="2" providerId="405">
+    </bank>
+
+    <bank name="Carrefour Banque" country="fr" url="http://www.carrefour-banque.fr" id="1025"
+          provider="2" providerId="23">
+      <bankEntity id="19870"/>
+    </bank>
+
+    <bank name="Crédit Coopératif" country="fr" url="http://www.credit-cooperatif.fr" id="1026"
+          provider="2" providerId="16">
+      <bankEntity id="42559"/>
+    </bank>
+
+    <bank name="Crédit Maritime" country="fr" url="http://www.creditmaritime.fr" id="1027"
+          provider="2" providerId="22">
+    </bank>
+
+    <bank name="Delubac" country="fr" url="https://www.delubac.com" id="1028"
+          provider="2" providerId="43">
+    </bank>
+
+    <bank name="Hello bank!" country="fr" url="https://www.hellobank.fr" id="1029"
+          provider="2" providerId="33">
+    </bank>
+
+    <bank name="Monte Paschi Banque" country="fr" url="https://www.montepaschi-banque.fr" id="1030"
+          provider="2" providerId="559">
+      <bankEntity id="30478"/>
+    </bank>
+
+    <bank name="Neuflize" country="fr" url="https://www.neuflizeobc.fr" id="1031"
+          provider="2" providerId="55">
+    </bank>
+
+    <bank name="SwissLife Banque Privée" country="fr" url="http://www.swisslifebanque.fr" id="1036"
+          provider="2" providerId="65">
+      <bankEntity id="11238"/>
+    </bank>
+
+    <bank name="Themis" country="fr" url="http://www.themisbanque.com" id="1037"
+          provider="2" providerId="61">
+      <bankEntity id="11449"/>
+    </bank>
 
   </bankFormat>
 </globs>

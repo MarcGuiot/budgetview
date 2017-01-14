@@ -20,7 +20,6 @@ import static com.budgetview.shared.json.Json.json;
 public class BudgeaAPI {
 
   private String token;
-  private boolean isPermanentToken;
 
   public static String requestFirstTemporaryToken() throws IOException {
     String url = "/auth/init";
@@ -39,9 +38,8 @@ public class BudgeaAPI {
     return code;
   }
 
-  public void setToken(String token, boolean permanentTokenRegistered) {
+  public void setToken(String token) {
     this.token = token;
-    this.isPermanentToken = permanentTokenRegistered;
   }
 
   public JSONObject getUsers() throws IOException {
@@ -68,8 +66,10 @@ public class BudgeaAPI {
   public JSONObject getBankFields(int budgeaBankId) throws IOException {
     checkToken();
     String url = "/banks/" + budgeaBankId + "/fields";
-    return json(Request.Get(BudgeaConstants.getServerUrl(url))
-                  .addHeader(BudgeaConstants.AUTHORIZATION, "Bearer " + token), url);
+    JSONObject json = json(Request.Get(BudgeaConstants.getServerUrl(url))
+                             .addHeader(BudgeaConstants.AUTHORIZATION, "Bearer " + token), url);
+    System.out.println("BudgeaAPI.getBankFields: \n" + json.toString(2));
+    return json;
   }
 
   public JSONObject getUserConnections(int userId) throws IOException {
@@ -97,6 +97,7 @@ public class BudgeaAPI {
       .add("id_bank", Integer.toString(budgeaBankId));
 
     for (Map.Entry<String, String> entry : params.entrySet()) {
+      System.out.println("BudgeaAPI.addBankConnectionStep1: " + entry.getKey() + " ==> " + entry.getValue());
       form.add(entry.getKey(), entry.getValue());
     }
 

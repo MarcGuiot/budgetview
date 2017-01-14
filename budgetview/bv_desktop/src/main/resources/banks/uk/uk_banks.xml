@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<globs>
+  <bankFormat id='104'>
+
+    <bank name="Barclays" country="fr" url="http://www.barclays.co.uk" id="10401"
+          provider="2" providerId="17">
+      <bankEntity id="30588"/>
+    </bank>
+
+
+
+  </bankFormat>
+</globs>

@@ -65,7 +65,7 @@ public abstract class AuthenticatedCommand extends HttpCommand {
     }
 
     budgeaAPI = new BudgeaAPI();
-    budgeaAPI.setToken(user.get(CloudUser.PROVIDER_ACCESS_TOKEN), true);
+    budgeaAPI.setToken(user.get(CloudUser.PROVIDER_ACCESS_TOKEN));
 
     super.run();
   }

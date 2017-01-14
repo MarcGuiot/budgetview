@@ -98,7 +98,7 @@
         </bank>
 
         <bank id='216' name="Crédit Mutuel Massif Central" country="fr" url="https://www.cmmc.fr"
-              downloadUrl="https://www.cmmc.fr" synchroEnabled="false">
+                provider="2" providerId="524">
         </bank>
 
         <transactionMatcher qifP="CARTE[\s]+(\d{2}/\d{2})[\s]+(.*)"

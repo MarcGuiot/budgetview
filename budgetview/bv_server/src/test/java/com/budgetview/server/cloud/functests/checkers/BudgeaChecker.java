@@ -54,4 +54,7 @@ public class BudgeaChecker {
     stub.callWebhook(json);
   }
 
+  public void checkLastLogin(String... fieldValues) {
+    stub.checkLastLogin(fieldValues);
+  }
 }

@@ -2,7 +2,7 @@
 <globs>
   <bankFormat id='16'>
     <bank name="American Express (France)" country="fr" url="https://www.americanexpress.com/france/" id="16"
-          synchroEnabled="true" icon="banks/amex.png" provider="2" providerId="30">
+          icon="banks/amex.png" provider="2" providerId="30">
       <bankEntity id="16820"/>
     </bank>
   </bankFormat>

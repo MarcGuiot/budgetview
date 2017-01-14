@@ -1,61 +1,108 @@
 package com.budgetview.desktop.importer.components;
 
-import org.globsframework.gui.editors.GlobTextEditor;
+import com.budgetview.budgea.model.BudgeaConnectionValue;
+import com.budgetview.model.CurrentMonth;
+import com.budgetview.model.Month;
+import com.budgetview.utils.Lang;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
-import javax.swing.text.MaskFormatter;
-import java.awt.event.FocusAdapter;
-import java.awt.event.FocusEvent;
-import java.text.Format;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+
+import static org.globsframework.model.FieldValue.value;
 
 public class CloudConnectionDateFieldEditor extends CloudConnectionFieldEditor {
-  private GlobTextEditor editor;
+  private JPanel panel = new JPanel();
+  private JComboBox<Integer> dayCombo = new JComboBox<Integer>();
+  private JComboBox<Integer> monthCombo = new JComboBox<Integer>();
+  private JComboBox<Integer> yearCombo = new JComboBox<Integer>();
 
   public CloudConnectionDateFieldEditor(Glob budgeaField, Glob budgeaConnectionValue, GlobRepository repository, Directory directory) {
     super(budgeaField, budgeaConnectionValue, repository, directory);
 
-    Format format = new SimpleDateFormat("MM/dd/yyyy");
-    JFormattedTextField textField = new JFormattedTextField(format);
-    try {
-      MaskFormatter maskFormatter = new MaskFormatter("##/##/####");
-      maskFormatter.setPlaceholderCharacter('_');
-    }
-    catch (ParseException e) {
-      e.printStackTrace();
-    }
-    textField.addFocusListener(new FocusAdapter() {
-      public void focusGained(FocusEvent e) {
-        if (textField.getFocusLostBehavior() == JFormattedTextField.PERSIST)
-          textField.setFocusLostBehavior(JFormattedTextField.COMMIT_OR_REVERT);
-      }
+    initCombo(dayCombo, 1, 31, "dayCombo");
+    initCombo(monthCombo, 1, 12, "monthCombo");
+    initCombo(yearCombo, Month.toYear(CurrentMonth.getCurrentMonth(repository)), 1900, "yearCombo");
 
-      public void focusLost(FocusEvent e) {
-        try {
-          Date date = (Date) format.parseObject(textField.getText());
-          textField.setValue(format.format(date));
+    monthCombo.setRenderer(new DefaultListCellRenderer() {
+      public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
+        if (value == null) {
+          this.setText("");
         }
-        catch (ParseException pe) {
-          textField.setFocusLostBehavior(JFormattedTextField.PERSIST);
-          textField.setText("");
-          textField.setValue(null);
+        else {
+          this.setText(Lang.get("month." + ((Integer) value) + ".long"));
         }
+        return this;
       }
     });
+
+    panel.setLayout(new BoxLayout(panel, BoxLayout.X_AXIS));
+    panel.add(dayCombo);
+    panel.add(new JLabel("/"));
+    panel.add(monthCombo);
+    panel.add(new JLabel("/"));
+    panel.add(yearCombo);
+    panel.setOpaque(false);
   }
 
-  public JTextField getEditor() {
-    return editor.getComponent();
+  public void initCombo(JComboBox combo, int first, int last, String name) {
+    combo.setModel(new DefaultComboBoxModel<Integer>(getValues(first, last)));
+    combo.addActionListener(new AbstractAction() {
+      public void actionPerformed(ActionEvent e) {
+        updateGlob();
+      }
+    });
+    combo.setName(name);
+  }
+
+  private void updateGlob() {
+    repository.update(budgeaFieldValue, value(BudgeaConnectionValue.VALUE, getCurrentValue()));
+  }
+
+  private String getCurrentValue() {
+    Integer day = (Integer) dayCombo.getSelectedItem();
+    Integer month = (Integer) monthCombo.getSelectedItem();
+    Integer year = (Integer) yearCombo.getSelectedItem();
+    if (day == null || month == null || year == null) {
+      return null;
+    }
+    StringBuffer date = new StringBuffer();
+    if (day < 10) {
+      date.append("0");
+    }
+    date.append(day).append("/");
+    if (month < 10) {
+      date.append("0");
+    }
+    date.append(month).append("/");
+    date.append(year);
+    return date.toString();
+  }
+
+  private Integer[] getValues(int start, int end) {
+    Integer[] result = new Integer[Math.abs(end - start) + 2];
+    if (start < end) {
+      for (int i = 1; i < result.length; i++) {
+        result[i] = start + i - 1;
+      }
+    }
+    else {
+      for (int i = 1; i < result.length; i++) {
+        result[i] = start - i + 1;
+      }
+    }
+    return result;
+  }
+
+  public JPanel getEditor() {
+    return panel;
   }
 
   public void dispose() {
     super.dispose();
-    editor.dispose();
-    editor = null;
+    panel = null;
   }
 }

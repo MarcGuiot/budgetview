@@ -28,6 +28,19 @@ public class CloudBankConnectionChecker extends ViewChecker {
     return this;
   }
 
+  public CloudBankConnectionChecker setDate(String label, Integer day, String month, Integer year) {
+    selectComboValue("dayCombo", day);
+    selectComboValue("monthCombo", month);
+    selectComboValue("yearCombo", year);
+    return this;
+  }
+
+  public void selectComboValue(String comboName, Object val) {
+    String value = val != null ? val.toString() : "";
+    ComboBox combo = mainWindow.getComboBox(comboName);
+    combo.select(value);
+  }
+
   public String getEditorName(String label) {
     assertThat(mainWindow.containsLabel(label));
     String labelName = mainWindow.getTextBox(label).getName();

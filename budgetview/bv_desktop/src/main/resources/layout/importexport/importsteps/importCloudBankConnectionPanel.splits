@@ -18,8 +18,8 @@
           <column margin="20">
 
             <repeat ref="fields" layout="verticalGrid">
-              <label ref="label"/>
-              <component ref="editor"/>
+              <label ref="label" marginBottom="5"/>
+              <component ref="editor" marginBottom="5"/>
             </repeat>
 
             <component ref="progressPanel" fill="none" margin="10" anchor="center" weightX="0.1"/>

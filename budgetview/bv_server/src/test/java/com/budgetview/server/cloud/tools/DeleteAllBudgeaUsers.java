@@ -14,7 +14,7 @@ public class DeleteAllBudgeaUsers {
     String token = BudgeaTools.getMasterToken(args);
 
     BudgeaAPI api = new BudgeaAPI();
-    api.setToken(token, false);
+    api.setToken(token);
 
     JSONObject users = api.getUsers();
     System.out.println(users.toString(2));

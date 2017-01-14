@@ -12,11 +12,11 @@ import java.awt.*;
 
 public abstract class CloudConnectionFieldEditor implements Disposable {
 
-  private Glob budgeaField;
-  private Glob budgeaFieldValue;
-  private GlobRepository repository;
-  private Directory directory;
-  private GlobLabelView labelView;
+  protected final Glob budgeaField;
+  protected final Glob budgeaFieldValue;
+  protected final GlobRepository repository;
+  protected final Directory directory;
+  protected final GlobLabelView labelView;
 
   public <T extends Component> CloudConnectionFieldEditor(Glob budgeaField, Glob budgeaFieldValue, GlobRepository repository, Directory directory) {
     this.budgeaField = budgeaField;

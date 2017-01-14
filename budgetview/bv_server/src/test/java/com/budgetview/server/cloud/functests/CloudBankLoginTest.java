@@ -57,4 +57,53 @@ public class CloudBankLoginTest extends CloudDesktopTestCase {
     budgetView.recurring.checkSeries("Electricity", "50.00", "50.00");
     budgetView.variable.checkSeries("Bank fees", "10.00", "To define");
   }
+
+  @Test
+  public void testLoginWithDateField() throws Exception {
+
+    cloudLicense.purchaseLicence("toto@example.com", Dates.tomorrow());
+
+    budgea.pushNewConnection(1, 123, 40);
+    budgea.pushStatement(BudgeaStatement.init()
+                           .addConnection(1, 123, 40, "Connecteur de Test Budgea", "2016-08-10 17:44:26")
+                           .addAccount(1, "Main account 1", "100200300", "checking", 1000.00, "2016-08-10 13:00:00")
+                           .addTransaction(1, "2016-08-10 13:00:00", -100.00, "AUCHAN")
+                           .addTransaction(2, "2016-08-12 17:00:00", -50.00, "EDF", BudgeaCategory.ELECTRICITE)
+                           .endAccount()
+                           .endConnection()
+                           .get());
+
+    budgea.setBankLoginFields(BudgeaBankFieldSample.ING_DIRECT);
+
+    operations.openImportDialog()
+      .selectCloudForNewUser()
+      .register("toto@example.com")
+      .processEmailAndNextToBankSelection(mailbox.getVerificationCode("toto@example.com"))
+      .checkNoBankSelected()
+      .checkNextDisabled()
+      .selectBank("Connecteur de Test Budgea")
+      .next()
+      .setText("Numero client", "43214321")
+      .setDate("Date de naissance", 25, "June", 2001)
+      .setPassword("Code secret", "1234")
+      .next()
+      .waitForNotificationAndDownload(mailbox.checkStatementReady("toto@example.com"))
+      .checkTransactions(new Object[][]{
+        {"2016/08/12", "EDF", "-50.00"},
+        {"2016/08/10", "AUCHAN", "-100.00"},
+      })
+      .importAccountAndComplete();
+
+    budgea.checkLastLogin("login=43214321", "birthday=25/06/2001");
+
+    transactions.initContent()
+      .add("12/08/2016", TransactionType.PRELEVEMENT, "EDF", "", -50.00, "Electricity")
+      .add("10/08/2016", TransactionType.PRELEVEMENT, "AUCHAN", "", -100.00)
+      .check();
+  }
+
+  @Test
+  public void testLoginErrors() throws Exception {
+    fail("tbd");
+  }
 }

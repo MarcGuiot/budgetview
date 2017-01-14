@@ -69,7 +69,31 @@ public enum BudgeaBankFieldSample {
       "      \"type\": \"password\"\n" +
       "    }\n" +
       "  ]\n" +
-      "}");
+      "}"),
+
+  ING_DIRECT("{\n" +
+             "   \"total\": 2,\n" +
+             "   \"fields\": [\n" +
+             "      {\n" +
+             "        \"regex\": \"^[0-9]+$\",\n" +
+             "        \"name\": \"login\",\n" +
+             "        \"label\": \"Numero client\",\n" +
+             "        \"type\": \"text\"\n" +
+             "      },\n" +
+             "      {\n" +
+             "        \"regex\": \"^[0-9]+$\",\n" +
+             "        \"name\": \"password\",\n" +
+             "        \"label\": \"Code secret\",\n" +
+             "        \"type\": \"password\"\n" +
+             "      },\n" +
+             "      {\n" +
+             "        \"regex\": \"^[0-9]{2}[/-]?[0-9]{2}[/-]?[0-9]{4}$\",\n" +
+             "        \"name\": \"birthday\",\n" +
+             "        \"label\": \"Date de naissance\",\n" +
+             "        \"type\": \"date\"\n" +
+             "      }\n" +
+             "   ],\n" +
+             "}");
 
 
   private String json;
@@ -81,4 +105,4 @@ public enum BudgeaBankFieldSample {
   public String getJSON() {
     return json;
   }
-}
+  }

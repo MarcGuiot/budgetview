@@ -207,7 +207,7 @@ public class CloudService {
         case OK:
           String token = result.getString(CloudConstants.PROVIDER_TOKEN);
           boolean permanentTokenRegistered = result.getBoolean(CloudConstants.PROVIDER_TOKEN_REGISTERED);
-          budgeaAPI.setToken(token, permanentTokenRegistered);
+          budgeaAPI.setToken(token);
           break;
         case NO_SUBSCRIPTION:
           callback.processSubscriptionError(getSubscriptionStatus(result));
@@ -298,7 +298,7 @@ public class CloudService {
             case OK:
               String token = result.getString(CloudConstants.PROVIDER_TOKEN);
               boolean permanentTokenRegistered = result.getBoolean(CloudConstants.PROVIDER_TOKEN_REGISTERED);
-              budgeaAPI.setToken(token, permanentTokenRegistered);
+              budgeaAPI.setToken(token);
               break;
             case NO_SUBSCRIPTION:
               callback.processSubscriptionError(getSubscriptionStatus(result));

@@ -12,9 +12,21 @@ public class ListBudgeaBanks {
     String token = BudgeaAPI.requestFirstTemporaryToken();
 
     BudgeaAPI api = new BudgeaAPI();
-    api.setToken(token, false);
+    api.setToken(token);
 
     JSONObject banks = api.getBanks();
     System.out.println(banks.toString(2));
+
+    System.out.println("=========================================");
+
+    for (Object item : banks.getJSONArray("banks")) {
+      JSONObject bank = (JSONObject) item;
+//      System.out.println("  " + bank.get("name") + " (BIC " + bank.optString("code") + ")==> " + bank.get("id"));
+
+      System.out.println("   <bank name=\"" + bank.get("name") + "\" country=\"fr\" url=\"\" id=\"\"\n" +
+                         "          provider=\"2\" providerId=\"" + bank.get("id") + "\">\n" +
+                         "      <bankEntity id=\"" + bank.optString("code") + "\"/>\n" +
+                         "    </bank>\n");
+    }
   }
 }

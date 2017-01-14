@@ -13,8 +13,11 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Stack;
 
 public class BudgeaStubServer {
@@ -32,6 +35,7 @@ public class BudgeaStubServer {
   private BudgeaBankFieldSample bankFieldsStep2 = null;
   private Stack<String> statements = new Stack<String>();
   private Stack<String> connections = new Stack<String>();
+  private List<String> lastLoginFields = new ArrayList<String>();
 
   public static void main(String... args) throws Exception {
     BudgeaStubServer stub = new BudgeaStubServer(args);
@@ -129,6 +133,14 @@ public class BudgeaStubServer {
 
   public void pushConnections(String json) {
     this.connections.push(json);
+  }
+
+  public void checkLastLogin(String... fieldValues) {
+    for (String fieldValue : fieldValues) {
+      if (!lastLoginFields.contains(fieldValue)) {
+        throw new RuntimeException("Couldn't find: " + fieldValue + " - login fields were: " + lastLoginFields);
+      }
+    }
   }
 
   private class AuthInitServlet extends HttpServlet {
@@ -272,6 +284,7 @@ public class BudgeaStubServer {
 
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
       logger.info("GET");
+
       PrintWriter writer = resp.getWriter();
       writer.write("{\n" +
                    "  \"signin\": \"datetime\",\n" +
@@ -293,6 +306,20 @@ public class BudgeaStubServer {
       if (!checkAuthorization(request, logger)) {
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
         return;
+      }
+
+      BufferedReader reader = request.getReader();
+      String body = reader.readLine();
+      if (body == null) {
+        logger.error("No login data provided");
+        response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+        return;
+      }
+
+      body = java.net.URLDecoder.decode(body, "UTF-8");
+      lastLoginFields.clear();
+      for (String field : body.split("&")) {
+        lastLoginFields.add(field);
       }
 
       boolean step2 = Strings.isNotEmpty(request.getPathInfo());

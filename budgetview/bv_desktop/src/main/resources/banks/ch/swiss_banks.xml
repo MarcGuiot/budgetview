@@ -14,5 +14,6 @@
     <bank name="Banque Coop" country="ch" url="http://www.bankcoop.ch/fr/index.htm" id="101009"/>
     <bank name="Banque Migros" country="ch" url="http://www.migrosbank.ch/fr/default.htm" id="101010"/>
 
+
   </bankFormat>
 </globs>
