@@ -24,15 +24,14 @@ import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
 import org.globsframework.model.Key;
 import org.globsframework.model.repository.LocalGlobRepository;
+import org.globsframework.model.utils.GlobFieldComparator;
 import org.globsframework.model.utils.GlobMatchers;
-import org.globsframework.utils.Utils;
 import org.globsframework.utils.directory.Directory;
 import org.globsframework.utils.exceptions.UnexpectedApplicationState;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.util.ArrayList;
-import java.util.Comparator;
 
 import static org.globsframework.model.FieldValue.value;
 import static org.globsframework.model.utils.GlobMatchers.linkedTo;
@@ -47,6 +46,7 @@ public class ImportCloudBankConnectionPanel extends AbstractImportStepPanel {
   private java.util.List<JComponent> components = new ArrayList<JComponent>();
   private Glob currentConnection;
   private JEditorPane message;
+  private JEditorPane errorMessage;
   private boolean step2;
   private int providerConnectionId;
   private Glob currentBank;
@@ -70,27 +70,33 @@ public class ImportCloudBankConnectionPanel extends AbstractImportStepPanel {
     message = GuiUtils.createReadOnlyHtmlComponent();
     builder.add("message", message);
 
-    fieldRepeat = builder.addRepeat("fields", BudgeaConnectionValue.TYPE, GlobMatchers.NONE, new FieldValueComparator(), new RepeatComponentFactory<Glob>() {
+    fieldRepeat = builder.addRepeat("fields", BudgeaConnectionValue.TYPE, GlobMatchers.NONE, new GlobFieldComparator(BudgeaConnectionValue.SEQUENCE_INDEX), new RepeatComponentFactory<Glob>() {
       public void registerComponents(PanelBuilder cellBuilder, Glob connectionValue) {
         CloudConnectionFieldEditor fieldEditor = CloudConnectionFieldEditorFactory.create(connectionValue, repository, localDirectory);
         JLabel label = cellBuilder.add("label", fieldEditor.getLabel()).getComponent();
         JComponent editor = cellBuilder.add("editor", fieldEditor.getEditor()).getComponent();
 
-        Integer id = connectionValue.get(BudgeaConnectionValue.ID);
-        label.setName("label:" + id);
-        editor.setName("editor:" + id);
+        Glob field = repository.findLinkTarget(connectionValue, BudgeaConnectionValue.FIELD);
+        String fieldLabel = field.get(BudgeaBankField.LABEL);
+
+        label.setName("label:" + fieldLabel);
+        editor.setName("editor:" + fieldLabel);
         components.add(label);
         components.add(editor);
 
         cellBuilder.addDisposable(fieldEditor);
         cellBuilder.addDisposable(new Disposable() {
           public void dispose() {
-            components.remove(label);
+            components.remove(fieldLabel);
             components.remove(editor);
           }
         });
       }
     });
+
+    errorMessage = GuiUtils.createReadOnlyHtmlComponent();
+    builder.add("errorMessage", errorMessage);
+    errorMessage.setVisible(false);
 
     builder.add("next", nextAction);
     builder.add("close", new AbstractAction(getCancelLabel()) {
@@ -139,16 +145,27 @@ public class ImportCloudBankConnectionPanel extends AbstractImportStepPanel {
     for (Glob field : fields) {
       repository.create(BudgeaConnectionValue.TYPE,
                         value(BudgeaConnectionValue.CONNECTION, currentBudgeaBankId),
-                        value(BudgeaConnectionValue.FIELD, field.get(BudgeaBankField.ID)));
+                        value(BudgeaConnectionValue.FIELD, field.get(BudgeaBankField.ID)),
+                        value(BudgeaConnectionValue.SEQUENCE_INDEX, field.get(BudgeaBankField.SEQUENCE_INDEX)));
     }
     repository.completeChangeSet();
 
     fieldRepeat.setFilter(linkedTo(currentConnection, BudgeaConnectionValue.CONNECTION));
     nextAction.setEnabled(true);
+    errorMessage.setVisible(false);
   }
 
   private void processConnection() {
     System.out.println("ImportCloudBankConnectionPanel.processConnection");
+
+    GlobList nullValues = repository.getAll(BudgeaConnectionValue.TYPE, GlobMatchers.isNull(BudgeaConnectionValue.VALUE)).sort(BudgeaConnectionValue.SEQUENCE_INDEX);
+    if (!nullValues.isEmpty()) {
+      Glob field = repository.findLinkTarget(nullValues.getFirst(), BudgeaConnectionValue.FIELD);
+      showErrorMessage("import.cloud.bankConnection.message.emptyField", field.get(BudgeaBankField.LABEL));
+      return;
+    }
+    errorMessage.setVisible(false);
+
     progressPanel.start();
     setAllEnabled(false);
     CloudService.BankConnectionCallback callback = new CloudService.BankConnectionCallback() {
@@ -170,6 +187,12 @@ public class ImportCloudBankConnectionPanel extends AbstractImportStepPanel {
         progressPanel.stop();
       }
 
+      public void processCredentialsRejected() {
+        showErrorMessage("import.cloud.bankConnection.message.rejected");
+        progressPanel.stop();
+        setAllEnabled(true);
+      }
+
       public void processError(Exception e) {
         controller.showCloudError(e);
         progressPanel.stop();
@@ -183,6 +206,12 @@ public class ImportCloudBankConnectionPanel extends AbstractImportStepPanel {
     }
   }
 
+  public void showErrorMessage(String key, String... args) {
+    String text = Lang.get(key, args).replace("<html>", "").replace("</html>", "");
+    errorMessage.setText("<html><font color=red>" + text + "</font></html>");
+    errorMessage.setVisible(true);
+  }
+
   public void prepareForDisplay() {
     setAllEnabled(true);
   }
@@ -191,20 +220,6 @@ public class ImportCloudBankConnectionPanel extends AbstractImportStepPanel {
     nextAction.setEnabled(enabled);
     for (JComponent component : components) {
       component.setEnabled(enabled);
-    }
-  }
-
-  private class FieldValueComparator implements Comparator<Glob> {
-    public int compare(Glob connectionValue1, Glob connectionValue2) {
-      Glob field1 = repository.findLinkTarget(connectionValue1, BudgeaConnectionValue.FIELD);
-      Glob field2 = repository.findLinkTarget(connectionValue2, BudgeaConnectionValue.FIELD);
-      if (field1 == null) {
-        return -1;
-      }
-      if (field2 == null) {
-        return 1;
-      }
-      return Utils.compare(field1.get(BudgeaBankField.FIELD_TYPE), field2.get(BudgeaBankField.FIELD_TYPE));
     }
   }
 }

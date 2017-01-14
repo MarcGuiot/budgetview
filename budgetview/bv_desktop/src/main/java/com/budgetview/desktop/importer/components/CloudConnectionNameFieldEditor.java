@@ -15,7 +15,8 @@ public class CloudConnectionNameFieldEditor extends CloudConnectionFieldEditor {
     super(budgeaField, budgeaConnectionValue, repository, directory);
 
     editor = GlobTextEditor.init(BudgeaConnectionValue.VALUE, repository, directory)
-      .forceSelection(budgeaConnectionValue.getKey());
+      .forceSelection(budgeaConnectionValue.getKey())
+      .setNotifyOnKeyPressed(true);
   }
 
   public JTextField getEditor() {

@@ -11,11 +11,10 @@ import org.apache.http.client.fluent.Request;
 import org.globsframework.utils.Strings;
 import org.json.JSONObject;
 
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
-
-import static com.budgetview.shared.json.Json.json;
 
 public class BudgeaAPI {
 
@@ -81,11 +80,31 @@ public class BudgeaAPI {
   }
 
   public static class LoginResult {
-    public final boolean singleStepLogin;
+
+    public enum Status {
+      ACCEPTED,
+      SECOND_STEP_NEEDED,
+      CREDENTIALS_REJECTED,
+      OTHER_ERROR
+    }
+
+    public final Status status;
     public final JSONObject json;
 
-    public LoginResult(boolean singleStepLogin, JSONObject json) {
-      this.singleStepLogin = singleStepLogin;
+    public LoginResult(int statusCode, JSONObject json) throws IOException {
+      switch (statusCode) {
+        case 200:
+          this.status = Status.ACCEPTED;
+          break;
+        case 202:
+          this.status = Status.SECOND_STEP_NEEDED;
+          break;
+        case 400:
+          this.status = Status.CREDENTIALS_REJECTED;
+          break;
+        default:
+          this.status = Status.OTHER_ERROR;
+      }
       this.json = json;
     }
   }
@@ -111,11 +130,11 @@ public class BudgeaAPI {
     StatusLine statusLine = response.getStatusLine();
     int statusCode = statusLine.getStatusCode();
     System.out.println("BudgeaAPI.addBankConnectionStep1 (" + url + ")  returned " + statusLine + " ==> " + statusCode);
-    if (statusCode != 200 && statusCode != 202) {
-      throw new IOException(url + " returned " + statusCode + " instead of 200");
+    if (statusCode != 200 && statusCode != 202 && statusCode != 400) {
+      throw new IOException(url + " returned " + statusCode + " instead of 200/202/400");
     }
 
-    return new LoginResult(statusCode == 200, Json.json(response));
+    return new LoginResult(statusCode, Json.json(response));
   }
 
   public JSONObject addBankConnectionStep2(Integer connectionId, Map<String, String> params) throws IOException {

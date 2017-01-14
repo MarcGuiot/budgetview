@@ -15,7 +15,8 @@ public class CloudConnectionPasswordFieldEditor extends CloudConnectionFieldEdit
   public CloudConnectionPasswordFieldEditor(Glob budgeaField, Glob budgeaConnectionValue, GlobRepository repository, Directory directory) {
     super(budgeaField, budgeaConnectionValue, repository, directory);
     editor = GlobPasswordEditor.init(BudgeaConnectionValue.VALUE, repository, directory)
-      .forceSelection(budgeaConnectionValue.getKey());
+      .forceSelection(budgeaConnectionValue.getKey())
+      .setNotifyOnKeyPressed(true);
   }
 
   public JTextField getEditor() {

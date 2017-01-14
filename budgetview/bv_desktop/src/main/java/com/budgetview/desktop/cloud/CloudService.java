@@ -51,6 +51,8 @@ public class CloudService {
 
     void processSubscriptionError(CloudSubscriptionStatus status);
 
+    void processCredentialsRejected();
+
     void processError(Exception e);
   }
 
@@ -255,10 +257,12 @@ public class CloudService {
 
     JsonGlobParser jsonParser = createBankParser(repository);
 
+    int index = 0;
     for (Object f : root.getJSONArray("fields")) {
       JSONObject field = (JSONObject) f;
       Glob fieldGlob = jsonParser.toGlob(field, BudgeaBankField.TYPE, repository,
-                                         value(BudgeaBankField.BANK, budgeaBankId));
+                                         value(BudgeaBankField.BANK, budgeaBankId),
+                                         value(BudgeaBankField.SEQUENCE_INDEX, index++));
 
       if (field.has("values")) {
         for (Object v : field.getJSONArray("values")) {
@@ -296,9 +300,7 @@ public class CloudService {
           JSONObject result = cloudAPI.getTemporaryBudgeaToken(email, bvToken);
           switch (CloudRequestStatus.get(result.getString(CloudConstants.STATUS))) {
             case OK:
-              String token = result.getString(CloudConstants.PROVIDER_TOKEN);
-              boolean permanentTokenRegistered = result.getBoolean(CloudConstants.PROVIDER_TOKEN_REGISTERED);
-              budgeaAPI.setToken(token);
+              budgeaAPI.setToken(result.getString(CloudConstants.PROVIDER_TOKEN));
               break;
             case NO_SUBSCRIPTION:
               callback.processSubscriptionError(getSubscriptionStatus(result));
@@ -311,15 +313,25 @@ public class CloudService {
           System.out.println("CloudService.addBankConnection - starting step1");
 
           BudgeaAPI.LoginResult connectionResult = budgeaAPI.addBankConnectionStep1(bankConnection.get(BudgeaConnection.BANK), params);
-          if (connectionResult.singleStepLogin) {
-            System.out.println("CloudService.addBankConnection - login OK");
-            processLoginOk(connectionResult.json, repository, callback);
-          }
-          else {
-            System.out.println("CloudService.addBankConnection - needs a second step \n" + connectionResult.json.toString(2));
-            int connectionId = connectionResult.json.getInt("id");
-            resetBankFields(bank, connectionResult.json, repository);
-            callback.processSecondStepResponse(connectionId);
+          switch (connectionResult.status) {
+            case ACCEPTED:
+              System.out.println("CloudService.addBankConnection - login OK");
+              processLoginOk(connectionResult.json, repository, callback);
+              break;
+            case SECOND_STEP_NEEDED:
+              System.out.println("CloudService.addBankConnection - needs a second step \n" + connectionResult.json.toString(2));
+              int connectionId = connectionResult.json.getInt("id");
+              resetBankFields(bank, connectionResult.json, repository);
+              callback.processSecondStepResponse(connectionId);
+              break;
+            case CREDENTIALS_REJECTED:
+              System.out.println("CloudService.addBankConnection - credentials rejected");
+              callback.processCredentialsRejected();
+              break;
+            case OTHER_ERROR:
+              System.out.println("CloudService.addBankConnection - other error" + connectionResult.json.toString(2));
+              callback.processError(null);
+              break;
           }
         }
         catch (Exception e) {

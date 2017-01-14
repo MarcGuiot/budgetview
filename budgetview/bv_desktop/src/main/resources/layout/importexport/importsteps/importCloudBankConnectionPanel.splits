@@ -22,6 +22,8 @@
               <component ref="editor" marginBottom="5"/>
             </repeat>
 
+            <htmlEditorPane ref="errorMessage" styleClass="errorMessage"/>
+
             <component ref="progressPanel" fill="none" margin="10" anchor="center" weightX="0.1"/>
 
             <filler fill="vertical"/>

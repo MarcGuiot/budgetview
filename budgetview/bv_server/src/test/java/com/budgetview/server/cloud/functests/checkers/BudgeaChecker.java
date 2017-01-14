@@ -57,4 +57,8 @@ public class BudgeaChecker {
   public void checkLastLogin(String... fieldValues) {
     stub.checkLastLogin(fieldValues);
   }
+
+  public void setLoginConstraint(String fieldEqualsValue) {
+    stub.setLoginConstraint(fieldEqualsValue);
+  }
 }

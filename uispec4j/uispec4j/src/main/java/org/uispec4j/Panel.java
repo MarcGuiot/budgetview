@@ -499,7 +499,7 @@ public class Panel extends AbstractUIComponent {
       public void check() {
         Component[] result = getSwingComponents(and(fromClass(JLabel.class), displayedNameSubstring(text)));
         if (result.length == 0) {
-          AssertAdapter.fail("No label found with text '" + text + "'");
+          AssertAdapter.fail("No label found with text '" + text + "'  - actual panel content: " + getDescription());
         }
       }
     };

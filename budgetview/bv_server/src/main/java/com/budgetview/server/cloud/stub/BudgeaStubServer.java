@@ -36,6 +36,7 @@ public class BudgeaStubServer {
   private Stack<String> statements = new Stack<String>();
   private Stack<String> connections = new Stack<String>();
   private List<String> lastLoginFields = new ArrayList<String>();
+  private String loginConstraint;
 
   public static void main(String... args) throws Exception {
     BudgeaStubServer stub = new BudgeaStubServer(args);
@@ -141,6 +142,10 @@ public class BudgeaStubServer {
         throw new RuntimeException("Couldn't find: " + fieldValue + " - login fields were: " + lastLoginFields);
       }
     }
+  }
+
+  public void setLoginConstraint(String loginConstraint) {
+    this.loginConstraint = loginConstraint;
   }
 
   private class AuthInitServlet extends HttpServlet {
@@ -320,6 +325,11 @@ public class BudgeaStubServer {
       lastLoginFields.clear();
       for (String field : body.split("&")) {
         lastLoginFields.add(field);
+      }
+      if (Strings.isNotEmpty(loginConstraint) && !lastLoginFields.contains(loginConstraint)) {
+        logger.error("Login rejected - expected constraint: " + loginConstraint + " not found in :" + lastLoginFields);
+        response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+        return;
       }
 
       boolean step2 = Strings.isNotEmpty(request.getPathInfo());

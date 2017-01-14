@@ -34,8 +34,8 @@ public class CloudBankLoginTest extends CloudDesktopTestCase {
       .next()
       .setChoice("Type de compte", "Professionnels")
       .setText("Identifiant", "1234")
-      .setPassword("Code (1234)", "")
-      .enterAndGetStep2()
+      .setPassword("Code (1234)", "1234")
+      .nextAndGetStep2()
       .setText("Please enter the PIN code", "6789")
       .next()
       .waitForNotificationAndDownload(mailbox.checkStatementReady("toto@example.com"))
@@ -79,8 +79,6 @@ public class CloudBankLoginTest extends CloudDesktopTestCase {
       .selectCloudForNewUser()
       .register("toto@example.com")
       .processEmailAndNextToBankSelection(mailbox.getVerificationCode("toto@example.com"))
-      .checkNoBankSelected()
-      .checkNextDisabled()
       .selectBank("Connecteur de Test Budgea")
       .next()
       .setText("Numero client", "43214321")
@@ -104,6 +102,48 @@ public class CloudBankLoginTest extends CloudDesktopTestCase {
 
   @Test
   public void testLoginErrors() throws Exception {
-    fail("tbd");
+    cloudLicense.purchaseLicence("toto@example.com", Dates.tomorrow());
+
+    budgea.pushNewConnection(1, 123, 40);
+    budgea.pushStatement(BudgeaStatement.init()
+                           .addConnection(1, 123, 40, "Connecteur de Test Budgea", "2016-08-10 17:44:26")
+                           .addAccount(1, "Main account 1", "100200300", "checking", 1000.00, "2016-08-10 13:00:00")
+                           .addTransaction(1, "2016-08-10 13:00:00", -100.00, "AUCHAN")
+                           .addTransaction(2, "2016-08-12 17:00:00", -50.00, "EDF", BudgeaCategory.ELECTRICITE)
+                           .endAccount()
+                           .endConnection()
+                           .get());
+
+    budgea.setLoginConstraint("login=1234");
+
+    operations.openImportDialog()
+      .selectCloudForNewUser()
+      .register("toto@example.com")
+      .processEmailAndNextToBankSelection(mailbox.getVerificationCode("toto@example.com"))
+      .selectBank("Connecteur de Test Budgea")
+      .next()
+      .checkNoErrorShown()
+      .nextAndCheckError("You must set 'Type de compte'")
+      .setChoice("Type de compte", "Professionnels")
+      .nextAndCheckError("You must set 'Identifiant'")
+      .setText("Identifiant", "6666666")
+      .nextAndCheckError("You must set 'Code (1234)'")
+      .setPassword("Code (1234)", "1234")
+      .nextAndCheckError("Login failed")
+      .setText("Identifiant", "1234")
+      .next()
+      .waitForNotificationAndDownload(mailbox.checkStatementReady("toto@example.com"))
+      .checkTransactions(new Object[][]{
+        {"2016/08/12", "EDF", "-50.00"},
+        {"2016/08/10", "AUCHAN", "-100.00"},
+      })
+      .importAccountAndComplete();
+
+    budgea.checkLastLogin("website=pro", "password=1234", "login=1234");
+
+    transactions.initContent()
+      .add("12/08/2016", TransactionType.PRELEVEMENT, "EDF", "", -50.00, "Electricity")
+      .add("10/08/2016", TransactionType.PRELEVEMENT, "AUCHAN", "", -100.00)
+      .check();
   }
 }

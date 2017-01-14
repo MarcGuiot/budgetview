@@ -69,7 +69,7 @@ public class CloudConnectionDateFieldEditor extends CloudConnectionFieldEditor {
     if (day == null || month == null || year == null) {
       return null;
     }
-    StringBuffer date = new StringBuffer();
+    StringBuilder date = new StringBuilder();
     if (day < 10) {
       date.append("0");
     }

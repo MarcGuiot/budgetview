@@ -10,6 +10,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.io.InputStream;
 
 public class Json {
   public static JSONObject json(Request request, String url) throws IOException {
@@ -21,7 +22,14 @@ public class Json {
   }
 
   public static JSONObject json(HttpResponse response) throws IOException {
-    String content = Files.loadStreamToString(response.getEntity().getContent(), "UTF-8");
+    InputStream stream = response.getEntity().getContent();
+    if (stream == null) {
+      return null;
+    }
+    String content = Files.loadStreamToString(stream, "UTF-8");
+    if (Strings.isNullOrEmpty(content)) {
+      return null;
+    }
     return parse(content);
   }
 

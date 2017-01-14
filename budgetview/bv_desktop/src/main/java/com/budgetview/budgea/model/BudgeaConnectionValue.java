@@ -22,7 +22,9 @@ public class BudgeaConnectionValue {
 
   public static StringField VALUE;
 
+  public static IntegerField SEQUENCE_INDEX;
+
   static {
-    GlobTypeLoader.init(BudgeaConnectionValue.class, "budgeaConnectionField");
+    GlobTypeLoader.init(BudgeaConnectionValue.class, "budgeaConnectionValue");
   }
 }

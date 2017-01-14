@@ -35,6 +35,8 @@ public class BudgeaBankField {
   @Target(BudgeaBankFieldType.class) @Name("type")
   public static LinkField FIELD_TYPE;
 
+  public static IntegerField SEQUENCE_INDEX;
+
   static {
     GlobTypeLoader.init(BudgeaBankField.class, "budgeaBankField");
   }

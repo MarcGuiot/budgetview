@@ -3,6 +3,8 @@ package com.budgetview.functests.checkers;
 import org.uispec4j.ListBox;
 import org.uispec4j.Window;
 
+import javax.swing.*;
+
 import static org.uispec4j.assertion.UISpecAssert.assertFalse;
 import static org.uispec4j.assertion.UISpecAssert.assertThat;
 

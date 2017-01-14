@@ -3,6 +3,7 @@ package org.globsframework.gui.editors;
 import org.globsframework.metamodel.fields.StringField;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.utils.directory.Directory;
+import org.globsframework.utils.exceptions.InvalidFormat;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -23,5 +24,9 @@ public class GlobPasswordEditor extends AbstractGlobTextEditor<JPasswordField, G
         apply();
       }
     });
+  }
+
+  protected Object getConvertedDisplayedValue() throws InvalidFormat {
+    return new String(textComponent.getPassword());
   }
 }

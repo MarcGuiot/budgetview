@@ -15,6 +15,7 @@
     <style selector=".dialog label" foreground="dialog.text" opaque="false"/>
     <style selector=".dialog label.errorMessage" horizontalAlignment="center" foreground="#FF0000" font="-,bold,12"
            fill="horizontal" anchor="center"/>
+    <style selector=".dialog htmlEditorPane.errorMessage" foreground="#FF0000" font="-,bold,12"/>
     <style selector=".dialog textArea" foreground="dialog.text"/>
     <style selector=".dialog htmlEditorPane" foreground="dialog.text" opaque="false"/>
     <style selector=".dialog checkBox" foreground="dialog.text" opaque="false"/>
