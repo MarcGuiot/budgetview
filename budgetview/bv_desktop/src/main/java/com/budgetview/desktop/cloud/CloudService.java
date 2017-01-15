@@ -156,50 +156,6 @@ public class CloudService {
     thread.start();
   }
 
-  public void updateBankList(GlobRepository repository, Callback callback) {
-
-    JsonGlobParser jsonParser = createBankParser(repository);
-    try {
-      repository.startChangeSet();
-      repository.deleteAll(BudgeaBank.TYPE, BudgeaBankField.TYPE, BudgeaBankFieldValue.TYPE);
-
-      JSONObject banks = budgeaAPI.getBanks();
-
-      for (Object b : banks.getJSONArray("banks")) {
-        JSONObject bank = (JSONObject) b;
-        if (bank.getBoolean("hidden") || bank.getBoolean("beta")) {
-          continue;
-        }
-
-        int bankId = bank.getInt("id");
-        jsonParser.toGlob(bank, BudgeaBank.TYPE, bankId);
-
-        for (Object f : bank.getJSONArray("fields")) {
-          JSONObject field = (JSONObject) f;
-          Glob fieldGlob = jsonParser.toGlob(field, BudgeaBankField.TYPE, repository,
-                                             value(BudgeaBankField.BANK, bankId));
-
-          if (field.has("values")) {
-            for (Object v : field.getJSONArray("values")) {
-              JSONObject value = (JSONObject) v;
-              jsonParser.toGlob(value, BudgeaBankFieldValue.TYPE, repository,
-                                value(BudgeaBankFieldValue.FIELD, fieldGlob.get(BudgeaBankField.ID)));
-            }
-          }
-        }
-      }
-
-      callback.processCompletion();
-    }
-    catch (Exception e) {
-      Log.write("Error retrieving bank list", e);
-      callback.processError(e);
-    }
-    finally {
-      repository.completeChangeSet();
-    }
-  }
-
   public void updateBankFields(Key bankKey, GlobRepository repository, Callback callback) {
     try {
       Glob user = repository.get(CloudDesktopUser.KEY);
@@ -243,31 +199,31 @@ public class CloudService {
     }
   }
 
-  public void resetBankFields(Glob bank, JSONObject root, GlobRepository repository) {
+  public void resetBankFields(Glob bank, JSONObject root, GlobRepository budgeaRepository) {
 
     Integer budgeaBankId = bank.get(Bank.PROVIDER_ID);
 
-    GlobList fields = repository.getAll(BudgeaBankField.TYPE, fieldEquals(BudgeaBankField.BANK, budgeaBankId));
-    repository.delete(BudgeaBankFieldValue.TYPE, fieldIn(BudgeaBankFieldValue.FIELD, fields.getValueSet(BudgeaBankField.ID)));
-    repository.delete(fields);
-    repository.delete(BudgeaConnection.TYPE, fieldEquals(BudgeaConnection.BANK, budgeaBankId));
-    repository.delete(BudgeaConnectionValue.TYPE, fieldEquals(BudgeaConnectionValue.CONNECTION, budgeaBankId));
-    repository.findOrCreate(Key.create(BudgeaBank.TYPE, budgeaBankId),
-                            value(BudgeaBank.BANK, bank.get(Bank.ID)));
+    GlobList fields = budgeaRepository.getAll(BudgeaBankField.TYPE, fieldEquals(BudgeaBankField.BANK, budgeaBankId));
+    budgeaRepository.delete(BudgeaBankFieldValue.TYPE, fieldIn(BudgeaBankFieldValue.FIELD, fields.getValueSet(BudgeaBankField.ID)));
+    budgeaRepository.delete(fields);
+    budgeaRepository.delete(BudgeaConnection.TYPE, fieldEquals(BudgeaConnection.BANK, budgeaBankId));
+    budgeaRepository.delete(BudgeaConnectionValue.TYPE, fieldEquals(BudgeaConnectionValue.CONNECTION, budgeaBankId));
+    budgeaRepository.findOrCreate(Key.create(BudgeaBank.TYPE, budgeaBankId),
+                                  value(BudgeaBank.BANK, bank.get(Bank.ID)));
 
-    JsonGlobParser jsonParser = createBankParser(repository);
+    JsonGlobParser jsonParser = createBankParser(budgeaRepository);
 
     int index = 0;
     for (Object f : root.getJSONArray("fields")) {
       JSONObject field = (JSONObject) f;
-      Glob fieldGlob = jsonParser.toGlob(field, BudgeaBankField.TYPE, repository,
+      Glob fieldGlob = jsonParser.toGlob(field, BudgeaBankField.TYPE, budgeaRepository,
                                          value(BudgeaBankField.BANK, budgeaBankId),
                                          value(BudgeaBankField.SEQUENCE_INDEX, index++));
 
       if (field.has("values")) {
         for (Object v : field.getJSONArray("values")) {
           JSONObject value = (JSONObject) v;
-          jsonParser.toGlob(value, BudgeaBankFieldValue.TYPE, repository,
+          jsonParser.toGlob(value, BudgeaBankFieldValue.TYPE, budgeaRepository,
                             value(BudgeaBankFieldValue.FIELD, fieldGlob.get(BudgeaBankField.ID)));
         }
       }
@@ -374,13 +330,14 @@ public class CloudService {
 
     repository.update(CloudDesktopUser.KEY, CloudDesktopUser.SYNCHRO_ENABLED, true);
 
-    Glob bank = BudgeaBank.findBudgetViewBank(connectionResult.getInt("id_bank"), repository);
+    Glob bank = Bank.findByProviderId(Provider.BUDGEA.getId(), connectionResult.getInt("id_bank"), repository);
     String bankName = bank != null ? bank.get(Bank.NAME) : "Bank";
 
     Glob connection =
       repository.create(CloudProviderConnection.TYPE,
                         value(CloudProviderConnection.PROVIDER, Provider.BUDGEA.getId()),
                         value(CloudProviderConnection.PROVIDER_CONNECTION_ID, providerConnectionId),
+                        value(CloudProviderConnection.BANK, bank.get(Bank.ID)),
                         value(CloudProviderConnection.BANK_NAME, bankName),
                         value(CloudProviderConnection.INITIALIZED, false));
 
@@ -449,9 +406,11 @@ public class CloudService {
           repository.deleteAll(CloudProviderConnection.TYPE);
           for (Object c : connections.getJSONArray("connections")) {
             JSONObject connection = (JSONObject) c;
+            int providerId = connection.getInt(CloudConstants.PROVIDER_ID);
             repository.create(CloudProviderConnection.TYPE,
-                              value(CloudProviderConnection.PROVIDER, connection.getInt(CloudConstants.PROVIDER_ID)),
+                              value(CloudProviderConnection.PROVIDER, providerId),
                               value(CloudProviderConnection.PROVIDER_CONNECTION_ID, connection.getInt(CloudConstants.PROVIDER_CONNECTION_ID)),
+                              value(CloudProviderConnection.BANK, Bank.findIdByProviderId(providerId, connection.getInt(CloudConstants.PROVIDER_BANK_ID), repository)),
                               value(CloudProviderConnection.BANK_NAME, connection.getString(CloudConstants.BANK_NAME)),
                               value(CloudProviderConnection.INITIALIZED, connection.getBoolean(CloudConstants.INITIALIZED)));
           }

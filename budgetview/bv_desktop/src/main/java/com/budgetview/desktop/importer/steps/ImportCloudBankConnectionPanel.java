@@ -1,9 +1,6 @@
 package com.budgetview.desktop.importer.steps;
 
-import com.budgetview.budgea.model.BudgeaBank;
-import com.budgetview.budgea.model.BudgeaBankField;
-import com.budgetview.budgea.model.BudgeaConnection;
-import com.budgetview.budgea.model.BudgeaConnectionValue;
+import com.budgetview.budgea.model.*;
 import com.budgetview.desktop.cloud.CloudService;
 import com.budgetview.desktop.components.ProgressPanel;
 import com.budgetview.desktop.components.dialogs.PicsouDialog;
@@ -22,6 +19,7 @@ import org.globsframework.gui.splits.utils.Disposable;
 import org.globsframework.gui.splits.utils.GuiUtils;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
+import org.globsframework.model.GlobRepository;
 import org.globsframework.model.Key;
 import org.globsframework.model.repository.LocalGlobRepository;
 import org.globsframework.model.utils.GlobFieldComparator;
@@ -171,6 +169,7 @@ public class ImportCloudBankConnectionPanel extends AbstractImportStepPanel {
     CloudService.BankConnectionCallback callback = new CloudService.BankConnectionCallback() {
       public void processCompletion(Glob providerConnection) {
         System.out.println("ImportCloudBankConnectionPanel.processCompletion");
+        repository.deleteAll(BudgeaModel.get().asArray());
         repository.commitChanges(false);
         controller.showCloudFirstDownload(providerConnection);
         progressPanel.stop();
@@ -183,6 +182,7 @@ public class ImportCloudBankConnectionPanel extends AbstractImportStepPanel {
       }
 
       public void processSubscriptionError(CloudSubscriptionStatus status) {
+        repository.deleteAll(BudgeaModel.get().asArray());
         controller.showCloudSubscriptionError(repository.get(CloudDesktopUser.KEY).get(CloudDesktopUser.EMAIL), status);
         progressPanel.stop();
       }
@@ -194,6 +194,7 @@ public class ImportCloudBankConnectionPanel extends AbstractImportStepPanel {
       }
 
       public void processError(Exception e) {
+        repository.deleteAll(BudgeaModel.get().asArray());
         controller.showCloudError(e);
         progressPanel.stop();
       }

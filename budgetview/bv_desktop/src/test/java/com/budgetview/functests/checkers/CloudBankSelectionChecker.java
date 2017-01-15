@@ -35,6 +35,12 @@ public class CloudBankSelectionChecker extends ViewChecker {
     return this;
   }
 
+  public CloudBankSelectionChecker checkBankNotShown(String bank) {
+    ListBox bankList = getBankList();
+    assertFalse(bankList.contains(bank));
+    return this;
+  }
+
   public CloudBankSelectionChecker checkNoBankSelected() {
     assertThat(getBankList().selectionIsEmpty());
     return this;

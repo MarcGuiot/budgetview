@@ -7,6 +7,7 @@ import com.budgetview.desktop.components.dialogs.PicsouDialog;
 import com.budgetview.desktop.importer.ImportController;
 import com.budgetview.model.Bank;
 import com.budgetview.model.CloudDesktopUser;
+import com.budgetview.model.CloudProviderConnection;
 import com.budgetview.shared.cloud.CloudSubscriptionStatus;
 import com.budgetview.shared.model.Provider;
 import com.budgetview.utils.Lang;
@@ -18,6 +19,8 @@ import org.globsframework.gui.splits.utils.GuiUtils;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
+import org.globsframework.model.format.GlobPrinter;
+import org.globsframework.model.utils.GlobMatcher;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
@@ -52,7 +55,10 @@ public class ImportCloudBankSelectionPanel extends AbstractImportStepPanel imple
 
     bankChooserPanel = new BankChooserPanel(repository, localDirectory, nextAction,
                                             and(fieldEquals(Bank.PROVIDER, Provider.BUDGEA.getId()),
-                                                isNotNull(Bank.PROVIDER_ID)), dialog);
+                                                isNotNull(Bank.PROVIDER_ID),
+                                                new NotConnectedBankMatcher()),
+                                            dialog);
+
     builder.add("bankChooserPanel", bankChooserPanel.getPanel());
 
     builder.add("next", nextAction);
@@ -120,6 +126,12 @@ public class ImportCloudBankSelectionPanel extends AbstractImportStepPanel imple
     if (selectionService != null) {
       selectionService.removeListener(this);
       selectionService = null;
+    }
+  }
+
+  private class NotConnectedBankMatcher implements GlobMatcher {
+    public boolean matches(Glob bank, GlobRepository repository) {
+      return !repository.contains(CloudProviderConnection.TYPE, linkedTo(bank, CloudProviderConnection.BANK));
     }
   }
 }

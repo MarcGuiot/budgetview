@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <globs>
   <bankFormat id='-999'>
-    <bank name="Connecteur de Test Budgea" country="fr" id="-999" synchroEnabled="true" provider="2" providerId="40">
+    <bank name="Connecteur de test" country="fr" id="-999" synchroEnabled="true" provider="2" providerId="40">
       <bankEntity id="-999"/>
     </bank>
 

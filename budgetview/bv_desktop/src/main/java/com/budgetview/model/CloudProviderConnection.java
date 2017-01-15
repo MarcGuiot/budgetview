@@ -31,6 +31,9 @@ public class CloudProviderConnection {
 
   public static IntegerField PROVIDER_CONNECTION_ID;
 
+  @Target(Bank.class)
+  public static LinkField BANK;
+
   public static StringField BANK_NAME;
 
   @DefaultBoolean(false)
@@ -55,6 +58,7 @@ public class CloudProviderConnection {
       SerializedOutput outputStream = serializedByteArrayOutput.getOutput();
       outputStream.writeInteger(values.get(PROVIDER));
       outputStream.writeInteger(values.get(PROVIDER_CONNECTION_ID));
+      outputStream.writeInteger(values.get(BANK));
       outputStream.writeUtf8String(values.get(BANK_NAME));
       outputStream.writeBoolean(values.get(INITIALIZED));
       return serializedByteArrayOutput.toByteArray();
@@ -70,6 +74,7 @@ public class CloudProviderConnection {
       SerializedInput input = SerializedInputOutputFactory.init(data);
       fieldSetter.set(PROVIDER, input.readInteger());
       fieldSetter.set(PROVIDER_CONNECTION_ID, input.readInteger());
+      fieldSetter.set(BANK, input.readInteger());
       fieldSetter.set(BANK_NAME, input.readUtf8String());
       fieldSetter.set(INITIALIZED, input.readBoolean());
     }

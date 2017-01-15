@@ -91,6 +91,7 @@ public class CloudAPI {
     Request request = Request.Post(cloudUrl(url))
       .addHeader(CloudConstants.EMAIL, email)
       .addHeader(CloudConstants.BV_TOKEN, bvToken)
+      .addHeader(CloudConstants.PROVIDER_ID, Integer.toString(Provider.BUDGEA.getId()))
       .addHeader(CloudConstants.PROVIDER_CONNECTION_ID, Integer.toString(connectionId));
     Http.execute(request, url);
   }
@@ -99,7 +100,8 @@ public class CloudAPI {
     String url = "/banks/connections";
     Request request = Request.Get(cloudUrl(url))
       .addHeader(CloudConstants.EMAIL, email)
-      .addHeader(CloudConstants.BV_TOKEN, bvToken);
+      .addHeader(CloudConstants.BV_TOKEN, bvToken)
+      .addHeader(CloudConstants.PROVIDER_ID, Integer.toString(Provider.BUDGEA.getId()));
     return Http.executeAndGetJson(url, request);
   }
 
@@ -108,6 +110,7 @@ public class CloudAPI {
     Request request = Request.Get(cloudUrl(url))
       .addHeader(CloudConstants.EMAIL, email)
       .addHeader(CloudConstants.BV_TOKEN, bvToken)
+      .addHeader(CloudConstants.PROVIDER_ID, Integer.toString(Provider.BUDGEA.getId()))
       .addHeader(CloudConstants.PROVIDER_CONNECTION_ID, Integer.toString(connectionId));
     return Http.executeAndGetJson(url, request);
   }

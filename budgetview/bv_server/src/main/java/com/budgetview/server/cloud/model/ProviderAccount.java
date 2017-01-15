@@ -1,12 +1,11 @@
 package com.budgetview.server.cloud.model;
 
+import com.budgetview.shared.model.Provider;
 import com.budgetview.shared.utils.GlobSerializer;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.annotations.Key;
-import org.globsframework.metamodel.fields.BooleanField;
-import org.globsframework.metamodel.fields.DoubleField;
-import org.globsframework.metamodel.fields.IntegerField;
-import org.globsframework.metamodel.fields.StringField;
+import org.globsframework.metamodel.annotations.Target;
+import org.globsframework.metamodel.fields.*;
 import org.globsframework.metamodel.utils.GlobTypeLoader;
 import org.globsframework.model.FieldSetter;
 import org.globsframework.model.FieldValues;
@@ -21,6 +20,9 @@ public class ProviderAccount {
 
   @Key
   public static IntegerField ID;
+
+  @Target(Provider.class)
+  public static LinkField PROVIDER;
 
   public static IntegerField PROVIDER_BANK_ID;
 
@@ -63,6 +65,7 @@ public class ProviderAccount {
     public byte[] serializeData(FieldValues fieldValues) {
       SerializedByteArrayOutput serializedByteArrayOutput = new SerializedByteArrayOutput();
       SerializedOutput output = serializedByteArrayOutput.getOutput();
+      output.writeInteger(fieldValues.get(PROVIDER));
       output.writeInteger(fieldValues.get(PROVIDER_BANK_ID));
       output.writeUtf8String(fieldValues.get(PROVIDER_BANK_NAME));
       output.writeUtf8String(fieldValues.get(NAME));
@@ -77,6 +80,7 @@ public class ProviderAccount {
 
     private void deserializeDataV1(FieldSetter fieldSetter, byte[] data) {
       SerializedInput input = SerializedInputOutputFactory.init(data);
+      fieldSetter.set(PROVIDER, input.readInteger());
       fieldSetter.set(PROVIDER_BANK_ID, input.readInteger());
       fieldSetter.set(PROVIDER_BANK_NAME, input.readUtf8String());
       fieldSetter.set(NAME, input.readUtf8String());

@@ -17,9 +17,9 @@ public class CloudImportTest extends CloudDesktopTestCase {
   public void testCreateStandardConnection() throws Exception {
     cloudLicense.purchaseLicence("toto@example.com", Dates.tomorrow());
 
-    budgea.pushNewConnection(1, 123, 40);
+    budgea.pushNewConnectionResponse(1, 123, 40);
     budgea.pushStatement(BudgeaStatement.init()
-                           .addConnection(1, 123, 40, "Connecteur de Test Budgea", "2016-08-10 17:44:26")
+                           .addConnection(1, 123, 40, "Connecteur de test", "2016-08-10 17:44:26")
                            .addAccount(1, "Main account 1", "100200300", "checking", 1000.00, "2016-08-12 13:00:00")
                            .addTransaction(1, "2016-08-10 13:00:00", -100.00, "AUCHAN")
                            .addTransaction(2, "2016-08-12 17:00:00", -50.00, "EDF", BudgeaCategory.ELECTRICITE)
@@ -32,12 +32,12 @@ public class CloudImportTest extends CloudDesktopTestCase {
       .selectCloudForNewUser()
       .register("toto@example.com")
       .processEmailAndNextToBankSelection(mailbox.getVerificationCode("toto@example.com"))
-      .checkContainsBanks("BNP Paribas", "CIC", "Connecteur de Test Budgea", "Crédit Agricole", "LCL")
-      .selectBank("Connecteur de Test Budgea")
+      .checkContainsBanks("BNP Paribas", "CIC", "Connecteur de test", "Crédit Agricole", "LCL")
+      .selectBank("Connecteur de test")
       .next()
       .setChoice("Type de compte", "Particuliers")
       .setText("Identifiant", "1234")
-      .setPassword("Code (1234)", "")
+      .setPassword("Code (1234)", "1234")
       .next()
       .waitForNotificationAndDownload(mailbox.checkStatementReady("toto@example.com"))
       .checkTransactions(new Object[][]{
@@ -63,18 +63,18 @@ public class CloudImportTest extends CloudDesktopTestCase {
   public void testWaitingForTheInitialStatement() throws Exception {
     cloudLicense.purchaseLicence("toto@example.com", Dates.tomorrow());
 
-    budgea.pushNewConnection(1, 123, 40);
+    budgea.pushNewConnectionResponse(1, 123, 40);
 
     CloudFirstDownloadChecker firstDownloadPanel = operations.openImportDialog()
       .selectCloudForNewUser()
       .register("toto@example.com")
       .processEmailAndNextToBankSelection(mailbox.getVerificationCode("toto@example.com"))
-      .checkContainsBanks("BNP Paribas", "CIC", "Connecteur de Test Budgea", "Crédit Agricole", "LCL")
-      .selectBank("Connecteur de Test Budgea")
+      .checkContainsBanks("BNP Paribas", "CIC", "Connecteur de test", "Crédit Agricole", "LCL")
+      .selectBank("Connecteur de test")
       .next()
       .setChoice("Type de compte", "Particuliers")
       .setText("Identifiant", "1234")
-      .setPassword("Code (1234)", "")
+      .setPassword("Code (1234)", "1234")
       .next()
       .checkNextDisabled()
       .checkNoDataMessageHidden()
@@ -84,7 +84,7 @@ public class CloudImportTest extends CloudDesktopTestCase {
     mailbox.checkEmpty();
 
     budgea.callWebhook(BudgeaStatement.init()
-                           .addConnection(1, 123, 40, "Connecteur de Test Budgea", "2016-08-10 17:44:26")
+                           .addConnection(1, 123, 40, "Connecteur de test", "2016-08-10 17:44:26")
                            .addAccount(1, "Main account 1", "100200300", "checking", 1000.00, "2016-08-12 13:00:00")
                            .addTransaction(1, "2016-08-10 13:00:00", -100.00, "AUCHAN")
                            .addTransaction(2, "2016-08-12 17:00:00", -50.00, "EDF", BudgeaCategory.ELECTRICITE)
@@ -118,25 +118,25 @@ public class CloudImportTest extends CloudDesktopTestCase {
   public void testClosingAndReopeningTheImportDialogWhileWaitingForTheInitialStatement() throws Exception {
     cloudLicense.purchaseLicence("toto@example.com", Dates.tomorrow());
 
-    budgea.pushNewConnection(1, 123, 40);
+    budgea.pushNewConnectionResponse(1, 123, 40);
 
     operations.openImportDialog()
       .selectCloudForNewUser()
       .register("toto@example.com")
       .processEmailAndNextToBankSelection(mailbox.getVerificationCode("toto@example.com"))
-      .checkContainsBanks("BNP Paribas", "CIC", "Connecteur de Test Budgea", "Crédit Agricole", "LCL")
-      .selectBank("Connecteur de Test Budgea")
+      .checkContainsBanks("BNP Paribas", "CIC", "Connecteur de test", "Crédit Agricole", "LCL")
+      .selectBank("Connecteur de test")
       .next()
       .setChoice("Type de compte", "Particuliers")
       .setText("Identifiant", "1234")
-      .setPassword("Code (1234)", "")
+      .setPassword("Code (1234)", "1234")
       .next()
       .checkNextDisabled()
       .close();
 
     mailbox.checkEmpty();
     budgea.callWebhook(BudgeaStatement.init()
-                         .addConnection(1, 123, 40, "Connecteur de Test Budgea", "2016-08-10 17:44:26")
+                         .addConnection(1, 123, 40, "Connecteur de test", "2016-08-10 17:44:26")
                          .addAccount(1, "Main account 1", "100200300", "checking", 1000.00, "2016-08-12 13:00:00")
                          .addTransaction(1, "2016-08-10 13:00:00", -100.00, "AUCHAN")
                          .addTransaction(2, "2016-08-12 17:00:00", -50.00, "EDF", BudgeaCategory.ELECTRICITE)
@@ -145,7 +145,7 @@ public class CloudImportTest extends CloudDesktopTestCase {
                          .endConnection()
                          .get());
 
-    budgea.pushConnections(BudgeaConnections.init()
+    budgea.pushConnectionList(BudgeaConnections.init()
                              .add(1, 123, 40, true, "2016-08-10 17:44:26")
                              .get());
 
@@ -174,9 +174,9 @@ public class CloudImportTest extends CloudDesktopTestCase {
   @Test
   public void testRefreshDoesNotResendPreviousStatements() throws Exception {
     cloudLicense.purchaseLicence("toto@example.com", Dates.tomorrow());
-    budgea.pushNewConnection(1, 123, 40);
+    budgea.pushNewConnectionResponse(1, 123, 40);
     budgea.pushStatement(BudgeaStatement.init()
-                           .addConnection(1, 123, 40, "Connecteur de Test Budgea", "2016-08-10 17:44:26")
+                           .addConnection(1, 123, 40, "Connecteur de test", "2016-08-10 17:44:26")
                            .addAccount(1, "Main account 1", "100200300", "checking", 1000.00, "2016-08-12 13:00:00")
                            .addTransaction(1, "2016-08-10 13:00:00", -100.00, "AUCHAN")
                            .addTransaction(2, "2016-08-12 17:00:00", -50.00, "EDF", BudgeaCategory.ELECTRICITE)
@@ -189,11 +189,11 @@ public class CloudImportTest extends CloudDesktopTestCase {
       .selectCloudForNewUser()
       .register("toto@example.com")
       .processEmailAndNextToBankSelection(mailbox.getVerificationCode("toto@example.com"))
-      .selectBank("Connecteur de Test Budgea")
+      .selectBank("Connecteur de test")
       .next()
       .setChoice("Type de compte", "Particuliers")
       .setText("Identifiant", "1234")
-      .setPassword("Code (1234)", "")
+      .setPassword("Code (1234)", "1234")
       .next()
       .waitForNotificationAndDownload(mailbox.checkStatementReady("toto@example.com"))
       .checkTransactions(new Object[][]{
@@ -208,7 +208,7 @@ public class CloudImportTest extends CloudDesktopTestCase {
       .check();
 
     budgea.callWebhook(BudgeaStatement.init()
-                         .addConnection(1, 123, 40, "Connecteur de Test Budgea", "2016-08-10 17:44:26")
+                         .addConnection(1, 123, 40, "Connecteur de test", "2016-08-10 17:44:26")
                          .addAccount(1, "Main account 1", "100200300", "checking", 1000.00, "2016-08-12 13:00:00")
                          .addTransaction(2, "2016-08-12 17:00:00", -50.00, "EDF", BudgeaCategory.ELECTRICITE)
                          .addTransaction(3, "2016-08-08 10:00:00", -10.00, "CIC", BudgeaCategory.FRAIS_BANCAIRES)
@@ -237,9 +237,9 @@ public class CloudImportTest extends CloudDesktopTestCase {
   @Test
   public void testRequestSameUpdateAfterCancel() throws Exception {
     cloudLicense.purchaseLicence("toto@example.com", Dates.tomorrow());
-    budgea.pushNewConnection(1, 123, 40);
+    budgea.pushNewConnectionResponse(1, 123, 40);
     budgea.pushStatement(BudgeaStatement.init()
-                           .addConnection(1, 123, 40, "Connecteur de Test Budgea", "2016-08-10 17:44:26")
+                           .addConnection(1, 123, 40, "Connecteur de test", "2016-08-10 17:44:26")
                            .addAccount(1, "Main account 1", "100200300", "checking", 1000.00, "2016-08-12 13:00:00")
                            .addTransaction(1, "2016-08-10 13:00:00", -100.00, "AUCHAN")
                            .addTransaction(2, "2016-08-12 17:00:00", -50.00, "EDF", BudgeaCategory.ELECTRICITE)
@@ -252,17 +252,17 @@ public class CloudImportTest extends CloudDesktopTestCase {
       .selectCloudForNewUser()
       .register("toto@example.com")
       .processEmailAndNextToBankSelection(mailbox.getVerificationCode("toto@example.com"))
-      .selectBank("Connecteur de Test Budgea")
+      .selectBank("Connecteur de test")
       .next()
       .setChoice("Type de compte", "Particuliers")
       .setText("Identifiant", "1234")
-      .setPassword("Code (1234)", "")
+      .setPassword("Code (1234)", "1234")
       .next()
       .waitForNotificationAndDownload(mailbox.checkStatementReady("toto@example.com"))
       .importAccountAndComplete();
 
     budgea.callWebhook(BudgeaStatement.init()
-                         .addConnection(1, 123, 40, "Connecteur de Test Budgea", "2016-08-10 17:44:26")
+                         .addConnection(1, 123, 40, "Connecteur de test", "2016-08-10 17:44:26")
                          .addAccount(1, "Main account 1", "100200300", "checking", 1000.00, "2016-08-12 13:00:00")
                          .addTransaction(2, "2016-08-12 17:00:00", -50.00, "EDF", BudgeaCategory.ELECTRICITE)
                          .addTransaction(3, "2016-08-08 10:00:00", -10.00, "CIC", BudgeaCategory.FRAIS_BANCAIRES)
@@ -303,9 +303,9 @@ public class CloudImportTest extends CloudDesktopTestCase {
       .addTransaction("2016/08/10", "2016/08/10", -100.00, "CB AUCHAN SA")
       .load();
 
-    budgea.pushNewConnection(1, 123, 40);
+    budgea.pushNewConnectionResponse(1, 123, 40);
     budgea.pushStatement(BudgeaStatement.init()
-                           .addConnection(1, 123, 40, "Connecteur de Test Budgea", "2016-08-12 17:44:26")
+                           .addConnection(1, 123, 40, "Connecteur de test", "2016-08-12 17:44:26")
                            .addAccount(1, "Main account 1", "100200300", "checking", 950.00, "2016-08-12 13:00:00")
                            .addTransaction(1, "2016-08-08 10:00:00", "2016-08-08 10:00:00", -10.00, "CIC", "PRLVT FRAIS CIC FILBANQUE", BudgeaCategory.FRAIS_BANCAIRES.getId(), "Frais bancaires", false)
                            .addTransaction(2, "2016-08-10 13:00:00", "2016-08-10 10:00:00", -100.00, "AUCHAN", "CB AUCHAN SA", BudgeaCategory.INDEFINI.getId(), "A classer", false)
@@ -318,8 +318,8 @@ public class CloudImportTest extends CloudDesktopTestCase {
       .selectCloudForNewUser()
       .register("toto@example.com")
       .processEmailAndNextToBankSelection(mailbox.getVerificationCode("toto@example.com"))
-      .checkContainsBanks("BNP Paribas", "CIC", "Connecteur de Test Budgea", "Crédit Agricole", "LCL")
-      .selectBank("Connecteur de Test Budgea")
+      .checkContainsBanks("BNP Paribas", "CIC", "Connecteur de test", "Crédit Agricole", "LCL")
+      .selectBank("Connecteur de test")
       .next()
       .setChoice("Type de compte", "Particuliers")
       .setText("Identifiant", "1234")
@@ -347,9 +347,9 @@ public class CloudImportTest extends CloudDesktopTestCase {
   @Test
   public void testCanManageConnexionWithTwoBanks() throws Exception {
     cloudLicense.purchaseLicence("toto@example.com", Dates.tomorrow());
-    budgea.pushNewConnection(1, 123, 40);
+    budgea.pushNewConnectionResponse(1, 123, 40);
     budgea.pushStatement(BudgeaStatement.init()
-                           .addConnection(1, 123, 40, "Connecteur de Test Budgea", "2016-08-10 17:44:26")
+                           .addConnection(1, 123, 40, "Connecteur de test", "2016-08-10 17:44:26")
                            .addAccount(1, "Main account 1", "100200300", "checking", 1000.00, "2016-08-12 13:00:00")
                            .addTransaction(1, "2016-08-10 13:00:00", -100.00, "AUCHAN")
                            .addTransaction(2, "2016-08-12 17:00:00", -50.00, "EDF", BudgeaCategory.ELECTRICITE)
@@ -361,11 +361,11 @@ public class CloudImportTest extends CloudDesktopTestCase {
       .selectCloudForNewUser()
       .register("toto@example.com")
       .processEmailAndNextToBankSelection(mailbox.getVerificationCode("toto@example.com"))
-      .selectBank("Connecteur de Test Budgea")
+      .selectBank("Connecteur de test")
       .next()
       .setChoice("Type de compte", "Particuliers")
       .setText("Identifiant", "1234")
-      .setPassword("Code (1234)", "")
+      .setPassword("Code (1234)", "1234")
       .next()
       .waitForNotificationAndDownload(mailbox.checkStatementReady("toto@example.com"))
       .checkTransactions(new Object[][]{
@@ -380,7 +380,7 @@ public class CloudImportTest extends CloudDesktopTestCase {
       .check();
 
     budgea.setBankLoginFields(BudgeaBankFieldSample.CIC);
-    budgea.pushNewConnection(2, 123, 10);
+    budgea.pushNewConnectionResponse(2, 123, 10);
     budgea.pushStatement(BudgeaStatement.init()
                            .addConnection(2, 123, 10, "CIC", "2016-08-14 16:18:44")
                            .addAccount(2, "Joint account", "987654321", "checking", 500.00, "2016-08-14 17:00:00")
@@ -389,13 +389,13 @@ public class CloudImportTest extends CloudDesktopTestCase {
                            .endConnection()
                            .get());
 
-    budgea.pushConnections(BudgeaConnections.init()
+    budgea.pushConnectionList(BudgeaConnections.init()
                              .add(1, 123, 40, true, "2016-08-10 17:44:26")
                              .get());
 
     operations.openImportDialog()
       .editCloudConnections()
-      .checkConnections("Connecteur de Test Budgea")
+      .checkConnections("Connecteur de test")
       .addConnection()
       .selectBank("CIC")
       .next()
@@ -415,23 +415,23 @@ public class CloudImportTest extends CloudDesktopTestCase {
     mainAccounts.checkContent("| Main account 1* | 1000.00 on 2016/08/12 | sunny |\n" +
                               "| Joint account*  | 500.00 on 2016/08/14  | sunny |");
 
-    budgea.pushConnections(BudgeaConnections.init()
+    budgea.pushConnectionList(BudgeaConnections.init()
                              .add(1, 123, 40, true, "2016-08-10 17:44:26")
                              .add(2, 123, 10, true, "2016-08-14 16:18:44")
                              .get());
 
     operations.openImportDialog()
       .editCloudConnections()
-      .checkConnections("Connecteur de Test Budgea", "CIC")
+      .checkConnections("CIC", "Connecteur de test")
       .close();
   }
 
   @Test
   public void testDownloadAccountWithoutTransactions() throws Exception {
     cloudLicense.purchaseLicence("toto@example.com", Dates.tomorrow());
-    budgea.pushNewConnection(1, 123, 40);
+    budgea.pushNewConnectionResponse(1, 123, 40);
     budgea.pushStatement(BudgeaStatement.init()
-                           .addConnection(1, 123, 40, "Connecteur de Test Budgea", "2016-08-10 17:44:26")
+                           .addConnection(1, 123, 40, "Connecteur de test", "2016-08-10 17:44:26")
                            .addAccount(1, "Main account 1", "100200300", "checking", 1000.00, "2016-08-10 13:00:00")
                            .endAccount()
                            .endConnection()
@@ -441,12 +441,12 @@ public class CloudImportTest extends CloudDesktopTestCase {
       .selectCloudForNewUser()
       .register("toto@example.com")
       .processEmailAndNextToBankSelection(mailbox.getVerificationCode("toto@example.com"))
-      .checkContainsBanks("BNP Paribas", "CIC", "Connecteur de Test Budgea", "Crédit Agricole", "LCL")
-      .selectBank("Connecteur de Test Budgea")
+      .checkContainsBanks("BNP Paribas", "CIC", "Connecteur de test", "Crédit Agricole", "LCL")
+      .selectBank("Connecteur de test")
       .next()
       .setChoice("Type de compte", "Particuliers")
       .setText("Identifiant", "1234")
-      .setPassword("Code (1234)", "")
+      .setPassword("Code (1234)", "1234")
       .next()
       .waitForNotificationAndDownload(mailbox.checkStatementReady("toto@example.com"))
       .checkNoTransactions()

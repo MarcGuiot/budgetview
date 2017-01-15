@@ -46,6 +46,11 @@ public class DefaultGlobModel implements GlobModel {
     return result;
   }
 
+  public GlobType[] asArray() {
+    Collection<GlobType> all = getAll();
+    return all.toArray(new GlobType[all.size()]);
+  }
+
   public Iterator<GlobType> iterator() {
     return getAll().iterator();
   }

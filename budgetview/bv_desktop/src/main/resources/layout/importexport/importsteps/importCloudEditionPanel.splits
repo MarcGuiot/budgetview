@@ -20,14 +20,14 @@
         <htmlEditorPane text="$import.cloud.edition.message" styleClass="multiLineLabel"/>
 
         <scrollPane marginTop="20" forceVerticalScroll="true" weightY="100">
-          <column margin="20">
+          <column margin="20" name="connectionsPanel">
 
             <repeat ref="connections" layout="column">
               <row styleClass="connection">
-                <label ref="name" styleClass="name"/>
+                <label ref="connectionName" styleClass="name"/>
                 <label ref="details" styleClass="details"/>
                 <filler fill="horizontal"/>
-                <button action="delete" styleClass="delete"/>
+                <button ref="delete" styleClass="delete"/>
               </row>
             </repeat>
 

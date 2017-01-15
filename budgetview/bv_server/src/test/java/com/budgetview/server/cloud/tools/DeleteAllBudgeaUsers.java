@@ -8,6 +8,12 @@ import java.io.IOException;
 
 public class DeleteAllBudgeaUsers {
 
+
+  /** Run with:
+   *
+   *      dev/config/bv_cloud_prod.properties
+   *
+   */
   public static void main(String[] args) throws Exception {
 
     BudgeaConstants.setProd();

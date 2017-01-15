@@ -3,6 +3,7 @@ package com.budgetview.server.cloud.services;
 import com.budgetview.server.cloud.model.CloudUser;
 import com.budgetview.server.cloud.model.ProviderConnection;
 import com.budgetview.server.license.mail.Mailer;
+import com.budgetview.shared.model.Provider;
 import org.apache.log4j.Logger;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
@@ -37,6 +38,7 @@ public class WebhookNotificationService {
         GlobList items =
           sqlConnection.startSelect(ProviderConnection.TYPE,
                                     Where.and(fieldEquals(ProviderConnection.USER, user.get(CloudUser.ID)),
+                                              fieldEquals(ProviderConnection.PROVIDER, Provider.BUDGEA.getId()),
                                               fieldEquals(ProviderConnection.PROVIDER_CONNECTION_ID, connectionId)))
             .selectAll()
             .getList();

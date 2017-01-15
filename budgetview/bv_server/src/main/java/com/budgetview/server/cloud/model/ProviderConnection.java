@@ -1,5 +1,6 @@
 package com.budgetview.server.cloud.model;
 
+import com.budgetview.shared.model.Provider;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.annotations.Key;
 import org.globsframework.metamodel.annotations.Target;
@@ -17,6 +18,9 @@ public class ProviderConnection {
 
   @Target(CloudUser.class)
   public static IntegerField USER;
+
+  @Target(Provider.class)
+  public static IntegerField PROVIDER;
 
   public static IntegerField PROVIDER_CONNECTION_ID;
 

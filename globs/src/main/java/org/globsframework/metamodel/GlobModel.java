@@ -11,6 +11,8 @@ public interface GlobModel extends Iterable<GlobType> {
 
   Collection<GlobType> getAll();
 
+  GlobType[] asArray();
+
   GlobType getType(String name) throws ItemNotFound;
 
   GlobList getConstants();

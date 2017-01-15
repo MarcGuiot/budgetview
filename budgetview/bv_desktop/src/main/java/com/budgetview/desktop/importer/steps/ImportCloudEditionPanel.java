@@ -14,12 +14,12 @@ import org.globsframework.gui.splits.PanelBuilder;
 import org.globsframework.gui.splits.repeat.RepeatComponentFactory;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobRepository;
+import org.globsframework.model.format.GlobPrinter;
 import org.globsframework.model.utils.GlobComparators;
 import org.globsframework.model.utils.GlobMatchers;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
-import java.awt.*;
 import java.awt.event.ActionEvent;
 
 public class ImportCloudEditionPanel extends AbstractImportStepPanel {
@@ -43,9 +43,12 @@ public class ImportCloudEditionPanel extends AbstractImportStepPanel {
 
     repeat = builder.addRepeat("connections", CloudProviderConnection.TYPE, GlobMatchers.NONE, GlobComparators.ascending(CloudProviderConnection.BANK_NAME), new RepeatComponentFactory<Glob>() {
       public void registerComponents(PanelBuilder cellBuilder, Glob connection) {
-        cellBuilder.add("name", new JLabel(connection.get(CloudProviderConnection.BANK_NAME)));
+        String bankName = connection.get(CloudProviderConnection.BANK_NAME);
+        cellBuilder.add("connectionName", new JLabel(bankName));
         cellBuilder.add("details", getDetailsLabel(connection));
-        cellBuilder.add("delete", new DeleteConnectionAction(connection));
+        JButton deleteButton = new JButton(new DeleteConnectionAction(connection));
+        cellBuilder.add("delete", deleteButton);
+        deleteButton.setName("delete:" + bankName);
       }
     });
 
@@ -98,6 +101,10 @@ public class ImportCloudEditionPanel extends AbstractImportStepPanel {
     progressPanel.start();
     cloudService.updateBankConnections(repository, new CloudService.Callback() {
       public void processCompletion() {
+
+        System.out.println("ImportCloudEditionPanel.processCompletion");
+        GlobPrinter.print(repository, CloudProviderConnection.TYPE);
+        
         repeat.setFilter(GlobMatchers.ALL);
         dialog.revalidate();
         setAllEnabled(true);

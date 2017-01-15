@@ -16,6 +16,9 @@ import org.globsframework.utils.serialization.SerializedInput;
 import org.globsframework.utils.serialization.SerializedInputOutputFactory;
 import org.globsframework.utils.serialization.SerializedOutput;
 
+import static org.globsframework.model.utils.GlobMatchers.and;
+import static org.globsframework.model.utils.GlobMatchers.fieldEquals;
+
 public class Bank {
   public static final int GENERIC_BANK_ID = -123456;
 
@@ -77,6 +80,17 @@ public class Bank {
   static {
     GlobTypeLoader.init(Bank.class, "bank");
     GENERIC_BANK_KEY = org.globsframework.model.Key.create(TYPE, GENERIC_BANK_ID);
+  }
+
+  public static Integer findIdByProviderId(int provider, int providerBankId, GlobRepository repository) {
+    Glob bank = findByProviderId(provider, providerBankId, repository);
+    return bank != null ? bank.get(Bank.ID) : null;
+  }
+
+  public static Glob findByProviderId(int provider, int providerBankId, GlobRepository repository) {
+    GlobList banks = repository.getAll(TYPE, and(fieldEquals(PROVIDER, provider),
+                                                 fieldEquals(PROVIDER_ID, providerBankId)));
+    return banks.isEmpty() ? null : banks.getFirst();
   }
 
   public static class Serializer implements GlobSerializer {

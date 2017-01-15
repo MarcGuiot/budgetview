@@ -41,13 +41,22 @@ public class BankConnectionsServlet extends HttpCloudServlet {
     Command command = new AuthenticatedCommand(directory, req, resp, logger) {
       protected int doRun(JsonGlobWriter writer) throws IOException, InvalidHeader {
 
-        Integer connectionId = getOptionalIntHeader(CloudConstants.PROVIDER_CONNECTION_ID);
 
+        Integer connectionId = getOptionalIntHeader(CloudConstants.PROVIDER_CONNECTION_ID);
         if (connectionId == null) {
           getAllConnections(writer);
         }
         else {
-          getSingleConnection(connectionId, writer);
+          Integer providerId = getOptionalIntHeader(CloudConstants.PROVIDER_ID);
+          if (providerId == null) {
+            logger.error("No provider set in call where a provider connection id (" + providerId + ") is set");
+            return HttpServletResponse.SC_BAD_REQUEST;
+          }
+          if (providerId != Provider.BUDGEA.getId()) {
+            logger.error("Unknown provider id " + providerId);
+            return HttpServletResponse.SC_BAD_REQUEST;
+          }
+          getSingleConnection(providerId, connectionId, writer);
         }
         return HttpServletResponse.SC_OK;
       }
@@ -79,12 +88,15 @@ public class BankConnectionsServlet extends HttpCloudServlet {
         for (Object c : budgeaConnections.getJSONArray("connections")) {
           JSONObject budgeaConnection = (JSONObject) c;
           int budgeaConnectionId = budgeaConnection.getInt("id");
+          int budgeaBankId = budgeaConnection.getInt("id_bank");
           Glob connection = connectionsById.get(budgeaConnectionId);
           boolean initialized = connection != null ? connection.get(ProviderConnection.INITIALIZED) : false;
+          Integer provider = connection != null ? connection.get(ProviderConnection.PROVIDER) : null;
 
           writer.object();
-          writer.key(CloudConstants.PROVIDER_ID).value(Integer.toString(Provider.BUDGEA.getId()));
+          writer.key(CloudConstants.PROVIDER_ID).value(provider);
           writer.key(CloudConstants.PROVIDER_CONNECTION_ID).value(budgeaConnectionId);
+          writer.key(CloudConstants.PROVIDER_BANK_ID).value(budgeaBankId);
           writer.key(CloudConstants.BANK_NAME).value(getName(budgeaConnection, bankNames));
           writer.key(CloudConstants.INITIALIZED).value(initialized);
           writer.endObject();
@@ -93,12 +105,13 @@ public class BankConnectionsServlet extends HttpCloudServlet {
         writer.endObject();
       }
 
-      private void getSingleConnection(Integer connectionId, JSONWriter writer) throws IOException {
+      private void getSingleConnection(Integer providerId, Integer connectionId, JSONWriter writer) throws IOException {
 
         SqlConnection sqlConnection = database.connect();
         GlobList connections =
           sqlConnection.startSelect(ProviderConnection.TYPE,
                                     Where.and(fieldEquals(ProviderConnection.USER, user.get(CloudUser.ID)),
+                                              fieldEquals(ProviderConnection.PROVIDER, providerId),
                                               fieldEquals(ProviderConnection.PROVIDER_CONNECTION_ID, connectionId)))
             .selectAll()
             .getList();
@@ -116,6 +129,8 @@ public class BankConnectionsServlet extends HttpCloudServlet {
           Glob connection = connections.getFirst();
           writer.object();
           writer.key("id").value(connectionId);
+          writer.key(CloudConstants.PROVIDER_ID).value(connection.get(ProviderConnection.PROVIDER));
+          writer.key(CloudConstants.PROVIDER_CONNECTION_ID).value(connection.get(ProviderConnection.PROVIDER_CONNECTION_ID));
           writer.key(CloudConstants.INITIALIZED).value(connection.isTrue(ProviderConnection.INITIALIZED));
           writer.endObject();
           writer.endArray();
@@ -153,18 +168,26 @@ public class BankConnectionsServlet extends HttpCloudServlet {
       protected int doRun(JsonGlobWriter writer) throws IOException, InvalidHeader {
 
         Integer userId = user.get(CloudUser.ID);
+        int providerId = getIntHeader(CloudConstants.PROVIDER_ID);
+        if (providerId != Provider.BUDGEA.getId()) {
+          logger.error("Unknown provider id " + providerId);
+          return HttpServletResponse.SC_BAD_REQUEST;
+        }
+
         int connectionId = getIntHeader(CloudConstants.PROVIDER_CONNECTION_ID);
 
         SqlConnection sqlConnection = database.connect();
         GlobList connections =
           sqlConnection.startSelect(ProviderConnection.TYPE,
                                     Where.and(fieldEquals(ProviderConnection.USER, userId),
+                                              fieldEquals(ProviderConnection.PROVIDER, providerId),
                                               fieldEquals(ProviderConnection.PROVIDER_CONNECTION_ID, connectionId)))
             .selectAll()
             .getList();
         if (connections.isEmpty()) {
           sqlConnection.startCreate(ProviderConnection.TYPE)
             .set(ProviderConnection.USER, userId)
+            .set(ProviderConnection.PROVIDER, providerId)
             .set(ProviderConnection.PROVIDER_CONNECTION_ID, connectionId)
             .set(ProviderConnection.INITIALIZED, false)
             .run();
@@ -185,15 +208,19 @@ public class BankConnectionsServlet extends HttpCloudServlet {
 
     Command command = new AuthenticatedCommand(directory, req, resp, logger) {
       protected int doRun(JsonGlobWriter writer) throws IOException, InvalidHeader {
+
         int providerId = getIntHeader(CloudConstants.PROVIDER_ID);
         int providerConnectionId = getIntHeader(CloudConstants.PROVIDER_CONNECTION_ID);
 
         try {
-          budgeaAPI.deleteConnection(providerConnectionId);
+          if (providerId == Provider.BUDGEA.getId()) {
+            budgeaAPI.deleteConnection(providerConnectionId);
+          }
 
           SqlConnection sqlConnection = database.connect();
           sqlConnection.startDelete(ProviderConnection.TYPE,
                                     Where.and(fieldEquals(ProviderConnection.USER, user.get(CloudUser.ID)),
+                                              fieldEquals(ProviderConnection.PROVIDER, providerId),
                                               fieldEquals(ProviderConnection.PROVIDER_CONNECTION_ID, providerConnectionId)))
             .execute();
           sqlConnection.commitAndClose();
