@@ -81,7 +81,7 @@
         <dependency>
           <groupId>org.uispec4j</groupId>
           <artifactId>uispec4j</artifactId>
-          <version>${pom.version}</version>
+          <version>${project.version}</version>
           <scope>test</scope>
           <classifier>jdk15</classifier>
         </dependency>
@@ -96,7 +96,7 @@
         <dependency>
           <groupId>org.uispec4j</groupId>
           <artifactId>uispec4j</artifactId>
-          <version>${pom.version}</version>
+          <version>${project.version}</version>
           <scope>test</scope>
           <classifier>jdk16</classifier>
         </dependency>
@@ -111,7 +111,7 @@
         <dependency>
           <groupId>org.uispec4j</groupId>
           <artifactId>uispec4j</artifactId>
-          <version>${pom.version}</version>
+          <version>${project.version}</version>
           <scope>test</scope>
           <classifier>jdk16</classifier>
         </dependency>

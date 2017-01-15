@@ -6,7 +6,7 @@
   <!-- POM Relationships -->
   <groupId>org.uispec4j</groupId>
   <artifactId>uispec4j-root</artifactId>
-  <version>2.3-SNAPSHOT</version>
+  <version>2.4-SNAPSHOT</version>
   <packaging>pom</packaging>
   <modules>
     <module>uispec4j</module>
@@ -20,11 +20,15 @@
   <url>http://www.uispec4j.org</url>
   <inceptionYear>2004</inceptionYear>
 
-
   <repositories>
     <repository>
-      <id>codehaus</id>
-      <url>http://http://repository.codehaus.org/</url>
+      <id>central</id>
+      <name>Central Repository</name>
+      <url>http://repo.maven.apache.org/maven2</url>
+      <layout>default</layout>
+      <snapshots>
+        <enabled>false</enabled>
+      </snapshots>
     </repository>
   </repositories>
 
