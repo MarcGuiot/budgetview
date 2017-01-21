@@ -39,7 +39,7 @@ public class WebhookNotificationService {
           sqlConnection.startSelect(ProviderConnection.TYPE,
                                     Where.and(fieldEquals(ProviderConnection.USER, user.get(CloudUser.ID)),
                                               fieldEquals(ProviderConnection.PROVIDER, Provider.BUDGEA.getId()),
-                                              fieldEquals(ProviderConnection.PROVIDER_CONNECTION_ID, connectionId)))
+                                              fieldEquals(ProviderConnection.PROVIDER_CONNECTION, connectionId)))
             .selectAll()
             .getList();
 
@@ -58,7 +58,7 @@ public class WebhookNotificationService {
           notificationNeeded = true;
           sqlConnection.startCreate(ProviderConnection.TYPE)
             .set(ProviderConnection.USER, user.get(CloudUser.ID))
-            .set(ProviderConnection.PROVIDER_CONNECTION_ID, connectionId)
+            .set(ProviderConnection.PROVIDER_CONNECTION, connectionId)
             .set(ProviderConnection.INITIALIZED, true)
             .run();
         }

@@ -97,7 +97,8 @@ public class BudgeaWebHookServlet extends HttpCloudServlet {
       }
       for (Object c : array) {
         JSONObject budgeaConnection = (JSONObject) c;
-        connectionIds.add(budgeaConnection.getInt("id"));
+        int connectionId = budgeaConnection.getInt("id");
+        connectionIds.add(connectionId);
         int budgeaUserId = budgeaConnection.getInt("id_user");
         user = getCloudUser(budgeaUserId, token);
         if (user == null) {
@@ -105,12 +106,12 @@ public class BudgeaWebHookServlet extends HttpCloudServlet {
           return;
         }
         JSONObject bank = budgeaConnection.getJSONObject("bank");
-        DbUpdater updater = new DbUpdater(user.get(CloudUser.ID));
+        DbUpdater updater = new DbUpdater(user.get(CloudUser.ID), connectionId);
         JSONArray accounts = budgeaConnection.optJSONArray("accounts");
         if (accounts != null) {
           for (Object a : accounts) {
             JSONObject account = (JSONObject) a;
-            updater.loadAccount(bank, account);
+            updater.loadAccount(connectionId, bank, account);
           }
         }
         else {
@@ -155,21 +156,25 @@ public class BudgeaWebHookServlet extends HttpCloudServlet {
 
   private class DbUpdater {
     private Integer userId;
+    private int connectionId;
     private GlobRepository repository = GlobRepositoryBuilder.createEmpty();
     private SqlConnection sqlConnection;
 
-    public DbUpdater(Integer userId) {
+    public DbUpdater(Integer userId, int connectionId) {
       this.userId = userId;
+      this.connectionId = connectionId;
       this.sqlConnection = db.connect();
     }
 
-    public void loadAccount(JSONObject bank, JSONObject account) throws GlobsSQLException, ParseException {
+    public void loadAccount(int connectionId, JSONObject bank, JSONObject account) throws GlobsSQLException, ParseException {
 
       Date lastUpdate = Budgea.parseTimestamp(account.getString("last_update"));
       int providerAccountId = account.getInt("id");
 
       repository.create(ProviderAccount.TYPE,
                         value(ProviderAccount.ID, providerAccountId),
+                        value(ProviderAccount.PROVIDER, Provider.BUDGEA.getId()),
+                        value(ProviderAccount.PROVIDER_CONNECTION, connectionId),
                         value(ProviderAccount.PROVIDER_BANK_ID, bank.getInt("id")),
                         value(ProviderAccount.PROVIDER_BANK_NAME, bank.getString("name")),
                         value(ProviderAccount.ACCOUNT_TYPE, BudgeaAccountTypeConverter.convertName(account.optString("type"))),
@@ -219,6 +224,7 @@ public class BudgeaWebHookServlet extends HttpCloudServlet {
       sqlConnection
         .startCreate(ProviderUpdate.TYPE)
         .set(ProviderUpdate.PROVIDER, Provider.BUDGEA.getId())
+        .set(ProviderUpdate.PROVIDER_CONNECTION, connectionId)
         .set(ProviderUpdate.USER, userId)
         .set(ProviderUpdate.DATE, new Date())
         .set(ProviderUpdate.DATA, serializer.toBlob(repository))

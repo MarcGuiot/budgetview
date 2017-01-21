@@ -22,7 +22,7 @@ public class ProviderConnection {
   @Target(Provider.class)
   public static IntegerField PROVIDER;
 
-  public static IntegerField PROVIDER_CONNECTION_ID;
+  public static IntegerField PROVIDER_CONNECTION;
 
   public static BooleanField INITIALIZED;
 

@@ -5,6 +5,7 @@ import com.budgetview.server.cloud.model.ProviderTransaction;
 import com.budgetview.server.config.ConfigService;
 import com.budgetview.shared.cloud.budgea.BudgeaCategory;
 import com.budgetview.shared.model.DefaultSeries;
+import com.budgetview.shared.model.Provider;
 import junit.framework.TestCase;
 import org.globsframework.model.*;
 import org.globsframework.utils.Dates;
@@ -24,6 +25,8 @@ public class CloudSerializerTest extends TestCase {
     FieldValue[] accountValues = {value(ProviderAccount.ID, 1),
       value(ProviderAccount.NAME, "My account"),
       value(ProviderAccount.NUMBER, "123456789"),
+      value(ProviderAccount.PROVIDER, Provider.BUDGEA.getId()),
+      value(ProviderAccount.PROVIDER_CONNECTION, 3),
       value(ProviderAccount.PROVIDER_BANK_NAME, "CIC"),
       value(ProviderAccount.PROVIDER_BANK_ID, 42),
       value(ProviderAccount.ACCOUNT_TYPE, "Chèque"),

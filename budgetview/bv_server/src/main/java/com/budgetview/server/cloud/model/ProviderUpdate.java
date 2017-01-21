@@ -23,6 +23,8 @@ public class ProviderUpdate {
   @Target(Provider.class)
   public static LinkField PROVIDER;
 
+  public static IntegerField PROVIDER_CONNECTION;
+
   public static BlobField DATA;
 
   static {

@@ -4,6 +4,7 @@ import com.budgetview.server.cloud.commands.AuthenticatedCommand;
 import com.budgetview.server.cloud.commands.Command;
 import com.budgetview.server.cloud.model.CloudUser;
 import com.budgetview.server.cloud.model.ProviderConnection;
+import com.budgetview.server.cloud.model.ProviderUpdate;
 import com.budgetview.shared.cloud.CloudConstants;
 import com.budgetview.shared.model.Provider;
 import org.apache.log4j.Logger;
@@ -41,7 +42,6 @@ public class BankConnectionsServlet extends HttpCloudServlet {
     Command command = new AuthenticatedCommand(directory, req, resp, logger) {
       protected int doRun(JsonGlobWriter writer) throws IOException, InvalidHeader {
 
-
         Integer connectionId = getOptionalIntHeader(CloudConstants.PROVIDER_CONNECTION_ID);
         if (connectionId == null) {
           getAllConnections(writer);
@@ -72,7 +72,7 @@ public class BankConnectionsServlet extends HttpCloudServlet {
         sqlConnection.commitAndClose();
         Map<Integer, Glob> connectionsById = new HashMap<Integer, Glob>();
         for (Glob connection : connections) {
-          connectionsById.put(connection.get(ProviderConnection.PROVIDER_CONNECTION_ID), connection);
+          connectionsById.put(connection.get(ProviderConnection.PROVIDER_CONNECTION), connection);
         }
 
         JSONObject budgeaConnections = budgeaAPI.getUserConnections(user.get(CloudUser.PROVIDER_USER_ID));
@@ -112,7 +112,7 @@ public class BankConnectionsServlet extends HttpCloudServlet {
           sqlConnection.startSelect(ProviderConnection.TYPE,
                                     Where.and(fieldEquals(ProviderConnection.USER, user.get(CloudUser.ID)),
                                               fieldEquals(ProviderConnection.PROVIDER, providerId),
-                                              fieldEquals(ProviderConnection.PROVIDER_CONNECTION_ID, connectionId)))
+                                              fieldEquals(ProviderConnection.PROVIDER_CONNECTION, connectionId)))
             .selectAll()
             .getList();
         sqlConnection.commitAndClose();
@@ -130,7 +130,7 @@ public class BankConnectionsServlet extends HttpCloudServlet {
           writer.object();
           writer.key("id").value(connectionId);
           writer.key(CloudConstants.PROVIDER_ID).value(connection.get(ProviderConnection.PROVIDER));
-          writer.key(CloudConstants.PROVIDER_CONNECTION_ID).value(connection.get(ProviderConnection.PROVIDER_CONNECTION_ID));
+          writer.key(CloudConstants.PROVIDER_CONNECTION_ID).value(connection.get(ProviderConnection.PROVIDER_CONNECTION));
           writer.key(CloudConstants.INITIALIZED).value(connection.isTrue(ProviderConnection.INITIALIZED));
           writer.endObject();
           writer.endArray();
@@ -181,14 +181,14 @@ public class BankConnectionsServlet extends HttpCloudServlet {
           sqlConnection.startSelect(ProviderConnection.TYPE,
                                     Where.and(fieldEquals(ProviderConnection.USER, userId),
                                               fieldEquals(ProviderConnection.PROVIDER, providerId),
-                                              fieldEquals(ProviderConnection.PROVIDER_CONNECTION_ID, connectionId)))
+                                              fieldEquals(ProviderConnection.PROVIDER_CONNECTION, connectionId)))
             .selectAll()
             .getList();
         if (connections.isEmpty()) {
           sqlConnection.startCreate(ProviderConnection.TYPE)
             .set(ProviderConnection.USER, userId)
             .set(ProviderConnection.PROVIDER, providerId)
-            .set(ProviderConnection.PROVIDER_CONNECTION_ID, connectionId)
+            .set(ProviderConnection.PROVIDER_CONNECTION, connectionId)
             .set(ProviderConnection.INITIALIZED, false)
             .run();
           logger.info("Added connection " + connectionId + " for user " + userId);
@@ -221,7 +221,12 @@ public class BankConnectionsServlet extends HttpCloudServlet {
           sqlConnection.startDelete(ProviderConnection.TYPE,
                                     Where.and(fieldEquals(ProviderConnection.USER, user.get(CloudUser.ID)),
                                               fieldEquals(ProviderConnection.PROVIDER, providerId),
-                                              fieldEquals(ProviderConnection.PROVIDER_CONNECTION_ID, providerConnectionId)))
+                                              fieldEquals(ProviderConnection.PROVIDER_CONNECTION, providerConnectionId)))
+            .execute();
+          sqlConnection.startDelete(ProviderUpdate.TYPE,
+                                    Where.and(fieldEquals(ProviderUpdate.USER, user.get(CloudUser.ID)),
+                                              fieldEquals(ProviderUpdate.PROVIDER, providerId),
+                                              fieldEquals(ProviderUpdate.PROVIDER_CONNECTION, providerConnectionId)))
             .execute();
           sqlConnection.commitAndClose();
 

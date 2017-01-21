@@ -24,6 +24,8 @@ public class ProviderAccount {
   @Target(Provider.class)
   public static LinkField PROVIDER;
 
+  public static IntegerField PROVIDER_CONNECTION;
+
   public static IntegerField PROVIDER_BANK_ID;
 
   public static StringField PROVIDER_BANK_NAME;
@@ -66,6 +68,7 @@ public class ProviderAccount {
       SerializedByteArrayOutput serializedByteArrayOutput = new SerializedByteArrayOutput();
       SerializedOutput output = serializedByteArrayOutput.getOutput();
       output.writeInteger(fieldValues.get(PROVIDER));
+      output.writeInteger(fieldValues.get(PROVIDER_CONNECTION));
       output.writeInteger(fieldValues.get(PROVIDER_BANK_ID));
       output.writeUtf8String(fieldValues.get(PROVIDER_BANK_NAME));
       output.writeUtf8String(fieldValues.get(NAME));
@@ -81,6 +84,7 @@ public class ProviderAccount {
     private void deserializeDataV1(FieldSetter fieldSetter, byte[] data) {
       SerializedInput input = SerializedInputOutputFactory.init(data);
       fieldSetter.set(PROVIDER, input.readInteger());
+      fieldSetter.set(PROVIDER_CONNECTION, input.readInteger());
       fieldSetter.set(PROVIDER_BANK_ID, input.readInteger());
       fieldSetter.set(PROVIDER_BANK_NAME, input.readUtf8String());
       fieldSetter.set(NAME, input.readUtf8String());
