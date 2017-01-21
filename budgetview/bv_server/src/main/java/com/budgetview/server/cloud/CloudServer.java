@@ -71,6 +71,10 @@ public class CloudServer {
     logger.info("server started");
   }
 
+  public Directory getDirectory() {
+    return directory;
+  }
+
   public void resetDatabase() {
     logger.info("cleaning up database");
     CloudDb.cleanAllTables(directory);

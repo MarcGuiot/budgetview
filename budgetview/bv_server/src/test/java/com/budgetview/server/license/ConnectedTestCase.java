@@ -4,7 +4,7 @@ import com.budgetview.desktop.Application;
 import com.budgetview.desktop.browsing.BrowsingService;
 import com.budgetview.desktop.startup.components.SingleApplicationInstanceListener;
 import com.budgetview.functests.utils.LoggedInFunctionalTestCase;
-import com.budgetview.server.license.checkers.DbChecker;
+import com.budgetview.server.license.checkers.LicenseDbChecker;
 import com.budgetview.server.license.checkers.FtpServerChecker;
 import com.budgetview.server.license.checkers.MailServerChecker;
 import com.budgetview.server.mobile.MobileServer;
@@ -22,7 +22,7 @@ import java.util.Locale;
 public abstract class ConnectedTestCase extends UISpecTestCase {
   protected MailServerChecker mailServer;
   protected FtpServerChecker ftpServer;
-  protected DbChecker db;
+  protected LicenseDbChecker db;
   protected int httpPort = 5000;
 
   protected static final String PATH_TO_DATA = "tmp/localprevayler";
@@ -43,9 +43,9 @@ public abstract class ConnectedTestCase extends UISpecTestCase {
     System.setProperty(LicenseConstants.FTP_URL_PROPERTY, "ftp://localhost:12000");
 
     System.setProperty(WebServer.HTTP_PORT_PROPERTY, Integer.toString(httpPort));
-    System.setProperty(CloudDb.DATABASE_URL, DbChecker.DATABASE_URL);
-    System.setProperty(CloudDb.DATABASE_USER, DbChecker.DATABASE_USER);
-    System.setProperty(CloudDb.DATABASE_PASSWORD, DbChecker.DATABASE_PASSWORD);
+    System.setProperty(CloudDb.DATABASE_URL, LicenseDbChecker.DATABASE_URL);
+    System.setProperty(CloudDb.DATABASE_USER, LicenseDbChecker.DATABASE_USER);
+    System.setProperty(CloudDb.DATABASE_PASSWORD, LicenseDbChecker.DATABASE_PASSWORD);
 
     System.setProperty(Application.LOCAL_PREVAYLER_PATH_PROPERTY, PATH_TO_DATA);
     System.setProperty(Application.DELETE_LOCAL_PREVAYLER_PROPERTY, "true");
@@ -57,7 +57,7 @@ public abstract class ConnectedTestCase extends UISpecTestCase {
 
     mailServer = new MailServerChecker();
 
-    db =  new DbChecker();
+    db =  new LicenseDbChecker();
     licenseServer = new LicenseServerChecker();
 
 //    Protocol http = new Protocol("http", new DefaultProtocolSocketFactory(), httpPort);

@@ -53,7 +53,6 @@ public class JsonImporter implements AccountFileImporter {
       }
     }
 
-
     Glob lastImportedTransaction = createdTransactions.sort(ImportedTransaction.BANK_DATE).getLast();
     if (lastImportedTransaction != null) {
       targetRepository.update(realAccount, RealAccount.TRANSACTION_ID, lastImportedTransaction.get(ImportedTransaction.ID));

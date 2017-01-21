@@ -11,7 +11,11 @@ import com.budgetview.model.*;
 import com.budgetview.shared.cloud.CloudSubscriptionStatus;
 import com.budgetview.shared.utils.Amounts;
 import com.budgetview.utils.Lang;
-import org.globsframework.model.*;
+import org.globsframework.model.Glob;
+import org.globsframework.model.GlobList;
+import org.globsframework.model.GlobRepository;
+import org.globsframework.model.Key;
+import org.globsframework.model.format.GlobPrinter;
 import org.globsframework.model.repository.LocalGlobRepository;
 import org.globsframework.model.utils.GlobFieldMatcher;
 import org.globsframework.model.utils.GlobFunctor;
@@ -28,8 +32,6 @@ import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
-
-import static org.globsframework.model.FieldValue.value;
 
 public class ImportController implements RealAccountImporter {
 
@@ -376,15 +378,26 @@ public class ImportController implements RealAccountImporter {
   }
 
   public void showCloudSubscriptionError(String email, CloudSubscriptionStatus status) {
-    importDialog.showCloudSubscriptionError(email, status);
+    if (CloudSubscriptionStatus.UNKNOWN_USER.equals(status)) {
+      System.out.println("ImportController.showCloudSubscriptionError: deleting all");
+      System.out.println("ImportController.showCloudSubscriptionError: before:");
+      GlobPrinter.print(localRepository, CloudProviderConnection.TYPE);
+
+      localRepository.deleteAll(CloudDesktopUser.TYPE, CloudProviderConnection.TYPE);
+      localRepository.create(CloudDesktopUser.KEY);
+
+      System.out.println("ImportController.showCloudSubscriptionError: after:");
+      GlobPrinter.print(localRepository, CloudProviderConnection.TYPE);
+
+      showCloudSignup();
+    }
+    else {
+      importDialog.showCloudSubscriptionError(email, status);
+    }
   }
 
   public void setReplaceSeries(boolean replace) {
     importSession.setReplaceSeries(replace);
-  }
-
-  public void showCloudFirstDownload() {
-    importDialog.showCloudFirstDownload();
   }
 
   public void showCloudFirstDownload(Glob providerConnection) {

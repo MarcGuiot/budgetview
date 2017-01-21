@@ -10,7 +10,7 @@ import com.budgetview.functests.checkers.license.LicenseChecker;
 import com.budgetview.functests.utils.LoggedInFunctionalTestCase;
 import com.budgetview.server.license.ConnectedTestCase;
 import com.budgetview.server.license.tools.DuplicateLine;
-import com.budgetview.server.license.checkers.DbChecker;
+import com.budgetview.server.license.checkers.LicenseDbChecker;
 import com.budgetview.server.license.checkers.Email;
 import com.budgetview.server.license.mail.Mailbox;
 import com.budgetview.server.license.model.License;
@@ -611,7 +611,7 @@ public class LicenseActivationTest extends ConnectedTestCase {
     return repoId;
   }
 
-  private void register(DbChecker db, String email, final String code) throws InterruptedException {
+  private void register(LicenseDbChecker db, String email, final String code) throws InterruptedException {
     db.checkRepoIdIsUpdated(1L, null);
     register(email, code);
     db.checkLicenseCount(email, 1);

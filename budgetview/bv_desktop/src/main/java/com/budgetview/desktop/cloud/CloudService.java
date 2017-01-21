@@ -325,7 +325,10 @@ public class CloudService {
     thread.start();
   }
 
-  public void processLoginOk(JSONObject connectionResult, GlobRepository repository, BankConnectionCallback callback) throws IOException {
+  private void processLoginOk(JSONObject connectionResult, GlobRepository repository, BankConnectionCallback callback) throws IOException {
+
+    System.out.println("CloudService.processLoginOk");
+
     int providerConnectionId = connectionResult.getInt("id");
 
     repository.update(CloudDesktopUser.KEY, CloudDesktopUser.SYNCHRO_ENABLED, true);
@@ -353,6 +356,9 @@ public class CloudService {
     Thread thread = new Thread(new Runnable() {
       public void run() {
         try {
+
+          System.out.println("CloudService.checkBankConnectionReady");
+
           Glob user = repository.get(CloudDesktopUser.KEY);
           Integer providerConnectionId = providerConnection.get(CloudProviderConnection.PROVIDER_CONNECTION_ID);
           JSONObject result =
@@ -400,7 +406,7 @@ public class CloudService {
           Glob user = repository.get(CloudDesktopUser.KEY);
           JSONObject connections = cloudAPI.getBankConnections(user.get(CloudDesktopUser.EMAIL), user.get(CloudDesktopUser.BV_TOKEN));
 
-          System.out.println("CloudService.run: " + connections.toString(2));
+          System.out.println("CloudService.updateBankConnections: " + connections.toString(2));
 
           repository.startChangeSet();
           repository.deleteAll(CloudProviderConnection.TYPE);
@@ -430,6 +436,9 @@ public class CloudService {
     Thread thread = new Thread(new Runnable() {
       public void run() {
         try {
+
+          System.out.println("CloudService.deleteBankConnection");
+
           Glob user = repository.get(CloudDesktopUser.KEY);
 
           cloudAPI.deleteConnection(user.get(CloudDesktopUser.EMAIL), user.get(CloudDesktopUser.BV_TOKEN),
@@ -447,48 +456,12 @@ public class CloudService {
     thread.start();
   }
 
-
-  public void downloadInitialStatement(GlobRepository repository, DownloadCallback callback) {
-    Thread thread = new Thread(new Runnable() {
-      public void run() {
-
-        System.out.println("\n\n --------- CloudService.downloadInitialStatement ---------");
-
-        for (int i = 0; i < 50; i++) {
-          try {
-            GlobList importedRealAccounts = doDownloadStatement(repository);
-            if (!importedRealAccounts.isEmpty()) {
-              GuiUtils.runInSwingThread(new Runnable() {
-                public void run() {
-                  callback.processCompletion(importedRealAccounts);
-                }
-              });
-              return;
-            }
-
-            Thread.sleep(3000);
-          }
-          catch (InterruptedException e) {
-            // Ignored - will exit after repeat
-          }
-          catch (Exception e) {
-            Log.write("Error downloading statement", e);
-            callback.processError(e);
-          }
-        }
-        GuiUtils.runInSwingThread(new Runnable() {
-          public void run() {
-            callback.processTimeout();
-          }
-        });
-      }
-    });
-    thread.start();
-  }
-
   public void downloadStatement(GlobRepository repository, DownloadCallback callback) {
     Thread thread = new Thread(new Runnable() {
       public void run() {
+
+        System.out.println("CloudService.downloadStatement");
+
         try {
           final GlobList importedRealAccounts = doDownloadStatement(repository);
           GuiUtils.runInSwingThread(new Runnable() {
@@ -530,6 +503,9 @@ public class CloudService {
       case TEMP_CODE_EXPIRED:
         throw new IOException("Unexpected error status: " + status);
     }
+
+
+    System.out.println("CloudService.doDownloadStatement\n"  + result.toString(2));
 
     JSONArray accounts = result.getJSONArray("accounts");
     if (accounts.length() == 0) {

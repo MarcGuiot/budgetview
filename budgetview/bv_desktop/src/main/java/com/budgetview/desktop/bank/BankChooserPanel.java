@@ -104,6 +104,10 @@ public class BankChooserPanel {
     filter.getComponent().requestFocus();
   }
 
+  public void refresh() {
+    filter.resetFilter();
+  }
+
   public JPanel getPanel() {
     return panel;
   }

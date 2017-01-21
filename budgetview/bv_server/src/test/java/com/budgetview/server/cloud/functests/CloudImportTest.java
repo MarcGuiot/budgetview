@@ -420,6 +420,14 @@ public class CloudImportTest extends CloudDesktopTestCase {
                              .add(2, 123, 10, true, "2016-08-14 16:18:44")
                              .get());
 
+    budgea.pushStatement(BudgeaStatement.init()
+                           .addConnection(2, 123, 10, "CIC", "2016-08-15 17:00:00")
+                           .addAccount(2, "Joint account", "987654321", "checking", 500.00, "2016-08-14 17:00:00")
+                           .addTransaction(1, "2016-08-14 10:00:00", -250.00, "FNAC", BudgeaCategory.INDEFINI)
+                           .endAccount()
+                           .endConnection()
+                           .get());
+
     operations.openImportDialog()
       .editCloudConnections()
       .checkConnections("CIC", "Connecteur de test")

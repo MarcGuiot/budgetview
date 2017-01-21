@@ -1,5 +1,6 @@
 package com.budgetview.functests.checkers;
 
+import com.budgetview.desktop.importer.steps.ImportCloudSignupPanel;
 import com.budgetview.utils.Lang;
 import org.globsframework.utils.TestUtils;
 import org.uispec4j.*;
@@ -244,21 +245,28 @@ public class ImportDialogChecker extends GuiChecker {
   }
 
   public ImportDialogPreviewChecker selectCloudRefresh() {
-    checkComponentVisible(dialog.getPanel("cloudIntro"), JButton.class, "refreshCloud", true);
-    dialog.getPanel("cloudIntro").getButton("refreshCloud").click();
+    doRefresh();
     return new ImportDialogPreviewChecker(dialog);
   }
 
+  public CloudSignupChecker selectCloudRefreshAndGetSignup() {
+    doRefresh();
+    return new CloudSignupChecker(dialog);
+  }
+
   public ImportDialogCompletionChecker selectCloudRefreshAndGetSummary() {
-    checkComponentVisible(dialog.getPanel("cloudIntro"), JButton.class, "refreshCloud", true);
-    dialog.getPanel("cloudIntro").getButton("refreshCloud").click();
+    doRefresh();
     return new ImportDialogCompletionChecker(dialog);
   }
 
   public CloudFirstDownloadChecker selectCloudRefreshAndGetFirstDowload() {
+    doRefresh();
+    return new CloudFirstDownloadChecker(dialog);
+  }
+
+  public void doRefresh() {
     checkComponentVisible(dialog.getPanel("cloudIntro"), JButton.class, "refreshCloud", true);
     dialog.getPanel("cloudIntro").getButton("refreshCloud").click();
-    return new CloudFirstDownloadChecker(dialog);
   }
 
   public ImportDialogPreviewChecker toPreview() {

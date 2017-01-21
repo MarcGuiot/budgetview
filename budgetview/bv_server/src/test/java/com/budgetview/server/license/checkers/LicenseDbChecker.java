@@ -19,7 +19,7 @@ import java.util.Date;
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertTrue;
 
-public class DbChecker {
+public class LicenseDbChecker {
 
   public static final String DATABASE_URL = "jdbc:hsqldb:.";
   public static final String DATABASE_USER = "sa";
@@ -27,7 +27,7 @@ public class DbChecker {
 
   private JdbcGlobsDatabase globsDatabase;
 
-  public DbChecker() {
+  public LicenseDbChecker() {
     SqlConnection connection = getConnection();
     connection.createTables(License.TYPE, RepoInfo.TYPE, MailError.TYPE, SoftwareInfo.TYPE);
     connection.emptyTable(License.TYPE, RepoInfo.TYPE, MailError.TYPE, SoftwareInfo.TYPE);

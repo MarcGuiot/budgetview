@@ -1,8 +1,13 @@
 package com.budgetview.server.cloud.functests.checkers;
 
 import com.budgetview.server.cloud.CloudServer;
+import com.budgetview.server.cloud.model.CloudDatabaseModel;
 import com.budgetview.server.cloud.services.EmailValidationService;
+import com.budgetview.server.cloud.utils.CloudDb;
 import com.budgetview.shared.cloud.CloudConstants;
+import org.globsframework.metamodel.GlobType;
+import org.globsframework.sqlstreams.GlobsDatabase;
+import org.globsframework.sqlstreams.SqlConnection;
 
 import java.util.Date;
 
@@ -19,6 +24,15 @@ public class CloudChecker {
 
   public void forceTokenExpirationDate(final Date date) {
     EmailValidationService.forceTokenExpirationDate(date);
+  }
+
+  public void cleanUpDatabase() {
+    GlobsDatabase db = cloudServer.getDirectory().get(GlobsDatabase.class);
+    SqlConnection connection = db.connect();
+    for (GlobType type : CloudDatabaseModel.getAllTypes()) {
+      connection.startDelete(type).execute();
+    }
+    connection.commit();
   }
 
   public void stopServer() throws Exception {

@@ -57,6 +57,11 @@ public class GlobListViewFilter implements ComponentHolder {
     return this;
   }
 
+  public GlobListViewFilter resetFilter() {
+    listView.setFilter(filter);
+    return this;
+  }
+
   public GlobListViewFilter setDefaultValue(Key key) throws InvalidParameter {
     if (key != null && !listView.getType().equals(key.getGlobType())) {
       throw new InvalidParameter("Key must be of type '" + listView.getType() +
@@ -86,6 +91,11 @@ public class GlobListViewFilter implements ComponentHolder {
     ignoreAccents = value;
     update();
     return this;
+  }
+
+  public void clearText() {
+    textField.setText("");
+    update();
   }
 
   public void update() {

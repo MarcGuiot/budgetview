@@ -9,7 +9,6 @@ import com.budgetview.shared.license.LicenseAPI;
 import org.apache.log4j.Logger;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
-import org.globsframework.model.format.GlobPrinter;
 import org.globsframework.sqlstreams.GlobsDatabase;
 import org.globsframework.sqlstreams.SqlConnection;
 import org.globsframework.sqlstreams.SqlCreateRequest;
@@ -17,7 +16,6 @@ import org.globsframework.sqlstreams.constraints.Where;
 import org.globsframework.sqlstreams.exceptions.DbConstraintViolation;
 import org.globsframework.sqlstreams.exceptions.GlobsSQLException;
 import org.globsframework.sqlstreams.exceptions.RollbackFailed;
-import org.globsframework.utils.Dates;
 import org.globsframework.utils.directory.Directory;
 import org.globsframework.utils.exceptions.ItemNotFound;
 import org.globsframework.utils.exceptions.TooManyItems;
@@ -137,6 +135,13 @@ public class AuthenticationService {
 
       return user;
     }
+    catch (ItemNotFound e) {
+      throw new SubscriptionCheckFailed(CloudSubscriptionStatus.UNKNOWN_USER);
+    }
+    catch (TooManyItems e) {
+      logger.error("Too many user token entries for: " + email);
+      throw new SubscriptionCheckFailed(CloudSubscriptionStatus.UNKNOWN_USER);
+    }
     finally {
       try {
         connection.commitAndClose();
@@ -155,9 +160,16 @@ public class AuthenticationService {
     try {
       Glob user = connection.selectUnique(CloudUser.TYPE, fieldEquals(CloudUser.ID, userId));
       if (user == null) {
-        throw new SubscriptionCheckFailed(CloudSubscriptionStatus.UNKNOWN);
+        throw new SubscriptionCheckFailed(CloudSubscriptionStatus.UNKNOWN_USER);
       }
       doCheckSubscription(user, userId, user.get(CloudUser.EMAIL), connection);
+    }
+    catch (ItemNotFound e) {
+      throw new SubscriptionCheckFailed(CloudSubscriptionStatus.UNKNOWN_USER);
+    }
+    catch (TooManyItems e) {
+      logger.error("Too many user token entries for user: " + userId);
+      throw new SubscriptionCheckFailed(CloudSubscriptionStatus.UNKNOWN_USER);
     }
     finally {
       try {
@@ -189,7 +201,7 @@ public class AuthenticationService {
     }
 
     if (endDate == null) {
-      throw new SubscriptionCheckFailed(CloudSubscriptionStatus.UNKNOWN);
+      throw new SubscriptionCheckFailed(CloudSubscriptionStatus.NEVER_PURCHASED);
     }
     if (now().after(endDate)) {
       throw new SubscriptionCheckFailed(CloudSubscriptionStatus.EXPIRED);
