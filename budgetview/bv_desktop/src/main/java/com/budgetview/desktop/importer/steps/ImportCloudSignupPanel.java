@@ -13,6 +13,8 @@ import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class ImportCloudSignupPanel extends AbstractImportStepPanel {
 
@@ -43,7 +45,7 @@ public class ImportCloudSignupPanel extends AbstractImportStepPanel {
     emailField.setAction(nextAction);
 
     errorLabel = new JLabel(" ");
-    builder.add("errorMessage", errorLabel);
+    builder.add("errorLabel", errorLabel);
     errorLabel.setVisible(false);
 
     builder.add("next", nextAction);
@@ -63,8 +65,16 @@ public class ImportCloudSignupPanel extends AbstractImportStepPanel {
   private void processNext() {
 
     final String email = Strings.trim(emailField.getText());
-    if (!looksLikeAnEmail(email)) {
+
+    if (Strings.isNullOrEmpty(email)) {
       errorLabel.setText(Lang.get("import.cloud.signup.missing.email"));
+      errorLabel.setVisible(true);
+      return;
+    }
+
+    if (!looksLikeAnEmail(email)) {
+      System.out.println("ImportCloudSignupPanel.looksLikeAnEmail: " + email + " : false");
+      errorLabel.setText(Lang.get("import.cloud.signup.invalid.email"));
       errorLabel.setVisible(true);
       return;
     }
@@ -95,7 +105,12 @@ public class ImportCloudSignupPanel extends AbstractImportStepPanel {
   }
 
   private boolean looksLikeAnEmail(String email) {
-    return (email.length() > 3) && email.contains("@");
+    if (email.length() < 3) {
+      return false;
+    }
+    Pattern pattern = Pattern.compile("[A-z0-9\\.@_-]+");
+    Matcher matcher = pattern.matcher(email);
+    return matcher.matches();
   }
 
   public void prepareForDisplay() {

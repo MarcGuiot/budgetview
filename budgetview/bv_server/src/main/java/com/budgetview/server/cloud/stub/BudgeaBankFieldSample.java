@@ -21,13 +21,13 @@ public enum BudgeaBankFieldSample {
                        "      \"type\": \"list\"\n" +
                        "    },\n" +
                        "    {\n" +
-                       "      \"regex\": null,\n" +
+                       "      \"regex\": \"^[A-z0-9]+$\",\n" +
                        "      \"name\": \"login\",\n" +
                        "      \"label\": \"Identifiant\",\n" +
                        "      \"type\": \"text\"\n" +
                        "    },\n" +
                        "    {\n" +
-                       "      \"regex\": null,\n" +
+                       "      \"regex\": \"^[0-9]{4}$\",\n" +
                        "      \"name\": \"password\",\n" +
                        "      \"label\": \"Code (1234)\",\n" +
                        "      \"type\": \"password\"\n" +

@@ -142,6 +142,7 @@ public class BudgeaAPI {
 
     Form form = Form.form();
     for (Map.Entry<String, String> entry : params.entrySet()) {
+      System.out.println("BudgeaAPI.addBankConnectionStep2: " + entry.getKey() + " ==> " + entry.getValue());
       form.add(entry.getKey(), entry.getValue());
     }
 

@@ -19,7 +19,7 @@
           <textField ref="emailField"/>
         </row>
 
-        <label ref="errorMessage" styleClass="errorMessage"/>
+        <label ref="errorLabel" styleClass="errorMessage"/>
 
         <component ref="progressPanel" marginTop="20"/>
 

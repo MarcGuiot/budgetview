@@ -344,18 +344,18 @@ public class BudgeaStubServer {
 
       if (bankFieldsStep2 == null || step2) {
         logger.info(step2 ? "Completing connection for step2" : "Completing connection for step1");
+        response.setStatus(HttpServletResponse.SC_OK);
         PrintWriter writer = response.getWriter();
         writer.write(newConnectionResponses.pop());
         writer.close();
         callWebhookWithCurrentStatements();
-        response.setStatus(HttpServletResponse.SC_OK);
       }
       else {
         logger.info("Two-step login : returning new fields with code " + HttpServletResponse.SC_ACCEPTED);
+        response.setStatus(HttpServletResponse.SC_ACCEPTED);
         PrintWriter writer = response.getWriter();
         writer.write(bankFieldsStep2.getJSON());
         writer.close();
-        response.setStatus(HttpServletResponse.SC_ACCEPTED);
       }
     }
 

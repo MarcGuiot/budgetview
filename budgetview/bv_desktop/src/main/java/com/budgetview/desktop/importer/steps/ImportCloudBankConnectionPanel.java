@@ -19,17 +19,19 @@ import org.globsframework.gui.splits.utils.Disposable;
 import org.globsframework.gui.splits.utils.GuiUtils;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
-import org.globsframework.model.GlobRepository;
 import org.globsframework.model.Key;
 import org.globsframework.model.repository.LocalGlobRepository;
 import org.globsframework.model.utils.GlobFieldComparator;
 import org.globsframework.model.utils.GlobMatchers;
+import org.globsframework.utils.Strings;
 import org.globsframework.utils.directory.Directory;
 import org.globsframework.utils.exceptions.UnexpectedApplicationState;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.util.ArrayList;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import static org.globsframework.model.FieldValue.value;
 import static org.globsframework.model.utils.GlobMatchers.linkedTo;
@@ -156,14 +158,25 @@ public class ImportCloudBankConnectionPanel extends AbstractImportStepPanel {
   private void processConnection() {
     System.out.println("ImportCloudBankConnectionPanel.processConnection");
 
-    GlobList nullValues = repository.getAll(BudgeaConnectionValue.TYPE, GlobMatchers.isNull(BudgeaConnectionValue.VALUE)).sort(BudgeaConnectionValue.SEQUENCE_INDEX);
-    if (!nullValues.isEmpty()) {
-      Glob field = repository.findLinkTarget(nullValues.getFirst(), BudgeaConnectionValue.FIELD);
-      showErrorMessage("import.cloud.bankConnection.message.emptyField", field.get(BudgeaBankField.LABEL));
-      return;
+    for (Glob fieldValue : repository.getAll(BudgeaConnectionValue.TYPE).sort(BudgeaConnectionValue.SEQUENCE_INDEX)) {
+      Glob field = repository.findLinkTarget(fieldValue, BudgeaConnectionValue.FIELD);
+      String value = fieldValue.get(BudgeaConnectionValue.VALUE);
+      if (Strings.isNullOrEmpty(value)) {
+        showErrorMessage("import.cloud.bankConnection.message.emptyField", field.get(BudgeaBankField.LABEL));
+        return;
+      }
+      String regex = field.get(BudgeaBankField.REGEX);
+      if (Strings.isNotEmpty(regex)) {
+        Pattern pattern  = Pattern.compile(regex);
+        Matcher matcher = pattern.matcher(value);
+        if (!matcher.matches()) {
+          showErrorMessage("import.cloud.bankConnection.message.invalidValue", field.get(BudgeaBankField.LABEL));
+          return;
+        }
+      }
     }
-    errorMessage.setVisible(false);
 
+    errorMessage.setVisible(false);
     progressPanel.start();
     setAllEnabled(false);
     CloudService.BankConnectionCallback callback = new CloudService.BankConnectionCallback() {

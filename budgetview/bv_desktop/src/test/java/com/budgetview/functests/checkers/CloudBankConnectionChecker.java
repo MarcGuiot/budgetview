@@ -89,6 +89,7 @@ public class CloudBankConnectionChecker extends ViewChecker {
 
   public CloudBankConnectionChecker nextAndGetStep2() {
     mainWindow.getButton("next").click();
+    checkComponentVisible(mainWindow, JEditorPane.class, "errorMessage", false);
     return new CloudBankConnectionChecker(mainWindow);
   }
 }
