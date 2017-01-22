@@ -88,6 +88,7 @@ public class ImportCloudBankSelectionPanel extends AbstractImportStepPanel imple
       return;
     }
 
+    bankChooserPanel.setEnabled(false);
     progressPanel.start();
     GuiUtils.runLater(new Runnable() {
       public void run() {
@@ -116,6 +117,7 @@ public class ImportCloudBankSelectionPanel extends AbstractImportStepPanel imple
     GlobPrinter.print(repository, CloudProviderConnection.TYPE);
 
     createPanelIfNeeded();
+    bankChooserPanel.setEnabled(true);
     bankChooserPanel.requestFocus();
     nextAction.setEnabled(!selectionService.getSelection(Bank.TYPE).isEmpty());
   }

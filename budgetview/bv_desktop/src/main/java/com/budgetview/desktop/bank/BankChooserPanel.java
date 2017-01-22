@@ -35,6 +35,7 @@ public class BankChooserPanel {
   private final GlobMatcher baseMatcher;
   private JPopupButton countryButton;
   private GlobListView bankListView;
+  private JPopupMenu actionMenu;
 
   public BankChooserPanel(GlobRepository repository,
                           Directory directory,
@@ -71,7 +72,7 @@ public class BankChooserPanel {
     builder.add("countrySelector", countryButton);
     setCountry(getDefaultCountry(repository));
 
-    JPopupMenu actionMenu = new JPopupMenu();
+    actionMenu = new JPopupMenu();
     actionMenu.add(new EditBankAction(owner, repository, directory));
     deleteBankAction = new DeleteBankAction(owner, repository, directory);
     actionMenu.add(deleteBankAction);
@@ -80,6 +81,13 @@ public class BankChooserPanel {
     builder.add("bankActions", new JPopupButton(Lang.get("budgetView.actions"), actionMenu));
 
     panel = builder.load();
+  }
+
+  public void setEnabled(boolean enabled) {
+    bankListView.getComponent().setEnabled(enabled);
+    filter.setEnabled(enabled);
+    countryButton.setEnabled(enabled);
+    actionMenu.setEnabled(enabled);
   }
 
   private Country getDefaultCountry(GlobRepository repository) {

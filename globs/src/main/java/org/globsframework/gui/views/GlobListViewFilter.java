@@ -151,6 +151,11 @@ public class GlobListViewFilter implements ComponentHolder {
     return true;
   }
 
+  public void setEnabled(boolean enabled) {
+    textField.setEnabled(enabled);
+
+  }
+
   private class OnKeyActionListener implements GlobMatcher, DocumentListener {
 
     public boolean matches(Glob item, GlobRepository repository) {
