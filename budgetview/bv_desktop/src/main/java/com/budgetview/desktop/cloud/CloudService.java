@@ -505,7 +505,7 @@ public class CloudService {
     }
 
 
-    System.out.println("CloudService.doDownloadStatement\n"  + result.toString(2));
+    System.out.println("CloudService.doDownloadStatement\n" + result.toString(2));
 
     JSONArray accounts = result.getJSONArray("accounts");
     if (accounts.length() == 0) {
@@ -525,6 +525,13 @@ public class CloudService {
       }
 
       Glob realAccount = RealAccount.findFromProvider(Provider.BUDGEA.getId(), budgeaAccountId, repository);
+      if (realAccount != null) {
+        JSONArray transactions = account.optJSONArray("transactions");
+        if (transactions == null || transactions.length() == 0) {
+          continue;
+        }
+      }
+
       if (realAccount == null) {
         realAccount = RealAccount.findByAccountNumber(number, bank.get(Bank.ID), repository);
         if (realAccount != null) {
@@ -539,6 +546,7 @@ public class CloudService {
                           value(RealAccount.PROVIDER, Provider.BUDGEA.getId()),
                           value(RealAccount.PROVIDER_ACCOUNT_ID, budgeaAccountId));
       }
+
 
       double position = account.getDouble("position");
       int positionMonth = account.getInt("position_month");

@@ -1,7 +1,6 @@
 package com.budgetview.functests.importexport;
 
 import com.budgetview.desktop.time.TimeService;
-import com.budgetview.functests.checkers.BankDownloadChecker;
 import com.budgetview.functests.checkers.ImportDialogChecker;
 import com.budgetview.functests.checkers.ImportDialogPreviewChecker;
 import com.budgetview.functests.utils.LoggedInFunctionalTestCase;

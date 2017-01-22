@@ -1,5 +1,6 @@
 package com.budgetview.desktop.importer;
 
+import com.budgetview.desktop.description.stringifiers.RealAccountComparator;
 import com.budgetview.desktop.importer.components.RealAccountImporter;
 import com.budgetview.desktop.importer.utils.InvalidFileFormat;
 import com.budgetview.desktop.startup.components.AutoCategorizationFunctor;
@@ -320,7 +321,7 @@ public class ImportController implements RealAccountImporter {
   }
 
   public void importAccounts(GlobList realAccounts) {
-    for (Glob realAccount : realAccounts) {
+    for (Glob realAccount : realAccounts.sortSelf(new RealAccountComparator())) {
       String content = realAccount.get(RealAccount.FILE_CONTENT);
       if (Strings.isNullOrEmpty(content)) {
         addRealAccountWithoutImport(realAccount);

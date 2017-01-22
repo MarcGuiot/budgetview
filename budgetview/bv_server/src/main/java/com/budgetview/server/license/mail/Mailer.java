@@ -99,7 +99,7 @@ public class Mailer {
 
     MimeMessage message = new MimeMessage(session);
     message.setFrom(new InternetAddress(mailbox.getEmail()));
-    message.setSubject(subject);
+    message.setSubject(subject, charset);
     message.setSentDate(new Date());
     message.setText(content, charset, subtype);
     try {
