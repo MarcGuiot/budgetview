@@ -10,7 +10,7 @@ export BV_ROOT=$PWD
 export RELEASE_DIR=$BV_ROOT/releases
 export BV_INSTALL_DIR=$BV_ROOT/budgetview/bv_desktop/dev/install
 export BV_WIN_INSTALL_DIR=$BV_ROOT/budgetview/bv_desktop/dev/install/windows
-export GENERATED_JAR=$BV_ROOT/budgetview/bv_desktop/target/obfuscated/budgetview$1.jar
+export GENERATED_JAR=$BV_ROOT/budgetview/bv_desktop/target/obfuscated/budgetview.jar
 
 cd $BV_ROOT/globs
 mvn install -Dmaven.test.skip.exec=true

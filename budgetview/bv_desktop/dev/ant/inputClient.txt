@@ -51,12 +51,6 @@ R org/jdesktop/swingx/plaf/linux/resources/
 R org/jdesktop/swingx/plaf/macosx/resources/
 R org/jdesktop/swingx/plaf/windows/resources/
 R net/java/balloontip/images/
-P net/sourceforge/htmlunit true
-P com/gargoylesoftware/htmlunit true
-P org/apache/xalan true
-P org/apache/xpath true
-
-R com/gargoylesoftware/htmlunit/javascript/configuration/
 
 R layout/
 R banks/

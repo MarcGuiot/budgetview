@@ -11,7 +11,6 @@ import org.apache.http.client.fluent.Request;
 import org.globsframework.utils.Strings;
 import org.json.JSONObject;
 
-import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;

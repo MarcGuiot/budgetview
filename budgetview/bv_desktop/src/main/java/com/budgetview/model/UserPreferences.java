@@ -1,13 +1,15 @@
 package com.budgetview.model;
 
 import com.budgetview.shared.utils.GlobSerializer;
-import org.apache.commons.lang3.RandomStringUtils;
+import com.budgetview.utils.RandomStrings;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.annotations.*;
-import org.globsframework.metamodel.annotations.Key;
 import org.globsframework.metamodel.fields.*;
 import org.globsframework.metamodel.utils.GlobTypeLoader;
-import org.globsframework.model.*;
+import org.globsframework.model.FieldSetter;
+import org.globsframework.model.FieldValues;
+import org.globsframework.model.Glob;
+import org.globsframework.model.GlobRepository;
 import org.globsframework.utils.serialization.SerializedByteArrayOutput;
 import org.globsframework.utils.serialization.SerializedInput;
 import org.globsframework.utils.serialization.SerializedInputOutputFactory;
@@ -107,7 +109,9 @@ public class UserPreferences {
   @DefaultBoolean(true)
   public static BooleanField SHOW_SAVINGS_ACCOUNT_LIST_IN_SUMMARY;
 
-  /** @deprecated */
+  /**
+   * @deprecated
+   */
   @Target(AnalysisViewType.class)
   @DefaultInteger(0)
   public static LinkField ANALYSIS_VIEW_TYPE;
@@ -132,7 +136,7 @@ public class UserPreferences {
   public static void initMobilePassword(GlobRepository repository, boolean force) {
     Glob prefs = repository.findOrCreate(KEY);
     if (prefs.get(PASSWORD_FOR_MOBILE) == null || force) {
-      repository.update(KEY, PASSWORD_FOR_MOBILE, RandomStringUtils.randomAlphanumeric(6).toLowerCase());
+      repository.update(KEY, PASSWORD_FOR_MOBILE, RandomStrings.randomAlphanumeric(6).toLowerCase());
     }
   }
 

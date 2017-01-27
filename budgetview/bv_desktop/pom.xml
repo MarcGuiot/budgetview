@@ -181,12 +181,6 @@
       <type>test-jar</type>
       <scope>test</scope>
     </dependency>
-    <dependency>
-      <groupId>org.eclipse.jetty</groupId>
-      <artifactId>jetty-maven-plugin</artifactId>
-      <version>9.3.10.v20160621</version>
-      <scope>test</scope>
-    </dependency>
   </dependencies>
 
   <profiles>

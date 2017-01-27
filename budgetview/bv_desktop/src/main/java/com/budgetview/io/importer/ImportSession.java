@@ -11,7 +11,6 @@ import com.budgetview.io.importer.utils.TypedInputStream;
 import com.budgetview.model.*;
 import com.budgetview.shared.model.AccountType;
 import com.budgetview.shared.model.BudgetArea;
-import org.apache.commons.io.output.ByteArrayOutputStream;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.fields.StringField;
 import org.globsframework.model.*;
@@ -34,6 +33,7 @@ import org.globsframework.utils.exceptions.InvalidFormat;
 import org.globsframework.utils.exceptions.OperationCancelled;
 import org.globsframework.utils.exceptions.TruncatedFile;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.ParseException;
