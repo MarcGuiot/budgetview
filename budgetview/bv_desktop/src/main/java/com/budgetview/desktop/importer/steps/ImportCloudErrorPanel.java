@@ -2,16 +2,20 @@ package com.budgetview.desktop.importer.steps;
 
 import com.budgetview.desktop.cloud.CloudService;
 import com.budgetview.desktop.components.ProgressPanel;
+import com.budgetview.desktop.components.dialogs.ConfirmationDialog;
 import com.budgetview.desktop.components.dialogs.PicsouDialog;
+import com.budgetview.desktop.help.HyperlinkHandler;
 import com.budgetview.desktop.importer.ImportController;
 import com.budgetview.utils.Lang;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.splits.utils.GuiUtils;
 import org.globsframework.model.GlobRepository;
+import org.globsframework.utils.Utils;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
+import java.net.UnknownHostException;
 
 public class ImportCloudErrorPanel extends AbstractImportStepPanel {
 
@@ -19,6 +23,8 @@ public class ImportCloudErrorPanel extends AbstractImportStepPanel {
   private final GlobRepository repository;
   private final CloudService cloudService;
   private ProgressPanel progressPanel;
+  private JLabel detailsTitle = new JLabel();
+  private JEditorPane detailsText = GuiUtils.createReadOnlyHtmlComponent();
 
   public ImportCloudErrorPanel(PicsouDialog dialog, ImportController controller, GlobRepository repository, Directory localDirectory) {
     super(dialog, controller, localDirectory);
@@ -38,6 +44,9 @@ public class ImportCloudErrorPanel extends AbstractImportStepPanel {
       }
     });
 
+    builder.add("detailsTitle", detailsTitle);
+    builder.add("detailsText", detailsText);
+
     progressPanel = new ProgressPanel();
     builder.add("progressPanel", progressPanel);
 
@@ -45,18 +54,27 @@ public class ImportCloudErrorPanel extends AbstractImportStepPanel {
   }
 
   public void showException(Exception e) {
-    errorMessage.setText(Lang.get("import.cloud.error.message", e != null ? e.getMessage() : "[Server Error]"));
-  }
+    if (e == null) {
+      errorMessage.setText(Lang.get("import.cloud.error.message.default"));
+      detailsTitle.setVisible(false);
+      detailsText.setVisible(false);
+      return;
+    }
 
-  public void showTimeout() {
-    errorMessage.setText(Lang.get("import.cloud.error.timeout"));
-  }
+    if (e instanceof UnknownHostException) {
+      errorMessage.setText(Lang.get("import.cloud.error.message.unknownHost"));
+      detailsTitle.setVisible(false);
+      detailsText.setVisible(false);
+      return;
+    }
 
-  private void processNext() {
-
+    errorMessage.setText(Lang.get("import.cloud.error.message.default"));
+    detailsTitle.setVisible(true);
+    detailsText.setVisible(true);
+    detailsText.setText(Utils.toString(e));
+    GuiUtils.scrollToTop(detailsText);
   }
 
   public void prepareForDisplay() {
-
   }
 }

@@ -5,7 +5,7 @@ import com.budgetview.server.cloud.commands.HttpCommand;
 import com.budgetview.server.cloud.model.ProviderUpdate;
 import com.budgetview.server.cloud.services.AuthenticationService;
 import com.budgetview.server.cloud.services.EmailValidationService;
-import com.budgetview.server.cloud.utils.CheckFailed;
+import com.budgetview.server.cloud.utils.ValidationFailed;
 import com.budgetview.server.cloud.utils.SubscriptionCheckFailed;
 import com.budgetview.shared.cloud.CloudConstants;
 import org.apache.log4j.Logger;
@@ -61,7 +61,7 @@ public class ValidateServlet extends HttpCloudServlet {
             String newToken = authentication.registerUserDevice(userId);
             writer.key(CloudConstants.BV_TOKEN).value(newToken);
           }
-          catch (CheckFailed checkFailed) {
+          catch (ValidationFailed checkFailed) {
             writer.key(CloudConstants.STATUS).value(checkFailed.getStatus());
             writer.endObject();
             return HttpServletResponse.SC_OK;

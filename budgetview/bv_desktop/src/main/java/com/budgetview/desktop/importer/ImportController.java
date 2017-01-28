@@ -370,10 +370,6 @@ public class ImportController implements RealAccountImporter {
     importDialog.showCloudBankConnection(bank);
   }
 
-  public void showCloudTimeout() {
-    importDialog.showCloudTimeout();
-  }
-
   public void showCloudError(Exception e) {
     importDialog.showCloudError(e);
   }

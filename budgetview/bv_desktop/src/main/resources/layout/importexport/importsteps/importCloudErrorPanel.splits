@@ -3,6 +3,9 @@
   <styleImport file="/layout/commonStyles.splits"/>
   <styleImport file="/layout/dialogStyles.splits"/>
   <styleImport file="/layout/importexport/components/importDialogStyles.splits"/>
+  <styles>
+    <style selector="#detailsTitle" font="-,bold,14" marginTop="10" marginBottom="10" fill="none" anchor="center"/>
+  </styles>
 
 
   <column styleClass="dialog" preferredSize="(600,710)" name="importCloudErrorPanel">
@@ -15,7 +18,14 @@
         <scrollPane marginTop="20" forceVerticalScroll="true">
           <column margin="20">
 
+            <label icon="synchro_error.png" styleClass="centerIcon"/>
+
             <htmlEditorPane ref="errorMessage"/>
+
+            <column styleClass="separator" autoHideSource="detailsText" marginTop="20">
+              <label ref="detailsTitle" text="$import.cloud.error.details"/>
+              <htmlEditorPane ref="detailsText"/>
+            </column>
 
             <filler fill="vertical"/>
 

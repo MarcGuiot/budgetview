@@ -2,10 +2,7 @@ package com.budgetview.desktop.cloud;
 
 import com.budgetview.budgea.model.*;
 import com.budgetview.model.*;
-import com.budgetview.shared.cloud.CloudAPI;
-import com.budgetview.shared.cloud.CloudConstants;
-import com.budgetview.shared.cloud.CloudRequestStatus;
-import com.budgetview.shared.cloud.CloudSubscriptionStatus;
+import com.budgetview.shared.cloud.*;
 import com.budgetview.shared.cloud.budgea.BudgeaAPI;
 import com.budgetview.shared.model.AccountType;
 import com.budgetview.shared.model.Provider;
@@ -20,6 +17,7 @@ import org.globsframework.utils.Log;
 import org.globsframework.utils.Strings;
 import org.globsframework.utils.Utils;
 import org.globsframework.utils.exceptions.InvalidParameter;
+import org.globsframework.utils.exceptions.UnexpectedValue;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -27,6 +25,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
+import static com.budgetview.shared.cloud.CloudValidationStatus.TEMP_VALIDATION_CODE_EXPIRED;
 import static org.globsframework.model.FieldValue.value;
 import static org.globsframework.model.utils.GlobMatchers.fieldEquals;
 import static org.globsframework.model.utils.GlobMatchers.fieldIn;
@@ -83,8 +82,6 @@ public class CloudService {
 
     void processSubscriptionError(CloudSubscriptionStatus subscriptionStatus);
 
-    void processTimeout();
-
     void processError(Exception e);
   }
 
@@ -105,6 +102,8 @@ public class CloudService {
             case NO_SUBSCRIPTION:
               callback.processSubscriptionError(getSubscriptionStatus(result));
               break;
+            default:
+              throw new UnexpectedValue(result.getString(CloudConstants.STATUS));
           }
         }
         catch (Exception e) {
@@ -121,7 +120,7 @@ public class CloudService {
       public void run() {
         try {
           JSONObject result = cloudAPI.validate(email, code);
-          switch (CloudRequestStatus.get(result.getString(CloudConstants.STATUS))) {
+          switch (CloudValidationStatus.get(result.getString(CloudConstants.STATUS))) {
             case OK:
               String bvToken = result.getString(CloudConstants.BV_TOKEN);
               repository.update(CloudDesktopUser.KEY,
@@ -134,10 +133,10 @@ public class CloudService {
                 callback.processCompletionAndSelectBank();
               }
               break;
-            case UNKNOWN_CODE:
+            case UNKNOWN_VALIDATION_CODE:
               callback.processInvalidCode();
               break;
-            case TEMP_CODE_EXPIRED:
+            case TEMP_VALIDATION_CODE_EXPIRED:
               callback.processTempTokenExpired();
               break;
             case NO_SUBSCRIPTION:
@@ -164,15 +163,13 @@ public class CloudService {
       switch (CloudRequestStatus.get(result.getString(CloudConstants.STATUS))) {
         case OK:
           String token = result.getString(CloudConstants.PROVIDER_TOKEN);
-          boolean permanentTokenRegistered = result.getBoolean(CloudConstants.PROVIDER_TOKEN_REGISTERED);
           budgeaAPI.setToken(token);
           break;
         case NO_SUBSCRIPTION:
           callback.processSubscriptionError(getSubscriptionStatus(result));
           return;
         default:
-          callback.processError(null);
-          return;
+          throw new UnexpectedValue(result.getString(result.getString(CloudConstants.STATUS)));
       }
 
       repository.startChangeSet();
@@ -262,8 +259,7 @@ public class CloudService {
               callback.processSubscriptionError(getSubscriptionStatus(result));
               return;
             default:
-              callback.processError(null);
-              return;
+              throw new UnexpectedValue(result.getString(CloudConstants.STATUS));
           }
 
           System.out.println("CloudService.addBankConnection - starting step1");
@@ -291,7 +287,6 @@ public class CloudService {
           }
         }
         catch (Exception e) {
-          System.out.println("CloudService.run - exception");
           Log.write("Error creating connection", e);
           callback.processError(e);
         }
@@ -372,8 +367,7 @@ public class CloudService {
               callback.processSubscriptionError(getSubscriptionStatus(result));
               return;
             default:
-              callback.processError(null);
-              return;
+              throw new UnexpectedValue(result.getString(CloudConstants.STATUS));
           }
 
           boolean initialized;
@@ -500,10 +494,9 @@ public class CloudService {
         break;
       case NO_SUBSCRIPTION:
         throw new SubscriptionError(getSubscriptionStatus(result));
-      case TEMP_CODE_EXPIRED:
-        throw new IOException("Unexpected error status: " + status);
+      default:
+        throw new UnexpectedValue(result.getString(CloudConstants.STATUS));
     }
-
 
     System.out.println("CloudService.doDownloadStatement\n" + result.toString(2));
 

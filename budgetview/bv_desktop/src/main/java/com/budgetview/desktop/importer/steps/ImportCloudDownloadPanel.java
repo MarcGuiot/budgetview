@@ -61,11 +61,6 @@ public class ImportCloudDownloadPanel extends AbstractImportStepPanel {
         progressPanel.stop();
       }
 
-      public void processTimeout() {
-        controller.showCloudTimeout();
-        progressPanel.stop();
-      }
-
       public void processError(Exception e) {
         controller.showCloudError(e);
         progressPanel.stop();

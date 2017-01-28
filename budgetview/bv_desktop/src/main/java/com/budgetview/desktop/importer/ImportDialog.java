@@ -275,11 +275,6 @@ public class ImportDialog implements RealAccountImporter, Disposable {
     setCurrentPanel(cloudErrorPanel);
   }
 
-  public void showCloudTimeout() {
-    cloudErrorPanel.showTimeout();
-    setCurrentPanel(cloudErrorPanel);
-  }
-
   public void showCloudSubscriptionError(String email, CloudSubscriptionStatus status) {
     cloudBankSubscriptionErrorPanel.update(email, status);
     setCurrentPanel(cloudBankSubscriptionErrorPanel);

@@ -3,6 +3,10 @@ package org.globsframework.utils;
 import org.globsframework.utils.exceptions.InvalidParameter;
 import org.globsframework.utils.exceptions.ItemNotFound;
 
+import java.io.BufferedOutputStream;
+import java.io.PrintStream;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.lang.reflect.Array;
 import java.util.*;
 import java.util.regex.Matcher;
@@ -410,5 +414,11 @@ public class Utils {
       result[i] = array[i];
     }
     return result;
+  }
+
+  public static String toString(Throwable t) {
+    StringWriter stringWriter = new StringWriter();
+    t.printStackTrace(new PrintWriter(stringWriter));
+    return stringWriter.toString();
   }
 }

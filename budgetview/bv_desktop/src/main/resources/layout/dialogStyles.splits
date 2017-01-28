@@ -24,6 +24,8 @@
            font="OpenSansRegular,plain,26" foreground="dialog.title"
            fill="none" anchor="center" marginTop="15" marginBottom="15" weightY="0.1"/>
 
+    <style selector=".dialog label.centerIcon" marginBottom="20" fill="none" anchor="center"/>
+
     <ui name="scrollPaneUI"
         class="com.budgetview.desktop.components.ui.FlatScrollbarUI"
         color="scrollBar.idle" rolloverColor="scrollBar.rollover" background="scrollBar.bg"/>
