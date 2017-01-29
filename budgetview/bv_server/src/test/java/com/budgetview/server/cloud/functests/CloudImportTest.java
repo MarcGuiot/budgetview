@@ -40,6 +40,7 @@ public class CloudImportTest extends CloudDesktopTestCase {
       .setPassword("Code (1234)", "1234")
       .next()
       .waitForNotificationAndDownload(mailbox.checkStatementReady("toto@example.com"))
+      .checkFileNameHidden()
       .checkTransactions(new Object[][]{
         {"2016/08/12", "EDF", "-50.00"},
         {"2016/08/10", "AUCHAN", "-100.00"},

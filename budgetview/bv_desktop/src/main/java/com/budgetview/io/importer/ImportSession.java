@@ -380,6 +380,7 @@ public class ImportSession {
         value(Transaction.OFX_CHECK_NUM, TransactionAnalyzerFactory.removeBlankAndToUppercase(importedTransaction.get(ImportedTransaction.OFX_CHECK_NUM))),
         value(Transaction.OFX_MEMO, TransactionAnalyzerFactory.removeBlankAndToUppercase(importedTransaction.get(ImportedTransaction.OFX_MEMO))),
         value(Transaction.LABEL, TransactionAnalyzerFactory.removeBlankAndToUppercase(importedTransaction.get(ImportedTransaction.SIMPLE_LABEL))),
+        value(Transaction.ORIGINAL_LABEL, TransactionAnalyzerFactory.removeBlankAndToUppercase(importedTransaction.get(ImportedTransaction.SIMPLE_LABEL))),
         value(Transaction.OFX_NAME, TransactionAnalyzerFactory.removeBlankAndToUppercase(importedTransaction.get(ImportedTransaction.OFX_NAME))),
         value(Transaction.QIF_M, TransactionAnalyzerFactory.removeBlankAndToUppercase(importedTransaction.get(ImportedTransaction.QIF_M))),
         value(Transaction.QIF_P, TransactionAnalyzerFactory.removeBlankAndToUppercase(importedTransaction.get(ImportedTransaction.QIF_P))),
@@ -458,7 +459,7 @@ public class ImportSession {
     Glob transactionImport =
       targetRepository.create(TransactionImport.TYPE,
                               value(TransactionImport.IMPORT_DATE, TimeService.getToday()),
-                              value(TransactionImport.SOURCE, file.getName()),
+                              value(TransactionImport.SOURCE, file.getFileName()),
                               value(TransactionImport.IS_WITH_SERIES, shouldImportSeries()),
                               value(TransactionImport.REPLACE_SERIES, replaceSeries),
                               value(TransactionImport.FILE_CONTENT, bytes));

@@ -172,12 +172,9 @@ public class ImportDialog implements RealAccountImporter, Disposable {
     fileSelectionPanel.preselectFiles(files);
   }
 
-  public void updateForNextImport(String absolutePath, List<String> dateFormats, final Glob importedAccount,
+  public void updateForNextImport(String absolutePath, List<String> dateFormats, final Glob realAccount,
                                   Integer accountNumber, Integer accountCount) {
-    if (absolutePath != null) {
-      previewPanel.setFileName(absolutePath);
-    }
-    previewPanel.updateForNextImport(dateFormats, importedAccount, accountNumber, accountCount);
+    previewPanel.updateForNextImport(absolutePath, dateFormats, realAccount, accountNumber, accountCount);
   }
 
   public void showPreview() {

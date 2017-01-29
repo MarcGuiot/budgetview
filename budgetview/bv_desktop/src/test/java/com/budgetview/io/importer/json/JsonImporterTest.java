@@ -1,5 +1,6 @@
 package com.budgetview.io.importer.json;
 
+import com.budgetview.io.importer.utils.TypedInputStream;
 import com.budgetview.model.ImportedTransaction;
 import com.budgetview.model.PicsouModel;
 import com.budgetview.model.RealAccount;
@@ -7,7 +8,9 @@ import junit.framework.TestCase;
 import org.globsframework.model.GlobChecker;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.GlobRepositoryBuilder;
+import org.hsqldb.lib.ReaderInputStream;
 
+import java.io.BufferedInputStream;
 import java.io.StringReader;
 
 import static org.globsframework.model.FieldValue.value;
@@ -44,10 +47,9 @@ public class JsonImporterTest extends TestCase {
     targetRepository.create(RealAccount.TYPE, value(RealAccount.PROVIDER_ACCOUNT_ID, 90));
 
     JsonImporter importer = new JsonImporter();
-    importer.loadTransactions(new StringReader(json), null, targetRepository, null);
+    importer.loadTransactions(new TypedInputStream(new ReaderInputStream(new StringReader(json)), null), null, targetRepository, null);
 
     GlobChecker checker = new GlobChecker(PicsouModel.get());
-    checker.assertEquals(targetRepository, ImportedTransaction.TYPE,
-                         "");
+    checker.assertEquals(targetRepository, ImportedTransaction.TYPE, "");
   }
 }

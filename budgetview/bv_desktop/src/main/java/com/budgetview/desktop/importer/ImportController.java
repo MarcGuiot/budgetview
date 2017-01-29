@@ -113,9 +113,10 @@ public class ImportController implements RealAccountImporter {
     {
       Ref<Integer> accountCount = new Ref<Integer>();
       Ref<Integer> accountNumber = new Ref<Integer>();
-      Glob importedAccount = importSession.gotoNextContent(accountNumber, accountCount);
-      if (importedAccount != null) {
-        importDialog.updateForNextImport(null, null, importedAccount, accountNumber.get(), accountCount.get());
+      Glob realAccount = importSession.gotoNextContent(accountNumber, accountCount);
+      if (realAccount != null) {
+        String filePath = realAccount.get(RealAccount.FILE_NAME);
+        importDialog.updateForNextImport(filePath, null, realAccount, accountNumber.get(), accountCount.get());
         return true;
       }
     }
@@ -144,22 +145,23 @@ public class ImportController implements RealAccountImporter {
     }
 
     TypedInputStream stream = null;
-    String path = null;
+    String filePath = null;
     Glob realAccount = null;
     Integer synchroId = null;
     try {
       if (!realAccountWithImport.isEmpty()) {
         AccountWithFile accountWithFile = realAccountWithImport.remove(0);
         realAccount = accountWithFile.realAccount;
-        stream = new TypedInputStream(new ByteArrayInputStream(accountWithFile.fileContent.getBytes("UTF-8")));
+        String fileName = realAccount != null ? realAccount.get(RealAccount.FILE_NAME) : null;
+        stream = new TypedInputStream(new ByteArrayInputStream(accountWithFile.fileContent.getBytes("UTF-8")), fileName);
         synchroId = accountWithFile.synchroId;
-        path = null;
+        filePath = realAccount.get(RealAccount.FILE_NAME);
       }
       else {
         synchronized (selectedFiles) {
           File file = selectedFiles.remove(0);
           stream = new TypedInputStream(file);
-          path = file.getAbsolutePath();
+          filePath = file.getAbsolutePath();
         }
       }
       List<String> dateFormats = importSession.loadFile(realAccount, synchroId, importDialog.getDialog(), stream);
@@ -167,15 +169,15 @@ public class ImportController implements RealAccountImporter {
       Ref<Integer> accountNumber = new Ref<Integer>();
       Glob importedAccount = importSession.gotoNextContent(accountNumber, accountCount);
       if (importedAccount != null) {
-        importDialog.updateForNextImport(path, dateFormats, importedAccount, accountNumber.get(), accountCount.get());
+        importDialog.updateForNextImport(filePath, dateFormats, importedAccount, accountNumber.get(), accountCount.get());
         return true;
       }
       String message;
-      if (path == null) {
+      if (filePath == null) {
         message = Lang.get("import.downloaded.empty");
       }
       else {
-        message = Lang.get("import.file.empty", path);
+        message = Lang.get("import.file.empty", filePath);
       }
       importDialog.showMessage(message);
       return false;
@@ -184,13 +186,13 @@ public class ImportController implements RealAccountImporter {
       return false;
     }
     catch (InvalidFileFormat e) {
-      String message = e.getMessage(path);
+      String message = e.getMessage(filePath);
       Log.write(message, e);
       importDialog.showMessage(message, e.getDetails());
       return false;
     }
     catch (Exception e) {
-      String message = Lang.get("import.file.error", path == null ? "" : path);
+      String message = Lang.get("import.file.error", filePath == null ? "" : filePath);
       Log.write(message, e);
       importDialog.showMessage(message, e.getMessage());
       return false;

@@ -1,13 +1,11 @@
 package com.budgetview.server.utils;
 
 import com.budgetview.server.config.ConfigService;
-import org.apache.commons.io.IOUtils;
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
 import org.apache.http.StatusLine;
 import org.apache.http.client.fluent.Response;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
+import org.globsframework.utils.Files;
 import org.globsframework.utils.exceptions.InvalidParameter;
 import org.globsframework.utils.exceptions.OperationFailed;
 
@@ -51,7 +49,7 @@ public class Log4J {
       String paramName = (String) params.nextElement();
       builder.append("    " + paramName + ": " + request.getParameter(paramName) + "\n");
     }
-    builder.append("  Content:\n").append(IOUtils.toString(request.getInputStream(), "UTF-8"));
+    builder.append("  Content:\n").append(Files.loadStreamToString(request.getInputStream(), "UTF-8"));
 
     logger.info("Request:\n" + builder.toString());
   }
@@ -59,6 +57,5 @@ public class Log4J {
   public static void dump(Response response, Logger logger) throws IOException {
     StatusLine statusLine = response.returnResponse().getStatusLine();
     logger.info(statusLine.getStatusCode() + " / " + statusLine.getReasonPhrase());
-
   }
 }

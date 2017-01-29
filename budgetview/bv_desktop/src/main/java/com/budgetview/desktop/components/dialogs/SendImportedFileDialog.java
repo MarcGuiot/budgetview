@@ -15,6 +15,7 @@ import org.globsframework.model.GlobRepository;
 import org.globsframework.model.format.GlobStringifier;
 import org.globsframework.model.utils.ReverseGlobFieldComparator;
 import org.globsframework.utils.Files;
+import org.globsframework.utils.Strings;
 import org.globsframework.utils.directory.DefaultDirectory;
 import org.globsframework.utils.directory.Directory;
 
@@ -47,7 +48,8 @@ public class SendImportedFileDialog {
       .setRenderer(new GlobStringifier() {
         public String toString(Glob glob, GlobRepository repository) {
           Date date = glob.get(TransactionImport.IMPORT_DATE);
-          return Formatting.toString(date) + " - " + glob.get(TransactionImport.SOURCE);
+          String source = glob.get(TransactionImport.SOURCE);
+          return Formatting.toString(date) + " - " + (Strings.isNotEmpty(source) ? source : "nosource");
         }
 
         public Comparator<Glob> getComparator(GlobRepository repository) {
@@ -108,7 +110,7 @@ public class SendImportedFileDialog {
           ZipInputStream stream = new ZipInputStream(byteArrayOutputStream);
           ZipEntry zipEntry = stream.getNextEntry();
           if (zipEntry != null) {
-            TypedInputStream typedInputStream = new TypedInputStream(stream);
+            TypedInputStream typedInputStream = new TypedInputStream(stream, null);
             if (obfuscate.isSelected()) {
               Obfuscator obfuscator = new Obfuscator();
               return obfuscator.apply(typedInputStream);

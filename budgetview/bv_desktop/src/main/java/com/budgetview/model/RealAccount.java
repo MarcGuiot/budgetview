@@ -23,6 +23,7 @@ import static org.globsframework.model.FieldValue.value;
 import static org.globsframework.model.utils.GlobMatchers.and;
 import static org.globsframework.model.utils.GlobMatchers.fieldEquals;
 
+// Account-related information found in the bank files, as opposed to the Account type which is BudgetView's internal representation
 public class RealAccount {
 
   public static GlobType TYPE;
@@ -156,21 +157,21 @@ public class RealAccount {
            !Utils.equal(realAccount1.get(ID), realAccount2.get(ID));
   }
 
-  public static Glob createAccountFromImported(Glob importedAccount, GlobRepository repository, boolean isImported) {
-    String amount = importedAccount.get(POSITION);
+  public static Glob createAccountFromImported(Glob realAccount, GlobRepository repository, boolean isImported) {
+    String amount = realAccount.get(POSITION);
     Double position = amount != null ? Amounts.extractAmount(amount) : null;
     return repository.create(Account.TYPE,
-                             value(Account.BANK_ENTITY, importedAccount.get(BANK_ENTITY)),
-                             value(Account.BANK_ENTITY_LABEL, importedAccount.get(BANK_ENTITY_LABEL)),
-                             value(Account.ACCOUNT_TYPE, importedAccount.get(ACCOUNT_TYPE)),
-                             value(Account.CARD_TYPE, importedAccount.get(CARD_TYPE)),
-                             value(Account.POSITION_DATE, importedAccount.get(POSITION_DATE)),
-                             value(Account.NUMBER, importedAccount.get(NUMBER)),
-                             value(Account.NAME, importedAccount.get(NAME)),
+                             value(Account.BANK_ENTITY, realAccount.get(BANK_ENTITY)),
+                             value(Account.BANK_ENTITY_LABEL, realAccount.get(BANK_ENTITY_LABEL)),
+                             value(Account.ACCOUNT_TYPE, realAccount.get(ACCOUNT_TYPE)),
+                             value(Account.CARD_TYPE, realAccount.get(CARD_TYPE)),
+                             value(Account.POSITION_DATE, realAccount.get(POSITION_DATE)),
+                             value(Account.NUMBER, realAccount.get(NUMBER)),
+                             value(Account.NAME, realAccount.get(NAME)),
                              value(Account.LAST_IMPORT_POSITION, position),
                              value(Account.IS_IMPORTED_ACCOUNT, isImported),
                              value(Account.DIRECT_SYNCHRO, true),
-                             value(Account.BANK, importedAccount.get(BANK)));
+                             value(Account.BANK, realAccount.get(BANK)));
   }
 
   public static void copy(GlobRepository repository, Glob from, Glob to) {

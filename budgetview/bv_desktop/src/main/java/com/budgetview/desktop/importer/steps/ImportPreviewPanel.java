@@ -47,8 +47,9 @@ public class ImportPreviewPanel extends AbstractImportStepPanel implements Messa
   private GlobRepository sessionRepository;
   private DefaultDirectory sessionDirectory;
 
+  private JLabel fileIntroLabel = new JLabel();
   private JLabel fileNameLabel = new JLabel();
-  private JEditorPane accountCountInfo = new JEditorPane();
+  private JLabel accountCountInfo = new JLabel();
 
   private Glob currentlySelectedAccount;
   private JLabel accountSelectionLabel = new JLabel();
@@ -120,6 +121,7 @@ public class ImportPreviewPanel extends AbstractImportStepPanel implements Messa
 
     importedTransactionTable = new ImportedTransactionsTable(sessionRepository, sessionDirectory, dateRenderer);
     builder.add("table", importedTransactionTable.getTable());
+    builder.add("fileIntroLabel", fileIntroLabel);
     builder.add("fileName", fileNameLabel);
     builder.add("accountCountInfo", accountCountInfo);
 
@@ -173,6 +175,7 @@ public class ImportPreviewPanel extends AbstractImportStepPanel implements Messa
   }
 
   public void prepareForDisplay() {
+    accountEditionPanel.requestFocus();
   }
 
   public void dispose() {
@@ -192,19 +195,20 @@ public class ImportPreviewPanel extends AbstractImportStepPanel implements Messa
     this.message.setText(message);
   }
 
-  public void updateForNextImport(List<String> dateFormats, Glob importedAccount,
+  public void updateForNextImport(String absolutePath, List<String> dateFormats, Glob realAccount,
                                   Integer accountNumber, Integer accountCount) {
     createPanelIfNeeded();
-    this.realAccount = importedAccount;
+    this.realAccount = realAccount;
+
     accountEditionRepository.rollback();
-    newAccount = RealAccount.createAccountFromImported(importedAccount, accountEditionRepository, true);
+    newAccount = RealAccount.createAccountFromImported(realAccount, accountEditionRepository, true);
 
     accountEditionPanel.setAccount(newAccount);
     localDirectory.get(SelectionService.class).select(newAccount);
 
     GlobList importedTransactions = sessionRepository.getAll(ImportedTransaction.TYPE);
 
-    updateFileAndAccountMessage(accountNumber, accountCount, !importedTransactions.isEmpty());
+    updateFileAndAccountMessage(absolutePath, accountNumber, accountCount, !importedTransactions.isEmpty());
 
     if (importedTransactions.isEmpty()) {
       cardHandler.show("noOperations");
@@ -219,7 +223,7 @@ public class ImportPreviewPanel extends AbstractImportStepPanel implements Messa
     if (dateFormats != null) {
       dateFormatSelectionPanel.init(importedTransactions.isEmpty() ? null : dateFormats);
     }
-    Integer accountId = importedAccount.get(RealAccount.ACCOUNT);
+    Integer accountId = realAccount.get(RealAccount.ACCOUNT);
     if (accountId != null && sessionRepository.contains(Key.create(Account.TYPE, accountId))) {
       sessionDirectory.get(SelectionService.class)
         .select(sessionRepository.get(Key.create(Account.TYPE, accountId)));
@@ -230,7 +234,7 @@ public class ImportPreviewPanel extends AbstractImportStepPanel implements Messa
       Glob associatedImportedAccount = sessionRepository.getAll(RealAccount.TYPE)
         .filter(GlobMatchers.fieldEquals(RealAccount.ACCOUNT, accountId), sessionRepository)
         .getFirst();
-      if (associatedImportedAccount != null && !RealAccount.areNearEquivalent(associatedImportedAccount, importedAccount)) {
+      if (associatedImportedAccount != null && !RealAccount.areNearEquivalent(associatedImportedAccount, realAccount)) {
         accountId = null;
       }
 
@@ -245,16 +249,21 @@ public class ImportPreviewPanel extends AbstractImportStepPanel implements Messa
     nextAction.setEnabled(true);
     // necessaire sous linux au moins
     accountComboBox.repaint();
+    accountEditionPanel.requestFocus();
   }
 
-  private void updateFileAndAccountMessage(Integer accountNumber, Integer accountCount, boolean hasTransactions) {
-    String transactionsSuffix = hasTransactions ? ".with.operations" : ".without.operations";
+  private void updateFileAndAccountMessage(String absolutePath, Integer accountNumber, Integer accountCount, boolean hasTransactions) {
+
+    boolean containsFile = Strings.isNotEmpty(absolutePath);
+    fileIntroLabel.setVisible(containsFile);
+    fileNameLabel.setVisible(containsFile);
+    fileNameLabel.setText(absolutePath);
+
     if (accountCount == 1) {
-      accountCountInfo.setText(Lang.get("import.preview.accountMessage.one" + transactionsSuffix));
+      accountCountInfo.setText(Lang.get("import.preview.accountCount.one"));
     }
     else {
-      accountCountInfo.setText(Lang.get("import.preview.accountMessage.many" + transactionsSuffix,
-                                        accountNumber, accountCount));
+      accountCountInfo.setText(Lang.get("import.preview.accountCount.many", accountNumber, accountCount));
     }
 
     if (hasTransactions) {
@@ -286,14 +295,9 @@ public class ImportPreviewPanel extends AbstractImportStepPanel implements Messa
     }
   }
 
-  public void setFileName(String absolutePath) {
-    createPanelIfNeeded();
-    fileNameLabel.setText(absolutePath);
-  }
-
   public void showFileErrorMessage(String message) {
     createPanelIfNeeded();
-    this.setFileName("");
+    this.fileNameLabel.setText("");
     this.accountCountInfo.setText("");
     this.message.setText(message);
     nextAction.setEnabled(false);

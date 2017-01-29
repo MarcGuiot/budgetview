@@ -4,11 +4,8 @@ import com.budgetview.functests.checkers.utils.ComponentIsVisibleAssertion;
 import com.budgetview.functests.utils.BalloonTipTesting;
 import com.budgetview.shared.utils.AmountFormat;
 import com.budgetview.utils.Lang;
-import junit.framework.AssertionFailedError;
-import org.globsframework.utils.Dates;
 import org.junit.Assert;
 import org.uispec4j.*;
-import org.uispec4j.assertion.Assertion;
 import org.uispec4j.assertion.UISpecAssert;
 import org.uispec4j.finder.ComponentMatchers;
 import org.uispec4j.interception.WindowInterceptor;
@@ -153,6 +150,19 @@ public class ImportDialogPreviewChecker extends DialogChecker {
 
   public ImportDialogPreviewChecker addNewAccountBank(String bankName, String url) {
     getAccountEditionChecker().selectNewBank(bankName, url);
+    return this;
+  }
+
+  public ImportDialogPreviewChecker checkFileNameShown(String path) {
+    checkComponentVisible(dialog, JLabel.class, "fileIntroLabel", true);
+    checkComponentVisible(dialog, JLabel.class, "fileName", true);
+    assertThat(dialog.getTextBox("fileName").textEquals(path));
+    return this;
+  }
+
+  public ImportDialogPreviewChecker checkFileNameHidden() {
+    checkComponentVisible(dialog, JLabel.class, "fileIntroLabel", false);
+    checkComponentVisible(dialog, JLabel.class, "fileName", false);
     return this;
   }
 

@@ -5,6 +5,7 @@ import com.budgetview.desktop.description.Labels;
 import com.budgetview.desktop.series.utils.SeriesMatchers;
 import com.budgetview.io.importer.AccountFileImporter;
 import com.budgetview.io.importer.utils.ImportedTransactionIdGenerator;
+import com.budgetview.io.importer.utils.TypedInputStream;
 import com.budgetview.model.*;
 import com.budgetview.shared.model.BudgetArea;
 import com.budgetview.shared.model.DefaultSeries;
@@ -20,7 +21,6 @@ import org.globsframework.utils.exceptions.OperationCancelled;
 import org.json.JSONObject;
 
 import java.io.IOException;
-import java.io.Reader;
 import java.text.ParseException;
 
 import static org.globsframework.model.FieldValue.value;
@@ -29,10 +29,10 @@ import static org.globsframework.model.utils.GlobMatchers.fieldEqualsIgnoreCase;
 
 public class JsonImporter implements AccountFileImporter {
 
-  public GlobList loadTransactions(Reader reader, GlobRepository initialRepository, GlobRepository targetRepository, PicsouDialog current) throws InvalidFormat, OperationCancelled, IOException {
+  public GlobList loadTransactions(TypedInputStream inputStream, GlobRepository initialRepository, GlobRepository targetRepository, PicsouDialog current) throws InvalidFormat, OperationCancelled, IOException {
 
     ImportedTransactionIdGenerator generator = new ImportedTransactionIdGenerator(targetRepository.getIdGenerator());
-    JSONObject jsonAccount = new JSONObject(Files.loadStreamToString(reader));
+    JSONObject jsonAccount = new JSONObject(Files.loadStreamToString(inputStream.getBestProbableReader()));
 
     //---------------
     System.out.println("JsonImporter.loadTransactions: parsing \n" + jsonAccount.toString(2));
@@ -62,6 +62,7 @@ public class JsonImporter implements AccountFileImporter {
                               value(RealAccount.TRANSACTION_ID, null),
                               value(RealAccount.POSITION, Double.toString(jsonAccount.getDouble("position"))),
                               value(RealAccount.POSITION_DATE, Month.toDate(jsonAccount.getInt("position_month"), jsonAccount.getInt("position_day"))),
+                              value(RealAccount.FILE_NAME, inputStream.getFileName()),
                               value(RealAccount.FILE_CONTENT, "{}"));
     }
 

@@ -23,7 +23,8 @@ public class BudgeaAccountTypeConverter {
 
     if  (budgeaAccountType.equals("savings") ||
          budgeaAccountType.equals("lifeinsurance") ||
-         budgeaAccountType.equals("market")) {
+         budgeaAccountType.equals("market") ||
+         budgeaAccountType.equals("loan")) {
       return AccountType.SAVINGS;
     }
 

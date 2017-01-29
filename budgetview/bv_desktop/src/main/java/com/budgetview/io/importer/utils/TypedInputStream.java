@@ -9,7 +9,7 @@ public class TypedInputStream {
   private RepeatableInputStream stream;
   private boolean notUTF8;
   private static final String DEFAULT_ENCODING = "ISO-8859-15";
-  private String fileName = "undef";
+  private String fileName = null;
   private boolean isWindows;
 
   public TypedInputStream(File file) throws IOException {
@@ -22,7 +22,7 @@ public class TypedInputStream {
     }
   }
 
-  public TypedInputStream(InputStream inputStream) throws IOException {
+  public TypedInputStream(InputStream inputStream, String fileName) throws IOException {
     stream = new RepeatableInputStream(inputStream);
     checkCoding();
     findType();
@@ -58,11 +58,7 @@ public class TypedInputStream {
     return type;
   }
 
-  public boolean isNotUTF8() {
-    return notUTF8;
-  }
-
-  public String getName() {
+  public String getFileName() {
     return fileName;
   }
 

@@ -40,6 +40,7 @@ public class ImportTest extends LoggedInFunctionalTestCase {
       .importFileWithError("login.data.file.not.found");
     importDialog
       .browseAndPreview(path)
+      .checkFileNameShown(path)
       .checkTransactions(new Object[][]{
         {"2006/01/10", "Menu K", "-1.10"}
       })
@@ -293,7 +294,7 @@ public class ImportTest extends LoggedInFunctionalTestCase {
     operations.openImportDialog()
       .setFilePath(path1 + ";" + path2)
       .importFileAndPreview()
-      .checkAccountMessage("Operations for single account:")
+      .checkAccountMessage("New operations for account:")
       .checkTransactions(new Object[][]{
         {"2006/01/10", "First operation", "-1.10"}
       })
@@ -324,7 +325,7 @@ public class ImportTest extends LoggedInFunctionalTestCase {
     operations.openImportDialog()
       .setFilePath(firstQif)
       .importFileAndPreview()
-      .checkAccountMessage("Operations for single account:")
+      .checkAccountMessage("New operations for account:")
       .defineAccount(SOCIETE_GENERALE, "Main account", "12345")
       .setPosition(0.00)
       .importAccountAndComplete();
@@ -667,7 +668,7 @@ public class ImportTest extends LoggedInFunctionalTestCase {
       .checkMessageEmptyFile()
       .setFilePath(notEmpty)
       .importFileAndPreview()
-      .checkAccountMessage("Operations for single account:")
+      .checkAccountMessage("New operations for account:")
       .checkAccountSelectionMessage("Import operations in:")
       .setMainAccount()
       .importAccountAndGetSummary()
@@ -846,17 +847,17 @@ public class ImportTest extends LoggedInFunctionalTestCase {
     operations.openImportDialog()
       .selectFiles(path1)
       .importFileAndPreview()
-      .checkAccountMessage("Account 1/3 - No operations")
+      .checkAccountMessage("New operations for account 1/3:")
       .checkAccountSelectionMessage("Update:")
       .setMainAccount()
       .importAccountAndOpenNext()
 
       .setMainAccount()
-      .checkAccountMessage("Account 2/3 - No operations")
+      .checkAccountMessage("New operations for account 2/3:")
       .checkAccountSelectionMessage("Update:")
       .importAccountAndOpenNext()
       .setMainAccount()
-      .checkAccountMessage("Account 3/3 - No operations")
+      .checkAccountMessage("New operations for account 3/3:")
       .checkAccountSelectionMessage("Update:")
       .importAccountAndComplete();
 
@@ -978,27 +979,29 @@ public class ImportTest extends LoggedInFunctionalTestCase {
       .importFileAndPreview();
 
     preview
-      .checkAccountMessage("Account 1/3 - No operations")
+      .checkFileNameShown(path)
+      .checkFileNameShown(path)
+      .checkAccountMessage("New operations for account 1/3:")
       .checkAccountSelectionMessage("Update:")
       .selectAccount("Account n. 00001123")
       .importAccountAndOpenNext();
 
     preview
       .checkAccountEditable()
-      .checkAccountMessage("Account 2/3 - No operations")
+      .checkAccountMessage("New operations for account 2/3:")
       .checkAccountSelectionMessage("Update:")
       .selectAccount("Account n. 00001123")
       .checkAccountNotEditable()
       .checkExistingAccountDescription("Account n.00001123 CIC Position: 0.00 on 2008/06/08")
       .selectAccount("a new account")
-      .checkAccountMessage("Account 2/3 - No operations")
+      .checkAccountMessage("New operations for account 2/3:")
       .checkAccountSelectionMessage("Update:")
       .checkAccountEditable()
       .setMainAccount()
       .importAccountAndOpenNext();
 
     preview
-      .checkAccountMessage("Account 3/3 - No operations")
+      .checkAccountMessage("New operations for account 3/3:")
       .checkAccountSelectionMessage("Update:")
       .setMainAccount()
       .importAccountAndComplete();

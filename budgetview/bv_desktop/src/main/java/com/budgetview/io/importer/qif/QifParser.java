@@ -1,6 +1,7 @@
 package com.budgetview.io.importer.qif;
 
 import com.budgetview.io.importer.utils.ImportedTransactionIdGenerator;
+import com.budgetview.io.importer.utils.TypedInputStream;
 import com.budgetview.model.ImportType;
 import com.budgetview.model.ImportedSeries;
 import com.budgetview.model.ImportedTransaction;
@@ -8,26 +9,24 @@ import com.budgetview.model.RealAccount;
 import com.budgetview.shared.utils.Amounts;
 import org.globsframework.model.*;
 import org.globsframework.model.repository.GlobIdGenerator;
-import org.globsframework.model.utils.GlobMatchers;
 import org.globsframework.utils.Strings;
 
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.Reader;
 
 import static org.globsframework.model.FieldValue.value;
 import static org.globsframework.model.utils.GlobMatchers.fieldEquals;
 
 public class QifParser {
 
-  public static GlobList read(Reader reader, ReadOnlyGlobRepository initialRepository, GlobRepository globRepository) {
-    QifParser qifParser = new QifParser(reader, initialRepository, globRepository);
+  public static GlobList read(TypedInputStream inputStream, ReadOnlyGlobRepository initialRepository, GlobRepository globRepository) {
+    QifParser qifParser = new QifParser(inputStream, initialRepository, globRepository);
     return qifParser.run();
   }
 
-  private BufferedReader reader;
-  private GlobRepository globRepository;
-  private GlobIdGenerator globIdGenerator;
+  private final BufferedReader reader;
+  private final GlobRepository globRepository;
+  private final GlobIdGenerator globIdGenerator;
   private Integer accountId = null;
   private Integer seriesId;
   GlobList result = new GlobList();
@@ -37,9 +36,9 @@ public class QifParser {
   String nValue = null;
   String pValue = null;
 
-  private QifParser(Reader reader, ReadOnlyGlobRepository initialRepository, GlobRepository globRepository) {
+  private QifParser(TypedInputStream inputStream, ReadOnlyGlobRepository initialRepository, GlobRepository globRepository) {
     this.globRepository = globRepository;
-    this.reader = new BufferedReader(reader);
+    this.reader = new BufferedReader(inputStream.getBestProbableReader());
     globIdGenerator = new ImportedTransactionIdGenerator(globRepository.getIdGenerator());
   }
 

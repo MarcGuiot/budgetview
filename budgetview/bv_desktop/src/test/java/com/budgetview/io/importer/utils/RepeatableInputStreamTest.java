@@ -46,7 +46,7 @@ public class RepeatableInputStreamTest extends TestCase{
 
   public void testWithCarriageReturn() throws Exception {
     ByteArrayInputStream stream = new ByteArrayInputStream("some\nsdfsdf\nff\r\ndata\n".getBytes());
-    TypedInputStream typedInputStream = new TypedInputStream(stream);
+    TypedInputStream typedInputStream = new TypedInputStream(stream, "/var/file.txt");
     typedInputStream.isWindowsType();
     BufferedReader reader = new BufferedReader(typedInputStream.getBestProbableReader());
     assertEquals("some sdfsdf ff", reader.readLine());

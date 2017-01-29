@@ -22,7 +22,7 @@ public class ImportService {
     throws IOException, ItemNotFound, InvalidFormat, OperationCancelled, TruncatedFile {
 
     AccountFileImporter importer = getImporter(fileStream, directory);
-    importer.loadTransactions(fileStream.getBestProbableReader(), initialRepository, targetRepository, current);
+    importer.loadTransactions(fileStream, initialRepository, targetRepository, current);
   }
 
   private AccountFileImporter getImporter(TypedInputStream fileStream, Directory directory) throws ItemNotFound {

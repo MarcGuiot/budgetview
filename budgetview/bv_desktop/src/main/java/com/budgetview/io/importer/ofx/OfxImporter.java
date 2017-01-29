@@ -5,6 +5,7 @@ import com.budgetview.desktop.importer.utils.InvalidFileFormat;
 import com.budgetview.io.importer.AccountFileImporter;
 import com.budgetview.io.importer.utils.DateFormatAnalyzer;
 import com.budgetview.io.importer.utils.ImportedTransactionIdGenerator;
+import com.budgetview.io.importer.utils.TypedInputStream;
 import com.budgetview.model.*;
 import com.budgetview.shared.model.AccountType;
 import com.budgetview.shared.utils.Amounts;
@@ -18,7 +19,6 @@ import org.globsframework.utils.collections.MultiMap;
 import org.globsframework.utils.exceptions.TruncatedFile;
 
 import java.io.IOException;
-import java.io.Reader;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -31,13 +31,13 @@ public class OfxImporter implements AccountFileImporter {
   public OfxImporter() {
   }
 
-  public GlobList loadTransactions(Reader reader,
+  public GlobList loadTransactions(TypedInputStream inputStream,
                                    GlobRepository initialRepository,
                                    GlobRepository targetRepository, PicsouDialog current) throws TruncatedFile {
     OfxParser parser = new OfxParser();
     try {
-      Functor functor = new Functor(targetRepository);
-      parser.parse(reader, functor);
+      Functor functor = new Functor(targetRepository, inputStream.getFileName());
+      parser.parse(inputStream.getBestProbableReader(), functor);
       if (!functor.fileCompleted) {
         throw new TruncatedFile();
       }
@@ -49,7 +49,8 @@ public class OfxImporter implements AccountFileImporter {
   }
 
   private static class Functor implements OfxFunctor {
-    private GlobRepository repository;
+    private final GlobRepository repository;
+    private final String fileName;
     private GlobList createdTransactions = new GlobList();
     private GlobList transactionsForAccount = new GlobList();
     private Map<String, Key> fIdToTransaction = new HashMap<String, Key>();
@@ -71,8 +72,9 @@ public class OfxImporter implements AccountFileImporter {
     private String checkNum;
     private Integer lastTransactionId;
 
-    public Functor(GlobRepository targetRepository) {
+    public Functor(GlobRepository targetRepository, String fileName) {
       this.repository = targetRepository;
+      this.fileName = fileName;
       generator = new ImportedTransactionIdGenerator(targetRepository.getIdGenerator());
     }
 
@@ -259,10 +261,10 @@ public class OfxImporter implements AccountFileImporter {
 
     private void updateTransactionLabel() {
       repository.update(currentTransactionKey,
-                        FieldValue.value(ImportedTransaction.OFX_NAME, name),
-                        FieldValue.value(ImportedTransaction.OFX_MEMO, memo),
-                        FieldValue.value(ImportedTransaction.OFX_CHECK_NUM, checkNum),
-                        FieldValue.value(ImportedTransaction.BANK_TRANSACTION_TYPE, transactionType));
+                        value(ImportedTransaction.OFX_NAME, name),
+                        value(ImportedTransaction.OFX_MEMO, memo),
+                        value(ImportedTransaction.OFX_CHECK_NUM, checkNum),
+                        value(ImportedTransaction.BANK_TRANSACTION_TYPE, transactionType));
       name = null;
       memo = null;
       checkNum = null;
@@ -321,6 +323,7 @@ public class OfxImporter implements AccountFileImporter {
                                          value(RealAccount.BANK, bankId),
                                          value(RealAccount.BANK_ENTITY_LABEL, bankEntityLabel),
                                          value(RealAccount.BANK_ENTITY, bankEntityId),
+                                         value(RealAccount.FILE_NAME, fileName),
                                          value(RealAccount.ACCOUNT_TYPE, isCreditCard ? AccountType.MAIN.getId() : null),
                                          value(RealAccount.CARD_TYPE, isCreditCard ? AccountCardType.UNDEFINED.getId()
                                                                                    : AccountCardType.NOT_A_CARD.getId()));

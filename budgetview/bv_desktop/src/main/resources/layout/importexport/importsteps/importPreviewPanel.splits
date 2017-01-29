@@ -6,7 +6,7 @@
 
   <styles>
     <style selector="label#fileName"
-           fill="none" anchor="left" font="-,bold,12" marginBottom="5"/>
+           fill="none" anchor="left" font="-,bold,12"/>
   </styles>
 
   <column styleClass="dialog" preferredSize="(600,710)" name="importPreviewPanel">
@@ -16,10 +16,10 @@
     <column styleClass="innerDialog">
       <column styleClass="innerDialogContent">
 
-        <label text="$import.file.to.import" marginBottom="5"/>
-        <label ref="fileName"/>
+        <label ref="fileIntroLabel" text="$import.file.to.import" marginBottom="5"/>
+        <label ref="fileName" marginBottom="10"/>
 
-        <htmlEditorPane ref="accountCountInfo"/>
+        <label ref="accountCountInfo" marginBottom="5"/>
 
         <cards ref="mainCardOperations">
           <card name="cardOperations">
