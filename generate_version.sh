@@ -18,7 +18,10 @@ mvn install -Dmaven.test.skip.exec=true
 cd $BV_ROOT/uispec4j
 mvn install -Dmaven.test.skip.exec=true
 
-cd $BV_ROOT/budgetview
+cd $BV_ROOT/budgetview/bv_shared
+mvn install -Dmaven.test.skip.exec=true
+
+cd $BV_ROOT/budgetview/bv_desktop
 mvn install -Dmaven.test.skip.exec=true -am -pl picsou -Pgen-demo
 mvn install -Dmaven.test.skip.exec=true -Pgen-version
 

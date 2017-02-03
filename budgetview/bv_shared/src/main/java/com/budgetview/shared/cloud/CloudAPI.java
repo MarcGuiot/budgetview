@@ -3,6 +3,7 @@ package com.budgetview.shared.cloud;
 import com.budgetview.shared.http.Http;
 import com.budgetview.shared.model.Provider;
 import org.apache.http.client.fluent.Request;
+import org.globsframework.utils.Log;
 import org.globsframework.utils.Strings;
 import org.globsframework.utils.Utils;
 import org.globsframework.utils.exceptions.InvalidParameter;
@@ -14,7 +15,9 @@ public class CloudAPI {
 
   public JSONObject signup(String email, String lang) throws IOException {
     String url = "/signup";
-    Request request = Request.Post(CloudConstants.getServerUrl(url))
+    String serverUrl = CloudConstants.getServerUrl(url);
+    Log.write("CloudAPI: calling " + serverUrl + " for " + email + " / " + lang);
+    Request request = Request.Post(serverUrl)
       .addHeader(CloudConstants.EMAIL, email)
       .addHeader(CloudConstants.LANG, lang);
     return Http.executeAndGetJson(url, request);

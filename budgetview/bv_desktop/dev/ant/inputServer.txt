@@ -1,4 +1,0 @@
-C com.budgetview.PicsouServer
-C javax.servlet.SingleThreadModel
-R javax/servlet/LocalStrings.properties
-R javax/servlet/http/LocalStrings.properties

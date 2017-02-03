@@ -83,7 +83,7 @@ public class LicenseConstants {
   }
 
   public static String getServerUrl(String path) {
-    String url = PROD_SERVER_URL;
+    String url = PROD_SERVER_URL + path;
     Utils.beginRemove();
     url = System.getProperty(LICENSE_URL_PROPERTY, PROD_SERVER_URL) + path;
     Utils.endRemove();

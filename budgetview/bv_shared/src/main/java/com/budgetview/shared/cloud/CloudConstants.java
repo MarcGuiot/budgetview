@@ -28,7 +28,7 @@ public class CloudConstants {
   public static final String CLOUD_URL_PROPERTY = APPNAME + ".cloud.url";
 
   public static String getServerUrl(String path) {
-    String url = PROD_CLOUD_SERVER_URL;
+    String url = PROD_CLOUD_SERVER_URL + path;
     Utils.beginRemove();
     url = System.getProperty(CLOUD_URL_PROPERTY, PROD_CLOUD_SERVER_URL) + path;
     Utils.endRemove();

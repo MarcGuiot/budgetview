@@ -1,6 +1,5 @@
 package com.budgetview.desktop.plaf;
 
-import com.budgetview.desktop.plaf.ButtonPanelItemUI;
 import com.budgetview.desktop.utils.Gui;
 import org.globsframework.gui.splits.ImageLocator;
 import org.globsframework.gui.splits.SplitsBuilder;

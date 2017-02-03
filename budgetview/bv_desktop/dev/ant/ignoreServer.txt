@@ -1,8 +1,0 @@
-P com/java
-P com/sun
-P sun
-# P javax
-D rt.jar
-P banks/.svn
-P i18n/.svn
-P images/.svn

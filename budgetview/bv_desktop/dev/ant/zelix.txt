@@ -3,9 +3,7 @@ open "budgetview.jar"
      -"budgetview.jar!demo/demo-en.snapshot"
      -"budgetview.jar!apple/laf/*.class"
      -"budgetview.jar!apple/awt/C*.class"
-     -"budgetview.jar!apple/awt/C*.class"
      -"budgetview.jar!apple/awt/FontConfiguration.class"
-     -"budgetview.jar!apple/awt/IntegerNIORaster.class"
      -"budgetview.jar!apple/awt/IntegerNIORaster.class"
      -"budgetview.jar!apple/awt/OSX*.class"
      -"budgetview.jar!com/apple/eawt/Application.class"
@@ -15,47 +13,48 @@ open "budgetview.jar"
      -"budgetview.jar!com/steadystate/css/parser/*.class"
      -"budgetview.jar!org/w3c/css/sac/*.class"
      -"budgetview.jar!java/awt/GraphicsEnvironment.class"
-     -"budgetview.jar!net/roydesign/mac/*.class"
-     -"budgetview.jar!net/roydesign/event/*.class";
+;
 
-exclude   budgetview.^Main and
-          com.budgetview.desktop.DesktopApp main(*) and
-          budgetview.^MainInMemory and
-          com.budgetview.desktop.InMemoryDesktopApp main(*) and
-          com.budgetview.gui.utils.AwtExceptionHandler and
-          apple.awt*.^* and
-          apple.awt*.^* *(*) and
-          apple.awt*.^* * and
-          com.apple.eawt*.^* and
-          com.apple.eawt*.^* *(*) and
-          com.apple.eawt*.^* * and
-          sun.java2d.opengl*.^* and
-          javax.xml*.^* and
-          javax.xml*.^* *(*) and
-          javax.xml*.^* * and
-          javax.swing*.^* * and
-          org.w3c*.^* and
-          org.w3c*.^* *(*) and
-          org.w3c*.^* * and
-          org.apache*.^* and
-          org.apache*.^* *(*) and
-          org.apache*.^* * and
-          org.xml*.^* and
-          org.xml*.^* *(*) and
-          org.xml*.^* * and
-          @*.NoObfuscation *.* and
-          *.* @*.NoObfuscation * and
-          *.* @*.NoObfuscation *(*) and
-          *.*UI set*(*) and
-          *.*UI get*(*) and
-          com.jidesoft.swing.* set*(*) and
-          com.budgetview.gui.components.* set*(*) and
-          com.budgetview.gui.components.* get*(*) and
-          com.budgetview.gui.components.charts.* set*(*) and
-          com.budgetview.gui.components.charts.* get*(*) and
-          com.budgetview.gui.projects.components.* get*(*) and
-          com.budgetview.gui.projects.components.* set*(*) and
-          org.globsframework.gui.components.ShowHideButton set*(*);
+exclude com.budgetview.desktop. and
+        com.budgetview.desktop.components.ui. and
+        com.budgetview.desktop.components.tabs. and
+        com.budgetview.desktop.plaf. and
+        *.AwtExceptionHandler and
+        apple.awt*.^* and
+        apple.awt*.^* *(*) and
+        apple.awt*.^* * and
+        com.apple.eawt*.^* and
+        com.apple.eawt*.^* *(*) and
+        com.apple.eawt*.^* * and
+        sun.java2d.opengl*.^* and
+        javax.xml*.^* and
+        javax.xml*.^* *(*) and
+        javax.xml*.^* * and
+        javax.swing*.^* * and
+        org.w3c*.^* and
+        org.w3c*.^* *(*) and
+        org.w3c*.^* * and
+        org.apache*.^* and
+        org.apache*.^* *(*) and
+        org.apache*.^* * and
+        org.xml*.^* and
+        org.xml*.^* *(*) and
+        org.xml*.^* * and
+        @*.NoObfuscation *.* and
+        *.* @*.NoObfuscation * and
+        *.* @*.NoObfuscation *(*) and
+        *.*UI and
+        *.*UI set*(*) and
+        *.*UI get*(*) and
+        com.jidesoft.swing.* set*(*) and
+        com.budgetview.desktop.components.* set*(*) and
+        com.budgetview.desktop.components.* get*(*) and
+        com.budgetview.desktop.components.charts.* set*(*) and
+        com.budgetview.desktop.components.charts.* get*(*) and
+        com.budgetview.desktop.projects.components.* get*(*) and
+        com.budgetview.desktop.projects.components.* set*(*) and
+        org.globsframework.gui.components.ShowHideButton set*(*)
+;
 
 obfuscate  changeLogFileOut="ChangeLogOutput.txt"
            aggressiveMethodRenaming=true

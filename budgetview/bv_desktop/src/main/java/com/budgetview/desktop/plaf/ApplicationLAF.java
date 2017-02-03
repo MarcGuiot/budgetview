@@ -29,32 +29,31 @@ public class ApplicationLAF {
   private static final String SHADOWED_LABEL_UI = org() + "globsframework.gui.splits.components.ShadowedLabelUI";
   private static final String STYLED_TOGGLE_BUTTON_UI = org() + "globsframework.gui.splits.components.StyledToggleButtonUI";
 
-  private static final String PANEL_UI = com() + "budgetview.gui.plaf.WavePanelUI";
-  private static final String CUSTOM_BUTTON_UI = com() + "budgetview.gui.components.ui.CustomButtonUI";
-  private static final String FLAT_BUTTON_UI = com() + "budgetview.gui.components.ui.FlatButtonUI";
-  private static final String FLAT_ICON_BUTTON_UI = com() + "budgetview.gui.components.ui.FlatIconButtonUI";
-  private static final String SERIES_TOGGLE_UI = com() + "budgetview.gui.components.ui.SelectionToggleUI";
-  private static final String BUTTON_PANEL_UI = com() + "budgetview.gui.plaf.ButtonPanelItemUI";
-  private static final String ARROW_BUTTON_UI = com() + "budgetview.gui.components.ui.ArrowButtonUI";
-  private static final String PLUS_MINUS_TOGGLE_UI = com() + "budgetview.gui.components.ui.PlusMinusToggleUI";
-  private static final String LINE_LABEL_UI = com() + "budgetview.gui.components.ui.LineLabelUI";
-  private static final String ON_OFF_TOGGLE_UI = com() + "budgetview.gui.components.ui.OnOffToggleUI";
-  private static final String ROUND_BUTTON_UI = com() + "budgetview.gui.components.ui.RoundButtonUI";
-  private static final String FLAT_SCROLLBAR_UI = com() + "budgetview.gui.components.ui.FlatScrollbarUI";
-  private static final String NOTIFICATION_FLAG_UI = com() + "budgetview.gui.components.ui.NotificationFlagUI";
-  private static final String VERTICAL_TAB_TOGGLE_UI = com() + "budgetview.gui.components.tabs.VerticalTabToggleUI";
-  private static final String VERTICAL_TAB_PANEL_UI = com() + "budgetview.gui.components.tabs.VerticalTabPanelUI";
-  private static final String SERES_PANEL_UI = com() + "budgetview.gui.series.ui.SeriesPanelUI";
+  private static final String PANEL_UI = com() + "budgetview.desktop.plaf.WavePanelUI";
+  private static final String CUSTOM_BUTTON_UI = com() + "budgetview.desktop.components.ui.CustomButtonUI";
+  private static final String FLAT_BUTTON_UI = com() + "budgetview.desktop.components.ui.FlatButtonUI";
+  private static final String FLAT_ICON_BUTTON_UI = com() + "budgetview.desktop.components.ui.FlatIconButtonUI";
+  private static final String SERIES_TOGGLE_UI = com() + "budgetview.desktop.components.ui.SelectionToggleUI";
+  private static final String BUTTON_PANEL_UI = com() + "budgetview.desktop.plaf.ButtonPanelItemUI";
+  private static final String ARROW_BUTTON_UI = com() + "budgetview.desktop.components.ui.ArrowButtonUI";
+  private static final String PLUS_MINUS_TOGGLE_UI = com() + "budgetview.desktop.components.ui.PlusMinusToggleUI";
+  private static final String LINE_LABEL_UI = com() + "budgetview.desktop.components.ui.LineLabelUI";
+  private static final String ON_OFF_TOGGLE_UI = com() + "budgetview.desktop.components.ui.OnOffToggleUI";
+  private static final String ROUND_BUTTON_UI = com() + "budgetview.desktop.components.ui.RoundButtonUI";
+  private static final String FLAT_SCROLLBAR_UI = com() + "budgetview.desktop.components.ui.FlatScrollbarUI";
+  private static final String NOTIFICATION_FLAG_UI = com() + "budgetview.desktop.components.ui.NotificationFlagUI";
+  private static final String VERTICAL_TAB_TOGGLE_UI = com() + "budgetview.desktop.components.tabs.VerticalTabToggleUI";
+  private static final String VERTICAL_TAB_PANEL_UI = com() + "budgetview.desktop.components.tabs.VerticalTabPanelUI";
+  private static final String SERES_PANEL_UI = com() + "budgetview.desktop.series.ui.SeriesPanelUI";
 
-  private static final String ACCOUNT_BLOCK_LAYOUT = com() + "budgetview.gui.accounts.utils.AccountBlockLayout";
-  private static final String PROJECT_ITEM_VIEW_LAYOUT = com() + "budgetview.gui.projects.utils.ProjectItemViewLayout";
-  private static final String BUDGET_AREA_SERIES_LAYOUT = com() + "budgetview.gui.budget.components.BudgetAreaSeriesLayout";
-  private static final String BUDGET_AREA_HEADER_LAYOUT = com() + "budgetview.gui.budget.utils.BudgetAreaHeaderLayout";
-  private static final String SIGNPOST_SECTION_LAYOUT = com() + "budgetview.gui.signpost.utils.SignpostSectionLayout";
-  private static final String HEADER_PANEL_LAYOUT = com() + "budgetview.gui.utils.HeaderPanelLayout";
-  private static final String ADD_ON_PANEL_LAYOUT = com() + "budgetview.gui.addons.utils.AddOnPanelLayout";
-  private static final String ANALYSIS_SELECTOR_LAYOUT = com() + "budgetview.gui.analysis.utils.AnalysisSelectorLayout";
-
+  private static final String ACCOUNT_BLOCK_LAYOUT = com() + "budgetview.desktop.accounts.utils.AccountBlockLayout";
+  private static final String PROJECT_ITEM_VIEW_LAYOUT = com() + "budgetview.desktop.projects.utils.ProjectItemViewLayout";
+  private static final String BUDGET_AREA_SERIES_LAYOUT = com() + "budgetview.desktop.budget.components.BudgetAreaSeriesLayout";
+  private static final String BUDGET_AREA_HEADER_LAYOUT = com() + "budgetview.desktop.budget.utils.BudgetAreaHeaderLayout";
+  private static final String SIGNPOST_SECTION_LAYOUT = com() + "budgetview.desktop.signpost.utils.SignpostSectionLayout";
+  private static final String HEADER_PANEL_LAYOUT = com() + "budgetview.desktop.utils.HeaderPanelLayout";
+  private static final String ADD_ON_PANEL_LAYOUT = com() + "budgetview.desktop.addons.utils.AddOnPanelLayout";
+  private static final String ANALYSIS_SELECTOR_LAYOUT = com() + "budgetview.desktop.analysis.utils.AnalysisSelectorLayout";
 
   private ApplicationLAF() {
   }

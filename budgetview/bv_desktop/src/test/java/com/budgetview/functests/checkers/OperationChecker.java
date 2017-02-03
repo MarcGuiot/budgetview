@@ -506,7 +506,7 @@ public class OperationChecker {
     if (currentDate != null) {
       args.add("-D" + Application.APPNAME + Application.TODAY + "=" + Dates.toString(currentDate));
     }
-    args.add("com.budgetview.gui.DevDesktopApp");
+    args.add("com.budgetview.desktop.DesktopApp");
     if (user != null) {
       args.add("-u");
       args.add(user);
