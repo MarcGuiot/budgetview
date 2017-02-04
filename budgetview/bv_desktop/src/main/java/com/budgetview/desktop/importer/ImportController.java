@@ -239,7 +239,7 @@ public class ImportController implements RealAccountImporter {
     if (!newSeries.isEmpty()) {
       importSession.setImportSeries(importDialog.askForSeriesImport(newSeries, targetAccount));
     }
-    Key importKey = importSession.importTransactions(targetAccount, dateFormat);
+    Key importKey = importSession.completeImport(targetAccount, dateFormat);
     if (importKey != null) {
       importKeys.add(importKey.get(TransactionImport.ID));
     }

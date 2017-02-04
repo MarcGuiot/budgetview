@@ -72,12 +72,10 @@ public class ImportPreviewPanel extends AbstractImportStepPanel implements Messa
 
   public ImportPreviewPanel(PicsouDialog dialog,
                             ImportController controller,
-                            Glob defaultAccount,
                             GlobRepository repository,
                             LocalGlobRepository localRepository,
                             Directory localDirectory) {
     super(dialog, controller, localDirectory);
-
     this.repository = repository;
     this.localRepository = localRepository;
   }

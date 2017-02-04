@@ -15,6 +15,7 @@ import javax.swing.*;
 
 import static org.globsframework.gui.views.utils.LabelCustomizers.chain;
 import static org.globsframework.gui.views.utils.LabelCustomizers.fontSize;
+import static org.globsframework.model.utils.GlobMatchers.isNotTrue;
 
 public class ImportedTransactionsTable {
   private JTable transactionTable;
@@ -27,6 +28,7 @@ public class ImportedTransactionsTable {
 
     GlobTableView tableView = GlobTableView.init(ImportedTransaction.TYPE, repository,
                                                  dateRenderer.getComparator(), directory)
+      .setFilter(isNotTrue(ImportedTransaction.DELETED))
       .addColumn(Lang.get("import.bankDate"), ImportedTransaction.BANK_DATE,
                  chain(fontSize(9), dateRenderer))
       .addColumn(Lang.get("label"), new ImportedTransactionLabelStringifier(), LabelCustomizers.autoTooltip())

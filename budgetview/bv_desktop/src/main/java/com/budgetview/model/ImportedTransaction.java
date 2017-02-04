@@ -1,5 +1,6 @@
 package com.budgetview.model;
 
+import com.budgetview.shared.model.Provider;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.annotations.Key;
 import org.globsframework.metamodel.annotations.Target;
@@ -51,6 +52,15 @@ public class ImportedTransaction {
 
   @Target(ImportedTransaction.class)
   public static LinkField SPLIT_SOURCE;
+
+  @Target(Provider.class)
+  public static LinkField PROVIDER;
+
+  public static IntegerField PROVIDER_ACCOUNT_ID;
+
+  public static IntegerField PROVIDER_TRANSACTION_ID;
+
+  public static BooleanField DELETED;
 
   static {
     GlobTypeLoader.init(ImportedTransaction.class);

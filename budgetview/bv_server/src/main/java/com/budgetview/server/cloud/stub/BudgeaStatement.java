@@ -66,6 +66,10 @@ public class BudgeaStatement {
     return addTransaction(id, date, date, amount, label, label, budgeaCategory.getId(), budgeaCategory.getName(), null);
   }
 
+  public BudgeaStatement addTransaction(int id, String date, double amount, String label, BudgeaCategory budgeaCategory, boolean deleted) {
+    return addTransaction(id, date, date, amount, label, label, budgeaCategory.getId(), budgeaCategory.getName(), deleted);
+  }
+
   public BudgeaStatement addTransaction(int id, String operationDate, String bankDate, double amount, String label, String originalLabel, int category, String categoryName, Boolean deleted) {
     json.object();
     json.key("id").value(id);

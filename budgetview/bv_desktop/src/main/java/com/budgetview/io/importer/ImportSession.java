@@ -18,10 +18,7 @@ import org.globsframework.model.delta.DefaultChangeSet;
 import org.globsframework.model.delta.MutableChangeSet;
 import org.globsframework.model.repository.LocalGlobRepository;
 import org.globsframework.model.repository.LocalGlobRepositoryBuilder;
-import org.globsframework.model.utils.ChangeSetAggregator;
-import org.globsframework.model.utils.DefaultChangeSetVisitor;
-import org.globsframework.model.utils.GlobFunctor;
-import org.globsframework.model.utils.GlobMatchers;
+import org.globsframework.model.utils.*;
 import org.globsframework.utils.Files;
 import org.globsframework.utils.Ref;
 import org.globsframework.utils.Strings;
@@ -43,6 +40,7 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
 import static org.globsframework.model.FieldValue.value;
+import static org.globsframework.model.utils.GlobMatchers.fieldEquals;
 
 public class ImportSession {
   private GlobRepository referenceRepository;
@@ -61,6 +59,7 @@ public class ImportSession {
   private Boolean importSeries;
   private boolean replaceSeries = true;
   private Key importKey;
+  private List<GlobMatcher> providerTransactionsToDeleteMatchers = new ArrayList<GlobMatcher>();
 
   public ImportSession(GlobRepository referenceRepository, Directory directory) {
     this.referenceRepository = referenceRepository;
@@ -142,7 +141,7 @@ public class ImportSession {
     for (Iterator it = accountIds.iterator(); it.hasNext(); ) {
       Glob acc = (Glob) it.next();
       if (!importRepository.contains(ImportedTransaction.TYPE,
-                                     GlobMatchers.fieldEquals(ImportedTransaction.ACCOUNT, acc.get(RealAccount.ID)))) {
+                                     fieldEquals(ImportedTransaction.ACCOUNT, acc.get(RealAccount.ID)))) {
         newList.add(acc);
         it.remove();
       }
@@ -255,7 +254,7 @@ public class ImportSession {
     return dateFormatAnalyzer.parse(valueSet);
   }
 
-  public Key importTransactions(Glob currentlySelectedAccount, String selectedDateFormat) {
+  public Key completeImport(Glob currentlySelectedAccount, String selectedDateFormat) {
     try {
       localRepository.startChangeSet();
       if (!load) {
@@ -314,6 +313,10 @@ public class ImportSession {
       updateImportAggregator.dispose();
       referenceRepository.apply(importChangeSet);
       referenceRepository.apply(updateImportChangeSet);
+      for (GlobMatcher matcher : providerTransactionsToDeleteMatchers) {
+        referenceRepository.delete(Transaction.TYPE, matcher);
+      }
+      providerTransactionsToDeleteMatchers.clear();
     }
     finally {
       referenceRepository.completeChangeSet();
@@ -357,6 +360,14 @@ public class ImportSession {
       Glob importedTransaction = iterator.next();
       Date bankDate = parseDate(dateFormat, importedTransaction, ImportedTransaction.BANK_DATE);
       Date userDate = parseDate(dateFormat, importedTransaction, ImportedTransaction.DATE);
+
+      if (importedTransaction.isTrue(ImportedTransaction.DELETED)) {
+        addProviderTransactionTransactionToDelete(importedTransaction.get(ImportedTransaction.PROVIDER),
+                                                  importedTransaction.get(ImportedTransaction.PROVIDER_ACCOUNT_ID),
+                                                  importedTransaction.get(ImportedTransaction.PROVIDER_TRANSACTION_ID));
+        continue;
+      }
+
       Glob transaction = localRepository.create(
         Key.create(Transaction.TYPE, nextId),
         value(Transaction.TRANSACTION_TYPE,
@@ -386,7 +397,10 @@ public class ImportSession {
         value(Transaction.QIF_P, TransactionAnalyzerFactory.removeBlankAndToUppercase(importedTransaction.get(ImportedTransaction.QIF_P))),
         value(Transaction.SERIES, getSeriesId(importedTransaction)),
         value(Transaction.SUB_SERIES, getSubSeriesId(importedTransaction)),
-        value(Transaction.IMPORT_TYPE, importedTransaction.get(ImportedTransaction.IMPORT_TYPE))
+        value(Transaction.IMPORT_TYPE, importedTransaction.get(ImportedTransaction.IMPORT_TYPE)),
+        value(Transaction.PROVIDER, importedTransaction.get(ImportedTransaction.PROVIDER)),
+        value(Transaction.PROVIDER_ACCOUNT_ID, importedTransaction.get(ImportedTransaction.PROVIDER_ACCOUNT_ID)),
+        value(Transaction.PROVIDER_TRANSACTION_ID, importedTransaction.get(ImportedTransaction.PROVIDER_TRANSACTION_ID))
       );
       linkImportedTransactionToTransaction.put(importedTransaction.get(ImportedTransaction.ID),
                                                transaction.get(Transaction.ID));
@@ -535,5 +549,15 @@ public class ImportSession {
     public void visitDeletion(Key key, FieldValues previousValues) throws Exception {
       localRepository.create(key, previousValues.toArray());
     }
+  }
+
+  private void addProviderTransactionTransactionToDelete(final Integer provider, final Integer providerAccountId, final Integer providerTransactionId) {
+    providerTransactionsToDeleteMatchers.add(new GlobMatcher() {
+      public boolean matches(Glob transaction, GlobRepository repository) {
+        return Utils.equal(provider, transaction.get(Transaction.PROVIDER)) &&
+               Utils.equal(providerAccountId, transaction.get(Transaction.PROVIDER_ACCOUNT_ID)) &&
+               Utils.equal(providerTransactionId, transaction.get(Transaction.PROVIDER_TRANSACTION_ID));
+      }
+    });
   }
 }

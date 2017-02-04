@@ -75,12 +75,9 @@ public class JsonImporter implements AccountFileImporter {
                                 ImportedTransactionIdGenerator generator)
     throws InvalidFormat, OperationCancelled, IOException {
 
-    if (isTrue(jsonTransaction.get("deleted"))) {
-      return null;
-    }
-
     String bankDate = convertDate(jsonTransaction.getString("bank_date"));
 
+    boolean deleted = isTrue(jsonTransaction.get("deleted"));
     return
       targetRepository.create(ImportedTransaction.TYPE,
                               value(ImportedTransaction.ID, generator.getNextId(ImportedTransaction.ID, 1)),
@@ -91,12 +88,19 @@ public class JsonImporter implements AccountFileImporter {
                               value(ImportedTransaction.SIMPLE_LABEL, jsonTransaction.getString("label")),
                               value(ImportedTransaction.OFX_NAME, jsonTransaction.getString("original_label")),
                               value(ImportedTransaction.SERIES, findOrCreateSeriesId(jsonTransaction.optInt("default_series_id"),
-                                                                                     bankDate,
+                                                                                     bankDate, deleted,
                                                                                      targetRepository)),
-                              value(ImportedTransaction.IMPORT_TYPE, ImportType.JSON.getId()));
+                              value(ImportedTransaction.IMPORT_TYPE, ImportType.JSON.getId()),
+                              value(ImportedTransaction.PROVIDER, realAccount.get(RealAccount.PROVIDER)),
+                              value(ImportedTransaction.PROVIDER_ACCOUNT_ID, realAccount.get(RealAccount.PROVIDER_ACCOUNT_ID)),
+                              value(ImportedTransaction.PROVIDER_TRANSACTION_ID, jsonTransaction.getInt("id")),
+                              value(ImportedTransaction.DELETED, deleted));
   }
 
-  private Integer findOrCreateSeriesId(Integer defaultSeriesId, String bankDate, GlobRepository targetRepository) {
+  private Integer findOrCreateSeriesId(Integer defaultSeriesId, String bankDate, boolean deleted, GlobRepository targetRepository) {
+    if (deleted) {
+      return null;
+    }
     DefaultSeries defaultSeries = DefaultSeries.find(defaultSeriesId);
     if (DefaultSeries.UNCATEGORIZED.equals(defaultSeries)) {
       defaultSeries = null;
@@ -143,8 +147,8 @@ public class JsonImporter implements AccountFileImporter {
     return importedSeriesList.getFirst().get(ImportedSeries.ID);
   }
 
-  private boolean isTrue(Object deleted) {
-    return "true".equalsIgnoreCase(deleted.toString());
+  private boolean isTrue(Object value) {
+    return "true".equalsIgnoreCase(value.toString());
   }
 
   private Glob getRealAccount(JSONObject jsonAccount, GlobRepository repository) {
