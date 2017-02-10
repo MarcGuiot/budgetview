@@ -185,18 +185,6 @@ public abstract class JdbcConnection implements SqlConnection {
     return connection;
   }
 
-  public GlobsSQLException getTypedException(String sql, SQLException e) {
-    if ("23000".equals(e.getSQLState())) {
-      if (sql == null) {
-        return new ConstraintViolation(e);
-      }
-      else {
-        return new ConstraintViolation(sql, e);
-      }
-    }
-    return new GlobsSQLException(e);
-  }
-
   private void applyAndClose(DbFunctor db) {
     if (connection == null) {
       return;
@@ -224,5 +212,17 @@ public abstract class JdbcConnection implements SqlConnection {
         throw ex;
       }
     }
+  }
+
+  public GlobsSQLException getTypedException(String sql, SQLException e) {
+    if ("23000".equals(e.getSQLState())) {
+      if (sql == null) {
+        return new ConstraintViolation(e);
+      }
+      else {
+        return new ConstraintViolation(sql, e);
+      }
+    }
+    return new GlobsSQLException(e);
   }
 }

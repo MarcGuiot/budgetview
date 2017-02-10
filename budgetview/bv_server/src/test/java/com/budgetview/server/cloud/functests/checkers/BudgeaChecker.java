@@ -61,4 +61,8 @@ public class BudgeaChecker {
   public void setLoginConstraint(String fieldEqualsValue) {
     stub.setLoginConstraint(fieldEqualsValue);
   }
+
+  public void checkUserDeletions(int userId) {
+    stub.checkUserDeletion(userId);
+  }
 }

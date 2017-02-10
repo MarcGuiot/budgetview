@@ -39,11 +39,16 @@
           </column>
         </scrollPane>
 
-        <row margin="20">
+        <row margin="20" marginBottom="0">
           <filler fill="horizontal"/>
           <button action="addConnection"/>
           <filler fill="horizontal"/>
           <button action="download"/>
+          <filler fill="horizontal"/>
+        </row>
+        <row margin="20">
+          <filler fill="horizontal"/>
+          <button action="unsubscribe"/>
           <filler fill="horizontal"/>
         </row>
 

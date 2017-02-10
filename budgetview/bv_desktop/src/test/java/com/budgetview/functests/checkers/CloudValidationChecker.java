@@ -26,6 +26,11 @@ public class CloudValidationChecker extends ViewChecker {
     return new ImportDialogPreviewChecker(mainWindow);
   }
 
+  public CloudFirstDownloadChecker processEmailAndNextToFirstDownload(String code) {
+    enterCode(code);
+    return new CloudFirstDownloadChecker(mainWindow);
+  }
+
   public CloudValidationChecker processEmailAndCheckError(String code) {
     enterCode(code);
     checkPanelShown("importCloudValidationPanel");

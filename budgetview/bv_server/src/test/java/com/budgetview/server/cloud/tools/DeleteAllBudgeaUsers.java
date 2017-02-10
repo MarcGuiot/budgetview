@@ -11,7 +11,7 @@ public class DeleteAllBudgeaUsers {
 
   /** Run with:
    *
-   *      dev/config/bv_cloud_prod.properties
+   *      budgea_master_token.txt
    *
    */
   public static void main(String[] args) throws Exception {

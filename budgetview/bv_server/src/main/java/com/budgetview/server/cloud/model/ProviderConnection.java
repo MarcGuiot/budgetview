@@ -6,6 +6,7 @@ import org.globsframework.metamodel.annotations.Key;
 import org.globsframework.metamodel.annotations.Target;
 import org.globsframework.metamodel.fields.BooleanField;
 import org.globsframework.metamodel.fields.IntegerField;
+import org.globsframework.metamodel.fields.LinkField;
 import org.globsframework.metamodel.utils.GlobTypeLoader;
 import org.globsframework.sqlstreams.annotations.AutoIncrement;
 
@@ -17,7 +18,7 @@ public class ProviderConnection {
   public static IntegerField ID;
 
   @Target(CloudUser.class)
-  public static IntegerField USER;
+  public static LinkField USER;
 
   @Target(Provider.class)
   public static IntegerField PROVIDER;

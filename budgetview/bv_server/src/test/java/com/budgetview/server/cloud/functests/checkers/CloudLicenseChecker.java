@@ -36,10 +36,10 @@ public class CloudLicenseChecker {
 
   public void purchaseLicence(String email, Date expirationDate) throws IOException {
     String url = LicenseConstants.getServerUrl(CLOUD_SUBSCRIPTION_BACKDOOR);
-    Http.execute(Request.Post(url)
+    Http.execute(url, Request.Post(url)
                    .addHeader(LicenseConstants.CLOUD_EMAIL, email)
-                   .addHeader(LicenseConstants.CLOUD_END_DATE, JsonGlobFormat.toString(expirationDate)),
-                 url);
+                   .addHeader(LicenseConstants.CLOUD_END_DATE, JsonGlobFormat.toString(expirationDate))
+    );
   }
 
   public void stopServer() throws Exception {

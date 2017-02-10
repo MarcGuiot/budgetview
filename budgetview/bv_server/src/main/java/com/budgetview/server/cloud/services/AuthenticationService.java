@@ -94,7 +94,7 @@ public class AuthenticationService {
     SqlConnection connection = database.connect();
     try {
       SqlCreateRequest request = connection.startCreate(CloudUserDevice.TYPE)
-        .set(CloudUserDevice.USER_ID, userId)
+        .set(CloudUserDevice.USER, userId)
         .set(CloudUserDevice.TOKEN, newToken)
         .set(CloudUserDevice.LAST_UPDATE, now())
         .getRequest();
@@ -115,6 +115,44 @@ public class AuthenticationService {
     return newToken;
   }
 
+  public Glob findUserAndToken(String email, String token) {
+    SqlConnection connection = database.connect();
+    try {
+      Glob user = connection.selectUnique(CloudUser.TYPE, fieldEquals(CloudUser.EMAIL, email.toLowerCase()));
+      if (user == null) {
+        return null;
+      }
+
+      Integer userId = user.get(CloudUser.ID);
+      GlobList usersWithToken = connection.selectAll(CloudUserDevice.TYPE,
+                                                     Where.and(fieldEquals(CloudUserDevice.USER, userId),
+                                                               fieldEquals(CloudUserDevice.TOKEN, token)));
+      if (usersWithToken.size() != 1) {
+        return null;
+      }
+
+      return user;
+    }
+    catch (ItemNotFound e) {
+      return null;
+    }
+    catch (TooManyItems e) {
+      logger.error("Too many user token entries for: " + email);
+      return null;
+    }
+    finally {
+      try {
+        connection.commitAndClose();
+      }
+      catch (RollbackFailed rollbackFailed) {
+        logger.error("Commit failed when looking for user: " + email, rollbackFailed);
+      }
+      catch (DbConstraintViolation constraintViolation) {
+        logger.error("Commit failed when looking for user: " + email, constraintViolation);
+      }
+    }
+  }
+
   public Glob checkUserToken(String email, String token) throws SubscriptionCheckFailed {
     SqlConnection connection = database.connect();
     try {
@@ -125,7 +163,7 @@ public class AuthenticationService {
 
       Integer userId = user.get(CloudUser.ID);
       GlobList usersWithToken = connection.selectAll(CloudUserDevice.TYPE,
-                                                     Where.and(fieldEquals(CloudUserDevice.USER_ID, userId),
+                                                     Where.and(fieldEquals(CloudUserDevice.USER, userId),
                                                                fieldEquals(CloudUserDevice.TOKEN, token)));
       if (usersWithToken.size() != 1) {
         return null;

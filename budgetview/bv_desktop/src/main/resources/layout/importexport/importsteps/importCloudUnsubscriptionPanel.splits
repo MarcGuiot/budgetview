@@ -1,0 +1,40 @@
+<splits xmlns="http://www.globsframework.org/xml/splits.xsd">
+
+  <styleImport file="/layout/commonStyles.splits"/>
+  <styleImport file="/layout/dialogStyles.splits"/>
+  <styleImport file="/layout/importexport/components/importDialogStyles.splits"/>
+  <styles>
+    <style selector="#delete" marginTop="25" fill="none" anchor="center"/>
+  </styles>
+
+
+  <column styleClass="dialog" preferredSize="(600,710)" name="importCloudUnsubscriptionPanel">
+
+    <label text="$import.cloud.unsubscription.title" name="title" styleClass="title"/>
+
+    <column styleClass="innerDialog">
+      <column styleClass="innerDialogContent">
+
+        <scrollPane marginTop="20" forceVerticalScroll="true">
+          <column margin="20">
+
+            <htmlEditorPane ref="message"/>
+
+            <button ref="unsubscribe"/>
+
+            <component ref="progressPanel" marginTop="20"/>
+
+            <filler fill="vertical"/>
+
+          </column>
+        </scrollPane>
+      </column>
+    </column>
+
+    <row styleClass="dialogButtons" name="buttons">
+      <filler fill="horizontal"/>
+      <button action="close"/>
+    </row>
+  </column>
+
+</splits>

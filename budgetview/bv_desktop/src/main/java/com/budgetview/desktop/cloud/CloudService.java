@@ -85,6 +85,12 @@ public class CloudService {
     void processError(Exception e);
   }
 
+  public interface UnsubscriptionCallback {
+    void processCompletion();
+
+    void processError(Exception e);
+  }
+
   public void signup(String email, GlobRepository repository, Callback callback) {
     Thread thread = new Thread(new Runnable() {
       public void run() {
@@ -569,6 +575,27 @@ public class CloudService {
     return Strings.isNullOrEmpty(type) ? AccountType.MAIN : AccountType.get(type);
   }
 
+  public void deleteCloudAccount(GlobRepository repository, UnsubscriptionCallback callback) {
+    Glob user = repository.findOrCreate(CloudDesktopUser.KEY);
+    try {
+      cloudAPI.deleteCloudAccount(user.get(CloudDesktopUser.EMAIL),
+                                  user.get(CloudDesktopUser.BV_TOKEN));
+      GuiUtils.runInSwingThread(new Runnable() {
+        public void run() {
+          callback.processCompletion();
+        }
+      });
+    }
+    catch (Exception e) {
+      Log.write("Error deleting BV cloud account", e);
+      GuiUtils.runInSwingThread(new Runnable() {
+        public void run() {
+          callback.processError(e);
+        }
+      });
+    }
+  }
+
   private Glob createMissingBank(int budgeaBankId, String bankName, GlobRepository repository) {
     return repository.create(Bank.TYPE,
                              value(Bank.NAME, bankName),
@@ -577,7 +604,7 @@ public class CloudService {
 
   }
 
-  public JsonGlobParser createBankParser(GlobRepository repository) {
+  private JsonGlobParser createBankParser(GlobRepository repository) {
     JsonGlobParser parser = new JsonGlobParser(repository);
     parser.setConverter(BudgeaBankField.FIELD_TYPE, new JsonGlobParser.Converter() {
       public Object convert(Object value) {

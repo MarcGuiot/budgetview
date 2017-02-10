@@ -60,6 +60,7 @@ public class ImportDialog implements RealAccountImporter, Disposable {
   private ImportCloudFirstDownloadPanel cloudFirstDownloadPanel;
   private ImportCloudDownloadPanel cloudDownloadPanel;
   private ImportCloudSubscriptionErrorPanel cloudBankSubscriptionErrorPanel;
+  private ImportCloudUnsubscriptionPanel cloudUnsubscriptionPanel;
   private ImportCloudErrorPanel cloudErrorPanel;
   private ImportPreviewPanel previewPanel;
   private ImportCompletionPanel completionPanel;
@@ -95,6 +96,7 @@ public class ImportDialog implements RealAccountImporter, Disposable {
     cloudBankSelectionPanel = new ImportCloudBankSelectionPanel(dialog, controller, localRepository, localDirectory);
     cloudBankConnectionPanel = new ImportCloudBankConnectionPanel(dialog, controller, localRepository, localDirectory);
     cloudBankSubscriptionErrorPanel = new ImportCloudSubscriptionErrorPanel(dialog, controller, localRepository, localDirectory);
+    cloudUnsubscriptionPanel = new ImportCloudUnsubscriptionPanel(dialog, controller, localRepository, localDirectory);
     cloudErrorPanel = new ImportCloudErrorPanel(dialog, controller, localRepository, localDirectory);
     previewPanel = new ImportPreviewPanel(dialog, controller, repository, localRepository, localDirectory);
     completionPanel = new ImportCompletionPanel(dialog, controller, localRepository, localDirectory);
@@ -262,6 +264,10 @@ public class ImportDialog implements RealAccountImporter, Disposable {
   public void showCloudBankConnection(Key bank) {
     cloudBankConnectionPanel.showStep1(bank);
     setCurrentPanel(cloudBankConnectionPanel);
+  }
+
+  public void showCloudUnsubscription() {
+    setCurrentPanel(cloudUnsubscriptionPanel);
   }
 
   public void showCloudError(Exception e) {

@@ -71,6 +71,16 @@ public class UndoRedoService {
     }
   }
 
+  public void removeLastUndo() {
+    undoRedoInProgress = true;
+    try {
+      changesToUndo.removeLast();
+    }
+    finally {
+      undoRedoInProgress = false;
+    }
+  }
+
   public void redo() {
     undoRedoInProgress = true;
     try {

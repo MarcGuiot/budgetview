@@ -31,6 +31,7 @@ public class ImportCloudEditionPanel extends AbstractImportStepPanel {
   private GlobRepeat repeat;
   private AbstractAction addConnectionAction;
   private AbstractAction downloadAction;
+  private AbstractAction unsubscribeAction;
 
   public ImportCloudEditionPanel(PicsouDialog dialog, ImportController controller, GlobRepository repository, Directory localDirectory) {
     super(dialog, controller, localDirectory);
@@ -65,6 +66,13 @@ public class ImportCloudEditionPanel extends AbstractImportStepPanel {
       }
     };
     builder.add("download", downloadAction);
+
+    unsubscribeAction = new AbstractAction(Lang.get("import.cloud.edition.unsubscribe.button")) {
+      public void actionPerformed(ActionEvent e) {
+        controller.showCloudUnsubscription();
+      }
+    };
+    builder.add("unsubscribe", unsubscribeAction);
 
     builder.add("close", new AbstractAction(getCloseLabel()) {
       public void actionPerformed(ActionEvent e) {
@@ -101,10 +109,6 @@ public class ImportCloudEditionPanel extends AbstractImportStepPanel {
     progressPanel.start();
     cloudService.updateBankConnections(repository, new CloudService.Callback() {
       public void processCompletion() {
-
-        System.out.println("ImportCloudEditionPanel.processCompletion");
-        GlobPrinter.print(repository, CloudProviderConnection.TYPE);
-        
         repeat.setFilter(GlobMatchers.ALL);
         dialog.revalidate();
         setAllEnabled(true);

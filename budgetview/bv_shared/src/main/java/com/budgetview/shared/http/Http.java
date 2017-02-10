@@ -40,7 +40,7 @@ public class Http {
     return new Post(url);
   }
 
-  public static HttpResponse execute(Request request, String url) throws IOException {
+  public static HttpResponse execute(String url, Request request) throws IOException {
     try {
       Response response = request.execute();
       HttpResponse httpResponse = response.returnResponse();
@@ -52,7 +52,7 @@ public class Http {
   }
 
   public static JSONObject executeAndGetJson(String url, Request request) throws IOException {
-    HttpResponse response = execute(request, url);
+    HttpResponse response = execute(url, request);
     return new JSONObject(Files.loadStreamToString(response.getEntity().getContent(), "UTF-8"));
   }
 

@@ -38,6 +38,7 @@ public class BudgeaStubServer {
   private Stack<String> newConnectionResponses = new Stack<String>();
   private List<String> lastLoginFields = new ArrayList<String>();
   private String loginConstraint;
+  private Integer lastDeletedUserId;
 
   public static void main(String... args) throws Exception {
     BudgeaStubServer stub = new BudgeaStubServer(args);
@@ -151,6 +152,12 @@ public class BudgeaStubServer {
 
   public void setLoginConstraint(String loginConstraint) {
     this.loginConstraint = loginConstraint;
+  }
+
+  public void checkUserDeletion(int userId) {
+    if (!Utils.equal(lastDeletedUserId, userId)) {
+      throw new RuntimeException("Last deleted user ID:" + lastDeletedUserId + " but expected: " + userId);
+    }
   }
 
   private class AuthInitServlet extends HttpServlet {
@@ -361,7 +368,6 @@ public class BudgeaStubServer {
 
     protected void doDelete(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
       logger.info("DELETE");
-      logger.info("UsersMeConnectionsServlet.doDelete: " + request.getQueryString() + " / " + request.getPathInfo() + " / " + request.getContextPath());
       response.setStatus(HttpServletResponse.SC_OK);
     }
   }
@@ -387,6 +393,21 @@ public class BudgeaStubServer {
       PrintWriter writer = response.getWriter();
       writer.write(connectionLists.pop());
       writer.close();
+
+      response.setStatus(HttpServletResponse.SC_OK);
+    }
+
+    protected void doDelete(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+      logger.info("GET");
+
+      if (!checkAuthorization(request, logger)) {
+        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+        return;
+      }
+
+
+      lastDeletedUserId = Integer.parseInt(request.getPathInfo().substring(1));
+      System.out.println("UserConnectionsServlet.doDelete: " + lastDeletedUserId);
 
       response.setStatus(HttpServletResponse.SC_OK);
     }

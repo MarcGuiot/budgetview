@@ -50,8 +50,8 @@ public class BudgeaAPI {
   public void deleteUser(int userId) throws IOException {
     checkToken();
     String url = "/users/" + userId;
-    Http.execute(Request.Delete(BudgeaConstants.getServerUrl(url))
-                   .addHeader(BudgeaConstants.AUTHORIZATION, "Bearer " + token), url);
+    Http.execute(url, Request.Delete(BudgeaConstants.getServerUrl(url))
+                   .addHeader(BudgeaConstants.AUTHORIZATION, "Bearer " + token));
   }
 
   public JSONObject getBanks() throws IOException {
@@ -156,8 +156,8 @@ public class BudgeaAPI {
 
   public void deleteConnection(int budgeaConnectionId) throws IOException {
     String url = "/users/me/connections/" + budgeaConnectionId;
-    Http.execute(Request.Delete(BudgeaConstants.getServerUrl(url))
-                   .addHeader(BudgeaConstants.AUTHORIZATION, "Bearer " + token), url);
+    Http.execute(url, Request.Delete(BudgeaConstants.getServerUrl(url))
+                   .addHeader(BudgeaConstants.AUTHORIZATION, "Bearer " + token));
   }
 
   public Integer getUserId() throws IOException {

@@ -6,6 +6,7 @@ import com.budgetview.desktop.importer.utils.InvalidFileFormat;
 import com.budgetview.desktop.startup.components.AutoCategorizationFunctor;
 import com.budgetview.desktop.startup.components.OpenRequestManager;
 import com.budgetview.desktop.time.TimeService;
+import com.budgetview.desktop.undo.UndoRedoService;
 import com.budgetview.io.importer.ImportSession;
 import com.budgetview.io.importer.utils.TypedInputStream;
 import com.budgetview.model.*;
@@ -33,6 +34,8 @@ import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
+
+import static org.globsframework.model.FieldValue.value;
 
 public class ImportController implements RealAccountImporter {
 
@@ -372,6 +375,10 @@ public class ImportController implements RealAccountImporter {
     importDialog.showCloudBankConnection(bank);
   }
 
+  public void showCloudUnsubscription() {
+    importDialog.showCloudUnsubscription();
+  }
+
   public void showCloudError(Exception e) {
     importDialog.showCloudError(e);
   }
@@ -419,8 +426,23 @@ public class ImportController implements RealAccountImporter {
     }
   }
 
+  public void saveCloudUnsubscription() {
+    localRepository.startChangeSet();
+    localRepository.update(CloudDesktopUser.KEY,
+                           value(CloudDesktopUser.EMAIL, null),
+                           value(CloudDesktopUser.BV_TOKEN, null),
+                           value(CloudDesktopUser.LAST_UPDATE, null),
+                           value(CloudDesktopUser.REGISTERED, false),
+                           value(CloudDesktopUser.SYNCHRO_ENABLED, false));
+    localRepository.deleteAll(CloudProviderConnection.TYPE);
+    localRepository.completeChangeSet();
+    localRepository.commitChanges(false);
+    directory.get(UndoRedoService.class).removeLastUndo();
+  }
+
   public void saveCloudCredentials() {
     localRepository.commitChanges(false);
+    directory.get(UndoRedoService.class).removeLastUndo();
   }
 
   private class InImportOpenStep2Callback implements OpenRequestManager.Callback {

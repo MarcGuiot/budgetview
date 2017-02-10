@@ -1,8 +1,9 @@
 package com.budgetview.server.license.mail;
 
 import com.budgetview.server.config.ConfigService;
-import org.apache.log4j.Logger;
 import com.budgetview.server.utils.Lang;
+import org.apache.log4j.Logger;
+import org.globsframework.utils.Utils;
 
 import javax.mail.*;
 import javax.mail.internet.AddressException;
@@ -22,8 +23,8 @@ public class Mailer {
 
   private static AtomicLong count = new AtomicLong(0);
 
-  private String host = "ns0.ovh.net";
-  private int port = 587;
+  private final String host;
+  private final int port;
 
   private BlockingQueue<MailToSend> pendingMails = new LinkedBlockingQueue<MailToSend>();
   private Map<String, Long> currentIdForMail = new ConcurrentHashMap<String, Long>();
@@ -81,6 +82,11 @@ public class Mailer {
   public boolean sendCloudWebhookNotification(String sendTo, String lang) throws MessagingException {
     return doSend(Mailbox.SUPPORT, Lang.get("cloud.webhook.notification.subject", lang), Lang.get("cloud.webhook.notification.message", lang),
                   Mailbox.SUPPORT.getEmail(), sendTo);
+  }
+
+  public void sendErrorToAdmin(Class sourceClass, String title, String message, Exception e) {
+    String content = message + "\n\nSent from class: " + sourceClass.getName() + "\n\n" + Utils.toString(e);
+    doSend(Mailbox.ADMIN, title, content, Mailbox.ADMIN.getEmail(), Mailbox.ADMIN.getEmail());
   }
 
   public void sendMail(Mailbox mailbox, String sendTo, String replyTo, String subject, String content,

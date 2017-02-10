@@ -80,6 +80,13 @@ public class CloudEditionChecker extends ViewChecker {
     return new ImportDialogPreviewChecker(mainWindow);
   }
 
+  public CloudUnsubscriptionChecker unsubscribe() {
+    Button button = mainWindow.getButton("unsubscribe");
+    assertThat(button.isEnabled());
+    button.click();
+    return new CloudUnsubscriptionChecker(mainWindow);
+  }
+
   public void close() {
     mainWindow.getButton("close").click();
     assertFalse(mainWindow.isVisible());

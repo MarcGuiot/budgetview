@@ -120,14 +120,6 @@ public class DefaultTransactionAnalyzer implements TransactionAnalyzer {
                          type.getGlob().getKey());
   }
 
-  private String replaceBankType(String text, Glob transaction) {
-    String bankType = transaction.get(Transaction.BANK_TRANSACTION_TYPE);
-    if (Strings.isNotEmpty(bankType)) {
-      return text.replace("$bankType", bankType);
-    }
-    return text;
-  }
-
   public void add(TransactionTypeFinalizer finalizer) {
     finalizers.add(finalizer);
   }
