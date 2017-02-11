@@ -70,6 +70,7 @@ public class BankConnectionsServlet extends HttpCloudServlet {
             .selectAll()
             .getList();
         sqlConnection.commitAndClose();
+
         Map<Integer, Glob> connectionsById = new HashMap<Integer, Glob>();
         for (Glob connection : connections) {
           connectionsById.put(connection.get(ProviderConnection.PROVIDER_CONNECTION), connection);
@@ -216,7 +217,13 @@ public class BankConnectionsServlet extends HttpCloudServlet {
           if (providerId == Provider.BUDGEA.getId()) {
             budgeaAPI.deleteConnection(providerConnectionId);
           }
+        }
+        catch (IOException e) {
+          logger.error("Budgea rejected request for deleting connection " + providerConnectionId + " for user " + user.get(CloudUser.ID), e);
+          return HttpServletResponse.SC_INTERNAL_SERVER_ERROR;
+        }
 
+        try {
           SqlConnection sqlConnection = database.connect();
           sqlConnection.startDelete(ProviderConnection.TYPE,
                                     Where.and(fieldEquals(ProviderConnection.USER, user.get(CloudUser.ID)),

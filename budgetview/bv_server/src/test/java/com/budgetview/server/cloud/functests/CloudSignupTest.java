@@ -413,14 +413,15 @@ public class CloudSignupTest extends CloudDesktopTestCase {
     budgea.checkUserDeletions(123);
 
     budgea.pushNewConnectionResponse(1, 123, 40);
-//    budgea.pushStatement(BudgeaStatement.init()
-//                           .addConnection(1, 123, 40, "Connecteur de test", "2016-08-10 17:44:26")
-//                           .addAccount(1, "Main account 1", "100200300", "checking", 1000.00, "2016-08-10 13:00:00")
-//                           .addTransaction(1, "2016-08-10 13:00:00", -100.00, "AUCHAN")
-//                           .addTransaction(2, "2016-08-12 17:00:00", -50.00, "EDF", BudgeaCategory.ELECTRICITE)
-//                           .endAccount()
-//                           .endConnection()
-//                           .get());
+    budgea.pushStatement(BudgeaStatement.init()
+                           .addConnection(1, 123, 40, "Connecteur de test", "2016-08-10 17:44:26")
+                           .addAccount(1, "Main account 1", "100200300", "checking", 1000.00, "2016-08-10 13:00:00")
+                           .addTransaction(1, "2016-08-10 13:00:00", -100.00, "AUCHAN")
+                           .addTransaction(2, "2016-08-12 17:00:00", -50.00, "EDF", BudgeaCategory.ELECTRICITE)
+                           .endAccount()
+                           .endConnection()
+                           .get());
+
 
     operations.openImportDialog()
       .selectCloudForNewUser()

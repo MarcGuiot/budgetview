@@ -126,6 +126,9 @@ public class CloudService {
       public void run() {
         try {
           JSONObject result = cloudAPI.validate(email, code);
+
+          System.out.println("CloudService.validate:" + result.toString(2));
+
           switch (CloudValidationStatus.get(result.getString(CloudConstants.STATUS))) {
             case OK:
               String bvToken = result.getString(CloudConstants.BV_TOKEN);

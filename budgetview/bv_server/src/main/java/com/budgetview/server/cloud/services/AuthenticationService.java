@@ -13,9 +13,7 @@ import org.globsframework.sqlstreams.GlobsDatabase;
 import org.globsframework.sqlstreams.SqlConnection;
 import org.globsframework.sqlstreams.SqlCreateRequest;
 import org.globsframework.sqlstreams.constraints.Where;
-import org.globsframework.sqlstreams.exceptions.DbConstraintViolation;
 import org.globsframework.sqlstreams.exceptions.GlobsSQLException;
-import org.globsframework.sqlstreams.exceptions.RollbackFailed;
 import org.globsframework.utils.directory.Directory;
 import org.globsframework.utils.exceptions.ItemNotFound;
 import org.globsframework.utils.exceptions.TooManyItems;
@@ -54,11 +52,8 @@ public class AuthenticationService {
       try {
         connection.commitAndClose();
       }
-      catch (RollbackFailed rollbackFailed) {
-        logger.error("Commit failed when looking for user: " + email, rollbackFailed);
-      }
-      catch (DbConstraintViolation constraintViolation) {
-        logger.error("Commit failed when looking for user: " + email, constraintViolation);
+      catch (GlobsSQLException e) {
+        logger.error("Commit failed when trying to find user: " + email, e);
       }
     }
     return userId;
@@ -79,11 +74,8 @@ public class AuthenticationService {
       try {
         connection.commitAndClose();
       }
-      catch (RollbackFailed rollbackFailed) {
-        logger.error("Commit failed when looking for user: " + email, rollbackFailed);
-      }
-      catch (DbConstraintViolation constraintViolation) {
-        logger.error("Commit failed when looking for user: " + email, constraintViolation);
+      catch (GlobsSQLException e) {
+        logger.error("Commit failed when looking for user: " + email, e);
       }
     }
   }
@@ -104,11 +96,8 @@ public class AuthenticationService {
       try {
         connection.commitAndClose();
       }
-      catch (RollbackFailed rollbackFailed) {
-        logger.error("Commit failed when registering device for user: " + userId, rollbackFailed);
-      }
-      catch (DbConstraintViolation constraintViolation) {
-        logger.error("Commit failed when registering device for user: " + userId, constraintViolation);
+      catch (GlobsSQLException e) {
+        logger.error("Commit failed when registering device for user: " + userId, e);
       }
     }
 
@@ -144,11 +133,8 @@ public class AuthenticationService {
       try {
         connection.commitAndClose();
       }
-      catch (RollbackFailed rollbackFailed) {
-        logger.error("Commit failed when looking for user: " + email, rollbackFailed);
-      }
-      catch (DbConstraintViolation constraintViolation) {
-        logger.error("Commit failed when looking for user: " + email, constraintViolation);
+      catch (GlobsSQLException e) {
+        logger.error("Commit failed when trying to find user and token for: " + email, e);
       }
     }
   }
@@ -184,11 +170,8 @@ public class AuthenticationService {
       try {
         connection.commitAndClose();
       }
-      catch (RollbackFailed rollbackFailed) {
-        logger.error("Commit failed when looking for user: " + email, rollbackFailed);
-      }
-      catch (DbConstraintViolation constraintViolation) {
-        logger.error("Commit failed when looking for user: " + email, constraintViolation);
+      catch (GlobsSQLException e) {
+        logger.error("Commit failed when looking for user: " + email, e);
       }
     }
   }
@@ -213,11 +196,8 @@ public class AuthenticationService {
       try {
         connection.commitAndClose();
       }
-      catch (RollbackFailed rollbackFailed) {
-        logger.error("Commit failed when looking for user: " + userId, rollbackFailed);
-      }
-      catch (DbConstraintViolation constraintViolation) {
-        logger.error("Commit failed when looking for user: " + userId, constraintViolation);
+      catch (GlobsSQLException e) {
+        logger.error("Commit failed when looking for user: " + userId, e);
       }
     }
   }
@@ -243,32 +223,6 @@ public class AuthenticationService {
     }
     if (now().after(endDate)) {
       throw new SubscriptionCheckFailed(CloudSubscriptionStatus.EXPIRED);
-    }
-  }
-
-  public void invalidateUserEmail(int userId) throws GlobsSQLException {
-    SqlConnection connection = database.connect();
-    try {
-      connection.startUpdate(CloudUser.TYPE, Where.fieldEquals(CloudUser.ID, userId))
-        .set(CloudUser.EMAIL_VERIFIED, false)
-        .run();
-    }
-    catch (ItemNotFound itemNotFound) {
-      logger.error("User not found: " + userId);
-    }
-    catch (TooManyItems tooManyItems) {
-      logger.error("Several entries found for user: " + userId);
-    }
-    finally {
-      try {
-        connection.commitAndClose();
-      }
-      catch (RollbackFailed rollbackFailed) {
-        logger.error("Commit failed when looking for user: " + userId, rollbackFailed);
-      }
-      catch (DbConstraintViolation constraintViolation) {
-        logger.error("Commit failed when looking for user: " + userId, constraintViolation);
-      }
     }
   }
 }

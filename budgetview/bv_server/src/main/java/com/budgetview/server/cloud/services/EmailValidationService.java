@@ -52,7 +52,12 @@ public class EmailValidationService {
         .run();
     }
     finally {
-      connection.commitAndClose();
+      try {
+        connection.commitAndClose();
+      }
+      catch (GlobsSQLException e) {
+        logger.error("Commit failed when sending temp code for user: " + userId + " with email: " + email, e);
+      }
     }
 
     logger.info("[REMOVE ME!!!] Temp code is " + code);
@@ -91,7 +96,12 @@ public class EmailValidationService {
       throw new ValidationFailed(CloudValidationStatus.UNKNOWN_VALIDATION_CODE);
     }
     finally {
-      connection.commitAndClose();
+      try {
+        connection.commitAndClose();
+      }
+      catch (GlobsSQLException e) {
+        logger.error("Commit failed when checking temp code for: " + userId, e);
+      }
     }
   }
 

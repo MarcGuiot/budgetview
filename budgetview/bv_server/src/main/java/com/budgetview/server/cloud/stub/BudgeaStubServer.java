@@ -156,7 +156,7 @@ public class BudgeaStubServer {
 
   public void checkUserDeletion(int userId) {
     if (!Utils.equal(lastDeletedUserId, userId)) {
-      throw new RuntimeException("Last deleted user ID:" + lastDeletedUserId + " but expected: " + userId);
+      throw new RuntimeException("Last deleted user ID: " + lastDeletedUserId + " but expected: " + userId);
     }
   }
 

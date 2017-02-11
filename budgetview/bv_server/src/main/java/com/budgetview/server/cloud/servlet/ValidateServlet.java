@@ -90,6 +90,10 @@ public class ValidateServlet extends HttpCloudServlet {
 
       private boolean containsStatements(Integer userId) {
         SqlConnection connection = database.connect();
+
+        logger.info("Existing statements:" + connection.selectAll(ProviderUpdate.TYPE, Where.fieldEquals(ProviderUpdate.USER, userId)));
+
+
         SqlSelect query = connection.startSelect(ProviderUpdate.TYPE, Where.fieldEquals(ProviderUpdate.USER, userId))
           .getQuery();
         GlobStream stream = query.getStream();

@@ -15,6 +15,7 @@ import com.budgetview.shared.cloud.budgea.BudgeaAPI;
 import org.apache.log4j.Logger;
 import org.globsframework.json.JsonGlobWriter;
 import org.globsframework.model.Glob;
+import org.globsframework.model.format.GlobPrinter;
 import org.globsframework.sqlstreams.GlobsDatabase;
 import org.globsframework.sqlstreams.SqlConnection;
 import org.globsframework.sqlstreams.constraints.Where;
@@ -125,18 +126,19 @@ public class SignupServlet extends HttpCloudServlet {
 
         GlobsDatabase database = directory.get(GlobsDatabase.class);
         SqlConnection connection = database.connect();
+
         try {
           connection
-            .startDelete(ProviderUpdate.TYPE, Where.fieldEquals(ProviderUpdate.USER, providerUserId))
+            .startDelete(ProviderUpdate.TYPE, Where.fieldEquals(ProviderUpdate.USER, userId))
             .execute();
           connection
-            .startDelete(ProviderConnection.TYPE, Where.fieldEquals(ProviderConnection.USER, providerUserId))
+            .startDelete(ProviderConnection.TYPE, Where.fieldEquals(ProviderConnection.USER, userId))
             .execute();
           connection
-            .startDelete(CloudUserDevice.TYPE, Where.fieldEquals(CloudUserDevice.USER, providerUserId))
+            .startDelete(CloudUserDevice.TYPE, Where.fieldEquals(CloudUserDevice.USER, userId))
             .execute();
           connection
-            .startDelete(CloudUser.TYPE, Where.fieldEquals(CloudUser.ID, providerUserId))
+            .startDelete(CloudUser.TYPE, Where.fieldEquals(CloudUser.ID, userId))
             .execute();
         }
         catch (GlobsSQLException e) {

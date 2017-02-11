@@ -11,6 +11,7 @@ import org.globsframework.sqlstreams.GlobsDatabase;
 import org.globsframework.sqlstreams.SqlConnection;
 import org.globsframework.sqlstreams.constraints.Where;
 import org.globsframework.utils.directory.Directory;
+import org.globsframework.utils.exceptions.GlobsException;
 
 import javax.mail.MessagingException;
 import java.util.Set;
@@ -63,14 +64,17 @@ public class WebhookNotificationService {
             .run();
         }
       }
-      sqlConnection.commitAndClose();
 
-      database.connect();
+      sqlConnection.commitAndClose();
 
       if (notificationNeeded) {
         mailer.sendCloudWebhookNotification(user.get(CloudUser.EMAIL), user.get(CloudUser.LANG));
         logger.info("Webhook notification email sent to: " + user.get(CloudUser.EMAIL));
       }
+    }
+    catch (GlobsException e) {
+      logger.error("Database error raised while processing webhook for user " + user.get(CloudUser.ID) + " with email: " + user.get(CloudUser.EMAIL));
+      sqlConnection.rollbackAndClose();
     }
     catch (MessagingException e) {
       logger.error("Could not send notification to user " + user.get(CloudUser.ID) + " with email: " + user.get(CloudUser.EMAIL));
