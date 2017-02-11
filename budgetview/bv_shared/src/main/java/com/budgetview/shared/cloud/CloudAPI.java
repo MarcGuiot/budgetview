@@ -14,7 +14,7 @@ import java.io.IOException;
 public class CloudAPI {
 
   public JSONObject signup(String email, String lang) throws IOException {
-    String url = "/signup";
+    String url = "/user";
     String serverUrl = CloudConstants.getServerUrl(url);
     Log.write("CloudAPI: calling " + serverUrl + " for " + email + " / " + lang);
     Request request = Request.Post(serverUrl)
@@ -24,7 +24,7 @@ public class CloudAPI {
   }
 
   public JSONObject validate(String email, String validationCode) throws IOException {
-    String url = "/validate";
+    String url = "/user/validation";
     Request request = Request.Post(CloudConstants.getServerUrl(url))
       .addHeader(CloudConstants.EMAIL, email)
       .addHeader(CloudConstants.VALIDATION_CODE, validationCode);
@@ -133,7 +133,7 @@ public class CloudAPI {
 
   public void deleteCloudAccount(String email, String bvToken) throws IOException {
     checkEmailAndBVToken(email, bvToken);
-    String url = "/signup";
+    String url = "/user";
     Request request = Request.Delete(cloudUrl(url))
       .addHeader(CloudConstants.EMAIL, email)
       .addHeader(CloudConstants.BV_TOKEN, bvToken);

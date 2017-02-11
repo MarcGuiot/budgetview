@@ -29,15 +29,15 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-public class SignupServlet extends HttpCloudServlet {
+public class UserServlet extends HttpCloudServlet {
 
-  private static Logger logger = Logger.getLogger("/signup");
+  private static Logger logger = Logger.getLogger("/user");
 
   private final AuthenticationService authentication;
   private final EmailValidationService emailValidation;
   private final Mailer mailer;
 
-  public SignupServlet(Directory directory) {
+  public UserServlet(Directory directory) {
     super(directory);
     this.authentication = directory.get(AuthenticationService.class);
     this.emailValidation = directory.get(EmailValidationService.class);

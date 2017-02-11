@@ -22,15 +22,15 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-public class ValidateServlet extends HttpCloudServlet {
+public class UserValidationServlet extends HttpCloudServlet {
 
-  private static Logger logger = Logger.getLogger("/validate");
+  private static Logger logger = Logger.getLogger("/user/validation");
 
   private final EmailValidationService emailValidation;
   private final AuthenticationService authentication;
   private final GlobsDatabase database;
 
-  public ValidateServlet(Directory directory) {
+  public UserValidationServlet(Directory directory) {
     super(directory);
     this.authentication = directory.get(AuthenticationService.class);
     this.emailValidation = directory.get(EmailValidationService.class);

@@ -42,8 +42,8 @@ public class CloudServer {
 
     directory = createDirectory();
     webServer = new WebServer(config);
-    webServer.add(new SignupServlet(directory), "/signup");
-    webServer.add(new ValidateServlet(directory), "/validate");
+    webServer.add(new UserServlet(directory), "/user");
+    webServer.add(new UserValidationServlet(directory), "/user/validation");
     webServer.add(new BudgeaTokenServlet(directory), "/budgea/token");
     webServer.add(new ProviderAccessServlet(directory), "/provider/access");
     webServer.add(new BankConnectionsServlet(directory), "/banks/connections");
