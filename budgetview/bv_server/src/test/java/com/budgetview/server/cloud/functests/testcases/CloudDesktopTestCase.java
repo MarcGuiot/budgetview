@@ -2,6 +2,7 @@ package com.budgetview.server.cloud.functests.testcases;
 
 import com.budgetview.functests.utils.LoggedInFunctionalTestCase;
 import com.budgetview.server.cloud.functests.checkers.*;
+import com.budgetview.server.cloud.utils.WebsiteUrls;
 import com.budgetview.shared.cloud.CloudConstants;
 import com.budgetview.shared.license.LicenseConstants;
 import org.apache.log4j.Logger;
@@ -14,6 +15,9 @@ public abstract class CloudDesktopTestCase extends LoggedInFunctionalTestCase {
   protected CloudLicenseChecker cloudLicense;
   protected CloudChecker cloud;
   protected CloudMailbox mailbox;
+  protected SubscriptionChecker subscriptions;
+  protected PaymentChecker payments;
+  protected WebsiteChecker website;
 
   public void setUp() throws Exception {
     createDefaultSeries = true;
@@ -21,6 +25,7 @@ public abstract class CloudDesktopTestCase extends LoggedInFunctionalTestCase {
     super.setUp();
     System.clearProperty(LicenseConstants.LICENSE_URL_PROPERTY);
     System.setProperty(CloudConstants.CLOUD_URL_PROPERTY, CloudConstants.LOCAL_SERVER_URL);
+    System.setProperty(WebsiteUrls.WEBSITE_URL_PROPERTY, WebsiteUrls.LOCAL_SERVER_URL);
 
     mailbox = new CloudMailbox();
     mailbox.start();
@@ -31,8 +36,15 @@ public abstract class CloudDesktopTestCase extends LoggedInFunctionalTestCase {
     cloudLicense = new CloudLicenseChecker();
     cloudLicense.startServer();
 
+    payments = new PaymentChecker();
+
     cloud = new CloudChecker();
-    cloud.startServer();
+    cloud.startServer(payments);
+
+    website = new WebsiteChecker();
+    website.startServer();
+
+    subscriptions = new SubscriptionChecker();
   }
 
   protected void tearDown() throws Exception {
@@ -49,6 +61,9 @@ public abstract class CloudDesktopTestCase extends LoggedInFunctionalTestCase {
     cloudLicense = null;
     mailbox.stop();
     mailbox = null;
+    subscriptions = null;
+    website.stopServer();
+    website = null;
 
     super.tearDown();
 

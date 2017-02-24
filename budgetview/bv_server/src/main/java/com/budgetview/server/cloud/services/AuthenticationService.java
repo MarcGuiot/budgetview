@@ -2,18 +2,18 @@ package com.budgetview.server.cloud.services;
 
 import com.budgetview.server.cloud.model.CloudUser;
 import com.budgetview.server.cloud.model.CloudUserDevice;
-import com.budgetview.server.cloud.utils.SubscriptionCheckFailed;
 import com.budgetview.server.cloud.utils.RandomStrings;
+import com.budgetview.server.cloud.utils.SubscriptionCheckFailed;
 import com.budgetview.shared.cloud.CloudSubscriptionStatus;
 import com.budgetview.shared.license.LicenseAPI;
 import org.apache.log4j.Logger;
+import org.globsframework.model.FieldValue;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
-import org.globsframework.sqlstreams.GlobsDatabase;
-import org.globsframework.sqlstreams.SqlConnection;
-import org.globsframework.sqlstreams.SqlCreateRequest;
+import org.globsframework.sqlstreams.*;
 import org.globsframework.sqlstreams.constraints.Where;
 import org.globsframework.sqlstreams.exceptions.GlobsSQLException;
+import org.globsframework.utils.Strings;
 import org.globsframework.utils.directory.Directory;
 import org.globsframework.utils.exceptions.ItemNotFound;
 import org.globsframework.utils.exceptions.TooManyItems;
@@ -34,16 +34,14 @@ public class AuthenticationService {
     this.database = directory.get(GlobsDatabase.class);
   }
 
-  public Integer findUser(String email) throws GlobsSQLException {
+  public Glob findUser(String email) throws GlobsSQLException {
     String lowerCaseEmail = email.toLowerCase();
     SqlConnection connection = database.connect();
-    Integer userId = null;
     try {
-      Glob user = connection.selectUnique(CloudUser.TYPE, fieldEquals(CloudUser.EMAIL, lowerCaseEmail));
-      userId = user.get(CloudUser.ID);
+      return connection.selectUnique(CloudUser.TYPE, fieldEquals(CloudUser.EMAIL, lowerCaseEmail));
     }
     catch (ItemNotFound itemNotFound) {
-      userId = null;
+      return null;
     }
     catch (TooManyItems tooManyItems) {
       logger.error("Several entries found for user: " + lowerCaseEmail);
@@ -56,7 +54,7 @@ public class AuthenticationService {
         logger.error("Commit failed when trying to find user: " + email, e);
       }
     }
-    return userId;
+    return null;
   }
 
   public Integer createUser(String email, String lang) throws GlobsSQLException {
@@ -66,6 +64,7 @@ public class AuthenticationService {
       SqlCreateRequest request = connection.startCreate(CloudUser.TYPE)
         .set(CloudUser.EMAIL, lowerCaseEmail)
         .set(CloudUser.LANG, lang)
+        .set(CloudUser.CREATION_DATE, new Date())
         .getRequest();
       request.execute();
       return request.getLastGeneratedIds().get(CloudUser.ID);
@@ -79,6 +78,47 @@ public class AuthenticationService {
       }
     }
   }
+
+  public Glob findOrCreateUser(String email, String lang, FieldValue... values) {
+    String lowerCaseEmail = email.toLowerCase();
+    SqlConnection connection = database.connect();
+    try {
+      GlobList users = connection.selectAll(CloudUser.TYPE, fieldEquals(CloudUser.EMAIL, lowerCaseEmail));
+      if (users.isEmpty()) {
+        SqlCreateBuilder builder = connection.startCreate(CloudUser.TYPE)
+          .set(CloudUser.EMAIL, lowerCaseEmail)
+          .set(CloudUser.LANG, lang)
+          .set(CloudUser.CREATION_DATE, new Date());
+        for (FieldValue value : values) {
+          builder.setValue(value.getField(), value.getValue());
+        }
+        SqlCreateRequest request = builder.getRequest();
+        request.execute();
+        Integer userId = request.getLastGeneratedIds().get(CloudUser.ID);
+        return connection.selectUnique(CloudUser.TYPE, Where.fieldEquals(CloudUser.ID, userId));
+      }
+      else if (users.size() > 1) {
+        if (values.length > 0) {
+          SqlUpdateBuilder builder =
+            connection.startUpdate(CloudUser.TYPE, fieldEquals(CloudUser.EMAIL, lowerCaseEmail));
+          for (FieldValue value : values) {
+            builder.setValue(value.getField(), value.getValue());
+          }
+          builder.getRequest().execute();
+        }
+      }
+    }
+    finally {
+      try {
+        connection.commitAndClose();
+      }
+      catch (GlobsSQLException e) {
+        logger.error("Commit failed when trying to find user: " + email, e);
+      }
+    }
+    return null;
+  }
+
 
   public String registerUserDevice(int userId) {
     String newToken = randomStrings.next(16);
@@ -155,7 +195,12 @@ public class AuthenticationService {
         return null;
       }
 
-      doCheckSubscription(user, userId, email, connection);
+      connection.startUpdate(CloudUserDevice.TYPE, Where.globEquals(usersWithToken.getFirst()))
+        .set(CloudUserDevice.LAST_UPDATE, new Date())
+        .getRequest()
+        .execute();
+
+      checkSubscriptionEndDate(user, userId, email, connection);
 
       return user;
     }
@@ -176,6 +221,13 @@ public class AuthenticationService {
     }
   }
 
+  public boolean isSubscriptionValid(Glob user) {
+    Date subscriptionEndDate = user.get(CloudUser.SUBSCRIPTION_END_DATE);
+    return Strings.isNotEmpty(user.get(CloudUser.STRIPE_ID)) &&
+           subscriptionEndDate != null &&
+           now().after(subscriptionEndDate);
+  }
+
   public void checkSubscriptionIsValid(Integer userId) throws SubscriptionCheckFailed {
     SqlConnection connection = database.connect();
     try {
@@ -183,7 +235,7 @@ public class AuthenticationService {
       if (user == null) {
         throw new SubscriptionCheckFailed(CloudSubscriptionStatus.UNKNOWN_USER);
       }
-      doCheckSubscription(user, userId, user.get(CloudUser.EMAIL), connection);
+      checkSubscriptionEndDate(user, userId, user.get(CloudUser.EMAIL), connection);
     }
     catch (ItemNotFound e) {
       throw new SubscriptionCheckFailed(CloudSubscriptionStatus.UNKNOWN_USER);
@@ -202,7 +254,7 @@ public class AuthenticationService {
     }
   }
 
-  private void doCheckSubscription(Glob user, Integer userId, String email, SqlConnection connection) throws SubscriptionCheckFailed {
+  private void checkSubscriptionEndDate(Glob user, Integer userId, String email, SqlConnection connection) throws SubscriptionCheckFailed {
     Date endDate = user.get(CloudUser.SUBSCRIPTION_END_DATE);
     if (endDate == null || now().after(endDate)) {
       try {
@@ -212,7 +264,7 @@ public class AuthenticationService {
         logger.error("Failed to retrieve subscription end date", e);
       }
       if (endDate != null) {
-        connection.startUpdate(CloudUser.TYPE, Where.fieldEquals(CloudUser.ID, userId))
+        connection.startUpdate(CloudUser.TYPE, Where.globEquals(user))
           .set(CloudUser.SUBSCRIPTION_END_DATE, endDate)
           .run();
       }

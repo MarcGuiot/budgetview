@@ -74,8 +74,13 @@ public class Mailer {
                   Mailbox.SUPPORT.getEmail(), sendTo);
   }
 
-  public boolean sendCloudEmailAddressVerification(String sendTo, String lang, String url) throws MessagingException {
-    return doSend(Mailbox.SUPPORT, Lang.get("cloud.verification.subject", lang), Lang.get("cloud.verification.message", lang, url),
+  public boolean sendCloudDeviceVerificationEmail(String sendTo, String lang, String code) throws MessagingException {
+    return doSend(Mailbox.SUPPORT, Lang.get("cloud.device.verification.subject", lang), Lang.get("cloud.device.verification.message", lang, code),
+                  Mailbox.SUPPORT.getEmail(), sendTo);
+  }
+
+  public boolean sendSubscriptionEmailValidationLink(String sendTo, String lang, String url) {
+    return doSend(Mailbox.SUPPORT, Lang.get("cloud.subscription.verification.subject", lang), Lang.get("cloud.subscription.verification.message", lang, url),
                   Mailbox.SUPPORT.getEmail(), sendTo);
   }
 

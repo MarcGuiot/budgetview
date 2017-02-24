@@ -23,7 +23,7 @@ public class DialogChecker extends GuiChecker {
     checkTitle(dialog, titleKey);
   }
 
-  public static void checkTitle(Panel dialog, String titleKey) {
+  public static void checkTitle(final Panel dialog, final String titleKey) {
     assertThat(new Assertion() {
       public void check() {
         TextBox titleLabel = dialog.getTextBox(ComponentMatchers.innerNameIdentity("title"));
@@ -34,7 +34,7 @@ public class DialogChecker extends GuiChecker {
     });
   }
 
-  protected void checkPanelShown(String componentName) {
+  protected void checkPanelShown(final String componentName) {
     assertThat(new Assertion() {
       public void check() {
         if (!dialog.getPanel(componentName).isVisible().isTrue()) {

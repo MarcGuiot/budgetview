@@ -21,7 +21,7 @@ public abstract class ViewChecker extends GuiChecker {
     return mainWindow;
   }
 
-  protected void checkPanelShown(String componentName) {
+  protected void checkPanelShown(final String componentName) {
     assertThat(new Assertion() {
       public void check() {
         if (!mainWindow.getPanel(componentName).isVisible().isTrue()) {

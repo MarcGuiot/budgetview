@@ -45,7 +45,7 @@ public class ServerMailingService {
     }
 
     public void run() {
-      String url = LicenseConstants.getServerUrl(LicenseConstants.REQUEST_SEND_MAIL);
+      final String url = LicenseConstants.getServerUrl(LicenseConstants.REQUEST_SEND_MAIL);
       Http.Post post = createPost(url);
       HttpResponse response;
       try {

@@ -10,6 +10,7 @@ import org.apache.http.client.fluent.Form;
 import org.apache.http.client.fluent.Request;
 import org.apache.log4j.Logger;
 import org.globsframework.json.JsonGlobWriter;
+import org.globsframework.model.Glob;
 import org.globsframework.sqlstreams.SqlConnection;
 import org.globsframework.sqlstreams.constraints.Where;
 import org.globsframework.sqlstreams.exceptions.GlobsSQLException;
@@ -73,7 +74,7 @@ public class ProviderAccessServlet extends HttpCloudServlet {
         }
 
         try {
-          saveProviderAccess(user.get(CloudUser.ID), providerId, budgeaUserId, newBudgeaToken);
+          saveProviderAccess(user, providerId, budgeaUserId, newBudgeaToken);
           return HttpServletResponse.SC_OK;
         }
         catch (GlobsSQLException e) {
@@ -93,9 +94,9 @@ public class ProviderAccessServlet extends HttpCloudServlet {
         return json(request, url).getString("access_token");
       }
 
-      private void saveProviderAccess(Integer userId, int providerId, int providerUserId, String providerAccessToken) throws GlobsSQLException {
+      private void saveProviderAccess(Glob user, int providerId, int providerUserId, String providerAccessToken) throws GlobsSQLException {
         SqlConnection connection = database.connect();
-        connection.startUpdate(CloudUser.TYPE, Where.fieldEquals(CloudUser.ID, userId))
+        connection.startUpdate(CloudUser.TYPE, Where.globEquals(user))
           .set(CloudUser.PROVIDER, providerId)
           .set(CloudUser.PROVIDER_USER_ID, providerUserId)
           .set(CloudUser.PROVIDER_ACCESS_TOKEN, providerAccessToken)

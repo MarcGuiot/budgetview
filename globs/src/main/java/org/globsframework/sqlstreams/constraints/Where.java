@@ -3,6 +3,8 @@ package org.globsframework.sqlstreams.constraints;
 import org.globsframework.metamodel.Field;
 import org.globsframework.metamodel.fields.*;
 import org.globsframework.model.FieldValues;
+import org.globsframework.model.Glob;
+import org.globsframework.model.Key;
 import org.globsframework.sqlstreams.constraints.impl.*;
 import org.globsframework.streams.accessors.*;
 import org.globsframework.utils.exceptions.UnexpectedApplicationState;
@@ -13,8 +15,35 @@ public class Where {
   private Where() {
   }
 
+  public static Constraint globEquals(Glob glob) {
+    Field[] list = glob.getType().getKeyFields();
+    if (list.length == 1) {
+      return Where.fieldEqualsValue(list[0], glob.getValue(list[0]));
+    }
+    Constraint constraint = null;
+    for (final Field field : list) {
+      constraint = Where.and(constraint, fieldEqualsValue(field, glob.getValue(list[0])));
+    }
+    return constraint;
+  }
+
+  public static Constraint globEquals(Key key) {
+    Field[] list = key.getGlobType().getKeyFields();
+    if (list.length == 1) {
+      return Where.fieldEqualsValue(list[0], key.getValue(list[0]));
+    }
+    Constraint constraint = null;
+    for (final Field field : list) {
+      constraint = Where.and(constraint, fieldEqualsValue(field, key.getValue(list[0])));
+    }
+    return constraint;
+  }
+
   public static Constraint keyEquals(final KeyConstraint keyAccessor) {
     Field[] list = keyAccessor.getGlobType().getKeyFields();
+    if (list.length == 1) {
+      return Where.fieldEqualsValue(list[0], new KeyElementAccessor(keyAccessor, list[0]));
+    }
     Constraint constraint = null;
     for (final Field field : list) {
       constraint = Where.and(constraint,
@@ -38,9 +67,7 @@ public class Where {
     return new EqualConstraint(new FieldOperand(field1), new FieldOperand(field2));
   }
 
-  /**
-   * We use different name to help the IDE giving us the good completion
-   */
+  // We use different name to help the IDE giving us the good completion
   public static Constraint fieldEqualsValue(Field field, Object value) {
     return new EqualConstraint(new FieldOperand(field), new ValueOperand(field, value));
   }

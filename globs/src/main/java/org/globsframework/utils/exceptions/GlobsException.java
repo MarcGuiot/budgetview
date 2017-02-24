@@ -1,6 +1,10 @@
 package org.globsframework.utils.exceptions;
 
 public class GlobsException extends RuntimeException {
+
+  public GlobsException() {
+  }
+
   public GlobsException(Exception e) {
     super(e);
   }

@@ -74,10 +74,10 @@ public class ImportCloudBankConnectionPanel extends AbstractImportStepPanel {
       public void registerComponents(PanelBuilder cellBuilder, Glob connectionValue) {
         CloudConnectionFieldEditor fieldEditor = CloudConnectionFieldEditorFactory.create(connectionValue, repository, localDirectory);
         JLabel label = cellBuilder.add("label", fieldEditor.getLabel()).getComponent();
-        JComponent editor = cellBuilder.add("editor", fieldEditor.getEditor()).getComponent();
+        final JComponent editor = cellBuilder.add("editor", fieldEditor.getEditor()).getComponent();
 
         Glob field = repository.findLinkTarget(connectionValue, BudgeaConnectionValue.FIELD);
-        String fieldLabel = field.get(BudgeaBankField.LABEL);
+        final String fieldLabel = field.get(BudgeaBankField.LABEL);
 
         label.setName("label:" + fieldLabel);
         editor.setName("editor:" + fieldLabel);

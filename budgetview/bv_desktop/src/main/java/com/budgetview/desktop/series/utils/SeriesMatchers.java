@@ -21,7 +21,7 @@ import static org.globsframework.model.utils.GlobMatchers.*;
 
 public class SeriesMatchers {
 
-  public static GlobMatcher activeInMonth(int monthId) {
+  public static GlobMatcher activeInMonth(final int monthId) {
     return new GlobMatcher() {
       public boolean matches(Glob series, GlobRepository repository) {
         if (series == null) {

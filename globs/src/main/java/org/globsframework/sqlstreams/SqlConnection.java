@@ -20,13 +20,13 @@ public interface SqlConnection {
 
   GlobList selectAll(GlobType globType);
 
-  Glob selectUnique(GlobType globType) throws ItemNotFound, TooManyItems;
+  Glob selectUnique(GlobType globType) throws ItemNotFound, TooManyItems,  GlobsSQLException;;
 
   SqlSelectBuilder startSelect(GlobType globType, Constraint where);
 
-  GlobList selectAll(GlobType globType, Constraint where);
+  GlobList selectAll(GlobType globType, Constraint where) throws GlobsSQLException;
 
-  Glob selectUnique(GlobType globType, Constraint where) throws ItemNotFound, TooManyItems;
+  Glob selectUnique(GlobType globType, Constraint where) throws ItemNotFound, TooManyItems, GlobsSQLException;
 
   SqlCreateBuilder startCreate(GlobType globType);
 

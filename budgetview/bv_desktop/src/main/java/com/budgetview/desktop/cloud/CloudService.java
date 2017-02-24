@@ -25,7 +25,6 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-import static com.budgetview.shared.cloud.CloudValidationStatus.TEMP_VALIDATION_CODE_EXPIRED;
 import static org.globsframework.model.FieldValue.value;
 import static org.globsframework.model.utils.GlobMatchers.fieldEquals;
 import static org.globsframework.model.utils.GlobMatchers.fieldIn;
@@ -91,7 +90,7 @@ public class CloudService {
     void processError(Exception e);
   }
 
-  public void signup(String email, GlobRepository repository, Callback callback) {
+  public void signup(final String email, final GlobRepository repository, final Callback callback) {
     Thread thread = new Thread(new Runnable() {
       public void run() {
         try {
@@ -121,7 +120,7 @@ public class CloudService {
     thread.start();
   }
 
-  public void validate(String email, String code, GlobRepository repository, ValidationCallback callback) {
+  public void validate(final String email, final String code, final GlobRepository repository, final ValidationCallback callback) {
     Thread thread = new Thread(new Runnable() {
       public void run() {
         try {
@@ -356,7 +355,7 @@ public class CloudService {
     callback.processCompletion(connection);
   }
 
-  public void checkBankConnectionReady(Glob providerConnection, GlobRepository repository, BankConnectionCheckCallback callback) {
+  public void checkBankConnectionReady(final Glob providerConnection, final GlobRepository repository, final BankConnectionCheckCallback callback) {
     Thread thread = new Thread(new Runnable() {
       public void run() {
         try {
@@ -435,7 +434,7 @@ public class CloudService {
     thread.start();
   }
 
-  public void deleteBankConnection(Glob connection, final GlobRepository repository, final Callback callback) {
+  public void deleteBankConnection(final Glob connection, final GlobRepository repository, final Callback callback) {
     Thread thread = new Thread(new Runnable() {
       public void run() {
         try {
@@ -459,7 +458,7 @@ public class CloudService {
     thread.start();
   }
 
-  public void downloadStatement(GlobRepository repository, DownloadCallback callback) {
+  public void downloadStatement(final GlobRepository repository, final DownloadCallback callback) {
     Thread thread = new Thread(new Runnable() {
       public void run() {
 
@@ -473,14 +472,14 @@ public class CloudService {
             }
           });
         }
-        catch (SubscriptionError e) {
+        catch (final SubscriptionError e) {
           GuiUtils.runInSwingThread(new Runnable() {
             public void run() {
               callback.processSubscriptionError(e.status);
             }
           });
         }
-        catch (Exception e) {
+        catch (final Exception e) {
           Log.write("Error downloading statement", e);
           GuiUtils.runInSwingThread(new Runnable() {
             public void run() {
@@ -578,7 +577,7 @@ public class CloudService {
     return Strings.isNullOrEmpty(type) ? AccountType.MAIN : AccountType.get(type);
   }
 
-  public void deleteCloudAccount(GlobRepository repository, UnsubscriptionCallback callback) {
+  public void deleteCloudAccount(GlobRepository repository, final UnsubscriptionCallback callback) {
     Glob user = repository.findOrCreate(CloudDesktopUser.KEY);
     try {
       cloudAPI.deleteCloudAccount(user.get(CloudDesktopUser.EMAIL),
@@ -589,7 +588,7 @@ public class CloudService {
         }
       });
     }
-    catch (Exception e) {
+    catch (final Exception e) {
       Log.write("Error deleting BV cloud account", e);
       GuiUtils.runInSwingThread(new Runnable() {
         public void run() {

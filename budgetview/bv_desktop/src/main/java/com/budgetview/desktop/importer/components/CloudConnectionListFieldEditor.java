@@ -3,19 +3,17 @@ package com.budgetview.desktop.importer.components;
 import com.budgetview.budgea.model.BudgeaBankFieldValue;
 import com.budgetview.budgea.model.BudgeaConnectionValue;
 import org.globsframework.model.Glob;
-import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.util.Arrays;
 
 public class CloudConnectionListFieldEditor extends CloudConnectionFieldEditor {
   private JComboBox comboBox;
 
-  public CloudConnectionListFieldEditor(Glob budgeaField, Glob budgeaConnectionValue, GlobRepository repository, Directory directory) {
+  public CloudConnectionListFieldEditor(Glob budgeaField, final Glob budgeaConnectionValue, final GlobRepository repository, Directory directory) {
     super(budgeaField, budgeaConnectionValue, repository, directory);
 
     Glob[] model = createModel(budgeaField, repository);
@@ -33,7 +31,7 @@ public class CloudConnectionListFieldEditor extends CloudConnectionFieldEditor {
     });
     comboBox.setAction(new AbstractAction() {
       public void actionPerformed(ActionEvent e) {
-        Glob connectionValue = (Glob)comboBox.getSelectedItem();
+        Glob connectionValue = (Glob) comboBox.getSelectedItem();
         String value = connectionValue != null ? connectionValue.get(BudgeaBankFieldValue.VALUE) : null;
         repository.update(budgeaConnectionValue, BudgeaConnectionValue.VALUE, value);
       }

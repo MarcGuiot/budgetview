@@ -134,28 +134,7 @@ public class NewUserServlet extends HttpServlet {
         String content = new String(buffer, 0, readed);
         if (content.equalsIgnoreCase("VERIFIED")) {
           logger.info("Email : '" + mail + "' VERIFIED");
-          SqlConnection connection = db.connect();
-          try {
-            register(resp, mail, transactionId, connection, lang);
-          }
-          catch (Exception e) {
-            logger.error("NewUser : RegisterServlet:doPost", e);
-            SqlConnection retryConnection = db.connect();
-            try {
-              register(resp, mail, transactionId, retryConnection, lang);
-            }
-            catch (Exception e1) {
-              resp.setStatus(HttpServletResponse.SC_OK);
-              if (retryConnection != null) {
-                retryConnection.commitAndClose();
-              }
-            }
-          }
-          finally {
-            if (connection != null) {
-              connection.commitAndClose();
-            }
-          }
+          registerNewUser(resp, mail, transactionId, lang);
         }
         else {
           logger.error("NewUser : Paypal refused confirmation " + content);
@@ -173,6 +152,31 @@ public class NewUserServlet extends HttpServlet {
     finally {
       if (postMethod != null) {
         postMethod.releaseConnection();
+      }
+    }
+  }
+
+  private void registerNewUser(HttpServletResponse resp, String mail, String transactionId, String lang) {
+    SqlConnection connection = db.connect();
+    try {
+      register(resp, mail, transactionId, connection, lang);
+    }
+    catch (Exception e) {
+      logger.error("NewUser : RegisterServlet:doPost", e);
+      SqlConnection retryConnection = db.connect();
+      try {
+        register(resp, mail, transactionId, retryConnection, lang);
+      }
+      catch (Exception e1) {
+        resp.setStatus(HttpServletResponse.SC_OK);
+        if (retryConnection != null) {
+          retryConnection.commitAndClose();
+        }
+      }
+    }
+    finally {
+      if (connection != null) {
+        connection.commitAndClose();
       }
     }
   }

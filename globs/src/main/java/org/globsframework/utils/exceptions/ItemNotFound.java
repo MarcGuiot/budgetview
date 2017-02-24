@@ -1,6 +1,10 @@
 package org.globsframework.utils.exceptions;
 
 public class ItemNotFound extends GlobsException {
+
+  public ItemNotFound() {
+  }
+
   public ItemNotFound(Exception e) {
     super(e);
   }

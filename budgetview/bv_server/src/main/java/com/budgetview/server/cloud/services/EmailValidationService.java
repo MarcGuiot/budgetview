@@ -1,26 +1,30 @@
 package com.budgetview.server.cloud.services;
 
+import com.budgetview.server.cloud.model.CloudEmailValidation;
 import com.budgetview.server.cloud.model.CloudUser;
-import com.budgetview.server.cloud.utils.ValidationFailed;
 import com.budgetview.server.cloud.utils.RandomStrings;
-import com.budgetview.server.config.ConfigService;
+import com.budgetview.server.cloud.utils.ValidationFailed;
 import com.budgetview.server.license.mail.Mailer;
+import com.budgetview.shared.cloud.CloudConstants;
 import com.budgetview.shared.cloud.CloudValidationStatus;
 import org.apache.log4j.Logger;
 import org.globsframework.model.Glob;
+import org.globsframework.model.GlobList;
 import org.globsframework.sqlstreams.GlobsDatabase;
 import org.globsframework.sqlstreams.SqlConnection;
 import org.globsframework.sqlstreams.constraints.Where;
 import org.globsframework.sqlstreams.exceptions.GlobsSQLException;
-import org.globsframework.utils.Dates;
 import org.globsframework.utils.Strings;
-import org.globsframework.utils.Utils;
 import org.globsframework.utils.directory.Directory;
 import org.globsframework.utils.exceptions.ItemNotFound;
+import org.globsframework.utils.exceptions.TimeExpired;
 import org.globsframework.utils.exceptions.TooManyItems;
 
 import javax.mail.MessagingException;
 import java.util.Date;
+
+import static org.globsframework.utils.Dates.hoursLater;
+import static org.globsframework.utils.Dates.now;
 
 public class EmailValidationService {
 
@@ -29,26 +33,40 @@ public class EmailValidationService {
   public static final int TEMP_CODE_DURATION_IN_MINUTES = 30;
 
   private GlobsDatabase database;
-  private final ConfigService config;
   private final Mailer mailer;
   private final RandomStrings sessionIds = new RandomStrings();
   public static Date forcedTokenExpirationDate;
 
   public EmailValidationService(Directory directory) {
-    this.config = directory.get(ConfigService.class);
     this.database = directory.get(GlobsDatabase.class);
     this.mailer = directory.get(Mailer.class);
   }
 
-  public void sendTempCode(Integer userId, String email, String lang) throws GlobsSQLException, MessagingException {
+  public boolean sendDeviceValidationTempCode(Integer userId, String email, String lang) throws GlobsSQLException, MessagingException {
+    return mailer.sendCloudDeviceVerificationEmail(email, lang, createCode(userId, email, 8));
+  }
 
-    String code = sessionIds.next(8);
+  public boolean sendSubscriptionEmailValidationLink(Integer userId, String email, String lang) throws GlobsSQLException, MessagingException {
+    String code = createCode(userId, email, 24);
+    String url = CloudConstants.getSubscriptionValidationUrl(code);
+    return mailer.sendSubscriptionEmailValidationLink(email, lang, url);
+  }
 
+  public String createCode(Integer userId, String email, int length) {
+    String validationCode = sessionIds.next(length);
     SqlConnection connection = database.connect();
     try {
-      connection.startUpdate(CloudUser.TYPE, Where.fieldEquals(CloudUser.ID, userId))
-        .set(CloudUser.LAST_VALIDATION_CODE, code)
-        .set(CloudUser.LAST_VALIDATION_DATE, getTokenExpirationDate())
+      connection
+        .startDelete(CloudEmailValidation.TYPE, Where.fieldEquals(CloudEmailValidation.CODE, validationCode))
+        .execute();
+
+      connection
+        .startCreate(CloudEmailValidation.TYPE)
+        .set(CloudEmailValidation.CODE, validationCode)
+        .set(CloudEmailValidation.EMAIL, email)
+        .set(CloudEmailValidation.USER, userId)
+        .set(CloudEmailValidation.CREATION_DATE, now())
+        .set(CloudEmailValidation.EXPIRATION_DATE, getTokenExpirationDate())
         .run();
     }
     finally {
@@ -60,9 +78,8 @@ public class EmailValidationService {
       }
     }
 
-    logger.info("[REMOVE ME!!!] Temp code is " + code);
-
-    mailer.sendCloudEmailAddressVerification(email, lang, code);
+    logger.info("[REMOVE ME!!!] Temp code is " + validationCode);
+    return validationCode;
   }
 
   public void checkTempCode(Integer userId, String validationCode) throws ValidationFailed {
@@ -72,19 +89,15 @@ public class EmailValidationService {
 
     SqlConnection connection = database.connect();
     try {
-      Glob user = connection.selectUnique(CloudUser.TYPE, Where.fieldEquals(CloudUser.ID, userId));
-      Date referenceCodeDate = user.get(CloudUser.LAST_VALIDATION_DATE);
-      String referenceCode = user.get(CloudUser.LAST_VALIDATION_CODE);
-      if ((referenceCode == null) || (referenceCodeDate == null)) {
+      GlobList entries = connection.selectAll(CloudEmailValidation.TYPE, Where.fieldEquals(CloudEmailValidation.CODE, validationCode));
+      if (entries.isEmpty()) {
         throw new ValidationFailed(CloudValidationStatus.UNKNOWN_VALIDATION_CODE);
       }
-      if (Dates.minutesBetween(referenceCodeDate, new Date()) > TEMP_CODE_DURATION_IN_MINUTES) {
+      Glob entry = entries.getFirst();
+      Date referenceCodeDate = entry.get(CloudEmailValidation.EXPIRATION_DATE);
+      if (referenceCodeDate == null || now().after(referenceCodeDate)) {
         logger.info("Temp token expired since " + referenceCodeDate);
         throw new ValidationFailed(CloudValidationStatus.TEMP_VALIDATION_CODE_EXPIRED);
-      }
-      if (!Utils.equal(referenceCode, validationCode.trim())) {
-        logger.info("Invalid code " + validationCode.trim() + " - expected " + referenceCode);
-        throw new ValidationFailed(CloudValidationStatus.UNKNOWN_VALIDATION_CODE);
       }
     }
     catch (ItemNotFound itemNotFound) {
@@ -116,8 +129,38 @@ public class EmailValidationService {
       forcedTokenExpirationDate = null;
     }
     else {
-      result = new Date();
+      result = hoursLater(1);
     }
+    logger.info("Created expiration date: " + result);
     return result;
+  }
+
+  public Glob getUser(String code) throws ItemNotFound, TimeExpired {
+    SqlConnection connection = database.connect();
+    try {
+      GlobList items =
+        connection.selectAll(CloudEmailValidation.TYPE, Where.fieldEquals(CloudEmailValidation.CODE, code));
+      if (items.isEmpty()) {
+        throw new ItemNotFound();
+      }
+      else {
+        Glob item = items.getFirst();
+        Date expirationDate = item.get(CloudEmailValidation.EXPIRATION_DATE);
+        if (now().after(expirationDate)) {
+          throw new TimeExpired();
+        }
+
+        Integer userId = item.get(CloudEmailValidation.USER);
+        return connection.selectUnique(CloudUser.TYPE, Where.fieldEquals(CloudUser.ID, userId));
+      }
+    }
+    finally {
+      try {
+        connection.commitAndClose();
+      }
+      catch (GlobsSQLException e) {
+        logger.error("Commit failed when finding user id for code: " + code, e);
+      }
+    }
   }
 }

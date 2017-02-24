@@ -11,6 +11,7 @@ public class CloudDatabaseModel {
   private static GlobModel MODEL =
     GlobModelBuilder.init(CloudUser.TYPE,
                           CloudUserDevice.TYPE,
+                          CloudEmailValidation.TYPE,
                           ProviderUpdate.TYPE,
                           ProviderConnection.TYPE)
       .get();

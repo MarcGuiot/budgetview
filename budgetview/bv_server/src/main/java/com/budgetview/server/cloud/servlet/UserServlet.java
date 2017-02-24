@@ -2,10 +2,7 @@ package com.budgetview.server.cloud.servlet;
 
 import com.budgetview.server.cloud.commands.Command;
 import com.budgetview.server.cloud.commands.HttpCommand;
-import com.budgetview.server.cloud.model.CloudUser;
-import com.budgetview.server.cloud.model.CloudUserDevice;
-import com.budgetview.server.cloud.model.ProviderConnection;
-import com.budgetview.server.cloud.model.ProviderUpdate;
+import com.budgetview.server.cloud.model.*;
 import com.budgetview.server.cloud.services.AuthenticationService;
 import com.budgetview.server.cloud.services.EmailValidationService;
 import com.budgetview.server.cloud.utils.SubscriptionCheckFailed;
@@ -15,7 +12,6 @@ import com.budgetview.shared.cloud.budgea.BudgeaAPI;
 import org.apache.log4j.Logger;
 import org.globsframework.json.JsonGlobWriter;
 import org.globsframework.model.Glob;
-import org.globsframework.model.format.GlobPrinter;
 import org.globsframework.sqlstreams.GlobsDatabase;
 import org.globsframework.sqlstreams.SqlConnection;
 import org.globsframework.sqlstreams.constraints.Where;
@@ -82,8 +78,9 @@ public class UserServlet extends HttpCloudServlet {
       }
 
       private void processSignup(String email, String lang) throws GlobsSQLException, MessagingException, SubscriptionCheckFailed {
-        Integer userId = authentication.findUser(email);
-        if (userId == null) {
+        Glob user = authentication.findUser(email);
+        Integer userId = null;
+        if (user == null) {
           logger.info("User not found for '" + email + "' - creating it");
           userId = authentication.createUser(email, lang);
         }
@@ -91,7 +88,7 @@ public class UserServlet extends HttpCloudServlet {
           logger.info("User " + userId + " found for '" + email + "'");
         }
 
-        emailValidation.sendTempCode(userId, email, lang);
+        emailValidation.sendDeviceValidationTempCode(userId, email, lang);
       }
     };
     command.run();
@@ -136,6 +133,9 @@ public class UserServlet extends HttpCloudServlet {
             .execute();
           connection
             .startDelete(CloudUserDevice.TYPE, Where.fieldEquals(CloudUserDevice.USER, userId))
+            .execute();
+          connection
+            .startDelete(CloudEmailValidation.TYPE, Where.fieldEquals(CloudEmailValidation.USER, userId))
             .execute();
           connection
             .startDelete(CloudUser.TYPE, Where.fieldEquals(CloudUser.ID, userId))

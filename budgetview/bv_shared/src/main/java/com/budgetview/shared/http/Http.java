@@ -51,6 +51,24 @@ public class Http {
     }
   }
 
+  public static String executeAndGetRedirect(String url, Request request) throws IOException {
+    try {
+      Response response = request.execute();
+      HttpResponse httpResponse = response.returnResponse();
+      int statusCode = httpResponse.getStatusLine().getStatusCode();
+      if (statusCode == 200 || statusCode == 302) {
+        Header location = httpResponse.getFirstHeader("Location");
+        return location != null ? location.getValue() : null;
+      }
+      else {
+        throw new IOException("No redirect for " + url + " - status code is " + statusCode);
+      }
+    }
+    catch (NoHttpResponseException e) {
+      throw new IOException("No response for url " + url, e);
+    }
+  }
+
   public static JSONObject executeAndGetJson(String url, Request request) throws IOException {
     HttpResponse response = execute(url, request);
     return new JSONObject(Files.loadStreamToString(response.getEntity().getContent(), "UTF-8"));

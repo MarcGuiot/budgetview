@@ -48,8 +48,7 @@ public class WebhookNotificationService {
           for (Glob item : items) {
             if (!item.isTrue(ProviderConnection.INITIALIZED)) {
               notificationNeeded = true;
-              sqlConnection.startUpdate(ProviderConnection.TYPE,
-                                        Where.fieldEquals(ProviderConnection.ID, item.get(ProviderConnection.ID)))
+              sqlConnection.startUpdate(ProviderConnection.TYPE, Where.globEquals(item))
                 .set(ProviderConnection.INITIALIZED, true)
                 .run();
             }

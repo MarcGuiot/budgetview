@@ -8,8 +8,13 @@
 
   <repositories>
     <repository>
-      <id>javanet</id>
-      <url>http://download.java.net/maven/2/</url>
+      <id>central</id>
+      <name>Central Repository</name>
+      <url>http://repo.maven.apache.org/maven2</url>
+      <layout>default</layout>
+      <snapshots>
+        <enabled>false</enabled>
+      </snapshots>
     </repository>
   </repositories>
 
@@ -20,8 +25,8 @@
         <artifactId>maven-compiler-plugin</artifactId>
         <version>2.3.2</version>
         <configuration>
-          <source>1.5</source>
-          <target>1.5</target>
+          <source>1.6</source>
+          <target>1.6</target>
           <encoding>UTF-8</encoding>
         </configuration>
       </plugin>
@@ -72,6 +77,7 @@
                   <include>javax.mail.internet:*</include>
                   <include>java.util.concurrent:*</include>
                   <include>org.json:json</include>
+                  <include>com.stripe</include>
                 </includes>
                 <excludes>
                   <exclude>junit:junit</exclude>
@@ -158,6 +164,11 @@
       <groupId>org.hsqldb</groupId>
       <artifactId>hsqldb</artifactId>
       <version>2.3.4</version>
+    </dependency>
+    <dependency>
+      <groupId>com.stripe</groupId>
+      <artifactId>stripe-java</artifactId>
+      <version>3.9.0</version>
     </dependency>
 
     <!-- For tests only-->

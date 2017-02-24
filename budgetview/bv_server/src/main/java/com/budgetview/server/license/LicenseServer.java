@@ -9,12 +9,9 @@ import com.budgetview.server.license.model.RepoInfo;
 import com.budgetview.server.license.model.SoftwareInfo;
 import com.budgetview.server.license.servlet.*;
 import com.budgetview.server.license.utils.LicenseDb;
-import com.budgetview.server.mobile.MobileServer;
-import com.budgetview.server.mobile.servlet.*;
 import com.budgetview.server.utils.Log4J;
 import com.budgetview.server.web.WebServer;
 import com.budgetview.shared.license.LicenseConstants;
-import com.budgetview.shared.mobile.MobileConstants;
 import org.apache.log4j.Logger;
 import org.globsframework.sqlstreams.GlobsDatabase;
 import org.globsframework.utils.directory.DefaultDirectory;
@@ -65,15 +62,8 @@ public class LicenseServer {
     webServer.add(new SendMailServlet(directory), LicenseConstants.REQUEST_SEND_MAIL);
     webServer.add(new SendUseInfoServlet(), LicenseConstants.SEND_USE_INFO);
 
+    webServer.add(new StaticWebPageServlet(directory), "/boutique");
     webServer.add(new CloudSubscriptionEndDateServlet(directory), LicenseConstants.CLOUD_SUBSCRIPTION_END_DATE);
-
-//    String pathForMobileData = MobileServer.getDataDirectoryPath(directory);
-//    webServer.add(new PostDataServlet(pathForMobileData), MobileConstants.POST_MOBILE_DATA);
-//    webServer.add(new GetMobileDataServlet(pathForMobileData, directory), MobileConstants.GET_MOBILE_DATA);
-//    webServer.add(new SendMailCreateMobileUserServlet(pathForMobileData, directory, webServer.getHttpPort()), MobileConstants.SEND_MAIL_TO_CONFIRM_MOBILE);
-//    webServer.add(new DeleteMobileUserServlet(pathForMobileData, directory), MobileConstants.DELETE_MOBILE_ACCOUNT);
-//    webServer.add(new CreateMobileUserServlet(pathForMobileData, directory), MobileConstants.CREATE_MOBILE_USER);
-//    webServer.add(new SendMailFromMobileServlet(directory), MobileConstants.SEND_MAIL_REMINDER_FROM_MOBILE);
   }
 
   public void addServlet(HttpServlet servlet, String name) {

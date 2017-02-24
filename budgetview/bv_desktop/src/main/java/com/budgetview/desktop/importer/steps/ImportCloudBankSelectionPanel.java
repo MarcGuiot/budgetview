@@ -83,7 +83,7 @@ public class ImportCloudBankSelectionPanel extends AbstractImportStepPanel imple
   }
 
   private void processSelection() {
-    Glob bank = selectionService.getSelection(Bank.TYPE).getFirst();
+    final Glob bank = selectionService.getSelection(Bank.TYPE).getFirst();
     if (bank == null) {
       return;
     }

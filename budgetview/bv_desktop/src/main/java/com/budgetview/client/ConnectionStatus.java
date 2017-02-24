@@ -22,7 +22,7 @@ public class ConnectionStatus {
     }
   }
 
-  private static void updateConnectedStatus(final boolean isConnected, GlobRepository repository) {
+  private static void updateConnectedStatus(final boolean isConnected, final GlobRepository repository) {
     if (repository.find(User.KEY) != null && !repository.get(User.KEY).get(User.CONNECTED)) {
       SwingUtilities.invokeLater(new Runnable() {
         public void run() {

@@ -2,6 +2,8 @@ package com.budgetview.server.cloud;
 
 import com.budgetview.server.cloud.services.AuthenticationService;
 import com.budgetview.server.cloud.services.EmailValidationService;
+import com.budgetview.server.cloud.services.PaymentService;
+import com.budgetview.server.cloud.services.StripeService;
 import com.budgetview.server.cloud.servlet.*;
 import com.budgetview.server.config.ConfigService;
 import com.budgetview.server.license.mail.Mailer;
@@ -49,19 +51,23 @@ public class CloudServer {
     webServer.add(new BankConnectionsServlet(directory), "/banks/connections");
     webServer.add(new BudgeaWebHookServlet(directory), "/budgea");
     webServer.add(new StatementServlet(directory), "/statement/*");
+    webServer.add(new StripeFormServlet(directory), "/stripe-form");
+    webServer.add(new SubscriptionEmailValidationServlet(directory), "/subscription/validation");
+    webServer.add(new StripeWebhookServlet(directory), "/stripe");
 
     if (config.isTrue("budgetview.ping.available")) {
       webServer.add(new PingServlet(directory), "/ping");
     }
   }
 
-  private Directory createDirectory() throws Exception {
+  protected Directory createDirectory() throws Exception {
     Directory directory = new DefaultDirectory();
     directory.add(config);
     directory.add(GlobsDatabase.class, CloudDb.create(config));
     directory.add(new Mailer(config));
     directory.add(new AuthenticationService(directory));
     directory.add(new EmailValidationService(directory));
+    directory.add(PaymentService.class, new StripeService());
     return directory;
   }
 

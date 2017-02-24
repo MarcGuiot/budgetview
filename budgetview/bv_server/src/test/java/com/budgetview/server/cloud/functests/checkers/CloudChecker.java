@@ -8,16 +8,23 @@ import com.budgetview.shared.cloud.CloudConstants;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.sqlstreams.GlobsDatabase;
 import org.globsframework.sqlstreams.SqlConnection;
+import org.globsframework.utils.directory.DefaultDirectory;
+import org.globsframework.utils.directory.Directory;
 
 import java.util.Date;
 
 public class CloudChecker {
 
-
   private CloudServer cloudServer;
 
-  public void startServer() throws Exception {
-    cloudServer = new CloudServer("budgetview/bv_server/dev/config/bv_cloud_test.properties");
+  public void startServer(final PaymentChecker payments) throws Exception {
+    cloudServer = new CloudServer("budgetview/bv_server/dev/config/bv_cloud_test.properties") {
+      protected Directory createDirectory() throws Exception {
+        Directory directory = new DefaultDirectory(super.createDirectory());
+        payments.install(directory);
+        return directory;
+      }
+    };
     cloudServer.init();
     cloudServer.start();
   }

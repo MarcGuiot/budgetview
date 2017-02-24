@@ -92,7 +92,7 @@ public class RegisterServlet extends HttpServlet {
             logger.info("Invalidating previous " + license.get(License.ID) + " ropId : " + license.get(License.REPO_ID));
           }
           byte[] signature = LicenseGenerator.generateSignature(mail);
-          db.startUpdate(License.TYPE, Where.fieldEquals(License.ID, license.get(License.ID)))
+          db.startUpdate(License.TYPE, Where.globEquals(license))
             .set(License.ACCESS_COUNT, 1L)
             .set(License.SIGNATURE, signature)
             .set(License.ACTIVATION_CODE, (String) null)
@@ -116,7 +116,7 @@ public class RegisterServlet extends HttpServlet {
             if (glob != license) {
               // on ne doit avoir qu'un seul enregistrement valide par repo.
               if (Utils.equal(glob.get(License.REPO_ID), repoId)) {
-                db.startUpdate(License.TYPE, Where.fieldEquals(License.ID, glob.get(License.ID)))
+                db.startUpdate(License.TYPE, Where.globEquals(glob))
                   .set(License.REPO_ID, ((String) null))
                   .run();
                 db.commit();

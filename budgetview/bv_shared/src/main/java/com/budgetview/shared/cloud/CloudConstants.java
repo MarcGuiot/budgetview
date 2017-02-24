@@ -34,4 +34,8 @@ public class CloudConstants {
     Utils.endRemove();
     return url;
   }
+
+  public static String getSubscriptionValidationUrl(String code) {
+    return getServerUrl("/subscription/validation?code=" + code);
+  }
 }

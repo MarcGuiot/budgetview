@@ -535,7 +535,14 @@ public class MainWindow implements WindowManager {
           }
         });
       }
-      catch (BadPassword | UserNotRegistered e) {
+      catch (BadPassword e) {
+        SwingUtilities.invokeLater(new Runnable() {
+          public void run() {
+            feedbackLoadingData.displayErrorMessage("login.invalid.credentials");
+          }
+        });
+      }
+      catch (UserNotRegistered e) {
         SwingUtilities.invokeLater(new Runnable() {
           public void run() {
             feedbackLoadingData.displayErrorMessage("login.invalid.credentials");

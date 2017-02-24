@@ -21,7 +21,7 @@ public class MacOSXHooks implements InvocationHandler {
   private Action preferencesAction;
   private Action exitAction;
   private Directory directory;
-  private final List<OpenFilesHandler> openFilesHandlers = new ArrayList<>();
+  private final List<OpenFilesHandler> openFilesHandlers = new ArrayList<OpenFilesHandler>();
 
   public static void install(Action aboutAction, Action preferencesAction, Action exitAction, Directory directory) {
     if (!GuiUtils.isMacOSX()) {
@@ -50,7 +50,7 @@ public class MacOSXHooks implements InvocationHandler {
       application.getDeclaredMethod("setPreferencesHandler", preferencesHandler).invoke(appli, listener);
       enableOSXFullscreen(directory.get(JFrame.class));
     }
-    catch (ReflectiveOperationException | SecurityException | IllegalArgumentException ex) {
+    catch (Exception ex) {
       System.out.println("Failed to register with OSX: " + ex);
     }
   }
@@ -70,36 +70,35 @@ public class MacOSXHooks implements InvocationHandler {
   }
 
   public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
-    switch (method.getName()) {
-      case "openFiles":
-        if (args[0] != null) {
-          try {
-            Object oFiles = args[0].getClass().getMethod("getFiles").invoke(args[0]);
-            if (oFiles instanceof List) {
-              List<File> files = (List<File>) oFiles;
-              synchronized (openFilesHandlers) {
-                for (OpenFilesHandler handler : openFilesHandlers) {
-                  handler.run(files);
-                }
+    if ("openFiles".equals(method.getName())) {
+      if (args[0] != null) {
+        try {
+          Object oFiles = args[0].getClass().getMethod("getFiles").invoke(args[0]);
+          if (oFiles instanceof List) {
+            List<File> files = (List<File>) oFiles;
+            synchronized (openFilesHandlers) {
+              for (OpenFilesHandler handler : openFilesHandlers) {
+                handler.run(files);
               }
             }
           }
-          catch (ReflectiveOperationException | SecurityException | IllegalArgumentException ex) {
-            System.out.println("MacOSXHooks.invoke: Failed to access open files event: " + ex);
-          }
         }
-        break;
-      case "handleQuitRequestWith":
-        exitAction.actionPerformed(null);
-        break;
-      case "handleAbout":
-        aboutAction.actionPerformed(null);
-        break;
-      case "handlePreferences":
-        preferencesAction.actionPerformed(null);
-        break;
-      default:
-        System.out.println("OSX unsupported method: " + method.getName());
+        catch (Exception ex) {
+          System.out.println("MacOSXHooks.invoke: Failed to access open files event: " + ex);
+        }
+      }
+    }
+    else if ("handleQuitRequestWith".equals(method.getName())) {
+      exitAction.actionPerformed(null);
+    }
+    else if ("handleAbout".equals(method.getName())) {
+      aboutAction.actionPerformed(null);
+    }
+    else if ("handlePreferences".equals(method.getName())) {
+      preferencesAction.actionPerformed(null);
+    }
+    else {
+      System.out.println("OSX unsupported method: " + method.getName());
     }
     return null;
   }

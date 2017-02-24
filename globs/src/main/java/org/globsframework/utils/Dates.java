@@ -38,6 +38,12 @@ public class Dates {
     return cal.getTime();
   }
 
+  public static Date hoursLater(int count) {
+    Calendar cal = Calendar.getInstance();
+    cal.add(Calendar.HOUR, count);
+    return cal.getTime();
+  }
+
   public static Date parse(String yyyyMMdd) {
     synchronized (dateFormat) {
       try {

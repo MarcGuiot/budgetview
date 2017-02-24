@@ -2,6 +2,7 @@ package com.budgetview.server.cloud.servlet;
 
 import com.budgetview.server.cloud.commands.Command;
 import com.budgetview.server.cloud.commands.HttpCommand;
+import com.budgetview.server.cloud.model.CloudUser;
 import com.budgetview.server.cloud.model.ProviderUpdate;
 import com.budgetview.server.cloud.services.AuthenticationService;
 import com.budgetview.server.cloud.services.EmailValidationService;
@@ -10,6 +11,7 @@ import com.budgetview.server.cloud.utils.SubscriptionCheckFailed;
 import com.budgetview.shared.cloud.CloudConstants;
 import org.apache.log4j.Logger;
 import org.globsframework.json.JsonGlobWriter;
+import org.globsframework.model.Glob;
 import org.globsframework.sqlstreams.GlobsDatabase;
 import org.globsframework.sqlstreams.SqlConnection;
 import org.globsframework.sqlstreams.SqlSelect;
@@ -50,11 +52,12 @@ public class UserValidationServlet extends HttpCloudServlet {
 
         try {
 
-          Integer userId = authentication.findUser(email);
-          if (userId == null) {
+          Glob user = authentication.findUser(email);
+          if (user == null) {
             return HttpServletResponse.SC_UNAUTHORIZED;
           }
 
+          Integer userId = user.get(CloudUser.ID);
           writer.object();
           try {
             emailValidation.checkTempCode(userId, code);
@@ -92,7 +95,6 @@ public class UserValidationServlet extends HttpCloudServlet {
         SqlConnection connection = database.connect();
 
         logger.info("Existing statements:" + connection.selectAll(ProviderUpdate.TYPE, Where.fieldEquals(ProviderUpdate.USER, userId)));
-
 
         SqlSelect query = connection.startSelect(ProviderUpdate.TYPE, Where.fieldEquals(ProviderUpdate.USER, userId))
           .getQuery();
