@@ -13,7 +13,7 @@ public class CloudBankLoginTest extends CloudDesktopTestCase {
 
   @Test
   public void testTwoStepBankLogin() throws Exception {
-    cloudLicense.purchaseLicence("toto@example.com", Dates.tomorrow());
+    cloud.createSubscription("toto@example.com", Dates.tomorrow());
 
     budgea.pushNewConnectionResponse(1, 123, 40);
     budgea.setBankLoginFields(BudgeaBankFieldSample.BUDGEA_FIELDS_STEP_1, BudgeaBankFieldSample.BUDGEA_FIELDS_STEP_2);
@@ -62,7 +62,7 @@ public class CloudBankLoginTest extends CloudDesktopTestCase {
   @Test
   public void testLoginWithDateField() throws Exception {
 
-    cloudLicense.purchaseLicence("toto@example.com", Dates.tomorrow());
+    cloud.createSubscription("toto@example.com", Dates.tomorrow());
 
     budgea.pushNewConnectionResponse(1, 123, 40);
     budgea.pushStatement(BudgeaStatement.init()
@@ -103,7 +103,7 @@ public class CloudBankLoginTest extends CloudDesktopTestCase {
 
   @Test
   public void testLoginErrors() throws Exception {
-    cloudLicense.purchaseLicence("toto@example.com", Dates.tomorrow());
+    cloud.createSubscription("toto@example.com", Dates.tomorrow());
 
     budgea.pushNewConnectionResponse(1, 123, 40);
     budgea.pushStatement(BudgeaStatement.init()
@@ -156,7 +156,7 @@ public class CloudBankLoginTest extends CloudDesktopTestCase {
   @Test
   public void testExistingConnectionsNotShownInBankSelectionList() throws Exception {
 
-    cloudLicense.purchaseLicence("toto@example.com", Dates.tomorrow());
+    cloud.createSubscription("toto@example.com", Dates.tomorrow());
 
     budgea.pushNewConnectionResponse(1, 123, 40);
     budgea.pushStatement(BudgeaStatement.init()

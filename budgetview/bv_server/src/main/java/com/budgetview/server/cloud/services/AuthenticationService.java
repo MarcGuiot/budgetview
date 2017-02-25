@@ -5,7 +5,6 @@ import com.budgetview.server.cloud.model.CloudUserDevice;
 import com.budgetview.server.cloud.utils.RandomStrings;
 import com.budgetview.server.cloud.utils.SubscriptionCheckFailed;
 import com.budgetview.shared.cloud.CloudSubscriptionStatus;
-import com.budgetview.shared.license.LicenseAPI;
 import org.apache.log4j.Logger;
 import org.globsframework.model.FieldValue;
 import org.globsframework.model.Glob;
@@ -256,20 +255,6 @@ public class AuthenticationService {
 
   private void checkSubscriptionEndDate(Glob user, Integer userId, String email, SqlConnection connection) throws SubscriptionCheckFailed {
     Date endDate = user.get(CloudUser.SUBSCRIPTION_END_DATE);
-    if (endDate == null || now().after(endDate)) {
-      try {
-        endDate = LicenseAPI.getCloudSubscriptionEndDate(email);
-      }
-      catch (Exception e) {
-        logger.error("Failed to retrieve subscription end date", e);
-      }
-      if (endDate != null) {
-        connection.startUpdate(CloudUser.TYPE, Where.globEquals(user))
-          .set(CloudUser.SUBSCRIPTION_END_DATE, endDate)
-          .run();
-      }
-    }
-
     if (endDate == null) {
       throw new SubscriptionCheckFailed(CloudSubscriptionStatus.NEVER_PURCHASED);
     }

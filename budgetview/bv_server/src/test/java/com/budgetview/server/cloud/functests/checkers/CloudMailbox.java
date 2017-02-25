@@ -43,35 +43,36 @@ public class CloudMailbox {
       public void check() {
         try {
           Email email = getEmail(mailTo);
-          email.checkSubjectContains("ready");
+          email.checkSubjectContainsAny("statements are ready", "Vos relev");
         }
-        catch (InterruptedException e) {
+        catch (Exception e) {
           Assert.fail(e.getMessage());
         }
       }
     };
   }
 
-  public void clickSubscriptionValidationLink(String mailTo, String expectedRedirect) throws Exception {
+  public void clickSubscriptionValidationLink(String mailTo) throws Exception {
     String content = getEmail(mailTo).getContent();
     Matcher matcher = SUBSCRIPTION_VALIDATION_LINK_PATTERN.matcher(content);
     if (!matcher.matches()) {
       Assert.fail("Email does not contain any link: " + content);
     }
     String url = matcher.group(1);
-    String redirect = Http.executeAndGetRedirect(url, Request.Get(url));
-    Assert.assertEquals(expectedRedirect, redirect);
+    Http.execute(url, Request.Get(url));
   }
 
-  private Email getEmail(String mailTo) throws InterruptedException {
+  private Email getEmail(String mailTo) throws Exception {
     if (mailServer == null) {
       throw new InvalidState("start() not called");
     }
 
+    // Warning: calling this several times within an UISpecAssert will cause the first
+    // message to be dumped and having a misleading "No mail received error"
     return mailServer.checkReceivedMail(mailTo);
   }
 
-  public void checkEmpty() throws InterruptedException {
+  public void checkEmpty() throws Exception {
     if (mailServer == null) {
       throw new InvalidState("start() not called");
     }

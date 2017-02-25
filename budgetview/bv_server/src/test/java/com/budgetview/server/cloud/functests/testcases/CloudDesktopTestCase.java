@@ -12,7 +12,6 @@ public abstract class CloudDesktopTestCase extends LoggedInFunctionalTestCase {
   private static Logger logger = Logger.getLogger("CloudDesktopTestCase");
 
   protected BudgeaChecker budgea;
-  protected CloudLicenseChecker cloudLicense;
   protected CloudChecker cloud;
   protected CloudMailbox mailbox;
   protected SubscriptionChecker subscriptions;
@@ -32,9 +31,6 @@ public abstract class CloudDesktopTestCase extends LoggedInFunctionalTestCase {
 
     budgea = new BudgeaChecker();
     budgea.startServer();
-
-    cloudLicense = new CloudLicenseChecker();
-    cloudLicense.startServer();
 
     payments = new PaymentChecker();
 
@@ -56,9 +52,7 @@ public abstract class CloudDesktopTestCase extends LoggedInFunctionalTestCase {
     budgea.stopServer();
     budgea = null;
     cloud.stopServer();
-    budgea = null;
-    cloudLicense.stopServer();
-    cloudLicense = null;
+    cloud = null;
     mailbox.stop();
     mailbox = null;
     subscriptions = null;

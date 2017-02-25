@@ -16,5 +16,9 @@ public class WebsiteChecker {
   public void stopServer() throws Exception {
     server.stop();
   }
+
+  public void checkLastVisitedPage(String path) {
+    server.checkLastVisitedPage(path);
+  }
 }
 

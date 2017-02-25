@@ -8,6 +8,7 @@ import com.budgetview.server.cloud.model.ProviderUpdate;
 import com.budgetview.shared.cloud.CloudConstants;
 import com.budgetview.shared.model.Provider;
 import org.apache.log4j.Logger;
+import org.globsframework.json.JsonGlobFormat;
 import org.globsframework.json.JsonGlobWriter;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
@@ -84,6 +85,7 @@ public class BankConnectionsServlet extends HttpCloudServlet {
 
         writer.object();
         writer.key(CloudConstants.STATUS).value("ok");
+        writer.key(CloudConstants.SUBSCRIPTION_END_DATE).value(JsonGlobFormat.toString(user.get(CloudUser.SUBSCRIPTION_END_DATE)));
         writer.key("connections");
         writer.array();
         for (Object c : budgeaConnections.getJSONArray("connections")) {

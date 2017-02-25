@@ -9,6 +9,7 @@ public class CloudConstants {
   public static final String BV_TOKEN = "token";
   public static final String STATUS = "status";
   public static final String SUBSCRIPTION_STATUS = "subscription_status";
+  public static final String SUBSCRIPTION_END_DATE = "subscription_end_date";
 
   public static final String PROVIDER_ID = "provider_id";
   public static final String PROVIDER_USER_ID = "provider_user_id";
@@ -26,6 +27,9 @@ public class CloudConstants {
   public static final String LOCAL_SERVER_URL = "http://127.0.0.1:8080";
   public static final String APPNAME = "budgetview";
   public static final String CLOUD_URL_PROPERTY = APPNAME + ".cloud.url";
+
+  public static final String CLOUD_EMAIL = "email";
+  public static final String CLOUD_END_DATE = "end_date";
 
   public static String getServerUrl(String path) {
     String url = PROD_CLOUD_SERVER_URL + path;

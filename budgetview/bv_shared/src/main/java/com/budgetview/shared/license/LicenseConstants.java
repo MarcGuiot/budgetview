@@ -49,8 +49,6 @@ public class LicenseConstants {
   public static final String SUPPORT_EMAIL = "support";
   public static final String ADMIN_EMAIL = "admin";
   public static final String CLOUD_SUBSCRIPTION_END_DATE = "/cloudSubscriptionEndDate";
-  public static final String CLOUD_EMAIL = "email";
-  public static final String CLOUD_END_DATE = "end_date";
 
   public static int RETRY_PERIOD = 10000;
 

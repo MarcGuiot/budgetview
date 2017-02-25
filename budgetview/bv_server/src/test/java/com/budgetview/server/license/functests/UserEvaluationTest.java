@@ -43,7 +43,7 @@ public class UserEvaluationTest extends ConnectedTestCase {
       .checkSubjectContains("User evaluation: ")
       .checkSubjectContains(Application.APPLICATION_VERSION)
       .checkSubjectContains(Lang.getLang())
-      .checkContains("Blah", "toto@example.com");
+      .checkContainsAll("Blah", "toto@example.com");
 
     application.startWithoutSLA();
     application.getOperations().checkExitWithoutDialog();
@@ -65,7 +65,7 @@ public class UserEvaluationTest extends ConnectedTestCase {
 
     mailServer.checkReceivedMail("admin@mybudgetview.fr")
       .checkSubjectContains("User evaluation: ")
-      .checkContains("Blah");
+      .checkContainsAll("Blah");
 
     application.startWithoutSLA();
     application.getOperations().checkExitWithoutDialog();
@@ -108,7 +108,7 @@ public class UserEvaluationTest extends ConnectedTestCase {
       .checkSubjectContains("User evaluation: ")
       .checkSubjectContains(Application.APPLICATION_VERSION)
       .checkSubjectContains(Lang.getLang())
-      .checkContains("Blah", "toto@example.com");
+      .checkContainsAll("Blah", "toto@example.com");
 
     application.startWithoutSLA();
     application.getOperations().checkExitWithoutDialog();

@@ -16,7 +16,7 @@ public class CloudFirstDownloadChecker extends ViewChecker {
   }
 
   public ImportDialogPreviewChecker waitForNotificationAndDownload(Assertion assertion) {
-    assertThat(assertion);
+    assertion.check(); // no repeat to get the right message
     download();
     return new ImportDialogPreviewChecker(mainWindow);
   }

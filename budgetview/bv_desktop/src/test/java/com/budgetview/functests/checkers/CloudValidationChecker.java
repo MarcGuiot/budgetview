@@ -21,6 +21,11 @@ public class CloudValidationChecker extends ViewChecker {
     return new CloudBankSelectionChecker(mainWindow);
   }
 
+  public CloudSubscriptionErrorChecker processEmailAndNextToSubscriptionError(String code) {
+    enterCode(code);
+    return new CloudSubscriptionErrorChecker(mainWindow);
+  }
+
   public ImportDialogPreviewChecker processEmailAndNextToDownload(String code) {
     enterCode(code);
     return new ImportDialogPreviewChecker(mainWindow);

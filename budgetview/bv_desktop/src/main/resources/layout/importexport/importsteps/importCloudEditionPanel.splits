@@ -46,6 +46,9 @@
           <button action="download"/>
           <filler fill="horizontal"/>
         </row>
+
+        <label ref="subscriptionEndDate"/>
+
         <row margin="20">
           <filler fill="horizontal"/>
           <button action="unsubscribe"/>

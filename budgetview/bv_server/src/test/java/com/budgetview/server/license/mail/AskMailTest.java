@@ -40,14 +40,14 @@ public class AskMailTest extends ConnectedTestCase {
     checkMail("fr", "Suite a votre demande, veuillez trouver", "monPremierClient@pirate.du");
   }
 
-  private void checkMail(String lang, final String expected, String... nextExpected) throws IOException, InterruptedException {
+  private void checkMail(String lang, final String expected, String... nextExpected) throws Exception {
     addUser("monPremierClient@pirate.du");
     HttpResponse response = sendRequest(lang);
     Header header = response.getFirstHeader(LicenseConstants.HEADER_STATUS);
     assertEquals(LicenseConstants.HEADER_MAIL_SENT, header.getValue());
     Email email = mailServer.checkReceivedMail("monPremierClient@pirate.du");
     for (String content : Utils.join(expected, nextExpected)) {
-      email.checkContains(content);
+      email.checkContainsAll(content);
     }
   }
 

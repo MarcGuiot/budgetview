@@ -1,6 +1,7 @@
 package com.budgetview.server.cloud.functests.checkers;
 
 import com.budgetview.server.config.ConfigService;
+import com.budgetview.server.utils.Servlets;
 import com.budgetview.server.web.WebServer;
 import org.apache.log4j.Logger;
 
@@ -50,7 +51,7 @@ public class WebsiteStubServer {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
       logger.info("GET");
       response.setStatus(HttpServletResponse.SC_OK);
-      WebsiteStubServer.this.lastVisitedPage = request.getContextPath();
+      WebsiteStubServer.this.lastVisitedPage = Servlets.getURL(request);
     }
   }
 }

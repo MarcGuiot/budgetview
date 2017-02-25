@@ -3,6 +3,7 @@ package com.budgetview.desktop.importer.steps;
 import com.budgetview.desktop.cloud.CloudService;
 import com.budgetview.desktop.components.ProgressPanel;
 import com.budgetview.desktop.components.dialogs.PicsouDialog;
+import com.budgetview.desktop.description.Formatting;
 import com.budgetview.desktop.importer.ImportController;
 import com.budgetview.model.CloudDesktopUser;
 import com.budgetview.model.CloudProviderConnection;
@@ -21,6 +22,7 @@ import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
+import java.util.Date;
 
 public class ImportCloudEditionPanel extends AbstractImportStepPanel {
 
@@ -28,6 +30,7 @@ public class ImportCloudEditionPanel extends AbstractImportStepPanel {
   private final CloudService cloudService;
   private ProgressPanel progressPanel;
   private JLabel progressLabel;
+  private JLabel subscriptionEndDate;
   private GlobRepeat repeat;
   private AbstractAction addConnectionAction;
   private AbstractAction downloadAction;
@@ -85,6 +88,9 @@ public class ImportCloudEditionPanel extends AbstractImportStepPanel {
     builder.add("progressLabel", progressLabel);
     progressLabel.setVisible(false);
 
+    subscriptionEndDate = new JLabel();
+    builder.add("subscriptionEndDate", subscriptionEndDate);
+
     progressPanel = new ProgressPanel();
     builder.add("progressPanel", progressPanel);
 
@@ -105,10 +111,13 @@ public class ImportCloudEditionPanel extends AbstractImportStepPanel {
   public void start() {
     repeat.setFilter(GlobMatchers.NONE);
     setAllEnabled(false);
+    subscriptionEndDate.setText("");
     progressLabel.setVisible(true);
     progressPanel.start();
     cloudService.updateBankConnections(repository, new CloudService.Callback() {
       public void processCompletion() {
+        Date date = repository.get(CloudDesktopUser.KEY).get(CloudDesktopUser.SUBSCRIPTION_END_DATE);
+        subscriptionEndDate.setText(Lang.get("import.cloud.edition.subscriptionEndDate", Formatting.toString(date)));
         repeat.setFilter(GlobMatchers.ALL);
         dialog.revalidate();
         setAllEnabled(true);

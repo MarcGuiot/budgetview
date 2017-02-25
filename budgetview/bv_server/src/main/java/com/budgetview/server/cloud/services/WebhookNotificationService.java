@@ -67,8 +67,8 @@ public class WebhookNotificationService {
       sqlConnection.commitAndClose();
 
       if (notificationNeeded) {
-        mailer.sendCloudWebhookNotification(user.get(CloudUser.EMAIL), user.get(CloudUser.LANG));
-        logger.info("Webhook notification email sent to: " + user.get(CloudUser.EMAIL));
+        boolean sent = mailer.sendCloudWebhookNotification(user.get(CloudUser.EMAIL), user.get(CloudUser.LANG));
+        logger.info("Webhook notification email " + (sent ? "sent" : "planned for sending") + " to: " + user.get(CloudUser.EMAIL));
       }
     }
     catch (GlobsException e) {

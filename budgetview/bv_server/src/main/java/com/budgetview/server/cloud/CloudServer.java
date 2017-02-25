@@ -17,6 +17,8 @@ import org.globsframework.sqlstreams.GlobsDatabase;
 import org.globsframework.utils.directory.DefaultDirectory;
 import org.globsframework.utils.directory.Directory;
 
+import javax.servlet.http.HttpServlet;
+
 public class CloudServer {
 
   private static Logger logger = Logger.getLogger("CloudServer");
@@ -58,6 +60,10 @@ public class CloudServer {
     if (config.isTrue("budgetview.ping.available")) {
       webServer.add(new PingServlet(directory), "/ping");
     }
+  }
+
+  public void addServlet(HttpServlet servlet, String name) {
+    webServer.add(servlet, name);
   }
 
   protected Directory createDirectory() throws Exception {

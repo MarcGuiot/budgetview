@@ -8,12 +8,15 @@ import com.budgetview.shared.cloud.budgea.BudgeaCategory;
 import org.globsframework.utils.Dates;
 import org.junit.Test;
 
+import java.util.Date;
+
 public class CloudSignupTest extends CloudDesktopTestCase {
 
   @Test
   public void testNewUserSequence() throws Exception {
 
-    cloudLicense.purchaseLicence("toto@example.com", Dates.tomorrow());
+    Date subscriptionEndDate =
+      cloud.createSubscription("toto@example.com", Dates.tomorrow());
 
     budgea.pushNewConnectionResponse(1, 123, 40);
     budgea.pushStatement(BudgeaStatement.init()
@@ -48,6 +51,14 @@ public class CloudSignupTest extends CloudDesktopTestCase {
       .add("12/08/2016", TransactionType.PRELEVEMENT, "EDF", "", -50.00, "Electricity")
       .add("10/08/2016", TransactionType.PRELEVEMENT, "AUCHAN", "", -100.00)
       .check();
+
+    budgea.pushConnectionList(BudgeaConnections.init()
+                                .add(1, 123, 40, true, "2016-08-10 17:44:26")
+                                .get());
+    operations.openImportDialog()
+      .editCloudConnections()
+      .checkSubscriptionEndDate(subscriptionEndDate)
+      .close();
   }
 
   @Test
@@ -63,7 +74,7 @@ public class CloudSignupTest extends CloudDesktopTestCase {
   @Test
   public void testTokenExpired() throws Exception {
 
-    cloudLicense.purchaseLicence("toto@example.com", Dates.tomorrow());
+    cloud.createSubscription("toto@example.com", Dates.tomorrow());
 
     budgea.pushNewConnectionResponse(1, 123, 40);
     budgea.pushStatement(BudgeaStatement.init()
@@ -103,7 +114,7 @@ public class CloudSignupTest extends CloudDesktopTestCase {
   @Test
   public void testErrorWhenTokenExpired() throws Exception {
 
-    cloudLicense.purchaseLicence("toto@example.com", Dates.tomorrow());
+    cloud.createSubscription("toto@example.com", Dates.tomorrow());
     cloud.forceTokenExpirationDate(Dates.hoursAgo(1));
 
     budgea.pushNewConnectionResponse(1, 123, 40);
@@ -147,7 +158,7 @@ public class CloudSignupTest extends CloudDesktopTestCase {
   @Test
   public void testSignupFromCleanInstanceWithExistingStatements() throws Exception {
 
-    cloudLicense.purchaseLicence("toto@example.com", Dates.tomorrow());
+    cloud.createSubscription("toto@example.com", Dates.tomorrow());
 
     budgea.pushNewConnectionResponse(1, 123, 40);
     budgea.pushStatement(BudgeaStatement.init()
@@ -218,7 +229,7 @@ public class CloudSignupTest extends CloudDesktopTestCase {
 
   @Test
   public void testSignupFromRestoredBackupWithExistingStatements() throws Exception {
-    cloudLicense.purchaseLicence("toto@example.com", Dates.tomorrow());
+    cloud.createSubscription("toto@example.com", Dates.tomorrow());
 
     budgea.pushNewConnectionResponse(1, 123, 40);
     budgea.pushStatement(BudgeaStatement.init()
@@ -284,82 +295,9 @@ public class CloudSignupTest extends CloudDesktopTestCase {
   }
 
   @Test
-  public void testRefreshWhenCloudAccountWasDeletedRevertsBackToSignup() throws Exception {
-    cloudLicense.purchaseLicence("toto@example.com", Dates.tomorrow());
-
-    budgea.pushNewConnectionResponse(1, 123, 40);
-    budgea.pushStatement(BudgeaStatement.init()
-                           .addConnection(1, 123, 40, "Connecteur de test", "2016-08-10 17:44:26")
-                           .addAccount(1, "Main account 1", "100200300", "checking", 1000.00, "2016-08-10 13:00:00")
-                           .addTransaction(1, "2016-08-10 13:00:00", -100.00, "AUCHAN")
-                           .addTransaction(2, "2016-08-12 17:00:00", -50.00, "EDF", BudgeaCategory.ELECTRICITE)
-                           .endAccount()
-                           .endConnection()
-                           .get());
-
-    operations.openImportDialog()
-      .selectCloudForNewUser()
-      .register("toto@example.com")
-      .processEmailAndNextToBankSelection(mailbox.getDeviceVerificationCode("toto@example.com"))
-      .selectBank("Connecteur de test")
-      .next()
-      .setChoice("Type de compte", "Particuliers")
-      .setText("Identifiant", "1234")
-      .setPassword("Code (1234)", "1234")
-      .next()
-      .waitForNotificationAndDownload(mailbox.checkStatementReady("toto@example.com"))
-      .checkTransactions(new Object[][]{
-        {"2016/08/12", "EDF", "-50.00"},
-        {"2016/08/10", "AUCHAN", "-100.00"},
-      })
-      .importAccountAndComplete();
-
-    transactions.initContent()
-      .add("12/08/2016", TransactionType.PRELEVEMENT, "EDF", "", -50.00, "Electricity")
-      .add("10/08/2016", TransactionType.PRELEVEMENT, "AUCHAN", "", -100.00)
-      .check();
-
-    budgea.pushNewConnectionResponse(1, 123, 40);
-    budgea.pushStatement(BudgeaStatement.init()
-                           .addConnection(1, 123, 40, "Connecteur de test", "2016-08-10 17:44:26")
-                           .addAccount(1, "Main account 1", "100200300", "checking", 1000.00, "2016-08-10 13:00:00")
-                           .addTransaction(1, "2016-08-10 13:00:00", -100.00, "AUCHAN")
-                           .addTransaction(2, "2016-08-12 17:00:00", -50.00, "EDF", BudgeaCategory.ELECTRICITE)
-                           .addTransaction(3, "2016-08-15 15:00:00", -20.00, "MC DONALDS", BudgeaCategory.RESTAURANT)
-                           .endAccount()
-                           .endConnection()
-                           .get());
-
-    cloud.cleanUpDatabase();
-
-    operations.openImportDialog()
-      .selectCloudRefreshAndGetSignup()
-      .register("toto@example.com")
-      .processEmailAndNextToBankSelection(mailbox.getDeviceVerificationCode("toto@example.com"))
-      .selectBank("Connecteur de test")
-      .next()
-      .setChoice("Type de compte", "Particuliers")
-      .setText("Identifiant", "1234")
-      .setPassword("Code (1234)", "1234")
-      .next()
-      .waitForNotificationAndDownload(mailbox.checkStatementReady("toto@example.com"))
-      .checkTransactions(new Object[][]{
-        {"2016/08/15", "MC DONALDS", "-20.00"},
-        {"2016/08/12", "EDF", "-50.00"},
-        {"2016/08/10", "AUCHAN", "-100.00"},
-      })
-      .importAccountAndComplete();
-
-    transactions.initContent()
-      .add("15/08/2016", TransactionType.PRELEVEMENT, "MC DONALDS", "", -20.00, "Restaurant")
-      .add("12/08/2016", TransactionType.PRELEVEMENT, "EDF", "", -50.00, "Electricity")
-      .add("10/08/2016", TransactionType.PRELEVEMENT, "AUCHAN", "", -100.00)
-      .check();
-  }
-
-  @Test
   public void testDeletingCloudAccount() throws Exception {
-    cloudLicense.purchaseLicence("toto@example.com", Dates.tomorrow());
+
+    cloud.createSubscription("toto@example.com", Dates.tomorrow());
 
     budgea.pushNewConnectionResponse(1, 123, 40);
     budgea.pushStatement(BudgeaStatement.init()
@@ -422,6 +360,8 @@ public class CloudSignupTest extends CloudDesktopTestCase {
                            .endConnection()
                            .get());
 
+    // Should be retrieved from PaymentService
+    cloud.createSubscription("toto@example.com", Dates.tomorrow());
 
     operations.openImportDialog()
       .selectCloudForNewUser()
@@ -444,5 +384,62 @@ public class CloudSignupTest extends CloudDesktopTestCase {
       .add("12/08/2016", TransactionType.PRELEVEMENT, "EDF", "", -50.00, "Electricity")
       .add("10/08/2016", TransactionType.PRELEVEMENT, "AUCHAN", "", -100.00)
       .check();
+  }
+
+  @Test
+  public void testRefreshWhenCloudAccountWasDeletedSwitchesToSubscriptionError() throws Exception {
+    cloud.createSubscription("toto@example.com", Dates.tomorrow());
+
+    budgea.pushNewConnectionResponse(1, 123, 40);
+    budgea.pushStatement(BudgeaStatement.init()
+                           .addConnection(1, 123, 40, "Connecteur de test", "2016-08-10 17:44:26")
+                           .addAccount(1, "Main account 1", "100200300", "checking", 1000.00, "2016-08-10 13:00:00")
+                           .addTransaction(1, "2016-08-10 13:00:00", -100.00, "AUCHAN")
+                           .addTransaction(2, "2016-08-12 17:00:00", -50.00, "EDF", BudgeaCategory.ELECTRICITE)
+                           .endAccount()
+                           .endConnection()
+                           .get());
+
+    operations.openImportDialog()
+      .selectCloudForNewUser()
+      .register("toto@example.com")
+      .processEmailAndNextToBankSelection(mailbox.getDeviceVerificationCode("toto@example.com"))
+      .selectBank("Connecteur de test")
+      .next()
+      .setChoice("Type de compte", "Particuliers")
+      .setText("Identifiant", "1234")
+      .setPassword("Code (1234)", "1234")
+      .next()
+      .waitForNotificationAndDownload(mailbox.checkStatementReady("toto@example.com"))
+      .checkTransactions(new Object[][]{
+        {"2016/08/12", "EDF", "-50.00"},
+        {"2016/08/10", "AUCHAN", "-100.00"},
+      })
+      .importAccountAndComplete();
+
+    transactions.initContent()
+      .add("12/08/2016", TransactionType.PRELEVEMENT, "EDF", "", -50.00, "Electricity")
+      .add("10/08/2016", TransactionType.PRELEVEMENT, "AUCHAN", "", -100.00)
+      .check();
+
+    budgea.pushNewConnectionResponse(1, 123, 40);
+    budgea.pushStatement(BudgeaStatement.init()
+                           .addConnection(1, 123, 40, "Connecteur de test", "2016-08-10 17:44:26")
+                           .addAccount(1, "Main account 1", "100200300", "checking", 1000.00, "2016-08-10 13:00:00")
+                           .addTransaction(1, "2016-08-10 13:00:00", -100.00, "AUCHAN")
+                           .addTransaction(2, "2016-08-12 17:00:00", -50.00, "EDF", BudgeaCategory.ELECTRICITE)
+                           .addTransaction(3, "2016-08-15 15:00:00", -20.00, "MC DONALDS", BudgeaCategory.RESTAURANT)
+                           .endAccount()
+                           .endConnection()
+                           .get());
+
+    cloud.cleanUpDatabase();
+
+    operations.openImportDialog()
+      .selectCloudRefreshAndGetSignup()
+      .register("toto@example.com")
+      .processEmailAndNextToSubscriptionError(mailbox.getDeviceVerificationCode("toto@example.com"))
+      .checkNoSubscriptionFound("toto@example.com")
+      .close();
   }
 }

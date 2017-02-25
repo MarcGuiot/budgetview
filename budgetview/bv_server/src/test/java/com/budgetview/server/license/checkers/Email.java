@@ -1,38 +1,65 @@
 package com.budgetview.server.license.checkers;
 
 import com.dumbster.smtp.SmtpMessage;
-import junit.framework.Assert;
+import junit.framework.AssertionFailedError;
+
+import java.io.UnsupportedEncodingException;
+
+import static javax.mail.internet.MimeUtility.decodeText;
 
 public class Email {
   private String content;
   private SmtpMessage message;
 
-  Email(SmtpMessage message) {
+  Email(SmtpMessage message) throws Exception {
     this.message = message;
-    this.content = message.getBody();
+    this.content = decodeText(message.getBody());
   }
 
-  public Email checkSubjectContains(String text) {
-    String subject = message.getHeaderValue("Subject");
+  public Email checkSubjectContains(String text) throws Exception {
+    String subject = getSubject();
     if (!subject.contains(text)) {
-      Assert.fail("Unexpected subject: " + subject);
+      throw new AssertionFailedError("Unexpected subject: " + subject);
     }
     return this;
   }
 
-  public Email checkContains(String... textElements) {
+  public Email checkSubjectContainsAny(String... text) throws Exception {
+    String subject = getSubject();
+    for (String item : text) {
+      if (subject.contains(item)) {
+        return this;
+      }
+    }
+    throw new AssertionFailedError("Unexpected subject: " + subject);
+  }
+
+  public String getSubject() throws Exception {
+    return decodeText(message.getHeaderValue("Subject"));
+  }
+
+  public Email checkContainsAll(String... textElements) {
     for (String textElement : textElements) {
       if (!content.contains(textElement)) {
-        Assert.fail("Text '" + textElement + "' not found. Actual content: \n" + content);
+        throw new AssertionFailedError("Text '" + textElement + "' not found. Actual content: \n" + content);
       }
     }
     return this;
   }
 
+  public Email checkContainsAny(String... textElements) {
+    for (String textElement : textElements) {
+      if (content.contains(textElement)) {
+        return this;
+      }
+    }
+    throw new AssertionFailedError("Text not found. Actual content: \n" + content);
+  }
+
   public Email checkDoesNotContain(String... textElements) {
     for (String textElement : textElements) {
       if (content.contains(textElement)) {
-        Assert.fail("Text '" + textElement + "' unexpectedly found. Actual content: \n" + content);
+        throw new AssertionFailedError("Text '" + textElement + "' unexpectedly found. Actual content: \n" + content);
       }
     }
     return this;

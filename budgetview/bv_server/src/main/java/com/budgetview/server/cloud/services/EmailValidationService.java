@@ -30,11 +30,10 @@ public class EmailValidationService {
 
   private static Logger logger = Logger.getLogger("EmailValidationService");
 
-  public static final int TEMP_CODE_DURATION_IN_MINUTES = 30;
-
-  private GlobsDatabase database;
+  private final GlobsDatabase database;
   private final Mailer mailer;
   private final RandomStrings sessionIds = new RandomStrings();
+
   public static Date forcedTokenExpirationDate;
 
   public EmailValidationService(Directory directory) {

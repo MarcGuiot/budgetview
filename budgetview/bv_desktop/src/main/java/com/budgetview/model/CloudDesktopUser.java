@@ -4,6 +4,7 @@ import com.budgetview.shared.utils.GlobSerializer;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.annotations.Key;
 import org.globsframework.metamodel.fields.BooleanField;
+import org.globsframework.metamodel.fields.DateField;
 import org.globsframework.metamodel.fields.IntegerField;
 import org.globsframework.metamodel.fields.StringField;
 import org.globsframework.metamodel.utils.GlobTypeLoader;
@@ -36,6 +37,8 @@ public class CloudDesktopUser {
   public static BooleanField SYNCHRO_ENABLED;
 
   public static IntegerField LAST_UPDATE;
+
+  public static DateField SUBSCRIPTION_END_DATE;
 
   public static boolean isTrue(BooleanField field, GlobRepository repository) {
     Glob user = repository.find(KEY);
@@ -71,6 +74,7 @@ public class CloudDesktopUser {
       outputStream.writeBoolean(values.get(REGISTERED));
       outputStream.writeBoolean(values.get(SYNCHRO_ENABLED));
       outputStream.writeInteger(values.get(LAST_UPDATE));
+      outputStream.writeDate(values.get(SUBSCRIPTION_END_DATE));
       return serializedByteArrayOutput.toByteArray();
     }
 
@@ -87,6 +91,7 @@ public class CloudDesktopUser {
       fieldSetter.set(REGISTERED, input.readBoolean());
       fieldSetter.set(SYNCHRO_ENABLED, input.readBoolean());
       fieldSetter.set(LAST_UPDATE, input.readInteger());
+      fieldSetter.set(SUBSCRIPTION_END_DATE, input.readDate());
     }
   }
 }

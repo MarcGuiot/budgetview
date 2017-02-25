@@ -56,11 +56,11 @@ public class FeedbackTest extends ConnectedTestCase {
     openFeedback().send("me@gg.fr", "some content\n\n-----\nfooter");
 
     mailServer.checkReceivedMail("support@mybudgetview.fr")
-      .checkContains("some content",
-                     "footer",
-                     "me@gg.fr",
-                     Application.APPLICATION_VERSION,
-                     "lang:en");
+      .checkContainsAll("some content",
+                        "footer",
+                        "me@gg.fr",
+                        Application.APPLICATION_VERSION,
+                        "lang:en");
 
     Lang.setLocale(Lang.ROOT);
   }
@@ -76,10 +76,10 @@ public class FeedbackTest extends ConnectedTestCase {
       .send("me@gg.fr", "some content");
 
     mailServer.checkReceivedMail("support@mybudgetview.fr")
-      .checkContains("some content",
-                     "me@gg.fr",
-                     Application.APPLICATION_VERSION,
-                     "Something in the logs");
+      .checkContainsAll("some content",
+                        "me@gg.fr",
+                        Application.APPLICATION_VERSION,
+                        "Something in the logs");
   }
 
   public void testSendFeedbackWithMissingLogs() throws Exception {
@@ -96,10 +96,10 @@ public class FeedbackTest extends ConnectedTestCase {
       .send("me@gg.fr", "some content");
 
     mailServer.checkReceivedMail("support@mybudgetview.fr")
-      .checkContains("some content",
-                     "me@gg.fr",
-                     Application.APPLICATION_VERSION,
-                     "[no log file found]");
+      .checkContainsAll("some content",
+                        "me@gg.fr",
+                        Application.APPLICATION_VERSION,
+                        "[no log file found]");
   }
 
   public void testSendFeedbackWithServerError() throws Exception {

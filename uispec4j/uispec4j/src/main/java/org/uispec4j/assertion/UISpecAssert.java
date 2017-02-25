@@ -205,7 +205,7 @@ public class UISpecAssert {
    */
   private static void retry(String message, Assertion assertion, long waitTimeLimit) {
     long elapsedTime = 0;
-    for (int i = 0; elapsedTime < waitTimeLimit; i++) {
+    for (int i = 0; elapsedTime <= waitTimeLimit; i++) {
       int waitTime = i < 10 ? 20 : 200;
       Utils.sleep(waitTime);
       elapsedTime += waitTime;

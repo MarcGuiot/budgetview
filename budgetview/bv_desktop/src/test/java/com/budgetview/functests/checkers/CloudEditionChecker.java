@@ -1,5 +1,6 @@
 package com.budgetview.functests.checkers;
 
+import com.budgetview.desktop.description.Formatting;
 import org.globsframework.utils.TestUtils;
 import org.uispec4j.Button;
 import org.uispec4j.Panel;
@@ -78,6 +79,11 @@ public class CloudEditionChecker extends ViewChecker {
     assertThat(button.isEnabled());
     button.click();
     return new ImportDialogPreviewChecker(mainWindow);
+  }
+
+  public CloudEditionChecker checkSubscriptionEndDate(Date date) {
+    assertThat(mainWindow.getTextBox("subscriptionEndDate").textContains(Formatting.toString(date)));
+    return this;
   }
 
   public CloudUnsubscriptionChecker unsubscribe() {

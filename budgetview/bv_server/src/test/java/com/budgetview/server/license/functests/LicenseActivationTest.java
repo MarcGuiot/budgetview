@@ -142,7 +142,7 @@ public class LicenseActivationTest extends ConnectedTestCase {
     LicenseActivationChecker.enterBadLicense(window, MAIL, "1234", "Activation failed. An email was sent at " + MAIL + " with further information.");
     license.checkInfoMessage("Activation failed. An email was sent");
     Email email = mailServer.checkReceivedMail(MAIL);
-    email.checkContains("To prevent anyone else from using your code");
+    email.checkContainsAll("To prevent anyone else from using your code");
     String emailcontent = email.getContent();
     int startCode = emailcontent.indexOf(ACTIVATION_CODE) + ACTIVATION_CODE.length();
     String newActivationCode = emailcontent.substring(startCode, startCode + 4);
@@ -422,7 +422,7 @@ public class LicenseActivationTest extends ConnectedTestCase {
     }
   }
 
-  private String checkMailAndExtractCode() throws InterruptedException {
+  private String checkMailAndExtractCode() throws Exception {
     String email = mailServer.checkReceivedMail(MAIL).getContent();
     int start = email.indexOf(ACTIVATION_CODE);
     if (start == -1) {
@@ -640,11 +640,11 @@ public class LicenseActivationTest extends ConnectedTestCase {
       .complete();
 
     mailServer.checkReceivedMail(Mailbox.SUPPORT.getEmail())
-      .checkContains(Lang.get("license.activation.feedback.question.0"))
-      .checkContains("My first answer")
+      .checkContainsAll(Lang.get("license.activation.feedback.question.0"))
+      .checkContainsAll("My first answer")
       .checkDoesNotContain(Lang.get("license.activation.feedback.question.1"))
-      .checkContains(Lang.get("license.activation.feedback.question.2"))
-      .checkContains("My third answer");
+      .checkContainsAll(Lang.get("license.activation.feedback.question.2"))
+      .checkContainsAll("My third answer");
   }
 
   public void testConfirmationWithoutFeedback() throws Exception {

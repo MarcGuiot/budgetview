@@ -34,6 +34,9 @@ public class MailServerChecker {
   }
 
   public void checkEmpty() throws InterruptedException {
+
+    System.out.println("\nMailServerChecker.checkEmpty");
+
     if (mailServer == null) {
       Assert.fail("Mail server not started");
     }
@@ -41,16 +44,21 @@ public class MailServerChecker {
     synchronized (mailServer) {
       Iterator receivedEmail = mailServer.getReceivedEmail();
       if (receivedEmail.hasNext()) {
-        SmtpMessage message = (SmtpMessage)receivedEmail.next();
+        SmtpMessage message = (SmtpMessage) receivedEmail.next();
         Assert.fail("Unexpected message sent to:" + message.getHeaderValue("To") + ": " + message.getBody());
       }
     }
   }
 
-  public Email checkReceivedMail(String mailTo) throws InterruptedException {
+  public Email checkReceivedMail(String mailTo) throws Exception {
     if (mailServer == null) {
       Assert.fail("Mail server not started");
     }
+
+    String errorMessage =
+      "No mail received.\n" +
+      "Note that if this was called with a retry strategy maybe the first message was not the one expected and " +
+      "was discarded. You should then call this only once since this method provides its own retry strategy.";
 
     long end = System.currentTimeMillis() + 4000;
     synchronized (mailServer) {
@@ -58,24 +66,24 @@ public class MailServerChecker {
       while (!receivedEmail.hasNext()) {
         mailServer.wait(800);
         if (System.currentTimeMillis() > end) {
-          Assert.fail("No mail received");
+          Assert.fail(errorMessage);
         }
         receivedEmail = mailServer.getReceivedEmail();
       }
       if (receivedEmail.hasNext()) {
-        SmtpMessage message = (SmtpMessage)receivedEmail.next();
+        SmtpMessage message = (SmtpMessage) receivedEmail.next();
         Assert.assertEquals(mailTo, message.getHeaderValue("To"));
         receivedEmail.remove();
         return new Email(message);
       }
       else {
-        Assert.fail("No mail received");
+        Assert.fail(errorMessage);
       }
     }
     return null;
   }
 
-  public void stop() throws InterruptedException {
+  public void stop() throws Exception {
     if (mailServer != null) {
       if (started) {
         try {
@@ -94,7 +102,7 @@ public class MailServerChecker {
     logger.info("Stopped mail server");
   }
 
-  public void dispose() throws InterruptedException {
+  public void dispose() throws Exception {
     stop();
   }
 }

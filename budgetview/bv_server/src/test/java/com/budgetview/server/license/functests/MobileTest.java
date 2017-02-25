@@ -1,7 +1,10 @@
 package com.budgetview.server.license.functests;
 
+import com.budgetview.functests.checkers.ApplicationChecker;
+import com.budgetview.functests.checkers.mobile.CreateMobileAccountChecker;
 import com.budgetview.functests.checkers.mobile.MobileAppChecker;
 import com.budgetview.functests.utils.OfxBuilder;
+import com.budgetview.server.license.ConnectedTestCase;
 import com.budgetview.server.license.checkers.Email;
 import org.apache.http.Header;
 import org.apache.http.HttpResponse;
@@ -9,15 +12,11 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.params.HttpClientParams;
 import org.apache.http.impl.client.DefaultHttpClient;
-import com.budgetview.functests.checkers.ApplicationChecker;
-import com.budgetview.functests.checkers.mobile.CreateMobileAccountChecker;
-import com.budgetview.server.license.ConnectedTestCase;
 import org.globsframework.utils.Files;
 import org.globsframework.utils.Strings;
 import org.globsframework.utils.TestUtils;
 
 import java.io.File;
-import java.io.IOException;
 
 public class MobileTest extends ConnectedTestCase {
   private ApplicationChecker application;
@@ -73,7 +72,7 @@ public class MobileTest extends ConnectedTestCase {
       .checkNoErrorsShown()
       .checkConfirmationAndClose();
     Email email = mailServer.checkReceivedMail(mail);
-    email.checkContains("http");
+    email.checkContainsAll("http");
   }
 
   public void testChangePassword() throws Exception {
@@ -91,7 +90,7 @@ public class MobileTest extends ConnectedTestCase {
     dialog.setNewPassword("newPassword")
       .validateAndClose();
     Email email = mailServer.checkReceivedMail(mail);
-    email.checkContains("http");
+    email.checkContainsAll("http");
   }
 
   public void testGetData() throws Exception {
@@ -157,7 +156,7 @@ public class MobileTest extends ConnectedTestCase {
 
     Email email = mailServer.checkReceivedMail("testReminderMail@budgetview.fr");
     email.checkSubjectContains("Votre rappel pour BudgetView");
-    email.checkContains("l'adresse suivante");
+    email.checkContainsAll("l'adresse suivante");
   }
 
   public void testPendingDataAreSentAtAccountCreation() throws Exception {
@@ -189,7 +188,7 @@ public class MobileTest extends ConnectedTestCase {
     mobileApp.checkLogin(emailAddress, mobileConnection.password);
   }
 
-  private void followUrl(String url, final int expectedReturnCode, final String expectedRedirect) throws IOException, InterruptedException {
+  private void followUrl(String url, final int expectedReturnCode, final String expectedRedirect) throws Exception {
     HttpClient httpClient = new DefaultHttpClient();
     HttpGet method = new HttpGet(url);
     HttpClientParams.setRedirecting(method.getParams(), false);
@@ -203,21 +202,21 @@ public class MobileTest extends ConnectedTestCase {
     assertEquals(expectedRedirect, locationHeader.getValue());
   }
 
-  private void followUrl(String url, final int expectedReturnCode, final String expectedRedirect, String emailAddress) throws IOException, InterruptedException {
+  private void followUrl(String url, final int expectedReturnCode, final String expectedRedirect, String emailAddress) throws Exception {
     followUrl(url, expectedReturnCode, expectedRedirect);
     Email email = mailServer.checkReceivedMail(emailAddress);
-    email.checkContains("To install the Android app");
+    email.checkContainsAll("To install the Android app");
   }
 
-  private MobileConnection requestAccountWithNewPassword(String userMail) throws InterruptedException {
+  private MobileConnection requestAccountWithNewPassword(String userMail) throws Exception {
     return requestMobileAccount(userMail, "newpassword");
   }
 
-  private MobileConnection requestNewMobileAccount(String userMail) throws InterruptedException {
+  private MobileConnection requestNewMobileAccount(String userMail) throws Exception {
     return requestMobileAccount(userMail, null);
   }
 
-  private MobileConnection requestMobileAccount(String userMail, String requestedPassword) throws InterruptedException {
+  private MobileConnection requestMobileAccount(String userMail, String requestedPassword) throws Exception {
     CreateMobileAccountChecker dialog = application.openMobileAccountDialog();
     if (Strings.isNotEmpty(requestedPassword)) {
       dialog.setNewPassword(requestedPassword);
@@ -227,7 +226,7 @@ public class MobileTest extends ConnectedTestCase {
     dialog.checkConfirmationAndClose();
 
     Email email = mailServer.checkReceivedMail(userMail);
-    email.checkContains("http");
+    email.checkContainsAll("http");
     String content = email.getContent();
     int httpStartIndex = content.indexOf("href=\"");
     int httpEndIndex = content.indexOf("\">http");

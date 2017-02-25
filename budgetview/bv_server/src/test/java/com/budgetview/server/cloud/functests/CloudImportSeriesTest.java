@@ -17,7 +17,7 @@ public class CloudImportSeriesTest extends CloudDesktopTestCase {
   @Test
   public void testUsesLocalSeriesFirstAndIgnoresTheOthers() throws Exception {
 
-    cloudLicense.purchaseLicence("toto@example.com", Dates.tomorrow());
+    cloud.createSubscription("toto@example.com", Dates.tomorrow());
 
     budgea.pushNewConnectionResponse(1, 123, 40);
     budgea.pushStatement(BudgeaStatement.init()
@@ -130,7 +130,7 @@ public class CloudImportSeriesTest extends CloudDesktopTestCase {
   @Test
   public void testUsesExistingSeriesOnlyWhenAvailableForSelectedAccount() throws Exception {
 
-    cloudLicense.purchaseLicence("toto@example.com", Dates.tomorrow());
+    cloud.createSubscription("toto@example.com", Dates.tomorrow());
 
     accounts.createMainAccount("Existing account", "123123123", 500.00);
     budgetView.recurring.editSeries("Electricity")
@@ -186,7 +186,7 @@ public class CloudImportSeriesTest extends CloudDesktopTestCase {
 
   @Test
   public void testUsesExistingSeriesOnlyWhenActiveForTransactionMonth() throws Exception {
-    cloudLicense.purchaseLicence("toto@example.com", Dates.tomorrow());
+    cloud.createSubscription("toto@example.com", Dates.tomorrow());
     accounts.createMainAccount("Existing account", "123123123", 500.00);
     budgetView.recurring.editSeries("Electricity")
       .setEndDate(201607)

@@ -15,7 +15,7 @@ public class CloudImportTest extends CloudDesktopTestCase {
 
   @Test
   public void testCreateStandardConnection() throws Exception {
-    cloudLicense.purchaseLicence("toto@example.com", Dates.tomorrow());
+    cloud.createSubscription("toto@example.com", Dates.tomorrow());
 
     budgea.pushNewConnectionResponse(1, 123, 40);
     budgea.pushStatement(BudgeaStatement.init()
@@ -62,7 +62,7 @@ public class CloudImportTest extends CloudDesktopTestCase {
 
   @Test
   public void testWaitingForTheInitialStatement() throws Exception {
-    cloudLicense.purchaseLicence("toto@example.com", Dates.tomorrow());
+    cloud.createSubscription("toto@example.com", Dates.tomorrow());
 
     budgea.pushNewConnectionResponse(1, 123, 40);
 
@@ -117,7 +117,7 @@ public class CloudImportTest extends CloudDesktopTestCase {
 
   @Test
   public void testClosingAndReopeningTheImportDialogWhileWaitingForTheInitialStatement() throws Exception {
-    cloudLicense.purchaseLicence("toto@example.com", Dates.tomorrow());
+    cloud.createSubscription("toto@example.com", Dates.tomorrow());
 
     budgea.pushNewConnectionResponse(1, 123, 40);
 
@@ -174,7 +174,7 @@ public class CloudImportTest extends CloudDesktopTestCase {
 
   @Test
   public void testRefreshDoesNotResendPreviousStatements() throws Exception {
-    cloudLicense.purchaseLicence("toto@example.com", Dates.tomorrow());
+    cloud.createSubscription("toto@example.com", Dates.tomorrow());
     budgea.pushNewConnectionResponse(1, 123, 40);
     budgea.pushStatement(BudgeaStatement.init()
                            .addConnection(1, 123, 40, "Connecteur de test", "2016-08-10 17:44:26")
@@ -237,7 +237,7 @@ public class CloudImportTest extends CloudDesktopTestCase {
 
   @Test
   public void testRequestSameUpdateAfterCancel() throws Exception {
-    cloudLicense.purchaseLicence("toto@example.com", Dates.tomorrow());
+    cloud.createSubscription("toto@example.com", Dates.tomorrow());
     budgea.pushNewConnectionResponse(1, 123, 40);
     budgea.pushStatement(BudgeaStatement.init()
                            .addConnection(1, 123, 40, "Connecteur de test", "2016-08-10 17:44:26")
@@ -297,7 +297,7 @@ public class CloudImportTest extends CloudDesktopTestCase {
 
   @Test
   public void testIgnoresOperationsThatWereAlreadyImportedWithAFile() throws Exception {
-    cloudLicense.purchaseLicence("toto@example.com", Dates.tomorrow());
+    cloud.createSubscription("toto@example.com", Dates.tomorrow());
     OfxBuilder.init(this)
       .addBankAccount(-999, 1234, "100200300", 1000.00, "2016/08/10")
       .addTransaction("2016/08/08", "2016/08/08", -10.00, "PRLVT FRAIS CIC FILBANQUE")
@@ -347,7 +347,7 @@ public class CloudImportTest extends CloudDesktopTestCase {
 
   @Test
   public void testCanManageConnexionWithTwoBanks() throws Exception {
-    cloudLicense.purchaseLicence("toto@example.com", Dates.tomorrow());
+    cloud.createSubscription("toto@example.com", Dates.tomorrow());
     budgea.pushNewConnectionResponse(1, 123, 40);
     budgea.pushStatement(BudgeaStatement.init()
                            .addConnection(1, 123, 40, "Connecteur de test", "2016-08-10 17:44:26")
@@ -437,7 +437,7 @@ public class CloudImportTest extends CloudDesktopTestCase {
 
   @Test
   public void testDownloadAccountWithoutTransactions() throws Exception {
-    cloudLicense.purchaseLicence("toto@example.com", Dates.tomorrow());
+    cloud.createSubscription("toto@example.com", Dates.tomorrow());
     budgea.pushNewConnectionResponse(1, 123, 40);
     budgea.pushStatement(BudgeaStatement.init()
                            .addConnection(1, 123, 40, "Connecteur de test", "2016-08-10 17:44:26")
@@ -468,7 +468,7 @@ public class CloudImportTest extends CloudDesktopTestCase {
 
   @Test
   public void testSkipsUnchangedAccountsDuringRefresh() throws Exception {
-    cloudLicense.purchaseLicence("toto@example.com", Dates.tomorrow());
+    cloud.createSubscription("toto@example.com", Dates.tomorrow());
 
     budgea.pushNewConnectionResponse(1, 123, 40);
     budgea.pushStatement(BudgeaStatement.init()
@@ -545,7 +545,7 @@ public class CloudImportTest extends CloudDesktopTestCase {
   @Test
   public void testManagesDeletedOperations() throws Exception {
 
-    cloudLicense.purchaseLicence("toto@example.com", Dates.tomorrow());
+    cloud.createSubscription("toto@example.com", Dates.tomorrow());
     budgea.pushNewConnectionResponse(1, 123, 40);
     budgea.pushStatement(BudgeaStatement.init()
                            .addConnection(1, 123, 40, "Connecteur de test", "2016-08-10 17:44:26")

@@ -63,7 +63,6 @@ public class LicenseServer {
     webServer.add(new SendUseInfoServlet(), LicenseConstants.SEND_USE_INFO);
 
     webServer.add(new StaticWebPageServlet(directory), "/boutique");
-    webServer.add(new CloudSubscriptionEndDateServlet(directory), LicenseConstants.CLOUD_SUBSCRIPTION_END_DATE);
   }
 
   public void addServlet(HttpServlet servlet, String name) {

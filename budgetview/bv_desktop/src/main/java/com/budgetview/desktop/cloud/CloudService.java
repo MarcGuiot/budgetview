@@ -7,7 +7,9 @@ import com.budgetview.shared.cloud.budgea.BudgeaAPI;
 import com.budgetview.shared.model.AccountType;
 import com.budgetview.shared.model.Provider;
 import com.budgetview.utils.Lang;
+import com.oracle.javafx.jmx.json.JSONFactory;
 import org.globsframework.gui.splits.utils.GuiUtils;
+import org.globsframework.json.JsonGlobFormat;
 import org.globsframework.json.JsonGlobParser;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
@@ -411,6 +413,8 @@ public class CloudService {
           System.out.println("CloudService.updateBankConnections: " + connections.toString(2));
 
           repository.startChangeSet();
+          repository.update(CloudDesktopUser.KEY, value(CloudDesktopUser.SUBSCRIPTION_END_DATE,
+                                                        JsonGlobFormat.parseDate(connections.optString(CloudConstants.SUBSCRIPTION_END_DATE))));
           repository.deleteAll(CloudProviderConnection.TYPE);
           for (Object c : connections.getJSONArray("connections")) {
             JSONObject connection = (JSONObject) c;

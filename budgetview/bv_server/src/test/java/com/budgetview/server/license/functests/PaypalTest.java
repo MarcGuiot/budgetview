@@ -66,7 +66,7 @@ public class PaypalTest extends ConnectedTestCase {
     }
   }
 
-  private void doBuy(final String transactionId, boolean checkDb) throws IOException, InterruptedException, URISyntaxException {
+  private void doBuy(final String transactionId, boolean checkDb) throws Exception {
     HttpClient client = new DefaultHttpClient();
     URIBuilder builder = new URIBuilder(SERVER_URL + LicenseConstants.NEW_USER);
 
@@ -91,8 +91,8 @@ public class PaypalTest extends ConnectedTestCase {
       assertEquals(3, glob.size());
       String code = glob.get(0).get(License.ACTIVATION_CODE);
       assertEquals(glob.get(0).get(License.TRANSACTION_ID), transactionId);
-      mailServer.checkReceivedMail("toto" + transactionId + "@bv.fr").checkContains(code);
-      mailServer.checkReceivedMail("admin@mybudgetview.fr").checkContains("toto" + transactionId + "@bv.fr");
+      mailServer.checkReceivedMail("toto" + transactionId + "@bv.fr").checkContainsAll(code);
+      mailServer.checkReceivedMail("admin@mybudgetview.fr").checkContainsAll("toto" + transactionId + "@bv.fr");
     }
     postMethod.releaseConnection();
   }
@@ -134,7 +134,7 @@ public class PaypalTest extends ConnectedTestCase {
     assertEquals(3, globs.size());
     String code = globs.get(0).get(License.ACTIVATION_CODE);
     mailServer.checkReceivedMail("admin@mybudgetview.fr");
-    mailServer.checkReceivedMail("toto12345@bv.fr").checkContains(code);
+    mailServer.checkReceivedMail("toto12345@bv.fr").checkContainsAll(code);
     assertEquals(globs.get(0).get(License.TRANSACTION_ID), "12345");
   }
 
