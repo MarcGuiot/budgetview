@@ -32,7 +32,7 @@ public class CloudUser {
 
   public static StringField PROVIDER_ACCESS_TOKEN;
 
-  public static StringField STRIPE_ID;
+  public static StringField STRIPE_CUSTOMER_ID;
 
   public static StringField STRIPE_TOKEN;
 

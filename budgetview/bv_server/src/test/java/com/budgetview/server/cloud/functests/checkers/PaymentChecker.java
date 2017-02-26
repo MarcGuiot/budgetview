@@ -6,6 +6,7 @@ import org.apache.log4j.Logger;
 import org.globsframework.utils.Dates;
 import org.globsframework.utils.directory.Directory;
 import org.globsframework.utils.exceptions.OperationFailed;
+import org.junit.Assert;
 
 import java.util.Date;
 
@@ -16,8 +17,11 @@ public class PaymentChecker {
   private DummyPaymentService paymentService = new DummyPaymentService();
   private String lastEmail;
   private String lastToken;
+  private String lastSubscriptionId;
   private Date subscriptionEndDate = Dates.tomorrow();
-
+  private String lastCustomerId;
+  private String lastDeletedCustomer;
+  private String lastDeletedSubscription;
 
   public PaymentChecker() {
   }
@@ -30,9 +34,16 @@ public class PaymentChecker {
     this.subscriptionEndDate = subscriptionEndDate;
   }
 
-  public PaymentChecker checkLastRequest(String email, String token) {
+  public String checkLastRequest(String email, String token) {
     assertEquals(email + " / " + token, lastEmail + " / " + lastToken);
-    return this;
+    return lastSubscriptionId;
+  }
+
+  public void checkSubscriptionDeleted(String subscriptionId) {
+    if (lastSubscriptionId == null) {
+      Assert.fail("No subscription deleted");
+    }
+    Assert.assertEquals(subscriptionId, lastSubscriptionId);
   }
 
   private class DummyPaymentService implements PaymentService {
@@ -45,8 +56,15 @@ public class PaymentChecker {
       logger.info("createSubscription(" + email + ", " + token + ")");
       PaymentChecker.this.lastEmail = email;
       PaymentChecker.this.lastToken = token;
-      return new CloudSubscription("sub" + index++, subscriptionEndDate);
+      PaymentChecker.this.lastCustomerId = "customer/" + index;
+      PaymentChecker.this.lastSubscriptionId = "subscription/" + index;
+      index++;
+      return new CloudSubscription(lastCustomerId, lastSubscriptionId, subscriptionEndDate);
     }
 
+    public void deleteSubscription(String customerId, String subscriptionId) {
+      PaymentChecker.this.lastDeletedCustomer = customerId;
+      PaymentChecker.this.lastDeletedSubscription = subscriptionId;
+    }
   }
 }

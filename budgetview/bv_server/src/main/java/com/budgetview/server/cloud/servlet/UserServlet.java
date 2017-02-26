@@ -5,6 +5,7 @@ import com.budgetview.server.cloud.commands.HttpCommand;
 import com.budgetview.server.cloud.model.*;
 import com.budgetview.server.cloud.services.AuthenticationService;
 import com.budgetview.server.cloud.services.EmailValidationService;
+import com.budgetview.server.cloud.services.PaymentService;
 import com.budgetview.server.cloud.utils.SubscriptionCheckFailed;
 import com.budgetview.server.license.mail.Mailer;
 import com.budgetview.shared.cloud.CloudConstants;
@@ -18,6 +19,7 @@ import org.globsframework.sqlstreams.constraints.Where;
 import org.globsframework.sqlstreams.exceptions.GlobsSQLException;
 import org.globsframework.utils.Strings;
 import org.globsframework.utils.directory.Directory;
+import org.globsframework.utils.exceptions.ItemNotFound;
 
 import javax.mail.MessagingException;
 import javax.servlet.ServletException;
@@ -119,6 +121,17 @@ public class UserServlet extends HttpCloudServlet {
           String message = "Failed to delete Budgea user " + email + " / " + userId + " with provider user ID " + providerUserId;
           logger.error(message, e);
           mailer.sendErrorToAdmin(getClass(), "Budgea user deletion failed", message, e);
+        }
+
+        String stripeCustomerId = user.get(CloudUser.STRIPE_CUSTOMER_ID);
+        String stripeSubscriptionId = user.get(CloudUser.STRIPE_SUBSCRIPTION_ID);
+        try {
+          directory.get(PaymentService.class).deleteSubscription(stripeCustomerId, stripeSubscriptionId);
+        }
+        catch (ItemNotFound e) {
+          String message = "Failed to delete Stripe customer " + stripeCustomerId + " with subscription " + stripeSubscriptionId;
+          logger.error(message, e);
+          mailer.sendErrorToAdmin(getClass(), "Stripe user deletion failed", message, e);
         }
 
         GlobsDatabase database = directory.get(GlobsDatabase.class);

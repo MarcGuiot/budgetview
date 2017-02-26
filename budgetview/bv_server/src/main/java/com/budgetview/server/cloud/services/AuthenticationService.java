@@ -222,7 +222,7 @@ public class AuthenticationService {
 
   public boolean isSubscriptionValid(Glob user) {
     Date subscriptionEndDate = user.get(CloudUser.SUBSCRIPTION_END_DATE);
-    return Strings.isNotEmpty(user.get(CloudUser.STRIPE_ID)) &&
+    return Strings.isNotEmpty(user.get(CloudUser.STRIPE_CUSTOMER_ID)) &&
            subscriptionEndDate != null &&
            now().after(subscriptionEndDate);
   }

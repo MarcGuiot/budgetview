@@ -2,6 +2,7 @@ package com.budgetview.server.cloud.services;
 
 import com.stripe.Stripe;
 import com.stripe.model.Customer;
+import com.stripe.model.Subscription;
 import org.apache.log4j.Logger;
 import org.globsframework.utils.exceptions.OperationFailed;
 
@@ -18,14 +19,14 @@ public class StripeService implements PaymentService {
   }
 
   public CloudSubscription createSubscription(String email, String stripeToken) throws OperationFailed {
-    String stripeId = null;
+    String customerId;
     try {
       Map<String, Object> params = new HashMap<String, Object>();
       params.put("email", email);
       params.put("source", stripeToken);
       params.put("plan", "cloud_std");
       Customer customer = Customer.create(params);
-      stripeId = customer.getId();
+      customerId = customer.getId();
     }
     catch (Exception e) {
       logger.error("Could not create customer", e);
@@ -34,16 +35,30 @@ public class StripeService implements PaymentService {
 
     try {
       Map<String, Object> params = new HashMap<String, Object>();
-      params.put("customer", stripeId);
+      params.put("customer", customerId);
       params.put("plan", "standard-cloud");
       com.stripe.model.Subscription subscription = com.stripe.model.Subscription.create(params);
 
       String subscriptionId = subscription.getId();
       Date currentPeriodEndDate = new Date(subscription.getCurrentPeriodEnd());
-      return new CloudSubscription(subscriptionId, currentPeriodEndDate);
+      return new CloudSubscription(customerId, subscriptionId, currentPeriodEndDate);
     }
     catch (Exception e) {
-      logger.error("Could not create subscription", e);
+      logger.error("Could not create subscription for customer " + customerId + " with email "  + email + " and token " + stripeToken, e);
+      throw new OperationFailed(e);
+    }
+  }
+
+  public void deleteSubscription(String customerId, String subscriptionId) throws OperationFailed {
+
+    try {
+      Customer customer = Customer.retrieve(customerId);
+
+      Subscription subscription = customer.getSubscriptions().retrieve(subscriptionId);
+      subscription.cancel(null);
+    }
+    catch (Exception e) {
+      logger.error("Could not delete subscription for customer " + customerId + " and id " + subscriptionId, e);
       throw new OperationFailed(e);
     }
   }

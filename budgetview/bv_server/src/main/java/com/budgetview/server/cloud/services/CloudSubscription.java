@@ -4,10 +4,12 @@ import java.util.Date;
 
 public class CloudSubscription {
 
+  public final String customerId;
   public final String subscriptionId;
   public final Date currentPeriodEndDate;
 
-  public CloudSubscription(String subscriptionId, Date currentPeriodEndDate) {
+  public CloudSubscription(String customerId, String subscriptionId, Date currentPeriodEndDate) {
+    this.customerId = customerId;
     this.subscriptionId = subscriptionId;
     this.currentPeriodEndDate = currentPeriodEndDate;
   }
