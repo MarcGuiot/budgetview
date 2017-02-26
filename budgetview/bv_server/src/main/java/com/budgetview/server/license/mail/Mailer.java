@@ -89,6 +89,11 @@ public class Mailer {
                   Mailbox.SUPPORT.getEmail(), sendTo);
   }
 
+  public boolean sendCloudAccountDeleted(String sendTo, String lang) throws MessagingException {
+    return doSend(Mailbox.SUPPORT, Lang.get("cloud.subscription.deleted.subject", lang), Lang.get("cloud.subscription.deleted.message", lang),
+                  Mailbox.SUPPORT.getEmail(), sendTo);
+  }
+
   public void sendErrorToAdmin(Class sourceClass, String title, String message, Exception e) {
     String content = message + "\n\nSent from class: " + sourceClass.getName() + "\n\n" + Utils.toString(e);
     doSend(Mailbox.ADMIN, title, content, Mailbox.ADMIN.getEmail(), Mailbox.ADMIN.getEmail());

@@ -169,6 +169,13 @@ public class UserServlet extends HttpCloudServlet {
           }
         }
 
+        try {
+          mailer.sendCloudAccountDeleted(user.get(CloudUser.EMAIL), user.get(CloudUser.LANG));
+        }
+        catch (Exception e) {
+          logger.error("Failed to send cloud account deletion email to " + user.get(CloudUser.EMAIL), e);
+        }
+
         return HttpServletResponse.SC_OK;
       }
     };

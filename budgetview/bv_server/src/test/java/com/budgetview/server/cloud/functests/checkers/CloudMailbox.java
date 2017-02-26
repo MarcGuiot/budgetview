@@ -2,14 +2,12 @@ package com.budgetview.server.cloud.functests.checkers;
 
 import com.budgetview.server.license.checkers.Email;
 import com.budgetview.server.license.checkers.MailServerChecker;
-import com.budgetview.shared.cloud.budgea.BudgeaConstants;
 import com.budgetview.shared.http.Http;
 import org.apache.http.client.fluent.Request;
 import org.globsframework.utils.exceptions.InvalidState;
 import org.junit.Assert;
 import org.uispec4j.assertion.Assertion;
 
-import java.io.IOException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -50,6 +48,11 @@ public class CloudMailbox {
         }
       }
     };
+  }
+
+  public void checkAccountDeleted(final String mailTo) throws Exception {
+    Email email = getEmail(mailTo);
+    email.checkContainsAny("deleted", "supprim");
   }
 
   public void clickSubscriptionValidationLink(String mailTo) throws Exception {

@@ -109,6 +109,7 @@ public class CloudSubscriptionTest extends CloudDesktopTestCase {
 
     operations.openImportDialog()
       .editCloudConnections()
+      .checkContainsConnection("Connecteur de test")
       .unsubscribe()
       .checkUnsubscribeButtonShown()
       .checkIntroMessageShown()
@@ -122,6 +123,7 @@ public class CloudSubscriptionTest extends CloudDesktopTestCase {
 
     budgea.checkUserDeletions(123);
     payments.checkSubscriptionDeleted(subscriptionId);
+    mailbox.checkAccountDeleted("toto@example.com");
 
     budgea.pushNewConnectionResponse(1, 123, 40);
     budgea.pushStatement(BudgeaStatement.init()

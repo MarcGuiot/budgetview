@@ -26,6 +26,7 @@ public class Email {
 
   public Email checkSubjectContainsAny(String... text) throws Exception {
     String subject = getSubject();
+    System.out.println("Email.checkSubjectContainsAny - " + subject);
     for (String item : text) {
       if (subject.contains(item)) {
         return this;
@@ -35,7 +36,9 @@ public class Email {
   }
 
   public String getSubject() throws Exception {
-    return decodeText(message.getHeaderValue("Subject"));
+    String subject = message.getHeaderValue("Subject");
+    System.out.println("Email.getSubject: " + subject);
+    return decodeText(subject);
   }
 
   public Email checkContainsAll(String... textElements) {
