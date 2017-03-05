@@ -6,5 +6,9 @@ public interface PaymentService {
 
   CloudSubscription createSubscription(String email, String token) throws OperationFailed;
 
+  CloudSubscription getSubscription(String subscriptionId) throws OperationFailed;
+
   void deleteSubscription(String customerId, String subscriptionId);
+
+  CloudInvoice getInvoiceForEvent(String eventId);
 }

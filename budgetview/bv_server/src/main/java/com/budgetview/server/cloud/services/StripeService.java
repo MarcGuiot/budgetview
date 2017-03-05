@@ -2,6 +2,8 @@ package com.budgetview.server.cloud.services;
 
 import com.stripe.Stripe;
 import com.stripe.model.Customer;
+import com.stripe.model.Event;
+import com.stripe.model.Invoice;
 import com.stripe.model.Subscription;
 import org.apache.log4j.Logger;
 import org.globsframework.utils.exceptions.OperationFailed;
@@ -37,14 +39,26 @@ public class StripeService implements PaymentService {
       Map<String, Object> params = new HashMap<String, Object>();
       params.put("customer", customerId);
       params.put("plan", "standard-cloud");
-      com.stripe.model.Subscription subscription = com.stripe.model.Subscription.create(params);
-
-      String subscriptionId = subscription.getId();
-      Date currentPeriodEndDate = new Date(subscription.getCurrentPeriodEnd());
-      return new CloudSubscription(customerId, subscriptionId, currentPeriodEndDate);
+      return convertToCloudSubscription(Subscription.create(params));
     }
     catch (Exception e) {
       logger.error("Could not create subscription for customer " + customerId + " with email "  + email + " and token " + stripeToken, e);
+      throw new OperationFailed(e);
+    }
+  }
+
+  public CloudSubscription convertToCloudSubscription(Subscription subscription) {
+    String subscriptionId = subscription.getId();
+    Date currentPeriodEndDate = new Date(subscription.getCurrentPeriodEnd());
+    return new CloudSubscription(subscription.getCustomer(), subscriptionId, currentPeriodEndDate);
+  }
+
+  public CloudSubscription getSubscription(String subscriptionId) throws OperationFailed {
+    try {
+      return convertToCloudSubscription(Subscription.retrieve(subscriptionId));
+    }
+    catch (Exception e) {
+      logger.error("Could not retrieve subscription with id " + subscriptionId, e);
       throw new OperationFailed(e);
     }
   }
@@ -61,5 +75,51 @@ public class StripeService implements PaymentService {
       logger.error("Could not delete subscription for customer " + customerId + " and id " + subscriptionId, e);
       throw new OperationFailed(e);
     }
+  }
+
+  public CloudInvoice getInvoiceForEvent(String eventId) throws OperationFailed {
+    Event event = null;
+    try {
+      event = Event.retrieve(eventId);
+    }
+    catch (Exception e) {
+      logger.error("Could not retrieve invoice for event " + eventId, e);
+      throw new OperationFailed(e);
+    }
+    if (event == null) {
+      logger.error("No event found with id  " + eventId);
+      throw new OperationFailed("No event found with id  " + eventId);
+    }
+
+    Object data =  event.getData().getObject();
+    if (data == null) {
+      logger.error("No data for event " + eventId);
+      throw new OperationFailed("No data for event " + eventId);
+    }
+    if (!(data instanceof Invoice)) {
+      logger.error("Invalid data type for event " + data.getClass());
+      throw new OperationFailed("No data for event " + "Invalid data type for event " + data.getClass());
+    }
+
+    Invoice invoice = (Invoice)data;
+    return new CloudInvoice(invoice.getSubscription(),
+                            invoice.getReceiptNumber(),
+                            toAmount(invoice.getTotal()),
+                            toAmount(invoice.getTotal()),
+                            toDate(invoice.getDate()));
+  }
+
+  private Double toAmount(Long value) {
+    if (value == null) {
+      return null;
+    }
+    return (double)(value / 100);
+  }
+
+  private Date toDate(Long time) {
+    if (time == null) {
+      return null;
+    }
+    return new Date(time);
   }
 }

@@ -2,8 +2,10 @@ package com.budgetview.server.license.mail;
 
 import com.budgetview.server.config.ConfigService;
 import com.budgetview.server.utils.Lang;
+import com.budgetview.server.utils.Template;
 import org.apache.log4j.Logger;
 import org.globsframework.utils.Utils;
+import org.globsframework.utils.exceptions.ResourceAccessFailed;
 
 import javax.mail.*;
 import javax.mail.internet.AddressException;
@@ -84,6 +86,24 @@ public class Mailer {
                   Mailbox.SUPPORT.getEmail(), sendTo);
   }
 
+  public boolean sendSubscriptionInvoice(String sendTo, String lang, String invoiceId, String total, String tax, String excludingTaxes, String date) {
+    try {
+      String content = Template.init(Lang.getFile("emails", "fr", "invoice.html"))
+        .set("invoice", invoiceId)
+        .set("date", date)
+        .set("total", total)
+        .set("taxes", tax)
+        .set("excludingTaxes", excludingTaxes)
+        .get();
+      return doSend(Mailbox.SUPPORT, Lang.get("cloud.subscription.invoice.subject", lang), content,
+                    Mailbox.SUPPORT.getEmail(), sendTo);
+    }
+    catch (ResourceAccessFailed e) {
+      logger.error("Failed to send subscription invoice", e);
+      return false;
+    }
+  }
+
   public boolean sendCloudWebhookNotification(String sendTo, String lang) throws MessagingException {
     return doSend(Mailbox.SUPPORT, Lang.get("cloud.webhook.notification.subject", lang), Lang.get("cloud.webhook.notification.message", lang),
                   Mailbox.SUPPORT.getEmail(), sendTo);
@@ -92,6 +112,11 @@ public class Mailer {
   public boolean sendCloudAccountDeleted(String sendTo, String lang) throws MessagingException {
     return doSend(Mailbox.SUPPORT, Lang.get("cloud.subscription.deleted.subject", lang), Lang.get("cloud.subscription.deleted.message", lang),
                   Mailbox.SUPPORT.getEmail(), sendTo);
+  }
+
+  public void sendErrorToAdmin(Class sourceClass, String title, String message) {
+    String content = message + "\n\nSent from class: " + sourceClass.getName();
+    doSend(Mailbox.ADMIN, title, content, Mailbox.ADMIN.getEmail(), Mailbox.ADMIN.getEmail());
   }
 
   public void sendErrorToAdmin(Class sourceClass, String title, String message, Exception e) {

@@ -26,6 +26,10 @@ import static org.globsframework.utils.Utils.sort;
 
 public class GlobPrinter {
 
+  public static String toString(GlobList list) {
+    return GlobPrinter.init(list).toString();
+  }
+
   public static String toString(final FieldValues glob) {
     final StringBuilder builder = new StringBuilder();
     glob.safeApply(new FieldValues.Functor() {

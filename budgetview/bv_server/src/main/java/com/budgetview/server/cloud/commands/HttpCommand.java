@@ -40,7 +40,7 @@ public abstract class HttpCommand implements Command {
       response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
     }
     catch (Exception e) {
-      logger.error(e);
+      logger.error("Error processing command " + getClass().getSimpleName(), e);
       response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
     }
   }

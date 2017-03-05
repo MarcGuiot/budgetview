@@ -33,8 +33,12 @@ public class Dates {
   }
 
   public static Date nextMonth() {
+    return monthsLater(1);
+  }
+
+  public static Date monthsLater(int offset) {
     Calendar cal = Calendar.getInstance();
-    cal.add(Calendar.MONTH, +1);
+    cal.add(Calendar.MONTH, offset);
     return cal.getTime();
   }
 

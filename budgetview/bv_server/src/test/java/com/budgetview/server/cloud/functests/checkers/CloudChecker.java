@@ -4,7 +4,6 @@ import com.budgetview.server.cloud.CloudServer;
 import com.budgetview.server.cloud.model.CloudDatabaseModel;
 import com.budgetview.server.cloud.model.CloudUser;
 import com.budgetview.server.cloud.services.EmailValidationService;
-import com.budgetview.server.license.model.License;
 import com.budgetview.shared.cloud.CloudConstants;
 import com.budgetview.shared.http.Http;
 import org.apache.http.client.fluent.Request;
@@ -102,7 +101,6 @@ public class CloudChecker {
 
       SqlConnection connection = db.connect();
       try {
-
         GlobList users = connection.selectAll(CloudUser.TYPE, Where.fieldEquals(CloudUser.EMAIL, email));
         if (users.isEmpty()) {
           connection.startCreate(CloudUser.TYPE)
@@ -125,7 +123,9 @@ public class CloudChecker {
         response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
       }
       finally {
-        connection.commitAndClose();
+        if (connection != null) {
+          connection.commitAndClose();
+        }
       }
     }
 

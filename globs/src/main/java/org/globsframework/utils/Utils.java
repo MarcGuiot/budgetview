@@ -3,8 +3,6 @@ package org.globsframework.utils;
 import org.globsframework.utils.exceptions.InvalidParameter;
 import org.globsframework.utils.exceptions.ItemNotFound;
 
-import java.io.BufferedOutputStream;
-import java.io.PrintStream;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.lang.reflect.Array;
@@ -146,7 +144,7 @@ public class Utils {
   }
 
   public static int randomInt(int max) {
-    return (int)Math.round(Math.random() * max);
+    return (int) Math.round(Math.random() * max);
   }
 
   public static boolean isEmpty(Object[] array) {
@@ -399,10 +397,10 @@ public class Utils {
     return (T[]) copyOf(original, newLength, original.getClass());
   }
 
-  public static <T,U> T[] copyOf(U[] original, int newLength, Class<? extends T[]> newType) {
-    T[] copy = ((Object)newType == (Object)Object[].class)
-               ? (T[]) new Object[newLength]
-               : (T[]) Array.newInstance(newType.getComponentType(), newLength);
+  public static <T, U> T[] copyOf(U[] original, int newLength, Class<? extends T[]> newType) {
+    T[] copy = ((Object) newType == (Object) Object[].class)
+      ? (T[]) new Object[newLength]
+      : (T[]) Array.newInstance(newType.getComponentType(), newLength);
     System.arraycopy(original, 0, copy, 0,
                      Math.min(original.length, newLength));
     return copy;
@@ -420,5 +418,19 @@ public class Utils {
     StringWriter stringWriter = new StringWriter();
     t.printStackTrace(new PrintWriter(stringWriter));
     return stringWriter.toString();
+  }
+
+  public static String toString(Iterable collection) {
+    StringBuilder builder = new StringBuilder();
+    builder.append("[");
+    Iterator iterator = collection.iterator();
+    while (iterator.hasNext()) {
+      builder.append(iterator.next());
+      if (iterator.hasNext()) {
+        builder.append(",");
+      }
+    }
+    builder.append("]");
+    return builder.toString();
   }
 }

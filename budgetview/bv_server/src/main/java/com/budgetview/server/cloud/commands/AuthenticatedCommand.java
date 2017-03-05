@@ -17,17 +17,15 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-public abstract class AuthenticatedCommand extends HttpCommand {
+public abstract class AuthenticatedCommand extends DatabaseCommand {
 
-  protected final GlobsDatabase database;
   protected final AuthenticationService authentication;
   protected BudgeaAPI budgeaAPI;
   protected Glob user;
 
   public AuthenticatedCommand(Directory directory, HttpServletRequest request, HttpServletResponse response, Logger logger) {
-    super(request, response, logger);
+    super(directory, request, response, logger);
     this.authentication = directory.get(AuthenticationService.class);
-    this.database = directory.get(GlobsDatabase.class);
   }
 
   public void run() throws ServletException, IOException {

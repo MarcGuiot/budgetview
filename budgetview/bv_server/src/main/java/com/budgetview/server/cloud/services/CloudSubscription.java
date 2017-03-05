@@ -6,7 +6,7 @@ public class CloudSubscription {
 
   public final String customerId;
   public final String subscriptionId;
-  public final Date currentPeriodEndDate;
+  public Date currentPeriodEndDate;
 
   public CloudSubscription(String customerId, String subscriptionId, Date currentPeriodEndDate) {
     this.customerId = customerId;

@@ -1,5 +1,10 @@
 package com.budgetview.server.utils;
 
+import org.globsframework.utils.Files;
+import org.globsframework.utils.exceptions.ItemNotFound;
+import org.globsframework.utils.exceptions.ResourceAccessFailed;
+
+import java.io.InputStream;
 import java.text.MessageFormat;
 import java.util.HashMap;
 import java.util.Locale;
@@ -31,6 +36,15 @@ public class Lang {
     else {
       return message;
     }
+  }
+
+  public static String getFile(String directory, String lang, String fileName) throws ResourceAccessFailed {
+    String filePath = "/" + directory + "/" + lang.toLowerCase() + "/" + fileName;
+    InputStream stream = Lang.class.getResourceAsStream(filePath);
+    if (stream == null) {
+      throw new ResourceAccessFailed("Resource file " + filePath + " not found");
+    }
+    return Files.loadStreamToString(stream, "UTF-8");
   }
 
   private synchronized static ResourceBundle getResource(Locale locale) {

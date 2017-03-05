@@ -55,6 +55,12 @@ public class CloudMailbox {
     email.checkContainsAny("deleted", "supprim");
   }
 
+
+  public void checkInvoice(final String mailTo, String receiptNumber) throws Exception {
+    Email email = getEmail(mailTo);
+    email.checkContainsAny(receiptNumber);
+  }
+
   public void clickSubscriptionValidationLink(String mailTo) throws Exception {
     String content = getEmail(mailTo).getContent();
     Matcher matcher = SUBSCRIPTION_VALIDATION_LINK_PATTERN.matcher(content);

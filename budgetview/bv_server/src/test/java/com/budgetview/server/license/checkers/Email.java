@@ -4,6 +4,7 @@ import com.dumbster.smtp.SmtpMessage;
 import junit.framework.AssertionFailedError;
 
 import java.io.UnsupportedEncodingException;
+import java.util.Arrays;
 
 import static javax.mail.internet.MimeUtility.decodeText;
 
@@ -56,7 +57,7 @@ public class Email {
         return this;
       }
     }
-    throw new AssertionFailedError("Text not found. Actual content: \n" + content);
+    throw new AssertionFailedError("Could not find any of " + Arrays.toString(textElements) + "\nActual content: \n" + content);
   }
 
   public Email checkDoesNotContain(String... textElements) {
