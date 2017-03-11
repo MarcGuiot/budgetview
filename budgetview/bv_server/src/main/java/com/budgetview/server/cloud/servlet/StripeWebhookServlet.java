@@ -75,9 +75,10 @@ public class StripeWebhookServlet extends HttpServlet {
 
       if ("invoice.payment_failed".equals(event.getType())) {
         logger.info("invoice.payment_failed");
-        EventData data = event.getData();
-        Invoice invoice = (Invoice) data.getObject();
-        processInvoicePaymentFailed(invoice);
+        CloudInvoice invoice = paymentService.getInvoiceForEvent(event.getId());
+        final CloudSubscription subscription = paymentService.getSubscription(invoice.subscriptionId);
+        Command command = new ProcessInvoicePaymentFailure(invoice, subscription, request, response, event);
+        command.run();
         return;
       }
     }
@@ -146,11 +147,56 @@ public class StripeWebhookServlet extends HttpServlet {
     }
   }
 
-  private String toDate(Date date) {
-    return dateFormat.format(date);
+  private class ProcessInvoicePaymentFailure extends DatabaseCommand {
+    private final CloudInvoice invoice;
+    private final CloudSubscription subscription;
+    private final Event event;
+
+    public ProcessInvoicePaymentFailure(CloudInvoice invoice, CloudSubscription subscription, HttpServletRequest request, HttpServletResponse response, Event event) {
+      super(StripeWebhookServlet.this.directory, request, response, StripeWebhookServlet.logger);
+      this.invoice = invoice;
+      this.subscription = subscription;
+      this.event = event;
+    }
+
+    protected int doRun(JsonGlobWriter writer) throws IOException, InvalidHeader {
+      SqlConnection connection = database.connect();
+      GlobList users;
+      try {
+        users =
+          connection.selectAll(CloudUser.TYPE,
+                               Where.fieldEquals(CloudUser.STRIPE_SUBSCRIPTION_ID, subscription.subscriptionId));
+      }
+      finally {
+        connection.commitAndClose();
+      }
+
+      if (users == null || users.isEmpty()) {
+        logger.error("No user found with subscriptionId " + subscription.subscriptionId);
+        mailer.sendErrorToAdmin(getClass(), "Stripe webhook - user not found", "No CloudUser found with subscriptionId " + subscription + "\nEvent:" + event.toJson());
+        return HttpServletResponse.SC_OK;
+      }
+
+      if (users.size() > 1) {
+        logger.error("Several users found with subscriptionId " + subscription.subscriptionId + "\n" + GlobPrinter.toString(users));
+        mailer.sendErrorToAdmin(getClass(), "Stripe webhook - several users found", "No CloudUser found with subscriptionId " + subscription + "\nEvent:" + event.toJson());
+        return HttpServletResponse.SC_OK;
+      }
+
+      Glob user = users.getFirst();
+
+      String email = user.get(CloudUser.EMAIL);
+      String date = toDate(invoice.date);
+      mailer.sendSubscriptionInvoiceFailed(email, "fr", invoice.receiptNumber, date);
+
+      logger.info("Processed invoice " + invoice.receiptNumber + " failure for user " + email + " (" + user.get(CloudUser.ID) + ") - email sent");
+
+      return HttpServletResponse.SC_OK;
+    }
   }
 
-  private void processInvoicePaymentFailed(Invoice invoice) {
+  private String toDate(Date date) {
+    return dateFormat.format(date);
   }
 
   private Event parseEvent(HttpServletRequest request) throws IOException {

@@ -61,6 +61,12 @@ public class CloudMailbox {
     email.checkContainsAny(receiptNumber);
   }
 
+  public void checkInvoicePaymentFailed(final String mailTo, String receiptNumber) throws Exception {
+    Email email = getEmail(mailTo);
+    email.checkContainsAny(receiptNumber);
+    email.checkContainsAny("Le r=C3=A8glement de votre abonnement =C3=A0 =C3=A9chou=C3=A9");
+  }
+
   public void clickSubscriptionValidationLink(String mailTo) throws Exception {
     String content = getEmail(mailTo).getContent();
     Matcher matcher = SUBSCRIPTION_VALIDATION_LINK_PATTERN.matcher(content);

@@ -122,4 +122,24 @@ public class PaymentChecker {
     Http.execute(url, Request.Post(url)
       .bodyString(event.toJson(), ContentType.APPLICATION_JSON));
   }
+
+  public void notifyInvoicePaymentFailed(String subscriptionId, Date currentPeriodEndDate, String receiptNumber) throws Exception {
+
+    String eventId = "event" + index++;
+
+    CloudSubscription subscription = doGetSubscription(subscriptionId);
+    subscription.currentPeriodEndDate = currentPeriodEndDate;
+
+    CloudInvoice invoice = new CloudInvoice(subscriptionId, receiptNumber, 2.25, 0.5, currentPeriodEndDate);
+    invoiceEvents.put(eventId, invoice);
+
+    Event event = new Event();
+    event.setId(eventId);
+    event.setType("invoice.payment_failed");
+
+    String url = CloudConstants.getServerUrl("/stripe");
+    Http.execute(url, Request.Post(url)
+      .bodyString(event.toJson(), ContentType.APPLICATION_JSON));
+  }
+
 }

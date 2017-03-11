@@ -76,6 +76,12 @@ public class CloudSubscriptionTest extends CloudDesktopTestCase {
       .close();
 
 
+    // SUBSCRIPTION PAYMENT FAILED
+
+    payments.notifyInvoicePaymentFailed(subscriptionId, newEndDate, "000111222333");
+    mailbox.checkInvoicePaymentFailed("toto@example.com", "000111222333");
+
+
     // DELETION
 
     budgea.pushConnectionList(BudgeaConnections.init()

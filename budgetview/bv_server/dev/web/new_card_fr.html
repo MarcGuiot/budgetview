@@ -1,0 +1,23 @@
+<html>
+<body>
+
+<div class="text-align:center">
+  <p>Pour entrer votre nouvelle carte :</p>
+  <form action="https://register.mybudgetview.fr:1445/stripe-form" method="POST">
+    <script
+        src="https://checkout.stripe.com/checkout.js" class="stripe-button"
+        data-key="pk_test_bXNiFgCQ994PRYR4EjDUA6Ns"
+        data-name="BudgetView"
+        data-description="Nouvelle carte bancaire"
+        data-image="https://stripe.com/img/documentation/checkout/marketplace.png"
+        data-locale="auto"
+        data-label="Valider cette carte"
+        data-zip-code="true"
+        data-currency="eur"
+        data-billing-address="true">
+    </script>
+  </form>
+</div>
+
+</body>
+</html>

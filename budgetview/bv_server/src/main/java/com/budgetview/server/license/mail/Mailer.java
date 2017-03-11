@@ -104,6 +104,21 @@ public class Mailer {
     }
   }
 
+  public boolean sendSubscriptionInvoiceFailed(String sendTo, String lang, String invoiceId, String date) {
+    try {
+      String content = Template.init(Lang.getFile("emails", "fr", "invoice_failed.html"))
+        .set("invoice", invoiceId)
+        .set("date", date)
+        .get();
+      return doSend(Mailbox.SUPPORT, Lang.get("cloud.subscription.invoiceFailed.subject", lang), content,
+                    Mailbox.SUPPORT.getEmail(), sendTo);
+    }
+    catch (ResourceAccessFailed e) {
+      logger.error("Failed to send subscription invoice failure", e);
+      return false;
+    }
+  }
+
   public boolean sendCloudWebhookNotification(String sendTo, String lang) throws MessagingException {
     return doSend(Mailbox.SUPPORT, Lang.get("cloud.webhook.notification.subject", lang), Lang.get("cloud.webhook.notification.message", lang),
                   Mailbox.SUPPORT.getEmail(), sendTo);
