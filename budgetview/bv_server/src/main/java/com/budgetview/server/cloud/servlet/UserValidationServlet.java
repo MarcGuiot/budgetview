@@ -59,6 +59,7 @@ public class UserValidationServlet extends HttpCloudServlet {
 
           Integer userId = user.get(CloudUser.ID);
           writer.object();
+          writer.key(CloudConstants.API_VERSION).value(CloudConstants.CURRENT_API_VERSION);
           try {
             emailValidation.checkTempCode(userId, code);
             String newToken = authentication.registerUserDevice(userId);

@@ -49,6 +49,7 @@ public abstract class HttpCommand implements Command {
 
   protected void setOk(JSONWriter writer) {
     writer.object();
+    writer.key(CloudConstants.API_VERSION).value(CloudConstants.CURRENT_API_VERSION);
     writer.key(CloudConstants.STATUS).value("ok");
     writer.endObject();
   }

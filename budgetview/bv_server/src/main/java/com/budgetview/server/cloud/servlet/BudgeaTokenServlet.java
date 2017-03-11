@@ -38,6 +38,7 @@ public class BudgeaTokenServlet extends HttpCloudServlet {
           temporaryToken = BudgeaAPI.requestFirstTemporaryToken();
         }
         writer.object();
+        writer.key(CloudConstants.API_VERSION).value(CloudConstants.CURRENT_API_VERSION);
         writer.key(CloudConstants.STATUS).value(CloudRequestStatus.OK);
         writer.key(CloudConstants.PROVIDER_TOKEN).value(temporaryToken);
         writer.key(CloudConstants.PROVIDER_TOKEN_REGISTERED).value(Strings.isNotEmpty(permanentBudgeaToken));

@@ -7,7 +7,6 @@ import com.budgetview.shared.cloud.budgea.BudgeaAPI;
 import com.budgetview.shared.model.AccountType;
 import com.budgetview.shared.model.Provider;
 import com.budgetview.utils.Lang;
-import com.oracle.javafx.jmx.json.JSONFactory;
 import org.globsframework.gui.splits.utils.GuiUtils;
 import org.globsframework.json.JsonGlobFormat;
 import org.globsframework.json.JsonGlobParser;
@@ -102,6 +101,7 @@ public class CloudService {
                             value(CloudDesktopUser.BV_TOKEN, null),
                             value(CloudDesktopUser.REGISTERED, false));
           JSONObject result = cloudAPI.signup(email, Lang.getLang());
+          checkAPIVersion(result);
           switch (CloudRequestStatus.get(result.getString(CloudConstants.STATUS))) {
             case OK:
               callback.processCompletion();
@@ -127,9 +127,8 @@ public class CloudService {
       public void run() {
         try {
           JSONObject result = cloudAPI.validate(email, code);
-
           System.out.println("CloudService.validate:" + result.toString(2));
-
+          checkAPIVersion(result);
           switch (CloudValidationStatus.get(result.getString(CloudConstants.STATUS))) {
             case OK:
               String bvToken = result.getString(CloudConstants.BV_TOKEN);
@@ -261,6 +260,7 @@ public class CloudService {
           System.out.println("CloudService.addBankConnection - getting temp token");
 
           JSONObject result = cloudAPI.getTemporaryBudgeaToken(email, bvToken);
+          checkAPIVersion(result);
           switch (CloudRequestStatus.get(result.getString(CloudConstants.STATUS))) {
             case OK:
               budgeaAPI.setToken(result.getString(CloudConstants.PROVIDER_TOKEN));
@@ -465,9 +465,6 @@ public class CloudService {
   public void downloadStatement(final GlobRepository repository, final DownloadCallback callback) {
     Thread thread = new Thread(new Runnable() {
       public void run() {
-
-        System.out.println("CloudService.downloadStatement");
-
         try {
           final GlobList importedRealAccounts = doDownloadStatement(repository);
           GuiUtils.runInSwingThread(new Runnable() {
@@ -496,10 +493,11 @@ public class CloudService {
     thread.start();
   }
 
-  public GlobList doDownloadStatement(GlobRepository repository) throws SubscriptionError, IOException {
+  public GlobList doDownloadStatement(GlobRepository repository) throws SubscriptionError, IOException, InvalidCloudAPIVersion {
     Glob user = repository.findOrCreate(CloudDesktopUser.KEY);
     Integer lastUpdate = user.get(CloudDesktopUser.LAST_UPDATE);
     JSONObject result = cloudAPI.getStatement(user.get(CloudDesktopUser.EMAIL), user.get(CloudDesktopUser.BV_TOKEN), lastUpdate);
+    checkAPIVersion(result);
     String status = result.getString(CloudConstants.STATUS);
     switch (CloudRequestStatus.get(status)) {
       case OK:
@@ -574,6 +572,13 @@ public class CloudService {
       repository.update(CloudDesktopUser.KEY, CloudDesktopUser.LAST_UPDATE, newUpdate);
     }
     return importedRealAccounts;
+  }
+
+  private void checkAPIVersion(JSONObject result) throws InvalidCloudAPIVersion {
+    int apiVersion = result.optInt(CloudConstants.API_VERSION, -1);
+    if (apiVersion != CloudConstants.CURRENT_API_VERSION) {
+      throw new InvalidCloudAPIVersion();
+    }
   }
 
   public AccountType getAccountType(JSONObject account) {

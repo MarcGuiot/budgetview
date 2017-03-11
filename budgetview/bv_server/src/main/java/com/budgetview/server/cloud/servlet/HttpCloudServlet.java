@@ -21,6 +21,7 @@ public abstract class HttpCloudServlet extends HttpServlet {
     writer.object();
     writer.key(CloudConstants.STATUS).value("no_subscription");
     writer.key(CloudConstants.SUBSCRIPTION_STATUS).value(e.getStatus().getName());
+    writer.key(CloudConstants.API_VERSION).value(CloudConstants.CURRENT_API_VERSION);
     writer.endObject();
   }
 

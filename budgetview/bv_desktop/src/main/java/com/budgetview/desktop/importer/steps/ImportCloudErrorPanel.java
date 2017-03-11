@@ -1,6 +1,7 @@
 package com.budgetview.desktop.importer.steps;
 
 import com.budgetview.desktop.cloud.CloudService;
+import com.budgetview.desktop.cloud.InvalidCloudAPIVersion;
 import com.budgetview.desktop.components.ProgressPanel;
 import com.budgetview.desktop.components.dialogs.ConfirmationDialog;
 import com.budgetview.desktop.components.dialogs.PicsouDialog;
@@ -47,6 +48,8 @@ public class ImportCloudErrorPanel extends AbstractImportStepPanel {
     builder.add("detailsTitle", detailsTitle);
     builder.add("detailsText", detailsText);
 
+    builder.add("hyperlinkHandler", new HyperlinkHandler(localDirectory));
+
     progressPanel = new ProgressPanel();
     builder.add("progressPanel", progressPanel);
 
@@ -54,6 +57,7 @@ public class ImportCloudErrorPanel extends AbstractImportStepPanel {
   }
 
   public void showException(Exception e) {
+
     if (e == null) {
       errorMessage.setText(Lang.get("import.cloud.error.message.default"));
       detailsTitle.setVisible(false);
@@ -61,8 +65,15 @@ public class ImportCloudErrorPanel extends AbstractImportStepPanel {
       return;
     }
 
-    if (e instanceof UnknownHostException) {
+    if (e instanceof UnknownHostException || e instanceof org.apache.http.conn.HttpHostConnectException) {
       errorMessage.setText(Lang.get("import.cloud.error.message.unknownHost"));
+      detailsTitle.setVisible(false);
+      detailsText.setVisible(false);
+      return;
+    }
+
+    if (e instanceof InvalidCloudAPIVersion) {
+      errorMessage.setText(Lang.get("import.cloud.error.message.apiVersion"));
       detailsTitle.setVisible(false);
       detailsText.setVisible(false);
       return;

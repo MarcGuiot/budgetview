@@ -20,7 +20,7 @@
 
             <label icon="synchro_error.png" styleClass="centerIcon"/>
 
-            <htmlEditorPane ref="errorMessage"/>
+            <htmlEditorPane ref="errorMessage" hyperlinkListener="hyperlinkHandler"/>
 
             <column styleClass="separator" autoHideSource="detailsText" marginTop="20">
               <label ref="detailsTitle" text="$import.cloud.error.details"/>

@@ -84,6 +84,7 @@ public class BankConnectionsServlet extends HttpCloudServlet {
         Map<Integer, String> bankNames = getBankNames();
 
         writer.object();
+        writer.key(CloudConstants.API_VERSION).value(CloudConstants.CURRENT_API_VERSION);
         writer.key(CloudConstants.STATUS).value("ok");
         writer.key(CloudConstants.SUBSCRIPTION_END_DATE).value(JsonGlobFormat.toString(user.get(CloudUser.SUBSCRIPTION_END_DATE)));
         writer.key("connections");
@@ -121,6 +122,7 @@ public class BankConnectionsServlet extends HttpCloudServlet {
         sqlConnection.commitAndClose();
 
         writer.object();
+        writer.key(CloudConstants.API_VERSION).value(CloudConstants.CURRENT_API_VERSION);
         if (connections.isEmpty()) {
           writer.key(CloudConstants.STATUS).value("not_found");
           return;

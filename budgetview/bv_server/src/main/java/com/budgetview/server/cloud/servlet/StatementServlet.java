@@ -98,6 +98,7 @@ public class StatementServlet extends HttpCloudServlet {
         }
 
         writer.object();
+        writer.key(CloudConstants.API_VERSION).value(CloudConstants.CURRENT_API_VERSION);
         writer.key(CloudConstants.STATUS).value("ok");
         writer.key("last_update").value(maxId);
 
