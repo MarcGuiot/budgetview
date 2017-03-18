@@ -8,6 +8,8 @@ public interface PaymentService {
 
   CloudSubscription getSubscription(String subscriptionId) throws OperationFailed;
 
+  void updateCard(String customerId, String stripeToken);
+
   void deleteSubscription(String customerId, String subscriptionId);
 
   CloudInvoice getInvoiceForEvent(String eventId);

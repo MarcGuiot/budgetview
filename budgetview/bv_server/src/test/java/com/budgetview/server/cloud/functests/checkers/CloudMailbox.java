@@ -82,8 +82,8 @@ public class CloudMailbox {
       throw new InvalidState("start() not called");
     }
 
-    // Warning: calling this several times within an UISpecAssert will cause the first
-    // message to be dumped and having a misleading "No mail received error"
+    // Warning: calling this repeatedly within an UISpecAssert will cause the first
+    // message to be dumped and having a misleading "No mail received error" in the end
     return mailServer.checkReceivedMail(mailTo);
   }
 

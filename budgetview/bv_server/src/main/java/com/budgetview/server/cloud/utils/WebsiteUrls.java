@@ -16,8 +16,8 @@ public class WebsiteUrls {
     return url("/boutique/abonnement-reussi");
   }
 
-  public static String subscriptionExists() {
-    return url("/boutique/client-existant");
+  public static String cardUpdated() {
+    return url("/boutique/nouvelle-carte");
   }
 
   public static String invalidCode() {

@@ -42,7 +42,20 @@ public class StripeService implements PaymentService {
       return convertToCloudSubscription(Subscription.create(params));
     }
     catch (Exception e) {
-      logger.error("Could not create subscription for customer " + customerId + " with email "  + email + " and token " + stripeToken, e);
+      logger.error("Could not create subscription for customer " + customerId + " with email " + email + " and token " + stripeToken, e);
+      throw new OperationFailed(e);
+    }
+  }
+
+  public void updateCard(String customerId, String stripeToken) throws OperationFailed {
+    try {
+      Customer customer = Customer.retrieve(customerId);
+      Map<String, Object> params = new HashMap<String, Object>();
+      params.put("source", stripeToken);
+      customer.update(params);
+    }
+    catch (Exception e) {
+      logger.error("Could not update card for customer " + customerId, e);
       throw new OperationFailed(e);
     }
   }
@@ -91,7 +104,7 @@ public class StripeService implements PaymentService {
       throw new OperationFailed("No event found with id  " + eventId);
     }
 
-    Object data =  event.getData().getObject();
+    Object data = event.getData().getObject();
     if (data == null) {
       logger.error("No data for event " + eventId);
       throw new OperationFailed("No data for event " + eventId);
@@ -101,7 +114,7 @@ public class StripeService implements PaymentService {
       throw new OperationFailed("No data for event " + "Invalid data type for event " + data.getClass());
     }
 
-    Invoice invoice = (Invoice)data;
+    Invoice invoice = (Invoice) data;
     return new CloudInvoice(invoice.getSubscription(),
                             invoice.getReceiptNumber(),
                             toAmount(invoice.getTotal()),
@@ -113,7 +126,7 @@ public class StripeService implements PaymentService {
     if (value == null) {
       return null;
     }
-    return (double)(value / 100);
+    return (double) (value / 100);
   }
 
   private Date toDate(Long time) {

@@ -82,6 +82,15 @@ public class CloudSubscriptionTest extends CloudDesktopTestCase {
     mailbox.checkInvoicePaymentFailed("toto@example.com", "000111222333");
 
 
+    // UPDATE CARD
+
+    payments.setSubscriptionEndDate(Dates.monthsLater(3));
+    subscriptions.submitStripeForm("toto@example.com", "xyz98765", WebsiteUrls.emailSent());
+    mailbox.clickSubscriptionValidationLink("toto@example.com");
+    website.checkLastVisitedPage(WebsiteUrls.cardUpdated());
+    payments.checkLastUpdate("xyz98765");
+
+
     // DELETION
 
     budgea.pushConnectionList(BudgeaConnections.init()

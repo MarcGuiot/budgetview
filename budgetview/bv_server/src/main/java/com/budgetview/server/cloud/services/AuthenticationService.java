@@ -96,7 +96,7 @@ public class AuthenticationService {
         Integer userId = request.getLastGeneratedIds().get(CloudUser.ID);
         return connection.selectUnique(CloudUser.TYPE, Where.fieldEquals(CloudUser.ID, userId));
       }
-      else if (users.size() > 1) {
+      else if (users.size() >= 1) {
         if (values.length > 0) {
           SqlUpdateBuilder builder =
             connection.startUpdate(CloudUser.TYPE, fieldEquals(CloudUser.EMAIL, lowerCaseEmail));
@@ -105,6 +105,7 @@ public class AuthenticationService {
           }
           builder.getRequest().execute();
         }
+        return users.getFirst();
       }
     }
     finally {

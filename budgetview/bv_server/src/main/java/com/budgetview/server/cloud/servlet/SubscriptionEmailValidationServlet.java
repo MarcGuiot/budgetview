@@ -63,6 +63,17 @@ public class SubscriptionEmailValidationServlet extends HttpServlet {
 
     String email = user.get(CloudUser.EMAIL);
     String stripeToken = user.get(CloudUser.STRIPE_TOKEN);
+    String customerId = user.get(CloudUser.STRIPE_CUSTOMER_ID);
+    boolean newAccount = Strings.isNullOrEmpty(customerId);
+
+    if (!newAccount) {
+      payments.updateCard(customerId, stripeToken);
+      String url = WebsiteUrls.cardUpdated();
+      logger.info("Card updated - redirect to " + url);
+      response.sendRedirect(url);
+      return;
+    }
+
     CloudSubscription subscription;
     try {
       subscription = payments.createSubscription(email, stripeToken);
@@ -91,7 +102,7 @@ public class SubscriptionEmailValidationServlet extends HttpServlet {
     }
 
     String url = WebsiteUrls.subscriptionCreated();
-    logger.info("Creation completed - redirect to " + url);
+    logger.info("Subscription created - redirect to " + url);
     response.sendRedirect(url);
   }
 }

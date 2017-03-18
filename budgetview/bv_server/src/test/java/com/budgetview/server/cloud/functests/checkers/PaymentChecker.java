@@ -32,6 +32,8 @@ public class PaymentChecker {
   private String lastCustomerId;
   private String lastDeletedCustomer;
   private String lastDeletedSubscription;
+  private String lastUpdateCustomerId;
+  private String lastUpdateToken;
   private Map<String, CloudSubscription> subscriptions = new HashMap<String, CloudSubscription>();
   private Map<String, CloudInvoice> invoiceEvents = new HashMap<String, CloudInvoice>();
   private int index = 100;
@@ -50,6 +52,10 @@ public class PaymentChecker {
   public String checkLastRequest(String email, String token) {
     assertEquals(email + " / " + token, lastEmail + " / " + lastToken);
     return lastSubscriptionId;
+  }
+
+  public void checkLastUpdate(String token) {
+    assertEquals(lastCustomerId + " / " + token, lastUpdateCustomerId + " / " + lastUpdateToken);
   }
 
   public void checkSubscriptionDeleted(String subscriptionId) {
@@ -79,6 +85,11 @@ public class PaymentChecker {
 
     public CloudSubscription getSubscription(String subscriptionId) throws OperationFailed {
       return doGetSubscription(subscriptionId);
+    }
+
+    public void updateCard(String customerId, String stripeToken) {
+      PaymentChecker.this.lastUpdateCustomerId = customerId;
+      PaymentChecker.this.lastUpdateToken = stripeToken;
     }
 
     public void deleteSubscription(String customerId, String subscriptionId) {
