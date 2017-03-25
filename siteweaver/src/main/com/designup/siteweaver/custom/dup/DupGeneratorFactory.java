@@ -58,6 +58,9 @@ public class DupGeneratorFactory implements GeneratorFactory {
     else if (generatorType.equals("booktoc")) {
       return new BookTOCGenerator(tag, new DupBookTOCFormatter());
     }
+    else if (generatorType.equals("noindex")) {
+      return new NoIndexGenerator();
+    }
 
     throw new RuntimeException("Unknow generator type '" + generatorType + "'");
   }
