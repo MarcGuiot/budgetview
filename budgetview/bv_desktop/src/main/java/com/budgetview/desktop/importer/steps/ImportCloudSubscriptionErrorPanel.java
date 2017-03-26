@@ -32,19 +32,12 @@ public class ImportCloudSubscriptionErrorPanel extends AbstractImportStepPanel {
   protected GlobsPanelBuilder createPanelBuilder() {
     GlobsPanelBuilder builder = new GlobsPanelBuilder(getClass(), "/layout/importexport/importsteps/importCloudSubscriptionErrorPanel.splits", repository, localDirectory);
 
-    Action nextAction = new AbstractAction() {
-      public void actionPerformed(ActionEvent e) {
-        processNext();
-      }
-    };
-
     messageField = GuiUtils.createReadOnlyHtmlComponent();
     builder.add("messageField", messageField);
 
     actionButton = new JButton();
     builder.add("actionButton", actionButton);
 
-    builder.add("next", nextAction);
     builder.add("close", new AbstractAction(getCloseLabel()) {
       public void actionPerformed(ActionEvent e) {
         controller.complete();
@@ -78,10 +71,6 @@ public class ImportCloudSubscriptionErrorPanel extends AbstractImportStepPanel {
         actionButton.setAction(new BuySubscriptionAction(localDirectory));
         break;
     }
-  }
-
-  private void processNext() {
-
   }
 
   public void prepareForDisplay() {

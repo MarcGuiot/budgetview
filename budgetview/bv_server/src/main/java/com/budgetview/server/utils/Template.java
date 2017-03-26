@@ -12,7 +12,7 @@ public class Template {
   }
 
   public Template set(String key, String value) {
-    content = content.replace("{{" + key + "}}", value);
+    content = content.replace("{{" + key + "}}", value != null ? value : "");
     return this;
   }
 

@@ -13,12 +13,13 @@
     <page file="achat.html" title="Achetez BudgetView !" shortTitle="Achat">
       <key name="title.hide" value="true"/>
       <key name="navbar.hide" value="true"/>
+      <key name="noindex" value="true"/>
       <key name="innerTemplate" value="templates/standardPageTemplate.html"/>
 
       <page file="achat/ok.html" title="Achat terminé">
         <key name="title.hide" value="true"/>
       </page>
-      <page file="achat/echec.html" title="Erreur"/>
+      <page file="achat/echec.html" title="Une erreur est survenue"/>
     </page>
 
     <page file="extensions.html" title="Extensions">
@@ -138,6 +139,7 @@
 
     <page file="mobile.html" title="Mobile">
       <key name="navbar.hide" value="true"/>
+      <key name="noindex" value="true"/>
       <key name="innerTemplate" value="templates/standardPageTemplate.html"/>
 
       <page file="mobile/account_ok.html" title="Votre compte mobile est activé"/>
@@ -149,6 +151,19 @@
       <key name="innerTemplate" value="templates/standardPageTemplate.html"/>
       <page file="apropos/presse.html" title="Presse et Blogs"/>
       <page file="apropos/mentions_legales.html" title="Mentions légales"/>
+    </page>
+
+    <page file="boutique.html" title="Mobile">
+      <key name="navbar.hide" value="true"/>
+      <key name="noindex" value="true"/>
+      <key name="innerTemplate" value="templates/standardPageTemplate.html"/>
+
+      <page file="boutique/email-envoye.html" title="Un email vous a été envoyé"/>
+      <page file="boutique/abonnement-reussi.html" title="Votre compte Cloud est activé"/>
+      <page file="boutique/nouvelle-carte.html" title="Votre nouvelle carte est bien prise en compte"/>
+      <page file="boutique/code-invalide.html" title="Ce lien d'activation est invalide"/>
+      <page file="boutique/code-expire.html" title="Votre code d'activation a expiré"/>
+      <page file="boutique/erreur.html" title="Une erreur est survenue"/>
     </page>
   </page>
 

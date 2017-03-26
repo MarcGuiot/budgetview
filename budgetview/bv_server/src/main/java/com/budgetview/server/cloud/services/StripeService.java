@@ -6,6 +6,7 @@ import com.stripe.model.Event;
 import com.stripe.model.Invoice;
 import com.stripe.model.Subscription;
 import org.apache.log4j.Logger;
+import org.globsframework.utils.Dates;
 import org.globsframework.utils.exceptions.OperationFailed;
 
 import java.util.Date;
@@ -15,6 +16,8 @@ import java.util.Map;
 public class StripeService implements PaymentService {
 
   private static Logger logger = Logger.getLogger("StripeService");
+
+  private static final String STRIPE_PLAN = "cloud-std";
 
   public StripeService() {
     Stripe.apiKey = "sk_test_p2kZ7X2c5pJ4r7Y6U44bkH79";  // https://dashboard.stripe.com/account/apikeys
@@ -26,7 +29,7 @@ public class StripeService implements PaymentService {
       Map<String, Object> params = new HashMap<String, Object>();
       params.put("email", email);
       params.put("source", stripeToken);
-      params.put("plan", "cloud_std");
+      params.put("plan", STRIPE_PLAN);
       Customer customer = Customer.create(params);
       customerId = customer.getId();
     }
@@ -38,7 +41,7 @@ public class StripeService implements PaymentService {
     try {
       Map<String, Object> params = new HashMap<String, Object>();
       params.put("customer", customerId);
-      params.put("plan", "standard-cloud");
+      params.put("plan", STRIPE_PLAN);
       return convertToCloudSubscription(Subscription.create(params));
     }
     catch (Exception e) {
@@ -62,13 +65,16 @@ public class StripeService implements PaymentService {
 
   public CloudSubscription convertToCloudSubscription(Subscription subscription) {
     String subscriptionId = subscription.getId();
-    Date currentPeriodEndDate = new Date(subscription.getCurrentPeriodEnd());
+    Date currentPeriodEndDate = toDate(subscription.getCurrentPeriodEnd());
+    logger.info("New subscription end: " + subscription.getCurrentPeriodEnd() + " ==> " + Dates.toString(currentPeriodEndDate));
     return new CloudSubscription(subscription.getCustomer(), subscriptionId, currentPeriodEndDate);
   }
 
   public CloudSubscription getSubscription(String subscriptionId) throws OperationFailed {
     try {
-      return convertToCloudSubscription(Subscription.retrieve(subscriptionId));
+      Subscription subscription = Subscription.retrieve(subscriptionId);
+      logger.info(subscription.toJson());
+      return convertToCloudSubscription(subscription);
     }
     catch (Exception e) {
       logger.error("Could not retrieve subscription with id " + subscriptionId, e);
@@ -126,13 +132,14 @@ public class StripeService implements PaymentService {
     if (value == null) {
       return null;
     }
-    return (double) (value / 100);
+    Double result = (double)value;
+    return result / 100;
   }
 
   private Date toDate(Long time) {
     if (time == null) {
       return null;
     }
-    return new Date(time);
+    return new Date(time *  1000);
   }
 }

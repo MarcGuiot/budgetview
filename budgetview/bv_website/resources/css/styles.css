@@ -26,8 +26,8 @@ button.btn {
 
 div.centered-image {
  text-align: center;
- margin-top: 15px;
- margin-bottom: 15px;
+ margin-top: 20px;
+ margin-bottom: 20px;
 }
 
 .container {
@@ -593,28 +593,55 @@ table.field-value td.value {
   padding-left: 0;
 }
 
-.buy-confirmation td#text {
+/* ========== SYSTEM MESSAGE PAGES ========== */
+
+div.system-message td#text {
   text-align: center;
   vertical-align: middle;
 }
 
-.buy-confirmation #text p {
+div.system-message div.body {
+  width: 70%;
+  margin-left:auto;
+  margin-right:auto;
+}
+
+div.system-message p {
   font-size: 11pt;
   line-height: 1.2em;
   margin: 10px;
 }
 
-.buy-confirmation #text p.title {
+div.system-message table h3 {
+  text-align: justify;
+  font-weight: normal;
   font-size: 18pt;
   line-height: 1.1em;
 }
 
-.buy-confirmation #text p.email {
+div.system-message h3 {
+  text-align: center;
+  font-weight: normal;
+  font-size: 18pt;
+  line-height: 1.1em;
+}
+
+div.system-message p.email {
+  text-align:center;
   font-size: 14pt;
   font-weight: bold;
   line-height: 1.1em;
   margin: 15px;
 }
+
+div.system-message p.link {
+  text-align:center;
+  font-size: 14pt;
+  font-weight: bold;
+  line-height: 1.1em;
+  margin: 15px;
+}
+
 
 /* ========== ABOUT PAGE ========== */
 

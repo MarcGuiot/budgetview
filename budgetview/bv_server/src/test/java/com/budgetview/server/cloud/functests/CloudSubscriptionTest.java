@@ -14,7 +14,7 @@ import java.util.Date;
 public class CloudSubscriptionTest extends CloudDesktopTestCase {
 
   @Test
-  public void testASubscriptionLifecycle() throws Exception {
+  public void testCompleteSubscriptionLifecycle() throws Exception {
 
     Date nextMonth = Dates.nextMonth();
     payments.setSubscriptionEndDate(nextMonth);

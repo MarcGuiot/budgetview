@@ -4,6 +4,7 @@ import com.budgetview.server.config.ConfigService;
 import com.budgetview.server.utils.Lang;
 import com.budgetview.server.utils.Template;
 import org.apache.log4j.Logger;
+import org.globsframework.utils.Dates;
 import org.globsframework.utils.Utils;
 import org.globsframework.utils.exceptions.ResourceAccessFailed;
 
@@ -130,12 +131,24 @@ public class Mailer {
   }
 
   public void sendErrorToAdmin(Class sourceClass, String title, String message) {
-    String content = message + "\n\nSent from class: " + sourceClass.getName();
+    String content = "<html><body>\n" +
+                     "<h2>" + message + "</h2>\n" +
+                     "<p>Sent from class: <code>" + sourceClass.getName() + "</code></p>\n" +
+                     "<p>On : " + Dates.toString(Dates.now()) + "</p>\n" +
+                     "</body></html>";
     doSend(Mailbox.ADMIN, title, content, Mailbox.ADMIN.getEmail(), Mailbox.ADMIN.getEmail());
   }
 
   public void sendErrorToAdmin(Class sourceClass, String title, String message, Exception e) {
-    String content = message + "\n\nSent from class: " + sourceClass.getName() + "\n\n" + Utils.toString(e);
+    String content = "<html><body>\n" +
+                     "<h2>" + message + "</h2>\n" +
+                     "<p>Sent from class: <code>" + sourceClass.getName() + "</code></p>\n" +
+                     "<p>On : " + Dates.toString(Dates.now()) + "</p>\n" +
+                     "<p>Exception:</p>\n" +
+                     "<pre><code>\n" +
+                     Utils.toString(e) +
+                     "</code></pre>\n" +
+                     "</body></html>";
     doSend(Mailbox.ADMIN, title, content, Mailbox.ADMIN.getEmail(), Mailbox.ADMIN.getEmail());
   }
 

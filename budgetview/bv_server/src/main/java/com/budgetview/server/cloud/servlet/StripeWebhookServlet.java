@@ -51,15 +51,17 @@ public class StripeWebhookServlet extends HttpServlet {
 
     logger.info("POST");
 
-    Event event = null;
+    Event event;
     try {
-      event = parseEvent(request);
+      event = parseEvent(request); // The event is retrieved again from the server in subsequent commands
     }
     catch (Exception e) {
       logger.error("Error parsing stripe webhook event", e);
       response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
       return;
     }
+
+    logger.info(event.toJson());
 
     // List of payment types: https://stripe.com/docs/api#event_types
 

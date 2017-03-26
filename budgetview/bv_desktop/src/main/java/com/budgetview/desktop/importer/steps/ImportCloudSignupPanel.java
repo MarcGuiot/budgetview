@@ -73,7 +73,6 @@ public class ImportCloudSignupPanel extends AbstractImportStepPanel {
     }
 
     if (!looksLikeAnEmail(email)) {
-      System.out.println("ImportCloudSignupPanel.looksLikeAnEmail: " + email + " : false");
       errorLabel.setText(Lang.get("import.cloud.signup.invalid.email"));
       errorLabel.setVisible(true);
       return;

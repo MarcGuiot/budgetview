@@ -29,7 +29,6 @@
     <row styleClass="dialogButtons" name="buttons">
       <filler fill="horizontal"/>
       <button action="close"/>
-      <button action="next"/>
     </row>
   </column>
 
