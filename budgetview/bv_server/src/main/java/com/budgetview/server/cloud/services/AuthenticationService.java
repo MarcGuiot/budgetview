@@ -205,11 +205,11 @@ public class AuthenticationService {
       return user;
     }
     catch (ItemNotFound e) {
-      throw new SubscriptionCheckFailed(CloudSubscriptionStatus.UNKNOWN_USER);
+      throw new SubscriptionCheckFailed(CloudSubscriptionStatus.NO_SUBSCRIPTION);
     }
     catch (TooManyItems e) {
       logger.error("Too many user token entries for: " + email);
-      throw new SubscriptionCheckFailed(CloudSubscriptionStatus.UNKNOWN_USER);
+      throw new SubscriptionCheckFailed(CloudSubscriptionStatus.NO_SUBSCRIPTION);
     }
     finally {
       try {
@@ -233,16 +233,16 @@ public class AuthenticationService {
     try {
       Glob user = connection.selectUnique(CloudUser.TYPE, fieldEquals(CloudUser.ID, userId));
       if (user == null) {
-        throw new SubscriptionCheckFailed(CloudSubscriptionStatus.UNKNOWN_USER);
+        throw new SubscriptionCheckFailed(CloudSubscriptionStatus.NO_SUBSCRIPTION);
       }
       checkSubscriptionEndDate(user, userId, user.get(CloudUser.EMAIL), connection);
     }
     catch (ItemNotFound e) {
-      throw new SubscriptionCheckFailed(CloudSubscriptionStatus.UNKNOWN_USER);
+      throw new SubscriptionCheckFailed(CloudSubscriptionStatus.NO_SUBSCRIPTION);
     }
     catch (TooManyItems e) {
       logger.error("Too many user token entries for user: " + userId);
-      throw new SubscriptionCheckFailed(CloudSubscriptionStatus.UNKNOWN_USER);
+      throw new SubscriptionCheckFailed(CloudSubscriptionStatus.NO_SUBSCRIPTION);
     }
     finally {
       try {
@@ -257,7 +257,7 @@ public class AuthenticationService {
   private void checkSubscriptionEndDate(Glob user, Integer userId, String email, SqlConnection connection) throws SubscriptionCheckFailed {
     Date endDate = user.get(CloudUser.SUBSCRIPTION_END_DATE);
     if (endDate == null) {
-      throw new SubscriptionCheckFailed(CloudSubscriptionStatus.NEVER_PURCHASED);
+      throw new SubscriptionCheckFailed(CloudSubscriptionStatus.NO_SUBSCRIPTION);
     }
     if (now().after(endDate)) {
       throw new SubscriptionCheckFailed(CloudSubscriptionStatus.EXPIRED);

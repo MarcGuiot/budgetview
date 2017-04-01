@@ -249,9 +249,9 @@ public class ImportDialogChecker extends GuiChecker {
     return new ImportDialogPreviewChecker(dialog);
   }
 
-  public CloudSignupChecker selectCloudRefreshAndGetSignup() {
+  public CloudSubscriptionErrorChecker selectCloudRefreshAndGetSubscriptionError() {
     doRefresh();
-    return new CloudSignupChecker(dialog);
+    return new CloudSubscriptionErrorChecker(dialog);
   }
 
   public ImportDialogCompletionChecker selectCloudRefreshAndGetSummary() {

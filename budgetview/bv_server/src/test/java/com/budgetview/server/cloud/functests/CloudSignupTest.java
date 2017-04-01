@@ -344,9 +344,7 @@ public class CloudSignupTest extends CloudDesktopTestCase {
     cloud.cleanUpDatabase();
 
     operations.openImportDialog()
-      .selectCloudRefreshAndGetSignup()
-      .register("toto@example.com")
-      .processEmailAndNextToSubscriptionError(mailbox.getDeviceVerificationCode("toto@example.com"))
+      .selectCloudRefreshAndGetSubscriptionError()
       .checkNoSubscriptionFound("toto@example.com")
       .close();
   }

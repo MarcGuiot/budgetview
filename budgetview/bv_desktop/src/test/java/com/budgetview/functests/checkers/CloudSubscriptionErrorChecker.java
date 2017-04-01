@@ -14,7 +14,7 @@ public class CloudSubscriptionErrorChecker extends ViewChecker {
   }
 
   public CloudSubscriptionErrorChecker checkNoSubscriptionFound(String email) {
-    assertThat(mainWindow.getTextBox("messageField").htmlEquals(Lang.get("import.cloud.subscription.unknown", email)));
+    assertThat(mainWindow.getTextBox("messageField").htmlEquals(Lang.get("import.cloud.subscription.nosubscription", email)));
     return this;
   }
 

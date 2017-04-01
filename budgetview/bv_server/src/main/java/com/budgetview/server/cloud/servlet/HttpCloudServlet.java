@@ -2,6 +2,7 @@ package com.budgetview.server.cloud.servlet;
 
 import com.budgetview.server.cloud.utils.SubscriptionCheckFailed;
 import com.budgetview.shared.cloud.CloudConstants;
+import com.budgetview.shared.cloud.CloudSubscriptionStatus;
 import org.globsframework.utils.directory.Directory;
 import org.json.JSONWriter;
 
@@ -17,10 +18,10 @@ public abstract class HttpCloudServlet extends HttpServlet {
     this.directory = directory;
   }
 
-  protected void setSubscriptionError(SubscriptionCheckFailed e, JSONWriter writer) {
+  protected void setSubscriptionError(CloudSubscriptionStatus status, JSONWriter writer) {
     writer.object();
     writer.key(CloudConstants.STATUS).value("no_subscription");
-    writer.key(CloudConstants.SUBSCRIPTION_STATUS).value(e.getStatus().getName());
+    writer.key(CloudConstants.SUBSCRIPTION_STATUS).value(status.getName());
     writer.key(CloudConstants.API_VERSION).value(CloudConstants.CURRENT_API_VERSION);
     writer.endObject();
   }

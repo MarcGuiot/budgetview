@@ -54,12 +54,8 @@ public class ImportCloudSubscriptionErrorPanel extends AbstractImportStepPanel {
   public void update(String email, CloudSubscriptionStatus status) {
     createPanelIfNeeded();
     switch (status) {
-      case UNKNOWN_USER:
-        messageField.setText(Lang.get("import.cloud.subscription.unknown", email));
-        actionButton.setAction(new BuySubscriptionAction(localDirectory));
-        break;
-      case NEVER_PURCHASED:
-        messageField.setText(Lang.get("import.cloud.subscription.neverpurchased", email));
+      case NO_SUBSCRIPTION:
+        messageField.setText(Lang.get("import.cloud.subscription.nosubscription", email));
         actionButton.setAction(new BuySubscriptionAction(localDirectory));
         break;
       case EXPIRED:

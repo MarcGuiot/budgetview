@@ -9,6 +9,7 @@ import com.budgetview.server.cloud.services.PaymentService;
 import com.budgetview.server.cloud.utils.SubscriptionCheckFailed;
 import com.budgetview.server.license.mail.Mailer;
 import com.budgetview.shared.cloud.CloudConstants;
+import com.budgetview.shared.cloud.CloudSubscriptionStatus;
 import com.budgetview.shared.cloud.budgea.BudgeaAPI;
 import org.apache.log4j.Logger;
 import org.globsframework.json.JsonGlobWriter;
@@ -21,7 +22,6 @@ import org.globsframework.utils.Strings;
 import org.globsframework.utils.directory.Directory;
 import org.globsframework.utils.exceptions.ItemNotFound;
 
-import javax.mail.MessagingException;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -54,12 +54,15 @@ public class UserServlet extends HttpCloudServlet {
         String lang = getLangHeader(CloudConstants.LANG);
 
         try {
-          processSignup(email, lang);
+          Glob user = authentication.findUser(email);
+          if (user == null) {
+            logger.info("User not found for '" + email + "'");
+            setSubscriptionError(CloudSubscriptionStatus.NO_SUBSCRIPTION, writer);
+            return HttpServletResponse.SC_OK;
+          }
+
+          emailValidation.sendDeviceValidationTempCode(user.get(CloudUser.ID), email, lang);
           setOk(writer);
-          return HttpServletResponse.SC_OK;
-        }
-        catch (SubscriptionCheckFailed e) {
-          setSubscriptionError(e, writer);
           return HttpServletResponse.SC_OK;
         }
         catch (Exception e) {
@@ -79,19 +82,6 @@ public class UserServlet extends HttpCloudServlet {
         return lang;
       }
 
-      private void processSignup(String email, String lang) throws GlobsSQLException, MessagingException, SubscriptionCheckFailed {
-        Glob user = authentication.findUser(email);
-        Integer userId = null;
-        if (user == null) {
-          logger.info("User not found for '" + email + "' - creating it");
-          userId = authentication.createUser(email, lang);
-        }
-        else {
-          logger.info("User " + userId + " found for '" + email + "'");
-        }
-
-        emailValidation.sendDeviceValidationTempCode(userId, email, lang);
-      }
     };
     command.run();
   }

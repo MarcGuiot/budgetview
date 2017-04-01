@@ -4,8 +4,9 @@ import org.globsframework.utils.exceptions.ItemNotFound;
 
 public enum CloudSubscriptionStatus {
   OK("ok"),
+  /** @deprecated */
   UNKNOWN_USER("unknown"),
-  NEVER_PURCHASED("not_purchased"),
+  NO_SUBSCRIPTION("not_purchased"),
   EXPIRED("expired");
 
   private String name;

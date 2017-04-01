@@ -22,6 +22,12 @@ public class CloudSignupChecker extends ViewChecker {
     return new CloudValidationChecker(mainWindow);
   }
 
+  public CloudSubscriptionErrorChecker registerAndGotoSubscriptionError(String email) {
+    mainWindow.getTextBox("emailField").setText(email, false);
+    mainWindow.getButton("next").click();
+    return new CloudSubscriptionErrorChecker(mainWindow);
+  }
+
   public CloudSignupChecker registerAndCheckError(String email, String errorMessage) {
     mainWindow.getTextBox("emailField").setText(email, false);
     mainWindow.getButton("next").click();

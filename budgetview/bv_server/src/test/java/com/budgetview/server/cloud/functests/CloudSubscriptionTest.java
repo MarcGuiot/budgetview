@@ -16,6 +16,11 @@ public class CloudSubscriptionTest extends CloudDesktopTestCase {
   @Test
   public void testCompleteSubscriptionLifecycle() throws Exception {
 
+    operations.openImportDialog()
+      .selectCloudForNewUser()
+      .registerAndGotoSubscriptionError("toto@example.com")
+      .close();
+
     Date nextMonth = Dates.nextMonth();
     payments.setSubscriptionEndDate(nextMonth);
     subscriptions.submitStripeForm("toto@example.com", "abcdef012345", WebsiteUrls.emailSent());
