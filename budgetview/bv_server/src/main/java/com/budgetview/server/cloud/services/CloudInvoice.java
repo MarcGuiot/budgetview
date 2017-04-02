@@ -1,5 +1,7 @@
 package com.budgetview.server.cloud.services;
 
+import org.globsframework.utils.Dates;
+
 import java.util.Date;
 
 public class CloudInvoice {
@@ -15,5 +17,9 @@ public class CloudInvoice {
     this.total = total;
     this.tax = tax;
     this.date = date;
+  }
+
+  public String toString() {
+    return "invoice - subscriptionId:" + subscriptionId + " / receiptNumber:" + receiptNumber + " / total:" + total + " / tax:" + tax + " / date: " + Dates.toString(date);
   }
 }

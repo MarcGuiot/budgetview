@@ -24,7 +24,7 @@ public class CloudSubscriptionTest extends CloudDesktopTestCase {
     Date nextMonth = Dates.nextMonth();
     payments.setSubscriptionEndDate(nextMonth);
     subscriptions.submitStripeForm("toto@example.com", "abcdef012345", WebsiteUrls.emailSent());
-    mailbox.clickSubscriptionValidationLink("toto@example.com");
+    mailbox.clickSubscriptionValidationLinkFromEmail("toto@example.com");
     website.checkLastVisitedPage(WebsiteUrls.subscriptionCreated());
     String subscriptionId = payments.checkLastRequest("toto@example.com", "abcdef012345");
 
@@ -91,7 +91,7 @@ public class CloudSubscriptionTest extends CloudDesktopTestCase {
 
     payments.setSubscriptionEndDate(Dates.monthsLater(3));
     subscriptions.submitStripeForm("toto@example.com", "xyz98765", WebsiteUrls.emailSent());
-    mailbox.clickSubscriptionValidationLink("toto@example.com");
+    mailbox.clickSubscriptionValidationLinkFromEmail("toto@example.com");
     website.checkLastVisitedPage(WebsiteUrls.cardUpdated());
     payments.checkLastUpdate("xyz98765");
 
@@ -154,5 +154,19 @@ public class CloudSubscriptionTest extends CloudDesktopTestCase {
       .add("12/08/2016", TransactionType.PRELEVEMENT, "EDF", "", -50.00, "Electricity")
       .add("10/08/2016", TransactionType.PRELEVEMENT, "AUCHAN", "", -100.00)
       .check();
+  }
+
+  @Test
+  public void testClickingTwiceOnTheEmailLinkDoesNotCreateTwoSubscriptions() throws Exception {
+    payments.setSubscriptionEndDate(Dates.nextMonth());
+    subscriptions.submitStripeForm("toto@example.com", "abcdef012345", WebsiteUrls.emailSent());
+    String link = mailbox.clickSubscriptionValidationLinkFromEmail("toto@example.com");
+    website.checkLastVisitedPage(WebsiteUrls.subscriptionCreated());
+    payments.checkLastRequest("toto@example.com", "abcdef012345");
+
+    payments.clear();
+    mailbox.clickLink(link);
+    website.checkLastVisitedPage(WebsiteUrls.subscriptionLinkAlreadyUsed());
+    payments.checkNoLastRequest();
   }
 }

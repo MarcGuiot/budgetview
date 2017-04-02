@@ -24,10 +24,10 @@ public class CloudEmailValidation {
 
   public static TimeStampField CREATION_DATE;
 
-  @DefaultBoolean(false)
-  public static BooleanField EMAIL_VERIFIED;
-
   public static TimeStampField EXPIRATION_DATE;
+
+  @DefaultBoolean(false)
+  public static BooleanField VALIDATED;
 
   static {
     GlobTypeLoader.init(CloudEmailValidation.class, "cloudEmailValidation");

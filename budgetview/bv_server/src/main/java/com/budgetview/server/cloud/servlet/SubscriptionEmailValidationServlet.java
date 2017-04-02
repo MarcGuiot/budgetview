@@ -12,6 +12,7 @@ import org.globsframework.sqlstreams.SqlConnection;
 import org.globsframework.sqlstreams.constraints.Where;
 import org.globsframework.utils.Strings;
 import org.globsframework.utils.directory.Directory;
+import org.globsframework.utils.exceptions.ItemAlreadyUsed;
 import org.globsframework.utils.exceptions.ItemNotFound;
 import org.globsframework.utils.exceptions.TimeExpired;
 
@@ -55,6 +56,10 @@ public class SubscriptionEmailValidationServlet extends HttpServlet {
       response.sendRedirect(WebsiteUrls.codeTimeout());
       return;
     }
+    catch (ItemAlreadyUsed e) {
+      response.sendRedirect(WebsiteUrls.subscriptionLinkAlreadyUsed());
+      return;
+    }
     catch (Exception e) {
       logger.error("Error processing code " + code, e);
       response.sendRedirect(WebsiteUrls.error());
@@ -65,7 +70,6 @@ public class SubscriptionEmailValidationServlet extends HttpServlet {
     String stripeToken = user.get(CloudUser.STRIPE_TOKEN);
     String customerId = user.get(CloudUser.STRIPE_CUSTOMER_ID);
     boolean newAccount = Strings.isNullOrEmpty(customerId);
-
     if (!newAccount) {
       payments.updateCard(customerId, stripeToken);
       String url = WebsiteUrls.cardUpdated();
@@ -91,6 +95,7 @@ public class SubscriptionEmailValidationServlet extends HttpServlet {
         .set(CloudUser.STRIPE_SUBSCRIPTION_ID, subscription.subscriptionId)
         .set(CloudUser.SUBSCRIPTION_END_DATE, subscription.currentPeriodEndDate)
         .run();
+      emailValidationService.setCodeValidated(code, connection);
     }
     catch (Exception e) {
       logger.error("Error saving subscription for " + email, e);

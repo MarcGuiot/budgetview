@@ -136,14 +136,16 @@ public class StripeWebhookServlet extends HttpServlet {
 
       Glob user = users.getFirst();
 
+      logger.info("Processing invoice: " + invoice);
+
       String email = user.get(CloudUser.EMAIL);
-      String tax = AmountFormat.toString(invoice.tax);
       String total = AmountFormat.toString(invoice.total);
+      String tax = AmountFormat.toString(invoice.tax);
       String excludingTaxes = AmountFormat.toString(invoice.total - invoice.tax);
       String date = toDate(invoice.date);
       mailer.sendSubscriptionInvoice(email, "fr", invoice.receiptNumber, total, tax, excludingTaxes, date);
 
-      logger.info("Processed invoice " + invoice.receiptNumber + " for user " + email + " (" + user.get(CloudUser.ID) + ")");
+      logger.info("Processed invoice " + invoice.receiptNumber + " for user " + email + " (" + user.get(CloudUser.ID) + ") for subscription " + invoice.subscriptionId);
 
       return HttpServletResponse.SC_OK;
     }

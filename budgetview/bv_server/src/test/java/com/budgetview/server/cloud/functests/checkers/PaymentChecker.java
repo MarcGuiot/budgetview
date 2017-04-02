@@ -20,6 +20,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+import static junit.framework.Assert.assertNull;
 import static junit.framework.TestCase.assertEquals;
 
 public class PaymentChecker {
@@ -30,7 +31,6 @@ public class PaymentChecker {
   private String lastSubscriptionId;
   private Date subscriptionEndDate = Dates.tomorrow();
   private String lastCustomerId;
-  private String lastDeletedCustomer;
   private String lastDeletedSubscription;
   private String lastUpdateCustomerId;
   private String lastUpdateToken;
@@ -47,6 +47,18 @@ public class PaymentChecker {
 
   public void setSubscriptionEndDate(Date subscriptionEndDate) {
     this.subscriptionEndDate = subscriptionEndDate;
+  }
+
+  public void clear() {
+    lastEmail = null;
+    lastToken = null;
+    lastCustomerId = null;
+    lastSubscriptionId = null;
+  }
+
+  public void checkNoLastRequest() {
+    assertNull(lastEmail);
+    assertNull(lastToken);
   }
 
   public String checkLastRequest(String email, String token) {
@@ -93,7 +105,6 @@ public class PaymentChecker {
     }
 
     public void deleteSubscription(String customerId, String subscriptionId) {
-      PaymentChecker.this.lastDeletedCustomer = customerId;
       PaymentChecker.this.lastDeletedSubscription = subscriptionId;
       subscriptions.remove(lastDeletedSubscription);
     }

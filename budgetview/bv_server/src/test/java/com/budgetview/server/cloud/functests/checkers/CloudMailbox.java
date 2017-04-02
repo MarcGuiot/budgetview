@@ -8,6 +8,7 @@ import org.globsframework.utils.exceptions.InvalidState;
 import org.junit.Assert;
 import org.uispec4j.assertion.Assertion;
 
+import java.io.IOException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -67,13 +68,18 @@ public class CloudMailbox {
     email.checkContainsAny("Le r=C3=A8glement de votre abonnement =C3=A0 =C3=A9chou=C3=A9");
   }
 
-  public void clickSubscriptionValidationLink(String mailTo) throws Exception {
+  public String clickSubscriptionValidationLinkFromEmail(String mailTo) throws Exception {
     String content = getEmail(mailTo).getContent();
     Matcher matcher = SUBSCRIPTION_VALIDATION_LINK_PATTERN.matcher(content);
     if (!matcher.matches()) {
       Assert.fail("Email does not contain any link: " + content);
     }
     String url = matcher.group(1);
+    clickLink(url);
+    return url;
+  }
+
+  public void clickLink(String url) throws IOException {
     Http.execute(url, Request.Get(url));
   }
 

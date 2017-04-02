@@ -16,6 +16,10 @@ public class WebsiteUrls {
     return url("/boutique/abonnement-reussi");
   }
 
+  public static String subscriptionLinkAlreadyUsed() {
+    return url("/boutique/lien-deja-utilise");
+  }
+
   public static String cardUpdated() {
     return url("/boutique/nouvelle-carte");
   }

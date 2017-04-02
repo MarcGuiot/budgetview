@@ -20,7 +20,7 @@
 
             <htmlEditorPane ref="message"/>
 
-            <button ref="unsubscribe"/>
+            <button ref="unsubscribe" fill="none" anchor="center"/>
 
             <component ref="progressPanel" marginTop="20"/>
 

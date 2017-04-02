@@ -16,6 +16,7 @@ import org.globsframework.sqlstreams.constraints.Where;
 import org.globsframework.sqlstreams.exceptions.GlobsSQLException;
 import org.globsframework.utils.Strings;
 import org.globsframework.utils.directory.Directory;
+import org.globsframework.utils.exceptions.ItemAlreadyUsed;
 import org.globsframework.utils.exceptions.ItemNotFound;
 import org.globsframework.utils.exceptions.TimeExpired;
 import org.globsframework.utils.exceptions.TooManyItems;
@@ -134,7 +135,7 @@ public class EmailValidationService {
     return result;
   }
 
-  public Glob getUser(String code) throws ItemNotFound, TimeExpired {
+  public Glob getUser(String code) throws ItemNotFound, ItemAlreadyUsed, TimeExpired {
     SqlConnection connection = database.connect();
     try {
       GlobList items =
@@ -144,6 +145,9 @@ public class EmailValidationService {
       }
       else {
         Glob item = items.getFirst();
+        if (item.isTrue(CloudEmailValidation.VALIDATED)) {
+          throw new ItemAlreadyUsed();
+        }
         Date expirationDate = item.get(CloudEmailValidation.EXPIRATION_DATE);
         if (now().after(expirationDate)) {
           throw new TimeExpired();
@@ -161,5 +165,11 @@ public class EmailValidationService {
         logger.error("Commit failed when finding user id for code: " + code, e);
       }
     }
+  }
+
+  public void setCodeValidated(String code, SqlConnection connection) {
+    connection.startUpdate(CloudEmailValidation.TYPE, Where.fieldEquals(CloudEmailValidation.CODE, code))
+      .set(CloudEmailValidation.VALIDATED, true)
+      .run();
   }
 }

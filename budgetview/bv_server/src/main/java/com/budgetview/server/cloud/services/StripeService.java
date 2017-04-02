@@ -15,21 +15,25 @@ import java.util.Map;
 
 public class StripeService implements PaymentService {
 
+  private static final String STRIPE_PLAN = "cloud-std";
+  private static final double TVA_RATE = 20.0;
+
   private static Logger logger = Logger.getLogger("StripeService");
 
-  private static final String STRIPE_PLAN = "cloud-std";
 
   public StripeService() {
     Stripe.apiKey = "sk_test_p2kZ7X2c5pJ4r7Y6U44bkH79";  // https://dashboard.stripe.com/account/apikeys
   }
 
   public CloudSubscription createSubscription(String email, String stripeToken) throws OperationFailed {
+
+    logger.info("Creating subscription for " + email);
+
     String customerId;
     try {
       Map<String, Object> params = new HashMap<String, Object>();
       params.put("email", email);
       params.put("source", stripeToken);
-      params.put("plan", STRIPE_PLAN);
       Customer customer = Customer.create(params);
       customerId = customer.getId();
     }
@@ -42,7 +46,9 @@ public class StripeService implements PaymentService {
       Map<String, Object> params = new HashMap<String, Object>();
       params.put("customer", customerId);
       params.put("plan", STRIPE_PLAN);
-      return convertToCloudSubscription(Subscription.create(params));
+      params.put("tax_percent", TVA_RATE);
+      Subscription subscription = Subscription.create(params);
+      return convertToCloudSubscription(subscription);
     }
     catch (Exception e) {
       logger.error("Could not create subscription for customer " + customerId + " with email " + email + " and token " + stripeToken, e);
@@ -51,6 +57,9 @@ public class StripeService implements PaymentService {
   }
 
   public void updateCard(String customerId, String stripeToken) throws OperationFailed {
+
+    logger.info("Updating card for " + customerId);
+
     try {
       Customer customer = Customer.retrieve(customerId);
       Map<String, Object> params = new HashMap<String, Object>();
@@ -63,7 +72,7 @@ public class StripeService implements PaymentService {
     }
   }
 
-  public CloudSubscription convertToCloudSubscription(Subscription subscription) {
+  private CloudSubscription convertToCloudSubscription(Subscription subscription) {
     String subscriptionId = subscription.getId();
     Date currentPeriodEndDate = toDate(subscription.getCurrentPeriodEnd());
     logger.info("New subscription end: " + subscription.getCurrentPeriodEnd() + " ==> " + Dates.toString(currentPeriodEndDate));
@@ -86,7 +95,6 @@ public class StripeService implements PaymentService {
 
     try {
       Customer customer = Customer.retrieve(customerId);
-
       Subscription subscription = customer.getSubscriptions().retrieve(subscriptionId);
       subscription.cancel(null);
     }
@@ -121,10 +129,12 @@ public class StripeService implements PaymentService {
     }
 
     Invoice invoice = (Invoice) data;
+    Long total = invoice.getTotal();
+    Long tax = invoice.getTax() != null ? invoice.getTax() : (long)(total * TVA_RATE / 100);
     return new CloudInvoice(invoice.getSubscription(),
-                            invoice.getReceiptNumber(),
-                            toAmount(invoice.getTotal()),
-                            toAmount(invoice.getTotal()),
+                            invoice.getCharge().substring(3),
+                            toAmount(total),
+                            toAmount(tax),
                             toDate(invoice.getDate()));
   }
 
