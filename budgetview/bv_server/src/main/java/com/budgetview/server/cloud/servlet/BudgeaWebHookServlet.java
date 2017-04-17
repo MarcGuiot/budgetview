@@ -20,6 +20,7 @@ import org.globsframework.sqlstreams.GlobsDatabase;
 import org.globsframework.sqlstreams.SqlConnection;
 import org.globsframework.sqlstreams.constraints.Where;
 import org.globsframework.sqlstreams.exceptions.GlobsSQLException;
+import org.globsframework.utils.Dates;
 import org.globsframework.utils.Files;
 import org.globsframework.utils.Strings;
 import org.globsframework.utils.directory.Directory;
@@ -158,19 +159,27 @@ public class BudgeaWebHookServlet extends HttpCloudServlet {
     private Integer userId;
     private int connectionId;
     private GlobRepository repository = GlobRepositoryBuilder.createEmpty();
-    private SqlConnection sqlConnection;
 
     public DbUpdater(Integer userId, int connectionId) {
       this.userId = userId;
       this.connectionId = connectionId;
-      this.sqlConnection = db.connect();
     }
 
     public void loadAccount(int connectionId, JSONObject bank, JSONObject account) throws GlobsSQLException, ParseException {
+      String lastUpdateValue = account.optString("last_update");
+      JSONArray transactions = account.optJSONArray("transactions");
+      Date lastUpdate;
+      if (Strings.isNotEmpty(lastUpdateValue)) {
+        lastUpdate = Budgea.parseTimestamp(lastUpdateValue);
+      }
+      else if (transactions != null && transactions.length() != 0) {
+        lastUpdate = Dates.now();
+      }
+      else {
+        return;
+      }
 
-      Date lastUpdate = Budgea.parseTimestamp(account.getString("last_update"));
       int providerAccountId = account.getInt("id");
-
       repository.create(ProviderAccount.TYPE,
                         value(ProviderAccount.ID, providerAccountId),
                         value(ProviderAccount.PROVIDER, Provider.BUDGEA.getId()),
@@ -185,9 +194,11 @@ public class BudgeaWebHookServlet extends HttpCloudServlet {
                         value(ProviderAccount.POSITION_MONTH, DateConverter.getMonthId(lastUpdate)),
                         value(ProviderAccount.POSITION_DAY, DateConverter.getDay(lastUpdate)));
 
-      for (Object t : account.getJSONArray("transactions")) {
-        JSONObject transaction = (JSONObject) t;
-        loadTransaction(providerAccountId, transaction);
+      if (transactions != null) {
+        for (Object t : transactions) {
+          JSONObject transaction = (JSONObject) t;
+          loadTransaction(providerAccountId, transaction);
+        }
       }
     }
 
@@ -221,6 +232,12 @@ public class BudgeaWebHookServlet extends HttpCloudServlet {
     }
 
     public void save() throws IOException, GeneralSecurityException {
+      if (!repository.contains(ProviderAccount.TYPE)) {
+        logger.info("No accounts created");
+        return;
+      }
+
+      SqlConnection sqlConnection = db.connect();
       sqlConnection
         .startCreate(ProviderUpdate.TYPE)
         .set(ProviderUpdate.PROVIDER, Provider.BUDGEA.getId())

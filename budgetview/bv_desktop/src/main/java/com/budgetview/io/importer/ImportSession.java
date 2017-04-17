@@ -362,9 +362,9 @@ public class ImportSession {
       Date userDate = parseDate(dateFormat, importedTransaction, ImportedTransaction.DATE);
 
       if (importedTransaction.isTrue(ImportedTransaction.DELETED)) {
-        addProviderTransactionTransactionToDelete(importedTransaction.get(ImportedTransaction.PROVIDER),
-                                                  importedTransaction.get(ImportedTransaction.PROVIDER_ACCOUNT_ID),
-                                                  importedTransaction.get(ImportedTransaction.PROVIDER_TRANSACTION_ID));
+        addProviderTransactionToDelete(importedTransaction.get(ImportedTransaction.PROVIDER),
+                                       importedTransaction.get(ImportedTransaction.PROVIDER_ACCOUNT_ID),
+                                       importedTransaction.get(ImportedTransaction.PROVIDER_TRANSACTION_ID));
         continue;
       }
 
@@ -551,7 +551,7 @@ public class ImportSession {
     }
   }
 
-  private void addProviderTransactionTransactionToDelete(final Integer provider, final Integer providerAccountId, final Integer providerTransactionId) {
+  private void addProviderTransactionToDelete(final Integer provider, final Integer providerAccountId, final Integer providerTransactionId) {
     providerTransactionsToDeleteMatchers.add(new GlobMatcher() {
       public boolean matches(Glob transaction, GlobRepository repository) {
         return Utils.equal(provider, transaction.get(Transaction.PROVIDER)) &&

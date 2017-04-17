@@ -46,7 +46,7 @@ public class ImportCloudFirstDownloadPanel extends AbstractImportStepPanel {
 
 
     builder.add("next", new DisabledAction(getNextLabel()));
-    builder.add("close", new AbstractAction(getCancelLabel()) {
+    builder.add("close", new AbstractAction(getCloseLabel()) {
       public void actionPerformed(ActionEvent e) {
         controller.complete();
         controller.closeDialog();
