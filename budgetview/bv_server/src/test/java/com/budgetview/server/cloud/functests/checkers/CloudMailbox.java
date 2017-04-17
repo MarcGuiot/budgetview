@@ -83,6 +83,11 @@ public class CloudMailbox {
     Http.execute(url, Request.Get(url));
   }
 
+  public void checkConnectionPasswordAlert(String mailTo, String bank) throws Exception {
+    Email email = getEmail(mailTo);
+    email.checkContainsAny("the password for bank <b>" + bank + "</b> needs to be updated");
+  }
+
   private Email getEmail(String mailTo) throws Exception {
     if (mailServer == null) {
       throw new InvalidState("start() not called");

@@ -14,7 +14,8 @@ import org.globsframework.utils.directory.Directory;
 import org.globsframework.utils.exceptions.GlobsException;
 
 import javax.mail.MessagingException;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.globsframework.sqlstreams.constraints.Where.fieldEquals;
 
@@ -30,54 +31,88 @@ public class WebhookNotificationService {
     this.mailer = directory.get(Mailer.class);
   }
 
-  public void send(Glob user, Set<Integer> connectionIds) {
+  public Notifications start() {
+    return new Notifications();
+  }
 
-    SqlConnection sqlConnection = database.connect();
-    boolean notificationNeeded = false;
-    try {
-      for (Integer connectionId : connectionIds) {
-        GlobList items =
-          sqlConnection.startSelect(ProviderConnection.TYPE,
-                                    Where.and(fieldEquals(ProviderConnection.USER, user.get(CloudUser.ID)),
-                                              fieldEquals(ProviderConnection.PROVIDER, Provider.BUDGEA.getId()),
-                                              fieldEquals(ProviderConnection.PROVIDER_CONNECTION, connectionId)))
-            .selectAll()
-            .getList();
+  public class Notifications {
+    private List<ConnectionInfo> infoList = new ArrayList<ConnectionInfo>();
 
-        if (!items.isEmpty()) {
-          for (Glob item : items) {
-            if (!item.isTrue(ProviderConnection.INITIALIZED)) {
-              notificationNeeded = true;
+    public void addConnection(int providerConnectionId, String bankName, boolean containsAccounts, boolean passwordError) {
+      infoList.add(new ConnectionInfo(providerConnectionId, bankName, containsAccounts, passwordError));
+    }
+
+    public void send(Glob user) {
+      SqlConnection sqlConnection = database.connect();
+      boolean newlyInitializedConnections = false;
+      try {
+        for (ConnectionInfo connectionInfo : infoList) {
+          GlobList items =
+            sqlConnection.startSelect(ProviderConnection.TYPE,
+                                      Where.and(fieldEquals(ProviderConnection.USER, user.get(CloudUser.ID)),
+                                                fieldEquals(ProviderConnection.PROVIDER, Provider.BUDGEA.getId()),
+                                                fieldEquals(ProviderConnection.PROVIDER_CONNECTION, connectionInfo.providerConnectionId)))
+              .selectAll()
+              .getList();
+
+          if (!items.isEmpty()) {
+            for (Glob item : items) {
+              if (!item.isTrue(ProviderConnection.INITIALIZED) && connectionInfo.containsAccounts) {
+                newlyInitializedConnections = true;
+                sqlConnection.startUpdate(ProviderConnection.TYPE, Where.globEquals(item))
+                  .set(ProviderConnection.INITIALIZED, true)
+                  .run();
+              }
               sqlConnection.startUpdate(ProviderConnection.TYPE, Where.globEquals(item))
-                .set(ProviderConnection.INITIALIZED, true)
+                .set(ProviderConnection.PASSWORD_ERROR, connectionInfo.passwordError)
                 .run();
             }
           }
+          else {
+            newlyInitializedConnections |= connectionInfo.containsAccounts;
+            sqlConnection.startCreate(ProviderConnection.TYPE)
+              .set(ProviderConnection.USER, user.get(CloudUser.ID))
+              .set(ProviderConnection.PROVIDER_CONNECTION, connectionInfo.providerConnectionId)
+              .set(ProviderConnection.INITIALIZED, connectionInfo.containsAccounts)
+              .set(ProviderConnection.PASSWORD_ERROR, connectionInfo.passwordError)
+              .run();
+          }
         }
-        else {
-          notificationNeeded = true;
-          sqlConnection.startCreate(ProviderConnection.TYPE)
-            .set(ProviderConnection.USER, user.get(CloudUser.ID))
-            .set(ProviderConnection.PROVIDER_CONNECTION, connectionId)
-            .set(ProviderConnection.INITIALIZED, true)
-            .run();
+        sqlConnection.commitAndClose();
+
+        if (newlyInitializedConnections) {
+          boolean sent = mailer.sendCloudWebhookNotification(user.get(CloudUser.EMAIL), user.get(CloudUser.LANG));
+          logger.info("Webhook notification email " + (sent ? "sent" : "planned for sending") + " to: " + user.get(CloudUser.EMAIL));
+        }
+        for (ConnectionInfo connectionInfo : infoList) {
+          if (connectionInfo.passwordError) {
+            boolean sent = mailer.sendCloudBankPasswordError(user.get(CloudUser.EMAIL), user.get(CloudUser.LANG), connectionInfo.bankName);
+            logger.info("Webhook password error email " + (sent ? "sent" : "planned for sending") + " to: " + user.get(CloudUser.EMAIL) + " for bank: " + connectionInfo.bankName);
+          }
         }
       }
-
-      sqlConnection.commitAndClose();
-
-      if (notificationNeeded) {
-        boolean sent = mailer.sendCloudWebhookNotification(user.get(CloudUser.EMAIL), user.get(CloudUser.LANG));
-        logger.info("Webhook notification email " + (sent ? "sent" : "planned for sending") + " to: " + user.get(CloudUser.EMAIL));
+      catch (GlobsException e) {
+        logger.error("Database error raised while processing webhook for user " + user.get(CloudUser.ID) + " with email: " + user.get(CloudUser.EMAIL));
+        sqlConnection.rollbackAndClose();
+      }
+      catch (MessagingException e) {
+        logger.error("Could not send notification to user " + user.get(CloudUser.ID) + " with email: " + user.get(CloudUser.EMAIL));
+        sqlConnection.rollbackAndClose();
       }
     }
-    catch (GlobsException e) {
-      logger.error("Database error raised while processing webhook for user " + user.get(CloudUser.ID) + " with email: " + user.get(CloudUser.EMAIL));
-      sqlConnection.rollbackAndClose();
-    }
-    catch (MessagingException e) {
-      logger.error("Could not send notification to user " + user.get(CloudUser.ID) + " with email: " + user.get(CloudUser.EMAIL));
-      sqlConnection.rollbackAndClose();
+  }
+
+  private static class ConnectionInfo {
+    public final int providerConnectionId;
+    public final String bankName;
+    private boolean containsAccounts;
+    public final boolean passwordError;
+
+    public ConnectionInfo(int providerConnectionId, String bankName, boolean containsAccounts, boolean passwordError) {
+      this.providerConnectionId = providerConnectionId;
+      this.bankName = bankName;
+      this.containsAccounts = containsAccounts;
+      this.passwordError = passwordError;
     }
   }
 }

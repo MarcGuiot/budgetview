@@ -23,12 +23,17 @@ public class BudgeaConnections {
   }
 
   public BudgeaConnections add(int id, int userId, int idBank, boolean active, String lastUpdate) {
+    return add(id, userId, idBank, active, lastUpdate, null);
+  }
+
+  public BudgeaConnections add(int id, int userId, int idBank, boolean active, String lastUpdate, String error) {
     json.object();
     json.key("id").value(id);
     json.key("id_user").value(userId);
     json.key("id_bank").value(idBank);
     json.key("active").value(active);
     json.key("last_update").value(lastUpdate);
+    json.key("error").value(error);
     json.endObject();
     total++;
     return this;

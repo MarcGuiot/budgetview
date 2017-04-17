@@ -125,6 +125,11 @@ public class Mailer {
                   Mailbox.SUPPORT.getEmail(), sendTo);
   }
 
+  public boolean sendCloudBankPasswordError(String sendTo, String lang, String bankName) throws MessagingException {
+    return doSend(Mailbox.SUPPORT, Lang.get("cloud.webhook.passwordError.subject", lang), Lang.get("cloud.webhook.passwordError.message", lang, bankName),
+                  Mailbox.SUPPORT.getEmail(), sendTo);
+  }
+
   public boolean sendCloudAccountDeleted(String sendTo, String lang) throws MessagingException {
     return doSend(Mailbox.SUPPORT, Lang.get("cloud.subscription.deleted.subject", lang), Lang.get("cloud.subscription.deleted.message", lang),
                   Mailbox.SUPPORT.getEmail(), sendTo);

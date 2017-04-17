@@ -37,8 +37,6 @@ import java.io.InputStream;
 import java.security.GeneralSecurityException;
 import java.text.ParseException;
 import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -84,7 +82,7 @@ public class BudgeaWebHookServlet extends HttpCloudServlet {
     String json = Files.loadStreamToString(inputStream, "UTF-8");
 
     Glob user = null;
-    Set<Integer> connectionIds = new HashSet<Integer>();
+    WebhookNotificationService.Notifications notifications = webhookNotifications.start();
     try {
       JSONObject root = new JSONObject(json);
 
@@ -99,26 +97,31 @@ public class BudgeaWebHookServlet extends HttpCloudServlet {
       for (Object c : array) {
         JSONObject budgeaConnection = (JSONObject) c;
         int connectionId = budgeaConnection.getInt("id");
-        connectionIds.add(connectionId);
         int budgeaUserId = budgeaConnection.getInt("id_user");
         user = getCloudUser(budgeaUserId, token);
         if (user == null) {
           response.setStatus(HttpServletResponse.SC_FORBIDDEN);
           return;
         }
+        boolean passwordError = "wrongpass".equalsIgnoreCase(budgeaConnection.optString("error"));
         JSONObject bank = budgeaConnection.getJSONObject("bank");
-        DbUpdater updater = new DbUpdater(user.get(CloudUser.ID), connectionId);
         JSONArray accounts = budgeaConnection.optJSONArray("accounts");
-        if (accounts != null) {
+        boolean containsAccounts = false;
+        if (accounts != null && accounts.length() > 0) {
+          DbUpdater updater = new DbUpdater(user.get(CloudUser.ID), connectionId);
           for (Object a : accounts) {
             JSONObject account = (JSONObject) a;
-            updater.loadAccount(connectionId, bank, account);
+            containsAccounts |= updater.loadAccount(connectionId, bank, account);
           }
+          updater.save();
         }
         else {
           logger.info("No account for connection");
         }
-        updater.save();
+        notifications.addConnection(connectionId,
+                                    bank.optString("name"),
+                                    containsAccounts,
+                                    passwordError);
       }
     }
     catch (ParseException e) {
@@ -134,7 +137,7 @@ public class BudgeaWebHookServlet extends HttpCloudServlet {
 
     logger.info("Webhook successfully saved");
 
-    webhookNotifications.send(user, connectionIds);
+    notifications.send(user);
 
     response.setStatus(HttpServletResponse.SC_OK);
   }
@@ -165,7 +168,7 @@ public class BudgeaWebHookServlet extends HttpCloudServlet {
       this.connectionId = connectionId;
     }
 
-    public void loadAccount(int connectionId, JSONObject bank, JSONObject account) throws GlobsSQLException, ParseException {
+    public boolean loadAccount(int connectionId, JSONObject bank, JSONObject account) throws GlobsSQLException, ParseException {
       String lastUpdateValue = account.optString("last_update");
       JSONArray transactions = account.optJSONArray("transactions");
       Date lastUpdate;
@@ -176,7 +179,7 @@ public class BudgeaWebHookServlet extends HttpCloudServlet {
         lastUpdate = Dates.now();
       }
       else {
-        return;
+        return false;
       }
 
       int providerAccountId = account.getInt("id");
@@ -200,6 +203,8 @@ public class BudgeaWebHookServlet extends HttpCloudServlet {
           loadTransaction(providerAccountId, transaction);
         }
       }
+
+      return true;
     }
 
     public void loadTransaction(Integer accountId, JSONObject transaction) throws GlobsSQLException, ParseException {

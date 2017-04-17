@@ -1,7 +1,6 @@
 package com.budgetview.server.utils;
 
 import org.globsframework.utils.Files;
-import org.globsframework.utils.exceptions.ItemNotFound;
 import org.globsframework.utils.exceptions.ResourceAccessFailed;
 
 import java.io.InputStream;
@@ -24,14 +23,14 @@ public class Lang {
     return Locale.ENGLISH;
   }
 
-  public static String get(String key, String lang, String... arg) {
+  public static String get(String key, String lang, String... args) {
     Locale locale = getLocale(lang);
     ResourceBundle resourceBundle = getResource(locale);
     String message = resourceBundle.getString(key);
-    if (arg.length != 0) {
+    if (args.length != 0) {
       MessageFormat formatter = new MessageFormat(message.replace("'", "''"));
       formatter.setLocale(locale);
-      return formatter.format(arg);
+      return formatter.format(args);
     }
     else {
       return message;

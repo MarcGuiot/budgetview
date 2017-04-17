@@ -24,11 +24,16 @@ public class BudgeaStatement {
   }
 
   public BudgeaStatement addConnection(int id, int userId, int bankId, String bankName, String lastUpdate) {
+    return addConnection(id, userId, bankId, bankName, lastUpdate, null);
+  }
+
+  public BudgeaStatement addConnection(int id, int userId, int bankId, String bankName, String lastUpdate, String error) {
     json.object();
     json.key("id").value(id);
     json.key("id_user").value(userId);
     json.key("id_bank").value(bankId);
     json.key("last_update").value(lastUpdate);
+    json.key("error").value(error);
 
     json.key("bank");
     json.object();
