@@ -39,6 +39,9 @@ public class CloudProviderConnection {
   @DefaultBoolean(false)
   public static BooleanField INITIALIZED;
 
+  @DefaultBoolean(false)
+  public static BooleanField PASSWORD_ERROR;
+
   static {
     GlobTypeLoader.init(CloudProviderConnection.class);
   }
@@ -61,6 +64,7 @@ public class CloudProviderConnection {
       outputStream.writeInteger(values.get(BANK));
       outputStream.writeUtf8String(values.get(BANK_NAME));
       outputStream.writeBoolean(values.get(INITIALIZED));
+      outputStream.writeBoolean(values.get(PASSWORD_ERROR));
       return serializedByteArrayOutput.toByteArray();
     }
 
@@ -77,6 +81,7 @@ public class CloudProviderConnection {
       fieldSetter.set(BANK, input.readInteger());
       fieldSetter.set(BANK_NAME, input.readUtf8String());
       fieldSetter.set(INITIALIZED, input.readBoolean());
+      fieldSetter.set(PASSWORD_ERROR, input.readBoolean());
     }
   }
 }

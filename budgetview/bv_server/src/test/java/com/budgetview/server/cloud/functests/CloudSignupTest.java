@@ -18,7 +18,7 @@ public class CloudSignupTest extends CloudDesktopTestCase {
     Date subscriptionEndDate =
       cloud.createSubscription("toto@example.com", Dates.tomorrow());
 
-    budgea.pushNewConnectionResponse(1, 123, 40);
+    budgea.pushConnectionResponse(1, 123, 40);
     budgea.pushStatement(BudgeaStatement.init()
                            .addConnection(1, 123, 40, "Connecteur de test", "2016-08-10 17:44:26")
                            .addAccount(1, "Main account 1", "100200300", "checking", 1000.00, "2016-08-10 13:00:00")
@@ -76,7 +76,7 @@ public class CloudSignupTest extends CloudDesktopTestCase {
 
     cloud.createSubscription("toto@example.com", Dates.tomorrow());
 
-    budgea.pushNewConnectionResponse(1, 123, 40);
+    budgea.pushConnectionResponse(1, 123, 40);
     budgea.pushStatement(BudgeaStatement.init()
                            .addConnection(1, 123, 40, "Connecteur de test", "2016-08-10 17:44:26")
                            .addAccount(1, "Main account 1", "100200300", "checking", 1000.00, "2016-08-10 13:00:00")
@@ -117,7 +117,7 @@ public class CloudSignupTest extends CloudDesktopTestCase {
     cloud.createSubscription("toto@example.com", Dates.tomorrow());
     cloud.forceTokenExpirationDate(Dates.hoursAgo(1));
 
-    budgea.pushNewConnectionResponse(1, 123, 40);
+    budgea.pushConnectionResponse(1, 123, 40);
     budgea.pushStatement(BudgeaStatement.init()
                            .addConnection(1, 123, 40, "Connecteur de test", "2016-08-10 17:44:26")
                            .addAccount(1, "Main account 1", "100200300", "checking", 1000.00, "2016-08-10 13:00:00")
@@ -160,7 +160,7 @@ public class CloudSignupTest extends CloudDesktopTestCase {
 
     cloud.createSubscription("toto@example.com", Dates.tomorrow());
 
-    budgea.pushNewConnectionResponse(1, 123, 40);
+    budgea.pushConnectionResponse(1, 123, 40);
     budgea.pushStatement(BudgeaStatement.init()
                            .addConnection(1, 123, 40, "Connecteur de test", "2016-08-10 17:44:26")
                            .addAccount(1, "Main account 1", "100200300", "checking", 1000.00, "2016-08-10 13:00:00")
@@ -231,7 +231,7 @@ public class CloudSignupTest extends CloudDesktopTestCase {
   public void testSignupFromRestoredBackupWithExistingStatements() throws Exception {
     cloud.createSubscription("toto@example.com", Dates.tomorrow());
 
-    budgea.pushNewConnectionResponse(1, 123, 40);
+    budgea.pushConnectionResponse(1, 123, 40);
     budgea.pushStatement(BudgeaStatement.init()
                            .addConnection(1, 123, 40, "Connecteur de test", "2016-08-10 17:44:26")
                            .addAccount(1, "Main account 1", "100200300", "checking", 1000.00, "2016-08-10 13:00:00")
@@ -298,7 +298,7 @@ public class CloudSignupTest extends CloudDesktopTestCase {
   public void testRefreshWhenCloudAccountWasDeletedSwitchesToSubscriptionError() throws Exception {
     cloud.createSubscription("toto@example.com", Dates.tomorrow());
 
-    budgea.pushNewConnectionResponse(1, 123, 40);
+    budgea.pushConnectionResponse(1, 123, 40);
     budgea.pushStatement(BudgeaStatement.init()
                            .addConnection(1, 123, 40, "Connecteur de test", "2016-08-10 17:44:26")
                            .addAccount(1, "Main account 1", "100200300", "checking", 1000.00, "2016-08-10 13:00:00")
@@ -330,7 +330,7 @@ public class CloudSignupTest extends CloudDesktopTestCase {
       .add("10/08/2016", TransactionType.PRELEVEMENT, "AUCHAN", "", -100.00)
       .check();
 
-    budgea.pushNewConnectionResponse(1, 123, 40);
+    budgea.pushConnectionResponse(1, 123, 40);
     budgea.pushStatement(BudgeaStatement.init()
                            .addConnection(1, 123, 40, "Connecteur de test", "2016-08-10 17:44:26")
                            .addAccount(1, "Main account 1", "100200300", "checking", 1000.00, "2016-08-10 13:00:00")

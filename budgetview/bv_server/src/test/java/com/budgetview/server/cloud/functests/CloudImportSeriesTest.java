@@ -19,7 +19,7 @@ public class CloudImportSeriesTest extends CloudDesktopTestCase {
 
     cloud.createSubscription("toto@example.com", Dates.tomorrow());
 
-    budgea.pushNewConnectionResponse(1, 123, 40);
+    budgea.pushConnectionResponse(1, 123, 40);
     budgea.pushStatement(BudgeaStatement.init()
                            .addConnection(1, 123, 40, "Connecteur de test", "2016-08-10 17:44:26")
                            .addAccount(1, "Main account 1", "100200300", "checking", 1000.00, "2016-08-10 13:00:00")
@@ -137,7 +137,7 @@ public class CloudImportSeriesTest extends CloudDesktopTestCase {
       .setTargetAccount("Existing account")
       .validate();
 
-    budgea.pushNewConnectionResponse(1, 123, 40);
+    budgea.pushConnectionResponse(1, 123, 40);
     budgea.pushStatement(BudgeaStatement.init()
                            .addConnection(1, 123, 40, "Connecteur de test", "2016-08-10 17:44:26")
                            .addAccount(1, "Main account 1", "100200300", "checking", 1000.00, "2016-08-10 13:00:00")
@@ -192,7 +192,7 @@ public class CloudImportSeriesTest extends CloudDesktopTestCase {
       .setEndDate(201607)
       .validate();
 
-    budgea.pushNewConnectionResponse(1, 123, 40);
+    budgea.pushConnectionResponse(1, 123, 40);
     budgea.pushStatement(BudgeaStatement.init()
                            .addConnection(1, 123, 40, "Connecteur de test", "2016-08-10 17:44:26")
                            .addAccount(1, "Main account 1", "100200300", "checking", 1000.00, "2016-08-10 13:00:00")

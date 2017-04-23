@@ -28,7 +28,7 @@ public class CloudSubscriptionTest extends CloudDesktopTestCase {
     website.checkLastVisitedPage(WebsiteUrls.subscriptionCreated());
     String subscriptionId = payments.checkLastRequest("toto@example.com", "abcdef012345");
 
-    budgea.pushNewConnectionResponse(1, 123, 40);
+    budgea.pushConnectionResponse(1, 123, 40);
     budgea.pushStatement(BudgeaStatement.init()
                            .addConnection(1, 123, 40, "Connecteur de test", "2016-08-10 17:44:26")
                            .addAccount(1, "Main account 1", "100200300", "checking", 1000.00, "2016-08-10 13:00:00")
@@ -120,7 +120,7 @@ public class CloudSubscriptionTest extends CloudDesktopTestCase {
     payments.checkSubscriptionDeleted(subscriptionId);
     mailbox.checkAccountDeleted("toto@example.com");
 
-    budgea.pushNewConnectionResponse(1, 123, 40);
+    budgea.pushConnectionResponse(1, 123, 40);
     budgea.pushStatement(BudgeaStatement.init()
                            .addConnection(1, 123, 40, "Connecteur de test", "2016-08-10 17:44:26")
                            .addAccount(1, "Main account 1", "100200300", "checking", 1000.00, "2016-08-10 13:00:00")

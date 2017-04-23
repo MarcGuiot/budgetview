@@ -7,7 +7,7 @@
     <style selector=".connection" opaque="false" border="matte(0,0,1,0,dialog.separator)"/>
     <style selector="label.name" font="-,bold,14" marginTop="10" marginBottom="10"/>
     <style selector="label.details" font="-,italic,12" marginTop="10" marginBottom="10" marginLeft="10"/>
-    <style selector="button.delete" fill="none" marginTop="10" marginBottom="10" weightX="0.1"/>
+    <style selector="button.edit" fill="none" marginTop="10" marginBottom="10" marginLeft="5" weightX="0.1"/>
   </styles>
 
   <column styleClass="dialog" preferredSize="(600,710)" name="importCloudEditionPanel">
@@ -27,7 +27,8 @@
                 <label ref="connectionName" styleClass="name"/>
                 <label ref="details" styleClass="details"/>
                 <filler fill="horizontal"/>
-                <button ref="delete" styleClass="delete"/>
+                <button ref="updatePassword" styleClass="edit"/>
+                <button ref="delete" styleClass="edit"/>
               </row>
             </repeat>
 

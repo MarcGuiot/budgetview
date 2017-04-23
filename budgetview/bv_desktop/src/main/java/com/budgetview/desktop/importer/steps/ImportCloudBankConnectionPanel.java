@@ -9,6 +9,7 @@ import com.budgetview.desktop.importer.components.CloudConnectionFieldEditor;
 import com.budgetview.desktop.importer.components.CloudConnectionFieldEditorFactory;
 import com.budgetview.model.Bank;
 import com.budgetview.model.CloudDesktopUser;
+import com.budgetview.model.CloudProviderConnection;
 import com.budgetview.shared.cloud.CloudSubscriptionStatus;
 import com.budgetview.utils.Lang;
 import org.globsframework.gui.GlobsPanelBuilder;
@@ -47,7 +48,7 @@ public class ImportCloudBankConnectionPanel extends AbstractImportStepPanel {
   private Glob currentConnection;
   private JEditorPane message;
   private JEditorPane errorMessage;
-  private boolean step2;
+  private ConnectionAction connectionAction;
   private int providerConnectionId;
   private Glob currentBank;
 
@@ -112,21 +113,31 @@ public class ImportCloudBankConnectionPanel extends AbstractImportStepPanel {
     return builder;
   }
 
-  public void showStep1(Key bankKey) {
-    System.out.println("ImportCloudBankConnectionPanel.showStep1");
+  public void showLoginStep1(Key bankKey) {
+    System.out.println("ImportCloudBankConnectionPanel.showLoginStep1");
     createPanelIfNeeded();
-    step2 = false;
+    connectionAction = new CreateConnectionStep1Action();
     providerConnectionId = 0;
     currentBank = repository.get(bankKey);
     message.setText(Lang.get("import.cloud.bankConnection.message", currentBank.get(Bank.NAME)));
     updateFieldEditors();
   }
 
-  private void showStep2(int connectionId) {
-    System.out.println("ImportCloudBankConnectionPanel.showStep2");
-    step2 = true;
+  private void showLoginStep2(int connectionId) {
+    System.out.println("ImportCloudBankConnectionPanel.showLoginStep2");
+    connectionAction = new CreateConnectionStep2Action();
     providerConnectionId = connectionId;
     message.setText(Lang.get("import.cloud.bankConnection.message.step2", currentBank.get(Bank.NAME)));
+    updateFieldEditors();
+  }
+
+  public void showPasswordUpdate(Glob cloudProviderConnection) {
+    System.out.println("ImportCloudBankConnectionPanel.showPasswordUpdate");
+    createPanelIfNeeded();
+    connectionAction = new UpdatePasswordAction();
+    currentBank = repository.findLinkTarget(cloudProviderConnection, CloudProviderConnection.BANK);
+    providerConnectionId = cloudProviderConnection.get(CloudProviderConnection.PROVIDER_CONNECTION_ID);
+    message.setText(Lang.get("import.cloud.bankConnection.message.updatePassword", currentBank.get(Bank.NAME)));
     updateFieldEditors();
   }
 
@@ -167,7 +178,7 @@ public class ImportCloudBankConnectionPanel extends AbstractImportStepPanel {
       }
       String regex = field.get(BudgeaBankField.REGEX);
       if (Strings.isNotEmpty(regex)) {
-        Pattern pattern  = Pattern.compile(regex);
+        Pattern pattern = Pattern.compile(regex);
         Matcher matcher = pattern.matcher(value);
         if (!matcher.matches()) {
           showErrorMessage("import.cloud.bankConnection.message.invalidValue", field.get(BudgeaBankField.LABEL));
@@ -179,7 +190,7 @@ public class ImportCloudBankConnectionPanel extends AbstractImportStepPanel {
     errorMessage.setVisible(false);
     progressPanel.start();
     setAllEnabled(false);
-    CloudService.BankConnectionCallback callback = new CloudService.BankConnectionCallback() {
+    connectionAction.run(new CloudService.BankConnectionCallback() {
       public void processCompletion(Glob providerConnection) {
         System.out.println("ImportCloudBankConnectionPanel.processCompletion");
         repository.deleteAll(BudgeaModel.get().asArray());
@@ -190,7 +201,7 @@ public class ImportCloudBankConnectionPanel extends AbstractImportStepPanel {
 
       public void processSecondStepResponse(int connectionId) {
         System.out.println("ImportCloudBankConnectionPanel.processSecondStepResponse");
-        showStep2(connectionId);
+        showLoginStep2(connectionId);
         progressPanel.stop();
       }
 
@@ -211,12 +222,28 @@ public class ImportCloudBankConnectionPanel extends AbstractImportStepPanel {
         controller.showCloudError(e);
         progressPanel.stop();
       }
-    };
-    if (!step2) {
+    });
+  }
+
+  private interface ConnectionAction {
+    void run(CloudService.BankConnectionCallback callback);
+  }
+
+  private class CreateConnectionStep1Action implements ConnectionAction {
+    public void run(CloudService.BankConnectionCallback callback) {
       cloudService.addBankConnection(currentBank, currentConnection, repository, callback);
     }
-    else {
+  }
+
+  private class CreateConnectionStep2Action implements ConnectionAction {
+    public void run(CloudService.BankConnectionCallback callback) {
       cloudService.addBankConnectionStep2(providerConnectionId, currentConnection, repository, callback);
+    }
+  }
+
+  private class UpdatePasswordAction implements ConnectionAction {
+    public void run(CloudService.BankConnectionCallback callback) {
+      cloudService.updatePassword(providerConnectionId, currentConnection, repository, callback);
     }
   }
 

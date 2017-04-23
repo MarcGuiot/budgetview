@@ -374,6 +374,10 @@ public class ImportController implements RealAccountImporter {
     importDialog.showCloudBankConnection(bank);
   }
 
+  public void updatePassword(Glob cloudProviderConnection) {
+    importDialog.updatePassword(cloudProviderConnection);
+  }
+
   public void showCloudUnsubscription() {
     importDialog.showCloudUnsubscription();
   }

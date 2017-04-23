@@ -13,9 +13,9 @@ import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.components.GlobRepeat;
 import org.globsframework.gui.splits.PanelBuilder;
 import org.globsframework.gui.splits.repeat.RepeatComponentFactory;
+import org.globsframework.gui.splits.utils.GuiUtils;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobRepository;
-import org.globsframework.model.format.GlobPrinter;
 import org.globsframework.model.utils.GlobComparators;
 import org.globsframework.model.utils.GlobMatchers;
 import org.globsframework.utils.directory.Directory;
@@ -49,7 +49,12 @@ public class ImportCloudEditionPanel extends AbstractImportStepPanel {
       public void registerComponents(PanelBuilder cellBuilder, Glob connection) {
         String bankName = connection.get(CloudProviderConnection.BANK_NAME);
         cellBuilder.add("connectionName", new JLabel(bankName));
-        cellBuilder.add("details", getDetailsLabel(connection));
+        cellBuilder.add("details", getDetailsLabel(connection, bankName));
+
+        JButton updatePasswordButton = new JButton(new UpdatePasswordAction(connection));
+        cellBuilder.add("updatePassword", updatePasswordButton);
+        updatePasswordButton.setName("updatePassword:" + bankName);
+
         JButton deleteButton = new JButton(new DeleteConnectionAction(connection));
         cellBuilder.add("delete", deleteButton);
         deleteButton.setName("delete:" + bankName);
@@ -97,14 +102,18 @@ public class ImportCloudEditionPanel extends AbstractImportStepPanel {
     return builder;
   }
 
-  private JLabel getDetailsLabel(Glob connection) {
+  private JLabel getDetailsLabel(Glob connection, String bankName) {
     JLabel label = new JLabel();
-    if (connection.isTrue(CloudProviderConnection.INITIALIZED)) {
-      label.setVisible(false);
+    if (connection.isTrue(CloudProviderConnection.PASSWORD_ERROR)) {
+      label.setText(Lang.get("import.cloud.edition.passwordError"));
     }
-    else {
+    else if (!connection.isTrue(CloudProviderConnection.INITIALIZED)) {
       label.setText(Lang.get("import.cloud.edition.notinitialized"));
     }
+    else {
+      label.setVisible(false);
+    }
+    label.setName("details:" + bankName);
     return label;
   }
 
@@ -172,6 +181,43 @@ public class ImportCloudEditionPanel extends AbstractImportStepPanel {
         public void processError(Exception e) {
           controller.showCloudError(e);
           progressPanel.stop();
+        }
+      });
+    }
+  }
+
+  private class UpdatePasswordAction extends AbstractAction {
+    private Glob cloudProviderConnection;
+
+    public UpdatePasswordAction(Glob connection) {
+      super(Lang.get("import.cloud.edition.updatePassword"));
+      this.cloudProviderConnection = connection;
+    }
+
+    public void actionPerformed(ActionEvent e) {
+      setAllEnabled(false);
+      progressPanel.start();
+      GuiUtils.runLater(new Runnable() {
+        public void run() {
+          cloudService.updateBankFields(cloudProviderConnection.getTargetKey(CloudProviderConnection.BANK), repository, new CloudService.Callback() {
+            public void processCompletion() {
+              controller.updatePassword(cloudProviderConnection);
+              setAllEnabled(true);
+              progressPanel.stop();
+            }
+
+            public void processSubscriptionError(CloudSubscriptionStatus status) {
+              controller.showCloudSubscriptionError(repository.get(CloudDesktopUser.KEY).get(CloudDesktopUser.EMAIL), status);
+              setAllEnabled(true);
+              progressPanel.stop();
+            }
+
+            public void processError(Exception e) {
+              controller.showCloudError(e);
+              setAllEnabled(true);
+              progressPanel.stop();
+            }
+          });
         }
       });
     }

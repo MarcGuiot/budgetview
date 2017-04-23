@@ -26,6 +26,7 @@ public class CloudConstants {
 
   public static final String BANK_NAME = "bank_name";
   public static final String INITIALIZED = "initialized";
+  public static final String PASSWORD_ERROR = "password_error";
 
   public static final String PROD_CLOUD_SERVER_URL = "https://register.mybudgetview.fr:1445";
 

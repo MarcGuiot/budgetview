@@ -32,10 +32,10 @@ public class BudgeaStubServer {
   private String lastTempToken;
   private String persistentToken = BudgeaWebhook.PERSISTEN_TOKEN;
   private BudgeaBankFieldSample bankFieldsStep1 = BudgeaBankFieldSample.BUDGEA_FIELDS_STEP_1;
-  private BudgeaBankFieldSample bankFieldsStep2 = null;
+  private BudgeaBankFieldSample bankFieldsForUpdate = null;
   private Stack<String> statements = new Stack<String>();
   private Stack<String> connectionLists = new Stack<String>();
-  private Stack<String> newConnectionResponses = new Stack<String>();
+  private Stack<String> connectionResponses = new Stack<String>();
   private List<String> lastLoginFields = new ArrayList<String>();
   private String loginConstraint;
   private Integer lastDeletedUserId;
@@ -125,7 +125,7 @@ public class BudgeaStubServer {
 
   public void setBankFields(BudgeaBankFieldSample step1, BudgeaBankFieldSample step2) {
     this.bankFieldsStep1 = step1;
-    this.bankFieldsStep2 = step2;
+    this.bankFieldsForUpdate = step2;
   }
 
   private String createTemporaryToken() {
@@ -138,8 +138,8 @@ public class BudgeaStubServer {
     this.connectionLists.push(json);
   }
 
-  public void pushNewConnectionResponse(String json) {
-    this.newConnectionResponses.push(json);
+  public void pushConnectionResponse(String json) {
+    this.connectionResponses.push(json);
   }
 
   public void checkLastLogin(String... fieldValues) {
@@ -344,24 +344,33 @@ public class BudgeaStubServer {
         return;
       }
 
-      boolean step2 = Strings.isNotEmpty(request.getPathInfo());
-      if (step2) {
+      boolean update = Strings.isNotEmpty(request.getPathInfo());
+      if (update) {
         logger.info("Processing step2");
       }
 
-      if (bankFieldsStep2 == null || step2) {
-        logger.info(step2 ? "Completing connection for step2" : "Completing connection for step1");
-        response.setStatus(HttpServletResponse.SC_OK);
-        PrintWriter writer = response.getWriter();
-        writer.write(newConnectionResponses.pop());
-        writer.close();
-        callWebhookWithCurrentStatements();
+      if (bankFieldsForUpdate == null || update) {
+        logger.info(update ? "Completing connection for step2" : "Completing connection for step1");
+        String connectionResponse = connectionResponses.pop();
+        if (connectionResponse.contains("wrongpass")) {
+          response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+          PrintWriter writer = response.getWriter();
+          writer.write(connectionResponse);
+          writer.close();
+        }
+        else {
+          response.setStatus(HttpServletResponse.SC_OK);
+          PrintWriter writer = response.getWriter();
+          writer.write(connectionResponse);
+          writer.close();
+          callWebhookWithCurrentStatements();
+        }
       }
       else {
         logger.info("Two-step login : returning new fields with code " + HttpServletResponse.SC_ACCEPTED);
         response.setStatus(HttpServletResponse.SC_ACCEPTED);
         PrintWriter writer = response.getWriter();
-        writer.write(bankFieldsStep2.getJSON());
+        writer.write(bankFieldsForUpdate.getJSON());
         writer.close();
       }
     }

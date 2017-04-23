@@ -115,7 +115,6 @@ public class BudgeaAPI {
       .add("id_bank", Integer.toString(budgeaBankId));
 
     for (Map.Entry<String, String> entry : params.entrySet()) {
-      System.out.println("BudgeaAPI.addBankConnectionStep1: " + entry.getKey() + " ==> " + entry.getValue());
       form.add(entry.getKey(), entry.getValue());
     }
 
@@ -125,15 +124,7 @@ public class BudgeaAPI {
       .addHeader(BudgeaConstants.AUTHORIZATION, "Bearer " + token)
       .bodyForm(pairs, Consts.UTF_8);
 
-    HttpResponse response = request.execute().returnResponse();
-    StatusLine statusLine = response.getStatusLine();
-    int statusCode = statusLine.getStatusCode();
-    System.out.println("BudgeaAPI.addBankConnectionStep1 (" + url + ")  returned " + statusLine + " ==> " + statusCode);
-    if (statusCode != 200 && statusCode != 202 && statusCode != 400) {
-      throw new IOException(url + " returned " + statusCode + " instead of 200/202/400");
-    }
-
-    return new LoginResult(statusCode, Json.json(response));
+    return getLoginResult(url, request);
   }
 
   public JSONObject addBankConnectionStep2(Integer connectionId, Map<String, String> params) throws IOException {
@@ -141,7 +132,6 @@ public class BudgeaAPI {
 
     Form form = Form.form();
     for (Map.Entry<String, String> entry : params.entrySet()) {
-      System.out.println("BudgeaAPI.addBankConnectionStep2: " + entry.getKey() + " ==> " + entry.getValue());
       form.add(entry.getKey(), entry.getValue());
     }
 
@@ -152,6 +142,34 @@ public class BudgeaAPI {
       .addHeader(BudgeaConstants.AUTHORIZATION, "Bearer " + token)
       .bodyForm(pairs, Consts.UTF_8);
     return Http.executeAndGetJson(url, request);
+  }
+
+  public LoginResult updateBankPassword(Integer connectionId, Map<String, String> params) throws IOException {
+    checkToken();
+    Form form = Form.form();
+    for (Map.Entry<String, String> entry : params.entrySet()) {
+      form.add(entry.getKey(), entry.getValue());
+    }
+
+    List<NameValuePair> pairs = form.build();
+    System.out.println("BudgeaAPI.updateBankPassword: " + pairs + " for token " + token);
+    String url = BudgeaConstants.getServerUrl("/users/me/connections/" + connectionId + "?expand=accounts");
+    Request request = Request.Post(url)
+      .addHeader(BudgeaConstants.AUTHORIZATION, "Bearer " + token)
+      .bodyForm(pairs, Consts.UTF_8);
+
+    return getLoginResult(url, request);
+  }
+
+  public LoginResult getLoginResult(String url, Request request) throws IOException {
+    HttpResponse response = request.execute().returnResponse();
+    StatusLine statusLine = response.getStatusLine();
+    int statusCode = statusLine.getStatusCode();
+    if (statusCode != 200 && statusCode != 202 && statusCode != 400) {
+      throw new IOException(url + " returned " + statusCode + " instead of 200/202/400");
+    }
+
+    return new LoginResult(statusCode, Json.json(response));
   }
 
   public void deleteConnection(int budgeaConnectionId) throws IOException {

@@ -1,9 +1,12 @@
 package com.budgetview.functests.checkers;
 
 import com.budgetview.desktop.description.Formatting;
+import com.budgetview.desktop.importer.steps.ImportCloudBankConnectionPanel;
+import com.budgetview.utils.Lang;
 import org.globsframework.utils.TestUtils;
 import org.uispec4j.Button;
 import org.uispec4j.Panel;
+import org.uispec4j.TextBox;
 import org.uispec4j.Window;
 import org.uispec4j.assertion.Assertion;
 
@@ -41,6 +44,15 @@ public class CloudEditionChecker extends ViewChecker {
     return this;
   }
 
+  public CloudEditionChecker checkConnectionWithPasswordError(String bankName) {
+    final Panel panel = CloudEditionChecker.this.getConnectionsPanel();
+    assertThat(panel.containsSwingComponent(JLabel.class, "details:" + bankName));
+    TextBox label = panel.getTextBox("details:" + bankName);
+    assertThat(label.textEquals(Lang.get("import.cloud.edition.passwordError")));
+    assertThat(label.isVisible());
+    return this;
+  }
+
   public List<String> getConnectionNames(Panel panel) {
     System.out.println("CloudEditionChecker.getConnectionNames: \n" + panel.getDescription());
     Component[] labels = panel.getSwingComponents(JLabel.class, "connectionName");
@@ -53,12 +65,18 @@ public class CloudEditionChecker extends ViewChecker {
     return actualNames;
   }
 
-  public Panel getConnectionsPanel() {
+  private Panel getConnectionsPanel() {
     JPanel connectionsPanel = mainWindow.findSwingComponent(JPanel.class, "connectionsPanel");
     if (connectionsPanel == null) {
       fail("Connections panel not shown - actual content: " + mainWindow.getDescription());
     }
     return new Panel(connectionsPanel);
+  }
+
+  public CloudBankConnectionChecker updatePassword(String bankName) {
+    checkContainsConnection(bankName);
+    mainWindow.getButton("updatePassword:" + bankName).click();
+    return new CloudBankConnectionChecker(mainWindow);
   }
 
   public CloudEditionChecker deleteConnection(String bankName) {

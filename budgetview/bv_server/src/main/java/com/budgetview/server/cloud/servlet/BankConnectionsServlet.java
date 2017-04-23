@@ -94,8 +94,9 @@ public class BankConnectionsServlet extends HttpCloudServlet {
           int budgeaConnectionId = budgeaConnection.getInt("id");
           int budgeaBankId = budgeaConnection.getInt("id_bank");
           Glob connection = connectionsById.get(budgeaConnectionId);
-          boolean initialized = connection != null ? connection.get(ProviderConnection.INITIALIZED) : false;
+          boolean initialized = connection != null && connection.isTrue(ProviderConnection.INITIALIZED);
           Integer provider = connection != null ? connection.get(ProviderConnection.PROVIDER) : null;
+          boolean passwordError = connection != null && connection.isTrue(ProviderConnection.PASSWORD_ERROR);
 
           writer.object();
           writer.key(CloudConstants.PROVIDER_ID).value(provider);
@@ -103,6 +104,7 @@ public class BankConnectionsServlet extends HttpCloudServlet {
           writer.key(CloudConstants.PROVIDER_BANK_ID).value(budgeaBankId);
           writer.key(CloudConstants.BANK_NAME).value(getName(budgeaConnection, bankNames));
           writer.key(CloudConstants.INITIALIZED).value(initialized);
+          writer.key(CloudConstants.PASSWORD_ERROR).value(passwordError);
           writer.endObject();
         }
         writer.endArray();
@@ -137,6 +139,7 @@ public class BankConnectionsServlet extends HttpCloudServlet {
           writer.key(CloudConstants.PROVIDER_ID).value(connection.get(ProviderConnection.PROVIDER));
           writer.key(CloudConstants.PROVIDER_CONNECTION_ID).value(connection.get(ProviderConnection.PROVIDER_CONNECTION));
           writer.key(CloudConstants.INITIALIZED).value(connection.isTrue(ProviderConnection.INITIALIZED));
+          writer.key(CloudConstants.PASSWORD_ERROR).value(connection.isTrue(ProviderConnection.PASSWORD_ERROR));
           writer.endObject();
           writer.endArray();
         }

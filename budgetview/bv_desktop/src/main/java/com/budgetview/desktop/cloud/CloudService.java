@@ -241,12 +241,7 @@ public class CloudService {
     Thread thread = new Thread(new Runnable() {
       public void run() {
         try {
-          Map<String, String> params = new HashMap<String, String>();
-          for (Glob value : repository.findLinkedTo(bankConnection.getKey(), BudgeaConnectionValue.CONNECTION)) {
-            Glob field = repository.findLinkTarget(value, BudgeaConnectionValue.FIELD);
-            String name = field.get(BudgeaBankField.NAME);
-            params.put(name, value.get(BudgeaConnectionValue.VALUE));
-          }
+          Map<String, String> params = getParametersMap(repository, bankConnection);
 
           Glob user = repository.get(CloudDesktopUser.KEY);
           String email = user.get(CloudDesktopUser.EMAIL);
@@ -310,15 +305,8 @@ public class CloudService {
     Thread thread = new Thread(new Runnable() {
       public void run() {
         try {
-          Map<String, String> params = new HashMap<String, String>();
-          for (Glob value : repository.findLinkedTo(bankConnection.getKey(), BudgeaConnectionValue.CONNECTION)) {
-            Glob field = repository.findLinkTarget(value, BudgeaConnectionValue.FIELD);
-            String name = field.get(BudgeaBankField.NAME);
-            params.put(name, value.get(BudgeaConnectionValue.VALUE));
-          }
-
-          JSONObject connectionResult = budgeaAPI.addBankConnectionStep2(connectionId, params);
-
+          JSONObject connectionResult =
+            budgeaAPI.addBankConnectionStep2(connectionId, getParametersMap(repository, bankConnection));
           processLoginOk(connectionResult, repository, callback);
         }
         catch (Exception e) {
@@ -328,6 +316,54 @@ public class CloudService {
       }
     });
     thread.start();
+  }
+
+  public void updatePassword(final int connectionId, final Glob bankConnection, final GlobRepository repository, final BankConnectionCallback callback) {
+    System.out.println("CloudService.updatePassword");
+    Thread thread = new Thread(new Runnable() {
+      public void run() {
+        try {
+
+          BudgeaAPI.LoginResult connectionResult =
+            budgeaAPI.updateBankPassword(connectionId, getParametersMap(repository, bankConnection));
+          switch (connectionResult.status) {
+            case ACCEPTED:
+              System.out.println("CloudService.updatePassword - login OK");
+              processLoginOk(connectionResult.json, repository, callback);
+              break;
+            case SECOND_STEP_NEEDED:
+              System.out.println("CloudService.updatePassword - needs a second step \n" + connectionResult.json.toString(2));
+              int connectionId = connectionResult.json.getInt("id");
+              resetBankFields(repository.findLinkTarget(bankConnection, BudgeaConnection.BANK), connectionResult.json, repository);
+              callback.processSecondStepResponse(connectionId);
+              break;
+            case CREDENTIALS_REJECTED:
+              System.out.println("CloudService.updatePassword - credentials rejected");
+              callback.processCredentialsRejected();
+              break;
+            case OTHER_ERROR:
+              System.out.println("CloudService.updatePassword - other error" + connectionResult.json.toString(2));
+              callback.processError(null);
+              break;
+          }
+        }
+        catch (Exception e) {
+          Log.write("Error updatingn password", e);
+          callback.processError(e);
+        }
+      }
+    });
+    thread.start();
+  }
+
+  public static Map<String, String> getParametersMap(GlobRepository repository, Glob bankConnection) {
+    Map<String, String> params = new HashMap<String, String>();
+    for (Glob value : repository.findLinkedTo(bankConnection.getKey(), BudgeaConnectionValue.CONNECTION)) {
+      Glob field = repository.findLinkTarget(value, BudgeaConnectionValue.FIELD);
+      String name = field.get(BudgeaBankField.NAME);
+      params.put(name, value.get(BudgeaConnectionValue.VALUE));
+    }
+    return params;
   }
 
   private void processLoginOk(JSONObject connectionResult, GlobRepository repository, BankConnectionCallback callback) throws IOException {
@@ -347,7 +383,8 @@ public class CloudService {
                         value(CloudProviderConnection.PROVIDER_CONNECTION_ID, providerConnectionId),
                         value(CloudProviderConnection.BANK, bank.get(Bank.ID)),
                         value(CloudProviderConnection.BANK_NAME, bankName),
-                        value(CloudProviderConnection.INITIALIZED, false));
+                        value(CloudProviderConnection.INITIALIZED, false),
+                        value(CloudProviderConnection.PASSWORD_ERROR, false));
 
     Glob user = repository.get(CloudDesktopUser.KEY);
     String email = user.get(CloudDesktopUser.EMAIL);
@@ -380,17 +417,18 @@ public class CloudService {
               throw new UnexpectedValue(result.getString(CloudConstants.STATUS));
           }
 
-          boolean initialized;
+          boolean initialized = false;
+          boolean passwordError = false;
           JSONArray array = result.getJSONArray("connections");
-          if (array.length() == 0) {
-            initialized = false;
-          }
-          else {
+          if (array.length() > 0) {
             JSONObject connection = (JSONObject) array.get(0);
             initialized = Boolean.TRUE.equals(connection.optBoolean(CloudConstants.INITIALIZED));
+            passwordError = Boolean.TRUE.equals(connection.optBoolean(CloudConstants.PASSWORD_ERROR));
           }
 
-          repository.update(providerConnection, CloudProviderConnection.INITIALIZED, initialized);
+          repository.update(providerConnection,
+                            value(CloudProviderConnection.INITIALIZED, initialized),
+                            value(CloudProviderConnection.PASSWORD_ERROR, passwordError));
 
           callback.processCompletion(initialized);
         }
@@ -424,7 +462,8 @@ public class CloudService {
                               value(CloudProviderConnection.PROVIDER_CONNECTION_ID, connection.getInt(CloudConstants.PROVIDER_CONNECTION_ID)),
                               value(CloudProviderConnection.BANK, Bank.findIdByProviderId(providerId, connection.getInt(CloudConstants.PROVIDER_BANK_ID), repository)),
                               value(CloudProviderConnection.BANK_NAME, connection.getString(CloudConstants.BANK_NAME)),
-                              value(CloudProviderConnection.INITIALIZED, connection.getBoolean(CloudConstants.INITIALIZED)));
+                              value(CloudProviderConnection.INITIALIZED, connection.getBoolean(CloudConstants.INITIALIZED)),
+                              value(CloudProviderConnection.PASSWORD_ERROR, connection.getBoolean(CloudConstants.PASSWORD_ERROR)));
           }
           repository.completeChangeSet();
           callback.processCompletion();

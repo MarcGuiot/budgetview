@@ -262,7 +262,12 @@ public class ImportDialog implements RealAccountImporter, Disposable {
   }
 
   public void showCloudBankConnection(Key bank) {
-    cloudBankConnectionPanel.showStep1(bank);
+    cloudBankConnectionPanel.showLoginStep1(bank);
+    setCurrentPanel(cloudBankConnectionPanel);
+  }
+
+  public void updatePassword(Glob cloudProviderConnection) {
+    cloudBankConnectionPanel.showPasswordUpdate(cloudProviderConnection);
     setCurrentPanel(cloudBankConnectionPanel);
   }
 
