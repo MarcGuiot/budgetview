@@ -5,9 +5,9 @@
   <styleImport file="/layout/importexport/components/importDialogStyles.splits"/>
   <styles>
     <style selector=".connection" opaque="false" border="matte(0,0,1,0,dialog.separator)"/>
-    <style selector="label.name" font="-,bold,14" marginTop="10" marginBottom="10"/>
-    <style selector="label.details" font="-,italic,12" marginTop="10" marginBottom="10" marginLeft="10"/>
-    <style selector="button.edit" fill="none" marginTop="10" marginBottom="10" marginLeft="5" weightX="0.1"/>
+    <style selector="label.name" font="-,bold,14"/>
+    <style selector="label.details" font="-,italic,12" marginBottom="2"/>
+    <style selector="button.edit" fill="none" marginLeft="5" marginRight="0"/>
   </styles>
 
   <column styleClass="dialog" preferredSize="(600,710)" name="importCloudEditionPanel">
@@ -23,13 +23,18 @@
           <column margin="20" name="connectionsPanel">
 
             <repeat ref="connections" layout="column">
-              <row styleClass="connection">
-                <label ref="connectionName" styleClass="name"/>
-                <label ref="details" styleClass="details"/>
-                <filler fill="horizontal"/>
-                <button ref="updatePassword" styleClass="edit"/>
-                <button ref="delete" styleClass="edit"/>
-              </row>
+              <column styleClass="connection">
+                <row marginTop="10" marginBottom="4">
+                  <label ref="connectionName" styleClass="name"/>
+                  <filler fill="horizontal"/>
+                </row>
+                <row marginTop="2" marginBottom="10">
+                  <label ref="details" styleClass="details"/>
+                  <filler fill="horizontal"/>
+                  <button ref="updatePassword" styleClass="edit"/>
+                  <button ref="delete" styleClass="edit"/>
+                </row>
+              </column>
             </repeat>
 
             <label ref="progressLabel" fill="none" anchor="center" marginBottom="15"/>
@@ -40,21 +45,17 @@
           </column>
         </scrollPane>
 
-        <row margin="20" marginBottom="0">
+        <row margin="10" marginBottom="0">
+          <button action="addConnection" marginLeft="30"/>
           <filler fill="horizontal"/>
-          <button action="addConnection"/>
-          <filler fill="horizontal"/>
-          <button action="download"/>
-          <filler fill="horizontal"/>
+          <button action="download" marginRight="30"/>
         </row>
 
-        <label ref="subscriptionEndDate"/>
-
-        <row margin="20">
-          <filler fill="horizontal"/>
-          <button action="unsubscribe"/>
-          <filler fill="horizontal"/>
-        </row>
+        <column styleClass="separator" weightY="20" marginTop="20">
+          <label text="Votre abonnement BudgetView Cloud" font="-,bold,14" anchor="center" marginTop="10"/>
+          <label ref="subscriptionEndDate" anchor="center"/>
+          <button action="unsubscribe" anchor="center" fill="none"/>
+        </column>
 
       </column>
     </column>

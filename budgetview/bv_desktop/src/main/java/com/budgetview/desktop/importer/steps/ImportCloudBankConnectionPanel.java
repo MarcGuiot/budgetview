@@ -195,7 +195,12 @@ public class ImportCloudBankConnectionPanel extends AbstractImportStepPanel {
         System.out.println("ImportCloudBankConnectionPanel.processCompletion");
         repository.deleteAll(BudgeaModel.get().asArray());
         repository.commitChanges(false);
-        controller.showCloudFirstDownload(providerConnection);
+        if (providerConnection.isTrue(CloudProviderConnection.INITIALIZED)) {
+          controller.showCloudDownload();
+        }
+        else {
+          controller.showCloudFirstDownload(providerConnection);
+        }
         progressPanel.stop();
       }
 

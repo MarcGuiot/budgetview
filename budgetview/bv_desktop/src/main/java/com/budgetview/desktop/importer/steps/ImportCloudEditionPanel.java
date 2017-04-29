@@ -111,7 +111,7 @@ public class ImportCloudEditionPanel extends AbstractImportStepPanel {
       label.setText(Lang.get("import.cloud.edition.notinitialized"));
     }
     else {
-      label.setVisible(false);
+      label.setText(Lang.get("import.cloud.edition.active"));
     }
     label.setName("details:" + bankName);
     return label;
