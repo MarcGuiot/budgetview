@@ -2,6 +2,7 @@ package com.budgetview.server.license.checkers;
 
 import com.dumbster.smtp.SmtpMessage;
 import junit.framework.AssertionFailedError;
+import org.globsframework.utils.Utils;
 
 import java.io.UnsupportedEncodingException;
 import java.util.Arrays;
@@ -69,11 +70,26 @@ public class Email {
     return this;
   }
 
-  public String getEnd(int charCount) {
-    return content.substring(content.length() - charCount, content.length()).trim();
+  public String to() {
+    return message.getHeaderValue("To");
+  }
+
+  public boolean sentTo(String email) {
+    return Utils.equalIgnoreCase(email, message.getHeaderValue("To"));
   }
 
   public String getContent() {
     return content;
+  }
+
+  public String toString() {
+    String subject = message.getHeaderValue("Subject");
+    try {
+      subject = decodeText(subject);
+    }
+    catch (Exception e) {
+      subject = "[Decoding error] " + subject;
+    }
+    return "To:" + to() + " - Subject:" + subject;
   }
 }

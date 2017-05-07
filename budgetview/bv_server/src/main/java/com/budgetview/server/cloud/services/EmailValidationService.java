@@ -52,6 +52,11 @@ public class EmailValidationService {
     return mailer.sendSubscriptionEmailValidationLink(email, lang, url);
   }
 
+  public boolean setNewEmailValidationCode(Integer userId, String newEmail, String lang) {
+    String code = createCode(userId, newEmail, 24);
+    return mailer.sendEmailModificationValidationLink(newEmail, lang, code);
+  }
+
   public String createCode(Integer userId, String email, int length) {
     String validationCode = sessionIds.next(length);
     SqlConnection connection = database.connect();
@@ -143,19 +148,17 @@ public class EmailValidationService {
       if (items.isEmpty()) {
         throw new ItemNotFound();
       }
-      else {
-        Glob item = items.getFirst();
-        if (item.isTrue(CloudEmailValidation.VALIDATED)) {
-          throw new ItemAlreadyUsed();
-        }
-        Date expirationDate = item.get(CloudEmailValidation.EXPIRATION_DATE);
-        if (now().after(expirationDate)) {
-          throw new TimeExpired();
-        }
-
-        Integer userId = item.get(CloudEmailValidation.USER);
-        return connection.selectUnique(CloudUser.TYPE, Where.fieldEquals(CloudUser.ID, userId));
+      Glob item = items.getFirst();
+      if (item.isTrue(CloudEmailValidation.VALIDATED)) {
+        throw new ItemAlreadyUsed();
       }
+      Date expirationDate = item.get(CloudEmailValidation.EXPIRATION_DATE);
+      if (now().after(expirationDate)) {
+        throw new TimeExpired();
+      }
+
+      Integer userId = item.get(CloudEmailValidation.USER);
+      return connection.selectUnique(CloudUser.TYPE, Where.fieldEquals(CloudUser.ID, userId));
     }
     finally {
       try {

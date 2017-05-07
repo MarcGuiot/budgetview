@@ -7,9 +7,12 @@ public class CloudConstants {
   public static final int CURRENT_API_VERSION = 1;
 
   public static final String EMAIL = "email";
+  public static final String NEW_EMAIL = "new_email";
   public static final String LANG = "lang";
+  public static final String CLOUD_USER_ID = "cloud_id";
+  public static final String DEVICE_ID = "device_id";
+  public static final String DEVICE_TOKEN = "device_token";
   public static final String VALIDATION_CODE = "validation_code";
-  public static final String BV_TOKEN = "token";
   public static final String STATUS = "status";
   public static final String API_VERSION = "api_version";
 

@@ -4,9 +4,11 @@ import com.budgetview.desktop.cloud.CloudService;
 import com.budgetview.desktop.components.ProgressPanel;
 import com.budgetview.desktop.components.dialogs.PicsouDialog;
 import com.budgetview.desktop.importer.ImportController;
+import com.budgetview.model.CloudDesktopUser;
 import com.budgetview.shared.cloud.CloudSubscriptionStatus;
 import com.budgetview.utils.Lang;
 import org.globsframework.gui.GlobsPanelBuilder;
+import org.globsframework.gui.splits.utils.GuiUtils;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.utils.Strings;
 import org.globsframework.utils.directory.Directory;
@@ -21,6 +23,7 @@ public class ImportCloudSignupPanel extends AbstractImportStepPanel {
   private final GlobRepository repository;
   private final CloudService cloudService;
   private ProgressPanel progressPanel;
+  private JEditorPane messageLabel;
   private Action nextAction;
   private JTextField emailField;
   private JLabel errorLabel;
@@ -39,6 +42,9 @@ public class ImportCloudSignupPanel extends AbstractImportStepPanel {
         processNext();
       }
     };
+
+    messageLabel = GuiUtils.createReadOnlyHtmlComponent();
+    builder.add("messageLabel", messageLabel);
 
     emailField = new JTextField();
     builder.add("emailField", emailField);
@@ -80,9 +86,15 @@ public class ImportCloudSignupPanel extends AbstractImportStepPanel {
 
     setAllEnabled(false);
     progressPanel.start();
-    cloudService.signup(email, repository, new CloudService.Callback() {
+    final boolean isSignup = !CloudDesktopUser.isRegistered(repository);
+    CloudService.Callback callback = new CloudService.Callback() {
       public void processCompletion() {
-        controller.showCloudValidation(email);
+        if (isSignup) {
+          controller.showCloudValidationForSignup(email);
+        }
+        else {
+          controller.showCloudValidationForEmailModification(email);
+        }
         progressPanel.stop();
       }
 
@@ -95,7 +107,13 @@ public class ImportCloudSignupPanel extends AbstractImportStepPanel {
         controller.showCloudError(e);
         progressPanel.stop();
       }
-    });
+    };
+    if (isSignup) {
+      cloudService.signup(email, repository, callback);
+    }
+    else {
+      cloudService.modifyEmailAddress(email, repository, callback);
+    }
   }
 
   private void setAllEnabled(boolean enabled) {
@@ -114,6 +132,12 @@ public class ImportCloudSignupPanel extends AbstractImportStepPanel {
 
   public void prepareForDisplay() {
     setAllEnabled(true);
+    if (CloudDesktopUser.isRegistered(repository)) {
+      messageLabel.setText("$import.cloud.modifyEmailAddress.message");
+    }
+    else {
+      messageLabel.setText("import.cloud.signup.message");
+    }
     emailField.requestFocus();
   }
 }

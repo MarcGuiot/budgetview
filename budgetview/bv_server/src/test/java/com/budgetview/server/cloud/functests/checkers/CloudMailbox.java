@@ -1,6 +1,7 @@
 package com.budgetview.server.cloud.functests.checkers;
 
 import com.budgetview.server.license.checkers.Email;
+import com.budgetview.server.license.checkers.EmailList;
 import com.budgetview.server.license.checkers.MailServerChecker;
 import com.budgetview.shared.http.Http;
 import org.apache.http.client.fluent.Request;
@@ -9,6 +10,7 @@ import org.junit.Assert;
 import org.uispec4j.assertion.Assertion;
 
 import java.io.IOException;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -28,8 +30,19 @@ public class CloudMailbox {
   }
 
   public String getDeviceVerificationCode(String mailTo) throws Exception {
-    String content = getEmail(mailTo).getContent();
+    Email email = getEmail(mailTo);
+    return getDeviceVerificationCode(email);
+  }
 
+  public String getDeviceVerificationCodeForEmailChange(String oldEmail, String newEmail) throws Exception {
+    EmailList emails = mailServer.checkReceivedEmails(2);
+    emails.checkContains(oldEmail, "you requested to change your email address");
+    emails.checkContains(newEmail, "please enter the following code");
+    return getDeviceVerificationCode(emails.get(newEmail));
+  }
+
+  public String getDeviceVerificationCode(Email email) {
+    String content = email.getContent();
     Matcher matcher = DEVICE_VERIFICATION_CODE_PATTERN.matcher(content);
     if (!matcher.matches()) {
       Assert.fail("Email does not contain any code: " + content);
@@ -86,6 +99,20 @@ public class CloudMailbox {
   public void checkConnectionPasswordAlert(String mailTo, String bank) throws Exception {
     Email email = getEmail(mailTo);
     email.checkContainsAny("the password for bank <b>" + bank + "</b> needs to be updated");
+  }
+
+  public Assertion checkEmailChangedAlert(final String mailTo) {
+    return new Assertion() {
+      public void check() {
+        try {
+          Email email = getEmail(mailTo);
+          email.checkSubjectContainsAny("you requested to change your email address", "votre demande de modification d'adresse email ");
+        }
+        catch (Exception e) {
+          Assert.fail(e.getMessage());
+        }
+      }
+    };
   }
 
   private Email getEmail(String mailTo) throws Exception {

@@ -82,6 +82,16 @@ public class Mailer {
                   Mailbox.SUPPORT.getEmail(), sendTo);
   }
 
+  public boolean setEmailModificationRequestAlert(String sendTo, String newEmail, String lang) {
+    return doSend(Mailbox.SUPPORT, Lang.get("cloud.email.modification.alert.subject", lang), Lang.get("cloud.email.modification.alert.message", lang, newEmail),
+                  Mailbox.SUPPORT.getEmail(), sendTo);
+  }
+
+  public boolean sendEmailModificationValidationLink(String sendTo, String lang, String url) {
+    return doSend(Mailbox.SUPPORT, Lang.get("cloud.email.modification.validation.subject", lang), Lang.get("cloud.email.modification.validation.message", lang, url),
+                  Mailbox.SUPPORT.getEmail(), sendTo);
+  }
+
   public boolean sendSubscriptionEmailValidationLink(String sendTo, String lang, String url) {
     return doSend(Mailbox.SUPPORT, Lang.get("cloud.subscription.verification.subject", lang), Lang.get("cloud.subscription.verification.message", lang, url),
                   Mailbox.SUPPORT.getEmail(), sendTo);

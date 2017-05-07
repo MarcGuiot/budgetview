@@ -47,6 +47,7 @@ public class CloudServer {
     directory = createDirectory();
     webServer = new WebServer(config);
     webServer.add(new UserServlet(directory), "/user");
+    webServer.add(new UserEmailServlet(directory), "/user/email");
     webServer.add(new UserValidationServlet(directory), "/user/validation");
     webServer.add(new BudgeaTokenServlet(directory), "/budgea/token");
     webServer.add(new ProviderAccessServlet(directory), "/provider/access");
@@ -55,6 +56,7 @@ public class CloudServer {
     webServer.add(new StatementServlet(directory), "/statement/*");
     webServer.add(new StripeFormServlet(directory), "/stripe-form");
     webServer.add(new SubscriptionEmailValidationServlet(directory), "/subscription/validation");
+    webServer.add(new UserEmailChangeValidationServlet(directory), "/user/email/validation");
     webServer.add(new StripeWebhookServlet(directory), "/stripe");
 
     if (config.isTrue("budgetview.ping.available")) {

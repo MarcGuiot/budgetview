@@ -9,6 +9,7 @@ import org.apache.log4j.Logger;
 import org.globsframework.model.FieldValue;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
+import org.globsframework.model.format.GlobPrinter;
 import org.globsframework.sqlstreams.*;
 import org.globsframework.sqlstreams.constraints.Where;
 import org.globsframework.sqlstreams.exceptions.GlobsSQLException;
@@ -33,7 +34,7 @@ public class AuthenticationService {
     this.database = directory.get(GlobsDatabase.class);
   }
 
-  public Glob findUser(String email) throws GlobsSQLException {
+  public Glob findUserWithEmail(String email) throws GlobsSQLException {
     String lowerCaseEmail = email.toLowerCase();
     SqlConnection connection = database.connect();
     try {
@@ -119,18 +120,27 @@ public class AuthenticationService {
     return null;
   }
 
+  public static class DeviceId {
+    public final int id;
+    public final String token;
+    public DeviceId(int id, String token) {
+      this.id = id;
+      this.token = token;
+    }
+  }
 
-  public String registerUserDevice(int userId) {
-    String newToken = randomStrings.next(16);
-
+  public DeviceId registerUserDevice(int userId) {
+    String token = randomStrings.next(16);
     SqlConnection connection = database.connect();
+    Integer id = null;
     try {
       SqlCreateRequest request = connection.startCreate(CloudUserDevice.TYPE)
         .set(CloudUserDevice.USER, userId)
-        .set(CloudUserDevice.TOKEN, newToken)
+        .set(CloudUserDevice.TOKEN, token)
         .set(CloudUserDevice.LAST_UPDATE, now())
         .getRequest();
       request.execute();
+      id = request.getLastGeneratedIds().get(CloudUserDevice.ID);
     }
     finally {
       try {
@@ -141,20 +151,20 @@ public class AuthenticationService {
       }
     }
 
-    return newToken;
+    return new DeviceId(id, token);
   }
 
-  public Glob findUserAndToken(String email, String token) {
+  public Glob findUser(Integer userId, Integer deviceId, String token) {
     SqlConnection connection = database.connect();
     try {
-      Glob user = connection.selectUnique(CloudUser.TYPE, fieldEquals(CloudUser.EMAIL, email.toLowerCase()));
+      Glob user = connection.selectUnique(CloudUser.TYPE, fieldEquals(CloudUser.ID, userId));
       if (user == null) {
         return null;
       }
 
-      Integer userId = user.get(CloudUser.ID);
       GlobList usersWithToken = connection.selectAll(CloudUserDevice.TYPE,
-                                                     Where.and(fieldEquals(CloudUserDevice.USER, userId),
+                                                     Where.and(fieldEquals(CloudUserDevice.ID, deviceId),
+                                                               fieldEquals(CloudUserDevice.USER, userId),
                                                                fieldEquals(CloudUserDevice.TOKEN, token)));
       if (usersWithToken.size() != 1) {
         return null;
@@ -166,7 +176,7 @@ public class AuthenticationService {
       return null;
     }
     catch (TooManyItems e) {
-      logger.error("Too many user token entries for: " + email);
+      logger.error("Too many user token entries for: " + userId + " / " + deviceId + " / " + token);
       return null;
     }
     finally {
@@ -174,33 +184,42 @@ public class AuthenticationService {
         connection.commitAndClose();
       }
       catch (GlobsSQLException e) {
-        logger.error("Commit failed when trying to find user and token for: " + email, e);
+        logger.error("Commit failed when trying to find user and token for: " + userId + " / " + deviceId + " / " + token, e);
       }
     }
   }
 
-  public Glob checkUserToken(String email, String token) throws SubscriptionCheckFailed {
+  public Glob checkUserToken(int userId, int deviceId, String deviceToken) throws SubscriptionCheckFailed {
     SqlConnection connection = database.connect();
+    Glob user;
     try {
-      Glob user = connection.selectUnique(CloudUser.TYPE, fieldEquals(CloudUser.EMAIL, email.toLowerCase()));
+      user = connection.selectUnique(CloudUser.TYPE, fieldEquals(CloudUser.ID, userId));
       if (user == null) {
         return null;
       }
+    }
+    catch (ItemNotFound e) {
+      throw new SubscriptionCheckFailed(CloudSubscriptionStatus.NO_SUBSCRIPTION);
+    }
+    catch (TooManyItems e) {
+      logger.error("Too many user token entries for cloudUserId: " + userId);
+      throw new SubscriptionCheckFailed(CloudSubscriptionStatus.NO_SUBSCRIPTION);
+    }
 
-      Integer userId = user.get(CloudUser.ID);
+    try {
       GlobList usersWithToken = connection.selectAll(CloudUserDevice.TYPE,
-                                                     Where.and(fieldEquals(CloudUserDevice.USER, userId),
-                                                               fieldEquals(CloudUserDevice.TOKEN, token)));
+                                                     Where.and(fieldEquals(CloudUserDevice.ID, deviceId),
+                                                               fieldEquals(CloudUserDevice.USER, userId),
+                                                               fieldEquals(CloudUserDevice.TOKEN, deviceToken)));
       if (usersWithToken.size() != 1) {
         return null;
       }
-
       connection.startUpdate(CloudUserDevice.TYPE, Where.globEquals(usersWithToken.getFirst()))
         .set(CloudUserDevice.LAST_UPDATE, new Date())
         .getRequest()
         .execute();
 
-      checkSubscriptionEndDate(user, userId, email, connection);
+      checkSubscriptionEndDate(user);
 
       return user;
     }
@@ -208,7 +227,7 @@ public class AuthenticationService {
       throw new SubscriptionCheckFailed(CloudSubscriptionStatus.NO_SUBSCRIPTION);
     }
     catch (TooManyItems e) {
-      logger.error("Too many user token entries for: " + email);
+      logger.error("Too many user token entries for userId: " + userId);
       throw new SubscriptionCheckFailed(CloudSubscriptionStatus.NO_SUBSCRIPTION);
     }
     finally {
@@ -216,7 +235,7 @@ public class AuthenticationService {
         connection.commitAndClose();
       }
       catch (GlobsSQLException e) {
-        logger.error("Commit failed when looking for user: " + email, e);
+        logger.error("Commit failed when looking for user: " + userId, e);
       }
     }
   }
@@ -235,7 +254,7 @@ public class AuthenticationService {
       if (user == null) {
         throw new SubscriptionCheckFailed(CloudSubscriptionStatus.NO_SUBSCRIPTION);
       }
-      checkSubscriptionEndDate(user, userId, user.get(CloudUser.EMAIL), connection);
+      checkSubscriptionEndDate(user);
     }
     catch (ItemNotFound e) {
       throw new SubscriptionCheckFailed(CloudSubscriptionStatus.NO_SUBSCRIPTION);
@@ -254,7 +273,7 @@ public class AuthenticationService {
     }
   }
 
-  private void checkSubscriptionEndDate(Glob user, Integer userId, String email, SqlConnection connection) throws SubscriptionCheckFailed {
+  private void checkSubscriptionEndDate(Glob user) throws SubscriptionCheckFailed {
     Date endDate = user.get(CloudUser.SUBSCRIPTION_END_DATE);
     if (endDate == null) {
       throw new SubscriptionCheckFailed(CloudSubscriptionStatus.NO_SUBSCRIPTION);
@@ -262,5 +281,13 @@ public class AuthenticationService {
     if (now().after(endDate)) {
       throw new SubscriptionCheckFailed(CloudSubscriptionStatus.EXPIRED);
     }
+  }
+
+  /** @deprecated - To be used for dbugging only */
+  public void dumpTables() {
+    SqlConnection connection = database.connect();
+    GlobPrinter.print(connection.selectAll(CloudUser.TYPE));
+    GlobPrinter.print(connection.selectAll(CloudUserDevice.TYPE));
+    connection.commitAndClose();
   }
 }

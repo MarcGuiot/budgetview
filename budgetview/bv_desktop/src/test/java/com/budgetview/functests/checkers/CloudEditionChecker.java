@@ -99,6 +99,12 @@ public class CloudEditionChecker extends ViewChecker {
     return new ImportDialogPreviewChecker(mainWindow);
   }
 
+  public CloudSignupChecker modifyCloudEmail(String currentAddress) {
+    assertThat(mainWindow.getTextBox("currentEmailAddress").textContains(currentAddress));
+    mainWindow.getButton("modifyEmailAddress").click();
+    return new CloudSignupChecker(mainWindow);
+  }
+
   public CloudEditionChecker checkSubscriptionEndDate(Date date) {
     assertThat(mainWindow.getTextBox("subscriptionEndDate").textContains(Formatting.toString(date)));
     return this;
@@ -115,4 +121,5 @@ public class CloudEditionChecker extends ViewChecker {
     mainWindow.getButton("close").click();
     assertFalse(mainWindow.isVisible());
   }
+
 }

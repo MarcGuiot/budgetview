@@ -358,12 +358,24 @@ public class ImportController implements RealAccountImporter {
     importDialog.showCloudSignup();
   }
 
+  public void showModifyCloudEmail() {
+    importDialog.showModifyCloudEmail();
+  }
+
   public void showCloudEdition() {
     importDialog.showCloudEdition();
   }
 
-  public void showCloudValidation(String email) {
-    importDialog.showCloudValidation(email);
+  public void showCloudValidationForSignup(String email) {
+    importDialog.showCloudValidationForSignup(email);
+  }
+
+  public void showCloudValidationForEmailModification(String email) {
+    importDialog.showCloudValidationForEmailModification(email);
+  }
+
+  public void showCloudEmailModificationCompleted(String newEmail) {
+    importDialog.showCloudEmailModificationCompleted(newEmail);
   }
 
   public void showCloudBankSelection() {
@@ -418,7 +430,7 @@ public class ImportController implements RealAccountImporter {
     localRepository.startChangeSet();
     localRepository.update(CloudDesktopUser.KEY,
                            value(CloudDesktopUser.EMAIL, null),
-                           value(CloudDesktopUser.BV_TOKEN, null),
+                           value(CloudDesktopUser.DEVICE_TOKEN, null),
                            value(CloudDesktopUser.LAST_UPDATE, null),
                            value(CloudDesktopUser.REGISTERED, false),
                            value(CloudDesktopUser.SYNCHRO_ENABLED, false));

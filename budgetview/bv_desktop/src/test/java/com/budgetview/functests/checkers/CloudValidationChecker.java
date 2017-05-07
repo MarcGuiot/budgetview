@@ -71,6 +71,11 @@ public class CloudValidationChecker extends ViewChecker {
     return new CloudSubscriptionErrorChecker(mainWindow);
   }
 
+  public CloudEmailModificationCompletedChecker processEmailAndNextToAddressChanged(String code) {
+    enterCode(code);
+    return new CloudEmailModificationCompletedChecker(mainWindow);
+  }
+
   public void enterCode(String code) {
     mainWindow.getInputTextBox("codeField").setText(code, false);
     mainWindow.getButton("next").click();

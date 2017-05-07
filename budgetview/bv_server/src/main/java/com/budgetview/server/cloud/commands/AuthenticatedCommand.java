@@ -7,7 +7,6 @@ import com.budgetview.shared.cloud.CloudConstants;
 import com.budgetview.shared.cloud.budgea.BudgeaAPI;
 import org.apache.log4j.Logger;
 import org.globsframework.model.Glob;
-import org.globsframework.sqlstreams.GlobsDatabase;
 import org.globsframework.utils.Strings;
 import org.globsframework.utils.directory.Directory;
 import org.json.JSONWriter;
@@ -30,21 +29,25 @@ public abstract class AuthenticatedCommand extends DatabaseCommand {
 
   public void run() throws ServletException, IOException {
 
-    String email = request.getHeader(CloudConstants.EMAIL);
-    String bvToken = request.getHeader(CloudConstants.BV_TOKEN);
-    if (Strings.isNullOrEmpty(email)) {
-      logger.error("No email provided");
-      response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-      return;
+    int cloudUserId = 0;
+    int deviceId = 0;
+    try {
+      cloudUserId = getIntHeader(CloudConstants.CLOUD_USER_ID);
+      deviceId = getIntHeader(CloudConstants.DEVICE_ID);
     }
-    if (Strings.isNullOrEmpty(bvToken)) {
-      logger.error("No token provided");
+    catch (InvalidHeader invalidHeader) {
+      logger.error("AuthenticatedCommand - Missing header", invalidHeader);
+      response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+    }
+    String deviceToken = request.getHeader(CloudConstants.DEVICE_TOKEN);
+    if (Strings.isNullOrEmpty(deviceToken)) {
+      logger.error("AuthenticatedCommand - No token provided");
       response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
       return;
     }
 
     try {
-      user = authentication.checkUserToken(email, bvToken);
+      user = authentication.checkUserToken(cloudUserId, deviceId, deviceToken);
     }
     catch (SubscriptionCheckFailed e) {
       response.setStatus(HttpServletResponse.SC_OK);
@@ -58,7 +61,8 @@ public abstract class AuthenticatedCommand extends DatabaseCommand {
     }
 
     if (user == null) {
-      logger.error("Could not identify user with email:" + email);
+      logger.error("AuthenticatedCommand - Could not identify user with id: " + cloudUserId + " / " + deviceId + " / " + deviceToken);
+      authentication.dumpTables();
       response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
       return;
     }

@@ -68,6 +68,8 @@ public class CloudService {
 
     void processCompletionAndDownload();
 
+    void processCompletionAndModifyEmail(String email);
+
     void processInvalidCode();
 
     void processTempTokenExpired();
@@ -98,7 +100,7 @@ public class CloudService {
           repository.findOrCreate(CloudDesktopUser.KEY);
           repository.update(CloudDesktopUser.KEY,
                             value(CloudDesktopUser.EMAIL, email),
-                            value(CloudDesktopUser.BV_TOKEN, null),
+                            value(CloudDesktopUser.DEVICE_TOKEN, null),
                             value(CloudDesktopUser.REGISTERED, false));
           JSONObject result = cloudAPI.signup(email, Lang.getLang());
           checkAPIVersion(result);
@@ -122,18 +124,19 @@ public class CloudService {
     thread.start();
   }
 
-  public void validate(final String email, final String code, final GlobRepository repository, final ValidationCallback callback) {
+  public void validateSignup(final String email, final String code, final GlobRepository repository, final ValidationCallback callback) {
     Thread thread = new Thread(new Runnable() {
       public void run() {
         try {
-          JSONObject result = cloudAPI.validate(email, code);
-          System.out.println("CloudService.validate:" + result.toString(2));
+          JSONObject result = cloudAPI.validateSignup(email, code);
+          System.out.println("CloudService.validateSignup:" + result.toString(2));
           checkAPIVersion(result);
           switch (CloudValidationStatus.get(result.getString(CloudConstants.STATUS))) {
             case OK:
-              String bvToken = result.getString(CloudConstants.BV_TOKEN);
               repository.update(CloudDesktopUser.KEY,
-                                value(CloudDesktopUser.BV_TOKEN, bvToken),
+                                value(CloudDesktopUser.CLOUD_USER_ID, result.getInt(CloudConstants.CLOUD_USER_ID)),
+                                value(CloudDesktopUser.DEVICE_ID, result.getInt(CloudConstants.DEVICE_ID)),
+                                value(CloudDesktopUser.DEVICE_TOKEN, result.getString(CloudConstants.DEVICE_TOKEN)),
                                 value(CloudDesktopUser.REGISTERED, true));
               if (Boolean.TRUE.equals(result.optBoolean(CloudConstants.EXISTING_STATEMENTS))) {
                 callback.processCompletionAndDownload();
@@ -164,11 +167,85 @@ public class CloudService {
     thread.start();
   }
 
+  public void modifyEmailAddress(final String newEmail, final GlobRepository repository, final Callback callback) {
+    Thread thread = new Thread(new Runnable() {
+      public void run() {
+        try {
+          Glob user = repository.get(CloudDesktopUser.KEY);
+          int cloudUserId = user.get(CloudDesktopUser.CLOUD_USER_ID);
+          int deviceId = user.get(CloudDesktopUser.DEVICE_ID);
+          String deviceToken = user.get(CloudDesktopUser.DEVICE_TOKEN);
+          String currentEmail = repository.get(CloudDesktopUser.KEY).get(CloudDesktopUser.EMAIL);
+          JSONObject result = cloudAPI.modifyEmailAddress(cloudUserId, deviceId, deviceToken, currentEmail, newEmail);
+          checkAPIVersion(result);
+          switch (CloudRequestStatus.get(result.getString(CloudConstants.STATUS))) {
+            case OK:
+              callback.processCompletion();
+              break;
+            case NO_SUBSCRIPTION:
+              callback.processSubscriptionError(getSubscriptionStatus(result));
+              break;
+            default:
+              throw new UnexpectedValue(result.getString(CloudConstants.STATUS));
+          }
+        }
+        catch (Exception e) {
+          Log.write("Error during signup", e);
+          callback.processError(e);
+        }
+      }
+    });
+    thread.start();
+  }
+
+  public void validateEmailModification(final String email, final String code, final GlobRepository repository, final ValidationCallback callback) {
+    Thread thread = new Thread(new Runnable() {
+      public void run() {
+        try {
+          Glob user = repository.get(CloudDesktopUser.KEY);
+          int cloudUserId = user.get(CloudDesktopUser.CLOUD_USER_ID);
+          int deviceId = user.get(CloudDesktopUser.DEVICE_ID);
+          String deviceToken = user.get(CloudDesktopUser.DEVICE_TOKEN);
+          JSONObject result = cloudAPI.validateEmailModification(cloudUserId, deviceId, deviceToken, email, code);
+          System.out.println("CloudService.validateEmailModification:" + result.toString(2));
+          checkAPIVersion(result);
+          switch (CloudValidationStatus.get(result.getString(CloudConstants.STATUS))) {
+            case OK:
+              String newEmail = result.getString(CloudConstants.NEW_EMAIL);
+              repository.update(CloudDesktopUser.KEY,
+                                value(CloudDesktopUser.EMAIL, newEmail));
+              callback.processCompletionAndModifyEmail(newEmail);
+              break;
+            case UNKNOWN_VALIDATION_CODE:
+              callback.processInvalidCode();
+              break;
+            case TEMP_VALIDATION_CODE_EXPIRED:
+              callback.processTempTokenExpired();
+              break;
+            case NO_SUBSCRIPTION:
+              callback.processSubscriptionError(getSubscriptionStatus(result));
+              break;
+            default:
+              callback.processError(null);
+          }
+        }
+        catch (Exception e) {
+          Log.write("Error validating email", e);
+          callback.processError(e);
+        }
+      }
+    });
+    thread.start();
+  }
+
   public void updateBankFields(Key bankKey, GlobRepository repository, Callback callback) {
     try {
       Glob user = repository.get(CloudDesktopUser.KEY);
 
-      JSONObject result = cloudAPI.getTemporaryBudgeaToken(user.get(CloudDesktopUser.EMAIL), user.get(CloudDesktopUser.BV_TOKEN));
+      int cloudUserId = user.get(CloudDesktopUser.CLOUD_USER_ID);
+      int deviceId = user.get(CloudDesktopUser.DEVICE_ID);
+      String deviceToken = user.get(CloudDesktopUser.DEVICE_TOKEN);
+      JSONObject result = cloudAPI.getTemporaryBudgeaToken(cloudUserId, deviceId, deviceToken);
       switch (CloudRequestStatus.get(result.getString(CloudConstants.STATUS))) {
         case OK:
           String token = result.getString(CloudConstants.PROVIDER_TOKEN);
@@ -244,17 +321,18 @@ public class CloudService {
           Map<String, String> params = getParametersMap(repository, bankConnection);
 
           Glob user = repository.get(CloudDesktopUser.KEY);
-          String email = user.get(CloudDesktopUser.EMAIL);
-          String bvToken = user.get(CloudDesktopUser.BV_TOKEN);
+          int cloudUserId = user.get(CloudDesktopUser.CLOUD_USER_ID);
+          int deviceId = user.get(CloudDesktopUser.DEVICE_ID);
+          String deviceToken = user.get(CloudDesktopUser.DEVICE_TOKEN);
           System.out.println("CloudService.addBankConnection - check provider access");
-          if (!cloudAPI.isProviderAccessRegistered(email, bvToken)) {
+          if (!cloudAPI.isProviderAccessRegistered(cloudUserId, deviceId, deviceToken)) {
             System.out.println("CloudService.addBankConnection - add provider access");
-            cloudAPI.addProviderAccess(email, bvToken, budgeaAPI.getToken(), budgeaAPI.getUserId());
+            cloudAPI.addProviderAccess(cloudUserId, deviceId, deviceToken, budgeaAPI.getToken(), budgeaAPI.getUserId());
           }
 
           System.out.println("CloudService.addBankConnection - getting temp token");
 
-          JSONObject result = cloudAPI.getTemporaryBudgeaToken(email, bvToken);
+          JSONObject result = cloudAPI.getTemporaryBudgeaToken(cloudUserId, deviceId, deviceToken);
           checkAPIVersion(result);
           switch (CloudRequestStatus.get(result.getString(CloudConstants.STATUS))) {
             case OK:
@@ -387,9 +465,10 @@ public class CloudService {
                         value(CloudProviderConnection.PASSWORD_ERROR, false));
 
     Glob user = repository.get(CloudDesktopUser.KEY);
-    String email = user.get(CloudDesktopUser.EMAIL);
-    String bvToken = user.get(CloudDesktopUser.BV_TOKEN);
-    cloudAPI.addBankConnection(email, bvToken, providerConnectionId);
+    int cloudUserId = user.get(CloudDesktopUser.CLOUD_USER_ID);
+    int deviceId = user.get(CloudDesktopUser.DEVICE_ID);
+    String deviceToken = user.get(CloudDesktopUser.DEVICE_TOKEN);
+    cloudAPI.addBankConnection(cloudUserId, deviceId, deviceToken, providerConnectionId);
 
     callback.processCompletion(connection);
   }
@@ -403,8 +482,10 @@ public class CloudService {
 
           Glob user = repository.get(CloudDesktopUser.KEY);
           Integer providerConnectionId = providerConnection.get(CloudProviderConnection.PROVIDER_CONNECTION_ID);
-          JSONObject result =
-            cloudAPI.checkBankConnection(user.get(CloudDesktopUser.EMAIL), user.get(CloudDesktopUser.BV_TOKEN), providerConnectionId);
+          int cloudUserId = user.get(CloudDesktopUser.CLOUD_USER_ID);
+          int deviceId = user.get(CloudDesktopUser.DEVICE_ID);
+          String deviceToken = user.get(CloudDesktopUser.DEVICE_TOKEN);
+          JSONObject result = cloudAPI.checkBankConnection(cloudUserId, deviceId, deviceToken, providerConnectionId);
 
           String status = result.getString(CloudConstants.STATUS);
           switch (CloudRequestStatus.get(status)) {
@@ -446,7 +527,10 @@ public class CloudService {
       public void run() {
         try {
           Glob user = repository.get(CloudDesktopUser.KEY);
-          JSONObject connections = cloudAPI.getBankConnections(user.get(CloudDesktopUser.EMAIL), user.get(CloudDesktopUser.BV_TOKEN));
+          int cloudUserId = user.get(CloudDesktopUser.CLOUD_USER_ID);
+          int deviceId = user.get(CloudDesktopUser.DEVICE_ID);
+          String deviceToken = user.get(CloudDesktopUser.DEVICE_TOKEN);
+          JSONObject connections = cloudAPI.getBankConnections(cloudUserId, deviceId, deviceToken);
 
           System.out.println("CloudService.updateBankConnections: " + connections.toString(2));
 
@@ -486,8 +570,12 @@ public class CloudService {
 
           Glob user = repository.get(CloudDesktopUser.KEY);
 
-          cloudAPI.deleteConnection(user.get(CloudDesktopUser.EMAIL), user.get(CloudDesktopUser.BV_TOKEN),
-                                    connection.get(CloudProviderConnection.PROVIDER), connection.get(CloudProviderConnection.PROVIDER_CONNECTION_ID));
+          int cloudUserId = user.get(CloudDesktopUser.CLOUD_USER_ID);
+          int deviceId = user.get(CloudDesktopUser.DEVICE_ID);
+          String deviceToken = user.get(CloudDesktopUser.DEVICE_TOKEN);
+          cloudAPI.deleteConnection(cloudUserId, deviceId, deviceToken,
+                                    connection.get(CloudProviderConnection.PROVIDER),
+                                    connection.get(CloudProviderConnection.PROVIDER_CONNECTION_ID));
 
           repository.delete(connection.getKey());
           callback.processCompletion();
@@ -535,7 +623,10 @@ public class CloudService {
   public GlobList doDownloadStatement(GlobRepository repository) throws SubscriptionError, IOException, InvalidCloudAPIVersion {
     Glob user = repository.findOrCreate(CloudDesktopUser.KEY);
     Integer lastUpdate = user.get(CloudDesktopUser.LAST_UPDATE);
-    JSONObject result = cloudAPI.getStatement(user.get(CloudDesktopUser.EMAIL), user.get(CloudDesktopUser.BV_TOKEN), lastUpdate);
+    int cloudUserId = user.get(CloudDesktopUser.CLOUD_USER_ID);
+    int deviceId = user.get(CloudDesktopUser.DEVICE_ID);
+    String deviceToken = user.get(CloudDesktopUser.DEVICE_TOKEN);
+    JSONObject result = cloudAPI.getStatement(cloudUserId, deviceId, deviceToken, lastUpdate);
     checkAPIVersion(result);
     String status = result.getString(CloudConstants.STATUS);
     switch (CloudRequestStatus.get(status)) {
@@ -628,8 +719,10 @@ public class CloudService {
   public void deleteCloudAccount(GlobRepository repository, final UnsubscriptionCallback callback) {
     Glob user = repository.findOrCreate(CloudDesktopUser.KEY);
     try {
-      cloudAPI.deleteCloudAccount(user.get(CloudDesktopUser.EMAIL),
-                                  user.get(CloudDesktopUser.BV_TOKEN));
+      int cloudUserId = user.get(CloudDesktopUser.CLOUD_USER_ID);
+      int deviceId = user.get(CloudDesktopUser.DEVICE_ID);
+      String deviceToken = user.get(CloudDesktopUser.DEVICE_TOKEN);
+      cloudAPI.deleteCloudAccount(cloudUserId, deviceId, deviceToken);
       GuiUtils.runInSwingThread(new Runnable() {
         public void run() {
           callback.processCompletion();

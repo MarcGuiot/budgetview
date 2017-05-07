@@ -6,7 +6,6 @@ import com.budgetview.server.cloud.model.*;
 import com.budgetview.server.cloud.services.AuthenticationService;
 import com.budgetview.server.cloud.services.EmailValidationService;
 import com.budgetview.server.cloud.services.PaymentService;
-import com.budgetview.server.cloud.utils.SubscriptionCheckFailed;
 import com.budgetview.server.license.mail.Mailer;
 import com.budgetview.shared.cloud.CloudConstants;
 import com.budgetview.shared.cloud.CloudSubscriptionStatus;
@@ -54,7 +53,7 @@ public class UserServlet extends HttpCloudServlet {
         String lang = getLangHeader(CloudConstants.LANG);
 
         try {
-          Glob user = authentication.findUser(email);
+          Glob user = authentication.findUserWithEmail(email);
           if (user == null) {
             logger.info("User not found for '" + email + "'");
             setSubscriptionError(CloudSubscriptionStatus.NO_SUBSCRIPTION, writer);
@@ -92,15 +91,15 @@ public class UserServlet extends HttpCloudServlet {
 
     Command command = new HttpCommand(req, resp, logger) {
       protected int doRun(JsonGlobWriter writer) throws IOException, InvalidHeader {
-        String email = getStringHeader(CloudConstants.EMAIL);
-        String bvToken = getStringHeader(CloudConstants.BV_TOKEN);
-        Glob user = authentication.findUserAndToken(email, bvToken);
+        Integer userId = getIntHeader(CloudConstants.CLOUD_USER_ID);
+        Integer deviceId = getIntHeader(CloudConstants.DEVICE_ID);
+        String deviceToken = getStringHeader(CloudConstants.DEVICE_TOKEN);
+        Glob user = authentication.findUser(userId, deviceId, deviceToken);
         if (user == null) {
-          logger.error("Could not identify user with email:" + email);
+          logger.error("Could not identify user:" + userId);
           return HttpServletResponse.SC_UNAUTHORIZED;
         }
 
-        Integer userId = user.get(CloudUser.ID);
         Integer providerUserId = user.get(CloudUser.PROVIDER_USER_ID);
         try {
           BudgeaAPI budgeaAPI = new BudgeaAPI();
@@ -108,7 +107,7 @@ public class UserServlet extends HttpCloudServlet {
           budgeaAPI.deleteUser(providerUserId);
         }
         catch (IOException e) {
-          String message = "Failed to delete Budgea user " + email + " / " + userId + " with provider user ID " + providerUserId;
+          String message = "Failed to delete Budgea user " + userId + " / device " + deviceId + " with provider user ID " + providerUserId;
           logger.error(message, e);
           mailer.sendErrorToAdmin(getClass(), "Budgea user deletion failed", message, e);
         }
@@ -145,7 +144,7 @@ public class UserServlet extends HttpCloudServlet {
             .execute();
         }
         catch (GlobsSQLException e) {
-          String message = "Failed to delete user " + email + " / " + userId + " with provider user ID " + providerUserId + " from database";
+          String message = "Failed to delete user " + userId + " with provider user ID " + providerUserId + " from database";
           logger.error(message, e);
           mailer.sendErrorToAdmin(getClass(), "User deletion failed", message, e);
           return HttpServletResponse.SC_INTERNAL_SERVER_ERROR;
@@ -155,7 +154,7 @@ public class UserServlet extends HttpCloudServlet {
             connection.commitAndClose();
           }
           catch (Exception e) {
-            logger.error("Commit failed when deleting user: " + email + " / " + userId, e);
+            logger.error("Commit failed when deleting user: " + userId, e);
           }
         }
 

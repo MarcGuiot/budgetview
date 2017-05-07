@@ -92,7 +92,7 @@ public class StatementServlet extends HttpCloudServlet {
             serializer.readBlob(bytes, repository);
           }
           catch (GeneralSecurityException e) {
-            logger.error("Could not identify user with email: " + user.get(CloudUser.EMAIL));
+            logger.error("Failed to deserialize statement for user with email: " + user.get(CloudUser.EMAIL), e);
             return HttpServletResponse.SC_INTERNAL_SERVER_ERROR;
           }
         }

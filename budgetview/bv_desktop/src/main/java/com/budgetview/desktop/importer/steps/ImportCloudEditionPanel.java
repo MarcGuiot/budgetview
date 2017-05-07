@@ -30,11 +30,13 @@ public class ImportCloudEditionPanel extends AbstractImportStepPanel {
   private final CloudService cloudService;
   private ProgressPanel progressPanel;
   private JLabel progressLabel;
+  private JLabel currentEmailAddress;
   private JLabel subscriptionEndDate;
   private GlobRepeat repeat;
-  private AbstractAction addConnectionAction;
-  private AbstractAction downloadAction;
-  private AbstractAction unsubscribeAction;
+  private Action addConnectionAction;
+  private Action downloadAction;
+  private Action modifyEmailAction;
+  private Action unsubscribeAction;
 
   public ImportCloudEditionPanel(PicsouDialog dialog, ImportController controller, GlobRepository repository, Directory localDirectory) {
     super(dialog, controller, localDirectory);
@@ -75,6 +77,13 @@ public class ImportCloudEditionPanel extends AbstractImportStepPanel {
     };
     builder.add("download", downloadAction);
 
+    modifyEmailAction = new AbstractAction(Lang.get("import.cloud.edition.modifyEmail.button")) {
+      public void actionPerformed(ActionEvent e) {
+        controller.showModifyCloudEmail();
+      }
+    };
+    builder.add("modifyEmailAddress", modifyEmailAction);
+
     unsubscribeAction = new AbstractAction(Lang.get("import.cloud.edition.unsubscribe.button")) {
       public void actionPerformed(ActionEvent e) {
         controller.showCloudUnsubscription();
@@ -92,6 +101,9 @@ public class ImportCloudEditionPanel extends AbstractImportStepPanel {
     progressLabel = new JLabel(Lang.get("import.cloud.edition.progress.label"));
     builder.add("progressLabel", progressLabel);
     progressLabel.setVisible(false);
+
+    currentEmailAddress = new JLabel();
+    builder.add("currentEmailAddress", currentEmailAddress);
 
     subscriptionEndDate = new JLabel();
     builder.add("subscriptionEndDate", subscriptionEndDate);
@@ -120,6 +132,8 @@ public class ImportCloudEditionPanel extends AbstractImportStepPanel {
   public void start() {
     repeat.setFilter(GlobMatchers.NONE);
     setAllEnabled(false);
+    String email = repository.get(CloudDesktopUser.KEY).get(CloudDesktopUser.EMAIL);
+    currentEmailAddress.setText(Lang.get("import.cloud.edition.currentEmailAddress", email));
     subscriptionEndDate.setText("");
     progressLabel.setVisible(true);
     progressPanel.start();

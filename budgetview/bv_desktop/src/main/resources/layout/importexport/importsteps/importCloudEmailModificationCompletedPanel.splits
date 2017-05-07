@@ -1,0 +1,38 @@
+<splits xmlns="http://www.globsframework.org/xml/splits.xsd">
+
+  <styleImport file="/layout/commonStyles.splits"/>
+  <styleImport file="/layout/dialogStyles.splits"/>
+  <styleImport file="/layout/importexport/components/importDialogStyles.splits"/>
+  <styles>
+    <style selector="#newEmail" anchor="center" fill="none" font="-,bold,12" marginTop="10"/>
+  </styles>
+
+
+  <column styleClass="dialog" preferredSize="(600,710)" name="importCloudEmailModificationCompletedPanel">
+
+    <label text="$import.cloud.email.validation.completed.title" name="title" styleClass="title"/>
+
+    <column styleClass="innerDialog">
+      <column styleClass="innerDialogContent">
+
+        <scrollPane marginTop="20" forceVerticalScroll="true">
+          <column margin="20">
+
+            <htmlEditorPane text="$import.cloud.email.validation.completed.message"/>
+
+            <label ref="emailLabel"/>
+
+            <filler fill="vertical"/>
+
+          </column>
+        </scrollPane>
+      </column>
+    </column>
+
+    <row styleClass="dialogButtons" name="buttons">
+      <filler fill="horizontal"/>
+      <button action="close"/>
+    </row>
+  </column>
+
+</splits>

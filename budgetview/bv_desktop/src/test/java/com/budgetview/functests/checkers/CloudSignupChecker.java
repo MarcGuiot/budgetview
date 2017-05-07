@@ -1,8 +1,6 @@
 package com.budgetview.functests.checkers;
 
 import org.uispec4j.Window;
-import org.uispec4j.assertion.Assertion;
-import org.uispec4j.assertion.UISpecAssert;
 
 import javax.swing.*;
 
@@ -16,8 +14,8 @@ public class CloudSignupChecker extends ViewChecker {
     checkPanelShown("importCloudSignupPanel");
   }
 
-  public CloudValidationChecker register(String email) {
-    mainWindow.getTextBox("emailField").setText(email, false);
+  public CloudValidationChecker register(String newEmail) {
+    mainWindow.getTextBox("emailField").setText(newEmail, false);
     next();
     return new CloudValidationChecker(mainWindow);
   }

@@ -23,7 +23,7 @@ public class CloudAPI {
     return Http.executeAndGetJson(url, request);
   }
 
-  public JSONObject validate(String email, String validationCode) throws IOException {
+  public JSONObject validateSignup(String email, String validationCode) throws IOException {
     String url = "/user/validation";
     Request request = Request.Post(CloudConstants.getServerUrl(url))
       .addHeader(CloudConstants.EMAIL, email)
@@ -31,27 +31,51 @@ public class CloudAPI {
     return Http.executeAndGetJson(url, request);
   }
 
-  public JSONObject getTemporaryBudgeaToken(String email, String bvToken) throws IOException {
-    if (Strings.isNullOrEmpty(email)) {
-      throw new InvalidParameter("A proper email must be provided to get a token");
-    }
-    if (Strings.isNullOrEmpty(bvToken)) {
+  public JSONObject modifyEmailAddress(Integer cloudUserId, Integer deviceId, String deviceToken, String currentEmail, String newEmail) throws IOException {
+    String url = "/user/email";
+    String serverUrl = CloudConstants.getServerUrl(url);
+    Log.write("CloudAPI: modifyEmailAddress with " + serverUrl + " for " + currentEmail + " ==> " + newEmail);
+    Request request = Request.Post(serverUrl)
+      .addHeader(CloudConstants.CLOUD_USER_ID, Integer.toString(cloudUserId))
+      .addHeader(CloudConstants.DEVICE_ID, Integer.toString(deviceId))
+      .addHeader(CloudConstants.DEVICE_TOKEN, deviceToken)
+      .addHeader(CloudConstants.EMAIL, currentEmail)
+      .addHeader(CloudConstants.NEW_EMAIL, newEmail);
+    return Http.executeAndGetJson(url, request);
+  }
+
+  public JSONObject validateEmailModification(Integer cloudUserId, Integer deviceId, String deviceToken, String newEmail, String validationCode) throws IOException {
+    String url = "/user/email/validation";
+    Request request = Request.Post(CloudConstants.getServerUrl(url))
+      .addHeader(CloudConstants.CLOUD_USER_ID, Integer.toString(cloudUserId))
+      .addHeader(CloudConstants.DEVICE_ID, Integer.toString(deviceId))
+      .addHeader(CloudConstants.DEVICE_TOKEN, deviceToken)
+      .addHeader(CloudConstants.NEW_EMAIL, newEmail)
+      .addHeader(CloudConstants.VALIDATION_CODE, validationCode);
+    return Http.executeAndGetJson(url, request);
+  }
+
+  public JSONObject getTemporaryBudgeaToken(Integer cloudUserId, Integer deviceId, String deviceToken) throws IOException {
+    checkIdAndToken(cloudUserId, deviceId, deviceToken);
+    if (Strings.isNullOrEmpty(deviceToken)) {
       throw new InvalidParameter("A proper token must be provided to get a token");
     }
     String url = CloudConstants.getServerUrl("/budgea/token");
     Request request = Request.Get(url)
-      .addHeader(CloudConstants.EMAIL, email)
-      .addHeader(CloudConstants.BV_TOKEN, bvToken);
+      .addHeader(CloudConstants.CLOUD_USER_ID, Integer.toString(cloudUserId))
+      .addHeader(CloudConstants.DEVICE_ID, Integer.toString(deviceId))
+      .addHeader(CloudConstants.DEVICE_TOKEN, deviceToken);
     return Http.executeAndGetJson(url, request);
   }
 
-  public boolean isProviderAccessRegistered(String email, String bvToken) throws IOException {
-    checkEmailAndBVToken(email, bvToken);
+  public boolean isProviderAccessRegistered(Integer cloudUserId, Integer deviceId, String deviceToken) throws IOException {
+    checkIdAndToken(cloudUserId, deviceId, deviceToken);
 
     String url = cloudUrl("/provider/access");
     Request request = Request.Get(url)
-      .addHeader(CloudConstants.EMAIL, email)
-      .addHeader(CloudConstants.BV_TOKEN, bvToken)
+      .addHeader(CloudConstants.CLOUD_USER_ID, Integer.toString(cloudUserId))
+      .addHeader(CloudConstants.DEVICE_ID, Integer.toString(deviceId))
+      .addHeader(CloudConstants.DEVICE_TOKEN, deviceToken)
       .addHeader(CloudConstants.PROVIDER_ID, Integer.toString(Provider.BUDGEA.getId()));
     JSONObject json = Http.executeAndGetJson(url, request);
 
@@ -60,8 +84,8 @@ public class CloudAPI {
     return Utils.equal("ok", json.optString("status"));
   }
 
-  public void addProviderAccess(String email, String bvToken, String budgeaToken, Integer budgeaUserId) throws IOException {
-    checkEmailAndBVToken(email, bvToken);
+  public void addProviderAccess(Integer cloudUserId, Integer deviceId, String deviceToken, String budgeaToken, Integer budgeaUserId) throws IOException {
+    checkIdAndToken(cloudUserId, deviceId, deviceToken);
     if (Strings.isNullOrEmpty(budgeaToken)) {
       throw new InvalidParameter("A non-empty Budgea token must be provided to create the connection");
     }
@@ -71,72 +95,79 @@ public class CloudAPI {
 
     String url = cloudUrl("/provider/access");
     Request request = Request.Post(url)
-      .addHeader(CloudConstants.EMAIL, email)
-      .addHeader(CloudConstants.BV_TOKEN, bvToken)
+      .addHeader(CloudConstants.CLOUD_USER_ID, Integer.toString(cloudUserId))
+      .addHeader(CloudConstants.DEVICE_ID, Integer.toString(deviceId))
+      .addHeader(CloudConstants.DEVICE_TOKEN, deviceToken)
       .addHeader(CloudConstants.PROVIDER_ID, Integer.toString(Provider.BUDGEA.getId()))
       .addHeader(CloudConstants.PROVIDER_TOKEN, budgeaToken)
       .addHeader(CloudConstants.PROVIDER_USER_ID, Integer.toString(budgeaUserId));
     Http.execute(url, request);
   }
 
-  public void addBankConnection(String email, String bvToken, int connectionId) throws IOException {
-    checkEmailAndBVToken(email, bvToken);
+  public void addBankConnection(Integer cloudUserId, Integer deviceId, String deviceToken, int connectionId) throws IOException {
+    checkIdAndToken(cloudUserId, deviceId, deviceToken);
     String url = "/banks/connections";
     Request request = Request.Post(cloudUrl(url))
-      .addHeader(CloudConstants.EMAIL, email)
-      .addHeader(CloudConstants.BV_TOKEN, bvToken)
+      .addHeader(CloudConstants.CLOUD_USER_ID, Integer.toString(cloudUserId))
+      .addHeader(CloudConstants.DEVICE_ID, Integer.toString(deviceId))
+      .addHeader(CloudConstants.DEVICE_TOKEN, deviceToken)
       .addHeader(CloudConstants.PROVIDER_ID, Integer.toString(Provider.BUDGEA.getId()))
       .addHeader(CloudConstants.PROVIDER_CONNECTION_ID, Integer.toString(connectionId));
     Http.execute(url, request);
   }
 
-  public JSONObject getBankConnections(String email, String bvToken) throws IOException {
-    checkEmailAndBVToken(email, bvToken);
+  public JSONObject getBankConnections(Integer cloudUserId, Integer deviceId, String deviceToken) throws IOException {
+    checkIdAndToken(cloudUserId, deviceId, deviceToken);
     String url = "/banks/connections";
     Request request = Request.Get(cloudUrl(url))
-      .addHeader(CloudConstants.EMAIL, email)
-      .addHeader(CloudConstants.BV_TOKEN, bvToken)
+      .addHeader(CloudConstants.CLOUD_USER_ID, Integer.toString(cloudUserId))
+      .addHeader(CloudConstants.DEVICE_ID, Integer.toString(deviceId))
+      .addHeader(CloudConstants.DEVICE_TOKEN, deviceToken)
       .addHeader(CloudConstants.PROVIDER_ID, Integer.toString(Provider.BUDGEA.getId()));
     return Http.executeAndGetJson(url, request);
   }
 
-  public JSONObject checkBankConnection(String email, String bvToken, int connectionId) throws IOException {
-    checkEmailAndBVToken(email, bvToken);
+  public JSONObject checkBankConnection(Integer cloudUserId, Integer deviceId, String deviceToken, int connectionId) throws IOException {
+    checkIdAndToken(cloudUserId, deviceId, deviceToken);
     String url = "/banks/connections";
     Request request = Request.Get(cloudUrl(url))
-      .addHeader(CloudConstants.EMAIL, email)
-      .addHeader(CloudConstants.BV_TOKEN, bvToken)
+      .addHeader(CloudConstants.CLOUD_USER_ID, Integer.toString(cloudUserId))
+      .addHeader(CloudConstants.DEVICE_ID, Integer.toString(deviceId))
+      .addHeader(CloudConstants.DEVICE_TOKEN, deviceToken)
       .addHeader(CloudConstants.PROVIDER_ID, Integer.toString(Provider.BUDGEA.getId()))
       .addHeader(CloudConstants.PROVIDER_CONNECTION_ID, Integer.toString(connectionId));
     return Http.executeAndGetJson(url, request);
   }
 
-  public void deleteConnection(String email, String bvToken, Integer providerId, Integer providerConnectionId) throws IOException {
-    checkEmailAndBVToken(email, bvToken);
+  public void deleteConnection(Integer cloudUserId, Integer deviceId, String deviceToken, Integer providerId, Integer providerConnectionId) throws IOException {
+    checkIdAndToken(cloudUserId, deviceId, deviceToken);
     String url = "/banks/connections";
     Request request = Request.Delete(cloudUrl(url))
-      .addHeader(CloudConstants.EMAIL, email)
-      .addHeader(CloudConstants.BV_TOKEN, bvToken)
+      .addHeader(CloudConstants.CLOUD_USER_ID, Integer.toString(cloudUserId))
+      .addHeader(CloudConstants.DEVICE_ID, Integer.toString(deviceId))
+      .addHeader(CloudConstants.DEVICE_TOKEN, deviceToken)
       .addHeader(CloudConstants.PROVIDER_ID, Integer.toString(providerId))
       .addHeader(CloudConstants.PROVIDER_CONNECTION_ID, Integer.toString(providerConnectionId));
     Http.execute(url, request);
   }
 
-  public JSONObject getStatement(String email, String bvToken, Integer lastUpdate) throws IOException {
-    checkEmailAndBVToken(email, bvToken);
+  public JSONObject getStatement(Integer cloudUserId, Integer deviceId, String deviceToken, Integer lastUpdate) throws IOException {
+    checkIdAndToken(cloudUserId, deviceId, deviceToken);
     String url = lastUpdate == null ? "/statement" : "/statement/" + lastUpdate;
     Request request = Request.Get(cloudUrl(url))
-      .addHeader(CloudConstants.EMAIL, email)
-      .addHeader(CloudConstants.BV_TOKEN, bvToken);
+      .addHeader(CloudConstants.CLOUD_USER_ID, Integer.toString(cloudUserId))
+      .addHeader(CloudConstants.DEVICE_ID, Integer.toString(deviceId))
+      .addHeader(CloudConstants.DEVICE_TOKEN, deviceToken);
     return Http.executeAndGetJson(url, request);
   }
 
-  public void deleteCloudAccount(String email, String bvToken) throws IOException {
-    checkEmailAndBVToken(email, bvToken);
+  public void deleteCloudAccount(Integer cloudUserId, Integer deviceId, String deviceToken) throws IOException {
+    checkIdAndToken(cloudUserId, deviceId, deviceToken);
     String url = "/user";
     Request request = Request.Delete(cloudUrl(url))
-      .addHeader(CloudConstants.EMAIL, email)
-      .addHeader(CloudConstants.BV_TOKEN, bvToken);
+      .addHeader(CloudConstants.CLOUD_USER_ID, Integer.toString(cloudUserId))
+      .addHeader(CloudConstants.DEVICE_ID, Integer.toString(deviceId))
+      .addHeader(CloudConstants.DEVICE_TOKEN, deviceToken);
     Http.execute(url, request);
   }
 
@@ -144,12 +175,15 @@ public class CloudAPI {
     return CloudConstants.getServerUrl(path);
   }
 
-  public void checkEmailAndBVToken(String email, String bvToken) {
-    if (Strings.isNullOrEmpty(email)) {
-      throw new InvalidParameter("A proper email must be provided to create the connection");
+  public void checkIdAndToken(Integer cloudUserId, Integer deviceId, String deviceToken) {
+    if (cloudUserId == null) {
+      throw new InvalidParameter("cloudUserId must not be null");
     }
-    if (Strings.isNullOrEmpty(bvToken)) {
-      throw new InvalidParameter("A proper token must be provided to create the connection");
+    if (deviceId == null) {
+      throw new InvalidParameter("deviceId must not be null");
+    }
+    if (Strings.isNullOrEmpty(deviceToken)) {
+      throw new InvalidParameter("A proper token must be provided");
     }
   }
 }

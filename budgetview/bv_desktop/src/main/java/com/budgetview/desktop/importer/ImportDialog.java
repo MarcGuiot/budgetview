@@ -61,6 +61,7 @@ public class ImportDialog implements RealAccountImporter, Disposable {
   private ImportCloudDownloadPanel cloudDownloadPanel;
   private ImportCloudSubscriptionErrorPanel cloudBankSubscriptionErrorPanel;
   private ImportCloudUnsubscriptionPanel cloudUnsubscriptionPanel;
+  private ImportCloudEmailModificationCompletedPanel cloudEmailModificationCompletedPanel;
   private ImportCloudErrorPanel cloudErrorPanel;
   private ImportPreviewPanel previewPanel;
   private ImportCompletionPanel completionPanel;
@@ -97,6 +98,7 @@ public class ImportDialog implements RealAccountImporter, Disposable {
     cloudBankConnectionPanel = new ImportCloudBankConnectionPanel(dialog, controller, localRepository, localDirectory);
     cloudBankSubscriptionErrorPanel = new ImportCloudSubscriptionErrorPanel(dialog, controller, localRepository, localDirectory);
     cloudUnsubscriptionPanel = new ImportCloudUnsubscriptionPanel(dialog, controller, localRepository, localDirectory);
+    cloudEmailModificationCompletedPanel = new ImportCloudEmailModificationCompletedPanel(dialog, controller, localRepository, localDirectory);
     cloudErrorPanel = new ImportCloudErrorPanel(dialog, controller, localRepository, localDirectory);
     previewPanel = new ImportPreviewPanel(dialog, controller, repository, localRepository, localDirectory);
     completionPanel = new ImportCompletionPanel(dialog, controller, localRepository, localDirectory);
@@ -247,13 +249,22 @@ public class ImportDialog implements RealAccountImporter, Disposable {
     setCurrentPanel(cloudSignupPanel);
   }
 
+  public void showModifyCloudEmail() {
+    setCurrentPanel(cloudSignupPanel);
+  }
+
   public void showCloudEdition() {
     setCurrentPanel(cloudEditionPanel);
     cloudEditionPanel.start();
   }
 
-  public void showCloudValidation(String email) {
-    cloudValidationPanel.setEmail(email);
+  public void showCloudValidationForSignup(String email) {
+    cloudValidationPanel.setSignupMode(email);
+    setCurrentPanel(cloudValidationPanel);
+  }
+
+  public void showCloudValidationForEmailModification(String email) {
+    cloudValidationPanel.setEmailModificationMode(email);
     setCurrentPanel(cloudValidationPanel);
   }
 
@@ -276,9 +287,6 @@ public class ImportDialog implements RealAccountImporter, Disposable {
   }
 
   public void showCloudError(Exception e) {
-    System.out.println("ImportDialog.showCloudError");
-    e.printStackTrace();
-
     cloudErrorPanel.showException(e);
     setCurrentPanel(cloudErrorPanel);
   }
@@ -293,15 +301,14 @@ public class ImportDialog implements RealAccountImporter, Disposable {
     setCurrentPanel(cloudFirstDownloadPanel);
   }
 
-  public void showCloudFirstDownload() {
-    cloudFirstDownloadPanel.setAllConnections();
-    setCurrentPanel(cloudFirstDownloadPanel);
-    cloudFirstDownloadPanel.updateAll();
-  }
-
   public void showCloudDownload() {
     setCurrentPanel(cloudDownloadPanel);
     cloudDownloadPanel.start();
+  }
+
+  public void showCloudEmailModificationCompleted(String newEmail) {
+    cloudEmailModificationCompletedPanel.setNewEmail(newEmail);
+    setCurrentPanel(cloudEmailModificationCompletedPanel);
   }
 
   static class DoubleRef {

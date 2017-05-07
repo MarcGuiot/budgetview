@@ -30,7 +30,11 @@ public class CloudDesktopUser {
 
   public static StringField EMAIL;
 
-  public static StringField BV_TOKEN;
+  public static IntegerField CLOUD_USER_ID;
+
+  public static IntegerField DEVICE_ID;
+
+  public static StringField DEVICE_TOKEN;
 
   public static BooleanField REGISTERED;
 
@@ -48,6 +52,10 @@ public class CloudDesktopUser {
   static {
     GlobTypeLoader.init(CloudDesktopUser.class);
     KEY = org.globsframework.model.Key.create(TYPE, SINGLETON_ID);
+  }
+
+  public static boolean isRegistered(GlobRepository repository) {
+    return repository.contains(CloudDesktopUser.KEY) && repository.get(CloudDesktopUser.KEY).isTrue(CloudDesktopUser.REGISTERED);
   }
 
   public static void unregister(GlobRepository repository) {
@@ -70,7 +78,9 @@ public class CloudDesktopUser {
       SerializedByteArrayOutput serializedByteArrayOutput = new SerializedByteArrayOutput();
       SerializedOutput outputStream = serializedByteArrayOutput.getOutput();
       outputStream.writeUtf8String(values.get(EMAIL));
-      outputStream.writeUtf8String(values.get(BV_TOKEN));
+      outputStream.writeInteger(values.get(CLOUD_USER_ID));
+      outputStream.writeInteger(values.get(DEVICE_ID));
+      outputStream.writeUtf8String(values.get(DEVICE_TOKEN));
       outputStream.writeBoolean(values.get(REGISTERED));
       outputStream.writeBoolean(values.get(SYNCHRO_ENABLED));
       outputStream.writeInteger(values.get(LAST_UPDATE));
@@ -87,7 +97,9 @@ public class CloudDesktopUser {
     private void deserializeV1(FieldSetter fieldSetter, byte[] data) {
       SerializedInput input = SerializedInputOutputFactory.init(data);
       fieldSetter.set(EMAIL, input.readUtf8String());
-      fieldSetter.set(BV_TOKEN, input.readUtf8String());
+      fieldSetter.set(CLOUD_USER_ID, input.readInteger());
+      fieldSetter.set(DEVICE_ID, input.readInteger());
+      fieldSetter.set(DEVICE_TOKEN, input.readUtf8String());
       fieldSetter.set(REGISTERED, input.readBoolean());
       fieldSetter.set(SYNCHRO_ENABLED, input.readBoolean());
       fieldSetter.set(LAST_UPDATE, input.readInteger());

@@ -5,7 +5,7 @@ import com.dumbster.smtp.SmtpMessage;
 import org.apache.log4j.Logger;
 import org.junit.Assert;
 
-import java.util.Iterator;
+import java.util.*;
 
 public class MailServerChecker {
 
@@ -58,7 +58,7 @@ public class MailServerChecker {
     String errorMessage =
       "No mail received.\n" +
       "Note that if this was called with a retry strategy maybe the first message was not the one expected and " +
-      "was discarded. You should then call this only once since this method provides its own retry strategy.";
+      "was discarded. You should call this only once since this method provides its own retry strategy.";
 
     long end = System.currentTimeMillis() + 4000;
     synchronized (mailServer) {
@@ -81,6 +81,39 @@ public class MailServerChecker {
       }
     }
     return null;
+  }
+
+  public EmailList checkReceivedEmails(int minCount) throws Exception {
+    if (mailServer == null) {
+      Assert.fail("Mail server not started");
+    }
+
+    List<Email> emails = new ArrayList<Email>();
+    int actualCount = 0;
+
+
+    long end = System.currentTimeMillis() + 4000;
+    synchronized (mailServer) {
+      while (actualCount < minCount && System.currentTimeMillis() < end) {
+        mailServer.wait(800);
+        Iterator receivedEmail = mailServer.getReceivedEmail();
+        if (receivedEmail.hasNext()) {
+          SmtpMessage message = (SmtpMessage) receivedEmail.next();
+          receivedEmail.remove();
+          actualCount++;
+          emails.add(new Email(message));
+        }
+      }
+    }
+
+    if (actualCount < minCount) {
+      Assert.fail("Received only " + actualCount + " emails instead of " + minCount + "\n" +
+                  emails +
+                  "Note that if this was called with a retry strategy maybe the first messages were consumed. " +
+                  "You should call this only once since this method provides its own retry strategy.");
+    }
+
+    return new EmailList(emails);
   }
 
   public void stop() throws Exception {
