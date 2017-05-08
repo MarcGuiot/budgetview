@@ -40,13 +40,13 @@ public class UserEmailChangeValidationServlet extends HttpCloudServlet {
   }
 
   protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-    logger.info("POST");
+    logger.debug("POST");
 
     Command command = new AuthenticatedCommand(directory, req, resp, logger) {
       protected int doRun(JsonGlobWriter writer) throws IOException, InvalidHeader {
         Integer userId = user.get(CloudUser.ID);
         String newEmail = getStringHeader(CloudConstants.NEW_EMAIL);
-        logger.info("Validation received for new email: " + newEmail);
+        logger.debug("Validation received for new email: " + newEmail);
         String code = getStringHeader(CloudConstants.VALIDATION_CODE);
         try {
           writer.object();
@@ -68,7 +68,7 @@ public class UserEmailChangeValidationServlet extends HttpCloudServlet {
             return HttpServletResponse.SC_INTERNAL_SERVER_ERROR;
           }
 
-          logger.info("Email changed for user: " + userId + " to " + newEmail);
+          logger.info("Email changed for user " + userId + " to " + newEmail);
           writer.key(CloudConstants.NEW_EMAIL).value(newEmail);
           writer.key(CloudConstants.STATUS).value("ok");
           writer.endObject();

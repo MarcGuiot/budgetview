@@ -65,8 +65,7 @@ public class CloudSignupTest extends CloudDesktopTestCase {
   public void testNoSubscriptionError() throws Exception {
     operations.openImportDialog()
       .selectCloudForNewUser()
-      .register("toto@example.com")
-      .processEmailAndCheckSubscriptionError(mailbox.getDeviceVerificationCode("toto@example.com"))
+      .registerAndGotoSubscriptionError("toto@example.com")
       .checkNoSubscriptionFound("toto@example.com")
       .close();
   }

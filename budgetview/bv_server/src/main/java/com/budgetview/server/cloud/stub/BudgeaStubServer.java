@@ -71,15 +71,15 @@ public class BudgeaStubServer {
   }
 
   public void start() throws Exception {
-    logger.info("starting server");
+    logger.debug("starting server");
     webServer.start();
-    logger.info("server started");
+    logger.debug("server started");
   }
 
   public void stop() throws Exception {
-    logger.info("stopping server");
+    logger.debug("stopping server");
     webServer.stop();
-    logger.info("server stopped");
+    logger.debug("server stopped");
   }
 
   public void callWebhook(String json) throws IOException {
@@ -92,13 +92,13 @@ public class BudgeaStubServer {
 
   private void callWebhookWithCurrentStatements() throws IOException {
     if (statements.isEmpty()) {
-      logger.info("No statement to send - next download will be empty");
+      logger.debug("No statement to send - next download will be empty");
       return;
     }
 
     final String statement = statements.pop();
 
-    logger.info("Starting thread for webhook");
+    logger.debug("Starting thread for webhook");
     Thread thread = new Thread(new Runnable() {
       public void run() {
         try {
@@ -165,7 +165,7 @@ public class BudgeaStubServer {
     private Logger logger = Logger.getLogger("BudgeaStubServer - /auth/init");
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-      logger.info("POST");
+      logger.debug("POST");
       PrintWriter writer = response.getWriter();
       writer.append("{\n" +
                     "   \"auth_token\" : \"" + createTemporaryToken() + "\",\n" +
@@ -181,7 +181,7 @@ public class BudgeaStubServer {
     private Logger logger = Logger.getLogger("BudgeaStubServer - /auth/token/code");
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-      logger.info("GET");
+      logger.debug("GET");
       PrintWriter writer = response.getWriter();
       writer.print("{\n" +
                    "   \"code\" : \"" + createTemporaryToken() + "\",\n" +
@@ -197,7 +197,7 @@ public class BudgeaStubServer {
     private Logger logger = Logger.getLogger("BudgeaStubServer - /auth/token/access");
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-      logger.info("POST");
+      logger.debug("POST");
 
       PrintWriter writer = response.getWriter();
       writer.print("{\n" +
@@ -214,7 +214,7 @@ public class BudgeaStubServer {
     private Logger logger = Logger.getLogger("BudgeaStubServer - /banks");
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-      logger.info("GET");
+      logger.debug("GET");
 
       if (!checkAuthorization(request, logger)) {
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
@@ -281,7 +281,7 @@ public class BudgeaStubServer {
     private Logger logger = Logger.getLogger("BudgeaStubServer - /banks/{id}/fields");
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-      logger.info("GET");
+      logger.debug("GET");
 
       if (!checkAuthorization(request, logger)) {
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
@@ -300,7 +300,7 @@ public class BudgeaStubServer {
     private Logger logger = Logger.getLogger("BudgeaStubServer - /users/me");
 
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-      logger.info("GET");
+      logger.debug("GET");
 
       PrintWriter writer = resp.getWriter();
       writer.write("{\n" +
@@ -318,7 +318,7 @@ public class BudgeaStubServer {
     private Logger logger = Logger.getLogger("BudgeaStubServer - /users/me/connections");
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-      logger.info("POST");
+      logger.debug("POST");
 
       if (!checkAuthorization(request, logger)) {
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
@@ -346,11 +346,11 @@ public class BudgeaStubServer {
 
       boolean update = Strings.isNotEmpty(request.getPathInfo());
       if (update) {
-        logger.info("Processing step2");
+        logger.debug("Processing step2");
       }
 
       if (bankFieldsForUpdate == null || update) {
-        logger.info(update ? "Completing connection for step2" : "Completing connection for step1");
+        logger.debug(update ? "Completing connection for step2" : "Completing connection for step1");
         if (connectionResponses.isEmpty()) {
           logger.error("No connection response provided - you must push one");
           response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
@@ -372,7 +372,7 @@ public class BudgeaStubServer {
         }
       }
       else {
-        logger.info("Two-step login : returning new fields with code " + HttpServletResponse.SC_ACCEPTED);
+        logger.debug("Two-step login : returning new fields with code " + HttpServletResponse.SC_ACCEPTED);
         response.setStatus(HttpServletResponse.SC_ACCEPTED);
         PrintWriter writer = response.getWriter();
         writer.write(bankFieldsForUpdate.getJSON());
@@ -381,7 +381,7 @@ public class BudgeaStubServer {
     }
 
     protected void doDelete(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-      logger.info("DELETE");
+      logger.debug("DELETE");
       response.setStatus(HttpServletResponse.SC_OK);
     }
   }
@@ -391,7 +391,7 @@ public class BudgeaStubServer {
     private Logger logger = Logger.getLogger("BudgeaStubServer - /users/{userId}/connections");
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-      logger.info("GET");
+      logger.debug("GET");
 
       if (!checkAuthorization(request, logger)) {
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
@@ -412,7 +412,7 @@ public class BudgeaStubServer {
     }
 
     protected void doDelete(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-      logger.info("GET");
+      logger.debug("GET");
 
       if (!checkAuthorization(request, logger)) {
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
@@ -432,7 +432,7 @@ public class BudgeaStubServer {
     private Logger logger = Logger.getLogger("BudgeaStubServer - /ping");
 
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-      logger.info("GET");
+      logger.debug("GET");
       PrintWriter writer = resp.getWriter();
       writer.write("Pong");
       writer.close();

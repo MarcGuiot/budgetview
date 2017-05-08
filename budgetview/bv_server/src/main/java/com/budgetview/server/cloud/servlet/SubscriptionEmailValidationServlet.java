@@ -37,7 +37,7 @@ public class SubscriptionEmailValidationServlet extends HttpServlet {
   }
 
   protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-    logger.info("GET");
+    logger.debug("GET");
     String code = request.getParameter("code");
     if (Strings.isNullOrEmpty(code)) {
       response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
@@ -73,7 +73,8 @@ public class SubscriptionEmailValidationServlet extends HttpServlet {
     if (!newAccount) {
       payments.updateCard(customerId, stripeToken);
       String url = WebsiteUrls.cardUpdated();
-      logger.info("Card updated - redirect to " + url);
+      logger.info("Credit card updated for user " + user.get(CloudUser.ID) + " (stripeId: " + customerId + ")");
+      logger.info("Redirecting to " + url);
       response.sendRedirect(url);
       return;
     }
@@ -108,7 +109,8 @@ public class SubscriptionEmailValidationServlet extends HttpServlet {
     }
 
     String url = WebsiteUrls.subscriptionCreated();
-    logger.info("Subscription created - redirect to " + url);
+    logger.info("Stripe subscription created for user " + user.get(CloudUser.ID) + " with email " + email + " - subscriptionId:" + subscription.subscriptionId);
+    logger.debug("redirect to " + url);
     response.sendRedirect(url);
   }
 }

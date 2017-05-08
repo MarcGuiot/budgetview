@@ -202,7 +202,7 @@ public class AuthenticationService {
       throw new SubscriptionCheckFailed(CloudSubscriptionStatus.NO_SUBSCRIPTION);
     }
     catch (TooManyItems e) {
-      logger.error("Too many user token entries for cloudUserId: " + userId);
+      logger.error("Too many user token entries for user: " + userId);
       throw new SubscriptionCheckFailed(CloudSubscriptionStatus.NO_SUBSCRIPTION);
     }
 

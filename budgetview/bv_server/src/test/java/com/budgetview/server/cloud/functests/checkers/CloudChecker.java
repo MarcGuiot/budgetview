@@ -83,18 +83,18 @@ public class CloudChecker {
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-      logger.info("POST");
+      logger.debug("POST");
 
       String email = request.getHeader(CloudConstants.CLOUD_EMAIL);
       if (Strings.isNullOrEmpty(email)) {
-        logger.info("Missing email parameter");
+        logger.debug("Missing email parameter");
         response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
         return;
       }
 
       String date = request.getHeader(CloudConstants.CLOUD_END_DATE);
       if (Strings.isNullOrEmpty(date)) {
-        logger.info("Missing date parameter");
+        logger.debug("Missing date parameter");
         response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
         return;
       }
@@ -114,7 +114,7 @@ public class CloudChecker {
             .run();
         }
 
-        logger.info("Subscription expiration date set to " + date + " for " + email);
+        logger.debug("Subscription expiration date set to " + date + " for " + email);
 
         response.setStatus(HttpServletResponse.SC_OK);
       }

@@ -82,12 +82,12 @@ public class WebhookNotificationService {
 
         if (newlyInitializedConnections) {
           boolean sent = mailer.sendCloudWebhookNotification(user.get(CloudUser.EMAIL), user.get(CloudUser.LANG));
-          logger.info("Webhook notification email " + (sent ? "sent" : "planned for sending") + " to: " + user.get(CloudUser.EMAIL));
+          logger.debug("Webhook notification email " + (sent ? "sent" : "planned for sending") + " to: " + user.get(CloudUser.EMAIL));
         }
         for (ConnectionInfo connectionInfo : infoList) {
           if (connectionInfo.passwordError) {
             boolean sent = mailer.sendCloudBankPasswordError(user.get(CloudUser.EMAIL), user.get(CloudUser.LANG), connectionInfo.bankName);
-            logger.info("Webhook password error email " + (sent ? "sent" : "planned for sending") + " to: " + user.get(CloudUser.EMAIL) + " for bank: " + connectionInfo.bankName);
+            logger.debug("Webhook password error email " + (sent ? "sent" : "planned for sending") + " to: " + user.get(CloudUser.EMAIL) + " for bank: " + connectionInfo.bankName);
           }
         }
       }

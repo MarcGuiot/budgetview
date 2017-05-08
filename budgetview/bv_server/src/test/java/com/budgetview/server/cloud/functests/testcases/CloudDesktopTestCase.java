@@ -47,7 +47,7 @@ public abstract class CloudDesktopTestCase extends LoggedInFunctionalTestCase {
     System.err.flush();
     System.out.flush();
     System.out.println("\n\n ---------------- tearDown ----------------");
-    logger.info("TearDown");
+    logger.debug("TearDown");
 
     budgea.stopServer();
     budgea = null;

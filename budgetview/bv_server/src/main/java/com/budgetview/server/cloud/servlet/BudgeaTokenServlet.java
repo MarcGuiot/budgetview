@@ -25,7 +25,7 @@ public class BudgeaTokenServlet extends HttpCloudServlet {
   }
 
   protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-    logger.info("GET");
+    logger.debug("GET");
 
     Command command = new AuthenticatedCommand(directory, req, resp, logger) {
       protected int doRun(JsonGlobWriter writer) throws IOException {

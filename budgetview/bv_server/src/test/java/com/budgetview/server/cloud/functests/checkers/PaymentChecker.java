@@ -84,7 +84,7 @@ public class PaymentChecker {
     private int index = 100000;
 
     public CloudSubscription createSubscription(String email, String token) throws OperationFailed {
-      logger.info("createSubscription(" + email + ", " + token + ")");
+      logger.debug("createSubscription(" + email + ", " + token + ")");
       PaymentChecker.this.lastEmail = email;
       PaymentChecker.this.lastToken = token;
       PaymentChecker.this.lastCustomerId = "customer/" + index;

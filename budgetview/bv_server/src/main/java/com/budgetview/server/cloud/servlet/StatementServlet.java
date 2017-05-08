@@ -50,7 +50,7 @@ public class StatementServlet extends HttpCloudServlet {
 
   protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
-    logger.info("GET");
+    logger.debug("GET");
 
     Command command = new AuthenticatedCommand(directory, req, resp, logger) {
       protected int doRun(JsonGlobWriter writer) throws IOException, InvalidHeader {
@@ -61,7 +61,7 @@ public class StatementServlet extends HttpCloudServlet {
           Matcher matcher = pattern.matcher(pathInfo);
           if (matcher.matches()) {
             lastUpdate = Integer.parseInt(matcher.group(1));
-            logger.info("Retrieving updates > " + lastUpdate);
+            logger.debug("Retrieving updates > " + lastUpdate);
           }
         }
 

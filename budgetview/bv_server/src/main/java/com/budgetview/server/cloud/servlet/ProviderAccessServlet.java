@@ -34,7 +34,7 @@ public class ProviderAccessServlet extends HttpCloudServlet {
 
   protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
-    logger.info("GET");
+    logger.debug("GET");
 
     Command command = new AuthenticatedCommand(directory, req, resp, logger) {
       protected int doRun(JsonGlobWriter writer) throws IOException, InvalidHeader {
@@ -55,7 +55,7 @@ public class ProviderAccessServlet extends HttpCloudServlet {
 
   protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
-    logger.info("POST");
+    logger.debug("POST");
 
     Command command = new AuthenticatedCommand(directory, req, resp, logger) {
       protected int doRun(JsonGlobWriter writer) throws IOException, InvalidHeader {
@@ -75,6 +75,7 @@ public class ProviderAccessServlet extends HttpCloudServlet {
 
         try {
           saveProviderAccess(user, providerId, budgeaUserId, newBudgeaToken);
+          logger.info("Saved new connection for budgea user " + budgeaUserId + " for cloud user " + user.get(CloudUser.ID));
           return HttpServletResponse.SC_OK;
         }
         catch (GlobsSQLException e) {
@@ -102,7 +103,7 @@ public class ProviderAccessServlet extends HttpCloudServlet {
           .set(CloudUser.PROVIDER_ACCESS_TOKEN, providerAccessToken)
           .run();
         connection.commitAndClose();
-        logger.info("Saved connection for userId " + providerUserId + " with token " + providerAccessToken);
+        logger.debug("Saved connection for userId " + providerUserId + " with token " + providerAccessToken);
       }
     };
     command.run();

@@ -28,7 +28,7 @@ public class BudgeaWebhook {
   }
 
   public void callWebhook(String budgeaToken, String json) throws IOException {
-    logger.info("Calling webhook with token " + budgeaToken);
+    logger.debug("Calling webhook with token " + budgeaToken);
     Request request = Request.Post(CloudConstants.getServerUrl("/budgea"))
       .addHeader("Authorization", "Bearer " + budgeaToken)
       .bodyString(json.replaceAll("'", "\""), ContentType.APPLICATION_JSON);

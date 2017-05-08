@@ -49,7 +49,7 @@ public class WebsiteStubServer {
     private Logger logger = Logger.getLogger("WebsiteStubServer servlet");
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-      logger.info("GET");
+      logger.debug("GET");
       response.setStatus(HttpServletResponse.SC_OK);
       WebsiteStubServer.this.lastVisitedPage = Servlets.getURL(request);
     }

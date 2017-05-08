@@ -36,12 +36,12 @@ public abstract class AuthenticatedCommand extends DatabaseCommand {
       deviceId = getIntHeader(CloudConstants.DEVICE_ID);
     }
     catch (InvalidHeader invalidHeader) {
-      logger.error("AuthenticatedCommand - Missing header", invalidHeader);
+      logger.error("[AuthenticatedCommand] Missing header", invalidHeader);
       response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
     }
     String deviceToken = request.getHeader(CloudConstants.DEVICE_TOKEN);
     if (Strings.isNullOrEmpty(deviceToken)) {
-      logger.error("AuthenticatedCommand - No token provided");
+      logger.error("[AuthenticatedCommand] No token provided in call from " + cloudUserId);
       response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
       return;
     }
@@ -61,7 +61,7 @@ public abstract class AuthenticatedCommand extends DatabaseCommand {
     }
 
     if (user == null) {
-      logger.error("AuthenticatedCommand - Could not identify user with id: " + cloudUserId + " / " + deviceId + " / " + deviceToken);
+      logger.error("[AuthenticatedCommand] Could not identify user with id: " + cloudUserId + " / " + deviceId + " / " + deviceToken);
       authentication.dumpTables();
       response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
       return;

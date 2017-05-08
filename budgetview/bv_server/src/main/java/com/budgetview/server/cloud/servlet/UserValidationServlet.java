@@ -41,12 +41,12 @@ public class UserValidationServlet extends HttpCloudServlet {
 
   protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
-    logger.info("POST");
+    logger.debug("POST");
 
     Command command = new HttpCommand(req, resp, logger) {
       protected int doRun(JsonGlobWriter writer) throws IOException, InvalidHeader {
         String email = getStringHeader(CloudConstants.EMAIL);
-        logger.info("Validation received for " + email);
+        logger.debug("Validation received for " + email);
 
         String code = getStringHeader(CloudConstants.VALIDATION_CODE);
 
@@ -84,7 +84,7 @@ public class UserValidationServlet extends HttpCloudServlet {
 
           writer.endObject();
 
-          logger.info("User " + email + " registered");
+          logger.info("User " + email + " registered with id " + userId);
 
           return HttpServletResponse.SC_OK;
         }
@@ -97,7 +97,9 @@ public class UserValidationServlet extends HttpCloudServlet {
       private boolean containsStatements(Integer userId) {
         SqlConnection connection = database.connect();
 
-        logger.info("Existing statements:" + connection.selectAll(ProviderUpdate.TYPE, Where.fieldEquals(ProviderUpdate.USER, userId)));
+        if (logger.isDebugEnabled()) {
+          logger.debug("Existing statements:" + connection.selectAll(ProviderUpdate.TYPE, Where.fieldEquals(ProviderUpdate.USER, userId)));
+        }
 
         SqlSelect query = connection.startSelect(ProviderUpdate.TYPE, Where.fieldEquals(ProviderUpdate.USER, userId))
           .getQuery();

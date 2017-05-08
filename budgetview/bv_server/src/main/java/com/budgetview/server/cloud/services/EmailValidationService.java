@@ -83,7 +83,7 @@ public class EmailValidationService {
       }
     }
 
-    logger.info("[REMOVE ME!!!] Temp code is " + validationCode);
+    logger.debug("Temp code is " + validationCode);
     return validationCode;
   }
 
@@ -96,12 +96,13 @@ public class EmailValidationService {
     try {
       GlobList entries = connection.selectAll(CloudEmailValidation.TYPE, Where.fieldEquals(CloudEmailValidation.CODE, validationCode));
       if (entries.isEmpty()) {
+        logger.debug("No user found for validation code " + validationCode);
         throw new ValidationFailed(CloudValidationStatus.UNKNOWN_VALIDATION_CODE);
       }
       Glob entry = entries.getFirst();
       Date referenceCodeDate = entry.get(CloudEmailValidation.EXPIRATION_DATE);
       if (referenceCodeDate == null || now().after(referenceCodeDate)) {
-        logger.info("Temp token expired since " + referenceCodeDate);
+        logger.debug("Temp token expired since " + referenceCodeDate);
         throw new ValidationFailed(CloudValidationStatus.TEMP_VALIDATION_CODE_EXPIRED);
       }
     }
@@ -136,7 +137,7 @@ public class EmailValidationService {
     else {
       result = hoursLater(1);
     }
-    logger.info("Created expiration date: " + result);
+    logger.debug("Created expiration date: " + result);
     return result;
   }
 

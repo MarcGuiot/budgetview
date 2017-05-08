@@ -40,7 +40,7 @@ public class BankConnectionsServlet extends HttpCloudServlet {
 
   protected void doGet(HttpServletRequest req, final HttpServletResponse resp) throws ServletException, IOException {
 
-    logger.info("GET");
+    logger.debug("GET");
 
     Command command = new AuthenticatedCommand(directory, req, resp, logger) {
       protected int doRun(JsonGlobWriter writer) throws IOException, InvalidHeader {
@@ -178,7 +178,7 @@ public class BankConnectionsServlet extends HttpCloudServlet {
   }
 
   protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-    logger.info("POST");
+    logger.debug("POST");
 
     Command command = new AuthenticatedCommand(directory, req, resp, logger) {
       protected int doRun(JsonGlobWriter writer) throws IOException, InvalidHeader {
@@ -220,7 +220,7 @@ public class BankConnectionsServlet extends HttpCloudServlet {
 
   protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
-    logger.info("DELETE");
+    logger.debug("DELETE");
 
     Command command = new AuthenticatedCommand(directory, req, resp, logger) {
       protected int doRun(JsonGlobWriter writer) throws IOException, InvalidHeader {

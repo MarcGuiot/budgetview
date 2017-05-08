@@ -9,8 +9,6 @@ import com.budgetview.server.cloud.services.PaymentService;
 import com.budgetview.server.license.mail.Mailer;
 import com.budgetview.shared.utils.AmountFormat;
 import com.stripe.model.Event;
-import com.stripe.model.EventData;
-import com.stripe.model.Invoice;
 import com.stripe.net.APIResource;
 import org.apache.log4j.Logger;
 import org.globsframework.json.JsonGlobWriter;
@@ -21,7 +19,6 @@ import org.globsframework.sqlstreams.SqlConnection;
 import org.globsframework.sqlstreams.constraints.Where;
 import org.globsframework.utils.Files;
 import org.globsframework.utils.directory.Directory;
-import org.globsframework.utils.exceptions.OperationFailed;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -49,7 +46,7 @@ public class StripeWebhookServlet extends HttpServlet {
 
   protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-    logger.info("POST");
+    logger.debug("POST");
 
     Event event;
     try {
@@ -61,13 +58,15 @@ public class StripeWebhookServlet extends HttpServlet {
       return;
     }
 
-    logger.info(event.toJson());
+    if (logger.isDebugEnabled()) {
+      logger.debug(event.toJson());
+    }
 
     // List of payment types: https://stripe.com/docs/api#event_types
 
     try {
       if ("invoice.payment_succeeded".equals(event.getType())) {
-        logger.info("invoice.payment_succeeded");
+        logger.debug("invoice.payment_succeeded");
         CloudInvoice invoice = paymentService.getInvoiceForEvent(event.getId());
         final CloudSubscription subscription = paymentService.getSubscription(invoice.subscriptionId);
         Command command = new ProcessInvoicePaymentSuccess(invoice, subscription, request, response, event);
@@ -76,7 +75,7 @@ public class StripeWebhookServlet extends HttpServlet {
       }
 
       if ("invoice.payment_failed".equals(event.getType())) {
-        logger.info("invoice.payment_failed");
+        logger.debug("invoice.payment_failed");
         CloudInvoice invoice = paymentService.getInvoiceForEvent(event.getId());
         final CloudSubscription subscription = paymentService.getSubscription(invoice.subscriptionId);
         Command command = new ProcessInvoicePaymentFailure(invoice, subscription, request, response, event);
@@ -117,35 +116,36 @@ public class StripeWebhookServlet extends HttpServlet {
         users =
           connection.selectAll(CloudUser.TYPE,
                                Where.fieldEquals(CloudUser.STRIPE_SUBSCRIPTION_ID, subscription.subscriptionId));
+
+        if (users == null || users.isEmpty()) {
+          logger.error("No user found with subscriptionId " + subscription.subscriptionId);
+          mailer.sendErrorToAdmin(getClass(), "Stripe webhook - user not found", "No CloudUser found with subscriptionId " + subscription + "\nEvent:" + event.toJson());
+          return HttpServletResponse.SC_OK;
+        }
+
+        if (users.size() > 1) {
+          logger.error("Several users found with subscriptionId " + subscription.subscriptionId + "\n" + GlobPrinter.toString(users));
+          mailer.sendErrorToAdmin(getClass(), "Stripe webhook - several users found", "No CloudUser found with subscriptionId " + subscription + "\nEvent:" + event.toJson());
+          return HttpServletResponse.SC_OK;
+        }
+
+        Glob user = users.getFirst();
+
+        logger.debug("Processing invoice: " + invoice);
+
+        String email = user.get(CloudUser.EMAIL);
+        String total = AmountFormat.toString(invoice.total);
+        String tax = AmountFormat.toString(invoice.tax);
+        String excludingTaxes = AmountFormat.toString(invoice.total - invoice.tax);
+        String date = toDate(invoice.date);
+
+        mailer.sendSubscriptionInvoice(email, "fr", invoice.receiptNumber, total, tax, excludingTaxes, date);
+
+        logger.info("Processed invoice " + invoice.receiptNumber + " for user " + email + " (" + user.get(CloudUser.ID) + ") for subscription " + invoice.subscriptionId);
       }
       finally {
         connection.commitAndClose();
       }
-
-      if (users == null || users.isEmpty()) {
-        logger.error("No user found with subscriptionId " + subscription.subscriptionId);
-        mailer.sendErrorToAdmin(getClass(), "Stripe webhook - user not found", "No CloudUser found with subscriptionId " + subscription + "\nEvent:" + event.toJson());
-        return HttpServletResponse.SC_OK;
-      }
-
-      if (users.size() > 1) {
-        logger.error("Several users found with subscriptionId " + subscription.subscriptionId + "\n" + GlobPrinter.toString(users));
-        mailer.sendErrorToAdmin(getClass(), "Stripe webhook - several users found", "No CloudUser found with subscriptionId " + subscription + "\nEvent:" + event.toJson());
-        return HttpServletResponse.SC_OK;
-      }
-
-      Glob user = users.getFirst();
-
-      logger.info("Processing invoice: " + invoice);
-
-      String email = user.get(CloudUser.EMAIL);
-      String total = AmountFormat.toString(invoice.total);
-      String tax = AmountFormat.toString(invoice.tax);
-      String excludingTaxes = AmountFormat.toString(invoice.total - invoice.tax);
-      String date = toDate(invoice.date);
-      mailer.sendSubscriptionInvoice(email, "fr", invoice.receiptNumber, total, tax, excludingTaxes, date);
-
-      logger.info("Processed invoice " + invoice.receiptNumber + " for user " + email + " (" + user.get(CloudUser.ID) + ") for subscription " + invoice.subscriptionId);
 
       return HttpServletResponse.SC_OK;
     }
@@ -193,7 +193,9 @@ public class StripeWebhookServlet extends HttpServlet {
       String date = toDate(invoice.date);
       mailer.sendSubscriptionInvoiceFailed(email, "fr", invoice.receiptNumber, date);
 
-      logger.info("Processed invoice " + invoice.receiptNumber + " failure for user " + email + " (" + user.get(CloudUser.ID) + ") - email sent");
+      if (logger.isDebugEnabled()) {
+        logger.debug("Processed invoice " + invoice.receiptNumber + " failure for user " + email + " (" + user.get(CloudUser.ID) + ") - email sent");
+      }
 
       return HttpServletResponse.SC_OK;
     }

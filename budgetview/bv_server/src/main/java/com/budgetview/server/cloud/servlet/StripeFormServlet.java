@@ -36,13 +36,12 @@ public class StripeFormServlet extends HttpServlet {
     try {
       Glob user = authentication.findOrCreateUser(email, "fr", value(CloudUser.STRIPE_TOKEN, token));
       emailValidationService.sendSubscriptionEmailValidationLink(user.get(CloudUser.ID), email, "fr");
+      logger.info("Sent email validation link to " + email + " for user id: " + user.get(CloudUser.ID));
+      response.sendRedirect(WebsiteUrls.emailSent());
     }
     catch (Exception e) {
       logger.error("Could not process stripe form", e);
       response.sendRedirect(WebsiteUrls.error());
-      return;
     }
-
-    response.sendRedirect(WebsiteUrls.emailSent());
   }
 }

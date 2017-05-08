@@ -86,7 +86,9 @@ public class BudgeaWebHookServlet extends HttpCloudServlet {
     try {
       JSONObject root = new JSONObject(json);
 
-      logger.info("Budgea webhook called with: " + root.toString(2));
+      if (logger.isDebugEnabled()) {
+        logger.debug("Budgea webhook called with: " + root.toString(2));
+      }
 
       JSONArray array = root.optJSONArray("connections");
       if (array == null) {
@@ -116,12 +118,13 @@ public class BudgeaWebHookServlet extends HttpCloudServlet {
           updater.save();
         }
         else {
-          logger.info("No account for connection");
+          logger.debug("No account for connection");
         }
         notifications.addConnection(connectionId,
                                     bank.optString("name"),
                                     containsAccounts,
                                     passwordError);
+        logger.debug("Webhook saved");
       }
     }
     catch (ParseException e) {
@@ -135,9 +138,9 @@ public class BudgeaWebHookServlet extends HttpCloudServlet {
       return;
     }
 
-    logger.info("Webhook successfully saved");
-
     notifications.send(user);
+
+    logger.info("Webhook successfully processed for user " + user.get(CloudUser.ID));
 
     response.setStatus(HttpServletResponse.SC_OK);
   }
@@ -238,7 +241,7 @@ public class BudgeaWebHookServlet extends HttpCloudServlet {
 
     public void save() throws IOException, GeneralSecurityException {
       if (!repository.contains(ProviderAccount.TYPE)) {
-        logger.info("No accounts created");
+        logger.debug("No accounts created");
         return;
       }
 

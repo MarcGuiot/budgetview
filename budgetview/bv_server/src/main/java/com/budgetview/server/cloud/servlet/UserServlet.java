@@ -43,19 +43,19 @@ public class UserServlet extends HttpCloudServlet {
 
   protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
-    logger.info("POST");
+    logger.debug("POST");
 
     Command command = new HttpCommand(req, resp, logger) {
       protected int doRun(JsonGlobWriter writer) throws IOException, InvalidHeader {
         String email = getStringHeader(CloudConstants.EMAIL);
-        logger.info("Signup requested for " + email);
-
         String lang = getLangHeader(CloudConstants.LANG);
+
+        logger.info("Signup requested for new user " + email);
 
         try {
           Glob user = authentication.findUserWithEmail(email);
           if (user == null) {
-            logger.info("User not found for '" + email + "'");
+            logger.debug("User not found for '" + email + "'");
             setSubscriptionError(CloudSubscriptionStatus.NO_SUBSCRIPTION, writer);
             return HttpServletResponse.SC_OK;
           }
@@ -87,7 +87,7 @@ public class UserServlet extends HttpCloudServlet {
 
   protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
-    logger.info("DELETE");
+    logger.debug("DELETE");
 
     Command command = new HttpCommand(req, resp, logger) {
       protected int doRun(JsonGlobWriter writer) throws IOException, InvalidHeader {
@@ -164,6 +164,8 @@ public class UserServlet extends HttpCloudServlet {
         catch (Exception e) {
           logger.error("Failed to send cloud account deletion email to " + user.get(CloudUser.EMAIL), e);
         }
+
+        logger.info("Deleted account for user " + userId + " with email " + user.get(CloudUser.EMAIL));
 
         return HttpServletResponse.SC_OK;
       }
