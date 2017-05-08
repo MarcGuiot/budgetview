@@ -24,6 +24,10 @@ public interface SqlCreateBuilder {
 
   SqlCreateBuilder set(LongField field, LongAccessor accessor);
 
+  SqlCreateBuilder set(DoubleField field, Double value);
+
+  SqlCreateBuilder set(DoubleField field, DoubleAccessor accessor);
+
   SqlCreateBuilder set(StringField field, StringAccessor accessor);
 
   SqlCreateBuilder set(TimeStampField field, DateAccessor accessor);

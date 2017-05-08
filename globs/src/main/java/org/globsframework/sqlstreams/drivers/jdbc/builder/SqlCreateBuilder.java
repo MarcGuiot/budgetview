@@ -89,6 +89,14 @@ public class SqlCreateBuilder implements org.globsframework.sqlstreams.SqlCreate
     return setValue(field, accessor);
   }
 
+  public org.globsframework.sqlstreams.SqlCreateBuilder set(DoubleField field, Double value) {
+    return setValue(field, value);
+  }
+
+  public org.globsframework.sqlstreams.SqlCreateBuilder set(DoubleField field, DoubleAccessor accessor) {
+    return setValue(field, accessor);
+  }
+
   public org.globsframework.sqlstreams.SqlCreateBuilder set(StringField field, StringAccessor accessor) {
     return setValue(field, accessor);
   }

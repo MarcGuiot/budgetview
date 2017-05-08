@@ -2,6 +2,7 @@ package com.budgetview.server.cloud.servlet;
 
 import com.budgetview.server.cloud.commands.Command;
 import com.budgetview.server.cloud.commands.DatabaseCommand;
+import com.budgetview.server.cloud.model.CloudInvoiceLog;
 import com.budgetview.server.cloud.model.CloudUser;
 import com.budgetview.server.cloud.services.CloudInvoice;
 import com.budgetview.server.cloud.services.CloudSubscription;
@@ -139,7 +140,16 @@ public class StripeWebhookServlet extends HttpServlet {
         String excludingTaxes = AmountFormat.toString(invoice.total - invoice.tax);
         String date = toDate(invoice.date);
 
-        mailer.sendSubscriptionInvoice(email, "fr", invoice.receiptNumber, total, tax, excludingTaxes, date);
+        boolean emailSent =  mailer.sendSubscriptionInvoice(email, "fr", invoice.receiptNumber, total, tax, excludingTaxes, date);
+
+        connection.startCreate(CloudInvoiceLog.TYPE)
+          .set(CloudInvoiceLog.USER, user.get(CloudUser.ID))
+          .set(CloudInvoiceLog.EMAIL, email)
+          .set(CloudInvoiceLog.DATE, invoice.date)
+          .set(CloudInvoiceLog.AMOUNT, invoice.total)
+          .set(CloudInvoiceLog.RECEIPT_NUMBER, invoice.receiptNumber)
+          .set(CloudInvoiceLog.EMAIL_SENT, emailSent)
+          .run();
 
         logger.info("Processed invoice " + invoice.receiptNumber + " for user " + email + " (" + user.get(CloudUser.ID) + ") for subscription " + invoice.subscriptionId);
       }
