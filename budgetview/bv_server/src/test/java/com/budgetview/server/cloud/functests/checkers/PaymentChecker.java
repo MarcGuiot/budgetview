@@ -126,9 +126,7 @@ public class PaymentChecker {
     return subscription;
   }
 
-  public void notifyInvoice(String subscriptionId, Date currentPeriodEndDate, String receiptNumber) throws Exception {
-
-    String eventId = "event" + index++;
+  public void notifyInvoice(String eventId, String subscriptionId, Date currentPeriodEndDate, String receiptNumber) throws Exception {
 
     CloudSubscription subscription = doGetSubscription(subscriptionId);
     subscription.currentPeriodEndDate = currentPeriodEndDate;

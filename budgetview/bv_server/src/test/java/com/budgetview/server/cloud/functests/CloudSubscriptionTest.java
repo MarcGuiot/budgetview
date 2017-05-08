@@ -70,7 +70,7 @@ public class CloudSubscriptionTest extends CloudDesktopTestCase {
     // UPDATES
 
     Date newEndDate = Dates.monthsLater(2);
-    payments.notifyInvoice(subscriptionId, newEndDate, "000111222333");
+    payments.notifyInvoice("evt1", subscriptionId, newEndDate, "000111222333");
     mailbox.checkInvoice("toto@example.com", "000111222333");
     budgea.pushConnectionList(BudgeaConnections.init()
                                 .add(1, 123, 40, true, "2016-08-10 17:44:26")
@@ -168,5 +168,54 @@ public class CloudSubscriptionTest extends CloudDesktopTestCase {
     mailbox.clickLink(link);
     website.checkLastVisitedPage(WebsiteUrls.subscriptionLinkAlreadyUsed());
     payments.checkNoLastRequest();
+  }
+
+  @Test
+  public void testReceivingStripeEventDuplicates() throws Exception {
+
+    payments.setSubscriptionEndDate(Dates.nextMonth());
+    subscriptions.submitStripeForm("toto@example.com", "abcdef012345", WebsiteUrls.emailSent());
+    mailbox.clickSubscriptionValidationLinkFromEmail("toto@example.com");
+    website.checkLastVisitedPage(WebsiteUrls.subscriptionCreated());
+    String subscriptionId = payments.checkLastRequest("toto@example.com", "abcdef012345");
+
+    Date endDate = Dates.monthsLater(2);
+    payments.notifyInvoice("evt1", subscriptionId, endDate, "000111222333");
+    mailbox.checkInvoice("toto@example.com", "000111222333");
+    payments.notifyInvoice("evt1", subscriptionId, endDate, "000111222333");
+    mailbox.checkEmpty();
+
+    budgea.pushConnectionList(BudgeaConnections.init()
+                                .add(1, 123, 40, true, "2016-08-10 17:44:26")
+                                .get());
+    budgea.pushConnectionResponse(1, 123, 40);
+    budgea.pushStatement(BudgeaStatement.init()
+                           .addConnection(1, 123, 40, "Connecteur de test", "2016-08-10 17:44:26")
+                           .addAccount(1, "Main account 1", "100200300", "checking", 1000.00, "2016-08-10 13:00:00")
+                           .addTransaction(1, "2016-08-10 13:00:00", -100.00, "AUCHAN")
+                           .addTransaction(2, "2016-08-12 17:00:00", -50.00, "EDF", BudgeaCategory.ELECTRICITE)
+                           .endAccount()
+                           .endConnection()
+                           .get());
+
+    operations.openImportDialog()
+      .selectCloudForNewUser()
+      .register("toto@example.com")
+      .processEmailAndNextToBankSelection(mailbox.getDeviceVerificationCode("toto@example.com"))
+      .selectBank("Connecteur de test")
+      .next()
+      .setChoice("Type de compte", "Particuliers")
+      .setText("Identifiant", "1234")
+      .setPassword("Code (1234)", "1234")
+      .next()
+      .waitForNotificationAndDownload(mailbox.checkStatementReady("toto@example.com"))
+      .importAccountAndComplete();
+    budgea.pushConnectionList(BudgeaConnections.init()
+                                .add(1, 123, 40, true, "2016-08-10 17:44:26")
+                                .get());
+    operations.openImportDialog()
+      .editCloudConnections()
+      .checkSubscriptionEndDate(endDate)
+      .close();
   }
 }

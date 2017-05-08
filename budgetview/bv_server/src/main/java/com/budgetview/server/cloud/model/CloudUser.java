@@ -38,6 +38,8 @@ public class CloudUser {
 
   public static StringField STRIPE_SUBSCRIPTION_ID;
 
+  public static StringField LAST_STRIPE_INVOICE_EVENT_ID;
+
   public static DateField SUBSCRIPTION_END_DATE;
 
   static {

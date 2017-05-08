@@ -19,6 +19,7 @@ import org.globsframework.model.format.GlobPrinter;
 import org.globsframework.sqlstreams.SqlConnection;
 import org.globsframework.sqlstreams.constraints.Where;
 import org.globsframework.utils.Files;
+import org.globsframework.utils.Utils;
 import org.globsframework.utils.directory.Directory;
 
 import javax.servlet.ServletException;
@@ -132,6 +133,11 @@ public class StripeWebhookServlet extends HttpServlet {
 
         Glob user = users.getFirst();
 
+        if (Utils.equal(event.getId(), user.get(CloudUser.LAST_STRIPE_INVOICE_EVENT_ID))) {
+          logger.info("Ignored duplicate subscription event " + event.getId() + " for invoice " + invoice);
+          return HttpServletResponse.SC_OK;
+        }
+
         logger.debug("Processing invoice: " + invoice);
 
         String email = user.get(CloudUser.EMAIL);
@@ -140,7 +146,7 @@ public class StripeWebhookServlet extends HttpServlet {
         String excludingTaxes = AmountFormat.toString(invoice.total - invoice.tax);
         String date = toDate(invoice.date);
 
-        boolean emailSent =  mailer.sendSubscriptionInvoice(email, "fr", invoice.receiptNumber, total, tax, excludingTaxes, date);
+        boolean emailSent = mailer.sendSubscriptionInvoice(email, "fr", invoice.receiptNumber, total, tax, excludingTaxes, date);
 
         connection.startCreate(CloudInvoiceLog.TYPE)
           .set(CloudInvoiceLog.USER, user.get(CloudUser.ID))
@@ -149,6 +155,11 @@ public class StripeWebhookServlet extends HttpServlet {
           .set(CloudInvoiceLog.AMOUNT, invoice.total)
           .set(CloudInvoiceLog.RECEIPT_NUMBER, invoice.receiptNumber)
           .set(CloudInvoiceLog.EMAIL_SENT, emailSent)
+          .run();
+
+        connection.startUpdate(CloudUser.TYPE,
+                               Where.fieldEquals(CloudUser.STRIPE_SUBSCRIPTION_ID, subscription.subscriptionId))
+          .set(CloudUser.LAST_STRIPE_INVOICE_EVENT_ID, event.getId())
           .run();
 
         logger.info("Processed invoice " + invoice.receiptNumber + " for user " + email + " (" + user.get(CloudUser.ID) + ") for subscription " + invoice.subscriptionId);
@@ -203,9 +214,7 @@ public class StripeWebhookServlet extends HttpServlet {
       String date = toDate(invoice.date);
       mailer.sendSubscriptionInvoiceFailed(email, "fr", invoice.receiptNumber, date);
 
-      if (logger.isDebugEnabled()) {
-        logger.debug("Processed invoice " + invoice.receiptNumber + " failure for user " + email + " (" + user.get(CloudUser.ID) + ") - email sent");
-      }
+      logger.info("Processed invoice failure (#" + invoice.receiptNumber + ") for user " + user.get(CloudUser.ID) + " - email sent to " + email);
 
       return HttpServletResponse.SC_OK;
     }

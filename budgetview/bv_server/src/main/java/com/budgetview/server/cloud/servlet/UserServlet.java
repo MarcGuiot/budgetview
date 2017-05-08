@@ -118,7 +118,7 @@ public class UserServlet extends HttpCloudServlet {
           directory.get(PaymentService.class).deleteSubscription(stripeCustomerId, stripeSubscriptionId);
         }
         catch (ItemNotFound e) {
-          String message = "Failed to delete Stripe customer " + stripeCustomerId + " with subscription " + stripeSubscriptionId;
+          String message = "Failed to delete Stripe customer " + stripeCustomerId + " with subscription " + stripeSubscriptionId + " (userId: " + userId + ")";
           logger.error(message, e);
           mailer.sendErrorToAdmin(getClass(), "Stripe user deletion failed", message, e);
         }
