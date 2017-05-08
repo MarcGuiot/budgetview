@@ -9,6 +9,7 @@ import com.budgetview.model.Bank;
 import com.budgetview.model.CloudDesktopUser;
 import com.budgetview.model.CloudProviderConnection;
 import com.budgetview.shared.cloud.CloudSubscriptionStatus;
+import com.budgetview.shared.cloud.budgea.BudgeaConstants;
 import com.budgetview.shared.model.Provider;
 import com.budgetview.utils.Lang;
 import org.globsframework.gui.GlobSelection;
@@ -21,6 +22,8 @@ import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.format.GlobPrinter;
 import org.globsframework.model.utils.GlobMatcher;
+import org.globsframework.model.utils.GlobMatchers;
+import org.globsframework.utils.Utils;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
@@ -56,6 +59,7 @@ public class ImportCloudBankSelectionPanel extends AbstractImportStepPanel imple
     bankChooserPanel = new BankChooserPanel(repository, localDirectory, nextAction,
                                             and(fieldEquals(Bank.PROVIDER, Provider.BUDGEA.getId()),
                                                 isNotNull(Bank.PROVIDER_ID),
+                                                testBankFilter(),
                                                 new NotConnectedBankMatcher()),
                                             dialog);
 
@@ -75,6 +79,14 @@ public class ImportCloudBankSelectionPanel extends AbstractImportStepPanel imple
     selectionService.addListener(this, Bank.TYPE);
 
     return builder;
+  }
+
+  private GlobMatcher testBankFilter() {
+    GlobMatcher result = GlobMatchers.not(GlobMatchers.fieldEquals(Bank.ID, BudgeaConstants.TEST_BANK_ID));
+    Utils.beginRemove();
+    result = GlobMatchers.ALL;
+    Utils.endRemove();
+    return result;
   }
 
   public void selectionUpdated(GlobSelection selection) {
