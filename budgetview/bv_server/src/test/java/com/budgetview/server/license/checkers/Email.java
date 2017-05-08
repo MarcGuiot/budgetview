@@ -4,7 +4,6 @@ import com.dumbster.smtp.SmtpMessage;
 import junit.framework.AssertionFailedError;
 import org.globsframework.utils.Utils;
 
-import java.io.UnsupportedEncodingException;
 import java.util.Arrays;
 
 import static javax.mail.internet.MimeUtility.decodeText;
@@ -28,7 +27,6 @@ public class Email {
 
   public Email checkSubjectContainsAny(String... text) throws Exception {
     String subject = getSubject();
-    System.out.println("Email.checkSubjectContainsAny - " + subject);
     for (String item : text) {
       if (subject.contains(item)) {
         return this;
@@ -39,7 +37,6 @@ public class Email {
 
   public String getSubject() throws Exception {
     String subject = message.getHeaderValue("Subject");
-    System.out.println("Email.getSubject: " + subject);
     return decodeText(subject);
   }
 

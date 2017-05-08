@@ -116,7 +116,7 @@ public class StrictGlobRepository extends GlobRepositoryDecorator {
       super.apply(changeSet);
     }
     catch (Throwable e) {
-      Log.write("in strict glob repository", e);
+      Log.write("[Glob] Error in strict glob repository", e);
       exceptionHandler.onException(e);
       throw new RuntimeException(e);
     }

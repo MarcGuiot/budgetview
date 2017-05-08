@@ -17,6 +17,7 @@ import com.budgetview.model.initial.DefaultSeriesFactory;
 import com.budgetview.shared.license.LicenseConstants;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.utils.Dates;
+import org.globsframework.utils.Log;
 import org.uispec4j.UISpecAdapter;
 import org.uispec4j.Window;
 import org.uispec4j.assertion.UISpecAssert;

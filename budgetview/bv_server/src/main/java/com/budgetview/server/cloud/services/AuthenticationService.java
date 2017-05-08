@@ -282,12 +282,4 @@ public class AuthenticationService {
       throw new SubscriptionCheckFailed(CloudSubscriptionStatus.EXPIRED);
     }
   }
-
-  /** @deprecated - To be used for dbugging only */
-  public void dumpTables() {
-    SqlConnection connection = database.connect();
-    GlobPrinter.print(connection.selectAll(CloudUser.TYPE));
-    GlobPrinter.print(connection.selectAll(CloudUserDevice.TYPE));
-    connection.commitAndClose();
-  }
 }

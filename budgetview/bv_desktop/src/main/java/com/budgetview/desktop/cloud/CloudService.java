@@ -106,9 +106,11 @@ public class CloudService {
           checkAPIVersion(result);
           switch (CloudRequestStatus.get(result.getString(CloudConstants.STATUS))) {
             case OK:
+              Log.write("[Cloud] Signup successful - email: " + email);
               callback.processCompletion();
               break;
             case NO_SUBSCRIPTION:
+              Log.write("[Cloud] Signup completed with subscription error");
               callback.processSubscriptionError(getSubscriptionStatus(result));
               break;
             default:
@@ -116,7 +118,7 @@ public class CloudService {
           }
         }
         catch (Exception e) {
-          Log.write("Error during signup", e);
+          Log.write("[Cloud] Error during signup", e);
           callback.processError(e);
         }
       }
@@ -129,7 +131,7 @@ public class CloudService {
       public void run() {
         try {
           JSONObject result = cloudAPI.validateSignup(email, code);
-          System.out.println("CloudService.validateSignup:" + result.toString(2));
+          Log.debug("[Cloud] validateSignup received:" + result.toString(2));
           checkAPIVersion(result);
           switch (CloudValidationStatus.get(result.getString(CloudConstants.STATUS))) {
             case OK:
@@ -139,27 +141,33 @@ public class CloudService {
                                 value(CloudDesktopUser.DEVICE_TOKEN, result.getString(CloudConstants.DEVICE_TOKEN)),
                                 value(CloudDesktopUser.REGISTERED, true));
               if (Boolean.TRUE.equals(result.optBoolean(CloudConstants.EXISTING_STATEMENTS))) {
+                Log.write("[Cloud] Email validation completed, existing statements");
                 callback.processCompletionAndDownload();
               }
               else {
+                Log.write("[Cloud] Email validation completed, proceeding to first download");
                 callback.processCompletionAndSelectBank();
               }
               break;
             case UNKNOWN_VALIDATION_CODE:
+              Log.write("[Cloud] Email validation: unknown code");
               callback.processInvalidCode();
               break;
             case TEMP_VALIDATION_CODE_EXPIRED:
+              Log.write("[Cloud] Email validation: temp code expired");
               callback.processTempTokenExpired();
               break;
             case NO_SUBSCRIPTION:
+              Log.write("[Cloud] Email validation: subscription error");
               callback.processSubscriptionError(getSubscriptionStatus(result));
               break;
             default:
+              Log.write("[Cloud] Email validation: error " + result.toString(2));
               callback.processError(null);
           }
         }
         catch (Exception e) {
-          Log.write("Error validating email", e);
+          Log.write("[Cloud] Error validating email", e);
           callback.processError(e);
         }
       }
@@ -180,17 +188,20 @@ public class CloudService {
           checkAPIVersion(result);
           switch (CloudRequestStatus.get(result.getString(CloudConstants.STATUS))) {
             case OK:
+              Log.write("[Cloud] Email address change completed");
               callback.processCompletion();
               break;
             case NO_SUBSCRIPTION:
+              Log.write("[Cloud] Email address change - subscription error");
               callback.processSubscriptionError(getSubscriptionStatus(result));
               break;
             default:
+              Log.write("[Cloud] Email address change - unexpected case " + result.toString(2));
               throw new UnexpectedValue(result.getString(CloudConstants.STATUS));
           }
         }
         catch (Exception e) {
-          Log.write("Error during signup", e);
+          Log.write("[Cloud] Error when modifying email address", e);
           callback.processError(e);
         }
       }
@@ -207,30 +218,35 @@ public class CloudService {
           int deviceId = user.get(CloudDesktopUser.DEVICE_ID);
           String deviceToken = user.get(CloudDesktopUser.DEVICE_TOKEN);
           JSONObject result = cloudAPI.validateEmailModification(cloudUserId, deviceId, deviceToken, email, code);
-          System.out.println("CloudService.validateEmailModification:" + result.toString(2));
+          Log.debug("[Cloud] validateEmailModification received:" + result.toString(2));
           checkAPIVersion(result);
           switch (CloudValidationStatus.get(result.getString(CloudConstants.STATUS))) {
             case OK:
+              Log.write("[Cloud] Email modication validation completed");
               String newEmail = result.getString(CloudConstants.NEW_EMAIL);
               repository.update(CloudDesktopUser.KEY,
                                 value(CloudDesktopUser.EMAIL, newEmail));
               callback.processCompletionAndModifyEmail(newEmail);
               break;
             case UNKNOWN_VALIDATION_CODE:
+              Log.write("[Cloud] Email modication validation - subscription error");
               callback.processInvalidCode();
               break;
             case TEMP_VALIDATION_CODE_EXPIRED:
+              Log.write("[Cloud] Email modication validation - temp validation code expired");
               callback.processTempTokenExpired();
               break;
             case NO_SUBSCRIPTION:
+              Log.write("[Cloud] Email modication validation - no subscription found");
               callback.processSubscriptionError(getSubscriptionStatus(result));
               break;
             default:
+              Log.write("[Cloud] Email modication validation - error " + result.toString(2));
               callback.processError(null);
           }
         }
         catch (Exception e) {
-          Log.write("Error validating email", e);
+          Log.write("[Cloud] Error validating email", e);
           callback.processError(e);
         }
       }
@@ -248,13 +264,16 @@ public class CloudService {
       JSONObject result = cloudAPI.getTemporaryBudgeaToken(cloudUserId, deviceId, deviceToken);
       switch (CloudRequestStatus.get(result.getString(CloudConstants.STATUS))) {
         case OK:
+          Log.write("[Cloud] Updated bank fields");
           String token = result.getString(CloudConstants.PROVIDER_TOKEN);
           budgeaAPI.setToken(token);
           break;
         case NO_SUBSCRIPTION:
+          Log.write("[Cloud] Bank fields update subscription error");
           callback.processSubscriptionError(getSubscriptionStatus(result));
           return;
         default:
+          Log.write("[Cloud] Bank fields update error");
           throw new UnexpectedValue(result.getString(result.getString(CloudConstants.STATUS)));
       }
 
@@ -274,7 +293,7 @@ public class CloudService {
       callback.processCompletion();
     }
     catch (Exception e) {
-      Log.write("Error retrieving bank fields", e);
+      Log.write("[Cloud] Error retrieving bank fields", e);
       callback.processError(e);
     }
     finally {
@@ -314,7 +333,7 @@ public class CloudService {
   }
 
   public void addBankConnection(final Glob bank, final Glob bankConnection, final GlobRepository repository, final BankConnectionCallback callback) {
-    System.out.println("CloudService.addBankConnection");
+    Log.debug("[Cloud] addBankConnection: " + bank);
     Thread thread = new Thread(new Runnable() {
       public void run() {
         try {
@@ -324,53 +343,52 @@ public class CloudService {
           int cloudUserId = user.get(CloudDesktopUser.CLOUD_USER_ID);
           int deviceId = user.get(CloudDesktopUser.DEVICE_ID);
           String deviceToken = user.get(CloudDesktopUser.DEVICE_TOKEN);
-          System.out.println("CloudService.addBankConnection - check provider access");
           if (!cloudAPI.isProviderAccessRegistered(cloudUserId, deviceId, deviceToken)) {
-            System.out.println("CloudService.addBankConnection - add provider access");
             cloudAPI.addProviderAccess(cloudUserId, deviceId, deviceToken, budgeaAPI.getToken(), budgeaAPI.getUserId());
           }
-
-          System.out.println("CloudService.addBankConnection - getting temp token");
 
           JSONObject result = cloudAPI.getTemporaryBudgeaToken(cloudUserId, deviceId, deviceToken);
           checkAPIVersion(result);
           switch (CloudRequestStatus.get(result.getString(CloudConstants.STATUS))) {
             case OK:
+              Log.write("[Cloud] Bank connection added");
               budgeaAPI.setToken(result.getString(CloudConstants.PROVIDER_TOKEN));
               break;
             case NO_SUBSCRIPTION:
+              Log.write("[Cloud] Bank connection could not be added - subscription error");
               callback.processSubscriptionError(getSubscriptionStatus(result));
               return;
             default:
+              Log.write("[Cloud] Bank connection could not be added - error");
               throw new UnexpectedValue(result.getString(CloudConstants.STATUS));
           }
 
-          System.out.println("CloudService.addBankConnection - starting step1");
+          Log.debug("[Cloud] addBankConnection - starting step1");
 
           BudgeaAPI.LoginResult connectionResult = budgeaAPI.addBankConnectionStep1(bankConnection.get(BudgeaConnection.BANK), params);
           switch (connectionResult.status) {
             case ACCEPTED:
-              System.out.println("CloudService.addBankConnection - login OK");
+              Log.debug("[Cloud] addBankConnection - login OK");
               processLoginOk(connectionResult.json, repository, callback);
               break;
             case SECOND_STEP_NEEDED:
-              System.out.println("CloudService.addBankConnection - needs a second step \n" + connectionResult.json.toString(2));
+              Log.debug("[Cloud] addBankConnection - needs a second step \n" + connectionResult.json.toString(2));
               int connectionId = connectionResult.json.getInt("id");
               resetBankFields(bank, connectionResult.json, repository);
               callback.processSecondStepResponse(connectionId);
               break;
             case CREDENTIALS_REJECTED:
-              System.out.println("CloudService.addBankConnection - credentials rejected");
+              Log.write("[Cloud] addBankConnection - credentials rejected");
               callback.processCredentialsRejected();
               break;
             case OTHER_ERROR:
-              System.out.println("CloudService.addBankConnection - other error" + connectionResult.json.toString(2));
+              Log.debug("[Cloud] addBankConnection - other error" + connectionResult.json.toString(2));
               callback.processError(null);
               break;
           }
         }
         catch (Exception e) {
-          Log.write("Error creating connection", e);
+          Log.write("[Cloud] Error creating connection", e);
           callback.processError(e);
         }
       }
@@ -379,7 +397,7 @@ public class CloudService {
   }
 
   public void addBankConnectionStep2(final int connectionId, final Glob bankConnection, final GlobRepository repository, final BankConnectionCallback callback) {
-    System.out.println("CloudService.addBankConnectionStep2");
+    Log.debug("[Cloud] addBankConnectionStep2");
     Thread thread = new Thread(new Runnable() {
       public void run() {
         try {
@@ -388,7 +406,7 @@ public class CloudService {
           processLoginOk(connectionResult, repository, callback);
         }
         catch (Exception e) {
-          Log.write("Error creating connection", e);
+          Log.write("[Cloud] Error adding bank connection / step 2", e);
           callback.processError(e);
         }
       }
@@ -397,7 +415,7 @@ public class CloudService {
   }
 
   public void updatePassword(final int connectionId, final Glob bankConnection, final GlobRepository repository, final BankConnectionCallback callback) {
-    System.out.println("CloudService.updatePassword");
+    Log.debug("[Cloud] updatePassword");
     Thread thread = new Thread(new Runnable() {
       public void run() {
         try {
@@ -406,27 +424,27 @@ public class CloudService {
             budgeaAPI.updateBankPassword(connectionId, getParametersMap(repository, bankConnection));
           switch (connectionResult.status) {
             case ACCEPTED:
-              System.out.println("CloudService.updatePassword - login OK");
+              Log.debug("[Cloud] Password updated");
               processLoginOk(connectionResult.json, repository, callback);
               break;
             case SECOND_STEP_NEEDED:
-              System.out.println("CloudService.updatePassword - needs a second step \n" + connectionResult.json.toString(2));
+              Log.debug("[Cloud] Password update - needs a second step");
               int connectionId = connectionResult.json.getInt("id");
               resetBankFields(repository.findLinkTarget(bankConnection, BudgeaConnection.BANK), connectionResult.json, repository);
               callback.processSecondStepResponse(connectionId);
               break;
             case CREDENTIALS_REJECTED:
-              System.out.println("CloudService.updatePassword - credentials rejected");
+              Log.debug("[Cloud] Password update - credentials rejected");
               callback.processCredentialsRejected();
               break;
             case OTHER_ERROR:
-              System.out.println("CloudService.updatePassword - other error" + connectionResult.json.toString(2));
+              Log.debug("[Cloud] Password update - other error" + connectionResult.json.toString(2));
               callback.processError(null);
               break;
           }
         }
         catch (Exception e) {
-          Log.write("Error updatingn password", e);
+          Log.write("[Cloud] Error updatingn password", e);
           callback.processError(e);
         }
       }
@@ -446,7 +464,7 @@ public class CloudService {
 
   private void processLoginOk(JSONObject connectionResult, GlobRepository repository, BankConnectionCallback callback) throws IOException {
 
-    System.out.println("CloudService.processLoginOk");
+    Log.debug("[Cloud] processLoginOk");
 
     int providerConnectionId = connectionResult.getInt("id");
 
@@ -470,6 +488,7 @@ public class CloudService {
     String deviceToken = user.get(CloudDesktopUser.DEVICE_TOKEN);
     cloudAPI.addBankConnection(cloudUserId, deviceId, deviceToken, providerConnectionId);
 
+    Log.write("[Cloud] Login successfully completed for bank " + bankName);
     callback.processCompletion(connection);
   }
 
@@ -478,7 +497,7 @@ public class CloudService {
       public void run() {
         try {
 
-          System.out.println("CloudService.checkBankConnectionReady");
+          Log.debug("[Cloud] checkBankConnectionReady");
 
           Glob user = repository.get(CloudDesktopUser.KEY);
           Integer providerConnectionId = providerConnection.get(CloudProviderConnection.PROVIDER_CONNECTION_ID);
@@ -514,7 +533,7 @@ public class CloudService {
           callback.processCompletion(initialized);
         }
         catch (Exception e) {
-          Log.write("Error retrieving connections", e);
+          Log.write("[Cloud] Error retrieving connections", e);
           callback.processError(e);
         }
       }
@@ -532,7 +551,7 @@ public class CloudService {
           String deviceToken = user.get(CloudDesktopUser.DEVICE_TOKEN);
           JSONObject connections = cloudAPI.getBankConnections(cloudUserId, deviceId, deviceToken);
 
-          System.out.println("CloudService.updateBankConnections: " + connections.toString(2));
+          Log.debug("[Cloud] updateBankConnections: " + connections.toString(2));
 
           repository.startChangeSet();
           repository.update(CloudDesktopUser.KEY, value(CloudDesktopUser.SUBSCRIPTION_END_DATE,
@@ -566,7 +585,7 @@ public class CloudService {
       public void run() {
         try {
 
-          System.out.println("CloudService.deleteBankConnection");
+          Log.debug("[Cloud] deleteBankConnection");
 
           Glob user = repository.get(CloudDesktopUser.KEY);
 
@@ -638,7 +657,7 @@ public class CloudService {
         throw new UnexpectedValue(result.getString(CloudConstants.STATUS));
     }
 
-    System.out.println("CloudService.doDownloadStatement\n" + result.toString(2));
+    Log.debug("[Cloud] doDownloadStatement\n" + result.toString(2));
 
     JSONArray accounts = result.getJSONArray("accounts");
     if (accounts.length() == 0) {
@@ -690,8 +709,6 @@ public class CloudService {
                         value(RealAccount.POSITION, Double.toString(position)),
                         value(RealAccount.POSITION_DATE, Month.toDate(positionMonth, positionDay)),
                         value(RealAccount.ACCOUNT_TYPE, getAccountType(account).getId()),
-//                            value(RealAccount.BANK_ENTITY_LABEL, ),
-//                            value(RealAccount.BANK_ENTITY, bankEntityId),
                         value(RealAccount.FILE_NAME, null),
                         value(RealAccount.FILE_CONTENT, account.toString()));
       importedRealAccounts.add(realAccount);
@@ -717,6 +734,7 @@ public class CloudService {
   }
 
   public void deleteCloudAccount(GlobRepository repository, final UnsubscriptionCallback callback) {
+    Log.debug("[Cloud] deleteCloudAccount");
     Glob user = repository.findOrCreate(CloudDesktopUser.KEY);
     try {
       int cloudUserId = user.get(CloudDesktopUser.CLOUD_USER_ID);
@@ -730,7 +748,7 @@ public class CloudService {
       });
     }
     catch (final Exception e) {
-      Log.write("Error deleting BV cloud account", e);
+      Log.write("[Cloud] Error deleting BV cloud account", e);
       GuiUtils.runInSwingThread(new Runnable() {
         public void run() {
           callback.processError(e);

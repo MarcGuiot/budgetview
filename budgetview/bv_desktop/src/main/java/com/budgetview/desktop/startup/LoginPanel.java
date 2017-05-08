@@ -148,7 +148,7 @@ public class LoginPanel {
     for (DataAccess.UserInfo user : users) {
       if (user.autologin) {
         if (autoLoginUser != null) {
-          Log.write("Multiple autologgin user " + autoLoginUser + " " + user.name);
+          Log.write("[Login] Multiple autologgin user " + autoLoginUser + " " + user.name);
         }
         autoLoginUser = user.name;
       }

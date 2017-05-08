@@ -131,7 +131,7 @@ public class Application {
     }
     catch (Exception e) {
       showError(e);
-      Log.write("At startup ", e);
+      Log.write("[Application] Error on startup ", e);
       System.exit(-1);
     }
   }
@@ -183,12 +183,12 @@ public class Application {
       mainWindow.show();
     }
     catch (InvalidState e) {
-      Log.write("Erreur au lancement", e);
+      Log.write("[Application] Error on startup - multiple instances", e);
       showMultipleInstanceError(e.getMessage());
     }
     catch (Exception e) {
       showError(e);
-      Log.write("Erreur au lancement exit", e);
+      Log.write("[Application] Error on startup - exiting", e);
       System.exit(1);
     }
   }

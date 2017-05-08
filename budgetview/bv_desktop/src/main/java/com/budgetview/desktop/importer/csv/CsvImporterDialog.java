@@ -195,7 +195,7 @@ public class CsvImporterDialog {
       if (elements != null && elements.size() > 1) {
         String remove = elements.remove(elements.size() - 1);
         if (Strings.isNotEmpty(remove)) {
-          Log.write("Le Csv ne semble pas correct : " + elements + " le dernier element devrait etre vide");
+          Log.write("[CSV] Incorrect content: " + elements + " - last element should be empty");
         }
       }
     }

@@ -88,7 +88,7 @@ public class SingleApplicationInstanceListener {
       }
     }
     catch (Exception e) {
-      Log.write("socket", e);
+      Log.write("[SingleApp] Socket check error", e);
     }
     return false;
   }
@@ -144,7 +144,7 @@ public class SingleApplicationInstanceListener {
       }
       catch (Exception e) {
         outputStream.writeObject(RESPONSE_FAIL);
-        Log.write("socket", e);
+        Log.write("[SingleApp] Socket read error", e);
       }
     }
     finally {
@@ -158,7 +158,7 @@ public class SingleApplicationInstanceListener {
         }
       }
       catch (IOException e) {
-        Log.write("Close error");
+        Log.write("[SingleApp] Close error");
       }
     }
   }
@@ -258,7 +258,7 @@ public class SingleApplicationInstanceListener {
         return RESPONSE_OK.equals(result);
       }
       catch (Exception e) {
-        Log.write("socket", e);
+        Log.write("[SingleApp] Socket send to remote", e);
         return false;
       }
       finally {
@@ -277,7 +277,7 @@ public class SingleApplicationInstanceListener {
           }
         }
         catch (Exception e) {
-          Log.write("close error");
+          Log.write("[SingleApp] Close error");
         }
       }
     }
@@ -321,9 +321,9 @@ public class SingleApplicationInstanceListener {
               return;
             }
           }
-          Log.write("accept failed");
+          Log.write("[SingleApp] Accept failed");
           if (System.currentTimeMillis() - lastFail < 200) {
-            Log.write("wait");
+            Log.write("[SingleApp] Wait");
             countFailed++;
             try {
               Thread.sleep(100);

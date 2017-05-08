@@ -3,7 +3,6 @@ package com.budgetview.shared.cloud;
 import com.budgetview.shared.http.Http;
 import com.budgetview.shared.model.Provider;
 import org.apache.http.client.fluent.Request;
-import org.globsframework.utils.Log;
 import org.globsframework.utils.Strings;
 import org.globsframework.utils.Utils;
 import org.globsframework.utils.exceptions.InvalidParameter;
@@ -16,7 +15,6 @@ public class CloudAPI {
   public JSONObject signup(String email, String lang) throws IOException {
     String url = "/user";
     String serverUrl = CloudConstants.getServerUrl(url);
-    Log.write("CloudAPI: calling " + serverUrl + " for " + email + " / " + lang);
     Request request = Request.Post(serverUrl)
       .addHeader(CloudConstants.EMAIL, email)
       .addHeader(CloudConstants.LANG, lang);
@@ -34,7 +32,6 @@ public class CloudAPI {
   public JSONObject modifyEmailAddress(Integer cloudUserId, Integer deviceId, String deviceToken, String currentEmail, String newEmail) throws IOException {
     String url = "/user/email";
     String serverUrl = CloudConstants.getServerUrl(url);
-    Log.write("CloudAPI: modifyEmailAddress with " + serverUrl + " for " + currentEmail + " ==> " + newEmail);
     Request request = Request.Post(serverUrl)
       .addHeader(CloudConstants.CLOUD_USER_ID, Integer.toString(cloudUserId))
       .addHeader(CloudConstants.DEVICE_ID, Integer.toString(deviceId))
@@ -78,9 +75,6 @@ public class CloudAPI {
       .addHeader(CloudConstants.DEVICE_TOKEN, deviceToken)
       .addHeader(CloudConstants.PROVIDER_ID, Integer.toString(Provider.BUDGEA.getId()));
     JSONObject json = Http.executeAndGetJson(url, request);
-
-    System.out.println("CloudAPI.isProviderAccessRegistered: " + json.toString(2));
-
     return Utils.equal("ok", json.optString("status"));
   }
 

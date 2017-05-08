@@ -59,7 +59,7 @@ public class DownloadThread extends Thread {
       client.connect(splitedUrl[1].substring("//" .length()));
       if (client.isConnected()) {
         if (!client.login("anonymous", "none")) {
-          Log.write("Fail to log to ftp server " + (client.getReplyString()));
+          Log.write("[Config] Failed to log to ftp server " + (client.getReplyString()));
         }
         client.setFileType(FTPClient.BINARY_FILE_TYPE);
         client.enterLocalPassiveMode();
@@ -71,24 +71,24 @@ public class DownloadThread extends Thread {
             completionCallback.complete(targetFile, version);
           }
           else {
-            Log.write("Fail to rename from " + tempFile.getName() + " to " + targetFile.getName());
+            Log.write("[Config] Failed to rename from " + tempFile.getName() + " to " + targetFile.getName());
             tempFile.delete();
             tempFile = null;
           }
         }
         else {
-          Log.write("Fail to retrieve " + fileName);
+          Log.write("[Config] Failed to retrieve " + fileName);
           stream.close();
           tempFile.delete();
           tempFile = null;
         }
       }
       else {
-        Log.write("Fail to connect to ftp server " + (client.getReplyString()));
+        Log.write("[Config] Failzs to connect to ftp server " + (client.getReplyString()));
       }
     }
     catch (Exception e) {
-      Log.write("in download", e);
+      Log.write("[Config] Download error", e);
       try {
         if (client.isConnected()) {
           client.disconnect();

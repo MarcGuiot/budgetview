@@ -114,7 +114,6 @@ public class ImportCloudBankConnectionPanel extends AbstractImportStepPanel {
   }
 
   public void showLoginStep1(Key bankKey) {
-    System.out.println("ImportCloudBankConnectionPanel.showLoginStep1");
     createPanelIfNeeded();
     connectionAction = new CreateConnectionStep1Action();
     providerConnectionId = 0;
@@ -124,7 +123,6 @@ public class ImportCloudBankConnectionPanel extends AbstractImportStepPanel {
   }
 
   private void showLoginStep2(int connectionId) {
-    System.out.println("ImportCloudBankConnectionPanel.showLoginStep2");
     connectionAction = new CreateConnectionStep2Action();
     providerConnectionId = connectionId;
     message.setText(Lang.get("import.cloud.bankConnection.message.step2", currentBank.get(Bank.NAME)));
@@ -132,7 +130,6 @@ public class ImportCloudBankConnectionPanel extends AbstractImportStepPanel {
   }
 
   public void showPasswordUpdate(Glob cloudProviderConnection) {
-    System.out.println("ImportCloudBankConnectionPanel.showPasswordUpdate");
     createPanelIfNeeded();
     connectionAction = new UpdatePasswordAction();
     currentBank = repository.findLinkTarget(cloudProviderConnection, CloudProviderConnection.BANK);
@@ -167,8 +164,6 @@ public class ImportCloudBankConnectionPanel extends AbstractImportStepPanel {
   }
 
   private void processConnection() {
-    System.out.println("ImportCloudBankConnectionPanel.processConnection");
-
     for (Glob fieldValue : repository.getAll(BudgeaConnectionValue.TYPE).sort(BudgeaConnectionValue.SEQUENCE_INDEX)) {
       Glob field = repository.findLinkTarget(fieldValue, BudgeaConnectionValue.FIELD);
       String value = fieldValue.get(BudgeaConnectionValue.VALUE);
@@ -192,7 +187,6 @@ public class ImportCloudBankConnectionPanel extends AbstractImportStepPanel {
     setAllEnabled(false);
     connectionAction.run(new CloudService.BankConnectionCallback() {
       public void processCompletion(Glob providerConnection) {
-        System.out.println("ImportCloudBankConnectionPanel.processCompletion");
         repository.deleteAll(BudgeaModel.get().asArray());
         repository.commitChanges(false);
         if (providerConnection.isTrue(CloudProviderConnection.INITIALIZED)) {
@@ -205,7 +199,6 @@ public class ImportCloudBankConnectionPanel extends AbstractImportStepPanel {
       }
 
       public void processSecondStepResponse(int connectionId) {
-        System.out.println("ImportCloudBankConnectionPanel.processSecondStepResponse");
         showLoginStep2(connectionId);
         progressPanel.stop();
       }

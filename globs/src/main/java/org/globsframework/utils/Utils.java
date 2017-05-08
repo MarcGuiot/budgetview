@@ -350,13 +350,13 @@ public class Utils {
           matcher.appendReplacement(buffer, groupMatcher.group(group));
         }
         catch (IndexOutOfBoundsException e) {
-          Log.write("Missing group '" + group + "' on " + targetString + " for patern " +
+          Log.write("[Globs] Missing group '" + group + "' on " + targetString + " for pattern " +
                     placementRegexp.toString() + " and " + groupMatcher.pattern().toString());
           return null;
         }
       }
       catch (IndexOutOfBoundsException e) {
-        Log.write("Pattern error : " + matcher.pattern().toString() + " on " + targetString);
+        Log.write("[Globs] Pattern error: " + matcher.pattern().toString() + " on " + targetString);
         return null;
       }
     }

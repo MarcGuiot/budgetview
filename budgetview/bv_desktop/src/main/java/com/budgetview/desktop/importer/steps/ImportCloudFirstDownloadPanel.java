@@ -80,7 +80,6 @@ public class ImportCloudFirstDownloadPanel extends AbstractImportStepPanel {
     cloudService.checkBankConnectionReady(providerConnection, repository, new CloudService.BankConnectionCheckCallback() {
       public void processCompletion(boolean ready) {
         if (ready) {
-          System.out.println("ImportCloudFirstDownloadPanel.processCompletion: statements ready, starting download");
           controller.showCloudDownload();
         }
         else {

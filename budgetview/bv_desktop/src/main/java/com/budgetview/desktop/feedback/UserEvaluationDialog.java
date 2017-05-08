@@ -153,12 +153,12 @@ public class UserEvaluationDialog {
                                                          new ServerMailingService.Listener() {
                                                     public void sent(String mail, String title, String content) {
                                                       messageSent();
-                                                      Log.write("Mail sent from " + mail + " - title : " + title + "\n" + content);
+                                                      Log.write("[UserEvaluation] Mail sent from " + mail + " - title : " + title + "\n" + content);
                                                     }
 
                                                     public void sendFailed(String mail, String title, String content) {
                                                       messageSent();
-                                                      Log.write("Failed to send mail from " + mail + " - title : " + title + "\n" + content);
+                                                      Log.write("[UserEvaluation] Failed to send mail from " + mail + " - title : " + title + "\n" + content);
                                                     }
                                                   },
                                                          repository);

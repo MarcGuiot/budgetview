@@ -163,7 +163,7 @@ public class UserConfigService {
         public void run() {
           Throwable f = e;
           while (f != null) {
-            Log.write("For activation : " + f.getMessage());
+            Log.write("[User] For activation : " + f.getMessage());
             if (f != f.getCause()) {
               f = f.getCause();
             }
@@ -449,10 +449,10 @@ public class UserConfigService {
         constructor.newInstance(globRepository, directory);
       }
       catch (IOException e) {
-        Log.write("failed to read " + name, e);
+        Log.write("[User] Failed to read " + name, e);
       }
       catch (Exception e) {
-        Log.write("failed to load class " + name, e);
+        Log.write("[User] Failed to load class " + name, e);
       }
     }
   }
@@ -485,7 +485,7 @@ public class UserConfigService {
                                   .replace("/", "."));
               }
               catch (IOException e) {
-                Log.write("Failed to get entry for " + className, e);
+                Log.write("[User] Failed to get entry for " + className, e);
               }
             }
           }
@@ -496,7 +496,7 @@ public class UserConfigService {
       return true;
     }
     catch (Exception e) {
-      Log.write("for " + jarFile.getAbsolutePath(), e);
+      Log.write("[User] Error for " + jarFile.getAbsolutePath(), e);
       return false;
     }
   }

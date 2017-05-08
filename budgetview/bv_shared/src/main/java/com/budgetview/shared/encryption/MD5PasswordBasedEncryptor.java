@@ -49,7 +49,7 @@ public class MD5PasswordBasedEncryptor implements PasswordBasedEncryptor {
       long stop = System.currentTimeMillis();
       long duration = stop - start;
       if (duration > 1000) {
-        Log.write("Take too long to compute MD5 : " + duration + "ms");
+        Log.write("[Persistence] Take too long to compute MD5 : " + duration + "ms");
       }
     }
   }

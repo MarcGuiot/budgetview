@@ -33,8 +33,8 @@ public abstract class AbstractTransactionTypeFinalizer implements TransactionTyp
         return Utils.replace(labelRegexp, placementRegexp, fileContentValue.replace("$", "\\$"), newLabel);
       }
       catch (RuntimeException e) {
-        Log.write("erreur label : " + labelRegexp + " placement :" + placementRegexp + " file content : " + fileContentValue
-                  + " newlabel " + newLabel, e);
+        Log.write("[Import] Label error: " + labelRegexp + " - place:" + placementRegexp + " - file content: " + fileContentValue
+                  + "  - newlabel: " + newLabel, e);
         return fileContentValue;
       }
     }

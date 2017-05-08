@@ -99,12 +99,12 @@ public class LicenseConfirmationFeedbackPanel implements Disposable {
                                                        builder.toString(),
                                                        new ServerMailingService.Listener() {
                                                   public void sent(String mail, String title, String content) {
-                                                    Log.write("Comment email sent from " + mail + " - title : " + title + "\n" + content);
+                                                    Log.write("[License] Comment email sent from " + mail + " - title : " + title + "\n" + content);
                                                     close();
                                                   }
 
                                                   public void sendFailed(String mail, String title, String content) {
-                                                    Log.write("Failed to send comment mail from " + mail + " - title : " + title + "\n" + content);
+                                                    Log.write("[License] Failed to send comment mail from " + mail + " - title : " + title + "\n" + content);
                                                     close();
                                                   }
                                                 },

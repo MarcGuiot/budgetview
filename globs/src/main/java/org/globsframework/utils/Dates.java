@@ -144,7 +144,7 @@ public class Dates {
       return simpleDateFormat.parse(str);
     }
     catch (ParseException e) {
-      Log.write("No date in " + str);
+      Log.write("[Globs] No date in " + str);
       return null;
     }
   }

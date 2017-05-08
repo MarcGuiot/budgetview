@@ -90,7 +90,7 @@ public class Obfuscator {
       });
     }
     catch (IOException e) {
-      Log.write("OFX obfuscation error", e);
+      Log.write("[Obfuscation] OFX obfuscation error", e);
     }
   }
 
@@ -116,7 +116,7 @@ public class Obfuscator {
       }
     }
     catch (IOException e) {
-      Log.write("QIF obfuscation error", e);
+      Log.write("[Obfuscation] QIF obfuscation error", e);
     }
   }
 

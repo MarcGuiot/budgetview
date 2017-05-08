@@ -405,7 +405,7 @@ public class ProjectUpgradeV40 {
           repository.update(transaction.getKey(), Transaction.SERIES, mirror.get(Series.ID));
         }
         else {
-          Log.write("Transaction not in series/mirror target account: " +
+          Log.write("[Upgrade] Transaction not in series/mirror target account: " +
                     transaction.get(Transaction.LABEL) + " - date: " +
                     transaction.get(Transaction.DAY) + "/" + transaction.get(Transaction.MONTH) + " - amount: " +
                     transaction.get(Transaction.AMOUNT));

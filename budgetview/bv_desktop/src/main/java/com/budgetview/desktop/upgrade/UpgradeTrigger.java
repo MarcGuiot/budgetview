@@ -366,7 +366,7 @@ public class UpgradeTrigger implements ChangeSetListener {
         updateSavingsSeries(repository, series);
         //finalement deux series sont identiques
         if (mirrorSeries.get(Series.TARGET_ACCOUNT).equals(series.get(Series.TARGET_ACCOUNT))) {
-          Log.write("Correcting savings series.");
+          Log.write("[Upgrade] Fixing savings series");
           repository.update(mirrorSeries.getKey(), Series.TARGET_ACCOUNT, mirrorSeries.get(Series.FROM_ACCOUNT));
           repository.update(series.getKey(), Series.TARGET_ACCOUNT, mirrorSeries.get(Series.TO_ACCOUNT));
         }
@@ -594,7 +594,7 @@ public class UpgradeTrigger implements ChangeSetListener {
               repository.update(transaction.getKey(), Transaction.SERIES, series.get(Series.ID));
             }
             else {
-              Log.write("Invalid operation: " + GlobPrinter.toString(transaction) + "\n" +
+              Log.write("[Upgrade] Invalid operation: " + GlobPrinter.toString(transaction) + "\n" +
                         "for series: " + GlobPrinter.toString(series));
             }
           }

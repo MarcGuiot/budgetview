@@ -41,7 +41,7 @@ public class UpdateMirrorSeriesBudgetChangeSetVisitor implements ChangeSetVisito
         localRepository.findByIndex(SeriesBudget.SERIES_INDEX, SeriesBudget.SERIES, mirrorSeries)
           .findByIndex(SeriesBudget.MONTH, budget.get(SeriesBudget.MONTH)).getGlobs().getFirst();
       if (mirrorBudget == null){
-        Log.write("missing mirror budget for " + mirrorSeries);
+        Log.write("[Triggers] Missing mirror budget for " + mirrorSeries);
         return ;
       }
       values.safeApply(new FieldValues.Functor() {

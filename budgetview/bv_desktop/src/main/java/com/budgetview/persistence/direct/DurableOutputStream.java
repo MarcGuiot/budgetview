@@ -56,7 +56,7 @@ class DurableOutputStream {
       throw new IOFailure(e);
     }
     catch (RuntimeException ex){
-      Log.write("Erreur while writing data", ex);
+      Log.write("[Persistence] Error while writing data", ex);
       throw ex;
     }
   }
@@ -67,7 +67,7 @@ class DurableOutputStream {
         outputStream.close();
       }
       catch (IOException e) {
-        Log.write("stream close error", e);
+        Log.write("[Persistence] Stream close error", e);
       }
     }
   }

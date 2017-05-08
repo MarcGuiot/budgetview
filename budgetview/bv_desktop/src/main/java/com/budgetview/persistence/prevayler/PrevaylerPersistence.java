@@ -37,7 +37,7 @@ public class PrevaylerPersistence implements Persistence {
       throw new UserNotRegistered(name + " not registered");
     }
     if (!Arrays.equals(user.get(User.ENCRYPTED_PASSWORD), cryptedPassword)) {
-      Log.write("For " + name + " bad password");
+      Log.write("[Persistence] For " + name + " bad password");
       throw new BadPassword(name + " not identified correctly");
     }
     return user;

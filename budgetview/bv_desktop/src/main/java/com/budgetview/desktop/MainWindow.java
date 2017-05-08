@@ -138,7 +138,7 @@ public class MainWindow implements WindowManager {
 
   private static void showDownloadJar(Directory directory, final UserConfigService userConfigService) throws InvocationTargetException, InterruptedException {
     if (userConfigService.downloadStep() < 0) {
-      Log.write("bad version, no download");
+      Log.write("[Main] Invalid version, no download");
       MessageDialog.show("jar.version.title", MessageType.ERROR, null, directory,
                          "jar.version.message");
     }

@@ -54,7 +54,7 @@ public abstract class AbstractRestoreAction extends AbstractBackupRestoreAction 
       }
     }
     catch (Exception ex) {
-      Log.write("Restore failed", ex);
+      Log.write("[Backup/Restore] Restore failed", ex);
       action.showError();
       restoreMonthSelection(currentSelection);
     }

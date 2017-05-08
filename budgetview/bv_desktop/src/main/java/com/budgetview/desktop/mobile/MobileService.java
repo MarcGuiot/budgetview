@@ -41,7 +41,7 @@ public class MobileService {
       return false;
     }
     catch (Exception e) {
-      Log.write("error", e);
+      Log.write("[Mobile] Error creating mobile account", e);
       ConnectionStatus.checkException(repository, e);
     }
     finally {
@@ -90,7 +90,7 @@ public class MobileService {
       return true;
     }
     catch (Exception e) {
-      Log.write("error", e);
+      Log.write("[Mobile] Error deleting mobile account", e);
       ConnectionStatus.checkException(repository, e);
     }
     finally {
@@ -135,7 +135,7 @@ public class MobileService {
       return true;
     }
     catch (Exception e) {
-      Log.write("while sending data", e);
+      Log.write("[Mobile] Error while sending data", e);
       message.set(e.getMessage());
       ConnectionStatus.checkException(repository, e);
       return false;

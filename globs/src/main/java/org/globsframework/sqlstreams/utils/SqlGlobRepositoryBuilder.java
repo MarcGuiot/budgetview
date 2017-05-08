@@ -27,7 +27,7 @@ public class SqlGlobRepositoryBuilder {
 
   public void add(Constraint constraint, Field... fields) {
     if (fields.length <= 0) {
-      Log.write("No field added to SqlGlobRepositoryBuilder");
+      Log.write("[Globs] No field added to SqlGlobRepositoryBuilder");
       return;
     }
     T3uples<Constraint, GlobType, Field[]> t3uples =

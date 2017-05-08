@@ -64,10 +64,8 @@ public class BudgeaAPI {
   public JSONObject getBankFields(int budgeaBankId) throws IOException {
     checkToken();
     String url = "/banks/" + budgeaBankId + "/fields";
-    JSONObject json = json(Request.Get(BudgeaConstants.getServerUrl(url))
+    return json(Request.Get(BudgeaConstants.getServerUrl(url))
                              .addHeader(BudgeaConstants.AUTHORIZATION, "Bearer " + token), url);
-    System.out.println("BudgeaAPI.getBankFields: \n" + json.toString(2));
-    return json;
   }
 
   public JSONObject getUserConnections(int userId) throws IOException {
@@ -136,7 +134,6 @@ public class BudgeaAPI {
     }
 
     List<NameValuePair> pairs = form.build();
-    System.out.println("BudgeaAPI.addBankConnectionStep2: " + pairs + " for token " + token);
     String url = BudgeaConstants.getServerUrl("/users/me/connections/" + connectionId + "?expand=accounts");
     Request request = Request.Post(url)
       .addHeader(BudgeaConstants.AUTHORIZATION, "Bearer " + token)
@@ -152,7 +149,6 @@ public class BudgeaAPI {
     }
 
     List<NameValuePair> pairs = form.build();
-    System.out.println("BudgeaAPI.updateBankPassword: " + pairs + " for token " + token);
     String url = BudgeaConstants.getServerUrl("/users/me/connections/" + connectionId + "?expand=accounts");
     Request request = Request.Post(url)
       .addHeader(BudgeaConstants.AUTHORIZATION, "Bearer " + token)

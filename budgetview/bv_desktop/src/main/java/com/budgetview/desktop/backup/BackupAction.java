@@ -55,7 +55,7 @@ public class BackupAction extends AbstractBackupRestoreAction {
       }
       catch (Exception e) {
         Gui.setDefaultCursor(frame);
-        Log.write("During backup", e);
+        Log.write("[Backup/Restore] During backup", e);
         MessageFileDialog dialog = new MessageFileDialog(repository, directory);
         dialog.show("backup.error.title", "backup.error.message", file);
       }

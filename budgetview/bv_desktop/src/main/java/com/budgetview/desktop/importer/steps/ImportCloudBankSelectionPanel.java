@@ -125,9 +125,6 @@ public class ImportCloudBankSelectionPanel extends AbstractImportStepPanel imple
   }
 
   public void prepareForDisplay() {
-    System.out.println("ImportCloudBankSelectionPanel.prepareForDisplay");
-    GlobPrinter.print(repository, CloudProviderConnection.TYPE);
-
     createPanelIfNeeded();
     bankChooserPanel.setEnabled(true);
     bankChooserPanel.requestFocus();

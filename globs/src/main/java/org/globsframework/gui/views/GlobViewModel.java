@@ -298,7 +298,7 @@ public class GlobViewModel implements ChangeSetListener, Disposable {
       for (Iterator<Glob> iterator = newList.iterator(); iterator.hasNext(); ) {
         Glob glob = iterator.next();
         if ((glob != null) && !glob.exists()) {
-          Log.write("Bug : " + glob.getKey() + " is deleted");
+          Log.write("[Globs] Bug : " + glob.getKey() + " is deleted");
           iterator.remove();
         }
       }

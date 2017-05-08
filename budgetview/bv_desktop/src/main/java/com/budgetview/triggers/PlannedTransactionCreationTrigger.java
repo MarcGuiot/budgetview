@@ -203,7 +203,7 @@ public class PlannedTransactionCreationTrigger implements ChangeSetListener {
 
         Glob series = repository.findLinkTarget(seriesBudget, SeriesBudget.SERIES);
         if (series == null) {
-          Log.write("No series for " + seriesBudget);
+          Log.write("[Triggers] No series for " + seriesBudget);
           return;
         }
         if (Utils.equal(series.get(Series.TARGET_ACCOUNT), Account.MAIN_SUMMARY_ACCOUNT_ID)) {
@@ -241,7 +241,7 @@ public class PlannedTransactionCreationTrigger implements ChangeSetListener {
     Glob series = repository.findLinkTarget(seriesBudget, SeriesBudget.SERIES);
     if (series == null) { // bug : une series a disparu - on continue
       repository.delete(plannedTransactionsForMonth);
-      Log.write("Missing series " + seriesBudget.get(SeriesBudget.SERIES));
+      Log.write("[Triggers] Missing series " + seriesBudget.get(SeriesBudget.SERIES));
       return;
     }
 
@@ -369,7 +369,7 @@ public class PlannedTransactionCreationTrigger implements ChangeSetListener {
     Glob toAccount = repository.findLinkTarget(series, Series.TO_ACCOUNT);
     if (series.get(Series.MIRROR_SERIES) != null) {
       if (fromAccount == null || toAccount == null) {
-        Log.write("Series '" + series.get(Series.NAME) + "' is a savings series with both accounts imported" +
+        Log.write("[Triggers] Series '" + series.get(Series.NAME) + "' is a savings series with both accounts imported" +
                   " but one of the accounts is missing.");
         return dayAmounts;
       }

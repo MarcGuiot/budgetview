@@ -53,20 +53,20 @@ public class ServerMailingService {
           response = post.execute();
         }
         catch (IOException e) {
-          Log.write("connection error (retrying): ", e);
+          Log.write("[ServerMailing] Connection error (retrying): ", e);
           post.dispose();
           post = createPost(url);
           response = post.execute();
         }
         ConnectionStatus.setOk(repository);
-        Log.write("Send mail ok");
+        Log.write("[ServerMailing] Mail sent");
       }
       catch (final Exception e) {
-        Log.write("Send mail raised exception", e);
+        Log.write("[ServerMailing] Send mail raised exception", e);
         ConnectionStatus.checkException(repository, e);
         SwingUtilities.invokeLater(new Runnable() {
           public void run() {
-            Log.write("Mail not sent", e);
+            Log.write("[ServerMailing] Mail not sent", e);
             listener.sendFailed(fromMail, title, content);
           }
         });
@@ -86,7 +86,7 @@ public class ServerMailingService {
       else {
         SwingUtilities.invokeLater(new Runnable() {
           public void run() {
-            Log.write("Mail not sent with error code " + statusCode + " for " + url + " with content: " + content);
+            Log.write("[ServerMailing] Mail not sent with error code " + statusCode + " for " + url + " with content: " + content);
             listener.sendFailed(fromMail, title, content);
           }
         });

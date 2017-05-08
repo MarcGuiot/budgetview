@@ -5,6 +5,7 @@ import java.io.PrintStream;
 public class Log {
 
   private static boolean loggingEnabled = true;
+  private static boolean debugEnabled = false;
 
   private static PrintStream stream = System.out;
   private static int indentation = 0;
@@ -15,6 +16,10 @@ public class Log {
     Log.stream = stream;
     System.setOut(stream);
     System.setErr(stream);
+  }
+
+  public static void enableDebug() {
+    debugEnabled = true;
   }
 
   public static void reset() {
@@ -48,12 +53,14 @@ public class Log {
     e.printStackTrace(stream);
   }
 
-  public static void doWrite(String prefix, String text, boolean indent) {
+  private static void doWrite(String prefix, String text, boolean indent) {
     if (loggingEnabled) {
       if (indent) {
         indent();
       }
-      stream.append(prefix);
+      if (indent && indentation > 0) {
+        stream.append(prefix);
+      }
       stream.append(text);
       stream.append(Strings.LINE_SEPARATOR);
     }
@@ -76,4 +83,13 @@ public class Log {
     loggingEnabled = enabled;
   }
 
+  public static void debug(String text) {
+    if (debugEnabled) {
+      write(text);
+    }
+  }
+
+  public static boolean debugEnabled() {
+    return debugEnabled;
+  }
 }

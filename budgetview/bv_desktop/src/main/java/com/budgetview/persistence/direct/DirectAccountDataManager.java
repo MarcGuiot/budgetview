@@ -242,7 +242,7 @@ public class DirectAccountDataManager implements AccountDataManager {
       }
     }
     catch (IOException e) {
-      Log.write("stream close error", e);
+      Log.write("[Persistence] Stream close error", e);
     }
   }
 
@@ -269,7 +269,7 @@ public class DirectAccountDataManager implements AccountDataManager {
         directory.deletePreviousJournal(lastDeletedSnasphotId);
       }
       catch (Exception e) {
-        Log.write("for " + userId, e);
+        Log.write("[Persistence] Snapshot creation error for " + userId, e);
       }
     }
     outputStreamMap.put(userId, new DurableOutputStream(this, transactionInfo.transactionId, userId));
@@ -302,7 +302,7 @@ public class DirectAccountDataManager implements AccountDataManager {
                     durableOutputStream.getPrevaylerDirectory(), System.currentTimeMillis());
     }
     catch (IOException e) {
-      Log.write("in new data", e);
+      Log.write("[Persistence] Error in new data", e);
       return false;
     }
     return true;

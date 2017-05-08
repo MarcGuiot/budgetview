@@ -116,7 +116,7 @@ public class BudgetStatTrigger implements ChangeSetListener {
 
     public void run(Glob transaction) {
       if (transaction.get(Transaction.SUMMARY_POSITION) == null) {
-        Log.write("Summary position is null for transaction : " + transaction.get(Transaction.ID) +
+        Log.write("[Triggers] Summary position is null for transaction : " + transaction.get(Transaction.ID) +
                   " " + transaction.get(Transaction.LABEL));
       }
 

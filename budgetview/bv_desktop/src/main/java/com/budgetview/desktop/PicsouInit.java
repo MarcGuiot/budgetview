@@ -262,7 +262,7 @@ public class PicsouInit {
         dataAccess.applyChanges(changeSet, repository);
       }
       catch (Exception e) {
-        Log.write("In load ", e);
+        Log.write("[Init] Error loading errors", e);
         throw new InvalidData(Lang.get("login.data.load.fail"), e);
       }
       finally {

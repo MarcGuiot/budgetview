@@ -118,8 +118,6 @@ public class RealAccount {
     if (accounts.size() > 0) {
       return accounts.getFirst();
     }
-
-    System.out.println("RealAccount.findOrCreate - creating account: " + name + " / " + number);
     return repository.create(RealAccount.TYPE,
                              value(RealAccount.ID, repository.getIdGenerator().getNextId(RealAccount.ID, 1)),
                              value(RealAccount.NAME, name),

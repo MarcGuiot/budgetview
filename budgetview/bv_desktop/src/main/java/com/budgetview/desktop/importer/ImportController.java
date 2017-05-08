@@ -141,7 +141,7 @@ public class ImportController implements RealAccountImporter {
         return false;
       }
       catch (Exception e) {
-        Log.write("Exception in Import:nextImport", e);
+        Log.write("[Import] Exception in Import:nextImport", e);
         return false;
       }
     }
@@ -212,7 +212,6 @@ public class ImportController implements RealAccountImporter {
   }
 
   public void commitAndClose(Set<Integer> months) {
-    System.out.println("ImportController.commitAndClose");
     openRequestManager.popCallback();
     countPush--;
     localRepository.commitChanges(true);

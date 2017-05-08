@@ -67,7 +67,7 @@ public class SeriesWrapperUpdateTrigger implements ChangeSetListener {
           parentWrapper = SeriesWrapper.getWrapperForBudgetArea(values.get(Series.BUDGET_AREA), repository);
         }
         if (parentWrapper == null) {
-          Log.write("Bug Empty parentWrapper for " + GlobPrinter.toString(values));
+          Log.write("[Upgrade] Bug Empty parentWrapper for " + GlobPrinter.toString(values));
         }
         else {
           Integer seriesId = key.get(Series.ID);
@@ -110,7 +110,7 @@ public class SeriesWrapperUpdateTrigger implements ChangeSetListener {
           }
 
           if (parentWrapper == null) {
-            Log.write("Bug Empty parentWrapper for " + GlobPrinter.toString(values));
+            Log.write("[Upgrade] Bug Empty parentWrapper for " + GlobPrinter.toString(values));
           }
           else {
             Glob seriesWrapper = repository.create(SeriesWrapper.TYPE,
@@ -137,7 +137,7 @@ public class SeriesWrapperUpdateTrigger implements ChangeSetListener {
         Glob parentSeriesWrapper =
           SeriesWrapper.getWrapperForSeries(values.get(SubSeries.SERIES), repository);
         if (parentSeriesWrapper == null) {
-          Log.write("Parent wrapper missing " + values.get(SubSeries.SERIES));
+          Log.write("[Upgrade] Parent wrapper missing " + values.get(SubSeries.SERIES));
         }
         else {
           if (repository.findByIndex(SeriesWrapper.INDEX, SeriesWrapper.ITEM_TYPE, SeriesWrapperType.SUB_SERIES.getId())
@@ -247,7 +247,7 @@ public class SeriesWrapperUpdateTrigger implements ChangeSetListener {
         Glob seriesWrapper =
           SeriesWrapper.getWrapperForSeries(subSeries.get(SubSeries.SERIES), repository);
         if (seriesWrapper == null) {
-          Log.write("Missing parent " + GlobPrinter.toString(subSeries));
+          Log.write("[Upgrade] Missing parent " + GlobPrinter.toString(subSeries));
         }
         else {
           repository.create(SeriesWrapper.TYPE,

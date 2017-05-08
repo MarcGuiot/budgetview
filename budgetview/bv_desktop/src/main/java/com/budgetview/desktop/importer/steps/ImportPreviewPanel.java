@@ -316,11 +316,11 @@ public class ImportPreviewPanel extends AbstractImportStepPanel implements Messa
       setEnabled(false);
       try {
         if (currentlySelectedAccount == null && !accountEditionPanel.check()) {
-          Log.write("Import: finish account check failed");
+          Log.write("[Import] Finish account check failed");
           return;
         }
         if (currentlySelectedAccount != null && Account.SUMMARY_ACCOUNT_IDS.contains(currentlySelectedAccount.get(Account.ID))) {
-          Log.write("Import bug: Using summary account");
+          Log.write("[Import] Bug: using summary account");
           return;
         }
         showStep2Message("");

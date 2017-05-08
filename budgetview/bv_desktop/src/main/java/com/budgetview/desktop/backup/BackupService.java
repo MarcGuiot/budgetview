@@ -115,7 +115,7 @@ public class BackupService {
       }, serverData, readPasswordBasedEncryptor, globModel);
     }
     catch (Exception e) {
-      Log.write("Error during restore", e);
+      Log.write("[Backup/Restore] Error during restore", e);
       return Status.DECRYPT_FAILED;
     }
 
@@ -138,7 +138,7 @@ public class BackupService {
       repository.reset(GlobList.EMPTY, DesktopModel.getUserSpecificTypes());
     }
     catch (Exception e) {
-      Log.write("Error while clearing data (ignored)", e);
+      Log.write("[Backup/Restore] Error while clearing data (ignored)", e);
     }
     finally {
       repository.completeChangeSet();

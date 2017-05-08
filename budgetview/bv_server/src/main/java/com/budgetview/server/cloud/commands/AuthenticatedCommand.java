@@ -62,7 +62,6 @@ public abstract class AuthenticatedCommand extends DatabaseCommand {
 
     if (user == null) {
       logger.error("[AuthenticatedCommand] Could not identify user with id: " + cloudUserId + " / " + deviceId + " / " + deviceToken);
-      authentication.dumpTables();
       response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
       return;
     }

@@ -23,6 +23,7 @@ public abstract class FunctionalTestCase extends UISpecTestCase {
 
   protected void setUp() throws Exception {
     super.setUp();
+    Log.enableDebug();
     Locale locale = getDefaultLocale();
     Locale.setDefault(locale);
     Lang.setLocale(locale);

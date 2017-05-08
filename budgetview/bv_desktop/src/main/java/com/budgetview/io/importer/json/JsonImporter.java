@@ -16,6 +16,7 @@ import org.globsframework.model.GlobRepository;
 import org.globsframework.model.format.GlobPrinter;
 import org.globsframework.utils.Dates;
 import org.globsframework.utils.Files;
+import org.globsframework.utils.Log;
 import org.globsframework.utils.exceptions.InvalidFormat;
 import org.globsframework.utils.exceptions.OperationCancelled;
 import org.json.JSONObject;
@@ -34,9 +35,9 @@ public class JsonImporter implements AccountFileImporter {
     ImportedTransactionIdGenerator generator = new ImportedTransactionIdGenerator(targetRepository.getIdGenerator());
     JSONObject jsonAccount = new JSONObject(Files.loadStreamToString(inputStream.getBestProbableReader()));
 
-    //---------------
-    System.out.println("JsonImporter.loadTransactions: parsing \n" + jsonAccount.toString(2));
-    //---------------
+    if (Log.debugEnabled()) {
+      Log.debug("[JsonImporter] Parsing " + jsonAccount.toString(2));
+    }
 
     Glob realAccount = getRealAccount(jsonAccount, initialRepository);
     if (realAccount == null) {
@@ -141,7 +142,9 @@ public class JsonImporter implements AccountFileImporter {
                                              value(ImportedSeries.NAME, name),
                                              value(ImportedSeries.SERIES, series != null ? series.get(Series.ID) : null),
                                              value(ImportedSeries.BUDGET_AREA, budgetArea.getId()));
-      GlobPrinter.print(created);
+      if (Log.debugEnabled()) {
+        Log.debug("[JsonImporter] Created \n" + GlobPrinter.toString(created));
+      }
       importedSeriesList = new GlobList(created);
     }
     return importedSeriesList.getFirst().get(ImportedSeries.ID);
