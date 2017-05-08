@@ -133,10 +133,10 @@ public class ImportCloudSignupPanel extends AbstractImportStepPanel {
   public void prepareForDisplay() {
     setAllEnabled(true);
     if (CloudDesktopUser.isRegistered(repository)) {
-      messageLabel.setText("$import.cloud.modifyEmailAddress.message");
+      messageLabel.setText(Lang.get("import.cloud.modifyEmailAddress.message"));
     }
     else {
-      messageLabel.setText("import.cloud.signup.message");
+      messageLabel.setText(Lang.get("import.cloud.signup.message"));
     }
     emailField.requestFocus();
   }

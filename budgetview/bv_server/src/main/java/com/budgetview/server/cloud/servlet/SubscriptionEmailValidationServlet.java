@@ -91,6 +91,7 @@ public class SubscriptionEmailValidationServlet extends HttpServlet {
     SqlConnection connection = database.connect();
     try {
       connection.startUpdate(CloudUser.TYPE, Where.globEquals(user))
+        .set(CloudUser.EMAIL_VERIFIED, true)
         .set(CloudUser.STRIPE_CUSTOMER_ID, subscription.customerId)
         .set(CloudUser.STRIPE_SUBSCRIPTION_ID, subscription.subscriptionId)
         .set(CloudUser.SUBSCRIPTION_END_DATE, subscription.currentPeriodEndDate)

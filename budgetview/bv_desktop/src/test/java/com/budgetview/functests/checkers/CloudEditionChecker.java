@@ -4,6 +4,8 @@ import com.budgetview.desktop.description.Formatting;
 import com.budgetview.desktop.importer.steps.ImportCloudBankConnectionPanel;
 import com.budgetview.utils.Lang;
 import org.globsframework.utils.TestUtils;
+import org.globsframework.utils.Utils;
+import org.junit.Assert;
 import org.uispec4j.Button;
 import org.uispec4j.Panel;
 import org.uispec4j.TextBox;
@@ -29,6 +31,19 @@ public class CloudEditionChecker extends ViewChecker {
     assertThat(new Assertion() {
       public void check() {
         TestUtils.assertEquals(getConnectionNames(panel), bankNames);
+      }
+    });
+    return this;
+  }
+
+  public CloudEditionChecker checkNoConnectionsShown() {
+    final Panel panel = CloudEditionChecker.this.getConnectionsPanel();
+    assertThat(new Assertion() {
+      public void check() {
+        List<String> connectionNames = getConnectionNames(panel);
+        if (!connectionNames.isEmpty()) {
+          Assert.fail("Unexpected connections: " + Utils.toString(connectionNames));
+        }
       }
     });
     return this;

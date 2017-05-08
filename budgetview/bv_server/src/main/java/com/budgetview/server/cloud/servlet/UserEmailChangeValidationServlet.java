@@ -84,6 +84,7 @@ public class UserEmailChangeValidationServlet extends HttpCloudServlet {
         SqlConnection connection = database.connect();
         connection.startUpdate(CloudUser.TYPE, Where.fieldEquals(CloudUser.ID, userId))
           .set(CloudUser.EMAIL, newEmail)
+          .set(CloudUser.EMAIL_VERIFIED, true)
           .run();
         connection.commitAndClose();
       }

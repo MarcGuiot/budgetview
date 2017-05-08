@@ -6,6 +6,7 @@ import com.budgetview.server.cloud.model.CloudUser;
 import com.budgetview.server.cloud.model.ProviderConnection;
 import com.budgetview.server.cloud.model.ProviderUpdate;
 import com.budgetview.shared.cloud.CloudConstants;
+import com.budgetview.shared.json.Json;
 import com.budgetview.shared.model.Provider;
 import org.apache.log4j.Logger;
 import org.globsframework.json.JsonGlobFormat;
@@ -16,6 +17,7 @@ import org.globsframework.sqlstreams.SqlConnection;
 import org.globsframework.sqlstreams.constraints.Where;
 import org.globsframework.utils.Strings;
 import org.globsframework.utils.directory.Directory;
+import org.json.JSONArray;
 import org.json.JSONObject;
 import org.json.JSONWriter;
 
@@ -77,11 +79,17 @@ public class BankConnectionsServlet extends HttpCloudServlet {
           connectionsById.put(connection.get(ProviderConnection.PROVIDER_CONNECTION), connection);
         }
 
-        JSONObject budgeaConnections = budgeaAPI.getUserConnections(user.get(CloudUser.PROVIDER_USER_ID));
-
-        logger.info("Budgea connections:" + budgeaConnections.toString(2));
-
-        Map<Integer, String> bankNames = getBankNames();
+        Integer providerUserId = user.get(CloudUser.PROVIDER_USER_ID);
+        JSONArray budgeaConnections;
+        Map<Integer, String> bankNames;
+        if (providerUserId != null) {
+          budgeaConnections = budgeaAPI.getUserConnections(providerUserId).getJSONArray("connections");
+          bankNames = getBankNames();
+        }
+        else {
+          budgeaConnections = new JSONArray();
+          bankNames = new HashMap<Integer, String>();
+        }
 
         writer.object();
         writer.key(CloudConstants.API_VERSION).value(CloudConstants.CURRENT_API_VERSION);
@@ -89,7 +97,7 @@ public class BankConnectionsServlet extends HttpCloudServlet {
         writer.key(CloudConstants.SUBSCRIPTION_END_DATE).value(JsonGlobFormat.toString(user.get(CloudUser.SUBSCRIPTION_END_DATE)));
         writer.key("connections");
         writer.array();
-        for (Object c : budgeaConnections.getJSONArray("connections")) {
+        for (Object c : budgeaConnections) {
           JSONObject budgeaConnection = (JSONObject) c;
           int budgeaConnectionId = budgeaConnection.getInt("id");
           int budgeaBankId = budgeaConnection.getInt("id_bank");

@@ -351,6 +351,11 @@ public class BudgeaStubServer {
 
       if (bankFieldsForUpdate == null || update) {
         logger.info(update ? "Completing connection for step2" : "Completing connection for step1");
+        if (connectionResponses.isEmpty()) {
+          logger.error("No connection response provided - you must push one");
+          response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+          return;
+        }
         String connectionResponse = connectionResponses.pop();
         if (connectionResponse.contains("wrongpass")) {
           response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
