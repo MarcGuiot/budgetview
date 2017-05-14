@@ -131,6 +131,14 @@ div.container h1 {
   margin-bottom: 30px;
 }
 
+div.container h2.banner {
+  border-top: 1px solid #DDD;
+  border-bottom: 1px solid #DDD;
+  margin-bottom: 40px;
+  padding: 5px;
+  text-align: center;
+}
+
 div.container h3 {
   color: #000;
   text-align: left;
@@ -320,6 +328,11 @@ div.container h3 {
   line-height: 1.44em;
 }
 
+#home #versions {
+  margin-top: 20px;
+  margin-bottom: 10px;
+}
+
 #home #mobile {
   width: 90%;
   margin-top: 20px;
@@ -330,9 +343,10 @@ div.container h3 {
   margin-top: 20px;
 }
 
-#home #addons-ref {
+#home .version-details {
   text-align: center;
   font-size: 22px;
+  margin-top: 20px;
 }
 
 /*=== SHOW/HIDE ===*/
@@ -844,6 +858,7 @@ div.system-message p.link {
 /*=== FEATURE LIST===*/
 
 .version-title {
+  margin-top: 15px;
   padding-top: 15px;
 }
 
@@ -1126,13 +1141,6 @@ margin-top: 40px;
   text-align: center;
 }
 
-#extensions h2.large {
-  border-top: 1px solid #DDD;
-  border-bottom: 1px solid #DDD;
-  margin-bottom: 40px;
-  padding: 5px;
-}
-
 #extensions #notes h2 {
   text-align: left;
   margin-top: 10px;
@@ -1142,6 +1150,60 @@ margin-top: 40px;
 
 #extensions #notes h2 img {
   vertical-align: middle;
+}
+
+/* ========== CLOUD ========== */
+
+#cloud #banner {
+  margin-top: 30px;
+}
+
+#cloud #banner h1 {
+  margin-top: 60px;
+}
+
+/* ========== CLOUD ========== */
+
+.store {
+    text-align: center;
+}
+
+.store .stripe {
+}
+
+.store .stripe .intro {
+   font-size: 16pt;
+   margin-top: 60px;
+   margin-bottom: 10px;
+}
+
+.store .stripe div.button {
+   margin-top: 40px;
+   margin-bottom: 80px;
+}
+
+.store .stripe .stripe-button-el {
+   background: none;
+   background-image: none;
+   background-color: #F37A32;
+   padding-left: 20px;
+   padding-right: 20px;
+   margin-bottom: 5px;
+}
+
+.store .stripe .stripe-button-el span {
+   color: #fff;
+   line-height: 40px;
+   height: 40px;
+   border-color: #eea236;
+   font-size: 26px;
+   background: none;
+   background-image: none;
+   background-color: #F37A32;
+}
+
+.store .secure-payment {
+  margin-top: 40px;
 }
 
 /* ========== FOOTER ========== */

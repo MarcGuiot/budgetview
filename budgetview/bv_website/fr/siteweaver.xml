@@ -27,6 +27,11 @@
       <key name="innerTemplate" value="templates/standardPageTemplate.html"/>
     </page>
 
+    <page file="cloud.html" title="Cloud">
+      <key name="title.hide" value="true"/>
+      <key name="innerTemplate" value="templates/standardPageTemplate.html"/>
+    </page>
+
     <page file="support.html" title="Aide &amp; Support" shortTitle="Aide &amp; Support">
       <key name="innerTemplate" value="templates/supportPageTemplate.html"/>
 

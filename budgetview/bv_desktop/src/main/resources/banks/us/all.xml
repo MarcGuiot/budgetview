@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <globs>
   <bankFormat id="2000">
-    <bank name="Citybank" country="us" id="2000"
+    <bank name="Citibank" country="us" id="2000"
           provider="2" providerId="69">
       <bankEntity id="11689"/>
     </bank>

@@ -50,7 +50,7 @@ public class ListBox extends AbstractSwingUIComponent {
     return new Assertion() {
       public void check() {
         if (getSize() != 0) {
-          AssertAdapter.fail("List should be empty but contains: " + ArrayUtils.toString(getContent()));
+          AssertAdapter.fail("List should be empty but contains: " + ArrayUtils.toString(getRenderedValues()));
         }
       }
     };
@@ -59,7 +59,7 @@ public class ListBox extends AbstractSwingUIComponent {
   public Assertion contentEquals(final String... displayedValues) {
     return new Assertion() {
       public void check() {
-        ArrayUtils.assertEquals(displayedValues, getContent());
+        ArrayUtils.assertEquals(displayedValues, getRenderedValues());
       }
     };
   }
@@ -71,7 +71,7 @@ public class ListBox extends AbstractSwingUIComponent {
   public Assertion contains(final String... items) {
     return new Assertion() {
       public void check() {
-        List content = Arrays.asList(getContent());
+        List content = Arrays.asList(getRenderedValues());
         for (String item : items) {
           if (!content.contains(item)) {
             AssertAdapter.fail("Item '" + item + "' not found - actual content:" + content);
@@ -97,7 +97,7 @@ public class ListBox extends AbstractSwingUIComponent {
       indices[i] = getIndexForString(values[i]);
       if (indices[i] == -1) {
         AssertAdapter.fail("Item '" + values[i] + "' not found in " +
-                           ArrayUtils.toString(getContent()));
+                           ArrayUtils.toString(getRenderedValues()));
       }
     }
     selectIndices(indices);
@@ -239,10 +239,10 @@ public class ListBox extends AbstractSwingUIComponent {
     }
   }
 
-  private String[] getContent() {
+  public String[] getRenderedValues() {
     String[] names = new String[jList.getModel().getSize()];
     for (int i = 0, max = jList.getModel().getSize(); i < max; i++) {
-      names[i] = getRenderedValue(i);
+      names[i] = getRenderedValues(i);
     }
     return names;
   }
@@ -251,12 +251,12 @@ public class ListBox extends AbstractSwingUIComponent {
     int[] selectedIndices = jList.getSelectedIndices();
     String[] names = new String[selectedIndices.length];
     for (int i = 0; i < selectedIndices.length; i++) {
-      names[i] = getRenderedValue(selectedIndices[i]);
+      names[i] = getRenderedValues(selectedIndices[i]);
     }
     return names;
   }
 
-  private String getRenderedValue(int index) {
+  private String getRenderedValues(int index) {
     return cellValueConverter.getValue(index, getComponent(index), jList.getModel().getElementAt(index));
   }
 
@@ -272,7 +272,7 @@ public class ListBox extends AbstractSwingUIComponent {
     for (StringMatcher matcher : matchers) {
       List<Integer> indices = new ArrayList<Integer>();
       for (int listIndex = 0, max = jList.getModel().getSize(); listIndex < max; listIndex++) {
-        String renderedValue = getRenderedValue(listIndex);
+        String renderedValue = getRenderedValues(listIndex);
         if (matcher.matches(renderedValue)) {
           indices.add(listIndex);
         }
@@ -283,7 +283,7 @@ public class ListBox extends AbstractSwingUIComponent {
       if (indices.size() > 1) {
         String[] items = new String[indices.size()];
         for (int j = 0; j < items.length; j++) {
-          items[j] = getRenderedValue(j);
+          items[j] = getRenderedValues(j);
         }
         throw new ItemAmbiguityException(searchedValue, items);
       }
