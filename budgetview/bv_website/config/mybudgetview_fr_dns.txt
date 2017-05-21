@@ -1,0 +1,31 @@
+$TTL 86400
+@	IN SOA dns17.ovh.net. tech.ovh.net. (2017052007 86400 3600 3600000 86400)
+                         IN NS     ns17.ovh.net.
+                         IN NS     dns17.ovh.net.
+                         IN MX 1   mail2.mybudgetview.fr.
+                         IN MX 100 mxb.ovh.net.
+                         IN MX 5   mx2.ovh.net.
+                         IN A      5.196.26.111
+                         IN TXT    "google-site-verification=-tw5o_lyjrULDqOiAotuflCz2XbhU_bEqhxU_raErP0"
+                     600 IN TXT    "v=spf1 include:mx.ovh.com ~all"
+_jabber._tcp             IN CNAME  _jabber._tcp.redirect.ovh.net.
+_sip._udp                IN CNAME  _sip._udp.redirect.ovh.net.
+_xmpp-client._tcp        IN CNAME  _xmpp-client._tcp.redirect.ovh.net.
+_xmpp-server._tcp        IN CNAME  _xmpp-server._tcp.redirect.ovh.net.
+audio                    IN CNAME  audio.ovh.net.
+ftp                      IN CNAME  mybudgetview.fr.
+ftp2                     IN CNAME  anonymous.ftp.ovh.net.
+ftpjar                   IN A      5.196.26.111
+imp                      IN CNAME  imp.ovh.net.
+jabber                   IN CNAME  jab1.redirect.ovh.net.
+mail                     IN CNAME  mail2.mybudgetview.fr.
+mail2                    IN A      5.196.26.111
+ox                       IN CNAME  ox.ovh.net.
+paypal                   IN A      5.196.26.111
+pop3                     IN CNAME  ns0.ovh.net.
+register                 IN A      5.196.26.111
+sip                      IN CNAME  sip1.redirect.ovh.net.
+smtp                     IN CNAME  ns0.ovh.net.
+squirrel                 IN CNAME  squirrel.ovh.net.
+vpn                      IN CNAME  vpn.redirect.ovh.net.
+www                      IN CNAME  mybudgetview.fr.
