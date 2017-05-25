@@ -61,9 +61,6 @@ public class LicenseServer {
     webServer.add(new NewUserServlet(directory), LicenseConstants.NEW_USER);
     webServer.add(new SendMailServlet(directory), LicenseConstants.REQUEST_SEND_MAIL);
     webServer.add(new SendUseInfoServlet(), LicenseConstants.SEND_USE_INFO);
-
-    webServer.add(new StaticWebPageServlet(directory), "/boutique");
-    webServer.add(new StaticWebPageServlet(directory), "/modifier");
   }
 
   public void addServlet(HttpServlet servlet, String name) {

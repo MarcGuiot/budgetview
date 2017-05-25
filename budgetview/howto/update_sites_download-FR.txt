@@ -23,10 +23,10 @@ Le logiciel est disponible sur trois plateformes, correspondant à trois URLs su
 Voici les informations principales à mettre à jour :
 - Numéro de version : 4.0
 - URL de téléchargement direct :
-  * Windows : http://www.mybudgetview.fr/files/app/BudgetView-4.0-fr-Setup.exe
-  * Mac : http://www.mybudgetview.fr/files/app/BudgetView-4.0-fr.dmg
-  * Linux : http://www.mybudgetview.fr/files/app/budgetview-4.0-fr.tar.gz
-- URL du site de l’éditeur : http://www.mybudgetview.fr
+  * Windows : https://www.mybudgetview.fr/files/app/BudgetView-4.0-fr-Setup.exe
+  * Mac : https://www.mybudgetview.fr/files/app/BudgetView-4.0-fr.dmg
+  * Linux : https://www.mybudgetview.fr/files/app/budgetview-4.0-fr.tar.gz
+- URL du site de l’éditeur : https://www.mybudgetview.fr
 - Licence (OpenSource/Gratuit/Demonstration) : Gratuit (et non plus Shareware)
 - Capture d’écran de 460 pixels de large : vous la trouverez en pièce jointe.
 - Icone 140x95 (.gif) : vous la trouverez aussi en pièce jointe.
@@ -79,15 +79,15 @@ J'ai le plaisir de vous informer qu'une nouvelle version est disponible pour le 
 
 La nouvelle version porte le numéro 4.0, et le fichier d'installation correspondant est disponible à l'adresse suivante :
 
-- Windows : http://www.mybudgetview.fr/files/app/BudgetView-4.0-fr-Setup.exe
+- Windows : https://www.mybudgetview.fr/files/app/BudgetView-4.0-fr-Setup.exe
 
-- Mac : http://www.mybudgetview.fr/files/app/BudgetView-4.0-fr.dmg
+- Mac : https://www.mybudgetview.fr/files/app/BudgetView-4.0-fr.dmg
 
-- Linux : http://www.mybudgetview.fr/files/app/budgetview-4.0-fr.tar.gz
+- Linux : https://www.mybudgetview.fr/files/app/budgetview-4.0-fr.tar.gz
 
 L'historique des modifications est visible sur cette page :
 
- http://www.mybudgetview.fr/support/derniers-changements
+ https://www.mybudgetview.fr/support/derniers-changements
 
 Pourriez-vous je vous prie mettre la fiche du logiciel à jour ?
 
@@ -113,7 +113,7 @@ Régis.
 
 2. Mettre à jour la version et les liens :
 
-- Windows : http://www.mybudgetview.fr/files/app/BudgetView-4.0-fr-Setup.exe
+- Windows : https://www.mybudgetview.fr/files/app/BudgetView-4.0-fr-Setup.exe
 
 !!! Attention à la catégorie Multimedia / Audio
 
@@ -132,7 +132,7 @@ Régis.
 
 2. Mettre à jour la version et les liens :
 
-- Mac : http://www.mybudgetview.fr/files/app/BudgetView-4.0-fr.dmg
+- Mac : https://www.mybudgetview.fr/files/app/BudgetView-4.0-fr.dmg
 
 !!! Attention à la catégorie Multimedia / Audio
 
@@ -152,11 +152,11 @@ Bonjour,
 
 J'ai le plaisir de vous informer qu'une nouvelle version de BudgetView est disponible. Il agit de la version 4.0, dont le lien direct de téléchargement est le suivant :
 
-- http://www.mybudgetview.fr/files/app/BudgetView-4.0-fr.dmg
+- https://www.mybudgetview.fr/files/app/BudgetView-4.0-fr.dmg
 
 L'historique des modifications est visible sur cette page : 
 
- http://www.mybudgetview.fr/support/derniers-changements
+ https://www.mybudgetview.fr/support/derniers-changements
 
 Pourriez-vous je vous prie mettre la fiche du logiciel à jour ?
 

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<site url="http://www.mybudgetview.fr" pagesDir="content">
+<site url="https://www.mybudgetview.fr" pagesDir="content">
 
   <page file="index.html" title="BudgetView" shortTitle="Accueil" template="templates/masterTemplate.html">
     <key name="innerTemplate" value="templates/homePageTemplate.html"/>
@@ -124,6 +124,13 @@
                 title="Comment supprime-t-on une opération ?"/>
         </page>
 
+        <page file="support/faq/cloud.html" title="Utiliser BudgetView Cloud">
+          <page file="support/faq/cloud/creation_cloud.html"
+                title="Comment créer un compte Cloud ?"/>
+          <page file="support/faq/cloud/suppression_cloud.html"
+                title="Comment supprimer mon compte Cloud ?"/>
+        </page>
+
 
         <page file="support/faq/mobile.html" title="Utiliser BudgetView sur smartphone et tablette">
           <page file="support/faq/mobile/utilisation_android.html"
@@ -158,10 +165,15 @@
       <page file="apropos/mentions_legales.html" title="Mentions légales"/>
     </page>
 
-    <page file="boutique.html" title="Mobile">
+    <page file="boutique.html" title="Boutique">
       <key name="navbar.hide" value="true"/>
       <key name="noindex" value="true"/>
+      <key name="title.hide" value="true"/>
       <key name="innerTemplate" value="templates/standardPageTemplate.html"/>
+
+      <page file="boutique/modifier-carte.html" title="Nouvelle carte de paiement">
+        <key name="title.hide" value="true"/>
+      </page>
 
       <page file="boutique/email-envoye.html" title="Un email vous a été envoyé"/>
       <page file="boutique/abonnement-reussi.html" title="Votre compte Cloud est activé"/>

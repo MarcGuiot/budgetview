@@ -50,7 +50,7 @@ public class CreateMobileUserServlet extends HttpServlet {
 
     String sha1Mail = URLDecoder.decode(httpServletRequest.getParameter(MobileConstants.CRYPTED_INFO), "UTF-8");
 
-    String baseUrl = "fr".equals(lang) ? "http://www.mybudgetview.fr" : "http://www.mybudgetview.com";
+    String baseUrl = "fr".equals(lang) ? "https://www.mybudgetview.fr" : "http://www.mybudgetview.com";
 
     if (!Arrays.equals(decryptedMail, mail.getBytes("UTF-8"))) {
       httpServletResponse.sendRedirect(baseUrl + "/mobile/invalidCreateUserRequest");

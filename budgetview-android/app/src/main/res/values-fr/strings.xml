@@ -54,7 +54,7 @@
 
   <string name="demoFooter">Découvrez BudgetView !</string>
   <string name="demoLinkMessage">Accedez à notre site :</string>
-  <string name="demoLink">http://www.mybudgetview.fr</string>
+  <string name="demoLink">https://www.mybudgetview.fr</string>
   <string name="demoTitle">Découvrez BudgetView!</string>
   <string name="demoPlatforms">Mac/Windows/Linux</string>
   <string name="demoEmailMessage">

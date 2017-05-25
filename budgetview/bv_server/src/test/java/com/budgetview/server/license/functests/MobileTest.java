@@ -231,7 +231,7 @@ public class MobileTest extends ConnectedTestCase {
     int httpStartIndex = content.indexOf("href=\"");
     int httpEndIndex = content.indexOf("\">http");
     String url = content.substring(httpStartIndex + "href=\"".length(), httpEndIndex);
-    url = url.replace("http://www.mybudgetview.fr", "http://localhost");
+    url = url.replace("https://www.mybudgetview.fr", "http://localhost");
     Thread.sleep(500); // on attend que les donnée pending soit envoyé au serveur
     return new MobileConnection(url, activatedPassword);
   }

@@ -3,10 +3,13 @@
 </FilesMatch>
 
 # Don't show directory listings for URLs which map to a directory.
-# Options -Indexes
+Options -Indexes
 
 # Follow symbolic links in this directory.
 Options +FollowSymLinks
+
+# Make Drupal handle any 404 errors.
+# ErrorDocument 404 /404.html
 
 # Force simple error message for requests for non-existent favicon.ico.
 <Files favicon.ico>
@@ -18,22 +21,30 @@ Options +FollowSymLinks
 DirectoryIndex index.html
 
 
+#--------------------------------
+# URL rewriting
+#--------------------------------
+
 # Various rewrite rules.
-<IfModule mod_rewrite.c>
-  RewriteEngine on
+RewriteEngine on
 
-  # To redirect all users to access the site WITHOUT the 'www.' prefix,
-  RewriteCond %{HTTP_HOST} !^www\.
-  RewriteRule ^(.*)$ http://www.%{HTTP_HOST}/$1 [R=301,L]
+# Redirect all to HTTPS
+RewriteCond %{SERVER_PORT} 80
+RewriteRule ^(.*)$ https://www.mybudgetview.com/$1 [R=301,L]
 
-  # Disable Automatic Directory detection
-  DirectorySlash Off
+# To redirect all users to access the site WITHOUT the 'www.' prefix
+RewriteCond %{HTTP_HOST} !^www\.
+RewriteRule ^(.*)$ https://www.%{HTTP_HOST}/$1 [R=301,L]
 
-  # Hide extension
-  RewriteCond %{REQUEST_FILENAME}\.html -f
-  RewriteRule ^(.*)$ $1.html
+# Hide extension for files corresponding to directories
+RewriteCond %{REQUEST_FILENAME} -d
+RewriteRule ^([^\.]+)$ /$1.html [NC,L]
 
-  Redirect permanent /mobile/app_privacy_policy /mobile/app-privacy-policy
-  Redirect permanent /managing-a-family-budget-guide /support/managing-a-family-budget-guide
+# RewriteCond %{REQUEST_FILENAME} !-f
+# RewriteRule ^([^\.]+)$ $1.html [NC,L]
 
-</IfModule>
+# Disable Automatic Directory detection
+DirectorySlash Off
+
+Redirect permanent /mobile/app_privacy_policy /mobile/app-privacy-policy
+Redirect permanent /managing-a-family-budget-guide /support/managing-a-family-budget-guide

@@ -1,0 +1,45 @@
+<FilesMatch "\.(engine|inc|info|install|module|profile|test|po|sh|.*sql|theme|tpl(\.php)?|xtmpl|svn-base)$|^(code-style\.pl|Entries.*|Repository|Root|Tag|Template|all-wcprops|entries|format)$">
+  Order allow,deny
+</FilesMatch>
+
+# Don't show directory listings for URLs which map to a directory.
+Options -Indexes
+
+# Follow symbolic links in this directory.
+Options +FollowSymLinks
+
+# Make Drupal handle any 404 errors.
+# ErrorDocument 404 /404.html
+
+# Force simple error message for requests for non-existent favicon.ico.
+<Files favicon.ico>
+  # There is no end quote below, for compatibility with Apache 1.3.
+  ErrorDocument 404 "The requested file favicon.ico was not found.
+</Files>
+
+# Set the default handler.
+DirectoryIndex index.html
+
+# Various rewrite rules.
+RewriteEngine on
+
+# Redirect all to HTTPS
+RewriteCond %{SERVER_PORT} 80
+RewriteRule ^(.*)$ https://budgetview.fr/$1 [R=301,L]
+
+# To redirect all users to access the site WITHOUT the 'www.' prefix
+RewriteCond %{HTTP_HOST} !^www\.
+RewriteRule ^(.*)$ https://www.%{HTTP_HOST}/$1 [R=301,L]
+
+# Hide extension for files corresponding to directories
+RewriteCond %{REQUEST_FILENAME} -d
+RewriteRule ^([^\.]+)$ /$1.html [NC,L]
+
+# RewriteCond %{REQUEST_FILENAME} !-f
+# RewriteRule ^([^\.]+)$ $1.html [NC,L]
+
+# Disable Automatic Directory detection
+DirectorySlash Off
+
+Redirect permanent /support/faq/enregistrer-code-activation /support/faq/general/enregistrer-code-activation
+Redirect permanent /guide-gestion-de-budget-familial /support/guide-gestion-de-budget-familial

@@ -189,7 +189,7 @@ public class DownloadTest extends ConnectedTestCase {
 
     NewVersionChecker newVersion = application.getNewVersion();
     newVersion.checkNewVersionShown();
-    newVersion.checkLink("http://www.mybudgetview.fr/support/derniers-changements");
+    newVersion.checkLink("https://www.mybudgetview.fr/support/derniers-changements");
     newVersion.hide();
     newVersion.checkNoNewVersionShown();
 

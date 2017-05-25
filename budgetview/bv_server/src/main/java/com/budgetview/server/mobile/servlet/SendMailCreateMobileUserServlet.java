@@ -51,7 +51,7 @@ public class SendMailCreateMobileUserServlet extends AbstractHttpServlet {
       boolean mkdir = dir.mkdir();
       logger.info(content + (mkdir? " created " : " not created"));
     }
-    URIBuilder builder = new URIBuilder("http://www.mybudgetview.fr:" + port + MobileConstants.CREATE_MOBILE_USER);
+    URIBuilder builder = new URIBuilder("https://www.mybudgetview.fr:" + port + MobileConstants.CREATE_MOBILE_USER);
     builder.addParameter(LicenseConstants.HEADER_MAIL_FROM, URLEncoder.encode(mail, "UTF-8"));
     builder.addParameter(MobileConstants.HEADER_LANG, lang);
     builder.addParameter(LicenseConstants.CODING, codedMail);
