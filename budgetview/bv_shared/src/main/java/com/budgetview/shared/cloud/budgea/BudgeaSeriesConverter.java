@@ -86,6 +86,10 @@ public class BudgeaSeriesConverter {
         BudgeaCategory.SUPERMARCHE,
         BudgeaCategory.TRAITEUR_CHOCOLATIER
     );
+    add(DefaultSeries.HOME,
+        BudgeaCategory.DECORATION_MOBILIER,
+        BudgeaCategory.BRICOLAGE_JARDINAGE
+    );
     add(DefaultSeries.HEALTH,
         BudgeaCategory.SANTE
     );
@@ -110,6 +114,7 @@ public class BudgeaSeriesConverter {
         BudgeaCategory.LOISIRS_CREATIFS,
         BudgeaCategory.MULTIMEDIA_LIVRES,
         BudgeaCategory.MUSIQUE,
+        BudgeaCategory.SPORTS_ACTIVITES,
         BudgeaCategory.TABAC_JEUX_D_ARGENT
     );
     add(DefaultSeries.RESTAURANT,

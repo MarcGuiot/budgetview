@@ -11,6 +11,7 @@ import com.budgetview.desktop.plaf.PicsouMacLookAndFeel;
 import com.budgetview.desktop.utils.Gui;
 import com.budgetview.session.SessionDirectory;
 import com.budgetview.utils.Lang;
+import org.globsframework.utils.Log;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
@@ -44,6 +45,7 @@ public class DevDesktopApp {
   public static Directory run(String user, String password, String snapshot) throws Exception {
     Application.clearRepositoryIfNeeded();
     Application.changeDate();
+    Log.setDebugEnabled(true);
 
     Directory directory = Application.createDirectory();
 

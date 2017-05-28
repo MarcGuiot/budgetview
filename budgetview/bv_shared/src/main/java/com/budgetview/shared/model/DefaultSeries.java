@@ -28,10 +28,11 @@ public enum DefaultSeries implements GlobConstantContainer {
   HEALTH_INSURANCE("healthInsurance", 28, BudgetArea.RECURRING),
 
   GROCERIES("groceries", 13, BudgetArea.VARIABLE),
+  HOME("home", 33, BudgetArea.RECURRING),
   HEALTH("health", 14, BudgetArea.VARIABLE),
-  PHYSICIAN("physician", 15, BudgetArea.VARIABLE, HEALTH),
-  PHARMACY("pharmacy", 16, BudgetArea.VARIABLE, HEALTH),
-  REIMBURSEMENTS("reimbursements", 17, BudgetArea.VARIABLE, HEALTH),
+  PHYSICIAN("physician", 15, BudgetArea.VARIABLE),
+  PHARMACY("pharmacy", 16, BudgetArea.VARIABLE),
+  REIMBURSEMENTS("reimbursements", 17, BudgetArea.VARIABLE),
   LEISURES("leisures", 18, BudgetArea.VARIABLE),
   CLOTHING("clothing", 19, BudgetArea.VARIABLE),
   BEAUTY("beauty", 20, BudgetArea.VARIABLE),
@@ -60,17 +61,11 @@ public enum DefaultSeries implements GlobConstantContainer {
   private final String name;
   private final int id;
   private final BudgetArea budgetArea;
-  private final DefaultSeries parent;
 
   DefaultSeries(String name, int id, BudgetArea budgetArea) {
-    this(name, id, budgetArea, null);
-  }
-
-  DefaultSeries(String name, int id, BudgetArea budgetArea, DefaultSeries parent) {
     this.name = name;
     this.id = id;
     this.budgetArea = budgetArea;
-    this.parent = parent;
   }
 
   static {
@@ -98,10 +93,6 @@ public enum DefaultSeries implements GlobConstantContainer {
 
   public int getId() {
     return id;
-  }
-
-  public DefaultSeries getParent() {
-    return parent;
   }
 
   public String toString() {

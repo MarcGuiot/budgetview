@@ -92,4 +92,8 @@ public class Log {
   public static boolean debugEnabled() {
     return debugEnabled;
   }
+
+  public static void setDebugEnabled(boolean debugEnabled) {
+    Log.debugEnabled = debugEnabled;
+  }
 }

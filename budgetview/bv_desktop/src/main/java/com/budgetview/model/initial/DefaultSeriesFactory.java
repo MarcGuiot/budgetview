@@ -1,7 +1,10 @@
 package com.budgetview.model.initial;
 
 import com.budgetview.desktop.description.Labels;
-import com.budgetview.model.*;
+import com.budgetview.model.Account;
+import com.budgetview.model.ProfileType;
+import com.budgetview.model.Series;
+import com.budgetview.model.SignpostStatus;
 import com.budgetview.shared.model.BudgetArea;
 import com.budgetview.shared.model.DefaultSeries;
 import org.globsframework.model.FieldValuesBuilder;
@@ -53,25 +56,17 @@ public class DefaultSeriesFactory {
     Map<DefaultSeries, Key> seriesToKeys = new HashMap<DefaultSeries, Key>();
 
     for (DefaultSeries defaultSeries : DefaultSeries.values()) {
-      DefaultSeries parent = defaultSeries.getParent();
-      if (parent == null) {
-        BudgetArea budgetArea = defaultSeries.getBudgetArea();
-        FieldValuesBuilder builder = FieldValuesBuilder.init()
-          .set(Series.NAME, Labels.get(defaultSeries))
-          .set(Series.IS_AUTOMATIC, budgetArea.isAutomatic())
-          .set(Series.BUDGET_AREA, budgetArea.getId())
-          .set(Series.TARGET_ACCOUNT, budgetArea == BudgetArea.TRANSFER ? null : Account.MAIN_SUMMARY_ACCOUNT_ID)
-          .set(Series.PROFILE_TYPE, ProfileType.EVERY_MONTH.getId())
-          .set(Series.IS_INITIAL, Boolean.TRUE);
+      BudgetArea budgetArea = defaultSeries.getBudgetArea();
+      FieldValuesBuilder builder = FieldValuesBuilder.init()
+        .set(Series.NAME, Labels.get(defaultSeries))
+        .set(Series.IS_AUTOMATIC, budgetArea.isAutomatic())
+        .set(Series.BUDGET_AREA, budgetArea.getId())
+        .set(Series.TARGET_ACCOUNT, budgetArea == BudgetArea.TRANSFER ? null : Account.MAIN_SUMMARY_ACCOUNT_ID)
+        .set(Series.PROFILE_TYPE, ProfileType.EVERY_MONTH.getId())
+        .set(Series.IS_INITIAL, Boolean.TRUE);
 
-        Glob series = repository.create(Series.TYPE, builder.toArray());
-        seriesToKeys.put(defaultSeries, series.getKey());
-      }
-      else {
-        repository.create(SubSeries.TYPE,
-                          value(SubSeries.NAME, Labels.get(defaultSeries)),
-                          value(SubSeries.SERIES, seriesToKeys.get(parent).get(Series.ID)));
-      }
+      Glob series = repository.create(Series.TYPE, builder.toArray());
+      seriesToKeys.put(defaultSeries, series.getKey());
     }
 
     SignpostStatus.setPeriodicitySeriesKey(seriesToKeys.get(DefaultSeries.ELECTRICITY), repository);

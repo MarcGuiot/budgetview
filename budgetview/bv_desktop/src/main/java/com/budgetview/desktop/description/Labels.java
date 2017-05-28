@@ -25,11 +25,6 @@ public class Labels {
   }
 
   public static String getKey(DefaultSeries defaultSeries) {
-    if (defaultSeries.getParent() == null) {
-      return "defaultSeries." + defaultSeries.getName();
-    }
-    else {
-      return "defaultSeries." + defaultSeries.getParent().getName() + "." + defaultSeries.getName();
-    }
+    return "defaultSeries." + defaultSeries.getName();
   }
 }
