@@ -7,12 +7,16 @@ Configuration des DNS OVH
 
 DNS Zones
 
+    https://www.ovh.com/manager/web/index.html#/configuration/domain/mybudgetview.fr?tab=ZONE
+
+
     Domain	                TTL	    Type	Target
     ----------------------------------------------------
-    mybudgetview.fr.	    0	    A	    5.196.26.111
-    www.mybudgetview.fr.    0	    A	    5.196.26.111
+    mybudgetview.fr.	    0	    A	    164.132.235.17
+    www.mybudgetview.fr.    0	    A	    164.132.235.17
 
-cf fichier mybudgetview_fr_dns.txt
+
+==> cf fichier mybudgetview_fr_dns.txt
 
 
 --------------
@@ -20,6 +24,9 @@ cf fichier mybudgetview_fr_dns.txt
 --------------
 
 Multisite
+
+    https://www.ovh.com/manager/web/index.html#/configuration/hosting/mybudgetview.fr?tab=MULTISITE
+
 
     Domain	               Root folder	  Separate logs	   Firewall       SSL
     -----------------------------------------------------------------------------
@@ -31,4 +38,4 @@ Multisite
 3/ .htaccess
 --------------
 
-Verifier que les réécritures d'URL pointent bien vers https://www.mybudgetview.fr/[...]
+    Verifier que les réécritures d'URL pointent bien vers https://www.mybudgetview.fr/[...]

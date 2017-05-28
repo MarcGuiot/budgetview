@@ -1,873 +1,893 @@
 <div id="changelog" class="log">
 
 
-        <h2>Dernières nouvelles <span class="date">Mars 2017</span></h2>
-        <p>Les connexions automatiques aux banques ne fonctionnent plus depuis que ces dernières ont changé le système d'accès
-            aux comptes. La mise à jour régulière prenant trop de temps, je travaille depuis plusieurs mois sur une solution
-            alternative qui évitera ces désagréments tout en élargissant la connexion à la quasi-totalité des banques Françaises.
-        </p>
-        <p>Cette solution, qui s'appuie sur un service externe, fera l'objet d'un abonnement payant pour un montant que
-            je tâcherai de conserver aussi réduit que possible.</p>
-        <p>En attendant que cela soit terminé, je vous invite à poursuivre les mises à jour de vos relevés en les
-            téléchargeant vous-mêmes sur le site de votre banque.</p>
-        <p>Je vous remercie pour votre patience,</p>
-        <p>Régis.</p>
+  <!------------------------------>
 
-    <!------------------------------>
+  <h2>version 4.10 <span class="date">31 mai 2017</span></h2>
 
-    <h2>version 4.03 <span class="date">14 février 2016</span></h2>
+  <div class="centered-image">
+    <img id="extensions-image" hspace="30" vspace="10" align="left" width="220" height="170"
+         src="/files/images_fr/cloud/cloud.png"
+         alt="BudgetView Cloud : accès automatique aux banques"/>
+  </div>
 
-    <h3>Nouvelle mécanique d'installation</h3>
+  <p>L'une des principales difficultés dont vous nous avez fait part est la récupération et la catégorisation initiale
+    de vos relevés.</p>
+  <p>Une mécanique de connexion directe aux établissements bancaires était disponible, mais celle-ci
+    ne couvrait qu'une poignée de banques et était fréquemment hors service du fait de changements dans les
+    interfaces offertes par les banques.</p>
 
-    <img src="/files/images_fr/support/versions/v4_03/budgetview_installer_icon.png" align="right" hspace="30"
-         alt="Installation BudgetView"/>
-    <p>Le premier changement visible concerne l'installation de BudgetView, que nous avons reprise de fond en comble :</p>
+  <p>Nous avons donc entrepris il y a un an la création d'un nouveau service "Cloud" qui offre&nbsp;:</p>
+  <ul>
+    <li>un accès direct à une soixantaine d'établissements financiers</li>
+    <li>la catégorisation automatique d'une partie de vos opérations dès le premier import</li>
+  </ul>
+  <p>Pour en savoir davantage, consultez notre page <a href="/cloud" class="highlighted">BudgetView Cloud</a></p>
+
+  <h3>Installation</h3>
+
+  <p>Vous êtes utilisateur de BudgetView 3 ? Un point important doit être noté avant d'installer la version
+    4&nbsp;:</p>
+
+  <div class="warning-block">
+    <p>La version 4 de BudgetView introduit des changements importants dans la façon dont votre budget
+      est représenté au sein du logiciel. Nous avons intensivement testé l'ensemble, que ce soit à travers une
+      batterie de plus de 1500 tests automatiques ou bien à travers nos propres tests manuels, mais par précaution
+      nous
+      vous recommandons de <a href="/support/faq/donnees/sauvegarde" class="highlighted">faire une sauvegarde de
+        vos données</a> avant d'installer la nouvelle version.</p>
+  </div>
+
+  <p><b>Pour télécharger cette version</b>, rendez-vous sur notre page Téléchargement dès maintenant&nbsp;:
+  </p>
+
+  <p class="centered">
+    <a href="/telechargement">
+      <button type="button" class="btn btn-primary">Télécharger</button>
+    </a>
+  </p>
+
+  <p>Et comme d'habitude, n'hésitez pas à nous écrire à l'adresse
+    <a href="mailto:support@mybudgetview.fr" class="highlighted">support@mybudgetview.fr</a>
+    pour nous faire part de vos commentaires sur cette nouvelle version.</p>
+
+
+  <!------------------------------>
+
+  <h2>version 4.03 <span class="date">14 février 2016</span></h2>
+
+  <h3>Nouvelle mécanique d'installation</h3>
+
+  <img src="/files/images_fr/support/versions/v4_03/budgetview_installer_icon.png" align="right" hspace="30"
+       alt="Installation BudgetView"/>
+  <p>Le premier changement visible concerne l'installation de BudgetView, que nous avons reprise de fond en comble :</p>
+  <ul>
+    <li>Sur Windows et Mac OS X il n'est maintenant plus nécessaire que vous installiez Java vous-mêmes sur votre
+      ordinateur. Cela rend l'installation bien plus simple, fonctionne sans manipulations étranges sur Mac
+      (Yosemite et El Capitan), et vous évite les mises à jour fréquentes de Java.
+    </li>
+    <li>Sur Linux, vous disposez maintenant de nombreuses options : une version "script Shell" qui gère
+      l'installation automatique ainsi que des packages RPM (Red Hat, Debora, Suse...) et DEB (Debian, Ubuntu...).
+      Nous avons même fait marcher BudgetView sans problème sur un Raspberry Pi&nbsp;!
+    </li>
+  </ul>
+  <p>La conséquence de ce changement est que la mise à jour automatique ne fonctionnera pas pour cette version :
+    vous devez installer vous même le logiciel sur votre ordinateur.</p>
+
+  <h3>Nouvelle présentation</h3>
+
+  <p>Le second changement visible de cette version concerne l'interface&nbsp:</p>
+
+  <div class="centered-image">
+    <img src="/files/images_fr/support/versions/v4_03/new_look.png"
+         alt="BudgetView : nouvelle présentation pour la version 4.03"/>
+  </div>
+
+  <p>Nous avons revu la présentation de l'application pour&nbsp;:</p>
+  <ul>
+    <li>Mieux guider les nouveaux utilisateurs</li>
+    <li>Avoir un affichage plus propre sur les écrans Retina</li>
+    <li>Faciliter la sélection des mois (via un menu accessible en cliquant sur le mois en haut à gauche de l'écran)
+    </li>
+  </ul>
+
+  <p>Si vous disposez des <a href="/extensions">extensions</a>, vous pouvez maintenant voir l'évolution du solde
+    de vos comptes sur 4 mois au lieu de 2 dans les vues Tableau de Bord, Budget et Relevés.</p>
+
+  <h3>Evolution de la gestion des comptes d'épargne</h3>
+
+  <p>Il est désormais possible de catégoriser des opérations de comptes d'épargne dans des enveloppes qui se trouvent
+    en dehors du poste budgétaire "Virements". Application immédiate : vous pouvez maintenant créer une enveloppe
+    "Intérêts de compte d'épargne" dans le poste "Revenus" pour y classer vos opérations d'intérêts.</p>
+
+  <p>Il nous reste encore du travail pour rendre la gestion des virements internes robuste et facile à comprendre.
+    Cela fera partie de nos travaux pour les prochaines versions.</p>
+
+
+  <h3>Amélioration de l'aide en ligne</h3>
+
+  <p>Nous avons supprimé l'aide intégrée au logiciel et enrichi l'<a href="/support">aide en ligne</a> de manière à
+    avoir un ensemble plus complet et cohérent.</p>
+
+  <h3>Correctifs</h3>
+
+  <p>Et comme toujours, cette version apporte son lot de corrections&nbsp;:</p>
+  <ul>
+    <li>La vue Tableau de Bord affichait dans certains cas une longue suite de 00000.</li>
+    <li>Certaines connexions automatiques à La Banque Postale échouaient lorsqu'il n'y avait aucun compte d'épargne
+      enregistré, et le bouton "Valider" sur la fenêtre de connexion était parfois masqué.
+    </li>
+    <li>La connexion directe au CIC échouait pour certains comptes seulement.</li>
+    <li>L'action Annuler ne fonctionnait pas correctement après avoir utilisé la fonction "Décaler le solde au mois
+      suivant".
+    </li>
+    <li>Les sous-enveloppes n'étaient pas correctement triées dans la vue Catégorisation.</li>
+  </ul>
+
+  <p>Nous continuons à travailler sur un correctif pour la connexion automatique au site BNP Paribas, mais celui-ci
+    n'est pas encore terminé.
+    Il fera l'objet d'une prochaine version.</p>
+
+  <!------------------------------>
+
+  <h2>version 4.02 <span class="date">31 août 2015</span></h2>
+
+  <p>Pour cette version nous avons avant tout cherché à faciliter l'accès aux nouveaux venus.
+    Nous avons ainsi amélioré l'assistant de guidage initial, mais aussi revu en profondeur
+    l'organisation de la fenêtre d'édition des enveloppes&nbsp;:</p>
+
+  <div class="centered-image">
+    <img src="/files/images_fr/support/versions/v4_02/edition_previsionnel.png"
+         alt="Nouvelle fenêtre d'édition du prévisionnel des enveloppes"/>
+  </div>
+
+  <p>En termes de nouvelles fonctionnalités, si vous utilisez l'extension "Analyse" vous verrez une nouvelle entrée&nbsp;:
+    l'évolution des enveloppes. Cette vue vous permet d'observer l'évolution de chacune de vos enveloppes dans le
+    temps,
+    jusqu'aux trois dernières années. </p>
+
+  <div class="centered-image">
+    <img src="/files/images_fr/support/versions/v4_02/analyse_vue_evolution.png"
+         alt="Extension Analyse : nouvelle vue 'Evolution'"/>
+  </div>
+
+  <p>Côté futur, nous avons fait passer l'horizon maximum à 60 mois dans le panneau Préférences.</p>
+
+  <p>Nous avons aussi ajouté quelques jeux de couleurs. Vous pouvez changer le thème dans le menu Fichier /
+    Préférences, parmi les choix suivants&nbsp;:</p>
+
+  <div class="centered-image">
+    <img src="/files/images_fr/support/versions/v4_02/themes_couleurs.png" alt="Nouveau jeu de couleurs"/>
+  </div>
+
+  <p>Et comme d'habitude nous avons aussi corrigé quelques bugs que vous nous avez signalés. Notez que si vous
+    rencontrez des problèmes de connexion à votre banque vous pouvez maintenant nous faire parvenir facilement les
+    informations correspondantes.</p>
+
+  <!------------------------------>
+
+  <h2>version 4.01 <span class="date">9 mai 2015</span></h2>
+
+  <p>Cette version comporte quelques correctifs, notamment pour la connexion directe à La Banque Postale et
+    la gestion de la suppression de comptes.</p>
+
+  <!------------------------------>
+
+  <h2>version 4.0 <span class="date">19 avril 2015</span></h2>
+
+
+  <h3>Une toute nouvelle présentation</h3>
+
+  <p>Au cours des derniers mois, nous avons repris la logique de l'ensemble de l'interface de manière à simplifier
+    deux choses&nbsp;: la découverte de l'application par les nouveaux utilisateurs et la gestion individuelle des
+    comptes.
+    Nous avons donc le plaisir de vous proposer une toute nouvelle organisation de l'interface du
+    logiciel&nbsp;:</p>
+
+  <div class="centered-image">
+    <img src="/files/images_fr/support/versions/v4_0/nouvelle_interface.png"/>
+  </div>
+
+  <p>Les principaux changements sont détaillés ci-dessous.</p>
+
+  <h3>La météo de vos comptes</h3>
+
+  <p>Gérer ses comptes, c'est tout d'abord répondre à la question : "Est-ce que l'un de mes comptes risque de passer
+    dans le rouge&nbsp;?"</p>
+
+  <p>BudgetView 4.0 répond directement à cette question&nbsp;:</p>
+
+  <div class="centered-image">
+    <img src="/files/images_fr/support/versions/v4_0/meteo.png"/>
+  </div>
+
+  <p>Des prévisions vous sont proposées sur chacun de vos comptes : une météo couverte ou pluvieuse indique le risque
+    que votre compte passe à découvert d'ici la fin du mois prochain.</p>
+
+  <h3>Fitrage par comptes</h3>
+
+  <p>Les vues Tableau de Bord, Budget et Comptes présentent dorénavant une même liste de comptes sur le bord gauche&nbsp;:</p>
+
+  <div class="centered-image">
+    <img src="/files/images_fr/support/versions/v4_0/filtrage_compte.png"/>
+  </div>
+
+  <p>Vous pouvez afficher ou masquer le graphe de l'évolution du solde de chacun de vos comptes, mais aussi
+    sélectionner un
+    compte pour ne voir que les informations correspondantes dans le reste de la vue. Avec cette nouvelle logique,
+    vous
+    pilotez bien plus finement chacun de vos comptes courants.</p>
+
+  <p>Avec ces évolutions, la vue spécifique des comptes d'épargne a disparu : les comptes d'épargne sont maintenant
+    représentés exactement de la même manière que les comptes courants.</p>
+
+
+  <h3>Multi-comptes plus souple</h3>
+
+  <p>Depuis les origines de BudgetView, le calcul du prévisionnel était réalisé pour les comptes courants pris dans
+    leur ensemble - il n'était pas possible de suivre l'évolution d'un compte courant en particulier.</p>
+
+  <p>Dans la version 3.14, nous avons permis de suivre chaque compte individuellement en associant chaque enveloppe
+    à un compte donné. Il se trouve
+    cependant que cette solution était trop contraignante pour certains de nos utilisateurs, obligeant dans certains
+    cas à dupliquer plusieurs enveloppes.</p>
+
+  <p>La version 4.0 remédie à cela en proposant un mode beaucoup plus souple&nbsp;: les enveloppes sont par défaut
+    associées à
+    l'ensemble des comptes courants, et la projection dans le futur se base sur le comportement observé au cours des
+    deux dernier mois.</p>
+
+  <div class="centered-image">
+    <img src="/files/images_fr/support/versions/v4_0/enveloppes_multi_comptes.png"/>
+  </div>
+
+  <p>Ainsi, si vous n'utilisez que l'un de vos comptes pour votre enveloppe Loisirs, le calcul du prévisionnel ne
+    prendra
+    en compte que ce compte-là. Si vous avez effectué un tiers des dépenses sur un compte et deux tiers sur un
+    autre,
+    cette même répartition s'appliquera dans la prévision. </p>
+
+  <p>Dans les cas où vous le jugez nécessaire, il vous est toujours possible d'éditer n'importe quelle enveloppe et
+    préciser qu'elle ne s'applique qu'à un compte donné. Les projections se feront alors exclusivement sur ce
+    compte,
+    et l'enveloppe ne sera visible dans la vue Catégorisation que lorsque vous sélectionnerez une opération de ce
+    compte.</p>
+
+  <h3>Virements</h3>
+
+  <p>Nous avons revu la façon de représenter vos virements entre vos comptes. Désormais, le bloc "Epargne" de la vue
+    Budget devient "Virements" et accueille tous vos virements : virements vers ou à partir de vos comptes
+    d'épargne,
+    mais aussi virements entre vos comptes courants.</p>
+
+  <h3>Une version de base gratuite</h3>
+
+  <p>Pour faire profiter du meilleur budget prévisionnel à un plus grand nombre d'utilisateurs, nous rendons le coeur
+    de
+    BudgetView 4.0 gratuit. Certaines fonctionnalités deviennent des extensions payantes&nbsp;:</p>
+  <ul>
+    <li>La constitution de <b>groupes d'enveloppes</b> dans la vue Budget</li>
+    <li>La gestion des <b>projets</b></li>
+    <li>L'ensemble de la vue <b>analyse</b></li>
+    <li>La visualisation du budget sur <b>mobile Android</b></li>
+  </ul>
+
+  <p>Ces extensions sont présentées dans une vue dédiée&nbsp;:</p>
+
+  <div class="centered-image">
+    <img src="/files/images_fr/support/versions/v4_0/extensions.png"/>
+  </div>
+
+  <p>Si vous aviez acheté un code d'activation BudgetView pour les versions antérieures, celui-ci reste bien sûr
+    valable et active
+    automatiquement l'ensemble des extensions disponibles.</p>
+
+
+  <!------------------------------>
+
+  <h2>version 3.14.4 <span class="date">4 octobre 2014</span></h2>
+
+  <p>BudgetView évolue depuis des années sur la base des suggestions dont vous nous faites part. Les deux plus
+    fréquentes ces derniers mois étaient d'une part la possibilité de suivre plusieurs comptes courants
+    individuellement,
+    et d'autre part de pouvoir regrouper les enveloppes pour y voir plus clair dans votre budget. </p>
+
+  <h3>Suivi par comptes</h3>
+
+  <p>La nouvelle version de BudgetView vous permet de gérer finement plusieurs comptes courants simultanément.
+    Cela est utile par exemple lorsque vous disposez d'un compte joint et de comptes personnels.
+
+  <p>
+
+  <p>Voici par exemple la nouvelle vue Budget&nbsp;:</p>
+
+  <div class="centered-image">
+    <img src="/files/images_fr/support/versions/v3_14b/multi_comptes_vue_budget.png"/>
+  </div>
+
+  <p>Les graphiques de la vue Tableau de Bord sont eux aussi séparés par compte&nbsp;:</p>
+
+  <div class="centered-image">
+    <img src="/files/images_fr/support/versions/v3_14b/multi_comptes_tableau_de_bord.png"/>
+  </div>
+
+  <h3>Groupes d'enveloppes</h3>
+
+  <p>Pour y voir plus clair dans votre budget, vous pouvez placer plusieurs enveloppes dans un même groupe comme
+    suit&nbsp;:</p>
+
+  <div class="centered-image">
+    <img src="/files/images_fr/support/versions/v3_14b/groupes_enveloppes.png"/>
+  </div>
+
+  <p>Pour ajouter une enveloppe dans un nouveau groupe ou un groupe existant,
+    cliquez sur son nom dans la vue Budget&nbsp;:</p>
+
+  <div class="centered-image">
+    <img src="/files/images_fr/support/versions/v3_14b/ajout_enveloppe_groupe.png"/>
+  </div>
+
+  <p>A la différence des sous-enveloppes qui sont proposées depuis longtemps dans l'application,
+    les groupes d'enveloppes vous permettent de gérer un budget prévu au niveau de chaque élément.
+    Vous pouvez y voir plus clair dans votre budget sans perdre le finesse de votre prévisionnel.
+  </p>
+
+  <h3>Mise à jour de vos données</h3>
+
+  <div class="warning-block">
+
+    <p>Le suivi individuel des comptes courants implique une conséquence importante&nbsp;:
+      chaque enveloppe ou chaque élément de projet doit dorénavant être associé à un et un seul compte
+      courant.</p>
+
+    <p>De ce fait, si vous êtes déjà utilisateur de BudgetView vos données doivent être revues pour être compatibles
+      avec cette nouvelle version.
+      Pour en savoir plus, suivez notre <a href="/support/versions/v3-14b-maj" class="highlighted">guide de mise à
+        jour</a>.</p>
+  </div>
+
+  <h3>Autres évolutions</h3>
+  <ul>
+    <li>Correction du téléchargement direct pour la Banque Postale (v3.14) et la Caisse d'Epargne (v3.14.2)</li>
+    <li>Résolution d'un problème de limitation mémoire sous Mac</li>
+    <li>Correction d'erreurs dans des cas particuliers d'utilisation des virements dans les projets (v3.14.3).</li>
+    <li>Correction d'erreurs dans certaines manipulations de comptes source/destination dans les enveloppes
+      d'épargne (v3.14.4).
+    </li>
+  </ul>
+
+  <!------------------------------>
+
+  <h2>version 3.13 <span class="date">11 janvier 2014</span></h2>
+
+  <p>BudgetView mémorise maintenant la taille de la fenêtre et des blocs des différentes vues.
+    A chaque lancement, vous retrouvez donc l'application telle que vous l'aviez laissée.</p>
+
+  <p>Vous pouvez dupliquer un projet existant pour le reproduire dans le futur.</p>
+
+  <p>Les opérations réparties sont mises en évidence dans les tables des vues Budget et Catégorisation.</p>
+
+  <p>Correction d'une erreur de mise à jour du solde des comptes.</p>
+
+  <p>...et autres corrections/ajustements mineurs.</p>
+
+  <!------------------------------>
+
+  <h2>version 3.12 <span class="date">5 décembre 2013</span></h2>
+
+  <p>Cette version comporte quelques évolutions pratiques :</p>
+  <ul>
+    <li>Vous pouvez maintenant lancer l'import de vos relevés à partir d'un bouton facilement accessible dans toutes
+      les vues de l'application :
+    </li>
+  </ul>
+
+  <div class="centered-image">
+    <img src="/files/images_fr/support/versions/v3_12/import_button.png"/>
+  </div>
+
+  <ul>
+    <li>Sur la vue d'accueil, vous pouvez escamoter le panneau d'affichage des projets pour
+      agrandir les graphes de projection du solde de vos comptes&nbsp;:
+    </li>
+  </ul>
+  <div class="centered-image">
+    <img src="/files/images_fr/support/versions/v3_12/escamotage_projets.png"/>
+  </div>
+
+  <ul>
+    <li>Le montant mensuel est dorénavant affiché dans le graphe d'évolution du solde d'épargne, dans la vue
+      d'accueil.
+    </li>
+    <li>Evolution de l'import CSV permettant d'utiliser les fichiers d'Axa Banque.</li>
+    <li>Dans la vue Comptes, il est maintenant possible d'escamoter le graphe sous la liste des transactions
+      en utilisant le menu "Actions" en haut à gauche de l'écran, puis en sélectionnant l'option
+      "Masquer le graphe d'évolution du solde".
+    </li>
+    <li>Corrections du téléchargement direct pour les banques CIC et American Express France</li>
+    <li>Correction de l'export OFX: le tag TRNTYPE est maintenant DEBIT pour les montants négatifs.</li>
+    <li>Correction d'une erreur de calcul dans l'affichage des montants d'épargne de la vue Analyse.</li>
+  </ul>
+
+  <!------------------------------>
+
+  <h2>version 3.11 <span class="date">13 octobre 2013</span></h2>
+
+  <p>Cette version comporte quelques correctifs, notamment pour la connexion directe BNP et deux erreurs survenant
+    dans des cas particuliers de mise à jour des données.</p>
+
+  <!------------------------------>
+
+  <h2>version 3.10 <span class="date">29 septembre 2013</span></h2>
+
+  <p>Cette version comporte une évolution majeure de la gestion des projets&nbsp;:</p>
+
+  <div class="centered-image">
+    <img src="/files/images_fr/support/versions/v3_10/refonte_projets.png" alt="Nouvelle gestion des projets"
+         style="margin:10px;"/>
+  </div>
+  <p>Vous pouvez maintenant&nbsp;:</p>
+  <ul>
+    <li>Activer / désactiver des projets ou des éléments pour procéder à des simulations</li>
+    <li>Décaler tous les éléments d'un projet</li>
+    <li>Intégrer des dépenses répétées sur plusieurs mois, par exemple des crédits</li>
+    <li>Intégrer des virements, notamment entre vos comptes d'épargne et vos comptes courants</li>
+    <li>Attribuer des images à vos projets, soit à partir d'images présentes sur votre ordinateur, soit en procédant
+      à des copier/coller à partir d'autres logiciels, par exemple votre navigateur internet
+    </li>
+    <li>Conserver des notes ou des liens sur les éléments des projets, et leur attribuer des images</li>
+  </ul>
+  <p>Pour commencer, nous vous recommandons de prendre le temps de mettre des images pour tous vos projets en cours
+    - vous verrez, cela donne une bien meilleure mine à votre budget&nbsp;!</p>
+
+  <!------------------------------>
+
+  <h2>version 3.09 <span class="date">16 août 2013</span></h2>
+
+  <p>Cette version comporte quelques correctifs, notamment dans le téléchargement direct à partir du CIC.</p>
+
+  <!------------------------------>
+
+  <h2>version 3.08 <span class="date">6 août 2013</span></h2>
+
+  <p>Cette version comporte quelques corrections dans les zones suivantes :</p>
+  <ul>
+    <li>Téléchargement direct à partir de la Caisse d'Epargne et de La Banque Postale.</li>
+    <li>Import de fichiers CSV.</li>
+    <li>Restauration de fichiers de sauvegarde.</li>
+  </ul>
+  <p>Elle propose également deux nouveaux thèmes de couleurs, que vous trouverez dans la fenêtre des Préférences.</p>
+
+
+  <h2>version 3.07 <span class="date">26 juin 2013</span></h2>
+
+  <p>Cette version comporte quelques évolutions et corrections mineures :</p>
+  <ul>
+    <li>Accès aux fonctions de suppression de comptes ou enveloppes à partir des menus de bouton droit (celles-ci
+      n'étaient auparavant disponibles qu'à travers la fenêtre d'édition)
+    </li>
+    <li>L'application accepte désormais les fichiers OFX non-standard dans lequel le solde utilise un format
+      du type "--100.00" (deux signes moins)
+    </li>
+    <li>L'application accepte les fichiers OFX qui comportent des opérations mais aucun compte.</li>
+    <li>Correction d'un blocage survenant par moments sur Mac au moment de quitter l'application.</li>
+    <li>Protection contre la corruption de données lorsque plusieurs applications BudgetView accèdent
+      simultanément au même répertoire de données. Veuillez noter toutefois que ce cas d'utilisation
+      n'est pas supporté, et doit être évité autant que possible.
+    </li>
+    <li>Correction d'une erreur de mise à jour de la date courante dans le logiciel,
+      dans certains cas où celui-ci reste ouvert sur plusieurs jours.
+    </li>
+    <li>Correction d'une erreur pouvant conduire à une utilisation d'une quantité de mémoire vive anormale.</li>
+  </ul>
+
+  <!------------------------------>
+
+  <h2>version 3.06 <span class="date">5 juin 2013</span></h2>
+  <ul>
+    <li>L'application mobile Android est maintenant disponible sur
+      <a href="https://play.google.com/store/apps/details?id=com.budgetview.android&hl=fr">Google Play</a>.
+    </li>
+    <li>Correction d'une erreur survenant dans le téléchargement direct de relevés auprès de la Caisse d'Epargne
+    </li>
+  </ul>
+
+  <!------------------------------>
+
+  <h2>version 3.05 <span class="date">26 mai 2013</span></h2>
+  <ul>
+    <li>Il est maintenant possible d'imprimer la liste des opérations affichée dans les vues Comptes et
+      Catégorisation. Pour lancer l'impression, utilisez les menus "Action" affichés à côté des listes
+      d'opérations.
+    </li>
+    <li>Reorganisation de la vue Comptes, avec pour chaque compte un nouveau graphe d'évolution du solde.
+      Vous pouvez cliquer sur chaque graphe pour voir les opérations correspondantes.
+    </li>
+    <li>Affichage du nombre d'opérations ignorées et classées automatiquement à la fin de chaque import.</li>
+    <li>Amélioration de l'affichage et des performances sous Windows.</li>
+    <li>Cette version inclut des corrections diverses, notamment dans l'import automatique des opérations à partir
+      de quelques banques Françaises.
+    </li>
+  </ul>
+
+  <!------------------------------>
+
+  <h2>version 3.03 <span class="date">28 avril 2013</span></h2>
+
+  <p>Cette version corrige des cas particuliers d'import direct de relevés auprès de deux banques&nbsp;: BNP Paribas
+    et Caisse d'Epargne.</p>
+
+  <!------------------------------>
+
+  <h2>version 3.0 <span class="date">21 avril 2013</span></h2>
+
+  <p>Au menu de cette nouvelle version&nbsp;:</p>
+  <ul>
+    <li>BudgetView se connecte dorénavant tout seul au site internet des principales banques Françaises,
+      sans que vous n'ayez à télécharger vous-mêmes vos fichiers de relevés&nbsp;! Pour en bénéficier, il vous
+      suffit,
+      lors de l'import de relevés, de sélectionner votre banque puis d'opter pour l'option "Connexion directe".
+    </li>
+  </ul>
+  <ul>
+    <li>L'application BudgetView pour Android est maintenant disponible en avant-première&nbsp;! Cette première
+      mouture
+      vous permet de visualiser votre budget où que vous soyez. Nous la rendons disponibles hors Google Play pour
+      le moment, afin de recueillir vos premiers retours pour nous aider à l'améliorer.
+    </li>
+  </ul>
+  <ul>
+    <li>Vous pouvez modifier une opération que vous avez saisie manuellement, en cliquant avec le bouton
+      droit sur l'opération en question dans les vues Comptes ou Catégorisation et en sélectionnant l'option
+      "Editer".
+    </li>
+    <li>Il vous est désormais possible de modifier le répertoire de stockage de l'application, par exemple pour le
+      mettre sur un répertoire partagé. Pour cela, rendez-vous dans "Fichier / Préférences..." puis sélectionnez
+      l'onglet "Stockage".
+    </li>
+    <li>Et comme toujours, ce version inclut les dernières corrections du logiciel.</li>
+  </ul>
+
+  <!------------------------------>
+
+  <h2>version 2.34 <span class="date">11 mars 2013</span></h2>
+  <ul>
+    <li>Import de fichiers CSV : l'application gère désormais les cas où certaines valeurs sont encadrées de
+      guillemets ("...")
+      ou de quotes ('...').
+    </li>
+    <li>Export CSV : ajout d'une colonne Compte, et traduction des en-têtes de colonnes dans la langue utilisée par
+      BudgetView.
+    </li>
+    <li>Il est désormais possible de changer la langue du logiciel (Anglais/Français) à partir des Préferences.</li>
+    <li>Nouveau thème de couleurs vert accessible dans les Préférences.</li>
+    <li>Correction d'erreurs diverses, notamment dans l'import de fichiers exportés par Microsoft Money, ou encore
+      dans le traitement des dates lorsque l'application reste ouverte plusieurs jours.
+    </li>
+  </ul>
+
+  <!------------------------------>
+
+  <h2>version 2.33 <span class="date">15 décembre 2012</span></h2>
+  <ul>
+    <li>La page <a href="/telechargement/linux">Téléchargement Linux</a> propose
+      désormais des packages ".deb" pour faciliter l'installation sur
+      les distributions Ubuntu et Debian.
+    </li>
+    <li>Correction d'une erreur de calcul du solde dans certains cas de mise à jour
+      des données lors de l'installation de la nouvelle version de l'application.
+    </li>
+  </ul>
+
+  <!------------------------------>
+
+  <h2>version 2.32 <span class="date">3 décembre 2012</span></h2>
+
+  <p>Saisie manuelle d'opérations :</p>
+  <ul>
+    <li>Vous pouvez maintenant saisir des opérations dans tous les comptes,
+      y compris ceux pour lesquels des imports de fichiers sont réalisés. Vous
+      pouvez ensuite réconcilier ces opérations lors d'imports ultérieurs.
+    </li>
+
+    <li>L'application complète automatiquement les libellés lors de la saisie,
+      et classe automatiquement les opérations sur la base des opérations existantes.
+    </li>
+  </ul>
+
+  <p>Gestion des comptes :</p>
+  <ul>
+    <li>BudgetView détecte maintenant les incohérences entre le solde d'un compte et la
+      séquence des opérations, ce qui permet de détecter des opérations absentes
+      ou en doublon.
+    </li>
+
+    <li>Vous pouvez dorénavant configurer les cartes à débit différé avec plus de souplesse&nbsp;-
+      par exemple pour des opérations réalisées du 20 au 20, et prélevées le 15 deux mois après.
+    </li>
+  </ul>
+
+  <p>Vue Analyse :</p>
+  <ul>
+    <li>Un clic droit sur les graphiques de la vue Analyse fait apparaître un menu
+      pour naviguer vers les opérations correspondantes.
+    </li>
+
+    <li>La table affichée au bas de la vue Analyse intègre les sous-enveloppes.</li>
+  </ul>
+
+  <p>Gestion des projets :</p>
+  <ul>
+    <li>Des sous-enveloppes sont maintenant créées automatiquement pour chaque composante
+      d'un projet. Vous pouvez alors voir dans la fenêtre d'édition du projet comment vos
+      dépenses évoluent dans le détail.
+    </li>
+  </ul>
+
+  <p>Impression :</p>
+  <ul>
+    <li>Une nouvelle page présente maintenant la vue "Budget",
+      avec l'ensemble des enveloppes et pour chacune
+      le niveau de revenus/dépenses prévu et réel.
+    </li>
+  </ul>
+
+  <p>Autres améliorations :</p>
+  <ul>
+    <li>De nouvelles fonctions du menu "Affichage" permettent de selectionner le mois en cours,
+      l'année en cours, etc.
+    </li>
+    <li>Ajout des principales banques Suisses et Belges.</li>
+    <li>Les opérations sont affichées en vert ou rouge, selon leur signe, dans les tableaux des vues Budget et
+      Catégorisation.
+    </li>
+    <li>Compatible avec les nouvelles règles de sécurité de Mac OS X Mountain Lion.</li>
+  </ul>
+
+  <!------------------------------>
+
+  <h2>version 2.31 <span class="date">18 juin 2012</span></h2>
+  <ul>
+    <li>Prise en charge de la version 1.7 de la plateforme Java, pour éviter une erreur
+      récurrente lors du chargement et la catégorisation des opérations.
+    </li>
+    <li>Cette version comporte également deux corrections, l"une dans l'affichage des sous-enveloppes
+      dans le tableau de la vue Analyse, et l'autre dans le traitement des cartes à débit différé.
+    </li>
+  </ul>
+
+  <!------------------------------>
+
+  <h2>version 2.29 <span class="date">18 mai 2012</span></h2>
+  <ul>
+    <li>Dans la vue Analyse, vous pouvez maintenant voir le détail des sous-enveloppes d'une enveloppe donnée.
+      Pour cela, cliquez dans le graphique de répartition d'une enveloppe qui contient des sous-enveloppes
+      : vous verrez apparaître un lien "Afficher les sous-enveloppes" qu'il vous suffit alors de cliquer.
+    </li>
+    <li>Cette version comporte également quelques correctifs, notamment dans l'import des fichiers OFX et CSV,
+      la connexion OFX directe aux banques, et l'affichage des enveloppes des projets dans la vue Budget.
+    </li>
+  </ul>
+
+  <!------------------------------>
+
+  <h2>version 2.28 <span class="date">2 mai 2012</span></h2>
+  <ul>
+    <li>Vous pouvez maintenant reporter le solde restant d'une enveloppe,
+      ou bien son dépassement, au mois suivant. Par exemple, si vous n'avez dépensé que 100.00
+      sur les 150.00 prévus de votre enveloppe Loisirs, ce fonction vous permet de reporter
+      automatiquement les 50.00 restants sur le mois suivant. Pour essayer, cliquez sur le nom
+      d'une enveloppe dans la vue Budget, et choisissez l'option de menu "Reporter...".
+    </li>
+    <li>BudgetView gère dorénavant mieux les formats de dates non-standard dans les fichiers OFX.</li>
+    <li>Dans l'écran de connexion initial, vous pouvez maintenant choisir un nom d'utilisateur
+      dans la liste des comptes existants.
+    </li>
+    <li>Cette version comporte également quelques correctifs. Par exemple, BudgetView ne demande
+      plus inutilement de connexions réseau entrantes,
+      et une erreur qui survenait parfois lors de l'édition d'une enveloppe a également été corrigée.
+    </li>
+  </ul>
+
+  <!------------------------------>
+
+  <h2>version 2.27 <span class="date">16 avril 2012</span></h2>
+  <ul>
+    <li>Si vous souhaitez mieux contrôler les prévisions faites par BudgetView pour vos dépenses futures,
+      vous pouvez désormais forcer une enveloppe donnée à ne prévoir qu'une opération par mois, à jour fixe.
+      Cela est utile par exemple pour indiquer que votre salaire est prévu le 29 de chaque mois. Pour régler
+      tout cela, cliquez sur le nom de l'enveloppe en question dans la vue Budget et rendez-vous dans l'onglet
+      "Planification".
+    </li>
+    <li>Vous pouvez également modifier le libellé des opérations, en cliquant avec le bouton droit
+      dans les tables des vues Catégorisation et Comptes.
+    </li>
+    <li>Lorsque vous importez vos fichiers, ou lorsque vous créez un compte,
+      vous pouvez maintenant ajouter une banque à la liste.
+    </li>
+    <li>Au moment de saisir une opération, il vous est dorénavant possible de choisir un mois dans le passé,
+      même si ce mois n'est pas affiché dans la barre de sélection de mois en haut de l'écran.
+    </li>
+    <li>Cette version corrige également quelques dysfonctionnements, notamment dans l'import de fichiers
+      CSV et dans l'affichage des projets.
+    </li>
+  </ul>
+
+  <!------------------------------>
+
+  <h2>version 2.25 <span class="date">13 mars 2012</span></h2>
+  <ul>
+    <li>Vous pouvez dorénavant importer vos fichiers CSV, par exemple produits à partir
+      d'un tableur comme Excel ou Numbers. Pour plus d'informations, consultez le
+      <a href="/support/faq/import/import-csv">guide d'import CSV</a>.
+    </li>
+    <li>Deux nouvelles options sont disponibles dans le menu des préférences&nbsp;:</li>
     <ul>
-        <li>Sur Windows et Mac OS X il n'est maintenant plus nécessaire que vous installiez Java vous-mêmes sur votre
-            ordinateur. Cela rend l'installation bien plus simple, fonctionne sans manipulations étranges sur Mac
-            (Yosemite et El Capitan), et vous évite les mises à jour fréquentes de Java.</li>
-        <li>Sur Linux, vous disposez maintenant de nombreuses options : une version "script Shell" qui gère
-            l'installation automatique ainsi que des packages RPM (Red Hat, Debora, Suse...) et DEB (Debian, Ubuntu...).
-            Nous avons même fait marcher BudgetView sans problème sur un Raspberry Pi&nbsp;!</li>
+      <li>Modifier le format utilisé pour l'affichage des dates</li>
+      <li>Modifier le thème de couleurs de l'application</li>
     </ul>
-    <p>La conséquence de ce changement est que la mise à jour automatique ne fonctionnera pas pour cette version :
-        vous devez installer vous même le logiciel sur votre ordinateur.</p>
+    <li>Lors de la première utilisation de l'application, il vous est proposé de voir BudgetView à l'oeuvre
+      à l'aide d'un compte de démonstration.
+    </li>
+    <li>Cette version corrige également quelques dysfonctionnements, notamment dans la suppression
+      manuelle d'opérations.
+    </li>
+  </ul>
 
-    <h3>Nouvelle présentation</h3>
+  <!------------------------------>
 
-    <p>Le second changement visible de cette version concerne l'interface&nbsp:</p>
+  <h2>version 2.23 <span class="date">29 janvier 2012</span></h2>
+  <ul>
+    <li>Vous pouvez maintenant <b>imprimer un rapport</b> de votre budget.
+      Choisissez pour cela l'option "Imprimer..." dans le menu Fichier. Notez bien qu'il
+      s'agit d'une toute première version de cette fonctionnalité, aussi n'hésitez pas à
+      <a href="mailto:support@mybudgetview.fr">nous faire part</a>
+      de vos commentaires sur ces rapports.
+    </li>
+    <li>Un même utilisateur peut dorénavant utiliser sa clef d'activation BudgetView
+      sur deux ordinateurs.
+    </li>
+    <li>Corrections de problèmes divers.</li>
+  </ul>
 
-    <div class="centered-image">
-        <img src="/files/images_fr/support/versions/v4_03/new_look.png"
-             alt="BudgetView : nouvelle présentation pour la version 4.03"/>
-    </div>
+  <!------------------------------>
 
-    <p>Nous avons revu la présentation de l'application pour&nbsp;:</p>
+  <h2>version 2.21 <span class="date">8 janvier 2012</span></h2>
+  <ul>
+    <li>Affichage des sous-enveloppes dans le tableau des opérations de la vue Comptes</li>
+    <li>Affichage du jour courant dans les graphiques d'évolution de soldes
+      de la vue Tableau de bord et de la vue Comptes
+    </li>
+  </ul>
+
+  <!------------------------------>
+
+  <h2>version 2.20 <span class="date">29 décembre 2011</span></h2>
+  <ul>
+    <li>Correction d'une erreur dans certains calculs des soldes des comptes</li>
+    <li>Correction d'un problème lors d'un double "Cmd-Q" sous Mac OS X</li>
+    <li>Les transactions créées manuellement ne sont plus pointées automatiquement
+      lors de la catégorisation
+    </li>
+  </ul>
+
+  <!------------------------------>
+
+  <h2>version 2.17 <span class="date">29 novembre 2011</span></h2>
+  <ul>
+    <li>Correction d'un blocage lorsque l'on quitte l'application à partir de la page d'accueil sous Mac OS X</li>
+    <li>Correction d'un problème dans la navigation d'une enveloppe de la vue Budget vers les opérations
+      correspondantes dans la vue Comptes
+    </li>
+    <li>Elimination des "tooltips" fantômes lors de l'utilisation de Alt-Tab sous Mac OS X</li>
+    <li>Ajout d'une dizaine de banques Françaises, notamment des banques en ligne</li>
+  </ul>
+
+  <!------------------------------>
+
+  <h2>version 2.14 <span class="date">31 octobre 2011</span></h2>
+  <ul>
+    <li>Import des catégories dans les fichiers Money</li>
+    <li>Correction d'une erreur survenant lors de l'import d'opérations pour un compte ayant été supprimé.</li>
+    <li>Correction d'une erreur survenant dans certains cas de suppression d'enveloppe (merci Bernard)</li>
+  </ul>
+
+  <!------------------------------>
+
+  <h2>version 2.13 <span class="date">18 octobre 2011</span></h2>
+  <ul>
+    <li>Clarification de l'écran d'import dans le cas où il y a plusieurs comptes dans un même fichier.</li>
+    <li>Correction d'un défaut qui pouvait causer l'invalidation répétée du code d'activation.</li>
+  </ul>
+
+  <!------------------------------>
+
+  <h2>version 2.12 <span class="date">9 octobre 2011</span></h2>
+  <ul>
+    <li>
+      Dans la vue Budget, vous pouvez maintenant passer votre souris pour voir le solde jour par jour, ainsi
+      que les enveloppes pour lesquelles il y a des opérations ce jour-là. Double-cliquez sur un jour pour voir
+      les opérations en question.Merci à Julien pour cette suggestion !
+    </li>
+
+    <li>
+      Toujours dans la vue Budget, de nouveaux indicateurs vous montrent l'évolution de chaque enveloppe par
+      rapport
+      au mois précédent. Vous pouvez ainsi identifier d'un coup d'oeil les principales augmentations de revenus ou
+      de
+      dépenses.
+    </li>
+
+    <li>
+      La vue d'accueil vous offre maintenant une vision plus claire de vos projets.
+    </li>
+
+    <li>
+      Pour les banques qui le proposent, BudgetView permet dorénavant d'importer directement
+      vos relevés d'opérations sans que vous n'ayez à télécharger de fichiers à la main sur
+      leur site internet. A notre connaissance parmi les grandes banques Françaises seule
+      La Banque Postale propose ce service aujourd'hui.</p>
+    </li>
+
+    <li>
+      Dans la vue Comptes, vous pouvez maintenant cliquer sur un compte pour voir uniquement les opérations
+      associées. Cette vue montre également l'évolution du solde des comptes au cours du mois.</p>
+    </li>
+
+    <li>
+      La vue Epargne est maintenant accessible à partir du bloc Epargne de la vue Budget.
+    </li>
+
+    <li>corrections et ajustements divers, en particulier :</li>
     <ul>
-        <li>Mieux guider les nouveaux utilisateurs</li>
-        <li>Avoir un affichage plus propre sur les écrans Retina</li>
-        <li>Faciliter la sélection des mois (via un menu accessible en cliquant sur le mois en haut à gauche de l'écran)</li>
+      <li>multi-sélection dans les graphiques de la vue analyse,</li>
+      <li>affichage du montant restant dans la fenêtre d'édition des projets,</li>
+      <li>corrections d'une erreur qui bloquait l'import de certains fichiers Microsoft Money,</li>
     </ul>
+  </ul>
 
-    <p>Si vous disposez des <a href="/extensions">extensions</a>, vous pouvez maintenant voir l'évolution du solde
-        de vos comptes sur 4 mois au lieu de 2 dans les vues Tableau de Bord, Budget et Relevés.</p>
+  <!------------------------------>
 
-    <h3>Evolution de la gestion des comptes d'épargne</h3>
+  <h2>version 2.08 <span class="date">28 juin 2011</span></h2>
+  <ul>
+    <li>Vous pouvez dorénavant pointer vos opérations dans la vue Catégorisation, pour vous assurer
+      que les opérations qui passent sur vos comptes bancaires sont en ligne avec celles que vous
+      suivez manuellement:<br/>
 
-    <p>Il est désormais possible de catégoriser des opérations de comptes d'épargne dans des enveloppes qui se trouvent
-        en dehors du poste budgétaire "Virements". Application immédiate : vous pouvez maintenant créer une enveloppe
-        "Intérêts de compte d'épargne" dans le poste "Revenus" pour y classer vos opérations d'intérêts.</p>
-
-    <p>Il nous reste encore du travail pour rendre la gestion des virements internes robuste et facile à comprendre.
-        Cela fera partie de nos travaux pour les prochaines versions.</p>
-
-
-    <h3>Amélioration de l'aide en ligne</h3>
-
-    <p>Nous avons supprimé l'aide intégrée au logiciel et enrichi l'<a href="/support">aide en ligne</a> de manière à avoir un ensemble plus complet et cohérent.</p>
-
-    <h3>Correctifs</h3>
-
-    <p>Et comme toujours, cette version apporte son lot de corrections&nbsp;:</p>
+      <div class="centered-image">
+        <img src="/files/images_fr/support/versions/v2/reconciliation.png"/>
+      </div>
+    </li>
+    <li>Corrections et ajustements divers, en particulier :</li>
     <ul>
-        <li>La vue Tableau de Bord affichait dans certains cas une longue suite de 00000.</li>
-        <li>Certaines connexions automatiques à La Banque Postale échouaient lorsqu'il n'y avait aucun compte d'épargne
-            enregistré, et le bouton "Valider" sur la fenêtre de connexion était parfois masqué.</li>
-        <li>La connexion directe au CIC échouait pour certains comptes seulement.</li>
-        <li>L'action Annuler ne fonctionnait pas correctement après avoir utilisé la fonction "Décaler le solde au mois suivant".</li>
-        <li>Les sous-enveloppes n'étaient pas correctement triées dans la vue Catégorisation.</li>
+      <li>une meilleure gestion des cartes à débit différé de La Banque Postale,</li>
+      <li>la prise en compte de certaines spécificités de Barclays dans la gestion du solde des comptes,</li>
+      <li>une meilleure gestion de la sélection des mois dans la fenêtre d'édition des enveloppes.</li>
     </ul>
-
-    <p>Nous continuons à travailler sur un correctif pour la connexion automatique au site BNP Paribas, mais celui-ci n'est pas encore terminé.
-        Il fera l'objet d'une prochaine version.</p>
-
-    <h3>Installation</h3>
-
-    <p>Vous êtes utilisateur de BudgetView 3 ? Un point important doit être noté avant d'installer la version
-        4&nbsp;:</p>
-
-    <div class="warning-block">
-        <p>La version 4 de BudgetView introduit des changements importants dans la façon dont votre budget
-            est représenté au sein du logiciel. Nous avons intensivement testé l'ensemble, que ce soit à travers une
-            batterie de plus de 1500 tests automatiques ou bien à travers nos propres tests manuels, mais par précaution
-            nous
-            vous recommandons de <a href="/support/faq/donnees/sauvegarde" class="highlighted">faire une sauvegarde de
-                vos données</a> avant d'installer la nouvelle version.</p>
-    </div>
-
-    <p><b>Pour télécharger cette version</b>, rendez-vous sur notre page Téléchargement dès maintenant&nbsp;:
-    </p>
-
-    <p class="centered">
-        <a href="/telechargement">
-            <button type="button" class="btn btn-primary">Télécharger</button>
-        </a>
-    </p>
-
-    <p>Et comme d'habitude, n'hésitez pas à nous écrire à l'adresse
-        <a href="mailto:support@mybudgetview.fr" class="highlighted">support@mybudgetview.fr</a>
-        pour nous faire part de vos commentaires sur cette nouvelle version.</p>
-
-    <!------------------------------>
-
-    <h2>version 4.02 <span class="date">31 août 2015</span></h2>
-
-    <p>Pour cette version nous avons avant tout cherché à faciliter l'accès aux nouveaux venus.
-        Nous avons ainsi amélioré l'assistant de guidage initial, mais aussi revu en profondeur
-        l'organisation de la fenêtre d'édition des enveloppes&nbsp;:</p>
-
-    <div class="centered-image">
-        <img src="/files/images_fr/support/versions/v4_02/edition_previsionnel.png"
-             alt="Nouvelle fenêtre d'édition du prévisionnel des enveloppes"/>
-    </div>
-
-    <p>En termes de nouvelles fonctionnalités, si vous utilisez l'extension "Analyse" vous verrez une nouvelle entrée&nbsp;:
-        l'évolution des enveloppes. Cette vue vous permet d'observer l'évolution de chacune de vos enveloppes dans le
-        temps,
-        jusqu'aux trois dernières années. </p>
-
-    <div class="centered-image">
-        <img src="/files/images_fr/support/versions/v4_02/analyse_vue_evolution.png"
-             alt="Extension Analyse : nouvelle vue 'Evolution'"/>
-    </div>
-
-    <p>Côté futur, nous avons fait passer l'horizon maximum à 60 mois dans le panneau Préférences.</p>
-
-    <p>Nous avons aussi ajouté quelques jeux de couleurs. Vous pouvez changer le thème dans le menu Fichier /
-        Préférences, parmi les choix suivants&nbsp;:</p>
-
-    <div class="centered-image">
-        <img src="/files/images_fr/support/versions/v4_02/themes_couleurs.png" alt="Nouveau jeu de couleurs"/>
-    </div>
-
-    <p>Et comme d'habitude nous avons aussi corrigé quelques bugs que vous nous avez signalés. Notez que si vous
-        rencontrez des problèmes de connexion à votre banque vous pouvez maintenant nous faire parvenir facilement les
-        informations correspondantes.</p>
-
-    <!------------------------------>
-
-    <h2>version 4.01 <span class="date">9 mai 2015</span></h2>
-
-    <p>Cette version comporte quelques correctifs, notamment pour la connexion directe à La Banque Postale et
-        la gestion de la suppression de comptes.</p>
-
-    <!------------------------------>
-
-    <h2>version 4.0 <span class="date">19 avril 2015</span></h2>
-
-
-    <h3>Une toute nouvelle présentation</h3>
-
-    <p>Au cours des derniers mois, nous avons repris la logique de l'ensemble de l'interface de manière à simplifier
-        deux choses&nbsp;: la découverte de l'application par les nouveaux utilisateurs et la gestion individuelle des
-        comptes.
-        Nous avons donc le plaisir de vous proposer une toute nouvelle organisation de l'interface du
-        logiciel&nbsp;:</p>
-
-    <div class="centered-image">
-        <img src="/files/images_fr/support/versions/v4_0/nouvelle_interface.png"/>
-    </div>
-
-    <p>Les principaux changements sont détaillés ci-dessous.</p>
-
-    <h3>La météo de vos comptes</h3>
-
-    <p>Gérer ses comptes, c'est tout d'abord répondre à la question : "Est-ce que l'un de mes comptes risque de passer
-        dans le rouge&nbsp;?"</p>
-
-    <p>BudgetView 4.0 répond directement à cette question&nbsp;:</p>
-
-    <div class="centered-image">
-        <img src="/files/images_fr/support/versions/v4_0/meteo.png"/>
-    </div>
-
-    <p>Des prévisions vous sont proposées sur chacun de vos comptes : une météo couverte ou pluvieuse indique le risque
-        que votre compte passe à découvert d'ici la fin du mois prochain.</p>
-
-    <h3>Fitrage par comptes</h3>
-
-    <p>Les vues Tableau de Bord, Budget et Comptes présentent dorénavant une même liste de comptes sur le bord gauche&nbsp;:</p>
-
-    <div class="centered-image">
-        <img src="/files/images_fr/support/versions/v4_0/filtrage_compte.png"/>
-    </div>
-
-    <p>Vous pouvez afficher ou masquer le graphe de l'évolution du solde de chacun de vos comptes, mais aussi
-        sélectionner un
-        compte pour ne voir que les informations correspondantes dans le reste de la vue. Avec cette nouvelle logique,
-        vous
-        pilotez bien plus finement chacun de vos comptes courants.</p>
-
-    <p>Avec ces évolutions, la vue spécifique des comptes d'épargne a disparu : les comptes d'épargne sont maintenant
-        représentés exactement de la même manière que les comptes courants.</p>
-
-
-    <h3>Multi-comptes plus souple</h3>
-
-    <p>Depuis les origines de BudgetView, le calcul du prévisionnel était réalisé pour les comptes courants pris dans
-        leur ensemble - il n'était pas possible de suivre l'évolution d'un compte courant en particulier.</p>
-
-    <p>Dans la version 3.14, nous avons permis de suivre chaque compte individuellement en associant chaque enveloppe
-        à un compte donné. Il se trouve
-        cependant que cette solution était trop contraignante pour certains de nos utilisateurs, obligeant dans certains
-        cas à dupliquer plusieurs enveloppes.</p>
-
-    <p>La version 4.0 remédie à cela en proposant un mode beaucoup plus souple&nbsp;: les enveloppes sont par défaut
-        associées à
-        l'ensemble des comptes courants, et la projection dans le futur se base sur le comportement observé au cours des
-        deux dernier mois.</p>
-
-    <div class="centered-image">
-        <img src="/files/images_fr/support/versions/v4_0/enveloppes_multi_comptes.png"/>
-    </div>
-
-    <p>Ainsi, si vous n'utilisez que l'un de vos comptes pour votre enveloppe Loisirs, le calcul du prévisionnel ne
-        prendra
-        en compte que ce compte-là. Si vous avez effectué un tiers des dépenses sur un compte et deux tiers sur un
-        autre,
-        cette même répartition s'appliquera dans la prévision. </p>
-
-    <p>Dans les cas où vous le jugez nécessaire, il vous est toujours possible d'éditer n'importe quelle enveloppe et
-        préciser qu'elle ne s'applique qu'à un compte donné. Les projections se feront alors exclusivement sur ce
-        compte,
-        et l'enveloppe ne sera visible dans la vue Catégorisation que lorsque vous sélectionnerez une opération de ce
-        compte.</p>
-
-    <h3>Virements</h3>
-
-    <p>Nous avons revu la façon de représenter vos virements entre vos comptes. Désormais, le bloc "Epargne" de la vue
-        Budget devient "Virements" et accueille tous vos virements : virements vers ou à partir de vos comptes
-        d'épargne,
-        mais aussi virements entre vos comptes courants.</p>
-
-    <h3>Une version de base gratuite</h3>
-
-    <p>Pour faire profiter du meilleur budget prévisionnel à un plus grand nombre d'utilisateurs, nous rendons le coeur
-        de
-        BudgetView 4.0 gratuit. Certaines fonctionnalités deviennent des extensions payantes&nbsp;:</p>
-    <ul>
-        <li>La constitution de <b>groupes d'enveloppes</b> dans la vue Budget</li>
-        <li>La gestion des <b>projets</b></li>
-        <li>L'ensemble de la vue <b>analyse</b></li>
-        <li>La visualisation du budget sur <b>mobile Android</b></li>
-    </ul>
-
-    <p>Ces extensions sont présentées dans une vue dédiée&nbsp;:</p>
-
-    <div class="centered-image">
-        <img src="/files/images_fr/support/versions/v4_0/extensions.png"/>
-    </div>
-
-    <p>Si vous aviez acheté un code d'activation BudgetView pour les versions antérieures, celui-ci reste bien sûr
-        valable et active
-        automatiquement l'ensemble des extensions disponibles.</p>
-
-
-    <!------------------------------>
-
-    <h2>version 3.14.4 <span class="date">4 octobre 2014</span></h2>
-
-    <p>BudgetView évolue depuis des années sur la base des suggestions dont vous nous faites part. Les deux plus
-        fréquentes ces derniers mois étaient d'une part la possibilité de suivre plusieurs comptes courants
-        individuellement,
-        et d'autre part de pouvoir regrouper les enveloppes pour y voir plus clair dans votre budget. </p>
-
-    <h3>Suivi par comptes</h3>
-
-    <p>La nouvelle version de BudgetView vous permet de gérer finement plusieurs comptes courants simultanément.
-        Cela est utile par exemple lorsque vous disposez d'un compte joint et de comptes personnels.
-
-    <p>
-
-    <p>Voici par exemple la nouvelle vue Budget&nbsp;:</p>
-
-    <div class="centered-image">
-        <img src="/files/images_fr/support/versions/v3_14b/multi_comptes_vue_budget.png"/>
-    </div>
-
-    <p>Les graphiques de la vue Tableau de Bord sont eux aussi séparés par compte&nbsp;:</p>
-
-    <div class="centered-image">
-        <img src="/files/images_fr/support/versions/v3_14b/multi_comptes_tableau_de_bord.png"/>
-    </div>
-
-    <h3>Groupes d'enveloppes</h3>
-
-    <p>Pour y voir plus clair dans votre budget, vous pouvez placer plusieurs enveloppes dans un même groupe comme
-        suit&nbsp;:</p>
-
-    <div class="centered-image">
-        <img src="/files/images_fr/support/versions/v3_14b/groupes_enveloppes.png"/>
-    </div>
-
-    <p>Pour ajouter une enveloppe dans un nouveau groupe ou un groupe existant,
-        cliquez sur son nom dans la vue Budget&nbsp;:</p>
-
-    <div class="centered-image">
-        <img src="/files/images_fr/support/versions/v3_14b/ajout_enveloppe_groupe.png"/>
-    </div>
-
-    <p>A la différence des sous-enveloppes qui sont proposées depuis longtemps dans l'application,
-        les groupes d'enveloppes vous permettent de gérer un budget prévu au niveau de chaque élément.
-        Vous pouvez y voir plus clair dans votre budget sans perdre le finesse de votre prévisionnel.
-    </p>
-
-    <h3>Mise à jour de vos données</h3>
-
-    <div class="warning-block">
-
-        <p>Le suivi individuel des comptes courants implique une conséquence importante&nbsp;:
-            chaque enveloppe ou chaque élément de projet doit dorénavant être associé à un et un seul compte
-            courant.</p>
-
-        <p>De ce fait, si vous êtes déjà utilisateur de BudgetView vos données doivent être revues pour être compatibles
-            avec cette nouvelle version.
-            Pour en savoir plus, suivez notre <a href="/support/versions/v3-14b-maj" class="highlighted">guide de mise à
-                jour</a>.</p>
-    </div>
-
-    <h3>Autres évolutions</h3>
-    <ul>
-        <li>Correction du téléchargement direct pour la Banque Postale (v3.14) et la Caisse d'Epargne (v3.14.2)</li>
-        <li>Résolution d'un problème de limitation mémoire sous Mac</li>
-        <li>Correction d'erreurs dans des cas particuliers d'utilisation des virements dans les projets (v3.14.3).</li>
-        <li>Correction d'erreurs dans certaines manipulations de comptes source/destination dans les enveloppes
-            d'épargne (v3.14.4).
-        </li>
-    </ul>
-
-    <!------------------------------>
-
-    <h2>version 3.13 <span class="date">11 janvier 2014</span></h2>
-
-    <p>BudgetView mémorise maintenant la taille de la fenêtre et des blocs des différentes vues.
-        A chaque lancement, vous retrouvez donc l'application telle que vous l'aviez laissée.</p>
-
-    <p>Vous pouvez dupliquer un projet existant pour le reproduire dans le futur.</p>
-
-    <p>Les opérations réparties sont mises en évidence dans les tables des vues Budget et Catégorisation.</p>
-
-    <p>Correction d'une erreur de mise à jour du solde des comptes.</p>
-
-    <p>...et autres corrections/ajustements mineurs.</p>
-
-    <!------------------------------>
-
-    <h2>version 3.12 <span class="date">5 décembre 2013</span></h2>
-
-    <p>Cette version comporte quelques évolutions pratiques :</p>
-    <ul>
-        <li>Vous pouvez maintenant lancer l'import de vos relevés à partir d'un bouton facilement accessible dans toutes
-            les vues de l'application :
-        </li>
-    </ul>
-
-    <div class="centered-image">
-        <img src="/files/images_fr/support/versions/v3_12/import_button.png"/>
-    </div>
-
-    <ul>
-        <li>Sur la vue d'accueil, vous pouvez escamoter le panneau d'affichage des projets pour
-            agrandir les graphes de projection du solde de vos comptes&nbsp;:
-        </li>
-    </ul>
-    <div class="centered-image">
-        <img src="/files/images_fr/support/versions/v3_12/escamotage_projets.png"/>
-    </div>
-
-    <ul>
-        <li>Le montant mensuel est dorénavant affiché dans le graphe d'évolution du solde d'épargne, dans la vue
-            d'accueil.
-        </li>
-        <li>Evolution de l'import CSV permettant d'utiliser les fichiers d'Axa Banque.</li>
-        <li>Dans la vue Comptes, il est maintenant possible d'escamoter le graphe sous la liste des transactions
-            en utilisant le menu "Actions" en haut à gauche de l'écran, puis en sélectionnant l'option
-            "Masquer le graphe d'évolution du solde".
-        </li>
-        <li>Corrections du téléchargement direct pour les banques CIC et American Express France</li>
-        <li>Correction de l'export OFX: le tag TRNTYPE est maintenant DEBIT pour les montants négatifs.</li>
-        <li>Correction d'une erreur de calcul dans l'affichage des montants d'épargne de la vue Analyse.</li>
-    </ul>
-
-    <!------------------------------>
-
-    <h2>version 3.11 <span class="date">13 octobre 2013</span></h2>
-
-    <p>Cette version comporte quelques correctifs, notamment pour la connexion directe BNP et deux erreurs survenant
-        dans des cas particuliers de mise à jour des données.</p>
-
-    <!------------------------------>
-
-    <h2>version 3.10 <span class="date">29 septembre 2013</span></h2>
-
-    <p>Cette version comporte une évolution majeure de la gestion des projets&nbsp;:</p>
-
-    <div class="centered-image">
-        <img src="/files/images_fr/support/versions/v3_10/refonte_projets.png" alt="Nouvelle gestion des projets"
-             style="margin:10px;"/>
-    </div>
-    <p>Vous pouvez maintenant&nbsp;:</p>
-    <ul>
-        <li>Activer / désactiver des projets ou des éléments pour procéder à des simulations</li>
-        <li>Décaler tous les éléments d'un projet</li>
-        <li>Intégrer des dépenses répétées sur plusieurs mois, par exemple des crédits</li>
-        <li>Intégrer des virements, notamment entre vos comptes d'épargne et vos comptes courants</li>
-        <li>Attribuer des images à vos projets, soit à partir d'images présentes sur votre ordinateur, soit en procédant
-            à des copier/coller à partir d'autres logiciels, par exemple votre navigateur internet
-        </li>
-        <li>Conserver des notes ou des liens sur les éléments des projets, et leur attribuer des images</li>
-    </ul>
-    <p>Pour commencer, nous vous recommandons de prendre le temps de mettre des images pour tous vos projets en cours
-        - vous verrez, cela donne une bien meilleure mine à votre budget&nbsp;!</p>
-
-    <!------------------------------>
-
-    <h2>version 3.09 <span class="date">16 août 2013</span></h2>
-
-    <p>Cette version comporte quelques correctifs, notamment dans le téléchargement direct à partir du CIC.</p>
-
-    <!------------------------------>
-
-    <h2>version 3.08 <span class="date">6 août 2013</span></h2>
-
-    <p>Cette version comporte quelques corrections dans les zones suivantes :</p>
-    <ul>
-        <li>Téléchargement direct à partir de la Caisse d'Epargne et de La Banque Postale.</li>
-        <li>Import de fichiers CSV.</li>
-        <li>Restauration de fichiers de sauvegarde.</li>
-    </ul>
-    <p>Elle propose également deux nouveaux thèmes de couleurs, que vous trouverez dans la fenêtre des Préférences.</p>
-
-
-    <h2>version 3.07 <span class="date">26 juin 2013</span></h2>
-
-    <p>Cette version comporte quelques évolutions et corrections mineures :</p>
-    <ul>
-        <li>Accès aux fonctions de suppression de comptes ou enveloppes à partir des menus de bouton droit (celles-ci
-            n'étaient auparavant disponibles qu'à travers la fenêtre d'édition)
-        </li>
-        <li>L'application accepte désormais les fichiers OFX non-standard dans lequel le solde utilise un format
-            du type "--100.00" (deux signes moins)
-        </li>
-        <li>L'application accepte les fichiers OFX qui comportent des opérations mais aucun compte.</li>
-        <li>Correction d'un blocage survenant par moments sur Mac au moment de quitter l'application.</li>
-        <li>Protection contre la corruption de données lorsque plusieurs applications BudgetView accèdent
-            simultanément au même répertoire de données. Veuillez noter toutefois que ce cas d'utilisation
-            n'est pas supporté, et doit être évité autant que possible.
-        </li>
-        <li>Correction d'une erreur de mise à jour de la date courante dans le logiciel,
-            dans certains cas où celui-ci reste ouvert sur plusieurs jours.
-        </li>
-        <li>Correction d'une erreur pouvant conduire à une utilisation d'une quantité de mémoire vive anormale.</li>
-    </ul>
-
-    <!------------------------------>
-
-    <h2>version 3.06 <span class="date">5 juin 2013</span></h2>
-    <ul>
-        <li>L'application mobile Android est maintenant disponible sur
-            <a href="https://play.google.com/store/apps/details?id=com.budgetview.android&hl=fr">Google Play</a>.
-        </li>
-        <li>Correction d'une erreur survenant dans le téléchargement direct de relevés auprès de la Caisse d'Epargne
-        </li>
-    </ul>
-
-    <!------------------------------>
-
-    <h2>version 3.05 <span class="date">26 mai 2013</span></h2>
-    <ul>
-        <li>Il est maintenant possible d'imprimer la liste des opérations affichée dans les vues Comptes et
-            Catégorisation. Pour lancer l'impression, utilisez les menus "Action" affichés à côté des listes
-            d'opérations.
-        </li>
-        <li>Reorganisation de la vue Comptes, avec pour chaque compte un nouveau graphe d'évolution du solde.
-            Vous pouvez cliquer sur chaque graphe pour voir les opérations correspondantes.
-        </li>
-        <li>Affichage du nombre d'opérations ignorées et classées automatiquement à la fin de chaque import.</li>
-        <li>Amélioration de l'affichage et des performances sous Windows.</li>
-        <li>Cette version inclut des corrections diverses, notamment dans l'import automatique des opérations à partir
-            de quelques banques Françaises.
-        </li>
-    </ul>
-
-    <!------------------------------>
-
-    <h2>version 3.03 <span class="date">28 avril 2013</span></h2>
-
-    <p>Cette version corrige des cas particuliers d'import direct de relevés auprès de deux banques&nbsp;: BNP Paribas
-        et Caisse d'Epargne.</p>
-
-    <!------------------------------>
-
-    <h2>version 3.0 <span class="date">21 avril 2013</span></h2>
-
-    <p>Au menu de cette nouvelle version&nbsp;:</p>
-    <ul>
-        <li>BudgetView se connecte dorénavant tout seul au site internet des principales banques Françaises,
-            sans que vous n'ayez à télécharger vous-mêmes vos fichiers de relevés&nbsp;! Pour en bénéficier, il vous
-            suffit,
-            lors de l'import de relevés, de sélectionner votre banque puis d'opter pour l'option "Connexion directe".
-        </li>
-    </ul>
-    <ul>
-        <li>L'application BudgetView pour Android est maintenant disponible en avant-première&nbsp;! Cette première
-            mouture
-            vous permet de visualiser votre budget où que vous soyez. Nous la rendons disponibles hors Google Play pour
-            le moment, afin de recueillir vos premiers retours pour nous aider à l'améliorer.
-        </li>
-    </ul>
-    <ul>
-        <li>Vous pouvez modifier une opération que vous avez saisie manuellement, en cliquant avec le bouton
-            droit sur l'opération en question dans les vues Comptes ou Catégorisation et en sélectionnant l'option
-            "Editer".
-        </li>
-        <li>Il vous est désormais possible de modifier le répertoire de stockage de l'application, par exemple pour le
-            mettre sur un répertoire partagé. Pour cela, rendez-vous dans "Fichier / Préférences..." puis sélectionnez
-            l'onglet "Stockage".
-        </li>
-        <li>Et comme toujours, ce version inclut les dernières corrections du logiciel.</li>
-    </ul>
-
-    <!------------------------------>
-
-    <h2>version 2.34 <span class="date">11 mars 2013</span></h2>
-    <ul>
-        <li>Import de fichiers CSV : l'application gère désormais les cas où certaines valeurs sont encadrées de
-            guillemets ("...")
-            ou de quotes ('...').
-        </li>
-        <li>Export CSV : ajout d'une colonne Compte, et traduction des en-têtes de colonnes dans la langue utilisée par
-            BudgetView.
-        </li>
-        <li>Il est désormais possible de changer la langue du logiciel (Anglais/Français) à partir des Préferences.</li>
-        <li>Nouveau thème de couleurs vert accessible dans les Préférences.</li>
-        <li>Correction d'erreurs diverses, notamment dans l'import de fichiers exportés par Microsoft Money, ou encore
-            dans le traitement des dates lorsque l'application reste ouverte plusieurs jours.
-        </li>
-    </ul>
-
-    <!------------------------------>
-
-    <h2>version 2.33 <span class="date">15 décembre 2012</span></h2>
-    <ul>
-        <li>La page <a href="/telechargement/linux">Téléchargement Linux</a> propose
-            désormais des packages ".deb" pour faciliter l'installation sur
-            les distributions Ubuntu et Debian.
-        </li>
-        <li>Correction d'une erreur de calcul du solde dans certains cas de mise à jour
-            des données lors de l'installation de la nouvelle version de l'application.
-        </li>
-    </ul>
-
-    <!------------------------------>
-
-    <h2>version 2.32 <span class="date">3 décembre 2012</span></h2>
-
-    <p>Saisie manuelle d'opérations :</p>
-    <ul>
-        <li>Vous pouvez maintenant saisir des opérations dans tous les comptes,
-            y compris ceux pour lesquels des imports de fichiers sont réalisés. Vous
-            pouvez ensuite réconcilier ces opérations lors d'imports ultérieurs.
-        </li>
-
-        <li>L'application complète automatiquement les libellés lors de la saisie,
-            et classe automatiquement les opérations sur la base des opérations existantes.
-        </li>
-    </ul>
-
-    <p>Gestion des comptes :</p>
-    <ul>
-        <li>BudgetView détecte maintenant les incohérences entre le solde d'un compte et la
-            séquence des opérations, ce qui permet de détecter des opérations absentes
-            ou en doublon.
-        </li>
-
-        <li>Vous pouvez dorénavant configurer les cartes à débit différé avec plus de souplesse&nbsp;-
-            par exemple pour des opérations réalisées du 20 au 20, et prélevées le 15 deux mois après.
-        </li>
-    </ul>
-
-    <p>Vue Analyse :</p>
-    <ul>
-        <li>Un clic droit sur les graphiques de la vue Analyse fait apparaître un menu
-            pour naviguer vers les opérations correspondantes.
-        </li>
-
-        <li>La table affichée au bas de la vue Analyse intègre les sous-enveloppes.</li>
-    </ul>
-
-    <p>Gestion des projets :</p>
-    <ul>
-        <li>Des sous-enveloppes sont maintenant créées automatiquement pour chaque composante
-            d'un projet. Vous pouvez alors voir dans la fenêtre d'édition du projet comment vos
-            dépenses évoluent dans le détail.
-        </li>
-    </ul>
-
-    <p>Impression :</p>
-    <ul>
-        <li>Une nouvelle page présente maintenant la vue "Budget",
-            avec l'ensemble des enveloppes et pour chacune
-            le niveau de revenus/dépenses prévu et réel.
-        </li>
-    </ul>
-
-    <p>Autres améliorations :</p>
-    <ul>
-        <li>De nouvelles fonctions du menu "Affichage" permettent de selectionner le mois en cours,
-            l'année en cours, etc.
-        </li>
-        <li>Ajout des principales banques Suisses et Belges.</li>
-        <li>Les opérations sont affichées en vert ou rouge, selon leur signe, dans les tableaux des vues Budget et
-            Catégorisation.
-        </li>
-        <li>Compatible avec les nouvelles règles de sécurité de Mac OS X Mountain Lion.</li>
-    </ul>
-
-    <!------------------------------>
-
-    <h2>version 2.31 <span class="date">18 juin 2012</span></h2>
-    <ul>
-        <li>Prise en charge de la version 1.7 de la plateforme Java, pour éviter une erreur
-            récurrente lors du chargement et la catégorisation des opérations.
-        </li>
-        <li>Cette version comporte également deux corrections, l"une dans l'affichage des sous-enveloppes
-            dans le tableau de la vue Analyse, et l'autre dans le traitement des cartes à débit différé.
-        </li>
-    </ul>
-
-    <!------------------------------>
-
-    <h2>version 2.29 <span class="date">18 mai 2012</span></h2>
-    <ul>
-        <li>Dans la vue Analyse, vous pouvez maintenant voir le détail des sous-enveloppes d'une enveloppe donnée.
-            Pour cela, cliquez dans le graphique de répartition d'une enveloppe qui contient des sous-enveloppes
-            : vous verrez apparaître un lien "Afficher les sous-enveloppes" qu'il vous suffit alors de cliquer.
-        </li>
-        <li>Cette version comporte également quelques correctifs, notamment dans l'import des fichiers OFX et CSV,
-            la connexion OFX directe aux banques, et l'affichage des enveloppes des projets dans la vue Budget.
-        </li>
-    </ul>
-
-    <!------------------------------>
-
-    <h2>version 2.28 <span class="date">2 mai 2012</span></h2>
-    <ul>
-        <li>Vous pouvez maintenant reporter le solde restant d'une enveloppe,
-            ou bien son dépassement, au mois suivant. Par exemple, si vous n'avez dépensé que 100.00
-            sur les 150.00 prévus de votre enveloppe Loisirs, ce fonction vous permet de reporter
-            automatiquement les 50.00 restants sur le mois suivant. Pour essayer, cliquez sur le nom
-            d'une enveloppe dans la vue Budget, et choisissez l'option de menu "Reporter...".
-        </li>
-        <li>BudgetView gère dorénavant mieux les formats de dates non-standard dans les fichiers OFX.</li>
-        <li>Dans l'écran de connexion initial, vous pouvez maintenant choisir un nom d'utilisateur
-            dans la liste des comptes existants.
-        </li>
-        <li>Cette version comporte également quelques correctifs. Par exemple, BudgetView ne demande
-            plus inutilement de connexions réseau entrantes,
-            et une erreur qui survenait parfois lors de l'édition d'une enveloppe a également été corrigée.
-        </li>
-    </ul>
-
-    <!------------------------------>
-
-    <h2>version 2.27 <span class="date">16 avril 2012</span></h2>
-    <ul>
-        <li>Si vous souhaitez mieux contrôler les prévisions faites par BudgetView pour vos dépenses futures,
-            vous pouvez désormais forcer une enveloppe donnée à ne prévoir qu'une opération par mois, à jour fixe.
-            Cela est utile par exemple pour indiquer que votre salaire est prévu le 29 de chaque mois. Pour régler
-            tout cela, cliquez sur le nom de l'enveloppe en question dans la vue Budget et rendez-vous dans l'onglet
-            "Planification".
-        </li>
-        <li>Vous pouvez également modifier le libellé des opérations, en cliquant avec le bouton droit
-            dans les tables des vues Catégorisation et Comptes.
-        </li>
-        <li>Lorsque vous importez vos fichiers, ou lorsque vous créez un compte,
-            vous pouvez maintenant ajouter une banque à la liste.
-        </li>
-        <li>Au moment de saisir une opération, il vous est dorénavant possible de choisir un mois dans le passé,
-            même si ce mois n'est pas affiché dans la barre de sélection de mois en haut de l'écran.
-        </li>
-        <li>Cette version corrige également quelques dysfonctionnements, notamment dans l'import de fichiers
-            CSV et dans l'affichage des projets.
-        </li>
-    </ul>
-
-    <!------------------------------>
-
-    <h2>version 2.25 <span class="date">13 mars 2012</span></h2>
-    <ul>
-        <li>Vous pouvez dorénavant importer vos fichiers CSV, par exemple produits à partir
-            d'un tableur comme Excel ou Numbers. Pour plus d'informations, consultez le
-            <a href="/support/faq/import/import-csv">guide d'import CSV</a>.
-        </li>
-        <li>Deux nouvelles options sont disponibles dans le menu des préférences&nbsp;:</li>
-        <ul>
-            <li>Modifier le format utilisé pour l'affichage des dates</li>
-            <li>Modifier le thème de couleurs de l'application</li>
-        </ul>
-        <li>Lors de la première utilisation de l'application, il vous est proposé de voir BudgetView à l'oeuvre
-            à l'aide d'un compte de démonstration.
-        </li>
-        <li>Cette version corrige également quelques dysfonctionnements, notamment dans la suppression
-            manuelle d'opérations.
-        </li>
-    </ul>
-
-    <!------------------------------>
-
-    <h2>version 2.23 <span class="date">29 janvier 2012</span></h2>
-    <ul>
-        <li>Vous pouvez maintenant <b>imprimer un rapport</b> de votre budget.
-            Choisissez pour cela l'option "Imprimer..." dans le menu Fichier. Notez bien qu'il
-            s'agit d'une toute première version de cette fonctionnalité, aussi n'hésitez pas à
-            <a href="mailto:support@mybudgetview.fr">nous faire part</a>
-            de vos commentaires sur ces rapports.
-        </li>
-        <li>Un même utilisateur peut dorénavant utiliser sa clef d'activation BudgetView
-            sur deux ordinateurs.
-        </li>
-        <li>Corrections de problèmes divers.</li>
-    </ul>
-
-    <!------------------------------>
-
-    <h2>version 2.21 <span class="date">8 janvier 2012</span></h2>
-    <ul>
-        <li>Affichage des sous-enveloppes dans le tableau des opérations de la vue Comptes</li>
-        <li>Affichage du jour courant dans les graphiques d'évolution de soldes
-            de la vue Tableau de bord et de la vue Comptes
-        </li>
-    </ul>
-
-    <!------------------------------>
-
-    <h2>version 2.20 <span class="date">29 décembre 2011</span></h2>
-    <ul>
-        <li>Correction d'une erreur dans certains calculs des soldes des comptes</li>
-        <li>Correction d'un problème lors d'un double "Cmd-Q" sous Mac OS X</li>
-        <li>Les transactions créées manuellement ne sont plus pointées automatiquement
-            lors de la catégorisation
-        </li>
-    </ul>
-
-    <!------------------------------>
-
-    <h2>version 2.17 <span class="date">29 novembre 2011</span></h2>
-    <ul>
-        <li>Correction d'un blocage lorsque l'on quitte l'application à partir de la page d'accueil sous Mac OS X</li>
-        <li>Correction d'un problème dans la navigation d'une enveloppe de la vue Budget vers les opérations
-            correspondantes dans la vue Comptes
-        </li>
-        <li>Elimination des "tooltips" fantômes lors de l'utilisation de Alt-Tab sous Mac OS X</li>
-        <li>Ajout d'une dizaine de banques Françaises, notamment des banques en ligne</li>
-    </ul>
-
-    <!------------------------------>
-
-    <h2>version 2.14 <span class="date">31 octobre 2011</span></h2>
-    <ul>
-        <li>Import des catégories dans les fichiers Money</li>
-        <li>Correction d'une erreur survenant lors de l'import d'opérations pour un compte ayant été supprimé.</li>
-        <li>Correction d'une erreur survenant dans certains cas de suppression d'enveloppe (merci Bernard)</li>
-    </ul>
-
-    <!------------------------------>
-
-    <h2>version 2.13 <span class="date">18 octobre 2011</span></h2>
-    <ul>
-        <li>Clarification de l'écran d'import dans le cas où il y a plusieurs comptes dans un même fichier.</li>
-        <li>Correction d'un défaut qui pouvait causer l'invalidation répétée du code d'activation.</li>
-    </ul>
-
-    <!------------------------------>
-
-    <h2>version 2.12 <span class="date">9 octobre 2011</span></h2>
-    <ul>
-        <li>
-            Dans la vue Budget, vous pouvez maintenant passer votre souris pour voir le solde jour par jour, ainsi
-            que les enveloppes pour lesquelles il y a des opérations ce jour-là. Double-cliquez sur un jour pour voir
-            les opérations en question.Merci à Julien pour cette suggestion !
-        </li>
-
-        <li>
-            Toujours dans la vue Budget, de nouveaux indicateurs vous montrent l'évolution de chaque enveloppe par
-            rapport
-            au mois précédent. Vous pouvez ainsi identifier d'un coup d'oeil les principales augmentations de revenus ou
-            de
-            dépenses.
-        </li>
-
-        <li>
-            La vue d'accueil vous offre maintenant une vision plus claire de vos projets.
-        </li>
-
-        <li>
-            Pour les banques qui le proposent, BudgetView permet dorénavant d'importer directement
-            vos relevés d'opérations sans que vous n'ayez à télécharger de fichiers à la main sur
-            leur site internet. A notre connaissance parmi les grandes banques Françaises seule
-            La Banque Postale propose ce service aujourd'hui.</p>
-        </li>
-
-        <li>
-            Dans la vue Comptes, vous pouvez maintenant cliquer sur un compte pour voir uniquement les opérations
-            associées. Cette vue montre également l'évolution du solde des comptes au cours du mois.</p>
-        </li>
-
-        <li>
-            La vue Epargne est maintenant accessible à partir du bloc Epargne de la vue Budget.
-        </li>
-
-        <li>corrections et ajustements divers, en particulier :</li>
-        <ul>
-            <li>multi-sélection dans les graphiques de la vue analyse,</li>
-            <li>affichage du montant restant dans la fenêtre d'édition des projets,</li>
-            <li>corrections d'une erreur qui bloquait l'import de certains fichiers Microsoft Money,</li>
-        </ul>
-    </ul>
-
-    <!------------------------------>
-
-    <h2>version 2.08 <span class="date">28 juin 2011</span></h2>
-    <ul>
-        <li>Vous pouvez dorénavant pointer vos opérations dans la vue Catégorisation, pour vous assurer
-            que les opérations qui passent sur vos comptes bancaires sont en ligne avec celles que vous
-            suivez manuellement:<br/>
-
-            <div class="centered-image">
-                <img src="/files/images_fr/support/versions/v2/reconciliation.png"/>
-            </div>
-        </li>
-        <li>Corrections et ajustements divers, en particulier :</li>
-        <ul>
-            <li>une meilleure gestion des cartes à débit différé de La Banque Postale,</li>
-            <li>la prise en compte de certaines spécificités de Barclays dans la gestion du solde des comptes,</li>
-            <li>une meilleure gestion de la sélection des mois dans la fenêtre d'édition des enveloppes.</li>
-        </ul>
-    </ul>
-
-    <!------------------------------>
-
-    <h2>version 2.07 <span class="date">7 juin 2011</span></h2>
-    <ul>
-        <li>Menus contextuels (bouton droit) dans les tables d'opérations (vues Catégorisation et
-            Comptes) pour classer, décaler, répartir ou supprimer des opérations
-        </li>
-        <li>Copie du contenu des tables d'opérations ou de la table "Analyse" vers Excel/Numbers,
-            via menu contextuel
-        </li>
-        <li>Choix des banques et accès aux sites internet dès la première étape de l'import de relevés</li>
-        <li>Corrections et ajustements divers</li>
-    </ul>
-
-    <!------------------------------>
-
-    <h2>version 2.06 <span class="date">15 mai 2011</span></h2>
-    <ul>
-        <li>Amélioration du guidage dans les phases initiales de l'utilisation</li>
-        <li>La vue "Evolution" s'appelle dorénavant "Analyse"</li>
-        <li>Ajout d'indications pour aider à la navigation dans la vue "Analyse"</li>
-        <li>Corrections et ajustements divers</li>
-    </ul>
+  </ul>
+
+  <!------------------------------>
+
+  <h2>version 2.07 <span class="date">7 juin 2011</span></h2>
+  <ul>
+    <li>Menus contextuels (bouton droit) dans les tables d'opérations (vues Catégorisation et
+      Comptes) pour classer, décaler, répartir ou supprimer des opérations
+    </li>
+    <li>Copie du contenu des tables d'opérations ou de la table "Analyse" vers Excel/Numbers,
+      via menu contextuel
+    </li>
+    <li>Choix des banques et accès aux sites internet dès la première étape de l'import de relevés</li>
+    <li>Corrections et ajustements divers</li>
+  </ul>
+
+  <!------------------------------>
+
+  <h2>version 2.06 <span class="date">15 mai 2011</span></h2>
+  <ul>
+    <li>Amélioration du guidage dans les phases initiales de l'utilisation</li>
+    <li>La vue "Evolution" s'appelle dorénavant "Analyse"</li>
+    <li>Ajout d'indications pour aider à la navigation dans la vue "Analyse"</li>
+    <li>Corrections et ajustements divers</li>
+  </ul>
 
 </div>
