@@ -733,28 +733,33 @@ public class CloudService {
     return Strings.isNullOrEmpty(type) ? AccountType.MAIN : AccountType.get(type);
   }
 
-  public void deleteCloudAccount(GlobRepository repository, final UnsubscriptionCallback callback) {
+  public void deleteCloudAccount(final GlobRepository repository, final UnsubscriptionCallback callback) {
     Log.debug("[Cloud] deleteCloudAccount");
-    Glob user = repository.findOrCreate(CloudDesktopUser.KEY);
-    try {
-      int cloudUserId = user.get(CloudDesktopUser.CLOUD_USER_ID);
-      int deviceId = user.get(CloudDesktopUser.DEVICE_ID);
-      String deviceToken = user.get(CloudDesktopUser.DEVICE_TOKEN);
-      cloudAPI.deleteCloudAccount(cloudUserId, deviceId, deviceToken);
-      GuiUtils.runInSwingThread(new Runnable() {
-        public void run() {
-          callback.processCompletion();
+    Thread thread = new Thread(new Runnable() {
+      public void run() {
+        Glob user = repository.findOrCreate(CloudDesktopUser.KEY);
+        try {
+          int cloudUserId = user.get(CloudDesktopUser.CLOUD_USER_ID);
+          int deviceId = user.get(CloudDesktopUser.DEVICE_ID);
+          String deviceToken = user.get(CloudDesktopUser.DEVICE_TOKEN);
+          cloudAPI.deleteCloudAccount(cloudUserId, deviceId, deviceToken);
+          GuiUtils.runInSwingThread(new Runnable() {
+            public void run() {
+              callback.processCompletion();
+            }
+          });
         }
-      });
-    }
-    catch (final Exception e) {
-      Log.write("[Cloud] Error deleting BV cloud account", e);
-      GuiUtils.runInSwingThread(new Runnable() {
-        public void run() {
-          callback.processError(e);
+        catch (final Exception e) {
+          Log.write("[Cloud] Error deleting BV cloud account", e);
+          GuiUtils.runInSwingThread(new Runnable() {
+            public void run() {
+              callback.processError(e);
+            }
+          });
         }
-      });
-    }
+      }
+    });
+    thread.start();
   }
 
   private Glob createMissingBank(int budgeaBankId, String bankName, GlobRepository repository) {
