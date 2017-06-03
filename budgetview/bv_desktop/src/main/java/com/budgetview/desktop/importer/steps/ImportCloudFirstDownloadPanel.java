@@ -25,6 +25,7 @@ public class ImportCloudFirstDownloadPanel extends AbstractImportStepPanel {
   private ProgressPanel progressPanel;
   private JLabel noDataLabel;
   private Glob providerConnection;
+  private Timer timer;
 
   public ImportCloudFirstDownloadPanel(PicsouDialog dialog, ImportController controller, LocalGlobRepository repository, Directory localDirectory) {
     super(dialog, controller, localDirectory);
@@ -44,6 +45,12 @@ public class ImportCloudFirstDownloadPanel extends AbstractImportStepPanel {
     noDataLabel = new JLabel(Lang.get("import.cloud.first.download.nodata"));
     builder.add("noData", noDataLabel);
 
+    timer = new Timer(3000, new AbstractAction() {
+      public void actionPerformed(ActionEvent e) {
+        noDataLabel.setVisible(false);
+        timer.stop();
+      }
+    });
 
     builder.add("next", new DisabledAction(getNextLabel()));
     builder.add("close", new AbstractAction(getCloseLabel()) {
@@ -63,10 +70,6 @@ public class ImportCloudFirstDownloadPanel extends AbstractImportStepPanel {
     this.providerConnection = providerConnection;
   }
 
-  public void setAllConnections() {
-    this.providerConnection = null;
-  }
-
   public void prepareForDisplay() {
     noDataLabel.setVisible(false);
   }
@@ -84,6 +87,9 @@ public class ImportCloudFirstDownloadPanel extends AbstractImportStepPanel {
         }
         else {
           noDataLabel.setVisible(true);
+          if (!timer.isRunning()) {
+            timer.start();
+          }
         }
         progressPanel.stop();
       }
@@ -100,31 +106,10 @@ public class ImportCloudFirstDownloadPanel extends AbstractImportStepPanel {
     });
   }
 
-  public void updateAll() {
-    noDataLabel.setVisible(false);
-    progressPanel.start();
-    cloudService.updateBankConnections(repository, new CloudService.Callback() {
-      public void processCompletion() {
-        repository.commitChanges(false);
-        for (Glob connection : repository.getAll(CloudProviderConnection.TYPE)) {
-          if (!connection.isTrue(CloudProviderConnection.INITIALIZED)) {
-            providerConnection = connection;
-            noDataLabel.setVisible(true);
-            return;
-          }
-        }
-        controller.showCloudDownload();
-      }
-
-      public void processSubscriptionError(CloudSubscriptionStatus status) {
-        controller.showCloudSubscriptionError(repository.get(CloudDesktopUser.KEY).get(CloudDesktopUser.EMAIL), status);
-        progressPanel.stop();
-      }
-
-      public void processError(Exception e) {
-        controller.showCloudError(e);
-        progressPanel.stop();
-      }
-    });
+  public void dispose() {
+    if (timer != null && timer.isRunning()) {
+      timer.stop();
+    }
+    super.dispose();
   }
 }

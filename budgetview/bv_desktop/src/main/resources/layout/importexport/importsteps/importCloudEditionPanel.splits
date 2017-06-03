@@ -52,15 +52,15 @@
         </row>
 
         <column styleClass="separator" weightY="20" marginTop="20">
-          <label text="Votre abonnement BudgetView Cloud" font="-,bold,14" anchor="center" marginTop="10"/>
+          <label text="Votre abonnement BudgetView Cloud" font="-,bold,16" anchor="center" marginTop="10"/>
           <row>
             <filler fill="horizontal"/>
             <label ref="currentEmailAddress"/>
-            <button action="modifyEmailAddress"/>
+            <button action="modifyEmailAddress" marginLeft="10"/>
             <filler fill="horizontal"/>
           </row>
           <label ref="subscriptionEndDate" anchor="center"/>
-          <button action="unsubscribe" anchor="center" fill="none"/>
+          <button action="unsubscribe" anchor="center" fill="none" marginTop="3"/>
         </column>
 
       </column>

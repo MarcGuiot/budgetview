@@ -67,7 +67,11 @@ public class ImportCloudUnsubscriptionPanel extends AbstractImportStepPanel {
                                                              Lang.get("import.cloud.unsubscription.confirm.message"),
                                                              dialog, localDirectory) {
       protected void processOk() {
-        doUnsubscribe();
+        SwingUtilities.invokeLater(new Runnable() {
+          public void run() {
+            doUnsubscribe();
+          }
+        });
       }
 
       protected void processCancel() {
