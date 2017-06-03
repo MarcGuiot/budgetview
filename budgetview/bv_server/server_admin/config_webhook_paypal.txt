@@ -1,0 +1,11 @@
+
+
+Configuration du webhook paypal (IPN)
+
+Page de modification :
+
+    https://www.paypal.com/cgi-bin/customerprofileweb?cmd=_profile-ipn-notify
+
+Valeur :
+
+    https://register.mybudgetview.fr:443/newUser

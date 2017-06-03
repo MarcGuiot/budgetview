@@ -1,3 +1,23 @@
+
+Configuration des DNS OVH
+
+
+    https://www.ovh.com/manager/web/index.html#/configuration/domain/mybudgetview.fr?tab=ZONE
+
+
+    Domain	                    TTL	    Type	Target
+    ----------------------------------------------------
+    mybudgetview.fr.	        0	    A	    164.132.235.17
+    www.mybudgetview.fr.        0	    A	    164.132.235.17
+    register.mybudgetview.fr.   0	    A	    5.196.26.111
+    ftpjar.mybudgetview.fr.     0	    A	    5.196.26.111
+    paypal.mybudgetview.fr.     0	    A	    5.196.26.111
+    stripe.mybudgetview.fr.     0	    A	    5.196.26.111
+
+
+Définition complète du DNS pour le domaine mybudgetview.fr :
+
+
 $TTL 86400
 @	IN SOA dns17.ovh.net. tech.ovh.net. (2017052806 86400 3600 3600000 86400)
                          IN NS     ns17.ovh.net.
@@ -30,3 +50,4 @@ squirrel                 IN CNAME  squirrel.ovh.net.
 stripe                   IN A      5.196.26.111
 vpn                      IN CNAME  vpn.redirect.ovh.net.
 www                      IN A      164.132.235.17
+

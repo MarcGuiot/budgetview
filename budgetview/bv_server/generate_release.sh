@@ -51,7 +51,5 @@ cp $BV_SERVER_ROOT/dev/config/log4j_*_prod.properties $RELEASE_PROD_DIR
 cp $BV_SERVER_ROOT/dev/config/logging.properties $RELEASE_PROD_DIR
 cp $BV_SERVER_ROOT/dev/scripts/*_prod.sh $RELEASE_PROD_DIR
 chmod +x $RELEASE_PROD_DIR/*.sh
-mkdir $RELEASE_PROD_DIR/web
-cp $BV_SERVER_ROOT/dev/web/*.html $RELEASE_PROD_DIR/web
 
 echo "Done"
