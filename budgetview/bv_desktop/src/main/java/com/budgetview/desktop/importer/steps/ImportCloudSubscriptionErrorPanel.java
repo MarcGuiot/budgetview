@@ -81,7 +81,7 @@ public class ImportCloudSubscriptionErrorPanel extends AbstractImportStepPanel {
     }
 
     protected String getUrl() {
-      return Lang.get("site.buy.cloud.url");
+      return Lang.get("site.buy.sync.url");
     }
 
   }

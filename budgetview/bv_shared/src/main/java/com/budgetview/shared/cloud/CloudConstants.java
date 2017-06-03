@@ -35,7 +35,7 @@ public class CloudConstants {
 
   public static final String LOCAL_SERVER_URL = "http://127.0.0.1:8080";
   public static final String APPNAME = "budgetview";
-  public static final String CLOUD_URL_PROPERTY = APPNAME + ".cloud.url";
+  public static final String CLOUD_URL_PROPERTY = APPNAME + ".sync.url";
 
   public static final String CLOUD_EMAIL = "email";
   public static final String CLOUD_END_DATE = "end_date";

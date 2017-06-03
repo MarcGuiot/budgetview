@@ -27,7 +27,7 @@
       <key name="innerTemplate" value="templates/standardPageTemplate.html"/>
     </page>
 
-    <page file="cloud.html" title="Cloud">
+    <page file="sync.html" title="Sync">
       <key name="title.hide" value="true"/>
       <key name="innerTemplate" value="templates/standardPageTemplate.html"/>
     </page>
@@ -124,11 +124,11 @@
                 title="Comment supprime-t-on une opération ?"/>
         </page>
 
-        <page file="support/faq/cloud.html" title="Utiliser BudgetView Cloud">
-          <page file="support/faq/cloud/creation_cloud.html"
-                title="Comment créer un compte Cloud ?"/>
-          <page file="support/faq/cloud/suppression_cloud.html"
-                title="Comment supprimer mon compte Cloud ?"/>
+        <page file="support/faq/sync.html" title="Utiliser BudgetView Sync">
+          <page file="support/faq/sync/creation_compte_sync.html"
+                title="Comment créer un compte BudgetView Sync ?"/>
+          <page file="support/faq/sync/suppression_compte_sync.html"
+                title="Comment supprimer mon compte BudgetView Sync ?"/>
         </page>
 
 
@@ -176,7 +176,7 @@
       </page>
 
       <page file="boutique/email-envoye.html" title="Un email vous a été envoyé"/>
-      <page file="boutique/abonnement-reussi.html" title="Votre compte Cloud est activé"/>
+      <page file="boutique/abonnement-reussi.html" title="Votre compte BudgetView Sync est activé"/>
       <page file="boutique/nouvelle-carte.html" title="Votre nouvelle carte est bien prise en compte"/>
       <page file="boutique/code-invalide.html" title="Ce lien d'activation est invalide"/>
       <page file="boutique/code-expire.html" title="Votre code d'activation a expiré"/>

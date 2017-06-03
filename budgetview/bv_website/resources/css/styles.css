@@ -134,7 +134,8 @@ div.container h1 {
 div.container h2.banner {
   border-top: 1px solid #DDD;
   border-bottom: 1px solid #DDD;
-  margin-bottom: 40px;
+  margin-top: 30px;
+  margin-bottom: 20px;
   padding: 5px;
   text-align: center;
 }
@@ -1152,14 +1153,26 @@ margin-top: 40px;
   vertical-align: middle;
 }
 
-/* ========== CLOUD ========== */
+/* ========== SYNC ========== */
 
-#cloud #banner {
+#sync #banner {
   margin-top: 30px;
 }
 
-#cloud #banner h1 {
-  margin-top: 60px;
+#sync #banner h1 {
+  margin-top: 70px;
+  margin-bottom:10px;
+}
+
+#sync #banner h2 {
+  margin-top: 5px;
+  margin-bottom:30px;
+}
+
+#sync .intro {
+  font-size: 13pt;
+  text-align: center;
+  margin-bottom: 15px;
 }
 
 /* ========== CLOUD ========== */
