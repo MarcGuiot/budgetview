@@ -9,6 +9,7 @@ import com.budgetview.server.cloud.model.ProviderUpdate;
 import com.budgetview.server.cloud.persistence.CloudSerializer;
 import com.budgetview.server.cloud.services.WebhookNotificationService;
 import com.budgetview.server.utils.DateConverter;
+import com.budgetview.shared.cloud.budgea.BudgeaAPI;
 import com.budgetview.shared.cloud.budgea.BudgeaSeriesConverter;
 import com.budgetview.shared.model.DefaultSeries;
 import com.budgetview.shared.model.Provider;
@@ -102,7 +103,9 @@ public class BudgeaWebHookServlet extends HttpCloudServlet {
         int budgeaUserId = budgeaConnection.getInt("id_user");
         user = getCloudUser(budgeaUserId, token);
         if (user == null) {
-          response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+          response.setStatus(HttpServletResponse.SC_OK);
+          logger.error("Received update for unknown budgea user " + budgeaUserId);
+          runDeleteBudgeaCommand(budgeaUserId, token);
           return;
         }
         boolean passwordError = "wrongpass".equalsIgnoreCase(budgeaConnection.optString("error"));
@@ -143,6 +146,22 @@ public class BudgeaWebHookServlet extends HttpCloudServlet {
     logger.info("Webhook successfully processed for user " + user.get(CloudUser.ID));
 
     response.setStatus(HttpServletResponse.SC_OK);
+  }
+
+  private void runDeleteBudgeaCommand(final int budgeaUserId, final String token) {
+    Thread thread = new Thread(new Runnable() {
+      public void run() {
+        try {
+          BudgeaAPI budgeaAPI = new BudgeaAPI();
+          budgeaAPI.setToken(token);
+          budgeaAPI.deleteUser(budgeaUserId);
+        }
+        catch (IOException e) {
+          logger.error("Failed to delete unmanaged user with budgea ID " + budgeaUserId, e);
+        }
+      }
+    });
+    thread.start();
   }
 
   private Glob getCloudUser(int budgeaUserId, String token) {

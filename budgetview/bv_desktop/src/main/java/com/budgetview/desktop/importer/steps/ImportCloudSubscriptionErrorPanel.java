@@ -21,6 +21,8 @@ public class ImportCloudSubscriptionErrorPanel extends AbstractImportStepPanel {
   private final CloudService cloudService;
   private ProgressPanel progressPanel;
   private JEditorPane messageField;
+  private JEditorPane backToSignupMessage;
+  private JButton backToSignupButton;
   private JButton actionButton;
 
   public ImportCloudSubscriptionErrorPanel(PicsouDialog dialog, ImportController controller, GlobRepository repository, Directory localDirectory) {
@@ -37,6 +39,16 @@ public class ImportCloudSubscriptionErrorPanel extends AbstractImportStepPanel {
 
     actionButton = new JButton();
     builder.add("actionButton", actionButton);
+
+    backToSignupMessage = GuiUtils.createReadOnlyHtmlComponent(Lang.get("import.cloud.subscription.backToSignup.message"));
+    builder.add("backToSignupMessage", backToSignupMessage);
+
+    backToSignupButton = new JButton(new AbstractAction(Lang.get("import.cloud.subscription.backToSignup.button")) {
+      public void actionPerformed(ActionEvent e) {
+        controller.showCloudSignup();
+      }
+    });
+    builder.add("backToSignupButton", backToSignupButton);
 
     builder.add("close", new AbstractAction(getCloseLabel()) {
       public void actionPerformed(ActionEvent e) {
@@ -57,16 +69,24 @@ public class ImportCloudSubscriptionErrorPanel extends AbstractImportStepPanel {
       case NO_SUBSCRIPTION:
         messageField.setText(Lang.get("import.cloud.subscription.nosubscription", email));
         actionButton.setAction(new BuySubscriptionAction(localDirectory));
+        setBackToSignupVisible(true);
         break;
       case EXPIRED:
         messageField.setText(Lang.get("import.cloud.subscription.expired", email));
         actionButton.setAction(new BuySubscriptionAction(localDirectory));
+        setBackToSignupVisible(true);
         break;
       default:
         messageField.setText(Lang.get("import.cloud.subscription.other", email));
         actionButton.setAction(new BuySubscriptionAction(localDirectory));
+        setBackToSignupVisible(false);
         break;
     }
+  }
+
+  private void setBackToSignupVisible(boolean visible) {
+    backToSignupMessage.setVisible(visible);
+    backToSignupButton.setVisible(visible);
   }
 
   public void prepareForDisplay() {

@@ -19,6 +19,10 @@
 
             <button ref="actionButton" fill="none" anchor="center" marginTop="20"/>
 
+            <htmlEditorPane ref="backToSignupMessage" marginTop="20"/>
+
+            <button ref="backToSignupButton" fill="none" anchor="center" marginTop="20"/>
+
             <filler fill="vertical"/>
 
           </column>
