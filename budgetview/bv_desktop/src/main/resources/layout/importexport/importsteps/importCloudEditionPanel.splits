@@ -52,7 +52,7 @@
         </row>
 
         <column styleClass="separator" weightY="20" marginTop="20">
-          <label text="Votre abonnement BudgetView Cloud" font="-,bold,16" anchor="center" marginTop="10"/>
+          <label text="$import.cloud.edition.account" font="-,bold,16" anchor="center" marginTop="10" marginBottom="5"/>
           <row>
             <filler fill="horizontal"/>
             <label ref="currentEmailAddress"/>

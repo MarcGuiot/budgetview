@@ -31,7 +31,7 @@
           </column>
         </scrollPane>
 
-        <htmlEditorPane text="$import.cloud.bankConnection.security" styleClass="multiLineLabel"/>
+        <htmlEditorPane ref="securityMessage" styleClass="multiLineLabel"/>
 
       </column>
     </column>

@@ -18,7 +18,7 @@ import java.util.regex.Pattern;
 
 public class UrlTest extends TestCase {
 
-  private Pattern URL_PATTERN = Pattern.compile(".*(http://[.A-z0-9_/#!-]+).*");
+  private Pattern URL_PATTERN = Pattern.compile(".*(http[s]?://[.A-z0-9_/#!-]+).*");
 
   @Test
   public void testFrench() throws Exception {
@@ -43,6 +43,7 @@ public class UrlTest extends TestCase {
       }
     }
     for (String url : urls) {
+      System.out.println(url);
       checkUrl(file, url);
     }
   }
@@ -57,7 +58,7 @@ public class UrlTest extends TestCase {
       fail("Malformed URL: " + url);
     }
     catch (final IOException e) {
-      fail("URL '" + url + "' not reachable in file: " + file);
+      fail("URL '" + url + "' not reachable in file: " + file + " - " + e.getMessage());
     }
   }
 

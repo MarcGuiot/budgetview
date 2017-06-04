@@ -4,6 +4,7 @@ import com.budgetview.budgea.model.*;
 import com.budgetview.desktop.cloud.CloudService;
 import com.budgetview.desktop.components.ProgressPanel;
 import com.budgetview.desktop.components.dialogs.PicsouDialog;
+import com.budgetview.desktop.help.HyperlinkHandler;
 import com.budgetview.desktop.importer.ImportController;
 import com.budgetview.desktop.importer.components.CloudConnectionFieldEditor;
 import com.budgetview.desktop.importer.components.CloudConnectionFieldEditorFactory;
@@ -94,6 +95,10 @@ public class ImportCloudBankConnectionPanel extends AbstractImportStepPanel {
         });
       }
     });
+
+    JEditorPane securityMessage = GuiUtils.createReadOnlyHtmlComponent(Lang.get("import.cloud.bankConnection.security"));
+    securityMessage.addHyperlinkListener(new HyperlinkHandler(localDirectory));
+    builder.add("securityMessage", securityMessage);
 
     errorMessage = GuiUtils.createReadOnlyHtmlComponent();
     builder.add("errorMessage", errorMessage);

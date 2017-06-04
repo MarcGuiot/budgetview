@@ -127,8 +127,18 @@
         <page file="support/faq/sync.html" title="Utiliser BudgetView Sync">
           <page file="support/faq/sync/creation_compte_sync.html"
                 title="Comment créer un compte BudgetView Sync ?"/>
+          <page file="support/faq/sync/ajouter_connexion_banque.html"
+                title="Comment ajouter une connexion bancaire supplémentaire ?"/>
+          <page file="support/faq/sync/supprimer_connexion_banque.html"
+                title="Comment supprimer une connexion bancaire ?"/>
+          <page file="support/faq/sync/changer_mot_de_passe_banque.html"
+                title="Comment changer le mot de passe d'accès à ma banque ?"/>
+          <page file="support/faq/sync/modifier_adresse_email.html"
+                title="Comment modifier l'adresse email de mon compte BudgetView Sync ?"/>
           <page file="support/faq/sync/suppression_compte_sync.html"
                 title="Comment supprimer mon compte BudgetView Sync ?"/>
+          <page file="support/faq/sync/confidentialite_securite_donnees.html"
+                title="Comment sont assurées la confidentialité et la sécurité de mes données ?"/>
         </page>
 
 
