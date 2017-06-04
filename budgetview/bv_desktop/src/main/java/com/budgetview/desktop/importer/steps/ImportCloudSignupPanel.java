@@ -5,10 +5,12 @@ import com.budgetview.desktop.components.ProgressPanel;
 import com.budgetview.desktop.components.dialogs.PicsouDialog;
 import com.budgetview.desktop.importer.ImportController;
 import com.budgetview.model.CloudDesktopUser;
+import com.budgetview.model.User;
 import com.budgetview.shared.cloud.CloudSubscriptionStatus;
 import com.budgetview.utils.Lang;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.splits.utils.GuiUtils;
+import org.globsframework.model.Glob;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.utils.Strings;
 import org.globsframework.utils.directory.Directory;
@@ -136,8 +138,21 @@ public class ImportCloudSignupPanel extends AbstractImportStepPanel {
       messageLabel.setText(Lang.get("import.cloud.modifyEmailAddress.message"));
     }
     else {
+      emailField.setText(getDefaultEmail());
       messageLabel.setText(Lang.get("import.cloud.signup.message"));
     }
-    emailField.requestFocus();
+    GuiUtils.selectAndRequestFocus(emailField);
+  }
+
+  public String getDefaultEmail() {
+    Glob cloudDesktopUser = repository.find(CloudDesktopUser.KEY);
+    if (cloudDesktopUser != null && Strings.isNotEmpty(cloudDesktopUser.get(CloudDesktopUser.EMAIL))) {
+      return cloudDesktopUser.get(CloudDesktopUser.EMAIL);
+    }
+    Glob user = repository.find(User.KEY);
+    if (user != null && Strings.isNotEmpty(user.get(User.EMAIL))) {
+      return user.get(User.EMAIL);
+    }
+    return null;
   }
 }

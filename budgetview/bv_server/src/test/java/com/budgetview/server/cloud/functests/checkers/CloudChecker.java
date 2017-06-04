@@ -33,7 +33,7 @@ public class CloudChecker {
   public static final String CLOUD_SUBSCRIPTION_BACKDOOR = "/cloudSubscriptionBackdoor";
 
   public void startServer(final PaymentChecker payments) throws Exception {
-    cloudServer = new CloudServer("budgetview/bv_server/dev/config/bv_cloud_test.properties") {
+    cloudServer = new CloudServer("budgetview/bv_server/server_admin/config/bv_cloud_test.properties") {
       protected Directory createDirectory() throws Exception {
         Directory directory = new DefaultDirectory(super.createDirectory());
         payments.install(directory);

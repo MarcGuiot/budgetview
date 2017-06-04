@@ -7,7 +7,7 @@ public class LicenseServerChecker {
   private boolean started;
 
   public LicenseServerChecker() throws Exception {
-    server = new LicenseServer("budgetview/bv_server/dev/config/bv_license_test.properties");
+    server = new LicenseServer("budgetview/bv_server/server_admin/config/bv_license_test.properties");
   }
 
   public void add(HttpServlet holder, String name) {

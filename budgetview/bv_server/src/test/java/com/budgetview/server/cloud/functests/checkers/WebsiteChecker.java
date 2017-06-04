@@ -8,7 +8,7 @@ public class WebsiteChecker {
   }
 
   public void startServer() throws Exception {
-    server = new WebsiteStubServer("budgetview/bv_server/dev/config/bv_website_test.properties");
+    server = new WebsiteStubServer("budgetview/bv_server/server_admin/config/bv_website_test.properties");
     server.start();
     server.init();
   }

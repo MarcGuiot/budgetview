@@ -69,21 +69,25 @@ public class CloudImportSeriesTest extends CloudDesktopTestCase {
 
     categorization.setVariable("Auchan", "Groceries");
 
-    budgetView.variable.checkContent("| Groceries     | 100.00 | To define |\n" +
-                                     "| Restaurant    | 15.00  | To define |\n" +
-                                     "| Animals       | 0.00   | To define |\n" +
-                                     "| Bank fees     | 0.00   | To define |\n" +
-                                     "| Beauty        | 0.00   | To define |\n" +
-                                     "| Cash          | 0.00   | To define |\n" +
-                                     "| Clothing      | 0.00   | To define |\n" +
-                                     "| Fuel          | 0.00   | To define |\n" +
-                                     "| Gifts         | 0.00   | To define |\n" +
-                                     "| Health        | 0.00   | To define |\n" +
-                                     "| Leisures      | 0.00   | To define |\n" +
-                                     "| Miscellaneous | 0.00   | To define |\n" +
-                                     "| Parking       | 0.00   | To define |\n" +
-                                     "| Toll          | 0.00   | To define |\n" +
-                                     "| Transport     | 0.00   | To define |");
+    budgetView.variable.checkContent("| Groceries      | 100.00 | To define |\n" +
+                                     "| Restaurant     | 15.00  | To define |\n" +
+                                     "| Animals        | 0.00   | To define |\n" +
+                                     "| Bank fees      | 0.00   | To define |\n" +
+                                     "| Beauty         | 0.00   | To define |\n" +
+                                     "| Cash           | 0.00   | To define |\n" +
+                                     "| Clothing       | 0.00   | To define |\n" +
+                                     "| Drugstore      | 0.00   | To define |\n" +
+                                     "| Fuel           | 0.00   | To define |\n" +
+                                     "| Gifts          | 0.00   | To define |\n" +
+                                     "| Health         | 0.00   | To define |\n" +
+                                     "| Home           | 0.00   | To define |\n" +
+                                     "| Leisures       | 0.00   | To define |\n" +
+                                     "| Miscellaneous  | 0.00   | To define |\n" +
+                                     "| Parking        | 0.00   | To define |\n" +
+                                     "| Physician      | 0.00   | To define |\n" +
+                                     "| Reimbursements | 0.00   | To define |\n" +
+                                     "| Toll           | 0.00   | To define |\n" +
+                                     "| Transport      | 0.00   | To define |");
 
     budgea.callWebhook(BudgeaStatement.init()
                          .addConnection(1, 123, 40, "Connecteur de test", "2016-08-10 17:44:26")
@@ -106,21 +110,25 @@ public class CloudImportSeriesTest extends CloudDesktopTestCase {
       .importAccountAndGetSummary()
       .checkSummaryAndValidate(3, 0, 2);
 
-    budgetView.variable.checkContent("| Groceries     | 175.00 | To define |\n" +
-                                     "| Restaurant    | 15.00  | To define |\n" +
-                                     "| Bank fees     | 5.00   | To define |\n" +
-                                     "| Animals       | 0.00   | To define |\n" +
-                                     "| Beauty        | 0.00   | To define |\n" +
-                                     "| Cash          | 0.00   | To define |\n" +
-                                     "| Clothing      | 0.00   | To define |\n" +
-                                     "| Fuel          | 0.00   | To define |\n" +
-                                     "| Gifts         | 0.00   | To define |\n" +
-                                     "| Health        | 0.00   | To define |\n" +
-                                     "| Leisures      | 0.00   | To define |\n" +
-                                     "| Miscellaneous | 0.00   | To define |\n" +
-                                     "| Parking       | 0.00   | To define |\n" +
-                                     "| Toll          | 0.00   | To define |\n" +
-                                     "| Transport     | 0.00   | To define |\n");
+    budgetView.variable.checkContent("| Groceries      | 175.00 | To define |\n" +
+                                     "| Restaurant     | 15.00  | To define |\n" +
+                                     "| Bank fees      | 5.00   | To define |\n" +
+                                     "| Animals        | 0.00   | To define |\n" +
+                                     "| Beauty         | 0.00   | To define |\n" +
+                                     "| Cash           | 0.00   | To define |\n" +
+                                     "| Clothing       | 0.00   | To define |\n" +
+                                     "| Drugstore      | 0.00   | To define |\n" +
+                                     "| Fuel           | 0.00   | To define |\n" +
+                                     "| Gifts          | 0.00   | To define |\n" +
+                                     "| Health         | 0.00   | To define |\n" +
+                                     "| Home           | 0.00   | To define |\n" +
+                                     "| Leisures       | 0.00   | To define |\n" +
+                                     "| Miscellaneous  | 0.00   | To define |\n" +
+                                     "| Parking        | 0.00   | To define |\n" +
+                                     "| Physician      | 0.00   | To define |\n" +
+                                     "| Reimbursements | 0.00   | To define |\n" +
+                                     "| Toll           | 0.00   | To define |\n" +
+                                     "| Transport      | 0.00   | To define |");
 
     operations.openImportDialog()
       .selectCloudRefreshAndGetSummary()

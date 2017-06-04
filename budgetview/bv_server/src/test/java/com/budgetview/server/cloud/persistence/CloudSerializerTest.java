@@ -17,7 +17,7 @@ import static org.globsframework.model.FieldValue.value;
 public class CloudSerializerTest extends TestCase {
   public void test() throws Exception {
 
-    ConfigService configService = new ConfigService("budgetview/bv_server/dev/config/bv_cloud_test.properties");
+    ConfigService configService = new ConfigService("budgetview/bv_server/server_admin/config/bv_cloud_test.properties");
     Directory directory = new DefaultDirectory();
     directory.add(configService);
     CloudSerializer serializer = new CloudSerializer(directory);

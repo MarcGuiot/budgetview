@@ -28,7 +28,7 @@ public enum DefaultSeries implements GlobConstantContainer {
   HEALTH_INSURANCE("healthInsurance", 28, BudgetArea.RECURRING),
 
   GROCERIES("groceries", 13, BudgetArea.VARIABLE),
-  HOME("home", 33, BudgetArea.RECURRING),
+  HOME("home", 33, BudgetArea.VARIABLE),
   HEALTH("health", 14, BudgetArea.VARIABLE),
   PHYSICIAN("physician", 15, BudgetArea.VARIABLE),
   PHARMACY("pharmacy", 16, BudgetArea.VARIABLE),
