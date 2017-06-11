@@ -32,6 +32,11 @@ public class JsonGlobWriter extends JSONWriter {
     value(fieldValues.get(field));
   }
 
+  public void field(TimeStampField field, String key) {
+    key(key);
+    value(JsonGlobFormat.toString(fieldValues.get(field)));
+  }
+
   public void field(DateField field, String key) {
     key(key);
     value(JsonGlobFormat.toString(fieldValues.get(field)));

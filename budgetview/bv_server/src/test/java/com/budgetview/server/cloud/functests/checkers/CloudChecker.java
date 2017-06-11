@@ -28,12 +28,14 @@ import java.util.Date;
 
 public class CloudChecker {
 
+  public static final String CONFIG_FILE_PATH = "budgetview/bv_server/server_admin/config/bv_cloud_test.properties";
+
   private CloudServer cloudServer;
 
   public static final String CLOUD_SUBSCRIPTION_BACKDOOR = "/cloudSubscriptionBackdoor";
 
   public void startServer(final PaymentChecker payments) throws Exception {
-    cloudServer = new CloudServer("budgetview/bv_server/server_admin/config/bv_cloud_test.properties") {
+    cloudServer = new CloudServer(CONFIG_FILE_PATH) {
       protected Directory createDirectory() throws Exception {
         Directory directory = new DefaultDirectory(super.createDirectory());
         payments.install(directory);

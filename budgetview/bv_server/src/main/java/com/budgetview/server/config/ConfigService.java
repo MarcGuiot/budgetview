@@ -20,7 +20,7 @@ public class ConfigService {
 
     public Builder() {
       try {
-        configService =new ConfigService();
+        configService = new ConfigService();
       }
       catch (IOException e) {
         throw new RuntimeException(e);
@@ -47,12 +47,10 @@ public class ConfigService {
   }
 
   public ConfigService(String... args) throws IOException, InvalidParameter {
-    if (args.length == 1) {
-      loadProperties(args[0]);
+    if (args.length < 1) {
+      throw new InvalidParameter("Expecting first command-line argument: <properties_file_path>");
     }
-    if (args.length > 1) {
-      throw new InvalidParameter("Expecting only one command-line argument: <properties_file_path>");
-    }
+    loadProperties(args[0]);
   }
 
   private void loadProperties(String propertiesFile) throws IOException {

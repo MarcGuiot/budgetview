@@ -19,12 +19,10 @@ import java.util.Arrays;
 public class SendMailCreateMobileUserServlet extends AbstractHttpServlet {
   static Logger logger = Logger.getLogger("SendMailCreateMobileUserServlet");
   private String root;
-  private Integer port;
   private Mailer mailer;
 
-  public SendMailCreateMobileUserServlet(String root, Directory directory, Integer port) {
+  public SendMailCreateMobileUserServlet(String root, Directory directory) {
     this.root = root;
-    this.port = port;
     this.mailer = directory.get(Mailer.class);
   }
 
@@ -51,7 +49,8 @@ public class SendMailCreateMobileUserServlet extends AbstractHttpServlet {
       boolean mkdir = dir.mkdir();
       logger.info(content + (mkdir? " created " : " not created"));
     }
-    URIBuilder builder = new URIBuilder("https://www.mybudgetview.fr:" + port + MobileConstants.CREATE_MOBILE_USER);
+
+    URIBuilder builder = new URIBuilder(MobileConstants.createUserUrl());
     builder.addParameter(LicenseConstants.HEADER_MAIL_FROM, URLEncoder.encode(mail, "UTF-8"));
     builder.addParameter(MobileConstants.HEADER_LANG, lang);
     builder.addParameter(LicenseConstants.CODING, codedMail);

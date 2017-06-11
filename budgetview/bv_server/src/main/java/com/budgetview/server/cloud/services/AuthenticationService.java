@@ -9,7 +9,6 @@ import org.apache.log4j.Logger;
 import org.globsframework.model.FieldValue;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
-import org.globsframework.model.format.GlobPrinter;
 import org.globsframework.sqlstreams.*;
 import org.globsframework.sqlstreams.constraints.Where;
 import org.globsframework.sqlstreams.exceptions.GlobsSQLException;
@@ -57,7 +56,7 @@ public class AuthenticationService {
     return null;
   }
 
-  public Integer createUser(String email, String lang) throws GlobsSQLException {
+  public Glob createUser(String email, String lang) throws GlobsSQLException {
     String lowerCaseEmail = email.toLowerCase();
     SqlConnection connection = database.connect();
     try {
@@ -67,7 +66,9 @@ public class AuthenticationService {
         .set(CloudUser.CREATION_DATE, new Date())
         .getRequest();
       request.execute();
-      return request.getLastGeneratedIds().get(CloudUser.ID);
+
+      Integer id = request.getLastGeneratedIds().get(CloudUser.ID);
+      return connection.startSelect(CloudUser.TYPE, Where.fieldEquals(CloudUser.ID, id)).getUnique();
     }
     finally {
       try {
@@ -123,6 +124,7 @@ public class AuthenticationService {
   public static class DeviceId {
     public final int id;
     public final String token;
+
     public DeviceId(int id, String token) {
       this.id = id;
       this.token = token;
@@ -269,6 +271,23 @@ public class AuthenticationService {
       }
       catch (GlobsSQLException e) {
         logger.error("Commit failed when looking for user: " + userId, e);
+      }
+    }
+  }
+
+  public void setSubscriptionEndDate(Glob user, Date subscriptionEndDate) {
+    SqlConnection connection = database.connect();
+    try {
+      connection.startUpdate(CloudUser.TYPE, Where.fieldEquals(CloudUser.ID, user.get(CloudUser.ID)))
+        .set(CloudUser.SUBSCRIPTION_END_DATE, subscriptionEndDate)
+        .run();
+    }
+    finally {
+      try {
+        connection.commitAndClose();
+      }
+      catch (GlobsSQLException e) {
+        logger.error("Commit failed when looking for user: " + user.get(CloudUser.ID), e);
       }
     }
   }

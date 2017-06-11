@@ -37,19 +37,19 @@ cd $BV_SERVER_ROOT
 echo "Preparing local release..."
 mkdir -p $RELEASE_LOCAL_DIR
 cp $GENERATED_JAR $RELEASE_LOCAL_DIR/
-cp $BV_SERVER_ROOT/dev/config/*_local.properties $RELEASE_LOCAL_DIR
-cp $BV_SERVER_ROOT/dev/config/log4j_local.properties $RELEASE_LOCAL_DIR
-cp $BV_SERVER_ROOT/dev/scripts/start_*_local_server.sh $RELEASE_LOCAL_DIR
+cp $BV_SERVER_ROOT/server_admin/config/*_local.properties $RELEASE_LOCAL_DIR
+cp $BV_SERVER_ROOT/server_admin/config/log4j_local.properties $RELEASE_LOCAL_DIR
+cp $BV_SERVER_ROOT/server_admin/scripts/loca/*.sh $RELEASE_LOCAL_DIR
 cp $BV_SERVER_ROOT/ssl/keystore $RELEASE_LOCAL_DIR
 chmod +x $RELEASE_LOCAL_DIR/*.sh
 
 echo "Preparing prod release..."
 mkdir -p $RELEASE_PROD_DIR
 cp $GENERATED_JAR $RELEASE_PROD_DIR
-cp $BV_SERVER_ROOT/dev/config/bv_*_prod.properties $RELEASE_PROD_DIR
-cp $BV_SERVER_ROOT/dev/config/log4j_*_prod.properties $RELEASE_PROD_DIR
-cp $BV_SERVER_ROOT/dev/config/logging.properties $RELEASE_PROD_DIR
-cp $BV_SERVER_ROOT/dev/scripts/*_prod.sh $RELEASE_PROD_DIR
+cp $BV_SERVER_ROOT/server_admin/config/bv_*_prod.properties $RELEASE_PROD_DIR
+cp $BV_SERVER_ROOT/server_admin/config/log4j_*_prod.properties $RELEASE_PROD_DIR
+cp $BV_SERVER_ROOT/server_admin/config/logging.properties $RELEASE_PROD_DIR
+cp $BV_SERVER_ROOT/server_admin/scripts/*.sh $RELEASE_PROD_DIR
 chmod +x $RELEASE_PROD_DIR/*.sh
 
 echo "Done"

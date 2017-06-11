@@ -5,6 +5,8 @@ import org.globsframework.utils.exceptions.InvalidParameter;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class Strings {
   public static final String LINE_SEPARATOR = System.getProperty("line.separator");
@@ -276,5 +278,14 @@ public class Strings {
 
   public static String removeSpaces(String text) {
     return text.replaceAll("[ \t\n]", "");
+  }
+
+  public static boolean looksLikeAnEmail(String email) {
+    if (email.length() < 3) {
+      return false;
+    }
+    Pattern pattern = Pattern.compile("[A-z0-9\\.@_-]+");
+    Matcher matcher = pattern.matcher(email);
+    return matcher.matches();
   }
 }

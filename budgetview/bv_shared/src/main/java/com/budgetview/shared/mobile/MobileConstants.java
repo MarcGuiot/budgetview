@@ -6,7 +6,8 @@ public class MobileConstants {
 
   public static final String APPNAME = "budgetview";
   public static final String SERVER_URL_PROPERTY = APPNAME + ".mobile.url";
-  public static final String PROD_SERVER_URL = "http://register.mybudgetview.fr:8080";
+
+  private static final String PROD_SERVER_URL = "https://register.mybudgetview.fr";
 
   public static final String MAJOR_VERSION_NAME = "MAJOR_VERSION";
   public static final String MINOR_VERSION_NAME = "MINOR_VERSION";
@@ -18,6 +19,9 @@ public class MobileConstants {
   public static final String SEND_MAIL_REMINDER_FROM_MOBILE = "/sendMailFromMobile";
   public static final String DELETE_MOBILE_ACCOUNT = "/deleteMobileAccount";
 
+  public static final String WWW_MYBUDGETVIEW_FR = "https://www.mybudgetview.fr";
+  public static final String WWW_MYBUDGETVIEW_COM = "http://www.mybudgetview.com";
+
   public static final String STATUS = "STATUS";
   public static final String CRYPTED_INFO = "info";
   public static final String MAIL = "mail";
@@ -25,11 +29,25 @@ public class MobileConstants {
 
   public static final String SALT = "d48(cWqH";
 
+  private static Integer port = 1443;
+
   public static String getServerUrl(String path) {
+    return getBaseUrl() + ":" + port + path;
+  }
+
+  private static String getBaseUrl() {
     String url = PROD_SERVER_URL;
     Utils.beginRemove();
-    url = System.getProperty(SERVER_URL_PROPERTY, PROD_SERVER_URL) + path;
+    url = System.getProperty(SERVER_URL_PROPERTY, PROD_SERVER_URL);
     Utils.endRemove();
     return url;
+  }
+
+  public static String createUserUrl() {
+    return getServerUrl(CREATE_MOBILE_USER);
+  }
+
+  public static void setPort(Integer port) {
+    MobileConstants.port = port;
   }
 }

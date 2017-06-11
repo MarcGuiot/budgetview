@@ -55,4 +55,13 @@ public enum Provider implements GlobConstantContainer {
     }
     throw new ItemNotFound("No provider found for id " + id);
   }
+
+  public static String toString(int id) {
+    for (Provider provider : values()) {
+      if (provider.getId() == id) {
+        return provider.name;
+      }
+    }
+    return "";
+  }
 }

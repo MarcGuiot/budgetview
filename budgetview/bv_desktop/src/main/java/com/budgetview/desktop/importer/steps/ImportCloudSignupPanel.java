@@ -17,8 +17,6 @@ import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class ImportCloudSignupPanel extends AbstractImportStepPanel {
 
@@ -80,7 +78,7 @@ public class ImportCloudSignupPanel extends AbstractImportStepPanel {
       return;
     }
 
-    if (!looksLikeAnEmail(email)) {
+    if (!Strings.looksLikeAnEmail(email)) {
       errorLabel.setText(Lang.get("import.cloud.signup.invalid.email"));
       errorLabel.setVisible(true);
       return;
@@ -121,15 +119,6 @@ public class ImportCloudSignupPanel extends AbstractImportStepPanel {
   private void setAllEnabled(boolean enabled) {
     nextAction.setEnabled(enabled);
     emailField.setEnabled(enabled);
-  }
-
-  private boolean looksLikeAnEmail(String email) {
-    if (email.length() < 3) {
-      return false;
-    }
-    Pattern pattern = Pattern.compile("[A-z0-9\\.@_-]+");
-    Matcher matcher = pattern.matcher(email);
-    return matcher.matches();
   }
 
   public void prepareForDisplay() {
