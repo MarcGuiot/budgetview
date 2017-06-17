@@ -1,9 +1,6 @@
 package com.budgetview.server.cloud;
 
-import com.budgetview.server.cloud.services.AuthenticationService;
-import com.budgetview.server.cloud.services.EmailValidationService;
-import com.budgetview.server.cloud.services.PaymentService;
-import com.budgetview.server.cloud.services.StripeService;
+import com.budgetview.server.cloud.services.*;
 import com.budgetview.server.cloud.servlet.*;
 import com.budgetview.server.config.ConfigService;
 import com.budgetview.server.license.mail.Mailer;
@@ -69,6 +66,10 @@ public class CloudServer {
   }
 
   protected Directory createDirectory() throws Exception {
+    return createDirectory(config);
+  }
+
+  public static Directory createDirectory(ConfigService config) {
     Directory directory = new DefaultDirectory();
     directory.add(config);
     directory.add(GlobsDatabase.class, CloudDb.create(config));
@@ -76,6 +77,7 @@ public class CloudServer {
     directory.add(new AuthenticationService(directory));
     directory.add(new EmailValidationService(directory));
     directory.add(PaymentService.class, new StripeService());
+    directory.add(new UserService(directory));
     return directory;
   }
 

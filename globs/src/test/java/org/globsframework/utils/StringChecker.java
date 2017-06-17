@@ -15,8 +15,12 @@ public class StringChecker {
     }
   }
 
-  public void checkEquals(String text) {
-    Assert.assertEquals(content, text);
+  public void checkEquals(String expected) {
+    Assert.assertEquals(expected, content);
+  }
+
+  public void checkEquals(StringChecker other) {
+    Assert.assertEquals(content, other.content);
   }
 
   public String toString() {

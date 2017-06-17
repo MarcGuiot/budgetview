@@ -15,6 +15,6 @@ public class ShowBudgeaUser {
     if (configFile == null || budgeaId == null) {
       return "Usage: script <config_file> <budgea_user_id>";
     }
-    return ShowUser.print(configFile, Where.fieldEquals(CloudUser.PROVIDER_USER_ID, budgeaId));
+    return ShowCloudUser.print(configFile, Where.fieldEquals(CloudUser.PROVIDER_USER_ID, budgeaId));
   }
 }

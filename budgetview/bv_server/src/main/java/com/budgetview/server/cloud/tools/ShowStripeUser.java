@@ -15,6 +15,6 @@ public class ShowStripeUser {
     if (configFile == null || stripeCustomerId == null) {
       return "Usage: script <config_file> <stripe_customer_id>";
     }
-    return ShowUser.print(configFile, Where.fieldEquals(CloudUser.STRIPE_CUSTOMER_ID, stripeCustomerId));
+    return ShowCloudUser.print(configFile, Where.fieldEquals(CloudUser.STRIPE_CUSTOMER_ID, stripeCustomerId));
   }
 }

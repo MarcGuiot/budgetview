@@ -17,7 +17,7 @@ import java.util.List;
 public class AddUser {
   public static void main(String... args) throws IOException {
     if (args.length < 2) {
-      System.out.println("Usage: AddUser <config_file> <email_address> <email_address> ...");
+      System.out.println("Usage: AddCloudUser <config_file> <email_address> <email_address> ...");
       return;
     }
 

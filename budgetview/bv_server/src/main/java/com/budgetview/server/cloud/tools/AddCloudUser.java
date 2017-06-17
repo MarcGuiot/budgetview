@@ -14,9 +14,9 @@ import org.globsframework.utils.directory.Directory;
 import java.io.IOException;
 import java.util.Date;
 
-public class AddUser {
+public class AddCloudUser {
 
-  private static Logger logger = Logger.getLogger("AddUser");
+  private static Logger logger = Logger.getLogger("AddCloudUser");
 
   public static void main(String... args) throws IOException {
 

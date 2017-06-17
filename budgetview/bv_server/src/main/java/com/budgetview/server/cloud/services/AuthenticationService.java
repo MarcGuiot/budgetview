@@ -139,7 +139,7 @@ public class AuthenticationService {
       SqlCreateRequest request = connection.startCreate(CloudUserDevice.TYPE)
         .set(CloudUserDevice.USER, userId)
         .set(CloudUserDevice.TOKEN, token)
-        .set(CloudUserDevice.LAST_UPDATE, now())
+        .set(CloudUserDevice.LAST_SEEN, now())
         .getRequest();
       request.execute();
       id = request.getLastGeneratedIds().get(CloudUserDevice.ID);
@@ -217,7 +217,7 @@ public class AuthenticationService {
         return null;
       }
       connection.startUpdate(CloudUserDevice.TYPE, Where.globEquals(usersWithToken.getFirst()))
-        .set(CloudUserDevice.LAST_UPDATE, new Date())
+        .set(CloudUserDevice.LAST_SEEN, new Date())
         .getRequest()
         .execute();
 

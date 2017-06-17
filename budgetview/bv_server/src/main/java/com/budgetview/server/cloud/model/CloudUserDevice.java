@@ -22,7 +22,7 @@ public class CloudUserDevice {
 
   public static StringField TOKEN;
 
-  public static DateField LAST_UPDATE;
+  public static DateField LAST_SEEN;
 
   static {
     GlobTypeLoader.init(CloudUserDevice.class, "cloudUserDevice");

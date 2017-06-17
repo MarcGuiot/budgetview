@@ -5,21 +5,15 @@ import com.budgetview.server.cloud.commands.HttpCommand;
 import com.budgetview.server.cloud.model.*;
 import com.budgetview.server.cloud.services.AuthenticationService;
 import com.budgetview.server.cloud.services.EmailValidationService;
-import com.budgetview.server.cloud.services.PaymentService;
+import com.budgetview.server.cloud.services.UserService;
 import com.budgetview.server.license.mail.Mailer;
 import com.budgetview.shared.cloud.CloudConstants;
 import com.budgetview.shared.cloud.CloudSubscriptionStatus;
-import com.budgetview.shared.cloud.budgea.BudgeaAPI;
 import org.apache.log4j.Logger;
 import org.globsframework.json.JsonGlobWriter;
 import org.globsframework.model.Glob;
-import org.globsframework.sqlstreams.GlobsDatabase;
-import org.globsframework.sqlstreams.SqlConnection;
-import org.globsframework.sqlstreams.constraints.Where;
-import org.globsframework.sqlstreams.exceptions.GlobsSQLException;
 import org.globsframework.utils.Strings;
 import org.globsframework.utils.directory.Directory;
-import org.globsframework.utils.exceptions.ItemNotFound;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -91,85 +85,39 @@ public class UserServlet extends HttpCloudServlet {
 
     Command command = new HttpCommand(req, resp, logger) {
       protected int doRun(JsonGlobWriter writer) throws IOException, InvalidHeader {
-        Integer userId = getIntHeader(CloudConstants.CLOUD_USER_ID);
+        final Integer userId = getIntHeader(CloudConstants.CLOUD_USER_ID);
         Integer deviceId = getIntHeader(CloudConstants.DEVICE_ID);
         String deviceToken = getStringHeader(CloudConstants.DEVICE_TOKEN);
-        Glob user = authentication.findUser(userId, deviceId, deviceToken);
+        final Glob user = authentication.findUser(userId, deviceId, deviceToken);
         if (user == null) {
           logger.error("Could not identify user:" + userId);
           return HttpServletResponse.SC_UNAUTHORIZED;
         }
 
-        Integer providerUserId = user.get(CloudUser.PROVIDER_USER_ID);
-        try {
-          BudgeaAPI budgeaAPI = new BudgeaAPI();
-          budgeaAPI.setToken(user.get(CloudUser.PROVIDER_ACCESS_TOKEN));
-          budgeaAPI.deleteUser(providerUserId);
-        }
-        catch (IOException e) {
-          String message = "Failed to delete Budgea user " + userId + " / device " + deviceId + " with provider user ID " + providerUserId;
-          logger.error(message, e);
-          mailer.sendErrorToAdmin(getClass(), "Budgea user deletion failed", message, e);
-        }
+        final String email = user.get(CloudUser.EMAIL);
 
-        String stripeCustomerId = user.get(CloudUser.STRIPE_CUSTOMER_ID);
-        String stripeSubscriptionId = user.get(CloudUser.STRIPE_SUBSCRIPTION_ID);
-        try {
-          directory.get(PaymentService.class).deleteSubscription(stripeCustomerId, stripeSubscriptionId);
-        }
-        catch (ItemNotFound e) {
-          String message = "Failed to delete Stripe customer " + stripeCustomerId + " with subscription " + stripeSubscriptionId + " (userId: " + userId + ")";
-          logger.error(message, e);
-          mailer.sendErrorToAdmin(getClass(), "Stripe user deletion failed", message, e);
-        }
-
-        GlobsDatabase database = directory.get(GlobsDatabase.class);
-        SqlConnection connection = database.connect();
-
-        try {
-          connection
-            .startDelete(ProviderUpdate.TYPE, Where.fieldEquals(ProviderUpdate.USER, userId))
-            .execute();
-          connection
-            .startDelete(ProviderConnection.TYPE, Where.fieldEquals(ProviderConnection.USER, userId))
-            .execute();
-          connection
-            .startDelete(CloudUserDevice.TYPE, Where.fieldEquals(CloudUserDevice.USER, userId))
-            .execute();
-          connection
-            .startDelete(CloudEmailValidation.TYPE, Where.fieldEquals(CloudEmailValidation.USER, userId))
-            .execute();
-          connection
-            .startDelete(CloudUser.TYPE, Where.fieldEquals(CloudUser.ID, userId))
-            .execute();
-        }
-        catch (GlobsSQLException e) {
-          String message = "Failed to delete user " + userId + " with provider user ID " + providerUserId + " from database";
-          logger.error(message, e);
-          mailer.sendErrorToAdmin(getClass(), "User deletion failed", message, e);
-          return HttpServletResponse.SC_INTERNAL_SERVER_ERROR;
-        }
-        finally {
-          try {
-            connection.commitAndClose();
+        boolean success = directory.get(UserService.class).deleteUser(user, new UserService.DeletionCallback() {
+          public void processOk() {
+            try {
+              mailer.sendCloudAccountDeleted(user.get(CloudUser.EMAIL), user.get(CloudUser.LANG));
+            }
+            catch (Exception e) {
+              logger.error("Failed to send cloud account deletion email to " + email, e);
+            }
+            logger.info("Deleted account for user " + userId + " with email " + email);
           }
-          catch (Exception e) {
-            logger.error("Commit failed when deleting user: " + userId, e);
+
+          public void processError(String message, Exception e) {
+            logger.error(message, e);
+            mailer.sendErrorToAdmin(getClass(), "Error when deleting user " + email, message, e);
           }
-        }
+        });
 
-        try {
-          mailer.sendCloudAccountDeleted(user.get(CloudUser.EMAIL), user.get(CloudUser.LANG));
-        }
-        catch (Exception e) {
-          logger.error("Failed to send cloud account deletion email to " + user.get(CloudUser.EMAIL), e);
-        }
 
-        logger.info("Deleted account for user " + userId + " with email " + user.get(CloudUser.EMAIL));
-
-        return HttpServletResponse.SC_OK;
+        return success ? HttpServletResponse.SC_OK : HttpServletResponse.SC_INTERNAL_SERVER_ERROR;
       }
     };
     command.run();
   }
+
 }

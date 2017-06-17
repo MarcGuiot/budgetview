@@ -21,7 +21,7 @@
           <htmlEditorPane ref="editor" opaque="false" foreground="#222222"/>
         </scrollPane>
 
-        <row>
+        <row weightY="1">
           <filler fill="horizontal"/>
           <checkBox ref="checkBox" text="$slaValidation.checkBox"/>
         </row>

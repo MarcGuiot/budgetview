@@ -17,7 +17,7 @@ import org.globsframework.sqlstreams.constraints.Where;
 
 import java.io.IOException;
 
-public class ShowUser {
+public class ShowCloudUser {
   public static void main(String... args) throws Exception {
     System.out.println(dump(args));
   }
@@ -36,6 +36,10 @@ public class ShowUser {
     GlobsDatabase database = CloudDb.create(config);
     SqlConnection connection = database.connect();
     GlobList users = connection.selectAll(CloudUser.TYPE, where);
+    if (users.isEmpty()) {
+      return "No user found";
+    }
+
     GlobTreePrinter writer = new GlobTreePrinter();
     for (Glob user : users) {
       writer.writeIndented("User",
@@ -68,11 +72,11 @@ public class ShowUser {
 
       GlobList devices =
         connection.selectAll(CloudUserDevice.TYPE, Where.fieldEquals(CloudUserDevice.USER, userId))
-          .sort(CloudUserDevice.LAST_UPDATE);
+          .sort(CloudUserDevice.LAST_SEEN);
       for (Glob device: devices) {
         writer.writeFlat("Device", device,
                          CloudUserDevice.ID,
-                         CloudUserDevice.LAST_UPDATE);
+                         CloudUserDevice.LAST_SEEN);
       }
 
       GlobList invoices =

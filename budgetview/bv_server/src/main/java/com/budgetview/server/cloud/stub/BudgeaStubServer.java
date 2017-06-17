@@ -419,10 +419,7 @@ public class BudgeaStubServer {
         return;
       }
 
-
       lastDeletedUserId = Integer.parseInt(request.getPathInfo().substring(1));
-      System.out.println("UserConnectionsServlet.doDelete: " + lastDeletedUserId);
-
       response.setStatus(HttpServletResponse.SC_OK);
     }
   }
