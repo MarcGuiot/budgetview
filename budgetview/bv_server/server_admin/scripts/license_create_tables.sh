@@ -1,2 +1,2 @@
 #!/bin/sh
-java -cp bv_server-2.0.jar com.budgetview.server.license.tools.CreateLicenseTables bv_license_prod.properties
+java -cp jars/bv_server-2.0.jar com.budgetview.server.license.tools.CreateLicenseTables config/bv_license_prod.properties
