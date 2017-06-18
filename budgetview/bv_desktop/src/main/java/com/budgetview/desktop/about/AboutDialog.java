@@ -52,6 +52,8 @@ public class AboutDialog {
 
     builder.add("licensesArea", createLicensesArea());
 
+    builder.add("slaArea", createSlaArea());
+
     dialog = PicsouDialog.create(this, directory.get(JFrame.class), directory);
     dialog.addPanelWithButton(builder.<JPanel>load(), new CloseDialogAction(dialog));
     dialog.pack();
@@ -71,9 +73,13 @@ public class AboutDialog {
   private String loadLicensesContent() {
     InputStream stream = Lang.class.getResourceAsStream("/docs/licenses.html");
     if (stream == null) {
-      return "Unable to load< licenses file";
+      return "Unable to load licenses file";
     }
     return Files.loadStreamToString(stream, "UTF-8");
+  }
+
+  private JEditorPane createSlaArea() {
+    return Gui.createHtmlEditor(Lang.getDocFile("sla.html"));
   }
 
   private String getConfiguration() {

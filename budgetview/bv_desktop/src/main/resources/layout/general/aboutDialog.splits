@@ -37,6 +37,12 @@
             </scrollPane>
           </tab>
 
+          <tab title="$about.sla">
+            <scrollPane margin="10">
+              <htmlEditorPane ref="slaArea"/>
+            </scrollPane>
+          </tab>
+
         </tabs>
 
       </column>
