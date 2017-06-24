@@ -18,6 +18,7 @@ public class MobileConstants {
   public static final String SEND_MAIL_TO_CONFIRM_MOBILE = "/sendMailToCreateMobileUser";
   public static final String SEND_MAIL_REMINDER_FROM_MOBILE = "/sendMailFromMobile";
   public static final String DELETE_MOBILE_ACCOUNT = "/deleteMobileAccount";
+  public static final String SERVER_STATUS = "/server-status";
 
   public static final String WWW_MYBUDGETVIEW_FR = "https://www.mybudgetview.fr";
   public static final String WWW_MYBUDGETVIEW_COM = "http://www.mybudgetview.com";

@@ -42,7 +42,7 @@ public class PaymentChecker {
   }
 
   public void install(Directory directory) {
-    directory.add(PaymentService.class, paymentService);
+    directory.replace(PaymentService.class, paymentService);
   }
 
   public void setSubscriptionEndDate(Date subscriptionEndDate) {

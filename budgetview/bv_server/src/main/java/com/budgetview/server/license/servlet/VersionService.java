@@ -8,9 +8,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class VersionService {
-  static Logger logger = Logger.getLogger("VersionService");
-  public JarInfos jarInfos = new JarInfos();
-  public JarInfos tmp;
+  private static Logger logger = Logger.getLogger("VersionService");
+
+  private JarInfos jarInfos = new JarInfos();
+  private JarInfos tmp;
 
   public void getVersion(String mail, Integer group, ValueLongAccessor jarVersion, ValueLongAccessor configVersion){
     JarInfo jarInfo = jarInfos.getInfo(mail, group);

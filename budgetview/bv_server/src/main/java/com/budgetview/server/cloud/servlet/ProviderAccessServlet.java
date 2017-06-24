@@ -26,7 +26,7 @@ import static com.budgetview.shared.json.Json.json;
 
 public class ProviderAccessServlet extends HttpCloudServlet {
 
-  private static Logger logger = Logger.getLogger("/provider/access");
+  private static Logger logger = Logger.getLogger("ProviderAccessServlet");
 
   public ProviderAccessServlet(Directory directory) {
     super(directory);

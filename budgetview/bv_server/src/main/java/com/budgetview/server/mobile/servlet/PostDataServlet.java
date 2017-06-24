@@ -17,7 +17,8 @@ import java.net.URLDecoder;
 public class PostDataServlet extends AbstractHttpServlet {
   public static final String CODE_FILE_NAME = "code.ser";
   public static final String DATA_FILE_NAME = "data.ser";
-  static Logger logger = Logger.getLogger("ReceiveDataServlet");
+
+  private static Logger logger = Logger.getLogger("PostDataServlet");
   private String root;
 
   public PostDataServlet(String root) {

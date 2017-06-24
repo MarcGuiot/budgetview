@@ -22,7 +22,7 @@ public class Mailer {
 
   private static final int WAIT_BEFORE_RETRY = 1000;
 
-  private static Logger logger = Logger.getLogger("mailer");
+  private static Logger logger = Logger.getLogger("Mailer");
 
   private static AtomicLong count = new AtomicLong(0);
 

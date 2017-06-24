@@ -28,7 +28,7 @@ import java.io.IOException;
 import java.util.Date;
 
 public class RequestForConfigServlet extends HttpServlet {
-  static Logger logger = Logger.getLogger("requestForConfig");
+  static Logger logger = Logger.getLogger("RequestForConfigServlet");
   private GlobsDatabase db;
   private Mailer mailer;
   private VersionService versionService;

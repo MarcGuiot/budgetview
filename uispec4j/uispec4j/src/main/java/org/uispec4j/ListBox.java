@@ -283,7 +283,7 @@ public class ListBox extends AbstractSwingUIComponent {
       if (indices.size() > 1) {
         String[] items = new String[indices.size()];
         for (int j = 0; j < items.length; j++) {
-          items[j] = getRenderedValues(j);
+          items[j] = getRenderedValues(indices.get(j));
         }
         throw new ItemAmbiguityException(searchedValue, items);
       }

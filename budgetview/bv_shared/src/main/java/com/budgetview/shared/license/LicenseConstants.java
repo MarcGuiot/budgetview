@@ -8,6 +8,7 @@ import java.net.URLDecoder;
 import java.net.URLEncoder;
 
 public class LicenseConstants {
+
   public static final String PROD_SERVER_URL = "https://register.mybudgetview.fr:443";
   public static final String FTP_SERVER_URL = "ftp://ftpjar.mybudgetview.fr";
 
@@ -15,12 +16,15 @@ public class LicenseConstants {
   public static final String FTP_URL_PROPERTY = "bv.license.ftp.url";
   public static final String LICENSE_URL_PROPERTY = "bv.license.url";
 
-  public static final String HEADER_MAIL_FROM = "mail";
   public static final String REQUEST_FOR_REGISTER = "/register";
   public static final String NEW_USER = "/newUser";
   public static final String REQUEST_FOR_CONFIG = "/requestForConfig";
   public static final String REQUEST_FOR_MAIL = "/mailTo";
   public static final String REQUEST_SEND_MAIL = "/sendMailToUs";
+  public static final String SERVER_STATUS = "/server-status";
+  public static final String SEND_USE_INFO = "/sendUseInfo";
+
+  public static final String HEADER_MAIL_FROM = "mail";
   public static final String CODING = "coding";
   public static final String HEADER_MAIL_TO = "toMail";
   public static final String HEADER_MAIL_TITLE = "title";
@@ -43,12 +47,10 @@ public class LicenseConstants {
   public static final String HEADER_REPO_ID = "repoId";
   public static final String HEADER_USE_INFO = "use";
   public static final String HEADER_PENDING = "pending";
-  public static final String SEND_USE_INFO = "/sendUseInfo";
   public static final String HEADER_BAD_ADRESS = "badAdress";
   public static final String SOME_PASSWORD = "HdsB 8(Rfm";
   public static final String SUPPORT_EMAIL = "support";
   public static final String ADMIN_EMAIL = "admin";
-  public static final String CLOUD_SUBSCRIPTION_END_DATE = "/cloudSubscriptionEndDate";
 
   public static int RETRY_PERIOD = 10000;
 

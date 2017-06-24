@@ -46,7 +46,7 @@ import static org.globsframework.sqlstreams.constraints.Where.fieldEquals;
 
 public class BudgeaWebHookServlet extends HttpCloudServlet {
 
-  private static Logger logger = Logger.getLogger("/budgea");
+  private static Logger logger = Logger.getLogger("BudgeaWebHookServlet");
   private static Pattern pattern = Pattern.compile("Bearer (.*)");
 
   private GlobsDatabase db;

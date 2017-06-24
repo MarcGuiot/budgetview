@@ -16,7 +16,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 public class SendMailServlet extends HttpServlet {
-  static Logger logger = Logger.getLogger("/sendMailToUs");
+  static Logger logger = Logger.getLogger("SendMailServlet");
   private Mailer mailer;
 
   public SendMailServlet(Directory directory) {

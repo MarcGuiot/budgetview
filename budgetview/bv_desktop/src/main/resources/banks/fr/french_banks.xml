@@ -70,11 +70,6 @@
       <bankEntity id="10268"/>
     </bank>
 
-    <bank name="ING Direct" country="fr" url="http://www.ingdirect.fr" id="1015"
-          provider="2" providerId="7">
-      <bankEntity id="14559"/>
-    </bank>
-
     <bank name="Banque de la Réunion" country="fr" url="https://www.banquedelareunion.fr" id="1016"
           provider="2" providerId="77">
       <bankEntity id="12169"/>

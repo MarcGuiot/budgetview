@@ -14,7 +14,7 @@ import java.io.IOException;
 import java.net.URLDecoder;
 
 public class SendMailFromMobileServlet extends HttpServlet {
-  static Logger logger = Logger.getLogger("sendMailFromMobile");
+  static Logger logger = Logger.getLogger("SendMailFromMobileServlet");
   private Mailer mailer;
 
   public SendMailFromMobileServlet(Directory directory) {

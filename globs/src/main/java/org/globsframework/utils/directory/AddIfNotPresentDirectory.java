@@ -38,4 +38,8 @@ public class AddIfNotPresentDirectory implements Directory {
   public <T, D extends T> void addFactory(Class<T> serviceClass, Factory<D> factory) throws ItemAlreadyExists {
     directory.addFactory(serviceClass, factory);
   }
+
+  public <T, D extends T> void replace(Class<T> serviceClass, D service) {
+    directory.add(serviceClass, service);
+  }
 }

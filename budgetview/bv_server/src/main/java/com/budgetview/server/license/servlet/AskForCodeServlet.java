@@ -23,7 +23,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class AskForCodeServlet extends HttpServlet {
-  static Logger logger = Logger.getLogger("askForCode");
+  static Logger logger = Logger.getLogger("AskForCodeServlet");
   private Mailer mailer;
   private GlobsDatabase globsDB;
 

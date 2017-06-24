@@ -32,7 +32,7 @@ import static org.globsframework.sqlstreams.constraints.Where.fieldEquals;
 
 public class BankConnectionsServlet extends HttpCloudServlet {
 
-  private static Logger logger = Logger.getLogger("/banks/connections");
+  private static Logger logger = Logger.getLogger("BankConnectionsServlet");
 
   public BankConnectionsServlet(Directory directory) {
     super(directory);

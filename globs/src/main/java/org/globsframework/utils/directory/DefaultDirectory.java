@@ -59,4 +59,8 @@ public class DefaultDirectory implements Directory {
     }
     services.put(serviceClass, service);
   }
+
+  public <T, D extends T> void replace(Class<T> serviceClass, D service) {
+    services.put(serviceClass, service);
+  }
 }

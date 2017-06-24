@@ -10,7 +10,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 public class SendUseInfoServlet extends HttpServlet {
-  static Logger logger = Logger.getLogger("sendUseInfo");
+  static Logger logger = Logger.getLogger("SendUseInfoServlet");
 
   protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
     req.setCharacterEncoding("UTF-8");

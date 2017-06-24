@@ -2,8 +2,10 @@
 <globs>
   <bankFormat id='10'>
 
-    <bank name="ING Direct" country="fr" url="https://secure.ingdirect.fr" id="10">
+    <bank name="ING Direct" country="fr" url="https://secure.ingdirect.fr" id="10"
+          provider="2" providerId="7">
       <bankEntity id="14559"/>
     </bank>
+
   </bankFormat>
 </globs>

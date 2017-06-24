@@ -16,6 +16,8 @@ public interface Directory {
 
   <T, D extends T> void addFactory(Class<T> serviceClass, Factory<D> factory) throws ItemAlreadyExists;
 
+  <T, D extends T> void replace(Class<T> serviceClass, D service);
+
   interface Factory<D>{
     D create();
   }

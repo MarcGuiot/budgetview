@@ -15,7 +15,7 @@ import java.io.*;
 import java.net.URLDecoder;
 
 public class GetMobileDataServlet extends HttpServlet {
-  static Logger logger = Logger.getLogger("RetrieveDataServlet");
+  static Logger logger = Logger.getLogger("GetMobileDataServlet");
   private String root;
 
   public GetMobileDataServlet(String root, Directory directory) {

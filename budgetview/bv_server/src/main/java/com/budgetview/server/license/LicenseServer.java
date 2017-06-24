@@ -1,6 +1,7 @@
 package com.budgetview.server.license;
 
 import com.budgetview.server.cloud.utils.CloudDb;
+import com.budgetview.server.common.ServerStatusServlet;
 import com.budgetview.server.config.ConfigService;
 import com.budgetview.server.license.mail.Mailer;
 import com.budgetview.server.license.model.License;
@@ -61,6 +62,7 @@ public class LicenseServer {
     webServer.add(new NewUserServlet(directory), LicenseConstants.NEW_USER);
     webServer.add(new SendMailServlet(directory), LicenseConstants.REQUEST_SEND_MAIL);
     webServer.add(new SendUseInfoServlet(), LicenseConstants.SEND_USE_INFO);
+    webServer.add(new ServerStatusServlet(directory), LicenseConstants.SERVER_STATUS);
   }
 
   public void addServlet(HttpServlet servlet, String name) {

@@ -26,7 +26,7 @@ import java.io.IOException;
 
 public class UserValidationServlet extends HttpCloudServlet {
 
-  private static Logger logger = Logger.getLogger("/user/validation");
+  private static Logger logger = Logger.getLogger("UserValidationServlet");
 
   private final EmailValidationService emailValidation;
   private final AuthenticationService authentication;

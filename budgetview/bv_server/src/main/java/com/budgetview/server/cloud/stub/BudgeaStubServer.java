@@ -162,7 +162,7 @@ public class BudgeaStubServer {
 
   private class AuthInitServlet extends HttpServlet {
 
-    private Logger logger = Logger.getLogger("BudgeaStubServer - /auth/init");
+    private Logger logger = Logger.getLogger("BudgeaStubServer:AuthInitServlet");
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
       logger.debug("POST");
@@ -178,7 +178,7 @@ public class BudgeaStubServer {
 
   private class AuthTokenCodeServlet extends HttpServlet {
 
-    private Logger logger = Logger.getLogger("BudgeaStubServer - /auth/token/code");
+    private Logger logger = Logger.getLogger("BudgeaStubServer:AuthTokenCodeServlet");
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
       logger.debug("GET");
@@ -194,7 +194,7 @@ public class BudgeaStubServer {
 
   private class AuthTokenAccessServlet extends HttpServlet {
 
-    private Logger logger = Logger.getLogger("BudgeaStubServer - /auth/token/access");
+    private Logger logger = Logger.getLogger("BudgeaStubServer:AuthTokenAccessServlet");
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
       logger.debug("POST");
@@ -211,7 +211,7 @@ public class BudgeaStubServer {
 
   public class BanksServlet extends HttpServlet {
 
-    private Logger logger = Logger.getLogger("BudgeaStubServer - /banks");
+    private Logger logger = Logger.getLogger("BudgeaStubServer:BanksServlet");
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
       logger.debug("GET");
@@ -278,7 +278,7 @@ public class BudgeaStubServer {
 
   public class BanksFieldsServlet extends HttpServlet {
 
-    private Logger logger = Logger.getLogger("BudgeaStubServer - /banks/{id}/fields");
+    private Logger logger = Logger.getLogger("BudgeaStubServer:BanksFieldsServlet");
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
       logger.debug("GET");
@@ -297,7 +297,7 @@ public class BudgeaStubServer {
 
   private class UsersMeServlet extends HttpServlet {
 
-    private Logger logger = Logger.getLogger("BudgeaStubServer - /users/me");
+    private Logger logger = Logger.getLogger("BudgeaStubServer:UsersMeServlet");
 
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
       logger.debug("GET");
@@ -315,7 +315,7 @@ public class BudgeaStubServer {
 
   private class UsersMeConnectionsServlet extends HttpServlet {
 
-    private Logger logger = Logger.getLogger("BudgeaStubServer - /users/me/connections");
+    private Logger logger = Logger.getLogger("BudgeaStubServer:UsersMeConnectionsServlet");
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
       logger.debug("POST");
@@ -388,7 +388,7 @@ public class BudgeaStubServer {
 
   private class UserConnectionsServlet extends HttpServlet {
 
-    private Logger logger = Logger.getLogger("BudgeaStubServer - /users/{userId}/connections");
+    private Logger logger = Logger.getLogger("BudgeaStubServer:UserConnectionsServlet");
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
       logger.debug("GET");
@@ -426,7 +426,7 @@ public class BudgeaStubServer {
 
   private class PingServlet extends HttpServlet {
 
-    private Logger logger = Logger.getLogger("BudgeaStubServer - /ping");
+    private Logger logger = Logger.getLogger("BudgeaStubServer:PingServlet");
 
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
       logger.debug("GET");

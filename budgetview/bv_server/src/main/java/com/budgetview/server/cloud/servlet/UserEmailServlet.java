@@ -17,7 +17,7 @@ import java.io.IOException;
 
 public class UserEmailServlet extends HttpCloudServlet {
 
-  private static Logger logger = Logger.getLogger("/user/email");
+  private static Logger logger = Logger.getLogger("UserEmailServlet");
 
   private final EmailValidationService emailValidation;
   private final Mailer mailer;

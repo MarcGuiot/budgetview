@@ -61,8 +61,8 @@ import java.util.regex.Pattern;
 
 public class Application {
 
-  public static final String APPLICATION_VERSION = "5.0b1";
-  public static Long JAR_VERSION = 150L;
+  public static final String APPLICATION_VERSION = "5.0b2";
+  public static Long JAR_VERSION = 151L;
   public static final Long BANK_CONFIG_VERSION = 7L;
 
   public static final String APPNAME = "budgetview";

@@ -37,7 +37,7 @@ public class CloudChecker {
   public void startServer(final PaymentChecker payments) throws Exception {
     cloudServer = new CloudServer(CONFIG_FILE_PATH) {
       protected Directory createDirectory() throws Exception {
-        Directory directory = new DefaultDirectory(super.createDirectory());
+        Directory directory = super.createDirectory();
         payments.install(directory);
         return directory;
       }

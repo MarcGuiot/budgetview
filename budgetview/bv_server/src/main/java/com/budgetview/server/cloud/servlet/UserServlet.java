@@ -22,7 +22,7 @@ import java.io.IOException;
 
 public class UserServlet extends HttpCloudServlet {
 
-  private static Logger logger = Logger.getLogger("/user");
+  private static Logger logger = Logger.getLogger("UserServlet");
 
   private final AuthenticationService authentication;
   private final EmailValidationService emailValidation;

@@ -69,7 +69,6 @@ public class CloudMailbox {
     email.checkContainsAny("deleted", "supprim");
   }
 
-
   public void checkInvoice(final String mailTo, String receiptNumber) throws Exception {
     Email email = getEmail(mailTo);
     email.checkContainsAny(receiptNumber);

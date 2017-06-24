@@ -1,5 +1,6 @@
 package com.budgetview.server.mobile;
 
+import com.budgetview.server.common.ServerStatusServlet;
 import com.budgetview.server.config.ConfigService;
 import com.budgetview.server.license.mail.Mailer;
 import com.budgetview.server.license.servlet.VersionService;
@@ -50,13 +51,14 @@ public class MobileServer {
 
     // Current: HTTP:8080 / HTTPS:1443
     webServer = new WebServer(config);
-    MobileConstants.setPort(webServer.getHttpPort());
+    MobileConstants.setPort(webServer.getHttpsPort());
     webServer.add(new PostDataServlet(pathForMobileData), MobileConstants.POST_MOBILE_DATA);
     webServer.add(new GetMobileDataServlet(pathForMobileData, directory), MobileConstants.GET_MOBILE_DATA);
     webServer.add(new SendMailCreateMobileUserServlet(pathForMobileData, directory), MobileConstants.SEND_MAIL_TO_CONFIRM_MOBILE);
     webServer.add(new DeleteMobileUserServlet(pathForMobileData, directory), MobileConstants.DELETE_MOBILE_ACCOUNT);
     webServer.add(new CreateMobileUserServlet(pathForMobileData, directory), MobileConstants.CREATE_MOBILE_USER);
     webServer.add(new SendMailFromMobileServlet(directory), MobileConstants.SEND_MAIL_REMINDER_FROM_MOBILE);
+    webServer.add(new ServerStatusServlet(directory), MobileConstants.SERVER_STATUS);
   }
 
   private Directory createDirectory() throws Exception {

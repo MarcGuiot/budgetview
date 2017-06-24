@@ -38,7 +38,7 @@ import static org.globsframework.sqlstreams.constraints.Where.fieldStrictlyGreat
 
 public class StatementServlet extends HttpCloudServlet {
 
-  private static Logger logger = Logger.getLogger("/statement");
+  private static Logger logger = Logger.getLogger("StatementServlet");
   private Pattern pattern = Pattern.compile("/([0-9]+)");
 
   private final CloudSerializer serializer;

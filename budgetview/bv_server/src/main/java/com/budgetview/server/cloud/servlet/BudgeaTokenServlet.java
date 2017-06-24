@@ -18,7 +18,7 @@ import java.io.IOException;
 
 public class BudgeaTokenServlet extends HttpCloudServlet {
 
-  private static Logger logger = Logger.getLogger("/budgea/token");
+  private static Logger logger = Logger.getLogger("BudgeaTokenServlet");
 
   public BudgeaTokenServlet(Directory directory) throws Exception {
     super(directory);

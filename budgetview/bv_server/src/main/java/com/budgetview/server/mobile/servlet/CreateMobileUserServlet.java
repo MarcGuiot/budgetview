@@ -20,7 +20,7 @@ import java.util.Arrays;
 
 public class CreateMobileUserServlet extends HttpServlet {
   public static final String PENDING = "pending";
-  static Logger logger = Logger.getLogger("CreateMobileUserServlet");
+  private static Logger logger = Logger.getLogger("CreateMobileUserServlet");
   private String root;
   private Mailer mailer;
   public static MD5PasswordBasedEncryptor encryptor =

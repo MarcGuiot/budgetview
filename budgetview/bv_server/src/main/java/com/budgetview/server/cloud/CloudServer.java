@@ -2,9 +2,10 @@ package com.budgetview.server.cloud;
 
 import com.budgetview.server.cloud.services.*;
 import com.budgetview.server.cloud.servlet.*;
+import com.budgetview.server.cloud.utils.CloudDb;
+import com.budgetview.server.common.ServerStatusServlet;
 import com.budgetview.server.config.ConfigService;
 import com.budgetview.server.license.mail.Mailer;
-import com.budgetview.server.cloud.utils.CloudDb;
 import com.budgetview.server.utils.Log4J;
 import com.budgetview.server.web.WebServer;
 import com.budgetview.shared.cloud.budgea.BudgeaConstants;
@@ -55,10 +56,7 @@ public class CloudServer {
     webServer.add(new SubscriptionEmailValidationServlet(directory), "/subscription/validation");
     webServer.add(new UserEmailChangeValidationServlet(directory), "/user/email/validation");
     webServer.add(new StripeWebhookServlet(directory), "/stripe");
-
-    if (config.isTrue("budgetview.ping.available")) {
-      webServer.add(new PingServlet(directory), "/ping");
-    }
+    webServer.add(new ServerStatusServlet(directory), "/server-status");
   }
 
   public void addServlet(HttpServlet servlet, String name) {

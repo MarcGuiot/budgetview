@@ -29,7 +29,8 @@ import org.uispec4j.Window;
 import org.uispec4j.interception.WindowInterceptor;
 
 public class LicenseActivationTest extends ConnectedTestCase {
-  public static final String ACTIVATION_CODE = "Activation code : <b>";
+  private static final String ACTIVATION_CODE = "Activation code : <b>";
+
   private Application Application;
   private Window window;
   private LoginChecker login;

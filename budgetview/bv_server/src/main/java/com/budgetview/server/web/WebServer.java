@@ -104,8 +104,8 @@ public class WebServer {
     jetty.destroy();
   }
 
-  public Integer getHttpPort() {
-    return httpPort;
+  public Integer getHttpsPort() {
+    return httpsPort;
   }
 
 }

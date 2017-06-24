@@ -14,8 +14,8 @@ import java.io.IOException;
 
 public class UserService {
 
-  private PaymentService paymentService;
   private GlobsDatabase database;
+  private Directory directory;
 
   public interface DeletionCallback {
     void processOk();
@@ -23,7 +23,7 @@ public class UserService {
   }
 
   public UserService(Directory directory) {
-    this.paymentService = directory.get(PaymentService.class);
+    this.directory = directory;
     this.database = directory.get(GlobsDatabase.class);
   }
 
@@ -47,9 +47,9 @@ public class UserService {
     if (stripeCustomerId != null) {
       String stripeSubscriptionId = user.get(CloudUser.STRIPE_SUBSCRIPTION_ID);
       try {
-        paymentService.deleteSubscription(stripeCustomerId, stripeSubscriptionId);
+        directory.get(PaymentService.class).deleteSubscription(stripeCustomerId, stripeSubscriptionId);
       }
-      catch (ItemNotFound e) {
+      catch (Exception e) {
         callback.processError("Failed to delete Stripe customer " + stripeCustomerId + " with subscription " + stripeSubscriptionId + " (userId: " + userId + ")", e);
       }
     }
