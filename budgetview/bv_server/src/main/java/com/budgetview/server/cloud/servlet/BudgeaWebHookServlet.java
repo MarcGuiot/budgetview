@@ -77,14 +77,16 @@ public class BudgeaWebHookServlet extends HttpCloudServlet {
       return;
     }
 
-    String token = tokenMatcher.group(1);
-
-    InputStream inputStream = request.getInputStream();
-    String json = Files.loadStreamToString(inputStream, "UTF-8");
-
     Glob user = null;
+    String token = "...";
     WebhookNotificationService.Notifications notifications = webhookNotifications.start();
+
     try {
+      token = tokenMatcher.group(1);
+
+      InputStream inputStream = request.getInputStream();
+      String json = Files.loadStreamToString(inputStream, "UTF-8");
+
       JSONObject root = new JSONObject(json);
 
       if (logger.isDebugEnabled()) {
@@ -105,7 +107,7 @@ public class BudgeaWebHookServlet extends HttpCloudServlet {
         if (user == null) {
           response.setStatus(HttpServletResponse.SC_OK);
           logger.error("Received update for unknown budgea user " + budgeaUserId);
-          runDeleteBudgeaCommand(budgeaUserId, token);
+          runDeleteBudgeaUserCommand(budgeaUserId, token);
           return;
         }
         boolean passwordError = "wrongpass".equalsIgnoreCase(budgeaConnection.optString("error"));
@@ -135,20 +137,23 @@ public class BudgeaWebHookServlet extends HttpCloudServlet {
       response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
       return;
     }
-    catch (GeneralSecurityException e) {
-      logger.error("Error cyphering update for user '" + user + "' with token '" + Strings.cut(token, 15) + "'", e);
+    catch (Exception e) {
+      logger.error("Uncaught exception for user '" + user + "' with token '" + Strings.cut(token, 15) + "'", e);
       response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
       return;
     }
 
-    notifications.send(user);
-
-    logger.info("Webhook successfully processed for user " + user.get(CloudUser.ID));
-
-    response.setStatus(HttpServletResponse.SC_OK);
+    try {
+      notifications.send(user);
+      logger.info("Update processed for user " + user.get(CloudUser.ID));
+      response.setStatus(HttpServletResponse.SC_OK);
+    }
+    catch (Exception e) {
+      logger.error("Failed to process notification for user " + user, e);
+    }
   }
 
-  private void runDeleteBudgeaCommand(final int budgeaUserId, final String token) {
+  private void runDeleteBudgeaUserCommand(final int budgeaUserId, final String token) {
     Thread thread = new Thread(new Runnable() {
       public void run() {
         try {

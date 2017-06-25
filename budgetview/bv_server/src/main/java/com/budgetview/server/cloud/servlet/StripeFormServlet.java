@@ -6,6 +6,7 @@ import com.budgetview.server.cloud.services.EmailValidationService;
 import com.budgetview.server.cloud.utils.WebsiteUrls;
 import org.apache.log4j.Logger;
 import org.globsframework.model.Glob;
+import org.globsframework.utils.Strings;
 import org.globsframework.utils.directory.Directory;
 
 import javax.servlet.ServletException;
@@ -32,6 +33,11 @@ public class StripeFormServlet extends HttpServlet {
 
     String token = request.getParameter("stripeToken");
     String email = request.getParameter("stripeEmail");
+    if (Strings.isNullOrEmpty(token) || Strings.isNullOrEmpty(email)) {
+      logger.error("Missing parameter for token: " + token + " and email: " + email);
+      response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+      return;
+    }
 
     try {
       Glob user = authentication.findOrCreateUser(email, "fr", value(CloudUser.STRIPE_TOKEN, token));

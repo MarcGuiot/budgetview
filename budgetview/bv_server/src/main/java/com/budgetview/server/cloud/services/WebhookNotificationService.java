@@ -14,6 +14,7 @@ import org.globsframework.utils.directory.Directory;
 import org.globsframework.utils.exceptions.GlobsException;
 
 import javax.mail.MessagingException;
+import java.security.InvalidParameterException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -43,6 +44,12 @@ public class WebhookNotificationService {
     }
 
     public void send(Glob user) {
+
+      if (user == null) {
+        logger.error("Cannot send notification for null user");
+        throw new InvalidParameterException("User is null");
+      }
+
       SqlConnection sqlConnection = database.connect();
       boolean newlyInitializedConnections = false;
       try {
@@ -96,6 +103,10 @@ public class WebhookNotificationService {
         sqlConnection.rollbackAndClose();
       }
       catch (MessagingException e) {
+        logger.error("Could not send notification to user " + user.get(CloudUser.ID) + " with email: " + user.get(CloudUser.EMAIL));
+        sqlConnection.rollbackAndClose();
+      }
+      catch (Exception e) {
         logger.error("Could not send notification to user " + user.get(CloudUser.ID) + " with email: " + user.get(CloudUser.EMAIL));
         sqlConnection.rollbackAndClose();
       }
