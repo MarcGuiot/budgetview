@@ -34,9 +34,6 @@ public class MailServerChecker {
   }
 
   public void checkEmpty() throws InterruptedException {
-
-    System.out.println("\nMailServerChecker.checkEmpty");
-
     if (mailServer == null) {
       Assert.fail("Mail server not started");
     }

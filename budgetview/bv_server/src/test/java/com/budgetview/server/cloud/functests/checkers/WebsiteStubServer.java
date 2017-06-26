@@ -32,7 +32,7 @@ public class WebsiteStubServer {
   public void start() throws Exception {
     logger.info("starting server");
     webServer.start();
-    logger.info("server started");
+    logger.info("server started - " + webServer.info());
   }
 
   public void stop() throws Exception {

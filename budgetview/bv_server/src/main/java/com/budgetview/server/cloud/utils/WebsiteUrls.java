@@ -1,12 +1,12 @@
 package com.budgetview.server.cloud.utils;
 
-import org.globsframework.utils.Utils;
+import org.globsframework.utils.Strings;
 
 public class WebsiteUrls {
 
-  public static final String PROD_CLOUD_SERVER_URL = "https://register.mybudgetview.fr";
-  public static final String WEBSITE_URL_PROPERTY = "budgetview.website.url";
+  public static final String PROD_CLOUD_SERVER_URL = "https://www.mybudgetview.fr";
   public static final String LOCAL_SERVER_URL = "http://127.0.0.1:8081";
+  public static final String WEBSITE_URL_PROPERTY = "budgetview.website.url";
 
   public static String emailSent() {
     return url("/boutique/email-envoye");
@@ -37,10 +37,10 @@ public class WebsiteUrls {
   }
 
   private static String url(String path) {
-    String url = PROD_CLOUD_SERVER_URL + path;
-    Utils.beginRemove();
-    url = System.getProperty(WEBSITE_URL_PROPERTY, PROD_CLOUD_SERVER_URL) + path;
-    Utils.endRemove();
-    return url;
+    String host = System.getProperty(WEBSITE_URL_PROPERTY, PROD_CLOUD_SERVER_URL);
+    if (Strings.isNullOrEmpty(host)) {
+      host = PROD_CLOUD_SERVER_URL;
+    }
+    return host + path;
   }
 }

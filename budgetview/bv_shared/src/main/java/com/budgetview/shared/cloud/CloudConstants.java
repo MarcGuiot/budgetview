@@ -6,6 +6,9 @@ public class CloudConstants {
 
   public static final int CURRENT_API_VERSION = 1;
 
+  public static final String PROD_CLOUD_SERVER_URL = "https://register.mybudgetview.fr:1445";
+  public static final String LOCAL_SERVER_URL = "http://127.0.0.1:8080";
+
   public static final String EMAIL = "email";
   public static final String NEW_EMAIL = "new_email";
   public static final String LANG = "lang";
@@ -31,9 +34,7 @@ public class CloudConstants {
   public static final String INITIALIZED = "initialized";
   public static final String PASSWORD_ERROR = "password_error";
 
-  public static final String PROD_CLOUD_SERVER_URL = "https://register.mybudgetview.fr:1445";
 
-  public static final String LOCAL_SERVER_URL = "http://127.0.0.1:8080";
   public static final String APPNAME = "budgetview";
   public static final String CLOUD_URL_PROPERTY = APPNAME + ".sync.url";
 

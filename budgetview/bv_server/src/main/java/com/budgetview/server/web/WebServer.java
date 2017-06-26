@@ -1,6 +1,7 @@
 package com.budgetview.server.web;
 
 import com.budgetview.server.config.ConfigService;
+import org.apache.log4j.Logger;
 import org.eclipse.jetty.http.HttpVersion;
 import org.eclipse.jetty.server.*;
 import org.eclipse.jetty.servlet.ServletContextHandler;
@@ -59,10 +60,6 @@ public class WebServer {
     sslContextFactory.setTrustStorePath(keystorePath);
     sslContextFactory.setTrustStorePassword(sslKeystorePassword);
 
-//    SslSocketConnector sslConnector = new SslSocketConnector();
-//    sslConnector.setHeaderBufferSize(1024 * 1024);
-//    sslConnector.setRequestBufferSize(1024 * 1024);
-
     HttpConfiguration httpsConfig = new HttpConfiguration(httpConfig);
     SecureRequestCustomizer src = new SecureRequestCustomizer();
     src.setStsMaxAge(2000);
@@ -108,4 +105,18 @@ public class WebServer {
     return httpsPort;
   }
 
+  public String info() {
+    StringBuilder builder = new StringBuilder();
+    builder.append("listening on ");
+    if (httpPort != null) {
+      builder.append("http://").append(host).append(":").append(httpPort);
+    }
+    if (httpPort != null && httpsPort != null) {
+      builder.append(" and ");
+    }
+    if (httpsPort != null) {
+      builder.append("https://").append(host).append(":").append(httpsPort);
+    }
+    return builder.toString();
+  }
 }

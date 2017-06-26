@@ -73,7 +73,7 @@ public class SiteWeaver {
 
   private static void checkUsage(String[] args) {
     if (args.length != 1 && args.length < 5) {
-      System.out.println("Usage: java SiteWeaver <configFile> <ftp_host> <ftp_dir> <ftp_user> <ftp_pwd>");
+      System.out.println("Usage: java SiteWeaver <configFile> [<ftp_host> <ftp_dir> <ftp_user> <ftp_pwd>]");
       System.exit(-1);
     }
   }

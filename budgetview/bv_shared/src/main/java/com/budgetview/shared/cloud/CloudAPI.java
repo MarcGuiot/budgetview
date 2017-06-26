@@ -18,7 +18,7 @@ public class CloudAPI {
     Request request = Request.Post(serverUrl)
       .addHeader(CloudConstants.EMAIL, email)
       .addHeader(CloudConstants.LANG, lang);
-    return Http.executeAndGetJson(url, request);
+    return Http.executeAndGetJson(serverUrl, request);
   }
 
   public JSONObject validateSignup(String email, String validationCode) throws IOException {

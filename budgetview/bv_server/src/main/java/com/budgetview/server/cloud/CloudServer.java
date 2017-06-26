@@ -3,6 +3,7 @@ package com.budgetview.server.cloud;
 import com.budgetview.server.cloud.services.*;
 import com.budgetview.server.cloud.servlet.*;
 import com.budgetview.server.cloud.utils.CloudDb;
+import com.budgetview.server.cloud.utils.WebsiteUrls;
 import com.budgetview.server.common.ServerStatusServlet;
 import com.budgetview.server.config.ConfigService;
 import com.budgetview.server.license.mail.Mailer;
@@ -82,7 +83,7 @@ public class CloudServer {
   public void start() throws Exception {
     logger.info("starting server");
     webServer.start();
-    logger.info("server started");
+    logger.info("server started - " + webServer.info());
   }
 
   public Directory getDirectory() {

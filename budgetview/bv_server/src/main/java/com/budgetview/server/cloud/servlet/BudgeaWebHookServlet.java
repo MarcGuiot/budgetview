@@ -144,12 +144,18 @@ public class BudgeaWebHookServlet extends HttpCloudServlet {
     }
 
     try {
-      notifications.send(user);
-      logger.info("Update processed for user " + user.get(CloudUser.ID));
-      response.setStatus(HttpServletResponse.SC_OK);
+      if (user != null) {
+        notifications.send(user);
+        logger.info("Update processed for user " + user.get(CloudUser.ID));
+        response.setStatus(HttpServletResponse.SC_OK);
+      }
+      else {
+        logger.info("No user found in this update");
+      }
     }
     catch (Exception e) {
       logger.error("Failed to process notification for user " + user, e);
+      response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
     }
   }
 
@@ -219,7 +225,7 @@ public class BudgeaWebHookServlet extends HttpCloudServlet {
                         value(ProviderAccount.ACCOUNT_TYPE, BudgeaAccountTypeConverter.convertName(account.optString("type"))),
                         value(ProviderAccount.NAME, account.getString("name")),
                         value(ProviderAccount.NUMBER, account.getString("number")),
-                        value(ProviderAccount.DELETED, !account.isNull("deleted") && account.getBoolean("deleted")),
+                        value(ProviderAccount.DELETED, Boolean.TRUE.equals(account.optBoolean("deleted"))),
                         value(ProviderAccount.POSITION, account.getDouble("balance")),
                         value(ProviderAccount.POSITION_MONTH, DateConverter.getMonthId(lastUpdate)),
                         value(ProviderAccount.POSITION_DAY, DateConverter.getDay(lastUpdate)));
@@ -251,7 +257,7 @@ public class BudgeaWebHookServlet extends HttpCloudServlet {
                         value(ProviderTransaction.ORIGINAL_LABEL, transaction.getString("original_wording")),
                         value(ProviderTransaction.DEFAULT_SERIES_ID, defaultSeries != null ? defaultSeries.getId() : null),
                         value(ProviderTransaction.PROVIDER_CATEGORY_NAME, category.getString("name")),
-                        value(ProviderTransaction.DELETED, !transaction.isNull("deleted") && transaction.getBoolean("deleted")));
+                        value(ProviderTransaction.DELETED, Boolean.TRUE.equals(transaction.optBoolean("deleted")));
     }
 
     private DefaultSeries findDefaultSeries(Integer providerSeriesId) {

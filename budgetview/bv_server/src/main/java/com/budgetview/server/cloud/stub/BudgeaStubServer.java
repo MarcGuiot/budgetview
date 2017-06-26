@@ -73,7 +73,7 @@ public class BudgeaStubServer {
   public void start() throws Exception {
     logger.debug("starting server");
     webServer.start();
-    logger.debug("server started");
+    logger.info("server started - " + webServer.info());
   }
 
   public void stop() throws Exception {

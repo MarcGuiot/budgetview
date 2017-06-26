@@ -74,12 +74,11 @@ public class CloudToolsTest extends CloudDesktopTestCase {
 
     StringChecker deleteOutput = new StringChecker(DeleteCloudUser.dump(CloudChecker.CONFIG_FILE_PATH, "toto@example.com", "skipConfirm"));
     deleteOutput.checkContains("Deleted account for user 0 with email toto@example.com");
-    deleteOutput.checkContains("Email sent to toto@example.com");
     deleteOutput.checkContains("Deletion completed");
 
-    mailbox.checkAccountDeleted("toto@example.com");
+    mailbox.checkEmpty();
 
     StringChecker newInfo = new StringChecker(ShowCloudUser.dump(CloudChecker.CONFIG_FILE_PATH, "toto@example.com"));
-    newInfo.checkEquals("No user found");
+    newInfo.checkEquals("User not found");
   }
 }

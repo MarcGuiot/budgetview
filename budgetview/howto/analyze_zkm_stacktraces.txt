@@ -1,6 +1,6 @@
 1/ Run from directory 'picsou':
 
-  java -Xmx512m -jar ./picsou/dev/Zelix/ZKM.jar
+  java -jar ./budgetview/bv_desktop/dev/Zelix/ZKM.jar
 
 2/ Close setup wizard
 

@@ -5,7 +5,6 @@ import com.budgetview.server.cloud.model.CloudUser;
 import com.budgetview.server.cloud.services.AuthenticationService;
 import com.budgetview.server.cloud.services.UserService;
 import com.budgetview.server.config.ConfigService;
-import com.budgetview.server.license.mail.Mailer;
 import com.budgetview.server.utils.Args;
 import org.globsframework.model.Glob;
 import org.globsframework.sqlstreams.constraints.Where;
@@ -44,12 +43,16 @@ public class DeleteCloudUser {
     }
 
     if (askConfirmation) {
-      System.out.println(ShowCloudUser.print(configFile, Where.fieldEquals(CloudUser.EMAIL, email)));
+      CloudUserDump cloudUserDump = CloudUserDump.get(configFile, Where.fieldEquals(CloudUser.EMAIL, email));
+      if (!cloudUserDump.userFound()) {
+        return "User not found";
+      }
+      System.out.println(cloudUserDump.toString());
       System.out.println("Are you sure you want to delete this user? (y/n)");
       Scanner input = new Scanner(System.in);
       String answer = input.next();
       if (!"y".equalsIgnoreCase(answer)) {
-        builder.append("User ");
+        builder.append("Deletion cancelled");
         return builder.toString();
       }
     }
@@ -66,15 +69,6 @@ public class DeleteCloudUser {
     boolean success = directory.get(UserService.class).deleteUser(user, new UserService.DeletionCallback() {
       public void processOk() {
         builder.append("Deleted account for user ").append(userId).append(" with email ").append(email).append("\n");
-        try {
-          directory.get(Mailer.class).sendCloudAccountDeleted(user.get(CloudUser.EMAIL), user.get(CloudUser.LANG));
-          builder.append("Email sent to ").append(email).append("\n");
-        }
-        catch (Exception e) {
-          builder
-            .append("Failed to send email to ").append(email).append("\n")
-            .append(Utils.toString(e)).append("\n");
-        }
       }
 
       public void processError(String message, Exception e) {
