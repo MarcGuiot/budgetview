@@ -257,7 +257,7 @@ public class BudgeaWebHookServlet extends HttpCloudServlet {
                         value(ProviderTransaction.ORIGINAL_LABEL, transaction.getString("original_wording")),
                         value(ProviderTransaction.DEFAULT_SERIES_ID, defaultSeries != null ? defaultSeries.getId() : null),
                         value(ProviderTransaction.PROVIDER_CATEGORY_NAME, category.getString("name")),
-                        value(ProviderTransaction.DELETED, Boolean.TRUE.equals(transaction.optBoolean("deleted")));
+                        value(ProviderTransaction.DELETED, Boolean.TRUE.equals(transaction.optBoolean("deleted"))));
     }
 
     private DefaultSeries findDefaultSeries(Integer providerSeriesId) {
