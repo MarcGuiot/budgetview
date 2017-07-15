@@ -63,13 +63,9 @@ public class NavigationService implements GlobSelectionListener {
     gotoCard(Card.HOME);
   }
 
-  public void gotoHomeAfterRestore(GlobList userData) {
+  public void gotoHomeAfterRestore(boolean onboardingCompleted) {
     gotoHome();
-    mainPanelContainer.reset(isInitCompleted(userData));
-  }
-
-  private boolean isInitCompleted(GlobList userData) {
-    return SignpostStatus.isOnboardingCompleted(userData.find(SignpostStatus.KEY));
+    mainPanelContainer.reset(onboardingCompleted);
   }
 
   public void gotoBudget() {

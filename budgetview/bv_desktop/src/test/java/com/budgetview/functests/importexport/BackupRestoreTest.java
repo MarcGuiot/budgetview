@@ -60,8 +60,11 @@ public class BackupRestoreTest extends LoggedInFunctionalTestCase {
 
     categorization.getTable().selectRows(0, 1);
     categorization.setUncategorized();
+    views.selectData();
 
     operations.restore(backupFile);
+
+    views.checkHomeSelected();
 
     timeline.checkSelection("2008/08");
 

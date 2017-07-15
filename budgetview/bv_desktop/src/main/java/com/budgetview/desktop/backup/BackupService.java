@@ -9,7 +9,6 @@ import com.budgetview.desktop.model.DesktopModel;
 import com.budgetview.desktop.time.TimeService;
 import com.budgetview.desktop.upgrade.UpgradeTrigger;
 import com.budgetview.model.CurrentMonth;
-import com.budgetview.model.SignpostStatus;
 import com.budgetview.model.User;
 import com.budgetview.persistence.direct.ReadOnlyAccountDataManager;
 import com.budgetview.session.serialization.SerializedGlob;
@@ -143,8 +142,6 @@ public class BackupService {
     finally {
       repository.completeChangeSet();
     }
-
-    directory.get(NavigationService.class).gotoHomeAfterRestore(userData);
 
     try {
       repository.startChangeSet();

@@ -21,7 +21,6 @@ import com.budgetview.io.importer.analyzer.TransactionAnalyzerFactory;
 import com.budgetview.model.*;
 import com.budgetview.model.initial.DefaultSeriesFactory;
 import com.budgetview.shared.model.AccountType;
-import com.budgetview.shared.model.Provider;
 import com.budgetview.triggers.*;
 import com.budgetview.triggers.projects.*;
 import com.budgetview.triggers.savings.SavingsUpdateSeriesMirrorTrigger;
@@ -37,6 +36,7 @@ import org.globsframework.model.utils.DefaultChangeSetListener;
 import org.globsframework.model.utils.GlobMatchers;
 import org.globsframework.utils.Log;
 import org.globsframework.utils.directory.Directory;
+import org.globsframework.utils.exceptions.ExceptionHandler;
 import org.globsframework.utils.exceptions.InvalidData;
 
 import javax.swing.*;
@@ -55,7 +55,7 @@ public class PicsouInit {
   private DefaultGlobIdGenerator idGenerator;
   private UpgradeTrigger upgradeTrigger;
   private ServerChangeSetListener changeSetListenerToDb;
-  private ShowDialogAndExitExceptionHandler exceptionHandler;
+  private ExceptionHandler exceptionHandler;
 
   public static PicsouInit init(DataAccess dataAccess, Directory directory, boolean registeredUser, boolean badJarVersion) {
     return new PicsouInit(dataAccess, directory, registeredUser, badJarVersion);
@@ -66,7 +66,7 @@ public class PicsouInit {
     this.directory = directory;
 
     this.idGenerator = new DefaultGlobIdGenerator();
-    this.exceptionHandler = new ShowDialogAndExitExceptionHandler(directory);
+    this.exceptionHandler = directory.get(ExceptionHandler.class);
     this.repository =
       GlobRepositoryBuilder.init(idGenerator, exceptionHandler)
         .add(directory.get(GlobModel.class).getConstants())

@@ -15,6 +15,8 @@ import org.globsframework.model.repository.DefaultGlobRepository;
 import org.globsframework.utils.Dates;
 import org.globsframework.utils.directory.DefaultDirectory;
 
+import java.io.StringWriter;
+
 import static org.globsframework.model.FieldValue.value;
 
 public class DataCheckingServiceTest extends TestCase {
@@ -51,18 +53,20 @@ public class DataCheckingServiceTest extends TestCase {
     createMonths(currentMonths);
 
     DataCheckingService action = new DataCheckingService(repository, directory);
-    DataCheckReport report = new DataCheckReport();
+    StringWriter writer = new StringWriter();
+    DataCheckReport report = new DataCheckReport(writer);
     assertTrue(action.doCheck(report));
-    String result = report.toString();
+    String result = writer.toString();
     for (int month : missingMonths) {
       assertTrue(Integer.toString(month), result.contains("Missing month " + month));
     }
     for (int month : currentMonths) {
       assertFalse(Integer.toString(month), result.contains("Missing month " + month));
     }
-    report.clear();
+    writer = new StringWriter();
+    report = new DataCheckReport(writer);
     boolean check = action.doCheck(report);
-    assertFalse(report.toString(), check);
+    assertFalse(writer.toString(), check);
   }
 
   private void createMonths(final int... months) {
@@ -162,14 +166,15 @@ public class DataCheckingServiceTest extends TestCase {
   private void doCheck(final String... expectedError) {
     PicsouInit.initTriggers(DataAccess.NULL, directory, repository);
     DataCheckingService checkerAction = new DataCheckingService(repository, directory);
-    DataCheckReport builder = new DataCheckReport();
-    assertTrue(checkerAction.doCheck(builder));
-    String text = builder.toString();
+    StringWriter writer = new StringWriter();
+    DataCheckReport report = new DataCheckReport(writer);
+    assertTrue(checkerAction.doCheck(report));
+    String text = writer.toString();
     for (String error : expectedError) {
       assertTrue(text, text.contains(error));
     }
-    DataCheckReport output = new DataCheckReport();
-    boolean result = checkerAction.doCheck(output);
-    assertFalse(output.toString(), result);
+    writer = new StringWriter();
+    report = new DataCheckReport(writer);
+    assertFalse(writer.toString(), checkerAction.doCheck(report));
   }
 }

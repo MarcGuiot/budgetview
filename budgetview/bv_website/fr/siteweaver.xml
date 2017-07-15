@@ -32,6 +32,13 @@
       <key name="innerTemplate" value="templates/standardPageTemplate.html"/>
     </page>
 
+    <page file="essai_sync.html" title="Essai BudgetView Sync">
+      <key name="navbar.hide" value="true"/>
+      <key name="noindex" value="true"/>
+      <key name="title.hide" value="true"/>
+      <key name="innerTemplate" value="templates/standardPageTemplate.html"/>
+    </page>
+
     <page file="support.html" title="Aide &amp; Support" shortTitle="Aide &amp; Support">
       <key name="innerTemplate" value="templates/supportPageTemplate.html"/>
 
@@ -140,7 +147,6 @@
           <page file="support/faq/sync/confidentialite_securite_donnees.html"
                 title="Comment sont assurées la confidentialité et la sécurité de mes données ?"/>
         </page>
-
 
         <page file="support/faq/mobile.html" title="Utiliser BudgetView sur smartphone et tablette">
           <page file="support/faq/mobile/utilisation_android.html"

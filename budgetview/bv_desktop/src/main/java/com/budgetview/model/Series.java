@@ -10,6 +10,7 @@ import org.globsframework.metamodel.annotations.Key;
 import org.globsframework.metamodel.fields.*;
 import org.globsframework.metamodel.utils.GlobTypeLoader;
 import org.globsframework.model.*;
+import org.globsframework.model.format.GlobDump;
 import org.globsframework.model.utils.GlobMatcher;
 import org.globsframework.model.utils.GlobMatchers;
 import org.globsframework.utils.Strings;
@@ -207,7 +208,7 @@ public class Series {
 
   public static BooleanField[] getMonths() {
     return new BooleanField[]{JANUARY, FEBRUARY, MARCH, APRIL, MAY, JUNE, JULY, AUGUST,
-                              SEPTEMBER, OCTOBER, NOVEMBER, DECEMBER};
+      SEPTEMBER, OCTOBER, NOVEMBER, DECEMBER};
   }
 
   public static String getPlannedTransactionLabel(Integer seriesId, FieldValues series) {
@@ -312,7 +313,7 @@ public class Series {
     }
   }
 
-  public static void doDelete(Glob series, GlobRepository repository) {
+  private static void doDelete(Glob series, GlobRepository repository) {
     SeriesStat.deleteAllForSeries(series, repository);
     SeriesBudget.deleteAllForSeries(series, repository);
     repository.delete(series);
@@ -372,6 +373,14 @@ public class Series {
     return !series.get(BUDGET_AREA).equals(BudgetArea.TRANSFER.getId()) ||
            ((series.get(FROM_ACCOUNT) != null && series.get(TO_ACCOUNT) != null) &&
             !series.get(FROM_ACCOUNT).equals(series.get(TO_ACCOUNT)));
+  }
+
+  public static String toString(Glob series) {
+    return GlobDump.init(series)
+      .add(NAME)
+      .add(ID)
+      .add(BUDGET_AREA, Series.getBudgetArea(series).getName())
+      .toString();
   }
 
   public static class Serializer implements GlobSerializer {

@@ -1,22 +1,13 @@
 package com.budgetview.desktop;
 
-import com.budgetview.client.exceptions.UserAlreadyExists;
-import com.budgetview.client.http.EncryptToTransportDataAccess;
 import com.budgetview.desktop.components.PicsouFrame;
 import com.budgetview.desktop.components.layoutconfig.LayoutConfigService;
-import com.budgetview.desktop.startup.AppPaths;
-import com.budgetview.client.DataAccess;
-import com.budgetview.client.local.LocalSessionDataTransport;
 import com.budgetview.desktop.plaf.PicsouMacLookAndFeel;
 import com.budgetview.desktop.utils.Gui;
-import com.budgetview.session.SessionDirectory;
 import com.budgetview.utils.Lang;
-import org.globsframework.utils.Log;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
@@ -43,28 +34,13 @@ public class DevDesktopApp {
   }
 
   public static Directory run(String user, String password, String snapshot) throws Exception {
-    Application.clearRepositoryIfNeeded();
-    Application.changeDate();
-    Log.setDebugEnabled(true);
 
-    Directory directory = Application.createDirectory();
-
-    SessionDirectory sessionDirectory = createServerDirectory(snapshot);
-    directory.add(SessionDirectory.class, sessionDirectory);
-    DataAccess dataAccess =
-      new EncryptToTransportDataAccess(new LocalSessionDataTransport(sessionDirectory.getServiceDirectory()),
-                                       directory);
-    dataAccess.connect(Application.JAR_VERSION);
-
-    boolean registered = isRegistered(user, password, dataAccess);
+    AppCore core = AppCore.init(user, password, snapshot).complete();
+    Directory directory = core.getDirectory();
 
     final PicsouFrame frame = new PicsouFrame(Lang.get("application"), directory);
     directory.add(JFrame.class, frame);
-    PicsouInit init = PicsouInit.init(dataAccess, directory, registered, false);
-    init.loadUserData(user, false, false).load();
-
-    Directory initDirectory = init.getDirectory();
-    MainPanel.init(init.getRepository(), initDirectory, new WindowManager() {
+    MainPanel.init(core.getRepository(), directory, new WindowManager() {
       public PicsouFrame getFrame() {
         return frame;
       }
@@ -99,28 +75,6 @@ public class DevDesktopApp {
     directory.get(LayoutConfigService.class).show(frame);
 
     return directory;
-  }
-
-  private static SessionDirectory createServerDirectory(String snapshot) throws FileNotFoundException {
-    SessionDirectory sessionDirectory;
-    if (snapshot != null) {
-      sessionDirectory = new SessionDirectory(new FileInputStream(snapshot));
-    }
-    else {
-      sessionDirectory = new SessionDirectory(AppPaths.getCurrentDataPath(), Application.isDataInMemory());
-    }
-    return sessionDirectory;
-  }
-
-  private static boolean isRegistered(String user, String password, DataAccess dataAccess) {
-    boolean registered = false;
-    try {
-      registered = dataAccess.createUser(user, password.toCharArray(), false);
-    }
-    catch (UserAlreadyExists e) {
-      registered = dataAccess.initConnection(user, password.toCharArray(), false);
-    }
-    return registered;
   }
 
   private static String parseArguments(List<String> args, String key, String defaultValue) {

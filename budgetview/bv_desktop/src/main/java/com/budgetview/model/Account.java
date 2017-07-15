@@ -13,6 +13,7 @@ import org.globsframework.metamodel.annotations.Key;
 import org.globsframework.metamodel.fields.*;
 import org.globsframework.metamodel.utils.GlobTypeLoader;
 import org.globsframework.model.*;
+import org.globsframework.model.format.GlobDump;
 import org.globsframework.model.utils.GlobMatcher;
 import org.globsframework.utils.collections.Pair;
 import org.globsframework.utils.exceptions.ItemNotFound;
@@ -363,6 +364,13 @@ public class Account {
       return null;
     }
     return AccountType.get(accountType);
+  }
+
+  public static String toString(Glob account) {
+    return GlobDump.init(account)
+      .add(NAME)
+      .add(ID)
+      .toString();
   }
 
   public static class Serializer implements GlobSerializer {

@@ -261,6 +261,13 @@ public class GlobMatchers {
     };
   }
 
+  public static GlobMatcher linkTargetIsNull(final Link link) {
+    return new GlobMatcher() {
+      public boolean matches(Glob item, GlobRepository repository) {
+        return repository.findLinkTarget(item, link) == null;
+      }
+    };
+  }
 
   public static GlobMatcher isNull(final Field field) {
     return new GlobMatcher() {

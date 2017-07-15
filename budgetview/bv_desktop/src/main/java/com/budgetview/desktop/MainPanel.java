@@ -8,6 +8,7 @@ import com.budgetview.desktop.addons.AddOnsSelector;
 import com.budgetview.desktop.addons.AddOnsView;
 import com.budgetview.desktop.analysis.AnalysisSelector;
 import com.budgetview.desktop.analysis.AnalysisView;
+import com.budgetview.desktop.backup.BackupService;
 import com.budgetview.desktop.budget.BudgetView;
 import com.budgetview.desktop.card.CardView;
 import com.budgetview.desktop.card.NavigationService;
@@ -138,7 +139,14 @@ public class MainPanel {
 
     budgetView = new BudgetView(replicationGlobRepository, directory);
 
-    directory.add(new NavigationService(mainPanelContainer, transactionView, categorizationSelector, projectView, repository, directory));
+    NavigationService navigationService = new NavigationService(mainPanelContainer, transactionView, categorizationSelector, projectView, repository, directory);
+    directory.add(navigationService);
+    directory.get(BackupService.class).addPostRestoreTrigger(new BackupService.Trigger() {
+      public void process(GlobRepository repository) {
+        boolean onboardingCompleted = SignpostStatus.isOnboardingCompleted(repository);
+        directory.get(NavigationService.class).gotoHomeAfterRestore(onboardingCompleted);
+      }
+    });
 
     menuBar = new MenuBarBuilder(repository, replicationGlobRepository,
                                  windowManager, logoutService,

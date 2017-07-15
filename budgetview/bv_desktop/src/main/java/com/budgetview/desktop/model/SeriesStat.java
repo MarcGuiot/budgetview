@@ -16,10 +16,12 @@ import org.globsframework.model.FieldValues;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
+import org.globsframework.model.format.GlobPrinter;
 import org.globsframework.model.utils.GlobMatcher;
 import org.globsframework.model.utils.GlobMatchers;
 import org.globsframework.utils.Utils;
 import org.globsframework.utils.exceptions.InvalidParameter;
+import org.globsframework.utils.exceptions.ItemNotFound;
 import org.globsframework.utils.exceptions.UnexpectedValue;
 
 import java.util.HashSet;
@@ -104,12 +106,20 @@ public class SeriesStat {
     return stat != null ? stat : repository.create(key);
   }
 
+  public static boolean isForSeries(FieldValues seriesStat) {
+    return SeriesType.SERIES.getId().equals(seriesStat.get(TARGET_TYPE));
+  }
+
   public static boolean isSummaryForSeries(FieldValues seriesStat) {
-    return isSummary(seriesStat) && SeriesType.SERIES.getId().equals(seriesStat.get(TARGET_TYPE));
+    return isSummary(seriesStat) && isForSeries(seriesStat);
+  }
+
+  public static boolean isForGroup(FieldValues seriesStat) {
+    return SeriesType.SERIES_GROUP.getId().equals(seriesStat.get(TARGET_TYPE));
   }
 
   public static boolean isSummaryForGroup(FieldValues seriesStat) {
-    return isSummary(seriesStat) && SeriesType.SERIES_GROUP.getId().equals(seriesStat.get(TARGET_TYPE));
+    return isSummary(seriesStat) && isForGroup(seriesStat);
   }
 
   public static org.globsframework.model.Key keyForGroupSummary(Integer groupId, Integer monthId) {
@@ -120,17 +130,18 @@ public class SeriesStat {
   }
 
   public static Glob findSeries(FieldValues seriesStatValues, GlobRepository repository) {
-    if (!SeriesType.SERIES.getId().equals(seriesStatValues.get(TARGET_TYPE))) {
+    if (!isForSeries(seriesStatValues)) {
       throw new InvalidParameter("Unexpected type for: " + seriesStatValues);
     }
     return repository.find(org.globsframework.model.Key.create(Series.TYPE, seriesStatValues.get(TARGET)));
   }
 
-  public static Glob getSeries(FieldValues seriesStatValues, GlobRepository repository) {
-    if (!SeriesType.SERIES.getId().equals(seriesStatValues.get(TARGET_TYPE))) {
-      throw new InvalidParameter("Unexpected type for: " + seriesStatValues);
+  public static Glob getSeries(FieldValues seriesStatValues, GlobRepository repository) throws ItemNotFound {
+    Glob series = findSeries(seriesStatValues, repository);
+    if (series == null) {
+      throw new ItemNotFound("No series found for SeriesStat: " + SeriesType.get(seriesStatValues.get(TARGET_TYPE)).name() + ":" + seriesStatValues.get(TARGET));
     }
-    return repository.get(org.globsframework.model.Key.create(Series.TYPE, seriesStatValues.get(TARGET)));
+    return series;
   }
 
   public static Glob findSummaryForSeries(Integer seriesId, Integer monthId, GlobRepository repository) {
@@ -159,7 +170,7 @@ public class SeriesStat {
   public static GlobMatcher isSeriesForAccount(final int accountId) {
     return new GlobMatcher() {
       public boolean matches(Glob seriesStat, GlobRepository repository) {
-        return seriesStat != null && equal(accountId, seriesStat.get(SeriesStat.ACCOUNT)) && SeriesType.SERIES.getId().equals(seriesStat.get(TARGET_TYPE));
+        return seriesStat != null && equal(accountId, seriesStat.get(SeriesStat.ACCOUNT)) && isForSeries(seriesStat);
       }
     };
   }
@@ -167,7 +178,7 @@ public class SeriesStat {
   public static GlobMatcher isSummaryForSeries() {
     return new GlobMatcher() {
       public boolean matches(Glob seriesStat, GlobRepository repository) {
-        return seriesStat != null && isSummary(seriesStat) && SeriesType.SERIES.getId().equals(seriesStat.get(TARGET_TYPE));
+        return seriesStat != null && isSummary(seriesStat) && isForSeries(seriesStat);
       }
     };
   }
@@ -175,7 +186,7 @@ public class SeriesStat {
   public static GlobMatcher isSummaryForGroup() {
     return new GlobMatcher() {
       public boolean matches(Glob seriesStat, GlobRepository repository) {
-        return seriesStat != null && isSummary(seriesStat) && SeriesType.SERIES_GROUP.getId().equals(seriesStat.get(TARGET_TYPE));
+        return seriesStat != null && isSummary(seriesStat) && isForGroup(seriesStat);
       }
     };
   }
@@ -183,7 +194,7 @@ public class SeriesStat {
   public static GlobMatcher isSeriesInGroup(final Integer groupId) {
     return new GlobMatcher() {
       public boolean matches(Glob seriesStat, GlobRepository repository) {
-        if ((seriesStat == null) || !SeriesType.SERIES.getId().equals(seriesStat.get(TARGET_TYPE))) {
+        if ((seriesStat == null) || !isForSeries(seriesStat)) {
           return false;
         }
         Glob series = repository.find(org.globsframework.model.Key.create(Series.TYPE, seriesStat.get(SeriesStat.TARGET)));
@@ -198,7 +209,7 @@ public class SeriesStat {
         if (seriesStat == null || !isSummary(seriesStat)) {
           return false;
         }
-        if (SeriesType.SERIES_GROUP.getId().equals(seriesStat.get(TARGET_TYPE))) {
+        if (isForGroup(seriesStat)) {
           return true;
         }
         Glob series = repository.find(org.globsframework.model.Key.create(Series.TYPE, seriesStat.get(TARGET)));
@@ -264,11 +275,11 @@ public class SeriesStat {
         if (seriesStat == null || !isSummary(seriesStat)) {
           return false;
         }
-        if (SeriesType.SERIES.getId().equals(seriesStat.get(TARGET_TYPE))) {
+        if (isForSeries(seriesStat)) {
           Glob series = repository.find(org.globsframework.model.Key.create(Series.TYPE, seriesStat.get(TARGET)));
           return series != null && Utils.equal(series.get(Series.BUDGET_AREA), budgetArea.getId());
         }
-        if (SeriesType.SERIES_GROUP.getId().equals(seriesStat.get(TARGET_TYPE))) {
+        if (isForGroup(seriesStat)) {
           Glob group = repository.find(org.globsframework.model.Key.create(SeriesGroup.TYPE, seriesStat.get(TARGET)));
           return group != null && Utils.equal(group.get(SeriesGroup.BUDGET_AREA), budgetArea.getId());
         }

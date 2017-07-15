@@ -156,8 +156,8 @@ public class UpgradeTrigger implements ChangeSetListener {
     repository.delete(Transaction.TYPE, and(fieldEquals(Transaction.CREATED_BY_SERIES, true),
                                             fieldEquals(Transaction.AMOUNT, 0.00)));
 
-    Glob config = LayoutConfig.find(FrameSize.init(directory.get(JFrame.class)), repository, true);
     if (currentJarVersion < 141) {
+      Glob config = LayoutConfig.find(FrameSize.init(directory.get(JFrame.class)), repository, true);
       resetLayout(config, repository);
     }
 

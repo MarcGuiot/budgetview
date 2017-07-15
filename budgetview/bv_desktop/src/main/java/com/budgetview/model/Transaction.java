@@ -1,6 +1,7 @@
 package com.budgetview.model;
 
 import com.budgetview.shared.model.Provider;
+import com.budgetview.shared.utils.AmountFormat;
 import com.budgetview.shared.utils.GlobSerializer;
 import com.budgetview.utils.TransactionComparator;
 import org.globsframework.metamodel.GlobType;
@@ -11,6 +12,7 @@ import org.globsframework.metamodel.index.MultiFieldNotUniqueIndex;
 import org.globsframework.metamodel.index.NotUniqueIndex;
 import org.globsframework.metamodel.utils.GlobTypeLoader;
 import org.globsframework.model.*;
+import org.globsframework.model.format.GlobDump;
 import org.globsframework.model.utils.GlobMatcher;
 import org.globsframework.utils.Utils;
 import org.globsframework.utils.serialization.SerializedByteArrayOutput;
@@ -310,6 +312,16 @@ public class Transaction {
 
   public static ImportType getImportType(Glob transaction) {
     return ImportType.get(transaction.get(IMPORT_TYPE));
+  }
+
+  public static String toString(Glob transaction) {
+    return GlobDump.init(transaction)
+      .add(LABEL)
+      .add(ID)
+      .add("amount", AmountFormat.toString(transaction.get(AMOUNT)))
+      .add("date", Month.toCompactString(transaction.get(MONTH), transaction.get(DAY)))
+      .add("bankDate", Month.toCompactString(transaction.get(BANK_MONTH), transaction.get(BANK_DAY)))
+      .toString();
   }
 
   public static class Serializer implements GlobSerializer {

@@ -23,10 +23,7 @@ import com.budgetview.desktop.startup.components.OpenRequestManager;
 import com.budgetview.desktop.startup.components.SingleApplicationInstanceListener;
 import com.budgetview.desktop.time.TimeService;
 import com.budgetview.desktop.upgrade.UpgradeService;
-import com.budgetview.desktop.utils.ApplicationColors;
-import com.budgetview.desktop.utils.AwtExceptionHandler;
-import com.budgetview.desktop.utils.Gui;
-import com.budgetview.desktop.utils.MacOSXHooks;
+import com.budgetview.desktop.utils.*;
 import com.budgetview.shared.encryption.MD5PasswordBasedEncryptor;
 import com.budgetview.shared.encryption.PasswordBasedEncryptor;
 import com.budgetview.shared.encryption.RedirectPasswordBasedEncryptor;
@@ -50,6 +47,7 @@ import org.globsframework.utils.Utils;
 import org.globsframework.utils.directory.AddIfNotPresentDirectory;
 import org.globsframework.utils.directory.DefaultDirectory;
 import org.globsframework.utils.directory.Directory;
+import org.globsframework.utils.exceptions.ExceptionHandler;
 import org.globsframework.utils.exceptions.InvalidState;
 
 import javax.swing.*;
@@ -61,8 +59,8 @@ import java.util.regex.Pattern;
 
 public class Application {
 
-  public static final String APPLICATION_VERSION = "5.0b2";
-  public static Long JAR_VERSION = 151L;
+  public static final String APPLICATION_VERSION = "5.0b3";
+  public static Long JAR_VERSION = 152L;
   public static final Long BANK_CONFIG_VERSION = 7L;
 
   public static final String APPNAME = "budgetview";
@@ -198,8 +196,7 @@ public class Application {
     e.printStackTrace(new PrintWriter(out));
     JDialog dialog = new JDialog((Frame) null, true);
     dialog.setSize(900, 700);
-    dialog.getContentPane()
-      .add(new JTextArea(out.toString()));
+    dialog.getContentPane().add(new JTextArea(out.toString()));
     dialog.setVisible(true);
   }
 
@@ -298,7 +295,6 @@ public class Application {
     AddIfNotPresentDirectory wrapper = new AddIfNotPresentDirectory(directory);
     ApplicationColors.registerColorService(wrapper);
     wrapper.add(OpenRequestManager.class, openRequestManager);
-    wrapper.add(OpenRequestManager.class, openRequestManager);
     wrapper.add(ApplicationLAF.initUiService());
     wrapper.add(ApplicationLAF.initLayoutService());
     wrapper.add(ApplicationLAF.initRepeatLayoutService());
@@ -311,6 +307,7 @@ public class Application {
     wrapper.add(ImageLocator.class, Gui.IMAGE_LOCATOR);
     wrapper.add(TextLocator.class, Lang.TEXT_LOCATOR);
     wrapper.add(FontLocator.class, Gui.FONT_LOCATOR);
+    wrapper.add(ExceptionHandler.class, new ShowDialogAndExitExceptionHandler(directory));
     wrapper.add(PasswordBasedEncryptor.class, new RedirectPasswordBasedEncryptor());
     wrapper.add(createConfigService());
     wrapper.add(new MobileService());
