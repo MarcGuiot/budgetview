@@ -1,6 +1,7 @@
 package com.budgetview.model;
 
 import com.budgetview.desktop.model.ProjectStat;
+import com.budgetview.shared.utils.AmountFormat;
 import com.budgetview.shared.utils.GlobSerializer;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.annotations.*;
@@ -11,6 +12,7 @@ import org.globsframework.metamodel.fields.LinkField;
 import org.globsframework.metamodel.fields.StringField;
 import org.globsframework.metamodel.utils.GlobTypeLoader;
 import org.globsframework.model.*;
+import org.globsframework.model.format.GlobDump;
 import org.globsframework.model.utils.GlobFieldsComparator;
 import org.globsframework.utils.collections.Range;
 import org.globsframework.utils.exceptions.UnexpectedApplicationState;
@@ -38,7 +40,6 @@ public class Project {
   public static StringField NAME;
 
   @Target(SeriesGroup.class)
-  @Required
   public static LinkField SERIES_GROUP;
 
   @DefaultBoolean(true)
@@ -141,6 +142,14 @@ public class Project {
     finally {
       repository.completeChangeSet();
     }
+  }
+
+  public static String toString(Glob project) {
+    return GlobDump.init(project)
+      .add(NAME)
+      .add(ID)
+      .add(ACTIVE)
+      .toString();
   }
 
   public static class Serializer implements GlobSerializer {

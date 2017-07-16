@@ -34,8 +34,8 @@ public enum ProjectItemType implements GlobConstantContainer {
   }
 
   public ReadOnlyGlob getGlob() {
-    return new ReadOnlyGlob(ProfileType.TYPE,
-                            value(ProfileType.ID, id));
+    return new ReadOnlyGlob(ProjectItemType.TYPE,
+                            value(ProjectItemType.ID, id));
   }
 
   public static ProjectItemType get(Glob item) {

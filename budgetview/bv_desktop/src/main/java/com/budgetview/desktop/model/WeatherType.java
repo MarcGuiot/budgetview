@@ -24,7 +24,7 @@ public enum WeatherType implements GlobConstantContainer {
   private final int id;
 
   static {
-    GlobTypeLoader.init(WeatherType.class, "seriesType");
+    GlobTypeLoader.init(WeatherType.class, "weatherType");
   }
 
   WeatherType(int id) {
@@ -32,8 +32,8 @@ public enum WeatherType implements GlobConstantContainer {
   }
 
   public ReadOnlyGlob getGlob() {
-    return new ReadOnlyGlob(ProfileType.TYPE,
-                            value(ProfileType.ID, id));
+    return new ReadOnlyGlob(WeatherType.TYPE,
+                            value(WeatherType.ID, id));
   }
 
   public Integer getId() {

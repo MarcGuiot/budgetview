@@ -43,9 +43,14 @@ public class BackupClinic {
     GlobRepository repository = core.getRepository();
 
     DataCheckingService checker = new DataCheckingService(repository, core.getDirectory());
-    checker.doCheck(report);
 
-    System.out.println("\n\n ========================= \n\n");
+//    System.out.println("\n\n============ First Check =============\n");
     checker.doCheck(report);
+    System.out.println(report.errorCount() + " errors");
+    report.reset();
+
+//    System.out.println("\n\n=========== Second Check =============\n");
+//    checker.doCheck(report);
+//    System.out.println(report.errorCount() + " errors");
   }
 }

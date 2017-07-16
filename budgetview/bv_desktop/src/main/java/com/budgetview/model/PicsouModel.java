@@ -1,5 +1,7 @@
 package com.budgetview.model;
 
+import com.budgetview.desktop.model.AccountWeather;
+import com.budgetview.desktop.model.WeatherType;
 import com.budgetview.io.importer.csv.CsvType;
 import com.budgetview.session.serialization.SerializationManager;
 import com.budgetview.shared.model.AccountType;
@@ -40,9 +42,11 @@ public class PicsouModel {
                           DeferredCardPeriod.TYPE,
                           Notes.TYPE,
                           SignpostStatus.TYPE,
+                          SignpostSectionType.TYPE,
                           SeriesOrder.TYPE,
                           Project.TYPE,
                           ProjectItem.TYPE,
+                          ProjectItemType.TYPE,
                           ProjectTransfer.TYPE,
                           RealAccount.TYPE,
                           NumericDateType.TYPE,
@@ -63,8 +67,10 @@ public class PicsouModel {
                           AddOns.TYPE,
                           ProjectAccountGraph.TYPE,
                           CloudDesktopUser.TYPE,
-                          CloudProviderConnection.TYPE
-    )
+                          CloudProviderConnection.TYPE,
+                          AccountWeather.TYPE,
+                          WeatherType.TYPE
+                          )
       .get();
 
   static {

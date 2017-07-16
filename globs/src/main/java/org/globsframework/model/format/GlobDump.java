@@ -26,6 +26,11 @@ public class GlobDump {
     return add(field, glob.get(field));
   }
 
+  public GlobDump add(BooleanField field) {
+    Boolean value = glob.get(field);
+    return add(field, value == null ? "null" : value.toString());
+  }
+
   public GlobDump add(IntegerField field) {
     return add(field, Integer.toString(glob.get(field)));
   }

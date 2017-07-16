@@ -85,7 +85,6 @@ public class DataCheckingService {
 
     for (Glob series : repository.getAll(Series.TYPE)) {
 
-      report.setCurrentSeries(series);
       try {
         GlobCheck.requiredFieldsAreSet(series, report);
 
@@ -102,21 +101,17 @@ public class DataCheckingService {
 
         // On verifie que les dates de debut/fin de series sont bien dans les bornes des transactions
         // associé a la serie
-        GlobMatcher matcher = fieldEquals(Transaction.SERIES, series.get(Series.ID));
-        TransactionMonthRange range = TransactionMonthRange.get(repository, matcher);
+        TransactionMonthRange range =
+          TransactionMonthRange.get(repository, fieldEquals(Transaction.SERIES, series.get(Series.ID)));
         if (range.first() < firstMonthForSeries) {
           firstMonthForSeries = range.first();
+          report.addFix("Invalid start date " + range + " for series, updating to " + firstMonthForSeries, Series.toString(series));
           repository.update(series.getKey(), Series.FIRST_MONTH, firstMonthForSeries);
-          report.addFix("Bad begin of series, updated to " + firstMonthForSeries);
         }
         if (range.last() > lastMonthForSeries) {
           lastMonthForSeries = range.last();
+          report.addFix("Invalid end date for series, updating to " + lastMonthForSeries, Series.toString(series));
           repository.update(series.getKey(), Series.LAST_MONTH, lastMonthForSeries);
-          report.addFix("Bad end of series, updated to " + lastMonthForSeries);
-        }
-
-        if (firstMonthForSeries > months.getMax()) {
-          continue;
         }
 
         SeriesCheck.seriesBudgetArePresent(series, firstMonthForSeries, lastMonthForSeries, repository, report);
@@ -130,7 +125,6 @@ public class DataCheckingService {
         report.addError(ex);
       }
     }
-    report.clearCurrentSeries();
 
     TransactionCheck.allSplitTransactionsHaveASource(repository, report);
     SeriesCheck.allSeriesBudgetAreProperlyAssociated(repository, report);
@@ -139,6 +133,10 @@ public class DataCheckingService {
     repository.safeApply(Transaction.TYPE, GlobMatchers.ALL, toSeriesChecker);
     toSeriesChecker.deletePlanned(repository);
     AccountCheck.accountTotalAlignedWithTransactions(repository, report);
+
+    ProjectCheck.allProjectsHaveSeriesGroup(repository, report);
+
+    GlobCheck.linksAreAllConnected(repository, report);
 
     return report.hasErrors();
   }
@@ -155,11 +153,11 @@ public class DataCheckingService {
       Glob target = repository.findLinkTarget(transaction, Transaction.SERIES);
       if (target == null) {
         if (transaction.isTrue(Transaction.PLANNED)) {
-          report.addFix("No series for planned transaction", Transaction.toString(transaction));
+          report.addFix("No series for planned transaction, preparing to delete", Transaction.toString(transaction));
           transactionsToDelete.add(transaction);
         }
-        else {
-          report.addFix("No series for real transaction", Transaction.toString(transaction));
+        else if (Transaction.isCategorized(transaction)) {
+          report.addFix("Series not found for transaction, uncategorizing", Transaction.toString(transaction));
           Transaction.uncategorize(transaction, repository);
         }
       }

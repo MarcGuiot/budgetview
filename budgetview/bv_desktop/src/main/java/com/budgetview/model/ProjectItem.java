@@ -28,6 +28,7 @@ public class ProjectItem {
   public static IntegerField ID;
 
   @Target(Project.class)
+  @Required
   public static LinkField PROJECT;
 
   @Target(Account.class)
@@ -35,6 +36,7 @@ public class ProjectItem {
 
   @Target(ProjectItemType.class)
   @DefaultInteger(0)
+  @Required
   public static LinkField ITEM_TYPE;
 
   @NamingField
@@ -59,6 +61,7 @@ public class ProjectItem {
   public static BooleanField ACTIVE;
 
   @Target(Series.class)
+  @Required
   public static LinkField SERIES;
 
   /**

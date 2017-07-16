@@ -13,7 +13,6 @@ public class DataCheckReport {
 
   private int errorCount;
   private Date date = TimeService.getCurrentDate();
-  private Glob currentSeries;
   private PrintWriter writer;
 
   public DataCheckReport(Writer writer) {
@@ -22,14 +21,6 @@ public class DataCheckReport {
 
   public DataCheckReport(OutputStream stream) {
     this.writer = new PrintWriter(stream, true);
-  }
-
-  public void setCurrentSeries(Glob series) {
-    this.currentSeries = series;
-  }
-
-  public void clearCurrentSeries() {
-    this.currentSeries = null;
   }
 
   public void addError(String message) {
@@ -75,5 +66,13 @@ public class DataCheckReport {
 
   public void addError(Throwable ex) {
     ex.printStackTrace(writer);
+  }
+
+  public void reset() {
+    errorCount = 0;
+  }
+
+  public int errorCount() {
+    return errorCount;
   }
 }
