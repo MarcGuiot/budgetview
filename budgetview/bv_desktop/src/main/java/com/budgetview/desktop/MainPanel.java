@@ -46,9 +46,11 @@ import com.budgetview.desktop.time.TimeView;
 import com.budgetview.desktop.title.PeriodView;
 import com.budgetview.desktop.transactions.TransactionView;
 import com.budgetview.desktop.undo.UndoRedoService;
+import com.budgetview.desktop.utils.FrameSize;
 import com.budgetview.desktop.utils.MacOSXHooks;
 import com.budgetview.desktop.utils.MainPanelContainer;
 import com.budgetview.desktop.utils.MenuBarBuilder;
+import com.budgetview.model.LayoutConfig;
 import com.budgetview.model.Month;
 import com.budgetview.model.SignpostStatus;
 import com.budgetview.model.Transaction;
@@ -93,6 +95,7 @@ public class MainPanel {
   private final BudgetView budgetView;
 
   public static MainPanel init(GlobRepository repository, Directory directory, WindowManager mainWindow) {
+    LayoutConfig.init(repository, directory);
     MainPanel panel = new MainPanel(repository, directory, mainWindow);
     mainWindow.getFrame().setRepository(repository);
     return panel;

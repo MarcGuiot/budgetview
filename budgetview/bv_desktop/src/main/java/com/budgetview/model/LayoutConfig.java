@@ -9,10 +9,13 @@ import org.globsframework.metamodel.fields.DoubleField;
 import org.globsframework.metamodel.fields.IntegerField;
 import org.globsframework.metamodel.utils.GlobTypeLoader;
 import org.globsframework.model.*;
+import org.globsframework.utils.directory.Directory;
 import org.globsframework.utils.serialization.SerializedByteArrayOutput;
 import org.globsframework.utils.serialization.SerializedInput;
 import org.globsframework.utils.serialization.SerializedInputOutputFactory;
 import org.globsframework.utils.serialization.SerializedOutput;
+
+import javax.swing.*;
 
 import static org.globsframework.model.FieldValue.value;
 import static org.globsframework.model.utils.GlobMatchers.*;
@@ -62,6 +65,12 @@ public class LayoutConfig {
 
   static {
     GlobTypeLoader.init(LayoutConfig.class, "layoutConfig");
+  }
+
+  public static void init(GlobRepository repository, Directory directory) {
+    JFrame frame = directory.get(JFrame.class);
+    FrameSize frameSize = FrameSize.init(frame);
+    LayoutConfig.find(frameSize, repository, true);
   }
 
   public static Glob find(FrameSize frameSize, GlobRepository repository, boolean createIfNeeded) {

@@ -325,8 +325,6 @@ public class PicsouInit {
                               value(UserVersionInformation.CURRENT_BANK_CONFIG_VERSION, Application.BANK_CONFIG_VERSION),
                               value(UserVersionInformation.CURRENT_SOFTWARE_VERSION, Application.APPLICATION_VERSION));
 
-      LayoutConfig.find(FrameSize.init(directory.get(JFrame.class)), repository, true);
-
       repository.findOrCreate(CurrentMonth.KEY,
                               value(CurrentMonth.LAST_TRANSACTION_DAY, 0),
                               value(CurrentMonth.LAST_TRANSACTION_MONTH, 0),
