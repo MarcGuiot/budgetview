@@ -12,6 +12,7 @@ import java.util.Date;
 public class DataCheckReport {
 
   private int errorCount;
+  private int fixCount;
   private Date date = TimeService.getCurrentDate();
   private PrintWriter writer;
 
@@ -40,11 +41,13 @@ public class DataCheckReport {
 
   public void addFix(String message) {
     errorCount++;
+    fixCount++;
     writer.append("[FIX] ").append(message).append('\n').flush();
   }
 
   public void addFix(String message, String source) {
     errorCount++;
+    fixCount++;
     writer.append("[FIX] ")
       .append(message)
       .append("\n          ")
@@ -55,6 +58,10 @@ public class DataCheckReport {
 
   public boolean hasErrors() {
     return errorCount > 0;
+  }
+
+  public boolean hasFixes() {
+    return fixCount > 0;
   }
 
   public String toString() {
@@ -74,5 +81,9 @@ public class DataCheckReport {
 
   public int errorCount() {
     return errorCount;
+  }
+
+  public int fixCount() {
+    return fixCount;
   }
 }

@@ -39,7 +39,7 @@ mkdir -p $RELEASE_LOCAL_DIR
 cp $GENERATED_JAR $RELEASE_LOCAL_DIR/jars
 cp $BV_SERVER_ROOT/server_admin/config/*_local.properties $RELEASE_LOCAL_DIR/config
 cp $BV_SERVER_ROOT/server_admin/config/log4j_local.properties $RELEASE_LOCAL_DIR/config
-cp $BV_SERVER_ROOT/server_admin/scripts/loca/*.sh $RELEASE_LOCAL_DIR/config
+cp $BV_SERVER_ROOT/server_admin/scripts/local/*.sh $RELEASE_LOCAL_DIR/config
 cp $BV_SERVER_ROOT/ssl/keystore $RELEASE_LOCAL_DIR
 chmod +x $RELEASE_LOCAL_DIR/*.sh
 

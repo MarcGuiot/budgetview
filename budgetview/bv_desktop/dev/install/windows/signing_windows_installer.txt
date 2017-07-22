@@ -1,0 +1,15 @@
+
+Sous Windows :
+
+1. Inserer le token USB
+
+2. Lancer GlobalSign - SafeNet Authentication Client Tools
+
+3. Lancer la commande :
+
+[FR]
+D:\Tools\WindowsKit\8.1\bin\x64\signtool sign /a /tr http://timestamp.globalsign.com/?signature=sha2 /td SHA256 C:\Users\rmedina\Desktop\BV\output\BudgetView-4.03-fr-Setup.exe
+
+[EN]
+D:\Tools\WindowsKit\8.1\bin\x64\signtool sign /a /tr http://timestamp.globalsign.com/?signature=sha2 /td SHA256 C:\Users\rmedina\Desktop\BV\output\BudgetView-4.03-en-Setup.exe
+

@@ -17,40 +17,39 @@ public class BackupClinic {
   public static void main(String[] args) throws Exception {
 
     if (args.length < 1) {
-      System.out.println("Args: <backup path>");
+      System.out.println("Args: <backup path> [<fixed backup path>]");
       System.exit(-1);
     }
 
-    File file = new File(args[0]);
-    if (!file.exists()) {
-      System.out.println("File not found: " + file.getAbsolutePath());
+    File inputFile = new File(args[0]);
+    if (!inputFile.exists()) {
+      System.out.println("File not found: " + inputFile.getAbsolutePath());
       System.exit(-1);
     }
-    if (!file.isFile()) {
-      System.out.println("Not a file: " + file.getAbsolutePath());
+    if (!inputFile.isFile()) {
+      System.out.println("Not a file: " + inputFile.getAbsolutePath());
       System.exit(-1);
     }
 
     DataCheckReport report = new DataCheckReport(System.out);
     AppCore core =
       AppCore.init("user", "pwd", null)
-      .set(ExceptionHandler.class, new DataCheckExceptionHandler(report))
-      .complete();
+        .set(ExceptionHandler.class, new DataCheckExceptionHandler(report))
+        .complete();
 
-    InputStream input = new BufferedInputStream(new FileInputStream(file));
+    InputStream input = new BufferedInputStream(new FileInputStream(inputFile));
     core.getDirectory().get(BackupService.class).restore(input, null);
 
     GlobRepository repository = core.getRepository();
 
     DataCheckingService checker = new DataCheckingService(repository, core.getDirectory());
-
-//    System.out.println("\n\n============ First Check =============\n");
     checker.doCheck(report);
-    System.out.println(report.errorCount() + " errors");
-    report.reset();
+    System.out.println("Check completed - errors: " + report.errorCount() + " fixes: " + report.fixCount());
 
-//    System.out.println("\n\n=========== Second Check =============\n");
-//    checker.doCheck(report);
-//    System.out.println(report.errorCount() + " errors");
+    if (report.hasFixes() && args.length == 2) {
+      File outputFile = new File(args[1]);
+      core.getDirectory().get(BackupService.class).generate(outputFile);
+      System.out.println("Fixed backup generated in " + outputFile.getAbsolutePath());
+    }
   }
 }
