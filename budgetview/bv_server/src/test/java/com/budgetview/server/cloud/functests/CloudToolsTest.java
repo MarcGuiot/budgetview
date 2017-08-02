@@ -73,7 +73,7 @@ public class CloudToolsTest extends CloudDesktopTestCase {
     infoForBudgeaUser.checkEquals(info);
 
     StringChecker deleteOutput = new StringChecker(DeleteCloudUser.dump(CloudChecker.CONFIG_FILE_PATH, "toto@example.com", "skipConfirm"));
-    deleteOutput.checkContains("Deleted account for user 0 with email toto@example.com");
+    deleteOutput.checkLineMatches("Deleted account for user [0-9]+ with email toto@example.com");
     deleteOutput.checkContains("Deletion completed");
 
     mailbox.checkEmpty();

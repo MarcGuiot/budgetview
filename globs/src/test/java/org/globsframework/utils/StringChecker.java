@@ -15,6 +15,15 @@ public class StringChecker {
     }
   }
 
+  public void checkLineMatches(String regexp) {
+    for (String line : content.split("\n")) {
+      if (line.trim().matches(regexp)) {
+        return;
+      }
+    }
+    Assert.fail("'" + regexp + "' not matched in:\n" + content);
+  }
+
   public void checkEquals(String expected) {
     Assert.assertEquals(expected, content);
   }

@@ -265,7 +265,7 @@ public class ImportDialogChecker extends GuiChecker {
   }
 
   public void doRefresh() {
-    checkComponentVisible(dialog.getPanel("cloudIntro"), JButton.class, "refreshCloud", true);
+    checkComponentVisible(dialog.getPanel("cloudIntro"), JPanel.class, "refresh", true);
     dialog.getPanel("cloudIntro").getButton("refreshCloud").click();
   }
 

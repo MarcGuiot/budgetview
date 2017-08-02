@@ -56,25 +56,14 @@ public class CloudIntroPanel implements Disposable {
     builder.add("refresh", refreshPanel);
     builder.add("edit", editPanel);
 
-    BooleanFieldListener listener = BooleanFieldListener.install(CloudDesktopUser.KEY, CloudDesktopUser.REGISTERED, repository, new BooleanListener() {
-      public void apply(boolean registered) {
-        initialPanel.setVisible(!registered);
-        refreshPanel.setVisible(registered);
-        editPanel.setVisible(registered);
-      }
-    });
-    disposables.add(listener);
-
-    progressPanel = new ProgressPanel();
-    builder.add("progressPanel", progressPanel);
-
-    builder.add("openCloudSynchro", new AbstractAction(Lang.get("import.fileSelection.cloud.initial.button")) {
+    final AbstractAction openSynchroAction = new AbstractAction(Lang.get("import.fileSelection.cloud.initial.button")) {
       public void actionPerformed(ActionEvent e) {
         controller.showCloudSignup();
       }
-    });
+    };
+    builder.add("openCloudSynchro", openSynchroAction);
 
-    builder.add("refreshCloud", new AbstractAction(Lang.get("import.fileSelection.cloud.refresh.button")) {
+    final AbstractAction refreshAction = new AbstractAction(Lang.get("import.fileSelection.cloud.refresh.button")) {
       public void actionPerformed(ActionEvent e) {
         GlobList connections = repository.getAll(CloudProviderConnection.TYPE, fieldEquals(CloudProviderConnection.INITIALIZED, false));
         if (connections.isEmpty()) {
@@ -84,13 +73,30 @@ public class CloudIntroPanel implements Disposable {
           controller.showCloudFirstDownload(connections.getFirst());
         }
       }
-    });
+    };
+    builder.add("refreshCloud", refreshAction);
 
-    builder.add("editCloudConnections", new AbstractAction(Lang.get("import.fileSelection.cloud.edition.button")) {
+    final AbstractAction editAction = new AbstractAction(Lang.get("import.fileSelection.cloud.edition.button")) {
       public void actionPerformed(ActionEvent e) {
         controller.showCloudEdition();
       }
+    };
+    builder.add("editCloudConnections", editAction);
+
+    BooleanFieldListener listener = BooleanFieldListener.install(CloudDesktopUser.KEY, CloudDesktopUser.REGISTERED, repository, new BooleanListener() {
+      public void apply(boolean registered) {
+        initialPanel.setVisible(!registered);
+        openSynchroAction.setEnabled(!registered);
+        refreshPanel.setVisible(registered);
+        refreshAction.setEnabled(registered);
+        editPanel.setVisible(registered);
+        editAction.setEnabled(registered);
+      }
     });
+    disposables.add(listener);
+
+    progressPanel = new ProgressPanel();
+    builder.add("progressPanel", progressPanel);
 
     return builder.load();
   }
