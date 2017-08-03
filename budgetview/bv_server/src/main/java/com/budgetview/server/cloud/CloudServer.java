@@ -3,7 +3,6 @@ package com.budgetview.server.cloud;
 import com.budgetview.server.cloud.services.*;
 import com.budgetview.server.cloud.servlet.*;
 import com.budgetview.server.cloud.utils.CloudDb;
-import com.budgetview.server.cloud.utils.WebsiteUrls;
 import com.budgetview.server.common.ServerStatusServlet;
 import com.budgetview.server.config.ConfigService;
 import com.budgetview.server.license.mail.Mailer;
@@ -23,7 +22,7 @@ public class CloudServer {
   private static Logger logger = Logger.getLogger("CloudServer");
 
   private WebServer webServer;
-  private ConfigService config;
+  protected ConfigService config;
   private Directory directory;
 
   public static void main(String[] args) throws Exception {
@@ -65,18 +64,22 @@ public class CloudServer {
   }
 
   protected Directory createDirectory() throws Exception {
-    return createDirectory(config);
+    return createDirectory(config, CloudDb.create(config));
   }
 
-  public static Directory createDirectory(ConfigService config) {
+  public static Directory createDirectory(ConfigService config, GlobsDatabase database) throws Exception {
     Directory directory = new DefaultDirectory();
     directory.add(config);
-    directory.add(GlobsDatabase.class, CloudDb.create(config));
+    directory.add(GlobsDatabase.class, database);
     directory.add(new Mailer(config));
     directory.add(new AuthenticationService(directory));
     directory.add(new EmailValidationService(directory));
     directory.add(PaymentService.class, new StripeService());
     directory.add(new UserService(directory));
+
+    CloudSerializationService serializer = CloudSerializationBuilder.create(config, directory);
+    directory.add(serializer);
+
     return directory;
   }
 
@@ -96,8 +99,11 @@ public class CloudServer {
   }
 
   public void stop() throws Exception {
-    logger.info("stopping server");
-    webServer.stop();
-    logger.info("server stopped");
+    if (webServer != null) {
+      logger.info("stopping server");
+      webServer.stop();
+      logger.info("server stopped");
+      webServer = null;
+    }
   }
 }

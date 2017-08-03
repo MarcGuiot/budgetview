@@ -34,8 +34,8 @@ public abstract class CloudDesktopTestCase extends LoggedInFunctionalTestCase {
 
     payments = new PaymentChecker();
 
-    cloud = new CloudChecker();
-    cloud.startServer(payments);
+    cloud = new CloudChecker(payments);
+    cloud.startServer();
 
     website = new WebsiteChecker();
     website.startServer();

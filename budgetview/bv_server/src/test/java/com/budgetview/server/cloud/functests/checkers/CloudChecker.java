@@ -4,6 +4,8 @@ import com.budgetview.server.cloud.CloudServer;
 import com.budgetview.server.cloud.model.CloudDatabaseModel;
 import com.budgetview.server.cloud.model.CloudUser;
 import com.budgetview.server.cloud.services.EmailValidationService;
+import com.budgetview.server.cloud.utils.CloudDb;
+import com.budgetview.server.config.ConfigService;
 import com.budgetview.shared.cloud.CloudConstants;
 import com.budgetview.shared.http.Http;
 import org.apache.http.client.fluent.Request;
@@ -31,13 +33,20 @@ public class CloudChecker {
   public static final String CONFIG_FILE_PATH = "budgetview/bv_server/server_admin/config/bv_cloud_test.properties";
 
   private CloudServer cloudServer;
+  private GlobsDatabase database;
 
   public static final String CLOUD_SUBSCRIPTION_BACKDOOR = "/cloudSubscriptionBackdoor";
+  private PaymentChecker payments;
 
-  public void startServer(final PaymentChecker payments) throws Exception {
+
+  public CloudChecker(final PaymentChecker payments) {
+    this.payments = payments;
+  }
+
+  public void startServer() throws Exception {
     cloudServer = new CloudServer(CONFIG_FILE_PATH) {
       protected Directory createDirectory() throws Exception {
-        Directory directory = super.createDirectory();
+        Directory directory = CloudServer.createDirectory(config, getDatabase(config));
         payments.install(directory);
         return directory;
       }
@@ -45,6 +54,13 @@ public class CloudChecker {
     cloudServer.init();
     cloudServer.addServlet(new CloudSubscriptionBackdoorServlet(cloudServer.getDirectory()), CLOUD_SUBSCRIPTION_BACKDOOR);
     cloudServer.start();
+  }
+
+  private GlobsDatabase getDatabase(ConfigService config) {
+    if (database == null) {
+      database = CloudDb.create(config);
+    }
+    return database;
   }
 
   public void forceTokenExpirationDate(final Date date) {
@@ -58,6 +74,14 @@ public class CloudChecker {
       connection.startDelete(type).execute();
     }
     connection.commit();
+  }
+
+  public void restartServerWithSameDatabase() throws Exception {
+    if (cloudServer != null) {
+      cloudServer.stop();
+      cloudServer = null;
+    }
+    startServer();
   }
 
   public void stopServer() throws Exception {

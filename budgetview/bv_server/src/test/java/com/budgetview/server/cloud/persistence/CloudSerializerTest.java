@@ -2,6 +2,7 @@ package com.budgetview.server.cloud.persistence;
 
 import com.budgetview.server.cloud.model.ProviderAccount;
 import com.budgetview.server.cloud.model.ProviderTransaction;
+import com.budgetview.server.cloud.services.CloudSerializationService;
 import com.budgetview.server.config.ConfigService;
 import com.budgetview.shared.cloud.budgea.BudgeaCategory;
 import com.budgetview.shared.model.DefaultSeries;
@@ -20,7 +21,7 @@ public class CloudSerializerTest extends TestCase {
     ConfigService configService = new ConfigService("budgetview/bv_server/server_admin/config/bv_cloud_test.properties");
     Directory directory = new DefaultDirectory();
     directory.add(configService);
-    CloudSerializer serializer = new CloudSerializer(directory);
+    CloudSerializationService serializer = new CloudSerializationService("aaa", directory);
 
     FieldValue[] accountValues = {value(ProviderAccount.ID, 1),
       value(ProviderAccount.NAME, "My account"),

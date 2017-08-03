@@ -6,7 +6,7 @@ import com.budgetview.server.cloud.model.CloudUser;
 import com.budgetview.server.cloud.model.ProviderAccount;
 import com.budgetview.server.cloud.model.ProviderTransaction;
 import com.budgetview.server.cloud.model.ProviderUpdate;
-import com.budgetview.server.cloud.persistence.CloudSerializer;
+import com.budgetview.server.cloud.services.CloudSerializationService;
 import com.budgetview.server.cloud.services.WebhookNotificationService;
 import com.budgetview.server.utils.DateConverter;
 import com.budgetview.shared.cloud.budgea.BudgeaAPI;
@@ -35,7 +35,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.InputStream;
-import java.security.GeneralSecurityException;
 import java.text.ParseException;
 import java.util.Date;
 import java.util.regex.Matcher;
@@ -50,13 +49,13 @@ public class BudgeaWebHookServlet extends HttpCloudServlet {
   private static Pattern pattern = Pattern.compile("Bearer (.*)");
 
   private GlobsDatabase db;
-  private CloudSerializer serializer;
+  private CloudSerializationService serializer;
   private WebhookNotificationService webhookNotifications;
 
   public BudgeaWebHookServlet(Directory directory) throws Exception {
     super(directory);
     db = directory.get(GlobsDatabase.class);
-    serializer = new CloudSerializer(directory);
+    serializer = directory.get(CloudSerializationService.class);
     webhookNotifications = new WebhookNotificationService(directory);
   }
 
@@ -269,7 +268,7 @@ public class BudgeaWebHookServlet extends HttpCloudServlet {
       return defaultSeries;
     }
 
-    public void save() throws IOException, GeneralSecurityException {
+    public void save() throws Exception {
       if (!repository.contains(ProviderAccount.TYPE)) {
         logger.debug("No accounts created");
         return;

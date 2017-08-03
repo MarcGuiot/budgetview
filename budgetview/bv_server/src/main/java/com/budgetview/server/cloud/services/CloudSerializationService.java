@@ -1,4 +1,4 @@
-package com.budgetview.server.cloud.persistence;
+package com.budgetview.server.cloud.services;
 
 import com.budgetview.server.cloud.model.ProviderAccount;
 import com.budgetview.server.cloud.model.ProviderTransaction;
@@ -18,12 +18,19 @@ import org.globsframework.utils.serialization.SerializedInput;
 import org.globsframework.utils.serialization.SerializedInputOutputFactory;
 import org.globsframework.utils.serialization.SerializedOutput;
 
+import javax.crypto.BadPaddingException;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.security.GeneralSecurityException;
+import java.security.InvalidAlgorithmParameterException;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
 
-public class CloudSerializer {
+public class CloudSerializationService {
 
   private static final String SALT = "3#D! DF?";
 
@@ -31,13 +38,11 @@ public class CloudSerializer {
   private Serializer transactionReader = new Serializer(ProviderTransaction.TYPE, ProviderTransaction.ID, new ProviderTransaction.Serializer());
   private PasswordEncryption passwordEncryption;
 
-  public CloudSerializer(Directory directory) throws Exception {
-    ConfigService configService = directory.get(ConfigService.class);
-    String encryptionPassword = configService.get("budgetview.db.encryption.password");
+  public CloudSerializationService(String encryptionPassword, Directory directory) throws Exception {
     passwordEncryption = new PasswordEncryption(encryptionPassword.toCharArray(), SALT);
   }
 
-  public byte[] toBlob(GlobRepository repository) throws IOException, GeneralSecurityException {
+  public byte[] toBlob(GlobRepository repository) throws Exception {
 
     ByteArrayOutputStream byteOutput = new ByteArrayOutputStream();
     SerializedOutput output = SerializedInputOutputFactory.init(byteOutput);
@@ -50,13 +55,12 @@ public class CloudSerializer {
     transactionReader.serializeAll(transactions, repository, output);
 
     byteOutput.close();
-    return passwordEncryption.encodeData(byteOutput.toByteArray());
+    return encode(byteOutput.toByteArray());
   }
 
+  public void readBlob(byte[] blob, GlobRepository repository) throws Exception {
 
-  public void readBlob(byte[] blob, GlobRepository repository) throws IOException, GeneralSecurityException {
-
-    byte[] decoded = passwordEncryption.decodeData(blob);
+    byte[] decoded = decode(blob);
     SerializedInput input = SerializedInputOutputFactory.init(new ByteArrayInputStream(decoded));
     Integer count = input.readInteger();
 
@@ -71,6 +75,14 @@ public class CloudSerializer {
         repository.create(glob.getType(), glob.toArray());
       }
     }
+  }
+
+  public byte[] encode(byte[] data) throws Exception {
+    return passwordEncryption.encodeData(data);
+  }
+
+  public byte[] decode(byte[] data) throws Exception {
+    return passwordEncryption.decodeData(data);
   }
 
   private Serializer getReader(String typeName) {

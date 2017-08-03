@@ -4,6 +4,7 @@ import com.budgetview.server.cloud.CloudServer;
 import com.budgetview.server.cloud.model.CloudUser;
 import com.budgetview.server.cloud.services.AuthenticationService;
 import com.budgetview.server.cloud.services.UserService;
+import com.budgetview.server.cloud.utils.CloudDb;
 import com.budgetview.server.config.ConfigService;
 import com.budgetview.server.utils.Args;
 import org.globsframework.model.Glob;
@@ -58,7 +59,7 @@ public class DeleteCloudUser {
     }
 
     ConfigService config = new ConfigService(configFile);
-    final Directory directory = CloudServer.createDirectory(config);
+    final Directory directory = CloudServer.createDirectory(config, CloudDb.create(config));
     final Glob user = directory.get(AuthenticationService.class).findUserWithEmail(email);
     if (user == null) {
       builder.append("Could not find user:").append(email).append("\n");

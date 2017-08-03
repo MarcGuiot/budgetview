@@ -14,7 +14,8 @@ public class CloudDatabaseModel {
                           CloudInvoiceLog.TYPE,
                           CloudEmailValidation.TYPE,
                           ProviderUpdate.TYPE,
-                          ProviderConnection.TYPE)
+                          ProviderConnection.TYPE,
+                          CloudConfig.TYPE)
       .get();
 
   public static GlobType[] getAllTypes() {

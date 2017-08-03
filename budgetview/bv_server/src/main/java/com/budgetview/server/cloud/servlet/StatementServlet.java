@@ -6,7 +6,7 @@ import com.budgetview.server.cloud.model.CloudUser;
 import com.budgetview.server.cloud.model.ProviderAccount;
 import com.budgetview.server.cloud.model.ProviderTransaction;
 import com.budgetview.server.cloud.model.ProviderUpdate;
-import com.budgetview.server.cloud.persistence.CloudSerializer;
+import com.budgetview.server.cloud.services.CloudSerializationService;
 import com.budgetview.shared.cloud.CloudConstants;
 import com.budgetview.shared.model.Provider;
 import org.apache.log4j.Logger;
@@ -41,11 +41,11 @@ public class StatementServlet extends HttpCloudServlet {
   private static Logger logger = Logger.getLogger("StatementServlet");
   private Pattern pattern = Pattern.compile("/([0-9]+)");
 
-  private final CloudSerializer serializer;
+  private final CloudSerializationService serializer;
 
   public StatementServlet(Directory directory) throws Exception {
     super(directory);
-    this.serializer = new CloudSerializer(directory);
+    serializer = directory.get(CloudSerializationService.class);
   }
 
   protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -91,7 +91,7 @@ public class StatementServlet extends HttpCloudServlet {
             byte[] bytes = accessor.get(ProviderUpdate.DATA);
             serializer.readBlob(bytes, repository);
           }
-          catch (GeneralSecurityException e) {
+          catch (Exception e) {
             logger.error("Failed to deserialize statement for user with email: " + user.get(CloudUser.EMAIL), e);
             return HttpServletResponse.SC_INTERNAL_SERVER_ERROR;
           }
