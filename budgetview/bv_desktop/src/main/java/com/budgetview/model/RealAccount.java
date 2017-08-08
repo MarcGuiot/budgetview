@@ -31,52 +31,33 @@ public class RealAccount {
   @Key
   public static IntegerField ID;
 
+  public static StringField NAME;
+
+  public static StringField NUMBER;
+
+  public static StringField POSITION;
+
+  public static DateField POSITION_DATE;
+
   @Target(Bank.class)
   public static LinkField BANK; // to protect if same name
-
-  @Target(Synchro.class)
-  public static LinkField SYNCHRO;
-
-  public static StringField BANK_ID;
 
   @Target(BankEntity.class)
   public static LinkField BANK_ENTITY;
 
   public static StringField BANK_ENTITY_LABEL;
 
-  public static StringField ACC_TYPE;
+  @Target(AccountType.class)
+  public static LinkField ACCOUNT_TYPE;
 
-  public static StringField URL;
-
-  public static StringField ORG;
-
-  public static StringField FID;
-
-  public static StringField NUMBER;
-
-  public static DateField POSITION_DATE;
-
-  public static StringField POSITION;
+  @Target(Account.class)
+  public static LinkField ACCOUNT;
 
   public static IntegerField TRANSACTION_ID;
-
-  public static StringField NAME;
-
-  @DefaultBoolean(false)
-  public static BooleanField FROM_SYNCHRO;
 
   @Target(AccountCardType.class)
   @DefaultInteger(0)
   public static LinkField CARD_TYPE;
-
-  @Target(AccountType.class)
-  public static LinkField ACCOUNT_TYPE;
-
-  @DefaultBoolean(false)
-  public static BooleanField SAVINGS;
-
-  @Target(Account.class)
-  public static LinkField ACCOUNT;
 
   public static StringField FILE_NAME;
 
@@ -86,6 +67,9 @@ public class RealAccount {
   public static LinkField PROVIDER;
 
   public static IntegerField PROVIDER_ACCOUNT_ID;
+
+  @DefaultBoolean(true)
+  public static BooleanField ENABLED;
 
   static {
     GlobTypeLoader.init(RealAccount.class, "realAccount");
@@ -134,10 +118,7 @@ public class RealAccount {
            Utils.equalIgnoreCase(realAccount1.get(NUMBER), realAccount2.get(NUMBER)) &&
            Utils.equal(realAccount1.get(BANK), realAccount2.get(BANK)) &&
            Utils.equal(realAccount1.get(BANK_ENTITY), realAccount2.get(BANK_ENTITY)) &&
-           Utils.equal(realAccount1.get(ACC_TYPE), realAccount2.get(ACC_TYPE)) &&
-           Utils.equal(realAccount1.get(BANK_ID), realAccount2.get(BANK_ID)) &&
            Utils.equal(realAccount1.get(CARD_TYPE), realAccount2.get(CARD_TYPE)) &&
-           Utils.equal(realAccount1.get(SAVINGS), realAccount2.get(SAVINGS)) &&
            !Utils.equal(realAccount1.get(ID), realAccount2.get(ID));
   }
 
@@ -145,7 +126,6 @@ public class RealAccount {
     return (Strings.isNotEmpty(realAccount1.get(NAME)) || Strings.isNotEmpty(realAccount1.get(NUMBER))) &&
            Utils.equalIgnoreCase(realAccount1.get(NAME), realAccount2.get(NAME)) &&
            Utils.equalIgnoreCase(realAccount1.get(NUMBER), realAccount2.get(NUMBER)) &&
-           Utils.equal(realAccount1.get(SAVINGS), realAccount2.get(SAVINGS)) &&
            !Utils.equal(realAccount1.get(ID), realAccount2.get(ID));
   }
 
@@ -183,7 +163,7 @@ public class RealAccount {
   public static class Serializer implements GlobSerializer {
 
     public int getWriteVersion() {
-      return 3;
+      return 4;
     }
 
     public boolean shouldBeSaved(GlobRepository repository, FieldValues fieldValues) {
@@ -193,32 +173,28 @@ public class RealAccount {
     public byte[] serializeData(FieldValues fieldValues) {
       SerializedByteArrayOutput serializedByteArrayOutput = new SerializedByteArrayOutput();
       SerializedOutput output = serializedByteArrayOutput.getOutput();
-      output.writeInteger(fieldValues.get(SYNCHRO));
-      output.writeInteger(fieldValues.get(BANK));
-      output.writeUtf8String(fieldValues.get(BANK_ID));
-      output.writeInteger(fieldValues.get(BANK_ENTITY));
-      output.writeUtf8String(fieldValues.get(BANK_ENTITY_LABEL));
-      output.writeUtf8String(fieldValues.get(ACC_TYPE));
-      output.writeUtf8String(fieldValues.get(URL));
-      output.writeUtf8String(fieldValues.get(ORG));
-      output.writeUtf8String(fieldValues.get(FID));
+      output.writeUtf8String(fieldValues.get(NAME));
       output.writeUtf8String(fieldValues.get(NUMBER));
       output.writeUtf8String(fieldValues.get(POSITION));
       output.writeDate(fieldValues.get(POSITION_DATE));
-      output.writeUtf8String(fieldValues.get(NAME));
+      output.writeInteger(fieldValues.get(BANK));
+      output.writeInteger(fieldValues.get(BANK_ENTITY));
+      output.writeUtf8String(fieldValues.get(BANK_ENTITY_LABEL));
       output.writeInteger(fieldValues.get(ACCOUNT_TYPE));
-      output.writeBoolean(fieldValues.get(SAVINGS));
       output.writeInteger(fieldValues.get(ACCOUNT));
       output.writeInteger(fieldValues.get(CARD_TYPE));
       output.writeInteger(fieldValues.get(TRANSACTION_ID));
-      output.writeBoolean(fieldValues.get(FROM_SYNCHRO));
       output.writeInteger(fieldValues.get(PROVIDER));
       output.writeInteger(fieldValues.get(PROVIDER_ACCOUNT_ID));
+      output.writeBoolean(fieldValues.get(ENABLED));
       return serializedByteArrayOutput.toByteArray();
     }
 
     public void deserializeData(int version, byte[] data, Integer id, FieldSetter fieldSetter) {
-      if (version == 3) {
+      if (version == 4) {
+        deserializeDataV4(fieldSetter, data);
+      }
+      else if (version == 3) {
         deserializeDataV3(fieldSetter, data);
       }
       else if (version == 2) {
@@ -229,52 +205,70 @@ public class RealAccount {
       }
     }
 
-    private void deserializeDataV3(FieldSetter fieldSetter, byte[] data) {
+    private void deserializeDataV4(FieldSetter fieldSetter, byte[] data) {
       SerializedInput input = SerializedInputOutputFactory.init(data);
-      fieldSetter.set(SYNCHRO, input.readInteger());
+      fieldSetter.set(NAME, input.readUtf8String());
+      fieldSetter.set(NUMBER, input.readUtf8String());
+      fieldSetter.set(POSITION, input.readUtf8String());
+      fieldSetter.set(POSITION_DATE, input.readDate());
       fieldSetter.set(BANK, input.readInteger());
-      fieldSetter.set(BANK_ID, input.readUtf8String());
       fieldSetter.set(BANK_ENTITY, input.readInteger());
       fieldSetter.set(BANK_ENTITY_LABEL, input.readUtf8String());
-      fieldSetter.set(ACC_TYPE, input.readUtf8String());
-      fieldSetter.set(URL, input.readUtf8String());
-      fieldSetter.set(ORG, input.readUtf8String());
-      fieldSetter.set(FID, input.readUtf8String());
+      fieldSetter.set(ACCOUNT_TYPE, input.readInteger());
+      fieldSetter.set(ACCOUNT, input.readInteger());
+      fieldSetter.set(CARD_TYPE, input.readInteger());
+      fieldSetter.set(TRANSACTION_ID, input.readInteger());
+      fieldSetter.set(PROVIDER, input.readInteger());
+      fieldSetter.set(PROVIDER_ACCOUNT_ID, input.readInteger());
+      fieldSetter.set(ENABLED, input.readBoolean());
+    }
+
+    private void deserializeDataV3(FieldSetter fieldSetter, byte[] data) {
+      SerializedInput input = SerializedInputOutputFactory.init(data);
+      input.readInteger(); // SYNCHRO
+      fieldSetter.set(BANK, input.readInteger());
+      input.readUtf8String(); // BANK_ID
+      fieldSetter.set(BANK_ENTITY, input.readInteger());
+      fieldSetter.set(BANK_ENTITY_LABEL, input.readUtf8String());
+      input.readUtf8String(); // ACC_TYPE
+      input.readUtf8String(); // URL
+      input.readUtf8String(); // ORG
+      input.readUtf8String(); // FID
       fieldSetter.set(NUMBER, input.readUtf8String());
       fieldSetter.set(POSITION, input.readUtf8String());
       fieldSetter.set(POSITION_DATE, input.readDate());
       fieldSetter.set(NAME, input.readUtf8String());
       fieldSetter.set(ACCOUNT_TYPE, input.readInteger());
-      fieldSetter.set(SAVINGS, input.readBoolean());
+      input.readBoolean(); // SAVINGS
       fieldSetter.set(ACCOUNT, input.readInteger());
       fieldSetter.set(CARD_TYPE, input.readInteger());
       fieldSetter.set(TRANSACTION_ID, input.readInteger());
-      fieldSetter.set(FROM_SYNCHRO, input.readBoolean());
+      input.readBoolean(); // FROM_SYNCHRO
       fieldSetter.set(PROVIDER, input.readInteger());
       fieldSetter.set(PROVIDER_ACCOUNT_ID, input.readInteger());
     }
 
     private void deserializeDataV2(FieldSetter fieldSetter, byte[] data) {
       SerializedInput input = SerializedInputOutputFactory.init(data);
-      fieldSetter.set(SYNCHRO, input.readInteger());
+      input.readInteger(); // SYNCHRO
       fieldSetter.set(BANK, input.readInteger());
-      fieldSetter.set(BANK_ID, input.readUtf8String());
+      input.readUtf8String(); // BANK_ID
       fieldSetter.set(BANK_ENTITY, input.readInteger());
       fieldSetter.set(BANK_ENTITY_LABEL, input.readUtf8String());
-      fieldSetter.set(ACC_TYPE, input.readUtf8String());
-      fieldSetter.set(URL, input.readUtf8String());
-      fieldSetter.set(ORG, input.readUtf8String());
-      fieldSetter.set(FID, input.readUtf8String());
+      input.readUtf8String(); // ACC_TYPE
+      input.readUtf8String(); // URL
+      input.readUtf8String(); // ORG
+      input.readUtf8String(); // FID
       fieldSetter.set(NUMBER, input.readUtf8String());
       fieldSetter.set(POSITION, input.readUtf8String());
       fieldSetter.set(POSITION_DATE, input.readDate());
       fieldSetter.set(NAME, input.readUtf8String());
       fieldSetter.set(ACCOUNT_TYPE, input.readInteger());
-      fieldSetter.set(SAVINGS, input.readBoolean());
+      input.readBoolean(); // SAVINGS
       fieldSetter.set(ACCOUNT, input.readInteger());
       fieldSetter.set(CARD_TYPE, input.readInteger());
       fieldSetter.set(TRANSACTION_ID, input.readInteger());
-      fieldSetter.set(FROM_SYNCHRO, input.readBoolean());
+      input.readBoolean(); // FROM_SYNCHRO
       fieldSetter.set(PROVIDER, Provider.FILE_IMPORT.getId());
       fieldSetter.set(PROVIDER_ACCOUNT_ID, null);
     }
@@ -282,23 +276,23 @@ public class RealAccount {
     private void deserializeDataV1(FieldSetter fieldSetter, byte[] data) {
       SerializedInput input = SerializedInputOutputFactory.init(data);
       fieldSetter.set(BANK, input.readInteger());
-      fieldSetter.set(BANK_ID, input.readUtf8String());
+      input.readUtf8String(); // BANK_ID
       fieldSetter.set(BANK_ENTITY, input.readInteger());
       fieldSetter.set(BANK_ENTITY_LABEL, input.readUtf8String());
-      fieldSetter.set(ACC_TYPE, input.readUtf8String());
-      fieldSetter.set(URL, input.readUtf8String());
-      fieldSetter.set(ORG, input.readUtf8String());
-      fieldSetter.set(FID, input.readUtf8String());
+      input.readUtf8String(); // ACC_TYPE
+      input.readUtf8String(); // URL
+      input.readUtf8String(); // ORG
+      input.readUtf8String(); // FID
       fieldSetter.set(NUMBER, input.readUtf8String());
       fieldSetter.set(POSITION, input.readUtf8String());
       fieldSetter.set(POSITION_DATE, input.readDate());
       fieldSetter.set(NAME, input.readUtf8String());
       fieldSetter.set(ACCOUNT_TYPE, input.readInteger());
-      fieldSetter.set(SAVINGS, input.readBoolean());
+      input.readBoolean(); // SAVINGS
       fieldSetter.set(ACCOUNT, input.readInteger());
       fieldSetter.set(CARD_TYPE, input.readInteger());
       fieldSetter.set(TRANSACTION_ID, input.readInteger());
-      fieldSetter.set(FROM_SYNCHRO, input.readBoolean());
+      input.readBoolean(); // FROM_SYNCHRO
       fieldSetter.set(PROVIDER, Provider.FILE_IMPORT.getId());
       fieldSetter.set(PROVIDER_ACCOUNT_ID, null);
     }

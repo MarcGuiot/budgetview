@@ -22,15 +22,12 @@ public class ImportCloudErrorPanel extends AbstractImportStepPanel {
 
   private JEditorPane errorMessage = GuiUtils.createReadOnlyHtmlComponent();
   private final GlobRepository repository;
-  private final CloudService cloudService;
-  private ProgressPanel progressPanel;
   private JLabel detailsTitle = new JLabel();
   private JEditorPane detailsText = GuiUtils.createReadOnlyHtmlComponent();
 
   public ImportCloudErrorPanel(PicsouDialog dialog, ImportController controller, GlobRepository repository, Directory localDirectory) {
     super(dialog, controller, localDirectory);
     this.repository = repository;
-    this.cloudService = localDirectory.get(CloudService.class);
   }
 
   protected GlobsPanelBuilder createPanelBuilder() {
@@ -49,9 +46,6 @@ public class ImportCloudErrorPanel extends AbstractImportStepPanel {
     builder.add("detailsText", detailsText);
 
     builder.add("hyperlinkHandler", new HyperlinkHandler(localDirectory));
-
-    progressPanel = new ProgressPanel();
-    builder.add("progressPanel", progressPanel);
 
     return builder;
   }

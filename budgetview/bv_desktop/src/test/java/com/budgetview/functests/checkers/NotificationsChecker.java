@@ -13,9 +13,8 @@ public class NotificationsChecker extends ViewChecker {
   }
 
   public NotificationsChecker checkVisible(int count) {
-    Button button = mainWindow.getButton("notificationsFlag");
-    assertTrue(button.isVisible());
-    assertTrue(button.textEquals(Integer.toString(count)));
+    checkComponentVisible(mainWindow, JButton.class, "notificationsFlag", true);
+    assertTrue(mainWindow.getButton("notificationsFlag").textEquals(Integer.toString(count)));
     return this;
   }
 

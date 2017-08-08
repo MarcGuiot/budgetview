@@ -1,52 +1,49 @@
-package com.budgetview.model;
+package com.budgetview.model.deprecated;
 
-
-import com.budgetview.shared.utils.GlobSerializer;
+import com.budgetview.model.Series;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.annotations.Key;
+import org.globsframework.metamodel.annotations.NoObfuscation;
 import org.globsframework.metamodel.annotations.Target;
 import org.globsframework.metamodel.fields.IntegerField;
 import org.globsframework.metamodel.fields.LinkField;
-import org.globsframework.metamodel.fields.StringField;
 import org.globsframework.metamodel.utils.GlobTypeLoader;
-import org.globsframework.model.FieldSetter;
 import org.globsframework.model.FieldValues;
+import org.globsframework.model.FieldSetter;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.utils.serialization.SerializedByteArrayOutput;
+import org.globsframework.utils.serialization.SerializedOutput;
 import org.globsframework.utils.serialization.SerializedInput;
 import org.globsframework.utils.serialization.SerializedInputOutputFactory;
-import org.globsframework.utils.serialization.SerializedOutput;
+import com.budgetview.shared.utils.GlobSerializer;
 
-public class Synchro {
+/** @deprecated */
+public class SeriesToCategory {
   public static GlobType TYPE;
 
+  @NoObfuscation
   @Key
   public static IntegerField ID;
 
-  @Target(Bank.class)
-  public static LinkField BANK;
+  @NoObfuscation
+  @Target(Series.class)
+  public static LinkField SERIES;
 
-  public static StringField CODE;
+  @NoObfuscation
+  @Target(Category.class)
+  public static LinkField CATEGORY;
 
   static {
-    GlobTypeLoader.init(Synchro.class, "synchro");
+    GlobTypeLoader.init(SeriesToCategory.class, "seriesToCategory");
   }
 
   public static class Serializer implements GlobSerializer {
 
-    public int getWriteVersion() {
-      return 1;
-    }
-
-    public boolean shouldBeSaved(GlobRepository repository, FieldValues fieldValues) {
-      return true;
-    }
-
     public byte[] serializeData(FieldValues fieldValues) {
       SerializedByteArrayOutput serializedByteArrayOutput = new SerializedByteArrayOutput();
       SerializedOutput output = serializedByteArrayOutput.getOutput();
-      output.writeUtf8String(fieldValues.get(Synchro.CODE));
-      output.writeInteger(fieldValues.get(Synchro.BANK));
+      output.writeInteger(fieldValues.get(SeriesToCategory.SERIES));
+      output.writeInteger(fieldValues.get(SeriesToCategory.CATEGORY));
       return serializedByteArrayOutput.toByteArray();
     }
 
@@ -58,10 +55,17 @@ public class Synchro {
 
     private void deserializeDataV1(FieldSetter fieldSetter, byte[] data) {
       SerializedInput input = SerializedInputOutputFactory.init(data);
-      fieldSetter.set(Synchro.CODE, input.readUtf8String());
-      fieldSetter.set(Synchro.BANK, input.readInteger());
+      fieldSetter.set(SeriesToCategory.SERIES, input.readInteger());
+      fieldSetter.set(SeriesToCategory.CATEGORY, input.readInteger());
+    }
+
+    public int getWriteVersion() {
+      return 1;
+    }
+
+    public boolean shouldBeSaved(GlobRepository repository, FieldValues fieldValues) {
+      return true;
     }
   }
+
 }
-
-

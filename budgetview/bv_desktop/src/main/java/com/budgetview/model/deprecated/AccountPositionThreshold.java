@@ -1,4 +1,4 @@
-package com.budgetview.model;
+package com.budgetview.model.deprecated;
 
 import com.budgetview.shared.utils.GlobSerializer;
 import org.globsframework.metamodel.GlobType;

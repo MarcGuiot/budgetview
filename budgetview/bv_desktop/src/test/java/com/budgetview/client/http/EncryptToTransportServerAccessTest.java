@@ -12,7 +12,7 @@ import com.budgetview.functests.utils.LoggedInFunctionalTestCase;
 import com.budgetview.desktop.userconfig.UserConfigService;
 import com.budgetview.shared.encryption.MD5PasswordBasedEncryptor;
 import com.budgetview.model.Account;
-import com.budgetview.model.Category;
+import com.budgetview.model.deprecated.Category;
 import com.budgetview.model.PicsouModel;
 import com.budgetview.model.Transaction;
 import com.budgetview.session.SessionDirectory;

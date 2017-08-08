@@ -52,6 +52,7 @@ public class ImportCloudSubscriptionErrorPanel extends AbstractImportStepPanel {
 
     builder.add("close", new AbstractAction(getCloseLabel()) {
       public void actionPerformed(ActionEvent e) {
+        controller.saveCloudCredentials();
         controller.complete();
         controller.closeDialog();
       }

@@ -9,6 +9,9 @@ import com.budgetview.desktop.series.utils.SeriesErrorsUpgrade;
 import com.budgetview.desktop.utils.FrameSize;
 import com.budgetview.io.importer.analyzer.TransactionAnalyzerFactory;
 import com.budgetview.model.*;
+import com.budgetview.model.deprecated.AccountPositionThreshold;
+import com.budgetview.model.deprecated.Category;
+import com.budgetview.model.deprecated.Synchro;
 import com.budgetview.model.upgrade.DeferredAccountUpgradeV40;
 import com.budgetview.shared.model.BudgetArea;
 import com.budgetview.shared.utils.Amounts;
@@ -126,7 +129,6 @@ public class UpgradeTrigger implements ChangeSetListener {
 
     if (currentJarVersion < 117) {
       updateOpenCloseAccount(repository);
-      deleteDuplicateSynchro(repository);
     }
 
     if (currentJarVersion < 133) {
@@ -196,44 +198,6 @@ public class UpgradeTrigger implements ChangeSetListener {
                         value(LayoutConfig.BUDGET_VERTICAL_LEFT_2, 0.5),
                         value(LayoutConfig.BUDGET_VERTICAL_RIGHT_1, 0.6));
     }
-  }
-
-  private void deleteDuplicateSynchro(GlobRepository repository) {
-    GlobList otherSynchros = repository.getAll(Synchro.TYPE);
-
-    Set<Key> synchroToDelete = new HashSet<Key>();
-    for (Glob synchro : otherSynchros) {
-      for (Glob otherSynchro : otherSynchros) {
-        if (synchro != otherSynchro && !synchroToDelete.contains(otherSynchro.getKey())) {
-          if (sameAccount(repository, synchro, otherSynchro)) {
-            synchroToDelete.add(synchro.getKey());
-          }
-        }
-      }
-    }
-    for (Key key : synchroToDelete) {
-      GlobList all = repository.getAll(RealAccount.TYPE, fieldEquals(RealAccount.SYNCHRO, key.get(Synchro.ID)));
-      for (Glob glob : all) {
-        repository.update(glob.getKey(), RealAccount.SYNCHRO, null);
-      }
-      repository.delete(key);
-    }
-  }
-
-  private boolean sameAccount(GlobRepository repository, Glob sync1, Glob sync2) {
-    GlobList acc1 = repository.findLinkedTo(sync1, RealAccount.SYNCHRO);
-    GlobList acc2 = repository.findLinkedTo(sync2, RealAccount.SYNCHRO);
-    for (Glob glob : acc1) {
-      for (Glob glob1 : acc2) {
-        if (glob1 != glob) {
-          if (Utils.equal(glob.get(RealAccount.NUMBER), glob1.get(RealAccount.NUMBER)) &&
-              Utils.equal(glob.get(RealAccount.NAME), glob1.get(RealAccount.NAME))) {
-            return true;
-          }
-        }
-      }
-    }
-    return false;
   }
 
   private void reassignBankId(GlobRepository repository) {

@@ -90,7 +90,7 @@ public class ImportSession {
     return localRepository;
   }
 
-  public List<String> loadFile(final Glob synchronizedAccount, Integer synchroId, PicsouDialog dialog, final TypedInputStream typedInputStream)
+  public List<String> loadFile(final Glob synchronizedAccount, PicsouDialog dialog, final TypedInputStream typedInputStream)
     throws IOException, TruncatedFile, NoOperations, InvalidFormat, OperationCancelled {
 
     this.importSeries = null;
@@ -172,13 +172,8 @@ public class ImportSession {
       }
     }
 
-    for (Glob realAccount : accountIds) {
-      importRepository.update(realAccount.getKey(), RealAccount.SYNCHRO, synchroId);
-    }
     List<String> dateFormat = getImportedTransactionFormat(importRepository);
-
     importKey = createCurrentImport(typedInputStream, referenceRepository);
-
     return dateFormat;
   }
 

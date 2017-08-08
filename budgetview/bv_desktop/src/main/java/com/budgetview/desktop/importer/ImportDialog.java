@@ -10,6 +10,7 @@ import com.budgetview.desktop.importer.components.RealAccountImporter;
 import com.budgetview.desktop.importer.series.SeriesImporter;
 import com.budgetview.desktop.importer.steps.*;
 import com.budgetview.model.*;
+import com.budgetview.model.deprecated.Synchro;
 import com.budgetview.shared.cloud.CloudSubscriptionStatus;
 import com.budgetview.shared.model.BudgetArea;
 import com.budgetview.triggers.AutomaticSeriesBudgetTrigger;
@@ -151,7 +152,7 @@ public class ImportDialog implements RealAccountImporter, Disposable {
       Account.TYPE, AccountUpdateMode.TYPE, BudgetArea.TYPE,
       Transaction.TYPE, Month.TYPE, UserPreferences.TYPE, CurrentMonth.TYPE, RealAccount.TYPE,
       Series.TYPE, SubSeries.TYPE, ImportedSeries.TYPE, TransactionImport.TYPE, CsvMapping.TYPE,
-      Synchro.TYPE, User.TYPE, CloudDesktopUser.TYPE, CloudProviderConnection.TYPE};
+      User.TYPE, CloudDesktopUser.TYPE, CloudProviderConnection.TYPE};
 
     if (localRepository == null) {
       this.localRepository = LocalGlobRepositoryBuilder.init(repository)

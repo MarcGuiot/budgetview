@@ -46,7 +46,7 @@ public class CloudChecker {
   public void startServer() throws Exception {
     cloudServer = new CloudServer(CONFIG_FILE_PATH) {
       protected Directory createDirectory() throws Exception {
-        Directory directory = CloudServer.createDirectory(config, getDatabase(config));
+        Directory directory = CloudServer.createDirectory(config, getDatabase(config), true);
         payments.install(directory);
         return directory;
       }

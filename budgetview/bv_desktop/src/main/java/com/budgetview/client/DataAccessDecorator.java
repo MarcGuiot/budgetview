@@ -63,10 +63,7 @@ public class DataAccessDecorator implements DataAccess {
   }
 
   public boolean hasChanged() {
-    if (dataAccess != null) {
-      return dataAccess.hasChanged();
-    }
-    return false;
+    return dataAccess != null && dataAccess.hasChanged();
   }
 
   public void takeSnapshot() {

@@ -59,7 +59,7 @@ public class DeleteCloudUser {
     }
 
     ConfigService config = new ConfigService(configFile);
-    final Directory directory = CloudServer.createDirectory(config, CloudDb.create(config));
+    final Directory directory = CloudServer.createDirectory(config, CloudDb.create(config), false);
     final Glob user = directory.get(AuthenticationService.class).findUserWithEmail(email);
     if (user == null) {
       builder.append("Could not find user:").append(email).append("\n");

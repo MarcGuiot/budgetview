@@ -1,5 +1,7 @@
-package com.budgetview.model;
+package com.budgetview.model.deprecated;
 
+import com.budgetview.model.Account;
+import com.budgetview.model.Month;
 import com.budgetview.shared.utils.GlobSerializer;
 import com.budgetview.desktop.accounts.utils.MonthDay;
 import org.globsframework.metamodel.GlobType;

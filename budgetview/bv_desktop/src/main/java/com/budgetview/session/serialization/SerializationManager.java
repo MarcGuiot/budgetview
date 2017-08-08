@@ -1,6 +1,7 @@
 package com.budgetview.session.serialization;
 
 import com.budgetview.model.*;
+import com.budgetview.model.deprecated.*;
 import com.budgetview.shared.utils.GlobSerializer;
 import org.globsframework.metamodel.GlobModel;
 import org.globsframework.metamodel.GlobType;

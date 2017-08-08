@@ -16,14 +16,12 @@ public class GeneratedIds {
     Field[] keyFields = globType.getKeyFields();
     KeyFieldVisitor visitor = new KeyFieldVisitor(resultSet);
     for (int i = 0; i < keyFields.length; i++) {
-      boolean hasResult = resultSet.next();
-      if (!hasResult) {
-        throw new SQLException("Could not convert resultSet in list of key & values for GlobType: " + globType);
+      if (resultSet.next()) {
+        visitor.setIndex(i);
+        Field field = keyFields[i];
+        field.safeVisit(visitor);
+        builder.setValue(field, visitor.value);
       }
-      visitor.setIndex(i);
-      Field field = keyFields[i];
-      field.safeVisit(visitor);
-      builder.setValue(field, visitor.value);
     }
     return builder.get();
   }

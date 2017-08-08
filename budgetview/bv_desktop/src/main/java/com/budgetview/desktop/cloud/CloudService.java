@@ -35,35 +35,29 @@ public class CloudService {
   private final BudgeaAPI budgeaAPI = new BudgeaAPI();
   private final CloudAPI cloudAPI = new CloudAPI();
 
-  public interface Callback {
-    void processCompletion();
-
+  public interface ErrorCallback {
     void processSubscriptionError(CloudSubscriptionStatus status);
 
     void processError(Exception e);
   }
 
-  public interface BankConnectionCallback {
+  public interface Callback extends ErrorCallback {
+    void processCompletion();
+  }
+
+  public interface BankConnectionCallback extends ErrorCallback {
     void processCompletion(Glob providerConnection);
 
     void processSecondStepResponse(int connectionId);
 
-    void processSubscriptionError(CloudSubscriptionStatus status);
-
     void processCredentialsRejected();
-
-    void processError(Exception e);
   }
 
-  public interface BankConnectionCheckCallback {
+  public interface BankConnectionCheckCallback extends ErrorCallback {
     void processCompletion(boolean ready);
-
-    void processSubscriptionError(CloudSubscriptionStatus status);
-
-    void processError(Exception e);
   }
 
-  public interface ValidationCallback {
+  public interface ValidationCallback extends ErrorCallback {
     void processCompletionAndSelectBank();
 
     void processCompletionAndDownload();
@@ -73,18 +67,10 @@ public class CloudService {
     void processInvalidCode();
 
     void processTempTokenExpired();
-
-    void processSubscriptionError(CloudSubscriptionStatus subscriptionStatus);
-
-    void processError(Exception e);
   }
 
-  public interface DownloadCallback {
+  public interface DownloadCallback extends ErrorCallback {
     void processCompletion(GlobList importedRealAccounts);
-
-    void processSubscriptionError(CloudSubscriptionStatus subscriptionStatus);
-
-    void processError(Exception e);
   }
 
   public interface UnsubscriptionCallback {
@@ -102,6 +88,7 @@ public class CloudService {
                             value(CloudDesktopUser.EMAIL, email),
                             value(CloudDesktopUser.DEVICE_TOKEN, null),
                             value(CloudDesktopUser.REGISTERED, false));
+          repository.deleteAll(CloudProviderConnection.TYPE);
           JSONObject result = cloudAPI.signup(email, Lang.getLang());
           checkAPIVersion(result);
           switch (CloudRequestStatus.get(result.getString(CloudConstants.STATUS))) {
@@ -111,7 +98,7 @@ public class CloudService {
               break;
             case NO_SUBSCRIPTION:
               Log.write("[Cloud] Signup completed with subscription error");
-              callback.processSubscriptionError(getSubscriptionStatus(result));
+              processSubscriptionError(callback, result, repository);
               break;
             default:
               throw new UnexpectedValue(result.getString(CloudConstants.STATUS));
@@ -124,6 +111,23 @@ public class CloudService {
       }
     });
     thread.start();
+  }
+
+  private void processSubscriptionError(ErrorCallback callback, JSONObject result, GlobRepository repository) {
+    processSubscriptionError(callback, getSubscriptionStatus(result), repository);
+  }
+
+  private void processSubscriptionError(ErrorCallback callback, CloudSubscriptionStatus status, GlobRepository repository) {
+    switch (status) {
+      case UNKNOWN_USER:
+      case NO_SUBSCRIPTION:
+        repository.update(CloudDesktopUser.KEY, CloudDesktopUser.REGISTERED, false);
+        repository.deleteAll(CloudProviderConnection.TYPE);
+        break;
+      case EXPIRED:
+        break;
+    }
+    callback.processSubscriptionError(status);
   }
 
   public void validateSignup(final String email, final String code, final GlobRepository repository, final ValidationCallback callback) {
@@ -159,7 +163,7 @@ public class CloudService {
               break;
             case NO_SUBSCRIPTION:
               Log.write("[Cloud] Email validation: subscription error");
-              callback.processSubscriptionError(getSubscriptionStatus(result));
+              processSubscriptionError(callback, result, repository);
               break;
             default:
               Log.write("[Cloud] Email validation: error " + result.toString(2));
@@ -193,7 +197,7 @@ public class CloudService {
               break;
             case NO_SUBSCRIPTION:
               Log.write("[Cloud] Email address change - subscription error");
-              callback.processSubscriptionError(getSubscriptionStatus(result));
+              processSubscriptionError(callback, result, repository);
               break;
             default:
               Log.write("[Cloud] Email address change - unexpected case " + result.toString(2));
@@ -238,7 +242,7 @@ public class CloudService {
               break;
             case NO_SUBSCRIPTION:
               Log.write("[Cloud] Email modication validation - no subscription found");
-              callback.processSubscriptionError(getSubscriptionStatus(result));
+              processSubscriptionError(callback, result, repository);
               break;
             default:
               Log.write("[Cloud] Email modication validation - error " + result.toString(2));
@@ -270,7 +274,7 @@ public class CloudService {
           break;
         case NO_SUBSCRIPTION:
           Log.write("[Cloud] Bank fields update subscription error");
-          callback.processSubscriptionError(getSubscriptionStatus(result));
+          processSubscriptionError(callback, result, repository);
           return;
         default:
           Log.write("[Cloud] Bank fields update error");
@@ -356,7 +360,7 @@ public class CloudService {
               break;
             case NO_SUBSCRIPTION:
               Log.write("[Cloud] Bank connection could not be added - subscription error");
-              callback.processSubscriptionError(getSubscriptionStatus(result));
+              processSubscriptionError(callback, result, repository);
               return;
             default:
               Log.write("[Cloud] Bank connection could not be added - error");
@@ -511,7 +515,7 @@ public class CloudService {
             case OK:
               break;
             case NO_SUBSCRIPTION:
-              callback.processSubscriptionError(getSubscriptionStatus(result));
+              processSubscriptionError(callback, result, repository);
               return;
             default:
               throw new UnexpectedValue(result.getString(CloudConstants.STATUS));
@@ -622,7 +626,7 @@ public class CloudService {
         catch (final SubscriptionError e) {
           GuiUtils.runInSwingThread(new Runnable() {
             public void run() {
-              callback.processSubscriptionError(e.status);
+              processSubscriptionError(callback, e.status, repository);
             }
           });
         }

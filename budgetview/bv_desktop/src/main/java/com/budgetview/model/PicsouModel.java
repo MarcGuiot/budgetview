@@ -3,6 +3,7 @@ package com.budgetview.model;
 import com.budgetview.desktop.model.AccountWeather;
 import com.budgetview.desktop.model.WeatherType;
 import com.budgetview.io.importer.csv.CsvType;
+import com.budgetview.model.deprecated.*;
 import com.budgetview.session.serialization.SerializationManager;
 import com.budgetview.shared.model.AccountType;
 import com.budgetview.shared.model.BudgetArea;

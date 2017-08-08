@@ -66,7 +66,7 @@ public class CloudMailbox {
 
   public void checkAccountDeleted(final String mailTo) throws Exception {
     Email email = getEmail(mailTo);
-    email.checkContainsAny("deleted", "supprim");
+    email.checkContainsAny("deleted", "supprim", "erased");
   }
 
   public void checkInvoice(final String mailTo, String receiptNumber) throws Exception {

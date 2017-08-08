@@ -64,10 +64,10 @@ public class CloudServer {
   }
 
   protected Directory createDirectory() throws Exception {
-    return createDirectory(config, CloudDb.create(config));
+    return createDirectory(config, CloudDb.create(config), true);
   }
 
-  public static Directory createDirectory(ConfigService config, GlobsDatabase database) throws Exception {
+  public static Directory createDirectory(ConfigService config, GlobsDatabase database, boolean createSerializer) throws Exception {
     Directory directory = new DefaultDirectory();
     directory.add(config);
     directory.add(GlobsDatabase.class, database);
@@ -77,8 +77,10 @@ public class CloudServer {
     directory.add(PaymentService.class, new StripeService());
     directory.add(new UserService(directory));
 
-    CloudSerializationService serializer = CloudSerializationBuilder.create(config, directory);
-    directory.add(serializer);
+    if (createSerializer) {
+      CloudSerializationService serializer = CloudSerializationBuilder.create(config, directory);
+      directory.add(serializer);
+    }
 
     return directory;
   }

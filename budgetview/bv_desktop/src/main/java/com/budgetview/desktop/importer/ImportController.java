@@ -149,14 +149,12 @@ public class ImportController implements RealAccountImporter {
     TypedInputStream stream = null;
     String filePath = null;
     Glob realAccount = null;
-    Integer synchroId = null;
     try {
       if (!realAccountWithImport.isEmpty()) {
         AccountWithFile accountWithFile = realAccountWithImport.remove(0);
         realAccount = accountWithFile.realAccount;
         String fileName = realAccount != null ? realAccount.get(RealAccount.FILE_NAME) : null;
         stream = new TypedInputStream(new ByteArrayInputStream(accountWithFile.fileContent.getBytes("UTF-8")), fileName);
-        synchroId = accountWithFile.synchroId;
         filePath = realAccount.get(RealAccount.FILE_NAME);
       }
       else {
@@ -166,7 +164,7 @@ public class ImportController implements RealAccountImporter {
           filePath = file.getAbsolutePath();
         }
       }
-      List<String> dateFormats = importSession.loadFile(realAccount, synchroId, importDialog.getDialog(), stream);
+      List<String> dateFormats = importSession.loadFile(realAccount, importDialog.getDialog(), stream);
       Ref<Integer> accountCount = new Ref<Integer>();
       Ref<Integer> accountNumber = new Ref<Integer>();
       Glob importedAccount = importSession.gotoNextContent(accountNumber, accountCount);
@@ -349,8 +347,7 @@ public class ImportController implements RealAccountImporter {
         return;
       }
     }
-    realAccountWithImport.add(new AccountWithFile(realAccount, fileContent,
-                                                  realAccount.get(RealAccount.SYNCHRO)));
+    realAccountWithImport.add(new AccountWithFile(realAccount, fileContent));
   }
 
   public void showCloudSignup() {
@@ -510,12 +507,10 @@ public class ImportController implements RealAccountImporter {
   private class AccountWithFile {
     private String fileContent;
     private Glob realAccount;
-    private Integer synchroId;
 
-    private AccountWithFile(Glob realAccount, String fileName, Integer synchroId) {
+    private AccountWithFile(Glob realAccount, String fileName) {
       this.realAccount = realAccount;
       this.fileContent = fileName;
-      this.synchroId = synchroId;
     }
   }
 }
