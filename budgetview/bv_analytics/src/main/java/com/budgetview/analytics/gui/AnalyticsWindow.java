@@ -89,15 +89,15 @@ public class AnalyticsWindow {
 
     selectionService.addListener(new GlobSelectionListener() {
       public void selectionUpdated(GlobSelection selection) {
-        GlobList experiments = selection.getAll(Experiment.TYPE);
-        if (experiments.isEmpty()) {
+        Glob experiment = selection.findFirst(Experiment.TYPE);
+        if (experiment == null) {
           selectionService.clear(WeekStats.TYPE);
           selectionService.clear(OnboardingStats.TYPE);
           selectionService.clear(User.TYPE);
           return;
         }
 
-        int weekId = experiments.getFirst().get(Experiment.WEEK);
+        int weekId = experiment.get(Experiment.WEEK);
         selectStat(weekId, WeekStats.TYPE);
         selectStat(weekId, OnboardingStats.TYPE);
 

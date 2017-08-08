@@ -67,6 +67,14 @@ public class DefaultGlobSelection implements GlobSelection {
     return new GlobList(globList);
   }
 
+  public Glob findFirst(GlobType type) {
+    GlobList globList = globs.get(type);
+    if (globList == null || globList.isEmpty()) {
+      return null;
+    }
+    return globList.getFirst();
+  }
+
   public String toString() {
     StringBuilder builder = new StringBuilder();
     builder.append("GlobSelection:");

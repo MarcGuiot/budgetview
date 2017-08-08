@@ -40,6 +40,7 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
 import static org.globsframework.model.FieldValue.value;
+import static org.globsframework.model.utils.GlobMatchers.contained;
 import static org.globsframework.model.utils.GlobMatchers.fieldEquals;
 
 public class ImportSession {
@@ -52,7 +53,7 @@ public class ImportSession {
   private boolean load = false;
   private int lastImportedTransactionsCount = 0;
   private int totalImportedTransactionsCount = 0;
-  private GlobList accountIds = new GlobList();
+  private GlobList realAccounts = new GlobList();
   private int accountCount;
   private ChangeSet changes;
   private Glob realAccount;
@@ -90,11 +91,11 @@ public class ImportSession {
     return localRepository;
   }
 
-  public List<String> loadFile(final Glob synchronizedAccount, PicsouDialog dialog, final TypedInputStream typedInputStream)
+  public List<String> loadFile(final Glob currentRealAccount, PicsouDialog dialog, final TypedInputStream typedInputStream)
     throws IOException, TruncatedFile, NoOperations, InvalidFormat, OperationCancelled {
 
     this.importSeries = null;
-    this.realAccount = synchronizedAccount;
+    this.realAccount = currentRealAccount;
     importChangeSet = new DefaultChangeSet();
     importChangeSetAggregator = new ChangeSetAggregator(localRepository, importChangeSet);
     load = true;
@@ -129,44 +130,43 @@ public class ImportSession {
         tmpAccountIds.add(values.get(ImportedTransaction.ACCOUNT));
       }
     });
-    accountIds =
-      importRepository.getAll(RealAccount.TYPE, GlobMatchers.contained(RealAccount.ID, tmpAccountIds))
+    realAccounts =
+      importRepository.getAll(RealAccount.TYPE, contained(RealAccount.ID, tmpAccountIds))
         //=>compte carte (debit differé) en premier pour qu'on puisse choisir le compte en target.
         .sort(RealAccount.CARD_TYPE, RealAccount.NAME, RealAccount.NUMBER);
 
     // on met en premier un compte qui a des operations sinon, le dateFormat sera demandé pour un compte
     // potentiellement vide
 
-    List<Glob> newList = new ArrayList<Glob>();
-    for (Iterator it = accountIds.iterator(); it.hasNext(); ) {
-      Glob acc = (Glob) it.next();
+    List<Glob> newRealAccountList = new ArrayList<Glob>();
+    for (Iterator it = realAccounts.iterator(); it.hasNext(); ) {
+      Glob realAccount = (Glob) it.next();
       if (!importRepository.contains(ImportedTransaction.TYPE,
-                                     fieldEquals(ImportedTransaction.ACCOUNT, acc.get(RealAccount.ID)))) {
-        newList.add(acc);
+                                     fieldEquals(ImportedTransaction.ACCOUNT, realAccount.get(RealAccount.ID)))) {
+        newRealAccountList.add(realAccount);
         it.remove();
       }
     }
-    accountIds.addAll(newList);
+    realAccounts.addAll(newRealAccountList);
 
-    accountCount = accountIds.size();
-    if (synchronizedAccount != null) {
-      if (accountIds.size() == 1 && typedInputStream.getType() != BankFileType.OFX && typedInputStream.getType() != BankFileType.JSON) {
-        Glob account = accountIds.remove(0);
+    accountCount = realAccounts.size();
+    if (currentRealAccount != null) {
+      if (realAccounts.size() == 1 && typedInputStream.getType() != BankFileType.OFX && typedInputStream.getType() != BankFileType.JSON) {
+        Glob account = realAccounts.remove(0);
 
-        //cas de l'ofx avec un seul compte (donc comme le qif sauf que la position est peut-etre
-        // bien renseignée.
+        // cas de l'ofx avec un seul compte (donc comme le qif sauf que la position est peut-etre bien renseignée.
         if (Strings.isNotEmpty(account.get(RealAccount.POSITION))) {
-          if (Strings.isNullOrEmpty(synchronizedAccount.get(RealAccount.POSITION))) {
-            localRepository.update(synchronizedAccount.getKey(),
+          if (Strings.isNullOrEmpty(currentRealAccount.get(RealAccount.POSITION))) {
+            localRepository.update(currentRealAccount.getKey(),
                                    RealAccount.POSITION, account.get(RealAccount.POSITION));
           }
         }
         importRepository.delete(account);
-        accountIds.add(synchronizedAccount);
+        realAccounts.add(currentRealAccount);
         importRepository.getAll(ImportedTransaction.TYPE)
           .safeApply(new GlobFunctor() {
             public void run(Glob glob, GlobRepository repository) throws Exception {
-              repository.update(glob.getKey(), ImportedTransaction.ACCOUNT, synchronizedAccount.get(RealAccount.ID));
+              repository.update(glob.getKey(), ImportedTransaction.ACCOUNT, currentRealAccount.get(RealAccount.ID));
             }
           }, importRepository);
       }
@@ -178,7 +178,7 @@ public class ImportSession {
   }
 
   private Glob readNext() throws NoOperations {
-    if (accountIds.isEmpty()) {
+    if (realAccounts.isEmpty()) {
       load = false;
       throw new NoOperations();
     }
@@ -189,7 +189,7 @@ public class ImportSession {
     localRepository.startChangeSet();
     Glob currentImportedAccount;
     try {
-      currentImportedAccount = accountIds.remove(0);
+      currentImportedAccount = realAccounts.remove(0);
       changes.safeVisit(new ForwardChanges(currentImportedAccount.get(RealAccount.ID)));
     }
     finally {
@@ -255,7 +255,7 @@ public class ImportSession {
       if (!load) {
         return null;
       }
-      if (accountIds.isEmpty()) {
+      if (realAccounts.isEmpty()) {
         load = false;
       }
 
@@ -496,7 +496,7 @@ public class ImportSession {
     try {
       Glob glob = readNext();
       accountCount.set(this.accountCount);
-      accountNum.set(this.accountCount - this.accountIds.size());
+      accountNum.set(this.accountCount - this.realAccounts.size());
       return glob;
     }
     catch (NoOperations operations) {

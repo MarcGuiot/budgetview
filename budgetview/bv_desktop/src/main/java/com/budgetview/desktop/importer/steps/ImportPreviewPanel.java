@@ -51,7 +51,7 @@ public class ImportPreviewPanel extends AbstractImportStepPanel implements Messa
   private JLabel fileNameLabel = new JLabel();
   private JLabel accountCountInfo = new JLabel();
 
-  private Glob currentlySelectedAccount;
+  private Glob selectedTargetAccount;
   private JLabel accountSelectionLabel = new JLabel();
   private JComboBox accountComboBox;
 
@@ -93,16 +93,16 @@ public class ImportPreviewPanel extends AbstractImportStepPanel implements Messa
                                                               }
                                                             });
     builder.add("dateSelectionPanel", dateFormatSelectionPanel.getBuilder());
+
     sessionDirectory = new DefaultDirectory(localDirectory);
     sessionDirectory.add(new SelectionService());
     sessionDirectory.get(SelectionService.class).addListener(new GlobSelectionListener() {
       public void selectionUpdated(GlobSelection selection) {
         showStep2Message("");
-        currentlySelectedAccount = selection.getAll(Account.TYPE).isEmpty() ? null :
-                                   selection.getAll(Account.TYPE).get(0);
-        if (currentlySelectedAccount != null) {
+        selectedTargetAccount = selection.findFirst(Account.TYPE);
+        if (selectedTargetAccount != null) {
           accountEditionPanel.clearAllMessages();
-          accountEditionPanel.setAccount(currentlySelectedAccount);
+          accountEditionPanel.setAccount(selectedTargetAccount);
           accountEditionPanel.setEditable(false);
         }
         else if (newAccount != null) {
@@ -176,18 +176,6 @@ public class ImportPreviewPanel extends AbstractImportStepPanel implements Messa
     accountEditionPanel.requestFocus();
   }
 
-  public void dispose() {
-    super.dispose();
-    if (importedTransactionTable != null) {
-      importedTransactionTable.dispose();
-      importedTransactionTable = null;
-      accountEditionPanel.dispose();
-      accountEditionPanel = null;
-      dateFormatSelectionPanel.dispose();
-      dateFormatSelectionPanel = null;
-    }
-  }
-
   public void showStep2Message(String message) {
     createPanelIfNeeded();
     this.message.setText(message);
@@ -245,8 +233,7 @@ public class ImportPreviewPanel extends AbstractImportStepPanel implements Messa
       }
     }
     nextAction.setEnabled(true);
-    // necessaire sous linux au moins
-    accountComboBox.repaint();
+    accountComboBox.repaint();   // necessaire sous linux au moins
     accountEditionPanel.requestFocus();
   }
 
@@ -307,58 +294,6 @@ public class ImportPreviewPanel extends AbstractImportStepPanel implements Messa
     this.lastExceptionDetails = details;
   }
 
-  private class NextAction extends AbstractAction {
-    public NextAction() {
-      super(Lang.get("import.preview.ok"));
-    }
-
-    public void actionPerformed(ActionEvent event) {
-      setEnabled(false);
-      try {
-        if (currentlySelectedAccount == null && !accountEditionPanel.check()) {
-          Log.write("[Import] Finish account check failed");
-          return;
-        }
-        if (currentlySelectedAccount != null && Account.SUMMARY_ACCOUNT_IDS.contains(currentlySelectedAccount.get(Account.ID))) {
-          Log.write("[Import] Bug: using summary account");
-          return;
-        }
-        showStep2Message("");
-        if (!dateFormatSelectionPanel.check()) {
-          return;
-        }
-        if (currentlySelectedAccount == null) {
-          currentlySelectedAccount = accountEditionPanel.getAccount();
-          accountEditionRepository.commitChanges(false);
-        }
-        else {
-          accountEditionRepository.rollback();
-        }
-
-        sessionRepository.update(realAccount.getKey(),
-                                 value(RealAccount.ACCOUNT, currentlySelectedAccount.get(Account.ID)));
-        if (currentlySelectedAccount.get(Account.LAST_IMPORT_POSITION) == null
-            && Strings.isNotEmpty(realAccount.get(RealAccount.POSITION))) {
-          sessionRepository.update(currentlySelectedAccount.getKey(),
-                                   Account.LAST_IMPORT_POSITION,
-                                   Double.parseDouble(realAccount.get(RealAccount.POSITION)));
-        }
-        deleteAccountIfDuplicate(realAccount);
-        Integer bankId = realAccount.get(RealAccount.BANK);
-        sessionRepository.update(currentlySelectedAccount.getKey(),
-                                 value(Account.UPDATE_MODE, AccountUpdateMode.AUTOMATIC.getId()));
-        if (bankId != null && currentlySelectedAccount.get(Account.BANK) == null){
-          sessionRepository.update(currentlySelectedAccount.getKey(), value(Account.BANK, bankId));
-        }
-        newAccount = null;
-        controller.completeImport(currentlySelectedAccount, dateFormatSelectionPanel.getSelectedFormat());
-      }
-      finally {
-        setEnabled(true);
-      }
-    }
-  }
-
   private void deleteAccountIfDuplicate(Glob selectedRealAccount) {
     for (Glob realAccount : sessionRepository.getAll(RealAccount.TYPE)) {
       if (RealAccount.areStrictlyEquivalent(selectedRealAccount, realAccount) &&
@@ -371,6 +306,58 @@ public class ImportPreviewPanel extends AbstractImportStepPanel implements Messa
 
   private void clearFileError() {
     lastExceptionDetails = null;
+  }
+
+  private class NextAction extends AbstractAction {
+    public NextAction() {
+      super(Lang.get("import.preview.ok"));
+    }
+
+    public void actionPerformed(ActionEvent event) {
+      setEnabled(false);
+      try {
+        if (selectedTargetAccount == null && !accountEditionPanel.check()) {
+          Log.write("[Import] Finish account check failed");
+          return;
+        }
+        if (selectedTargetAccount != null && Account.SUMMARY_ACCOUNT_IDS.contains(selectedTargetAccount.get(Account.ID))) {
+          Log.write("[Import] Bug: using summary account");
+          return;
+        }
+        showStep2Message("");
+        if (!dateFormatSelectionPanel.check()) {
+          return;
+        }
+        if (selectedTargetAccount == null) {
+          selectedTargetAccount = accountEditionPanel.getAccount();
+          accountEditionRepository.commitChanges(false);
+        }
+        else {
+          accountEditionRepository.rollback();
+        }
+
+        sessionRepository.update(realAccount.getKey(),
+                                 value(RealAccount.ACCOUNT, selectedTargetAccount.get(Account.ID)));
+        if (selectedTargetAccount.get(Account.LAST_IMPORT_POSITION) == null
+            && Strings.isNotEmpty(realAccount.get(RealAccount.POSITION))) {
+          sessionRepository.update(selectedTargetAccount.getKey(),
+                                   Account.LAST_IMPORT_POSITION,
+                                   Double.parseDouble(realAccount.get(RealAccount.POSITION)));
+        }
+        deleteAccountIfDuplicate(realAccount);
+        Integer bankId = realAccount.get(RealAccount.BANK);
+        sessionRepository.update(selectedTargetAccount.getKey(),
+                                 value(Account.UPDATE_MODE, AccountUpdateMode.AUTOMATIC.getId()));
+        if (bankId != null && selectedTargetAccount.get(Account.BANK) == null){
+          sessionRepository.update(selectedTargetAccount.getKey(), value(Account.BANK, bankId));
+        }
+        newAccount = null;
+        controller.completeImport(selectedTargetAccount, dateFormatSelectionPanel.getSelectedFormat());
+      }
+      finally {
+        setEnabled(true);
+      }
+    }
   }
 
   private class SkipFileAction extends AbstractAction {
@@ -403,6 +390,18 @@ public class ImportPreviewPanel extends AbstractImportStepPanel implements Messa
       clearFileError();
       controller.complete(); // missing?
       controller.closeDialog();
+    }
+  }
+
+  public void dispose() {
+    super.dispose();
+    if (importedTransactionTable != null) {
+      importedTransactionTable.dispose();
+      importedTransactionTable = null;
+      accountEditionPanel.dispose();
+      accountEditionPanel = null;
+      dateFormatSelectionPanel.dispose();
+      dateFormatSelectionPanel = null;
     }
   }
 }

@@ -111,7 +111,7 @@ public class ImportController implements RealAccountImporter {
     }
   }
 
-  public boolean nextImport() {
+  private boolean nextImport() {
     {
       Ref<Integer> accountCount = new Ref<Integer>();
       Ref<Integer> accountNumber = new Ref<Integer>();

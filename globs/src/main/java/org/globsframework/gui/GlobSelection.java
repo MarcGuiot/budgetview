@@ -1,6 +1,7 @@
 package org.globsframework.gui;
 
 import org.globsframework.metamodel.GlobType;
+import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
 
 public interface GlobSelection {
@@ -10,4 +11,6 @@ public interface GlobSelection {
   boolean isRelevantForType(GlobType type);
 
   GlobList getAll(GlobType type);
+
+  Glob findFirst(GlobType type);
 }

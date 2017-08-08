@@ -37,8 +37,7 @@ public class NotificationsChecker extends ViewChecker {
   }
 
   public NotificationsDialogChecker openDialog() {
-    Button button = mainWindow.getButton("notificationsFlag");
-    assertTrue(button.isVisible());
-    return NotificationsDialogChecker.open(button);
+    checkComponentVisible(mainWindow, JButton.class, "notificationsFlag", true);
+    return NotificationsDialogChecker.open(mainWindow.getButton("notificationsFlag"));
   }
 }

@@ -2,9 +2,9 @@ package org.globsframework.gui.utils;
 
 import org.globsframework.gui.GlobSelection;
 import org.globsframework.metamodel.GlobType;
-import org.globsframework.model.utils.EmptyGlobList;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
+import org.globsframework.model.utils.EmptyGlobList;
 
 import java.util.Collection;
 
@@ -17,7 +17,7 @@ public class GlobSelectionBuilder {
 
   public static GlobSelection create(Collection<Glob> globs, GlobType type) {
     for (Glob glob : globs) {
-      if (glob == null){
+      if (glob == null) {
         throw new RuntimeException("null not allowed here for " + type.getName());
       }
     }
@@ -69,6 +69,13 @@ public class GlobSelectionBuilder {
       else {
         return new EmptyGlobList();
       }
+    }
+
+    public Glob findFirst(GlobType type) {
+      if (!type.equals(this.type) || globs.isEmpty()) {
+        return null;
+      }
+      return globs.getFirst();
     }
 
     public String toString() {
