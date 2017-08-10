@@ -404,6 +404,11 @@ public class AccountEditionChecker extends GuiChecker {
     checkSignpostVisible(dialog, getNameEditor(), "You must enter a name for this account");
   }
 
+  public void checkReadOnlyMessage(String text) {
+    checkAccountDisabled();
+    assertThat(dialog.getTextBox("readOnlyDescription").htmlEquals(text));
+  }
+
   public String getAccountName() {
     return dialog.getInputTextBox("name").getText();
   }

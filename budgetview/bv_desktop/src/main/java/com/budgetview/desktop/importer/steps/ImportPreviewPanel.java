@@ -123,9 +123,9 @@ public class ImportPreviewPanel extends AbstractImportStepPanel implements Messa
 
       public void skipAccount() {
         importMode = new SkipFileMode();
-        selectedTargetAccount = null;
         clearErrorMessage();
-
+        selectedTargetAccount = null;
+        accountEditionPanel.clearAccount(Lang.get("import.preview.skippedFileMessage"));
       }
     });
     builder.add("targetAccountCombo", targetCombo.get());

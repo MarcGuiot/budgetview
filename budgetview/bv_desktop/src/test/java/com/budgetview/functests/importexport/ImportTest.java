@@ -302,7 +302,7 @@ public class ImportTest extends LoggedInFunctionalTestCase {
       .importAccountAndOpenNext()
       .checkMessageCreateFirstAccount()
       .selectSkipFile()
-      .checkMessageCreateFirstAccount()
+      .checkSkippedFileMessage()
       .importAccountAndOpenNext()
       .checkTransactions(new Object[][]{
         {"2006/01/20", "Second operation", "-2.20"}

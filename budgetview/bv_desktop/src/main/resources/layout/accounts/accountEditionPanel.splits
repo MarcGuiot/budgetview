@@ -9,7 +9,8 @@
   </styles>
 
   <cards ref="cards">
-    <card name="editable">
+
+    <card name="edition">
       <column>
         <grid defaultMarginBottom="5">
           <label text="$account.name" gridPos="(0,0)" styleClass="formLabel"/>
@@ -45,12 +46,14 @@
       </column>
 
     </card>
-    <card name="readonly">
+
+    <card name="description">
       <column>
         <htmlEditorPane ref="readOnlyDescription" foreground="#333333"/>
         <filler fill="vertical"/>
       </column>
     </card>
+
   </cards>
 
 </splits>

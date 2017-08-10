@@ -7,11 +7,10 @@ import com.budgetview.utils.HtmlBuilder;
 import com.budgetview.utils.Lang;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.splits.layout.CardHandler;
+import org.globsframework.gui.splits.utils.GuiUtils;
 import org.globsframework.model.Glob;
-import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.format.DescriptionService;
-import org.globsframework.model.format.GlobListStringifier;
 import org.globsframework.utils.Strings;
 import org.globsframework.utils.directory.Directory;
 
@@ -22,6 +21,7 @@ import java.util.Date;
 public class AccountEditionPanel extends AbstractAccountPanel<GlobRepository> {
   private CardHandler cards;
   private GlobsPanelBuilder builder;
+  private JEditorPane readOnlyDescription;
 
   public AccountEditionPanel(Window owner, GlobRepository repository, Directory parentDirectory) {
     super(repository, parentDirectory);
@@ -31,21 +31,23 @@ public class AccountEditionPanel extends AbstractAccountPanel<GlobRepository> {
   private void createPanel(Window owner) {
     builder = new GlobsPanelBuilder(getClass(), "/layout/accounts/accountEditionPanel.splits", localRepository,
                                     localDirectory);
+
     createComponents(builder, owner, Account.LAST_IMPORT_POSITION);
+
+    readOnlyDescription = GuiUtils.createReadOnlyHtmlComponent();
+    builder.add("readOnlyDescription", readOnlyDescription);
+
     cards = builder.addCardHandler("cards");
-    cards.show("editable");
-    builder.addHtmlView("readOnlyDescription", Account.TYPE, new GlobListStringifier() {
-      public String toString(GlobList list, GlobRepository repository) {
-        if (list.size() != 1) {
-          return "";
-        }
-        return getReadOnlyDescription(list.get(0), repository);
-      }
-    });
+    cards.show("edition");
+
     builder.load();
   }
 
   private String getReadOnlyDescription(Glob account, GlobRepository repository) {
+
+    if (account == null) {
+      return "";
+    }
 
     HtmlBuilder html = new HtmlBuilder();
 
@@ -64,9 +66,9 @@ public class AccountEditionPanel extends AbstractAccountPanel<GlobRepository> {
     }
 
     Double position = account.get(Account.POSITION_WITH_PENDING);
-    Date date = account.get(Account.POSITION_DATE);
     if (position != null) {
       String positionLabel = Formatting.toString(position);
+      Date date = account.get(Account.POSITION_DATE);
       if (date != null) {
         String dateLabel = Formatting.toString(date);
         html.appendParagraph(Lang.get("account.readOnly.positionAndDate", positionLabel, dateLabel));
@@ -83,8 +85,18 @@ public class AccountEditionPanel extends AbstractAccountPanel<GlobRepository> {
     return panel;
   }
 
+  public void setAccount(Glob account) {
+    super.setAccount(account);
+    readOnlyDescription.setText(getReadOnlyDescription(account, localRepository));
+  }
+
+  public void clearAccount(String text) {
+    readOnlyDescription.setText(text);
+    cards.show("description");
+  }
+
   public void setEditable(boolean editable) {
-    cards.show(editable ? "editable" : "readonly");
+    cards.show(editable ? "edition" : "description");
     super.setEditable(editable);
   }
 

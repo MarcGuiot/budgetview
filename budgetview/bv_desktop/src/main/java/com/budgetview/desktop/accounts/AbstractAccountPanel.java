@@ -184,8 +184,8 @@ public class AbstractAccountPanel<T extends GlobRepository> {
     accountTypeFlag.clear();
   }
 
-  public void updateMandatoryFlags() {
-    if (editable) {
+  private void updateMandatoryFlags() {
+    if (editable && currentAccount != null)  {
       nameFlag.update(Strings.isNullOrEmpty(currentAccount.get(Account.NAME))
                       || localRepository.getAll(Account.TYPE, fieldEquals(Account.NAME, currentAccount.get(Account.NAME))).size() != 1);
       bankFlag.update(currentAccount.get(Account.BANK) == null);

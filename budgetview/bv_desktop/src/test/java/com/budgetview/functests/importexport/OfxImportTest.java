@@ -678,6 +678,7 @@ public class OfxImportTest extends LoggedInFunctionalTestCase {
       .setFilePath(ofxFile)
       .importFileAndPreview()
       .selectSkipFile()
+      .checkSkippedFileMessage()
       .importAccountAndOpenNext()
       .setMainAccount()
       .selectBank("Other")

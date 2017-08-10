@@ -6,8 +6,6 @@ import com.budgetview.shared.utils.AmountFormat;
 import com.budgetview.utils.Lang;
 import org.junit.Assert;
 import org.uispec4j.*;
-import org.uispec4j.Panel;
-import org.uispec4j.Window;
 import org.uispec4j.assertion.UISpecAssert;
 import org.uispec4j.finder.ComponentMatchers;
 import org.uispec4j.interception.WindowInterceptor;
@@ -64,6 +62,11 @@ public class ImportDialogPreviewChecker extends DialogChecker {
 
   private ComboBox getTargetAccountCombo() {
     return dialog.getComboBox("targetAccountCombo");
+  }
+
+  public ImportDialogPreviewChecker checkSkippedFileMessage() {
+    getAccountEditionChecker().checkReadOnlyMessage(Lang.get("import.preview.skippedFileMessage"));
+    return this;
   }
 
   public ImportDialogPreviewChecker checkNoErrorMessage() {
