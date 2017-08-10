@@ -108,7 +108,7 @@ public class ArrayUtils {
   }
 
   private static void fail(String message, Object[] expected, Object[] actual) {
-    boolean verticalDisplay = expected.length > 5 || actual.length > 5;
+    boolean verticalDisplay = expected.length > 3 || actual.length > 3;
     if (verticalDisplay) {
       AssertAdapter.assertEquals(message, toVerticalString(expected), toVerticalString(actual));
     }
