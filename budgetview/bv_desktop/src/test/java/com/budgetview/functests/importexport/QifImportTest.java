@@ -203,7 +203,7 @@ public class QifImportTest extends LoggedInFunctionalTestCase {
   }
 
   @Test
-  public void testAutomaticallySelectAccount() throws Exception {
+  public void testAutomaticallySelectsTargetAccount() throws Exception {
     QifBuilder
       .init(this)
       .addTransaction("2006/01/10", -1.1, "Tx 1")
@@ -215,6 +215,8 @@ public class QifImportTest extends LoggedInFunctionalTestCase {
       .init(this)
       .addTransaction("2006/01/12", -2.23, "Tx 2")
       .save();
+
+    System.out.println("\n\nQifImportTest.testAutomaticallySelectsTargetAccount");
 
     operations.openImportDialog()
       .setFilePath(newFile)

@@ -247,7 +247,7 @@ public class SingleInstanceTest extends StartUpFunctionalTestCase {
       .importFileAndPreview();
     AccountPositionEditionChecker accountPosition = preview
       .defineAccount(LoggedInFunctionalTestCase.SOCIETE_GENERALE, "Main account", "11111")
-      .importAndEditPosiiton();
+      .importAndEditPosition();
 
     NewApplicationThread newApplication = new NewApplicationThread(file);
     newApplication.start();

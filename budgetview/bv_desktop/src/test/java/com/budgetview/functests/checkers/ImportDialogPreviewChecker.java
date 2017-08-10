@@ -6,11 +6,15 @@ import com.budgetview.shared.utils.AmountFormat;
 import com.budgetview.utils.Lang;
 import org.junit.Assert;
 import org.uispec4j.*;
+import org.uispec4j.Panel;
+import org.uispec4j.Window;
 import org.uispec4j.assertion.UISpecAssert;
 import org.uispec4j.finder.ComponentMatchers;
 import org.uispec4j.interception.WindowInterceptor;
 
 import javax.swing.*;
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.uispec4j.assertion.UISpecAssert.*;
 
@@ -22,27 +26,44 @@ public class ImportDialogPreviewChecker extends DialogChecker {
     checkPanelShown("importPreviewPanel");
   }
 
+  public ImportDialogPreviewChecker checkNewAccountSelected() {
+    assertThat(getTargetAccountCombo().selectionEquals(Lang.get("import.preview.targetCombo.newAccount")));
+    return this;
+  }
+
   public ImportDialogPreviewChecker checkSelectedAccount(String accountNumber) {
-    assertThat(getAccountCombo().selectionEquals(accountNumber));
+    assertThat(getTargetAccountCombo().selectionEquals(Lang.get("import.preview.targetCombo.existingAccount", accountNumber)));
     return this;
   }
 
   public ImportDialogPreviewChecker checkAvailableAccounts(String... accountNames) {
-    String[] tmp = new String[accountNames.length + 1];
-    System.arraycopy(accountNames, 0, tmp, 1, accountNames.length);
-    tmp[0] = Lang.get("import.account.combo.empty");
-    assertTrue(getAccountCombo().contentEquals(tmp));
+    List<String> expected = new ArrayList<String>();
+    expected.add(Lang.get("import.preview.targetCombo.newAccount"));
+    for (String accountName : accountNames) {
+      expected.add(Lang.get("import.preview.targetCombo.existingAccount", accountName));
+    }
+    expected.add(Lang.get("import.preview.targetCombo.skip"));
+    assertTrue(getTargetAccountCombo().contentEquals(expected.toArray(new String[expected.size()])));
     return this;
   }
 
   public ImportDialogPreviewChecker selectAccount(final String accountName) {
-    getAccountCombo().select(accountName);
+    getTargetAccountCombo().select(Lang.get("import.preview.targetCombo.existingAccount", accountName));
     return this;
   }
 
   public ImportDialogPreviewChecker selectNewAccount() {
-    getAccountCombo().select("a new account");
+    getTargetAccountCombo().select(Lang.get("import.preview.targetCombo.newAccount"));
     return this;
+  }
+
+  public ImportDialogPreviewChecker selectSkipFile() {
+    getTargetAccountCombo().select(Lang.get("import.preview.targetCombo.skip"));
+    return this;
+  }
+
+  private ComboBox getTargetAccountCombo() {
+    return dialog.getComboBox("targetAccountCombo");
   }
 
   public ImportDialogPreviewChecker checkNoErrorMessage() {
@@ -51,16 +72,6 @@ public class ImportDialogPreviewChecker extends DialogChecker {
       assertTrue(message.textIsEmpty());
     }
     getAccountEditionChecker().checkNoErrorDisplayed();
-    return this;
-  }
-
-
-  private ComboBox getAccountCombo() {
-    return dialog.getComboBox("accountCombo");
-  }
-
-  public ImportDialogPreviewChecker addNewAccount() {
-    getAccountCombo().select(Lang.get("import.account.combo.empty"));
     return this;
   }
 
@@ -79,7 +90,7 @@ public class ImportDialogPreviewChecker extends DialogChecker {
   }
 
   public ImportDialogPreviewChecker createNewAccount(String bank, String accountName, String number, Double initialBalance) {
-    addNewAccount();
+    selectNewAccount();
     AccountEditionChecker editionChecker = getAccountEditionChecker()
       .selectBank(bank)
       .setAsMain()
@@ -89,11 +100,6 @@ public class ImportDialogPreviewChecker extends DialogChecker {
       editionChecker
         .setPosition(initialBalance);
     }
-    return this;
-  }
-
-  public ImportDialogPreviewChecker skipFile() {
-    dialog.getButton(Lang.get("import.skip.file")).click();
     return this;
   }
 
@@ -123,7 +129,7 @@ public class ImportDialogPreviewChecker extends DialogChecker {
     return this;
   }
 
-  public ImportDialogPreviewChecker checkErrorAccount() {
+  public ImportDialogPreviewChecker checkAccountError() {
     getAccountEditionChecker().checkNameMissing();
     return this;
   }
@@ -168,11 +174,6 @@ public class ImportDialogPreviewChecker extends DialogChecker {
 
   public ImportDialogPreviewChecker checkAccountMessage(String text) {
     assertThat(dialog.getTextBox("accountCountInfo").textContains(text));
-    return this;
-  }
-
-  public ImportDialogPreviewChecker checkAccountSelectionMessage(String text) {
-    assertThat(dialog.getTextBox("accountSelectionLabel").textEquals(text));
     return this;
   }
 
@@ -284,7 +285,7 @@ public class ImportDialogPreviewChecker extends DialogChecker {
     return this;
   }
 
-  public ImportDialogPreviewChecker checkAccountEditable() {
+  public ImportDialogPreviewChecker checkAccountIsEditable() {
     getAccountEditionChecker().checkAccountEditable();
     return this;
   }
@@ -369,10 +370,10 @@ public class ImportDialogPreviewChecker extends DialogChecker {
   public static void validateAndComplete(final int importedTransactionCount,
                                          final int ignoredTransactionCount,
                                          final int autocategorizedTransactionCount,
-                                         final Panel dialogToClose, final String key) {
+                                         final Panel dialogToClose) {
 
     ImportDialogCompletionChecker
-      .complete(importedTransactionCount, ignoredTransactionCount, autocategorizedTransactionCount, dialogToClose);
+      .checkAndClose(importedTransactionCount, ignoredTransactionCount, autocategorizedTransactionCount, dialogToClose);
     UISpecAssert.assertFalse(dialogToClose.isVisible());
   }
 
@@ -385,8 +386,8 @@ public class ImportDialogPreviewChecker extends DialogChecker {
     return new ImportDialogCompletionChecker(dialog);
   }
 
-  public AccountPositionEditionChecker importAndEditPosiiton() {
-    return new AccountPositionEditionChecker(dialog, "import.fileSelection.ok");
+  public AccountPositionEditionChecker importAndEditPosition() {
+    return new AccountPositionEditionChecker(dialog, "import.preview.next");
   }
 
   public void completeImportAndImportSeries() {
@@ -397,8 +398,8 @@ public class ImportDialogPreviewChecker extends DialogChecker {
   }
 
   public void completeImportAndSkipSeries() {
-    assertTrue(dialog.getTextBox("importMessage").textIsEmpty());
-    Trigger trigger = dialog.getButton(Lang.get("import.preview.ok")).triggerClick();
+    assertTrue(dialog.getTextBox("errorMessage").textIsEmpty());
+    Trigger trigger = dialog.getButton(Lang.get("import.preview.next")).triggerClick();
     ImportSeriesChecker.init(trigger, dialog)
       .cancelImportSeries();
     UISpecAssert.assertFalse(dialog.isVisible());
@@ -412,16 +413,16 @@ public class ImportDialogPreviewChecker extends DialogChecker {
   }
 
   public void completeImportStartFromZero(double amount) {
-    AccountPositionEditionChecker positionEditionChecker = importAndEditPosiiton();
+    AccountPositionEditionChecker positionEditionChecker = importAndEditPosition();
     positionEditionChecker.checkInitialAmountSelected(AmountFormat.DECIMAL_FORMAT.format(amount));
     positionEditionChecker.validate();
-    ImportDialogCompletionChecker.complete(-1, -1, -1, dialog);
+    ImportDialogCompletionChecker.checkAndClose(-1, -1, -1, dialog);
     UISpecAssert.assertFalse(dialog.isVisible());
   }
 
   public boolean isNewAccount() {
-    UIComponent component = dialog.findUIComponent(ComponentMatchers.innerNameIdentity("accountCombo"));
-    return ((JComboBox) component.getAwtComponent()).getSelectedItem() == null;
+    UIComponent component = dialog.findUIComponent(ComponentMatchers.innerNameIdentity("targetAccountCombo"));
+    return ((JComboBox) component.getAwtComponent()).getSelectedIndex() == 0;
   }
 
   public ImportDialogPreviewChecker selectDateFormat(String dateFormat) {
@@ -449,18 +450,19 @@ public class ImportDialogPreviewChecker extends DialogChecker {
   }
 
   public ImportDialogPreviewChecker checkErrorMessage(String message, String... arg) {
-    assertTrue(dialog.getTextBox("importMessage").textEquals(Lang.get(message, arg)));
+    assertTrue(dialog.getTextBox("errorMessage").textEquals(Lang.get(message, arg)));
     return this;
   }
 
   public ImportDialogPreviewChecker checkHtmlErrorMessage(String message, String... arg) {
-    assertTrue(dialog.getTextBox("importMessage").htmlEquals(Lang.get(message, arg)));
+    assertTrue(dialog.getTextBox("errorMessage").htmlEquals(Lang.get(message, arg)));
     return this;
   }
 
   public void skipAndComplete() {
-    skipFile();
-    validateAndComplete(-1, -1, -1, dialog, "import.skip.file");
+    selectSkipFile();
+    clickNext();
+    validateAndComplete(-1, -1, -1, dialog);
   }
 
   public ImportDialogPreviewChecker checkExistingAccountDescription(String text) {
@@ -471,7 +473,7 @@ public class ImportDialogPreviewChecker extends DialogChecker {
   }
 
   public ImportSeriesChecker importSeries() {
-    return new ImportSeriesChecker(WindowInterceptor.getModalDialog(dialog.getButton(Lang.get("import.preview.ok"))
+    return new ImportSeriesChecker(WindowInterceptor.getModalDialog(dialog.getButton(Lang.get("import.preview.next"))
                                                                       .triggerClick()), dialog);
   }
 

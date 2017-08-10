@@ -14,14 +14,12 @@ import static org.uispec4j.assertion.UISpecAssert.assertThat;
 
 public class AccountPositionEditionChecker extends GuiChecker {
   private Window window;
-  private Panel parentWindow;
 
   public AccountPositionEditionChecker(Window window) {
     this.window = window;
   }
 
   public AccountPositionEditionChecker(Panel parentWindow, String buttonKey) {
-    this.parentWindow = parentWindow;
     this.window = WindowInterceptor.getModalDialog(parentWindow.getButton(Lang.get(buttonKey)).triggerClick());
   }
 

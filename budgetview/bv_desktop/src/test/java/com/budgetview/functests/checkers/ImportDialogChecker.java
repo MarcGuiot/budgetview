@@ -1,9 +1,10 @@
 package com.budgetview.functests.checkers;
 
-import com.budgetview.desktop.importer.steps.ImportCloudSignupPanel;
 import com.budgetview.utils.Lang;
-import org.globsframework.utils.TestUtils;
-import org.uispec4j.*;
+import org.uispec4j.Button;
+import org.uispec4j.TextBox;
+import org.uispec4j.Trigger;
+import org.uispec4j.Window;
 import org.uispec4j.assertion.Assertion;
 import org.uispec4j.assertion.UISpecAssert;
 import org.uispec4j.finder.ComponentMatchers;
@@ -12,8 +13,6 @@ import org.uispec4j.interception.WindowInterceptor;
 
 import javax.swing.*;
 import java.io.File;
-import java.util.HashSet;
-import java.util.Set;
 
 import static org.uispec4j.assertion.UISpecAssert.*;
 
@@ -119,7 +118,7 @@ public class ImportDialogChecker extends GuiChecker {
   }
 
   public ImportDialogChecker checkNoErrorMessage() {
-    TextBox message = (TextBox) dialog.findUIComponent(ComponentMatchers.innerNameIdentity("importMessage"));
+    TextBox message = (TextBox) dialog.findUIComponent(ComponentMatchers.innerNameIdentity("errorMessage"));
     if (message != null) {
       assertTrue(message.textIsEmpty());
     }
@@ -136,18 +135,18 @@ public class ImportDialogChecker extends GuiChecker {
   }
 
   public ImportDialogChecker checkErrorMessage(String message, String... arg) {
-    assertTrue(dialog.getTextBox("importMessage").textEquals(Lang.get(message, arg)));
+    assertTrue(dialog.getTextBox("errorMessage").textEquals(Lang.get(message, arg)));
     return this;
   }
 
   public ImportDialogChecker checkHtmlErrorMessage(String message, String... arg) {
-    assertTrue(dialog.getTextBox("importMessage").htmlEquals(Lang.get(message, arg)));
+    assertTrue(dialog.getTextBox("errorMessage").htmlEquals(Lang.get(message, arg)));
     return this;
   }
 
   public MessageAndDetailsDialogChecker clickErrorMessage() {
     return MessageAndDetailsDialogChecker.init(
-      dialog.getTextBox("importMessage").triggerClickOnHyperlink("Click here"));
+      dialog.getTextBox("errorMessage").triggerClickOnHyperlink("Click here"));
   }
 
   public ImportDialogChecker checkCloseButton(String text) {
@@ -212,21 +211,6 @@ public class ImportDialogChecker extends GuiChecker {
       importButton = dialog.getButton("Import");
     }
     return importButton;
-  }
-
-  public ImportDialogChecker checkManualDownloadAvailableForAccounts(String... expectedAccountNames) {
-    return checkAccountLabels(dialog.getPanel("manualAccountsPanel"), expectedAccountNames);
-  }
-
-  private ImportDialogChecker checkAccountLabels(Panel panel, String[] expectedAccountNames) {
-    Set<String> actualNames = new HashSet<String>();
-    assertThat(panel.isVisible());
-    for (UIComponent component : panel.getUIComponents(TextBox.class, "accountLabel")) {
-      TextBox textBox = (TextBox) component;
-      actualNames.add(textBox.getText());
-    }
-    TestUtils.assertSetEquals(actualNames, expectedAccountNames);
-    return this;
   }
 
   public CloudSignupChecker selectCloudForNewUser() {

@@ -157,9 +157,10 @@ public class ImportTest extends LoggedInFunctionalTestCase {
         .checkTransactions(new Object[][]{
           {"2006/01/10", "Menu K", "-1.10"}
         })
+        .checkNewAccountSelected()
         .defineAccount(SOCIETE_GENERALE, "My SG account", "0123546");
     preview
-      .importAndEditPosiiton()
+      .importAndEditPosition()
       .setAmount(0.00)
       .validate();
     preview.toCompletion().validate();
@@ -223,7 +224,7 @@ public class ImportTest extends LoggedInFunctionalTestCase {
       .defineAccount(SOCIETE_GENERALE, "Main", "12345");
 
     preview
-      .importAndEditPosiiton()
+      .importAndEditPosition()
       .checkAccountLabel("Account: Main")
       .checkCancelNotAvailable()
       .checkEscNotAvailable()
@@ -272,9 +273,9 @@ public class ImportTest extends LoggedInFunctionalTestCase {
     operations.openImportDialog()
       .setFilePath(secondSecondQif)
       .importFileAndPreview()
-      .checkSelectedAccount(null)
+      .checkNewAccountSelected()
       .importAccountAndOpenNext()
-      .checkErrorAccount()
+      .checkAccountError()
       .selectAccount("Second account")
       .checkNoErrorMessage()
       .importAccountAndComplete();
@@ -300,8 +301,9 @@ public class ImportTest extends LoggedInFunctionalTestCase {
       })
       .importAccountAndOpenNext()
       .checkMessageCreateFirstAccount()
-      .skipFile()
+      .selectSkipFile()
       .checkMessageCreateFirstAccount()
+      .importAccountAndOpenNext()
       .checkTransactions(new Object[][]{
         {"2006/01/20", "Second operation", "-2.20"}
       })
@@ -669,7 +671,7 @@ public class ImportTest extends LoggedInFunctionalTestCase {
       .setFilePath(notEmpty)
       .importFileAndPreview()
       .checkAccountMessage("New operations for account:")
-      .checkAccountSelectionMessage("Import operations in:")
+      .checkNewAccountSelected()
       .setMainAccount()
       .importAccountAndGetSummary()
       .checkSummaryAndValidate(1, 0, 0);
@@ -848,17 +850,16 @@ public class ImportTest extends LoggedInFunctionalTestCase {
       .selectFiles(path1)
       .importFileAndPreview()
       .checkAccountMessage("New operations for account 1/3:")
-      .checkAccountSelectionMessage("Update:")
+      .checkNewAccountSelected()
       .setMainAccount()
       .importAccountAndOpenNext()
-
       .setMainAccount()
       .checkAccountMessage("New operations for account 2/3:")
-      .checkAccountSelectionMessage("Update:")
+      .checkNewAccountSelected()
       .importAccountAndOpenNext()
       .setMainAccount()
       .checkAccountMessage("New operations for account 3/3:")
-      .checkAccountSelectionMessage("Update:")
+      .checkNewAccountSelected()
       .importAccountAndComplete();
 
     mainAccounts.checkPosition("Account n. 111", 100.);
@@ -879,7 +880,7 @@ public class ImportTest extends LoggedInFunctionalTestCase {
       .checkSelectedAccount("Account n. 113")
       .checkAccountNotEditable()
       .checkExistingAccountDescription("Account n.113 Other Position: 100.00 on 2008/08/01")
-      .selectAccount("a new account")
+      .selectNewAccount()
       .checkAstericsErrorOnName()
       .checkAccountPosition(300.00)
       .selectAccount("Account n. 113")
@@ -980,29 +981,27 @@ public class ImportTest extends LoggedInFunctionalTestCase {
 
     preview
       .checkFileNameShown(path)
-      .checkFileNameShown(path)
       .checkAccountMessage("New operations for account 1/3:")
-      .checkAccountSelectionMessage("Update:")
+      .checkNewAccountSelected()
       .selectAccount("Account n. 00001123")
       .importAccountAndOpenNext();
 
     preview
-      .checkAccountEditable()
+      .checkAccountIsEditable()
       .checkAccountMessage("New operations for account 2/3:")
-      .checkAccountSelectionMessage("Update:")
+      .checkNewAccountSelected()
       .selectAccount("Account n. 00001123")
       .checkAccountNotEditable()
       .checkExistingAccountDescription("Account n.00001123 CIC Position: 0.00 on 2008/06/08")
-      .selectAccount("a new account")
+      .selectNewAccount()
       .checkAccountMessage("New operations for account 2/3:")
-      .checkAccountSelectionMessage("Update:")
-      .checkAccountEditable()
+      .checkAccountIsEditable()
       .setMainAccount()
       .importAccountAndOpenNext();
 
     preview
       .checkAccountMessage("New operations for account 3/3:")
-      .checkAccountSelectionMessage("Update:")
+      .checkNewAccountSelected()
       .setMainAccount()
       .importAccountAndComplete();
 

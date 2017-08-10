@@ -185,7 +185,7 @@ public class CsvImportTest extends SpecificBankTestCase {
   }
 
   @Test
-  public void testImportWithEnvelopes() throws Exception {
+  public void testImportWithSeries() throws Exception {
     String file =
       CsvBuilder.init(this, '\t')
         .add("date", "libelle", "montant", "enveloppe")
@@ -249,7 +249,7 @@ public class CsvImportTest extends SpecificBankTestCase {
       })
       .selectDateFormat("Year/Month/Day")
       .selectAccount("imported")
-      .importAccountAndComplete();
+      .importAccountWithAllSeriesAndComplete();
 
     transactions.initAmountContent()
       .add("04/01/2008", "ED", -100.00, "Groceries", 0.0, 0.0, "imported")

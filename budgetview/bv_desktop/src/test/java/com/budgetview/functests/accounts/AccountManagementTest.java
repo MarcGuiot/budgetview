@@ -174,13 +174,13 @@ public class AccountManagementTest extends LoggedInFunctionalTestCase {
     operations.openPreferences().setFutureMonthsCount(4).validate();
 
     OfxBuilder.init(this)
-      .addBankAccount("13006", 13006, "123", 10, "2008/08/10")
+      .addBankAccount(30006, 13006, "123", 10, "2008/08/10")
       .addTransaction("2008/07/28", -550, "first account")
       .load();
     categorization.setNewVariable("first account", "first serie", 100.);
 
     OfxBuilder.init(this)
-      .addBankAccount("13006", 13006, "321", 10, "2008/07/30")
+      .addBankAccount(30006, 13006, "321", 10, "2008/07/30")
       .addTransaction("2008/07/29", -550, "second account ")
       .load();
 
@@ -243,20 +243,20 @@ public class AccountManagementTest extends LoggedInFunctionalTestCase {
   @Test
   public void testCharts() throws Exception {
     OfxBuilder.init(this)
-      .addBankAccount("13006", 13006, "111", 1000, "2008/05/24")
+      .addBankAccount(30006, 13006, "111", 1000, "2008/05/24")
       .addTransaction("2008/05/24", -100, "Tr 1a")
       .addTransaction("2008/05/20", -200, "Tr 1b")
       .addTransaction("2008/05/20", -200, "Tr 1c")
       .load();
 
     OfxBuilder.init(this)
-      .addBankAccount("13006", 13006, "222", 10000, "2008/05/20")
+      .addBankAccount(30006, 13006, "222", 10000, "2008/05/20")
       .addTransaction("2008/05/20", 1000, "Tr 2a")
       .addTransaction("2008/04/20", 1000, "Tr 2b")
       .load();
 
     OfxBuilder.init(this)
-      .addBankAccount("13006", 13006, "333", 100, "2008/04/15")
+      .addBankAccount(30006, 13006, "333", 100, "2008/04/15")
       .addTransaction("2008/04/10", 50, "Trans 3")
       .load();
 

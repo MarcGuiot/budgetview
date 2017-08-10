@@ -2,8 +2,8 @@ package com.budgetview.desktop.accounts.utils;
 
 import com.budgetview.model.Account;
 import com.budgetview.model.AccountCardType;
-import com.budgetview.shared.model.AccountType;
 import com.budgetview.model.Month;
+import com.budgetview.shared.model.AccountType;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.utils.GlobMatcher;
@@ -69,7 +69,7 @@ public class AccountMatchers {
   public static GlobMatcher activeMainAccountsForPlannedTransactions(final Integer monthId) {
     return new GlobMatcher() {
       public boolean matches(Glob account, GlobRepository repository) {
-        if (account.get(Account.CARD_TYPE).equals(AccountCardType.DEFERRED.getId())){
+        if (account.get(Account.CARD_TYPE).equals(AccountCardType.DEFERRED.getId())) {
           return false;
         }
         if (!Account.isUserCreatedMainAccount(account)) {
@@ -181,6 +181,15 @@ public class AccountMatchers {
     return new GlobMatcher() {
       public boolean matches(Glob account, GlobRepository repository) {
         return Account.isUserCreatedSavingsAccount(account);
+      }
+    };
+  }
+
+  public static GlobMatcher nonSummaryAccounts() {
+    return new GlobMatcher() {
+      public boolean matches(Glob account, GlobRepository repository) {
+        return account != null &&
+               !Account.SUMMARY_ACCOUNT_IDS.contains(account.get(Account.ID));
       }
     };
   }

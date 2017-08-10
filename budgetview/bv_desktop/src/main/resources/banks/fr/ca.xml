@@ -62,7 +62,6 @@
             <bankEntity id="13606"/>
         </bank>
         <bank id="69" country="fr" url="https://www.ca-languedoc.fr" name="Crédit Agricole Languedoc" shortName="Crédit Agricole"  synchroEnabled="true" icon="banks/credit_agricole.png">
-            <!--<bankEntity id="13006"/>-->
             <bankEntity id="13506"/>
         </bank>
         <bank id="70" country="fr" url="https://www.ca-loirehauteloire.fr" name="Crédit Agricole Loire Haute Loire" shortName="Crédit Agricole"  synchroEnabled="true" icon="banks/credit_agricole.png">

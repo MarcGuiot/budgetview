@@ -10,7 +10,6 @@ import com.budgetview.desktop.importer.components.RealAccountImporter;
 import com.budgetview.desktop.importer.series.SeriesImporter;
 import com.budgetview.desktop.importer.steps.*;
 import com.budgetview.model.*;
-import com.budgetview.model.deprecated.Synchro;
 import com.budgetview.shared.cloud.CloudSubscriptionStatus;
 import com.budgetview.shared.model.BudgetArea;
 import com.budgetview.triggers.AutomaticSeriesBudgetTrigger;

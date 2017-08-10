@@ -28,7 +28,7 @@
         </row>
 
         <panel opaque="false" marginTop="0" weightY="0.01">
-          <htmlEditorPane ref="importMessage" styleClass="errorMessage" hyperlinkListener="hyperlinkHandler"
+          <htmlEditorPane ref="errorMessage" styleClass="errorMessage" hyperlinkListener="hyperlinkHandler"
                           border="empty(0,0,10,0)"/>
         </panel>
 

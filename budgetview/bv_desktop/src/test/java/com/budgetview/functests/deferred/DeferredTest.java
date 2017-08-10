@@ -91,7 +91,7 @@ public class DeferredTest extends LoggedInFunctionalTestCase {
     ImportDialogPreviewChecker preview = cardCategorization.importAccount()
       .setFilePath(cardFile)
       .importFileAndPreview();
-    preview.addNewAccount()
+    preview.selectNewAccount()
       .setAccountName("Card account")
       .selectBank("CIC")
       .setDeferredAccount(25, 28, 0)

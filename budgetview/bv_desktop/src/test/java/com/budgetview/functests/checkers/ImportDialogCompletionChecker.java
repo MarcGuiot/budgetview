@@ -16,7 +16,7 @@ public class ImportDialogCompletionChecker extends DialogChecker {
     checkTitle("import.completion.title");
   }
 
-  public static void complete(int importedTransactionCount, int ignoredTransactionCount, int autocategorizedTransactionCount, Panel dialogToClose) {
+  public static void checkAndClose(int importedTransactionCount, int ignoredTransactionCount, int autocategorizedTransactionCount, Panel dialogToClose) {
     CompletionChecker handler = new CompletionChecker(importedTransactionCount, ignoredTransactionCount, autocategorizedTransactionCount);
     handler.checkAndClose(dialogToClose);
   }

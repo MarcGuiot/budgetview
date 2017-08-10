@@ -21,8 +21,7 @@ public class AccountFinder implements GlobFunctor {
 
   public static Integer findBestAccount(GlobList importedTransactions, GlobRepository repository) {
     AccountFinder accountFinder = new AccountFinder();
-    repository.safeApply(Transaction.TYPE,
-                         GlobMatchers.isFalse(Transaction.PLANNED), accountFinder);
+    repository.safeApply(Transaction.TYPE, GlobMatchers.isFalse(Transaction.PLANNED), accountFinder);
     return accountFinder.findAccount(importedTransactions);
   }
 

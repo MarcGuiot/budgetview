@@ -88,7 +88,7 @@ public class OperationChecker {
       .setFilePath(fileName)
       .importFileAndPreview();
 
-    preview.addNewAccount()
+    preview.selectNewAccount()
       .setAccountNumber(accountName)
       .setMainAccount()
       .setAccountName(accountName);
@@ -107,7 +107,7 @@ public class OperationChecker {
       .setFilePath(fileName)
       .importFileAndPreview();
 
-    ImportDialogPreviewChecker accountEdition = preview.addNewAccount();
+    ImportDialogPreviewChecker accountEdition = preview.selectNewAccount();
     if (bank != null) {
       accountEdition
         .selectBank(bank);
@@ -128,7 +128,7 @@ public class OperationChecker {
       .setFilePath(fileName)
       .importFileAndPreview();
 
-    preview.addNewAccount()
+    preview.selectNewAccount()
       .setAccountNumber("1111")
       .setAccountName(accountName);
     preview
@@ -253,13 +253,13 @@ public class OperationChecker {
       preview.selectBank("Other");
     }
     if (targetAccount != null) {
-      dialog.getComboBox("accountCombo").select(targetAccount);
+      dialog.getComboBox("targetAccountCombo").select(targetAccount);
     }
     if (preview.hasAccountType()) {
       preview.setMainAccountForAll();
     }
 
-    final Button step2Button = dialog.getButton(Lang.get("import.preview.ok"));
+    final Button step2Button = dialog.getButton(Lang.get("import.preview.next"));
     for (int i = 0; i < fileNames.length - 2; i++) {
       step2Button.click();
     }

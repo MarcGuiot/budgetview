@@ -53,7 +53,7 @@ public class ImportedFileSelectionPanel extends AbstractImportStepPanel implemen
                                     localRepository, localDirectory);
 
     initFileField();
-    builder.add("importMessage", importMessage);
+    builder.add("errorMessage", importMessage);
     builder.add("filePanel", filePanel);
     builder.add("fileField", fileField);
     importAction = new ImportAction();

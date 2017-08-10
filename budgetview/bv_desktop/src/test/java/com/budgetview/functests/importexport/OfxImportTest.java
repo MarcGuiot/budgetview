@@ -403,7 +403,7 @@ public class OfxImportTest extends LoggedInFunctionalTestCase {
         public Trigger process(Window window) throws Exception {
           window.getInputTextBox("fileField").setText(fileName);
           window.getButton("Import").click();
-          assertTrue(window.getTextBox("importMessage").textContains("Invalid file content"));
+          assertTrue(window.getTextBox("errorMessage").textContains("Invalid file content"));
           return window.getButton("Close").triggerClick();
         }
       })
@@ -426,7 +426,7 @@ public class OfxImportTest extends LoggedInFunctionalTestCase {
         public Trigger process(Window window) throws Exception {
           window.getInputTextBox("fileField").setText(file.getAbsolutePath());
           window.getButton("Import").click();
-          assertTrue(window.getTextBox("importMessage").textContains("only OFX, QIF and CSV or TSV files are supported"));
+          assertTrue(window.getTextBox("errorMessage").textContains("only OFX, QIF and CSV or TSV files are supported"));
           return window.getButton("Close").triggerClick();
         }
       })
@@ -674,12 +674,11 @@ public class OfxImportTest extends LoggedInFunctionalTestCase {
       .addTransaction("2008/08/06", -30.00, "Virement 222")
       .save();
 
-    ImportDialogPreviewChecker preview = operations.openImportDialog()
+    operations.openImportDialog()
       .setFilePath(ofxFile)
-      .importFileAndPreview();
-    preview
-      .skipFile();
-    preview
+      .importFileAndPreview()
+      .selectSkipFile()
+      .importAccountAndOpenNext()
       .setMainAccount()
       .selectBank("Other")
       .importAccountAndComplete();

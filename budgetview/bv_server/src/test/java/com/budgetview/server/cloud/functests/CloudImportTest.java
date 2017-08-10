@@ -407,7 +407,7 @@ public class CloudImportTest extends CloudDesktopTestCase {
       .checkTransactions(new Object[][]{
         {"2016/08/14", "FNAC", "-250.00"},
       })
-      .checkSelectedAccount("a new account")
+      .checkNewAccountSelected()
       .importAccountAndGetSummary()
       .checkSummaryAndValidate(1, 0, 0);
 

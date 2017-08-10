@@ -43,10 +43,9 @@
 
         <panel ref="dateSelectionPanel"/>
 
-        <row weightY="0.01" margin="10" autoHideSource="accountCombo">
+        <row weightY="0.01" margin="10" autoHideSource="targetAccountCombo">
           <filler fill="horizontal"/>
-          <label ref="accountSelectionLabel" styleClass="formLabel"/>
-          <comboBox ref="accountCombo"/>
+          <comboBox ref="targetAccountCombo"/>
           <filler fill="horizontal"/>
         </row>
 
@@ -55,7 +54,7 @@
         </panel>
 
         <panel minimumSize="(200,20)" opaque="false" marginTop="5">
-          <htmlEditorPane ref="importMessage" styleClass="errorMessage"/>
+          <htmlEditorPane ref="errorMessage" styleClass="errorMessage"/>
         </panel>
 
       </column>
@@ -63,7 +62,6 @@
 
     <row styleClass="dialogButtons">
       <filler fill="horizontal"/>
-      <button action="skipFile"/>
       <button action="next" />
     </row>
 
