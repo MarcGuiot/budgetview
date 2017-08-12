@@ -1,5 +1,6 @@
 package com.budgetview.model;
 
+import com.budgetview.model.util.TypeLoader;
 import com.budgetview.shared.utils.GlobSerializer;
 import org.globsframework.metamodel.Field;
 import org.globsframework.metamodel.GlobType;
@@ -7,7 +8,6 @@ import org.globsframework.metamodel.annotations.Key;
 import org.globsframework.metamodel.annotations.NoObfuscation;
 import org.globsframework.metamodel.fields.BooleanField;
 import org.globsframework.metamodel.fields.IntegerField;
-import org.globsframework.metamodel.utils.GlobTypeLoader;
 import org.globsframework.model.FieldSetter;
 import org.globsframework.model.FieldValues;
 import org.globsframework.model.Glob;
@@ -38,7 +38,7 @@ public class AddOns {
   public static BooleanField MOBILE;
 
   static {
-    GlobTypeLoader.init(AddOns.class, "addOns");
+    TypeLoader.init(AddOns.class, "addOns");
     KEY = org.globsframework.model.Key.create(TYPE, SINGLETON_ID);
   }
 

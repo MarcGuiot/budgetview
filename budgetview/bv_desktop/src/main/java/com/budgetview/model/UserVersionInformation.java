@@ -1,12 +1,12 @@
 package com.budgetview.model;
 
+import com.budgetview.model.util.TypeLoader;
 import com.budgetview.shared.utils.GlobSerializer;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.annotations.Key;
 import org.globsframework.metamodel.fields.IntegerField;
 import org.globsframework.metamodel.fields.LongField;
 import org.globsframework.metamodel.fields.StringField;
-import org.globsframework.metamodel.utils.GlobTypeLoader;
 import org.globsframework.model.FieldSetter;
 import org.globsframework.model.FieldValues;
 import org.globsframework.model.GlobRepository;
@@ -30,7 +30,7 @@ public class UserVersionInformation {
   public static LongField CURRENT_BANK_CONFIG_VERSION;
 
   static {
-    GlobTypeLoader.init(UserVersionInformation.class, "versionInformation");
+    TypeLoader.init(UserVersionInformation.class, "versionInformation");
     KEY = org.globsframework.model.Key.create(TYPE, SINGLETON_ID);
   }
   public static class Serializer implements GlobSerializer {

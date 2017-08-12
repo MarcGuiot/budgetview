@@ -4,6 +4,7 @@ import com.budgetview.desktop.description.Labels;
 import com.budgetview.desktop.model.SeriesStat;
 import com.budgetview.desktop.model.SeriesType;
 import com.budgetview.model.*;
+import com.budgetview.model.util.TypeLoader;
 import com.budgetview.shared.model.BudgetArea;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.annotations.Key;
@@ -53,7 +54,7 @@ public class SeriesWrapper {
                                                SAVINGS_POSITION_SUMMARY_ID};
 
   static {
-    GlobTypeLoader loader = GlobTypeLoader.init(SeriesWrapper.class);
+    TypeLoader loader = TypeLoader.init(SeriesWrapper.class, "seriesWrapper");
     loader.defineMultiFieldUniqueIndex(INDEX, ITEM_TYPE, ITEM_ID, PARENT);
   }
 

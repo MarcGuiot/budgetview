@@ -1,10 +1,10 @@
 package com.budgetview.model;
 
+import com.budgetview.model.util.TypeLoader;
 import com.budgetview.utils.Lang;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.annotations.Key;
 import org.globsframework.metamodel.fields.IntegerField;
-import org.globsframework.metamodel.utils.GlobTypeLoader;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.impl.ReadOnlyGlob;
@@ -30,7 +30,7 @@ public enum AnalysisViewType implements GlobConstantContainer {
   }
 
   static {
-    GlobTypeLoader.init(AnalysisViewType.class, "analysisViewType");
+    TypeLoader.init(AnalysisViewType.class, "analysisViewType");
   }
 
   public ReadOnlyGlob getGlob() {

@@ -1,12 +1,12 @@
 package com.budgetview.model;
 
+import com.budgetview.model.util.TypeLoader;
 import com.budgetview.utils.Lang;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.annotations.Key;
 import org.globsframework.metamodel.annotations.NamingField;
 import org.globsframework.metamodel.fields.IntegerField;
 import org.globsframework.metamodel.fields.StringField;
-import org.globsframework.metamodel.utils.GlobTypeLoader;
 import org.globsframework.model.impl.ReadOnlyGlob;
 import org.globsframework.model.utils.GlobConstantContainer;
 import org.globsframework.utils.exceptions.InvalidData;
@@ -44,7 +44,7 @@ public enum NumericDateType implements GlobConstantContainer {
   }
 
   static {
-    GlobTypeLoader.init(NumericDateType.class, "numericDateType");
+    TypeLoader.init(NumericDateType.class, "numericDateType");
   }
 
   public ReadOnlyGlob getGlob() {

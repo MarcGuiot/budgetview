@@ -1,5 +1,6 @@
 package com.budgetview.desktop.components.charts;
 
+import com.budgetview.model.util.TypeLoader;
 import com.budgetview.shared.model.BudgetArea;
 import org.globsframework.gui.GuiTestCase;
 import org.globsframework.metamodel.GlobType;
@@ -99,7 +100,7 @@ public class GlobDeltaGaugeViewTest extends GuiTestCase {
     public static IntegerField NEW_MONTH;
 
     static {
-      GlobTypeLoader.init(MyObject.class);
+      TypeLoader.init(MyObject.class, "myObject");
     }
   }
 }

@@ -1,6 +1,10 @@
 package com.budgetview.desktop.model;
 
-import com.budgetview.model.*;
+import com.budgetview.model.Account;
+import com.budgetview.model.Month;
+import com.budgetview.model.Series;
+import com.budgetview.model.SeriesGroup;
+import com.budgetview.model.util.TypeLoader;
 import com.budgetview.shared.model.BudgetArea;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.annotations.DefaultDouble;
@@ -11,12 +15,10 @@ import org.globsframework.metamodel.fields.DoubleField;
 import org.globsframework.metamodel.fields.IntegerField;
 import org.globsframework.metamodel.fields.LinkField;
 import org.globsframework.metamodel.index.NotUniqueIndex;
-import org.globsframework.metamodel.utils.GlobTypeLoader;
 import org.globsframework.model.FieldValues;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
-import org.globsframework.model.format.GlobPrinter;
 import org.globsframework.model.utils.GlobMatcher;
 import org.globsframework.model.utils.GlobMatchers;
 import org.globsframework.utils.Utils;
@@ -68,7 +70,7 @@ public class SeriesStat {
   public static NotUniqueIndex SERIES_INDEX;
 
   static {
-    GlobTypeLoader loader = GlobTypeLoader.init(SeriesStat.class);
+    TypeLoader loader = TypeLoader.init(SeriesStat.class, "seriesStat");
     loader.defineNonUniqueIndex(MONTH_INDEX, MONTH);
     loader.defineNonUniqueIndex(SERIES_INDEX, TARGET);
   }
@@ -213,7 +215,7 @@ public class SeriesStat {
           return true;
         }
         Glob series = repository.find(org.globsframework.model.Key.create(Series.TYPE, seriesStat.get(TARGET)));
-        return series != null  && series.get(Series.GROUP) == null;
+        return series != null && series.get(Series.GROUP) == null;
       }
     };
   }
@@ -263,7 +265,7 @@ public class SeriesStat {
   }
 
   public static GlobList getAllSummaryMonths(Integer targetId, SeriesType type, GlobRepository repository) {
-    return  repository.findByIndex(SeriesStat.SERIES_INDEX, targetId)
+    return repository.findByIndex(SeriesStat.SERIES_INDEX, targetId)
       .filterSelf(and(fieldEquals(SeriesStat.ACCOUNT, Account.ALL_SUMMARY_ACCOUNT_ID),
                       fieldEquals(SeriesStat.TARGET_TYPE, type.getId())),
                   repository);

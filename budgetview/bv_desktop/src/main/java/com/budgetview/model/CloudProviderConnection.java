@@ -1,5 +1,6 @@
 package com.budgetview.model;
 
+import com.budgetview.model.util.TypeLoader;
 import com.budgetview.shared.model.Provider;
 import com.budgetview.shared.utils.GlobSerializer;
 import org.globsframework.metamodel.GlobType;
@@ -10,7 +11,6 @@ import org.globsframework.metamodel.fields.BooleanField;
 import org.globsframework.metamodel.fields.IntegerField;
 import org.globsframework.metamodel.fields.LinkField;
 import org.globsframework.metamodel.fields.StringField;
-import org.globsframework.metamodel.utils.GlobTypeLoader;
 import org.globsframework.model.FieldSetter;
 import org.globsframework.model.FieldValues;
 import org.globsframework.model.GlobRepository;
@@ -43,7 +43,7 @@ public class CloudProviderConnection {
   public static BooleanField PASSWORD_ERROR;
 
   static {
-    GlobTypeLoader.init(CloudProviderConnection.class);
+    TypeLoader.init(CloudProviderConnection.class, "cloudProviderConnection");
   }
 
   public static class Serializer implements GlobSerializer {

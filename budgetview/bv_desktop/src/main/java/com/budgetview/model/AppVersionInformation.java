@@ -1,11 +1,11 @@
 package com.budgetview.model;
 
+import com.budgetview.model.util.TypeLoader;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.annotations.Key;
 import org.globsframework.metamodel.fields.IntegerField;
 import org.globsframework.metamodel.fields.LongField;
 import org.globsframework.metamodel.fields.StringField;
-import org.globsframework.metamodel.utils.GlobTypeLoader;
 
 public class AppVersionInformation {
 
@@ -22,7 +22,7 @@ public class AppVersionInformation {
   public static LongField LATEST_BANK_CONFIG_SOFTWARE_VERSION;
 
   static {
-    GlobTypeLoader.init(AppVersionInformation.class, "appVersionInformation");
+    TypeLoader.init(AppVersionInformation.class, "appVersionInformation");
     KEY = org.globsframework.model.Key.create(TYPE, SINGLETON_ID);
   }
 }

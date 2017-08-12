@@ -1,11 +1,11 @@
 package com.budgetview.model;
 
+import com.budgetview.model.util.TypeLoader;
 import com.budgetview.shared.utils.GlobSerializer;
 import org.globsframework.metamodel.GlobType;
-import org.globsframework.metamodel.annotations.Key;
 import org.globsframework.metamodel.annotations.DefaultBoolean;
+import org.globsframework.metamodel.annotations.Key;
 import org.globsframework.metamodel.fields.*;
-import org.globsframework.metamodel.utils.GlobTypeLoader;
 import org.globsframework.model.FieldSetter;
 import org.globsframework.model.FieldValues;
 import org.globsframework.model.GlobRepository;
@@ -33,7 +33,7 @@ public class TransactionImport {
   public static BlobField FILE_CONTENT;
 
   static {
-    GlobTypeLoader.init(TransactionImport.class, "transactionImport");
+    TypeLoader.init(TransactionImport.class, "transactionImport");
   }
 
   public static class Serializer implements GlobSerializer {

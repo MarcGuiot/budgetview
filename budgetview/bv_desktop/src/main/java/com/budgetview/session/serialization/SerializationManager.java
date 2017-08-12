@@ -56,5 +56,8 @@ public class SerializationManager {
     ProjectAccountGraph.TYPE.updateProperty(SERIALIZATION_PROPERTY, new ProjectAccountGraph.Serializer());
     CloudDesktopUser.TYPE.updateProperty(SERIALIZATION_PROPERTY, new CloudDesktopUser.Serializer());
     CloudProviderConnection.TYPE.updateProperty(SERIALIZATION_PROPERTY, new CloudProviderConnection.Serializer());
+
+    // WARNING : Make sure that all serialized globtypes used a hardcoded name - obfuscation may caused backups to
+    // become unreadable
   }
 }

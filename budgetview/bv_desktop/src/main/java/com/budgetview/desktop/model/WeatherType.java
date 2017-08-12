@@ -1,6 +1,7 @@
 package com.budgetview.desktop.model;
 
 import com.budgetview.model.ProfileType;
+import com.budgetview.model.util.TypeLoader;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.annotations.Key;
 import org.globsframework.metamodel.fields.IntegerField;
@@ -24,7 +25,7 @@ public enum WeatherType implements GlobConstantContainer {
   private final int id;
 
   static {
-    GlobTypeLoader.init(WeatherType.class, "weatherType");
+    TypeLoader.init(WeatherType.class, "weatherType");
   }
 
   WeatherType(int id) {

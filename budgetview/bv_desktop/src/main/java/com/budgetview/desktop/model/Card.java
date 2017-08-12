@@ -1,5 +1,6 @@
 package com.budgetview.desktop.model;
 
+import com.budgetview.model.util.TypeLoader;
 import com.budgetview.utils.Lang;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.annotations.Key;
@@ -32,7 +33,7 @@ public enum Card implements GlobConstantContainer {
   private String name;
 
   static {
-    GlobTypeLoader.init(Card.class);
+    TypeLoader.init(Card.class, "card");
   }
 
   Card(String name, int id) {

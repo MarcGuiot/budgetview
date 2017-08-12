@@ -1,6 +1,7 @@
 package com.budgetview.desktop.model;
 
 import com.budgetview.model.Account;
+import com.budgetview.model.util.TypeLoader;
 import com.budgetview.shared.model.BudgetArea;
 import com.budgetview.model.Month;
 import org.globsframework.metamodel.GlobType;
@@ -62,7 +63,7 @@ public class SavingsBudgetStat {
   public static DoubleField SAVINGS_OUT_PLANNED;
 
   static {
-    GlobTypeLoader.init(SavingsBudgetStat.class);
+    TypeLoader.init(SavingsBudgetStat.class, "savingsBudgetStat");
   }
 
   public static DoubleField getObserved(BudgetArea budgetArea) {

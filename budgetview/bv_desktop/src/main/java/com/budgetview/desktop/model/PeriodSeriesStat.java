@@ -1,5 +1,6 @@
 package com.budgetview.desktop.model;
 
+import com.budgetview.model.util.TypeLoader;
 import com.budgetview.shared.model.BudgetArea;
 import com.budgetview.model.Series;
 import com.budgetview.model.SeriesGroup;
@@ -74,7 +75,7 @@ public class PeriodSeriesStat {
   public static BooleanField TO_SET;
 
   static {
-    GlobTypeLoader.init(PeriodSeriesStat.class);
+    TypeLoader.init(PeriodSeriesStat.class, "periodSeriesStat");
   }
 
   public static boolean isForSeries(Glob periodSeriesStat) {

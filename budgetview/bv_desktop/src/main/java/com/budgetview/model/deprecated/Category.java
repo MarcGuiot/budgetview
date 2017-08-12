@@ -1,5 +1,6 @@
 package com.budgetview.model.deprecated;
 
+import com.budgetview.model.util.TypeLoader;
 import com.budgetview.shared.utils.GlobSerializer;
 import com.budgetview.utils.Lang;
 import org.globsframework.metamodel.GlobType;
@@ -10,8 +11,10 @@ import org.globsframework.metamodel.fields.BooleanField;
 import org.globsframework.metamodel.fields.IntegerField;
 import org.globsframework.metamodel.fields.LinkField;
 import org.globsframework.metamodel.fields.StringField;
-import org.globsframework.metamodel.utils.GlobTypeLoader;
-import org.globsframework.model.*;
+import org.globsframework.model.FieldSetter;
+import org.globsframework.model.FieldValues;
+import org.globsframework.model.Glob;
+import org.globsframework.model.GlobRepository;
 import org.globsframework.utils.serialization.SerializedByteArrayOutput;
 import org.globsframework.utils.serialization.SerializedInput;
 import org.globsframework.utils.serialization.SerializedInputOutputFactory;
@@ -38,7 +41,7 @@ public class Category {
   public static BooleanField SYSTEM;
 
   static {
-    GlobTypeLoader.init(Category.class, "category");
+    TypeLoader.init(Category.class, "category");
   }
 
   public static String getName(Integer categoryId, GlobRepository repository) {

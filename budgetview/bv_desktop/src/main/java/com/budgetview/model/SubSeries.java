@@ -1,22 +1,22 @@
 package com.budgetview.model;
 
+import com.budgetview.model.util.TypeLoader;
 import com.budgetview.shared.utils.GlobSerializer;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.annotations.Key;
-import org.globsframework.metamodel.annotations.Target;
 import org.globsframework.metamodel.annotations.NamingField;
+import org.globsframework.metamodel.annotations.Target;
 import org.globsframework.metamodel.fields.IntegerField;
 import org.globsframework.metamodel.fields.LinkField;
 import org.globsframework.metamodel.fields.StringField;
 import org.globsframework.metamodel.index.NotUniqueIndex;
-import org.globsframework.metamodel.utils.GlobTypeLoader;
-import org.globsframework.model.FieldValues;
 import org.globsframework.model.FieldSetter;
+import org.globsframework.model.FieldValues;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.utils.serialization.SerializedByteArrayOutput;
-import org.globsframework.utils.serialization.SerializedOutput;
 import org.globsframework.utils.serialization.SerializedInput;
 import org.globsframework.utils.serialization.SerializedInputOutputFactory;
+import org.globsframework.utils.serialization.SerializedOutput;
 
 public class SubSeries {
   public static GlobType TYPE;
@@ -33,7 +33,7 @@ public class SubSeries {
   public static NotUniqueIndex SERIES_INDEX;
 
   static {
-    GlobTypeLoader loader = GlobTypeLoader.init(SubSeries.class, "subSeries");
+    TypeLoader loader = TypeLoader.init(SubSeries.class, "subSeries");
     loader.defineNonUniqueIndex(SERIES_INDEX, SERIES);
   }
 

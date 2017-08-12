@@ -1,6 +1,7 @@
 package com.budgetview.desktop.model;
 
 import com.budgetview.model.Account;
+import com.budgetview.model.util.TypeLoader;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.annotations.DefaultDouble;
 import org.globsframework.metamodel.annotations.Key;
@@ -28,7 +29,7 @@ public class AccountWeather {
   public static DoubleField FUTURE_MIN;
 
   static {
-    GlobTypeLoader.init(AccountWeather.class);
+    TypeLoader.init(AccountWeather.class, "accountWeather");
   }
 
   public static boolean isForMainAccount(Glob accountWeather, GlobRepository repository) {

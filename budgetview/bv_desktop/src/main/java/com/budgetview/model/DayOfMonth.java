@@ -1,11 +1,11 @@
 package com.budgetview.model;
 
+import com.budgetview.model.util.TypeLoader;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.annotations.Key;
 import org.globsframework.metamodel.annotations.NamingField;
 import org.globsframework.metamodel.fields.IntegerField;
 import org.globsframework.metamodel.fields.StringField;
-import org.globsframework.metamodel.utils.GlobTypeLoader;
 import org.globsframework.model.impl.ReadOnlyGlob;
 import org.globsframework.model.utils.GlobConstantContainer;
 
@@ -65,6 +65,6 @@ public enum DayOfMonth implements GlobConstantContainer {
   }
 
   static {
-    GlobTypeLoader.init(DayOfMonth.class, "dayOfMonth");
+    TypeLoader.init(DayOfMonth.class, "dayOfMonth");
   }
 }

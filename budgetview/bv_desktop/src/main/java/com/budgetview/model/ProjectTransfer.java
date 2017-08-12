@@ -1,13 +1,17 @@
 package com.budgetview.model;
 
+import com.budgetview.model.util.TypeLoader;
 import com.budgetview.shared.model.AccountType;
 import com.budgetview.shared.utils.GlobSerializer;
 import org.globsframework.metamodel.GlobType;
-import org.globsframework.metamodel.annotations.*;
 import org.globsframework.metamodel.annotations.Key;
-import org.globsframework.metamodel.fields.*;
-import org.globsframework.metamodel.utils.GlobTypeLoader;
-import org.globsframework.model.*;
+import org.globsframework.metamodel.annotations.Required;
+import org.globsframework.metamodel.annotations.Target;
+import org.globsframework.metamodel.fields.LinkField;
+import org.globsframework.model.FieldSetter;
+import org.globsframework.model.FieldValues;
+import org.globsframework.model.Glob;
+import org.globsframework.model.GlobRepository;
 import org.globsframework.utils.serialization.SerializedByteArrayOutput;
 import org.globsframework.utils.serialization.SerializedInput;
 import org.globsframework.utils.serialization.SerializedInputOutputFactory;
@@ -29,7 +33,7 @@ public class ProjectTransfer {
   public static LinkField TO_ACCOUNT;
 
   static {
-    GlobTypeLoader.init(ProjectTransfer.class, "projectTransfer");
+    TypeLoader.init(ProjectTransfer.class, "projectTransfer");
   }
 
   public static Glob getTransferFromItem(FieldValues itemValues, GlobRepository repository) {

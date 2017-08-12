@@ -1,19 +1,19 @@
 package com.budgetview.model;
 
+import com.budgetview.model.util.TypeLoader;
 import com.budgetview.utils.Lang;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.annotations.Key;
 import org.globsframework.metamodel.annotations.NamingField;
 import org.globsframework.metamodel.fields.IntegerField;
 import org.globsframework.metamodel.fields.StringField;
-import org.globsframework.metamodel.utils.GlobTypeLoader;
-import static org.globsframework.model.FieldValue.value;
-
 import org.globsframework.model.Glob;
 import org.globsframework.model.impl.ReadOnlyGlob;
 import org.globsframework.model.utils.GlobConstantContainer;
 import org.globsframework.utils.Utils;
 import org.globsframework.utils.exceptions.ItemNotFound;
+
+import static org.globsframework.model.FieldValue.value;
 
 public enum AccountUpdateMode implements GlobConstantContainer {
   AUTOMATIC("AUTOMATIC", 1),
@@ -36,7 +36,7 @@ public enum AccountUpdateMode implements GlobConstantContainer {
   }
 
   static {
-    GlobTypeLoader.init(AccountUpdateMode.class, "accountUpdateMode");
+    TypeLoader.init(AccountUpdateMode.class, "accountUpdateMode");
   }
 
   public ReadOnlyGlob getGlob() {

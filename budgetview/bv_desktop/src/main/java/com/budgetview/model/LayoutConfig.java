@@ -1,13 +1,13 @@
 package com.budgetview.model;
 
 import com.budgetview.desktop.utils.FrameSize;
+import com.budgetview.model.util.TypeLoader;
 import com.budgetview.shared.utils.GlobSerializer;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.annotations.DefaultDouble;
 import org.globsframework.metamodel.annotations.Key;
 import org.globsframework.metamodel.fields.DoubleField;
 import org.globsframework.metamodel.fields.IntegerField;
-import org.globsframework.metamodel.utils.GlobTypeLoader;
 import org.globsframework.model.*;
 import org.globsframework.utils.directory.Directory;
 import org.globsframework.utils.serialization.SerializedByteArrayOutput;
@@ -18,7 +18,8 @@ import org.globsframework.utils.serialization.SerializedOutput;
 import javax.swing.*;
 
 import static org.globsframework.model.FieldValue.value;
-import static org.globsframework.model.utils.GlobMatchers.*;
+import static org.globsframework.model.utils.GlobMatchers.and;
+import static org.globsframework.model.utils.GlobMatchers.fieldEquals;
 
 public class LayoutConfig {
 
@@ -64,7 +65,7 @@ public class LayoutConfig {
   public static DoubleField ANALYSIS_TABLE;
 
   static {
-    GlobTypeLoader.init(LayoutConfig.class, "layoutConfig");
+    TypeLoader.init(LayoutConfig.class, "layoutConfig");
   }
 
   public static void init(GlobRepository repository, Directory directory) {

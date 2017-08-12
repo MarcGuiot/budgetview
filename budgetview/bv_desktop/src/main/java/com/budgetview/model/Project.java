@@ -1,7 +1,7 @@
 package com.budgetview.model;
 
 import com.budgetview.desktop.model.ProjectStat;
-import com.budgetview.shared.utils.AmountFormat;
+import com.budgetview.model.util.TypeLoader;
 import com.budgetview.shared.utils.GlobSerializer;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.annotations.*;
@@ -10,7 +10,6 @@ import org.globsframework.metamodel.fields.BooleanField;
 import org.globsframework.metamodel.fields.IntegerField;
 import org.globsframework.metamodel.fields.LinkField;
 import org.globsframework.metamodel.fields.StringField;
-import org.globsframework.metamodel.utils.GlobTypeLoader;
 import org.globsframework.model.*;
 import org.globsframework.model.format.GlobDump;
 import org.globsframework.model.utils.GlobFieldsComparator;
@@ -55,7 +54,7 @@ public class Project {
   public static LinkField SERIES;
 
   static {
-    GlobTypeLoader.init(Project.class, "project");
+    TypeLoader.init(Project.class, "project");
   }
 
   public static Glob findProjectForGroup(Glob seriesGroup, GlobRepository repository) {

@@ -1,6 +1,7 @@
 package com.budgetview.desktop.model;
 
 import com.budgetview.model.Project;
+import com.budgetview.model.util.TypeLoader;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.annotations.DefaultDouble;
 import org.globsframework.metamodel.annotations.DoublePrecision;
@@ -30,6 +31,6 @@ public class ProjectStat {
   public static IntegerField LAST_MONTH;
 
   static {
-    GlobTypeLoader.init(ProjectStat.class);
+    TypeLoader.init(ProjectStat.class, "projectStat");
   }
 }

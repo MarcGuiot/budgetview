@@ -1,5 +1,6 @@
 package com.budgetview.desktop.model;
 
+import com.budgetview.model.util.TypeLoader;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.annotations.Key;
 import org.globsframework.metamodel.annotations.Target;
@@ -39,7 +40,7 @@ public class DashboardStat {
   public static BooleanField SHOW_ALL_ACCOUNTS;
 
   static {
-    GlobTypeLoader.init(DashboardStat.class);
+    TypeLoader.init(DashboardStat.class, "dashboardStat");
     KEY = org.globsframework.model.Key.create(TYPE, SINGLETON_ID);
   }
 

@@ -1,6 +1,7 @@
 package com.budgetview.model;
 
 import com.budgetview.desktop.model.SeriesStat;
+import com.budgetview.model.util.TypeLoader;
 import com.budgetview.shared.model.BudgetArea;
 import com.budgetview.shared.utils.GlobSerializer;
 import com.budgetview.utils.Lang;
@@ -8,7 +9,6 @@ import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.annotations.*;
 import org.globsframework.metamodel.annotations.Key;
 import org.globsframework.metamodel.fields.*;
-import org.globsframework.metamodel.utils.GlobTypeLoader;
 import org.globsframework.model.*;
 import org.globsframework.model.format.GlobDump;
 import org.globsframework.model.utils.GlobMatcher;
@@ -167,7 +167,7 @@ public class Series {
   public static final GlobMatcher USER_SERIES_MATCHER;
 
   static {
-    GlobTypeLoader.init(Series.class, "series");
+    TypeLoader.init(Series.class, "series");
     UNCATEGORIZED_SERIES = org.globsframework.model.Key.create(TYPE, UNCATEGORIZED_SERIES_ID);
     USER_SERIES_MATCHER = org.globsframework.model.utils.GlobMatchers.fieldIn(BUDGET_AREA,
                                                                               BudgetArea.INCOME.getId(),

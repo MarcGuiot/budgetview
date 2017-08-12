@@ -1,5 +1,6 @@
 package com.budgetview.budgea.model;
 
+import com.budgetview.model.util.TypeLoader;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.annotations.*;
 import org.globsframework.metamodel.fields.IntegerField;
@@ -25,6 +26,6 @@ public class BudgeaConnectionValue {
   public static IntegerField SEQUENCE_INDEX;
 
   static {
-    GlobTypeLoader.init(BudgeaConnectionValue.class, "budgeaConnectionValue");
+    TypeLoader.init(BudgeaConnectionValue.class, "budgeaConnectionValue");
   }
 }

@@ -1,5 +1,6 @@
 package com.budgetview.model;
 
+import com.budgetview.model.util.TypeLoader;
 import com.budgetview.shared.utils.GlobSerializer;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.annotations.DefaultBoolean;
@@ -7,7 +8,6 @@ import org.globsframework.metamodel.annotations.Key;
 import org.globsframework.metamodel.annotations.Target;
 import org.globsframework.metamodel.fields.BooleanField;
 import org.globsframework.metamodel.fields.LinkField;
-import org.globsframework.metamodel.utils.GlobTypeLoader;
 import org.globsframework.model.FieldSetter;
 import org.globsframework.model.FieldValues;
 import org.globsframework.model.GlobRepository;
@@ -27,7 +27,7 @@ public class ProjectAccountGraph {
   public static BooleanField SHOW;
 
   static {
-    GlobTypeLoader.init(ProjectAccountGraph.class, "projectAccountGraph");
+    TypeLoader.init(ProjectAccountGraph.class, "projectAccountGraph");
   }
 
   public static class Serializer implements GlobSerializer {

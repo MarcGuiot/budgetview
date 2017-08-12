@@ -1,5 +1,6 @@
 package com.budgetview.budgea.model;
 
+import com.budgetview.model.util.TypeLoader;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.annotations.*;
 import org.globsframework.metamodel.fields.IntegerField;
@@ -38,7 +39,7 @@ public class BudgeaBankField {
   public static IntegerField SEQUENCE_INDEX;
 
   static {
-    GlobTypeLoader.init(BudgeaBankField.class, "budgeaBankField");
+    TypeLoader.init(BudgeaBankField.class, "budgeaBankField");
   }
 
   public static BudgeaBankFieldType getFieldType(Glob field) {

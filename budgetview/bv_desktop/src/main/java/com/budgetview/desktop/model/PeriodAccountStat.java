@@ -1,6 +1,7 @@
 package com.budgetview.desktop.model;
 
 import com.budgetview.model.Account;
+import com.budgetview.model.util.TypeLoader;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.annotations.DefaultBoolean;
 import org.globsframework.metamodel.annotations.DefaultInteger;
@@ -27,6 +28,6 @@ public class PeriodAccountStat {
   public static IntegerField SEQUENCE;
 
   static {
-    GlobTypeLoader.init(PeriodAccountStat.class);
+    TypeLoader.init(PeriodAccountStat.class, "periodAccountStat");
   }
 }

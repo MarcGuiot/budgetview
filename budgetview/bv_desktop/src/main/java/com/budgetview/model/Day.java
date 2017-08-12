@@ -1,12 +1,12 @@
 package com.budgetview.model;
 
 import com.budgetview.desktop.description.Formatting;
+import com.budgetview.model.util.TypeLoader;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.annotations.Key;
 import org.globsframework.metamodel.annotations.Target;
 import org.globsframework.metamodel.fields.IntegerField;
 import org.globsframework.metamodel.fields.LinkField;
-import org.globsframework.metamodel.utils.GlobTypeLoader;
 
 public class Day {
   public static GlobType TYPE;
@@ -19,7 +19,7 @@ public class Day {
   public static IntegerField DAY;
 
   static {
-    GlobTypeLoader.init(Day.class, "day");
+    TypeLoader.init(Day.class, "day");
   }
 
   public static String getFullLabel(org.globsframework.model.Key dayKey) {

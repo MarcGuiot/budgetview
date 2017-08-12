@@ -1,11 +1,11 @@
 package com.budgetview.model;
 
+import com.budgetview.model.util.TypeLoader;
 import com.budgetview.shared.utils.GlobSerializer;
 import com.budgetview.utils.RandomStrings;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.annotations.*;
 import org.globsframework.metamodel.fields.*;
-import org.globsframework.metamodel.utils.GlobTypeLoader;
 import org.globsframework.model.FieldSetter;
 import org.globsframework.model.FieldValues;
 import org.globsframework.model.Glob;
@@ -120,7 +120,7 @@ public class UserPreferences {
   public static DoubleField RAINY_WEATHER_THRESHOLD;
 
   static {
-    GlobTypeLoader.init(UserPreferences.class, "userPreferences");
+    TypeLoader.init(UserPreferences.class, "userPreferences");
     KEY = org.globsframework.model.Key.create(TYPE, SINGLETON_ID);
   }
 

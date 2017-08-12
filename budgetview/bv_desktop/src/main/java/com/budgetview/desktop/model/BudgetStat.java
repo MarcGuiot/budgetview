@@ -1,5 +1,6 @@
 package com.budgetview.desktop.model;
 
+import com.budgetview.model.util.TypeLoader;
 import com.budgetview.shared.model.BudgetArea;
 import com.budgetview.model.Month;
 import org.globsframework.metamodel.GlobType;
@@ -211,7 +212,7 @@ public class BudgetStat {
   public static DoubleField[] EXPENSE_REMAINING_FIELDS;
 
   static {
-    GlobTypeLoader.init(BudgetStat.class);
+    TypeLoader.init(BudgetStat.class, "budgetStat");
     EXPENSE_FIELDS = new DoubleField[]{VARIABLE, RECURRING, EXTRAS};
     EXPENSE_REMAINING_FIELDS = new DoubleField[]{VARIABLE_NEGATIVE_REMAINING, VARIABLE_POSITIVE_REMAINING,
                                                  RECURRING_NEGATIVE_REMAINING, RECURRING_POSITIVE_REMAINING,

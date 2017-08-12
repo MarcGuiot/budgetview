@@ -1,5 +1,6 @@
 package com.budgetview.model;
 
+import com.budgetview.model.util.TypeLoader;
 import com.budgetview.shared.utils.GlobSerializer;
 import org.globsframework.metamodel.Field;
 import org.globsframework.metamodel.GlobType;
@@ -10,7 +11,6 @@ import org.globsframework.metamodel.annotations.Target;
 import org.globsframework.metamodel.fields.BooleanField;
 import org.globsframework.metamodel.fields.IntegerField;
 import org.globsframework.metamodel.fields.LinkField;
-import org.globsframework.metamodel.utils.GlobTypeLoader;
 import org.globsframework.model.FieldSetter;
 import org.globsframework.model.FieldValues;
 import org.globsframework.model.Glob;
@@ -64,7 +64,7 @@ public class SignpostStatus {
   public static IntegerField PERIODICITY_SERIES;
 
   static {
-    GlobTypeLoader.init(SignpostStatus.class, "signpostStatus");
+    TypeLoader.init(SignpostStatus.class, "signpostStatus");
     KEY = org.globsframework.model.Key.create(TYPE, SINGLETON_ID);
   }
 

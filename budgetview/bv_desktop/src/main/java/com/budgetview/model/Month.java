@@ -1,11 +1,11 @@
 package com.budgetview.model;
 
+import com.budgetview.model.util.TypeLoader;
 import com.budgetview.shared.utils.GlobSerializer;
 import com.budgetview.utils.Lang;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.annotations.Key;
 import org.globsframework.metamodel.fields.IntegerField;
-import org.globsframework.metamodel.utils.GlobTypeLoader;
 import org.globsframework.model.FieldSetter;
 import org.globsframework.model.FieldValues;
 import org.globsframework.model.GlobRepository;
@@ -27,7 +27,7 @@ public class Month {
   public static IntegerField ID;
 
   static {
-    GlobTypeLoader.init(Month.class, "month");
+    TypeLoader.init(Month.class, "month");
   }
 
   private static NumberFormat MONTH_FORMAT = new DecimalFormat("00");

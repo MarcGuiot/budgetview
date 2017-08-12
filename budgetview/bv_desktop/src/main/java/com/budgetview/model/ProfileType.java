@@ -1,16 +1,17 @@
 package com.budgetview.model;
 
+import com.budgetview.model.util.TypeLoader;
 import com.budgetview.utils.Lang;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.annotations.Key;
 import org.globsframework.metamodel.annotations.NamingField;
 import org.globsframework.metamodel.fields.IntegerField;
 import org.globsframework.metamodel.fields.StringField;
-import org.globsframework.metamodel.utils.GlobTypeLoader;
-import static org.globsframework.model.FieldValue.value;
 import org.globsframework.model.impl.ReadOnlyGlob;
 import org.globsframework.model.utils.GlobConstantContainer;
 import org.globsframework.utils.exceptions.InvalidData;
+
+import static org.globsframework.model.FieldValue.value;
 
 public enum ProfileType implements GlobConstantContainer {
   CUSTOM("CUSTOM", 0, 1, 8),
@@ -47,7 +48,7 @@ public enum ProfileType implements GlobConstantContainer {
   }
 
   static {
-    GlobTypeLoader.init(ProfileType.class, "profileType");
+    TypeLoader.init(ProfileType.class, "profileType");
   }
 
   public ReadOnlyGlob getGlob() {

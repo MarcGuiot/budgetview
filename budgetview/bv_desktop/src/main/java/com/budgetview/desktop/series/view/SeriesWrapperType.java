@@ -1,5 +1,6 @@
 package com.budgetview.desktop.series.view;
 
+import com.budgetview.model.util.TypeLoader;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.annotations.Key;
 import org.globsframework.metamodel.fields.IntegerField;
@@ -30,7 +31,7 @@ public enum SeriesWrapperType implements GlobConstantContainer {
   }
 
   static {
-    GlobTypeLoader.init(SeriesWrapperType.class, "SeriesWrapperType");
+    TypeLoader.init(SeriesWrapperType.class, "SeriesWrapperType");
   }
 
   public ReadOnlyGlob getGlob() {

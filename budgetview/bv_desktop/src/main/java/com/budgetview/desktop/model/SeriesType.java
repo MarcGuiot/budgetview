@@ -2,6 +2,7 @@ package com.budgetview.desktop.model;
 
 import com.budgetview.model.Series;
 import com.budgetview.model.SeriesGroup;
+import com.budgetview.model.util.TypeLoader;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.annotations.Key;
 import org.globsframework.metamodel.fields.IntegerField;
@@ -27,7 +28,7 @@ public enum   SeriesType implements GlobConstantContainer {
   private final GlobType targetType;
 
   static {
-    GlobTypeLoader.init(SeriesType.class, "seriesType");
+    TypeLoader.init(SeriesType.class, "seriesType");
   }
 
   SeriesType(int id, GlobType targetType) {

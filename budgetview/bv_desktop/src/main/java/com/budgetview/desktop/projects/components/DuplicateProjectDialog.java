@@ -10,6 +10,7 @@ import com.budgetview.desktop.model.ProjectStat;
 import com.budgetview.desktop.projects.utils.ProjectPeriodSliderAdapter;
 import com.budgetview.model.Month;
 import com.budgetview.model.Project;
+import com.budgetview.model.util.TypeLoader;
 import com.budgetview.utils.Lang;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.editors.GlobTextEditor;
@@ -155,7 +156,7 @@ public class DuplicateProjectDialog {
     public static IntegerField FIRST_MONTH;
 
     static {
-      GlobTypeLoader.init(ProjectDuplicate.class, "duplicateInfo");
+      TypeLoader.init(ProjectDuplicate.class, "duplicateInfo");
     }
   }
 }

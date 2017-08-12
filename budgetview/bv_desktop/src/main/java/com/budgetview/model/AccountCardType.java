@@ -1,19 +1,19 @@
 package com.budgetview.model;
 
+import com.budgetview.model.util.TypeLoader;
+import com.budgetview.utils.Lang;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.annotations.Key;
 import org.globsframework.metamodel.annotations.NamingField;
 import org.globsframework.metamodel.fields.IntegerField;
 import org.globsframework.metamodel.fields.StringField;
-import org.globsframework.metamodel.utils.GlobTypeLoader;
-import static org.globsframework.model.FieldValue.value;
-
 import org.globsframework.model.Glob;
 import org.globsframework.model.impl.ReadOnlyGlob;
 import org.globsframework.model.utils.GlobConstantContainer;
 import org.globsframework.utils.Strings;
 import org.globsframework.utils.exceptions.ItemNotFound;
-import com.budgetview.utils.Lang;
+
+import static org.globsframework.model.FieldValue.value;
 
 public enum AccountCardType implements GlobConstantContainer {
   NOT_A_CARD("NOT_A_CARD", 0),
@@ -38,7 +38,7 @@ public enum AccountCardType implements GlobConstantContainer {
   }
 
   static {
-    GlobTypeLoader.init(AccountCardType.class, "accountCardType");
+    TypeLoader.init(AccountCardType.class, "accountCardType");
   }
 
   public ReadOnlyGlob getGlob() {

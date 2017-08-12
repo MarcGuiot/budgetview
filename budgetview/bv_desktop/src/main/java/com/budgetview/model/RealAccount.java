@@ -1,5 +1,6 @@
 package com.budgetview.model;
 
+import com.budgetview.model.util.TypeLoader;
 import com.budgetview.shared.model.AccountType;
 import com.budgetview.shared.model.Provider;
 import com.budgetview.shared.utils.Amounts;
@@ -10,7 +11,6 @@ import org.globsframework.metamodel.annotations.DefaultInteger;
 import org.globsframework.metamodel.annotations.Key;
 import org.globsframework.metamodel.annotations.Target;
 import org.globsframework.metamodel.fields.*;
-import org.globsframework.metamodel.utils.GlobTypeLoader;
 import org.globsframework.model.*;
 import org.globsframework.utils.Strings;
 import org.globsframework.utils.Utils;
@@ -72,7 +72,7 @@ public class RealAccount {
   public static BooleanField ENABLED;
 
   static {
-    GlobTypeLoader.init(RealAccount.class, "realAccount");
+    TypeLoader.init(RealAccount.class, "realAccount");
   }
 
   public static Glob findFromProvider(Integer providerId, Integer providerAccountId, GlobRepository repository) {

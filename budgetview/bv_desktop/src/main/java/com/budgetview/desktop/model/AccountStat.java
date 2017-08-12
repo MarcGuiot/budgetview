@@ -2,6 +2,7 @@ package com.budgetview.desktop.model;
 
 import com.budgetview.model.Account;
 import com.budgetview.model.Month;
+import com.budgetview.model.util.TypeLoader;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.annotations.DefaultInteger;
 import org.globsframework.metamodel.annotations.Key;
@@ -39,6 +40,6 @@ public class AccountStat {
   public static DoubleField SUMMARY_POSITION_AT_MIN;
 
   static {
-    GlobTypeLoader.init(AccountStat.class);
+    TypeLoader.init(AccountStat.class, "accountStat");
   }
 }

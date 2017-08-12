@@ -2,6 +2,7 @@ package com.budgetview.desktop.model;
 
 import com.budgetview.model.Month;
 import com.budgetview.model.SubSeries;
+import com.budgetview.model.util.TypeLoader;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.annotations.DefaultDouble;
 import org.globsframework.metamodel.annotations.Key;
@@ -23,7 +24,7 @@ public class SubSeriesStat {
   public static DoubleField ACTUAL_AMOUNT;
 
   static {
-    GlobTypeLoader.init(SubSeriesStat.class);
+    TypeLoader.init(SubSeriesStat.class, "subSeriesStat");
   }
 
   public static org.globsframework.model.Key createKey(Integer subSeriesId, Integer month) {

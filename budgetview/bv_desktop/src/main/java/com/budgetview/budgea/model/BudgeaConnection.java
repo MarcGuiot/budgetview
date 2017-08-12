@@ -1,5 +1,6 @@
 package com.budgetview.budgea.model;
 
+import com.budgetview.model.util.TypeLoader;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.annotations.*;
 import org.globsframework.metamodel.fields.IntegerField;
@@ -17,6 +18,6 @@ public class BudgeaConnection {
   public static LinkField BANK;
 
   static {
-    GlobTypeLoader.init(BudgeaConnection.class, "budgeaConnection");
+    TypeLoader.init(BudgeaConnection.class, "budgeaConnection");
   }
 }

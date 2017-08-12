@@ -1,17 +1,17 @@
 package com.budgetview.model;
 
 import com.budgetview.desktop.accounts.utils.AccountMatchers;
+import com.budgetview.desktop.accounts.utils.MonthDay;
+import com.budgetview.model.util.TypeLoader;
 import com.budgetview.shared.model.AccountType;
 import com.budgetview.shared.model.BudgetArea;
 import com.budgetview.shared.utils.GlobSerializer;
-import com.budgetview.utils.PicsouUtils;
-import com.budgetview.desktop.accounts.utils.MonthDay;
 import com.budgetview.utils.Lang;
+import com.budgetview.utils.PicsouUtils;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.annotations.*;
 import org.globsframework.metamodel.annotations.Key;
 import org.globsframework.metamodel.fields.*;
-import org.globsframework.metamodel.utils.GlobTypeLoader;
 import org.globsframework.model.*;
 import org.globsframework.model.format.GlobDump;
 import org.globsframework.model.utils.GlobMatcher;
@@ -136,7 +136,7 @@ public class Account {
   public static IntegerField SEQUENCE;
 
   static {
-    GlobTypeLoader.init(Account.class, "account");
+    TypeLoader.init(Account.class, "account");
     MAIN_SUMMARY_KEY = org.globsframework.model.Key.create(TYPE, MAIN_SUMMARY_ACCOUNT_ID);
     SAVINGS_SUMMARY_KEY = org.globsframework.model.Key.create(TYPE, SAVINGS_SUMMARY_ACCOUNT_ID);
     ALL_SUMMARY_KEY = org.globsframework.model.Key.create(TYPE, ALL_SUMMARY_ACCOUNT_ID);

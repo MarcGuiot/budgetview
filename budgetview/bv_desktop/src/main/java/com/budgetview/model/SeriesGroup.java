@@ -1,5 +1,6 @@
 package com.budgetview.model;
 
+import com.budgetview.model.util.TypeLoader;
 import com.budgetview.shared.model.BudgetArea;
 import com.budgetview.shared.utils.GlobSerializer;
 import org.globsframework.metamodel.GlobType;
@@ -11,7 +12,6 @@ import org.globsframework.metamodel.fields.BooleanField;
 import org.globsframework.metamodel.fields.IntegerField;
 import org.globsframework.metamodel.fields.LinkField;
 import org.globsframework.metamodel.fields.StringField;
-import org.globsframework.metamodel.utils.GlobTypeLoader;
 import org.globsframework.model.FieldSetter;
 import org.globsframework.model.FieldValues;
 import org.globsframework.model.Glob;
@@ -41,7 +41,7 @@ public class SeriesGroup {
   public static BooleanField EXPANDED;
 
   static {
-    GlobTypeLoader.init(SeriesGroup.class, "seriesGroup");
+    TypeLoader.init(SeriesGroup.class, "seriesGroup");
   }
 
   public static BudgetArea getBudgetArea(Glob group) {

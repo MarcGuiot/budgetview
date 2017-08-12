@@ -1,16 +1,18 @@
 package com.budgetview.model.deprecated;
 
+import com.budgetview.desktop.accounts.utils.MonthDay;
 import com.budgetview.model.Account;
 import com.budgetview.model.Month;
+import com.budgetview.model.util.TypeLoader;
 import com.budgetview.shared.utils.GlobSerializer;
-import com.budgetview.desktop.accounts.utils.MonthDay;
 import org.globsframework.metamodel.GlobType;
-import org.globsframework.metamodel.annotations.*;
+import org.globsframework.metamodel.annotations.DefaultInteger;
+import org.globsframework.metamodel.annotations.Key;
+import org.globsframework.metamodel.annotations.Target;
 import org.globsframework.metamodel.fields.IntegerField;
 import org.globsframework.metamodel.fields.LinkField;
-import org.globsframework.metamodel.utils.GlobTypeLoader;
-import org.globsframework.model.FieldValues;
 import org.globsframework.model.FieldSetter;
+import org.globsframework.model.FieldValues;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.utils.serialization.SerializedByteArrayOutput;
 import org.globsframework.utils.serialization.SerializedInput;
@@ -35,8 +37,9 @@ public class DeferredCardPeriod {
 
 
   static {
-    GlobTypeLoader.init(DeferredCardPeriod.class, "DeferredCardPeriod");
+    TypeLoader.init(DeferredCardPeriod.class, "DeferredCardPeriod");
   }
+
   public static class Serializer implements GlobSerializer {
 
     public int getWriteVersion() {

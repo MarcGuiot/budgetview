@@ -34,7 +34,7 @@ fi
 cd $BV_ROOT/
 cp $GENERATED_JAR $RELEASE_DIR
 cp $GENERATED_JAR $RELEASE_DIR/budgetview_bundle.jar
-mv $BV_ROOT/budgetview/bv_desktop/ChangeLogOutput*.txt.bz2 $RELEASE_DIR
+cp $BV_ROOT/budgetview/bv_desktop/ChangeLogOutput*.txt $RELEASE_DIR/ChangeLogOutput$1.txt
 
 ### Prepare Mac & Linux installer
 cp $RELEASE_DIR/budgetview_bundle.jar $BV_INSTALL_DIR

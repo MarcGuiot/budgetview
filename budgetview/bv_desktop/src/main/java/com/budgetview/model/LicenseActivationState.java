@@ -1,9 +1,9 @@
 package com.budgetview.model;
 
+import com.budgetview.model.util.TypeLoader;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.annotations.Key;
 import org.globsframework.metamodel.fields.IntegerField;
-import org.globsframework.metamodel.utils.GlobTypeLoader;
 import org.globsframework.model.impl.ReadOnlyGlob;
 import org.globsframework.model.utils.GlobConstantContainer;
 import org.globsframework.utils.exceptions.InvalidParameter;
@@ -37,7 +37,7 @@ public enum LicenseActivationState implements GlobConstantContainer {
   }
 
   static {
-    GlobTypeLoader.init(LicenseActivationState.class, "userActivationState");
+    TypeLoader.init(LicenseActivationState.class, "userActivationState");
   }
 
   public ReadOnlyGlob getGlob() {

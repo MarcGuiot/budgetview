@@ -1,5 +1,6 @@
 package com.budgetview.budgea.model;
 
+import com.budgetview.model.util.TypeLoader;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.annotations.Key;
 import org.globsframework.metamodel.annotations.NamingField;
@@ -64,6 +65,6 @@ public enum BudgeaBankFieldType implements GlobConstantContainer {
   }
 
   static {
-    GlobTypeLoader.init(BudgeaBankFieldType.class, "budgeaBankFieldType");
+    TypeLoader.init(BudgeaBankFieldType.class, "budgeaBankFieldType");
   }
 }

@@ -1,5 +1,6 @@
 package com.budgetview.session.model;
 
+import com.budgetview.model.util.TypeLoader;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.annotations.Key;
 import org.globsframework.metamodel.annotations.MaxSize;
@@ -23,7 +24,7 @@ public class HiddenUser {
   private static final byte V2 = 2;
 
   static {
-    GlobTypeLoader.init(HiddenUser.class);
+    TypeLoader.init(HiddenUser.class, "hiddenUser");
   }
 
   public static Glob read(SerializedInput input) {

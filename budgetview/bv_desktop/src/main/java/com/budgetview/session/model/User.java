@@ -1,5 +1,6 @@
 package com.budgetview.session.model;
 
+import com.budgetview.model.util.TypeLoader;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.annotations.Key;
 import org.globsframework.metamodel.fields.BlobField;
@@ -25,7 +26,7 @@ public class User {
   public final static byte LASTEST_VERSION = 4;
 
   static {
-    GlobTypeLoader.init(User.class);
+    TypeLoader.init(User.class, "user");
   }
 
   public static Glob read(SerializedInput input) {

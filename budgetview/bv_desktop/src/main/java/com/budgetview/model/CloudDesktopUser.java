@@ -1,5 +1,6 @@
 package com.budgetview.model;
 
+import com.budgetview.model.util.TypeLoader;
 import com.budgetview.shared.utils.GlobSerializer;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.annotations.Key;
@@ -7,7 +8,6 @@ import org.globsframework.metamodel.fields.BooleanField;
 import org.globsframework.metamodel.fields.DateField;
 import org.globsframework.metamodel.fields.IntegerField;
 import org.globsframework.metamodel.fields.StringField;
-import org.globsframework.metamodel.utils.GlobTypeLoader;
 import org.globsframework.model.FieldSetter;
 import org.globsframework.model.FieldValues;
 import org.globsframework.model.Glob;
@@ -50,7 +50,7 @@ public class CloudDesktopUser {
   }
 
   static {
-    GlobTypeLoader.init(CloudDesktopUser.class);
+    TypeLoader.init(CloudDesktopUser.class, "cloudDesktopUser");
     KEY = org.globsframework.model.Key.create(TYPE, SINGLETON_ID);
   }
 

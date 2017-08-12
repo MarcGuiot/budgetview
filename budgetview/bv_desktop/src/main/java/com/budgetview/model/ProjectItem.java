@@ -2,13 +2,13 @@ package com.budgetview.model;
 
 import com.budgetview.desktop.model.ProjectItemStat;
 import com.budgetview.model.util.ClosedMonthRange;
+import com.budgetview.model.util.TypeLoader;
 import com.budgetview.shared.utils.GlobSerializer;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.annotations.*;
 import org.globsframework.metamodel.annotations.Key;
 import org.globsframework.metamodel.fields.*;
 import org.globsframework.metamodel.index.NotUniqueIndex;
-import org.globsframework.metamodel.utils.GlobTypeLoader;
 import org.globsframework.model.*;
 import org.globsframework.utils.Utils;
 import org.globsframework.utils.exceptions.UnexpectedApplicationState;
@@ -19,7 +19,8 @@ import org.globsframework.utils.serialization.SerializedOutput;
 
 import java.util.SortedSet;
 
-import static org.globsframework.model.utils.GlobMatchers.*;
+import static org.globsframework.model.utils.GlobMatchers.fieldEquals;
+import static org.globsframework.model.utils.GlobMatchers.linkedTo;
 
 public class ProjectItem {
   public static GlobType TYPE;
@@ -82,7 +83,7 @@ public class ProjectItem {
   public static NotUniqueIndex SERIES_INDEX;
 
   static {
-    GlobTypeLoader loader = GlobTypeLoader.init(ProjectItem.class, "projectItem");
+    TypeLoader loader = TypeLoader.init(ProjectItem.class, "projectItem");
     loader.defineNonUniqueIndex(SERIES_INDEX, SERIES);
   }
 

@@ -1,12 +1,12 @@
 package com.budgetview.model.deprecated;
 
+import com.budgetview.model.util.TypeLoader;
 import com.budgetview.shared.utils.GlobSerializer;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.annotations.DefaultDouble;
 import org.globsframework.metamodel.annotations.Key;
 import org.globsframework.metamodel.fields.DoubleField;
 import org.globsframework.metamodel.fields.IntegerField;
-import org.globsframework.metamodel.utils.GlobTypeLoader;
 import org.globsframework.model.FieldSetter;
 import org.globsframework.model.FieldValues;
 import org.globsframework.model.Glob;
@@ -33,7 +33,7 @@ public class AccountPositionThreshold {
   public static DoubleField THRESHOLD_FOR_WARN;
 
   static {
-    GlobTypeLoader.init(AccountPositionThreshold.class, "accountBalanceLimit");
+    TypeLoader.init(AccountPositionThreshold.class, "accountBalanceLimit");
     KEY = org.globsframework.model.Key.create(TYPE, SINGLETON_ID);
   }
 

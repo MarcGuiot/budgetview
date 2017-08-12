@@ -1,11 +1,11 @@
 package com.budgetview.model;
 
+import com.budgetview.model.util.TypeLoader;
 import com.budgetview.shared.utils.GlobSerializer;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.annotations.Key;
 import org.globsframework.metamodel.fields.IntegerField;
 import org.globsframework.metamodel.fields.StringField;
-import org.globsframework.metamodel.utils.GlobTypeLoader;
 import org.globsframework.model.FieldSetter;
 import org.globsframework.model.FieldValues;
 import org.globsframework.model.GlobRepository;
@@ -25,7 +25,7 @@ public class CsvMapping {
   public static StringField CSV_TYPE_NAME;
 
   static {
-    GlobTypeLoader.init(CsvMapping.class, "csvMapping");
+    TypeLoader.init(CsvMapping.class, "csvMapping");
   }
 
   public static class Serializer implements GlobSerializer {

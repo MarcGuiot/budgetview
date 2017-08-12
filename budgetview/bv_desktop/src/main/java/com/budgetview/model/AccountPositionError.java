@@ -1,12 +1,12 @@
 package com.budgetview.model;
 
+import com.budgetview.model.util.TypeLoader;
 import com.budgetview.shared.utils.GlobSerializer;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.annotations.DefaultBoolean;
 import org.globsframework.metamodel.annotations.Key;
 import org.globsframework.metamodel.annotations.Target;
 import org.globsframework.metamodel.fields.*;
-import org.globsframework.metamodel.utils.GlobTypeLoader;
 import org.globsframework.model.FieldSetter;
 import org.globsframework.model.FieldValues;
 import org.globsframework.model.GlobRepository;
@@ -34,7 +34,7 @@ public class AccountPositionError {
   public static IntegerField LAST_PREVIOUS_IMPORT_DATE;
 
   static {
-    GlobTypeLoader.init(AccountPositionError.class, "accountPositionError");
+    TypeLoader.init(AccountPositionError.class, "accountPositionError");
   }
 
   public static class Serializer implements GlobSerializer {

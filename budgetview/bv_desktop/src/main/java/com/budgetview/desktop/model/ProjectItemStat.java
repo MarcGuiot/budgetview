@@ -1,6 +1,7 @@
 package com.budgetview.desktop.model;
 
 import com.budgetview.model.ProjectItem;
+import com.budgetview.model.util.TypeLoader;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.annotations.*;
 import org.globsframework.metamodel.fields.BooleanField;
@@ -26,6 +27,6 @@ public class ProjectItemStat {
   public static BooleanField CATEGORIZATION_WARNING;
 
   static {
-    GlobTypeLoader.init(ProjectItemStat.class);
+    TypeLoader.init(ProjectItemStat.class, "projectItemStat");
   }
 }

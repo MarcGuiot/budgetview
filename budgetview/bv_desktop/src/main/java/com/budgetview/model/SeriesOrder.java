@@ -1,9 +1,9 @@
 package com.budgetview.model;
 
+import com.budgetview.model.util.TypeLoader;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.annotations.Key;
 import org.globsframework.metamodel.fields.IntegerField;
-import org.globsframework.metamodel.utils.GlobTypeLoader;
 import org.globsframework.model.impl.ReadOnlyGlob;
 import org.globsframework.model.utils.GlobConstantContainer;
 import org.globsframework.utils.exceptions.ItemNotFound;
@@ -31,7 +31,7 @@ public enum SeriesOrder implements GlobConstantContainer {
   }
 
   static {
-    GlobTypeLoader.init(SeriesOrder.class, "seriesOrder");
+    TypeLoader.init(SeriesOrder.class, "seriesOrder");
   }
 
   public ReadOnlyGlob getGlob() {

@@ -1,5 +1,6 @@
 package com.budgetview.model;
 
+import com.budgetview.model.util.TypeLoader;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.annotations.Key;
 import org.globsframework.metamodel.annotations.NoObfuscation;
@@ -8,7 +9,6 @@ import org.globsframework.metamodel.fields.BooleanField;
 import org.globsframework.metamodel.fields.IntegerField;
 import org.globsframework.metamodel.fields.LinkField;
 import org.globsframework.metamodel.fields.StringField;
-import org.globsframework.metamodel.utils.GlobTypeLoader;
 
 public class PreTransactionTypeMatcher {
   public static GlobType TYPE;
@@ -60,6 +60,6 @@ public class PreTransactionTypeMatcher {
 
 
   static {
-    GlobTypeLoader.init(PreTransactionTypeMatcher.class, "transactionMatcher");
+    TypeLoader.init(PreTransactionTypeMatcher.class, "transactionMatcher");
   }
 }

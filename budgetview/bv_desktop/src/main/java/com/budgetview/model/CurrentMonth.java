@@ -1,14 +1,14 @@
 package com.budgetview.model;
 
-import com.budgetview.shared.utils.GlobSerializer;
 import com.budgetview.desktop.time.TimeService;
+import com.budgetview.model.util.TypeLoader;
+import com.budgetview.shared.utils.GlobSerializer;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.annotations.DefaultInteger;
 import org.globsframework.metamodel.annotations.Key;
 import org.globsframework.metamodel.annotations.Target;
 import org.globsframework.metamodel.fields.IntegerField;
 import org.globsframework.metamodel.fields.LinkField;
-import org.globsframework.metamodel.utils.GlobTypeLoader;
 import org.globsframework.model.FieldSetter;
 import org.globsframework.model.FieldValues;
 import org.globsframework.model.Glob;
@@ -44,7 +44,7 @@ public class CurrentMonth {
   public static org.globsframework.model.Key KEY;
 
   static {
-    GlobTypeLoader.init(CurrentMonth.class, "currentMonth");
+    TypeLoader.init(CurrentMonth.class, "currentMonth");
     KEY = org.globsframework.model.Key.create(TYPE, 0);
   }
 

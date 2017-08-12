@@ -1,13 +1,12 @@
 package com.budgetview.model;
 
+import com.budgetview.model.util.TypeLoader;
 import com.budgetview.shared.model.Provider;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.annotations.Key;
 import org.globsframework.metamodel.annotations.Target;
 import org.globsframework.metamodel.fields.*;
-import org.globsframework.metamodel.utils.GlobTypeLoader;
 import org.globsframework.model.Glob;
-import org.globsframework.utils.Utils;
 
 public class ImportedTransaction {
   public static GlobType TYPE;
@@ -63,7 +62,7 @@ public class ImportedTransaction {
   public static BooleanField DELETED;
 
   static {
-    GlobTypeLoader.init(ImportedTransaction.class);
+    TypeLoader.init(ImportedTransaction.class, "importedTransaction");
   }
 
   public static ImportType getImportType(Glob transaction) {

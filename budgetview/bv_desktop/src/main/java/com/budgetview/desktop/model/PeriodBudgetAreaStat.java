@@ -1,5 +1,6 @@
 package com.budgetview.desktop.model;
 
+import com.budgetview.model.util.TypeLoader;
 import com.budgetview.shared.model.BudgetArea;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.annotations.DefaultBoolean;
@@ -42,6 +43,6 @@ public class PeriodBudgetAreaStat {
   public static BooleanField ACTIVE;
 
   static {
-    GlobTypeLoader.init(PeriodBudgetAreaStat.class);
+    TypeLoader.init(PeriodBudgetAreaStat.class, "periodBudgetAreaStat");
   }
 }

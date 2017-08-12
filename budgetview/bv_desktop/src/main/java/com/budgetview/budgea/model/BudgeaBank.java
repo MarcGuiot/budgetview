@@ -1,6 +1,7 @@
 package com.budgetview.budgea.model;
 
 import com.budgetview.model.Bank;
+import com.budgetview.model.util.TypeLoader;
 import com.budgetview.shared.model.Provider;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.annotations.Key;
@@ -25,7 +26,7 @@ public class BudgeaBank {
   public static LinkField BANK;
 
   static {
-    GlobTypeLoader.init(BudgeaBank.class, "budgeaBank");
+    TypeLoader.init(BudgeaBank.class, "budgeaBank");
   }
 
   public static Glob findBudgetViewBank(int budgeaId, GlobRepository repository) {

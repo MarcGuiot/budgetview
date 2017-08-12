@@ -1,11 +1,11 @@
 package com.budgetview.model;
 
+import com.budgetview.model.util.TypeLoader;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.annotations.DefaultBoolean;
 import org.globsframework.metamodel.annotations.Key;
 import org.globsframework.metamodel.annotations.Target;
 import org.globsframework.metamodel.fields.*;
-import org.globsframework.metamodel.utils.GlobTypeLoader;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobRepository;
 
@@ -39,7 +39,7 @@ public class User {
   public static BooleanField AUTO_LOGIN;
 
   static {
-    GlobTypeLoader.init(User.class);
+    TypeLoader.init(User.class, "user");
     KEY = org.globsframework.model.Key.create(TYPE, SINGLETON_ID);
   }
 

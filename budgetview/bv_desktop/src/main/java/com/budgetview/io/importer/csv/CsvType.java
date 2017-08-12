@@ -1,6 +1,7 @@
 package com.budgetview.io.importer.csv;
 
 import com.budgetview.model.ImportedTransaction;
+import com.budgetview.model.util.TypeLoader;
 import com.budgetview.shared.utils.Amounts;
 import com.budgetview.utils.Lang;
 import org.globsframework.metamodel.Field;
@@ -63,7 +64,7 @@ public class CsvType {
   }
 
   static {
-    GlobTypeLoader.init(CsvType.class);
+    TypeLoader.init(CsvType.class, "csvType");
   }
 
   public interface CsvConverter {

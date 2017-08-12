@@ -1,5 +1,6 @@
 package com.budgetview.desktop.components;
 
+import com.budgetview.model.util.TypeLoader;
 import com.budgetview.shared.model.BudgetArea;
 import com.budgetview.desktop.components.charts.Gauge;
 import com.budgetview.desktop.components.charts.GlobGaugeView;
@@ -119,7 +120,7 @@ public class GlobGaugeViewTest extends GuiTestCase {
     public static BooleanField ACTIVE;
 
     static {
-      GlobTypeLoader.init(MyObject.class);
+      TypeLoader.init(MyObject.class, "myObject");
     }
   }
 

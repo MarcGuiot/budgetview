@@ -1,15 +1,15 @@
 package com.budgetview.model;
 
+import com.budgetview.model.util.TypeLoader;
 import com.budgetview.shared.model.Provider;
 import com.budgetview.shared.utils.GlobSerializer;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.annotations.*;
 import org.globsframework.metamodel.annotations.Key;
-import org.globsframework.metamodel.fields.IntegerField;
-import org.globsframework.metamodel.fields.StringField;
-import org.globsframework.metamodel.fields.LinkField;
 import org.globsframework.metamodel.fields.BooleanField;
-import org.globsframework.metamodel.utils.GlobTypeLoader;
+import org.globsframework.metamodel.fields.IntegerField;
+import org.globsframework.metamodel.fields.LinkField;
+import org.globsframework.metamodel.fields.StringField;
 import org.globsframework.model.*;
 import org.globsframework.utils.serialization.SerializedByteArrayOutput;
 import org.globsframework.utils.serialization.SerializedInput;
@@ -78,7 +78,7 @@ public class Bank {
   public static org.globsframework.model.Key GENERIC_BANK_KEY;
 
   static {
-    GlobTypeLoader.init(Bank.class, "bank");
+    TypeLoader.init(Bank.class, "bank");
     GENERIC_BANK_KEY = org.globsframework.model.Key.create(TYPE, GENERIC_BANK_ID);
   }
 

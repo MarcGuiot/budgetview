@@ -1,5 +1,6 @@
 package com.budgetview.budgea.model;
 
+import com.budgetview.model.util.TypeLoader;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.annotations.Key;
 import org.globsframework.metamodel.annotations.NamingField;
@@ -30,6 +31,6 @@ public class BudgeaBankFieldValue {
   public static StringField VALUE;
 
   static {
-    GlobTypeLoader.init(BudgeaBankFieldValue.class, "budgeaBankFieldValue");
+    TypeLoader.init(BudgeaBankFieldValue.class, "budgeaBankFieldValue");
   }
 }

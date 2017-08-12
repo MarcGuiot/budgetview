@@ -2,6 +2,7 @@ package com.budgetview.desktop.model;
 
 import com.budgetview.model.Month;
 import com.budgetview.model.Series;
+import com.budgetview.model.util.TypeLoader;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.annotations.Target;
 import org.globsframework.metamodel.fields.DoubleField;
@@ -36,7 +37,7 @@ public class SeriesShape {
   public static IntegerField FIXED_DATE;
 
   static {
-    GlobTypeLoader.init(SeriesShape.class);
+    TypeLoader.init(SeriesShape.class, "seriesShape");
   }
 
   public static IntegerField getField(int period) {

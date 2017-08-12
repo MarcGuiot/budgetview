@@ -1,9 +1,9 @@
 package com.budgetview.model;
 
+import com.budgetview.model.util.TypeLoader;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.annotations.Key;
 import org.globsframework.metamodel.fields.IntegerField;
-import org.globsframework.metamodel.utils.GlobTypeLoader;
 import org.globsframework.model.Glob;
 import org.globsframework.model.impl.ReadOnlyGlob;
 import org.globsframework.model.utils.GlobConstantContainer;
@@ -39,7 +39,7 @@ public enum ColorTheme implements GlobConstantContainer {
   }
 
   static {
-    GlobTypeLoader.init(ColorTheme.class, "colorTheme");
+    TypeLoader.init(ColorTheme.class, "colorTheme");
   }
 
   public ReadOnlyGlob getGlob() {

@@ -1,5 +1,6 @@
 package com.budgetview.model;
 
+import com.budgetview.model.util.TypeLoader;
 import com.budgetview.shared.utils.GlobSerializer;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.annotations.DefaultBoolean;
@@ -8,7 +9,6 @@ import org.globsframework.metamodel.fields.BooleanField;
 import org.globsframework.metamodel.fields.DateField;
 import org.globsframework.metamodel.fields.IntegerField;
 import org.globsframework.metamodel.fields.StringField;
-import org.globsframework.metamodel.utils.GlobTypeLoader;
 import org.globsframework.model.FieldSetter;
 import org.globsframework.model.FieldValues;
 import org.globsframework.model.GlobRepository;
@@ -31,7 +31,7 @@ public class StandardMessage {
   public static BooleanField CLEARED;
 
   static {
-    GlobTypeLoader.init(StandardMessage.class, "standardMessage");
+    TypeLoader.init(StandardMessage.class, "standardMessage");
   }
 
   public static class Serializer implements GlobSerializer {

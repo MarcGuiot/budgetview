@@ -1,15 +1,15 @@
 package com.budgetview.model;
 
+import com.budgetview.model.util.TypeLoader;
 import com.budgetview.shared.model.BudgetArea;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.annotations.DefaultInteger;
-import org.globsframework.metamodel.utils.GlobTypeLoader;
-import org.globsframework.metamodel.fields.IntegerField;
-import org.globsframework.metamodel.fields.StringField;
-import org.globsframework.metamodel.fields.LinkField;
 import org.globsframework.metamodel.annotations.Key;
-import org.globsframework.metamodel.annotations.Target;
 import org.globsframework.metamodel.annotations.Required;
+import org.globsframework.metamodel.annotations.Target;
+import org.globsframework.metamodel.fields.IntegerField;
+import org.globsframework.metamodel.fields.LinkField;
+import org.globsframework.metamodel.fields.StringField;
 
 public class ImportedSeries {
   public static GlobType TYPE;
@@ -31,7 +31,7 @@ public class ImportedSeries {
   public static LinkField SUB_SERIES;
 
   static {
-    GlobTypeLoader.init(ImportedSeries.class);
+    TypeLoader.init(ImportedSeries.class, "importedSeries");
   }
 
 }

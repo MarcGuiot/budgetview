@@ -1,5 +1,6 @@
 package com.budgetview.model;
 
+import com.budgetview.model.util.TypeLoader;
 import com.budgetview.shared.utils.GlobSerializer;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.annotations.DefaultDouble;
@@ -10,7 +11,6 @@ import org.globsframework.metamodel.fields.DoubleField;
 import org.globsframework.metamodel.fields.IntegerField;
 import org.globsframework.metamodel.fields.LinkField;
 import org.globsframework.metamodel.index.MultiFieldUniqueIndex;
-import org.globsframework.metamodel.utils.GlobTypeLoader;
 import org.globsframework.model.*;
 import org.globsframework.utils.exceptions.InvalidState;
 import org.globsframework.utils.serialization.SerializedByteArrayOutput;
@@ -39,7 +39,7 @@ public class ProjectItemAmount {
   public static MultiFieldUniqueIndex PROJECT_ITEM_INDEX;
 
   static {
-    GlobTypeLoader loader = GlobTypeLoader.init(ProjectItemAmount.class, "projectItemAmount");
+    TypeLoader loader = TypeLoader.init(ProjectItemAmount.class, "projectItemAmount");
     loader.defineMultiFieldUniqueIndex(PROJECT_ITEM_INDEX, PROJECT_ITEM, MONTH);
   }
 

@@ -1,5 +1,6 @@
 package com.budgetview.model;
 
+import com.budgetview.model.util.TypeLoader;
 import com.budgetview.shared.model.Provider;
 import com.budgetview.shared.utils.AmountFormat;
 import com.budgetview.shared.utils.GlobSerializer;
@@ -10,7 +11,6 @@ import org.globsframework.metamodel.annotations.Key;
 import org.globsframework.metamodel.fields.*;
 import org.globsframework.metamodel.index.MultiFieldNotUniqueIndex;
 import org.globsframework.metamodel.index.NotUniqueIndex;
-import org.globsframework.metamodel.utils.GlobTypeLoader;
 import org.globsframework.model.*;
 import org.globsframework.model.format.GlobDump;
 import org.globsframework.model.utils.GlobMatcher;
@@ -149,7 +149,7 @@ public class Transaction {
   public static IntegerField PROVIDER_TRANSACTION_ID;
 
   static {
-    GlobTypeLoader loader = GlobTypeLoader.init(Transaction.class, "transaction");
+    TypeLoader loader = TypeLoader.init(Transaction.class, "transaction");
     loader.defineNonUniqueIndex(LABEL_FOR_CATEGORISATION_INDEX, LABEL_FOR_CATEGORISATION);
     loader.defineMultiFieldNotUniqueIndex(SERIES_INDEX, SERIES, POSITION_MONTH);
     loader.defineNonUniqueIndex(POSITION_MONTH_INDEX, POSITION_MONTH);

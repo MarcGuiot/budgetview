@@ -1,19 +1,19 @@
 package com.budgetview.model;
 
+import com.budgetview.model.util.TypeLoader;
 import com.budgetview.shared.utils.GlobSerializer;
 import org.globsframework.metamodel.GlobType;
-import org.globsframework.metamodel.utils.GlobTypeLoader;
+import org.globsframework.metamodel.annotations.Key;
 import org.globsframework.metamodel.fields.IntegerField;
 import org.globsframework.metamodel.fields.StringField;
-import org.globsframework.metamodel.annotations.Key;
-import org.globsframework.model.GlobRepository;
-import org.globsframework.model.Glob;
-import org.globsframework.model.FieldValues;
 import org.globsframework.model.FieldSetter;
+import org.globsframework.model.FieldValues;
+import org.globsframework.model.Glob;
+import org.globsframework.model.GlobRepository;
 import org.globsframework.utils.serialization.SerializedByteArrayOutput;
-import org.globsframework.utils.serialization.SerializedOutput;
 import org.globsframework.utils.serialization.SerializedInput;
 import org.globsframework.utils.serialization.SerializedInputOutputFactory;
+import org.globsframework.utils.serialization.SerializedOutput;
 
 public class Notes {
   public static final Integer SINGLETON_ID = 0;
@@ -27,7 +27,7 @@ public class Notes {
   public static StringField TEXT;
 
   static {
-    GlobTypeLoader.init(Notes.class, "notes");
+    TypeLoader.init(Notes.class, "notes");
     KEY = org.globsframework.model.Key.create(TYPE, SINGLETON_ID);
   }
 

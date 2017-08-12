@@ -1,5 +1,6 @@
 package com.budgetview.model;
 
+import com.budgetview.model.util.TypeLoader;
 import com.budgetview.shared.utils.GlobSerializer;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.annotations.Key;
@@ -9,7 +10,6 @@ import org.globsframework.metamodel.annotations.Target;
 import org.globsframework.metamodel.fields.IntegerField;
 import org.globsframework.metamodel.fields.LinkField;
 import org.globsframework.metamodel.fields.StringField;
-import org.globsframework.metamodel.utils.GlobTypeLoader;
 import org.globsframework.model.*;
 import org.globsframework.utils.exceptions.ItemAmbiguity;
 import org.globsframework.utils.exceptions.ItemNotFound;
@@ -49,7 +49,7 @@ public class BankEntity {
   }
 
   static {
-    GlobTypeLoader.init(BankEntity.class, "bankEntity");
+    TypeLoader.init(BankEntity.class, "bankEntity");
   }
 
   public static Integer find(String bankEntityLabel, GlobRepository repository) throws ItemAmbiguity {
