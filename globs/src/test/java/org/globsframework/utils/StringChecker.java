@@ -85,6 +85,6 @@ public class StringChecker {
   }
 
   private String cleanup(String text) {
-    return text.trim().replace("\t", " ");
+    return text.trim().replaceAll("[ \t]+", " ");
   }
 }

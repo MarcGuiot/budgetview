@@ -16,6 +16,7 @@ import org.globsframework.streams.accessors.StringAccessor;
 import org.globsframework.streams.accessors.TimestampAccessor;
 import org.globsframework.utils.Dates;
 import org.globsframework.utils.Ref;
+import org.globsframework.utils.Strings;
 
 import java.io.PrintStream;
 import java.util.Date;
@@ -54,18 +55,18 @@ public class ListCloudUsers {
       .select(CloudUser.SUBSCRIPTION_END_DATE, subscriptionEndDate)
       .getQuery()
       .getStream();
-    out.println("id\temail\tcreation\tsubscriptionEnd\tlastSeen\tlastUpdated");
+    out.println("id    email                                     creation  subsEnd   lastSeen  lastUpdated");
     while (stream.next()) {
-      out.print(id.get().getValue());
-      out.print("\t");
-      out.print(email.get().getString());
-      out.print("\t");
+      out.print(Strings.leftAlign(Integer.toString(id.get().getValue()), 4));
+      out.print("  ");
+      out.print(Strings.leftAlign(email.get().getString(), 40));
+      out.print("  ");
       out.print(toYyyyMmDd(creationDate.get().getDate()));
-      out.print("\t");
+      out.print("  ");
       out.print(toYyyyMmDd(subscriptionEndDate.get().getDate()));
-      out.print("\t");
+      out.print("  ");
       out.print(toYyyyMmDd(lastSeen.get(id.get().getValue())));
-      out.print("\t");
+      out.print("  ");
       out.print(toYyyyMmDd(lastUpdated.get(id.get().getValue())));
       out.println();
     }
@@ -118,7 +119,7 @@ public class ListCloudUsers {
 
   private static String toYyyyMmDd(Date date) {
     if (date == null) {
-      return "-";
+      return "-       ";
     }
     return Integer.toString(DateConverter.toYyyyMmDd(date));
   }
