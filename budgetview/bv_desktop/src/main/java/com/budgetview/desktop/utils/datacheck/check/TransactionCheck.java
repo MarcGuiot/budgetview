@@ -1,19 +1,16 @@
 package com.budgetview.desktop.utils.datacheck.check;
 
 import com.budgetview.desktop.utils.datacheck.DataCheckReport;
-import com.budgetview.model.*;
-import com.budgetview.shared.model.AccountType;
-import com.budgetview.utils.TransactionComparator;
+import com.budgetview.model.Account;
+import com.budgetview.model.Month;
+import com.budgetview.model.Series;
+import com.budgetview.model.Transaction;
 import org.globsframework.model.Glob;
-import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.utils.GlobMatchers;
-import org.globsframework.utils.Dates;
 
-import java.util.Date;
 import java.util.Set;
 
-import static org.globsframework.model.utils.GlobMatchers.fieldEquals;
 import static org.globsframework.model.utils.GlobMatchers.isNotNull;
 
 public class TransactionCheck {

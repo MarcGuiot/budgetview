@@ -10,7 +10,6 @@ import org.globsframework.model.utils.DefaultChangeSetVisitor;
 import java.util.Set;
 
 import static org.globsframework.model.FieldValue.value;
-import static org.globsframework.model.utils.GlobMatchers.fieldIn;
 
 public class ProjectItemToAmountLocalTrigger implements ChangeSetListener {
   public void globsChanged(ChangeSet changeSet, final GlobRepository repository) {

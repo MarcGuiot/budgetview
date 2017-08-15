@@ -1,7 +1,6 @@
 package com.budgetview.desktop.utils.datacheck;
 
 import com.budgetview.desktop.time.TimeService;
-import org.globsframework.model.Glob;
 import org.globsframework.utils.Dates;
 
 import java.io.OutputStream;

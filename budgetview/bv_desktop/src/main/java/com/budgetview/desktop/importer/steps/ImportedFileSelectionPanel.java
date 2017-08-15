@@ -67,7 +67,7 @@ public class ImportedFileSelectionPanel extends AbstractImportStepPanel implemen
       }
     });
 
-    cloudIntroPanel = new CloudIntroPanel(dialog, controller, localRepository, localDirectory);
+    cloudIntroPanel = new CloudIntroPanel(controller, localRepository, localDirectory);
     builder.add("cloudIntro", cloudIntroPanel.getPanel());
     builder.addDisposable(cloudIntroPanel);
 

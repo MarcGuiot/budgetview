@@ -46,7 +46,6 @@ import com.budgetview.desktop.time.TimeView;
 import com.budgetview.desktop.title.PeriodView;
 import com.budgetview.desktop.transactions.TransactionView;
 import com.budgetview.desktop.undo.UndoRedoService;
-import com.budgetview.desktop.utils.FrameSize;
 import com.budgetview.desktop.utils.MacOSXHooks;
 import com.budgetview.desktop.utils.MainPanelContainer;
 import com.budgetview.desktop.utils.MenuBarBuilder;

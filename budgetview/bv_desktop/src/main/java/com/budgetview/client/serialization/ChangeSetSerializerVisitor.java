@@ -1,10 +1,10 @@
 package com.budgetview.client.serialization;
 
+import com.budgetview.session.serialization.SerializationManager;
 import com.budgetview.session.serialization.SerializedDelta;
+import com.budgetview.session.serialization.SerializedDeltaState;
 import com.budgetview.shared.encryption.PasswordBasedEncryptor;
 import com.budgetview.shared.utils.GlobSerializer;
-import com.budgetview.session.serialization.SerializedDeltaState;
-import com.budgetview.session.serialization.SerializationManager;
 import org.globsframework.metamodel.Field;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.fields.IntegerField;

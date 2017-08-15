@@ -1,11 +1,11 @@
 package com.budgetview.persistence.prevayler.users;
 
 import com.budgetview.persistence.prevayler.CustomSerializable;
-import org.prevayler.Transaction;
 import com.budgetview.persistence.prevayler.CustomSerializableFactory;
+import org.globsframework.utils.directory.Directory;
 import org.globsframework.utils.serialization.SerializedInput;
 import org.globsframework.utils.serialization.SerializedOutput;
-import org.globsframework.utils.directory.Directory;
+import org.prevayler.Transaction;
 
 import java.util.Date;
 

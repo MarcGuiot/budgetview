@@ -1,9 +1,9 @@
 package com.budgetview.desktop.model;
 
 import com.budgetview.model.Account;
+import com.budgetview.model.Month;
 import com.budgetview.model.util.TypeLoader;
 import com.budgetview.shared.model.BudgetArea;
-import com.budgetview.model.Month;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.annotations.DefaultDouble;
 import org.globsframework.metamodel.annotations.Key;
@@ -11,7 +11,6 @@ import org.globsframework.metamodel.annotations.Target;
 import org.globsframework.metamodel.fields.DoubleField;
 import org.globsframework.metamodel.fields.IntegerField;
 import org.globsframework.metamodel.fields.LinkField;
-import org.globsframework.metamodel.utils.GlobTypeLoader;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.utils.exceptions.UnexpectedApplicationState;

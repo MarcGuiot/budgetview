@@ -1,7 +1,7 @@
 package com.budgetview.triggers.projects;
 
-import com.budgetview.model.ProjectAccountGraph;
 import com.budgetview.model.Account;
+import com.budgetview.model.ProjectAccountGraph;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.*;
 import org.globsframework.model.utils.DefaultChangeSetVisitor;

@@ -1,9 +1,9 @@
 package com.budgetview.desktop.mobile;
 
 import com.budgetview.client.ConnectionStatus;
-import com.budgetview.shared.http.Http;
-import com.budgetview.shared.encryption.PasswordEncryption;
 import com.budgetview.shared.encryption.MD5PasswordBasedEncryptor;
+import com.budgetview.shared.encryption.PasswordEncryption;
+import com.budgetview.shared.http.Http;
 import com.budgetview.shared.license.LicenseConstants;
 import com.budgetview.shared.mobile.MobileConstants;
 import com.budgetview.shared.mobile.model.MobileModel;

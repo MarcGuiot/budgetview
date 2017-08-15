@@ -2,9 +2,6 @@ package com.budgetview.utils.generator;
 
 import com.budgetview.io.exporter.ofx.OfxExporter;
 import com.budgetview.model.*;
-
-import static com.budgetview.utils.generator.DayGenerator.*;
-import static org.globsframework.model.FieldValue.value;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.GlobRepositoryBuilder;
@@ -16,6 +13,10 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.budgetview.utils.generator.DayGenerator.anyDay;
+import static com.budgetview.utils.generator.DayGenerator.dayBetween;
+import static org.globsframework.model.FieldValue.value;
 
 public class PicsouSampleGenerator {
   private Integer accountId;

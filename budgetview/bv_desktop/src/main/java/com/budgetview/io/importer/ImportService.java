@@ -1,11 +1,11 @@
 package com.budgetview.io.importer;
 
-import com.budgetview.io.importer.json.JsonImporter;
-import com.budgetview.io.importer.utils.TypedInputStream;
 import com.budgetview.desktop.components.dialogs.PicsouDialog;
 import com.budgetview.io.importer.csv.CsvImporter;
+import com.budgetview.io.importer.json.JsonImporter;
 import com.budgetview.io.importer.ofx.OfxImporter;
 import com.budgetview.io.importer.qif.QifImporter;
+import com.budgetview.io.importer.utils.TypedInputStream;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.utils.directory.Directory;
 import org.globsframework.utils.exceptions.InvalidFormat;

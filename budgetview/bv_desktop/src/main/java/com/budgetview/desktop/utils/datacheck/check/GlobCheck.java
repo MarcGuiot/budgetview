@@ -4,7 +4,6 @@ import com.budgetview.desktop.model.DesktopModel;
 import com.budgetview.desktop.utils.datacheck.DataCheckReport;
 import org.globsframework.metamodel.Field;
 import org.globsframework.metamodel.GlobType;
-import org.globsframework.metamodel.annotations.Required;
 import org.globsframework.metamodel.fields.LinkField;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobRepository;

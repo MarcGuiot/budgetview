@@ -1,8 +1,8 @@
 package com.budgetview.triggers.savings;
 
-import com.budgetview.shared.model.BudgetArea;
 import com.budgetview.model.Series;
 import com.budgetview.model.SeriesBudget;
+import com.budgetview.shared.model.BudgetArea;
 import org.globsframework.metamodel.Field;
 import org.globsframework.model.*;
 import org.globsframework.model.utils.DefaultChangeSetListener;

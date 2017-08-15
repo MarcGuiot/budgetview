@@ -1,6 +1,9 @@
 package com.budgetview.triggers.projects;
 
-import com.budgetview.model.*;
+import com.budgetview.model.Project;
+import com.budgetview.model.ProjectItem;
+import com.budgetview.model.ProjectTransfer;
+import com.budgetview.model.Series;
 import com.budgetview.shared.model.BudgetArea;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.*;
@@ -9,7 +12,7 @@ import org.globsframework.model.utils.DefaultChangeSetVisitor;
 import java.util.Set;
 
 import static org.globsframework.model.FieldValue.value;
-import static org.globsframework.model.utils.GlobMatchers.*;
+import static org.globsframework.model.utils.GlobMatchers.linkedTo;
 
 public class ProjectItemToSeriesTrigger implements ChangeSetListener {
 

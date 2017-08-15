@@ -1,7 +1,7 @@
 package com.budgetview.desktop.categorization.components.messages;
 
-import com.budgetview.shared.model.BudgetArea;
 import com.budgetview.model.Series;
+import com.budgetview.shared.model.BudgetArea;
 import com.budgetview.utils.Lang;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.ChangeSet;

@@ -1,17 +1,17 @@
 package com.budgetview.mobile;
 
-import com.budgetview.desktop.description.Labels;
-import com.budgetview.model.*;
-import com.budgetview.shared.mobile.model.*;
 import com.budgetview.desktop.accounts.position.DailyAccountPositionComputer;
 import com.budgetview.desktop.accounts.position.DailyAccountPositionValues;
 import com.budgetview.desktop.accounts.utils.AccountMatchers;
 import com.budgetview.desktop.budget.summary.TotalBudgetAreaAmounts;
+import com.budgetview.desktop.description.Labels;
 import com.budgetview.desktop.description.stringifiers.AccountComparator;
 import com.budgetview.desktop.model.BudgetStat;
 import com.budgetview.desktop.model.SeriesStat;
 import com.budgetview.desktop.transactions.utils.TransactionMatchers;
 import com.budgetview.desktop.utils.DaySelection;
+import com.budgetview.model.*;
+import com.budgetview.shared.mobile.model.*;
 import com.budgetview.shared.model.AccountType;
 import com.budgetview.shared.model.BudgetArea;
 import com.budgetview.utils.TransactionComparator;

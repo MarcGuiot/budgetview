@@ -1,14 +1,10 @@
 package com.budgetview.desktop.description.stringifiers;
 
-import com.budgetview.model.Account;
 import com.budgetview.model.RealAccount;
 import org.globsframework.model.Glob;
 import org.globsframework.utils.Utils;
 
 import java.util.Comparator;
-
-import static com.budgetview.model.Account.ID;
-import static com.budgetview.model.Account.NAME;
 
 public class RealAccountComparator implements Comparator<Glob> {
 

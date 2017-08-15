@@ -6,7 +6,10 @@ import com.budgetview.desktop.notifications.standard.StandardMessageNotification
 import com.budgetview.desktop.transactions.utils.MirrorTransactionFinder;
 import com.budgetview.desktop.upgrade.BindTransactionsToSeries;
 import com.budgetview.desktop.upgrade.PostProcessor;
-import com.budgetview.model.*;
+import com.budgetview.model.Account;
+import com.budgetview.model.Series;
+import com.budgetview.model.SeriesBudget;
+import com.budgetview.model.Transaction;
 import com.budgetview.shared.model.BudgetArea;
 import com.budgetview.shared.utils.Amounts;
 import com.budgetview.utils.Lang;

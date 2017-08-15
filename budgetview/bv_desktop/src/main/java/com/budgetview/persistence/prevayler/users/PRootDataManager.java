@@ -1,10 +1,10 @@
 package com.budgetview.persistence.prevayler.users;
 
+import com.budgetview.client.exceptions.RemoteException;
+import com.budgetview.persistence.prevayler.CustomSerializablePolicy;
 import com.budgetview.persistence.prevayler.DefaultSerializer;
 import com.budgetview.persistence.prevayler.RootDataManager;
-import com.budgetview.persistence.prevayler.CustomSerializablePolicy;
 import com.budgetview.session.states.Persistence;
-import com.budgetview.client.exceptions.RemoteException;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
 import org.globsframework.utils.directory.DefaultDirectory;

@@ -7,7 +7,7 @@
   <column name="cloudIntroPanel">
 
     <column ref="initial">
-      <htmlEditorPane text="$import.fileSelection.cloud.initial.message" styleClass="multiLineLabel"/>
+      <htmlEditorPane ref="initialMessage" styleClass="multiLineLabel"/>
       <row>
         <filler fill="horizontal"/>
         <label text="$import.fileSelection.cloud.initial.label" styleClass="formLabel"/>

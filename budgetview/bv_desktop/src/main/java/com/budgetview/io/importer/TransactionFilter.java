@@ -1,21 +1,19 @@
 package com.budgetview.io.importer;
 
 import com.budgetview.model.Transaction;
-import com.budgetview.utils.TransactionComparator;
 import com.budgetview.shared.utils.Amounts;
+import com.budgetview.utils.TransactionComparator;
 import org.globsframework.model.*;
-import org.globsframework.utils.collections.MultiMap;
 import org.globsframework.utils.Strings;
-
-import static org.globsframework.model.utils.GlobMatchers.and;
-import static org.globsframework.model.utils.GlobMatchers.fieldEquals;
-import static org.globsframework.model.utils.GlobMatchers.isNotNull;
-import static org.globsframework.utils.Utils.equal;
+import org.globsframework.utils.collections.MultiMap;
 
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+
+import static org.globsframework.model.utils.GlobMatchers.*;
+import static org.globsframework.utils.Utils.equal;
 
 public class TransactionFilter {
 

@@ -1,10 +1,12 @@
 package com.budgetview.triggers;
 
-import com.budgetview.model.*;
+import com.budgetview.model.Account;
+import com.budgetview.model.Series;
+import com.budgetview.model.SeriesBudget;
 import com.budgetview.shared.model.AccountType;
 import com.budgetview.shared.model.BudgetArea;
-import org.globsframework.model.utils.DefaultChangeSetListener;
 import org.globsframework.model.*;
+import org.globsframework.model.utils.DefaultChangeSetListener;
 import org.globsframework.utils.collections.Pair;
 
 import static org.globsframework.model.utils.GlobMatchers.*;

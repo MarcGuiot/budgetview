@@ -1,9 +1,9 @@
 package com.budgetview.triggers;
 
-import com.budgetview.desktop.Application;
-import com.budgetview.model.LicenseActivationState;
 import com.budgetview.client.DataAccess;
+import com.budgetview.desktop.Application;
 import com.budgetview.desktop.utils.KeyService;
+import com.budgetview.model.LicenseActivationState;
 import com.budgetview.model.User;
 import org.globsframework.model.*;
 

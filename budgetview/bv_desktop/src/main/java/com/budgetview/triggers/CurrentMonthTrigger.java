@@ -1,9 +1,9 @@
 package com.budgetview.triggers;
 
-import com.budgetview.model.Transaction;
 import com.budgetview.desktop.time.TimeService;
 import com.budgetview.model.CurrentMonth;
 import com.budgetview.model.Month;
+import com.budgetview.model.Transaction;
 import org.globsframework.model.*;
 import org.globsframework.model.utils.GlobFunctor;
 

@@ -1,11 +1,9 @@
 package com.budgetview.io.importer.analyzer;
 
-import com.budgetview.model.Transaction;
 import com.budgetview.model.Month;
+import com.budgetview.model.Transaction;
 import com.budgetview.model.TransactionType;
 import org.globsframework.metamodel.fields.StringField;
-import static org.globsframework.model.FieldValue.value;
-
 import org.globsframework.model.FieldValue;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobRepository;
@@ -18,6 +16,8 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.regex.Pattern;
+
+import static org.globsframework.model.FieldValue.value;
 
 public abstract class AbstractTransactionTypeFinalizer implements TransactionTypeFinalizer {
   static Pattern ALL = Pattern.compile(".*");

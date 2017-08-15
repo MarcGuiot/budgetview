@@ -1,9 +1,9 @@
 package com.budgetview.desktop.series.view;
 
-import com.budgetview.shared.model.BudgetArea;
 import com.budgetview.model.Series;
 import com.budgetview.model.SeriesGroup;
 import com.budgetview.model.SubSeries;
+import com.budgetview.shared.model.BudgetArea;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.fields.IntegerField;
 import org.globsframework.model.*;

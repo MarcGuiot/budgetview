@@ -1,10 +1,10 @@
 package com.budgetview.io.exporter.ofx;
 
 import com.budgetview.desktop.transactions.utils.TransactionMatchers;
-import com.budgetview.model.*;
 import com.budgetview.io.exporter.Exporter;
 import com.budgetview.io.importer.ofx.OfxImporter;
 import com.budgetview.io.importer.ofx.OfxWriter;
+import com.budgetview.model.*;
 import com.budgetview.utils.TransactionComparator;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;

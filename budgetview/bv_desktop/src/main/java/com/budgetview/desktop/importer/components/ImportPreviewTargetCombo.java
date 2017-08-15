@@ -5,7 +5,6 @@ import com.budgetview.desktop.description.stringifiers.AccountComparator;
 import com.budgetview.desktop.importer.utils.AccountFinder;
 import com.budgetview.model.Account;
 import com.budgetview.model.RealAccount;
-import com.budgetview.model.Transaction;
 import com.budgetview.utils.Lang;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;

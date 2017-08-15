@@ -1,13 +1,13 @@
 package com.budgetview.triggers;
 
-import org.globsframework.model.*;
-import org.globsframework.metamodel.GlobType;
-import org.globsframework.utils.Utils;
 import com.budgetview.desktop.model.SeriesStat;
 import com.budgetview.model.CurrentMonth;
 import com.budgetview.model.Series;
 import com.budgetview.shared.model.BudgetArea;
 import com.budgetview.shared.utils.Amounts;
+import org.globsframework.metamodel.GlobType;
+import org.globsframework.model.*;
+import org.globsframework.utils.Utils;
 
 import java.util.Set;
 

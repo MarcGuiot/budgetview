@@ -4,7 +4,9 @@ import com.budgetview.model.Picture;
 import com.budgetview.model.Project;
 import com.budgetview.model.ProjectItem;
 import org.globsframework.metamodel.GlobType;
-import org.globsframework.model.*;
+import org.globsframework.model.ChangeSet;
+import org.globsframework.model.ChangeSetListener;
+import org.globsframework.model.GlobRepository;
 
 import java.util.HashSet;
 import java.util.Set;

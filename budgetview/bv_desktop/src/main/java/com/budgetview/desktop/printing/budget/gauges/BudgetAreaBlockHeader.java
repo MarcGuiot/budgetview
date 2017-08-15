@@ -1,8 +1,8 @@
 package com.budgetview.desktop.printing.budget.gauges;
 
 import com.budgetview.desktop.model.BudgetStat;
-import com.budgetview.shared.model.BudgetArea;
 import com.budgetview.model.Month;
+import com.budgetview.shared.model.BudgetArea;
 import org.globsframework.gui.GlobSelection;
 import org.globsframework.gui.GlobSelectionListener;
 import org.globsframework.gui.SelectionService;

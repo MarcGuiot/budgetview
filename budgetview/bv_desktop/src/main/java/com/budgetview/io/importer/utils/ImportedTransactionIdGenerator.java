@@ -1,7 +1,7 @@
 package com.budgetview.io.importer.utils;
 
-import com.budgetview.model.Transaction;
 import com.budgetview.model.ImportedTransaction;
+import com.budgetview.model.Transaction;
 import org.globsframework.metamodel.fields.IntegerField;
 import org.globsframework.model.repository.GlobIdGenerator;
 

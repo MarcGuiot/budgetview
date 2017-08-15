@@ -4,7 +4,10 @@ import com.budgetview.desktop.categorization.reconciliation.ReconciliationNaviga
 import com.budgetview.desktop.categorization.reconciliation.ReconciliationPanel;
 import com.budgetview.desktop.description.Labels;
 import com.budgetview.desktop.transactions.columns.TransactionRendererColors;
-import com.budgetview.model.*;
+import com.budgetview.model.Account;
+import com.budgetview.model.Series;
+import com.budgetview.model.SignpostStatus;
+import com.budgetview.model.Transaction;
 import com.budgetview.shared.model.BudgetArea;
 import com.budgetview.utils.Lang;
 import org.globsframework.gui.GlobSelection;

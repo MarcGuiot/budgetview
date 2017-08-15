@@ -4,10 +4,11 @@ import com.budgetview.client.DataAccess;
 import com.budgetview.client.http.EncryptToTransportDataAccess;
 import com.budgetview.desktop.Application;
 import com.budgetview.desktop.PicsouInit;
-import com.budgetview.desktop.card.NavigationService;
 import com.budgetview.desktop.model.DesktopModel;
 import com.budgetview.desktop.time.TimeService;
 import com.budgetview.desktop.upgrade.UpgradeTrigger;
+import com.budgetview.model.CloudDesktopUser;
+import com.budgetview.model.CloudProviderConnection;
 import com.budgetview.model.CurrentMonth;
 import com.budgetview.model.User;
 import com.budgetview.persistence.direct.ReadOnlyAccountDataManager;
@@ -22,6 +23,7 @@ import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.delta.DefaultChangeSet;
 import org.globsframework.model.delta.MutableChangeSet;
+import org.globsframework.model.format.GlobPrinter;
 import org.globsframework.model.repository.DefaultGlobIdGenerator;
 import org.globsframework.utils.Files;
 import org.globsframework.utils.Log;
@@ -164,6 +166,7 @@ public class BackupService {
     finally {
       repository.completeChangeSet();
     }
+
     repository.update(CurrentMonth.KEY,
                       value(CurrentMonth.CURRENT_MONTH, TimeService.getCurrentMonth()),
                       value(CurrentMonth.CURRENT_DAY, TimeService.getCurrentDay()));

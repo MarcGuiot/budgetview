@@ -1,8 +1,8 @@
 package com.budgetview.client.local;
 
+import com.budgetview.client.DataTransport;
 import com.budgetview.client.exceptions.BadConnection;
 import com.budgetview.session.SessionService;
-import com.budgetview.client.DataTransport;
 import org.globsframework.utils.directory.Directory;
 import org.globsframework.utils.serialization.SerializedByteArrayOutput;
 import org.globsframework.utils.serialization.SerializedInput;

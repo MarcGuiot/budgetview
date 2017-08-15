@@ -7,7 +7,6 @@ import com.budgetview.utils.TransactionComparator;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.fields.DoubleField;
 import org.globsframework.model.*;
-import static org.globsframework.model.FieldValue.value;
 import org.globsframework.model.utils.GlobBuilder;
 import org.globsframework.model.utils.GlobFunctor;
 import org.globsframework.model.utils.GlobMatchers;
@@ -15,6 +14,8 @@ import org.globsframework.utils.collections.MapOfMaps;
 import org.globsframework.utils.collections.MultiMap;
 
 import java.util.*;
+
+import static org.globsframework.model.FieldValue.value;
 
 public class SavingsBudgetStatTrigger implements ChangeSetListener {
   public void globsChanged(ChangeSet changeSet, GlobRepository repository) {

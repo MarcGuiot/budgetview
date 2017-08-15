@@ -1,7 +1,7 @@
 package com.budgetview.desktop.components.charts;
 
-import com.budgetview.shared.model.BudgetArea;
 import com.budgetview.shared.gui.gauge.GaugeModel;
+import com.budgetview.shared.model.BudgetArea;
 
 public class BudgetAreaGaugeFactory {
   public static Gauge createGauge(BudgetArea area) {

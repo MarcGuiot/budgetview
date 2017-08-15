@@ -1,14 +1,12 @@
 package com.budgetview.triggers.savings;
 
-import com.budgetview.shared.model.BudgetArea;
 import com.budgetview.model.Series;
 import com.budgetview.model.Transaction;
+import com.budgetview.shared.model.BudgetArea;
 import org.globsframework.metamodel.Field;
 import org.globsframework.model.*;
 import org.globsframework.utils.Utils;
 
-import static org.globsframework.model.FieldValue.value;
-import static org.globsframework.model.utils.GlobMatchers.and;
 import static org.globsframework.model.utils.GlobMatchers.isFalse;
 
 public class UpdateMirrorSeriesChangeSetVisitor implements ChangeSetVisitor {

@@ -1,11 +1,11 @@
 package com.budgetview.persistence.prevayler.users;
 
+import com.budgetview.client.exceptions.IdentificationFailed;
 import com.budgetview.client.exceptions.UserAlreadyExists;
 import com.budgetview.persistence.prevayler.CustomSerializable;
 import com.budgetview.persistence.prevayler.CustomSerializableFactory;
 import com.budgetview.session.model.HiddenUser;
 import com.budgetview.session.model.User;
-import com.budgetview.client.exceptions.IdentificationFailed;
 import com.budgetview.session.states.Persistence;
 import org.globsframework.model.Glob;
 import org.globsframework.model.utils.GlobBuilder;

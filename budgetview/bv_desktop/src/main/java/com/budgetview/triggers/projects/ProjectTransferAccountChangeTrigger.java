@@ -1,8 +1,8 @@
 package com.budgetview.triggers.projects;
 
-import com.budgetview.model.ProjectTransfer;
 import com.budgetview.model.Account;
 import com.budgetview.model.ProjectItem;
+import com.budgetview.model.ProjectTransfer;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.*;
 import org.globsframework.model.utils.GlobUtils;
@@ -10,7 +10,8 @@ import org.globsframework.model.utils.GlobUtils;
 import java.util.HashSet;
 import java.util.Set;
 
-import static org.globsframework.model.utils.GlobMatchers.*;
+import static org.globsframework.model.utils.GlobMatchers.fieldIn;
+import static org.globsframework.model.utils.GlobMatchers.or;
 
 public class ProjectTransferAccountChangeTrigger implements ChangeSetListener {
   public void globsChanged(ChangeSet changeSet, GlobRepository repository) {

@@ -6,7 +6,6 @@ import org.globsframework.metamodel.annotations.Key;
 import org.globsframework.metamodel.fields.BlobField;
 import org.globsframework.metamodel.fields.BooleanField;
 import org.globsframework.metamodel.fields.StringField;
-import org.globsframework.metamodel.utils.GlobTypeLoader;
 import org.globsframework.model.Glob;
 import org.globsframework.model.utils.GlobBuilder;
 import org.globsframework.utils.exceptions.InvalidData;

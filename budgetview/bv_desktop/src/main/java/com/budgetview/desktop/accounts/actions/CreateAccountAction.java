@@ -2,8 +2,8 @@ package com.budgetview.desktop.accounts.actions;
 
 import com.budgetview.desktop.accounts.AccountEditionDialog;
 import com.budgetview.desktop.card.NavigationService;
-import com.budgetview.shared.model.AccountType;
 import com.budgetview.model.AccountUpdateMode;
+import com.budgetview.shared.model.AccountType;
 import com.budgetview.utils.Lang;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.utils.directory.Directory;

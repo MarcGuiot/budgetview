@@ -1,6 +1,9 @@
 package com.budgetview.triggers;
 
-import com.budgetview.model.*;
+import com.budgetview.model.Account;
+import com.budgetview.model.AccountCardType;
+import com.budgetview.model.Series;
+import com.budgetview.model.Transaction;
 import com.budgetview.shared.model.BudgetArea;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.*;

@@ -1,9 +1,9 @@
 package com.budgetview.persistence.direct;
 
 import com.budgetview.client.serialization.GlobCollectionSerializer;
-import com.budgetview.session.serialization.SerializedGlob;
 import com.budgetview.session.serialization.SerializedDelta;
 import com.budgetview.session.serialization.SerializedDeltaState;
+import com.budgetview.session.serialization.SerializedGlob;
 import org.globsframework.utils.collections.MapOfMaps;
 import org.globsframework.utils.collections.MultiMap;
 import org.globsframework.utils.serialization.SerializedInput;

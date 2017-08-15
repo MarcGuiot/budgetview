@@ -1,6 +1,9 @@
 package com.budgetview.triggers.projects;
 
-import com.budgetview.model.*;
+import com.budgetview.model.Project;
+import com.budgetview.model.ProjectItem;
+import com.budgetview.model.Series;
+import com.budgetview.model.SeriesGroup;
 import com.budgetview.shared.model.BudgetArea;
 import com.budgetview.triggers.DeleteUnusedSeriesGroupTrigger;
 import org.globsframework.metamodel.GlobType;

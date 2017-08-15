@@ -1,11 +1,11 @@
 package com.budgetview.io.exporter.tsv;
 
+import com.budgetview.desktop.description.stringifiers.AmountStringifier;
 import com.budgetview.desktop.description.stringifiers.TransactionDateStringifier;
 import com.budgetview.desktop.transactions.utils.TransactionMatchers;
-import com.budgetview.model.Transaction;
 import com.budgetview.io.exporter.Exporter;
-import com.budgetview.desktop.description.stringifiers.AmountStringifier;
 import com.budgetview.model.Series;
+import com.budgetview.model.Transaction;
 import com.budgetview.utils.Lang;
 import com.budgetview.utils.TransactionComparator;
 import org.globsframework.model.Glob;

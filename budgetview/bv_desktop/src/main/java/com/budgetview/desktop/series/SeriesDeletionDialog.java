@@ -2,7 +2,10 @@ package com.budgetview.desktop.series;
 
 import com.budgetview.desktop.components.dialogs.PicsouDialog;
 import com.budgetview.desktop.description.stringifiers.SeriesNameComparator;
-import com.budgetview.model.*;
+import com.budgetview.model.Account;
+import com.budgetview.model.Month;
+import com.budgetview.model.Series;
+import com.budgetview.model.Transaction;
 import com.budgetview.shared.model.BudgetArea;
 import com.budgetview.utils.Lang;
 import org.globsframework.gui.GlobSelection;

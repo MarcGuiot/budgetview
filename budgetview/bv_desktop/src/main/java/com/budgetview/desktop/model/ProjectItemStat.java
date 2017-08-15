@@ -7,7 +7,6 @@ import org.globsframework.metamodel.annotations.*;
 import org.globsframework.metamodel.fields.BooleanField;
 import org.globsframework.metamodel.fields.DoubleField;
 import org.globsframework.metamodel.fields.LinkField;
-import org.globsframework.metamodel.utils.GlobTypeLoader;
 
 public class ProjectItemStat {
   public static GlobType TYPE;

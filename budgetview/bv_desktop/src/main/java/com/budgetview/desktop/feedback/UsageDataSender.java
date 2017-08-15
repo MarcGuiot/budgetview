@@ -2,9 +2,9 @@ package com.budgetview.desktop.feedback;
 
 import com.budgetview.desktop.Application;
 import com.budgetview.desktop.accounts.utils.AccountMatchers;
-import com.budgetview.desktop.userconfig.UserConfigService;
 import com.budgetview.desktop.model.ProjectStat;
 import com.budgetview.desktop.projects.utils.CurrentProjectsMatcher;
+import com.budgetview.desktop.userconfig.UserConfigService;
 import com.budgetview.model.*;
 import com.budgetview.utils.Lang;
 import org.globsframework.model.Glob;

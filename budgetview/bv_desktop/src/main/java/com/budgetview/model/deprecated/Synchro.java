@@ -18,6 +18,7 @@ import org.globsframework.utils.serialization.SerializedInput;
 import org.globsframework.utils.serialization.SerializedInputOutputFactory;
 import org.globsframework.utils.serialization.SerializedOutput;
 
+/** @deprecated */
 public class Synchro {
   public static GlobType TYPE;
 

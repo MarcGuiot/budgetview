@@ -17,7 +17,6 @@ import org.globsframework.utils.exceptions.InvalidFormat;
 import org.globsframework.utils.exceptions.ResourceAccessFailed;
 import org.globsframework.xml.XmlGlobParser;
 import org.saxstack.parser.ExceptionHolder;
-import org.xml.sax.SAXParseException;
 
 import java.io.InputStream;
 import java.io.InputStreamReader;

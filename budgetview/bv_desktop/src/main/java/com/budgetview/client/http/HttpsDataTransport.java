@@ -1,12 +1,12 @@
 package com.budgetview.client.http;
 
+import com.budgetview.client.DataTransport;
 import com.budgetview.client.exceptions.*;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.ByteArrayEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
-import com.budgetview.client.DataTransport;
 import org.globsframework.utils.Log;
 import org.globsframework.utils.exceptions.InvalidState;
 import org.globsframework.utils.serialization.SerializedByteArrayOutput;

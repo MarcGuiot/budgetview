@@ -1,10 +1,10 @@
 package com.budgetview.io.importer.analyzer;
 
 import com.budgetview.model.Transaction;
-
-import static org.globsframework.model.FieldValue.value;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobRepository;
+
+import static org.globsframework.model.FieldValue.value;
 
 public class TransactionDateUpdater implements TransactionTypeFinalizer {
   public boolean processTransaction(Glob transaction, GlobRepository repository) {

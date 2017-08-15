@@ -1,9 +1,9 @@
 package com.budgetview.desktop.categorization.components;
 
-import com.budgetview.shared.model.BudgetArea;
 import com.budgetview.model.Series;
 import com.budgetview.model.SubSeries;
 import com.budgetview.model.Transaction;
+import com.budgetview.shared.model.BudgetArea;
 import org.globsframework.gui.GlobSelection;
 import org.globsframework.gui.GlobSelectionListener;
 import org.globsframework.gui.SelectionService;

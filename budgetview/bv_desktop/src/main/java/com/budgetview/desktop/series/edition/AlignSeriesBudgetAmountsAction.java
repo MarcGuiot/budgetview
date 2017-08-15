@@ -1,9 +1,9 @@
 package com.budgetview.desktop.series.edition;
 
 import com.budgetview.desktop.description.Formatting;
-import com.budgetview.shared.model.BudgetArea;
 import com.budgetview.model.Series;
 import com.budgetview.model.SeriesBudget;
+import com.budgetview.shared.model.BudgetArea;
 import com.budgetview.utils.Lang;
 import org.globsframework.gui.actions.MultiSelectionAction;
 import org.globsframework.model.Glob;

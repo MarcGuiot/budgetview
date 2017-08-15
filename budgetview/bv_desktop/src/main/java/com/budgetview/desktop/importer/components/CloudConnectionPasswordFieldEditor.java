@@ -2,7 +2,6 @@ package com.budgetview.desktop.importer.components;
 
 import com.budgetview.budgea.model.BudgeaConnectionValue;
 import org.globsframework.gui.editors.GlobPasswordEditor;
-import org.globsframework.gui.editors.GlobTextEditor;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.utils.directory.Directory;

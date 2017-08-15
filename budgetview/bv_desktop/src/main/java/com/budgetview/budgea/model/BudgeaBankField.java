@@ -6,9 +6,7 @@ import org.globsframework.metamodel.annotations.*;
 import org.globsframework.metamodel.fields.IntegerField;
 import org.globsframework.metamodel.fields.LinkField;
 import org.globsframework.metamodel.fields.StringField;
-import org.globsframework.metamodel.utils.GlobTypeLoader;
 import org.globsframework.model.Glob;
-import org.globsframework.model.format.GlobPrinter;
 
 public class BudgeaBankField {
 

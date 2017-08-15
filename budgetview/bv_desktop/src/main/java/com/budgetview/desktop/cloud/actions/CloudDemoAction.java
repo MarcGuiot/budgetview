@@ -7,7 +7,6 @@ import org.apache.http.client.fluent.Request;
 import org.apache.http.client.fluent.Response;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.utils.directory.Directory;
-import org.json.JSONObject;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;

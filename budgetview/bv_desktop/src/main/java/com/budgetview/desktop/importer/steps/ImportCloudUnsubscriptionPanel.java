@@ -5,8 +5,6 @@ import com.budgetview.desktop.components.ProgressPanel;
 import com.budgetview.desktop.components.dialogs.ConfirmationDialog;
 import com.budgetview.desktop.components.dialogs.PicsouDialog;
 import com.budgetview.desktop.importer.ImportController;
-import com.budgetview.model.CloudDesktopUser;
-import com.budgetview.shared.cloud.CloudSubscriptionStatus;
 import com.budgetview.utils.Lang;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.splits.utils.GuiUtils;

@@ -1,9 +1,9 @@
 package com.budgetview.triggers.projects;
 
 import com.budgetview.desktop.model.ProjectItemStat;
-import com.budgetview.shared.utils.Amounts;
 import com.budgetview.desktop.model.SeriesStat;
 import com.budgetview.model.ProjectItem;
+import com.budgetview.shared.utils.Amounts;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.*;
 

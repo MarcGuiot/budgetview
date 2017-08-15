@@ -2,7 +2,10 @@ package com.budgetview.desktop.categorization.utils;
 
 import com.budgetview.desktop.series.utils.SeriesMatchers;
 import com.budgetview.desktop.utils.MonthMatcher;
-import com.budgetview.model.*;
+import com.budgetview.model.Account;
+import com.budgetview.model.AccountCardType;
+import com.budgetview.model.Series;
+import com.budgetview.model.Transaction;
 import com.budgetview.shared.model.BudgetArea;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;

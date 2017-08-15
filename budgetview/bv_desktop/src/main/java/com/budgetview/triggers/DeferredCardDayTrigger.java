@@ -4,12 +4,13 @@ import com.budgetview.model.*;
 import com.budgetview.shared.model.BudgetArea;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.*;
-import static org.globsframework.model.FieldValue.value;
 import org.globsframework.model.utils.DefaultChangeSetListener;
 import org.globsframework.model.utils.GlobMatchers;
 
 import java.util.Date;
 import java.util.Set;
+
+import static org.globsframework.model.FieldValue.value;
 
 public class DeferredCardDayTrigger extends DefaultChangeSetListener {
 

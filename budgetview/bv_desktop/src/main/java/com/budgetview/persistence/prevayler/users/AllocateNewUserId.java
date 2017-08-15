@@ -2,11 +2,11 @@ package com.budgetview.persistence.prevayler.users;
 
 import com.budgetview.persistence.prevayler.CustomSerializable;
 import com.budgetview.persistence.prevayler.CustomSerializableFactory;
-import org.prevayler.TransactionWithQuery;
-import org.globsframework.utils.serialization.SerializedInput;
-import org.globsframework.utils.serialization.SerializedOutput;
 import org.globsframework.utils.directory.Directory;
 import org.globsframework.utils.exceptions.UnexpectedApplicationState;
+import org.globsframework.utils.serialization.SerializedInput;
+import org.globsframework.utils.serialization.SerializedOutput;
+import org.prevayler.TransactionWithQuery;
 
 import java.util.Date;
 

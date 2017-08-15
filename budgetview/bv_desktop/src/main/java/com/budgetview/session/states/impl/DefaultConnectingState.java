@@ -1,9 +1,9 @@
 package com.budgetview.session.states.impl;
 
 import com.budgetview.client.exceptions.InvalidActionForState;
+import com.budgetview.session.states.ConnectingState;
 import com.budgetview.session.states.CreatingUserState;
 import com.budgetview.session.states.IdentifiedState;
-import com.budgetview.session.states.ConnectingState;
 import com.budgetview.session.states.Persistence;
 import org.globsframework.utils.serialization.SerializedInput;
 import org.globsframework.utils.serialization.SerializedOutput;

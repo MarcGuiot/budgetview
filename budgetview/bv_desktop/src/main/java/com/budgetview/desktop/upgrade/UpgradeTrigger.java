@@ -11,7 +11,6 @@ import com.budgetview.io.importer.analyzer.TransactionAnalyzerFactory;
 import com.budgetview.model.*;
 import com.budgetview.model.deprecated.AccountPositionThreshold;
 import com.budgetview.model.deprecated.Category;
-import com.budgetview.model.deprecated.Synchro;
 import com.budgetview.model.upgrade.DeferredAccountUpgradeV40;
 import com.budgetview.shared.model.BudgetArea;
 import com.budgetview.shared.utils.Amounts;
@@ -30,7 +29,6 @@ import org.globsframework.model.utils.GlobBuilder;
 import org.globsframework.model.utils.GlobFunctor;
 import org.globsframework.model.utils.GlobMatchers;
 import org.globsframework.utils.Log;
-import org.globsframework.utils.Utils;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;

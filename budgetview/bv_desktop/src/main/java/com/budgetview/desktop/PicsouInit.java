@@ -13,8 +13,6 @@ import com.budgetview.desktop.upgrade.UpgradeTrigger;
 import com.budgetview.desktop.userconfig.UserConfigService;
 import com.budgetview.desktop.userconfig.triggers.LicenseActivationTrigger;
 import com.budgetview.desktop.utils.AwtExceptionHandler;
-import com.budgetview.desktop.utils.FrameSize;
-import com.budgetview.desktop.utils.ShowDialogAndExitExceptionHandler;
 import com.budgetview.desktop.utils.datacheck.DataCheckingService;
 import com.budgetview.io.importer.ImportService;
 import com.budgetview.io.importer.analyzer.TransactionAnalyzerFactory;
@@ -39,7 +37,6 @@ import org.globsframework.utils.directory.Directory;
 import org.globsframework.utils.exceptions.ExceptionHandler;
 import org.globsframework.utils.exceptions.InvalidData;
 
-import javax.swing.*;
 import java.util.Arrays;
 import java.util.Set;
 import java.util.concurrent.ExecutorService;

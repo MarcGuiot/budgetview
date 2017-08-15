@@ -5,7 +5,6 @@ import com.budgetview.utils.Lang;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.annotations.Key;
 import org.globsframework.metamodel.fields.IntegerField;
-import org.globsframework.metamodel.utils.GlobTypeLoader;
 import org.globsframework.model.FieldValues;
 import org.globsframework.model.KeyBuilder;
 import org.globsframework.model.impl.ReadOnlyGlob;

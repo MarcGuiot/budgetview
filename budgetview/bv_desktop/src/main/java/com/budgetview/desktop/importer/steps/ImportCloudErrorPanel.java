@@ -1,9 +1,6 @@
 package com.budgetview.desktop.importer.steps;
 
-import com.budgetview.desktop.cloud.CloudService;
 import com.budgetview.desktop.cloud.InvalidCloudAPIVersion;
-import com.budgetview.desktop.components.ProgressPanel;
-import com.budgetview.desktop.components.dialogs.ConfirmationDialog;
 import com.budgetview.desktop.components.dialogs.PicsouDialog;
 import com.budgetview.desktop.help.HyperlinkHandler;
 import com.budgetview.desktop.importer.ImportController;

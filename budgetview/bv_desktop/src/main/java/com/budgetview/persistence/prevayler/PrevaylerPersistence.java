@@ -1,11 +1,11 @@
 package com.budgetview.persistence.prevayler;
 
-import com.budgetview.session.model.User;
 import com.budgetview.client.exceptions.BadPassword;
 import com.budgetview.client.exceptions.IdentificationFailed;
-import com.budgetview.client.exceptions.UserNotRegistered;
 import com.budgetview.client.exceptions.RemoteException;
+import com.budgetview.client.exceptions.UserNotRegistered;
 import com.budgetview.session.model.HiddenUser;
+import com.budgetview.session.model.User;
 import com.budgetview.session.states.Persistence;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;

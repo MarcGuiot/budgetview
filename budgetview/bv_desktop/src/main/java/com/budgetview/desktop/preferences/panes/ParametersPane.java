@@ -1,9 +1,9 @@
 package com.budgetview.desktop.preferences.panes;
 
-import com.budgetview.desktop.userconfig.UserConfigService;
 import com.budgetview.desktop.preferences.PreferencesDialog;
 import com.budgetview.desktop.preferences.PreferencesPane;
 import com.budgetview.desktop.preferences.PreferencesResult;
+import com.budgetview.desktop.userconfig.UserConfigService;
 import com.budgetview.model.UserPreferences;
 import com.budgetview.utils.Lang;
 import org.globsframework.gui.GlobsPanelBuilder;

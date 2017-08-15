@@ -16,8 +16,8 @@ import org.globsframework.utils.serialization.SerializedInput;
 import org.globsframework.utils.serialization.SerializedOutput;
 import org.prevayler.TransactionWithQuery;
 
-import java.util.Date;
 import java.util.Arrays;
+import java.util.Date;
 
 public class RenameUserAndHiddenUser implements TransactionWithQuery, CustomSerializable {
   private String newName;

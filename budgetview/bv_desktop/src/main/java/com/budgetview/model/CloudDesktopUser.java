@@ -17,8 +17,6 @@ import org.globsframework.utils.serialization.SerializedInput;
 import org.globsframework.utils.serialization.SerializedInputOutputFactory;
 import org.globsframework.utils.serialization.SerializedOutput;
 
-import static org.globsframework.model.FieldValue.value;
-
 public class CloudDesktopUser {
   public static final Integer SINGLETON_ID = 0;
   public static org.globsframework.model.Key KEY;
@@ -59,9 +57,7 @@ public class CloudDesktopUser {
   }
 
   public static void unregister(GlobRepository repository) {
-    if (repository.contains(CloudDesktopUser.KEY)) {
-      repository.update(CloudDesktopUser.KEY, value(CloudDesktopUser.REGISTERED, false));
-    }
+    repository.deleteAll(CloudDesktopUser.TYPE, CloudProviderConnection.TYPE);
   }
 
   public static class Serializer implements GlobSerializer {

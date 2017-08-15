@@ -2,9 +2,9 @@ package com.budgetview.desktop.budget.components;
 
 import com.budgetview.desktop.description.PeriodSeriesStatComparator;
 import com.budgetview.desktop.model.PeriodSeriesStat;
-import com.budgetview.shared.model.BudgetArea;
 import com.budgetview.model.SeriesOrder;
 import com.budgetview.model.UserPreferences;
+import com.budgetview.shared.model.BudgetArea;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.splits.SplitsNode;
 import org.globsframework.metamodel.GlobType;

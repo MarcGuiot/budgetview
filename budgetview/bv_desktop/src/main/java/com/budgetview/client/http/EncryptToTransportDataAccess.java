@@ -1,20 +1,20 @@
 package com.budgetview.client.http;
 
-import com.budgetview.client.serialization.ChangeSetSerializerVisitor;
-import com.budgetview.session.serialization.SerializedGlob;
-import com.budgetview.shared.encryption.PasswordBasedEncryptor;
-import com.budgetview.shared.encryption.RedirectPasswordBasedEncryptor;
-import com.budgetview.shared.encryption.MD5PasswordBasedEncryptor;
-import com.budgetview.shared.utils.GlobSerializer;
-import com.budgetview.client.DataTransport;
-import com.budgetview.client.serialization.SerializableDeltaGlobSerializer;
-import com.budgetview.client.serialization.GlobCollectionSerializer;
 import com.budgetview.client.DataAccess;
+import com.budgetview.client.DataTransport;
 import com.budgetview.client.exceptions.BadConnection;
 import com.budgetview.client.exceptions.BadPassword;
 import com.budgetview.client.exceptions.UserAlreadyExists;
-import com.budgetview.session.serialization.SerializedDelta;
+import com.budgetview.client.serialization.ChangeSetSerializerVisitor;
+import com.budgetview.client.serialization.GlobCollectionSerializer;
+import com.budgetview.client.serialization.SerializableDeltaGlobSerializer;
 import com.budgetview.session.serialization.SerializationManager;
+import com.budgetview.session.serialization.SerializedDelta;
+import com.budgetview.session.serialization.SerializedGlob;
+import com.budgetview.shared.encryption.MD5PasswordBasedEncryptor;
+import com.budgetview.shared.encryption.PasswordBasedEncryptor;
+import com.budgetview.shared.encryption.RedirectPasswordBasedEncryptor;
+import com.budgetview.shared.utils.GlobSerializer;
 import org.globsframework.metamodel.GlobModel;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.fields.IntegerField;
@@ -434,6 +434,12 @@ public class EncryptToTransportDataAccess implements DataAccess {
     }
     else if (globTypeName.equals("r")) {
       globType = globModel.getType("accountPositionError");
+    }
+    else if (globTypeName.equals("m")) {
+      globType = globModel.getType("cloudDesktopUser");
+    }
+    else if (globTypeName.equals("o")) {
+      globType = globModel.getType("cloudProviderConnection");
     }
     else {
       globType = globModel.getType(globTypeName);

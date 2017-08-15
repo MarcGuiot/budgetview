@@ -1,9 +1,9 @@
 package com.budgetview.io.importer.csv;
 
 import com.budgetview.desktop.components.dialogs.PicsouDialog;
+import com.budgetview.desktop.importer.csv.CsvImporterDialog;
 import com.budgetview.io.importer.AccountFileImporter;
 import com.budgetview.io.importer.utils.TypedInputStream;
-import com.budgetview.desktop.importer.csv.CsvImporterDialog;
 import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.utils.directory.Directory;

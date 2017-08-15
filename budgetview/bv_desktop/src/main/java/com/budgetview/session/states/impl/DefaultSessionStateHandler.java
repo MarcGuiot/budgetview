@@ -1,16 +1,16 @@
 package com.budgetview.session.states.impl;
 
-import com.budgetview.session.model.User;
-import com.budgetview.session.states.Persistence;
-import com.budgetview.session.states.SessionStateHandler;
-import com.budgetview.session.states.SessionState;
 import com.budgetview.client.exceptions.UnknownId;
+import com.budgetview.session.model.User;
 import com.budgetview.session.states.ConnectingState;
+import com.budgetview.session.states.Persistence;
+import com.budgetview.session.states.SessionState;
+import com.budgetview.session.states.SessionStateHandler;
 import org.globsframework.metamodel.GlobModel;
+import org.globsframework.model.Glob;
+import org.globsframework.model.GlobList;
 import org.globsframework.utils.directory.Directory;
 import org.globsframework.utils.serialization.SerializedOutput;
-import org.globsframework.model.GlobList;
-import org.globsframework.model.Glob;
 
 import java.util.Iterator;
 import java.util.Random;

@@ -1,9 +1,9 @@
 package com.budgetview.desktop.description;
 
-import com.budgetview.shared.model.BudgetArea;
 import com.budgetview.model.Month;
 import com.budgetview.model.NumericDateType;
 import com.budgetview.model.TextDateType;
+import com.budgetview.shared.model.BudgetArea;
 import com.budgetview.shared.utils.AmountFormat;
 import com.budgetview.utils.Lang;
 import org.globsframework.utils.Strings;

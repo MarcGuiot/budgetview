@@ -282,6 +282,8 @@ public class CloudSignupTest extends CloudDesktopTestCase {
       .checkTransactions(new Object[][]{
         {"2016/08/15", "FOUQUETS", "-50.00"},
         {"2016/08/13", "TOTAL", "-25.00"},
+        {"2016/08/12", "EDF", "-50.00"},
+        {"2016/08/10", "AUCHAN", "-100.00"},
       })
       .importAccountAndComplete();
 

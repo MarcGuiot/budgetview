@@ -10,7 +10,10 @@ import com.budgetview.desktop.transactions.actions.ShowAllTransactionsInAccountV
 import com.budgetview.desktop.transactions.actions.ShowSeriesTransactionsInAccountViewAction;
 import com.budgetview.desktop.transactions.actions.ShowTransactionsInAccountViewAction;
 import com.budgetview.desktop.transactions.utils.TransactionMatchers;
-import com.budgetview.model.*;
+import com.budgetview.model.Account;
+import com.budgetview.model.Series;
+import com.budgetview.model.SeriesGroup;
+import com.budgetview.model.Transaction;
 import com.budgetview.shared.model.BudgetArea;
 import org.globsframework.gui.SelectionService;
 import org.globsframework.metamodel.GlobType;

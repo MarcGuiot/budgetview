@@ -1,7 +1,7 @@
 package com.budgetview.io.importer.utils;
 
-import com.budgetview.model.Transaction;
 import com.budgetview.model.Account;
+import com.budgetview.model.Transaction;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
@@ -10,8 +10,8 @@ import org.saxstack.writer.XmlWriter;
 
 import java.io.IOException;
 import java.io.StringWriter;
-import java.util.Set;
 import java.util.HashSet;
+import java.util.Set;
 
 public class BankFormatExporter {
   public static String export(GlobRepository repository, GlobList transactions) throws IOException {

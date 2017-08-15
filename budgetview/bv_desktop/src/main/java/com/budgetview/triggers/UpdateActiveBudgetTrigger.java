@@ -1,8 +1,8 @@
 package com.budgetview.triggers;
 
-import com.budgetview.model.Transaction;
 import com.budgetview.model.Series;
 import com.budgetview.model.SeriesBudget;
+import com.budgetview.model.Transaction;
 import org.globsframework.model.*;
 import org.globsframework.model.utils.DefaultChangeSetListener;
 
