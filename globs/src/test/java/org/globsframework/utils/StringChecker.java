@@ -2,37 +2,89 @@ package org.globsframework.utils;
 
 import org.junit.Assert;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class StringChecker {
-  private String content;
+  private final String initialContent;
+  private Map<String, String> variables;
 
-  public StringChecker(String content) {
-    this.content = content;
+  public static StringChecker init(String initialContent) {
+    return new StringChecker(initialContent);
   }
 
-  public void checkContains(String text) {
-    if (!content.contains(text)) {
-      Assert.fail("'" + text + "' not found in:\n" + content);
+  public StringChecker(String initialContent) {
+    this.initialContent = initialContent;
+  }
+
+  public StringChecker with(String variable, int value) {
+    return with(variable, Integer.toString(value));
+  }
+
+  public StringChecker with(String variable, String value) {
+    if (variables == null) {
+      variables = new HashMap<String, String>();
     }
+    variables.put(variable, value);
+    return this;
   }
 
-  public void checkLineMatches(String regexp) {
-    for (String line : content.split("\n")) {
-      if (line.trim().matches(regexp)) {
-        return;
+  public StringChecker checkContains(String text) {
+    String convertedText = convert(text);
+    if (!initialContent.contains(convertedText)) {
+      Assert.fail("'" + convertedText + "' not found in:\n" + initialContent);
+    }
+    return this;
+  }
+
+  public StringChecker checkLineMatches(String regexp) {
+    String convertedRegexp = convert(regexp);
+    for (String line : initialContent.split("\n")) {
+      if (line.trim().matches(convertedRegexp)) {
+        return this;
       }
     }
-    Assert.fail("'" + regexp + "' not matched in:\n" + content);
+    Assert.fail("'" + convertedRegexp + "' not matched in:\n" + initialContent);
+    return this;
   }
 
-  public void checkEquals(String expected) {
-    Assert.assertEquals(expected, content);
+  public StringChecker checkEquals(String text) {
+    String convertedText = convert(text);
+    Assert.assertEquals(convertedText, initialContent);
+    return this;
   }
 
-  public void checkEquals(StringChecker other) {
-    Assert.assertEquals(content, other.content);
+  public StringChecker checkEquals(StringChecker other) {
+    String convertedOther = convert(other.toString());
+    Assert.assertEquals(toString(), convertedOther);
+    return this;
+  }
+
+  public StringChecker checkMatches(String regexp) {
+    String initial = cleanup(initialContent);
+    String convertedRegexp = cleanup(convert(regexp));
+    if (toString().matches(convertedRegexp)) {
+      Assert.fail("'" + convertedRegexp + "' not matched in:\n" + initial);
+    }
+    return this;
   }
 
   public String toString() {
-    return content;
+    return initialContent;
+  }
+
+  private String convert(String text) {
+    if (variables == null) {
+      return text;
+    }
+    String result = text;
+    for (Map.Entry<String,String> entry : variables.entrySet()) {
+      result = result.replace("{{" + entry.getKey() + "}}", entry.getValue());
+    }
+    return result;
+  }
+
+  private String cleanup(String text) {
+    return text.trim().replace("\t", " ");
   }
 }

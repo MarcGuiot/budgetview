@@ -23,4 +23,8 @@ public class DateConverter {
   public static int toYyyyMm(int year, int month) {
     return year * 100 + month;
   }
+
+  public static int toYyyyMmDd(Date date) {
+    return getMonthId(date) * 100 + getDay(date);
+  }
 }

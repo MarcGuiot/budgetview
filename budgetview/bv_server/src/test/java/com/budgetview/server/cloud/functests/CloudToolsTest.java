@@ -5,14 +5,17 @@ import com.budgetview.server.cloud.functests.checkers.CloudChecker;
 import com.budgetview.server.cloud.functests.testcases.CloudDesktopTestCase;
 import com.budgetview.server.cloud.stub.BudgeaConnections;
 import com.budgetview.server.cloud.stub.BudgeaStatement;
-import com.budgetview.server.cloud.tools.AddCloudUser;
-import com.budgetview.server.cloud.tools.DeleteCloudUser;
-import com.budgetview.server.cloud.tools.ShowBudgeaUser;
-import com.budgetview.server.cloud.tools.ShowCloudUser;
+import com.budgetview.server.cloud.tools.*;
 import com.budgetview.shared.cloud.budgea.BudgeaCategory;
 import org.globsframework.utils.Dates;
 import org.globsframework.utils.StringChecker;
 import org.junit.Test;
+
+import java.io.ByteArrayOutputStream;
+import java.io.PrintStream;
+
+import static com.com.budgetview.server.utils.TestDates.monthsLater;
+import static com.com.budgetview.server.utils.TestDates.today;
 
 public class CloudToolsTest extends CloudDesktopTestCase {
 
@@ -20,6 +23,7 @@ public class CloudToolsTest extends CloudDesktopTestCase {
   public void testCreateDeleteUser() throws Exception {
 
     AddCloudUser.main(CloudChecker.CONFIG_FILE_PATH, "toto@example.com", "5");
+    AddCloudUser.main(CloudChecker.CONFIG_FILE_PATH, "another@email.com", "1");
 
     budgea.pushConnectionResponse(1, 123, 40);
     budgea.pushStatement(BudgeaStatement.init()
@@ -63,22 +67,32 @@ public class CloudToolsTest extends CloudDesktopTestCase {
       .checkSubscriptionEndDate(Dates.monthsLater(5))
       .close();
 
-    StringChecker info = new StringChecker(ShowCloudUser.dump(CloudChecker.CONFIG_FILE_PATH, "toto@example.com"));
-    info.checkContains("email: toto@example.com");
-    info.checkContains("emailVerified: false");
-    info.checkContains("provider: 2");
-    info.checkContains("providerUserId: 123");
+    ByteArrayOutputStream stream = new ByteArrayOutputStream();
+    ListCloudUsers.dump(new PrintStream(stream), CloudChecker.CONFIG_FILE_PATH, "toto@example.com");
+    StringChecker.init(stream.toString())
+      .with("today", today())
+      .with("+1", monthsLater(1))
+      .with("+5", monthsLater(5))
+      .checkMatches("id\temail\tcreation\tsubscriptionEnd\tlastSeen\nlastUpdate" +
+                    "[0-9]+\ttoto@example.com\t{{today}}\t{{+5}}\t{{today}}\t{{today}}\n" +
+                    "[0-9]+\tanother@email.com\t{{today}}\t{{+1}}\t-\t-\n");
+
+    StringChecker info = StringChecker.init(ShowCloudUser.dump(CloudChecker.CONFIG_FILE_PATH, "toto@example.com"))
+      .checkContains("email: toto@example.com")
+      .checkContains("emailVerified: false")
+      .checkContains("provider: 2")
+      .checkContains("providerUserId: 123");
 
     StringChecker infoForBudgeaUser = new StringChecker(ShowBudgeaUser.dump(CloudChecker.CONFIG_FILE_PATH, "123"));
     infoForBudgeaUser.checkEquals(info);
 
-    StringChecker deleteOutput = new StringChecker(DeleteCloudUser.dump(CloudChecker.CONFIG_FILE_PATH, "toto@example.com", "skipConfirm"));
-    deleteOutput.checkLineMatches("Deleted account for user [0-9]+ with email toto@example.com");
-    deleteOutput.checkContains("Deletion completed");
+    StringChecker.init(DeleteCloudUser.dump(CloudChecker.CONFIG_FILE_PATH, "toto@example.com", "skipConfirm"))
+      .checkLineMatches("Deleted account for user [0-9]+ with email toto@example.com")
+      .checkContains("Deletion completed");
 
     mailbox.checkEmpty();
 
-    StringChecker newInfo = new StringChecker(ShowCloudUser.dump(CloudChecker.CONFIG_FILE_PATH, "toto@example.com"));
-    newInfo.checkEquals("User not found");
+    StringChecker.init(ShowCloudUser.dump(CloudChecker.CONFIG_FILE_PATH, "toto@example.com"))
+      .checkEquals("User not found");
   }
 }
