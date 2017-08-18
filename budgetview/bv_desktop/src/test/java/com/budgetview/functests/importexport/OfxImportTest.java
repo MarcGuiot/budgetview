@@ -553,6 +553,7 @@ public class OfxImportTest extends LoggedInFunctionalTestCase {
     operations.openPreferences().setFutureMonthsCount(2).validate();
     String file = OfxBuilder.init(this)
       .addBankAccount("unknown", 111, "111", 1000.00, "2008/08/07")
+      .addTransaction("2008/08/07", 50.00, "something")
       .addCardAccount("1234", 10, "2008/08/07")
       .addTransaction("2008/08/10", -50.00, "Virement")
       .save();
@@ -562,13 +563,19 @@ public class OfxImportTest extends LoggedInFunctionalTestCase {
       .importFileAndPreview();
 
     preview
-      .setDeferredAccount(25, 28, 0)
+      .checkTransactions(new Object[][]{
+        {"2008/08/07", "something", "50.00"}
+      })
       .selectBank("Other")
+      .setMainAccount()
       .importAccountAndOpenNext();
 
     preview
+      .checkTransactions(new Object[][]{
+        {"2008/08/10", "Virement", "-50.00"}
+      })
+      .setDeferredAccount(25, 28, 0)
       .selectBank("Other")
-      .setMainAccount()
       .importAccountAndComplete();
 
     views.selectHome();

@@ -64,6 +64,9 @@ public class ImportPreviewTargetCombo {
     if (accountId != null && repository.contains(Key.create(Account.TYPE, accountId))) {
       selectAccount(accountId);
     }
+    else if (importedTransactions.isEmpty()) {
+      selectSkipAccount();
+    }
     else {
       accountId = AccountFinder.findBestAccount(importedTransactions, globalRepository);
 

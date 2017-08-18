@@ -184,7 +184,7 @@ public class OperationChecker {
     openImportDialog()
       .setFilePath(file)
       .importFileAndPreview()
-      .createNewAccount(bank, "Main account", "", position)
+      .setNewAccount(bank, "Main account", "", position)
       .setMainAccount()
       .importAccountAndComplete();
   }
@@ -193,7 +193,7 @@ public class OperationChecker {
     openImportDialog()
       .setFilePath(file)
       .importFileAndPreview()
-      .createNewAccount(bank, "Main account", "", position)
+      .setNewAccount(bank, "Main account", "", position)
       .setMainAccount()
       .completeImportAndSkipSeries();
   }

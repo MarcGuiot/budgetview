@@ -205,7 +205,7 @@ public class ImportTest extends LoggedInFunctionalTestCase {
       .setFilePath(firstQif)
       .importFileAndPreview()
       .checkAvailableAccounts("Main", "Cash")
-      .createNewAccount(SOCIETE_GENERALE, "SG", "12345", 100.0)
+      .setNewAccount(SOCIETE_GENERALE, "SG", "12345", 100.0)
       .importAccountAndComplete();
 
     mainAccounts.checkAccounts("Main", "Cash", "SG");
@@ -260,7 +260,7 @@ public class ImportTest extends LoggedInFunctionalTestCase {
       .setFilePath(secondQif)
       .importFileAndPreview()
       .checkAvailableAccounts("Main account")
-      .createNewAccount(SOCIETE_GENERALE, "Second account", "00022", 12.30)
+      .setNewAccount(SOCIETE_GENERALE, "Second account", "00022", 12.30)
       .importAccountAndComplete();
 
     mainAccounts.checkAccounts("Main account", "Second account");
@@ -812,7 +812,7 @@ public class ImportTest extends LoggedInFunctionalTestCase {
       .selectFiles(path, "badFile.ofx")
       .importFileAndPreview()
       .checkNoErrorMessage()
-      .createNewAccount("CIC", "Main account", "", 0.)
+      .setNewAccount("CIC", "Main account", "", 0.)
       .setMainAccount()
       .importAccountWithError()
       .checkHtmlErrorMessage("import.file.error", path)
@@ -850,15 +850,19 @@ public class ImportTest extends LoggedInFunctionalTestCase {
       .selectFiles(path1)
       .importFileAndPreview()
       .checkAccountMessage("New operations for account 1/3:")
-      .checkNewAccountSelected()
+      .checkSkipFileSelected()
+      .selectNewAccount()
       .setMainAccount()
       .importAccountAndOpenNext()
-      .setMainAccount()
       .checkAccountMessage("New operations for account 2/3:")
-      .checkNewAccountSelected()
-      .importAccountAndOpenNext()
+      .checkSkipFileSelected()
+      .selectNewAccount()
       .setMainAccount()
+      .importAccountAndOpenNext()
       .checkAccountMessage("New operations for account 3/3:")
+      .checkSkipFileSelected()
+      .selectNewAccount()
+      .setMainAccount()
       .checkNewAccountSelected()
       .importAccountAndComplete();
 
@@ -875,8 +879,7 @@ public class ImportTest extends LoggedInFunctionalTestCase {
       .save();
     ImportDialogPreviewChecker preview = operations.openImportDialog()
       .selectFiles(path2)
-      .importFileAndPreview();
-    preview
+      .importFileAndPreview()
       .checkSelectedAccount("Account n. 113")
       .checkAccountNotEditable()
       .checkExistingAccountDescription("Account n.113 Other Position: 100.00 on 2008/08/01")
@@ -886,6 +889,8 @@ public class ImportTest extends LoggedInFunctionalTestCase {
       .selectAccount("Account n. 113")
       .importAccountAndOpenNext();
     preview
+      .checkSkipFileSelected()
+      .selectNewAccount()
       .setMainAccount()
       .importAccountAndOpenNext();
     preview
@@ -982,14 +987,16 @@ public class ImportTest extends LoggedInFunctionalTestCase {
     preview
       .checkFileNameShown(path)
       .checkAccountMessage("New operations for account 1/3:")
-      .checkNewAccountSelected()
+      .checkSkipFileSelected()
+      .selectNewAccount()
       .selectAccount("Account n. 00001123")
       .importAccountAndOpenNext();
 
     preview
+      .checkSkipFileSelected()
+      .selectNewAccount()
       .checkAccountIsEditable()
       .checkAccountMessage("New operations for account 2/3:")
-      .checkNewAccountSelected()
       .selectAccount("Account n. 00001123")
       .checkAccountNotEditable()
       .checkExistingAccountDescription("Account n.00001123 CIC Position: 0.00 on 2008/06/08")
@@ -1001,7 +1008,8 @@ public class ImportTest extends LoggedInFunctionalTestCase {
 
     preview
       .checkAccountMessage("New operations for account 3/3:")
-      .checkNewAccountSelected()
+      .checkSkipFileSelected()
+      .selectNewAccount()
       .setMainAccount()
       .importAccountAndComplete();
 

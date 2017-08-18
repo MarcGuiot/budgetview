@@ -45,6 +45,11 @@ public class ImportDialogPreviewChecker extends DialogChecker {
     return this;
   }
 
+  public ImportDialogPreviewChecker checkSkipFileSelected() {
+    assertThat(getTargetAccountCombo().selectionEquals(Lang.get("import.preview.targetCombo.skip")));
+    return this;
+  }
+
   public ImportDialogPreviewChecker selectAccount(final String accountName) {
     getTargetAccountCombo().select(Lang.get("import.preview.targetCombo.existingAccount", accountName));
     return this;
@@ -88,11 +93,11 @@ public class ImportDialogPreviewChecker extends DialogChecker {
     return this;
   }
 
-  public ImportDialogPreviewChecker createNewAccount(String bank, String accountName, String number) {
-    return createNewAccount(bank, accountName, number, null);
+  public ImportDialogPreviewChecker setNewAccount(String bank, String accountName, String number) {
+    return setNewAccount(bank, accountName, number, null);
   }
 
-  public ImportDialogPreviewChecker createNewAccount(String bank, String accountName, String number, Double initialBalance) {
+  public ImportDialogPreviewChecker setNewAccount(String bank, String accountName, String number, Double initialBalance) {
     selectNewAccount();
     AccountEditionChecker editionChecker = getAccountEditionChecker()
       .selectBank(bank)
@@ -293,6 +298,11 @@ public class ImportDialogPreviewChecker extends DialogChecker {
     return this;
   }
 
+  public ImportDialogPreviewChecker importAndPreviewNextAccount() {
+    dialog.getButton("next").click();
+    return this;
+  }
+
   public void importDeferred(String accountName, String fileName, boolean withMainAccount, String targetAccountName) {
     if (getAccountEditionChecker().getAccountName().equals(accountName)) {
       if (accountName.length() > 20) {
@@ -319,18 +329,18 @@ public class ImportDialogPreviewChecker extends DialogChecker {
   }
 
   public ImportDialogPreviewChecker importAccountAndOpenNext() {
-    clickNext();
+    importAndPreviewNextAccount();
     return this;
   }
 
   public ImportDialogPreviewChecker importAccountWithError() {
-    clickNext();
+    importAndPreviewNextAccount();
     checkPreviewPanelShown();
     return this;
   }
 
   public ImportDialogCompletionChecker importAccountAndGetSummary() {
-    clickNext();
+    importAndPreviewNextAccount();
     return new ImportDialogCompletionChecker(dialog);
   }
 
@@ -341,7 +351,7 @@ public class ImportDialogPreviewChecker extends DialogChecker {
   }
 
   public void importAccountAndComplete() {
-    clickNext();
+    importAndPreviewNextAccount();
     try {
       new ImportDialogCompletionChecker(dialog).validate();
     }
@@ -356,10 +366,6 @@ public class ImportDialogPreviewChecker extends DialogChecker {
     ImportSeriesChecker.init(dialog.getButton("next").triggerClick(), dialog)
       .validateAndFinishImport();
     checkClosed();
-  }
-
-  public void clickNext() {
-    dialog.getButton("next").click();
   }
 
   public ImportDialogPreviewChecker checkMessageCreateFirstAccount() {
@@ -464,7 +470,7 @@ public class ImportDialogPreviewChecker extends DialogChecker {
 
   public void skipAndComplete() {
     selectSkipFile();
-    clickNext();
+    importAndPreviewNextAccount();
     validateAndComplete(-1, -1, -1, dialog);
   }
 

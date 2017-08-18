@@ -83,7 +83,7 @@ public class MoneyExportTest extends SpecificBankTestCase {
     operations.openImportDialog()
       .setFilePath(getFile("money_export_standard.qif"))
       .importFileAndPreview()
-      .createNewAccount("CIC", "Main account", "", 0.)
+      .setNewAccount("CIC", "Main account", "", 0.)
       .setMainAccount()
       .importSeries()
       .checkContains("Loisirs-culture-sport:Journaux",
@@ -99,7 +99,7 @@ public class MoneyExportTest extends SpecificBankTestCase {
     operations.openImportDialog()
       .setFilePath(getFile("money_export_strict.qif"))
       .importFileAndPreview()
-      .createNewAccount("CIC", "Main account", "")
+      .setNewAccount("CIC", "Main account", "")
       .setMainAccount()
       .importSeries()
       .cancelImportSeries();
