@@ -160,6 +160,31 @@ public class RealAccount {
     }
   }
 
+  public static Glob deduplicate(Glob account, GlobRepository repository) {
+    GlobList results = new GlobList();
+    GlobList allRealAccounts = repository.getAll(TYPE);
+    for (Glob realAccount : allRealAccounts) {
+      if (areStrictlyEquivalent(account, realAccount)) {
+        results.add(realAccount);
+      }
+    }
+    if (results.isEmpty()) {
+      for (Glob glob : allRealAccounts) {
+        if (areEquivalent(account, glob)) {
+          results.add(glob);
+        }
+      }
+      if (results.isEmpty()) {
+        return repository.get(account.getKey());
+      }
+    }
+    if (results.size() == 1) {
+      Glob first = results.getFirst();
+      repository.update(account.getKey(), ACCOUNT, first.get(ACCOUNT));
+    }
+    return repository.get(account.getKey());
+  }
+
   public static class Serializer implements GlobSerializer {
 
     public int getWriteVersion() {

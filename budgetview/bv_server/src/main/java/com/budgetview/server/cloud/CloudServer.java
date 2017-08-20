@@ -52,6 +52,7 @@ public class CloudServer {
     webServer.add(new BankConnectionsServlet(directory), "/banks/connections");
     webServer.add(new BudgeaWebHookServlet(directory), "/budgea");
     webServer.add(new StatementServlet(directory), "/statement/*");
+    webServer.add(new AccountServlet(directory), "/accounts");
     webServer.add(new StripeFormServlet(directory), "/stripe-form");
     webServer.add(new SubscriptionEmailValidationServlet(directory), "/subscription/validation");
     webServer.add(new UserEmailChangeValidationServlet(directory), "/user/email/validation");

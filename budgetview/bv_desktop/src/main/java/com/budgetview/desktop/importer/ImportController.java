@@ -1,5 +1,6 @@
 package com.budgetview.desktop.importer;
 
+import com.budgetview.desktop.cloud.CloudService;
 import com.budgetview.desktop.description.stringifiers.RealAccountComparator;
 import com.budgetview.desktop.importer.components.RealAccountImporter;
 import com.budgetview.desktop.importer.utils.InvalidFileFormat;
@@ -13,10 +14,8 @@ import com.budgetview.model.*;
 import com.budgetview.shared.cloud.CloudSubscriptionStatus;
 import com.budgetview.shared.utils.Amounts;
 import com.budgetview.utils.Lang;
-import org.globsframework.model.Glob;
-import org.globsframework.model.GlobList;
-import org.globsframework.model.GlobRepository;
-import org.globsframework.model.Key;
+import org.globsframework.model.*;
+import org.globsframework.model.format.GlobPrinter;
 import org.globsframework.model.repository.LocalGlobRepository;
 import org.globsframework.model.utils.GlobFieldMatcher;
 import org.globsframework.model.utils.GlobFunctor;
@@ -212,8 +211,15 @@ public class ImportController implements RealAccountImporter {
   public void commitAndClose(Set<Integer> months) {
     openRequestManager.popCallback();
     countPush--;
+    updateCloudAccounts();
     localRepository.commitChanges(true);
     importDialog.showLastImportedMonthAndClose(months);
+  }
+
+  public void updateCloudAccounts() {
+    System.out.println("ImportController.updateCloudAccounts");
+    GlobPrinter.print(localRepository, RealAccount.TYPE);
+    directory.get(CloudService.class).updateAccounts(localRepository.getCurrentChanges(), localRepository);
   }
 
   private void deleteEmptyImport() {

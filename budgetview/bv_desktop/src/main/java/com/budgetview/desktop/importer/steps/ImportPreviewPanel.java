@@ -281,6 +281,10 @@ public class ImportPreviewPanel extends AbstractImportStepPanel implements Messa
         accountEditionRepository.rollback();
       }
 
+      if (localRepository.contains(realAccount.getKey())) {
+        localRepository.update(realAccount.getKey(), RealAccount.ENABLED, true);
+      }
+
       sessionRepository.update(realAccount.getKey(),
                                value(RealAccount.ACCOUNT, selectedTargetAccount.get(Account.ID)));
       if (selectedTargetAccount.get(Account.LAST_IMPORT_POSITION) == null
@@ -289,7 +293,7 @@ public class ImportPreviewPanel extends AbstractImportStepPanel implements Messa
                                  Account.LAST_IMPORT_POSITION,
                                  Double.parseDouble(realAccount.get(RealAccount.POSITION)));
       }
-      deleteAccountIfDuplicate(realAccount);
+      deleteOtherDuplicateAccounts(realAccount);
       Integer bankId = realAccount.get(RealAccount.BANK);
       sessionRepository.update(selectedTargetAccount.getKey(),
                                value(Account.UPDATE_MODE, AccountUpdateMode.AUTOMATIC.getId()));
@@ -300,7 +304,7 @@ public class ImportPreviewPanel extends AbstractImportStepPanel implements Messa
       controller.completeImport(selectedTargetAccount, dateFormatSelectionPanel.getSelectedFormat());
     }
 
-    private void deleteAccountIfDuplicate(Glob selectedRealAccount) {
+    private void deleteOtherDuplicateAccounts(Glob selectedRealAccount) {
       for (Glob realAccount : sessionRepository.getAll(RealAccount.TYPE)) {
         if (RealAccount.areStrictlyEquivalent(selectedRealAccount, realAccount) &&
             Utils.equal(selectedRealAccount.get(RealAccount.ACCOUNT), realAccount.get(RealAccount.ACCOUNT))) {
@@ -317,6 +321,7 @@ public class ImportPreviewPanel extends AbstractImportStepPanel implements Messa
       clearFileError();
       accountEditionRepository.rollback();
       controller.skipFile();
+      localRepository.update(realAccount, RealAccount.ENABLED, false);
     }
   }
 

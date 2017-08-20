@@ -6,8 +6,10 @@ import com.budgetview.server.web.WebServer;
 import com.budgetview.shared.cloud.budgea.BudgeaCategory;
 import com.budgetview.shared.cloud.budgea.BudgeaConstants;
 import org.apache.log4j.Logger;
+import org.globsframework.utils.Files;
 import org.globsframework.utils.Strings;
 import org.globsframework.utils.Utils;
+import org.json.JSONObject;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -15,10 +17,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.PrintWriter;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Stack;
+import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class BudgeaStubServer {
 
@@ -39,6 +42,7 @@ public class BudgeaStubServer {
   private List<String> lastLoginFields = new ArrayList<String>();
   private String loginConstraint;
   private Integer lastDeletedUserId;
+  private List<String> accountUpdates = new ArrayList<String>();
 
   public static void main(String... args) throws Exception {
     BudgeaStubServer stub = new BudgeaStubServer(args);
@@ -65,6 +69,7 @@ public class BudgeaStubServer {
     webServer.add(new UsersMeServlet(), "/users/me");
     webServer.add(new UsersMeConnectionsServlet(), "/users/me/connections/*");
     webServer.add(new UserConnectionsServlet(), "/users/*");
+    webServer.add(new UsersMeAccountServlet(), "/users/me/accounts/*");
     webServer.add(new PingServlet(), "/ping");
 
     Log4J.init(config);
@@ -158,6 +163,10 @@ public class BudgeaStubServer {
     if (!Utils.equal(lastDeletedUserId, userId)) {
       throw new RuntimeException("Last deleted user ID: " + lastDeletedUserId + " but expected: " + userId);
     }
+  }
+
+  public List<String> getAccountUpdates() {
+    return accountUpdates;
   }
 
   private class AuthInitServlet extends HttpServlet {
@@ -436,6 +445,58 @@ public class BudgeaStubServer {
       resp.setStatus(HttpServletResponse.SC_OK);
     }
   }
+
+  private class UsersMeAccountServlet extends HttpServlet {
+
+    private Logger logger = Logger.getLogger("BudgeaStubServer:UsersMeAccountServlet");
+
+    protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+      logger.debug("PUT");
+
+      BufferedReader reader = req.getReader();
+      String body = reader.readLine();
+      if (body == null) {
+        logger.error("No login data provided");
+        resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+        return;
+      }
+
+      Pattern urlPattern = Pattern.compile("[A-z/]+([0-9]+)");
+      Matcher urlMatcher = urlPattern.matcher(req.getRequestURI());
+      if (!urlMatcher.matches()) {
+        logger.error("Could not match account id in " + req.getRequestURI());
+        resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+        return;
+      }
+      int accountId = Integer.parseInt(urlMatcher.group(1));
+
+      body = java.net.URLDecoder.decode(body, "UTF-8").trim();
+
+      Pattern valuePattern = Pattern.compile(".*disabled=([A-z0-9]+).*");
+      Matcher valueMatcher = valuePattern.matcher(body);
+      if (!valueMatcher.matches()) {
+        logger.error("Could not match disabled value in " + body);
+        resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+        return;
+      }
+
+      String value = valueMatcher.group(1);
+      String update = "account:" + accountId + " => disabled:" + value;
+      accountUpdates.add(update);
+      logger.debug("New update: " + update);
+
+      PrintWriter writer = resp.getWriter();
+      writer.write("{\n" +
+                   "  \"signin\": \"datetime\",\n" +
+                   "  \"platform\": \"unicode\",\n" +
+                   "  \"id\": \"" + userId + "\"\n" +
+                   "}");
+      writer.close();
+
+      resp.setStatus(HttpServletResponse.SC_OK);
+    }
+  }
+
 
   private boolean checkAuthorization(HttpServletRequest request, Logger logger) {
     String actual = request.getHeader(BudgeaConstants.AUTHORIZATION);

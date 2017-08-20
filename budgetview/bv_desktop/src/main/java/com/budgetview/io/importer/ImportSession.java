@@ -199,7 +199,7 @@ public class ImportSession {
     GlobList importedTransactions = localRepository.getAll(ImportedTransaction.TYPE);
 
     if (realAccount == null) {
-      currentImportedAccount = findExistingRealAccount(currentImportedAccount);
+      currentImportedAccount = RealAccount.deduplicate(currentImportedAccount, localRepository);
       Integer realAccountId = currentImportedAccount.get(RealAccount.ID);
       for (Glob operation : importedTransactions) {
         localRepository.update(operation.getKey(), ImportedTransaction.ACCOUNT, realAccountId);
@@ -215,31 +215,6 @@ public class ImportSession {
 
     lastImportedTransactionsCount = importedTransactions.size();
     return currentImportedAccount;
-  }
-
-  private Glob findExistingRealAccount(Glob account) {
-    GlobList matchingAccounts = new GlobList();
-    GlobList globList = localRepository.getAll(RealAccount.TYPE);
-    for (Glob glob : globList) {
-      if (RealAccount.areStrictlyEquivalent(account, glob)) {
-        matchingAccounts.add(glob);
-      }
-    }
-    if (matchingAccounts.isEmpty()) {
-      for (Glob glob : globList) {
-        if (RealAccount.areEquivalent(account, glob)) {
-          matchingAccounts.add(glob);
-        }
-      }
-      if (matchingAccounts.isEmpty()) {
-        return localRepository.get(account.getKey());
-      }
-    }
-    if (matchingAccounts.size() == 1) {
-      Glob first = matchingAccounts.getFirst();
-      localRepository.update(account.getKey(), RealAccount.ACCOUNT, first.get(RealAccount.ACCOUNT));
-    }
-    return localRepository.get(account.getKey());
   }
 
   private List<String> getImportedTransactionFormat(final GlobRepository repository) {
@@ -507,17 +482,17 @@ public class ImportSession {
   }
 
   private class ForwardChanges implements ChangeSetVisitor {
-    private final Integer currentAccoutId;
+    private final Integer currentAccountId;
 
-    public ForwardChanges(Integer currentAccoutId) {
-      this.currentAccoutId = currentAccoutId;
+    public ForwardChanges(Integer currentAccountId) {
+      this.currentAccountId = currentAccountId;
     }
 
     public void visitCreation(Key key, FieldValues values) throws Exception {
-      if (key.getGlobType() == ImportedTransaction.TYPE && Utils.equal(currentAccoutId, values.get(ImportedTransaction.ACCOUNT))) {
+      if (key.getGlobType() == ImportedTransaction.TYPE && Utils.equal(currentAccountId, values.get(ImportedTransaction.ACCOUNT))) {
         localRepository.create(key, values.toArray());
       }
-      else if (key.getGlobType() == RealAccount.TYPE && Utils.equal(currentAccoutId, key.get(RealAccount.ID))) {
+      else if (key.getGlobType() == RealAccount.TYPE && Utils.equal(currentAccountId, key.get(RealAccount.ID))) {
         localRepository.create(key, values.toArray());
       }
       else if (key.getGlobType() == ImportedSeries.TYPE) {

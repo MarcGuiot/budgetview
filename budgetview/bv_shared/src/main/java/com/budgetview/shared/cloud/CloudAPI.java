@@ -3,6 +3,7 @@ package com.budgetview.shared.cloud;
 import com.budgetview.shared.http.Http;
 import com.budgetview.shared.model.Provider;
 import org.apache.http.client.fluent.Request;
+import org.apache.http.entity.ContentType;
 import org.globsframework.utils.Strings;
 import org.globsframework.utils.Utils;
 import org.globsframework.utils.exceptions.InvalidParameter;
@@ -179,6 +180,17 @@ public class CloudAPI {
     if (Strings.isNullOrEmpty(deviceToken)) {
       throw new InvalidParameter("A proper token must be provided");
     }
+  }
+
+  public void updateAccounts(Integer cloudUserId, Integer deviceId, String deviceToken, String json) throws IOException {
+    checkIdAndToken(cloudUserId, deviceId, deviceToken);
+    String url = "/accounts";
+    Request request = Request.Post(cloudUrl(url))
+      .addHeader(CloudConstants.CLOUD_USER_ID, Integer.toString(cloudUserId))
+      .addHeader(CloudConstants.DEVICE_ID, Integer.toString(deviceId))
+      .addHeader(CloudConstants.DEVICE_TOKEN, deviceToken)
+      .bodyString(json, ContentType.APPLICATION_JSON);
+    Http.execute(url, request);
   }
 }
 

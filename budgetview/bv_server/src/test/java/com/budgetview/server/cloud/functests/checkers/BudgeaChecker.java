@@ -3,6 +3,7 @@ package com.budgetview.server.cloud.functests.checkers;
 import com.budgetview.server.cloud.stub.BudgeaBankFieldSample;
 import com.budgetview.server.cloud.stub.BudgeaStubServer;
 import com.budgetview.shared.cloud.budgea.BudgeaConstants;
+import org.globsframework.utils.TestUtils;
 
 import java.io.IOException;
 
@@ -68,5 +69,9 @@ public class BudgeaChecker {
 
   public void checkUserDeletions(int userId) {
     stub.checkUserDeletion(userId);
+  }
+
+  public void checkAccountUpdates(String... updates) {
+    TestUtils.assertSetEquals(stub.getAccountUpdates(), updates);
   }
 }

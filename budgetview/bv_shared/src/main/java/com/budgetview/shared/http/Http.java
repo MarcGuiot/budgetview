@@ -24,6 +24,7 @@ import org.json.JSONObject;
 
 import javax.net.ssl.SSLException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.security.cert.X509Certificate;
 import java.util.ArrayList;
 import java.util.HashMap;

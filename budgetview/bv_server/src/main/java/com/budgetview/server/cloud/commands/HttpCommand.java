@@ -3,13 +3,16 @@ package com.budgetview.server.cloud.commands;
 import com.budgetview.shared.cloud.CloudConstants;
 import org.apache.log4j.Logger;
 import org.globsframework.json.JsonGlobWriter;
+import org.globsframework.utils.Files;
 import org.globsframework.utils.Strings;
+import org.json.JSONObject;
 import org.json.JSONWriter;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.StringWriter;
 
 public abstract class HttpCommand implements Command {
@@ -87,6 +90,12 @@ public abstract class HttpCommand implements Command {
       throw new MissingHeader(header);
     }
     return value;
+  }
+
+  protected JSONObject getRequestBodyAsJson() throws IOException {
+    InputStream inputStream = request.getInputStream();
+    String json = Files.loadStreamToString(inputStream, "UTF-8");
+    return new JSONObject(json);
   }
 
   protected abstract class InvalidHeader extends Exception {

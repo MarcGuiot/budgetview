@@ -56,10 +56,11 @@ public class CloudAccountManagementTest extends CloudDesktopTestCase {
       .add("10/08/2016", TransactionType.PRELEVEMENT, "AUCHAN", "", -100.00)
       .check();
 
-    fail("compte disabled visible à partir de la vue Compleion");
+    budgea.checkAccountUpdates("account:2 => disabled:1");
+
+    fail("TODO : on peut voir et réactiver les comptes à partir de la vue d'édition de la connexion cloud");
     fail("TODO: montrer les comptes disabled puis les réselectionner, refaire l'import et les retrouver " +
          "- cela signifie de refaire une passe sur tous les updates côté serveur en filtrant les comptes");
-    fail("Vérifier l'appel à Budgea");
   }
 
   @Test
@@ -69,7 +70,6 @@ public class CloudAccountManagementTest extends CloudDesktopTestCase {
 
   @Test
   public void testDeletedAccountsLinkedToACLoudDownloadAreAutomaticallyDisabled() throws Exception {
-    fail("");
     fail("Que se passe-t-il si undo ? Le griser, ou pousser l'action inverse ?");
   }
 }

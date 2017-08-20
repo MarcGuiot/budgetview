@@ -10,20 +10,23 @@ import com.budgetview.utils.Lang;
 import org.globsframework.gui.splits.utils.GuiUtils;
 import org.globsframework.json.JsonGlobFormat;
 import org.globsframework.json.JsonGlobParser;
-import org.globsframework.model.Glob;
-import org.globsframework.model.GlobList;
-import org.globsframework.model.GlobRepository;
-import org.globsframework.model.Key;
+import org.globsframework.model.*;
+import org.globsframework.model.format.GlobPrinter;
 import org.globsframework.utils.Log;
 import org.globsframework.utils.Strings;
 import org.globsframework.utils.Utils;
+import org.globsframework.utils.collections.Pair;
 import org.globsframework.utils.exceptions.InvalidParameter;
 import org.globsframework.utils.exceptions.UnexpectedValue;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.json.JSONWriter;
 
 import java.io.IOException;
+import java.io.StringWriter;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static org.globsframework.model.FieldValue.value;
@@ -760,6 +763,72 @@ public class CloudService {
               callback.processError(e);
             }
           });
+        }
+      }
+    });
+    thread.start();
+  }
+
+  public void updateAccounts(ChangeSet changeSet, final GlobRepository repository) {
+    final List<Pair<Integer, Boolean>> updates = new ArrayList<Pair<Integer, Boolean>>();
+    changeSet.safeVisit(RealAccount.TYPE, new ChangeSetVisitor() {
+      public void visitCreation(Key key, FieldValues values) throws Exception {
+        System.out.println("CloudService.visitCreation: " + key + " / " + GlobPrinter.toString(values));
+        Integer providerAccountId = values.get(RealAccount.PROVIDER_ACCOUNT_ID);
+        if (Utils.equal(values.get(RealAccount.PROVIDER), Provider.BUDGEA.getId())
+            && providerAccountId != null
+            && !values.isTrue(RealAccount.ENABLED)) {
+          updates.add(new Pair<Integer, Boolean>(providerAccountId, false));
+        }
+      }
+
+      public void visitUpdate(Key key, FieldValuesWithPrevious values) throws Exception {
+        System.out.println("CloudService.visitUpdate: " + key + " / " + GlobPrinter.toString(values));
+        if (values.contains(RealAccount.ENABLED)) {
+          Glob realAccount = repository.get(key);
+          Integer providerAccountId = realAccount.get(RealAccount.PROVIDER_ACCOUNT_ID);
+          if (Utils.equal(realAccount.get(RealAccount.PROVIDER), Provider.BUDGEA.getId())
+              && providerAccountId != null) {
+            updates.add(new Pair<Integer, Boolean>(providerAccountId, realAccount.isTrue(RealAccount.ENABLED)));
+          }
+        }
+      }
+
+      public void visitDeletion(Key key, FieldValues previousValues) throws Exception {
+      }
+    });
+    if (updates.isEmpty()) {
+      return;
+    }
+
+    Glob user = repository.findOrCreate(CloudDesktopUser.KEY);
+    final int cloudUserId = user.get(CloudDesktopUser.CLOUD_USER_ID);
+    final int deviceId = user.get(CloudDesktopUser.DEVICE_ID);
+    final String deviceToken = user.get(CloudDesktopUser.DEVICE_TOKEN);
+
+    Thread thread = new Thread(new Runnable() {
+      public void run() {
+        try {
+          StringWriter json = new StringWriter();
+          JSONWriter writer = new JSONWriter(json);
+          writer.object();
+          writer.key("accounts");
+          writer.array();
+          for (Pair<Integer, Boolean> update : updates) {
+            writer.object();
+            writer.key("provider_account_id").value(update.getFirst());
+            writer.key("enabled").value(update.getSecond());
+            writer.endObject();
+          }
+          writer.endArray();
+          writer.endObject();
+
+          System.out.println("CloudService.run: sending  " + json.toString());
+
+          cloudAPI.updateAccounts(cloudUserId, deviceId, deviceToken, json.toString());
+        }
+        catch (final Exception e) {
+          Log.write("[Cloud] Error updated account state", e);
         }
       }
     });

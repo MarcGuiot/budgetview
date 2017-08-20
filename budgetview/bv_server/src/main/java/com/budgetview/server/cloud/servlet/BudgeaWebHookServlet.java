@@ -11,6 +11,7 @@ import com.budgetview.server.cloud.services.WebhookNotificationService;
 import com.budgetview.server.utils.DateConverter;
 import com.budgetview.shared.cloud.budgea.BudgeaAPI;
 import com.budgetview.shared.cloud.budgea.BudgeaSeriesConverter;
+import com.budgetview.shared.http.Http;
 import com.budgetview.shared.model.DefaultSeries;
 import com.budgetview.shared.model.Provider;
 import org.apache.log4j.Logger;
@@ -85,7 +86,6 @@ public class BudgeaWebHookServlet extends HttpCloudServlet {
 
       InputStream inputStream = request.getInputStream();
       String json = Files.loadStreamToString(inputStream, "UTF-8");
-
       JSONObject root = new JSONObject(json);
 
       if (logger.isDebugEnabled()) {

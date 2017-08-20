@@ -51,7 +51,7 @@ public class BudgeaAPI {
     checkToken();
     String url = "/users/" + userId;
     Http.execute(url, Request.Delete(BudgeaConstants.getServerUrl(url))
-                   .addHeader(BudgeaConstants.AUTHORIZATION, "Bearer " + token));
+      .addHeader(BudgeaConstants.AUTHORIZATION, "Bearer " + token));
   }
 
   public JSONObject getBanks() throws IOException {
@@ -65,7 +65,7 @@ public class BudgeaAPI {
     checkToken();
     String url = "/banks/" + budgeaBankId + "/fields";
     return json(Request.Get(BudgeaConstants.getServerUrl(url))
-                             .addHeader(BudgeaConstants.AUTHORIZATION, "Bearer " + token), url);
+                  .addHeader(BudgeaConstants.AUTHORIZATION, "Bearer " + token), url);
   }
 
   public JSONObject getUserConnections(int userId) throws IOException {
@@ -171,7 +171,7 @@ public class BudgeaAPI {
   public void deleteConnection(int budgeaConnectionId) throws IOException {
     String url = "/users/me/connections/" + budgeaConnectionId;
     Http.execute(url, Request.Delete(BudgeaConstants.getServerUrl(url))
-                   .addHeader(BudgeaConstants.AUTHORIZATION, "Bearer " + token));
+      .addHeader(BudgeaConstants.AUTHORIZATION, "Bearer " + token));
   }
 
   public Integer getUserId() throws IOException {
@@ -180,6 +180,19 @@ public class BudgeaAPI {
     JSONObject user = json(Request.Get(BudgeaConstants.getServerUrl(url))
                              .addHeader(BudgeaConstants.AUTHORIZATION, "Bearer " + token), url);
     return user.getInt("id");
+  }
+
+  public JSONObject setAccountEnabled(int budgeaAccountId, boolean enabled) throws IOException {
+    checkToken();
+    String url = "/users/me/accounts/" + budgeaAccountId;
+    Form form = Form.form()
+      .add("disabled", enabled ? "null" : "1");
+
+    return json(Request.Put(BudgeaConstants.getServerUrl(url))
+                  .addHeader(BudgeaConstants.AUTHORIZATION, "Bearer " + token)
+                  .addHeader("user_id", "me")
+                  .bodyForm(form.build(), Consts.UTF_8), url);
+
   }
 
   public String getToken() throws IOException {
