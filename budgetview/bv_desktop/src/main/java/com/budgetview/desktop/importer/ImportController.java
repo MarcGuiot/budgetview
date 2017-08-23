@@ -368,6 +368,10 @@ public class ImportController implements RealAccountImporter {
     importDialog.showCloudEdition();
   }
 
+  public void showCloudAccounts(Glob cloudProviderConnection) {
+    importDialog.showCloudAccounts(cloudProviderConnection);
+  }
+
   public void showCloudValidationForSignup(String email) {
     importDialog.showCloudValidationForSignup(email);
   }

@@ -7,33 +7,43 @@
     <style selector=".connection" opaque="false" border="matte(0,0,1,0,dialog.separator)"/>
     <style selector="label.name" font="-,bold,14"/>
     <style selector="label.details" font="-,italic,12" marginBottom="2"/>
-    <style selector="button.edit" fill="none" marginLeft="5" marginRight="0"/>
+
+    <ui name="onOffToggle" class="com.budgetview.desktop.components.ui.OnOffToggleUI"
+        selectedBgColor="projectView.onoff.selected.bg"
+        selectedBorderColor="projectView.onoff.selected.border"
+        selectedTextColor="projectView.onoff.selected.text"
+        unselectedBgColor="projectView.onoff.unselected.bg"
+        unselectedBorderColor="projectView.onoff.unselected.border"
+        unselectedTextColor="projectView.onoff.unselected.text"
+        rolloverTextColor="projectView.onoff.text.rollover"/>
+    <style selector="toggleButton#enable" ui="onOffToggle"
+           weightX="0" fill="none" anchor="center"
+           marginLeft="5" marginRight="0"
+           minimumSize="(26,14)" preferredSize="(26,14)"/>
   </styles>
 
   <column styleClass="dialog" preferredSize="(600,710)" name="importCloudEditionPanel">
 
-    <label text="$import.cloud.edition.title" name="title" styleClass="title"/>
+    <label text="$import.cloud.accounts.title" name="title" styleClass="title"/>
 
     <column styleClass="innerDialog">
       <column styleClass="innerDialogContent">
 
-        <htmlEditorPane text="$import.cloud.edition.message" styleClass="multiLineLabel"/>
+        <htmlEditorPane ref="message" styleClass="multiLineLabel"/>
 
         <scrollPane marginTop="20" forceVerticalScroll="true" weightY="100">
-          <column margin="20" name="connectionsPanel">
+          <column margin="20" name="accountsPanel">
 
-            <repeat ref="connections" layout="column">
-              <column styleClass="connection">
+            <repeat ref="accounts" layout="column">
+              <column ref="accountPanel" styleClass="account">
                 <row marginTop="10" marginBottom="4">
-                  <label ref="connectionName" styleClass="name"/>
+                  <label ref="accountName" styleClass="name"/>
                   <filler fill="horizontal"/>
                 </row>
                 <row marginTop="2" marginBottom="10">
-                  <label ref="details" styleClass="details"/>
+                  <label ref="accountNumber" styleClass="details"/>
                   <filler fill="horizontal"/>
-                  <button ref="editAccounts" styleClass="edit"/>
-                  <button ref="updatePassword" styleClass="edit"/>
-                  <button ref="delete" styleClass="edit"/>
+                  <toggleButton ref="toggle"/>
                 </row>
               </column>
             </repeat>
@@ -47,29 +57,16 @@
         </scrollPane>
 
         <row margin="10" marginBottom="0">
-          <button action="addConnection" marginLeft="30"/>
-          <filler fill="horizontal"/>
-          <button action="download" marginRight="30"/>
         </row>
-
-        <column styleClass="separator" weightY="20" marginTop="20">
-          <label text="$import.cloud.edition.account" font="-,bold,16" anchor="center" marginTop="10" marginBottom="5"/>
-          <row>
-            <filler fill="horizontal"/>
-            <label ref="currentEmailAddress"/>
-            <button action="modifyEmailAddress" marginLeft="10"/>
-            <filler fill="horizontal"/>
-          </row>
-          <label ref="subscriptionEndDate" anchor="center"/>
-          <button action="unsubscribe" anchor="center" fill="none" marginTop="3"/>
-        </column>
 
       </column>
     </column>
 
     <row styleClass="dialogButtons" name="buttons">
+      <button action="back" marginRight="30"/>
       <filler fill="horizontal"/>
       <button action="close"/>
+      <button action="apply"/>
     </row>
   </column>
 

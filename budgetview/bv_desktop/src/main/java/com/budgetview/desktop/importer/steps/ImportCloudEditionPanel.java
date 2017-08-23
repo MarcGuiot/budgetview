@@ -53,6 +53,14 @@ public class ImportCloudEditionPanel extends AbstractImportStepPanel {
         cellBuilder.add("connectionName", new JLabel(bankName));
         cellBuilder.add("details", getDetailsLabel(connection, bankName));
 
+        JButton editAccountsButton = new JButton(new AbstractAction(Lang.get("import.cloud.edition.editAccounts.button")) {
+          public void actionPerformed(ActionEvent e) {
+
+          }
+        });
+        cellBuilder.add("editAccounts", editAccountsButton);
+        editAccountsButton.setName("editAccounts:" + bankName);
+
         JButton updatePasswordButton = new JButton(new UpdatePasswordAction(connection));
         cellBuilder.add("updatePassword", updatePasswordButton);
         updatePasswordButton.setName("updatePassword:" + bankName);

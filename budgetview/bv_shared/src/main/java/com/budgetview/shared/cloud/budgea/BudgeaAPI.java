@@ -41,10 +41,23 @@ public class BudgeaAPI {
   }
 
   public JSONObject getUsers() throws IOException {
-    checkToken();
-    String url = "/users";
-    return json(Request.Get(BudgeaConstants.getServerUrl(url))
-                  .addHeader(BudgeaConstants.AUTHORIZATION, "Bearer " + token), url);
+    return getAsJson("/users");
+  }
+
+  public JSONObject getBanks() throws IOException {
+    return getAsJson("/banks?expand=fields");
+  }
+
+  public JSONObject getBankFields(int budgeaBankId) throws IOException {
+    return getAsJson("/banks/" + budgeaBankId + "/fields");
+  }
+
+  public JSONObject getUserConnections(int userId) throws IOException {
+    return getAsJson("/users/" + userId + "/connections");
+  }
+
+  public JSONObject getUserAccounts(int userId) throws IOException {
+    return getAsJson("/users/" + userId + "/accounts");
   }
 
   public void deleteUser(int userId) throws IOException {
@@ -52,28 +65,6 @@ public class BudgeaAPI {
     String url = "/users/" + userId;
     Http.execute(url, Request.Delete(BudgeaConstants.getServerUrl(url))
       .addHeader(BudgeaConstants.AUTHORIZATION, "Bearer " + token));
-  }
-
-  public JSONObject getBanks() throws IOException {
-    checkToken();
-    String url = "/banks?expand=fields";
-    return json(Request.Get(BudgeaConstants.getServerUrl(url))
-                  .addHeader(BudgeaConstants.AUTHORIZATION, "Bearer " + token), url);
-  }
-
-  public JSONObject getBankFields(int budgeaBankId) throws IOException {
-    checkToken();
-    String url = "/banks/" + budgeaBankId + "/fields";
-    return json(Request.Get(BudgeaConstants.getServerUrl(url))
-                  .addHeader(BudgeaConstants.AUTHORIZATION, "Bearer " + token), url);
-  }
-
-  public JSONObject getUserConnections(int userId) throws IOException {
-    checkToken();
-    String url = "/users/" + userId + "/connections";
-    return json(Request.Get(BudgeaConstants.getServerUrl(url))
-                  .addHeader(BudgeaConstants.AUTHORIZATION, "Bearer " + token)
-                  .addHeader("user_id", "me"), url);
   }
 
   public static class LoginResult {
@@ -175,10 +166,7 @@ public class BudgeaAPI {
   }
 
   public Integer getUserId() throws IOException {
-    checkToken();
-    String url = "/users/me";
-    JSONObject user = json(Request.Get(BudgeaConstants.getServerUrl(url))
-                             .addHeader(BudgeaConstants.AUTHORIZATION, "Bearer " + token), url);
+    JSONObject user = getAsJson("/users/me");
     return user.getInt("id");
   }
 
@@ -197,6 +185,12 @@ public class BudgeaAPI {
 
   public String getToken() throws IOException {
     return token;
+  }
+
+  private JSONObject getAsJson(String url) throws IOException {
+    checkToken();
+    return json(Request.Get(BudgeaConstants.getServerUrl(url))
+                  .addHeader(BudgeaConstants.AUTHORIZATION, "Bearer " + token), url);
   }
 
   private void checkToken() throws IOException {

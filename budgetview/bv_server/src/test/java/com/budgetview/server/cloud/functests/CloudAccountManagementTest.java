@@ -2,6 +2,8 @@ package com.budgetview.server.cloud.functests;
 
 import com.budgetview.model.TransactionType;
 import com.budgetview.server.cloud.functests.testcases.CloudDesktopTestCase;
+import com.budgetview.server.cloud.stub.BudgeaAccounts;
+import com.budgetview.server.cloud.stub.BudgeaConnections;
 import com.budgetview.server.cloud.stub.BudgeaStatement;
 import com.budgetview.shared.cloud.budgea.BudgeaCategory;
 import org.globsframework.utils.Dates;
@@ -13,7 +15,7 @@ public class CloudAccountManagementTest extends CloudDesktopTestCase {
   public void testEmptyAccountsAreAutomaticallySkipped() throws Exception {
     cloud.createSubscription("toto@example.com", Dates.tomorrow());
 
-    budgea.pushConnectionResponse(1, 123, 40);
+    budgea.pushNewConnectionResponse(1, 123, 40);
     budgea.pushStatement(BudgeaStatement.init()
                            .addConnection(1, 123, 40, "Connecteur de test", "2016-08-10 17:44:26")
                            .addAccount(1, "Main account 1", "100200300", "checking", 1000.00, "2016-08-10 13:00:00")
@@ -58,6 +60,23 @@ public class CloudAccountManagementTest extends CloudDesktopTestCase {
 
     budgea.checkAccountUpdates("account:2 => disabled:1");
 
+    System.out.println("\nCloudAccountManagementTest.testEmptyAccountsAreAutomaticallySkipped ================");
+
+    budgea.pushConnectionList(BudgeaConnections.init()
+                                .add(1, 123, 40, true, "2016-08-10 17:44:26")
+                                .get());
+    budgea.pushAccountList(BudgeaAccounts.init()
+                             .add(1, 1, "Main account 1", "100200300", true)
+                             .add(1, 2, "Main account 2", "200300400", true)
+                             .get());
+
+    operations.openImportDialog()
+      .editCloudConnections()
+      .editAccounts("CIC")
+      .checkAccounts("Main account 1 / 100200300 / true",
+                     "Main account 2 / 200300400 / false")
+      .close();
+
     fail("TODO : on peut voir et réactiver les comptes à partir de la vue d'édition de la connexion cloud");
     fail("TODO: montrer les comptes disabled puis les réselectionner, refaire l'import et les retrouver " +
          "- cela signifie de refaire une passe sur tous les updates côté serveur en filtrant les comptes");
@@ -71,5 +90,10 @@ public class CloudAccountManagementTest extends CloudDesktopTestCase {
   @Test
   public void testDeletedAccountsLinkedToACLoudDownloadAreAutomaticallyDisabled() throws Exception {
     fail("Que se passe-t-il si undo ? Le griser, ou pousser l'action inverse ?");
+  }
+
+  @Test
+  public void testDisabledAccountsOperationsAreExcludedOnFirstDownload() throws Exception {
+    fail("Plusieurs updates côté serveur, le dernier désactive le compte");
   }
 }

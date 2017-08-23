@@ -36,23 +36,27 @@ public class BudgeaChecker {
     stub.pushStatement(json);
   }
 
+  public void pushNewConnectionResponse(int connectionId, int userId, int bankId) {
+    pushNewConnectionResponse(connectionId, userId, bankId, "null");
+  }
+
+  public void pushNewConnectionResponse(int connectionId, int userId, int bankId, String error) {
+    stub.pushNewConnectionResponse("{\n" +
+                                   "   \"id\" : " + connectionId + ",\n" +
+                                   "   \"id_user\" : " + userId + ",\n" +
+                                   "   \"id_bank\" : " + bankId + ",\n" +
+                                   "   \"expire\" : null,\n" +
+                                   "   \"last_update\" : \"2016-04-03 18:51:07\",\n" +
+                                   "   \"error\" : " + error + ",\n" +
+                                   "}\n");
+  }
+
   public void pushConnectionList(String json) {
     stub.pushConnectionList(json);
   }
 
-  public void pushConnectionResponse(int connectionId, int userId, int bankId) {
-    pushConnectionResponse(connectionId, userId, bankId, "null");
-  }
-
-  public void pushConnectionResponse(int connectionId, int userId, int bankId, String error) {
-    stub.pushConnectionResponse("{\n" +
-                                "   \"id\" : " + connectionId + ",\n" +
-                                "   \"id_user\" : " + userId + ",\n" +
-                                "   \"id_bank\" : " + bankId + ",\n" +
-                                "   \"expire\" : null,\n" +
-                                "   \"last_update\" : \"2016-04-03 18:51:07\",\n" +
-                                "   \"error\" : " + error + ",\n" +
-                                "}\n");
+  public void pushAccountList(String json) {
+    stub.pushAccountResponse(json);
   }
 
   public void callWebhook(String json) throws IOException {

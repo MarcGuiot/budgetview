@@ -69,12 +69,10 @@ public class CloudEditionChecker extends ViewChecker {
   }
 
   public List<String> getConnectionNames(Panel panel) {
-    System.out.println("CloudEditionChecker.getConnectionNames: \n" + panel.getDescription());
     Component[] labels = panel.getSwingComponents(JLabel.class, "connectionName");
     List<String> actualNames = new ArrayList<String>();
     for (Component label : labels) {
       String text = ((JLabel) label).getText();
-      System.out.println("    -> " + text);
       actualNames.add(text);
     }
     return actualNames;
@@ -114,6 +112,12 @@ public class CloudEditionChecker extends ViewChecker {
     return new ImportDialogPreviewChecker(mainWindow);
   }
 
+  public CloudAccountsChecker editAccounts(String bankName) {
+    checkContainsConnection(bankName);
+    mainWindow.getButton("editAccounts:" + bankName).click();
+    return new CloudAccountsChecker(mainWindow);
+  }
+
   public CloudSignupChecker modifyCloudEmail(String currentAddress) {
     assertThat(mainWindow.getTextBox("currentEmailAddress").textContains(currentAddress));
     mainWindow.getButton("modifyEmailAddress").click();
@@ -136,5 +140,4 @@ public class CloudEditionChecker extends ViewChecker {
     mainWindow.getButton("close").click();
     assertFalse(mainWindow.isVisible());
   }
-
 }

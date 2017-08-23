@@ -27,9 +27,13 @@ public class CloudConstants {
   public static final String PROVIDER_TOKEN = "provider_token";
   public static final String PROVIDER_TOKEN_REGISTERED = "provider_token_registered";
   public static final String PROVIDER_CONNECTION_ID = "provider_connection_id";
+  public static final String PROVIDER_ACCOUNT_ID = "provider_account_id";
   public static final String PROVIDER_BANK_ID = "provider_bank_id";
   public static final String EXISTING_STATEMENTS = "existing_statements";
 
+  public static final String NAME = "name";
+  public static final String NUMBER = "number";
+  public static final String ENABLED = "enabled";
   public static final String BANK_NAME = "bank_name";
   public static final String INITIALIZED = "initialized";
   public static final String PASSWORD_ERROR = "password_error";

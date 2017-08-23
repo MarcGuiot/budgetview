@@ -69,6 +69,7 @@ public class PicsouModel {
                           ProjectAccountGraph.TYPE,
                           CloudDesktopUser.TYPE,
                           CloudProviderConnection.TYPE,
+                          CloudProviderAccount.TYPE,
                           AccountWeather.TYPE,
                           WeatherType.TYPE
                           )

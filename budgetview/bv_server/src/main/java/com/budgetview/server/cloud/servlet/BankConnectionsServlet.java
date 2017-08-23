@@ -6,7 +6,6 @@ import com.budgetview.server.cloud.model.CloudUser;
 import com.budgetview.server.cloud.model.ProviderConnection;
 import com.budgetview.server.cloud.model.ProviderUpdate;
 import com.budgetview.shared.cloud.CloudConstants;
-import com.budgetview.shared.json.Json;
 import com.budgetview.shared.model.Provider;
 import org.apache.log4j.Logger;
 import org.globsframework.json.JsonGlobFormat;
@@ -52,7 +51,7 @@ public class BankConnectionsServlet extends HttpCloudServlet {
         else {
           Integer providerId = getOptionalIntHeader(CloudConstants.PROVIDER_ID);
           if (providerId == null) {
-            logger.error("No provider set in call where a provider connection id (" + providerId + ") is set");
+            logger.error("No provider set in call where a provider connection id (" + connectionId + ") is set");
             return HttpServletResponse.SC_BAD_REQUEST;
           }
           if (providerId != Provider.BUDGEA.getId()) {
@@ -81,14 +80,17 @@ public class BankConnectionsServlet extends HttpCloudServlet {
 
         Integer providerUserId = user.get(CloudUser.PROVIDER_USER_ID);
         JSONArray budgeaConnections;
+        JSONArray connectionAccounts;
         Map<Integer, String> bankNames;
         if (providerUserId != null) {
-          budgeaConnections = budgeaAPI.getUserConnections(providerUserId).getJSONArray("connections");
-          bankNames = getBankNames();
+          budgeaConnections = fetchConnections(providerUserId);
+          bankNames = fetchBankNames();
+          connectionAccounts = fetchAccounts(providerUserId);
         }
         else {
           budgeaConnections = new JSONArray();
           bankNames = new HashMap<Integer, String>();
+          connectionAccounts = new JSONArray();
         }
 
         writer.object();
@@ -113,6 +115,7 @@ public class BankConnectionsServlet extends HttpCloudServlet {
           writer.key(CloudConstants.BANK_NAME).value(getName(budgeaConnection, bankNames));
           writer.key(CloudConstants.INITIALIZED).value(initialized);
           writer.key(CloudConstants.PASSWORD_ERROR).value(passwordError);
+          writeConnectionAccounts(writer, budgeaConnectionId, connectionAccounts);
           writer.endObject();
         }
         writer.endArray();
@@ -142,10 +145,11 @@ public class BankConnectionsServlet extends HttpCloudServlet {
           writer.key("connections");
           writer.array();
           Glob connection = connections.getFirst();
+          Integer providerConnectionId = connection.get(ProviderConnection.PROVIDER_CONNECTION);
           writer.object();
           writer.key("id").value(connectionId);
           writer.key(CloudConstants.PROVIDER_ID).value(connection.get(ProviderConnection.PROVIDER));
-          writer.key(CloudConstants.PROVIDER_CONNECTION_ID).value(connection.get(ProviderConnection.PROVIDER_CONNECTION));
+          writer.key(CloudConstants.PROVIDER_CONNECTION_ID).value(providerConnectionId);
           writer.key(CloudConstants.INITIALIZED).value(connection.isTrue(ProviderConnection.INITIALIZED));
           writer.key(CloudConstants.PASSWORD_ERROR).value(connection.isTrue(ProviderConnection.PASSWORD_ERROR));
           writer.endObject();
@@ -154,7 +158,34 @@ public class BankConnectionsServlet extends HttpCloudServlet {
         writer.endObject();
       }
 
-      private Map<Integer, String> getBankNames() throws IOException {
+      private void writeConnectionAccounts(JSONWriter writer, int budgeaConnectionId, JSONArray connectionAccounts) {
+        writer.key("accounts");
+        writer.array();
+        for (Object o : connectionAccounts) {
+          JSONObject account = (JSONObject) o;
+          int connectionId = account.getInt("id_connection");
+          if (connectionId != budgeaConnectionId) {
+            continue;
+          }
+          writer.object();
+          writer.key(CloudConstants.PROVIDER_ACCOUNT_ID).value(account.getInt("id"));
+          writer.key(CloudConstants.NAME).value(account.optString("name"));
+          writer.key(CloudConstants.NUMBER).value(account.optString("number"));
+          writer.key(CloudConstants.ENABLED).value(account.isNull("disabled"));
+          writer.endObject();
+        }
+        writer.endArray();
+      }
+
+      private JSONArray fetchConnections(Integer providerUserId) throws IOException {
+        return budgeaAPI.getUserConnections(providerUserId).getJSONArray("connections");
+      }
+
+      private JSONArray fetchAccounts(Integer providerUserId) throws IOException {
+        return budgeaAPI.getUserAccounts(providerUserId).getJSONArray("accounts");
+      }
+
+      private Map<Integer, String> fetchBankNames() throws IOException {
         Map<Integer, String> result = new HashMap<Integer, String>();
         JSONObject banks = budgeaAPI.getBanks();
         for (Object b : banks.getJSONArray("banks")) {

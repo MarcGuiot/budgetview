@@ -29,4 +29,8 @@ public class JsonUtils {
       }
     }
   }
+
+  public static String toTimeStampString(Date date) {
+    return DEFAULT_TIMESTAMP_FORMAT.format(date);
+  }
 }

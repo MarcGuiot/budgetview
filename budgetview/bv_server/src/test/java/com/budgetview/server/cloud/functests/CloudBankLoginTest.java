@@ -3,6 +3,7 @@ package com.budgetview.server.cloud.functests;
 import com.budgetview.functests.checkers.CloudBankConnectionChecker;
 import com.budgetview.model.TransactionType;
 import com.budgetview.server.cloud.functests.testcases.CloudDesktopTestCase;
+import com.budgetview.server.cloud.stub.BudgeaAccounts;
 import com.budgetview.server.cloud.stub.BudgeaBankFieldSample;
 import com.budgetview.server.cloud.stub.BudgeaConnections;
 import com.budgetview.server.cloud.stub.BudgeaStatement;
@@ -16,7 +17,7 @@ public class CloudBankLoginTest extends CloudDesktopTestCase {
   public void testTwoStepBankLogin() throws Exception {
     cloud.createSubscription("toto@example.com", Dates.tomorrow());
 
-    budgea.pushConnectionResponse(1, 123, 40);
+    budgea.pushNewConnectionResponse(1, 123, 40);
     budgea.setBankLoginFields(BudgeaBankFieldSample.BUDGEA_FIELDS_STEP_1, BudgeaBankFieldSample.BUDGEA_FIELDS_STEP_2);
     budgea.pushStatement(BudgeaStatement.init()
                            .addConnection(1, 123, 40, "Connecteur de test", "2016-08-10 17:44:26")
@@ -65,7 +66,7 @@ public class CloudBankLoginTest extends CloudDesktopTestCase {
 
     cloud.createSubscription("toto@example.com", Dates.tomorrow());
 
-    budgea.pushConnectionResponse(1, 123, 40);
+    budgea.pushNewConnectionResponse(1, 123, 40);
     budgea.pushStatement(BudgeaStatement.init()
                            .addConnection(1, 123, 40, "Connecteur de test", "2016-08-10 17:44:26")
                            .addAccount(1, "Main account 1", "100200300", "checking", 1000.00, "2016-08-10 13:00:00")
@@ -106,7 +107,7 @@ public class CloudBankLoginTest extends CloudDesktopTestCase {
   public void testLoginErrors() throws Exception {
     cloud.createSubscription("toto@example.com", Dates.tomorrow());
 
-    budgea.pushConnectionResponse(1, 123, 40);
+    budgea.pushNewConnectionResponse(1, 123, 40);
     budgea.pushStatement(BudgeaStatement.init()
                            .addConnection(1, 123, 40, "Connecteur de test", "2016-08-10 17:44:26")
                            .addAccount(1, "Main account 1", "100200300", "checking", 1000.00, "2016-08-10 13:00:00")
@@ -159,7 +160,7 @@ public class CloudBankLoginTest extends CloudDesktopTestCase {
 
     cloud.createSubscription("toto@example.com", Dates.tomorrow());
 
-    budgea.pushConnectionResponse(1, 123, 40);
+    budgea.pushNewConnectionResponse(1, 123, 40);
     budgea.pushStatement(BudgeaStatement.init()
                            .addConnection(1, 123, 40, "Connecteur de test", "2016-08-10 17:44:26")
                            .addAccount(1, "Main account 1", "100200300", "checking", 1000.00, "2016-08-10 13:00:00")
@@ -194,6 +195,9 @@ public class CloudBankLoginTest extends CloudDesktopTestCase {
     budgea.pushConnectionList(BudgeaConnections.init()
                                 .add(1, 123, 40, true, "2016-08-10 17:44:26")
                                 .get());
+    budgea.pushAccountList(BudgeaAccounts.init()
+                             .add(1, 1, "Main account 1", "100200300", true)
+                             .get());
     operations.openImportDialog()
       .editCloudConnections()
       .checkContainsConnection("Connecteur de test")
@@ -204,13 +208,17 @@ public class CloudBankLoginTest extends CloudDesktopTestCase {
     budgea.pushConnectionList(BudgeaConnections.init()
                                 .add(1, 123, 40, true, "2016-08-10 17:44:26")
                                 .get());
+    budgea.pushAccountList(BudgeaAccounts.init()
+                             .add(1, 1, "Main account 1", "100200300", true)
+                             .get());
     operations.openImportDialog()
       .editCloudConnections()
       .deleteConnection("Connecteur de test")
       .close();
 
-    budgea.pushConnectionResponse(1, 123, 40);
+    budgea.pushNewConnectionResponse(1, 123, 40);
     budgea.pushConnectionList(BudgeaConnections.init().get());
+    budgea.pushAccountList(BudgeaAccounts.init().get());
     budgea.pushStatement(BudgeaStatement.init()
                            .addConnection(1, 123, 40, "Connecteur de test", "2016-08-13 14:00:00")
                            .addAccount(1, "Main account 1", "100200300", "checking", 900.00, "2016-08-13 13:00:00")
@@ -248,7 +256,7 @@ public class CloudBankLoginTest extends CloudDesktopTestCase {
   public void testBankLoginChange() throws Exception {
     cloud.createSubscription("toto@example.com", Dates.tomorrow());
 
-    budgea.pushConnectionResponse(1, 123, 40);
+    budgea.pushNewConnectionResponse(1, 123, 40);
     budgea.pushStatement(BudgeaStatement.init()
                            .addConnection(1, 123, 40, "Connecteur de test", "2016-08-10 17:44:26")
                            .addAccount(1, "Main account 1", "100200300", "checking", 1000.00, "2016-08-10 13:00:00")
@@ -286,10 +294,13 @@ public class CloudBankLoginTest extends CloudDesktopTestCase {
                          .get());
     mailbox.checkConnectionPasswordAlert("toto@example.com", "Connecteur de test");
 
-    budgea.pushConnectionResponse(1, 123, 40);
+    budgea.pushNewConnectionResponse(1, 123, 40);
     budgea.pushConnectionList(BudgeaConnections.init()
                                 .add(1, 123, 40, true, "2016-08-10 17:44:26", "wrongpass")
                                 .get());
+    budgea.pushAccountList(BudgeaAccounts.init()
+                             .add(1, 1, "Main account 1", "100200300", true)
+                             .get());
     operations.openImportDialog()
       .editCloudConnections()
       .checkConnectionWithPasswordError("Connecteur de test")
@@ -306,7 +317,7 @@ public class CloudBankLoginTest extends CloudDesktopTestCase {
   public void testErrorDuringAPasswordUpdate() throws Exception {
     cloud.createSubscription("toto@example.com", Dates.tomorrow());
 
-    budgea.pushConnectionResponse(1, 123, 40);
+    budgea.pushNewConnectionResponse(1, 123, 40);
     budgea.pushStatement(BudgeaStatement.init()
                            .addConnection(1, 123, 40, "Connecteur de test", "2016-08-10 17:44:26")
                            .addAccount(1, "Main account 1", "100200300", "checking", 1000.00, "2016-08-10 13:00:00")
@@ -336,7 +347,10 @@ public class CloudBankLoginTest extends CloudDesktopTestCase {
     budgea.pushConnectionList(BudgeaConnections.init()
                                 .add(1, 123, 40, true, "2016-08-10 17:44:26", "wrongpass")
                                 .get());
-    budgea.pushConnectionResponse(1, 123, 40, "wrongpass");
+    budgea.pushAccountList(BudgeaAccounts.init()
+                             .add(1, 1, "Main account 1", "100200300", true)
+                             .get());
+    budgea.pushNewConnectionResponse(1, 123, 40, "wrongpass");
     CloudBankConnectionChecker bankConnection = operations.openImportDialog()
       .editCloudConnections()
       .updatePassword("Connecteur de test")
@@ -345,7 +359,7 @@ public class CloudBankLoginTest extends CloudDesktopTestCase {
       .setPassword("Code (1234)", "6789")
       .nextAndCheckError("Login failed");
 
-    budgea.pushConnectionResponse(1, 123, 40);
+    budgea.pushNewConnectionResponse(1, 123, 40);
     bankConnection
       .setPassword("Code (1234)", "2345")
       .next()

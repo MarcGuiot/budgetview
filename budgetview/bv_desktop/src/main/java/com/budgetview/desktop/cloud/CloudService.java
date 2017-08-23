@@ -567,13 +567,26 @@ public class CloudService {
           for (Object c : connections.getJSONArray("connections")) {
             JSONObject connection = (JSONObject) c;
             int providerId = connection.getInt(CloudConstants.PROVIDER_ID);
-            repository.create(CloudProviderConnection.TYPE,
-                              value(CloudProviderConnection.PROVIDER, providerId),
-                              value(CloudProviderConnection.PROVIDER_CONNECTION_ID, connection.getInt(CloudConstants.PROVIDER_CONNECTION_ID)),
-                              value(CloudProviderConnection.BANK, Bank.findIdByProviderId(providerId, connection.getInt(CloudConstants.PROVIDER_BANK_ID), repository)),
-                              value(CloudProviderConnection.BANK_NAME, connection.getString(CloudConstants.BANK_NAME)),
-                              value(CloudProviderConnection.INITIALIZED, connection.getBoolean(CloudConstants.INITIALIZED)),
-                              value(CloudProviderConnection.PASSWORD_ERROR, connection.getBoolean(CloudConstants.PASSWORD_ERROR)));
+            Glob providerConnection =
+              repository.create(CloudProviderConnection.TYPE,
+                                value(CloudProviderConnection.PROVIDER, providerId),
+                                value(CloudProviderConnection.PROVIDER_CONNECTION_ID, connection.getInt(CloudConstants.PROVIDER_CONNECTION_ID)),
+                                value(CloudProviderConnection.BANK, Bank.findIdByProviderId(providerId, connection.getInt(CloudConstants.PROVIDER_BANK_ID), repository)),
+                                value(CloudProviderConnection.BANK_NAME, connection.getString(CloudConstants.BANK_NAME)),
+                                value(CloudProviderConnection.INITIALIZED, connection.getBoolean(CloudConstants.INITIALIZED)),
+                                value(CloudProviderConnection.PASSWORD_ERROR, connection.getBoolean(CloudConstants.PASSWORD_ERROR)));
+            JSONArray accounts = connection.optJSONArray("accounts");
+            if (accounts != null) {
+              for (Object a : accounts) {
+                JSONObject account = (JSONObject) a;
+                repository.create(CloudProviderAccount.TYPE,
+                                  value(CloudProviderAccount.CONNECTION, providerConnection.get(CloudProviderConnection.ID)),
+                                  value(CloudProviderAccount.PROVIDER_ACCOUNT_ID, account.getInt(CloudConstants.PROVIDER_ACCOUNT_ID)),
+                                  value(CloudProviderAccount.NAME, account.getString(CloudConstants.NAME)),
+                                  value(CloudProviderAccount.NUMBER, account.getString(CloudConstants.NUMBER)),
+                                  value(CloudProviderAccount.ENABLED, account.getBoolean(CloudConstants.ENABLED)));
+              }
+            }
           }
           repository.completeChangeSet();
           callback.processCompletion();
@@ -773,7 +786,6 @@ public class CloudService {
     final List<Pair<Integer, Boolean>> updates = new ArrayList<Pair<Integer, Boolean>>();
     changeSet.safeVisit(RealAccount.TYPE, new ChangeSetVisitor() {
       public void visitCreation(Key key, FieldValues values) throws Exception {
-        System.out.println("CloudService.visitCreation: " + key + " / " + GlobPrinter.toString(values));
         Integer providerAccountId = values.get(RealAccount.PROVIDER_ACCOUNT_ID);
         if (Utils.equal(values.get(RealAccount.PROVIDER), Provider.BUDGEA.getId())
             && providerAccountId != null
@@ -783,7 +795,6 @@ public class CloudService {
       }
 
       public void visitUpdate(Key key, FieldValuesWithPrevious values) throws Exception {
-        System.out.println("CloudService.visitUpdate: " + key + " / " + GlobPrinter.toString(values));
         if (values.contains(RealAccount.ENABLED)) {
           Glob realAccount = repository.get(key);
           Integer providerAccountId = realAccount.get(RealAccount.PROVIDER_ACCOUNT_ID);
@@ -822,8 +833,6 @@ public class CloudService {
           }
           writer.endArray();
           writer.endObject();
-
-          System.out.println("CloudService.run: sending  " + json.toString());
 
           cloudAPI.updateAccounts(cloudUserId, deviceId, deviceToken, json.toString());
         }

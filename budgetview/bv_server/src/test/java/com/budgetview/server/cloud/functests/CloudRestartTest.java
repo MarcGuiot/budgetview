@@ -2,6 +2,7 @@ package com.budgetview.server.cloud.functests;
 
 import com.budgetview.model.TransactionType;
 import com.budgetview.server.cloud.functests.testcases.CloudDesktopTestCase;
+import com.budgetview.server.cloud.stub.BudgeaAccounts;
 import com.budgetview.server.cloud.stub.BudgeaConnections;
 import com.budgetview.server.cloud.stub.BudgeaStatement;
 import com.budgetview.shared.cloud.budgea.BudgeaCategory;
@@ -33,7 +34,7 @@ public class CloudRestartTest extends CloudDesktopTestCase {
 
     cloud.createSubscription("toto@example.com", Dates.tomorrow());
 
-    budgea.pushConnectionResponse(1, 123, 40);
+    budgea.pushNewConnectionResponse(1, 123, 40);
     budgea.pushStatement(BudgeaStatement.init()
                            .addConnection(1, 123, 40, "Connecteur de test", "2016-08-10 17:44:26")
                            .addAccount(1, "Main account 1", "100200300", "checking", 1000.00, "2016-08-10 13:00:00")
@@ -138,7 +139,7 @@ public class CloudRestartTest extends CloudDesktopTestCase {
   public void testRestartWhenCloudAccountWasDeletedOnServer() throws Exception {
     cloud.createSubscription("toto@example.com", Dates.tomorrow());
 
-    budgea.pushConnectionResponse(1, 123, 40);
+    budgea.pushNewConnectionResponse(1, 123, 40);
     budgea.pushStatement(BudgeaStatement.init()
                            .addConnection(1, 123, 40, "Connecteur de test", "2016-08-10 17:44:26")
                            .addAccount(1, "Main account 1", "100200300", "checking", 1000.00, "2016-08-10 13:00:00")
@@ -188,7 +189,9 @@ public class CloudRestartTest extends CloudDesktopTestCase {
     budgea.pushConnectionList(BudgeaConnections.init()
                                 .add(1, 123, 40, true, "2016-08-10 17:44:26")
                                 .get());
-
+    budgea.pushAccountList(BudgeaAccounts.init()
+                             .add(1, 1, "Main account 1", "100200300", true)
+                             .get());
     operations.openImportDialog()
       .editCloudConnections()
       .unsubscribe()
@@ -215,7 +218,7 @@ public class CloudRestartTest extends CloudDesktopTestCase {
 
     cloud.createSubscription("toto@example.com", Dates.tomorrow());
 
-    budgea.pushConnectionResponse(1, 123, 40);
+    budgea.pushNewConnectionResponse(1, 123, 40);
     budgea.pushStatement(BudgeaStatement.init()
                            .addConnection(1, 123, 40, "Connecteur de test", "2016-08-10 17:44:26")
                            .addAccount(1, "Main account 1", "100200300", "checking", 1000.00, "2016-08-15 13:00:00")

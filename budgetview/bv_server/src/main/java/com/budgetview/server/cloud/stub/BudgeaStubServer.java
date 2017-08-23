@@ -6,10 +6,8 @@ import com.budgetview.server.web.WebServer;
 import com.budgetview.shared.cloud.budgea.BudgeaCategory;
 import com.budgetview.shared.cloud.budgea.BudgeaConstants;
 import org.apache.log4j.Logger;
-import org.globsframework.utils.Files;
 import org.globsframework.utils.Strings;
 import org.globsframework.utils.Utils;
-import org.json.JSONObject;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -17,7 +15,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.PrintWriter;
 import java.util.*;
 import java.util.regex.Matcher;
@@ -38,7 +35,8 @@ public class BudgeaStubServer {
   private BudgeaBankFieldSample bankFieldsForUpdate = null;
   private Stack<String> statements = new Stack<String>();
   private Stack<String> connectionLists = new Stack<String>();
-  private Stack<String> connectionResponses = new Stack<String>();
+  private Stack<String> newConnectionResponses = new Stack<String>();
+  private Stack<String> accountLists = new Stack<String>();
   private List<String> lastLoginFields = new ArrayList<String>();
   private String loginConstraint;
   private Integer lastDeletedUserId;
@@ -68,8 +66,8 @@ public class BudgeaStubServer {
     webServer.add(new BanksFieldsServlet(), "/banks/*");
     webServer.add(new UsersMeServlet(), "/users/me");
     webServer.add(new UsersMeConnectionsServlet(), "/users/me/connections/*");
-    webServer.add(new UserConnectionsServlet(), "/users/*");
     webServer.add(new UsersMeAccountServlet(), "/users/me/accounts/*");
+    webServer.add(new UserConnectionsAndAccountsServlet(), "/users/*");
     webServer.add(new PingServlet(), "/ping");
 
     Log4J.init(config);
@@ -143,8 +141,12 @@ public class BudgeaStubServer {
     this.connectionLists.push(json);
   }
 
-  public void pushConnectionResponse(String json) {
-    this.connectionResponses.push(json);
+  public void pushAccountResponse(String json) {
+    this.accountLists.push(json);
+  }
+
+  public void pushNewConnectionResponse(String json) {
+    this.newConnectionResponses.push(json);
   }
 
   public void checkLastLogin(String... fieldValues) {
@@ -360,12 +362,12 @@ public class BudgeaStubServer {
 
       if (bankFieldsForUpdate == null || update) {
         logger.debug(update ? "Completing connection for step2" : "Completing connection for step1");
-        if (connectionResponses.isEmpty()) {
+        if (newConnectionResponses.isEmpty()) {
           logger.error("No connection response provided - you must push one");
           response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
           return;
         }
-        String connectionResponse = connectionResponses.pop();
+        String connectionResponse = newConnectionResponses.pop();
         if (connectionResponse.contains("wrongpass")) {
           response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
           PrintWriter writer = response.getWriter();
@@ -395,9 +397,9 @@ public class BudgeaStubServer {
     }
   }
 
-  private class UserConnectionsServlet extends HttpServlet {
+  private class UserConnectionsAndAccountsServlet extends HttpServlet {
 
-    private Logger logger = Logger.getLogger("BudgeaStubServer:UserConnectionsServlet");
+    private Logger logger = Logger.getLogger("BudgeaStubServer:UserConnectionsAndAccountsServlet");
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
       logger.debug("GET");
@@ -407,14 +409,33 @@ public class BudgeaStubServer {
         return;
       }
 
-      if (connectionLists.isEmpty()) {
-        logger.error("No connection response provided - you may have to push a connection JSON before making this call");
+      String result;
+      if (request.getPathInfo().endsWith("connections")) {
+        if (connectionLists.isEmpty()) {
+          logger.error("No connection list provided - you may have to push a connection JSON before making this call");
+          response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+          return;
+        }
+        logger.info("Returning list of connections");
+        result = connectionLists.pop();
+      }
+      else if (request.getPathInfo().endsWith("accounts")) {
+        if (accountLists.isEmpty()) {
+          logger.error("No account list provided - you may have to push an account JSON before making this call");
+          response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+          return;
+        }
+        logger.info("Returning list of accounts");
+        result = accountLists.pop();
+      }
+      else {
+        logger.error("Unexpected request path " + request.getRequestURI());
         response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
         return;
       }
 
       PrintWriter writer = response.getWriter();
-      writer.write(connectionLists.pop());
+      writer.write(result);
       writer.close();
 
       response.setStatus(HttpServletResponse.SC_OK);
@@ -430,19 +451,6 @@ public class BudgeaStubServer {
 
       lastDeletedUserId = Integer.parseInt(request.getPathInfo().substring(1));
       response.setStatus(HttpServletResponse.SC_OK);
-    }
-  }
-
-  private class PingServlet extends HttpServlet {
-
-    private Logger logger = Logger.getLogger("BudgeaStubServer:PingServlet");
-
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-      logger.debug("GET");
-      PrintWriter writer = resp.getWriter();
-      writer.write("Pong");
-      writer.close();
-      resp.setStatus(HttpServletResponse.SC_OK);
     }
   }
 
@@ -497,7 +505,6 @@ public class BudgeaStubServer {
     }
   }
 
-
   private boolean checkAuthorization(HttpServletRequest request, Logger logger) {
     String actual = request.getHeader(BudgeaConstants.AUTHORIZATION);
     String expectedTemp = "Bearer " + lastTempToken;
@@ -507,5 +514,18 @@ public class BudgeaStubServer {
       return false;
     }
     return true;
+  }
+
+  private class PingServlet extends HttpServlet {
+
+    private Logger logger = Logger.getLogger("BudgeaStubServer:PingServlet");
+
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+      logger.debug("GET");
+      PrintWriter writer = resp.getWriter();
+      writer.write("Pong");
+      writer.close();
+      resp.setStatus(HttpServletResponse.SC_OK);
+    }
   }
 }

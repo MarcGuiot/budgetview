@@ -20,4 +20,8 @@ public class Budgea {
   public static Date parseDate(String timestamp) throws ParseException {
     return DATE_FORMAT.parse(timestamp);
   }
+
+  public static String toTimeStampString(Date date) {
+    return TIMESTAMP_FORMAT.format(date);
+  }
 }
