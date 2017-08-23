@@ -11,7 +11,6 @@ import org.globsframework.gui.splits.utils.GuiUtils;
 import org.globsframework.json.JsonGlobFormat;
 import org.globsframework.json.JsonGlobParser;
 import org.globsframework.model.*;
-import org.globsframework.model.format.GlobPrinter;
 import org.globsframework.utils.Log;
 import org.globsframework.utils.Strings;
 import org.globsframework.utils.Utils;
@@ -782,7 +781,7 @@ public class CloudService {
     thread.start();
   }
 
-  public void updateAccounts(ChangeSet changeSet, final GlobRepository repository) {
+  public void updateAccounts(ChangeSet changeSet, final GlobRepository repository, Callback callback) {
     final List<Pair<Integer, Boolean>> updates = new ArrayList<Pair<Integer, Boolean>>();
     changeSet.safeVisit(RealAccount.TYPE, new ChangeSetVisitor() {
       public void visitCreation(Key key, FieldValues values) throws Exception {
@@ -812,6 +811,10 @@ public class CloudService {
       return;
     }
 
+    updateAccounts(updates, repository, callback);
+  }
+
+  public void updateAccounts(final List<Pair<Integer, Boolean>> updates, GlobRepository repository, final Callback callback) {
     Glob user = repository.findOrCreate(CloudDesktopUser.KEY);
     final int cloudUserId = user.get(CloudDesktopUser.CLOUD_USER_ID);
     final int deviceId = user.get(CloudDesktopUser.DEVICE_ID);
@@ -835,9 +838,11 @@ public class CloudService {
           writer.endObject();
 
           cloudAPI.updateAccounts(cloudUserId, deviceId, deviceToken, json.toString());
+          callback.processCompletion();
         }
         catch (final Exception e) {
-          Log.write("[Cloud] Error updated account state", e);
+          Log.write("[Cloud] Error updating account state", e);
+          callback.processError(e);
         }
       }
     });

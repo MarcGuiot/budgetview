@@ -20,13 +20,16 @@ import org.globsframework.model.Key;
 import org.globsframework.model.utils.GlobComparators;
 import org.globsframework.model.utils.GlobMatchers;
 import org.globsframework.utils.Utils;
+import org.globsframework.utils.collections.Pair;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static org.globsframework.model.utils.GlobMatchers.linkedTo;
@@ -51,7 +54,7 @@ public class ImportCloudAccountsPanel extends AbstractImportStepPanel {
   }
 
   protected GlobsPanelBuilder createPanelBuilder() {
-    GlobsPanelBuilder builder = new GlobsPanelBuilder(getClass(), "/layout/importexport/importsteps/importCloudEditionPanel.splits", repository, localDirectory);
+    GlobsPanelBuilder builder = new GlobsPanelBuilder(getClass(), "/layout/importexport/importsteps/importCloudAccountsPanel.splits", repository, localDirectory);
 
     message = GuiUtils.createReadOnlyHtmlComponent();
     builder.add("message", message);
@@ -82,7 +85,7 @@ public class ImportCloudAccountsPanel extends AbstractImportStepPanel {
 
     backAction = new AbstractAction(Lang.get("import.cloud.accounts.back")) {
       public void actionPerformed(ActionEvent e) {
-        controller.showCloudBankSelection();
+        controller.showCloudEdition();
       }
     };
     builder.add("back", backAction);
@@ -92,7 +95,7 @@ public class ImportCloudAccountsPanel extends AbstractImportStepPanel {
         apply();
       }
     };
-    builder.add("download", applyAction);
+    builder.add("apply", applyAction);
 
     closeAction = new AbstractAction(getCloseLabel()) {
       public void actionPerformed(ActionEvent e) {
@@ -112,6 +115,7 @@ public class ImportCloudAccountsPanel extends AbstractImportStepPanel {
   }
 
   public void show(Glob cloudProviderConnection) {
+    createPanelIfNeeded();
     message.setText(Lang.get("import.cloud.accounts.message", cloudProviderConnection.get(CloudProviderConnection.BANK_NAME)));
     accountStates.clear();
     applyAction.setEnabled(false);
@@ -128,7 +132,8 @@ public class ImportCloudAccountsPanel extends AbstractImportStepPanel {
 
   private boolean accountChanged() {
     for (Map.Entry<Key, Boolean> entry : accountStates.entrySet()) {
-      Boolean accountEnabled = repository.get(entry.getKey()).get(CloudProviderAccount.ENABLED);
+      Glob account = repository.get(entry.getKey());
+      Boolean accountEnabled = account.get(CloudProviderAccount.ENABLED);
       if (!Utils.equal(accountEnabled, entry.getValue())) {
         return true;
       }
@@ -139,11 +144,21 @@ public class ImportCloudAccountsPanel extends AbstractImportStepPanel {
   private void apply() {
     applyMessage.setText(Lang.get("import.cloud.accounts.apply.inprogress"));
     applyMessage.setVisible(true);
+    repeat.setFilter(GlobMatchers.NONE);
     progressPanel.start();
     applyAction.setEnabled(false);
     backAction.setEnabled(false);
     closeAction.setEnabled(false);
-    cloudService.updateBankConnections(repository, new CloudService.Callback() {
+
+    final List<Pair<Integer, Boolean>> updates = new ArrayList<Pair<Integer, Boolean>>();
+    for (Map.Entry<Key, Boolean> entry : accountStates.entrySet()) {
+      Glob account = repository.get(entry.getKey());
+      Boolean accountEnabled = account.get(CloudProviderAccount.ENABLED);
+      if (!Utils.equal(accountEnabled, entry.getValue())) {
+        updates.add(new Pair<Integer, Boolean>(account.get(CloudProviderAccount.PROVIDER_ACCOUNT_ID), entry.getValue()));
+      }
+    }
+    cloudService.updateAccounts(updates, repository, new CloudService.Callback() {
       public void processCompletion() {
         applyMessage.setText(Lang.get("import.cloud.accounts.apply.completed"));
         applyAction.setEnabled(false);

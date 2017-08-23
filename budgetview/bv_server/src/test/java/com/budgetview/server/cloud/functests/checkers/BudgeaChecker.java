@@ -78,4 +78,8 @@ public class BudgeaChecker {
   public void checkAccountUpdates(String... updates) {
     TestUtils.assertSetEquals(stub.getAccountUpdates(), updates);
   }
+
+  public void clearAccountUpdates() {
+    stub.clearAccountUpdates();
+  }
 }

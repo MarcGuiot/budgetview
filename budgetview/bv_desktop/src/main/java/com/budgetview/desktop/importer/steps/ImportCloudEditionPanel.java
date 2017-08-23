@@ -16,6 +16,7 @@ import org.globsframework.gui.splits.repeat.RepeatComponentFactory;
 import org.globsframework.gui.splits.utils.GuiUtils;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobRepository;
+import org.globsframework.model.format.GlobPrinter;
 import org.globsframework.model.utils.GlobComparators;
 import org.globsframework.model.utils.GlobMatchers;
 import org.globsframework.utils.directory.Directory;
@@ -35,8 +36,6 @@ public class ImportCloudEditionPanel extends AbstractImportStepPanel {
   private GlobRepeat repeat;
   private Action addConnectionAction;
   private Action downloadAction;
-  private Action modifyEmailAction;
-  private Action unsubscribeAction;
 
   public ImportCloudEditionPanel(PicsouDialog dialog, ImportController controller, GlobRepository repository, Directory localDirectory) {
     super(dialog, controller, localDirectory);
@@ -48,14 +47,14 @@ public class ImportCloudEditionPanel extends AbstractImportStepPanel {
     GlobsPanelBuilder builder = new GlobsPanelBuilder(getClass(), "/layout/importexport/importsteps/importCloudEditionPanel.splits", repository, localDirectory);
 
     repeat = builder.addRepeat("connections", CloudProviderConnection.TYPE, GlobMatchers.NONE, GlobComparators.ascending(CloudProviderConnection.BANK_NAME), new RepeatComponentFactory<Glob>() {
-      public void registerComponents(PanelBuilder cellBuilder, Glob connection) {
+      public void registerComponents(PanelBuilder cellBuilder, final Glob connection) {
         String bankName = connection.get(CloudProviderConnection.BANK_NAME);
         cellBuilder.add("connectionName", new JLabel(bankName));
         cellBuilder.add("details", getDetailsLabel(connection, bankName));
 
         JButton editAccountsButton = new JButton(new AbstractAction(Lang.get("import.cloud.edition.editAccounts.button")) {
           public void actionPerformed(ActionEvent e) {
-
+            controller.showCloudAccounts(connection);
           }
         });
         cellBuilder.add("editAccounts", editAccountsButton);
@@ -85,14 +84,14 @@ public class ImportCloudEditionPanel extends AbstractImportStepPanel {
     };
     builder.add("download", downloadAction);
 
-    modifyEmailAction = new AbstractAction(Lang.get("import.cloud.edition.modifyEmail.button")) {
+    Action modifyEmailAction = new AbstractAction(Lang.get("import.cloud.edition.modifyEmail.button")) {
       public void actionPerformed(ActionEvent e) {
         controller.showModifyCloudEmail();
       }
     };
     builder.add("modifyEmailAddress", modifyEmailAction);
 
-    unsubscribeAction = new AbstractAction(Lang.get("import.cloud.edition.unsubscribe.button")) {
+    Action unsubscribeAction = new AbstractAction(Lang.get("import.cloud.edition.unsubscribe.button")) {
       public void actionPerformed(ActionEvent e) {
         controller.showCloudUnsubscription();
       }

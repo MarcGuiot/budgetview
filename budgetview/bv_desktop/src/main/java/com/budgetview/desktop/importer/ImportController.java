@@ -217,9 +217,18 @@ public class ImportController implements RealAccountImporter {
   }
 
   public void updateCloudAccounts() {
-    System.out.println("ImportController.updateCloudAccounts");
     GlobPrinter.print(localRepository, RealAccount.TYPE);
-    directory.get(CloudService.class).updateAccounts(localRepository.getCurrentChanges(), localRepository);
+    directory.get(CloudService.class).updateAccounts(localRepository.getCurrentChanges(), localRepository, new CloudService.Callback() {
+      public void processCompletion() {
+      }
+
+      public void processSubscriptionError(CloudSubscriptionStatus status) {
+      }
+
+      public void processError(Exception e) {
+        Log.write("Failed to update account statuses", e);
+      }
+    });
   }
 
   private void deleteEmptyImport() {

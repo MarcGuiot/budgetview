@@ -171,6 +171,10 @@ public class BudgeaStubServer {
     return accountUpdates;
   }
 
+  public void clearAccountUpdates() {
+    accountUpdates.clear();
+  }
+
   private class AuthInitServlet extends HttpServlet {
 
     private Logger logger = Logger.getLogger("BudgeaStubServer:AuthInitServlet");

@@ -1,7 +1,6 @@
 package com.budgetview.model;
 
 import com.budgetview.model.util.TypeLoader;
-import com.budgetview.shared.model.Provider;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.annotations.Key;
 import org.globsframework.metamodel.annotations.Target;
@@ -16,7 +15,7 @@ public class CloudProviderAccount {
   @Key
   public static IntegerField ID;
 
-  @Target(Provider.class)
+  @Target(CloudProviderConnection.class)
   public static LinkField CONNECTION;
 
   public static IntegerField PROVIDER_ACCOUNT_ID;

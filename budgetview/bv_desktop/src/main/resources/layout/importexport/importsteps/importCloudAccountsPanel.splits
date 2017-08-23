@@ -22,7 +22,7 @@
            minimumSize="(26,14)" preferredSize="(26,14)"/>
   </styles>
 
-  <column styleClass="dialog" preferredSize="(600,710)" name="importCloudEditionPanel">
+  <column styleClass="dialog" preferredSize="(600,710)" name="importCloudAccountsPanel">
 
     <label text="$import.cloud.accounts.title" name="title" styleClass="title"/>
 
@@ -48,7 +48,8 @@
               </column>
             </repeat>
 
-            <label ref="progressLabel" fill="none" anchor="center" marginBottom="15"/>
+            <htmlEditorPane ref="applyMessage"/>
+
             <component ref="progressPanel"/>
 
             <filler fill="vertical"/>

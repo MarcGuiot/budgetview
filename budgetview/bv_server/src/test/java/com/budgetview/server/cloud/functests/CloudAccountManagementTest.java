@@ -1,5 +1,6 @@
 package com.budgetview.server.cloud.functests;
 
+import com.budgetview.functests.checkers.CloudAccountsChecker;
 import com.budgetview.model.TransactionType;
 import com.budgetview.server.cloud.functests.testcases.CloudDesktopTestCase;
 import com.budgetview.server.cloud.stub.BudgeaAccounts;
@@ -59,22 +60,43 @@ public class CloudAccountManagementTest extends CloudDesktopTestCase {
       .check();
 
     budgea.checkAccountUpdates("account:2 => disabled:1");
-
-    System.out.println("\nCloudAccountManagementTest.testEmptyAccountsAreAutomaticallySkipped ================");
+    budgea.clearAccountUpdates();
 
     budgea.pushConnectionList(BudgeaConnections.init()
                                 .add(1, 123, 40, true, "2016-08-10 17:44:26")
                                 .get());
     budgea.pushAccountList(BudgeaAccounts.init()
                              .add(1, 1, "Main account 1", "100200300", true)
-                             .add(1, 2, "Main account 2", "200300400", true)
+                             .add(2, 1, "Main account 2", "200300400", false)
                              .get());
-
-    operations.openImportDialog()
+    CloudAccountsChecker dialog = operations.openImportDialog()
       .editCloudConnections()
-      .editAccounts("CIC")
+      .editAccounts("Connecteur de test")
       .checkAccounts("Main account 1 / 100200300 / true",
                      "Main account 2 / 200300400 / false")
+      .checkApplyDisabled()
+      .enableAccount("Main account 2")
+      .checkAccounts("Main account 1 / 100200300 / true",
+                     "Main account 2 / 200300400 / true")
+      .apply()
+      .checkApplyMessage("Your accounts have been updated.");
+
+    budgea.checkAccountUpdates("account:2 => disabled:null");
+
+    budgea.pushConnectionList(BudgeaConnections.init()
+                                .add(1, 123, 40, true, "2016-08-10 17:44:26")
+                                .get());
+    budgea.pushAccountList(BudgeaAccounts.init()
+                             .add(1, 1, "Main account 1", "100200300", true)
+                             .add(2, 1, "Main account 2 - renamed", "200300400", true)
+                             .get());
+
+    dialog
+      .back()
+      .editAccounts("Connecteur de test")
+      .checkAccounts("Main account 1 / 100200300 / true",
+                     "Main account 2 - renamed / 200300400 / true")
+      .checkApplyDisabled()
       .close();
 
     fail("TODO : on peut voir et réactiver les comptes à partir de la vue d'édition de la connexion cloud");
