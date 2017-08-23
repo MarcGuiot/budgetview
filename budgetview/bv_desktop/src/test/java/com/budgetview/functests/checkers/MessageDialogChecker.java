@@ -39,7 +39,7 @@ public class MessageDialogChecker extends GuiChecker {
   }
 
   private MessageDialogChecker checkMessage(String message, Icon icon) {
-    assertThat(dialog.getTextBox("messageField").textContains(message));
+    assertThat(dialog.getTextBox("message").textContains(message));
     assertThat(dialog.getTextBox("icon").iconEquals(icon));
     return this;
   }

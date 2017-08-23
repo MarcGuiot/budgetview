@@ -1,5 +1,7 @@
 package com.budgetview.triggers;
 
+import com.budgetview.desktop.model.AccountStat;
+import com.budgetview.desktop.model.AccountWeather;
 import com.budgetview.desktop.model.SeriesStat;
 import com.budgetview.model.*;
 import org.globsframework.model.ChangeSet;
@@ -11,6 +13,7 @@ import org.globsframework.model.utils.DefaultChangeSetListener;
 import java.util.HashSet;
 import java.util.Set;
 
+import static org.globsframework.model.FieldValue.value;
 import static org.globsframework.model.utils.GlobMatchers.*;
 
 public class AccountDeletionTrigger extends DefaultChangeSetListener {
@@ -41,7 +44,10 @@ public class AccountDeletionTrigger extends DefaultChangeSetListener {
         itemsToDelete.add(repository.findLinkTarget(transfer, ProjectTransfer.PROJECT_ITEM));
       }
       repository.delete(AccountPositionError.TYPE, linkedTo(accountKey, AccountPositionError.ACCOUNT));
-      repository.delete(SeriesStat.TYPE, SeriesStat.isForAccount(accountKey.get(Account.ID)));
+      repository.delete(AccountWeather.TYPE, linkedTo(accountKey, AccountWeather.ACCOUNT));
+      repository.delete(AccountPositionError.TYPE, linkedTo(accountKey, AccountPositionError.ACCOUNT));
+      repository.delete(AccountStat.TYPE, linkedTo(accountKey, AccountStat.ACCOUNT));
+      repository.delete(DeferredCardDate.TYPE, linkedTo(accountKey, DeferredCardDate.ACCOUNT));
     }
 
     Set<Integer> projectIds = new HashSet<Integer>();

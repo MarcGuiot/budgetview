@@ -20,7 +20,7 @@ public class GlobCheck {
 
   public static void linksAreAllConnected(GlobRepository repository, DataCheckReport report) {
     for (GlobType type : DesktopModel.getUserSpecificTypes()) {
-      for (Glob glob : repository.getAll()) {
+      for (Glob glob : repository.getAll(type)) {
         for (Field field : glob.getType().getFields()) {
           if (field.isRequired() && glob.getValue(field) == null) {
             report.addError(field + " should not be null", glob.toString());

@@ -1,5 +1,6 @@
 package com.budgetview.desktop.accounts.utils;
 
+import com.budgetview.desktop.cloud.CloudAccountStatus;
 import com.budgetview.desktop.components.dialogs.ConfirmationDialog;
 import com.budgetview.desktop.utils.Gui;
 import com.budgetview.model.Series;
@@ -9,6 +10,7 @@ import com.budgetview.utils.Lang;
 import org.globsframework.gui.splits.utils.GuiUtils;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobRepository;
+import org.globsframework.model.Key;
 import org.globsframework.model.repository.LocalGlobRepository;
 import org.globsframework.model.utils.GlobMatcher;
 import org.globsframework.model.utils.GlobMatchers;
@@ -50,6 +52,8 @@ public class DeleteAccountHandler {
       protected void processOk() {
         Gui.setWaitCursor(GuiUtils.getEnclosingFrame(owner));
         try {
+          Key accountKey = currentAccount.getKey();
+          CloudAccountStatus.processDeletion(accountKey, parentRepository, localDirectory);
           localRepository.delete(currentAccount);
           localRepository.commitChanges(false);
           if (closeOwnerOnConfirmation) {

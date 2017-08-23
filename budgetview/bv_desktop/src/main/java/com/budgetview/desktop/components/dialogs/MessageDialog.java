@@ -57,7 +57,7 @@ public class MessageDialog {
 
     builder.add("title", new JLabel(Lang.get(titleKey)));
     this.editorPane = new JEditorPane("text/html", message);
-    builder.add("messageField", this.editorPane);
+    builder.add("message", this.editorPane);
 
     builder.add("icon", new JLabel(getIcon(type)));
 

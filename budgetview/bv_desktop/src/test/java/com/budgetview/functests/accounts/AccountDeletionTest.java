@@ -1,9 +1,15 @@
 package com.budgetview.functests.accounts;
 
+import com.budgetview.desktop.model.SeriesStat;
 import com.budgetview.functests.utils.LoggedInFunctionalTestCase;
 import com.budgetview.functests.utils.OfxBuilder;
+import com.budgetview.model.Account;
+import com.budgetview.model.Series;
 import com.budgetview.model.TransactionType;
+import org.globsframework.model.format.GlobPrinter;
 import org.junit.Test;
+
+import static org.globsframework.model.utils.GlobMatchers.fieldEquals;
 
 public class AccountDeletionTest extends LoggedInFunctionalTestCase {
 
@@ -170,6 +176,12 @@ public class AccountDeletionTest extends LoggedInFunctionalTestCase {
       .checkMessageContains("All the series associated to this account will be deleted")
       .validate();
     savingsAccounts.checkNotPresent("Codevi");
+
+    mainAccounts.checkNoAccountsSelected();
+    savingsAccounts.checkNoAccountsSelected();
+
+    GlobPrinter.print(repository, Account.TYPE, Series.TYPE);
+    GlobPrinter.print(repository.getAll(SeriesStat.TYPE, fieldEquals(SeriesStat.ACCOUNT, 101)));
 
     operations.checkDataIsOk();
   }

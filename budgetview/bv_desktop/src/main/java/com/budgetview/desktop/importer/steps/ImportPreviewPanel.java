@@ -274,10 +274,12 @@ public class ImportPreviewPanel extends AbstractImportStepPanel implements Messa
         return;
       }
       if (selectedTargetAccount == null) {
+        sessionRepository.update(realAccount, RealAccount.ACCOUNT, newAccount.get(Account.ID));
         selectedTargetAccount = accountEditionPanel.getAccount();
         accountEditionRepository.commitChanges(false);
       }
       else {
+        sessionRepository.update(realAccount, RealAccount.ACCOUNT, selectedTargetAccount.get(Account.ID));
         accountEditionRepository.rollback();
       }
 
@@ -285,8 +287,6 @@ public class ImportPreviewPanel extends AbstractImportStepPanel implements Messa
         localRepository.update(realAccount.getKey(), RealAccount.ENABLED, true);
       }
 
-      sessionRepository.update(realAccount.getKey(),
-                               value(RealAccount.ACCOUNT, selectedTargetAccount.get(Account.ID)));
       if (selectedTargetAccount.get(Account.LAST_IMPORT_POSITION) == null
           && Strings.isNotEmpty(realAccount.get(RealAccount.POSITION))) {
         sessionRepository.update(selectedTargetAccount.getKey(),

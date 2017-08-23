@@ -807,14 +807,14 @@ public class CloudService {
       public void visitDeletion(Key key, FieldValues previousValues) throws Exception {
       }
     });
-    if (updates.isEmpty()) {
-      return;
-    }
-
     updateAccounts(updates, repository, callback);
   }
 
   public void updateAccounts(final List<Pair<Integer, Boolean>> updates, GlobRepository repository, final Callback callback) {
+    if (updates.isEmpty()) {
+      return;
+    }
+
     Glob user = repository.findOrCreate(CloudDesktopUser.KEY);
     final int cloudUserId = user.get(CloudDesktopUser.CLOUD_USER_ID);
     final int deviceId = user.get(CloudDesktopUser.DEVICE_ID);

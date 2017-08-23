@@ -114,8 +114,7 @@ public class PeriodSeriesStatUpdater implements GlobSelectionListener, ChangeSet
       repository.safeApply(SeriesStat.TYPE,
                            and(fieldContained(SeriesStat.MONTH, selectedMonths.getValueSet(Month.ID)),
                                selectedAccountId != null ? isSeriesForAccount(selectedAccountId) : isSummaryForSeries()),
-                           seriesStatFunctor
-      );
+                           seriesStatFunctor);
       initToSetField();
       initGroups();
       initEvolutionFields();
@@ -280,8 +279,7 @@ public class PeriodSeriesStatUpdater implements GlobSelectionListener, ChangeSet
                                 Math.abs(plannedAmount == null ? 0 : plannedAmount) : Math.abs(amount)),
                         value(PeriodSeriesStat.VISIBLE, visible),
                         value(PeriodSeriesStat.ACTIVE, isActive),
-                        value(PeriodSeriesStat.TO_SET, false)
-      );
+                        value(PeriodSeriesStat.TO_SET, false));
 
       stats.add(periodStat);
     }
