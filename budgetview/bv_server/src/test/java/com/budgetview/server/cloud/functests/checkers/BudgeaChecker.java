@@ -32,6 +32,10 @@ public class BudgeaChecker {
     stub.setBankFields(step1JSON, step2JSON);
   }
 
+  public void sendStatement(String json) throws IOException {
+    stub.callWebhook(json);
+  }
+
   public void pushStatement(String json) {
     stub.pushStatement(json);
   }
@@ -57,10 +61,6 @@ public class BudgeaChecker {
 
   public void pushAccountList(String json) {
     stub.pushAccountResponse(json);
-  }
-
-  public void callWebhook(String json) throws IOException {
-    stub.callWebhook(json);
   }
 
   public void checkLastLogin(String... fieldValues) {

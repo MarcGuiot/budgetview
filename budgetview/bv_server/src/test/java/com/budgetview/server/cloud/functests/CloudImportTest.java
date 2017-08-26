@@ -85,7 +85,7 @@ public class CloudImportTest extends CloudDesktopTestCase {
 
     mailbox.checkEmpty();
 
-    budgea.callWebhook(BudgeaStatement.init()
+    budgea.sendStatement(BudgeaStatement.init()
                            .addConnection(1, 123, 40, "Connecteur de test", "2016-08-10 17:44:26")
                            .addAccount(1, "Main account 1", "100200300", "checking", 1000.00, "2016-08-12 13:00:00")
                            .addTransaction(1, "2016-08-10 13:00:00", -100.00, "AUCHAN")
@@ -137,7 +137,7 @@ public class CloudImportTest extends CloudDesktopTestCase {
       .close();
 
     mailbox.checkEmpty();
-    budgea.callWebhook(BudgeaStatement.init()
+    budgea.sendStatement(BudgeaStatement.init()
                          .addConnection(1, 123, 40, "Connecteur de test", "2016-08-10 17:44:26")
                          .addAccount(1, "Main account 1", "100200300", "checking", 1000.00, "2016-08-12 13:00:00")
                          .addTransaction(1, "2016-08-10 13:00:00", -100.00, "AUCHAN")
@@ -209,7 +209,7 @@ public class CloudImportTest extends CloudDesktopTestCase {
       .add("10/08/2016", "AUCHAN", -100.00, "To categorize", 1050.00, 1050.00, "Main account 1")
       .check();
 
-    budgea.callWebhook(BudgeaStatement.init()
+    budgea.sendStatement(BudgeaStatement.init()
                          .addConnection(1, 123, 40, "Connecteur de test", "2016-08-10 17:44:26")
                          .addAccount(1, "Main account 1", "100200300", "checking", 1000.00, "2016-08-12 13:00:00")
                          .addTransaction(2, "2016-08-12 17:00:00", -50.00, "EDF", BudgeaCategory.ELECTRICITE)
@@ -263,7 +263,7 @@ public class CloudImportTest extends CloudDesktopTestCase {
       .waitForNotificationAndDownload(mailbox.checkStatementReady("toto@example.com"))
       .importAccountAndComplete();
 
-    budgea.callWebhook(BudgeaStatement.init()
+    budgea.sendStatement(BudgeaStatement.init()
                          .addConnection(1, 123, 40, "Connecteur de test", "2016-08-10 17:44:26")
                          .addAccount(1, "Main account 1", "100200300", "checking", 1000.00, "2016-08-12 13:00:00")
                          .addTransaction(2, "2016-08-12 17:00:00", -50.00, "EDF", BudgeaCategory.ELECTRICITE)
@@ -525,7 +525,7 @@ public class CloudImportTest extends CloudDesktopTestCase {
     budgetView.recurring.checkSeries("Electricity", "50.00", "50.00");
     budgetView.variable.checkSeries("Bank fees", "10.00", "To define");
 
-    budgea.callWebhook(BudgeaStatement.init()
+    budgea.sendStatement(BudgeaStatement.init()
                          .addConnection(1, 123, 40, "Connecteur de test", "2016-08-10 17:44:26")
                          .addAccount(1, "Main account 1", "100200300", "checking", 1000.00, "2016-08-15 15:00:00")
                          .addTransaction(2, "2016-08-12 17:00:00", -50.00, "EDF", BudgeaCategory.ELECTRICITE)
@@ -585,7 +585,7 @@ public class CloudImportTest extends CloudDesktopTestCase {
       .add("10/08/2016", "AUCHAN", -100.00, "To categorize", 1050.00, 1050.00, "Main account 1")
       .check();
 
-    budgea.callWebhook(BudgeaStatement.init()
+    budgea.sendStatement(BudgeaStatement.init()
                          .addConnection(1, 123, 40, "Connecteur de test", "2016-08-10 17:44:26")
                          .addAccount(1, "Main account 1", "100200300", "checking", 1000.00, "2016-08-12 13:00:00")
                          .addTransaction(2, "2016-08-12 17:00:00", -50.00, "EDF", BudgeaCategory.ELECTRICITE, true)

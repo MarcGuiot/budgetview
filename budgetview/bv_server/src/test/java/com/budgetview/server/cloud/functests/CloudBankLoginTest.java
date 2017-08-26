@@ -283,7 +283,7 @@ public class CloudBankLoginTest extends CloudDesktopTestCase {
       })
       .importAccountAndComplete();
 
-    budgea.callWebhook(BudgeaStatement.init()
+    budgea.sendStatement(BudgeaStatement.init()
                          .addConnection(1, 123, 40, "Connecteur de test", "2016-08-10 17:44:26", "wrongpass")
                          .addAccount(1, "Main account 1", "100200300", "checking", 1000.00, "2016-08-10 13:00:00")
                          .addTransaction(4, "2016-08-14 13:00:00", -75.00, "Auchan")

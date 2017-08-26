@@ -627,7 +627,7 @@ public class CloudService {
     thread.start();
   }
 
-  public void downloadStatement(final GlobRepository repository, final DownloadCallback callback) {
+  public void downloadStatement(final GlobRepository repository, final  DownloadCallback callback) {
     Thread thread = new Thread(new Runnable() {
       public void run() {
         try {
@@ -694,11 +694,17 @@ public class CloudService {
         String bankName = account.getString("provider_bank_name");
         bank = createMissingBank(budgeaBankId, bankName, repository);
       }
+      boolean deleted = account.optBoolean("deleted", false);
 
       Glob realAccount = RealAccount.findFromProvider(Provider.BUDGEA.getId(), budgeaAccountId, repository);
       if (realAccount != null) {
         JSONArray transactions = account.optJSONArray("transactions");
         if (transactions == null || transactions.length() == 0) {
+          continue;
+        }
+        if (deleted) {
+          repository.update(realAccount, RealAccount.ENABLED, false);
+          System.out.println("CloudService.doDownloadStatement: " + realAccount.get(RealAccount.NAME) + " disabled");
           continue;
         }
       }

@@ -77,6 +77,7 @@ public class Log {
     doWrite("", BANNER, false);
     doWrite("==     ", text, false);
     doWrite("", BANNER, false);
+    stream.flush();
   }
 
   public static void setEnabled(boolean enabled) {

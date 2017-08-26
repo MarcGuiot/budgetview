@@ -24,6 +24,7 @@ import org.globsframework.sqlstreams.constraints.Where;
 import org.globsframework.sqlstreams.exceptions.GlobsSQLException;
 import org.globsframework.utils.Dates;
 import org.globsframework.utils.Files;
+import org.globsframework.utils.Log;
 import org.globsframework.utils.Strings;
 import org.globsframework.utils.directory.Directory;
 import org.globsframework.utils.exceptions.ItemNotFound;
@@ -215,6 +216,8 @@ public class BudgeaWebHookServlet extends HttpCloudServlet {
       }
 
       int providerAccountId = account.getInt("id");
+      boolean deleted = isDeleted(account);
+      Log.debug("account " + account.getString("name") + " deleted = " + deleted);
       repository.create(ProviderAccount.TYPE,
                         value(ProviderAccount.ID, providerAccountId),
                         value(ProviderAccount.PROVIDER, Provider.BUDGEA.getId()),
@@ -224,7 +227,7 @@ public class BudgeaWebHookServlet extends HttpCloudServlet {
                         value(ProviderAccount.ACCOUNT_TYPE, BudgeaAccountTypeConverter.convertName(account.optString("type"))),
                         value(ProviderAccount.NAME, account.getString("name")),
                         value(ProviderAccount.NUMBER, account.getString("number")),
-                        value(ProviderAccount.DELETED, Boolean.TRUE.equals(account.optBoolean("deleted"))),
+                        value(ProviderAccount.DELETED, deleted),
                         value(ProviderAccount.POSITION, account.getDouble("balance")),
                         value(ProviderAccount.POSITION_MONTH, DateConverter.getMonthId(lastUpdate)),
                         value(ProviderAccount.POSITION_DAY, DateConverter.getDay(lastUpdate)));
@@ -236,6 +239,16 @@ public class BudgeaWebHookServlet extends HttpCloudServlet {
         }
       }
 
+      return true;
+    }
+
+    private boolean isDeleted(JSONObject account) {
+      if (account.isNull("deleted")) {
+        return false;
+      }
+      if (account.optBoolean("deleted", false)) {
+        return true;
+      }
       return true;
     }
 

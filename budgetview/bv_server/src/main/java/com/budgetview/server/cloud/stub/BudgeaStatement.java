@@ -48,6 +48,10 @@ public class BudgeaStatement {
   }
 
   public BudgeaStatement addAccount(int id, String name, String number, String type, double balance, String lastUpdate) {
+    return addAccount(id, name, number, type, balance, lastUpdate, null);
+  }
+
+  public BudgeaStatement addAccount(int id, String name, String number, String type, double balance, String lastUpdate, String deleted) {
     json.object();
     json.key("id").value(id);
     json.key("name").value(name);
@@ -55,7 +59,7 @@ public class BudgeaStatement {
     json.key("last_update").value(lastUpdate);
     json.key("balance").value(balance);
     json.key("type").value(type);
-    json.key("deleted").value(null);
+    json.key("deleted").value(deleted);
 
     json.key("transactions");
     json.array();

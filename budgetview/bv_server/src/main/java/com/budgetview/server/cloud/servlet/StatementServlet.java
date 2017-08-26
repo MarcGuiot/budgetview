@@ -142,6 +142,7 @@ public class StatementServlet extends HttpCloudServlet {
         writer.field(ProviderAccount.POSITION_DAY, "position_day");
         writer.field(ProviderAccount.NAME, "name");
         writer.field(ProviderAccount.NUMBER, "number");
+        writer.field(ProviderAccount.DELETED, "deleted");
       }
 
       private void writeTransaction(FieldValues transaction, JsonGlobWriter writer) {

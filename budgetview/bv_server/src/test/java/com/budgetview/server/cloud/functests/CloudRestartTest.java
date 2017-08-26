@@ -68,7 +68,7 @@ public class CloudRestartTest extends CloudDesktopTestCase {
       .add("10/08/2016", TransactionType.PRELEVEMENT, "AUCHAN", "", -100.00)
       .check();
 
-    budgea.callWebhook(BudgeaStatement.init()
+    budgea.sendStatement(BudgeaStatement.init()
                          .addConnection(1, 123, 40, "Connecteur de test", "2016-08-15 17:44:26")
                          .addAccount(1, "Main account 1", "100200300", "checking", 1000.00, "2016-08-15 13:00:00")
                          .addTransaction(3, "2016-08-13 13:00:00", -25.00, "TOTAL", BudgeaCategory.ESSENCE)
@@ -173,7 +173,7 @@ public class CloudRestartTest extends CloudDesktopTestCase {
       .add("10/08/2016", TransactionType.PRELEVEMENT, "AUCHAN", "", -100.00)
       .check();
 
-    budgea.callWebhook(BudgeaStatement.init()
+    budgea.sendStatement(BudgeaStatement.init()
                          .addConnection(1, 123, 40, "Connecteur de test", "2016-08-15 17:44:26")
                          .addAccount(1, "Main account 1", "100200300", "checking", 1000.00, "2016-08-15 13:00:00")
                          .addTransaction(3, "2016-08-13 13:00:00", -25.00, "TOTAL", BudgeaCategory.ESSENCE)
