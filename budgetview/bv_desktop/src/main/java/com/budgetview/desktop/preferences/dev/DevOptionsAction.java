@@ -7,11 +7,12 @@ import javax.swing.*;
 import java.awt.event.ActionEvent;
 
 public class DevOptionsAction extends AbstractAction {
+  public static final String LABEL = "Show Dev Options Dialog";
   private GlobRepository repository;
   private Directory directory;
 
   public DevOptionsAction(GlobRepository repository, Directory directory) {
-    super("Show Dev Options Dialog");
+    super(LABEL);
     this.repository = repository;
     this.directory = directory;
   }

@@ -2,8 +2,10 @@ package com.budgetview.functests.checkers;
 
 import com.budgetview.desktop.Application;
 import com.budgetview.desktop.addons.dev.ToggleAllAddOnsAction;
+import com.budgetview.desktop.preferences.dev.DevOptionsAction;
 import com.budgetview.desktop.utils.DataCheckerAction;
 import com.budgetview.desktop.utils.DumpDataAction;
+import com.budgetview.desktop.utils.DumpUndoStackAction;
 import com.budgetview.desktop.utils.dev.*;
 import com.budgetview.functests.checkers.mobile.CreateMobileAccountChecker;
 import com.budgetview.functests.checkers.mobile.EditMobileAccountChecker;
@@ -378,13 +380,17 @@ public class OperationChecker {
   }
 
   public DevOptionsChecker openDevOptions() {
-    return DevOptionsChecker.open(getDevMenu().getSubMenu("Show Dev Options Dialog").triggerClick());
+    return DevOptionsChecker.open(getDevMenu().getSubMenu(DevOptionsAction.LABEL).triggerClick());
   }
 
   public void undo(int count) {
     for (int i = 0; i < count; i++) {
       undo();
     }
+  }
+
+  public void dumpUndoRedoStack() {
+    getDevMenu().getSubMenu(DumpUndoStackAction.LABEL).click();
   }
 
   public void undo() {

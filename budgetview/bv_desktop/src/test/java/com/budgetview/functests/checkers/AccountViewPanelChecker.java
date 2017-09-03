@@ -38,8 +38,12 @@ public abstract class AccountViewPanelChecker<T extends AccountViewPanelChecker>
     this.panelName = panelName;
   }
 
-  public T checkAccounts(String... expectedNames) {
-    org.globsframework.utils.TestUtils.assertSetEquals(getDisplayedAccounts(), expectedNames);
+  public T checkAccounts(final String... expectedNames) {
+    assertThat(new Assertion() {
+      public void check() {
+        org.globsframework.utils.TestUtils.assertSetEquals(getDisplayedAccounts(), expectedNames);
+      }
+    });
     return (T) this;
   }
 

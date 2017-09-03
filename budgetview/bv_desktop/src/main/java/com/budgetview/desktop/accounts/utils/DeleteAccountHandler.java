@@ -14,6 +14,7 @@ import org.globsframework.model.Key;
 import org.globsframework.model.repository.LocalGlobRepository;
 import org.globsframework.model.utils.GlobMatcher;
 import org.globsframework.model.utils.GlobMatchers;
+import org.globsframework.utils.Functor;
 import org.globsframework.utils.directory.Directory;
 
 import java.awt.*;
@@ -52,13 +53,15 @@ public class DeleteAccountHandler {
       protected void processOk() {
         Gui.setWaitCursor(GuiUtils.getEnclosingFrame(owner));
         try {
-          Key accountKey = currentAccount.getKey();
-          CloudAccountStatus.processDeletion(accountKey, parentRepository, localDirectory);
-          localRepository.delete(currentAccount);
-          localRepository.commitChanges(false);
-          if (closeOwnerOnConfirmation) {
-            owner.setVisible(false);
-          }
+          CloudAccountStatus.processDeletion(currentAccount.getKey(), localRepository, parentRepository, localDirectory, new Functor() {
+            public void run() throws Exception {
+              localRepository.delete(currentAccount);
+              localRepository.commitChanges(false);
+              if (closeOwnerOnConfirmation) {
+                owner.setVisible(false);
+              }
+            }
+          });
         }
         finally {
           Gui.setDefaultCursor(GuiUtils.getEnclosingFrame(owner));

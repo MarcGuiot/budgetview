@@ -121,7 +121,7 @@ public class AccountEditionDialog extends AbstractAccountPanel<LocalGlobReposito
   public static LocalGlobRepository createLocalRepository(GlobRepository parentRepository) {
     return LocalGlobRepositoryBuilder.init(parentRepository)
       .copy(Bank.TYPE, BankEntity.TYPE, AccountUpdateMode.TYPE, MonthDay.TYPE, CurrentMonth.TYPE,
-            Account.TYPE, AccountCardType.TYPE, AccountType.TYPE, Month.TYPE, DeferredCardDate.TYPE)
+            Account.TYPE, AccountCardType.TYPE, AccountType.TYPE, Month.TYPE, DeferredCardDate.TYPE, RealAccount.TYPE)
       .get();
   }
 

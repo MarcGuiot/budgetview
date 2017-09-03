@@ -9,12 +9,10 @@ import java.awt.event.ActionEvent;
 
 public class DumpUndoStackAction extends AbstractAction {
   public static final String LABEL = "Dump undo stack";
-  private final GlobRepository repository;
   private Directory directory;
 
   public DumpUndoStackAction(GlobRepository repository, Directory directory) {
     super(LABEL);
-    this.repository = repository;
     this.directory = directory;
   }
 

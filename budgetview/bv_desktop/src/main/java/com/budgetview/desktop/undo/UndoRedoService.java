@@ -4,6 +4,7 @@ import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.ChangeSet;
 import org.globsframework.model.ChangeSetListener;
 import org.globsframework.model.GlobRepository;
+import org.globsframework.utils.exceptions.InvalidState;
 
 import java.io.PrintStream;
 import java.util.*;
@@ -20,6 +21,11 @@ public class UndoRedoService {
     void update();
   }
 
+  public interface Change {
+    void apply();
+    void revert();
+  }
+
   public UndoRedoService(GlobRepository repository) {
     this.repository = repository;
     installChangeListener();
@@ -29,7 +35,7 @@ public class UndoRedoService {
     this.repository.addChangeListener(new ChangeSetListener() {
       public void globsChanged(ChangeSet changeSet, GlobRepository repository) {
         if (!undoRedoInProgress) {
-          changesToUndo.addLast(createChange(changeSet));
+          changesToUndo.addLast(new RepositoryChange(changeSet));
           if (changesToUndo.size() == MAX_UNDO) {
             changesToUndo.removeFirst();
           }
@@ -108,13 +114,21 @@ public class UndoRedoService {
     }
   }
 
-  private Change createChange(ChangeSet changeSet) {
-    return new Change(changeSet);
-  }
-
   public void cleanUndo() {
     changesToUndo.clear();
     notifyListeners();
+  }
+
+  public void appendToNextUndo(Change change) throws InvalidState {
+    if (changesToUndo.isEmpty()) {
+      throw new InvalidState("There is no change to undo in the stack");
+    }
+
+    Change current = changesToUndo.removeLast();
+    changesToUndo.addLast(new CompositeChange(current, change));
+    if (changesToUndo.size() == MAX_UNDO) {
+      changesToUndo.removeFirst();
+    }
   }
 
   public void dump(PrintStream out) {
@@ -124,10 +138,10 @@ public class UndoRedoService {
     }
   }
 
-  private class Change {
+  private class RepositoryChange implements Change {
     private ChangeSet changeSet;
 
-    private Change(ChangeSet changeSet) {
+    private RepositoryChange(ChangeSet changeSet) {
       this.changeSet = changeSet;
     }
 
@@ -154,4 +168,28 @@ public class UndoRedoService {
     }
   }
 
+  private class CompositeChange implements Change {
+
+    private Change change1;
+    private Change change2;
+
+    public CompositeChange(Change change1, Change change2) {
+      this.change1 = change1;
+      this.change2 = change2;
+    }
+
+    public void apply() {
+      change1.apply();
+      change2.apply();
+    }
+
+    public void revert() {
+      change2.revert();
+      change1.revert();
+    }
+
+    public String toString() {
+      return "Combined: " + change1 + "\nand: " + change2;
+    }
+  }
 }
