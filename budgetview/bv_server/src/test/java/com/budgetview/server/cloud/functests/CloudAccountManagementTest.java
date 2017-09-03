@@ -231,7 +231,7 @@ public class CloudAccountManagementTest extends CloudDesktopTestCase {
   }
 
   @Test
-  public void testAccountsLinkedToACLoudDownloadAreAutomaticallyDisabledWhenDeleted() throws Exception {
+  public void testAccountsLinkedToACloudDownloadAreAutomaticallyDisabledWhenDeleted() throws Exception {
     cloud.createSubscription("toto@example.com", Dates.tomorrow());
 
     budgea.pushNewConnectionResponse(1, 123, 40);

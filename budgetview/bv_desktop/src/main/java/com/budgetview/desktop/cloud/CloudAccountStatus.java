@@ -22,8 +22,6 @@ public class CloudAccountStatus {
 
   public static void processDeletion(Key accountKey, GlobRepository localRepository, GlobRepository targetRepository, Directory directory, Functor functor) {
 
-    System.out.println("CloudAccountStatus.processDeletion");
-
     try {
 
       targetRepository.startChangeSet();
