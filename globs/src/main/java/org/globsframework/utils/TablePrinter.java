@@ -39,7 +39,7 @@ public class TablePrinter {
         return;
       }
     }
-    print(header, rows, sorted, printer);
+    print(header, rows, sorted, printer, null);
   }
 
   public void print() {
@@ -54,11 +54,11 @@ public class TablePrinter {
 
   public static String toString(Object[] headerRow, List<Object[]> rows) {
     StringWriter writer = new StringWriter();
-    print(headerRow, rows, true, new PrintWriter(writer));
+    print(headerRow, rows, true, new PrintWriter(writer), null);
     return writer.toString();
   }
 
-  public static void print(Object[] headerRow, List<Object[]> rows, boolean sorted, PrintWriter printer) {
+  public static void print(Object[] headerRow, List<Object[]> rows, boolean sorted, PrintWriter printer, String indent) {
     List<Object[]> aggregated = new ArrayList<Object[]>();
     if (headerRow != null) {
       aggregated.add(headerRow);
@@ -83,6 +83,7 @@ public class TablePrinter {
     }
 
     if (headerRow != null) {
+      printer.print(indent);
       printer.println(toString(headerRow, sizes));
     }
     List<String> strings = new ArrayList<String>();
@@ -93,6 +94,7 @@ public class TablePrinter {
       strings = Utils.sort(strings);
     }
     for (String string : strings) {
+      printer.print(indent);
       printer.println(string);
     }
 

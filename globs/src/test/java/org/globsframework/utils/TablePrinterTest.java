@@ -34,11 +34,11 @@ public class TablePrinterTest extends TestCase {
                          new Object[]{"first value", "second value"},
                          new Object[]{"a", "b"}
                        ),
-                       true, new PrintWriter(writer));
+                       true, new PrintWriter(writer), ">  ");
 
-    assertEquals("| Title 1     | Title 2      |" + Strings.LINE_SEPARATOR +
-                 "| a           | b            |" + Strings.LINE_SEPARATOR +
-                 "| first value | second value |" + Strings.LINE_SEPARATOR,
+    assertEquals(">  | Title 1     | Title 2      |" + Strings.LINE_SEPARATOR +
+                 ">  | a           | b            |" + Strings.LINE_SEPARATOR +
+                 ">  | first value | second value |" + Strings.LINE_SEPARATOR,
                  writer.toString());
   }
 
@@ -49,7 +49,7 @@ public class TablePrinterTest extends TestCase {
                            new Object[]{"first value", "second value",},
                            new Object[]{"a", "b", "c"}
                          ),
-                         true, new PrintWriter(writer));
+                         true, new PrintWriter(writer), null);
     }
     catch (InvalidParameter e) {
       assertEquals("Row larger than the first row: [a, b, c]", e.getMessage());

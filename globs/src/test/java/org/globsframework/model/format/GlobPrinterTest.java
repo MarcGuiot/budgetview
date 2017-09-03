@@ -121,7 +121,7 @@ public class GlobPrinterTest extends TestCase {
 
   private void checkOutput(Glob glob, String expected) {
     StringWriter writer = new StringWriter();
-    GlobPrinter.print(glob, writer);
+    GlobPrinter.print(glob, writer, null);
     assertEquals(expected, writer.getBuffer().toString().trim());
   }
 

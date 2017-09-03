@@ -57,10 +57,10 @@ public class GlobPrinter {
   }
 
   public static void print(Glob glob) {
-    print(glob, new OutputStreamWriter(System.out));
+    print(glob, new OutputStreamWriter(System.out), null);
   }
 
-  public static void print(Glob glob, Writer writer) {
+  public static void print(Glob glob, Writer writer, String indent) {
     PrintWriter printer = new PrintWriter(writer);
     printer.println("===== " + glob + " ======");
 
@@ -69,7 +69,7 @@ public class GlobPrinter {
       rows.add(new Object[]{field.getName(), glob.getValue(field)});
     }
 
-    TablePrinter.print(new String[]{"Field", "Value"}, rows, true, printer);
+    TablePrinter.print(new String[]{"Field", "Value"}, rows, true, printer, indent);
 
     printer.println();
     printer.flush();
@@ -118,7 +118,7 @@ public class GlobPrinter {
   public void run(Writer writer) {
     PrintWriter printer = new PrintWriter(writer);
     for (GlobType type : sort(types, GlobTypeComparator.INSTANCE)) {
-      printType(type, globs.getAll(type), printer);
+      printType(type, globs.getAll(type), printer, null);
     }
   }
 
@@ -132,7 +132,7 @@ public class GlobPrinter {
     return writer.toString();
   }
 
-  private void printType(GlobType type, GlobList globs, PrintWriter printer) {
+  private void printType(GlobType type, GlobList globs, PrintWriter printer, String indent) {
     printer.println("===== " + type.getName() + " ======");
 
     List<Object[]> rows = new ArrayList<Object[]>();
@@ -155,7 +155,7 @@ public class GlobPrinter {
         rows.add(row);
     }
 
-    TablePrinter.print(headerRow, rows, true, printer);
+    TablePrinter.print(headerRow, rows, true, printer, indent);
 
     printer.println();
     printer.flush();
