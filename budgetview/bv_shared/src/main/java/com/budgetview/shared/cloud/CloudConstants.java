@@ -37,6 +37,7 @@ public class CloudConstants {
   public static final String BANK_NAME = "bank_name";
   public static final String INITIALIZED = "initialized";
   public static final String PASSWORD_ERROR = "password_error";
+  public static final String ACTION_NEEDED = "action_needed";
 
 
   public static final String APPNAME = "budgetview";

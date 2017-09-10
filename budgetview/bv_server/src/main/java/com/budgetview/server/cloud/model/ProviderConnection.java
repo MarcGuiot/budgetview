@@ -29,6 +29,8 @@ public class ProviderConnection {
 
   public static BooleanField PASSWORD_ERROR;
 
+  public static BooleanField ACTION_NEEDED;
+
   static {
     GlobTypeLoader.init(ProviderConnection.class, "providerConnection");
   }

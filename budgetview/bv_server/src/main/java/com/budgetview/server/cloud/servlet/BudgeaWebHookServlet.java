@@ -113,6 +113,7 @@ public class BudgeaWebHookServlet extends HttpCloudServlet {
           return;
         }
         boolean passwordError = "wrongpass".equalsIgnoreCase(budgeaConnection.optString("error"));
+        boolean actionNeeded = "actionNeeded".equalsIgnoreCase(budgeaConnection.optString("error"));
         JSONObject bank = budgeaConnection.getJSONObject("bank");
         JSONArray accounts = budgeaConnection.optJSONArray("accounts");
         boolean containsAccounts = false;
@@ -130,7 +131,8 @@ public class BudgeaWebHookServlet extends HttpCloudServlet {
         notifications.addConnection(connectionId,
                                     bank.optString("name"),
                                     containsAccounts,
-                                    passwordError);
+                                    passwordError,
+                                    actionNeeded);
         logger.debug("Webhook saved");
       }
     }

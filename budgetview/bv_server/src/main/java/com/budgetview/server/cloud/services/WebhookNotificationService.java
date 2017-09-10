@@ -39,8 +39,8 @@ public class WebhookNotificationService {
   public class Notifications {
     private List<ConnectionInfo> infoList = new ArrayList<ConnectionInfo>();
 
-    public void addConnection(int providerConnectionId, String bankName, boolean containsAccounts, boolean passwordError) {
-      infoList.add(new ConnectionInfo(providerConnectionId, bankName, containsAccounts, passwordError));
+    public void addConnection(int providerConnectionId, String bankName, boolean containsAccounts, boolean passwordError, boolean actionNeeded) {
+      infoList.add(new ConnectionInfo(providerConnectionId, bankName, containsAccounts, passwordError, actionNeeded));
     }
 
     public void send(Glob user) {
@@ -72,6 +72,7 @@ public class WebhookNotificationService {
               }
               sqlConnection.startUpdate(ProviderConnection.TYPE, Where.globEquals(item))
                 .set(ProviderConnection.PASSWORD_ERROR, connectionInfo.passwordError)
+                .set(ProviderConnection.ACTION_NEEDED, connectionInfo.actionNeeded)
                 .run();
             }
           }
@@ -82,6 +83,7 @@ public class WebhookNotificationService {
               .set(ProviderConnection.PROVIDER_CONNECTION, connectionInfo.providerConnectionId)
               .set(ProviderConnection.INITIALIZED, connectionInfo.containsAccounts)
               .set(ProviderConnection.PASSWORD_ERROR, connectionInfo.passwordError)
+              .set(ProviderConnection.ACTION_NEEDED, connectionInfo.actionNeeded)
               .run();
           }
         }
@@ -95,6 +97,10 @@ public class WebhookNotificationService {
           if (connectionInfo.passwordError) {
             boolean sent = mailer.sendCloudBankPasswordError(user.get(CloudUser.EMAIL), user.get(CloudUser.LANG), connectionInfo.bankName);
             logger.debug("Webhook password error email " + (sent ? "sent" : "planned for sending") + " to: " + user.get(CloudUser.EMAIL) + " for bank: " + connectionInfo.bankName);
+          }
+          if (connectionInfo.actionNeeded) {
+            boolean sent = mailer.sendCloudActionNeeded(user.get(CloudUser.EMAIL), user.get(CloudUser.LANG), connectionInfo.bankName);
+            logger.debug("Webhook action needd email " + (sent ? "sent" : "planned for sending") + " to: " + user.get(CloudUser.EMAIL) + " for bank: " + connectionInfo.bankName);
           }
         }
       }
@@ -116,14 +122,16 @@ public class WebhookNotificationService {
   private static class ConnectionInfo {
     public final int providerConnectionId;
     public final String bankName;
-    private boolean containsAccounts;
+    public final boolean containsAccounts;
     public final boolean passwordError;
+    public final boolean actionNeeded;
 
-    public ConnectionInfo(int providerConnectionId, String bankName, boolean containsAccounts, boolean passwordError) {
+    public ConnectionInfo(int providerConnectionId, String bankName, boolean containsAccounts, boolean passwordError, boolean actionNeeded) {
       this.providerConnectionId = providerConnectionId;
       this.bankName = bankName;
       this.containsAccounts = containsAccounts;
       this.passwordError = passwordError;
+      this.actionNeeded = actionNeeded;
     }
   }
 }

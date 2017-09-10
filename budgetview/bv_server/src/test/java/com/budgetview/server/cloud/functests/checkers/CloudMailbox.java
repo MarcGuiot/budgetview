@@ -100,6 +100,11 @@ public class CloudMailbox {
     email.checkContainsAny("the password for bank <b>" + bank + "</b> needs to be updated");
   }
 
+  public void checkActionNeededAlert(String mailTo, String bank) throws Exception {
+    Email email = getEmail(mailTo);
+    email.checkContainsAny("the website of your bank <b>" + bank + "</b> is requiring an action on your part");
+  }
+
   public Assertion checkEmailChangedAlert(final String mailTo) {
     return new Assertion() {
       public void check() {

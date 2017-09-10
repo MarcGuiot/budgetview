@@ -140,6 +140,11 @@ public class Mailer {
                   Mailbox.SUPPORT.getEmail(), sendTo);
   }
 
+  public boolean sendCloudActionNeeded(String sendTo, String lang, String bankName) throws MessagingException {
+    return doSend(Mailbox.SUPPORT, Lang.get("cloud.webhook.actionNeeded.subject", lang), Lang.get("cloud.webhook.actionNeeded.message", lang, bankName),
+                  Mailbox.SUPPORT.getEmail(), sendTo);
+  }
+
   public boolean sendCloudAccountDeleted(String sendTo, String lang) throws MessagingException {
     return doSend(Mailbox.SUPPORT, Lang.get("cloud.subscription.deleted.subject", lang), Lang.get("cloud.subscription.deleted.message", lang),
                   Mailbox.SUPPORT.getEmail(), sendTo);

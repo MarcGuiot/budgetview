@@ -1,7 +1,6 @@
 package com.budgetview.functests.checkers;
 
 import com.budgetview.desktop.description.Formatting;
-import com.budgetview.desktop.importer.steps.ImportCloudBankConnectionPanel;
 import com.budgetview.utils.Lang;
 import org.globsframework.utils.TestUtils;
 import org.globsframework.utils.Utils;
@@ -59,12 +58,24 @@ public class CloudEditionChecker extends ViewChecker {
     return this;
   }
 
+  public CloudEditionChecker checkConnectionOK(String bankName) {
+    return checkDetailsLabel(bankName, Lang.get("import.cloud.edition.active"));
+  }
+
   public CloudEditionChecker checkConnectionWithPasswordError(String bankName) {
+    return checkDetailsLabel(bankName, Lang.get("import.cloud.edition.passwordError"));
+  }
+
+  public CloudEditionChecker checkActionNeededForConnection(String bankName) {
+    return checkDetailsLabel(bankName, Lang.get("import.cloud.edition.actionNeeded"));
+  }
+
+  private CloudEditionChecker checkDetailsLabel(String bankName, String detailsText) {
     final Panel panel = CloudEditionChecker.this.getConnectionsPanel();
     assertThat(panel.containsSwingComponent(JLabel.class, "details:" + bankName));
-    TextBox label = panel.getTextBox("details:" + bankName);
-    assertThat(label.textEquals(Lang.get("import.cloud.edition.passwordError")));
-    assertThat(label.isVisible());
+    TextBox detailsLabel = panel.getTextBox("details:" + bankName);
+    assertThat(detailsLabel.textEquals(detailsText));
+    assertThat(detailsLabel.isVisible());
     return this;
   }
 

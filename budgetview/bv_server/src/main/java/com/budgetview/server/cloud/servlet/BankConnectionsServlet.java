@@ -15,7 +15,6 @@ import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
 import org.globsframework.sqlstreams.SqlConnection;
 import org.globsframework.sqlstreams.constraints.Where;
-import org.globsframework.utils.Log;
 import org.globsframework.utils.Strings;
 import org.globsframework.utils.directory.Directory;
 import org.json.JSONArray;
@@ -109,6 +108,7 @@ public class BankConnectionsServlet extends HttpCloudServlet {
           boolean initialized = connection != null && connection.isTrue(ProviderConnection.INITIALIZED);
           Integer provider = connection != null ? connection.get(ProviderConnection.PROVIDER) : null;
           boolean passwordError = connection != null && connection.isTrue(ProviderConnection.PASSWORD_ERROR);
+          boolean actionNeeded = connection != null && connection.isTrue(ProviderConnection.ACTION_NEEDED);
 
           writer.object();
           writer.key(CloudConstants.PROVIDER_ID).value(provider);
@@ -117,6 +117,7 @@ public class BankConnectionsServlet extends HttpCloudServlet {
           writer.key(CloudConstants.BANK_NAME).value(getName(budgeaConnection, bankNames));
           writer.key(CloudConstants.INITIALIZED).value(initialized);
           writer.key(CloudConstants.PASSWORD_ERROR).value(passwordError);
+          writer.key(CloudConstants.ACTION_NEEDED).value(actionNeeded);
           writeConnectionAccounts(writer, budgeaConnectionId, connectionAccounts);
           writer.endObject();
         }
@@ -154,6 +155,7 @@ public class BankConnectionsServlet extends HttpCloudServlet {
           writer.key(CloudConstants.PROVIDER_CONNECTION_ID).value(providerConnectionId);
           writer.key(CloudConstants.INITIALIZED).value(connection.isTrue(ProviderConnection.INITIALIZED));
           writer.key(CloudConstants.PASSWORD_ERROR).value(connection.isTrue(ProviderConnection.PASSWORD_ERROR));
+          writer.key(CloudConstants.ACTION_NEEDED).value(connection.isTrue(ProviderConnection.ACTION_NEEDED));
           writer.endObject();
           writer.endArray();
         }

@@ -486,7 +486,8 @@ public class CloudService {
                         value(CloudProviderConnection.BANK, bank.get(Bank.ID)),
                         value(CloudProviderConnection.BANK_NAME, bankName),
                         value(CloudProviderConnection.INITIALIZED, false),
-                        value(CloudProviderConnection.PASSWORD_ERROR, false));
+                        value(CloudProviderConnection.PASSWORD_ERROR, false),
+                        value(CloudProviderConnection.ACTION_NEEDED, false));
 
     Glob user = repository.get(CloudDesktopUser.KEY);
     int cloudUserId = user.get(CloudDesktopUser.CLOUD_USER_ID);
@@ -525,16 +526,19 @@ public class CloudService {
 
           boolean initialized = false;
           boolean passwordError = false;
+          boolean actionNeeded = false;
           JSONArray array = result.getJSONArray("connections");
           if (array.length() > 0) {
             JSONObject connection = (JSONObject) array.get(0);
             initialized = Boolean.TRUE.equals(connection.optBoolean(CloudConstants.INITIALIZED));
             passwordError = Boolean.TRUE.equals(connection.optBoolean(CloudConstants.PASSWORD_ERROR));
+            actionNeeded = Boolean.TRUE.equals(connection.optBoolean(CloudConstants.ACTION_NEEDED));
           }
 
           repository.update(providerConnection,
                             value(CloudProviderConnection.INITIALIZED, initialized),
-                            value(CloudProviderConnection.PASSWORD_ERROR, passwordError));
+                            value(CloudProviderConnection.PASSWORD_ERROR, passwordError),
+                            value(CloudProviderConnection.ACTION_NEEDED, actionNeeded));
 
           callback.processCompletion(initialized);
         }
@@ -573,7 +577,8 @@ public class CloudService {
                                 value(CloudProviderConnection.BANK, Bank.findIdByProviderId(providerId, connection.getInt(CloudConstants.PROVIDER_BANK_ID), repository)),
                                 value(CloudProviderConnection.BANK_NAME, connection.getString(CloudConstants.BANK_NAME)),
                                 value(CloudProviderConnection.INITIALIZED, connection.getBoolean(CloudConstants.INITIALIZED)),
-                                value(CloudProviderConnection.PASSWORD_ERROR, connection.getBoolean(CloudConstants.PASSWORD_ERROR)));
+                                value(CloudProviderConnection.PASSWORD_ERROR, connection.optBoolean(CloudConstants.PASSWORD_ERROR, false)),
+                                value(CloudProviderConnection.ACTION_NEEDED, connection.optBoolean(CloudConstants.ACTION_NEEDED, false)));
             JSONArray accounts = connection.optJSONArray("accounts");
             if (accounts != null) {
               for (Object a : accounts) {

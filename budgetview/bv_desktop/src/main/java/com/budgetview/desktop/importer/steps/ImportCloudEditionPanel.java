@@ -126,6 +126,9 @@ public class ImportCloudEditionPanel extends AbstractImportStepPanel {
     if (connection.isTrue(CloudProviderConnection.PASSWORD_ERROR)) {
       label.setText(Lang.get("import.cloud.edition.passwordError"));
     }
+    else if (connection.isTrue(CloudProviderConnection.ACTION_NEEDED)) {
+      label.setText(Lang.get("import.cloud.edition.actionNeeded"));
+    }
     else if (!connection.isTrue(CloudProviderConnection.INITIALIZED)) {
       label.setText(Lang.get("import.cloud.edition.notinitialized"));
     }
