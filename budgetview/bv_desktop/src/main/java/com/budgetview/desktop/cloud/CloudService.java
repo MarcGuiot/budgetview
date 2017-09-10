@@ -699,12 +699,12 @@ public class CloudService {
       Glob realAccount = RealAccount.findFromProvider(Provider.BUDGEA.getId(), budgeaAccountId, repository);
       if (realAccount != null) {
         JSONArray transactions = account.optJSONArray("transactions");
-        if (transactions == null || transactions.length() == 0) {
-          continue;
-        }
         if (deleted) {
           repository.update(realAccount, RealAccount.ENABLED, false);
           System.out.println("CloudService.doDownloadStatement: " + realAccount.get(RealAccount.NAME) + " disabled");
+          continue;
+        }
+        if (transactions == null || transactions.length() == 0) {
           continue;
         }
       }
@@ -735,7 +735,8 @@ public class CloudService {
                         value(RealAccount.POSITION_DATE, Month.toDate(positionMonth, positionDay)),
                         value(RealAccount.ACCOUNT_TYPE, getAccountType(account).getId()),
                         value(RealAccount.FILE_NAME, null),
-                        value(RealAccount.FILE_CONTENT, account.toString()));
+                        value(RealAccount.FILE_CONTENT, account.toString()),
+                        value(RealAccount.ENABLED, !deleted));
       importedRealAccounts.add(realAccount);
     }
 
@@ -844,12 +845,21 @@ public class CloudService {
           writer.endObject();
 
           cloudAPI.updateAccounts(cloudUserId, deviceId, deviceToken, json.toString());
+          Log.debug(getUpdateAccountsDebugMessage("[Cloud] Updated account statuses: ", updates));
           callback.processCompletion();
         }
         catch (final Exception e) {
           Log.write("[Cloud] Error updating account state", e);
           callback.processError(e);
         }
+      }
+
+      private String getUpdateAccountsDebugMessage(String text, List<Pair<Integer, Boolean>> updates) {
+        StringBuilder builder = new StringBuilder(text);
+        for (Pair<Integer, Boolean> update : updates) {
+          builder.append(' ').append(update.getFirst()).append("=>").append(update.getSecond());
+        }
+        return builder.toString();
       }
     });
     thread.start();

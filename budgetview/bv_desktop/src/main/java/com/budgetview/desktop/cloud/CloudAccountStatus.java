@@ -49,8 +49,6 @@ public class CloudAccountStatus {
       targetRepository.completeChangeSet();
 
       directory.get(UndoRedoService.class).appendToNextUndo(change);
-      System.out.println("CloudAccountStatus.Functor.complete - added redo modifier");
-
     }
     catch (Exception e) {
       throw new UnexpectedException(e);
@@ -69,18 +67,15 @@ public class CloudAccountStatus {
     }
 
     public void apply() {
-      System.out.println("CloudAccountStatus.CloudAccountChange.apply");
       send(false);
     }
 
     public void revert() {
-      System.out.println("CloudAccountStatus.CloudAccountChange.revert");
       send(true);
     }
 
     private void send(boolean enabled) {
       final List<Pair<Integer, Boolean>> updates = new ArrayList<Pair<Integer, Boolean>>();
-      System.out.println("CloudAccountStatus.CloudAccountChange.send: updating " + providerAccountId);
       updates.add(new Pair<Integer, Boolean>(providerAccountId, enabled));
       directory.get(CloudService.class).updateAccounts(updates, globalRepository, new CloudService.Callback() {
         public void processCompletion() {

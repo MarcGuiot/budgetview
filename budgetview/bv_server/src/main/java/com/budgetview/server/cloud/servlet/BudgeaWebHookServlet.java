@@ -11,7 +11,6 @@ import com.budgetview.server.cloud.services.WebhookNotificationService;
 import com.budgetview.server.utils.DateConverter;
 import com.budgetview.shared.cloud.budgea.BudgeaAPI;
 import com.budgetview.shared.cloud.budgea.BudgeaSeriesConverter;
-import com.budgetview.shared.http.Http;
 import com.budgetview.shared.model.DefaultSeries;
 import com.budgetview.shared.model.Provider;
 import org.apache.log4j.Logger;
@@ -216,8 +215,7 @@ public class BudgeaWebHookServlet extends HttpCloudServlet {
       }
 
       int providerAccountId = account.getInt("id");
-      boolean deleted = isDeleted(account);
-      Log.debug("account " + account.getString("name") + " deleted = " + deleted);
+      boolean deleted = Budgea.isDeleted(account);
       repository.create(ProviderAccount.TYPE,
                         value(ProviderAccount.ID, providerAccountId),
                         value(ProviderAccount.PROVIDER, Provider.BUDGEA.getId()),
@@ -239,16 +237,6 @@ public class BudgeaWebHookServlet extends HttpCloudServlet {
         }
       }
 
-      return true;
-    }
-
-    private boolean isDeleted(JSONObject account) {
-      if (account.isNull("deleted")) {
-        return false;
-      }
-      if (account.optBoolean("deleted", false)) {
-        return true;
-      }
       return true;
     }
 

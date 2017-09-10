@@ -1,5 +1,7 @@
 package com.budgetview.server.cloud.budgea;
 
+import org.json.JSONObject;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -23,5 +25,15 @@ public class Budgea {
 
   public static String toTimeStampString(Date date) {
     return TIMESTAMP_FORMAT.format(date);
+  }
+
+  public static boolean isDeleted(JSONObject account) {
+    if (account.isNull("deleted")) {
+      return false;
+    }
+    if (account.optBoolean("deleted", false)) {
+      return true;
+    }
+    return true;
   }
 }

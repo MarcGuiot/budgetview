@@ -4,7 +4,7 @@
   <styleImport file="/layout/dialogStyles.splits"/>
   <styleImport file="/layout/importexport/components/importDialogStyles.splits"/>
   <styles>
-    <style selector=".connection" opaque="false" border="matte(0,0,1,0,dialog.separator)"/>
+    <style selector=".accountPanel" opaque="false" border="matte(0,0,1,0,dialog.separator)"/>
     <style selector="label.name" font="-,bold,14"/>
     <style selector="label.details" font="-,italic,12" marginBottom="2"/>
 
@@ -16,10 +16,10 @@
         unselectedBorderColor="projectView.onoff.unselected.border"
         unselectedTextColor="projectView.onoff.unselected.text"
         rolloverTextColor="projectView.onoff.text.rollover"/>
-    <style selector="toggleButton#enable" ui="onOffToggle"
+    <style selector="toggleButton#toggle" ui="onOffToggle"
            weightX="0" fill="none" anchor="center"
            marginLeft="5" marginRight="0"
-           minimumSize="(26,14)" preferredSize="(26,14)"/>
+           minimumSize="(39,21)" preferredSize="(39,21)"/>
   </styles>
 
   <column styleClass="dialog" preferredSize="(600,710)" name="importCloudAccountsPanel">

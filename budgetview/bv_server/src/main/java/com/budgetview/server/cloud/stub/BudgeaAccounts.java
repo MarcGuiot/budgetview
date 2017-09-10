@@ -29,7 +29,7 @@ public class BudgeaAccounts {
     json.key("id_connection").value(connectionId);
     json.key("name").value(name);
     json.key("number").value(number);
-    json.key("disabled").value(enabled ? null : Budgea.toTimeStampString(Dates.now()));
+    json.key("deleted").value(enabled ? null : Budgea.toTimeStampString(Dates.now()));
     json.endObject();
     return this;
   }

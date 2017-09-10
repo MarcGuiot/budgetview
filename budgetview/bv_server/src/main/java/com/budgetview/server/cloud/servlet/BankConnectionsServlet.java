@@ -1,5 +1,6 @@
 package com.budgetview.server.cloud.servlet;
 
+import com.budgetview.server.cloud.budgea.Budgea;
 import com.budgetview.server.cloud.commands.AuthenticatedCommand;
 import com.budgetview.server.cloud.commands.Command;
 import com.budgetview.server.cloud.model.CloudUser;
@@ -14,6 +15,7 @@ import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
 import org.globsframework.sqlstreams.SqlConnection;
 import org.globsframework.sqlstreams.constraints.Where;
+import org.globsframework.utils.Log;
 import org.globsframework.utils.Strings;
 import org.globsframework.utils.directory.Directory;
 import org.json.JSONArray;
@@ -171,7 +173,7 @@ public class BankConnectionsServlet extends HttpCloudServlet {
           writer.key(CloudConstants.PROVIDER_ACCOUNT_ID).value(account.getInt("id"));
           writer.key(CloudConstants.NAME).value(account.optString("name"));
           writer.key(CloudConstants.NUMBER).value(account.optString("number"));
-          writer.key(CloudConstants.ENABLED).value(account.isNull("disabled"));
+          writer.key(CloudConstants.ENABLED).value(!Budgea.isDeleted(account));
           writer.endObject();
         }
         writer.endArray();
