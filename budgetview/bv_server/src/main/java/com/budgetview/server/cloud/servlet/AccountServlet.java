@@ -2,6 +2,7 @@ package com.budgetview.server.cloud.servlet;
 
 import com.budgetview.server.cloud.commands.AuthenticatedCommand;
 import com.budgetview.server.cloud.commands.Command;
+import com.budgetview.server.cloud.utils.Debug;
 import org.apache.log4j.Logger;
 import org.globsframework.json.JsonGlobWriter;
 import org.globsframework.utils.directory.Directory;
@@ -32,6 +33,9 @@ public class AccountServlet extends HttpCloudServlet {
           JSONObject account = (JSONObject) a;
           int accountId = account.getInt("provider_account_id");
           boolean enabled = account.getBoolean("enabled");
+          if (Debug.isTestUser(user)) {
+            logger.info("Updating budgea account " + accountId + " ==> " + enabled);
+          }
           budgeaAPI.setAccountEnabled(accountId, enabled);
         }
 

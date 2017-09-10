@@ -8,15 +8,18 @@ import com.budgetview.server.cloud.model.ProviderTransaction;
 import com.budgetview.server.cloud.model.ProviderUpdate;
 import com.budgetview.server.cloud.services.CloudSerializationService;
 import com.budgetview.server.cloud.services.WebhookNotificationService;
+import com.budgetview.server.cloud.utils.Debug;
 import com.budgetview.server.utils.DateConverter;
 import com.budgetview.shared.cloud.budgea.BudgeaAPI;
 import com.budgetview.shared.cloud.budgea.BudgeaSeriesConverter;
 import com.budgetview.shared.model.DefaultSeries;
 import com.budgetview.shared.model.Provider;
+import oracle.jvm.hotspot.jfr.Producer;
 import org.apache.log4j.Logger;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.GlobRepositoryBuilder;
+import org.globsframework.model.format.GlobPrinter;
 import org.globsframework.sqlstreams.GlobsDatabase;
 import org.globsframework.sqlstreams.SqlConnection;
 import org.globsframework.sqlstreams.constraints.Where;
@@ -114,7 +117,7 @@ public class BudgeaWebHookServlet extends HttpCloudServlet {
         JSONArray accounts = budgeaConnection.optJSONArray("accounts");
         boolean containsAccounts = false;
         if (accounts != null && accounts.length() > 0) {
-          DbUpdater updater = new DbUpdater(user.get(CloudUser.ID), connectionId);
+          DbUpdater updater = new DbUpdater(user, connectionId);
           for (Object a : accounts) {
             JSONObject account = (JSONObject) a;
             containsAccounts |= updater.loadAccount(connectionId, bank, account);
@@ -194,9 +197,11 @@ public class BudgeaWebHookServlet extends HttpCloudServlet {
     private Integer userId;
     private int connectionId;
     private GlobRepository repository = GlobRepositoryBuilder.createEmpty();
+    private final boolean debug;
 
-    public DbUpdater(Integer userId, int connectionId) {
-      this.userId = userId;
+    public DbUpdater(Glob user, int connectionId) {
+      this.userId = user.get(CloudUser.ID);
+      this.debug = Debug.isTestUser(user);
       this.connectionId = connectionId;
     }
 
@@ -273,6 +278,10 @@ public class BudgeaWebHookServlet extends HttpCloudServlet {
       if (!repository.contains(ProviderAccount.TYPE)) {
         logger.debug("No accounts created");
         return;
+      }
+
+      if (debug) {
+        logger.info("Saving test user update: \n" + GlobPrinter.init(repository.getAll(ProviderAccount.TYPE)).toString());
       }
 
       SqlConnection sqlConnection = db.connect();

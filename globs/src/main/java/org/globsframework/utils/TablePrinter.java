@@ -83,7 +83,9 @@ public class TablePrinter {
     }
 
     if (headerRow != null) {
-      printer.print(indent);
+      if (indent != null) {
+        printer.print(indent);
+      }
       printer.println(toString(headerRow, sizes));
     }
     List<String> strings = new ArrayList<String>();
@@ -94,7 +96,9 @@ public class TablePrinter {
       strings = Utils.sort(strings);
     }
     for (String string : strings) {
-      printer.print(indent);
+      if (indent != null) {
+        printer.print(indent);
+      }
       printer.println(string);
     }
 
