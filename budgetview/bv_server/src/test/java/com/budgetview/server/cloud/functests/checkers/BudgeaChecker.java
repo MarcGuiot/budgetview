@@ -71,8 +71,12 @@ public class BudgeaChecker {
     stub.setLoginConstraint(fieldEqualsValue);
   }
 
-  public void checkUserDeletions(int userId) {
-    stub.checkUserDeletion(userId);
+  public void checkUserDeleted(int userId) {
+    stub.checkUserDeleted(userId);
+  }
+
+  public void checkConnectionDeleted(int connectionId) {
+    stub.checkConnectionDeleted(connectionId);
   }
 
   public void checkAccountUpdates(String... updates) {

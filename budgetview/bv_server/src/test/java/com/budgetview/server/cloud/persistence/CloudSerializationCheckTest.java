@@ -36,7 +36,7 @@ public class CloudSerializationCheckTest extends TestCase {
       Assert.fail("Exception not raised");
     }
     catch (InvalidConfiguration e) {
-      Assert.assertEquals("Phrase 'budgetview.db.encryption.phrase' and password are different from previous ones - aborting",
+      Assert.assertEquals("Phrase 'budgetview.db.encryption.pwd.phrase' and password are different from previous ones - aborting",
                           e.getMessage());
     }
 
@@ -50,7 +50,7 @@ public class CloudSerializationCheckTest extends TestCase {
       Assert.fail("Exception not raised");
     }
     catch (InvalidConfiguration e) {
-      Assert.assertEquals("Phrase 'budgetview.db.encryption.phrase' is different from previous one - aborting",
+      Assert.assertEquals("Phrase 'budgetview.db.encryption.pwd.phrase' is different from previous one - aborting",
                           e.getMessage());
     }
 

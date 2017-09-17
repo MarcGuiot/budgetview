@@ -12,8 +12,10 @@ import com.budgetview.utils.Lang;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.components.GlobRepeat;
 import org.globsframework.gui.splits.PanelBuilder;
+import org.globsframework.gui.splits.SplitsNode;
 import org.globsframework.gui.splits.repeat.RepeatComponentFactory;
 import org.globsframework.gui.splits.utils.GuiUtils;
+import org.globsframework.gui.splits.utils.OnLoadListener;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.Key;
@@ -66,20 +68,35 @@ public class ImportCloudAccountsPanel extends AbstractImportStepPanel {
         cellBuilder.add("accountPanel", panel);
         panel.setName("accountPanel:" + name);
 
-        cellBuilder.add("accountName", new JLabel(name));
-        cellBuilder.add("accountNumber", new JLabel(account.get(CloudProviderAccount.NUMBER)));
-        JToggleButton toggle = new JToggleButton("", account.isTrue(CloudProviderAccount.ENABLED));
+        final SplitsNode<JLabel> accountNameNode = cellBuilder.add("accountName", new JLabel(name));
+        final SplitsNode<JLabel> accountNumberNode = cellBuilder.add("accountNumber", new JLabel(account.get(CloudProviderAccount.NUMBER)));
+        final JToggleButton toggle = new JToggleButton("");
         toggle.addItemListener(new ItemListener() {
           public void itemStateChanged(ItemEvent ev) {
             if (ev.getStateChange() == ItemEvent.SELECTED) {
               toggleAccount(account.getKey(), true);
+              updateLabels(true, accountNameNode, accountNumberNode);
             }
             else if (ev.getStateChange() == ItemEvent.DESELECTED) {
               toggleAccount(account.getKey(), false);
+              updateLabels(false, accountNameNode, accountNumberNode);
             }
           }
         });
         cellBuilder.add("toggle", toggle);
+
+        cellBuilder.addOnLoadListener(new OnLoadListener() {
+          public void processLoad() {
+            boolean enabled = account.isTrue(CloudProviderAccount.ENABLED);
+            toggle.setSelected(enabled);
+            updateLabels(enabled, accountNameNode, accountNumberNode);
+          }
+        });
+      }
+
+      private void updateLabels(boolean enabled, SplitsNode<JLabel> accountNameNode, SplitsNode<JLabel> accountNumberNode) {
+        accountNameNode.applyStyle(enabled ? "accountEnabled" : "accountDisabled");
+        accountNumberNode.applyStyle(enabled ? "accountEnabled" : "accountDisabled");
       }
     });
 

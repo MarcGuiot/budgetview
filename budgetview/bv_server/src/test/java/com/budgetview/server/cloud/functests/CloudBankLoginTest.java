@@ -214,7 +214,9 @@ public class CloudBankLoginTest extends CloudDesktopTestCase {
     operations.openImportDialog()
       .editCloudConnections()
       .deleteConnection("Connecteur de test")
+      .checkNoConnectionsShown()
       .close();
+    budgea.checkConnectionDeleted(1);
 
     budgea.pushNewConnectionResponse(1, 123, 40);
     budgea.pushConnectionList(BudgeaConnections.init().get());

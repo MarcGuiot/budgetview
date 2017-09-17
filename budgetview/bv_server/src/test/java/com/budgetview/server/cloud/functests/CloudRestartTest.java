@@ -199,7 +199,7 @@ public class CloudRestartTest extends CloudDesktopTestCase {
       .checkCompletionMessageShown()
       .close();
 
-    mailbox.checkAccountDeleted("toto@example.com");
+    mailbox.checkSyncAccountDeleted("toto@example.com");
 
     // -- Restart and revert to app state before deletion --
 

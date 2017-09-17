@@ -128,9 +128,9 @@ public class CloudSubscriptionTest extends CloudDesktopTestCase {
       .checkCompletionMessageShown()
       .close();
 
-    budgea.checkUserDeletions(123);
+    budgea.checkUserDeleted(123);
     payments.checkSubscriptionDeleted(subscriptionId);
-    mailbox.checkAccountDeleted("toto@example.com");
+    mailbox.checkSyncAccountDeleted("toto@example.com");
 
     budgea.pushNewConnectionResponse(1, 123, 40);
     budgea.pushStatement(BudgeaStatement.init()

@@ -64,7 +64,7 @@ public class CloudMailbox {
     };
   }
 
-  public void checkAccountDeleted(final String mailTo) throws Exception {
+  public void checkSyncAccountDeleted(final String mailTo) throws Exception {
     Email email = getEmail(mailTo);
     email.checkContainsAny("deleted", "supprim", "erased");
   }

@@ -18,7 +18,7 @@ public class CloudSerializationBuilder {
 
   private static Logger logger = Logger.getLogger("CloudSerializationBuilder");
 
-  public static final String DB_ENCRYPTION_PHRASE_PROPERTY = "budgetview.db.encryption.phrase";
+  public static final String DB_ENCRYPTION_PHRASE_PROPERTY = "budgetview.db.encryption.pwd.phrase";
   public static final String DB_ENCRYPTION_PASSWORD_PROPERTY = "budgetview.db.encryption.password";
 
   public static CloudSerializationService create(ConfigService configService, Directory directory) throws Exception {
@@ -46,8 +46,6 @@ public class CloudSerializationBuilder {
         Glob config = configs.getFirst();
         byte[] decoded = serializationService.decode(config.get(CloudConfig.SAMPLE));
         String previousPhrase = new String(decoded, "UTF-8");
-        logger.info("previous: " + previousPhrase);
-        logger.info("new: " + encryptionPhrase);
         if (!Utils.equal(previousPhrase, encryptionPhrase)) {
           throw new InvalidConfiguration("Phrase '" + DB_ENCRYPTION_PHRASE_PROPERTY + "' is different from previous one - aborting");
         }

@@ -11,6 +11,7 @@ import org.globsframework.model.format.GlobPrinter;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.junit.Assert;
+import org.junit.Test;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -22,7 +23,8 @@ import static org.globsframework.model.utils.GlobMatchers.fieldEquals;
 
 public class CloudBanksListTest extends LoggedInFunctionalTestCase {
 
-  public void testBudgetInsightBanksAreAligneWithInternalBanks() throws Exception {
+  @Test
+  public void testBudgetInsightBanksAreAlignedWithInternalBanks() throws Exception {
 
     Map<String, JSONObject> jsonBanks = new HashMap<String, JSONObject>();
     for (Object item : getBudgeaBanks()) {

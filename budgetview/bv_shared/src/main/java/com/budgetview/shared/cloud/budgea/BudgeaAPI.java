@@ -8,6 +8,7 @@ import org.apache.http.NameValuePair;
 import org.apache.http.StatusLine;
 import org.apache.http.client.fluent.Form;
 import org.apache.http.client.fluent.Request;
+import org.apache.log4j.Logger;
 import org.globsframework.utils.Strings;
 import org.json.JSONObject;
 
@@ -16,6 +17,8 @@ import java.util.List;
 import java.util.Map;
 
 public class BudgeaAPI {
+
+  private static Logger logger = Logger.getLogger("BudgeaAPI");
 
   private String token;
 
@@ -57,7 +60,7 @@ public class BudgeaAPI {
   }
 
   public JSONObject getUserAccounts(int userId) throws IOException {
-    return getAsJson("/users/" + userId + "/accounts");
+    return getAsJson("/users/" + userId + "/accounts/?all");
   }
 
   public void deleteUser(int userId) throws IOException {
@@ -170,17 +173,24 @@ public class BudgeaAPI {
     return user.getInt("id");
   }
 
-  public JSONObject setAccountEnabled(int budgeaAccountId, boolean enabled) throws IOException {
+  public JSONObject setAccountEnabled(int budgeaUserId, int budgeaAccountId, boolean enabled) throws IOException {
     checkToken();
     String url = "/users/me/accounts/" + budgeaAccountId;
-    Form form = Form.form()
-      .add("disabled", enabled ? "null" : "1");
-
-    return json(Request.Put(BudgeaConstants.getServerUrl(url))
-                  .addHeader(BudgeaConstants.AUTHORIZATION, "Bearer " + token)
-                  .addHeader("user_id", "me")
-                  .bodyForm(form.build(), Consts.UTF_8), url);
-
+    if (enabled) {
+      Form form = Form.form()
+        .add("deleted", "null");
+      logger.info("PUT " + url);
+      return json(Request.Put(BudgeaConstants.getServerUrl(url))
+                    .addHeader(BudgeaConstants.AUTHORIZATION, "Bearer " + token)
+                    .addHeader("user_id", "me")
+                    .bodyForm(form.build(), Consts.UTF_8), url);
+    }
+    else {
+      logger.info("DELETE " + url);
+      return json(Request.Delete(BudgeaConstants.getServerUrl(url))
+                    .addHeader(BudgeaConstants.AUTHORIZATION, "Bearer " + token)
+                    .addHeader("user_id", "me"), url);
+    }
   }
 
   public String getToken() throws IOException {

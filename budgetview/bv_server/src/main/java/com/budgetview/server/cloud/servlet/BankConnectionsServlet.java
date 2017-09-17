@@ -6,6 +6,7 @@ import com.budgetview.server.cloud.commands.Command;
 import com.budgetview.server.cloud.model.CloudUser;
 import com.budgetview.server.cloud.model.ProviderConnection;
 import com.budgetview.server.cloud.model.ProviderUpdate;
+import com.budgetview.server.cloud.utils.Debug;
 import com.budgetview.shared.cloud.CloudConstants;
 import com.budgetview.shared.model.Provider;
 import org.apache.log4j.Logger;
@@ -87,6 +88,9 @@ public class BankConnectionsServlet extends HttpCloudServlet {
           budgeaConnections = fetchConnections(providerUserId);
           bankNames = fetchBankNames();
           connectionAccounts = fetchAccounts(providerUserId);
+          if (Debug.isTestUser(user)) {
+            logger.info("Accounts:" + connectionAccounts.toString(2));
+          }
         }
         else {
           budgeaConnections = new JSONArray();
@@ -204,7 +208,7 @@ public class BankConnectionsServlet extends HttpCloudServlet {
         String name = bankNames.get(bankId);
         if (Strings.isNullOrEmpty(name)) {
           name = "-?-";
-          logger.error("/Get - no bank found fon bank_id " + bankId);
+          logger.error("/Get - no bank found for bank_id " + bankId);
         }
         return name;
       }

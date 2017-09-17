@@ -49,22 +49,22 @@ public class BooleanFieldListener implements Disposable {
         if (!changeSet.containsChanges(key, field)) {
           return;
         }
-        doUpdate();
+        update();
       }
 
       public void globsReset(GlobRepository repository, Set<GlobType> changedTypes) {
         if (!changedTypes.contains(key.getGlobType())) {
           return;
         }
-        doUpdate();
+        update();
       }
 
     };
     repository.addChangeListener(this.listener);
-    doUpdate();
+    update();
   }
 
-  private void doUpdate() {
+  public void update() {
     Glob glob = repository.find(key);
     functor.apply(glob != null && glob.isTrue(field));
   }

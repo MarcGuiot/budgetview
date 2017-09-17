@@ -20,6 +20,9 @@
            weightX="0" fill="none" anchor="center"
            marginLeft="5" marginRight="0"
            minimumSize="(39,21)" preferredSize="(39,21)"/>
+
+    <style id="accountEnabled" selector="x" foreground="dialog.text"/>
+    <style id="accountDisabled" selector="x" foreground="dialog.text.disabled"/>
   </styles>
 
   <column styleClass="dialog" preferredSize="(600,710)" name="importCloudAccountsPanel">

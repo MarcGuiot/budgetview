@@ -87,6 +87,10 @@ public class WebServer {
     context.setResourceBase("resources");
   }
 
+  public void setHandler(Handler handler) {
+    jetty.setHandler(handler);
+  }
+
   public void add(HttpServlet servlet, String path) {
     context.addServlet(new ServletHolder(servlet), path);
   }
