@@ -136,6 +136,7 @@ public class StatementServlet extends HttpCloudServlet {
         writer.value(Provider.BUDGEA.getId(), "provider");
         writer.field(ProviderAccount.PROVIDER_BANK_ID, "provider_bank_id");
         writer.field(ProviderAccount.ID, "provider_account_id");
+        writer.field(ProviderAccount.PROVIDER_CONNECTION, "provider_connection_id");
         writer.field(ProviderAccount.PROVIDER_BANK_NAME, "provider_bank_name");
         writer.field(ProviderAccount.POSITION, "position");
         writer.field(ProviderAccount.POSITION_MONTH, "position_month");

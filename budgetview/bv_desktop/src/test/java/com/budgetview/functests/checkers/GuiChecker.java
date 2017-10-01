@@ -59,6 +59,12 @@ public abstract class GuiChecker {
     assertThat(message, new ComponentIsVisibleAssertion<T>(panel, swingComponentClass, componentName, visible));
   }
 
+  protected <T extends JComponent> boolean isComponentVisible(final Panel panel,
+                                                              final Class<T> swingComponentClass,
+                                                              final String componentName) {
+    return new ComponentIsVisibleAssertion<T>(panel, swingComponentClass, componentName, true).isTrue();
+  }
+
   protected <T extends JComponent> void checkMessageHidden(final Panel panel, final String componentName) {
     assertThat(new MessageIsHiddenAssertion(panel, componentName));
   }

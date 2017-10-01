@@ -1,6 +1,7 @@
 package com.budgetview.desktop.cloud;
 
 import com.budgetview.budgea.model.*;
+import com.budgetview.desktop.cloud.accounts.CloudAccountUpdates;
 import com.budgetview.model.*;
 import com.budgetview.shared.cloud.*;
 import com.budgetview.shared.cloud.budgea.BudgeaAPI;
@@ -14,7 +15,6 @@ import org.globsframework.model.*;
 import org.globsframework.utils.Log;
 import org.globsframework.utils.Strings;
 import org.globsframework.utils.Utils;
-import org.globsframework.utils.collections.Pair;
 import org.globsframework.utils.exceptions.InvalidParameter;
 import org.globsframework.utils.exceptions.UnexpectedValue;
 import org.json.JSONArray;
@@ -23,9 +23,7 @@ import org.json.JSONWriter;
 
 import java.io.IOException;
 import java.io.StringWriter;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import static org.globsframework.model.FieldValue.value;
@@ -585,6 +583,7 @@ public class CloudService {
                 JSONObject account = (JSONObject) a;
                 repository.create(CloudProviderAccount.TYPE,
                                   value(CloudProviderAccount.CONNECTION, providerConnection.get(CloudProviderConnection.ID)),
+                                  value(CloudProviderAccount.PROVIDER_CONNECTION_ID, providerConnection.get(CloudProviderConnection.PROVIDER_CONNECTION_ID)),
                                   value(CloudProviderAccount.PROVIDER_ACCOUNT_ID, account.getInt(CloudConstants.PROVIDER_ACCOUNT_ID)),
                                   value(CloudProviderAccount.NAME, account.getString(CloudConstants.NAME)),
                                   value(CloudProviderAccount.NUMBER, account.getString(CloudConstants.NUMBER)),
@@ -632,7 +631,7 @@ public class CloudService {
     thread.start();
   }
 
-  public void downloadStatement(final GlobRepository repository, final  DownloadCallback callback) {
+  public void downloadStatement(final GlobRepository repository, final DownloadCallback callback) {
     Thread thread = new Thread(new Runnable() {
       public void run() {
         try {
@@ -692,6 +691,7 @@ public class CloudService {
       JSONObject account = (JSONObject) item;
       String name = Strings.toString(account.getString("name")).trim();
       String number = Strings.toString(account.getString("number")).trim();
+      int budgeaConnectionId = account.getInt("provider_connection_id");
       int budgeaAccountId = account.getInt("provider_account_id");
       int budgeaBankId = account.getInt("provider_bank_id");
       Glob bank = BudgeaBank.findBudgetViewBank(budgeaBankId, repository);
@@ -701,12 +701,12 @@ public class CloudService {
       }
       boolean deleted = account.optBoolean("deleted", false);
 
-      Glob realAccount = RealAccount.findFromProvider(Provider.BUDGEA.getId(), budgeaAccountId, repository);
+      Glob realAccount = RealAccount.findFromProvider(Provider.BUDGEA.getId(), budgeaConnectionId, budgeaAccountId, repository);
       if (realAccount != null) {
         JSONArray transactions = account.optJSONArray("transactions");
         if (deleted) {
           repository.update(realAccount, RealAccount.ENABLED, false);
-          System.out.println("CloudService.doDownloadStatement: " + realAccount.get(RealAccount.NAME) + " disabled");
+          Log.debug("CloudService.doDownloadStatement: " + realAccount.get(RealAccount.NAME) + " disabled");
           continue;
         }
         if (transactions == null || transactions.length() == 0) {
@@ -719,6 +719,7 @@ public class CloudService {
         if (realAccount != null) {
           repository.update(realAccount,
                             value(RealAccount.PROVIDER, Provider.BUDGEA.getId()),
+                            value(RealAccount.PROVIDER_CONNECTION_ID, budgeaConnectionId),
                             value(RealAccount.PROVIDER_ACCOUNT_ID, budgeaAccountId));
         }
       }
@@ -726,6 +727,7 @@ public class CloudService {
         realAccount = RealAccount.findOrCreate(name, number, bank.get(Bank.ID), repository);
         repository.update(realAccount,
                           value(RealAccount.PROVIDER, Provider.BUDGEA.getId()),
+                          value(RealAccount.PROVIDER_CONNECTION_ID, budgeaConnectionId),
                           value(RealAccount.PROVIDER_ACCOUNT_ID, budgeaAccountId));
       }
 
@@ -794,24 +796,26 @@ public class CloudService {
   }
 
   public void updateAccounts(ChangeSet changeSet, final GlobRepository repository, Callback callback) {
-    final List<Pair<Integer, Boolean>> updates = new ArrayList<Pair<Integer, Boolean>>();
+    final CloudAccountUpdates.Builder updates = CloudAccountUpdates.build();
     changeSet.safeVisit(RealAccount.TYPE, new ChangeSetVisitor() {
       public void visitCreation(Key key, FieldValues values) throws Exception {
+        Integer providerConnectionId = values.get(RealAccount.PROVIDER_CONNECTION_ID);
         Integer providerAccountId = values.get(RealAccount.PROVIDER_ACCOUNT_ID);
         if (Utils.equal(values.get(RealAccount.PROVIDER), Provider.BUDGEA.getId())
             && providerAccountId != null
             && !values.isTrue(RealAccount.ENABLED)) {
-          updates.add(new Pair<Integer, Boolean>(providerAccountId, false));
+          updates.add(providerConnectionId, providerAccountId, false);
         }
       }
 
       public void visitUpdate(Key key, FieldValuesWithPrevious values) throws Exception {
         if (values.contains(RealAccount.ENABLED)) {
           Glob realAccount = repository.get(key);
+          Integer providerConnectionId = realAccount.get(RealAccount.PROVIDER_CONNECTION_ID);
           Integer providerAccountId = realAccount.get(RealAccount.PROVIDER_ACCOUNT_ID);
           if (Utils.equal(realAccount.get(RealAccount.PROVIDER), Provider.BUDGEA.getId())
               && providerAccountId != null) {
-            updates.add(new Pair<Integer, Boolean>(providerAccountId, realAccount.isTrue(RealAccount.ENABLED)));
+            updates.add(providerConnectionId, providerAccountId, realAccount.isTrue(RealAccount.ENABLED));
           }
         }
       }
@@ -819,10 +823,10 @@ public class CloudService {
       public void visitDeletion(Key key, FieldValues previousValues) throws Exception {
       }
     });
-    updateAccounts(updates, repository, callback);
+    updateAccounts(updates.get(), repository, callback);
   }
 
-  public void updateAccounts(final List<Pair<Integer, Boolean>> updates, GlobRepository repository, final Callback callback) {
+  public void updateAccounts(final CloudAccountUpdates updates, GlobRepository repository, final Callback callback) {
     if (updates.isEmpty()) {
       return;
     }
@@ -836,16 +840,19 @@ public class CloudService {
       public void run() {
         try {
           StringWriter json = new StringWriter();
-          JSONWriter writer = new JSONWriter(json);
+          final JSONWriter writer = new JSONWriter(json);
           writer.object();
           writer.key("accounts");
           writer.array();
-          for (Pair<Integer, Boolean> update : updates) {
-            writer.object();
-            writer.key("provider_account_id").value(update.getFirst());
-            writer.key("enabled").value(update.getSecond());
-            writer.endObject();
-          }
+          updates.visit(new CloudAccountUpdates.Visitor() {
+            public void visit(int connectionId, int accountId, boolean enabled) {
+              writer.object();
+              writer.key("provider_connection_id").value(connectionId);
+              writer.key("provider_account_id").value(accountId);
+              writer.key("enabled").value(enabled);
+              writer.endObject();
+            }
+          });
           writer.endArray();
           writer.endObject();
 
@@ -859,11 +866,13 @@ public class CloudService {
         }
       }
 
-      private String getUpdateAccountsDebugMessage(String text, List<Pair<Integer, Boolean>> updates) {
-        StringBuilder builder = new StringBuilder(text);
-        for (Pair<Integer, Boolean> update : updates) {
-          builder.append(' ').append(update.getFirst()).append("=>").append(update.getSecond());
-        }
+      private String getUpdateAccountsDebugMessage(String text, CloudAccountUpdates updates) {
+        final StringBuilder builder = new StringBuilder(text);
+        updates.visit(new CloudAccountUpdates.Visitor() {
+          public void visit(int connectionId, int accountId, boolean enabled) {
+            builder.append(' ').append(connectionId).append("/").append(accountId).append("=>").append(enabled);
+          }
+        });
         return builder.toString();
       }
     });

@@ -21,6 +21,7 @@ public class JsonImporterTest extends TestCase {
                   "    \"position_month\": 201608,\n" +
                   "    \"number\": \"3002900000\",\n" +
                   "    \"provider_bank_id\": 40,\n" +
+                  "    \"provider_connection_id\": 123,\n" +
                   "    \"provider_account_id\": 614,\n" +
                   "    \"provider\": 2,\n" +
                   "    \"provider_bank_name\": \"Connecteur de test\",\n" +

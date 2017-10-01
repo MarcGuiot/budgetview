@@ -146,7 +146,7 @@ public class ImportPreviewPanel extends AbstractImportStepPanel implements Messa
 
     nextAction = new NextAction();
     builder.add("next", nextAction);
-    builder.add("close", new CancelAction(getCancelLabel()));
+    builder.add("cancel", new CancelAction(getCancelLabel()));
     accountEditionPanel.setBalanceEditorVisible(true);
     return builder;
   }

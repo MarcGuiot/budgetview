@@ -33,11 +33,12 @@ public class AccountServlet extends HttpCloudServlet {
         for (Object a : accounts) {
           JSONObject account = (JSONObject) a;
           int accountId = account.getInt("provider_account_id");
+          int connectionId = account.getInt("provider_connection_id");
           boolean enabled = account.getBoolean("enabled");
           if (Debug.isTestUser(user)) {
             logger.info("Updating budgea account " + accountId + " ==> " + enabled);
           }
-          budgeaAPI.setAccountEnabled(user.get(CloudUser.PROVIDER_USER_ID), accountId, enabled);
+          budgeaAPI.setAccountEnabled(user.get(CloudUser.PROVIDER_USER_ID), connectionId, accountId, enabled);
         }
 
         return HttpServletResponse.SC_OK;

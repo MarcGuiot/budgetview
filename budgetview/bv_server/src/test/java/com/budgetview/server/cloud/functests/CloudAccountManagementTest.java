@@ -105,7 +105,7 @@ public class CloudAccountManagementTest extends CloudDesktopTestCase {
       .checkApplyDisabled()
       .close();
 
-    // --- New download : Main account 2 is not shown ---
+    // --- New download : Main account 2 is now shown ---
 
     budgea.sendStatement(BudgeaStatement.init()
                            .addConnection(1, 123, 40, "Connecteur de test", "2016-08-14 17:44:26")
@@ -128,6 +128,7 @@ public class CloudAccountManagementTest extends CloudDesktopTestCase {
         {"2016/08/13", "DECATHLON", "-150.00"}
       })
       .checkNewAccountSelected()
+      .checkAccount("Main account 2")
       .importAccountAndComplete();
 
     mainAccounts.checkAccounts("Main account 1", "Main account 2");

@@ -20,7 +20,6 @@ public class ImportDialogChecker extends GuiChecker {
   private Window dialog;
   private TextBox fileField;
   private Button importButton;
-  private BankDownloadChecker bankDownload;
 
   public static ImportDialogChecker open(Trigger trigger) {
     Window window = WindowInterceptor.getModalDialog(trigger);
@@ -71,6 +70,11 @@ public class ImportDialogChecker extends GuiChecker {
     return this;
   }
 
+  public ImportDialogPreviewChecker importFileAndPreview(String path) {
+    setFilePath(path);
+    return importFileAndPreview();
+  }
+
   public ImportDialogPreviewChecker importFileAndPreview() {
     checkTitle("import.fileSelection.title");
     getImportButton().click();
@@ -108,13 +112,6 @@ public class ImportDialogChecker extends GuiChecker {
     TextBox fileMessage = dialog.findUIComponent(TextBox.class, text);
     assertTrue(fileMessage.isVisible());
     return this;
-  }
-
-  public BankDownloadChecker getBankDownload() {
-    if (bankDownload == null) {
-      bankDownload = new BankDownloadChecker(dialog);
-    }
-    return bankDownload;
   }
 
   public ImportDialogChecker checkNoErrorMessage() {
@@ -211,6 +208,11 @@ public class ImportDialogChecker extends GuiChecker {
       importButton = dialog.getButton("Import");
     }
     return importButton;
+  }
+
+  public void enterTransactionsManually() {
+    dialog.getButton("manualEntry").click();
+    checkClosed();
   }
 
   public CloudSignupChecker selectCloudForNewUser() {

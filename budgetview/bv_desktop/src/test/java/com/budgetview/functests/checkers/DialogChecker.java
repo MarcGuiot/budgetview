@@ -9,6 +9,8 @@ import org.uispec4j.assertion.Assertion;
 import org.uispec4j.assertion.UISpecAssert;
 import org.uispec4j.finder.ComponentMatchers;
 
+import javax.swing.*;
+
 import static org.uispec4j.assertion.UISpecAssert.assertThat;
 
 public class DialogChecker extends GuiChecker {
@@ -43,5 +45,4 @@ public class DialogChecker extends GuiChecker {
       }
     }, 10000);
   }
-
 }

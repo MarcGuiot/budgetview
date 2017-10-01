@@ -625,9 +625,6 @@ public class SignpostSequenceTest extends LoggedInFunctionalTestCase {
     signpostView.checkSignpostViewShown();
 
     operations.openImportDialog()
-      .getBankDownload()
-      .selectCountry("France")
-      .selectBank("CIC")
       .enterTransactionsManually();
 
     transactionCreation.checkSignpostShown("Click here to enter transactions");

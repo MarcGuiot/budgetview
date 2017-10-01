@@ -1,8 +1,8 @@
 package com.budgetview.functests.banks;
 
 import com.budgetview.functests.checkers.AccountEditionChecker;
-import com.budgetview.functests.checkers.BankDownloadChecker;
-import com.budgetview.functests.checkers.ImportDialogChecker;
+import com.budgetview.functests.checkers.BankChooserChecker;
+import com.budgetview.functests.checkers.ImportDialogPreviewChecker;
 import com.budgetview.functests.utils.LoggedInFunctionalTestCase;
 import com.budgetview.functests.utils.OfxBuilder;
 import com.budgetview.functests.utils.QifBuilder;
@@ -28,18 +28,20 @@ public class BankEditionTest extends LoggedInFunctionalTestCase {
   @Test
   public void testCanAddBankFromImportDialog() throws Exception {
 
-    /** Create bank and load first file **/
+    /* -- Create bank and load first file -- */
 
     String ofxFilePath = OfxBuilder.init(this)
       .addBankAccount(777777, 7777, "0001234", 1000.00, "2008/06/16")
       .addTransaction("2008/06/16", -27.50, "Burger King")
       .save();
 
-    ImportDialogChecker importDialog = operations.openImportDialog();
+    ImportDialogPreviewChecker importDialog = operations.openImportDialog()
+      .importFileAndPreview(ofxFilePath)
+      .setAccountName("TestAccount");
 
-    BankDownloadChecker bankDownload = importDialog.getBankDownload();
+    BankChooserChecker bankChooser = importDialog.openBankSelection();
 
-    bankDownload
+    bankChooser
       .addNewBank()
       .setName("")
       .checkValidationError("You must enter a name for this bank")
@@ -48,15 +50,13 @@ public class BankEditionTest extends LoggedInFunctionalTestCase {
       .setUrl("http://www.testbank.net")
       .validate();
 
-    bankDownload
+    bankChooser
       .checkContainsBanks("TestBank", "BNP Paribas")
-      .checkSelectedBank("TestBank");
+      .checkSelectedBank("TestBank")
+      .validate();
 
     importDialog
-      .setFilePath(ofxFilePath)
-      .importFileAndPreview()
-      .setAccountName("TestAccount")
-      .selectBank("TestBank")
+      .checkSelectedBank("TestBank")
       .setMainAccount()
       .checkTransactions(new Object[][]{
         {"2008/06/16", "Burger King", "-27.50"}
@@ -66,29 +66,31 @@ public class BankEditionTest extends LoggedInFunctionalTestCase {
     mainAccounts.checkAccount("TestAccount", 1000.00, "2008/06/16");
     mainAccounts.checkAccountWebsite("TestAccount", "TestBank", "http://www.testbank.net");
 
-    /** Restart **/
+    /* -- Restart -- */
 
     restartApplication();
 
     mainAccounts.checkAccount("TestAccount", 1000.00, "2008/06/16");
     mainAccounts.checkAccountWebsite("TestAccount", "TestBank", "http://www.testbank.net");
 
-    /** Load second file **/
+    /* -- Load second file -- */
 
     String secondOfxFilePath = OfxBuilder.init(this)
       .addBankAccount(777777, 7777, "0001234", 970.00, "2008/07/16")
       .addTransaction("2008/07/16", -30.00, "Burger King")
       .save();
 
-    ImportDialogChecker secondImportDialog = operations.openImportDialog();
+    ImportDialogPreviewChecker secondImportDialog = operations.openImportDialog()
+      .importFileAndPreview(secondOfxFilePath)
+      .checkSelectedAccount("TestAccount")
+      .selectNewAccount();
 
-    secondImportDialog.getBankDownload()
-      .checkContainsBanks("TestBank");
+    secondImportDialog.openBankSelection()
+      .checkContainsBanks("TestBank")
+      .validate();
 
     secondImportDialog
-      .setFilePath(secondOfxFilePath)
-      .importFileAndPreview()
-      .checkSelectedAccount("TestAccount")
+      .selectAccount("TestAccount")
       .importAccountAndComplete();
   }
 
@@ -100,13 +102,15 @@ public class BankEditionTest extends LoggedInFunctionalTestCase {
       .addTransaction("2008/06/16", -27.50, "Burger King")
       .save();
 
-    ImportDialogChecker importDialog = operations.openImportDialog();
+    ImportDialogPreviewChecker importDialog = operations.openImportDialog()
+      .importFileAndPreview(ofxFilePath)
+      .setAccountName("TestAccount");
 
-    BankDownloadChecker bankDownload = importDialog.getBankDownload();
+    BankChooserChecker bankChooser = importDialog.openBankSelection();
 
-    /** ----- Create the bank ----- */
+    /* ----- Create the bank ----- */
 
-    bankDownload
+    bankChooser
       .addNewBank()
       .checkTitle("Add a bank")
       .checkName("")
@@ -114,33 +118,28 @@ public class BankEditionTest extends LoggedInFunctionalTestCase {
       .setName("TestBank")
       .setUrlAndValidate("http://www.testbank.net");
 
-    bankDownload
+    bankChooser
       .checkSelectedBank("TestBank")
       .selectBank("CIC")
       .checkEditDisabled()
       .selectBank("TestBank");
 
-    /** ----- Change the bank ----- */
+    /* ----- Change the bank ----- */
 
-    bankDownload.edit()
+    bankChooser.edit()
       .checkTitle("Edit bank")
       .checkName("TestBank")
       .checkUrl("http://www.testbank.net")
       .setName("NewBank")
       .setUrlAndValidate("http://www.newbank.net");
 
-    bankDownload
+    bankChooser
       .checkBankNotPresent("TestBank")
       .checkContainsBanks("NewBank", "CIC")
       .checkSelectedBank("NewBank")
-      .selectManualDownload()
-      .checkManualDownloadHelp("NewBank", "http://www.newbank.net");
+      .validate();
 
     importDialog
-      .setFilePath(ofxFilePath)
-      .importFileAndPreview()
-      .setAccountName("TestAccount")
-      .selectBank("NewBank")
       .setMainAccount()
       .checkTransactions(new Object[][]{
         {"2008/06/16", "Burger King", "-27.50"}
@@ -149,15 +148,18 @@ public class BankEditionTest extends LoggedInFunctionalTestCase {
 
     mainAccounts.checkAccountWebsite("TestAccount", "NewBank", "http://www.newbank.net");
 
-    /** ----- Try to delete the bank when it is used ----- */
+    /* ----- Try to delete the bank when it is used ----- */
 
-    ImportDialogChecker secondImportDialog = operations.openImportDialog();
+    ImportDialogPreviewChecker secondImportDialog = operations.openImportDialog()
+      .importFileAndPreview(ofxFilePath)
+      .selectNewAccount();
 
-    secondImportDialog.getBankDownload()
+    secondImportDialog.openBankSelection()
       .selectBank("CIC")
       .checkDeleteDisabled()
       .selectBank("NewBank")
-      .checkDeleteRejected("Delete bank", "This bank is used by account TestAccount. You cannot delete it.");
+      .checkDeleteRejected("Delete bank", "This bank is used by account TestAccount. You cannot delete it.")
+      .validate();
 
     secondImportDialog.close();
 
@@ -165,22 +167,28 @@ public class BankEditionTest extends LoggedInFunctionalTestCase {
       .selectBank("CIC")
       .validate();
 
-    /** ----- Delete the bank ----- */
+    /* ----- Delete the bank ----- */
 
-    ImportDialogChecker thirdImportDialog = operations.openImportDialog();
-    thirdImportDialog.getBankDownload()
-      .selectCountry("All")
-      .selectBank("NewBank")
-      .deleteAndCancel()
-      .checkContainsBanks("NewBank")
-      .delete("Delete bank", "This bank is not used. Do you want to delete it?")
-      .checkBankNotPresent("NewBank");
-    thirdImportDialog
+    ImportDialogPreviewChecker thirdImportDialog = operations.openImportDialog()
       .setFilePath(OfxBuilder.init(this)
                      .addBankAccount(777777, 7777, "0001234", 1000.00, "2008/06/18")
                      .addTransaction("2008/06/18", -15.00, "Mc Do")
                      .save())
       .importFileAndPreview()
+      .selectNewAccount();
+
+    thirdImportDialog.openBankSelection()
+      .selectCountry("All")
+      .selectBank("NewBank")
+      .deleteAndCancel()
+      .checkContainsBanks("NewBank")
+      .delete("Delete bank", "This bank is not used. Do you want to delete it?")
+      .checkBankNotPresent("NewBank")
+      .selectBank("CIC")
+      .validate();
+
+    thirdImportDialog
+      .selectAccount("TestAccount")
       .importAccountAndComplete();
 
     mainAccounts.edit("TestAccount")
@@ -216,7 +224,7 @@ public class BankEditionTest extends LoggedInFunctionalTestCase {
     mainAccounts.checkAccountWebsite("TestAccount", "NewBank", "http://www.newbank.net");
     mainAccounts.checkAccountWebsite("OtherAccount", "NewBank", "http://www.newbank.net");
 
-    /** ------ Try to delete the bank while it is used by another account -- */
+    /* ------ Try to delete the bank while it is used by another account -- */
 
     mainAccounts.edit("TestAccount")
       .checkSelectedBank("NewBank")
@@ -288,8 +296,7 @@ public class BankEditionTest extends LoggedInFunctionalTestCase {
       .save();
 
     operations.openImportDialog()
-      .setFilePath(qifPath)
-      .importFileAndPreview()
+      .importFileAndPreview(qifPath)
       .setAccountName("NewAccount")
       .addNewAccountBank("NewBank", "http://www.newbank.net")
       .setMainAccount()
@@ -308,10 +315,17 @@ public class BankEditionTest extends LoggedInFunctionalTestCase {
 
   @Test
   public void testBanksAreFilteredByCountry() throws Exception {
-    ImportDialogChecker importDialog = operations.openImportDialog();
-    importDialog.getBankDownload()
+
+    String qifPath = QifBuilder.init(this)
+      .addTransaction("2008/08/30", -50.00, "MacDo")
+      .save();
+
+    ImportDialogPreviewChecker importDialog = operations.openImportDialog()
+      .importFileAndPreview(qifPath);
+    importDialog.openBankSelection()
       .checkCountry("All")
-      .checkContainsBanks("CIC", "Credit Suisse", "BNP Paribas Fortis", "Bank One");
+      .checkContainsBanks("CIC", "Credit Suisse", "BNP Paribas Fortis")
+      .cancel();
     importDialog.close();
 
     accounts.createNewAccount()
@@ -321,14 +335,16 @@ public class BankEditionTest extends LoggedInFunctionalTestCase {
       .setPosition(100.00)
       .validate();
 
-    importDialog = operations.openImportDialog();
-    importDialog.getBankDownload()
+    importDialog = operations.openImportDialog()
+      .importFileAndPreview(qifPath);
+    importDialog.openBankSelection()
       .checkCountry("Switzerland")
       .checkContainsBanks("Credit Suisse")
-      .checkBanksNotPresent("CIC", "BNP Paribas Fortis", "Bank One")
+      .checkBanksNotPresent("CIC", "BNP Paribas Fortis")
       .selectCountry("France")
       .checkContainsBanks("Boursorama", "CIC", "Société Générale")
-      .checkBanksNotPresent("Credit Suisse", "BNP Paribas Fortis", "Bank One");
+      .checkBanksNotPresent("Credit Suisse")
+      .validate();
     importDialog.close();
 
     accounts.createNewAccount()
@@ -338,27 +354,32 @@ public class BankEditionTest extends LoggedInFunctionalTestCase {
       .setPosition(200.00)
       .validate();
 
-    importDialog = operations.openImportDialog();
-    importDialog.getBankDownload()
+    importDialog = operations.openImportDialog()
+      .importFileAndPreview(qifPath);
+    importDialog.openBankSelection()
       .checkCountry("All")
-      .checkContainsBanks("CIC", "Credit Suisse", "BNP Paribas Fortis", "Bank One");
+      .checkContainsBanks("CIC", "Credit Suisse", "BNP Paribas Fortis")
+      .validate();
     importDialog.close();
 
     mainAccounts.openDelete("Account 1").validate();
 
-    importDialog = operations.openImportDialog();
-    importDialog.getBankDownload()
-      .checkCountry("France")
-      .checkContainsBanks("Boursorama", "CIC", "Société Générale")
-      .checkBanksNotPresent("Credit Suisse", "BNP Paribas Fortis", "Bank One");
+    importDialog = operations.openImportDialog()
+      .importFileAndPreview(qifPath);
+    importDialog.openBankSelection()
+      .checkCountry("All")
+      .checkContainsBanks("Boursorama", "CIC", "Société Générale", "Credit Suisse", "BNP Paribas Fortis")
+      .validate();
     importDialog.close();
 
     savingsAccounts.openDelete("Account 2").validate();
 
-    importDialog = operations.openImportDialog();
-    importDialog.getBankDownload()
+    importDialog = operations.openImportDialog()
+      .importFileAndPreview(qifPath);
+    importDialog.openBankSelection()
       .checkCountry("All")
-      .checkContainsBanks("CIC", "Credit Suisse", "BNP Paribas Fortis", "Bank One");
+      .checkContainsBanks("CIC", "Credit Suisse", "BNP Paribas Fortis")
+      .validate();
     importDialog.close();
   }
 }

@@ -62,6 +62,7 @@
 
     <row styleClass="dialogButtons">
       <filler fill="horizontal"/>
+      <button action="cancel" />
       <button action="next" />
     </row>
 

@@ -33,7 +33,7 @@ public class BankChooserPanelChecker<T extends BankChooserPanelChecker> extends 
   public T checkBanksNotPresent(String... banks) {
     ListBox bankList = window.getListBox("bankList");
     for (String bank : banks) {
-      assertFalse(bankList.contains(bank));
+      assertFalse("Bank unexpectedly found: " + bank, bankList.contains(bank));
     }
     return (T) this;
   }

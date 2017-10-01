@@ -93,6 +93,7 @@ public class JsonImporter implements AccountFileImporter {
                                                                                      targetRepository)),
                               value(ImportedTransaction.IMPORT_TYPE, ImportType.JSON.getId()),
                               value(ImportedTransaction.PROVIDER, realAccount.get(RealAccount.PROVIDER)),
+                              value(ImportedTransaction.PROVIDER_CONNECTION_ID, realAccount.get(RealAccount.PROVIDER_CONNECTION_ID)),
                               value(ImportedTransaction.PROVIDER_ACCOUNT_ID, realAccount.get(RealAccount.PROVIDER_ACCOUNT_ID)),
                               value(ImportedTransaction.PROVIDER_TRANSACTION_ID, jsonTransaction.getInt("id")),
                               value(ImportedTransaction.DELETED, deleted));
@@ -156,6 +157,7 @@ public class JsonImporter implements AccountFileImporter {
 
   private Glob getRealAccount(JSONObject jsonAccount, GlobRepository repository) {
     return RealAccount.findFromProvider(jsonAccount.getInt("provider"),
+                                        jsonAccount.getInt("provider_connection_id"),
                                         jsonAccount.getInt("provider_account_id"),
                                         repository);
   }

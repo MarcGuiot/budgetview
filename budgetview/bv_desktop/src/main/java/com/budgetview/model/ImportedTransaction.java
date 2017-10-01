@@ -57,6 +57,8 @@ public class ImportedTransaction {
 
   public static IntegerField PROVIDER_ACCOUNT_ID;
 
+  public static IntegerField PROVIDER_CONNECTION_ID;
+
   public static IntegerField PROVIDER_TRANSACTION_ID;
 
   public static BooleanField DELETED;

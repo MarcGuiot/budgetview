@@ -66,6 +66,8 @@ public class RealAccount {
   @Target(Provider.class)
   public static LinkField PROVIDER;
 
+  public static IntegerField PROVIDER_CONNECTION_ID;
+
   public static IntegerField PROVIDER_ACCOUNT_ID;
 
   @DefaultBoolean(true)
@@ -75,9 +77,10 @@ public class RealAccount {
     TypeLoader.init(RealAccount.class, "realAccount");
   }
 
-  public static Glob findFromProvider(Integer providerId, Integer providerAccountId, GlobRepository repository) {
+  public static Glob findFromProvider(Integer providerId, Integer providerConnectionId, Integer providerAccountId, GlobRepository repository) {
     GlobList accounts = repository.getAll(RealAccount.TYPE,
                                           and(fieldEquals(RealAccount.PROVIDER, providerId),
+                                              fieldEquals(RealAccount.PROVIDER_CONNECTION_ID, providerConnectionId),
                                               fieldEquals(RealAccount.PROVIDER_ACCOUNT_ID, providerAccountId)));
     if (accounts.isEmpty()) {
       return null;
@@ -188,7 +191,7 @@ public class RealAccount {
   public static class Serializer implements GlobSerializer {
 
     public int getWriteVersion() {
-      return 4;
+      return 5;
     }
 
     public boolean shouldBeSaved(GlobRepository repository, FieldValues fieldValues) {
@@ -210,13 +213,17 @@ public class RealAccount {
       output.writeInteger(fieldValues.get(CARD_TYPE));
       output.writeInteger(fieldValues.get(TRANSACTION_ID));
       output.writeInteger(fieldValues.get(PROVIDER));
+      output.writeInteger(fieldValues.get(PROVIDER_CONNECTION_ID));
       output.writeInteger(fieldValues.get(PROVIDER_ACCOUNT_ID));
       output.writeBoolean(fieldValues.get(ENABLED));
       return serializedByteArrayOutput.toByteArray();
     }
 
     public void deserializeData(int version, byte[] data, Integer id, FieldSetter fieldSetter) {
-      if (version == 4) {
+      if (version == 5) {
+        deserializeDataV5(fieldSetter, data);
+      }
+      else if (version == 4) {
         deserializeDataV4(fieldSetter, data);
       }
       else if (version == 3) {
@@ -228,6 +235,25 @@ public class RealAccount {
       else if (version == 1) {
         deserializeDataV1(fieldSetter, data);
       }
+    }
+
+    private void deserializeDataV5(FieldSetter fieldSetter, byte[] data) {
+      SerializedInput input = SerializedInputOutputFactory.init(data);
+      fieldSetter.set(NAME, input.readUtf8String());
+      fieldSetter.set(NUMBER, input.readUtf8String());
+      fieldSetter.set(POSITION, input.readUtf8String());
+      fieldSetter.set(POSITION_DATE, input.readDate());
+      fieldSetter.set(BANK, input.readInteger());
+      fieldSetter.set(BANK_ENTITY, input.readInteger());
+      fieldSetter.set(BANK_ENTITY_LABEL, input.readUtf8String());
+      fieldSetter.set(ACCOUNT_TYPE, input.readInteger());
+      fieldSetter.set(ACCOUNT, input.readInteger());
+      fieldSetter.set(CARD_TYPE, input.readInteger());
+      fieldSetter.set(TRANSACTION_ID, input.readInteger());
+      fieldSetter.set(PROVIDER, input.readInteger());
+      fieldSetter.set(PROVIDER_CONNECTION_ID, input.readInteger());
+      fieldSetter.set(PROVIDER_ACCOUNT_ID, input.readInteger());
+      fieldSetter.set(ENABLED, input.readBoolean());
     }
 
     private void deserializeDataV4(FieldSetter fieldSetter, byte[] data) {

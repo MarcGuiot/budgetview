@@ -7,7 +7,7 @@
 
   <column styleClass="dialog" preferredSize="(600,710)" name="importCloudSubscriptionErrorPanel">
 
-    <label text="$import.completion.title" name="title" styleClass="title"/>
+    <label text="$import.cloud.subscription.error.title" name="title" styleClass="title"/>
 
     <column styleClass="innerDialog">
       <column styleClass="innerDialogContent">

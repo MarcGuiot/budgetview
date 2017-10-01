@@ -163,9 +163,10 @@ public class BudgeaAPI {
   }
 
   public void deleteConnection(int budgeaConnectionId) throws IOException {
-    String url = "/users/me/connections/" + budgeaConnectionId;
-    Http.execute(url, Request.Delete(BudgeaConstants.getServerUrl(url))
-      .addHeader(BudgeaConstants.AUTHORIZATION, "Bearer " + token));
+    String url = BudgeaConstants.getServerUrl("/users/me/connections/" + budgeaConnectionId);
+    Http.execute(url,
+                 Request.Delete(url)
+                   .addHeader(BudgeaConstants.AUTHORIZATION, "Bearer " + token));
   }
 
   public Integer getUserId() throws IOException {
@@ -173,24 +174,25 @@ public class BudgeaAPI {
     return user.getInt("id");
   }
 
-  public JSONObject setAccountEnabled(int budgeaUserId, int budgeaAccountId, boolean enabled) throws IOException {
+  public JSONObject setAccountEnabled(int budgeaUserId, int budgeaConnectionId, int budgeaAccountId, boolean enabled) throws IOException {
     checkToken();
-    String url = "/users/me/accounts/" + budgeaAccountId;
+    Request request;
+    String url;
     if (enabled) {
-      Form form = Form.form()
-        .add("deleted", "null");
-      logger.info("PUT " + url);
-      return json(Request.Put(BudgeaConstants.getServerUrl(url))
-                    .addHeader(BudgeaConstants.AUTHORIZATION, "Bearer " + token)
-                    .addHeader("user_id", "me")
-                    .bodyForm(form.build(), Consts.UTF_8), url);
+      url = BudgeaConstants.getServerUrl("/users/" + budgeaUserId + "/connections/" + budgeaConnectionId + "/accounts/" + budgeaAccountId) + "/?all";
+      request = Request.Put(url)
+        .addHeader(BudgeaConstants.AUTHORIZATION, "Bearer " + token)
+        .bodyForm(Form.form()
+                    .add("deleted", "null")
+                    .build(), Consts.UTF_8);
     }
     else {
-      logger.info("DELETE " + url);
-      return json(Request.Delete(BudgeaConstants.getServerUrl(url))
-                    .addHeader(BudgeaConstants.AUTHORIZATION, "Bearer " + token)
-                    .addHeader("user_id", "me"), url);
+      url = BudgeaConstants.getServerUrl("/users/" + budgeaUserId + "/connections/" + budgeaConnectionId + "/accounts/" + budgeaAccountId);
+      request = Request.Delete(url)
+        .addHeader(BudgeaConstants.AUTHORIZATION, "Bearer " + token);
     }
+    logger.info("setAccountEnabled: " + request.toString());
+    return json(request, url);
   }
 
   public String getToken() throws IOException {

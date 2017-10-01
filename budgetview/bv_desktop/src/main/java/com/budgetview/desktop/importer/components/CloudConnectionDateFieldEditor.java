@@ -33,7 +33,7 @@ public class CloudConnectionDateFieldEditor extends CloudConnectionFieldEditor {
           this.setText("");
         }
         else {
-          this.setText(Lang.get("month." + ((Integer) value) + ".long"));
+          this.setText(Lang.get("month." + value + ".long"));
         }
         return this;
       }

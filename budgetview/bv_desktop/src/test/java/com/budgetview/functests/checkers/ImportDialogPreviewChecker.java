@@ -17,6 +17,7 @@ import java.util.List;
 import static org.uispec4j.assertion.UISpecAssert.*;
 
 public class ImportDialogPreviewChecker extends DialogChecker {
+
   private AccountEditionChecker accountEditionChecker;
 
   public ImportDialogPreviewChecker(Window dialog) {
@@ -160,6 +161,15 @@ public class ImportDialogPreviewChecker extends DialogChecker {
   public ImportDialogPreviewChecker selectBank(String bank) {
     getAccountEditionChecker().selectBank(bank);
     return this;
+  }
+
+  public ImportDialogPreviewChecker checkSelectedBank(String bank) {
+    getAccountEditionChecker().checkSelectedBank(bank);
+    return this;
+  }
+
+  public BankChooserChecker openBankSelection() {
+    return getAccountEditionChecker().openBankSelection();
   }
 
   public ImportDialogPreviewChecker addNewAccountBank(String bankName, String url) {
@@ -351,14 +361,15 @@ public class ImportDialogPreviewChecker extends DialogChecker {
   }
 
   public void importAccountAndComplete() {
-    importAndPreviewNextAccount();
+    dialog.getButton("next").click();
     try {
       new ImportDialogCompletionChecker(dialog).validate();
     }
     catch (Exception e) {
-      Assert.fail("Could not validate import. " +
+      Assert.fail("Could not validate import.\n" +
                   "A possible explanation is that the series import dialog was unexpectedly shown (dialog disposed) " +
-                  "or there is another account to preview. Dialog content:\n" + dialog.getDescription());
+                  "or there is another account to preview.\n" +
+                  "Original exception: " + e.getMessage());
     }
   }
 
@@ -492,7 +503,7 @@ public class ImportDialogPreviewChecker extends DialogChecker {
   }
 
   public void close() {
-    dialog.getButton("close").click();
+    dialog.getButton("cancel").click();
     checkClosed();
   }
 

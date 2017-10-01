@@ -1,5 +1,6 @@
-package com.budgetview.desktop.cloud;
+package com.budgetview.desktop.cloud.accounts;
 
+import com.budgetview.desktop.cloud.CloudService;
 import com.budgetview.desktop.undo.UndoRedoService;
 import com.budgetview.model.RealAccount;
 import com.budgetview.shared.cloud.CloudSubscriptionStatus;
@@ -8,12 +9,8 @@ import org.globsframework.model.GlobRepository;
 import org.globsframework.model.Key;
 import org.globsframework.utils.Functor;
 import org.globsframework.utils.Log;
-import org.globsframework.utils.collections.Pair;
 import org.globsframework.utils.directory.Directory;
 import org.prevayler.foundation.UnexpectedException;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import static org.globsframework.model.FieldValue.value;
 import static org.globsframework.model.utils.GlobMatchers.*;
@@ -26,11 +23,13 @@ public class CloudAccountStatus {
 
       targetRepository.startChangeSet();
 
+      Integer providerConnectionId = null;
       Integer providerAccountId = null;
       for (Glob realAccount : targetRepository.getAll(RealAccount.TYPE,
                                                       and(linkedTo(accountKey, RealAccount.ACCOUNT),
                                                           isNotNull(RealAccount.PROVIDER_ACCOUNT_ID)))) {
         if (realAccount.isTrue(RealAccount.ENABLED)) {
+          providerConnectionId = realAccount.get(RealAccount.PROVIDER_CONNECTION_ID);
           providerAccountId = realAccount.get(RealAccount.PROVIDER_ACCOUNT_ID);
         }
         localRepository.update(realAccount,
@@ -43,7 +42,7 @@ public class CloudAccountStatus {
 
       functor.run();
 
-      UndoRedoService.Change change = new CloudAccountChange(providerAccountId, directory, targetRepository);
+      UndoRedoService.Change change = new CloudAccountChange(providerConnectionId, providerAccountId, directory, targetRepository);
       change.apply();
 
       targetRepository.completeChangeSet();
@@ -56,11 +55,13 @@ public class CloudAccountStatus {
   }
 
   private static class CloudAccountChange implements UndoRedoService.Change {
+    private Integer providerConnectionId;
     private final Integer providerAccountId;
     private final Directory directory;
     private final GlobRepository globalRepository;
 
-    public CloudAccountChange(Integer providerAccountId, Directory directory, GlobRepository globalRepository) {
+    public CloudAccountChange(Integer providerConnectionId, Integer providerAccountId, Directory directory, GlobRepository globalRepository) {
+      this.providerConnectionId = providerConnectionId;
       this.providerAccountId = providerAccountId;
       this.directory = directory;
       this.globalRepository = globalRepository;
@@ -75,8 +76,10 @@ public class CloudAccountStatus {
     }
 
     private void send(boolean enabled) {
-      final List<Pair<Integer, Boolean>> updates = new ArrayList<Pair<Integer, Boolean>>();
-      updates.add(new Pair<Integer, Boolean>(providerAccountId, enabled));
+      CloudAccountUpdates updates = CloudAccountUpdates.build()
+        .add(providerConnectionId, providerAccountId, enabled)
+        .get();
+
       directory.get(CloudService.class).updateAccounts(updates, globalRepository, new CloudService.Callback() {
         public void processCompletion() {
         }

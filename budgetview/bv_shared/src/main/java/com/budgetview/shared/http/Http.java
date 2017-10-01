@@ -45,7 +45,7 @@ public class Http {
     try {
       Response response = request.execute();
       HttpResponse httpResponse = response.returnResponse();
-      return checkResponse(url, httpResponse);
+      return checkResponse(url, request, httpResponse);
     }
     catch (NoHttpResponseException e) {
       throw new IOException("No response for url " + url, e);
@@ -75,7 +75,7 @@ public class Http {
     return new JSONObject(Files.loadStreamToString(response.getEntity().getContent(), "UTF-8"));
   }
 
-  public static HttpResponse checkResponse(String url, HttpResponse httpResponse) throws IOException {
+  public static HttpResponse checkResponse(String url, Request request, HttpResponse httpResponse) throws IOException {
     int statusCode = httpResponse.getStatusLine().getStatusCode();
     switch (statusCode) {
       case 200:

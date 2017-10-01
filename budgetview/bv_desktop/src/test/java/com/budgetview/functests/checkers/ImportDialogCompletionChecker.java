@@ -2,9 +2,13 @@ package com.budgetview.functests.checkers;
 
 import com.budgetview.utils.Lang;
 import junit.framework.Assert;
+import junit.framework.AssertionFailedError;
 import org.uispec4j.Panel;
+import org.uispec4j.TextBox;
 import org.uispec4j.Window;
 import org.uispec4j.finder.ComponentMatchers;
+
+import javax.swing.*;
 
 import static org.uispec4j.assertion.UISpecAssert.assertFalse;
 import static org.uispec4j.assertion.UISpecAssert.assertThat;
@@ -13,7 +17,14 @@ public class ImportDialogCompletionChecker extends DialogChecker {
 
   public ImportDialogCompletionChecker(Window dialog) {
     super(dialog);
-    checkTitle("import.completion.title");
+    try {
+      checkPanelShown("importCompletionPanel");
+    }
+    catch (Exception e) {
+      if (isComponentVisible(dialog, JPanel.class, "importPreviewPanel")) {
+        throw new AssertionFailedError("Unexpected import preview shown:\n" + dialog.getTable());
+      }
+    }
   }
 
   public static void checkAndClose(int importedTransactionCount, int ignoredTransactionCount, int autocategorizedTransactionCount, Panel dialogToClose) {

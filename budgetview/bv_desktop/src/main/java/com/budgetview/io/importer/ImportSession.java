@@ -334,6 +334,7 @@ public class ImportSession {
 
       if (importedTransaction.isTrue(ImportedTransaction.DELETED)) {
         addProviderTransactionToDelete(importedTransaction.get(ImportedTransaction.PROVIDER),
+                                       importedTransaction.get(ImportedTransaction.PROVIDER_CONNECTION_ID),
                                        importedTransaction.get(ImportedTransaction.PROVIDER_ACCOUNT_ID),
                                        importedTransaction.get(ImportedTransaction.PROVIDER_TRANSACTION_ID));
         continue;
@@ -370,6 +371,7 @@ public class ImportSession {
         value(Transaction.SUB_SERIES, getSubSeriesId(importedTransaction)),
         value(Transaction.IMPORT_TYPE, importedTransaction.get(ImportedTransaction.IMPORT_TYPE)),
         value(Transaction.PROVIDER, importedTransaction.get(ImportedTransaction.PROVIDER)),
+        value(Transaction.PROVIDER_CONNECTION_ID, importedTransaction.get(ImportedTransaction.PROVIDER_CONNECTION_ID)),
         value(Transaction.PROVIDER_ACCOUNT_ID, importedTransaction.get(ImportedTransaction.PROVIDER_ACCOUNT_ID)),
         value(Transaction.PROVIDER_TRANSACTION_ID, importedTransaction.get(ImportedTransaction.PROVIDER_TRANSACTION_ID))
       );
@@ -522,10 +524,11 @@ public class ImportSession {
     }
   }
 
-  private void addProviderTransactionToDelete(final Integer provider, final Integer providerAccountId, final Integer providerTransactionId) {
+  private void addProviderTransactionToDelete(final Integer provider, final Integer providerConnectionId, final Integer providerAccountId, final Integer providerTransactionId) {
     providerTransactionsToDeleteMatchers.add(new GlobMatcher() {
       public boolean matches(Glob transaction, GlobRepository repository) {
         return Utils.equal(provider, transaction.get(Transaction.PROVIDER)) &&
+               Utils.equal(providerConnectionId, transaction.get(Transaction.PROVIDER_CONNECTION_ID)) &&
                Utils.equal(providerAccountId, transaction.get(Transaction.PROVIDER_ACCOUNT_ID)) &&
                Utils.equal(providerTransactionId, transaction.get(Transaction.PROVIDER_TRANSACTION_ID));
       }

@@ -14,16 +14,18 @@ export RELEASE_LOCAL_DIR=$BV_SERVER_ROOT/release_local
 export RELEASE_PROD_DIR=$BV_SERVER_ROOT/release_prod
 
 cd $BV_SERVER_ROOT/../../globs
-mvn install -Dmaven.test.skip.exec=true
+mvn clean install -Dmaven.test.skip.exec=true
 
 cd $BV_SERVER_ROOT/../bv_shared
-mvn install -Dmaven.test.skip.exec=true
+rm target/*.jar
+mvn clean install -Dmaven.test.skip.exec=true
 
 cd $BV_SERVER_ROOT/../bv_desktop
-mvn install -Dmaven.test.skip.exec=true
+rm target/*.jar
+mvn clean install -Dmaven.test.skip.exec=true
 
 cd $BV_SERVER_ROOT
-mvn install -Dmaven.test.skip.exec=true
+mvn clean install -Dmaven.test.skip.exec=true
 
 export GENERATED_JAR=$BV_SERVER_ROOT/target/bv_server-$JAR_VERSION.jar
 if [ ! -e  $GENERATED_JAR ];

@@ -1,6 +1,7 @@
 package com.budgetview.desktop.importer.steps;
 
 import com.budgetview.desktop.cloud.CloudService;
+import com.budgetview.desktop.cloud.accounts.CloudAccountUpdates;
 import com.budgetview.desktop.components.ProgressPanel;
 import com.budgetview.desktop.components.dialogs.PicsouDialog;
 import com.budgetview.desktop.importer.ImportController;
@@ -22,16 +23,13 @@ import org.globsframework.model.Key;
 import org.globsframework.model.utils.GlobComparators;
 import org.globsframework.model.utils.GlobMatchers;
 import org.globsframework.utils.Utils;
-import org.globsframework.utils.collections.Pair;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import static org.globsframework.model.utils.GlobMatchers.linkedTo;
@@ -167,15 +165,15 @@ public class ImportCloudAccountsPanel extends AbstractImportStepPanel {
     backAction.setEnabled(false);
     closeAction.setEnabled(false);
 
-    final List<Pair<Integer, Boolean>> updates = new ArrayList<Pair<Integer, Boolean>>();
+    CloudAccountUpdates.Builder updates = CloudAccountUpdates.build();
     for (Map.Entry<Key, Boolean> entry : accountStates.entrySet()) {
       Glob account = repository.get(entry.getKey());
       Boolean accountEnabled = account.get(CloudProviderAccount.ENABLED);
       if (!Utils.equal(accountEnabled, entry.getValue())) {
-        updates.add(new Pair<Integer, Boolean>(account.get(CloudProviderAccount.PROVIDER_ACCOUNT_ID), entry.getValue()));
+        updates.add(account.get(CloudProviderAccount.PROVIDER_CONNECTION_ID), account.get(CloudProviderAccount.PROVIDER_ACCOUNT_ID), entry.getValue());
       }
     }
-    cloudService.updateAccounts(updates, repository, new CloudService.Callback() {
+    cloudService.updateAccounts(updates.get(), repository, new CloudService.Callback() {
       public void processCompletion() {
         applyMessage.setText(Lang.get("import.cloud.accounts.apply.completed"));
         applyAction.setEnabled(false);

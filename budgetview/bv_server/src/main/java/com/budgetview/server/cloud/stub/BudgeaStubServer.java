@@ -88,11 +88,14 @@ public class BudgeaStubServer {
     if (target.matches("/users/[A-z0-9]+")) {
       return new UsersMeServlet();
     }
-    if (target.matches("/users/[A-z0-9]+/connections.*")) {
-      return new UserConnectionsServlet();
-    }
     if (target.matches("/users/[A-z0-9]+/accounts.*")) {
       return new UserAccountsServlet();
+    }
+    if (target.matches("/users/[A-z0-9]+/connections/[A-z0-9]+/accounts.*")) {
+      return new UserConnectionAccountsServlet();
+    }
+    if (target.matches("/users/[A-z0-9]+/connections.*")) {
+      return new UserConnectionsServlet();
     }
     if ("/ping".equals(target)) {
       return new PingServlet();
@@ -501,6 +504,11 @@ public class BudgeaStubServer {
 
       response.setStatus(HttpServletResponse.SC_OK);
     }
+  }
+
+  private class UserConnectionAccountsServlet extends HttpServlet {
+
+    private Logger logger = Logger.getLogger("BudgeaStubServer:UserConnectionAccountsServlet");
 
     protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
       BufferedReader reader = req.getReader();
@@ -511,7 +519,8 @@ public class BudgeaStubServer {
         return;
       }
 
-      Pattern urlPattern = Pattern.compile("[A-z/]+([0-9]+)");
+      logger.info(req.getRequestURI());
+      Pattern urlPattern = Pattern.compile("/users/[A-z0-9]+/connections/[A-z0-9]+/accounts/([A-z0-9]+).*");
       Matcher urlMatcher = urlPattern.matcher(req.getRequestURI());
       if (!urlMatcher.matches()) {
         logger.error("Could not match account id in " + req.getRequestURI());
