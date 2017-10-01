@@ -24,7 +24,7 @@ public class GlobFunctors {
   public static GlobFunctor updateValue(final Field field, final Object value) {
     return new GlobFunctor() {
       public void run(Glob glob, GlobRepository repository) throws Exception {
-        repository.update(glob.getKey(), field, value);
+        repository.update(glob, field, value);
       }
     };
   }

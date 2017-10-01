@@ -67,7 +67,7 @@ public class RenameGlobAction extends AbstractAction implements GlobSelectionLis
 
     String newName = stringInputDialog.getSelectedName();
     if (newName != null) {
-      repository.update(currentObject.getKey(), namingField, newName);
+      repository.update(currentObject, namingField, newName);
     }
   }
 

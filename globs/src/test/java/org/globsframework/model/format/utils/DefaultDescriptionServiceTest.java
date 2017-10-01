@@ -78,11 +78,11 @@ public class DefaultDescriptionServiceTest extends TestCase {
   private void checkListStringification(GlobListStringifier stringifier, GlobList list) {
     assertEquals("", stringifier.toString(GlobList.EMPTY, repository));
 
-    repository.update(emptyObject.getKey(), DummyObject.NAME, "name");
-    repository.update(dummyObject.getKey(), DummyObject.NAME, "name");
+    repository.update(emptyObject, DummyObject.NAME, "name");
+    repository.update(dummyObject, DummyObject.NAME, "name");
     assertEquals("name", stringifier.toString(list, repository));
 
-    repository.update(emptyObject.getKey(), DummyObject.NAME, "anotherName");
+    repository.update(emptyObject, DummyObject.NAME, "anotherName");
     assertEquals("...", stringifier.toString(list, repository));
   }
 

@@ -222,9 +222,9 @@ public class BudgetSummaryViewTest extends LoggedInFunctionalTestCase {
 
     mainAccounts.select("Account n. 000333");
     mainAccounts.checkContent(
-      "| Account n. 000111 | 1000.00 on 2008/07/10  | sunny |\n" +
-      "| Account n. 000222 | -2000.00 on 2008/07/15 | rainy |\n" +
-      "| Account n. 000333 | 3000.00 on 2008/07/01  | sunny |"
+      "| Account n. 000111  | 1000.00 on 2008/07/10  | sunny |\n" +
+      "| Account n. 000222  | -2000.00 on 2008/07/15 | rainy |\n" +
+      "| Account n. 000333* | 3000.00 on 2008/07/01  | sunny |"
     );
     mainAccounts.showChart("Account n. 000333");
     mainAccounts.getChart("Account n. 000333")
@@ -237,9 +237,9 @@ public class BudgetSummaryViewTest extends LoggedInFunctionalTestCase {
     views.selectBudget();
     projects.moveAccountUp("Account n. 000333");
     mainAccounts.checkContent(
-      "| Account n. 000333 | 3000.00 on 2008/07/01  | sunny |\n" +
-      "| Account n. 000111 | 1000.00 on 2008/07/10  | sunny |\n" +
-      "| Account n. 000222 | -2000.00 on 2008/07/15 | rainy |"
+      "| Account n. 000333* | 3000.00 on 2008/07/01  | sunny |\n" +
+      "| Account n. 000111  | 1000.00 on 2008/07/10  | sunny |\n" +
+      "| Account n. 000222  | -2000.00 on 2008/07/15 | rainy |"
     );
 
     // -- Reacts to deletions --
@@ -290,8 +290,8 @@ public class BudgetSummaryViewTest extends LoggedInFunctionalTestCase {
     );
     mainAccounts.select("Account n. 000222");
     mainAccounts.checkContent(
-      "| Account n. 000111 | 1000.00 on 2008/07/10  | sunny |\n" +
-      "| Account n. 000222 | -2000.00 on 2008/06/20 | rainy |"
+      "| Account n. 000111  | 1000.00 on 2008/07/10  | sunny |\n" +
+      "| Account n. 000222* | -2000.00 on 2008/06/20 | rainy |"
     );
     mainAccounts.showChart("Account n. 000222");
     mainAccounts.getChart("Account n. 000222")
@@ -306,8 +306,8 @@ public class BudgetSummaryViewTest extends LoggedInFunctionalTestCase {
 
     timeline.selectMonth(200806);
     mainAccounts.checkContent(
-      "| Account n. 000111 | 1000.00 on 2008/07/10 | sunny |\n" +
-      "| Account n. 000222 | 0.00 on 2008/06/20    | -     |");
+      "| Account n. 000111  | 1000.00 on 2008/07/10 | sunny |\n" +
+      "| Account n. 000222* | 0.00 on 2008/06/20    | -     |");
     mainAccounts.showChart("Account n. 000111");
     mainAccounts.getChart("Account n. 000111")
       .checkValue(200806, 1, -790.00)

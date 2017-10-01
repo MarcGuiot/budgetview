@@ -47,6 +47,8 @@ public class AccountDeletionTrigger extends DefaultChangeSetListener {
       repository.delete(AccountWeather.TYPE, linkedTo(accountKey, AccountWeather.ACCOUNT));
       repository.delete(AccountPositionError.TYPE, linkedTo(accountKey, AccountPositionError.ACCOUNT));
       repository.delete(AccountStat.TYPE, linkedTo(accountKey, AccountStat.ACCOUNT));
+      System.out.println("AccountDeletionTrigger.processAccountDeletions");
+      repository.delete(SeriesStat.TYPE, linkedTo(accountKey, SeriesStat.ACCOUNT));
       repository.delete(DeferredCardDate.TYPE, linkedTo(accountKey, DeferredCardDate.ACCOUNT));
     }
 

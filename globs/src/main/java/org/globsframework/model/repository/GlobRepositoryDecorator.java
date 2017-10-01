@@ -93,6 +93,10 @@ public class GlobRepositoryDecorator implements GlobRepository {
     return getRepository().findOrCreate(key, valuesForCreate);
   }
 
+  public boolean contains(Glob glob) {
+    return getRepository().contains(glob);
+  }
+
   public boolean contains(Key key) {
     return getRepository().contains(key);
   }
@@ -119,6 +123,14 @@ public class GlobRepositoryDecorator implements GlobRepository {
 
   public void update(Key key, FieldValue... values) {
     getRepository().update(key, values);
+  }
+
+  public void updateAll(GlobList list, FieldValue... values) throws ItemNotFound {
+    getRepository().updateAll(list, values);
+  }
+
+  public void updateAll(GlobType type, GlobMatcher matcher, FieldValue... values) throws ItemNotFound {
+    getRepository().updateAll(type, matcher, values);
   }
 
   public void setTarget(Key source, Link link, Key target) throws ItemNotFound {

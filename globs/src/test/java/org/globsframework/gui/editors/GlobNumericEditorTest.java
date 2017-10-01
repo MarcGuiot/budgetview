@@ -122,7 +122,7 @@ public class GlobNumericEditorTest extends GuiComponentTestCase {
     textBox.insertText("4", 0);
     assertThat(textBox.textEquals("4"));
 
-    repository.update(glob.getKey(), DummyObject.VALUE, -8.8);
+    repository.update(glob, DummyObject.VALUE, -8.8);
     selectionService.select(glob);
     assertThat(textBox.textEquals("8.8"));
   }
@@ -165,7 +165,7 @@ public class GlobNumericEditorTest extends GuiComponentTestCase {
     selectionService.select(glob);
     assertThat(textBox.textEquals("3.5"));
 
-    repository.update(glob.getKey(), DummyObject.VALUE, -8.8);
+    repository.update(glob, DummyObject.VALUE, -8.8);
     assertThat(textBox.textEquals("-8.8"));
   }
 
@@ -177,7 +177,7 @@ public class GlobNumericEditorTest extends GuiComponentTestCase {
     TextBox textBox = new TextBox(textField);
 
     selectionService.select(glob);
-    repository.update(glob.getKey(), DummyObject.VALUE, 0.00);
+    repository.update(glob, DummyObject.VALUE, 0.00);
     assertThat(textBox.textEquals("0"));
 
     textBox.setText("-8.8");
@@ -267,7 +267,7 @@ public class GlobNumericEditorTest extends GuiComponentTestCase {
       GlobNumericEditor.init(DummyObject.VALUE, repository, directory)
         .setValidationAction(new AbstractAction() {
           public void actionPerformed(ActionEvent e) {
-            repository.update(glob.getKey(), DummyObject.VALUE, 3.14);
+            repository.update(glob, DummyObject.VALUE, 3.14);
           }
         })
         .setNotifyOnKeyPressed(true)

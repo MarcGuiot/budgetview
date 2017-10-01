@@ -284,15 +284,17 @@ public abstract class AccountViewPanelChecker<T extends AccountViewPanelChecker>
 
   static String getActualContent(Panel panel) {
     TablePrinter printer = new TablePrinter();
+    Component[] selects = panel.getSwingComponents(JToggleButton.class, "selectAccount");
     Component[] buttons = panel.getSwingComponents(JButton.class, "editAccount");
     Component[] weathers = panel.getSwingComponents(JButton.class, "accountWeather");
     Component[] positions = panel.getSwingComponents(JButton.class, "accountPosition");
     Component[] dates = panel.getSwingComponents(JLabel.class, "accountUpdateDate");
     for (int i = 0; i < weathers.length; i++) {
-      String weather = getWeather(weathers[i]);
-      JButton selectorButton = (JButton) buttons[i];
-      String accountName = selectorButton.getText();
-      if (selectorButton.getFont().isBold()) {
+      String weather = toWeatherString(weathers[i]);
+      JToggleButton select = (JToggleButton) selects[i];
+      JButton editButton = (JButton) buttons[i];
+      String accountName = editButton.getText();
+      if (select.isSelected()) {
         accountName += "*";
       }
       printer.addRow(accountName,
@@ -302,7 +304,7 @@ public abstract class AccountViewPanelChecker<T extends AccountViewPanelChecker>
     return printer.toString();
   }
 
-  private static String getWeather(Component weather) {
+  private static String toWeatherString(Component weather) {
     JButton status = (JButton) weather;
     Icon icon = (status.getIcon());
     if (icon == AccountWeatherButton.SUNNY_ICON) {

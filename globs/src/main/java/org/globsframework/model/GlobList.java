@@ -85,7 +85,7 @@ public class GlobList extends ArrayList<Glob> {
     GlobList result = new GlobList();
     for (Iterator<Glob> iter = iterator(); iter.hasNext(); ) {
       Glob glob = iter.next();
-      if (repository.contains(glob.getKey())) {
+      if (repository.contains(glob)) {
         result.add(glob);
       }
     }
@@ -95,7 +95,7 @@ public class GlobList extends ArrayList<Glob> {
   public void keepExistingGlobsOnly(GlobRepository repository) {
     for (Iterator<Glob> iter = iterator(); iter.hasNext(); ) {
       Glob glob = iter.next();
-      if (!glob.exists() || !repository.contains(glob.getKey())) {
+      if (!glob.exists() || !repository.contains(glob)) {
         iter.remove();
       }
     }

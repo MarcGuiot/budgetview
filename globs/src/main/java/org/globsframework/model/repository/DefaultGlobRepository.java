@@ -103,6 +103,13 @@ public class DefaultGlobRepository implements GlobRepository, IndexSource {
     return findLinkedTo(target.getKey(), link);
   }
 
+  public boolean contains(Glob glob) {
+    if (glob == null) {
+      return false;
+    }
+    return contains(glob.getKey());
+  }
+
   public boolean contains(Key key) {
     return find(key) != null;
   }
@@ -359,6 +366,42 @@ public class DefaultGlobRepository implements GlobRepository, IndexSource {
     try {
       for (FieldValue value : values) {
         doUpdate(mutableGlob, key, value.getField(), value.getValue());
+      }
+    }
+    finally {
+      completeChangeSet();
+    }
+  }
+
+  public void updateAll(GlobList list, FieldValue... values) throws ItemNotFound {
+    if (list.isEmpty()) {
+      return;
+    }
+    startChangeSet();
+    try {
+      for (Glob glob : list) {
+        for (FieldValue value : values) {
+          doUpdate((MutableGlob) glob, glob.getKey(), value.getField(), value.getValue());
+        }
+      }
+    }
+    finally {
+      completeChangeSet();
+    }
+  }
+
+  public void updateAll(GlobType type, GlobMatcher matcher, FieldValue... values) throws ItemNotFound {
+    GlobList all = getAll(type, matcher);
+    if (all.isEmpty()) {
+      return;
+    }
+
+    startChangeSet();
+    try {
+      for (Glob glob : all) {
+        for (FieldValue value : values) {
+          doUpdate((MutableGlob) glob, glob.getKey(), value.getField(), value.getValue());
+        }
       }
     }
     finally {

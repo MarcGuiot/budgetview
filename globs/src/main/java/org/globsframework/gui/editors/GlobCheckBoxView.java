@@ -38,7 +38,7 @@ public class GlobCheckBoxView extends AbstractGlobComponentHolder<GlobCheckBoxVi
   private void apply() {
     repository.startChangeSet();
     for (Glob glob : currentGlobs) {
-      repository.update(glob.getKey(), field, checkBox.isSelected());
+      repository.update(glob, field, checkBox.isSelected());
     }
     repository.completeChangeSet();
   }

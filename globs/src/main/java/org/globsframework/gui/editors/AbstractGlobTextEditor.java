@@ -161,7 +161,7 @@ public abstract class AbstractGlobTextEditor<COMPONENT_TYPE extends JTextCompone
       isAdjusting = true;
       repository.startChangeSet();
       for (Glob glob : currentGlobs) {
-        repository.update(glob.getKey(), AbstractGlobTextEditor.this.field, value);
+        repository.update(glob, AbstractGlobTextEditor.this.field, value);
       }
     }
     finally {

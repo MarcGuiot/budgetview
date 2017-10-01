@@ -93,7 +93,7 @@ public class BlogApplication {
 
     public void actionPerformed(ActionEvent e) {
       for (Glob post : selectedPosts) {
-        repository.update(post.getKey(), Post.PUBLISHED, true);
+        repository.update(post, Post.PUBLISHED, true);
       }
     }
   }

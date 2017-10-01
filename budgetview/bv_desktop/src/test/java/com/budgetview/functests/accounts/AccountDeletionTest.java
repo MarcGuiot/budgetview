@@ -49,7 +49,8 @@ public class AccountDeletionTest extends LoggedInFunctionalTestCase {
       .add("01/10/2008", TransactionType.VIREMENT, "WorldCo", "", 1000.00, "Salaire")
       .check();
 
-    mainAccounts.edit("Account n. 0000123").openDelete()
+    mainAccounts.edit("Account n. 0000123")
+      .openDelete()
       .checkMessageContains("All the operations and series associated to this account will be deleted")
       .validate();
     mainAccounts.checkNotPresent("Account n. 0000123");
@@ -109,6 +110,8 @@ public class AccountDeletionTest extends LoggedInFunctionalTestCase {
       .validate();
 
     mainAccounts.checkNotPresent("Main");
+
+    operations.checkDataIsOk();
   }
 
   @Test

@@ -28,15 +28,13 @@ public class CurrentMonth {
   public static IntegerField ID;
 
   @DefaultInteger(0)
-  @Target(Month.class)
-  public static LinkField LAST_TRANSACTION_MONTH;
+  public static IntegerField LAST_TRANSACTION_MONTH;
 
   @DefaultInteger(1)
   public static IntegerField LAST_TRANSACTION_DAY;
 
-  @Target(Month.class)
   @DefaultInteger(0)
-  public static LinkField CURRENT_MONTH;
+  public static IntegerField CURRENT_MONTH;
 
   @DefaultInteger(0)
   public static IntegerField CURRENT_DAY;
@@ -54,9 +52,9 @@ public class CurrentMonth {
       Date date = new Date();
       return Month.getMonthId(date);
     }
-    Glob month = repository.findLinkTarget(currentMonth, LAST_TRANSACTION_MONTH);
+    Glob month = repository.find(org.globsframework.model.Key.create(Month.TYPE, currentMonth.get(LAST_TRANSACTION_MONTH)));
     if (month == null) {
-      month = repository.findLinkTarget(currentMonth, CURRENT_MONTH);
+      month = repository.find(org.globsframework.model.Key.create(Month.TYPE, currentMonth.get(CURRENT_MONTH)));
     }
     if (month == null) {
       month = repository.getAll(Month.TYPE).getFirst();

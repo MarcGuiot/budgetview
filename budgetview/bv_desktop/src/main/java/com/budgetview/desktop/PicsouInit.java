@@ -20,6 +20,7 @@ import com.budgetview.model.*;
 import com.budgetview.model.initial.DefaultSeriesFactory;
 import com.budgetview.shared.model.AccountType;
 import com.budgetview.triggers.*;
+import com.budgetview.triggers.cloud.CloudAccountTrigger;
 import com.budgetview.triggers.projects.*;
 import com.budgetview.triggers.savings.SavingsUpdateSeriesMirrorTrigger;
 import com.budgetview.utils.Lang;
@@ -164,6 +165,7 @@ public class PicsouInit {
     repository.addTrigger(new DateFormatTrigger(directory));
     repository.addTrigger(new ProjectPicturesDelectionTrigger());
     repository.addTrigger(new ProjectAccountGraphTrigger());
+    repository.addTrigger(new CloudAccountTrigger());
   }
 
   public PreLoadData loadUserData(String user, boolean useDemoAccount, boolean autoLogin) {

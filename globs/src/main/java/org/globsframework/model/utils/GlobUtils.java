@@ -82,7 +82,7 @@ public class GlobUtils {
     repository.startChangeSet();
     try {
       for (DoubleField field : fields) {
-        repository.update(glob.getKey(), field, value);
+        repository.update(glob, field, value);
       }
     }
     finally {
@@ -141,7 +141,7 @@ public class GlobUtils {
       Field field = fields[i];
       fieldValues[i] = new FieldValue(field, from.getValue(field));
     }
-    repository.update(to.getKey(), fieldValues);
+    repository.update(to, fieldValues);
   }
 
   public static GlobList getAll(Set<Key> keys, GlobRepository repository) {

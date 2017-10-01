@@ -88,7 +88,7 @@ public class GlobSliderEditor extends AbstractGlobFieldEditor<GlobSliderEditor> 
       Double adaptedValue = adapter.convertToGlobsValue(slider.getValue());
       repository.startChangeSet();
       for (Glob glob : currentGlobs) {
-        repository.update(glob.getKey(), field, adaptedValue);
+        repository.update(glob, field, adaptedValue);
       }
     }
     finally {

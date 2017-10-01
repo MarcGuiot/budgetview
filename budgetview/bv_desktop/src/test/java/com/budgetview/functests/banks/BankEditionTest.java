@@ -367,8 +367,8 @@ public class BankEditionTest extends LoggedInFunctionalTestCase {
     importDialog = operations.openImportDialog()
       .importFileAndPreview(qifPath);
     importDialog.openBankSelection()
-      .checkCountry("All")
-      .checkContainsBanks("Boursorama", "CIC", "Société Générale", "Credit Suisse", "BNP Paribas Fortis")
+      .checkCountry("France")
+      .checkContainsBanks("Boursorama", "CIC", "Société Générale", "BNP Paribas Fortis")
       .validate();
     importDialog.close();
 

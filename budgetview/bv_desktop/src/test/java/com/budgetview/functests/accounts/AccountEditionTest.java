@@ -353,8 +353,8 @@ public class AccountEditionTest extends LoggedInFunctionalTestCase {
     mainAccounts.select(OfxBuilder.DEFAULT_ACCOUNT_NAME);
     mainAccounts.checkEndOfMonthPosition(OfxBuilder.DEFAULT_ACCOUNT_NAME, 100.00);
     accounts.checkContent(
-      "| Account n. 00001123 | 0.00 on 2008/08/15 | sunny |\n" +
-      "| Account n. 0000100  | 0.00 on 2008/07/01 | -     |");
+      "| Account n. 00001123* | 0.00 on 2008/08/15 | sunny |\n" +
+      "| Account n. 0000100   | 0.00 on 2008/07/01 | -     |");
     mainAccounts.getChart("Account n. 00001123")
       .checkValue(200807, 1, 200.00)
       .checkValue(200807, 15, 100.00)

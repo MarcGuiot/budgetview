@@ -36,18 +36,18 @@ public class CloudAccountStatus {
                                value(RealAccount.ACCOUNT, null),
                                value(RealAccount.ENABLED, false));
       }
-      if (providerAccountId == null) {
-        return;
-      }
 
       functor.run();
 
-      UndoRedoService.Change change = new CloudAccountChange(providerConnectionId, providerAccountId, directory, targetRepository);
-      change.apply();
-
-      targetRepository.completeChangeSet();
-
-      directory.get(UndoRedoService.class).appendToNextUndo(change);
+      if (providerAccountId != null) {
+        UndoRedoService.Change change = new CloudAccountChange(providerConnectionId, providerAccountId, directory, targetRepository);
+        change.apply();
+        targetRepository.completeChangeSet();
+        directory.get(UndoRedoService.class).appendToNextUndo(change);
+      }
+      else {
+        targetRepository.completeChangeSet();
+      }
     }
     catch (Exception e) {
       throw new UnexpectedException(e);

@@ -33,6 +33,12 @@ public interface GlobRepository extends ReadOnlyGlobRepository {
   void update(Key key, FieldValue... values)
     throws ItemNotFound;;
 
+  void updateAll(GlobList list, FieldValue... values)
+    throws ItemNotFound;;
+
+  void updateAll(GlobType type, GlobMatcher matcher, FieldValue... values)
+    throws ItemNotFound;
+
   void setTarget(Key source, Link link, Key target)
     throws ItemNotFound;
 

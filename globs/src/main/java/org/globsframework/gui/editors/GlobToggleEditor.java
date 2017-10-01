@@ -71,7 +71,7 @@ public class GlobToggleEditor extends AbstractGlobFieldEditor<GlobToggleEditor> 
       boolean isSelected = toggle.isSelected();
       repository.startChangeSet();
       for (Glob glob : currentGlobs) {
-        repository.update(glob.getKey(), field, isSelected);
+        repository.update(glob, field, isSelected);
       }
     }
     finally {
