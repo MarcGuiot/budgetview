@@ -80,6 +80,7 @@ public class WebhookNotificationService {
             newlyInitializedConnections |= connectionInfo.containsAccounts;
             sqlConnection.startCreate(ProviderConnection.TYPE)
               .set(ProviderConnection.USER, user.get(CloudUser.ID))
+              .set(ProviderConnection.PROVIDER, Provider.BUDGEA.getId())
               .set(ProviderConnection.PROVIDER_CONNECTION, connectionInfo.providerConnectionId)
               .set(ProviderConnection.INITIALIZED, connectionInfo.containsAccounts)
               .set(ProviderConnection.PASSWORD_ERROR, connectionInfo.passwordError)

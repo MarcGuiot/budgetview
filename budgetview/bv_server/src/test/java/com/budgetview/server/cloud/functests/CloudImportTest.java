@@ -416,8 +416,8 @@ public class CloudImportTest extends CloudDesktopTestCase {
 
     budgetView.recurring.checkSeries("Electricity", "50.00", "50.00");
 
-    mainAccounts.checkContent("| Main account 1* | 1000.00 on 2016/08/12 | sunny |\n" +
-                              "| Joint account*  | 500.00 on 2016/08/14  | sunny |");
+    mainAccounts.checkContent("| Main account 1 | 1000.00 on 2016/08/12 | sunny |\n" +
+                              "| Joint account  | 500.00 on 2016/08/14  | sunny |");
 
     budgea.pushConnectionList(BudgeaConnections.init()
                              .add(1, 123, 40, true, "2016-08-10 17:44:26")

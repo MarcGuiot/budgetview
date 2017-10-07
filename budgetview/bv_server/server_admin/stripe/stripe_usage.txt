@@ -1,0 +1,14 @@
+
+----------------------------------------------------------------
+ Stripe Checkout Form
+----------------------------------------------------------------
+
+Formulaire web : mettre à jour data-key avec la clef publique pk_....
+
+
+----------------------------------------------------------------
+ Stripe Webhook
+----------------------------------------------------------------
+
+Page : https://dashboard.stripe.com/account/webhooks
+Webhook BV : https://register.mybudgetview.fr:1445/stripe

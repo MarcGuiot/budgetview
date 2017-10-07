@@ -21,7 +21,7 @@ public class StripeService implements PaymentService {
   private static Logger logger = Logger.getLogger("StripeService");
 
   public StripeService() {
-    Stripe.apiKey = "sk_test_p2kZ7X2c5pJ4r7Y6U44bkH79";  // https://dashboard.stripe.com/account/apikeys
+    Stripe.apiKey = "sk_live_s6ZwHNRjJyMBCkvYyX2bnRYD";  // https://dashboard.stripe.com/account/apikeys
   }
 
   public CloudSubscription createSubscription(String email, String stripeToken) throws OperationFailed {

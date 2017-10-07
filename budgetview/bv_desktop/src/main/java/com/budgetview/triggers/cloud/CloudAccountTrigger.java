@@ -3,6 +3,7 @@ package com.budgetview.triggers.cloud;
 import com.budgetview.model.CloudProviderAccount;
 import com.budgetview.model.CloudProviderConnection;
 import com.budgetview.model.RealAccount;
+import com.budgetview.model.Transaction;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.*;
 import org.globsframework.model.utils.DefaultChangeSetVisitor;
@@ -24,20 +25,11 @@ public class CloudAccountTrigger implements ChangeSetListener {
                                fieldEquals(RealAccount.PROVIDER_CONNECTION_ID, connectionId),
                                value(RealAccount.PROVIDER_CONNECTION_ID, null),
                                value(RealAccount.PROVIDER_ACCOUNT_ID, null));
-        }
-      });
-    }
-
-    if (changeSet.containsDeletions(CloudProviderAccount.TYPE)) {
-      changeSet.safeVisit(CloudProviderAccount.TYPE, new DefaultChangeSetVisitor() {
-        public void visitDeletion(Key key, FieldValues values) throws Exception {
-          Integer connectionId = values.get(CloudProviderAccount.PROVIDER_CONNECTION_ID);
-          Integer accountId = values.get(CloudProviderAccount.PROVIDER_ACCOUNT_ID);
-          repository.updateAll(RealAccount.TYPE,
-                               and(fieldEquals(RealAccount.PROVIDER_CONNECTION_ID, connectionId),
-                                   fieldEquals(RealAccount.PROVIDER_ACCOUNT_ID, accountId)),
-                               value(RealAccount.PROVIDER_CONNECTION_ID, null),
-                               value(RealAccount.PROVIDER_ACCOUNT_ID, null));
+          repository.updateAll(Transaction.TYPE,
+                               fieldEquals(Transaction.PROVIDER_CONNECTION_ID, connectionId),
+                               value(Transaction.PROVIDER_CONNECTION_ID, null),
+                               value(Transaction.PROVIDER_ACCOUNT_ID, null),
+                               value(Transaction.PROVIDER_TRANSACTION_ID, null));
         }
       });
     }
@@ -48,32 +40,24 @@ public class CloudAccountTrigger implements ChangeSetListener {
 
       for (Glob realAccount : repository.getAll(RealAccount.TYPE)) {
         Integer connectionId = realAccount.get(RealAccount.PROVIDER_CONNECTION_ID);
-        Integer accountId = realAccount.get(RealAccount.PROVIDER_ACCOUNT_ID);
-
-        if (accountId != null && connectionId == null) {
-          repository.update(realAccount,
-                            value(RealAccount.PROVIDER_CONNECTION_ID, null),
-                            value(RealAccount.PROVIDER_ACCOUNT_ID, null));
-          continue;
-        }
-
-        if (accountId != null &&
-            !repository.contains(CloudProviderAccount.TYPE,
-                                 and(fieldEquals(CloudProviderAccount.PROVIDER_CONNECTION_ID, connectionId),
-                                     fieldEquals(CloudProviderAccount.PROVIDER_ACCOUNT_ID, accountId)))) {
-          repository.update(realAccount,
-                            value(RealAccount.PROVIDER_CONNECTION_ID, null),
-                            value(RealAccount.PROVIDER_ACCOUNT_ID, null));
-          continue;
-
-        }
-
-        if (connectionId != null &&
+        if (connectionId == null ||
             !repository.contains(CloudProviderConnection.TYPE, fieldEquals(CloudProviderConnection.PROVIDER_CONNECTION_ID, connectionId))) {
           repository.update(realAccount,
                             value(RealAccount.PROVIDER_CONNECTION_ID, null),
                             value(RealAccount.PROVIDER_ACCOUNT_ID, null));
         }
+      }
+    }
+
+    for (Glob transaction : repository.getAll(Transaction.TYPE)) {
+      Integer connectionId = transaction.get(Transaction.PROVIDER_CONNECTION_ID);
+      if (connectionId == null ||
+          !repository.contains(CloudProviderAccount.TYPE,
+                               and(fieldEquals(CloudProviderAccount.PROVIDER_CONNECTION_ID, connectionId)))) {
+        repository.update(transaction,
+                          value(Transaction.PROVIDER_CONNECTION_ID, null),
+                          value(Transaction.PROVIDER_ACCOUNT_ID, null),
+                          value(Transaction.PROVIDER_TRANSACTION_ID, null));
       }
     }
   }

@@ -169,7 +169,7 @@
     <dependency>
       <groupId>com.stripe</groupId>
       <artifactId>stripe-java</artifactId>
-      <version>3.9.0</version>
+      <version>5.10.0</version>
     </dependency>
 
     <!-- For tests only-->

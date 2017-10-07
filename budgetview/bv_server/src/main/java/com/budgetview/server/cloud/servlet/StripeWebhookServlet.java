@@ -9,6 +9,7 @@ import com.budgetview.server.cloud.services.CloudSubscription;
 import com.budgetview.server.cloud.services.PaymentService;
 import com.budgetview.server.license.mail.Mailer;
 import com.budgetview.shared.utils.AmountFormat;
+import com.google.gson.JsonSyntaxException;
 import com.stripe.model.Event;
 import com.stripe.net.APIResource;
 import org.apache.log4j.Logger;
@@ -228,7 +229,13 @@ public class StripeWebhookServlet extends HttpServlet {
     Event event;
     InputStream inputStream = request.getInputStream();
     String json = Files.loadStreamToString(inputStream, "UTF-8");
-    event = APIResource.GSON.fromJson(json, Event.class);
+    try {
+      event = APIResource.GSON.fromJson(json, Event.class);
+    }
+    catch (JsonSyntaxException e) {
+      logger.error("Error parsing event string: " + json);
+      throw e;
+    }
     return event;
   }
 }

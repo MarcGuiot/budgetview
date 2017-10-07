@@ -4,7 +4,7 @@ import org.globsframework.utils.Utils;
 
 public class CloudConstants {
 
-  public static final int CURRENT_API_VERSION = 1;
+  public static final int CURRENT_API_VERSION = 2;
 
   public static final String PROD_CLOUD_SERVER_URL = "https://register.mybudgetview.fr:1445";
   public static final String LOCAL_SERVER_URL = "http://127.0.0.1:8080";
