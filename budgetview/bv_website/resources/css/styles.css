@@ -334,6 +334,11 @@ div.container h3 {
   margin-bottom: 10px;
 }
 
+#home #versions tr.price td {
+  font-weight: bold;
+  font-size: 13pt;
+}
+
 #home #mobile {
   width: 90%;
   margin-top: 20px;
@@ -1153,6 +1158,11 @@ margin-top: 40px;
   vertical-align: middle;
 }
 
+#extensions .sla {
+  margin-top: 20px;
+  font-size: 12pt;
+}
+
 /* ========== SYNC ========== */
 
 #sync #banner {
@@ -1175,7 +1185,7 @@ margin-top: 40px;
   margin-bottom: 15px;
 }
 
-/* ========== CLOUD ========== */
+/* ========== SYNC STORE ========== */
 
 .store {
     text-align: center;
@@ -1192,7 +1202,7 @@ margin-top: 40px;
 
 .store .stripe div.button {
    margin-top: 40px;
-   margin-bottom: 80px;
+   margin-bottom: 60px;
 }
 
 .store .stripe .stripe-button-el {
@@ -1216,7 +1226,16 @@ margin-top: 40px;
 }
 
 .store .secure-payment {
-  margin-top: 40px;
+  margin-top: 10px;
+}
+
+.store .sla {
+ margin-top: 40px;
+ font-size: 13pt;
+}
+
+.store a.highlighted {
+  font-weight: bold;
 }
 
 /* ======== FEATURE TABLE ===== */
