@@ -1,10 +1,12 @@
 
+
 ----------------------------------------------------------------
- Stripe Checkout Form
+ Clefs Stripe
 ----------------------------------------------------------------
 
-Formulaire web : mettre à jour data-key avec la clef publique pk_....
-
+Page : https://dashboard.stripe.com/account/apikeys
+- Formulaire web : mettre à jour data-key avec la clef publique (pk...)
+- Serveur : mettre à jour Stripe.apiKey dans StripeService avec la clef privée (sk...)
 
 ----------------------------------------------------------------
  Stripe Webhook
