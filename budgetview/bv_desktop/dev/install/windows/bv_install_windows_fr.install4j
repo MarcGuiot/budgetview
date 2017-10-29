@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<install4j version="6.0.4" transformSequenceNumber="5">
+<install4j version="6.1.6" transformSequenceNumber="5">
   <directoryPresets config="." />
-  <application name="BudgetView" distributionSourceDir="" applicationId="4832-1970-4684-3002" mediaDir="./output" mediaFilePattern="${compiler:sys.fullName}-${compiler:sys.version}-${compiler:sys.languageId}-Setup" compression="8" lzmaCompression="true" pack200Compression="true" excludeSignedFromPacking="true" commonExternalFiles="false" createMd5Sums="false" shrinkRuntime="true" shortName="budgetview" publisher="BudgetView" publisherWeb="https://www.mybudgetview.fr" version="5.0b5" allPathsRelative="true" backupOnSave="false" autoSave="false" convertDotsToUnderscores="false" macSignature="????" macVolumeId="ed5735cb5a2413af" javaMinVersion="1.8" javaMaxVersion="" allowBetaVM="false" jdkMode="runtimeJre" jdkName="">
+  <application name="BudgetView" distributionSourceDir="" applicationId="4832-1970-4684-3002" mediaDir="./output" mediaFilePattern="${compiler:sys.fullName}-${compiler:sys.version}-${compiler:sys.languageId}-Setup" compression="8" lzmaCompression="true" pack200Compression="true" excludeSignedFromPacking="true" commonExternalFiles="false" createMd5Sums="false" shrinkRuntime="true" shortName="budgetview" publisher="BudgetView" publisherWeb="https://www.mybudgetview.fr" version="5.0" allPathsRelative="true" backupOnSave="false" autoSave="false" convertDotsToUnderscores="false" macSignature="????" macVolumeId="ed5735cb5a2413af" javaMinVersion="1.8" javaMaxVersion="" allowBetaVM="false" jdkMode="runtimeJre" jdkName="">
     <languages skipLanguageSelection="false" languageSelectionInPrincipalLanguage="false">
       <principalLanguage id="fr" customLocalizationFile="./messages_fr_windows.utf8" />
       <additionalLanguages />
@@ -27,7 +27,7 @@
     <components />
   </files>
   <launchers>
-    <launcher name="BudgetView" id="24" customizedId="" external="false" excludeFromMenu="false" unixMode="755" menuName="" icnsFile="" customMacBundleIdentifier="false" macBundleIdentifier="" swtApp="false" fileset="" macBundleBinary="JavaApplicationStub" addMacEntitlements="false" macEntitlementsFile="" useCustomMacosExecutableName="true" customMacosExecutableName="BudgetView">
+    <launcher name="BudgetView" id="24" customizedId="" external="false" excludeFromMenu="false" unixMode="755" unixAutoStart="true" menuName="" icnsFile="" customMacBundleIdentifier="false" macBundleIdentifier="" swtApp="false" fileset="" macBundleBinary="JavaApplicationStub" addMacEntitlements="false" macEntitlementsFile="" useCustomMacosExecutableName="true" customMacosExecutableName="BudgetView" useJavaMinVersionOverride="false" javaMinVersionOverride="" useJavaMaxVersionOverride="false" javaMaxVersionOverride="">
       <executable name="BudgetView" type="1" iconSet="true" iconFile="./budgetview_icon.ico" executableDir="" redirectStderr="true" stderrFile="error.log" stderrMode="overwrite" redirectStdout="false" stdoutFile="output.log" stdoutMode="overwrite" failOnStderrOutput="true" executableMode="1" changeWorkingDirectory="true" workingDirectory="." singleInstance="true" serviceStartType="2" serviceDependencies="" serviceDescription="" jreLocation="" executionLevel="asInvoker" checkConsoleParameter="false" globalSingleInstance="false" singleInstanceActivate="true" dpiAware="false">
         <versionInfo include="false" fileVersion="" fileDescription="" legalCopyright="" internalName="" productName="" />
       </executable>
@@ -42,6 +42,7 @@
           <archive location="budgetview_bundle.jar" failOnError="false" />
         </classPath>
         <nativeLibraryDirectories />
+        <vmOptions />
       </java>
       <includedFiles />
       <unextractableFiles />
@@ -506,9 +507,23 @@
         <customAttributes />
       </autoUpdate>
     </windows>
+    <windows name="Windows nojre" id="172" customizedId="" mediaFileName="${compiler:sys.fullName}-${compiler:sys.version}-${compiler:sys.languageId}-nojre-Setup" installDir="${compiler:sys.shortName}" overridePrincipalLanguage="false" jreBitType="32" runPostProcessor="false" postProcessor="" failOnPostProcessorError="false" useLegacyMediaFileIds="false" legacyMediaFileIds="" downloadURL="" includeAllDownloadableComponents="false" includedJRE="" manualJREEntry="false" bundleType="1" jreURL="" jreShared="false" directDownload="false" installOnlyIfNecessary="false" customInstallBaseDir="" contentFilesType="1" verifyIntegrity="true">
+      <excludedComponents />
+      <includedDownloadableComponents />
+      <excludedLaunchers />
+      <excludedBeans />
+      <overriddenPrincipalLanguage id="fr" customLocalizationFile="./messages_fr_windows.utf8" />
+      <exclude />
+      <variables />
+      <autoUpdate useMinUpdatableVersion="false" minUpdatableVersion="" useMaxUpdatableVersion="false" maxUpdatableVersion="">
+        <commentFiles />
+        <customAttributes />
+      </autoUpdate>
+    </windows>
   </mediaSets>
   <buildIds buildAll="true">
     <mediaSet refId="170" />
+    <mediaSet refId="172" />
   </buildIds>
   <buildOptions verbose="false" faster="false" disableSigning="false" disableJreBundling="false" debug="false" />
 </install4j>

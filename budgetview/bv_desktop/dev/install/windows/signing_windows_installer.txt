@@ -8,8 +8,11 @@ Sous Windows :
 3. Lancer la commande :
 
 [FR]
-D:\Tools\WindowsKit\8.1\bin\x64\signtool sign /a /tr http://timestamp.globalsign.com/?signature=sha2 /td SHA256 C:\Users\rmedina\Desktop\BV\output\BudgetView-4.03-fr-Setup.exe
+D:\Tools\WindowsKit\8.1\bin\x64\signtool sign /a /tr http://timestamp.globalsign.com/?signature=sha2 /td SHA256 C:\Users\rmedina\Desktop\BV\bv155\output\BudgetView-5.0-fr-Setup.exe
+
+D:\Tools\WindowsKit\8.1\bin\x64\signtool sign /a /tr http://timestamp.globalsign.com/?signature=sha2 /td SHA256 C:\Users\rmedina\Desktop\BV\bv155\output\BudgetView-5.0-fr-nojre-Setup.exe
+
 
 [EN]
-D:\Tools\WindowsKit\8.1\bin\x64\signtool sign /a /tr http://timestamp.globalsign.com/?signature=sha2 /td SHA256 C:\Users\rmedina\Desktop\BV\output\BudgetView-4.03-en-Setup.exe
+D:\Tools\WindowsKit\8.1\bin\x64\signtool sign /a /tr http://timestamp.globalsign.com/?signature=sha2 /td SHA256 C:\Users\rmedina\Desktop\BV\bv154\output\BudgetView-5.0-en-Setup.exe
 
