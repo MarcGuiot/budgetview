@@ -354,7 +354,7 @@ public class LicenseActivationTest extends ConnectedTestCase {
     activation.close();
   }
 
-  public void testMailSentLater() throws Exception {
+  public void testMailSentLaterIfMailServerNotAvailable() throws Exception {
     loginAndRegisterFirstPicsou();
     exit();
 
@@ -366,14 +366,7 @@ public class LicenseActivationTest extends ConnectedTestCase {
     mailServer.stop();
     LicenseActivationChecker.enterBadLicense(window, MAIL, "1234",
                                              "Activation failed. An email was sent at " + MAIL + " with further information.");
-    boolean received = false;
-    try {
-      mailServer.checkReceivedMail(MAIL);
-      received = true;
-    }
-    catch (AssertionFailedError e) {
-    }
-    assertFalse(received);
+    mailServer.checkNoMailReceived(MAIL);
 
     mailServer.start();
     mailServer.checkReceivedMail(MAIL);

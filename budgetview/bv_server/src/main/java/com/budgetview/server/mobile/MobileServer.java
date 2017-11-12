@@ -38,7 +38,7 @@ public class MobileServer {
     return path;
   }
 
-  private MobileServer(String[] args) throws Exception {
+  public MobileServer(String... args) throws Exception {
     config = new ConfigService(args);
     Log4J.init(config);
     logger.info("init server");

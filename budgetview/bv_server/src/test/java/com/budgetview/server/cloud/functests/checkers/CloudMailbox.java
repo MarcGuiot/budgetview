@@ -138,7 +138,7 @@ public class CloudMailbox {
   }
 
   public void stop() throws Exception {
-    mailServer.stop();
+    mailServer.dispose();
     mailServer = null;
   }
 }

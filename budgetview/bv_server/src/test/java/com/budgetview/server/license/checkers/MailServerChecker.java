@@ -5,7 +5,9 @@ import com.dumbster.smtp.SmtpMessage;
 import org.apache.log4j.Logger;
 import org.junit.Assert;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 public class MailServerChecker {
 
@@ -43,6 +45,20 @@ public class MailServerChecker {
       if (receivedEmail.hasNext()) {
         SmtpMessage message = (SmtpMessage) receivedEmail.next();
         Assert.fail("Unexpected message sent to:" + message.getHeaderValue("To") + ": " + message.getBody());
+      }
+    }
+  }
+
+  public void checkNoMailReceived(String mailTo) throws Exception {
+    synchronized (mailServer) {
+      Iterator receivedEmail = mailServer.getReceivedEmail();
+      while (receivedEmail.hasNext()) {
+        SmtpMessage message = (SmtpMessage) receivedEmail.next();
+        if (mailTo.equals(message.getHeaderValue("To"))) {
+          receivedEmail.remove();
+          Email email = new Email(message);
+          Assert.fail("Unexpected email received: " + email);
+        }
       }
     }
   }
@@ -124,15 +140,15 @@ public class MailServerChecker {
         started = false;
       }
     }
+  }
+
+  public void dispose() throws Exception {
+    stop();
     mailServer = null;
     if (mailThread != null) {
       mailThread.join();
     }
     mailThread = null;
     logger.info("Stopped mail server");
-  }
-
-  public void dispose() throws Exception {
-    stop();
   }
 }
