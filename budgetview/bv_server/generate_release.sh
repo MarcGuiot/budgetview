@@ -59,5 +59,6 @@ mkdir -p $RELEASE_PROD_DIR/config
   cp $BV_SERVER_ROOT/server_admin/config/bv_*_prod.properties $RELEASE_PROD_DIR/config
   cp $BV_SERVER_ROOT/server_admin/config/log4j_*_prod.properties $RELEASE_PROD_DIR/config
   cp $BV_SERVER_ROOT/server_admin/config/logging.properties $RELEASE_PROD_DIR/config
+cp $RELEASE_PROD_DIR/budgetview.jar $RELEASE_PROD_DIR/budgetview$JAR_VERSION.jar
 
 echo "Done"
