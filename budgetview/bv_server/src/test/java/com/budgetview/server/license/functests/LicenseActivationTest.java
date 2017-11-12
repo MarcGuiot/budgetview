@@ -9,18 +9,17 @@ import com.budgetview.functests.checkers.license.LicenseActivationChecker;
 import com.budgetview.functests.checkers.license.LicenseChecker;
 import com.budgetview.functests.utils.LoggedInFunctionalTestCase;
 import com.budgetview.server.license.ConnectedTestCase;
-import com.budgetview.server.license.tools.DuplicateLine;
 import com.budgetview.server.license.checkers.LicenseDbChecker;
-import com.budgetview.server.license.checkers.Email;
 import com.budgetview.server.license.mail.Mailbox;
 import com.budgetview.server.license.model.License;
 import com.budgetview.server.license.model.RepoInfo;
 import com.budgetview.server.license.servlet.RegisterServlet;
+import com.budgetview.server.license.tools.DuplicateLine;
 import com.budgetview.utils.Lang;
 import junit.framework.Assert;
-import junit.framework.AssertionFailedError;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
+import org.globsframework.model.format.GlobPrinter;
 import org.globsframework.sqlstreams.SqlConnection;
 import org.globsframework.sqlstreams.constraints.Where;
 import org.globsframework.utils.Dates;
@@ -123,56 +122,6 @@ public class LicenseActivationTest extends ConnectedTestCase {
     checkUserNotRegistered();
   }
 
-  public void testResendsActivationKeyIfCountDecreases() throws Exception {
-    String repoId = loginAndRegisterFirstPicsou();
-
-    exit();
-    restartAppAndLogAndDispose();
-    System.setProperty(Application.LOCAL_PREVAYLER_PATH_PROPERTY, SECOND_PATH);
-    System.setProperty(Application.DELETE_LOCAL_PREVAYLER_PROPERTY, "true");
-
-    startApplication(true);
-    System.setProperty(Application.DELETE_LOCAL_PREVAYLER_PROPERTY, "false");
-
-    LoginChecker login = new LoginChecker(window);
-    login.logNewUser("user", "passw@rd");
-
-    db.checkRepoIdIsUpdated(1L, Where.notEqual(RepoInfo.REPO_ID, repoId));
-    license.checkInfoMessageHidden();
-
-    LicenseActivationChecker.enterBadLicense(window, MAIL, "1234", "Activation failed. An email was sent at " + MAIL + " with further information.");
-    license.checkInfoMessage("Activation failed. An email was sent");
-    Email email = mailServer.checkReceivedMail(MAIL);
-    email.checkContainsAll("To prevent anyone else from using your code");
-    String emailcontent = email.getContent();
-    int startCode = emailcontent.indexOf(ACTIVATION_CODE) + ACTIVATION_CODE.length();
-    String newActivationCode = emailcontent.substring(startCode, startCode + 4);
-    Integer.parseInt(newActivationCode);
-    exit();
-
-    TimeService.setCurrentDate(Dates.parse("2008/08/01"));
-
-    checkVersionValidity(false, PATH_TO_DATA);
-    activateNewLicenseInNewVersion(newActivationCode);
-    checkVersionValidity(false, SECOND_PATH);
-    TimeService.setCurrentDate(Dates.parse("2008/12/10"));
-    checkVersionValidity(false, SECOND_PATH);
-    TimeService.setCurrentDate(Dates.parse("2009/05/10"));
-    checkVersionValidity(false, SECOND_PATH);
-    checkKilledVersion(PATH_TO_DATA);
-    stopServers();
-    TimeService.setCurrentDate(Dates.parse("2009/07/10"));
-    checkVersionValidity(false, SECOND_PATH);
-  }
-
-  private void checkKilledVersion(String pathToData) throws Exception {
-    System.setProperty(Application.LOCAL_PREVAYLER_PATH_PROPERTY, pathToData);
-    startApplication(false);
-    login.logExistingUser("user", "passw@rd");
-    license.checkKilled();
-    exit();
-  }
-
   public void testRegisterAndReRegisterWithBadEmail() throws Exception {
     String email = "alfred@free.fr";
     db.registerMail(email, "1234");
@@ -272,9 +221,7 @@ public class LicenseActivationTest extends ConnectedTestCase {
 
     stopServers();
 
-    license.validateWithError();
-    license.checkErrorMessage("You must be connected to the Internet")
-      .close();
+    license.validateWithError("You must be connected to the Internet").close();
 
     checkMessage("Cannot connect to remote server");
 
@@ -291,14 +238,20 @@ public class LicenseActivationTest extends ConnectedTestCase {
     db.registerMail("titi@foo.org", "4321");
     LicenseActivationChecker license = LicenseActivationChecker.open(window);
     license.checkMsgToReceiveNewCode();
-    license.enterLicense("titi@foo.org", "az");
-    license.checkMsgSendNewCode();
-    license.validateWithError();
-    license.checkErrorMessage("Activation failed");
-    license.enterLicense("titi@foo.org", "");
-    license.checkMsgSendNewCode();
-    license.validateWithError();
-    license.checkErrorMessage("Activation failed");
+
+    license.enterLicense("titi@foo.org", "az")
+      .checkActivationEnabled()
+      .checkMsgSendNewCode()
+      .validateWithError("Activation failed");
+
+    license.enterLicense("titi@foo.org", "")
+      .checkActivationDisabled()
+      .checkMsgSendNewCode();
+
+    license.enterLicense("titi@foo.org", "xyz")
+      .checkActivationEnabled()
+      .validateWithError("Activation failed");
+
     license.close();
 
     checkMessage("This activation code is not valid. You can request");
@@ -397,16 +350,16 @@ public class LicenseActivationTest extends ConnectedTestCase {
     startApplication(false);
     login.logExistingUser("user", "passw@rd");
 
-    LicenseChecker license = new LicenseChecker(window);
-    license.requestNewLicense()
-      .checkMail("alfred@free.fr")
-      .sendKey()
+    LicenseActivationChecker.open(window)
+      .enterMail("alfred@free.fr")
+      .askForCode()
       .close();
 
-    String newEmail = mailServer.checkReceivedMail(MAIL).getContent();
+    String newEmail = mailServer.checkReceivedMail("alfred@free.fr").getContent();
     exit();
+
     SqlConnection connection = db.getConnection();
-    Glob glob = connection.selectUnique(License.TYPE, Where.fieldEquals(License.MAIL, MAIL));
+    Glob glob = connection.selectUnique(License.TYPE, Where.fieldEquals(License.MAIL, "alfred@free.fr"));
     String activationCode = glob.get(License.ACTIVATION_CODE);
     if (activationCode.length() < 4) {
       Assert.fail("Invalid activation code found in DB: " + activationCode);

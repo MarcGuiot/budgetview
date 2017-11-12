@@ -19,8 +19,17 @@ public class LicenseChecker extends ViewChecker {
     super(mainWindow);
   }
 
+  public static LicenseChecker init(Window window) {
+    return new LicenseChecker(window);
+  }
+
   public void register() {
     LicenseActivationChecker.enterLicense(mainWindow, "admin", "1234");
+  }
+
+  public LicenseActivationChecker open() {
+    OperationChecker operations = new OperationChecker(mainWindow);
+    return operations.openActivationDialog();
   }
 
   public LicenseChecker checkInfoMessageHidden() {
@@ -45,17 +54,6 @@ public class LicenseChecker extends ViewChecker {
   public LicenseChecker clickLink(String text) {
     getInfoMessageTextBox().clickOnHyperlink(text);
     return this;
-  }
-
-  public LicenseExpirationChecker requestNewLicense() {
-    OperationChecker operations = new OperationChecker(mainWindow);
-    operations.hideSignposts();
-    Window dialog = WindowInterceptor.getModalDialog(new Trigger() {
-      public void run() throws Exception {
-        getInfoMessageTextBox().clickOnHyperlink("Ask for a new code");
-      }
-    });
-    return new LicenseExpirationChecker(dialog);
   }
 
   public LicenseChecker checkUserIsRegistered() {
@@ -90,18 +88,5 @@ public class LicenseChecker extends ViewChecker {
 
   public void checkMailKilled(String email) {
     checkInfoMessage("Activation failed. An email was sent at " + email + " with further information.");
-  }
-
-  public void checkActivationFailed() {
-    TextBox message = getInfoMessageTextBox();
-    assertThat(message.isVisible());
-    assertTrue(message.textContains("This activation code is not valid."));
-    assertTrue(message.textContains("You can request"));
-  }
-
-  public void checkKilled() {
-    TextBox message = getInfoMessageTextBox();
-    assertThat(message.isVisible());
-    assertTrue(message.textContains("You are not allowed to import data anymore"));
   }
 }

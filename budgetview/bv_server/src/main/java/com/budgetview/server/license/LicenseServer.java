@@ -60,7 +60,7 @@ public class LicenseServer {
     webServer.add(new RequestForConfigServlet(directory), LicenseConstants.REQUEST_FOR_CONFIG);
     webServer.add(new RegisterServlet(directory), LicenseConstants.REQUEST_FOR_REGISTER);
     webServer.add(new NewUserServlet(directory), LicenseConstants.NEW_USER);
-    webServer.add(new SendMailServlet(directory), LicenseConstants.REQUEST_SEND_MAIL);
+    webServer.add(new SendMailServlet(directory), LicenseConstants.SEND_MAIL_TO_US);
     webServer.add(new SendUseInfoServlet(), LicenseConstants.SEND_USE_INFO);
     webServer.add(new ServerStatusServlet(directory), LicenseConstants.SERVER_STATUS);
   }

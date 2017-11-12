@@ -2,7 +2,7 @@ package com.budgetview.desktop.addons;
 
 import com.budgetview.desktop.View;
 import com.budgetview.desktop.help.actions.GotoWebsiteAction;
-import com.budgetview.desktop.license.activation.RegisterLicenseAction;
+import com.budgetview.desktop.license.activation.ActivateLicenseAction;
 import com.budgetview.utils.Lang;
 import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.model.GlobRepository;
@@ -30,7 +30,7 @@ public class AddOnsSelector extends View {
       }
     });
 
-    builder.add("activate", new RegisterLicenseAction(Lang.get("addonsSelector.activate.button"), repository, directory));
+    builder.add("activate", new ActivateLicenseAction(Lang.get("addonsSelector.activate.button"), repository, directory));
 
     parentBuilder.add("addonsSelector", builder);
   }

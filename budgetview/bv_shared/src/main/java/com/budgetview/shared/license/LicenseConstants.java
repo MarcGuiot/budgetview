@@ -20,7 +20,7 @@ public class LicenseConstants {
   public static final String NEW_USER = "/newUser";
   public static final String REQUEST_FOR_CONFIG = "/requestForConfig";
   public static final String REQUEST_FOR_MAIL = "/mailTo";
-  public static final String REQUEST_SEND_MAIL = "/sendMailToUs";
+  public static final String SEND_MAIL_TO_US = "/sendMailToUs";
   public static final String SERVER_STATUS = "/server-status";
   public static final String SEND_USE_INFO = "/sendUseInfo";
 

@@ -28,6 +28,16 @@ public class LicenseActivationChecker extends GuiChecker {
     return new LicenseActivationChecker(WindowInterceptor.getModalDialog(trigger));
   }
 
+  public LicenseActivationChecker enterMail(String email) {
+    dialog.getInputTextBox("ref-mail").setText(email);
+    return this;
+  }
+
+  public LicenseActivationChecker checkMail(String email) {
+    assertThat(dialog.getInputTextBox("ref-mail").textEquals(email));
+    return this;
+  }
+
   public static void enterLicense(Window window, final String email, final String code) {
     Integer.parseInt(code);
     enterLicense(window, new WindowHandler() {
@@ -62,12 +72,6 @@ public class LicenseActivationChecker extends GuiChecker {
     WindowInterceptor.init(registerMenu)
       .process(windowHandler)
       .run();
-  }
-
-  public LicenseActivationChecker checkCodeIsEmpty() {
-    UISpecAssert.assertThat(dialog.getInputTextBox("ref-mail").textIsEmpty());
-    UISpecAssert.assertThat(dialog.getInputTextBox("ref-code").textIsEmpty());
-    return this;
   }
 
   public LicenseActivationChecker checkActivationCodeIsEmptyAndMailIs(String mail) {
@@ -132,9 +136,10 @@ public class LicenseActivationChecker extends GuiChecker {
     close();
   }
 
-  public LicenseActivationChecker validateWithError() {
+  public LicenseActivationChecker validateWithError(String text) {
     dialog.getButton("Activate").click();
     assertThat(dialog.isVisible());
+    checkErrorMessage(text);
     return this;
   }
 
@@ -151,6 +156,16 @@ public class LicenseActivationChecker extends GuiChecker {
   public LicenseActivationChecker askForCode() throws Exception {
     Trigger trigger = dialog.getTextBox("messageSendNewCode").triggerClickOnHyperlink("Send a new code");
     trigger.run();
+    return this;
+  }
+
+  public LicenseActivationChecker checkActivationEnabled() {
+    assertThat(dialog.getButton("Activate").isEnabled());
+    return this;
+  }
+
+  public LicenseActivationChecker checkActivationDisabled() {
+    assertFalse(dialog.getButton("Activate").isEnabled());
     return this;
   }
 

@@ -13,9 +13,14 @@ import org.globsframework.gui.GlobsPanelBuilder;
 import org.globsframework.gui.SelectionService;
 import org.globsframework.gui.editors.GlobTextEditor;
 import org.globsframework.gui.splits.utils.GuiUtils;
+import org.globsframework.gui.utils.BooleanFieldListener;
+import org.globsframework.gui.utils.BooleanListener;
 import org.globsframework.model.*;
+import org.globsframework.model.format.GlobPrinter;
 import org.globsframework.model.repository.LocalGlobRepository;
 import org.globsframework.model.repository.LocalGlobRepositoryBuilder;
+import org.globsframework.model.utils.FieldChangeListener;
+import org.globsframework.model.utils.KeyChangeListener;
 import org.globsframework.utils.Strings;
 import org.globsframework.utils.Utils;
 import org.globsframework.utils.directory.DefaultDirectory;
@@ -85,6 +90,13 @@ public class LicenseActivationDialog {
       .setValidationAction(activateAction)
       .setNotifyOnKeyPressed(true);
 
+    localRepository.addChangeListener(new FieldChangeListener(User.ACTIVATION_CODE) {
+      public void update() {
+        activateAction.setEnabled(localRepository.contains(User.KEY) &&
+                                  Strings.isNotEmpty(localRepository.get(User.KEY).get(User.ACTIVATION_CODE)));
+      }
+    });
+
     GuiUtils.initHtmlComponent(askForNewCodeMessage);
     builder.add("messageSendNewCode", askForNewCodeMessage);
     updateSendNewCodeMessage(user);
@@ -104,9 +116,7 @@ public class LicenseActivationDialog {
     dialog.addPanelWithButton(builder.<JPanel>load(), closeAction);
     dialog.setCloseAction(closeAction);
 
-    Boolean isConnected = user.isTrue(User.CONNECTED);
-    connectionMessage.setVisible(!isConnected);
-    askForNewCodeMessage.setVisible(isConnected);
+    clearActivationErrorMessage();
 
     initRegisterChangeListener();
     dialog.pack();
@@ -118,7 +128,7 @@ public class LicenseActivationDialog {
       askForNewCodeMessage.setText(Lang.get("license.askForCode.noMail"));
     }
     else {
-      askForNewCodeMessage.setText(Lang.get("license.askForCode", mail));
+      askForNewCodeMessage.setText(Lang.get("license.askForCode"));
     }
   }
 
@@ -126,15 +136,6 @@ public class LicenseActivationDialog {
     changeSetListener = new AbstractChangeSetListener() {
       public void globsChanged(ChangeSet changeSet, GlobRepository repository) {
         if (changeSet.containsChanges(User.KEY)) {
-          boolean isConnected = updateConnectionState(repository);
-          if (!isConnected) {
-            return;
-          }
-          if (changeSet.containsChanges(User.KEY, User.CONNECTED)) {
-            selectionService.select(localRepository.get(User.KEY));
-            activateAction.setEnabled(true);
-          }
-          activateAction.setEnabled(true);
           connectionMessage.setVisible(false);
           Glob user = repository.get(User.KEY);
           activationState = LicenseActivationState.get(user.get(User.LICENSE_ACTIVATION_STATE));
@@ -143,16 +144,19 @@ public class LicenseActivationDialog {
               case ACTIVATION_IN_PROGRESS:
                 break;
               case ACTIVATION_OK:
-                showConfirmation();
+                showConfirmationPanel();
+                break;
+              case ACTIVATION_FAILED_CAN_NOT_CONNECT:
+                showActivationErrorMessage("license.connect");
                 break;
               case ACTIVATION_FAILED_MAIL_UNKNOWN:
-                updateDialogState("license.mail.unknown");
+                showActivationErrorMessage("license.mail.unknown");
                 break;
               case ACTIVATION_FAILED_MAIL_SENT:
-                updateDialogState("license.activation.failed.mailSent", localRepository.get(User.KEY).get(User.EMAIL));
+                showActivationErrorMessage("license.activation.failed.mailSent", localRepository.get(User.KEY).get(User.EMAIL));
                 break;
               default:
-                updateDialogState("license.activation.failed");
+                showActivationErrorMessage("license.activation.failed");
             }
           }
         }
@@ -170,20 +174,12 @@ public class LicenseActivationDialog {
     });
   }
 
-  private boolean updateConnectionState(GlobRepository repository) {
-    boolean isConnected = repository.get(User.KEY).isTrue(User.CONNECTED);
-    if (!isConnected) {
-      connectionMessage.setText(Lang.get("license.connect"));
-      connectionMessage.setVisible(true);
-      askForNewCodeMessage.setVisible(false);
-      selectionService.clear(User.TYPE);
-      activateAction.setEnabled(false);
-      progressPanel.stop();
-    }
-    return isConnected;
+  private void clearActivationErrorMessage() {
+    connectionMessage.setText(null);
+    connectionMessage.setVisible(true);
   }
 
-  private void updateDialogState(String message, String... args) {
+  private void showActivationErrorMessage(String message, String... args) {
     localRepository.rollback();
     localRepository.update(User.KEY, User.ACTIVATION_CODE, null);
     selectionService.select(localRepository.get(User.KEY));
@@ -198,7 +194,7 @@ public class LicenseActivationDialog {
     localRepository.update(User.KEY, User.ACTIVATION_CODE, null);
     localRepository.update(User.KEY, User.SIGNATURE, null);
     selectionService.select(localRepository.get(User.KEY));
-    updateConnectionState(localRepository);
+    clearActivationErrorMessage();
     mailEditor.getComponent().requestFocus();
     dialog.showCentered();
     builder.dispose();
@@ -222,7 +218,7 @@ public class LicenseActivationDialog {
           localRepository.update(User.KEY, User.IS_REGISTERED_USER, true);
           localRepository.commitChanges(false);
           localDirectory.get(UndoRedoService.class).cleanUndo();
-          showConfirmation();
+          showConfirmationPanel();
           return;
         }
         Utils.endRemove();
@@ -243,7 +239,7 @@ public class LicenseActivationDialog {
     }
   }
 
-  private void showConfirmation() {
+  private void showConfirmationPanel() {
     LicenseConfirmationFeedbackPanel confirmationPanel = new LicenseConfirmationFeedbackPanel(localRepository, localDirectory);
     confirmationPanel.install(dialog, localRepository.get(User.KEY).get(User.EMAIL), closeAction);
   }

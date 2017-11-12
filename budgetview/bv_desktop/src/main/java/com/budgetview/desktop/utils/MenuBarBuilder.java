@@ -15,7 +15,7 @@ import com.budgetview.desktop.feedback.actions.SendFeedbackAction;
 import com.budgetview.desktop.help.actions.GotoSupportAction;
 import com.budgetview.desktop.help.actions.GotoWebsiteAction;
 import com.budgetview.desktop.help.actions.SendLogsAction;
-import com.budgetview.desktop.license.activation.RegisterLicenseAction;
+import com.budgetview.desktop.license.activation.ActivateLicenseAction;
 import com.budgetview.desktop.license.dev.ShowLicenseExpirationAction;
 import com.budgetview.desktop.license.dev.SimulateLicenseRegistrationAction;
 import com.budgetview.desktop.mobile.DumpMobileXmlAction;
@@ -59,7 +59,7 @@ public class MenuBarBuilder {
   private SendImportedFileAction sendImportedFileAction;
   private PreferencesAction preferencesAction;
   private DeleteUserAction deleteUserAction;
-  private RegisterLicenseAction registerAction;
+  private ActivateLicenseAction activateLicenseAction;
   private Action threadsAction;
   private EditMobileAccountAction editMobileAccountAction;
   private PrintBudgetAction printBudgetAction;
@@ -84,7 +84,7 @@ public class MenuBarBuilder {
     this.restoreSnapshotMenuAction = new RestoreSnapshotMenuAction(directory, repository);
     this.sendImportedFileAction = new SendImportedFileAction(directory, repository);
     this.preferencesAction = new PreferencesAction(repository, directory);
-    this.registerAction = new RegisterLicenseAction(repository, directory);
+    this.activateLicenseAction = new ActivateLicenseAction(repository, directory);
     this.setPasswordAction = new SetPasswordAction(repository, directory);
     this.deleteUserAction = deleteUserAction;
     this.printBudgetAction = new PrintBudgetAction(replicationGlobRepository, directory);
@@ -127,7 +127,7 @@ public class MenuBarBuilder {
     }
 
     menu.addSeparator();
-    menu.add(registerAction);
+    menu.add(activateLicenseAction);
 
     menu.add(setPasswordAction);
     menu.add(logoutAction);

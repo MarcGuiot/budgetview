@@ -20,6 +20,8 @@ import java.io.File;
 import java.util.Locale;
 
 public abstract class ConnectedTestCase extends UISpecTestCase {
+
+  protected LicenseServerChecker licenseServer;
   protected MailServerChecker mailServer;
   protected FtpServerChecker ftpServer;
   protected LicenseDbChecker db;
@@ -27,7 +29,9 @@ public abstract class ConnectedTestCase extends UISpecTestCase {
 
   protected static final String PATH_TO_DATA = "tmp/localprevayler";
   protected static final File MOBILE_DATA_DIR = new File("/var/tmp/bv_mobile/");
-  protected LicenseServerChecker licenseServer;
+  public static final String LICENSE_SERVER_URL = "http://localhost:5000";
+  public static final String MOBILE_SERVER_URL = "http://localhost:8088";
+
 
   protected void setUp() throws Exception {
     super.setUp();
@@ -38,8 +42,8 @@ public abstract class ConnectedTestCase extends UISpecTestCase {
     System.setProperty("budgetview.log.sout", "true");
 
     System.setProperty(SingleApplicationInstanceListener.SINGLE_INSTANCE_DISABLED, "true");
-    System.setProperty(LicenseConstants.LICENSE_URL_PROPERTY, "http://localhost:" + httpPort);
-    System.setProperty(MobileConstants.SERVER_URL_PROPERTY, "http://localhost:" + httpPort);
+    System.setProperty(LicenseConstants.LICENSE_URL_PROPERTY, LICENSE_SERVER_URL);
+    System.setProperty(MobileConstants.SERVER_URL_PROPERTY, MOBILE_SERVER_URL);
     System.setProperty(LicenseConstants.FTP_URL_PROPERTY, "ftp://localhost:12000");
 
     System.setProperty(WebServer.HTTP_PORT_PROPERTY, Integer.toString(httpPort));

@@ -8,16 +8,16 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 
-public class RegisterLicenseAction extends AbstractAction {
+public class ActivateLicenseAction extends AbstractAction {
   private Frame parent;
   private GlobRepository repository;
   private Directory directory;
 
-  public RegisterLicenseAction(GlobRepository repository, Directory directory) {
+  public ActivateLicenseAction(GlobRepository repository, Directory directory) {
     this(Lang.get("license.register"), repository, directory);
   }
 
-  public RegisterLicenseAction(String text, GlobRepository repository, Directory directory) {
+  public ActivateLicenseAction(String text, GlobRepository repository, Directory directory) {
     super(text);
     this.parent = directory.get(JFrame.class);
     this.repository = repository;

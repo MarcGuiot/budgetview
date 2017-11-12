@@ -45,7 +45,7 @@ public class ServerMailingService {
     }
 
     public void run() {
-      final String url = LicenseConstants.getServerUrl(LicenseConstants.REQUEST_SEND_MAIL);
+      final String url = LicenseConstants.getServerUrl(LicenseConstants.SEND_MAIL_TO_US);
       Http.Post post = createPost(url);
       HttpResponse response;
       try {
@@ -59,7 +59,6 @@ public class ServerMailingService {
           response = post.execute();
         }
         ConnectionStatus.setOk(repository);
-        Log.write("[ServerMailing] Mail sent");
       }
       catch (final Exception e) {
         Log.write("[ServerMailing] Send mail raised exception", e);
@@ -79,6 +78,7 @@ public class ServerMailingService {
       if (statusCode == 200) {
         SwingUtilities.invokeLater(new Runnable() {
           public void run() {
+            Log.write("[ServerMailing] Mail sent");
             listener.sent(fromMail, title, content);
           }
         });
@@ -86,7 +86,7 @@ public class ServerMailingService {
       else {
         SwingUtilities.invokeLater(new Runnable() {
           public void run() {
-            Log.write("[ServerMailing] Mail not sent with error code " + statusCode + " for " + url + " with content: " + content);
+            Log.write("[ServerMailing] Mail not sent - error code " + statusCode + " for " + url + " with content: " + content);
             listener.sendFailed(fromMail, title, content);
           }
         });

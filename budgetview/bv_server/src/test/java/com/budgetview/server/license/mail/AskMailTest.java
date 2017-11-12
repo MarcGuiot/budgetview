@@ -52,7 +52,7 @@ public class AskMailTest extends ConnectedTestCase {
   }
 
   private HttpResponse sendRequest(String lang) throws IOException {
-    HttpPost postMethod = new HttpPost("http://localhost:" + httpPort + "/mailTo");
+    HttpPost postMethod = new HttpPost(LICENSE_SERVER_URL + "/mailTo");
     postMethod.getParams().setParameter(CoreProtocolPNames.HTTP_CONTENT_CHARSET, "UTF-8");
     postMethod.getParams().setParameter(CoreProtocolPNames.HTTP_ELEMENT_CHARSET, "UTF-8");
     postMethod.setHeader(LicenseConstants.HEADER_MAIL_FROM, "monPremierClient@pirate.du");
@@ -61,7 +61,7 @@ public class AskMailTest extends ConnectedTestCase {
   }
 
   public void testAddInDbIfBadAdress() throws Exception {
-    HttpPost postMethod = new HttpPost("http://localhost:" + httpPort + "/mailTo");
+    HttpPost postMethod = new HttpPost(LICENSE_SERVER_URL + "/mailTo");
     String badMail = "monPremierClient@pirate";
     postMethod.getParams().setParameter(CoreProtocolPNames.HTTP_CONTENT_CHARSET, "UTF-8");
     postMethod.getParams().setParameter(CoreProtocolPNames.HTTP_ELEMENT_CHARSET, "UTF-8");

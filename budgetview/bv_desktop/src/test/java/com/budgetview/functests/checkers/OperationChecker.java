@@ -7,6 +7,7 @@ import com.budgetview.desktop.utils.DataCheckerAction;
 import com.budgetview.desktop.utils.DumpDataAction;
 import com.budgetview.desktop.utils.DumpUndoStackAction;
 import com.budgetview.desktop.utils.dev.*;
+import com.budgetview.functests.checkers.license.LicenseActivationChecker;
 import com.budgetview.functests.checkers.mobile.CreateMobileAccountChecker;
 import com.budgetview.functests.checkers.mobile.EditMobileAccountChecker;
 import com.budgetview.functests.checkers.printing.PrintDialogChecker;
@@ -669,6 +670,10 @@ public class OperationChecker {
 
   private MenuItem getRedoMenu() {
     return getEditMenu().getSubMenu(Lang.get("redo"));
+  }
+
+  public LicenseActivationChecker openActivationDialog() {
+    return LicenseActivationChecker.open(getFileMenu().getSubMenu(Lang.get("license.register")).triggerClick());
   }
 
   public NotesDialogChecker openNotes() {
