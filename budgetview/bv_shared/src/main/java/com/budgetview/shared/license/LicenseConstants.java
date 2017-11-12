@@ -78,10 +78,6 @@ public class LicenseConstants {
     }
   }
 
-  public static boolean isServerUrlSet() {
-    return Strings.isNotEmpty(System.getProperty(LICENSE_URL_PROPERTY));
-  }
-
   public static String getServerUrl(String path) {
     String url = PROD_SERVER_URL + path;
     Utils.beginRemove();

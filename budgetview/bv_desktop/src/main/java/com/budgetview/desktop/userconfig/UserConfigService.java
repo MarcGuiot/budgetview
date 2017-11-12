@@ -95,9 +95,6 @@ public class UserConfigService {
     }
 
     final String signature = signatureInByte == null ? null : Encoder.byteToString(signatureInByte);
-    if (!LicenseConstants.isServerUrlSet()) {
-      return isValidUser;
-    }
 
     Thread request = new Thread() {
       {
@@ -105,9 +102,6 @@ public class UserConfigService {
       }
 
       public void run() {
-        if (!LicenseConstants.isServerUrlSet()) {
-          return;
-        }
         boolean connectionEstablished = false;
         while (!connectionEstablished) {
           try {
@@ -134,11 +128,6 @@ public class UserConfigService {
   }
 
   synchronized public void sendLicenseActivationRequest(String mail, String code, final GlobRepository repository) {
-    Utils.beginRemove();
-    if (!LicenseConstants.isServerUrlSet()) {
-      return;
-    }
-    Utils.endRemove();
     String url = LicenseConstants.getServerUrl(LicenseConstants.REQUEST_FOR_REGISTER);
     Http.Post postRequest = Http.utf8Post(url)
       .setHeader(LicenseConstants.HEADER_MAIL_FROM, mail)
@@ -191,6 +180,7 @@ public class UserConfigService {
       HttpResponse response = postRequest.executeWithRetry();
       int statusCode = response.getStatusLine().getStatusCode();
       if (statusCode != 200) {
+        Log.write("UserConfigService unexpected reponse " + statusCode + " ");
         return false;
       }
 
@@ -392,12 +382,6 @@ public class UserConfigService {
   }
 
   public Boolean isVerifiedServerValidity() {
-    Utils.beginRemove();
-    if (!LicenseConstants.isServerUrlSet()) {
-      userState = new CompletedUserState("local");
-      return true;
-    }
-    Utils.endRemove();
     return userState.isVerifiedServerValidity();
   }
 
