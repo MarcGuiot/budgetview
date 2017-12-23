@@ -199,6 +199,7 @@
       <page file="boutique/abonnement-reussi.html" title="Votre compte BudgetView Sync est activé"/>
       <page file="boutique/nouvelle-carte.html" title="Votre nouvelle carte est bien prise en compte"/>
       <page file="boutique/code-invalide.html" title="Ce lien d'activation est invalide"/>
+      <page file="boutique/lien-deja-utilise.html" title="Ce lien a déjà été utilisé"/>
       <page file="boutique/code-expire.html" title="Votre code d'activation a expiré"/>
       <page file="boutique/erreur.html" title="Une erreur est survenue"/>
     </page>

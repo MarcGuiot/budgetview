@@ -7,6 +7,7 @@ import org.apache.commons.net.ftp.FTPFile;
 import org.apache.commons.net.ftp.FTPReply;
 
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -117,7 +118,7 @@ public class FtpFileAccess extends AbstractFileAccess {
     if (!applyChanges) {
       return;
     }
-    fileTree.update(remotePath, new ByteArrayInputStream(content.getBytes("UTF-8")));
+    fileTree.update(remotePath, new ByteArrayInputStream(content.getBytes(StandardCharsets.UTF_8.name())));
   }
 
   public void uploadFile(String path, File file) throws IOException {
@@ -160,17 +161,19 @@ public class FtpFileAccess extends AbstractFileAccess {
       }
 
       public void updateFile(String name, InputStream inputStream) throws IOException {
-        System.out.println("upload " + name);
+        boolean isText = isTextField(name);
+        System.out.print("upload " + name + " [" + (isText ? "text" : "bin") + "] ");
         FTPClient ftp = getFTP();
         ftp.deleteFile(name);
-        if (isTextField(name)) {
+        if (isText) {
           ftp.setFileType(FTP.ASCII_FILE_TYPE);
         }
         else {
           ftp.setFileType(FTP.BINARY_FILE_TYPE);
         }
         try {
-          ftp.storeFile(name, inputStream);
+          boolean result = ftp.storeFile(name, inputStream);
+          System.out.println(result ? "ok" : "failed");
         }
         catch (Exception e) {
           throw new RuntimeException(e);
