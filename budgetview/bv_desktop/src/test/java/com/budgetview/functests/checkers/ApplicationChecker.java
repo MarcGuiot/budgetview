@@ -140,7 +140,7 @@ public class ApplicationChecker extends GuiChecker {
     return addOns;
   }
 
-  public NewVersionChecker getNewVersion() {
+  public NewVersionChecker getNewVersionFooter() {
     checkApplicationStarted();
     if (newVersion == null) {
       newVersion = new NewVersionChecker(window);

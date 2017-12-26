@@ -47,4 +47,5 @@ public class FooterBannerChecker extends GuiChecker {
     }
     return panel;
   }
+
 }

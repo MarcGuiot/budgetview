@@ -1,5 +1,6 @@
 package com.budgetview.server.license;
 
+import com.budgetview.server.cloud.servlet.DesktopVersionServlet;
 import com.budgetview.server.cloud.utils.CloudDb;
 import com.budgetview.server.common.ServerStatusServlet;
 import com.budgetview.server.config.ConfigService;
@@ -63,6 +64,7 @@ public class LicenseServer {
     webServer.add(new SendMailServlet(directory), LicenseConstants.SEND_MAIL_TO_US);
     webServer.add(new SendUseInfoServlet(), LicenseConstants.SEND_USE_INFO);
     webServer.add(new ServerStatusServlet(directory), LicenseConstants.SERVER_STATUS);
+    webServer.add(new DesktopVersionServlet(directory), LicenseConstants.DESKTOP_VERSION);
   }
 
   public void addServlet(HttpServlet servlet, String name) {

@@ -176,6 +176,19 @@ public class Files {
     outputStream.close();
   }
 
+  public static void loadProperties(Properties properties, String propertiesFile) throws ResourceAccessFailed {
+    File file = new File(propertiesFile);
+    if (!file.exists()) {
+      throw new ResourceAccessFailed("Properties file not found: " + file.getAbsolutePath());
+    }
+    try {
+      properties.load(new FileInputStream(propertiesFile));
+    }
+    catch (IOException e) {
+      throw new ResourceAccessFailed("Could not load properties file: " + propertiesFile, e);
+    }
+  }
+
   public static Properties loadProperties(Class refClass, String fileName) throws ResourceAccessFailed {
     InputStream stream = getStream(refClass, fileName);
     Properties properties = new Properties();

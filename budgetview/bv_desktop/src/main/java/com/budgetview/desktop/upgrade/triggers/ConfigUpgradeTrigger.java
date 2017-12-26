@@ -1,5 +1,6 @@
-package com.budgetview.desktop.upgrade;
+package com.budgetview.desktop.upgrade.triggers;
 
+import com.budgetview.desktop.upgrade.UpgradeService;
 import com.budgetview.model.Account;
 import com.budgetview.model.AppVersionInformation;
 import com.budgetview.model.UserVersionInformation;

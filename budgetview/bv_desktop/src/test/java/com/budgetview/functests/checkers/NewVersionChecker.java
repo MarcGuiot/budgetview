@@ -5,27 +5,29 @@ import org.uispec4j.Window;
 
 public class NewVersionChecker {
 
-  private FooterBannerChecker footerBanner;
+  private FooterBannerChecker footer;
 
   public NewVersionChecker(Window mainWindow) {
-    this.footerBanner = new FooterBannerChecker(mainWindow, "newVersionView");
+    this.footer = new FooterBannerChecker(mainWindow, "newVersionView");
   }
 
-  public NewVersionChecker checkNewVersionShown() {
-    footerBanner.checkVisible("new version");
+  public NewVersionChecker checkNewVersionShown(String message) {
+    footer.checkVisible(message);
     return this;
   }
 
-  public NewVersionChecker checkNoNewVersionShown() {
-    footerBanner.checkHidden();
+  public NewVersionChecker checkHidden() {
+    footer.checkHidden();
     return this;
   }
 
-  public void checkLink(String url) {
-    BrowsingChecker.checkDisplay(footerBanner.getActionButton(), url);
+  public NewVersionChecker checkLink(String url) {
+    BrowsingChecker.checkDisplay(footer.getActionButton(), url);
+    return this;
   }
 
-  public void hide() {
-    footerBanner.hide();
+  public NewVersionChecker hide() {
+    footer.hide();
+    return this;
   }
 }

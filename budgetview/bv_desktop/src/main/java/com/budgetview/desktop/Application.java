@@ -24,6 +24,7 @@ import com.budgetview.desktop.time.TimeService;
 import com.budgetview.desktop.upgrade.UpgradeService;
 import com.budgetview.desktop.userconfig.UserConfigService;
 import com.budgetview.desktop.utils.*;
+import com.budgetview.desktop.version.NewVersionService;
 import com.budgetview.shared.encryption.MD5PasswordBasedEncryptor;
 import com.budgetview.shared.encryption.PasswordBasedEncryptor;
 import com.budgetview.shared.encryption.RedirectPasswordBasedEncryptor;
@@ -315,6 +316,7 @@ public class Application {
     wrapper.add(new CloudService());
     wrapper.add(PrinterService.class, new DefaultPrinterService());
     wrapper.add(new AddOnService());
+    wrapper.add(new NewVersionService());
 
     NotificationService notificationService = new NotificationService();
     notificationService.addHandler(new AccountPositionNotificationHandler());

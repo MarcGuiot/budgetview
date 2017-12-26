@@ -4,6 +4,7 @@ import com.budgetview.server.config.ConfigService;
 import com.budgetview.server.utils.Servlets;
 import com.budgetview.server.web.WebServer;
 import org.apache.log4j.Logger;
+import org.globsframework.utils.exceptions.ResourceAccessFailed;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -20,7 +21,7 @@ public class WebsiteStubServer {
   private WebServer webServer;
   private String lastVisitedPage;
 
-  public WebsiteStubServer(String... args) throws IOException {
+  public WebsiteStubServer(String... args) throws ResourceAccessFailed {
     ConfigService configService = new ConfigService(args);
     this.webServer = new WebServer(configService);
   }

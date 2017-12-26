@@ -1,4 +1,4 @@
-package com.budgetview.desktop.upgrade;
+package com.budgetview.desktop.upgrade.triggers;
 
 import com.budgetview.model.Series;
 import com.budgetview.model.Transaction;

@@ -41,7 +41,7 @@ import com.budgetview.desktop.signpost.guides.ImportSignpost;
 import com.budgetview.desktop.startup.components.DemoMessageView;
 import com.budgetview.desktop.startup.components.LogoutService;
 import com.budgetview.desktop.startup.components.OpenRequestManager;
-import com.budgetview.desktop.summary.version.NewVersionView;
+import com.budgetview.desktop.version.NewVersionView;
 import com.budgetview.desktop.time.TimeView;
 import com.budgetview.desktop.title.PeriodView;
 import com.budgetview.desktop.transactions.TransactionView;
@@ -92,6 +92,7 @@ public class MainPanel {
   private CategorizationSelector categorizationSelector;
   private DashboardView dashboardView;
   private final BudgetView budgetView;
+  private NewVersionView newVersionView;
 
   public static MainPanel init(GlobRepository repository, Directory directory, WindowManager mainWindow) {
     LayoutConfig.init(repository, directory);
@@ -174,6 +175,7 @@ public class MainPanel {
     analysisSelector = new AnalysisSelector(repository, directory);
     signpostView = new SignpostView(replicationGlobRepository, directory);
     dashboardView = new DashboardView(repository, directory);
+    newVersionView = new NewVersionView(repository, directory);
     createPanel(
       periodView,
       new AccountView(replicationGlobRepository, directory),
@@ -181,7 +183,7 @@ public class MainPanel {
       new LicenseInfoView(repository, directory),
       transactionView,
       timeView,
-      new NewVersionView(repository, directory),
+      newVersionView,
       new DemoMessageView(repository, directory),
       categorizationSelector,
       categorizationView,
@@ -228,6 +230,7 @@ public class MainPanel {
     cardView.showInitialCard();
     budgetView.reset();
     dashboardView.reset();
+    newVersionView.reset();
     transactionView.reset();
     categorizationSelector.reset();
     directory.get(NavigationService.class).reset();

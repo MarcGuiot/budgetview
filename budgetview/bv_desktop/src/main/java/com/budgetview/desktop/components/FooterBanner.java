@@ -15,20 +15,29 @@ public class FooterBanner {
 
   private GlobRepository repository;
   private Directory directory;
-  private String message;
   private boolean withHideButton;
   private Action action;
+  private JLabel messageLabel = new JLabel();
   private JButton hideButton;
 
   private boolean forceHidden = false;
 
   public FooterBanner(String message, Action action, boolean withHideButton, GlobRepository repository, Directory directory) {
-    this.message = message;
+    this.messageLabel.setText(message);
     this.withHideButton = withHideButton;
     this.repository = repository;
     this.directory = directory;
     this.action = action;
     createPanel();
+  }
+
+  public void show(String message) {
+    this.messageLabel.setText(message);
+    setVisible(true);
+  }
+
+  public void hide() {
+    setVisible(false);
   }
 
   public void setVisible(boolean visible) {
@@ -44,8 +53,7 @@ public class FooterBanner {
 
     GlobsPanelBuilder builder = new GlobsPanelBuilder(getClass(), "/layout/components/footerBanner.splits",
                                                       repository, directory);
-
-    builder.add("message", new JLabel(message));
+    builder.add("message", messageLabel);
     builder.add("action", action);
     hideButton = new JButton(new HideAction());
     builder.add("hideButton", hideButton);

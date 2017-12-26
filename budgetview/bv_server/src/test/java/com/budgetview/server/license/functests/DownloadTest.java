@@ -8,7 +8,6 @@ import com.budgetview.functests.checkers.MessageDialogChecker;
 import com.budgetview.functests.utils.OfxBuilder;
 import com.budgetview.server.license.checkers.FtpServerChecker;
 import com.budgetview.functests.checkers.ApplicationChecker;
-import com.budgetview.functests.checkers.NewVersionChecker;
 import com.budgetview.functests.checkers.license.LicenseActivationChecker;
 import com.budgetview.server.license.ConnectedTestCase;
 import com.budgetview.server.license.model.SoftwareInfo;
@@ -118,8 +117,6 @@ public class DownloadTest extends ConnectedTestCase {
     application.start();
     retr.assertOk();
 
-    application.getNewVersion().checkNewVersionShown();
-
     String ofxFile = OfxBuilder.init(this)
       .addBankAccount(4321, -2, "1111", 123.3, "10/09/2008")
       .addTransaction("2008/09/10", -100., "STUPID HEADER blabla")
@@ -186,12 +183,6 @@ public class DownloadTest extends ConnectedTestCase {
     FtpServerChecker.Retr retr = ftpServer.setFtpReply(jarName, "jar content", configJarName, generateConfigContent());
     startServersWithoutLicence();
     retr.assertOk();
-
-    NewVersionChecker newVersion = application.getNewVersion();
-    newVersion.checkNewVersionShown();
-    newVersion.checkLink("https://www.mybudgetview.fr/support/derniers-changements");
-    newVersion.hide();
-    newVersion.checkNoNewVersionShown();
 
     application.getTransactions().initContent()
       .add("10/09/2008", TransactionType.VIREMENT, "GOOD HEADER", "", -100.00) // le plugin specific de banque n'est pas appelé

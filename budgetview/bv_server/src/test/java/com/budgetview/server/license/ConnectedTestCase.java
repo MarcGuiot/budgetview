@@ -64,11 +64,8 @@ public abstract class ConnectedTestCase extends UISpecTestCase {
     db =  new LicenseDbChecker();
     licenseServer = new LicenseServerChecker();
 
-//    Protocol http = new Protocol("http", new DefaultProtocolSocketFactory(), httpPort);
-//    Protocol.registerProtocol("http", http);
-
     ftpServer = new FtpServerChecker(12000);
-    UISpec4J.setAssertionTimeLimit(10000);  //=> l'envoie de mail est parfois res long
+    UISpec4J.setAssertionTimeLimit(10000);  //=> l'envoi de mail est parfois très long
   }
 
   protected void tearDown() throws Exception {

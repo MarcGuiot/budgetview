@@ -22,6 +22,7 @@ public class LicenseConstants {
   public static final String REQUEST_FOR_MAIL = "/mailTo";
   public static final String SEND_MAIL_TO_US = "/sendMailToUs";
   public static final String SERVER_STATUS = "/server-status";
+  public static final String DESKTOP_VERSION = "/desktop-version";
   public static final String SEND_USE_INFO = "/sendUseInfo";
 
   public static final String HEADER_MAIL_FROM = "mail";

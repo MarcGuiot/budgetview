@@ -1,4 +1,4 @@
-package com.budgetview.desktop.upgrade;
+package com.budgetview.desktop.upgrade.triggers;
 
 import org.globsframework.model.GlobRepository;
 

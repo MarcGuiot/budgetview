@@ -1,21 +1,14 @@
 package com.budgetview.server.license.tools;
 
 import com.budgetview.server.config.ConfigService;
-import com.budgetview.server.license.model.License;
 import com.budgetview.server.license.generator.LicenseGenerator;
+import com.budgetview.server.license.model.License;
 import com.budgetview.server.license.utils.LicenseDb;
-import org.globsframework.sqlstreams.SqlConnection;
 import org.globsframework.sqlstreams.GlobsDatabase;
-import org.globsframework.sqlstreams.drivers.jdbc.JdbcGlobsDatabase;
-
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.List;
+import org.globsframework.sqlstreams.SqlConnection;
 
 public class AddUser {
-  public static void main(String... args) throws IOException {
+  public static void main(String... args) {
     if (args.length < 2) {
       System.out.println("Usage: AddCloudUser <config_file> <email_address> <email_address> ...");
       return;

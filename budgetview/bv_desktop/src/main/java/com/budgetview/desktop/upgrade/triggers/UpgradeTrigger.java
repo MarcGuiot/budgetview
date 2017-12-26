@@ -1,4 +1,4 @@
-package com.budgetview.desktop.upgrade;
+package com.budgetview.desktop.upgrade.triggers;
 
 import com.budgetview.desktop.Application;
 import com.budgetview.desktop.PicsouInit;
@@ -6,6 +6,7 @@ import com.budgetview.desktop.accounts.utils.AccountMatchers;
 import com.budgetview.desktop.projects.upgrade.ProjectUpgradeV40;
 import com.budgetview.desktop.series.upgrade.SeriesUpgradeV40;
 import com.budgetview.desktop.series.utils.SeriesErrorsUpgrade;
+import com.budgetview.desktop.upgrade.UpgradeService;
 import com.budgetview.desktop.utils.FrameSize;
 import com.budgetview.io.importer.analyzer.TransactionAnalyzerFactory;
 import com.budgetview.model.*;

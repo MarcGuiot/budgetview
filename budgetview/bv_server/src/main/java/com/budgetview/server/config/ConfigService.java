@@ -1,13 +1,12 @@
 package com.budgetview.server.config;
 
+import org.globsframework.utils.Files;
 import org.globsframework.utils.Strings;
 import org.globsframework.utils.exceptions.InvalidParameter;
 import org.globsframework.utils.exceptions.OperationDenied;
+import org.globsframework.utils.exceptions.ResourceAccessFailed;
 
 import java.io.Console;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
 import java.util.Properties;
 
 public class ConfigService {
@@ -18,13 +17,8 @@ public class ConfigService {
 
     private ConfigService configService;
 
-    public Builder() {
-      try {
-        configService = new ConfigService();
-      }
-      catch (IOException e) {
-        throw new RuntimeException(e);
-      }
+    public Builder() throws ResourceAccessFailed {
+      configService = new ConfigService();
     }
 
     public Builder set(String property, String value) {
@@ -46,24 +40,15 @@ public class ConfigService {
     return new Builder();
   }
 
-  public ConfigService(String... args) throws IOException, InvalidParameter {
+  public ConfigService(String... args) throws ResourceAccessFailed, InvalidParameter {
     if (args.length < 1) {
       throw new InvalidParameter("Expecting first command-line argument: <properties_file_path>");
     }
     loadProperties(args[0]);
   }
 
-  private void loadProperties(String propertiesFile) throws IOException {
-    File file = new File(propertiesFile);
-    if (!file.exists()) {
-      throw new IOException("Properties file not found: " + file.getAbsolutePath());
-    }
-    try {
-      properties.load(new FileInputStream(propertiesFile));
-    }
-    catch (IOException e) {
-      throw new IOException("Could not load properties file: " + propertiesFile, e);
-    }
+  private void loadProperties(String propertiesFile) throws ResourceAccessFailed {
+    Files.loadProperties(properties, propertiesFile);
   }
 
   public String get(String property) {
