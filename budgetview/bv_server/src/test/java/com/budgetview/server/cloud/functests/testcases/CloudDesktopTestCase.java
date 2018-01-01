@@ -1,5 +1,6 @@
 package com.budgetview.server.cloud.functests.testcases;
 
+import com.budgetview.functests.checkers.cloud.AutoCloudImportChecker;
 import com.budgetview.functests.utils.LoggedInFunctionalTestCase;
 import com.budgetview.server.cloud.functests.checkers.*;
 import com.budgetview.server.cloud.utils.WebsiteUrls;
@@ -17,6 +18,7 @@ public abstract class CloudDesktopTestCase extends LoggedInFunctionalTestCase {
   protected SubscriptionChecker subscriptions;
   protected PaymentChecker payments;
   protected WebsiteChecker website;
+  protected AutoCloudImportChecker autoImport;
 
   public void setUp() throws Exception {
     createDefaultSeries = true;
@@ -58,9 +60,15 @@ public abstract class CloudDesktopTestCase extends LoggedInFunctionalTestCase {
     subscriptions = null;
     website.stopServer();
     website = null;
+    autoImport = null;
 
     super.tearDown();
 
     WebServerTestUtils.waitForPorts(8080, 8085);
+  }
+
+  protected void initCheckers() {
+    super.initCheckers();
+    autoImport = new AutoCloudImportChecker(mainWindow);
   }
 }

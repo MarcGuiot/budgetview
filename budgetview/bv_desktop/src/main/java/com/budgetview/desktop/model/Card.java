@@ -15,7 +15,7 @@ import org.globsframework.utils.exceptions.ItemNotFound;
 import static org.globsframework.model.FieldValue.value;
 
 public enum Card implements GlobConstantContainer {
-  HOME("home", 0),
+  DASHBOARD("home", 0),
   CATEGORIZATION("categorization", 1),
   BUDGET("budget", 2),
   ANALYSIS("analysis", 3),
@@ -63,7 +63,7 @@ public enum Card implements GlobConstantContainer {
   public static Card get(int id) {
     switch (id) {
       case 0:
-        return HOME;
+        return DASHBOARD;
       case 1:
         return CATEGORIZATION;
       case 2:

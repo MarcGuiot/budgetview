@@ -1,6 +1,5 @@
 package com.budgetview.io.importer.ofx;
 
-import com.budgetview.desktop.components.dialogs.PicsouDialog;
 import com.budgetview.desktop.importer.utils.InvalidFileFormat;
 import com.budgetview.desktop.time.TimeService;
 import com.budgetview.io.importer.AccountFileImporter;
@@ -21,10 +20,12 @@ import org.globsframework.utils.Utils;
 import org.globsframework.utils.collections.MultiMap;
 import org.globsframework.utils.exceptions.TruncatedFile;
 
+import java.awt.*;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.List;
 
 import static org.globsframework.model.FieldValue.value;
 
@@ -36,7 +37,7 @@ public class OfxImporter implements AccountFileImporter {
 
   public GlobList loadTransactions(TypedInputStream inputStream,
                                    GlobRepository initialRepository,
-                                   GlobRepository targetRepository, PicsouDialog current) throws TruncatedFile {
+                                   GlobRepository targetRepository, Window parent) throws TruncatedFile {
     OfxParser parser = new OfxParser();
     try {
       Functor functor = new Functor(targetRepository, inputStream.getFileName());

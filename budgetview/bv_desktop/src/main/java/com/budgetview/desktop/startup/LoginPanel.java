@@ -142,7 +142,7 @@ public class LoginPanel {
     logUser(AUTOLOG_USER, AUTOLOG_USER.toCharArray(), createUser, true);
   }
 
-  public JPanel preparePanelForShow(java.util.List<DataAccess.UserInfo> users) {
+  public JPanel prepareForDisplay(java.util.List<DataAccess.UserInfo> users) {
     setComponentsEnabled(true);
     autoLoginUser = null;
     for (DataAccess.UserInfo user : users) {

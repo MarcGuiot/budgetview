@@ -16,22 +16,22 @@ import javax.swing.*;
 import java.util.*;
 
 public class TimeViewChecker extends GuiChecker {
-  protected TimeViewPanel timeViewPanel;
+  private TimeViewPanel timeViewPanel;
+  private Panel mainWindow;
 
-  public TimeViewChecker(Panel panel) {
-    Panel table = panel.getPanel("timeView");
-    timeViewPanel = (TimeViewPanel) table.getAwtComponent();
+  public TimeViewChecker(Panel mainWindow) {
+    this.mainWindow = mainWindow;
   }
 
   public void assertEmpty() {
-    Set<Selectable> selectables = timeViewPanel.getCurrentlySelectedToUpdate();
+    Set<Selectable> selectables = getTimeViewPanel().getCurrentlySelectedToUpdate();
     Assert.assertTrue("Contains: " + selectables, selectables.isEmpty());
   }
 
   public void checkDisplays(String... months) {
     long end = System.currentTimeMillis() + 1000;
     GlobList list = new GlobList();
-    timeViewPanel.getAllSelectableMonth(list);
+    getTimeViewPanel().getAllSelectableMonth(list);
     while (list.size() != months.length && System.currentTimeMillis() < end) {
       try {
         Thread.sleep(50);
@@ -39,7 +39,7 @@ public class TimeViewChecker extends GuiChecker {
       catch (InterruptedException e) {
       }
       list.clear();
-      timeViewPanel.getAllSelectableMonth(list);
+      getTimeViewPanel().getAllSelectableMonth(list);
     }
     List<Integer> expectedIds = new ArrayList<Integer>();
     for (String month : months) {
@@ -52,7 +52,7 @@ public class TimeViewChecker extends GuiChecker {
   public void checkSelection(final String... yyyymm) {
     UISpecAssert.assertThat(new Assertion() {
       public void check() {
-        Set<Selectable> list = timeViewPanel.getCurrentlySelectedToUpdate();
+        Set<Selectable> list = getTimeViewPanel().getCurrentlySelectedToUpdate();
         GlobList selectedMonths = new GlobList();
         for (Selectable selectable : list) {
           selectable.getSelectedGlobs(selectedMonths);
@@ -73,13 +73,13 @@ public class TimeViewChecker extends GuiChecker {
    * @deprecated
    */
   public void selectCell(int index) {
-    timeViewPanel.selectMonthByIndex(index);
+    getTimeViewPanel().selectMonthByIndex(index);
   }
 
   public void selectMonth(final int monthId) throws Exception {
     SwingUtilities.invokeAndWait(new Runnable() {
       public void run() {
-        timeViewPanel.selectMonths(Collections.singleton(monthId));
+        getTimeViewPanel().selectMonths(Collections.singleton(monthId));
       }
     });
   }
@@ -96,7 +96,7 @@ public class TimeViewChecker extends GuiChecker {
     }
     SwingUtilities.invokeAndWait(new Runnable() {
       public void run() {
-        timeViewPanel.selectMonths(monthSet);
+        getTimeViewPanel().selectMonths(monthSet);
       }
     });
   }
@@ -108,7 +108,7 @@ public class TimeViewChecker extends GuiChecker {
     }
     SwingUtilities.invokeAndWait(new Runnable() {
       public void run() {
-        timeViewPanel.selectMonths(monthIds);
+        getTimeViewPanel().selectMonths(monthIds);
       }
     });
   }
@@ -116,7 +116,7 @@ public class TimeViewChecker extends GuiChecker {
   public void selectLast() throws Exception {
     SwingUtilities.invokeAndWait(new Runnable() {
       public void run() {
-        timeViewPanel.selectLastMonth();
+        getTimeViewPanel().selectLastMonth();
       }
     });
   }
@@ -124,7 +124,7 @@ public class TimeViewChecker extends GuiChecker {
   public void selectNone() throws Exception {
     SwingUtilities.invokeAndWait(new Runnable() {
       public void run() {
-        timeViewPanel.selectMonths(Collections.<Integer>emptySet());
+        getTimeViewPanel().selectMonths(Collections.<Integer>emptySet());
       }
     });
   }
@@ -132,7 +132,7 @@ public class TimeViewChecker extends GuiChecker {
   public void selectAll() throws Exception {
     SwingUtilities.invokeAndWait(new Runnable() {
       public void run() {
-        timeViewPanel.selectAll();
+        getTimeViewPanel().selectAll();
       }
     });
   }
@@ -140,7 +140,7 @@ public class TimeViewChecker extends GuiChecker {
   public void checkSpanEquals(String fromYyyyMm, String toYyyyMm) {
     long end = System.currentTimeMillis() + 1000;
     GlobList list = new GlobList();
-    timeViewPanel.getAllSelectableMonth(list);
+    getTimeViewPanel().getAllSelectableMonth(list);
     while (list.size() < 2 && System.currentTimeMillis() < end) {
       try {
         Thread.sleep(50);
@@ -148,7 +148,7 @@ public class TimeViewChecker extends GuiChecker {
       catch (InterruptedException e) {
       }
       list.clear();
-      timeViewPanel.getAllSelectableMonth(list);
+      getTimeViewPanel().getAllSelectableMonth(list);
     }
     Assert.assertTrue(list.size() >= 2);
     Assert.assertEquals(fromYyyyMm, Month.toString(list.get(0).get(Month.ID)));
@@ -156,8 +156,8 @@ public class TimeViewChecker extends GuiChecker {
   }
 
   public TimeViewChecker checkMonthTooltip(String monthId, double position) {
-    timeViewPanel.getMouseOverHandler().enterMonth(parseMonthId(monthId));
-    String tooltip = timeViewPanel.getToolTipText();
+    getTimeViewPanel().getMouseOverHandler().enterMonth(parseMonthId(monthId));
+    String tooltip = getTimeViewPanel().getToolTipText();
     if (!tooltip.contains("Min position: " + AmountFormat.toStandardValueString(position))) {
       Assert.fail("Expected position: " + position + " - " + tooltip +
                   "\nbut was: " + tooltip);
@@ -166,14 +166,26 @@ public class TimeViewChecker extends GuiChecker {
   }
 
   public TimeViewChecker checkMonthTooltip(String monthId, String expectedTooltip) {
-    timeViewPanel.getMouseOverHandler().enterMonth(parseMonthId(monthId));
-    Assert.assertEquals(expectedTooltip, timeViewPanel.getToolTipText());
+    getTimeViewPanel().getMouseOverHandler().enterMonth(parseMonthId(monthId));
+    Assert.assertEquals(expectedTooltip, getTimeViewPanel().getToolTipText());
     return this;
   }
 
   public TimeViewChecker checkYearTooltip(int year, String expectedTooltip) {
-    timeViewPanel.getMouseOverHandler().enterYear(year);
-    Assert.assertEquals(expectedTooltip, timeViewPanel.getToolTipText());
+    getTimeViewPanel().getMouseOverHandler().enterYear(year);
+    Assert.assertEquals(expectedTooltip, getTimeViewPanel().getToolTipText());
     return this;
+  }
+
+  public TimeViewPanel getTimeViewPanel() {
+    if (timeViewPanel == null) {
+      Panel table = mainWindow.getPanel("timeView");
+      setTimeViewPanel((TimeViewPanel) table.getAwtComponent());
+    }
+    return timeViewPanel;
+  }
+
+  public void setTimeViewPanel(TimeViewPanel timeViewPanel) {
+    this.timeViewPanel = timeViewPanel;
   }
 }

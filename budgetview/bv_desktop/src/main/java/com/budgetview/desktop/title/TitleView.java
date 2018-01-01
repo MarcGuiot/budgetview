@@ -16,7 +16,7 @@ import javax.swing.*;
 public class TitleView extends View implements GlobSelectionListener {
 
   private JLabel sectionTitle = new JLabel();
-  private Card card = Card.HOME;
+  private Card card = Card.DASHBOARD;
 
   public TitleView(GlobRepository repository, Directory directory) {
     super(repository, directory);

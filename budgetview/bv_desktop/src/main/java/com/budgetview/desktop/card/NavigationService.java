@@ -25,7 +25,7 @@ import java.util.*;
 
 public class NavigationService implements GlobSelectionListener {
 
-  public static final Card INITIAL_CARD = Card.HOME;
+  public static final Card INITIAL_CARD = Card.DASHBOARD;
 
   private SelectionService selectionService;
   private MainPanelContainer mainPanelContainer;
@@ -59,12 +59,12 @@ public class NavigationService implements GlobSelectionListener {
     select(card, false);
   }
 
-  public void gotoHome() {
-    gotoCard(Card.HOME);
+  public void gotoDashboard() {
+    gotoCard(Card.DASHBOARD);
   }
 
-  public void gotoHomeAfterRestore(boolean onboardingCompleted) {
-    gotoHome();
+  public void gotoDashboardAfterRestore(boolean onboardingCompleted) {
+    gotoDashboard();
     mainPanelContainer.reset(onboardingCompleted);
   }
 
@@ -78,6 +78,11 @@ public class NavigationService implements GlobSelectionListener {
 
   public void gotoCategorizationAndShowAll() {
     categorizationSelector.setFilteringMode(CategorizationFilteringMode.ALL);
+    gotoCategorization();
+  }
+
+  public void gotoCategorizationForLastImport() {
+    categorizationSelector.setFilteringMode(CategorizationFilteringMode.LAST_IMPORTED_FILE);
     gotoCategorization();
   }
 
@@ -253,6 +258,6 @@ public class NavigationService implements GlobSelectionListener {
   public void reset() {
     backStack.clear();
     forwardStack.clear();
-    select(Card.HOME, true);
+    select(Card.DASHBOARD, true);
   }
 }

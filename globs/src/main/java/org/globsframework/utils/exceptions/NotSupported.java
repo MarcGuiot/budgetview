@@ -1,6 +1,10 @@
 package org.globsframework.utils.exceptions;
 
 public class NotSupported extends GlobsException {
+
+  public NotSupported() {
+  }
+
   public NotSupported(Exception e) {
     super(e);
   }

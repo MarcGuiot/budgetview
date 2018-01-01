@@ -297,11 +297,11 @@ public class MainWindow implements WindowManager {
         login(LoginPanel.AUTOLOG_USER, LoginPanel.AUTOLOG_USER.toCharArray(), true, false, true);
       }
       else {
-        setPanel(loginPanel.preparePanelForShow(localUsers));
+        setPanel(loginPanel.prepareForDisplay(localUsers));
       }
     }
     else {
-      setPanel(loginPanel.preparePanelForShow(localUsers));
+      setPanel(loginPanel.prepareForDisplay(localUsers));
     }
 
     directory.get(LayoutConfigService.class).show(frame);
@@ -314,14 +314,14 @@ public class MainWindow implements WindowManager {
   }
 
   public void autoLogin(String user) {
-    LoginFunctor functor = new LoginFunctor(new AutoLoginFeedback(), user, user.toCharArray(), false, false, true);
+    LoginFunctor functor = new LoginFunctor(new AutoLoginDataLoadingDisplay(), user, user.toCharArray(), false, false, true);
     Thread thread = new Thread(functor);
     thread.setDaemon(true);
     thread.start();
   }
 
   public void login(String user, char[] password, boolean createUser, boolean useDemoAccount, boolean autoLog) {
-    LoginFunctor functor = new LoginFunctor(new OnPanelFeedback(), user, password, createUser, useDemoAccount, autoLog);
+    LoginFunctor functor = new LoginFunctor(new OnPanelDataLoadingDisplay(), user, password, createUser, useDemoAccount, autoLog);
     Thread thread = new Thread(functor);
     thread.setDaemon(true);
     thread.start();
@@ -334,7 +334,7 @@ public class MainWindow implements WindowManager {
     initServerAccess(serverAddress, prevaylerPath, dataInMemory);
     picsouInit.partialReset();
     frame.setJMenuBar(null);
-    setPanel(loginPanel.preparePanelForShow(localUsers));
+    setPanel(loginPanel.prepareForDisplay(localUsers));
     directory.get(UndoRedoService.class).reset();
   }
 
@@ -412,57 +412,57 @@ public class MainWindow implements WindowManager {
     this.serverAccess.connect(Application.JAR_VERSION);
   }
 
-  interface FeedbackLoadingData {
+  interface DataLoadingDisplay {
 
-    void displayErrorMessage(String message);
+    void showErrorMessage(String message);
+
+    void showPasswordErrorMessage(String message, String arg);
+
+    void showErrorText(String message);
 
     void complete();
-
-    void displayBadPasswordMessage(String message, String arg);
-
-    void displayErrorText(String message);
   }
 
-  class OnPanelFeedback implements FeedbackLoadingData {
+  class OnPanelDataLoadingDisplay implements DataLoadingDisplay {
 
-    public void displayErrorMessage(String key) {
+    public void showErrorMessage(String key) {
       loginPanel.displayErrorMessage(key);
     }
 
-    public void complete() {
-      loginPanel.stopProgressBar();
-    }
-
-    public void displayBadPasswordMessage(String key, String complement) {
+    public void showPasswordErrorMessage(String key, String complement) {
       serverAccess.disconnect();
       initServerAccess(serverAddress, prevaylerPath, dataInMemory);
       loginPanel.displayBadPasswordMessage(key, complement);
     }
 
-    public void displayErrorText(String message) {
+    public void showErrorText(String message) {
       serverAccess.disconnect();
       initServerAccess(serverAddress, prevaylerPath, dataInMemory);
       loginPanel.displayErrorText(message);
     }
+
+    public void complete() {
+      loginPanel.stopProgressBar();
+    }
   }
 
-  class AutoLoginFeedback extends OnPanelFeedback {
-    public void displayErrorMessage(String key) {
-      setPanel(loginPanel.preparePanelForShow(localUsers));
-      super.displayErrorMessage(key);
+  class AutoLoginDataLoadingDisplay extends OnPanelDataLoadingDisplay {
+    public void showErrorMessage(String key) {
+      setPanel(loginPanel.prepareForDisplay(localUsers));
+      super.showErrorMessage(key);
     }
 
     public void complete() {
     }
 
-    public void displayBadPasswordMessage(String key, String complement) {
-      setPanel(loginPanel.preparePanelForShow(localUsers));
-      super.displayBadPasswordMessage(key, complement);
+    public void showPasswordErrorMessage(String key, String complement) {
+      setPanel(loginPanel.prepareForDisplay(localUsers));
+      super.showPasswordErrorMessage(key, complement);
     }
 
-    public void displayErrorText(String message) {
-      setPanel(loginPanel.preparePanelForShow(localUsers));
-      super.displayErrorText(message);
+    public void showErrorText(String message) {
+      setPanel(loginPanel.prepareForDisplay(localUsers));
+      super.showErrorText(message);
     }
   }
 
@@ -472,11 +472,11 @@ public class MainWindow implements WindowManager {
     private boolean createUser;
     private boolean useDemoAccount;
     private boolean autoLog;
-    private FeedbackLoadingData feedbackLoadingData;
+    private DataLoadingDisplay dataLoadingDisplay;
 
-    public LoginFunctor(FeedbackLoadingData feedbackLoadingData, String user, char[] password,
+    public LoginFunctor(DataLoadingDisplay dataLoadingDisplay, String user, char[] password,
                         boolean createUser, boolean useDemoAccount, boolean autoLog) {
-      this.feedbackLoadingData = feedbackLoadingData;
+      this.dataLoadingDisplay = dataLoadingDisplay;
       this.user = user;
       this.password = password;
       this.createUser = createUser;
@@ -512,7 +512,7 @@ public class MainWindow implements WindowManager {
               preLoadData.load();
             }
             catch (Exception e) {
-              feedbackLoadingData.displayErrorText(e.getMessage());
+              dataLoadingDisplay.showErrorText(e.getMessage());
               logout();
               return;
             }
@@ -524,42 +524,42 @@ public class MainWindow implements WindowManager {
       catch (UnexpectedApplicationState e) {
         SwingUtilities.invokeLater(new Runnable() {
           public void run() {
-            feedbackLoadingData.displayErrorMessage("data.load.error.journal");
+            dataLoadingDisplay.showErrorMessage("data.load.error.journal");
           }
         });
       }
       catch (UserAlreadyExists e) {
         SwingUtilities.invokeLater(new Runnable() {
           public void run() {
-            feedbackLoadingData.displayErrorMessage("login.user.exists");
+            dataLoadingDisplay.showErrorMessage("login.user.exists");
           }
         });
       }
       catch (BadPassword e) {
         SwingUtilities.invokeLater(new Runnable() {
           public void run() {
-            feedbackLoadingData.displayErrorMessage("login.invalid.credentials");
+            dataLoadingDisplay.showErrorMessage("login.invalid.credentials");
           }
         });
       }
       catch (UserNotRegistered e) {
         SwingUtilities.invokeLater(new Runnable() {
           public void run() {
-            feedbackLoadingData.displayErrorMessage("login.invalid.credentials");
+            dataLoadingDisplay.showErrorMessage("login.invalid.credentials");
           }
         });
       }
       catch (final PasswordBasedEncryptor.EncryptFail e) {
         SwingUtilities.invokeLater(new Runnable() {
           public void run() {
-            feedbackLoadingData.displayBadPasswordMessage("login.password.error", e.getMessage());
+            dataLoadingDisplay.showPasswordErrorMessage("login.password.error", e.getMessage());
           }
         });
       }
       catch (final InvalidState e) {
         SwingUtilities.invokeLater(new Runnable() {
           public void run() {
-            feedbackLoadingData.displayErrorText(e.getMessage());
+            dataLoadingDisplay.showErrorText(e.getMessage());
             logout();
           }
         });
@@ -568,7 +568,7 @@ public class MainWindow implements WindowManager {
       catch (final Exception e) {
         SwingUtilities.invokeLater(new Runnable() {
           public void run() {
-            feedbackLoadingData.displayErrorMessage("login.server.connection.failure");
+            dataLoadingDisplay.showErrorMessage("login.server.connection.failure");
             final StringWriter stringWriter = new StringWriter();
             PrintWriter writer = new PrintWriter(stringWriter);
             e.printStackTrace(writer);
@@ -586,7 +586,7 @@ public class MainWindow implements WindowManager {
       finally {
         SwingUtilities.invokeLater(new Runnable() {
           public void run() {
-            feedbackLoadingData.complete();
+            dataLoadingDisplay.complete();
           }
         });
       }

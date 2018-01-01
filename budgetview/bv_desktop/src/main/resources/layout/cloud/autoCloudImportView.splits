@@ -1,0 +1,46 @@
+<splits xmlns="http://www.globsframework.org/xml/splits.xsd">
+
+  <styleImport file="/layout/commonStyles.splits"/>
+  <styles>
+    <style selector=".label" font="OpenSansLight,plain,24" foreground="dashboard.title"
+           marginTop="20" weightY="1" fill="none" anchor="center"/>
+    <style selector=".progress"  margin="20" anchor="center"/>
+
+    <style id="textOK" selector="x" foreground="dashboard.text.ok"/>
+    <style id="textNOK" selector="x" foreground="dashboard.text.nok"/>
+
+    <style selector=".bg" opaque="true" background="dashboard.bg"/>
+
+    <style selector=".separatorRow" border="matte(1,0,1,0,dashboard.separator)" opaque="true" background="dashboard.bg" marginBottom="10" marginLeft="30" marginRight="30"/>
+    <style selector=".separatorRow .widget" font="OpenSansLight,plain,32"/>
+
+  </styles>
+
+  <column name="autoCloudImportView" styleClass="bg">
+
+    <filler fill="vertical" weightY="20"/>
+
+    <label icon="app_icon_128.png" fill="none" anchor="center"/>
+
+    <filler fill="vertical" weightY="20"/>
+
+    <row styleClass="separatorRow" weightY="0.1" marginBottom="40">
+      <filler fill="horizontal"/>
+      <column>
+        <label ref="label" styleClass="label"/>
+        <component ref="progressPanel" styleClass="progress"/>
+      </column>
+      <filler fill="horizontal"/>
+    </row>
+
+    <row weightY="0.1">
+      <filler fill="horizontal"/>
+      <button ref="action" styleClass="widget"/>
+      <filler fill="horizontal"/>
+    </row>
+
+    <filler fill="vertical" weightY="50"/>
+
+  </column>
+
+</splits>

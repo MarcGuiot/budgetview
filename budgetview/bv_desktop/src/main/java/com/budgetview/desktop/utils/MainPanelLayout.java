@@ -58,7 +58,7 @@ public class MainPanelLayout implements LayoutManager {
   public void setCard(Card card, boolean initialGuidanceCompleted) {
     this.initialGuidanceCompleted = initialGuidanceCompleted;
     switch (card) {
-      case HOME:
+      case DASHBOARD:
         currentSidebar = ACCOUNT_VIEW;
         currentContentPanel = HOME;
         stretchMode = this.initialGuidanceCompleted ? StretchMode.FIXED_SIDEBAR : StretchMode.NO_SIDEBAR;

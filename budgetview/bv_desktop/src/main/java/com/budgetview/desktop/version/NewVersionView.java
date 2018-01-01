@@ -1,6 +1,5 @@
 package com.budgetview.desktop.version;
 
-import com.budgetview.desktop.Application;
 import com.budgetview.desktop.View;
 import com.budgetview.desktop.browsing.BrowsingAction;
 import com.budgetview.desktop.components.FooterBanner;

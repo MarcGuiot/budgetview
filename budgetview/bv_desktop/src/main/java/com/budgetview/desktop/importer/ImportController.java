@@ -14,8 +14,11 @@ import com.budgetview.model.*;
 import com.budgetview.shared.cloud.CloudSubscriptionStatus;
 import com.budgetview.shared.utils.Amounts;
 import com.budgetview.utils.Lang;
-import org.globsframework.model.*;
-import org.globsframework.model.format.GlobPrinter;
+import org.globsframework.gui.splits.utils.Disposable;
+import org.globsframework.model.Glob;
+import org.globsframework.model.GlobList;
+import org.globsframework.model.GlobRepository;
+import org.globsframework.model.Key;
 import org.globsframework.model.repository.LocalGlobRepository;
 import org.globsframework.model.utils.GlobFieldMatcher;
 import org.globsframework.model.utils.GlobFunctor;
@@ -35,7 +38,7 @@ import java.util.*;
 
 import static org.globsframework.model.FieldValue.value;
 
-public class ImportController implements RealAccountImporter {
+public class ImportController implements RealAccountImporter, Disposable {
 
   private GlobRepository repository;
   private LocalGlobRepository localRepository;
@@ -44,22 +47,22 @@ public class ImportController implements RealAccountImporter {
 
   private OpenRequestManager openRequestManager;
 
-  private ImportDialog importDialog;
-  private final JTextField fileField = new JTextField();
+  private ImportDisplay display;
+  private JTextField fileField = new JTextField();
 
   private boolean step1 = true;
   private boolean step2 = true;
 
-  private final List<File> selectedFiles = new ArrayList<File>();
+  private List<File> selectedFiles = new ArrayList<File>();
   private Set<Integer> importKeys = new HashSet<Integer>();
   private List<AccountWithFile> realAccountWithImport = new ArrayList<AccountWithFile>();
   private GlobList realAccountWithoutImport = new GlobList();
   private int countPush;
 
-  public ImportController(ImportDialog importDialog,
+  public ImportController(ImportDisplay importDisplay,
                           GlobRepository repository, LocalGlobRepository localRepository,
                           Directory directory) {
-    this.importDialog = importDialog;
+    this.display = importDisplay;
     this.repository = repository;
     this.localRepository = localRepository;
     this.directory = directory;
@@ -93,7 +96,7 @@ public class ImportController implements RealAccountImporter {
 
   private void next(boolean first) {
     if (!realAccountWithoutImport.isEmpty()) {
-      importDialog.showNoImport(realAccountWithoutImport.remove(0), first);
+      display.showNoImport(realAccountWithoutImport.remove(0), first);
       return;
     }
     for (Glob realAccount : realAccountWithoutImport) {
@@ -106,7 +109,7 @@ public class ImportController implements RealAccountImporter {
       }
     }
     if (nextImport()) {
-      importDialog.showPreview();
+      display.showPreview();
     }
   }
 
@@ -117,7 +120,7 @@ public class ImportController implements RealAccountImporter {
       Glob realAccount = importSession.gotoNextContent(accountNumber, accountCount);
       if (realAccount != null) {
         String filePath = realAccount.get(RealAccount.FILE_NAME);
-        importDialog.updateForNextImport(filePath, null, realAccount, accountNumber.get(), accountCount.get());
+        display.updateForNextImport(filePath, null, realAccount, accountNumber.get(), accountCount.get());
         return true;
       }
     }
@@ -132,11 +135,11 @@ public class ImportController implements RealAccountImporter {
         Set<Integer> months = createMonths();
         AutoCategorizationFunctor autoCategorizationFunctor = autocategorize();
         deleteEmptyImport();
-        importDialog.showAccountPositionDialogsIfNeeded();
-        importDialog.showCompleteMessage(months,
-                                         autoCategorizationFunctor.getImportedTransactionCount(),
-                                         autoCategorizationFunctor.getIgnoredTransactionCount(importSession.getTotalImportedTransactionsCount()),
-                                         autoCategorizationFunctor.getAutocategorizedTransactionCount());
+        display.showAccountPositionDialogsIfNeeded();
+        display.showCompleteMessage(months,
+                                    autoCategorizationFunctor.getImportedTransactionCount(),
+                                    autoCategorizationFunctor.getIgnoredTransactionCount(importSession.getTotalImportedTransactionsCount()),
+                                    autoCategorizationFunctor.getAutocategorizedTransactionCount());
         return false;
       }
       catch (Exception e) {
@@ -163,12 +166,12 @@ public class ImportController implements RealAccountImporter {
           filePath = file.getAbsolutePath();
         }
       }
-      List<String> dateFormats = importSession.loadFile(realAccount, importDialog.getDialog(), stream);
+      List<String> dateFormats = importSession.loadFile(realAccount, stream, display.getParentWindow());
       Ref<Integer> accountCount = new Ref<Integer>();
       Ref<Integer> accountNumber = new Ref<Integer>();
       Glob importedAccount = importSession.gotoNextContent(accountNumber, accountCount);
       if (importedAccount != null) {
-        importDialog.updateForNextImport(filePath, dateFormats, importedAccount, accountNumber.get(), accountCount.get());
+        display.updateForNextImport(filePath, dateFormats, importedAccount, accountNumber.get(), accountCount.get());
         return true;
       }
       String message;
@@ -178,7 +181,7 @@ public class ImportController implements RealAccountImporter {
       else {
         message = Lang.get("import.file.empty", filePath);
       }
-      importDialog.showMessage(message);
+      display.showMessage(message);
       return false;
     }
     catch (OperationCancelled e) {
@@ -187,13 +190,13 @@ public class ImportController implements RealAccountImporter {
     catch (InvalidFileFormat e) {
       String message = e.getMessage(filePath);
       Log.write(message, e);
-      importDialog.showMessage(message, e.getDetails());
+      display.showMessage(message, e.getDetails());
       return false;
     }
     catch (Exception e) {
       String message = Lang.get("import.file.error", filePath == null ? "" : filePath);
       Log.write(message, e);
-      importDialog.showMessage(message, e.getMessage());
+      display.showMessage(message, e.getMessage());
       return false;
     }
     finally {
@@ -213,7 +216,7 @@ public class ImportController implements RealAccountImporter {
     countPush--;
     updateCloudAccounts();
     localRepository.commitChanges(true);
-    importDialog.showLastImportedMonthAndClose(months);
+    display.showLastImportedMonthAndClose(months);
   }
 
   public void updateCloudAccounts() {
@@ -250,7 +253,7 @@ public class ImportController implements RealAccountImporter {
   public void completeImport(Glob targetAccount, String dateFormat) {
     Set<Key> newSeries = importSession.getNewSeries();
     if (!newSeries.isEmpty()) {
-      importSession.setImportSeries(importDialog.askForSeriesImport(newSeries, targetAccount));
+      importSession.setImportSeries(display.askForSeriesImport(newSeries, targetAccount));
     }
     Key importKey = importSession.completeImport(targetAccount, dateFormat);
     if (importKey != null) {
@@ -328,7 +331,7 @@ public class ImportController implements RealAccountImporter {
   }
 
   public void closeDialog() {
-    importDialog.closeDialog();
+    display.closeDialog();
   }
 
   public JTextField getFileField() {
@@ -365,67 +368,67 @@ public class ImportController implements RealAccountImporter {
   }
 
   public void showCloudSignup() {
-    importDialog.showCloudSignup();
+    display.showCloudSignup();
   }
 
   public void showModifyCloudEmail() {
-    importDialog.showModifyCloudEmail();
+    display.showModifyCloudEmail();
   }
 
   public void showCloudEdition() {
-    importDialog.showCloudEdition();
+    display.showCloudEdition();
   }
 
   public void showCloudAccounts(Glob cloudProviderConnection) {
-    importDialog.showCloudAccounts(cloudProviderConnection);
+    display.showCloudAccounts(cloudProviderConnection);
   }
 
   public void showCloudValidationForSignup(String email) {
-    importDialog.showCloudValidationForSignup(email);
+    display.showCloudValidationForSignup(email);
   }
 
   public void showCloudValidationForEmailModification(String email) {
-    importDialog.showCloudValidationForEmailModification(email);
+    display.showCloudValidationForEmailModification(email);
   }
 
   public void showCloudEmailModificationCompleted(String newEmail) {
-    importDialog.showCloudEmailModificationCompleted(newEmail);
+    display.showCloudEmailModificationCompleted(newEmail);
   }
 
   public void showCloudBankSelection() {
-    importDialog.showCloudBankSelection();
+    display.showCloudBankSelection();
   }
 
   public void showCloudBankConnection(Key bank) {
-    importDialog.showCloudBankConnection(bank);
+    display.showCloudBankConnection(bank);
   }
 
   public void updatePassword(Glob cloudProviderConnection) {
-    importDialog.updatePassword(cloudProviderConnection);
+    display.updatePassword(cloudProviderConnection);
   }
 
   public void showCloudUnsubscription() {
-    importDialog.showCloudUnsubscription();
+    display.showCloudUnsubscription();
   }
 
   public void showCloudError(Exception e) {
-    importDialog.showCloudError(e);
+    display.showCloudError(e);
   }
 
   public void showCloudSubscriptionError(String email, CloudSubscriptionStatus status) {
-    importDialog.showCloudSubscriptionError(email, status);
+    display.showCloudSubscriptionError(email, status);
+  }
+
+  public void showCloudFirstDownload(Glob providerConnection) {
+    display.showCloudFirstDownload(providerConnection);
+  }
+
+  public void showCloudDownload() {
+    display.showCloudDownload();
   }
 
   public void setReplaceSeries(boolean replace) {
     importSession.setReplaceSeries(replace);
-  }
-
-  public void showCloudFirstDownload(Glob providerConnection) {
-    importDialog.showCloudFirstDownload(providerConnection);
-  }
-
-  public void showCloudDownload() {
-    importDialog.showCloudDownload();
   }
 
   private static class HasOperationFunctor implements GlobFunctor {
@@ -510,8 +513,8 @@ public class ImportController implements RealAccountImporter {
         public void run() {
           synchronized (fileField) {
             if (step1) {
-              importDialog.preselectFiles(files);
-              importDialog.acceptFiles();
+              display.preselectFiles(files);
+              display.acceptFiles();
             }
             else {
               openRequestManager.openFiles(files);
@@ -530,5 +533,19 @@ public class ImportController implements RealAccountImporter {
       this.realAccount = realAccount;
       this.fileContent = fileName;
     }
+  }
+
+  public void dispose() {
+    repository = null;
+    localRepository = null;
+    directory = null;
+    importSession = null;
+    openRequestManager = null;
+    display = null;
+    fileField = null;
+    selectedFiles = null;
+    importKeys = null;
+    realAccountWithImport = null;
+    realAccountWithoutImport = null;
   }
 }

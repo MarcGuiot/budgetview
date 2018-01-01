@@ -1,6 +1,5 @@
 package com.budgetview.io.importer.json;
 
-import com.budgetview.desktop.components.dialogs.PicsouDialog;
 import com.budgetview.desktop.description.Labels;
 import com.budgetview.desktop.series.utils.SeriesMatchers;
 import com.budgetview.io.importer.AccountFileImporter;
@@ -21,6 +20,7 @@ import org.globsframework.utils.exceptions.InvalidFormat;
 import org.globsframework.utils.exceptions.OperationCancelled;
 import org.json.JSONObject;
 
+import java.awt.*;
 import java.io.IOException;
 import java.text.ParseException;
 
@@ -30,7 +30,7 @@ import static org.globsframework.model.utils.GlobMatchers.fieldEqualsIgnoreCase;
 
 public class JsonImporter implements AccountFileImporter {
 
-  public GlobList loadTransactions(TypedInputStream inputStream, GlobRepository initialRepository, GlobRepository targetRepository, PicsouDialog current) throws InvalidFormat, OperationCancelled, IOException {
+  public GlobList loadTransactions(TypedInputStream inputStream, GlobRepository initialRepository, GlobRepository targetRepository, Window parent) throws InvalidFormat, OperationCancelled, IOException {
 
     ImportedTransactionIdGenerator generator = new ImportedTransactionIdGenerator(targetRepository.getIdGenerator());
     JSONObject jsonAccount = new JSONObject(Files.loadStreamToString(inputStream.getBestProbableReader()));

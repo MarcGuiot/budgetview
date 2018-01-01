@@ -1,6 +1,5 @@
 package com.budgetview.io.importer;
 
-import com.budgetview.desktop.components.dialogs.PicsouDialog;
 import com.budgetview.io.importer.csv.CsvImporter;
 import com.budgetview.io.importer.json.JsonImporter;
 import com.budgetview.io.importer.ofx.OfxImporter;
@@ -13,16 +12,17 @@ import org.globsframework.utils.exceptions.ItemNotFound;
 import org.globsframework.utils.exceptions.OperationCancelled;
 import org.globsframework.utils.exceptions.TruncatedFile;
 
+import java.awt.*;
 import java.io.IOException;
 
 public class ImportService {
 
   public void run(TypedInputStream fileStream, GlobRepository initialRepository,
-                  GlobRepository targetRepository, Directory directory, PicsouDialog current)
+                  GlobRepository targetRepository, Directory directory, Window parentWindow)
     throws IOException, ItemNotFound, InvalidFormat, OperationCancelled, TruncatedFile {
 
     AccountFileImporter importer = getImporter(fileStream, directory);
-    importer.loadTransactions(fileStream, initialRepository, targetRepository, current);
+    importer.loadTransactions(fileStream, initialRepository, targetRepository, parentWindow);
   }
 
   private AccountFileImporter getImporter(TypedInputStream fileStream, Directory directory) throws ItemNotFound {

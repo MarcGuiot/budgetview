@@ -56,6 +56,6 @@ public class SkipCategorizationPanel {
   private void activate() {
     SignpostStatus.setCompleted(SignpostStatus.GOTO_BUDGET_SHOWN, repository);
     SignpostStatus.setCompleted(SignpostStatus.CATEGORIZATION_SKIPPED, repository);
-    directory.get(NavigationService.class).gotoHome();
+    directory.get(NavigationService.class).gotoDashboard();
   }
 }

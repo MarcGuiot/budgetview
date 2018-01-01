@@ -2,7 +2,6 @@ package com.budgetview.desktop;
 
 import com.budgetview.desktop.accounts.AccountView;
 import com.budgetview.desktop.actions.DeleteUserAction;
-import com.budgetview.desktop.actions.ExitAction;
 import com.budgetview.desktop.actions.ImportFileAction;
 import com.budgetview.desktop.addons.AddOnsSelector;
 import com.budgetview.desktop.addons.AddOnsView;
@@ -14,6 +13,7 @@ import com.budgetview.desktop.card.CardView;
 import com.budgetview.desktop.card.NavigationService;
 import com.budgetview.desktop.categorization.CategorizationSelector;
 import com.budgetview.desktop.categorization.CategorizationView;
+import com.budgetview.desktop.cloud.AutoCloudImportView;
 import com.budgetview.desktop.components.PicsouFrame;
 import com.budgetview.desktop.components.highlighting.HighlightingService;
 import com.budgetview.desktop.components.layoutconfig.LayoutConfigService;
@@ -41,7 +41,6 @@ import com.budgetview.desktop.signpost.guides.ImportSignpost;
 import com.budgetview.desktop.startup.components.DemoMessageView;
 import com.budgetview.desktop.startup.components.LogoutService;
 import com.budgetview.desktop.startup.components.OpenRequestManager;
-import com.budgetview.desktop.version.NewVersionView;
 import com.budgetview.desktop.time.TimeView;
 import com.budgetview.desktop.title.PeriodView;
 import com.budgetview.desktop.transactions.TransactionView;
@@ -49,6 +48,7 @@ import com.budgetview.desktop.undo.UndoRedoService;
 import com.budgetview.desktop.utils.MacOSXHooks;
 import com.budgetview.desktop.utils.MainPanelContainer;
 import com.budgetview.desktop.utils.MenuBarBuilder;
+import com.budgetview.desktop.version.NewVersionView;
 import com.budgetview.model.LayoutConfig;
 import com.budgetview.model.Month;
 import com.budgetview.model.SignpostStatus;
@@ -73,9 +73,8 @@ import java.awt.*;
 import static org.globsframework.model.utils.GlobMatchers.isFalse;
 
 public class MainPanel {
-  private final AnalysisSelector analysisSelector;
+  private AnalysisSelector analysisSelector;
   private PicsouFrame frame;
-  private static ExitAction exitActionWhitoutUserEvaluation;
   private GlobsPanelBuilder builder;
   private GlobRepository repository;
   private Directory directory;
@@ -85,13 +84,13 @@ public class MainPanel {
   private CardView cardView;
   private TransactionView transactionView;
   private AnalysisView analysisView;
-  private CategorizationView categorizationView;
   private ProjectView projectView;
   private SignpostView signpostView;
   private MenuBarBuilder menuBar;
   private CategorizationSelector categorizationSelector;
   private DashboardView dashboardView;
-  private final BudgetView budgetView;
+  private BudgetView budgetView;
+  private AutoCloudImportView autoCloudImportView;
   private NewVersionView newVersionView;
 
   public static MainPanel init(GlobRepository repository, Directory directory, WindowManager mainWindow) {
@@ -129,7 +128,7 @@ public class MainPanel {
 
     transactionView = new TransactionView(repository, directory);
     categorizationSelector = new CategorizationSelector(repository, directory);
-    categorizationView = new CategorizationView(categorizationSelector, repository);
+    CategorizationView categorizationView = new CategorizationView(categorizationSelector, repository);
     cardView = new CardView(repository, directory, categorizationSelector.getGotoBudgetSignpost());
 
     ReplicationGlobRepository replicationGlobRepository =
@@ -147,7 +146,7 @@ public class MainPanel {
     directory.get(BackupService.class).addPostRestoreTrigger(new BackupService.Trigger() {
       public void process(GlobRepository repository) {
         boolean onboardingCompleted = SignpostStatus.isOnboardingCompleted(repository);
-        directory.get(NavigationService.class).gotoHomeAfterRestore(onboardingCompleted);
+        directory.get(NavigationService.class).gotoDashboardAfterRestore(onboardingCompleted);
       }
     });
 
@@ -176,6 +175,7 @@ public class MainPanel {
     signpostView = new SignpostView(replicationGlobRepository, directory);
     dashboardView = new DashboardView(repository, directory);
     newVersionView = new NewVersionView(repository, directory);
+    autoCloudImportView = new AutoCloudImportView(repository, directory);
     createPanel(
       periodView,
       new AccountView(replicationGlobRepository, directory),
@@ -197,7 +197,8 @@ public class MainPanel {
       new AddOnsSelector(repository, directory),
       new AddOnsView(repository, directory),
       signpostView,
-      new NotificationsFlagView(repository, directory)
+      new NotificationsFlagView(repository, directory),
+      autoCloudImportView
     );
 
     builder.load();
@@ -239,7 +240,7 @@ public class MainPanel {
     signpostView.reset();
     projectView.reset();
 
-    windowManager.setPanel(panel);
+    autoCloudImportView.displayIfNeeded(windowManager, panel);
     analysisView.reset();
     analysisSelector.reset();
     timeView.selectCurrentMonth();

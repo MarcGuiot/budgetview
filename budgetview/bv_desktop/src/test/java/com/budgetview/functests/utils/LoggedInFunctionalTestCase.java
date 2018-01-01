@@ -1,10 +1,5 @@
 package com.budgetview.functests.utils;
 
-import com.budgetview.functests.checkers.*;
-import com.budgetview.functests.checkers.components.TimeViewChecker;
-import com.budgetview.functests.checkers.license.LicenseActivationChecker;
-import com.budgetview.functests.checkers.license.LicenseChecker;
-import com.budgetview.functests.checkers.printing.PrinterChecker;
 import com.budgetview.desktop.Application;
 import com.budgetview.desktop.browsing.BrowsingService;
 import com.budgetview.desktop.components.PicsouFrame;
@@ -12,12 +7,16 @@ import com.budgetview.desktop.startup.LoginPanel;
 import com.budgetview.desktop.startup.components.SingleApplicationInstanceListener;
 import com.budgetview.desktop.time.TimeService;
 import com.budgetview.desktop.time.TimeViewPanel;
+import com.budgetview.functests.checkers.*;
+import com.budgetview.functests.checkers.components.TimeViewChecker;
+import com.budgetview.functests.checkers.license.LicenseActivationChecker;
+import com.budgetview.functests.checkers.license.LicenseChecker;
+import com.budgetview.functests.checkers.printing.PrinterChecker;
 import com.budgetview.model.SignpostStatus;
 import com.budgetview.model.initial.DefaultSeriesFactory;
 import com.budgetview.shared.license.LicenseConstants;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.utils.Dates;
-import org.globsframework.utils.Log;
 import org.uispec4j.UISpecAdapter;
 import org.uispec4j.Window;
 import org.uispec4j.assertion.UISpecAssert;
@@ -375,7 +374,8 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
   }
 
   public void waitForApplicationToLoad() {
-    UISpecAssert.waitUntil(mainWindow.containsSwingComponent(TimeViewPanel.class), 10000);
+    UISpecAssert.waitUntil(UISpecAssert.or(mainWindow.containsSwingComponent(TimeViewPanel.class),
+                                           mainWindow.containsSwingComponent(JPanel.class, "autoCloudImportView")), 10000);
   }
 
   static boolean disableClipboard = Boolean.getBoolean("disableClipboard");

@@ -33,7 +33,7 @@ public class MainPanelContainer extends JPanel implements GlobSelectionListener 
 
   public void reset(boolean initCompleted) {
     if (layout != null) {
-      layout.setCard(Card.HOME, initCompleted);
+      layout.setCard(Card.DASHBOARD, initCompleted);
     }
   }
 

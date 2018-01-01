@@ -1,7 +1,6 @@
 package com.budgetview.desktop.importer;
 
 import com.budgetview.desktop.accounts.AccountPositionEditionDialog;
-import com.budgetview.desktop.accounts.utils.MonthDay;
 import com.budgetview.desktop.components.PicsouFrame;
 import com.budgetview.desktop.components.dialogs.MessageAndDetailsDialog;
 import com.budgetview.desktop.components.dialogs.PicsouDialog;
@@ -9,23 +8,19 @@ import com.budgetview.desktop.importer.components.RealAccountImporter;
 import com.budgetview.desktop.importer.series.ImportSeriesDialog;
 import com.budgetview.desktop.importer.series.SeriesImporter;
 import com.budgetview.desktop.importer.steps.*;
+import com.budgetview.desktop.importer.utils.Importer;
 import com.budgetview.model.*;
 import com.budgetview.shared.cloud.CloudSubscriptionStatus;
-import com.budgetview.shared.model.BudgetArea;
-import com.budgetview.triggers.AutomaticSeriesBudgetTrigger;
-import com.budgetview.triggers.SeriesBudgetTrigger;
 import org.globsframework.gui.SelectionService;
 import org.globsframework.gui.splits.layout.SingleComponentLayout;
 import org.globsframework.gui.splits.utils.Disposable;
 import org.globsframework.gui.splits.utils.DisposableGroup;
 import org.globsframework.gui.splits.utils.GuiUtils;
-import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.Key;
 import org.globsframework.model.repository.LocalGlobRepository;
-import org.globsframework.model.repository.LocalGlobRepositoryBuilder;
 import org.globsframework.utils.directory.DefaultDirectory;
 import org.globsframework.utils.directory.Directory;
 
@@ -42,7 +37,7 @@ import java.util.Set;
 
 import static org.globsframework.model.utils.GlobMatchers.fieldIn;
 
-public class ImportDialog implements RealAccountImporter, Disposable {
+public class ImportDialog implements RealAccountImporter, Disposable, ImportDisplay {
   private GlobRepository parentRepository;
   private Directory parentDirectory;
   private LocalGlobRepository localRepository;
@@ -80,7 +75,12 @@ public class ImportDialog implements RealAccountImporter, Disposable {
     this.parentRepository = repository;
     this.parentDirectory = directory;
 
-    loadLocalRepository(repository);
+    if (localRepository == null) {
+      localRepository = Importer.loadLocalRepository(repository);
+    }
+    else {
+      this.localRepository.rollback();
+    }
 
     localDirectory = new DefaultDirectory(directory);
     localDirectory.add(new SelectionService());
@@ -152,24 +152,6 @@ public class ImportDialog implements RealAccountImporter, Disposable {
     stepPanel.prepareForDisplay();
   }
 
-  private void loadLocalRepository(GlobRepository repository) {
-    GlobType[] globTypes = {Bank.TYPE, BankEntity.TYPE, MonthDay.TYPE,
-      Account.TYPE, AccountUpdateMode.TYPE, BudgetArea.TYPE,
-      Transaction.TYPE, Month.TYPE, UserPreferences.TYPE, CurrentMonth.TYPE, RealAccount.TYPE,
-      Series.TYPE, SubSeries.TYPE, ImportedSeries.TYPE, TransactionImport.TYPE, CsvMapping.TYPE,
-      User.TYPE, CloudDesktopUser.TYPE, CloudProviderConnection.TYPE};
-
-    if (localRepository == null) {
-      this.localRepository = LocalGlobRepositoryBuilder.init(repository)
-        .copy(globTypes).get();
-      this.localRepository.addTrigger(new AutomaticSeriesBudgetTrigger());
-      this.localRepository.addTrigger(new SeriesBudgetTrigger(parentRepository));
-    }
-    else {
-      this.localRepository.rollback();
-    }
-  }
-
   public PicsouDialog getDialog() {
     return dialog;
   }
@@ -231,7 +213,7 @@ public class ImportDialog implements RealAccountImporter, Disposable {
     }
   }
 
-  protected void closeDialog() {
+  public void closeDialog() {
     dialog.setVisible(false);
   }
 
@@ -315,6 +297,10 @@ public class ImportDialog implements RealAccountImporter, Disposable {
   public void showCloudDownload() {
     setCurrentPanel(cloudDownloadPanel);
     cloudDownloadPanel.start();
+  }
+
+  public Window getParentWindow() {
+    return dialog;
   }
 
   public void showCloudEmailModificationCompleted(String newEmail) {

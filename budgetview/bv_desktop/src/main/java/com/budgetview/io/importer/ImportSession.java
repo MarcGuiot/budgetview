@@ -1,7 +1,6 @@
 package com.budgetview.io.importer;
 
 import com.budgetview.desktop.accounts.utils.MonthDay;
-import com.budgetview.desktop.components.dialogs.PicsouDialog;
 import com.budgetview.desktop.importer.utils.NoOperations;
 import com.budgetview.desktop.time.TimeService;
 import com.budgetview.io.importer.analyzer.TransactionAnalyzer;
@@ -16,7 +15,6 @@ import org.globsframework.metamodel.fields.StringField;
 import org.globsframework.model.*;
 import org.globsframework.model.delta.DefaultChangeSet;
 import org.globsframework.model.delta.MutableChangeSet;
-import org.globsframework.model.format.GlobPrinter;
 import org.globsframework.model.repository.LocalGlobRepository;
 import org.globsframework.model.repository.LocalGlobRepositoryBuilder;
 import org.globsframework.model.utils.*;
@@ -31,12 +29,14 @@ import org.globsframework.utils.exceptions.InvalidFormat;
 import org.globsframework.utils.exceptions.OperationCancelled;
 import org.globsframework.utils.exceptions.TruncatedFile;
 
+import java.awt.*;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
@@ -85,14 +85,14 @@ public class ImportSession {
   }
 
   public void setReplaceSeries(boolean replaceSeries) {
-    this.replaceSeries = false;
+    this.replaceSeries = replaceSeries;
   }
 
   public GlobRepository getTempRepository() {
     return localRepository;
   }
 
-  public List<String> loadFile(final Glob currentRealAccount, PicsouDialog dialog, final TypedInputStream typedInputStream)
+  public List<String> loadFile(final Glob currentRealAccount, final TypedInputStream typedInputStream, Window parentWindow)
     throws IOException, TruncatedFile, NoOperations, InvalidFormat, OperationCancelled {
 
     this.importSeries = null;
@@ -114,7 +114,7 @@ public class ImportSession {
 
     importRepository.startChangeSet();
     final Set<Integer> tmpAccountIds = new HashSet<Integer>();
-    importService.run(typedInputStream, referenceRepository, importRepository, directory, dialog);
+    importService.run(typedInputStream, referenceRepository, importRepository, directory, parentWindow);
     importRepository.completeChangeSet();
     changes = importRepository.getCurrentChanges();
     changes.safeVisit(RealAccount.TYPE, new DefaultChangeSetVisitor() {

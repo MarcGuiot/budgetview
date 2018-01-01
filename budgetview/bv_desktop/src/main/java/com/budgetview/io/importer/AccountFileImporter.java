@@ -7,11 +7,12 @@ import org.globsframework.model.GlobRepository;
 import org.globsframework.utils.exceptions.InvalidFormat;
 import org.globsframework.utils.exceptions.OperationCancelled;
 
+import java.awt.*;
 import java.io.IOException;
 
 public interface AccountFileImporter {
   GlobList loadTransactions(TypedInputStream inputStream,
                             GlobRepository initialRepository,
-                            GlobRepository targetRepository, PicsouDialog current)
+                            GlobRepository targetRepository, Window parent)
     throws InvalidFormat, OperationCancelled, IOException;
 }
