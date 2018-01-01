@@ -8,6 +8,7 @@ import com.budgetview.desktop.importer.components.RealAccountImporter;
 import com.budgetview.desktop.importer.series.ImportSeriesDialog;
 import com.budgetview.desktop.importer.series.SeriesImporter;
 import com.budgetview.desktop.importer.steps.*;
+import com.budgetview.desktop.importer.utils.ImportSelection;
 import com.budgetview.desktop.importer.utils.Importer;
 import com.budgetview.model.*;
 import com.budgetview.shared.cloud.CloudSubscriptionStatus;
@@ -224,12 +225,7 @@ public class ImportDialog implements RealAccountImporter, Disposable, ImportDisp
   }
 
   public void showLastImportedMonthAndClose(Set<Integer> months) {
-    GlobList monthsToSelect =
-      parentRepository.getAll(Month.TYPE, fieldIn(Month.ID, months)).sort(Month.ID);
-    if (!monthsToSelect.isEmpty()) {
-      SelectionService selectionService = parentDirectory.get(SelectionService.class);
-      selectionService.select(monthsToSelect.getLast());
-    }
+    ImportSelection.selectLastMonth(months, parentRepository, parentDirectory);
     closeDialog();
   }
 

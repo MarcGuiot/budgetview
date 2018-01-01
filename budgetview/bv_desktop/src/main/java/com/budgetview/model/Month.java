@@ -30,6 +30,7 @@ public class Month {
     TypeLoader.init(Month.class, "month");
   }
 
+  public static final String DATE_FORMAT_STRING = "yyyy/MM/dd";
   private static NumberFormat MONTH_FORMAT = new DecimalFormat("00");
   private static NumberFormat TWO_DIGITS_YEAR_FORMAT = new DecimalFormat("00");
   private static final Calendar CALENDAR = Calendar.getInstance();

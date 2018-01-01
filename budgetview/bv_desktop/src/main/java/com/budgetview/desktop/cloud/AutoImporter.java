@@ -3,18 +3,16 @@ package com.budgetview.desktop.cloud;
 import com.budgetview.desktop.cloud.utils.SilentImportDisplay;
 import com.budgetview.desktop.importer.ImportController;
 import com.budgetview.desktop.importer.ImportDisplay;
+import com.budgetview.desktop.importer.utils.ImportSelection;
 import com.budgetview.desktop.importer.utils.Importer;
-import com.budgetview.model.Account;
-import com.budgetview.model.CloudDesktopUser;
-import com.budgetview.model.RealAccount;
-import com.budgetview.model.TransactionImport;
+import com.budgetview.desktop.time.TimeView;
+import com.budgetview.model.*;
 import com.budgetview.shared.cloud.CloudSubscriptionStatus;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.Key;
 import org.globsframework.model.repository.LocalGlobRepository;
-import org.globsframework.utils.Functor;
 import org.globsframework.utils.Runnables;
 import org.globsframework.utils.directory.Directory;
 import org.globsframework.utils.exceptions.NotSupported;
@@ -33,6 +31,7 @@ public class AutoImporter {
   private ImportController controller;
   private Callback callback;
   private boolean finished = false;
+  private Glob currentRealAccount = null;
   private Runnable callbackResult = Runnables.NO_OP;
 
   public interface Callback {
@@ -91,9 +90,15 @@ public class AutoImporter {
     controller.setReplaceSeries(false);
     controller.importAccounts(importedRealAccounts);
     while (!finished) {
+      System.out.println("AutoImporter.importSilently - calling completeImportForAccount(" + currentRealAccount + ", " + Month.DATE_FORMAT_STRING);
+      controller.completeImportForAccount(parentRepository.findLinkTarget(currentRealAccount, RealAccount.ACCOUNT), Month.DATE_FORMAT_STRING);
       controller.next();
     }
     callbackResult.run();
+  }
+
+  public void applyChanges(Set<Integer> months) {
+    controller.commitAndClose(months);
   }
 
   public void dispose() {
@@ -107,6 +112,7 @@ public class AutoImporter {
 
     public void updateForNextImport(String filePath, List<String> dateFormats, Glob importedAccount, Integer accountNumber, Integer accountCount) {
       System.out.println("AutoImportDisplay.updateForNextImport: " + accountNumber);
+      currentRealAccount = importedAccount;
       finished = false;
     }
 
@@ -125,14 +131,23 @@ public class AutoImporter {
     }
 
     public void showImportCompleted(final Set<Integer> months, final int importedTransactionCount, final int ignoredTransactionCount, final int autocategorizedTransactionCount) {
-      System.out.println("AutoImportDisplay.showImportCompleted");
+      System.out.println("AutoImportDisplay.showImportCompleted (" + importedTransactionCount + ")");
       finished = true;
-      final Set<Key> createdTransactionImports = localRepository.getCurrentChanges().getCreated(TransactionImport.TYPE);
-      callbackResult = new Runnable() {
-        public void run() {
-          callback.importCompleted(months, importedTransactionCount, createdTransactionImports);
-        }
-      };
+      if (importedTransactionCount > 0) {
+        final Set<Key> createdTransactionImports = localRepository.getCurrentChanges().getCreated(TransactionImport.TYPE);
+        callbackResult = new Runnable() {
+          public void run() {
+            callback.importCompleted(months, importedTransactionCount, createdTransactionImports);
+          }
+        };
+      }
+      else {
+        callbackResult = new Runnable() {
+          public void run() {
+            callback.nothingToImport();
+          }
+        };
+      }
     }
 
     public void showCloudSubscriptionError(final String email, final CloudSubscriptionStatus status) {
@@ -150,8 +165,15 @@ public class AutoImporter {
     }
 
     public void closeDialog() {
-      System.out.println("AutoImportDisplay.closeDialog");
-      throw new NotSupported();
+      // Nothing to do
+    }
+
+    public void showLastImportedMonthAndClose(Set<Integer> months) {
+      ImportSelection.selectLastMonth(months, parentRepository, directory);
+    }
+
+    public boolean askForSeriesImport(Set<Key> newSeries, Glob targetAccount) {
+      return false;
     }
   }
 }

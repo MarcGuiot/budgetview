@@ -37,7 +37,7 @@ public class AutoCloudImportView extends View {
     GlobsPanelBuilder builder = new GlobsPanelBuilder(getClass(), "/layout/cloud/autoCloudImportView.splits",
                                                       repository, directory);
 
-    label = new JLabel(Lang.get("autoimport.cloud.download.message"));
+    label = new JLabel(Lang.get("autoimport.cloud.message.downloading"));
     builder.add("label", label);
 
     progressPanel = new ProgressPanel();
@@ -57,17 +57,6 @@ public class AutoCloudImportView extends View {
     return repository.contains(CloudDesktopUser.KEY) && repository.get(CloudDesktopUser.KEY).isTrue(CloudDesktopUser.REGISTERED);
   }
 
-  public AbstractAction gotoCategorization(final Set<Key> createdTransactionImports, final Runnable switchToMainPanel) {
-    return new AbstractAction(Lang.get("autoimport.cloud.goto.categorization")) {
-      public void actionPerformed(ActionEvent e) {
-        System.out.println("AutoCloudImportView.actionPerformed: " + createdTransactionImports);
-        GlobList transactions = repository.getAll(Transaction.TYPE, GlobMatchers.linkedTo(createdTransactionImports, Transaction.IMPORT));
-        directory.get(NavigationService.class).gotoCategorization(transactions, false);
-        switchToMainPanel.run();
-      }
-    };
-  }
-
   public void displayIfNeeded(final WindowManager windowManager, final JPanel mainPanel) {
 
     switchToMainPanel = new Runnable() {
@@ -85,6 +74,7 @@ public class AutoCloudImportView extends View {
 
     cancelButton.setAction(new AbstractAction(Lang.get("cancel")) {
       public void actionPerformed(ActionEvent e) {
+        System.out.println("AutoCloudImportView.Cancel.actionPerformed");
         switchToMainPanel.run();
         directory.get(NavigationService.class).gotoDashboard();
         autoImporter.dispose();
@@ -95,28 +85,45 @@ public class AutoCloudImportView extends View {
     windowManager.setPanel(panel);
     autoImporter.start(new AutoImporter.Callback() {
 
-      public void importCompleted(Set<Integer> months, int importedTransactionCount, Set<Key> createdTransactionImports) {
+      public void importCompleted(final Set<Integer> months, int importedTransactionCount, final Set<Key> createdTransactionImports) {
+        System.out.println("AutoCloudImportView.Callback.importCompleted");
         String message = importedTransactionCount == 1 ?
-          Lang.get("autoimport.cloud.import.completed.one") :
-          Lang.get("autoimport.cloud.import.completed.many", importedTransactionCount);
-        update(message, gotoCategorization(createdTransactionImports, switchToMainPanel));
+          Lang.get("autoimport.cloud.message.import.completed.one") :
+          Lang.get("autoimport.cloud.message.import.completed.many", importedTransactionCount);
+        update(message, new AbstractAction(Lang.get("autoimport.cloud.goto.categorization")) {
+          public void actionPerformed(ActionEvent e) {
+            autoImporter.applyChanges(months);
+            System.out.println("AutoCloudImportView.importCompleted.actionPerformed: " + createdTransactionImports);
+            GlobList transactions = repository.getAll(Transaction.TYPE, GlobMatchers.linkedTo(createdTransactionImports, Transaction.IMPORT));
+            directory.get(NavigationService.class).gotoCategorization(transactions, false);
+            switchToMainPanel.run();
+          }
+        });
       }
 
       public void nothingToImport() {
-
+        System.out.println("AutoCloudImportView.Callback.nothingToImport");
+        update(Lang.get("autoimport.cloud.message.notransactions"), new AbstractAction(Lang.get("autoimport.cloud.action.notransactions")) {
+          public void actionPerformed(ActionEvent e) {
+            System.out.println("AutoCloudImportView.nothingToImport.actionPerformed:");
+            directory.get(NavigationService.class).gotoDashboard();
+            switchToMainPanel.run();
+          }
+        });
       }
 
       public void needsManualImport() {
-
+        System.out.println("AutoCloudImportView.Callback.needsManualImport");
       }
 
       public void subscriptionError(String email, CloudSubscriptionStatus status) {
-
+        System.out.println("AutoCloudImportView.Callback.subscriptionError");
       }
     });
   }
 
   private void update(String message, AbstractAction action) {
+    label.setText(message);
     actionButton.setAction(action);
     actionButton.setVisible(true);
   }

@@ -15,7 +15,6 @@ public class AutoCloudImportChecker extends ViewChecker {
   }
 
   public AutoCloudImportChecker checkDisplayed() {
-    System.out.println("AutoCloudImportChecker.checkDisplayed: " + mainWindow.getDescription());
     checkComponentVisible(mainWindow, JPanel.class, "autoCloudImportView", true);
     return this;
   }

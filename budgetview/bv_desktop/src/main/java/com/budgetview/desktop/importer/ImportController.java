@@ -320,6 +320,7 @@ public class ImportController implements RealAccountImporter, Disposable {
 
   private AutoCategorizationFunctor autocategorize() {
     AutoCategorizationFunctor autoCategorizationFunctor = new AutoCategorizationFunctor(repository);
+    System.out.println("ImportController.autocategorize: " + importKeys);
     localRepository.safeApply(Transaction.TYPE,
                               GlobMatchers.fieldIn(Transaction.IMPORT, importKeys),
                               autoCategorizationFunctor);
