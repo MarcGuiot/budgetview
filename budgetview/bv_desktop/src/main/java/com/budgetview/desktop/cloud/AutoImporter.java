@@ -7,17 +7,22 @@ import com.budgetview.desktop.importer.utils.Importer;
 import com.budgetview.model.Account;
 import com.budgetview.model.CloudDesktopUser;
 import com.budgetview.model.RealAccount;
+import com.budgetview.model.TransactionImport;
 import com.budgetview.shared.cloud.CloudSubscriptionStatus;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.Key;
 import org.globsframework.model.repository.LocalGlobRepository;
+import org.globsframework.utils.Functor;
+import org.globsframework.utils.Runnables;
 import org.globsframework.utils.directory.Directory;
 import org.globsframework.utils.exceptions.NotSupported;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.List;
+import java.util.Set;
 
 public class AutoImporter {
   private LocalGlobRepository localRepository;
@@ -27,9 +32,13 @@ public class AutoImporter {
   private ImportDisplay display;
   private ImportController controller;
   private Callback callback;
+  private boolean finished = false;
+  private Runnable callbackResult = Runnables.NO_OP;
 
   public interface Callback {
-    void importCompleted();
+    void importCompleted(Set<Integer> months, int importedTransactionCount, Set<Key> createdTransactionImports);
+
+    void nothingToImport();
 
     void needsManualImport();
 
@@ -80,6 +89,10 @@ public class AutoImporter {
   private void importSilently(GlobList importedRealAccounts) {
     controller.setReplaceSeries(false);
     controller.importAccounts(importedRealAccounts);
+    while (!finished) {
+      controller.next();
+    }
+    callbackResult.run();
   }
 
   public void dispose() {
@@ -90,11 +103,45 @@ public class AutoImporter {
   }
 
   private class AutoImportDisplay extends SilentImportDisplay {
-    public void showPreview() {
+
+    public void updateForNextImport(String filePath, List<String> dateFormats, Glob importedAccount, Integer accountNumber, Integer accountCount) {
+      System.out.println("AutoImportDisplay.updateForNextImport: " + accountNumber);
+      finished = false;
     }
 
-    public void showCloudSubscriptionError(String email, CloudSubscriptionStatus status) {
-      callback.subscriptionError(email, status);
+    public void showNoImport(Glob remove, boolean first) {
+      System.out.println("AutoImportDisplay.showNoImport");
+      finished = true;
+      callbackResult = new Runnable() {
+        public void run() {
+          callback.nothingToImport();
+        }
+      };
+    }
+
+    public void showPreview() {
+      System.out.println("AutoImportDisplay.showPreview");
+    }
+
+    public void showImportCompleted(final Set<Integer> months, final int importedTransactionCount, final int ignoredTransactionCount, final int autocategorizedTransactionCount) {
+      System.out.println("AutoImportDisplay.showImportCompleted");
+      finished = true;
+      final Set<Key> createdTransactionImports = localRepository.getCurrentChanges().getCreated(TransactionImport.TYPE);
+      callbackResult = new Runnable() {
+        public void run() {
+          callback.importCompleted(months, importedTransactionCount, createdTransactionImports);
+        }
+      };
+    }
+
+    public void showCloudSubscriptionError(final String email, final CloudSubscriptionStatus status) {
+      System.out.println("AutoImportDisplay.showCloudSubscriptionError");
+      finished = true;
+      callbackResult = new Runnable() {
+        public void run() {
+          callback.subscriptionError(email, status);
+        }
+      };
     }
 
     public Window getParentWindow() {
@@ -102,6 +149,7 @@ public class AutoImporter {
     }
 
     public void closeDialog() {
+      System.out.println("AutoImportDisplay.closeDialog");
       throw new NotSupported();
     }
   }

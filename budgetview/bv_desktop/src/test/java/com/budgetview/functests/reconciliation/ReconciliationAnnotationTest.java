@@ -124,7 +124,7 @@ public class ReconciliationAnnotationTest extends LoggedInFunctionalTestCase {
 
     categorization.checkFilteringModes("All operations",
                                        "Selected months",
-                                       "Last imported file",
+                                       "Last import",
                                        "Uncategorized operations",
                                        "Uncategorized operations for the selected months",
                                        "Operations to reconcile");
@@ -141,7 +141,7 @@ public class ReconciliationAnnotationTest extends LoggedInFunctionalTestCase {
     categorization.checkShowsAllTransactions();
     categorization.checkFilteringModes("All operations",
                                        "Selected months",
-                                       "Last imported file",
+                                       "Last import",
                                        "Uncategorized operations",
                                        "Uncategorized operations for the selected months",
                                        "Operations to annotate",
@@ -171,7 +171,7 @@ public class ReconciliationAnnotationTest extends LoggedInFunctionalTestCase {
     categorization.checkShowsAllTransactions();
     categorization.checkFilteringModes("All operations",
                                        "Selected months",
-                                       "Last imported file",
+                                       "Last import",
                                        "Uncategorized operations",
                                        "Uncategorized operations for the selected months",
                                        "Operations to reconcile");

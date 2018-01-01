@@ -18,7 +18,7 @@ public interface ImportDisplay {
 
   void showAccountPositionDialogsIfNeeded();
 
-  void showCompleteMessage(Set<Integer> months, int importedTransactionCount, int ignoredTransactionCount, int autocategorizedTransactionCount);
+  void showImportCompleted(Set<Integer> months, int importedTransactionCount, int ignoredTransactionCount, int autocategorizedTransactionCount);
 
   void showMessage(String message);
 

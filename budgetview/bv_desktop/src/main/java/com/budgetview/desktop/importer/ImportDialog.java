@@ -173,7 +173,7 @@ public class ImportDialog implements RealAccountImporter, Disposable, ImportDisp
     setCurrentPanel(previewPanel);
   }
 
-  public void showCompleteMessage(Set<Integer> months, int importedTransactionCount, int ignoredTransactionCount, int autocategorizedTransaction) {
+  public void showImportCompleted(Set<Integer> months, int importedTransactionCount, int ignoredTransactionCount, int autocategorizedTransaction) {
     completionPanel.update(months, importedTransactionCount, ignoredTransactionCount, autocategorizedTransaction);
     setCurrentPanel(completionPanel);
   }

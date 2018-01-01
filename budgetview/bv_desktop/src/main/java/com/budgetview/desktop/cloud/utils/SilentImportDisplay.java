@@ -26,6 +26,38 @@ public abstract class SilentImportDisplay implements ImportDisplay {
     throw new NotSupported();
   }
 
+  public boolean askForSeriesImport(Set<Key> newSeries, Glob targetAccount) {
+    throw new NotSupported();
+  }
+
+  public void showAccountPositionDialogsIfNeeded() {
+    // do nothing
+  }
+
+  public void showMessage(String message) {
+    throw new NotSupported();
+  }
+
+  public void showMessage(String message, String details) {
+    throw new NotSupported();
+  }
+
+  public void showLastImportedMonthAndClose(Set<Integer> months) {
+    throw new NotSupported();
+  }
+
+  public void updatePassword(Glob cloudProviderConnection) {
+    throw new NotSupported();
+  }
+
+  public void showCloudUnsubscription() {
+    throw new NotSupported();
+  }
+
+  public void showCloudError(Exception e) {
+    throw new NotSupported();
+  }
+
   public void showCloudEdition() {
     throw new NotSupported();
   }
@@ -62,47 +94,4 @@ public abstract class SilentImportDisplay implements ImportDisplay {
     throw new NotSupported();
   }
 
-  public boolean askForSeriesImport(Set<Key> newSeries, Glob targetAccount) {
-    throw new NotSupported();
-  }
-
-  public void showNoImport(Glob remove, boolean first) {
-    throw new NotSupported();
-  }
-
-  public void updateForNextImport(String filePath, List<String> dateFormats, Glob importedAccount, Integer accountNumber, Integer accountCount) {
-    throw new NotSupported();
-  }
-
-  public void showAccountPositionDialogsIfNeeded() {
-    throw new NotSupported();
-  }
-
-  public void showCompleteMessage(Set<Integer> months, int importedTransactionCount, int ignoredTransactionCount, int autocategorizedTransactionCount) {
-    throw new NotSupported();
-  }
-
-  public void showMessage(String message) {
-    throw new NotSupported();
-  }
-
-  public void showMessage(String message, String details) {
-    throw new NotSupported();
-  }
-
-  public void showLastImportedMonthAndClose(Set<Integer> months) {
-    throw new NotSupported();
-  }
-
-  public void updatePassword(Glob cloudProviderConnection) {
-    throw new NotSupported();
-  }
-
-  public void showCloudUnsubscription() {
-    throw new NotSupported();
-  }
-
-  public void showCloudError(Exception e) {
-    throw new NotSupported();
-  }
 }

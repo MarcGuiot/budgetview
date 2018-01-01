@@ -821,6 +821,10 @@ public class CategorizationChecker extends FilteredViewChecker<CategorizationChe
     checkTransactionFilterMode(CategorizationFilteringMode.SELECTED_MONTHS);
   }
 
+  public void checkShowsLastImport() {
+    checkTransactionFilterMode(CategorizationFilteringMode.LAST_IMPORT);
+  }
+
   public void checkShowsUncategorizedTransactionsOnly() {
     checkTransactionFilterMode(CategorizationFilteringMode.UNCATEGORIZED);
   }
@@ -865,7 +869,7 @@ public class CategorizationChecker extends FilteredViewChecker<CategorizationChe
   }
 
   public void showLastImportedFileOnly() {
-    selectTransactionFilterMode(CategorizationFilteringMode.LAST_IMPORTED_FILE);
+    selectTransactionFilterMode(CategorizationFilteringMode.LAST_IMPORT);
   }
 
   public void showUncategorizedTransactionsOnly() {

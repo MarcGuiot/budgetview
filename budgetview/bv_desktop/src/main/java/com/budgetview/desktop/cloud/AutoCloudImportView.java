@@ -5,14 +5,20 @@ import com.budgetview.desktop.WindowManager;
 import com.budgetview.desktop.card.NavigationService;
 import com.budgetview.desktop.components.ProgressPanel;
 import com.budgetview.model.CloudDesktopUser;
+import com.budgetview.model.Transaction;
 import com.budgetview.shared.cloud.CloudSubscriptionStatus;
 import com.budgetview.utils.Lang;
 import org.globsframework.gui.GlobsPanelBuilder;
+import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
+import org.globsframework.model.Key;
+import org.globsframework.model.utils.GlobMatchers;
+import org.globsframework.utils.Runnables;
 import org.globsframework.utils.directory.Directory;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
+import java.util.Set;
 
 public class AutoCloudImportView extends View {
 
@@ -21,10 +27,7 @@ public class AutoCloudImportView extends View {
   private ProgressPanel progressPanel;
   private JButton actionButton;
   private JButton cancelButton;
-  private Runnable switchToMainPanel = new Runnable() {
-    public void run() {
-    }
-  };
+  private Runnable switchToMainPanel = Runnables.NO_OP;
 
   public AutoCloudImportView(GlobRepository repository, Directory directory) {
     super(repository, directory);
@@ -51,13 +54,16 @@ public class AutoCloudImportView extends View {
   }
 
   private boolean shouldDisplay() {
-    return false; // repository.contains(CloudDesktopUser.KEY) && repository.get(CloudDesktopUser.KEY).isTrue(CloudDesktopUser.REGISTERED);
+    return repository.contains(CloudDesktopUser.KEY) && repository.get(CloudDesktopUser.KEY).isTrue(CloudDesktopUser.REGISTERED);
   }
 
-  public AbstractAction gotoCategorization() {
+  public AbstractAction gotoCategorization(final Set<Key> createdTransactionImports, final Runnable switchToMainPanel) {
     return new AbstractAction(Lang.get("autoimport.cloud.goto.categorization")) {
       public void actionPerformed(ActionEvent e) {
-        directory.get(NavigationService.class).gotoCategorizationForLastImport();
+        System.out.println("AutoCloudImportView.actionPerformed: " + createdTransactionImports);
+        GlobList transactions = repository.getAll(Transaction.TYPE, GlobMatchers.linkedTo(createdTransactionImports, Transaction.IMPORT));
+        directory.get(NavigationService.class).gotoCategorization(transactions, false);
+        switchToMainPanel.run();
       }
     };
   }
@@ -88,8 +94,16 @@ public class AutoCloudImportView extends View {
     progressPanel.start();
     windowManager.setPanel(panel);
     autoImporter.start(new AutoImporter.Callback() {
-      public void importCompleted() {
-        update(Lang.get(""), gotoCategorization());
+
+      public void importCompleted(Set<Integer> months, int importedTransactionCount, Set<Key> createdTransactionImports) {
+        String message = importedTransactionCount == 1 ?
+          Lang.get("autoimport.cloud.import.completed.one") :
+          Lang.get("autoimport.cloud.import.completed.many", importedTransactionCount);
+        update(message, gotoCategorization(createdTransactionImports, switchToMainPanel));
+      }
+
+      public void nothingToImport() {
+
       }
 
       public void needsManualImport() {

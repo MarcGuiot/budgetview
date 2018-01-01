@@ -230,6 +230,13 @@ public class GlobMatchers {
     return fieldEquals(link, targetvalue);
   }
 
+  public static GlobMatcher linkedTo(Collection<Key> targetKeys, final LinkField link) {
+    if (targetKeys.isEmpty()) {
+      return NONE;
+    }
+    return fieldIn(link, GlobUtils.getValues(targetKeys, link.getTargetKeyField()));
+  }
+
   public static GlobMatcher linkTargetFieldEquals(final Link link, final Field targetField,
                                                   final Object targetFieldValue) {
     return new GlobMatcher() {

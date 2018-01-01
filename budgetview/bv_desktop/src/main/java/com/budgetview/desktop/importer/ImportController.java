@@ -136,7 +136,7 @@ public class ImportController implements RealAccountImporter, Disposable {
         AutoCategorizationFunctor autoCategorizationFunctor = autocategorize();
         deleteEmptyImport();
         display.showAccountPositionDialogsIfNeeded();
-        display.showCompleteMessage(months,
+        display.showImportCompleted(months,
                                     autoCategorizationFunctor.getImportedTransactionCount(),
                                     autoCategorizationFunctor.getIgnoredTransactionCount(importSession.getTotalImportedTransactionsCount()),
                                     autoCategorizationFunctor.getAutocategorizedTransactionCount());
@@ -250,7 +250,7 @@ public class ImportController implements RealAccountImporter, Disposable {
     nextImport();
   }
 
-  public void completeImport(Glob targetAccount, String dateFormat) {
+  public void completeImportForAccount(Glob targetAccount, String dateFormat) {
     Set<Key> newSeries = importSession.getNewSeries();
     if (!newSeries.isEmpty()) {
       importSession.setImportSeries(display.askForSeriesImport(newSeries, targetAccount));

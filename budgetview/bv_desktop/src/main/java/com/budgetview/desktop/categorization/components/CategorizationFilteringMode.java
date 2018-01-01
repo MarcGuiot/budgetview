@@ -22,7 +22,7 @@ import static org.globsframework.model.utils.GlobMatchers.*;
 public enum CategorizationFilteringMode {
   ALL(1),
   SELECTED_MONTHS(2),
-  LAST_IMPORTED_FILE(3),
+  LAST_IMPORT(3),
   UNCATEGORIZED(4),
   UNCATEGORIZED_SELECTED_MONTHS(5),
   MISSING_RECONCILIATION_ANNOTATION(6),
@@ -52,7 +52,7 @@ public enum CategorizationFilteringMode {
         return GlobMatchers.fieldIn(Transaction.BUDGET_MONTH, selectedMonthIds);
       }
 
-      case LAST_IMPORTED_FILE:
+      case LAST_IMPORT:
         GlobList imports = repository.getAll(TransactionImport.TYPE)
           .sortSelf(new GlobFieldsComparator(TransactionImport.IMPORT_DATE, true, TransactionImport.ID, true));
         if (imports.isEmpty()) {

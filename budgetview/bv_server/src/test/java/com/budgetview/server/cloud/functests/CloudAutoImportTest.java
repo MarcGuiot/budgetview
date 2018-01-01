@@ -51,16 +51,20 @@ public class CloudAutoImportTest extends CloudDesktopTestCase {
         {"2016/08/12", "EDF", "-50.00"},
         {"2016/08/10", "AUCHAN", "-100.00"},
       })
+      .importAccountAndOpenNext()
+      .checkTransactions(new Object[][]{
+        {"2016/08/11", "FNAC", "-200.00"},
+      })
       .importAccountAndComplete();
 
     budgea.sendStatement(BudgeaStatement.init()
                            .addConnection(1, 123, 40, "Connecteur de test", "2016-08-15 17:44:26")
                            .addAccount(1, "Main account 1", "100200300", "checking", 1000.00, "2016-08-15 13:00:00")
-                           .addTransaction(3, "2016-08-13 13:00:00", -25.00, "TOTAL", BudgeaCategory.ESSENCE)
-                           .addTransaction(4, "2016-08-15 15:00:00", -50.00, "FOUQUETS", BudgeaCategory.RESTAURANT)
+                           .addTransaction(4, "2016-08-13 13:00:00", -25.00, "TOTAL", BudgeaCategory.ESSENCE)
+                           .addTransaction(5, "2016-08-15 15:00:00", -50.00, "FOUQUETS", BudgeaCategory.RESTAURANT)
                            .endAccount()
                            .addAccount(2, "Main account 2", "200300400", "checking", 1500.00, "2016-08-15 13:00:00")
-                           .addTransaction(3, "2016-08-13 14:00:00", -500.00, "APPLE")
+                           .addTransaction(6, "2016-08-13 14:00:00", -500.00, "APPLE")
                            .endAccount()
                            .endConnection()
                            .get());
@@ -72,6 +76,13 @@ public class CloudAutoImportTest extends CloudDesktopTestCase {
     .performAction("Categorize operations");
 
     views.checkCategorizationSelected();
+
+    categorization.checkShowsAllTransactions();
+    categorization.initContent()
+      .add("10/08/2016", "", "AUCHAN", -100.00)
+      .add("12/08/2016", "", "EDF", -50.00)
+      .add("11/08/2016", "", "FNAC", -200.00)
+      .check();
   }
 
   public void testCancelAfterImport() throws Exception {
