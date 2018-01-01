@@ -35,7 +35,8 @@
 
     <row weightY="0.1">
       <filler fill="horizontal"/>
-      <button ref="action" styleClass="widget"/>
+      <button ref="cancel"/>
+      <button ref="action"/>
       <filler fill="horizontal"/>
     </row>
 

@@ -43,6 +43,7 @@ public class AutoImporter {
     void needsManualImport();
 
     void subscriptionError(String email, CloudSubscriptionStatus status);
+
   }
 
   public AutoImporter(GlobRepository repository, Directory directory) {
