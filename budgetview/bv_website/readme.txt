@@ -8,4 +8,4 @@ avec comme paramètres :
 
 soit :
 
-   budgetview/bv_website/fr/siteweaver.xml 5.196.26.111 / fr_mybudgetview ninja600
+   budgetview/bv_website/fr/siteweaver.xml <ftp> / <user ftp> <pwd ftp>

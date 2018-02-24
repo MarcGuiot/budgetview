@@ -142,6 +142,8 @@
                 title="Comment changer le mot de passe d'accès à ma banque ?"/>
           <page file="support/faq/sync/modifier_adresse_email.html"
                 title="Comment modifier l'adresse email de mon compte BudgetView Sync ?"/>
+          <page file="support/faq/sync/arreter_abonnement_sync.html"
+                title="Comment arrêter mon abonnement BudgetView Sync ?"/>
           <page file="support/faq/sync/suppression_compte_sync.html"
                 title="Comment supprimer mon compte BudgetView Sync ?"/>
           <page file="support/faq/sync/confidentialite_securite_donnees.html"
