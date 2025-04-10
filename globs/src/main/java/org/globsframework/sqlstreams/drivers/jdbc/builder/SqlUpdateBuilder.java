@@ -8,7 +8,7 @@ import org.globsframework.sqlstreams.SqlRequest;
 import org.globsframework.sqlstreams.constraints.Constraint;
 import org.globsframework.sqlstreams.drivers.jdbc.impl.BlobUpdater;
 import org.globsframework.sqlstreams.drivers.jdbc.request.JdbcUpdateRequest;
-import org.globsframework.sqlstreams.exceptions.GlobsSQLException;
+import org.globsframework.sqlstreams.exceptions.GlobsSqlException;
 import org.globsframework.streams.accessors.*;
 import org.globsframework.streams.accessors.utils.*;
 import org.globsframework.utils.exceptions.InvalidState;
@@ -178,7 +178,7 @@ public class SqlUpdateBuilder implements org.globsframework.sqlstreams.SqlUpdate
     }
   }
 
-  public int run() throws GlobsSQLException {
+  public int run() throws GlobsSqlException {
     return getRequest().execute();
   }
 }

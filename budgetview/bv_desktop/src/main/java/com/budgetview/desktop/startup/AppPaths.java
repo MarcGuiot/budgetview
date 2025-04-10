@@ -53,6 +53,7 @@ public class AppPaths {
       if (GuiUtils.isXP()) {
         return System.getProperty("user.home") + File.separator + "Application Data" + BUDGET_VIEW;
       }
+      return System.getProperty("user.home") + File.separator + "AppData" + File.separator + "Local" + BUDGET_VIEW;
     }
     return System.getProperty("user.home") + "/.budgetview";
   }
@@ -150,7 +151,7 @@ public class AppPaths {
   }
 
   public static String getCurrentDataPath() {
-    return getCurrentStoragePath() + "/data";
+    return getCurrentStoragePath() + File.separator + "data";
   }
 
   public static String getCurrentStoragePath() {

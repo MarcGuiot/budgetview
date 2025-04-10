@@ -148,6 +148,9 @@ public class UpgradeTrigger implements ChangeSetListener {
       AddOnTrigger.alignWithUser(repository);
     }
 
+    // on ouvre tout a tous le monde.
+    AddOnTrigger.alignWithUser(repository);
+
     // Dans tous les cas :
 
     SeriesErrorsUpgrade.fixInvalidTransfers(repository);

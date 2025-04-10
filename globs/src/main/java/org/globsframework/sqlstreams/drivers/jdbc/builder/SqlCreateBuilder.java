@@ -8,7 +8,7 @@ import org.globsframework.sqlstreams.SqlCreateRequest;
 import org.globsframework.sqlstreams.drivers.jdbc.JdbcConnection;
 import org.globsframework.sqlstreams.drivers.jdbc.impl.BlobUpdater;
 import org.globsframework.sqlstreams.drivers.jdbc.request.JdbcCreateRequest;
-import org.globsframework.sqlstreams.exceptions.GlobsSQLException;
+import org.globsframework.sqlstreams.exceptions.GlobsSqlException;
 import org.globsframework.streams.accessors.*;
 import org.globsframework.streams.accessors.utils.*;
 import org.globsframework.utils.collections.Pair;
@@ -152,7 +152,7 @@ public class SqlCreateBuilder implements org.globsframework.sqlstreams.SqlCreate
     return new JdbcCreateRequest(fields, connection, globType, globsDB, blobUpdater, jdbcConnection);
   }
 
-  public void run() throws GlobsSQLException {
+  public void run() throws GlobsSqlException {
     getRequest().execute();
   }
 }

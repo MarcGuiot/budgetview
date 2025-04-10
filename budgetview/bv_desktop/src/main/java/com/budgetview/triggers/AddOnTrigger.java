@@ -18,7 +18,7 @@ public class AddOnTrigger extends TypeChangeSetListener {
   public static void alignWithUser(GlobRepository repository) {
     Glob user = repository.find(User.KEY);
     if (user != null && repository.contains(AddOns.KEY)) {
-      AddOns.setAllEnabled(repository, user.isTrue(User.IS_REGISTERED_USER));
+      AddOns.setAllEnabled(repository, true);
     }
   }
 }

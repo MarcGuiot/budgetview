@@ -2,6 +2,7 @@ package com.budgetview.desktop;
 
 import com.budgetview.client.DataAccess;
 import com.budgetview.desktop.accounts.utils.MonthDay;
+import com.budgetview.desktop.addons.AddOn;
 import com.budgetview.desktop.backup.BackupService;
 import com.budgetview.desktop.browsing.BrowsingService;
 import com.budgetview.desktop.model.DesktopModel;
@@ -71,8 +72,11 @@ public class PicsouInit {
         .get();
 
     repository.findOrCreate(User.KEY,
-                            value(User.LICENSE_ACTIVATION_STATE, badJarVersion ? LicenseActivationState.STARTUP_CHECK_JAR_VERSION.getId() : null),
-                            value(User.IS_REGISTERED_USER, registeredUser));
+            value(User.LICENSE_ACTIVATION_STATE, LicenseActivationState.ACTIVATION_OK.getId()),
+            value(User.IS_REGISTERED_USER, registeredUser));
+    repository.update(User.KEY,
+            value(User.LICENSE_ACTIVATION_STATE, LicenseActivationState.ACTIVATION_OK.getId()),
+            value(User.IS_REGISTERED_USER, registeredUser));
     repository.findOrCreate(AppVersionInformation.KEY,
                             value(AppVersionInformation.LATEST_AVALAIBLE_JAR_VERSION, Application.JAR_VERSION),
                             value(AppVersionInformation.LATEST_BANK_CONFIG_SOFTWARE_VERSION, Application.BANK_CONFIG_VERSION),
@@ -275,6 +279,12 @@ public class PicsouInit {
           repository.completeChangeSet();
         }
       }
+      repository.update(AddOns.KEY,
+              value(AddOns.ANALYSIS, true),
+              value(AddOns.PROJECTS, true),
+              value(AddOns.GROUPS, true),
+              value(AddOns.EXTRA_RANGE, true)
+              );
       repository.update(CurrentMonth.KEY,
                         value(CurrentMonth.CURRENT_MONTH, TimeService.getCurrentMonth()),
                         value(CurrentMonth.CURRENT_DAY, TimeService.getCurrentDay()));
@@ -330,7 +340,10 @@ public class PicsouInit {
                               value(CurrentMonth.CURRENT_MONTH, TimeService.getCurrentMonth()),
                               value(CurrentMonth.CURRENT_DAY, TimeService.getCurrentDay()));
 
-      repository.findOrCreate(AddOns.KEY);
+      repository.findOrCreate(AddOns.KEY, FieldValue.value(AddOns.EXTRA_RANGE, true),
+              FieldValue.value(AddOns.GROUPS, true),
+              FieldValue.value(AddOns.PROJECTS, true),
+              FieldValue.value(AddOns.ANALYSIS, true));
 
       repository.findOrCreate(Account.MAIN_SUMMARY_KEY,
                               value(Account.ACCOUNT_TYPE, AccountType.MAIN.getId()),

@@ -24,8 +24,8 @@
         <artifactId>maven-compiler-plugin</artifactId>
         <version>2.3.2</version>
         <configuration>
-          <source>1.6</source>
-          <target>1.6</target>
+          <source>1.8</source>
+          <target>1.8</target>
           <encoding>UTF-8</encoding>
           <debug>true</debug>
         </configuration>
@@ -109,11 +109,11 @@
       <artifactId>swingx</artifactId>
       <version>0.9.7</version>
     </dependency>
-    <dependency>
-      <groupId>com.apple.laf</groupId>
-      <artifactId>ui</artifactId>
-      <version>1.0</version>
-    </dependency>
+<!--    <dependency>-->
+<!--      <groupId>com.apple.laf</groupId>-->
+<!--      <artifactId>ui</artifactId>-->
+<!--      <version>1.0</version>-->
+<!--    </dependency>-->
     <dependency>
       <groupId>org.apache.httpcomponents</groupId>
       <artifactId>httpclient</artifactId>
@@ -265,11 +265,11 @@
                     <jar destfile="config.jar">
                       <fileset dir="src/main/resources" includes="banks/**"/>
                     </jar>
-                    <delete dir="target/obfuscated"/>
-                    <java fork="yes" jar="dev/Zelix/ZKM.jar">
-                      <jvmarg line="-Xmx1g"/>
-                      <arg line="-de dev/Zelix/defaultExclude.txt dev/ant/zelix.txt"/>
-                    </java>
+<!--                    <delete dir="target/obfuscated"/>-->
+<!--                    <java fork="yes" jar="dev/Zelix/ZKM.jar">-->
+<!--                      <jvmarg line="-Xmx1g"/>-->
+<!--                      <arg line="-de dev/Zelix/defaultExclude.txt dev/ant/zelix.txt"/>-->
+<!--                    </java>-->
                   </tasks>
                 </configuration>
                 <goals>

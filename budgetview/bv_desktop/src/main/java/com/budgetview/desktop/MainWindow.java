@@ -65,7 +65,7 @@ public class MainWindow implements WindowManager {
   private DataAccessDecorator serverAccess = new DataAccessDecorator(null);
   private PicsouInit picsouInit;
   private MainPanel mainPanel;
-  private boolean registered = false;
+  private boolean registered = true;
   static private ShutDownThread thread;
 
   // Il faut etre sur qu'on ne fera plus de modif dans le repository en dehors du thread de dispath swing

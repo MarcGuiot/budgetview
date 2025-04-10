@@ -11,7 +11,7 @@ import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
 import org.globsframework.sqlstreams.*;
 import org.globsframework.sqlstreams.constraints.Where;
-import org.globsframework.sqlstreams.exceptions.GlobsSQLException;
+import org.globsframework.sqlstreams.exceptions.GlobsSqlException;
 import org.globsframework.utils.Strings;
 import org.globsframework.utils.directory.Directory;
 import org.globsframework.utils.exceptions.ItemNotFound;
@@ -33,7 +33,7 @@ public class AuthenticationService {
     this.database = directory.get(GlobsDatabase.class);
   }
 
-  public Glob findUserWithEmail(String email) throws GlobsSQLException {
+  public Glob findUserWithEmail(String email) throws GlobsSqlException {
     String lowerCaseEmail = email.toLowerCase();
     SqlConnection connection = database.connect();
     try {
@@ -49,14 +49,14 @@ public class AuthenticationService {
       try {
         connection.commitAndClose();
       }
-      catch (GlobsSQLException e) {
+      catch (GlobsSqlException e) {
         logger.error("Commit failed when trying to find user: " + email, e);
       }
     }
     return null;
   }
 
-  public Glob createUser(String email, String lang) throws GlobsSQLException {
+  public Glob createUser(String email, String lang) throws GlobsSqlException {
     String lowerCaseEmail = email.toLowerCase();
     SqlConnection connection = database.connect();
     try {
@@ -74,7 +74,7 @@ public class AuthenticationService {
       try {
         connection.commitAndClose();
       }
-      catch (GlobsSQLException e) {
+      catch (GlobsSqlException e) {
         logger.error("Commit failed when looking for user: " + email, e);
       }
     }
@@ -114,7 +114,7 @@ public class AuthenticationService {
       try {
         connection.commitAndClose();
       }
-      catch (GlobsSQLException e) {
+      catch (GlobsSqlException e) {
         logger.error("Commit failed when trying to find user: " + email, e);
       }
     }
@@ -148,7 +148,7 @@ public class AuthenticationService {
       try {
         connection.commitAndClose();
       }
-      catch (GlobsSQLException e) {
+      catch (GlobsSqlException e) {
         logger.error("Commit failed when registering device for user: " + userId, e);
       }
     }
@@ -185,7 +185,7 @@ public class AuthenticationService {
       try {
         connection.commitAndClose();
       }
-      catch (GlobsSQLException e) {
+      catch (GlobsSqlException e) {
         logger.error("Commit failed when trying to find user and token for: " + userId + " / " + deviceId + " / " + token, e);
       }
     }
@@ -236,7 +236,7 @@ public class AuthenticationService {
       try {
         connection.commitAndClose();
       }
-      catch (GlobsSQLException e) {
+      catch (GlobsSqlException e) {
         logger.error("Commit failed when looking for user: " + userId, e);
       }
     }
@@ -269,7 +269,7 @@ public class AuthenticationService {
       try {
         connection.commitAndClose();
       }
-      catch (GlobsSQLException e) {
+      catch (GlobsSqlException e) {
         logger.error("Commit failed when looking for user: " + userId, e);
       }
     }
@@ -286,7 +286,7 @@ public class AuthenticationService {
       try {
         connection.commitAndClose();
       }
-      catch (GlobsSQLException e) {
+      catch (GlobsSqlException e) {
         logger.error("Commit failed when looking for user: " + user.get(CloudUser.ID), e);
       }
     }

@@ -3,7 +3,6 @@ package com.budgetview.server.cloud.servlet;
 import com.budgetview.server.cloud.commands.AuthenticatedCommand;
 import com.budgetview.server.cloud.commands.Command;
 import com.budgetview.server.cloud.model.CloudUser;
-import com.budgetview.server.cloud.model.ProviderUpdate;
 import com.budgetview.server.cloud.services.AuthenticationService;
 import com.budgetview.server.cloud.services.EmailValidationService;
 import com.budgetview.server.cloud.utils.ValidationFailed;
@@ -12,12 +11,9 @@ import org.apache.log4j.Logger;
 import org.globsframework.json.JsonGlobWriter;
 import org.globsframework.sqlstreams.GlobsDatabase;
 import org.globsframework.sqlstreams.SqlConnection;
-import org.globsframework.sqlstreams.SqlSelect;
 import org.globsframework.sqlstreams.constraints.Where;
-import org.globsframework.sqlstreams.exceptions.GlobsSQLException;
-import org.globsframework.streams.GlobStream;
+import org.globsframework.sqlstreams.exceptions.GlobsSqlException;
 import org.globsframework.utils.directory.Directory;
-import org.json.JSONException;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -80,7 +76,7 @@ public class UserEmailChangeValidationServlet extends HttpCloudServlet {
         }
       }
 
-      private void updateEmailAddress(Integer userId, String newEmail) throws GlobsSQLException {
+      private void updateEmailAddress(Integer userId, String newEmail) throws GlobsSqlException {
         SqlConnection connection = database.connect();
         connection.startUpdate(CloudUser.TYPE, Where.fieldEquals(CloudUser.ID, userId))
           .set(CloudUser.EMAIL, newEmail)

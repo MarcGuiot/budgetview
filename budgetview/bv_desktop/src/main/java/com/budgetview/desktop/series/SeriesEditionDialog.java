@@ -740,8 +740,12 @@ public class SeriesEditionDialog {
       }
       amountEditionPanel.completeBeforeCommit();
       localRepository.commitChanges(false);
-      localRepository.rollback();
-      dialog.setVisible(false);
+        try {
+            localRepository.rollback();
+        } catch (Exception ex) {
+            throw new RuntimeException(ex);
+        }
+        dialog.setVisible(false);
     }
 
     private void trimNames() {

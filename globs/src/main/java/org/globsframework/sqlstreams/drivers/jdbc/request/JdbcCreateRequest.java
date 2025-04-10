@@ -10,7 +10,7 @@ import org.globsframework.sqlstreams.drivers.jdbc.JdbcConnection;
 import org.globsframework.sqlstreams.drivers.jdbc.impl.BlobUpdater;
 import org.globsframework.sqlstreams.drivers.jdbc.impl.GeneratedIds;
 import org.globsframework.sqlstreams.drivers.jdbc.impl.SqlValueFieldVisitor;
-import org.globsframework.sqlstreams.exceptions.GlobsSQLException;
+import org.globsframework.sqlstreams.exceptions.GlobsSqlException;
 import org.globsframework.sqlstreams.utils.PrettyWriter;
 import org.globsframework.sqlstreams.utils.StringPrettyWriter;
 import org.globsframework.streams.accessors.Accessor;
@@ -89,7 +89,7 @@ public class JdbcCreateRequest implements SqlCreateRequest {
     return writer.toString();
   }
 
-  public int execute() throws GlobsSQLException {
+  public int execute() throws GlobsSqlException {
     try {
       int index = 0;
       for (Pair<Field, Accessor> pair : fields) {

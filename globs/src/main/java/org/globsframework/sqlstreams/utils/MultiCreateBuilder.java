@@ -5,7 +5,7 @@ import org.globsframework.metamodel.GlobType;
 import org.globsframework.sqlstreams.SqlCreateBuilder;
 import org.globsframework.sqlstreams.SqlConnection;
 import org.globsframework.sqlstreams.SqlRequest;
-import org.globsframework.sqlstreams.exceptions.GlobsSQLException;
+import org.globsframework.sqlstreams.exceptions.GlobsSqlException;
 
 import java.util.*;
 
@@ -28,7 +28,7 @@ public class MultiCreateBuilder {
     return new MultiSqlRequest(createBuilders);
   }
 
-  public void run() throws GlobsSQLException {
+  public void run() throws GlobsSqlException {
     getRequest().execute();
   }
 
@@ -42,7 +42,7 @@ public class MultiCreateBuilder {
       }
     }
 
-    public int execute() throws GlobsSQLException {
+    public int execute() throws GlobsSqlException {
       int result = 0;
       for (SqlRequest sqlRequest : sqlRequests) {
         result += sqlRequest.execute();

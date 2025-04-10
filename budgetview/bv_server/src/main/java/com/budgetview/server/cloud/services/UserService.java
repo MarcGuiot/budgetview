@@ -6,9 +6,8 @@ import org.globsframework.model.Glob;
 import org.globsframework.sqlstreams.GlobsDatabase;
 import org.globsframework.sqlstreams.SqlConnection;
 import org.globsframework.sqlstreams.constraints.Where;
-import org.globsframework.sqlstreams.exceptions.GlobsSQLException;
+import org.globsframework.sqlstreams.exceptions.GlobsSqlException;
 import org.globsframework.utils.directory.Directory;
-import org.globsframework.utils.exceptions.ItemNotFound;
 
 import java.io.IOException;
 
@@ -72,7 +71,7 @@ public class UserService {
         .startDelete(CloudUser.TYPE, Where.fieldEquals(CloudUser.ID, userId))
         .execute();
     }
-    catch (GlobsSQLException e) {
+    catch (GlobsSqlException e) {
       callback.processError("Failed to delete user " + userId + " with provider user ID " + providerUserId + " from database", e);
       return false;
     }

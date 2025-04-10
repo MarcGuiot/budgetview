@@ -451,8 +451,10 @@ public class SplitTransactionDialog {
         label.setForeground(Color.WHITE);
       }
       else {
-        boolean newTransaction = transaction.get(Transaction.AMOUNT) == null;
-        label.setForeground(newTransaction ? grey : Color.BLACK);
+        if (transaction.exists()) {
+          boolean newTransaction = transaction.get(Transaction.AMOUNT) == null;
+          label.setForeground(newTransaction ? grey : Color.BLACK);
+        }
       }
     }
   }

@@ -3,7 +3,6 @@ package org.globsframework.gui.splits.utils;
 import org.globsframework.utils.Strings;
 import org.globsframework.utils.Utils;
 import org.globsframework.utils.exceptions.ResourceAccessFailed;
-import sun.security.action.GetPropertyAction;
 
 import javax.swing.*;
 import javax.swing.text.JTextComponent;
@@ -18,7 +17,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.security.AccessController;
 
 public class GuiUtils {
 
@@ -37,7 +35,7 @@ public class GuiUtils {
   private static final String WINDOWS_PLATFORM_ID = "Windows";
 
   static {
-    String os = AccessController.doPrivileged(new GetPropertyAction("os.name"));
+    String os = System.getProperty("os.name"); //AccessController.doPrivileged(new GetPropertyAction("os.name"));
     IS_MACOSX = os.contains(MAC_PLATFORM_ID);
     IS_LINUX = os.contains(LINUX_PLATFORM_ID);
     IS_WINDOWS = os.contains(WINDOWS_PLATFORM_ID);
@@ -46,7 +44,7 @@ public class GuiUtils {
     IS_WIN8 = IS_WINDOWS && os.toLowerCase().contains("8");
     IS_XP = IS_WINDOWS && os.toLowerCase().contains("xp");
 
-    String vm = AccessController.doPrivileged(new GetPropertyAction("java.vm.name"));
+    String vm = System.getProperty("java.vm.name"); //AccessController.doPrivileged(new GetPropertyAction("java.vm.name"));
     IS_OPEN_JDK = vm.contains("OpenJDK");
   }
 

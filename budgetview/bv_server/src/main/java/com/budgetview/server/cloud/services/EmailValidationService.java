@@ -13,7 +13,7 @@ import org.globsframework.model.GlobList;
 import org.globsframework.sqlstreams.GlobsDatabase;
 import org.globsframework.sqlstreams.SqlConnection;
 import org.globsframework.sqlstreams.constraints.Where;
-import org.globsframework.sqlstreams.exceptions.GlobsSQLException;
+import org.globsframework.sqlstreams.exceptions.GlobsSqlException;
 import org.globsframework.utils.Strings;
 import org.globsframework.utils.directory.Directory;
 import org.globsframework.utils.exceptions.ItemAlreadyUsed;
@@ -42,11 +42,11 @@ public class EmailValidationService {
     this.mailer = directory.get(Mailer.class);
   }
 
-  public boolean sendDeviceValidationTempCode(Integer userId, String email, String lang) throws GlobsSQLException, MessagingException {
+  public boolean sendDeviceValidationTempCode(Integer userId, String email, String lang) throws GlobsSqlException, MessagingException {
     return mailer.sendCloudDeviceVerificationEmail(email, lang, createCode(userId, email, 8));
   }
 
-  public boolean sendSubscriptionEmailValidationLink(Integer userId, String email, String lang) throws GlobsSQLException, MessagingException {
+  public boolean sendSubscriptionEmailValidationLink(Integer userId, String email, String lang) throws GlobsSqlException, MessagingException {
     String code = createCode(userId, email, 24);
     String url = CloudConstants.getSubscriptionValidationUrl(code);
     return mailer.sendSubscriptionEmailValidationLink(email, lang, url);
@@ -78,7 +78,7 @@ public class EmailValidationService {
       try {
         connection.commitAndClose();
       }
-      catch (GlobsSQLException e) {
+      catch (GlobsSqlException e) {
         logger.error("Commit failed when sending temp code for user: " + userId + " with email: " + email, e);
       }
     }
@@ -118,7 +118,7 @@ public class EmailValidationService {
       try {
         connection.commitAndClose();
       }
-      catch (GlobsSQLException e) {
+      catch (GlobsSqlException e) {
         logger.error("Commit failed when checking temp code for: " + userId, e);
       }
     }
@@ -165,7 +165,7 @@ public class EmailValidationService {
       try {
         connection.commitAndClose();
       }
-      catch (GlobsSQLException e) {
+      catch (GlobsSqlException e) {
         logger.error("Commit failed when finding user id for code: " + code, e);
       }
     }

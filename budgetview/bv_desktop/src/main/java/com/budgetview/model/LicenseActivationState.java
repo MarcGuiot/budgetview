@@ -52,32 +52,33 @@ public enum LicenseActivationState implements GlobConstantContainer {
     if (state == null) {
       return null;
     }
-    switch (state) {
-      case 1:
-        return ACTIVATION_IN_PROGRESS;
-      case 2:
-        return ACTIVATION_OK;
-      case 3:
-        return ACTIVATION_FAILED_BAD_SIGNATURE;
-      case 4:
-        return ACTIVATION_FAILED_CAN_NOT_CONNECT;
-      case 5:
-        return ACTIVATION_FAILED_HTTP_REQUEST;
-      case 6:
-        return ACTIVATION_FAILED_MAIL_UNKNOWN;
-      // On n'a pas envoyé au serveur les mail, signature et code d'activation alors que c'est un utilisateur
-      // enregistré (donc a priori le repo a ete modifié manuellement)
-      case 8:
-        return ACTIVATION_FAILED_MAIL_SENT;
-      case 9:
-        return ACTIVATION_FAILED_MAIL_NOT_SENT;
-      case 10:
-        return STARTUP_CHECK_KILL_USER;
-      case 11:
-        return STARTUP_CHECK_MAIL_SENT;
-      case 12:
-        return STARTUP_CHECK_JAR_VERSION;
-    }
-    throw new InvalidParameter("Unexpected value " + state);
+    return ACTIVATION_OK;
+//    switch (state) {
+//      case 1:
+//        return ACTIVATION_IN_PROGRESS;
+//      case 2:
+//        return ACTIVATION_OK;
+//      case 3:
+//        return ACTIVATION_FAILED_BAD_SIGNATURE;
+//      case 4:
+//        return ACTIVATION_FAILED_CAN_NOT_CONNECT;
+//      case 5:
+//        return ACTIVATION_FAILED_HTTP_REQUEST;
+//      case 6:
+//        return ACTIVATION_FAILED_MAIL_UNKNOWN;
+//      // On n'a pas envoyé au serveur les mail, signature et code d'activation alors que c'est un utilisateur
+//      // enregistré (donc a priori le repo a ete modifié manuellement)
+//      case 8:
+//        return ACTIVATION_FAILED_MAIL_SENT;
+//      case 9:
+//        return ACTIVATION_FAILED_MAIL_NOT_SENT;
+//      case 10:
+//        return STARTUP_CHECK_KILL_USER;
+//      case 11:
+//        return STARTUP_CHECK_MAIL_SENT;
+//      case 12:
+//        return STARTUP_CHECK_JAR_VERSION;
+//    }
+//    throw new InvalidParameter("Unexpected value " + state);
   }
 }

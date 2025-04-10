@@ -66,8 +66,13 @@ public class LabelCustomizers {
   public static LabelCustomizer stringifier(final GlobStringifier stringifier, final GlobRepository repository) {
     return new LabelCustomizer() {
       public void process(JLabel label, Glob glob, boolean isSelected, boolean hasFocus, int row, int column) {
-        String value = stringifier.toString(glob, repository);
-        label.setText(value);
+        if (glob.exists()) {
+          String value = stringifier.toString(glob, repository);
+          label.setText(value);
+        }
+        else {
+          label.setText("");
+        }
       }
     };
   }
@@ -126,7 +131,9 @@ public class LabelCustomizers {
   public static LabelCustomizer fieldTooltip(final StringField field) {
     return new LabelCustomizer() {
       public void process(JLabel label, Glob glob, boolean isSelected, boolean hasFocus, int row, int column) {
-        label.setToolTipText(glob.get(field));
+        if (glob.exists()) {
+          label.setToolTipText(glob.get(field));
+        }
       }
     };
   }

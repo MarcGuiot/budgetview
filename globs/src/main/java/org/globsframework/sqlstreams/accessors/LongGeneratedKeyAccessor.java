@@ -1,6 +1,6 @@
 package org.globsframework.sqlstreams.accessors;
 
-import org.globsframework.sqlstreams.exceptions.GlobsSQLException;
+import org.globsframework.sqlstreams.exceptions.GlobsSqlException;
 import org.globsframework.streams.accessors.LongAccessor;
 
 import java.sql.ResultSet;
@@ -16,7 +16,7 @@ public class LongGeneratedKeyAccessor implements GeneratedKeyAccessor, LongAcces
       hasGeneratedKey = generatedKeys.next();
     }
     catch (SQLException e) {
-      throw new GlobsSQLException(e);
+      throw new GlobsSqlException(e);
     }
   }
 
@@ -30,11 +30,11 @@ public class LongGeneratedKeyAccessor implements GeneratedKeyAccessor, LongAcces
         return generatedKeys.getLong(1);
       }
       catch (SQLException e) {
-        throw new GlobsSQLException(e);
+        throw new GlobsSqlException(e);
       }
     }
     else {
-      throw new GlobsSQLException("No generated key for request : ");
+      throw new GlobsSqlException("No generated key for request : ");
     }
   }
 

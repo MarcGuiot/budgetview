@@ -340,7 +340,7 @@ public class TransactionView extends View implements Filterable {
         label.setForeground(rendererColors.getTransactionSelectedTextColor());
       }
       else {
-        if (glob.isTrue(Transaction.PLANNED)) {
+        if (glob.exists() && glob.isTrue(Transaction.PLANNED)) {
           label.setForeground(rendererColors.getTransactionPlannedTextColor());
         }
         else {

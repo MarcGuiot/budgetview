@@ -4,7 +4,7 @@ import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
 import org.globsframework.sqlstreams.constraints.Constraint;
-import org.globsframework.sqlstreams.exceptions.GlobsSQLException;
+import org.globsframework.sqlstreams.exceptions.GlobsSqlException;
 import org.globsframework.utils.exceptions.ItemNotFound;
 import org.globsframework.utils.exceptions.TooManyItems;
 
@@ -20,13 +20,13 @@ public interface SqlConnection {
 
   GlobList selectAll(GlobType globType);
 
-  Glob selectUnique(GlobType globType) throws ItemNotFound, TooManyItems,  GlobsSQLException;;
+  Glob selectUnique(GlobType globType) throws ItemNotFound, TooManyItems, GlobsSqlException;;
 
   SqlSelectBuilder startSelect(GlobType globType, Constraint where);
 
-  GlobList selectAll(GlobType globType, Constraint where) throws GlobsSQLException;
+  GlobList selectAll(GlobType globType, Constraint where) throws GlobsSqlException;
 
-  Glob selectUnique(GlobType globType, Constraint where) throws ItemNotFound, TooManyItems, GlobsSQLException;
+  Glob selectUnique(GlobType globType, Constraint where) throws ItemNotFound, TooManyItems, GlobsSqlException;
 
   SqlCreateBuilder startCreate(GlobType globType);
 
@@ -38,11 +38,11 @@ public interface SqlConnection {
 
   SqlRequest startDelete(GlobType globType, Constraint where);
 
-  void commit() throws GlobsSQLException;
+  void commit() throws GlobsSqlException;
 
-  void commitAndClose() throws GlobsSQLException;
+  void commitAndClose() throws GlobsSqlException;
 
-  void rollbackAndClose() throws GlobsSQLException;
+  void rollbackAndClose() throws GlobsSqlException;
 
   Connection getInnerConnection();
 }

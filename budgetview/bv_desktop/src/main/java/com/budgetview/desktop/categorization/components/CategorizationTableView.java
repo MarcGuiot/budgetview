@@ -396,7 +396,7 @@ public class CategorizationTableView extends View implements TableView, Filterab
     }
 
     public void process(JLabel label, Glob glob, boolean isSelected, boolean hasFocus, int row, int column) {
-      if (categorizedTransactions.contains(glob.getKey())) {
+      if (glob.exists() && categorizedTransactions.contains(glob.getKey())) {
         label.setForeground(envelopeSeriesLabelForegroundColor);
         label.setFont(font);
         if (isSelected) {

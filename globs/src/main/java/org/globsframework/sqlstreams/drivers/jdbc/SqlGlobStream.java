@@ -3,7 +3,7 @@ package org.globsframework.sqlstreams.drivers.jdbc;
 import org.globsframework.metamodel.Field;
 import org.globsframework.sqlstreams.accessors.SqlAccessor;
 import org.globsframework.sqlstreams.drivers.jdbc.select.SqlSelectQuery;
-import org.globsframework.sqlstreams.exceptions.GlobsSQLException;
+import org.globsframework.sqlstreams.exceptions.GlobsSqlException;
 import org.globsframework.streams.GlobStream;
 import org.globsframework.streams.accessors.Accessor;
 import org.globsframework.utils.exceptions.UnexpectedApplicationState;
@@ -120,7 +120,7 @@ public class SqlGlobStream implements GlobStream {
       return number.intValue();
     }
     catch (SQLException e) {
-      throw new GlobsSQLException(e);
+      throw new GlobsSqlException(e);
     }
   }
 
@@ -129,7 +129,7 @@ public class SqlGlobStream implements GlobStream {
       return (String)resultSet.getObject(index);
     }
     catch (SQLException e) {
-      throw new GlobsSQLException(e);
+      throw new GlobsSqlException(e);
     }
   }
 
@@ -138,7 +138,7 @@ public class SqlGlobStream implements GlobStream {
       return resultSet.getTimestamp(index);
     }
     catch (SQLException e) {
-      throw new GlobsSQLException(e);
+      throw new GlobsSqlException(e);
     }
   }
 
@@ -147,7 +147,7 @@ public class SqlGlobStream implements GlobStream {
       return resultSet.getBytes(index);
     }
     catch (SQLException e) {
-      throw new GlobsSQLException(e);
+      throw new GlobsSqlException(e);
     }
   }
 
@@ -156,7 +156,7 @@ public class SqlGlobStream implements GlobStream {
       return resultSet.getLong(index);
     }
     catch (SQLException e) {
-      throw new GlobsSQLException(e);
+      throw new GlobsSqlException(e);
     }
   }
 
@@ -165,7 +165,7 @@ public class SqlGlobStream implements GlobStream {
       return resultSet.wasNull();
     }
     catch (SQLException e) {
-      throw new GlobsSQLException(e);
+      throw new GlobsSqlException(e);
     }
   }
 

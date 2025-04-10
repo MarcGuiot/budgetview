@@ -2,25 +2,24 @@ package org.globsframework.utils.serialization;
 
 import org.globsframework.utils.Strings;
 import org.globsframework.utils.exceptions.IOFailure;
-import sun.misc.BASE64Decoder;
-import sun.misc.BASE64Encoder;
+
+import java.util.Base64;
 
 public class Encoder {
-  private Encoder() {
-  }
-
-  public static String byteToString(byte[] cryptedBytes) {
-    BASE64Encoder b64 = new BASE64Encoder();
-    return Strings.removeNewLine(b64.encode(cryptedBytes));
-  }
-
-  public static byte[] stringToByte(String text) {
-    try {
-      BASE64Decoder b64 = new BASE64Decoder();
-      return b64.decodeBuffer(text);
+    private Encoder() {
     }
-    catch (Exception e) {
-      throw new IOFailure(e);
+
+    public static String byteToString(byte[] cryptedBytes) {
+        Base64.Encoder encoder = Base64.getEncoder();
+        return Strings.removeNewLine(new String(encoder.encode(cryptedBytes)));
     }
-  }
+
+    public static byte[] stringToByte(String text) {
+        try {
+            Base64.Decoder decoder = Base64.getDecoder();
+            return decoder.decode(text);
+        } catch (Exception e) {
+            throw new IOFailure(e);
+        }
+    }
 }

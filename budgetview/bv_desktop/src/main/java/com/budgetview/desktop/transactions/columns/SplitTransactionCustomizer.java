@@ -18,7 +18,7 @@ public class SplitTransactionCustomizer implements LabelCustomizer {
   }
 
   public void process(JLabel label, Glob transaction, boolean isSelected, boolean hasFocus, int row, int column) {
-    if (Transaction.isSplitTransaction(transaction)) {
+    if (transaction.exists() && Transaction.isSplitTransaction(transaction)) {
       label.setIcon(getIcon());
     }
     else {

@@ -151,9 +151,11 @@ public class Application {
     };
     MacOSXHooks.addOpenDocumentListener(mrjDocumentListener);
 
-    Locale.setDefault(Locale.ENGLISH);
     if (args.length > 1) {
       args = parseLanguage(args);
+    }
+    else {
+      Lang.setLang("fr");
     }
     List<File> fileToOpen = new ArrayList<File>();
     for (String arg : args) {
@@ -178,7 +180,9 @@ public class Application {
     initDirectory(directory, openRequestManager);
 
     try {
-      final MainWindow mainWindow = new MainWindow(this, getServerAddress(), AppPaths.getCurrentDataPath(), isDataInMemory(), directory);
+      final String currentDataPath = AppPaths.getCurrentDataPath();
+      Log.write("Path is " + currentDataPath);
+      final MainWindow mainWindow = new MainWindow(this, getServerAddress(), currentDataPath, isDataInMemory(), directory);
       mainWindow.show();
     }
     catch (InvalidState e) {

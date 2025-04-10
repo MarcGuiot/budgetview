@@ -13,7 +13,7 @@ import org.globsframework.json.JsonGlobWriter;
 import org.globsframework.model.Glob;
 import org.globsframework.sqlstreams.SqlConnection;
 import org.globsframework.sqlstreams.constraints.Where;
-import org.globsframework.sqlstreams.exceptions.GlobsSQLException;
+import org.globsframework.sqlstreams.exceptions.GlobsSqlException;
 import org.globsframework.utils.Utils;
 import org.globsframework.utils.directory.Directory;
 
@@ -78,7 +78,7 @@ public class ProviderAccessServlet extends HttpCloudServlet {
           logger.info("Saved new connection for budgea user " + budgeaUserId + " for cloud user " + user.get(CloudUser.ID));
           return HttpServletResponse.SC_OK;
         }
-        catch (GlobsSQLException e) {
+        catch (GlobsSqlException e) {
           logger.error("Could not store user '" + user.get(CloudUser.EMAIL) + "' in dabase", e);
           return HttpServletResponse.SC_INTERNAL_SERVER_ERROR;
         }
@@ -95,7 +95,7 @@ public class ProviderAccessServlet extends HttpCloudServlet {
         return json(request, url).getString("access_token");
       }
 
-      private void saveProviderAccess(Glob user, int providerId, int providerUserId, String providerAccessToken) throws GlobsSQLException {
+      private void saveProviderAccess(Glob user, int providerId, int providerUserId, String providerAccessToken) throws GlobsSqlException {
         SqlConnection connection = database.connect();
         connection.startUpdate(CloudUser.TYPE, Where.globEquals(user))
           .set(CloudUser.PROVIDER, providerId)

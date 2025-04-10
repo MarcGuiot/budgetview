@@ -22,7 +22,7 @@ import org.globsframework.model.format.GlobPrinter;
 import org.globsframework.sqlstreams.GlobsDatabase;
 import org.globsframework.sqlstreams.SqlConnection;
 import org.globsframework.sqlstreams.constraints.Where;
-import org.globsframework.sqlstreams.exceptions.GlobsSQLException;
+import org.globsframework.sqlstreams.exceptions.GlobsSqlException;
 import org.globsframework.utils.Dates;
 import org.globsframework.utils.Files;
 import org.globsframework.utils.Strings;
@@ -205,7 +205,7 @@ public class BudgeaWebHookServlet extends HttpCloudServlet {
       this.connectionId = connectionId;
     }
 
-    public boolean loadAccount(int connectionId, JSONObject bank, JSONObject account) throws GlobsSQLException, ParseException {
+    public boolean loadAccount(int connectionId, JSONObject bank, JSONObject account) throws GlobsSqlException, ParseException {
       String lastUpdateValue = account.optString("last_update");
       JSONArray transactions = account.optJSONArray("transactions");
       Date lastUpdate;
@@ -245,7 +245,7 @@ public class BudgeaWebHookServlet extends HttpCloudServlet {
       return true;
     }
 
-    public void loadTransaction(Integer accountId, JSONObject transaction) throws GlobsSQLException, ParseException {
+    public void loadTransaction(Integer accountId, JSONObject transaction) throws GlobsSqlException, ParseException {
       int providerTransactionId = transaction.getInt("id");
       Date operationDate = Budgea.parseDate(transaction.getString("rdate"));
       Date bankDate = Budgea.parseDate(transaction.getString("date"));

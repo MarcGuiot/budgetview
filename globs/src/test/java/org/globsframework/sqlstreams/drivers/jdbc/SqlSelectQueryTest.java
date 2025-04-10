@@ -8,7 +8,7 @@ import org.globsframework.sqlstreams.SqlSelect;
 import org.globsframework.sqlstreams.SqlConnection;
 import org.globsframework.sqlstreams.constraints.Constraint;
 import org.globsframework.sqlstreams.constraints.Where;
-import org.globsframework.sqlstreams.exceptions.GlobsSQLException;
+import org.globsframework.sqlstreams.exceptions.GlobsSqlException;
 import org.globsframework.streams.GlobStream;
 import org.globsframework.streams.accessors.IntegerAccessor;
 import org.globsframework.streams.accessors.StringAccessor;
@@ -150,7 +150,7 @@ public class SqlSelectQueryTest extends GlobsDatabaseTestCase {
         firstGlobStream.next();
         firstAccessor.getValue();
       }
-    }, GlobsSQLException.class);
+    }, GlobsSqlException.class);
   }
 
   public void testInConstraint() throws Exception {

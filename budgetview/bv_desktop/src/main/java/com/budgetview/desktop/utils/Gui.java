@@ -68,7 +68,7 @@ public class Gui {
 
     try {
       if (GuiUtils.isMacOSX()) {
-        UIManager.setLookAndFeel(new PicsouMacLookAndFeel());
+//        UIManager.setLookAndFeel(new PicsouMacLookAndFeel());
       }
       else {
         Options.setUseSystemFonts(true);

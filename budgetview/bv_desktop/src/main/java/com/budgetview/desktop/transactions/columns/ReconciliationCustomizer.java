@@ -9,7 +9,6 @@ import org.globsframework.utils.directory.Directory;
 import javax.swing.*;
 
 public class ReconciliationCustomizer implements LabelCustomizer {
-
   private Icon icon;
   private Directory directory;
 
@@ -18,6 +17,9 @@ public class ReconciliationCustomizer implements LabelCustomizer {
   }
 
   public void process(JLabel label, Glob transaction, boolean isSelected, boolean hasFocus, int row, int column) {
+    if (!transaction.exists()) {
+      return;
+    }
     if (transaction.isTrue(Transaction.TO_RECONCILE)) {
       label.setIcon(getIcon());
     }

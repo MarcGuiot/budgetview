@@ -15,8 +15,8 @@
         <artifactId>maven-compiler-plugin</artifactId>
         <version>2.3.2</version>
         <configuration>
-          <source>1.5</source>
-          <target>1.5</target>
+          <source>1.8</source>
+          <target>1.8</target>
         </configuration>
       </plugin>
     </plugins>
@@ -46,7 +46,6 @@
       <groupId>asm</groupId>
       <artifactId>asm-util</artifactId>
       <version>3.1</version>
-      <type>test</type>
     </dependency>
   </dependencies>
 

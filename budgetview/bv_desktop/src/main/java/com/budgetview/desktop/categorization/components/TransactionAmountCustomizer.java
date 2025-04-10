@@ -15,7 +15,7 @@ public class TransactionAmountCustomizer implements LabelCustomizer {
   }
 
   public void process(JLabel label, Glob transaction, boolean isSelected, boolean hasFocus, int row, int column) {
-    if (transaction == null) {
+    if (transaction == null || !transaction.exists()) {
       return;
     }
     colors.setForeground(label, isSelected, transaction,

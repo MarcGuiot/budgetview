@@ -12,7 +12,7 @@ import org.globsframework.sqlstreams.drivers.jdbc.impl.SqlFieldCreationVisitor;
 import org.globsframework.sqlstreams.drivers.jdbc.request.JdbcDeleteRequest;
 import org.globsframework.sqlstreams.exceptions.ConstraintViolation;
 import org.globsframework.sqlstreams.exceptions.RollbackFailed;
-import org.globsframework.sqlstreams.exceptions.GlobsSQLException;
+import org.globsframework.sqlstreams.exceptions.GlobsSqlException;
 import org.globsframework.sqlstreams.metadata.MetaData;
 import org.globsframework.sqlstreams.utils.StringPrettyWriter;
 import org.globsframework.utils.exceptions.*;
@@ -214,7 +214,7 @@ public abstract class JdbcConnection implements SqlConnection {
     }
   }
 
-  public GlobsSQLException getTypedException(String sql, SQLException e) {
+  public GlobsSqlException getTypedException(String sql, SQLException e) {
     if ("23000".equals(e.getSQLState())) {
       if (sql == null) {
         return new ConstraintViolation(e);
@@ -223,6 +223,6 @@ public abstract class JdbcConnection implements SqlConnection {
         return new ConstraintViolation(sql, e);
       }
     }
-    return new GlobsSQLException(e);
+    return new GlobsSqlException(e);
   }
 }

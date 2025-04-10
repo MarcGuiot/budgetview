@@ -28,6 +28,10 @@ public class ImportedTransactionDateRenderer implements LabelCustomizer {
   }
 
   public void process(JLabel label, Glob glob, boolean isSelected, boolean hasFocus, int row, int column) {
+    if (!glob.exists()) {
+      label.setText("");
+      return;
+    }
     if (format == null) {
       label.setText(glob.get(ImportedTransaction.BANK_DATE));
       return;
