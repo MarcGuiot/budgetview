@@ -9,8 +9,8 @@ import java.net.URLEncoder;
 
 public class LicenseConstants {
 
-  public static final String PROD_SERVER_URL = "https://register.mybudgetview.fr:443";
-  public static final String FTP_SERVER_URL = "ftp://ftpjar.mybudgetview.fr";
+  public static final String PROD_SERVER_URL = "https://register.budgetview.fr:443";
+  public static final String FTP_SERVER_URL = "ftp://ftpjar.budgetview.fr";
 
   public static final String APPNAME = "budgetview";
   public static final String FTP_URL_PROPERTY = "bv.license.ftp.url";

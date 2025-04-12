@@ -136,16 +136,16 @@ public class AnalyticsChecker {
     public DummyServerLogBuilder logPurchase(String date, String email) throws IOException {
       writeLogLine("INFO " + date + " 10:03:56,065 - receive new User  :");
       writeLogLine("INFO " + date + " 10:03:56,072 - NewUser : mail : '" + email);
-      writeLogLine("INFO " + date + " 10:03:56,105 - item_number=''; residence_country='FR'; shipping_method='Default'; shipping_discount='0.00'; insurance_amount='0.00'; verify_sign='AiKZhEEPLJjSIccz.2M.tbyW5YFwAogOwwn6hFr2r7eNMOUys8ifgwbo'; payment_status='Completed'; business='paypal@mybudgetview.fr'; protection_eligibility='Ineligible'; transaction_subject='Code d'activation BudgetView'; payer_id='8RUUNCADFXSWW'; first_name='Bernard'; shipping='0.00'; payer_email='" + email + "'; mc_fee='1.27'; btn_id='20331125'; txn_id='9WF31892AN672923R'; receiver_email='paypal@mybudgetview.fr'; quantity='1'; notify_version='3.4'; txn_type='web_accept'; mc_gross='29.90'; payer_status='unverified'; mc_currency='EUR'; custom=''; payment_date='00:16:57 Sep 25, 2011 PDT'; payment_fee=''; charset='UTF-8'; payment_gross=''; ipn_track_id='rL229rvcmQ2BGs7vDxFjVA'; discount='0.00'; tax='4.90'; handling_amount='0.00'; item_name='Code d'activation BudgetView'; last_name='Aiglehoux'; payment_type='instant'; receiver_id='RQLKPV2F4ZR74';");
+      writeLogLine("INFO " + date + " 10:03:56,105 - item_number=''; residence_country='FR'; shipping_method='Default'; shipping_discount='0.00'; insurance_amount='0.00'; verify_sign='AiKZhEEPLJjSIccz.2M.tbyW5YFwAogOwwn6hFr2r7eNMOUys8ifgwbo'; payment_status='Completed'; business='paypal@budgetview.fr'; protection_eligibility='Ineligible'; transaction_subject='Code d'activation BudgetView'; payer_id='8RUUNCADFXSWW'; first_name='Bernard'; shipping='0.00'; payer_email='" + email + "'; mc_fee='1.27'; btn_id='20331125'; txn_id='9WF31892AN672923R'; receiver_email='paypal@budgetview.fr'; quantity='1'; notify_version='3.4'; txn_type='web_accept'; mc_gross='29.90'; payer_status='unverified'; mc_currency='EUR'; custom=''; payment_date='00:16:57 Sep 25, 2011 PDT'; payment_fee=''; charset='UTF-8'; payment_gross=''; ipn_track_id='rL229rvcmQ2BGs7vDxFjVA'; discount='0.00'; tax='4.90'; handling_amount='0.00'; item_name='Code d'activation BudgetView'; last_name='Aiglehoux'; payment_type='instant'; receiver_id='RQLKPV2F4ZR74';");
       writeLogLine("INFO " + date + " 10:03:57,259 - NewUser : mail : '" + email + " VERIFIED");
       writeLogLine("INFO " + date + " 10:03:57,302 - NewUser : ok  for " + email + " code is 1594");
       writeLogLine("INFO " + date + " 10:03:57,425 - mail sent : " + email + "  Votre code d'activation BudgetView");
-      writeLogLine("INFO " + date + " 10:03:57,433 - mail sent : support@mybudgetview.fr  New User");
+      writeLogLine("INFO " + date + " 10:03:57,433 - mail sent : support@budgetview.fr  New User");
       return this;
     }
 
     public DummyServerLogBuilder logUserEvaluation(String date, boolean value) throws IOException {
-      writeLogLine("INFO " + date + " 14:31:32,217 - mail sent : support@mybudgetview.fr  User evaluation: " + Strings.toYesNo(value));
+      writeLogLine("INFO " + date + " 14:31:32,217 - mail sent : support@budgetview.fr  User evaluation: " + Strings.toYesNo(value));
       writeLogLine("title User evaluation: " + Strings.toYesNo(value));
       return this;
     }

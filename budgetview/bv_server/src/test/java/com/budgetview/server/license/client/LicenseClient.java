@@ -7,7 +7,7 @@ import org.apache.http.impl.client.HttpClientBuilder;
 
 public class LicenseClient {
 
-  private static String URL = "https://register.mybudgetview.fr:8443/getMobileData?mail=regis.medina%40gmail.com&info=2d7aa19702c8bfaf2461fe258b82195c77761b51";
+  private static String URL = "https://register.budgetview.fr:8443/getMobileData?mail=regis.medina%40gmail.com&info=2d7aa19702c8bfaf2461fe258b82195c77761b51";
 
   public static void main(String[] args) throws Exception {
     HttpClient client = HttpClientBuilder.create().build();

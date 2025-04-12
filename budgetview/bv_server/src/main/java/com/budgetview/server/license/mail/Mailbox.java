@@ -1,8 +1,8 @@
 package com.budgetview.server.license.mail;
 
 public enum Mailbox {
-  SUPPORT("support@mybudgetview.fr"),
-  ADMIN("admin@mybudgetview.fr");
+  SUPPORT("support@budgetview.fr"),
+  ADMIN("admin@budgetview.fr");
   private String email;
 
   Mailbox(String email) {

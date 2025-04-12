@@ -20,8 +20,8 @@ public enum Card implements GlobConstantContainer {
   BUDGET("budget", 2),
   ANALYSIS("analysis", 3),
   DATA("data", 4),
-  PROJECTS("projects", 5),
-  ADDONS("addons", 6);
+  PROJECTS("projects", 5);
+//  ADDONS("addons", 6);
 
   public static GlobType TYPE;
 
@@ -74,8 +74,8 @@ public enum Card implements GlobConstantContainer {
         return DATA;
       case 5:
         return PROJECTS;
-      case 6:
-        return ADDONS;
+//      case 6:
+//        return ADDONS;
     }
     throw new ItemNotFound(id + " is not associated to any Card enum value");
   }

@@ -42,7 +42,7 @@ import java.net.URLEncoder;
 
 public class HttpsDataSync implements DataSync {
   public static final String URL_BV =
-    "https://register.mybudgetview.fr:1443";
+    "https://register.budgetview.fr:1443";
   //    "https://192.168.1.17:1443";
 //  "http://192.168.1.17:8080";
   private static final String LOCAL_TEMP_FILE_NAME = "temp.xml";

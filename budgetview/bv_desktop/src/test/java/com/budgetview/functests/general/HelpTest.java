@@ -17,7 +17,7 @@ public class HelpTest extends LoggedInFunctionalTestCase {
 
   @Test
   public void testDefaultLinks() throws Exception {
-    operations.checkGotoSupport("http://www.mybudgetview.com/support");
+    operations.checkGotoSupport("http://www.budgetview.fr/support");
   }
 
   @Test
@@ -31,7 +31,7 @@ public class HelpTest extends LoggedInFunctionalTestCase {
 
     operations.openSendLogs()
       .checkTitle("Send logs")
-      .checkMessageContains("support@mybudgetview.com")
+      .checkMessageContains("support@budgetview.fr")
       .checkDetailsContain(text)
       .checkCopy()
       .close();

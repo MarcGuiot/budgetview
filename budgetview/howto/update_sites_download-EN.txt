@@ -7,7 +7,7 @@ Mise à jour des sites de download EN pour une nouvelle release :
 
 1. Aller sur : https://www.macupdate.com/developers/login/
 
-2. Login : regis@mybudgetview.fr / P&cs0U17
+2. Login : regis@budgetview.fr / P&cs0U17
 
 3. Cliquer sur "Update listing"
 
@@ -31,11 +31,11 @@ Mise à jour des sites de download EN pour une nouvelle release :
 
 1. Aller sur : https://developer.softonic.com
 
-2. Login : regis@mybudgetview.fr / 12=Picsou+21
+2. Login : regis@budgetview.fr / 12=Picsou+21
 
 3. Actions / Update current version ==> mettre à jour le formulaire
 
-http://www.mybudgetview.com/files/app/BudgetView-3.13-en-Setup.exe
+http://www.budgetview.fr/files/app/BudgetView-3.13-en-Setup.exe
 
 
 ================================================
@@ -56,11 +56,11 @@ I have the pleasure to announce that the 4.0 release of BudgetView is now availa
 
 The Windows installer file can be downloaded from the following link:
 
-- http://www.mybudgetview.com/files/app/BudgetView-4.0-en-Setup.exe
+- http://www.budgetview.fr/files/app/BudgetView-4.0-en-Setup.exe
 
 The change log for this release is available here:
 
-- http://www.mybudgetview.com/support/last-changes
+- http://www.budgetview.fr/support/last-changes
 
 Please do not hesitate to contact me if you have any question about BudgetView.
 
@@ -86,7 +86,7 @@ Regis.
 
 1. Aller sur : https://upload.cnet.com/
 
-2. Login : regis@mybudgetview.fr / g1_XX_3R
+2. Login : regis@budgetview.fr / g1_XX_3R
 
 3. Cliquer sur "Modify", mettre à jour le formulaire (notamment release notes)
 

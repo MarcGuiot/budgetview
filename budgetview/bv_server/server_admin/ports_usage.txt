@@ -2,7 +2,7 @@
 
 URL
 
-    https://register.mybudgetview.fr
+    https://register.budgetview.fr
 
 
 Utilisation des ports

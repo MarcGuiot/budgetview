@@ -39,7 +39,7 @@ public class UserEvaluationTest extends ConnectedTestCase {
     Thread.sleep(1000);
     application.checkClosed();
 
-    mailServer.checkReceivedMail("admin@mybudgetview.fr")
+    mailServer.checkReceivedMail("admin@budgetview.fr")
       .checkSubjectContains("User evaluation: ")
       .checkSubjectContains(Application.APPLICATION_VERSION)
       .checkSubjectContains(Lang.getLang())
@@ -63,7 +63,7 @@ public class UserEvaluationTest extends ConnectedTestCase {
     Thread.sleep(1000);
     application.checkClosed();
 
-    mailServer.checkReceivedMail("admin@mybudgetview.fr")
+    mailServer.checkReceivedMail("admin@budgetview.fr")
       .checkSubjectContains("User evaluation: ")
       .checkContainsAll("Blah");
 
@@ -104,7 +104,7 @@ public class UserEvaluationTest extends ConnectedTestCase {
     Thread.sleep(1000);
     application.checkClosed();
 
-    mailServer.checkReceivedMail("admin@mybudgetview.fr")
+    mailServer.checkReceivedMail("admin@budgetview.fr")
       .checkSubjectContains("User evaluation: ")
       .checkSubjectContains(Application.APPLICATION_VERSION)
       .checkSubjectContains(Lang.getLang())

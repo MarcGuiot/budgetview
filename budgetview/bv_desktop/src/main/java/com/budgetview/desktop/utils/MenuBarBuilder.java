@@ -59,7 +59,7 @@ public class MenuBarBuilder {
   private SendImportedFileAction sendImportedFileAction;
   private PreferencesAction preferencesAction;
   private DeleteUserAction deleteUserAction;
-  private ActivateLicenseAction activateLicenseAction;
+//  private ActivateLicenseAction activateLicenseAction;
   private Action threadsAction;
   private EditMobileAccountAction editMobileAccountAction;
   private PrintBudgetAction printBudgetAction;
@@ -84,7 +84,7 @@ public class MenuBarBuilder {
     this.restoreSnapshotMenuAction = new RestoreSnapshotMenuAction(directory, repository);
     this.sendImportedFileAction = new SendImportedFileAction(directory, repository);
     this.preferencesAction = new PreferencesAction(repository, directory);
-    this.activateLicenseAction = new ActivateLicenseAction(repository, directory);
+//    this.activateLicenseAction = new ActivateLicenseAction(repository, directory);
     this.setPasswordAction = new SetPasswordAction(repository, directory);
     this.deleteUserAction = deleteUserAction;
     this.printBudgetAction = new PrintBudgetAction(replicationGlobRepository, directory);
@@ -127,7 +127,7 @@ public class MenuBarBuilder {
     }
 
     menu.addSeparator();
-    menu.add(activateLicenseAction);
+//    menu.add(activateLicenseAction);
 
     menu.add(setPasswordAction);
     menu.add(logoutAction);
@@ -136,9 +136,9 @@ public class MenuBarBuilder {
     menu.addSeparator();
     menu.add(printBudgetAction);
 
-    menu.addSeparator();
-    menu.add(editMobileAccountAction);
-    menu.add(new SendMobileDataAction(repository, directory));
+//    menu.addSeparator();
+//    menu.add(editMobileAccountAction);
+//    menu.add(new SendMobileDataAction(repository, directory));
 
     if (!Gui.useMacOSMenu()) {
       menu.addSeparator();

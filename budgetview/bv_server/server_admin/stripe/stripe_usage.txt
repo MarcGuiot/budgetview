@@ -13,4 +13,4 @@ Page : https://dashboard.stripe.com/account/apikeys
 ----------------------------------------------------------------
 
 Page : https://dashboard.stripe.com/account/webhooks
-Webhook BV : https://register.mybudgetview.fr:1445/stripe
+Webhook BV : https://register.budgetview.fr:1445/stripe

@@ -194,8 +194,8 @@ public class MainPanel {
       new ProjectSelector(repository, directory),
       projectView,
       new WelcomeView(replicationGlobRepository, directory),
-      new AddOnsSelector(repository, directory),
-      new AddOnsView(repository, directory),
+//      new AddOnsSelector(repository, directory),
+//      new AddOnsView(repository, directory),
       signpostView,
       new NotificationsFlagView(repository, directory),
       autoCloudImportView

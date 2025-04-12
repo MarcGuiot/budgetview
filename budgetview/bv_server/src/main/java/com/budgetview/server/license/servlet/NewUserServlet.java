@@ -108,7 +108,7 @@ public class NewUserServlet extends HttpServlet {
         }
       }
       logger.info(paramaters.toString());
-      if (!receiverEmail.equalsIgnoreCase("paypal@mybudgetview.fr")) {
+      if (!receiverEmail.equalsIgnoreCase("paypal@budgetview.fr")) {
         logger.error("Invalid email : " + receiverEmail);
         return;
       }

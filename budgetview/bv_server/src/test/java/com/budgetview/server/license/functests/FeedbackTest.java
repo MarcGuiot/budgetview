@@ -55,7 +55,7 @@ public class FeedbackTest extends ConnectedTestCase {
 
     openFeedback().send("me@gg.fr", "some content\n\n-----\nfooter");
 
-    mailServer.checkReceivedMail("support@mybudgetview.fr")
+    mailServer.checkReceivedMail("support@budgetview.fr")
       .checkContainsAll("some content",
                         "footer",
                         "me@gg.fr",
@@ -75,7 +75,7 @@ public class FeedbackTest extends ConnectedTestCase {
       .setLogsAdded()
       .send("me@gg.fr", "some content");
 
-    mailServer.checkReceivedMail("support@mybudgetview.fr")
+    mailServer.checkReceivedMail("support@budgetview.fr")
       .checkContainsAll("some content",
                         "me@gg.fr",
                         Application.APPLICATION_VERSION,
@@ -95,7 +95,7 @@ public class FeedbackTest extends ConnectedTestCase {
       .setLogsAdded()
       .send("me@gg.fr", "some content");
 
-    mailServer.checkReceivedMail("support@mybudgetview.fr")
+    mailServer.checkReceivedMail("support@budgetview.fr")
       .checkContainsAll("some content",
                         "me@gg.fr",
                         Application.APPLICATION_VERSION,

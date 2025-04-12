@@ -71,7 +71,7 @@ public class PaypalTest extends ConnectedTestCase {
     URIBuilder builder = new URIBuilder(SERVER_URL + LicenseConstants.NEW_USER);
 
     builder.setParameter(PaypalConstants.PAYER_EMAIL, "toto" + transactionId + "@bv.fr");
-    builder.setParameter(PaypalConstants.RECEIVER_EMAIL, "paypal@mybudgetview.fr");
+    builder.setParameter(PaypalConstants.RECEIVER_EMAIL, "paypal@budgetview.fr");
     builder.setParameter(PaypalConstants.PAYMENT_STATUS_ID, "completed");
     builder.setParameter(PaypalConstants.TRANSACTION_ID, transactionId);
     builder.setParameter(PARAMETER_WITH_ACCENT, RAPHAËL);
@@ -92,7 +92,7 @@ public class PaypalTest extends ConnectedTestCase {
       String code = glob.get(0).get(License.ACTIVATION_CODE);
       assertEquals(glob.get(0).get(License.TRANSACTION_ID), transactionId);
       mailServer.checkReceivedMail("toto" + transactionId + "@bv.fr").checkContainsAll(code);
-      mailServer.checkReceivedMail("admin@mybudgetview.fr").checkContainsAll("toto" + transactionId + "@bv.fr");
+      mailServer.checkReceivedMail("admin@budgetview.fr").checkContainsAll("toto" + transactionId + "@bv.fr");
     }
     postMethod.releaseConnection();
   }
@@ -102,7 +102,7 @@ public class PaypalTest extends ConnectedTestCase {
 //    postMethod.getParams().setContentCharset("UTF-8");
     URIBuilder builder = new URIBuilder(SERVER_URL + LicenseConstants.NEW_USER);
     builder.setParameter(PaypalConstants.PAYER_EMAIL, "toto@bv.fr");
-    builder.setParameter(PaypalConstants.RECEIVER_EMAIL, "paypal@mybudgetview.fr");
+    builder.setParameter(PaypalConstants.RECEIVER_EMAIL, "paypal@budgetview.fr");
     builder.setParameter(PaypalConstants.PAYMENT_STATUS_ID, "completed");
     builder.setParameter(PaypalConstants.TRANSACTION_ID, "12345");
     HttpPost postMethod = new HttpPost(builder.build());
@@ -122,7 +122,7 @@ public class PaypalTest extends ConnectedTestCase {
     HttpClient client = new DefaultHttpClient();
 //    postMethod.getParams().setContentCharset("UTF-8");
     builder.setParameter(PaypalConstants.PAYER_EMAIL, "toto12345@bv.fr");
-    builder.setParameter(PaypalConstants.RECEIVER_EMAIL, "paypal@mybudgetview.fr");
+    builder.setParameter(PaypalConstants.RECEIVER_EMAIL, "paypal@budgetview.fr");
     builder.setParameter(PaypalConstants.PAYMENT_STATUS_ID, "completed");
     builder.setParameter(PaypalConstants.TRANSACTION_ID, "12346");
     HttpPost postMethod = new HttpPost(builder.build());
@@ -133,7 +133,7 @@ public class PaypalTest extends ConnectedTestCase {
       db.getConnection().selectAll(License.TYPE, Where.fieldEquals(License.MAIL, "toto12345@bv.fr"));
     assertEquals(3, globs.size());
     String code = globs.get(0).get(License.ACTIVATION_CODE);
-    mailServer.checkReceivedMail("admin@mybudgetview.fr");
+    mailServer.checkReceivedMail("admin@budgetview.fr");
     mailServer.checkReceivedMail("toto12345@bv.fr").checkContainsAll(code);
     assertEquals(globs.get(0).get(License.TRANSACTION_ID), "12345");
   }

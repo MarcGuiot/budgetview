@@ -7,7 +7,7 @@ public class MobileConstants {
   public static final String APPNAME = "budgetview";
   public static final String SERVER_URL_PROPERTY = APPNAME + ".mobile.url";
 
-  private static final String PROD_SERVER_URL = "https://register.mybudgetview.fr";
+  private static final String PROD_SERVER_URL = "https://register.budgetview.fr";
 
   public static final String MAJOR_VERSION_NAME = "MAJOR_VERSION";
   public static final String MINOR_VERSION_NAME = "MINOR_VERSION";
@@ -20,8 +20,8 @@ public class MobileConstants {
   public static final String DELETE_MOBILE_ACCOUNT = "/deleteMobileAccount";
   public static final String SERVER_STATUS = "/server-status";
 
-  public static final String WWW_MYBUDGETVIEW_FR = "https://www.mybudgetview.fr";
-  public static final String WWW_MYBUDGETVIEW_COM = "http://www.mybudgetview.com";
+  public static final String WWW_MYBUDGETVIEW_FR = "https://www.budgetview.fr";
+  public static final String WWW_MYBUDGETVIEW_COM = "http://www.budgetview.fr";
 
   public static final String STATUS = "STATUS";
   public static final String CRYPTED_INFO = "info";

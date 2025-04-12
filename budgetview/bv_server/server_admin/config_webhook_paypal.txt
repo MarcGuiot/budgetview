@@ -8,4 +8,4 @@ Page de modification :
 
 Valeur :
 
-    https://register.mybudgetview.fr:443/newUser
+    https://register.budgetview.fr:443/newUser

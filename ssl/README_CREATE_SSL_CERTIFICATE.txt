@@ -4,12 +4,12 @@ Jetty SSL guide :
 
 ==================
 
-> keytool -keystore bv.keystore -alias budgetview -genkey -keyalg RSA -sigalg SHA256withRSA -ext 'SAN=dns:register.mybudgetview.fr'
+> keytool -keystore bv.keystore -alias budgetview -genkey -keyalg RSA -sigalg SHA256withRSA -ext 'SAN=dns:register.budgetview.fr'
 
     Enter keystore password: *******
     Re-enter new password: *******
     What is your first and last name?
-      [Unknown]:  register.mybudgetview.fr
+      [Unknown]:  register.budgetview.fr
     What is the name of your organizational unit?
       [Unknown]:  budgetview
     What is the name of your organization?
@@ -20,7 +20,7 @@ Jetty SSL guide :
       [Unknown]:  -
     What is the two-letter country code for this unit?
       [Unknown]:  fr
-    Is CN=register.mybudgetview.fr, OU=budgetview, O=budgetview, L=paris, ST=Unknown, C=fr correct?
+    Is CN=register.budgetview.fr, OU=budgetview, O=budgetview, L=paris, ST=Unknown, C=fr correct?
       [no]:  yes
 
     Enter key password for <budgetview>
@@ -55,8 +55,8 @@ The following command generates a certificate for the key into the file bv.crt
     Locality Name (eg, city) []:Paris
     Organization Name (eg, company) [Internet Widgits Pty Ltd]:budgetview
     Organizational Unit Name (eg, section) []:budgetview
-    Common Name (e.g. server FQDN or YOUR name) []:register.mybudgetview.fr
-    Email Address []:admin@mybudgetview.fr
+    Common Name (e.g. server FQDN or YOUR name) []:register.budgetview.fr
+    Email Address []:admin@budgetview.fr
 
 ==================
 

@@ -46,9 +46,9 @@ public class MobileTest extends ConnectedTestCase {
   public void testCreateAndDeleteAccount() throws Exception {
     application.enableAllAddOns();
 
-    String mail = "testCreateDelete@mybudgetview.fr";
+    String mail = "testCreateDelete@budgetview.fr";
     MobileConnection connection = requestNewMobileAccount(mail);
-    followUrl(connection.url, 302, "http://www.mybudgetview.com/mobile/account-ok", mail);
+    followUrl(connection.url, 302, "http://www.budgetview.fr/mobile/account-ok", mail);
 
     application.openMobileAccountDialog()
       .setEmailAndValidate(mail)
@@ -64,7 +64,7 @@ public class MobileTest extends ConnectedTestCase {
   }
 
   public void testEmptyEmailMessage() throws Exception {
-    String mail = "testEmpty@mybudgetview.fr";
+    String mail = "testEmpty@budgetview.fr";
     application.enableAllAddOns();
     application.openMobileAccountDialog()
       .validateAndCheckEmailTip("You must enter your email address")
@@ -77,7 +77,7 @@ public class MobileTest extends ConnectedTestCase {
 
   public void testChangePassword() throws Exception {
     application.enableAllAddOns();
-    String mail = "testChangePassword@mybudgetview.fr";
+    String mail = "testChangePassword@budgetview.fr";
     CreateMobileAccountChecker dialog = application.openMobileAccountDialog();
     String generatedPassword = dialog
       .setEmailWithoutValidating(mail)
@@ -96,11 +96,11 @@ public class MobileTest extends ConnectedTestCase {
   public void testGetData() throws Exception {
     application.enableAllAddOns();
 
-    String emailAddress = "testGetData@mybudgetview.fr";
+    String emailAddress = "testGetData@budgetview.fr";
 
     MobileConnection mobileConnection = requestNewMobileAccount(emailAddress);
     String url = mobileConnection.url;
-    followUrl(url, 302, "http://www.mybudgetview.com/mobile/account-ok", emailAddress);
+    followUrl(url, 302, "http://www.budgetview.fr/mobile/account-ok", emailAddress);
 
     String path = OfxBuilder
       .init(this)
@@ -124,7 +124,7 @@ public class MobileTest extends ConnectedTestCase {
       .checkErrorMessageContains("Failed to send data to server: Password has changed")
       .close();
 
-    followUrl(url2, 302, "http://www.mybudgetview.com/mobile/account-ok", emailAddress);
+    followUrl(url2, 302, "http://www.budgetview.fr/mobile/account-ok", emailAddress);
     application.getOperations()
       .sendDataToServer()
       .checkSuccessMessageContains("Data sent to server")
@@ -135,19 +135,19 @@ public class MobileTest extends ConnectedTestCase {
 
   public void testAlreadyActivated() throws Exception {
     application.enableAllAddOns();
-    String mail = "testAlreadyActivated@mybudgetview.fr";
+    String mail = "testAlreadyActivated@budgetview.fr";
     String url1 = requestNewMobileAccount(mail).url;
     String url2 = requestNewMobileAccount(mail).url;
-    followUrl(url1, 302, "http://www.mybudgetview.com/mobile/account-ok", mail);
-    followUrl(url2, 302, "http://www.mybudgetview.com/mobile/account-already-present", mail);
+    followUrl(url1, 302, "http://www.budgetview.fr/mobile/account-ok", mail);
+    followUrl(url2, 302, "http://www.budgetview.fr/mobile/account-already-present", mail);
   }
 
   public void testError() throws Exception {
     application.enableAllAddOns();
     Files.deleteWithSubtree(MOBILE_DATA_DIR);
-    String mail = "testError@mybudgetview.fr";
+    String mail = "testError@budgetview.fr";
     String url = requestNewMobileAccount(mail).url;
-    followUrl(url, 302, "http://www.mybudgetview.com/mobile/internal-error");
+    followUrl(url, 302, "http://www.budgetview.fr/mobile/internal-error");
   }
 
   public void testReminderMail() throws Exception {
@@ -162,7 +162,7 @@ public class MobileTest extends ConnectedTestCase {
   public void testPendingDataAreSentAtAccountCreation() throws Exception {
     application.enableAllAddOns();
 
-    String emailAddress = "testPending@mybudgetview.fr";
+    String emailAddress = "testPending@budgetview.fr";
 
     String path = OfxBuilder
       .init(this)
@@ -183,7 +183,7 @@ public class MobileTest extends ConnectedTestCase {
       }
     });
     String url = mobileConnection.url;
-    followUrl(url, 302, "http://www.mybudgetview.com/mobile/account-ok", emailAddress);
+    followUrl(url, 302, "http://www.budgetview.fr/mobile/account-ok", emailAddress);
 
     mobileApp.checkLogin(emailAddress, mobileConnection.password);
   }
@@ -231,7 +231,7 @@ public class MobileTest extends ConnectedTestCase {
     int httpStartIndex = content.indexOf("href=\"");
     int httpEndIndex = content.indexOf("\">http");
     String url = content.substring(httpStartIndex + "href=\"".length(), httpEndIndex);
-    url = url.replace("https://www.mybudgetview.fr", "http://localhost");
+    url = url.replace("https://www.budgetview.fr", "http://localhost");
     Thread.sleep(500); // on attend que les donnée pending soit envoyé au serveur
     return new MobileConnection(url, activatedPassword);
   }

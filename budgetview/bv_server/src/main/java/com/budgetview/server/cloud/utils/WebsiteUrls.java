@@ -4,7 +4,7 @@ import org.globsframework.utils.Strings;
 
 public class WebsiteUrls {
 
-  public static final String PROD_CLOUD_SERVER_URL = "https://www.mybudgetview.fr";
+  public static final String PROD_CLOUD_SERVER_URL = "https://www.budgetview.fr";
   public static final String LOCAL_SERVER_URL = "http://127.0.0.1:8081";
   public static final String WEBSITE_URL_PROPERTY = "budgetview.website.url";
 

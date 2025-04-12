@@ -55,16 +55,16 @@ openssl req -new -x509 -newkey rsa:2048 -sha256 -key jetty.key -out jetty.crt
 	Locality Name (eg, city) []:paris
 	Organization Name (eg, company) [Internet Widgits Pty Ltd]:budgetview
 	Organizational Unit Name (eg, section) []:budgetview
-	Common Name (e.g. server FQDN or YOUR name) []:mybudgetview.fr
-	Email Address []:admin@mybudgetview.fr
+	Common Name (e.g. server FQDN or YOUR name) []:budgetview.fr
+	Email Address []:admin@budgetview.fr
 
 =====================
 
 keytool -keystore keystore -import -alias jetty -file jetty.crt -trustcacerts
 
 	Enter keystore password:  
-	Owner: EMAILADDRESS=admin@mybudgetview.fr, CN=mybudgetview.fr, OU=budgetview, O=budgetview, L=paris, ST=Some-State, C=fr
-	Issuer: EMAILADDRESS=admin@mybudgetview.fr, CN=mybudgetview.fr, OU=budgetview, O=budgetview, L=paris, ST=Some-State, C=fr
+	Owner: EMAILADDRESS=admin@budgetview.fr, CN=budgetview.fr, OU=budgetview, O=budgetview, L=paris, ST=Some-State, C=fr
+	Issuer: EMAILADDRESS=admin@budgetview.fr, CN=budgetview.fr, OU=budgetview, O=budgetview, L=paris, ST=Some-State, C=fr
 	Serial number: f164e663d91b4e2d
 	Valid from: Sun Jul 24 18:50:54 CEST 2016 until: Tue Aug 23 18:50:54 CEST 2016
 	Certificate fingerprints:
@@ -82,7 +82,7 @@ keytool -keystore keystore -import -alias jetty -file jetty.crt -trustcacerts
 	0000: 19 1D F3 19 4A 25 93 93   C1 F4 74 0A E7 4A 0D 49  ....J%....t..J.I
 	0010: 3F 13 7B FF                                        ?...
 	]
-	[EMAILADDRESS=admin@mybudgetview.fr, CN=mybudgetview.fr, OU=budgetview, O=budgetview, L=paris, ST=Some-State, C=fr]
+	[EMAILADDRESS=admin@budgetview.fr, CN=budgetview.fr, OU=budgetview, O=budgetview, L=paris, ST=Some-State, C=fr]
 	SerialNumber: [    f164e663 d91b4e2d]
 	]
 

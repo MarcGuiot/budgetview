@@ -69,7 +69,7 @@ public class NewVersionTest extends ConnectedTestCase {
     application.start();
     application.getNewVersionFooter()
       .checkNewVersionShown("Switch from version " + Application.APPLICATION_VERSION + " to " + newVersion)
-      .checkLink("https://www.mybudgetview.fr/support/derniers-changements")
+      .checkLink("https://www.budgetview.fr/support/derniers-changements")
       .hide()
       .checkHidden();
 

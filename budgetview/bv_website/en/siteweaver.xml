@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<site url="http://www.mybudgetview.com" pagesDir="content">
+<site url="http://www.budgetview.fr" pagesDir="content">
 
   <page file="index.html" title="BudgetView" shortTitle="Home" template="templates/masterTemplate.html">
     <key name="innerTemplate" value="templates/homePageTemplate.html"/>

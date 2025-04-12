@@ -54,7 +54,7 @@
 
   <string name="demoFooter">Discover BudgetView!</string>
   <string name="demoLinkMessage">Visit our website:</string>
-  <string name="demoLink">http://www.mybudgetview.com</string>
+  <string name="demoLink">http://www.budgetview.fr</string>
   <string name="demoTitle">Discover BudgetView!</string>
   <string name="demoPlatforms">Mac/Windows/Linux</string>
   <string name="demoEmailMessage">
@@ -87,7 +87,7 @@
   <string name="logoutNo">No</string>
 
   <string name="sendEmailMessage">Contact us!</string>
-  <string name="sendEmailSupportAddress">support@mybudgetview.com</string>
+  <string name="sendEmailSupportAddress">support@budgetview.fr</string>
   <string name="sendEmailDefaultSubject">My comment about BudgetView</string>
   <string name="sendEmailError">Could not send the email</string>
 

@@ -11,8 +11,8 @@ public class MainPanelLayout implements LayoutManager {
 
   private Component actionsBar;
   private Component timeviewHeader;
-  private Component[] sidebars = new Component[5];
-  private Component[] contentPanels = new Component[7];
+  private Component[] sidebars = new Component[4];
+  private Component[] contentPanels = new Component[6];
   private Component footer;
 
   private int currentSidebar = 0;
@@ -22,7 +22,7 @@ public class MainPanelLayout implements LayoutManager {
   private static final int CATEGORIZATION_SELECTOR = 1;
   private static final int ANALYSIS_SELECTOR = 2;
   private static final int PROJECTS_SELECTOR = 3;
-  private static final int ADDONS_SELECTOR = 4;
+//  private static final int ADDONS_SELECTOR = 4;
 
   private static final int HOME = 0;
   private static final int BUDGET = 1;
@@ -30,7 +30,7 @@ public class MainPanelLayout implements LayoutManager {
   private static final int CATEGORIZATION = 3;
   private static final int ANALYSIS = 4;
   private static final int PROJECTS = 5;
-  private static final int ADDONS = 6;
+//  private static final int ADDONS = 6;
 
   private StretchMode stretchMode = StretchMode.FIXED_SIDEBAR;
   private boolean initialGuidanceCompleted;
@@ -88,11 +88,11 @@ public class MainPanelLayout implements LayoutManager {
         currentContentPanel = PROJECTS;
         stretchMode = StretchMode.FIXED_CONTENT;
         break;
-      case ADDONS:
-        currentSidebar = ADDONS_SELECTOR;
-        currentContentPanel = ADDONS;
-        stretchMode = StretchMode.FIXED_SIDEBAR;
-        break;
+//      case ADDONS:
+//        currentSidebar = ADDONS_SELECTOR;
+//        currentContentPanel = ADDONS;
+//        stretchMode = StretchMode.FIXED_SIDEBAR;
+//        break;
       default:
         throw new InvalidParameter("Unexpected card: " + card);
     }
@@ -131,9 +131,9 @@ public class MainPanelLayout implements LayoutManager {
       else if ("projectSelector".equals(name)) {
         sidebars[PROJECTS_SELECTOR] = comp;
       }
-      else if ("addonsSelector".equals(name)) {
-        sidebars[ADDONS_SELECTOR] = comp;
-      }
+//      else if ("addonsSelector".equals(name)) {
+//        sidebars[ADDONS_SELECTOR] = comp;
+//      }
       else if ("home".equals(name)) {
         contentPanels[HOME] = comp;
       }
@@ -152,9 +152,9 @@ public class MainPanelLayout implements LayoutManager {
       else if ("projects".equals(name)) {
         contentPanels[PROJECTS] = comp;
       }
-      else if ("addons".equals(name)) {
-        contentPanels[ADDONS] = comp;
-      }
+//      else if ("addons".equals(name)) {
+//        contentPanels[ADDONS] = comp;
+//      }
       else if ("footer".equals(name)) {
         footer = comp;
       }

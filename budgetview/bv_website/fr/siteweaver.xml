@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<site url="https://www.mybudgetview.fr" pagesDir="content">
+<site url="https://www.budgetview.fr" pagesDir="content">
 
   <page file="index.html" title="BudgetView" shortTitle="Accueil" template="templates/masterTemplate.html">
     <key name="innerTemplate" value="templates/homePageTemplate.html"/>
@@ -10,34 +10,34 @@
       <key name="innerTemplate" value="templates/standardPageTemplate.html"/>
     </page>
 
-    <page file="achat.html" title="Achetez BudgetView !" shortTitle="Achat">
-      <key name="title.hide" value="true"/>
-      <key name="navbar.hide" value="true"/>
-      <key name="noindex" value="true"/>
-      <key name="innerTemplate" value="templates/standardPageTemplate.html"/>
+<!--    <page file="achat.html" title="Achetez BudgetView !" shortTitle="Achat">-->
+<!--      <key name="title.hide" value="true"/>-->
+<!--      <key name="navbar.hide" value="true"/>-->
+<!--      <key name="noindex" value="true"/>-->
+<!--      <key name="innerTemplate" value="templates/standardPageTemplate.html"/>-->
 
-      <page file="achat/ok.html" title="Achat terminé">
-        <key name="title.hide" value="true"/>
-      </page>
-      <page file="achat/echec.html" title="Une erreur est survenue"/>
-    </page>
+<!--      <page file="achat/ok.html" title="Achat terminé">-->
+<!--        <key name="title.hide" value="true"/>-->
+<!--      </page>-->
+<!--      <page file="achat/echec.html" title="Une erreur est survenue"/>-->
+<!--    </page>-->
 
-    <page file="extensions.html" title="Extensions">
-      <key name="title.hide" value="true"/>
-      <key name="innerTemplate" value="templates/standardPageTemplate.html"/>
-    </page>
-
-    <page file="sync.html" title="Sync">
+    <page file="extensions.html" title="fonctions avancées">
       <key name="title.hide" value="true"/>
       <key name="innerTemplate" value="templates/standardPageTemplate.html"/>
     </page>
 
-    <page file="essai_sync.html" title="Essai BudgetView Sync">
-      <key name="navbar.hide" value="true"/>
-      <key name="noindex" value="true"/>
-      <key name="title.hide" value="true"/>
-      <key name="innerTemplate" value="templates/standardPageTemplate.html"/>
-    </page>
+<!--    <page file="sync.html" title="Sync">-->
+<!--      <key name="title.hide" value="true"/>-->
+<!--      <key name="innerTemplate" value="templates/standardPageTemplate.html"/>-->
+<!--    </page>-->
+
+<!--    <page file="essai_sync.html" title="Essai BudgetView Sync">-->
+<!--      <key name="navbar.hide" value="true"/>-->
+<!--      <key name="noindex" value="true"/>-->
+<!--      <key name="title.hide" value="true"/>-->
+<!--      <key name="innerTemplate" value="templates/standardPageTemplate.html"/>-->
+<!--    </page>-->
 
     <page file="support.html" title="Aide &amp; Support" shortTitle="Aide &amp; Support">
       <key name="innerTemplate" value="templates/supportPageTemplate.html"/>

@@ -26,7 +26,7 @@ public class CloudDemoAction extends AbstractAction {
 
       Request request = Request.Post("http://127.0.0.1:8080/budgea")
         .bodyForm(Form.form()
-                    .add("email", "regis@mybudgetview.fr")
+                    .add("email", "regis@budgetview.fr")
                     .add("code", "zefsdsdfq")
                     .build(), Consts.UTF_8);
 

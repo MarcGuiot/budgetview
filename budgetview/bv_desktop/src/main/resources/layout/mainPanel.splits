@@ -93,7 +93,7 @@
 
     <panel ref="projectSelector" preferredSize="(600,50)"/>
 
-    <panel ref="addonsSelector"/>
+<!--    <panel ref="addonsSelector"/>-->
 
     <column name="home" styleClass="content">
       <cards ref="signpostCard" styleClass="innerContent">
@@ -130,9 +130,9 @@
       <panel ref="projectView" styleClass="innerContent"/>
     </column>
 
-    <column name="addons" styleClass="content">
-      <panel ref="addonsView" styleClass="innerContent"/>
-    </column>
+<!--    <column name="addons" styleClass="content">-->
+<!--      <panel ref="addonsView" styleClass="innerContent"/>-->
+<!--    </column>-->
 
     <verticalBoxes name="footer" styleClass="content">
       <panel ref="newVersionView"/>
