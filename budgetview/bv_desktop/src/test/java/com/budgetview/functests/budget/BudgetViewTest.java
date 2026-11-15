@@ -783,6 +783,10 @@ public class BudgetViewTest extends LoggedInFunctionalTestCase {
       .validate();
 
     budgetView.variable.checkOrder("Leisures", "Groceries");
+
+    // La fenetre principale est partagee entre les tests de la classe : on retablit le filtrage
+    // par mois, sinon les tests suivants voient aussi les enveloppes inactives.
+    budgetView.variable.hideInactiveEnveloppes();
   }
 
   @Test
