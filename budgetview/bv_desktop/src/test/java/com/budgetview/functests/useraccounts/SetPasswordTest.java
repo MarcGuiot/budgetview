@@ -6,6 +6,21 @@ import org.junit.Test;
 
 public class SetPasswordTest extends LoggedInFunctionalTestCase {
 
+  // Deconnexion puis reconnexion : la deconnexion recree la session, ce qui vide les utilisateurs
+  // d'une base en memoire. Comme PreferencesTest, on travaille sur disque, dans une base neuve.
+  protected void setUp() throws Exception {
+    resetWindow();
+    setInMemory(false);
+    setDeleteLocalPrevayler(true);
+    super.setUp();
+    setDeleteLocalPrevayler(false);
+  }
+
+  protected void tearDown() throws Exception {
+    resetWindow();
+    super.tearDown();
+  }
+
   @Test
   public void testNominal() throws Exception {
 
