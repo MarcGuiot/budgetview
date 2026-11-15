@@ -33,13 +33,21 @@ public class GlobSelectionToggleTest extends GuiComponentTestCase {
     selectionListener = DummySelectionListener.register(selectionService, DummyObject.TYPE);
   }
 
+  // Le bouton écoute les ActionEvent depuis 2014 (740f2e340) : seul un clic de l'utilisateur change la
+  // sélection, plus un setSelected() fait par le code (mise à jour depuis la sélection).
+  private void clickTo(boolean selected) {
+    assertEquals(!selected, jToggle.isSelected());
+    jToggle.doClick();
+    assertEquals(selected, jToggle.isSelected());
+  }
+
   public void testInitializedWithSelection() throws Exception {
     selectionService.select(glob1);
 
     initToggle();
     assertTrue(jToggle.isSelected());
 
-    jToggle.setSelected(false);
+    clickTo(false);
     selectionListener.assertEquals("<log>" +
                                    "  <selection types='dummyObject'/>" +
                                    "</log>");
@@ -55,7 +63,7 @@ public class GlobSelectionToggleTest extends GuiComponentTestCase {
 
     selectionListener.reset();
 
-    jToggle.setSelected(false);
+    clickTo(false);
     selectionListener.assertEquals("<log>" +
                                    "  <selection types='dummyObject'>" +
                                    "    <item key='dummyObject[id=2]'/>" +
@@ -63,7 +71,7 @@ public class GlobSelectionToggleTest extends GuiComponentTestCase {
                                    "  </selection>" +
                                    "</log>");
 
-    jToggle.setSelected(true);
+    clickTo(true);
     selectionListener.assertEquals("<log>" +
                                    "  <selection types='dummyObject'>" +
                                    "    <item key='dummyObject[id=1]'/>" +
@@ -75,14 +83,14 @@ public class GlobSelectionToggleTest extends GuiComponentTestCase {
     initToggle();
     assertFalse(jToggle.isSelected());
 
-    jToggle.setSelected(true);
+    clickTo(true);
     selectionListener.assertEquals("<log>" +
                                    "  <selection types='dummyObject'>" +
                                    "    <item key='dummyObject[id=1]'/>" +
                                    "  </selection>" +
                                    "</log>");
 
-    jToggle.setSelected(false);
+    clickTo(false);
     selectionListener.assertEquals("<log>" +
                                    "  <selection types='dummyObject'/>" +
                                    "</log>");

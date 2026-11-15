@@ -1032,7 +1032,7 @@ public class DefaultGlobRepositoryTest extends DefaultGlobRepositoryTestCase {
                              "id=1\n" +
                              "name=obj1\n" +
                              "value=null\n" +
-                             "count=null\n" +
+                             "counter=null\n" +
                              "present=null\n" +
                              "date=null\n" +
                              "timestamp=null\n" +
@@ -1102,17 +1102,18 @@ public class DefaultGlobRepositoryTest extends DefaultGlobRepositoryTestCase {
   }
 
   public void testResetUpdateIndex() throws Exception {
-    init("<dummyObjectIndex id='0' name='name'/>" +
-         "<dummyObjectIndex id='1' name='name1' value='1.1'/>" +
-         "<dummyObjectIndex id='2' name='name2' value='2.2'/>");
+    // Passé à DummyObjectIndex en 2013 quand l'index de DummyObject a disparu ; l'index unique porte sur uniqueName.
+    init("<dummyObjectIndex id='0' name='a' uniqueName='name'/>" +
+         "<dummyObjectIndex id='1' name='b' uniqueName='name1' value='1.1'/>" +
+         "<dummyObjectIndex id='2' name='c' uniqueName='name2' value='2.2'/>");
 
     GlobList listForName1 = repository.findByIndex(DummyObjectIndex.UNIQUE_NAME_INDEX, "name1");
     assertEquals(1, listForName1.size());
     Glob dummyObject3 =
-      GlobBuilder.init(DummyObject.TYPE).set(DummyObject.ID, 3)
-        .set(DummyObject.NAME, "name3").get();
-    repository.reset(new GlobList(dummyObject3), DummyObject.TYPE);
-    assertEquals(1, repository.getAll(DummyObject.TYPE).size());
+      GlobBuilder.init(DummyObjectIndex.TYPE).set(DummyObjectIndex.ID, 3)
+        .set(DummyObjectIndex.UNIQUE_NAME, "name3").get();
+    repository.reset(new GlobList(dummyObject3), DummyObjectIndex.TYPE);
+    assertEquals(1, repository.getAll(DummyObjectIndex.TYPE).size());
     GlobList shouldBeEmpty = repository.findByIndex(DummyObjectIndex.UNIQUE_NAME_INDEX, "name1");
     assertTrue(shouldBeEmpty.isEmpty());
     GlobList listForName3 = repository.findByIndex(DummyObjectIndex.UNIQUE_NAME_INDEX, "name3");

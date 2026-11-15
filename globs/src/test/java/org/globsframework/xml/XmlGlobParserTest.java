@@ -163,7 +163,7 @@ public class XmlGlobParserTest extends TestCase {
 
   public void testReadInvalidContent() throws Exception {
     parseIgnoreError("" +
-            "<dummyObject id='1' count='sdf'/>" +
+            "<dummyObject id='1' counter='sdf'/>" +
             "<dummyUnknownObject id='1' COUNT='titi'/>" +
             "<dummyObject id='2' undefined='toto'/>" +
             "");

@@ -11,6 +11,7 @@ import org.globsframework.gui.splits.parameters.ConfiguredPropertiesService;
 import org.globsframework.gui.splits.ui.UIService;
 import org.globsframework.gui.splits.utils.DummyImageLocator;
 import org.globsframework.gui.splits.utils.DummyTextLocator;
+import org.globsframework.gui.splits.repeat.RepeatLayoutService;
 import org.globsframework.utils.directory.DefaultDirectory;
 import org.globsframework.utils.directory.Directory;
 import org.uispec4j.UISpecTestCase;
@@ -51,6 +52,7 @@ public abstract class SplitsTestCase extends UISpecTestCase {
     directory.add(ImageLocator.class, iconLocator);
     directory.add(UIService.class, uiService);
     directory.add(new LayoutService());
+    directory.add(new RepeatLayoutService()); // requis depuis 2014 (d67e1dde5) pour les layouts de repeat personnalisés
     directory.add(configuredPropertiesService);
     builder = new SplitsBuilder(directory);
   }

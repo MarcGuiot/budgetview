@@ -5,6 +5,7 @@ import org.globsframework.metamodel.GlobType;
 import org.globsframework.sqlstreams.SqlCreateBuilder;
 import org.globsframework.sqlstreams.SqlConnection;
 import org.globsframework.sqlstreams.SqlRequest;
+import org.globsframework.streams.accessors.Accessor;
 import org.globsframework.sqlstreams.exceptions.GlobsSqlException;
 
 import java.util.*;
@@ -17,6 +18,12 @@ public class MultiCreateBuilder {
     for (GlobType globType : globTypes) {
       createBuilders.put(globType, sqlConnection.startCreate(globType));
     }
+  }
+
+  // Sans cette variante, un Accessor passait par setValue(Field, Object) et était pris pour la valeur elle-même.
+  public MultiCreateBuilder setValue(Field field, Accessor accessor) {
+    createBuilders.get(field.getGlobType()).setValue(field, accessor);
+    return this;
   }
 
   public MultiCreateBuilder setValue(Field field, Object value) {
