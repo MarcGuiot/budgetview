@@ -1,7 +1,6 @@
 package com.budgetview.io.importer.analyzer;
 
 import com.budgetview.bank.BankPluginService;
-import com.budgetview.bank.plugins.LaPoste;
 import com.budgetview.model.BankEntity;
 import com.budgetview.model.PreTransactionTypeMatcher;
 import com.budgetview.model.TransactionType;
@@ -65,13 +64,6 @@ public class TransactionAnalyzerFactory {
     loadMatchers(loader, repository);
     analyzer.add(new LabelForCategorizationUpdater());
     analyzer.add(new TransactionDateUpdater());
-    // Plugins de banque, debranches en 2016 (03bb7182f, 6273d670a) au profit de la synchro Budgea,
-    // arretee depuis : l'import de fichiers est le seul qui reste.
-    BankPluginService bankPluginService = directory.find(BankPluginService.class);
-    if (bankPluginService != null) {
-      new LaPoste(repository, directory);
-      loader.loadBank(bankPluginService);
-    }
   }
 
   synchronized public TransactionAnalyzer getAnalyzer() {
