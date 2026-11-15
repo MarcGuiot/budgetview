@@ -11,3 +11,8 @@ jpackage --input bv/ --main-jar budgetview.jar --name budgetview --app-version 6
 
 Pour linux : créé un repertoire gen et version et mettre le jar dans gen 
 jpackage --input gen --dest version --main-jar budgetview.jar --name budgetview --app-version 6.0 --type rpm
+
+## Licence
+
+BudgetView est distribué sous la [licence Apache 2.0](LICENSE).
+Copyright 2008-2019 Marc Guiot et Régis Medina (BudgetView SARL) — voir [NOTICE](NOTICE).
