@@ -114,7 +114,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
-        <version>2.3.2</version>
+        <version>3.0</version>
         <configuration>
           <source>1.8</source>
           <target>1.8</target>
@@ -127,14 +127,12 @@
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-surefire-plugin</artifactId>
         <configuration>
-          <systemProperties>
-            <property>
-              <name>uispec4j.test.library</name>
-              <value>junit</value>
-            </property>
-          </systemProperties>
+          <systemPropertyVariables>
+            <uispec4j.test.library>junit</uispec4j.test.library>
+          </systemPropertyVariables>
           <redirectTestOutputToFile>true</redirectTestOutputToFile>
-          <forkMode>once</forkMode>
+          <forkCount>1</forkCount>
+          <reuseForks>true</reuseForks>
         </configuration>
       </plugin>
     </plugins>
@@ -150,7 +148,7 @@
         <plugins>
           <plugin>
             <artifactId>maven-jar-plugin</artifactId>
-            <version>2.6</version>
+            <version>3.0.2</version>
             <executions>
               <execution>
                 <configuration>
@@ -192,7 +190,7 @@
         <plugins>
           <plugin>
             <artifactId>maven-jar-plugin</artifactId>
-            <version>2.6</version>
+            <version>3.0.2</version>
             <executions>
               <execution>
                 <configuration>
@@ -234,7 +232,7 @@
         <plugins>
           <plugin>
             <artifactId>maven-jar-plugin</artifactId>
-            <version>2.6</version>
+            <version>3.0.2</version>
             <executions>
               <execution>
                 <configuration>
