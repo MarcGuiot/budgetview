@@ -98,8 +98,12 @@ public class BudgetStatTrigger implements ChangeSetListener {
                             value(AccountStat.MIN_POSITION, lastEnd),
                             value(AccountStat.FUTURE_MIN_POSITION, lastEnd),
                             value(AccountStat.END_POSITION, lastEnd),
-                            value(AccountStat.ACCOUNT_COUNT, accountIds.size()),
-                            value(AccountStat.SUMMARY_POSITION_AT_MIN, last.get(AccountStat.SUMMARY_POSITION_AT_MIN)));
+                            // Mois sans operation : rien ne bouge, on reprend le nombre de comptes du mois
+                            // precedent (accountIds compte aussi les comptes de synthese) et, pour le compte
+                            // de synthese, le total au minimum est le total de fin, constant sur le mois.
+                            value(AccountStat.ACCOUNT_COUNT, last.get(AccountStat.ACCOUNT_COUNT)),
+                            value(AccountStat.SUMMARY_POSITION_AT_MIN,
+                                  accountId == summaryAccountId ? lastEnd : last.get(AccountStat.SUMMARY_POSITION_AT_MIN)));
         }
         last = current;
       }
