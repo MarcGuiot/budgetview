@@ -11,7 +11,9 @@ import com.budgetview.desktop.time.TimeService;
 import org.globsframework.model.Key;
 import org.globsframework.model.format.DescriptionService;
 import org.globsframework.model.repository.DefaultGlobIdGenerator;
-import org.globsframework.model.repository.DefaultGlobRepository;
+import org.globsframework.model.GlobRepository;
+import org.globsframework.model.GlobRepositoryBuilder;
+import com.budgetview.desktop.model.DesktopModel;
 import org.globsframework.utils.Dates;
 import org.globsframework.utils.directory.DefaultDirectory;
 
@@ -20,13 +22,18 @@ import java.io.StringWriter;
 import static org.globsframework.model.FieldValue.value;
 
 public class DataCheckingServiceTest extends TestCase {
-  private DefaultGlobRepository repository;
+  private GlobRepository repository;
   private DefaultDirectory directory;
 
   protected void setUp() throws Exception {
     super.setUp();
     TimeService.setCurrentDate(Dates.parse("2009/10/10"));
-    repository = new DefaultGlobRepository(new DefaultGlobIdGenerator());
+    // Comme PicsouInit : le contrôle des liens (GlobCheck.linksAreAllConnected, 2017) exige les constantes
+    // (BudgetArea, TransactionType…) et les MonthDay.
+    repository = GlobRepositoryBuilder.init(new DefaultGlobIdGenerator())
+      .add(DesktopModel.get().getConstants())
+      .get();
+    PicsouInit.createTransientDataForNewUser(repository); // MonthDay 1..31
     directory = new DefaultDirectory();
     TimeService timeService = new TimeService();
     directory.add(TimeService.class, timeService);
@@ -57,16 +64,28 @@ public class DataCheckingServiceTest extends TestCase {
     DataCheckReport report = new DataCheckReport(writer);
     assertTrue(action.doCheck(report));
     String result = writer.toString();
+    // Depuis 9b303cd8e (2017), les mois manquants sont signalés en une ligne « Creating months:[…] »
+    String created = createdMonths(result);
     for (int month : missingMonths) {
-      assertTrue(Integer.toString(month), result.contains("Missing month " + month));
+      assertTrue(result, created.contains(Integer.toString(month)));
     }
     for (int month : currentMonths) {
-      assertFalse(Integer.toString(month), result.contains("Missing month " + month));
+      assertFalse(result, created.contains(Integer.toString(month)));
     }
     writer = new StringWriter();
     report = new DataCheckReport(writer);
     boolean check = action.doCheck(report);
     assertFalse(writer.toString(), check);
+  }
+
+  private static String createdMonths(String report) {
+    String prefix = "Creating months:";
+    int start = report.indexOf(prefix);
+    if (start < 0) {
+      return "";
+    }
+    int end = report.indexOf('\n', start);
+    return report.substring(start + prefix.length(), end < 0 ? report.length() : end);
   }
 
   private void createMonths(final int... months) {
@@ -92,7 +111,7 @@ public class DataCheckingServiceTest extends TestCase {
                       value(SeriesBudget.DAY, 1),
                       value(SeriesBudget.SERIES, 1233),
                       value(SeriesBudget.PLANNED_AMOUNT, 9.));
-    doCheck("Missing series 1233");
+    doCheck("Missing series for seriesBudget 1233");
   }
 
   public void testBadEndOfSeries() throws Exception {
@@ -132,7 +151,7 @@ public class DataCheckingServiceTest extends TestCase {
 
     createSeriesBudget(200905);
     createSeriesBudget(200911);
-    doCheck("Deleting SeriesBudget", "Adding SeriesBudget", "Missing month 200909");
+    doCheck("Deleting SeriesBudget", "Adding SeriesBudget", "Creating months:[200909]");
   }
 
   private void createSeriesBudget(final int monthId) {
