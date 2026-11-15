@@ -4,7 +4,6 @@ import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.util.HashMap;
 import java.util.Map;
-import java.security.AccessController;
 
 /**
  * Contants class defining keyboard keys.
@@ -185,7 +184,7 @@ public final class Key {
    * Returns META-Key on MacOS X, and CTRL-Key on other platforms.
    */
   public static Key plaformSpecificCtrl(Key key) {
-    String os = (String)AccessController.doPrivileged(new GetPropertyAction("os.name"));
+    String os = System.getProperty("os.name");
     boolean isMacOSX = os.contains("Mac OS X");
     return isMacOSX ? meta(key) : control(key);
   }
