@@ -85,6 +85,9 @@ public class DeferredCardCategorizationPanel implements SpecialCategorizationPan
   private void updateDisplay() {
     if (repository.contains(Series.TYPE, SeriesMatchers.deferredCardSeries())) {
       if (repeatHandler.isEmpty()) {
+        // Aucune carte proposable pour cette selection : on replie le panneau qu'une selection
+        // precedente avait pu deplier.
+        controller.setShown(false);
         updateMessage("categorization.specialCases.deferredCard.invalidSelection");
       }
       else {

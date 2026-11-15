@@ -100,6 +100,13 @@ public class CategorizationMatchers {
         if (excludeCardAccounts && !AccountCardType.NOT_A_CARD.getId().equals(account.get(Account.CARD_TYPE))) {
           return false;
         }
+        // Depuis 2015, les operations d'une carte a debit differe sont deplacees dans le compte
+        // principal : la carte n'apparait plus que dans ORIGINAL_ACCOUNT.
+        Glob originalAccount = repository.findLinkTarget(transaction, Transaction.ORIGINAL_ACCOUNT);
+        if (excludeCardAccounts && originalAccount != null
+            && !AccountCardType.NOT_A_CARD.getId().equals(originalAccount.get(Account.CARD_TYPE))) {
+          return false;
+        }
       }
       return true;
     }
