@@ -7,6 +7,7 @@ import com.budgetview.io.importer.analyzer.TransactionAnalyzer;
 import com.budgetview.io.importer.analyzer.TransactionAnalyzerFactory;
 import com.budgetview.io.importer.utils.DateFormatAnalyzer;
 import com.budgetview.io.importer.utils.TypedInputStream;
+import com.budgetview.bank.BankPluginService;
 import com.budgetview.model.*;
 import com.budgetview.shared.model.AccountType;
 import com.budgetview.shared.model.BudgetArea;
@@ -58,6 +59,7 @@ public class ImportSession {
   private int accountCount;
   private ChangeSet changes;
   private Glob realAccount;
+  private Glob currentImportedAccount;
   private Boolean importSeries;
   private boolean replaceSeries = true;
   private Key importKey;
@@ -215,6 +217,7 @@ public class ImportSession {
     }
 
     lastImportedTransactionsCount = importedTransactions.size();
+    this.currentImportedAccount = currentImportedAccount;
     return currentImportedAccount;
   }
 
@@ -234,6 +237,13 @@ public class ImportSession {
       if (realAccounts.isEmpty()) {
         load = false;
       }
+
+      // Report du solde du fichier sur le compte (LAST_IMPORT_POSITION) et regles propres a chaque
+      // banque (La Poste, cartes a debit differe...). Appel retire par erreur en 2016 (a05fe274b).
+      BankPluginService bankPluginService = directory.get(BankPluginService.class);
+      GlobList transactions = localRepository.getAll(ImportedTransaction.TYPE);
+      bankPluginService.apply(currentlySelectedAccount, currentImportedAccount, transactions, referenceRepository,
+                              localRepository, importChangeSet);
 
       GlobList allNewTransactions = convertImportedTransaction(selectedDateFormat, currentlySelectedAccount.get(Account.ID));
       boolean shouldImportSeries = shouldImportSeries();

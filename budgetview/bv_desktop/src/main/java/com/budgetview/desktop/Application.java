@@ -1,5 +1,7 @@
 package com.budgetview.desktop;
 
+import com.budgetview.bank.BankPluginService;
+
 import com.budgetview.client.mail.ServerMailingService;
 import com.budgetview.desktop.accounts.utils.AccountPositionNotificationHandler;
 import com.budgetview.desktop.addons.AddOnService;
@@ -323,6 +325,8 @@ public class Application {
     wrapper.add(new MobileService());
     wrapper.add(new ServerMailingService());
     wrapper.add(new CloudService());
+    // Retire par erreur en 2016 (03bb7182f) : utilise par ImportSession et les plugins de banque (LaPoste...).
+    wrapper.add(new BankPluginService());
     wrapper.add(PrinterService.class, new DefaultPrinterService());
     wrapper.add(new AddOnService());
     wrapper.add(new NewVersionService());
