@@ -84,7 +84,7 @@ public class SignpostSequenceTest extends LoggedInFunctionalTestCase {
     categorization.setNewRecurring("rent", "Rent"); // SED shown
 
     categorization.checkFirstCategorizationSignpostDisplayed("The operation is categorized, continue");
-    categorization.setIncome("income", "Income 1");
+    categorization.setIncome("income", "Income");
 
     checkNoSignpostVisible();
     categorization.setVariable("auchan", "Groceries");
@@ -182,7 +182,7 @@ public class SignpostSequenceTest extends LoggedInFunctionalTestCase {
     // === Categorization ===
 
     categorization.setNewRecurring("rent", "Rent"); // SED shown
-    categorization.setIncome("income", "Income 1");
+    categorization.setIncome("income", "Income");
     categorization.setVariable("auchan", "Groceries");
     categorization.setVariable("Chausse", "Clothing");
 
@@ -236,7 +236,7 @@ public class SignpostSequenceTest extends LoggedInFunctionalTestCase {
       .addTransaction("2010/04/29", -100, "vroum")
       .load();
 
-    categorization.setIncome("income", "Income 1");
+    categorization.setIncome("income", "Income");
     categorization.setVariable("auchan", "Groceries");
 
     categorization.selectTransactions("vroum");
@@ -391,7 +391,7 @@ public class SignpostSequenceTest extends LoggedInFunctionalTestCase {
     // === Categorization ===
 
     categorization.setNewRecurring("rent", "Rent"); // SED shown
-    categorization.setIncome("income", "Income 1");
+    categorization.setIncome("income", "Income");
     categorization.setVariable("auchan", "Groceries");
     categorization.setVariable("Chausse", "Clothing");
 
