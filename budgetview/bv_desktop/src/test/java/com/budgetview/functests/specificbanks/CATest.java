@@ -6,7 +6,19 @@ import org.junit.Test;
 public class CATest extends SpecificBankTestCase {
   @Test
   public void test() throws Exception {
-    operations.importOfxWithDeferred(getFile("ca1.ofx"), "Card n. 5341-1130-2611-1111", "Account n. 123123123123");
+    // Le code banque du fichier (13006) n'est plus rattache a une banque depuis la refonte des caisses
+    // regionales (2016) : on choisit la banque a la main.
+    operations.openImportDialog()
+      .setFilePath(getFile("ca1.ofx"))
+      .importFileAndPreview()
+      .selectBank("Crédit Agricole")
+      .setMainAccount()
+      .importAccountAndOpenNext()
+      .setAccountName("Card n. 5341-1130-2")
+      .selectBank("Crédit Agricole")
+      .setDeferredAccount(25, 28, 0, "Account n. 123123123123")
+      .importAccountAndGetSummary()
+      .validate();
     timeline.selectAll();
 
     views.selectData();
