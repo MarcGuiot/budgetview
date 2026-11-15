@@ -3,6 +3,8 @@ budgetview/bv_desktop/budgetview.jar
 budgetview/bv_desktop/config.jar
 budgetview/bv_desktop/dump.jar
 .DS_Store
+tmp/
+budgetview/bv_desktop/badFile.ofx
 
 # Clés et certificats : ne jamais les versionner (ceux de ssl/ ont été publiés, ils sont compromis)
 ssl/*

@@ -9,7 +9,6 @@ import com.budgetview.desktop.time.TimeService;
 import com.budgetview.desktop.time.TimeViewPanel;
 import com.budgetview.functests.checkers.*;
 import com.budgetview.functests.checkers.components.TimeViewChecker;
-import com.budgetview.functests.checkers.license.LicenseActivationChecker;
 import com.budgetview.functests.checkers.license.LicenseChecker;
 import com.budgetview.functests.checkers.printing.PrinterChecker;
 import com.budgetview.model.SignpostStatus;
@@ -106,34 +105,42 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
       }
     });
 
-    if (mainWindow != null) {
-      LoginChecker login = new LoginChecker(mainWindow);
-      login.clickFirstAutoLogin();
+    // Si la préparation échoue, la fenêtre partagée (static) resterait ouverte
+    // et connectée : tous les tests suivants de la classe échoueraient en cascade.
+    try {
+      if (mainWindow != null) {
+        LoginChecker login = new LoginChecker(mainWindow);
+        login.clickFirstAutoLogin();
+      }
+      else {
+        mainWindow = getMainWindow();
+      }
+      repository = ((PicsouFrame) mainWindow.getAwtComponent()).getRepository();
+
+      initCheckers();
+
+      if (registered) {
+        license.register();
+        operations.openPreferences()
+          .setFutureMonthsCount(0)
+          .validate();
+        operations.openDevOptions()
+          .setPeriodInMonth(4)
+          .setMonthBack(1)
+          .validate();
+
+      }
+
+      if (!initialGuidesShown) {
+        SignpostStatus.setInitialGuidanceCompleted(repository);
+      }
+
+      selectInitialView();
     }
-    else {
-      mainWindow = getMainWindow();
+    catch (Throwable e) {
+      disposeMainWindow();
+      throw e;
     }
-    repository = ((PicsouFrame) mainWindow.getAwtComponent()).getRepository();
-
-    initCheckers();
-
-    if (registered) {
-      license.register();
-      operations.openPreferences()
-        .setFutureMonthsCount(0)
-        .validate();
-      operations.openDevOptions()
-        .setPeriodInMonth(4)
-        .setMonthBack(1)
-        .validate();
-
-    }
-
-    if (!initialGuidesShown) {
-      SignpostStatus.setInitialGuidanceCompleted(repository);
-    }
-
-    selectInitialView();
   }
 
   public void setInitialGuidesShown(boolean initialGuidesShown) {
@@ -197,18 +204,7 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
     }
     catch (Throwable e) {
 //      e.printStackTrace();  // on perd l'assert si il y en a eu un.
-      try {
-        SwingUtilities.invokeAndWait(new Runnable() {
-          public void run() {
-            mainWindow.getAwtComponent().setVisible(false);
-            mainWindow.dispose();
-          }
-        });
-      }
-      catch (Throwable e1) {
-//        e1.printStackTrace();
-      }
-      mainWindow = null;
+      disposeMainWindow();
     }
     try {
       super.tearDown();
@@ -217,6 +213,24 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
       e.printStackTrace();
     }
     clearCheckers();
+  }
+
+  private static void disposeMainWindow() {
+    if (mainWindow == null) {
+      return;
+    }
+    try {
+      SwingUtilities.invokeAndWait(new Runnable() {
+        public void run() {
+          mainWindow.getAwtComponent().setVisible(false);
+          mainWindow.dispose();
+        }
+      });
+    }
+    catch (Throwable e) {
+      // On garde l'erreur d'origine.
+    }
+    mainWindow = null;
   }
 
   protected void clearCheckers() {
@@ -336,7 +350,7 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
 
     initCheckers();
     if (registered) {
-      LicenseActivationChecker.enterLicense(mainWindow, "admin", "1234");
+      license.register();
     }
   }
 
@@ -361,7 +375,7 @@ public abstract class LoggedInFunctionalTestCase extends FunctionalTestCase {
     loginChecker.logNewUser(user, password);
     initCheckers();
     if (registered) {
-      LicenseActivationChecker.enterLicense(mainWindow, "admin", "1234");
+      license.register();
     }
   }
 

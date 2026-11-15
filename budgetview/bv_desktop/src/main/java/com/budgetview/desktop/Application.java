@@ -75,6 +75,8 @@ public class Application {
   public static final String DEFAULT_ADDRESS_PROPERTY = APPNAME + ".server.url";
   public static String DELETE_LOCAL_PREVAYLER_PROPERTY = APPNAME + ".prevayler.delete";
   public static String IS_DATA_IN_MEMORY = APPNAME + ".data.in.memory";
+  /** Langue au démarrage : "fr" (défaut), "en", ou "keep" pour conserver la langue déjà en place (tests). */
+  public static final String LANG_PROPERTY = APPNAME + ".lang";
 
   public static final String TODAY = ".today";
   public static String FORCE_DATE = APPNAME + TODAY;
@@ -155,7 +157,10 @@ public class Application {
       args = parseLanguage(args);
     }
     else {
-      Lang.setLang("fr");
+      String lang = System.getProperty(LANG_PROPERTY, "fr");
+      if (!"keep".equals(lang)) {
+        Lang.setLang(lang);
+      }
     }
     List<File> fileToOpen = new ArrayList<File>();
     for (String arg : args) {
