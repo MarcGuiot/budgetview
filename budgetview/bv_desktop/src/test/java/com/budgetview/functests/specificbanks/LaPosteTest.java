@@ -57,7 +57,10 @@ public class LaPosteTest extends SpecificBankTestCase {
   }
 
   @Test
-  public void testDeferred() throws Exception {
+  // Desactive : repose sur le plugin La Poste (inversion du signe des operations de carte a debit
+  // differe, d'apres un releve de 2011), debranche en 2016 avec les connecteurs web (6273d670a). On ne
+  // sait pas si l'export OFX actuel de La Poste a encore ce defaut ; le plugin n'est pas rebranche.
+  public void disabled_testDeferred() throws Exception {
     setCurrentDate("2011/02/02");
     operations.changeDate();
     operations.openPreferences().setFutureMonthsCount(2).validate();
