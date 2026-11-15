@@ -134,7 +134,9 @@ public class TimeViewPanelUISpecTest extends UISpecTestCase {
       return;
     }
     init(170, 12);
-    timeViewPanel.setSize(80, 90);
+    // Au moins deux mois de large (MonthGraph : 46 px mini depuis 2015), sinon le panneau ne
+    // defile pas pour garder le mois selectionne visible.
+    timeViewPanel.setSize(100, 90);
     checkSelectedIsVisible();
     timeViewPanel.setSize(30, 90);
     checkSelectedIsNoInvisible();
