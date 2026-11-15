@@ -86,12 +86,6 @@
       <version>1.0</version>
     </dependency>
     <dependency>
-      <groupId>org.designup</groupId>
-      <artifactId>shrinker</artifactId>
-      <version>1.0</version>
-      <scope>runtime</scope>
-    </dependency>
-    <dependency>
       <groupId>org.globsframework</groupId>
       <artifactId>prevayler</artifactId>
       <version>1.0</version>
@@ -228,6 +222,30 @@
       <id>gen-version</id>
       <build>
         <plugins>
+          <!-- Livrable dans target/dist : budgetview.jar (classes de bv_desktop) + lib/ (bibliothèques),
+               la forme qu’attend jpackage (voir README.md).
+               Remplace l'ancien JarShrinker (ASM 3.1, incompatible avec le bytecode Java 9+). -->
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-dependency-plugin</artifactId>
+            <version>3.0.2</version>
+            <executions>
+              <execution>
+                <id>dist-lib</id>
+                <phase>install</phase>
+                <goals>
+                  <goal>copy-dependencies</goal>
+                </goals>
+                <configuration>
+                  <outputDirectory>${project.build.directory}/dist/lib</outputDirectory>
+                  <includeScope>runtime</includeScope>
+                  <!-- Jamais chargées par l'application (aucune de leurs classes n'entrait dans le jar
+                       réduit par l'ancien shrinker) : tirées par globs (sqlstreams) ou pour des constantes. -->
+                  <excludeArtifactIds>hsqldb,mysql-connector-java,joda-time,xercesImpl,xml-apis,slf4j-api,slf4j-log4j12,servlet-api</excludeArtifactIds>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-antrun-plugin</artifactId>
@@ -238,41 +256,22 @@
                 <phase>install</phase>
                 <configuration>
                   <target>
-                    <java fork="yes"
-                          classname="org.designup.shrinker.JarShrinker" failonerror="true">
+                    <property name="dist" value="${project.build.directory}/dist"/>
+                    <manifestclasspath property="dist.classpath" jarfile="${dist}/budgetview.jar">
                       <classpath>
-                        <path refid="maven.runtime.classpath"/>
+                        <fileset dir="${dist}/lib" includes="*.jar"/>
                       </classpath>
-                      <sysproperty key="with.debug" value="true"/>
-                      <arg
-                          line="target/dump.jar ${project.build.directory}/../dev/ant/inputDump.txt ${project.build.directory}/../dev/ant/ignoreClient.txt"/>
-                    </java>
-                    <manifest file="target/classes/MANIFEST.MF">
-                      <attribute name="Main-Class" value="com.budgetview.persistence.direct.Dump"/>
-                    </manifest>
-                    <jar update="true" jarfile="target/dump.jar" manifest="target/classes/MANIFEST.MF"/>
-                    <java fork="yes"
-                          classname="org.designup.shrinker.JarShrinker" failonerror="true">
-                      <classpath>
-                        <path refid="maven.runtime.classpath"/>
-                      </classpath>
-                      <sysproperty key="with.debug" value="true"/>
-                      <sysproperty key="std.out.trace" value="false"/>
-                      <arg
-                          line="budgetview.jar ${project.build.directory}/../dev/ant/inputClient.txt ${project.build.directory}/../dev/ant/ignoreClient.txt"/>
-                    </java>
-                    <manifest file="target/classes/MANIFEST.MF">
-                      <attribute name="Main-Class" value="com.budgetview.desktop.DesktopApp"/>
-                    </manifest>
-                    <jar update="true" jarfile="budgetview.jar" manifest="target/classes/MANIFEST.MF"/>
-                    <jar destfile="config.jar">
+                    </manifestclasspath>
+                    <jar destfile="${dist}/budgetview.jar">
+                      <fileset dir="${project.build.outputDirectory}"/>
+                      <manifest>
+                        <attribute name="Main-Class" value="com.budgetview.desktop.DesktopApp"/>
+                        <attribute name="Class-Path" value="${dist.classpath}"/>
+                      </manifest>
+                    </jar>
+                    <jar destfile="${dist}/config.jar">
                       <fileset dir="src/main/resources" includes="banks/**"/>
                     </jar>
-<!--                    <delete dir="target/obfuscated"/>-->
-<!--                    <java fork="yes" jar="dev/Zelix/ZKM.jar">-->
-<!--                      <jvmarg line="-Xmx1g"/>-->
-<!--                      <arg line="-de dev/Zelix/defaultExclude.txt dev/ant/zelix.txt"/>-->
-<!--                    </java>-->
                   </target>
                 </configuration>
                 <goals>
