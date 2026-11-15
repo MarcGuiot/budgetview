@@ -21,6 +21,13 @@ public class UISpecToolkit extends ToolkitDelegate {
   static final String UNIX_SYSTEM_DEFAULT_VALUE = "sun.awt.motif.MToolkit";
   static final String WINDOWS_SYSTEM_DEFAULT_VALUE = "sun.awt.windows.WToolkit";
 
+  private static final String[] CANDIDATE_TOOLKITS = {
+    WINDOWS_SYSTEM_DEFAULT_VALUE,
+    "sun.lwawt.macosx.LWCToolkit",
+    "sun.awt.X11.XToolkit",
+    UNIX_SYSTEM_DEFAULT_VALUE
+  };
+
   private static String awtToolkit;
 
   public UISpecToolkit() {
@@ -59,7 +66,7 @@ public class UISpecToolkit extends ToolkitDelegate {
     return (UISpecToolkit)defaultToolkit;
   }
 
-  protected LightweightPeer createComponent(Component target) {
+  public LightweightPeer createComponent(Component target) {
     if (target instanceof JPopupMenu) {
       UISpecDisplay.instance().setCurrentPopup((JPopupMenu)target);
     }
@@ -156,7 +163,7 @@ public class UISpecToolkit extends ToolkitDelegate {
     return 0;
   }
 
-  protected MouseInfoPeer getMouseInfoPeer() {
+  public MouseInfoPeer getMouseInfoPeer() {
     return Empty.NULL_MOUSE_INFO;
   }
 
@@ -195,19 +202,18 @@ public class UISpecToolkit extends ToolkitDelegate {
   }
 
   private static void setAwtToolkitProperty() {
-    try {
-      Class.forName(WINDOWS_SYSTEM_DEFAULT_VALUE);
-      awtToolkit = WINDOWS_SYSTEM_DEFAULT_VALUE;
-    }
-    catch (ClassNotFoundException e) {
+    // Java 9+ no longer sets the awt.toolkit system property: try the known platform toolkits.
+    for (String name : CANDIDATE_TOOLKITS) {
       try {
-        Class.forName(UNIX_SYSTEM_DEFAULT_VALUE);
-        awtToolkit = UNIX_SYSTEM_DEFAULT_VALUE;
+        Class.forName(name);
+        awtToolkit = name;
+        return;
       }
-      catch (ClassNotFoundException e1) {
-        throw new AWTError("Unable to locate AWT Toolkit");
+      catch (ClassNotFoundException e) {
+        // try the next one
       }
     }
+    throw new AWTError("Unable to locate AWT Toolkit");
   }
 
   private static void buildUnderlyingToolkit(String awtToolkit) {

@@ -265,5 +265,45 @@
         </plugins>
       </build>
     </profile>
+    <!-- Java 9 and later (tested on 17). Compiled with source/target 1.8, javac does not enforce module
+         encapsulation, so no add-exports is needed; at run time the sun.* / peer packages must be opened. -->
+    <profile>
+      <id>jdk17</id>
+      <activation>
+        <jdk>[9,)</jdk>
+      </activation>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.codehaus.mojo</groupId>
+            <artifactId>build-helper-maven-plugin</artifactId>
+            <version>1.1</version>
+            <executions>
+              <execution>
+                <id>add-specific-source</id>
+                <goals>
+                  <goal>add-source</goal>
+                </goals>
+                <configuration>
+                  <sources>
+                    <source>${basedir}/src/main/java-jdk17</source>
+                  </sources>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-surefire-plugin</artifactId>
+            <configuration>
+              <argLine>-Dapple.awt.UIElement=true ${uispec4j.jdk17.opens}</argLine>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>
+      <properties>
+        <uispec4j.jdk17.opens>--add-opens java.desktop/java.awt=ALL-UNNAMED --add-opens java.desktop/javax.swing=ALL-UNNAMED --add-opens java.desktop/java.awt.peer=ALL-UNNAMED --add-opens java.desktop/java.awt.dnd.peer=ALL-UNNAMED --add-opens java.desktop/sun.awt=ALL-UNNAMED --add-opens java.desktop/sun.awt.datatransfer=ALL-UNNAMED --add-opens java.desktop/sun.awt.image=ALL-UNNAMED --add-opens java.desktop/sun.java2d=ALL-UNNAMED --add-opens java.desktop/sun.java2d.pipe=ALL-UNNAMED --add-opens java.desktop/sun.font=ALL-UNNAMED --add-opens java.desktop/sun.lwawt=ALL-UNNAMED --add-opens java.desktop/sun.lwawt.macosx=ALL-UNNAMED</uispec4j.jdk17.opens>
+      </properties>
+    </profile>
   </profiles>
 </project>
