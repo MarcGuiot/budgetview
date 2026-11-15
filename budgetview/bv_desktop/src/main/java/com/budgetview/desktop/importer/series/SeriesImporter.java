@@ -55,7 +55,10 @@ public class SeriesImporter {
                                             value(Series.IS_AUTOMATIC,
                                                   BudgetArea.RECURRING.getId().equals(importedSeries.get(ImportedSeries.BUDGET_AREA))),
                                             value(Series.BUDGET_AREA, importedSeries.get(ImportedSeries.BUDGET_AREA)),
-                                            value(Series.NAME, seriesName));
+                                            value(Series.NAME, seriesName),
+                                            // Comme a la creation d'une enveloppe (SeriesEditionDialog) : sans
+                                            // compte cible, la serie n'etait plus reconnue au reimport.
+                                            value(Series.TARGET_ACCOUNT, Account.MAIN_SUMMARY_ACCOUNT_ID));
             if (subSeriesName != null) {
               subSeries = localRepository.create(SubSeries.TYPE,
                                                  value(SubSeries.NAME, subSeriesName),
