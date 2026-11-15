@@ -102,7 +102,7 @@ public class MoneyExportTest extends SpecificBankTestCase {
       .setNewAccount("CIC", "Main account", "")
       .setMainAccount()
       .importSeries()
-      .cancelImportSeries();
+      .cancelImportSeriesAndAcceptPosition("835.83");
 
     transactions.initContent()
       .add("20/08/2008", TransactionType.VIREMENT, "SPLIT COURSES QUELCONQUES", "", 0.00)

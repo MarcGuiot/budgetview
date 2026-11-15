@@ -90,4 +90,14 @@ public class ImportSeriesChecker {
     assertFalse(dialog.isVisible());
     ImportDialogCompletionChecker.checkAndClose(-1, -1, -1, parent);
   }
+
+  /** Pour un compte sans solde connu : la fin de l'import demande sa position, on garde celle proposee. */
+  public void cancelImportSeriesAndAcceptPosition(String proposedPosition) {
+    AccountPositionEditionChecker position =
+      new AccountPositionEditionChecker(WindowInterceptor.getModalDialog(dialog.getButton("do not import").triggerClick()));
+    position.checkInitialAmountSelected(proposedPosition);
+    position.validate();
+    assertFalse(dialog.isVisible());
+    ImportDialogCompletionChecker.checkAndClose(-1, -1, -1, parent);
+  }
 }
