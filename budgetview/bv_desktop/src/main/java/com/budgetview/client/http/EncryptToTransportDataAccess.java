@@ -27,6 +27,7 @@ import org.globsframework.utils.collections.MapOfMaps;
 import org.globsframework.utils.collections.MultiMap;
 import org.globsframework.utils.directory.Directory;
 import org.globsframework.utils.exceptions.InvalidState;
+import org.globsframework.utils.exceptions.UnexpectedApplicationState;
 import org.globsframework.utils.serialization.SerializedByteArrayOutput;
 import org.globsframework.utils.serialization.SerializedInput;
 import org.globsframework.utils.serialization.SerializedOutput;
@@ -412,6 +413,11 @@ public class EncryptToTransportDataAccess implements DataAccess {
           globSerializer.deserializeData(globData.getVersion(),
                                          passwordBasedEncryptor.decrypt(globData.getData()), id, globBuilder
           );
+        }
+        catch (UnexpectedApplicationState e) {
+          // Dechiffrement impossible (donnees corrompues) : on garde le type, que MainWindow
+          // traduit en "data.load.error.journal" au lieu d'une erreur de connexion au serveur.
+          throw new UnexpectedApplicationState("Error loading type " + globType + " with version " + globData.getVersion(), e);
         }
         catch (Exception e) {
           throw new RuntimeException("Error loading type " + globType + " with version " + globData.getVersion(), e);
