@@ -580,8 +580,12 @@ public class OperationChecker {
   }
 
   public void checkDataIsOk() {
-    MessageDialogChecker.open(getDevMenu().getSubMenu(DataCheckerAction.LABEL).triggerClick())
-      .checkSuccessMessageContains("No error was found").close();
+    Window dialog = WindowInterceptor.getModalDialog(getDevMenu().getSubMenu(DataCheckerAction.LABEL).triggerClick());
+    if (!dialog.getTextBox("message").getText().contains("No error was found")) {
+      // Sans cela, l'echec ne dit pas quelles erreurs ont ete trouvees.
+      junit.framework.Assert.fail("Data check failed:\n" + dialog.getTextBox("details").getText());
+    }
+    new MessageDialogChecker(dialog).checkSuccessMessageContains("No error was found").close();
   }
 
   public void nextMonth() {
