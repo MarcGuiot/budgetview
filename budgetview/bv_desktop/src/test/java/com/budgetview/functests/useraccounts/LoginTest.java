@@ -523,10 +523,12 @@ public class LoginTest extends StartUpFunctionalTestCase {
         public Trigger process(Window window) throws Exception {
           ImportDialogChecker importDialog = new ImportDialogChecker(window);
 
+          // Depuis 2017, ignorer le fichier se choisit dans la liste des comptes cibles, puis "Next".
           importDialog.setFilePath(path)
-            .importFileAndPreview();
+            .importFileAndPreview()
+            .selectSkipFile();
 
-          window.getButton("Skip file").click();
+          window.getButton("Next").click();
           return window.getButton("OK").triggerClick();
         }
       })
