@@ -323,7 +323,9 @@ public class ImportDialog implements RealAccountImporter, Disposable, ImportDisp
     }
     for (Map.Entry<Integer, DoubleRef> accountAndTotal : accounts.entrySet()) {
       Glob account = localRepository.get(Key.create(Account.TYPE, accountAndTotal.getKey()));
-      if (account.get(Account.LAST_IMPORT_POSITION) == null && !AccountCardType.DEFERRED.getId().equals(account.get(Account.CARD_TYPE))) {
+      if (account.get(Account.LAST_IMPORT_POSITION) == null
+          && account.get(Account.PAST_POSITION) == null // position deja saisie a la main : l'import la fait evoluer
+          && !AccountCardType.DEFERRED.getId().equals(account.get(Account.CARD_TYPE))) {
         double value = accountAndTotal.getValue().value;
         AccountPositionEditionDialog positionDialog =
           new AccountPositionEditionDialog(account, value, localRepository, localDirectory, this.dialog);
