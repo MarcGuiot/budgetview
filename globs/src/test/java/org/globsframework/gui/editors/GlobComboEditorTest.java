@@ -22,9 +22,9 @@ public class GlobComboEditorTest extends GuiComponentTestCase {
   protected void setUp() throws Exception {
     super.setUp();
     repository = checker.parse(
-      "<dummyObject id='1' name='name1' count='3'/>" +
-      "<dummyObject id='2' name='name2' count='3'/>" +
-      "<dummyObject id='3' name='name3' count='4'/>"
+      "<dummyObject id='1' name='name1' counter='3'/>" +
+      "<dummyObject id='2' name='name2' counter='3'/>" +
+      "<dummyObject id='3' name='name3' counter='4'/>"
     );
     repository.addChangeListener(changeListener);
     repoChecker = new GlobRepositoryChecker(repository);

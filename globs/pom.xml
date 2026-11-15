@@ -59,6 +59,8 @@
           </includes>
           <excludes>
             <exclude>**/*TestCase.java</exclude>
+            <!-- Demande un serveur MySQL local (base et compte de test) : hors de portée du build. -->
+            <exclude>**/MySqlExceptionTest.java</exclude>
           </excludes>
         </configuration>
       </plugin>
@@ -122,13 +124,8 @@
         </includes>
       </testResource>
       <testResource>
+        <!-- Tout le dossier : les tests de splits lisent aussi des .splits et des .colors. -->
         <directory>src/test/resources</directory>
-        <excludes>
-          <exclude>**/*.java</exclude>
-        </excludes>
-        <includes>
-          <include>**/*.properties</include>
-        </includes>
       </testResource>
     </testResources>
   </build>

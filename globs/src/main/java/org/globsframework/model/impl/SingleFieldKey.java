@@ -18,7 +18,7 @@ public class SingleFieldKey extends Key {
 
   private Object value;
   private Field keyField;
-  private int hashCode = -1;
+  private int hashCode = 0;
 
   public SingleFieldKey(Field field, Object value) throws MissingInfo {
     checkValue(field, value);
@@ -148,10 +148,12 @@ public class SingleFieldKey extends Key {
   }
 
   // optimized - do not use generated code
+  // Même formule que CompositeKey et les clés à 2, 3 ou 4 champs (changée pour elles en 2015,
+  // 24c8bf275) : equals() accepte toute Key de même contenu, le hashCode doit donc concorder.
   public int hashCode() {
-    if (hashCode < 0) {
-      hashCode = (value != null ? value.hashCode() : 0);
-      hashCode = 31 * hashCode + keyField.hashCode();
+    if (hashCode == 0) {
+      int result = 31 * getGlobType().hashCode() + (value != null ? value.hashCode() : 0);
+      hashCode = (result == 0) ? 23 : result;
     }
     return hashCode;
   }

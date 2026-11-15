@@ -9,14 +9,19 @@ import java.awt.*;
 public class FontsTest extends UISpecTestCase {
   public void testFontParsing() throws Exception {
     checkFont("Arial,italic,24", "Arial", Font.ITALIC, 24);
-    if (System.getProperty("os.name").equalsIgnoreCase("Linux")) {
-      checkFont("Times,bold,8", "Dialog", Font.BOLD, 8);
-      checkFont("Courier,plain,12", "Monospaced", Font.PLAIN, 12);
+    // Java remplace une police absente par « Dialog », ou « Monospaced » pour Courier : l'attente dépend des
+    // polices installées, pas du système (ni Times ni Courier ne sont vues par le JDK 8 sur ce Mac ARM).
+    checkFont("Times,bold,8", installedOr("Times", "Dialog"), Font.BOLD, 8);
+    checkFont("Courier,plain,12", installedOr("Courier", "Monospaced"), Font.PLAIN, 12);
+  }
+
+  private static String installedOr(String family, String fallback) {
+    for (String installed : GraphicsEnvironment.getLocalGraphicsEnvironment().getAvailableFontFamilyNames()) {
+      if (installed.equals(family)) {
+        return family;
+      }
     }
-    else {
-      checkFont("Times,bold,8", "Times", Font.BOLD, 8);
-      checkFont("Courier,plain,12", "Courier", Font.PLAIN, 12);
-    }
+    return fallback;
   }
 
   public void testFontParsingErrors() throws Exception {
