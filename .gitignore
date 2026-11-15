@@ -1,3 +1,9 @@
+target/
+budgetview/bv_desktop/budgetview.jar
+budgetview/bv_desktop/config.jar
+budgetview/bv_desktop/dump.jar
+.DS_Store
+
 # Clés et certificats : ne jamais les versionner (ceux de ssl/ ont été publiés, ils sont compromis)
 ssl/*
 !ssl/README_CREATE_SSL_CERTIFICATE.txt
