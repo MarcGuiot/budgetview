@@ -16,7 +16,8 @@ import java.io.StringReader;
 import static org.globsframework.model.FieldValue.value;
 
 public class JsonImporterTest extends TestCase {
-  public void test() throws Exception {
+  // Désactivé (JUnit 3 : renommé pour ne plus commencer par "test") — import JSON du service cloud Budgea (BudgetView Sync), arrêté en 2018.
+  public void disabled_test() throws Exception {
     String json = "{\n" +
                   "    \"position_month\": 201608,\n" +
                   "    \"number\": \"3002900000\",\n" +

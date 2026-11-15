@@ -6,7 +6,7 @@ import org.junit.Test;
 public class CreditMutuelTest extends SpecificBankTestCase {
   @Test
   public void test() throws Exception {
-    operations.importQifFile(getFile("credit_mutuel.qif"), "Crédit Mutuel Sud-Ouest (Arkéa)", 0.);
+    operations.importQifFile(getFile("credit_mutuel.qif"), "Crédit Mutuel Sud-Ouest", 0.);
     timeline.selectAll();
 
     views.selectData();
