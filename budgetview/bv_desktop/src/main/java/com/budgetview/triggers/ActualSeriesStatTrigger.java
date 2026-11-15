@@ -106,11 +106,13 @@ public class ActualSeriesStatTrigger implements ChangeSetListener {
     }
 
     final Double transactionAmount = values.get(Transaction.AMOUNT);
-    Glob stat = repository.findOrCreate(SeriesStat.createKeyForSeries(seriesId, values.get(Transaction.BUDGET_MONTH)));
-    updateStat(stat, transactionAmount, multiplier, repository);
-    Glob accountStat = repository.findOrCreate(SeriesStat.createKeyForSeries(values.get(Transaction.ACCOUNT), seriesId, values.get(Transaction.BUDGET_MONTH)));
-    if (accountStat == null) System.out.println("ActualSeriesStatTrigger.processTransaction - accountStat is NULL");
-    updateStat(accountStat, transactionAmount, multiplier, repository);
+    Key statKey = SeriesStat.createKeyForSeries(seriesId, values.get(Transaction.BUDGET_MONTH));
+    Key accountStatKey = SeriesStat.createKeyForSeries(values.get(Transaction.ACCOUNT), seriesId, values.get(Transaction.BUDGET_MONTH));
+    // Une suppression ne fait que retrancher : on ne cree pas de stat. Sinon, a la suppression d'un
+    // compte, on recreait la stat du compte qu'AccountDeletionTrigger venait d'effacer (lien casse).
+    boolean create = multiplier > 0;
+    updateStat(create ? repository.findOrCreate(statKey) : repository.find(statKey), transactionAmount, multiplier, repository);
+    updateStat(create ? repository.findOrCreate(accountStatKey) : repository.find(accountStatKey), transactionAmount, multiplier, repository);
   }
 
   private void updateStat(Glob stat, Double transactionAmount, int multiplier, GlobRepository repository) {
