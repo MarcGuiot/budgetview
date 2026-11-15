@@ -7,7 +7,6 @@
 
   <modules>
     <module>globs</module>
-    <module>shrinker</module>
     <module>budgetview</module>
 <!--    <module>uispec4j</module>-->
     <module>saxstack</module>

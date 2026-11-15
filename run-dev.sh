@@ -15,7 +15,7 @@ set -euo pipefail
 
 ROOT="$(cd "$(dirname "$0")" && pwd)"
 DESKTOP="$ROOT/budgetview/bv_desktop"
-JAR="$DESKTOP/budgetview.jar"
+JAR="$DESKTOP/target/dist/budgetview.jar"  # + lib/ à côté, voir le profil gen-version
 DATA="${BV_DEV_DATA:-$HOME/.budgetview-dev}"
 export JAVA_HOME="${JAVA_HOME:-$HOME/Library/Java/JavaVirtualMachines/zulu-8.jdk/Contents/Home}"
 
