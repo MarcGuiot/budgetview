@@ -5,27 +5,23 @@ import org.junit.Test;
 
 public class BNPTest extends SpecificBankTestCase {
 
-  // Désactivé (JUnit 3 : renommé pour ne plus commencer par "test") — les règles de libellés BNP ont été retirées de banks/fr/bnp.xml en 2017 (commit 501972923, passage à Budgea). À réactiver si on les restaure.
   @Test
-  public void disabled_test1() throws Exception {
+  public void test1() throws Exception {
     checkFile("bnp_Money2000_new.qif");
   }
 
-  // Désactivé (JUnit 3 : renommé pour ne plus commencer par "test") — voir test1.
   @Test
-  public void disabled_test2() throws Exception {
+  public void test2() throws Exception {
     checkFile("bnp_PM5_MMJJAA_new.qif");
   }
 
-  // Désactivé (JUnit 3 : renommé pour ne plus commencer par "test") — voir test1.
   @Test
-  public void disabled_test3() throws Exception {
+  public void test3() throws Exception {
     checkFile("bnp_Quicken2000_new.qif");
   }
 
-  // Désactivé (JUnit 3 : renommé pour ne plus commencer par "test") — voir test1.
   @Test
-  public void disabled_test4() throws Exception {
+  public void test4() throws Exception {
     operations.importQifFile(getFile("bnp_Herve.qif"), "BNP Paribas", 0.);
     timeline.selectAll();
 
