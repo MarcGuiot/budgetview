@@ -6,7 +6,7 @@ import org.junit.Test;
 public class CaisseEpargneTest extends SpecificBankTestCase {
   @Test
   public void test() throws Exception {
-    operations.importQifFile(getFile("caisse_epargne.qif"), "Caisse d'épargne", 0.);
+    operations.importQifFile(getFile("caisse_epargne.qif"), "Caisse d'Épargne", 0.);
     timeline.selectAll();
     views.selectData();
     transactions.getTable().getHeader().click(1);

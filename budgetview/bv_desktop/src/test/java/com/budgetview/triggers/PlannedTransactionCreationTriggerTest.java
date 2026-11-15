@@ -167,7 +167,7 @@ public class PlannedTransactionCreationTriggerTest extends PicsouTriggerTestCase
       "<create account='3' amount='-300.0' bankMonth='200808' bankDay='1' id='1' label='Auchan'" +
       "        budgetDay='1' budgetMonth='200808'" +
       "        planned='false' series='101' type='transaction' mirror='false'  createdBySeries='false'/>" +
-      "<create account='3' amount='1900.0' bankMonth='200808' bankDay='1' id='0' label='picsou'" +
+      "<create account='3' amount='1900.0' bankMonth='200808' bankDay='1' id='0' label='budgetview'" +
       "        budgetDay='1' budgetMonth='200808'" +
       "        planned='false' series='102' type='transaction' mirror='false'  createdBySeries='false'/>" +
       "<update _amount='-1000.0' amount='-700.0' id='" + enveloppePlannedTransaction[0] + "' type='transaction'/>");
