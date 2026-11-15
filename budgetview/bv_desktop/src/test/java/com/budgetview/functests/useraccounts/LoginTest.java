@@ -162,7 +162,7 @@ public class LoginTest extends StartUpFunctionalTestCase {
 
       {
         BudgetViewChecker budgetView = new BudgetViewChecker(window);
-        budgetView.income.checkSeriesPresent("Income 1", "Income 2");
+        budgetView.income.checkSeriesPresent("Income", "Interest");
         budgetView.variable.checkSeriesPresent("Groceries", "Health", "Fuel");
         budgetView.variable.checkPlannedUnset("Groceries");
 
@@ -185,7 +185,7 @@ public class LoginTest extends StartUpFunctionalTestCase {
       {
         CategorizationChecker categorization = new CategorizationChecker(window);
         categorization.selectTransaction("WorldCo");
-        categorization.selectIncome().checkSeriesListEquals("Income 1", "Income 2");
+        categorization.selectIncome().checkSeriesListEquals("Income", "Interest");
       }
     }
     finally {
