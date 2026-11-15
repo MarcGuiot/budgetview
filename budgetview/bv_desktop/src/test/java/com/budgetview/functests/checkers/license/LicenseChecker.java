@@ -24,7 +24,9 @@ public class LicenseChecker extends ViewChecker {
   }
 
   public void register() {
-    LicenseActivationChecker.enterLicense(mainWindow, "admin", "1234");
+    // Depuis la 6.00, toutes les extensions sont activées au démarrage
+    // (AddOnTrigger / PicsouInit) et le menu « Activer les extensions... »
+    // n'existe plus : il n'y a plus rien à enregistrer.
   }
 
   public LicenseActivationChecker open() {

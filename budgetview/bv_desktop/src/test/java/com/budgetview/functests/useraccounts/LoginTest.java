@@ -2,7 +2,6 @@ package com.budgetview.functests.useraccounts;
 
 import com.budgetview.functests.checkers.*;
 import com.budgetview.functests.checkers.components.TimeViewChecker;
-import com.budgetview.functests.checkers.license.LicenseActivationChecker;
 import com.budgetview.functests.checkers.license.LicenseChecker;
 import com.budgetview.functests.utils.OfxBuilder;
 import com.budgetview.functests.utils.StartUpFunctionalTestCase;
@@ -417,7 +416,6 @@ public class LoginTest extends StartUpFunctionalTestCase {
   @Test
   public void testAutoLoginAndImportInNewUser() throws Exception {
     login.clickAutoLogin();
-    LicenseActivationChecker.enterLicense(window, "admin", "1234");
 
     operations = new OperationChecker(window);
     String path = OfxBuilder
