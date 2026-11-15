@@ -77,6 +77,7 @@
                  JUnit 3 signale sinon « No tests found » comme un échec. -->
             <exclude>**/UrlTest.java</exclude>
             <exclude>**/JsonImporterTest.java</exclude>
+            <exclude>**/SingleInstanceTest.java</exclude>
           </excludes>
         </configuration>
       </plugin>
