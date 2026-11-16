@@ -1,6 +1,7 @@
 package com.budgetview.functests.utils;
 
 import com.budgetview.desktop.Application;
+import com.budgetview.desktop.utils.AppExit;
 import com.budgetview.utils.Lang;
 import org.globsframework.utils.Log;
 import org.globsframework.utils.TestUtils;
@@ -23,31 +24,14 @@ public abstract class FunctionalTestCase extends UISpecTestCase {
     }
 
     /**
-     * L'application appelle System.exit() sur certaines erreurs (ShowDialogAndExitExceptionHandler,
-     * ExitAction...) : dans les tests, cela tuerait la JVM de surefire et tous les tests suivants
-     * disparaîtraient du rapport. On transforme ces appels en exception ; surefire, lui,
-     * doit pouvoir quitter normalement en fin de suite.
+     * L'application quitte sur certaines erreurs (ShowDialogAndExitExceptionHandler, ExitAction...) :
+     * dans les tests, cela tuerait la JVM de surefire et tous les tests suivants disparaîtraient du
+     * rapport. Toutes ses sorties passent par AppExit, qu'on fait lever une exception à la place.
      */
     private static void preventApplicationExit() {
-        System.setSecurityManager(new SecurityManager() {
-            public void checkPermission(java.security.Permission perm) {
-            }
-
-            public void checkPermission(java.security.Permission perm, Object context) {
-            }
-
-            public void checkExit(int status) {
-                // Swing appelle aussi checkExit() sans quitter (setDefaultCloseOperation(EXIT_ON_CLOSE)) :
-                // on ne bloque que les vrais Runtime.exit() venant de l'application.
-                boolean realExit = false;
-                for (StackTraceElement element : Thread.currentThread().getStackTrace()) {
-                    if (element.getClassName().equals("java.lang.Runtime") && element.getMethodName().equals("exit")) {
-                        realExit = true;
-                    }
-                    else if (realExit && element.getClassName().startsWith("com.budgetview.desktop")) {
-                        throw new SecurityException("System.exit(" + status + ") appelé par l'application pendant un test");
-                    }
-                }
+        AppExit.setHandler(new AppExit.Handler() {
+            public void exit(int status) {
+                throw new IllegalStateException("Sortie de l'application (code " + status + ") pendant un test");
             }
         });
     }
