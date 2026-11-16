@@ -129,6 +129,7 @@ public class Application {
     changeDate();
     Utils.endRemove();
 
+    MacOSXHooks.useScreenMenuBar();
     try {
       new Application().run(args);
     }

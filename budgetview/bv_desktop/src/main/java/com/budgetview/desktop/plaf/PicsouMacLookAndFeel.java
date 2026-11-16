@@ -13,6 +13,8 @@ import java.awt.*;
 public class PicsouMacLookAndFeel /*extends AquaLookAndFeel */{
 
   public static void initApplicationName() {
+    // Nom du menu application quand on lance un jar (un .app jpackage prend celui de son Info.plist)
+    System.setProperty("apple.awt.application.name", Lang.get("application"));
     System.setProperty("com.apple.mrj.application.apple.menu.about.name", Lang.get("application"));
   }
 
