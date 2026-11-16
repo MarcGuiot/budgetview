@@ -4,6 +4,7 @@ import junit.framework.Assert;
 import org.uispec4j.MenuItem;
 import org.uispec4j.Trigger;
 import org.uispec4j.assertion.UISpecAssert;
+import org.uispec4j.utils.TriggerRunner;
 
 import javax.swing.*;
 import java.awt.*;
@@ -62,9 +63,13 @@ public abstract class PopupChecker {
     if (!(awtComponent instanceof JCheckBoxMenuItem)) {
       Assert.fail("Selection is possible only for CheckBox items. For other items types use click(option).");
     }
-    JCheckBoxMenuItem item = (JCheckBoxMenuItem) awtComponent;
+    final JCheckBoxMenuItem item = (JCheckBoxMenuItem) awtComponent;
     Assert.assertEquals(message, !selected, item.isSelected());
-    item.doClick();
+    TriggerRunner.runInSwingThread(new Trigger() {
+      public void run() throws Exception {
+        item.doClick();
+      }
+    });
     close(menu);
   }
 
@@ -100,9 +105,19 @@ public abstract class PopupChecker {
     return new SubPopupChecker(parentMenu, subMenu);
   }
 
+  /**
+   * Masquer le menu modifie le MenuSelectionManager de Swing : à faire dans l'EDT. Depuis le fil du test,
+   * cela entrait en concurrence avec l'ouverture du menu suivant (ArrayIndexOutOfBoundsException dans
+   * MenuSelectionManager.setSelectedPath, ou NullPointerException sur invokerRootPane), surtout après un
+   * click() qui ouvre une fenêtre modale : ce fil ne reprend qu'à sa fermeture, quand le test a déjà enchaîné.
+   */
   protected void close(MenuItem menu) {
-    Component awtComponent = menu.getAwtComponent();
-    awtComponent.setVisible(false);
+    final Component awtComponent = menu.getAwtComponent();
+    TriggerRunner.runInSwingThread(new Trigger() {
+      public void run() throws Exception {
+        awtComponent.setVisible(false);
+      }
+    });
   }
 
   private class SubPopupChecker extends PopupChecker {

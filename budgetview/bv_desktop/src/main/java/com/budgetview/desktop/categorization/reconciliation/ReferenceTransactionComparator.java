@@ -54,12 +54,17 @@ public class ReferenceTransactionComparator implements Comparator<Glob> {
       return 1;
     }
 
+    // Les opérations qui portent le libellé de référence passent devant. Les deux côtés doivent être
+    // examinés, sinon compare(a, b) et compare(b, a) valent tous deux -1 quand a et b le portent, ce que
+    // TimSort signale par « Comparison method violates its general contract! ».
     String transactionLabel1 = transaction1.get(Transaction.LABEL);
-    if (label.equalsIgnoreCase(transactionLabel1)) {
+    String transactionLabel2 = transaction2.get(Transaction.LABEL);
+    boolean sameLabel1 = label != null && label.equalsIgnoreCase(transactionLabel1);
+    boolean sameLabel2 = label != null && label.equalsIgnoreCase(transactionLabel2);
+    if (sameLabel1 && !sameLabel2) {
       return -1;
     }
-    String transactionLabel2 = transaction1.get(Transaction.LABEL);
-    if (label.equalsIgnoreCase(transactionLabel2)) {
+    if (sameLabel2 && !sameLabel1) {
       return 1;
     }
 
