@@ -184,14 +184,14 @@
 
   <profiles>
     <!-- Tests sous Java 9 et plus : uispec4j remplace le Toolkit AWT et a besoin des paquets internes de
-         java.desktop ; FunctionalTestCase installe un SecurityManager, refusé par défaut depuis Java 18. -->
+         java.desktop. -->
     <profile>
       <id>jdk17</id>
       <activation>
         <jdk>[9,)</jdk>
       </activation>
       <properties>
-        <jdk.test.args>-Djava.security.manager=allow --add-opens java.desktop/java.awt=ALL-UNNAMED --add-opens java.desktop/javax.swing=ALL-UNNAMED --add-opens java.desktop/java.awt.peer=ALL-UNNAMED --add-opens java.desktop/java.awt.dnd.peer=ALL-UNNAMED --add-opens java.desktop/sun.awt=ALL-UNNAMED --add-opens java.desktop/sun.awt.datatransfer=ALL-UNNAMED --add-opens java.desktop/sun.awt.image=ALL-UNNAMED --add-opens java.desktop/sun.java2d=ALL-UNNAMED --add-opens java.desktop/sun.java2d.pipe=ALL-UNNAMED --add-opens java.desktop/sun.font=ALL-UNNAMED --add-opens java.desktop/sun.lwawt=ALL-UNNAMED --add-opens java.desktop/sun.lwawt.macosx=ALL-UNNAMED</jdk.test.args>
+        <jdk.test.args>--add-opens java.desktop/java.awt=ALL-UNNAMED --add-opens java.desktop/javax.swing=ALL-UNNAMED --add-opens java.desktop/java.awt.peer=ALL-UNNAMED --add-opens java.desktop/java.awt.dnd.peer=ALL-UNNAMED --add-opens java.desktop/sun.awt=ALL-UNNAMED --add-opens java.desktop/sun.awt.datatransfer=ALL-UNNAMED --add-opens java.desktop/sun.awt.image=ALL-UNNAMED --add-opens java.desktop/sun.java2d=ALL-UNNAMED --add-opens java.desktop/sun.java2d.pipe=ALL-UNNAMED --add-opens java.desktop/sun.font=ALL-UNNAMED --add-opens java.desktop/sun.lwawt=ALL-UNNAMED --add-opens java.desktop/sun.lwawt.macosx=ALL-UNNAMED</jdk.test.args>
       </properties>
     </profile>
     <profile>

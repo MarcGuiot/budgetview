@@ -136,7 +136,7 @@ public class Application {
     catch (Exception e) {
       showError(e);
       Log.write("[Application] Error on startup ", e);
-      System.exit(-1);
+      AppExit.exit(-1);
     }
   }
 
@@ -200,7 +200,7 @@ public class Application {
     catch (Exception e) {
       showError(e);
       Log.write("[Application] Error on startup - exiting", e);
-      System.exit(1);
+      AppExit.exit(1);
     }
   }
 
@@ -230,7 +230,7 @@ public class Application {
 
   private void showMultipleInstanceError(String message) {
     MessageDialog.show("init.dialog.lock.title", MessageType.ERROR, null, directory, "init.dialog.lock.content", message);
-    System.exit(1);
+    AppExit.exit(1);
   }
 
   public static String[] parseLanguage(String... args) {
