@@ -1,0 +1,8 @@
+BudgetView
+Copyright 2008-2019 Marc Guiot et Régis Medina (BudgetView SARL)
+
+Ce produit est distribué sous la licence Apache, version 2.0 (voir le fichier LICENSE).
+
+Les sous-projets globs, splits et saxstack sont eux aussi sous licence Apache 2.0.
+Prevayler (prevayler/) et UISpec4J (uispec4j/) gardent leurs propres licences,
+indiquées dans leurs dossiers.
