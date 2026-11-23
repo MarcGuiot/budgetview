@@ -47,11 +47,12 @@
         <version>3.0.0</version>
         <configuration>
           <!-- Une JVM par classe : des tests d'IHM laissent un état partagé (ColorServiceEditorTest échoue derrière
-               d'autres classes). Limite de temps : un blocage SQL reste possible. -->
+               d'autres classes). Limite de temps : un blocage SQL reste possible. Les add-opens permettent à uispec4j
+               de remplacer le Toolkit AWT (sans eux, 38 classes d'IHM échouent sous Java 21). -->
           <forkCount>1</forkCount>
           <reuseForks>false</reuseForks>
           <forkedProcessTimeoutInSeconds>120</forkedProcessTimeoutInSeconds>
-          <argLine>-Xmx512m -Dapple.awt.UIElement=true</argLine>
+          <argLine>-Xmx512m -Dapple.awt.UIElement=true --add-opens java.desktop/java.awt=ALL-UNNAMED --add-opens java.desktop/javax.swing=ALL-UNNAMED --add-opens java.desktop/java.awt.peer=ALL-UNNAMED --add-opens java.desktop/java.awt.dnd.peer=ALL-UNNAMED --add-opens java.desktop/sun.awt=ALL-UNNAMED --add-opens java.desktop/sun.awt.datatransfer=ALL-UNNAMED --add-opens java.desktop/sun.awt.image=ALL-UNNAMED --add-opens java.desktop/sun.java2d=ALL-UNNAMED --add-opens java.desktop/sun.java2d.pipe=ALL-UNNAMED --add-opens java.desktop/sun.font=ALL-UNNAMED --add-opens java.desktop/sun.lwawt=ALL-UNNAMED --add-opens java.desktop/sun.lwawt.macosx=ALL-UNNAMED</argLine>
           <systemPropertyVariables>
             <uispec4j.test.library>junit</uispec4j.test.library>
           </systemPropertyVariables>
