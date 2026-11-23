@@ -16,7 +16,10 @@ jpackage --input budgetview/bv_desktop/target/dist --dest version --main-jar bud
 
 ## Développement
 
-Il faut un **JDK 8** : uispec4j, dont dépendent les tests d'IHM, sous-classe `sun.awt.SunToolkit`.
+Il faut un **JDK 21** : le réacteur est compilé en `--release 21`, et `jpackage` est fourni par le JDK.
+uispec4j, dont dépendent les tests d'IHM, sous-classe `sun.awt.SunToolkit` : le jar installé dans
+`~/.m2` ne marche qu'avec le JDK qui l'a construit. Après un changement de JDK, le réinstaller,
+puis refaire un `clean install`.
 
 ```sh
 # Une fois : installer uispec4j dans ~/.m2. Il est hors du réacteur racine, mais
