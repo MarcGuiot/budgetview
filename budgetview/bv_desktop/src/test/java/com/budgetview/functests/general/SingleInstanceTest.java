@@ -30,7 +30,7 @@ public class SingleInstanceTest extends StartUpFunctionalTestCase {
   }
 
   @Test
-  // Désactivé (JUnit 3 : renommé pour ne plus commencer par "test") — mis de côté durablement (2026-11-15) : plusieurs instances lancées dans la même JVM sur les vrais ports 5454…, fenêtres non interceptées. Voir docs/etat-des-tests.md.
+  // Désactivé (JUnit 3 : renommé pour ne plus commencer par "test") — mis de côté durablement (2026-11-15) : plusieurs instances lancées dans la même JVM sur les vrais ports 5454…, fenêtres non interceptées.
   public void disabled_testOpenRequestsDuringLoginAndInitialFileImport() throws Exception {
     final String[] files = {
       OfxBuilder.init(this)
@@ -97,7 +97,7 @@ public class SingleInstanceTest extends StartUpFunctionalTestCase {
   }
 
   @Test
-  // Désactivé (JUnit 3 : renommé pour ne plus commencer par "test") — mis de côté durablement (2026-11-15) : plusieurs instances lancées dans la même JVM sur les vrais ports 5454…, fenêtres non interceptées. Voir docs/etat-des-tests.md.
+  // Désactivé (JUnit 3 : renommé pour ne plus commencer par "test") — mis de côté durablement (2026-11-15) : plusieurs instances lancées dans la même JVM sur les vrais ports 5454…, fenêtres non interceptées.
   public void disabled_testOpenRequestsWhenTheApplicationIsRunning() throws Exception {
 
     final Application application = new Application();
@@ -151,7 +151,7 @@ public class SingleInstanceTest extends StartUpFunctionalTestCase {
   }
 
   @Test
-  // Désactivé (JUnit 3 : renommé pour ne plus commencer par "test") — mis de côté durablement (2026-11-15) : plusieurs instances lancées dans la même JVM sur les vrais ports 5454…, fenêtres non interceptées. Voir docs/etat-des-tests.md.
+  // Désactivé (JUnit 3 : renommé pour ne plus commencer par "test") — mis de côté durablement (2026-11-15) : plusieurs instances lancées dans la même JVM sur les vrais ports 5454…, fenêtres non interceptées.
   public void disabled_testOpenRequestAndCloseAndOpenRequest() throws Exception {
     final Application application = new Application();
     final Window slaWindow = WindowInterceptor.getModalDialog(new Trigger() {
@@ -206,7 +206,7 @@ public class SingleInstanceTest extends StartUpFunctionalTestCase {
   }
 
   @Test
-  // Désactivé (JUnit 3 : renommé pour ne plus commencer par "test") — mis de côté durablement (2026-11-15) : plusieurs instances lancées dans la même JVM sur les vrais ports 5454…, fenêtres non interceptées. Voir docs/etat-des-tests.md.
+  // Désactivé (JUnit 3 : renommé pour ne plus commencer par "test") — mis de côté durablement (2026-11-15) : plusieurs instances lancées dans la même JVM sur les vrais ports 5454…, fenêtres non interceptées.
   public void disabled_testWhenFirstPortsAreInUse() throws Exception {
     ServerSocket serverSocket1 = new ServerSocket(5454);
     ServerSocket serverSocket2 = new ServerSocket(3474);
@@ -216,7 +216,7 @@ public class SingleInstanceTest extends StartUpFunctionalTestCase {
   }
 
   @Test
-  // Désactivé (JUnit 3 : renommé pour ne plus commencer par "test") — mis de côté durablement (2026-11-15) : plusieurs instances lancées dans la même JVM sur les vrais ports 5454…, fenêtres non interceptées. Voir docs/etat-des-tests.md.
+  // Désactivé (JUnit 3 : renommé pour ne plus commencer par "test") — mis de côté durablement (2026-11-15) : plusieurs instances lancées dans la même JVM sur les vrais ports 5454…, fenêtres non interceptées.
   public void disabled_testImportQifWhileBalanceDialogIsOpen() throws Exception {
     final Application application = new Application();
     final Window slaWindow = WindowInterceptor.getModalDialog(new Trigger() {
@@ -271,7 +271,7 @@ public class SingleInstanceTest extends StartUpFunctionalTestCase {
   }
 
   @Test
-  // Désactivé (JUnit 3 : renommé pour ne plus commencer par "test") — mis de côté durablement (2026-11-15) : plusieurs instances lancées dans la même JVM sur les vrais ports 5454…, fenêtres non interceptées. Voir docs/etat-des-tests.md.
+  // Désactivé (JUnit 3 : renommé pour ne plus commencer par "test") — mis de côté durablement (2026-11-15) : plusieurs instances lancées dans la même JVM sur les vrais ports 5454…, fenêtres non interceptées.
   public void disabled_testImportWithSeriesEditionDialogOpen() throws Exception {
     final Application application = new Application();
     final Window slaWindow = WindowInterceptor.getModalDialog(new Trigger() {

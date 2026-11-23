@@ -616,7 +616,7 @@ public class ProjectTransferTest extends LoggedInFunctionalTestCase {
   // Les soldes attendus suivent le comportement actuel : la position saisie à la création (1 000)
   // sert de solde d'ouverture et les opérations importées s'y ajoutent ; le solde du fichier OFX,
   // daté d'avant la position saisie, est ignoré. L'aide du site parle au contraire de « solde actuel » :
-  // question ouverte, voir docs/etat-des-tests.md (ProjectTransferTest).
+  // question ouverte.
   private void createMainAccount(String mainAccountName, String accountNumber) throws Exception {
     accounts.createNewAccount()
       .setAsMain()
