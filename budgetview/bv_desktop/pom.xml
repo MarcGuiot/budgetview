@@ -209,7 +209,7 @@
                   <target>
                     <mkdir dir="src/main/resources/demo"/>
                     <java fork="true" classname="com.budgetview.functests.general.DemoGenerationTest" failonerror="true">
-                      <jvmarg line="-Ddemogeneration.output.dir=src/main/resources/demo -Xmx512m"/>
+                      <jvmarg line="-Ddemogeneration.output.dir=src/main/resources/demo -Xmx512m -Dapple.awt.UIElement=true ${jdk.test.args}"/>
                       <classpath>
                         <path refid="maven.test.classpath"/>
                       </classpath>
