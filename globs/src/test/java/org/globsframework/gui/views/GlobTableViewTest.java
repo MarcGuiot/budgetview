@@ -713,7 +713,7 @@ public class GlobTableViewTest extends GuiComponentTestCase {
   // coupe les notifications de sélection, mais la remise à zéro du modèle (globListPreReset / globListReset) les
   // rétablit avant la fin, et la sélection réappliquée part en événements transitoires (vide, puis ligne par ligne).
   // Les rendre imbriquables (compteur) fait échouer AnalysisSeriesGroupViewTest dans bv_desktop : l'appli dépend
-  // de ces événements. Voir docs/etat-des-tests.md.
+  // de ces événements.
   public void disabled_testRefreshUpdatesTheSortingAndKeepsSelection() throws Exception {
     repository =
       checker.parse("<dummyObject id='1' name='thisIsAName' value='0.23' date='2006/08/14'/>" +

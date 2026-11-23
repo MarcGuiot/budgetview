@@ -665,7 +665,7 @@ public class AnalysisBudgetViewStackChartTest extends LoggedInFunctionalTestCase
   }
 
   @Test
-  // Désactivé (JUnit 3 : renommé pour ne plus commencer par "test") — mis de côté durablement (2026-11-15) : « component must be showing on the screen » à l'ouverture d'un menu contextuel. Voir docs/etat-des-tests.md.
+  // Désactivé (JUnit 3 : renommé pour ne plus commencer par "test") — mis de côté durablement (2026-11-15) : « component must be showing on the screen » à l'ouverture d'un menu contextuel.
   public void disabled_testPopupMenus() throws Exception {
 
     OfxBuilder.init(this)

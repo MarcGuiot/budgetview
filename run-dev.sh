@@ -36,7 +36,7 @@ if [ -f "$REAL/redirect.txt" ]; then
 fi
 
 if ! "$JAVA_HOME/bin/java" -version 2>&1 | grep -q '"1\.8'; then
-  echo "JDK 8 introuvable dans JAVA_HOME=$JAVA_HOME (voir CLAUDE.md, section Build)." >&2
+  echo "JDK 8 introuvable dans JAVA_HOME=$JAVA_HOME (voir README.md)." >&2
   exit 1
 fi
 

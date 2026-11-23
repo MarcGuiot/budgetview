@@ -182,7 +182,7 @@ public class SeriesUpgradeTest extends LoggedInFunctionalTestCase {
   }
 
   @Test
-  // Désactivé (JUnit 3 : renommé pour ne plus commencer par "test") — mis de côté durablement (2026-11-15) : instable, passe ou échoue selon les passes (expected:<MainA> but was:<SavingsA>). Voir docs/etat-des-tests.md.
+  // Désactivé (JUnit 3 : renommé pour ne plus commencer par "test") — mis de côté durablement (2026-11-15) : instable, passe ou échoue selon les passes (expected:<MainA> but was:<SavingsA>).
   public void disabled_testNoMessagesDisplayedWhenConvertingASavingsSeriesWithNoTransactionsAndASingleMainAccount() throws Exception {
     operations.restore(Files.copyResourceToTmpFile(this, "/testbackups/upgrade_jar131_series_transfers_no_transactions_one_main_account.budgetview"));
 
