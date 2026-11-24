@@ -1,0 +1,19 @@
+# Clés et certificats : ne jamais les versionner (ceux de ssl/ ont été publiés, ils sont compromis)
+ssl/*
+!ssl/README_CREATE_SSL_CERTIFICATE.txt
+*.key
+*.jks
+*.keystore
+*.p12
+*.pem
+
+# Fichiers d'IDE : le pom.xml fait foi
+*.iml
+*.ipr
+*.iws
+.idea/
+.classpath
+.project
+.settings/
+.vscode/
+bin/
