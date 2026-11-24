@@ -1,4 +1,7 @@
 target/
+budgetview/bv_desktop/budgetview.jar
+budgetview/bv_desktop/config.jar
+budgetview/bv_desktop/dump.jar
 .DS_Store
 tmp/
 budgetview/bv_desktop/badFile.ofx
