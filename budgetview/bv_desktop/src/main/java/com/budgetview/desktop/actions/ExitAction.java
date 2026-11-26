@@ -1,6 +1,7 @@
 package com.budgetview.desktop.actions;
 
 import com.budgetview.desktop.WindowManager;
+import com.budgetview.desktop.utils.AppExit;
 import com.budgetview.desktop.feedback.UserEvaluationDialog;
 import com.budgetview.utils.Lang;
 import org.globsframework.model.GlobRepository;
@@ -45,7 +46,7 @@ public class ExitAction extends AbstractAction {
     frame.dispose();
     windowManager.shutdown();
     if (System.getProperty("realExit", "true").equalsIgnoreCase("true")){
-      System.exit(0);
+      AppExit.exit(0);
     }
   }
 }

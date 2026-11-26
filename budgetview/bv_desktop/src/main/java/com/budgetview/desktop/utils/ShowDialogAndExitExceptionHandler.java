@@ -29,7 +29,7 @@ public class ShowDialogAndExitExceptionHandler implements ExceptionHandler {
                                                                    directory);
       dialog.show();
       if (Application.EXIT_ON_DATA_ERROR) {
-        System.exit(10);
+        AppExit.exit(10);
       }
     }
   }
