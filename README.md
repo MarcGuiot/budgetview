@@ -45,6 +45,9 @@ mvn test -pl budgetview/bv_desktop -Dtest=LoginTest   # une classe
 données (`~/.budgetview-dev`, ou `BV_DEV_DATA`) et `-DSINGLE_INSTANCE_DISABLED=true`, pour qu'elle
 cohabite avec une version installée sans toucher à ses données.
 
+Notes pour les agents de code et les nouveaux développeurs (modules, pièges du build et des tests,
+conventions) : [AGENTS.md](AGENTS.md).
+
 Tests désactivés : JUnit 3, donc la méthode est renommée `disabled_test…`, avec un commentaire
 qui donne la raison.
 
